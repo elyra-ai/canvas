@@ -173,8 +173,8 @@ class VirtualizedTable extends React.Component {
 		return isLastColumn;
 	}
 
-	selectAll(selected) {
-		this.props.setAllRowsSelected(selected);
+	selectAll(evt, { checked, id }) {
+		this.props.setAllRowsSelected(checked);
 	}
 
 	// Callback responsible for rendering a cell's contents.

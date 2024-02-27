@@ -23,12 +23,14 @@ import { v4 as uuid4 } from "uuid";
 
 import * as ControlUtils from "../../util/control-utils";
 import ValidationMessage from "../../components/validation-message";
-import { STATES } from "../../constants/constants";
+import { STATES, MESSAGE_KEYS } from "../../constants/constants";
+import { formatMessage } from "./../../util/property-utils";
 
 
 class SliderControl extends React.Component {
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.handleChange = this.handleChange.bind(this);
 		this.uuid = uuid4();
 	}
@@ -59,6 +61,7 @@ class SliderControl extends React.Component {
 					onChange={this.handleChange}
 					disabled={this.props.state === STATES.DISABLED}
 					light={this.props.controller.getLight() && this.props.control.light}
+					ariaLabelInput={formatMessage(this.reactIntl, MESSAGE_KEYS.SLIDER_NUMBER_INPUT_LABEL)}
 					formatLabel={
 						(val, label) => label || val
 					}

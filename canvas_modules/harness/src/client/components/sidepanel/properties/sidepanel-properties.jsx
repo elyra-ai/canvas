@@ -271,6 +271,7 @@ export default class SidePanelProperties extends React.Component {
 					buttonLabel="Choose file"
 					accept={[".json"]}
 					onChange={this.onPropertiesSelect}
+					iconDescription="Delete file"
 				/>
 				{space}
 			</div>);

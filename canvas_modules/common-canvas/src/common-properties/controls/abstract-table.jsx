@@ -568,7 +568,7 @@ export default class AbstractTable extends React.Component {
 		}
 	}
 
-	checkedAllValue(colIndex, checked) {
+	checkedAllValue(colIndex, evt, { checked, id }) {
 		const controlValue = this.props.value;
 		if (Array.isArray(controlValue)) {
 			for (let i = 0; i < controlValue.length; i++) {

@@ -17,8 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Icon from "carbon-components-react/lib/components/Icon";
-import Toggle from "carbon-components-react/lib/components/Toggle";
-import ToggleSmall from "carbon-components-react/lib/components/ToggleSmall";
+import { Toggle } from "@carbon/react";
 import { connect } from "react-redux";
 
 class CustomToggleCtrl extends React.Component {
@@ -71,7 +70,8 @@ class CustomToggleCtrl extends React.Component {
 			/>
 		);
 		if (this.props.table) {
-			toggle = (<ToggleSmall
+			toggle = (<Toggle
+				size="sm"
 				disabled={disabled}
 				id={id}
 				toggled={this.props.controlValue}

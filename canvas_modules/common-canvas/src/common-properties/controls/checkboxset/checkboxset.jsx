@@ -59,7 +59,7 @@ class CheckboxsetControl extends React.Component {
 		}
 	}
 
-	handleChange(val, checked) {
+	handleChange(val, evt, { checked, id }) {
 		let values = this.props.controller.getPropertyValue(this.props.propertyId);
 		if (typeof values === "undefined" || values === null) {
 			values = [];

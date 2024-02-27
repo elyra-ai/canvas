@@ -53,7 +53,7 @@ class ButtonAction extends React.Component {
 		}
 		switch (this.props.action.button.size) {
 		case CARBON_BUTTON_SIZE.SMALL: return CARBON_BUTTON_SIZE.SMALL;
-		case CARBON_BUTTON_SIZE.MEDIUM: return CARBON_BUTTON_SIZE.DEFAULT; // TODO: update this after upgrading to carbon 11.x
+		case CARBON_BUTTON_SIZE.MEDIUM: return CARBON_BUTTON_SIZE.MEDIUM;
 		case CARBON_BUTTON_SIZE.LARGE: return CARBON_BUTTON_SIZE.LARGE;
 		case CARBON_BUTTON_SIZE.EXTRA_LARGE: return CARBON_BUTTON_SIZE.EXTRA_LARGE;
 		default: return CARBON_BUTTON_SIZE.SMALL;

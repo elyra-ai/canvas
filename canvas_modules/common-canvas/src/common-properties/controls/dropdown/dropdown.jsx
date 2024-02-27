@@ -234,7 +234,7 @@ class DropDown extends React.Component {
 		} else if (this.props.control.customValueAllowed) { // combobox dropdown not allowed in tables
 			dropdownComponent = (<ComboBox
 				{...validationProps}
-				ariaLabel={this.props.control.label ? this.props.control.label.text : ""}
+				aria-label={this.props.control.label ? this.props.control.label.text : ""}
 				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
 				disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
 				placeholder={dropDown.selectedOption.label}

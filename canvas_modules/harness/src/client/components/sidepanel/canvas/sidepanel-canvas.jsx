@@ -398,6 +398,7 @@ export default class SidePanelForms extends React.Component {
 					buttonLabel="Choose file"
 					accept={[".json"]}
 					onChange={this.onCanvasFileSelect}
+					iconDescription="Delete file"
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
@@ -419,6 +420,7 @@ export default class SidePanelForms extends React.Component {
 					buttonLabel="Choose file"
 					accept={[".json"]}
 					onChange={this.onCanvasPaletteSelect}
+					iconDescription="Delete file"
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
@@ -468,6 +470,7 @@ export default class SidePanelForms extends React.Component {
 					buttonLabel="Chose file"
 					accept={[".json"]}
 					onChange={this.onCanvasFileSelect2}
+					iconDescription="Delete file"
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
@@ -490,6 +493,7 @@ export default class SidePanelForms extends React.Component {
 					buttonLabel="Chose file"
 					accept={[".json"]}
 					onChange={this.onCanvasPaletteSelect2}
+					iconDescription="Delete file"
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">

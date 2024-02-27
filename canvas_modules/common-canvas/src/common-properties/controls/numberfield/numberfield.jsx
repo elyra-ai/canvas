@@ -69,7 +69,7 @@ class NumberfieldControl extends React.Component {
 		}
 	}
 
-	handleChange(evt, direction) {
+	handleChange(evt, { value, direction }) {
 		if (typeof direction === "string") {
 			this.onDirection(direction);
 			return;
@@ -77,7 +77,7 @@ class NumberfieldControl extends React.Component {
 
 		if (
 			evt.target.validity && evt.target.validity.badInput ||
-			(!isFinite(evt.target.value))
+			(!isFinite(evt.target.value)) // TODO: Check if this should be changed to value
 		) {
 			// Note - When user enters an invalid number, evt.target.value is set to "".
 			// It is difficult to differentiate between empty value and invalid input because both return "".
@@ -107,7 +107,7 @@ class NumberfieldControl extends React.Component {
 			this.props.controller.updateErrorMessage(this.props.propertyId, null);
 		}
 
-		const actualValue = evt.target.value;
+		const actualValue = value;
 		if (typeof actualValue === "undefined" || actualValue === null || actualValue === "") {
 			this.props.controller.updatePropertyValue(this.props.propertyId, null);
 		} else {
