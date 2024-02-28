@@ -123,7 +123,7 @@ const isEditingAction = (action) =>
 // controller passed in.
 const createDefaultContextMenu = (source) => {
 	let menuDefinition = [];
-	const menuForNonSelectedObj = cc.isContextMenuForNonSelectedObj(source);
+	const menuForNonSelectedObj = cc.isContextToolbarForNonSelectedObj(source);
 
 	// Select all & add comment: canvas only
 	if (source.type === "canvas") {
@@ -280,7 +280,7 @@ const createDefaultContextMenu = (source) => {
 	}
 	if (source.type === "canvas") {
 		menuDefinition = menuDefinition.concat(
-			{ action: "unhighlight", label: getLabel("menu.unhighlight"), enable: cc.isHighlighted() }
+			{ action: "unhighlight", label: getLabel("menu.unhighlight"), enable: cc.isBranchHighlighted() }
 		);
 	}
 	if (source.type === "node" &&
@@ -319,7 +319,7 @@ const createHighlightSubMenu = (source) => {
 // This should only appear in menu if highlight is true.
 const createUnhighlightMenu = (source) => {
 	const unhighlightSubMenu = [
-		{ action: "unhighlight", label: getLabel("menu.unhighlight"), enable: cc.isHighlighted() }
+		{ action: "unhighlight", label: getLabel("menu.unhighlight"), enable: cc.isBranchHighlighted() }
 	];
 	return unhighlightSubMenu;
 };

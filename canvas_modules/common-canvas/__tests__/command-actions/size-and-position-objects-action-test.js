@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ for (let i = 0; i < nodeIds.length; i++) {
 
 describe("SizeAndPositionObjectsAction handles calls correctly", () => {
 	it("should handle calls, undo, and redo", () => {
-		const sizeAndPositionObjects = new SizeAndPositionObjectsAction(newObjectInfo, objectModel);
+		const sizeAndPositionObjects = new SizeAndPositionObjectsAction(newObjectInfo, canvasController);
 		const previousObjectsInfo = sizeAndPositionObjects.previousObjectsInfo;
 		equalsObjectInfo(previousObjectsInfo, getNodesInfo(nodeIds));
 

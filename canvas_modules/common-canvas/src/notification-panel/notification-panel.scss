@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,31 +18,9 @@ $notification-panel-header-height: 33px;
 $notification-message-height: 48px;
 $notification-left-border-color-width: 4px;
 $notification-panel-button-container-height: 49px;
-$toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
-
-// This section adds an ease-in ease-out effect for the notification-panel-container
-.notification-panel-container {
-	opacity: 1;
-	margin-top: 0;
-	z-index: 2; // Ensure panel appears on top of bottom panel.
-
-	&.panel-hidden {
-		display: block;
-		opacity: 0;
-		visibility: hidden;
-	}
-
-	&.panel-transition {
-		transition: 0.25s ease-in-out;
-	}
-}
 
 .notification-panel {
-	position: absolute;
-	top: $toolbar-button-height;
-	right: 0;
-
-	width: 320px;
+	width: 318px;
 	height: fit-content;
 	min-height: calc(#{$notification-panel-header-height} + #{$notification-panel-button-container-height} + #{$notification-message-height});
 	max-height: calc(100% - 53px);
@@ -60,7 +38,6 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	border: 1px solid $ui-03;
 	border-bottom: 0;
 	padding: $spacing-05;
 	.notification-panel-header {
@@ -74,9 +51,12 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 		color: $text-02;
 		padding-top: $spacing-02;
 	}
-	.notification-panel-close-button {
-		left: $spacing-02;
-	}
+}
+
+.notification-panel-close-button {
+	position: absolute;
+	top: 12px;
+	right: 12px;
 }
 
 .notification-panel-button-container {
@@ -85,7 +65,6 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	background-color: $ui-01;
 	display: flex;
 	justify-content: space-between;
-	border: 1px solid $ui-03;
 	border-top: 0;
 	padding: $spacing-03 0;
 	font-weight: 400;
@@ -95,7 +74,8 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	overflow-y: auto;
 	line-height: normal;
 	background-color: $ui-01;
-	border: 1px solid $ui-03;
+	border-top: 1px solid $ui-03;
+	border-bottom: 1px solid $ui-03;
 	max-height: 448px;
 	.notifications-button-container {
 		border-bottom: 1px solid $ui-03;
@@ -134,11 +114,9 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 			cursor: pointer;
 		}
 
-		&:active,
 		&:focus {
-			outline: none;
-			border-style: none;
-			border-left: $notification-left-border-color-width solid $ui-01;
+			border-color: $interactive-01;
+			box-shadow: inset 0 0 0 1px $interactive-01, inset 0 0 0 2px $ui-background;
 		}
 
 		&:hover {
@@ -226,6 +204,9 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	}
 }
 
-.notification-message-close:hover {
-	text-decoration: underline;
+.notification-message-close {
+	width: fit-content;
+	&:hover {
+		text-decoration: underline;
+	}
 }

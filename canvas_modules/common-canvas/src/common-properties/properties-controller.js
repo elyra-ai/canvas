@@ -28,7 +28,7 @@ import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYP
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole, ControlType, ItemType } from "./constants/form-constants";
-import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get, difference } from "lodash";
+import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get, difference, merge } from "lodash";
 import Form from "./form/Form";
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
 import { DEFAULT_LOCALE } from "./constants/constants";
@@ -134,6 +134,11 @@ export default class PropertiesController {
 	// Return the id of top-level active tab or accordion
 	getTopLevelActiveGroupId() {
 		return this.propertiesStore.getActiveTab();
+	}
+
+	// Set the top-level active tab using tabId
+	setTopLevelActiveGroupId(tabId) {
+		this.propertiesStore.setActiveTab(tabId);
 	}
 
 	isTearsheetContainer() {
@@ -395,7 +400,7 @@ export default class PropertiesController {
 		parseUiContent(this.panelTree, this.form, PANEL_TREE_ROOT);
 	}
 
-	_addToControlValues(sameParameterDefRendered, resolveParameterRefs, setDefaultValues) {
+	_addToControlValues(sameParameterDefRendered, resolveParameterRefs, setDefaults) {
 		const defaultControlValues = {};
 		for (const keyName in this.controls) {
 			if (!has(this.controls, keyName)) {
@@ -403,7 +408,12 @@ export default class PropertiesController {
 			}
 			const control = this.controls[keyName];
 			const propertyId = { name: control.name };
-			let controlValue = this.getPropertyValue(propertyId);
+			let controlValue;
+			if (setDefaults?.values) {
+				controlValue = setDefaults.values[control.name];
+			} else {
+				controlValue = this.getPropertyValue(propertyId);
+			}
 
 			if (resolveParameterRefs) {
 				if (typeof controlValue !== "undefined" && controlValue !== null && typeof controlValue.parameterRef !== "undefined") {
@@ -422,7 +432,7 @@ export default class PropertiesController {
 					controlValue = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, controlValue);
 				}
 
-				if (setDefaultValues) {
+				if (setDefaults?.setDefaultValues) {
 					// When setDefaultValues is set, update all default values in a single call
 					defaultControlValues[control.name] = controlValue;
 				} else if (sameParameterDefRendered && !this.differentProperties.includes(control.name)) {
@@ -440,23 +450,11 @@ export default class PropertiesController {
 			}
 		}
 
-		if (setDefaultValues) {
-			this.setDefaultControlValues(defaultControlValues);
+		if (setDefaults?.setDefaultValues) {
+			return defaultControlValues;
 		}
-	}
 
-	setDefaultControlValues(defaultControlValues) {
-		// Update all default values
-		this.propertiesStore.setPropertyValues(defaultControlValues);
-
-		// Single call to the propertyListener
-		if (this.handlers.propertyListener) {
-			this.handlers.propertyListener(
-				{
-					action: ACTIONS.SET_PROPERTIES // Setting the default control values
-				}
-			);
-		}
+		return null;
 	}
 
 	_populateFieldData(controlValue, control) {
@@ -1254,6 +1252,12 @@ export default class PropertiesController {
 			}
 		}
 
+		if (options && options.setDefaultValues) {
+			const setDefaults = { values: inValues, setDefaultValues: true };
+			const defaultValues = this._addToControlValues(false, false, setDefaults);
+			inValues = merge(defaultValues, inValues);
+		}
+
 		this.propertiesStore.setPropertyValues(inValues);
 
 		if (options && options.isInitProps) {
@@ -1290,10 +1294,6 @@ export default class PropertiesController {
 					action: ACTIONS.SET_PROPERTIES // Setting the properties in current_parameters
 				}
 			);
-		}
-
-		if (options && options.setDefaultValues) {
-			this._addToControlValues(false, false, true);
 		}
 	}
 

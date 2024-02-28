@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
 
 
 const canvasController = new CanvasController();
-const objectModel = canvasController.getObjectModel();
 deepFreeze(startPipelineFlow);
 canvasController.setPipelineFlow(startPipelineFlow);
 const links = canvasController.getLinks();
@@ -42,7 +41,7 @@ describe("SetLinksStyleAction handles calls correctly", () => {
 			temporary: false
 		};
 		data.pipelineLinkIds[originalPipelineId] = [links[0].id];
-		const setLinksStyleAction1 = new SetLinksStyleAction(data, objectModel);
+		const setLinksStyleAction1 = new SetLinksStyleAction(data, canvasController);
 
 		setLinksStyleAction1.do();
 		let actualStyle = canvasController.getLinkStyle(links[0].id, false, originalPipelineId);

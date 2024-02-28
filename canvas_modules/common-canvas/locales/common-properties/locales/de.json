@@ -56,6 +56,7 @@
   "expression.values.empty.table.label": "Keine Werte gefunden",
   "expression.functions.table.label": "Tabelle 'Funktionen'",
   "expression.fields.dropdown": "Felder",
+  "expression.add.column": "Hinzufügen",
   "expression.fields.title": "Felder",
   "expression.values.title": "Werte",
   "expression.field.column": "Feld",

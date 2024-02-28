@@ -48,6 +48,7 @@ import StructureEditorControl from "./structureeditor";
 import StructureTableControl from "./structuretable";
 import StructurelisteditorControl from "./structurelisteditor";
 import ReadonlyTableControl from "./readonlytable";
+import Slider from "./slider";
 
 import ControlItem from "./../components/control-item";
 import ActionFactory from "./../actions/action-factory.js";
@@ -82,7 +83,8 @@ const accessibleControls = [
 	ControlType.ONEOFSELECT,
 	ControlType.MULTISELECT,
 	ControlType.SELECTSCHEMA,
-	ControlType.SELECTCOLUMN
+	ControlType.SELECTCOLUMN,
+	ControlType.SLIDER
 ];
 
 const tableControls = [
@@ -336,6 +338,9 @@ export default class ControlFactory {
 				openFieldPicker={this.openFieldPicker}
 				rightFlyout={this.rightFlyout}
 			/>);
+			break;
+		case (ControlType.SLIDER):
+			createdControl = (<Slider {...props} />);
 			break;
 		default:
 			createdControl = (<ReadonlyControl {...props} />);

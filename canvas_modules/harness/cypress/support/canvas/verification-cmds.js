@@ -1000,7 +1000,7 @@ Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
 
 Cypress.Commands.add("verifyToolbarButtonEnabled", (action, state) => {
 	cy.get(".toolbar-div")
-		.find("." + action + "-action > button")
+		.find("." + action + "-action > div > button")
 		.then((buttons) => {
 			const classList = Array.from(buttons[0].classList);
 			const enabled = !classList.includes("bx--btn--disabled");
@@ -1334,12 +1334,12 @@ Cypress.Commands.add("clickNotificationAtIndex", (index) => {
 		.click();
 });
 
-Cypress.Commands.add("verifyNotificationCenterHidden", (hidden) => {
-	if (hidden) {
-		cy.get(".notification-panel-container").should("have.class", "panel-hidden");
-	} else {
-		cy.get(".notification-panel-container").should("not.have.class", "panel-hidden");
-	}
+Cypress.Commands.add("verifyNotificationCenterExists", () => {
+	cy.get(".notification-panel");
+});
+
+Cypress.Commands.add("verifyNotificationCenterDoesntExist", (hidden) => {
+	cy.get(".notification-panel").should("not.exist");
 });
 
 Cypress.Commands.add("verifyNodeWidthHeight", (nodeLabel, nodeWidth, nodeHeight) => {

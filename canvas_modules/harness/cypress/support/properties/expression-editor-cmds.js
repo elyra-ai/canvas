@@ -19,8 +19,8 @@ Cypress.Commands.add("enterTextInExpressionEditor", (text, propertyId) => {
 		.then((selectedKey) => {
 			cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
 				.find(".properties-expression-editor")
-				.find(".CodeMirror")
-				.find(".CodeMirror-code")
+				.find(".cm-editor")
+				.find(".cm-content")
 				.type(selectedKey + "{a}{del}") // Select all and delete existing text in expression editor
 				.type(text + "{ctrl} "); // Type text and ctrl + space to display hints
 		});
@@ -29,7 +29,7 @@ Cypress.Commands.add("enterTextInExpressionEditor", (text, propertyId) => {
 Cypress.Commands.add("selectFirstAutoCompleteForText", (text, propertyId) => {
 	cy.enterTextInExpressionEditor(text, propertyId);
 	// select the first one in the list of hints and make sure it is the text
-	cy.get(".CodeMirror-hints")
+	cy.get(".cm-tooltip-autocomplete")
 		.eq(0)
 		.find("li")
 		.eq(0)

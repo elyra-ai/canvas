@@ -13,21 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-export const genElementByClass = (className, containingDiv) => {
-	const elements = containingDiv.getElementsByClassName(className);
-
-	if (elements && elements.length > 0) {
-		return elements[0];
+ 
+.properties-slider {
+	.bx--slider-container { 
+		min-width: 100%;
+		
+		.bx--slider { 
+			min-width: unset; // Default Carbon Component Slider has a fixed min-width of 12.5rem so unset it to make it responsive
+		}
 	}
-	return null;
-};
-
-export const genRectByClass = (className, containingDiv) => {
-	const element = genElementByClass(className, containingDiv);
-
-	if (element) {
-		return element.getBoundingClientRect();
+	&.error {
+		.bx--text-input--invalid, .bx--text-input {
+			outline: unset;
+			outline-offset: unset;
+		}
+		input[type="number"]:not([disabled]) {
+			border: 2px solid $support-01;
+		}
 	}
-	return null;
-};
+	&.warning {
+		.bx--text-input--invalid, .bx--text-input {
+			outline: unset;
+			outline-offset: unset;
+		}
+		input[type="number"]:not([disabled]) {
+			border: 2px solid $support-03;
+		}
+	}
+	
+}

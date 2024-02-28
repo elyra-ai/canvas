@@ -2302,6 +2302,18 @@ export default class ObjectModel {
 		return port;
 	}
 
+	setObjectsBranchHighlight(pipelineObjIds) {
+		this.store.dispatch({ type: "SET_OBJECTS_BRANCH_HIGHLIGHT", data: { pipelineObjIds: pipelineObjIds } });
+	}
+
+	setLinksBranchHighlight(pipelineLinkIds) {
+		this.store.dispatch({ type: "SET_LINKS_BRANCH_HIGHLIGHT", data: { pipelineObjIds: pipelineLinkIds } });
+	}
+
+	unsetAllBranchHighlight() {
+		this.store.dispatch({ type: "UNSET_OBJECTS_BRANCH_HIGHLIGHT" });
+	}
+
 	// ---------------------------------------------------------------------------
 	// Clipboard methods
 	// ---------------------------------------------------------------------------

@@ -22,6 +22,7 @@ import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
+import NotificationPanel from "../notification-panel/notification-panel.jsx";
 import { ERROR, WARNING, SUCCESS, INFO, PALETTE_LAYOUT_NONE,
 	NOTIFICATION_ICON_CLASS, TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_LAYOUT_TOP }
 	from "../common-canvas/constants/canvas-constants";
@@ -177,23 +178,33 @@ class CommonCanvasToolbar extends React.Component {
 	}
 
 	optionallyAddNotificationTool(rightBar) {
-		if (this.props.notificationConfig &&
-			typeof this.props.notificationConfig.action !== "undefined" &&
-			typeof this.props.notificationConfig.enable !== "undefined") {
+		if (this.props.notificationConfigExists) {
 			const notificationCount = this.props.notificationMessages.length;
 			const notificationTools = [
 				{ divider: true },
 				{ action: TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
-					label: this.props.notificationConfig.label,
-					enable: this.props.notificationConfig.enable,
-					isSelected: this.props.isNotificationOpen,
+					label: this.props.notificationConfigLabel,
+					enable: this.props.notificationConfigEnable,
+					extIsSubAreaDisplayed: this.props.isNotificationOpen,
+					setExtIsSubAreaDisplayed: this.callExtIsSubAreaDisplayed.bind(this),
 					className: this.getNotificationClassName(),
-					textContent: (notificationCount > 9) ? "9+" : notificationCount.toString()
+					textContent: (notificationCount > 9) ? "9+" : notificationCount.toString(),
+					subPanel: NotificationPanel,
+					subPanelData: { canvasController: this.props.canvasController },
+					leaveSubAreaOpenOnClickOutside: this.props.notificationConfigKeepOpen
 				}
 			];
 			return rightBar.concat(notificationTools);
 		}
 		return rightBar;
+	}
+
+	callExtIsSubAreaDisplayed(state) {
+		if (state) {
+			this.props.canvasController.openNotificationPanel();
+		} else {
+			this.props.canvasController.closeNotificationPanel();
+		}
 	}
 
 	configureToolbarButtonsState(toolbarConfig) {
@@ -276,6 +287,7 @@ class CommonCanvasToolbar extends React.Component {
 				<div aria-label={this.getLabel("toolbar.label")} role="navigation" className={"common-canvas-toolbar"} >
 					<Toolbar
 						config={toolbarConfig}
+						containingDivId={this.props.containingDivId}
 						instanceId={this.props.canvasController.getInstanceId()}
 						toolbarActionHandler={this.toolbarActionHandler}
 						additionalText={{ overflowMenuLabel: this.getLabel("toolbar.overflowMenu") }}
@@ -291,6 +303,7 @@ CommonCanvasToolbar.propTypes = {
 	// Provided by CommonCanvas
 	intl: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	containingDivId: PropTypes.string.isRequired,
 
 	// Provided by redux
 	enableToolbarLayout: PropTypes.string.isRequired,
@@ -302,7 +315,10 @@ CommonCanvasToolbar.propTypes = {
 	isPaletteOpen: PropTypes.bool,
 	isNotificationOpen: PropTypes.bool,
 	notificationMessages: PropTypes.array,
-	notificationConfig: PropTypes.object,
+	notificationConfigExists: PropTypes.object,
+	notificationConfigEnable: PropTypes.bool,
+	notificationConfigLabel: PropTypes.string,
+	notificationConfigKeepOpen: PropTypes.bool,
 	enableInternalObjectModel: PropTypes.bool,
 	enableEditingActions: PropTypes.bool,
 	canUndo: PropTypes.bool,
@@ -323,7 +339,10 @@ const mapStateToProps = (state, ownProps) => ({
 	isPaletteEnabled: state.canvasconfig.enablePaletteLayout !== PALETTE_LAYOUT_NONE,
 	isPaletteOpen: state.palette.isOpen,
 	isNotificationOpen: state.notificationpanel.isOpen,
-	notificationConfig: state.notificationpanel.config,
+	notificationConfigExists: state.notificationpanel?.config,
+	notificationConfigEnable: state.notificationpanel?.config?.enable,
+	notificationConfigLabel: state.notificationpanel?.config?.label,
+	notificationConfigKeepOpen: state.notificationpanel?.config?.keepOpen,
 	notificationMessages: state.notifications,
 	enableInternalObjectModel: state.canvasconfig.enableInternalObjectModel,
 	enableEditingActions: state.canvasconfig.enableEditingActions,

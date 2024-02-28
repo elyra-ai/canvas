@@ -32,6 +32,7 @@ class ToolTip extends React.Component {
 		this.uuid = uuid4();
 		this.pendingTooltip = null;
 		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
+		this.tabKeyPressed = false;
 	}
 
 	componentDidMount() {
@@ -78,7 +79,24 @@ class ToolTip extends React.Component {
 				if (tooltipTrigger && tooltip) {
 					this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
 				}
+
+				const linkElement = this.targetRef.querySelector("a");
+
+				// Focus on link when tooltip with link is opened
+				if (linkElement) {
+					linkElement.focus();
+				}
 			}
+		}
+	}
+
+	setKeyPressed(evt) {
+		if (evt.key === "Tab") {
+			this.tabKeyPressed = true;
+		}
+		if (evt.key === "Escape") {
+			this.triggerRef.focus();
+			this.setTooltipVisible(false);
 		}
 	}
 
@@ -313,6 +331,9 @@ class ToolTip extends React.Component {
 		// To prevent this default behavior, stopPropagation and preventDefault is used.
 		evt.stopPropagation();
 		evt.preventDefault();
+
+		// When tooltip with link is closed and another tooltip is opened newly opened tooltip should have focus.
+		this.triggerRef.focus();
 		if (this.state.isTooltipVisible) {
 			// Tooltip is visible and user clicks on trigger element again, hide tooltip
 			this.setTooltipVisible(false);
@@ -337,11 +358,22 @@ class ToolTip extends React.Component {
 			const mousedown = () => this.setTooltipVisible(false);
 			// `focus` event occurs before `click`. Adding timeout in onFocus function to ensure click is executed first.
 			// Ref - https://stackoverflow.com/a/49512400
+			const onKeyDown = (evt) => this.setKeyPressed(evt);
 			const onFocus = () => this.showTooltipWithDelay();
 			const onBlur = (evt) => {
-				// Keep tooltip visible when clicked on a link.
-				if (evt.relatedTarget === null) {
+				// Close the tooltip if tab is click
+				if (this.tabKeyPressed) {
 					this.setTooltipVisible(false);
+					this.tabKeyPressed = false;
+				} else {
+					// Check if evt.relatedTarget is a child of .common-canvas-tooltip to set tooltip visible when clicked on link
+					const el = evt?.relatedTarget?.closest(".common-canvas-tooltip");
+					if (el?.tagName?.toLowerCase() === "div") {
+						this.setTooltipVisible(true);
+					} else {
+						// Close the tooltip if evt.relatedTarget is not a child of .common-canvas-tooltip
+						this.setTooltipVisible(false);
+					}
 				}
 			};
 			const click = (evt) => this.toggleTooltipOnClick(evt);
@@ -355,6 +387,7 @@ class ToolTip extends React.Component {
 				onClick={this.props.showToolTipOnClick ? click : null}
 				onFocus={this.props.showToolTipOnClick ? onFocus : null} // When focused using keyboard
 				onBlur={this.props.showToolTipOnClick ? onBlur : null}
+				onKeyDown={this.props.showToolTipOnClick ? onKeyDown : null}
 				tabIndex={this.props.showToolTipOnClick ? 0 : null}
 				role={this.props.showToolTipOnClick ? "button" : null}
 				aria-labelledby={this.props.showToolTipOnClick ? `${this.uuid}-${this.props.id}` : null}
@@ -386,22 +419,53 @@ class ToolTip extends React.Component {
 		if (this.props.className) {
 			tipClass += " " + this.props.className;
 		}
-
+		let linkClicked = false;
 		let link = null;
 		if (this.state.isTooltipVisible && this.props.tooltipLinkHandler && this.props.link) {
 			const linkInformation = this.props.tooltipLinkHandler(this.props.link);
 			// Verify tooltipLinkHandler returns object in correct format
 			if (typeof linkInformation === "object" && linkInformation.label && linkInformation.url) {
-				link = (<Link
-					className="tooltip-link"
-					id={this.props.link.id}
-					href={linkInformation.url}
-					target="_blank"
-					rel="noopener"
-					visited={false}
+				link = (<div
+					ref={(ref) => (this.linkRef = ref)}
+					onKeyDown={(evt) => {
+						evt.stopPropagation();
+						evt.preventDefault();
+
+						// When 'Esc' is pressed shift the focus to tooltip icon so that user can navigate following elements.
+						if (evt.key === "Escape") {
+							this.triggerRef.focus();
+							this.setTooltipVisible(false);
+						} else if (evt.key === "Enter") { // Open active/highlighted link when Enter or Return is clicked.
+							const focusedElement = this.linkRef.children[0];
+							if (focusedElement) {
+								window.open(focusedElement, "_blank");
+							}
+						}
+					}}
+					onBlur={() => {
+						if (linkClicked) { // Keep tooltip open when link is clicked
+							this.setTooltipVisible(true);
+						} else { // Close the tooltip and shift focus to tooltip icon
+							this.triggerRef.focus();
+							this.setTooltipVisible(false);
+						}
+					}
+					}
+					onClick={() => {
+						linkClicked = true;
+					}}
 				>
-					{linkInformation.label}
-				</Link>);
+					<Link
+						className="tooltip-link"
+						id={this.props.link.id}
+						href={linkInformation.url}
+						target="_blank"
+						rel="noopener"
+						visited={false}
+					>
+						{linkInformation.label}
+					</Link>
+				</div>);
 			}
 		}
 
@@ -416,6 +480,7 @@ class ToolTip extends React.Component {
 						className={tipClass}
 						aria-hidden={!this.state.isTooltipVisible}
 						direction={this.props.direction}
+						ref={(ref) => (this.targetRef = ref)}
 					>
 						<svg className="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />

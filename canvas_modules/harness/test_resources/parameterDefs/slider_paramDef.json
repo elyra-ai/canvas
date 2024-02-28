@@ -1,0 +1,334 @@
+{
+  "titleDefinition": {
+    "title": "Slider with Min Max"
+  },
+  "current_parameters": {
+    "slider": 50,
+    "slider_double": 0.5,
+    "slider_null": null,
+    "slider_error": 50,
+    "slider_warning": 0,
+    "hide": true,
+    "slider_hidden": 0,
+    "disable": true,
+    "slider_disable": 50
+  },
+  "parameters": [
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "slider",
+      "type": "integer"
+    },
+    {
+      "id": "slider_double",
+      "type": "double"
+    },
+    {
+      "id": "slider_empty",
+      "type": "integer"
+    },
+    {
+      "id": "slider_undefined",
+      "type": "integer"
+    },
+    {
+      "id": "slider_null",
+      "type": "integer"
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "slider_hidden",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "slider_disable",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "slider_warning",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "slider_error",
+      "type": "integer",
+      "required": true,
+      "default": 20
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "sliders",
+      "parameters": []
+    }
+  ],
+  "uihints": {
+    "id": "slider",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Slider Values"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "slider",
+        "label": {
+          "default": "Slider Testing"
+        },
+        "description": {
+          "default": "Slider Testing"
+        },
+        "control": "slider",
+        "min_value": 10,
+        "max_value": 100,
+        "increment": 10,
+        "class_name": "slider-control-class"
+      },
+      {
+        "parameter_ref": "slider_double",
+        "label": {
+          "default": "Slider Double Testing"
+        },
+        "description": {
+          "default": "Slider Double Testing"
+        },
+        "control": "slider",
+        "min_value": 0.1,
+        "max_value": 1,
+        "increment": 0.1,
+        "class_name": "slider-control-class"
+      },
+      {
+        "parameter_ref": "slider_empty",
+        "label": {
+          "default": "Empty"
+        },
+        "description": {
+          "default": "slider with parameter value set to '\"\"'"
+        },
+        "control": "slider"
+      },
+      {
+        "parameter_ref": "slider_null",
+        "label": {
+          "default": "Null"
+        },
+        "description": {
+          "default": "slider with parameter value set to 'null'"
+        },
+        "control": "slider"
+      },
+      {
+        "parameter_ref": "slider_undefined",
+        "label": {
+          "default": "Undefined"
+        },
+        "description": {
+          "default": "slider with parameter value set to 'undefined'"
+        },
+        "control": "slider"
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'Slider Hidden'"
+        }
+      },
+      {
+        "parameter_ref": "slider_hidden",
+        "label": {
+          "default": "Slider Hidden"
+        },
+        "description": {
+          "default": "Slider Hidden Testing"
+        },
+        "control": "slider",
+        "min_value": 0,
+        "max_value": 10,
+        "increment": 1
+      },
+      {
+        "parameter_ref": "slider_warning",
+        "label": {
+          "default": "Warning"
+        },
+        "description": {
+          "default": "Slider with warning when set more than 8"
+        },
+        "control": "slider",
+        "min_value": 0,
+        "max_value": 10,
+        "increment": 1
+      },
+      {
+        "parameter_ref": "slider_error",
+        "label": {
+          "default": "Error"
+        },
+        "control": "slider",
+        "min_value": 10,
+        "max_value": 100,
+        "increment": 1,
+        "description": {
+          "default": "Slider error with range more than Max'"
+        }
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'Slider'"
+        }
+      },
+      {
+        "parameter_ref": "slider_disable",
+        "label": {
+          "default": "Slider Disable Testing"
+        },
+        "description": {
+          "default": "Slider Disable Testing"
+        },
+        "control": "slider",
+        "min_value": 10,
+        "max_value": 100,
+        "increment": 10,
+        "class_name": "slider-control-class"
+      }
+    ],
+    "complex_type_info": [],
+    "group_info": [
+      {
+        "id": "slider-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "slider",
+          "slider_double",
+          "slider_empty",
+          "slider_null",
+          "slider_undefined"
+        ]
+      },
+      {
+        "id": "slider",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "hide",
+          "slider_hidden",
+          "disable",
+          "slider_disable"
+        ]
+      },
+      {
+        "id": "slider-conditions",
+        "label": {
+          "default": "Error Handling"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "slider_error",
+          "slider_warning"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "slider_warning",
+          "message": {
+            "default": "Slider value to be less than 8"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "slider_warning",
+            "op": "lessThan",
+            "value": 8
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "slider_error",
+          "message": {
+            "default": "Needs to be greater than 10"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "slider_error",
+            "op": "greaterThan",
+            "value": 9
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "slider_error",
+          "message": {
+            "default": "Needs to be less than 100"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "slider_error",
+            "op": "lessThan",
+            "value": 101
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "slider_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "slider_disable"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ],
+  "resources": {
+    "slider.min.label": "Min",
+    "slider.max.label": "Max"
+  }
+}
