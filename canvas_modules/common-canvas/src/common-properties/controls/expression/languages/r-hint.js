@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-const keywords = "function|if|in|break|next|repeat|else|for" +
-	"|return|switch|while|try|tryCatch|stop|warning|require|library" +
-	"|attach|detach|source|setMethod|setGeneric|setGroupGeneric|setClass";
+// Ref: https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Reserved-words
+// Search for "10.3.3 Reserved words"
+const keywords = "if|else|repeat|while|function|for|in|next|break" +
+	"|TRUE|FALSE|NULL|Inf|NaN|NA|NA_integer_|NA_real_|NA_complex_|NA_character_";
 
 const rKeywords = keywords.split("|");
 

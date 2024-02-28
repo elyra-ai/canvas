@@ -19,9 +19,6 @@ import PropTypes from "prop-types";
 import { Checkbox } from "carbon-components-react";
 
 const TAB_KEY = 9;
-const LEFT_ARROW_KEY = 37;
-const RIGHT_ARROW_KEY = 39;
-
 
 class AppSettingsPanel extends React.Component {
 	constructor(props) {
@@ -38,7 +35,6 @@ class AppSettingsPanel extends React.Component {
 		this.checkRef = React.createRef();
 
 		this.onChange = this.onChange.bind(this);
-		this.onKeyDownPanel = this.onKeyDownPanel.bind(this);
 		this.onKeyDownCheckbox = this.onKeyDownCheckbox.bind(this);
 		this.onKeyDownXIcon = this.onKeyDownXIcon.bind(this);
 		this.closePanel = this.closePanel.bind(this);
@@ -56,12 +52,6 @@ class AppSettingsPanel extends React.Component {
 		const obj = {};
 		obj[field] = value;
 		this.setState(obj);
-	}
-
-	onKeyDownPanel(evt) {
-		if (evt.keyCode === LEFT_ARROW_KEY || evt.keyCode === RIGHT_ARROW_KEY) {
-			evt.stopPropagation();
-		}
 	}
 
 	onKeyDownCheckbox(evt) {
@@ -90,7 +80,7 @@ class AppSettingsPanel extends React.Component {
 
 	render() {
 		return (
-			<div style={{ padding: 10, width: 170 }} onClick={this.onClick} onKeyDown={this.onKeyDownPanel} >
+			<div style={{ padding: 10, width: 170 }} onClick={this.onClick} >
 				<div style={{ display: "flex", paddingTop: 10, paddingBottom: 15, justifyContent: "space-between" }}>
 					Test panel:
 					<button

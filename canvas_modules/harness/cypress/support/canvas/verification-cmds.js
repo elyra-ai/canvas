@@ -1334,12 +1334,12 @@ Cypress.Commands.add("clickNotificationAtIndex", (index) => {
 		.click();
 });
 
-Cypress.Commands.add("verifyNotificationCenterHidden", (hidden) => {
-	if (hidden) {
-		cy.get(".notification-panel-container").should("have.class", "panel-hidden");
-	} else {
-		cy.get(".notification-panel-container").should("not.have.class", "panel-hidden");
-	}
+Cypress.Commands.add("verifyNotificationCenterExists", () => {
+	cy.get(".notification-panel");
+});
+
+Cypress.Commands.add("verifyNotificationCenterDoesntExist", (hidden) => {
+	cy.get(".notification-panel").should("not.exist");
 });
 
 Cypress.Commands.add("verifyNodeWidthHeight", (nodeLabel, nodeWidth, nodeHeight) => {
