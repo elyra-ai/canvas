@@ -68,12 +68,14 @@ describe("Test of notification center configuration", function() {
 	it("Test proper rendering of notification center components", function() {
 		cy.toggleCommonCanvasSidePanel();
 
-		cy.verifyNotificationCenterHidden(true);
-		cy.clickToolbarNotifications();
-		cy.verifyNotificationCenterHidden(false);
+		cy.verifyNotificationCenterDoesntExist();
 
+		cy.clickToolbarNotifications();
+		cy.verifyNotificationCenterExists();
+
+		// Clicking outside the panel should leave the panel open
 		cy.clickOutsideNotificationPanel();
-		cy.verifyNotificationCenterHidden(false);
+		cy.verifyNotificationCenterExists();
 
 		cy.setNotificationCenterContent("notificationHeader", "test header");
 		cy.verifyNotificationCenterContent("header", "test header");

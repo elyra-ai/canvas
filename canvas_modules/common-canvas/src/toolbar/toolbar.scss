@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -201,6 +201,12 @@ $toolbar-divider-width: 1px;
 	&.disabled.default {
 		color: $disabled-02;
 		fill: $disabled-02; // For custom svg images
+		& .toolbar-tick-mark {
+			fill: $disabled-02;
+		}
+		& .toolbar-text-content {
+			stroke: $disabled-02;
+		}
 	}
 
 	.toolbar-icon {
@@ -212,52 +218,53 @@ $toolbar-divider-width: 1px;
 			-webkit-user-drag: none;
 		}
 	}
-}
 
-.toolbar-text-content {
-	position: absolute;
-	top: 14px;
-	font-size: 9px;
-	line-height: 9px;
-	color: $icon-01;
-}
-
-.toolbar-icon-label {
-	line-height: 16px;
-
-	&.before {
-		padding-right: 8px;
+	.toolbar-text-content {
+		position: absolute;
+		top: 14px;
+		font-size: 9px;
+		line-height: 9px;
+		color: $icon-01;
 	}
 
-	&.after {
+	.toolbar-icon-label {
+		line-height: 16px;
+
+		&.before {
+			padding-right: 8px;
+		}
+
+		&.after {
+			padding-left: 8px;
+		}
+
+		&.overflow {
+			padding-left: 8px;
+			word-break: break-word;
+			hyphens: auto;
+		}
+	}
+
+	.toolbar-up-down-chevron {
 		padding-left: 8px;
+		height: 16px;
+		pointer-events: none;
 	}
 
-	&.overflow {
-		padding-left: 8px;
-		word-break: break-word;
-		hyphens: auto;
+	// Triangular tick mark in bottom right corner of an expandable icon
+	.toolbar-tick-svg {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		height: $toolbar-button-height;
+		width: $toolbar-button-height;
+		pointer-events: none;
 	}
-}
 
-.toolbar-up-down-chevron {
-	padding-left: 8px;
-	height: 16px;
-	pointer-events: none;
-}
+	.toolbar-tick-mark {
+		fill: $interactive-02;
 
-// Triangular tick mark in bottom right corner of an expandable icon
-.toolbar-tick-svg {
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	height: $toolbar-button-height;
-	width: $toolbar-button-height;
-	pointer-events: none;
-}
-
-.toolbar-tick-mark {
-	fill: $interactive-02;
+	}
 }
 
 .toolbar-jsx-item {

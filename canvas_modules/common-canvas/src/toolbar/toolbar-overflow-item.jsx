@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,6 +89,7 @@ class ToolbarOverflowItem extends React.Component {
 
 		} else {
 			document.addEventListener("click", this.clickOutside, false);
+			this.props.closeAnyOpenSubArea();
 			this.props.setOverflowIndex(this.props.index);
 			this.openSubMenu();
 			this.props.setToolbarFocusAction(this.props.action);
@@ -168,7 +169,8 @@ ToolbarOverflowItem.propTypes = {
 	containingDivId: PropTypes.string,
 	toolbarFocusAction: PropTypes.string,
 	setToolbarFocusAction: PropTypes.func,
-	isFocusInToolbar: PropTypes.bool
+	isFocusInToolbar: PropTypes.bool,
+	closeAnyOpenSubArea: PropTypes.func
 };
 
 export default ToolbarOverflowItem;

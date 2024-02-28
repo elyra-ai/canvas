@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Elyra Authors
+ * Copyright 2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,25 @@
 */
 
 // These utility functions are used by both toolbar-sub-menu.jsx AND
-// toolbar-sub-panel.jsx to position the areaEf (menu or panel) relative
-// to the parent actionItemRect, passed in, in the direction indicated by
-// the expandDirection parameter and constrained within the <div>
-// specified by the containingDivId parameter.
+// toolbar-sub-panel.jsx to position the sub-area (sub-menu or sub-panel)
+// relative to the parent actionItemRect, passed in, in the direction
+// indicated by the expandDirection parameter and constrained within
+// the <div> specified by the containingDivId parameter.
 
 
 // Adjust the position of the sub-area to make sure it doesn't extend
 // outside the containing divs boundary. We need to do this after the subarea
 // has been mounted so we can query its size and position.
 export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection, actionItemRect) {
+	if (!areaRef || !actionItemRect || !containingDivId) {
+		return;
+	}
 	const containingDiv = document.getElementById(containingDivId);
-	const containingDivRect = containingDiv.getBoundingClientRect();
+	const containingDivRect = containingDiv
+		? containingDiv.getBoundingClientRect()
+		: { top: -1000, bottom: 1000, left: -1000, right: 1000 }; // To enable Jest tests.
 
-	const thisAreaRect = areaRef.current.getBoundingClientRect();
+	const thisAreaRect = areaRef.getBoundingClientRect();
 
 	const outsideBottom = thisAreaRect.bottom - containingDivRect.bottom;
 	const outsideRight = thisAreaRect.right - containingDivRect.right;
@@ -40,28 +45,32 @@ export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection,
 				? actionItemRect.top - thisAreaRect.height
 				: actionItemRect.bottom - outsideBottom;
 
-			areaRef.current.style.top = newTop + "px";
+			areaRef.style.top = newTop + "px";
 		}
 
 		if (outsideRight > 0) {
-			const newLeft = actionItemRect.left - outsideRight - 2;
-			areaRef.current.style.left = newLeft + "px";
+			const newLeft = actionItemRect.left - outsideRight;
+			areaRef.style.left = newLeft + "px";
 		}
 
 	} else {
 		if (outsideBottom > 0) {
 			const newTop = thisAreaRect.top - outsideBottom - 2;
-			areaRef.current.style.top = newTop + "px";
+			areaRef.style.top = newTop + "px";
 		}
 
 		if (outsideRight > 0) {
 			const newLeft = actionItemRect.left - thisAreaRect.width;
-			areaRef.current.style.left = newLeft + "px";
+			areaRef.style.left = newLeft + "px";
 		}
 	}
 }
 
 export function generateSubAreaStyle(expandDirection, actionItemRect) {
+	if (!actionItemRect) {
+		return null;
+	}
+
 	if (expandDirection === "vertical") {
 		return {
 			top: actionItemRect.bottom + 1,

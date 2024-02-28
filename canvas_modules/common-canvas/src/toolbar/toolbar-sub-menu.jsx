@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Elyra Authors
+ * Copyright 2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,6 @@ class ToolbarSubMenu extends React.Component {
 		this.state = {
 			focusAction: "subarea"
 		};
-
-		this.areaRef = React.createRef();
 
 		this.onKeyDown = this.onKeyDown.bind(this);
 		this.setFocusAction = this.setFocusAction.bind(this);
@@ -143,7 +141,7 @@ class ToolbarSubMenu extends React.Component {
 		const focusableActions = [];
 
 		for (let i = 0; i < this.props.subMenuActions.length; i++) {
-			if (this.props.subMenuActions[i].enable) {
+			if (this.props.subMenuActions[i].enable || this.props.subMenuActions[i].jsx) {
 				focusableActions.push(this.props.subMenuActions[i]);
 			}
 		}
@@ -224,7 +222,7 @@ class ToolbarSubMenu extends React.Component {
 			this.subMenuItems = this.generateSubMenuItems();
 
 			return (
-				<div ref={this.areaRef} style={style} className={"toolbar-popover-list submenu"}
+				<div ref={(ref) => (this.areaRef = ref)} style={style} className={"toolbar-popover-list submenu"}
 					tabIndex={-1} onKeyDown={this.onKeyDown}
 				>
 					{this.subMenuItems}
@@ -242,7 +240,7 @@ ToolbarSubMenu.propTypes = {
 	closeSubArea: PropTypes.func,
 	setToolbarFocusAction: PropTypes.func,
 	setSubMenuFocus: PropTypes.func,
-	actionItemRect: PropTypes.object.isRequired,
+	actionItemRect: PropTypes.object,
 	expandDirection: PropTypes.string.isRequired,
 	containingDivId: PropTypes.string,
 	parentSelector: PropTypes.string,

@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
 
 const TAB_KEY = 9;
+const RETURN_KEY = 13;
 const SPACE_KEY = 32;
 const LEFT_ARROW_KEY = 37;
 const UP_ARROW_KEY = 38;
@@ -83,7 +84,10 @@ class ColorPicker extends React.Component {
 				this.colorIndex -= COLORS_IN_ROW;
 			}
 
-		} else if (evt.keyCode === SPACE_KEY) {
+		} else if (evt.keyCode === SPACE_KEY ||
+					evt.keyCode === RETURN_KEY) {
+			evt.stopPropagation();
+			evt.preventDefault();
 			this.selectColor(evt);
 
 		} else if (evt.keyCode === TAB_KEY) {
