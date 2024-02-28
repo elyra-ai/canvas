@@ -2422,7 +2422,7 @@ describe("Properties Controller setTopLevelActiveGroup", () => {
 
 		// Select Condition in accordion
 		const conditionsCategory = wrapper.find("div.properties-category-container").at(2);
-		conditionsCategory.find("button.properties-category-title").simulate("click");
+		conditionsCategory.find("button.bx--accordion__heading").simulate("click");
 		topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
 		expect(topLevelActiveGroupId).to.equal("Primary2");
 	});
