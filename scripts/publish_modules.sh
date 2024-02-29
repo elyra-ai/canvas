@@ -58,6 +58,6 @@ NPM_VERSION=`node -p "require('./package.json').version"`
 echo "Updated $GITHUB_REF build $NPM_VERSION"
 commit_changes ${GITHUB_REF} "Update Elyra Canvas to version ${NPM_VERSION} [skip ci]"
 
-echo "Publishing Elyra Canvas $NPM_VERSION to Artifactory NPM"
-echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
-npm publish --userconfig=~/.npmrc --registry=https://registry.npmjs.org
+#echo "Publishing Elyra Canvas $NPM_VERSION to Artifactory NPM"
+#echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
+#npm publish --userconfig=~/.npmrc --registry=https://registry.npmjs.org
