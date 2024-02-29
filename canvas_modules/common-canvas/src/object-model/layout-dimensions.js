@@ -73,7 +73,7 @@ const portsHorizontalDefaultLayout = {
 		labelAllowReturnKey: false, // true allows line feed to be inserted into label, "save" to make the return key save the label.
 
 		// An array of decorations to be applied to the node. For details see:
-		// https://github.com/elyra-ai/canvas/tree/main/guide/2.4.2-Decoration-Specification.md
+		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
 		// These are added to the node at run time and will not be saved into
 		// the pipeline flow.
 		decorations: [],
@@ -488,7 +488,7 @@ const portsVerticalDefaultLayout = {
 		labelAllowReturnKey: false, // true allows line feed to be inserted into label, "save" to make the return key save the label.
 
 		// An array of decorations to be applied to the node. For details see:
-		// https://github.com/elyra-ai/canvas/tree/main/guide/2.4.2-Decoration-Specification.md
+		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
 		// These are added to the node at run time and will not be saved into
 		// the pipeline flow.
 		decorations: [],
