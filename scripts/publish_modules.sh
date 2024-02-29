@@ -48,15 +48,15 @@ setup_git_branch()
 }
 
 setup_git_branch
-checkout_branch ${GITHUB_REF}
+checkout_branch ${GITHUB_REF_NAME}
 
 cd ./canvas_modules/common-canvas
 release=$(echo $GITHUB_REF | cut -d'_' -f2)
 echo "Release is set to $release"
 npm version $release
 NPM_VERSION=`node -p "require('./package.json').version"`
-echo "Updated $GITHUB_REF build $NPM_VERSION"
-commit_changes ${GITHUB_REF} "Update Elyra Canvas to version ${NPM_VERSION} [skip ci]"
+echo "Updated $GITHUB_REF_NAME build $NPM_VERSION"
+commit_changes ${GITHUB_REF_NAME} "Update Elyra Canvas to version ${NPM_VERSION} [skip ci]"
 
 #echo "Publishing Elyra Canvas $NPM_VERSION to Artifactory NPM"
 #echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
