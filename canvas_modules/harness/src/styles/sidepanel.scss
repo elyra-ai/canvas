@@ -16,14 +16,14 @@
 
 /*SidePanel*/
 .harness-app-sidepanel {
-	background-color: $ui-01;
+	background-color: $layer-01;
 	top: 50px;
 	position: fixed;
 	right: 0;
 	height: calc(100% - $harness-header-height);
 	width: 0;
 	transition: width $harness-sidepanel-transition-time;
-	color: $text-01;
+	color: $text-primary;
 	overflow: auto;
 	z-index: 100;
 	box-sizing: border-box;
@@ -31,7 +31,7 @@
 	overflow-x: hidden;
 	padding-top: 5px;
 	padding-bottom: 10px;
-	border-left: 1px solid $ui-03;
+	border-left: 1px solid $layer-accent-01;
 	.bx--fieldset {
 		margin-bottom: 0;
 	}
@@ -57,7 +57,7 @@
 
 .harness-side-panel-header {
 	padding: 0 20px;
-	color: $text-01;
+	color: $text-primary;
 	font-size: 16px;
 	font-weight: bold;
 	pointer-events: none;
@@ -70,7 +70,7 @@
 .harness-sidepanel-divider {
 	width: 100%;
 	margin: 0 0 10px;
-	border-bottom: 1px solid $ui-03;
+	border-bottom: 1px solid $layer-accent-01;
 	padding: 5px 0;
 }
 

@@ -28,7 +28,7 @@
 			outline-offset: unset;
 		}
 		input[type="number"]:not([disabled]) {
-			border: 2px solid $support-01;
+			border: 2px solid $support-error;
 		}
 	}
 	&.warning {
@@ -37,7 +37,7 @@
 			outline-offset: unset;
 		}
 		input[type="number"]:not([disabled]) {
-			border: 2px solid $support-03;
+			border: 2px solid $support-warning;
 		}
 	}
 	

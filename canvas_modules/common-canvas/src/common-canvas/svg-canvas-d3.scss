@@ -15,70 +15,70 @@
  */
 
 // Canvas background color
-$canvas-background-color: $ui-background;
+$canvas-background-color: $background;
 
 // Region selection colors
-$region-selector-stroke-color: $ui-05;
-$region-selector-fill-color: $ui-03;
+$region-selector-stroke-color: $layer-selected-inverse;
+$region-selector-fill-color: $layer-accent-01;
 
 // Node colors
-$node-body-stroke: $ui-05;
-$node-body-fill: $ui-01;
+$node-body-stroke: $layer-selected-inverse;
+$node-body-fill: $layer-01;
 
-$node-body-stroke-hover: $ui-03;
-$node-body-fill-hover: $hover-selected-ui;
+$node-body-stroke-hover: $layer-accent-01;
+$node-body-fill-hover: $layer-accent-hover-01;
 
-$node-selection-color: $inverse-link;
+$node-selection-color: $link-inverse;
 
-$node-decoration-outline: $ui-05;
+$node-decoration-outline: $layer-selected-inverse;
 
 $node-super-expand-icon-color: $brand-01;
-$node-super-expand-icon-background-hover-color: $ui-03;
+$node-super-expand-icon-background-hover-color: $layer-accent-01;
 
 $node-ellipsis-color: $brand-01;
-$node-ellipsis-background-hover-color: $ui-03;
+$node-ellipsis-background-hover-color: $layer-accent-01;
 
-$node-error-color: $support-01; // Error red
-$node-warning-color: $support-03; // Warning yellow
+$node-error-color: $support-error; // Error red
+$node-warning-color: $support-warning; // Warning yellow
 
 // Node label properties
-$node-label-color: $text-01;
+$node-label-color: $text-primary;
 $node-label-font-size: 12px;
 $node-label-font-weight: 500;
 $node-label-display-border: 2px;
 $node-label-entry-border: 6px;
-$node-label-edit-icon-hover-color: $ui-03;
+$node-label-edit-icon-hover-color: $layer-accent-01;
 
 // Output port styles
 
-$node-port-output-stroke-color: $inverse-02;
+$node-port-output-stroke-color: $background-inverse;
 $node-port-output-fill-color: $node-body-fill;
 
-$node-port-output-connected-stroke-color: $inverse-02;
-$node-port-output-connected-fill-color: $inverse-02;
+$node-port-output-connected-stroke-color: $background-inverse;
+$node-port-output-connected-fill-color: $background-inverse;
 
-$node-port-output-hover-stroke: $inverse-02;
-$node-port-output-hover-fill: $inverse-02;
+$node-port-output-hover-stroke: $background-inverse;
+$node-port-output-hover-fill: $background-inverse;
 
 // Input port styles
 
-$node-port-input-stroke-color: $inverse-02;
+$node-port-input-stroke-color: $background-inverse;
 $node-port-input-fill-color: $node-body-fill;
 
 $node-port-input-connected-stroke-color: $node-body-fill;
 $node-port-input-connected-fill-color: $node-body-fill;
 
-$node-port-input-connected-super-binding-stroke-color: $inverse-02;
-$node-port-input-connected-super-binding-fill-color: $ui-02;
+$node-port-input-connected-super-binding-stroke-color: $background-inverse;
+$node-port-input-connected-super-binding-fill-color: $layer-02;
 
-$node-port-input-arrow-connected-stroke-color: $inverse-02;
+$node-port-input-arrow-connected-stroke-color: $background-inverse;
 $node-port-input-arrow-connected-fill-color: transparent;
 
 // Comment colors
-$comment-outline-color: $active-light-ui;
-$comment-outline-hover-color: $inverse-hover-ui;
-$comment-fill-color: $ui-01;
-$comment-text-color: $text-01;
+$comment-outline-color: $layer-active-02;
+$comment-outline-hover-color: $background-inverse-hover;
+$comment-fill-color: $layer-01;
+$comment-text-color: $text-primary;
 
 // Comment properties
 $comment-text-font-size: 12px;
@@ -89,11 +89,11 @@ $comment-text-display-border: 8px;
 $comment-text-entry-border: $comment-text-display-border - 2px; // Remove 2px to allow for focus border
 
 // Link colors
-$comment-link-color: $ui-04;
-$object-link-color: $ui-05; // Used for association links for a regular data flow canvas
-$association-link-color: $ui-04; // Used for association links when config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE.
-$data-link-color: $inverse-link;
-$link-highlight-color: $support-04;
+$comment-link-color: $border-strong-01;
+$object-link-color: $layer-selected-inverse; // Used for association links for a regular data flow canvas
+$association-link-color: $border-strong-01; // Used for association links when config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE.
+$data-link-color: $link-inverse;
+$link-highlight-color: $support-info;
 
 /* Canvas styles */
 
@@ -123,7 +123,7 @@ $link-highlight-color: $support-04;
 	// Supress the default focus highlighting with non-carbon color and round corners.
 	outline: none;
 	// Add our own focus highlighting with our own color and square corners
-	box-shadow: 0 0 0 2px $interactive-01;
+	box-shadow: 0 0 0 2px $button-primary;
 }
 
 /* Pull-out region rectangle used for object selection */
@@ -141,7 +141,7 @@ $link-highlight-color: $support-04;
 }
 
 .d3-canvas-underlay {
-	fill: $ui-03;
+	fill: $layer-accent-01;
 }
 
 /* Temporary overlay to display altered pointer cursor styles on dynamic drag operations */
@@ -197,9 +197,9 @@ $link-highlight-color: $support-04;
 .d3-node-unavailable .d3-node-body-outline,
 .d3-node-unavailable .d3-node-label,
 .d3-node-unavailable svg path {
-	stroke: $disabled-02;
-	fill: $disabled-03;
-	color: $disabled-02;
+	stroke: $button-disabled;
+	fill: $layer-selected-disabled;
+	color: $button-disabled;
 }
 
 .d3-node-selection-highlight {
@@ -265,10 +265,10 @@ $link-highlight-color: $support-04;
 
 .d3-node-group[data-new-link-over="yes"] {
 	.d3-node-selection-highlight {
-		stroke: $interactive-01;
+		stroke: $button-primary;
 		stroke-dasharray: 4;
 		stroke-width: 2;
-		fill: $ui-01;
+		fill: $layer-01;
 		pointer-events: none;
 	}
 }
@@ -277,21 +277,21 @@ $link-highlight-color: $support-04;
 
 .d3-node-group.d3-branch-highlight {
 	.d3-node-body-outline {
-		stroke: $ui-05;
+		stroke: $layer-selected-inverse;
 		stroke-width: 2px;
 		fill: $highlight;
 	}
 
 	.d3-node-label {
-		color: $text-01;
+		color: $text-primary;
 	}
 }
 
 .d3-node-group.d3-branch-highlight:hover {
 	.d3-node-body-outline {
-		stroke: $ui-05;
+		stroke: $layer-selected-inverse;
 		stroke-width: 2px;
-		fill: $hover-primary;
+		fill: $button-primary-hover;
 	}
 }
 
@@ -362,7 +362,7 @@ $link-highlight-color: $support-04;
 		// These properties will pass the color to icon paths in an SVG icon provided
 		// the icon doesn't have any hard coded fill color set.
 		fill: currentColor;
-		color: $icon-01;
+		color: $icon-primary;
 	}
 }
 
@@ -431,7 +431,7 @@ $link-highlight-color: $support-04;
 	// These properties will pass the color to icon paths in an SVG icon provided
 	// the icon doesn't have any hard coded fill color set.
 	fill: currentColor;
-	color: $icon-01;
+	color: $icon-primary;
 }
 
 // Remove the foreign object outline when the foreign object has focus.
@@ -651,7 +651,7 @@ $link-highlight-color: $support-04;
 // override any color provided by the host app.
 g.bkg-col-white-0 {
 	// In dark-mode, white-0 will be interpreted as black background with white text.
-	@include d3-comment-color-overrides($ui-01, $text-01);
+	@include d3-comment-color-overrides($layer-01, $text-primary);
 }
 g.bkg-col-yellow-20 {
 	@include d3-comment-color-overrides($yellow-20, $gray-100);
@@ -735,21 +735,21 @@ g.bkg-col-cyan-50 {
 		letter-spacing: 0.15px;
 	}
 	hr {
-		border-top-color: $ui-03;
+		border-top-color: $layer-accent-01;
 	}
 	img {
 		max-width: 100%;
 	}
 	blockquote {
 		padding: 0 12px;
-		border-left: 3px solid $ui-03;
+		border-left: 3px solid $layer-accent-01;
 		line-height: 8px;
 	}
 	code {
 		font-size: $comment-text-font-size;
 		font-weight: $comment-text-font-weight;
 		line-height: $comment-text-line-height;
-		background-color: $ui-03;
+		background-color: $layer-accent-01;
 		border-radius: 4px;
 		white-space: pre-wrap;
 	}
@@ -757,13 +757,13 @@ g.bkg-col-cyan-50 {
 		font-size: $comment-text-font-size;
 		font-weight: $comment-text-font-weight;
 		line-height: $comment-text-line-height;
-		background-color: $ui-02;
+		background-color: $layer-02;
 		padding: 4px;
-		border: 1px solid $ui-03;
+		border: 1px solid $layer-accent-01;
 		border-radius: 4px;
 		white-space: pre-wrap;
 		code {
-			background-color: $ui-02;
+			background-color: $layer-02;
 		}
 	}
 	table {
@@ -774,26 +774,26 @@ g.bkg-col-cyan-50 {
 		border-collapse: collapse;
 		box-sizing: border-box;
 		text-indent: initial;
-		color: $text-01;
+		color: $text-primary;
 		thead {
 			@include type-style("productive-heading-01");
 			font-size: 12px;
 			display: table-header-group;
 			vertical-align: middle;
 			border-color: inherit;
-			background-color: $ui-03;
+			background-color: $layer-accent-01;
 			text-align: left;
 			tr th {
 				padding: 8px;
-				border-bottom: 2px solid $ui-03;
+				border-bottom: 2px solid $layer-accent-01;
 			}
 		}
 		tbody {
 			@include type-style("body-short-01");
 			font-size: 12px;
 			tr {
-				border-bottom: 2px solid $ui-03;
-				background-color: $ui-02;
+				border-bottom: 2px solid $layer-accent-01;
+				background-color: $layer-02;
 				td {
 					padding: 8px;
 				}
@@ -895,13 +895,13 @@ g.bkg-col-cyan-50 {
 
 .d3-link-group.d3-branch-highlight {
 	.d3-link-line {
-		stroke: $inverse-02;
+		stroke: $background-inverse;
 	}
 }
 
 .d3-link-group.d3-branch-highlight:hover {
 	.d3-link-line {
-		stroke: $inverse-02;
+		stroke: $background-inverse;
 		stroke-width: 3px;
 	}
 }

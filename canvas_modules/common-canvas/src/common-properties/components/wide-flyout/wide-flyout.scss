@@ -24,7 +24,7 @@ $properties-modal-buttons-height: 64px;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: $overlay-01;
+	background-color: $overlay;
 	z-index: 1000;
 	cursor: default;
 	&.show {
@@ -38,7 +38,7 @@ $properties-modal-buttons-height: 64px;
 	width: 675px;
 	margin-right: -675px;
 	z-index: 1001;
-	background-color: $ui-01;
+	background-color: $layer-01;
 	right: 0;
 	transition: margin-right 0.1s;
 	&.show {
@@ -51,7 +51,7 @@ $properties-modal-buttons-height: 64px;
 		display: flex;
 		align-items: center;
 		height: $properties-wf-title-height;
-		border-bottom: 1px solid $ui-03;
+		border-bottom: 1px solid $layer-accent-01;
 	}
 	.properties-wf-children {
 		padding: $spacing-05;
@@ -61,5 +61,5 @@ $properties-modal-buttons-height: 64px;
 }
 
 .properties-light-disabled {
-	background-color: $ui-background;
+	background-color: $background;
 }

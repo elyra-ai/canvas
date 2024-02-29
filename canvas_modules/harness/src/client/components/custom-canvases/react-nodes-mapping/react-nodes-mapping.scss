@@ -101,7 +101,7 @@
 		}
 
 		.d3-node-selection-highlight[data-selected="yes"] {
-			stroke: $ui-05;
+			stroke: $layer-selected-inverse;
 			stroke-dasharray: 4, 4;
 			stroke-width: 1;
 			fill: transparent;

@@ -28,7 +28,7 @@ $selected-tab-width: 3px;
 
 .properties-leftnav-container {
 	display: flex;
-	border-top: px solid $ui-03;
+	border-top: px solid $layer-accent-01;
 	height: calc(100% + #{$parent-padding}); // Include padding from parent
 	margin-top: -$spacing-05;
 	margin-left: -$spacing-05;
@@ -36,8 +36,8 @@ $selected-tab-width: 3px;
 
 	.properties-leftnav-subtabs {
 		width: 282px;
-		background-color: $ui-01;
-		border-right: 1px solid $ui-03;
+		background-color: $layer-01;
+		border-right: 1px solid $layer-accent-01;
 		padding-top: $spacing-02;
 		height: 100%;
 
@@ -47,12 +47,12 @@ $selected-tab-width: 3px;
 		}
 
 		li.bx--tabs--scrollable__nav-item--selected {
-			border-left: $selected-tab-width solid $interactive-04;
+			border-left: $selected-tab-width solid $border-interactive;
 			border-bottom: 0;
-			background-color: $selected-ui;
+			background-color: $layer-selected-01;
 
 			&:hover {
-				background-color: $hover-row;
+				background-color: $layer-hover-01;
 			}
 
 			&.properties-leftnav-subtab-item button {

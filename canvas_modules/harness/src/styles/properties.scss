@@ -55,20 +55,20 @@
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-	background-color: $text-01;
+	background-color: $text-primary;
 	z-index: 4;
 }
 
 #harness-properties-documentation-title,
 #harness-conditions-documentation-title {
-	color: $inverse-01;
+	color: $text-inverse;
 	padding: 14px;
 	font-size: 14px;
 
 	&:hover {
 		cursor: default;
-		background-color: $text-01;
-		color: $inverse-01;
+		background-color: $text-primary;
+		color: $text-inverse;
 	}
 }
 
@@ -87,10 +87,10 @@
 
 	.bx--dropdown__wrapper .bx--dropdown {
 		width: 150px;
-		background-color: $ui-01;
+		background-color: $layer-01;
 
 		&:hover {
-			background-color: $hover-ui;
+			background-color: $layer-hover-01;
 		}
 	}
 }
@@ -109,25 +109,25 @@
 		display: block;
 		text-align: center;
 		padding: 14px 12px;
-		color: $inverse-01;
+		color: $text-inverse;
 		fill: $brand-01;
 		font-size: 16px;
-		background-color: $text-01;
+		background-color: $text-primary;
 		cursor: pointer;
 
 		&:hover {
 			background-color: #2D3F49;
-			color: $support-04;
+			color: $support-info;
 		}
 	}
 }
 
 /* Header section */
 .harness-properties-documentation-section-header {
-	background: $ui-02;
+	background: $layer-02;
 	padding: 4.5em 4em 2em;
 	position: relative;
-	color: $text-01;
+	color: $text-primary;
 	> h1 {
 		font-size: 4rem;
 	}
@@ -137,13 +137,13 @@
 	text-align: center;
 	display: block;
 	margin: 1.5em 0 0;
-	color: $text-01;
+	color: $text-primary;
 	font-size: 1em;
 	vertical-align: middle;
 	text-decoration: none;
 
 	&:hover {
-		color: $text-01;
+		color: $text-primary;
 		text-decoration: underline;
 	}
 }
@@ -156,7 +156,7 @@
 .harness-properties-documentation-content,
 .harness-conditions-documentation-content {
 	padding: 1em;
-	background-color: $ui-01;
+	background-color: $layer-01;
 }
 
 .harness-conditions-documentation-panels-controls-component,
@@ -208,7 +208,7 @@
 	padding-right: 1em;
 	.properties-custom-container {
 		width: 100%;
-		border: 1px solid $ui-03;
+		border: 1px solid $layer-accent-01;
 		padding: 5px;
 	}
 }
@@ -221,8 +221,8 @@
 	font-size: 12px;
 	line-height: 1.5;
 	max-height: 565px;
-	background-color: $ui-02;
-	border: 1px solid $ui-03;
+	background-color: $layer-02;
+	border: 1px solid $layer-accent-01;
 	padding: 5px;
 	overflow: auto;
 }
@@ -236,7 +236,7 @@
 }
 
 .harness-highlight {
-	background-color: $ui-03;
+	background-color: $layer-accent-01;
 	font-weight: 400;
 	border-radius: 4px;
 }
@@ -246,7 +246,7 @@
 	overflow-x: scroll;
 	.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
 		padding: 8px;
-		border-top: 1px solid $ui-03;
+		border-top: 1px solid $layer-accent-01;
 		line-height: 1.25;
 		vertical-align: bottom;
 	}
@@ -267,7 +267,7 @@
 		outline: none;
 	}
 	& tr {
-		border-bottom-color: $ui-03;
+		border-bottom-color: $layer-accent-01;
 	}
 }
 

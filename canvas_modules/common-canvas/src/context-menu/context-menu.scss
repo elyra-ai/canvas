@@ -20,7 +20,7 @@
 .context-menu-popover {
 	cursor: pointer;
 	min-width: 160px;
-	background-color: $ui-01;
+	background-color: $layer-01;
 	-webkit-background-clip: padding-box;
 	background-clip: padding-box;
 	border: 0;
@@ -47,7 +47,7 @@
 	height: 30px;
 	padding: 0 1em;
 	clear: both;
-	color: $text-01;
+	color: $text-primary;
 	text-align: inherit;
 	white-space: nowrap;
 	background: 0 0;
@@ -64,7 +64,7 @@
 	&:active,
 	&:focus,
 	&:hover {
-		background: $hover-ui;
+		background: $layer-hover-01;
 		text-decoration: none;
 		border: 0;
 		outline: none; /* Suppress Chrome's blue active border */
@@ -72,7 +72,7 @@
 
 	/* Style for the chevron '>' in menu item that opens a submenu. */
 	& svg {
-		color: $text-01;
+		color: $text-primary;
 		position: absolute;
 		right: 12px;
 	}
@@ -82,6 +82,6 @@
 	height: 1px;
 	display: block;
 	overflow: hidden;
-	background-color: $ui-03;
+	background-color: $layer-accent-01;
 	padding: 0;
 }

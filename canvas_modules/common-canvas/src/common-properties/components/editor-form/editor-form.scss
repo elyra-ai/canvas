@@ -40,7 +40,7 @@ $primary-tab-height: $spacing-08;
 		.properties-subtabs {
 			position: absolute;
 			height: $primary-tab-height;
-			border-bottom: 1px solid $ui-03;
+			border-bottom: 1px solid $layer-accent-01;
 		}
 		.properties-subtab-panel {
 			height: calc(100% - #{$primary-tab-height});
@@ -63,35 +63,35 @@ $primary-tab-height: $spacing-08;
 
 .properties-category-title {
 	@include type-style("body-long-01");
-	text-decoration-color: $text-01;
-	color: $text-01;
+	text-decoration-color: $text-primary;
+	color: $text-primary;
 
 	height: 46px;
 	width: 100%;
 
 	display: flex;
-	background-color: $ui-background;
+	background-color: $background;
 	justify-content: space-between;
 	align-items: center;
 	padding: 0 $spacing-05;
 	border: 0; // override for button styling
 	outline: none; // override for button styling
-	border-bottom: 1px solid $ui-03;
+	border-bottom: 1px solid $layer-accent-01;
 	cursor: pointer;
 	&:hover {
-		background-color: $hover-ui;
+		background-color: $layer-hover-01;
 	}
 	> svg {
 		height: 20px;
 		width: 20px;
-		fill: $icon-01;
+		fill: $icon-primary;
 	}
 }
 
 .properties-category-content {
 	height: 100%;
 	padding: $spacing-05;
-	border-bottom: 1px solid $ui-03;
+	border-bottom: 1px solid $layer-accent-01;
 	display: none;
 	&.show {
 		display: inherit;
@@ -110,10 +110,10 @@ $primary-tab-height: $spacing-08;
 	padding: $spacing-02 0;
 	.properties-static-text {
 		@include type-style("body-short-01");
-		color: $text-01;
+		color: $text-primary;
 		&.info {
 			@include type-style("label-01");
-			color: $text-02;
+			color: $text-secondary;
 		}
 	}
 	svg {
@@ -141,7 +141,7 @@ $primary-tab-height: $spacing-08;
 }
 
 .properties-light-enabled {
-	background-color: $ui-01; // Override theme background-color when light option is true
+	background-color: $layer-01; // Override theme background-color when light option is true
 }
 
 .properties-custom-panel + .properties-control-panel {
@@ -155,7 +155,7 @@ $primary-tab-height: $spacing-08;
 	.properties-primaryTabs {
 		position: absolute;
 		height: $primary-tab-height;
-		border-bottom: 1px solid $ui-03;
+		border-bottom: 1px solid $layer-accent-01;
 	}
 
 	.properties-primary-tab-panel.tearsheet-container, .properties-primary-tab-panel.right-flyout-tabs-view {

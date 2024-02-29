@@ -16,7 +16,7 @@
 
 .properties-title-editor {
 	padding: $spacing-05 0;
-	border-bottom: 1px $ui-03 solid;
+	border-bottom: 1px $layer-accent-01 solid;
 }
 
 .properties-title-right-flyout-tabs-view {
@@ -58,7 +58,7 @@
 
 		input { //override styling from carbon
 			@include type-style("productive-heading-02");
-			color: $text-01;
+			color: $text-primary;
 			min-width: unset;
 			background: unset;
 			text-overflow: ellipsis;
@@ -72,7 +72,7 @@
 			margin: $spacing-02 0 0 $spacing-05; // 4px top padding for error/warning message
 		}
 		.bx--text-input__field-wrapper--warning input {
-			border-bottom: 1px solid $ui-04;
+			border-bottom: 1px solid $border-strong-01;
 		}
 	}
 

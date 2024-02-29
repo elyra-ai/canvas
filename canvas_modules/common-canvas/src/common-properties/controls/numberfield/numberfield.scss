@@ -51,12 +51,12 @@
 		}
 		&.error {
 			input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
-				box-shadow: 0 2px 0 0 $support-01;
+				box-shadow: 0 2px 0 0 $support-error;
 			}
 		}
 		&.warning {
 			input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
-				box-shadow: 0 2px 0 0 $support-03;
+				box-shadow: 0 2px 0 0 $support-warning;
 			}
 		}
 		input[type="number"] { //override styling from carbon
