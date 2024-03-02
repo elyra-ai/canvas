@@ -99,9 +99,15 @@ $palette-search-container-height: 41px;
 		/* This stops it being dragged incorrectly.*/
 		user-select: none;
 		width: 100%;
+		outline: none; // Turn outline off and use carbon style for focus below.
 
 		&:hover {
 			background-color: $ui-03;
+		}
+
+		&:focus {
+			border-color: $interactive-03;
+			box-shadow: inset 0 0 0 1px $interactive-03, inset 0 0 0 2px $ui-background;
 		}
 
 		.palette-list-item-category-label {

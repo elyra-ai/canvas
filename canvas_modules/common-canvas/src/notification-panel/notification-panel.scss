@@ -40,12 +40,20 @@ $notification-panel-button-container-height: 49px;
 	justify-content: center;
 	border-bottom: 0;
 	padding: $spacing-05;
+	outline: none; // Turn outline off and use carbon style for focus below.
+
+	&:focus {
+		border-color: $interactive-03;
+		box-shadow: inset 0 0 0 1px $interactive-03, inset 0 0 0 2px $ui-background;
+	}
+
 	.notification-panel-header {
 		@include carbon--type-style("productive-heading-02");
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	}
+
 	.notification-panel-subtitle {
 		@include carbon--type-style("helper-text-01");
 		color: $text-02;
@@ -77,15 +85,24 @@ $notification-panel-button-container-height: 49px;
 	border-top: 1px solid $ui-03;
 	border-bottom: 1px solid $ui-03;
 	max-height: 448px;
+
 	.notifications-button-container {
 		border-bottom: 1px solid $ui-03;
 		min-height: $notification-message-height;
 	}
+
 	.notification-panel-empty-message-container {
 		min-height: $notification-message-height;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		outline: none; // Turn outline off and use carbon style for focus below.
+
+		&:focus {
+			border-color: $interactive-03;
+			box-shadow: inset 0 0 0 1px $interactive-03, inset 0 0 0 2px $ui-background;
+		}
+
 		.notification-panel-empty-message {
 			@include carbon--type-style("body-short-01");
 			text-align: center;
@@ -109,19 +126,19 @@ $notification-panel-button-container-height: 49px;
 		cursor: default;
 		margin-top: 0; // Required for Safari
 		margin-bottom: 0; // Required for Safari
-
-		&.clickable {
-			cursor: pointer;
-		}
+		outline: none; // Turn outline off and use carbon style for focus below.
 
 		&:focus {
-			border-color: $interactive-01;
-			box-shadow: inset 0 0 0 1px $interactive-01, inset 0 0 0 2px $ui-background;
+			border-color: $interactive-03;
+			box-shadow: inset 0 0 0 1px $interactive-03, inset 0 0 0 2px $ui-background;
 		}
 
 		&:hover {
 			background-color: $hover-ui;
+		}
 
+		&:focus,
+		&:hover {
 			&.unspecified {
 				border-left: $notification-left-border-color-width solid $field-01;
 			}
@@ -137,6 +154,10 @@ $notification-panel-button-container-height: 49px;
 			&.info {
 				border-left: $notification-left-border-color-width solid $support-04;
 			}
+		}
+
+		&.clickable {
+			cursor: pointer;
 		}
 
 		.notification-message-type {
