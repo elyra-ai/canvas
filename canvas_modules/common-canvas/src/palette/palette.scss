@@ -107,7 +107,7 @@ $palette-search-container-height: 41px;
 
 		&:focus {
 			border-color: $interactive-03;
-			box-shadow: inset 0 0 0 1px $interactive-03, inset 0 0 0 2px $ui-background;
+			box-shadow: inset 0 0 0 2px $interactive-03;
 		}
 
 		.palette-list-item-category-label {
