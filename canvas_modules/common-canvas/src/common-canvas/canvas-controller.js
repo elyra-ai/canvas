@@ -1358,30 +1358,51 @@ export default class CanvasController {
 	// Command stack methods
 	// ---------------------------------------------------------------------------
 
+	// This method is deprecated. Applications should use the canvas-contoller
+	// methods to interact with the cmmand stack.
 	getCommandStack() {
 		return this.commandStack;
 	}
 
+	// Adds the command object to the command stack which will cause the
+	// do() method of the command to be called.
+	do(command) {
+		this.getCommandStack().do(command);
+		this.objectModel.refreshToolbar();
+	}
+
+	// Calls the undo() method of the next available command on the command
+	// stack that can be undone, if one is available.
 	undo() {
 		if (this.canUndo()) {
 			this.getCommandStack().undo();
+			this.objectModel.refreshToolbar();
 		}
 	}
 
+	// Calls the redo() method of the next available command on the command
+	// stack that can be redone, if one is available.
 	redo() {
 		if (this.canRedo()) {
 			this.getCommandStack().redo();
+			this.objectModel.refreshToolbar();
 		}
 	}
 
+	// Returns true if there is a command on the command stack
+	// available to be undone.
 	canUndo() {
 		return this.getCommandStack().canUndo();
 	}
 
+	// Returns true if there is a command on the command stack
+	// available to be redone.
 	canRedo() {
 		return this.getCommandStack().canRedo();
 	}
 
+	// Returns a string which is the label that descibes the next undoable
+	// command.
 	getUndoLabel() {
 		if (this.canUndo()) {
 			const cmnd = this.getCommandStack().getUndoCommand();
@@ -1392,6 +1413,8 @@ export default class CanvasController {
 		return "";
 	}
 
+	// Returns a string which is the label that descibes the next redoable
+	// command.
 	getRedoLabel() {
 		if (this.canRedo()) {
 			const cmnd = this.getCommandStack().getRedoCommand();
@@ -1400,6 +1423,12 @@ export default class CanvasController {
 			}
 		}
 		return "";
+	}
+
+	// Clears the command stack of all currently stored commands.
+	clearCommandStack() {
+		this.getCommandStack().clearCommandStack();
+		this.objectModel.refreshToolbar();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -2538,11 +2567,13 @@ export default class CanvasController {
 			case "undo": {
 				command = this.getCommandStack().getUndoCommand();
 				this.commandStack.undo();
+				this.objectModel.refreshToolbar();
 				break;
 			}
 			case "redo": {
 				command = this.getCommandStack().getRedoCommand();
 				this.commandStack.redo();
+				this.objectModel.refreshToolbar();
 				break;
 			}
 

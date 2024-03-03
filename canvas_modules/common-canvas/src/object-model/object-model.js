@@ -1378,6 +1378,14 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "SET_TOOLBAR_CONFIG", data: { toolbarConfig: config } });
 	}
 
+	// The toolbar.jsx React object retrieves some display attributes from the
+	// canvas-controller, not from Redux. This method will refresh the toolbar
+	// config which causes mapStateToProps to run in toolbar.jsx and that
+	// will cause the toolbar to retrieve those attributes from canvas-contoller.
+	refreshToolbar() {
+		this.store.dispatch({ type: "REFRESH_TOOLBAR" });
+	}
+
 	setNotificationPanelConfig(config) {
 		this.store.dispatch({ type: "SET_NOTIFICATION_PANEL_CONFIG", data: { notificationPanelConfig: config } });
 	}

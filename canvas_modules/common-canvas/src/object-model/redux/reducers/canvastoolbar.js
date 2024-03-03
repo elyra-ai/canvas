@@ -26,6 +26,11 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { config: action.data.toolbarConfig });
 	}
 
+	case "REFRESH_TOOLBAR": {
+		return Object.assign({}, state);
+	}
+
+
 	default:
 		return state;
 	}
