@@ -1972,14 +1972,16 @@ export default class ObjectModel {
 
 	setZoom(zoom, pipelineId) {
 		const enableSaveZoom = this.getCanvasConfig().enableSaveZoom;
-		// This will save zoom to the pipeline if enableSaveZoom is
-		// SAVE_ZOOM_PIPELINE_FLOW and also will cause the toolbar to be updated
-		// so zoom icons can be enabled/disabled.
-		this.store.dispatch({ type: "SET_ZOOM", data: { zoom: zoom, enableSaveZoom }, pipelineId });
 
-		if (enableSaveZoom === SAVE_ZOOM_LOCAL_STORAGE) {
+		if (enableSaveZoom === SAVE_ZOOM_PIPELINE_FLOW) {
+			this.store.dispatch({ type: "SET_ZOOM", data: { zoom: zoom, enableSaveZoom }, pipelineId });
+
+		} else if (enableSaveZoom === SAVE_ZOOM_LOCAL_STORAGE) {
 			this.setSavedZoomLocal(zoom, pipelineId);
 		}
+		// This will cause the toolbar to be updated so zoom icons can
+		// be enabled/disabled.
+		this.refreshToolbar();
 	}
 
 	// Returns the saved zoom based on the enableSaveZoom config parameter.

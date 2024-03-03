@@ -16,12 +16,6 @@
 
 export default (state = {}, action) => {
 	switch (action.type) {
-	// Setting a zoom amount needs to cause toolbar to be re-rendered to
-	// enable/disable zoom buttons.
-	case "SET_ZOOM": {
-		return Object.assign({}, state);
-	}
-
 	case "SET_TOOLBAR_CONFIG": {
 		return Object.assign({}, state, { config: action.data.toolbarConfig });
 	}

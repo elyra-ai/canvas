@@ -99,16 +99,13 @@ export default (state = {}, action) => {
 	}
 
 	case "SET_ZOOM": {
-		if (action.data.enableSaveZoom === SAVE_ZOOM_PIPELINE_FLOW) {
-			const canvasInfoPipelines = state.pipelines.map((pipeline) => {
-				if (pipeline.id === action.pipelineId) {
-					return Object.assign({}, pipeline, { zoom: { "k": action.data.zoom.k, "x": action.data.zoom.x, "y": action.data.zoom.y } });
-				}
-				return pipeline;
-			});
-			return Object.assign({}, state, { pipelines: canvasInfoPipelines });
-		}
-		return state;
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
+			if (pipeline.id === action.pipelineId) {
+				return Object.assign({}, pipeline, { zoom: { "k": action.data.zoom.k, "x": action.data.zoom.x, "y": action.data.zoom.y } });
+			}
+			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
 	case "ADD_SUPERNODES": {
