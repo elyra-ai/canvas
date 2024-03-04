@@ -20,43 +20,12 @@ set -e
 
 WORKING_DIR="$PWD"
 
-checkout_branch()
-{
-	echo "Checkout $1"
-	git checkout $1
-	git fetch origin
-	git pull
-}
-
-commit_changes()
-{
-	pushd $WORKING_DIR
-	git config --global user.email "elyra-canvas@users.noreply.github.com"
-	git config --global user.name "Automated build"
-	git add ./canvas_modules/common-canvas/package.json
-	git status
-	git commit -m "$2"
-	echo "Push changes to $1"
-	git push
-	popd
-}
-
-setup_git_branch()
-{
-		git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-		git fetch
-}
-
-setup_git_branch
-checkout_branch ${GITHUB_REF_NAME}
-
 cd ./canvas_modules/common-canvas
-release=$(echo $GITHUB_REF | cut -d'_' -f2)
+release=$(echo $GITHUB_REF | cut -d'v' -f2)
 echo "Release is set to $release"
 npm version $release
 NPM_VERSION=`node -p "require('./package.json').version"`
 echo "Updated $GITHUB_REF_NAME build $NPM_VERSION"
-commit_changes ${GITHUB_REF_NAME} "Update Elyra Canvas to version ${NPM_VERSION} [skip ci]"
 
 #echo "Publishing Elyra Canvas $NPM_VERSION to Artifactory NPM"
 #echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
