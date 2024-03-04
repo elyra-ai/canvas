@@ -27,6 +27,6 @@ npm version $release
 NPM_VERSION=`node -p "require('./package.json').version"`
 echo "Updated $GITHUB_REF_NAME build $NPM_VERSION"
 
-#echo "Publishing Elyra Canvas $NPM_VERSION to Artifactory NPM"
-#echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
-#npm publish --userconfig=~/.npmrc --registry=https://registry.npmjs.org
+echo "Publishing Elyra Canvas $NPM_VERSION to Artifactory NPM"
+echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
+npm publish --userconfig=~/.npmrc --registry=https://registry.npmjs.org

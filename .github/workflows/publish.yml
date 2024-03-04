@@ -29,7 +29,7 @@ jobs:
       with:
         node-version: 16.x
     - run: npm install -g grunt-cli
-    #- run: ./canvas_modules/common-canvas/build.sh
+    - run: ./canvas_modules/common-canvas/build.sh
     - run: ./scripts/publish_modules.sh
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
