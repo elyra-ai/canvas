@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-// Ref: https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Reserved-words
-// Search for "10.3.3 Reserved words"
-const keywords = "if|else|repeat|while|function|for|in|next|break" +
-	"|TRUE|FALSE|NULL|Inf|NaN|NA|NA_integer_|NA_real_|NA_complex_|NA_character_";
-
-const rKeywords = keywords.split("|");
+import { LanguageSupport, StreamLanguage } from "@codemirror/language";
+import { completeFromList } from "@codemirror/autocomplete";
+import { r } from "@codemirror/legacy-modes/mode/r";
 
 const builtIns = "zapsmall xzfile xtfrm xor writeLines writeChar writeBin write withVisible withRestarts within" +
 	" withCallingHandlers withAutoprint with while which weekdays warnings warning version Vectorize vector vapply" +
@@ -70,13 +67,23 @@ const rBuiltIns = builtIns.split(" ");
 function getRHints() {
 	const rHints = [];
 
-	rKeywords.forEach((keyword) => rHints.push({ label: keyword, type: "keyword" }));
-
 	rBuiltIns.forEach((builtIn) => rHints.push({ label: builtIn, type: "keyword" }));
 
 	return rHints;
 }
 
+// Define R language
+const rLan = StreamLanguage.define(r);
+
+// Autocompletions
+const rCompletion = rLan.data.of({
+	autocomplete: completeFromList(getRHints())
+});
+
+function rLanguage() {
+	return new LanguageSupport(rLan, [rCompletion]);
+}
+
 export {
-	getRHints
+	rLanguage
 };
