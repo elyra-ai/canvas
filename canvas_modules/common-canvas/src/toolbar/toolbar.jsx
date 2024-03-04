@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,6 +69,7 @@ class Toolbar extends React.Component {
 		this.generateToolbarItems = this.generateToolbarItems.bind(this);
 		this.setFocusAction = this.setFocusAction.bind(this);
 		this.setFocusOnItem = this.setFocusOnItem.bind(this);
+		this.closeAnyOpenSubArea = this.closeAnyOpenSubArea.bind(this);
 	}
 
 	// If, after updating, we are left in a situation where this.state.focusAction
@@ -76,13 +77,12 @@ class Toolbar extends React.Component {
 	// item. This might happen when an item with focus is activated and the action it
 	// performs causes itself to become disabled. For example, if the delete item is
 	// activated the selected objects are deleted and since no objects are now selected
-	// the delete item (which has focus) will become disabled.
+	// the delete item (which has focus) will become disabled. It may also happen if the
+	// toolbar config is updated and the current focusAction item is removed.
 	componentDidUpdate() {
-		if (this.isFocusInToolbar) {
-			const index = this.getFocusableItemRefs().findIndex((item) => this.getRefAction(item) === this.state.focusAction);
-			if (index === -1) {
-				this.setFocusOnFirstItem();
-			}
+		const index = this.getFocusableItemRefs().findIndex((item) => this.getRefAction(item) === this.state.focusAction);
+		if (index === -1) {
+			this.setFocusOnFirstItem();
 		}
 	}
 
@@ -106,11 +106,15 @@ class Toolbar extends React.Component {
 		}
 	}
 
-	// When focus leaves the toolbar make sure we record it so we don't
-	// accidentally set focus on a toolbar item when re-rendering with
-	// the focus elsewhere.
-	onBlur() {
-		this.isFocusInToolbar = false;
+	// When focus leaves the toolbar make sure we record it. This prevents
+	// us accidentally setting focus on a toolbar item when the toolbar
+	// re-renders with the focus elsewhere.
+	onBlur(evt) {
+		// If the focus is being moved to an object outside the toolbar div
+		// we set isFocusInToolbar to false.
+		if (!evt.relatedTarget?.closest(".toolbar-div")) {
+			this.isFocusInToolbar = false;
+		}
 	}
 
 	// This is called when the user presses a key with focus on one of the
@@ -136,15 +140,46 @@ class Toolbar extends React.Component {
 	}
 
 	// When the toolbar resizes, check each toolbar item to see if it has
-	// a sub-menu open and, if it does, close it.
+	// an open sub-area and, if that item is not a focusable item, close
+	// the sub-area. The item may no longer be focusable it is it was wrapped
+	// into the overflow menu. Also, check to see if the current focus action
+	// item is focusable and, if not, set focus on the first focusable item.
 	onToolbarResize() {
-		this.leftItemRefs.forEach((ref) => this.closeSubMenuOnRef(ref));
-		this.rightItemRefs.forEach((ref) => this.closeSubMenuOnRef(ref));
-		this.overflowItemRefs.forEach((ref) => this.closeOverflowMenuOnRef(ref));
+		const focusableItemRefs = this.getFocusableItemRefs();
+		// Note: isFocusActionFocusable needs to be calculated here before any
+		// update to the toolbar caused by the code in the subsequent if ststement.
+		const isFocusActionFocusable = this.isFocusActionFocusable(this.state.focusAction, focusableItemRefs);
+		const refWithOpenSubArea = this.getRefWithOpenSubArea();
 
-		if (this.isFocusInToolbar) {
+		if (refWithOpenSubArea) {
+			const action = refWithOpenSubArea.current.getAction();
+			const isFocusActionWithOpenSubAreaFocusable = this.isFocusActionFocusable(action, focusableItemRefs);
+
+			if (!isFocusActionWithOpenSubAreaFocusable) {
+				refWithOpenSubArea.current.closeSubArea();
+
+			} else {
+				// This forces a refresh that will cause the position of any
+				// open sub-area to be recaulculated based on the new toolbar width.
+				this.setFocusAction(this.state.focusAction);
+			}
+		}
+
+		// If the focus action item is not focusable (maybe because it has been
+		// moved into the overflow menu) then set focus on the first focusable item.
+		if (!isFocusActionFocusable) {
 			this.setFocusOnFirstItem();
 		}
+	}
+
+	// Returns the ref to any item that currently has an open sub-area or null
+	// if no item has an open sub-area.
+	getRefWithOpenSubArea() {
+		let subAreaOpenRef = this.leftItemRefs.find((ref) => ref.current.isSubAreaDisplayed());
+		if (!subAreaOpenRef) {
+			subAreaOpenRef = this.rightItemRefs.find((ref) => ref.current.isSubAreaDisplayed());
+		}
+		return subAreaOpenRef;
 	}
 
 	// Either sets the focus on the item for the action passed in or, if
@@ -192,18 +227,18 @@ class Toolbar extends React.Component {
 
 	getPreviousItemRef(focusableItemRefs) {
 		const index = focusableItemRefs.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
-		if (index > 0) {
-			return focusableItemRefs[index - 1];
+		if (index === 0) {
+			return focusableItemRefs[focusableItemRefs.length - 1];
 		}
-		return null;
+		return focusableItemRefs[index - 1];
 	}
 
 	getNextItemRef(focusableItemRefs) {
 		const index = focusableItemRefs.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
-		if (index < focusableItemRefs.length - 1) {
-			return focusableItemRefs[index + 1];
+		if (index === focusableItemRefs.length - 1) {
+			return focusableItemRefs[0];
 		}
-		return null;
+		return focusableItemRefs[index + 1];
 	}
 
 	getRefAction(ref) {
@@ -313,6 +348,14 @@ class Toolbar extends React.Component {
 		return index;
 	}
 
+	// Returns true of the current focus action item is one of the focusable
+	// items. (It may not be if it has been placed in the overflow menu).
+	isFocusActionFocusable(focusAction, focusableItemRefs) {
+		const indexFocusAction = focusableItemRefs.findIndex((ref) =>
+			ref.current.props.actionObj?.action === focusAction);
+		return indexFocusAction > -1;
+	}
+
 	// Returns a reference to the first item that is not on the
 	// top (visible) row of the toolbar.
 	findFirstRightItemRefNotOnTopRow() {
@@ -386,6 +429,7 @@ class Toolbar extends React.Component {
 						toolbarFocusAction={this.state.focusAction}
 						setToolbarFocusAction={this.setFocusOnItem}
 						isFocusInToolbar={this.isFocusInToolbar}
+						closeAnyOpenSubArea={this.closeAnyOpenSubArea}
 						size={this.props.size}
 					/>
 				);
@@ -421,6 +465,7 @@ class Toolbar extends React.Component {
 				toolbarFocusAction={this.state.focusAction}
 				setToolbarFocusAction={this.setFocusOnItem}
 				isFocusInToolbar={this.isFocusInToolbar}
+				closeAnyOpenSubArea={this.closeAnyOpenSubArea}
 			/>
 		);
 
@@ -440,8 +485,17 @@ class Toolbar extends React.Component {
 		return subMenuActions;
 	}
 
-	closeSubMenuOnRef(ref) {
-		if (ref.current.state.subAreaDisplayed) {
+	closeAnyOpenSubArea() {
+		this.leftItemRefs.forEach((ref) => this.closeSubAreaOnRef(ref));
+		this.rightItemRefs.forEach((ref) => this.closeSubAreaOnRef(ref));
+		this.overflowItemRefs.forEach((ref) => this.closeOverflowMenuOnRef(ref));
+	}
+
+	closeSubAreaOnRef(ref) {
+		if (ref.current.props.actionObj.setExtIsSubAreaDisplayed) {
+			ref.current.props.actionObj.setExtIsSubAreaDisplayed(false);
+
+		} else if (ref.current.state.subAreaDisplayed) {
 			ref.current.closeSubArea();
 		}
 	}

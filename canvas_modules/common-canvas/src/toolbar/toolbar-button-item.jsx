@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,6 @@ import Tooltip from "../tooltip/tooltip.jsx";
 import ArrangeHorizontally from "./../../assets/images/arrange_horizontally.svg";
 import ArrangeVertically from "./../../assets/images/arrange_vertically.svg";
 import ToggleNotificationPanel from "./../../assets/images/notification_counter_icon.svg";
-import PaletteClose from "./../../assets/images/palette/palette_close.svg";
-import PaletteOpen from "./../../assets/images/palette/palette_open.svg";
-import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
 
 import { Button } from "@carbon/react";
 import SVG from "react-inlinesvg";
@@ -31,7 +28,8 @@ import classNames from "classnames";
 import { StopFilledAlt, Play, Undo, Redo, Chat, ChatOff, Result,
 	Cut, Copy, Paste, Edit,	ColorPalette, Maximize, Minimize,
 	Launch, AddComment, TrashCan, ZoomIn, ZoomOut,
-	ChevronRight, ChevronDown, ChevronUp } from "@carbon/react/icons";
+	ChevronRight, ChevronDown, ChevronUp,
+  CenterToFit, OpenPanelFilledLeft } from "@carbon/icons-react";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT, TOOLBAR_COLOR_BACKGROUND,
@@ -54,6 +52,14 @@ class ToolbarButtonItem extends React.Component {
 	componentDidUpdate() {
 		if (this.props.isFocusInToolbar &&
 				this.props.buttonFocusAction === this.props.actionObj.action) {
+			// If a Jsx object was provided, the class of the component should have
+			// been set to toolbar-jsx-obj.
+			const jsxItem = this.buttonRef.current.querySelector(".toolbar-jsx-obj");
+			if (jsxItem) {
+				jsxItem.focus();
+				return;
+			}
+
 			this.buttonRef.current.focus();
 		}
 	}
@@ -105,17 +111,18 @@ class ToolbarButtonItem extends React.Component {
 			return <ZoomIn disabled={disabled} />;
 		case (TOOLBAR_ZOOM_OUT):
 			return <ZoomOut disabled={disabled} />;
-
 		case (TOOLBAR_ZOOM_FIT):
-			return <SVG src={ZoomToFit} disabled={disabled} />;
+			return <CenterToFit16 disabled={disabled} />;
+		case (TOOLBAR_OPEN_PALETTE):
+			return <OpenPanelFilledLeft16 disabled={disabled} />;
+		case (TOOLBAR_CLOSE_PALETTE):
+			return <OpenPanelFilledLeft16 disabled={disabled} />;
+
+		// Non-carbon icons
 		case (TOOLBAR_ARRANGE_HORIZONALLY):
 			return <SVG src={ArrangeHorizontally} disabled={disabled} />;
 		case (TOOLBAR_ARRANGE_VERTICALLY):
 			return <SVG src={ArrangeVertically} disabled={disabled} />;
-		case (TOOLBAR_OPEN_PALETTE):
-			return <SVG src={PaletteOpen} disabled={disabled} />;
-		case (TOOLBAR_CLOSE_PALETTE):
-			return <SVG src={PaletteClose} disabled={disabled} />;
 		case (TOOLBAR_TOGGLE_NOTIFICATION_PANEL):
 			return <SVG src={ToggleNotificationPanel} disabled={disabled} />;
 
@@ -169,7 +176,7 @@ class ToolbarButtonItem extends React.Component {
 		return null;
 	}
 
-	generateButton(actionObj) {
+	generateRegularItem(actionObj) {
 		let labelBefore = null;
 		let labelAfter = null;
 
@@ -264,6 +271,26 @@ class ToolbarButtonItem extends React.Component {
 		);
 	}
 
+	// Creates a <div> containing the JSX in the actionObj.jsx field, wrapped in a tooltip
+	// <div>, for display as an action item in the toolbar. The jsx field can be just
+	// regular JSX OR a function that returns JSX. If the application has provided a
+	// function we call it, passing in the tabIndex that the component in the JSX should
+	// use, based on whether it is focused or not.
+	generateJsxItem(actionObj) {
+		let content = null;
+		if (typeof actionObj.jsx === "function") {
+			const tabIndex = this.props.buttonFocusAction === actionObj.action ? 0 : -1;
+			content = actionObj.jsx(tabIndex);
+		} else {
+			content = actionObj.jsx;
+		}
+		const jsx = this.wrapInTooltip(content);
+		const div = (<div ref={this.buttonRef}>{jsx}</div>);
+
+		return div;
+	}
+
+
 	wrapInTooltip(content) {
 		if (!this.props.isInMenu && (this.showLabelAsTip(this.props.actionObj) || this.props.actionObj.tooltip)) {
 			const tip = this.props.actionObj.tooltip ? this.props.actionObj.tooltip : this.props.actionObj.label;
@@ -296,13 +323,10 @@ class ToolbarButtonItem extends React.Component {
 
 	render() {
 		const actionObj = this.props.actionObj;
-		let divContent = null;
 
-		if (actionObj.jsx) {
-			divContent = this.wrapInTooltip(actionObj.jsx);
-		} else {
-			divContent = this.generateButton(actionObj);
-		}
+		const divContent = actionObj.jsx
+			? this.generateJsxItem(actionObj)
+			: this.generateRegularItem(actionObj);
 
 		return divContent;
 	}
@@ -333,7 +357,10 @@ ToolbarButtonItem.propTypes = {
 		subMenu: PropTypes.array,
 		subPanel: PropTypes.any,
 		subPanelData: PropTypes.object,
-		jsx: PropTypes.object,
+		jsx: PropTypes.oneOfType([
+			PropTypes.object,
+			PropTypes.func
+		]),
 		tooltip: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.object,

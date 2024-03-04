@@ -2176,7 +2176,7 @@ class App extends React.Component {
 					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
 					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
 					{ divider: true },
-					{ action: "subpanel", iconEnabled: (<Settings size={32} />), label: "Settings", enable: true,
+					{ action: "settingspanel", iconEnabled: (<Settings32 />), label: "Settings", enable: true,
 						subPanel: AppSettingsPanel, subPanelData: { saveData: (settings) => window.alert("Panel data received by application.\n" + settings) } },
 					{ divider: true },
 					{ action: "text-size-submenu", incLabelWithIcon: "after", iconEnabled: (<TextScale size={32} />), label: "Text Size", enable: true,
@@ -2299,9 +2299,12 @@ class App extends React.Component {
 					{
 						action: "custom-loading",
 						tooltip: "A custom loading!",
-						jsx: (
+						jsx: (tabIndex) => (
 							<div style={{ padding: "4px 11px" }}>
-								<InlineLoading status="active" description="Loading..." />
+								<InlineLoading status="active" description="Loading..."
+									className={"toolbar-jsx-obj"}
+									tabIndex={tabIndex}
+								/>
 							</div>
 						)
 					},
@@ -2309,9 +2312,13 @@ class App extends React.Component {
 					{
 						action: "custom-checkbox",
 						tooltip: "A custom checkbox!",
-						jsx: (
+						jsx: (tabIndex) => (
 							<div style={{ padding: "5px 11px" }}>
-								<Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} />
+								<Checkbox id={"custom-checkbox"} defaultChecked labelText={"Check it out"}
+									onClick={(e) => window.alert("Checkbox clicked!")}
+									className={"toolbar-jsx-obj"}
+									tabIndex={tabIndex}
+								/>
 							</div>
 						)
 					},
@@ -2319,24 +2326,35 @@ class App extends React.Component {
 					{
 						action: "custom-button",
 						tooltip: "A custom button of type primary!",
-						jsx: (
-							<div className="toolbar-custom-button">
-								<Button id={"btn1"} size="md" kind="primary">Custom button </Button>
-							</div>
+						jsx: (tabIndex) => (
+							<Button id={"custom-button"} size="field" kind="primary"
+								onClick={(e) => window.alert("Button clicked!")}
+								className={"toolbar-jsx-obj"}
+								tabIndex={tabIndex}
+							>
+								Custom button
+							</Button>
 						)
 					},
 					{ divider: true },
 					{
 						action: "custom-dropdown",
 						tooltip: () => (this.suppressTooltip ? null : "A drop down using the overflow menu!"),
-						jsx: (
+						jsx: (tabIndex) => (
 							<div className="toolbar-custom-button">
 								<OverflowMenu
 									id={"ovf1"}
 									renderIcon={TextScale32}
 									iconDescription={""}
-									onOpen={() => (this.suppressTooltip = true)}
-									onClose={() => (this.suppressTooltip = false)}
+									onOpen={() => (
+										this.suppressTooltip = true)
+									}
+									onClose={() => {
+										this.suppressTooltip = false;
+										window.alert("Option selected");
+									}}
+									className={"toolbar-jsx-obj"}
+									tabIndex={tabIndex}
 								>
 									<OverflowMenuItem itemText="Big" />
 									<OverflowMenuItem itemText="Medium" />

@@ -25,6 +25,9 @@ import Logger from "../logging/canvas-logger.js";
 import { DEFAULT_NOTIFICATION_HEADER } from "./../common-canvas/constants/canvas-constants.js";
 import defaultMessages from "../../locales/notification-panel/locales/en.json";
 
+const TAB_KEY = 9;
+const RETURN_KEY = 13;
+const SPACE_KEY = 32;
 
 class NotificationPanel extends React.Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -38,18 +41,18 @@ class NotificationPanel extends React.Component {
 		super(props);
 		this.state = {};
 
-		this.firstTime = true;
 		this.logger = new Logger("NotificationPanel");
-		this.handleNotificationPanelClickOutside = this.handleNotificationPanelClickOutside.bind(this);
-		this.closeNotificationPanel = this.closeNotificationPanel.bind(this);
+		this.keyDownOnPanel = this.keyDownOnPanel.bind(this);
 	}
 
 	componentDidMount() {
-		document.addEventListener("click", this.handleNotificationPanelClickOutside, true);
+		this.setFocusOnFirstItem();
 	}
 
-	componentWillUnmount() {
-		document.removeEventListener("click", this.handleNotificationPanelClickOutside, true);
+	setFocusOnFirstItem() {
+		if (this.allRefs.length > 0) {
+			this.allRefs[0].focus();
+		}
 	}
 
 	getNotifications() {
@@ -79,9 +82,14 @@ class NotificationPanel extends React.Component {
 				: null;
 
 			const closeMessage = message.closeMessage
-				? (<div className = "notification-message-close" onClick={this.deleteNotification.bind(this, message.id)}>
-					{message.closeMessage}
-				</div>)
+				? (
+					<div tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))}
+						className = "notification-message-close"
+						onClick={this.clickOnCloseButton.bind(this, message)}
+						onKeyDown={this.keyDownOnCloseButton.bind(this, message)}
+					>
+						{message.closeMessage}
+					</div>)
 				: null;
 
 			const timestamp = message.timestamp
@@ -99,6 +107,8 @@ class NotificationPanel extends React.Component {
 				<div
 					className={"notifications " + className + message.type}
 					onClick={this.notificationCallback.bind(this, message.id, message.callback)}
+					tabIndex={0}
+					ref={(ref) => (!ref || this.allRefs.push(ref))}
 				>
 					{type}
 					<div className="notification-message-details">
@@ -117,55 +127,66 @@ class NotificationPanel extends React.Component {
 		return notifications;
 	}
 
-	handleNotificationPanelClickOutside(e) {
-		if (this.props.isNotificationOpen &&
-				this.props.notificationConfig &&
-				!this.props.notificationConfig.keepOpen &&
-				this.isClickOutsideNotificationPanel(e)) {
-			this.props.canvasController.toolbarActionHandler("closeNotificationPanel");
-			e.stopPropagation(); // Prevent D3 canvas code from clearing the selections.
-		}
-	}
-
-	isClickOutsideNotificationPanel(e) {
-		return !e.target.closest(".notification-panel");
-	}
-
 	notificationCallback(id, messageCallback) {
 		if (messageCallback) {
 			messageCallback(id);
 		}
 	}
 
+	clickOnCloseButton(message) {
+		this.deleteNotification(message.id);
+	}
+
+	keyDownOnCloseButton(message, evt) {
+		if (evt.keyCode === SPACE_KEY || evt.keyCode === RETURN_KEY) {
+			this.deleteNotification(message.id);
+		}
+	}
+
 	deleteNotification(id) {
-		this.props.canvasController.deleteNotificationMessages(id);
+		this.props.subPanelData.canvasController.deleteNotificationMessages(id);
 	}
 
 	clearNotificationMessages() {
-		this.props.canvasController.clearNotificationMessages();
+		this.props.subPanelData.canvasController.clearNotificationMessages();
+		this.setFocusOnFirstItem();
+
 		if (typeof this.props.notificationConfig.clearAllCallback === "function") {
 			this.props.notificationConfig.clearAllCallback();
 		}
 	}
 
-	closeNotificationPanel() {
-		this.props.canvasController.toolbarActionHandler("closeNotificationPanel");
+	keyDownOnPanel(evt) {
+		if (evt.keyCode === TAB_KEY && !evt.shiftKey) {
+			const lastElement = this.allRefs[this.allRefs.length - 1];
+			if (evt.target === lastElement) {
+				evt.stopPropagation();
+				evt.preventDefault();
+				this.allRefs[0].focus();
+			}
+		} else if (evt.keyCode === TAB_KEY && evt.shiftKey) {
+			const lastElement = this.allRefs[this.allRefs.length - 1];
+			if (evt.target === this.allRefs[0]) {
+				evt.stopPropagation();
+				evt.preventDefault();
+				lastElement.focus();
+			}
+		}
 	}
 
 	render() {
 		this.logger.log("render");
+		this.allRefs = [];
 
 		if (!this.props.notificationConfig) {
 			return null;
 		}
 
-		let notificationPanelClassName = this.props.isNotificationOpen ? "" : "panel-hidden";
-		notificationPanelClassName += this.firstTime ? "" : " panel-transition";
-		this.firstTime = false;
-
-		const notificationHeader = this.props.notificationConfig && this.props.notificationConfig.notificationHeader
+		const headerText = this.props.notificationConfig && this.props.notificationConfig.notificationHeader
 			? this.props.notificationConfig.notificationHeader
 			: DEFAULT_NOTIFICATION_HEADER;
+
+		const notificationHeader = (<div className="notification-panel-header">{headerText}</div>);
 
 		const notificationSubtitle = this.props.notificationConfig && this.props.notificationConfig.notificationSubtitle
 			? (<div className="notification-panel-subtitle">
@@ -173,9 +194,28 @@ class NotificationPanel extends React.Component {
 			</div>)
 			: null;
 
+		const closeButton = (
+			<div className="notification-panel-close-button">
+				<Button
+					ref={(ref) => (!ref || this.allRefs.push(ref))}
+					size="sm"
+					kind="ghost"
+					renderIcon={Close16}
+					hasIconOnly
+					iconDescription={this.props.intl.formatMessage({
+						id: "notification.panel.close.button.description",
+						defaultMessage: defaultMessages["notification.panel.close.button.description"]
+					})}
+					onClick={this.props.closeSubPanel}
+					tooltipAlignment="end"
+					tooltipPosition="bottom"
+				/>
+			</div>
+		);
+
 		const notificationPanelMessages = this.props.messages.length > 0
 			? this.getNotifications()
-			: (<div className="notification-panel-empty-message-container">
+			: (<div tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))} className="notification-panel-empty-message-container">
 				<div className="notification-panel-empty-message">
 					{this.props.notificationConfig && this.props.notificationConfig.emptyMessage ? this.props.notificationConfig.emptyMessage : null}
 				</div>
@@ -184,6 +224,7 @@ class NotificationPanel extends React.Component {
 		const clearAll = this.props.notificationConfig && this.props.notificationConfig.clearAllMessage
 			? (<div className="notification-panel-clear-all-container">
 				<Button
+					ref={(ref) => (!ref || this.props.messages.length === 0 || this.allRefs.push(ref))}
 					className="notification-panel-clear-all"
 					onClick={this.clearNotificationMessages.bind(this)}
 					kind="ghost"
@@ -200,6 +241,7 @@ class NotificationPanel extends React.Component {
 			this.props.notificationConfig.secondaryButtonCallback
 			? (<div className="notification-panel-secondary-button-container">
 				<Button
+					ref={(ref) => (!ref || this.props.secondaryButtonDisabled || this.allRefs.push(ref))}
 					className="notification-panel-secondary-button"
 					onClick={this.props.notificationConfig.secondaryButtonCallback.bind(this)}
 					kind="ghost"
@@ -211,28 +253,13 @@ class NotificationPanel extends React.Component {
 			</div>)
 			: null;
 
-		return (<div className={"notification-panel-container " + notificationPanelClassName} >
-			<div className="notification-panel">
-				<div className="notification-panel-header-container">
-					<div className="notification-panel-header">
-						{notificationHeader}
-						<Button
-							className="notification-panel-close-button"
-							size="sm"
-							kind="ghost"
-							renderIcon={Close}
-							hasIconOnly
-							iconDescription={this.props.intl.formatMessage({
-								id: "notification.panel.close.button.description",
-								defaultMessage: defaultMessages["notification.panel.close.button.description"]
-							})}
-							onClick={this.closeNotificationPanel}
-							tooltipAlignment="end"
-							tooltipPosition="bottom"
-						/>
-					</div>
+		return (
+			<div className="notification-panel" onKeyDown={this.keyDownOnPanel}>
+				<div className="notification-panel-header-container" tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))}>
+					{notificationHeader}
 					{notificationSubtitle}
 				</div>
+				{closeButton}
 				<div className="notification-panel-messages">
 					{notificationPanelMessages}
 				</div>
@@ -241,13 +268,14 @@ class NotificationPanel extends React.Component {
 					{secondaryButton}
 				</div>
 			</div>
-		</div>);
+		);
 	}
 }
 
 NotificationPanel.propTypes = {
-	// Provided by CommonCanvas
-	canvasController: PropTypes.object,
+	// Provided by toolbar
+	closeSubPanel: PropTypes.func,
+	subPanelData: PropTypes.object,
 
 	// Provided by Redux
 	notificationConfig: PropTypes.shape({
@@ -277,7 +305,6 @@ NotificationPanel.propTypes = {
 		secondaryButtonDisabled: PropTypes.bool
 	}),
 	secondaryButtonDisabled: PropTypes.bool,
-	isNotificationOpen: PropTypes.bool,
 	messages: PropTypes.array,
 	intl: PropTypes.object.isRequired
 };
@@ -285,7 +312,6 @@ NotificationPanel.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
 	notificationConfig: state.notificationpanel.config,
 	secondaryButtonDisabled: state.notificationpanel.config ? state.notificationpanel.config.secondaryButtonDisabled : false,
-	isNotificationOpen: state.notificationpanel.isOpen,
 	messages: state.notifications
 });
 

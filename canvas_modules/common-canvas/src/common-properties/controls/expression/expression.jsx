@@ -41,12 +41,11 @@ import { Compartment } from "@codemirror/state";
 import { tags } from "@lezer/highlight";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { python } from "@codemirror/lang-python";
-import { r } from "codemirror-lang-r";
 import { sql } from "@codemirror/lang-sql";
 import { javascript } from "@codemirror/lang-javascript";
 
 import { getPythonHints } from "./languages/python-hint";
-import { getRHints } from "./languages/r-hint";
+import { rLanguage } from "./languages/r-hint";
 import { clem } from "./languages/CLEM-hint";
 
 const pxPerChar = 8.5;
@@ -168,14 +167,13 @@ class ExpressionControl extends React.Component {
 			this.origHint = getPythonHints();
 			break;
 		case "text/x-rsrc":
-			language = r();
-			this.origHint = getRHints();
+			language = rLanguage(); // custom language
 			break;
 		case "javascript":
 			language = javascript();
 			break;
 		default:
-			language = clem();
+			language = clem(); // custom language
 		}
 
 		// Custom completions add to the language completions

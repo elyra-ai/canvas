@@ -24,7 +24,6 @@ import CommonCanvasToolbar from "./cc-toolbar.jsx";
 import CommonCanvasRightFlyout from "./cc-right-flyout.jsx";
 import CanvasBottomPanel from "./cc-bottom-panel.jsx";
 import CanvasTopPanel from "./cc-top-panel.jsx";
-import NotificationPanel from "../notification-panel/notification-panel.jsx";
 import Logger from "../logging/canvas-logger.js";
 
 class CommonCanvasCentralItems extends React.Component {
@@ -74,7 +73,6 @@ class CommonCanvasCentralItems extends React.Component {
 		const canvasContents = (<CanvasContents canvasController={this.props.canvasController} />);
 		const bottomPanel = (<CanvasBottomPanel canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />);
 		const topPanel = (<CanvasTopPanel canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />);
-		const notificationPanel = (<NotificationPanel canvasController={this.props.canvasController} />);
 
 		let rightSideItems = null;
 		if (this.props.enableRightFlyoutUnderToolbar) {
@@ -94,7 +92,6 @@ class CommonCanvasCentralItems extends React.Component {
 						</div>
 						{rightFlyout}
 					</div>
-					{notificationPanel}
 				</div>
 			);
 
@@ -112,7 +109,6 @@ class CommonCanvasCentralItems extends React.Component {
 						{topPanel}
 						{canvasContents}
 						{bottomPanel}
-						{notificationPanel}
 					</div>
 					{rightFlyout}
 				</div>

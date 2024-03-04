@@ -19,7 +19,6 @@ import CanvasContents from "../../src/common-canvas/cc-contents.jsx";
 import PaletteDialog from "../../src/palette/palette-dialog.jsx";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
-import NotificationPanel from "../../src/notification-panel/notification-panel.jsx";
 import CanvasBottomPanel from "../../src/common-canvas/cc-bottom-panel.jsx";
 import CommonCanvasRightFlyout from "../../src/common-canvas/cc-right-flyout.jsx";
 import CommonCanvasStateTag from "../../src/common-canvas/cc-state-tag.jsx";
@@ -143,16 +142,6 @@ describe("CommonCanvas renders correctly", () => {
 		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 	});
-
-	it("should render one <NotificationPanel/> component", () => {
-		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
-		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
-		const config = {};
-		const wrapper = createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig);
-		expect(wrapper.find(Toolbar)).to.have.length(1);
-		expect(wrapper.find(NotificationPanel)).to.have.length(1);
-	});
-
 
 	it("canvas controller isPaletteOpen() should return true when paletteInitialState is true", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];

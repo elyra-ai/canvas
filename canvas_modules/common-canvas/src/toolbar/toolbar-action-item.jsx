@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,39 +67,62 @@ class ToolbarActionItem extends React.Component {
 
 	// Called by toolbar.jsx
 	isEnabled() {
-		return this.props.actionObj.enable;
+		return this.props.actionObj.enable || this.props.actionObj.jsx;
+	}
+
+	// Called by toolbar.jsx and internally
+	isSubAreaDisplayed() {
+		if (this.props.actionObj.setExtIsSubAreaDisplayed &&
+			typeof this.props.actionObj.extIsSubAreaDisplayed !== "undefined") {
+			return this.props.actionObj.extIsSubAreaDisplayed;
+		}
+		return this.state.subAreaDisplayed;
 	}
 
 	clickOutside(evt) {
-		if (this.state.subAreaDisplayed) {
+		if (this.isSubAreaDisplayed()) {
 			const items = document.getElementsByClassName(this.generateActionName());
 			const isOver = items && items.length > 0 ? items[0].contains(evt.target) : false;
 
-			if (!isOver) {
+			if (!isOver && !this.props.actionObj.leaveSubAreaOpenOnClickOutside) {
 				this.closeSubArea();
 			}
 		}
 	}
 
 	openSubArea() {
+		// If host app is controlling display of the sub-area call it to say
+		// sub-area is closing.
+		if (this.props.actionObj.setExtIsSubAreaDisplayed) {
+			this.props.actionObj.setExtIsSubAreaDisplayed(true);
+			return;
+		}
 		this.setState({ subAreaDisplayed: true });
 	}
 
 	closeSubArea(checkCloseSubAreaOnClick) {
 		if (!checkCloseSubAreaOnClick || this.props.actionObj.closeSubAreaOnClick) {
+			// If host app is controlling display of the sub-area call it to say
+			// sub-area is closing.
+			if (this.props.actionObj.setExtIsSubAreaDisplayed) {
+				this.props.actionObj.setExtIsSubAreaDisplayed(false);
+				return;
+			}
 			this.setState({ subAreaDisplayed: false });
 		}
 	}
 
 	actionClickHandler(evt) {
 		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
-			if (this.state.subAreaDisplayed) {
+			if (this.isSubAreaDisplayed()) {
 				document.removeEventListener("click", this.clickOutside, false);
 				this.closeSubArea();
 				this.props.setToolbarFocusAction(this.props.actionObj.action);
 
 			} else {
 				document.addEventListener("click", this.clickOutside, false);
+				this.props.closeAnyOpenSubArea();
+				this.props.setToolbarFocusAction(this.props.actionObj.action);
 				this.openSubArea();
 			}
 
@@ -118,7 +141,7 @@ class ToolbarActionItem extends React.Component {
 	// supPanel field  OR a sub-menu which is a list of options which is created
 	// from the array of items the caller passes in the subMenu field.
 	generateSubArea() {
-		const actionItemRect = this.divRef.current.getBoundingClientRect();
+		const actionItemRect = this.divRef.current ? this.divRef.current.getBoundingClientRect() : null;
 
 		if (this.props.actionObj.subPanel) {
 			return (
@@ -171,7 +194,7 @@ class ToolbarActionItem extends React.Component {
 			kindAsClass,
 			actionName);
 
-		const subArea = this.state.subAreaDisplayed ? this.generateSubArea() : null;
+		const subArea = this.isSubAreaDisplayed() ? this.generateSubArea() : null;
 
 		return (
 			<div ref={this.divRef} className={itemClassName} data-toolbar-action={actionObj.action} data-toolbar-item
@@ -184,9 +207,9 @@ class ToolbarActionItem extends React.Component {
 						tooltipDirection={this.props.tooltipDirection}
 						instanceId={this.props.instanceId}
 						isInMenu={false}
-						subAreaDisplayed={this.state.subAreaDisplayed}
+						subAreaDisplayed={this.isSubAreaDisplayed()}
 						actionClickHandler={this.actionClickHandler}
-						buttonFocusAction={this.state.subAreaDisplayed ? null : this.props.toolbarFocusAction}
+						buttonFocusAction={this.isSubAreaDisplayed() ? null : this.props.toolbarFocusAction}
 						isFocusInToolbar={this.props.isFocusInToolbar}
 						size={this.props.size}
 					/>
@@ -217,12 +240,18 @@ ToolbarActionItem.propTypes = {
 		className: PropTypes.string,
 		textContent: PropTypes.string,
 		isSelected: PropTypes.bool,
+		setExtIsSubAreaDisplayed: PropTypes.func,
+		extIsSubAreaDisplayed: PropTypes.bool,
 		kind: PropTypes.string,
 		closeSubAreaOnClick: PropTypes.bool,
+		leaveSubAreaOpenOnClickOutside: PropTypes.bool,
 		subMenu: PropTypes.array,
 		subPanel: PropTypes.any,
 		subPanelData: PropTypes.object,
-		jsx: PropTypes.object,
+		jsx: PropTypes.oneOfType([
+			PropTypes.object,
+			PropTypes.func
+		]),
 		tooltip: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.object,
@@ -237,6 +266,7 @@ ToolbarActionItem.propTypes = {
 	toolbarFocusAction: PropTypes.string,
 	setToolbarFocusAction: PropTypes.func,
 	isFocusInToolbar: PropTypes.bool,
+	closeAnyOpenSubArea: PropTypes.func,
 	size: PropTypes.oneOf(["md", "sm"])
 };
 

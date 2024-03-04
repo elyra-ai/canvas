@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,16 +30,16 @@ $toolbar-divider-width: 1px;
 	background-color: $layer-01;
 	box-sizing: content-box;
 	position: relative;
-
 	display: flex;
 	justify-content: space-between;
+	outline: none; // Turn outline off and use carbon style for focus below.
 
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
 
 	&:focus {
 		border-color: $button-primary;
-		box-shadow: inset 0 0 0 1px $button-primary, inset 0 0 0 2px $background;
+		box-shadow: inset 0 0 0 2px $button-primary;
 	}
 
 	/* Small size toolbar  */
@@ -106,6 +106,7 @@ $toolbar-divider-width: 1px;
 	& button {
 		padding: 0;
 		min-height: 30px;
+		height: $toolbar-button-height;
 	}
 
 	&.default,
@@ -201,10 +202,15 @@ $toolbar-divider-width: 1px;
 	&.disabled.default {
 		color: $button-disabled;
 		fill: $button-disabled; // For custom svg images
+		& .toolbar-tick-mark {
+			fill: $button-disabled;
+		}
+		& .toolbar-text-content {
+			stroke: $button-disabled;
+		}
 	}
 
 	.toolbar-icon {
-		height: $toolbar-icon-size;
 		& svg {
 			height: $toolbar-icon-size;
 			width: $toolbar-icon-size;
@@ -212,7 +218,6 @@ $toolbar-divider-width: 1px;
 			-webkit-user-drag: none;
 		}
 	}
-}
 
 .toolbar-text-content {
 	position: absolute;
@@ -222,42 +227,43 @@ $toolbar-divider-width: 1px;
 	color: $icon-primary;
 }
 
-.toolbar-icon-label {
-	line-height: 16px;
+	.toolbar-icon-label {
+		line-height: 16px;
 
-	&.before {
-		padding-right: 8px;
+		&.before {
+			padding-right: 8px;
+		}
+
+		&.after {
+			padding-left: 8px;
+		}
+
+		&.overflow {
+			padding-left: 8px;
+			word-break: break-word;
+			hyphens: auto;
+		}
 	}
 
-	&.after {
+	.toolbar-up-down-chevron {
 		padding-left: 8px;
+		height: 16px;
+		pointer-events: none;
 	}
 
-	&.overflow {
-		padding-left: 8px;
-		word-break: break-word;
-		hyphens: auto;
+	// Triangular tick mark in bottom right corner of an expandable icon
+	.toolbar-tick-svg {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		height: $toolbar-button-height;
+		width: $toolbar-button-height;
+		pointer-events: none;
+
+		& .toolbar-tick-mark {
+			fill: $icon-primary;
+		}
 	}
-}
-
-.toolbar-up-down-chevron {
-	padding-left: 8px;
-	height: 16px;
-	pointer-events: none;
-}
-
-// Triangular tick mark in bottom right corner of an expandable icon
-.toolbar-tick-svg {
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	height: $toolbar-button-height;
-	width: $toolbar-button-height;
-	pointer-events: none;
-}
-
-.toolbar-tick-mark {
-	fill: $button-secondary;
 }
 
 .toolbar-jsx-item {
@@ -285,13 +291,7 @@ $toolbar-divider-width: 1px;
 	&.ghost {
 		& button {
 			background-color: $layer-accent-01;
-			border-color: transparent;
-			box-shadow: none;
 			border-bottom: 2px solid $button-primary;
-		}
-		& button:focus {
-			border-color: $button-primary;
-			box-shadow: inset 0 0 0 1px $button-primary, inset 0 0 0 2px $background;
 		}
 	}
 }
