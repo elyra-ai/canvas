@@ -18,7 +18,6 @@
 import nodes from "./nodes.js";
 import comments from "./comments.js";
 import links from "./links.js";
-import { SAVE_ZOOM_PIPELINE_FLOW } from "../../../common-canvas/constants/canvas-constants.js";
 
 export default (state = {}, action) => {
 	switch (action.type) {
