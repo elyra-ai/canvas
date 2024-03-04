@@ -21,9 +21,6 @@ import Tooltip from "../tooltip/tooltip.jsx";
 import ArrangeHorizontally from "./../../assets/images/arrange_horizontally.svg";
 import ArrangeVertically from "./../../assets/images/arrange_vertically.svg";
 import ToggleNotificationPanel from "./../../assets/images/notification_counter_icon.svg";
-import PaletteClose from "./../../assets/images/palette/palette_close.svg";
-import PaletteOpen from "./../../assets/images/palette/palette_open.svg";
-import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
 
 import { Button } from "carbon-components-react";
 import SVG from "react-inlinesvg";
@@ -31,7 +28,8 @@ import classNames from "classnames";
 import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16, Result16,
 	Cut16, Copy16, Paste16, Edit16,	ColorPalette16, Maximize16, Minimize16,
 	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16,
-	ChevronRight16, ChevronDown16, ChevronUp16 } from "@carbon/icons-react";
+	ChevronRight16, ChevronDown16, ChevronUp16,
+	CenterToFit16, OpenPanelFilledLeft16 } from "@carbon/icons-react";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT, TOOLBAR_COLOR_BACKGROUND,
@@ -113,17 +111,18 @@ class ToolbarButtonItem extends React.Component {
 			return <ZoomIn16 disabled={disabled} />;
 		case (TOOLBAR_ZOOM_OUT):
 			return <ZoomOut16 disabled={disabled} />;
-
 		case (TOOLBAR_ZOOM_FIT):
-			return <SVG src={ZoomToFit} disabled={disabled} />;
+			return <CenterToFit16 disabled={disabled} />;
+		case (TOOLBAR_OPEN_PALETTE):
+			return <OpenPanelFilledLeft16 disabled={disabled} />;
+		case (TOOLBAR_CLOSE_PALETTE):
+			return <OpenPanelFilledLeft16 disabled={disabled} />;
+
+		// Non-carbon icons
 		case (TOOLBAR_ARRANGE_HORIZONALLY):
 			return <SVG src={ArrangeHorizontally} disabled={disabled} />;
 		case (TOOLBAR_ARRANGE_VERTICALLY):
 			return <SVG src={ArrangeVertically} disabled={disabled} />;
-		case (TOOLBAR_OPEN_PALETTE):
-			return <SVG src={PaletteOpen} disabled={disabled} />;
-		case (TOOLBAR_CLOSE_PALETTE):
-			return <SVG src={PaletteClose} disabled={disabled} />;
 		case (TOOLBAR_TOGGLE_NOTIFICATION_PANEL):
 			return <SVG src={ToggleNotificationPanel} disabled={disabled} />;
 

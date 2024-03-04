@@ -168,13 +168,14 @@ describe("Test of Python and R expression controls", function() {
 		// test R autocomplete and syntax highlighting
 		cy.verifyTypeOfWordInExpressionEditor("# syntax testing", "comment", "conditionExpr");
 		cy.verifyTypeOfWordInExpressionEditor("1", "number", "conditionExpr");
-		cy.verifyTypeOfWordInExpressionEditor("text", "string", "conditionExpr");
-		cy.verifyTypeOfWordInExpressionEditor("\n", "string", "conditionExpr");
+		cy.verifyTypeOfWordInExpressionEditor("text\"", "string", "conditionExpr");
+		cy.verifyTypeOfWordInExpressionEditor('\n', "string", "conditionExpr");
 		cy.verifyTypeOfWordInExpressionEditor("=", "operator", "conditionExpr");
 		cy.verifyTypeOfWordInExpressionEditor("function", "keyword", "conditionExpr");
-		cy.verifyTypeOfWordInExpressionEditor("Inf", "number", "conditionExpr");
-		cy.verifyTypeOfWordInExpressionEditor("return", "keyword", "conditionExpr");
+		cy.verifyTypeOfWordInExpressionEditor("Inf", "keyword", "conditionExpr");
+		cy.verifyTypeOfWordInExpressionEditor("return", "variable", "conditionExpr");
 		cy.verifyTypeOfWordInExpressionEditor("<-", "operator", "conditionExpr");
+		cy.verifyTypeOfWordInExpressionEditor(";", "punctuation", "conditionExpr");
 
 		cy.enterTextInExpressionEditor("br", "conditionExpr");
 		cy.verifyNumberOfHintsInExpressionEditor(9);
