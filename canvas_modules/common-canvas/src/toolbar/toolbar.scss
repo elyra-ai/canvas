@@ -30,16 +30,16 @@ $toolbar-divider-width: 1px;
 	background-color: $ui-01;
 	box-sizing: content-box;
 	position: relative;
-
 	display: flex;
 	justify-content: space-between;
+	outline: none; // Turn outline off and use carbon style for focus below.
 
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
 
 	&:focus {
-		border-color: $interactive-01;
-		box-shadow: inset 0 0 0 1px $interactive-01, inset 0 0 0 2px $ui-background;
+		border-color: $interactive-03;
+		box-shadow: inset 0 0 0 2px $interactive-03;
 	}
 
 	/* Small size toolbar  */
@@ -106,6 +106,7 @@ $toolbar-divider-width: 1px;
 	& button {
 		padding: 0;
 		min-height: 30px;
+		height: $toolbar-button-height;
 	}
 
 	&.default,
@@ -210,7 +211,6 @@ $toolbar-divider-width: 1px;
 	}
 
 	.toolbar-icon {
-		height: $toolbar-icon-size;
 		& svg {
 			height: $toolbar-icon-size;
 			width: $toolbar-icon-size;
@@ -259,11 +259,10 @@ $toolbar-divider-width: 1px;
 		height: $toolbar-button-height;
 		width: $toolbar-button-height;
 		pointer-events: none;
-	}
 
-	.toolbar-tick-mark {
-		fill: $interactive-02;
-
+		& .toolbar-tick-mark {
+			fill: $icon-01;
+		}
 	}
 }
 
@@ -292,13 +291,7 @@ $toolbar-divider-width: 1px;
 	&.ghost {
 		& button {
 			background-color: $ui-03;
-			border-color: transparent;
-			box-shadow: none;
 			border-bottom: 2px solid $interactive-01;
-		}
-		& button:focus {
-			border-color: $interactive-01;
-			box-shadow: inset 0 0 0 1px $interactive-01, inset 0 0 0 2px $ui-background;
 		}
 	}
 }

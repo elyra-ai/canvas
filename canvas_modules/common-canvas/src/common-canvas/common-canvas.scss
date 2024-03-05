@@ -83,7 +83,7 @@ $panel-border-color: $ui-03;
 	background: $ui-01;
 	transition: all 0.2s ease-in;
 	&:hover {
-		background: $interactive-01;
+		background: $interactive-03;
 	}
 }
 
@@ -119,7 +119,7 @@ $panel-border-color: $ui-03;
 	.toolbar-overflow-item {
 		button:focus {
 			border-color: transparent;
-			box-shadow: inset 2px 2px $interactive-01, inset -6px -2px $interactive-01;
+			box-shadow: inset 2px 2px $interactive-03, inset -6px -2px $interactive-03;
 		}
 		// Set padding so overflow icon appears in the center (horizontally). This
 		// offsets the 5px which are set in the code to make the overflow icon
@@ -252,7 +252,7 @@ $panel-border-color: $ui-03;
 	& button:hover,
 	& button:focus {
 		background-color: $ui-03;
-		color: $interactive-01;
+		color: $interactive-03;
 	}
 	& .return-to-previous-content {
 		display: flex;

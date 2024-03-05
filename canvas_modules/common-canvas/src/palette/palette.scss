@@ -99,9 +99,15 @@ $palette-search-container-height: 41px;
 		/* This stops it being dragged incorrectly.*/
 		user-select: none;
 		width: 100%;
+		outline: none; // Turn outline off and use carbon style for focus below.
 
 		&:hover {
 			background-color: $ui-03;
+		}
+
+		&:focus {
+			border-color: $interactive-03;
+			box-shadow: inset 0 0 0 2px $interactive-03;
 		}
 
 		.palette-list-item-category-label {
@@ -414,47 +420,9 @@ $palette-search-container-height: 41px;
 }
 
 .palette-dialog-topbar {
-	height: 40px;
-	padding: 10px;
+	height: 41px;
 	background-color: $ui-03;
 	border-bottom: $palette-border-width solid $palette-border-color;
-
-	.left-navbar {
-		height: 20px;
-		float: left;
-		vertical-align: middle;
-		/* Prevent elements from being selectable */
-		/* This stops it being dragged incorrectly.*/
-		user-select: none;
-	}
-
-	.right-navbar {
-		height: 20px;
-		float: right;
-		vertical-align: middle;
-	}
-
-	.secondary-action {
-		margin-left: 10px;
-		display: inline-block;
-		cursor: pointer;
-		width: 20px;
-	}
-
-	.close-icon svg {
-		fill: $interactive-02;
-	}
-
-	.palette-three-way-icon-div {
-		margin-left: 5px;
-		display: inline-block;
-		cursor: pointer;
-		width: 20px;
-		height: 20px;
-		/* Prevent elements from being selectable */
-		/* This stops it being dragged incorrectly.*/
-		user-select: none;
-	}
 }
 
 .palette-dialog-content {
@@ -466,7 +434,7 @@ $palette-search-container-height: 41px;
 }
 
 .palette-dialog-categories {
-	background-color: $ui-03;
+	background-color: $ui-01;
 	width: 130px;
 	min-width: 130px; /* Set a min-width to ensure space for the scroll bar when it is displayed */
 	border-right: $palette-border-width solid $palette-border-color;

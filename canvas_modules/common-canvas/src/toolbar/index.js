@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,5 @@
  * limitations under the License.
  */
 
-export default (state = {}, action) => {
-	switch (action.type) {
-	case "SET_TOOLBAR_CONFIG": {
-		return Object.assign({}, state, { config: action.data.toolbarConfig });
-	}
-
-	case "REFRESH_TOOLBAR": {
-		return Object.assign({}, state);
-	}
-
-
-	default:
-		return state;
-	}
-};
+import Toolbar from "./toolbar.jsx";
+export default Toolbar;

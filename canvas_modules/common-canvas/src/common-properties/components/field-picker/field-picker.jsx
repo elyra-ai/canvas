@@ -315,9 +315,13 @@ export default class FieldPicker extends React.Component {
 	_genResetButton() {
 		const resetLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL);
+		const defaultSelections = this.props.currentFields;
+		const selectedFields = this.state.selectedFields;
+		const isSelectionEqual = defaultSelections.length === selectedFields.length && defaultSelections.every((field) => selectedFields.indexOf(field) > -1);
 		return (
 			<Button
 				className="properties-fp-reset-button-container"
+				disabled={isSelectionEqual}
 				onClick={this.handleReset}
 				renderIcon={Reset24}
 				iconDescription={resetLabel}

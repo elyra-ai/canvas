@@ -16,14 +16,10 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import PaletteDialogTopbarThreeWayIcon from "./palette-dialog-topbar-three-way-icon.jsx";
-import Close32Icon from "../../assets/images/palette/close_32.svg";
-import PaletteGridSelectedIcon from "../../assets/images/palette/palette_grid_selected.svg";
-import PaletteGridHoverIcon from "../../assets/images/palette/palette_grid_hover.svg";
-import PaletteGridDeSelectedIcon from "../../assets/images/palette/palette_grid_deselected.svg";
-import PaletteListSelectedIcon from "../../assets/images/palette/palette_list_selected.svg";
-import PaletteListHoverIcon from "../../assets/images/palette/palette_list_hover.svg";
-import PaletteListDeSelectedIcon from "../../assets/images/palette/palette_list_deselected.svg";
+
+import { CloseOutline16, Grid16, List16 } from "@carbon/icons-react";
+
+import Toolbar from "../toolbar";
 
 class PaletteDialogTopbar extends React.Component {
 	constructor(props) {
@@ -34,9 +30,7 @@ class PaletteDialogTopbar extends React.Component {
 
 		this.mouseDown = this.mouseDown.bind(this);
 		this.doubleClick = this.doubleClick.bind(this);
-		this.close = this.close.bind(this);
-		this.gridViewSelected = this.gridViewSelected.bind(this);
-		this.listViewSelected = this.listViewSelected.bind(this);
+		this.toolbarActionHandler = this.toolbarActionHandler.bind(this);
 	}
 
 	mouseDown(mouseDownEvent) {
@@ -47,40 +41,35 @@ class PaletteDialogTopbar extends React.Component {
 		this.props.windowMaximizeMethod(doubleClickEvent);
 	}
 
-	close(closeEvent) {
-		this.props.canvasController.closePalette(closeEvent);
-	}
+	toolbarActionHandler(action) {
+		if (action === "close") {
+			this.props.canvasController.closePalette();
 
-	gridViewSelected() {
-		this.props.showGridMethod(true);
-	}
+		} else if (action === "grid") {
+			this.props.showGridMethod(true);
 
-	listViewSelected() {
-		this.props.showGridMethod(false);
+		} else if (action === "list") {
+			this.props.showGridMethod(false);
+		}
 	}
 
 	render() {
+		const config = {
+			leftBar: [
+				{ action: "grid", iconEnabled: (<Grid16 />), enable: true, isSelected: this.props.showGrid },
+				{ action: "list", iconEnabled: (<List16 />), enable: true, isSelected: !this.props.showGrid },
+				{ divider: true }
+			],
+			rightBar: [
+				{ divider: true },
+				{ action: "close", iconEnabled: (<CloseOutline16 />), enable: true }
+			]
+		};
+
+
 		return (
 			<div className="palette-dialog-topbar" onMouseDown={this.mouseDown} onDoubleClick={this.doubleClick}>
-				<span className="left-navbar">
-					<PaletteDialogTopbarThreeWayIcon iconClickedMethod={this.gridViewSelected}
-						isSelected={this.props.showGrid}
-						selectedIconName={PaletteGridSelectedIcon}
-						hoverIconName={PaletteGridHoverIcon}
-						deselectedIconName={PaletteGridDeSelectedIcon}
-					/>
-					<PaletteDialogTopbarThreeWayIcon iconClickedMethod={this.listViewSelected}
-						isSelected={!this.props.showGrid}
-						selectedIconName={PaletteListSelectedIcon}
-						hoverIconName={PaletteListHoverIcon}
-						deselectedIconName={PaletteListDeSelectedIcon}
-					/>
-				</span>
-				<span className="right-navbar">
-					<a className="secondary-action" onClick={this.close}>
-						<img src={Close32Icon} draggable="false" className="close-icon" />
-					</a>
-				</span>
+				<Toolbar instanceId = {0} config={config} toolbarActionHandler={this.toolbarActionHandler} />
 			</div>
 		);
 	}

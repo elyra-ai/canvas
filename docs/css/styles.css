@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-export default (state = {}, action) => {
-	switch (action.type) {
-	case "SET_TOOLBAR_CONFIG": {
-		return Object.assign({}, state, { config: action.data.toolbarConfig });
-	}
+th {
+  font-weight: bold;
+}
 
-	case "REFRESH_TOOLBAR": {
-		return Object.assign({}, state);
-	}
-
-
-	default:
-		return state;
-	}
-};
+.md-grid {
+  max-width: initial;
+}
