@@ -156,6 +156,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 	.d3-node-port-input-arrow {
 		stroke: transparent;
 		fill: transparent;
+		pointer-events: none;
 	}
 
 	.d3-comment-selection-highlight {
