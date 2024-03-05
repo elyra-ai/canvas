@@ -21,7 +21,7 @@ set -e
 WORKING_DIR="$PWD"
 
 cd ./canvas_modules/common-canvas
-release=$(echo $GITHUB_REF | cut -d'v' -f2)
+release=$(echo $GITHUB_REF_NAME | cut -d'v' -f2)
 echo "Release is set to $release"
 npm version $release
 NPM_VERSION=`node -p "require('./package.json').version"`
