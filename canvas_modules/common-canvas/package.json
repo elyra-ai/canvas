@@ -1,6 +1,6 @@
 {
   "name": "@elyra/canvas",
-  "version": "12.42.0",
+  "version": "0.0.0",
   "description": "Elyra common-canvas",
   "main": "dist/common-canvas.js",
   "module": "dist/common-canvas.es.js",
