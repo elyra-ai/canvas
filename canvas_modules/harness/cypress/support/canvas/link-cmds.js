@@ -374,6 +374,7 @@ Cypress.Commands.add("hoverOverLinkName", (linkName) => {
 	cy.getLinkWithLabel(linkName)
 		.children()
 		.eq(1)
+		.trigger("mouseenter", { force: true })
 		.trigger("mouseover", { force: true });
 });
 
