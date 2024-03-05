@@ -1975,15 +1975,26 @@ export default class SVGCanvasRenderer {
 				} else {
 					this.addDynamicNodeIcons(d3Event, d, nodeGrp);
 				}
+			})
+			// This will be called when the mouse cursor enters the node or moves out of
+			// child elements of the node. Some child elements, like decorations, may have
+			// their own tooltips so this will redisplay the node tooltip on exiting the decoration.
+			.on("mouseover", (d3Event, d) => {
+				d3Event.stopPropagation(); // Stop propagation in case we are in a sub-flow
 				if (this.canOpenTip(TIP_TYPE_NODE)) {
-					this.canvasController.closeTip(); // Ensure existing tip is removed when moving pointer within an in-place supernode
-					this.canvasController.openTip({
-						id: this.getId("node_tip", d.id),
-						type: TIP_TYPE_NODE,
-						targetObj: d3Event.currentTarget,
-						pipelineId: this.activePipeline.id,
-						node: d
-					});
+					const tipId = this.canvasController.getTipObjId(); // Id of current tip or null
+					const nodeTipId = this.getId("node_tip", d.id);
+
+					if (tipId === null || tipId !== nodeTipId) {
+						this.canvasController.closeTip();
+						this.canvasController.openTip({
+							id: nodeTipId,
+							type: TIP_TYPE_NODE,
+							targetObj: d3Event.currentTarget,
+							pipelineId: this.activePipeline.id,
+							node: d
+						});
+					}
 				}
 			})
 			.on("mouseleave", (d3Event, d) => {
@@ -2507,7 +2518,7 @@ export default class SVGCanvasRenderer {
 	attachDecGroupListeners(decGrps) {
 		decGrps
 			.on("mouseenter", (d3Event, dec) => {
-				if (this.canOpenTip(TIP_TYPE_DEC)) {
+				if (this.canOpenTip(TIP_TYPE_DEC) && dec.tooltip) {
 					this.canvasController.closeTip(); // Ensure any existing tip is removed
 					this.canvasController.openTip({
 						id: this.getId("dec_tip", dec.id),
@@ -2518,8 +2529,10 @@ export default class SVGCanvasRenderer {
 					});
 				}
 			})
-			.on("mouseleave", (d3Event, d) => {
-				this.canvasController.closeTip();
+			.on("mouseleave", (d3Event, dec) => {
+				if (this.canOpenTip(TIP_TYPE_DEC) && dec.tooltip) {
+					this.canvasController.closeTip();
+				}
 			});
 	}
 
@@ -4054,17 +4067,27 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableContextToolbar) {
 					this.addContextToolbar(d3Event, link, "link");
 				}
-
+			})
+			// This will be called when the mouse cursor enters the link or moves out of
+			// child elements of the link. Some child elements, like decorations, may have
+			// their own tooltips so this will redisplay the link tooltip on exiting the decoration.
+			.on("mouseover", (d3Event, link) => {
+				d3Event.stopPropagation(); // Stop propagation in case we are in a sub-flow
 				if (this.canOpenTip(TIP_TYPE_LINK)) {
-					this.canvasController.closeTip();
-					this.canvasController.openTip({
-						id: this.getId("link_tip", link.id),
-						type: TIP_TYPE_LINK,
-						targetObj: targetObj,
-						mousePos: { x: d3Event.clientX, y: d3Event.clientY },
-						pipelineId: this.activePipeline.id,
-						link: link
-					});
+					const tipId = this.canvasController.getTipObjId(); // Id of current tip or null
+					const linkTipId = this.getId("link_tip", link.id);
+
+					if (tipId === null || tipId !== linkTipId) {
+						this.canvasController.closeTip();
+						this.canvasController.openTip({
+							id: linkTipId,
+							type: TIP_TYPE_LINK,
+							targetObj: d3Event.currentTarget,
+							mousePos: { x: d3Event.clientX, y: d3Event.clientY },
+							pipelineId: this.activePipeline.id,
+							link: link
+						});
+					}
 				}
 			})
 			.on("mouseleave", (d3Event, link) => {
