@@ -1976,7 +1976,7 @@ export default class CanvasController {
 
 	// Returns the ID of the current tooltip or null if no tip
 	// is curently displayed.
-	getTipObjId() {
+	getTipId() {
 		const t = this.objectModel.getTooltip();
 		return t ? t.id : null;
 	}

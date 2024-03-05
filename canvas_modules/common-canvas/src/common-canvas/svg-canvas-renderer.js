@@ -1982,7 +1982,7 @@ export default class SVGCanvasRenderer {
 			.on("mouseover", (d3Event, d) => {
 				d3Event.stopPropagation(); // Stop propagation in case we are in a sub-flow
 				if (this.canOpenTip(TIP_TYPE_NODE)) {
-					const tipId = this.canvasController.getTipObjId(); // Id of current tip or null
+					const tipId = this.canvasController.getTipId(); // Id of current tip or null
 					const nodeTipId = this.getId("node_tip", d.id);
 
 					if (tipId === null || tipId !== nodeTipId) {
@@ -4074,7 +4074,7 @@ export default class SVGCanvasRenderer {
 			.on("mouseover", (d3Event, link) => {
 				d3Event.stopPropagation(); // Stop propagation in case we are in a sub-flow
 				if (this.canOpenTip(TIP_TYPE_LINK)) {
-					const tipId = this.canvasController.getTipObjId(); // Id of current tip or null
+					const tipId = this.canvasController.getTipId(); // Id of current tip or null
 					const linkTipId = this.getId("link_tip", link.id);
 
 					if (tipId === null || tipId !== linkTipId) {
