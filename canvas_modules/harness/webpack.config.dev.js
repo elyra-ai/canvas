@@ -57,7 +57,7 @@ const rules = [
 		test: /\.js(x?)$/,
 		loader: "babel-loader",
 		exclude: /node_modules/,
-		query: babelOptions
+		options: babelOptions
 	},
 	{
 		test: /\.s*css$/,
@@ -83,7 +83,7 @@ const rules = [
 	},
 	{
 		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
-		loader: "file-loader?name=graphics/[hash].[ext]"
+		use: "file-loader?name=graphics/[contenthash].[ext]"
 	}
 ];
 
@@ -92,8 +92,8 @@ const rules = [
 
 // Plugins ------------------------------------------------------------>
 
-var plugins = [
-	new webpack.optimize.OccurrenceOrderPlugin(),
+const plugins = [
+	// new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.NoEmitOnErrorsPlugin(),
 	// Generates an `index.html` file with the <script> injected.
 	new HtmlWebpackPlugin({
@@ -105,6 +105,11 @@ var plugins = [
 	new webpack.SourceMapDevToolPlugin({
 		module: true,
 		columns: false
+	}),
+	// Work around for Buffer is undefined:
+	// https://github.com/webpack/changelog-v5/issues/10
+	new webpack.ProvidePlugin({
+		Buffer: ["buffer", "Buffer"],
 	})
 ];
 
@@ -120,6 +125,13 @@ module.exports = {
 			__dirname,
 			"node_modules"
 		],
+		fallback: {
+			// path: require.resolve("path-browserify"),
+			// stream: require.resolve("stream-browserify"),
+			util: require.resolve("util"),
+			buffer: require.resolve("buffer"),
+			vm: false
+		},
 		alias: {
 			"react": "node_modules/react",
 			"react-dom": "node_modules/@hot-loader/react-dom",

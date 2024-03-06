@@ -82,7 +82,7 @@ const rules = [
 
 // Plugins ------------------------------------------------------------>
 const plugins = [
-	new webpack.optimize.OccurrenceOrderPlugin(),
+	// new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.NoEmitOnErrorsPlugin(),
 	new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
 	new MiniCssExtractPlugin({

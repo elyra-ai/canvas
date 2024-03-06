@@ -15,9 +15,9 @@
  */
 
 // Some useful variations on Carbon colors
-$blue: lighten($focus, 25%);
-$light-blue: lighten($focus, 43%);
-$dark-blue: lighten($focus, 10%);
+$blue: #8EB5FF;
+$light-blue: #E9F1FF;
+$dark-blue: #4283FE;
 
 // Node colors for the Regular (Vertical) theme
 $node-body-stroke: $blue;
