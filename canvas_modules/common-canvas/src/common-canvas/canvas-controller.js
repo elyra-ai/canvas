@@ -1974,6 +1974,13 @@ export default class CanvasController {
 		return this.objectModel.isTooltipOpen();
 	}
 
+	// Returns the ID of the current tooltip or null if no tip
+	// is curently displayed.
+	getTipId() {
+		const t = this.objectModel.getTooltip();
+		return t ? t.id : null;
+	}
+
 	isTipEnabled(tipType) {
 		const canvasConfig = this.getCanvasConfig();
 		switch (tipType) {

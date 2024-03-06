@@ -2442,6 +2442,10 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "SET_TOOLTIP_DEF", data: { tooltipDef: tipDef } });
 	}
 
+	getTooltip() {
+		return this.store.getTooltip();
+	}
+
 	isTooltipOpen() {
 		return this.store.isTooltipOpen();
 	}

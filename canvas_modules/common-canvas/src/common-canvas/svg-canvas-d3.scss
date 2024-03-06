@@ -549,6 +549,7 @@ $link-highlight-color: $support-info;
 		stroke: $node-port-input-arrow-connected-stroke-color;
 		stroke-width: 1;
 		fill: $node-port-input-arrow-connected-fill-color;
+		pointer-events: none;
 	}
 }
 
