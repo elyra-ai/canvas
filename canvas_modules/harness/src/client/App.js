@@ -2176,7 +2176,7 @@ class App extends React.Component {
 					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
 					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
 					{ divider: true },
-					{ action: "settingspanel", iconEnabled: (<Settings32 />), label: "Settings", enable: true,
+					{ action: "settingspanel", iconEnabled: (<Settings />), label: "Settings", enable: true,
 						subPanel: AppSettingsPanel, subPanelData: { saveData: (settings) => window.alert("Panel data received by application.\n" + settings) } },
 					{ divider: true },
 					{ action: "text-size-submenu", incLabelWithIcon: "after", iconEnabled: (<TextScale size={32} />), label: "Text Size", enable: true,

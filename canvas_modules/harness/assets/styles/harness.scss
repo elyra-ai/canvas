@@ -15,18 +15,18 @@
  */
 
 $font-prefix: "/fonts";
-@import "@ibm/plex/scss/ibm-plex.scss";
+@use "@carbon/react/scss/themes" as *;
+@use "./carbon.scss" as *;
 
-@use "@carbon/react/scss/themes";
 // Switch the theme's below to change light <-> dark theme for harness
 // Modify common-canvas/src/themes/light.scss to switch common-canvas.
-@use "@carbon/react/scss/theme" as * with (
-	$theme: themes.$g10 // The light (gray 10) theme
-	// $theme: themes.$g90 // The dark theme
-);
+$theme: $g10; // The light (gray 10) theme
+// $theme: $g90; // The dark theme
 
-@include theme;
-@use "./carbon.scss" as *;
+:root {
+	@include theme();
+}
+@import "@ibm/plex/scss/ibm-plex.scss";
 
 // Common variables for App.scss and sidepanel.scss
 $harness-header-height: 50px;

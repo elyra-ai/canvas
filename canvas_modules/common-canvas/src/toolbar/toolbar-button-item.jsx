@@ -29,7 +29,7 @@ import { StopFilledAlt, Play, Undo, Redo, Chat, ChatOff, Result,
 	Cut, Copy, Paste, Edit,	ColorPalette, Maximize, Minimize,
 	Launch, AddComment, TrashCan, ZoomIn, ZoomOut,
 	ChevronRight, ChevronDown, ChevronUp,
-  CenterToFit, OpenPanelFilledLeft } from "@carbon/icons-react";
+	CenterToFit, OpenPanelFilledLeft } from "@carbon/react/icons";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT, TOOLBAR_COLOR_BACKGROUND,
@@ -112,11 +112,11 @@ class ToolbarButtonItem extends React.Component {
 		case (TOOLBAR_ZOOM_OUT):
 			return <ZoomOut disabled={disabled} />;
 		case (TOOLBAR_ZOOM_FIT):
-			return <CenterToFit16 disabled={disabled} />;
+			return <CenterToFit disabled={disabled} />;
 		case (TOOLBAR_OPEN_PALETTE):
-			return <OpenPanelFilledLeft16 disabled={disabled} />;
+			return <OpenPanelFilledLeft disabled={disabled} />;
 		case (TOOLBAR_CLOSE_PALETTE):
-			return <OpenPanelFilledLeft16 disabled={disabled} />;
+			return <OpenPanelFilledLeft disabled={disabled} />;
 
 		// Non-carbon icons
 		case (TOOLBAR_ARRANGE_HORIZONALLY):

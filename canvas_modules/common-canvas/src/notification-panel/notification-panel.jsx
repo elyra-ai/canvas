@@ -200,7 +200,7 @@ class NotificationPanel extends React.Component {
 					ref={(ref) => (!ref || this.allRefs.push(ref))}
 					size="sm"
 					kind="ghost"
-					renderIcon={Close16}
+					renderIcon={Close}
 					hasIconOnly
 					iconDescription={this.props.intl.formatMessage({
 						id: "notification.panel.close.button.description",

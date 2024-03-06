@@ -19,8 +19,8 @@ import PropTypes from "prop-types";
 import SVG from "react-inlinesvg";
 import { get } from "lodash";
 
-import ShapeNode from "@carbon/charts-react/diagrams/ShapeNode";
-import "@carbon/charts/styles-g10.css";
+import ShapeNode from "@carbon/charts";
+import "@carbon/charts-react/dist/styles.css";
 
 class ShapeNodeWrapper extends React.Component {
 	componentDidMount() {

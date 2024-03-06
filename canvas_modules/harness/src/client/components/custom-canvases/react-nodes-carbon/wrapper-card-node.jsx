@@ -22,9 +22,9 @@ import { get } from "lodash";
 import CardNode, { CardNodeColumn,
 	CardNodeSubtitle,
 	CardNodeTitle
-} from "@carbon/charts-react/diagrams/CardNode";
+} from "@carbon/charts";
 
-import "@carbon/charts/styles-g10.css";
+import "@carbon/charts-react/dist/styles.css";
 
 class CardNodeWrapper extends React.Component {
 	componentDidMount() {

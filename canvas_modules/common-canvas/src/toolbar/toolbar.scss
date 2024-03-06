@@ -116,11 +116,11 @@ $toolbar-divider-width: 1px;
 		}
 
 		& button:hover {
-			background-color: $hover-field;
+			background-color: $skeleton-background;
 		}
 
 		& button:focus {
-			background-color: $hover-field;
+			background-color: $skeleton-background;
 		}
 
 		& button:disabled:hover {
@@ -130,12 +130,12 @@ $toolbar-divider-width: 1px;
 
 	&.tertiary {
 		& button {
-			color: $brand-03;
+			color: $link-primary;
 			background-color: $layer-01;
 		}
 
 		& button:hover {
-			background-color: $hover-field;
+			background-color: $skeleton-background;
 		}
 
 		& button:disabled,
@@ -165,7 +165,7 @@ $toolbar-divider-width: 1px;
 	}
 
 	& button:hover {
-		background-color: $hover-field;
+		background-color: $skeleton-background;
 	}
 
 	& button:disabled:hover {
@@ -219,13 +219,13 @@ $toolbar-divider-width: 1px;
 		}
 	}
 
-.toolbar-text-content {
-	position: absolute;
-	top: 14px;
-	font-size: 9px;
-	line-height: 9px;
-	color: $icon-primary;
-}
+	.toolbar-text-content {
+		position: absolute;
+		top: 14px;
+		font-size: 9px;
+		line-height: 9px;
+		color: $icon-primary;
+	}
 
 	.toolbar-icon-label {
 		line-height: 16px;
