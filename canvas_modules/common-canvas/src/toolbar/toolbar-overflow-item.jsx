@@ -35,7 +35,7 @@ class ToolbarOverflowItem extends React.Component {
 		this.uuid = uuid4();
 		this.toggleExtendedMenu = this.toggleExtendedMenu.bind(this);
 		this.clickOutside = this.clickOutside.bind(this);
-		this.closeSubMenu = this.closeSubMenu.bind(this);
+		this.closeSubArea = this.closeSubArea.bind(this);
 	}
 
 	componentDidUpdate() {
@@ -55,7 +55,13 @@ class ToolbarOverflowItem extends React.Component {
 		return this.props.action;
 	}
 
-	closeSubMenu() {
+	// Called by toolbar.jsx
+	isSubAreaDisplayed() {
+		return this.state.showExtendedMenu;
+	}
+
+	// Called by toolbar.jsx and internally
+	closeSubArea() {
 		this.setState({ showExtendedMenu: false });
 	}
 
@@ -84,7 +90,7 @@ class ToolbarOverflowItem extends React.Component {
 		if (this.state.showExtendedMenu) {
 			document.removeEventListener("click", this.clickOutside, false);
 			this.props.setOverflowIndex(null); // Clear the indexes
-			this.closeSubMenu();
+			this.closeSubArea();
 			this.props.setToolbarFocusAction(this.props.action); // This will not set focus on this item
 
 		} else {
@@ -118,7 +124,7 @@ class ToolbarOverflowItem extends React.Component {
 					subMenuActions={this.props.subMenuActions}
 					instanceId={this.props.instanceId}
 					toolbarActionHandler={this.props.toolbarActionHandler}
-					closeSubArea={this.closeSubMenu}
+					closeSubArea={this.closeSubArea}
 					setToolbarFocusAction={this.props.setToolbarFocusAction}
 					actionItemRect={actionItemRect}
 					expandDirection={"vertical"}
