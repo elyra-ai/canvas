@@ -24,7 +24,8 @@ import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import NotificationPanel from "../notification-panel/notification-panel.jsx";
 import { ERROR, WARNING, SUCCESS, INFO, PALETTE_LAYOUT_NONE,
-	NOTIFICATION_ICON_CLASS, TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_LAYOUT_TOP }
+	NOTIFICATION_ICON_CLASS, TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_LAYOUT_TOP,
+	TOOLBAR_TOGGLE_PALETTE }
 	from "../common-canvas/constants/canvas-constants";
 
 class CommonCanvasToolbar extends React.Component {
@@ -164,9 +165,8 @@ class CommonCanvasToolbar extends React.Component {
 
 		// Add the new togglePalette icon if the palette is enabled.
 		if (this.props.isPaletteEnabled) {
-			const paletteOpenClose = this.props.isPaletteOpen
-				? { action: "paletteClose", label: paletteLabel, enable: true }
-				: { action: "paletteOpen", label: paletteLabel, enable: true };
+			const paletteOpenClose =
+				{ action: TOOLBAR_TOGGLE_PALETTE, label: paletteLabel, enable: true, isSelected: this.props.isPaletteOpen };
 
 			const paletteTools = [
 				paletteOpenClose,
