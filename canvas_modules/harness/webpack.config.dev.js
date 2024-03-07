@@ -109,6 +109,10 @@ const plugins = [
 	}),
 	new webpack.ProvidePlugin({
 		process: "process"
+	}),
+	new HtmlWebpackPlugin({
+		inject: true,
+		template: "./index-dev.html"
 	})
 ];
 

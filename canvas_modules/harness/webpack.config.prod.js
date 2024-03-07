@@ -91,6 +91,10 @@ const plugins = [
 	// required for file uploads. s3 package uses process.browser
 	new webpack.ProvidePlugin({
 		process: "process"
+	}),
+	new HtmlWebpackPlugin({
+		inject: true,
+		template: "./index-dev.html"
 	})
 ];
 
