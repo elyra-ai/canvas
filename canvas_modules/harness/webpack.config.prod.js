@@ -22,7 +22,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const babelOptions = require("./scripts/babel/babelOptions").babelOptions;
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+// const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const constants = require("./lib/constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
@@ -36,8 +36,8 @@ const entry = {
 const output = {
 	path: path.join(__dirname, ".build"),
 	publicPath: constants.APP_PATH,
-	filename: "js/[name].[hash].js",
-	chunkFilename: "js/chunk.[name].[id].[chunkhash].js"
+	filename: "js/[name].[contenthash].js",
+	chunkFilename: "js/chunk.[name].[id].[contenthash].js"
 };
 
 
@@ -48,14 +48,11 @@ const rules = [
 		test: /\.js(x?)$/,
 		loader: "babel-loader",
 		exclude: (/node_modules|common-canvas/),
-		query: babelOptions
+		options: babelOptions
 	},
 	{
 		test: /\.s*css$/,
 		use: [
-			{
-				loader: MiniCssExtractPlugin.loader,
-			},
 			{ loader: "css-loader", options: { url: false } },
 			{ loader: "postcss-loader",
 				options: {
@@ -75,23 +72,25 @@ const rules = [
 	},
 	{
 		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
-		loader: "file-loader?name=graphics/[hash].[ext]"
+		use: [
+			"file-loader?name=graphics/[contenthash].[ext]"
+		]
 	}
 ];
 
 
 // Plugins ------------------------------------------------------------>
 const plugins = [
-	// new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.NoEmitOnErrorsPlugin(),
 	new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
-	new MiniCssExtractPlugin({
-		filename: "harness.min.css"
+	// Work around for Buffer is undefined:
+	// https://github.com/webpack/changelog-v5/issues/10
+	new webpack.ProvidePlugin({
+		Buffer: ["buffer", "Buffer"],
 	}),
-	// Generates an `index.html` file with the <script> injected.
-	new HtmlWebpackPlugin({
-		inject: true,
-		template: "./index.html"
+	// required for file uploads. s3 package uses process.browser
+	new webpack.ProvidePlugin({
+		process: "process"
 	})
 ];
 
@@ -110,7 +109,16 @@ module.exports = {
 	resolve: {
 		modules: [
 			__dirname,
-			"node_modules"],
+			"node_modules"
+		],
+		fallback: {
+			path: require.resolve("path-browserify"),
+			stream: require.resolve("stream-browserify"),
+			util: require.resolve("util"),
+			buffer: require.resolve("buffer"),
+			url: false,
+			process: false
+		},
 		alias: {
 			"react": "node_modules/react",
 			"react-dom": "node_modules/react-dom",

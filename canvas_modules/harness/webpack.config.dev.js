@@ -83,7 +83,9 @@ const rules = [
 	},
 	{
 		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
-		use: "file-loader?name=graphics/[contenthash].[ext]"
+		use: [
+			"file-loader?name=graphics/[contenthash].[ext]",
+		],
 	}
 ];
 
@@ -93,13 +95,7 @@ const rules = [
 // Plugins ------------------------------------------------------------>
 
 const plugins = [
-	// new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.NoEmitOnErrorsPlugin(),
-	// Generates an `index.html` file with the <script> injected.
-	new HtmlWebpackPlugin({
-		inject: true,
-		template: "./index-dev.html"
-	}),
 	new webpack.HotModuleReplacementPlugin(),
 	// generates the source maps used for debugging.  Used instead of `devtool` option
 	new webpack.SourceMapDevToolPlugin({
@@ -110,6 +106,9 @@ const plugins = [
 	// https://github.com/webpack/changelog-v5/issues/10
 	new webpack.ProvidePlugin({
 		Buffer: ["buffer", "Buffer"],
+	}),
+	new webpack.ProvidePlugin({
+		process: "process"
 	})
 ];
 
@@ -119,18 +118,18 @@ module.exports = {
 	mode: "development",
 	devtool: false,
 	entry: entry,
-	cache: true,
 	resolve: {
 		modules: [
 			__dirname,
 			"node_modules"
 		],
 		fallback: {
-			// path: require.resolve("path-browserify"),
-			// stream: require.resolve("stream-browserify"),
+			path: require.resolve("path-browserify"),
+			stream: require.resolve("stream-browserify"),
 			util: require.resolve("util"),
 			buffer: require.resolve("buffer"),
-			vm: false
+			url: false,
+			process: false
 		},
 		alias: {
 			"react": "node_modules/react",

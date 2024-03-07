@@ -19,12 +19,12 @@ import PropTypes from "prop-types";
 import SVG from "react-inlinesvg";
 import { get } from "lodash";
 
-import CardNode, { CardNodeColumn,
+import { CardNode, CardNodeColumn,
 	CardNodeSubtitle,
 	CardNodeTitle
-} from "@carbon/charts";
+} from "@carbon/charts-react";
 
-import "@carbon/charts-react/dist/styles.css";
+// import "@carbon/charts-react/dist/styles.css"; // TODO: Check if this is still needed?
 
 class CardNodeWrapper extends React.Component {
 	componentDidMount() {
