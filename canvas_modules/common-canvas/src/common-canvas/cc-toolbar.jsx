@@ -165,8 +165,13 @@ class CommonCanvasToolbar extends React.Component {
 
 		// Add the new togglePalette icon if the palette is enabled.
 		if (this.props.isPaletteEnabled) {
+			// Applications may need to detect these legacy classes to detect which action
+			// is to be performed. So add them as additional classes. Also, jest tests require them.
+			const className = this.props.isPaletteOpen ? "paletteClose-action" : "paletteOpen-action";
+
 			const paletteOpenClose =
-				{ action: TOOLBAR_TOGGLE_PALETTE, label: paletteLabel, enable: true, isSelected: this.props.isPaletteOpen };
+				{ action: TOOLBAR_TOGGLE_PALETTE, label: paletteLabel, enable: true,
+					isSelected: this.props.isPaletteOpen, className };
 
 			const paletteTools = [
 				paletteOpenClose,

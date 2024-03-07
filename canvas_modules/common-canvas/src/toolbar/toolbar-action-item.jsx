@@ -192,7 +192,8 @@ class ToolbarActionItem extends React.Component {
 				"toolbar-item-selected": actionObj.isSelected
 			},
 			kindAsClass,
-			actionName);
+			actionName,
+			this.props.actionObj.className);
 
 		const subArea = this.isSubAreaDisplayed() ? this.generateSubArea() : null;
 
