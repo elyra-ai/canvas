@@ -190,6 +190,7 @@ export const TOOLBAR_ARRANGE_VERTICALLY = "arrangeVertically";
 export const TOOLBAR_TOGGLE_NOTIFICATION_PANEL = "toggleNotificationPanel";
 export const TOOLBAR_OPEN_PALETTE = "paletteOpen";
 export const TOOLBAR_CLOSE_PALETTE = "paletteClose";
+export const TOOLBAR_TOGGLE_PALETTE = "paletteToggle";
 export const TOOLBAR_EXPAND_SUPERNODE_IN_PLACE = "expandSuperNodeInPlace";
 export const TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE = "collapseSuperNodeInPlace";
 export const TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE = "displaySubPipeline";
