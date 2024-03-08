@@ -36,7 +36,7 @@ import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_DELETE_SELECTED_OBJECTS, TOOLBAR_DELETE_LINK,
 	TOOLBAR_ZOOM_IN, TOOLBAR_ZOOM_OUT, TOOLBAR_ZOOM_FIT,
 	TOOLBAR_ARRANGE_HORIZONALLY, TOOLBAR_ARRANGE_VERTICALLY,
-	TOOLBAR_OPEN_PALETTE, TOOLBAR_CLOSE_PALETTE, TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
+	TOOLBAR_OPEN_PALETTE, TOOLBAR_CLOSE_PALETTE, TOOLBAR_TOGGLE_PALETTE, TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
 	TOOLBAR_SHOW_COMMENTS, TOOLBAR_HIDE_COMMENTS,
 	TOOLBAR_EXPAND_SUPERNODE_IN_PLACE, TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE,
 	TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE, TOOLBAR_SET_NODE_LABEL_EDIT, TOOLBAR_SET_COMMENT_EDIT_MODE }
@@ -117,6 +117,8 @@ class ToolbarButtonItem extends React.Component {
 			return <OpenPanelFilledLeft disabled={disabled} />;
 		case (TOOLBAR_CLOSE_PALETTE):
 			return <OpenPanelFilledLeft disabled={disabled} />;
+		case (TOOLBAR_TOGGLE_PALETTE):
+			return <OpenPanelFilledLeft disabled={disabled} />;
 
 		// Non-carbon icons
 		case (TOOLBAR_ARRANGE_HORIZONALLY):
@@ -195,7 +197,6 @@ class ToolbarButtonItem extends React.Component {
 
 		const itemContentClassName = classNames(
 			"toolbar-item-content",
-			actionObj.className ? actionObj.className : null,
 			{ "overflow": this.props.isInMenu, "disabled": !actionObj.enable, "default": !actionObj.kind });
 
 		// If no 'kind' is set, use ghost and then override colors using the "default" class in innerDivClassName.

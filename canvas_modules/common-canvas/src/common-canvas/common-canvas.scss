@@ -296,17 +296,17 @@ $panel-border-color: $layer-accent-01;
 	border-width: 2px;
 }
 
-.toolbar-item-content.notificationCounterIcon {
-	&.error > div > svg > .dot {
+.toolbar-item.notificationCounterIcon {
+	&.error .toolbar-icon .dot {
 		fill: $support-error;
 	}
-	&.warning > div > svg > .dot {
+	&.warning .toolbar-icon .dot {
 		fill: $support-warning;
 	}
-	&.success > div > svg > .dot {
+	&.success .toolbar-icon .dot {
 		fill: $support-success;
 	}
-	&.info > div > svg > .dot {
+	&.info .toolbar-icon .dot {
 		fill: $support-info;
 	}
 }
