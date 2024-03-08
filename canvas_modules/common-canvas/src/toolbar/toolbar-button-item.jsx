@@ -197,7 +197,6 @@ class ToolbarButtonItem extends React.Component {
 
 		const itemContentClassName = classNames(
 			"toolbar-item-content",
-			actionObj.className ? actionObj.className : null,
 			{ "overflow": this.props.isInMenu, "disabled": !actionObj.enable, "default": !actionObj.kind });
 
 		// If no 'kind' is set, use ghost and then override colors using the "default" class in innerDivClassName.
