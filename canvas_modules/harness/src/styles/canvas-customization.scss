@@ -16,6 +16,8 @@
 
 // This file contains styles used to customize the default styles for common
 // canvas.
+@use "../../assets/styles/carbon.scss" as *;
+
 
 // Some useful variations on Carbon colors
 $blue: #8EB5FF;

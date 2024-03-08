@@ -211,7 +211,7 @@ export default class SidePanelProperties extends React.Component {
 		const formOptions = [];
 		const paramDefOptions = [];
 		const choosefromlocation = [];
-		options.push(<SelectItem key = "choose-an-option" text = "Choose an option..." />);
+		options.push(<SelectItem key = "choose-an-option" text = "Choose an option..." value = "Choose an option..." />);
 		choosefromlocation.push(
 			<SelectItem key={"choose-from-location"} text = "Choose From Location" value = {CHOOSE_FROM_LOCATION} />);
 		options.push(

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@use "../../../../assets/styles/carbon.scss" as *;
 
 .harness-app-console {
 	@include type-style("code-01");

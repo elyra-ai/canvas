@@ -15,6 +15,7 @@
  */
 
 @use "../carbon.scss" as *;
+
 $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 $panel-border-width: 1px;
 $panel-border-color: $layer-accent-01;
