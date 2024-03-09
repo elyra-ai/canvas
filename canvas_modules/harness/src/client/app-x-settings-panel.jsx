@@ -88,7 +88,7 @@ class AppSettingsPanel extends React.Component {
 						onKeyDown={this.onKeyDownXIcon}
 						onClick={this.closePanel}
 						style={{
-							display: "inline-flex", cursor: "pointer", minHeight: 20, width: 25, border: 0, padding: "0 10px" }}
+							display: "inline-flex", cursor: "pointer", minHeight: 20, width: 25, border: 0, padding: "0 10px", height: "10px" }}
 					>X</button>
 				</div>
 				<Checkbox id={"chk1"} labelText={"Check one"} onChange={this.onChange} checked={this.state.chk1} />

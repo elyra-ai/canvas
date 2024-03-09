@@ -295,17 +295,17 @@ $panel-border-color: $ui-03;
 	border-width: 2px;
 }
 
-.toolbar-item-content.notificationCounterIcon {
-	&.error > div > svg > .dot {
+.toolbar-item.notificationCounterIcon {
+	&.error .toolbar-icon .dot {
 		fill: $support-01;
 	}
-	&.warning > div > svg > .dot {
+	&.warning .toolbar-icon .dot {
 		fill: $support-03;
 	}
-	&.success > div > svg > .dot {
+	&.success .toolbar-icon .dot {
 		fill: $support-02;
 	}
-	&.info > div > svg > .dot {
+	&.info .toolbar-icon .dot {
 		fill: $support-04;
 	}
 }
