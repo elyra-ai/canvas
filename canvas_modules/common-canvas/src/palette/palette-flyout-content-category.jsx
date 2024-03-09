@@ -212,7 +212,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	categoryKeyPressed(evt) {
-		if (evt.target.className === "bx--accordion__heading") {
+		if (evt.target.className === "cds--accordion__heading") {
 			if (evt.code === "Enter" || evt.code === "Space") {
 				evt.preventDefault();
 				evt.stopPropagation();

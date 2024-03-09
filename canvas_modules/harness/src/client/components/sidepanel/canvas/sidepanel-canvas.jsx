@@ -373,7 +373,7 @@ export default class SidePanelForms extends React.Component {
 		let key = 1;
 		const groupOptions = [];
 		const choosefromlocation = [];
-		options.push(<SelectItem key = "choose-an-option" text = "Choose an option..." />);
+		options.push(<SelectItem key = "choose-an-option" text = "Choose an option..." value = "Choose an option..." />);
 		choosefromlocation.push(
 			<SelectItem key={"choose-from-location"} text = "Choose From Location" value = {CHOOSE_FROM_LOCATION} />);
 		options.push(
@@ -1107,6 +1107,7 @@ export default class SidePanelForms extends React.Component {
 					name="node_layout_radio"
 					onChange={this.exampleAppOptionChange}
 					defaultSelected={this.props.getStateValue("selectedExampleApp")}
+					orientation="vertical"
 				>
 					<RadioButton
 						value={EXAMPLE_APP_FLOWS}
@@ -1263,6 +1264,7 @@ export default class SidePanelForms extends React.Component {
 					className="harness-sidepanel-radio-group"
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedToolbarType")}
+					orientation="vertical"
 				>
 					<RadioButton
 						value={TOOLBAR_TYPE_DEFAULT}

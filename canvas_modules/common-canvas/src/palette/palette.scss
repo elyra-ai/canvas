@@ -197,27 +197,27 @@ $palette-search-container-height: 41px;
 	position: absolute;
 	overflow-x: hidden;
 	overflow-y: overlay;
-	li .bx--accordion__arrow {
-		margin-top: 15px;
+	li .cds--accordion__arrow {
+		margin: 15px;
 	}
-	.bx--accordion__item--active {
+	.cds--accordion__item--active {
 		button {
 			border-bottom: $palette-border-width solid $palette-border-color;
 		}
 	}
-	.bx--accordion__item {
+	.cds--accordion__item {
 		border-top: 0;
 
-		.bx--accordion__heading {
+		.cds--accordion__heading {
 			padding: 0;
-			.bx--accordion__title {
+			.cds--accordion__title {
 				margin: 0;
 				padding: 0 0 0 11px;
 				height: 45px;
 			}
 		}
 	}
-	li .bx--accordion__content {
+	li .cds--accordion__content {
 		padding: 0;
 	}
 }
@@ -304,7 +304,7 @@ $palette-search-container-height: 41px;
 		overflow: hidden;
 		// Move the magnifying glass icon to be positioned over the category icons
 		// in the palette, as required from DUX review.
-		.bx--search-magnifier svg {
+		.cds--search-magnifier svg {
 			margin-left: 10px;
 		}
 
@@ -332,14 +332,14 @@ $palette-search-container-height: 41px;
 			margin-top: 4px;
 			border-bottom-width: 0;
 
-			&.bx--search-close::before {
+			&.cds--search-close::before {
 				content: none;
 			}
 		}
 	}
 }
 
-.palette-loading-category .bx--accordion__arrow {
+.palette-loading-category .cds--accordion__arrow {
 	display: none;
 }
 

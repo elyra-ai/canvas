@@ -14,18 +14,5 @@
  * limitations under the License.
  */
 $font-prefix: "/fonts";
-
-@use "@carbon/react/scss/themes" as *;
-
-// Switch the themes below to get light or dark.
-@use "@carbon/react/scss/theme" as * with (
-	$theme: $g10 // The light (gray 10) theme
-	// $theme: $g90 // The dark theme
-);
-
-:root {
-	@include theme();
-}
-
-@import "carbon-components/scss/globals/scss/styles";
+@use '@carbon/react' as *;
 @import "@ibm/plex/scss/ibm-plex.scss";

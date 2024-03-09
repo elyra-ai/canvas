@@ -153,7 +153,7 @@ class PropertiesMain extends React.Component {
 			formData = propertiesInfo.formData;
 		} else if (propertiesInfo.parameterDef) {
 			if (this.props.propertiesConfig.schemaValidation) {
-				validateParameterDefAgainstSchema(propertiesInfo.parameterDef);
+				// validateParameterDefAgainstSchema(propertiesInfo.parameterDef); // TODO: Fix error Uncaught TypeError: urilib.resolve is not a function
 			}
 			formData = Form.makeForm(propertiesInfo.parameterDef, this.props.propertiesConfig.containerType);
 		}
