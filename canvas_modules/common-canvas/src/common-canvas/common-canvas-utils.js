@@ -18,7 +18,7 @@
 // objects stored in redux and also the copy of canvas objects maintained by
 // the CanvasRender objects.
 
-import { get, set } from "lodash";
+import { get, has, set } from "lodash";
 import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST }
 	from "../common-canvas/constants/canvas-constants.js";
@@ -1237,4 +1237,13 @@ export default class CanvasUtils {
 		return el.classList && el.classList.contains(className);
 	}
 
+	// Returns the ID of the pipeline referenced by the supernode
+	// passed in.
+	static getSupernodePipelineId(supernode) {
+		if (supernode.type === SUPER_NODE &&
+				has(supernode, "subflow_ref.pipeline_id_ref")) {
+			return supernode.subflow_ref.pipeline_id_ref;
+		}
+		return null;
+	}
 }
