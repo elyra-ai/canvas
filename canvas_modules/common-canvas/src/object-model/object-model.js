@@ -896,14 +896,6 @@ export default class ObjectModel {
 		return this.getDescendantPipelineIds(ancestorId).includes(pipelineId);
 	}
 
-	// getSupernodePipelineId(supernode) {
-	// 	if (supernode.type === SUPER_NODE &&
-	// 			has(supernode, "subflow_ref.pipeline_id_ref")) {
-	// 		return supernode.subflow_ref.pipeline_id_ref;
-	// 	}
-	// 	return null;
-	// }
-
 	getSupernodePipelineUrl(supernode) {
 		if (supernode.type === SUPER_NODE &&
 				has(supernode, "subflow_ref.url")) {
