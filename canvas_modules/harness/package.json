@@ -8,7 +8,7 @@
     "build": "export NODE_OPTIONS=--openssl-legacy-provider && npx stylelint 'src/**/*.scss' && grunt",
     "test": "npx cypress open",
     "bundle-report": "NODE_ENV=production BUNDLE_REPORT=true grunt",
-    "start-prod": "NODE_ENV=production node index.js",
+    "start-prod": "export NODE_OPTIONS=--openssl-legacy-provider && NODE_ENV=production node index.js",
     "build-prod": "export NODE_OPTIONS=--openssl-legacy-provider && npx stylelint 'src/**/*.scss' && NODE_ENV=production grunt --max-old-space-size=8192"
   },
   "engines": {
