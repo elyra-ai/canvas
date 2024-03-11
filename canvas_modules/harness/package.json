@@ -4,7 +4,7 @@
   "private": true,
   "license": "Apache-2.0",
   "scripts": {
-    "start": "NODE_ENV=development node index.js",
+    "start": "export NODE_OPTIONS=--openssl-legacy-provider && NODE_ENV=development node index.js",
     "build": "npx stylelint 'src/**/*.scss' && grunt",
     "test": "npx cypress open",
     "bundle-report": "NODE_ENV=production BUNDLE_REPORT=true grunt",
@@ -12,7 +12,7 @@
     "build-prod": "npx stylelint 'src/**/*.scss' && NODE_ENV=production grunt --max-old-space-size=8192"
   },
   "engines": {
-    "node": "16.x"
+    "node": "20.x"
   },
   "dependencies": {
     "body-parser": "1.19.0",
