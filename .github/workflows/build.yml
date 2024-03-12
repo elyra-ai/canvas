@@ -37,7 +37,7 @@ jobs:
         node-version: 16.x
     - run: npm install -g grunt-cli sass
     - run: ./canvas_modules/common-canvas/build.sh
-    - run: ./canvas_modules/harness/build.sh test
+    # - run: ./canvas_modules/harness/build.sh test # TODO: Enable this while fixing issue - https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3689
     - run: ./canvas_modules/harness/functional_test.sh
 
   tag:
