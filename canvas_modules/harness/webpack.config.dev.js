@@ -57,7 +57,7 @@ const rules = [
 		test: /\.js(x?)$/,
 		loader: "babel-loader",
 		exclude: /node_modules/,
-		options: babelOptions
+		query: babelOptions
 	},
 	{
 		test: /\.s*css$/,
@@ -83,9 +83,7 @@ const rules = [
 	},
 	{
 		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
-		use: [
-			"file-loader?name=graphics/[contenthash].[ext]",
-		],
+		loader: "file-loader?name=graphics/[hash].[ext]"
 	}
 ];
 
@@ -94,25 +92,19 @@ const rules = [
 
 // Plugins ------------------------------------------------------------>
 
-const plugins = [
+var plugins = [
+	new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.NoEmitOnErrorsPlugin(),
+	// Generates an `index.html` file with the <script> injected.
+	new HtmlWebpackPlugin({
+		inject: true,
+		template: "./index-dev.html"
+	}),
 	new webpack.HotModuleReplacementPlugin(),
 	// generates the source maps used for debugging.  Used instead of `devtool` option
 	new webpack.SourceMapDevToolPlugin({
 		module: true,
 		columns: false
-	}),
-	// Work around for Buffer is undefined:
-	// https://github.com/webpack/changelog-v5/issues/10
-	new webpack.ProvidePlugin({
-		Buffer: ["buffer", "Buffer"],
-	}),
-	new webpack.ProvidePlugin({
-		process: "process"
-	}),
-	new HtmlWebpackPlugin({
-		inject: true,
-		template: "./index-dev.html"
 	})
 ];
 
@@ -122,22 +114,15 @@ module.exports = {
 	mode: "development",
 	devtool: false,
 	entry: entry,
+	cache: true,
 	resolve: {
 		modules: [
 			__dirname,
 			"node_modules"
 		],
-		fallback: {
-			path: require.resolve("path-browserify"),
-			stream: require.resolve("stream-browserify"),
-			util: require.resolve("util"),
-			buffer: require.resolve("buffer"),
-			url: false,
-			process: false
-		},
 		alias: {
 			"react": "node_modules/react",
-			"react-dom": "node_modules/react-dom",
+			"react-dom": "node_modules/@hot-loader/react-dom",
 			"react-redux": "node_modules/react-redux",
 			"react-intl": "node_modules/react-intl",
 			"common-canvas": "src/common-canvas-dev.js"
