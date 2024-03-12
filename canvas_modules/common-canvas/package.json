@@ -15,7 +15,7 @@
   "license": "Apache-2.0",
   "sideEffects": false,
   "scripts": {
-    "build": "export NODE_OPTIONS=--openssl-legacy-provider && npx stylelint '**/*.scss' && grunt && rollup -c",
+    "build": "npx stylelint '**/*.scss' && grunt && rollup -c",
     "test": "NODE_ENV=test jest",
     "test-coverage": "NODE_ENV=test jest --coverage",
     "bundle-report": "BUNDLE_REPORT=true rollup -c",
