@@ -103,11 +103,14 @@ $toolbar-divider-width: 1px;
 	background-color: $layer-01;
 	display: inline-block;
 
-	& button {
-		padding: 0;
-		min-height: 30px;
-		height: $toolbar-button-height;
+	.toolbar-button-item {
+		& button {
+			padding: 0;
+			min-height: 30px;
+			height: $toolbar-button-height;
+		}
 	}
+	
 
 	&.default,
 	&.ghost {
@@ -327,6 +330,7 @@ $toolbar-divider-width: 1px;
 
 	&.subpanel {
 		width: fit-content;
+		box-sizing: border-box;
 	}
 }
 

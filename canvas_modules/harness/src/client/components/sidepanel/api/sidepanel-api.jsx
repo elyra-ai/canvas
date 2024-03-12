@@ -730,6 +730,7 @@ export default class SidePanelAPI extends React.Component {
 							name="notification_message_type"
 							onChange={this.onNotificationMessageTypeChange.bind(this)}
 							defaultSelected={NOTIFICATION_MESSAGE_TYPE.INFO}
+							orientation="vertical"
 						>
 							<RadioButton
 								value={NOTIFICATION_MESSAGE_TYPE.INFO}

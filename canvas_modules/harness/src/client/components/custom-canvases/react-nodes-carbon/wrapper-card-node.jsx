@@ -24,7 +24,7 @@ import { CardNode, CardNodeColumn,
 	CardNodeTitle
 } from "@carbon/charts-react";
 
-import "@carbon/charts-react/styles.css" // TODO: Check if this is still needed?
+import "@carbon/charts/styles.css"; // TODO: Check if this is still needed?
 
 class CardNodeWrapper extends React.Component {
 	componentDidMount() {

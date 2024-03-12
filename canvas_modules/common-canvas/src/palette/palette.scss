@@ -200,11 +200,6 @@ $palette-search-container-height: 41px;
 	li .cds--accordion__arrow {
 		margin: 15px;
 	}
-	.cds--accordion__item--active {
-		button {
-			border-bottom: $palette-border-width solid $palette-border-color;
-		}
-	}
 	.cds--accordion__item {
 		border-top: 0;
 
@@ -215,6 +210,10 @@ $palette-search-container-height: 41px;
 				padding: 0 0 0 11px;
 				height: 45px;
 			}
+		}
+
+		.cds--accordion__wrapper {
+			padding: 0;
 		}
 	}
 	li .cds--accordion__content {

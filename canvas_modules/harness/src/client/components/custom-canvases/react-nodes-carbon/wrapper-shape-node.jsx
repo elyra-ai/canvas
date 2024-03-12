@@ -20,7 +20,7 @@ import SVG from "react-inlinesvg";
 import { get } from "lodash";
 
 import { ShapeNode } from "@carbon/charts-react";
-// import "@carbon/charts-react/dist/styles.css"; // TODO: Check if this is still needed?
+import "@carbon/charts/styles.css"; // TODO: Check if this is still needed?
 
 class ShapeNodeWrapper extends React.Component {
 	componentDidMount() {

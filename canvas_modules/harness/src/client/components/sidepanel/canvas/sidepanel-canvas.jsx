@@ -547,6 +547,7 @@ export default class SidePanelForms extends React.Component {
 						name="selectedSaveZoom" // Set name to corresponding field name in App.js
 						onChange={this.setStateValue}
 						defaultSelected={this.props.getStateValue("selectedSaveZoom")}
+						orientation="vertical"
 					>
 						<RadioButton
 							value={NONE_SAVE_ZOOM}
@@ -598,6 +599,7 @@ export default class SidePanelForms extends React.Component {
 						name="selectedSnapToGridType" // Set name to corresponding field name in App.js
 						onChange={this.setStateValue}
 						defaultSelected={this.props.getStateValue("selectedSnapToGridType")}
+						orientation="vertical"
 					>
 						<RadioButton
 							value={NONE_DRAG}
@@ -762,6 +764,7 @@ export default class SidePanelForms extends React.Component {
 					name="selectedImageDisplay" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedImageDisplay")}
+					orientation="vertical"
 				>
 					<RadioButton
 						value={IMAGE_DISPLAY_SVG_INLINE}
@@ -788,6 +791,7 @@ export default class SidePanelForms extends React.Component {
 					name="selectedLinkSelection" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedLinkSelection")}
+					orientation="vertical"
 				>
 					<RadioButton
 						value={LINK_SELECTION_NONE}
@@ -818,6 +822,7 @@ export default class SidePanelForms extends React.Component {
 					name="selectedAssocLinkType" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedAssocLinkType")}
+					orientation="vertical"
 				>
 					<RadioButton
 						value={ASSOC_STRAIGHT}
@@ -840,6 +845,7 @@ export default class SidePanelForms extends React.Component {
 					name="selectedCanvasUnderlay" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedCanvasUnderlay")}
+					orientation="vertical"
 				>
 					<RadioButton
 						value={UNDERLAY_NONE}
@@ -1007,6 +1013,7 @@ export default class SidePanelForms extends React.Component {
 					name="selectedInteractionType" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedInteractionType")}
+					orientation="vertical"
 				>
 					<RadioButton
 						value={INTERACTION_MOUSE}
@@ -1033,6 +1040,7 @@ export default class SidePanelForms extends React.Component {
 					name="selectedNodeFormatType" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedNodeFormatType")}
+					orientation="vertical"
 				>
 					<RadioButton
 						value={VERTICAL_FORMAT}
@@ -1055,6 +1063,7 @@ export default class SidePanelForms extends React.Component {
 					name="selectedLinkType" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedLinkType")}
+					orientation="vertical"
 				>
 					<RadioButton
 						value={CURVE_LINKS}
@@ -1081,6 +1090,7 @@ export default class SidePanelForms extends React.Component {
 					name="selectedLinkDirection" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedLinkDirection")}
+					orientation="vertical"
 				>
 					<RadioButton
 						value={DIRECTION_LEFT_RIGHT}
@@ -1174,6 +1184,7 @@ export default class SidePanelForms extends React.Component {
 					className="harness-sidepanel-radio-group"
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedPaletteLayout")}
+					orientation="vertical"
 				>
 					<RadioButton
 						value={PALETTE_FLYOUT}
@@ -1208,6 +1219,7 @@ export default class SidePanelForms extends React.Component {
 					className="harness-sidepanel-radio-group"
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedStateTag")}
+					orientation="vertical"
 				>
 					<RadioButton
 						value={STATE_TAG_NONE}
@@ -1242,6 +1254,7 @@ export default class SidePanelForms extends React.Component {
 					className="harness-sidepanel-radio-group"
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedToolbarLayout")}
+					orientation="vertical"
 				>
 					<RadioButton
 						value={TOOLBAR_LAYOUT_NONE}
