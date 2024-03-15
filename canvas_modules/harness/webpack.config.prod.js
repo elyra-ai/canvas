@@ -30,7 +30,7 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 
 const entry = {
 	harness: ["@babel/polyfill", "./src/client/index.js"],
-	vendor: ["react", "react-dom", "react-intl", "intl-messageformat", "intl-messageformat-parser"]
+	vendor: ["react", "react-dom", "react-intl", "intl-messageformat"]
 };
 
 const output = {
