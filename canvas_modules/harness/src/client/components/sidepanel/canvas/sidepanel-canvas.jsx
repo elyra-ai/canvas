@@ -1316,8 +1316,8 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		var tipConfig = (<div className="harness-sidepanel-children" id="harness-sidepanel-tip-config">
-			<fieldset className="bx--fieldset">
-				<legend className="bx--label">Tips</legend>
+			<fieldset className="cds--fieldset">
+				<legend className="cds--label">Tips</legend>
 				<Checkbox
 					id="tip_palette_categories"
 					labelText={TIP_PALETTE_CATEGORIES}

@@ -137,7 +137,7 @@ export default class SvgCanvasTextArea {
 		if (evt.relatedTarget &&
 				(CanvasUtils.getParentElementWithClass(evt.relatedTarget, "d3-comment-entry") ||
 					CanvasUtils.getParentElementWithClass(evt.relatedTarget, "text-toolbar") ||
-					CanvasUtils.getParentElementWithClass(evt.relatedTarget, "bx--overflow-menu-options__btn"))) {
+					CanvasUtils.getParentElementWithClass(evt.relatedTarget, "cds--overflow-menu-options__btn"))) {
 			return;
 		}
 

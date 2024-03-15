@@ -34,7 +34,7 @@
 	padding-top: 5px;
 	padding-bottom: 10px;
 	border-left: 1px solid $layer-accent-01;
-	.bx--fieldset {
+	.cds--fieldset {
 		margin-bottom: 0;
 	}
 
@@ -95,7 +95,7 @@
 
 .harness-sidepanel-radio-group {
 	display: block;
-	.bx--radio-button-wrapper {
+	.cds--radio-button-wrapper {
 		margin-bottom: $spacing-02;
 		> label {
 			justify-content: left; // override carbon style to center justify radio-button labels
@@ -104,11 +104,11 @@
 }
 
 .harness-sidepanel-file-uploader {
-	.bx--label-description,
-	.bx--form-item {
+	.cds--label-description,
+	.cds--form-item {
 		margin-bottom: 0;
 	}
-	.bx--file-container {
+	.cds--file-container {
 		margin-top: 5px;
 	}
 }
@@ -122,10 +122,10 @@
 }
 
 .harness-notification-title, .harness-notification-subtitle, .harness-notification-empty-message, .harness-notification-clear-all {
-	.bx--label {
+	.cds--label {
 		margin: 0;
 	}
-	.bx--text-input__field-wrapper {
+	.cds--text-input__field-wrapper {
 		margin-bottom: 8px;
 	}
 }

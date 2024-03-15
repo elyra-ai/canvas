@@ -82,12 +82,12 @@
 	margin-right: 10px;
 	padding: 10px 0 0 10px;
 
-	.bx--list-box__menu {
+	.cds--list-box__menu {
 		height: 210px;
 		max-height: 330px;
 	}
 
-	.bx--dropdown__wrapper .bx--dropdown {
+	.cds--dropdown__wrapper .cds--dropdown {
 		width: 150px;
 		background-color: $layer-01;
 
@@ -282,7 +282,7 @@
 }
 
 
-.bx--list-box__menu {
+.cds--list-box__menu {
 	max-height: 23em;
 	overflow-x: hidden;
 }

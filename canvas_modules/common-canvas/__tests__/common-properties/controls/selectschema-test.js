@@ -83,7 +83,7 @@ describe("selectschema renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-test-selectschema']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
@@ -127,13 +127,13 @@ describe("selectschema works correctly in common-properties", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropDown = wrapper.find("div[data-id='properties-selectschema'] Dropdown");
-		const dropdownList = dropDown.find("div.bx--list-box__menu-item");
+		const dropdownList = dropDown.find("div.cds--list-box__menu-item");
 		dropdownList.at(0).simulate("click");
 		expect(propertiesController.getPropertyValue({ name: "selectschema" })).to.equal("");
 	});
 	it("selectschema control should have aria-label", () => {
 		const dropDown = wrapper.find("div[data-id='properties-selectschema'] Dropdown");
-		const dropdownAriaLabelledby = dropDown.find(".bx--list-box__menu").prop("aria-labelledby");
+		const dropdownAriaLabelledby = dropDown.find(".cds--list-box__menu").prop("aria-labelledby");
 		expect(dropDown.find(`#${dropdownAriaLabelledby}`).text()).to.equal("selectschema(required)");
 	});
 });

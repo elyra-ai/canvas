@@ -915,11 +915,11 @@ Cypress.Commands.add("verifyNodeDoesExistInPaletteAtIndex", (nodeName, index) =>
 });
 
 Cypress.Commands.add("verifyCategoryIsClosed", (categoryLabel) => {
-	cy.get(".bx--accordion__item")
+	cy.get(".cds--accordion__item")
 		.then((catItems) => {
 			for (let i = 0; i < catItems.length; i++) {
 				if (catItems[i].textContent.includes(categoryLabel)) {
-					const index = catItems[i].className.indexOf("bx--accordion__item--active");
+					const index = catItems[i].className.indexOf("cds--accordion__item--active");
 					expect(index).to.equal(-1);
 				}
 			}
@@ -927,7 +927,7 @@ Cypress.Commands.add("verifyCategoryIsClosed", (categoryLabel) => {
 });
 
 Cypress.Commands.add("verifyCategoryIsOpened", (categoryLabel) => {
-	cy.get(".bx--accordion__item--active")
+	cy.get(".cds--accordion__item--active")
 		.contains(categoryLabel)
 		.should("exist");
 });
@@ -1003,7 +1003,7 @@ Cypress.Commands.add("verifyToolbarButtonEnabled", (action, state) => {
 		.find("." + action + "-action > div > button")
 		.then((buttons) => {
 			const classList = Array.from(buttons[0].classList);
-			const enabled = !classList.includes("bx--btn--disabled");
+			const enabled = !classList.includes("cds--btn--disabled");
 			expect(enabled).to.equal(state);
 		});
 });

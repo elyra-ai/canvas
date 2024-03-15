@@ -36,7 +36,7 @@ describe("tabs and subtabs should be rendered correctly", () => {
 		let category = wrapper.find("div[data-id='properties-Primary2']");
 		const subTabsContainer = category.find("div.properties-subtabs");
 		expect(subTabsContainer).to.have.length(1);
-		const subTabs = subTabsContainer.find("button.bx--tabs--scrollable__nav-link");
+		const subTabs = subTabsContainer.find("button.cds--tabs--scrollable__nav-link");
 		expect(subTabs).to.have.length(3);
 		subTabs.at(2).simulate("click");
 		category = wrapper.find("div[data-id='properties-Primary2']");
@@ -112,7 +112,7 @@ describe("controls should be rendered correctly when no uihints are provided", (
 		controller.updatePropertyValue({ name: "textfield" }, null);
 		wrapper.update();
 		// validate message is created
-		expect(wrapper.find(".bx--form-requirement")).to.have.length(1);
+		expect(wrapper.find(".cds--form-requirement")).to.have.length(1);
 		// valide no catagories(tabs) are created
 		expect(wrapper.find(".properties-categories")).to.have.length(0);
 	});
