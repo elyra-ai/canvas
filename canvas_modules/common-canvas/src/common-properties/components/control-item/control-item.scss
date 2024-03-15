@@ -73,8 +73,8 @@
 	white-space: pre-wrap; // Add a line break for \n
 }
 
-// Removed padding in properties-label-container because .bx--label has margin-bottom: $spacing-03
-.bx--label {
+// Removed padding in properties-label-container because .cds--label has margin-bottom: $spacing-03
+.cds--label {
 	.properties-label-container {
 		padding-bottom: 0;
 	}

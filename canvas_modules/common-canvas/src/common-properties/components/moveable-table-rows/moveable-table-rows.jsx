@@ -117,6 +117,7 @@ class MoveableTableRows extends React.Component {
 					renderIcon={UpToTop24}
 					iconDescription={topLabel}
 					tooltipPosition="left"
+					size="sm"
 					hasIconOnly
 				/>
 				<Button
@@ -127,6 +128,7 @@ class MoveableTableRows extends React.Component {
 					renderIcon={ArrowUp24}
 					iconDescription={upLabel}
 					tooltipPosition="left"
+					size="sm"
 					hasIconOnly
 				/>
 			</div>
@@ -145,6 +147,7 @@ class MoveableTableRows extends React.Component {
 					renderIcon={ArrowDown24}
 					iconDescription={bottomLabel}
 					tooltipPosition="left"
+					size="sm"
 					hasIconOnly
 				/>
 				<Button
@@ -155,6 +158,7 @@ class MoveableTableRows extends React.Component {
 					renderIcon={DownToBottom24}
 					iconDescription={downLabel}
 					tooltipPosition="left"
+					size="sm"
 					hasIconOnly
 				/>
 			</div>

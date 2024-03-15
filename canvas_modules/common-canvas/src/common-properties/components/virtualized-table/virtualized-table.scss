@@ -55,10 +55,10 @@
 		// Override text-transform: uppercase from .ReactVirtualized__Table__headerRow
 		text-transform: none;
 		margin-left: 0;
-		.properties-vt-column .bx--checkbox-wrapper {
+		.properties-vt-column .cds--checkbox-wrapper {
 			margin-top: 0;
 			margin-bottom: 0;
-			.bx--checkbox-label {
+			.cds--checkbox-label {
 				width: 100%;
 
 				span {
@@ -118,7 +118,6 @@
 	}
 
 	.properties-vt-row-checkbox {
-		height: $spacing-07;
 		margin-left: $spacing-05;
 		margin-right: $spacing-02;
 	}
@@ -226,7 +225,7 @@
 		div[data-role="properties-data-row"] {
 			background-color: $layer-01;
 		}
-		.bx--select--inline .bx--select-input[disabled] {
+		.cds--select--inline .cds--select-input[disabled] {
 			background-color: $background;
 		}
 	}

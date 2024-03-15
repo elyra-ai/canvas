@@ -25,15 +25,12 @@
 	justify-content: center;
 }
 
-.table-row-move-button.bx--btn--ghost {
-	padding: 0;
-	min-height: 24px;
-	margin-bottom: 8px;
+.table-row-move-button.cds--btn--ghost {
+	width: calc(#{$spacing-05} + #{$spacing-01});
 
 	> svg {
-		height: 16px;
-		width: 16px;
-		margin-left: 0;
+		height: $spacing-05;
+		width: $spacing-05;
 	}
 }
 
@@ -47,7 +44,6 @@
 		.properties-mr-table-content {
 			width: 100%;
 			display: flex;
-			border-bottom: 0;
 			&.disabled {
 				pointer-events: none;
 				opacity: 0.5;

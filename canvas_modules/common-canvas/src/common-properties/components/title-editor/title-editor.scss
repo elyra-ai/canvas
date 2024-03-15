@@ -16,6 +16,7 @@
 @use "../../../carbon.scss" as *;
 
 .properties-title-editor {
+	font-size: 0;
 	padding: $spacing-05 0;
 	border-bottom: 1px $layer-accent-01 solid;
 }
@@ -53,7 +54,7 @@
 	&.properties-title-editor-with-help {
 		width: calc(100% - #{$spacing-07} - #{$spacing-03}); // subtract the size of the help button and 8px to align with Close icon when applyOnBlur is set
 	}
-	.bx--form-item.bx--text-input-wrapper {
+	.cds--form-item.cds--text-input-wrapper {
 		// allow edit icon to be at the end of text input
 		width: 100%;
 
@@ -69,17 +70,16 @@
 				cursor: default;
 			}
 		}
-		.bx--form-requirement {
+		.cds--form-requirement {
 			margin: $spacing-02 0 0 $spacing-05; // 4px top padding for error/warning message
 		}
-		.bx--text-input__field-wrapper--warning input {
+		.cds--text-input__field-wrapper--warning input {
 			border-bottom: 1px solid $border-strong-01;
 		}
 	}
 
 	// Edit button should be inside the title input box
 	.properties-title-editor-btn {
-		position: absolute;
 		right: $spacing-01;
 	}
 }

@@ -202,6 +202,9 @@ $palette-search-container-height: 41px;
 	}
 	.cds--accordion__item {
 		border-top: 0;
+		&:last-child {
+			border-block-end: 1px solid $border-subtle-01;
+		}
 
 		.cds--accordion__heading {
 			padding: 0;

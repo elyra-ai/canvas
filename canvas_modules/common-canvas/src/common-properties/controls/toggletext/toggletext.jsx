@@ -52,10 +52,10 @@ class ToggletextControl extends React.Component {
 			const imgSource = this.iconsMap[this.props.value];
 			if (typeof imgSource === "string" && imgSource.slice(imgSource.length - 4) === ".svg") {
 				// svg image
-				icon = <Isvg className="bx--btn__icon" src={imgSource} />;
+				icon = <Isvg className="cds--btn__icon" src={imgSource} />;
 			} else {
 				icon = (<img
-					className="bx--btn__icon"
+					className="cds--btn__icon"
 					src={imgSource}
 					alt=""
 				/>);

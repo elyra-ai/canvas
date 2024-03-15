@@ -16,7 +16,7 @@
 
 
 .properties-numberfield {
-	.bx--form-item { // carbon overrides
+	.cds--form-item { // carbon overrides
 		margin-right: 0;
 		margin-bottom: 0;
 	}
@@ -44,8 +44,8 @@
 
 .properties-table-cell-control { // overrides when in a table cell
 	.properties-numberfield {
-		.bx--number[data-invalid] { // carbon override to not display error
-			.bx--form-requirement { // carbon override to not display error
+		.cds--number[data-invalid] { // carbon override to not display error
+			.cds--form-requirement { // carbon override to not display error
 				display: none;
 			}
 		}
@@ -64,7 +64,7 @@
 			padding: 0;
 			height: 1.5rem;
 		}
-		.bx--number input[type="number"] {
+		.cds--number input[type="number"] {
 			min-width: 0;
 		}
 	}

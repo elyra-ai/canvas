@@ -20,7 +20,7 @@
 	}
 }
 .properties-table-cell-control { // overrides when in a table cell
-	.bx--toggle__switch { // override carbon when inside a table
+	.cds--toggle__switch { // override carbon when inside a table
 		margin-bottom: $spacing-05;
 	}
 }

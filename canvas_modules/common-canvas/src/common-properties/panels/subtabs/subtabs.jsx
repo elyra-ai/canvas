@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { Tabs, Tab } from "@carbon/react";
+import { Tabs, Tab, TabList, TabPanel, TabPanels } from "@carbon/react";
 import { getDataId } from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 import { v4 as uuid4 } from "uuid";
@@ -36,7 +36,8 @@ class Subtabs extends React.Component {
 	}
 
 	render() {
-		const subTabs = [];
+		const subTabLists = [];
+		const subTabPanels = [];
 		let activeTab = 0;
 		let tabIdx = 0;
 		const className = this.props.className ? this.props.className : "";
@@ -50,20 +51,26 @@ class Subtabs extends React.Component {
 					activeTab = tabIdx;
 				}
 
-				subTabs.push(
+				subTabLists.push(
 					<Tab
-						id={`subtabs.tab.${i}-${this.uuid}`}
-						key={`subtabs.tab.${i}-${this.uuid}`}
+						// id={`subtabs.tab.${i}-${this.uuid}`}
+						// key={`subtabs.tab.${i}-${this.uuid}`}
 						disabled={panelState === STATES.DISABLED}
 						className={classNames("properties-subtab", { "properties-leftnav-subtab-item": this.props.leftnav })}
-						tabIndex={tabIdx}
-						label={tab.text}
+						// tabIndex={tabIdx}
+						// label={tab.text}
 						title={tab.text}
 						onClick={this.onClick.bind(this, tab.group)}
 						data-id={getDataId({ name: tab.group })}
 					>
-						{subPanelItems}
+						{tab.text}
 					</Tab>
+				);
+
+				subTabPanels.push(
+					<TabPanel className="properties-subtab-panel">
+						{subPanelItems}
+					</TabPanel>
 				);
 				tabIdx++;
 			}
@@ -78,12 +85,16 @@ class Subtabs extends React.Component {
 					className
 				)}
 			>
-				<Tabs className={classNames("properties-subtabs", { "properties-leftnav-subtabs": this.props.leftnav })}
-					selected={activeTab}
+				<Tabs
+					selectedIndex={activeTab}
 					light={this.props.controller.getLight()}
-					tabContentClassName="properties-subtab-panel"
 				>
-					{subTabs}
+					<TabList className={classNames("properties-subtabs", { "properties-leftnav-subtabs": this.props.leftnav })}>
+						{subTabLists}
+					</TabList>
+					<TabPanels>
+						{subTabPanels}
+					</TabPanels>
 				</Tabs>
 			</div>
 		);

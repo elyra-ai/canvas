@@ -21,7 +21,7 @@
 
 import React from "react";
 import Isvg from "react-inlinesvg";
-import { Tooltip as ReactTooltip } from "react-tooltip"
+import { Tooltip as ReactTooltip } from "react-tooltip";
 import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";

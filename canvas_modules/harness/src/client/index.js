@@ -26,7 +26,7 @@ import { HashRouter, Route } from "react-router-dom";
 import { IntlProvider } from "react-intl";
 
 const container = document.getElementById("root");
-const root = createRoot(container); 
+const root = createRoot(container);
 root.render(
 	<HashRouter>
 		<IntlProvider locale="en">

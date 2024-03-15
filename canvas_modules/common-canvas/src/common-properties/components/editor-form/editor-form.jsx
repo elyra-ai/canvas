@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { setActiveTab } from "./../../actions";
-import { Tab, Tabs, Link } from "@carbon/react";
+import { Tab, Tabs, TabList, TabPanel, Link, TabPanels } from "@carbon/react";
 import * as PropertyUtil from "./../../util/property-utils";
 import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE, STATES, CATEGORY_VIEW } from "./../../constants/constants";
 import { cloneDeep, isEmpty, sortBy, get, filter } from "lodash";
@@ -134,6 +134,8 @@ class EditorForm extends React.Component {
 
 	genPrimaryTabs(key, tabs, propertyId, indexof) {
 		const tabContent = [];
+		const tabLists = [];
+		const tabPanels = [];
 		let hasAlertsTab = false;
 		let modalSelected = 0;
 		let hiddenTabs = 0;
@@ -202,19 +204,27 @@ class EditorForm extends React.Component {
 				if (this.props.activeTab === tab.group) {
 					modalSelected = i - hiddenTabs; // Adjust the Carbon Tabs index to accomodate hidden tabs
 				}
-				tabContent.push(
+				tabLists.push(
 					<Tab
-						id={"tab." + this._getContainerIndex(hasAlertsTab, i) + "-" + key}
-						key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
-						tabIndex={i}
-						label={filter([tab.text, this._getMessageCountForCategory(tab)]).join("")}
+						// id={"tab." + this._getContainerIndex(hasAlertsTab, i) + "-" + key}
+						// key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
+						// tabIndex={i}
 						title={filter([tab.text, this._getMessageCountForCategory(tab)]).join("")}
 						className={classNames({ "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						onClick={this._modalTabsOnClick.bind(this, tab.group)}
 					>
+						{filter([tab.text, this._getMessageCountForCategory(tab)]).join("")}
+					</Tab>
+				);
+
+				tabPanels.push(
+					<TabPanel className={classNames("properties-primary-tab-panel",
+						{ "tearsheet-container": this.props.controller.isTearsheetContainer() },
+						{ "right-flyout-tabs-view": this.props.rightFlyout && this.props.categoryView === CATEGORY_VIEW.TABS })}
+					>
 						{panelItems}
 						{additionalComponent}
-					</Tab>
+					</TabPanel>
 				);
 			}
 		}
@@ -228,14 +238,15 @@ class EditorForm extends React.Component {
 		}
 		return (
 			<Tabs key={"tab." + key}
-				className="properties-primaryTabs"
-				selected={modalSelected}
+				selectedIndex={modalSelected}
 				light={this.props.controller.getLight()}
-				tabContentClassName={classNames("properties-primary-tab-panel",
-					{ "tearsheet-container": this.props.controller.isTearsheetContainer() },
-					{ "right-flyout-tabs-view": this.props.rightFlyout && this.props.categoryView === CATEGORY_VIEW.TABS })}
 			>
-				{tabContent}
+				<TabList className="properties-primaryTabs" aria-label="Primary Tabs">
+					{tabLists}
+				</TabList>
+				<TabPanels>
+					{tabPanels}
+				</TabPanels>
 			</Tabs>
 		);
 	}

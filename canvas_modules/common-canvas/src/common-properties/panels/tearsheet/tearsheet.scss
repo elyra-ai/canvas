@@ -16,22 +16,22 @@
 
 $properties-buttons-height: $spacing-10;
 
-.properties-tearsheet-panel.properties-tearsheet-stacked.bx--modal {
-	.bx--modal-container {
+.properties-tearsheet-panel.properties-tearsheet-stacked.cds--modal {
+	.cds--modal-container {
 		max-height: calc(100% - 104px);
 		width: calc(100% - 96px);
 	}
 }
 
-.properties-tearsheet-panel.bx--modal {
+.properties-tearsheet-panel.cds--modal {
 	align-items: flex-end;
 	&.is-visible {
-		.bx--modal-container {
+		.cds--modal-container {
 			transform: translate3d(0, 0, 0);
 			transition: transform 240ms cubic-bezier(0, 0, 0.3, 1);
 		}
 	}
-	.bx--modal-container {
+	.cds--modal-container {
 		max-height: calc(100% - 88px);
 		height: 100%;
 		width: calc(100% - 128px);
@@ -58,7 +58,7 @@ $properties-buttons-height: $spacing-10;
 	.properties-tearsheet-body {
 		padding: $spacing-06 $spacing-07;
 		margin-bottom: 0;
-		.bx--multi-select, .bx--dropdown, .bx--number input[type=number], .bx--text-input, .bx--text-area, .bx--date-picker__input {	// override carbon's modal
+		.cds--multi-select, .cds--dropdown, .cds--number input[type=number], .cds--text-input, .cds--text-area, .cds--date-picker__input {	// override carbon's modal
 			background-color: $layer-01;
 		}
 	}
@@ -66,13 +66,13 @@ $properties-buttons-height: $spacing-10;
 }
 
 // These styles are to display editor-form in a Tearsheet
-.properties-tearsheet-panel.bx--modal {
+.properties-tearsheet-panel.cds--modal {
 	.properties-tearsheet-header.with-tabs {
 		border-bottom: 0;
 	}
 
 	.properties-tearsheet-header.hide-close-button {
-		button.bx--modal-close {
+		button.cds--modal-close {
 			display: none;
 		}
 	}

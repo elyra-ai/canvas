@@ -17,11 +17,11 @@
 
 $primary-tab-height: $spacing-08;
 
-.properties-primaryTabs {
-	.bx--tabs__nav-item {
-		margin-left: 1rem;
-	}
-}
+// .properties-primaryTabs {
+// 	.cds--tabs__nav-item {
+// 		margin-left: 1rem;
+// 	}
+// }
 
 // styling when there is only 1 tab
 .properties-single-category {
@@ -100,7 +100,7 @@ $primary-tab-height: $spacing-08;
 }
 
 .properties-subtabs, .properties-primaryTabs {
-	.bx--tabs__nav {
+	.cds--tabs__nav {
 		overflow-x: auto; // override carbon so scrollbar doesn't always show
 	}
 }

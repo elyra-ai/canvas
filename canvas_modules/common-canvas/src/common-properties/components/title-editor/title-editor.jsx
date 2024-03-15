@@ -186,7 +186,7 @@ class TitleEditor extends Component {
 						ref={this.textInputRef}
 						value={this.props.title}
 						onChange={this.handleTitleChange}
-						onKeyPress={(e) => this._handleKeyPress(e)}
+						onKeyDown={(e) => this._handleKeyPress(e)}
 						readOnly={this.props.labelEditable === false} // shows a non editable icon
 						labelText={this.labelText}
 						hideLabel

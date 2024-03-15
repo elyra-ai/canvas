@@ -15,15 +15,15 @@
  */
  
 .properties-slider {
-	.bx--slider-container { 
+	.cds--slider-container { 
 		min-width: 100%;
 		
-		.bx--slider { 
+		.cds--slider { 
 			min-width: unset; // Default Carbon Component Slider has a fixed min-width of 12.5rem so unset it to make it responsive
 		}
 	}
 	&.error {
-		.bx--text-input--invalid, .bx--text-input {
+		.cds--text-input--invalid, .cds--text-input {
 			outline: unset;
 			outline-offset: unset;
 		}
@@ -32,7 +32,7 @@
 		}
 	}
 	&.warning {
-		.bx--text-input--invalid, .bx--text-input {
+		.cds--text-input--invalid, .cds--text-input {
 			outline: unset;
 			outline-offset: unset;
 		}

@@ -24,7 +24,7 @@
 			display: flex;
 		}
 	}
-	.bx--form-item.bx--checkbox-wrapper {
+	.cds--form-item.cds--checkbox-wrapper {
 		flex: initial; // override carbon style to show tooltipIcon next to checkbox label
 	}
 	.properties-validation-message {
@@ -35,7 +35,7 @@
 	}
 }
 .table {
-	.bx--form-item.bx--checkbox-wrapper:first-of-type {
+	.cds--form-item.cds--checkbox-wrapper:first-of-type {
 		margin-top: 0;
 		padding: 1px; // Allow space for checkbox borders to show when embedded within a table.
 	}

@@ -15,7 +15,11 @@
  */
 
 .properties-sub-tab-container {
-	.bx--tab-content {
+	.cds--tab--list {
+		width: inherit;
+	}
+
+	.cds--tab-content {
 		// override carbon padding
 		padding-left: 0;
 		padding-right: 0;
@@ -41,12 +45,12 @@ $selected-tab-width: 3px;
 		padding-top: $spacing-02;
 		height: 100%;
 
-		ul.bx--tabs--scrollable__nav {
+		ul.cds--tabs--scrollable__nav {
 			flex-direction: column;
 			width: 282px;
 		}
 
-		li.bx--tabs--scrollable__nav-item--selected {
+		li.cds--tabs--scrollable__nav-item--selected {
 			border-left: $selected-tab-width solid $border-interactive;
 			border-bottom: 0;
 			background-color: $layer-selected-01;
@@ -78,7 +82,7 @@ $selected-tab-width: 3px;
 		}
 	}
 
-	div.bx--tab-content {
+	div.cds--tab-content {
 		width: 100%;
 		padding: $spacing-05; // Override padding set by subtab
 	}

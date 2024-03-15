@@ -16,18 +16,18 @@
 @use "../../../carbon.scss" as *;
 
 .properties-modal {
-	.bx--modal-close {
+	.cds--modal-close {
 		display: none;
 	}
-	.bx--modal-container {
+	.cds--modal-container {
 		padding: 0;
 	}
-	.bx--modal-content {
+	.cds--modal-content {
 		margin-bottom: $spacing-05;
 		padding: 0;
 	}
 	&.noButtons {
-		.bx--modal-footer {
+		.cds--modal-footer {
 			opacity: 0;
 			pointer-events: none;
 			display: none;

@@ -87,7 +87,7 @@ class VirtualizedTable extends React.Component {
 
 	// This is also triggered when clicking on a checkbox
 	onRowClick(evt, rowData, index) {
-		if (evt.target.className === "bx--select-option") {
+		if (evt.target.className === "cds--select-option") {
 			evt.stopPropagation(); // stop propagation when selecting dropdown select options within table rows
 		} else {
 			// Set selections

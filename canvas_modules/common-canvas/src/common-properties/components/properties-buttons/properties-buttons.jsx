@@ -17,7 +17,7 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
-import { Button } from "@carbon/react";
+import { Button, ButtonSet } from "@carbon/react";
 import classNames from "classnames";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
@@ -39,7 +39,7 @@ class PropertiesButtons extends Component {
 					data-id="properties-cancel-button"
 					className="properties-cancel-button"
 					type="button"
-					size="sm"
+					size="xl"
 					kind="secondary"
 					onClick={this.props.cancelHandler}
 				>
@@ -54,7 +54,7 @@ class PropertiesButtons extends Component {
 					data-id="properties-apply-button"
 					className="properties-apply-button"
 					type="button"
-					size="sm"
+					size="xl"
 					onClick={this.props.okHandler}
 					disabled={!this.props.applyButtonEnabled}
 				>
@@ -65,13 +65,12 @@ class PropertiesButtons extends Component {
 
 		const propertiesModalButtons = this.props.okHandler || this.props.cancelHandler
 			? (
-				<div
-					className={classNames("properties-modal-buttons", { "hide": (typeof (this.props.showPropertiesButtons) !== "undefined" &&
-						!this.props.showPropertiesButtons) })}
+				<ButtonSet className={classNames("properties-modal-buttons", { "hide": (typeof (this.props.showPropertiesButtons) !== "undefined" &&
+					!this.props.showPropertiesButtons) })}
 				>
 					{rejectButton}
 					{applyButton}
-				</div>
+				</ButtonSet>
 			)
 			: null;
 
