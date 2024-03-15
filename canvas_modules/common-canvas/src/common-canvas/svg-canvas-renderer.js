@@ -3422,7 +3422,7 @@ export default class SVGCanvasRenderer {
 				// If we are only going to display a single port, we set all the
 				// port positions to be the same as if there is only one port.
 				if (displaySinglePort) {
-					this.setPortPositionsVerticalSinglePort(node, ports, xPos, yPos);
+					this.setPortPositionsVerticalDisplaySingle(node, ports, xPos, yPos);
 
 				} else if (autoPosition || CanvasUtils.isExpandedSupernode(node)) {
 					this.setPortPositionsVerticalAuto(node, ports, portsWidth, yPos);
@@ -3437,7 +3437,7 @@ export default class SVGCanvasRenderer {
 	// If only a single port is to be displayed, this methods sets the x and y
 	// coordinates of all the ports to the same values appropriately for either
 	// regular nodes or expanded supernodes.
-	setPortPositionsVerticalSinglePort(node, ports, xPos, yPos) {
+	setPortPositionsVerticalDisplaySingle(node, ports, xPos, yPos) {
 		let xPosition = 0;
 		if (CanvasUtils.isExpandedSupernode(node)) {
 			const widthSvgArea = node.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
@@ -3500,7 +3500,7 @@ export default class SVGCanvasRenderer {
 				// If we are only going to display a single port, we set all the
 				// port positions to be the same as if there is only one port.
 				if (displaySinglePort) {
-					this.setPortPositionsHorizSinglePort(node, ports, xPos, yPos);
+					this.setPortPositionsHorizDisplaySingle(node, ports, xPos, yPos);
 
 				} else if (autoPosition || CanvasUtils.isExpandedSupernode(node)) {
 					this.setPortPositionsHorizAuto(node, ports, portsHeight, xPos);
@@ -3515,7 +3515,7 @@ export default class SVGCanvasRenderer {
 	// If only a single port is to be displayed, this methods sets the x and y
 	// coordinates of all the ports to the same values appropriately for either
 	// regular nodes or expanded supernodes.
-	setPortPositionsHorizSinglePort(node, ports, xPos, yPos) {
+	setPortPositionsHorizDisplaySingle(node, ports, xPos, yPos) {
 		let yPosition = 0;
 		if (CanvasUtils.isExpandedSupernode(node)) {
 			const heightSvgArea = node.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
