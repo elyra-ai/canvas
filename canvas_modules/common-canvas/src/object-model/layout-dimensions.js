@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { cloneDeep } from "lodash";
 
 const portsHorizontalDefaultLayout = {
 	nodeLayout: {
@@ -154,26 +156,19 @@ const portsHorizontalDefaultLayout = {
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
-		// Position of left single input port. Multiple input ports will be
-		// automatically positioned with the Y coordinate being overriden. These
-		// values are an offset from the top left corner of the node outline.
-		// Used when linkDirection is "LeftRight".
-		inputPortLeftPosX: 0,
-		inputPortLeftPosY: 20,
+		// Indicates whether multiple input ports should be automatically
+		// positioned (true) or positioned based on the contents of
+		// inputPortPositions array (false).
+		inputPortAutoPosition: true,
 
-		// Position of top single input port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the top left corner of the node outline.
-		// Used when linkDirection is "TopBottom".
-		inputPortTopPosX: 80,
-		inputPortTopPosY: 0,
-
-		// Position of bottom single input port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the bottom left corner of the node outline.
-		// Used when linkDirection is "BottomTop".
-		inputPortBottomPosX: 80,
-		inputPortBottomPosY: 0,
+		// An array of input port positions. Each element is structured like
+		// this: { x_pos: 5, y_pos: 10, pos: "topLeft" }. x_pos and y_pos are
+		// offsets from the pos point on the node.
+		// The order of the elements corresponds to the order of ports in the
+		// inputs array for the node.
+		inputPortPositions: [
+			{ x_pos: 0, y_pos: 20, pos: "topLeft" }
+		],
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -196,27 +191,19 @@ const portsHorizontalDefaultLayout = {
 		outputPortWidth: 12,
 		outputPortHeight: 12,
 
-		// Position of right single output port. Multiple input ports will be
-		// automatically positioned with the Y coordinate being overriden. These
-		// values are an offset from the top right corner of the node outline.
-		// Used when linkDirection is "LeftRight".
-		outputPortRightPosition: "topRight",
-		outputPortRightPosX: 0,
-		outputPortRightPosY: 20,
+		// Indicates whether multiple output ports should be automatically
+		// positioned (true) or positioned based on the contents of
+		// outputPortPositions array (false).
+		outputPortAutoPosition: true,
 
-		// Position of top single output port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the top left corner of the node outline.
-		// Used when linkDirection is "BottomTop".
-		outputPortTopPosX: 80,
-		outputPortTopPosY: 0,
-
-		// Position of bottom single output port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the bottom left corner of the node outline.
-		// Used when linkDirection is "TopBottom".
-		outputPortBottomPosX: 80,
-		outputPortBottomPosY: 0,
+		// An array of output port positions. Each element is structured like
+		// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
+		// offsets from the pos point on the node.
+		// The order of the elements corresponds to the order of ports in the
+		// outputs array for the node.
+		outputPortPositions: [
+			{ x_pos: 0, y_pos: 20, pos: "topRight" }
+		],
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -412,7 +399,7 @@ const portsHorizontalDefaultLayout = {
 		// to switch the data-new-link-over attribute to "yes".
 		nodeProximity: 20,
 
-		// Adds additional area around the ghost areaa dragged from the palette
+		// Adds additional area around the ghost area dragged from the palette
 		// which can increase the possibility of detecting detached links.
 		ghostAreaPadding: 10,
 
@@ -569,26 +556,19 @@ const portsVerticalDefaultLayout = {
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
-		// Position of left single input port. Multiple input ports will be
-		// automatically positioned with the Y coordinate being overriden. These
-		// values are an offset from the top left corner of the node outline.
-		// Used when linkDirection is "LeftRight".
-		inputPortLeftPosX: 0,
-		inputPortLeftPosY: 29,
+		// Indicates whether multiple input ports should be automatically
+		// positioned (true) or positioned based on the contents of
+		// inputPortPositions array (false).
+		inputPortAutoPosition: true,
 
-		// Position of top single input port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the top left corner of the node outline.
-		// Used when linkDirection is "TopBottom".
-		inputPortTopPosX: 35,
-		inputPortTopPosY: 0,
-
-		// Position of bottom single input port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the bottom left corner of the node outline.
-		// Used when linkDirection is "BottomTop".
-		inputPortBottomPosX: 35,
-		inputPortBottomPosY: 0,
+		// An array of input port positions. Each element is structured like
+		// this: { x_pos: 5, y_pos: 10, pos: "topLeft" }. x_pos and y_pos are
+		// offsets from the pos point on the node.
+		// The order of the elements corresponds to the order of ports in the
+		// inputs array for the node.
+		inputPortPositions: [
+			{ x_pos: 0, y_pos: 29, pos: "topLeft" }
+		],
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -611,27 +591,19 @@ const portsVerticalDefaultLayout = {
 		outputPortWidth: 12,
 		outputPortHeight: 12,
 
-		// Position of right single input port. Multiple input ports will be
-		// automatically positioned with the Y coordinate being overriden. These
-		// values are an offset from the top right corner of the node outline.
-		// Used when linkDirection is "LeftRight".
-		outputPortRightPosition: "topRight",
-		outputPortRightPosX: 0,
-		outputPortRightPosY: 29,
+		// Indicates whether multiple output ports should be automatically
+		// positioned (true) or positioned based on the contents of
+		// outputPortPositions array (false).
+		outputPortAutoPosition: true,
 
-		// Position of top single input port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the top left corner of the node outline.
-		// Used when linkDirection is "BottomTop".
-		outputPortTopPosX: 35,
-		outputPortTopPosY: 0,
-
-		// Position of bottom single input port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the bottom left corner of the node outline.
-		// Used when linkDirection is "TopBottom".
-		outputPortBottomPosX: 35,
-		outputPortBottomPosY: 0,
+		// An array of output port positions. Each element is structured like
+		// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
+		// offsets from the pos point on the node.
+		// The order of the elements corresponds to the order of ports in the
+		// outputs array for the node.
+		outputPortPositions: [
+			{ x_pos: 0, y_pos: 29, pos: "topRight" }
+		],
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -827,7 +799,7 @@ const portsVerticalDefaultLayout = {
 		// to switch the data-new-link-over attribute to "yes".
 		nodeProximity: 20,
 
-		// Adds additional area around the ghost areaa dragged from the palette
+		// Adds additional area around the ghost area dragged from the palette
 		// which can increase the possibility of detecting detached links.
 		ghostAreaPadding: 10,
 
@@ -850,7 +822,8 @@ export default class LayoutDimensions {
 		let newLayout = this.getDefaultLayout(config);
 
 		if (config) {
-			newLayout = this.overrideNodeLayout(newLayout, overlayLayout); // Do this first because snap-to-grid depends on this.
+			newLayout = this.overridePortPositions(newLayout, config); // Must do this before overrideNodeLayout
+			newLayout = this.overrideNodeLayout(newLayout, overlayLayout); // Must do this before overrideSnapToGrid
 			newLayout = this.overrideCanvasLayout(newLayout, config, overlayLayout);
 			newLayout = this.overrideLinkType(newLayout, config);
 			newLayout = this.overrideSnapToGrid(newLayout, config);
@@ -867,7 +840,7 @@ export default class LayoutDimensions {
 		} else {
 			defaultLayout = portsHorizontalDefaultLayout;
 		}
-		return Object.assign({}, defaultLayout);
+		return cloneDeep(defaultLayout);
 	}
 
 	static overrideNodeLayout(layout, overlayLayout) {
@@ -938,5 +911,27 @@ export default class LayoutDimensions {
 			return (Number.parseInt(snapToGridSizeStr, 10) / 100) * defaultNodeSize;
 		}
 		return Number.parseInt(snapToGridSizeStr, 10);
+	}
+
+	// Overrides the port positioning fields in the layout based on the type of node
+	// and the link direction.
+	static overridePortPositions(layout, config) {
+		if (config.enableLinkDirection === "BottomTop") {
+			layout.nodeLayout.inputPortPositions = [
+				{ x_pos: 0, y_pos: 0, pos: "bottomCenter" }
+			];
+			layout.nodeLayout.outputPortPositions = [
+				{ x_pos: 0, y_pos: 0, pos: "topCenter" }
+			];
+
+		} else if (config.enableLinkDirection === "TopBottom") {
+			layout.nodeLayout.inputPortPositions = [
+				{ x_pos: 0, y_pos: 0, pos: "topCenter" }
+			];
+			layout.nodeLayout.outputPortPositions = [
+				{ x_pos: 0, y_pos: 0, pos: "bottomCenter" }
+			];
+		}
+		return layout;
 	}
 }
