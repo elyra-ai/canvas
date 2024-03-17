@@ -1,5 +1,5 @@
 /*
-* Copyright 2023 Elyra Authors
+* Copyright 2023-2024 Elyra Authors
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import SVG from "react-inlinesvg";
 import { get } from "lodash";
 
 import { ShapeNode } from "@carbon/charts-react";
-import "@carbon/charts/styles.css"; // TODO: Check if this is still needed?
 
 class ShapeNodeWrapper extends React.Component {
 	componentDidMount() {
@@ -41,13 +40,14 @@ class ShapeNodeWrapper extends React.Component {
 		const styleImage = { height: "24px", width: "24px", y: 0 };
 		const icon = (<SVG src={this.props.nodeData.image} style={styleImage} />);
 		return (
-			<ShapeNode
-				className={"shape-node-div"}
-				title={this.props.nodeData.label}
-				shape={shape}
-				size="28px"
-				renderIcon={icon}
-			/>
+			<div className={"shape-node-div"}>
+				<ShapeNode
+					title={this.props.nodeData.label}
+					shape={shape}
+					size="28px"
+					renderIcon={icon}
+				/>
+			</div>
 		);
 	}
 }

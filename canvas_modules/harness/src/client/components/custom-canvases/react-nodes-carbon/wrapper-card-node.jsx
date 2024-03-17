@@ -1,5 +1,5 @@
 /*
-* Copyright 2023 Elyra Authors
+* Copyright 2023-2024 Elyra Authors
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,8 +23,6 @@ import { CardNode, CardNodeColumn,
 	CardNodeSubtitle,
 	CardNodeTitle
 } from "@carbon/charts-react";
-
-import "@carbon/charts/styles.css"; // TODO: Check if this is still needed?
 
 class CardNodeWrapper extends React.Component {
 	componentDidMount() {
@@ -51,34 +49,42 @@ class CardNodeWrapper extends React.Component {
 			// The SVG area that shows the sub-flow will overlay this Card Node that
 			// forms the background for the supernode.
 			return (
-				<CardNode className={"card-node-div"}>
+				<div className={"card-node"}>
+					<CardNode>
+						<CardNodeColumn>
+							<SVG src={image} style={styleImage} />
+						</CardNodeColumn>
+						<CardNodeColumn>
+							<CardNodeTitle>{this.props.nodeData.label}</CardNodeTitle>
+						</CardNodeColumn>
+					</CardNode>
+				</div>
+			);
+		}
+
+		// Read attributes from the nodeData, in the pipeline flow JSON file,
+		// for the node we are displaying.
+		const type = get(this, "props.nodeData.op"); // Derive the type from the operator
+		const color = get(this, "props.nodeData.app_data.react_nodes_data.color");
+		const shape = get(this, "props.nodeData.app_data.react_nodes_data.shape");
+
+		// Set the classes based on the node attributes.
+		let className = "card-node";
+		className += type === "card-node-with-outline" ? " card-node-outline-div" : "";
+		className += shape === "curved-corners" ? " card-node-curved-corners" : "";
+
+		return (
+			<div className={className}>
+				<CardNode color={color}>
 					<CardNodeColumn>
 						<SVG src={image} style={styleImage} />
 					</CardNodeColumn>
 					<CardNodeColumn>
 						<CardNodeTitle>{this.props.nodeData.label}</CardNodeTitle>
+						<CardNodeSubtitle>{this.props.nodeData.description}</CardNodeSubtitle>
 					</CardNodeColumn>
 				</CardNode>
-			);
-		}
-
-		const type = get(this, "props.nodeData.op"); // Derive the type from the operator
-		const color = get(this, "props.nodeData.app_data.react_nodes_data.color");
-		const shape = get(this, "props.nodeData.app_data.react_nodes_data.shape");
-
-		let className = type === "card-node-with-outline" ? "card-node-outline-div" : "";
-		className += shape === "curved-corners" ? " card-node-curved-corners" : "";
-
-		return (
-			<CardNode className={className} color={color}>
-				<CardNodeColumn>
-					<SVG src={image} style={styleImage} />
-				</CardNodeColumn>
-				<CardNodeColumn>
-					<CardNodeTitle>{this.props.nodeData.label}</CardNodeTitle>
-					<CardNodeSubtitle>{this.props.nodeData.description}</CardNodeSubtitle>
-				</CardNodeColumn>
-			</CardNode>
+			</div>
 		);
 	}
 }

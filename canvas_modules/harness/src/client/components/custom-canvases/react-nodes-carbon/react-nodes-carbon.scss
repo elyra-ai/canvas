@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Elyra Authors
+ * Copyright 2023-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,27 @@
 /* Override styles for react-nodes sample application. */
 @use "../../../../../assets/styles/carbon.scss" as *;
 
+@import "@carbon/charts-react/styles.min.css";
+
 .react-nodes-carbon {
 
 	.d3-node-group {
-		.card-node-outline-div {
+		.card-node {
+			height: 100%;
+		}
+
+		.card-node-outline-div .cds--cc--card-node {
 			border-top: thin solid;
 			border-bottom: thin solid;
 			border-right: thin solid;
 		}
 
-		.card-node-curved-corners {
+		.card-node-curved-corners .cds--cc--card-node {
 			border: thin solid;
 			border-radius: 10px;
 		}
 
-		.shape-node-div {
+		.shape-node-div .cds--cc--shape-node {
 			border: thin solid;
 			width: 28px;
 		}
@@ -135,56 +141,5 @@
 		fill: none;
 		stroke: $layer-selected-inverse;
 		stroke-width: 1;
-	}
-
-	/* For association link */
-	.d3-object-link  .d3-link-line {
-		stroke: $border-strong-01;
-		stroke-width: 2;
-		fill: none;
-		stroke-dasharray: 5.5;
-	}
-
-	.d3-comment-link  .d3-link-line {
-		stroke: $border-strong-01;
-		stroke-width: 1;
-		fill: none;
-		stroke-dasharray: 10.5;
-	}
-
-
-	.d3-link-group:hover .d3-link-line,
-	.d3-link-group:hover .d3-link-line-arrow-head {
-		stroke: $button-primary;
-		stroke-width: 2;
-	}
-
-	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: $button-primary;
-		stroke-width: 2;
-		stroke-dasharray: 1 0;
-		fill: none;
-	}
-
-	.d3-comment-selection-highlight[data-selected="yes"] {
-		stroke: $gray-50;
-		stroke-dasharray: 5, 5;
-		stroke-width: 1;
-		fill: transparent;
-		pointer-events: none;
-	}
-
-	/* Decoration Styles */
-
-	.node-cache-empty {
-		fill: $layer-01;
-	}
-
-	.node-cache-full {
-		fill: $layer-01;
-	}
-
-	.node-sql-pushback {
-		fill: $layer-01;
 	}
 }
