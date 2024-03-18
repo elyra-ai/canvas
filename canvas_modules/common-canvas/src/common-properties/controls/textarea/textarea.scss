@@ -15,11 +15,6 @@
  */
 
 .properties-textarea {
-	.cds--form-item { // carbon overrides
-		margin-right: 0;
-		margin-bottom: 0;
-	}
-
 	&.hide {
 		display: none;
 	}

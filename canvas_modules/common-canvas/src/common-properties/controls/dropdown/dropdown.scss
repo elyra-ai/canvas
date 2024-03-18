@@ -25,9 +25,7 @@
 }
 .properties-table-cell-control {
 	>.properties-dropdown {
-		width: 100%;
 		.cds--select.cds--select--inline {
-			width: 100%;
 			.cds--select-input--inline__wrapper {
 				width: 100%;
 			}
@@ -40,9 +38,6 @@
 			background-color: transparent; // Override carbon default background-color: #f4f4f4;
 			padding: 0 1.25rem 0 0;
 			box-shadow: 0 2px 0 0 $button-primary;
-			&:hover {
-				background: unset;
-			}
 			&:focus {
 				outline: unset;
 			}

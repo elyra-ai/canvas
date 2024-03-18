@@ -16,18 +16,11 @@
 
 
 .properties-numberfield {
-	.cds--form-item { // carbon overrides
-		margin-right: 0;
-		margin-bottom: 0;
+	.properties-numberfield-layer {
+		inline-size: 100%;
 	}
 	.properties-number-generator {
 		margin-left: $spacing-05;
-		right: $spacing-01;
-		// Button dimensions 40x40 px
-		width: $spacing-08;
-		min-height: $spacing-08;
-		padding-left: $spacing-04;
-		padding-right: $spacing-04;
 	}
 	&.numberfield-with-number-generator {
 		width: 100%;

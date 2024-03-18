@@ -142,6 +142,7 @@ class EditorForm extends React.Component {
 		const nonTearsheetTabs = tabs.filter((t) => t.content.itemType !== ItemType.TEARSHEET);
 		const tearsheetTabs = tabs.filter((t) => t.content.itemType === ItemType.TEARSHEET);
 		const totalTabs = tearsheetTabs.concat(nonTearsheetTabs);
+		const tabListAriaLabel = PropertyUtil.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.EDITORFORM_TABLIST_LABEL);
 
 		for (let i = 0; i < totalTabs.length; i++) {
 			const tab = totalTabs[i];
@@ -206,9 +207,6 @@ class EditorForm extends React.Component {
 				}
 				tabLists.push(
 					<Tab
-						// id={"tab." + this._getContainerIndex(hasAlertsTab, i) + "-" + key}
-						// key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
-						// tabIndex={i}
 						title={filter([tab.text, this._getMessageCountForCategory(tab)]).join("")}
 						className={classNames({ "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						onClick={this._modalTabsOnClick.bind(this, tab.group)}
@@ -241,7 +239,7 @@ class EditorForm extends React.Component {
 				selectedIndex={modalSelected}
 				light={this.props.controller.getLight()}
 			>
-				<TabList className="properties-primaryTabs" aria-label="Primary Tabs">
+				<TabList className="properties-primaryTabs" aria-label={tabListAriaLabel}>
 					{tabLists}
 				</TabList>
 				<TabPanels>

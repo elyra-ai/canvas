@@ -54,11 +54,20 @@ class ToggleControl extends React.Component {
 			labelB={labelOn}
 			labelA={labelOff}
 			onToggle={this.handleChange.bind(this)}
-			labelText={this.props.tableControl ? null : this.props.controlItem}
+			aria-labelledby={`${this.props.propertyId?.name}-toggle-label`}
 		/>);
 		const className = classNames("properties-toggle", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				{
+					this.props.tableControl
+						? null
+						: (
+							<div id={`${this.props.propertyId?.name}-toggle-label`} className="properties-toggle-label">
+								{this.props.tableControl ? null : this.props.controlItem}
+							</div>
+						)
+				}
 				{toggleControl}
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

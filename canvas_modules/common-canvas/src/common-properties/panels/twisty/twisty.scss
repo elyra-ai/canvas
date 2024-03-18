@@ -26,6 +26,9 @@
 		// 24px padding between accordion title and content (issue #3106)
 		padding: $spacing-06 $spacing-05 $spacing-05;
 	}
+	.cds--accordion__wrapper {
+		padding: 0;
+	}
 }
 
 .properties-twisty-panel + .properties-control-panel {

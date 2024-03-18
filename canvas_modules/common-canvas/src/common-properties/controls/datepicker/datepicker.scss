@@ -21,12 +21,3 @@
 		}
 	}
 }
-
-.properties-datepicker {
-	.cds--date-picker-container {
-		.cds--form-requirement,
-		.cds--form__helper-text {
-			max-width: 18rem; // https://github.com/carbon-design-system/carbon/issues/12937
-		}
-	}
-}

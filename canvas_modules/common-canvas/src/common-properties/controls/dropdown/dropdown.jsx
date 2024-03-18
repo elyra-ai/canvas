@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { SelectItem, Select, Dropdown, ComboBox } from "@carbon/react";
+import { SelectItem, Select, Dropdown, ComboBox, Layer } from "@carbon/react";
 import { isEqual, isEmpty } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
@@ -219,47 +219,56 @@ class DropDown extends React.Component {
 			for (const option of dropDown.options) {
 				options.push(<SelectItem text={option.label} key={this.id + "-" + option.value} value={option.value} />);
 			}
-			dropdownComponent = (<Select
-				id={this.id}
-				hideLabel
-				inline
-				labelText={this.props.control.label ? this.props.control.label.text : ""}
-				disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
-				onChange={this.handleChange}
-				value={selection}
-				light={this.props.controller.getLight() && this.props.control.light}
-			>
-				{ options }
-			</Select>);
+			dropdownComponent = (
+				<Layer level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
+					<Select
+						id={this.id}
+						hideLabel
+						inline
+						labelText={this.props.control.label ? this.props.control.label.text : ""}
+						disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
+						onChange={this.handleChange}
+						value={selection}
+					>
+						{ options }
+					</Select>
+				</Layer>
+			);
 		} else if (this.props.control.customValueAllowed) { // combobox dropdown not allowed in tables
-			dropdownComponent = (<ComboBox
-				{...validationProps}
-				aria-label={this.props.control.label ? this.props.control.label.text : ""}
-				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
-				disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
-				placeholder={dropDown.selectedOption.label}
-				selectedItem={dropDown.selectedOption.label}
-				items={dropDown.options}
-				onChange={this.handleComboOnChange}
-				onInputChange={this.handleOnInputChange}
-				light={this.props.controller.getLight() && this.props.control.light}
-				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-				titleText={this.props.controlItem}
-			/>);
+			dropdownComponent = (
+				<Layer level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
+					<ComboBox
+						{...validationProps}
+						aria-label={this.props.control.label ? this.props.control.label.text : ""}
+						id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
+						disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
+						placeholder={dropDown.selectedOption.label}
+						selectedItem={dropDown.selectedOption.label}
+						items={dropDown.options}
+						onChange={this.handleComboOnChange}
+						onInputChange={this.handleOnInputChange}
+						translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+						titleText={this.props.controlItem}
+					/>
+				</Layer>
+			);
 		} else {
-			dropdownComponent = (<Dropdown
-				{...validationProps}
-				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
-				disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
-				type="default"
-				items={dropDown.options}
-				onChange={this.handleChange}
-				selectedItem={dropDown.selectedOption}
-				label={this.emptyLabel}
-				light={this.props.controller.getLight() && this.props.control.light}
-				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-				titleText={this.props.controlItem}
-			/>);
+			dropdownComponent = (
+				<Layer level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
+					<Dropdown
+						{...validationProps}
+						id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
+						disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
+						type="default"
+						items={dropDown.options}
+						onChange={this.handleChange}
+						selectedItem={dropDown.selectedOption}
+						label={this.emptyLabel}
+						translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+						titleText={this.props.controlItem}
+					/>
+				</Layer>
+			);
 		}
 
 		return (

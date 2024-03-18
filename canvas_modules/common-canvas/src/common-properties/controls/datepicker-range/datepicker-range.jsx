@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { DatePicker, DatePickerInput } from "@carbon/react";
+import { DatePicker, DatePickerInput, Layer } from "@carbon/react";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
 
@@ -135,39 +135,40 @@ class DatepickerRangeControl extends React.Component {
 
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<DatePicker
-					datePickerType={DATEPICKER_TYPE.RANGE}
-					dateFormat={this.dateFormat}
-					light={this.props.controller.getLight() && this.props.control.light}
-					onChange={this.handleDateRangeChange.bind(this)}
-					locale={this.locale}
-					allowInput
-				>
-					<DatePickerInput
-						{...validationProps}
-						id={`${this.id}-start`}
-						placeholder={this.props.control.additionalText}
-						labelText={!this.props.tableControl && startLabel}
-						disabled={this.props.state === STATES.DISABLED}
-						size={this.getDatepickerSize()}
-						onChange={this.handleInputStartChange.bind(this)}
-						value={this.state.valueStart}
-						onBlur={this.onStartBlur.bind(this)}
-						helperText={!this.props.tableControl && startHelperText}
-					/>
-					<DatePickerInput
-						{...validationProps}
-						id={`${this.id}-end`}
-						placeholder={this.props.control.additionalText}
-						labelText={!this.props.tableControl && endLabel}
-						disabled={this.props.state === STATES.DISABLED}
-						size={this.getDatepickerSize()}
-						onChange={this.handleInputEndChange.bind(this)}
-						value={this.state.valueEnd}
-						onBlur={this.onEndBlur.bind(this)}
-						helperText={!this.props.tableControl && endHelperText}
-					/>
-				</DatePicker>
+				<Layer level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
+					<DatePicker
+						datePickerType={DATEPICKER_TYPE.RANGE}
+						dateFormat={this.dateFormat}
+						onChange={this.handleDateRangeChange.bind(this)}
+						locale={this.locale}
+						allowInput
+					>
+						<DatePickerInput
+							{...validationProps}
+							id={`${this.id}-start`}
+							placeholder={this.props.control.additionalText}
+							labelText={!this.props.tableControl && startLabel}
+							disabled={this.props.state === STATES.DISABLED}
+							size={this.getDatepickerSize()}
+							onChange={this.handleInputStartChange.bind(this)}
+							value={this.state.valueStart}
+							onBlur={this.onStartBlur.bind(this)}
+							helperText={!this.props.tableControl && startHelperText}
+						/>
+						<DatePickerInput
+							{...validationProps}
+							id={`${this.id}-end`}
+							placeholder={this.props.control.additionalText}
+							labelText={!this.props.tableControl && endLabel}
+							disabled={this.props.state === STATES.DISABLED}
+							size={this.getDatepickerSize()}
+							onChange={this.handleInputEndChange.bind(this)}
+							value={this.state.valueEnd}
+							onBlur={this.onEndBlur.bind(this)}
+							helperText={!this.props.tableControl && endHelperText}
+						/>
+					</DatePicker>
+				</Layer>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);

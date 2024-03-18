@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { MultiSelect, FilterableMultiSelect } from "@carbon/react";
+import { MultiSelect, FilterableMultiSelect, Layer } from "@carbon/react";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
@@ -109,7 +109,7 @@ class MultiSelectControl extends React.Component {
 
 	handleOnChange(evt) {
 		const controlValues = [];
-		for (let i = 0; i < evt.selectedItems.length; i++) {
+		for (let i = 0; i < evt?.selectedItems?.length; i++) {
 			controlValues.push(evt.selectedItems[i].id);
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, controlValues);
@@ -144,31 +144,37 @@ class MultiSelectControl extends React.Component {
 
 		let dropdownComponent = null;
 		if (this.props.control.filterable) {
-			dropdownComponent = (<FilterableMultiSelect
-				{...validationProps}
-				id={`${ControlUtils.getDataId(this.props.propertyId)}-multiselect-filterable`}
-				disabled={this.props.state === STATES.DISABLED}
-				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-				items={multiSelectDropdown.options}
-				initialSelectedItems={multiSelectDropdown.selectedOptions}
-				onChange={this.handleOnChange}
-				placeholder={label}
-				titleText={this.props.tableControl ? null : this.props.controlItem}
-				light={this.props.controller.getLight() && this.props.control.light}
-			/>);
+			dropdownComponent = (
+				<Layer level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
+					<FilterableMultiSelect
+						{...validationProps}
+						id={`${ControlUtils.getDataId(this.props.propertyId)}-multiselect-filterable`}
+						disabled={this.props.state === STATES.DISABLED}
+						translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+						items={multiSelectDropdown.options}
+						initialSelectedItems={multiSelectDropdown.selectedOptions}
+						onChange={this.handleOnChange}
+						placeholder={label}
+						titleText={this.props.tableControl ? null : this.props.controlItem}
+					/>
+				</Layer>
+			);
 		} else {
-			dropdownComponent = (<MultiSelect
-				{...validationProps}
-				id={`${ControlUtils.getDataId(this.props.propertyId)}-multiselect`}
-				disabled={this.props.state === STATES.DISABLED}
-				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-				items={multiSelectDropdown.options}
-				selectedItems={multiSelectDropdown.selectedOptions}
-				onChange={this.handleOnChange}
-				label={label}
-				titleText={this.props.tableControl ? null : this.props.controlItem}
-				light={this.props.controller.getLight() && this.props.control.light}
-			/>);
+			dropdownComponent = (
+				<Layer level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
+					<MultiSelect
+						{...validationProps}
+						id={`${ControlUtils.getDataId(this.props.propertyId)}-multiselect`}
+						disabled={this.props.state === STATES.DISABLED}
+						translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+						items={multiSelectDropdown.options}
+						selectedItems={multiSelectDropdown.selectedOptions}
+						onChange={this.handleOnChange}
+						label={label}
+						titleText={this.props.tableControl ? null : this.props.controlItem}
+					/>
+				</Layer>
+			);
 		}
 
 		return (

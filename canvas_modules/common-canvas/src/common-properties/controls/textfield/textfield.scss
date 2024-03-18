@@ -20,10 +20,6 @@ $textinput-bottom-padding: 5px;
 	&.hide {
 		display: none;
 	}
-	.cds--form-item { // carbon overrides
-		margin-right: 0;
-		margin-bottom: 0;
-	}
 	input {
 		min-width: unset;
 	}

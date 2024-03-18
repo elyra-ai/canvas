@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { NumberInput, Button } from "@carbon/react";
+import { NumberInput, Button, Layer } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
@@ -70,7 +70,7 @@ class NumberfieldControl extends React.Component {
 	}
 
 	handleChange(evt, { value, direction }) {
-		if (typeof direction === "string") {
+		if (this.props.control.controlType !== ControlType.NUMBERFIELD && typeof direction === "string") {
 			this.onDirection(direction);
 			return;
 		}
@@ -139,6 +139,7 @@ class NumberfieldControl extends React.Component {
 				onClick={this.generateNumber}
 				disabled={disabled}
 				kind="tertiary"
+				size="md"
 				renderIcon={Shuffle}
 				tooltipPosition="bottom"
 				tooltipAlignment="end"
@@ -155,22 +156,23 @@ class NumberfieldControl extends React.Component {
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<NumberInput
-					{...validationProps}
-					ref= { (ref) => (this.numberInput = ref)}
-					id={this.id}
-					onChange={this.handleChange.bind(this)}
-					disabled={disabled}
-					step={this.props.control.increment}
-					value={controlValue}
-					placeholder={this.props.control.additionalText}
-					label={this.props.controlItem}
-					hideLabel={this.props.tableControl}
-					allowEmpty
-					light={this.props.controller.getLight() && this.props.control.light}
-					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
-					onInput={this.onInput.bind(this)}
-				/>
+				<Layer className="properties-numberfield-layer" level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
+					<NumberInput
+						{...validationProps}
+						ref= { (ref) => (this.numberInput = ref)}
+						id={this.id}
+						onChange={this.handleChange.bind(this)}
+						disabled={disabled}
+						step={this.props.control.increment}
+						value={controlValue}
+						placeholder={this.props.control.additionalText}
+						label={this.props.controlItem}
+						hideLabel={this.props.tableControl}
+						allowEmpty
+						hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
+						onInput={this.onInput.bind(this)}
+					/>
+				</Layer>
 				{numberGenerator}
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

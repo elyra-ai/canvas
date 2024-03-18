@@ -19,8 +19,9 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import { Tabs, Tab, TabList, TabPanel, TabPanels } from "@carbon/react";
 import { getDataId } from "./../../util/control-utils";
-import { STATES } from "./../../constants/constants.js";
+import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import { v4 as uuid4 } from "uuid";
+import { formatMessage } from "./../../util/property-utils";
 
 class Subtabs extends React.Component {
 	constructor(props) {
@@ -41,6 +42,7 @@ class Subtabs extends React.Component {
 		let activeTab = 0;
 		let tabIdx = 0;
 		const className = this.props.className ? this.props.className : "";
+		const tabListAriaLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.SUBTABS_TABLIST_LABEL);
 		for (let i = 0; i < this.props.tabs.length; i++) {
 			const tab = this.props.tabs[i];
 			// TODO this might not work once we don't rerender on each change
@@ -53,12 +55,8 @@ class Subtabs extends React.Component {
 
 				subTabLists.push(
 					<Tab
-						// id={`subtabs.tab.${i}-${this.uuid}`}
-						// key={`subtabs.tab.${i}-${this.uuid}`}
 						disabled={panelState === STATES.DISABLED}
 						className={classNames("properties-subtab", { "properties-leftnav-subtab-item": this.props.leftnav })}
-						// tabIndex={tabIdx}
-						// label={tab.text}
 						title={tab.text}
 						onClick={this.onClick.bind(this, tab.group)}
 						data-id={getDataId({ name: tab.group })}
@@ -89,7 +87,7 @@ class Subtabs extends React.Component {
 					selectedIndex={activeTab}
 					light={this.props.controller.getLight()}
 				>
-					<TabList className={classNames("properties-subtabs", { "properties-leftnav-subtabs": this.props.leftnav })}>
+					<TabList className={classNames("properties-subtabs", { "properties-leftnav-subtabs": this.props.leftnav })} aria-label={tabListAriaLabel}>
 						{subTabLists}
 					</TabList>
 					<TabPanels>

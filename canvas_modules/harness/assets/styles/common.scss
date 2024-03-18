@@ -15,4 +15,4 @@
  */
 $font-prefix: "/fonts";
 @use '@carbon/react' as *;
-@import "@ibm/plex/scss/ibm-plex.scss";
+@import "node_modules/@ibm/plex/scss/ibm-plex.scss";

@@ -48,9 +48,9 @@ class AppSettingsPanel extends React.Component {
 		evt.stopPropagation();
 	}
 
-	onChange(value, field) {
+	onChange(evt, { checked, id }) {
 		const obj = {};
-		obj[field] = value;
+		obj[id] = checked;
 		this.setState(obj);
 	}
 

@@ -21,6 +21,10 @@
 		.cds--slider { 
 			min-width: unset; // Default Carbon Component Slider has a fixed min-width of 12.5rem so unset it to make it responsive
 		}
+
+		.cds--slider-text-input {
+			text-align: center;
+		}
 	}
 	&.error {
 		.cds--text-input--invalid, .cds--text-input {

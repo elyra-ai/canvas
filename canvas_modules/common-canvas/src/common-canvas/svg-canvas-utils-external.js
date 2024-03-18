@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import React from "react";
-import { createRoot } from "react-dom/client.js";
+import { createRoot } from "react-dom/client";
 
 import Logger from "../logging/canvas-logger.js";
 

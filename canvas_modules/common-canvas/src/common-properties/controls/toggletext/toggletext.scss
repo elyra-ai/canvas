@@ -33,7 +33,14 @@
 
 // toggle control in table needs to fit within column
 .properties-table-cell-control {
-	.properties-toggletext button {
-		padding: 0 $spacing-02;
+	.properties-toggletext {
+		button {
+			padding: 0 $spacing-02;
+			align-items: center;
+		}
+		.cds--btn--ghost:not([disabled]) svg {
+			fill: currentColor;
+		}
+		
 	}
 }

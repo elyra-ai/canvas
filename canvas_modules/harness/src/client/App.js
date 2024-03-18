@@ -2328,7 +2328,7 @@ class App extends React.Component {
 						action: "custom-button",
 						tooltip: "A custom button of type primary!",
 						jsx: (tabIndex) => (
-							<Button id={"custom-button"} size="field" kind="primary"
+							<Button id={"custom-button"} size="md" kind="primary"
 								onClick={(e) => window.alert("Button clicked!")}
 								className={"toolbar-jsx-obj"}
 								tabIndex={tabIndex}
