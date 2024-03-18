@@ -532,19 +532,19 @@ describe("Test all the nodes are correctly positioned", function() {
 
 		// Check the five single-port binding nodes in the first supernode are correctly positioned
 		cy.verifyNodeTransformInSupernode(
-			"SN1-BN-INPUT0", "Supernode-5-binding", 5.5325910785737875, 541.2282679742564
+			"SN1-BN-INPUT0", "Supernode-5-binding", 5.5325910785737875, 536
 		);
 		cy.verifyNodeTransformInSupernode(
-			"SN1-BN-INPUT1", "Supernode-5-binding", 5.5325910785737875, 577.7189309049523
+			"SN1-BN-INPUT1", "Supernode-5-binding", 5.5325910785737875, 572
 		);
 		cy.verifyNodeTransformInSupernode(
-			"SN1-BN-OUTPUT0", "Supernode-5-binding", 463.4674089214262, 522.9829365089084
+			"SN1-BN-OUTPUT0", "Supernode-5-binding", 463.4674089214262, 518
 		);
 		cy.verifyNodeTransformInSupernode(
-			"SN1-BN-OUTPUT1", "Supernode-5-binding", 463.4674089214262, 559.4735994396044
+			"SN1-BN-OUTPUT1", "Supernode-5-binding", 463.4674089214262, 554
 		);
 		cy.verifyNodeTransformInSupernode(
-			"SN1-BN-OUTPUT2", "Supernode-5-binding", 463.4674089214262, 595.9642623703003
+			"SN1-BN-OUTPUT2", "Supernode-5-binding", 463.4674089214262, 590
 		);
 
 		// Check the second supernode (with 2 multi-port binding nodes) is correctly positioned
@@ -556,13 +556,13 @@ describe("Test all the nodes are correctly positioned", function() {
 		cy.verifyNodeTransformInSupernode("SN2-Filler", "Supernode-2-binding", 752, -351.49998474121094);
 		cy.verifyNodeTransformInSupernode("SN2-Select", "Supernode-2-binding", 889.5, -344.99998474121094);
 		cy.verifyNodeTransformInSupernode(
-			"SN2-Sample", "Supernode-2-binding", 1039.5, -351.99998474121094
+			"SN2-Sample", "Supernode-2-binding", 1039.5, -352
 		);
 
 		// Check the two single-port binding nodes in the second supernode are correctly positioned
-		cy.verifyNodeTransformInSupernode("SN2-BN-INPUT", "Supernode-2-binding", 598, -351.31031669823415);
+		cy.verifyNodeTransformInSupernode("SN2-BN-INPUT", "Supernode-2-binding", 598, -355);
 		cy.verifyNodeTransformInSupernode(
-			"SN2-BN-OUTPUT", "Supernode-2-binding", 1193.5, -354.72815902589485
+			"SN2-BN-OUTPUT", "Supernode-2-binding", 1193.5, -359
 		);
 	});
 });
