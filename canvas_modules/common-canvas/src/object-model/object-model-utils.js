@@ -59,6 +59,7 @@ function setSupernodesBindingStatus(pipelines, supernode) {
 	return pipelines;
 }
 
+
 function setSupernodesBindingStatusForNode(node, pipelines) {
 	const snPipelineId = CanvasUtils.getSupernodePipelineId(node);
 	if (snPipelineId) {
@@ -85,6 +86,9 @@ function setSupernodesBindingStatusForNode(node, pipelines) {
 	}
 }
 
+
+// Sets the auto-calculated attributes for nodes and comments based on different layout
+// informaiton for the pipeline passed in.
 function setPipelineObjectAttributes(inPipeline, nodeLayout, canvasLayout, layoutHandler) {
 	const pipeline = Object.assign({}, inPipeline);
 	if (pipeline.nodes) {
@@ -113,7 +117,7 @@ export function setNodeAttributesWithLayout(node, nodeLayout, canvasLayout, layo
 			canvasLayout.linkDirection === "BottomTop") {
 		newNode = setNodeDimensionAttributesVertical(newNode, canvasLayout);
 	} else {
-		newNode = setNodeDimensionAttributesLeftRight(newNode, canvasLayout);
+		newNode = setNodeDimensionAttributesHoriz(newNode, canvasLayout);
 	}
 	if (canvasLayout.snapToGridType === SNAP_TO_GRID_DURING ||
 			canvasLayout.snapToGridType === SNAP_TO_GRID_AFTER) {
@@ -129,12 +133,17 @@ function setNodeLayoutAttributes(node, nodeLayout, layoutHandler) {
 	node.layout = nodeLayout;
 
 	if (layoutHandler) {
-		const customLayout = layoutHandler(node);
+		let customLayout = layoutHandler(node);
 
 		// If using the layoutHandler we must make a copy of the layout info
 		// for each node so the original single version of layout info attached
 		// to the node doesn't get overwritten.
 		if (customLayout && !isEmpty(customLayout)) {
+			// TODO - This should be removed in a future major release.
+			// This method converts now deprecated layout variables from customLayout
+			// to the new port positions arrays for input and output ports.
+			customLayout = CanvasUtils.convertPortPosInfo(customLayout);
+
 			const decs = CanvasUtils.getCombinedDecorations(node.layout.decorations, customLayout.decorations);
 			node.layout = Object.assign({}, node.layout, customLayout, { decorations: decs });
 		}
@@ -145,14 +154,9 @@ function setNodeLayoutAttributes(node, nodeLayout, layoutHandler) {
 // Returns the node passed in with additional fields which contains
 // the height occupied by the input ports and output ports, based on the
 // layout info passed in, as well as the node width.
-function setNodeDimensionAttributesLeftRight(node, canvasLayout) {
-	node.inputPortsHeight = node.inputs
-		? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-		: 0;
-
-	node.outputPortsHeight = node.outputs
-		? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-		: 0;
+function setNodeDimensionAttributesHoriz(node, canvasLayout) {
+	node.inputPortsHeight = node.inputs ? getInputPortsHeight(node) : 0;
+	node.outputPortsHeight = node.outputs ? getOutputPortsHeight(node) : 0;
 
 	if (node.layout.autoSizeNode) {
 		node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);
@@ -182,17 +186,26 @@ function setNodeDimensionAttributesLeftRight(node, canvasLayout) {
 	return node;
 }
 
+// Returns the height of the input ports for the node if they are automatically
+// positioned by common-canvas.
+function getInputPortsHeight(node) {
+	return (node.inputs.length * (node.layout.portArcRadius * 2)) +
+		((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2);
+}
+
+// Returns the height of the output ports for the node if they are automatically
+// positioned by common-canvas.
+function getOutputPortsHeight(node) {
+	return (node.outputs.length * (node.layout.portArcRadius * 2)) +
+		((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2);
+}
+
 // Returns the node passed in with additional fields which contains
 // the width occupied by the input ports and output ports, based on the
 // layout info passed in, as well as the node height.
 function setNodeDimensionAttributesVertical(node, canvasLayout) {
-	node.inputPortsWidth = node.inputs
-		? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-		: 0;
-
-	node.outputPortsWidth = node.outputs
-		? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-		: 0;
+	node.inputPortsWidth = node.inputs ? getInputPortsWidth(node) : 0;
+	node.outputPortsWidth = node.outputs ? getOutputPortsWidth(node) : 0;
 
 	node.height = node.layout.defaultNodeHeight;
 
@@ -220,6 +233,20 @@ function setNodeDimensionAttributesVertical(node, canvasLayout) {
 	}
 
 	return node;
+}
+
+// Returns the width of the input ports for the node if they are automatically
+// positioned by common-canvas or zero if ports will be manually positioned..
+function getInputPortsWidth(node) {
+	return (node.inputs.length * (node.layout.portArcRadius * 2)) +
+		((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2);
+}
+
+// Returns the width of the output ports for the node if they are automatically
+// positioned by common-canvas or zero if ports will be manually positioned..
+function getOutputPortsWidth(node) {
+	return (node.outputs.length * (node.layout.portArcRadius * 2)) +
+		((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2);
 }
 
 function findNode(nodeId, pipelineId, pipelines) {

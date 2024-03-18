@@ -75,7 +75,7 @@ export default class SvgCanvasExternal {
 				out.cy = outputPos.cy / k;
 			});
 		}
-		this.ren.displayLinks();
+		this.ren.displayMovedLinks();
 	}
 
 	setNodesProperties(newProps) {
