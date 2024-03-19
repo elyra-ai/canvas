@@ -77,7 +77,7 @@ class NumberfieldControl extends React.Component {
 
 		if (
 			evt.target.validity && evt.target.validity.badInput ||
-			(!isFinite(evt.target.value)) // TODO: Check if this should be changed to value
+			(!isFinite(evt.target.value))
 		) {
 			// Note - When user enters an invalid number, evt.target.value is set to "".
 			// It is difficult to differentiate between empty value and invalid input because both return "".
