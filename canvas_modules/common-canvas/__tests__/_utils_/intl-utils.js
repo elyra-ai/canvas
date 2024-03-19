@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import React from "react";
 import { IntlProvider } from "react-intl";
 import { shallow } from "enzyme";
 import { mount } from "./mount-utils.js";
@@ -24,7 +24,7 @@ import * as HarnessBundles from "../../../harness/src/intl/locales";
 const defaultLocale = "en-US";
 const locale = defaultLocale;
 
-export function mountWithIntl(node, inOptions) {
+export function mountWithIntl1(node, inOptions) {
 	const options = Object.assign({
 		wrappingComponent: IntlProvider,
 		wrappingComponentProps: {
@@ -33,6 +33,14 @@ export function mountWithIntl(node, inOptions) {
 		}
 	}, inOptions);
 	return mount(node, options);
+}
+
+
+export function mountWithIntl(node, inOptions) {
+	function Wrapper({children}) {
+		return (<IntlProvider locale={locale}>{children}</IntlProvider>);
+	}
+	return mount(node, { wrapper: Wrapper, ...inOptions });
 }
 
 // Allow for custom resources to be applied from the test harness

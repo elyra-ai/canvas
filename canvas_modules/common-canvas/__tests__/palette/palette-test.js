@@ -21,34 +21,33 @@ import PaletteDialogTopbar from "../../src/palette/palette-dialog-topbar.jsx";
 import PaletteDialogContent from "../../src/palette/palette-dialog-content.jsx";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import sinon from "sinon";
-import { expect } from "chai";
 
 
 describe("Palette renders correctly", () => {
 
 	it("should use a `.palette-div` CSS class", () => {
-		const popupPalette = createPalette();
-		expect(popupPalette.find(".palette-dialog-div")).to.have.length(1);
+		const { container: popupPaletteContainer } = createPalette();
+		expect(popupPaletteContainer.getElementsByClassName("palette-dialog-div")).toHaveLength(1);
 	});
 
 	it("should render one <PaletteTopbar/> component", () => {
-		const popupPalette = createPalette();
-		expect(popupPalette.find(PaletteDialogTopbar)).to.have.length(1);
+		const { container: popupPaletteContainer } = createPalette();
+		expect(popupPaletteContainer.getElementsByClassName("palette-dialog-topbar")).toHaveLength(1);
 	});
 
 	it("should render one <PaletteContent/> component", () => {
-		const popupPalette = createPalette();
-		expect(popupPalette.find(PaletteDialogContent)).to.have.length(1);
+		const { container: popupPaletteContainer } = createPalette();
+		expect(popupPaletteContainer.getElementsByClassName("palette-dialog-content")).toHaveLength(1);
 	});
 
 	// WARNING: The data-id attribute is used by host application "walk-me"
 	// tours to identify palette elements. Therefore, the attribute name
 	// MUST NOT be removed or renamed.
 	it("Palette modal categories should have data-id attribute", () => {
-		const popupPalette = createPalette();
-		const modalPaletteCategories = popupPalette.find(".palette-dialog-category-selected");
+		const { container: popupPaletteContainer } = createPalette();
+		const modalPaletteCategories = popupPaletteContainer.querySelectorAll("palette-dialog-category-selected");
 		modalPaletteCategories.forEach((category, idx) => {
-			expect(category.props()).to.have.property("data-id", paletteSpec.categories[idx].id);
+			expect(category).toHaveAttribute("data-id", paletteSpec.categories[idx].id);
 		});
 	});
 });
