@@ -1129,6 +1129,15 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getCommentStyle(commentId, temporary);
 	}
 
+	// Toggles comments on the canvas between shown and hidden.
+	toggleComments() {
+		if (this.isHidingComments()) {
+			this.showComments();
+		} else {
+			this.hideComments();
+		}
+	}
+
 	// Hides all comments on the canvas.
 	hideComments() {
 		this.objectModel.hideComments();
@@ -2308,6 +2317,10 @@ export default class CanvasController {
 		}
 		case "zoomToFit": {
 			this.zoomToFit();
+			break;
+		}
+		case "commentsToggle": {
+			this.toggleComments();
 			break;
 		}
 		case "commentsHide": {
