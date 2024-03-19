@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import { isMatch, isMatchWith, omit } from "lodash";
 import LayoutDimensions from "./layout-dimensions.js";
 import { ASSOC_STRAIGHT, LINK_SELECTION_NONE } from "../common-canvas/constants/canvas-constants";
 
-export default class CanvasUtils {
+export default class ConfigUtils {
 
 	// Returns a config object which is the result of merging config into
 	// startConfig.
