@@ -84,6 +84,13 @@ module.exports = function(grunt) {
 					cwd: "./node_modules/react-virtualized/",
 					src: ["styles.css"],
 					dest: ".build/css/react-virtualized"
+				},
+				{
+					expand: true,
+					flatten: false,
+					cwd: "./node_modules/@carbon/charts-react/dist",
+					src: ["styles.min.css"],
+					dest: ".build/css/@carbon/charts-react"
 				}]
 			}
 		},

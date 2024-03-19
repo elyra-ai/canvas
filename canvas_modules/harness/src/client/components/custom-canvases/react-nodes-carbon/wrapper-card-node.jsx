@@ -25,18 +25,6 @@ import { CardNode, CardNodeColumn,
 } from "@carbon/charts-react";
 
 class CardNodeWrapper extends React.Component {
-	componentDidMount() {
-		window.console.log("CardNodeWrapper - componentDidMount");
-	}
-
-	componentDidUpdate() {
-		window.console.log("CardNodeWrapper - componentDidUpdate");
-	}
-
-	componentWillUnmount() {
-		window.console.log("CardNodeWrapper - componentWillUnmount");
-	}
-
 	render() {
 		const styleImage = { height: "24px", width: "24px", y: 0 };
 

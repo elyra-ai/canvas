@@ -22,18 +22,6 @@ import { get } from "lodash";
 import { ShapeNode } from "@carbon/charts-react";
 
 class ShapeNodeWrapper extends React.Component {
-	componentDidMount() {
-		window.console.log("ShapeNodeWrapper - componentDidMount");
-	}
-
-	componentDidUpdate() {
-		window.console.log("ShapeNodeWrapper - componentDidUpdate");
-	}
-
-	componentWillUnmount() {
-		window.console.log("ShapeNodeWrapper - componentWillUnmount");
-	}
-
 	render() {
 		const shape = get(this, "props.nodeData.app_data.react_nodes_data.shape");
 

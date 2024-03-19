@@ -2214,8 +2214,8 @@ class App extends React.Component {
 				{ divider: true },
 				{ action: "createAutoComment", label: "Add Comment", enable: true },
 				(this.canvasController.isHidingComments()
-					? { action: "commentsToggle", label: "Show comments", enable: true, iconEnabled: (<Chat32 />) }
-					: { action: "commentsToggle", label: "Hide comments", enable: true, iconEnabled: (<ChatOff32 />) }
+					? { action: "commentsToggle", label: "Show comments", enable: true, iconEnabled: (<Chat size={32} />) }
+					: { action: "commentsToggle", label: "Hide comments", enable: true, iconEnabled: (<ChatOff size={32} />) }
 				),
 				{ divider: true },
 				{ action: "deleteSelectedObjects", label: "Delete", enable: true },
