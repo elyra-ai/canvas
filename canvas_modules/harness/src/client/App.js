@@ -84,7 +84,7 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
-import { Add32, ColorPalette32, Edit32, Play32, Scale32, Settings32, SelectWindow32,
+import { Add32, Chat32, ChatOff32, ColorPalette32, Edit32, Play32, Scale32, Settings32, SelectWindow32,
 	StopFilledAlt32, Subtract32, TextScale32, TouchInteraction32 } from "@carbon/icons-react";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "carbon-components-react";
@@ -2212,8 +2212,9 @@ class App extends React.Component {
 				{ divider: true },
 				{ action: "createAutoComment", label: "Add Comment", enable: true },
 				(this.canvasController.isHidingComments()
-					? { action: "commentsShow", label: "Show comments", enable: true }
-					: { action: "commentsHide", label: "Hide comments", enable: true }),
+					? { action: "commentsToggle", label: "Show comments", enable: true, iconEnabled: (<Chat32 />) }
+					: { action: "commentsToggle", label: "Hide comments", enable: true, iconEnabled: (<ChatOff32 />) }
+				),
 				{ divider: true },
 				{ action: "deleteSelectedObjects", label: "Delete", enable: true },
 				{ divider: true },
