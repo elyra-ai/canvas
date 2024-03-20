@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-@use "../carbon.scss" as *;
-
 $toolbar-icon-label-margin: 8px;
 $toolbar-icon-size: 16px;
 $toolbar-button-height: 40px;
@@ -38,8 +36,8 @@ $toolbar-divider-width: 1px;
 	-webkit-user-drag: none;
 
 	&:focus {
-		border-color: $button-primary;
-		box-shadow: inset 0 0 0 2px $button-primary;
+		border-color: $button-tertiary;
+		box-shadow: inset 0 0 0 2px $button-tertiary;
 	}
 
 	/* Small size toolbar  */

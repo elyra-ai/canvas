@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-@use "../carbon.scss" as *;
-
 $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 $panel-border-width: 1px;
 $panel-border-color: $layer-accent-01;
@@ -84,7 +82,7 @@ $panel-border-color: $layer-accent-01;
 	background: $layer-01;
 	transition: all 0.2s ease-in;
 	&:hover {
-		background: $button-primary;
+		background: $button-tertiary;
 	}
 }
 
@@ -120,7 +118,7 @@ $panel-border-color: $layer-accent-01;
 	.toolbar-overflow-item {
 		button:focus {
 			border-color: transparent;
-			box-shadow: inset 2px 2px $button-primary, inset -6px -2px $button-primary;
+			box-shadow: inset 2px 2px $button-tertiary, inset -6px -2px $button-tertiary;
 		}
 		// Set padding so overflow icon appears in the center (horizontally). This
 		// offsets the 5px which are set in the code to make the overflow icon

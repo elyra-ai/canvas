@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@use "../carbon.scss" as *;
 
 $notification-panel-header-height: 33px;
 $notification-message-height: 48px;
@@ -183,13 +182,13 @@ $notification-panel-button-container-height: 49px;
 
 			.notification-message-title {
 				@include type-style("productive-heading-01");
-				color: $text-secondary;
+				color: $text-primary;
 				padding-bottom: $spacing-02;
 			}
 
 			.notification-message-subtitle {
 				@include type-style("label-01");
-				color: $text-primary;
+				color: $text-secondary;
 				hr {
 					margin-bottom: $spacing-03;
 					border-bottom: 0;
