@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import React from "react";
-import { fireEvent, act, waitFor, screen } from "@testing-library/react";
+import { fireEvent, act, waitFor } from "@testing-library/react";
 import { mountWithIntl } from "../_utils_/intl-utils";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import PaletteFlyoutContent from "../../src/palette/palette-flyout-content.jsx";
@@ -41,130 +41,114 @@ describe("Palette search renders correctly", () => {
 		jest.useFakeTimers("modern");
 	});
 
-	// it("should filter nodes based on search text", async() => {
+	it("should filter nodes based on search text", async() => {
 
-	// 	const { container } = createMountedPalette();
+		const { container } = createMountedPalette();
 
-	// 	// Simulate click on search input to open palette with search bar
-	// 	const searchInput = container.querySelector("div.palette-flyout-search-container");
-	// 	fireEvent.click(searchInput);
+		// Simulate click on search input to open palette with search bar
+		const searchInput = container.querySelector("div.palette-flyout-search-container");
+		fireEvent.click(searchInput);
 
-	// 	await simulateSearchEntry(searchInput, "data");
-	// 	await waitFor(() => {
-	// 		expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(4);
-	// 		expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
-	// 	});
+		await simulateSearchEntry(searchInput, "data");
+		await waitFor(() => {
+			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(4);
+			expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
+		});
 
-	// 	await simulateSearchEntry(searchInput, "var");
-	// 	await waitFor(() => {
-	// 		expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(1);
-	// 		expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
-	// 	});
+		await simulateSearchEntry(searchInput, "var");
+		await waitFor(() => {
+			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(1);
+			expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
+		});
 
-	// 	await simulateSearchEntry(searchInput, "data import");
-	// 	await waitFor(() => {
-	// 		expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(4);
-	// 		expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
-	// 	});
+		await simulateSearchEntry(searchInput, "data import");
+		await waitFor(() => {
+			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(4);
+			expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
+		});
 
-	// 	await simulateSearchEntry(searchInput, "d");
-	// 	await waitFor(() => {
-	// 		expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(5);
-	// 		expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
-	// 	});
+		await simulateSearchEntry(searchInput, "d");
+		await waitFor(() => {
+			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(5);
+			expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
+		});
 
-	// 	await simulateSearchEntry(searchInput, "import data");
-	// 	await waitFor(() => {
-	// 		expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(4);
-	// 		expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
-	// 	});
+		await simulateSearchEntry(searchInput, "import data");
+		await waitFor(() => {
+			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(4);
+			expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
+		});
 
-	// 	await simulateSearchEntry(searchInput, "xxxxx");
-	// 	await waitFor(() => {
-	// 		expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(0);
-	// 		expect(container.getElementsByClassName("palette-no-results-title")).toHaveLength(1);
-	// 	});
-	// });
+		await simulateSearchEntry(searchInput, "xxxxx");
+		await waitFor(() => {
+			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(0);
+			expect(container.getElementsByClassName("palette-no-results-title")).toHaveLength(1);
+		});
+	});
 
-	// it("should filter nodes based on search text when fields are missing", async() => {
+	it("should filter nodes based on search text when fields are missing", async() => {
 
-	// 	const { container } = createMountedPalette({ palette: paletteMissingFields, showPalette: true });
+		const { container } = createMountedPalette({ palette: paletteMissingFields, showPalette: true });
 
-	// 	// Simulate click on search input to open palette with search bar
-	// 	const searchInput = container.querySelector("div.palette-flyout-search-container");
-	// 	fireEvent.click(searchInput);
+		// Simulate click on search input to open palette with search bar
+		const searchInput = container.querySelector("div.palette-flyout-search-container");
+		fireEvent.click(searchInput);
 
-	// 	await simulateSearchEntry(searchInput, "t");
-	// 	await waitFor(() => {
-	// 		expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(1);
-	// 	});
+		await simulateSearchEntry(searchInput, "t");
+		await waitFor(() => {
+			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(1);
+		});
 
-	// 	await simulateSearchEntry(searchInput, "test");
+		await simulateSearchEntry(searchInput, "test");
 
-	// 	await simulateSearchEntry(searchInput, "xxxxx");
-	// 	await waitFor(() => {
-	// 		expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(0);
-	// 		expect(container.getElementsByClassName("palette-no-results-title")).toHaveLength(1);
-	// 	});
+		await simulateSearchEntry(searchInput, "xxxxx");
+		await waitFor(() => {
+			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(0);
+			expect(container.getElementsByClassName("palette-no-results-title")).toHaveLength(1);
+		});
 
-	// });
+	});
 
-
-	it("should filter nodes based on search text when no node descriptions are present", async () => {
+	it("should filter nodes based on search text when no node descriptions are present", async() => {
 		const config = {
 			showPalette: true,
 			palette: testPalette3NoDesc
 		};
-
-		const { getByTestId, getAllByTestId } = render(<MountedPalette config={config} />);
+		const { container, getByTestId, getAllByTestId } = createMountedPalette(config);
 
 		// Simulate click on search input to open palette with search bar
-		const searchInput = getByTestId("palette-flyout-search-container");
+		const searchInput = container.querySelector("div.palette-flyout-search-container");
 		fireEvent.click(searchInput);
 
 		// Simulate search entry
 		fireEvent.change(searchInput.querySelector("input"), { target: { value: "a" } });
 
 		// Wait for re-rendering or update of the component
+		const exp = ["ImportVar. File", "OutputsTable", "OutputsData Audit"];
 		await waitFor(() => {
-			const contentListItems = getAllByTestId("palette-content-list-item");
+			const contentListItems = container.getElementsByClassName("palette-list-item search-result");
 			expect(contentListItems).toHaveLength(3);
 
-			// Asserting the text content of the first search result
-			expect(contentListItems[0]).toHaveTextContent("ImportVar. File");
-			expect(contentListItems[1]).toHaveTextContent("OutputsTable");
-			expect(contentListItems[2]).toHaveTextContent("OutputsData Audit");
+			exp.forEach((item, idx) => {
+				expect(contentListItems[idx].textContent).toContain(item);
+			});
 		});
 
 		// Simulate new search entry
 		fireEvent.change(searchInput.querySelector("input"), { target: { value: "ta" } });
 
-		// Wait for re-rendering or update of the component
 		await waitFor(() => {
-			const contentListItems2 = getAllByTestId("palette-content-list-item");
+			const contentListItems2 = container.getElementsByClassName("palette-list-item search-result");
 			expect(contentListItems2).toHaveLength(2);
 
 			// Asserting the text content of the filtered search result
-			expect(contentListItems2[0]).toHaveTextContent("OutputsTable");
-			expect(contentListItems2[1]).toHaveTextContent("OutputsData Audit");
+			const exp2 = ["OutputsTable", "OutputsData Audit"];
+
+			exp2.forEach((item, idx) => {
+				expect(contentListItems2[idx].textContent).toContain(item);
+			});
 		});
 	});
-
-	// 	const exp = ["ImportVar. File", "OutputsTable", "OutputsData Audit"];
-	// 	contentListItem.forEach((item, idx) => {
-	// 		expect(item.text()).to.equal(exp[idx]);
-	// 	});
-
-	// 	simulateSearchEntrysimulateSearchEntry(searchInput, "ta");
-	// 	wrapper.update();
-	// 	const contentListItem2 = wrapper.find(PaletteContentListItem);
-	// 	expect(contentListItem2).to.have.length(2);
-
-	// 	const exp2 = ["OutputsTable", "OutputsData Audit"];
-	// 	contentListItem2.forEach((item, idx) => {
-	// 		expect(item.text()).to.equal(exp2[idx]);
-	// 	});
-	// });
 });
 
 async function simulateSearchEntry(searchInput, searchString) {
@@ -174,15 +158,10 @@ async function simulateSearchEntry(searchInput, searchString) {
 
 describe("Palette renders correctly", () => {
 
-	// it("should use a `.palette-flyout-div` CSS class", () => {
-	// 	const flyoutPalette = createMountedPalette();
-	// 	expect(flyoutPalette.find(".palette-flyout-div")).to.have.length(1);
-	// });
-
-	// it("should have properties defined", () => {
-	// 	const flyoutPalette = createMountedPalette();
-	// 	expect(flyoutPalette.prop("paletteJSON")).to.equal(testPalette2);
-	// });
+	it("should use a `.palette-flyout-div` CSS class", () => {
+		const { container } = createMountedPalette();
+		expect(container.getElementsByClassName("palette-flyout-div")).toHaveLength(1);
+	});
 
 	// it("should render 1 <PaletteFlyoutContent/> component", () => {
 	// 	const flyoutPalette = createMountedPalette();
