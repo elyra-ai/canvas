@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -245,34 +245,29 @@ export default class SvgCanvasLinks {
 	}
 
 	getNodeLinkCoordsForPorts(srcNode, srcPortId, trgNode, trgPortId) {
-		let srcX = srcNode.width + srcNode.layout.outputPortRightPosX;
-		let srcY = srcNode.layout.outputPortRightPosY;
-		let trgX = trgNode.layout.inputPortLeftPosX;
-		let trgY = trgNode.layout.inputPortLeftPosY;
-
-		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-			srcX = srcNode.layout.outputPortBottomPosX;
-			srcY = srcNode.height + srcNode.layout.outputPortBottomPosY;
-			trgX = trgNode.layout.inputPortTopPosX;
-			trgY = trgNode.layout.inputPortTopPosY;
-
-		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-			srcX = srcNode.layout.outputPortBottomPosX;
-			srcY = srcNode.layout.outputPortBottomPosY;
-			trgX = trgNode.layout.inputPortTopPosX;
-			trgY = trgNode.height + trgNode.layout.inputPortTopPosY;
-		}
+		let srcX;
+		let srcY;
+		let trgX;
+		let trgY;
 
 		if (srcNode.outputs && srcNode.outputs.length > 0) {
 			const port = srcNode.outputs.find((srcPort) => srcPort.id === srcPortId);
 			srcX = port ? port.cx : srcX;
 			srcY = port ? port.cy : srcY;
+
+		} else {
+			srcX = this.nodeUtils.getNodePortPosX(srcNode.layout.outputPortPositions[0], srcNode);
+			srcY = this.nodeUtils.getNodePortPosY(srcNode.layout.outputPortPositions[0], srcNode);
 		}
 
 		if (trgNode.inputs && trgNode.inputs.length > 0) {
 			const port = trgNode.inputs.find((trgPort) => trgPort.id === trgPortId);
 			trgX = port ? port.cx : trgX;
 			trgY = port ? port.cy : trgY;
+
+		} else {
+			trgX = this.nodeUtils.getNodePortPosX(trgNode.layout.inputPortPositions[0], trgNode);
+			trgY = this.nodeUtils.getNodePortPosY(trgNode.layout.inputPortPositions[0], trgNode);
 		}
 
 		return {
@@ -284,31 +279,32 @@ export default class SvgCanvasLinks {
 	}
 
 	getAssociationCurveLinkCoords(srcNode, trgNode, assocLinkVariation) {
-		let x1 = 0;
-		let x2 = 0;
+		let srcX = 0;
+		let trgX = 0;
 
 		if (assocLinkVariation === ASSOC_VAR_CURVE_RIGHT) {
-			x1 = srcNode.x_pos + srcNode.width;
-			x2 = trgNode.x_pos;
+			srcX = srcNode.width;
+			trgX = 0;
 
 		} else if (assocLinkVariation === ASSOC_VAR_CURVE_LEFT) {
-			x1 = srcNode.x_pos;
-			x2 = trgNode.x_pos + trgNode.width;
+			srcX = 0;
+			trgX = trgNode.width;
 
 		} else if (assocLinkVariation === ASSOC_VAR_DOUBLE_BACK_LEFT) {
-			x1 = srcNode.x_pos;
-			x2 = trgNode.x_pos;
+			srcX = 0;
+			trgX = 0;
 
 		} else {
-			x1 = srcNode.x_pos + srcNode.width;
-			x2 = trgNode.x_pos + trgNode.width;
+			srcX = srcNode.width;
+			trgX = trgNode.width;
 		}
 
 		return {
-			x1: x1,
-			y1: srcNode.y_pos + srcNode.layout.outputPortRightPosY,
-			x2: x2,
-			y2: trgNode.y_pos + trgNode.layout.inputPortLeftPosY };
+			x1: srcNode.x_pos + srcX,
+			y1: srcNode.y_pos + this.nodeUtils.getNodePortPosY(srcNode.layout.outputPortPositions[0], srcNode),
+			x2: trgNode.x_pos + trgX,
+			y2: trgNode.y_pos + this.nodeUtils.getNodePortPosY(trgNode.layout.inputPortPositions[0], trgNode)
+		};
 	}
 
 	getCommentLinkCoords(srcComment, trgNode) {

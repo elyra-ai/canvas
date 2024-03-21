@@ -50,6 +50,7 @@ import SetLinksStyleAction from "../command-actions/setLinksStyleAction.js";
 import UpdateLinkAction from "../command-actions/updateLinkAction.js";
 import LabelUtil from "./label-util.js";
 import Logger from "../logging/canvas-logger.js";
+import CanvasUtils from "./common-canvas-utils";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import getContextMenuDefiniton from "./canvas-controller-menu-utils.js";
@@ -127,7 +128,10 @@ export default class CanvasController {
 
 	setCanvasConfig(config) {
 		this.logger.log("Setting Canvas Config");
+		// TODO - Remove these next three lines in next major release.
 		const correctConfig = this.correctTypo(config);
+		correctConfig.enableNodeLayout =
+			CanvasUtils.convertPortPosInfo(correctConfig.enableNodeLayout);
 		this.objectModel.openPaletteIfNecessary(config);
 		this.objectModel.setCanvasConfig(correctConfig);
 	}
@@ -1123,6 +1127,15 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	getCommentStyle(commentId, temporary, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getCommentStyle(commentId, temporary);
+	}
+
+	// Toggles comments on the canvas between shown and hidden.
+	toggleComments() {
+		if (this.isHidingComments()) {
+			this.showComments();
+		} else {
+			this.hideComments();
+		}
 	}
 
 	// Hides all comments on the canvas.
@@ -2304,6 +2317,10 @@ export default class CanvasController {
 		}
 		case "zoomToFit": {
 			this.zoomToFit();
+			break;
+		}
+		case "commentsToggle": {
+			this.toggleComments();
 			break;
 		}
 		case "commentsHide": {
