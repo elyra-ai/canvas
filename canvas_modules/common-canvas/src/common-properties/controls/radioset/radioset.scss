@@ -44,6 +44,7 @@
 		align-items: center;
 		flex-wrap: wrap;
 		overflow: hidden;
+		padding-left: 0.1rem;
 		.bx--radio-button-wrapper{
 			margin-right: 0; // We removed the space between radio & tooltip to position it correctly
 		}
