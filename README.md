@@ -57,7 +57,7 @@ npm install
 
 3. Install required mkdocs packages using pip3.
 ```
-pip3 install -r requirements.txt`
+pip3 install -r requirements.txt
 ```
 
 4. Run below command to start mkdocs server.
