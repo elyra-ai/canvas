@@ -26,6 +26,10 @@ The Common Canvas tooling consists of two Node JS modules:
 2) `Test harness`  
 See [here](https://github.com/elyra-ai/canvas/tree/main/canvas_modules/harness) for setting up local environment
 
+## Documentation
+* Elyra canvas documentation - https://elyra-ai.github.io/canvas/
+* Elyra canvas playground (Test harness) - https://ibm.biz/elyra-canvas-test-harness
+
 ## Using local version of common-canvas and/or common-properties
 Clone elyra/canvas
 ```sh
