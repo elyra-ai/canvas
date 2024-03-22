@@ -38,6 +38,7 @@ $selected-tab-width: 3px;
 	margin-left: -$spacing-05;
 	margin-bottom: calc(-1 * #{$parent-padding});
 
+	// TODO: Height of this class will be fixed in issue https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3699
 	.properties-leftnav-subtabs {
 		width: 282px;
 		background-color: $layer-01;

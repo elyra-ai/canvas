@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-$font-prefix: "/fonts";
 @use "@carbon/react/scss/themes" as *;
 @use "./carbon.scss" as *;
 
@@ -26,7 +25,6 @@ $theme: $g10; // The light (gray 10) theme
 :root {
 	@include theme();
 }
-@import "node_modules/@ibm/plex/scss/ibm-plex.scss";
 
 // Common variables for App.scss and sidepanel.scss
 $harness-header-height: 50px;
