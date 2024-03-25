@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,33 +14,9 @@
  * limitations under the License.
  */
 
-
-.properties-toggletext {
-	&.hide {
-		display: none;
-	}
-	&.error {
-		button {
-			border-bottom: 2px solid $support-error;
-		}
-	}
-	&.warning {
-		button {
-			border-bottom: 2px solid $support-warning;
-		}
-	}
-}
-
-// toggle control in table needs to fit within column
-.properties-table-cell-control {
-	.properties-toggletext {
-		button {
-			padding: 0 $spacing-02;
-			align-items: center;
-		}
-		.cds--btn--ghost:not([disabled]) svg {
-			fill: currentColor;
-		}
-		
-	}
-}
+@forward "@carbon/react/scss/colors";
+@forward "@carbon/react/scss/type";
+@forward "@carbon/react/scss/spacing";
+@forward "@carbon/react/scss/theme";
+@forward "@carbon/react/scss/motion";
+@forward "@carbon/react/scss/components/button/tokens";

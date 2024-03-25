@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 .properties-vt {
 	width: 100%;
 	height: 100%;
@@ -30,7 +29,7 @@
 		.properties-vt-row-disabled {
 			opacity: 0.5;
 			&:hover {
-				border-bottom: 1px solid $ui-03;
+				border-bottom: 1px solid $layer-accent-01;
 			}
 		}
 	}
@@ -44,26 +43,26 @@
 	}
 
 	div[data-role="properties-header-row"] {
-		background-color: $ui-03;
+		background-color: $layer-accent-01;
 	}
 
 	div[data-role="properties-data-row"] {
-		background-color: $ui-02;
+		background-color: $layer-02;
 	}
 
 	.properties-autosized-vt-header {
 		// Override text-transform: uppercase from .ReactVirtualized__Table__headerRow
 		text-transform: none;
 		margin-left: 0;
-		.properties-vt-column .bx--checkbox-wrapper {
+		.properties-vt-column .cds--checkbox-wrapper {
 			margin-top: 0;
 			margin-bottom: 0;
-			.bx--checkbox-label {
+			.cds--checkbox-label {
 				width: 100%;
 
 				span {
-					@include carbon--type-style("productive-heading-01");
-					color: $text-01;
+					@include type-style("productive-heading-01");
+					color: $text-primary;
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;
@@ -86,16 +85,16 @@
 			cursor: col-resize;
 		}
 		.properties-vt-header-resize:hover {
-			background-color: $active-secondary;
+			background-color: $button-secondary-active;
 		}
 
 		.properties-vt-header-resize-active {
 			z-index: 3;
 		}
 		&:hover {
-			background-color: $active-ui;
+			background-color: $layer-active-01;
 			.properties-vt-header-resize {
-				background-color: $active-secondary;
+				background-color: $button-secondary-active;
 			}
 		}
 	}
@@ -118,7 +117,6 @@
 	}
 
 	.properties-vt-row-checkbox {
-		height: $spacing-07;
 		margin-left: $spacing-05;
 		margin-right: $spacing-02;
 	}
@@ -127,18 +125,18 @@
 		.properties-vt-row-class {
 			border-top: 1px solid transparent;
 			&.properties-vt-row-selected {
-				border-top: 1px solid $hover-selected-ui;
+				border-top: 1px solid $layer-accent-hover-01;
 			}
 		}
 	}
 
 	.properties-vt-row-class {
 		line-height: 20px;
-		border-bottom: 1px solid $ui-03;
+		border-bottom: 1px solid $layer-accent-01;
 
 		&:hover:not(.properties-vt-row-non-interactive):not(.properties-vt-row-selected) {
 			// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
-			background-color: $hover-ui;
+			background-color: $layer-hover-01;
 		}
 
 		.properties-table-cell-control {
@@ -176,7 +174,7 @@
 				padding-right: $spacing-03; // spacing between column label and sort icon
 			}
 			&:hover {
-				background-color: $active-ui;
+				background-color: $layer-active-01;
 			}
 		}
 
@@ -186,10 +184,10 @@
 	}
 
 	.properties-vt-row-selected {
-		background-color: $selected-ui;
-		border-bottom: 1px solid $hover-selected-ui;
+		background-color: $layer-selected-01;
+		border-bottom: 1px solid $layer-accent-hover-01;
 		&:hover {
-			background-color: $hover-selected-ui;
+			background-color: $layer-accent-hover-01;
 		}
 	}
 
@@ -204,16 +202,16 @@
 			padding-left: 3px;
 		}
 		.properties-vt-row-selected {
-			border-left: 4px solid $interactive-01;
+			border-left: 4px solid $button-primary;
 			padding-left: 0;
 			&:not(.properties-vt-row-disabled):hover {
-				border-left: 4px solid $interactive-01;
+				border-left: 4px solid $button-primary;
 			}
 		}
 	}
 
 	.properties-vt-small-loading svg {
-		stroke: $interactive-01; // Override carbon's small Loading color.
+		stroke: $button-primary; // Override carbon's small Loading color.
 	}
 
 	// Required for Autosizer in VirtualizedTable to set a height and width
@@ -224,10 +222,10 @@
 
 	.properties-light-disabled {
 		div[data-role="properties-data-row"] {
-			background-color: $ui-01;
+			background-color: $layer-01;
 		}
-		.bx--select--inline .bx--select-input[disabled] {
-			background-color: $ui-background;
+		.cds--select--inline .cds--select-input[disabled] {
+			background-color: $background;
 		}
 	}
 

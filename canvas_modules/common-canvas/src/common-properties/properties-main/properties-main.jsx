@@ -30,7 +30,7 @@ import { Size } from "./../constants/form-constants";
 import { validateParameterDefAgainstSchema } from "../schema-validator/properties-schema-validator.js";
 import { has, isEqual, omit, pick, cloneDeep } from "lodash";
 import Icon from "./../../icons/icon.jsx";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import { Provider } from "react-redux";
 import logger from "../../../utils/logger";
 import TitleEditor from "./../components/title-editor";

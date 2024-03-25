@@ -52,7 +52,7 @@ describe("tearsheet tests", () => {
 	it("should be hidden but not removed from DOM on the tearsheet close button", () => {
 		controller.setActiveTearsheet("tearsheet1");
 		wrapper.update();
-		wrapper.find("div.properties-tearsheet-panel button.bx--modal-close").simulate("click");
+		wrapper.find("div.properties-tearsheet-panel button.cds--modal-close").simulate("click");
 		wrapper.update();
 		expect(wrapper.find("div.properties-tearsheet-panel.is-visible")).to.have.length(0);
 		expect(wrapper.find("div.properties-tearsheet-panel")).to.have.length(1);

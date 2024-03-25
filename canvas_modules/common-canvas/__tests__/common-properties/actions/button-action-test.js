@@ -152,9 +152,9 @@ describe("action-button renders correctly", () => {
 		const button = wrapper.find("button");
 		expect(button).to.have.length(1);
 		// verify button kind is secondary
-		expect(button.prop("className").includes("bx--btn--secondary")).to.equal(true);
+		expect(button.prop("className").includes("cds--btn--secondary")).to.equal(true);
 		// verify button size is extra large
-		expect(button.prop("className").includes("bx--btn--xl")).to.equal(true);
+		expect(button.prop("className").includes("cds--btn--xl")).to.equal(true);
 	});
 	it("action button default kind is tertiary and size is small", () => {
 		const actionWithoutButtonObject = {
@@ -181,9 +181,9 @@ describe("action-button renders correctly", () => {
 		const button = wrapper.find("button");
 		expect(button).to.have.length(1);
 		// verify default button kind is tertiary
-		expect(button.prop("className").includes("bx--btn--tertiary")).to.equal(true);
+		expect(button.prop("className").includes("cds--btn--tertiary")).to.equal(true);
 		// verify default button size is small
-		expect(button.prop("className").includes("bx--btn--sm")).to.equal(true);
+		expect(button.prop("className").includes("cds--btn--sm")).to.equal(true);
 	});
 });
 

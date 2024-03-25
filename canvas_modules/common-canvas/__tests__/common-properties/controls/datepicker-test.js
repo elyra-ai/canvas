@@ -158,7 +158,7 @@ describe("error messages renders correctly for datepicker controls", () => {
 		};
 		const actual = controller.getErrorMessage(propertyId);
 		expect(actual).to.eql(expectedDatepickerErrorMessages);
-		let messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		let messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
@@ -168,7 +168,7 @@ describe("error messages renders correctly for datepicker controls", () => {
 
 		// Ensure the error message is no longer displayed.
 		dateWrapper = wrapper.find("div[data-id='properties-ctrl-datepicker_required']");
-		messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -184,7 +184,7 @@ describe("error messages renders correctly for datepicker controls", () => {
 
 		// Ensure an error message is not displayed.
 		dateWrapper = wrapper.find("div[data-id='properties-ctrl-datepicker']");
-		const messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		const messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 

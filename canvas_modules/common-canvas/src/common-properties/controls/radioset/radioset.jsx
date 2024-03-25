@@ -21,12 +21,12 @@ import { isEqual } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
 import * as ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
 import ValidationMessage from "./../../components/validation-message";
-import { RadioButton } from "carbon-components-react";
+import { RadioButton } from "@carbon/react";
 import classNames from "classnames";
 import { STATES, UPDATE_TYPE } from "./../../constants/constants.js";
 import { ORIENTATIONS } from "./../../constants/form-constants.js";
 import { v4 as uuid4 } from "uuid";
-import { Information16 } from "@carbon/icons-react";
+import { Information } from "@carbon/react/icons";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { isEmpty } from "lodash";
 
@@ -186,7 +186,7 @@ class RadiosetControl extends React.Component {
 						showToolTipOnClick
 						disable={hidden || disabled}
 					>
-						<Information16 disabled={disabled} className="properties-control-description-icon-info" />
+						<Information disabled={disabled} className="properties-control-description-icon-info" />
 					</Tooltip>
 				);
 			}

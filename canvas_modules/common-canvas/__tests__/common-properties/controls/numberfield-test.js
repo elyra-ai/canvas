@@ -81,8 +81,8 @@ describe("numberfield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		expect(wrapper.find(".bx--number--nosteppers")).to.have.length(1);
-		expect(wrapper.find(".bx--number__controls")).to.have.length(0);
+		expect(wrapper.find(".cds--number--nosteppers")).to.have.length(1);
+		expect(wrapper.find(".cds--number__controls")).to.have.length(0);
 	});
 
 	it("numberfield should set placeholder text", () => {
@@ -141,7 +141,7 @@ describe("numberfield-control renders correctly", () => {
 			/>
 		);
 		const textWrapper = wrapper.find("div[data-id='properties-test-number']");
-		const messageWrapper = textWrapper.find("div.bx--form-requirement");
+		const messageWrapper = textWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 });
@@ -260,8 +260,8 @@ describe("numberfield control works correctly", () => {
 		propertyUtils.openSummaryPanel(wrapper, "numberfield-table-summary");
 		const numberfieldInTable = wrapper.find(".properties-table-cell-control").find(".properties-numberfield");
 		numberfieldInTable.forEach((numberfieldInTableCell) => {
-			expect(numberfieldInTableCell.find(".bx--number--nosteppers")).to.have.length(1);
-			expect(numberfieldInTableCell.find(".bx--number__controls")).to.have.length(0);
+			expect(numberfieldInTableCell.find(".cds--number--nosteppers")).to.have.length(1);
+			expect(numberfieldInTableCell.find(".cds--number__controls")).to.have.length(0);
 		});
 	});
 	it("should display error when invalid number is entered", () => {
@@ -271,7 +271,7 @@ describe("numberfield control works correctly", () => {
 		integerNumber.simulate("change", { target: { value: "44e+-" } });
 		// Verify error is displayed
 		const intergerWrapper = wrapper.find("div[data-id='properties-number_int']");
-		const messageWrapper = intergerWrapper.find(".bx--form-requirement");
+		const messageWrapper = intergerWrapper.find(".cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 		expect(messageWrapper.text()).to.eql("Number is not valid.");
 		// Verify property value is NOT updated to invalid number

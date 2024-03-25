@@ -17,7 +17,7 @@
 import React from "react";
 import { isEqual } from "lodash";
 import CustomEffectsCtrl from "../ctrl/CustomEffectsCtrl.jsx";
-import { Dropdown, Button } from "carbon-components-react";
+import { Dropdown, Button } from "@carbon/react";
 
 class RandomEffectsPanel {
 	static id() {
@@ -314,7 +314,7 @@ class RandomEffectsPanel {
 	makeButtonPanel() {
 		const prevButton = (<Button
 			type="button"
-			size="small"
+			size="sm"
 			kind="ghost"
 			onClick={this.previousEffect}
 			disabled={this.arrayIndex === 0}
@@ -330,7 +330,7 @@ class RandomEffectsPanel {
 		const disableNext = atEnd && !(hasIntercept || effectsLen);
 		const nextButton = (<Button
 			type="button"
-			size="small"
+			size="sm"
 			kind="ghost"
 			onClick={this.nextEffect}
 			disabled={disableNext}

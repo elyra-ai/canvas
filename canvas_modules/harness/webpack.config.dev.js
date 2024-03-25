@@ -57,7 +57,7 @@ const rules = [
 		test: /\.js(x?)$/,
 		loader: "babel-loader",
 		exclude: /node_modules/,
-		query: babelOptions
+		options: babelOptions
 	},
 	{
 		test: /\.s*css$/,
@@ -83,7 +83,9 @@ const rules = [
 	},
 	{
 		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
-		loader: "file-loader?name=graphics/[hash].[ext]"
+		use: [
+			"file-loader?name=graphics/[contenthash].[ext]",
+		],
 	}
 ];
 
@@ -92,8 +94,7 @@ const rules = [
 
 // Plugins ------------------------------------------------------------>
 
-var plugins = [
-	new webpack.optimize.OccurrenceOrderPlugin(),
+const plugins = [
 	new webpack.NoEmitOnErrorsPlugin(),
 	// Generates an `index.html` file with the <script> injected.
 	new HtmlWebpackPlugin({
@@ -114,7 +115,6 @@ module.exports = {
 	mode: "development",
 	devtool: false,
 	entry: entry,
-	cache: true,
 	resolve: {
 		modules: [
 			__dirname,
@@ -122,7 +122,7 @@ module.exports = {
 		],
 		alias: {
 			"react": "node_modules/react",
-			"react-dom": "node_modules/@hot-loader/react-dom",
+			"react-dom": "node_modules/react-dom",
 			"react-redux": "node_modules/react-redux",
 			"react-intl": "node_modules/react-intl",
 			"common-canvas": "src/common-canvas-dev.js"

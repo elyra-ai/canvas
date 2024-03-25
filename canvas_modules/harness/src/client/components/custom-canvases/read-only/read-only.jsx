@@ -24,7 +24,7 @@ import { LINK_SELECTION_LINK_ONLY, PALETTE_LAYOUT_NONE,
 import DetachedCanvasFlow from "./readOnlyCanvas.json";
 import DetachedPalette from "./readOnlyPalette.json";
 
-import { Edit16, EditOff16, Locked16 } from "@carbon/icons-react";
+import { Edit, EditOff, Locked } from "@carbon/react/icons";
 
 export default class ReadOnlyCanvas extends React.Component {
 	constructor(props) {
@@ -65,9 +65,9 @@ export default class ReadOnlyCanvas extends React.Component {
 			{ action: "createAutoComment", label: "Add Comment" },
 			{ action: "deleteSelectedObjects", label: "Delete" },
 			{ divider: true },
-			{ action: "edit", label: "Edit", iconEnabled: (<Edit16 />), enable: true, isSelected: this.state.editState === STATE_TAG_NONE },
-			{ action: "readOnly", label: "Read-only", iconEnabled: (<EditOff16 />), enable: true, isSelected: this.state.editState === STATE_TAG_READ_ONLY },
-			{ action: "locked", label: "Locked", iconEnabled: (<Locked16 />), enable: true, isSelected: this.state.editState === STATE_TAG_LOCKED },
+			{ action: "edit", label: "Edit", iconEnabled: (<Edit />), enable: true, isSelected: this.state.editState === STATE_TAG_NONE },
+			{ action: "readOnly", label: "Read-only", iconEnabled: (<EditOff />), enable: true, isSelected: this.state.editState === STATE_TAG_READ_ONLY },
+			{ action: "locked", label: "Locked", iconEnabled: (<Locked />), enable: true, isSelected: this.state.editState === STATE_TAG_LOCKED },
 			{ divider: true }
 		];
 
