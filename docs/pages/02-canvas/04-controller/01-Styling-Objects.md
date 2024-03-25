@@ -1,9 +1,11 @@
+# Styling Canvas Objects
+
 There are multiple was to specify the styles for the objects common-canvas displays:
 
 * A class name can be provided for nodes either within the pipelineFlow document or
 * The common-canvas default styes can be overriden within your CSS or SCSS file
 
-For more precise styling of objects the style specification object can be used to provide a number of styles to common canvas to set the inline styles on numerous elements of an object. For example, a node is made up of: a selection outline; a node body (rectangle); an image, a label etc. 
+For more precise styling of objects the style specification object can be used to provide a number of styles to common canvas to set the inline styles on numerous elements of an object. For example, a node is made up of: a selection outline; a node body (rectangle); an image, a label etc.
 
 Style specifications may be applied to common-canvas objects using the following [Canvas Controller](2.4-Canvas-Controller-API.md) methods:
 ```js
@@ -31,8 +33,8 @@ The style spec for a node can set the styles for all these elements in one shot.
  ```
 And here is a real example:
 ```js
-{ 
-    body: { 
+{
+    body: {
         default: "fill: coral; stroke: red;",
         hover: "fill: cornflowerblue; stroke: blue;"
     }
@@ -58,12 +60,12 @@ And here is a template for styling a link:
 
 * **`<css_snippet>`** - is a string containing any CSS code that can be added inline to an SVG object. That means, for example, you need to use fill and stroke for colors etc  It is recommended NOT to change the sizes of text fonts.
 
-The CSS will be applied to the element of the object specified, either as the default inline style or as the style when the pointer hovers over the object. 
+The CSS will be applied to the element of the object specified, either as the default inline style or as the style when the pointer hovers over the object.
 
-When a hover style is applied to a graphical element it is applied in addition to the default style so there is no need to repeat styles in the hover `<css_snippet>` because they will augment the default style. 
+When a hover style is applied to a graphical element it is applied in addition to the default style so there is no need to repeat styles in the hover `<css_snippet>` because they will augment the default style.
 
-Because styles are applied as in-line styles they will override any styles provided in your application's CSS and specified to common-canvas through the class_name field of canvas objects.  
+Because styles are applied as in-line styles they will override any styles provided in your application's CSS and specified to common-canvas through the class_name field of canvas objects.
 
 If the `<css_snippet>` is specified as null the current style will be removed from the specified element of the object.
 
-Finally, styles can be applied to your nodes, comments and links as either temporary or permanent styles by specifying the `temporary` boolean in the API methods. A temporary style is just applied for the duration of the session and are not persisted. You should use `temporary=true` styles that represent transient attributes of an object that should not be persisted in the pipelineFlow document. Use `temporary=false` styles for styles that you want to persist in the pipelineFlow document.   
+Finally, styles can be applied to your nodes, comments and links as either temporary or permanent styles by specifying the `temporary` boolean in the API methods. A temporary style is just applied for the duration of the session and are not persisted. You should use `temporary=true` styles that represent transient attributes of an object that should not be persisted in the pipelineFlow document. Use `temporary=false` styles for styles that you want to persist in the pipelineFlow document.

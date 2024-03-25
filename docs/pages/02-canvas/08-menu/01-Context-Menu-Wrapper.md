@@ -1,10 +1,10 @@
-## Context Menu Wrapper
+# Context Menu Wrapper
 
 Context Menu Wrapper is now deprecated. Carbon 11 supports a context menu component
 
 The context menu in common-canvas can be used in your application by importing the `ContextMenuWrapper` React component. Aside from providing a standard context menu to allow users to select different actions, this context menu also allows for configuration of submenus as a menu item, as well as a visual dividers.
 
-# Getting started with Context Menu 
+# Getting started with Context Menu
 ## Step 1: Import Context Menu Wrapper
 To use Context Menu Wrapper in your React application you need to import the `ContextMenuWrapper` React component from the common-canvas library. It's recommended to use All Components if common-canvas is also being imported, otherwise use ContextMenuWrapper only option.
 
@@ -19,9 +19,9 @@ To use Context Menu Wrapper in your React application you need to import the `Co
 ```
 
 ## Step 2: Pass in the correct props
-* **contextMenuDef** `array` (required): an array of menu item objects consisting of action and label. You can also pass in a divider item. 
+* **contextMenuDef** `array` (required): an array of menu item objects consisting of action and label. You can also pass in a divider item.
 
-```js 
+```js
     const menuDef = [
         { action: ACTION.BUILD, label: "Build" },
 	{ action: ACTION.EXTEND, label: "Extend" },
@@ -33,7 +33,7 @@ To use Context Menu Wrapper in your React application you need to import the `Co
 ```
 
 * **containingDivId** `string` (required): the id of the element that the context menu will be absolutely positioned inside. typically, the page element is used.
-* **contextMenuPos** `object` (required): the position of the context menu within the containing div. 
+* **contextMenuPos** `object` (required): the position of the context menu within the containing div.
 ```js
     const menuPos = { x: 500  , y: 300  };
 ```
@@ -50,8 +50,8 @@ To use Context Menu Wrapper in your React application you need to import the `Co
 		}
 	}
 ```
-* **closeContextMenu** `func`  (required): this handler will be called when the context menu is closed. 
-* **stopPropagation** `bool` (optional): this is optional and only for very specific, uncommon use cases. When this flag is set, if a user clicks outside the context menu, the event will not bubble to parent elements, preventing parent event handlers from being called. 
+* **closeContextMenu** `func`  (required): this handler will be called when the context menu is closed.
+* **stopPropagation** `bool` (optional): this is optional and only for very specific, uncommon use cases. When this flag is set, if a user clicks outside the context menu, the event will not bubble to parent elements, preventing parent event handlers from being called.
 
 ## Example
 ```js
