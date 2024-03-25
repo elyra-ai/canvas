@@ -58,16 +58,14 @@ npm install
 ### Contribute to the Elyra Canvas documentation (mkdocs)
 1. Python v3 needs to be available.
 
-2. Go to canvas directory.
+2. Go to canvas/docs directory.
 
 3. Install required mkdocs packages using pip3.
 ```
 pip3 install -r requirements.txt
 ```
 
-4. Go to canvas/docs directory.
-
-5. Run below command to start mkdocs server.
+4. Run below command to start mkdocs server.
 ```
 mkdocs serve
 ```
