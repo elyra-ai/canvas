@@ -19,7 +19,7 @@ limitations under the License.
 ## elyra/canvas
 
 ## Overview
-The Common Canvas tooling consists of two Node JS modules:
+The Elyra Canvas tooling consists of two Node JS modules:
 
 1) A `Common Canvas` for use in building canvas-like applications. See [detailed API and event documentation](https://github.com/elyra-ai/canvas/tree/main/canvas_modules/common-canvas).
 
@@ -33,9 +33,12 @@ See [here](https://github.com/elyra-ai/canvas/tree/main/canvas_modules/harness) 
 ## Using local version of common-canvas and/or common-properties
 Clone elyra/canvas
 ```sh
+# Clone the repo
 git clone git@github.com:elyra-ai/canvas.git
-# install global libraries for building
+
+# Install global libraries for building
 npm install -g grunt-cli sass
+
 # Build common-canvas and common-properties
 ./<elyra/canvas>/canvas_modules/common-canvas/build.sh
 ```
