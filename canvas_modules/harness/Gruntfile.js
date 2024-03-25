@@ -61,6 +61,29 @@ module.exports = function(grunt) {
 					dest: ".build"
 				}]
 			},
+			fonts: {
+				files: [{
+					expand: true,
+					flatten: false,
+					cwd: "./node_modules/@ibm/plex",
+					src: ["IBM-Plex*/**"],
+					dest: ".build/fonts"
+				},
+				{
+					expand: true,
+					flatten: true,
+					cwd: "./node_modules/@ibm/plex/IBM-Plex-Sans/fonts/split",
+					src: ["**/*.woff"],
+					dest: ".build/fonts/IBM-Plex-Sans/fonts/split/woff"
+				},
+				{
+					expand: true,
+					flatten: true,
+					cwd: "./node_modules/@ibm/plex/IBM-Plex-Sans/fonts/split",
+					src: ["**/*.woff2"],
+					dest: ".build/fonts/IBM-Plex-Sans/fonts/split/woff2"
+				}]
+			},
 			styleguide: {
 				files: [{
 					expand: true,
@@ -115,7 +138,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-contrib-copy");
 	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint"]);
 
-	var buildTasks = ["clean", "lint", "sass", "copy:graphics", "copy:styleguide"];
+	var buildTasks = ["clean", "lint", "sass", "copy:graphics", "copy:styleguide", "copy:fonts"];
 	if (IS_PRODUCTION) {
 		buildTasks = buildTasks.concat(["webpack"]);
 	}
