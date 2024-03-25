@@ -16,17 +16,8 @@
 
 .properties-table-cell-control {
 	.properties-datepicker {
-		.bx--date-picker.bx--date-picker--single .bx--date-picker__input {
+		.cds--date-picker.cds--date-picker--single .cds--date-picker__input {
 			width: unset; // Unset width when displayed within a table
-		}
-	}
-}
-
-.properties-datepicker {
-	.bx--date-picker-container {
-		.bx--form-requirement,
-		.bx--form__helper-text {
-			max-width: 18rem; // https://github.com/carbon-design-system/carbon/issues/12937
 		}
 	}
 }

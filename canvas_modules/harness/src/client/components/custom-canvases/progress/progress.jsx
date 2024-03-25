@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
-import { Play32, StopFilledAlt32 } from "@carbon/icons-react";
+import { Play, StopFilledAlt } from "@carbon/react/icons";
 
 import ProgressCanvasFlow from "./progress.json";
 import ProgressPalette from "../../../../../test_resources/palettes/modelerPalette.json";
@@ -98,9 +98,9 @@ export default class ProgressCanvas extends React.Component {
 		const toolbarConfig = [
 			{ action: "palette", label: "Palette", enable: true },
 			{ divider: true },
-			{ action: "runit", label: "Run", enable: true, incLabelWithIcon: "before", iconEnabled: (<Play32 />), kind: "primary" },
+			{ action: "runit", label: "Run", enable: true, incLabelWithIcon: "before", iconEnabled: (<Play size={32} />), kind: "primary" },
 			{ divider: true },
-			{ action: "stopit", label: "Stop", enable: true, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt32 />) },
+			{ action: "stopit", label: "Stop", enable: true, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt size={32} />) },
 			{ divider: true },
 			{ action: "undo", label: "Undo", enable: true },
 			{ action: "redo", label: "Redo", enable: true },

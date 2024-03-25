@@ -16,11 +16,11 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { InlineLoading } from "carbon-components-react";
+import { InlineLoading } from "@carbon/react";
 import SVG from "react-inlinesvg";
 import { TIP_TYPE_PALETTE_CATEGORY } from "../common-canvas/constants/canvas-constants.js";
 import { get } from "lodash";
-import { AccordionItem } from "carbon-components-react";
+import { AccordionItem } from "@carbon/react";
 import PaletteContentList from "./palette-content-list.jsx";
 
 
@@ -212,7 +212,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	categoryKeyPressed(evt) {
-		if (evt.target.className === "bx--accordion__heading") {
+		if (evt.target.className === "cds--accordion__heading") {
 			if (evt.code === "Enter" || evt.code === "Space") {
 				evt.preventDefault();
 				evt.stopPropagation();

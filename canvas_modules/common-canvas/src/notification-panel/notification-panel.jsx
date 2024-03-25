@@ -19,8 +19,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import Icon from "./../icons/icon.jsx";
-import { Button } from "carbon-components-react";
-import { Close16 } from "@carbon/icons-react";
+import { Button } from "@carbon/react";
+import { Close } from "@carbon/react/icons";
 import Logger from "../logging/canvas-logger.js";
 import { DEFAULT_NOTIFICATION_HEADER } from "./../common-canvas/constants/canvas-constants.js";
 import defaultMessages from "../../locales/notification-panel/locales/en.json";
@@ -200,7 +200,7 @@ class NotificationPanel extends React.Component {
 					ref={(ref) => (!ref || this.allRefs.push(ref))}
 					size="sm"
 					kind="ghost"
-					renderIcon={Close16}
+					renderIcon={Close}
 					hasIconOnly
 					iconDescription={this.props.intl.formatMessage({
 						id: "notification.panel.close.button.description",
@@ -228,7 +228,7 @@ class NotificationPanel extends React.Component {
 					className="notification-panel-clear-all"
 					onClick={this.clearNotificationMessages.bind(this)}
 					kind="ghost"
-					size="small"
+					size="sm"
 					disabled={this.props.messages.length === 0}
 				>
 					{this.props.notificationConfig.clearAllMessage}
@@ -245,7 +245,7 @@ class NotificationPanel extends React.Component {
 					className="notification-panel-secondary-button"
 					onClick={this.props.notificationConfig.secondaryButtonCallback.bind(this)}
 					kind="ghost"
-					size="small"
+					size="sm"
 					disabled={this.props.secondaryButtonDisabled}
 				>
 					{this.props.notificationConfig.secondaryButtonLabel}

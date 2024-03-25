@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
 import Logger from "../logging/canvas-logger.js";
 
@@ -25,22 +25,28 @@ export default class SvgCanvasExternal {
 	}
 
 	addNodeExternalObject(node, i, foreignObjects) {
-		ReactDOM.render(
+		const container = foreignObjects[i];
+		const root = createRoot(container);
+
+		root.render(
 			<node.layout.nodeExternalObject
 				nodeData={node}
 				canvasController={this.ren.canvasController}
 				externalUtils={this}
-			/>,
-			foreignObjects[i]
+			/>
 		);
 	}
 
 	addDecExternalObject(dec, i, foreignObjects) {
-		ReactDOM.render(dec.jsx, foreignObjects[i]);
+		const container = foreignObjects[i];
+		const root = createRoot(container);
+		root.render(dec.jsx);
 	}
 
 	removeExternalObject(obj, i, foreignObjects) {
-		ReactDOM.unmountComponentAtNode(foreignObjects[i]);
+		const container = foreignObjects[i];
+		const root = createRoot(container);
+		root.unmount();
 	}
 
 	getActiveNodes() {

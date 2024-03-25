@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
-import { Edit16 } from "@carbon/icons-react";
+import { Edit } from "@carbon/react/icons";
 
 import StagesCanvasFlow from "./stagesCanvas.json";
 import StagesPalette from "../../../../../test_resources/palettes/stagesPalette.json";
@@ -197,7 +197,7 @@ export default class DetachedCanvas extends React.Component {
 		const newMenu = defaultMenu;
 		if (source.type === "link") {
 			newMenu.unshift(
-				{ action: "renameLinkLabel", label: "Rename", icon: (<Edit16 />) }
+				{ action: "renameLinkLabel", label: "Rename", icon: (<Edit />) }
 			);
 		}
 

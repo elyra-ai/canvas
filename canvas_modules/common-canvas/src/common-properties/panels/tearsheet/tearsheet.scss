@@ -16,63 +16,63 @@
 
 $properties-buttons-height: $spacing-10;
 
-.properties-tearsheet-panel.properties-tearsheet-stacked.bx--modal {
-	.bx--modal-container {
+.properties-tearsheet-panel.properties-tearsheet-stacked.cds--modal {
+	.cds--modal-container {
 		max-height: calc(100% - 104px);
 		width: calc(100% - 96px);
 	}
 }
 
-.properties-tearsheet-panel.bx--modal {
+.properties-tearsheet-panel.cds--modal {
 	align-items: flex-end;
 	&.is-visible {
-		.bx--modal-container {
+		.cds--modal-container {
 			transform: translate3d(0, 0, 0);
 			transition: transform 240ms cubic-bezier(0, 0, 0.3, 1);
 		}
 	}
-	.bx--modal-container {
+	.cds--modal-container {
 		max-height: calc(100% - 88px);
 		height: 100%;
 		width: calc(100% - 128px);
 		transform: translate3d(0, 500px, 0);
 		transition: transform 240ms cubic-bezier(0, 0, 0.3, 1);
-		background-color: $ui-background;
+		background-color: $background;
 	}
 
 	// Start:: These styles are to display only parameters in a Tearsheet
 	.properties-tearsheet-header {
 		padding: $spacing-06 $spacing-07;
-		border-bottom: 1px solid $ui-03;
+		border-bottom: 1px solid $layer-accent-01;
 		margin-bottom: 0;
 		h3 {
-			@include carbon--type-style("productive-heading-04");
+			@include type-style("productive-heading-04");
 		}
 		p {
 			margin-top: $spacing-03;
-			@include carbon--type-style("body-short-01");
+			@include type-style("body-short-01");
 		}
-		background-color: $ui-01;
+		background-color: $layer-01;
 	}
 
 	.properties-tearsheet-body {
 		padding: $spacing-06 $spacing-07;
 		margin-bottom: 0;
-		.bx--multi-select, .bx--dropdown, .bx--number input[type=number], .bx--text-input, .bx--text-area, .bx--date-picker__input {	// override carbon's modal
-			background-color: $ui-01;
+		.cds--multi-select, .cds--dropdown, .cds--number input[type=number], .cds--text-input, .cds--text-area, .cds--date-picker__input {	// override carbon's modal
+			background-color: $layer-01;
 		}
 	}
 	// End:: These styles are to display only parameters in a Tearsheet
 }
 
 // These styles are to display editor-form in a Tearsheet
-.properties-tearsheet-panel.bx--modal {
+.properties-tearsheet-panel.cds--modal {
 	.properties-tearsheet-header.with-tabs {
 		border-bottom: 0;
 	}
 
 	.properties-tearsheet-header.hide-close-button {
-		button.bx--modal-close {
+		button.cds--modal-close {
 			display: none;
 		}
 	}
@@ -86,8 +86,8 @@ $properties-buttons-height: $spacing-10;
 			}
 
 			.properties-primaryTabs {
-				background-color: $ui-01;
-				border-bottom: 1px solid $ui-03;
+				background-color: $layer-01;
+				border-bottom: 1px solid $layer-accent-01;
 				margin-bottom: $spacing-05;
 				padding-left: $spacing-05;
 			}
@@ -96,7 +96,7 @@ $properties-buttons-height: $spacing-10;
 
 	.properties-tearsheet-body.with-buttons {
 		height: calc(100% - #{$properties-buttons-height});
-		border-bottom: 1px solid $ui-03;
+		border-bottom: 1px solid $layer-accent-01;
 	}
 
 	.properties-tearsheet-body.with-tabs {

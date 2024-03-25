@@ -20,7 +20,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { isEmpty } from "lodash";
-import { Toggle, Button, Dropdown, TextArea, TextInput, RadioButtonGroup, RadioButton, FormGroup } from "carbon-components-react";
+import { Toggle, Button, Dropdown, TextArea, TextInput, RadioButtonGroup, RadioButton, FormGroup } from "@carbon/react";
 import {
 	API_SET_PIPELINEFLOW,
 	API_ADD_PALETTE_ITEM,
@@ -536,7 +536,7 @@ export default class SidePanelAPI extends React.Component {
 			(<div className="harness-sidepanel-children" id="harness-sidepanel-api-list">
 				<Dropdown
 					id="harness-sidepanel-api-ops-dropdown"
-					ariaLabel="Operations. Before selecting an operation, make sure you have selected Canvas Diagram from Common Canvas configuration options."
+					aria-label="Operations. Before selecting an operation, make sure you have selected Canvas Diagram from Common Canvas configuration options."
 					label="Choose an operation..."
 					onChange={this.onOperationSelect.bind(this)}
 					items={dropdownOptions}
@@ -546,7 +546,7 @@ export default class SidePanelAPI extends React.Component {
 
 		const submit =
 			(<div className="harness-sidepanel-children" id="harness-sidepanel-api-submit">
-				<Button size="small"
+				<Button size="sm"
 					disabled={!this.isReadyToSubmit()}
 					onClick={this.callAPI.bind(this)}
 				>
@@ -565,7 +565,7 @@ export default class SidePanelAPI extends React.Component {
 					onChange={this.onFieldChange.bind(this, "pipelineFlow")}
 					value={this.state.pipelineFlow}
 				/>
-				<Button size="small"
+				<Button size="sm"
 					onClick={this.refreshPipeline.bind(this)}
 				>
 					Refresh
@@ -621,7 +621,7 @@ export default class SidePanelAPI extends React.Component {
 						disabled={isEmpty(this.state.nodes)}
 						onChange={this.onNodeSelect.bind(this)}
 						label="Node Selection"
-						ariaLabel="Node Selection"
+						aria-label="Node Selection"
 						titleText="Node Selection"
 						items={this.dropdownOptions(this.state.nodes)}
 					/>
@@ -632,7 +632,7 @@ export default class SidePanelAPI extends React.Component {
 						id="harness-sidepanel-api-nps-dropdown"
 						disabled={isEmpty(this.state.ports)}
 						onChange={this.onPortSelect.bind(this)}
-						ariaLabel="Port Selection"
+						aria-label="Port Selection"
 						label="Port Selection"
 						titleText="Port Selection"
 						items={this.dropdownOptions(this.state.ports)}
@@ -665,7 +665,7 @@ export default class SidePanelAPI extends React.Component {
 						disabled={isEmpty(this.state.nodes)}
 						onChange={this.onNodeSelect.bind(this)}
 						label="Node Selection"
-						ariaLabel="Node Selection"
+						aria-label="Node Selection"
 						titleText="Node Selection"
 						items={this.dropdownOptions(this.state.nodes)}
 					/>
@@ -692,7 +692,7 @@ export default class SidePanelAPI extends React.Component {
 						disabled={isEmpty(this.state.links)}
 						onChange={this.onLinkSelect.bind(this)}
 						label="Link Selection"
-						ariaLabel="Link Selection"
+						aria-label="Link Selection"
 						titleText="Link Selection"
 						items={this.dropdownOptions(this.state.links)}
 					/>
@@ -714,7 +714,7 @@ export default class SidePanelAPI extends React.Component {
 				id="harness-sidepanel-api-notificationMessages"
 			>
 				<div className="harness-sidepanel-headers">Clear Notification Messages</div>
-				<Button size="small"
+				<Button size="sm"
 					id="harness-clearNotificationMessagesubmit"
 					onClick={this.clearNotificationMessages.bind(this)}
 				>
@@ -730,6 +730,7 @@ export default class SidePanelAPI extends React.Component {
 							name="notification_message_type"
 							onChange={this.onNotificationMessageTypeChange.bind(this)}
 							defaultSelected={NOTIFICATION_MESSAGE_TYPE.INFO}
+							orientation="vertical"
 						>
 							<RadioButton
 								value={NOTIFICATION_MESSAGE_TYPE.INFO}
@@ -842,7 +843,7 @@ export default class SidePanelAPI extends React.Component {
 						disabled={isEmpty(objects)}
 						onChange={onChange}
 						label={label}
-						ariaLabel={label}
+						aria-label={label}
 						titleText={label}
 						items={this.dropdownOptions(objects)}
 					/>

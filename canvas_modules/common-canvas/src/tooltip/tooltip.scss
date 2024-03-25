@@ -22,11 +22,11 @@
 	font-size: 12px;
 	position: fixed;
 	padding: $spacing-05;
-	background-color: $inverse-02;
-	border: 1px solid $inverse-02;
+	background-color: $background-inverse;
+	border: 1px solid $background-inverse;
 	font-weight: 400;
 	opacity: 90%;
-	color: $inverse-01;
+	color: $text-inverse;
 	line-height: 1.2;
 	text-align: left;
 	z-index: 10000; // Modal layout has z-index 9000. Show tooltip on top of modal.
@@ -35,14 +35,14 @@
 	max-width: 228px;
 	border-radius: 2px;
 	white-space: pre-wrap; // Add a line break for \n in tooltip
-	.bx--link {
+	.cds--link {
 		display: block;
-		color: $inverse-link;
+		color: $link-inverse;
 		margin-top: $spacing-05;
 		pointer-events: auto; // To make link clickable inside tooltip
 		cursor: pointer;
 		&:hover {
-			color: $inverse-link;
+			color: $link-inverse;
 			text-decoration: underline;
 		}
 	}
@@ -92,12 +92,12 @@
 
 
 .common-canvas-tooltip .tipArrow polyline {
-	fill: $inverse-02;
+	fill: $background-inverse;
 	stroke-width: 0;
 }
 
 .common-canvas-tooltip .tipArrow polygon {
-	fill: $inverse-02;
+	fill: $background-inverse;
 }
 
 .common-canvas-tooltip[aria-hidden="false"] {
@@ -120,12 +120,12 @@
 .tip-palette-category {
 	font-size: 10px;
 	padding-bottom: 4px;
-	color: $inverse-01;
+	color: $text-inverse;
 }
 
 .tip-palette-label, .tip-node-label {
 	font-weight: 600;
-	color: $inverse-01;
+	color: $text-inverse;
 }
 
 .tip-palette-desc, .tip-node-desc {
@@ -139,10 +139,10 @@
 	right: $spacing-05;
 	top: $spacing-03;
 	&.warning {
-		fill: $support-03;
+		fill: $support-warning;
 	}
 	&.error {
-		fill: $support-01;
+		fill: $support-error;
 	}
 }
 
@@ -151,11 +151,11 @@
 }
 
 .properties-tooltips {
-	background-color: $inverse-02;
-	color: $inverse-01;
+	background-color: $background-inverse;
+	color: $text-inverse;
 	max-width: 250px;
 }
 
 .properties-tooltips .tipArrow polyline {
-	fill: $inverse-02;
+	fill: $background-inverse;
 }

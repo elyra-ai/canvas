@@ -2365,7 +2365,7 @@ describe("Properties Controller setWideFlyoutPrimaryButtonDisabled", () => {
 			.find(".properties-modal-buttons")
 			.find("button[data-id='properties-apply-button']");
 		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", false);
-		expect(wideFlyoutPrimaryButton.prop("className").includes("bx--btn--disabled")).to.equal(false);
+		expect(wideFlyoutPrimaryButton.prop("className").includes("cds--btn--disabled")).to.equal(false);
 
 		// Disable OK button for this summary panel using controller method
 		controller.setWideFlyoutPrimaryButtonDisabled(summaryPanelId, true);
@@ -2375,7 +2375,7 @@ describe("Properties Controller setWideFlyoutPrimaryButtonDisabled", () => {
 			.find(".properties-modal-buttons")
 			.find("button[data-id='properties-apply-button']");
 		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", true);
-		expect(wideFlyoutPrimaryButton.prop("className").includes("bx--btn--disabled")).to.equal(true);
+		expect(wideFlyoutPrimaryButton.prop("className").includes("cds--btn--disabled")).to.equal(true);
 		expect(controller.getWideFlyoutPrimaryButtonDisabled(summaryPanelId)).to.be.true;
 
 		// Enable OK button for this summary panel using controller method
@@ -2386,7 +2386,7 @@ describe("Properties Controller setWideFlyoutPrimaryButtonDisabled", () => {
 			.find(".properties-modal-buttons")
 			.find("button[data-id='properties-apply-button']");
 		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", false);
-		expect(wideFlyoutPrimaryButton.prop("className").includes("bx--btn--disabled")).to.equal(false);
+		expect(wideFlyoutPrimaryButton.prop("className").includes("cds--btn--disabled")).to.equal(false);
 		expect(controller.getWideFlyoutPrimaryButtonDisabled(summaryPanelId)).to.be.false;
 	});
 });

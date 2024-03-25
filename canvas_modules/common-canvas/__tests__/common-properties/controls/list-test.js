@@ -435,7 +435,7 @@ describe("list renders correctly as a nested control", () => {
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
 		onPanelList = summaryPanel.find(".properties-onpanel-container")
 			.find("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
-		const textinputs = onPanelList.find(".bx--text-input__field-wrapper");
+		const textinputs = onPanelList.find(".cds--text-input__field-wrapper");
 		expect(textinputs).to.have.length(2);
 		textinputs.at(0).find("input")
 			.simulate("change", { target: { value: "new value list 0" } });
@@ -487,7 +487,7 @@ describe("list renders correctly as a nested control", () => {
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
 		onPanelList = summaryPanel.find(".properties-onpanel-container")
 			.find("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
-		const secondTextinputs = onPanelList.find(".bx--text-input__field-wrapper");
+		const secondTextinputs = onPanelList.find(".cds--text-input__field-wrapper");
 		expect(secondTextinputs).to.have.length(1);
 		secondTextinputs.find("input").simulate("change", { target: { value: "new value list 10" } });
 		tableData = renderedController.getPropertyValue(propertyId);
@@ -528,7 +528,7 @@ describe("list renders correctly as a nested control", () => {
 
 		// edit nested list row index 0
 		subPanelTable = wrapper.find("div[data-id='properties-complexListStructuretables']");
-		let textinputs = subPanelTable.find(".bx--text-input__field-wrapper");
+		let textinputs = subPanelTable.find(".cds--text-input__field-wrapper");
 		expect(textinputs).to.have.length(2);
 		textinputs.at(0).find("input")
 			.simulate("change", { target: { value: "new value list 0" } });
@@ -564,7 +564,7 @@ describe("list renders correctly as a nested control", () => {
 
 		// edit nested list row index 0
 		subPanelTable = wrapper.find("div[data-id='properties-complexListStructuretables']").at(1);
-		textinputs = subPanelTable.find(".bx--text-input__field-wrapper");
+		textinputs = subPanelTable.find(".cds--text-input__field-wrapper");
 		expect(textinputs).to.have.length(1);
 		textinputs.find("input").simulate("change", { target: { value: "new value list 10" } });
 		tableData = renderedController.getPropertyValue(propertyId);

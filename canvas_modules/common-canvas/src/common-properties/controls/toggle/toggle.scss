@@ -19,8 +19,6 @@
 		padding-bottom: 0;
 	}
 }
-.properties-table-cell-control { // overrides when in a table cell
-	.bx--toggle__switch { // override carbon when inside a table
-		margin-bottom: $spacing-05;
-	}
+.properties-toggle-label {
+	margin-bottom: $spacing-05;
 }

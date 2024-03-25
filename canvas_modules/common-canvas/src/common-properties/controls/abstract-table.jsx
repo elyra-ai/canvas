@@ -17,14 +17,14 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Button, Checkbox } from "carbon-components-react";
+import { Button, Checkbox } from "@carbon/react";
 import FlexibleTable from "./../components/flexible-table";
 import TableButtons from "./../components/table-buttons";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
 import classNames from "classnames";
-import { Add16, TrashCan16, Edit16 } from "@carbon/icons-react";
+import { Add, TrashCan, Edit } from "@carbon/react/icons";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 import { v4 as uuid4 } from "uuid";
 
@@ -505,9 +505,9 @@ export default class AbstractTable extends React.Component {
 					className="properties-remove-fields-button"
 					disabled={removeDisabled}
 					onClick={removeOnClick}
-					size="small"
+					size="sm"
 					kind="ghost"
-					renderIcon={TrashCan16}
+					renderIcon={TrashCan}
 				>
 					{removeButtonLabel}
 				</Button>
@@ -515,9 +515,9 @@ export default class AbstractTable extends React.Component {
 					className="properties-add-fields-button"
 					disabled={addButtonDisabled}
 					onClick={this.addOnClick.bind(this, this.props.propertyId)}
-					size="small"
+					size="sm"
 					kind="ghost"
-					renderIcon={Add16}
+					renderIcon={Add}
 				>
 					{addButtonLabel}
 				</Button>
@@ -534,9 +534,9 @@ export default class AbstractTable extends React.Component {
 				<Button
 					className="properties-edit-button"
 					onClick={this.editOnClick.bind(this, this.props.propertyId)}
-					size="small"
+					size="sm"
 					kind="ghost"
-					renderIcon={Edit16}
+					renderIcon={Edit}
 				>
 					{tableButtonConfig.label}
 				</Button>
@@ -568,7 +568,7 @@ export default class AbstractTable extends React.Component {
 		}
 	}
 
-	checkedAllValue(colIndex, checked) {
+	checkedAllValue(colIndex, evt, { checked, id }) {
 		const controlValue = this.props.value;
 		if (Array.isArray(controlValue)) {
 			for (let i = 0; i < controlValue.length; i++) {
