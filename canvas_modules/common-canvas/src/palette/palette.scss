@@ -106,8 +106,8 @@ $palette-search-container-height: 41px;
 		}
 
 		&:focus {
-			border-color: $button-tertiary;
-			box-shadow: inset 0 0 0 2px $button-tertiary;
+			border-color: $focus;
+			box-shadow: inset 0 0 0 2px $focus;
 		}
 
 		.palette-list-item-category-label {
