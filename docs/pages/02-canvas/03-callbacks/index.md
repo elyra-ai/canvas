@@ -1,9 +1,9 @@
-# Event listener callbacks 
+# Common Canvas callbacks
 
-You can *optionally* provide callback listeners.  These will be called when the user interacts with the canvas. 
+You can *optionally* provide callback listeners.  These will be called when the user interacts with the canvas.
 
 These listeners are as follows:
- 
+
 ## contextMenuHandler
 ```js
     contextMenuHandler(source, defaultMenu)
@@ -12,18 +12,18 @@ This callback is used for both 'context menus' and, if the [`enableContextToolba
 
 If this callback is not provided common canvas will handle context menu/toolbars, and their actions, internally. You only need to implement this callback if you want to add or remove options to/from the context menu/toolbar.
 
-The job of this callback is to tell common canvas what items to display in the context menu/toolbar. 
+The job of this callback is to tell common canvas what items to display in the context menu/toolbar.
 
-### For Context Menu 
+### For Context Menu
 
-For context menus this will be dependent on what object or set of objects the context menu was requested for by the user. 
+For context menus this will be dependent on what object or set of objects the context menu was requested for by the user.
 
 This callback will be called if the user performs a context menu gesture (such as mouse 'right click') on a:
 
 * node
 * link
 * comment
-* port 
+* port
 * on the canvas background or
 * if a number of objects are selected, the combination of objects.
 
@@ -38,9 +38,9 @@ The source object passed in looks like this:
       mousePos: {x: "10", y:"20"}
     }
 ```
-**type** - Indicates type of object for which the context menu was selected. Can be "node", "port", "link", "canvas" or "comment" 
+**type** - Indicates type of object for which the context menu was selected. Can be "node", "port", "link", "canvas" or "comment"
 
-**targetObject** - The object for which the context menu was requested. Only provided when type is "node" or "comment" 
+**targetObject** - The object for which the context menu was requested. Only provided when type is "node" or "comment"
 
 **selectedObjectIds** -  An array containing the IDs of all currently selected nodes and/or comments
 
@@ -57,7 +57,7 @@ The callback would need to return an array, that describes the context menu to b
 ```
 There is one element in the array for each entry in the context menu. An entry can be either a context menu item, which consists of a label and an action, or a divider, whose field would need to be set to true.
 
-Actions can be either internal (implemented inside the common canvas, like "deleteSelectedObjects" above) or external (like "myAction"). 
+Actions can be either internal (implemented inside the common canvas, like "deleteSelectedObjects" above) or external (like "myAction").
 
 Existing internal actions are:
 
@@ -79,7 +79,7 @@ Existing internal actions are:
 * highlightUpstream
 * unhighlight
 
-External actions are custom actions you want common canvas to display for your application. To get common canvas to display your action you would need to return an array from the callback that includes a menu item for the action. 
+External actions are custom actions you want common canvas to display for your application. To get common canvas to display your action you would need to return an array from the callback that includes a menu item for the action.
 
 When the user clicks the option in the context menu matching your action common canvas will call the [editActionHandler](#editactionhandler) callback so you'll need to implement some code in that callback to execute the intended action. If you want to simply add your action to the default context menu provided by common canvas you can take the defaultMenu parameter provided to the callback and add your menu item to it. Alternatively, you can provide a complete new context menu of your own.
 
@@ -94,13 +94,13 @@ Here is a sample implementation of contextMenuHandler, which takes a source obje
       return customMenu;
     }
 ```
-In addition to adding the context menu item, you would also need to implement the editActionHandler callback to execute the action, like this: 
+In addition to adding the context menu item, you would also need to implement the editActionHandler callback to execute the action, like this:
 ```js
     editActionHandler(data) {
       if (data.editType === "myAction") {
         // Execute my action code here.
       }
-    } 
+    }
 ```
 Tip: To avoid any future name clashes with internal actions you should make sure you action names are unique. For example, you could add a prefix to your action names eg. `$MyApp_action` where `$MayApp_` is the prefix for all your actions.
 
@@ -110,7 +110,7 @@ For context toolbars, this will be dependent on which object the mouse cursor is
 
 
 ## editActionHandler
-```js    
+```js
     editActionHandler(data, command)
 ```
 This callback is optional. You don't *need* to implement anything for it and it doesn't return anything. It is called whenever the user does the following types of action on the canvas:
@@ -123,7 +123,7 @@ This callback is optional. You don't *need* to implement anything for it and it 
     * Moves one or a set of nodes/comments (moveObjects)
     * Edits a comment (editComment)
     * Links two nodes together (linkNodes)
-    * Links a comment to a node (linkComment) 
+    * Links a comment to a node (linkComment)
     * Resizes a supernode (resizeObjects)
     * Resizes a comment (editComment)
     * Expands a supernode in place (expandSuperNodeInPlace)
@@ -145,7 +145,7 @@ This callback is called *after* the common-canvas internal object model has been
     }
 ```
 
-   + ***editType*** - This is the action that originates from either the toolbar, context menu, keyboard action or direct manipulation on the canvas. If you specified your own action in the context menu or in the toolbar this field will be your action's name. 
+   + ***editType*** - This is the action that originates from either the toolbar, context menu, keyboard action or direct manipulation on the canvas. If you specified your own action in the context menu or in the toolbar this field will be your action's name.
 
    + ***editSource*** - This is the source of the action. It can be set to "toolbar", "contextmenu", "keyboard" or "canvas" (for an action caused by direct manipulation on the canvas).
 
@@ -155,13 +155,13 @@ This callback is called *after* the common-canvas internal object model has been
 
    + ***Other fields*** - Numerous other fields which vary based on the action and the source of the action.
 
-2. **command parameter** - This is a Javascript class which is the command object that was added to the command stack and executed to run the action 'requested' by the user. If the user performed an `undo` action this will be the command that has been undone. If the user performed a `redo` action this will be the command that was redone. The command object may contain fields which are connected with the execution of the command.    
- 
+2. **command parameter** - This is a Javascript class which is the command object that was added to the command stack and executed to run the action 'requested' by the user. If the user performed an `undo` action this will be the command that has been undone. If the user performed a `redo` action this will be the command that was redone. The command object may contain fields which are connected with the execution of the command.
+
 ## beforeEditActionHandler
-```js    
+```js
     beforeEditActionHandler(data, command)
 ```
-This callback is optional. You don't *need* to implement anything for it but if you do implement it you **must** return either a data object or null. This callback is called in all the same instances where `editActionHandler` is called. The difference is that this callback is called *before* the internal object model is updated. This gives your application the opportunity to examine the action that is about to be performed and either: let it continue; modify it and let it continue; or cancel it. 
+This callback is optional. You don't *need* to implement anything for it but if you do implement it you **must** return either a data object or null. This callback is called in all the same instances where `editActionHandler` is called. The difference is that this callback is called *before* the internal object model is updated. This gives your application the opportunity to examine the action that is about to be performed and either: let it continue; modify it and let it continue; or cancel it.
 
  This callback is provided with two parameters: `data` and `command`.
 
@@ -171,24 +171,24 @@ This callback is optional. You don't *need* to implement anything for it but if 
 This callback *must* return either the data object that was passed in or null. `beforeEditActionHandler` will behave as follows based on what is returned:
 
 * If the data object is returned unmodified: the action will be performed as normal.
-* If the data object is returned modified: the action will be performed based on the modified data object. This means your application can alter the behavior of the action that will be performed. For example, you could intercept a `createNode` command and change the label for the new node in the nodeTemplate to something different. Then when the node is created the new label will be used. It is recommended you be **very** **very** careful when updating this object since there is no error checking in common-canvas to ensure you modified the object correctly.     
+* If the data object is returned modified: the action will be performed based on the modified data object. This means your application can alter the behavior of the action that will be performed. For example, you could intercept a `createNode` command and change the label for the new node in the nodeTemplate to something different. Then when the node is created the new label will be used. It is recommended you be **very** **very** careful when updating this object since there is no error checking in common-canvas to ensure you modified the object correctly.
 * If `null` is returned: the action will be cancelled and not performed on the internal object model nor will `editActionHandler` be called.
 
 If you need to do any asynchronous activity in the beforeEditActionHandler callback you can:
 
 * Return null from the callback - which will cancel the current action
-* Do your asynchronous activity. While this is happening, the user ought to be prevented from modifying the canvas so you should display some sort of progress indicator or modal dialog to inform the user that some activity is occurring.   
-* Then call `CanvasController.editActionHandler(data)` passing in the `data` object as a parameter with the modified properties. This will then execute the action as before. Note: This means the `beforeEditActionHandler` will be called a second time so be sure you put in a check to make sure you don't get into a loop. 
+* Do your asynchronous activity. While this is happening, the user ought to be prevented from modifying the canvas so you should display some sort of progress indicator or modal dialog to inform the user that some activity is occurring.
+* Then call `CanvasController.editActionHandler(data)` passing in the `data` object as a parameter with the modified properties. This will then execute the action as before. Note: This means the `beforeEditActionHandler` will be called a second time so be sure you put in a check to make sure you don't get into a loop.
 
 ## clickActionHandler
 ```js
     clickActionHandler(source)
 ```
-This callback is provided for your information. You don't need to implement anything for it and it doesn't need to return anything to common canvas. It is called whenever the user clicks or double clicks on something on the canvas. You could use this callback to implement opening a properties dialog when the user double clicks a node. 
+This callback is provided for your information. You don't need to implement anything for it and it doesn't need to return anything to common canvas. It is called whenever the user clicks or double clicks on something on the canvas. You could use this callback to implement opening a properties dialog when the user double clicks a node.
 
 Note: When handling selections, it is recommended the selectionChangeHandler be used in preference to this handler when possible. selectionChangeHandler will notify you of all selection changes regardless of how they occur, such as when the user presses Ctrl+A on the keyboard to select all objects.
 
-At the moment only click/double-click on nodes and the canvas background are returned. It is provided with one parameter that looks like this: 
+At the moment only click/double-click on nodes and the canvas background are returned. It is provided with one parameter that looks like this:
 ```js
     {
       clickType: "DOUBLE_CLICK"
@@ -200,7 +200,7 @@ At the moment only click/double-click on nodes and the canvas background are ret
 The fields can be:
 
 * clickType - This can be either "SINGLE_CLICK", "SINGLE_CLICK_CONTEXTMENU" or "DOUBLE_CLICK"
-* objectType - Can be either "node", "comment", "canvas" or "region". "region" is specified when the user pulls out a selection rectangle around a set of objects that might include nodes and comments.  
+* objectType - Can be either "node", "comment", "canvas" or "region". "region" is specified when the user pulls out a selection rectangle around a set of objects that might include nodes and comments.
 * id - The ID of the node or comment clicked. Only provided when objectType is "node" or "comment"
 * selectedObjectIds - An array of the selected objects (after the click action was performed).
 
@@ -212,7 +212,7 @@ Note: "SINGLE_CLICK_CONTEXTMENU" indicates that the user performed a contextmenu
 ```
 Decorations are small images that can be displayed on or near to your nodes and links. They can be for display only or actionable (so the user can click on them). See the canvas JSON schema for information on how to define decorations for your nodes.
 
-This callback is called when the user clicks on an actionable decoration. You don't need to implement anything for this callback unless you added actionable decorations to your nodes. It doesn't return anything. It is called whenever the user clicks on a decoration that you added to a node in the canvas JSON. 
+This callback is called when the user clicks on an actionable decoration. You don't need to implement anything for this callback unless you added actionable decorations to your nodes. It doesn't return anything. It is called whenever the user clicks on a decoration that you added to a node in the canvas JSON.
 
 It is provided with two parameters:
 
@@ -224,7 +224,7 @@ It is provided with two parameters:
 ```js
     tipHandler(tipType, data)
 ```
-Note: The display of tooltips (or not) can be controlled using the [`tipConfig`](2.1-Config-Objects.md#tipconfig) field of the canvas config object. 
+Note: The display of tooltips (or not) can be controlled using the [`tipConfig`](2.1-Config-Objects.md#tipconfig) field of the canvas config object.
 
 This optional callback can be implemented to override the tooltip content that is displayed by default for each canvas object. It is called before tips are shown for: palette categories, palette node templates, node, ports, links, decorations and the state tag. Common-canvas provides default implementations for all of the tips except for links and decorations, as follows:
 
@@ -242,7 +242,7 @@ To override the content, you can return either a string or JSX object. If your c
 
 Common-canvas calls the `tipHandler` callback with two parameters:
 
-- tipType - the type of the tip 
+- tipType - the type of the tip
 - data - an object that describes the canvas element for which the tip was requested
 
 Here are some specific examples:
@@ -254,19 +254,19 @@ Here are some specific examples:
 
 ```js
 {
-    category: { 
+    category: {
         id: "1234",
         label: "Import",
         description: "Category for import nodes",
         image: "/images/import.svg"
     }
-} 
-``` 
+}
+```
 
 #### Palette nodes templates:
 
   - tipType: "tipTypePaletteItem"
-  - data: An object with node template information: 
+  - data: An object with node template information:
 ```js
 {
     nodeTemplate: {
@@ -280,7 +280,7 @@ Here are some specific examples:
     }
 }
 ```
-#### Nodes: 
+#### Nodes:
   - tipType: "tipTypeNode"
   - data: An object with pipelineId and node information:
 ```js
@@ -301,7 +301,7 @@ Here are some specific examples:
 }
 ```
 
-#### Ports: 
+#### Ports:
 
   - tipType: "tipTypePort"
   - data: An object with pipelineId, node and port information:
@@ -369,7 +369,7 @@ Here are some specific examples:
         trgPortId: "inPort"
     }
 }
-``` 
+```
 
 #### Decorations
   - tipType: "tipTypeDec"
@@ -384,7 +384,7 @@ Here are some specific examples:
         "tooltip": "Foxes never quit"
     }
 }
-``` 
+```
 
 #### State tag
   - tipType: "tipTypeStateTag"
@@ -394,7 +394,7 @@ Here are some specific examples:
     stateTagText: "This flow is locked and cannot be edited.",
     stateTagType: "Locked"
 }
-``` 
+```
 
 
 
@@ -435,12 +435,12 @@ nodeType:
 
 * create comment:
 
-    * action: create_comment 
+    * action: create_comment
     * data: n/a
 
 * create node link:
-    * action: create_node_link 
-    * data: 
+    * action: create_node_link
+    * data:
 
 ```js
 sourceNode: {
@@ -478,7 +478,7 @@ targetNode: {
 ```
 
 - create comment link:
-    * action: create_comment_link 
+    * action: create_comment_link
     * data:
 
 ```js
@@ -510,7 +510,7 @@ targetNode: {
 ```
 
 - clone node: triggered when copying&pasting a node
-    * action: clone_node 
+    * action: clone_node
     * data:
 
 ```js
@@ -683,7 +683,7 @@ The selectionChangeHandler callback is triggered whenever the selection in the c
 - addedComments: Array with comment objects that were added to the selection
 - deselectedNodes: Array with node objects that were removed from the selection
 - deselectedComments: Array with comment objects that were removed from the selection
-- previousPipelineId: The ID of the Pipeline for the selected objects prior to the selection action 
+- previousPipelineId: The ID of the Pipeline for the selected objects prior to the selection action
 - selectedPipelineId: The ID of the Pipeline for the newly selected objects
 
 
@@ -691,7 +691,7 @@ The selectionChangeHandler callback is triggered whenever the selection in the c
 ```js
     layoutHandler(data)
 ```
-This is an optional handler you don't need to implement anything for it unless you want to. The layoutHandler callback, when provided, is called for each node on the canvas. The callback should return a Javascript object whose properties will override the default properties for node layout. The callback is provided with a parameter `data` which is the node object. Your code can look at the node properties and decide which properties it needs to override. This can be used to change the node shape, styling and position and size of node elements like the image, main label etc. 
+This is an optional handler you don't need to implement anything for it unless you want to. The layoutHandler callback, when provided, is called for each node on the canvas. The callback should return a Javascript object whose properties will override the default properties for node layout. The callback is provided with a parameter `data` which is the node object. Your code can look at the node properties and decide which properties it needs to override. This can be used to change the node shape, styling and position and size of node elements like the image, main label etc.
 
 For more details see: [Customizing Node Layout Properties](2.7-Customizing-Node-Layout-Properties.md)
 
@@ -699,6 +699,6 @@ For more details see: [Customizing Node Layout Properties](2.7-Customizing-Node-
 ```js
     actionLabelHandler(action)
 ```
-This is an optional handler you don't need to implement anything for it unless you want to. This callback allows your code to override the default tooltip text for the `Undo` and `Redo` buttons. 
+This is an optional handler you don't need to implement anything for it unless you want to. This callback allows your code to override the default tooltip text for the `Undo` and `Redo` buttons.
 
-The `actionLabelHandler` callback, when provided, is called for each action that is performed in common-canvas. The `action` object parameter, passed in to the callback, contains details of the action being performed. This callback should return either a string or null. If a string is returned it will be shown in the tooltip for the `Undo` button in the toolbar preceded by "Undo:" and the string will also appear in the tooltip for the `Redo` button (when appropriate) preceded by "Redo:". If null is returned, common-canvas will display the default text for the `Undo` and `Redo` buttons. 
+The `actionLabelHandler` callback, when provided, is called for each action that is performed in common-canvas. The `action` object parameter, passed in to the callback, contains details of the action being performed. This callback should return either a string or null. If a string is returned it will be shown in the tooltip for the `Undo` button in the toolbar preceded by "Undo:" and the string will also appear in the tooltip for the `Redo` button (when appropriate) preceded by "Redo:". If null is returned, common-canvas will display the default text for the `Undo` and `Redo` buttons.
