@@ -68,20 +68,6 @@ module.exports = function(grunt) {
 					cwd: "./node_modules/@ibm/plex",
 					src: ["IBM-Plex*/**"],
 					dest: ".build/fonts"
-				},
-				{
-					expand: true,
-					flatten: false,
-					cwd: "./node_modules/@ibm/plex/IBM-Plex-Sans/fonts/split",
-					src: ["**/*.woff"],
-					dest: ".build/fonts/IBM-Plex-Sans/fonts/split/woff"
-				},
-				{
-					expand: true,
-					flatten: false,
-					cwd: "./node_modules/@ibm/plex/IBM-Plex-Sans/fonts/split",
-					src: ["**/*.woff2"],
-					dest: ".build/fonts/IBM-Plex-Sans/fonts/split/woff2"
 				}]
 			},
 			styleguide: {
