@@ -1,0 +1,121 @@
+#
+# Copyright 2017-2023 Elyra Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+site_name: Elyra Canvas
+repo_url: https://github.com/elyra-ai/canvas
+docs_dir: pages
+
+theme:
+    name: material
+    highlightjs: true
+    logo: assets/FlowIcon.png
+    favicon: assets/FlowIcon.png
+    palette:
+        scheme: default
+    features:
+      - content.code.copy
+      - content.action.edit
+      - navigation.tabs
+      - navigation.indexes
+
+plugins:
+    - search
+
+extra_css:
+  - css/styles.css
+
+extra_javascript:
+  - js/links-in-new-tabs.js
+
+edit_uri: edit/main/docs/
+
+# Documentation and theme
+copyright: 'Copyright  &copy; 2024 Elyra Authors, an open source project and all are welcome to contribute! Maintained by the Elyra Authors Team'
+
+nav:
+  - Home: index.md
+
+  - Installation:
+    - 01-install/index.md
+
+  - Common Canvas:
+    - 02-canvas/index.md
+    - Canvas Components:
+      - 02-canvas/01-components/index.md
+      - Flow Editor:
+        - 02-canvas/01-components/01-editor/index.md
+        - Nodes: 02-canvas/01-components/01-editor/01-Nodes.md
+        - Links: 02-canvas/01-components/01-editor/02-Links.md
+        - Comments: 02-canvas/01-components/01-editor/03-Comments.md
+      - Palette: 02-canvas/01-components/02-Palette.md
+      - Context Menu: 02-canvas/01-components/03-Context-Menu.md
+      - Context Toolbar: 02-canvas/01-components/04-Context-Toolbar.md
+    - Config Objects:
+      - 02-canvas/02-configs/index.md
+      - Canvas Config: 02-canvas/02-configs/01-canvas-config.md
+      - Toolbar Config: 02-canvas/02-configs/02-toolbar-config.md
+      - Notification Config: 02-canvas/02-configs/03-notification-config.md
+      - Context Menu Config: 02-canvas/02-configs/04-context-menu-config.md
+      - Keyboard Config: 02-canvas/02-configs/05-keyboard-config.md
+    - Callbacks: 02-canvas/03-callbacks/index.md
+    - Canvas Controller:
+      - 02-canvas/04-controller/index.md
+      - Styling Canvas Objects: 02-canvas/04-controller/01-Styling-Objects.md
+      - Decorations: 02-canvas/04-controller/02-Decorations.md
+      - API Object Structure: 02-canvas/04-controller/03-Object-structure-used-by-API.md
+      - Notification Message Specification: 02-canvas/04-controller/04-Notification-Message-Specification.md
+      - Programmatically Creating New Canvas Nodes: 02-canvas/04-controller/05-Programmatically-creating-new-canvas-nodes.md
+      - Read Only or Locked Canvas: 02-canvas/04-controller/06-Read-only-or-locked-canvas.md
+      - Calling the Canvas Controller API: 02-canvas/04-controller/07-Calling-the-Canvas-Controller-API.md
+    - Node Creation from External Object: 02-canvas/05-ext-objs/index.md
+    - Commmand Stack API: 02-canvas/06-stack/01-Command-Stack.md
+    - Customizing Node Layout Properties: 02-canvas/07-layout/01-Customizing-Node-Layout.md
+    - Context Menu Wrapper Documentation: 02-canvas/08-menu/01-Context-Menu-Wrapper.md
+    - External Subflows Support: 02-canvas/09-ext-flows/01-External-Subflows-support.md
+    - Flow Validation API: 02-canvas/10-validate/01-Flow-Validation-API.md
+
+  - Common Properties:
+    - 03-props/index.md
+    - Parameter Definitions: 03-props/01-Parameter-Definition.md
+    - UI Hints: 03-props/02-UI-Hints.md
+    - Controls: 03-props/03-Controls.md
+    - Conditions: 03-props/04-Conditions.md
+    - Custom Components: 03-props/05-Custom-Components.md
+    - Properties Controller: 03-props/06-Properties-Controller.md
+
+  - Troubleshooting:
+    - 04-trouble/01-Troubleshooting.md
+
+  - Contributing:
+    - 05-contrib/01-Testing-Guidelines-for-Development.md
+
+  # - Testing Guidelines for Development: 5.0-Testing-Guidelines-for-Development.md
+
+markdown_extensions:
+  - admonition:
+  - codehilite:
+  - extra:
+  - pymdownx.magiclink:
+  - pymdownx.inlinehilite:
+  - pymdownx.highlight:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - sane_lists:
+  - smarty:
+  - toc:
+      permalink: True

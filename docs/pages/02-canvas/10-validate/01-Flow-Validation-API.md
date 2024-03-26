@@ -1,5 +1,7 @@
 # Flow Validation API
 
+## __This function is deprectated and will be removed in  future release__
+
   The Flow Validation API allows application code to programmatically validate the nodes in the flow against it's property values.  The API can be invoked after setting the Canvas Controller pipeline flow, when opening a new flow, or associated with a canvas context menu item.  To use the Flow Validation API import the FlowValidation object fro common-canvas:
 ```
 import { FlowValidation } from "@elyra/canvas";
@@ -13,10 +15,10 @@ The Flow Validation object provides the following API:
 
 ```
 validateFlow(canvasController, parameterDataCallback, setNodeMessagesCallback, includeMsgTypes)
-	canvasController - an instance of the canvas controller 
+	canvasController - an instance of the canvas controller
 	parameterDataCallback – function to get the parameter data or form data for a node
 	setNodeMessagesCallback – function to set the validation messages for a node. (optional)
-    includeMsgTypes - array[strings] Return invalid only if messages are found of types contained 
+    includeMsgTypes - array[strings] Return invalid only if messages are found of types contained
                       in the array. If not specified then any message type causes invalid return. (optional)
     return - boolean If flow is valid returns true, otherwise returns false.
 ```
@@ -34,10 +36,10 @@ parameterDataCallback(nodeId)
 setNodeMessagesCallback(nodeId, messages)
 	nodeId – string node Id.
 	an array of message objects generated from the validation of the node.
-``` 
+```
 
 The validateFlow() API will traverse the current flow and for each node invoke the parameterDataCallback() to get with a form data JSON or a parameterDef JSON.  It will validate the JSON for the node and store any messages in the node objects within the model.  The setNodeMessagesCallback() function will be called with all the messages generated for the node.  This is only useful if the application is not using the internal object model.
-The format of the message object is described in [Pipeline Flow UI schema](https://github.com/elyra-ai/wdp-pipeline-schemas/blob/master/common-pipeline/pipeline-flow/pipeline-flow-ui-v1-schema.json) 
+The format of the message object is described in [Pipeline Flow UI schema](https://github.com/elyra-ai/wdp-pipeline-schemas/blob/master/common-pipeline/pipeline-flow/pipeline-flow-ui-v1-schema.json)
 
 Here is an example of using the FlowValidation API to validate a flow on opening:
 

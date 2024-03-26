@@ -1,4 +1,4 @@
-## Decorations
+# Decorations
 Your application can add Decorations -- additional icons, text labels, shapes or JSX objects -- to nodes or links in the canvas to indicate special status or attributes of the node or link. Decorations can be static (for display only) or interactive (a hotspot) so the user can click them to initiate some action.
 
 ## Adding Decorations
@@ -18,7 +18,7 @@ Decorations can be added to the nodes and/or links in four different ways:
     ```
     See the [CanvasController API documentation](2.4-Canvas-Controller-API.md) for more details.
 
-2. Node decorations can be specified in the [nodeLayout object](2.1-Config-Objects.md#enablenodelayout) in the canvas config. Decorations specified in this way are applied to all nodes on the canvas. 
+2. Node decorations can be specified in the [nodeLayout object](2.1-Config-Objects.md#enablenodelayout) in the canvas config. Decorations specified in this way are applied to all nodes on the canvas.
 
 3. Decorations can be applied to, and retrieved from, nodes or links in the pipelineFlow in the `app_data.ui_data` section for the node or link. (Note: JSX objects are not supported in the pipelineFlow document).
 
@@ -104,14 +104,14 @@ These properties are applicable to a JSX decoration:
 
 where:
 
-#### **id** 
+#### **id**
 A unique ID for the decoration within the context of the node or link to which the decorator is attached.
 
 #### **image**
 A reference to an image to display for the decoration. If an image is specified the image is displayed within an outline rectangle unless `outline` is set to false. The image should be a reference to your image like: "/images/decorations/zoom-in_32.svg". Do not set label or path or jsx when this field is set.
 
 #### **path**
-An SVG shape that is displayed using this string as it's SVG path. eg. "M 0 0 L 10 10 -10 10 Z" could be specified to draw a triangle. Do not set image or label or jsx when this field is set. 
+An SVG shape that is displayed using this string as it's SVG path. eg. "M 0 0 L 10 10 -10 10 Z" could be specified to draw a triangle. Do not set image or label or jsx when this field is set.
 
 #### **jsx**
 A JSX object that is is displayed at the specified decoration location. Do not set image or path or label when this field is set. Note JSX decorations are not supported in the pipelineFlow document.
@@ -120,7 +120,7 @@ A JSX object that is is displayed at the specified decoration location. Do not s
 A text string that is displayed at the specified decoration location. Do not set image or path or jsx when this field is set.
 
 #### **label_editable**
-A boolean that defaults to `false`. When set to `true`, if the mouse pointer is hovered over the label an edit icon is displayed next to the label which, when clicked, opens the label for editing. The label can also for double clicked to go to edit mode. 
+A boolean that defaults to `false`. When set to `true`, if the mouse pointer is hovered over the label an edit icon is displayed next to the label which, when clicked, opens the label for editing. The label can also for double clicked to go to edit mode.
 
 When editing is completed (by clicking outside the text area) an `editDecorationLabel` action is executed which results in calls to first the `beforeEditActionHandler` and then the `editActionHandler` callbacks.
 
@@ -128,61 +128,61 @@ When editing is completed (by clicking outside the text area) an `editDecoration
 Can be either "center" or "left". When set to center the label will be centered on the point defined by the `position`, `distance`, `x_pos` and `y_pos` properties.
 
 #### **label_single_line**
-A boolean that defaults to `false`. When set to `true` the label is displayed on a single line and is truncated at the width of the label (specified in the `width` property for the decoration) and does not word wrap. If it is truncated an ellipsis (...) is displayed at the end of the truncated text. 
+A boolean that defaults to `false`. When set to `true` the label is displayed on a single line and is truncated at the width of the label (specified in the `width` property for the decoration) and does not word wrap. If it is truncated an ellipsis (...) is displayed at the end of the truncated text.
 
-If this property is set to `false`, long label text is displayed over a number of lines with word wrapping being controlled by the `width` set for the decoration. If the text extends beyond a second line an ellipsis (..) is displayed at the end of the second line. This is controlled by the `-webkit-line-clamp: 2;` CSS property. You can override this if you want the ellipsis to be displayed on a different line. 
+If this property is set to `false`, long label text is displayed over a number of lines with word wrapping being controlled by the `width` set for the decoration. If the text extends beyond a second line an ellipsis (..) is displayed at the end of the second line. This is controlled by the `-webkit-line-clamp: 2;` CSS property. You can override this if you want the ellipsis to be displayed on a different line.
 
 Note: For both single and multi-line labels you may need to set the `height` property for the decoration to show the text fully.
 
 #### **label_max_characters**
-A number or null. Defaults to null. If set to a number the label will be restricted to that number of characters. If the label in the pipeline flow document is longer than the max number it will be displayed but when it is edited the user will not be able to do anything except delete characters until the label is shorter than the max number. If this property is set to `null` or omitted an unlimited number of characters may be entered by the user. 
+A number or null. Defaults to null. If set to a number the label will be restricted to that number of characters. If the label in the pipeline flow document is longer than the max number it will be displayed but when it is edited the user will not be able to do anything except delete characters until the label is shorter than the max number. If this property is set to `null` or omitted an unlimited number of characters may be entered by the user.
 
 #### **label_allow_return_key**
 A boolean that defaults to `false`. When `false`, if the user presses the return key nothing will happen. This means multi-line labels will only word-wrap at the `width` of the decorator. Preventing newline insertion is useful if the label text appears elsewhere in the UI which is not able to show text with newline characters. When set to `"save"`, if the user presses the return key, the editing will be completed and the label saved -- this is the equivalent of clicking on the canvas background to complete the edit. If set to `true`, a new line character will be inserted in the label when the user presses return.
 
 #### **position**
-This is the anchor point to which the decoration is attached.  For a node, this can be one of these 9 enumerated values:  
+This is the anchor point to which the decoration is attached.  For a node, this can be one of these 9 enumerated values:
 ```
-   "topLeft", "topCenter", "topRight",  
-   "middleLeft", "middleCenter", "middleRight",   
-   "bottomLeft", "bottomCenter", "bottomRight".   
+   "topLeft", "topCenter", "topRight",
+   "middleLeft", "middleCenter", "middleRight",
+   "bottomLeft", "bottomCenter", "bottomRight".
 ```
 If omitted it will default to "topLeft".
-    
-For a link, this can be one of these 3 enumerated values:  
+
+For a link, this can be one of these 3 enumerated values:
 ```
-   "source"  
-   "middle"  
-   "target"  
+   "source"
+   "middle"
+   "target"
 ```
 `source` will position the decoration at the start point of the line and `target` will position it at the end point of the line. If omitted it will default to `middle`.
 
 #### **distance**
 A number of pixels. This is only applicable when the decoration is for a link line and then, only with straight connecting lines. That is, for node to node connections when the config property `enableLinkType` is set to `"straight"`. When specified, it will move the anchor point for the decoration to a new position along the connecting line relative to the initial position specified in the decoration's `position` property. A positive number moves the decoration along the line from the starting position towards the target of the link and a negative number backwards towards the source of the link. For example, if a straight link decoration has `position` of `source` and a `distance` of `20` the decoration's anchor point will be 20 pixels along the link line from the source (start) point of the line. After the `distance` value has been applied to the anchor point of the decoration, any `x_pos` and `y_pos` adjustment will be applied to fine tune the decoration's final position.
- 
+
 #### **x_pos**
-This is the number of pixels horizontally from the anchor point that the decoration is positioned. It can be positive or negative. If omitted it takes a default value from the [node layout properties](2.7-Customizing-Node-Layout-Properties.md#what-are-the-node-layout-properties-and-what-are-they-set-to-by-default). x_pos is not applicable if you specify an SVG path using the `path` field, because the SVG path can be used to position the shape. 
+This is the number of pixels horizontally from the anchor point that the decoration is positioned. It can be positive or negative. If omitted it takes a default value from the [node layout properties](2.7-Customizing-Node-Layout-Properties.md#what-are-the-node-layout-properties-and-what-are-they-set-to-by-default). x_pos is not applicable if you specify an SVG path using the `path` field, because the SVG path can be used to position the shape.
 
 #### **y_pos**
 This is the number of pixels vertically from the anchor point that the decoration is positioned. It can be positive or negative. If omitted it takes a default value from the [node layout properties](2.7-Customizing-Node-Layout-Properties.md#what-are-the-node-layout-properties-and-what-are-they-set-to-by-default). y_pos is not applicable if you specify an SVG path using the `path` field, because the SVG path can be used to position the shape.
 
 #### **width**
-This is the width for the decorator in pixels. For an image decorator, it is the width of the rectangle surrounding the image. For a label decorator it is the width allowed for display of the label text. If omitted it takes a default value from the [node layout properties](2.7-Customizing-Node-Layout-Properties.md#what-are-the-node-layout-properties-and-what-are-they-set-to-by-default) for Node decorations and from the canvas layout properties for Link properties. 
+This is the width for the decorator in pixels. For an image decorator, it is the width of the rectangle surrounding the image. For a label decorator it is the width allowed for display of the label text. If omitted it takes a default value from the [node layout properties](2.7-Customizing-Node-Layout-Properties.md#what-are-the-node-layout-properties-and-what-are-they-set-to-by-default) for Node decorations and from the canvas layout properties for Link properties.
 
 #### **height**
-This is the height for the decorator in pixels. For an image decorator, it is the height of the rectangle surrounding the image. For a label decorator it is the height allowed for display of the label text. If omitted it takes a default value from the [node layout properties](2.7-Customizing-Node-Layout-Properties.md#what-are-the-node-layout-properties-and-what-are-they-set-to-by-default) for Node decorations and from the canvas layout properties for Link properties. 
+This is the height for the decorator in pixels. For an image decorator, it is the height of the rectangle surrounding the image. For a label decorator it is the height allowed for display of the label text. If omitted it takes a default value from the [node layout properties](2.7-Customizing-Node-Layout-Properties.md#what-are-the-node-layout-properties-and-what-are-they-set-to-by-default) for Node decorations and from the canvas layout properties for Link properties.
 
 #### **hotspot**
-A Boolean. It defaults to false. When set to true the decoration becomes clickable and when it is clicked the [decorationCallbackHandler](2.2-Common-Canvas-callbacks.md#decorationactionhandler) is called with the ID of the decoration passed as a parameter.   
+A Boolean. It defaults to false. When set to true the decoration becomes clickable and when it is clicked the [decorationCallbackHandler](2.2-Common-Canvas-callbacks.md#decorationactionhandler) is called with the ID of the decoration passed as a parameter.
 
 #### **class_name**
-An optional class that will be applied to the decoration. You can add a style rule that references that class in your CSS to style the decoration and override the default styles. 
+An optional class that will be applied to the decoration. You can add a style rule that references that class in your CSS to style the decoration and override the default styles.
 
 #### **outline**
 A Boolean. It defaults to true. When a decoration is specified with an image field the image is typically displayed with a outline rectangle around it and with an offset within the rectangle to improve presentation. If `outline` is set to `false` the outline rectangle is **not** displayed and the image is displayed without any offset from its specified `x_pos` and `y_pos`.
 
 #### **tooltip**
-A String. When specified, the string will be shown in a tooltip when the pointer is hovered over the decoration. No tip will be displayed if the `tooltip` property is omitted. Note: for decoration tooltips to be displayed on the canvas, the `decorations` property of the `tipConfig` object in the canvas config must be set to true (which is its default setting).  
+A String. When specified, the string will be shown in a tooltip when the pointer is hovered over the decoration. No tip will be displayed if the `tooltip` property is omitted. Note: for decoration tooltips to be displayed on the canvas, the `decorations` property of the `tipConfig` object in the canvas config must be set to true (which is its default setting).
 
 #### **temporary**
 A Boolean. It defaults to false. When set to true the decoration object will _not_ be saved in the pipelineFlow document returned by the `CanvasController.getPipelineFlow()` method. Typically, this should be set to `true` when adding decorations programmatically to the nodes and links on the canvas.
@@ -192,4 +192,4 @@ A Boolean. It defaults to false. When set to true the decoration object will _no
 1. Using `x_pos` and `y_pos`, decorations can be displayed outside the node boundary.
 2. If no image or label or path is provided, the default decoration is a rectangle displayed with the class_name provided.
 3. You can specify as many decorations as you want by providing extra entries in the decorations array.
-4. Images and labels are positioned differently. For images, the position defined for the decoration is the top left corner of the image. For labels it is anchor point for the label which is the base line of the string in the vertical direction and is dependent on the text-anchor CSS property applied to the text. So if you apply the `text-anchor: middle` CSS property to the label in the style related to class_name the label will be centered on the point calculated for the position of the decoration.  
+4. Images and labels are positioned differently. For images, the position defined for the decoration is the top left corner of the image. For labels it is anchor point for the label which is the base line of the string in the vertical direction and is dependent on the text-anchor CSS property applied to the text. So if you apply the `text-anchor: middle` CSS property to the label in the style related to class_name the label will be centered on the point calculated for the position of the decoration.

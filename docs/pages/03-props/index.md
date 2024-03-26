@@ -1,10 +1,12 @@
+# Common Properties
+
 ## Introduction
 Common properties displays controls to view and set property values.
 
 You can look at the harness/src/client/App.js file of this repo to see examples of code that uses the common properties component.
 
 
-# Getting started with Common Properties programming
+## Getting started with Common Properties programming
 
 _Note: There are two ways one can use the Common Properties tooling: Either by allowing the form to be built dynamically from a parameterDef JSON (which is comprised of the base property set, ui-hints, conditions, and resources), or by explicitly providing the dialog form for rendering (deprecated). The first approach is recommended as an easier and clearer interface_
 
@@ -16,7 +18,7 @@ To use Common Properties in your React application you need to do the following.
 ```js
     import { CommonProperties } from "@elyra/canvas";
 ```
-**Properties Only** 
+**Properties Only**
 
 To import only common properties functionality in `cjs` format use:
 
@@ -39,9 +41,9 @@ propertiesInfo: {
   id: "{id}"	                            // Unique parameter definition ID [Optional]
 }
 ```
-[parameterDef schema and examples](https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/parameter-defs)  
-[3.1 Common Properties Parameter Definition](3.1-Common-Properties-Parameter-Definition.md)  
-[`expressionInfo` schema and examples](https://github.com/elyra-ai/pipeline-schemas/tree/master)  
+[parameterDef schema and examples](https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/parameter-defs)
+[3.1 Common Properties Parameter Definition](3.1-Common-Properties-Parameter-Definition.md)
+[`expressionInfo` schema and examples](https://github.com/elyra-ai/pipeline-schemas/tree/master)
 
 or...
 
@@ -57,8 +59,8 @@ propertiesInfo: {
   id: "{id}"	                                                // Unique parameter definition ID [Optional]
 }
 ```
-formData [schema](https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/form)  
-form information [wiki](https://github.com/elyra-ai/wml-canvas-service/wiki/2.-Runtimes-And-Operators)  
+formData [schema](https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/form)
+form information [wiki](https://github.com/elyra-ai/wml-canvas-service/wiki/2.-Runtimes-And-Operators)
 
 The optional messages attribute can be used to set validation messages associated with a node.  The format of the message objects is defined in [Pipelin Flow UI schema](https://github.com/elyra-ai/pipeline-schemas/blob/master/common-pipeline/pipeline-flow/pipeline-flow-ui-v1-schema.json)
 
@@ -85,7 +87,7 @@ var messages = i18nData.messages;
     />
   </IntlProvider>
 ```
-**Properties**  
+**Properties**
 
 - propertiesInfo `object`: See above
 - propertiesConfig `object`:
@@ -122,7 +124,7 @@ You can look at the **harness/src/intl/en.js** file of this repo to see the list
 **Reference methods**
 ```js
 /*
-* @closeEditor (boolean) - determines if closePropertiesDialog is called or not 
+* @closeEditor (boolean) - determines if closePropertiesDialog is called or not
 */
 applyPropertiesEditing(closeEditor)
 ```
@@ -137,7 +139,7 @@ Create a CommonProperties object with containerType set to "Custom" and rightFly
     const rightFlyoutContent =(<CommonProperties
         propertiesInfo={this.propertiesInfo}
         propertiesConfig={{ containerType: "Custom", rightFlyout: true }}
-        callbacks={this.callbacks}  
+        callbacks={this.callbacks}
     />);
 ```
 Pass the CommonProperties object into CommonCanvas's rightFlyoutContent props. Also set the showRightFlyout boolean to tell CommonCanvas when to show the rightFlyout.
@@ -195,7 +197,7 @@ closePropertiesDialog() {
 ```
 
 ### propertyListener()
-Executes when a user property values are updated.  
+Executes when a user property values are updated.
 
 ```js
 propertyListener(data) {
@@ -222,14 +224,14 @@ actionHandler(id, appData, data) {
 ```
 
 ### buttonHandler()
-Called when the edit button is clicked on in a `readonlyTable` control, or if a custom table button is clicked. The callback provides the following data: 
+Called when the edit button is clicked on in a `readonlyTable` control, or if a custom table button is clicked. The callback provides the following data:
 
 - data: an object that consists of
-    - type: of button the click was invoked from. 
+    - type: of button the click was invoked from.
         - `edit` is returned from the edit button click of a `readonlyTable` control.
         - `custom_button` is returned from the custom button click of a complex type control.
-    - propertyId: of the control that was clicked. 
-    - buttonId: of the button that was clicked from a custom table button. 
+    - propertyId: of the control that was clicked.
+    - buttonId: of the button that was clicked from a custom table button.
 
 ```js
 buttonHandler(data) {
@@ -238,12 +240,12 @@ buttonHandler(data) {
 ```
 
 ### buttonIconHandler()
-Called when there is a `buttons` uihints set in the `complex_type_info` section of the parameter definition. This buttonIconHandler expects a Carbon Icon jsx object as the return value from the callback. This is used to display the Carbon icon in the custom table button. The buttonIconHandler provides the following data: 
+Called when there is a `buttons` uihints set in the `complex_type_info` section of the parameter definition. This buttonIconHandler expects a Carbon Icon jsx object as the return value from the callback. This is used to display the Carbon icon in the custom table button. The buttonIconHandler provides the following data:
 
 - data: an object that consists of
     - type: `customButtonIcon`
-    - propertyId: of the control that was clicked. 
-    - buttonId: of the button that was clicked from a custom table button. 
+    - propertyId: of the control that was clicked.
+    - buttonId: of the button that was clicked from a custom table button.
     - carbonIcon: The name of the Carbon icon specified in the uihints. The corresponding jsx object is expected to be returned in the callback.
 
 ```js
@@ -266,7 +268,7 @@ helpClickHandler(nodeTypeId, helpData, appData) {
 }
 ```
 To control whether a node shows the help icon in the right fly-out, a help object with optional helpData needs to be provided in the paramDef or formData:
-- paramDef: Provide help object in operator's uihints. If help object exists, the icon will be shown. Optionally, provide a helpData object within the help object, which will be passed in the helpClickHandler callback.  
+- paramDef: Provide help object in operator's uihints. If help object exists, the icon will be shown. Optionally, provide a helpData object within the help object, which will be passed in the helpClickHandler callback.
 https://github.com/elyra-ai/pipeline-schemas/blob/master/common-pipeline/operators/uihints-v2-schema.json#L64
 - formData: add help object to form definition. The
 https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/form/form-v2-schema.json#L51
@@ -286,7 +288,7 @@ titleChangeHandler(title, callbackFunction) {
       type: "error",
       message: "Only 15 characters are allowed in title."
     });
-  } 
+  }
 }
 ```
 where:
