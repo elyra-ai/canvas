@@ -71,14 +71,14 @@ module.exports = function(grunt) {
 				},
 				{
 					expand: true,
-					flatten: true,
+					flatten: false,
 					cwd: "./node_modules/@ibm/plex/IBM-Plex-Sans/fonts/split",
 					src: ["**/*.woff"],
 					dest: ".build/fonts/IBM-Plex-Sans/fonts/split/woff"
 				},
 				{
 					expand: true,
-					flatten: true,
+					flatten: false,
 					cwd: "./node_modules/@ibm/plex/IBM-Plex-Sans/fonts/split",
 					src: ["**/*.woff2"],
 					dest: ".build/fonts/IBM-Plex-Sans/fonts/split/woff2"
