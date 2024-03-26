@@ -86,6 +86,11 @@ const rules = [
 		use: [
 			"file-loader?name=graphics/[contenthash].[ext]",
 		],
+	},
+	{
+		test: /\.(js|jsx)$/,
+		use: "react-hot-loader/webpack",
+		include: /node_modules/
 	}
 ];
 
