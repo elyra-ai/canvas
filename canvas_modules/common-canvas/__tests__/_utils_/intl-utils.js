@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import React from "react";
 import { IntlProvider } from "react-intl";
 import { shallow } from "enzyme";
 import { mount } from "./mount-utils.js";
@@ -25,14 +25,11 @@ const defaultLocale = "en-US";
 const locale = defaultLocale;
 
 export function mountWithIntl(node, inOptions) {
-	const options = Object.assign({
-		wrappingComponent: IntlProvider,
-		wrappingComponentProps: {
-			locale,
-			defaultLocale
-		}
-	}, inOptions);
-	return mount(node, options);
+	// eslint-disable-next-line react/prop-types
+	function Wrapper({ children }) {
+		return (<IntlProvider locale={locale} defaultLocale={defaultLocale}>{children}</IntlProvider>);
+	}
+	return mount(node, { wrapper: Wrapper, ...inOptions });
 }
 
 // Allow for custom resources to be applied from the test harness

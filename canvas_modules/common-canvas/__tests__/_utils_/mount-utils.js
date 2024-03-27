@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { mount as enzymeMount } from "enzyme";
+import { render } from "@testing-library/react";
 
 export function mount(param1, param2) {
 	// Workaround for problem using latest version (9.1.0) of react-resize-detector.
@@ -28,5 +27,5 @@ export function mount(param1, param2) {
 		disconnect: jest.fn(),
 	}));
 
-	return enzymeMount(param1, param2);
+	return render(param1, param2);
 }
