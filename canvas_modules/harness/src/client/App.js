@@ -21,7 +21,7 @@
 
 import React from "react";
 import Isvg from "react-inlinesvg";
-import ReactTooltip from "react-tooltip";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
@@ -84,10 +84,10 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
-import { Add32, Chat32, ChatOff32, ColorPalette32, Edit32, Play32, Scale32, Settings32, SelectWindow32,
-	StopFilledAlt32, Subtract32, TextScale32, TouchInteraction32 } from "@carbon/icons-react";
+import { Add, Chat, ChatOff, ColorPalette, Edit, Play, Scale, Settings, SelectWindow,
+	StopFilledAlt, Subtract, TextScale, TouchInteraction } from "@carbon/react/icons";
 
-import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "carbon-components-react";
+import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "@carbon/react";
 
 import {
 	SIDE_PANEL_CANVAS,
@@ -804,8 +804,9 @@ class App extends React.Component {
 	}
 
 	setPropertiesJSON(propertiesJson) {
-		this.setState({ propertiesJson: propertiesJson });
-		this.openPropertiesEditorDialog();
+		this.setState({ propertiesJson: propertiesJson }, () => {
+			this.openPropertiesEditorDialog();
+		});
 		this.log("Properties set");
 	}
 
@@ -1398,7 +1399,7 @@ class App extends React.Component {
 	buttonIconHandler(data, callbackIcon) {
 		// handle custom buttons icon
 		if (data.type === "customButtonIcon") {
-			callbackIcon(<Edit32 />);
+			callbackIcon(<Edit size={32} />);
 		}
 	}
 
@@ -2159,31 +2160,32 @@ class App extends React.Component {
 			];
 
 			const subMenuSize = [
-				{ action: "increase", label: "Increase", enable: true, iconEnabled: (<Add32 />) },
-				{ action: "decrease", label: "Decrease", enable: true, iconEnabled: (<Subtract32 />) }
+				{ action: "increase", label: "Increase", enable: true, iconEnabled: (<Add size={32} />) },
+				{ action: "decrease", label: "Decrease", enable: true, iconEnabled: (<Subtract size={32} />) }
 			];
 
 			toolbarConfig = {
 				leftBar: [
 					{ action: "palette", label: "Palette", enable: true },
 					{ divider: true },
-					{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt32 />) },
+					{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt size={32} />) },
 					{ divider: true },
-					{ action: "run", label: "Run", enable: true, iconEnabled: (<Play32 />) },
+					{ action: "run", label: "Run", enable: true, iconEnabled: (<Play size={32} />) },
 					{ divider: true },
 					{ action: "deleteSelectedObjects", label: "Delete", enable: true },
 					{ divider: true },
 					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
 					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
 					{ divider: true },
-					{ action: "settingspanel", iconEnabled: (<Settings32 />), label: "Settings", enable: true,
+					{ action: "settingspanel", iconEnabled: (<Settings />), label: "Settings", enable: true,
 						subPanel: AppSettingsPanel, subPanelData: { saveData: (settings) => window.alert("Panel data received by application.\n" + settings) } },
 					{ divider: true },
-					{ action: "text-size-submenu", incLabelWithIcon: "after", iconEnabled: (<TextScale32 />), label: "Text Size", enable: true, subMenu: subMenuTextSize, closeSubAreaOnClick: true },
+					{ action: "text-size-submenu", incLabelWithIcon: "after", iconEnabled: (<TextScale size={32} />), label: "Text Size", enable: true,
+						subMenu: subMenuTextSize, closeSubAreaOnClick: true },
 					{ divider: true },
-					{ action: "size-submenu", iconEnabled: (<Scale32 />), label: "Size", enable: true, subMenu: subMenuSize },
+					{ action: "size-submenu", iconEnabled: (<Scale size={32} />), label: "Size", enable: true, subMenu: subMenuSize },
 					{ divider: true },
-					{ action: "color-subpanel", iconEnabled: (<ColorPalette32 />), label: "Color picker", enable: true,
+					{ action: "color-subpanel", iconEnabled: (<ColorPalette size={32} />), label: "Color picker", enable: true,
 						subPanel: ColorPicker, subPanelData: { clickActionHandler: (color) => window.alert("Color selected = " + color) } },
 					{ divider: true },
 					{ action: "undo", label: "Undo", enable: true },
@@ -2202,18 +2204,18 @@ class App extends React.Component {
 			toolbarConfig = [
 				{ action: "palette", label: "Palette", enable: true },
 				{ divider: true },
-				{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt32 />) },
+				{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt size={32} />) },
 				{ action: "runSelection", label: "Run Selection", enable: true, incLabelWithIcon: "before", kind: "primary" },
 				{ divider: true },
-				{ action: "run", label: "Run", enable: true, iconEnabled: (<Play32 />) },
+				{ action: "run", label: "Run", enable: true, iconEnabled: (<Play size={32} />) },
 				{ divider: true },
 				{ action: "undo", label: "Undo", enable: true },
 				{ action: "redo", label: "Redo", enable: true },
 				{ divider: true },
 				{ action: "createAutoComment", label: "Add Comment", enable: true },
 				(this.canvasController.isHidingComments()
-					? { action: "commentsToggle", label: "Show comments", enable: true, iconEnabled: (<Chat32 />) }
-					: { action: "commentsToggle", label: "Hide comments", enable: true, iconEnabled: (<ChatOff32 />) }
+					? { action: "commentsToggle", label: "Show comments", enable: true, iconEnabled: (<Chat size={32} />) }
+					: { action: "commentsToggle", label: "Hide comments", enable: true, iconEnabled: (<ChatOff size={32} />) }
 				),
 				{ divider: true },
 				{ action: "deleteSelectedObjects", label: "Delete", enable: true },
@@ -2221,18 +2223,18 @@ class App extends React.Component {
 				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
 				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
 				{ divider: true },
-				{ action: "mouse", iconEnabled: (<SelectWindow32 />), label: "Mouse", enable: true, isSelected: this.state.selectedInteractionType === "Mouse" },
-				{ action: "trackpad", iconEnabled: (<TouchInteraction32 />), label: "Trackpad", enable: true, isSelected: this.state.selectedInteractionType === "Trackpad" },
+				{ action: "mouse", iconEnabled: (<SelectWindow size={32} />), label: "Mouse", enable: true, isSelected: this.state.selectedInteractionType === "Mouse" },
+				{ action: "trackpad", iconEnabled: (<TouchInteraction size={32} />), label: "Trackpad", enable: true, isSelected: this.state.selectedInteractionType === "Trackpad" },
 				{ divider: true }
 			];
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_BEFORE_AFTER) {
 			toolbarConfig = {
 				leftBar: [
-					{ action: "before-enabled", incLabelWithIcon: "before", label: "Before - enabled", enable: true, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
-					{ action: "before-disabled", incLabelWithIcon: "before", label: "Before - disbaled", enable: false, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
-					{ action: "after-enabled", incLabelWithIcon: "after", label: "After - enabled", enable: true, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
-					{ action: "after-disabled", incLabelWithIcon: "after", label: "After - disbaled", enable: false, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+					{ action: "before-enabled", incLabelWithIcon: "before", label: "Before - enabled", enable: true, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
+					{ action: "before-disabled", incLabelWithIcon: "before", label: "Before - disbaled", enable: false, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
+					{ action: "after-enabled", incLabelWithIcon: "after", label: "After - enabled", enable: true, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
+					{ action: "after-disabled", incLabelWithIcon: "after", label: "After - disbaled", enable: false, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
 				],
 				rightBar: [
 					{ divider: true },
@@ -2270,23 +2272,24 @@ class App extends React.Component {
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CARBON_BUTTONS) {
 			toolbarConfig = {
 				leftBar: [
-					{ action: "primary", label: "Primary", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit32 />) },
-					{ action: "danger", label: "Danger", enable: true, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit32 />) },
-					{ action: "secondary", label: "Secondary", enable: true, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit32 />) },
-					{ action: "tertiary", label: "Tertiary", enable: true, incLabelWithIcon: "before", kind: "tertiary", iconEnabled: (<Edit32 />) },
-					{ action: "ghost", label: "Ghost", enable: true, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit32 />) },
-					{ action: "default", label: "Default", enable: true, incLabelWithIcon: "before", iconEnabled: (<Edit32 />) },
+					{ action: "primary", label: "Primary", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit size={32} />) },
+					{ action: "danger", label: "Danger", enable: true, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit size={32} />) },
+					{ action: "secondary", label: "Secondary", enable: true, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit size={32} />) },
+					{ action: "tertiary", label: "Tertiary", enable: true, incLabelWithIcon: "before", kind: "tertiary", iconEnabled: (<Edit size={32} />) },
+					{ action: "ghost", label: "Ghost", enable: true, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit size={32} />) },
+					{ action: "default", label: "Default", enable: true, incLabelWithIcon: "before", iconEnabled: (<Edit size={32} />) },
 				],
 				rightBar: [
-					{ action: "dis-primary", label: "Primary", enable: false, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit32 />) },
-					{ action: "dis-danger", label: "Danger", enable: false, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit32 />) },
-					{ action: "dis-secondary", label: "Secondary", enable: false, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit32 />) },
-					{ action: "dis-ghost", label: "Ghost", enable: false, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit32 />) },
-					{ action: "dis-default", label: "Default", enable: false, incLabelWithIcon: "before", iconEnabled: (<Edit32 />) },
+					{ action: "dis-primary", label: "Primary", enable: false, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit size={32} />) },
+					{ action: "dis-danger", label: "Danger", enable: false, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit size={32} />) },
+					{ action: "dis-secondary", label: "Secondary", enable: false, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit size={32} />) },
+					{ action: "dis-ghost", label: "Ghost", enable: false, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit size={32} />) },
+					{ action: "dis-default", label: "Default", enable: false, incLabelWithIcon: "before", iconEnabled: (<Edit size={32} />) },
 				]
 			};
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOM_ACTIONS) {
+			const TextScale32 = React.forwardRef((props, ref) => <TextScale ref={ref} size={32} {...props} />);
 			// This example shows how custom JSX can be provided to the toolbar in the
 			// jsx field to replace the content specified in the other fields. The JSX
 			// added can be customized using the host applications own CSS.
@@ -2326,7 +2329,7 @@ class App extends React.Component {
 						action: "custom-button",
 						tooltip: "A custom button of type primary!",
 						jsx: (tabIndex) => (
-							<Button id={"custom-button"} size="field" kind="primary"
+							<Button id={"custom-button"} size="md" kind="primary"
 								onClick={(e) => window.alert("Button clicked!")}
 								className={"toolbar-jsx-obj"}
 								tabIndex={tabIndex}

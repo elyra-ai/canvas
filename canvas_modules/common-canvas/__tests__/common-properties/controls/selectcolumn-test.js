@@ -121,7 +121,7 @@ describe("selectcolumn control renders correctly", () => {
 			/>
 		);
 		const dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
-		const messageWrapper = dropdownWrapper.find("div.bx--form-requirement");
+		const messageWrapper = dropdownWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 
@@ -144,7 +144,7 @@ describe("selectcolumn control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
@@ -168,7 +168,7 @@ describe("selectcolumn control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
@@ -193,7 +193,7 @@ describe("selectcolumn control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
 		dropdownList.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal("");
@@ -392,17 +392,17 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
-		let dropdownList = selectField.find("div.bx--list-box__menu-item");
+		let dropdownList = selectField.find("div.cds--list-box__menu-item");
 		dropdownList.at(2).simulate("click");
 		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
 		dropdownButton = selectField.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
-		dropdownList = selectField.find("div.bx--list-box__menu-item");
+		dropdownList = selectField.find("div.cds--list-box__menu-item");
 		dropdownList.at(0).simulate("click");
 		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
-		const errorMsgDiv = selectField.find("div.bx--form-requirement");
+		const errorMsgDiv = selectField.find("div.cds--form-requirement");
 		expect(errorMsgDiv).to.have.length(0);
 	});
 
@@ -414,7 +414,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 
 	it("selectcolumn control should have aria-label", () => {
 		const selectColumnWrapper = wrapper.find("div[data-id='properties-ctrl-field1_panel']");
-		const selectColumnAriaLabelledby = selectColumnWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
+		const selectColumnAriaLabelledby = selectColumnWrapper.find(".cds--list-box__menu").prop("aria-labelledby");
 		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field1 Panel(required)");
 	});
 
@@ -440,14 +440,14 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 		let dropdownButton = fieldWrapperDropdown.find("button");
 		dropdownButton.simulate("click");
 		fieldWrapperDropdown = wrapper.find("div[data-id='properties-field'] Dropdown");
-		let dropdownList = fieldWrapperDropdown.find("div.bx--list-box__menu-item");
+		let dropdownList = fieldWrapperDropdown.find("div.cds--list-box__menu-item");
 		dropdownList.at(2).simulate("click");
 
 		let fieldWarningWrapperDropdown = wrapper.find("div[data-id='properties-field_warning'] Dropdown");
 		dropdownButton = fieldWarningWrapperDropdown.find("button");
 		dropdownButton.simulate("click");
 		fieldWarningWrapperDropdown = wrapper.find("div[data-id='properties-field_warning'] Dropdown");
-		dropdownList = fieldWarningWrapperDropdown.find("div.bx--list-box__menu-item");
+		dropdownList = fieldWarningWrapperDropdown.find("div.cds--list-box__menu-item");
 		dropdownList.at(2).simulate("click");
 
 		// Verify alerts are cleared by checking first tab is not the alert tab
@@ -504,7 +504,7 @@ describe("selectcolumn works correctly with multi input schemas", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		selectField = wrapper.find("div[data-id='properties-field'] Dropdown");
-		const dropdownList = selectField.find("div.bx--list-box__menu-item");
+		const dropdownList = selectField.find("div.cds--list-box__menu-item");
 		dropdownList.at(15).simulate("click");
 		const expectedValue = { link_ref: "1", field_name: "Na" };
 		expect(controller.getPropertyValue({ name: "field" })).to.eql(expectedValue);

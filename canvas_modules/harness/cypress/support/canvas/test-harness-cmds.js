@@ -80,12 +80,12 @@ Cypress.Commands.add("openCanvasAPI", (api) => {
 Cypress.Commands.add("dropdownSelect", (dropdownElement, selectedItemName) => {
 	// Get the list of drop down options
 	cy.get(dropdownElement)
-		.find(".bx--dropdown")
+		.find(".cds--dropdown")
 		.click();
 
 	// Select option from drop down list
-	cy.get(".bx--list-box__menu")
-		.find(".bx--list-box__menu-item")
+	cy.get(".cds--list-box__menu")
+		.find(".cds--list-box__menu-item")
 		.then((options) => options.filter((idx) => options[idx].outerText === selectedItemName))
 		.click();
 });
@@ -212,7 +212,7 @@ Cypress.Commands.add("clearNotificationCenterContent", (id) => {
 });
 
 Cypress.Commands.add("toggleNotificationCenterKeepOpen", () => {
-	cy.get("label[for='keepOpen'] .bx--toggle__switch").click();
+	cy.get("label[for='keepOpen'] .cds--toggle__switch").click();
 });
 
 Cypress.Commands.add("selectNotificationMessageType", (type) => {
@@ -282,5 +282,5 @@ Cypress.Commands.add("clickBreadcrumb", (breadCrumb) => {
 });
 
 Cypress.Commands.add("toggleApplyOnBlur", () => {
-	cy.get("div[data-id='properties-applyOnBlur'] label.bx--toggle-input__label").click();
+	cy.get("div[data-id='properties-applyOnBlur'] label.cds--toggle-input__label").click();
 });

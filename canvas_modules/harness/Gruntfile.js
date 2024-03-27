@@ -61,15 +61,6 @@ module.exports = function(grunt) {
 					dest: ".build"
 				}]
 			},
-			fonts: {
-				files: [{
-					expand: true,
-					flatten: false,
-					cwd: "./node_modules/@ibm/plex",
-					src: ["IBM-Plex*/**"],
-					dest: ".build/fonts"
-				}]
-			},
 			styleguide: {
 				files: [{
 					expand: true,
@@ -84,6 +75,13 @@ module.exports = function(grunt) {
 					cwd: "./node_modules/react-virtualized/",
 					src: ["styles.css"],
 					dest: ".build/css/react-virtualized"
+				},
+				{
+					expand: true,
+					flatten: false,
+					cwd: "./node_modules/@carbon/charts-react/dist",
+					src: ["styles.min.css"],
+					dest: ".build/css/@carbon/charts-react"
 				}]
 			}
 		},
@@ -117,7 +115,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-contrib-copy");
 	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint"]);
 
-	var buildTasks = ["clean", "lint", "sass", "copy:graphics", "copy:styleguide", "copy:fonts"];
+	var buildTasks = ["clean", "lint", "sass", "copy:graphics", "copy:styleguide"];
 	if (IS_PRODUCTION) {
 		buildTasks = buildTasks.concat(["webpack"]);
 	}

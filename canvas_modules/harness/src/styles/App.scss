@@ -42,7 +42,7 @@ $harness-navbar-icon-width: 48px;
 }
 
 .harness-title {
-	color: $text-01;
+	color: $text-primary;
 	min-width: $harness-navbar-title-width;
 	display: block;
 	font-size: 14px;
@@ -52,7 +52,7 @@ $harness-navbar-icon-width: 48px;
 }
 
 .harness-version {
-	color: $text-01;
+	color: $text-primary;
 	display: block;
 	font-size: 8px;
 	text-align: right;
@@ -68,12 +68,12 @@ $harness-navbar-icon-width: 48px;
 	width: 174px;
 	height: 121px;
 	opacity: 0.5;
-	fill: $text-02;
+	fill: $text-secondary;
 }
 
 .harness-empty-link {
 	display: block;
-	color: $text-02;
+	color: $text-secondary;
 	font-size: 20px;
 	text-align: center;
 	text-decoration: underline;
@@ -84,7 +84,7 @@ $harness-navbar-icon-width: 48px;
 
 .harness-empty-text {
 	display: block;
-	color: $text-02;
+	color: $text-secondary;
 	font-size: 20px;
 	text-align: center;
 	user-select: none;
@@ -103,8 +103,8 @@ $harness-navbar-icon-width: 48px;
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-	background-color: $ui-01;
-	border-bottom: 2px solid $ui-03;
+	background-color: $layer-01;
+	border-bottom: 2px solid $layer-accent-01;
 }
 
 .harness-navbar-li {
@@ -118,12 +118,12 @@ $harness-navbar-icon-width: 48px;
 		text-align: center;
 		padding: 14px;
 		width: 18px;
-		fill: $icon-01;
+		fill: $icon-primary;
 		box-sizing: content-box;
 		cursor: pointer;
 
 		&:hover {
-			background-color: $ui-03;
+			background-color: $layer-accent-01;
 		}
 	}
 }
@@ -133,7 +133,7 @@ $harness-navbar-icon-width: 48px;
 }
 
 .harness-nav-divider {
-	border-left: 1px solid $ui-03;
+	border-left: 1px solid $layer-accent-01;
 }
 
 /* Navbar Breadcrumbs */
@@ -155,17 +155,17 @@ $harness-navbar-icon-width: 48px;
 		background-color: transparent;
 		padding: 0 5px;
 		font-size: 12px;
-		color: $text-01;
+		color: $text-primary;
 
 		&:hover {
-			color: $link-01;
+			color: $link-primary;
 			text-decoration-line: underline;
 		}
 		&.last-item {
 			cursor: default;
 			height: 10px;
 			&:hover {
-				color: $text-01;
+				color: $text-primary;
 				text-decoration-line: none;
 			}
 		}
@@ -177,9 +177,9 @@ $harness-navbar-icon-width: 48px;
 }
 
 .harness-panel-temp-content {
-	background-color: $ui-01;
+	background-color: $layer-01;
 	padding: 30px;
-	color: $text-02;
+	color: $text-secondary;
 	font-size: 20px;
 	pointer-events: none;
 	user-select: none;

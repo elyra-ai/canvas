@@ -1,3 +1,6 @@
+# Common Canvas
+
+
 ## Introduction
 Common canvas displays a flow of data operations as nodes and links which the user can create and edit to get the flow they want. These visual flows of data operations are translated into data processing steps performed by a back-end server. Common canvas provides functionality for the visual display of flows in the browser and leaves persistence and execution of data flows to the application.
 Within common canvas the user can perform operations such as:
@@ -9,34 +12,41 @@ Within common canvas the user can perform operations such as:
 * Delete a link by clicking a context menu option.
 * Add a comment to the canvas and draw a link from it to one or more nodes.
 * Edit a comment.
-* Move nodes and comments around in the canvas to get the desired arrangement.  
+* Move nodes and comments around in the canvas to get the desired arrangement.
 * And more! ...
 
-# Architecture
 
 ## Common Canvas react object
-   Common-canvas is a react component that can be used in your react application to display a fully-functional canvas user interface including the function mentioned above. The `<CommonCanvas>` component is displayed in a `<div>` provided by your application. 
+   Common-canvas is a react component that can be used in your react application to display a fully-functional canvas user interface including the function mentioned above. The `<CommonCanvas>` component is displayed in a `<div>` provided by your application. Here's some sample code to show the mnimum needed to get a working canvas.
 
-Common-canvas has these constituent parts that are visible to the user:
+```
+import React from "react";
+import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
+import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
+import { CommonCanvas, CanvasController } from "@elyra/canvas";
 
-* [Canvas editor](2.0.1-Canvas-Editor.md) - the main area of the UI where the flow is displayed and edited
-* [Palette](2.0.2-Palette.md) - a set of node templates that can be dragged to the canvas to create new nodes
-* [Context menu](2.0.3-Context-Menu.md) - a menu of options for nodes, comments, etc
-* [Context toolbar](2.0.4-Context-Toolbar.md) - a menu of options for nodes, comments, etc presented as a small toolbar
-* Toolbar - a set of tools across the top of the UI
-* Notification panel - a panel for displaying runtime and other messages to your user
-* Right side flyout - a panel, often used to display node properties
-* Top panel - a panel which can be used to display other app related information
-* Bottom panel - a panel which can be used to display other app related information
+class App extends React.Component {
+	constructor(props) {
+		super(props);
 
-and it handles: 
+		this.canvasController = new CanvasController();
+		this.canvasController.setPipelineFlow(AllTypesCanvas);
+		this.canvasController.setPipelineFlowPalette(ModelerPalette);
+	}
 
-  1. the visual display of the flow of operations;
-  2. any user gestures on the canvas;
-  3. display of context menus;
-  4. display and handling of the palette.
-  5. provision of callbacks to tell your code what operations the user is performing on the canvas
-  6. and much much more.
+	render() {
+		return (
+			<div id="harness-app-container">
+				<CommonCanvas
+					canvasController={this.canvasController}
+				/>
+			</div>
+		);
+	}
+}
+```
+
+
 
 ## Canvas Controller
 
@@ -63,7 +73,7 @@ The only mandatory parameter for the `<CommonCanvas>` component is a regular Jav
 ## Hello Canvas!
   You can start by looking at these two 'hello  world' examples for using common canvas:
 
-* This first one called [app-tiny.js](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js) has the bare minimum necessary to get a fully functioning common-canvas to appear including all the basic functionality, a palette and a flow of nodes and links. 
+* This first one called [app-tiny.js](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js) has the bare minimum necessary to get a fully functioning common-canvas to appear including all the basic functionality, a palette and a flow of nodes and links.
 * The second, called [app-small.js](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-small.js), shows many of the options available to a common-canvas developer such as configurations and callback handlers.
 
 You can also look at the [App.js](https://github.com/elyra-ai/canvas/blob/49ed634e3353d8f5c58eb8409ed8e1009f19c87a/canvas_modules/harness/src/client/App.js) file in the test harness section of this repo to see examples of code that uses the common canvas component.
@@ -75,7 +85,7 @@ You can also look at the [App.js](https://github.com/elyra-ai/canvas/blob/49ed63
 
 Enter:
 ```
-     npm install @elyra/canvas 
+     npm install @elyra/canvas
 ```
 
 ## Step 2 : Import Common-canvas
@@ -109,10 +119,10 @@ Next you'll need to populate the palette data. This will specify the nodes (spli
 ```js
     this.canvasController.setPipelineFlowPalette(pipelineFlowPalette);
 ```
-The pipelineFlowPalette object should conform to the JSON schema found here:    
+The pipelineFlowPalette object should conform to the JSON schema found here:
 https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/palette
 
-Some examples of palette JSON files can be found here:    
+Some examples of palette JSON files can be found here:
 https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resources/palettes
 
 ## Step 5 : (Optional) Set the flow data
@@ -121,10 +131,10 @@ This is an optional step. If you want a previously saved flow to be shown in the
     this.canvasController.setPipelineFlow(pipelineFlow);
 ```
 
-The pipelineFlow object should conform to the JSON schema found here:    
+The pipelineFlow object should conform to the JSON schema found here:
 https://github.com/elyra-ai/pipeline-schemas/tree/master/common-pipeline/pipeline-flow
 
-Some examples of pipeline flow JSON files can be found here:    
+Some examples of pipeline flow JSON files can be found here:
 https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resources/diagrams
 
 ## Step 6 : Pull in the CSS
@@ -143,7 +153,7 @@ Finally you'll need to display the canvas object inside an `<IntlProvider>` obje
 The div should have the dimensions you want for your canvas to display in your page. For the canvasController property, pass the instance of canvas controller you created earlier. This is the only mandatory property. After providing this and running your code you will have a fully functioning canvas including: a palette; default toolbar; context menus; direct manipulation (move and resize) etc. To customize these behaviors and presentation continue with the sections below.
 
 ## Common Canvas customization
-If you want to customize the behavior of common canvas you can specify any combination of the following optional settings:   
+If you want to customize the behavior of common canvas you can specify any combination of the following optional settings:
 ```html
     <div>
         <CommonCanvas
@@ -157,10 +167,10 @@ If you want to customize the behavior of common canvas you can specify any combi
 
             contextMenuHandler={this.contextMenuHandler}
             beforeEditActionHandler={this.beforeEditActionHandler}
-            editActionHandler={this.editActionHandler}    
-            clickActionHandler={this.clickActionHandler}   
+            editActionHandler={this.editActionHandler}
+            clickActionHandler={this.clickActionHandler}
             decorationActionHandler={this.decorationActionHandler}
-            layoutHandler={this.layoutHandler}  
+            layoutHandler={this.layoutHandler}
             tipHandler={this.tipHandler}
             idGeneratorHandler={this.idGeneratorHandler}
             selectionChangeHandler={this.selectionChangeHandler}
@@ -226,7 +236,7 @@ Common canvas supports a number of keyboard interactions as follows:
 
 |Keyboard Shortcut|Action|Description|
 |---|---|---|
-|Ctrl/Cmnd + a|selectAll|Select All objects   
+|Ctrl/Cmnd + a|selectAll|Select All objects
 |delete|deleteSelectedObjects|Delete currently selected objects|
 |Ctrl/Cmnd + x|cut|Cut selected objects to the clipboard|
 |Ctrl/Cmnd + c|copy|Copy selected objects to the clipboard|

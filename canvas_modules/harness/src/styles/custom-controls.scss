@@ -16,7 +16,6 @@
 
 /* These are used in custom common-properties */
 
-
 .harness-custom-control-custom-map-summary {
 	span {
 		display: flex;
@@ -35,10 +34,10 @@
 	.icon {
 		padding-right: 3px;
 		.warning {
-			fill: $support-03;
+			fill: $support-warning;
 		}
 		.error {
-			fill: $support-01;
+			fill: $support-error;
 		}
 	}
 }
@@ -52,7 +51,7 @@
 	th {
 		font-weight: 600;
 		text-align: left;
-		border-bottom: 2px solid $ui-03;
+		border-bottom: 2px solid $layer-accent-01;
 		padding: 10px 0 5px;
 	}
 	td {

@@ -20,7 +20,7 @@ import React from "react";
 import { injectIntl } from "react-intl";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import { Search } from "carbon-components-react";
+import { Search, Layer } from "@carbon/react";
 import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
 import { REM_ROW_HEIGHT, REM_HEADER_HEIGHT, ONE_REM_HEIGHT, SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
 import ReactResizeDetector from "react-resize-detector";
@@ -494,15 +494,16 @@ class FlexibleTable extends React.Component {
 
 			searchBar = (
 				<div className={classNames("properties-ft-search-container", { "disabled": disabled })}>
-					<Search
-						className="properties-ft-search-text"
-						placeholder={placeHolder}
-						onChange={this.handleFilterChange}
-						disabled={disabled}
-						size="sm"
-						labelText={searchBarLabel}
-						light={this.props.light}
-					/>
+					<Layer level={this.props.light ? 1 : 0}>
+						<Search
+							className="properties-ft-search-text"
+							placeholder={placeHolder}
+							onChange={this.handleFilterChange}
+							disabled={disabled}
+							size="sm"
+							labelText={searchBarLabel}
+						/>
+					</Layer>
 				</div>
 			);
 		}

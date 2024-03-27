@@ -41,16 +41,16 @@
 	align-items: center;
 	padding-bottom: $spacing-03;
 	label, .properties-indicator {
-		@include carbon--type-style("label-01");
-		color: $text-02;
+		@include type-style("label-01");
+		color: $text-secondary;
 	}
 	.properties-indicator {
 		padding-left: $spacing-02;
 	}
 	&.table-control {
 		label, .properties-indicator {
-			@include carbon--type-style("productive-heading-01");
-			color: $text-01;
+			@include type-style("productive-heading-01");
+			color: $text-primary;
 		}
 	}
 }
@@ -66,14 +66,14 @@
 }
 
 .properties-control-description {
-	@include carbon--type-style("helper-text-01");
-	color: $text-02;
+	@include type-style("helper-text-01");
+	color: $text-secondary;
 	padding-bottom: $spacing-03;
 	white-space: pre-wrap; // Add a line break for \n
 }
 
-// Removed padding in properties-label-container because .bx--label has margin-bottom: $spacing-03
-.bx--label {
+// Removed padding in properties-label-container because .cds--label has margin-bottom: $spacing-03
+.cds--label {
 	.properties-label-container {
 		padding-bottom: 0;
 	}

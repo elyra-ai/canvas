@@ -17,7 +17,7 @@
 
 .properties-table-cell-control { // overrides when in a table cell
 	.properties-dropdown {
-		.bx--multi-select__wrapper > label { // hidden label should not take any space in table cell
+		.cds--multi-select__wrapper > label { // hidden label should not take any space in table cell
 			display: none;
 		}
 	}

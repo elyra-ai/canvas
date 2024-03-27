@@ -114,7 +114,7 @@ describe("Palette search renders correctly", () => {
 			showPalette: true,
 			palette: testPalette3NoDesc
 		};
-		const { container, getByTestId, getAllByTestId } = createMountedPalette(config);
+		const { container } = createMountedPalette(config);
 
 		// Simulate click on search input to open palette with search bar
 		const searchInput = container.querySelector("div.palette-flyout-search-container");
@@ -180,13 +180,14 @@ describe("Palette renders correctly", () => {
 
 	it("should leave currently opened category open when a new category is opened", () => {
 		const canvasController = new CanvasController();
-		const { getByText, container, rerender} = createMountedPalette({ canvasController });
+		const { getByText, container, rerender } = createMountedPalette({ canvasController });
 
 		const importCat = getByText("Import");
 		fireEvent.click(importCat);
-		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()} 
-					showPalette={true}
-					canvasController={canvasController} />);
+		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
+			showPalette
+			canvasController={canvasController}
+		/>);
 
 		expect(container.querySelectorAll(".palette-content-list")).toHaveLength(1);
 		expect(container.querySelectorAll(".palette-list-item-icon-and-text")).toHaveLength(3);
@@ -370,7 +371,7 @@ function createMountedPalette(config) {
 function findCategoryElement(flyoutPaletteContent, categoryName) {
 	var categories = flyoutPaletteContent.getElementsByClassName("palette-flyout-category");
 	for (const item of categories) {
-		if ( item.getAttribute('data-id') === categoryName) {
+		if (item.getAttribute("data-id") === categoryName) {
 			return item;
 		}
 	}
@@ -378,6 +379,8 @@ function findCategoryElement(flyoutPaletteContent, categoryName) {
 }
 
 function getOpenCategories(wrapper) {
-	const categoryList2 = wrapper.querySelector("div.palette-flyout-categories");
-	return categoryList2.querySelectorAll(".bx--accordion__item--active");
+	// const categoryList2 = wrapper.querySelector("div.palette-flyout-categories");
+	// return categoryList2.querySelectorAll(".bx--accordion__item--active");
+	const categoryList2 = wrapper.find("div.palette-flyout-categories");
+	return categoryList2.find(".cds--accordion__item--active");
 }

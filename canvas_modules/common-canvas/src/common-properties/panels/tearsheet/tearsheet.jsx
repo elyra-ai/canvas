@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import classNames from "classnames";
 import { formatMessage } from "./../../util/property-utils";
-import { ComposedModal, ModalHeader, ModalBody } from "carbon-components-react";
+import { ComposedModal, ModalHeader, ModalBody } from "@carbon/react";
 import { Portal } from "react-portal";
 import { MESSAGE_KEYS } from "./../../constants/constants";
 import PropertiesButtons from "../../components/properties-buttons";

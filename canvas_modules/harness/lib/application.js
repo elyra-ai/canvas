@@ -96,7 +96,6 @@ function _configureHmr(app) {
 	// in the webpack config, but we are applying this middleware to
 	// a route mounted at constants.APP_PATH already
 	hmrRouter.use(require("webpack-dev-middleware")(compiler, {
-		noInfo: true,
 		publicPath: "/"
 	}));
 	hmrRouter.use(require("webpack-hot-middleware")(compiler));

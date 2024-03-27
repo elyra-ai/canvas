@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { has } from "lodash";
-import { Checkbox } from "carbon-components-react";
+import { Checkbox } from "@carbon/react";
 
 // Reusable component to show tooltip if the content is truncated
 export default class TruncatedContentTooltip extends React.Component {
