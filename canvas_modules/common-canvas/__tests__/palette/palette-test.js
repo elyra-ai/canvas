@@ -17,8 +17,6 @@
 import React from "react";
 import { mountWithIntl } from "../_utils_/intl-utils";
 import PaletteDialog from "../../src/palette/palette-dialog.jsx";
-import PaletteDialogTopbar from "../../src/palette/palette-dialog-topbar.jsx";
-import PaletteDialogContent from "../../src/palette/palette-dialog-content.jsx";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import sinon from "sinon";
 

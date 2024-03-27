@@ -24,21 +24,10 @@ import * as HarnessBundles from "../../../harness/src/intl/locales";
 const defaultLocale = "en-US";
 const locale = defaultLocale;
 
-export function mountWithIntl1(node, inOptions) {
-	const options = Object.assign({
-		wrappingComponent: IntlProvider,
-		wrappingComponentProps: {
-			locale,
-			defaultLocale
-		}
-	}, inOptions);
-	return mount(node, options);
-}
-
-
 export function mountWithIntl(node, inOptions) {
-	function Wrapper({children}) {
-		return (<IntlProvider locale={locale}>{children}</IntlProvider>);
+	// eslint-disable-next-line react/prop-types
+	function Wrapper({ children }) {
+		return (<IntlProvider locale={locale} defaultLocale={defaultLocale}>{children}</IntlProvider>);
 	}
 	return mount(node, { wrapper: Wrapper, ...inOptions });
 }

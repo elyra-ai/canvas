@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 import React from "react";
-import { fireEvent, act, waitFor, screen } from "@testing-library/react";
+import { fireEvent, waitFor } from "@testing-library/react";
 import { mountWithIntl } from "../_utils_/intl-utils";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
-import PaletteFlyoutContent from "../../src/palette/palette-flyout-content.jsx";
-import PaletteFlyoutContentCategory from "../../src/palette/palette-flyout-content-category.jsx";
-import PaletteFlyoutContentFilteredList from "../../src/palette/palette-flyout-content-filtered-list.jsx";
-import PaletteFlyoutContentList from "../../src/palette/palette-content-list.jsx";
-import PaletteContentListItem from "../../src/palette/palette-content-list-item.jsx";
+import { expect } from "chai";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 
 import imageTestPalette from "../test_resources/palettes/image-test-palette.json";
@@ -51,38 +47,38 @@ describe("Palette search renders correctly", () => {
 
 		await simulateSearchEntry(searchInput, "data");
 		await waitFor(() => {
-			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(4);
-			expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
+			expect(container.getElementsByClassName("palette-list-item search-result")).to.have.length(4);
+			expect(container.getElementsByClassName("palette-scroll")).to.have.length(1);
 		});
 
 		await simulateSearchEntry(searchInput, "var");
 		await waitFor(() => {
-			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(1);
-			expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
+			expect(container.getElementsByClassName("palette-list-item search-result")).to.have.length(1);
+			expect(container.getElementsByClassName("palette-scroll")).to.have.length(1);
 		});
 
 		await simulateSearchEntry(searchInput, "data import");
 		await waitFor(() => {
-			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(4);
-			expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
+			expect(container.getElementsByClassName("palette-list-item search-result")).to.have.length(4);
+			expect(container.getElementsByClassName("palette-scroll")).to.have.length(1);
 		});
 
 		await simulateSearchEntry(searchInput, "d");
 		await waitFor(() => {
-			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(5);
-			expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
+			expect(container.getElementsByClassName("palette-list-item search-result")).to.have.length(5);
+			expect(container.getElementsByClassName("palette-scroll")).to.have.length(1);
 		});
 
 		await simulateSearchEntry(searchInput, "import data");
 		await waitFor(() => {
-			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(4);
-			expect(container.getElementsByClassName("palette-scroll")).toHaveLength(1);
+			expect(container.getElementsByClassName("palette-list-item search-result")).to.have.length(4);
+			expect(container.getElementsByClassName("palette-scroll")).to.have.length(1);
 		});
 
 		await simulateSearchEntry(searchInput, "xxxxx");
 		await waitFor(() => {
-			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(0);
-			expect(container.getElementsByClassName("palette-no-results-title")).toHaveLength(1);
+			expect(container.getElementsByClassName("palette-list-item search-result")).to.have.length(0);
+			expect(container.getElementsByClassName("palette-no-results-title")).to.have.length(1);
 		});
 	});
 
@@ -96,15 +92,15 @@ describe("Palette search renders correctly", () => {
 
 		await simulateSearchEntry(searchInput, "t");
 		await waitFor(() => {
-			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(1);
+			expect(container.getElementsByClassName("palette-list-item search-result")).to.have.length(1);
 		});
 
 		await simulateSearchEntry(searchInput, "test");
 
 		await simulateSearchEntry(searchInput, "xxxxx");
 		await waitFor(() => {
-			expect(container.getElementsByClassName("palette-list-item search-result")).toHaveLength(0);
-			expect(container.getElementsByClassName("palette-no-results-title")).toHaveLength(1);
+			expect(container.getElementsByClassName("palette-list-item search-result")).to.have.length(0);
+			expect(container.getElementsByClassName("palette-no-results-title")).to.have.length(1);
 		});
 
 	});
@@ -127,10 +123,10 @@ describe("Palette search renders correctly", () => {
 		const exp = ["ImportVar. File", "OutputsTable", "OutputsData Audit"];
 		await waitFor(() => {
 			const contentListItems = container.getElementsByClassName("palette-list-item search-result");
-			expect(contentListItems).toHaveLength(3);
+			expect(contentListItems).to.have.length(3);
 
 			exp.forEach((item, idx) => {
-				expect(contentListItems[idx].textContent).toContain(item);
+				expect(contentListItems[idx].textContent).to.equal(item);
 			});
 		});
 
@@ -139,13 +135,13 @@ describe("Palette search renders correctly", () => {
 
 		await waitFor(() => {
 			const contentListItems2 = container.getElementsByClassName("palette-list-item search-result");
-			expect(contentListItems2).toHaveLength(2);
+			expect(contentListItems2).to.have.length(2);
 
 			// Asserting the text content of the filtered search result
 			const exp2 = ["OutputsTable", "OutputsData Audit"];
 
 			exp2.forEach((item, idx) => {
-				expect(contentListItems2[idx].textContent).toContain(item);
+				expect(contentListItems2[idx].textContent).to.equal(item);
 			});
 		});
 	});
@@ -160,23 +156,13 @@ describe("Palette renders correctly", () => {
 
 	it("should use a `.palette-flyout-div` CSS class", () => {
 		const { container } = createMountedPalette();
-		expect(container.getElementsByClassName("palette-flyout-div")).toHaveLength(1);
+		expect(container.getElementsByClassName("palette-flyout-div")).to.have.length(1);
 	});
 
-	// it("should render 1 <PaletteFlyoutContent/> component", () => {
-	// 	const flyoutPalette = createMountedPalette();
-	// 	expect(flyoutPalette.find(PaletteFlyoutContent)).to.have.length(1);
-	// });
-
-	// it("should render 1 <PaletteFlyoutContent/> component", () => {
-	// 	const flyoutPalette = createMountedPalette();
-	// 	expect(flyoutPalette.find(PaletteFlyoutContent)).to.have.length(1);
-	// });
-
-	// it("should render 2 <PaletteFlyoutContentCategory/> component", () => {
-	// 	const flyoutPaletteContent = createMountedPalette().find(PaletteFlyoutContent);
-	// 	expect(flyoutPaletteContent.find(PaletteFlyoutContentCategory)).to.have.length(2);
-	// });
+	it("should render 2 <PaletteFlyoutContentCategory/> component", () => {
+		const { container } = createMountedPalette();
+		expect(container.getElementsByClassName("palette-flyout-category")).to.have.length(2);
+	});
 
 	it("should leave currently opened category open when a new category is opened", () => {
 		const canvasController = new CanvasController();
@@ -187,172 +173,228 @@ describe("Palette renders correctly", () => {
 		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
 			showPalette
 			canvasController={canvasController}
+			isEditingEnabled
+			enableNarrowPalette
 		/>);
 
-		expect(container.querySelectorAll(".palette-content-list")).toHaveLength(1);
-		expect(container.querySelectorAll(".palette-list-item-icon-and-text")).toHaveLength(3);
+		expect(container.querySelectorAll(".palette-content-list")).to.have.length(1);
+		expect(container.querySelectorAll(".palette-list-item-icon-and-text")).to.have.length(3);
 
 		const counts = getOpenCategories(container);
-		expect(counts).toHaveLength(1);
+		expect(counts).to.have.length(1);
 
 
-		const outputsCat = findCategoryElement(container, "output");
+		const outputsCat = getByText("Outputs");
 		fireEvent.click(outputsCat);
-		// wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+		rerender(<PaletteFlyout
+			paletteJSON={canvasController.getPaletteData()}
+			showPalette
+			canvasController={canvasController}
+			isEditingEnabled
+			enableNarrowPalette
+		/>);
 
-		// expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
-		// expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
+		expect(container.querySelectorAll(".palette-content-list")).to.have.length(2);
+		expect(container.querySelectorAll(".palette-list-item-icon-and-text")).to.have.length(5);
 
-		// const counts2 = getOpenCategories(wrapper);
-		// expect(counts2).to.have.length(2);
+		const counts2 = getOpenCategories(container);
+		expect(counts2).to.have.length(2);
 	});
 
-	// it("should close a category when two categories are currently open", () => {
-	// 	const canvasController = new CanvasController();
-	// 	const wrapper = createMountedPalette({ canvasController });
+	it("should close a category when two categories are currently open", () => {
+		const canvasController = new CanvasController();
+		const { container, rerender, getByText } = createMountedPalette({ canvasController });
 
-	// 	const importCat = findCategoryElement(wrapper, "Import");
-	// 	importCat.simulate("click");
-	// 	wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+		const importCat = getByText("Import");
+		fireEvent.click(importCat);
 
-	// 	const outputsCat = findCategoryElement(wrapper, "Outputs");
-	// 	outputsCat.simulate("click");
-	// 	wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
+			showPalette
+			canvasController={canvasController}
+			isEditingEnabled
+			enableNarrowPalette
+		/>);
 
-	// 	expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
-	// 	expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
-	// 	const counts = getOpenCategories(wrapper);
-	// 	expect(counts).to.have.length(2);
+		const outputsCat = getByText("Outputs");
+		fireEvent.click(outputsCat);
 
-	// 	// We now click the Import category again to close it
-	// 	const importCat2 = findCategoryElement(wrapper, "Import");
-	// 	importCat2.simulate("click");
-	// 	wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
+			showPalette
+			canvasController={canvasController}
+			isEditingEnabled
+			enableNarrowPalette
+		/>);
 
-	// 	// When the Import category is closed and the Outputs category is opened
-	// 	// we should have 1 palette flyout content list object because
-	// 	// content lists are removed when a category is closed.
-	// 	expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(1);
-	// 	expect(wrapper.find(PaletteContentListItem)).to.have.length(2);
+		expect(container.getElementsByClassName("palette-content-list")).to.have.length(2);
+		expect(container.getElementsByClassName("palette-list-item-icon-and-text")).to.have.length(5);
 
-	// 	const counts2 = getOpenCategories(wrapper);
-	// 	expect(counts2).to.have.length(1);
+		const counts = getOpenCategories(container);
+		expect(counts).to.have.length(2);
 
-	// });
+		// We now click the Import category again to close it
+		const importCat2 = getByText("Import");
+		fireEvent.click(importCat2);
+		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
+			showPalette
+			canvasController={canvasController}
+			isEditingEnabled
+			enableNarrowPalette
+		/>);
 
-	// it("should open/close all categories when calling openAllPaletteCategories/closeAllPaletteCategories", () => {
-	// 	const canvasController = new CanvasController();
-	// 	const wrapper = createMountedPalette({ canvasController });
+		// When the Import category is closed and the Outputs category is opened
+		// we should have 1 palette flyout content list object because
+		// content lists are removed when a category is closed.
+		expect(container.getElementsByClassName("palette-content-list")).to.have.length(1);
+		expect(container.getElementsByClassName("palette-list-item-icon-and-text")).to.have.length(2);
 
-	// 	canvasController.openAllPaletteCategories();
-	// 	wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+		const counts2 = getOpenCategories(container);
+		expect(counts2).to.have.length(1);
 
-	// 	expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
-	// 	expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
-	// 	const counts = getOpenCategories(wrapper);
-	// 	expect(counts).to.have.length(2);
 
-	// 	canvasController.closeAllPaletteCategories();
-	// 	wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+	});
 
-	// 	expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(0);
-	// 	expect(wrapper.find(PaletteContentListItem)).to.have.length(0);
-	// 	const counts2 = getOpenCategories(wrapper);
-	// 	expect(counts2).to.have.length(0);
+	it("should open/close all categories when calling openAllPaletteCategories/closeAllPaletteCategories", () => {
+		const canvasController = new CanvasController();
+		const { container, rerender } = createMountedPalette({ canvasController });
 
-	// });
+		canvasController.openAllPaletteCategories();
+		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
+			showPalette
+			canvasController={canvasController}
+			isEditingEnabled
+			enableNarrowPalette
+		/>);
+
+		expect(container.getElementsByClassName("palette-content-list")).to.have.length(2);
+		expect(container.getElementsByClassName("palette-list-item-icon-and-text")).to.have.length(5);
+		const counts = getOpenCategories(container);
+		expect(counts).to.have.length(2);
+
+		canvasController.closeAllPaletteCategories();
+		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
+			showPalette
+			canvasController={canvasController}
+			isEditingEnabled
+			enableNarrowPalette
+		/>);
+
+		expect(container.getElementsByClassName("palette-content-list")).to.have.length(0);
+		expect(container.getElementsByClassName("palette-list-item-icon-and-text")).to.have.length(0);
+		const counts2 = getOpenCategories(container);
+		expect(counts2).to.have.length(0);
+
+	});
 
 	// // WARNING: The data-id attribute is used by host application "walk-me"
 	// // tours to identify palette elements. Therefore, the attribute name
 	// // MUST NOT be removed or renamed.
-	// it("Palette flyout categories should have data-id attribute", () => {
-	// 	const flyoutPaletteContent = createMountedPalette().find(PaletteFlyoutContent);
-	// 	const flyoutPaletteCategories = flyoutPaletteContent.find(".palette-flyout-category");
-	// 	flyoutPaletteCategories.forEach((category, idx) => {
-	// 		expect(category.props()).to.have.property("data-id", testPalette2.categories[idx].id);
-	// 	});
-	// });
+	it("Palette flyout categories should have data-id attribute", () => {
+		const canvasController = new CanvasController();
+		const { container } = createMountedPalette({ canvasController });
+		const flyoutCategories = container.querySelectorAll(".palette-flyout-category");
+		flyoutCategories.forEach((category, idx) => {
+			expect(category.getAttribute("data-id")).to.equal(testPalette2.categories[idx].id);
+		});
+	});
 
-	// // WARNING: The data-id attribute is used by host application "walk-me"
-	// // tours to identify palette elements. Therefore, the attribute name
-	// // MUST NOT be removed or renamed.
-	// it("Palette flyout nodes should have data-id attribute", () => {
-	// 	const wrapper = createMountedPalette();
-	// 	const importCat = findCategoryElement(wrapper, "Import");
-	// 	importCat.simulate("click");
-	// 	const outputsCat = findCategoryElement(wrapper, "Outputs");
-	// 	outputsCat.simulate("click");
-	// 	const ops = [];
-	// 	testPalette2.categories.forEach((category) => category.node_types.forEach((node) => ops.push(node.op)));
-	// 	const flyoutPaletteNodes = wrapper.find(".palette-list-item");
-	// 	flyoutPaletteNodes.forEach((node, idx) => {
-	// 		expect(node.props()).to.have.property("data-id", ops[idx]);
-	// 	});
-	// });
 
-	// it("should show wide palette", () => {
-	// 	const palette = createMountedPalette().find(".palette-flyout-div-open");
-	// 	expect(palette).to.have.length(1);
-	// });
+	// WARNING: The data-id attribute is used by host application "walk-me"
+	// tours to identify palette elements. Therefore, the attribute name
+	// MUST NOT be removed or renamed.
+	it("Palette flyout nodes should have data-id attribute", () => {
+		const { container, getByText } = createMountedPalette();
+		const importCat = getByText("Import");
+		fireEvent.click(importCat);
+		const outputsCat = getByText("Outputs");
+		fireEvent.click(outputsCat);
+		const ops = [];
+		testPalette2.categories.forEach((category) => category.node_types.forEach((node) => ops.push(node.op)));
+		const flyoutPaletteNodes = container.querySelectorAll("palette-list-item");
+		flyoutPaletteNodes.forEach((node, idx) => {
+			expect(node.getAttribute("data-id")).to.equal(ops[idx]);
+		});
+	});
 
-	// it("palette should be hidden", () => {
-	// 	const config = {
-	// 		showNarrowPalette: false,
-	// 		showPalette: false
-	// 	};
-	// 	const palette = createMountedPalette(config).find(".palette-flyout-div-closed");
-	// 	expect(palette).to.have.length(1);
-	// });
+	it("should show wide palette", () => {
+		const { container } = createMountedPalette();
 
-	// it("open palette should show correct values for category and node with and without an image", () => {
-	// 	const canvasController = new CanvasController();
-	// 	const config = {
-	// 		showPalette: true,
-	// 		palette: imageTestPalette,
-	// 		canvasController
-	// 	};
-	// 	const wrapper = createMountedPalette(config);
-	// 	const categories = wrapper.find(PaletteFlyoutContentCategory);
-	// 	expect(categories).to.have.length(2);
+		expect(container.getElementsByClassName("palette-flyout-div-open")).to.have.length(1);
+	});
 
-	// 	const category = findCategoryElement(wrapper, "Category1");
-	// 	category.simulate("click");
-	// 	wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+	it("palette should be hidden", () => {
+		const config = {
+			showNarrowPalette: false,
+			showPalette: false
+		};
+		const { container } = createMountedPalette(config);
 
-	// 	expect(wrapper.find(PaletteContentListItem)).to.have.length(2);
-	// });
+		expect(container.getElementsByClassName("palette-flyout-div-closed")).to.have.length(1);
+	});
 
-	// it("narrow palette should show correct values for category and node with and without an image", () => {
-	// 	const canvasController = new CanvasController();
-	// 	const config = {
-	// 		showPalette: false,
-	// 		palette: imageTestPalette,
-	// 		canvasController
-	// 	};
-	// 	const wrapper = createMountedPalette(config);
+	it("open palette should show correct values for category and node with and without an image", () => {
+		const canvasController = new CanvasController();
+		const config = {
+			showPalette: true,
+			palette: imageTestPalette,
+			canvasController
+		};
+		const { container, getByText, rerender } = createMountedPalette(config);
+		const categories = container.getElementsByClassName("palette-flyout-category");
+		expect(categories).to.have.length(2);
 
-	// 	// 2 categories should be rendered
-	// 	const categories = wrapper.find(PaletteFlyoutContentCategory);
-	// 	expect(categories).to.have.length(2);
+		const category = getByText("Category1");
+		fireEvent.click(category);
 
-	// 	// Category1 should show `Cat` when no image provided
-	// 	const category = findCategoryElement(wrapper, "Category1");
-	// 	expect(category.find("span").text()).to.equal("Cat");
-	// 	category.simulate("click");
-	// 	wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
+			showPalette
+			canvasController={canvasController}
+			isEditingEnabled
+			enableNarrowPalette
+		/>);
 
-	// 	expect(wrapper.find(PaletteContentListItem)).to.have.length(2);
+		expect(container.getElementsByClassName("palette-list-item-icon-and-text")).to.have.length(2);
+	});
 
-	// 	// Category2 should show image when provided
-	// 	const category2 = findCategoryElement(wrapper, "Category2");
-	// 	expect(category2.find("img")).to.have.length(1);
-	// });
+	it("narrow palette should show correct values for category and node with and without an image", () => {
+		const canvasController = new CanvasController();
+		const config = {
+			showPalette: true,
+			palette: imageTestPalette,
+			canvasController
+		};
+		const { container, rerender } = createMountedPalette(config);
+
+		// 2 categories should be rendered
+		const categories = container.getElementsByClassName("palette-flyout-category");
+		expect(categories).to.have.length(2);
+
+		// Category1 should show `Cat` when no image provided
+		const category = findCategoryElement(container, "canvas-no-image");
+		expect(category.textContent).to.equal("Category1");
+		fireEvent.click(category);
+
+		rerender(<PaletteFlyout
+			paletteJSON={canvasController.getPaletteData()}
+			showPalette
+			canvasController={canvasController}
+			isEditingEnabled
+			enableNarrowPalette
+		/>);
+
+		expect(container.getElementsByClassName("palette-list-item-icon-and-text")).to.have.length(2);
+
+		// Category2 should show image when provided
+		const category2 = findCategoryElement(container, "category-image");
+		expect(category2.querySelectorAll("img")).to.have.length(1);
+	});
 });
 
 function createMountedPalette(config) {
 	const canvasController = (config && config.canvasController) ? config.canvasController : new CanvasController();
 	const showPalette = (config && typeof config.showPalette === "boolean") ? config.showPalette : true;
 	const palette = (config && config.palette) ? config.palette : testPalette2;
+	const isEditingEnabled = (config && config.isEditingEnabled) ? config.isEditingEnabled : true;
+	const enableNarrowPalette = (config && config.enableNarrowPalette) ? config.enableNarrowPalette : true;
 
 	canvasController.setPipelineFlowPalette(palette);
 
@@ -361,8 +403,8 @@ function createMountedPalette(config) {
 			paletteJSON={palette}
 			showPalette={showPalette}
 			canvasController={canvasController}
-			isEditingEnabled
-			enableNarrowPalette
+			isEditingEnabled={isEditingEnabled}
+			enableNarrowPalette={enableNarrowPalette}
 		/>
 	);
 	return wrapper;
@@ -379,8 +421,6 @@ function findCategoryElement(flyoutPaletteContent, categoryName) {
 }
 
 function getOpenCategories(wrapper) {
-	// const categoryList2 = wrapper.querySelector("div.palette-flyout-categories");
-	// return categoryList2.querySelectorAll(".bx--accordion__item--active");
-	const categoryList2 = wrapper.find("div.palette-flyout-categories");
-	return categoryList2.find(".cds--accordion__item--active");
+	const categoryList2 = wrapper.querySelector("div.palette-flyout-categories");
+	return categoryList2.querySelectorAll(".cds--accordion__item--active");
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { mount as enzymeMount } from "enzyme";
 import { render } from "@testing-library/react";
 
 export function mount(param1, param2) {
