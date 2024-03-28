@@ -40,6 +40,10 @@ export default class SizeAndPositionObjectsAction extends Action {
 	}
 
 	getLabel() {
+		const com = this.apiPipeline.getComment(this.data.selectedObjectIds[0]);
+		if (com) {
+			return this.labelUtil.getActionLabel(this, "action.sizeComment");
+		}
 		return this.labelUtil.getActionLabel(this, "action.sizeAndPositionObjects");
 	}
 

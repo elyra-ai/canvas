@@ -40,6 +40,7 @@
 	"action.setNodeLabel": "[Esperanto~Set node label~eo]",
 	"action.setObjectsStyle": "[Esperanto~Set objects style~~~eo]",
 	"action.sizeAndPositionObjects": "[Esperanto~Size node~~~~eo]",
+	"action.sizeComment": "[Esperanto~Size comment~~eo]",
 	"action.updateLink": "[Esperanto~Update link~eo]",
 	"supernode.template.description": "[Esperanto~This supernode was created by common-canvas.~~~~~~~~~~~~eo]",
 	"supernode.template.label": "[Esperanto~Supernode~~~~eo]",
