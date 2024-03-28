@@ -474,6 +474,9 @@ export default class SVGCanvasUtilsDragObjects {
 				detachedLinksInfo: this.nodeSizingDetLinksInfo,
 				pipelineId: this.ren.activePipeline.id
 			});
+
+			// Clear the objects ready for next sizing action.
+			this.nodeSizingObjectsInfo = {};
 		}
 	}
 
