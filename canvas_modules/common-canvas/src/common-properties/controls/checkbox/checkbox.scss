@@ -24,18 +24,16 @@
 			display: flex;
 		}
 	}
-	.bx--form-item.bx--checkbox-wrapper {
+	.cds--form-item.cds--checkbox-wrapper {
 		flex: initial; // override carbon style to show tooltipIcon next to checkbox label
-	}
-	.properties-validation-message {
-		flex: 0 1 100%;
+		margin-block-start: 0.1875rem;
 	}
 	&.hide {
 		display: none;
 	}
 }
 .table {
-	.bx--form-item.bx--checkbox-wrapper:first-of-type {
+	.cds--form-item.cds--checkbox-wrapper:first-of-type {
 		margin-top: 0;
 		padding: 1px; // Allow space for checkbox borders to show when embedded within a table.
 	}

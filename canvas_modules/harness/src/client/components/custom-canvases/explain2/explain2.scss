@@ -19,12 +19,12 @@
 .explain2 {
 	.d3-node-body-outline {
 		stroke: transparent;
-		fill: $ui-01;
+		fill: $layer-01;
 		stroke-width: 2;
 	}
 
 	.d3-node-selection-highlight[data-selected="yes"] {
-		stroke: $inverse-support-04;
+		stroke: $support-info-inverse;
 	}
 
 	.d3-node-label {
@@ -34,12 +34,12 @@
 	}
 
 	.d3-data-link {
-		stroke: $ui-04;
+		stroke: $border-strong-01;
 		stroke-width: 1px;
 	}
 
 	.d3-data-link-arrow-head {
-		stroke: $ui-04;
+		stroke: $border-strong-01;
 	}
 
 	.dec-percentage-label {
@@ -57,24 +57,24 @@
 
 	.dec-sql-cost-label {
 		font-size: 14px;
-		color: $text-05;
+		color: $text-helper;
 		font-weight: 600;
 		text-align: left;
 	}
 
 	.dec-right-bar {
-		fill: $ui-03;
-		stroke: $ui-03;
+		fill: $layer-accent-01;
+		stroke: $layer-accent-01;
 	}
 
 	.dec-percentage-bar-red {
-		fill: $support-01;
-		stroke: $support-01;
+		fill: $support-error;
+		stroke: $support-error;
 	}
 
 	.dec-percentage-bar-gray {
-		fill: $text-05;
-		stroke: $text-05;
+		fill: $text-helper;
+		stroke: $text-helper;
 	}
 }
 

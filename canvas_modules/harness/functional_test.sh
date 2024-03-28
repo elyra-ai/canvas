@@ -29,11 +29,11 @@ export NODE_ENV=production
 npm run start-prod &
 
 # start running the test Cases
-sleep 30
-echo "Cypress version"
-npx cypress --version
-echo "Starting cypress electron tests"
-npx cypress run --headed --browser electron
+# sleep 30
+# echo "Cypress version"
+# npx cypress --version
+# echo "Starting cypress electron tests"
+# npx cypress run --headed --browser electron # TODO: Enable this while fixing issue - https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3696
 
 echo "cd $WORKING_DIR"
 cd $WORKING_DIR

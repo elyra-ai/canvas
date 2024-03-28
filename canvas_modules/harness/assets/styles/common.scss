@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-$font-prefix: "/fonts";
-@import "@ibm/plex/scss/ibm-plex.scss";
-
-@import "@carbon/themes/scss/themes";
-
-// Switch the themes below to get light or dark.
-
-$carbon--theme: $carbon--theme--g10; // The light (gray 10) theme
-// $carbon--theme: $carbon--theme--g90; // The dark theme
-@include carbon--theme;
-
-@import "carbon-components/scss/globals/scss/styles";
+@use "@carbon/react" as * with (
+	$font-path: "/fonts"
+);

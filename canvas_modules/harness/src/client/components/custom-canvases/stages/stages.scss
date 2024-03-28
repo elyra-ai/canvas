@@ -30,8 +30,8 @@
 		}
 
 		&.d3-node-supernode-expanded > .d3-node-body-outline {
-			stroke: $ui-03;
-			fill: $ui-03;
+			stroke: $layer-accent-01;
+			fill: $layer-accent-01;
 		}
 
 		// Style the node selection highlighting
@@ -74,7 +74,7 @@
 		// Style node ellipsis icon.
 		.d3-node-ellipsis-group {
 			.d3-node-ellipsis {
-				fill: $icon-01;
+				fill: $icon-primary;
 			}
 
 			&:hover {
@@ -86,7 +86,7 @@
 
 		&.d3-resized {
 			.d3-node-body-outline {
-				fill: $ui-background;
+				fill: $background;
 				stroke: #A0A0A0;
 			}
 		}
@@ -128,31 +128,31 @@
 		.d3-link-dec-group {
 			// Style the link label
 			.d3-link-dec-label {
-				color: $ui-04;
+				color: $border-strong-01;
 				font-weight: 700;
 				font-size: 10px;
 			}
 
 			// Style the background rectangle under the link label
 			.det-link-label-background {
-				fill: $ui-background;
-				stroke: $ui-background;
+				fill: $background;
+				stroke: $background;
 			}
 
 			// Style the 'dot' decoration at the start of the link line
 			.det-link-dot {
-				fill: $inverse-link;
-				stroke: $inverse-link;
+				fill: $link-inverse;
+				stroke: $link-inverse;
 			}
 
 			.d3-link-dec-outline.det-tri {
-				fill: $ui-background;
-				stroke: $ui-background;
+				fill: $background;
+				stroke: $background;
 			}
 
 			.d3-link-dec-image.det-tri {
 				fill: currentColor;
-				color: $support-01;
+				color: $support-error;
 			}
 		}
 
@@ -161,15 +161,15 @@
 		&[data-drag-node-over].d3-data-link .det-link-label-background,
 		&[data-selected][data-drag-node-over].d3-data-link .det-link-dot,
 		&[data-selected][data-drag-node-over].d3-data-link .det-link-label-background {
-			fill: $support-04;
-			stroke: $support-04;
+			fill: $support-info;
+			stroke: $support-info;
 			stroke-width: 2;
 		}
 	}
 
 	// Style new connection link line
 	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: $interactive-01;
+		stroke: $button-primary;
 		stroke-width: 2;
 		stroke-dasharray: 1 0;
 		fill: none;

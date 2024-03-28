@@ -17,13 +17,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Checkbox } from "carbon-components-react";
+import { Checkbox } from "@carbon/react";
 import * as ControlUtils from "./../../util/control-utils";
 import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
 import { v4 as uuid4 } from "uuid";
 import { intersection, isEqual } from "lodash";
-import { Information16 } from "@carbon/icons-react";
+import { Information } from "@carbon/react/icons";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { STATES } from "./../../constants/constants.js";
 import { isEmpty } from "lodash";
@@ -59,7 +59,7 @@ class CheckboxsetControl extends React.Component {
 		}
 	}
 
-	handleChange(val, checked) {
+	handleChange(val, evt, { checked, id }) {
 		let values = this.props.controller.getPropertyValue(this.props.propertyId);
 		if (typeof values === "undefined" || values === null) {
 			values = [];
@@ -101,7 +101,7 @@ class CheckboxsetControl extends React.Component {
 					showToolTipOnClick
 					disable={hidden || disabled}
 				>
-					<Information16 disabled={disabled} className="properties-control-description-icon-info" />
+					<Information disabled={disabled} className="properties-control-description-icon-info" />
 				</Tooltip>);
 			}
 			const id = {

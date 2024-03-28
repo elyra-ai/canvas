@@ -23,11 +23,11 @@ import TruncatedContentTooltip from "./../truncated-content-tooltip";
 import PropertiesButtons from "./../properties-buttons";
 import * as PropertyUtils from "./../../util/property-utils";
 
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 
 import { MESSAGE_KEYS, DATA_TYPE, SORT_DIRECTION, ROW_SELECTION } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
-import { Reset24 } from "@carbon/icons-react";
+import { Reset } from "@carbon/react/icons";
 
 import { has, isEmpty, sortBy, isEqual } from "lodash";
 
@@ -315,6 +315,7 @@ export default class FieldPicker extends React.Component {
 	_genResetButton() {
 		const resetLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL);
+		const Reset24 = React.forwardRef((props, ref) => <Reset ref={ref} size={24} {...props} />);
 		const defaultSelections = this.props.currentFields;
 		const selectedFields = this.state.selectedFields;
 		const isSelectionEqual = defaultSelections.length === selectedFields.length && defaultSelections.every((field) => selectedFields.indexOf(field) > -1);
@@ -325,7 +326,7 @@ export default class FieldPicker extends React.Component {
 				onClick={this.handleReset}
 				renderIcon={Reset24}
 				iconDescription={resetLabel}
-				size="small"
+				size="sm"
 				kind="ghost"
 			>
 				<span>{resetLabel}</span>

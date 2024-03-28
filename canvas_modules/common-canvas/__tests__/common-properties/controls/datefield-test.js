@@ -175,7 +175,7 @@ describe("datefield-control renders correctly", () => {
 			/>
 		);
 		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		expect(dateWrapper.find(".bx--text-input--light")).to.have.length(1);
+		expect(dateWrapper.find(".cds--text-input--light")).to.have.length(1);
 	});
 
 	it("should render `DatefieldControl` with light mode disabled", () => {
@@ -190,7 +190,7 @@ describe("datefield-control renders correctly", () => {
 			/>
 		);
 		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		expect(dateWrapper.find(".bx--text-input--light")).to.have.length(0);
+		expect(dateWrapper.find(".cds--text-input--light")).to.have.length(0);
 	});
 });
 
@@ -226,7 +226,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		};
 		const actual = controller.getErrorMessage({ name: "date_ymd" });
 		expect(datefieldErrorMessages).to.eql(actual);
-		let messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		let messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
@@ -234,7 +234,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
 		// Ensure the error message is no longer displayed.
-		messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -261,7 +261,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		const actual = controller.getErrorMessage({ name: "date_ymd" });
 
 		expect(datefieldErrorMessages).to.eql(actual);
-		let messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		let messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
@@ -269,7 +269,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Ensure the error message is no longer displayed.
 		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
-		messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -292,7 +292,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		};
 		const actual = controller.getErrorMessage({ name: "date_mdy" });
 		expect(datefieldErrorMessages).to.eql(actual);
-		let messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		let messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
@@ -300,7 +300,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Ensure the error message is no longer displayed.
 		dateWrapper = wrapper.find("div[data-id='properties-date_mdy']");
-		messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -312,7 +312,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Ensure an error message is not displayed.
 		dateWrapper = wrapper.find("div[data-id='properties-date_ymd_non_req']");
-		const messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		const messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 

@@ -23,7 +23,7 @@ import Controller from "./../../../src/common-properties/properties-controller";
 import { Provider } from "react-redux";
 import { expect } from "chai";
 import sinon from "sinon";
-import { Slider } from "carbon-components-react";
+import { Slider } from "@carbon/react";
 import SliderControl from "./../../../src/common-properties/controls/slider";
 import sliderParamDef from "../../test_resources/paramDefs/slider_paramDef.json";
 

@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { get } from "lodash";
-import { ChevronUp16, ChevronDown16, Draggable16, DragVertical16 } from "@carbon/icons-react";
+import { ChevronUp, ChevronDown, Draggable, DragVertical } from "@carbon/react/icons";
 
 import LinkInputToOutputAction from "./linkInputToOutputAction.js";
 
@@ -450,7 +450,7 @@ class MappingContainerNode extends React.Component {
 	}
 
 	getChevronIcon() {
-		const icon = this.isContainerResized() ? (<ChevronUp16 />) : (<ChevronDown16 />);
+		const icon = this.isContainerResized() ? (<ChevronUp />) : (<ChevronDown />);
 		return (
 			<div className="node-header-chevron" onMouseDown={this.onMouseDownOnHeaderChevron}>
 				{icon}
@@ -584,7 +584,7 @@ class MappingContainerNode extends React.Component {
 		if (this.props.nodeData.op === "output_link") {
 			return (
 				<div className="node-header-drag-icon" onMouseDown={this.onMouseDownOnDragContainerIcon}>
-					<DragVertical16 />
+					<DragVertical />
 				</div>
 			);
 
@@ -595,7 +595,7 @@ class MappingContainerNode extends React.Component {
 					onDragStart={this.onDragStartOnContainerDataIcon}
 					onMouseDown={this.onMouseDownOnContainerDataIcon}
 				>
-					<Draggable16 />
+					<Draggable />
 				</div>
 			);
 		}
@@ -641,7 +641,7 @@ class MappingContainerNode extends React.Component {
 			if (this.props.nodeData.op === "output_link") {
 				beforeLabel = (
 					<div>
-						<Draggable16 />
+						<Draggable />
 					</div>
 				);
 				mapping = (
@@ -657,7 +657,7 @@ class MappingContainerNode extends React.Component {
 						onMouseDown={this.onMouseDownOnFieldIcon}
 						onDragStart={(evt) => this.onDragStartOnFieldIcon(evt, field)}
 					>
-						<Draggable16 />
+						<Draggable />
 					</div>
 				);
 			}

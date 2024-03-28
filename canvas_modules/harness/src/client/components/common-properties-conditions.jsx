@@ -19,7 +19,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { hot } from "react-hot-loader/root";
-import { Button, Dropdown } from "carbon-components-react";
+import { Button, Dropdown } from "@carbon/react";
 import {
 	TEXTFIELD_ERROR_PROPS_INFO,
 	TEXTFIELD_WARNING_PROPS_INFO,
@@ -192,7 +192,7 @@ class CommonPropertiesComponents extends React.Component {
 		const openFlyoutButton = (<Button
 			className="harness-properties-documentation-show-flyout-button"
 			type="button"
-			size="small"
+			size="sm"
 			kind="secondary"
 			onClick={() => this.setRightFlyoutState(content)}
 		>
