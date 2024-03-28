@@ -16,7 +16,7 @@
 import React from "react";
 import { IntlProvider } from "react-intl";
 import { shallow } from "enzyme";
-import { mount } from "./mount-utils.js";
+import { mount, render } from "./mount-utils.js";
 
 import { getMessages } from "../../../harness/src/intl/intl-utils";
 import * as HarnessBundles from "../../../harness/src/intl/locales";
@@ -24,12 +24,23 @@ import * as HarnessBundles from "../../../harness/src/intl/locales";
 const defaultLocale = "en-US";
 const locale = defaultLocale;
 
-export function mountWithIntl(node, inOptions) {
+export function renderWithIntl(node, inOptions) {
 	// eslint-disable-next-line react/prop-types
 	function Wrapper({ children }) {
 		return (<IntlProvider locale={locale} defaultLocale={defaultLocale}>{children}</IntlProvider>);
 	}
-	return mount(node, { wrapper: Wrapper, ...inOptions });
+	return render(node, { wrapper: Wrapper, ...inOptions });
+}
+
+export function mountWithIntl(node, inOptions) {
+	const options = Object.assign({
+		wrappingComponent: IntlProvider,
+		wrappingComponentProps: {
+			locale,
+			defaultLocale
+		}
+	}, inOptions);
+	return mount(node, options);
 }
 
 // Allow for custom resources to be applied from the test harness

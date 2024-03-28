@@ -15,7 +15,7 @@
  */
 
 import React from "react";
-import { mountWithIntl } from "../_utils_/intl-utils";
+import { renderWithIntl } from "../_utils_/intl-utils";
 import PaletteDialog from "../../src/palette/palette-dialog.jsx";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import sinon from "sinon";
@@ -94,7 +94,7 @@ function createPalette() {
 	const createTempNodeCallback = sinon.spy();
 	const deleteTempNodeCallback = sinon.spy();
 	const canvasController = new CanvasController();
-	const popupPalette = mountWithIntl(
+	const popupPalette = renderWithIntl(
 		<PaletteDialog paletteJSON={paletteSpec}
 			showPalette
 			closePalette={closePaletteCallback}

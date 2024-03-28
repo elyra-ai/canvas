@@ -15,7 +15,7 @@
  */
 import React from "react";
 import { fireEvent, waitFor } from "@testing-library/react";
-import { mountWithIntl } from "../_utils_/intl-utils";
+import { renderWithIntl } from "../_utils_/intl-utils";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import { expect } from "chai";
 import CanvasController from "../../src/common-canvas/canvas-controller";
@@ -398,7 +398,7 @@ function createMountedPalette(config) {
 
 	canvasController.setPipelineFlowPalette(palette);
 
-	const wrapper = mountWithIntl(
+	const wrapper = renderWithIntl(
 		<PaletteFlyout
 			paletteJSON={palette}
 			showPalette={showPalette}

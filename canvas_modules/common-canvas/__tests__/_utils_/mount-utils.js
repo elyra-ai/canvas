@@ -13,7 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { render } from "@testing-library/react";
+import { mount as enzymeMount } from "enzyme";
+import { render as rtlRender } from "@testing-library/react";
+
+export function render(param1, param2) {
+	// Workaround for problem using latest version (9.1.0) of react-resize-detector.
+	// This mocks the ResizeObserver constructor that otherwise causes an error
+	// when using the mount keyword.
+	// https://github.com/maslianok/react-resize-detector/issues/145
+	delete window.ResizeObserver;
+	window.ResizeObserver = jest.fn().mockImplementation(() => ({
+		observe: jest.fn(),
+		unobserve: jest.fn(),
+		disconnect: jest.fn(),
+	}));
+
+	return rtlRender(param1, param2);
+}
 
 export function mount(param1, param2) {
 	// Workaround for problem using latest version (9.1.0) of react-resize-detector.
@@ -27,5 +43,5 @@ export function mount(param1, param2) {
 		disconnect: jest.fn(),
 	}));
 
-	return render(param1, param2);
+	return enzymeMount(param1, param2);
 }
