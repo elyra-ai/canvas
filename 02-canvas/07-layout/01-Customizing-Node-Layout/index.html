@@ -1,0 +1,2589 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../06-stack/01-Command-Stack/">
+      
+      
+        <link rel="next" href="../../08-menu/01-Context-Menu-Wrapper/">
+      
+      
+      <link rel="icon" href="../../../assets/FlowIcon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
+    
+    
+      
+        <title>Customizing Node Layout Properties - Elyra Canvas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../css/styles.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#node-layout-properties" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Elyra Canvas" class="md-header__button md-logo" aria-label="Elyra Canvas" data-md-component="logo">
+      
+  <img src="../../../assets/FlowIcon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Elyra Canvas
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Customizing Node Layout Properties
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/elyra-ai/canvas" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../01-install/" class="md-tabs__link">
+          
+  
+    
+  
+  Installation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+    
+  
+  Common Canvas
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../03-props/" class="md-tabs__link">
+          
+  
+    
+  
+  Common Properties
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../04-trouble/01-Troubleshooting/" class="md-tabs__link">
+          
+  
+    
+  
+  Troubleshooting
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../05-contrib/01-Testing-Guidelines-for-Development/" class="md-tabs__link">
+          
+  
+    
+  
+  Contributing
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Elyra Canvas" class="md-nav__button md-logo" aria-label="Elyra Canvas" data-md-component="logo">
+      
+  <img src="../../../assets/FlowIcon.png" alt="logo">
+
+    </a>
+    Elyra Canvas
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/elyra-ai/canvas" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../01-install/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Installation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Common Canvas
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Common Canvas
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../01-components/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Canvas Components
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Canvas Components
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../01-components/01-editor/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Flow Editor
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2_2" id="__nav_3_2_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flow Editor
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-components/01-editor/01-Nodes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nodes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-components/01-editor/02-Links/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Links
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-components/01-editor/03-Comments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-components/02-Palette/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Palette
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-components/03-Context-Menu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-components/04-Context-Toolbar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Toolbar
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../02-configs/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Config Objects
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Config Objects
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-configs/01-canvas-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Canvas Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-configs/02-toolbar-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Toolbar Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-configs/03-notification-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notification Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-configs/04-context-menu-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-configs/05-keyboard-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keyboard Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../03-callbacks/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Callbacks
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            Callbacks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-callbacks/01-context-menu-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-callbacks/02-edit-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edit Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-callbacks/03-before-edit-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Before Edit Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-callbacks/04-layout-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Layout Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-callbacks/05-decoration-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decoration Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-callbacks/06-tip-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tip Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-callbacks/07-id-generator-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ID Generator Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-callbacks/08-selection-change-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Selection Change Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-callbacks/09-click-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Click Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-callbacks/10-action-label-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Action Label Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../04-controller/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Canvas Controller
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            Canvas Controller
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-controller/01-Styling-Objects/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Styling Canvas Objects
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-controller/02-Decorations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decorations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-controller/03-Object-structure-used-by-API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Object Structure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-controller/04-Notification-Message-Specification/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notification Message Specification
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-controller/05-Programmatically-creating-new-canvas-nodes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Programmatically Creating New Canvas Nodes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-controller/06-Read-only-or-locked-canvas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Read Only or Locked Canvas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-controller/07-Calling-the-Canvas-Controller-API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Calling the Canvas Controller API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ext-objs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Node Creation from External Object
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-stack/01-Command-Stack/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Commmand Stack API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Customizing Node Layout Properties
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Customizing Node Layout Properties
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#node-layout-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node layout properties
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#default-values-for-node-layout-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default values for node layout properties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Default values for node layout properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positioning-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positioning objects
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overriding-the-default-node-layout-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overriding the default node layout properties
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customizing-individual-nodes-or-categories-of-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customizing individual nodes or categories of nodes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customizing-node-colors-and-styles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customizing node colors and styles
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-menu/01-Context-Menu-Wrapper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Wrapper Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-ext-flows/01-External-Subflows-support/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    External Subflows Support
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-validate/01-Flow-Validation-API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flow Validation API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../03-props/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Common Properties
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Common Properties
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../03-props/01-Parameter-Definition/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parameter Definitions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../03-props/02-UI-Hints/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UI Hints
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../03-props/03-Controls/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controls
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../03-props/04-Conditions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conditions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../03-props/05-Custom-Components/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Custom Components
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../03-props/06-Properties-Controller/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Properties Controller
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Troubleshooting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../04-trouble/01-Troubleshooting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trouble shooting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Contributing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../05-contrib/01-Testing-Guidelines-for-Development/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing Guidelines for Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#node-layout-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node layout properties
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#default-values-for-node-layout-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default values for node layout properties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Default values for node layout properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positioning-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positioning objects
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overriding-the-default-node-layout-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overriding the default node layout properties
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customizing-individual-nodes-or-categories-of-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customizing individual nodes or categories of nodes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customizing-node-colors-and-styles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customizing node colors and styles
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/elyra-ai/canvas/edit/main/docs/02-canvas/07-layout/01-Customizing-Node-Layout.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+
+
+  <h1>Customizing Node Layout Properties</h1>
+
+<h2 id="node-layout-properties">Node layout properties<a class="headerlink" href="#node-layout-properties" title="Permanent link">&para;</a></h2>
+<p>Node layout properties define how all the elements of a node are displayed such as: the position and size of the icon image; the position of the main label; even the shape of the node itself! You can change just about anything to do with the way the nodes appear in your canvas. So you can get a very different looking canvas to suit your needs. </p>
+<p>There are two possible sets of node layout properties provided by common-canvas, these are controlled by the <code>enableNodeFormatType</code> canvas configuration property which can be set to either &ldquo;Horizontal&rdquo; or &ldquo;Vertical&rdquo;. &ldquo;Horizontal&rdquo; will display a node with an image and the label to the right of the image. &ldquo;Vertical&rdquo; will display the node with the label underneath the image.</p>
+<h2 id="default-values-for-node-layout-properties">Default values for node layout properties<a class="headerlink" href="#default-values-for-node-layout-properties" title="Permanent link">&para;</a></h2>
+<p>The possible node layout properties are shown below with the values they have when <code>enableNodeFormatType = "Horizontal"</code>. You can see the values for both sets of properties by looking at the <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/common-canvas/src/object-model/layout-dimensions.js">layout-dimensions.js program</a> </p>
+<div class="highlight"><pre><span></span><code>// Default node sizes. The height might be overridden for nodes with more ports
+// than will fit in the default size.
+defaultNodeWidth: 160,
+defaultNodeHeight: 40,
+
+// A space separated list of classes that will be added to the group &lt;g&gt;
+// DOM element for the node.
+className: &quot;&quot;,
+
+// Displays the node outline shape underneath the image and label.
+nodeShapeDisplay: true,
+
+// Default node shape. Can be &quot;rectangle&quot; or &quot;port-arcs&quot;. Used when nodeOutlineDisplay is true.
+nodeShape: &quot;port-arcs&quot;,
+
+// SVG path strings to define the shape of your node and its
+// selection highlighting. If set to null the paths will be set by default
+// based on the nodeShape setting.
+bodyPath: null,
+selectionPath: null,
+
+// Displays the external object specified, as the body of the node
+nodeExternalObject: false,
+
+// Display image
+imageDisplay: true,
+
+// Image dimensions
+imageWidth: 26,
+imageHeight: 26,
+
+// Image position
+imagePosition: &quot;topLeft&quot;,
+imagePosX: 6,
+imagePosY: 7,
+
+// Display label
+labelDisplay: true,
+
+// Label dimensions
+labelWidth: 112,
+labelHeight: 19,
+
+// Label position
+labelPosition: &quot;topLeft&quot;,
+labelPosX: 36,
+labelPosY: 12,
+
+// Label appearance
+labelEditable: false,
+labelAlign: &quot;left&quot;, // can be &quot;left&quot; or &quot;center&quot;
+labelSingleLine: true, // false allow multi-line labels
+labelOutline: false,
+labelMaxCharacters: null, // null allows unlimited characters
+labelAllowReturnKey: false, // true allows line feed to be inserted into label, &quot;save&quot; to make the return key save the label.
+
+// An array of decorations to be applied to the node. For details see:
+// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
+// These are added to the node at run time and will not be saved into
+// the pipeline flow.
+decorations: [],
+
+// Positions and dimensions for 9 enumerated default decorator positions.
+// decoratorWidth and decoratorHeight are the dimensions of the outline
+// rectangle and decoratorPadding is the padding for the image within the
+// outline rectangle.
+decoratorTopY: 2,
+decoratorMiddleY: -8,
+decoratorBottomY: -18,
+
+decoratorLeftX: 2,
+decoratorCenterX: -8,
+decoratorRightX: -30,
+
+// Width, height and padding for image decorators
+decoratorWidth: 16,
+decoratorHeight: 16,
+decoratorPadding: 2,
+
+// Width and height for label decorators
+decoratorLabelWidth: 80,
+decoratorLabelHeight: 30,
+
+// Display drop shadow under and round the nodes
+dropShadow: true,
+
+// The gap between a node and its selection highlight rectangle
+nodeHighlightGap: 1,
+
+// The size of the node sizing area that extends around the node, over
+// which the mouse pointer will change to the sizing arrows.
+nodeSizingArea: 10,
+
+// Error indicator dimensions
+errorPosition: &quot;topLeft&quot;,
+errorXPos: 24,
+errorYPos: 5,
+errorWidth: 10.5,
+errorHeight: 10.5,
+
+// When sizing a supernode this decides the size of the corner area for
+// diagonal sizing.
+nodeCornerResizeArea: 10,
+
+// What point to draw the data links from and to when enableLinkType is set
+// to &quot;Straight&quot;. Possible values are &quot;image_center&quot; or &quot;node_center&quot;.
+drawNodeLinkLineFromTo: &quot;node_center&quot;,
+
+// What point to draw the comment to node link line to. Possible values
+// are &quot;image_center&quot; or &quot;node_center&quot;.
+drawCommentLinkLineTo: &quot;node_center&quot;,
+
+// This is the size of the horizontal line protruding from the
+// port on the source node when drawing an elbow or straight connection line.
+minInitialLine: 30,
+
+// For the elbow connection type with nodes with multiple output ports,
+// this is used to increment the minInitialLine so that connection lines
+// do not overlap each other when they turn up or down after the elbow.
+minInitialLineIncrement: 8,
+
+// This is the minimum size of the horizontal line entering the
+// target port on the target node when drawing an Elbow connection line.
+minFinalLine: 30,
+
+// Display input ports.
+inputPortDisplay: true,
+
+// Object for input port can be &quot;circle&quot; or &quot;image&quot;.
+inputPortObject: &quot;circle&quot;,
+
+// If input port object is &quot;image&quot; use this image.
+inputPortImage: &quot;&quot;,
+
+// If input port dimensions for &quot;image&quot;.
+inputPortWidth: 12,
+inputPortHeight: 12,
+
+// Position of left single input port. Multiple input ports will be
+// automatically positioned with the Y coordinate being overriden. These
+// values are an offset from the top left corner of the node outline.
+// Used when linkDirection is &quot;LeftRight&quot;.
+inputPortLeftPosX: 0,
+inputPortLeftPosY: 20,
+
+// Position of top single input port. Multiple input ports will be
+// automatically positioned with the X coordinate being overriden. These
+// values are an offset from the top left corner of the node outline.
+// Used when linkDirection is &quot;TopBottom&quot;.
+inputPortTopPosX: 80,
+inputPortTopPosY: 0,
+
+// Position of bottom single input port. Multiple input ports will be
+// automatically positioned with the X coordinate being overriden. These
+// values are an offset from the bottom left corner of the node outline.
+// Used when linkDirection is &quot;BottomTop&quot;.
+inputPortBottomPosX: 80,
+inputPortBottomPosY: 0,
+
+// The &#39;guide&#39; is the object drawn at the mouse position as a new line
+// is being dragged outwards.
+// Object for input port guide can be &quot;circle&quot; or &quot;image&quot;.
+inputPortGuideObject: &quot;circle&quot;,
+
+// If input port guide object is &quot;image&quot; use this image.
+inputPortGuideImage: &quot;&quot;,
+
+// Display output ports.
+outputPortDisplay: true,
+
+// Object for output port can be &quot;circle&quot; or &quot;image&quot;.
+outputPortObject: &quot;circle&quot;,
+
+// If output port object is &quot;image&quot; use this image.
+outputPortImage: &quot;&quot;,
+
+// Output port dimensions for &quot;image&quot;.
+outputPortWidth: 12,
+outputPortHeight: 12,
+
+// Position of right single output port. Multiple input ports will be
+// automatically positioned with the Y coordinate being overriden. These
+// values are an offset from the top right corner of the node outline.
+// Used when linkDirection is &quot;LeftRight&quot;.
+outputPortRightPosition: &quot;topRight&quot;,
+outputPortRightPosX: 0,
+outputPortRightPosY: 20,
+
+// Position of top single output port. Multiple input ports will be
+// automatically positioned with the X coordinate being overriden. These
+// values are an offset from the top left corner of the node outline.
+// Used when linkDirection is &quot;BottomTop&quot;.
+outputPortTopPosX: 80,
+outputPortTopPosY: 0,
+
+// Position of bottom single output port. Multiple input ports will be
+// automatically positioned with the X coordinate being overriden. These
+// values are an offset from the bottom left corner of the node outline.
+// Used when linkDirection is &quot;TopBottom&quot;.
+outputPortBottomPosX: 80,
+outputPortBottomPosY: 0,
+
+// The &#39;guide&#39; is the object drawn at the mouse position as a new line
+// is being dragged outwards.
+// Object for output port guide can be &quot;circle&quot; or &quot;image&quot;.
+outputPortGuideObject: &quot;circle&quot;,
+
+// If output port guide object is &quot;image&quot; use this image.
+outputPortGuideImage: &quot;&quot;,
+
+// Automatically increases the node size to accommodate its ports so both
+// input and output ports can be shown within the dimensions of
+// the node.
+autoSizeNode: true,
+
+// Radius of the either the input or output ports when they are set to &quot;circle&quot;
+portRadius: 3,
+
+// Size of an offset above and below the set of port arcs.
+portArcOffset: 3,
+
+// Radius of an imaginary circle around the port. This controls the
+// spacing of ports and the size of port arcs when nodeShape is set to
+// port-arcs.
+portArcRadius: 6,
+
+// Spacing between the port arcs around the ports.
+portArcSpacing: 3,
+
+// Position of the context toolbar realtive to the node. Some adjustment
+// will be made to account for the width of the toolbar.
+contextToolbarPosition: &quot;topRight&quot;,
+
+// Display of vertical ellipsis to show context menu
+ellipsisDisplay: true,
+ellipsisPosition: &quot;topLeft&quot;,
+ellipsisWidth: 10,
+ellipsisHeight: 22,
+ellipsisPosX: 145,
+ellipsisPosY: 9,
+ellipsisHoverAreaPadding: 2
+</code></pre></div>
+<h3 id="positioning-objects">Positioning objects<a class="headerlink" href="#positioning-objects" title="Permanent link">&para;</a></h3>
+<p>If you have nodes of varying sizes or if you have enabled re-sizeable nodes, by setting the canvas config property <code>enableResizableNodes</code> to true, it is important to note the following.</p>
+<p>All coordinate positions for elements are based on one of nine anchor positions around the node:
+<div class="highlight"><pre><span></span><code>       &quot;topLeft&quot;, &quot;topCenter&quot;, &quot;topRight&quot;,  
+       &quot;middleLeft&quot;, &quot;middleCenter&quot;, &quot;middleRight&quot;,   
+       &quot;bottomLeft&quot;, &quot;bottomCenter&quot;, &quot;bottomRight&quot;.   
+</code></pre></div></p>
+<p>The PosX and PosY properties for each element is an offset from the associated anchor position where PosX is the number of pixels <strong>to the right</strong> of the anchor position and PosY is a number of pixels <strong>down from</strong> the anchor position. Negative values can be provided to specify an offset <strong>to the left</strong> and <strong>up from</strong> the anchor position. The default anchor position for all elements is <code>topLeft</code>. By the way, the top left corner of the node is also the point that the node will be positioned at based on its <code>x_pos</code> and <code>y_pos</code> fields in the pipelineFlow document.</p>
+<p>For example, these settings:
+<div class="highlight"><pre><span></span><code>    {
+        imagePosition: &quot;middleCenter&quot;,
+        imagePosX: -10,
+        imagePosY: -10,
+        imageWidth: 20,
+        imageHeight: 20
+    }
+};
+</code></pre></div>
+would position the image 10 pixels left and 10 pixels above the very center of the node. Since the image is 20 x 20 pixels this would position the center of the image at the center of the node. If you have enabled re-sizeable nodes, this would keep the image centrally positioned while the node is being resized by the user.</p>
+<p>Elements like the node image and vertical ellipsis are positioned based on the top left corner of that element. Text is positioned based on the top left corner of its containing <code>&lt;div&gt;</code>.</p>
+<p>The values for <code>bodyPath</code> and <code>selectionPath</code> must be <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths">SVG path strings</a> which describe how to draw the node body shape and its selection highlight shape. For example, the following would draw a triangular node body and a triangular selection outline 5 pixels away from it:</p>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">bodyPath</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;     M  0 0 L  70 35  0 70 Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">selectionPath</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;M -5 -5 L 75 35 -5 75 Z&quot;</span><span class="p">,</span>
+</code></pre></div>
+<h2 id="overriding-the-default-node-layout-properties">Overriding the default node layout properties<a class="headerlink" href="#overriding-the-default-node-layout-properties" title="Permanent link">&para;</a></h2>
+<p>There are a couple of ways to do this depending on your needs. First, if you just want to change the appearance of <strong>all</strong> nodes on your canvas you can specify the <code>enableNodeLayout</code> configuration parameter in the <a href="2.1-Config-Objects.md#config-object">main canvas configuration object</a>. The properties from this object will replace any properties in the default set, which was chosen based on the settings of <code>enableNodeFormatType</code>. So you don&rsquo;t need to provide all of the properties; just the ones you want to replace. </p>
+<p>Let&rsquo;s say you want your nodes to be displayed as ellipses. You could provide the following settings in <code>enableNodeLayout</code> in the canvas config:
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">canvasConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="nx">enableNodeLayout</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">bodyPath</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;     M  0 30 Q  0  0 60  0 Q 120  0 120 30 Q 120 60 60 60 Q  0 60  0 30 Z&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">selectionPath</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;M -5 30 Q -5 -5 60 -5 Q 125 -5 125 30 Q 125 65 60 65 Q -5 65 -5 30 Z&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">defaultNodeWidth</span><span class="o">:</span><span class="w"> </span><span class="mf">120</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">defaultNodeHeight</span><span class="o">:</span><span class="w"> </span><span class="mf">60</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">imageWidth</span><span class="o">:</span><span class="w"> </span><span class="mf">30</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">imageHeight</span><span class="o">:</span><span class="w"> </span><span class="mf">30</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">imagePosX</span><span class="o">:</span><span class="w"> </span><span class="mf">20</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">imagePosY</span><span class="o">:</span><span class="w"> </span><span class="mf">10</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">labelEditable</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">labelPosX</span><span class="o">:</span><span class="w"> </span><span class="mf">60</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">labelPosY</span><span class="o">:</span><span class="w"> </span><span class="mf">37</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">labelWidth</span><span class="o">:</span><span class="w"> </span><span class="mf">90</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">labelHeight</span><span class="o">:</span><span class="w"> </span><span class="mf">17</span><span class="p">,</span><span class="w"> </span><span class="c1">// Should match the font size specified in css + padding</span>
+<span class="w">        </span><span class="nx">ellipsisDisplay</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">ellipsisPosX</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">ellipsisPosY</span><span class="o">:</span><span class="w"> </span><span class="mf">20</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">portPosY</span><span class="o">:</span><span class="w"> </span><span class="mf">30</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></p>
+<h2 id="customizing-individual-nodes-or-categories-of-nodes">Customizing individual nodes or categories of nodes<a class="headerlink" href="#customizing-individual-nodes-or-categories-of-nodes" title="Permanent link">&para;</a></h2>
+<p>If you want each node, or category of nodes, to have a different layout based on some criteria you can use the second method for overriding the node layout properties. This uses the <a href="2.2-Common-Canvas-callbacks.md#layouthandler">layoutHandler callback method</a>. When you specify this callback method to common canvas, it will be called for each node on the canvas, during initialization and, occasionally, at other times. </p>
+<p>The method should return a simple JavaScript object that contains any node layout properties you want to override from the defaults and the ones specified in the <code>enableNodeLayout</code> field in the canvas config. This is an important point: there are three levels of properties provided where each overrides the previous set:</p>
+<ol>
+<li>First we take the full default set of node layout properties based on the value for <code>enableNodeFormatType</code>.</li>
+<li>Then we override these with the properties from the <code>enableNodeLayout</code> field in the canvas config object, if any are provided.</li>
+<li>Finally we override the combined set with any properties from the object returned from the <code>layoutHandler</code> method if one is specified.</li>
+</ol>
+<p>The callback is provided with a <code>data</code> parameter which is the node object from the pipelineFlow so your code can examine the node object and return node layout properties as appropriate.</p>
+<p>Note: The <code>layoutHandler</code> callback is called while the canvas is being displayed, therefore it must return very quickly each time it is called otherwise your canvas display speed will be slowed down.</p>
+<p>Here is a simple example of a <code>layoutHandler</code> callback method which will override the width of the node based on the width of the main label for any node where the node&rsquo;s <code>op</code> field is set to <code>Sort</code>:
+<div class="highlight"><pre><span></span><code><span class="nx">layoutHandler</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">customNodeLayout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">op</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;Sort&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">labLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">label</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">label</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">labLen</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">9</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">30</span><span class="p">;</span><span class="w"> </span><span class="c1">// Allow 9 pixels for each character and a bit extra for padding</span>
+<span class="w">        </span><span class="nx">customNodeLayout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">defaultNodeWidth</span><span class="o">:</span><span class="w"> </span><span class="nx">width</span><span class="w"> </span><span class="c1">// Override default width with calculated width</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">customNodeLayout</span><span class="p">;</span>
+</code></pre></div>
+OK, it&rsquo;s not a very complicated example but hopefully you get the message :)</p>
+<p>In the test harness, you can see an example application that use the <a href="2.2-Common-Canvas-callbacks.md#layouthandler">layoutHandler callback method</a>. In the test harness:</p>
+<ol>
+<li>Open the Common Canvas side panel (click the hamburger icon)</li>
+<li>Select the <code>Explain</code> sample application</li>
+</ol>
+<p>You will see the nodes have different shapes and colors based on their type.
+You can examine the <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/components/custom-canvases/explain/explain-canvas.jsx">Explain sample app code</a> to see how it works. This involves these parts:</p>
+<ol>
+<li><a href="https://github.com/elyra-ai/canvas/blob/64af90b1f8a1179478f3ea32749681b851d897a4/canvas_modules/harness/src/client/components/custom-canvases/explain/explain-canvas.jsx#L36">This line</a> sets the <code>enableNodeFormatType</code> in the canvas config to &ldquo;Vertical&rdquo;. This will set all of the node layout properties to their defaults for &ldquo;Vertical&rdquo; nodes.</li>
+<li><a href="https://github.com/elyra-ai/canvas/blob/64af90b1f8a1179478f3ea32749681b851d897a4/canvas_modules/harness/src/client/components/custom-canvases/explain/explain-canvas.jsx#L37">This line</a> will override the default node layout properties with a few different values which apply to all nodes.</li>
+<li><a href="https://github.com/elyra-ai/canvas/blob/64af90b1f8a1179478f3ea32749681b851d897a4/canvas_modules/harness/src/client/components/custom-canvases/explain/explain-canvas.jsx#L145">The layout handler</a> will override layout properties on a node by node basis. It calls some utility functions to translate data retrieved from the node to the appropriate layout properties. The returned node layout properties contains an array of decorations that are used to display data values from the node.</li>
+<li><a href="https://github.com/elyra-ai/canvas/blob/64af90b1f8a1179478f3ea32749681b851d897a4/canvas_modules/harness/src/client/components/custom-canvases/explain/explain-canvas.jsx#L192">This line</a> specifies the <code>layoutHandler</code> to the <code>&lt;CommonCanvas&gt;</code> object.  </li>
+</ol>
+<h2 id="customizing-node-colors-and-styles">Customizing node colors and styles<a class="headerlink" href="#customizing-node-colors-and-styles" title="Permanent link">&para;</a></h2>
+<p>The DOM elements that make up a node can be customized using CSS styles. This is done by assigning a class name to the group <code>&lt;g&gt;</code> element that is the container for all the node elements. The class can be applied to the group object is a number of different ways:</p>
+<ol>
+<li>By specifying it in the <code>app_data.ui_data.class_name</code> field of the node in the pipeline flow document that is provided to common-canvas using <code>CanvasController.setPipelineFlow(pFlow)</code></li>
+<li>By specifying it using the following API methods: <ul>
+<li>CanvasController.setNodeProperties(nodeId, properties, pipelineId)</li>
+<li>CanvasController.setNodesClassName(nodeIds, newClassName, pipelineId)</li>
+</ul>
+</li>
+<li>By specifying a class name in the <code>className</code> field of the node layout properties in the canvas config. Like this
+<div class="highlight"><pre><span></span><code>const canvasConfig = {
+    enableNodeLayout: {
+        className: &quot;my-node-class&quot;
+    }
+};
+</code></pre></div></li>
+<li>By specifying a class name in the <code>className</code> field of the node layout properties returned from the <code>layoutHandler</code>.</li>
+</ol>
+<p>You can see the <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/common-canvas/src/common-canvas/svg-canvas-d3.scss">svg-canvas-d3.scss file</a> for full details about what elements in the node can be styled but here are a list of some basic parts of the node:</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>DOM Element</th>
+<th>Class Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Group</td>
+<td><code>&lt;g&gt;</code></td>
+<td>d3-node-group</td>
+</tr>
+<tr>
+<td>&ndash;&gt; Body Shape</td>
+<td><code>&lt;path&gt;</code></td>
+<td>d3-node-body-outline</td>
+</tr>
+<tr>
+<td>&ndash;&gt; Selection Outline</td>
+<td><code>&lt;path&gt;</code></td>
+<td>d3-node-selection-highlight</td>
+</tr>
+<tr>
+<td>&ndash;&gt; Label Container</td>
+<td><code>&lt;foreignobject&gt;</code></td>
+<td>d3-foreign-object-node-label</td>
+</tr>
+<tr>
+<td>-----&gt; Label</td>
+<td><code>&lt;div&gt;</code></td>
+<td>d3-node-label</td>
+</tr>
+</tbody>
+</table>
+<p>So for example if you want the node body (the rectangle) to be colored orange you would provide a class name to the group element using one of the techniques mentioned above and then put this in you CSS:</p>
+<p><div class="highlight"><pre><span></span><code>.my-node-class .d3-node-body-outline {
+   fill: orange;
+}
+</code></pre></div>
+Note: You can use the <a href="2.1-Config-Objects.md#enableparentclass"><code>enableParentClass</code></a> canvas config field to make you CSS rulesets specific so your styles are picked up in preference to the common-canvas default styles.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright  &copy; 2024 Elyra Authors, an open source project and all are welcome to contribute! Maintained by the Elyra Authors Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.tabs", "navigation.indexes"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.bd41221c.min.js"></script>
+      
+        <script src="../../../js/links-in-new-tabs.js"></script>
+      
+    
+  </body>
+</html>

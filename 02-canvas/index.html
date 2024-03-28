@@ -1,0 +1,2308 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../01-install/">
+      
+      
+        <link rel="next" href="01-components/">
+      
+      
+      <link rel="icon" href="../assets/FlowIcon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
+    
+    
+      
+        <title>Common Canvas - Elyra Canvas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/styles.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#common-canvas" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Elyra Canvas" class="md-header__button md-logo" aria-label="Elyra Canvas" data-md-component="logo">
+      
+  <img src="../assets/FlowIcon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Elyra Canvas
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Common Canvas
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/elyra-ai/canvas" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01-install/" class="md-tabs__link">
+          
+  
+    
+  
+  Installation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+    
+  
+  Common Canvas
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../03-props/" class="md-tabs__link">
+          
+  
+    
+  
+  Common Properties
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../04-trouble/01-Troubleshooting/" class="md-tabs__link">
+          
+  
+    
+  
+  Troubleshooting
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05-contrib/01-Testing-Guidelines-for-Development/" class="md-tabs__link">
+          
+  
+    
+  
+  Contributing
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Elyra Canvas" class="md-nav__button md-logo" aria-label="Elyra Canvas" data-md-component="logo">
+      
+  <img src="../assets/FlowIcon.png" alt="logo">
+
+    </a>
+    Elyra Canvas
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/elyra-ai/canvas" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../01-install/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Installation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="./" class="md-nav__link md-nav__link--active">
+              
+  
+  <span class="md-ellipsis">
+    Common Canvas
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link md-nav__link--active" for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Common Canvas
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="01-components/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Canvas Components
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Canvas Components
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="01-components/01-editor/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Flow Editor
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2_2" id="__nav_3_2_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flow Editor
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-components/01-editor/01-Nodes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nodes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-components/01-editor/02-Links/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Links
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-components/01-editor/03-Comments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-components/02-Palette/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Palette
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-components/03-Context-Menu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-components/04-Context-Toolbar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Toolbar
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="02-configs/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Config Objects
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Config Objects
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-configs/01-canvas-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Canvas Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-configs/02-toolbar-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Toolbar Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-configs/03-notification-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notification Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-configs/04-context-menu-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-configs/05-keyboard-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keyboard Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="03-callbacks/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Callbacks
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            Callbacks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-callbacks/01-context-menu-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-callbacks/02-edit-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edit Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-callbacks/03-before-edit-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Before Edit Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-callbacks/04-layout-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Layout Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-callbacks/05-decoration-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decoration Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-callbacks/06-tip-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tip Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-callbacks/07-id-generator-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ID Generator Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-callbacks/08-selection-change-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Selection Change Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-callbacks/09-click-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Click Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-callbacks/10-action-label-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Action Label Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="04-controller/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Canvas Controller
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            Canvas Controller
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-controller/01-Styling-Objects/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Styling Canvas Objects
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-controller/02-Decorations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decorations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-controller/03-Object-structure-used-by-API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Object Structure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-controller/04-Notification-Message-Specification/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notification Message Specification
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-controller/05-Programmatically-creating-new-canvas-nodes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Programmatically Creating New Canvas Nodes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-controller/06-Read-only-or-locked-canvas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Read Only or Locked Canvas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-controller/07-Calling-the-Canvas-Controller-API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Calling the Canvas Controller API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="05-ext-objs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Node Creation from External Object
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-stack/01-Command-Stack/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Commmand Stack API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-layout/01-Customizing-Node-Layout/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Customizing Node Layout Properties
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="08-menu/01-Context-Menu-Wrapper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Wrapper Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="09-ext-flows/01-External-Subflows-support/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    External Subflows Support
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="10-validate/01-Flow-Validation-API/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flow Validation API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../03-props/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Common Properties
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Common Properties
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-props/01-Parameter-Definition/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parameter Definitions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-props/02-UI-Hints/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UI Hints
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-props/03-Controls/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controls
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-props/04-Conditions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conditions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-props/05-Custom-Components/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Custom Components
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-props/06-Properties-Controller/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Properties Controller
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Troubleshooting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-trouble/01-Troubleshooting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Trouble shooting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Contributing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-contrib/01-Testing-Guidelines-for-Development/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing Guidelines for Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-canvas-react-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Canvas react object
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canvas-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      Canvas Controller
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/elyra-ai/canvas/edit/main/docs/02-canvas/index.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="common-canvas">Common Canvas<a class="headerlink" href="#common-canvas" title="Permanent link">&para;</a></h1>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
+<p>Common canvas displays a flow of data operations as nodes and links which the user can create and edit to get the flow they want. These visual flows of data operations are translated into data processing steps performed by a back-end server. Common canvas provides functionality for the visual display of flows in the browser and leaves persistence and execution of data flows to the application.
+Within common canvas the user can perform operations such as:</p>
+<ul>
+<li>Create a new node by dragging a node definition from a palette onto the canvas.</li>
+<li>Create a new node by dragging a node from outside the canvas onto the canvas (you&rsquo;ll have to do some programming to get this to work).</li>
+<li>Delete a node by clicking a context menu option.</li>
+<li>Create a link by dragging a line from one node to another.</li>
+<li>Delete a link by clicking a context menu option.</li>
+<li>Add a comment to the canvas and draw a link from it to one or more nodes.</li>
+<li>Edit a comment.</li>
+<li>Move nodes and comments around in the canvas to get the desired arrangement.</li>
+<li>And more! &hellip;</li>
+</ul>
+<h2 id="common-canvas-react-object">Common Canvas react object<a class="headerlink" href="#common-canvas-react-object" title="Permanent link">&para;</a></h2>
+<p>Common-canvas is a react component that can be used in your react application to display a fully-functional canvas user interface including the function mentioned above. The <code>&lt;CommonCanvas&gt;</code> component is displayed in a <code>&lt;div&gt;</code> provided by your application. Here&rsquo;s some sample code to show the mnimum needed to get a working canvas.</p>
+<div class="highlight"><pre><span></span><code>import React from &quot;react&quot;;
+import AllTypesCanvas from &quot;../../test_resources/diagrams/allTypesCanvas.json&quot;;
+import ModelerPalette from &quot;../../test_resources/palettes/modelerPalette.json&quot;;
+import { CommonCanvas, CanvasController } from &quot;@elyra/canvas&quot;;
+
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.canvasController = new CanvasController();
+        this.canvasController.setPipelineFlow(AllTypesCanvas);
+        this.canvasController.setPipelineFlowPalette(ModelerPalette);
+    }
+
+    render() {
+        return (
+            &lt;div id=&quot;harness-app-container&quot;&gt;
+                &lt;CommonCanvas
+                    canvasController={this.canvasController}
+                /&gt;
+            &lt;/div&gt;
+        );
+    }
+}
+</code></pre></div>
+<h2 id="canvas-controller">Canvas Controller<a class="headerlink" href="#canvas-controller" title="Permanent link">&para;</a></h2>
+<p>The only mandatory parameter for the <code>&lt;CommonCanvas&gt;</code> component is a regular JavaScript object called the <a href="2.4-Canvas-Controller-API.md">CanvasController</a>.</p>
+<p>The CanvasController routes handles calls from the host application and actions performed by the user. It then updates the internal object model which stores:</p>
+<ol>
+<li>the data that describes the flow of nodes, links and comments (called a pipelineFlow);</li>
+<li>the data that describes the definition of the palette which contains node templates that can dragged to add nodes to the canvas;</li>
+<li>the set of currently selected objects.</li>
+<li>notification messages</li>
+<li>breadcrumbs that indicate which sub-flow is being viewed</li>
+<li>layout information</li>
+</ol>
+<p>The <a href="2.4-Canvas-Controller-API.md">CanvasController</a> provides an API which allows your code to:</p>
+<ol>
+<li>set a new pipelineFlow;</li>
+<li>get the current pipelineFlow (after the user has edited it);</li>
+<li>update and edit objects in the canvas (for example, add node, delete link etc.);</li>
+<li>set the node definition data (for display of nodes in the palette)</li>
+</ol>
+<h1 id="getting-started-with-common-canvas-programming">Getting started with common canvas programming<a class="headerlink" href="#getting-started-with-common-canvas-programming" title="Permanent link">&para;</a></h1>
+<h2 id="hello-canvas">Hello Canvas!<a class="headerlink" href="#hello-canvas" title="Permanent link">&para;</a></h2>
+<p>You can start by looking at these two &lsquo;hello  world&rsquo; examples for using common canvas:</p>
+<ul>
+<li>This first one called <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js">app-tiny.js</a> has the bare minimum necessary to get a fully functioning common-canvas to appear including all the basic functionality, a palette and a flow of nodes and links.</li>
+<li>The second, called <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-small.js">app-small.js</a>, shows many of the options available to a common-canvas developer such as configurations and callback handlers.</li>
+</ul>
+<p>You can also look at the <a href="https://github.com/elyra-ai/canvas/blob/49ed634e3353d8f5c58eb8409ed8e1009f19c87a/canvas_modules/harness/src/client/App.js">App.js</a> file in the test harness section of this repo to see examples of code that uses the common canvas component.</p>
+<p>Now let&rsquo;s walk through the different steps to get common-canvas working:</p>
+<h2 id="step-1-install-elyra-canvas-npm-module">Step 1 : Install Elyra Canvas NPM module<a class="headerlink" href="#step-1-install-elyra-canvas-npm-module" title="Permanent link">&para;</a></h2>
+<p>Enter:
+<div class="highlight"><pre><span></span><code>     npm install @elyra/canvas
+</code></pre></div></p>
+<h2 id="step-2-import-common-canvas">Step 2 : Import Common-canvas<a class="headerlink" href="#step-2-import-common-canvas" title="Permanent link">&para;</a></h2>
+<p>To use common canvas in your react application you need to do the following. First import the CommonCanvas react component and CanvasController class from the Elyra Canvas library.  Elyra Canvas produces both <code>esm</code> and <code>cjs</code> outputs.  By default <code>esm</code> will be used when webpack is used to build the consuming application.</p>
+<p><strong>All Components</strong>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CommonCanvas</span><span class="p">,</span><span class="w"> </span><span class="nx">CanvasController</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas&quot;</span><span class="p">;</span>
+</code></pre></div>
+<strong>Canvas only</strong></p>
+<p>To import only canvas functionality in <code>cjs</code> format use:
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CommonCanvas</span><span class="p">,</span><span class="w"> </span><span class="nx">CanvasController</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas/dist/lib/canvas&quot;</span><span class="p">;</span>
+</code></pre></div></p>
+<p>In addition you&rsquo;ll need to import <code>&lt;IntlProvider&gt;</code> from the <code>react-intl</code> library.
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">IntlProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react-intl&quot;</span><span class="p">;</span>
+</code></pre></div></p>
+<h2 id="step-3-create-an-instance-of-the-canvas-controller">Step 3 : Create an instance of the canvas controller<a class="headerlink" href="#step-3-create-an-instance-of-the-canvas-controller" title="Permanent link">&para;</a></h2>
+<p>To control the canvas you&rsquo;ll need an instance of the canvas controller so create an instance of it like this (probably in the constructor of your object).
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">CanvasController</span><span class="p">();</span>
+</code></pre></div></p>
+<h2 id="step-4-set-the-palette-data">Step 4 : Set the palette data<a class="headerlink" href="#step-4-set-the-palette-data" title="Permanent link">&para;</a></h2>
+<p>Next you&rsquo;ll need to populate the palette data. This will specify the nodes (split into categories) that will appear in the palette. The user can drag them from the palette to build their flow. This is done by calling CanvasController with:
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">setPipelineFlowPalette</span><span class="p">(</span><span class="nx">pipelineFlowPalette</span><span class="p">);</span>
+</code></pre></div>
+The pipelineFlowPalette object should conform to the JSON schema found here:
+<a href="https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/palette">https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/palette</a></p>
+<p>Some examples of palette JSON files can be found here:
+<a href="https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resources/palettes">https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resources/palettes</a></p>
+<h2 id="step-5-optional-set-the-flow-data">Step 5 : (Optional) Set the flow data<a class="headerlink" href="#step-5-optional-set-the-flow-data" title="Permanent link">&para;</a></h2>
+<p>This is an optional step. If you want a previously saved flow to be shown in the canvas editor so the user can start to edit it, you will need to call the CanvasController with:
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">setPipelineFlow</span><span class="p">(</span><span class="nx">pipelineFlow</span><span class="p">);</span>
+</code></pre></div></p>
+<p>The pipelineFlow object should conform to the JSON schema found here:
+<a href="https://github.com/elyra-ai/pipeline-schemas/tree/master/common-pipeline/pipeline-flow">https://github.com/elyra-ai/pipeline-schemas/tree/master/common-pipeline/pipeline-flow</a></p>
+<p>Some examples of pipeline flow JSON files can be found here:
+<a href="https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resources/diagrams">https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resources/diagrams</a></p>
+<h2 id="step-6-pull-in-the-css">Step 6 : Pull in the CSS<a class="headerlink" href="#step-6-pull-in-the-css" title="Permanent link">&para;</a></h2>
+<p>Check this section to find info on what CSS to include in your application&rsquo;s CSS. <a href="4.0-Styling.md">Styling</a>.</p>
+<h2 id="step-7-display-the-canvas">Step 7 : Display the canvas<a class="headerlink" href="#step-7-display-the-canvas" title="Permanent link">&para;</a></h2>
+<p>Finally you&rsquo;ll need to display the canvas object inside an <code>&lt;IntlProvider&gt;</code> object. Inside your render code, add the following:
+<div class="highlight"><pre><span></span><code>    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">IntlProvider</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">CommonCanvas</span> <span class="na">canvasController</span><span class="o">=</span><span class="s">{this.canvasController}</span> <span class="p">/&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">IntlProvider</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div>
+The div should have the dimensions you want for your canvas to display in your page. For the canvasController property, pass the instance of canvas controller you created earlier. This is the only mandatory property. After providing this and running your code you will have a fully functioning canvas including: a palette; default toolbar; context menus; direct manipulation (move and resize) etc. To customize these behaviors and presentation continue with the sections below.</p>
+<h2 id="common-canvas-customization">Common Canvas customization<a class="headerlink" href="#common-canvas-customization" title="Permanent link">&para;</a></h2>
+<p>If you want to customize the behavior of common canvas you can specify any combination of the following optional settings:
+<div class="highlight"><pre><span></span><code>    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">CommonCanvas</span>
+            <span class="na">canvasController</span><span class="o">=</span><span class="s">{this.canvasController}</span>
+
+            <span class="na">config</span><span class="o">=</span><span class="s">{this.commonCanvasConfig}</span>
+            <span class="na">toolbarConfig</span><span class="o">=</span><span class="s">{this.toolbarConfig}</span>
+            <span class="na">notificationConfig</span><span class="o">=</span><span class="s">{this.notificationConfig}</span>
+            <span class="na">contextMenuConfig</span><span class="o">=</span><span class="s">{this.contextMenuConfig}</span>
+            <span class="na">keyboardConfig</span><span class="o">=</span><span class="s">{this.keyboardConfig}</span>
+
+            <span class="na">contextMenuHandler</span><span class="o">=</span><span class="s">{this.contextMenuHandler}</span>
+            <span class="na">beforeEditActionHandler</span><span class="o">=</span><span class="s">{this.beforeEditActionHandler}</span>
+            <span class="na">editActionHandler</span><span class="o">=</span><span class="s">{this.editActionHandler}</span>
+            <span class="na">clickActionHandler</span><span class="o">=</span><span class="s">{this.clickActionHandler}</span>
+            <span class="na">decorationActionHandler</span><span class="o">=</span><span class="s">{this.decorationActionHandler}</span>
+            <span class="na">layoutHandler</span><span class="o">=</span><span class="s">{this.layoutHandler}</span>
+            <span class="na">tipHandler</span><span class="o">=</span><span class="s">{this.tipHandler}</span>
+            <span class="na">idGeneratorHandler</span><span class="o">=</span><span class="s">{this.idGeneratorHandler}</span>
+            <span class="na">selectionChangeHandler</span><span class="o">=</span><span class="s">{this.selectionChangeHandler}</span>
+            <span class="na">actionLabelHandler</span><span class="o">=</span><span class="s">{this.actionLabelHandler}</span>
+
+            <span class="na">showRightFlyout</span><span class="o">=</span><span class="s">{showRightFlyout}</span>
+            <span class="na">rightFlyoutContent</span><span class="o">=</span><span class="s">{rightFlyoutContent}</span>
+
+            <span class="na">showBottomPanel</span><span class="o">=</span><span class="s">{showBottomPanel}</span>
+            <span class="na">bottomPanelContent</span><span class="o">=</span><span class="s">{bottomPanelContent}</span>
+
+            <span class="na">showTopPanel</span><span class="o">=</span><span class="s">{showTopPanel}</span>
+            <span class="na">topPanelContent</span><span class="o">=</span><span class="s">{topPanelContent}</span>
+        <span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">CommonCanvas</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div></p>
+<h3 id="config-objects">Config objects<a class="headerlink" href="#config-objects" title="Permanent link">&para;</a></h3>
+<p>Common canvas has five <strong>optional</strong> configuration objects: config, toolbarConfig, notificationConfig, contextMenuConfig and keyboardConfig.
+They are documented here:
+<a href="2.1-Config-Objects.md">Config Objects</a></p>
+<h3 id="handlers">Handlers<a class="headerlink" href="#handlers" title="Permanent link">&para;</a></h3>
+<p>There are several <strong>optional</strong> handlers implemented as callback functions. They are contextMenuHandler, editActionHandler, beforeEditActionHandler, clickActionHandler, decorationActionHandler, layoutHandler, tipHandler, idGeneratorHandler, selectionChangeHandler and actionLabelHandler. They are documented here:
+<a href="2.2-Common-Canvas-callbacks.md">Common Canvas Callback</a></p>
+<h3 id="right-flyout-panel-parameters">Right-flyout panel parameters<a class="headerlink" href="#right-flyout-panel-parameters" title="Permanent link">&para;</a></h3>
+<p>The right flyout panel appears on the right of the canvas area. You can add whatever content you like to this panel. Typically, it is used to display properties of nodes on the canvas. There are two <strong>optional</strong> parameters to let you manage the right flyout panel These are:</p>
+<ul>
+<li>showRightFlyout: This can be true or false to indicate whether the flyout panel is shown or not. The default is false.</li>
+<li>rightFlyoutContent: content to display in the right flyout which is a JSX object. Nothing is displayed by default.</li>
+</ul>
+<h3 id="bottom-panel-parameters">Bottom panel parameters<a class="headerlink" href="#bottom-panel-parameters" title="Permanent link">&para;</a></h3>
+<p>The bottom panel appears below the canvas area and between the palette and the right flyout panel. You can add whatever content you like to this panel. There are two <strong>optional</strong> parameters to let you manage the bottom panel. These are:</p>
+<ul>
+<li>showBottomPanel: This can be true or false to indicate whether the bottom panel is shown or not. The default is false.</li>
+<li>bottomPanelContent: content to display in the bottom panel which is a JSX object. Nothing is displayed by default.</li>
+</ul>
+<h3 id="top-panel-parameters">Top panel parameters<a class="headerlink" href="#top-panel-parameters" title="Permanent link">&para;</a></h3>
+<p>The top panel appears below the toolbar and between the palette and the right flyout panel. You can add whatever content you like to this panel. There are two <strong>optional</strong> parameters to let you manage the top panel. These are:</p>
+<ul>
+<li>showTopPanel: This can be true or false to indicate whether the top panel is shown or not. The default is false.</li>
+<li>topPanelContent: content to display in the top panel which is a JSX object. Nothing is displayed by default.</li>
+</ul>
+<h3 id="localization">Localization<a class="headerlink" href="#localization" title="Permanent link">&para;</a></h3>
+<p>You can customize <code>&lt;CommonCanvas&gt;</code> using the <code>&lt;IntlProvider&gt;</code> object to <a href="#localization">display translated test</a></p>
+<h2 id="creating-nodes-on-the-canvas">Creating nodes on the canvas<a class="headerlink" href="#creating-nodes-on-the-canvas" title="Permanent link">&para;</a></h2>
+<p>Nodes can be created on the canvas by the user in two ways:</p>
+<ul>
+<li>By dragging a node from the palette onto the canvas background</li>
+<li>By dragging a node from outside the canvas</li>
+</ul>
+<p>The first technique is provided by Common canvas. The second requires some development work which is documented here:
+<a href="2.3-Enabling-node-creation-from-external-object.md">Enabling node creation from external object</a></p>
+<h2 id="keyboard-support">Keyboard support<a class="headerlink" href="#keyboard-support" title="Permanent link">&para;</a></h2>
+<p>Common canvas supports a number of keyboard interactions as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Keyboard Shortcut</th>
+<th>Action</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ctrl/Cmnd + a</td>
+<td>selectAll</td>
+<td>Select All objects</td>
+</tr>
+<tr>
+<td>delete</td>
+<td>deleteSelectedObjects</td>
+<td>Delete currently selected objects</td>
+</tr>
+<tr>
+<td>Ctrl/Cmnd + x</td>
+<td>cut</td>
+<td>Cut selected objects to the clipboard</td>
+</tr>
+<tr>
+<td>Ctrl/Cmnd + c</td>
+<td>copy</td>
+<td>Copy selected objects to the clipboard</td>
+</tr>
+<tr>
+<td>Ctrl/Cmnd + v</td>
+<td>paste</td>
+<td>Paste objects from the clipboard. If the mouse cursor is over <br>the canvas, objects will be pasted at the cursor position or, <br>if not, at a default position</td>
+</tr>
+<tr>
+<td>Ctrl/Cmnd + z</td>
+<td>undo</td>
+<td>Undo last command</td>
+</tr>
+<tr>
+<td>Ctrl/Cmnd + Shift + z</td>
+<td>redo</td>
+<td>Redo last undone command</td>
+</tr>
+<tr>
+<td>Ctrl/Cmnd + y</td>
+<td>redo</td>
+<td>Redo last undone command</td>
+</tr>
+</tbody>
+</table>
+<p>Your application can disable any or all of these actions by providing the <a href="2.1-Config-Objects.md#keyboard-config-object">keyboard config object</a> to the CommonCanvas react component.</p>
+<p>When any of the shortcut keys are pressed the common-canvas object model will be updated and then the <a href="2.2-Common-Canvas-callbacks.md#editactionhandler">editActionHandler</a> callback will be called with the <code>data.editType</code> parameter set to the action above and the <code>data.editSource</code> parameter set to &ldquo;keyboard&rdquo;.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright  &copy; 2024 Elyra Authors, an open source project and all are welcome to contribute! Maintained by the Elyra Authors Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "navigation.tabs", "navigation.indexes"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.bd41221c.min.js"></script>
+      
+        <script src="../js/links-in-new-tabs.js"></script>
+      
+    
+  </body>
+</html>
