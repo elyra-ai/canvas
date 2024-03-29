@@ -103,7 +103,7 @@ $toolbar-divider-width: 1px;
 	background-color: $ui-01;
 	display: inline-block;
 
-	& button {
+	& > .toolbar-button-item > button {
 		padding: 0;
 		min-height: 30px;
 		height: $toolbar-button-height;
@@ -111,37 +111,34 @@ $toolbar-divider-width: 1px;
 
 	&.default,
 	&.ghost {
-		& button {
+		& > .toolbar-button-item > button {
 			background-color: $ui-01;
-		}
 
-		& button:hover {
-			background-color: $hover-field;
-		}
+			&:hover,
+			&:focus {
+				background-color: $hover-field;
+			}
 
-		& button:focus {
-			background-color: $hover-field;
-		}
-
-		& button:disabled:hover {
-			background-color: $ui-01;
+			&:disabled:hover {
+				background-color: $ui-01;
+			}
 		}
 	}
 
 	&.tertiary {
-		& button {
+		& > .toolbar-button-item > button {
 			color: $brand-03;
 			background-color: $ui-01;
-		}
 
-		& button:hover {
-			background-color: $hover-field;
-		}
+			&:hover {
+				background-color: $hover-field;
+			}
 
-		& button:disabled,
-		& button:disabled:hover {
-			color: $disabled-02;
-			background-color: $ui-01;
+			&:disabled,
+			&:disabled:hover {
+				color: $disabled-02;
+				background-color: $ui-01;
+			}
 		}
 	}
 }
