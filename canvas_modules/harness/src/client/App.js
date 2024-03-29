@@ -41,7 +41,6 @@ import PaletteBundles from "@elyra/canvas/locales/palette/locales";
 import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
 import { CommonCanvas, CanvasController, CommonProperties, ColorPicker } from "common-canvas"; // eslint-disable-line import/no-unresolved
-import CommonCanvasPackage from "@elyra/canvas/package.json";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
@@ -2416,13 +2415,15 @@ class App extends React.Component {
 		const apiLabel = "API";
 		const commonPropertiesModalLabel = "Common Properties Modal";
 		const commonCanvasLabel = "Common Canvas";
+		const todaysDate = new Date();
+		const todaysDateFormatted = todaysDate.toISOString().split("T")[0];
 
 		const navBar = (<div aria-label="Common Canvas Test Harness" role="banner">
 			<div className="harness-app-navbar">
 				<ul className="harness-app-navbar-items">
 					<li className="harness-navbar-li">
 						<span className="harness-title">Common Canvas</span>
-						<span className="harness-version">{"v" + CommonCanvasPackage.version}</span>
+						<span className="harness-version">{todaysDateFormatted}</span>
 					</li>
 					<li className="harness-navbar-li harness-nav-divider" data-tip={consoleLabel}>
 						<a onClick={this.openConsole.bind(this) }>
