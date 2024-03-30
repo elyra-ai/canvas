@@ -17,7 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { ChevronRight } from "@carbon/react/icons";
+import { ChevronRight16 } from "@carbon/icons-react";
 import ColorPicker from "../color-picker";
 
 // context-menu sizing
@@ -206,7 +206,7 @@ class CommonContextMenu extends React.Component {
 		const subMenuPosStyle = this.buildSubMenuPosStyle(runningYPos, menuPos, subMenuSize, canvasRect, rtl);
 		const menuItem = menuDefinition[index];
 
-		const icon = (<ChevronRight />);
+		const icon = (<ChevronRight16 />);
 		const menuItemContent = <div>{menuItem.label}{icon} </div>;
 		const menuItemClass = "context-menu-item " + (disabled ? " disabled" : "");
 		const subMenuClass = "context-menu-popover context-menu-submenu" +

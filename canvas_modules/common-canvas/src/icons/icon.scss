@@ -15,41 +15,41 @@
  */
 
 .canvas-icon .stroke, .canvas-icon.stroke {
-	stroke: $icon-primary;
+	stroke: $icon-01;
 }
 
 .canvas-icon .fill, .canvas-icon.fill {
-	fill: $icon-primary;
+	fill: $icon-01;
 }
 
 .canvas-icon[disabled] {
-	fill: $button-disabled;
+	fill: $disabled-02;
 }
 
 svg.properties-icon, svg.canvas-icon {
-	fill: $icon-primary;
+	fill: $icon-01;
 }
 
 svg.canvas-state-icon-error {
-	fill: $support-error;
+	fill: $support-01;
 }
 
 svg.canvas-state-icon-success {
-	fill: $support-success;
+	fill: $support-02;
 }
 
 svg.canvas-state-icon-warning {
-	fill: $support-warning;
+	fill: $support-03;
 	[data-icon-path="inner-path"] { // exclamation mark
-		fill: $layer-selected-inverse;
+		fill: $ui-05;
 		opacity: 1;
 	}
 }
 
 svg.canvas-state-icon-info {
-	fill: $support-info;
+	fill: $support-04;
 }
 
 svg.canvas-state-icon-information-hollow {
-	fill: $icon-secondary;
+	fill: $icon-02;
 }

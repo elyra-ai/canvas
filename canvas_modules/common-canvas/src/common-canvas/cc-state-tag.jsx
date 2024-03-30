@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import { injectIntl } from "react-intl";
-import { Locked, EditOff } from "@carbon/react/icons";
+import { Locked16, EditOff16 } from "@carbon/icons-react";
 import { STATE_TAG_LOCKED, STATE_TAG_READ_ONLY, TIP_TYPE_STATE_TAG }
 	from "../common-canvas/constants/canvas-constants.js";
 
@@ -78,11 +78,11 @@ class CommonCanvasStateTag extends React.Component {
 
 		if (this.props.stateTagType === STATE_TAG_LOCKED) {
 			const label = this.getLabel("canvas.stateTagLocked");
-			stateTag = this.getStateTag(label, (<Locked />));
+			stateTag = this.getStateTag(label, (<Locked16 />));
 
 		} else if (this.props.stateTagType === STATE_TAG_READ_ONLY) {
 			const label = this.getLabel("canvas.stateTagReadOnly");
-			stateTag = this.getStateTag(label, (<EditOff />));
+			stateTag = this.getStateTag(label, (<EditOff16 />));
 		}
 
 		return stateTag;

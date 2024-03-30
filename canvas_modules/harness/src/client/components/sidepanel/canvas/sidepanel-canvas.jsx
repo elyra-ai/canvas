@@ -20,7 +20,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { TextInput, FileUploader, Button, Select, SelectItemGroup, SelectItem, Checkbox, RadioButtonGroup, RadioButton, Toggle, FormGroup }
-	from "@carbon/react";
+	from "carbon-components-react";
 import { get, set } from "lodash";
 import {
 	NONE_SAVE_ZOOM,
@@ -373,7 +373,7 @@ export default class SidePanelForms extends React.Component {
 		let key = 1;
 		const groupOptions = [];
 		const choosefromlocation = [];
-		options.push(<SelectItem key = "choose-an-option" text = "Choose an option..." value = "Choose an option..." />);
+		options.push(<SelectItem key = "choose-an-option" text = "Choose an option..." />);
 		choosefromlocation.push(
 			<SelectItem key={"choose-from-location"} text = "Choose From Location" value = {CHOOSE_FROM_LOCATION} />);
 		options.push(
@@ -398,11 +398,10 @@ export default class SidePanelForms extends React.Component {
 					buttonLabel="Choose file"
 					accept={[".json"]}
 					onChange={this.onCanvasFileSelect}
-					iconDescription="Delete file"
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
-					<Button size="sm"
+					<Button size="small"
 						disabled={!this.isReadyToSubmitCanvasData()}
 						onClick={this.submitCanvas.bind(this)}
 					>
@@ -420,11 +419,10 @@ export default class SidePanelForms extends React.Component {
 					buttonLabel="Choose file"
 					accept={[".json"]}
 					onChange={this.onCanvasPaletteSelect}
-					iconDescription="Delete file"
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
-					<Button size="sm"
+					<Button size="small"
 						disabled={!this.isReadyToSubmitPaletteData()}
 						onClick={this.submitPalette.bind(this)}
 					>
@@ -470,11 +468,10 @@ export default class SidePanelForms extends React.Component {
 					buttonLabel="Chose file"
 					accept={[".json"]}
 					onChange={this.onCanvasFileSelect2}
-					iconDescription="Delete file"
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
-					<Button size="sm"
+					<Button size="small"
 						disabled={!this.isReadyToSubmitCanvasData2()}
 						onClick={this.submitCanvas2.bind(this)}
 					>
@@ -493,11 +490,10 @@ export default class SidePanelForms extends React.Component {
 					buttonLabel="Chose file"
 					accept={[".json"]}
 					onChange={this.onCanvasPaletteSelect2}
-					iconDescription="Delete file"
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
-					<Button size="sm"
+					<Button size="small"
 						disabled={!this.isReadyToSubmitPaletteData2()}
 						onClick={this.submitPalette2.bind(this)}
 					>
@@ -547,7 +543,6 @@ export default class SidePanelForms extends React.Component {
 						name="selectedSaveZoom" // Set name to corresponding field name in App.js
 						onChange={this.setStateValue}
 						defaultSelected={this.props.getStateValue("selectedSaveZoom")}
-						orientation="vertical"
 					>
 						<RadioButton
 							value={NONE_SAVE_ZOOM}
@@ -566,7 +561,7 @@ export default class SidePanelForms extends React.Component {
 			</div>
 			<div className="harness-sidepanel-spacer" />
 			<div style={pad}className="harness-sidepanel-clear-saved-storage">
-				<Button size="sm"
+				<Button size="small"
 					onClick={this.props.canvasConfig.clearSavedZoomValues}
 				>
 				Clear local storage zoom values
@@ -578,7 +573,7 @@ export default class SidePanelForms extends React.Component {
 		var saveToPdf = (<div>
 			<div className="harness-sidepanel-spacer" />
 			<div style={pad}className="harness-sidepanel-save-to-pdf">
-				<Button size="sm"
+				<Button size="small"
 					onClick={this.props.canvasConfig.saveToPdf}
 				>
 				Save to PDF
@@ -599,7 +594,6 @@ export default class SidePanelForms extends React.Component {
 						name="selectedSnapToGridType" // Set name to corresponding field name in App.js
 						onChange={this.setStateValue}
 						defaultSelected={this.props.getStateValue("selectedSnapToGridType")}
-						orientation="vertical"
 					>
 						<RadioButton
 							value={NONE_DRAG}
@@ -643,7 +637,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedShowRightFlyout" // Set ID to corresponding field in App.js state
 				labelText="Open Right Flyout"
 				toggled={this.props.getStateValue("selectedShowRightFlyout")}
-				onToggle={(val) => this.setStateValue(val, "selectedShowRightFlyout")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -652,7 +646,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedShowBottomPanel" // Set ID to corresponding field in App.js state
 				labelText="Open Bottom Panel"
 				toggled={this.props.getStateValue("selectedShowBottomPanel")}
-				onToggle={(val) => this.setStateValue(val, "selectedShowBottomPanel")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -661,7 +655,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedShowTopPanel" // Set ID to corresponding field in App.js state
 				labelText="Open Top Panel"
 				toggled={this.props.getStateValue("selectedShowTopPanel")}
-				onToggle={(val) => this.setStateValue(val, "selectedShowTopPanel")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -670,7 +664,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedMarkdownInComments" // Set ID to corresponding field in App.js state
 				labelText="Enable Markdown Text"
 				toggled={this.props.getStateValue("selectedMarkdownInComments")}
-				onToggle={(val) => this.setStateValue(val, "selectedMarkdownInComments")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -679,7 +673,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedContextToolbar" // Set ID to corresponding field in App.js state
 				labelText="Enable Context Toolbar"
 				toggled={this.props.getStateValue("selectedContextToolbar")}
-				onToggle={(val) => this.setStateValue(val, "selectedContextToolbar")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -688,7 +682,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedPanIntoViewOnOpen" // Set ID to corresponding field in App.js state
 				labelText="Enable Pan Into View On Open"
 				toggled={this.props.getStateValue("selectedPanIntoViewOnOpen")}
-				onToggle={(val) => this.setStateValue(val, "selectedPanIntoViewOnOpen")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -697,7 +691,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedAutoLinkOnlyFromSelNodes" // Set ID to corresponding field in App.js state
 				labelText="Enable Auto Link Only From Selected Nodes"
 				toggled={this.props.getStateValue("selectedAutoLinkOnlyFromSelNodes")}
-				onToggle={(val) => this.setStateValue(val, "selectedAutoLinkOnlyFromSelNodes")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -706,7 +700,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedBrowserEditMenu" // Set ID to corresponding field in App.js state
 				labelText="Enable Browser Edit Menu"
 				toggled={this.props.getStateValue("selectedBrowserEditMenu")}
-				onToggle={(val) => this.setStateValue(val, "selectedBrowserEditMenu")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -715,7 +709,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedRightFlyoutUnderToolbar" // Set ID to corresponding field in App.js state
 				labelText="Enable Right Flyout Under Toolbar"
 				toggled={this.props.getStateValue("selectedRightFlyoutUnderToolbar")}
-				onToggle={(val) => this.setStateValue(val, "selectedRightFlyoutUnderToolbar")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -724,7 +718,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedDragWithoutSelect" // Set ID to corresponding field in App.js state
 				labelText="Enable Drag Without Select"
 				toggled={this.props.getStateValue("selectedDragWithoutSelect")}
-				onToggle={(val) => this.setStateValue(val, "selectedDragWithoutSelect")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -733,7 +727,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedPositionNodeOnRightFlyoutOpen" // Set ID to corresponding field in App.js state
 				labelText="Enable Position Node On Right Flyout Open"
 				toggled={this.props.getStateValue("selectedPositionNodeOnRightFlyoutOpen")}
-				onToggle={(val) => this.setStateValue(val, "selectedPositionNodeOnRightFlyoutOpen")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -742,7 +736,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedLinkReplaceOnNewConnection" // Set ID to corresponding field in App.js state
 				labelText="Enable Link Replace On New Connection"
 				toggled={this.props.getStateValue("selectedLinkReplaceOnNewConnection")}
-				onToggle={(val) => this.setStateValue(val, "selectedLinkReplaceOnNewConnection")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -751,7 +745,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedAssocLinkCreation" // Set ID to corresponding field in App.js state
 				labelText="Enable Association Link Creation"
 				toggled={this.props.getStateValue("selectedAssocLinkCreation")}
-				onToggle={(val) => this.setStateValue(val, "selectedAssocLinkCreation")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -764,7 +758,6 @@ export default class SidePanelForms extends React.Component {
 					name="selectedImageDisplay" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedImageDisplay")}
-					orientation="vertical"
 				>
 					<RadioButton
 						value={IMAGE_DISPLAY_SVG_INLINE}
@@ -791,7 +784,6 @@ export default class SidePanelForms extends React.Component {
 					name="selectedLinkSelection" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedLinkSelection")}
-					orientation="vertical"
 				>
 					<RadioButton
 						value={LINK_SELECTION_NONE}
@@ -822,7 +814,6 @@ export default class SidePanelForms extends React.Component {
 					name="selectedAssocLinkType" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedAssocLinkType")}
-					orientation="vertical"
 				>
 					<RadioButton
 						value={ASSOC_STRAIGHT}
@@ -845,7 +836,6 @@ export default class SidePanelForms extends React.Component {
 					name="selectedCanvasUnderlay" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedCanvasUnderlay")}
-					orientation="vertical"
 				>
 					<RadioButton
 						value={UNDERLAY_NONE}
@@ -864,7 +854,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedInternalObjectModel" // Set ID to corresponding field in App.js state
 				labelText="Use Object Model"
 				toggled={this.props.getStateValue("selectedInternalObjectModel")}
-				onToggle={(val) => this.setStateValue(val, "selectedInternalObjectModel")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -874,7 +864,7 @@ export default class SidePanelForms extends React.Component {
 					id="selectedSaveToPalette" // Set ID to corresponding field in App.js state
 					labelText="Enable Save To Palette"
 					toggled={this.props.getStateValue("selectedSaveToPalette")}
-					onToggle={(val) => this.setStateValue(val, "selectedSaveToPalette")}
+					onToggle={this.setStateValue}
 				/>
 			</div>);
 
@@ -884,7 +874,7 @@ export default class SidePanelForms extends React.Component {
 					id="selectedInsertNodeDroppedOnLink" // Set ID to corresponding field in App.js state
 					labelText="Enable Insert Node Dropped On Link"
 					toggled={this.props.getStateValue("selectedInsertNodeDroppedOnLink")}
-					onToggle={(val) => this.setStateValue(val, "selectedInsertNodeDroppedOnLink")}
+					onToggle={this.setStateValue}
 				/>
 			</div>);
 
@@ -894,7 +884,7 @@ export default class SidePanelForms extends React.Component {
 					id="selectedHighlightNodeOnNewLinkDrag" // Set ID to corresponding field in App.js state
 					labelText="Enable Highlight Node On New Link Drag"
 					toggled={this.props.getStateValue("selectedHighlightNodeOnNewLinkDrag")}
-					onToggle={(val) => this.setStateValue(val, "selectedHighlightNodeOnNewLinkDrag")}
+					onToggle={this.setStateValue}
 				/>
 			</div>);
 
@@ -904,7 +894,7 @@ export default class SidePanelForms extends React.Component {
 					id="selectedHighlightUnavailableNodes" // Set ID to corresponding field in App.js state
 					labelText="Enable Highlight Unavailable Nodes"
 					toggled={this.props.getStateValue("selectedHighlightUnavailableNodes")}
-					onToggle={(val) => this.setStateValue(val, "selectedHighlightUnavailableNodes")}
+					onToggle={this.setStateValue}
 				/>
 			</div>);
 
@@ -914,7 +904,7 @@ export default class SidePanelForms extends React.Component {
 					id="selectedZoomIntoSubFlows" // Set ID to corresponding field in App.js state
 					labelText="Enable Zoom Into Sub-flows"
 					toggled={this.props.getStateValue("selectedZoomIntoSubFlows")}
-					onToggle={(val) => this.setStateValue(val, "selectedZoomIntoSubFlows")}
+					onToggle={this.setStateValue}
 				/>
 			</div>);
 
@@ -924,7 +914,7 @@ export default class SidePanelForms extends React.Component {
 					id="selectedSingleOutputPortDisplay" // Set ID to corresponding field in App.js state
 					labelText="Enable Single Output Port Display"
 					toggled={this.props.getStateValue("selectedSingleOutputPortDisplay")}
-					onToggle={(val) => this.setStateValue(val, "selectedSingleOutputPortDisplay")}
+					onToggle={this.setStateValue}
 				/>
 			</div>);
 
@@ -935,7 +925,7 @@ export default class SidePanelForms extends React.Component {
 					id="selectedDropZoneOnExternalDrag" // Set ID to corresponding field in App.js state
 					labelText="Enable Drop Zone on Drag"
 					toggled={this.props.getStateValue("selectedDropZoneOnExternalDrag")}
-					onToggle={(val) => this.setStateValue(val, "selectedDropZoneOnExternalDrag")}
+					onToggle={this.setStateValue}
 				/>
 			</div>);
 
@@ -945,7 +935,7 @@ export default class SidePanelForms extends React.Component {
 					id="selectedDisplayCustomizedDropZoneContent" // Set ID to corresponding field in App.js state
 					labelText="Display customized drop zone content"
 					toggled={this.props.getStateValue("selectedDisplayCustomizedDropZoneContent")}
-					onToggle={(val) => this.setStateValue(val, "selectedDisplayCustomizedDropZoneContent")}
+					onToggle={this.setStateValue}
 				/>
 			</div>);
 
@@ -955,7 +945,7 @@ export default class SidePanelForms extends React.Component {
 					id="selectedDisplayCustomizedEmptyCanvasContent" // Set ID to corresponding field in App.js state
 					labelText="Display customized empty canvas content"
 					toggled={this.props.getStateValue("selectedDisplayCustomizedEmptyCanvasContent")}
-					onToggle={(val) => this.setStateValue(val, "selectedDisplayCustomizedEmptyCanvasContent")}
+					onToggle={this.setStateValue}
 				/>
 			</div>);
 
@@ -964,7 +954,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedCreateSupernodeNonContiguous" // Set ID to corresponding field in App.js state
 				labelText="Enable Create Supernode for Noncontiguous Nodes"
 				toggled={this.props.getStateValue("selectedCreateSupernodeNonContiguous")}
-				onToggle={(val) => this.setStateValue(val, "selectedCreateSupernodeNonContiguous")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -973,7 +963,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedMoveNodesOnSupernodeResize" // Set ID to corresponding field in App.js state
 				labelText="Enable move surrounding nodes when resizing a supernode."
 				toggled={this.props.getStateValue("selectedMoveNodesOnSupernodeResize")}
-				onToggle={(val) => this.setStateValue(val, "selectedMoveNodesOnSupernodeResize")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -982,7 +972,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedExternalPipelineFlows" // Set ID to corresponding field in App.js state
 				labelText="Enable External Pipeline Flows"
 				toggled={this.props.getStateValue("selectedExternalPipelineFlows")}
-				onToggle={(val) => this.setStateValue(val, "selectedExternalPipelineFlows")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -991,7 +981,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedEditingActions" // Set ID to corresponding field in App.js state
 				labelText="Enable Editing Actions"
 				toggled={this.props.getStateValue("selectedEditingActions")}
-				onToggle={(val) => this.setStateValue(val, "selectedEditingActions")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -1000,7 +990,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedResizableNodes" // Set ID to corresponding field in App.js state
 				labelText="Enable Resizable Nodes"
 				toggled={this.props.getStateValue("selectedResizableNodes")}
-				onToggle={(val) => this.setStateValue(val, "selectedResizableNodes")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -1013,7 +1003,6 @@ export default class SidePanelForms extends React.Component {
 					name="selectedInteractionType" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedInteractionType")}
-					orientation="vertical"
 				>
 					<RadioButton
 						value={INTERACTION_MOUSE}
@@ -1040,7 +1029,6 @@ export default class SidePanelForms extends React.Component {
 					name="selectedNodeFormatType" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedNodeFormatType")}
-					orientation="vertical"
 				>
 					<RadioButton
 						value={VERTICAL_FORMAT}
@@ -1063,7 +1051,6 @@ export default class SidePanelForms extends React.Component {
 					name="selectedLinkType" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedLinkType")}
-					orientation="vertical"
 				>
 					<RadioButton
 						value={CURVE_LINKS}
@@ -1090,7 +1077,6 @@ export default class SidePanelForms extends React.Component {
 					name="selectedLinkDirection" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedLinkDirection")}
-					orientation="vertical"
 				>
 					<RadioButton
 						value={DIRECTION_LEFT_RIGHT}
@@ -1117,7 +1103,6 @@ export default class SidePanelForms extends React.Component {
 					name="node_layout_radio"
 					onChange={this.exampleAppOptionChange}
 					defaultSelected={this.props.getStateValue("selectedExampleApp")}
-					orientation="vertical"
 				>
 					<RadioButton
 						value={EXAMPLE_APP_FLOWS}
@@ -1184,7 +1169,6 @@ export default class SidePanelForms extends React.Component {
 					className="harness-sidepanel-radio-group"
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedPaletteLayout")}
-					orientation="vertical"
 				>
 					<RadioButton
 						value={PALETTE_FLYOUT}
@@ -1205,7 +1189,7 @@ export default class SidePanelForms extends React.Component {
 					id="selectedNarrowPalette" // Set ID to corresponding field in App.js state
 					labelText="Show Narrow Palette"
 					toggled={this.props.getStateValue("selectedNarrowPalette")}
-					onToggle={(val) => this.setStateValue(val, "selectedNarrowPalette")}
+					onToggle={this.setStateValue}
 				/>
 			</div>
 		</div>);
@@ -1219,7 +1203,6 @@ export default class SidePanelForms extends React.Component {
 					className="harness-sidepanel-radio-group"
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedStateTag")}
-					orientation="vertical"
 				>
 					<RadioButton
 						value={STATE_TAG_NONE}
@@ -1254,7 +1237,6 @@ export default class SidePanelForms extends React.Component {
 					className="harness-sidepanel-radio-group"
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedToolbarLayout")}
-					orientation="vertical"
 				>
 					<RadioButton
 						value={TOOLBAR_LAYOUT_NONE}
@@ -1277,7 +1259,6 @@ export default class SidePanelForms extends React.Component {
 					className="harness-sidepanel-radio-group"
 					onChange={this.setStateValue}
 					defaultSelected={this.props.getStateValue("selectedToolbarType")}
-					orientation="vertical"
 				>
 					<RadioButton
 						value={TOOLBAR_TYPE_DEFAULT}
@@ -1316,8 +1297,8 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		var tipConfig = (<div className="harness-sidepanel-children" id="harness-sidepanel-tip-config">
-			<fieldset className="cds--fieldset">
-				<legend className="cds--label">Tips</legend>
+			<fieldset className="bx--fieldset">
+				<legend className="bx--label">Tips</legend>
 				<Checkbox
 					id="tip_palette_categories"
 					labelText={TIP_PALETTE_CATEGORIES}
@@ -1368,7 +1349,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedExtraCanvasDisplayed" // Set ID to corresponding field in App.js state
 				labelText="Extra canvas"
 				toggled={this.props.getStateValue("selectedExtraCanvasDisplayed")}
-				onToggle={(val) => this.setStateValue(val, "selectedExtraCanvasDisplayed")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -1393,7 +1374,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedSchemaValidation" // Set ID to corresponding field in App.js state
 				labelText="Schema Validation"
 				toggled={this.props.getStateValue("selectedSchemaValidation")}
-				onToggle={(val) => this.setStateValue(val, "selectedSchemaValidation")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -1402,7 +1383,7 @@ export default class SidePanelForms extends React.Component {
 				id="selectedBoundingRectangles" // Set ID to corresponding field in App.js state
 				labelText="Display Bounding Rectangles"
 				toggled={this.props.getStateValue("selectedBoundingRectangles")}
-				onToggle={(val) => this.setStateValue(val, "selectedBoundingRectangles")}
+				onToggle={this.setStateValue}
 			/>
 		</div>);
 
@@ -1444,13 +1425,13 @@ export default class SidePanelForms extends React.Component {
 				id="keepOpen" // Set ID to corresponding field in App.js state
 				labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
 				toggled={this.props.getStateValue("notificationConfig").keepOpen}
-				onToggle={(val) => this.setStateValue(val, "notificationConfig")}
+				onToggle={this.notificationConfigToggle}
 			/>
 			<Toggle
 				id="secondaryButtonDisabled" // Set ID to corresponding field in App.js state
 				labelText="Disable the notification center secondary button"
 				toggled={this.props.getStateValue("notificationConfig").secondaryButtonDisabled}
-				onToggle={(val) => this.setStateValue(val, "secondaryButtonDisabled")}
+				onToggle={this.notificationConfigToggle}
 			/>
 		</div>);
 
@@ -1497,7 +1478,7 @@ export default class SidePanelForms extends React.Component {
 				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
 				labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
 				toggled={this.props.getStateValue("notificationConfig2").keepOpen}
-				onToggle={(val) => this.setStateValue(val, "notificationConfig2")}
+				onToggle={this.notificationConfigToggle}
 			/>
 		</div>);
 
@@ -1507,7 +1488,7 @@ export default class SidePanelForms extends React.Component {
 					id="selectedDisplayFullLabelOnHover" // Set ID to corresponding field in App.js state
 					labelText="Display full node label on hover"
 					toggled={this.props.getStateValue("selectedDisplayFullLabelOnHover")}
-					onToggle={(val) => this.setStateValue(val, "selectedDisplayFullLabelOnHover")}
+					onToggle={this.setStateValue}
 				/>
 			</div>);
 

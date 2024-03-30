@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { isEmpty } from "lodash";
-import { Checkbox } from "@carbon/react";
+import { Checkbox } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
@@ -33,8 +33,8 @@ class CheckboxControl extends React.Component {
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 	}
 
-	handleChange(evt, { checked, id }) {
-		this.props.controller.updatePropertyValue(this.props.propertyId, checked);
+	handleChange(value) {
+		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 
 	render() {
@@ -69,18 +69,18 @@ class CheckboxControl extends React.Component {
 			</span>
 		);
 		return (
-			<div data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<div className={classNames("properties-checkbox", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}>
-					<Checkbox
-						disabled={this.props.state === STATES.DISABLED}
-						id={this.id}
-						labelText={checkboxLabel}
-						onChange={this.handleChange.bind(this)}
-						checked={Boolean(this.props.value)}
-						hideLabel={this.props.tableControl}
-					/>
-					{tooltipIcon}
-				</div>
+			<div className={classNames("properties-checkbox", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}
+				data-id={ControlUtils.getDataId(this.props.propertyId)}
+			>
+				<Checkbox
+					disabled={this.props.state === STATES.DISABLED}
+					id={this.id}
+					labelText={checkboxLabel}
+					onChange={this.handleChange.bind(this)}
+					checked={Boolean(this.props.value)}
+					hideLabel={this.props.tableControl}
+				/>
+				{tooltipIcon}
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)} />
 			</div>
 		);

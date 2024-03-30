@@ -303,7 +303,7 @@ describe("textfield renders correctly", () => {
 			/>
 		);
 		const textWrapper = wrapper.find("div[data-id='properties-test-text']");
-		const messageWrapper = textWrapper.find("div.cds--form-requirement");
+		const messageWrapper = textWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 });

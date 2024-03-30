@@ -20,25 +20,25 @@
 	.icon {
 		margin: 0 $spacing-01;
 		.properties-validation-icon-warning {
-			fill: $support-warning;
+			fill: $support-03;
 			[data-icon-path="inner-path"] { // exclamation mark
-				fill: $layer-selected-inverse;
+				fill: $ui-05;
 				opacity: 1;
 			}
 		}
 		.properties-validation-icon-error {
-			fill: $support-error;
+			fill: $support-01;
 		}
 		.properties-validation-icon-info {
-			fill: $support-info;
+			fill: $support-04;
 		}
 		.properties-validation-icon-success {
-			fill: $support-success;
+			fill: $support-02;
 		}
 	}
 	span {
-		@include type-style("caption-01");
-		color: $text-primary;
+		@include carbon--type-style("caption-01");
+		color: $text-01;
 	}
 	&.error {
 		span {

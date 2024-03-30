@@ -15,16 +15,15 @@
  */
 
 /*SidePanel*/
-
 .harness-app-sidepanel {
-	background-color: $layer-01;
+	background-color: $ui-01;
 	top: 50px;
 	position: fixed;
 	right: 0;
 	height: calc(100% - $harness-header-height);
 	width: 0;
 	transition: width $harness-sidepanel-transition-time;
-	color: $text-primary;
+	color: $text-01;
 	overflow: auto;
 	z-index: 100;
 	box-sizing: border-box;
@@ -32,8 +31,8 @@
 	overflow-x: hidden;
 	padding-top: 5px;
 	padding-bottom: 10px;
-	border-left: 1px solid $layer-accent-01;
-	.cds--fieldset {
+	border-left: 1px solid $ui-03;
+	.bx--fieldset {
 		margin-bottom: 0;
 	}
 
@@ -58,7 +57,7 @@
 
 .harness-side-panel-header {
 	padding: 0 20px;
-	color: $text-primary;
+	color: $text-01;
 	font-size: 16px;
 	font-weight: bold;
 	pointer-events: none;
@@ -71,7 +70,7 @@
 .harness-sidepanel-divider {
 	width: 100%;
 	margin: 0 0 10px;
-	border-bottom: 1px solid $layer-accent-01;
+	border-bottom: 1px solid $ui-03;
 	padding: 5px 0;
 }
 
@@ -94,7 +93,7 @@
 
 .harness-sidepanel-radio-group {
 	display: block;
-	.cds--radio-button-wrapper {
+	.bx--radio-button-wrapper {
 		margin-bottom: $spacing-02;
 		> label {
 			justify-content: left; // override carbon style to center justify radio-button labels
@@ -103,11 +102,11 @@
 }
 
 .harness-sidepanel-file-uploader {
-	.cds--label-description,
-	.cds--form-item {
+	.bx--label-description,
+	.bx--form-item {
 		margin-bottom: 0;
 	}
-	.cds--file-container {
+	.bx--file-container {
 		margin-top: 5px;
 	}
 }
@@ -121,10 +120,10 @@
 }
 
 .harness-notification-title, .harness-notification-subtitle, .harness-notification-empty-message, .harness-notification-clear-all {
-	.cds--label {
+	.bx--label {
 		margin: 0;
 	}
-	.cds--text-input__field-wrapper {
+	.bx--text-input__field-wrapper {
 		margin-bottom: 8px;
 	}
 }

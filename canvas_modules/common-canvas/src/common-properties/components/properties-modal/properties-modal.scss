@@ -15,18 +15,18 @@
  */
 
 .properties-modal {
-	.cds--modal-close {
+	.bx--modal-close {
 		display: none;
 	}
-	.cds--modal-container {
+	.bx--modal-container {
 		padding: 0;
 	}
-	.cds--modal-content {
+	.bx--modal-content {
 		margin-bottom: $spacing-05;
 		padding: 0;
 	}
 	&.noButtons {
-		.cds--modal-footer {
+		.bx--modal-footer {
 			opacity: 0;
 			pointer-events: none;
 			display: none;

@@ -21,10 +21,14 @@ import tableUtils from "./../../_utils_/table-utils";
 
 import { mountWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
+import chai from "chai";
+import chaiEnzyme from "chai-enzyme";
 import sinon from "sinon";
 import fieldPickerParamDef from "./../../test_resources/paramDefs/fieldpicker_paramDef.json";
 import glmmParamDef from "./../../test_resources/paramDefs/glmm_paramDef.json";
 import propertyUtils from "../../_utils_/property-utils";
+
+chai.use(chaiEnzyme()); // Note the invocation at the end
 
 const controller = new Controller();
 

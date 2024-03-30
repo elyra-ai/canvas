@@ -20,7 +20,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Icon from "./../../../icons/icon.jsx";
-import { Button } from "@carbon/react";
+import { Button } from "carbon-components-react";
 import classNames from "classnames";
 import { isEqual, concat } from "lodash";
 import ValidationMessage from "./../../components/validation-message";
@@ -28,7 +28,7 @@ import WideFlyout from "./../../components/wide-flyout";
 import { formatMessage } from "./../../util/property-utils";
 import ExpressionBuilder from "./expression-builder/expression-builder";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE } from "./../../constants/constants";
-import { Calculator } from "@carbon/react/icons";
+import { Calculator24 } from "@carbon/icons-react";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants";
 import { get } from "lodash";
@@ -319,10 +319,9 @@ class ExpressionControl extends React.Component {
 		}
 
 		const reactIntl = this.props.controller.getReactIntl();
-		const Calculator24 = React.forwardRef((props, ref) => <Calculator ref={ref} size={24} {...props} />);
 
 		const button = this._showBuilderButton() ? (
-			<Button kind="ghost" size="sm"
+			<Button kind="ghost" size="small"
 				className="properties-expression-button"
 				disabled={this.props.state === STATES.DISABLED}
 				onClick={this.showExpressionBuilder}

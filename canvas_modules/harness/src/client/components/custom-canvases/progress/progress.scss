@@ -15,16 +15,16 @@
  */
 
 // Some useful variations on Carbon colors
-$blue: #8EB5FF;
-$light-blue: #E9F1FF;
-$dark-blue: #4283FE;
+$blue: lighten($focus, 25%);
+$light-blue: lighten($focus, 43%);
+$dark-blue: lighten($focus, 10%);
 
 // Node colors for the Regular (Vertical) theme
 $node-body-stroke: $blue;
 $node-body-fill: $light-blue;
 
 $node-port-output-stroke-color: $blue;
-$node-port-output-fill-color: $background;
+$node-port-output-fill-color: $ui-background;
 
 $node-port-output-connected-stroke-color: $blue;
 $node-port-output-connected-fill-color: $light-blue;
@@ -33,7 +33,7 @@ $node-port-output-hover-stroke: $dark-blue;
 $node-port-output-hover-fill: $dark-blue;
 
 $node-port-input-stroke-color: $blue;
-$node-port-input-fill-color: $background;
+$node-port-input-fill-color: $ui-background;
 
 $node-port-input-connected-stroke-color: $blue;
 $node-port-input-connected-fill-color: $light-blue;
@@ -66,7 +66,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 	}
 
 	.d3-node-selection-highlight[data-selected="yes"] {
-		stroke: $link-inverse;
+		stroke: $inverse-link;
 		stroke-dasharray: 5, 5;
 		stroke-width: 2;
 		fill: transparent;
@@ -75,9 +75,9 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 
 	.d3-node-group.d3-node-unavailable .d3-node-body-outline,
 	.d3-node-group.d3-node-unavailable .d3-node-label {
-		stroke: $button-disabled;
-		fill: $layer-selected-disabled;
-		color: $button-disabled;
+		stroke: $disabled-02;
+		fill: $disabled-03;
+		color: $disabled-02;
 	}
 
 	.d3-node-label {
@@ -153,7 +153,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 	}
 
 	.d3-comment-selection-highlight[data-selected="yes"] {
-		stroke: $link-inverse;
+		stroke: $inverse-link;
 		stroke-dasharray: 5 5;
 		stroke-width: 2;
 		fill: transparent;

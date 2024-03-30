@@ -178,7 +178,7 @@ describe("Passwordfield renders correctly", () => {
 			/>
 		);
 		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
-		const messageWrapper = passwordWrapper.find("div.cds--form-requirement");
+		const messageWrapper = passwordWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 	it("Passwordfield eyeIcon tooltip default content appears correctly", () => {

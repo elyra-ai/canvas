@@ -57,22 +57,13 @@ const rules = [
 		test: /\.js(x?)$/,
 		loader: "babel-loader",
 		exclude: /node_modules/,
-		options: babelOptions
+		query: babelOptions
 	},
 	{
 		test: /\.s*css$/,
 		use: [
-			{ loader: "style-loader",
-				options: {
-					esModule: false
-				}
-			},
-			{ loader: "css-loader",
-				options: {
-					sourceMap: true,
-					url: false
-				}
-			},
+			{ loader: "style-loader" },
+			{ loader: "css-loader", options: { sourceMap: true, url: false } },
 			{ loader: "postcss-loader",
 				options: {
 					postcssOptions: {
@@ -92,9 +83,7 @@ const rules = [
 	},
 	{
 		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
-		use: [
-			"file-loader?name=graphics/[contenthash].[ext]",
-		],
+		loader: "file-loader?name=graphics/[hash].[ext]"
 	}
 ];
 
@@ -103,7 +92,8 @@ const rules = [
 
 // Plugins ------------------------------------------------------------>
 
-const plugins = [
+var plugins = [
+	new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.NoEmitOnErrorsPlugin(),
 	// Generates an `index.html` file with the <script> injected.
 	new HtmlWebpackPlugin({
@@ -124,6 +114,7 @@ module.exports = {
 	mode: "development",
 	devtool: false,
 	entry: entry,
+	cache: true,
 	resolve: {
 		modules: [
 			__dirname,
@@ -131,7 +122,7 @@ module.exports = {
 		],
 		alias: {
 			"react": "node_modules/react",
-			"react-dom": "node_modules/react-dom",
+			"react-dom": "node_modules/@hot-loader/react-dom",
 			"react-redux": "node_modules/react-redux",
 			"react-intl": "node_modules/react-intl",
 			"common-canvas": "src/common-canvas-dev.js"

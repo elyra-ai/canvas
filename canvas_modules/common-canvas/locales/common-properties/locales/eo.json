@@ -105,8 +105,5 @@
   "virtualizedTable.row.checkbox.label": "[Esperanto~Select row {row_index} from {table_label}~~~~~~~~~~eo]",
   "properties.empty.table.text": "[Esperanto~To begin, click \"{button_label}\"~~~~~eo]",
   "label.indicator.required": "[Esperanto~(required)~~~~~~eo]",
-  "label.indicator.optional": "[Esperanto~(optional)~~~~~~eo]",
-  "slider.numberInput.label": "[Esperanto~Slider number input~~~~~eo]",
-  "editorForm.tabList.label": "[Esperanto~Primary Tabs~~~~eo]",
-  "subTabs.tabList.label": "[Esperanto~Tab List~~~~eo]"
+  "label.indicator.optional": "[Esperanto~(optional)~~~~~~eo]"
 }

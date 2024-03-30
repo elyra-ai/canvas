@@ -40,16 +40,16 @@ Cypress.Commands.add("verifyPropertiesFlyoutTitle", (givenTitle) => {
 
 Cypress.Commands.add("verifyMessageInPropertiesTitleEditor", (message, type) => {
 	cy.get(".common-canvas-right-side-items .properties-title-editor")
-		.find(".cds--form-requirement")
+		.find(".bx--form-requirement")
 		.should("have.text", message);
 
 	if (type === "warning") {
 		cy.get(".common-canvas-right-side-items .properties-title-editor")
-			.find(".cds--text-input__field-wrapper--warning")
+			.find(".bx--text-input__field-wrapper--warning")
 			.should("have.length", 1);
 	} else if (type === "error") {
 		cy.get(".common-canvas-right-side-items .properties-title-editor")
-			.find(".cds--text-input__field-wrapper")
+			.find(".bx--text-input__field-wrapper")
 			.should("have.attr", "data-invalid", "true");
 	}
 });

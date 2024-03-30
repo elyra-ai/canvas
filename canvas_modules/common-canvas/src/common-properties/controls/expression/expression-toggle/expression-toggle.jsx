@@ -18,8 +18,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
-import { Button } from "@carbon/react";
-import { Maximize, Minimize } from "@carbon/react/icons";
+import { Button } from "carbon-components-react";
+import { Maximize16, Minimize16 } from "@carbon/icons-react";
 import { formatMessage } from "../../../util/property-utils";
 import { MESSAGE_KEYS } from "../../../constants/constants";
 
@@ -36,9 +36,9 @@ class ExpressionToggle extends React.Component {
 					{this.props.enableMaximize ? (<Button
 						className="maximize"
 						type="button"
-						size="sm"
+						size="small"
 						kind="ghost"
-						renderIcon={Maximize}
+						renderIcon={Maximize16}
 						hasIconOnly
 						iconDescription={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_MAXIMIZE_LABEL)}
 						onClick={() => {
@@ -53,17 +53,16 @@ class ExpressionToggle extends React.Component {
 					/>) : (<Button
 						type="button"
 						className="minimize"
-						size="sm"
+						size="small"
 						kind="ghost"
 						hasIconOnly
-						renderIcon={Minimize}
+						renderIcon={Minimize16}
 						iconDescription={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_MINIMIZE_LABEL)}
 						onClick={() => this.props.controller.clearActiveTearsheet()}
 					/>)
 					}
 				</div>
-			</div>
-		);
+			</div>);
 	}
 }
 ExpressionToggle.propTypes = {

@@ -35,12 +35,12 @@
 		// Style node ellipsis icon.
 		.d3-node-ellipsis-group {
 			.d3-node-ellipsis {
-				fill: $icon-primary;
+				fill: $icon-01;
 			}
 
 			&:hover {
 				.d3-node-ellipsis-background {
-					fill: $layer-accent-01;
+					fill: $ui-03;
 				}
 			}
 		}
@@ -87,7 +87,7 @@
 
 	// Style new connection link line
 	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: $button-primary;
+		stroke: $interactive-01;
 		stroke-width: 2;
 		stroke-dasharray: 1 0;
 		fill: none;

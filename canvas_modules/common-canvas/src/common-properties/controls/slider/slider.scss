@@ -15,33 +15,29 @@
  */
  
 .properties-slider {
-	.cds--slider-container { 
+	.bx--slider-container { 
 		min-width: 100%;
 		
-		.cds--slider { 
+		.bx--slider { 
 			min-width: unset; // Default Carbon Component Slider has a fixed min-width of 12.5rem so unset it to make it responsive
-		}
-
-		.cds--slider-text-input {
-			text-align: center;
 		}
 	}
 	&.error {
-		.cds--text-input--invalid, .cds--text-input {
+		.bx--text-input--invalid, .bx--text-input {
 			outline: unset;
 			outline-offset: unset;
 		}
 		input[type="number"]:not([disabled]) {
-			border: 2px solid $support-error;
+			border: 2px solid $support-01;
 		}
 	}
 	&.warning {
-		.cds--text-input--invalid, .cds--text-input {
+		.bx--text-input--invalid, .bx--text-input {
 			outline: unset;
 			outline-offset: unset;
 		}
 		input[type="number"]:not([disabled]) {
-			border: 2px solid $support-warning;
+			border: 2px solid $support-03;
 		}
 	}
 	

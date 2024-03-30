@@ -1,5 +1,5 @@
 /*
-* Copyright 2023-2024 Elyra Authors
+* Copyright 2023 Elyra Authors
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,23 +19,35 @@ import PropTypes from "prop-types";
 import SVG from "react-inlinesvg";
 import { get } from "lodash";
 
-import { ShapeNode } from "@carbon/charts-react";
+import ShapeNode from "@carbon/charts-react/diagrams/ShapeNode";
+import "@carbon/charts/styles-g10.css";
 
 class ShapeNodeWrapper extends React.Component {
+	componentDidMount() {
+		window.console.log("ShapeNodeWrapper - componentDidMount");
+	}
+
+	componentDidUpdate() {
+		window.console.log("ShapeNodeWrapper - componentDidUpdate");
+	}
+
+	componentWillUnmount() {
+		window.console.log("ShapeNodeWrapper - componentWillUnmount");
+	}
+
 	render() {
 		const shape = get(this, "props.nodeData.app_data.react_nodes_data.shape");
 
 		const styleImage = { height: "24px", width: "24px", y: 0 };
 		const icon = (<SVG src={this.props.nodeData.image} style={styleImage} />);
 		return (
-			<div className={"shape-node-div"}>
-				<ShapeNode
-					title={this.props.nodeData.label}
-					shape={shape}
-					size="28px"
-					renderIcon={icon}
-				/>
-			</div>
+			<ShapeNode
+				className={"shape-node-div"}
+				title={this.props.nodeData.label}
+				shape={shape}
+				size="28px"
+				renderIcon={icon}
+			/>
 		);
 	}
 }

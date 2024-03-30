@@ -22,14 +22,14 @@ import ArrangeHorizontally from "./../../assets/images/arrange_horizontally.svg"
 import ArrangeVertically from "./../../assets/images/arrange_vertically.svg";
 import ToggleNotificationPanel from "./../../assets/images/notification_counter_icon.svg";
 
-import { Button } from "@carbon/react";
+import { Button } from "carbon-components-react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
-import { StopFilledAlt, Play, Undo, Redo, Chat, ChatOff, Result,
-	Cut, Copy, Paste, Edit,	ColorPalette, Maximize, Minimize,
-	Launch, AddComment, TrashCan, ZoomIn, ZoomOut,
-	ChevronRight, ChevronDown, ChevronUp,
-	CenterToFit, OpenPanelFilledLeft } from "@carbon/react/icons";
+import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16, Result16,
+	Cut16, Copy16, Paste16, Edit16,	ColorPalette16, Maximize16, Minimize16,
+	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16,
+	ChevronRight16, ChevronDown16, ChevronUp16,
+	CenterToFit16, OpenPanelFilledLeft16 } from "@carbon/icons-react";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT, TOOLBAR_COLOR_BACKGROUND,
@@ -71,54 +71,54 @@ class ToolbarButtonItem extends React.Component {
 
 		switch (actionObj.action) {
 		case (TOOLBAR_STOP):
-			return <StopFilledAlt disabled={disabled} />;
+			return <StopFilledAlt16 disabled={disabled} />;
 		case (TOOLBAR_RUN):
-			return <Play disabled={disabled} />;
+			return <Play16 disabled={disabled} />;
 		case (TOOLBAR_EXPAND_SUPERNODE_IN_PLACE):
-			return <Maximize disabled={disabled} />;
+			return <Maximize16 disabled={disabled} />;
 		case (TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE):
-			return <Minimize disabled={disabled} />;
+			return <Minimize16 disabled={disabled} />;
 		case (TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE):
-			return <Launch disabled={disabled} />;
+			return <Launch16 disabled={disabled} />;
 		case (TOOLBAR_UNDO):
-			return <Undo disabled={disabled} />;
+			return <Undo16 disabled={disabled} />;
 		case (TOOLBAR_REDO):
-			return <Redo disabled={disabled} />;
+			return <Redo16 disabled={disabled} />;
 		case (TOOLBAR_CLIPBOARD):
-			return <Result disabled={disabled} />;
+			return <Result16 disabled={disabled} />;
 		case (TOOLBAR_CUT):
-			return <Cut disabled={disabled} />;
+			return <Cut16 disabled={disabled} />;
 		case (TOOLBAR_COPY):
-			return <Copy disabled={disabled} />;
+			return <Copy16 disabled={disabled} />;
 		case (TOOLBAR_PASTE):
-			return <Paste disabled={disabled} />;
+			return <Paste16 disabled={disabled} />;
 		case (TOOLBAR_CREATE_COMMENT):
 		case (TOOLBAR_CREATE_AUTO_COMMENT):
-			return <AddComment disabled={disabled} />;
+			return <AddComment16 disabled={disabled} />;
 		case (TOOLBAR_SHOW_COMMENTS):
-			return <Chat disabled={disabled} />;
+			return <Chat16 disabled={disabled} />;
 		case (TOOLBAR_HIDE_COMMENTS):
-			return <ChatOff disabled={disabled} />;
+			return <ChatOff16 disabled={disabled} />;
 		case (TOOLBAR_COLOR_BACKGROUND):
-			return <ColorPalette disabled={disabled} />;
+			return <ColorPalette16 disabled={disabled} />;
 		case (TOOLBAR_DELETE_LINK):
 		case (TOOLBAR_DELETE_SELECTED_OBJECTS):
-			return <TrashCan disabled={disabled} />;
+			return <TrashCan16 disabled={disabled} />;
 		case (TOOLBAR_SET_COMMENT_EDIT_MODE):
 		case (TOOLBAR_SET_NODE_LABEL_EDIT):
-			return <Edit disabled={disabled} />;
+			return <Edit16 disabled={disabled} />;
 		case (TOOLBAR_ZOOM_IN):
-			return <ZoomIn disabled={disabled} />;
+			return <ZoomIn16 disabled={disabled} />;
 		case (TOOLBAR_ZOOM_OUT):
-			return <ZoomOut disabled={disabled} />;
+			return <ZoomOut16 disabled={disabled} />;
 		case (TOOLBAR_ZOOM_FIT):
-			return <CenterToFit disabled={disabled} />;
+			return <CenterToFit16 disabled={disabled} />;
 		case (TOOLBAR_OPEN_PALETTE):
-			return <OpenPanelFilledLeft disabled={disabled} />;
+			return <OpenPanelFilledLeft16 disabled={disabled} />;
 		case (TOOLBAR_CLOSE_PALETTE):
-			return <OpenPanelFilledLeft disabled={disabled} />;
+			return <OpenPanelFilledLeft16 disabled={disabled} />;
 		case (TOOLBAR_TOGGLE_PALETTE):
-			return <OpenPanelFilledLeft disabled={disabled} />;
+			return <OpenPanelFilledLeft16 disabled={disabled} />;
 
 		// Non-carbon icons
 		case (TOOLBAR_ARRANGE_HORIZONALLY):
@@ -249,11 +249,11 @@ class ToolbarButtonItem extends React.Component {
 	generateChevronIcon(actionObj) {
 		if (actionObj.subMenu || actionObj.subPanel) {
 			if (this.props.isInMenu) {
-				return <ChevronRight />;
+				return (<ChevronRight16 />);
 			}
 			if (actionObj.incLabelWithIcon === "before" ||
 					actionObj.incLabelWithIcon === "after") {
-				const chev = this.props.subAreaDisplayed ? (<ChevronUp />) : (<ChevronDown />);
+				const chev = this.props.subAreaDisplayed ? (<ChevronUp16 />) : (<ChevronDown16 />);
 				return (<div className={"toolbar-up-down-chevron"}>{chev}</div>);
 			}
 			return this.generateChevronMini();

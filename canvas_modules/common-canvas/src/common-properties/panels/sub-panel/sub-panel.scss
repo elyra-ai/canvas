@@ -20,12 +20,12 @@ button.properties-subpanel-button {
 	height: 2rem;
 	width: 2rem;
 	display: flex;
-	align-items: center;
+	justify-content: center;
 }
 
 .properties-subpanel-modal-in-tearsheet {
 	.properties-light-disabled {
-		background-color: $layer-01;
+		background-color: $ui-01;
 	}
 
 	.properties-modal-children {

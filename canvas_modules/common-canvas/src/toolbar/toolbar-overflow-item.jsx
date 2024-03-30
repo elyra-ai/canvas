@@ -18,8 +18,8 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { v4 as uuid4 } from "uuid";
-import { Button } from "@carbon/react";
-import { OverflowMenuVertical } from "@carbon/react/icons";
+import { Button } from "carbon-components-react";
+import { OverflowMenuVertical16 } from "@carbon/icons-react";
 import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
 
 class ToolbarOverflowItem extends React.Component {
@@ -152,7 +152,7 @@ class ToolbarOverflowItem extends React.Component {
 					>
 						<div className="toolbar-item-content default">
 							<div className="toolbar-icon">
-								<OverflowMenuVertical />
+								<OverflowMenuVertical16 />
 							</div>
 						</div>
 					</Button>

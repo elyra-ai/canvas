@@ -16,9 +16,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Add } from "@carbon/react/icons";
-import { Button } from "@carbon/react";
-import { Switch, ContentSwitcher, Dropdown } from "@carbon/react";
+import { Add16 } from "@carbon/icons-react";
+import { Button } from "carbon-components-react";
+import { Switch, ContentSwitcher, Dropdown } from "carbon-components-react";
 import FlexibleTable from "./../../../components/flexible-table/flexible-table";
 import TruncatedContentTooltip from "./../../../components/truncated-content-tooltip";
 import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
@@ -276,9 +276,9 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				className="expression-add-field-button properties-expr-table-cell"
 				onClick={this.handleAddButtonClick.bind(this, index, tableType)}
 				kind="ghost"
-				size="sm"
+				size="small"
 			>
-				<Add aria-label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN)} />
+				<Add16 aria-label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN)} />
 			</Button>
 		);
 		return addValueButtonContent;

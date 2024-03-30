@@ -38,7 +38,7 @@
 }
 
 .properties-error-content {
-	@include type-style("label-02");
+	@include carbon--type-style("label-02");
 	padding: 0 $spacing-06;
 }
 
@@ -47,7 +47,7 @@
 	align-items: left;
 }
 
-.cds--tabs .cds--tabs__nav-item.properties-hidden-container,
+.bx--tabs--scrollable .bx--tabs--scrollable__nav-item.properties-hidden-container,
 .properties-hidden-container {
 	display: none;
 }

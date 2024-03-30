@@ -18,7 +18,7 @@
 	&.hide {
 		display: none;
 	}
-	.cds--form-item {
+	.bx--form-item {
 		margin-bottom: $spacing-02;
 	}
 }
@@ -44,7 +44,7 @@
 		align-items: center;
 		flex-wrap: wrap;
 		overflow: hidden;
-		.cds--radio-button-wrapper{
+		.bx--radio-button-wrapper{
 			margin-right: 0; // We removed the space between radio & tooltip to position it correctly
 		}
 		.properties-radioset-tooltip {

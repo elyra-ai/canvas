@@ -24,7 +24,7 @@ $properties-modal-buttons-height: 64px;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: $overlay;
+	background-color: $overlay-01;
 	z-index: 1000;
 	cursor: default;
 	&.show {
@@ -38,7 +38,7 @@ $properties-modal-buttons-height: 64px;
 	width: 675px;
 	margin-right: -675px;
 	z-index: 1001;
-	background-color: $layer-01;
+	background-color: $ui-01;
 	right: 0;
 	transition: margin-right 0.1s;
 	&.show {
@@ -46,12 +46,12 @@ $properties-modal-buttons-height: 64px;
 		transition: margin-right 0.3s;
 	}
 	.properties-wf-title {
-		@include type-style("productive-heading-01");
+		@include carbon--type-style("productive-heading-01");
 		padding-left: $spacing-06;
 		display: flex;
 		align-items: center;
 		height: $properties-wf-title-height;
-		border-bottom: 1px solid $layer-accent-01;
+		border-bottom: 1px solid $ui-03;
 	}
 	.properties-wf-children {
 		padding: $spacing-05;
@@ -61,5 +61,5 @@ $properties-modal-buttons-height: 64px;
 }
 
 .properties-light-disabled {
-	background-color: $background;
+	background-color: $ui-background;
 }

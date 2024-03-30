@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "@carbon/react";
+import { Button } from "carbon-components-react";
 
 import Tooltip from "./../../../../tooltip/tooltip";
 import classNames from "classnames";
@@ -50,7 +50,7 @@ export default class ExpressionSelectOperator extends React.Component {
 							<Button
 								className={classNames("properties-operator-button", { "first": (index % 2 === 0),
 									"second": !(index % 2 === 0) })}
-								size="sm"
+								size="small"
 								kind="tertiary"
 								onClick={this.onOperatorClick.bind(this, operator.value)}
 							>

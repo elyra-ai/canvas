@@ -78,7 +78,7 @@ describe("custom control renders correctly", () => {
 		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click"); // open dropdown
 		dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
-		let dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
+		let dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(1); // should have 1 item. Before custom toggle changes
 
 		const customToggle = wrapper.find("div[data-id='properties-ci-custom_toggle']");
@@ -90,7 +90,7 @@ describe("custom control renders correctly", () => {
 
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
-		dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
+		dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(2); // should have 2 items. Custom toggle control updates the values
 
 		toggle.getDOMNode().checked = false;
@@ -98,7 +98,7 @@ describe("custom control renders correctly", () => {
 
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
-		dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
+		dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(3); // should have 2 items. Custom toggle control updates the values
 	});
 });

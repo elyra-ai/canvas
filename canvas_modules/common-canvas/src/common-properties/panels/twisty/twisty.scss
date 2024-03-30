@@ -18,16 +18,13 @@
 	&.hide {
 		display: none;
 	}
-	.cds--accordion__item {
+	.bx--accordion__item {
 		border-top: 0;
 		margin: 0 -1rem; // Remove 16px outer padding for accordion title and content
 	}
-	.cds--accordion__item--active .cds--accordion__content {
+	.bx--accordion__item--active .bx--accordion__content {
 		// 24px padding between accordion title and content (issue #3106)
 		padding: $spacing-06 $spacing-05 $spacing-05;
-	}
-	.cds--accordion__wrapper {
-		padding: 0;
 	}
 }
 

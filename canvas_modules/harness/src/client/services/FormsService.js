@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 /* eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
+import fetch from "isomorphic-fetch";
 
 class FormsService {
 	getFiles(type) {

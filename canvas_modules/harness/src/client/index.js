@@ -15,7 +15,7 @@
  */
 
 import React from "react";
-import { createRoot } from "react-dom/client.js";
+import ReactDOM from "react-dom";
 
 import CommonPropertiesComponents from "./components/common-properties-components.jsx";
 import CommonPropertiesConditions from "./components/common-properties-conditions.jsx";
@@ -25,9 +25,8 @@ import AppTiny from "./app-tiny.js";
 import { HashRouter, Route } from "react-router-dom";
 import { IntlProvider } from "react-intl";
 
-const container = document.getElementById("root");
-const root = createRoot(container);
-root.render(
+
+ReactDOM.render(
 	<HashRouter>
 		<IntlProvider locale="en">
 			<div>
@@ -38,5 +37,6 @@ root.render(
 				<Route path="/conditions" component={ CommonPropertiesConditions } />
 			</div>
 		</IntlProvider>
-	</HashRouter>
+	</HashRouter>,
+	document.getElementById("root")
 );

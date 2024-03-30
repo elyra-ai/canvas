@@ -20,11 +20,11 @@ import { connect } from "react-redux";
 import { setTitle } from "./../../actions";
 import Isvg from "react-inlinesvg";
 import { get } from "lodash";
-import { TextInput, Button } from "@carbon/react";
+import { TextInput, Button } from "carbon-components-react";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
 import classNames from "classnames";
-import { Help, Edit, Close } from "@carbon/react/icons";
+import { Help16, Edit16, Close16 } from "@carbon/icons-react";
 
 
 class TitleEditor extends Component {
@@ -111,8 +111,8 @@ class TitleEditor extends Component {
 				onClick={this.editTitleClickHandler}
 				tooltipPosition="bottom"
 				tooltipAlignment="end"
-				renderIcon={Edit}
-				size="sm"
+				renderIcon={Edit16}
+				size="small"
 				iconDescription={propertiesTitleEditButtonLabel}
 				hasIconOnly
 			/>);
@@ -124,8 +124,8 @@ class TitleEditor extends Component {
 				data-id="help"
 				onClick={this.helpClickHandler}
 				tooltipPosition="bottom"
-				renderIcon={Help}
-				size="sm"
+				renderIcon={Help16}
+				size="small"
 				iconDescription={helpButtonLabel}
 				hasIconOnly
 			/>)
@@ -135,11 +135,11 @@ class TitleEditor extends Component {
 			? (<div className="properties-close-button">
 				<Button
 					kind="ghost"
-					size="sm"
+					size="small"
 					data-id="close"
 					onClick={this.props.closeHandler}
 					tooltipPosition="left"
-					renderIcon={Close}
+					renderIcon={Close16}
 					iconDescription={closeButtonLabel}
 					hasIconOnly
 				/>
@@ -186,7 +186,7 @@ class TitleEditor extends Component {
 						ref={this.textInputRef}
 						value={this.props.title}
 						onChange={this.handleTitleChange}
-						onKeyDown={(e) => this._handleKeyPress(e)}
+						onKeyPress={(e) => this._handleKeyPress(e)}
 						readOnly={this.props.labelEditable === false} // shows a non editable icon
 						labelText={this.labelText}
 						hideLabel

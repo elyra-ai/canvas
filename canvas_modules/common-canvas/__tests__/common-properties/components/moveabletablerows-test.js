@@ -19,10 +19,13 @@ import MoveableTableRows from "../../../src/common-properties/components/moveabl
 import FlexibleTable from "../../../src/common-properties/components/flexible-table";
 import { mountWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
+import chai from "chai";
+import chaiEnzyme from "chai-enzyme";
 import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
 import Controller from "../../../src/common-properties/properties-controller";
 
+chai.use(chaiEnzyme()); // Note the invocation at the end
 
 const handleRowClick = sinon.spy();
 const setScrollToRow = sinon.spy();

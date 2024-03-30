@@ -1155,7 +1155,7 @@ describe("structuretable with long text input values should render as readonly",
 		const subpanelTable = tables.at(1); // second one is the textarea in subpanel flyout
 		expect(subpanelTable.find("textarea").prop("disabled")).to.equal(true);
 
-		const validationMsg = subpanelTable.find("div.cds--form-requirement");
+		const validationMsg = subpanelTable.find("div.bx--form-requirement");
 		expect(validationMsg).to.have.length(1);
 	});
 });
@@ -1473,7 +1473,7 @@ describe("structuretable control with nested structure tables", () => {
 		dropdownButton.simulate("click");
 		// select the fourth item
 		const dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-nestedStructure_table_data_type']");
-		const dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(5);
 		dropdownList.at(3).simulate("click");
 

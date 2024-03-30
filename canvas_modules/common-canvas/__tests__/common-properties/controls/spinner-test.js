@@ -108,8 +108,8 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		expect(wrapper.find(".cds--number--nosteppers")).to.have.length(0);
-		expect(wrapper.find(".cds--number__controls")).to.have.length(1);
+		expect(wrapper.find(".bx--number--nosteppers")).to.have.length(0);
+		expect(wrapper.find(".bx--number__controls")).to.have.length(1);
 	});
 
 	it("should set correct state value when integer increment in `SpinnerControl`", () => {

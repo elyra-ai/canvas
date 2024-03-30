@@ -32,7 +32,7 @@ import {
 	Select,
 	SelectItemGroup,
 	SelectItem,
-} from "@carbon/react";
+} from "carbon-components-react";
 
 import {
 	CHOOSE_FROM_LOCATION,
@@ -211,7 +211,7 @@ export default class SidePanelProperties extends React.Component {
 		const formOptions = [];
 		const paramDefOptions = [];
 		const choosefromlocation = [];
-		options.push(<SelectItem key = "choose-an-option" text = "Choose an option..." value = "Choose an option..." />);
+		options.push(<SelectItem key = "choose-an-option" text = "Choose an option..." />);
 		choosefromlocation.push(
 			<SelectItem key={"choose-from-location"} text = "Choose From Location" value = {CHOOSE_FROM_LOCATION} />);
 		options.push(
@@ -271,7 +271,6 @@ export default class SidePanelProperties extends React.Component {
 					buttonLabel="Choose file"
 					accept={[".json"]}
 					onChange={this.onPropertiesSelect}
-					iconDescription="Delete file"
 				/>
 				{space}
 			</div>);
@@ -293,7 +292,7 @@ export default class SidePanelProperties extends React.Component {
 					{this.dropdownOptions()}
 				</Select>
 				{fileChooser}
-				<Button size="sm"
+				<Button size="small"
 					disabled={!this.isReadyToSubmitProperties()}
 					onClick={this.submitProperties.bind(this)}
 				>
@@ -304,7 +303,7 @@ export default class SidePanelProperties extends React.Component {
 
 		const validateProperties = (
 			<div className="harness-sidepanel-children">
-				<Button size="sm"
+				<Button size="small"
 					onClick={this.props.propertiesConfig.validateProperties}
 				>
 					Validate Properties

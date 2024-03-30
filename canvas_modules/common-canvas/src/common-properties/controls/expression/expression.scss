@@ -22,7 +22,7 @@
 		height: inherit;
 		width: 100%;
 		background: $field-02;
-		color: $text-primary;
+		color: $text-01;
 
 		.cm-gutters {
 			border-right: none;
@@ -32,16 +32,16 @@
 		.cm-content {
 			.cm-line {
 				padding-left: $spacing-03;
-				@include type-style("code-02");
+				@include carbon--type-style("code-02");
 			}
 			.cm-placeholder {
-				@include type-style("code-02");
+				@include carbon--type-style("code-02");
 			}
 			.cm-cursor {
-				border-left: 1px solid $text-primary;
+				border-left: 1px solid $text-01;
 			}
 			.cm-lineNumbers .cm-gutterElement {
-				@include type-style("body-short-01");
+				@include carbon--type-style("body-short-01");
 			}
 		}
 
@@ -53,24 +53,24 @@
 		}
 	}
 
-	.cm-line .cm-keyword { color: $link-primary; }
+	.cm-line .cm-keyword { color: $link-01; }
 
-	.cm-line .cm-number { color: $text-secondary; }
+	.cm-line .cm-number { color: $text-02; }
 
-	.cm-line .cm-def { color: $support-error; }
+	.cm-line .cm-def { color: $support-01; }
 
-	.cm-line .cm-comment { color: $support-success; }
+	.cm-line .cm-comment { color: $support-02; }
 
 	.cm-line .cm-variable,
 	.cm-line .cm-punctuation,
 	.cm-line .cm-property,
 	.cm-line .cm-operator {
-		color: $text-primary;
+		color: $text-01;
 	}
 
 	.cm-line .cm-string { color: $text-error; }
 
-	.cm-line .cm-meta { color: $layer-01; }
+	.cm-line .cm-meta { color: $ui-01; }
 }
 
 .elyra-CodeMirror.disabled {
@@ -81,18 +81,18 @@
 
 .elyra-CodeMirror.warning {
 	.cm-editor {
-		border: $spacing-01 solid $support-warning;
+		border: $spacing-01 solid $support-03;
 	}
 }
 
 .elyra-CodeMirror.error {
 	.cm-editor {
-		border: $spacing-01 solid $support-error;
+		border: $spacing-01 solid $support-01;
 	}
 }
 
 .properties-expression-editor {
-	border: 1px solid $layer-accent-01;
+	border: 1px solid $ui-03;
 	&.disabled {
 		opacity: 0.5;
 	}
@@ -132,7 +132,7 @@
 	position: relative;
 	height: $spacing-07;
 	.properties-expression-title {
-		@include type-style("label-01");
+		@include carbon--type-style("label-01");
 		position: absolute;
 		bottom: 5px;
 		left: 0;
@@ -144,10 +144,11 @@
 	}
 }
 
-.properties-expression-button {
+.properties-expression-button.bx--btn--sm.bx--btn--ghost {
 	padding: $spacing-02;
 	svg {
 		height: 20px;
 		width: 20px;
+		margin-left: 0;
 	}
 }

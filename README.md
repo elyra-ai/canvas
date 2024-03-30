@@ -19,11 +19,11 @@ limitations under the License.
 ## elyra/canvas
 
 ## Overview
-The Elyra Canvas tooling consists of two Node JS modules:
+The Common Canvas tooling consists of two Node JS modules:
 
 1) A `Common Canvas` for use in building canvas-like applications. See [detailed API and event documentation](https://github.com/elyra-ai/canvas/tree/main/canvas_modules/common-canvas).
 
-2) `Test harness`
+2) `Test harness`  
 See [here](https://github.com/elyra-ai/canvas/tree/main/canvas_modules/harness) for setting up local environment
 
 ## Documentation
@@ -33,21 +33,18 @@ See [here](https://github.com/elyra-ai/canvas/tree/main/canvas_modules/harness) 
 ## Using local version of common-canvas and/or common-properties
 Clone elyra/canvas
 ```sh
-# Clone the repo
 git clone git@github.com:elyra-ai/canvas.git
-
-# Install global libraries for building
+# install global libraries for building
 npm install -g grunt-cli sass
-
 # Build common-canvas and common-properties
 ./<elyra/canvas>/canvas_modules/common-canvas/build.sh
 ```
-In your application's package.json replace
+In your application's package.json replace  
 ```
 "@elyra/canvas": "<version>"
 ```
 with
-```
+```  
 "@elyra/canvas": "file:<elyra/canvas>/canvas_modules/common-canvas"
 ```
 
@@ -60,12 +57,11 @@ npm install
 
 ### Contribute to the Elyra Canvas documentation (mkdocs)
 1. Python v3 needs to be available.
-
-2. Go to canvas/docs directory.
+2. Go to canvas directory.
 
 3. Install required mkdocs packages using pip3.
 ```
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt`
 ```
 
 4. Run below command to start mkdocs server.

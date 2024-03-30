@@ -33,13 +33,13 @@
 }
 
 .properties-summary-values {
-	border-top: 1px solid $layer-accent-01;
+	border-top: 1px solid $ui-03;
 	padding: $spacing-05 0;
 }
 
 .properties-summary-table {
-	@include type-style("body-short-01");
-	color: $text-primary;
+	@include carbon--type-style("body-short-01");
+	color: $text-01;
 	max-height: 270px;
 	width: 100%;
 	display: flex;
@@ -51,8 +51,8 @@
 }
 
 .properties-summary-label {
-	@include type-style("productive-heading-01");
-	color: $text-primary;
+	@include carbon--type-style("productive-heading-01");
+	color: $text-01;
 	margin-bottom: $spacing-05;
 }
 

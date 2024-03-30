@@ -118,10 +118,7 @@ export const MESSAGE_KEYS = {
 	LABEL_INDICATOR_REQUIRED: "label.indicator.required",
 	LABEL_INDICATOR_OPTIONAL: "label.indicator.optional",
 	DATEPICKER_RANGE_START_LABEL: "datepickerRangeStart.default.label",
-	DATEPICKER_RANGE_END_LABEL: "datepickerRangeEnd.default.label",
-	SLIDER_NUMBER_INPUT_LABEL: "slider.numberInput.label",
-	EDITORFORM_TABLIST_LABEL: "editorForm.tabList.label",
-	SUBTABS_TABLIST_LABEL: "subTabs.tabList.label"
+	DATEPICKER_RANGE_END_LABEL: "datepickerRangeEnd.default.label"
 };
 
 export const TRUNCATE_LIMIT = 10000;
@@ -281,7 +278,8 @@ export const CARBON_BUTTON_SIZE = {
 	SMALL: "sm",
 	MEDIUM: "md",
 	LARGE: "lg",
-	EXTRA_LARGE: "xl"
+	EXTRA_LARGE: "xl",
+	DEFAULT: "default" // TODO: remove this after upgrading to carbon 11.x
 };
 
 export const CONTAINER_TYPE = {

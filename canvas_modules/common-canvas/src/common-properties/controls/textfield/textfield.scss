@@ -20,6 +20,10 @@ $textinput-bottom-padding: 5px;
 	&.hide {
 		display: none;
 	}
+	.bx--form-item { // carbon overrides
+		margin-right: 0;
+		margin-bottom: 0;
+	}
 	input {
 		min-width: unset;
 	}
@@ -44,17 +48,17 @@ $textinput-bottom-padding: 5px;
 		}
 		&.error {
 			input:not([disabled]) {
-				box-shadow: 0 2px 0 0 $support-error;
+				box-shadow: 0 2px 0 0 $support-01;
 			}
 		}
 		&.warning {
 			input:not([disabled]) {
-				box-shadow: 0 2px 0 0 $support-warning;
+				box-shadow: 0 2px 0 0 $support-03;
 			}
 		}
 	}
 	input:disabled:hover {
-		box-shadow: 0 2px 0 0 $text-secondary;
+		box-shadow: 0 2px 0 0 $text-02;
 	}
 
 	// Readonly control for error handling in table cells

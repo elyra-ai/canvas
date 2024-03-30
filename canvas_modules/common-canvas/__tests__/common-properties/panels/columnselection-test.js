@@ -35,7 +35,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 
 	it("should show correct values from selectcolumn controls", () => {
 		const panel1 = wrapper.find("div[data-id='properties-field1_panel']");
-		expect(panel1.find("span.cds--list-box__label").text()).to.equal("age");
+		expect(panel1.find("span.bx--list-box__label").text()).to.equal("age");
 		const expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "age", value: "age" },
@@ -46,7 +46,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 		expect(actualOptions).to.eql(expectedOptions);
 
 		const panel2 = wrapper.find("div[data-id='properties-field2_panel']");
-		expect(panel2.find("span.cds--list-box__label").text()).to.equal("BP");
+		expect(panel2.find("span.bx--list-box__label").text()).to.equal("BP");
 		const expectedOptions2 = [
 			{ label: "...", value: "" },
 			{ label: "BP", value: "BP" },
@@ -59,7 +59,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 
 	it("should show correct values from selectcolumn and selectcolumns controls", () => {
 		let panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
-		expect(panel1.find("span.cds--list-box__label").text()).to.equal("...");
+		expect(panel1.find("span.bx--list-box__label").text()).to.equal("...");
 		const expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "age", value: "age" },
@@ -73,7 +73,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 		const dropdownButton = panel1.find("button");
 		dropdownButton.simulate("click");
 		panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
-		const dropdownList = panel1.find("div.cds--list-box__menu-item");
+		const dropdownList = panel1.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(5);
 		// select age
 		dropdownList.at(1).simulate("click");
@@ -101,7 +101,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 
 	it("should show correct values from selectcolumn controls with multi schema input", () => {
 		let panel1 = wrapper.find("div[data-id='properties-field1_panel']");
-		expect(panel1.find("span.cds--list-box__label").text()).to.equal("0.Age");
+		expect(panel1.find("span.bx--list-box__label").text()).to.equal("0.Age");
 
 		let expectedSelectColumn1Options = [
 			{ label: "...", value: "" },
@@ -122,7 +122,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		expect(actualOptions).to.eql(expectedSelectColumn1Options);
 
 		let panel2 = wrapper.find("div[data-id='properties-field2_panel']");
-		expect(panel2.find("span.cds--list-box__label").text()).to.equal("0.BP");
+		expect(panel2.find("span.bx--list-box__label").text()).to.equal("0.BP");
 
 		let expectedSelectColumn2Options = [
 			{ label: "...", value: "" },
@@ -145,7 +145,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		const dropdownButton = panel1.find("button");
 		dropdownButton.simulate("click");
 		panel1 = wrapper.find("div[data-id='properties-field1_panel']");
-		const dropdownList = panel1.find("div.cds--list-box__menu-item");
+		const dropdownList = panel1.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(13);
 		// select data.drug2
 		dropdownList.at(8).simulate("click");
@@ -190,7 +190,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 
 	it("should show correct values from selectcolumn and selectcolumns controls with multi schema input", () => {
 		let panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
-		expect(panel1.find("span.cds--list-box__label").text()).to.equal("...");
+		expect(panel1.find("span.bx--list-box__label").text()).to.equal("...");
 
 		const fieldTable = [
 			{ "name": "Age", "schema": "0" },
@@ -217,7 +217,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		const dropdownButton = panel1.find("button");
 		dropdownButton.simulate("click");
 		panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
-		const dropdownList = panel1.find("div.cds--list-box__menu-item");
+		const dropdownList = panel1.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(12);
 		// select data.Age
 		dropdownList.at(5).simulate("click");
@@ -339,7 +339,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 
 	it("should handle improply defined string fields as strings", () => {
 		const panel1 = wrapper.find("div[data-id='properties-BADVAR1']");
-		expect(panel1.find("span.cds--list-box__label").text()).to.equal("0.Age");
+		expect(panel1.find("span.bx--list-box__label").text()).to.equal("0.Age");
 	});
 });
 

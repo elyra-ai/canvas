@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 $flexible-table-header-row-height: $spacing-07;
 $row-left-padding: $spacing-02;
 
@@ -28,7 +27,7 @@ $row-left-padding: $spacing-02;
 
 		.properties-ft-search-text {
 			svg {
-				fill: $icon-primary;
+				fill: $icon-01;
 			}
 		}
 		&.disabled {
@@ -51,10 +50,10 @@ $row-left-padding: $spacing-02;
 	position: relative;
 	overflow: hidden;
 	&.error {
-		border: 1px solid $support-error;
+		border: 1px solid $support-01;
 	}
 	&.warning {
-		border: 1px solid $support-warning;
+		border: 1px solid $support-03;
 	}
 }
 
@@ -65,7 +64,7 @@ $row-left-padding: $spacing-02;
 	width: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
-	background-color: $layer-01;
+	background-color: $ui-01;
 	display: flex; // address scrollbar with mouse issue
 	flex-direction: column; // address scrollbar with mouse issue
 }
@@ -73,7 +72,7 @@ $row-left-padding: $spacing-02;
 .properties-ft-container-absolute {
 	height: 100%;
 	width: 100%;
-	background-color: $layer-01;
+	background-color: $ui-01;
 	.properties-ft-container {
 		height: 100%;
 	}
@@ -127,17 +126,17 @@ $row-left-padding: $spacing-02;
 	justify-content: center;
 	align-items: center;
 	padding: 0 $spacing-05;
-	@include type-style("body-long-01");
+	@include carbon--type-style("body-long-01");
 }
 
 .properties-light-enabled {
 	.properties-ft-empty-table {
-		background-color: $background;
+		background-color: $ui-background;
 	}
 }
 
 .properties-light-disabled {
 	.properties-ft-empty-table {
-		background-color: $layer-01;
+		background-color: $ui-01;
 	}
 }
