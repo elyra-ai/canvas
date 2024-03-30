@@ -363,6 +363,7 @@ export default class CanvasController {
 	// Rearranges the nodes in the canvas in the direction specified for the
 	// pipeline ID passed in.
 	// layoutDirection - can be "horizontal" or "vertical"
+	// pipelineId - Optional - ID of the pipeline to be laid out, if ommited it is the current pipleline.
 	autoLayout(layoutDirection, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).autoLayout(layoutDirection);
 	}
