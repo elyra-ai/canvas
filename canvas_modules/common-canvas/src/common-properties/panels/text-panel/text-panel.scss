@@ -16,13 +16,13 @@
 
 .properties-text-panel {
 	.panel-label {
-		@include type-style("productive-heading-01");
-		color: $text-primary;
+		@include carbon--type-style("productive-heading-01");
+		color: $text-01;
 		padding-bottom: $spacing-03;
 	}
 	.panel-description {
-		@include type-style("body-short-01");
-		color: $text-primary;
+		@include carbon--type-style("body-short-01");
+		color: $text-01;
 		padding-bottom: $spacing-05;
 	}
 	.tooltip-container {

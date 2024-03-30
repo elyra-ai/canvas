@@ -41,11 +41,11 @@
 
 .properties-control-nested-panel {
 	padding: 0 0 0 $spacing-05; // Ensure nested panels have a padding
-	border-left: 1px solid $border-strong-01;
+	border-left: 1px solid $ui-04;
 }
 
 .properties-control-nested-panel .properties-control-nested-panel {
-	border-left: 1px solid $layer-accent-01;
+	border-left: 1px solid $ui-03;
 }
 
 // Set the height of the very first panel to be full width inside a tearsheet

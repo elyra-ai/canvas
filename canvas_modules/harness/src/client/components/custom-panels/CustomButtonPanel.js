@@ -17,7 +17,7 @@
 /* eslint-disable no-empty-function */
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { Button } from "@carbon/react";
+import { Button } from "carbon-components-react";
 import paramDef from "./json/misclassification_paramDef.json";
 
 
@@ -210,11 +210,11 @@ class CustomButtonPanel {
 					{cost}
 				</div>
 				<br />
-				<Button size="sm" onClick={this.addRowAction} {...addDisabled}>
+				<Button size="small" onClick={this.addRowAction} {...addDisabled}>
 					Add
 				</Button>
 				&nbsp; &nbsp;
-				<Button size="sm" onClick={this.removeRowsAction} {...removeDisabled}>
+				<Button size="small" onClick={this.removeRowsAction} {...removeDisabled}>
 					Remove Selected
 				</Button>
 			</div>

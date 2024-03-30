@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CloseOutline, Grid, List } from "@carbon/react/icons";
+import { CloseOutline16, Grid16, List16 } from "@carbon/icons-react";
 
 import Toolbar from "../toolbar";
 
@@ -56,13 +56,13 @@ class PaletteDialogTopbar extends React.Component {
 	render() {
 		const config = {
 			leftBar: [
-				{ action: "grid", iconEnabled: (<Grid />), enable: true, isSelected: this.props.showGrid },
-				{ action: "list", iconEnabled: (<List />), enable: true, isSelected: !this.props.showGrid },
+				{ action: "grid", iconEnabled: (<Grid16 />), enable: true, isSelected: this.props.showGrid },
+				{ action: "list", iconEnabled: (<List16 />), enable: true, isSelected: !this.props.showGrid },
 				{ divider: true }
 			],
 			rightBar: [
 				{ divider: true },
-				{ action: "close", iconEnabled: (<CloseOutline />), enable: true }
+				{ action: "close", iconEnabled: (<CloseOutline16 />), enable: true }
 			]
 		};
 

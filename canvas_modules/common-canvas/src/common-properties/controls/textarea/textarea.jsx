@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { TextArea, Layer } from "@carbon/react";
+import { TextArea } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
@@ -71,34 +71,30 @@ class TextareaControl extends React.Component {
 			};
 			validationProps = ControlUtils.getValidationProps(errorMessage, this.props.tableControl);
 			textArea = (<div>
-				<Layer level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
-					<TextArea
-						{...validationProps}
-						id={this.id}
-						disabled
-						placeholder={this.props.control.additionalText}
-						value={value}
-						labelText={this.props.controlItem}
-						hideLabel={this.props.tableControl}
-					/>
-				</Layer>
+				<TextArea
+					{...validationProps}
+					id={this.id}
+					disabled
+					placeholder={this.props.control.additionalText}
+					value={value}
+					labelText={this.props.controlItem}
+					hideLabel={this.props.tableControl}
+					light={this.props.controller.getLight() && this.props.control.light}
+				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={""} messageInfo={errorMessage} />
 			</div>);
 		} else {
-			textArea = (
-				<Layer level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
-					<TextArea
-						{...validationProps}
-						id={this.id}
-						disabled={this.props.state === STATES.DISABLED}
-						placeholder={this.props.control.additionalText}
-						onChange={this.handleChange.bind(this)}
-						value={value}
-						labelText={this.props.controlItem}
-						hideLabel={this.props.tableControl}
-					/>
-				</Layer>
-			);
+			textArea = (<TextArea
+				{...validationProps}
+				id={this.id}
+				disabled={this.props.state === STATES.DISABLED}
+				placeholder={this.props.control.additionalText}
+				onChange={this.handleChange.bind(this)}
+				value={value}
+				labelText={this.props.controlItem}
+				hideLabel={this.props.tableControl}
+				light={this.props.controller.getLight() && this.props.control.light}
+			/>);
 		}
 
 		let display = textArea;

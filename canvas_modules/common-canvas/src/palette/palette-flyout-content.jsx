@@ -22,7 +22,7 @@ import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx"
 import PaletteFlyoutContentSearch from "./palette-flyout-content-search.jsx";
 import PaletteFlyoutContentFilteredList from "./palette-flyout-content-filtered-list.jsx";
 import Logger from "../logging/canvas-logger.js";
-import { Accordion } from "@carbon/react";
+import { Accordion } from "carbon-components-react";
 
 
 const logger = new Logger("PaletteFlyoutContent");

@@ -27,12 +27,12 @@
 }
 
 .properties-at-selectedEditRows {
-	background-color: $button-secondary;
+	background-color: $interactive-02;
 	.properties-selectedEditRows-title {
 		padding-top: 10px;
 		padding-bottom: 10px;
 		padding-left: 12px;
-		color: $layer-01;
+		color: $ui-01;
 	}
 
 	.properties-ft-table-header {
@@ -45,10 +45,10 @@
 	}
 
 	.properties-vt-row-class {
-		background-color: $layer-selected-01;
+		background-color: $selected-ui;
 		&:hover {
 			border: 1px solid transparent;
-			background-color: $layer-accent-hover-01;
+			background-color: $hover-selected-ui;
 		}
 	}
 }

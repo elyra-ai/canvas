@@ -16,8 +16,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { WarningFilled, ErrorFilled } from "@carbon/react/icons";
-import { Toggle } from "@carbon/react";
+import Icon from "carbon-components-react/lib/components/Icon";
+import Toggle from "carbon-components-react/lib/components/Toggle";
+import ToggleSmall from "carbon-components-react/lib/components/ToggleSmall";
 import { connect } from "react-redux";
 
 class CustomToggleCtrl extends React.Component {
@@ -42,9 +43,9 @@ class CustomToggleCtrl extends React.Component {
 		if (this.props.messageInfo && this.props.messageInfo.text && !this.props.table) {
 			messageText = this.props.messageInfo.text;
 			if (this.props.messageInfo.type === "warning") {
-				icon = (<WarningFilled className="warning" />);
+				icon = (<Icon className="warning" name="warning--glyph" />);
 			} else if (this.props.messageInfo.type === "error") {
-				icon = (<ErrorFilled className="error" />);
+				icon = (<Icon className="error" name="error--glyph" />);
 			}
 		}
 		let visibility;
@@ -70,8 +71,7 @@ class CustomToggleCtrl extends React.Component {
 			/>
 		);
 		if (this.props.table) {
-			toggle = (<Toggle
-				size="sm"
+			toggle = (<ToggleSmall
 				disabled={disabled}
 				id={id}
 				toggled={this.props.controlValue}

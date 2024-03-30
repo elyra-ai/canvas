@@ -27,13 +27,12 @@ export default class Breadcrumbs extends React.Component {
 				? <span className="harness-pipeline-breadcrumbs-separator">/</span>
 				: <div />;
 			const link = index !== this.props.breadcrumbsDef.length - 1
-				? (
-					<button className="harness-pipeline-breadcrumbs-label"
-						key={breadcrumbDef.pipelineId}
-						onClick={that.breadcrumbOnClick.bind(that, breadcrumbDef) }
-					>
-						{label}
-					</button>)
+				? (<button className="harness-pipeline-breadcrumbs-label"
+					key={breadcrumbDef.pipelineId}
+					onClick={that.breadcrumbOnClick.bind(that, breadcrumbDef) }
+				>
+					{label}
+				</button>)
 				: (<div className="harness-pipeline-breadcrumbs-label last-item">
 					{label}
 				</div>);

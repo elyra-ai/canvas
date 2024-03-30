@@ -370,5 +370,5 @@ function findCategoryElement(flyoutPaletteContent, categoryName) {
 
 function getOpenCategories(wrapper) {
 	const categoryList2 = wrapper.find("div.palette-flyout-categories");
-	return categoryList2.find(".cds--accordion__item--active");
+	return categoryList2.find(".bx--accordion__item--active");
 }

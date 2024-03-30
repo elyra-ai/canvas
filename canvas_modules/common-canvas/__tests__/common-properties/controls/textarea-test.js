@@ -297,7 +297,7 @@ describe("textarea control renders correctly", () => {
 		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
 		expect(textWrapper.find("textarea").prop("disabled")).to.equal(true);
 
-		const validationMsg = textWrapper.find("div.cds--form-requirement");
+		const validationMsg = textWrapper.find("div.bx--form-requirement");
 		expect(validationMsg).to.have.length(1);
 	});
 });

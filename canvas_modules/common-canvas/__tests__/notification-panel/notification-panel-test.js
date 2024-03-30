@@ -633,7 +633,7 @@ describe("notification center buttons work properly", () => {
 		wrapper.update();
 
 		// click the close button
-		wrapper.find(".notification-panel-close-button .cds--btn--sm").simulate("click");
+		wrapper.find(".notification-panel-close-button .bx--btn--sm").simulate("click");
 
 		// check that notification panel is closed
 		wrapper.update();

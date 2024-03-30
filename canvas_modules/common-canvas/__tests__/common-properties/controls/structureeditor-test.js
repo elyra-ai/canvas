@@ -171,7 +171,7 @@ describe("structureeditor control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		const dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
@@ -197,7 +197,7 @@ describe("structureeditor control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		const dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
@@ -223,7 +223,7 @@ describe("structureeditor control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		const dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
 		dropdownList.at(0).simulate("click");
 		const value = controller.getPropertyValue(propertyId);

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@import "carbon-components/scss/globals/scss/_vars";
+
 .color-picker {
 	width: 156px;
 	height: 55px;
@@ -26,7 +28,7 @@
 		margin: 5px 0 0 5px;
 		cursor: pointer;
 		&.white-0 {
-			background-color: $layer-01; // In dark-mode, white-0 will be interpreted as black.
+			background-color: $ui-01; // In dark-mode, white-0 will be interpreted as black.
 			border: 1px solid $gray-50;
 		}
 		&.yellow-20 { background-color: $yellow-20; }

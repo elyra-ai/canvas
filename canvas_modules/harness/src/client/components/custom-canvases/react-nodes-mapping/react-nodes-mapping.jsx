@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { Add, Edit } from "@carbon/react/icons";
+import { Add32, Edit32 } from "@carbon/icons-react";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
@@ -92,8 +92,8 @@ export default class ReactNodesMappingCanvas extends React.Component {
 	contextMenuHandler(source, defaultMenu) {
 		if (source.type === "node") {
 			return [
-				{ action: "add", label: "Add", icon: (<Add size={32} />), enable: true, toolbarItem: true },
-				{ action: "edit", label: "Edit", icon: (<Edit size={32} />), enable: true, toolbarItem: true },
+				{ action: "add", label: "Add", icon: (<Add32 />), enable: true, toolbarItem: true },
+				{ action: "edit", label: "Edit", icon: (<Edit32 />), enable: true, toolbarItem: true },
 				{ action: "select", label: "Select", enable: true },
 				{ action: "select_All", label: "Select All", enable: true },
 				{ action: "findReplace", label: "Find/Replace", enable: true }

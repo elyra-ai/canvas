@@ -117,7 +117,7 @@ describe("multiselect renders correctly", () => {
 
 		// select the first item
 		multiselectWrapper = wrapper.find("div[data-id='properties-test-multiselect']");
-		const multiselectList = multiselectWrapper.find("div.cds--list-box__menu-item");
+		const multiselectList = multiselectWrapper.find("div.bx--list-box__menu-item");
 		expect(multiselectList).to.be.length(4);
 		multiselectList.at(0).simulate("click");
 		const expectedValue = [multiselectList.at(0).text()];
@@ -143,7 +143,7 @@ describe("multiselect renders correctly", () => {
 		multiselectButton.simulate("click");
 		// select the first item
 		multiselectWrapper = wrapper.find("div[data-id='properties-test-multiselect']");
-		const multiselectList = multiselectWrapper.find("div.cds--list-box__menu-item");
+		const multiselectList = multiselectWrapper.find("div.bx--list-box__menu-item");
 		expect(multiselectList).to.be.length(4);
 		multiselectList.at(0).simulate("click");
 		const expectedValue = [multiselectList.at(0).text()];
@@ -194,7 +194,7 @@ describe("multiselect renders correctly", () => {
 		multiselectButton.simulate("click");
 		multiselectWrapper = wrapper.find("div[data-id='properties-test-multiselect']");
 		// select the first item
-		const multiselectList = multiselectWrapper.find("div.cds--list-box__menu-item");
+		const multiselectList = multiselectWrapper.find("div.bx--list-box__menu-item");
 		expect(multiselectList).to.be.length(2);
 	});
 
@@ -213,7 +213,7 @@ describe("multiselect renders correctly", () => {
 			/>
 		);
 		const multiselectWrapper = wrapper.find("div[data-id='properties-test-multiselect']");
-		const messageWrapper = multiselectWrapper.find("div.cds--form-requirement");
+		const messageWrapper = multiselectWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 });
@@ -241,7 +241,7 @@ describe("multiselect paramDef works correctly", () => {
 
 		multiselectWrapper.update();
 		multiselectWrapper = wrapper.find("div[data-id='properties-multiselect_custom_labels']");
-		const multiselectList = multiselectWrapper.find("div.cds--list-box__menu-item");
+		const multiselectList = multiselectWrapper.find("div.bx--list-box__menu-item");
 		expect(multiselectList).to.have.length(6);
 
 		multiselectList.at(0).simulate("click");
@@ -259,7 +259,7 @@ describe("multiselect paramDef works correctly", () => {
 
 		multiselectWrapper.update();
 		multiselectWrapper = wrapper.find("div[data-id='properties-multiselect_multiple_selected']");
-		const multiselectList = multiselectWrapper.find("div.cds--list-box__menu-item");
+		const multiselectList = multiselectWrapper.find("div.bx--list-box__menu-item");
 		expect(multiselectList).to.have.length(6);
 
 		// The options are not in the order they are defined. Test to verify "Custom" is in the text
@@ -298,7 +298,7 @@ describe("multiselect paramDef works correctly", () => {
 
 		table.update();
 		table = wrapper.find("div[data-id='properties-ci-multiselect_table']");
-		const subPanelMultiselectList = table.find("div.cds--list-box__menu-item");
+		const subPanelMultiselectList = table.find("div.bx--list-box__menu-item");
 		expect(subPanelMultiselectList).to.have.length(6);
 
 		subPanelMultiselectList.at(1).simulate("click");
@@ -324,7 +324,7 @@ describe("multiselect paramDef works correctly", () => {
 
 		table.update();
 		table = wrapper.find("div[data-id='properties-ci-multiselect_table']");
-		const multiselectList = table.find("div.cds--list-box__menu-item");
+		const multiselectList = table.find("div.bx--list-box__menu-item");
 		expect(multiselectList).to.have.length(4);
 
 		multiselectList.at(0).simulate("click");
@@ -334,7 +334,7 @@ describe("multiselect paramDef works correctly", () => {
 
 	it("multiselect control should have aria-label", () => {
 		const multiselectWrapper = wrapper.find("div[data-id='properties-ctrl-multiselect_multiple_selected']");
-		const multiselectAriaLabelledby = multiselectWrapper.find(".cds--list-box__menu").prop("aria-labelledby");
+		const multiselectAriaLabelledby = multiselectWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
 		expect(
 			multiselectWrapper
 				.find(`#${multiselectAriaLabelledby}`)
@@ -380,7 +380,7 @@ describe("multiselect filters work correctly", () => {
 		let multiselectButton = multiselectWrapper.find("button");
 		multiselectButton.simulate("click");
 		multiselectWrapper = wrapper.find("div[data-id='properties-multiselect_filtered']");
-		let multiselectList = multiselectWrapper.find("div.cds--list-box__menu-item");
+		let multiselectList = multiselectWrapper.find("div.bx--list-box__menu-item");
 		expect(multiselectList).to.be.length(6);
 
 
@@ -392,7 +392,7 @@ describe("multiselect filters work correctly", () => {
 		multiselectButton = multiselectWrapper.find("button");
 		multiselectButton.simulate("click");
 		multiselectWrapper = wrapper.find("div[data-id='properties-multiselect_filtered']");
-		multiselectList = multiselectWrapper.find("div.cds--list-box__menu-item");
+		multiselectList = multiselectWrapper.find("div.bx--list-box__menu-item");
 		expect(multiselectList).to.be.length(3);
 
 	});

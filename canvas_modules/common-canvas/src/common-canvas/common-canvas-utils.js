@@ -1300,9 +1300,8 @@ export default class CanvasUtils {
 			delete newLayout.outputPortBottomPosY;
 
 		} else if (isNumber(newLayout.outputPortRightPosX) || isNumber(newLayout.outputPortRightPosY)) {
-			const pos = newLayout.outputPortRightPosition || "topRight";
 			newLayout.outputPortPositions = [
-				{ x_pos: newLayout.outputPortRightPosX, y_pos: newLayout.outputPortRightPosY, pos: pos }
+				{ x_pos: newLayout.outputPortRightPosX, y_pos: newLayout.outputPortRightPosY, pos: "topRight" }
 			];
 			delete newLayout.outputPortRightPosX;
 			delete newLayout.outputPortRightPosY;

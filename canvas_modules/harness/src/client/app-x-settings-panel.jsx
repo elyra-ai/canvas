@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Checkbox } from "@carbon/react";
+import { Checkbox } from "carbon-components-react";
 
 const TAB_KEY = 9;
 
@@ -48,9 +48,9 @@ class AppSettingsPanel extends React.Component {
 		evt.stopPropagation();
 	}
 
-	onChange(evt, { checked, id }) {
+	onChange(value, field) {
 		const obj = {};
-		obj[id] = checked;
+		obj[field] = value;
 		this.setState(obj);
 	}
 

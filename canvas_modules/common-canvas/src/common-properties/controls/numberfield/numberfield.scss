@@ -16,11 +16,18 @@
 
 
 .properties-numberfield {
-	.properties-numberfield-layer {
-		inline-size: 100%;
+	.bx--form-item { // carbon overrides
+		margin-right: 0;
+		margin-bottom: 0;
 	}
 	.properties-number-generator {
 		margin-left: $spacing-05;
+		right: $spacing-01;
+		// Button dimensions 40x40 px
+		width: $spacing-08;
+		min-height: $spacing-08;
+		padding-left: $spacing-04;
+		padding-right: $spacing-04;
 	}
 	&.numberfield-with-number-generator {
 		width: 100%;
@@ -37,19 +44,19 @@
 
 .properties-table-cell-control { // overrides when in a table cell
 	.properties-numberfield {
-		.cds--number[data-invalid] { // carbon override to not display error
-			.cds--form-requirement { // carbon override to not display error
+		.bx--number[data-invalid] { // carbon override to not display error
+			.bx--form-requirement { // carbon override to not display error
 				display: none;
 			}
 		}
 		&.error {
 			input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
-				box-shadow: 0 2px 0 0 $support-error;
+				box-shadow: 0 2px 0 0 $support-01;
 			}
 		}
 		&.warning {
 			input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
-				box-shadow: 0 2px 0 0 $support-warning;
+				box-shadow: 0 2px 0 0 $support-03;
 			}
 		}
 		input[type="number"] { //override styling from carbon
@@ -57,7 +64,7 @@
 			padding: 0;
 			height: 1.5rem;
 		}
-		.cds--number input[type="number"] {
+		.bx--number input[type="number"] {
 			min-width: 0;
 		}
 	}

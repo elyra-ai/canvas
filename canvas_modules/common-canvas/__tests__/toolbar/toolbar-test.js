@@ -126,8 +126,8 @@ describe("Toolbar renders correctly", () => {
 		expect(defaultButtons).to.have.length(3);
 
 		// Verify if the buttons show up with medium size
-		expect(overflowButtons.find(".cds--btn--md")).to.have.length(3);
-		expect(defaultButtons.find(".cds--btn--md")).to.have.length(3);
+		expect(overflowButtons.find(".bx--btn--md")).to.have.length(3);
+		expect(defaultButtons.find(".bx--btn--md")).to.have.length(3);
 	});
 
 	it("should render a Toolbar with small size buttons", () => {
@@ -148,8 +148,8 @@ describe("Toolbar renders correctly", () => {
 		expect(defaultButtons).to.have.length(3);
 
 		// Verify if the buttons show up with small size
-		expect(overflowButtons.find(".cds--btn--sm")).to.have.length(3);
-		expect(defaultButtons.find(".cds--btn--sm")).to.have.length(3);
+		expect(overflowButtons.find(".bx--btn--sm")).to.have.length(3);
+		expect(defaultButtons.find(".bx--btn--sm")).to.have.length(3);
 	});
 
 	it("should render a Toolbar buttons with only icons ", () => {
@@ -176,7 +176,7 @@ describe("Toolbar renders correctly", () => {
 		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
 
 		expect(defaultButtons).to.have.length(1);
-		expect(defaultButtons.find(".cds--btn--icon-only")).to.have.length(0);
+		expect(defaultButtons.find(".bx--btn--icon-only")).to.have.length(0);
 	});
 });
 

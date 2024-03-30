@@ -15,11 +15,12 @@
  */
 
 /* Context Menu styles - used by react-contextmenu module */
+@import "carbon-components/scss/globals/scss/typography";
 
 .context-menu-popover {
 	cursor: pointer;
 	min-width: 160px;
-	background-color: $layer-01;
+	background-color: $ui-01;
 	-webkit-background-clip: padding-box;
 	background-clip: padding-box;
 	border: 0;
@@ -46,7 +47,7 @@
 	height: 30px;
 	padding: 0 1em;
 	clear: both;
-	color: $text-primary;
+	color: $text-01;
 	text-align: inherit;
 	white-space: nowrap;
 	background: 0 0;
@@ -63,7 +64,7 @@
 	&:active,
 	&:focus,
 	&:hover {
-		background: $layer-hover-01;
+		background: $hover-ui;
 		text-decoration: none;
 		border: 0;
 		outline: none; /* Suppress Chrome's blue active border */
@@ -71,7 +72,7 @@
 
 	/* Style for the chevron '>' in menu item that opens a submenu. */
 	& svg {
-		color: $text-primary;
+		color: $text-01;
 		position: absolute;
 		right: 12px;
 	}
@@ -81,6 +82,6 @@
 	height: 1px;
 	display: block;
 	overflow: hidden;
-	background-color: $layer-accent-01;
+	background-color: $ui-03;
 	padding: 0;
 }

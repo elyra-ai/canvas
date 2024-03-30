@@ -15,6 +15,9 @@
  */
 
 import { expect } from "chai";
+import chai from "chai";
+import chaiEnzyme from "chai-enzyme";
+chai.use(chaiEnzyme()); // Note the invocation at the end
 import CommandStack from "../../src/command-stack/command-stack.js";
 
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */

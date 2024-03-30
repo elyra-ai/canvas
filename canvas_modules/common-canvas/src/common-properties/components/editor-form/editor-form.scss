@@ -16,6 +16,12 @@
 
 $primary-tab-height: $spacing-08;
 
+.properties-primaryTabs {
+	.bx--tabs__nav-item {
+		margin-left: 1rem;
+	}
+}
+
 // styling when there is only 1 tab
 .properties-single-category {
 	padding: $spacing-05;
@@ -34,7 +40,7 @@ $primary-tab-height: $spacing-08;
 		.properties-subtabs {
 			position: absolute;
 			height: $primary-tab-height;
-			border-bottom: 1px solid $layer-accent-01;
+			border-bottom: 1px solid $ui-03;
 		}
 		.properties-subtab-panel {
 			height: calc(100% - #{$primary-tab-height});
@@ -56,36 +62,36 @@ $primary-tab-height: $spacing-08;
 }
 
 .properties-category-title {
-	@include type-style("body-long-01");
-	text-decoration-color: $text-primary;
-	color: $text-primary;
+	@include carbon--type-style("body-long-01");
+	text-decoration-color: $text-01;
+	color: $text-01;
 
 	height: 46px;
 	width: 100%;
 
 	display: flex;
-	background-color: $background;
+	background-color: $ui-background;
 	justify-content: space-between;
 	align-items: center;
 	padding: 0 $spacing-05;
 	border: 0; // override for button styling
 	outline: none; // override for button styling
-	border-bottom: 1px solid $layer-accent-01;
+	border-bottom: 1px solid $ui-03;
 	cursor: pointer;
 	&:hover {
-		background-color: $layer-hover-01;
+		background-color: $hover-ui;
 	}
 	> svg {
 		height: 20px;
 		width: 20px;
-		fill: $icon-primary;
+		fill: $icon-01;
 	}
 }
 
 .properties-category-content {
 	height: 100%;
 	padding: $spacing-05;
-	border-bottom: 1px solid $layer-accent-01;
+	border-bottom: 1px solid $ui-03;
 	display: none;
 	&.show {
 		display: inherit;
@@ -93,7 +99,7 @@ $primary-tab-height: $spacing-08;
 }
 
 .properties-subtabs, .properties-primaryTabs {
-	.cds--tabs__nav {
+	.bx--tabs__nav {
 		overflow-x: auto; // override carbon so scrollbar doesn't always show
 	}
 }
@@ -103,11 +109,11 @@ $primary-tab-height: $spacing-08;
 	align-items: center;
 	padding: $spacing-02 0;
 	.properties-static-text {
-		@include type-style("body-short-01");
-		color: $text-primary;
+		@include carbon--type-style("body-short-01");
+		color: $text-01;
 		&.info {
-			@include type-style("label-01");
-			color: $text-secondary;
+			@include carbon--type-style("label-01");
+			color: $text-02;
 		}
 	}
 	svg {
@@ -135,7 +141,7 @@ $primary-tab-height: $spacing-08;
 }
 
 .properties-light-enabled {
-	background-color: $layer-01; // Override theme background-color when light option is true
+	background-color: $ui-01; // Override theme background-color when light option is true
 }
 
 .properties-custom-panel + .properties-control-panel {
@@ -149,7 +155,7 @@ $primary-tab-height: $spacing-08;
 	.properties-primaryTabs {
 		position: absolute;
 		height: $primary-tab-height;
-		border-bottom: 1px solid $layer-accent-01;
+		border-bottom: 1px solid $ui-03;
 	}
 
 	.properties-primary-tab-panel.tearsheet-container, .properties-primary-tab-panel.right-flyout-tabs-view {

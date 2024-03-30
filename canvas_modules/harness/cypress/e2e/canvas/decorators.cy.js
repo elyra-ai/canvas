@@ -15,7 +15,7 @@
  */
 import React from "react";
 import * as testUtils from "../../utils/eventlog-utils";
-import { Play } from "@carbon/react/icons";
+import { Play16 } from "@carbon/icons-react";
 
 describe("Test adding a decorator to a node", function() {
 	beforeEach(() => {
@@ -164,7 +164,7 @@ describe("Test adding a decorator to a node", function() {
 
 	it("Test adding a JSX decoration to a node.", function() {
 		cy.setNodeDecorations("Top Left",
-			[{ "id": "123", "jsx": (<Play />), "x_pos": "20", "y_pos": "-20" }]
+			[{ "id": "123", "jsx": (<Play16 />), "x_pos": "20", "y_pos": "-20" }]
 		);
 		cy.verifyNumberOfDecoratorsOnNode("Top Left", 1);
 		cy.verifyJsxDecorationOnNode("Top Left", "123", 20, -20);
@@ -344,7 +344,7 @@ describe("Test adding a decorator to a link", function() {
 
 	it("Test adding a JSX decoration to a link.", function() {
 		cy.setLinkDecorations("Bottom Left-Bottom Right",
-			[{ "id": "123", "jsx": (<Play />), "x_pos": "20", "y_pos": "-20" }]
+			[{ "id": "123", "jsx": (<Play16 />), "x_pos": "20", "y_pos": "-20" }]
 		);
 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
 		cy.verifyJsxDecorationOnLink("Bottom Left-Bottom Right", "123", 508, 215);

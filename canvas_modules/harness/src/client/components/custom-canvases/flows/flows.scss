@@ -41,12 +41,12 @@
 
 		.d3-node-ellipsis-group {
 			.d3-node-ellipsis {
-				fill: $icon-primary;
+				fill: $icon-01;
 			}
 
 			&:hover {
 				.d3-node-ellipsis-background {
-					fill: $layer-accent-01;
+					fill: $ui-03;
 				}
 			}
 		}
@@ -82,13 +82,13 @@
 			.d3-node-dec-group {
 				.d3-node-dec-image[data-id*="supernode-zoom"] {
 					display: block;
-					fill: $icon-primary;
+					fill: $icon-01;
 					stroke-width: 0;
 				}
 
 				&:hover {
 					.d3-node-dec-outline {
-						fill: $layer-accent-01;
+						fill: $ui-03;
 						stroke-width: 0;
 					}
 				}
@@ -99,20 +99,20 @@
 	.d3-data-link .d3-link-line,
 	.d3-data-link .d3-link-line-arrow-head {
 		fill: none;
-		stroke: $layer-selected-inverse;
+		stroke: $ui-05;
 		stroke-width: 1;
 	}
 
 	/* For association link */
 	.d3-object-link  .d3-link-line {
-		stroke: $border-strong-01;
+		stroke: $ui-04;
 		stroke-width: 2;
 		fill: none;
 		stroke-dasharray: 5.5;
 	}
 
 	.d3-comment-link  .d3-link-line {
-		stroke: $border-strong-01;
+		stroke: $ui-04;
 		stroke-width: 1;
 		fill: none;
 		stroke-dasharray: 10.5;
@@ -121,12 +121,12 @@
 
 	.d3-link-group:hover .d3-link-line,
 	.d3-link-group:hover .d3-link-line-arrow-head {
-		stroke: $button-primary;
+		stroke: $interactive-01;
 		stroke-width: 2;
 	}
 
 	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: $button-primary;
+		stroke: $interactive-01;
 		stroke-width: 2;
 		stroke-dasharray: 1 0;
 		fill: none;
@@ -143,15 +143,15 @@
 	/* Decoration Styles */
 
 	.node-cache-empty {
-		fill: $layer-01;
+		fill: $ui-01;
 	}
 
 	.node-cache-full {
-		fill: $layer-01;
+		fill: $ui-01;
 	}
 
 	.node-sql-pushback {
-		fill: $layer-01;
+		fill: $ui-01;
 	}
 
 	/* Override styles in common canvas to fade out nodes and comments
@@ -184,19 +184,19 @@
 	}
 
 	.canvas-ui-empty-text-placeholder {
-		@include type-style("productive-heading-03");
-		color: $text-primary;
+		@include carbon--type-style("productive-heading-03");
+		color: $text-01;
 	}
 
 	.canvas-ui-empty-subtext-placeholder {
-		@include type-style("body-long-02");
-		color: $text-secondary;
+		@include carbon--type-style("body-long-02");
+		color: $text-02;
 		margin-top: 8px;
 	}
 
 	.canvas-ui-empty-node-text {
-		@include type-style("productive-heading-02");
-		color: $text-secondary;
+		@include carbon--type-style("productive-heading-02");
+		color: $text-02;
 	}
 
 }

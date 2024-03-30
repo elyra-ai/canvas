@@ -16,8 +16,8 @@
 
 import { Column, Table, AutoSizer } from "react-virtualized";
 import Draggable from "react-draggable";
-import { Checkbox, Loading } from "@carbon/react";
-import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
+import { Checkbox, Loading } from "carbon-components-react";
+import { ArrowUp16, ArrowDown16, ArrowsVertical16, Information16 } from "@carbon/icons-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import TruncatedContentTooltip from "./../truncated-content-tooltip";
 import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";
@@ -87,7 +87,7 @@ class VirtualizedTable extends React.Component {
 
 	// This is also triggered when clicking on a checkbox
 	onRowClick(evt, rowData, index) {
-		if (evt.target.className === "cds--select-option") {
+		if (evt.target.className === "bx--select-option") {
 			evt.stopPropagation(); // stop propagation when selecting dropdown select options within table rows
 		} else {
 			// Set selections
@@ -173,8 +173,8 @@ class VirtualizedTable extends React.Component {
 		return isLastColumn;
 	}
 
-	selectAll(evt, { checked, id }) {
-		this.props.setAllRowsSelected(checked);
+	selectAll(selected) {
+		this.props.setAllRowsSelected(selected);
 	}
 
 	// Callback responsible for rendering a cell's contents.
@@ -230,13 +230,13 @@ class VirtualizedTable extends React.Component {
 			let type = null;
 			switch (this.props.sortColumns[dataKey]) {
 			case SORT_DIRECTION.ASC:
-				type = <ArrowUp disabled={this.props.tableState === STATES.DISABLED} />;
+				type = <ArrowUp16 disabled={this.props.tableState === STATES.DISABLED} />;
 				break;
 			case SORT_DIRECTION.DESC:
-				type = <ArrowDown disabled={this.props.tableState === STATES.DISABLED} />;
+				type = <ArrowDown16 disabled={this.props.tableState === STATES.DISABLED} />;
 				break;
 			default:
-				type = <ArrowsVertical disabled={this.props.tableState === STATES.DISABLED} />;
+				type = <ArrowsVertical16 disabled={this.props.tableState === STATES.DISABLED} />;
 			}
 			sortIcon = (<span className="properties-ft-column-sort-icon">
 				{type}
@@ -253,7 +253,7 @@ class VirtualizedTable extends React.Component {
 					className="properties-tooltips"
 					showToolTipOnClick
 				>
-					<Information className="properties-vt-info-icon" />
+					<Information16 className="properties-vt-info-icon" />
 				</Tooltip>
 			</div>);
 
