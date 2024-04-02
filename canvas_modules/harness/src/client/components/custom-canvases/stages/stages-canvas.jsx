@@ -19,7 +19,9 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
-import { Edit } from "@carbon/react/icons";
+import { ChevronDown, Edit } from "@carbon/react/icons";
+
+import MultiUndoPanel from "./multi-undo-panel";
 
 import StagesCanvasFlow from "./stagesCanvas.json";
 import StagesPalette from "../../../../../test_resources/palettes/stagesPalette.json";
@@ -32,6 +34,7 @@ export default class DetachedCanvas extends React.Component {
 		this.canvasController.setPipelineFlowPalette(StagesPalette);
 
 		this.getConfig = this.getConfig.bind(this);
+		this.getToolbarConfig = this.getToolbarConfig.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
@@ -45,7 +48,34 @@ export default class DetachedCanvas extends React.Component {
 				return { linkId: link.id, pipelineId: pId, decorations: decs };
 			});
 		this.canvasController.setLinksMultiDecorations(pipelineLinkDecorations);
+	}
 
+	getToolbarConfig() {
+		const toolbarConfig = {
+			leftBar: [
+				{ action: "undo", label: "Undo", enable: true },
+				{ action: "multiUndo",
+					label: "Multiple Undo",
+					iconEnabled: (<ChevronDown size={32} />),
+					subPanel: MultiUndoPanel,
+					subPanelData: { canvasController: this.canvasController } },
+				{ action: "redo", label: "Redo", enable: true },
+				{ divider: true },
+				{ action: "cut", label: "Cut", enable: true },
+				{ action: "copy", label: "Copy", enable: true },
+				{ action: "paste", label: "Paste", enable: true },
+				{ divider: true },
+				{ action: "createAutoComment", label: "Add Comment", enable: true },
+				{ action: "deleteSelectedObjects", label: "Delete", enable: true }
+			],
+			rightBar: [
+				{ divider: true },
+				{ action: "zoomIn", label: "Zoom In", enable: true },
+				{ action: "zoomOut", label: "Zoom Out", enable: true },
+				{ action: "zoomToFit", label: "Zoom To Fit", enable: true }
+			]
+		};
+		return toolbarConfig;
 	}
 
 	getConfig() {
@@ -221,6 +251,8 @@ export default class DetachedCanvas extends React.Component {
 
 	render() {
 		const config = this.getConfig();
+		const toolbarConfig = this.getToolbarConfig();
+
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
@@ -228,6 +260,7 @@ export default class DetachedCanvas extends React.Component {
 				editActionHandler={this.editActionHandler}
 				clickActionHandler={this.clickActionHandler}
 				contextMenuHandler={this.contextMenuHandler}
+				toolbarConfig={toolbarConfig}
 				config={config}
 			/>
 		);
