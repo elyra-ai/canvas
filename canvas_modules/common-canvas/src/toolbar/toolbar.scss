@@ -103,7 +103,7 @@ $toolbar-divider-width: 1px;
 	background-color: $ui-01;
 	display: inline-block;
 
-	& > .toolbar-button-item > button {
+	& > div > button {
 		padding: 0;
 		min-height: 30px;
 		height: $toolbar-button-height;
@@ -111,7 +111,7 @@ $toolbar-divider-width: 1px;
 
 	&.default,
 	&.ghost {
-		& > .toolbar-button-item > button {
+		& > div > button {
 			background-color: $ui-01;
 
 			&:hover,
@@ -126,7 +126,7 @@ $toolbar-divider-width: 1px;
 	}
 
 	&.tertiary {
-		& > .toolbar-button-item > button {
+		& > div > button {
 			color: $brand-03;
 			background-color: $ui-01;
 
