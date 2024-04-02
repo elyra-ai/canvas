@@ -1394,7 +1394,7 @@ export default class CanvasController {
 	}
 
 	// Undoes a number of commands on the command stack as
-	// indictaed by the 'count' parameter. If 'count' is bigger
+	// indicated by the 'count' parameter. If 'count' is bigger
 	// than the number of commands on the stack, all undoable
 	// commands currently on the command stack will be undone.
 	undoMulti(count) {
