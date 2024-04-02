@@ -26,24 +26,12 @@
 
 .properties-radio-button-group {
 	display: block;
-	&.horizontal {
+	.cds--radio-button-group--label-right { // Horizontal-long labels to wrap properly
 		display: inline-flex;
-		flex-wrap: wrap;
-		.properties-radioset-panel {
-			display: flex;
-			height: auto;
-			align-items: center;
-			margin-bottom: 0;
-		}
+		flex-wrap: wrap; 
 	}
 	.properties-radioset-panel {
-		margin-bottom: $spacing-02;
-		margin-right: $spacing-04;
-		display: flex;
-		justify-content: flex-start;
-		align-items: center;
-		flex-wrap: wrap;
-		overflow: hidden;
+		 margin-right: $spacing-04;
 		.cds--radio-button-wrapper{
 			margin-right: 0; // We removed the space between radio & tooltip to position it correctly
 		}

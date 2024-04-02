@@ -21,10 +21,9 @@ import { isEqual } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
 import * as ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
 import ValidationMessage from "./../../components/validation-message";
-import { RadioButton } from "@carbon/react";
+import { RadioButton, RadioButtonGroup } from "@carbon/react";
 import classNames from "classnames";
 import { STATES, UPDATE_TYPE } from "./../../constants/constants.js";
-import { ORIENTATIONS } from "./../../constants/form-constants.js";
 import { v4 as uuid4 } from "uuid";
 import { Information } from "@carbon/react/icons";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
@@ -223,12 +222,13 @@ class RadiosetControl extends React.Component {
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 				className={classNames("properties-radioset ", { "hide": this.props.state === STATES.HIDDEN })}
 			>
-				<div
-					className={classNames("properties-radio-button-group", this.props.messageInfo ? this.props.messageInfo.type : null,
-						{ "horizontal": this.props.control.orientation !== ORIENTATIONS.VERTICAL })} disabled={this.props.state === STATES.DISABLED}
+				<RadioButtonGroup className={classNames("properties-radio-button-group", this.props.messageInfo ? this.props.messageInfo.type : null)}
+					disabled={this.props.state === STATES.DISABLED}
+					name="radio-button-group"
+					orientation={this.props.control.orientation}
 				>
 					{buttons}
-				</div>
+				</RadioButtonGroup>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>
 		);
