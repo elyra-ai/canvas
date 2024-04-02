@@ -28,10 +28,10 @@
 	display: block;
 	.cds--radio-button-group--label-right { // Horizontal-long labels to wrap properly
 		display: inline-flex;
-		flex-wrap: wrap; 
+		flex-wrap: wrap;
 	}
 	.properties-radioset-panel {
-		 margin-right: $spacing-04;
+		margin-right: $spacing-04; // space between first label and next radiobtn
 		.cds--radio-button-wrapper{
 			margin-right: 0; // We removed the space between radio & tooltip to position it correctly
 		}
