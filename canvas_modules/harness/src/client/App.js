@@ -2282,6 +2282,7 @@ class App extends React.Component {
 					{ action: "dis-primary", label: "Primary", enable: false, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit size={32} />) },
 					{ action: "dis-danger", label: "Danger", enable: false, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit size={32} />) },
 					{ action: "dis-secondary", label: "Secondary", enable: false, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit size={32} />) },
+					{ action: "dis-tertiary", label: "Tertiary", enable: false, incLabelWithIcon: "before", kind: "tertiary", iconEnabled: (<Edit size={32} />) },
 					{ action: "dis-ghost", label: "Ghost", enable: false, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit size={32} />) },
 					{ action: "dis-default", label: "Default", enable: false, incLabelWithIcon: "before", iconEnabled: (<Edit size={32} />) },
 				]

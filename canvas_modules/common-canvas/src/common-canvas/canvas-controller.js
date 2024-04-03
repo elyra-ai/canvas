@@ -1393,6 +1393,16 @@ export default class CanvasController {
 		}
 	}
 
+	// Undoes a number of commands on the command stack as
+	// indicated by the 'count' parameter. If 'count' is bigger
+	// than the number of commands on the stack, all undoable
+	// commands currently on the command stack will be undone.
+	undoMulti(count) {
+		for (let i = 0; i < count; i++) {
+			this.undo();
+		}
+	}
+
 	// Calls the redo() method of the next available command on the command
 	// stack that can be redone, if one is available.
 	redo() {
@@ -1412,6 +1422,12 @@ export default class CanvasController {
 	// available to be redone.
 	canRedo() {
 		return this.getCommandStack().canRedo();
+	}
+
+	// Returns an array of all undoable commands currently on the
+	// command stack.
+	getAllUndoCommands() {
+		return this.getCommandStack().getAllUndoCommands();
 	}
 
 	// Returns a string which is the label that descibes the next undoable
