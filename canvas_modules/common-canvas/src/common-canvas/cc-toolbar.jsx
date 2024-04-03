@@ -223,6 +223,7 @@ class CommonCanvasToolbar extends React.Component {
 
 		if (typeof toolbarConfig !== "undefined") {
 			const editingAllowed = this.props.enableEditingActions;
+			this.applyToolState("multiUndo", toolbarConfig, editingAllowed && this.props.canMultiUndo);
 			this.applyToolState("undo", toolbarConfig, editingAllowed && this.props.canUndo);
 			this.applyToolState("redo", toolbarConfig, editingAllowed && this.props.canRedo);
 			this.applyToolState("cut", toolbarConfig, editingAllowed && this.props.canCutCopy);
@@ -326,6 +327,7 @@ CommonCanvasToolbar.propTypes = {
 	notificationConfigKeepOpen: PropTypes.bool,
 	enableInternalObjectModel: PropTypes.bool,
 	enableEditingActions: PropTypes.bool,
+	canMultiUndo: PropTypes.bool,
 	canUndo: PropTypes.bool,
 	canRedo: PropTypes.bool,
 	canCutCopy: PropTypes.bool,
@@ -351,6 +353,7 @@ const mapStateToProps = (state, ownProps) => ({
 	notificationMessages: state.notifications,
 	enableInternalObjectModel: state.canvasconfig.enableInternalObjectModel,
 	enableEditingActions: state.canvasconfig.enableEditingActions,
+	canMultiUndo: ownProps.canvasController.getAllUndoCommands().length > 1,
 	canUndo: ownProps.canvasController.canUndo(),
 	canRedo: ownProps.canvasController.canRedo(),
 	canCutCopy: ownProps.canvasController.canCutCopy(),
