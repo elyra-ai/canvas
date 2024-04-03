@@ -207,6 +207,7 @@ class EditorForm extends React.Component {
 				}
 				tabLists.push(
 					<Tab
+						key={tab.group}
 						title={filter([tab.text, this._getMessageCountForCategory(tab)]).join("")}
 						className={classNames({ "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						onClick={this._modalTabsOnClick.bind(this, tab.group)}
@@ -216,7 +217,7 @@ class EditorForm extends React.Component {
 				);
 
 				tabPanels.push(
-					<TabPanel className={classNames("properties-primary-tab-panel",
+					<TabPanel key={tab.group} className={classNames("properties-primary-tab-panel",
 						{ "tearsheet-container": this.props.controller.isTearsheetContainer() },
 						{ "right-flyout-tabs-view": this.props.rightFlyout && this.props.categoryView === CATEGORY_VIEW.TABS })}
 					>
