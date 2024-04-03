@@ -106,5 +106,8 @@
   "virtualizedTable.row.checkbox.label": "{table_label} から行 {row_index} を選択",
   "properties.empty.table.text": "開始するには、「{button_label}」をクリックします",
   "label.indicator.required": "(必須)",
-  "label.indicator.optional": "(オプション)"
+  "label.indicator.optional": "(オプション)",
+  "slider.numberInput.label": "スライダー番号の入力",
+  "editorForm.tabList.label": "プライマリー・タブ",
+  "subTabs.tabList.label": "タブ・リスト"
 }
