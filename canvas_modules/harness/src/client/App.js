@@ -2416,7 +2416,7 @@ class App extends React.Component {
 		const commonPropertiesModalLabel = "Common Properties Modal";
 		const commonCanvasLabel = "Common Canvas";
 		const todaysDate = new Date();
-		const todaysDateFormatted = todaysDate.toISOString().split("T")[0];
+		const todaysDateFormatted = "v13-" + todaysDate.toISOString().split("T")[0];
 
 		const navBar = (<div aria-label="Common Canvas Test Harness" role="banner">
 			<div className="harness-app-navbar">
