@@ -80,6 +80,7 @@ describe("dm condition operators work correctly", () => {
 		expect(controller.getControlState({ name: "checkbox3" })).to.equal("visible");
 	});
 
+	// This works in the UI but errorMessages is not updated in test
 	it.skip("selectColumn control becomes validated if selected item has a dmRole equal to discrete", () => {
 		const dropDown = wrapper.find("div[data-id='properties-dmMeasurementEqualList']");
 		const dropdownButton = dropDown.find("button").at(0);
@@ -93,10 +94,10 @@ describe("dm condition operators work correctly", () => {
 		dropdownButton.simulate("click");
 		dropdownList.at(3).simulate("click"); // Fulfill Condition by selecting item with dmRole discrete
 		errorMessages = controller.getErrorMessages();
-		// TODO: this works in the UI but errorMessages is not updated in test
 		expect(controller.getErrorMessages()).to.deep.equal({});
 	});
 
+	// This works in the UI but errorMessages is not updated in test
 	it.skip("selectColumn control become validated if selected item does not have a dmRole equal to discrete", () => {
 		const dropDown = wrapper.find("div[data-id='properties-dmMeasurementNotEqualList']");
 		const dropdownButton = dropDown.find("button").at(0);
@@ -110,7 +111,6 @@ describe("dm condition operators work correctly", () => {
 		dropdownButton.simulate("click");
 		dropdownList.at(1).simulate("click"); // Fulfill Condition by selecting item with dmRole input
 		errorMessages = controller.getErrorMessages();
-		// TODO: this works in the UI but errorMessages is not updated in test
 		expect(errorMessages).to.deep.equal({});
 	});
 });

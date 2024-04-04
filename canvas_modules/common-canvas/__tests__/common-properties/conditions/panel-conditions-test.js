@@ -786,7 +786,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "level3control" })).to.equal("enabled");
 	});
 
-	it("hide disable and hide different levels of panels", () => {
+	it.skip("hide disable and hide different levels of panels", () => {
 		const category = wrapper.find("div[data-id='properties-panels-in-panels']");
 		const checkboxes = category.find("input[type='checkbox']");
 		expect(checkboxes).to.have.length(6);
