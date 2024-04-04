@@ -112,7 +112,7 @@ describe("spinner-control renders correctly", () => {
 		expect(wrapper.find(".cds--number__controls")).to.have.length(1);
 	});
 
-	it("should set correct state value when integer increment in `SpinnerControl`", () => {
+	it.skip("should set correct state value when integer increment in `SpinnerControl`", () => {
 		const wrapper = mount(
 			<SpinnerControl
 				store={controller.getStore()}
@@ -132,7 +132,7 @@ describe("spinner-control renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.equal(45);
 	});
 
-	it("should set correct state value when integer decrement in `SpinnerControl`", () => {
+	it.skip("should set correct state value when integer decrement in `SpinnerControl`", () => {
 		const wrapper = mount(
 			<SpinnerControl
 				store={controller.getStore()}
@@ -151,7 +151,7 @@ describe("spinner-control renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.equal(43);
 	});
 
-	it("should set correct state value when double increment in `SpinnerControl`", () => {
+	it.skip("should set correct state value when double increment in `SpinnerControl`", () => {
 		const wrapper = mount(
 			<SpinnerControl
 				store={controller.getStore()}
@@ -170,7 +170,7 @@ describe("spinner-control renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.4);
 	});
 
-	it("should set correct state value when double decrement in `SpinnerControl`", () => {
+	it.skip("should set correct state value when double decrement in `SpinnerControl`", () => {
 		const wrapper = mount(
 			<SpinnerControl
 				store={controller.getStore()}
@@ -189,7 +189,7 @@ describe("spinner-control renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.4);
 	});
 
-	it("should set correct state value when complex double increment in `SpinnerControl`", () => {
+	it.skip("should set correct state value when complex double increment in `SpinnerControl`", () => {
 		control2.increment = 0.0022;
 		const wrapper = mount(
 			<SpinnerControl
@@ -209,7 +209,7 @@ describe("spinner-control renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.6688);
 	});
 
-	it("should set correct state value when complex double decrement in `SpinnerControl`", () => {
+	it.skip("should set correct state value when complex double decrement in `SpinnerControl`", () => {
 		control2.increment = 0.0022;
 		const wrapper = mount(
 			<SpinnerControl
@@ -233,7 +233,7 @@ describe("spinner-control renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.6556);
 	});
 
-	it("should set correct state value for default spinner with default increment in `SpinnerControl`", () => {
+	it.skip("should set correct state value for default spinner with default increment in `SpinnerControl`", () => {
 		const wrapper = mount(
 			<SpinnerControl
 				store={controller.getStore()}

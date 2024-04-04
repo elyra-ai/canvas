@@ -31,16 +31,20 @@ console.error = jest.fn(mockConsole(console.error));
 // Added to simulate scrollIntoView for react components
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
-// Added to fix - TypeError: window.matchMedia is not a function
+// Fixes - TypeError: window.matchMedia is not a function
 // https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
 Object.defineProperty(window, "matchMedia", {
-	value: () => (
-		{
-			matches: false,
-			addListener: () => { /* do nothing */ },
-			removeListener: () => { /* do nothing */ }
-		}
-	)
+	writable: true,
+	value: jest.fn().mockImplementation((query) => ({
+		matches: false,
+		media: query,
+		onchange: null,
+		addListener: jest.fn(), // deprecated
+		removeListener: jest.fn(), // deprecated
+		addEventListener: jest.fn(),
+		removeEventListener: jest.fn(),
+		dispatchEvent: jest.fn(),
+	})),
 });
 
 function mockConsole(consoleMethod) {
