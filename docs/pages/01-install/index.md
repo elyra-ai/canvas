@@ -71,18 +71,17 @@ When building your application you will need to load fonts and override styles:
 
 If you just want to get up and running and don't care about scss then import these regular css files:
 
-  - carbon-components/css/carbon-components.min.css
   - @elyra/canvas/dist/styles/common-canvas.min.css
     - version 8.x and older @elyra/canvas/dist/common-canvas.min.css
 
-More information about carbon components can be found here http://www.carbondesignsystem.com/getting-started/developers
+More information about carbon components can be found here https://carbondesignsystem.com/developing/frameworks/react#getting-started
 
 
 ### SCSS styling (recommended)
 
 If you want to use the full power of scss styling with variable overrides etc then include these imports in your main scss file:
-```sass
-@import "carbon-components/scss/globals/scss/styles";
+```
+@use "@carbon/react"; // Bring in all the styles for Carbon in your root/global stylesheet
 @import "@elyra/canvas/src/index.scss";
 ```
 
@@ -93,17 +92,33 @@ If you want to use the full power of scss styling with variable overrides etc th
 options: { includePaths: ["node_modules"] }
 ```
 
-Again, you can refer to the test harness [index.scss file](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/styles/index.scss) for sample code.
+Again, you can refer to the test harness [harness.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/harness.scss) and [common.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) files for sample code.
 
 
 ### Loading Fonts
 You may find that there is a pause in common canvas behavior, such as when the context menu is first displayed, which is caused by fonts being loaded. This can be fixed by adding the following to the `.scss` file for your application:
 ```
-$font-path: "/fonts";
-@import "carbon-components/scss/globals/scss/styles";
+@use "@carbon/react" as * with (
+	$font-path: "/fonts"
+);
 ```
 The fonts will need to be imported from carbon before carbon styles and placed in a public `/fonts` directory.
-You can see an example of this in the common-canvas test harness (which is the equivalent of a host application) in this repo. That is, the [index.scss file](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/styles/index.scss) contains the lines above and the grunt build files ensures the fonts are copied from`node_modules/carbon-components/src/globals/` to the `<carbon fonts folder>` directory.
+You can see an example of this in the common-canvas test harness (which is the equivalent of a host application) in this repo. That is, the [common.scss file](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) contains the lines above and the grunt build files ensures the fonts are copied from `/node_modules/@ibm/plex` to the `<carbon fonts folder>` directory. We added following config in [Gruntfile](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L64) for copying fonts -
+```
+copy: {
+	fonts: {
+		files: [{
+			expand: true,
+			flatten: false,
+			cwd: "./node_modules/@ibm/plex",
+			src: ["IBM-Plex*/**"],
+			dest: ".build/fonts"
+		}]
+	}
+}
+
+var buildTasks = ["copy:fonts"];
+```
 
 
 ### 3rd party styling
