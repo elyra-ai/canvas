@@ -106,5 +106,8 @@
   "virtualizedTable.row.checkbox.label": "Zeile {row_index} aus {table_label} auswählen",
   "properties.empty.table.text": "Klicken Sie zum Starten auf \"{button_label}\".",
   "label.indicator.required": "(erforderlich)",
-  "label.indicator.optional": "(optional)"
+  "label.indicator.optional": "(optional)",
+  "slider.numberInput.label": "Eingabe einer Zahl für Schieberegler",
+  "editorForm.tabList.label": "Primäre Registerkarten",
+  "subTabs.tabList.label": "Registerkartenliste"
 }
