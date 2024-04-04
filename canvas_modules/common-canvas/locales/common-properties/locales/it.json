@@ -106,5 +106,8 @@
   "virtualizedTable.row.checkbox.label": "Selezionare la riga {row_index} da {table_label}",
   "properties.empty.table.text": "Per iniziare, fare clic su \"{button_label}\"",
   "label.indicator.required": "(obbligatorio)",
-  "label.indicator.optional": "(facoltativo)."
+  "label.indicator.optional": "(facoltativo).",
+  "slider.numberInput.label": "Input numero dispositivo di scorrimento",
+  "editorForm.tabList.label": "Schede principali",
+  "subTabs.tabList.label": "Elenco schede"
 }
