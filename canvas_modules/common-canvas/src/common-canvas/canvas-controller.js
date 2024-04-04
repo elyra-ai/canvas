@@ -1385,30 +1385,32 @@ export default class CanvasController {
 	}
 
 	// Calls the undo() method of the next available command on the command
-	// stack that can be undone, if one is available.
+	// stack that can be undone, if one is available. Uses the editActionHandler
+	// method which will cause the app's editActionHandler to be called.
 	undo() {
 		if (this.canUndo()) {
-			this.getCommandStack().undo();
-			this.objectModel.refreshToolbar();
+			this.editActionHandler({ editType: "undo", editSource: "controller" });
 		}
 	}
 
-	// Undoes a number of commands on the command stack as
-	// indicated by the 'count' parameter. If 'count' is bigger
-	// than the number of commands on the stack, all undoable
-	// commands currently on the command stack will be undone.
+	// Undoes a number of commands on the command stack as indicated by the
+	// 'count' parameter. If 'count' is bigger than the number of commands
+	// on the stack, all undoable commands currently on the command stack
+	// will be undone. Uses the editActionHandler method which will cause
+	// the app's editActionHandler to be called.
 	undoMulti(count) {
-		for (let i = 0; i < count; i++) {
-			this.undo();
+		for (let i = 0; i < count && this.canUndo(); i++) {
+			this.editActionHandler({ editType: "undo", editSource: "controller" });
 		}
 	}
+
 
 	// Calls the redo() method of the next available command on the command
-	// stack that can be redone, if one is available.
+	// stack that can be redone, if one is available. Uses the editActionHandler
+	// method which will cause the app's editActionHandler to be called.
 	redo() {
 		if (this.canRedo()) {
-			this.getCommandStack().redo();
-			this.objectModel.refreshToolbar();
+			this.editActionHandler({ editType: "redo", editSource: "controller" });
 		}
 	}
 
