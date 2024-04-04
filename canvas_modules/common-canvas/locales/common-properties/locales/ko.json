@@ -106,5 +106,8 @@
   "virtualizedTable.row.checkbox.label": "{table_label}에서 행 {row_index} 선택",
   "properties.empty.table.text": "시작하려면 \"{button_label}\"을(를) 클릭하십시오.",
   "label.indicator.required": "(필수)",
-  "label.indicator.optional": "(선택사항)"
+  "label.indicator.optional": "(선택사항)",
+  "slider.numberInput.label": "슬라이더 번호 입력",
+  "editorForm.tabList.label": "기본 탭",
+  "subTabs.tabList.label": "탭 목록"
 }

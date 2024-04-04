@@ -106,5 +106,8 @@
   "virtualizedTable.row.checkbox.label": "Sélectionnez la ligne {row_index} dans {table_label}",
   "properties.empty.table.text": "Pour commencer, cliquez sur \"{button_label}\"",
   "label.indicator.required": "(requis)",
-  "label.indicator.optional": "(facultatif)"
+  "label.indicator.optional": "(facultatif)",
+  "slider.numberInput.label": "Entrée de numéro de curseur",
+  "editorForm.tabList.label": "Onglets principaux",
+  "subTabs.tabList.label": "Liste d'onglets"
 }
