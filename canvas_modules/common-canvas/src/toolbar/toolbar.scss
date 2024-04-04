@@ -101,6 +101,16 @@ $toolbar-divider-width: 1px;
 	background-color: $layer-01;
 	display: inline-block;
 
+	&.toolbar-item-selected {
+		&.default,
+		&.ghost {
+			& > .toolbar-button-item > button {
+				background-color: $layer-accent-01;
+				border-bottom: 2px solid $button-primary;
+			}
+		}
+	}
+
 	& > .toolbar-button-item > button {
 		padding: 0;
 		min-height: 30px;
@@ -279,16 +289,6 @@ $toolbar-divider-width: 1px;
 	vertical-align: top;
 	position: relative;
 	padding: 0;
-}
-
-.toolbar-item-selected {
-	&.default,
-	&.ghost {
-		& button {
-			background-color: $layer-accent-01;
-			border-bottom: 2px solid $button-primary;
-		}
-	}
 }
 
 .toolbar-divider {
