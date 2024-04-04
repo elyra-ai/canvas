@@ -40,6 +40,7 @@ Cypress.Commands.add("getFirstOutputPortIdForLabel", (nodeLabel) =>
 );
 
 Cypress.Commands.add("doubleClickLabelOnNode", (nodeLabel) => {
+	cy.wait(0);
 	cy.getNodeWithLabel(nodeLabel)
 		.find("foreignObject > div > span")
 		.dblclick();
@@ -185,6 +186,7 @@ Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) 
 
 // position parameter is optional
 Cypress.Commands.add("rightClickNode", (nodeName, position) => {
+	cy.wait(100);
 	cy.getNodeWithLabel(nodeName)
 		.rightclick(position);
 });
@@ -212,6 +214,7 @@ Cypress.Commands.add("hoverOverNode", (nodeName) => {
 });
 
 Cypress.Commands.add("hoverOverNodeLabel", (nodeName) => {
+	cy.wait(0);
 	cy.getNodeWithLabel(nodeName)
 		.find("> foreignObject > .d3-node-label > span")
 		.trigger("mouseenter");

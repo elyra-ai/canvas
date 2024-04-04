@@ -40,6 +40,7 @@ Cypress.Commands.add("toggleCommonPropertiesSidePanel", () => {
 });
 
 Cypress.Commands.add("openCanvasDefinition", (canvasFileName, checkForComment) => {
+	cy.get("#harness-app-container");
 	cy.document().then((doc) => {
 		doc.setCanvasDropdownFile(canvasFileName);
 	});
@@ -61,6 +62,7 @@ Cypress.Commands.add("openCanvasDefinitionForExtraCanvas", (canvasFileName) => {
 });
 
 Cypress.Commands.add("openCanvasPalette", (paletteFileName) => {
+	cy.get("#harness-app-container");
 	cy.document().then((doc) => {
 		doc.setPaletteDropdownSelect(paletteFileName);
 	});
@@ -91,6 +93,7 @@ Cypress.Commands.add("dropdownSelect", (dropdownElement, selectedItemName) => {
 });
 
 Cypress.Commands.add("setCanvasConfig", (config) => {
+	cy.get("#harness-app-container");
 	cy.document().then((doc) => {
 		doc.setCanvasConfig(config);
 	});
