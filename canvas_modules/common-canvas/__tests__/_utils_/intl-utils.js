@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import React from "react";
 import { IntlProvider } from "react-intl";
 import { shallow } from "enzyme";
-import { mount } from "./mount-utils.js";
+import { mount, render } from "./mount-utils.js";
 
 import { getMessages } from "../../../harness/src/intl/intl-utils";
 import * as HarnessBundles from "../../../harness/src/intl/locales";
 
 const defaultLocale = "en-US";
 const locale = defaultLocale;
+
+export function renderWithIntl(node, inOptions) {
+	// eslint-disable-next-line react/prop-types
+	function Wrapper({ children }) {
+		return (<IntlProvider locale={locale} defaultLocale={defaultLocale}>{children}</IntlProvider>);
+	}
+	return render(node, { wrapper: Wrapper, ...inOptions });
+}
 
 export function mountWithIntl(node, inOptions) {
 	const options = Object.assign({
