@@ -320,7 +320,7 @@ describe("list renders correctly for array[integer]", () => {
 		expect(getTableRows(wrapper)).to.have.length(2);
 	});
 
-	it.skip("should be able to modify value in `list` control numberfield", () => {
+	it("should be able to modify value in `list` control numberfield", () => {
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
 				<List
