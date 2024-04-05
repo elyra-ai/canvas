@@ -103,6 +103,16 @@ $toolbar-divider-width: 1px;
 	background-color: $ui-01;
 	display: inline-block;
 
+	&.toolbar-item-selected {
+		&.default,
+		&.ghost {
+			& > div > button {
+				background-color: $ui-03;
+				border-bottom: 2px solid $interactive-01;
+			}
+		}
+	}
+
 	& > div > button {
 		padding: 0;
 		min-height: 30px;
@@ -281,16 +291,6 @@ $toolbar-divider-width: 1px;
 	vertical-align: top;
 	position: relative;
 	padding: 0;
-}
-
-.toolbar-item-selected {
-	&.default,
-	&.ghost {
-		& button {
-			background-color: $ui-03;
-			border-bottom: 2px solid $interactive-01;
-		}
-	}
 }
 
 .toolbar-divider {
