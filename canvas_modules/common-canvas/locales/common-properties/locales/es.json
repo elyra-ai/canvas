@@ -106,5 +106,8 @@
   "virtualizedTable.row.checkbox.label": "Seleccionar la fila {row_index} de {table_label}",
   "properties.empty.table.text": "Para empezar, pulse \"{button_label}\"",
   "label.indicator.required": "(obligatorio)",
-  "label.indicator.optional": "(opcional)"
+  "label.indicator.optional": "(opcional)",
+  "slider.numberInput.label": "Entrada de número de control deslizante",
+  "editorForm.tabList.label": "Separadores principales",
+  "subTabs.tabList.label": "Lista de pestañas"
 }
