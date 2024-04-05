@@ -100,7 +100,7 @@ export default class SVGCanvasPipeline {
 	// Returns true if the pipeline is empty except for any binding nodes.
 	isEmptyOrBindingsOnly() {
 		return (isEmpty(this.pipeline.nodes) || this.containsOnlyBindingNodes()) &&
-						isEmpty(this.pipeline.comments);
+						isEmpty(this.pipeline.comments) && isEmpty(this.pipeline.links);
 	}
 
 	containsOnlyBindingNodes() {
