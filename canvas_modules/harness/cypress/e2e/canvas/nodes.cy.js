@@ -44,10 +44,14 @@ describe("Test adding nodes from palette", function() {
 		cy.clickToolbarPaletteOpen();
 		cy.dragNodeToPosition("Filter", 500, 200);
 		cy.linkNodes("Derive", "Filter");
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(10);
 		cy.verifyLinkBetweenNodes("Derive", "Filter", 3);
 		cy.verifyLinkNodesActionOccurred("Derive", "Filter");
 		cy.dragNodeToPosition("Type", 600, 200);
 		cy.linkNodes("Filter", "Type");
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(10);
 		cy.verifyLinkBetweenNodes("Filter", "Type", 4);
 		cy.verifyLinkNodesActionOccurred("Filter", "Type");
 		cy.clickCategory("Modeling");
@@ -55,9 +59,13 @@ describe("Test adding nodes from palette", function() {
 		cy.dragNodeToPosition("Neural Net", 800, 300);
 		cy.clickToolbarPaletteClose();
 		cy.linkNodes("Type", "C5.0");
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(10);
 		cy.verifyLinkBetweenNodes("Type", "C5.0", 5);
 		cy.verifyLinkNodesActionOccurred("Type", "C5.0");
 		cy.linkNodes("Type", "Neural Net");
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(10);
 		cy.verifyLinkBetweenNodes("Type", "Neural Net", 6);
 		cy.verifyLinkNodesActionOccurred("Type", "Neural Net");
 

@@ -32,7 +32,7 @@ Cypress.Commands.add("saveFlyout", () => {
 
 Cypress.Commands.add("closeFlyout", () => {
 	// When applyOnBlur set to true, show Close icon in properties title
-	cy.get(".common-canvas-right-side-items .properties-close-button > button").click({ force: true });
+	cy.get(".common-canvas-right-side-items .properties-close-button > span").click({ force: true });
 });
 
 Cypress.Commands.add("openSubPanel", (title) => {

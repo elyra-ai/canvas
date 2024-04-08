@@ -285,5 +285,5 @@ Cypress.Commands.add("clickBreadcrumb", (breadCrumb) => {
 });
 
 Cypress.Commands.add("toggleApplyOnBlur", () => {
-	cy.get("div[data-id='properties-applyOnBlur'] label.cds--toggle-input__label").click();
+	cy.get("div[data-id='properties-applyOnBlur'] div.cds--toggle__switch").click();
 });

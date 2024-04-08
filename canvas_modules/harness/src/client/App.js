@@ -2389,15 +2389,14 @@ class App extends React.Component {
 	}
 
 	getTempContent() {
-		// const text1 = "Common Canvas panel.";
-		// const text2 = "Some temporary content for common canvas panel. This panel can display content from the host application.";
-		// return (
-		// 	<div className="harness-panel-temp-content">
-		// 		<div className="title">{text1}</div>
-		// 		<div className="text">{text2}</div>
-		// 	</div>
-		// );
-		return "ab";
+		const text1 = "Common Canvas panel.";
+		const text2 = "Some temporary content for common canvas panel. This panel can display content from the host application.";
+		return (
+			<div className="harness-panel-temp-content">
+				<div className="title">{text1}</div>
+				<div className="text">{text2}</div>
+			</div>
+		);
 	}
 
 	render() {

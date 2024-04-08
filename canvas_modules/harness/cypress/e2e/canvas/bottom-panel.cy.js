@@ -35,7 +35,7 @@ describe("Testing bottom panel", function() {
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
 		cy.moveBottomPanelDivider(200);
 		cy.verifyBottomPanelHeight(511);
-		cy.verifyBottomPanelWidth(807.4375);
+		cy.verifyBottomPanelWidth(813.6953125);
 	});
 
 	it("Testing bottom panel max height", function() {
@@ -47,7 +47,7 @@ describe("Testing bottom panel", function() {
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
 		cy.moveBottomPanelDivider(50);
 		cy.verifyBottomPanelHeight(650);
-		cy.verifyBottomPanelWidth(807.4375);
+		cy.verifyBottomPanelWidth(813.6953125);
 	});
 
 	it("Testing bottom panel min height", function() {
@@ -59,7 +59,7 @@ describe("Testing bottom panel", function() {
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
 		cy.moveBottomPanelDivider(640);
 		cy.verifyBottomPanelHeight(75);
-		cy.verifyBottomPanelWidth(807.4375);
+		cy.verifyBottomPanelWidth(813.6953125);
 	});
 
 });

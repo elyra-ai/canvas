@@ -697,7 +697,7 @@ describe("Test selectedLinkSelection = 'Detachable' configuration option", funct
 		// First create a new node on the canvas.
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Record Ops");
-		cy.dragNodeToPosition("Sample", 300, 450);
+		cy.dragNodeToPosition("Sample", 500, 450);
 
 		// Drag the node from the canvas to the detached links
 		cy.moveNodeToPosition("Sample", 200, 350);

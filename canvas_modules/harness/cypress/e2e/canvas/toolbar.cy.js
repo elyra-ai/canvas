@@ -285,6 +285,8 @@ describe("Test overrideAutoEnableDisable toolbar config option", function() {
 	});
 
 	it("Test overrideAutoEnableDisable leaves all standard buttons in default state", function() {
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(10);
 		cy.verifyToolbarButtonEnabled("undo", false);
 		cy.verifyToolbarButtonEnabled("redo", false);
 
