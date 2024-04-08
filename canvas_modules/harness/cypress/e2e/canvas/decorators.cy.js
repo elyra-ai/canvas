@@ -83,273 +83,273 @@ describe("Test adding a decorator to a node", function() {
 
 	});
 
-	// it("Test adding a path decoration to a node", function() {
-	// 	// Add a new decoration to the top left position
-	// 	cy.setNodeDecorations("Custom position",
-	// 		[{ "id": "123", "path": "M 0 0 L 10 10 -10 10 Z",
-	// 			"outline": false, "x_pos": -20, "y_pos": 20, "hotspot": true }]
-	// 	);
-	// 	// TODO: this next click is a workaround, the next click on the toggle won't trigger
-	// 	// an onClick unless elsewhere on the panel is clicked first. remove when fixed
-	// 	cy.clickOutsideNotificationPanel();
-	// 	cy.verifyNumberOfPathDecoratorsOnNode("Custom position", 1);
-	// 	cy.verifyDecorationTransformOnNode("Custom position", "123", -20, 20);
+	it("Test adding a path decoration to a node", function() {
+		// Add a new decoration to the top left position
+		cy.setNodeDecorations("Custom position",
+			[{ "id": "123", "path": "M 0 0 L 10 10 -10 10 Z",
+				"outline": false, "x_pos": -20, "y_pos": 20, "hotspot": true }]
+		);
+		// TODO: this next click is a workaround, the next click on the toggle won't trigger
+		// an onClick unless elsewhere on the panel is clicked first. remove when fixed
+		cy.clickOutsideNotificationPanel();
+		cy.verifyNumberOfPathDecoratorsOnNode("Custom position", 1);
+		cy.verifyDecorationTransformOnNode("Custom position", "123", -20, 20);
 
-	// 	// Click on the hot spot and make sure it calls the callback function
-	// 	cy.clickDecoratorHotspotOnNode("123", "Custom position");
-	// 	verifyDecorationHandlerEntryInConsole("123");
+		// Click on the hot spot and make sure it calls the callback function
+		cy.clickDecoratorHotspotOnNode("123", "Custom position");
+		verifyDecorationHandlerEntryInConsole("123");
 
-	// 	// Check the path is correct
-	// 	cy.verifyDecorationPathOnNode("Custom position", "123", "M 0 0 L 10 10 -10 10 Z");
-	// });
+		// Check the path is correct
+		cy.verifyDecorationPathOnNode("Custom position", "123", "M 0 0 L 10 10 -10 10 Z");
+	});
 
-	// it("Test editable single-line label decoration on a node with max number of characters.", function() {
-	// 	cy.setNodeDecorations("No Decorator",
-	// 		[{ "id": "123", "position": "bottomRight", "label": "Dec Label",
-	// 			"label_editable": true, "label_single_line": true, "height": 28,
-	// 			"label_max_characters": 12,
-	// 			"x_pos": "20", "y_pos": "-20" }]
-	// 	);
-	// 	cy.hoverOverNodeDecoration("No Decorator", "123");
-	// 	cy.clickEditIconForNodeDecLabel("No Decorator", "123");
-	// 	cy.enterLabelForNodeDec("No Decorator", "123", "New Label Text");
-	// 	cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
-	// 	cy.verifyLabelDecorationOnNode("No Decorator", "123", "New Label Te", 90, 55);
-	// });
+	it("Test editable single-line label decoration on a node with max number of characters.", function() {
+		cy.setNodeDecorations("No Decorator",
+			[{ "id": "123", "position": "bottomRight", "label": "Dec Label",
+				"label_editable": true, "label_single_line": true, "height": 28,
+				"label_max_characters": 12,
+				"x_pos": "20", "y_pos": "-20" }]
+		);
+		cy.hoverOverNodeDecoration("No Decorator", "123");
+		cy.clickEditIconForNodeDecLabel("No Decorator", "123");
+		cy.enterLabelForNodeDec("No Decorator", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
+		cy.verifyLabelDecorationOnNode("No Decorator", "123", "New Label Te", 90, 55);
+	});
 
 
-	// it("Test editable multi-line label decoration on a node.", function() {
-	// 	cy.setNodeDecorations("No Decorator",
-	// 		[{ "id": "123", "position": "bottomRight", "label": "Dec Label",
-	// 			"label_editable": true, "label_single_line": false, "height": 28,
-	// 			"label_align": "center",
-	// 			"x_pos": "20", "y_pos": "-20" }]
-	// 	);
-	// 	cy.hoverOverNodeDecoration("No Decorator", "123");
-	// 	cy.clickEditIconForNodeDecLabel("No Decorator", "123");
-	// 	cy.enterLabelForNodeDec("No Decorator", "123", "New Label Text");
-	// 	cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
-	// 	cy.verifyLabelDecorationOnNode("No Decorator", "123", "New Label Text", 90, 55);
-	// });
+	it("Test editable multi-line label decoration on a node.", function() {
+		cy.setNodeDecorations("No Decorator",
+			[{ "id": "123", "position": "bottomRight", "label": "Dec Label",
+				"label_editable": true, "label_single_line": false, "height": 28,
+				"label_align": "center",
+				"x_pos": "20", "y_pos": "-20" }]
+		);
+		cy.hoverOverNodeDecoration("No Decorator", "123");
+		cy.clickEditIconForNodeDecLabel("No Decorator", "123");
+		cy.enterLabelForNodeDec("No Decorator", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
+		cy.verifyLabelDecorationOnNode("No Decorator", "123", "New Label Text", 90, 55);
+	});
 
-	// it("Test editable multi-line label decoration on a node with label_allow_return_key = 'save'.", function() {
-	// 	cy.setNodeDecorations("No Decorator",
-	// 		[{ "id": "123", "position": "bottomRight", "label": "Dec Label",
-	// 			"label_editable": true, "label_single_line": false, "height": 28,
-	// 			"label_align": "center", "label_allow_return_key": "save",
-	// 			"x_pos": "20", "y_pos": "-20" }]
-	// 	);
-	// 	cy.hoverOverNodeDecoration("No Decorator", "123");
-	// 	cy.clickEditIconForNodeDecLabel("No Decorator", "123");
-	// 	// Enter the label and hit return after which will edit edit and save the label
-	// 	cy.enterLabelForNodeDecHitReturn("No Decorator", "123", "New Label Text");
-	// 	cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
-	// 	cy.verifyLabelDecorationOnNode("No Decorator", "123", "New Label Text", 90, 55);
-	// });
+	it("Test editable multi-line label decoration on a node with label_allow_return_key = 'save'.", function() {
+		cy.setNodeDecorations("No Decorator",
+			[{ "id": "123", "position": "bottomRight", "label": "Dec Label",
+				"label_editable": true, "label_single_line": false, "height": 28,
+				"label_align": "center", "label_allow_return_key": "save",
+				"x_pos": "20", "y_pos": "-20" }]
+		);
+		cy.hoverOverNodeDecoration("No Decorator", "123");
+		cy.clickEditIconForNodeDecLabel("No Decorator", "123");
+		// Enter the label and hit return after which will edit edit and save the label
+		cy.enterLabelForNodeDecHitReturn("No Decorator", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
+		cy.verifyLabelDecorationOnNode("No Decorator", "123", "New Label Text", 90, 55);
+	});
 
-	// it("Test editable single-line label decoration on a node with label_allow_return_key = 'save'.", function() {
-	// 	cy.setNodeDecorations("No Decorator",
-	// 		[{ "id": "123", "position": "bottomRight", "label": "Dec Label",
-	// 			"label_editable": true, "label_single_line": true, "height": 28,
-	// 			"label_align": "center", "label_allow_return_key": "save",
-	// 			"x_pos": "20", "y_pos": "-20" }]
-	// 	);
-	// 	cy.hoverOverNodeDecoration("No Decorator", "123");
-	// 	cy.clickEditIconForNodeDecLabel("No Decorator", "123");
-	// 	// Enter the label and hit return after which will edit edit and save the label
-	// 	cy.enterLabelForNodeDecHitReturn("No Decorator", "123", "New Label Text");
-	// 	cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
-	// 	cy.verifyLabelDecorationOnNode("No Decorator", "123", "New Label Text", 90, 55);
-	// });
+	it("Test editable single-line label decoration on a node with label_allow_return_key = 'save'.", function() {
+		cy.setNodeDecorations("No Decorator",
+			[{ "id": "123", "position": "bottomRight", "label": "Dec Label",
+				"label_editable": true, "label_single_line": true, "height": 28,
+				"label_align": "center", "label_allow_return_key": "save",
+				"x_pos": "20", "y_pos": "-20" }]
+		);
+		cy.hoverOverNodeDecoration("No Decorator", "123");
+		cy.clickEditIconForNodeDecLabel("No Decorator", "123");
+		// Enter the label and hit return after which will edit edit and save the label
+		cy.enterLabelForNodeDecHitReturn("No Decorator", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
+		cy.verifyLabelDecorationOnNode("No Decorator", "123", "New Label Text", 90, 55);
+	});
 
-	// it("Test adding a JSX decoration to a node.", function() {
-	// 	cy.setNodeDecorations("Top Left",
-	// 		[{ "id": "123", "jsx": (<Play />), "x_pos": "20", "y_pos": "-20" }]
-	// 	);
-	// 	cy.verifyNumberOfDecoratorsOnNode("Top Left", 1);
-	// 	cy.verifyJsxDecorationOnNode("Top Left", "123", 20, -20);
-	// });
+	it("Test adding a JSX decoration to a node.", function() {
+		cy.setNodeDecorations("Top Left",
+			[{ "id": "123", "jsx": (<Play />), "x_pos": "20", "y_pos": "-20" }]
+		);
+		cy.verifyNumberOfDecoratorsOnNode("Top Left", 1);
+		cy.verifyJsxDecorationOnNode("Top Left", "123", 20, -20);
+	});
 });
 
 
-// describe("Test adding a decorator to a link", function() {
-// 	beforeEach(() => {
-// 		cy.visit("/");
-// 		cy.openCanvasDefinition("decoratorCanvas.json");
-// 	});
+describe("Test adding a decorator to a link", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("decoratorCanvas.json");
+	});
 
-// 	it("Test adding a new decoration to a link, remove decorations, add label decorator," +
-//   " add image decorator to a link", function() {
-// 		// Verify number of decorators on existing links
-// 		cy.verifyNumberOfDecoratorsOnLink("Top Left-Top Right", 4);
-// 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 3);
+	it("Test adding a new decoration to a link, remove decorations, add label decorator," +
+  " add image decorator to a link", function() {
+		// Verify number of decorators on existing links
+		cy.verifyNumberOfDecoratorsOnLink("Top Left-Top Right", 4);
+		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 3);
 
-// 		// Verify decoration transform on existing links
-// 		cy.verifyDecorationTransformOnLink("Top Left-Top Right", "assocDec1", 370, 133.5);
-// 		cy.verifyDecorationTransformOnLink("Top Left-Top Right", "assocDec2", 478, 133.5);
-// 		cy.verifyDecorationTransformOnLink("Top Left-Top Right", "assocDec3", 586, 133.5);
+		// Verify decoration transform on existing links
+		cy.verifyDecorationTransformOnLink("Top Left-Top Right", "assocDec1", 370, 133.5);
+		cy.verifyDecorationTransformOnLink("Top Left-Top Right", "assocDec2", 478, 133.5);
+		cy.verifyDecorationTransformOnLink("Top Left-Top Right", "assocDec3", 586, 133.5);
 
-// 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "123", 373, 225);
-// 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "456", 478, 225);
-// 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "789", 583, 225);
+		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "123", 373, 225);
+		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "456", 478, 225);
+		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "789", 583, 225);
 
-// 		// Remove all decorations from the association link
-// 		cy.setLinkDecorations("Top Left-Top Right", []);
-// 		cy.verifyNumberOfDecoratorsOnLink("Top Left-Top Right", 0);
+		// Remove all decorations from the association link
+		cy.setLinkDecorations("Top Left-Top Right", []);
+		cy.verifyNumberOfDecoratorsOnLink("Top Left-Top Right", 0);
 
-// 		// Remove all decorations from the node data link
-// 		cy.setLinkDecorations("Bottom Left-Bottom Right", []);
-// 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 0);
+		// Remove all decorations from the node data link
+		cy.setLinkDecorations("Bottom Left-Bottom Right", []);
+		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 0);
 
-// 		// Add a rectangle decorator to association link
-// 		cy.setLinkDecorations("Top Left-Top Right", [{ "id": "123" }]);
-// 		cy.verifyNumberOfDecoratorsOnLink("Top Left-Top Right", 1);
+		// Add a rectangle decorator to association link
+		cy.setLinkDecorations("Top Left-Top Right", [{ "id": "123" }]);
+		cy.verifyNumberOfDecoratorsOnLink("Top Left-Top Right", 1);
 
-// 		// Add a label decorator to association link
-// 		cy.setLinkDecorations("Top Left-Top Right",
-// 			[{ "id": "123", "label": "Link Decoration" }]
-// 		);
-// 		cy.verifyNumberOfLabelDecoratorsOnLink("Top Left-Top Right", 1);
+		// Add a label decorator to association link
+		cy.setLinkDecorations("Top Left-Top Right",
+			[{ "id": "123", "label": "Link Decoration" }]
+		);
+		cy.verifyNumberOfLabelDecoratorsOnLink("Top Left-Top Right", 1);
 
-// 		// Add an image decorator with a hotspot to the node data link
-// 		cy.setLinkDecorations("Bottom Left-Bottom Right",
-// 			[{ "id": "456", "position": "source", "image": "/images/decorators/zoom-in_32.svg", "hotspot": true }]
-// 		);
-// 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
+		// Add an image decorator with a hotspot to the node data link
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "456", "position": "source", "image": "/images/decorators/zoom-in_32.svg", "hotspot": true }]
+		);
+		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
 
-// 		// Click on the hotspot and make sure it works
-// 		cy.clickDecoratorHotspotOnLink("456", "Bottom Left-Bottom Right");
-// 		verifyDecorationHandlerEntryInConsole("456");
-// 	});
+		// Click on the hotspot and make sure it works
+		cy.clickDecoratorHotspotOnLink("456", "Bottom Left-Bottom Right");
+		verifyDecorationHandlerEntryInConsole("456");
+	});
 
-// 	it("Test adding a path decoration to a link", function() {
-// 		// Add a new decoration to the top left position
-// 		cy.setLinkDecorations("Bottom Left-Bottom Right",
-// 			[{ "id": "555", "path": "M 0 0 L 10 10 -10 10 Z",
-// 				"outline": false, "x_pos": -20, "y_pos": 20, "hotspot": true }]
-// 		);
-// 		cy.verifyNumberOfPathDecoratorsOnLink("Bottom Left-Bottom Right", 1);
+	it("Test adding a path decoration to a link", function() {
+		// Add a new decoration to the top left position
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "555", "path": "M 0 0 L 10 10 -10 10 Z",
+				"outline": false, "x_pos": -20, "y_pos": 20, "hotspot": true }]
+		);
+		cy.verifyNumberOfPathDecoratorsOnLink("Bottom Left-Bottom Right", 1);
 
-// 		// Click on the hot spot and make sure it calls the callback function
-// 		cy.clickDecoratorHotspotOnLink("555", "Bottom Left-Bottom Right");
-// 		verifyDecorationHandlerEntryInConsole("555");
+		// Click on the hot spot and make sure it calls the callback function
+		cy.clickDecoratorHotspotOnLink("555", "Bottom Left-Bottom Right");
+		verifyDecorationHandlerEntryInConsole("555");
 
-// 		// Check the path is correct
-// 		cy.verifyDecorationPathOnLink("Bottom Left-Bottom Right", "555", "M 0 0 L 10 10 -10 10 Z");
-// 	});
+		// Check the path is correct
+		cy.verifyDecorationPathOnLink("Bottom Left-Bottom Right", "555", "M 0 0 L 10 10 -10 10 Z");
+	});
 
-// 	it("Test positioning a decoration using distance on a straight line link", function() {
-// 		// The 'distance' property is only applicable with straight link lines.
-// 		cy.setCanvasConfig({ "selectedLinkType": "Straight" });
+	it("Test positioning a decoration using distance on a straight line link", function() {
+		// The 'distance' property is only applicable with straight link lines.
+		cy.setCanvasConfig({ "selectedLinkType": "Straight" });
 
-// 		// Test positive distance from source position
-// 		cy.setLinkDecorations("Bottom Left-Bottom Right",
-// 			[{ "id": "555", "position": "source",
-// 				"distance": 30 }]
-// 		);
-// 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 410, 243.5);
+		// Test positive distance from source position
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "555", "position": "source",
+				"distance": 30 }]
+		);
+		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 410, 243.5);
 
-// 		// Test negative distance from target position
-// 		cy.setLinkDecorations("Bottom Left-Bottom Right",
-// 			[{ "id": "555", "position": "target", "distance": -30 }]
-// 		);
-// 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 566, 243.5);
+		// Test negative distance from target position
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "555", "position": "target", "distance": -30 }]
+		);
+		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 566, 243.5);
 
-// 		// Test negative distance from middle position
-// 		cy.setLinkDecorations("Bottom Left-Bottom Right",
-// 			[{ "id": "555", "position": "middle", "distance": -20 }]
-// 		);
-// 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 468, 243.5);
+		// Test negative distance from middle position
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "555", "position": "middle", "distance": -20 }]
+		);
+		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 468, 243.5);
 
-// 		// Test positive distance from middle position
-// 		cy.setLinkDecorations("Bottom Left-Bottom Right",
-// 			[{ "id": "555", "position": "middle", "distance": 20 }]
-// 		);
-// 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 508, 243.5);
-// 	});
+		// Test positive distance from middle position
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "555", "position": "middle", "distance": 20 }]
+		);
+		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 508, 243.5);
+	});
 
-// 	it("Test editable single-line label decoration on a link with max number of characters.", function() {
-// 		cy.setLinkDecorations("Bottom Left-Bottom Right",
-// 			[{ "id": "123", "label": "Dec Label",
-// 				"label_editable": true, "label_single_line": true, "height": 14,
-// 				"label_max_characters": 12,
-// 				"x_pos": "20", "y_pos": "-20" }]
-// 		);
-// 		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
-// 		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
-// 		cy.enterLabelForLinkDec("Bottom Left-Bottom Right", "123", "New Label Text");
-// 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
-// 		// New label should be truncated because max number of characters is 12
-// 		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Te", 508, 215);
-// 	});
+	it("Test editable single-line label decoration on a link with max number of characters.", function() {
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "123", "label": "Dec Label",
+				"label_editable": true, "label_single_line": true, "height": 14,
+				"label_max_characters": 12,
+				"x_pos": "20", "y_pos": "-20" }]
+		);
+		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
+		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
+		cy.enterLabelForLinkDec("Bottom Left-Bottom Right", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
+		// New label should be truncated because max number of characters is 12
+		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Te", 508, 215);
+	});
 
-// 	it("Test editable multi-line label decoration on a link.", function() {
-// 		cy.setLinkDecorations("Bottom Left-Bottom Right",
-// 			[{ "id": "123", "label": "Dec Label",
-// 				"label_editable": true, "label_single_line": false, "height": 28,
-// 				"label_align": "center",
-// 				"x_pos": "20", "y_pos": "-20" }]);
-// 		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
-// 		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
-// 		cy.enterLabelForLinkDec("Bottom Left-Bottom Right", "123", "New Label Text");
-// 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
-// 		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Text", 498, 215);
-// 	});
+	it("Test editable multi-line label decoration on a link.", function() {
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "123", "label": "Dec Label",
+				"label_editable": true, "label_single_line": false, "height": 28,
+				"label_align": "center",
+				"x_pos": "20", "y_pos": "-20" }]);
+		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
+		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
+		cy.enterLabelForLinkDec("Bottom Left-Bottom Right", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
+		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Text", 498, 215);
+	});
 
-// 	it("Test editable multi-line label decoration on a link, with label_allow_return_key = 'save'", function() {
-// 		cy.setLinkDecorations("Bottom Left-Bottom Right",
-// 			[{ "id": "123", "label": "Dec Label",
-// 				"label_editable": true, "label_single_line": false, "height": 28,
-// 				"label_align": "center", "label_allow_return_key": "save",
-// 				"x_pos": "20", "y_pos": "-20" }]);
-// 		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
-// 		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
-// 		// Enter the label and hit return after which will edit edit and save the label
-// 		cy.enterLabelForLinkDecHitReturn("Bottom Left-Bottom Right", "123", "New Label Text");
-// 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
-// 		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Text", 498, 215);
-// 	});
+	it("Test editable multi-line label decoration on a link, with label_allow_return_key = 'save'", function() {
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "123", "label": "Dec Label",
+				"label_editable": true, "label_single_line": false, "height": 28,
+				"label_align": "center", "label_allow_return_key": "save",
+				"x_pos": "20", "y_pos": "-20" }]);
+		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
+		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
+		// Enter the label and hit return after which will edit edit and save the label
+		cy.enterLabelForLinkDecHitReturn("Bottom Left-Bottom Right", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
+		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Text", 498, 215);
+	});
 
-// 	it("Test editable single-line label decoration on a link, with label_allow_return_key = 'save'", function() {
-// 		cy.setLinkDecorations("Bottom Left-Bottom Right",
-// 			[{ "id": "123", "label": "Dec Label",
-// 				"label_editable": true, "label_single_line": true, "height": 28,
-// 				"label_align": "center", "label_allow_return_key": "save",
-// 				"x_pos": "20", "y_pos": "-20" }]);
-// 		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
-// 		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
-// 		// Enter the label and hit return after which will edit edit and save the label
-// 		cy.enterLabelForLinkDecHitReturn("Bottom Left-Bottom Right", "123", "New Label Text");
-// 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
-// 		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Text", 498, 215);
-// 	});
+	it("Test editable single-line label decoration on a link, with label_allow_return_key = 'save'", function() {
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "123", "label": "Dec Label",
+				"label_editable": true, "label_single_line": true, "height": 28,
+				"label_align": "center", "label_allow_return_key": "save",
+				"x_pos": "20", "y_pos": "-20" }]);
+		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
+		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
+		// Enter the label and hit return after which will edit edit and save the label
+		cy.enterLabelForLinkDecHitReturn("Bottom Left-Bottom Right", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
+		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Text", 498, 215);
+	});
 
-// 	// There are more tests for tips on decorations in the tips.js file
-// 	it("Test a tooltip appears on hover over decoration.", function() {
-// 		// Must switch off link tips here otherwise, in Cypress, the link tip
-// 		// appears when hovering over the decoration instead of the decoration tip
-// 		// even though the decoration tip appears correctly in usual operation.
-// 		cy.setCanvasConfig({
-// 			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false,
-// 				"decorations": true, "links": false }
-// 		});
-// 		// Add a decoration with a tooltip.
-// 		cy.setLinkDecorations("Bottom Left-Bottom Right",
-// 			[{ "id": "123", "path": "M 0 0 L 0 -20 -10 -30 -20 -20 -20 0 Z",
-// 				"tooltip": "Inform - Educate - Entertain",
-// 				"x_pos": "40", "y_pos": "15" }]);
-// 		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
-// 		cy.verifyTipForDecoration("Inform - Educate - Entertain");
-// 	});
+	// There are more tests for tips on decorations in the tips.js file
+	it("Test a tooltip appears on hover over decoration.", function() {
+		// Must switch off link tips here otherwise, in Cypress, the link tip
+		// appears when hovering over the decoration instead of the decoration tip
+		// even though the decoration tip appears correctly in usual operation.
+		cy.setCanvasConfig({
+			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false,
+				"decorations": true, "links": false }
+		});
+		// Add a decoration with a tooltip.
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "123", "path": "M 0 0 L 0 -20 -10 -30 -20 -20 -20 0 Z",
+				"tooltip": "Inform - Educate - Entertain",
+				"x_pos": "40", "y_pos": "15" }]);
+		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
+		cy.verifyTipForDecoration("Inform - Educate - Entertain");
+	});
 
-// 	it("Test adding a JSX decoration to a link.", function() {
-// 		cy.setLinkDecorations("Bottom Left-Bottom Right",
-// 			[{ "id": "123", "jsx": (<Play />), "x_pos": "20", "y_pos": "-20" }]
-// 		);
-// 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
-// 		cy.verifyJsxDecorationOnLink("Bottom Left-Bottom Right", "123", 508, 215);
-// 	});
-// });
+	it("Test adding a JSX decoration to a link.", function() {
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "123", "jsx": (<Play />), "x_pos": "20", "y_pos": "-20" }]
+		);
+		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
+		cy.verifyJsxDecorationOnLink("Bottom Left-Bottom Right", "123", 508, 215);
+	});
+});
 
 function verifyDecorationHandlerEntryInConsole(decoratorId) {
 	cy.document().then((doc) => {
