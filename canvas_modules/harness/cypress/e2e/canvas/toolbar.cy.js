@@ -112,6 +112,8 @@ describe("Test for toolbar resize", function() {
 	});
 
 	it("Test number of items in toolbar for different window sizes", function() {
+		// eslint-disable-next-line cypress/no-unnecessary-waiting
+		cy.wait(10);
 		cy.viewport(400, 600);
 		cy.verifyNumberOfItemsInToolbar(8);
 
