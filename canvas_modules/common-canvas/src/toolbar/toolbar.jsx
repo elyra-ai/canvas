@@ -345,7 +345,7 @@ class Toolbar extends React.Component {
 		const ref = this.findFirstRightItemRefNotOnTopRow();
 
 		const index = ref === null
-			? this.rightBar.length - 1
+			? this.rightBar.length
 			: this.rightBar.findIndex((ri) => ri.action === this.getRefAction(ref));
 
 		return index;

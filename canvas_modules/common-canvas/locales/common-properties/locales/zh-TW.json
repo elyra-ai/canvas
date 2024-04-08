@@ -106,5 +106,8 @@
   "virtualizedTable.row.checkbox.label": "從 {table_label} 選取列 {row_index}",
   "properties.empty.table.text": "若要開始，請按一下 \"{button_label}\"",
   "label.indicator.required": "（必要）",
-  "label.indicator.optional": "（選用）"
+  "label.indicator.optional": "（選用）",
+  "slider.numberInput.label": "滑塊號碼輸入",
+  "editorForm.tabList.label": "主要標籤",
+  "subTabs.tabList.label": "標籤清單"
 }

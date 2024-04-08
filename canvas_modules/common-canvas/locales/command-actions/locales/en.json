@@ -40,6 +40,7 @@
 	"action.setNodeLabel": "Set node label",
 	"action.setObjectsStyle": "Set objects style",
 	"action.sizeAndPositionObjects": "Size node",
+	"action.sizeComment": "Size comment",
 	"action.updateLink": "Update link",
 	"supernode.template.description": "This supernode was created by common-canvas.",
 	"supernode.template.label": "Supernode",

@@ -1,0 +1,16 @@
+# Decoration Action Handler
+
+## decorationActionHandler
+```js
+    decorationActionHandler(object, id, pipelineId)
+```
+Decorations are small images that can be displayed on or near to your nodes and links. They can be for display only or actionable (so the user can click on them). See the canvas JSON schema for information on how to define decorations for your nodes.
+
+This callback is called when the user clicks on an actionable decoration. You don't need to implement anything for this callback unless you added actionable decorations to your nodes. It doesn't return anything. It is called whenever the user clicks on a decoration that you added to a node in the canvas JSON.
+
+It is provided with two parameters:
+
+* object -- the node or link with which the decoration is associated.
+* id -- the ID of the decoration that you provided in the canvas JSON
+* pipelineId -- the ID of the pipeline for the node.
+

@@ -47,6 +47,10 @@ export default class CommandStack {
 		return null;
 	}
 
+	getAllUndoCommands() {
+		return this.commands.getUndoCommands().toArray();
+	}
+
 	// need this for validation on unit tests
 	getStack() {
 		return {

@@ -69,7 +69,18 @@ nav:
       - Notification Config: 02-canvas/02-configs/03-notification-config.md
       - Context Menu Config: 02-canvas/02-configs/04-context-menu-config.md
       - Keyboard Config: 02-canvas/02-configs/05-keyboard-config.md
-    - Callbacks: 02-canvas/03-callbacks/index.md
+    - Callbacks:
+      - 02-canvas/03-callbacks/index.md
+      - Context Menu Handler: 02-canvas/03-callbacks/01-context-menu-handler.md
+      - Edit Action Handler: 02-canvas/03-callbacks/02-edit-action-handler.md
+      - Before Edit Action Handler: 02-canvas/03-callbacks/03-before-edit-action-handler.md
+      - Layout Handler: 02-canvas/03-callbacks/04-layout-handler.md
+      - Decoration Action Handler: 02-canvas/03-callbacks/05-decoration-action-handler.md
+      - Tip Handler: 02-canvas/03-callbacks/06-tip-handler.md
+      - ID Generator Handler: 02-canvas/03-callbacks/07-id-generator-handler.md
+      - Selection Change Handler: 02-canvas/03-callbacks/08-selection-change-handler.md
+      - Click Action Handler: 02-canvas/03-callbacks/09-click-action-handler.md
+      - Action Label Handler: 02-canvas/03-callbacks/10-action-label-handler.md
     - Canvas Controller:
       - 02-canvas/04-controller/index.md
       - Styling Canvas Objects: 02-canvas/04-controller/01-Styling-Objects.md
