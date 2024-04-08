@@ -648,7 +648,7 @@ export default class ObjectModel {
 	// layout, dimension and supernode binding status info. This uses the redux
 	// layout information.
 	setNodeAttributes(node) {
-		return setNodeAttributesWithLayout(node, this.getNodeLayout(), this.getCanvasLayout());
+		return setNodeAttributesWithLayout(node, this.getNodeLayout(), this.getCanvasLayout(), this.layoutHandler);
 	}
 
 	// Returns a copy of the comment passed in with position adjusted for
