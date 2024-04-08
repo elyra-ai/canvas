@@ -88,17 +88,17 @@ nav:
       - Decorations: 03.04.01-decorations.md
       - Object Structure: 03.04.02-api-object-structure.md
       - Creating New Canvas Nodes: 03.04.03-creating-new-canvas-nodes.md
-      - Read Only or Locked Canvas: 03.04.04-read-only-or-locked-canvas.md
       - Notification Messages: 03.04.05-notification-messages.md
       - Styling Canvas Objects: 03.04.06-styling-objects.md
     - Keyboard Support: 03.05-keyboard-support.md
     - Node Layout: 03.06-node-layout.md
     - Node Creation from External Object: 03.07-external-objects.md
     - External Pipeline Flows: 03.08-external-pipeline-flows.md
-    - Commmand Stack: 03.09-command-stack.md
+    - Read Only or Locked Flows: 03.09-read-only-or-locked-flows.md
+    - Commmand Stack: 03.10-command-stack.md
     - Deprecated:
-      - Context Menu Wrapper Documentation: 03.10.01-context-menu-wrapper.md
-      - Flow Validation API: 03.10.02-flow-validation.md
+      - Context Menu Wrapper: 03.30.01-context-menu-wrapper.md
+      - Flow Validation: 03.30.02-flow-validation.md
 
   - Common Properties:
     - Getting started: 04-common-properties.md

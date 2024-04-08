@@ -90,13 +90,16 @@ In addition you'll need to import `<IntlProvider>` from the `react-intl` library
     import { IntlProvider } from "react-intl";
 ```
 
+### Step 3 : Pull in the CSS
+Check this section to find info on what CSS to include in your application's CSS. [Styling](02-set-up.md#overriding-styles-and-color-themes).
 
-### Step 3 : Create an instance of the canvas controller
+
+### Step 4 : Create an instance of the canvas controller
 To control the canvas you'll need an instance of the canvas controller so create an instance of it like this (probably in the constructor of your object).
 ```js
     this.canvasController = new CanvasController();
 ```
-### Step 4 : Set the palette data
+### Step 5 : Set the palette data
 Next you'll need to populate the palette data. This will specify the nodes (split into categories) that will appear in the palette. The user can drag them from the palette to build their flow. This is done by calling CanvasController with:
 ```js
     this.canvasController.setPipelineFlowPalette(pipelineFlowPalette);
@@ -107,7 +110,7 @@ https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/palette
 Some examples of palette JSON files can be found here:
 https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resources/palettes
 
-### Step 5 : (Optional) Set the flow data
+### Step 6 : (Optional) Set the flow data
 This is an optional step. If you want a previously saved flow to be shown in the canvas editor so the user can start to edit it, you will need to call the CanvasController with:
 ```js
     this.canvasController.setPipelineFlow(pipelineFlow);
@@ -119,8 +122,6 @@ https://github.com/elyra-ai/pipeline-schemas/tree/master/common-pipeline/pipelin
 Some examples of pipeline flow JSON files can be found here:
 https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resources/diagrams
 
-### Step 6 : Pull in the CSS
-Check this section to find info on what CSS to include in your application's CSS. [Styling](02-install.md#overriding-styles-and-color-themes).
 
 ### Step 7 : Display the canvas
 
