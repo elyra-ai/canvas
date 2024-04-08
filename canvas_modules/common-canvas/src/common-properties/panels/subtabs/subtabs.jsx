@@ -55,6 +55,7 @@ class Subtabs extends React.Component {
 
 				subTabLists.push(
 					<Tab
+						key={`subtabs.tab.${i}-${this.uuid}`}
 						disabled={panelState === STATES.DISABLED}
 						className={classNames("properties-subtab", { "properties-leftnav-subtab-item": this.props.leftnav })}
 						title={tab.text}
@@ -66,7 +67,7 @@ class Subtabs extends React.Component {
 				);
 
 				subTabPanels.push(
-					<TabPanel className="properties-subtab-panel">
+					<TabPanel key={`subtabs.tab.${i}-${this.uuid}`} className="properties-subtab-panel">
 						{subPanelItems}
 					</TabPanel>
 				);

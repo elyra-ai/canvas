@@ -57,10 +57,9 @@ describe("toggle renders correctly", () => {
 		);
 
 		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
-		const toggle = toggleWrapper.find("input");
-		expect(toggle.getDOMNode().checked).to.equal(true);
-		toggle.getDOMNode().checked = false;
-		toggle.simulate("change");
+		const toggle = toggleWrapper.find("Toggle");
+		expect(toggle.prop("toggled")).to.equal(true);
+		toggle.find("button").simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(false);
 
 	});

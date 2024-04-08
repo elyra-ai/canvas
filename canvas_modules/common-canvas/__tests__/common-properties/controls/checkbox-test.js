@@ -154,7 +154,7 @@ describe("checkbox control tests", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkbox']");
+		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkbox'] > div");
 		expect(checkboxWrapper.hasClass("hide")).to.equal(true);
 	});
 	it("checkbox renders correctly in a table", () => {

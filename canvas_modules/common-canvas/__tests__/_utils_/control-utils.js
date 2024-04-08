@@ -20,7 +20,7 @@ function getDropdownItems(wrapper, parameterId) {
 	const dropdownButton = dropdownWrapper.find("button");
 	dropdownButton.simulate("click");
 	dropdownWrapper = wrapper.find(`div[data-id='properties-${parameterId}']`);
-	const dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
+	const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 	return dropdownList;
 }
 

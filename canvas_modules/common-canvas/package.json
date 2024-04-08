@@ -67,6 +67,7 @@
     "@rollup/plugin-url": "6.1.0",
     "@testing-library/jest-dom": "5.17.0",
     "@testing-library/react": "14.2.2",
+    "@wojtekmaj/enzyme-adapter-react-17": "0.8.0",
     "autoprefixer": "9.8.8",
     "babel-jest": "26.3.0",
     "babel-plugin-lodash": "3.3.4",
@@ -143,5 +144,11 @@
       "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.js"
     },
     "testURL": "http://localhost/"
+  },
+  "overrides": {
+    "@wojtekmaj/enzyme-adapter-react-17": {
+       "react": "^18",
+       "react-dom": "^18"
+     }
   }
 }
