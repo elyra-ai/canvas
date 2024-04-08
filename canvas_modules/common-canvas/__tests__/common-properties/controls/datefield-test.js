@@ -175,7 +175,8 @@ describe("datefield-control renders correctly", () => {
 			/>
 		);
 		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		expect(dateWrapper.find(".cds--text-input--light")).to.have.length(1);
+		expect(dateWrapper.find(".cds--layer-two")).to.have.length(1); // light enabled
+		expect(dateWrapper.find(".cds--layer-one")).to.have.length(0); // light disabled
 	});
 
 	it("should render `DatefieldControl` with light mode disabled", () => {
