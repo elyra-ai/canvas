@@ -130,8 +130,8 @@ export default class SVGCanvasD3 {
 		this.renderer.externalObjectDropped(dropData, x, y);
 	}
 
-	zoomTo(zoomObject) {
-		this.renderer.zoomTo(zoomObject);
+	zoomTo(zoomObject, animateTime) {
+		this.renderer.zoomTo(zoomObject, animateTime);
 	}
 
 	translateBy(x, y, animateTime) {
