@@ -1742,11 +1742,13 @@ export default class CanvasController {
 	//    pixel amount to move. Negative left and positive right
 	// y: Is the vertical translate amount which is a number indicating the
 	//    pixel amount to move. Negative up and positive down.
-	// k: is the scale amount which is a number greater than 0 where 1 is the
+	// k: Is the scale amount which is a number greater than 0 where 1 is the
 	//    default scale size.
-	zoomTo(zoomObject) {
+	// animateTime is a number of milliseconds that the animation should take.
+	// It defaults to 500ms. Set to 0 for no animation.
+	zoomTo(zoomObject, animateTime) {
 		if (this.canvasContents) {
-			this.getSVGCanvasD3().zoomTo(zoomObject);
+			this.getSVGCanvasD3().zoomTo(zoomObject, animateTime);
 		}
 	}
 
