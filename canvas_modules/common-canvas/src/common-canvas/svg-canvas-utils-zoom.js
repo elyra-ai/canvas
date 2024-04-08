@@ -132,10 +132,11 @@ export default class SVGCanvasUtilsZoom {
 		this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1);
 	}
 
-	// Zooms the canvas to the extent specified in the zoom object.
-	zoomTo(zoomObject) {
-		const animateTime = 500;
-		this.zoomCanvasInvokeZoomBehavior(zoomObject, animateTime);
+	// Zooms the canvas to the extent specified in the zoom object. Animate
+	// the zoom by the time specified (in milliseconds) or by 500ms by default.
+	zoomTo(zoomObject, animateTime) {
+		const at = typeof animateTime === "undefined" ? 500 : animateTime;
+		this.zoomCanvasInvokeZoomBehavior(zoomObject, at);
 	}
 
 	// Pans the canvas by the x and y amount specified in the time specified.
