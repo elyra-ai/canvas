@@ -171,7 +171,7 @@ describe("structureeditor control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		const dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
@@ -197,7 +197,7 @@ describe("structureeditor control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		const dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
@@ -223,7 +223,7 @@ describe("structureeditor control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		const dropdownList = dropdownWrapper.find("div.cds--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
 		dropdownList.at(0).simulate("click");
 		const value = controller.getPropertyValue(propertyId);
@@ -509,7 +509,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
 
 		// As "Field 3" row is displayed before "Field 5", it will be added as the first row. Modify values in the first row
-		const editButton = firstRow.find(".properties-subpanel-button").at(0);
+		const editButton = firstRow.find("button.properties-subpanel-button").at(0);
 		editButton.simulate("click");
 		const userFields = wrapper.find("div[data-id='properties-userFieldsTable']");
 		userFields.find("textarea").simulate("change", { target: { value: "annotation for newly added Field 3" } });

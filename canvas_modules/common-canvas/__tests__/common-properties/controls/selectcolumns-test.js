@@ -418,7 +418,7 @@ describe("selectcolumns control displays the proper number of rows", () => {
 
 		// open the subpanel for the added row
 		tableWrapper = wrapper.find("div[data-id='properties-structurelist2']");
-		const editButton = tableWrapper.find(".properties-subpanel-button").at(0);
+		const editButton = tableWrapper.find("button.properties-subpanel-button").at(0);
 		editButton.simulate("click");
 		const selectColumnsWrapper = wrapper.find("div[data-id='properties-structurelist2_0_1']");
 
@@ -486,7 +486,7 @@ describe("selectcolumns control functions correctly in a table", () => {
 
 		// Need to reassign tableWrapper after adding row.
 		tableWrapper = wrapper.find("div[data-id='properties-ft-structurelist_sub_panel']");
-		const editButton = tableWrapper.find(".properties-subpanel-button").at(0);
+		const editButton = tableWrapper.find("button.properties-subpanel-button").at(0);
 		editButton.simulate("click"); // open the subpanel for the added row
 
 		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields2");
@@ -509,7 +509,7 @@ describe("selectcolumns control functions correctly in a table", () => {
 
 		// Need to reassign tableWrapper after adding row.
 		tableWrapper = wrapper.find("div[data-id='properties-ft-structurelist_sub_panel']");
-		const editButton = tableWrapper.find(".properties-subpanel-button").at(0);
+		const editButton = tableWrapper.find("button.properties-subpanel-button").at(0);
 		editButton.simulate("click"); // open the subpanel for the added row
 
 		let fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields2");

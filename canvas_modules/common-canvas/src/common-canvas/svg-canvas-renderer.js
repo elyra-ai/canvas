@@ -187,8 +187,8 @@ export default class SVGCanvasRenderer {
 		return this.zoomUtils.isSpaceKeyPressed();
 	}
 
-	zoomTo(zoomObject) {
-		this.zoomUtils.zoomTo(zoomObject);
+	zoomTo(zoomObject, animateTime) {
+		this.zoomUtils.zoomTo(zoomObject, animateTime);
 	}
 
 	translateBy(x, y, animateTime) {
