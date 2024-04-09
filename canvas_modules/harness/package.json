@@ -78,7 +78,7 @@
     "react-tooltip": "5.26.3",
     "react-virtualized": "9.22.5",
     "reactable": "1.1.0",
-    "redux": "5.0.1",
+    "redux": "4.0.5",
     "sass": "1.72.0",
     "sass-loader": "14.1.1",
     "source-map-loader": "5.0.0",

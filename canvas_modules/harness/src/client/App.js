@@ -24,6 +24,10 @@ import Isvg from "react-inlinesvg";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
+import { Provider } from "react-redux";
+import { createStore, combineReducers } from "redux";
+import todoReducer from "./reducers/todoReducer";
+import Todo from "./Todo.js";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
 import { hot } from "react-hot-loader/root";
 import classNames from "classnames";
@@ -2792,9 +2796,12 @@ class App extends React.Component {
 		</div>);
 
 		return (
-			<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
-				{mainView}
-			</IntlProvider>
+			<Provider store={createStore(combineReducers({ todo: todoReducer }), {})}>
+				<Todo />
+				<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
+					{mainView}
+				</IntlProvider>
+			</Provider>
 		);
 	}
 }
