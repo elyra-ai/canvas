@@ -312,7 +312,7 @@ describe("FlexibleTable renders correctly", () => {
 		expect(tableBody).to.have.length(1);
 		const emptyTableDiv = tableBody.find("div.properties-ft-empty-table");
 		expect(emptyTableDiv).to.have.length(1);
-		expect(emptyTableDiv).to.have.text(emptyTablePlaceholder);
+		expect(emptyTableDiv.text()).to.equal(emptyTablePlaceholder);
 	});
 
 	it("Empty `FlexibleTable` should have emptyTablePlaceholder react element", () => {
@@ -334,7 +334,7 @@ describe("FlexibleTable renders correctly", () => {
 		const emptyTableDiv = tableBody.find("div.properties-ft-empty-table");
 		expect(emptyTableDiv).to.have.length(1);
 		expect(emptyTableDiv.find("div.empty-table-text")).to.have.length(1);
-		expect(emptyTableDiv).to.have.text("This is an empty table placeholder element.");
+		expect(emptyTableDiv.text()).to.equal("This is an empty table placeholder element.");
 	});
 
 	it("Empty `FlexibleTable` shows blank text when emptyTablePlaceholder is not defined", () => {
@@ -349,7 +349,7 @@ describe("FlexibleTable renders correctly", () => {
 		expect(tableBody).to.have.length(1);
 		const emptyTableDiv = tableBody.find("div.properties-ft-empty-table");
 		expect(emptyTableDiv).to.have.length(1);
-		expect(emptyTableDiv).to.have.text("");
+		expect(emptyTableDiv.text()).to.equal("");
 	});
 
 	it("Empty `FlexibleTable` uses place_holder_text from uiHints", () => {
@@ -361,7 +361,7 @@ describe("FlexibleTable renders correctly", () => {
 		expect(termsTable).to.have.length(1);
 		const emptyTableDiv = termsTable.find("div.properties-ft-empty-table");
 		expect(emptyTableDiv).to.have.length(1);
-		expect(emptyTableDiv).to.have.text("No terms added");
+		expect(emptyTableDiv.text()).to.equal("No terms added");
 
 
 		// Fields table is an empty table using place_holder_text resource_key
@@ -369,7 +369,7 @@ describe("FlexibleTable renders correctly", () => {
 		expect(fieldsTable).to.have.length(1);
 		const emptyTableDiv1 = fieldsTable.find("div.properties-ft-empty-table");
 		expect(emptyTableDiv1).to.have.length(1);
-		expect(emptyTableDiv1).to.have.text(glmmParamDef.resources["covariance_list.placeholder.label"]);
+		expect(emptyTableDiv1.text()).to.equal(glmmParamDef.resources["covariance_list.placeholder.label"]);
 	});
 
 	it("should readjust height when row changes", () => {

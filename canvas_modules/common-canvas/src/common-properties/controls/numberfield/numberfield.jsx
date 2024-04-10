@@ -70,7 +70,9 @@ class NumberfieldControl extends React.Component {
 	}
 
 	handleChange(evt, { value, direction }) {
-		if (this.props.control.controlType !== ControlType.NUMBERFIELD && typeof direction === "string") {
+		// When stepper buttons are clicked, evt.type = click
+		// When user changes the value manually without clicking stepper buttons, evt.type = change
+		if (evt?.type === "click" && typeof direction === "string") {
 			this.onDirection(direction);
 			return;
 		}
