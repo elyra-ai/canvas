@@ -152,6 +152,7 @@ class ToolTip extends React.Component {
 	}
 
 	showTooltipWithDelay() {
+
 		// set a delay on displaying the tooltip
 		if (!this.pendingTooltip && this.showTooltip()) {
 			const that = this;
