@@ -93,7 +93,7 @@ export class Control {
 			if (settings.generatedValues.operation) {
 				this.generatedValues.operation = settings.generatedValues.operation;
 			}
-			if (settings.generatedValues.start_value) {
+			if (isFinite(settings.generatedValues.start_value)) {
 				this.generatedValues.startValue = settings.generatedValues.start_value;
 			}
 		}
