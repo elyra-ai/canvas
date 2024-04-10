@@ -23,7 +23,7 @@ const webpack = require("webpack");
 const babelOptions = require("./scripts/babel/babelOptions").babelOptions;
 const constants = require("./lib/constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 // Globals
 
