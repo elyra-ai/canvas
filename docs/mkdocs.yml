@@ -46,7 +46,7 @@ copyright: 'Copyright  &copy; 2024 Elyra Authors, an open source project and all
 
 nav:
   - Home:
-    - 00-home.md
+    - index.md
 
   - Components:
     - Components Overview: 01-canvas-components.md
