@@ -5,7 +5,7 @@ Elyra Canvas is an open source library providing **React** objects to enable app
 flows of linked nodes.
 
 <p>
-	<img src="../assets/spss-modeler.gif" width="800" height="400"/>
+	<img src="assets/spss-modeler.gif" width="800" height="400"/>
 	<br />
 	<em>Elyra Canvas in action in the SPSS Modeler UI, the flagship component of IBM Watsonx</em>
 </p>
