@@ -1,32 +1,24 @@
 # Elyra Canvas Components Overview
 
+The Elyra Canvas package delivers two decoupled React objects: Common Canvas and Common Properties.
+
 ## Common Canvas
-Common canvas displays a flow of data operations as nodes and links which the user can create and edit to get the flow they want. These visual flows of data operations are translated into data processing steps performed by a back-end server. Common canvas provides functionality for the visual display of flows in the browser and leaves persistence and execution of data flows to the application.
+Common canvas displays a flow of data operations as nodes and links (edges) which the user can create and edit to get the flow they want. These visual flows of data operations are translated into data processing steps performed by a back-end server. Common canvas provides functionality for the visual display of flows in the browser and leaves persistence and execution of data flows to the application.
 
 The common-canvas user can perform operations such as:
 
-* Create a new node by dragging a node definition from a palette onto the canvas.
-* Create a new node by dragging a node from outside the canvas onto the canvas (you'll have to do some programming to get this to work).
+* Create a new node by dragging a node template from a palette onto the canvas.
 * Delete a node by clicking a context menu option.
 * Create a link by dragging a line from one node to another.
 * Delete a link by clicking a context menu option.
 * Add a comment to the canvas and draw a link from it to one or more nodes.
 * Edit a comment.
 * Move nodes and comments around in the canvas to get the desired arrangement.
-* And more! ...
-
-## Creating nodes on the canvas
-
-Nodes can be created on the canvas by the user in two ways:
-
-* By dragging a node from the palette onto the canvas background
-* By dragging a node from outside the canvas
-
-The first technique is provided by Common canvas. The second requires some development work which is documented here:
-[Enabling node creation from external object](03.07-external-objects.md)
+* Create a new node by dragging a node from the OS desktop (or elsewhere on the browser page) onto the canvas. This takes a little bit of [development work](03.07-external-objects.md).
+* And much more! ...
 
 
-## Common Canvas Components
+### Common Canvas Components
 
 Common canvas has several constituent parts that are visible to the user:
 
@@ -39,6 +31,7 @@ Common canvas has several constituent parts that are visible to the user:
 * Right side flyout - a panel, often used to display node properties
 * Top panel - a panel which can be used to display other app related information
 * Bottom panel - a panel which can be used to display other app related information
+* State Tag - a small pill shaped component that appears over the canvas to indicate its state: locked or read-only.
 
 
 and it handles:
@@ -49,6 +42,10 @@ and it handles:
   4. display and handling of the palette.
   5. provision of callbacks to tell your code what operations the user is performing on the canvas
   6. and much much more.
+
+## Common Properties
+Common properties allows the application to display a Carbon compliant properties panel or dialog with just a Javascript (JSON) object as input. Common properties supports the most commonly used UI components and also allows custom components to be added into its visual output.
+
 
 
 

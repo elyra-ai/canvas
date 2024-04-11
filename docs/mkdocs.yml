@@ -55,6 +55,7 @@ nav:
       - Nodes: 01.01.01-nodes.md
       - Links: 01.01.02-links.md
       - Comments: 01.01.03-comments.md
+      - Background: 01.01.04-background.md
     - Palette: 01.02-palette.md
     - Context Menu: 01.03-context-menu.md
     - Context Toolbar: 01.04-context-toolbar.md
@@ -114,7 +115,9 @@ nav:
     - 05-troubleshooting.md
 
   - Contributing:
-    - 06-testing-guidelines.md
+    - 06-contributing.md
+    - 06.01-style-guidelines.md
+    - 06.02-testing-guidelines.md
 
 markdown_extensions:
   - admonition:
