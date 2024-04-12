@@ -132,6 +132,8 @@ describe("Test elbow connections from multi-port source nodes", function() {
 		);
 
 		// Move node on canvas and verify updated link paths
+		// TODO -- Fix when autoselect is available.
+		cy.getNodeWithLabel("Neural Net").click();
 		cy.moveNodeToPosition("Neural Net", 50, 530);
 		cy.verifyNumberOfPortDataLinks(6);
 		cy.verifyLinkPath(
@@ -150,6 +152,8 @@ describe("Test elbow connections from multi-port source nodes", function() {
 			"144 511.5 L 30 511.5 Q 20 511.5 20 521.25 L 20 547 Q 20 557 30 557 L 50 557"
 		);
 
+		// TODO -- Fix when autoselect is available.
+		cy.getNodeWithLabel("Select3").click();
 		cy.moveNodeToPosition("Select3", 150, 400);
 		cy.verifyNumberOfPortDataLinks(6);
 		cy.verifyLinkPath(
@@ -189,6 +193,8 @@ describe("Test elbow connections from multi-port source nodes", function() {
 
 		// Move the target node so one link line continues to go over the top of
 		// both nodes and one goes underneath both nodes.
+		// TODO -- Fix when autoselect is available.
+		cy.getNodeWithLabel("Select").click();
 		cy.moveNodeToPosition("Select", 440, 450);
 		cy.verifyLinkPath(
 			"Filler", "outPort1", "Select", "inPort",
@@ -203,6 +209,7 @@ describe("Test elbow connections from multi-port source nodes", function() {
 
 		// Move the target node so both link lines go over the source node and
 		// under the target node.
+		cy.getNodeWithLabel("Select").click();
 		cy.moveNodeToPosition("Select", 440, 400);
 		cy.verifyLinkPath(
 			"Filler", "outPort1", "Select", "inPort",
@@ -217,6 +224,7 @@ describe("Test elbow connections from multi-port source nodes", function() {
 
 		// Move the target node so both link lines go under the source node and
 		// over the target node.
+		cy.getNodeWithLabel("Select").click();
 		cy.moveNodeToPosition("Select", 440, 600);
 		cy.verifyLinkPath(
 			"Filler", "outPort1", "Select", "inPort",
