@@ -18,7 +18,6 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { hot } from "react-hot-loader/root";
 import { Button, Dropdown } from "@carbon/react";
 import {
 	TEXTFIELD_ERROR_PROPS_INFO,
@@ -1306,4 +1305,4 @@ class CommonPropertiesComponents extends React.Component {
 	}
 }
 
-export default hot(CommonPropertiesComponents);
+export default CommonPropertiesComponents;
