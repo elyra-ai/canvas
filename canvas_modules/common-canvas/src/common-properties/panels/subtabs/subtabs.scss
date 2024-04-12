@@ -38,28 +38,24 @@ $selected-tab-width: 3px;
 	margin-left: -$spacing-05;
 	margin-bottom: calc(-1 * #{$parent-padding});
 
-	// TODO: Height of this class will be fixed in issue https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3699
 	.properties-leftnav-subtabs {
 		width: 282px;
 		background-color: $layer-01;
 		border-right: 1px solid $layer-accent-01;
 		padding-top: $spacing-02;
 		height: 100%;
+		max-block-size: none; // To make the height same as parent div
 
 		.cds--tab--list {
 			flex-direction: column;
 			width: 282px;
-			height: fit-content;
 		}
 
 		button.properties-leftnav-subtab-item {
-			&:hover {
-				border-bottom: 0;
-			}
-
 			border-left: $selected-tab-width solid transparent;
 			border-bottom: 0;
 			transition: none; // Prevent border/outline from flickering
+			max-block-size: $spacing-08;
 
 			&:focus, &:active {
 				outline: 0;
