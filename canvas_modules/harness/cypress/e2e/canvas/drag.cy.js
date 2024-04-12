@@ -67,6 +67,7 @@ describe("Test to see if regular selection and drag behavior works " +
 
 		// Try dragging a node that is not selected -
 		// this should select the node being dragged and deselect the three selections
+		cy.getNodeWithLabel("Super node").click();
 		cy.moveNodeToPosition("Super node", 300, 350);
 
 		// Verify only dragged node is selected, all other selections are cleared
@@ -82,6 +83,14 @@ describe("Test to see if regular selection and drag behavior works " +
 
 		// Try dragging a comment that is not selected -
 		// this should select the comment being dragged and deselect the three selections
+		cy.getCommentWithText(
+			"This canvas shows the 4 different node types and three link types: node links, " +
+			"association links and comments links."
+		).click();
+		cy.getCommentWithText(
+			"This canvas shows the 4 different node types and three link types: node links, " +
+			"association links and comments links."
+		).click();
 		cy.moveCommentToPosition(
 			"This canvas shows the 4 different node types and three link types: node links, " +
 			"association links and comments links.", 300, 350
