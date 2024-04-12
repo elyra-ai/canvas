@@ -706,7 +706,6 @@ Cypress.Commands.add("verifyJsxDecorationOnLink", (linkLabel, decoratorId, xPos,
 });
 
 Cypress.Commands.add("verifyDecorationTransformOnNode", (nodeName, decoratorId, xPos, yPos) => {
-	// eslint-disable-next-line cypress/no-unnecessary-waiting
 	cy.wait(10);
 	cy.getNodeWithLabel(nodeName)
 		.find(".d3-node-dec-group")

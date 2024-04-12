@@ -176,7 +176,6 @@ describe("Test create supernode within a supernode with a new node from palette"
 		cy.verifyNumberOfNodesInPipeline(15);
 		cy.verifyNumberOfNodesInSupernode("Supernode", 9);
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		// Add a port to port link between nodes in supernode
 		cy.linkNodeOutputPortToNodeInputPortInSupernode("Supernode", "Distribution", "outPort", "Derive", "inPort");
@@ -312,7 +311,6 @@ describe("Test create a supernode with link that does not have port info", funct
 		cy.verifyLinkBetweenNodes("Filler", "Type", 1);
 		cy.verifyLinkNodesActionOccurred("Filler", "Type");
 		cy.linkNodes("Filler", "Filter");
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyLinkBetweenNodes("Filler", "Filter", 2);
 		cy.verifyLinkNodesActionOccurred("Filler", "Filter");
@@ -488,7 +486,6 @@ describe("Test changes in full-page sub-flow are made successfully", function() 
 
 		// Check the new nodes in the sub-flow are dispayed OK by counting number of nodes
 		cy.verifyNumberOfNodes(10);
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(8);
 	});
@@ -581,7 +578,6 @@ describe("Test that supernode ports/binding nodes are created correctly with mul
 	});
 
 	it("Test all binding nodes and ports are created correctly", function() {
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.clickNode("In Unlimtd");
 		cy.ctrlOrCmdClickNode("Out Unlmt");

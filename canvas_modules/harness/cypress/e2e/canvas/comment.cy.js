@@ -184,7 +184,6 @@ describe("Test coloring comments", function() {
 		cy.getCommentWithText("Hello Canvas!")
 			.rightclick();
 		cy.clickColorFromContextSubmenu("Color background", "teal-50");
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyCommentColor("Hello Canvas!", "teal-50");
 	});
@@ -201,7 +200,6 @@ describe("Test coloring comments", function() {
 		cy.getCommentWithText("Orange 40").rightclick();
 		cy.clickColorFromContextSubmenu("Color background", "cyan-20");
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyCommentColor("Default", "cyan-20");
 		cy.verifyCommentColor("White 0", "cyan-20");
@@ -211,7 +209,6 @@ describe("Test coloring comments", function() {
 
 		cy.clickToolbarUndo();
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyCommentColor("Default", "");
 		cy.verifyCommentColor("White 0", "white-0");
@@ -221,7 +218,6 @@ describe("Test coloring comments", function() {
 
 		cy.clickToolbarRedo();
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyCommentColor("Default", "cyan-20");
 		cy.verifyCommentColor("White 0", "cyan-20");

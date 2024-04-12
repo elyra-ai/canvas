@@ -8,6 +8,7 @@ module.exports = {
 	},
 	rules: {
 		"no-unused-expressions": "off",
-		"consistent-return": "off"
+		"consistent-return": "off",
+		"no-unnecessary-waiting": "off"
 	}
 };

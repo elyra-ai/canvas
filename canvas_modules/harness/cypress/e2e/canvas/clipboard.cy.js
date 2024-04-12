@@ -554,7 +554,6 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(13);
 
@@ -574,7 +573,6 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(13);
 
@@ -594,7 +592,6 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(13);
 	});
@@ -614,7 +611,6 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(14);
 
@@ -633,7 +629,6 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(14);
 
@@ -652,7 +647,6 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(14);
 	});
@@ -677,7 +671,6 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(12); // Goes to 12 because one of the comment links is deleted during the 'cut'
 		cy.verifyNumberOfPortDataLinks(8);
@@ -709,7 +702,6 @@ describe("Test clipboard with detachable links enabled", function() {
 
 		// Total count of links stays at 13 because one of the comment links is
 		// deleted during the 'cut' but a node link is added when the node is pasted.
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(13);
 		cy.verifyNumberOfPortDataLinks(9);
@@ -741,7 +733,6 @@ describe("Test clipboard with detachable links enabled", function() {
 
 		// Total count of links stays at 13 because one of the comment links is
 		// deleted during the 'cut' but a node link is added when the node is pasted.
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(13);
 		cy.verifyNumberOfPortDataLinks(9);
@@ -771,7 +762,6 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(14);
 		cy.verifyNumberOfPortDataLinks(9);
@@ -800,7 +790,6 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(15);
 		cy.verifyNumberOfPortDataLinks(10);
@@ -829,7 +818,6 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(15);
 		cy.verifyNumberOfPortDataLinks(10);
@@ -858,7 +846,6 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		// eslint-disable-next-line cypress/no-unnecessary-waiting
 		cy.wait(10);
 		cy.verifyNumberOfLinks(16);
 		cy.verifyNumberOfPortDataLinks(11);
