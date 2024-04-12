@@ -25,6 +25,7 @@ describe("Test dragged node snaps to grid", function() {
 		// First move a node by an odd amount with no snap-to-grid to make sure
 		// it moves appropriately.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "None" });
+		cy.getNodeWithLabel("Binding (entry) node").click();
 		cy.verifyNodeTransform("Binding (entry) node", 89, 99.5);
 		cy.moveNodeToPosition("Binding (entry) node", 321, 281);
 		cy.verifyNodeTransform("Binding (entry) node", 321, 280.5);
@@ -36,6 +37,7 @@ describe("Test dragged node snaps to grid", function() {
 		// Make the same change with Snap To Grid set to "During"
 		// and verify the node is at a different position.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "During" });
+		cy.wait(10)
 		cy.verifyNodeTransform("Binding (entry) node", 87.5, 105);
 		cy.moveNodeToPosition("Binding (entry) node", 321, 281);
 		cy.verifyNodeTransform("Binding (entry) node", 315, 285);
@@ -64,6 +66,7 @@ describe("Test dragged comment snaps to grid", function() {
 		// First move a comment by an odd amount with no snap-to-grid to make sure
 		// it moves appropriately.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "None" });
+		cy.getCommentWithText("The 4 different node types").click();
 		cy.verifyCommentTransform("The 4 different node types", 400, 50);
 		cy.moveCommentToPosition("The 4 different node types", 321, 281);
 		cy.verifyCommentTransform("The 4 different node types", 321, 281);
@@ -75,6 +78,7 @@ describe("Test dragged comment snaps to grid", function() {
 		// Make the same change with Snap To Grid set to "During"
 		// and verify the comment is at a different position.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "During" });
+		cy.wait(10);
 		cy.verifyCommentTransform("The 4 different node types", 402.5, 45);
 		cy.moveCommentToPosition("The 4 different node types", 321, 281);
 		cy.verifyCommentTransform("The 4 different node types", 315, 285);
@@ -86,6 +90,8 @@ describe("Test dragged comment snaps to grid", function() {
 		// Make the same change with Snap To Grid set to "After"
 		// and verify the comment is at a different position.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "After" });
+		cy.wait(10);
+		cy.getCommentWithText("The 4 different node types").click();
 		cy.verifyCommentTransform("The 4 different node types", 402.5, 45);
 		cy.moveCommentToPosition("The 4 different node types", 321, 281);
 		cy.verifyCommentTransform("The 4 different node types", 315, 285);
@@ -104,10 +110,13 @@ describe("Test resized comment snaps to grid", function() {
 		// because, if not, the sizing test may be adversely affected because sizing
 		// during snap to grid may also move the position of the comment.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "During" });
+		cy.wait(10);
+		cy.getCommentWithText("The 4 different node types").click();
 		cy.moveCommentToPosition("The 4 different node types", 100, 300);
 
 		// Now size a comment with Snap to Grid set to "None"
 		cy.setCanvasConfig({ "selectedSnapToGridType": "None" });
+		cy.wait(10);
 		cy.resizeComment("The 4 different node types", "south-east", 350, 80);
 		cy.verifyCommentDimensions("The 4 different node types", 350, 80);
 
@@ -116,6 +125,7 @@ describe("Test resized comment snaps to grid", function() {
 
 		// Now size a comment with Snap to Grid set to "During"
 		cy.setCanvasConfig({ "selectedSnapToGridType": "During" });
+		cy.wait(10);
 		cy.resizeComment("The 4 different node types", "south-east", 303, 54);
 		cy.verifyCommentDimensions("The 4 different node types", 297.5, 60);
 
@@ -124,6 +134,7 @@ describe("Test resized comment snaps to grid", function() {
 
 		// Now size a comment with Snap to Grid set to "After"
 		cy.setCanvasConfig({ "selectedSnapToGridType": "After" });
+		cy.wait(10);
 		cy.resizeComment("The 4 different node types", "south-east", 303, 54);
 		cy.verifyCommentDimensions("The 4 different node types", 297.5, 60);
 	});

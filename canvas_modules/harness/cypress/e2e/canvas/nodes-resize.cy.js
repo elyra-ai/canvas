@@ -34,12 +34,14 @@ describe("Test adding resizing nodes", function() {
 	it("Test all attached and detached links appear OK after moving nodes around", function() {
 		cy.verifyNumberOfPortDataLinks(8);
 
+		cy.getNodeWithLabel("Node 2").click();
 		cy.moveNodeToPosition("Node 2", 700, 420);
+		cy.getNodeWithLabel("Node 3").click();
 		cy.moveNodeToPosition("Node 3", 200, 100);
+		cy.getNodeWithLabel("Node 4").click();
 		cy.moveNodeToPosition("Node 4", 200, 400);
 
 		// Test the two links from Node 2 to Node 1
-		cy.wait(10);
 		cy.verifyLinkPath("Node 2", "outPort1", "Node 1", "inPort",
 			"M 692.3055572509766 435.94787206585977 L 538.2596130371094 385.5264058399579");
 		cy.verifyLinkPath("Node 2", "outPort2", "Node 1", "inPort",
