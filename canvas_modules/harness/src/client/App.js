@@ -25,7 +25,6 @@ import { Tooltip as ReactTooltip } from "react-tooltip";
 import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
-import { hot } from "react-hot-loader/root";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
 
@@ -2799,4 +2798,4 @@ class App extends React.Component {
 	}
 }
 
-export default hot(App);
+export default App;
