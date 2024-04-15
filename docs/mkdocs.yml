@@ -45,63 +45,80 @@ edit_uri: edit/main/docs/
 copyright: 'Copyright  &copy; 2024 Elyra Authors, an open source project and all are welcome to contribute! Maintained by the Elyra Authors Team'
 
 nav:
-  - Home: index.md
+  - Home:
+    - index.md
 
-  - Installation:
-    - 01-install/index.md
+  - Components:
+    - Components Overview: 01-canvas-components.md
+    - Flow Editor:
+      - Editor Overview: 01.01-flow-editor.md
+      - Nodes: 01.01.01-nodes.md
+      - Links: 01.01.02-links.md
+      - Comments: 01.01.03-comments.md
+      - Background: 01.01.04-background.md
+    - Palette: 01.02-palette.md
+    - Context Menu: 01.03-context-menu.md
+    - Context Toolbar: 01.04-context-toolbar.md
+
+  - Initial Setup:
+    - 02-set-up.md
 
   - Common Canvas:
-    - 02-canvas/index.md
-    - Canvas Components:
-      - 02-canvas/01-components/index.md
-      - Flow Editor:
-        - 02-canvas/01-components/01-editor/index.md
-        - Nodes: 02-canvas/01-components/01-editor/01-Nodes.md
-        - Links: 02-canvas/01-components/01-editor/02-Links.md
-        - Comments: 02-canvas/01-components/01-editor/03-Comments.md
-      - Palette: 02-canvas/01-components/02-Palette.md
-      - Context Menu: 02-canvas/01-components/03-Context-Menu.md
-      - Context Toolbar: 02-canvas/01-components/04-Context-Toolbar.md
+    - Getting Started: 03-common-canvas.md
     - Config Objects:
-      - 02-canvas/02-configs/index.md
-      - Canvas Config: 02-canvas/02-configs/01-canvas-config.md
-      - Toolbar Config: 02-canvas/02-configs/02-toolbar-config.md
-      - Notification Config: 02-canvas/02-configs/03-notification-config.md
-      - Context Menu Config: 02-canvas/02-configs/04-context-menu-config.md
-      - Keyboard Config: 02-canvas/02-configs/05-keyboard-config.md
-    - Callbacks: 02-canvas/03-callbacks/index.md
+      - Configuration Overview: 03.02-configuration.md
+      - Canvas Config: 03.02.01-canvas-config.md
+      - Toolbar Config: 03.02.02-toolbar-config.md
+      - Notification Config: 03.02.03-notification-config.md
+      - Context Menu Config: 03.02.04-context-menu-config.md
+      - Keyboard Config: 03.02.05-keyboard-config.md
+    - Callbacks:
+      - Callbacks Overview: 03.03-callbacks.md
+      - Context Menu Handler: 03.03.01-context-menu-handler.md
+      - Before Edit Action Handler: 03.03.02-before-edit-action-handler.md
+      - Edit Action Handler: 03.03.03-edit-action-handler.md
+      - Layout Handler: 03.03.04-layout-handler.md
+      - Decoration Action Handler: 03.03.05-decoration-action-handler.md
+      - Tip Handler: 03.03.06-tip-handler.md
+      - ID Generator Handler: 03.03.07-id-generator-handler.md
+      - Selection Change Handler: 03.03.08-selection-change-handler.md
+      - Click Action Handler: 03.03.09-click-action-handler.md
+      - Action Label Handler: 03.03.10-action-label-handler.md
     - Canvas Controller:
-      - 02-canvas/04-controller/index.md
-      - Styling Canvas Objects: 02-canvas/04-controller/01-Styling-Objects.md
-      - Decorations: 02-canvas/04-controller/02-Decorations.md
-      - API Object Structure: 02-canvas/04-controller/03-Object-structure-used-by-API.md
-      - Notification Message Specification: 02-canvas/04-controller/04-Notification-Message-Specification.md
-      - Programmatically Creating New Canvas Nodes: 02-canvas/04-controller/05-Programmatically-creating-new-canvas-nodes.md
-      - Read Only or Locked Canvas: 02-canvas/04-controller/06-Read-only-or-locked-canvas.md
-      - Calling the Canvas Controller API: 02-canvas/04-controller/07-Calling-the-Canvas-Controller-API.md
-    - Node Creation from External Object: 02-canvas/05-ext-objs/index.md
-    - Commmand Stack API: 02-canvas/06-stack/01-Command-Stack.md
-    - Customizing Node Layout Properties: 02-canvas/07-layout/01-Customizing-Node-Layout.md
-    - Context Menu Wrapper Documentation: 02-canvas/08-menu/01-Context-Menu-Wrapper.md
-    - External Subflows Support: 02-canvas/09-ext-flows/01-External-Subflows-support.md
-    - Flow Validation API: 02-canvas/10-validate/01-Flow-Validation-API.md
+      - API: 03.04-canvas-controller.md
+      - Decorations: 03.04.01-decorations.md
+      - Object Structure: 03.04.02-api-object-structure.md
+      - Creating New Canvas Nodes: 03.04.03-creating-new-canvas-nodes.md
+      - Notification Messages: 03.04.05-notification-messages.md
+      - Styling Canvas Objects: 03.04.06-styling-objects.md
+    - Keyboard Support: 03.05-keyboard-support.md
+    - Node Layout: 03.06-node-layout.md
+    - Node Creation from External Object: 03.07-external-objects.md
+    - External Pipeline Flows: 03.08-external-pipeline-flows.md
+    - Read Only or Locked Flows: 03.09-read-only-or-locked-flows.md
+    - Commmand Stack: 03.10-command-stack.md
+    - Internal Actions: 03.11-internal-actions.md
+    - Deprecated:
+      - Context Menu Wrapper: 03.30.01-context-menu-wrapper.md
+      - Flow Validation: 03.30.02-flow-validation.md
 
   - Common Properties:
-    - 03-props/index.md
-    - Parameter Definitions: 03-props/01-Parameter-Definition.md
-    - UI Hints: 03-props/02-UI-Hints.md
-    - Controls: 03-props/03-Controls.md
-    - Conditions: 03-props/04-Conditions.md
-    - Custom Components: 03-props/05-Custom-Components.md
-    - Properties Controller: 03-props/06-Properties-Controller.md
+    - Getting started: 04-common-properties.md
+    - Parameter Definitions: 04.01-parameter-definition.md
+    - Callbacks: 04.02-callbacks.md
+    - UI Hints: 04.03-ui-hints.md
+    - Controls: 04.04-controls.md
+    - Conditions: 04.05-conditions.md
+    - Custom Components: 04.06-custom-components.md
+    - Properties Controller: 04.07-properties-controller.md
 
   - Troubleshooting:
-    - 04-trouble/01-Troubleshooting.md
+    - 05-troubleshooting.md
 
   - Contributing:
-    - 05-contrib/01-Testing-Guidelines-for-Development.md
-
-  # - Testing Guidelines for Development: 5.0-Testing-Guidelines-for-Development.md
+    - 06-contributing.md
+    - 06.01-style-guidelines.md
+    - 06.02-testing-guidelines.md
 
 markdown_extensions:
   - admonition:

@@ -33,7 +33,7 @@ describe("subtabs renders correctly", () => {
 	it("should have displayed the 4 tabs created with 6 nested subtabs", () => {
 		const tabContainer = wrapper.find("div[data-id='properties-Primary'] div.properties-sub-tab-container");
 		// should render 1 control panel
-		expect(tabContainer.find("li.properties-subtab")).to.have.length(10);
+		expect(tabContainer.find("button.properties-subtab")).to.have.length(10);
 	});
 });
 
@@ -51,30 +51,30 @@ describe("subtabs visible and enabled conditions work correctly", () => {
 	});
 
 	it("subtabs and controls should be disabled", () => {
-		let subTab = wrapper.find("li[data-id='properties-fruit-subtab'] > button");
+		let subTab = wrapper.find("button[data-id='properties-fruit-subtab']");
 		// check initial state of enabled
 		expect(subTab.prop("aria-disabled")).to.equal(false);
 		controller.updatePropertyValue({ name: "disable" }, true);
 		wrapper.update();
-		subTab = wrapper.find("li[data-id='properties-fruit-subtab'] > button");
+		subTab = wrapper.find("button[data-id='properties-fruit-subtab']");
 		expect(subTab.prop("aria-disabled")).to.equal(true);
 	});
 
 	it("subtabs and controls should be hidden", () => {
-		let subTab = wrapper.find("li[data-id='properties-table-subtab']");
+		let subTab = wrapper.find("button[data-id='properties-table-subtab']");
 		expect(subTab).to.have.length(1);
 		controller.updatePropertyValue({ name: "hide" }, true);
 		wrapper.update();
-		subTab = wrapper.find("li[data-id='properties-table-subtab']");
+		subTab = wrapper.find("button[data-id='properties-table-subtab']");
 		expect(subTab).to.have.length(0);
 	});
 
 	it("hidden and non hidden tabs display correctly", () => {
 		let primaryTabs = wrapper.find(".properties-primaryTabs");
-		let tab1 = primaryTabs.find("li[title='Tab Test']");
-		let tab2 = primaryTabs.find("li[title='Tab Test2']");
-		let tab3 = primaryTabs.find("li[title='Tab Test3']");
-		let tab4 = primaryTabs.find("li[title='Tab Test4']");
+		let tab1 = primaryTabs.find("button[title='Tab Test']");
+		let tab2 = primaryTabs.find("button[title='Tab Test2']");
+		let tab3 = primaryTabs.find("button[title='Tab Test3']");
+		let tab4 = primaryTabs.find("button[title='Tab Test4']");
 		expect(tab1).to.have.length(1);
 		expect(tab2).to.have.length(1);
 		expect(tab3).to.have.length(1);
@@ -85,10 +85,10 @@ describe("subtabs visible and enabled conditions work correctly", () => {
 		wrapper.update();
 
 		primaryTabs = wrapper.find(".properties-primaryTabs");
-		tab1 = primaryTabs.find("li[title='Tab Test']");
-		tab2 = primaryTabs.find("li[title='Tab Test2']");
-		tab3 = primaryTabs.find("li[title='Tab Test3']");
-		tab4 = primaryTabs.find("li[title='Tab Test4']");
+		tab1 = primaryTabs.find("button[title='Tab Test']");
+		tab2 = primaryTabs.find("button[title='Tab Test2']");
+		tab3 = primaryTabs.find("button[title='Tab Test3']");
+		tab4 = primaryTabs.find("button[title='Tab Test4']");
 
 		expect(tab1).to.have.length(0);
 		expect(tab2).to.have.length(1);
@@ -141,6 +141,6 @@ describe("subtabs renders correctly in a Tearsheet container", () => {
 
 		const leftNav = primaryTab.find("div.properties-subtabs.properties-leftnav-subtabs");
 		expect(leftNav).to.have.length(1);
-		expect(leftNav.find("li.properties-leftnav-subtab-item")).to.have.length(3);
+		expect(leftNav.find("button.properties-leftnav-subtab-item")).to.have.length(3);
 	});
 });

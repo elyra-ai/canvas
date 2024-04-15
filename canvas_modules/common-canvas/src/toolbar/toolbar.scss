@@ -101,48 +101,52 @@ $toolbar-divider-width: 1px;
 	background-color: $layer-01;
 	display: inline-block;
 
-	.toolbar-button-item {
-		& button {
-			padding: 0;
-			min-height: 30px;
-			height: $toolbar-button-height;
+	&.toolbar-item-selected {
+		&.default,
+		&.ghost {
+			& > .toolbar-button-item > button {
+				background-color: $layer-accent-01;
+				border-bottom: 2px solid $button-primary;
+			}
 		}
 	}
-	
+
+	& > .toolbar-button-item > button {
+		padding: 0;
+		min-height: 30px;
+		height: $toolbar-button-height;
+	}
 
 	&.default,
 	&.ghost {
-		& button {
+		& > .toolbar-button-item > button {
 			background-color: $layer-01;
-		}
 
-		& button:hover {
-			background-color: $skeleton-background;
-		}
+			&:hover,
+			&:focus {
+				background-color: $skeleton-background;
+			}
 
-		& button:focus {
-			background-color: $skeleton-background;
-		}
-
-		& button:disabled:hover {
-			background-color: $layer-01;
+			&:disabled:hover {
+				background-color: $layer-01;
+			}
 		}
 	}
 
 	&.tertiary {
-		& button {
+		& > .toolbar-button-item > button {
 			color: $link-primary;
 			background-color: $layer-01;
-		}
 
-		& button:hover {
-			background-color: $skeleton-background;
-		}
+			&:hover {
+				background-color: $skeleton-background;
+			}
 
-		& button:disabled,
-		& button:disabled:hover {
-			color: $button-disabled;
-			background-color: $layer-01;
+			&:disabled,
+			&:disabled:hover {
+				color: $button-disabled;
+				background-color: $layer-01;
+			}
 		}
 	}
 }
@@ -285,16 +289,6 @@ $toolbar-divider-width: 1px;
 	vertical-align: top;
 	position: relative;
 	padding: 0;
-}
-
-.toolbar-item-selected {
-	&.default,
-	&.ghost {
-		& button {
-			background-color: $layer-accent-01;
-			border-bottom: 2px solid $button-primary;
-		}
-	}
 }
 
 .toolbar-divider {

@@ -23,13 +23,13 @@ const webpack = require("webpack");
 const babelOptions = require("./scripts/babel/babelOptions").babelOptions;
 const constants = require("./lib/constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 // Globals
 
 // Entry & Output files ------------------------------------------------------------>
 
 const entry = [
-	"react-hot-loader/patch",
 	"webpack-hot-middleware/client",
 	"@babel/polyfill",
 	"./src/client/index.js",
@@ -49,9 +49,6 @@ const output = {
 };
 
 
-// Loaders ------------------------------------------------------------>
-babelOptions.plugins.push("react-hot-loader/babel"); // needed for HMR support
-
 const rules = [
 	{
 		test: /\.js(x?)$/,
@@ -62,8 +59,17 @@ const rules = [
 	{
 		test: /\.s*css$/,
 		use: [
-			{ loader: "style-loader" },
-			{ loader: "css-loader", options: { sourceMap: true, url: false } },
+			{ loader: "style-loader",
+				options: {
+					esModule: false
+				}
+			},
+			{ loader: "css-loader",
+				options: {
+					sourceMap: true,
+					url: false
+				}
+			},
 			{ loader: "postcss-loader",
 				options: {
 					postcssOptions: {
@@ -106,7 +112,8 @@ const plugins = [
 	new webpack.SourceMapDevToolPlugin({
 		module: true,
 		columns: false
-	})
+	}),
+	new ReactRefreshWebpackPlugin(),
 ];
 
 // Exports ------------------------------------------------------------>

@@ -88,7 +88,7 @@ describe("Tearsheet renders correctly", () => {
 		const tearsheet = wrapper.find("div.properties-tearsheet-panel");
 		expect(tearsheet).to.have.length(1);
 		expect(tearsheet.find("div.properties-tearsheet-header")).to.have.length(1);
-		expect(tearsheet.find("div.properties-tearsheet-header").text()).to.equal("test title");
+		expect(tearsheet.find("div.properties-tearsheet-header > h3").text()).to.equal("test title");
 		expect(tearsheet.find("div.properties-tearsheet-body")).to.have.length(1);
 		expect(tearsheet.find("div.properties-tearsheet-body").text()).to.equal("test content");
 		expect(tearsheet.find("div.properties-tearsheet-body.with-buttons")).to.have.length(0);

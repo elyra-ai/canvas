@@ -73,7 +73,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 		const dropdownButton = panel1.find("button");
 		dropdownButton.simulate("click");
 		panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
-		const dropdownList = panel1.find("div.cds--list-box__menu-item");
+		const dropdownList = panel1.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(5);
 		// select age
 		dropdownList.at(1).simulate("click");
@@ -145,7 +145,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		const dropdownButton = panel1.find("button");
 		dropdownButton.simulate("click");
 		panel1 = wrapper.find("div[data-id='properties-field1_panel']");
-		const dropdownList = panel1.find("div.cds--list-box__menu-item");
+		const dropdownList = panel1.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(13);
 		// select data.drug2
 		dropdownList.at(8).simulate("click");
@@ -217,7 +217,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		const dropdownButton = panel1.find("button");
 		dropdownButton.simulate("click");
 		panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
-		const dropdownList = panel1.find("div.cds--list-box__menu-item");
+		const dropdownList = panel1.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(12);
 		// select data.Age
 		dropdownList.at(5).simulate("click");

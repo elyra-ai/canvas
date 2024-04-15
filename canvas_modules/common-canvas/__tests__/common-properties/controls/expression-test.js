@@ -193,7 +193,9 @@ describe("expression-control renders correctly", () => {
 		);
 		const expressionBuilderIcon = wrapper.find("button.properties-expression-button");
 		expect(expressionBuilderIcon).to.have.length(1);
-		expect(expressionBuilderIcon.text()).to.equal("launch expression builder");
+		const expressionBuilderIconAriaLabelledBy = expressionBuilderIcon.prop("aria-labelledby");
+		const expressionBuilderIconTooltip = wrapper.find(`span[id='${expressionBuilderIconAriaLabelledBy}']`);
+		expect(expressionBuilderIconTooltip.text()).to.equal("launch expression builder");
 	});
 	it("should render maximize button", () => {
 		reset();
@@ -426,7 +428,7 @@ describe("expression-builder renders correctly", () => {
 		// Navigate to Information table
 		var dropDown = wrapper.find("div.properties-expression-function-select .cds--list-box__field");
 		dropDown.simulate("click");
-		var dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		var dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(2).simulate("click");
 		expect(wrapper.find("div.properties-expression-function-select span").text()).to.equal("Information");
 
@@ -720,7 +722,7 @@ describe("expression builder generates and accesses field dropdown correctly", (
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Fields");
 		const dropDown = wrapper.find("div.properties-expression-field-select .cds--list-box__field");
 		dropDown.simulate("click");
-		var dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		var dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		// check that all dropdown options are loaded
 		expect(dropDownList).to.have.length(5);
 		// selecting the dropdown list has the correct entries
@@ -732,7 +734,7 @@ describe("expression builder generates and accesses field dropdown correctly", (
 		// select an option
 		dropDownList.at(2).simulate("click");
 		// properly close the dropdown once selected
-		expect(wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item")).to.have.length(0);
+		expect(wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item")).to.have.length(0);
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Globals");
 	});
 
@@ -749,7 +751,7 @@ describe("expression builder generates and accesses field dropdown correctly", (
 		);
 		var dropDown = wrapper.find("div.properties-expression-field-select button");
 		dropDown.simulate("click");
-		var dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		var dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		// test globals
 		dropDownList.at(2).simulate("click");
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Globals");
@@ -766,7 +768,7 @@ describe("expression builder generates and accesses field dropdown correctly", (
 		// test mrs
 		dropDown = wrapper.find("div.properties-expression-field-select button");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(3).simulate("click");
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Multi Response Set");
 		addFieldButtons.at(0).simulate("click");
@@ -953,7 +955,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// navigate to Recently Used fields and check that it is empty
 		var dropDown = wrapper.find("div.properties-expression-field-select .cds--list-box__field");
 		dropDown.simulate("click");
-		var dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		var dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(1).simulate("click");
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Recently Used");
 		expect(wrapper.find("div.properties-field-table-container .properties-vt-column").at(0)
@@ -965,7 +967,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// back to Fields
 		dropDown = wrapper.find("div.properties-expression-field-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(0).simulate("click");
 		fieldRows = tableUtils.getTableRows(wrapper.find("div.properties-field-table-container"));
 		// add two rows to Recently Used
@@ -975,7 +977,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// back to Recently used
 		dropDown = wrapper.find("div.properties-expression-field-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(1).simulate("click");
 		// check that the fields were correctly added
 		fieldRows = tableUtils.getTableRows(wrapper.find("div.properties-field-table-container"));
@@ -989,7 +991,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// check that reusing a field will move it to the top of Recently Used
 		dropDown = wrapper.find("div.properties-expression-field-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(0).simulate("click");
 		fieldRows = tableUtils.getTableRows(wrapper.find("div.properties-field-table-container"));
 		// add Age again, moving it to the top of Recently Used
@@ -997,7 +999,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// back to Recently Used
 		dropDown = wrapper.find("div.properties-expression-field-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(1).simulate("click");
 		// order of rows should be reversed
 		fieldRows = tableUtils.getTableRows(wrapper.find("div.properties-field-table-container"));
@@ -1026,7 +1028,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// navigate to Recently Used fields and check that it is empty
 		var dropDown = wrapper.find("div.properties-expression-function-select .cds--list-box__field");
 		dropDown.simulate("click");
-		var dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		var dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(1).simulate("click");
 		expect(wrapper.find("div.properties-expression-function-select span").text()).to.equal("Recently Used");
 		expect(wrapper.find("div.properties-functions-table-container .properties-vt-column").at(0)
@@ -1038,7 +1040,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// back to General Functions
 		dropDown = wrapper.find("div.properties-expression-function-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(0).simulate("click");
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		// add two rows to Recently Used
@@ -1048,7 +1050,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// back to Recently used
 		dropDown = wrapper.find("div.properties-expression-function-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(1).simulate("click");
 		// check that the functions were correctly added
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
@@ -1058,7 +1060,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// check that reusing a function will move it to the top of Recently Used
 		dropDown = wrapper.find("div.properties-expression-function-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(0).simulate("click");
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		// add to_integer again, moving it to the top of Recently Used
@@ -1067,7 +1069,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// back to Recently Used
 		dropDown = wrapper.find("div.properties-expression-function-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.cds--list-box__menu .cds--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(1).simulate("click");
 		// order of rows should be reversed
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));

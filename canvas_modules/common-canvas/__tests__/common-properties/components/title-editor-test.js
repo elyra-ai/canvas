@@ -184,7 +184,7 @@ describe("title-editor renders correctly", () => {
 		// Verify warning message is displayed
 		const warningMessage = "Title exceeds 10 characters. This is a warning message. There is no restriction on message length. Height is adjusted for multi-line messages.";
 		expect(wrapper.find(".cds--text-input__field-wrapper--warning")).to.have.length(1);
-		expect(wrapper.find(".cds--form-requirement").text()).to.equal(warningMessage);
+		expect(wrapper.find("div.cds--form-requirement").text()).to.equal(warningMessage);
 	});
 	it("Error message returned by titleChangeHandler should be displayed correctly", () => {
 		controller.setTitle("test title");
@@ -205,7 +205,7 @@ describe("title-editor renders correctly", () => {
 		// verify error message is displayed
 		const errorMessage = "Only 15 characters are allowed in title.";
 		expect(wrapper.find(".cds--text-input__field-wrapper[data-invalid=true]")).to.have.length(1);
-		expect(wrapper.find(".cds--form-requirement").text()).to.equal(errorMessage);
+		expect(wrapper.find("div.cds--form-requirement").text()).to.equal(errorMessage);
 	});
 	it("Don't show any error/warning message when titleChangeHandler doesn't return anything", () => {
 		controller.setTitle("test title");

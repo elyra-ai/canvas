@@ -2108,7 +2108,7 @@ describe("Properties Controller addRemoveRows", () => {
 		// Verify buttons are visible when editor opens
 		let summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
 		const parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructurelisteditor']");
-		parentTable.find(".properties-subpanel-button").at(0)
+		parentTable.find("button.properties-subpanel-button").at(0)
 			.simulate("click");
 		let nestedTable = wrapper.find("div[data-id='properties-nested_structure']");
 		expect(nestedTable.find(".properties-at-buttons-container")).to.have.length(1);
@@ -2311,7 +2311,7 @@ describe("Properties Controller custom table buttons", () => {
 
 		let summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
 		let parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructureCustomButtons']");
-		parentTable.find(".properties-subpanel-button").at(0)
+		parentTable.find("button.properties-subpanel-button").at(0)
 			.simulate("click");
 		let nestedTable = wrapper.find("div[data-id='properties-nestedStructureCustomButtons_table']");
 		let customButtonToolbar = nestedTable.find(".properties-custom-table-buttons");
@@ -2334,7 +2334,7 @@ describe("Properties Controller custom table buttons", () => {
 		// // Verify buttons are visible when editor opens
 		summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
 		parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructureCustomButtons']");
-		parentTable.find(".properties-subpanel-button").at(0)
+		parentTable.find("button.properties-subpanel-button").at(0)
 			.simulate("click");
 		nestedTable = wrapper.find("div[data-id='properties-nestedStructureCustomButtons_table']");
 		customButtonToolbar = nestedTable.find(".properties-custom-table-buttons");

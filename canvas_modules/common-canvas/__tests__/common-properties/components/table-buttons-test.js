@@ -88,9 +88,14 @@ const customButtons = [
 const customButtonsState = { "button_1": false, "button_2": true, "button_3": false, "button_4": true };
 
 describe("Table buttons renders correctly", () => {
+	let wrapper;
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
 
 	it("Convert table buttons to toolbar config correctly", () => {
-		const wrapper = mountWithIntl(
+		wrapper = mountWithIntl(
 			<TableButtons
 				controller={controller}
 				propertyId={propertyId}
@@ -153,7 +158,7 @@ describe("Table buttons renders correctly", () => {
 	});
 
 	it("Convert table buttons to toolbar config correctly when table state is disable", () => {
-		const wrapper = mountWithIntl(
+		wrapper = mountWithIntl(
 			<TableButtons
 				controller={controller}
 				propertyId={propertyId}
@@ -220,7 +225,7 @@ describe("Table buttons renders correctly", () => {
 		controller.setHandlers({
 			buttonIconHandler: buttonIconHandler
 		});
-		const wrapper = mountWithIntl(
+		wrapper = mountWithIntl(
 			<TableButtons
 				controller={controller}
 				propertyId={propertyId}
@@ -247,7 +252,7 @@ describe("Table buttons renders correctly", () => {
 		controller.setHandlers({
 			buttonHandler: buttonHandler
 		});
-		const wrapper = mountWithIntl(
+		wrapper = mountWithIntl(
 			<TableButtons
 				controller={controller}
 				propertyId={propertyId}

@@ -128,12 +128,14 @@ export default class CanvasController {
 
 	setCanvasConfig(config) {
 		this.logger.log("Setting Canvas Config");
-		// TODO - Remove these next three lines in next major release.
-		const correctConfig = this.correctTypo(config);
-		correctConfig.enableNodeLayout =
-			CanvasUtils.convertPortPosInfo(correctConfig.enableNodeLayout);
-		this.objectModel.openPaletteIfNecessary(config);
-		this.objectModel.setCanvasConfig(correctConfig);
+		if (config) {
+			// TODO - Remove these next three lines in next major release.
+			const correctConfig = this.correctTypo(config);
+			correctConfig.enableNodeLayout =
+				CanvasUtils.convertPortPosInfo(correctConfig.enableNodeLayout);
+			this.objectModel.openPaletteIfNecessary(config);
+			this.objectModel.setCanvasConfig(correctConfig);
+		}
 	}
 
 	// Converts the config option 'enableHightlightNodeOnNewLinkDrag' (which has
@@ -313,7 +315,7 @@ export default class CanvasController {
 
 	// Specifies the new styles for objects that are not highlighted during
 	// branch highlighting.
-	// newStyle - is a style specification object. See wiki for details.
+	// newStyle - is a style specification object.
 	setSubdueStyle(newStyle) {
 		this.objectModel.setSubdueStyle(newStyle);
 	}
@@ -697,7 +699,7 @@ export default class CanvasController {
 	//         <objectID_2_2
 	//     ]
 	//   }
-	// newStyles - This is a style specification. See the wiki for details.
+	// newStyles - This is a style specification object.
 	// temporary - A boolean to indicate if the style is serialized when
 	//             getPipelineFlow() method is called or not.
 	setObjectsStyle(pipelineObjectIds, newStyle, temporary) {
@@ -834,7 +836,7 @@ export default class CanvasController {
 	// Sets the decorations on a node. The decorations array passed in
 	// will replace any decorations currently applied to the node.
 	// nodeId - The ID of the node
-	// newDecorations - An array of decorations. See Wiki for details.
+	// newDecorations - An array of decoration objects.
 	// pipelineId - The ID of the pipeline
 	setNodeDecorations(nodeId, newDecorations, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeDecorations(nodeId, newDecorations);
@@ -958,7 +960,7 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeClassName(nodeId);
 	}
 
-	// Gets the style specification (see Wiki) for a node
+	// Gets the style specification for a node
 	// nodeId - The ID of the node
 	// temporary - A boolean to indicate if the styles are serialized when
 	//             getPipelineFlow() method is called or not.
@@ -1120,7 +1122,7 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getCommentClassName(commentId);
 	}
 
-	// Gets the style spcification (see Wiki) for a comment
+	// Gets the style spcification for a comment.
 	// commentId - The ID of the node
 	// temporary - A boolean to indicate if the styles are serialized when
 	//             getPipelineFlow() method is called or not.
@@ -1287,7 +1289,7 @@ export default class CanvasController {
 	//         <linkID_2_2
 	//     ]
 	//   }
-	// newStyle - This is a style specification. See the wiki for details.
+	// newStyle - This is a style specification objects.
 	// temporary - A boolean to indicate if the style is serialized when
 	//             getPipelineFlow() method is called or not.
 	setLinksStyle(pipelineLinkIds, newStyle, temporary) {
@@ -1332,7 +1334,7 @@ export default class CanvasController {
 	// Sets the decorations on a link. The decorations array passed in
 	// will replace any decorations currently applied to the link.
 	// linkId - The ID of the link
-	// newDecorations - An array of decorations. See Wiki for details.
+	// newDecorations - An array of decoration objects.
 	// pipelineId - The ID of the pipeline
 	setLinkDecorations(linkId, newDecorations, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setLinkDecorations(linkId, newDecorations);
@@ -1385,20 +1387,32 @@ export default class CanvasController {
 	}
 
 	// Calls the undo() method of the next available command on the command
-	// stack that can be undone, if one is available.
+	// stack that can be undone, if one is available. Uses the editActionHandler
+	// method which will cause the app's editActionHandler to be called.
 	undo() {
 		if (this.canUndo()) {
-			this.getCommandStack().undo();
-			this.objectModel.refreshToolbar();
+			this.editActionHandler({ editType: "undo", editSource: "controller" });
 		}
 	}
 
+	// Undoes a number of commands on the command stack as indicated by the
+	// 'count' parameter. If 'count' is bigger than the number of commands
+	// on the stack, all undoable commands currently on the command stack
+	// will be undone. Uses the editActionHandler method which will cause
+	// the app's editActionHandler to be called.
+	undoMulti(count) {
+		for (let i = 0; i < count && this.canUndo(); i++) {
+			this.editActionHandler({ editType: "undo", editSource: "controller" });
+		}
+	}
+
+
 	// Calls the redo() method of the next available command on the command
-	// stack that can be redone, if one is available.
+	// stack that can be redone, if one is available. Uses the editActionHandler
+	// method which will cause the app's editActionHandler to be called.
 	redo() {
 		if (this.canRedo()) {
-			this.getCommandStack().redo();
-			this.objectModel.refreshToolbar();
+			this.editActionHandler({ editType: "redo", editSource: "controller" });
 		}
 	}
 
@@ -1412,6 +1426,12 @@ export default class CanvasController {
 	// available to be redone.
 	canRedo() {
 		return this.getCommandStack().canRedo();
+	}
+
+	// Returns an array of all undoable commands currently on the
+	// command stack.
+	getAllUndoCommands() {
+		return this.getCommandStack().getAllUndoCommands();
 	}
 
 	// Returns a string which is the label that descibes the next undoable
@@ -1724,11 +1744,13 @@ export default class CanvasController {
 	//    pixel amount to move. Negative left and positive right
 	// y: Is the vertical translate amount which is a number indicating the
 	//    pixel amount to move. Negative up and positive down.
-	// k: is the scale amount which is a number greater than 0 where 1 is the
+	// k: Is the scale amount which is a number greater than 0 where 1 is the
 	//    default scale size.
-	zoomTo(zoomObject) {
+	// animateTime is a number of milliseconds that the animation should take.
+	// It defaults to 500ms. Set to 0 for no animation.
+	zoomTo(zoomObject, animateTime) {
 		if (this.canvasContents) {
-			this.getSVGCanvasD3().zoomTo(zoomObject);
+			this.getSVGCanvasD3().zoomTo(zoomObject, animateTime);
 		}
 	}
 

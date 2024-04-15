@@ -106,5 +106,8 @@
   "virtualizedTable.row.checkbox.label": "从 {table_label} 中选择行 {row_index}",
   "properties.empty.table.text": "要开始操作，请单击“{button_label}”",
   "label.indicator.required": "（必需）",
-  "label.indicator.optional": "（可选）"
+  "label.indicator.optional": "（可选）",
+  "slider.numberInput.label": "滑块编号输入",
+  "editorForm.tabList.label": "主选项卡",
+  "subTabs.tabList.label": "选项卡列表"
 }
