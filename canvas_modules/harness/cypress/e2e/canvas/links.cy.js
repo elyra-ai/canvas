@@ -209,6 +209,7 @@ describe("Test elbow connections from multi-port source nodes", function() {
 
 		// Move the target node so both link lines go over the source node and
 		// under the target node.
+		// TODO -- Fix when autoselect is available.
 		cy.getNodeWithLabel("Select").click();
 		cy.moveNodeToPosition("Select", 440, 400);
 		cy.verifyLinkPath(
@@ -224,6 +225,7 @@ describe("Test elbow connections from multi-port source nodes", function() {
 
 		// Move the target node so both link lines go under the source node and
 		// over the target node.
+		// TODO -- Fix when autoselect is available.
 		cy.getNodeWithLabel("Select").click();
 		cy.moveNodeToPosition("Select", 440, 600);
 		cy.verifyLinkPath(

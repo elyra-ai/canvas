@@ -186,7 +186,7 @@ Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) 
 
 // position parameter is optional
 Cypress.Commands.add("rightClickNode", (nodeName, position) => {
-	cy.wait(100);
+	cy.wait(10);
 	cy.getNodeWithLabel(nodeName)
 		.rightclick(position);
 });

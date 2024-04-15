@@ -25,6 +25,7 @@ describe("Test dragged node snaps to grid", function() {
 		// First move a node by an odd amount with no snap-to-grid to make sure
 		// it moves appropriately.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "None" });
+		// TODO -- Fix when autoselect is available.
 		cy.getNodeWithLabel("Binding (entry) node").click();
 		cy.verifyNodeTransform("Binding (entry) node", 89, 99.5);
 		cy.moveNodeToPosition("Binding (entry) node", 321, 281);
@@ -66,6 +67,7 @@ describe("Test dragged comment snaps to grid", function() {
 		// First move a comment by an odd amount with no snap-to-grid to make sure
 		// it moves appropriately.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "None" });
+		// TODO -- Fix when autoselect is available.
 		cy.getCommentWithText("The 4 different node types").click();
 		cy.verifyCommentTransform("The 4 different node types", 400, 50);
 		cy.moveCommentToPosition("The 4 different node types", 321, 281);
@@ -91,6 +93,7 @@ describe("Test dragged comment snaps to grid", function() {
 		// and verify the comment is at a different position.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "After" });
 		cy.wait(10);
+		// TODO -- Fix when autoselect is available.
 		cy.getCommentWithText("The 4 different node types").click();
 		cy.verifyCommentTransform("The 4 different node types", 402.5, 45);
 		cy.moveCommentToPosition("The 4 different node types", 321, 281);
