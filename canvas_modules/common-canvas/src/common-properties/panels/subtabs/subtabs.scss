@@ -32,7 +32,6 @@ $selected-tab-width: 3px;
 
 .properties-leftnav-container {
 	display: flex;
-	border-top: px solid $layer-accent-01;
 	height: calc(100% + #{$parent-padding}); // Include padding from parent
 	margin-top: -$spacing-05;
 	margin-left: -$spacing-05;
@@ -52,6 +51,10 @@ $selected-tab-width: 3px;
 		}
 
 		button.properties-leftnav-subtab-item {
+			&:hover {
+				background-color: $layer-hover-01;
+			}
+
 			border-left: $selected-tab-width solid transparent;
 			border-bottom: 0;
 			transition: none; // Prevent border/outline from flickering
@@ -78,5 +81,9 @@ $selected-tab-width: 3px;
 	div.cds--tab-content {
 		width: 100%;
 		padding: $spacing-05; // Override padding set by subtab
+	}
+
+	div.cds--tabs:not(.cds--tabs--contained) .cds--tabs__nav-item:not(.cds--tabs__nav-item--selected):not(.cds--tabs__nav-item--disabled):hover {
+		border-block-end: none; // Don't show bottom border for non-selected properties-leftnav-subtab-item
 	}
 }
