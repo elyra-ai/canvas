@@ -1,93 +1,94 @@
 /*
- * Copyright 2017-2023 Elyra Authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Copyright 2017-2023 Elyra Authors
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
- $primary-tab-height: $spacing-08;
+$primary-tab-height: $spacing-08;
 
- // styling when there is only 1 tab
- .properties-single-category {
-	 padding: $spacing-05;
- }
- 
- .properties-right-flyout {
-	 .properties-editor-form {
-		 height: 100%;
-	 }
-	 .properties-single-category {
-		 height: 100%;
-		 .properties-sub-tab-container {
-			 position: relative;
-			 height: 100%;
-		 }
-		 .properties-subtabs {
-			 position: absolute;
-			 height: $primary-tab-height;
-			 border-bottom: 1px solid $layer-accent-01;
-		 }
-		 .properties-subtab-panel {
-			 height: calc(100% - #{$primary-tab-height});
-			 position: relative;
-			 top: $primary-tab-height;
-			 overflow-y: auto;
-			 overflow-x: hidden;
-		 }
-	 }
- }
- 
- .properties-category-title {
-	 @include type-style("body-long-01");
-	 text-decoration-color: $text-primary;
-	 color: $text-primary;
- 
-	 height: 46px;
-	 width: 100%;
- 
-	 display: flex;
-	 background-color: $background;
-	 justify-content: space-between;
-	 align-items: center;
-	 padding: 0 $spacing-05;
-	 border: 0; // override for button styling
-	 outline: none; // override for button styling
-	 border-bottom: 1px solid $layer-accent-01;
-	 cursor: pointer;
-	 &:hover {
-		 background-color: $layer-hover-01;
-	 }
-	 > svg {
-		 height: 20px;
-		 width: 20px;
-		 fill: $icon-primary;
-	 }
- }
- 
- .properties-subtabs, .properties-primaryTabs {
-	 .cds--tabs__nav {
-		 overflow-x: auto; // override carbon so scrollbar doesn't always show
-	 }
- }
+// styling when there is only 1 tab
+.properties-single-category {
+	padding: $spacing-05;
+}
 
- .properties-categories {  
+.properties-right-flyout {
+	.properties-editor-form {
+		height: 100%;
+	}
+	.properties-single-category {
+		height: 100%;
+		.properties-sub-tab-container {
+			position: relative;
+			height: 100%;
+		}
+		.properties-subtabs {
+			position: absolute;
+			height: $primary-tab-height;
+			border-bottom: 1px solid $layer-accent-01;
+		}
+		.properties-subtab-panel {
+			height: calc(100% - #{$primary-tab-height});
+			position: relative;
+			top: $primary-tab-height;
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+	}
+}
+
+.properties-category-title {
+	@include type-style("body-long-01");
+	text-decoration-color: $text-primary;
+	color: $text-primary;
+
+	height: 46px;
+	width: 100%;
+
+	display: flex;
+	background-color: $background;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 $spacing-05;
+	border: 0; // override for button styling
+	outline: none; // override for button styling
+	border-bottom: 1px solid $layer-accent-01;
+	cursor: pointer;
+	&:hover {
+		background-color: $layer-hover-01;
+	}
+	> svg {
+		height: 20px;
+		width: 20px;
+		fill: $icon-primary;
+	}
+}
+
+.properties-subtabs,
+.properties-primaryTabs {
+	.cds--tabs__nav {
+		overflow-x: auto; // override carbon so scrollbar doesn't always show
+	}
+}
+
+.properties-categories {
 	.cds--accordion__item--active .cds--accordion__content {
 		// 24px padding between accordion title and content (issue #3106)
 		padding: $spacing-06 $spacing-05 $spacing-05;
-		
+
 		/*  
-			Accordion Carbon Component currently doesn't support Accordions inside an Accordion
-			By default inner Accordions will be in open state and won't close on click
-		*/
+		Accordion Carbon Component currently doesn't support Accordions inside an Accordion
+		By default inner Accordions will be in open state and won't close on click
+	*/
 
 		// Handle Initial state where Accordion is closed to hide the content and rotate arrow to indicate the same.
 		.cds--accordion__item {
@@ -101,7 +102,7 @@
 		}
 
 		// Handle Open state where Accordion is opened to show the content and rotate arrow.
-		.cds--accordion__item.cds--accordion__item--active { 
+		.cds--accordion__item.cds--accordion__item--active {
 			.cds--accordion__content {
 				display: block;
 			}
@@ -109,74 +110,75 @@
 				transform: rotate(270deg);
 			}
 		}
-		
 	}
 
 	// Remove Default borders for Accordions
-	.cds--accordion__item{
-		border-top: 0px
+	.cds--accordion__item {
+		border-top: 0px;
 	}
 }
- 
- .properties-static-text-container {
-	 display: flex;
-	 align-items: center;
-	 padding: $spacing-02 0;
-	 .properties-static-text {
-		 @include type-style("body-short-01");
-		 color: $text-primary;
-		 &.info {
-			 @include type-style("label-01");
-			 color: $text-secondary;
-		 }
-	 }
-	 svg {
-		 width: 16px;
-		 height: 16px;
-		 margin-right: $spacing-03;
-	 }
- }
- 
- .properties-h-separator {
-	 margin-top: $spacing-05;
-	 margin-bottom: $spacing-05;
- }
- 
- .properties-link-text-container {
-	 display: flex;
-	 align-items: center;
-	 padding: $spacing-04 0 0 0;
-	 svg {
-		 margin-right: $spacing-03;
-	 }
-	 .properties-link-text {
-		 cursor: pointer;
-	 }
- }
- 
- .properties-light-enabled {
-	 background-color: $layer-01; // Override theme background-color when light option is true
- }
- 
- .properties-custom-panel + .properties-control-panel {
-	 padding-top: $spacing-05; // padding between the two classes
- }
- 
- // Display in full height if inside a tearsheet
- .properties-editor-form.tearsheet-container, .properties-editor-form.right-flyout-tabs-view {
-	 height: 100%;
- 
-	 .properties-primaryTabs {
-		 position: absolute;
-		 height: $primary-tab-height;
-		 border-bottom: 1px solid $layer-accent-01;
-	 }
- 
-	 .properties-primary-tab-panel.tearsheet-container, .properties-primary-tab-panel.right-flyout-tabs-view {
-		 height: calc(100% - #{$primary-tab-height});
-		 position: relative;
-		 top: $primary-tab-height;
-		 overflow-y: auto;
-		 overflow-x: hidden;
-	 }
- }
+
+.properties-static-text-container {
+	display: flex;
+	align-items: center;
+	padding: $spacing-02 0;
+	.properties-static-text {
+		@include type-style("body-short-01");
+		color: $text-primary;
+		&.info {
+			@include type-style("label-01");
+			color: $text-secondary;
+		}
+	}
+	svg {
+		width: 16px;
+		height: 16px;
+		margin-right: $spacing-03;
+	}
+}
+
+.properties-h-separator {
+	margin-top: $spacing-05;
+	margin-bottom: $spacing-05;
+}
+
+.properties-link-text-container {
+	display: flex;
+	align-items: center;
+	padding: $spacing-04 0 0 0;
+	svg {
+		margin-right: $spacing-03;
+	}
+	.properties-link-text {
+		cursor: pointer;
+	}
+}
+
+.properties-light-enabled {
+	background-color: $layer-01; // Override theme background-color when light option is true
+}
+
+.properties-custom-panel + .properties-control-panel {
+	padding-top: $spacing-05; // padding between the two classes
+}
+
+// Display in full height if inside a tearsheet
+.properties-editor-form.tearsheet-container,
+.properties-editor-form.right-flyout-tabs-view {
+	height: 100%;
+
+	.properties-primaryTabs {
+		position: absolute;
+		height: $primary-tab-height;
+		border-bottom: 1px solid $layer-accent-01;
+	}
+
+	.properties-primary-tab-panel.tearsheet-container,
+	.properties-primary-tab-panel.right-flyout-tabs-view {
+		height: calc(100% - #{$primary-tab-height});
+		position: relative;
+		top: $primary-tab-height;
+		overflow-y: auto;
+		overflow-x: hidden;
+	}
+}
