@@ -16,11 +16,11 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { InlineLoading } from "carbon-components-react";
+import { InlineLoading } from "@carbon/react";
 import SVG from "react-inlinesvg";
 import { TIP_TYPE_PALETTE_CATEGORY } from "../common-canvas/constants/canvas-constants.js";
 import { get } from "lodash";
-import { AccordionItem } from "carbon-components-react";
+import { AccordionItem } from "@carbon/react";
 import PaletteContentList from "./palette-content-list.jsx";
 
 
@@ -31,6 +31,8 @@ class PaletteFlyoutContentCategory extends React.Component {
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.categoryClicked = this.categoryClicked.bind(this);
+		this.categoryKeyPressed = this.categoryKeyPressed.bind(this);
+		this.setPaletteCategory = this.setPaletteCategory.bind(this);
 	}
 
 	onMouseOver(ev) {
@@ -93,12 +95,22 @@ class PaletteFlyoutContentCategory extends React.Component {
 		return content;
 	}
 
+	setPaletteCategory(isOpen) {
+		if (isOpen) {
+			this.props.canvasController.closePaletteCategory(this.props.category.id);
+		} else {
+			this.props.canvasController.openPaletteCategory(this.props.category.id);
+		}
+	}
+
 	// Returns the category object for a regular category.
 	getRenderCategory() {
 		const titleObj = this.getTitleObj();
 		const content = this.getContent();
 		return (
-			<AccordionItem title={titleObj} open={this.props.category.is_open}>
+			<AccordionItem title={titleObj} open={this.props.category.is_open}
+				onKeyDown={this.categoryKeyPressed}
+			>
 				{content}
 			</AccordionItem>
 		);
@@ -116,7 +128,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
 			>
-				<div className="palette-flyout-category-item">
+				<div className="palette-flyout-category-item" tabIndex={-1}>
 					{itemImage}
 					{itemText}
 				</div></div>
@@ -196,10 +208,17 @@ class PaletteFlyoutContentCategory extends React.Component {
 		// a category is opened.
 		evt.stopPropagation();
 
-		if (this.props.category.is_open) {
-			this.props.canvasController.closePaletteCategory(this.props.category.id);
-		} else {
-			this.props.canvasController.openPaletteCategory(this.props.category.id);
+		this.setPaletteCategory(this.props.category.is_open);
+	}
+
+	categoryKeyPressed(evt) {
+		if (evt.target.className === "cds--accordion__heading") {
+			if (evt.code === "Enter" || evt.code === "Space") {
+				evt.preventDefault();
+				evt.stopPropagation();
+
+				this.setPaletteCategory(this.props.category.is_open);
+			}
 		}
 	}
 

@@ -16,8 +16,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Slider } from "carbon-components-react";
-import { WarningFilled16, ErrorFilled16 } from "@carbon/icons-react";
+import { Slider } from "@carbon/react";
+import { WarningFilled, ErrorFilled } from "@carbon/react/icons";
 import { connect } from "react-redux";
 
 class CustomSliderCtrl extends React.Component {
@@ -45,9 +45,9 @@ class CustomSliderCtrl extends React.Component {
 		if (this.props.messageInfo && this.props.messageInfo.text) {
 			messageText = this.props.messageInfo.text;
 			if (this.props.messageInfo.type === "warning") {
-				icon = (<WarningFilled16 className="warning" />);
+				icon = (<WarningFilled className="warning" />);
 			} else if (this.props.messageInfo.type === "error") {
-				icon = (<ErrorFilled16 className="error" />);
+				icon = (<ErrorFilled className="error" />);
 			}
 		}
 		return (

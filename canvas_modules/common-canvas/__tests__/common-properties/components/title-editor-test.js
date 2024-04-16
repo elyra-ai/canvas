@@ -183,8 +183,8 @@ describe("title-editor renders correctly", () => {
 		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
 		// Verify warning message is displayed
 		const warningMessage = "Title exceeds 10 characters. This is a warning message. There is no restriction on message length. Height is adjusted for multi-line messages.";
-		expect(wrapper.find(".bx--text-input__field-wrapper--warning")).to.have.length(1);
-		expect(wrapper.find(".bx--form-requirement").text()).to.equal(warningMessage);
+		expect(wrapper.find(".cds--text-input__field-wrapper--warning")).to.have.length(1);
+		expect(wrapper.find("div.cds--form-requirement").text()).to.equal(warningMessage);
 	});
 	it("Error message returned by titleChangeHandler should be displayed correctly", () => {
 		controller.setTitle("test title");
@@ -204,8 +204,8 @@ describe("title-editor renders correctly", () => {
 
 		// verify error message is displayed
 		const errorMessage = "Only 15 characters are allowed in title.";
-		expect(wrapper.find(".bx--text-input__field-wrapper[data-invalid=true]")).to.have.length(1);
-		expect(wrapper.find(".bx--form-requirement").text()).to.equal(errorMessage);
+		expect(wrapper.find(".cds--text-input__field-wrapper[data-invalid=true]")).to.have.length(1);
+		expect(wrapper.find("div.cds--form-requirement").text()).to.equal(errorMessage);
 	});
 	it("Don't show any error/warning message when titleChangeHandler doesn't return anything", () => {
 		controller.setTitle("test title");
@@ -224,7 +224,7 @@ describe("title-editor renders correctly", () => {
 		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
 
 		// verify no message is displayed
-		expect(wrapper.find(".bx--form-requirement")).to.have.length(0);
+		expect(wrapper.find(".cds--form-requirement")).to.have.length(0);
 	});
 	it("Don't show any error/warning message when titleChangeHandler response is invalid", () => {
 		controller.setTitle("test title");
@@ -244,7 +244,7 @@ describe("title-editor renders correctly", () => {
 		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
 
 		// verify no message is displayed
-		expect(wrapper.find(".bx--form-requirement")).to.have.length(0);
+		expect(wrapper.find(".cds--form-requirement")).to.have.length(0);
 	});
 	it("test label is readonly", () => {
 		helpClickHandler.resetHistory();

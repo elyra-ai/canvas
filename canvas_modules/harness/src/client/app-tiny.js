@@ -22,7 +22,6 @@ import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
 // Note use "@elyra/canvas" instead of "common-canvas" here, if you are importing from the NPM module.
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 // This library is only needed if you want to use hot loading during development.
-import { hot } from "react-hot-loader/root";
 
 class App extends React.Component {
 	constructor(props) {
@@ -46,4 +45,4 @@ class App extends React.Component {
 	}
 }
 
-export default hot(App);
+export default App;

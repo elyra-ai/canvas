@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
@@ -52,10 +52,10 @@ class ToggletextControl extends React.Component {
 			const imgSource = this.iconsMap[this.props.value];
 			if (typeof imgSource === "string" && imgSource.slice(imgSource.length - 4) === ".svg") {
 				// svg image
-				icon = <Isvg className="bx--btn__icon" src={imgSource} />;
+				icon = <Isvg className="cds--btn__icon" src={imgSource} />;
 			} else {
 				icon = (<img
-					className="bx--btn__icon"
+					className="cds--btn__icon"
 					src={imgSource}
 					alt=""
 				/>);
@@ -75,7 +75,7 @@ class ToggletextControl extends React.Component {
 			button = (
 				<Button
 					kind={buttonType}
-					size="small"
+					size="sm"
 					onClick={this.onClick.bind(this)}
 					renderIcon={this.renderIcon.bind(this)}
 					iconDescription={formatMessage(this.reactIntl, MESSAGE_KEYS.TOGGLETEXT_ICON_DESCRIPTION, { toggletext_label: this.props.value })}

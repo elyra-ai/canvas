@@ -20,7 +20,7 @@ Cypress.Commands.add("openPropertyDefinition", (propertyFileName) => {
 });
 
 Cypress.Commands.add("toggleCategory", (categoryName) => {
-	cy.get(".common-canvas-right-side-items .bx--accordion__heading")
+	cy.get(".common-canvas-right-side-items .cds--accordion__heading")
 		.contains(categoryName)
 		.click();
 });
@@ -125,13 +125,13 @@ Cypress.Commands.add("getControlContainerFromName", (givenName) => {
 Cypress.Commands.add("selectPropertiesContainerType", (containerType) => {
 	if (containerType === "Custom" || containerType === "Flyout") {
 		cy.get("div[data-id='properties-propertiesContainerType']")
-			.find(".bx--radio-button-wrapper")
+			.find(".cds--radio-button-wrapper")
 			.eq(0)
 			.find("label")
 			.click();
 	} else if (containerType === "Modal") {
 		cy.get("#harness-sidepanel-properties-container-type")
-			.find(".bx--radio-button-wrapper")
+			.find(".cds--radio-button-wrapper")
 			.eq(1)
 			.find("label")
 			.click();

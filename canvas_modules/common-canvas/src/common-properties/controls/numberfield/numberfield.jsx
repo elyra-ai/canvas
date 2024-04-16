@@ -17,14 +17,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { NumberInput, Button } from "carbon-components-react";
+import { NumberInput, Button, Layer } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
 import { ControlType } from "./../../constants/form-constants";
-import { Shuffle16 } from "@carbon/icons-react";
+import { Shuffle } from "@carbon/react/icons";
 import { has } from "lodash";
 
 class NumberfieldControl extends React.Component {
@@ -69,8 +69,10 @@ class NumberfieldControl extends React.Component {
 		}
 	}
 
-	handleChange(evt, direction) {
-		if (typeof direction === "string") {
+	handleChange(evt, { value, direction }) {
+		// When stepper buttons are clicked, evt.type = click
+		// When user changes the value manually without clicking stepper buttons, evt.type = change
+		if (evt?.type === "click" && typeof direction === "string") {
 			this.onDirection(direction);
 			return;
 		}
@@ -107,7 +109,7 @@ class NumberfieldControl extends React.Component {
 			this.props.controller.updateErrorMessage(this.props.propertyId, null);
 		}
 
-		const actualValue = evt.target.value;
+		const actualValue = value;
 		if (typeof actualValue === "undefined" || actualValue === null || actualValue === "") {
 			this.props.controller.updatePropertyValue(this.props.propertyId, null);
 		} else {
@@ -139,7 +141,8 @@ class NumberfieldControl extends React.Component {
 				onClick={this.generateNumber}
 				disabled={disabled}
 				kind="tertiary"
-				renderIcon={Shuffle16}
+				size="md"
+				renderIcon={Shuffle}
 				tooltipPosition="bottom"
 				tooltipAlignment="end"
 				iconDescription={this.props.control.label.numberGenerator.text}
@@ -155,22 +158,23 @@ class NumberfieldControl extends React.Component {
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<NumberInput
-					{...validationProps}
-					ref= { (ref) => (this.numberInput = ref)}
-					id={this.id}
-					onChange={this.handleChange.bind(this)}
-					disabled={disabled}
-					step={this.props.control.increment}
-					value={controlValue}
-					placeholder={this.props.control.additionalText}
-					label={this.props.controlItem}
-					hideLabel={this.props.tableControl}
-					allowEmpty
-					light={this.props.controller.getLight() && this.props.control.light}
-					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
-					onInput={this.onInput.bind(this)}
-				/>
+				<Layer className="properties-numberfield-layer" level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
+					<NumberInput
+						{...validationProps}
+						ref= { (ref) => (this.numberInput = ref)}
+						id={this.id}
+						onChange={this.handleChange.bind(this)}
+						disabled={disabled}
+						step={this.props.control.increment}
+						value={controlValue}
+						placeholder={this.props.control.additionalText}
+						label={this.props.controlItem}
+						hideLabel={this.props.tableControl}
+						allowEmpty
+						hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
+						onInput={this.onInput.bind(this)}
+					/>
+				</Layer>
 				{numberGenerator}
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

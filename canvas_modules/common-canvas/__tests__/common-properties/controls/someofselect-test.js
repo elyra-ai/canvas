@@ -390,7 +390,7 @@ describe("someofselect control multiple rows selection", () => {
 
 	it("verify multiple rows select/deselect works fine with filtered enum", () => {
 		// Open filters tab
-		wrapper.find("button.bx--accordion__heading")
+		wrapper.find("button.cds--accordion__heading")
 			.at(2)
 			.simulate("click");
 		let someofselectWrapper;

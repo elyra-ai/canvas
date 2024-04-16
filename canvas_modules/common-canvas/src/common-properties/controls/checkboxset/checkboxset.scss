@@ -18,8 +18,9 @@
 	&.hide {
 		display: none;
 	}
-	.bx--form-item.bx--checkbox-wrapper:first-of-type { //override carbon checkbox styling
-		margin-bottom: $spacing-03;
+	.cds--form-item.cds--checkbox-wrapper:first-of-type { //override carbon checkbox styling
+		margin-block-start: 0.1875rem;
+		margin-block-end: $spacing-03;
 		flex: 0 1 auto; // Do not allow value to take up entire width
 	}
 	.properties-checkboxset-container {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 // objects stored in redux and also the copy of canvas objects maintained by
 // the CanvasRender objects.
 
-import { get, set } from "lodash";
+import { get, has, isNumber, set } from "lodash";
 import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST }
 	from "../common-canvas/constants/canvas-constants.js";
@@ -1237,4 +1237,76 @@ export default class CanvasUtils {
 		return el.classList && el.classList.contains(className);
 	}
 
+	// Returns the ID of the pipeline referenced by the supernode
+	// passed in.
+	static getSupernodePipelineId(supernode) {
+		if (supernode.type === SUPER_NODE &&
+				has(supernode, "subflow_ref.pipeline_id_ref")) {
+			return supernode.subflow_ref.pipeline_id_ref;
+		}
+		return null;
+	}
+
+	// Convert now deprecated layout fields to the port positions arrays. The layout fields are
+	// expected to provided in pairs. For example: inputPortTopPosX and inputPortTopPosY. However,
+	// if they are not and only one of the pair is provided the functions in svg-canvas-utils.nodes.js
+	// that calculate a x, y coordinate for the port will default to 0 if a value provided is undefined.
+	// TODO - Remove this in a future major release.
+	static convertPortPosInfo(layout) {
+		const newLayout = layout;
+
+		if (!layout) {
+			return newLayout;
+		}
+
+		// If custom fields exist for input ports, write the values into the
+		// inputPortPositions array and delete the redundant fields.
+		if (isNumber(newLayout.inputPortTopPosX) || isNumber(newLayout.inputPortTopPosY)) {
+			newLayout.inputPortPositions = [
+				{ x_pos: newLayout.inputPortTopPosX, y_pos: newLayout.inputPortTopPosY, pos: "topLeft" }
+			];
+			delete newLayout.inputPortTopPosX;
+			delete newLayout.inputPortTopPosY;
+
+		} else if (isNumber(newLayout.inputPortBottomPosX) || isNumber(newLayout.inputPortBottomPosY)) {
+			newLayout.inputPortPositions = [
+				{ x_pos: newLayout.inputPortBottomPosX, y_pos: newLayout.inputPortBottomPosY, pos: "bottomLeft" }
+			];
+			delete newLayout.inputPortBottomPosX;
+			delete newLayout.inputPortBottomPosY;
+
+		} else if (isNumber(newLayout.inputPortLeftPosX) || isNumber(newLayout.inputPortLeftPosY)) {
+			newLayout.inputPortPositions = [
+				{ x_pos: newLayout.inputPortLeftPosX, y_pos: newLayout.inputPortLeftPosY, pos: "topLeft" }
+			];
+			delete newLayout.inputPortLeftPosX;
+			delete newLayout.inputPortLeftPosY;
+		}
+
+		// If custom fields exist for output ports, write the values into the
+		// outputPortPositions array and delete the redundant fields.
+		if (isNumber(newLayout.outputPortTopPosX) || isNumber(newLayout.outputPortTopPosY)) {
+			newLayout.outputPortPositions = [
+				{ x_pos: newLayout.outputPortTopPosX, y_pos: newLayout.outputPortTopPosY, pos: "topLeft" }
+			];
+			delete newLayout.outputPortTopPosX;
+			delete newLayout.outputPortTopPosY;
+
+		} else if (isNumber(newLayout.outputPortBottomPosX) || isNumber(newLayout.outputPortBottomPosY)) {
+			newLayout.outputPortPositions = [
+				{ x_pos: newLayout.outputPortBottomPosX, y_pos: newLayout.outputPortBottomPosY, pos: "bottomLeft" }
+			];
+			delete newLayout.outputPortBottomPosX;
+			delete newLayout.outputPortBottomPosY;
+
+		} else if (isNumber(newLayout.outputPortRightPosX) || isNumber(newLayout.outputPortRightPosY)) {
+			const pos = newLayout.outputPortRightPosition || "topRight";
+			newLayout.outputPortPositions = [
+				{ x_pos: newLayout.outputPortRightPosX, y_pos: newLayout.outputPortRightPosY, pos: pos }
+			];
+			delete newLayout.outputPortRightPosX;
+			delete newLayout.outputPortRightPosY;
+		}
+		return newLayout;
+	}
 }

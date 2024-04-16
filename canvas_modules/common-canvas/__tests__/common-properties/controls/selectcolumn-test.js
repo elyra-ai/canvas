@@ -121,7 +121,7 @@ describe("selectcolumn control renders correctly", () => {
 			/>
 		);
 		const dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
-		const messageWrapper = dropdownWrapper.find("div.bx--form-requirement");
+		const messageWrapper = dropdownWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 
@@ -144,7 +144,7 @@ describe("selectcolumn control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
@@ -168,7 +168,7 @@ describe("selectcolumn control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
@@ -193,7 +193,7 @@ describe("selectcolumn control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
 		dropdownList.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal("");
@@ -392,17 +392,17 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
-		let dropdownList = selectField.find("div.bx--list-box__menu-item");
+		let dropdownList = selectField.find("li.cds--list-box__menu-item");
 		dropdownList.at(2).simulate("click");
 		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
 		dropdownButton = selectField.find("button");
 		dropdownButton.simulate("click");
 		// select the first item
 		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
-		dropdownList = selectField.find("div.bx--list-box__menu-item");
+		dropdownList = selectField.find("li.cds--list-box__menu-item");
 		dropdownList.at(0).simulate("click");
 		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
-		const errorMsgDiv = selectField.find("div.bx--form-requirement");
+		const errorMsgDiv = selectField.find("div.cds--form-requirement");
 		expect(errorMsgDiv).to.have.length(0);
 	});
 
@@ -414,15 +414,15 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 
 	it("selectcolumn control should have aria-label", () => {
 		const selectColumnWrapper = wrapper.find("div[data-id='properties-ctrl-field1_panel']");
-		const selectColumnAriaLabelledby = selectColumnWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
-		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field1 Panel(required)");
+		const selectColumnAriaLabelledby = selectColumnWrapper.find(".cds--list-box__menu").prop("aria-labelledby");
+		expect(selectColumnWrapper.find(`label[id='${selectColumnAriaLabelledby}']`).text()).to.equal("Field1 Panel(required)");
 	});
 
 	it("selectcolumn control should show warning for invalid selected values", () => {
 		// Verify there are 2 alerts
 		// get alerts tabs
 		let alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		const alertButton = alertCategory.find("button.bx--accordion__heading");
+		const alertButton = alertCategory.find("button.cds--accordion__heading");
 		expect(alertButton.text()).to.equal("Alerts (2)");
 		alertButton.simulate("click");
 
@@ -440,19 +440,19 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 		let dropdownButton = fieldWrapperDropdown.find("button");
 		dropdownButton.simulate("click");
 		fieldWrapperDropdown = wrapper.find("div[data-id='properties-field'] Dropdown");
-		let dropdownList = fieldWrapperDropdown.find("div.bx--list-box__menu-item");
+		let dropdownList = fieldWrapperDropdown.find("li.cds--list-box__menu-item");
 		dropdownList.at(2).simulate("click");
 
 		let fieldWarningWrapperDropdown = wrapper.find("div[data-id='properties-field_warning'] Dropdown");
 		dropdownButton = fieldWarningWrapperDropdown.find("button");
 		dropdownButton.simulate("click");
 		fieldWarningWrapperDropdown = wrapper.find("div[data-id='properties-field_warning'] Dropdown");
-		dropdownList = fieldWarningWrapperDropdown.find("div.bx--list-box__menu-item");
+		dropdownList = fieldWarningWrapperDropdown.find("li.cds--list-box__menu-item");
 		dropdownList.at(2).simulate("click");
 
 		// Verify alerts are cleared by checking first tab is not the alert tab
 		const firstCategory = wrapper.find("div.properties-category-container").at(0);
-		const firstTab = firstCategory.find("button.bx--accordion__heading");
+		const firstTab = firstCategory.find("button.cds--accordion__heading");
 		expect(firstTab.text()).to.equal("Values");
 	});
 });
@@ -504,7 +504,7 @@ describe("selectcolumn works correctly with multi input schemas", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		selectField = wrapper.find("div[data-id='properties-field'] Dropdown");
-		const dropdownList = selectField.find("div.bx--list-box__menu-item");
+		const dropdownList = selectField.find("li.cds--list-box__menu-item");
 		dropdownList.at(15).simulate("click");
 		const expectedValue = { link_ref: "1", field_name: "Na" };
 		expect(controller.getPropertyValue({ name: "field" })).to.eql(expectedValue);

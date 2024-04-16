@@ -15,7 +15,11 @@
  */
 
 .properties-sub-tab-container {
-	.bx--tab-content {
+	.cds--tab--list {
+		width: inherit;
+	}
+
+	.cds--tab-content {
 		// override carbon padding
 		padding-left: 0;
 		padding-right: 0;
@@ -28,57 +32,54 @@ $selected-tab-width: 3px;
 
 .properties-leftnav-container {
 	display: flex;
-	border-top: px solid $ui-03;
+	border-top: px solid $layer-accent-01;
 	height: calc(100% + #{$parent-padding}); // Include padding from parent
 	margin-top: -$spacing-05;
 	margin-left: -$spacing-05;
 	margin-bottom: calc(-1 * #{$parent-padding});
 
+	// TODO: Height of this class will be fixed in issue https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3699
 	.properties-leftnav-subtabs {
 		width: 282px;
-		background-color: $ui-01;
-		border-right: 1px solid $ui-03;
+		background-color: $layer-01;
+		border-right: 1px solid $layer-accent-01;
 		padding-top: $spacing-02;
 		height: 100%;
 
-		ul.bx--tabs--scrollable__nav {
+		.cds--tab--list {
 			flex-direction: column;
 			width: 282px;
+			height: fit-content;
 		}
 
-		li.bx--tabs--scrollable__nav-item--selected {
-			border-left: $selected-tab-width solid $interactive-04;
-			border-bottom: 0;
-			background-color: $selected-ui;
-
+		button.properties-leftnav-subtab-item {
 			&:hover {
-				background-color: $hover-row;
-			}
-
-			&.properties-leftnav-subtab-item button {
-				border-left: 0;
-			}
-		}
-
-		li.properties-leftnav-subtab-item {
-			&:hover button {
 				border-bottom: 0;
 			}
-			button {
-				border-left: $selected-tab-width solid transparent;
+
+			border-left: $selected-tab-width solid transparent;
+			border-bottom: 0;
+			transition: none; // Prevent border/outline from flickering
+
+			&:focus, &:active {
+				outline: 0;
 				border-bottom: 0;
 				transition: none; // Prevent border/outline from flickering
+			}
+		}
 
-				&:focus, &:active {
-					outline: 0;
-					border-bottom: 0;
-					transition: none; // Prevent border/outline from flickering
-				}
+		button.cds--tabs__nav-item--selected {
+			border-left: $selected-tab-width solid $border-interactive;
+			border-bottom: 0;
+			background-color: $layer-selected-01;
+
+			&:hover {
+				background-color: $layer-hover-01;
 			}
 		}
 	}
 
-	div.bx--tab-content {
+	div.cds--tab-content {
 		width: 100%;
 		padding: $spacing-05; // Override padding set by subtab
 	}

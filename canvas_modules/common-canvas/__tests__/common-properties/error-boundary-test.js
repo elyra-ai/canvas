@@ -56,7 +56,7 @@ describe("The error boundary class should catch errors and display a fallback UI
 			</IntlProvider>
 		);
 		expect(wrapper.find("div.properties-flyout-error-container")).to.have.length(1);
-		expect(wrapper.find("button.properties-apply-button.bx--btn.bx--btn--sm.bx--btn--primary")).to.have.length(1);
-		expect(wrapper.find("button.properties-apply-button.bx--btn.bx--btn--sm.bx--btn--secondary")).to.have.length(0);
+		expect(wrapper.find("button.properties-apply-button.cds--btn.cds--btn--primary")).to.have.length(1);
+		expect(wrapper.find("button.properties-apply-button.cds--btn.cds--btn--secondary")).to.have.length(0);
 	});
 });

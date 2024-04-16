@@ -30,14 +30,14 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 
 const entry = {
 	harness: ["@babel/polyfill", "./src/client/index.js"],
-	vendor: ["react", "react-dom", "react-intl", "intl-messageformat", "intl-messageformat-parser"]
+	vendor: ["react", "react-dom", "react-intl", "intl-messageformat"]
 };
 
 const output = {
 	path: path.join(__dirname, ".build"),
 	publicPath: constants.APP_PATH,
-	filename: "js/[name].[hash].js",
-	chunkFilename: "js/chunk.[name].[id].[chunkhash].js"
+	filename: "js/[name].[contenthash].js",
+	chunkFilename: "js/chunk.[name].[id].[contenthash].js"
 };
 
 
@@ -48,7 +48,7 @@ const rules = [
 		test: /\.js(x?)$/,
 		loader: "babel-loader",
 		exclude: (/node_modules|common-canvas/),
-		query: babelOptions
+		options: babelOptions
 	},
 	{
 		test: /\.s*css$/,
@@ -56,7 +56,11 @@ const rules = [
 			{
 				loader: MiniCssExtractPlugin.loader,
 			},
-			{ loader: "css-loader", options: { url: false } },
+			{ loader: "css-loader",
+				options: {
+					url: false
+				}
+			},
 			{ loader: "postcss-loader",
 				options: {
 					postcssOptions: {
@@ -75,14 +79,15 @@ const rules = [
 	},
 	{
 		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
-		loader: "file-loader?name=graphics/[hash].[ext]"
+		use: [
+			"file-loader?name=graphics/[contenthash].[ext]"
+		]
 	}
 ];
 
 
 // Plugins ------------------------------------------------------------>
 const plugins = [
-	new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.NoEmitOnErrorsPlugin(),
 	new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
 	new MiniCssExtractPlugin({
@@ -110,7 +115,8 @@ module.exports = {
 	resolve: {
 		modules: [
 			__dirname,
-			"node_modules"],
+			"node_modules"
+		],
 		alias: {
 			"react": "node_modules/react",
 			"react-dom": "node_modules/react-dom",

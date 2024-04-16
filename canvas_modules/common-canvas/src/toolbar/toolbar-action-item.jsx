@@ -192,7 +192,8 @@ class ToolbarActionItem extends React.Component {
 				"toolbar-item-selected": actionObj.isSelected
 			},
 			kindAsClass,
-			actionName);
+			actionName,
+			this.props.actionObj.className);
 
 		const subArea = this.isSubAreaDisplayed() ? this.generateSubArea() : null;
 
@@ -200,7 +201,7 @@ class ToolbarActionItem extends React.Component {
 			<div ref={this.divRef} className={itemClassName} data-toolbar-action={actionObj.action} data-toolbar-item
 				onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} onKeyDown={this.onKeyDown}
 			>
-				<div>
+				<div className="toolbar-button-item">
 					<ToolbarButtonItem
 						actionObj={actionObj}
 						actionName={this.generateActionName()}

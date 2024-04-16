@@ -106,5 +106,8 @@
   "virtualizedTable.row.checkbox.label": "Välj rad {row_index} från {table_label}",
   "properties.empty.table.text": "Klicka på \"{button_label}\" för att börja",
   "label.indicator.required": "(obligatorisk)",
-  "label.indicator.optional": "(valfritt)"
+  "label.indicator.optional": "(valfritt)",
+  "slider.numberInput.label": "Indata för antalet skjutreglage",
+  "editorForm.tabList.label": "Huvudflikar",
+  "subTabs.tabList.label": "Fliklista"
 }

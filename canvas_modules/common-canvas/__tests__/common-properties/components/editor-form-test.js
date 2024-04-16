@@ -36,12 +36,12 @@ describe("tabs and subtabs should be rendered correctly", () => {
 		let category = wrapper.find("div[data-id='properties-Primary2']");
 		const subTabsContainer = category.find("div.properties-subtabs");
 		expect(subTabsContainer).to.have.length(1);
-		const subTabs = subTabsContainer.find("button.bx--tabs--scrollable__nav-link");
+		const subTabs = subTabsContainer.find("button.cds--tabs__nav-link");
 		expect(subTabs).to.have.length(3);
 		subTabs.at(2).simulate("click");
 		category = wrapper.find("div[data-id='properties-Primary2']");
 		// use react object to find tab content.
-		let tabContent = category.find("div.properties-sub-tab-container TabContent");
+		let tabContent = category.find("div.properties-sub-tab-container div.properties-subtab-panel");
 		expect(tabContent.at(0).prop("hidden")).to.equal(true);
 		expect(tabContent.at(1).prop("hidden")).to.equal(true);
 		expect(tabContent.at(2).prop("hidden")).to.equal(false);
@@ -49,7 +49,7 @@ describe("tabs and subtabs should be rendered correctly", () => {
 		subTabs.at(2).simulate("click");
 		category = wrapper.find("div[data-id='properties-Primary2']");
 		// use react object to find tab content.
-		tabContent = category.find("div.properties-sub-tab-container TabContent");
+		tabContent = category.find("div.properties-sub-tab-container div.properties-subtab-panel");
 		expect(tabContent.at(0).prop("hidden")).to.equal(true);
 		expect(tabContent.at(1).prop("hidden")).to.equal(true);
 		expect(tabContent.at(2).prop("hidden")).to.equal(false);
@@ -57,7 +57,7 @@ describe("tabs and subtabs should be rendered correctly", () => {
 		subTabs.at(1).simulate("click");
 		category = wrapper.find("div[data-id='properties-Primary2']");
 		// use react object to find tab content.
-		tabContent = category.find("div.properties-sub-tab-container TabContent");
+		tabContent = category.find("div.properties-sub-tab-container div.properties-subtab-panel");
 		expect(tabContent.at(0).prop("hidden")).to.equal(true);
 		expect(tabContent.at(1).prop("hidden")).to.equal(false);
 		expect(tabContent.at(2).prop("hidden")).to.equal(true);
@@ -112,7 +112,7 @@ describe("controls should be rendered correctly when no uihints are provided", (
 		controller.updatePropertyValue({ name: "textfield" }, null);
 		wrapper.update();
 		// validate message is created
-		expect(wrapper.find(".bx--form-requirement")).to.have.length(1);
+		expect(wrapper.find("div.cds--form-requirement")).to.have.length(1);
 		// valide no catagories(tabs) are created
 		expect(wrapper.find(".properties-categories")).to.have.length(0);
 	});
@@ -131,7 +131,7 @@ describe("Right flyout category views", () => {
 		const editorForm = wrapper.find(".properties-editor-form");
 		expect(editorForm.prop("className").includes("right-flyout-tabs-view")).to.equal(true);
 		// Verify primary tabs
-		const primaryTabs = editorForm.find("Tab");
+		const primaryTabs = editorForm.find("button[role='tab']");
 		expect(primaryTabs).to.have.length(3);
 
 		const tabPanels = editorForm.find("div[role='tabpanel']");

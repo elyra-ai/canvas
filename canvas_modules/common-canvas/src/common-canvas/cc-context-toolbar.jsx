@@ -25,6 +25,9 @@ import ColorPicker from "../color-picker";
 const CM_TOOLBAR_GAP = 2;
 const CM_ICON_SIZE = 32;
 const CM_ICON_PAD = 2;
+const DIVIDER_SIZE = 1;
+const ICON_SIZE_PLUS_GAP = CM_ICON_SIZE + CM_TOOLBAR_GAP;
+const PADDING = 2;
 
 class CommonCanvasContextToolbar extends React.Component {
 	constructor(props) {
@@ -102,17 +105,22 @@ class CommonCanvasContextToolbar extends React.Component {
 
 	// Returns the width of the context toolbar.
 	getContextToolbarWidth(toolbarItems, overflowMenuItems) {
+		const dividers = toolbarItems.filter((i) => i.divider);
+		const dividersCount = dividers.length;
+		const dividersWidth = dividersCount * DIVIDER_SIZE;
+
 		// If there is at least one overflow item, we will need an overflow
 		// icon which will increase the toolbar items by one.
 		const overflowItemCount = overflowMenuItems.length > 0 ? 1 : 0;
-		const toolbarItemsCount = toolbarItems.length + overflowItemCount;
+		const buttonsCount = toolbarItems.length + overflowItemCount - dividersCount;
+		const buttonsWidth = (buttonsCount * (CM_ICON_SIZE + CM_ICON_PAD));
 
 		// If we have some overflow menu items, we reduce the width by five pixels
 		// which forces the overflow menu and the overflow icon to be shown. We
 		// use 5 pixels because this is how many are needed to make the toolbar
 		// work correcty with differnet browser magnificaitons.
 		const reduction = overflowMenuItems.length > 0 ? 5 : 0;
-		return (toolbarItemsCount * (CM_ICON_SIZE + CM_ICON_PAD)) - reduction;
+		return buttonsWidth + dividersWidth - reduction;
 	}
 
 	// Removes leading and trailing dividers from the items array and any
@@ -162,13 +170,53 @@ class CommonCanvasContextToolbar extends React.Component {
 				!this.props.contextSource.targetObject.is_expanded);
 	}
 
+	// Returns adjusted x, y  coordinates for the context menu to ensure it appears
+	// fully within the containing div (viewport).
+	adjustPosToFit(x, y, width, height) {
+		const containingDiv = document.getElementById(this.props.containingDivId);
+		const divRect = containingDiv
+			? containingDiv.getBoundingClientRect()
+			: { top: -1000, bottom: 1000, left: -1000, right: 1000 }; // To enable Jest tests.
+
+		const rect = {
+			left: 0,
+			right: divRect.right - divRect.left,
+			top: 0,
+			bottom: divRect.bottom - divRect.top
+		};
+
+		let newX = x;
+		let newY = y;
+
+		const rightOver = (x + width) - rect.right;
+		const leftOver = rect.left - x;
+		const bottomOver = (y + height) - rect.bottom;
+		const topOver = rect.top - y;
+
+		if (rightOver > 0) {
+			newX -= rightOver + PADDING;
+
+		} else if (leftOver > 0) {
+			newX += leftOver + PADDING;
+		}
+
+		if (bottomOver > 0) {
+			newY -= bottomOver + PADDING;
+
+		} else if (topOver > 0) {
+			newY += topOver + PADDING;
+		}
+
+		return { x: newX, y: newY };
+	}
+
 	render() {
 		this.logger.log("render");
 
 		let contextToolbar = null;
 
 		if (this.props.showContextMenu) {
-			const toolbarItems = this.props.contextMenuDef.filter((cmItem) => cmItem.toolbarItem && !cmItem.divider);
+			const toolbarItems = this.props.contextMenuDef.filter((cmItem) => cmItem.toolbarItem);
 			let overflowMenuItems = this.props.contextMenuDef.filter((cmItem) => !cmItem.toolbarItem);
 			overflowMenuItems = this.removeUnnecessaryDividers(overflowMenuItems);
 			const toolbarConfig = this.getToolbarConfig({ toolbarItems, overflowMenuItems });
@@ -177,10 +225,13 @@ class CommonCanvasContextToolbar extends React.Component {
 			// Note: cmPos is already adjusted as a starting point for the context
 			// toolbar position by a calculation in svg-canvas-renderer.js.
 			const pos = this.props.contextSource.cmPos || { x: 0, y: 0 };
-			const x = this.shouldCenterJustifyToolbar()
+			let x = this.shouldCenterJustifyToolbar()
 				? pos.x - (toolbarWidth / 2)
 				: pos.x - toolbarWidth;
-			const y = (pos.y - CM_ICON_SIZE) - CM_TOOLBAR_GAP;
+			let y = pos.y - ICON_SIZE_PLUS_GAP;
+
+			// Make sure the context toolbar is fully inside the viewport.
+			({ x, y } = this.adjustPosToFit(x, y, toolbarWidth, ICON_SIZE_PLUS_GAP));
 
 			contextToolbar = (
 				<div className={"context-toolbar"} style={{ left: x, top: y, width: toolbarWidth }}

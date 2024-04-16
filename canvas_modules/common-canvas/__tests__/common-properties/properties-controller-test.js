@@ -2108,7 +2108,7 @@ describe("Properties Controller addRemoveRows", () => {
 		// Verify buttons are visible when editor opens
 		let summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
 		const parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructurelisteditor']");
-		parentTable.find(".properties-subpanel-button").at(0)
+		parentTable.find("button.properties-subpanel-button").at(0)
 			.simulate("click");
 		let nestedTable = wrapper.find("div[data-id='properties-nested_structure']");
 		expect(nestedTable.find(".properties-at-buttons-container")).to.have.length(1);
@@ -2311,7 +2311,7 @@ describe("Properties Controller custom table buttons", () => {
 
 		let summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
 		let parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructureCustomButtons']");
-		parentTable.find(".properties-subpanel-button").at(0)
+		parentTable.find("button.properties-subpanel-button").at(0)
 			.simulate("click");
 		let nestedTable = wrapper.find("div[data-id='properties-nestedStructureCustomButtons_table']");
 		let customButtonToolbar = nestedTable.find(".properties-custom-table-buttons");
@@ -2334,7 +2334,7 @@ describe("Properties Controller custom table buttons", () => {
 		// // Verify buttons are visible when editor opens
 		summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
 		parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructureCustomButtons']");
-		parentTable.find(".properties-subpanel-button").at(0)
+		parentTable.find("button.properties-subpanel-button").at(0)
 			.simulate("click");
 		nestedTable = wrapper.find("div[data-id='properties-nestedStructureCustomButtons_table']");
 		customButtonToolbar = nestedTable.find(".properties-custom-table-buttons");
@@ -2365,7 +2365,7 @@ describe("Properties Controller setWideFlyoutPrimaryButtonDisabled", () => {
 			.find(".properties-modal-buttons")
 			.find("button[data-id='properties-apply-button']");
 		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", false);
-		expect(wideFlyoutPrimaryButton.prop("className").includes("bx--btn--disabled")).to.equal(false);
+		expect(wideFlyoutPrimaryButton.prop("className").includes("cds--btn--disabled")).to.equal(false);
 
 		// Disable OK button for this summary panel using controller method
 		controller.setWideFlyoutPrimaryButtonDisabled(summaryPanelId, true);
@@ -2375,7 +2375,7 @@ describe("Properties Controller setWideFlyoutPrimaryButtonDisabled", () => {
 			.find(".properties-modal-buttons")
 			.find("button[data-id='properties-apply-button']");
 		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", true);
-		expect(wideFlyoutPrimaryButton.prop("className").includes("bx--btn--disabled")).to.equal(true);
+		expect(wideFlyoutPrimaryButton.prop("className").includes("cds--btn--disabled")).to.equal(true);
 		expect(controller.getWideFlyoutPrimaryButtonDisabled(summaryPanelId)).to.be.true;
 
 		// Enable OK button for this summary panel using controller method
@@ -2386,7 +2386,7 @@ describe("Properties Controller setWideFlyoutPrimaryButtonDisabled", () => {
 			.find(".properties-modal-buttons")
 			.find("button[data-id='properties-apply-button']");
 		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", false);
-		expect(wideFlyoutPrimaryButton.prop("className").includes("bx--btn--disabled")).to.equal(false);
+		expect(wideFlyoutPrimaryButton.prop("className").includes("cds--btn--disabled")).to.equal(false);
 		expect(controller.getWideFlyoutPrimaryButtonDisabled(summaryPanelId)).to.be.false;
 	});
 });
@@ -2402,7 +2402,7 @@ describe("Properties Controller getTopLevelActiveGroupId", () => {
 
 		// Select Conditions accordion
 		const conditionsCategory = wrapper.find("div.properties-category-container").at(1);
-		conditionsCategory.find("button.bx--accordion__heading").simulate("click");
+		conditionsCategory.find("button.cds--accordion__heading").simulate("click");
 		topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
 		expect(topLevelActiveGroupId).to.equal("checkboxset-conditions");
 
@@ -2422,7 +2422,7 @@ describe("Properties Controller setTopLevelActiveGroup", () => {
 
 		// Select Condition in accordion
 		const conditionsCategory = wrapper.find("div.properties-category-container").at(2);
-		conditionsCategory.find("button.bx--accordion__heading").simulate("click");
+		conditionsCategory.find("button.cds--accordion__heading").simulate("click");
 		topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
 		expect(topLevelActiveGroupId).to.equal("Primary2");
 	});

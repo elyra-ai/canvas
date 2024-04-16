@@ -40,16 +40,16 @@ Cypress.Commands.add("verifyPropertiesFlyoutTitle", (givenTitle) => {
 
 Cypress.Commands.add("verifyMessageInPropertiesTitleEditor", (message, type) => {
 	cy.get(".common-canvas-right-side-items .properties-title-editor")
-		.find(".bx--form-requirement")
+		.find(".cds--form-requirement")
 		.should("have.text", message);
 
 	if (type === "warning") {
 		cy.get(".common-canvas-right-side-items .properties-title-editor")
-			.find(".bx--text-input__field-wrapper--warning")
+			.find(".cds--text-input__field-wrapper--warning")
 			.should("have.length", 1);
 	} else if (type === "error") {
 		cy.get(".common-canvas-right-side-items .properties-title-editor")
-			.find(".bx--text-input__field-wrapper")
+			.find(".cds--text-input__field-wrapper")
 			.should("have.attr", "data-invalid", "true");
 	}
 });
@@ -191,7 +191,7 @@ Cypress.Commands.add("verifyControlIsDisplayed", (propertyId) => {
 Cypress.Commands.add("verifyValueInSummaryPanelForCategory", (value, summaryName, rowNumber, categoryName) => {
 	cy.get(".right-flyout-panel")
 		.find(".properties-category-container")
-		.find(".bx--accordion__title")
+		.find(".cds--accordion__title")
 		.contains(categoryName)
 		.should("exist");
 

@@ -24,7 +24,8 @@ import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import NotificationPanel from "../notification-panel/notification-panel.jsx";
 import { ERROR, WARNING, SUCCESS, INFO, PALETTE_LAYOUT_NONE,
-	NOTIFICATION_ICON_CLASS, TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_LAYOUT_TOP }
+	NOTIFICATION_ICON_CLASS, TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_LAYOUT_TOP,
+	TOOLBAR_TOGGLE_PALETTE }
 	from "../common-canvas/constants/canvas-constants";
 
 class CommonCanvasToolbar extends React.Component {
@@ -164,9 +165,13 @@ class CommonCanvasToolbar extends React.Component {
 
 		// Add the new togglePalette icon if the palette is enabled.
 		if (this.props.isPaletteEnabled) {
-			const paletteOpenClose = this.props.isPaletteOpen
-				? { action: "paletteClose", label: paletteLabel, enable: true }
-				: { action: "paletteOpen", label: paletteLabel, enable: true };
+			// Applications may need to detect these legacy classes to detect which action
+			// is to be performed. So add them as additional classes. Also, jest tests require them.
+			const className = this.props.isPaletteOpen ? "paletteClose-action" : "paletteOpen-action";
+
+			const paletteOpenClose =
+				{ action: TOOLBAR_TOGGLE_PALETTE, label: paletteLabel, enable: true,
+					isSelected: this.props.isPaletteOpen, className };
 
 			const paletteTools = [
 				paletteOpenClose,
@@ -218,6 +223,7 @@ class CommonCanvasToolbar extends React.Component {
 
 		if (typeof toolbarConfig !== "undefined") {
 			const editingAllowed = this.props.enableEditingActions;
+			this.applyToolState("multiUndo", toolbarConfig, editingAllowed && this.props.canMultiUndo);
 			this.applyToolState("undo", toolbarConfig, editingAllowed && this.props.canUndo);
 			this.applyToolState("redo", toolbarConfig, editingAllowed && this.props.canRedo);
 			this.applyToolState("cut", toolbarConfig, editingAllowed && this.props.canCutCopy);
@@ -321,6 +327,7 @@ CommonCanvasToolbar.propTypes = {
 	notificationConfigKeepOpen: PropTypes.bool,
 	enableInternalObjectModel: PropTypes.bool,
 	enableEditingActions: PropTypes.bool,
+	canMultiUndo: PropTypes.bool,
 	canUndo: PropTypes.bool,
 	canRedo: PropTypes.bool,
 	canCutCopy: PropTypes.bool,
@@ -346,6 +353,7 @@ const mapStateToProps = (state, ownProps) => ({
 	notificationMessages: state.notifications,
 	enableInternalObjectModel: state.canvasconfig.enableInternalObjectModel,
 	enableEditingActions: state.canvasconfig.enableEditingActions,
+	canMultiUndo: ownProps.canvasController.getAllUndoCommands().length > 1,
 	canUndo: ownProps.canvasController.canUndo(),
 	canRedo: ownProps.canvasController.canRedo(),
 	canCutCopy: ownProps.canvasController.canCutCopy(),

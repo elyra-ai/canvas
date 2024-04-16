@@ -179,6 +179,9 @@ class Toolbar extends React.Component {
 		if (!subAreaOpenRef) {
 			subAreaOpenRef = this.rightItemRefs.find((ref) => ref.current.isSubAreaDisplayed());
 		}
+		if (!subAreaOpenRef) {
+			subAreaOpenRef = this.overflowItemRefs.find((ref) => ref.current.isSubAreaDisplayed());
+		}
 		return subAreaOpenRef;
 	}
 
@@ -342,7 +345,7 @@ class Toolbar extends React.Component {
 		const ref = this.findFirstRightItemRefNotOnTopRow();
 
 		const index = ref === null
-			? this.rightBar.length - 1
+			? this.rightBar.length
 			: this.rightBar.findIndex((ri) => ri.action === this.getRefAction(ref));
 
 		return index;
@@ -502,7 +505,7 @@ class Toolbar extends React.Component {
 
 	closeOverflowMenuOnRef(ref) {
 		if (ref.current.state.showExtendedMenu) {
-			ref.current.closeSubMenu();
+			ref.current.closeSubArea();
 		}
 	}
 

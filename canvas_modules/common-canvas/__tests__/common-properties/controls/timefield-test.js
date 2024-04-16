@@ -194,7 +194,7 @@ describe("error messages renders correctly for timefield controls", () => {
 		};
 		const actual = controller.getErrorMessage({ name: "time_hms" });
 		expect(timefieldErrorMessages).to.eql(actual);
-		let messageWrapper = timeWrapper.find("div.bx--form-requirement");
+		let messageWrapper = timeWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// // Now simulate entering a valid time with the correct format.
@@ -202,7 +202,7 @@ describe("error messages renders correctly for timefield controls", () => {
 
 		// Ensure the error message is no longer displayed.
 		timeWrapper = wrapper.find("div[data-id='properties-time_hms']");
-		messageWrapper = timeWrapper.find("div.bx--form-requirement");
+		messageWrapper = timeWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -225,7 +225,7 @@ describe("error messages renders correctly for timefield controls", () => {
 		const actual = controller.getErrorMessage({ name: "time_hms" });
 
 		expect(timefieldErrorMessages).to.eql(actual);
-		let messageWrapper = timeWrapper.find("div.bx--form-requirement");
+		let messageWrapper = timeWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid time with the correct format.
@@ -233,7 +233,7 @@ describe("error messages renders correctly for timefield controls", () => {
 
 		// Ensure the error message is no longer displayed.
 		timeWrapper = wrapper.find("div[data-id='properties-time_hms']");
-		messageWrapper = timeWrapper.find("div.bx--form-requirement");
+		messageWrapper = timeWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -245,7 +245,7 @@ describe("error messages renders correctly for timefield controls", () => {
 
 		// Ensure an error message is not displayed.
 		timeWrapper = wrapper.find("div[data-id='properties-time_hms_non_req']");
-		const messageWrapper = timeWrapper.find("div.bx--form-requirement");
+		const messageWrapper = timeWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 

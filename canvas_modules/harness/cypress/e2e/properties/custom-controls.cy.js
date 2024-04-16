@@ -25,7 +25,7 @@ describe("Test of custom panels", function() {
 		// TODO: this next click is a workaround, the next click on the toggle won't trigger
 		// an onClick unless elsewhere on the panel is clicked first. remove when fixed
 		cy.get(".harness-custom-control-custom-toggle").first()
-			.find(".bx--form-item")
+			.find(".cds--form-item")
 			.click();
 		cy.get(".harness-custom-control-custom-toggle label").first()
 			.click();
@@ -35,7 +35,7 @@ describe("Test of custom panels", function() {
 		cy.openSubPanel("Configure Slider");
 		verifySliderDropDown(6);
 		// move slider to be above 60
-		cy.get(".harness-custom-control-slider .bx--slider__thumb")
+		cy.get(".harness-custom-control-slider .cds--slider__thumb")
 			.trigger("mousedown")
 			.trigger("mousemove", { clientX: 900 })
 			.trigger("mouseup");

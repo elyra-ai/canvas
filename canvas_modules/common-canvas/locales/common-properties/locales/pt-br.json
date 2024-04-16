@@ -106,5 +106,8 @@
   "virtualizedTable.row.checkbox.label": "Selecionar linha {row_index} a partir de {table_label}",
   "properties.empty.table.text": "Para iniciar, clique em \"{button_label}\"",
   "label.indicator.required": "(necessário)",
-  "label.indicator.optional": "(opcional)"
+  "label.indicator.optional": "(opcional)",
+  "slider.numberInput.label": "Entrada do número do controle deslizante",
+  "editorForm.tabList.label": "Guias principais",
+  "subTabs.tabList.label": "Lista de guias"
 }

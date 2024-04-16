@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
 import ConfigUtils from "./config-utils.js";
 import LocalStorage from "../common-canvas/local-storage.js";
+import { prepareNodes, setNodeAttributesWithLayout, setCommentAttributesWithLayout } from "./object-model-utils.js";
 import APIPipeline from "./api-pipeline.js";
 import CanvasStore from "./redux/canvas-store.js";
 import Logger from "../logging/canvas-logger.js";
@@ -35,7 +36,6 @@ import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from ".
 import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
 	CLONE_COMMENT, CLONE_COMMENT_LINK, CLONE_NODE, CLONE_NODE_LINK, CLONE_PIPELINE, SUPER_NODE,
 	HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM, HIGHLIGHT_DOWNSTREAM,
-	SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	SAVE_ZOOM_LOCAL_STORAGE, SAVE_ZOOM_PIPELINE_FLOW
 } from "../common-canvas/constants/canvas-constants.js";
 
@@ -85,7 +85,8 @@ export default class ObjectModel {
 	setLayoutHandler(layoutHandler) {
 		if (layoutHandler !== this.layoutHandler) {
 			this.layoutHandler = layoutHandler;
-			const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, this.getNodeLayout(), this.getCanvasLayout());
+			const newPipelines =
+				prepareNodes(this.getCanvasInfo().pipelines, this.getNodeLayout(), this.getCanvasLayout(), this.layoutHandler);
 			this.store.dispatch({ type: "REPLACE_PIPELINES", data: { pipelines: newPipelines } });
 		}
 	}
@@ -247,7 +248,7 @@ export default class ObjectModel {
 				: PipelineInHandler.convertPipelinesToCanvasInfoPipelines(pd, this.getCanvasLayout());
 			// Need to make sure pipeline IDs are unique.
 			newPd = this.cloneSupernodeContents(supernode, newPd);
-			newPd = this.prepareNodes(newPd, this.getNodeLayout(), this.getCanvasLayout(), supernode);
+			newPd = prepareNodes(newPd, this.getNodeLayout(), this.getCanvasLayout(), this.layoutHandler, supernode);
 
 		} else {
 			const newPipeline = this.createEmptyPipeline();
@@ -443,7 +444,7 @@ export default class ObjectModel {
 	// true if a pipeline flow was loaded and false if not.
 	ensurePipelineIsLoaded(data) {
 		const snPipelineUrl = this.getSupernodePipelineUrl(data.targetObject);
-		const snPipelineId = this.getSupernodePipelineId(data.targetObject);
+		const snPipelineId = CanvasUtils.getSupernodePipelineId(data.targetObject);
 
 		// If the pipeline isn't loaded check to make sure the external pipeline
 		// flow provided contains the target pipeline and, if so, load the pipeline
@@ -488,7 +489,7 @@ export default class ObjectModel {
 		let supernodes = [];
 		pipeline.nodes.forEach((n) => {
 			if (n.type === SUPER_NODE && n.is_expanded) {
-				const subFlowPipeline = pipelines.find((p) => p.id === this.getSupernodePipelineId(n));
+				const subFlowPipeline = pipelines.find((p) => p.id === CanvasUtils.getSupernodePipelineId(n));
 
 				// If this expanded supernode refers to an external pipeline that is
 				// not yet loaded then save to our output.
@@ -619,7 +620,6 @@ export default class ObjectModel {
 			if (this.store.getCanvasConfig().schemaValidation) {
 				validatePipelineFlowAgainstSchema(pipelineFlow);
 			}
-
 		}
 
 		return pipelineFlow;
@@ -639,227 +639,22 @@ export default class ObjectModel {
 	preparePipelineFlow(newPipelineFlow, supernode) {
 		const pipelineFlow = this.validateAndUpgrade(newPipelineFlow);
 		const canvasInfo = PipelineInHandler.convertPipelineFlowToCanvasInfo(pipelineFlow, this.getCanvasLayout());
-		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout(), supernode);
+		canvasInfo.pipelines =
+			prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout(), this.layoutHandler, supernode);
 		return canvasInfo;
-	}
-
-	// Does all preparation needed for nodes before they are saved into Redux.
-	prepareNodes(pipelines, nodeLayout, canvasLayout, supernode) {
-		const newPipelines = this.setSupernodesBindingStatus(pipelines, supernode);
-		return newPipelines.map((pipeline) => this.setPipelineObjectAttributes(pipeline, nodeLayout, canvasLayout));
-	}
-
-	// Loops through all the pipelines and adds the appropriate supernode binding
-	// attribute to any binding nodes that are referenced by the ports of a supernode.
-	setSupernodesBindingStatus(pipelines, supernode) {
-		// First, clear all supernode binding statuses from nodes
-		pipelines.forEach((pipeline) => {
-			if (pipeline.nodes) {
-				pipeline.nodes.forEach((node) => {
-					delete node.isSupernodeInputBinding;
-					delete node.isSupernodeOutputBinding;
-				});
-			}
-		});
-
-		if (supernode) {
-			this.setSupernodesBindingStatusForNode(supernode, pipelines);
-		}
-
-		// Set the supernode binding statuses as appropriate.
-		pipelines.forEach((pipeline) => {
-			if (pipeline.nodes) {
-				CanvasUtils.filterSupernodes(pipeline.nodes).forEach((node) => {
-					this.setSupernodesBindingStatusForNode(node, pipelines);
-				});
-			}
-		});
-		return pipelines;
-	}
-
-	setSupernodesBindingStatusForNode(node, pipelines) {
-		const snPipelineId = this.getSupernodePipelineId(node);
-		if (snPipelineId) {
-			if (node.inputs) {
-				node.inputs.forEach((input) => {
-					if (input.subflow_node_ref) {
-						const subNode = this.findNode(input.subflow_node_ref, snPipelineId, pipelines);
-						if (subNode) {
-							subNode.isSupernodeInputBinding = true;
-						}
-					}
-				});
-			}
-			if (node.outputs) {
-				node.outputs.forEach((output) => {
-					if (output.subflow_node_ref) {
-						const subNode = this.findNode(output.subflow_node_ref, snPipelineId, pipelines);
-						if (subNode) {
-							subNode.isSupernodeOutputBinding = true;
-						}
-					}
-				});
-			}
-		}
-	}
-
-	setPipelineObjectAttributes(inPipeline, nodeLayout, canvasLayout) {
-		const pipeline = Object.assign({}, inPipeline);
-		if (pipeline.nodes) {
-			pipeline.nodes = pipeline.nodes.map((node) => this.setNodeAttributesWithLayout(node, nodeLayout, canvasLayout));
-		} else {
-			pipeline.nodes = [];
-		}
-
-		if (pipeline.comments) {
-			pipeline.comments = pipeline.comments.map((comment) => this.setCommentAttributesWithLayout(comment, canvasLayout));
-		} else {
-			pipeline.comments = [];
-		}
-
-		return pipeline;
 	}
 
 	// Returns a copy of the node passed in with additional fields which contain
 	// layout, dimension and supernode binding status info. This uses the redux
 	// layout information.
 	setNodeAttributes(node) {
-		return this.setNodeAttributesWithLayout(node, this.getNodeLayout(), this.getCanvasLayout());
+		return setNodeAttributesWithLayout(node, this.getNodeLayout(), this.getCanvasLayout(), this.layoutHandler);
 	}
 
 	// Returns a copy of the comment passed in with position adjusted for
 	// snap to grid, if necessary. This is called from the api-pipeline class.
 	setCommentAttributes(comment) {
-		return this.setCommentAttributesWithLayout(comment, this.getCanvasLayout());
-	}
-
-	// Returns a copy of the node passed using the layout info provided. The
-	// returned node is augmented with additional fields which contain
-	// layout, dimension and supernode binding status info.
-	setNodeAttributesWithLayout(node, nodeLayout, canvasLayout) {
-		let newNode = Object.assign({}, node);
-		newNode = this.setNodeLayoutAttributes(newNode, nodeLayout);
-		if (canvasLayout.linkDirection === "TopBottom" ||
-				canvasLayout.linkDirection === "BottomTop") {
-			newNode = this.setNodeDimensionAttributesVertical(newNode, canvasLayout);
-		} else {
-			newNode = this.setNodeDimensionAttributesLeftRight(newNode, canvasLayout);
-		}
-		if (canvasLayout.snapToGridType === SNAP_TO_GRID_DURING ||
-				canvasLayout.snapToGridType === SNAP_TO_GRID_AFTER) {
-			newNode.x_pos = CanvasUtils.snapToGrid(newNode.x_pos, canvasLayout.snapToGridXPx);
-			newNode.y_pos = CanvasUtils.snapToGrid(newNode.y_pos, canvasLayout.snapToGridYPx);
-		}
-		return newNode;
-	}
-
-	// Returns a copy of the comment passed using the layout info provided. The
-	// returned comment has its position adjusted for snap to grid, if necessary.
-	setCommentAttributesWithLayout(comment, canvasLayout) {
-		const newComment = Object.assign({}, comment);
-		if (canvasLayout.snapToGridType === SNAP_TO_GRID_DURING ||
-				canvasLayout.snapToGridType === SNAP_TO_GRID_AFTER) {
-			newComment.x_pos = CanvasUtils.snapToGrid(newComment.x_pos, canvasLayout.snapToGridXPx);
-			newComment.y_pos = CanvasUtils.snapToGrid(newComment.y_pos, canvasLayout.snapToGridYPx);
-		}
-		return newComment;
-	}
-
-	// Returns the node passed in with additional fields which contains
-	// the layout info.
-	setNodeLayoutAttributes(node, nodeLayout) {
-		node.layout = nodeLayout;
-
-		// If using the layoutHandler we must make a copy of the layout for each node
-		// so the original layout info doesn't get overwritten.
-		if (this.layoutHandler) {
-			const customLayout = this.layoutHandler(node);
-			if (customLayout && !isEmpty(customLayout)) {
-				const decs = CanvasUtils.getCombinedDecorations(node.layout.decorations, customLayout.decorations);
-				node.layout = Object.assign({}, node.layout, customLayout, { decorations: decs });
-			}
-		}
-		return node;
-	}
-
-	// Returns the node passed in with additional fields which contains
-	// the height occupied by the input ports and output ports, based on the
-	// layout info passed in, as well as the node width.
-	setNodeDimensionAttributesLeftRight(node, canvasLayout) {
-		node.inputPortsHeight = node.inputs
-			? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-			: 0;
-
-		node.outputPortsHeight = node.outputs
-			? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-			: 0;
-
-		if (node.layout.autoSizeNode) {
-			node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);
-
-		} else {
-			node.height = node.layout.defaultNodeHeight;
-		}
-
-		node.width = node.layout.defaultNodeWidth;
-
-		if (node.type === SUPER_NODE && node.is_expanded) {
-			node.height += canvasLayout.supernodeTopAreaHeight + canvasLayout.supernodeSVGAreaPadding;
-			// If an expanded height is provided make sure it is at least as big
-			// as the node height.
-			if (node.expanded_height) {
-				node.expanded_height = Math.max(node.expanded_height, node.height);
-			}
-
-			node.width = CanvasUtils.getSupernodeExpandedWidth(node, canvasLayout);
-			node.height = CanvasUtils.getSupernodeExpandedHeight(node, canvasLayout);
-
-		} else if (node.isResized) {
-			node.height = node.resizeHeight ? node.resizeHeight : node.height;
-			node.width = node.resizeWidth ? node.resizeWidth : node.width;
-		}
-
-		return node;
-	}
-
-	// Returns the node passed in with additional fields which contains
-	// the width occupied by the input ports and output ports, based on the
-	// layout info passed in, as well as the node height.
-	setNodeDimensionAttributesVertical(node, canvasLayout) {
-		node.inputPortsWidth = node.inputs
-			? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-			: 0;
-
-		node.outputPortsWidth = node.outputs
-			? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-			: 0;
-
-		node.height = node.layout.defaultNodeHeight;
-
-		if (node.layout.autoSizeNode) {
-			node.width = Math.max(node.inputPortsWidth, node.outputPortsWidth, node.layout.defaultNodeWidth);
-
-		} else {
-			node.width = node.layout.defaultNodeWidth;
-		}
-
-		if (node.type === SUPER_NODE && node.is_expanded) {
-			node.width += (2 * canvasLayout.supernodeSVGAreaPadding);
-			// If an expanded width is provided make sure it is at least as big
-			// as the node width.
-			if (node.expanded_width) {
-				node.expanded_width = Math.max(node.expanded_width, node.width);
-			}
-
-			node.width = CanvasUtils.getSupernodeExpandedWidth(node, canvasLayout);
-			node.height = CanvasUtils.getSupernodeExpandedHeight(node, canvasLayout);
-
-		} else if (node.isResized) {
-			node.height = node.resizeHeight ? node.resizeHeight : node.height;
-			node.width = node.resizeWidth ? node.resizeWidth : node.width;
-		}
-
-		return node;
+		return setCommentAttributesWithLayout(comment, this.getCanvasLayout());
 	}
 
 	validateAndUpgrade(newPipelineFlow) {
@@ -903,7 +698,7 @@ export default class ObjectModel {
 		let pipelineIds = [];
 		this.getAPIPipeline(pipelineId).getSupernodes()
 			.forEach((supernode) => {
-				const snPipelineId = this.getSupernodePipelineId(supernode);
+				const snPipelineId = CanvasUtils.getSupernodePipelineId(supernode);
 				if (snPipelineId) {
 					pipelineIds.push(snPipelineId);
 					pipelineIds = pipelineIds.concat(this.getDescendantPipelineIds(snPipelineId));
@@ -922,7 +717,7 @@ export default class ObjectModel {
 
 	getDescendantPipelinesForSupernode(supernode) {
 		let pipelines = [];
-		const snPipelineId = this.getSupernodePipelineId(supernode);
+		const snPipelineId = CanvasUtils.getSupernodePipelineId(supernode);
 		if (snPipelineId) {
 			const subPipeline = this.getCanvasInfoPipeline(snPipelineId);
 			if (subPipeline) {
@@ -1023,7 +818,7 @@ export default class ObjectModel {
 	getDescendantSupernodeInfosForSupernode(supernode, parentPipelineId, ignoreInfo) {
 		let supernodeInfos = [];
 		if (this.continueNavigation(supernode, parentPipelineId, ignoreInfo)) {
-			const pipelineId = this.getSupernodePipelineId(supernode);
+			const pipelineId = CanvasUtils.getSupernodePipelineId(supernode);
 			const pipeline = this.getCanvasInfoPipeline(pipelineId);
 			// An external pipeline might not be loaded if the supernode is collapsed.
 			if (pipeline) {
@@ -1084,7 +879,7 @@ export default class ObjectModel {
 		let ancestors = [];
 		this.getAPIPipeline(upperPipelineId).getSupernodes()
 			.forEach((supernode) => {
-				const snPipelineId = this.getSupernodePipelineId(supernode);
+				const snPipelineId = CanvasUtils.getSupernodePipelineId(supernode);
 				if (snPipelineId) {
 					if (this.isAncestorOfPipeline(snPipelineId, lowerPipelineId) || snPipelineId === lowerPipelineId) {
 						ancestors.push({ pipelineId: snPipelineId, label: supernode.label, supernodeId: supernode.id, parentPipelineId: upperPipelineId });
@@ -1098,14 +893,6 @@ export default class ObjectModel {
 	// Returns true if ancestorId is an ancestor pipeline of pipelineId.
 	isAncestorOfPipeline(ancestorId, pipelineId) {
 		return this.getDescendantPipelineIds(ancestorId).includes(pipelineId);
-	}
-
-	getSupernodePipelineId(supernode) {
-		if (supernode.type === SUPER_NODE &&
-				has(supernode, "subflow_ref.pipeline_id_ref")) {
-			return supernode.subflow_ref.pipeline_id_ref;
-		}
-		return null;
 	}
 
 	getSupernodePipelineUrl(supernode) {
@@ -1122,7 +909,7 @@ export default class ObjectModel {
 		let supernodeRef;
 		if (pipelineId === this.getPrimaryPipelineId()) {
 			const supernodes = this.getAPIPipeline(pipelineId).getSupernodes();
-			supernodeRef = supernodes.find((supernode) => this.getSupernodePipelineId(supernode) === pipelineId).id;
+			supernodeRef = supernodes.find((supernode) => CanvasUtils.getSupernodePipelineId(supernode) === pipelineId).id;
 		} else {
 			const ancestorPipelines = this.getAncestorPipelineIds(pipelineId);
 			const supernodePipelineObj = ancestorPipelines.find((pipelineObj) => pipelineObj.pipelineId === pipelineId && has(pipelineObj, "supernodeId"));
@@ -1133,7 +920,8 @@ export default class ObjectModel {
 
 	setCanvasInfo(inCanvasInfo) {
 		const canvasInfo = Object.assign({}, inCanvasInfo);
-		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout());
+		canvasInfo.pipelines =
+			prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout(), this.layoutHandler);
 		this.store.dispatch({ type: "SET_CANVAS_INFO", canvasInfo: canvasInfo, canvasInfoIdChanged: this.hasCanvasInfoIdChanged(canvasInfo) });
 	}
 
@@ -1216,7 +1004,7 @@ export default class ObjectModel {
 	// descendants of the supernode passed in.
 	cloneSupernodeContents(node, inPipelines) {
 		let subPipelines = [];
-		const snPipelineId = this.getSupernodePipelineId(node);
+		const snPipelineId = CanvasUtils.getSupernodePipelineId(node);
 		if (snPipelineId) {
 			const targetPipeline = inPipelines.find((p) => p.id === snPipelineId);
 			// A target pipeline may not exist if the supernode is external. In which
@@ -1364,8 +1152,8 @@ export default class ObjectModel {
 		const newConfig = ConfigUtils.mergeCanvasConfigs(oldConfig, config);
 
 		if (!ConfigUtils.compareCanvasConfigs(oldConfig, newConfig)) {
-			const newPipelines = this.prepareNodes(
-				this.getCanvasInfo().pipelines, newConfig.enableNodeLayout, newConfig.enableCanvasLayout);
+			const newPipelines = prepareNodes(
+				this.getCanvasInfo().pipelines, newConfig.enableNodeLayout, newConfig.enableCanvasLayout, this.layoutHandler);
 
 			this.store.dispatch({ type: "SET_CANVAS_CONFIG_INFO", data: {
 				canvasConfig: newConfig,
@@ -1376,6 +1164,14 @@ export default class ObjectModel {
 
 	setToolbarConfig(config) {
 		this.store.dispatch({ type: "SET_TOOLBAR_CONFIG", data: { toolbarConfig: config } });
+	}
+
+	// The toolbar.jsx React object retrieves some display attributes from the
+	// canvas-controller, not from Redux. This method will refresh the toolbar
+	// config which causes mapStateToProps to run in toolbar.jsx and that
+	// will cause the toolbar to retrieve those attributes from canvas-contoller.
+	refreshToolbar() {
+		this.store.dispatch({ type: "REFRESH_TOOLBAR" });
 	}
 
 	setNotificationPanelConfig(config) {
@@ -1964,14 +1760,16 @@ export default class ObjectModel {
 
 	setZoom(zoom, pipelineId) {
 		const enableSaveZoom = this.getCanvasConfig().enableSaveZoom;
-		// This will save zoom to the pipeline if enableSaveZoom is
-		// SAVE_ZOOM_PIPELINE_FLOW and also will cause the toolbar to be updated
-		// so zoom icons can be enabled/disabled.
-		this.store.dispatch({ type: "SET_ZOOM", data: { zoom: zoom, enableSaveZoom }, pipelineId });
 
-		if (enableSaveZoom === SAVE_ZOOM_LOCAL_STORAGE) {
+		if (enableSaveZoom === SAVE_ZOOM_PIPELINE_FLOW) {
+			this.store.dispatch({ type: "SET_ZOOM", data: { zoom: zoom, enableSaveZoom }, pipelineId });
+
+		} else if (enableSaveZoom === SAVE_ZOOM_LOCAL_STORAGE) {
 			this.setSavedZoomLocal(zoom, pipelineId);
 		}
+		// This will cause the toolbar to be updated so zoom icons can
+		// be enabled/disabled.
+		this.refreshToolbar();
 	}
 
 	// Returns the saved zoom based on the enableSaveZoom config parameter.
@@ -2106,7 +1904,7 @@ export default class ObjectModel {
 	getSupernodeNodeIds(nodeId, pipelineId, highlightNodeIds, highlightLinkIds) {
 		const node = this.getAPIPipeline(pipelineId).getNode(nodeId);
 		if (node.type === SUPER_NODE) {
-			const snPipelineId = this.getSupernodePipelineId(node);
+			const snPipelineId = CanvasUtils.getSupernodePipelineId(node);
 
 			highlightNodeIds[snPipelineId] = highlightNodeIds[snPipelineId] || [];
 			highlightLinkIds[snPipelineId] = highlightLinkIds[snPipelineId] || [];
@@ -2145,7 +1943,7 @@ export default class ObjectModel {
 
 					const srcNodeOutputPort = this.getSupernodeOutputPortForLink(srcNode, link);
 					if (srcNodeOutputPort) {
-						const snPipelineId = this.getSupernodePipelineId(srcNode);
+						const snPipelineId = CanvasUtils.getSupernodePipelineId(srcNode);
 						const bindingNode = this.getAPIPipeline(snPipelineId).getNode(srcNodeOutputPort.subflow_node_ref);
 
 						if (bindingNode) {
@@ -2184,7 +1982,7 @@ export default class ObjectModel {
 								const upstreamSupernodeOutputPort = this.getSupernodeOutputPortForLink(upstreamSupernode, supernodeLink);
 								if (upstreamSupernodeOutputPort) {
 									const bindingNodeId = upstreamSupernodeOutputPort.subflow_node_ref;
-									this.getUpstreamObjIdsFrom(bindingNodeId, this.getSupernodePipelineId(upstreamSupernode), highlightNodeIds, highlightLinkIds);
+									this.getUpstreamObjIdsFrom(bindingNodeId, CanvasUtils.getSupernodePipelineId(upstreamSupernode), highlightNodeIds, highlightLinkIds);
 								}
 							} else {
 								this.getUpstreamObjIdsFrom(supernodeLink.srcNodeId, parentPipelineId, highlightNodeIds, highlightLinkIds);
@@ -2218,7 +2016,7 @@ export default class ObjectModel {
 
 					const trgNodeInputPort = this.getSupernodeInputPortForLink(trgNode, link);
 					if (trgNodeInputPort) {
-						const snPipelineId = this.getSupernodePipelineId(trgNode);
+						const snPipelineId = CanvasUtils.getSupernodePipelineId(trgNode);
 						const bindingNode = this.getAPIPipeline(snPipelineId).getNode(trgNodeInputPort.subflow_node_ref);
 
 						if (bindingNode) {
@@ -2257,7 +2055,7 @@ export default class ObjectModel {
 									const downstreamSupernodeInputPort = this.getSupernodeInputPortForLink(downstreamSupernode, supernodeLink);
 									if (downstreamSupernodeInputPort) {
 										const bindingNodeId = downstreamSupernodeInputPort.subflow_node_ref;
-										this.getDownstreamObjIdsFrom(bindingNodeId, this.getSupernodePipelineId(downstreamSupernode), highlightNodeIds, highlightLinkIds);
+										this.getDownstreamObjIdsFrom(bindingNodeId, CanvasUtils.getSupernodePipelineId(downstreamSupernode), highlightNodeIds, highlightLinkIds);
 									}
 								} else {
 									this.getDownstreamObjIdsFrom(supernodeLink.trgNodeId, parentPipelineId, highlightNodeIds, highlightLinkIds);
@@ -2275,7 +2073,7 @@ export default class ObjectModel {
 	// does not have a reference to one of the node's input ports.
 	getSupernodeInputPortForLink(trgNode, link) {
 		let port = null;
-		if (this.getSupernodePipelineId(trgNode) && link.trgNodePortId) {
+		if (CanvasUtils.getSupernodePipelineId(trgNode) && link.trgNodePortId) {
 			trgNode.inputs.forEach((inputPort) => {
 				if (inputPort.id === link.trgNodePortId) {
 					port = inputPort;
@@ -2291,7 +2089,7 @@ export default class ObjectModel {
 	// does not have a reference to one of the node's output ports.
 	getSupernodeOutputPortForLink(srcNode, link) {
 		let port = null;
-		if (this.getSupernodePipelineId(srcNode) && link.srcNodePortId) {
+		if (CanvasUtils.getSupernodePipelineId(srcNode) && link.srcNodePortId) {
 			srcNode.outputs.forEach((outputPort) => {
 				if (outputPort.id === link.srcNodePortId) {
 					port = outputPort;
@@ -2430,6 +2228,10 @@ export default class ObjectModel {
 	// ---------------------------------------------------------------------------
 	setTooltipDef(tipDef) {
 		this.store.dispatch({ type: "SET_TOOLTIP_DEF", data: { tooltipDef: tipDef } });
+	}
+
+	getTooltip() {
+		return this.store.getTooltip();
 	}
 
 	isTooltipOpen() {

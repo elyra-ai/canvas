@@ -394,7 +394,7 @@ describe("list renders correctly as a nested control", () => {
 		wrapper.unmount();
 	});
 
-	it("should render a `list` control inside a structurelisteditor", () => {
+	it("should render a `list` control inside a structurelisteditor starting with index 0", () => {
 		const propertyId = { name: "complexListStructurelisteditor" };
 		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
 		let table = summaryPanel.find("div[data-id='properties-ci-complexListStructurelisteditor']");
@@ -428,26 +428,26 @@ describe("list renders correctly as a nested control", () => {
 
 		// The table content should increase by 2
 		tableData = renderedController.getPropertyValue(propertyId);
-		let expected = [[1, "Ascending", ["", ""]]];
+		let expected = [[0, "Ascending", ["", ""]]];
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 
 		// edit nested list row index 0
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
 		onPanelList = summaryPanel.find(".properties-onpanel-container")
 			.find("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
-		const textinputs = onPanelList.find(".bx--text-input__field-wrapper");
+		const textinputs = onPanelList.find(".cds--text-input__field-wrapper");
 		expect(textinputs).to.have.length(2);
 		textinputs.at(0).find("input")
 			.simulate("change", { target: { value: "new value list 0" } });
 		tableData = renderedController.getPropertyValue(propertyId);
-		expected = [[1, "Ascending", ["new value list 0", ""]]];
+		expected = [[0, "Ascending", ["new value list 0", ""]]];
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 
 		// edit nested list row index 1
 		textinputs.at(1).find("input")
 			.simulate("change", { target: { value: "new value list 1" } });
 		tableData = renderedController.getPropertyValue(propertyId);
-		expected = [[1, "Ascending", ["new value list 0", "new value list 1"]]];
+		expected = [[0, "Ascending", ["new value list 0", "new value list 1"]]];
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 
 		// deselect the row
@@ -460,7 +460,7 @@ describe("list renders correctly as a nested control", () => {
 		expect(addColumnButton).to.have.length(1);
 		addColumnButton.simulate("click");
 		tableData = renderedController.getPropertyValue(propertyId);
-		expected = [[1, "Ascending", ["new value list 0", "new value list 1"]], [2, "Ascending", []]];
+		expected = [[0, "Ascending", ["new value list 0", "new value list 1"]], [1, "Ascending", []]];
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
@@ -487,11 +487,11 @@ describe("list renders correctly as a nested control", () => {
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
 		onPanelList = summaryPanel.find(".properties-onpanel-container")
 			.find("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
-		const secondTextinputs = onPanelList.find(".bx--text-input__field-wrapper");
+		const secondTextinputs = onPanelList.find(".cds--text-input__field-wrapper");
 		expect(secondTextinputs).to.have.length(1);
 		secondTextinputs.find("input").simulate("change", { target: { value: "new value list 10" } });
 		tableData = renderedController.getPropertyValue(propertyId);
-		expected = [[1, "Ascending", ["new value list 0", "new value list 1"]], [2, "Ascending", ["new value list 10"]]];
+		expected = [[0, "Ascending", ["new value list 0", "new value list 1"]], [1, "Ascending", ["new value list 10"]]];
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 	});
 
@@ -504,7 +504,7 @@ describe("list renders correctly as a nested control", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
 
 		// click on subpanel edit
-		const editButton = table.find(".properties-subpanel-button").at(0);
+		const editButton = table.find("button.properties-subpanel-button").at(0);
 		editButton.simulate("click");
 
 		// subPanel table
@@ -528,7 +528,7 @@ describe("list renders correctly as a nested control", () => {
 
 		// edit nested list row index 0
 		subPanelTable = wrapper.find("div[data-id='properties-complexListStructuretables']");
-		let textinputs = subPanelTable.find(".bx--text-input__field-wrapper");
+		let textinputs = subPanelTable.find(".cds--text-input__field-wrapper");
 		expect(textinputs).to.have.length(2);
 		textinputs.at(0).find("input")
 			.simulate("change", { target: { value: "new value list 0" } });
@@ -564,7 +564,7 @@ describe("list renders correctly as a nested control", () => {
 
 		// edit nested list row index 0
 		subPanelTable = wrapper.find("div[data-id='properties-complexListStructuretables']").at(1);
-		textinputs = subPanelTable.find(".bx--text-input__field-wrapper");
+		textinputs = subPanelTable.find(".cds--text-input__field-wrapper");
 		expect(textinputs).to.have.length(1);
 		textinputs.find("input").simulate("change", { target: { value: "new value list 10" } });
 		tableData = renderedController.getPropertyValue(propertyId);

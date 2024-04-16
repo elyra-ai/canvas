@@ -45,18 +45,15 @@ describe("custom control renders correctly", () => {
 	});
 
 	it("updating custom controls should work correctly", () => {
-		let tableToggle = wrapper.find("input#structuretable_1_1");
-		tableToggle.getDOMNode().checked = false;
-		tableToggle.simulate("change");
-		const customToggle = wrapper.find("input#custom_toggle");
-		customToggle.getDOMNode().checked = false;
-		customToggle.simulate("change");
+		let tableToggle = wrapper.find("button#structuretable_1_1");
+		tableToggle.simulate("click");
+		const customToggle = wrapper.find("button#custom_toggle");
+		customToggle.simulate("click");
 		expect(controller.getPropertyValue({ name: "custom_toggle" })).to.equal(false);
 		expect(controller.getPropertyValue({ name: "structuretable", row: 1, col: 1 })).to.equal(false);
 		expect(controller.getPropertyValue({ name: "structuretable", row: 0, col: 1 })).to.equal(false);
-		tableToggle = wrapper.find("input#structuretable_0_1");
-		tableToggle.getDOMNode().checked = true;
-		tableToggle.simulate("change");
+		tableToggle = wrapper.find("button#structuretable_0_1");
+		tableToggle.simulate("click");
 		expect(controller.getPropertyValue({ name: "structuretable", row: 0, col: 1 })).to.equal(true);
 	});
 
@@ -78,28 +75,26 @@ describe("custom control renders correctly", () => {
 		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click"); // open dropdown
 		dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
-		let dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		let dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(1); // should have 1 item. Before custom toggle changes
 
 		const customToggle = wrapper.find("div[data-id='properties-ci-custom_toggle']");
 		expect(customToggle).to.have.length(1);
-		const toggle = customToggle.find("input");
-		toggle.getDOMNode().checked = true;
-		toggle.simulate("change");
+		const toggle = customToggle.find("button");
+		toggle.simulate("click");
 		dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
 
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
-		dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		expect(dropdownList).to.be.length(3); // should have 3 items. Custom toggle control updates the values
+
+		toggle.simulate("click");
+
+		// select the first item
+		dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
+		dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(2); // should have 2 items. Custom toggle control updates the values
-
-		toggle.getDOMNode().checked = false;
-		toggle.simulate("change");
-
-		// select the first item
-		dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
-		dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
-		expect(dropdownList).to.be.length(3); // should have 2 items. Custom toggle control updates the values
 	});
 });
 
