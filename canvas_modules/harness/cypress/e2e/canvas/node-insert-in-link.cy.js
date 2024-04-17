@@ -88,7 +88,10 @@ describe("Test dropping a node on a link with enableInsertNodeDroppedOnLink opti
 		// Now we do the same test expect we drag the node
 		// from within the canvas UI not palette
 		cy.verifyNumberOfPortDataLinks(4);
-		cy.dragNodeToPosition("Select", 490, 200);
+		cy.dragNodeToPosition("Select", 490, 340);
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Select").click();
 		cy.moveNodeToPosition("Select", 490, 240);
 		// There should now be one extra link because, on inserting the node, we
 		// removed the old link and added two new ones.
@@ -100,8 +103,11 @@ describe("Test dropping a node on a link with enableInsertNodeDroppedOnLink opti
 		// This will be the node we move to the link.
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Record Ops");
-		cy.dragNodeToPosition("Sort", 700, 300);
+		cy.dragNodeToPosition("Sort", 500, 600);
 
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Sort").click();
 		// Move the Select node from the canvas onto the link between the
 		// Execution node and the Supernode.
 		cy.moveNodeToPosition("Sort", 400, 200);
@@ -122,7 +128,6 @@ describe("Test dropping a node on a link with enableInsertNodeDroppedOnLink opti
 
 		// Make sure undo works. We are back to four links; the two new links are
 		// removed and the old link that was removed is restored.
-		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfPortDataLinks(4);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
@@ -199,10 +204,12 @@ describe("Test dropping a node, with existing links, on the canvas onto a link w
 	});
 
 	it("Drag node with output link from stream on the canvas onto a link - should 'work'", function() {
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Sample").click();
 		// Move the Sample node from the canvas onto the link between the
 		// Execution node and the Supernode.
 		// On the first Sort node moves and on the second move Sample node will move
-		cy.moveNodeToPosition("Sample", 400, 200);
 		cy.moveNodeToPosition("Sample", 400, 200);
 
 		// The Sample node should be inserted in the link because, although it has

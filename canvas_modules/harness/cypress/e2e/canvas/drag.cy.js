@@ -65,10 +65,11 @@ describe("Test to see if regular selection and drag behavior works " +
 		cy.verifyCommentIsSelected("The 4 different node types");
 		cy.clickToolbarUndo();
 
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Super node").click();
 		// Try dragging a node that is not selected -
 		// this should select the node being dragged and deselect the three selections
-		// TODO -- Fix when autoselect is available.
-		cy.getNodeWithLabel("Super node").click();
 		cy.moveNodeToPosition("Super node", 300, 350);
 
 		// Verify only dragged node is selected, all other selections are cleared
@@ -82,17 +83,18 @@ describe("Test to see if regular selection and drag behavior works " +
 		cy.verifyNodeTransform("Super node", 300, 350);
 		cy.clickToolbarUndo();
 
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getCommentWithText(
+			"This canvas shows the 4 different node types and three link types: node links, " +
+			"association links and comments links."
+		).click();
+		cy.getCommentWithText(
+			"This canvas shows the 4 different node types and three link types: node links, " +
+			"association links and comments links."
+		).click();
 		// Try dragging a comment that is not selected -
 		// this should select the comment being dragged and deselect the three selections
-		// TODO -- Fix when autoselect is available.
-		cy.getCommentWithText(
-			"This canvas shows the 4 different node types and three link types: node links, " +
-			"association links and comments links."
-		).click();
-		cy.getCommentWithText(
-			"This canvas shows the 4 different node types and three link types: node links, " +
-			"association links and comments links."
-		).click();
 		cy.moveCommentToPosition(
 			"This canvas shows the 4 different node types and three link types: node links, " +
 			"association links and comments links.", 300, 350

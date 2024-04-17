@@ -35,12 +35,15 @@ describe("Test adding resizing nodes", function() {
 		cy.verifyNumberOfPortDataLinks(8);
 
 		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Node 2").click();
 		cy.moveNodeToPosition("Node 2", 700, 420);
 		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Node 3").click();
 		cy.moveNodeToPosition("Node 3", 200, 100);
 		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Node 4").click();
 		cy.moveNodeToPosition("Node 4", 200, 400);
 

@@ -565,7 +565,7 @@ describe("Test undo/redo property values and title in common-properties", functi
 		cy.saveFlyout();
 
 		//  Verification steps
-		// TODO -Cannoy berify an invalid entered value. See above.
+		// TODO - Cannot verify an invalid entered value.
 		// verifySamplingRatioParameterValueInConsole("samplingRatio", null);
 		// verifyErrorMessageForSamplingRatioParameterInConsole("error", "samplingRatio", "Select a sampling ratio");
 
