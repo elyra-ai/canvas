@@ -89,10 +89,6 @@ describe("Test to see if regular selection and drag behavior works " +
 			"This canvas shows the 4 different node types and three link types: node links, " +
 			"association links and comments links."
 		).click();
-		cy.getCommentWithText(
-			"This canvas shows the 4 different node types and three link types: node links, " +
-			"association links and comments links."
-		).click();
 		// Try dragging a comment that is not selected -
 		// this should select the comment being dragged and deselect the three selections
 		cy.moveCommentToPosition(

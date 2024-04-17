@@ -117,6 +117,8 @@ describe("Test resized comment snaps to grid", function() {
 		// during snap to grid may also move the position of the comment.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "During" });
 		cy.wait(10);
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getCommentWithText("The 4 different node types").click();
 		cy.moveCommentToPosition("The 4 different node types", 100, 300);
 

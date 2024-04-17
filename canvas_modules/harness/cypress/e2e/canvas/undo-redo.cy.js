@@ -57,6 +57,7 @@ describe("Test basic undo/redo operations", function() {
 		cy.clickToolbarAddComment();
 
 		// TODO - Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getCommentWithText("").click("topLeft");
 
 		cy.moveCommentToPosition("", 350, 250);
@@ -104,6 +105,7 @@ describe("Test basic undo/redo operations", function() {
 
 		// Move node on canvas
 		// TODO - Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Var. File").click();
 
 		cy.moveNodeToPosition("Var. File", 50, 50);
@@ -122,6 +124,7 @@ describe("Test basic undo/redo operations", function() {
 
 		// Move comment on canvas
 		// TODO - Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getCommentWithText("This comment box should be edited.").click();
 
 		cy.moveCommentToPosition("This comment box should be edited.", 100, 100);
