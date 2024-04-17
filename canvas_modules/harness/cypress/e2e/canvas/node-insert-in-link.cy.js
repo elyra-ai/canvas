@@ -209,7 +209,6 @@ describe("Test dropping a node, with existing links, on the canvas onto a link w
 		cy.getNodeWithLabel("Sample").click();
 		// Move the Sample node from the canvas onto the link between the
 		// Execution node and the Supernode.
-		// On the first Sort node moves and on the second move Sample node will move
 		cy.moveNodeToPosition("Sample", 400, 200);
 
 		// The Sample node should be inserted in the link because, although it has
