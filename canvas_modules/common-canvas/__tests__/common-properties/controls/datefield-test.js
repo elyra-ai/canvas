@@ -328,7 +328,6 @@ describe("error messages renders correctly for datefield controls", () => {
 
 	it("should render `DatefieldControl` with light mode enabled", () => {
 		const dateWrapper = wrapper.find("div[data-id='properties-ctrl-date_mdy']");
-		console.log(dateWrapper.debug());
 		expect(dateWrapper.find(".cds--layer-two")).to.have.length(1); // light enabled
 		expect(dateWrapper.find(".cds--layer-one")).to.have.length(0); // light disabled
 	});
