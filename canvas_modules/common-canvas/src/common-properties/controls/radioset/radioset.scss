@@ -40,6 +40,9 @@
 			align-items: center;
 			margin: 2.5px 0 1.5px 0;
 		}
+		.tooltip-container {
+			margin-bottom: 3px; // align tooltip icon with the radio button
+		}
 		.properties-control-nested-panel{
 			flex-basis: 100%;
 			width: 100%;
