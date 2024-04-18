@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { TextInput, Layer } from "@carbon/react";
+import { TextInput } from "@carbon/react";
 import ReadonlyControl from "./../readonly";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
@@ -96,20 +96,18 @@ class TextfieldControl extends React.Component {
 		} else {
 			const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 			textInput = (
-				<Layer level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
-					<TextInput
-						{...validationProps}
-						autoComplete={this.props.tableControl === true ? "off" : "on"}
-						id={this.id}
-						disabled={ this.props.state === STATES.DISABLED}
-						placeholder={this.props.control.additionalText}
-						onChange={this.handleChange.bind(this)}
-						value={value}
-						labelText={this.props.controlItem}
-						hideLabel={this.props.tableControl}
-						ref={(ref) => (this.textInputRef = ref)}
-					/>
-				</Layer>
+				<TextInput
+					{...validationProps}
+					autoComplete={this.props.tableControl === true ? "off" : "on"}
+					id={this.id}
+					disabled={ this.props.state === STATES.DISABLED}
+					placeholder={this.props.control.additionalText}
+					onChange={this.handleChange.bind(this)}
+					value={value}
+					labelText={this.props.controlItem}
+					hideLabel={this.props.tableControl}
+					ref={(ref) => (this.textInputRef = ref)}
+				/>
 			);
 		}
 
