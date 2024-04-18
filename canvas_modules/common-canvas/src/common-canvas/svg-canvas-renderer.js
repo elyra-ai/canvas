@@ -1765,7 +1765,15 @@ export default class SVGCanvasRenderer {
 	}
 
 	removeNodes(removeSel) {
-		// Remove any foreign objects for react nodes, if necessary.
+		// Remove any JSX decorations for the nodes being removed to
+		// unmount their React objects.
+		removeSel
+			.selectAll(".d3-foreign-object-dec-jsx")
+			.each((d, idx, exts) =>
+				this.externalUtils.removeExternalObject(d, idx, exts));
+
+		// Remove any foreign objects for React nodes to
+		// unmount their React objects.
 		removeSel
 			.selectChildren(".d3-foreign-object-external-node")
 			.each((d, idx, exts) =>

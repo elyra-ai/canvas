@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { TextInput, Layer } from "@carbon/react";
+import { TextInput } from "@carbon/react";
 import { parse, format, isValid } from "date-fns";
 import classNames from "classnames";
 
@@ -71,19 +71,17 @@ class TimefieldControl extends React.Component {
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<Layer level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
-					<TextInput
-						{...validationProps}
-						autoComplete="off"
-						id={this.id}
-						disabled={this.props.state === STATES.DISABLED}
-						placeholder={this.props.control.additionalText}
-						onChange={this.handleChange.bind(this)}
-						value={this.value}
-						labelText={this.props.controlItem}
-						hideLabel={this.props.tableControl}
-					/>
-				</Layer>
+				<TextInput
+					{...validationProps}
+					autoComplete="off"
+					id={this.id}
+					disabled={this.props.state === STATES.DISABLED}
+					placeholder={this.props.control.additionalText}
+					onChange={this.handleChange.bind(this)}
+					value={this.value}
+					labelText={this.props.controlItem}
+					hideLabel={this.props.tableControl}
+				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);
