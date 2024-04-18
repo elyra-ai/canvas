@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -283,6 +283,22 @@ export default (state = [], action) => {
 				const newNode = Object.assign({}, node);
 				delete newNode.style;
 				return newNode;
+			}
+			return node;
+		});
+
+	case "SET_OBJECTS_BRANCH_HIGHLIGHT":
+		return state.map((node) => {
+			if (action.data.objIds.indexOf(node.id) > -1) {
+				return Object.assign({}, node, { branchHighlight: true });
+			}
+			return node;
+		});
+
+	case "UNSET_OBJECTS_BRANCH_HIGHLIGHT":
+		return state.map((node) => {
+			if (node.branchHighlight) {
+				return Object.assign({}, node, { branchHighlight: false });
 			}
 			return node;
 		});

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,17 @@ import Action from "../command-stack/action.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
 
 export default class CollapseSuperNodeInPlaceAction extends Action {
-	constructor(data, objectModel, labelUtil, enableMoveNodesOnSupernodeResize) {
+	constructor(data, canvasController) {
 		super(data);
 		this.data = data;
-		this.objectModel = objectModel;
-		this.labelUtil = labelUtil;
+		this.labelUtil = canvasController.labelUtil;
+		this.objectModel = canvasController.objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.oldObjectPositions = [];
 		this.newObjectPositions = [];
 		this.oldLinkPositions = [];
 		this.newLinkPositions = [];
-		this.enableMoveNodesOnSupernodeResize = enableMoveNodesOnSupernodeResize;
+		this.enableMoveNodesOnSupernodeResize = canvasController.getCanvasConfig().enableMoveNodesOnSupernodeResize;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 
 		if (this.enableMoveNodesOnSupernodeResize) {

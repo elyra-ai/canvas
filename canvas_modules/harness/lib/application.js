@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,7 +96,6 @@ function _configureHmr(app) {
 	// in the webpack config, but we are applying this middleware to
 	// a route mounted at constants.APP_PATH already
 	hmrRouter.use(require("webpack-dev-middleware")(compiler, {
-		noInfo: true,
 		publicPath: "/"
 	}));
 	hmrRouter.use(require("webpack-hot-middleware")(compiler));

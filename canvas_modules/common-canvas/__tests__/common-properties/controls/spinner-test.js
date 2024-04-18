@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import React from "react";
 import SpinnerControl from "../../../src/common-properties/controls/numberfield";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
@@ -108,8 +108,8 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		expect(wrapper.find(".bx--number--nosteppers")).to.have.length(0);
-		expect(wrapper.find(".bx--number__controls")).to.have.length(1);
+		expect(wrapper.find(".cds--number--nosteppers")).to.have.length(0);
+		expect(wrapper.find(".cds--number__controls")).to.have.length(1);
 	});
 
 	it("should set correct state value when integer increment in `SpinnerControl`", () => {
@@ -257,9 +257,10 @@ describe("spinner-control renders correctly", () => {
 describe("spinnerControl paramDef render correctly", () => {
 	const renderedObject = propertyUtils.flyoutEditorForm(spinnerParamDef);
 	const wrapper = renderedObject.wrapper;
+	const spinnerController = renderedObject.controller;
 
 	it("should have displayed correct text in spinnerControl elements", () => {
-		const labels = wrapper.find("label.properties-control-label");
+		let labels = wrapper.find("label.properties-control-label");
 		expect(labels.at(0).text()).to.equal("Default");
 		expect(labels.at(1).text()).to.equal("Integer");
 		expect(labels.at(2).text()).to.equal("Double");
@@ -270,6 +271,11 @@ describe("spinnerControl paramDef render correctly", () => {
 		expect(labels.at(7).text()).to.equal("Error");
 		expect(labels.at(8).text()).to.equal("Warning");
 		expect(labels.at(9).text()).to.equal("Spinner Disabled");
+		expect(labels.at(10)).to.have.length(0); // "Spinner Hidden"
+
+		spinnerController.updatePropertyValue({ name: "hide" }, false);
+		wrapper.update();
+		labels = wrapper.find("label.properties-control-label");
 		expect(labels.at(10).text()).to.equal("Spinner Hidden");
 	});
 });

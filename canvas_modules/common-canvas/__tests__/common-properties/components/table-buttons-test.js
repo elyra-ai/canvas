@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,9 +88,14 @@ const customButtons = [
 const customButtonsState = { "button_1": false, "button_2": true, "button_3": false, "button_4": true };
 
 describe("Table buttons renders correctly", () => {
+	let wrapper;
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
 
 	it("Convert table buttons to toolbar config correctly", () => {
-		const wrapper = mountWithIntl(
+		wrapper = mountWithIntl(
 			<TableButtons
 				controller={controller}
 				propertyId={propertyId}
@@ -153,7 +158,7 @@ describe("Table buttons renders correctly", () => {
 	});
 
 	it("Convert table buttons to toolbar config correctly when table state is disable", () => {
-		const wrapper = mountWithIntl(
+		wrapper = mountWithIntl(
 			<TableButtons
 				controller={controller}
 				propertyId={propertyId}
@@ -220,7 +225,7 @@ describe("Table buttons renders correctly", () => {
 		controller.setHandlers({
 			buttonIconHandler: buttonIconHandler
 		});
-		const wrapper = mountWithIntl(
+		wrapper = mountWithIntl(
 			<TableButtons
 				controller={controller}
 				propertyId={propertyId}
@@ -247,7 +252,7 @@ describe("Table buttons renders correctly", () => {
 		controller.setHandlers({
 			buttonHandler: buttonHandler
 		});
-		const wrapper = mountWithIntl(
+		wrapper = mountWithIntl(
 			<TableButtons
 				controller={controller}
 				propertyId={propertyId}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ describe("radio renders and works correctly with different enum types", () => {
 
 	it("radioset tooltip with string enum Gini & Entropy are displayed ", () => {
 		const radioStringContainer = wrapper.find("div[data-id='properties-ci-radioString']");
-		const tooltipConatiner = radioStringContainer.find("div#tooltipContainer");
+		const tooltipConatiner = radioStringContainer.find("div.tooltipContainer");
 		// Verify Entropy Tooltips text
 		expect(tooltipConatiner.at(0).text()).to.equal("desc for Gini");
 		// Verify Gini Tooltips text
@@ -211,14 +211,21 @@ describe("radio renders and works correctly with different enum types", () => {
 
 
 	it("radioset control hidden", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioHidden']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Hidden");
+		let controlDiv = wrapper.find("div[data-id='properties-ci-radioHidden']");
+		expect(controlDiv).to.have.length(0);
+
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-hide']");
 		const checkbox = checkboxsetWrapper.find("input");
-		// checked the hidden box
-		checkbox.getDOMNode().checked = true;
+
+		// unchecked the hidden box
+		checkbox.getDOMNode().checked = false;
 		checkbox.simulate("change");
+
+		wrapper.update();
+		controlDiv = wrapper.find("div[data-id='properties-ci-radioHidden']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Hidden");
+
 		expect(renderedController.getPropertyValue({ name: "radioHidden" })).to.equal("gini");
 		const radioGroup = wrapper.find("div[data-id='properties-radioHidden']");
 		const radioHidden = radioGroup.find("input[value='entropy']");
@@ -309,7 +316,7 @@ describe("radioset works in table correctly", () => {
 		expect(tableDiv.find(".properties-vt-row-selected")).to.have.length(1);
 
 		const onPanelRadioset = wrapper.find("div[data-id='properties-radioset_col2']");
-		const onPanelRadios = onPanelRadioset.find("input.bx--radio-button");
+		const onPanelRadios = onPanelRadioset.find("input.cds--radio-button");
 		expect(onPanelRadios).to.have.length(4);
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][1]).to.equal("pear");
 		onPanelRadios.at(1).simulate("change");
@@ -322,7 +329,7 @@ describe("radioset works in table correctly", () => {
 		expect(subpanelButton).to.have.length(1);
 		subpanelButton.simulate("click");
 		const subpanelRadioset = wrapper.find("div[data-id='properties-radioset_col3']");
-		const subpanelRadios = subpanelRadioset.find("input.bx--radio-button");
+		const subpanelRadios = subpanelRadioset.find("input.cds--radio-button");
 		expect(subpanelRadios).to.have.length(6);
 		subpanelRadios.at(1).simulate("change");
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][3]).to.equal("green");
@@ -334,7 +341,7 @@ describe("radioset works in table correctly", () => {
 		tableDiv = wrapper.find(".properties-vt");
 
 		const onPanelRadioset = wrapper.find("div[data-id='properties-radioset_col2']");
-		const onPanelRadios = onPanelRadioset.find("input.bx--radio-button");
+		const onPanelRadios = onPanelRadioset.find("input.cds--radio-button");
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][1]).to.equal("pear");
 		onPanelRadios.at(1).simulate("change");
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][1]).to.equal("orange");
@@ -355,7 +362,7 @@ describe("radioset works in table correctly", () => {
 		const subpanelButton = tableDiv.find(".properties-table-subcell").find("button.properties-subpanel-button");
 		subpanelButton.simulate("click");
 		const subpanelRadioset = wrapper.find("div[data-id='properties-radioset_col3']");
-		const subpanelRadios = subpanelRadioset.find("input.bx--radio-button");
+		const subpanelRadios = subpanelRadioset.find("input.cds--radio-button");
 		subpanelRadios.at(1).simulate("change");
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][3]).to.equal("green");
 		// selecting the disabled option should default to first radio in the list, red, instead of orange

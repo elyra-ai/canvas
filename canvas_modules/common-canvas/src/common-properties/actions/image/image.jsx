@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import { connect } from "react-redux";
 import { STATES } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
-import { v4 as uuid4 } from "uuid";
 
 class ImageAction extends React.Component {
 	constructor(props) {
@@ -28,7 +27,6 @@ class ImageAction extends React.Component {
 		this.state = {
 		};
 		this.applyAction = this.applyAction.bind(this);
-		this.uuid = uuid4();
 	}
 
 	applyAction() {
@@ -51,9 +49,10 @@ class ImageAction extends React.Component {
 		}
 
 		const disabled = this.props.state === STATES.DISABLED;
+		const customClassName = this.props.action.className ? this.props.action.className : "";
 		const className = classNames("properties-action-image", { "left": this.props.action.image.placement === "left" },
 			{ "right": this.props.action.image.placement === "right" }, { "hide": this.props.state === STATES.HIDDEN },
-			{ "disabled": disabled });
+			{ "disabled": disabled }, customClassName);
 
 		const image = (
 			<div data-id={this.props.action.name}>
@@ -68,7 +67,7 @@ class ImageAction extends React.Component {
 
 		let display = image;
 		if (this.props.action.description) {
-			const tooltipId = this.uuid + "-tooltip-action-" + this.props.action.name;
+			const tooltipId = "tooltip-action-" + this.props.action.name;
 			const tooltip = (
 				<div className="properties-tooltips">
 					{this.props.action.description.text}

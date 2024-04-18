@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { hot } from "react-hot-loader/root";
-import { Button, Dropdown } from "carbon-components-react";
+import { Button, Dropdown } from "@carbon/react";
 import {
 	TEXTFIELD_ERROR_PROPS_INFO,
 	TEXTFIELD_WARNING_PROPS_INFO,
@@ -192,7 +191,7 @@ class CommonPropertiesComponents extends React.Component {
 		const openFlyoutButton = (<Button
 			className="harness-properties-documentation-show-flyout-button"
 			type="button"
-			size="small"
+			size="sm"
 			kind="secondary"
 			onClick={() => this.setRightFlyoutState(content)}
 		>
@@ -335,6 +334,10 @@ class CommonPropertiesComponents extends React.Component {
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "dateField (date)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "yes", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
+			{ Control: "datepicker (date)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
+			{ Control: "datepickerRange (date)", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "password (string)", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "radioset (boolean|number|string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
@@ -343,6 +346,8 @@ class CommonPropertiesComponents extends React.Component {
 				dmMeasurementEquals: "yes", dmMeasurementNotEquals: "yes", dmRoleEquals: "yes", dmRoleNotEquals: "yes", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "selectcolumns  ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "yes", dmTypeNotEquals: "yes",
 				dmMeasurementEquals: "yes", dmMeasurementNotEquals: "yes", dmRoleEquals: "yes", dmRoleNotEquals: "yes", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
+			{ Control: "slider (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "someofselect ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "textarea (string/[string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
@@ -957,12 +962,13 @@ class CommonPropertiesComponents extends React.Component {
 		const contentGroupConditions = (<section id="GroupConditions" className="section conditions-documentation-content-group-section">
 			<h2 className="harness-properties-documentation-section-title">Group Conditions</h2>
 			<div className="harness-section-description">
-				<p>Group conditions validate the user's input from two controls. The following conditions are supported in group validations:
-					<ul>
-						<li>greaterThan/lessThan</li>
-						<li>equals/notEquals</li>
-						<li>contains/notContains</li>
-					</ul>
+				<p>Group conditions validate the user's input from two controls. The following conditions are supported in group validations:</p>
+				<ul>
+					<li>greaterThan/lessThan</li>
+					<li>equals/notEquals</li>
+					<li>contains/notContains</li>
+				</ul>
+				<p>
 					The condition will be evaluated if both
 					controls are the same data type. For example, a textfield control will not be able to validate against a numberfield control.
 					If a group condition fails, the same <span className="harness-highlight">fail_message</span> will be shown on the control value
@@ -1299,4 +1305,4 @@ class CommonPropertiesComponents extends React.Component {
 	}
 }
 
-export default hot(CommonPropertiesComponents);
+export default CommonPropertiesComponents;

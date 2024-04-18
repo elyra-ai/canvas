@@ -3,7 +3,7 @@
   "action.arrangeLayout": "レイアウトの配置",
   "action.attachNodeToLinks": "リンクへの {node_label} ノードの接続",
   "action.collapseSuperNodeInPlace": "スーパーノードの省略",
-  "action.commonProperties": "プロパティーの保存",
+  "action.commonProperties": "{node_label}ノードのプロパティーの保存",
   "action.colorComments": "色 {comments_count, plural, other {# comments}}",
   "action.convertSuperNodeExternalToLocal": "外部スーパーノード {node_label} をローカルに変換",
   "action.convertSuperNodeLocalToExternal": "ローカル・スーパーノード {node_label} を外部に変換",

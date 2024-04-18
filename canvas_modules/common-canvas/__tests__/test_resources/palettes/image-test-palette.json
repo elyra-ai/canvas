@@ -1,4 +1,5 @@
 {
+	"version": "3.0",
 	"categories": [
 		{
 			"id": "canvas-no-image",
@@ -19,7 +20,7 @@
 				{
 					"id": "",
 					"type": "execution_node",
-					"operator_id_ref": "without.image",
+					"op": "without.image",
 					"app_data": {
 						"ui_data": {
 							"label": "No Image",

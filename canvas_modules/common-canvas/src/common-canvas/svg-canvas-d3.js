@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,22 +24,22 @@ import Logger from "../logging/canvas-logger.js";
 
 export default class SVGCanvasD3 {
 
-	constructor(canvasInfo, canvasDivSelector, config, canvasController) {
-		this.logger = new Logger(["SVGCanvasD3", "FlowId", canvasInfo.id]);
+	constructor(canvasInfoId, canvasDivSelector, canvasController) {
+		this.logger = new Logger(["SVGCanvasD3", "FlowId", canvasInfoId]);
 		this.logger.logStartTimer("constructor");
 		this.canvasController = canvasController;
 		this.canvasDiv = d3.select(canvasDivSelector);
 		this.logger.logEndTimer("constructor", true);
 	}
 
-	setCanvasInfo(canvasInfo, config) {
+	setCanvasInfo(canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config) {
 		this.logger = new Logger(["SVGCanvasD3", "FlowId", canvasInfo.id]);
 		if (!this.config ||
 				!this.renderer ||
 				!this.canvasInfo ||
 				canvasInfo.id !== this.canvasInfo.id ||
 				(this.renderer && this.renderer.pipelineId !== this.canvasController.getCurrentBreadcrumb().pipelineId) ||
-				!ConfigUtils.compareCanvasConfigs(this.config, config)) {
+				!ConfigUtils.compareCanvasConfigsOmitFields(this.config, config)) {
 			this.logger.logStartTimer("initializing");
 
 			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
@@ -56,6 +56,10 @@ export default class SVGCanvasD3 {
 				this.canvasDiv,
 				this.canvasController,
 				this.canvasInfo,
+				selectionInfo,
+				breadcrumbs,
+				nodeLayout,
+				canvasLayout,
 				config,
 				{ id: currentBreadcrumb.supernodeId, // Will be null for primary pipeline
 					pipelineId: currentBreadcrumb.supernodeParentPipelineId // Will be null for primary pipeline
@@ -68,9 +72,16 @@ export default class SVGCanvasD3 {
 			this.logger.logStartTimer("set canvas info");
 
 			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
-			this.renderer.setCanvasInfoRenderer(this.canvasInfo);
+			this.config = this.cloneConfig(config);
+			this.renderer.setCanvasInfoRenderer(this.canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, this.config);
 
 			this.logger.logEndTimer("set canvas info", true);
+		}
+	}
+
+	setSelectionInfo(selectionInfo) {
+		if (this.renderer) {
+			this.renderer.setSelectionInfo(selectionInfo);
 		}
 	}
 
@@ -96,9 +107,7 @@ export default class SVGCanvasD3 {
 	}
 
 	convertPageCoordsToSnappedCanvasCoords(pos) {
-		let positon = this.renderer.convertPageCoordsToCanvasCoords(pos.x, pos.y);
-		positon = this.renderer.getMousePosSnapToGrid(positon);
-		return positon;
+		return this.renderer.convertPageCoordsToSnappedCanvasCoords(pos);
 	}
 
 	nodeTemplateDragStart(nodeTemplate) {
@@ -121,8 +130,8 @@ export default class SVGCanvasD3 {
 		this.renderer.externalObjectDropped(dropData, x, y);
 	}
 
-	zoomTo(zoomObject) {
-		this.renderer.zoomTo(zoomObject);
+	zoomTo(zoomObject, animateTime) {
+		this.renderer.zoomTo(zoomObject, animateTime);
 	}
 
 	translateBy(x, y, animateTime) {
@@ -157,6 +166,22 @@ export default class SVGCanvasD3 {
 		return this.renderer ? this.renderer.getZoom() : null;
 	}
 
+	setCommentEditingMode(commentId, pipelineId) {
+		this.renderer.setCommentEditingMode(commentId, pipelineId);
+	}
+
+	setNodeLabelEditingMode(nodeId, pipelineId) {
+		this.renderer.setNodeLabelEditingMode(nodeId, pipelineId);
+	}
+
+	setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId) {
+		this.renderer.setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId);
+	}
+
+	setLinkDecorationLabelEditingMode(decId, linkId, pipelineId) {
+		this.renderer.setLinkDecorationLabelEditingMode(decId, linkId, pipelineId);
+	}
+
 	refreshOnSizeChange() {
 		if (this.renderer) {
 			this.renderer.refreshOnSizeChange();
@@ -169,6 +194,10 @@ export default class SVGCanvasD3 {
 
 	getTransformedViewportDimensions() {
 		return this.renderer.getTransformedViewportDimensions();
+	}
+
+	getCanvasDimensionsWithPadding() {
+		return this.renderer.getCanvasDimensionsWithPadding();
 	}
 
 	getGhostNode(nodeTemplate) {

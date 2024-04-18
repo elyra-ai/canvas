@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,8 @@ function op() {
 
 function evaluate(paramInfo, param2Info, value, controller) {
 	const supportedControls = ["textarea", "list"];
-	if (supportedControls.indexOf(paramInfo.control.controlType) >= 0) {
+	const emptyTable = paramInfo.value.length === 0;
+	if (supportedControls.indexOf(paramInfo.control.controlType) >= 0 && !emptyTable) {
 		let nonEmptyCount = 0;
 		paramInfo.value.forEach((item) => {
 			if (typeof item !== "undefined" && item.length > 0) {

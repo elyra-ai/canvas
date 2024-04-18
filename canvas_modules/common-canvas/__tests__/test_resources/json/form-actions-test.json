@@ -275,7 +275,7 @@
                             "description": {
                               "text": "Try pressing Increment or Descrement buttons"
                             },
-                            "light": false,
+                            "light": true,
                             "labelVisible": true,
                             "controlType": "readonly",
                             "valueDef": {
@@ -342,7 +342,7 @@
                             "description": {
                               "text": "Press 'Update Datamodel' to add a new field"
                             },
-                            "light": false,
+                            "light": true,
                             "labelVisible": true,
                             "controlType": "selectcolumns",
                             "valueDef": {

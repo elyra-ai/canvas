@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,13 +33,13 @@
 }
 
 .properties-summary-values {
-	border-top: 1px solid $ui-03;
+	border-top: 1px solid $layer-accent-01;
 	padding: $spacing-05 0;
 }
 
 .properties-summary-table {
-	@include carbon--type-style("body-short-01");
-	color: $text-01;
+	@include type-style("body-short-01");
+	color: $text-primary;
 	max-height: 270px;
 	width: 100%;
 	display: flex;
@@ -51,22 +51,16 @@
 }
 
 .properties-summary-label {
-	@include carbon--type-style("productive-heading-01");
-	color: $text-01;
+	@include type-style("productive-heading-01");
+	color: $text-primary;
 	margin-bottom: $spacing-05;
-}
-
-.properties-summary-row-data > .tooltip-container {
-	margin: 1px 0;
-	> div:first-child {
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		overflow: hidden;
-	}
 }
 
 .properties-summary-row {
 	display: flex;
-	justify-content: space-between;
 	padding: 2px 0;
+	span {
+		cursor: text;
+		user-select: text;
+	}
 }

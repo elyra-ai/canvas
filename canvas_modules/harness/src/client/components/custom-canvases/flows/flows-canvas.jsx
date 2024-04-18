@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,12 @@ import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disabl
 import FlowsCanvasFlow from "./flowsCanvas.json";
 import FlowsPalette from "./flowsPalette.json";
 import FlowsLoadingPalette from "./flowsLoadingPalette.json";
-
+import FlowsProperties from "./flows-properties";
 
 export default class FlowsCanvas extends React.Component {
 	constructor(props) {
 		super(props);
+		this.propertiesRef = React.createRef();
 		this.canvasController = new CanvasController();
 		this.canvasController.setPipelineFlow(FlowsCanvasFlow);
 		this.canvasController.setPipelineFlowPalette(FlowsLoadingPalette);
@@ -35,6 +36,7 @@ export default class FlowsCanvas extends React.Component {
 
 		this.getConfig = this.getConfig.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
+		this.clickActionHandler = this.clickActionHandler.bind(this);
 	}
 
 	getConfig() {
@@ -49,6 +51,7 @@ export default class FlowsCanvas extends React.Component {
 			enableLinkReplaceOnNewConnection: true,
 			paletteInitialState: true,
 			enableDropZoneOnExternalDrag: true,
+			enableContextToolbar: true,
 			enableHighlightNodeOnNewLinkDrag: true,
 			tipConfig: {
 				palette: true,
@@ -98,8 +101,16 @@ export default class FlowsCanvas extends React.Component {
 	decorationActionHandler() {
 		this.canvasController.displaySubPipeline({
 			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
-			pipelineFlowId: "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159"
+			pipelineFlowId: "123456789-c3d2-4da7-ab5a-2b9573e5e159"
 		});
+	}
+
+	clickActionHandler(source) {
+		if (this.propertiesRef.current &&
+				source.objectType === "node" &&
+				source.clickType === "DOUBLE_CLICK") {
+			this.propertiesRef.current.editNodeHandler(source.id, source.pipelineId);
+		}
 	}
 
 	activateLoadingCanvas() {
@@ -118,11 +129,22 @@ export default class FlowsCanvas extends React.Component {
 
 	render() {
 		const config = this.getConfig();
+
+		const rightFlyoutContent = (
+			<FlowsProperties
+				ref={this.propertiesRef}
+				canvasController={this.canvasController}
+			/>
+		);
+
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
 				decorationActionHandler={this.decorationActionHandler}
 				config={config}
+				rightFlyoutContent={rightFlyoutContent}
+				clickActionHandler={this.clickActionHandler}
+				showRightFlyout
 			/>
 		);
 	}

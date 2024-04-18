@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,6 @@
  */
 
 import { expect } from "chai";
-import chai from "chai";
-import chaiEnzyme from "chai-enzyme";
-chai.use(chaiEnzyme()); // Note the invocation at the end
 import CommandStack from "../../src/command-stack/command-stack.js";
 
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */

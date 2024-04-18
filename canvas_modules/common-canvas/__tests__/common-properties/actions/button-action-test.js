@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import ActionButton from "./../../../src/common-properties/actions/button";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 import Controller from "./../../../src/common-properties/properties-controller";
@@ -47,7 +47,8 @@ const action = {
 	"button": {
 		"kind": "secondary",
 		"size": "xl"
-	}
+	},
+	"class_name": "custom-class-for-action-button"
 };
 
 describe("action-button renders correctly", () => {
@@ -134,7 +135,7 @@ describe("action-button renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const tooltip = wrapper.find("div[id='tooltipContainer']");
+		const tooltip = wrapper.find("div.tooltipContainer");
 		expect(tooltip).to.have.length(1);
 		expect(tooltip.text()).to.equal("Increment number by 1.");
 
@@ -151,9 +152,9 @@ describe("action-button renders correctly", () => {
 		const button = wrapper.find("button");
 		expect(button).to.have.length(1);
 		// verify button kind is secondary
-		expect(button.prop("className").includes("bx--btn--secondary")).to.equal(true);
+		expect(button.prop("className").includes("cds--btn--secondary")).to.equal(true);
 		// verify button size is extra large
-		expect(button.prop("className").includes("bx--btn--xl")).to.equal(true);
+		expect(button.prop("className").includes("cds--btn--xl")).to.equal(true);
 	});
 	it("action button default kind is tertiary and size is small", () => {
 		const actionWithoutButtonObject = {
@@ -180,16 +181,23 @@ describe("action-button renders correctly", () => {
 		const button = wrapper.find("button");
 		expect(button).to.have.length(1);
 		// verify default button kind is tertiary
-		expect(button.prop("className").includes("bx--btn--tertiary")).to.equal(true);
+		expect(button.prop("className").includes("cds--btn--tertiary")).to.equal(true);
 		// verify default button size is small
-		expect(button.prop("className").includes("bx--btn--sm")).to.equal(true);
+		expect(button.prop("className").includes("cds--btn--sm")).to.equal(true);
 	});
 });
 
 describe("actions using paramDef", () => {
+	let wrapper;
+	let renderedObject;
+	beforeEach(() => {
+		renderedObject = propertyUtils.flyoutEditorForm(ACTION_PARAMDEF);
+		wrapper = renderedObject.wrapper;
+	});
+
 	it("should fire action when button clicked", (done) => {
-		const renderedObject = propertyUtils.flyoutEditorForm(ACTION_PARAMDEF, null, { actionHandler: callback }, { appData: appData });
-		const wrapper = renderedObject.wrapper;
+		renderedObject = propertyUtils.flyoutEditorForm(ACTION_PARAMDEF, null, { actionHandler: callback }, { appData: appData });
+		wrapper = renderedObject.wrapper;
 		function callback(id, inAppData, data) {
 			expect(id).to.equal("increment");
 			expect(inAppData).to.eql(appData);
@@ -200,4 +208,13 @@ describe("actions using paramDef", () => {
 		button.simulate("click");
 	});
 
+	it("action button should have custom classname defined", () => {
+		// class_name defined in uiHints action_info
+		const incrementButton = wrapper.find("div[data-id='increment']");
+		expect(incrementButton.prop("className")).to.equal("properties-action-button custom-class-for-action-button");
+
+		// class_name not defined in uiHints action_info
+		const decrementButton = wrapper.find("div[data-id='decrement']");
+		expect(decrementButton.prop("className")).to.equal("properties-action-button");
+	});
 });

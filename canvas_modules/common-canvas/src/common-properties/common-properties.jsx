@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import PropertiesMain from "./properties-main";
 import PropertiesModal from "./components/properties-modal";
 import ValidationMessage from "./components/validation-message";
 import { formatMessage } from "./util/property-utils";
-import { MESSAGE_KEYS } from "./constants/constants";
+import { MESSAGE_KEYS, DEFAULT_LOCALE, CATEGORY_VIEW } from "./constants/constants";
 
 import { injectIntl } from "react-intl";
 
@@ -102,7 +102,7 @@ class CommonProperties extends React.Component {
 		const closeFunction = this.props.callbacks.closePropertiesDialog;
 		const revertText = formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REVERTBUTTON_LABEL);
 		const revertFunction = this.revertState;
-		const propertiesLandmarkRoleLabel = formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL);
+		const propertiesLandmarkRoleLabel = formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_ERROR_LABEL);
 		let closeAndRevertContainer;
 		if (this.props.propertiesConfig.containerType === "Custom") { // Right flyout view or Custom
 			if (this.propertiesMainHasMounted === true) {
@@ -231,21 +231,28 @@ CommonProperties.propTypes = {
 	propertiesInfo: PropTypes.object.isRequired,
 	propertiesConfig: PropTypes.shape({
 		applyOnBlur: PropTypes.bool,
+		trimSpaces: PropTypes.bool,
 		disableSaveOnRequiredErrors: PropTypes.bool,
 		rightFlyout: PropTypes.bool,
+		categoryView: PropTypes.oneOf([CATEGORY_VIEW.ACCORDIONS, CATEGORY_VIEW.TABS]),
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
 		conditionReturnValueHandling: PropTypes.oneOf(["null", "value"]),
+		returnValueFiltering: PropTypes.array,
 		buttonLabels: PropTypes.shape({
 			primary: PropTypes.string,
 			secondary: PropTypes.string
 		}),
 		schemaValidation: PropTypes.bool,
 		applyPropertiesWithoutEdit: PropTypes.bool,
-		conditionHiddenPropertyHandling: PropTypes.oneOf(["null", "value"]),
-		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "value"]),
+		conditionHiddenPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
+		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
 		maxLengthForMultiLineControls: PropTypes.number,
-		maxLengthForSingleLineControls: PropTypes.number
+		maxLengthForSingleLineControls: PropTypes.number,
+		convertValueDataTypes: PropTypes.bool,
+		showRequiredIndicator: PropTypes.bool,
+		showAlertsTab: PropTypes.bool,
+		locale: PropTypes.string
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
@@ -272,14 +279,20 @@ CommonProperties.defaultProps = {
 	propertiesConfig: {
 		containerType: "Custom",
 		rightFlyout: true,
+		categoryView: CATEGORY_VIEW.ACCORDIONS,
 		applyOnBlur: false,
+		trimSpaces: true,
 		disableSaveOnRequiredErrors: false,
 		enableResize: true,
 		conditionReturnValueHandling: "value",
 		schemaValidation: false,
 		applyPropertiesWithoutEdit: false,
 		maxLengthForMultiLineControls: 1024,
-		maxLengthForSingleLineControls: 128
+		maxLengthForSingleLineControls: 128,
+		convertValueDataTypes: false,
+		showRequiredIndicator: true,
+		showAlertsTab: true,
+		locale: DEFAULT_LOCALE
 	},
 	callbacks: {
 	},

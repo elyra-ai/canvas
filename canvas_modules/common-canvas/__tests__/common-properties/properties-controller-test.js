@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import deepFreeze from "deep-freeze";
+import { merge } from "lodash";
 import propertyUtils from "../_utils_/property-utils";
 import Controller from "../../src/common-properties/properties-controller";
 import Form from "../../src/common-properties/form/Form";
@@ -25,8 +26,11 @@ import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
 import structureTableParamDef from "../test_resources/paramDefs/structuretable_paramDef.json";
 import checkboxsetParamDef from "../test_resources/paramDefs/checkboxset_paramDef.json";
+import tabParamDef from "../test_resources/paramDefs/tab_paramDef.json";
+import checkboxParamDef from "../test_resources/paramDefs/checkbox_paramDef.json";
 import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
 import numberfieldParamDef from "../test_resources/paramDefs/numberfield_paramDef.json";
+import oneofselectParamDef from "../test_resources/paramDefs/oneofselect_paramDef.json";
 import structuretablePropertyValues from "../test_resources/json/structuretable_propertyValues.json";
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
 import readonlyTableParamDef from "../test_resources/paramDefs/readonlyTable_paramDef.json";
@@ -1193,6 +1197,98 @@ describe("Properties Controller handlers", () => {
 		const actual = controller.getPropertyValues();
 		expect(actual).to.eql(values);
 	});
+	it("should set default values when setPropertyValues() is called with option { setDefaultValues: true }", () => {
+		const renderedObject = testUtils.flyoutEditorForm(checkboxParamDef);
+		controller = renderedObject.controller;
+		controller.setHandlers({
+			propertyListener: propertyListener
+		});
+
+		const filteredValues = controller.getPropertyValues({ filterHiddenDisabled: true });
+		// We filtered hidden and disabled properties, so "checkbox_hidden" property doesn't exist in filteredValues
+		expect(filteredValues).not.to.have.property("checkbox_hidden");
+
+		// setDefaultValues is not set
+		controller.setPropertyValues(filteredValues);
+		// Verify value is not set for checkbox_hidden
+		expect(controller.getPropertyValues()).not.to.have.property("checkbox_hidden");
+		// Verify filteredValues are set
+		expect(controller.getPropertyValues()).to.eql(filteredValues);
+
+		// setDefaultValues is set to true
+		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
+		// Verify a value is set for checkbox_hidden
+		expect(controller.getPropertyValues()).to.have.property("checkbox_hidden", true);
+		// Verify filteredValues and default values are set
+		const allProperties = merge({ "checkbox_hidden": true }, filteredValues);
+		expect(controller.getPropertyValues()).to.eql(allProperties);
+
+		// setDefaultValues is set to true - 2nd time
+		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
+		// Verify a value is set for checkbox_hidden
+		expect(controller.getPropertyValues()).to.have.property("checkbox_hidden", true);
+		// Verify filteredValues and default values are set
+		expect(controller.getPropertyValues()).to.eql(allProperties);
+
+		// setDefaultValues is set to true - 3rd time
+		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
+		// Verify a value is set for checkbox_hidden
+		expect(controller.getPropertyValues()).to.have.property("checkbox_hidden", true);
+		// Verify filteredValues and default values are set
+		expect(controller.getPropertyValues()).to.eql(allProperties);
+
+		// Verify there's a single call to the propertyListener()
+		expect(propertyListener.calledWith({
+			action: "SET_PROPERTIES"
+		})).to.be.true;
+	});
+	it("should set default values having 0 or ' ' when setPropertyValues() is called with option { setDefaultValues: true }", () => {
+		const renderedObject = testUtils.flyoutEditorForm(oneofselectParamDef);
+		controller = renderedObject.controller;
+		controller.setHandlers({
+			propertyListener: propertyListener
+		});
+
+		const filteredValues = controller.getPropertyValues({ filterHiddenDisabled: true });
+		// We filtered hidden and disabled properties, some hidden properties don't exist in filteredValues
+		expect(filteredValues).not.to.have.property("oneofselect_hidden");
+		expect(filteredValues).not.to.have.property("fill");
+		expect(filteredValues).not.to.have.property("viewonly");
+
+		// setDefaultValues is not set
+		controller.setPropertyValues(filteredValues);
+		// Verify value is not set for hidden properties
+		expect(controller.getPropertyValues()).not.to.have.property("oneofselect_hidden");
+		expect(controller.getPropertyValues()).not.to.have.property("fill");
+		expect(controller.getPropertyValues()).not.to.have.property("viewonly");
+		// Verify filteredValues are set
+		expect(controller.getPropertyValues()).to.eql(filteredValues);
+
+		// setDefaultValues is set to true - 1st time
+		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
+		// Verify a default value is set for hidden properties
+		expect(controller.getPropertyValues()).to.have.property("fill", 0);
+		expect(controller.getPropertyValues()).to.have.property("viewonly", " ");
+		// Verify filteredValues and default values are set
+		const allProperties = merge({ "fill": 0, "viewonly": " " }, filteredValues);
+		expect(controller.getPropertyValues()).to.eql(allProperties);
+
+		// setDefaultValues is set to true - 2nd time
+		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
+		// Verify a default value is set for hidden properties
+		expect(controller.getPropertyValues()).to.have.property("fill", 0);
+		expect(controller.getPropertyValues()).to.have.property("viewonly", " ");
+		// Verify filteredValues and default values are set
+		expect(controller.getPropertyValues()).to.eql(allProperties);
+
+		// setDefaultValues is set to true - 3rd time
+		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
+		// Verify a default value is set for hidden properties
+		expect(controller.getPropertyValues()).to.have.property("fill", 0);
+		expect(controller.getPropertyValues()).to.have.property("viewonly", " ");
+		// Verify filteredValues and default values are set
+		expect(controller.getPropertyValues()).to.eql(allProperties);
+	});
 	it("should fire event on updatePropertyValue", () => {
 		controller.updatePropertyValue({ name: "param_int" }, 10);
 		expect(propertyListener).to.have.property("callCount", 1);
@@ -1217,9 +1313,17 @@ describe("Properties Controller handlers", () => {
 		const type = {
 			type: "initial_load"
 		};
-		controller.updatePropertyValue({ name: "structurelisteditorObjectType" }, internalValue, true, type);
+		const propertyId = { name: "structurelisteditorObjectType" };
+		const initialValue = controller.getPropertyValue(propertyId);
+		controller.updatePropertyValue(propertyId, internalValue, true, type);
 		expect(propertyListener).to.have.property("callCount", 4);
-		expect(propertyListener.calledWith({ action: "UPDATE_PROPERTY", property: { name: "structurelisteditorObjectType" }, value: returnValue, type })).to.be.true;
+		expect(propertyListener.calledWith({
+			action: "UPDATE_PROPERTY",
+			property: propertyId,
+			value: returnValue,
+			previousValue: initialValue,
+			type
+		})).to.be.true;
 	});
 	it("should callback after all properties are loaded", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldParamDef, null, { propertyListener: propertyListener });
@@ -1230,7 +1334,7 @@ describe("Properties Controller handlers", () => {
 		const expectedRequiredMessages = {
 			"number_undefined": {
 				"type": "error",
-				"text": "You must provide your Undefined.",
+				"text": "You must enter a value for Undefined.",
 				"validation_id": "required_number_undefined_272.9520234285945",
 				"propertyId": {
 					"name": "number_undefined"
@@ -1240,7 +1344,7 @@ describe("Properties Controller handlers", () => {
 			},
 			"number_null": {
 				"type": "error",
-				"text": "You must provide your Null.",
+				"text": "You must enter a value for Null.",
 				"validation_id": "required_number_null_401.11526920064296",
 				"propertyId": {
 					"name": "number_null"
@@ -1785,7 +1889,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 	const requiredErrors = {
 		"hidden_required_control": {
 			"type": "error",
-			"text": "You must provide your hidden_required_control.",
+			"text": "You must enter a value for hidden_required_control.",
 			"validation_id": "required_hidden_required_control_424.43891381281946",
 			"required": true,
 			"propertyId": { "name": "hidden_required_control" },
@@ -1793,7 +1897,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 		},
 		"numberfieldMaxBins": {
 			"type": "error",
-			"text": "You must provide your Maximum number of bins.",
+			"text": "You must enter a value for Maximum number of bins.",
 			"validation_id": "required_numberfieldMaxBins_823.4996625010101",
 			"required": true,
 			"propertyId": { "name": "numberfieldMaxBins" },
@@ -1817,7 +1921,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 		},
 		"textareaDescription": {
 			"type": "error",
-			"text": "You must provide your Description.",
+			"text": "You must enter a value for Description.",
 			"validation_id": "required_textareaDescription_708.576019526482",
 			"required": false,
 			"propertyId": { "name": "textareaDescription" },
@@ -2004,7 +2108,7 @@ describe("Properties Controller addRemoveRows", () => {
 		// Verify buttons are visible when editor opens
 		let summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
 		const parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructurelisteditor']");
-		parentTable.find(".properties-subpanel-button").at(0)
+		parentTable.find("button.properties-subpanel-button").at(0)
 			.simulate("click");
 		let nestedTable = wrapper.find("div[data-id='properties-nested_structure']");
 		expect(nestedTable.find(".properties-at-buttons-container")).to.have.length(1);
@@ -2207,7 +2311,7 @@ describe("Properties Controller custom table buttons", () => {
 
 		let summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
 		let parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructureCustomButtons']");
-		parentTable.find(".properties-subpanel-button").at(0)
+		parentTable.find("button.properties-subpanel-button").at(0)
 			.simulate("click");
 		let nestedTable = wrapper.find("div[data-id='properties-nestedStructureCustomButtons_table']");
 		let customButtonToolbar = nestedTable.find(".properties-custom-table-buttons");
@@ -2230,7 +2334,7 @@ describe("Properties Controller custom table buttons", () => {
 		// // Verify buttons are visible when editor opens
 		summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
 		parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructureCustomButtons']");
-		parentTable.find(".properties-subpanel-button").at(0)
+		parentTable.find("button.properties-subpanel-button").at(0)
 			.simulate("click");
 		nestedTable = wrapper.find("div[data-id='properties-nestedStructureCustomButtons_table']");
 		customButtonToolbar = nestedTable.find(".properties-custom-table-buttons");
@@ -2261,7 +2365,7 @@ describe("Properties Controller setWideFlyoutPrimaryButtonDisabled", () => {
 			.find(".properties-modal-buttons")
 			.find("button[data-id='properties-apply-button']");
 		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", false);
-		expect(wideFlyoutPrimaryButton.prop("className").includes("bx--btn--disabled")).to.equal(false);
+		expect(wideFlyoutPrimaryButton.prop("className").includes("cds--btn--disabled")).to.equal(false);
 
 		// Disable OK button for this summary panel using controller method
 		controller.setWideFlyoutPrimaryButtonDisabled(summaryPanelId, true);
@@ -2271,7 +2375,7 @@ describe("Properties Controller setWideFlyoutPrimaryButtonDisabled", () => {
 			.find(".properties-modal-buttons")
 			.find("button[data-id='properties-apply-button']");
 		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", true);
-		expect(wideFlyoutPrimaryButton.prop("className").includes("bx--btn--disabled")).to.equal(true);
+		expect(wideFlyoutPrimaryButton.prop("className").includes("cds--btn--disabled")).to.equal(true);
 		expect(controller.getWideFlyoutPrimaryButtonDisabled(summaryPanelId)).to.be.true;
 
 		// Enable OK button for this summary panel using controller method
@@ -2282,7 +2386,44 @@ describe("Properties Controller setWideFlyoutPrimaryButtonDisabled", () => {
 			.find(".properties-modal-buttons")
 			.find("button[data-id='properties-apply-button']");
 		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", false);
-		expect(wideFlyoutPrimaryButton.prop("className").includes("bx--btn--disabled")).to.equal(false);
+		expect(wideFlyoutPrimaryButton.prop("className").includes("cds--btn--disabled")).to.equal(false);
 		expect(controller.getWideFlyoutPrimaryButtonDisabled(summaryPanelId)).to.be.false;
+	});
+});
+
+describe("Properties Controller getTopLevelActiveGroupId", () => {
+	it("should get the top level active group id in properties controller", () => {
+		reset();
+		const renderedObject = testUtils.flyoutEditorForm(checkboxsetParamDef);
+		controller = renderedObject.controller;
+		const wrapper = renderedObject.wrapper;
+		let topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
+		expect(topLevelActiveGroupId).to.equal("checkboxset-values");
+
+		// Select Conditions accordion
+		const conditionsCategory = wrapper.find("div.properties-category-container").at(1);
+		conditionsCategory.find("button.properties-category-title").simulate("click");
+		topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
+		expect(topLevelActiveGroupId).to.equal("checkboxset-conditions");
+
+	});
+});
+
+describe("Properties Controller setTopLevelActiveGroup", () => {
+	it("should set the top level active group id in properties controller", () => {
+		reset();
+		const renderedObject = testUtils.flyoutEditorForm(tabParamDef);
+		controller = renderedObject.controller;
+		const wrapper = renderedObject.wrapper;
+
+		controller.setTopLevelActiveGroupId("Primary3");
+		let topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
+		expect(topLevelActiveGroupId).to.equal("Primary3");
+
+		// Select Condition in accordion
+		const conditionsCategory = wrapper.find("div.properties-category-container").at(2);
+		conditionsCategory.find("button.properties-category-title").simulate("click");
+		topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
+		expect(topLevelActiveGroupId).to.equal("Primary2");
 	});
 });

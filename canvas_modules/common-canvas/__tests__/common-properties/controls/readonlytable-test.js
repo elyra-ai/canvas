@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -213,8 +213,7 @@ describe("readonlytable control conditions", () => {
 	it("a hidden `readonlyTable` control should not be shown", () => {
 		const tables = propertyUtils.openSummaryPanel(wrapper, "readonlyTable-conditions-summary-panel");
 		const table = tables.find("div[data-id='properties-ci-readonlyTableHidden']");
-		expect(table.prop("className")).to.equal("properties-control-item hide");
-		expect(table.find("div[data-id='properties-readonlyTableHidden']")).not.to.be.undefined;
+		expect(table).to.have.length(0);
 	});
 
 	it("a disabled `readonlytable` control should be disabled", () => {

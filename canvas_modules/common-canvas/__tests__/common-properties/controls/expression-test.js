@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import sinon from "sinon";
 import Expression from "../../../src/common-properties/controls/expression";
 import ExpressionBuilder from "../../../src/common-properties/controls/expression/expression-builder/expression-builder";
 import ExpressionToggle from "../../../src/common-properties/controls/expression/expression-toggle/expression-toggle";
+import ExpressionSelectFieldFunctions from "../../../src/common-properties/controls/expression/expression-builder/expression-select-field-function";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
 import tableUtils from "./../../_utils_/table-utils";
@@ -34,6 +35,7 @@ import { expect } from "chai";
 
 import ExpressionInfo from "../../test_resources/json/expression-function-list.json";
 import ExpressionParamdef from "../../test_resources/paramDefs/expressionControl_paramDef.json";
+import Sinon from "sinon";
 
 const control = {
 	name: "test-expression",
@@ -125,6 +127,10 @@ function getCopy(value) {
 	return JSON.parse(JSON.stringify(value));
 }
 
+function getAddButtonsList(rows) {
+	return rows.find("Button.expression-add-field-button");
+}
+
 var controller = new Controller();
 const buttonHandler = sinon.spy();
 function reset() {
@@ -170,7 +176,7 @@ describe("expression-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find(".react-codemirror2");
+		const input = wrapper.find(".elyra-CodeMirror");
 		expect(input).to.have.length(1);
 	});
 
@@ -187,7 +193,9 @@ describe("expression-control renders correctly", () => {
 		);
 		const expressionBuilderIcon = wrapper.find("button.properties-expression-button");
 		expect(expressionBuilderIcon).to.have.length(1);
-		expect(expressionBuilderIcon.text()).to.equal("launch expression builder");
+		const expressionBuilderIconAriaLabelledBy = expressionBuilderIcon.prop("aria-labelledby");
+		const expressionBuilderIconTooltip = wrapper.find(`span[id='${expressionBuilderIconAriaLabelledBy}']`);
+		expect(expressionBuilderIconTooltip.text()).to.equal("launch expression builder");
 	});
 	it("should render maximize button", () => {
 		reset();
@@ -412,15 +420,15 @@ describe("expression-builder renders correctly", () => {
 			// Verify values in "Return" column match with "return_type_label". Default to "return_type".
 			const expectedReturnType = functionInfo.locReturnType ? functionInfo.locReturnType : functionInfo.return_type;
 			const actualReturnType = row.find(".ReactVirtualized__Table__rowColumn")
-				.at(1)
+				.at(2) // consider Add column
 				.text();
 			expect(expectedReturnType).to.eql(actualReturnType);
 		});
 
 		// Navigate to Information table
-		var dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
+		var dropDown = wrapper.find("div.properties-expression-function-select .cds--list-box__field");
 		dropDown.simulate("click");
-		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		var dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(2).simulate("click");
 		expect(wrapper.find("div.properties-expression-function-select span").text()).to.equal("Information");
 
@@ -433,7 +441,7 @@ describe("expression-builder renders correctly", () => {
 			// Verify values in "Return" column match with "return_type_label". Default to "return_type".
 			const expectedReturnType = functionInfo.locReturnType ? functionInfo.locReturnType : functionInfo.return_type;
 			const actualReturnType = row.find(".ReactVirtualized__Table__rowColumn")
-				.at(1)
+				.at(2)
 				.text();
 			expect(expectedReturnType).to.eql(actualReturnType);
 		});
@@ -453,16 +461,18 @@ describe("expression-builder renders correctly", () => {
 		// Verify custom header label
 		const header = valuesTable.find("div[data-role='properties-header-row']");
 		const headerLabel = header.find(".properties-vt-label-tip-icon");
-		expect(headerLabel).to.have.length(1);
-		expect(header.text()).to.equal(harnessMessages[MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN]);
+		expect(headerLabel).to.have.length(2); // include Add column
+		expect(header.text()).to.equal("Add" +	harnessMessages[MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN]);
 
 		// Verify info icon
 		const headerInfoIcon = header.find(".properties-vt-info-icon-tip");
 		expect(headerInfoIcon).to.have.length(1);
-		let infoTip = wrapper.find("div[data-id='properties-tooltip-Custom Value-info']");
+		const tooltipTrigger = headerInfoIcon.find(".tooltip-trigger");
+		const tooltipId = tooltipTrigger.props()["aria-labelledby"];
+		let infoTip = wrapper.find(`div[data-id='${tooltipId}']`);
 		expect(infoTip.props()).to.have.property("aria-hidden", true);
-		headerInfoIcon.find("div[data-id='properties-tooltip-Custom Value-info-trigger']").simulate("click");
-		infoTip = wrapper.find("div[data-id='properties-tooltip-Custom Value-info']");
+		tooltipTrigger.simulate("click");
+		infoTip = wrapper.find(`div[data-id='${tooltipId}']`);
 		expect(infoTip.props()).to.have.property("aria-hidden", false);
 	});
 });
@@ -497,8 +507,9 @@ describe("expression-builder select from tables correctly", () => {
 			</Provider>
 		);
 		const fieldTable = wrapper.find("div.properties-field-table-container");
-		tableUtils.dblClickTableRows(fieldTable, [0]);
-		expect(controller.getPropertyValue(propertyId)).to.equal(" 'Age'");
+		const addButtons = getAddButtonsList(tableUtils.getTableRows(fieldTable));
+		addButtons.at(0).simulate("click");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" Age");
 	});
 
 	it("expression builder select a field value", () => {
@@ -513,7 +524,8 @@ describe("expression-builder select from tables correctly", () => {
 			</Provider>
 		);
 		const valueTable = wrapper.find("div.properties-value-table-container");
-		tableUtils.dblClickTableRows(valueTable, [0]);
+		const addButtons = getAddButtonsList(tableUtils.getTableRows(valueTable));
+		addButtons.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" 21");
 	});
 
@@ -533,7 +545,8 @@ describe("expression-builder select from tables correctly", () => {
 		tableUtils.clickTableRows(fieldTable, [1]);
 		// select a string value from value table.
 		const valueTable = wrapper.find("div.properties-value-table-container");
-		tableUtils.dblClickTableRows(valueTable, [1]);
+		const addButtons = getAddButtonsList(tableUtils.getTableRows(valueTable));
+		addButtons.at(1).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" \"female\"");
 	});
 
@@ -550,7 +563,8 @@ describe("expression-builder select from tables correctly", () => {
 		);
 		wrapper.find("button.expresson-builder-function-tab").simulate("click");
 		const functionTable = wrapper.find("div.properties-functions-table-container");
-		tableUtils.dblClickTableRows(functionTable, [0]);
+		const addButtons = getAddButtonsList(tableUtils.getTableRows(functionTable));
+		addButtons.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" to_integer(?)");
 	});
 
@@ -679,7 +693,7 @@ describe("expression handles no expression builder resources correctly", () => {
 	it("CommonProperties renders with validateLink set true", () => {
 		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
 		const renderedObject = propertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, callbacks, propertiesInfo);
-		expect(renderedObject.wrapper.find("button.validateLink")).to.have.length(8); // there are 8 expressions in this paramdef
+		expect(renderedObject.wrapper.find("button.validateLink")).to.have.length(7); // there are 8 expressions in this paramdef, 1 is hidden
 	});
 
 	it("CommonProperties renders with validateLink and callback is called on click", () => {
@@ -706,9 +720,9 @@ describe("expression builder generates and accesses field dropdown correctly", (
 			</Provider>
 		);
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Fields");
-		const dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
+		const dropDown = wrapper.find("div.properties-expression-field-select .cds--list-box__field");
 		dropDown.simulate("click");
-		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		var dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		// check that all dropdown options are loaded
 		expect(dropDownList).to.have.length(5);
 		// selecting the dropdown list has the correct entries
@@ -720,7 +734,7 @@ describe("expression builder generates and accesses field dropdown correctly", (
 		// select an option
 		dropDownList.at(2).simulate("click");
 		// properly close the dropdown once selected
-		expect(wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item")).to.have.length(0);
+		expect(wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item")).to.have.length(0);
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Globals");
 	});
 
@@ -737,29 +751,31 @@ describe("expression builder generates and accesses field dropdown correctly", (
 		);
 		var dropDown = wrapper.find("div.properties-expression-field-select button");
 		dropDown.simulate("click");
-		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		var dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		// test globals
 		dropDownList.at(2).simulate("click");
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Globals");
 		const fieldTable = wrapper.find("div.properties-field-table-container");
 		const valueTable = wrapper.find("div.properties-value-table-container");
-		tableUtils.dblClickTableRows(fieldTable, [0]);
+		const addFieldButtons = getAddButtonsList(tableUtils.getTableRows(fieldTable));
+		addFieldButtons.at(0).simulate("click");
 		// expect selecting a field enters the correct value
 		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE')");
 		tableUtils.clickTableRows(fieldTable, [1]);
-		tableUtils.dblClickTableRows(valueTable, [0]);
+		const addValueButtons = getAddButtonsList(tableUtils.getTableRows(valueTable));
+		addValueButtons.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863");
 		// test mrs
 		dropDown = wrapper.find("div.properties-expression-field-select button");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(3).simulate("click");
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Multi Response Set");
-		tableUtils.dblClickTableRows(fieldTable, [0]);
-		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 'numberSet'");
+		addFieldButtons.at(0).simulate("click");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 numberSet");
 		tableUtils.clickTableRows(fieldTable, [1]);
-		tableUtils.dblClickTableRows(valueTable, [0]);
-		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 'numberSet' 1");
+		addValueButtons.at(0).simulate("click");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 numberSet 1");
 	});
 });
 
@@ -937,27 +953,31 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 
 		expect(fieldRows).to.have.length(4);
 		// navigate to Recently Used fields and check that it is empty
-		var dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
+		var dropDown = wrapper.find("div.properties-expression-field-select .cds--list-box__field");
 		dropDown.simulate("click");
-		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		var dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(1).simulate("click");
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Recently Used");
-		expect(wrapper.find("div.properties-field-table-container .properties-vt-column").text()).to.equal("Item");
+		expect(wrapper.find("div.properties-field-table-container .properties-vt-column").at(0)
+			.text()).to.equal("Add");
+		expect(wrapper.find("div.properties-field-table-container .properties-vt-column").at(1)
+			.text()).to.equal("Item");
 		fieldRows = tableUtils.getTableRows(wrapper.find("div.properties-field-table-container"));
 		expect(fieldRows).to.have.length(0);
 		// back to Fields
-		dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
+		dropDown = wrapper.find("div.properties-expression-field-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(0).simulate("click");
 		fieldRows = tableUtils.getTableRows(wrapper.find("div.properties-field-table-container"));
 		// add two rows to Recently Used
-		fieldRows.at(0).simulate("dblclick");
-		fieldRows.at(1).simulate("dblclick");
+		const addButtons = getAddButtonsList(fieldRows);
+		addButtons.at(0).simulate("click");
+		addButtons.at(1).simulate("click");
 		// back to Recently used
-		dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
+		dropDown = wrapper.find("div.properties-expression-field-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(1).simulate("click");
 		// check that the fields were correctly added
 		fieldRows = tableUtils.getTableRows(wrapper.find("div.properties-field-table-container"));
@@ -969,17 +989,17 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		expect(valueRows).to.have.length(3);
 		expect(valueRows.at(2).text()).to.equal("not specified");
 		// check that reusing a field will move it to the top of Recently Used
-		dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
+		dropDown = wrapper.find("div.properties-expression-field-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(0).simulate("click");
 		fieldRows = tableUtils.getTableRows(wrapper.find("div.properties-field-table-container"));
 		// add Age again, moving it to the top of Recently Used
-		fieldRows.at(0).simulate("dblclick");
+		addButtons.at(0).simulate("click");
 		// back to Recently Used
-		dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
+		dropDown = wrapper.find("div.properties-expression-field-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(1).simulate("click");
 		// order of rows should be reversed
 		fieldRows = tableUtils.getTableRows(wrapper.find("div.properties-field-table-container"));
@@ -1006,28 +1026,31 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		let funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		expect(funcRows).to.have.length(4);
 		// navigate to Recently Used fields and check that it is empty
-		var dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
+		var dropDown = wrapper.find("div.properties-expression-function-select .cds--list-box__field");
 		dropDown.simulate("click");
-		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		var dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(1).simulate("click");
 		expect(wrapper.find("div.properties-expression-function-select span").text()).to.equal("Recently Used");
 		expect(wrapper.find("div.properties-functions-table-container .properties-vt-column").at(0)
+			.text()).to.equal("Add");
+		expect(wrapper.find("div.properties-functions-table-container .properties-vt-column").at(1)
 			.text()).to.equal("Function");
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		expect(funcRows).to.have.length(0);
 		// back to General Functions
-		dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
+		dropDown = wrapper.find("div.properties-expression-function-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(0).simulate("click");
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		// add two rows to Recently Used
-		funcRows.at(0).simulate("dblclick");
-		funcRows.at(1).simulate("dblclick");
+		const addFuncButtons = getAddButtonsList(funcRows);
+		addFuncButtons.at(0).simulate("click");
+		addFuncButtons.at(1).simulate("click");
 		// back to Recently used
-		dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
+		dropDown = wrapper.find("div.properties-expression-function-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(1).simulate("click");
 		// check that the functions were correctly added
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
@@ -1035,17 +1058,18 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		expect(funcRows.at(0).text()).to.equal("count_equal(Item, List)Integer");
 		expect(funcRows.at(1).text()).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
 		// check that reusing a function will move it to the top of Recently Used
-		dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
+		dropDown = wrapper.find("div.properties-expression-function-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(0).simulate("click");
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		// add to_integer again, moving it to the top of Recently Used
-		funcRows.at(0).simulate("dblclick");
+		const addButtons = getAddButtonsList(funcRows);
+		addButtons.at(0).simulate("click");
 		// back to Recently Used
-		dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
+		dropDown = wrapper.find("div.properties-expression-function-select .cds--list-box__field");
 		dropDown.simulate("click");
-		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList = wrapper.find("ul.cds--list-box__menu .cds--list-box__menu-item");
 		dropDownList.at(1).simulate("click");
 		// order of rows should be reversed
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
@@ -1127,5 +1151,34 @@ describe("expression toggle in tearsheet", () => {
 		controller.setActiveTearsheet("tearsheetX");
 		wrapper.find("button.minimize").simulate("click");
 		expect(controller.getActiveTearsheet()).to.equal(null);
+	});
+});
+
+describe("expression select field function tests", () => {
+	let wrapper;
+	beforeEach(() => {
+		reset();
+		wrapper = mountWithIntl(
+			<ExpressionSelectFieldFunctions
+				controller={controller}
+				language={control.language}
+				onChange={Sinon.spy()}
+				functionList={ExpressionInfo.actual.functionCategories}
+			/>
+		);
+	});
+
+	it("should return true if field name includes special characters", () => {
+		const instance = wrapper.find("ExpressionSelectFieldOrFunction").instance();
+		expect(instance.shouldQuoteField("field")).to.equal(false);
+		expect(instance.shouldQuoteField("FieldName")).to.equal(false);
+
+		expect(instance.shouldQuoteField("field space")).to.equal(true);
+		expect(instance.shouldQuoteField("field0")).to.equal(true);
+		expect(instance.shouldQuoteField("9field")).to.equal(true);
+		expect(instance.shouldQuoteField("field5number")).to.equal(true);
+		expect(instance.shouldQuoteField("field-dash")).to.equal(true);
+		expect(instance.shouldQuoteField("$field$")).to.equal(true);
+		expect(instance.shouldQuoteField("field_underscore")).to.equal(true);
 	});
 });

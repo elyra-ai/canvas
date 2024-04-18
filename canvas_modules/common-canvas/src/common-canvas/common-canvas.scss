@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-@import "carbon-components/scss/globals/scss/_vars";
 $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
-$bottom-panel-border-width: 1px;
-$bottom-panel-border-color: $ui-03;
+$panel-border-width: 1px;
+$panel-border-color: $border-subtle-01;
 
 /* Default layout for common-canvas components where the canvas appears below
  * the toolbar and right-side flyout appears to the right of the toolbar and
@@ -40,6 +39,9 @@ $bottom-panel-border-color: $ui-03;
 	height: 100%;
 	position: relative;
 	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr;
+	/* grid-template-rows is set dynamically in cc-central-items */
 }
 
 .common-canvas-right-side-items {
@@ -47,74 +49,91 @@ $bottom-panel-border-color: $ui-03;
 	display: flex;
 }
 
-.common-canvas-main {
-	width: 100%;
-	height: 100%;
-}
-
-.common-canvas-with-bottom-panel {
-	width: 100%;
-	position: relative;
-}
-
 .common-canvas-drop-div {
-	height: calc(100% - #{$toolbar-button-height});
+	height: 100%;
 	width: 100%;
 	min-width: inherit;
-	position: absolute;
 	cursor: default;
-	top: $toolbar-button-height;
 	overflow: hidden;
-
-	&.common-canvas-toolbar-none {
-		height: 100%;
-		top: 0;
-	}
-
-	&.common-canvas-toolbar-none.common-canvas-bottom-panel-is-open {
-		top: 0;
-	}
+	position: relative; // This allows the State Tag to have positio: absolute
 }
 
 .right-flyout-panel {
 	height: 100%;
 	position: relative;
 	user-select: none; /* Prevent elements from being selectable */
-	background-color: $ui-01;
+	background-color: $layer-01;
 }
 
 .bottom-panel {
 	display: flex;
 	flex-direction: column;
-	position: absolute;
-	left:0;
-	right:0;
-	bottom: 0;
-	border-top: $bottom-panel-border-width solid $bottom-panel-border-color;
+	border-top: $panel-border-width solid $panel-border-color;
+	// Make sure the bottom panel appear above the empty canvas content
+	// (when displayed) in the flow editor div.
+	z-index: 1;
 }
 
 .bottom-panel-drag {
-	border-top: $bottom-panel-border-color;
+	border-top: $panel-border-color;
 	cursor: row-resize;
 	flex: 0 0 2px;
 	border-top-width: 1px;
-	background: $ui-01;
+	background: $layer-01;
 	transition: all 0.2s ease-in;
 	&:hover {
-		background: $interactive-01;
+		background: $button-tertiary;
 	}
 }
 
 .bottom-panel-contents {
-	background-color: $ui-01;
+	background-color: $layer-01;
 	width: 100%;
 	user-select: none;
 	height: 100%;
 }
 
+.top-panel {
+	display: flex;
+	flex-direction: column;
+	border-bottom: $panel-border-width solid $panel-border-color;
+}
+
+.common-canvas-toolbar {
+	border-bottom: $toolbar-divider-width solid $border-strong-01;
+}
+
 .text-toolbar {
+	.toolbar-div {
+		animation: raise-toolbar 0.3s linear;
+		border: 1px solid $border-strong-01;
+	}
+}
+
+// Below, we have to override the Carbon button's focus highlighting in the
+// context toolbar to get a complete border around the overflow icon. This is
+// necessary because the width allocated to the context toolbar is reduced by
+// five pixels to force the overflow icon to be displayed.
+.context-toolbar  {
+	.toolbar-overflow-item {
+		button:focus {
+			border-color: transparent;
+			box-shadow: inset 2px 2px $button-tertiary, inset -6px -2px $button-tertiary;
+		}
+		// Set padding so overflow icon appears in the center (horizontally). This
+		// offsets the 5px which are set in the code to make the overflow icon
+		// be generated correctly.
+		.toolbar-item-content {
+			padding-left: 4px;
+		}
+	}
+}
+
+.text-toolbar,
+.context-toolbar  {
 	position: absolute;
 	// top and left will be calculated and set for the text toolbar programmatically
+	// top, left and width will be calculated and set for the context toolbar programmatically
 	top: 0;
 	left: 0;
 	width: fit-content;
@@ -124,28 +143,20 @@ $bottom-panel-border-color: $ui-03;
 		// opening by adjusting its 'height' and 'top' values.
 		position: relative;
 		left: 0;
-		animation: raise-toolbar 0.3s linear;
-		border: 1px solid $ui-04;
 		padding-right: 0px;
 
 		.toolbar-left-bar {
 			padding-right: 0px;
 		}
 	}
+}
 
-	.text-toolbar-tick-svg {
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 40px;
-		width: 40px;
-		pointer-events: none;
-	}
-
-	.text-toolbar-tick-mark {
-		fill: $interactive-02;
+.text-toolbar  {
+	.toolbar-div {
+		animation: raise-toolbar 0.3s linear;
 	}
 }
+
 
 // Causes the text toolbar to animate upwards from the top of the comment
 // to its final position
@@ -166,21 +177,25 @@ $bottom-panel-border-color: $ui-03;
  * enableRightFlyoutUnderToolbar is true. */
 
 .common-canvas-right-side-items-under-toolbar {
+	display: grid;
+	/* grid-template-rows is set dynamically in cc-central-items */
+	grid-template-columns: 1fr;
 	width: 100%;
 }
 
 .common-canvas-items-container-under-toolbar {
-	height: calc(100% - #{$toolbar-button-height});
-	width: 100%;
-	display: flex;
-}
-
-.common-canvas-drop-div-under-toolbar {
 	height: 100%;
 	width: 100%;
-	position: relative; // Needed to allow textarea (for commnt editing) to be positiond OK.
-	cursor: default;
-	overflow: hidden;
+	display: grid;
+	grid-template-rows: 1fr auto;
+	/* grid-template-columns is set dynamically in cc-central-items */
+}
+
+.common-canvas-with-top-and-bottom-panel {
+	width: 100%;
+	display: grid;
+	/* grid-template-rows is set dynamically in cc-central-items */
+	grid-template-columns: 1fr;
 }
 
 /* Styles for empty canvas objects */
@@ -196,8 +211,8 @@ $bottom-panel-border-color: $ui-03;
 }
 
 .empty-canvas-image {
-	color: $text-03; // Picked up by fill attribute in the icon.
-	opacity: 0.4;
+	color: $text-placeholder; // Picked up by fill attribute in the icon.
+	opacity: 0.75;
 	display: block;
 	text-align: center;
 	& svg {
@@ -207,19 +222,49 @@ $bottom-panel-border-color: $ui-03;
 }
 
 .empty-canvas-text1 {
-	@include carbon--type-style("productive-heading-03");
+	@include type-style("productive-heading-03");
 	padding-top: $spacing-02;
-	color: $text-03;
+	color: $text-secondary;
 	display: block;
 	text-align: center;
 }
 
 .empty-canvas-text2 {
-	@include carbon--type-style("body-short-02");
+	@include type-style("body-short-02");
 	padding-top: $spacing-03;
-	color: $text-03;
+	color: $text-secondary;
 	display: block;
 	text-align: center;
+}
+
+/* Styles for 'Return to previous flow' button - shown for full-page sub-flows */
+
+.return-to-previous {
+	position: absolute;
+	left: 15px;
+	top: 15px;
+	background-color: $background;
+	& button {
+		background-color: $background;
+		padding-right: 20px;
+	}
+	& button:hover,
+	& button:focus {
+		background-color: $layer-accent-01;
+		color: $button-primary;
+	}
+	& .return-to-previous-content {
+		display: flex;
+		background-color: transparent;
+		& svg {
+			margin-top: 1px;
+			margin-left: 4px;
+			margin-right: 7px;
+		}
+		& span {
+			padding-bottom: 2px;
+		}
+	}
 }
 
 /* Styles for drop zone canvas objects */
@@ -234,7 +279,7 @@ $bottom-panel-border-color: $ui-03;
 	cursor: default;
 	transform: translate(-50%, -50%);
 	pointer-events: all;
-	background-color: $ui-background;
+	background-color: $background;
 	opacity: 0.75;
 }
 
@@ -244,32 +289,33 @@ $bottom-panel-border-color: $ui-03;
 	left: 30px;
 	right: 30px;
 	bottom: 30px;
-	border-color: $ui-04;
+	border-color: $border-strong-01;
 	border-style: dashed;
 	border-width: 2px;
 }
 
-.toolbar-item-content.notificationCounterIcon {
-	&.error > div > svg > .dot {
-		fill: $support-01;
+.toolbar-item.notificationCounterIcon {
+	&.error .toolbar-icon .dot {
+		fill: $support-error;
 	}
-	&.warning > div > svg > .dot {
-		fill: $support-03;
+	&.warning .toolbar-icon .dot {
+		fill: $support-warning;
 	}
-	&.success > div > svg > .dot {
-		fill: $support-02;
+	&.success .toolbar-icon .dot {
+		fill: $support-success;
 	}
-	&.info > div > svg > .dot {
-		fill: $support-04;
+	&.info .toolbar-icon .dot {
+		fill: $support-info;
 	}
 }
 
 .state-tag {
-	@include carbon--type-style("productive-heading-01");
-	color: $inverse-01;
+	@include type-style("productive-heading-01");
+	color: $text-inverse;
 	background-color: $background-inverse;
+	width: fit-content;
 	height: 40px;
-	position: absolute;
+	position: absolute; /* Positioned relative to the common-canvas-drop-div */
 	left: 50%;
 	top: 16px;
 	transform: translate(-50%, 0%);
@@ -278,7 +324,7 @@ $bottom-panel-border-color: $ui-03;
 	user-select: none; /* Prevent elements from being selectable */
 
 	svg {
-		color: $inverse-01;
+		color: $text-inverse;
 		position: relative;
 		top: 3px;
 		margin-left: 14px;

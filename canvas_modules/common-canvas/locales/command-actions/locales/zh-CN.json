@@ -3,7 +3,7 @@
   "action.arrangeLayout": "安排布局",
   "action.attachNodeToLinks": "将 {node_label} 节点附加到链接",
   "action.collapseSuperNodeInPlace": "折叠超节点",
-  "action.commonProperties": "保存属性",
+  "action.commonProperties": "保存 {node_label} 节点属性",
   "action.colorComments": "颜色 {comments_count, plural, other {# comments}}",
   "action.convertSuperNodeExternalToLocal": "将外部超节点 {node_label} 转换为本地超节点",
   "action.convertSuperNodeLocalToExternal": "将本地超节点 {node_label} 转换为外部超节点",

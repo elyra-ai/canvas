@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,12 +41,12 @@
 
 		.d3-node-ellipsis-group {
 			.d3-node-ellipsis {
-				fill: $icon-01;
+				fill: $icon-primary;
 			}
 
 			&:hover {
 				.d3-node-ellipsis-background {
-					fill: $ui-03;
+					fill: $layer-accent-01;
 				}
 			}
 		}
@@ -82,13 +82,13 @@
 			.d3-node-dec-group {
 				.d3-node-dec-image[data-id*="supernode-zoom"] {
 					display: block;
-					fill: $icon-01;
+					fill: $icon-primary;
 					stroke-width: 0;
 				}
 
 				&:hover {
 					.d3-node-dec-outline {
-						fill: $ui-03;
+						fill: $layer-accent-01;
 						stroke-width: 0;
 					}
 				}
@@ -99,20 +99,20 @@
 	.d3-data-link .d3-link-line,
 	.d3-data-link .d3-link-line-arrow-head {
 		fill: none;
-		stroke: $ui-05;
+		stroke: $layer-selected-inverse;
 		stroke-width: 1;
 	}
 
 	/* For association link */
 	.d3-object-link  .d3-link-line {
-		stroke: $ui-04;
+		stroke: $border-strong-01;
 		stroke-width: 2;
 		fill: none;
 		stroke-dasharray: 5.5;
 	}
 
 	.d3-comment-link  .d3-link-line {
-		stroke: $ui-04;
+		stroke: $border-strong-01;
 		stroke-width: 1;
 		fill: none;
 		stroke-dasharray: 10.5;
@@ -121,12 +121,12 @@
 
 	.d3-link-group:hover .d3-link-line,
 	.d3-link-group:hover .d3-link-line-arrow-head {
-		stroke: $interactive-01;
+		stroke: $button-primary;
 		stroke-width: 2;
 	}
 
 	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: $interactive-01;
+		stroke: $button-primary;
 		stroke-width: 2;
 		stroke-dasharray: 1 0;
 		fill: none;
@@ -143,15 +143,15 @@
 	/* Decoration Styles */
 
 	.node-cache-empty {
-		fill: $ui-01;
+		fill: $layer-01;
 	}
 
 	.node-cache-full {
-		fill: $ui-01;
+		fill: $layer-01;
 	}
 
 	.node-sql-pushback {
-		fill: $ui-01;
+		fill: $layer-01;
 	}
 
 	/* Override styles in common canvas to fade out nodes and comments
@@ -184,19 +184,19 @@
 	}
 
 	.canvas-ui-empty-text-placeholder {
-		@include carbon--type-style("productive-heading-03");
-		color: $text-01;
+		@include type-style("productive-heading-03");
+		color: $text-primary;
 	}
 
 	.canvas-ui-empty-subtext-placeholder {
-		@include carbon--type-style("body-long-02");
-		color: $text-02;
+		@include type-style("body-long-02");
+		color: $text-secondary;
 		margin-top: 8px;
 	}
 
 	.canvas-ui-empty-node-text {
-		@include carbon--type-style("productive-heading-02");
-		color: $text-02;
+		@include type-style("productive-heading-02");
+		color: $text-secondary;
 	}
 
 }

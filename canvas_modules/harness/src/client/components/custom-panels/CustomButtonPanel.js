@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /* eslint-disable no-empty-function */
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import paramDef from "./json/misclassification_paramDef.json";
 
 
@@ -210,11 +210,11 @@ class CustomButtonPanel {
 					{cost}
 				</div>
 				<br />
-				<Button size="small" onClick={this.addRowAction} {...addDisabled}>
+				<Button size="sm" onClick={this.addRowAction} {...addDisabled}>
 					Add
 				</Button>
 				&nbsp; &nbsp;
-				<Button size="small" onClick={this.removeRowsAction} {...removeDisabled}>
+				<Button size="sm" onClick={this.removeRowsAction} {...removeDisabled}>
 					Remove Selected
 				</Button>
 			</div>

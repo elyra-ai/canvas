@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,6 +73,7 @@ export const MESSAGE_KEYS = {
 	EXPRESSION_FIELDS_TITLE: "expression.fields.title",
 	EXPRESSION_VALUES_TITLE: "expression.values.title",
 	EXPRESSION_FIELD_COLUMN: "expression.field.column",
+	EXPRESSION_ADD_COLUMN: "expression.add.column",
 	EXPRESSION_FIELD_COLUMN_DESCRIPTION: "expression.field.column.description",
 	EXPRESSION_STORAGE_COLUMN: "expression.storage.column",
 	EXPRESSION_VALUE_COLUMN: "expression.value.column",
@@ -103,6 +104,7 @@ export const MESSAGE_KEYS = {
 	DROPDOWN_TOOLTIP_CLEARSELECTION: "dropdown.tooltip.clear.selection",
 	TRUNCATE_LONG_STRING_ERROR: "truncate.long.string.error",
 	PROPERTIES_LABEL: "properties.label",
+	PROPERTIES_ERROR_LABEL: "properties.error.label",
 	PROPERTIES_ACTION_LABEL: "action.commonProperties",
 	READONLYTABLE_EDIT_BUTTON_LABEL: "readonlytable.edit.button.label",
 	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description",
@@ -112,7 +114,14 @@ export const MESSAGE_KEYS = {
 	TOGGLE_ON_LABEL: "toggle.on.label",
 	TOGGLE_OFF_LABEL: "toggle.off.label",
 	SHOW_PASSWORD_TOOLTIP: "passwordShow.tooltip",
-	HIDE_PASSWORD_TOOLTIP: "passwordHide.tooltip"
+	HIDE_PASSWORD_TOOLTIP: "passwordHide.tooltip",
+	LABEL_INDICATOR_REQUIRED: "label.indicator.required",
+	LABEL_INDICATOR_OPTIONAL: "label.indicator.optional",
+	DATEPICKER_RANGE_START_LABEL: "datepickerRangeStart.default.label",
+	DATEPICKER_RANGE_END_LABEL: "datepickerRangeEnd.default.label",
+	SLIDER_NUMBER_INPUT_LABEL: "slider.numberInput.label",
+	EDITORFORM_TABLIST_LABEL: "editorForm.tabList.label",
+	SUBTABS_TABLIST_LABEL: "subTabs.tabList.label"
 };
 
 export const TRUNCATE_LIMIT = 10000;
@@ -150,7 +159,14 @@ export const DATA_TYPE = {
 	TIMESTAMP: "timestamp"
 };
 
-export const DEFAULT_DATE_FORMAT = "yyyy-mm-dd";
+export const DATEPICKER_TYPE = {
+	SINGLE: "single",
+	RANGE: "range"
+};
+
+export const DEFAULT_DATEPICKER_FORMAT = "Y-m-d"; // ISO format
+
+export const DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
 export const DEFAULT_TIME_FORMAT = "H:m:s";
 
@@ -265,6 +281,18 @@ export const CARBON_BUTTON_SIZE = {
 	SMALL: "sm",
 	MEDIUM: "md",
 	LARGE: "lg",
-	EXTRA_LARGE: "xl",
-	DEFAULT: "default" // TODO: remove this after upgrading to carbon 11.x
+	EXTRA_LARGE: "xl"
+};
+
+export const CONTAINER_TYPE = {
+	CUSTOM: "Custom",
+	TEARSHEET: "Tearsheet",
+	MODAL: "Modal"
+};
+
+export const DEFAULT_LOCALE = "en";
+
+export const CATEGORY_VIEW = { // Category view ONLY for right flyout
+	ACCORDIONS: "accordions",
+	TABS: "tabs"
 };

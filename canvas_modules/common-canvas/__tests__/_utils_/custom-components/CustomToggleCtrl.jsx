@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Icon from "carbon-components-react/lib/components/Icon";
-import Toggle from "carbon-components-react/lib/components/Toggle";
-import ToggleSmall from "carbon-components-react/lib/components/ToggleSmall";
+import { WarningFilled, ErrorFilled } from "@carbon/react/icons";
+import { Toggle } from "@carbon/react";
 import { connect } from "react-redux";
 
 class CustomToggleCtrl extends React.Component {
@@ -43,9 +42,9 @@ class CustomToggleCtrl extends React.Component {
 		if (this.props.messageInfo && this.props.messageInfo.text && !this.props.table) {
 			messageText = this.props.messageInfo.text;
 			if (this.props.messageInfo.type === "warning") {
-				icon = (<Icon className="warning" name="warning--glyph" />);
+				icon = (<WarningFilled className="warning" />);
 			} else if (this.props.messageInfo.type === "error") {
-				icon = (<Icon className="error" name="error--glyph" />);
+				icon = (<ErrorFilled className="error" />);
 			}
 		}
 		let visibility;
@@ -71,7 +70,8 @@ class CustomToggleCtrl extends React.Component {
 			/>
 		);
 		if (this.props.table) {
-			toggle = (<ToggleSmall
+			toggle = (<Toggle
+				size="sm"
 				disabled={disabled}
 				id={id}
 				toggled={this.props.controlValue}

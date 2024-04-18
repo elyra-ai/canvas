@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ export class PropertyDef {
 		const actionMetadata = ActionMetadata.makeActionMetadata(propertyOf(uihints)("action_info"));
 		const groupMetadata = GroupMetadata.makeGroupMetadata(propertyOf(uihints)("group_info"), parameterMetadata.getParameters());
 
-		const label = titleDefinition && titleDefinition.title ? titleDefinition.title : "";
+		const label = titleDefinition && titleDefinition.title ? titleDefinition.title : null;
 		const labelEditable = titleDefinition && typeof titleDefinition.editable !== "undefined" ? titleDefinition.editable : DEFAULT_LABEL_EDITABLE;
 
 		return new PropertyDef(

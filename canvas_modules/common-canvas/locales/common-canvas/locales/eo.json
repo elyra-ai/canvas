@@ -21,7 +21,9 @@
 	"canvas.stateTagReadOnly": "[Esperanto~Read-only~~~eo]",
 	"canvas.stateTagTipLocked": "[Esperanto~This flow is locked and cannot be edited.~~~~~~~~~eo]",
 	"canvas.stateTagTipReadOnly": "[Esperanto~This flow cannot be edited.~~~~~~~~~eo]",
+	"canvas.returnToPrevious": "[Esperanto~Return to previous flow~~~~~~eo]",
 	"comment.colorBackground": "[Esperanto~Color background~~~~~~~~~eo]",
+	"comment.editComment": "[Esperanto~Edit comment~~~~~~~eo]",
 	"node.createSupernode": "[Esperanto~Create supernode~~eo]",
 	"node.createSupernodeExternal": "[Esperanto~Create external supernode~~~~~~eo]",
 	"node.expandSupernode": "[Esperanto~Expand supernode~~eo]",
@@ -30,6 +32,7 @@
 	"node.deconstructSupernode": "[Esperanto~Deconstruct supernode~~~~eo]",
 	"node.convertSupernodeExternalToLocal": "[Esperanto~Convert external to local~~~~~~eo]",
 	"node.convertSupernodeLocalToExternal": "[Esperanto~Convert local to external~~~~~~eo]",
+	"node.renameNode": "[Esperanto~Rename~eo]",
 	"canvas.validateFlow": "[Esperanto~Validate Flow~eo]",
 	"node.editNode": "[Esperanto~Open~eo]",
 	"node.editMenu": "[Esperanto~Edit~eo]",
@@ -46,7 +49,6 @@
 	"texttoolbar.bulletedListAction": "[Esperanto~Bulleted List~~~~eo]",
 	"texttoolbar.numberedListAction": "[Esperanto~Numbered List~~~~eo]",
 	"texttoolbar.titleAction": "[Esperanto~Title~eo]",
-	"texttoolbar.headerAction": "[Esperanto~Header~eo]",
 	"texttoolbar.subheaderAction": "[Esperanto~Subheader~eo]",
 	"texttoolbar.bodyAction": "[Esperanto~Body~eo]"
 }

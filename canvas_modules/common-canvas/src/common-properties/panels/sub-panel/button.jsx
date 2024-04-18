@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import logger from "./../../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import { formatMessage } from "./../../util/property-utils";
 import { MESSAGE_KEYS } from "./../../constants/constants";
 
@@ -47,7 +47,7 @@ export default class SubPanelButton extends React.Component {
 		const button = (<Button
 			className="properties-subpanel-button"
 			type="button"
-			small
+			size="sm"
 			kind="secondary"
 			onClick={this.showSubPanel}
 		>

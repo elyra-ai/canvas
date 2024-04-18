@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { IntlProvider } from "react-intl";
-import { mount } from "enzyme";
+import { mount } from "./mount-utils.js";
 import sinon from "sinon";
 
 

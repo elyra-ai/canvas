@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { get } from "lodash";
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import ExplainCanvasFlow from "./explainCanvas.json";
 
@@ -32,6 +33,7 @@ export default class ExplainCanvas extends React.Component {
 			enableLinkType: "Straight",
 			enablePaletteLayout: "None",
 			enableEditingActions: false,
+			enableNodeFormatType: "Vertical",
 			enableNodeLayout:
 			{
 				defaultNodeWidth: 120,
@@ -50,14 +52,18 @@ export default class ExplainCanvas extends React.Component {
 		});
 	}
 
-
-	layoutHandler(data) {
-		const labLen = data.label ? data.label.length : 0;
+	// Returns an object containing the bodyPath, selectionPath and a calculated
+	// width for the node passed in.
+	getPaths(node) {
+		const labLen = node.label ? node.label.length : 0;
 		let width = 120;
+
 		let bodyPath = "";
 		let selectionPath = "";
 
-		switch (data.op) {
+		// Set the shape of the nodes based on the op field stored in
+		// the node.
+		switch (node.op) {
 		case "rectangle": {
 			bodyPath = "     M  0 0  L  0 60 120 60 120  0  0  0 Z";
 			selectionPath = "M -5 -5 L -5 65 125 65 125 -5 -5 -5 Z";
@@ -84,6 +90,7 @@ export default class ExplainCanvas extends React.Component {
 			break;
 		}
 		case "hexagon": {
+			// Hexagons can be sized to accommodate the size of long labels.
 			width = (labLen * 9) + 60; // Allow 9 pixels for each character
 			const corner = width - 30;
 			bodyPath = `     M   0 30 L 30 60 ${corner} 60 ${width}     30 ${corner}  0 30  0 Z`;
@@ -94,13 +101,84 @@ export default class ExplainCanvas extends React.Component {
 			return {};
 		}
 
+		return { bodyPath, selectionPath, width };
+	}
+
+	// Returns a class name for coloring nodes based on the category passed in.
+	getClassNameForCategory(category) {
+		let className = "";
+
+		switch (category) {
+		case "a": {
+			className = "light_brown";
+			break;
+		}
+		case "b": {
+			className = "light_purple";
+			break;
+		}
+		case "c": {
+			className = "pink";
+			break;
+		}
+		case "d": {
+			className = "dark_purple";
+			break;
+		}
+		case "e": {
+			className = "gray";
+			break;
+		}
+		case "f": {
+			className = "light_green";
+			break;
+		}
+		case "g":
+		default:
+			className = "";
+		}
+
+		return className;
+	}
+
+	// Returns node layout properties for each node passed in the data parameter.
+	layoutHandler(node) {
+		const category = get(node, "app_data.explain_data.category");
+		const index = get(node, "app_data.explain_data.index");
+		const cost = get(node, "app_data.explain_data.cost");
+
+		const className = this.getClassNameForCategory(category);
+		const { bodyPath, selectionPath, width } = this.getPaths(node);
+
 		const nodeFormat = {
 			defaultNodeWidth: width, // Override default width with calculated width
 			labelPosX: (width / 2), // Specify center of label as center of node Note: text-align is set to center in the CSS for this label
 			labelWidth: width, // Set big enough so that label is not truncated and so no ... appears
 			ellipsisPosX: width - 25, // Always position 25px in from the right side
 			bodyPath: bodyPath,
-			selectionPath: selectionPath
+			selectionPath: selectionPath,
+			className: className,
+			decorations: [
+				{
+					id: "labelDecoration1",
+					x_pos: 10,
+					y_pos: 15,
+					width: 28,
+					label: "(" + index + ")",
+					class_name: "small_text",
+					temporary: true
+				},
+				{
+					id: "labelDecoration2",
+					position: "bottomCenter",
+					x_pos: -25,
+					y_pos: -19,
+					width: 50,
+					label: cost,
+					class_name: "small_text",
+					temporary: true
+				}
+			]
 		};
 
 		return nodeFormat;
@@ -111,7 +189,7 @@ export default class ExplainCanvas extends React.Component {
 			<CommonCanvas
 				canvasController={this.canvasController}
 				config={this.config}
-				layoutHandler={this.layoutHandler}
+				layoutHandler={this.layoutHandler.bind(this)}
 			/>
 		);
 	}

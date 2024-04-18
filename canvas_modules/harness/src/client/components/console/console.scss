@@ -1,0 +1,53 @@
+/*
+ * Copyright 2023 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.harness-app-console {
+	@include type-style("code-01");
+	background-color: $layer-01;
+	border-top: 1px solid $layer-accent-01;
+	overflow-y: auto;
+	padding: $spacing-04;
+	word-wrap: break-word;
+	position: fixed;
+	bottom: 0;
+	height: $harness-console-height;
+	width: 100%;
+
+	&.side-panel-open {
+		width: calc(100% - $harness-sidepanel-width);
+	}
+
+	.harness-console-pretty-json {
+		margin: 0 $spacing-04 $spacing-04 0;
+	}
+
+	.harness-console-entry {
+		&::before {
+			content: "-";
+			padding-right: $spacing-04;
+		}
+
+		&:hover {
+			background-color: $layer-02;
+			cursor: pointer;
+		}
+
+		&:hover::before {
+			content: "+";
+			padding-right: $spacing-04;
+		}
+	}
+}

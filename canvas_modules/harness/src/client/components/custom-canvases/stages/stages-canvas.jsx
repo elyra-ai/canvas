@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,12 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
+import { ChevronDown, Edit } from "@carbon/react/icons";
+
+import MultiUndoPanel from "./multi-undo-panel";
+
 import StagesCanvasFlow from "./stagesCanvas.json";
-import StagesPalette from "./stagesPalette.json";
+import StagesPalette from "../../../../../test_resources/palettes/stagesPalette.json";
 
 export default class DetachedCanvas extends React.Component {
 	constructor(props) {
@@ -30,6 +34,7 @@ export default class DetachedCanvas extends React.Component {
 		this.canvasController.setPipelineFlowPalette(StagesPalette);
 
 		this.getConfig = this.getConfig.bind(this);
+		this.getToolbarConfig = this.getToolbarConfig.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
@@ -43,17 +48,46 @@ export default class DetachedCanvas extends React.Component {
 				return { linkId: link.id, pipelineId: pId, decorations: decs };
 			});
 		this.canvasController.setLinksMultiDecorations(pipelineLinkDecorations);
+	}
 
+	getToolbarConfig() {
+		const toolbarConfig = {
+			leftBar: [
+				{ action: "undo", label: "Undo", enable: true },
+				{ action: "multiUndo",
+					label: "Multiple Undo",
+					iconEnabled: (<ChevronDown size={32} />),
+					subPanel: MultiUndoPanel,
+					subPanelData: { canvasController: this.canvasController } },
+				{ action: "redo", label: "Redo", enable: true },
+				{ divider: true },
+				{ action: "cut", label: "Cut", enable: true },
+				{ action: "copy", label: "Copy", enable: true },
+				{ action: "paste", label: "Paste", enable: true },
+				{ divider: true },
+				{ action: "createAutoComment", label: "Add Comment", enable: true },
+				{ action: "deleteSelectedObjects", label: "Delete", enable: true }
+			],
+			rightBar: [
+				{ divider: true },
+				{ action: "zoomIn", label: "Zoom In", enable: true },
+				{ action: "zoomOut", label: "Zoom Out", enable: true },
+				{ action: "zoomToFit", label: "Zoom To Fit", enable: true }
+			]
+		};
+		return toolbarConfig;
 	}
 
 	getConfig() {
 		const config = Object.assign({}, this.props.config, {
-			enableParentClass: "detached-links",
+			enableParentClass: "stages",
 			enableNodeFormatType: "Vertical",
 			enableLinkType: "Straight",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",
+			enableSnapToGridX: "33%",
+			enableSnapToGridY: "33%",
 			enableLinkSelection: "Detachable",
 			enableInsertNodeDroppedOnLink: true,
 			enableDropZoneOnExternalDrag: true,
@@ -63,6 +97,7 @@ export default class DetachedCanvas extends React.Component {
 			enableAutoLinkOnlyFromSelNodes: true,
 			enableSingleOutputPortDisplay: true,
 			enableMarkdownInComments: true,
+			enableContextToolbar: true,
 			enableResizableNodes: true,
 			enableNarrowPalette: false,
 			paletteInitialState: true,
@@ -99,26 +134,26 @@ export default class DetachedCanvas extends React.Component {
 				labelAllowReturnKey: "save",
 				portRadius: 10,
 				inputPortDisplay: false,
-				outputPortRightPosition: "middleCenter",
-				outputPortRightPosX: 34,
+				outputPortRightPosition: "middleRight",
+				outputPortRightPosX: 0,
 				outputPortRightPosY: 0,
 				outputPortObject: "image",
-				outputPortImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				outputPortImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,
 				outputPortHeight: 20,
 				outputPortGuideObject: "image",
-				outputPortGuideImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg"
+				outputPortGuideImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg"
 			},
 			enableCanvasLayout: {
 				dataLinkArrowHead: "M -5 5 L 0 0 -5 -5",
 				linkGap: 4,
 				displayLinkOnOverlap: false,
 				linkStartHandleObject: "image",
-				linkStartHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateStart.svg",
+				linkStartHandleImage: "/images/custom-canvases/stages/decorations/dragStateStart.svg",
 				linkStartHandleWidth: 20,
 				linkStartHandleHeight: 20,
 				linkEndHandleObject: "image",
-				linkEndHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				linkEndHandleImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				linkEndHandleWidth: 20,
 				linkEndHandleHeight: 20,
 				linkHandleRaiseToTop: true
@@ -130,12 +165,13 @@ export default class DetachedCanvas extends React.Component {
 	getDecorationsArray(linkLabel) {
 		const decs = [
 			{ id: "dec-0", position: "source", path: "M 0 -5 A 5 5 0 1 1 0 5 A 5 5 0 1 1 0 -5", class_name: "det-link-dot", temporary: true },
-			{ id: "dec-1", position: "source", image: "images/up-triangle.svg", class_name: "det-tri",
+			{ id: "dec-1", position: "source", image: "images/custom-canvases/stages/decorations/tri-up.svg", class_name: "det-tri",
 				distance: 40, x_pos: -7, y_pos: -7, width: 14, height: 14, outline: true, tooltip: "Up Triangle", temporary: true },
-			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", class_name: "det-tri",
+			{ id: "dec-2", position: "target", image: "images/custom-canvases/stages/decorations/tri-down.svg", class_name: "det-tri",
 				distance: -40, x_pos: -7, y_pos: -7, width: 14, height: 14, outline: true, tooltip: "Down Triangle", temporary: true },
 			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background", temporary: true },
-			{ id: "dec-4", position: "middle", label: linkLabel, x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
+			{ id: "link-label", position: "middle", label: linkLabel, label_editable: true, label_allow_return_key: "save",
+				x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
 		];
 		return decs;
 	}
@@ -161,8 +197,10 @@ export default class DetachedCanvas extends React.Component {
 	editActionHandler(data, command) {
 		if (data.editType === "linkNodes") {
 			this.createDecorations(data.linkIds[0]);
+
 		} else if (data.editType === "redo" && command.data.editType === "linkNodes") {
 			this.createDecorations(command.data.linkIds[0]);
+
 		} else if (data.editType === "createSuperNode" ||
 								data.editType === "redo" && command.data.editType === "createSuperNode") {
 			const newNodeProps =
@@ -174,20 +212,26 @@ export default class DetachedCanvas extends React.Component {
 				command.supernode.id,
 				newNodeProps,
 				command.apiPipeline.pipelineId);
+
 		} else if (data.editType === "addPort") {
 			const outputs = this.canvasController.getNodeOutputPorts(data.selectedObjects[0].id);
 			const newOutputs = outputs.concat(this.getNewPort(outputs.length + 1));
 			this.canvasController.setNodeOutputPorts(data.selectedObjects[0].id, newOutputs);
+
+		} else if (data.editType === "renameLinkLabel") {
+			this.canvasController.setLinkDecorationLabelEditingMode("link-label", data.id, data.pipelineId);
 		}
 	}
 
 	contextMenuHandler(source, defaultMenu) {
-		if (source.selectedObjectIds.length === 1) {
-			return defaultMenu.concat([
-				{ divider: true }, { action: "addPort", label: "Add port" }
-			]);
+		const newMenu = defaultMenu;
+		if (source.type === "link") {
+			newMenu.unshift(
+				{ action: "renameLinkLabel", label: "Rename", icon: (<Edit />) }
+			);
 		}
-		return defaultMenu;
+
+		return newMenu;
 	}
 
 	clickActionHandler(source) {
@@ -207,6 +251,8 @@ export default class DetachedCanvas extends React.Component {
 
 	render() {
 		const config = this.getConfig();
+		const toolbarConfig = this.getToolbarConfig();
+
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
@@ -214,6 +260,7 @@ export default class DetachedCanvas extends React.Component {
 				editActionHandler={this.editActionHandler}
 				clickActionHandler={this.clickActionHandler}
 				contextMenuHandler={this.contextMenuHandler}
+				toolbarConfig={toolbarConfig}
 				config={config}
 			/>
 		);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,9 @@
 /* eslint no-lonely-if: "off" */
 
 // Import just the D3 modules that are needed and combine them as the 'd3' object.
-import * as d3Drag from "d3-drag";
-import * as d3Ease from "d3-ease";
 import * as d3Selection from "d3-selection";
 import * as d3Fetch from "d3-fetch";
-import * as d3Zoom from "./d3-zoom-extension/src";
-const d3 = Object.assign({}, d3Drag, d3Ease, d3Selection, d3Fetch, d3Zoom);
+const d3 = Object.assign({}, d3Selection, d3Fetch);
 
 const markdownIt = require("markdown-it")({
 	html: false, // Don't allow HTML to be executed in comments.
@@ -32,16 +29,15 @@ const markdownIt = require("markdown-it")({
 	typographer: true
 });
 
-import { cloneDeep, escape as escapeText, forOwn, get } from "lodash";
+import { escape as escapeText, forOwn, get } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
 	LINK_DIR_LEFT_RIGHT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
-	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON, EDIT_ICON,
-	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
+	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, EDIT_ICON,
+	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
-	INTERACTION_MOUSE, INTERACTION_TRACKPAD, INTERACTION_CARBON,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	NORTH, SOUTH, EAST, WEST }
@@ -55,29 +51,31 @@ import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import SvgCanvasComments from "./svg-canvas-utils-comments.js";
 import SvgCanvasLinks from "./svg-canvas-utils-links.js";
 import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
+import SvgCanvasExternal from "./svg-canvas-utils-external.js";
 import SvgCanvasTextArea from "./svg-canvas-utils-textarea.js";
+import SvgCanvasDragObject from "./svg-canvas-utils-drag-objects.js";
+import SvgCanvasDragNewLink from "./svg-canvas-utils-drag-new-link.js";
+import SvgCanvasDragDetLink from "./svg-canvas-utils-drag-det-link.js";
+import SvgCanvasZoom from "./svg-canvas-utils-zoom.js";
 import SVGCanvasPipeline from "./svg-canvas-pipeline";
-
-const showLinksTime = false;
 
 const NINETY_DEGREES = 90;
 
-const INPUT_TYPE = "input_type";
-const OUTPUT_TYPE = "output_type";
-
-
 export default class SVGCanvasRenderer {
-	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, config, supernodeInfo = {}) {
+	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config, supernodeInfo = {}) {
 		this.logger = new Logger(["SVGCanvasRenderer", "PipeId", pipelineId]);
 		this.logger.logStartTimer("constructor" + pipelineId.substring(0, 5));
 		this.pipelineId = pipelineId;
-		this.supernodeInfo = supernodeInfo; // Contents will be undefined in case of primary pipeline renderer
+		this.supernodeInfo = supernodeInfo; // Contents will be 'empty object' in case of primary pipeline renderer
 		this.canvasDiv = canvasDiv;
 		this.canvasInfo = canvasInfo;
+		this.selectionInfo = selectionInfo;
+		this.breadcrumbs = breadcrumbs;
+		this.nodeLayout = nodeLayout;
+		this.canvasLayout = canvasLayout;
 		this.config = config;
 		this.canvasController = canvasController;
-		this.objectModel = this.canvasController.getObjectModel();
-		this.activePipeline = new SVGCanvasPipeline(pipelineId, canvasInfo);
+		this.activePipeline = new SVGCanvasPipeline(pipelineId, canvasInfo, selectionInfo);
 
 		// An array of renderers for the supernodes on the canvas.
 		this.superRenderers = [];
@@ -85,14 +83,16 @@ export default class SVGCanvasRenderer {
 		// Our instance ID for adding to DOM element IDs
 		this.instanceId = this.canvasController.getInstanceId();
 
-		// Get the canvas layout info
-		this.canvasLayout = this.objectModel.getCanvasLayout();
-
-		this.dispUtils = new SvgCanvasDisplay(this.canvasController, this.supernodeInfo.d3Selection, this.pipelineId);
+		this.dispUtils = new SvgCanvasDisplay(this.canvasController, this.supernodeInfo.d3Selection, this.pipelineId, breadcrumbs);
 		this.nodeUtils = new SvgCanvasNodes(this.canvasLayout);
 		this.commentUtils = new SvgCanvasComments();
 		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils, this.commentUtils);
 		this.decUtils = new SvgCanvasDecs(this.canvasLayout);
+		this.dragObjectUtils = new SvgCanvasDragObject(this);
+		this.dragNewLinkUtils = new SvgCanvasDragNewLink(this);
+		this.dragDetLinkUtils = new SvgCanvasDragDetLink(this);
+		this.zoomUtils = new SvgCanvasZoom(this);
+		this.externalUtils = new SvgCanvasExternal(this);
 		this.svgCanvasTextArea = new SvgCanvasTextArea(
 			this.config,
 			this.dispUtils,
@@ -108,44 +108,6 @@ export default class SVGCanvasRenderer {
 
 		this.dispUtils.setDisplayState();
 		this.logger.log(this.dispUtils.getDisplayStateMsg());
-
-		// Initialize zoom variables
-		this.initializeZoomVariables();
-
-		// Dimensions for extent of canvas scaling
-		this.minScaleExtent = 0.2;
-		this.maxScaleExtent = 1.8;
-
-		// Allows us to track the sizing behavior of comments
-		this.commentSizing = false;
-		this.commentSizingDirection = "";
-
-		// Allows us to track the sizing behavior of nodes
-		this.nodeSizing = false;
-		this.nodeSizingDirection = "";
-		this.nodeSizingObjectsInfo = {};
-		this.nodeSizingDetLinksInfo = {};
-
-		// Keeps track of the size and position, at the start of the sizing event,
-		// of the object (node or comment) being sized.
-		this.resizeObjInitialInfo = null;
-
-		// Keeps track of the size and position, during a sizing event, of the
-		// object (node or comment) being sized, before it is snapped to grid.
-		this.notSnappedXPos = 0;
-		this.notSnappedYPos = 0;
-		this.notSnappedWidth = 0;
-		this.notSnappedHeight = 0;
-
-		// Allows us to record the drag behavior or nodes and comments.
-		this.dragging = false;
-		this.dragOffsetX = 0;
-		this.dragOffsetY = 0;
-		this.dragRunningX = 0;
-		this.dragRunningY = 0;
-		this.dragObjects = [];
-		this.dragStartX = 0;
-		this.dragStartY = 0;
 
 		// The data link a node is currently being dragged over. It will be null
 		// when the node being dragged is not over a data link.
@@ -166,105 +128,32 @@ export default class SVGCanvasRenderer {
 		// option is switched on.
 		this.dragNewLinkOverNode = null;
 
-		// Flag to indicate if the current drag operation is for a node that can
-		// be inserted into a link. Such a node would need input and output ports.
-		this.existingNodeInsertableIntoLink = false;
-
-		// Flag to indicate if the current drag operation is for a node that can
-		// be attached to a detached link.
-		this.existingNodeAttachableToDetachedLinks = false;
-
-		// Allow us to track when a selection is being made so there is
-		// no need to re-render whole canvas
-		this.selecting = false;
-
-		// Flag to indicate when the space key is down (used when dragging).
-		this.spaceKeyPressed = false;
-
-		// Flag to indicate when a zoom is invoked programmatically.
-		this.zoomingAction = false;
-
-		// Allows us to track when the binding nodes in a subflow are being moved.
-		this.movingBindingNodes = false;
-
-		// Keep track of when the context menu has been closed, so we don't remove
-		// selections when a context menu is closed during a zoom gesture.
-		this.contextMenuClosedOnZoom = false;
-
-		// Keep track of when text editing has been closed, so we don't remove
-		// selections when that happens during a zoom gesture.
-		this.textEditingClosedfOnZoom = false;
-
-		// Used to monitor the region selection rectangle.
-		this.regionSelect = false;
-
-		// Used to track the start of the zoom.
-		this.zoomStartPoint = { x: 0, y: 0, k: 0, startX: 0, startY: 0 };
-
-		// I was not able to figure out how to use the zoom filter method to
-		// allow mousedown and mousemove messages to go through to the canvas to
-		// do region selection. Therefore I had to implement region selection in
-		// the zoom methods. This has the side effect that, when a region is
-		// selected, d3Event.transform.x and d3Event.transform.y are incremented
-		// even though the objects in the canvas have not moved. The values below
-		// are used to store the current transform x and y amounts at the beginning
-		// of the region selection and then restore those amounts at the end of
-		// the region selection.
-		this.regionStartTransformX = 0;
-		this.regionStartTransformY = 0;
-
-		// Object to store variables for dynamically drawing a new link line. The
-		// existence of this object means a new link is being drawn. A null means
-		// no link is currently being drawn.
-		this.drawingNewLinkData = null;
-
-		// Create a drag object for use with nodes and comments.
-		this.drag = d3.drag()
-			.on("start", this.dragStart.bind(this))
-			.on("drag", this.dragMove.bind(this))
-			.on("end", this.dragEnd.bind(this));
-
-		this.draggingLinkData = null;
-
-		this.dragSelectionHandle = d3.drag()
-			.on("start", this.dragStartLinkHandle.bind(this))
-			.on("drag", this.dragMoveLinkHandle.bind(this))
-			.on("end", this.dragEndLinkHandle.bind(this));
-
-		// Create a zoom object for use with the canvas.
-		this.zoom =
-			d3.zoom()
-				.trackpad(this.config.enableInteractionType === INTERACTION_TRACKPAD)
-				.preventBackGesture(true)
-				.wheelDelta((d3Event) => -d3Event.deltaY * (this.config.enableInteractionType === INTERACTION_TRACKPAD ? 0.02 : 0.002))
-				.scaleExtent([this.minScaleExtent, this.maxScaleExtent])
-				.on("start", this.zoomStart.bind(this))
-				.on("zoom", this.zoomAction.bind(this))
-				.on("end", this.zoomEnd.bind(this));
-
 		this.initializeGhostDiv();
 
 		this.canvasSVG = this.createCanvasSVG();
-		this.canvasGrp = this.createCanvasGroup(this.canvasSVG, "d3-canvas-group"); // Group to contain all canvas objects
-		this.canvasUnderlay = this.createCanvasUnderlay(this.canvasGrp, "d3-canvas-underlay"); // Put underlay rectangle under comments, nodes and links
-		this.commentsGrp = this.createCanvasGroup(this.canvasGrp, "d3-comments-group"); // Group to always position comments under nodes and links
-		this.nodesLinksGrp = this.createCanvasGroup(this.canvasGrp, "d3-nodes-links-group"); // Group to position nodes and links over comments
-		this.boundingRectsGrp = this.createBoundingRectanglesGrp(this.canvasGrp, "d3-bounding-rect-group"); // Group to optionally add bounding rectangles over all objects
+		this.canvasDefs = this.canvasSVG.selectChildren("defs");
 
+		// Group to contain all canvas objects
+		this.canvasGrp = this.createCanvasGroup(this.canvasSVG, "d3-canvas-group");
+
+		// Put underlay rectangle under comments, nodes and links
+		this.canvasUnderlay = this.createCanvasUnderlay(this.canvasGrp, "d3-canvas-underlay");
+
+		// Group to always position comments under nodes and links
+		this.commentsGrp = this.createCanvasGroup(this.canvasGrp, "d3-comments-group");
+
+		// Group to position nodes and links over comments
+		this.nodesLinksGrp = this.createCanvasGroup(this.canvasGrp, "d3-nodes-links-group");
+
+		// Group to optionally add bounding rectangles over all objects
+		this.boundingRectsGrp = this.createBoundingRectanglesGrp(this.canvasGrp, "d3-bounding-rect-group");
 
 		this.resetCanvasSVGBehaviors();
 
 		this.displayCanvas();
 
 		if (this.dispUtils.isDisplayingFullPage()) {
-			this.restoreZoom();
-		}
-
-		// If we are showing a sub-flow in full screen mode, or the options is
-		// switched on to always display it, show the 'back to parent' control.
-		if (this.dispUtils.isDisplayingSubFlowFullPage() ||
-				this.canvasLayout.alwaysDisplayBackToParentFlow) {
-			this.addBackToParentFlowArrow(this.canvasSVG);
+			this.zoomUtils.restoreZoom();
 		}
 
 		// If we are showing a sub-flow in full screen mode and there
@@ -285,30 +174,66 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("constructor" + pipelineId.substring(0, 5));
 	}
 
+	// Sets the pressed state of the space bar. This is called
+	// from outside canvas via svg-canvas-d3.
 	setSpaceKeyPressed(state) {
-		this.spaceKeyPressed = state;
+		this.zoomUtils.setSpaceKeyPressed(state);
 		this.resetCanvasCursor();
 	}
 
 	// Returns true if the space bar is pressed and held down. This is called
-	// from outside canvas via svg-canvas-d3 as well as internally.
+	// from outside canvas via svg-canvas-d3.
 	isSpaceKeyPressed() {
-		return this.spaceKeyPressed;
+		return this.zoomUtils.isSpaceKeyPressed();
 	}
 
-	// Returns true if the event indicates that a drag is in action. This means
-	// with regular Mouse interation that the space bar is pressed or with
-	// legacy interation it means the shift key is NOT pressed.
-	isDragActivated(d3Event) {
-		if (this.config.enableInteractionType === INTERACTION_CARBON) {
-			return this.isSpaceKeyPressed();
-		}
-		return (d3Event && d3Event.sourceEvent && !d3Event.sourceEvent.shiftKey);
+	zoomTo(zoomObject, animateTime) {
+		this.zoomUtils.zoomTo(zoomObject, animateTime);
+	}
+
+	translateBy(x, y, animateTime) {
+		this.zoomUtils.translateBy(x, y, animateTime);
+	}
+
+	zoomIn() {
+		this.zoomUtils.zoomIn();
+	}
+
+	zoomOut() {
+		this.zoomUtils.zoomOut();
+	}
+
+	zoomToFit() {
+		this.zoomUtils.zoomToFit();
+	}
+
+	isZoomedToMax() {
+		return this.zoomUtils.isZoomedToMax();
+	}
+
+	isZoomedToMin() {
+		return this.zoomUtils.isZoomedToMin();
+	}
+
+	getZoomToReveal(objectIDs, xPos, yPos) {
+		return this.zoomUtils.getZoomToReveal(objectIDs, xPos, yPos);
+	}
+
+	getZoom() {
+		return this.zoomUtils.getZoom();
+	}
+
+	getTransformedViewportDimensions() {
+		return this.zoomUtils.getTransformedViewportDimensions();
+	}
+
+	getCanvasDimensionsWithPadding() {
+		return this.zoomUtils.getCanvasDimensionsWithPadding();
 	}
 
 	// Returns the data object for the parent supernode that references the
 	// active pipeline (managed by this renderer). We get the supernode by
-	// looking through the overall canvas info objects.
+	// looking through the overall canvas info object.
 	// Don't be tempted into thinking you can retrieve the supernode datum by
 	// calling the parent renderer because there is no parent renderer when we
 	// are showing a sub-flow in full page mode.
@@ -326,20 +251,35 @@ export default class SVGCanvasRenderer {
 		return node;
 	}
 
-	getZoomTransform() {
-		return this.zoomTransform;
-	}
-
-	initializeZoomVariables() {
-		// Allows us to record the current zoom amounts.
-		this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1);
-	}
-
-	setCanvasInfoRenderer(canvasInfo) {
+	// Provides new canvas info data to this renderer and other display and layout info
+	// so the canvas can be redisplayed.
+	setCanvasInfoRenderer(canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config) {
 		this.logger.logStartTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
+		this.config = config;
 		this.canvasInfo = canvasInfo;
-		this.activePipeline.initialize(this.pipelineId, canvasInfo);
-		this.canvasLayout = this.objectModel.getCanvasLayout(); // Refresh the canvas layout info in case it changed.
+		this.selectionInfo = selectionInfo;
+		this.breadcrumbs = breadcrumbs;
+		this.nodeLayout = nodeLayout;
+		this.canvasLayout = canvasLayout;
+
+		this.activePipeline.initialize(this.pipelineId, canvasInfo, selectionInfo);
+
+		// Must recreate these utils objects because they use the config object
+		// which may have changed.
+		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils, this.commentUtils);
+		this.svgCanvasTextArea = new SvgCanvasTextArea(
+			this.config,
+			this.dispUtils,
+			this.nodeUtils,
+			this.decUtils,
+			this.canvasController,
+			this.canvasDiv,
+			this.activePipeline,
+			this.displayComments.bind(this), // Function
+			this.displayLinks.bind(this), // Function
+			this.getCommentToolbarPos.bind(this) // Function
+		);
+
 
 		// Set the display state incase we changed from in-place to full-page
 		// sub-flow display.
@@ -362,6 +302,24 @@ export default class SVGCanvasRenderer {
 		this.displayCanvas();
 
 		this.logger.logEndTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
+	}
+
+	// Updates the selection info for all renderers and displays the selection
+	// highlighting for nodes, links and comments. This provides a performance
+	// inmprovment over running the displayCanvas method which displays the
+	// whole canvas.
+	setSelectionInfo(selectionInfo) {
+		this.selectionInfo = selectionInfo;
+		this.activePipeline.initialize(this.pipelineId, this.canvasInfo, selectionInfo);
+
+		this.displayCommentsSelectionStatus();
+		this.displayNodesSelectionStatus();
+		this.displayLinksSelectionStatus();
+
+		this.superRenderers.forEach((renderer) => {
+			renderer.setSelectionInfo(selectionInfo);
+		});
+
 	}
 
 	// Returns a subset of renderers, from the current set of super renderers,
@@ -387,7 +345,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	clearCanvas() {
-		this.initializeZoomVariables();
+		this.zoomUtils.resetZoomTransform();
 		this.canvasSVG.remove();
 	}
 
@@ -404,10 +362,12 @@ export default class SVGCanvasRenderer {
 
 		if (this.config.enablePositionNodeOnRightFlyoutOpen &&
 				this.canvasController.isRightFlyoutOpen()) {
-			const posInfo = this.config.enablePositionNodeOnRightFlyoutOpen;
+			const posInfo = (typeof this.config.enablePositionNodeOnRightFlyoutOpen === "boolean")
+				? { x: 50, y: 50 }
+				: this.config.enablePositionNodeOnRightFlyoutOpen;
 			const x = posInfo.x ? posInfo.x : 50;
 			const y = posInfo.y ? posInfo.y : 50;
-			const selNodeIds = this.canvasController.getSelectedNodes().map((n) => n.id);
+			const selNodeIds = this.activePipeline.getSelectedNodeIds();
 			const zoom = this.getZoomToReveal(selNodeIds, x, y);
 			this.zoomTo(zoom);
 		}
@@ -423,7 +383,7 @@ export default class SVGCanvasRenderer {
 		// Ensure the SVG area is displayed, incase it was previously hidden.
 		this.canvasSVG.style("display", "inherit");
 
-		this.displayComments(); // Show comments first so they appear under nodes, if there is overlap.
+		this.displayComments();
 		this.displayNodes();
 		this.displayLinks();
 
@@ -431,21 +391,27 @@ export default class SVGCanvasRenderer {
 			this.displaySVGToFitSupernode();
 		}
 
+		this.displayCanvasAccoutrements();
+
+		this.logger.logEndTimer("displayCanvas");
+	}
+
+	// Displays zoom and size dependent canvas elements.
+	displayCanvasAccoutrements() {
+		if (this.config.enableBoundingRectangles) {
+			this.displayBoundingRectangles();
+		}
+
+		if (this.config.enableCanvasUnderlay !== "None" &&
+				this.dispUtils.isDisplayingPrimaryFlowFullPage()) {
+			this.setCanvasUnderlaySize();
+		}
+
 		// The supernode will not have any calculated port positions when the
 		// subflow is being displayed full screen, so calculate them first.
 		if (this.dispUtils.isDisplayingSubFlowFullPage()) {
 			this.displayPortsForSubFlowFullPage();
 		}
-
-		if (this.config.enableBoundingRectangles) {
-			this.displayBoundingRectangles();
-		}
-
-		if (this.config.enableCanvasUnderlay !== "None" && this.dispUtils.isDisplayingPrimaryFlowFullPage()) {
-			this.setCanvasUnderlaySize();
-		}
-
-		this.logger.logEndTimer("displayCanvas");
 	}
 
 	// Ensures the binding ports for a full-page sub-flow are calculated
@@ -481,10 +447,10 @@ export default class SVGCanvasRenderer {
 		// moved to the right place.
 		this.setPortPositionsAllNodes();
 		this.moveSuperBindingNodes();
-		this.movingBindingNodes = true;
-		this.displayNodes();
-		this.displayLinks();
-		this.movingBindingNodes = false;
+
+		this.displayMovedNodes();
+		this.displayMovedLinks();
+
 		this.logger.log("displayBindingNodesToFitSVG - end");
 	}
 
@@ -503,7 +469,7 @@ export default class SVGCanvasRenderer {
 	// Moves the binding nodes in a sub-flow, which map to nodes in the parent
 	// supernode, to the edge of the SVG area.
 	moveSuperBindingNodes() {
-		const transformedSVGRect = this.getTransformedViewportDimensions();
+		const transformedSVGRect = this.zoomUtils.getTransformedViewportDimensions();
 
 		// this.logger.log("transformedSVGRect" +
 		// 	" x = " + transformedSVGRect.x +
@@ -570,10 +536,10 @@ export default class SVGCanvasRenderer {
 		if (!this.activePipeline) {
 			return;
 		}
-		const svgRect = this.getViewportDimensions();
-		const transformedSVGRect = this.getTransformedRect(svgRect, 1);
-		const canv = this.getCanvasDimensionsAdjustedForScale(1);
-		const canvWithPadding = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
+		const svgRect = this.zoomUtils.getViewportDimensions();
+		const transformedSVGRect = this.zoomUtils.getTransformedRect(svgRect, 1);
+		const canv = this.zoomUtils.getCanvasDimensions();
+		const canvWithPadding = this.zoomUtils.getCanvasDimensionsWithPadding();
 
 		this.boundingRectsGrp.selectChildren(".d3-bounding").remove();
 
@@ -627,6 +593,16 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	// Selects any objects in the region provided where region is { x, y, width, height }
+	selectObjsInRegion(region) {
+		const selections =
+			CanvasUtils.selectInRegion(region, this.activePipeline,
+				this.config.enableLinkSelection !== LINK_SELECTION_NONE,
+				this.config.enableLinkType,
+				this.config.enableAssocLinkType);
+		this.canvasController.setSelections(selections, this.activePipeline.id);
+	}
+
 	// Returns true when we are editing text. Called by svg-canvas-d3.
 	isEditingText() {
 		if (this.svgCanvasTextArea.isEditingText()) {
@@ -643,20 +619,17 @@ export default class SVGCanvasRenderer {
 
 	// Returns true when we are dragging objects. Called by svg-canvas-d3.
 	isDragging() {
-		return this.dragging;
+		return this.dragObjectUtils.isMoving() || this.dragNewLinkUtils.isDragging() || this.dragDetLinkUtils.isDragging();
 	}
 
-	// Returns true if the node should be resizeable. Expanded supernodes are
-	// always resizabele and all other nodes, except collapsed supernodes, are
-	// resizeable when enableResizableNodes is switched on.
-	isNodeResizable(node) {
-		if (!this.config.enableEditingActions ||
-				CanvasUtils.isSuperBindingNode(node) ||
-				CanvasUtils.isCollapsedSupernode(node) ||
-				(!this.config.enableResizableNodes && !CanvasUtils.isExpandedSupernode(node))) {
-			return false;
-		}
-		return true;
+	// Returns true whenever a node or comment is being resized.
+	isSizing() {
+		this.dragObjectUtils.isSizing();
+	}
+
+	// Returns true whenever a node or comment is being moved.
+	isMoving() {
+		this.dragObjectUtils.isMoving();
 	}
 
 	// Returns true if the node should have a resizing area. We should display
@@ -684,9 +657,26 @@ export default class SVGCanvasRenderer {
 		return this.nodesLinksGrp.selectChildren(nodeGrpSelector);
 	}
 
-	getLinkGroupSelectionById(nodeId) {
-		const linkGrpSelector = this.getSelectorForId("link_grp", nodeId);
+	getLinkGroupSelectionById(linkId) {
+		const linkGrpSelector = this.getSelectorForId("link_grp", linkId);
 		return this.nodesLinksGrp.selectChildren(linkGrpSelector);
+	}
+
+	getCommentGroupSelectionById(comId) {
+		const selector = this.getSelectorForId("comment_grp", comId);
+		return this.commentsGrp.selectChildren(selector);
+	}
+
+	getNodeDecSelectionById(decId, nodeId) {
+		const nodeSel = this.getNodeGroupSelectionById(nodeId);
+		const selector = this.getSelectorForId("node_dec_group", decId);
+		return nodeSel.selectAll(selector);
+	}
+
+	getLinkDecSelectionById(decId, linkId) {
+		const linkSel = this.getLinkGroupSelectionById(linkId);
+		const selector = this.getSelectorForId("link_dec_group", decId);
+		return linkSel.selectAll(selector);
 	}
 
 	// Returns a selector for the ID string like one of the following:
@@ -726,22 +716,11 @@ export default class SVGCanvasRenderer {
 		return transPos;
 	}
 
-	// Returns the object passed in with its position and size snapped to
-	// the current grid dimensions.
-	snapToGridObject(inResizeObj) {
-		const resizeObj = inResizeObj;
-		resizeObj.x_pos = CanvasUtils.snapToGrid(resizeObj.x_pos, this.canvasLayout.snapToGridXPx);
-		resizeObj.y_pos = CanvasUtils.snapToGrid(resizeObj.y_pos, this.canvasLayout.snapToGridYPx);
-		resizeObj.width = CanvasUtils.snapToGrid(resizeObj.width, this.canvasLayout.snapToGridXPx);
-		resizeObj.height = CanvasUtils.snapToGrid(resizeObj.height, this.canvasLayout.snapToGridYPx);
-		return resizeObj;
-	}
-
 	// Returns the current mouse position transformed by the current zoom
 	// transformation amounts based on the local SVG -- that is, if we're
 	// displaying a sub-flow it is based on the SVG in the supernode.
 	getTransformedMousePos(d3Event) {
-		return this.transformPos(this.getMousePos(d3Event, this.canvasSVG));
+		return this.zoomUtils.transformPos(this.getMousePos(d3Event, this.canvasSVG));
 	}
 
 	// Returns the current mouse position based on the D3 SVG selection object
@@ -760,45 +739,19 @@ export default class SVGCanvasRenderer {
 		return { x: 0, y: 0 };
 	}
 
+	// Returns the page position passed in snapped to the grid in canvas
+	// coordinates. Called externally via svg-canvas-d3.
+	convertPageCoordsToSnappedCanvasCoords(pos) {
+		let positon = this.convertPageCoordsToCanvasCoords(pos.x, pos.y);
+		positon = this.getMousePosSnapToGrid(positon);
+		return positon;
+	}
+
 	// Convert coordinates from the page (based on the page top left corner) to
 	// canvas coordinates based on the canvas coordinate system.
 	convertPageCoordsToCanvasCoords(x, y) {
 		const svgRect = this.canvasSVG.node().getBoundingClientRect();
-		return this.transformPos({ x: x - Math.round(svgRect.left), y: y - Math.round(svgRect.top) });
-	}
-
-	// Transforms the x and y fields passed in by the current zoom
-	// transformation amounts to convert a coordinate position in screen pixels
-	// to a canvas coordinate position.
-	transformPos(pos) {
-		return {
-			x: (pos.x - this.zoomTransform.x) / this.zoomTransform.k,
-			y: (pos.y - this.zoomTransform.y) / this.zoomTransform.k
-		};
-	}
-
-	// Transforms the x and y fields passed in by the current zoom
-	// transformation amounts to convert a canvas coordinate position
-	// to a coordinate position in screen pixels.
-	unTransformPos(pos) {
-		return {
-			x: (pos.x * this.zoomTransform.k) + this.zoomTransform.x,
-			y: (pos.y * this.zoomTransform.k) + this.zoomTransform.y
-		};
-	}
-
-	// Transforms the x, y, height and width fields of the object passed in by the
-	// current zoom transformation amounts to convert coordinate positions and
-	// dimensions in screen pixels to coordinate positions and dimensions in
-	// zoomed pixels.
-	getTransformedRect(svgRect, pad) {
-		const transPad = (pad / this.zoomTransform.k);
-		return {
-			x: (-this.zoomTransform.x / this.zoomTransform.k) + transPad,
-			y: (-this.zoomTransform.y / this.zoomTransform.k) + transPad,
-			height: (svgRect.height / this.zoomTransform.k) - (2 * transPad),
-			width: (svgRect.width / this.zoomTransform.k) - (2 * transPad)
-		};
+		return this.zoomUtils.transformPos({ x: x - Math.round(svgRect.left), y: y - Math.round(svgRect.top) });
 	}
 
 	// Creates the div which contains the ghost node for drag and
@@ -832,29 +785,16 @@ export default class SVGCanvasRenderer {
 	// plus its width and height. This needs to be called each time a new node
 	// is dragged from the palette, in case the dimensions of the ghost node
 	// have changed because the canvas has been zoomed.
-	getGhostNode(nodeTemplate) {
+	getGhostNode(node) {
 		const that = this;
-		const ghost = this.getGhostDimensions();
-		const node = this.canvasController.convertNodeTemplate(nodeTemplate);
-		node.layout = this.canvasController.getObjectModel().getNodeLayout();
-		if (node.is_expanded) {
-			node.width = node.expanded_width;
-			node.height = node.expanded_height;
-		} else if (node.isResized) {
-			node.width = node.resizeWidth;
-			node.height = node.resizeHeight;
-		} else {
-			node.width = ghost.width;
-			node.height = ghost.height;
-		}
-		const nodeImage = this.getNodeImage(node);
-		const nodeImageType = this.getImageType(nodeImage);
 		const ghostDivSel = this.getGhostDivSel();
+		const zoomScale = this.zoomUtils.getZoomScale();
 
 		// Calculate the ghost area width which is the maximum of either the node
 		// label or the default node width.
-		const nodeLayout = this.objectModel.getNodeLayout();
-		const ghostAreaWidth = Math.max(nodeLayout.labelWidth, node.width);
+		const ghostAreaWidth = Math.max(this.nodeLayout.labelWidth, node.width);
+
+		let xOffset = 0;
 
 		// Remove any existing SVG object from the div
 		ghostDivSel
@@ -864,8 +804,8 @@ export default class SVGCanvasRenderer {
 		// Create a new SVG area for the ghost area.
 		const ghostAreaSVG = ghostDivSel
 			.append("svg")
-			.attr("width", ghostAreaWidth * this.zoomTransform.k)
-			.attr("height", (50 + node.height) * this.zoomTransform.k) // Add some extra pixels, in case label is below label bottom
+			.attr("width", ghostAreaWidth * zoomScale)
+			.attr("height", (50 + node.height) * zoomScale) // Add some extra pixels, in case label is below label bottom
 			.attr("x", 0)
 			.attr("y", 0)
 			.attr("class", "d3-ghost-svg");
@@ -882,61 +822,67 @@ export default class SVGCanvasRenderer {
 			.attr("width", node.width)
 			.attr("height", node.height);
 
-		ghostGrp
-			.append(nodeImageType)
-			.attr("class", "d3-node-image")
-			.each(function() { that.setNodeImageContent(this, node); })
-			.attr("x", this.nodeUtils.getNodeImagePosX(node))
-			.attr("y", this.nodeUtils.getNodeImagePosY(node))
-			.attr("width", this.nodeUtils.getNodeImageWidth(node))
-			.attr("height", this.nodeUtils.getNodeImageHeight(node));
+		if (!this.nodeLayout.nodeExternalObject) {
+			const nodeImage = this.getNodeImage(node);
+			const nodeImageType = this.getImageType(nodeImage);
 
-		const fObject = ghostGrp
-			.append("foreignObject")
-			.attr("x", this.nodeUtils.getNodeLabelPosX(node))
-			.attr("y", this.nodeUtils.getNodeLabelPosY(node))
-			.attr("width", this.nodeUtils.getNodeLabelWidth(node))
-			.attr("height", this.nodeUtils.getNodeLabelHeight(node))
-			.attr("class", "d3-foreign-object-ghost-label");
+			ghostGrp
+				.append(nodeImageType)
+				.attr("class", "d3-node-image")
+				.each(function() { that.setNodeImageContent(this, node); })
+				.attr("x", this.nodeUtils.getNodeImagePosX(node))
+				.attr("y", this.nodeUtils.getNodeImagePosY(node))
+				.attr("width", this.nodeUtils.getNodeImageWidth(node))
+				.attr("height", this.nodeUtils.getNodeImageHeight(node));
 
-		const fObjectDiv = fObject
-			.append("xhtml:div")
-			.attr("class", this.nodeUtils.getNodeLabelClass(node));
+			const fObject = ghostGrp
+				.append("foreignObject")
+				.attr("x", this.nodeUtils.getNodeLabelPosX(node))
+				.attr("y", this.nodeUtils.getNodeLabelPosY(node))
+				.attr("width", this.nodeUtils.getNodeLabelWidth(node))
+				.attr("height", this.nodeUtils.getNodeLabelHeight(node))
+				.attr("class", "d3-foreign-object-ghost-label");
 
-		const fObjectSpan = fObjectDiv
-			.append("xhtml:span")
-			.html(node.label);
+			const fObjectDiv = fObject
+				.append("xhtml:div")
+				.attr("class", this.nodeUtils.getNodeLabelClass(node));
 
-		// At the time of writing, Firefox takes the ghost image from only those
-		// objects that are visible (ignoring any invisible objects like the div
-		// and SVG area) consequently we position the node and label so the label
-		// (if bigger than the node width) is positioned up against the left edge
-		// of the invisible div and SVG area. If the label is shorter than the node
-		// width, the node is positioned up against the left edge of the SVG. We do
-		// this by translating the group object in the x direction.
+			const fObjectSpan = fObjectDiv
+				.append("xhtml:span")
+				.html(node.label);
 
-		// First calculate the display width of the label. The span will be the
-		// full text but it may be constricted by the label width in the layout.
-		const labelSpanWidth = fObjectSpan.node().getBoundingClientRect().width + 4; // Include border for label
-		const nodeLabelWidth = this.nodeUtils.getNodeLabelWidth(node);
-		const labelDisplayLength = Math.min(nodeLabelWidth, labelSpanWidth);
+			// At the time of writing, Firefox takes the ghost image from only those
+			// objects that are visible (ignoring any invisible objects like the div
+			// and SVG area) consequently we position the node and label so the label
+			// (if bigger than the node width) is positioned up against the left edge
+			// of the invisible div and SVG area. If the label is shorter than the node
+			// width, the node is positioned up against the left edge of the SVG. We do
+			// this by translating the group object in the x direction.
 
-		// Next calculate the amount, if any, the label protrudes beyond the edge
-		// of the node width and move the ghost group by that amount.
-		const xOffset = Math.max(0, (labelDisplayLength - ghost.width) / 2) * this.zoomTransform.k;
-		ghostGrp.attr("transform", `translate(${xOffset}, 0) scale(${this.zoomTransform.k})`);
+			// First calculate the display width of the label. The span will be the
+			// full text but it may be constricted by the label width in the layout.
+			const labelSpanWidth = fObjectSpan.node().getBoundingClientRect().width + 4; // Include border for label
+			const nodeLabelWidth = this.nodeUtils.getNodeLabelWidth(node);
+			const labelDisplayLength = Math.min(nodeLabelWidth, labelSpanWidth);
 
-		// If the label is center justified, restrict the label width to the
-		// display amount and adjust the x coordinate to compensate for the change
-		// in width.
-		if (node.layout.labelAlign === "center") {
-			const labelDiff = Math.max(0, (nodeLabelWidth - labelDisplayLength) / 2);
+			// Next calculate the amount, if any, the label protrudes beyond the edge
+			// of the node width and move the ghost group by that amount.
+			xOffset = Math.max(0, (labelDisplayLength - node.width) / 2) * zoomScale;
 
-			fObject
-				.attr("width", labelDisplayLength)
-				.attr("x", this.nodeUtils.getNodeLabelPosX(node) + labelDiff);
-			fObjectDiv.attr("width", labelDisplayLength);
+			// If the label is center justified, restrict the label width to the
+			// display amount and adjust the x coordinate to compensate for the change
+			// in width.
+			if (node.layout.labelAlign === "center") {
+				const labelDiff = Math.max(0, (nodeLabelWidth - labelDisplayLength) / 2);
+
+				fObject
+					.attr("width", labelDisplayLength)
+					.attr("x", this.nodeUtils.getNodeLabelPosX(node) + labelDiff);
+				fObjectDiv.attr("width", labelDisplayLength);
+			}
 		}
+
+		ghostGrp.attr("transform", `translate(${xOffset}, 0) scale(${zoomScale})`);
 
 		// Get the amount the actual browser page is 'zoomed'. This is differet
 		// to the zoom amount for the canvas objects.
@@ -944,13 +890,14 @@ export default class SVGCanvasRenderer {
 
 		// Calculate the center of the node area for positioning the mouse pointer
 		// on the image when it is being dragged.
-		const centerX = (xOffset + ((ghost.width / 2) * this.zoomTransform.k)) * browserZoom;
-		const centerY = ((ghost.height / 2) * this.zoomTransform.k) * browserZoom;
+		const centerX = (xOffset + ((node.width / 2) * zoomScale)) * browserZoom;
+		const centerY = ((node.height / 2) * zoomScale) * browserZoom;
 
 		return {
 			element: ghostDivSel.node(),
 			centerX: centerX,
-			centerY: centerY
+			centerY: centerY,
+			nodeTemplate: node
 		};
 	}
 
@@ -975,18 +922,6 @@ export default class SVGCanvasRenderer {
 		}
 
 		return browserZoom;
-	}
-
-	// Returns an object containing the dimensions of the ghost node that hovers
-	// over canvas when a node is being dragged from the palette. The ghost node
-	// is based on the default node width and height so any change to these values
-	// that might be made to a node by the layoutHandler will not be reflected here.
-	getGhostDimensions() {
-		const nodeLayout = this.objectModel.getNodeLayout();
-		return {
-			width: nodeLayout.defaultNodeWidth,
-			height: nodeLayout.defaultNodeHeight
-		};
 	}
 
 	nodeTemplateDragStart(nodeTemplate) {
@@ -1017,12 +952,11 @@ export default class SVGCanvasRenderer {
 
 		if (this.isNodeTemplateAttachableToDetachedLinks(nodeTemplate)) {
 			const mousePos = this.convertPageCoordsToCanvasCoords(x, y);
-			const ghost = this.getGhostDimensions();
 			const ghostArea = {
-				x1: mousePos.x - (ghost.width / 2),
-				y1: mousePos.y - (ghost.height / 2),
-				x2: mousePos.x + (ghost.width / 2),
-				y2: mousePos.y + (ghost.height / 2)
+				x1: mousePos.x - (nodeTemplate.width / 2),
+				y1: mousePos.y - (nodeTemplate.height / 2),
+				x2: mousePos.x + (nodeTemplate.width / 2),
+				y2: mousePos.y + (nodeTemplate.height / 2)
 			};
 			const template = this.canvasController.convertNodeTemplate(nodeTemplate);
 			const links = this.getAttachableLinksForNodeAtPos(template, ghostArea);
@@ -1103,62 +1037,33 @@ export default class SVGCanvasRenderer {
 			.attr("data-drag-node-over", state ? true : null); // true will add the attr, null will remove it
 	}
 
-	// Switches on or off node port highlighting depending on the node
+	// Switches on or off node highlighting depending on the node
 	// passed in and keeps track of the currently highlighted node. This is
-	// called as a new link is being drawn towards a target node to highlight
-	// the target node.
-	setNewLinkOverNode(d3Event) {
-		const nodeNearMouse = this.getNodeNearMousePos(d3Event, this.canvasLayout.nodeProximity);
-		if (nodeNearMouse && this.isConnectionAllowedToNearbyNode(d3Event, nodeNearMouse)) {
+	// called as a new link or a detached link is being dragged towards or
+	// away from a target node to highlight or unhighlight the target node.
+	setHighlightingOverNode(state, nodeNearMouse) {
+		if (state) {
 			if (!this.dragNewLinkOverNode) {
 				this.dragNewLinkOverNode = nodeNearMouse;
-				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, true);
+				this.setLinkOverNode(this.dragNewLinkOverNode, true);
 
 			} else if (nodeNearMouse.id !== this.dragNewLinkOverNode.id) {
-				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, false);
+				this.setLinkOverNode(this.dragNewLinkOverNode, false);
 				this.dragNewLinkOverNode = nodeNearMouse;
-				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, true);
+				this.setLinkOverNode(this.dragNewLinkOverNode, true);
 			}
 
 		} else {
 			if (this.dragNewLinkOverNode) {
-				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, false);
+				this.setLinkOverNode(this.dragNewLinkOverNode, false);
 				this.dragNewLinkOverNode = null;
 			}
 		}
 	}
 
-	isConnectionAllowedToNearbyNode(d3Event, nodeNearMouse) {
-		if (this.drawingNewLinkData) {
-			if (this.drawingNewLinkData.action === NODE_LINK) {
-				const srcNode = this.drawingNewLinkData.srcNode;
-				const trgNode = nodeNearMouse;
-				const srcNodePortId = this.drawingNewLinkData.srcNodePortId;
-				const trgNodePortId = CanvasUtils.getDefaultInputPortId(trgNode); // TODO - make specific to nodes.
-				return CanvasUtils.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, this.activePipeline.links);
-
-			} else if (this.drawingNewLinkData.action === ASSOCIATION_LINK) {
-				const srcNode = this.drawingNewLinkData.srcNode;
-				const trgNode = nodeNearMouse;
-				return CanvasUtils.isAssocConnectionAllowed(srcNode, trgNode, this.activePipeline.links);
-
-			} else if (this.drawingNewLinkData.action === COMMENT_LINK) {
-				const srcObjId = this.drawingNewLinkData.srcObjId;
-				const trgNodeId = nodeNearMouse.id;
-				return CanvasUtils.isCommentLinkConnectionAllowed(srcObjId, trgNodeId, this.activePipeline.links);
-			}
-		} else if (this.draggingLinkData) {
-			const newLink = this.getNewLinkOnDrag(d3Event, this.canvasLayout.nodeProximity);
-			if (newLink) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	// Switches on or off the input-port highlighting on the node passed in.
-	// This is called when the user drags a new link towards a target node.
-	setNewLinkOverNodeHighlighting(node, state) {
+	// Switches on or off the highlighting on the node passed in.
+	// This is called when the user drags a link towards a target node.
+	setLinkOverNode(node, state) {
 		if (node) {
 			this.getNodeGroupSelectionById(node.id)
 				.attr("data-new-link-over", state ? "yes" : "no");
@@ -1167,17 +1072,18 @@ export default class SVGCanvasRenderer {
 
 	// Removes the data-new-link-over attribute used for highlighting a node
 	// that a new link is being dragged towards or over.
-	setNewLinkOverNodeCancel() {
-		this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, false);
+	setLinkOverNodeCancel() {
+		this.setLinkOverNode(this.dragNewLinkOverNode, false);
 		this.dragNewLinkOverNode = null;
 	}
 
-	// Processes the drop of a palette node template onto the canvas.
+	// Processes the drop of a palette node template onto the canvas. The
+	// nodeTemplate is in internal format.
 	nodeTemplateDropped(nodeTemplate, x, y) {
 		if (nodeTemplate === null) {
 			return;
 		}
-		const transPos = this.transformMousePosForNode(x, y);
+		const transPos = this.transformMousePosForNode(x, y, nodeTemplate);
 
 		// If the node template was dropped on a link
 		if (this.dragOverLink) {
@@ -1210,13 +1116,17 @@ export default class SVGCanvasRenderer {
 
 	// Transforms the mouse position passed in to be appropriate for a palette
 	// node or external object being dragged over the canvas.
-	transformMousePosForNode(x, y) {
+	transformMousePosForNode(x, y, node) {
 		const mousePos = this.convertPageCoordsToCanvasCoords(x, y);
 
 		// Offset mousePos so new node appears in center of mouse location.
-		const ghost = this.getGhostDimensions();
-		mousePos.x -= ghost.width / 2;
-		mousePos.y -= ghost.height / 2;
+		if (node && node.width && node.height) {
+			mousePos.x -= node.width / 2;
+			mousePos.y -= node.height / 2;
+		} else {
+			mousePos.x -= this.nodeLayout.defaultNodeWidth / 2;
+			mousePos.y -= this.nodeLayout.defaultNodeHeight / 2;
+		}
 
 		return this.getMousePosSnapToGrid(mousePos);
 	}
@@ -1232,25 +1142,6 @@ export default class SVGCanvasRenderer {
 			!this.isPortMaxCardinalityZero(nodeTemplate.outputs[0]);
 	}
 
-	// Returns true if the current drag objects array has a single node which
-	// is 'insertable' into a data link between nodes on the canvas.  Returns
-	// false otherwise, including if a single comment is being dragged.
-	isExistingNodeInsertableIntoLink() {
-		return (this.config.enableInsertNodeDroppedOnLink &&
-			this.dragObjects.length === 1 &&
-			CanvasUtils.isNode(this.dragObjects[0]) &&
-			CanvasUtils.hasInputAndOutputPorts(this.dragObjects[0]) &&
-			!CanvasUtils.isNodeDefaultPortsCardinalityAtMax(this.dragObjects[0], this.activePipeline.links));
-	}
-
-	// Returns true if the current drag objects array has a single node which
-	// is 'attachable' to any detached link on the canvas. Returns false otherwise,
-	// including if a single comment is being dragged.
-	isExistingNodeAttachableToDetachedLinks() {
-		return (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE &&
-			this.dragObjects.length === 1 &&
-			CanvasUtils.isNode(this.dragObjects[0]));
-	}
 
 	// Returns true if the current node template being dragged from the palette
 	// is 'attachable' to any detached link on the canvas. Returns false otherwise.
@@ -1285,7 +1176,6 @@ export default class SVGCanvasRenderer {
 		});
 
 		if (attachableLinks.length > 0) {
-
 			// Make sure the attachable links can be attached to the node based on
 			// the availability of ports and whether they are maxed out or not.
 			const linkArrays =
@@ -1306,35 +1196,20 @@ export default class SVGCanvasRenderer {
 		return false;
 	}
 
-	getNodePort(nodeId, portId, type) {
-		const node = this.activePipeline.getNode(nodeId);
-		if (node) {
-			let ports;
-			if (type === "input") {
-				ports = node.inputs;
-			} else {
-				ports = node.outputs;
-			}
-			const port = ports.find((p) => p.id === portId);
-			return (typeof port === "undefined") ? null : port;
-		}
-		return null;
-	}
-
 	// Sets the maximum zoom extent if we are the renderer of the top level flow
 	// or calls the same method on our parent renderer if we are a sub-flow. This
 	// means the factors will multiply as they percolate up to the top flow.
 	setMaxZoomExtent(factor) {
 		if (this.dispUtils.isDisplayingFullPage()) {
-			const newMaxExtent = this.maxScaleExtent * factor;
-
-			this.zoom.scaleExtent([this.minScaleExtent, newMaxExtent]);
+			this.zoomUtils.setMaxZoomExtent(factor);
 		} else {
-			const newFactor = Number(factor) * 1 / this.zoomTransform.k;
+			const newFactor = Number(factor) * 1 / this.zoomUtils.getZoomScale();
 			this.supernodeInfo.renderer.setMaxZoomExtent(newFactor);
 		}
 	}
 
+	// Returns a new canvas SVG object with all the behavior expected of a great
+	// SVG canvas object.
 	createCanvasSVG() {
 		this.logger.log("Create Canvas SVG.");
 
@@ -1365,14 +1240,14 @@ export default class SVGCanvasRenderer {
 			.attr("x", dims.x)
 			.attr("y", dims.y)
 			.on("mouseenter", (d3Event, d) => {
-				// If we are a sub-flow (i.e we have a parent renderer) set the max
+				// If we are a sub-flow (i.e. we have a parent renderer) set the max
 				// zoom extent with a factor calculated from our zoom amount.
 				if (this.supernodeInfo.renderer && this.config.enableZoomIntoSubFlows) {
-					this.supernodeInfo.renderer.setMaxZoomExtent(1 / this.zoomTransform.k);
+					this.supernodeInfo.renderer.setMaxZoomExtent(1 / this.zoomUtils.getZoomScale());
 				}
 			})
 			.on("mouseleave", (d3Event, d) => {
-				// If we are a sub-flow (i.e we have a parent renderer) set the max
+				// If we are a sub-flow (i.e. we have a parent renderer) set the max
 				// zoom extent with a factor of 1.
 				if (this.supernodeInfo.renderer && this.config.enableZoomIntoSubFlows) {
 					this.supernodeInfo.renderer.setMaxZoomExtent(1);
@@ -1430,21 +1305,12 @@ export default class SVGCanvasRenderer {
 		if (!this.activePipeline.isEmptyOrBindingsOnly() &&
 				this.dispUtils.isDisplayingFullPage()) {
 			this.canvasSVG
-				.call(this.zoom);
+				.call(this.zoomUtils.getZoomHandler());
 		}
 
 		// These behaviors will be applied to SVG areas at the top level and
 		// SVG areas displaying an in-place subflow
 		this.canvasSVG
-			.on("mousemove.zoom", (d3Event) => {
-				// this.logger.log("Zoom - mousemove - drawingNewLink = " + this.drawingNewLinkData ? "yes" : "no");
-				if (this.drawingNewLinkData) {
-					this.drawNewLink(d3Event);
-				}
-				if (this.draggingLinkData) {
-					this.dragLinkHandle(d3Event);
-				}
-			})
 			// Don't use mousedown.zoom here as it will replace the zoom start behavior
 			// and prevent panning of canvas background.
 			.on("mousedown", (d3Event) => {
@@ -1457,22 +1323,14 @@ export default class SVGCanvasRenderer {
 					d3Event.stopPropagation();
 				}
 			})
-			.on("mouseup.zoom", (d3Event) => {
-				this.logger.log("Canvas - mouseup-zoom");
-				if (this.drawingNewLinkData) {
-					this.completeNewLink(d3Event);
-				}
-				if (this.draggingLinkData) {
-					this.completeDraggedLink(d3Event);
-				}
-			})
 			.on("click.zoom", (d3Event) => {
+				// Control comes here after the zoomClick action has been perfoemd in zoomUtils.
 				this.logger.log("Canvas - click-zoom");
 
 				this.canvasController.clickActionHandler({
 					clickType: d3Event.type === "contextmenu" ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
 					objectType: "canvas",
-					selectedObjectIds: this.objectModel.getSelectedObjectIds()
+					selectedObjectIds: this.activePipeline.getSelectedObjectIds()
 				});
 			})
 			.on("dblclick.zoom", () => {
@@ -1480,7 +1338,7 @@ export default class SVGCanvasRenderer {
 				this.canvasController.clickActionHandler({
 					clickType: "DOUBLE_CLICK",
 					objectType: "canvas",
-					selectedObjectIds: this.objectModel.getSelectedObjectIds() });
+					selectedObjectIds: this.activePipeline.getSelectedObjectIds() });
 			})
 			.on("contextmenu.zoom", (d3Event, d) => {
 				this.logger.log("Zoom - context menu");
@@ -1491,7 +1349,7 @@ export default class SVGCanvasRenderer {
 	// Resets the pointer cursor on the background rectangle in the Canvas SVG area.
 	resetCanvasCursor() {
 		const selector = ".d3-svg-background[data-pipeline-id='" + this.activePipeline.id + "']";
-		this.canvasSVG.select(selector).style("cursor", this.isDragActivated() && this.dispUtils.isDisplayingFullPage() ? "grab" : "default");
+		this.canvasSVG.select(selector).style("cursor", this.zoomUtils.isDragActivated() && this.dispUtils.isDisplayingFullPage() ? "grab" : "default");
 	}
 
 	createCanvasGroup(canvasObj, className) {
@@ -1513,7 +1371,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	setCanvasUnderlaySize(x = 0, y = 0) {
-		const canv = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
+		const canv = this.zoomUtils.getCanvasDimensionsWithPadding();
 		if (canv) {
 			this.canvasUnderlay
 				.attr("x", canv.left - 50)
@@ -1521,50 +1379,6 @@ export default class SVGCanvasRenderer {
 				.attr("width", canv.width + 100)
 				.attr("height", canv.height + 100);
 		}
-	}
-
-	addBackToParentFlowArrow(canvasSVG) {
-		const g = canvasSVG
-			.append("g")
-			.attr("transform", "translate(15, 15)")
-			.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
-				d3.select(this).select("rect")
-					.attr("data-pointer-hover", "yes");
-			})
-			.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
-				d3.select(this).select("rect")
-					.attr("data-pointer-hover", "no");
-			})
-			.on("mousedown mouseup", (d3Event) => {
-				// Prevent mouse events going through to the canvas. This prevents
-				// a drag gesture on the button activating the canvas drag action.
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-			})
-			.on("click", (d3Event) => {
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				this.canvasController.displayPreviousPipeline();
-			});
-
-		g.append("rect")
-			.attr("x", 0)
-			.attr("y", 0)
-			.attr("width", 210)
-			.attr("height", 40)
-			.attr("class", "d3-back-to-previous-flow-box");
-
-		g.append("svg")
-			.attr("x", 16)
-			.attr("y", 11)
-			.attr("width", 16)
-			.attr("height", 16)
-			.html(LEFT_ARROW_ICON)
-			.attr("class", "d3-back-to-previous-flow-text");
-
-		g.append("text")
-			.attr("x", 40)
-			.attr("y", 24)
-			.attr("class", "d3-back-to-previous-flow-text")
-			.text("Return to previous flow");
 	}
 
 	createDropShadow(defs) {
@@ -1601,425 +1415,75 @@ export default class SVGCanvasRenderer {
 		feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 	}
 
-	// Restores the zoom of the canvas, if it has changed, based on the type
-	// of 'save zoom' specified in the configuration and, if no saved zoom, was
-	// provided pans the canvas area so it is always visible.
-	restoreZoom() {
-		let newZoom = this.canvasController.getSavedZoom(this.pipelineId);
-
-		// If there's no saved zoom, and enablePanIntoViewOnOpen is set, pan so
-		// the canvas area (containing nodes and comments) is visible in the viewport.
-		if (!newZoom && this.config.enablePanIntoViewOnOpen) {
-			const canvWithPadding = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
-			if (canvWithPadding) {
-				newZoom = { x: -canvWithPadding.left, y: -canvWithPadding.top, k: 1 };
-			}
-		}
-
-		// If there's no saved zoom and we have some initial pan amounts provided use them.
-		if (!newZoom && this.canvasLayout.initialPanX && this.canvasLayout.initialPanY) {
-			newZoom = { x: this.canvasLayout.initialPanX, y: this.canvasLayout.initialPanY, k: 1 };
-		}
-
-		// If new zoom is different to the current zoom amount, apply it.
-		if (newZoom &&
-				(newZoom.k !== this.zoomTransform.k ||
-					newZoom.x !== this.zoomTransform.x ||
-					newZoom.y !== this.zoomTransform.y)) {
-			this.zoomCanvasInvokeZoomBehavior(newZoom);
-		}
-	}
-
-	// Zooms the canvas to amount specified in zoomTransform. Zooming the canvas
-	// in this way will invoke the zoom behavior methods (zoomStart, zoomAction
-	// and zoomEnd).
-	zoomCanvasInvokeZoomBehavior(newZoomTransform, animateTime) {
-		if (isFinite(newZoomTransform.x) &&
-				isFinite(newZoomTransform.y) &&
-				isFinite(newZoomTransform.k)) {
-			this.zoomingAction = true;
-			const zoomTransform = d3.zoomIdentity.translate(newZoomTransform.x, newZoomTransform.y).scale(newZoomTransform.k);
-			if (animateTime) {
-				this.canvasSVG.call(this.zoom).transition()
-					.duration(animateTime)
-					.call(this.zoom.transform, zoomTransform);
-			} else {
-				this.canvasSVG.call(this.zoom.transform, zoomTransform);
-			}
-			this.zoomingAction = false;
-		}
-	}
-
-	zoomToFit() {
-		const padding = this.getZoomToFitPadding();
-		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, padding);
-		const viewPortDimensions = this.getViewportDimensions();
-
-		if (canvasDimensions) {
-			const xRatio = viewPortDimensions.width / canvasDimensions.width;
-			const yRatio = viewPortDimensions.height / canvasDimensions.height;
-			const newScale = Math.min(xRatio, yRatio, 1); // Don't let the canvas be scaled more than 1 in either direction
-
-			let x = (viewPortDimensions.width - (canvasDimensions.width * newScale)) / 2;
-			let y = (viewPortDimensions.height - (canvasDimensions.height * newScale)) / 2;
-
-			x -= newScale * canvasDimensions.left;
-			y -= newScale * canvasDimensions.top;
-
-			this.zoomCanvasInvokeZoomBehavior({ x: x, y: y, k: newScale });
-		}
-	}
-
-	// Returns the padding space for the canvas objects to be zoomed which takes
-	// into account any connections that need to be made to/from any sub-flow
-	// binding nodes plus any space needed for the binding nodes ports.
-	getZoomToFitPadding() {
-		let padding = this.canvasLayout.zoomToFitPadding;
-
-		if (this.dispUtils.isDisplayingSubFlow()) {
-			// Allocate some space for connecting lines and the binding node ports
-			const newPadding = this.getMaxZoomToFitPaddingForConnections() + (2 * this.canvasLayout.supernodeBindingPortRadius);
-			padding = Math.max(padding, newPadding);
-		}
-		return padding;
-	}
-
-	zoomTo(zoomObject) {
-		const animateTime = 500;
-		this.zoomCanvasInvokeZoomBehavior(zoomObject, animateTime);
-	}
-
-	getZoom() {
-		return { x: this.zoomTransform.x, y: this.zoomTransform.y, k: this.zoomTransform.k };
-	}
-
-	translateBy(x, y, animateTime) {
-		const z = this.getZoomTransform();
-		const zoomObject = d3.zoomIdentity.translate(z.x + x, z.y + y).scale(z.k);
-		this.zoomCanvasInvokeZoomBehavior(zoomObject, animateTime);
-	}
-
-	zoomIn() {
-		if (this.zoomTransform.k < this.maxScaleExtent) {
-			const newScale = Math.min(this.zoomTransform.k * 1.1, this.maxScaleExtent);
-			this.canvasSVG.call(this.zoom.scaleTo, newScale);
-		}
-	}
-
-	zoomOut() {
-		if (this.zoomTransform.k > this.minScaleExtent) {
-			const newScale = Math.max(this.zoomTransform.k / 1.1, this.minScaleExtent);
-			this.canvasSVG.call(this.zoom.scaleTo, newScale);
-		}
-	}
-
-	isZoomedToMax() {
-		return this.zoomTransform ? this.zoomTransform.k === this.maxScaleExtent : false;
-	}
-
-	isZoomedToMin() {
-		return this.zoomTransform ? this.zoomTransform.k === this.minScaleExtent : false;
-	}
-
-	getZoomToReveal(nodeIDs, xPos, yPos) {
-		const transformedSVGRect = this.getTransformedViewportDimensions();
-		const nodes = this.activePipeline.getNodes(nodeIDs);
-		const canvasDimensions = CanvasUtils.getCanvasDimensions(nodes, [], [], 0);
-		const canv = this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, 1, 10);
-		const xPosInt = parseInt(xPos, 10);
-		const yPosInt = typeof yPos === "undefined" ? xPosInt : parseInt(yPos, 10);
-
-		if (canv) {
-			let xOffset;
-			let yOffset;
-
-			if (!Number.isNaN(xPosInt) && !Number.isNaN(yPosInt)) {
-				xOffset = transformedSVGRect.x + (transformedSVGRect.width * (xPosInt / 100)) - (canv.left + (canv.width / 2));
-				yOffset = transformedSVGRect.y + (transformedSVGRect.height * (yPosInt / 100)) - (canv.top + (canv.height / 2));
-
-			} else {
-				if (canv.right > transformedSVGRect.x + transformedSVGRect.width) {
-					xOffset = transformedSVGRect.x + transformedSVGRect.width - canv.right;
-				}
-				if (canv.left < transformedSVGRect.x) {
-					xOffset = transformedSVGRect.x - canv.left;
-				}
-				if (canv.bottom > transformedSVGRect.y + transformedSVGRect.height) {
-					yOffset = transformedSVGRect.y + transformedSVGRect.height - canv.bottom;
-				}
-				if (canv.top < transformedSVGRect.y) {
-					yOffset = transformedSVGRect.y - canv.top;
-				}
-			}
-
-			if (typeof xOffset !== "undefined" || typeof yOffset !== "undefined") {
-				const x = this.zoomTransform.x + ((xOffset || 0)) * this.zoomTransform.k;
-				const y = this.zoomTransform.y + ((yOffset || 0)) * this.zoomTransform.k;
-				return { x: x || 0, y: y || 0, k: this.zoomTransform.k };
-			}
-		}
-
-		return null;
-	}
-
-	// Returns an object representing the viewport dimensions which have been
-	// transformed for the current zoom amount.
-	getTransformedViewportDimensions() {
-		const svgRect = this.getViewportDimensions();
-		return this.getTransformedRect(svgRect, 0);
-	}
-
-	// Returns the dimensions of the SVG area. When we are displaying a sub-flow
-	// we can use the supernode's dimensions. If not we are displaying
-	// full-page so we can use getBoundingClientRect() to get the dimensions
-	// (for some reason that method doesn't return correct values with embedded SVG areas).
-	getViewportDimensions() {
-		let viewportDimensions = {};
-
-		if (this.dispUtils.isDisplayingSubFlowInPlace()) {
-			const dims = this.getParentSupernodeSVGDimensions();
-			viewportDimensions.width = dims.width;
-			viewportDimensions.height = dims.height;
-
-		} else {
-			if (this.canvasSVG && this.canvasSVG.node()) {
-				viewportDimensions = this.canvasSVG.node().getBoundingClientRect();
-			} else {
-				viewportDimensions = { x: 0, y: 0, width: 1100, height: 640 }; // Return a sensible default (for Jest tests)
-			}
-		}
-		return viewportDimensions;
-	}
-
-	zoomStart(d3Event) {
-		this.logger.log("zoomStart - " + JSON.stringify(d3Event.transform));
-
-		// Ensure any open tip is closed before starting a zoom operation.
-		this.canvasController.closeTip();
-
-		// Close the context menu, if it's open, before panning or zooming.
-		// If the context menu is opened inside the expanded supernode (in-place
-		// subflow), when the user zooms the canvas, the full page flow is handling
-		// that zoom, which causes a refresh in the subflow, so the full page flow
-		// will take care of closing the context menu. This means the in-place
-		// subflow doesn’t need to do anything on zoom,
-		// hence: !this.dispUtils.isDisplayingSubFlowInPlace()
-		if (this.canvasController.isContextMenuDisplayed() &&
-				!this.dispUtils.isDisplayingSubFlowInPlace()) {
-			this.canvasController.closeContextMenu();
-			this.contextMenuClosedOnZoom = true;
-		}
-
-		// Any text editing in progress will be closed by the textarea's blur event
-		// if the user clicks on the canvas background. So we set this flag to
-		// prevent the selection being lost in the zoomEnd (mouseup) event.
-		if (this.svgCanvasTextArea.isEditingText()) {
-			this.textEditingClosedfOnZoom = true;
-		}
-
-		this.regionSelect = this.shouldDoRegionSelect(d3Event);
-
-		if (this.regionSelect) {
-			// Add a delay so, if the user just clicks, they don't see the crosshair.
-			// This will be cleared in zoomEnd if the user's click takes less than 200 ms.
-			this.addingCrossHairCursor = setTimeout(() => this.addTempCursorOverlay("crosshair"), 200);
-			this.regionStartTransformX = d3Event.transform.x;
-			this.regionStartTransformY = d3Event.transform.y;
-
-		} else {
-			if (this.isDragActivated(d3Event)) {
-				this.addTempCursorOverlay("grabbing");
-			} else {
-				this.addTempCursorOverlay("default");
-			}
-		}
-
-		const transPos = this.getTransformedMousePos(d3Event);
-		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k, startX: transPos.x, startY: transPos.y };
-		this.previousD3Event = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
-		// Calculate the canvas dimensions here, so we don't have to recalculate
-		// them for every zoom action event.
-		this.zoomCanvasDimensions = CanvasUtils.getCanvasDimensions(
-			this.activePipeline.nodes, this.activePipeline.comments,
-			this.activePipeline.links, this.canvasLayout.commentHighlightGap);
-	}
-
-	zoomAction(d3Event) {
-		this.logger.log("zoomAction - " + JSON.stringify(d3Event.transform));
-
-		// If the scale amount is the same we are not zooming, so we must be panning.
-		if (d3Event.transform.k === this.zoomStartPoint.k) {
-			if (this.regionSelect) {
-				this.drawRegionSelector(d3Event);
-
-			} else {
-				this.zoomCanvasBackground(d3Event);
+	setCommentEditingMode(commentId, pipelineId) {
+		if (this.pipelineId === pipelineId) {
+			const comment = this.activePipeline.getComment(commentId);
+			if (comment && this.config.enableEditingActions) {
+				const comSel = this.getCommentGroupSelectionById(commentId);
+				const comDomObj = comSel.node();
+				this.displayCommentTextArea(comment, comDomObj);
 			}
 		} else {
-			this.addTempCursorOverlay("default");
-			this.zoomCanvasBackground(d3Event);
-			this.zoomCommentToolbar();
+			this.superRenderers.forEach((renderer) => {
+				renderer.setCommentEditingMode(commentId, pipelineId);
+			});
 		}
 	}
 
-	zoomEnd(d3Event) {
-		this.logger.log("zoomEnd - " + JSON.stringify(d3Event.transform));
-
-		// Clears the display of the crosshair cursor if the user clicks within 200 ms
-		clearTimeout(this.addingCrossHairCursor);
-
-		const transPos = this.getTransformedMousePos(d3Event);
-
-		if (this.drawingNewLinkData) {
-			this.stopDrawingNewLink();
-
-		} else if (this.draggingLinkData) {
-			this.stopDraggingLink();
-
-		// The user just clicked -- with no drag.
-		} else if (transPos.x === this.zoomStartPoint.startX &&
-							transPos.y === this.zoomStartPoint.startY &&
-							!this.zoomChanged()) {
-			this.zoomClick();
-
-		} else if (this.regionSelect) {
-			this.zoomEndRegionSelect(d3Event);
-
-		} else if (this.dispUtils.isDisplayingFullPage() && this.zoomChanged()) {
-			this.zoomSave();
-		}
-
-		// Remove the cursor overlay and reset the SVG background rectangle
-		// cursor style, which was set in the zoom start method.
-		this.resetCanvasCursor(d3Event);
-		this.removeTempCursorOverlay();
-		this.contextMenuClosedOnZoom = false;
-		this.textEditingClosedfOnZoom = false;
-		this.regionSelect = false;
-	}
-
-	// Returns true if the region select gesture is requested by the user.
-	shouldDoRegionSelect(d3Event) {
-		// The this.zoomingAction flag indicates zooming is being invoked
-		// programmatically.
-		if (this.zoomingAction) {
-			return false;
-
-		} else if (this.config.enableInteractionType === INTERACTION_MOUSE &&
-				(d3Event && d3Event.sourceEvent && d3Event.sourceEvent.shiftKey)) {
-			return true;
-
-		} else if (this.config.enableInteractionType === INTERACTION_CARBON &&
-							!this.isSpaceKeyPressed(d3Event)) {
-			return true;
-
-		} else if (this.config.enableInteractionType === INTERACTION_TRACKPAD &&
-				(d3Event.sourceEvent && d3Event.sourceEvent.buttons === 1) && // Main button is pressed
-				!this.spaceKeyPressed) {
-			return true;
-		}
-
-		return false;
-	}
-
-	// Returns true if the current zoom transform is different from the
-	// zoom values at the beginning of the zoom action.
-	zoomChanged() {
-		return (this.zoomTransform.k !== this.zoomStartPoint.k ||
-			this.zoomTransform.x !== this.zoomStartPoint.x ||
-			this.zoomTransform.y !== this.zoomStartPoint.y);
-	}
-
-	zoomCanvasBackground(d3Event) {
-		this.regionSelect = false;
-
-		if (this.dispUtils.isDisplayingPrimaryFlowFullPage()) {
-			const incTransform = this.getTransformIncrement(d3Event);
-			this.zoomTransform = this.zoomConstrainRegular(incTransform, this.getViewportDimensions(), this.zoomCanvasDimensions);
+	setNodeLabelEditingMode(nodeId, pipelineId) {
+		if (this.pipelineId === pipelineId) {
+			const node = this.activePipeline.getNode(nodeId);
+			if (node && node.layout.labelEditable && this.config.enableEditingActions) {
+				const nodeSel = this.getNodeGroupSelectionById(nodeId);
+				const nodeDomObj = nodeSel.node();
+				this.displayNodeLabelTextArea(node, nodeDomObj);
+			}
 		} else {
-			this.zoomTransform = d3.zoomIdentity.translate(d3Event.transform.x, d3Event.transform.y).scale(d3Event.transform.k);
-		}
-
-		this.canvasGrp.attr("transform", this.zoomTransform);
-
-		if (this.config.enableBoundingRectangles) {
-			this.displayBoundingRectangles();
-		}
-
-		if (this.config.enableCanvasUnderlay !== "None" &&
-				this.dispUtils.isDisplayingPrimaryFlowFullPage()) {
-			this.setCanvasUnderlaySize();
-		}
-
-		// The supernode will not have any calculated port positions when the
-		// subflow is being displayed full screen, so calculate them first.
-		if (this.dispUtils.isDisplayingSubFlowFullPage()) {
-			this.displayPortsForSubFlowFullPage();
+			this.superRenderers.forEach((renderer) => {
+				renderer.setNodeLabelEditingMode(nodeId, pipelineId);
+			});
 		}
 	}
 
-	// Handles a zoom operation that is just a click on the canvas background.
-	zoomClick() {
-		// Only clear selections if clicked on the canvas of the current active pipeline.
-		// Clicking the canvas of an expanded supernode will select that node.
-		// Also, don't clear selections if we have closed a context menu or
-		// closed text editing.
-		if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom && !this.textEditingClosedfOnZoom) {
-			this.selecting = true;
-			this.canvasController.clearSelections();
-			this.selecting = false;
+	setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId) {
+		if (this.pipelineId === pipelineId) {
+			const node = this.activePipeline.getNode(nodeId);
+			if (node && node.decorations) {
+				const dec = node.decorations.find((d) => d.id === decId);
+				if (dec && typeof dec.label !== "undefined" && dec.label_editable && this.config.enableEditingActions) {
+					const nodeDecSel = this.getNodeDecSelectionById(decId, nodeId);
+					const nodeDecDomObj = nodeDecSel.node();
+					this.displayDecLabelTextArea(dec, node, "node", nodeDecDomObj);
+				}
+			}
+		} else {
+			this.superRenderers.forEach((renderer) => {
+				renderer.setLinkDecorationLabelEditingMode(decId, nodeId, pipelineId);
+			});
 		}
 	}
 
-	// Handles the behavior when the user stops doing a region select.
-	zoomEndRegionSelect(d3Event) {
-		this.removeRegionSelector();
-
-		// Reset the transform x and y to what they were before the region
-		// selection action was started. This directly sets the x and y values
-		// in the __zoom property of the svgCanvas DOM object.
-		d3Event.transform.x = this.regionStartTransformX;
-		d3Event.transform.y = this.regionStartTransformY;
-
-		const { startX, startY, width, height } = this.getRegionDimensions(d3Event);
-
-		// Ensure the link objects in the active pipeline have their coordinate
-		// positions set. The coords might not be set if the last object model
-		// update was a change in selections or some other operation that does
-		// not redraw link lines.
-		this.buildLinksArray();
-
-		const region = { x1: startX, y1: startY, x2: startX + width, y2: startY + height };
-		const selections =
-			CanvasUtils.selectInRegion(region, this.activePipeline,
-				this.config.enableLinkSelection !== LINK_SELECTION_NONE,
-				this.config.enableLinkType,
-				this.config.enableAssocLinkType);
-		this.selecting = true;
-		this.canvasController.setSelections(selections, this.activePipeline.id);
-		this.selecting = false;
-	}
-
-	// Save the zoom amount. The canvas controller/object model will decide
-	// how this info is saved.
-	zoomSave() {
-		// Set the internal zoom value for canvasSVG used by D3. This will be
-		// used by d3Event next time a zoom action is initiated.
-		this.canvasSVG.property("__zoom", this.zoomTransform);
-
-		const data = {
-			editType: "setZoom",
-			editSource: "canvas",
-			zoom: this.zoomTransform,
-			pipelineId: this.activePipeline.id
-		};
-		this.canvasController.editActionHandler(data);
-
+	setLinkDecorationLabelEditingMode(decId, linkId, pipelineId) {
+		if (this.pipelineId === pipelineId) {
+			const link = this.activePipeline.getLink(linkId);
+			if (link && link.decorations) {
+				const dec = link.decorations.find((d) => d.id === decId);
+				if (dec && typeof dec.label !== "undefined" && dec.label_editable && this.config.enableEditingActions) {
+					const linkDecSel = this.getLinkDecSelectionById(decId, linkId);
+					const linkDecDomObj = linkDecSel.node();
+					this.displayDecLabelTextArea(dec, link, "link", linkDecDomObj);
+				}
+			}
+		} else {
+			this.superRenderers.forEach((renderer) => {
+				renderer.setLinkDecorationLabelEditingMode(decId, linkId, pipelineId);
+			});
+		}
 	}
 
 	// Repositions the comment toolbar so it is always over the top of the
 	// comment being edited.
-	zoomCommentToolbar() {
+	repositionCommentToolbar() {
 		if (this.config.enableMarkdownInComments &&
 				this.dispUtils.isDisplayingFullPage() &&
 				this.svgCanvasTextArea.isEditingText()) {
@@ -2035,485 +1499,11 @@ export default class SVGCanvasRenderer {
 	// Returns a position object that describes the position in page coordinates
 	// of the comment toolbar so that it is positioned above the comment being edited.
 	getCommentToolbarPos(com) {
-		const pos = this.unTransformPos({ x: com.x_pos, y: com.y_pos });
+		const pos = this.zoomUtils.unTransformPos({ x: com.x_pos, y: com.y_pos });
 		return {
 			x: pos.x + this.canvasLayout.commentToolbarPosX,
 			y: pos.y + this.canvasLayout.commentToolbarPosY
 		};
-	}
-
-	// Returns a new zoom which is the result of incrementing the current zoom
-	// by the amount since the previous d3Event transform amount.
-	// We calculate increments because d3Event.transform is not based on
-	// the constrained zoom position (which is very annoying) so we keep track
-	// of the current constraind zoom amount in this.zoomTransform.
-	getTransformIncrement(d3Event) {
-		const xInc = d3Event.transform.x - this.previousD3Event.x;
-		const yInc = d3Event.transform.y - this.previousD3Event.y;
-
-		const newTransform = { x: this.zoomTransform.x + xInc, y: this.zoomTransform.y + yInc, k: d3Event.transform.k };
-		this.previousD3Event = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
-		return newTransform;
-	}
-
-	// Returns a modifed transform object so that the canvas area (the area
-	// containing nodes and comments) is constrained such that it never totally
-	// disappears from the view port.
-	zoomConstrainRegular(transform, viewPort, canvasDimensions) {
-		if (!canvasDimensions) {
-			return this.zoomTransform;
-		}
-
-		const k = transform.k;
-		let x = transform.x;
-		let y = transform.y;
-
-		const canv =
-			this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, k, this.getZoomToFitPadding());
-
-		const rightOffsetLimit = viewPort.width - Math.min((viewPort.width * 0.25), (canv.width * 0.25));
-		const leftOffsetLimit = -(Math.max((canv.width - (viewPort.width * 0.25)), (canv.width * 0.75)));
-
-		const bottomOffsetLimit = viewPort.height - Math.min((viewPort.height * 0.25), (canv.height * 0.25));
-		const topOffsetLimit = -(Math.max((canv.height - (viewPort.height * 0.25)), (canv.height * 0.75)));
-
-		if (x > -canv.left + rightOffsetLimit) {
-			x = -canv.left + rightOffsetLimit;
-
-		} else if (x < -canv.left + leftOffsetLimit) {
-			x = -canv.left + leftOffsetLimit;
-		}
-
-		if (y > -canv.top + bottomOffsetLimit) {
-			y = -canv.top + bottomOffsetLimit;
-
-		} else if (y < -canv.top + topOffsetLimit) {
-			y = -canv.top + topOffsetLimit;
-		}
-
-		return d3.zoomIdentity.translate(x, y).scale(k);
-	}
-
-	// Returns the dimensions in SVG coordinates of the canvas area. This is
-	// based on the position and width and height of the nodes and comments. It
-	// does not include the 'super binding nodes' which are the binding nodes in
-	// a sub-flow that map to a port in the containing supernode. The dimensions
-	// are scaled by k and padded by pad (if provided).
-	getCanvasDimensionsAdjustedForScale(k, pad) {
-		const gap = this.canvasLayout.commentHighlightGap;
-		const canvasDimensions = this.activePipeline.getCanvasDimensions(gap);
-		return this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, k, pad);
-	}
-
-	convertCanvasDimensionsAdjustedForScaleWithPadding(canv, k, pad) {
-		const padding = pad || 0;
-		if (canv) {
-			return {
-				left: (canv.left * k) - padding,
-				top: (canv.top * k) - padding,
-				right: (canv.right * k) + padding,
-				bottom: (canv.bottom * k) + padding,
-				width: (canv.width * k) + (2 * padding),
-				height: (canv.height * k) + (2 * padding)
-			};
-		}
-		return null;
-	}
-
-	drawRegionSelector(d3Event) {
-		this.removeRegionSelector();
-		const { startX, startY, width, height } = this.getRegionDimensions(d3Event);
-
-		this.canvasGrp
-			.append("rect")
-			.attr("width", width)
-			.attr("height", height)
-			.attr("x", startX)
-			.attr("y", startY)
-			.attr("class", "d3-region-selector");
-	}
-
-	removeRegionSelector() {
-		this.canvasGrp.selectAll(".d3-region-selector").remove();
-	}
-
-	// Returns the startX, startY, width and height of the selection region
-	// where startX and startY are always the top left corner of the region
-	// and width and height are therefore always positive.
-	getRegionDimensions(d3Event) {
-		const transPos = this.getTransformedMousePos(d3Event);
-		let startX = this.zoomStartPoint.startX;
-		let startY = this.zoomStartPoint.startY;
-		let width = transPos.x - startX;
-		let height = transPos.y - startY;
-
-		if (width < 0) {
-			width = Math.abs(width);
-			startX -= width;
-		}
-		if (height < 0) {
-			height = Math.abs(height);
-			startY -= height;
-		}
-
-		return { startX, startY, width, height };
-	}
-
-	// Records the initial starting position of the object being sized so
-	// that drag increments can be added to the original starting
-	// position to aid calculating the snap-to-grid position.
-	initializeResizeVariables(resizeObj) {
-		this.resizeObjInitialInfo = {
-			x_pos: resizeObj.x_pos, y_pos: resizeObj.y_pos, width: resizeObj.width, height: resizeObj.height };
-		this.notSnappedXPos = resizeObj.x_pos;
-		this.notSnappedYPos = resizeObj.y_pos;
-		this.notSnappedWidth = resizeObj.width;
-		this.notSnappedHeight = resizeObj.height;
-	}
-
-	// Returns an array of objects to drag. If enableDragWithoutSelect is true,
-	// and the object on which this drag start has initiated is not in the
-	// set of selected objects, then just that object is to be dragged. Otherwise,
-	// the selected objects are the objects to be dragged.
-	getDragObjects(d) {
-		const selectedObjects = this.getSelectedNodesAndComments();
-
-		if (this.config.enableDragWithoutSelect &&
-				selectedObjects.findIndex((o) => o.id === d.id) === -1) {
-			return [d];
-		}
-
-		return selectedObjects;
-	}
-
-	dragStart(d3Event, d) {
-		this.logger.logStartTimer("dragStart");
-
-		this.closeContextMenuIfOpen();
-
-		// Note: Comment and Node resizing is started by the comment/node highlight rectangle.
-		if (this.commentSizing) {
-			const resizeObj = this.activePipeline.getComment(d.id);
-			this.initializeResizeVariables(resizeObj);
-
-		} else if (this.nodeSizing) {
-			const resizeObj = this.activePipeline.getNode(d.id);
-			this.initializeResizeVariables(resizeObj);
-
-		} else {
-			this.dragObjectsStart(d3Event, d);
-		}
-		this.logger.logEndTimer("dragStart", true);
-	}
-
-	dragMove(d3Event, d) {
-		this.logger.logStartTimer("dragMove");
-		if (this.commentSizing) {
-			this.resizeComment(d3Event, d);
-		} else if (this.nodeSizing) {
-			this.resizeNode(d3Event, d);
-		} else {
-			this.dragObjectsAction(d3Event);
-		}
-
-		this.logger.logEndTimer("dragMove", true);
-	}
-
-	dragEnd(d3Event, d) {
-		this.logger.logStartTimer("dragEnd");
-
-		this.removeTempCursorOverlay();
-
-		if (this.commentSizing) {
-			this.endCommentSizing(d);
-
-		} else if (this.nodeSizing) {
-			this.endNodeSizing(d);
-
-		} else if (this.dragging) {
-			this.dragObjectsEnd(d3Event, d);
-		}
-
-		this.logger.logEndTimer("dragEnd", true);
-	}
-
-	// Starts the dragging action for canvas objects (nodes and comments).
-	dragObjectsStart(d3Event, d) {
-		// Ensure flags are false before staring a new drag.
-		this.existingNodeInsertableIntoLink = false;
-		this.existingNodeAttachableToDetachedLinks = false;
-
-		this.dragging = true;
-		this.dragOffsetX = 0;
-		this.dragOffsetY = 0;
-		this.dragRunningX = 0;
-		this.dragRunningY = 0;
-		this.dragObjects = this.getDragObjects(d);
-		if (this.dragObjects && this.dragObjects.length > 0) {
-			this.dragStartX = this.dragObjects[0].x_pos;
-			this.dragStartY = this.dragObjects[0].y_pos;
-		}
-
-		// If we are dragging an 'insertable' node, set it to be translucent so
-		// that, when it is dragged over a link line, the highlightd line can be seen OK.
-		if (this.isExistingNodeInsertableIntoLink()) {
-			this.existingNodeInsertableIntoLink = true;
-			this.setNodeTranslucentState(this.dragObjects[0].id, true);
-			this.setDataLinkSelectionAreaWider(true);
-		}
-
-		// If we are dragging an 'attachable' node, set it to be translucent so
-		// that, when it is dragged over link lines, the highlightd lines can be seen OK.
-		if (this.isExistingNodeAttachableToDetachedLinks()) {
-			this.existingNodeAttachableToDetachedLinks = true;
-			const mousePos = this.getTransformedMousePos(d3Event);
-			this.dragPointerOffsetInNode = {
-				x: mousePos.x - this.dragObjects[0].x_pos,
-				y: mousePos.y - this.dragObjects[0].y_pos
-			};
-			this.setNodeTranslucentState(this.dragObjects[0].id, true);
-		}
-	}
-
-	// Performs the dragging action for canvas objects (nodes and comments).
-	dragObjectsAction(d3Event) {
-		this.dragOffsetX += d3Event.dx;
-		this.dragOffsetY += d3Event.dy;
-
-		// Limit the size a drag can be so, when the user is dragging objects in
-		// an in-place subflow they do not drag them too far.
-		// this.logger.log("Drag offset X = " + this.dragOffsetX + " y = " + this.dragOffsetY);
-		if (this.dispUtils.isDisplayingSubFlowInPlace() &&
-				(this.dragOffsetX > 1000 || this.dragOffsetX < -1000 ||
-					this.dragOffsetY > 1000 || this.dragOffsetY < -1000)) {
-			this.dragOffsetX -= d3Event.dx;
-			this.dragOffsetY -= d3Event.dy;
-
-		} else {
-			let	increment = { x: 0, y: 0 };
-
-			if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING) {
-				const stgPos = this.snapToGridDraggedNode();
-
-				increment = {
-					x: stgPos.x - this.dragObjects[0].x_pos,
-					y: stgPos.y - this.dragObjects[0].y_pos
-				};
-
-			} else {
-				increment = {
-					x: d3Event.dx,
-					y: d3Event.dy
-				};
-			}
-
-			this.dragRunningX += increment.x;
-			this.dragRunningY += increment.y;
-
-			this.dragObjects.forEach((d) => {
-				d.x_pos += increment.x;
-				d.y_pos += increment.y;
-			});
-
-			if (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
-				this.getSelectedLinks().forEach((link) => {
-					if (link.srcPos) {
-						link.srcPos.x_pos += increment.x;
-						link.srcPos.y_pos += increment.y;
-					}
-					if (link.trgPos) {
-						link.trgPos.x_pos += increment.x;
-						link.trgPos.y_pos += increment.y;
-					}
-				});
-			}
-		}
-
-		this.displayCanvas();
-
-		if (this.existingNodeInsertableIntoLink) {
-			const link = this.getLinkAtMousePos(d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
-			// Set highlighting when there is no link because this will turn
-			// current highlighting off. And only switch on highlighting when we are
-			// over a fully attached link (not a detached link) and provided the
-			// link is not to/from the node being dragged (which is possible in
-			// some odd situations).
-			if (!link ||
-					(this.isLinkFullyAttached(link) &&
-						this.dragObjects[0].id !== link.srcNodeId &&
-						this.dragObjects[0].id !== link.trgNodeId)) {
-				this.setInsertNodeIntoLinkHighlighting(link);
-			}
-		}
-
-		if (this.existingNodeAttachableToDetachedLinks) {
-			const mousePos = this.getTransformedMousePos(d3Event);
-			const node = this.dragObjects[0];
-			const ghostArea = {
-				x1: mousePos.x - this.dragPointerOffsetInNode.x,
-				y1: mousePos.y - this.dragPointerOffsetInNode.y,
-				x2: mousePos.x - this.dragPointerOffsetInNode.x + node.width,
-				y2: mousePos.y - this.dragPointerOffsetInNode.y + node.height
-			};
-			const links = this.getAttachableLinksForNodeAtPos(node, ghostArea);
-			this.setDetachedLinkHighlighting(links);
-		}
-	}
-
-	// Ends the dragging action for canvas objects (nodes and comments).
-	dragObjectsEnd(d3Event, d) {
-		// Set to false before updating object model so main body of displayNodes is run.
-		this.dragging = false;
-
-		// If the pointer hasn't moved and enableDragWithoutSelect we interpret
-		// that as a select on the object.
-		if (this.dragOffsetX === 0 &&
-				this.dragOffsetY === 0 &&
-				this.config.enableDragWithoutSelect) {
-			this.selectObjectSourceEvent(d3Event, d);
-
-		} else {
-			if (this.dragRunningX !== 0 ||
-					this.dragRunningY !== 0) {
-				let dragFinalOffset = null;
-				if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
-					const stgPos = this.snapToGridDraggedNode();
-					dragFinalOffset = {
-						x: stgPos.x - this.dragStartX,
-						y: stgPos.y - this.dragStartY
-					};
-				} else {
-					dragFinalOffset = { x: this.dragRunningX, y: this.dragRunningY };
-				}
-
-				if (this.existingNodeInsertableIntoLink &&
-						this.dragOverLink) {
-					this.canvasController.editActionHandler({
-						editType: "insertNodeIntoLink",
-						editSource: "canvas",
-						node: this.dragObjects[0],
-						link: this.dragOverLink,
-						offsetX: dragFinalOffset.x,
-						offsetY: dragFinalOffset.y,
-						pipelineId: this.activePipeline.id });
-
-				} else if (this.existingNodeAttachableToDetachedLinks &&
-										this.dragOverDetachedLinks.length > 0) {
-					this.canvasController.editActionHandler({
-						editType: "attachNodeToLinks",
-						editSource: "canvas",
-						node: this.dragObjects[0],
-						detachedLinks: this.dragOverDetachedLinks,
-						offsetX: dragFinalOffset.x,
-						offsetY: dragFinalOffset.y,
-						pipelineId: this.activePipeline.id });
-
-				} else {
-					this.canvasController.editActionHandler({
-						editType: "moveObjects",
-						editSource: "canvas",
-						nodes: this.dragObjects.map((o) => o.id),
-						links: this.getSelectedLinks().filter((l) => l.srcPos || l.trgPos), // Filter detached links
-						offsetX: dragFinalOffset.x,
-						offsetY: dragFinalOffset.y,
-						pipelineId: this.activePipeline.id });
-				}
-			}
-		}
-
-		// Switch off any drag highlighting
-		this.setDataLinkSelectionAreaWider(false);
-		this.unsetNodeTranslucentState();
-		this.unsetInsertNodeIntoLinkHighlighting();
-		this.unsetDetachedLinkHighlighting();
-	}
-
-	dragStartLinkHandle(d3Event, d) {
-		this.logger.logStartTimer("dragStartLinkHandle");
-
-		this.closeContextMenuIfOpen();
-
-		this.draggingLinkHandle = true;
-
-		const handleSelection = d3.select(d3Event.sourceEvent.currentTarget);
-		const link = this.activePipeline.getLink(d.id);
-		const oldLink = cloneDeep(link);
-
-		const linkGrpSelector = this.getLinkGroupSelectionById(d.id);
-
-		this.draggingLinkData = {
-			lineInfo: d,
-			link: link,
-			oldLink: oldLink,
-			linkGrpSelection: d3.select(linkGrpSelector)
-		};
-
-		if (handleSelection.attr("class").includes("d3-link-handle-end")) {
-			this.draggingLinkData.endBeingDragged = "end";
-
-		} else if (handleSelection.attr("class").includes("d3-link-handle-start")) {
-			this.draggingLinkData.endBeingDragged = "start";
-		}
-
-		if (this.config.enableHighlightUnavailableNodes) {
-			if (this.draggingLinkData.endBeingDragged === "end") {
-				const links = this.activePipeline.links.filter((lnk) => lnk.id !== link.id);
-				this.setUnavailableTargetNodesHighlighting(
-					this.activePipeline.getNode(this.draggingLinkData.link.srcNodeId),
-					this.draggingLinkData.link.srcNodePortId,
-					links
-				);
-			} else if (this.draggingLinkData.endBeingDragged === "start") {
-				const links = this.activePipeline.links.filter((lnk) => lnk.id !== link.id);
-				this.setUnavailableSourceNodesHighlighting(
-					this.activePipeline.getNode(this.draggingLinkData.oldLink.trgNodeId),
-					this.draggingLinkData.link.trgNodePortId,
-					links
-				);
-			}
-		}
-
-		this.dragLinkHandle(d3Event);
-		this.logger.logEndTimer("dragStartLinkHandle", true);
-	}
-
-	dragMoveLinkHandle(d3Event) {
-		this.logger.logStartTimer("dragMoveLinkHandle");
-		this.dragLinkHandle(d3Event);
-		this.logger.logEndTimer("dragMoveLinkHandle", true);
-	}
-
-	dragEndLinkHandle(d3Event) {
-		this.logger.logStartTimer("dragEndLinkHandle");
-		this.completeDraggedLink(d3Event);
-		this.draggingLinkHandle = false;
-		this.logger.logEndTimer("dragEndLinkHandle", true);
-	}
-
-	// Switches on or off the translucent state of the node identified by the
-	// node ID passed in. This is used when an 'insertable' node is dragged on
-	// the canvas. It makes is easier for the user to see the highlighted link
-	// when the node is dragged over it.
-	setNodeTranslucentState(nodeId, state) {
-		this.getNodeGroupSelectionById(nodeId).classed("d3-node-group-translucent", state);
-	}
-
-	// Switched off the translucent state of the objects being dragged (if
-	// there are any).
-	unsetNodeTranslucentState() {
-		if (this.dragObjects && this.dragObjects.length > 0) {
-			this.setNodeTranslucentState(this.dragObjects[0].id, false);
-		}
-	}
-
-	// Returns the snap-to-grid position of the object positioned at
-	// this.dragStartX and this.dragStartY after applying the current offset of
-	// this.dragOffsetX and this.dragOffsetY.
-	snapToGridDraggedNode() {
-		const objPosX = this.dragStartX + this.dragOffsetX;
-		const objPosY = this.dragStartY + this.dragOffsetY;
-
-		return this.snapToGridPosition({ x: objPosX, y: objPosY });
 	}
 
 	// Returns the snap-to-grid position of the object positioned at objPos.x
@@ -2526,11 +1516,10 @@ export default class SVGCanvasRenderer {
 		return { x: stgPosX, y: stgPosY };
 	}
 
+	// Displays all the nodes on the canvas either by creating new nodes,
+	// updating existing nodes or removing unwanted nodes.
 	displayNodes() {
 		this.logger.logStartTimer("displayNodes " + this.getFlags());
-
-		// Do not return from here if there are no nodes because there may
-		// be still nodes on display that need to be deleted.
 
 		// Set the port positions for all ports - these will be needed when displaying
 		// nodes and links. This needs to be done here because a resized supernode
@@ -2538,24 +1527,14 @@ export default class SVGCanvasRenderer {
 		// redrawn which will need port positions to be set appropriately.
 		this.setPortPositionsAllNodes();
 
-		// For any of these activities we don't need to do anything to the nodes.
-		if (this.commentSizing) {
-			this.logger.logEndTimer("displayNodes " + this.getFlags());
-			return;
+		const sel = this.getAllNodeGroupsSelection();
+		this.displayNodesSubset(sel, this.activePipeline.nodes);
 
-		} else if ((this.dragging && !this.nodeSizing && !this.commentSizing) || this.movingBindingNodes) {
-			this.displayMovedNodes();
-
-		} else if (this.selecting) {
-			this.displayNodesSelectionStatus();
-
-		} else {
-			this.displayAllNodes();
-		}
 		this.logger.logEndTimer("displayNodes " + this.getFlags());
 	}
 
 	displayMovedNodes() {
+		this.logger.logStartTimer("displayMovedNodes");
 		const nodeGroupSel = this.getAllNodeGroupsSelection();
 
 		nodeGroupSel
@@ -2574,32 +1553,42 @@ export default class SVGCanvasRenderer {
 					}
 				});
 		}
+		this.logger.logEndTimer("displayMovedNodes");
 	}
 
-	displayNodesSelectionStatus(nodeGroupSel) {
+	displayNodesSelectionStatus(selectionInfo) {
+		this.logger.logStartTimer("displayNodesSelectionStatus");
+
 		this.getAllNodeGroupsSelection()
 			.selectChildren(".d3-node-selection-highlight")
-			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? "yes" : "no"));
+			.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? "yes" : "no"));
 
-		this.superRenderers.forEach((renderer) => {
-			renderer.selecting = true;
-			renderer.displayNodes();
-			renderer.selecting = false;
-		});
+		this.logger.logEndTimer("displayNodesSelectionStatus");
 	}
 
-	// Displays all the nodes on the canvas either by creating new nodes,
-	// updating existing nodes or removing unwanted nodes.
-	displayAllNodes() {
-		this.getAllNodeGroupsSelection()
-			.data(this.activePipeline.nodes, (d) => d.id)
+	displaySingleNode(d) {
+		this.logger.logStartTimer("displaySingleNode " + this.getFlags());
+
+		this.setPortPositionsForNode(d);
+
+		const selection = this.getNodeGroupSelectionById(d.id);
+		this.displayNodesSubset(selection, [d]);
+
+		this.logger.logEndTimer("displaySingleNode " + this.getFlags());
+	}
+
+	displayNodesSubset(selection, data) {
+		selection
+			.data(data, (d) => d.id)
 			.join(
-				(enter) => this.createNodes(enter)
+				(enter) => this.createNodes(enter),
+				null,
+				(remove) => this.removeNodes(remove)
 			)
 			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 			.attr("class", (d) => this.getNodeGroupClass(d))
 			.attr("style", (d) => this.getNodeGrpStyle(d))
-			.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps));
+			.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps, data));
 	}
 
 	createNodes(enter) {
@@ -2610,76 +1599,95 @@ export default class SVGCanvasRenderer {
 			.attr("data-id", (d) => this.getId("node_grp", d.id))
 			.call(this.attachNodeGroupListeners.bind(this));
 
-		if (this.config.enableEditingActions) {
-			newNodeGroups
-				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
-		}
-
-		// Node Sizing Area.
-		newNodeGroups.filter((d) => this.shouldDisplayNodeSizingArea(d))
-			.append("path")
-			.attr("class", "d3-node-sizing")
-			.call(this.attachNodeSizingListeners.bind(this));
-
-		// Node Selection Highlighting Outline.
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
-			.append("path")
-			.attr("class", "d3-node-selection-highlight");
-
-		// Node Body
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
-			.append("path")
-			.attr("class", "d3-node-body-outline");
-
-		// Node Image
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.imageDisplay)
-			.each((node, i, nodeGrps) => {
-				const nodeImage = this.getNodeImage(node);
-				const nodeImageType = this.getImageType(nodeImage);
-				d3.select(nodeGrps[i])
-					.append(nodeImageType)
-					.attr("class", (d) => this.nodeUtils.getNodeImageClass(d));
-			});
-
-		// Node Label
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
-			.append("foreignObject")
-			.attr("class", "d3-foreign-object-node-label")
-			.call(this.attachNodeLabelListeners.bind(this))
-			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-			.append("xhtml:span") // Provide a namespace when span is inside foreignObject
-			.call(this.attachNodeLabelSpanListeners.bind(this));
-
 		this.logger.logEndTimer("createNodes");
 
 		return newNodeGroups;
 	}
 
-	updateNodes(joinedNodeGrps) {
+	updateNodes(joinedNodeGrps, data) {
 		this.logger.logStartTimer("updateNodes");
 
+		const nonBindingNodeGrps = joinedNodeGrps.filter((node) => !CanvasUtils.isSuperBindingNode(node));
+
 		// Node Sizing Area
-		joinedNodeGrps.selectChildren(".d3-node-sizing")
+		nonBindingNodeGrps
+			.selectChildren(".d3-node-sizing")
+			.data((d) => (this.shouldDisplayNodeSizingArea(d) ? [d] : []), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("path")
+						.attr("class", "d3-node-sizing")
+						.call(this.attachNodeSizingListeners.bind(this))
+			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeShapePathSizing(d));
 
 		// Node Selection Highlighting Outline.
-		joinedNodeGrps.selectChildren(".d3-node-selection-highlight")
+		nonBindingNodeGrps
+			.selectChildren(".d3-node-selection-highlight")
+			.data((d) => ([d]), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("path")
+						.attr("class", "d3-node-selection-highlight")
+			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeSelectionOutline(d))
-			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? "yes" : "no"))
+			.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? "yes" : "no"))
 			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
 
 		// Node Body
-		joinedNodeGrps.selectChildren(".d3-node-body-outline")
+		nonBindingNodeGrps
+			.selectChildren(".d3-node-body-outline")
+			.data((d) => (d.layout.nodeShapeDisplay ? [d] : []), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("path")
+						.attr("class", "d3-node-body-outline")
+			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeShapePath(d))
 			.attr("style", (d) => this.getNodeBodyStyle(d, "default"));
 
-		// Node Image
-		joinedNodeGrps.selectChildren(".d3-node-image")
+		// Optional foreign object to contain a React object
+		nonBindingNodeGrps
+			.selectChildren(".d3-foreign-object-external-node")
+			.data((d) => (d.layout.nodeExternalObject ? [d] : []), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("foreignObject")
+						.attr("class", "d3-foreign-object-external-node"),
+				null,
+				(exit) => {
+					exit.each((d, idx, exts) =>
+						this.externalUtils.removeExternalObject(d, idx, exts));
+					exit.remove();
+				}
+			)
 			.datum((d) => this.activePipeline.getNode(d.id))
-			.each((d, i, nodeGrps) => this.setNodeImageContent(nodeGrps[i], d))
+			.attr("width", (d) => d.width)
+			.attr("height", (d) => d.height)
+			.attr("x", 0)
+			.attr("y", 0)
+			.each((d, idx, exts) =>
+				this.externalUtils.addNodeExternalObject(d, idx, exts));
+
+		// Node Image
+		nonBindingNodeGrps
+			.selectChildren(".d3-node-image")
+			.data((d) => (d.layout.imageDisplay ? [d] : []), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append((d) => this.getImageElement(d))
+						.attr("class", "d3-node-image")
+			)
+			.datum((d) => this.activePipeline.getNode(d.id))
+			.each((d, idx, imgs) => this.setNodeImageContent(imgs[idx], d))
 			.attr("x", (d) => this.nodeUtils.getNodeImagePosX(d))
 			.attr("y", (d) => this.nodeUtils.getNodeImagePosY(d))
 			.attr("width", (d) => this.nodeUtils.getNodeImageWidth(d))
@@ -2687,7 +1695,22 @@ export default class SVGCanvasRenderer {
 			.attr("style", (d) => this.getNodeImageStyle(d, "default"));
 
 		// Node Label
-		joinedNodeGrps.selectChildren(".d3-foreign-object-node-label")
+		nonBindingNodeGrps
+			.selectChildren(".d3-foreign-object-node-label")
+			.data((d) => (d.layout.labelDisplay ? [d] : []), (d) => d.id)
+			.join(
+				(enter) => {
+					const labelFOSel = enter
+						.append("foreignObject")
+						.attr("class", "d3-foreign-object-node-label")
+						.call(this.attachNodeLabelListeners.bind(this));
+					labelFOSel
+						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+						.append("xhtml:span") // Provide a namespace when span is inside foreignObject
+						.call(this.attachNodeLabelSpanListeners.bind(this));
+					return labelFOSel;
+				}
+			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("x", (d) => this.nodeUtils.getNodeLabelPosX(d))
 			.attr("y", (d) => this.nodeUtils.getNodeLabelPosY(d))
@@ -2700,11 +1723,11 @@ export default class SVGCanvasRenderer {
 			.html((d) => escapeText(d.label));
 
 		// Node Ellipsis Icon - if one exists
-		joinedNodeGrps.selectChildren(".d3-node-ellipsis-group")
+		nonBindingNodeGrps.selectChildren(".d3-node-ellipsis-group")
 			.attr("transform", (d) => this.nodeUtils.getNodeEllipsisTranslate(d));
 
 		// Node (Supernode) Expansion Icon - if one exists
-		joinedNodeGrps.selectChildren(".d3-node-super-expand-icon-group")
+		nonBindingNodeGrps.selectChildren(".d3-node-super-expand-icon-group")
 			.attr("transform", (d) => this.nodeUtils.getNodeExpansionIconTranslate(d));
 
 		// Ports display; Supernode sub-flow display; Error marker display; and
@@ -2727,7 +1750,37 @@ export default class SVGCanvasRenderer {
 				this.displayDecorations(d, DEC_NODE, nodeGrp, decorations);
 			}
 		});
+
+		// Add or remove drag behavior as appropriate
+		if (this.config.enableEditingActions) {
+			const handler = this.dragObjectUtils.getDragObjectHandler();
+			nonBindingNodeGrps
+				.call(handler);
+		} else {
+			nonBindingNodeGrps
+				.on(".drag", null);
+		}
+
 		this.logger.logEndTimer("updateNodes");
+	}
+
+	removeNodes(removeSel) {
+		// Remove any JSX decorations for the nodes being removed to
+		// unmount their React objects.
+		removeSel
+			.selectAll(".d3-foreign-object-dec-jsx")
+			.each((d, idx, exts) =>
+				this.externalUtils.removeExternalObject(d, idx, exts));
+
+		// Remove any foreign objects for React nodes to
+		// unmount their React objects.
+		removeSel
+			.selectChildren(".d3-foreign-object-external-node")
+			.each((d, idx, exts) =>
+				this.externalUtils.removeExternalObject(d, idx, exts));
+
+		// Remove all nodes in the selection.
+		removeSel.remove();
 	}
 
 	// Handles the display of a supernode sub-flow contents or hides the contents
@@ -2740,7 +1793,15 @@ export default class SVGCanvasRenderer {
 				ren = this.createSupernodeRenderer(d, supernodeD3Object); // Create will call displayCanvas
 				this.superRenderers.push(ren);
 			} else {
-				ren.setCanvasInfoRenderer(this.canvasInfo); // Setting canvas info will call displayCanvas
+				// Setting canvas info will call displayCanvas for the sub-flow
+				ren.setCanvasInfoRenderer(
+					this.canvasInfo,
+					this.selectionInfo,
+					this.breadcrumbs,
+					this.nodeLayout,
+					this.canvasLayout,
+					this.config
+				);
 			}
 		} else {
 			if (ren) {
@@ -2750,22 +1811,23 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayPorts(nodeGrp, d) {
-		// Empty inputs arrays are allowed because some apps support that when ports are deleted.
-		if (d.layout.inputPortDisplay && Array.isArray(d.inputs)) {
-			this.displayInputPorts(nodeGrp, d);
-		}
-
-		// Empty outputs arrays are allowed because some apps support that when ports are deleted.
-		if (d.layout.outputPortDisplay && Array.isArray(d.outputs)) {
-			this.displayOutputPorts(nodeGrp, d);
-		}
+		this.displayInputPorts(nodeGrp, d);
+		this.displayOutputPorts(nodeGrp, d);
 	}
 
 	displayInputPorts(nodeGrp, node) {
 		const inSelector = "." + this.getNodeInputPortClassName();
 
+		// Some applications may set inputs to undefined after inputs was
+		// previously set to an array, so use empty array in that case so any
+		// existing input ports are removed from the node.
+		let inputs = node.inputs || [];
+
+		// Don't display input ports if config says not to.
+		inputs = node.layout.inputPortDisplay ? inputs : [];
+
 		nodeGrp.selectChildren(inSelector)
-			.data(node.inputs, (p) => p.id)
+			.data(inputs, (p) => p.id)
 			.join(
 				(enter) => this.createInputPorts(enter, node)
 			)
@@ -2829,14 +1891,30 @@ export default class SVGCanvasRenderer {
 						.attr("transform", this.getPortArrowPathTransform(port));
 				}
 			});
+
+		if (this.config.enableEditingActions) {
+			const handler = this.dragNewLinkUtils.getDragNewLinkHandler();
+			joinedInputPortGrps.call(handler);
+		} else {
+			joinedInputPortGrps.on(".drag", null);
+		}
 	}
 
 	displayOutputPorts(nodeGrp, node) {
 		const outSelector = "." + this.getNodeOutputPortClassName();
 
-		const outputs = this.config.enableSingleOutputPortDisplay && node.outputs.length > 1
-			? [node.outputs[node.outputs.length - 1]]
-			: node.outputs;
+		// Some applications may set outputs to undefined after outputs was
+		// previously set to an array, so use empty array in that case so any
+		// existing output ports are removed from the node.
+		let outputs = node.outputs || [];
+
+		// Don't display output ports if config says not to.
+		outputs = node.layout.outputPortDisplay ? outputs : [];
+
+		// Only show a single output port (the last one) if config tells us to.
+		outputs = this.config.enableSingleOutputPortDisplay && outputs.length > 1
+			? [outputs[outputs.length - 1]]
+			: outputs;
 
 		nodeGrp.selectChildren(outSelector)
 			.data(outputs, (p) => p.id)
@@ -2862,8 +1940,8 @@ export default class SVGCanvasRenderer {
 		return outputPortGroups;
 	}
 
-	updateOutputPorts(joinedOutputPortGroups, node) {
-		joinedOutputPortGroups.selectChildren(".d3-node-port-output-main")
+	updateOutputPorts(joinedOutputPortGrps, node) {
+		joinedOutputPortGrps.selectChildren(".d3-node-port-output-main")
 			.datum((port) => node.outputs.find((o) => port.id === o.id))
 			.each((port, i, outputPorts) => {
 				const obj = d3.select(outputPorts[i]);
@@ -2881,58 +1959,78 @@ export default class SVGCanvasRenderer {
 						.attr("cy", port.cy);
 				}
 			});
+
+		if (this.config.enableEditingActions) {
+			const handler = this.dragNewLinkUtils.getDragNewLinkHandler();
+			joinedOutputPortGrps.call(handler);
+		} else {
+			joinedOutputPortGrps.on(".drag", null);
+		}
 	}
 
 	// Attaches the appropriate listeners to the node groups.
 	attachNodeGroupListeners(nodeGrps) {
 		nodeGrps
 			.on("mouseenter", (d3Event, d) => {
+				if (this.isDragging()) {
+					return;
+				}
 				const nodeGrp = d3.select(d3Event.currentTarget);
 				this.raiseNodeToTop(nodeGrp);
 				this.setNodeStyles(d, "hover", nodeGrp);
-				this.addDynamicNodeIcons(d, nodeGrp);
+				if (this.config.enableContextToolbar) {
+					this.addContextToolbar(d3Event, d, "node");
+				} else {
+					this.addDynamicNodeIcons(d3Event, d, nodeGrp);
+				}
+			})
+			// This will be called when the mouse cursor enters the node or moves out of
+			// child elements of the node. Some child elements, like decorations, may have
+			// their own tooltips so this will redisplay the node tooltip on exiting the decoration.
+			.on("mouseover", (d3Event, d) => {
+				d3Event.stopPropagation(); // Stop propagation in case we are in a sub-flow
 				if (this.canOpenTip(TIP_TYPE_NODE)) {
-					this.canvasController.closeTip(); // Ensure existing tip is removed when moving pointer within an in-place supernode
-					this.canvasController.openTip({
-						id: this.getId("node_tip", d.id),
-						type: TIP_TYPE_NODE,
-						targetObj: d3Event.currentTarget,
-						pipelineId: this.activePipeline.id,
-						node: d
-					});
+					const tipId = this.canvasController.getTipId(); // Id of current tip or null
+					const nodeTipId = this.getId("node_tip", d.id);
+
+					if (tipId === null || tipId !== nodeTipId) {
+						this.canvasController.closeTip();
+						this.canvasController.openTip({
+							id: nodeTipId,
+							type: TIP_TYPE_NODE,
+							targetObj: d3Event.currentTarget,
+							pipelineId: this.activePipeline.id,
+							node: d
+						});
+					}
 				}
 			})
 			.on("mouseleave", (d3Event, d) => {
 				const nodeGrp = d3.select(d3Event.currentTarget);
 				this.setNodeStyles(d, "default", nodeGrp);
-				this.removeDynamicNodeIcons(d, nodeGrp);
+				if (this.config.enableContextToolbar) {
+					this.removeContextToolbar();
+				} else {
+					this.removeDynamicNodeIcons(d3Event, d, nodeGrp);
+				}
 				this.canvasController.closeTip();
 			})
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
-				this.logger.log("Node Group - mouse down");
+				this.logger.logStartTimer("Node Group - mouse down");
+				d3Event.stopPropagation();
 				if (this.svgCanvasTextArea.isEditingText()) {
 					this.svgCanvasTextArea.completeEditing();
 				}
 				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d);
+					this.selectObjectD3Event(d3Event, d, "node");
 				}
-				this.logger.log("Node Group - finished mouse down");
+				this.logger.logEndTimer("Node Group - mouse down");
 			})
 			.on("mousemove", (d3Event, d) => {
 				// this.logger.log("Node Group - mouse move");
 				// Don't stop propogation. Mouse move messages must be allowed to
 				// propagate to canvas zoom operation.
-			})
-			.on("mouseup", (d3Event, d) => {
-				d3Event.stopPropagation();
-				this.logger.log("Node Group - mouse up");
-				if (this.drawingNewLinkData) {
-					this.completeNewLink(d3Event);
-				}
-				if (this.draggingLinkData) {
-					this.completeDraggedLink(d3Event, d);
-				}
 			})
 			.on("click", (d3Event, d) => {
 				this.logger.log("Node Group - click");
@@ -2941,12 +2039,11 @@ export default class SVGCanvasRenderer {
 			.on("dblclick", (d3Event, d) => {
 				this.logger.log("Node Group - double click");
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				var selObjIds = this.objectModel.getSelectedObjectIds();
 				this.canvasController.clickActionHandler({
 					clickType: "DOUBLE_CLICK",
 					objectType: "node",
 					id: d.id,
-					selectedObjectIds: selObjIds,
+					selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
 					pipelineId: this.activePipeline.id
 				});
 			})
@@ -2957,7 +2054,7 @@ export default class SVGCanvasRenderer {
 					// With enableDragWithoutSelect set to true, the object for which the
 					// context menu is being requested needs to be implicitely selected.
 					if (this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d3Event, d);
+						this.selectObjectD3Event(d3Event, d, "node");
 					}
 					this.openContextMenu(d3Event, "node", d);
 				}
@@ -2967,11 +2064,7 @@ export default class SVGCanvasRenderer {
 	attachNodeSizingListeners(nodeGrps) {
 		nodeGrps
 			.on("mousedown", (d3Event, d) => {
-				if (this.isNodeResizable(d)) {
-					this.nodeSizing = true;
-					// Note - node resizing and finalization of size is handled by drag functions.
-					this.addTempCursorOverlay(this.nodeSizingCursor);
-				}
+				this.dragObjectUtils.mouseDownNodeSizingArea(d);
 			})
 			// Use mousemove as well as mouseenter so the cursor will change
 			// if the pointer moves from one area of the node outline to another
@@ -2980,19 +2073,10 @@ export default class SVGCanvasRenderer {
 			// pointer leaves the temporary overlay (which is removed) and enters
 			// the node outline.
 			.on("mousemove mouseenter", (d3Event, d) => {
-				if (this.isNodeResizable(d) &&
-						!this.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
-					let cursorType = "default";
-					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
-						this.nodeSizingDirection = this.getSizingDirection(d3Event, d, d.layout.nodeCornerResizeArea);
-						this.nodeSizingCursor = this.getCursorBasedOnDirection(this.nodeSizingDirection);
-						cursorType = this.nodeSizingCursor;
-					}
-					d3.select(d3Event.currentTarget).style("cursor", cursorType);
-				}
+				this.dragObjectUtils.mouseEnterNodeSizingArea(d3Event, d);
 			})
 			.on("mouseleave", (d3Event, d) => {
-				d3.select(d3Event.currentTarget).style("cursor", "default");
+				this.dragObjectUtils.mouseLeaveNodeSizingArea(d3Event, d);
 			});
 	}
 
@@ -3005,7 +2089,7 @@ export default class SVGCanvasRenderer {
 					labelSel
 						.attr("x", this.nodeUtils.getNodeLabelHoverPosX(d))
 						.attr("width", this.nodeUtils.getNodeLabelHoverWidth(d))
-						.attr("height", this.nodeUtils.getNodeLabelHoverHeight(d, spanSel.node(), this.zoomTransform.k));
+						.attr("height", this.nodeUtils.getNodeLabelHoverHeight(d, spanSel.node(), this.zoomUtils.getZoomScale()));
 					spanSel.classed("d3-label-full", true);
 				}
 			})
@@ -3045,33 +2129,6 @@ export default class SVGCanvasRenderer {
 
 	attachInputPortListeners(inputPorts, node) {
 		inputPorts
-			.on("mousedown", (d3Event, port) => {
-				if (this.config.enableAssocLinkCreation) {
-					// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
-					if (d3Event.button === 0) {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
-						const srcNode = this.activePipeline.getNode(node.id);
-						this.drawingNewLinkData = {
-							srcObjId: node.id,
-							srcPortId: port.id,
-							action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-							srcNode: srcNode,
-							startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
-							portType: "input",
-							portObject: node.layout.inputPortObject,
-							portImage: node.layout.inputPortImage,
-							portWidth: node.layout.inputPortWidth,
-							portHeight: node.layout.inputPortHeight,
-							portRadius: this.getPortRadius(srcNode),
-							minInitialLine: srcNode.layout.minInitialLine,
-							guideObject: node.layout.inputPortGuideObject,
-							guideImage: node.layout.inputPortGuideImage,
-							linkArray: []
-						};
-						this.drawNewLink(d3Event);
-					}
-				}
-			})
 			.on("mouseenter", (d3Event, port) => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event); // stop event propagation, otherwise node tip is shown
 				if (this.canOpenTip(TIP_TYPE_PORT)) {
@@ -3095,7 +2152,7 @@ export default class SVGCanvasRenderer {
 				// With enableDragWithoutSelect set to true, the object for which the
 				// context menu is being requested needs to be implicitely selected.
 				if (this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, node);
+					this.selectObjectD3Event(d3Event, node, "node");
 				}
 
 				this.openContextMenu(d3Event, "input_port", node, port);
@@ -3104,36 +2161,6 @@ export default class SVGCanvasRenderer {
 
 	attachOutputPortListeners(outputPorts, node) {
 		outputPorts
-			.on("mousedown", (d3Event, port) => {
-				// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
-				if (d3Event.button === 0) {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
-					const srcNode = this.activePipeline.getNode(node.id);
-					if (!CanvasUtils.isSrcCardinalityAtMax(port.id, srcNode, this.activePipeline.links)) {
-						this.drawingNewLinkData = {
-							srcObjId: node.id,
-							srcPortId: port.id,
-							action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-							srcNode: srcNode,
-							startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
-							portType: "output",
-							portObject: node.layout.outputPortObject,
-							portImage: node.layout.outputPortImage,
-							portWidth: node.layout.outputPortWidth,
-							portHeight: node.layout.outputPortHeight,
-							portRadius: this.getPortRadius(srcNode),
-							minInitialLine: srcNode.layout.minInitialLine,
-							guideObject: node.layout.outputPortGuideObject,
-							guideImage: node.layout.outputPortGuideImage,
-							linkArray: []
-						};
-						if (this.config.enableHighlightUnavailableNodes) {
-							this.setUnavailableTargetNodesHighlighting(srcNode, port.id, this.activePipeline.links);
-						}
-						this.drawNewLink(d3Event);
-					}
-				}
-			})
 			.on("mouseenter", (d3Event, port) => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event); // stop event propagation, otherwise node tip is shown
 				if (this.canOpenTip(TIP_TYPE_PORT)) {
@@ -3157,7 +2184,7 @@ export default class SVGCanvasRenderer {
 				// With enableDragWithoutSelect set to true, the object for which the
 				// context menu is being requested needs to be implicitely selected.
 				if (this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, node);
+					this.selectObjectD3Event(d3Event, node, "node");
 				}
 				this.openContextMenu(d3Event, "output_port", node, port);
 			});
@@ -3194,7 +2221,7 @@ export default class SVGCanvasRenderer {
 		const nodeObj = foreignObj.parentElement;
 		const nodeGrpSel = d3.select(nodeObj);
 		const transform = this.nodeUtils.getNodeLabelEditIconTranslate(node, spanObj,
-			this.zoomTransform.k, this.config.enableDisplayFullLabelOnHover);
+			this.zoomUtils.getZoomScale(), this.config.enableDisplayFullLabelOnHover);
 
 		this.displayEditIcon(spanObj, nodeGrpSel, transform,
 			(d3Event, d) => this.displayNodeLabelTextArea(d, d3Event.currentTarget.parentNode));
@@ -3208,7 +2235,7 @@ export default class SVGCanvasRenderer {
 		const decObj = foreignObj.parentElement;
 		const decGrpSel = d3.select(decObj);
 		const transform = this.decUtils.getDecLabelEditIconTranslate(
-			dec, obj, objType, spanObj, this.zoomTransform.k);
+			dec, obj, objType, spanObj, this.zoomUtils.getZoomScale());
 
 		this.displayEditIcon(spanObj, decGrpSel, transform,
 			(d3Event, d) => this.displayDecLabelTextArea(dec, obj, objType, d3Event.currentTarget.parentNode));
@@ -3278,12 +2305,16 @@ export default class SVGCanvasRenderer {
 
 	// Adds the object passed in to the set of selected objects using
 	// the d3Event object passed in.
-	selectObjectD3Event(d3Event, d) {
+	selectObjectD3Event(d3Event, d, objType) {
 		this.selectObject(
 			d,
 			d3Event.type,
 			d3Event.shiftKey,
 			CanvasUtils.isCmndCtrlPressed(d3Event));
+		// If the selection has changed we need to recreate any currently displayed
+		// context toolbar because the context actions may have changed based on
+		// the new selection.
+		this.recreateContextToolbar(d3Event, d, objType);
 	}
 
 	// Adds the object passed in to the set of selected objects using
@@ -3302,21 +2333,7 @@ export default class SVGCanvasRenderer {
 	// off. This method also sends a SINGLE_CLICK action to the
 	// clickActionHandler callback in the host application.
 	selectObject(d, d3EventType, isShiftKeyPressed, isCmndCtrlPressed) {
-		this.selecting = true;
-
-		if (!this.objectModel.isSelected(d.id, this.activePipeline.id)) {
-			if (isShiftKeyPressed) {
-				this.objectModel.selectSubGraph(d.id, this.activePipeline.id);
-			} else {
-				this.objectModel.toggleSelection(d.id, isCmndCtrlPressed, this.activePipeline.id);
-			}
-		} else {
-			if (isCmndCtrlPressed) {
-				this.objectModel.toggleSelection(d.id, isCmndCtrlPressed, this.activePipeline.id);
-			}
-		}
-		// Ensure 'selecting' flag is off before calling click action callback.
-		this.selecting = false;
+		this.canvasController.selectObject(d.id, isShiftKeyPressed, isCmndCtrlPressed, this.activePipeline.id);
 
 		// Even though the single click message below should be emitted
 		// from common canvas for comments, if we uncomment this line it prevents
@@ -3330,7 +2347,7 @@ export default class SVGCanvasRenderer {
 				clickType: d3EventType === "contextmenu" || this.ellipsisClicked ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
 				objectType: objectTypeName,
 				id: d.id,
-				selectedObjectIds: this.objectModel.getSelectedObjectIds(),
+				selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
 				pipelineId: this.activePipeline.id });
 			this.ellipsisClicked = false;
 		}
@@ -3355,7 +2372,7 @@ export default class SVGCanvasRenderer {
 				(enter) => this.createDecorations(enter, objType, decGrpClassName)
 			)
 			.attr("transform", (dec) => this.decUtils.getDecTransform(dec, d, objType))
-			.on("mousedown", (d3Event, dec) => (dec.hotspot ? that.callDecoratorCallback(d3Event, d, dec) : null))
+			.on("mousedown", (d3Event, dec) => (dec.hotspot && d3Event.button === 0 ? that.callDecoratorCallback(d3Event, d, dec) : null))
 			.each((dec, i, elements) => this.updateDecoration(dec, d3.select(elements[i]), objType, d));
 	}
 
@@ -3374,12 +2391,13 @@ export default class SVGCanvasRenderer {
 		this.updateDecPaths(dec, decSel, objType);
 		this.updateDecImages(dec, decSel, objType, d);
 		this.updateDecLabels(dec, decSel, objType, d);
+		this.updateDecJsxObjs(dec, decSel, objType, d);
 	}
 
 	updateDecOutlines(dec, decSel, objType, d) {
 		let outlnSel = decSel.selectChild("rect");
 
-		if (!dec.label && !dec.path && dec.outline !== false) {
+		if (!dec.label && !dec.path && !dec.jsx && dec.outline !== false) {
 			outlnSel = outlnSel.empty() ? decSel.append("rect") : outlnSel;
 			outlnSel
 				.attr("class", this.decUtils.getDecClass(dec, `d3-${objType}-dec-outline`))
@@ -3427,7 +2445,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	updateDecLabels(dec, decSel, objType, d) {
-		let labelSel = decSel.selectChild("foreignObject");
+		let labelSel = decSel.selectChild(".d3-foreign-object-dec-label");
 
 		if (dec.label) {
 			if (labelSel.empty()) {
@@ -3451,6 +2469,31 @@ export default class SVGCanvasRenderer {
 				.html(escapeText(dec.label));
 		} else {
 			labelSel.remove();
+		}
+	}
+
+	updateDecJsxObjs(dec, decSel, objType, d) {
+		let extSel = decSel.selectChild(".d3-foreign-object-dec-jsx");
+
+		if (dec.jsx) {
+			if (extSel.empty()) {
+				extSel = decSel
+					.append("foreignObject")
+					.attr("class", "d3-foreign-object-dec-jsx")
+					.attr("tabindex", -1)
+					.attr("x", 0)
+					.attr("y", 0)
+					.call(this.attachDecLabelListeners.bind(this, d, objType));
+			}
+			extSel
+				.attr("width", this.decUtils.getDecWidth(dec, d, objType))
+				.attr("height", this.decUtils.getDecHeight(dec, d, objType))
+				.each((decData, idx, exts) =>
+					this.externalUtils.addDecExternalObject(decData, idx, exts));
+		} else {
+			extSel.each((decData, idx, exts) =>
+				this.externalUtils.removeExternalObject(decData, idx, exts));
+			extSel.remove();
 		}
 	}
 
@@ -3483,7 +2526,7 @@ export default class SVGCanvasRenderer {
 	attachDecGroupListeners(decGrps) {
 		decGrps
 			.on("mouseenter", (d3Event, dec) => {
-				if (this.canOpenTip(TIP_TYPE_DEC)) {
+				if (this.canOpenTip(TIP_TYPE_DEC) && dec.tooltip) {
 					this.canvasController.closeTip(); // Ensure any existing tip is removed
 					this.canvasController.openTip({
 						id: this.getId("dec_tip", dec.id),
@@ -3494,8 +2537,10 @@ export default class SVGCanvasRenderer {
 					});
 				}
 			})
-			.on("mouseleave", (d3Event, d) => {
-				this.canvasController.closeTip();
+			.on("mouseleave", (d3Event, dec) => {
+				if (this.canOpenTip(TIP_TYPE_DEC) && dec.tooltip) {
+					this.canvasController.closeTip();
+				}
 			});
 	}
 
@@ -3554,14 +2599,51 @@ export default class SVGCanvasRenderer {
 			// Save image field in DOM object to avoid unnecessary image refreshes.
 			imageSel.attr("data-image", image);
 			if (nodeImageType === "svg") {
-				imageSel.selectChild("svg").remove();
-				d3.svg(image, { cache: "force-cache" }).then((data) => {
-					imageSel.node().append(data.documentElement);
-				});
+				if (this.config.enableImageDisplay === "LoadSVGToDefs") {
+					this.loadSVGToDefs(imageSel, image);
+
+				} else {
+					imageSel.selectChild("svg").remove();
+					d3.svg(image, { cache: "force-cache" }).then((data) => {
+						imageSel.node().append(data.documentElement);
+					});
+				}
 			} else {
 				imageSel.attr("xlink:href", image);
 			}
 		}
+	}
+
+	// The default behavior for SVG files is to load them in-line regardless
+	// of how many times a unique image is used for a particular flow. This
+	// can be unnecessarily slow if an image is referenced many times. This
+	// method provides a performance enhancement for displaying SVG images.
+	// It stores each unique SVG file encountered in the <defs> element for the
+	// canvas as a <symbol> element. It then adds <use> elements to each place
+	// where that image is referenced. So, if the same image is referenced many
+	// times there is just one symbol for the SVG file stored in the <defs>
+	// element. This is faster but can restrict customization capabilities of
+	// the canvas images.
+	loadSVGToDefs(imageSel, image) {
+		const symbolId = "img" + image.replaceAll(/[/.]/g, "-"); // Replace all / and . characters with -
+		const symbolSelector = "#" + symbolId;
+		const symbol = this.canvasDefs.selectChildren(symbolSelector);
+		// If no symbol exists in <defs> for this image, add a place holder
+		// <symbol> for it.
+		if (symbol.empty()) {
+			this.canvasDefs.append("symbol").attr("id", symbolId);
+
+			d3.svg(image, { cache: "force-cache" }).then((data) => {
+				// Asynchronously, populate placeholder <symbol> with SVG file contents.
+				this.canvasDefs.selectChildren(symbolSelector)
+					.node()
+					.append(data.documentElement);
+			});
+		}
+
+		// Use <symbol> containing our SVG image from <defs>
+		imageSel.selectChild("use").remove();
+		imageSel.append("use").attr("href", symbolSelector);
 	}
 
 	// Returns the appropriate image from the object (either node or decoration)
@@ -3584,7 +2666,17 @@ export default class SVGCanvasRenderer {
 	// Returns the type of image passed in, either "svg" or "image". This will
 	// be used to append an svg or image element to the DOM.
 	getImageType(nodeImage) {
-		return nodeImage && nodeImage.endsWith(".svg") ? "svg" : "image";
+		return nodeImage && nodeImage.endsWith(".svg") && this.config.enableImageDisplay !== "SVGAsImage" ? "svg" : "image";
+	}
+
+	// Returns a DOM element for the image of the node passed in.
+	getImageElement(node) {
+		const nodeImage = this.getNodeImage(node);
+		const imageType = this.getImageType(nodeImage);
+		if (imageType === "image") {
+			return d3.create("svg:image").node();
+		}
+		return d3.create("svg").node();
 	}
 
 	setNodeStyles(d, type, nodeGrp) {
@@ -3664,50 +2756,6 @@ export default class SVGCanvasRenderer {
 		return expandedSupernodeHaveStyledNodes;
 	}
 
-	// Returns the maximum amount for padding, when zooming to fit the canvas
-	// objects within a subflow, to allow the connection lines to be displayed
-	// without them doubling back on themselves.
-	getMaxZoomToFitPaddingForConnections() {
-		const paddingForInputBinding = this.getMaxPaddingForConnectionsFromInputBindingNodes();
-		const paddingForOutputBinding = this.getMaxPaddingForConnectionsToOutputBindingNodes();
-		const padding = Math.max(paddingForInputBinding, paddingForOutputBinding);
-		return padding;
-	}
-
-	// Returns the maximum amount for padding, when zooming to fit the canvas
-	// objects within a subflow, to allow the connection lines (from input binding
-	// nodes to other sub-flow nodes) to be displayed without them doubling back
-	// on themselves.
-	getMaxPaddingForConnectionsFromInputBindingNodes() {
-		let maxPadding = 0;
-		const inputBindingNodes = this.activePipeline.nodes.filter((n) => n.isSupernodeInputBinding);
-
-		inputBindingNodes.forEach((n) => {
-			const nodePadding = CanvasUtils.getNodePaddingToTargetNodes(n, this.activePipeline.nodes,
-				this.activePipeline.links, this.canvasLayout.linkType);
-			maxPadding = Math.max(maxPadding, nodePadding);
-		});
-
-		return maxPadding;
-	}
-
-	// Returns the maximum amount for padding, when zooming to fit the canvas
-	// objects within a subflow, to allow the connection lines (from sub-flow nodes
-	// to output binding nodes) to be displayed without them doubling back
-	// on themselves.
-	getMaxPaddingForConnectionsToOutputBindingNodes() {
-		let maxPadding = 0;
-		const outputBindingNodes = this.activePipeline.nodes.filter((n) => n.isSupernodeOutputBinding);
-
-		this.activePipeline.nodes.forEach((n) => {
-			const nodePadding = CanvasUtils.getNodePaddingToTargetNodes(n, outputBindingNodes,
-				this.activePipeline.links, this.canvasLayout.linkType);
-			maxPadding = Math.max(maxPadding, nodePadding);
-		});
-
-		return maxPadding;
-	}
-
 	getPortRadius(d) {
 		return CanvasUtils.isSuperBindingNode(d) ? this.getBindingPortRadius() : d.layout.portRadius;
 	}
@@ -3715,87 +2763,128 @@ export default class SVGCanvasRenderer {
 	// Returns the radius size of the supernode binding ports scaled up by
 	// the zoom scale amount to give the actual size.
 	getBindingPortRadius() {
-		return this.canvasLayout.supernodeBindingPortRadius / this.zoomTransform.k;
+		return this.canvasLayout.supernodeBindingPortRadius / this.zoomUtils.getZoomScale();
 	}
 
-	addDynamicNodeIcons(d, nodeGrp) {
-		if (!this.nodeSizing && !CanvasUtils.isSuperBindingNode(d)) {
-
-			const ellipsisGrp = nodeGrp
-				.append("g")
-				.filter(() => d.layout.ellipsisDisplay)
-				.attr("class", "d3-node-ellipsis-group")
-				.attr("transform", (nd) => this.nodeUtils.getNodeEllipsisTranslate(nd))
-				.on("mousedown", (d3Event) => {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.ellipsisClicked = true;
-					if (!this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d3Event, d);
-					}
-					if (this.canvasController.isContextMenuDisplayed()) {
-						this.canvasController.closeContextMenu();
-					} else {
-						const rect = ellipsisGrp.node().getBoundingClientRect();
-						const rect2 = this.canvasSVG.node().getBoundingClientRect();
-						const pos = { x: rect.left - rect2.left, y: rect.bottom - rect2.top };
-						this.openContextMenu(d3Event, "node", d, null, pos);
-					}
-				});
-
-			ellipsisGrp
-				.append("rect")
-				.attr("class", "d3-node-ellipsis-background")
-				.attr("width", (nd) => this.nodeUtils.getNodeEllipsisWidth(nd))
-				.attr("height", (nd) => this.nodeUtils.getNodeEllipsisHeight(nd))
-				.attr("x", 0)
-				.attr("y", 0);
-
-			ellipsisGrp
-				.append("svg")
-				.attr("class", "d3-node-ellipsis")
-				.html(NODE_MENU_ICON)
-				.attr("width", (nd) => this.nodeUtils.getNodeEllipsisIconWidth(nd))
-				.attr("height", (nd) => this.nodeUtils.getNodeEllipsisIconHeight(nd))
-				.attr("x", (nd) => nd.layout.ellipsisHoverAreaPadding)
-				.attr("y", (nd) => nd.layout.ellipsisHoverAreaPadding);
-
+	addDynamicNodeIcons(d3Event, d, nodeGrp) {
+		if (!this.isSizing() && !CanvasUtils.isSuperBindingNode(d)) {
+			// Add the ellipsis icon if requested by layout config.
+			if (d.layout.ellipsisDisplay) {
+				this.addEllipsisIcon(d, nodeGrp);
+			}
 
 			// Add Supernode expansion icon and background for expanded supernodes
 			if (CanvasUtils.isExpandedSupernode(d)) {
-				const expGrp = nodeGrp
-					.append("g")
-					.attr("transform", (nd) => this.nodeUtils.getNodeExpansionIconTranslate(nd))
-					.attr("class", "d3-node-super-expand-icon-group")
-					.on("mousedown", (d3Event) => {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						const breadcrumbs = this.getSupernodeBreadcrumbs(d3Event.currentTarget);
-						this.canvasController.displaySubPipelineForBreadcrumbs(breadcrumbs);
-					})
-					.on("mouseenter", function() { // Use function keyword so 'this' pointer references the DOM text object
-						d3.select(this).attr("data-pointer-hover", "yes");
-					})
-					.on("mouseleave", function() { // Use function keyword so 'this' pointer references the DOM text object
-						d3.select(this).attr("data-pointer-hover", "no");
-					});
-
-				expGrp
-					.append("rect")
-					.attr("class", "d3-node-super-expand-icon-background")
-					.attr("width", this.canvasLayout.supernodeExpansionIconWidth)
-					.attr("height", this.canvasLayout.supernodeExpansionIconHeight)
-					.attr("x", 0)
-					.attr("y", 0);
-
-				expGrp
-					.append("svg")
-					.attr("class", "d3-node-super-expand-icon")
-					.html(SUPER_NODE_EXPAND_ICON)
-					.attr("width", this.canvasLayout.supernodeExpansionIconWidth - (2 * this.canvasLayout.supernodeExpansionIconHoverAreaPadding))
-					.attr("height", this.canvasLayout.supernodeExpansionIconHeight - (2 * this.canvasLayout.supernodeExpansionIconHoverAreaPadding))
-					.attr("x", this.canvasLayout.supernodeExpansionIconHoverAreaPadding)
-					.attr("y", this.canvasLayout.supernodeExpansionIconHoverAreaPadding);
+				this.addSuperNodeFullPageIcon(nodeGrp);
 			}
 		}
+	}
+
+	getContextToolbarPos(objType, d) {
+		if (objType === "link") {
+			return d.pathInfo.centerPoint;
+
+		} else if (objType === "node" && d.layout.contextToolbarPosition === "topCenter" && !d.is_expanded) {
+			return { x: d.x_pos + (d.width / 2), y: d.y_pos };
+
+		}
+		return { x: d.x_pos + d.width, y: d.y_pos };
+	}
+
+	addContextToolbar(d3Event, d, objType) {
+		if (!this.isSizing() && !this.isDragging() &&
+				!this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
+			this.canvasController.setMouseInObject(d.id);
+			let pos = this.getContextToolbarPos(objType, d);
+			pos = this.zoomUtils.unTransformPos(pos);
+			this.openContextMenu(d3Event, objType, d, null, pos);
+		}
+	}
+
+	removeContextToolbar() {
+		this.canvasController.setMouseInObject(null);
+		if (this.canvasController.isContextMenuDisplayed()) {
+			setTimeout(() => this.canvasController.closeContextToolbar(), 200);
+		}
+	}
+
+	recreateContextToolbar(d3Event, d, objType) {
+		if (this.config.enableContextToolbar) {
+			this.removeContextToolbar();
+			this.addContextToolbar(d3Event, d, objType);
+		}
+	}
+
+	addEllipsisIcon(d, nodeGrp) {
+		const ellipsisGrp = nodeGrp
+			.append("g")
+			.attr("class", "d3-node-ellipsis-group")
+			.attr("transform", (nd) => this.nodeUtils.getNodeEllipsisTranslate(nd))
+			.on("mousedown", (d3Event) => {
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				this.ellipsisClicked = true;
+				this.selectObjectD3Event(d3Event, d, "node");
+				if (this.canvasController.isContextMenuDisplayed()) {
+					this.canvasController.closeContextMenu();
+				} else {
+					const rect = ellipsisGrp.node().getBoundingClientRect();
+					const rect2 = this.canvasSVG.node().getBoundingClientRect();
+					const pos = { x: rect.left - rect2.left, y: rect.bottom - rect2.top };
+					this.openContextMenu(d3Event, "node", d, null, pos);
+				}
+			});
+
+		ellipsisGrp
+			.append("rect")
+			.attr("class", "d3-node-ellipsis-background")
+			.attr("width", (nd) => this.nodeUtils.getNodeEllipsisWidth(nd))
+			.attr("height", (nd) => this.nodeUtils.getNodeEllipsisHeight(nd))
+			.attr("x", 0)
+			.attr("y", 0);
+
+		ellipsisGrp
+			.append("svg")
+			.attr("class", "d3-node-ellipsis")
+			.html(NODE_MENU_ICON)
+			.attr("width", (nd) => this.nodeUtils.getNodeEllipsisIconWidth(nd))
+			.attr("height", (nd) => this.nodeUtils.getNodeEllipsisIconHeight(nd))
+			.attr("x", (nd) => nd.layout.ellipsisHoverAreaPadding)
+			.attr("y", (nd) => nd.layout.ellipsisHoverAreaPadding);
+	}
+
+	addSuperNodeFullPageIcon(nodeGrp) {
+		const expGrp = nodeGrp
+			.append("g")
+			.attr("transform", (nd) => this.nodeUtils.getNodeExpansionIconTranslate(nd))
+			.attr("class", "d3-node-super-expand-icon-group")
+			.on("mousedown", (d3Event) => {
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				const breadcrumbs = this.getSupernodeBreadcrumbs(d3Event.currentTarget);
+				this.canvasController.displaySubPipelineForBreadcrumbs(breadcrumbs);
+			})
+			.on("mouseenter", function() { // Use function keyword so 'this' pointer references the DOM text object
+				d3.select(this).attr("data-pointer-hover", "yes");
+			})
+			.on("mouseleave", function() { // Use function keyword so 'this' pointer references the DOM text object
+				d3.select(this).attr("data-pointer-hover", "no");
+			});
+
+		expGrp
+			.append("rect")
+			.attr("class", "d3-node-super-expand-icon-background")
+			.attr("width", this.canvasLayout.supernodeExpansionIconWidth)
+			.attr("height", this.canvasLayout.supernodeExpansionIconHeight)
+			.attr("x", 0)
+			.attr("y", 0);
+
+		expGrp
+			.append("svg")
+			.attr("class", "d3-node-super-expand-icon")
+			.html(SUPER_NODE_EXPAND_ICON)
+			.attr("width", this.canvasLayout.supernodeExpansionIconWidth - (2 * this.canvasLayout.supernodeExpansionIconHoverAreaPadding))
+			.attr("height", this.canvasLayout.supernodeExpansionIconHeight - (2 * this.canvasLayout.supernodeExpansionIconHoverAreaPadding))
+			.attr("x", this.canvasLayout.supernodeExpansionIconHoverAreaPadding)
+			.attr("y", this.canvasLayout.supernodeExpansionIconHoverAreaPadding);
 	}
 
 	// Returns an array of breadcrumbs for the DOM element passed in. The DOM
@@ -3815,7 +2904,8 @@ export default class SVGCanvasRenderer {
 			const parentPipelineId = svgAreaEl.getAttribute("data-pipeline-id");
 
 			breadcrumbs.push(
-				this.canvasController.getObjectModel().createBreadcrumb(supernodeDatum, parentPipelineId));
+				this.canvasController.createBreadcrumb(supernodeDatum, parentPipelineId)
+			);
 
 			nodeGroupEl = svgAreaEl.closest(".d3-node-group");
 		}
@@ -3855,7 +2945,11 @@ export default class SVGCanvasRenderer {
 		return (get(port, "app_data.ui_data.cardinality.max", 1) === 0);
 	}
 
-	removeDynamicNodeIcons(d, nodeGrp) {
+	isMouseOverContextToolbar(d3Event) {
+		return this.getElementWithClassAtMousePos(d3Event, "context-toolbar");
+	}
+
+	removeDynamicNodeIcons(d3Event, d, nodeGrp) {
 		if (d.layout.ellipsisDisplay) {
 			nodeGrp.selectChildren(".d3-node-ellipsis-group").remove();
 		}
@@ -3869,6 +2963,10 @@ export default class SVGCanvasRenderer {
 				this.canvasDiv,
 				this.canvasController,
 				this.canvasInfo,
+				this.selectionInfo,
+				this.breadcrumbs,
+				this.nodeLayout,
+				this.canvasLayout,
 				this.config,
 				{ id: d.id,
 					pipelineId: this.activePipeline.id,
@@ -3897,6 +2995,8 @@ export default class SVGCanvasRenderer {
 
 	}
 
+	// Opens either the context menu or the context toolbar depending on which is
+	// currently enabled.
 	openContextMenu(d3Event, type, d, port, pos) {
 		CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stop the browser context menu appearing
 		this.canvasController.contextMenuHandler({
@@ -3908,15 +3008,20 @@ export default class SVGCanvasRenderer {
 				? pos
 				: this.getMousePos(d3Event, this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area even in a subflow.
 			mousePos: this.getMousePosSnapToGrid(this.getTransformedMousePos(d3Event)),
-			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
+			selectedObjectIds: this.canvasController.getSelectedObjectIds(),
 			addBreadcrumbs: (d && d.type === SUPER_NODE) ? this.getSupernodeBreadcrumbs(d3Event.currentTarget) : null,
 			port: port,
-			zoom: this.zoomTransform.k });
+			zoom: this.zoomUtils.getZoomScale() });
 	}
 
+	// Closes the conetext menu if open. Called by various drag utility
+	// classes.
 	closeContextMenuIfOpen() {
 		if (this.canvasController.isContextMenuDisplayed()) {
 			this.canvasController.closeContextMenu();
+		}
+		if (this.config.enableContextToolbar) {
+			this.removeContextToolbar();
 		}
 	}
 
@@ -3927,130 +3032,6 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	drawNewLink(d3Event) {
-		if (this.config.enableEditingActions === false) {
-			return;
-		}
-
-		this.closeContextMenuIfOpen();
-
-		const transPos = this.getTransformedMousePos(d3Event);
-
-		if (this.drawingNewLinkData.action === COMMENT_LINK) {
-			this.drawNewCommentLinkForPorts(transPos);
-		} else {
-			this.drawNewNodeLinkForPorts(transPos);
-		}
-		// Switch on an attribute to indicate a new link is being dragged
-		// towards and over a target node.
-		if (this.config.enableHighlightNodeOnNewLinkDrag) {
-			this.setNewLinkOverNode(d3Event);
-		}
-	}
-
-	drawNewNodeLinkForPorts(transPos) {
-		var that = this;
-		const linkType = this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK;
-
-		let startPos;
-		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
-			startPos = this.linkUtils.getNewStraightNodeLinkStartPos(this.drawingNewLinkData.srcNode, transPos);
-		} else {
-			startPos = {
-				x: this.drawingNewLinkData.startPos.x,
-				y: this.drawingNewLinkData.startPos.y };
-		}
-
-		this.drawingNewLinkData.linkArray = [{
-			"x1": startPos.x,
-			"y1": startPos.y,
-			"x2": transPos.x,
-			"y2": transPos.y,
-			"originX": startPos.originX,
-			"originY": startPos.originY,
-			"type": linkType }];
-
-		if (this.config.enableAssocLinkCreation) {
-			this.drawingNewLinkData.linkArray[0].assocLinkVariation =
-				this.getNewLinkAssocVariation(
-					this.drawingNewLinkData.linkArray[0].x1,
-					this.drawingNewLinkData.linkArray[0].x2,
-					this.drawingNewLinkData.portType);
-		}
-
-		const pathInfo = this.linkUtils.getConnectorPathInfo(
-			this.drawingNewLinkData.linkArray[0], this.drawingNewLinkData.minInitialLine);
-
-		const connectionLineSel = this.nodesLinksGrp.selectAll(".d3-new-connection-line");
-		const connectionStartSel = this.nodesLinksGrp.selectAll(".d3-new-connection-start");
-		const connectionGuideSel = this.nodesLinksGrp.selectAll(".d3-new-connection-guide");
-
-		// For a straight node line, don't draw the new link line when the guide
-		// icon or object is inside the node boundary.
-		if (linkType === NODE_LINK &&
-				this.canvasLayout.linkType === LINK_TYPE_STRAIGHT &&
-				this.nodeUtils.isPointInNodeBoundary(transPos, this.drawingNewLinkData.srcNode)) {
-			this.removeNewLinkLine();
-
-		} else {
-			connectionLineSel
-				.data(this.drawingNewLinkData.linkArray)
-				.enter()
-				.append("path")
-				.attr("class", "d3-new-connection-line")
-				.attr("linkType", linkType)
-				.merge(connectionLineSel)
-				.attr("d", pathInfo.path)
-				.attr("transform", pathInfo.transform);
-		}
-
-		if (this.canvasLayout.linkType !== LINK_TYPE_STRAIGHT) {
-			connectionStartSel
-				.data(this.drawingNewLinkData.linkArray)
-				.enter()
-				.append(this.drawingNewLinkData.portObject)
-				.attr("class", "d3-new-connection-start")
-				.attr("linkType", linkType)
-				.merge(connectionStartSel)
-				.each(function(d) {
-					// No need to draw the starting object of the new line if it is an image.
-					if (that.drawingNewLinkData.portObject === PORT_OBJECT_CIRCLE) {
-						d3.select(this)
-							.attr("cx", d.x1)
-							.attr("cy", d.y1)
-							.attr("r", that.drawingNewLinkData.portRadius);
-					}
-				});
-		}
-
-		connectionGuideSel
-			.data(this.drawingNewLinkData.linkArray)
-			.enter()
-			.append(this.drawingNewLinkData.guideObject)
-			.attr("class", "d3-new-connection-guide")
-			.attr("linkType", linkType)
-			.on("mouseup", (d3Event) => {
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				this.completeNewLink(d3Event);
-			})
-			.merge(connectionGuideSel)
-			.each(function(d) {
-				if (that.drawingNewLinkData.guideObject === PORT_OBJECT_IMAGE) {
-					d3.select(this)
-						.attr("xlink:href", that.drawingNewLinkData.guideImage)
-						.attr("x", d.x2 - (that.drawingNewLinkData.portWidth / 2))
-						.attr("y", d.y2 - (that.drawingNewLinkData.portHeight / 2))
-						.attr("width", that.drawingNewLinkData.portWidth)
-						.attr("height", that.drawingNewLinkData.portHeight)
-						.attr("transform", that.getLinkImageTransform(d));
-				} else {
-					d3.select(this)
-						.attr("cx", d.x2)
-						.attr("cy", d.y2)
-						.attr("r", that.drawingNewLinkData.portRadius);
-				}
-			});
-	}
 
 	getLinkImageTransform(d) {
 		let angle = 0;
@@ -4071,471 +3052,6 @@ export default class SVGCanvasRenderer {
 			return `rotate(${angle},${d.x2},${d.y2})`;
 		}
 		return null;
-	}
-
-	drawNewCommentLinkForPorts(transPos) {
-		const that = this;
-		const srcComment = this.activePipeline.getComment(this.drawingNewLinkData.srcObjId);
-		const startPos = this.linkUtils.getNewStraightCommentLinkStartPos(srcComment, transPos);
-		const linkType = COMMENT_LINK;
-
-		this.drawingNewLinkData.linkArray = [{
-			"x1": startPos.x,
-			"y1": startPos.y,
-			"x2": transPos.x,
-			"y2": transPos.y,
-			"type": linkType }];
-
-		const connectionLineSel = this.nodesLinksGrp.selectAll(".d3-new-connection-line");
-		const connectionGuideSel = this.nodesLinksGrp.selectAll(".d3-new-connection-guide");
-
-		connectionLineSel
-			.data(this.drawingNewLinkData.linkArray)
-			.enter()
-			.append("path")
-			.attr("class", "d3-new-connection-line")
-			.attr("linkType", linkType)
-			.merge(connectionLineSel)
-			.attr("d", (d) => that.linkUtils.getConnectorPathInfo(d).path);
-
-		connectionGuideSel
-			.data(this.drawingNewLinkData.linkArray)
-			.enter()
-			.append("circle")
-			.attr("class", "d3-new-connection-guide")
-			.attr("linkType", linkType)
-			.on("mouseup", (d3Event) => {
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				this.completeNewLink(d3Event);
-			})
-			.merge(connectionGuideSel)
-			.attr("cx", (d) => d.x2)
-			.attr("cy", (d) => d.y2)
-			.attr("r", this.canvasLayout.commentPortRadius);
-
-		if (this.canvasLayout.commentLinkArrowHead) {
-			const connectionArrowHeadSel = this.nodesLinksGrp.selectAll(".d3-new-connection-arrow");
-
-			connectionArrowHeadSel
-				.data(this.drawingNewLinkData.linkArray)
-				.enter()
-				.append("path")
-				.attr("class", "d3-new-connection-arrow")
-				.attr("linkType", linkType)
-				.on("mouseup", (d3Event) => {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.completeNewLink(d3Event);
-				})
-				.merge(connectionArrowHeadSel)
-				.attr("d", (d) => this.getArrowHead(d))
-				.attr("transform", (d) => this.getArrowHeadTransform(d));
-		}
-	}
-
-	// Handles the completion of a new link being drawn from a source node.
-	completeNewLink(d3Event) {
-		if (this.config.enableEditingActions === false) {
-			return;
-		}
-
-		if (this.config.enableHighlightUnavailableNodes) {
-			this.unsetUnavailableNodesHighlighting();
-		}
-		var trgNode = this.getNodeAtMousePos(d3Event);
-		if (trgNode !== null) {
-			this.completeNewLinkOnNode(d3Event, trgNode);
-		} else {
-			if (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE &&
-					this.drawingNewLinkData.action === NODE_LINK &&
-					!this.config.enableAssocLinkCreation) {
-				this.completeNewDetachedLink(d3Event);
-			} else {
-				this.stopDrawingNewLink();
-			}
-		}
-	}
-
-	// Handles the completion of a new link when the end is dropped on a node.
-	completeNewLinkOnNode(d3Event, trgNode) {
-		// If we completed a connection remove the new line objects.
-		this.removeNewLink();
-
-		// Switch 'new link over node' highlighting off
-		if (this.config.enableHighlightNodeOnNewLinkDrag) {
-			this.setNewLinkOverNodeCancel();
-		}
-
-		if (trgNode !== null) {
-			const type = this.drawingNewLinkData.action;
-			if (type === NODE_LINK) {
-				const srcNode = this.activePipeline.getNode(this.drawingNewLinkData.srcObjId);
-				const srcPortId = this.drawingNewLinkData.srcPortId;
-				const trgPortId = this.getInputNodePortId(d3Event, trgNode);
-
-				if (CanvasUtils.isDataConnectionAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links)) {
-					this.canvasController.editActionHandler({
-						editType: "linkNodes",
-						editSource: "canvas",
-						nodes: [{ "id": this.drawingNewLinkData.srcObjId, "portId": this.drawingNewLinkData.srcPortId }],
-						targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
-						type: type,
-						linkType: "data", // Added for historical purposes - for WML Canvas support
-						pipelineId: this.pipelineId });
-
-				} else if (this.config.enableLinkReplaceOnNewConnection &&
-										CanvasUtils.isDataLinkReplacementAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links)) {
-					const linksToTrgPort = CanvasUtils.getDataLinksConnectedTo(trgPortId, trgNode, this.activePipeline.links);
-					// We only replace a link to a maxed out cardinality port if there
-					// is only one link. i.e. the input port cardinality is 0:1
-					if (linksToTrgPort.length === 1) {
-						this.canvasController.editActionHandler({
-							editType: "linkNodesAndReplace",
-							editSource: "canvas",
-							nodes: [{ "id": this.drawingNewLinkData.srcObjId, "portId": this.drawingNewLinkData.srcPortId }],
-							targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
-							type: type,
-							pipelineId: this.pipelineId,
-							replaceLink: linksToTrgPort[0]
-						});
-					}
-				}
-
-			} else if (type === ASSOCIATION_LINK) {
-				const srcNode = this.activePipeline.getNode(this.drawingNewLinkData.srcObjId);
-
-				if (CanvasUtils.isAssocConnectionAllowed(srcNode, trgNode, this.activePipeline.links)) {
-					this.canvasController.editActionHandler({
-						editType: "linkNodes",
-						editSource: "canvas",
-						nodes: [{ "id": this.drawingNewLinkData.srcObjId }],
-						targetNodes: [{ "id": trgNode.id }],
-						type: type,
-						pipelineId: this.pipelineId });
-				}
-
-			} else {
-				if (CanvasUtils.isCommentLinkConnectionAllowed(this.drawingNewLinkData.srcObjId, trgNode.id, this.activePipeline.links)) {
-					this.canvasController.editActionHandler({
-						editType: "linkComment",
-						editSource: "canvas",
-						nodes: [this.drawingNewLinkData.srcObjId],
-						targetNodes: [trgNode.id],
-						type: COMMENT_LINK,
-						linkType: "comment", // Added for historical purposes - for WML Canvas support
-						pipelineId: this.pipelineId });
-				}
-			}
-		}
-
-		this.drawingNewLinkData = null;
-	}
-
-	// Handles the completion of a new link when the end is dropped away from
-	// a node (when enableLinkSelection is set to LINK_SELECTION_DETACHABLE)
-	// which creates a  new detached link.
-	completeNewDetachedLink(d3Event) {
-		// If we completed a connection remove the new line objects.
-		this.removeNewLink();
-
-		// Switch 'new link over node' highlighting off
-		if (this.config.enableHighlightNodeOnNewLinkDrag) {
-			this.setNewLinkOverNodeCancel();
-		}
-
-		const endPoint = this.getTransformedMousePos(d3Event);
-		this.canvasController.editActionHandler({
-			editType: "createDetachedLink",
-			editSource: "canvas",
-			srcNodeId: this.drawingNewLinkData.srcObjId,
-			srcNodePortId: this.drawingNewLinkData.srcPortId,
-			trgPos: endPoint,
-			type: NODE_LINK,
-			pipelineId: this.pipelineId });
-
-		this.drawingNewLinkData = null;
-	}
-
-	stopDrawingNewLink() {
-		// Switch 'new link over node' highlighting off
-		if (this.config.enableHighlightNodeOnNewLinkDrag) {
-			this.setNewLinkOverNodeCancel();
-		}
-
-		this.stopDrawingNewLinkForPorts();
-		this.drawingNewLinkData = null;
-	}
-
-	stopDrawingNewLinkForPorts() {
-		const saveX1 = this.drawingNewLinkData.linkArray[0].x1;
-		const saveY1 = this.drawingNewLinkData.linkArray[0].y1;
-		const saveX2 = this.drawingNewLinkData.linkArray[0].x2;
-		const saveY2 = this.drawingNewLinkData.linkArray[0].y2;
-
-		const saveNewLinkData = Object.assign({}, this.drawingNewLinkData);
-
-		this.drawingNewLinkData = null;
-
-		// If we completed a connection successfully just remove the new line
-		// objects.
-		let newPath = "";
-		let duration = 350;
-
-		if (this.canvasLayout.linkType === LINK_TYPE_CURVE) {
-			newPath = "M " + saveX1 + " " + saveY1 +
-								"C " + saveX2 + " " + saveY2 +
-								" " + saveX2 + " " + saveY2 +
-								" " + saveX2 + " " + saveY2;
-
-		} else if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
-			if (saveX1 < saveX2) {
-				duration = 0;
-			}
-			newPath = "M " + saveX1 + " " + saveY1 +
-								"L " + saveX2 + " " + saveY2 +
-								" " + saveX2 + " " + saveY2 +
-								" " + saveX2 + " " + saveY2;
-
-		} else {
-			newPath = "M " + saveX1 + " " + saveY1 +
-								"L " + saveX2 + " " + saveY2 +
-								"Q " + saveX2 + " " + saveY2 + " " + saveX2 + " " + saveY2 +
-								"L " + saveX2 + " " + saveY2 +
-								"Q " + saveX2 + " " + saveY2 + " " + saveX2 + " " + saveY2 +
-								"L " + saveX2 + " " + saveY2 +
-								"Q " + saveX2 + " " + saveY2 + " " + saveX2 + " " + saveY2 +
-								"L " + saveX2 + " " + saveY2 +
-								"Q " + saveX2 + " " + saveY2 + " " + saveX2 + " " + saveY2 +
-								"L " + saveX2 + " " + saveY2;
-		}
-
-		this.nodesLinksGrp.selectAll(".d3-new-connection-line")
-			.transition()
-			.duration(duration)
-			.attr("d", newPath)
-			.on("end", () => {
-				this.nodesLinksGrp.selectAll(".d3-new-connection-arrow").remove();
-
-				this.nodesLinksGrp.selectAll(".d3-new-connection-guide")
-					.transition()
-					.duration(1000)
-					.ease(d3.easeElastic)
-					// The lines below set all attributes for images AND circles even
-					// though some attributes will not be relevant. This is done
-					// because I could not get the .each() method to work here (which
-					// would be necessary to have an if statement based on guide object)
-					.attr("x", saveX1 - (saveNewLinkData.portWidth / 2))
-					.attr("y", saveY1 - (saveNewLinkData.portHeight / 2))
-					.attr("cx", saveX1)
-					.attr("cy", saveY1)
-					.attr("transform", null);
-				this.nodesLinksGrp.selectAll(".d3-new-connection-line")
-					.transition()
-					.duration(1000)
-					.ease(d3.easeElastic)
-					.attr("d", "M " + saveX1 + " " + saveY1 +
-											"L " + saveX1 + " " + saveY1)
-					.on("end", this.removeNewLink.bind(this));
-			});
-	}
-
-	removeNewLink() {
-		this.nodesLinksGrp.selectAll(".d3-new-connection-line").remove();
-		this.nodesLinksGrp.selectAll(".d3-new-connection-start").remove();
-		this.nodesLinksGrp.selectAll(".d3-new-connection-guide").remove();
-		this.nodesLinksGrp.selectAll(".d3-new-connection-arrow").remove();
-	}
-
-	removeNewLinkLine() {
-		this.nodesLinksGrp.selectAll(".d3-new-connection-line").remove();
-	}
-
-	dragLinkHandle(d3Event) {
-		const transPos = this.getTransformedMousePos(d3Event);
-		const link = this.draggingLinkData.link;
-
-		if (this.draggingLinkData.endBeingDragged === "start") {
-			link.srcPos = { x_pos: transPos.x, y_pos: transPos.y };
-			delete link.srcNodeId;
-			delete link.srcNodePortId;
-			delete link.srcObj;
-
-		} else {
-			link.trgPos = { x_pos: transPos.x, y_pos: transPos.y };
-			delete link.trgNodeId;
-			delete link.trgNodePortId;
-			delete link.trgNode;
-		}
-
-		this.displayLinks();
-
-		// Switch on an attribute to indicate a new link is being dragged
-		// towards and over a target node.
-		if (this.config.enableHighlightNodeOnNewLinkDrag) {
-			this.setNewLinkOverNode(d3Event);
-		}
-	}
-
-	completeDraggedLink(d3Event) {
-		const newLink = this.getNewLinkOnDrag(d3Event);
-
-		if (newLink) {
-			this.canvasController.editActionHandler({
-				editType: "updateLink",
-				editSource: "canvas",
-				newLink: newLink,
-				pipelineId: this.pipelineId });
-		} else {
-			this.activePipeline.replaceLink(this.draggingLinkData.oldLink);
-			this.displayLinks();
-		}
-
-		// Switch 'new link over node' highlighting off
-		if (this.config.enableHighlightNodeOnNewLinkDrag) {
-			this.setNewLinkOverNodeCancel();
-		}
-
-		this.unsetUnavailableNodesHighlighting();
-		this.stopDraggingLink();
-	}
-
-	// Returns a new link if one can be created given the current data in the
-	// this.draggingLinkData object. Returns null if a link cannot be created.
-	getNewLinkOnDrag(d3Event, nodeProximity) {
-		const oldLink = this.draggingLinkData.oldLink;
-		const newLink = cloneDeep(oldLink);
-
-		if (this.draggingLinkData.endBeingDragged === "start") {
-			delete newLink.srcNodeId;
-			delete newLink.srcNodePortId;
-			delete newLink.srcPos;
-
-			const srcNode = nodeProximity
-				? this.getNodeNearMousePos(d3Event, nodeProximity)
-				: this.getNodeAtMousePos(d3Event);
-
-			if (srcNode) {
-				newLink.srcNodeId = srcNode.id;
-				newLink.srcNodePortId = nodeProximity
-					? this.getNodePortIdNearMousePos(d3Event, OUTPUT_TYPE, srcNode)
-					: this.getOutputNodePortId(d3Event, srcNode);
-			}	else {
-				newLink.srcPos = this.draggingLinkData.link.srcPos;
-			}
-
-		} else {
-			delete newLink.trgNodeId;
-			delete newLink.trgNodePortId;
-			delete newLink.trgPos;
-
-			const trgNode = nodeProximity
-				? this.getNodeNearMousePos(d3Event, nodeProximity)
-				: this.getNodeAtMousePos(d3Event);
-
-			if (trgNode) {
-				newLink.trgNodeId = trgNode.id;
-				newLink.trgNodePortId = nodeProximity
-					? this.getNodePortIdNearMousePos(d3Event, INPUT_TYPE, trgNode)
-					: this.getInputNodePortId(d3Event, trgNode);
-			}	else {
-				newLink.trgPos = this.draggingLinkData.link.trgPos;
-			}
-		}
-
-		// If links are not detachable, we cannot create a link if srcPos
-		// or trgPos are set because that would create a detached link unconnected
-		// to either a source node or a target node or both.
-		if (this.config.enableLinkSelection !== LINK_SELECTION_DETACHABLE &&
-				(newLink.srcPos || newLink.trgPos)) {
-			return null;
-		}
-
-		if (this.canExecuteUpdateLinkCommand(newLink, oldLink)) {
-			return newLink;
-		}
-		return null;
-	}
-
-	// Returns true if the update command for a dragged link can be executed.
-	// It might be prevented from executing if either the course
-	canExecuteUpdateLinkCommand(newLink, oldLink) {
-		const srcNode = this.activePipeline.getNode(newLink.srcNodeId);
-		const trgNode = this.activePipeline.getNode(newLink.trgNodeId);
-		const linkSrcChanged = this.hasLinkSrcChanged(newLink, oldLink);
-		const linkTrgChanged = this.hasLinkTrgChanged(newLink, oldLink);
-		const links = this.activePipeline.links;
-		let executeCommand = true;
-
-		if (linkSrcChanged && srcNode &&
-				!CanvasUtils.isSrcConnectionAllowedWithDetachedLinks(newLink.srcNodePortId, srcNode, links)) {
-			executeCommand = false;
-		}
-		if (linkTrgChanged && trgNode &&
-				!CanvasUtils.isTrgConnectionAllowedWithDetachedLinks(newLink.trgNodePortId, trgNode, links)) {
-			executeCommand = false;
-		}
-		if (srcNode && trgNode &&
-				!CanvasUtils.isConnectionAllowedWithDetachedLinks(newLink.srcNodePortId, newLink.trgNodePortId, srcNode, trgNode, links)) {
-			executeCommand = false;
-		}
-		return executeCommand;
-	}
-
-	// Returns true if the source information has changed between
-	// the two links.
-	hasLinkSrcChanged(newLink, oldLink) {
-		let linkUpdated = false;
-
-		if (newLink.srcNodeId) {
-			if (newLink.srcNodeId !== oldLink.srcNodeId) {
-				linkUpdated = true;
-			}
-
-			if (newLink.srcNodePortId !== oldLink.srcNodePortId) {
-				linkUpdated = true;
-			}
-
-		}	else {
-			if (oldLink.srcPos) {
-				if (newLink.srcPos.x_pos !== oldLink.srcPos.x_pos ||
-						newLink.srcPos.y_pos !== oldLink.srcPos.y_pos) {
-					linkUpdated = true;
-				}
-			} else {
-				linkUpdated = true;
-			}
-		}
-		return linkUpdated;
-	}
-
-	// Returns true if the target information has changed between
-	// the two links.
-	hasLinkTrgChanged(newLink, oldLink) {
-		let linkUpdated = false;
-
-		if (newLink.trgNodeId) {
-			if (newLink.trgNodeId !== oldLink.trgNodeId) {
-				linkUpdated = true;
-			}
-
-			if (newLink.trgNodePortId !== oldLink.trgNodePortId) {
-				linkUpdated = true;
-			}
-
-		}	else {
-			if (oldLink.trgPos) {
-				if (newLink.trgPos.x_pos !== oldLink.trgPos.x_pos ||
-						newLink.trgPos.y_pos !== oldLink.trgPos.y_pos) {
-					linkUpdated = true;
-				}
-			} else {
-				linkUpdated = true;
-			}
-		}
-		return linkUpdated;
-	}
-
-	stopDraggingLink() {
-		this.draggingLinkData = null;
 	}
 
 	// Returns a link, if one can be found, at the position indicated by x and y
@@ -4667,7 +3183,7 @@ export default class SVGCanvasRenderer {
 			.each((d) => {
 				let portRadius = d.layout.portRadius;
 				if (CanvasUtils.isSuperBindingNode(d)) {
-					portRadius = this.canvasLayout.supernodeBindingPortRadius / this.zoomTransform.k;
+					portRadius = this.canvasLayout.supernodeBindingPortRadius / this.zoomUtils.getZoomScale();
 				}
 
 				if (pos.x >= d.x_pos - portRadius - prox && // Target port sticks out by its radius so need to allow for it.
@@ -4678,75 +3194,6 @@ export default class SVGCanvasRenderer {
 				}
 			});
 		return node;
-	}
-
-	getNodePortIdNearMousePos(d3Event, portType, node) {
-		const pos = this.getTransformedMousePos(d3Event);
-		let portId = null;
-		let defaultPortId = null;
-
-		if (node) {
-			if (portType === OUTPUT_TYPE) {
-				const portObjs = this.getAllNodeGroupsSelection()
-					.selectChildren("." + this.getNodeOutputPortClassName())
-					.selectChildren(".d3-node-port-output-main");
-
-				portId = this.searchForPortNearMouse(
-					node, pos, portObjs,
-					node.layout.outputPortObject,
-					node.width);
-				defaultPortId = CanvasUtils.getDefaultOutputPortId(node);
-
-			} else {
-				const portObjs = this.getAllNodeGroupsSelection()
-					.selectChildren("." + this.getNodeInputPortClassName())
-					.selectChildren(".d3-node-port-input-main");
-
-				portId = this.searchForPortNearMouse(
-					node, pos, portObjs,
-					node.layout.inputPortObject,
-					0);
-				defaultPortId = CanvasUtils.getDefaultInputPortId(node);
-			}
-		}
-
-		if (!portId) {
-			portId = defaultPortId;
-		}
-		return portId;
-	}
-
-	// Returns a port ID for the port identified by the position (pos) on the
-	// node (node) further specified by the other parameters.
-	searchForPortNearMouse(node, pos, portObjs, portObjectType, nodeWidthOffset) {
-		let portId = null;
-		portObjs
-			.each((p, i, portGrps) => {
-				const portSel = d3.select(portGrps[i]);
-				if (portObjectType === PORT_OBJECT_IMAGE) {
-					const xx = node.x_pos + Number(portSel.attr("x"));
-					const yy = node.y_pos + Number(portSel.attr("y"));
-					const wd = Number(portSel.attr("width"));
-					const ht = Number(portSel.attr("height"));
-					if (pos.x >= xx &&
-							pos.x <= xx + nodeWidthOffset + wd &&
-							pos.y >= yy &&
-							pos.y <= yy + ht) {
-						portId = portGrps[i].getAttribute("data-port-id");
-					}
-				} else { // Port must be a circle
-					const cx = node.x_pos + Number(portSel.attr("cx"));
-					const cy = node.y_pos + Number(portSel.attr("cy"));
-					if (pos.x >= cx - node.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
-							pos.x <= cx + node.layout.portRadius &&
-							pos.y >= cy - node.layout.portRadius &&
-							pos.y <= cy + node.layout.portRadius) {
-						portId = portGrps[i].getAttribute("data-port-id");
-					}
-				}
-			});
-
-		return portId;
 	}
 
 	// Returns a sizing rectangle for nodes and comments. This extends an
@@ -4945,126 +3392,141 @@ export default class SVGCanvasRenderer {
 	}
 
 	setPortPositionsForNode(node) {
-		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-			this.setPortPositionsVertical(node, node.inputs, node.inputPortsWidth, node.layout.inputPortTopPosX, node.layout.inputPortTopPosY);
-			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.outputPortBottomPosX, this.getOutputPortBottomPosY(node));
-		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-			this.setPortPositionsVertical(node, node.inputs, node.inputPortsWidth, node.layout.inputPortBottomPosX, this.getInputPortBottomPosY(node));
-			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.outputPortTopPosX, node.layout.outputPortTopPosY);
+		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM ||
+				this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+			this.setPortPositionsVertical(
+				node, node.inputs, node.inputPortsWidth,
+				node.layout.inputPortPositions,
+				node.layout.inputPortAutoPosition);
+			this.setPortPositionsVertical(
+				node, node.outputs, node.outputPortsWidth,
+				node.layout.outputPortPositions,
+				node.layout.outputPortAutoPosition,
+				this.config.enableSingleOutputPortDisplay);
+
 		} else {
-			this.setPortPositionsLeftRight(node, node.inputs, node.inputPortsHeight, node.layout.inputPortLeftPosX, node.layout.inputPortLeftPosY);
-			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight,
-				this.nodeUtils.getNodeOutputPortRightPosX(node),
-				this.nodeUtils.getNodeOutputPortRightPosY(node),
+			this.setPortPositionsHoriz(
+				node, node.inputs, node.inputPortsHeight,
+				node.layout.inputPortPositions,
+				node.layout.inputPortAutoPosition);
+			this.setPortPositionsHoriz(
+				node, node.outputs, node.outputPortsHeight,
+				node.layout.outputPortPositions,
+				node.layout.outputPortAutoPosition,
 				this.config.enableSingleOutputPortDisplay);
 		}
 	}
 
-	getOutputPortBottomPosY(node) {
-		return node.height + node.layout.outputPortBottomPosY;
-	}
-
-	getInputPortBottomPosY(node) {
-		return node.height + node.layout.inputPortBottomPosY;
-	}
-
-	setPortPositionsVertical(data, ports, portsWidth, xPos, yPos) {
+	setPortPositionsVertical(node, ports, portsWidth, portPositions, autoPosition, displaySinglePort = false) {
 		if (ports && ports.length > 0) {
-			if (data.width <= data.layout.defaultNodeWidth &&
+			const xPos = this.nodeUtils.getNodePortPosX(portPositions[0], node);
+			const yPos = this.nodeUtils.getNodePortPosY(portPositions[0], node);
+
+			if (node.width <= node.layout.defaultNodeWidth &&
 					ports.length === 1) {
 				ports[0].cx = xPos;
 				ports[0].cy = yPos;
 			} else {
-				let xPosition = 0;
-
-				if (CanvasUtils.isExpandedSupernode(data)) {
-					const widthSvgArea = data.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
-					const remainingSpace = widthSvgArea - portsWidth;
-					xPosition = (2 * this.canvasLayout.supernodeSVGAreaPadding) + (remainingSpace / 2);
-
-				} else if (portsWidth < data.width) {
-					xPosition = (data.width - portsWidth) / 2;
-				}
-
-				xPosition += data.layout.portArcOffset;
-
-				// Sub-flow binding node ports need to be spaced by the inverse of the
-				// zoom amount so that, after zoomToFit on the in-place sub-flow the
-				// binding node ports line up with those on the supernode. This is only
-				// necessary with binding nodes with mutiple ports.
-				let multiplier = 1;
-				if (CanvasUtils.isSuperBindingNode(data)) {
-					multiplier = 1 / this.zoomTransform.k;
-				}
-
-				ports.forEach((p) => {
-					xPosition += (data.layout.portArcRadius * multiplier);
-					p.cx = xPosition;
-					p.cy = yPos;
-					xPosition += ((data.layout.portArcRadius + data.layout.portArcSpacing) * multiplier);
-				});
-			}
-		}
-	}
-
-	setPortPositionsLeftRight(data, ports, portsHeight, xPos, yPos, displaySinglePort = false) {
-		if (ports && ports.length > 0) {
-			if (data.height <= data.layout.defaultNodeHeight &&
-					ports.length === 1) {
-				ports[0].cx = xPos;
-				ports[0].cy = yPos;
-			} else {
-				// If we are only going to display a single port, we can set all the
+				// If we are only going to display a single port, we set all the
 				// port positions to be the same as if there is only one port.
 				if (displaySinglePort) {
-					this.setPortPositionsLeftRightSinglePort(data, ports, xPos, yPos);
+					this.setPortPositionsVerticalDisplaySingle(node, ports, xPos, yPos);
+
+				} else if (autoPosition || CanvasUtils.isExpandedSupernode(node)) {
+					this.setPortPositionsVerticalAuto(node, ports, portsWidth, yPos);
+
 				} else {
-					this.setPortPositionsLeftRightAllPorts(data, ports, portsHeight, xPos, yPos);
+					this.setPortPositionsCustom(ports, portPositions, node, xPos, yPos);
 				}
 			}
 		}
+	}
+
+	// If only a single port is to be displayed, this methods sets the x and y
+	// coordinates of all the ports to the same values appropriately for either
+	// regular nodes or expanded supernodes.
+	setPortPositionsVerticalDisplaySingle(node, ports, xPos, yPos) {
+		let xPosition = 0;
+		if (CanvasUtils.isExpandedSupernode(node)) {
+			const widthSvgArea = node.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
+			xPosition = widthSvgArea / 2;
+
+		} else {
+			xPosition = xPos;
+		}
+
+		ports.forEach((p) => {
+			p.cx = xPosition;
+			p.cy = yPos;
+		});
 	}
 
 	// Sets the ports x and y coordinates for regular and expanded supernodes
 	// when all ports are displayed in a normal manner (as opposed to when a
 	// single port is displayed).
-	setPortPositionsLeftRightAllPorts(data, ports, portsHeight, xPos, yPos) {
-		let yPosition = 0;
+	setPortPositionsVerticalAuto(node, ports, portsWidth, yPos) {
+		let xPosition = 0;
 
-		if (CanvasUtils.isExpandedSupernode(data)) {
-			const heightSvgArea = data.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
-			const remainingSpace = heightSvgArea - portsHeight;
-			yPosition = this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding + (remainingSpace / 2);
+		if (CanvasUtils.isExpandedSupernode(node)) {
+			const widthSvgArea = node.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
+			const remainingSpace = widthSvgArea - portsWidth;
+			xPosition = this.canvasLayout.supernodeSVGAreaPadding + (remainingSpace / 2);
 
-		} else if (portsHeight < data.height) {
-			yPosition = (data.height - portsHeight) / 2;
+		} else if (portsWidth < node.width) {
+			xPosition = (node.width - portsWidth) / 2;
 		}
 
-		yPosition += data.layout.portArcOffset;
+		xPosition += node.layout.portArcOffset;
 
 		// Sub-flow binding node ports need to be spaced by the inverse of the
 		// zoom amount so that, after zoomToFit on the in-place sub-flow the
 		// binding node ports line up with those on the supernode. This is only
 		// necessary with binding nodes with mutiple ports.
 		let multiplier = 1;
-		if (CanvasUtils.isSuperBindingNode(data)) {
-			multiplier = 1 / this.zoomTransform.k;
+		if (CanvasUtils.isSuperBindingNode(node)) {
+			multiplier = 1 / this.zoomUtils.getZoomScale();
 		}
 		ports.forEach((p) => {
-			yPosition += (data.layout.portArcRadius * multiplier);
-			p.cx = xPos;
-			p.cy = yPosition;
-			yPosition += ((data.layout.portArcRadius + data.layout.portArcSpacing) * multiplier);
+			xPosition += (node.layout.portArcRadius * multiplier);
+			p.cx = xPosition;
+			p.cy = yPos;
+			xPosition += ((node.layout.portArcRadius + node.layout.portArcSpacing) * multiplier);
 		});
+	}
+
+	setPortPositionsHoriz(node, ports, portsHeight, portPositions, autoPosition, displaySinglePort = false) {
+		if (ports && ports.length > 0) {
+			const xPos = this.nodeUtils.getNodePortPosX(portPositions[0], node);
+			const yPos = this.nodeUtils.getNodePortPosY(portPositions[0], node);
+
+			if (node.height <= node.layout.defaultNodeHeight &&
+					ports.length === 1) {
+				ports[0].cx = xPos;
+				ports[0].cy = yPos;
+
+			} else {
+				// If we are only going to display a single port, we set all the
+				// port positions to be the same as if there is only one port.
+				if (displaySinglePort) {
+					this.setPortPositionsHorizDisplaySingle(node, ports, xPos, yPos);
+
+				} else if (autoPosition || CanvasUtils.isExpandedSupernode(node)) {
+					this.setPortPositionsHorizAuto(node, ports, portsHeight, xPos);
+
+				} else {
+					this.setPortPositionsCustom(ports, portPositions, node, xPos, yPos);
+				}
+			}
+		}
 	}
 
 	// If only a single port is to be displayed, this methods sets the x and y
 	// coordinates of all the ports to the same values appropriately for either
 	// regular nodes or expanded supernodes.
-	setPortPositionsLeftRightSinglePort(data, ports, xPos, yPos) {
+	setPortPositionsHorizDisplaySingle(node, ports, xPos, yPos) {
 		let yPosition = 0;
-		if (CanvasUtils.isExpandedSupernode(data)) {
-			const heightSvgArea = data.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
+		if (CanvasUtils.isExpandedSupernode(node)) {
+			const heightSvgArea = node.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
 			yPosition = this.canvasLayout.supernodeTopAreaHeight + (heightSvgArea / 2);
 
 		} else {
@@ -5077,43 +3539,98 @@ export default class SVGCanvasRenderer {
 		});
 	}
 
+	// Sets the ports x and y coordinates for regular and expanded supernodes
+	// when all ports are displayed in a normal manner (as opposed to when a
+	// single port is displayed).
+	setPortPositionsHorizAuto(node, ports, portsHeight, xPos) {
+		let yPosition = 0;
+
+		if (CanvasUtils.isExpandedSupernode(node)) {
+			const heightSvgArea = node.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
+			const remainingSpace = heightSvgArea - portsHeight;
+			yPosition = this.canvasLayout.supernodeTopAreaHeight + (remainingSpace / 2);
+
+		} else if (portsHeight < node.height) {
+			yPosition = (node.height - portsHeight) / 2;
+		}
+
+		yPosition += node.layout.portArcOffset;
+
+		// Sub-flow binding node ports need to be spaced by the inverse of the
+		// zoom amount so that, after zoomToFit on the in-place sub-flow the
+		// binding node ports line up with those on the supernode. This is only
+		// necessary with binding nodes with mutiple ports.
+		let multiplier = 1;
+		if (CanvasUtils.isSuperBindingNode(node)) {
+			multiplier = 1 / this.zoomUtils.getZoomScale();
+		}
+		ports.forEach((p) => {
+			yPosition += (node.layout.portArcRadius * multiplier);
+			p.cx = xPos;
+			p.cy = yPosition;
+			yPosition += ((node.layout.portArcRadius + node.layout.portArcSpacing) * multiplier);
+		});
+	}
+
+	// Sets the node's port positions based on the custom positions provided
+	// by the application in the portPositions array.
+	setPortPositionsCustom(ports, portPositions, node, zerothX, zerothY) {
+		let xPos = zerothX;
+		let yPos = zerothY;
+
+		ports.forEach((p, i) => {
+			// No need to recalculate the zeroth position AND if there are more
+			// ports than portPositions just use the last port position for all
+			// subsequent ports.
+			if (i > 0 && i < portPositions.length) {
+				xPos = this.nodeUtils.getNodePortPosX(portPositions[i], node);
+				yPos = this.nodeUtils.getNodePortPosY(portPositions[i], node);
+			}
+			p.cx = xPos;
+			p.cy = yPos;
+		});
+	}
+
+	// Displays all the comments on the canvas either by creating new comments,
+	// updating existing comments or removing unwanted comments.
 	displayComments() {
 		this.logger.logStartTimer("displayComments " + this.getFlags());
 
-		if (this.dragging && !this.commentSizing && !this.nodeSizing && !this.isCommentBeingUpdated) {
-			this.displayMovedComments();
-
-		} else if (this.selecting) {
-			this.displayCommentsSelectionStatus();
-
-		} else {
-			this.displayAllComments();
-		}
+		const selection = this.getAllCommentGroupsSelection();
+		this.displayCommentsSubset(selection, this.activePipeline.comments);
 
 		this.logger.logEndTimer("displayComments " + this.getFlags());
 	}
 
 	displayMovedComments() {
+		this.logger.logStartTimer("displayMovedComments");
+
 		this.getAllCommentGroupsSelection()
 			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
 			.datum((d) => this.activePipeline.getComment(d.id));
+
+		this.logger.logEndTimer("displayMovedComments");
 	}
 
 	displayCommentsSelectionStatus() {
+		this.logger.logStartTimer("displayCommentsSelectionStatus");
+
 		this.getAllCommentGroupsSelection()
 			.selectChildren(".d3-comment-selection-highlight")
-			.attr("data-selected", (c) => (this.objectModel.isSelected(c.id, this.activePipeline.id) ? "yes" : "no"));
+			.attr("data-selected", (c) => (this.activePipeline.isSelected(c.id) ? "yes" : "no"));
 
-		this.superRenderers.forEach((renderer) => {
-			renderer.selecting = true;
-			renderer.displayComments();
-			renderer.selecting = false;
-		});
+		this.logger.logEndTimer("displayCommentsSelectionStatus");
 	}
 
-	displayAllComments() {
-		this.getAllCommentGroupsSelection()
-			.data(this.activePipeline.comments, (c) => c.id)
+	displaySingleComment(comment) {
+		const selection = this.getCommentGroupSelectionById(comment.id);
+		this.displayCommentsSubset(selection, [comment]);
+	}
+
+	displayCommentsSubset(selection, data) {
+		const newData = this.canvasInfo.hideComments ? [] : data;
+		selection
+			.data(newData, (c) => c.id)
 			.join(
 				(enter) => this.createComments(enter)
 			)
@@ -5127,11 +3644,6 @@ export default class SVGCanvasRenderer {
 			.append("g")
 			.attr("data-id", (c) => this.getId("comment_grp", c.id))
 			.call(this.attachCommentGroupListeners.bind(this));
-
-		if (this.config.enableEditingActions) {
-			newCommentGroups
-				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
-		}
 
 		// Comment Sizing Area
 		newCommentGroups
@@ -5186,7 +3698,7 @@ export default class SVGCanvasRenderer {
 			.attr("y", -this.canvasLayout.commentHighlightGap)
 			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentHighlightGap))
 			.attr("width", (c) => c.width + (2 * this.canvasLayout.commentHighlightGap))
-			.attr("data-selected", (c) => (this.objectModel.isSelected(c.id, this.activePipeline.id) ? "yes" : "no"))
+			.attr("data-selected", (c) => (this.activePipeline.isSelected(c.id) ? "yes" : "no"))
 			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
 
 		// Comment Body
@@ -5208,33 +3720,53 @@ export default class SVGCanvasRenderer {
 				this.config.enableMarkdownInComments
 					? markdownIt.render(c.content)
 					: escapeText(c.content)));
+
+		// Add or remove drag object behavior for the comment groups.
+		if (this.config.enableEditingActions) {
+			const handler = this.dragObjectUtils.getDragObjectHandler();
+			joinedCommentGrps
+				.call(handler);
+		} else {
+			joinedCommentGrps
+				.on(".drag", null);
+		}
 	}
 
 	// Attaches the appropriate listeners to the comment groups.
 	attachCommentGroupListeners(commentGrps) {
 		commentGrps
 			.on("mouseenter", (d3Event, d) => {
+				if (this.isDragging()) {
+					return;
+				}
 				this.setCommentStyles(d, "hover", d3.select(d3Event.currentTarget));
 				if (this.config.enableEditingActions && d.id !== this.svgCanvasTextArea.getEditingTextId()) {
 					this.createCommentPort(d3Event.currentTarget, d);
 				}
+				if (this.config.enableContextToolbar) {
+					this.addContextToolbar(d3Event, d, "comment");
+				}
 			})
 			.on("mouseleave", (d3Event, d) => {
 				this.setCommentStyles(d, "default", d3.select(d3Event.currentTarget));
+				if (this.config.enableContextToolbar) {
+					this.removeContextToolbar();
+				}
 				if (this.config.enableEditingActions) {
 					this.deleteCommentPort(d3Event.currentTarget);
 				}
 			})
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
-				this.logger.log("Comment Group - mouse down");
+				this.logger.logStartTimer("Comment Group - mouse down");
+				d3Event.stopPropagation();
 				if (this.svgCanvasTextArea.isEditingText()) {
 					this.svgCanvasTextArea.completeEditing();
 				}
 				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d);
+					this.selectObjectD3Event(d3Event, d, "comment");
 				}
-				this.logger.log("Comment Group - finished mouse down");
+				this.logger.logEndTimer("Comment Group - mouse down");
 			})
 			.on("click", (d3Event, d) => {
 				this.logger.log("Comment Group - click");
@@ -5252,7 +3784,7 @@ export default class SVGCanvasRenderer {
 						clickType: "DOUBLE_CLICK",
 						objectType: "comment",
 						id: d.id,
-						selectedObjectIds: this.objectModel.getSelectedObjectIds(),
+						selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
 						pipelineId: this.activePipeline.id });
 				}
 			})
@@ -5261,7 +3793,7 @@ export default class SVGCanvasRenderer {
 				// With enableDragWithoutSelect set to true, the object for which the
 				// context menu is being requested needs to be implicitely selected.
 				if (this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d);
+					this.selectObjectD3Event(d3Event, d, "comment");
 				}
 				this.openContextMenu(d3Event, "comment", d);
 			});
@@ -5270,9 +3802,7 @@ export default class SVGCanvasRenderer {
 	attachCommentSizingListeners(commentGrps) {
 		commentGrps
 			.on("mousedown", (d3Event, d) => {
-				this.commentSizing = true;
-				// Note - comment resizing and finalization of size is handled by drag functions.
-				this.addTempCursorOverlay(this.commentSizingCursor);
+				this.dragObjectUtils.mouseDownCommentSizingArea();
 			})
 			// Use mousemove here rather than mouseenter so the cursor will change
 			// if the pointer moves from one area of the node outline to another
@@ -5281,17 +3811,10 @@ export default class SVGCanvasRenderer {
 			// pointer leaves the temporary overlay (which is removed) and enters
 			// the node outline.
 			.on("mousemove mouseenter", (d3Event, d) => {
-				if (this.config.enableEditingActions && // Only set cursor when we are able to edit comments
-					!this.isRegionSelectOrSizingInProgress()) // Don't switch sizing direction if we are already sizing
-				{
-					let cursorType = "default";
-					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
-						this.commentSizingDirection = this.getSizingDirection(d3Event, d, this.canvasLayout.commentCornerResizeArea);
-						this.commentSizingCursor = this.getCursorBasedOnDirection(this.commentSizingDirection);
-						cursorType = this.commentSizingCursor;
-					}
-					d3.select(d3Event.currentTarget).style("cursor", cursorType);
-				}
+				this.dragObjectUtils.mouseEnterCommentSizingArea(d3Event, d);
+			})
+			.on("mouseleave", (d3Event, d) => {
+				this.dragObjectUtils.mouseLeaveCommentSizingArea(d3Event, d);
 			});
 	}
 
@@ -5301,26 +3824,19 @@ export default class SVGCanvasRenderer {
 	createCommentPort(commentObj, d) {
 		const commentGrp = d3.select(commentObj);
 
-		commentGrp
+		const commentPort = commentGrp
 			.append("circle")
 			.attr("cx", (com) => com.width / 2)
 			.attr("cy", (com) => com.height + this.canvasLayout.commentHighlightGap)
 			.attr("r", this.canvasLayout.commentPortRadius)
-			.attr("class", "d3-comment-port-circle")
-			.on("mousedown", (d3Event, cd) => {
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
-				this.drawingNewLinkData = {
-					srcObjId: d.id,
-					action: COMMENT_LINK,
-					startPos: {
-						x: d.x_pos - this.canvasLayout.commentHighlightGap,
-						y: d.y_pos - this.canvasLayout.commentHighlightGap
-					},
-					linkArray: []
-				};
-				this.drawNewLink(d3Event);
-			});
+			.attr("class", "d3-comment-port-circle");
 
+		if (this.config.enableEditingActions) {
+			const handler = this.dragNewLinkUtils.getDragNewLinkHandler();
+			commentPort.call(handler);
+		} else {
+			commentPort.on(".drag", null);
+		}
 	}
 
 	deleteCommentPort(commentObj) {
@@ -5410,7 +3926,7 @@ export default class SVGCanvasRenderer {
 	// Returns true if this renderer or any of its ancestors are currently in the
 	// process of selecting a region or sizing a node or comment.
 	isRegionSelectOrSizingInProgress() {
-		if (this.regionSelect || this.nodeSizing || this.commentSizing) {
+		if (this.regionSelect || this.isSizing()) {
 			return true;
 		}
 		if (this.supernodeInfo.renderer) {
@@ -5421,373 +3937,64 @@ export default class SVGCanvasRenderer {
 		return false;
 	}
 
-	// This method allows us to avoid a strange behavior which only appears in the
-	// Chrome browser. That is, when the mouse pointer is inside the
-	// node/comment selection highlight area but is close to either the
-	// right or bottom side of the node/comment body, any mousedown events will go
-	// to the body instead of the highlight area. We use this method to detect
-	// this situation and use the result to decide whether to display the sizing
-	// cursor or not.
-	isPointerCloseToBodyEdge(d3Event, d) {
-		const pos = this.getTransformedMousePos(d3Event);
-		const rightEdge = d.x_pos + d.width;
-		const bottomEdge = d.y_pos + d.height;
-
-		// Is the pointer within 1 pixel of the right edge of the node or comment
-		const rightEdgeState =
-			pos.x >= rightEdge && pos.x <= rightEdge + 1 &&
-			pos.y >= 0 && pos.y <= bottomEdge;
-
-		// Is the pointer within 1 pixel of the bottom edge of the node or comment
-		const bottomEdgeState =
-			pos.y >= bottomEdge && pos.y <= bottomEdge + 1 &&
-			pos.x >= 0 && pos.x <= rightEdge;
-
-		return rightEdgeState || bottomEdgeState;
-	}
-
-	// Returns the comment or supernode sizing direction (i.e. one of n, s, e, w, nw, ne,
-	// sw or se) based on the current mouse position and the position and
-	// dimensions of the comment or node outline.
-	getSizingDirection(d3Event, d, cornerResizeArea) {
-		var xPart = "";
-		var yPart = "";
-
-		const transPos = this.getTransformedMousePos(d3Event);
-		if (transPos.x < d.x_pos + cornerResizeArea) {
-			xPart = "w";
-		} else if (transPos.x > d.x_pos + d.width - cornerResizeArea) {
-			xPart = "e";
-		}
-		if (transPos.y < d.y_pos + cornerResizeArea) {
-			yPart = "n";
-		} else if (transPos.y > d.y_pos + d.height - cornerResizeArea) {
-			yPart = "s";
-		}
-
-		return yPart + xPart;
-	}
-
-	// Returns a cursor type based on the currect comment sizing direction.
-	// Possible values are: ns-resize, ew-resize, nwse-resize or nesw-resize.
-	getCursorBasedOnDirection(direction) {
-		var cursorType;
-		switch (direction) {
-		case "n":
-		case "s":
-			cursorType = "ns-resize";
-			break;
-		case "e":
-		case "w":
-			cursorType = "ew-resize";
-			break;
-		case "nw":
-		case "se":
-			cursorType = "nwse-resize";
-			break;
-		case "ne":
-		case "sw":
-			cursorType = "nesw-resize";
-			break;
-		default:
-			cursorType = "";
-		}
-
-		return cursorType;
-	}
-
-	// Returns the minimum allowed height for the node passed in. For supernodes
-	// this means combining the bigger of the space for the inputs and output ports
-	// with some space for the top of the display frame and the padding at the
-	// bottom of the frame. Then the bigger of that height versus the default
-	// supernode minimum height is retunred.
-	getMinHeight(node) {
-		if (CanvasUtils.isSupernode(node)) {
-			const minHt = Math.max(node.inputPortsHeight, node.outputPortsHeight) +
-				this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding;
-			return Math.max(this.canvasLayout.supernodeMinHeight, minHt);
-		}
-		return node.layout.defaultNodeHeight;
-	}
-
-	// Returns the minimum allowed width for the node passed in.
-	getMinWidth(node) {
-		if (CanvasUtils.isSupernode(node)) {
-			return this.canvasLayout.supernodeMinWidth;
-		}
-		return node.layout.defaultNodeWidth;
-	}
-
-	// Sets the size and position of the node in the canvasInfo.nodes
-	// array based on the position of the pointer during the resize action
-	// then redraws the nodes and links (the link positions may move based
-	// on the node size change).
-	resizeNode(d3Event, d) {
-		const resizeObj = this.activePipeline.getNode(d.id);
-		const oldSupernode = Object.assign({}, resizeObj);
-		const minHeight = this.getMinHeight(resizeObj);
-		const minWidth = this.getMinWidth(resizeObj);
-
-		const delta = this.resizeObject(d3Event, resizeObj,
-			this.nodeSizingDirection, minWidth, minHeight);
-
-		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
-			if (CanvasUtils.isSupernode(resizeObj) &&
-					this.config.enableMoveNodesOnSupernodeResize) {
-				const objectsInfo = CanvasUtils.moveSurroundingObjects(
-					oldSupernode,
-					this.activePipeline.getNodesAndComments(),
-					this.nodeSizingDirection,
-					resizeObj.width,
-					resizeObj.height,
-					true // Pass true to indicate that object positions should be updated.
-				);
-
-				const linksInfo = CanvasUtils.moveSurroundingDetachedLinks(
-					oldSupernode,
-					this.activePipeline.links,
-					this.nodeSizingDirection,
-					resizeObj.width,
-					resizeObj.height,
-					true // Pass true to indicate that link positions should be updated.
-				);
-
-				// Overwrite the object and link info with any new info.
-				this.nodeSizingObjectsInfo = Object.assign(this.nodeSizingObjectsInfo, objectsInfo);
-				this.nodeSizingDetLinksInfo = Object.assign(this.nodeSizingDetLinksInfo, linksInfo);
-			}
-
-			this.displayComments();
-			this.displayNodes();
-			this.displayLinks();
-
-			if (CanvasUtils.isSupernode(resizeObj)) {
-				if (this.dispUtils.isDisplayingSubFlow()) {
-					this.displayBindingNodesToFitSVG();
-				}
-				this.superRenderers.forEach((renderer) => renderer.displaySVGToFitSupernode());
-			}
-		}
-	}
-
-	// Sets the size and position of the comment in the canvasInfo.comments
-	// array based on the position of the pointer during the resize action
-	// then redraws the comment and links (the link positions may move based
-	// on the comment size change).
-	resizeComment(d3Event, d) {
-		const resizeObj = this.activePipeline.getComment(d.id);
-		this.resizeObject(d3Event, resizeObj, this.commentSizingDirection, 20, 20);
-		this.displayComments();
-		this.displayLinks();
-	}
-
-	// Sets the size and position of the object in the canvasInfo
-	// array based on the position of the pointer during the resize action.
-	resizeObject(d3Event, canvasObj, direction, minWidth, minHeight) {
-		let incrementX = 0;
-		let incrementY = 0;
-		let incrementWidth = 0;
-		let incrementHeight = 0;
-
-		if (direction.indexOf("e") > -1) {
-			incrementWidth += d3Event.dx;
-		}
-		if (direction.indexOf("s") > -1) {
-			incrementHeight += d3Event.dy;
-		}
-		if (direction.indexOf("n") > -1) {
-			incrementY += d3Event.dy;
-			incrementHeight -= d3Event.dy;
-		}
-		if (direction.indexOf("w") > -1) {
-			incrementX += d3Event.dx;
-			incrementWidth -= d3Event.dx;
-		}
-
-		let xPos = 0;
-		let yPos = 0;
-		let width = 0;
-		let height = 0;
-
-		if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING) {
-			// Calculate where the object being resized would be and its size given
-			// current increments.
-			this.notSnappedXPos += incrementX;
-			this.notSnappedYPos += incrementY;
-			this.notSnappedWidth += incrementWidth;
-			this.notSnappedHeight += incrementHeight;
-
-			xPos = CanvasUtils.snapToGrid(this.notSnappedXPos, this.canvasLayout.snapToGridXPx);
-			yPos = CanvasUtils.snapToGrid(this.notSnappedYPos, this.canvasLayout.snapToGridYPx);
-			width = CanvasUtils.snapToGrid(this.notSnappedWidth, this.canvasLayout.snapToGridXPx);
-			height = CanvasUtils.snapToGrid(this.notSnappedHeight, this.canvasLayout.snapToGridYPx);
-
-		} else {
-			xPos = canvasObj.x_pos + incrementX;
-			yPos = canvasObj.y_pos + incrementY;
-			width = canvasObj.width + incrementWidth;
-			height = canvasObj.height + incrementHeight;
-		}
-
-		// Don't allow the object area to shrink below the min width and height.
-		// For comment sizing, errors may occur especially if the width becomes
-		// less that one character's width. For node sizing we want at least some
-		// area to display the sub-flow.
-		if (width < minWidth || height < minHeight) {
-			return null;
-		}
-
-		const delta = {
-			width: width - canvasObj.width,
-			height: height - canvasObj.height,
-			x_pos: xPos - canvasObj.x_pos,
-			y_pos: yPos - canvasObj.y_pos
-		};
-
-		canvasObj.x_pos = xPos;
-		canvasObj.y_pos = yPos;
-		canvasObj.width = width;
-		canvasObj.height = height;
-
-		return delta;
-	}
-
-	// Finalises the sizing of a node by calling editActionHandler
-	// with an editNode action.
-	endNodeSizing(node) {
-		let resizeObj = this.activePipeline.getNode(node.id);
-		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
-			resizeObj = this.snapToGridObject(resizeObj);
-		}
-
-		// If the dimensions or position has changed, issue the command.
-		// Note: x_pos or y_pos might change on resize if the node is sized
-		// upwards or to the left.
-		if (this.resizeObjInitialInfo.x_pos !== resizeObj.x_pos ||
-				this.resizeObjInitialInfo.y_pos !== resizeObj.y_pos ||
-				this.resizeObjInitialInfo.width !== resizeObj.width ||
-				this.resizeObjInitialInfo.height !== resizeObj.height) {
-			// Add the dimensions of the object being resized to the array of object infos.
-			this.nodeSizingObjectsInfo[resizeObj.id] = {
-				width: resizeObj.width,
-				height: resizeObj.height,
-				x_pos: resizeObj.x_pos,
-				y_pos: resizeObj.y_pos
-			};
-
-			// If the node has been resized set the resize properties appropriately.
-			// We use some padding because sometimes, when a node is sized back to its
-			// original dimensions, it isn't retunred to EXACTLY its default width/height.
-			if (resizeObj.height > resizeObj.layout.defaultNodeHeight + 2 ||
-					resizeObj.width > resizeObj.layout.defaultNodeWidth + 2) {
-				this.nodeSizingObjectsInfo[resizeObj.id].isResized = true;
-				this.nodeSizingObjectsInfo[resizeObj.id].resizeWidth = resizeObj.width;
-				this.nodeSizingObjectsInfo[resizeObj.id].resizeHeight = resizeObj.height;
-			}
-
-			this.canvasController.editActionHandler({
-				editType: "resizeObjects",
-				editSource: "canvas",
-				objectsInfo: this.nodeSizingObjectsInfo,
-				detachedLinksInfo: this.nodeSizingDetLinksInfo,
-				pipelineId: this.pipelineId
-			});
-		}
-		this.nodeSizing = false;
-		this.nodeSizingObjectsInfo = {};
-		this.nodeSizingDetLinksInfo = {};
-	}
-
-	// Finalises the sizing of a comment by calling editActionHandler
-	// with an editComment action.
-	endCommentSizing(comment) {
-		let resizeObj = this.activePipeline.getComment(comment.id);
-		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
-			resizeObj = this.snapToGridObject(resizeObj);
-		}
-
-		// If the dimensions or position has changed, issue the command.
-		// Note: x_pos or y_pos might change on resize if the node is sized
-		// upwards or to the left.
-		if (this.resizeObjInitialInfo.x_pos !== resizeObj.x_pos ||
-				this.resizeObjInitialInfo.y_pos !== resizeObj.y_pos ||
-				this.resizeObjInitialInfo.width !== resizeObj.width ||
-				this.resizeObjInitialInfo.height !== resizeObj.height) {
-			const commentSizingObjectsInfo = [];
-			commentSizingObjectsInfo[resizeObj.id] = {
-				width: resizeObj.width,
-				height: resizeObj.height,
-				x_pos: resizeObj.x_pos,
-				y_pos: resizeObj.y_pos
-			};
-
-			const data = {
-				editType: "resizeObjects",
-				editSource: "canvas",
-				objectsInfo: commentSizingObjectsInfo,
-				detachedLinksInfo: {}, // Comments cannot have detached links
-				pipelineId: this.pipelineId
-			};
-			this.canvasController.editActionHandler(data);
-		}
-		this.commentSizing = false;
-	}
-
+	// Displays all the links on the canvas either by creating new links,
+	// updating existing links or removing unwanted links.
 	displayLinks() {
-		this.logger.logStartTimer("displayLinks " + this.getFlags());
+		this.logger.logStartTimer("displayLinks");
 
-		if (this.selecting) {
-			this.displayLinksSelectionStatus();
+		const linksArray = this.buildLinksArray();
+		const selection = this.getAllLinkGroupsSelection();
+		this.displayLinksSubset(selection, linksArray);
 
-		} else {
-			this.displayAllLinks();
-		}
-
-		this.logger.logEndTimer("displayLinks " + this.getFlags());
+		this.logger.logEndTimer("displayLinks");
 	}
 
 	displayLinksSelectionStatus() {
+		this.logger.logStartTimer("displayLinksSelectionStatus");
+
 		if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 			this.getAllLinkGroupsSelection()
-				.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null));
-
-			this.superRenderers.forEach((renderer) => {
-				renderer.selecting = true;
-				renderer.displayLinks();
-				renderer.selecting = false;
-			});
+				.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? true : null));
 		}
+
+		this.logger.logEndTimer("displayLinksSelectionStatus");
 	}
 
-	displayAllLinks() {
-		var startTimeDrawingLines = Date.now();
+	displayMovedLinks() {
+		this.logger.logStartTimer("displayMovedLinks");
 
-		const timeAfterDelete = Date.now();
 		const linksArray = this.buildLinksArray();
-		const afterLineArray = Date.now();
+		const movedLinks = linksArray.filter((l) => l.coordsUpdated);
 
-		this.getAllLinkGroupsSelection()
+		movedLinks.forEach((l) => {
+			this.displaySingleLink(l);
+		});
+
+		this.logger.logEndTimer("displayMovedLinks");
+	}
+
+	displaySingleLink(link) {
+		const selection = this.getLinkGroupSelectionById(link.id);
+		this.displayLinksSubset(selection, [link]);
+	}
+
+	displayLinksSubset(selection, linksArray) {
+		selection
 			.data(linksArray, (link) => link.id)
 			.join(
 				(enter) => this.createLinks(enter)
 			)
 			.attr("class", (d) => this.getLinkGroupClass(d))
 			.attr("style", (d) => this.getLinkGrpStyle(d))
-			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null))
+			.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? true : null))
 			.call((joinedLinkGrps) => {
 				this.updateLinks(joinedLinkGrps, linksArray);
 			});
-
-		var endTimeDrawingLines = Date.now();
-
-		if (showLinksTime) {
-			this.logger.log("displayLinks R " + (timeAfterDelete - startTimeDrawingLines) +
-			" B " + (afterLineArray - timeAfterDelete) + " D " + (endTimeDrawingLines - afterLineArray));
-		}
 	}
 
 	// Creates all newly created links specified in the enter selection.
 	createLinks(enter) {
+		this.logger.logStartTimer("createLinks");
 		// Add groups for links
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
@@ -5831,6 +4038,8 @@ export default class SVGCanvasRenderer {
 				});
 		}
 
+		this.logger.logEndTimer("createLinks");
+
 		return newLinkGrps;
 	}
 
@@ -5838,6 +4047,7 @@ export default class SVGCanvasRenderer {
 	// selection object. The selection object will contain newly created links
 	// as well as existing links.
 	updateLinks(joinedLinkGrps, lineArray) {
+		this.logger.logStartTimer("updateLinks");
 		// Update link selection area
 		joinedLinkGrps
 			.selectAll(".d3-link-selection-area")
@@ -5883,9 +4093,11 @@ export default class SVGCanvasRenderer {
 			});
 		}
 
-		if (!this.dragging) {
+		if (!this.isMoving() && !this.isSizing()) {
 			this.setDisplayOrder(joinedLinkGrps);
 		}
+
+		this.logger.logEndTimer("updateLinks");
 	}
 
 	attachLinkGroupListeners(linkGrps) {
@@ -5896,9 +4108,9 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing();
 				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-					this.selectObjectD3Event(d3Event, d);
+					this.selectObjectD3Event(d3Event, d, "link");
 				}
-				d3Event.stopPropagation();
+				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
 			})
 			.on("mouseup", () => {
 				this.logger.log("Link Group - mouse up");
@@ -5910,11 +4122,15 @@ export default class SVGCanvasRenderer {
 			.on("contextmenu", (d3Event, d) => {
 				this.logger.log("Link Group - context menu");
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-					this.selectObjectD3Event(d3Event, d);
+					this.selectObjectD3Event(d3Event, d, "link");
 				}
 				this.openContextMenu(d3Event, "link", d);
 			})
 			.on("mouseenter", (d3Event, link) => {
+				if (this.isDragging()) {
+					return;
+				}
+
 				const targetObj = d3Event.currentTarget;
 
 				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
@@ -5923,16 +4139,30 @@ export default class SVGCanvasRenderer {
 				}
 				this.setLinkLineStyles(targetObj, link, "hover");
 
-				if (this.canOpenTip(TIP_TYPE_LINK) &&
-						!this.draggingLinkData) {
-					this.canvasController.openTip({
-						id: this.getId("link_tip", link.id),
-						type: TIP_TYPE_LINK,
-						targetObj: targetObj,
-						mousePos: { x: d3Event.clientX, y: d3Event.clientY },
-						pipelineId: this.activePipeline.id,
-						link: link
-					});
+				if (this.config.enableContextToolbar) {
+					this.addContextToolbar(d3Event, link, "link");
+				}
+			})
+			// This will be called when the mouse cursor enters the link or moves out of
+			// child elements of the link. Some child elements, like decorations, may have
+			// their own tooltips so this will redisplay the link tooltip on exiting the decoration.
+			.on("mouseover", (d3Event, link) => {
+				d3Event.stopPropagation(); // Stop propagation in case we are in a sub-flow
+				if (this.canOpenTip(TIP_TYPE_LINK)) {
+					const tipId = this.canvasController.getTipId(); // Id of current tip or null
+					const linkTipId = this.getId("link_tip", link.id);
+
+					if (tipId === null || tipId !== linkTipId) {
+						this.canvasController.closeTip();
+						this.canvasController.openTip({
+							id: linkTipId,
+							type: TIP_TYPE_LINK,
+							targetObj: d3Event.currentTarget,
+							mousePos: { x: d3Event.clientX, y: d3Event.clientY },
+							pipelineId: this.activePipeline.id,
+							link: link
+						});
+					}
 				}
 			})
 			.on("mouseleave", (d3Event, link) => {
@@ -5943,48 +4173,30 @@ export default class SVGCanvasRenderer {
 				}
 				this.setLinkLineStyles(targetObj, link, "default");
 				this.canvasController.closeTip();
+
+				if (this.config.enableContextToolbar) {
+					this.removeContextToolbar();
+				}
 			});
 	}
 
 	// Creates a new start handle and a new end handle for the link groups
 	// passed in.
 	createNewHandles(handlesGrp) {
-		const startHandle = handlesGrp
+		handlesGrp
 			.append(this.canvasLayout.linkStartHandleObject)
 			.attr("class", (d) => "d3-link-handle-start")
-			// Use mouse down instead of click because it gets called before drag start.
-			.on("mousedown", (d3Event, d) => {
-				this.logger.log("Link start handle - mouse down");
-				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d);
-				}
-				this.logger.log("Link end handle - finished mouse down");
-			});
+			.call(this.attachStartHandleListeners.bind(this));
 
-		if (this.config.enableEditingActions) {
-			startHandle.call(this.dragSelectionHandle);
-		}
-
-		const endHandle = handlesGrp
+		handlesGrp
 			.append(this.canvasLayout.linkEndHandleObject)
 			.attr("class", (d) => "d3-link-handle-end")
-			// Use mouse down instead of click because it gets called before drag start.
-			.on("mousedown", (d3Event, d) => {
-				this.logger.log("Link end handle - mouse down");
-				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d);
-				}
-				this.logger.log("Link end handle - finished mouse down");
-			});
-
-		if (this.config.enableEditingActions) {
-			endHandle.call(this.dragSelectionHandle);
-		}
+			.call(this.attachEndHandleListeners.bind(this));
 	}
 
 	// Updates the start and end link handles for the handle groups passed in.
 	updateHandles(handlesGrp, lineArray) {
-		handlesGrp
+		const startHandle = handlesGrp
 			.selectAll(".d3-link-handle-start")
 			.datum((d) => this.activePipeline.getLink(d.id))
 			.each((datum, index, linkHandles) => {
@@ -6005,7 +4217,15 @@ export default class SVGCanvasRenderer {
 				}
 			});
 
-		handlesGrp
+		// Add or remove drag behavior as appropriate
+		if (this.config.enableEditingActions) {
+			const handler = this.dragDetLinkUtils.getDragDetachedLinkHandler();
+			startHandle.call(handler);
+		} else {
+			startHandle.on(".drag", null);
+		}
+
+		const endHandle = handlesGrp
 			.selectAll(".d3-link-handle-end")
 			.datum((d) => this.activePipeline.getLink(d.id))
 			.each((datum, index, linkHandles) => {
@@ -6025,6 +4245,40 @@ export default class SVGCanvasRenderer {
 						.attr("cx", (d) => d.x2)
 						.attr("cy", (d) => d.y2);
 				}
+			});
+
+		// Add or remove drag behavior as appropriate
+		if (this.config.enableEditingActions) {
+			const handler = this.dragDetLinkUtils.getDragDetachedLinkHandler();
+			endHandle.call(handler);
+		} else {
+			endHandle.on(".drag", null);
+		}
+	}
+
+	// Attaches any required event listeners to the start handles of the links.
+	attachStartHandleListeners(startHandles) {
+		startHandles
+			// Use mouse down instead of click because it gets called before drag start.
+			.on("mousedown", (d3Event, d) => {
+				this.logger.log("Link start handle - mouse down");
+				if (!this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, d, "link");
+				}
+				this.logger.log("Link end handle - finished mouse down");
+			});
+	}
+
+	// Attaches any required event listeners to the end handles of the links.
+	attachEndHandleListeners(endHandles) {
+		endHandles
+			// Use mouse down instead of click because it gets called before drag start.
+			.on("mousedown", (d3Event, d) => {
+				this.logger.log("Link end handle - mouse down");
+				if (!this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, d, "link");
+				}
+				this.logger.log("Link end handle - finished mouse down");
 			});
 	}
 
@@ -6052,7 +4306,12 @@ export default class SVGCanvasRenderer {
 
 	// Returns the class string to be appled to the link group object.
 	getLinkGroupClass(d) {
-		return "d3-link-group " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
+		return "d3-link-group " + this.getLinkTypeClass(d) + " " + this.getLinkBranchHighlightCLass(d) + " " + this.getLinkCustomClass(d);
+	}
+
+	// Returns the class to be used for branch highlighting if the branchHighlight flag id set for the link.
+	getLinkBranchHighlightCLass(d) {
+		return (d.branchHighlight ? "d3-branch-highlight" : "");
 	}
 
 	// Returns the custom class string for the link object passed in.
@@ -6107,7 +4366,8 @@ export default class SVGCanvasRenderer {
 
 	// Returns the class string to be appled to the node group object.
 	getNodeGroupClass(d) {
-		let customClass = "";
+		let customClass = " " + d.layout.className || "";
+
 		// If the node has a classname that isn't the default use it!
 		if (d.class_name &&
 				d.class_name !== "canvas-node" &&
@@ -6129,7 +4389,9 @@ export default class SVGCanvasRenderer {
 			? " d3-resized"
 			: "";
 
-		return "d3-node-group" + supernodeClass + resizeClass + draggableClass + customClass;
+		const branchHighlightClass = d.branchHighlight ? " d3-branch-highlight" : "";
+
+		return "d3-node-group" + supernodeClass + resizeClass + draggableClass + branchHighlightClass + customClass;
 	}
 
 	// Pushes the links to be below nodes within the nodesLinksGrp group.
@@ -6145,12 +4407,26 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	// Raises the node, specified by the node ID, above other nodes and objects.
+	// Called by external utils.
+	raiseNodeToTopById(nodeId) {
+		this.getNodeGroupSelectionById(nodeId).raise();
+	}
+
 	// Raises the node above other nodes and objects (on the mouse entering
 	// the node). This is necessary for apps that have ports that protrude from
 	// the side of the node and where those nodes may be positioned close to each
-	// other so it makes the ports appear on top of any adjacent node.
+	// other so it makes the ports appear on top of any adjacent node. We don't
+	// raise the nodes for various conditions:
+	// * The enableRaiseNodesToTopOnHover config option is set to false
+	// * We are currently dragging to create a new link, or to move objects or detached links
+	// * There are one or more selected links
+	// * We are editing text
 	raiseNodeToTop(nodeGrp) {
-		if (this.drawingNewLinkData === null && !this.dragging && this.getSelectedLinks().length === 0) {
+		if (this.config.enableRaiseNodesToTopOnHover &&
+			!this.isDragging() &&
+			this.activePipeline.getSelectedLinksCount() === 0 &&
+			!this.isEditingText()) {
 			nodeGrp.raise();
 		}
 	}
@@ -6179,11 +4455,9 @@ export default class SVGCanvasRenderer {
 		return link.decorations && link.decorations.length > 0;
 	}
 
-	isLinkBeingDragged(link) {
-		return this.draggingLinkData && this.draggingLinkData.link.id === link.id;
-	}
-
 	buildLinksArray() {
+		this.logger.logStartTimer("buildLinksArray");
+
 		let linksArray = [];
 
 		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
@@ -6193,8 +4467,9 @@ export default class SVGCanvasRenderer {
 		this.activePipeline.links.forEach((link) => {
 			let linkObj = null;
 
-			if (((this.config.enableLinkSelection === LINK_SELECTION_HANDLES && this.isLinkBeingDragged(link)) ||
-						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) &&
+			if (((this.config.enableLinkSelection === LINK_SELECTION_HANDLES &&
+					this.dragDetLinkUtils.isLinkBeingDragged(link)) ||
+					this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) &&
 					(!link.srcObj || !link.trgNode)) {
 				linkObj = this.getDetachedLineObj(link);
 
@@ -6214,6 +4489,8 @@ export default class SVGCanvasRenderer {
 
 		// Add connection path info to the links.
 		linksArray = this.linkUtils.addConnectionPaths(linksArray);
+
+		this.logger.logEndTimer("buildLinksArray");
 
 		return linksArray;
 	}
@@ -6245,9 +4522,14 @@ export default class SVGCanvasRenderer {
 					: null;
 			const coords = this.linkUtils.getLinkCoords(link, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation);
 
+			// Set additional calculated fields on link object.
+			link.coordsUpdated =
+				link.x1 !== coords.x1 ||
+				link.y1 !== coords.y1 ||
+				link.x2 !== coords.x2 ||
+				link.y2 !== coords.y2;
+
 			link.assocLinkVariation = assocLinkVariation;
-			link.srcPortId = srcPortId;
-			link.trgPortId = trgPortId;
 			link.x1 = coords.x1;
 			link.y1 = coords.y1;
 			link.x2 = coords.x2;
@@ -6315,8 +4597,13 @@ export default class SVGCanvasRenderer {
 			}
 		}
 
-		link.srcPortId = srcPortId;
-		link.trgPortId = trgPortId;
+		// Set additional calculated fields on link object.
+		link.coordsUpdated =
+			link.x1 !== coords.x1 ||
+			link.y1 !== coords.y1 ||
+			link.x2 !== coords.x2 ||
+			link.y2 !== coords.y2;
+
 		link.x1 = coords.x1;
 		link.y1 = coords.y1;
 		link.x2 = coords.x2;
@@ -6370,9 +4657,15 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns true if a link should be displayed and false if not. The link
-	// should not be displayed if the displayLinkOnOverlap flag is false and the
-	// nodes are overlapping.
+	// should not be displayed if:
+	// * it is a comment link and comment links are switched off (comments are hiding)
+	// * the displayLinkOnOverlap flag is false and the objects at each end of
+	//   the link are overlapping.
 	shouldDisplayLink(srcNode, trgNode, linkType) {
+		if (linkType === COMMENT_LINK && this.canvasInfo.hideComments) {
+			return false;
+		}
+
 		if (this.canvasLayout.displayLinkOnOverlap === false) {
 			return !this.areLinkedObjectsOverlapping(srcNode, trgNode, linkType);
 		}
@@ -6731,7 +5024,8 @@ export default class SVGCanvasRenderer {
 	// "Curve" link to make it look presentable. I know, I tried!
 	getArrowHeadTransform(d) {
 		const angle =
-			this.canvasLayout.linkType === LINK_TYPE_ELBOW
+			this.canvasLayout.linkType === LINK_TYPE_ELBOW ||
+			this.canvasLayout.linkType === LINK_TYPE_CURVE
 				? this.getAngleBasedOnLinkDirection()
 				: Math.atan2((d.y2 - d.y1), (d.x2 - d.x1)) * (180 / Math.PI);
 
@@ -6751,52 +5045,26 @@ export default class SVGCanvasRenderer {
 		return 0;
 	}
 
-	getSelectedNodesAndComments() {
-		var objs = [];
-		this.activePipeline.nodes.forEach((node) => {
-			if (this.objectModel.getSelectedObjectIds().includes(node.id)) {
-				objs.push(node);
-			}
-		});
-
-		this.activePipeline.comments.forEach((comment) => {
-			if (this.objectModel.getSelectedObjectIds().includes(comment.id)) {
-				objs.push(comment);
-			}
-		});
-		return objs;
-	}
-
-	getSelectedLinks() {
-		var objs = [];
-		this.activePipeline.links.forEach((link) => {
-			if (this.objectModel.getSelectedObjectIds().includes(link.id)) {
-				objs.push(link);
-			}
-		});
-		return objs;
-	}
-
 	canOpenTip(tipType) {
 		return this.canvasController.isTipEnabled(tipType) &&
-			!this.selecting && !this.regionSelect && !this.dragging &&
-			!this.commentSizing && !this.nodeSizing && !this.drawingNewLinkData;
+			!this.regionSelect && !this.isDragging() && !this.isSizing();
 	}
 
-	// Return the x,y coordinates of the svg group relative to the window's viewport
-	// This is used when a new comment is created from the toolbar to make sure the
-	// new comment always appears in the view port.
+	// Return the x,y coordinates for the default position of a new comment
+	// created from the toolbar. This make sure the new comment always appears
+	// in the top left corner of the view port.
 	getDefaultCommentOffset() {
 		let xPos = this.canvasLayout.addCommentOffsetX;
 		let yPos = this.canvasLayout.addCommentOffsetY;
+		const z = this.zoomUtils.getZoomTransform();
 
-		if (this.zoomTransform) {
-			xPos = this.zoomTransform.x / this.zoomTransform.k;
-			yPos = this.zoomTransform.y / this.zoomTransform.k;
+		if (z) {
+			const xPanByScale = z.x / z.k;
+			const yPanByScale = z.y / z.k;
 
-			// The window's viewport is in the opposite direction of zoomTransform
-			xPos = -xPos + this.canvasLayout.addCommentOffsetX;
-			yPos = -yPos + this.canvasLayout.addCommentOffsetY;
+			// Offset in the negative direction.
+			xPos = -xPanByScale + this.canvasLayout.addCommentOffsetX;
+			yPos = -yPanByScale + this.canvasLayout.addCommentOffsetY;
 		}
 
 		if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING ||
@@ -6809,20 +5077,11 @@ export default class SVGCanvasRenderer {
 	// Returns a string that explains which flags are set to true.
 	getFlags() {
 		let str = "Flags:";
-		if (this.dragging) {
+		if (this.isDragging()) {
 			str += " dragging = true";
 		}
-		if (this.nodeSizing) {
-			str += " nodeSizing = true";
-		}
-		if (this.commentSizing) {
-			str += " commentSizing = true";
-		}
-		if (this.movingBindingNodes) {
-			str += " movingBindingNodes = true";
-		}
-		if (this.selecting) {
-			str += " selecting = true";
+		if (this.isSizing()) {
+			str += " sizing = true";
 		}
 		if (this.regionSelect) {
 			str += " regionSelect = true";

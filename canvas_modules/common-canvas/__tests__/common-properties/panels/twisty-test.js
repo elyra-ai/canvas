@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,23 +33,23 @@ describe("twisty panel renders correctly", () => {
 
 	it("should have displayed the twisty panel with first panel closed and 2nd panel open", () => {
 		const twisty = wrapper.find("div[data-id='properties-TwistyPanel1']");
-		expect(twisty.find("li.bx--accordion__item")).to.have.length(1);
-		expect(twisty.find("li.bx--accordion__item--active")).to.have.length(0);
+		expect(twisty.find("li.cds--accordion__item")).to.have.length(1);
+		expect(twisty.find("li.cds--accordion__item--active")).to.have.length(0);
 
 		const tableTwisty = wrapper.find("div[data-id='properties-TableTwisty']");
-		expect(tableTwisty.find("li.bx--accordion__item")).to.have.length(1);
-		expect(tableTwisty.find("li.bx--accordion__item--active")).to.have.length(1);
+		expect(tableTwisty.find("li.cds--accordion__item")).to.have.length(1);
+		expect(tableTwisty.find("li.cds--accordion__item--active")).to.have.length(1);
 	});
 
 	it("should expand content when twisty panel link clicked", () => {
 		let twisty = wrapper.find("div[data-id='properties-TwistyPanel1']");
-		expect(twisty.find("li.bx--accordion__item")).to.have.length(1);
-		expect(twisty.find("li.bx--accordion__item--active")).to.have.length(0);
-		const twistyButton = twisty.find("button.bx--accordion__heading");
+		expect(twisty.find("li.cds--accordion__item")).to.have.length(1);
+		expect(twisty.find("li.cds--accordion__item--active")).to.have.length(0);
+		const twistyButton = twisty.find("button.cds--accordion__heading");
 		twistyButton.simulate("click");
 		twisty = wrapper.find("div[data-id='properties-TwistyPanel1']");
-		expect(twisty.find("li.bx--accordion__item")).to.have.length(1);
-		expect(twisty.find("li.bx--accordion__item--active")).to.have.length(1);
+		expect(twisty.find("li.cds--accordion__item")).to.have.length(1);
+		expect(twisty.find("li.cds--accordion__item--active")).to.have.length(1);
 	});
 });
 
@@ -85,7 +85,7 @@ describe("twisty panel visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "twisty-panel1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "numberfield1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "numberfield2" })).to.equal("disabled");
-		expect(twistyPanel.find("li.bx--accordion__item--disabled")).to.have.length(1);
+		expect(twistyPanel.find("li.cds--accordion__item--disabled")).to.have.length(1);
 
 
 		// can also disable a twisty that is opened
@@ -97,8 +97,8 @@ describe("twisty panel visible and enabled conditions work correctly", () => {
 			.at(0)
 			.simulate("click");
 		twistyPanel = wrapper.find("div[data-id='properties-twisty-panel1']");
-		expect(twistyPanel.find("li.bx--accordion__item")).to.have.length(1);
-		expect(twistyPanel.find("li.bx--accordion__item--active")).to.have.length(1);
+		expect(twistyPanel.find("li.cds--accordion__item")).to.have.length(1);
+		expect(twistyPanel.find("li.cds--accordion__item--active")).to.have.length(1);
 
 		const numberfields = twistyPanel.find("input[type='number']");
 		expect(numberfields).to.have.length(2);
@@ -113,7 +113,7 @@ describe("twisty panel visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "twisty-panel1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "numberfield1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "numberfield2" })).to.equal("disabled");
-		expect(twistyPanel.find("li.bx--accordion__item--disabled")).to.have.length(1);
+		expect(twistyPanel.find("li.cds--accordion__item--disabled")).to.have.length(1);
 
 	});
 
@@ -142,8 +142,8 @@ describe("twisty panel visible and enabled conditions work correctly", () => {
 			.at(0)
 			.simulate("click");
 		twistyPanel = wrapper.find("div[data-id='properties-twisty-panel2']");
-		expect(twistyPanel.find("li.bx--accordion__item")).to.have.length(1);
-		expect(twistyPanel.find("li.bx--accordion__item--active")).to.have.length(1);
+		expect(twistyPanel.find("li.cds--accordion__item")).to.have.length(1);
+		expect(twistyPanel.find("li.cds--accordion__item--active")).to.have.length(1);
 		const numberfield = twistyPanel.find("input[type='number']");
 		expect(numberfield).to.have.length(1);
 		expect(controller.getPanelState({ name: "twisty-panel2" })).to.equal("visible");

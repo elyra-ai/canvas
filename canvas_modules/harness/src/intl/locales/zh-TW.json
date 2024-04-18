@@ -1,5 +1,8 @@
 {
   "dialog.nodePropertiesTitle": "節點內容",
   "canvas.emptyText": "歡迎使用「共用畫布」測試工具。{br}您的流程是空的！",
-  "canvas.emptyLink": "請按一下這裡以進行導覽"
+  "canvas.emptyLink": "請按一下這裡以進行導覽",
+  "expression.value.column": "自訂值",
+  "expression.value.column.description": "從應用程式測試自訂說明",
+  "expression.field.column.description": "自訂說明"
 }

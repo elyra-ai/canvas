@@ -170,6 +170,49 @@
 				"Canadian"
 			]
 		],
+		"ST_mse_table_II": [
+			[
+				"Age",
+				true,
+				"Soccer",
+				"Don't show",
+				false,
+				"American",
+				[
+					"a",
+					"b",
+					"c"
+				]
+			],
+			[
+				"BP",
+				false,
+				"Football",
+				"Don't show",
+				false,
+				"American",
+				[]
+			],
+			[
+				"K",
+				false,
+				"Soccer",
+				"Don't show",
+				true,
+				"Canadian",
+				[
+					"1"
+				]
+			],
+			[
+				"K",
+				true,
+				"Soccer",
+				"Don't show",
+				true,
+				"Canadian"
+			]
+		],
 		"structuretableCustomIconButtons": [
 			[
 				0,
@@ -418,6 +461,12 @@
 		{
 			"id": "ST_mse_table",
 			"type": "map[string, ST_mse_table]",
+			"role": "column",
+			"default": []
+		},
+		{
+			"id": "ST_mse_table_II",
+			"type": "map[string, ST_mse_table_II]",
 			"role": "column",
 			"default": []
 		},
@@ -844,6 +893,52 @@
 						"Soccer"
 					],
 					"default": "Soccer"
+				},
+				{
+					"id": "dummy_entry_invisble",
+					"type": "string",
+					"default": "Don't show"
+				},
+				{
+					"id": "checkit",
+					"type": "boolean"
+				},
+				{
+					"id": "sometext",
+					"type": "string",
+					"default": "Type something here..."
+				},
+				{
+					"id": "anArray",
+					"type": "array[string]",
+					"default": [
+						"One",
+						"Two"
+					]
+				}
+			]
+		},
+		{
+			"id": "ST_mse_table_II",
+			"key_definition": {
+				"id": "field",
+				"type": "string",
+				"role": "column"
+			},
+			"parameters": [
+				{
+					"id": "override",
+					"type": "boolean",
+					"default": false
+				},
+				{
+					"id": "dummy_entry_sport_name",
+					"enum": [
+						"Football",
+						"Soccer",
+						"Basketball",
+						"Baseball"
+					]
 				},
 				{
 					"id": "dummy_entry_invisble",
@@ -1428,6 +1523,18 @@
 			},
 			{
 				"parameter_ref": "ST_mse_table",
+				"label": {
+					"default": "Test Multi-select Edit in a structure table control"
+				},
+				"control": "structuretable",
+				"description": {
+					"default": "If 'Text' field is 'European' then 'Sport' will not be allowed to change to 'Football'.",
+					"placement": "on_panel"
+				},
+				"rows": -1
+			},
+			{
+				"parameter_ref": "ST_mse_table_II",
 				"label": {
 					"default": "Test Multi-select Edit in a structure table control"
 				},
@@ -2171,6 +2278,77 @@
 							"/images/down-triangle.svg"
 						],
 						"summary": true
+					},
+					{
+						"parameter_ref": "dummy_entry_invisble",
+						"label": {
+							"default": "Invisible Field"
+						},
+						"width": 10,
+						"edit_style": "inline",
+						"visible": false
+					},
+					{
+						"parameter_ref": "checkit",
+						"label": {
+							"resource_key": "ST_mse_table.checkit.label"
+						},
+						"width": 5,
+						"edit_style": "inline"
+					},
+					{
+						"parameter_ref": "sometext",
+						"label": {
+							"resource_key": "ST_mse_table.sometext.label"
+						},
+						"width": 12,
+						"edit_style": "inline",
+						"summary": true
+					},
+					{
+						"parameter_ref": "anArray",
+						"label": {
+							"default": "String Array"
+						},
+						"width": 12,
+						"edit_style": "inline",
+						"summary": true
+					}
+				]
+			},
+			{
+				"complex_type_ref": "ST_mse_table_II",
+				"row_selection": "multiple-edit",
+				"key_definition": {
+					"parameter_ref": "field",
+					"width": 10,
+					"label": {
+						"resource_key": "ST_mse_table.field.label"
+					},
+					"summary": true,
+					"filterable": true
+				},
+				"parameters": [
+					{
+						"parameter_ref": "override",
+						"label": {
+							"resource_key": "ST_mse_table.override.label"
+						},
+						"width": 6,
+						"edit_style": "inline"
+					},
+					{
+						"parameter_ref": "dummy_entry_sport_name",
+						"label": {
+							"resource_key": "ST_mse_table.dummy_entry_sport_name.label"
+						},
+						"control": "oneofselect",
+						"width": 8,
+						"edit_style": "inline",
+						"summary": true,
+						"place_holder_text": {
+							"resource_key": "ST_mse_table.dummy_entry_sport_name.placeholder"
+						}
 					},
 					{
 						"parameter_ref": "dummy_entry_invisble",
@@ -3214,6 +3392,25 @@
 						]
 					},
 					{
+						"id": "ST_mse_table_II-summary-panel",
+						"label": {
+							"default": "MSE Structure Table II"
+						},
+						"type": "summaryPanel",
+						"group_info": [
+							{
+								"id": "ST_mse_table_II_id",
+								"type": "columnSelection",
+								"label": {
+									"default": "Columns"
+								},
+								"parameter_refs": [
+									"ST_mse_table_II"
+								]
+							}
+						]
+					},
+					{
 						"id": "structuretableCustomIconButtons-summary-panel",
 						"label": {
 							"default": "Configure Custom Table Buttons"
@@ -3815,6 +4012,7 @@
 		"ST_mse_table.field.label": "Field",
 		"ST_mse_table.override.label": "Override",
 		"ST_mse_table.dummy_entry_sport_name.label": "Sport",
+		"ST_mse_table.dummy_entry_sport_name.placeholder": "Select",
 		"ST_mse_table.checkit.label": "Check",
 		"ST_mse_table.sometext.label": "Text",
 		"ST_mse_table.dummy_entry_sport_name.Football.label": "Football",

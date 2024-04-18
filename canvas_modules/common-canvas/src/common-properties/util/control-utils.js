@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 import { v4 as uuid4 } from "uuid";
-import { TRUNCATE_LIMIT } from "../constants/constants";
+import { TRUNCATE_LIMIT, DEFAULT_DATEPICKER_FORMAT, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
+import { ControlType } from "../constants/form-constants";
 
 /**
 * Used to return a unique id for a control that requires an html id
@@ -110,6 +111,19 @@ function getValidationProps(messageInfo, inTable) {
 	return validationProps;
 }
 
+// Get the format of the date/time control
+function getDateTimeFormat(control) {
+	let dtFormat;
+	if (control.controlType === ControlType.DATEPICKER || control.controlType === ControlType.DATEPICKERRANGE) {
+		dtFormat = (control.dateFormat) ? control.dateFormat : DEFAULT_DATEPICKER_FORMAT;
+	} else if (control.controlType === ControlType.DATEFIELD) {
+		dtFormat = (control.dateFormat) ? control.dateFormat : DEFAULT_DATE_FORMAT;
+	} else { // time
+		dtFormat = (control.timeFormat) ? control.timeFormat : DEFAULT_TIME_FORMAT;
+	}
+	return dtFormat;
+}
+
 export {
 	getCharLimit,
 	getControlId,
@@ -117,5 +131,6 @@ export {
 	splitNewlines,
 	joinNewlines,
 	truncateDisplayValue,
-	getValidationProps
+	getValidationProps,
+	getDateTimeFormat
 };

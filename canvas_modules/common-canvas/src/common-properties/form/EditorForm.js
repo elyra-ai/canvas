@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 import { Control } from "./ControlInfo";
 import { UIItem } from "./UIItem";
 import { GroupType, PanelType, Type, ControlType, ParamRole, ORIENTATIONS } from "../constants/form-constants";
+import { CONTAINER_TYPE } from "../constants/constants";
 import logger from "../../../utils/logger";
 import { StructureDef } from "./StructureInfo";
 import { Action } from "./ActionInfo";
@@ -130,12 +131,17 @@ class NumberGenerator {
 /**
  * Creates tab based on parameter definition
  */
-function makePrimaryTab(propertyDef, group, l10nProvider) {
+function makePrimaryTab(propertyDef, group, l10nProvider, containerType) {
 	const label = l10nProvider.l10nLabel(group, group.name);
-	return new EditorTab(label, group.name, _makeUIItem(propertyDef.parameterMetadata, propertyDef.actionMetadata, group, propertyDef.structureMetadata, l10nProvider));
+	const additionalInfo = {
+		light: true,
+		containerType
+	};
+	return new EditorTab(label, group.name,
+		_makeUIItem(propertyDef.parameterMetadata, propertyDef.actionMetadata, group, propertyDef.structureMetadata, l10nProvider, additionalInfo));
 }
 
-function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, light = false) {
+function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo) {
 	const groupName = group.name;
 	let groupItem = null;
 	let groupLabel = null;
@@ -144,13 +150,13 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	switch (group.groupType()) {
 	case GroupType.CONTROLS:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName, nestedPanel,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, light)));
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo)));
 	case GroupType.COLUMN_SELECTION:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, groupClassName, nestedPanel,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo)));
 	case GroupType.ADDITIONAL: {
 		const panel = new ControlPanel(groupName, PanelType.GENERAL, groupClassName, nestedPanel,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider));
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo));
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
 		return UIItem.makeAdditionalLink(groupLabel, groupLabel, panel);
 	}
@@ -160,7 +166,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
 				const subGroupName = subGroup.name;
-				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, additionalInfo);
 				groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
 				subTabItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 			});
@@ -169,14 +175,14 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	}
 	case GroupType.PANEL_SELECTOR: {
 		// Defines a sub-tab group where each child group represents a sub-tab.
-		const panSelSubItems = _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, structureMetadata, l10nProvider);
+		const panSelSubItems = _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, structureMetadata, l10nProvider, additionalInfo);
 		return UIItem.makePanelSelector(groupName, panSelSubItems, group.dependsOn, groupClassName);
 	}
 	case GroupType.PANELS: {
 		const panSubItems = [];
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
-				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, additionalInfo);
 				panSubItems.push(groupItem);
 			});
 		}
@@ -186,7 +192,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		const panSubItems = [];
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
-				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, additionalInfo);
 				panSubItems.push(groupItem);
 			});
 		}
@@ -200,7 +206,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		const panSubItems = [];
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
-				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, additionalInfo);
 				panSubItems.push(groupItem);
 			});
 		}
@@ -232,7 +238,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		const panSubItems = [];
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
-				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, additionalInfo);
 				panSubItems.push(groupItem);
 			});
 		}
@@ -247,7 +253,8 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		const panSubItems = [];
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
-				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, true);
+				const additionalInfoUpdated = Object.assign({}, additionalInfo, { light: false });
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, additionalInfoUpdated);
 				panSubItems.push(groupItem);
 			});
 		}
@@ -262,7 +269,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 /**
  * Called on a base property group.
  */
-function _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, light = false) {
+function _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo) {
 	const uiItems = [];
 	const panelInsertedFor = [];
 	if (!Array.isArray(group.parameterNames())) {
@@ -276,7 +283,7 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 			structureDef = structureMetadata.getStructure(prop.baseType());
 		}
 		if (!(group instanceof StructureDef) || (group instanceof StructureDef && prop.isSubPanelEdit())) {
-			const ctrl = _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata, structureMetadata, null, light);
+			const ctrl = _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata, structureMetadata, null, additionalInfo);
 			const control = UIItem.makeControl(ctrl);
 			if (prop.separatorBefore()) {
 				uiItems.push(UIItem.makeHSeparator());
@@ -308,7 +315,7 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 							group.subGroups[i].dependsOn === control.control.name) {
 						panelInsertedFor.push(group.subGroups[i].dependsOn);
 						control.additionalItems =
-							_genPanelSelectorPanels(group.subGroups[i], parameterMetadata, actionMetadata, structureMetadata, l10nProvider);
+							_genPanelSelectorPanels(group.subGroups[i], parameterMetadata, actionMetadata, structureMetadata, l10nProvider, additionalInfo);
 					}
 				}
 			}
@@ -320,7 +327,7 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 	if (Array.isArray(group.subGroups)) {
 		group.subGroups.forEach(function(subGroup) {
 			if (!_hasPanelBeenInserted(panelInsertedFor, subGroup.dependsOn)) {
-				const uiItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, light);
+				const uiItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, additionalInfo);
 				uiItems.push(uiItem);
 			}
 		});
@@ -347,12 +354,12 @@ function _hasPanelBeenInserted(panelInsertedFor, dependsOn) {
  * and its ID. The ID is subsequently used by the radioset control to decide
  * which panel is displayed with which radio button.
  */
-function _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, structureMetadata, l10nProvider) {
+function _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, structureMetadata, l10nProvider, additionalInfo) {
 	const panSelSubItems = [];
 	if (Array.isArray(group.subGroups)) {
 		group.subGroups.forEach(function(subGroup) {
 			const subGroupName = subGroup.name;
-			const groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+			const groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, additionalInfo);
 			const groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
 			panSelSubItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 		});
@@ -415,7 +422,7 @@ function _makeStringControl(parameter, isSubControl) {
 /**
  * Creates a control for the supplied property.
  */
-function _makeControl(parameterMetadata, paramName, group, structureDefinition, l10nProvider, actionMetadata, structureMetadata, subControl, light = false) {
+function _makeControl(parameterMetadata, paramName, group, structureDefinition, l10nProvider, actionMetadata, structureMetadata, subControl, additionalInfo) {
 	const isSubControl = typeof subControl !== "undefined" && subControl;
 
 	// Assume the property is defined
@@ -483,7 +490,11 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 			break;
 		case Type.DATE:
 			role = Type.DATE;
-			if (parameter.isList()) {
+			if (parameter.control === ControlType.DATEPICKER) {
+				controlType = ControlType.DATEPICKER;
+			} else if (parameter.control === ControlType.DATEPICKERRANGE) {
+				controlType = ControlType.DATEPICKERRANGE;
+			} else if (parameter.isList()) {
 				controlType = ControlType.TEXTAREA;
 			} else {
 				controlType = ControlType.DATEFIELD;
@@ -501,11 +512,11 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 			controlType = ControlType.TIMESTAMP;
 			break;
 		case Type.STRUCTURE: {
-			const structureDef = isSubControl ? structureMetadata.getStructure(parameter.baseType()) : structureDefinition;
+			const structureDef = isSubControl && structureMetadata ? structureMetadata.getStructure(parameter.baseType()) : structureDefinition;
 
 			if (structureDef) {
 				if (structureDef.hasSubPanel()) {
-					childItem = _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata);
+					childItem = _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata, additionalInfo);
 				}
 				keyIndex = structureDef.keyAttributeIndex();
 				// The defaultRow allows the UI to create a new row with sensible settings
@@ -515,14 +526,14 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 				subControls = [];
 				if (structureDef.parameterMetadata && Array.isArray(structureDef.parameterMetadata.paramDefs)) {
 					structureDef.parameterMetadata.paramDefs.forEach(function(param) {
-						const newSubControl = _makeSubControl(param, l10nProvider, structureMetadata);
+						const newSubControl = _makeSubControl(param, l10nProvider, structureMetadata, additionalInfo);
 						subControls.push(newSubControl);
 					});
 				}
 				// If the property is a keyed property or a structure list then the key should not be included in the
 				// structure definition. However it will still need to be included in the table column definitions.
 				if ((parameter.isMapValue() || parameter.isList()) && structureDef.keyDefinition) {
-					const newSubControl = _makeSubControl(structureDef.keyDefinition, l10nProvider, structureMetadata);
+					const newSubControl = _makeSubControl(structureDef.keyDefinition, l10nProvider, structureMetadata, additionalInfo);
 					subControls.unshift(newSubControl);
 				}
 				if (parameter.isList() || parameter.isMapValue()) {
@@ -625,6 +636,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.enableMaximize = parameter.enableMaximize;
 	settings.summary = parameter.summary;
 	settings.increment = parameter.increment;
+	settings.minValue = parameter.minValue;
+	settings.maxValue = parameter.maxValue;
 	settings.rowSelection = rowSelection;
 	settings.generatedValues = parameter.generatedValues;
 	settings.addRemoveRows = addRemoveRows;
@@ -643,7 +656,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.customValueAllowed = parameter.customValueAllowed;
 	settings.className = parameter.className;
 	settings.buttons = buttons;
-	settings.light = light;
+	settings.light = _isControlLight(additionalInfo.light, additionalInfo.containerType, parameter.isSubPanelEdit());
 	if (isSubControl) {
 		settings.visible = parameter.visible;
 		settings.width = parameter.columns(8);
@@ -652,6 +665,12 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 		settings.dmDefault = parameter.dmDefault;
 	}
 	return new Control(settings);
+}
+
+function _isControlLight(light, containerType, isSubPanelEdit) {
+	return light &&
+		(containerType !== CONTAINER_TYPE.TEARSHEET || // Controls displayed in a Tearsheet are not light themed
+		(containerType === CONTAINER_TYPE.TEARSHEET && isSubPanelEdit)); // Controls inside a subpanel of tearsheet container are light themed
 }
 
 function _processListParameter(parameter) {
@@ -677,7 +696,7 @@ function _processListParameter(parameter) {
 	return controlObj;
 }
 
-function _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata) {
+function _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata, additionalInfo) {
 	// If we"re not editing in-line then create a sub-panel that can be used to edit the attributes
 	const panel = new ControlPanel(
 		structureDef.name,
@@ -688,7 +707,8 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata) {
 			structureDef.actionMetadata,
 			structureDef,
 			structureMetadata,
-			l10nProvider)
+			l10nProvider,
+			additionalInfo)
 	);
 	const groupLabel = l10nProvider.l10nLabel(structureDef, structureDef.name);
 	return UIItem.makeAdditionalLink("...", groupLabel, panel);
@@ -697,14 +717,14 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata) {
 /**
  * Creates a column control for the supplied property/attribute.
  */
-function _makeSubControl(parameter, l10nProvider, structureMetadata) {
+function _makeSubControl(parameter, l10nProvider, structureMetadata, additionalInfo) {
 	const parameterMetadata = null;
 	const paramName = null;
 	const group = null;
-	const structureDef = parameter.propType() === Type.STRUCTURE ? structureMetadata.getStructure(parameter.baseType()) : null;
+	const structureDef = parameter.propType() === Type.STRUCTURE && structureMetadata ? structureMetadata.getStructure(parameter.baseType()) : null;
 	const actionMetadata = null;
 	const subControl = parameter;
-	return _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata, structureMetadata, subControl);
+	return _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata, structureMetadata, subControl, additionalInfo);
 }
 
 /**
@@ -745,7 +765,7 @@ function _makeAction(action, l10nProvider) {
 	if (action.description) {
 		actionDesc = new Description(l10nProvider.l10nDesc(action, action.id));
 	}
-	return new Action(action.id, actionLabel, actionDesc, action.control, action.data, action.image, action.button);
+	return new Action(action.id, actionLabel, actionDesc, action.control, action.data, action.image, action.button, action.className);
 }
 
 function _makeButtons(buttonMetadata, l10nProvider) {

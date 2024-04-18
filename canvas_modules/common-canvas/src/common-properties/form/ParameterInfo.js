@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,6 +64,12 @@ export class ParameterDef {
 		}
 		if (settings.charLimit) {
 			this.charLimit = settings.charLimit;
+		}
+		if (settings.minValue) {
+			this.minValue = settings.minValue;
+		}
+		if (settings.maxValue) {
+			this.maxValue = settings.maxValue;
 		}
 		if (settings.placeHolderText) {
 			this.placeHolderText = ResourceDef.make(settings.placeHolderText);
@@ -330,6 +336,8 @@ export class ParameterDef {
 				"orientation": propertyOf(uihint)("orientation"),
 				"width": propertyOf(uihint)("width"),
 				"charLimit": propertyOf(uihint)("char_limit"),
+				"minValue": propertyOf(uihint)("min_value"),
+				"maxValue": propertyOf(uihint)("max_value"),
 				"placeHolderText": propertyOf(uihint)("place_holder_text"),
 				"separator": propertyOf(uihint)("separator"),
 				"resource_key": propertyOf(uihint)("resource_key"),

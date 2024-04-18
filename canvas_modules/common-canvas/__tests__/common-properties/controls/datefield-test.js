@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 import React from "react";
 import propertyUtils from "../../_utils_/property-utils";
 import DatefieldControl from "../../../src/common-properties/controls/datefield";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import datefieldParamDef from "../../test_resources/paramDefs/datefield_paramDef.json";
@@ -34,7 +34,8 @@ describe("datefield-control renders correctly", () => {
 		valueDef: {
 			isList: false,
 			propType: "date"
-		}
+		},
+		light: true
 	};
 	const controlItem = <span>"Label"</span>;
 	propertyUtils.setControls(controller, [control]);
@@ -162,21 +163,6 @@ describe("datefield-control renders correctly", () => {
 		expect(input.getDOMNode().placeholder).to.equal(control.additionalText);
 	});
 
-	it("should render `DatefieldControl` with light mode enabled", () => {
-		controller.setLight(true);
-		const wrapper = mount(
-			<DatefieldControl
-				store={controller.getStore()}
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				controlItem={controlItem}
-			/>
-		);
-		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		expect(dateWrapper.find(".bx--text-input--light")).to.have.length(1);
-	});
-
 	it("should render `DatefieldControl` with light mode disabled", () => {
 		controller.setLight(false);
 		const wrapper = mount(
@@ -189,7 +175,7 @@ describe("datefield-control renders correctly", () => {
 			/>
 		);
 		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		expect(dateWrapper.find(".bx--text-input--light")).to.have.length(0);
+		expect(dateWrapper.find(".cds--text-input--light")).to.have.length(0);
 	});
 });
 
@@ -225,7 +211,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		};
 		const actual = controller.getErrorMessage({ name: "date_ymd" });
 		expect(datefieldErrorMessages).to.eql(actual);
-		let messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		let messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
@@ -233,7 +219,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
 		// Ensure the error message is no longer displayed.
-		messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -260,7 +246,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		const actual = controller.getErrorMessage({ name: "date_ymd" });
 
 		expect(datefieldErrorMessages).to.eql(actual);
-		let messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		let messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
@@ -268,7 +254,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Ensure the error message is no longer displayed.
 		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
-		messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -287,11 +273,11 @@ describe("error messages renders correctly for datefield controls", () => {
 			"required": true,
 			"validation_id": "required_date_mdy_202.02932392909872",
 			"type": "error",
-			"text": "You must provide your Required Date M-D-Y.",
+			"text": "You must enter a value for Required Date M-D-Y.",
 		};
 		const actual = controller.getErrorMessage({ name: "date_mdy" });
 		expect(datefieldErrorMessages).to.eql(actual);
-		let messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		let messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
@@ -299,7 +285,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Ensure the error message is no longer displayed.
 		dateWrapper = wrapper.find("div[data-id='properties-date_mdy']");
-		messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -311,7 +297,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Ensure an error message is not displayed.
 		dateWrapper = wrapper.find("div[data-id='properties-date_ymd_non_req']");
-		const messageWrapper = dateWrapper.find("div.bx--form-requirement");
+		const messageWrapper = dateWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -319,13 +305,13 @@ describe("error messages renders correctly for datefield controls", () => {
 		// First check the hidden field is not displayed (style.display should be
 		// set to 'none').
 		let dateWrapper = wrapper.find("div[data-id='properties-hidden_date']");
-		expect(dateWrapper.hasClass("hide")).to.equal(true);
+		expect(dateWrapper).to.have.length(0);
 		controller.updatePropertyValue({ name: "hide_date_field" }, false);
 		wrapper.update();
 		// After the checkbox is unchecked there should be no in-line style
 		// applied to the date field (which makes it be hidden).
 		dateWrapper = wrapper.find("div[data-id='properties-hidden_date']");
-		expect(dateWrapper.hasClass("hide")).to.equal(false);
+		expect(dateWrapper).to.have.length(1);
 	});
 
 	it("should enable date field when checkbox is clicked", () => {
@@ -338,6 +324,12 @@ describe("error messages renders correctly for datefield controls", () => {
 		// applied to the date field (which makes it show as enabled).
 		dateWrapper = wrapper.find("div[data-id='properties-disabled_date']");
 		expect(dateWrapper.find("input").prop("disabled")).to.equal(false);
+	});
+
+	it("should render `DatefieldControl` with light mode enabled", () => {
+		const dateWrapper = wrapper.find("div[data-id='properties-ctrl-date_mdy']");
+		expect(dateWrapper.find(".cds--layer-two")).to.have.length(1); // light enabled
+		expect(dateWrapper.find(".cds--layer-one")).to.have.length(0); // light disabled
 	});
 });
 

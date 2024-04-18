@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { InlineLoading } from "carbon-components-react";
+import { InlineLoading } from "@carbon/react";
 import SVG from "react-inlinesvg";
 import { TIP_TYPE_PALETTE_CATEGORY } from "../common-canvas/constants/canvas-constants.js";
 import { get } from "lodash";
-import { AccordionItem } from "carbon-components-react";
+import { AccordionItem } from "@carbon/react";
 import PaletteContentList from "./palette-content-list.jsx";
 
 
@@ -28,13 +28,11 @@ class PaletteFlyoutContentCategory extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			isOpen: false
-		};
-
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
-		this.categorySelected = this.categorySelected.bind(this);
+		this.categoryClicked = this.categoryClicked.bind(this);
+		this.categoryKeyPressed = this.categoryKeyPressed.bind(this);
+		this.setPaletteCategory = this.setPaletteCategory.bind(this);
 	}
 
 	onMouseOver(ev) {
@@ -64,17 +62,23 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	getInlineLoadingRenderCategory() {
+
+		// TODO - This loading functionality should be replaced with a skeleton
+		// graphic to indicate the category is loading instead of using the
+		// InlineLoading component.
+
 		let description = "";
 		if (this.props.isPaletteOpen) {
 			description = this.props.category.loading_text;
 		}
 
+		// We do not specify an iconDescription below because doing so overrides
+		// the icon label which causes a problem with the accessibility checker.
 		const titleLoadingObj = (
 			<div className="palette-flyout-category">
 				<div className="palette-flyout-category-item-loading">
 					<InlineLoading
 						description={ description }
-						iconDescription={ description }
 						onSuccess={function noRefCheck() {
 							return null;
 						}}
@@ -91,12 +95,22 @@ class PaletteFlyoutContentCategory extends React.Component {
 		return content;
 	}
 
+	setPaletteCategory(isOpen) {
+		if (isOpen) {
+			this.props.canvasController.closePaletteCategory(this.props.category.id);
+		} else {
+			this.props.canvasController.openPaletteCategory(this.props.category.id);
+		}
+	}
+
 	// Returns the category object for a regular category.
 	getRenderCategory() {
 		const titleObj = this.getTitleObj();
 		const content = this.getContent();
 		return (
-			<AccordionItem title={titleObj} onHeadingClick={({ isOpen }) => this.setState({ isOpen })}>
+			<AccordionItem title={titleObj} open={this.props.category.is_open}
+				onKeyDown={this.categoryKeyPressed}
+			>
 				{content}
 			</AccordionItem>
 		);
@@ -109,12 +123,12 @@ class PaletteFlyoutContentCategory extends React.Component {
 		return (
 			<div className="palette-flyout-category"
 				data-id={get(this.props.category, "id", "")}
-				onClick={this.categorySelected}
+				onClick={this.categoryClicked}
 				value={this.props.category.label}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
 			>
-				<div className="palette-flyout-category-item">
+				<div className="palette-flyout-category-item" tabIndex={-1}>
 					{itemImage}
 					{itemText}
 				</div></div>
@@ -159,7 +173,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 			} else {
 				itemImage = (
 					<div>
-						<img src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" />
+						<img src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" alt={this.props.category.label} />
 					</div>
 				);
 			}
@@ -168,12 +182,12 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	// Returns the content object for the AccordionItem. This is only set to
-	// something if the category is open (that is: isOpen is true). It is useful
-	// to remove the nodes from the DOM when the category is closed because this
-	// can help inline SVG icons on the canvas, that reference elements in the
-	// <defs> element, to appear correclty.
+	// something if the category is open (that is: this.props.category.is_open
+	// is true). We remove the nodes from the DOM, when the category
+	// is closed, because this helps inline SVG icons on the canvas, that
+	// reference elements in the <defs> element, to appear correctly.
 	getContent() {
-		if (this.state.isOpen) {
+		if (this.props.category.is_open) {
 			const nodeTypeInfos = this.props.category.node_types.map((nt) => ({ nodeType: nt, category: this.props.category }));
 			return (
 				<PaletteContentList
@@ -189,8 +203,23 @@ class PaletteFlyoutContentCategory extends React.Component {
 		return null;
 	}
 
-	categorySelected() {
-		this.props.categorySelectedMethod(this.props.category.id);
+	categoryClicked(evt) {
+		// Stopping event propagation prevents an extra refresh of the node icons when
+		// a category is opened.
+		evt.stopPropagation();
+
+		this.setPaletteCategory(this.props.category.is_open);
+	}
+
+	categoryKeyPressed(evt) {
+		if (evt.target.className === "cds--accordion__heading") {
+			if (evt.code === "Enter" || evt.code === "Space") {
+				evt.preventDefault();
+				evt.stopPropagation();
+
+				this.setPaletteCategory(this.props.category.is_open);
+			}
+		}
 	}
 
 	render() {
@@ -202,7 +231,6 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 PaletteFlyoutContentCategory.propTypes = {
 	category: PropTypes.object.isRequired,
-	categorySelectedMethod: PropTypes.func.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired,
 	isEditingEnabled: PropTypes.bool.isRequired,

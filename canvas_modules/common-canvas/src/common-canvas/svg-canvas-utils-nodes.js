@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,6 @@ export default class SvgCanvasNodes {
 			pos.x <= node.x_pos + node.width &&
 			pos.y >= node.y_pos &&
 			pos.y <= node.y_pos + node.height;
-	}
-
-	getNodeImageClass(node) {
-		return "d3-node-image";
 	}
 
 	getNodeLabelClass(node) {
@@ -343,20 +339,12 @@ export default class SvgCanvasNodes {
 		return node.layout.errorHeight;
 	}
 
-	getNodeInputPortLeftPosX(node) {
-		return this.getElementPosX(node.width, node.layout.inputPortLeftPosX, node.layout.inputPortLeftPosition);
+	getNodePortPosX(posInfo, node) {
+		return this.getElementPosX(node.width, posInfo.x_pos, posInfo.pos);
 	}
 
-	getNodeInputPortLeftPosY(node) {
-		return this.getElementPosY(node.height, node.layout.inputPortLeftPosY, node.layout.inputPortLeftPosition);
-	}
-
-	getNodeOutputPortRightPosX(node) {
-		return this.getElementPosX(node.width, node.layout.outputPortRightPosX, node.layout.outputPortRightPosition);
-	}
-
-	getNodeOutputPortRightPosY(node) {
-		return this.getElementPosY(node.height, node.layout.outputPortRightPosY, node.layout.outputPortRightPosition);
+	getNodePortPosY(posInfo, node) {
+		return this.getElementPosY(node.height, posInfo.y_pos, posInfo.pos);
 	}
 
 	getElementPosX(width, xOffset = 0, position = "topLeft") {

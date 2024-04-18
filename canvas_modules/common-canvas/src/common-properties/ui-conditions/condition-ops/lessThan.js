@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { ControlType } from "../../constants/form-constants";
 import logger from "./../../../../utils/logger";
 
 function op() {
@@ -42,6 +43,26 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			return true;
 		}
 		return false;
+	case "string": {
+		if (paramInfo.control && paramInfo.control.controlType === ControlType.DATEPICKER) {
+			const param1Date = new Date(paramInfo.value);
+			if (!isNaN(param1Date) && param2Info) {
+				const param2Date = new Date(param2Info.value);
+				if (!isNaN(param2Date)) {
+					return param1Date.getTime() < param2Date.getTime();
+				}
+				throw new Error("Insufficient parameter for condition operation 'lessThan'");
+			} else if (!isNaN(param1Date) && value) {
+				const valueDate = new Date(value);
+				if (!isNaN(valueDate)) {
+					return param1Date.getTime() < valueDate.getTime();
+				}
+				throw new Error("Insufficient parameter for condition operation 'lessThan'");
+			}
+			throw new Error("Insufficient parameter for condition operation 'lessThan'");
+		}
+		return true;
+	}
 	default:
 		logger.warn("Ignoring condition operation 'lessThan' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 		return true;

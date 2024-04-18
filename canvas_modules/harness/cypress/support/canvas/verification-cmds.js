@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,8 +122,7 @@ Cypress.Commands.add("verifyNodeTransformInSupernode", (nodeLabel, supernodeName
 
 Cypress.Commands.add("verifyNodeIsDeleted", (nodeName, deleteUsingContextMenu) => {
 	// verify node is not the canvas DOM
-	cy.getNodeWithLabel(nodeName)
-		.should("not.exist");
+	cy.checkNodeDoesntExist(nodeName);
 
 	// verify that the node is not in the internal object model
 	cy.getNodeLabelCountFromObjectModel(nodeName)
@@ -149,8 +148,7 @@ function verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole(nodeName, de
 
 Cypress.Commands.add("verifyCommentIsDeleted", (commentText) => {
 	// verify comment is not the canvas DOM
-	cy.getCommentWithText(commentText)
-		.should("not.exist");
+	cy.checkCommentDoesntExist(commentText);
 
 	// verify that the comment is not in the internal object model
 	cy.getCommentContentCountFromObjectModel(commentText)
@@ -321,7 +319,7 @@ Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 
 Cypress.Commands.add("verifyNumberOfNodesInSubFlow", (noOfNodes) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-node-image").length) {
+		if ($body.find(".d3-canvas-group .d3-node-image").length) {
 			cy.get(nodesInSubFlowSelector)
 				.should("have.length", noOfNodes);
 		} else {
@@ -333,7 +331,7 @@ Cypress.Commands.add("verifyNumberOfNodesInSubFlow", (noOfNodes) => {
 
 Cypress.Commands.add("verifyNumberOfNodesInSubFlowInSubFlow", (noOfNodes) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-node-image").length) {
+		if ($body.find(".d3-canvas-group .d3-node-image").length) {
 			cy.get(nodesInSubFlowInSubFlowSelector)
 				.should("have.length", noOfNodes);
 		} else {
@@ -345,7 +343,7 @@ Cypress.Commands.add("verifyNumberOfNodesInSubFlowInSubFlow", (noOfNodes) => {
 
 
 Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
-	cy.get("#canvas-div-1").find(".d3-node-image")
+	cy.get("#canvas-div-1").find(".d3-canvas-group .d3-node-image")
 		.should("have.length", noOfNodes);
 
 	// verify the number of nodes in the internal object model
@@ -506,8 +504,7 @@ Cypress.Commands.add("verifyLinkIsNotSelected", (linkId) => {
 
 Cypress.Commands.add("verifyLinkIsDeleted", (linkId, deleteUsingContextMenu) => {
 	// verify link is not the canvas DOM
-	cy.getLinkUsingLinkId(linkId)
-		.should("not.exist");
+	cy.checkLinkDoesntExist(linkId);
 
 	// verify that the link is not in the internal object model
 	cy.getLinkCountFromObjectModel(linkId)
@@ -692,6 +689,22 @@ Cypress.Commands.add("verifyLabelDecorationOnLink", (linkLabel, decoratorId, lab
 		});
 });
 
+Cypress.Commands.add("verifyJsxDecorationOnNode", (nodeName, decoratorId, xPos, yPos) => {
+	cy.verifyDecorationTransformOnNode(nodeName, decoratorId, xPos, yPos)
+		.then((jsxDecorator) => {
+			cy.wrap(jsxDecorator)
+				.find(".d3-foreign-object-dec-jsx");
+		});
+});
+
+Cypress.Commands.add("verifyJsxDecorationOnLink", (linkLabel, decoratorId, xPos, yPos) => {
+	cy.verifyDecorationTransformOnLink(linkLabel, decoratorId, xPos, yPos)
+		.then((jsxDecorator) => {
+			cy.wrap(jsxDecorator)
+				.find(".d3-foreign-object-dec-jsx");
+		});
+});
+
 Cypress.Commands.add("verifyDecorationTransformOnNode", (nodeName, decoratorId, xPos, yPos) => {
 	cy.getNodeWithLabel(nodeName)
 		.find(".d3-node-dec-group")
@@ -814,6 +827,21 @@ Cypress.Commands.add("verifyBottomPanelWidth", (width) => {
 	});
 });
 
+Cypress.Commands.add("verifyTopPanelHeight", (height) => {
+	cy.get(".top-panel").should((element) => {
+		expect(element).to.have.css("height", `${height}px`);
+	});
+});
+
+Cypress.Commands.add("verifyTopPanelWidth", (width) => {
+	cy.get(".top-panel").should((element) => {
+		// Use compareCloseTo here because top-panel width is slighyly different
+		// on the build machine to its width when running tests on a local machine.
+		compareCloseTo(element[0].offsetWidth, width);
+	});
+});
+
+
 Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
@@ -887,11 +915,11 @@ Cypress.Commands.add("verifyNodeDoesExistInPaletteAtIndex", (nodeName, index) =>
 });
 
 Cypress.Commands.add("verifyCategoryIsClosed", (categoryLabel) => {
-	cy.get(".bx--accordion__item")
+	cy.get(".cds--accordion__item")
 		.then((catItems) => {
 			for (let i = 0; i < catItems.length; i++) {
 				if (catItems[i].textContent.includes(categoryLabel)) {
-					const index = catItems[i].className.indexOf("bx--accordion__item--active");
+					const index = catItems[i].className.indexOf("cds--accordion__item--active");
 					expect(index).to.equal(-1);
 				}
 			}
@@ -899,7 +927,7 @@ Cypress.Commands.add("verifyCategoryIsClosed", (categoryLabel) => {
 });
 
 Cypress.Commands.add("verifyCategoryIsOpened", (categoryLabel) => {
-	cy.get(".bx--accordion__item--active")
+	cy.get(".cds--accordion__item--active")
 		.contains(categoryLabel)
 		.should("exist");
 });
@@ -946,32 +974,36 @@ Cypress.Commands.add("verifyNumberOfPortsOnNode", (nodeName, portType, noOfPorts
 });
 
 Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
-	cy.get("#toolbar-items")
-		.find("li")
-		.its("length")
-		.then((totalItemsLength) => {
-			// Find hidden items length
-			cy.get("#actions-container")
-				.find("#overflow-action")
-				.eq(0)
-				.find(".toolbar-popover-list-hide")
-				.eq(0)
-				.find("li")
-				.its("length")
-				.then((hiddenItemsLength) => {
-					// Get number of visible items
-					const itemsVisible = totalItemsLength - hiddenItemsLength;
-					expect(itemsVisible).to.equal(noOfItems);
+	cy.get(".toolbar-left-bar .toolbar-item")
+		.then((leftBarItems) => {
+			cy.get(".toolbar-right-bar .toolbar-item")
+				.then((rightBarItems) => {
+					cy.get(".toolbar-overflow-item")
+						.then((toolbarOverflowItems) => {
+							const leftBarTopItemsCount = getCountToolbarItemsOnTopRow(leftBarItems);
+							const overflowTopItemsCount = getCountToolbarItemsOnTopRow(toolbarOverflowItems);
+							const rightBarTopItemsCount = getCountToolbarItemsOnTopRow(rightBarItems);
+
+							let visibleItemsCount = leftBarTopItemsCount + rightBarTopItemsCount;
+
+							// If there is one more overflow item than the left bar items
+							// then an overflow item is visible.
+							if (overflowTopItemsCount > leftBarTopItemsCount) {
+								visibleItemsCount++;
+							}
+
+							expect(visibleItemsCount).to.equal(noOfItems);
+						});
 				});
 		});
 });
 
 Cypress.Commands.add("verifyToolbarButtonEnabled", (action, state) => {
 	cy.get(".toolbar-div")
-		.find("." + action + "-action > button")
+		.find("." + action + "-action > div > button")
 		.then((buttons) => {
 			const classList = Array.from(buttons[0].classList);
-			const enabled = !classList.includes("bx--btn--disabled");
+			const enabled = !classList.includes("cds--btn--disabled");
 			expect(enabled).to.equal(state);
 		});
 });
@@ -1016,60 +1048,42 @@ Cypress.Commands.add("verifyTipForToolbarItemNotDisplayed", (toolbarItem) => {
 });
 
 Cypress.Commands.add("verifyTipForCategory", (categoryLabel) => {
-	// Verify the tip shows next to given category
+	// Verify the tip shows
 	cy.get(".tip-palette-item")
 		.should("not.eq", null);
 	// Verify tip label
 	cy.get(".tip-palette-item")
 		.find(".tip-palette-label")
 		.should("have.text", categoryLabel);
-	// Verify tip description
-	cy.get(".tip-palette-item")
-		.find(".tip-palette-desc")
-		.should("have.text", "Description for " + categoryLabel);
+	cy.getCategory(categoryLabel).then((cat) => {
+		// Verify tip description
+		cy.get(".tip-palette-item")
+			.find(".tip-palette-desc")
+			.should("have.text", cat.description);
+	});
 });
 
-Cypress.Commands.add("verifyTipForNodeInCategory", (nodeName, categoryLabel) => {
-	// Verify the tip shows next to the node in category
+Cypress.Commands.add("verifyTipForNodeTemplateInCategory", (nodeLabel, categoryLabel) => {
+	// Verify the tip shows
 	cy.get(".tip-palette-item")
 		.should("not.eq", null);
 	// Verify tip label
-	cy.findNodeIndexInPalette(nodeName)
-		.then((nodeIndex) => {
-			cy.get(".palette-list-item")
-				.eq(nodeIndex)
-				.then((paletteItem) => {
-					// get node dimensions
-					const nodeRight = paletteItem[0].getBoundingClientRect().x + paletteItem[0].getBoundingClientRect().width;
-					cy.get(".tip-palette-item")
-						.then((tip) => {
-							const tipLeft = tip[0].getBoundingClientRect().x;
-							expect(tipLeft).to.be.greaterThan(nodeRight);
-						});
-				});
-		});
-});
-
-Cypress.Commands.add("verifyTipDoesNotShowForCategory", (categoryLabel) => {
-	cy.findCategory(categoryLabel)
-		.invoke("attr", "data-id")
-		.then((dataId) => {
-			cy.get(`div[data-id='paletteTip_${dataId}']`)
-				.should("have.attr", "aria-hidden", "true");
-		});
-});
-
-Cypress.Commands.add("verifyTipDoesNotShowForNodeInCategory", (nodeName) => {
-	// Verify the tip doesn't show for node in category
 	cy.get(".tip-palette-item")
-		.should("not.exist");
+		.find(".tip-palette-label")
+		.should("have.text", nodeLabel);
+	cy.getNodeTemplate(nodeLabel, categoryLabel).then((nt) => {
+		// Verify tip description
+		cy.get(".tip-palette-item")
+			.find(".tip-palette-desc")
+			.should("have.text", nt.app_data.ui_data.description);
+	});
 });
 
 Cypress.Commands.add("verifyTipForNodeAtLocation", (nodeName, tipLocation) => {
 	// Verify the tip shows "below" the node "Define Types"
 	cy.getNodeWithLabel(nodeName)
 		.then((node) => {
-			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
+			const nodeTipSelector = "[data-id*='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
 			cy.get(nodeTipSelector)
 				.then((tip) => {
 					// Verify tip is displayed on canvas
@@ -1091,16 +1105,6 @@ Cypress.Commands.add("verifyTipForNodeAtLocation", (nodeName, tipLocation) => {
 					// Verify node tip class
 					cy.verifyTipClass(tip, "definition-tooltip");
 				});
-		});
-});
-
-Cypress.Commands.add("verifyTipDoesNotShowForNode", (nodeName) => {
-	// Verify the tip doesn't show for node on canvas
-	cy.getNodeWithLabel(nodeName)
-		.then((node) => {
-			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
-			cy.get(nodeTipSelector)
-				.should("not.exist");
 		});
 });
 
@@ -1163,12 +1167,6 @@ Cypress.Commands.add("verifyTipForInputPortOfNode", (nodeName, inputPortId, port
 		});
 });
 
-Cypress.Commands.add("verifyTipDoesNotShowForInputPortId", (inputPortId) => {
-	// Verify the tip doesn't show for input port id "inPort2"
-	cy.getNodePortTipSelector(inputPortId)
-		.then((portTipSelector) => cy.get(portTipSelector).should("not.exist"));
-});
-
 Cypress.Commands.add("verifyTipForOutputPortOfNode", (nodeName, outputPortId, portName) => {
 	cy.getNodePortSelector(nodeName, "output", outputPortId)
 		.then((portSelector) => {
@@ -1199,22 +1197,18 @@ Cypress.Commands.add("verifyTipForOutputPortOfNode", (nodeName, outputPortId, po
 		});
 });
 
-Cypress.Commands.add("verifyTipForLink", (mouseY, sourceNode, sourcePort, targetNode, targetPort) => {
-	cy.get("[data-id*=link_tip_0_]") // Find tip with id that starts with 'link_tip_0_'
+Cypress.Commands.add("verifyTipForLink", (sourceNode, sourcePort, targetNode, targetPort) => {
+	cy.get("[data-id*=link_tip_0_]") // Find tip with id that has 'link_tip_0_'
 		.then((tip) => {
 			// Verify tip is displayed on canvas
 			cy.wrap(tip).should("have.length", 1);
-
-			// Verify tip location
-			const tipTop = tip[0].offsetTop;
-			expect(tipTop).to.be.greaterThan(mouseY);
 
 			// Verify tip label
 			const sourceString = `'${sourceNode}', port '${sourcePort}'`;
 			const targetString = `'${targetNode}', port '${targetPort}'`;
 			const linkLabel = `Link from ${sourceString} to ${targetString}`;
 			cy.wrap(tip)
-				.find("#tooltipContainer")
+				.find(".tooltipContainer")
 				.should("have.text", linkLabel);
 
 			// Verify link tip class
@@ -1223,13 +1217,8 @@ Cypress.Commands.add("verifyTipForLink", (mouseY, sourceNode, sourcePort, target
 
 });
 
-Cypress.Commands.add("verifyTipDoesNotShowForLink", () => {
-	cy.get("[data-id*=link_tip_0_]") // Find tip with id that starts with 'link_tip_0_'
-		.should("not.exist");
-});
-
 Cypress.Commands.add("verifyTipForDecoration", (tipText) => {
-	cy.get("[data-id*=dec_tip_0_]") // Find decoration tip with id that starts with 'dec_tip_0_'
+	cy.get("[data-id*=dec_tip_0_]") // Find decoration tip with id that has 'dec_tip_0_'
 		.then((tip) => {
 			// Verify tip is displayed on canvas
 			cy.wrap(tip).should("have.length", 1);
@@ -1244,8 +1233,48 @@ Cypress.Commands.add("verifyTipForDecoration", (tipText) => {
 		});
 });
 
+Cypress.Commands.add("verifyTipDoesNotShowForCategory", (categoryLabel) => {
+	cy.findCategory(categoryLabel)
+		.then((category) => {
+			const id = category[0].getAttribute("data-id");
+			const categoryTipSelector = "div[data-id$=paletteTip_" + id + "][aria-hidden=false]";
+			cy.get(categoryTipSelector)
+				.should("not.exist");
+		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForNodeTemplate", (nodeLabel, categoryLabel) => {
+	cy.getNodeTemplate(nodeLabel, categoryLabel)
+		.then((nt) => {
+			const categoryTipSelector = "div[data-id$=paletteTip_" + nt.op + "][aria-hidden=false]";
+			cy.get(categoryTipSelector)
+				.should("not.exist");
+		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForNode", (nodeName) => {
+	// Verify the tip doesn't show for node on canvas
+	cy.getNodeWithLabel(nodeName)
+		.then((node) => {
+			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
+			cy.get(nodeTipSelector)
+				.should("not.exist");
+		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForInputPortId", (inputPortId) => {
+	// Verify the tip doesn't show for input port id "inPort2"
+	cy.getNodePortTipSelector(inputPortId)
+		.then((portTipSelector) => cy.get(portTipSelector).should("not.exist"));
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForLink", () => {
+	cy.get("[data-id*=link_tip_0_]") // Find tip with id that has 'link_tip_0_'
+		.should("not.exist");
+});
+
 Cypress.Commands.add("verifyTipDoesNotShowForDecoration", () => {
-	cy.get("[data-id*=dec_tip_0_]") // Find decoration tip with id that starts with 'dec_tip_0_'
+	cy.get("[data-id*=dec_tip_0_]") // Find decoration tip with id that has 'dec_tip_0_'
 		.should("not.exist");
 });
 
@@ -1305,12 +1334,20 @@ Cypress.Commands.add("clickNotificationAtIndex", (index) => {
 		.click();
 });
 
-Cypress.Commands.add("verifyNotificationCenterHidden", (hidden) => {
-	if (hidden) {
-		cy.get(".notification-panel-container").should("have.class", "panel-hidden");
-	} else {
-		cy.get(".notification-panel-container").should("not.have.class", "panel-hidden");
-	}
+Cypress.Commands.add("verifyNotificationCenterExists", () => {
+	cy.get(".notification-panel");
+});
+
+Cypress.Commands.add("verifyNotificationCenterDoesntExist", (hidden) => {
+	cy.get(".notification-panel").should("not.exist");
+});
+
+Cypress.Commands.add("verifyNodeWidthHeight", (nodeLabel, nodeWidth, nodeHeight) => {
+	cy.getNodeWithLabel(nodeLabel).get(".d3-node-body-outline")
+		.should((element) => {
+			expect(element).to.have.css("height", `${nodeHeight}px`);
+			expect(element).to.have.css("width", `${nodeWidth}px`);
+		});
 });
 
 Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
@@ -1341,6 +1378,19 @@ Cypress.Commands.add("verifyPixelValueInCompareRange", (value, cssValue) => {
 Cypress.Commands.add("verifyValueInCompareRange", (value, compareValue) => {
 	compareCloseTo(value, compareValue);
 });
+
+// Returns the count of toolbar items passed in that are on the top row of the
+// toolbar. That is, where their offset top is 0.
+function getCountToolbarItemsOnTopRow(items) {
+	let itemsVisible = 0;
+
+	for (let i = 0; i < items.length; i++) {
+		if (items[i].offsetTop === 0) {
+			itemsVisible++;
+		}
+	}
+	return itemsVisible;
+}
 
 function verifyPath(actualPath, expectedPath) {
 	const actualElements = actualPath.getAttribute("d").split(" ");

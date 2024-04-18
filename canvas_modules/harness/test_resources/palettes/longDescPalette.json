@@ -2,10 +2,10 @@
       "version": "3.0",
       "categories": [
         {
-          "label": "Import some data for using in your pipeline where data is required",
+          "label": "With Image",
           "description": "Description for Import",
           "image": "/images/palette-categories/sources_open.svg",
-          "id": "import",
+          "id": "iwith_image_id",
           "node_types": [
             {
               "id": "",
@@ -94,6 +94,45 @@
                 }
               }
             }
+          ]
+        },
+        {
+          "label": "With Image - with label on two lines",
+          "description": "With Image - with longish label on two lines",
+          "image": "/images/palette-categories/sources_open.svg",
+          "id": "with_image_longer_id",
+          "node_types": [
+          ]
+        },
+        {
+          "label": "With Image - with longer label that wraps onto three lines",
+          "description": "With Image - with longish label on two lines",
+          "image": "/images/palette-categories/sources_open.svg",
+          "id": "with_image_longest_id",
+          "node_types": [
+          ]
+        },
+        {
+          "label": "No image",
+          "description": "Description for Import",
+          "image": "",
+          "id": "no_image_id",
+          "node_types": [
+          ]
+        },
+        {
+          "label": "No image - longer label with more words",
+          "description": "Description for Import",
+          "image": "",
+          "id": "no_image_longer_id",
+          "node_types": [
+          ]
+        },
+        {
+          "label": "No image - longer label with more words that stretch onto a third line",
+          "image": "",
+          "id": "no_image_longest_id",
+          "node_types": [
           ]
         }
       ]

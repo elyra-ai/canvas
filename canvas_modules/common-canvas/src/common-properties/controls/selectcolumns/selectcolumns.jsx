@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ class SelectColumnsControl extends AbstractTable {
 	makeRows(controlValue, tableState) {
 		const rows = [];
 		if (controlValue) {
-			for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+			for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				const columns = [];
 				// If the propertyId contains 'row' then this selectcolumns control is part of a table.
 				// Need to add an additional 'index' to retrieve the correct value from the control within a table.
@@ -137,11 +137,11 @@ class SelectColumnsControl extends AbstractTable {
 				selectedRows={this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
 				updateRowSelections={this.updateRowSelections}
-				light={this.props.controller.getLight() && !this.props.control.light}
+				light={this.props.controller.getLight() && this.props.control.light}
 				emptyTablePlaceholder={this.props.control.additionalText}
 			/>);
 
-		var content = (
+		const content = (
 			<div>
 				<div className="properties-column-select-table">
 					{table}

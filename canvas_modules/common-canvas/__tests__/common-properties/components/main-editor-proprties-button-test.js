@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,7 +123,7 @@ describe("main-editor-properties-buttons renders correctly", () => {
 		controller.setErrorMessages({
 			testcontrol: {
 				type: "error",
-				text: "You must provide your string with char limit.",
+				text: "You must enter a value for string with char limit.",
 				validation_id: "required_string_charLimit_713.1789411411248",
 				required: true
 			}
@@ -134,7 +134,7 @@ describe("main-editor-properties-buttons renders correctly", () => {
 		controller.setErrorMessages({
 			testcontrol: {
 				type: "error",
-				text: "You must provide your string with char limit.",
+				text: "You must enter a value for string with char limit.",
 				validation_id: "required_string_charLimit_713.1789411411248",
 				required: false
 			}
@@ -152,7 +152,7 @@ describe("main-editor-properties-buttons renders correctly", () => {
 		const expectedErrors = {
 			"string_empty": {
 				"type": "error",
-				"text": "You must provide your Empty.",
+				"text": "You must enter a value for Empty.",
 				"validation_id": "required_string_empty_938.7063182960883",
 				"required": true,
 				"displayError": false,

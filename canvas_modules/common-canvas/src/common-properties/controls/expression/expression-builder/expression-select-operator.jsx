@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,13 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 
 import Tooltip from "./../../../../tooltip/tooltip";
-import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 
 
 export default class ExpressionSelectOperator extends React.Component {
-
 	onOperatorClick(value, evt) {
 		if (this.props.onChange) {
 			this.props.onChange(value);
@@ -35,7 +33,7 @@ export default class ExpressionSelectOperator extends React.Component {
 		if (this.props.operatorList) {
 			const operatorButtons = [];
 			this.props.operatorList.forEach((operator, index) => {
-				const tooltipId = uuid4() + "-tooltip-expression-operator";
+				const tooltipId = `tooltip-expression-operator-${index}`;
 				const tooltip = (
 					<div className="properties-tooltips">
 						{operator.help}
@@ -52,7 +50,7 @@ export default class ExpressionSelectOperator extends React.Component {
 							<Button
 								className={classNames("properties-operator-button", { "first": (index % 2 === 0),
 									"second": !(index % 2 === 0) })}
-								size="small"
+								size="sm"
 								kind="tertiary"
 								onClick={this.onOperatorClick.bind(this, operator.value)}
 							>

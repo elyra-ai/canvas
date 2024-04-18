@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ import { NODE_LINK }
 	from "../common-canvas/constants/canvas-constants.js";
 
 export default class DeconstructSuperNodeAction extends Action {
-	constructor(data, objectModel, labelUtil, enableMoveNodesOnSupernodeResize) {
+	constructor(data, canvasController) {
 		super(data);
 		this.data = data;
-		this.objectModel = objectModel;
-		this.labelUtil = labelUtil;
+		this.labelUtil = canvasController.labelUtil;
+		this.objectModel = canvasController.objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-		this.enableMoveNodesOnSupernodeResize = enableMoveNodesOnSupernodeResize;
+		this.enableMoveNodesOnSupernodeResize = canvasController.getCanvasConfig().enableMoveNodesOnSupernodeResize;
 		this.supernode = this.data.targetObject;
 		this.oldObjectPositions = [];
 		this.newObjectPositions = [];

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,9 @@
  */
 /* eslint max-len: "off" */
 
-Cypress.Commands.add("getCommentWithText", (commentText) => {
-	cy.get("body").then(($body) => {
-		const len = $body.find(".d3-comment-group").length;
-		if (len) {
-			cy.get(getCommentGrpSelector())
-				.then((grpArray) => findGrpForText(grpArray, commentText));
-		}
-		// No comments found on canvas
-		return null;
-	});
-});
+Cypress.Commands.add("getCommentWithText", (commentText) =>
+	cy.get(getCommentGrpSelector())
+		.then((grpArray) => findGrpForText(grpArray, commentText)));
 
 Cypress.Commands.add("getCommentWithTextInSubFlow", (commentText) =>
 	cy.get(getCommentGrpSelectorInSubFlow())
@@ -42,6 +34,12 @@ Cypress.Commands.add("getCommentWithTextInSupernode", (commentText, supernodeNam
 			cy.get(getCommentGrpSelectorInSupernode(supernodeId))
 				.then((grpArray) => findGrpForText(grpArray, commentText));
 		});
+});
+
+Cypress.Commands.add("checkCommentDoesntExist", (commentText) => {
+	cy.get(".d3-comments-group")
+		.contains(commentText)
+		.should("not.exist");
 });
 
 function getCommentGrpSelector() {
@@ -132,7 +130,7 @@ Cypress.Commands.add("isCommentSelected", (commentText) => {
 		});
 });
 
-Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText) => {
+Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText, saveComment = true) => {
 	cy.getCommentWithText(originalCommentText)
 		.dblclick()
 		.get("textarea")
@@ -140,7 +138,9 @@ Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText) 
 		.type(newCommentText);
 
 	// Click somewhere on canvas to save comment
-	cy.get(`#canvas-div-${document.instanceId}`).click(2, 2);
+	if (saveComment) {
+		cy.get(`#canvas-div-${document.instanceId}`).click(2, 2);
+	}
 });
 
 Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newCommentText) => {
@@ -213,18 +213,21 @@ Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
 				const canvasX = nodeDimensions.x_pos + (nodeDimensions.width / 2);
 				const canvasY = nodeDimensions.y_pos + (nodeDimensions.height / 2);
 
-				cy.dragAndDrop(srcSelector, 0, 0, ".svg-area", canvasX, canvasY);
+				// Use 5 px in x and y direction to move mouse position over the port
+				cy.dragAndDrop(srcSelector, 5, 5, ".svg-area", canvasX, canvasY);
 			});
 		});
 	});
 });
 
 Cypress.Commands.add("dragAndDrop", (srcSelector, srcXPos, srcYPos, trgSelector, trgXPos, trgYPos) => {
-	cy.get(srcSelector)
-		.trigger("mousedown", srcXPos, srcYPos, { force: true });
-	cy.get(trgSelector)
-		.trigger("mousemove", trgXPos, trgYPos)
-		.trigger("mouseup", trgXPos, trgYPos);
+	cy.window().then((win) => {
+		cy.get(srcSelector)
+			.trigger("mousedown", srcXPos, srcYPos, { which: 1, view: win });
+		cy.get(trgSelector)
+			.trigger("mousemove", trgXPos, trgYPos, { view: win })
+			.trigger("mouseup", trgXPos, trgYPos, { which: 1, view: win });
+	});
 });
 
 Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight) => {
@@ -321,7 +324,6 @@ Cypress.Commands.add("selectAllCommentsUsingCtrlOrCmdKey", () => {
 
 Cypress.Commands.add("selectTextInComment", (textToSelect, commentText) => {
 	cy.getCommentWithText(commentText)
-		.dblclick()
 		.get("textarea")
 		.then((tas) => {
 			const start = commentText.indexOf(textToSelect);

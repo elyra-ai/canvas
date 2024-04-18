@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { SelectItem, Select, Dropdown, ComboBox } from "carbon-components-react";
-import { isEqual } from "lodash";
+import { SelectItem, Select, Dropdown, ComboBox } from "@carbon/react";
+import { isEqual, isEmpty } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
@@ -30,11 +30,22 @@ import { formatMessage } from "./../../util/property-utils";
 class DropDown extends React.Component {
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.emptyLabel = "...";
-		if (props.control.additionalText) {
+		this.disableEmptyListDropdown = false;
+		if (isEmpty(props.controlOpts)) {
+			// For empty dropdown, get placeholder text from resources
+			const overrideEmptyListPlaceholder = `${this.props.control.name}.emptyList.placeholder`;
+			const emptyLabelOverride = props.controller.getResource(overrideEmptyListPlaceholder);
+			// Disable empty dropdown when [property_id].emptyList.placeholder is set in resources
+			if (emptyLabelOverride) {
+				this.emptyLabel = emptyLabelOverride;
+				this.disableEmptyListDropdown = true;
+			}
+		} else if (props.control.additionalText) {
+			// For non-empty dropdown, get placeholder text from place_holder_text in parameter_info
 			this.emptyLabel = props.control.additionalText;
 		}
-		this.reactIntl = props.controller.getReactIntl();
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleComboOnChange = this.handleComboOnChange.bind(this);
@@ -167,7 +178,14 @@ class DropDown extends React.Component {
 
 	// evt is null when onBlur, empty string when clicking the 'x' to clear input
 	handleOnInputChange(evt) {
-		if (evt !== null) {
+		const currentValue = this.props.controller.getPropertyValue(this.props.propertyId);
+
+		// Don't update property value during initial render
+		if ((typeof currentValue === "undefined" || currentValue === null) && evt === "") {
+			return;
+		}
+
+		if (evt !== null && evt !== currentValue) {
 			const value = evt;
 			this.props.controller.updatePropertyValue(this.props.propertyId, value);
 		}
@@ -185,7 +203,8 @@ class DropDown extends React.Component {
 
 		const listBoxMenuIconTranslationIds = {
 			"close.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLOSEMENU),
-			"open.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_OPENMENU)
+			"open.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_OPENMENU),
+			"clear.selection": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLEARSELECTION)
 		};
 
 		let dropdownComponent = null;
@@ -200,47 +219,50 @@ class DropDown extends React.Component {
 			for (const option of dropDown.options) {
 				options.push(<SelectItem text={option.label} key={this.id + "-" + option.value} value={option.value} />);
 			}
-			dropdownComponent = (<Select
-				id={this.id}
-				hideLabel
-				inline
-				labelText={this.props.control.label ? this.props.control.label.text : ""}
-				disabled={this.props.state === STATES.DISABLED}
-				onChange={this.handleChange}
-				value={selection}
-				light={this.props.controller.getLight() && !this.props.control.light}
-			>
-				{ options }
-			</Select>);
+			dropdownComponent = (
+				<Select
+					id={this.id}
+					hideLabel
+					inline
+					labelText={this.props.control.label ? this.props.control.label.text : ""}
+					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
+					onChange={this.handleChange}
+					value={selection}
+				>
+					{ options }
+				</Select>
+			);
 		} else if (this.props.control.customValueAllowed) { // combobox dropdown not allowed in tables
-			dropdownComponent = (<ComboBox
-				{...validationProps}
-				ariaLabel={this.props.control.label ? this.props.control.label.text : ""}
-				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
-				disabled={this.props.state === STATES.DISABLED}
-				placeholder={dropDown.selectedOption.label}
-				selectedItem={dropDown.selectedOption.label}
-				items={dropDown.options}
-				onChange={this.handleComboOnChange}
-				onInputChange={this.handleOnInputChange}
-				light={this.props.controller.getLight() && !this.props.control.light}
-				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-				titleText={this.props.controlItem}
-			/>);
+			dropdownComponent = (
+				<ComboBox
+					{...validationProps}
+					aria-label={this.props.control.label ? this.props.control.label.text : ""}
+					id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
+					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
+					placeholder={dropDown.selectedOption.label}
+					selectedItem={dropDown.selectedOption.label}
+					items={dropDown.options}
+					onChange={this.handleComboOnChange}
+					onInputChange={this.handleOnInputChange}
+					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+					titleText={this.props.controlItem}
+				/>
+			);
 		} else {
-			dropdownComponent = (<Dropdown
-				{...validationProps}
-				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
-				disabled={this.props.state === STATES.DISABLED}
-				type="default"
-				items={dropDown.options}
-				onChange={this.handleChange}
-				selectedItem={dropDown.selectedOption}
-				label={this.emptyLabel}
-				light={this.props.controller.getLight() && !this.props.control.light}
-				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-				titleText={this.props.controlItem}
-			/>);
+			dropdownComponent = (
+				<Dropdown
+					{...validationProps}
+					id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
+					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
+					type="default"
+					items={dropDown.options}
+					onChange={this.handleChange}
+					selectedItem={dropDown.selectedOption}
+					label={this.emptyLabel}
+					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+					titleText={this.props.controlItem}
+				/>
+			);
 		}
 
 		return (

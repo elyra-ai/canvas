@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,17 +22,20 @@ import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
+import NotificationPanel from "../notification-panel/notification-panel.jsx";
 import { ERROR, WARNING, SUCCESS, INFO, PALETTE_LAYOUT_NONE,
-	NOTIFICATION_ICON_CLASS, TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_LAYOUT_TOP }
+	NOTIFICATION_ICON_CLASS, TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_LAYOUT_TOP,
+	TOOLBAR_TOGGLE_PALETTE }
 	from "../common-canvas/constants/canvas-constants";
 
 class CommonCanvasToolbar extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.logger = new Logger("CC-Toolbar");
+
 		this.getLabel = this.getLabel.bind(this);
 		this.toolbarActionHandler = this.toolbarActionHandler.bind(this);
-		this.logger = new Logger("CC-Toolbar");
 	}
 
 	getLabel(labelId, substituteObj) {
@@ -162,12 +165,16 @@ class CommonCanvasToolbar extends React.Component {
 
 		// Add the new togglePalette icon if the palette is enabled.
 		if (this.props.isPaletteEnabled) {
+			// Applications may need to detect these legacy classes to detect which action
+			// is to be performed. So add them as additional classes. Also, jest tests require them.
+			const className = this.props.isPaletteOpen ? "paletteClose-action" : "paletteOpen-action";
+
+			const paletteOpenClose =
+				{ action: TOOLBAR_TOGGLE_PALETTE, label: paletteLabel, enable: true,
+					isSelected: this.props.isPaletteOpen, className };
+
 			const paletteTools = [
-				{ action: "togglePalette",
-					label: paletteLabel,
-					enable: true,
-					iconTypeOverride: this.props.isPaletteOpen ? "paletteClose" : "paletteOpen"
-				},
+				paletteOpenClose,
 				{ divider: true }
 			];
 			return paletteTools.concat(newLeftBar);
@@ -176,23 +183,33 @@ class CommonCanvasToolbar extends React.Component {
 	}
 
 	optionallyAddNotificationTool(rightBar) {
-		if (this.props.notificationConfig &&
-			typeof this.props.notificationConfig.action !== "undefined" &&
-			typeof this.props.notificationConfig.enable !== "undefined") {
+		if (this.props.notificationConfigExists) {
 			const notificationCount = this.props.notificationMessages.length;
 			const notificationTools = [
 				{ divider: true },
 				{ action: TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
-					label: this.props.notificationConfig.label,
-					enable: true,
-					isSelected: this.props.isNotificationOpen,
+					label: this.props.notificationConfigLabel,
+					enable: this.props.notificationConfigEnable,
+					extIsSubAreaDisplayed: this.props.isNotificationOpen,
+					setExtIsSubAreaDisplayed: this.callExtIsSubAreaDisplayed.bind(this),
 					className: this.getNotificationClassName(),
-					textContent: (notificationCount > 9) ? "9+" : notificationCount.toString()
+					textContent: (notificationCount > 9) ? "9+" : notificationCount.toString(),
+					subPanel: NotificationPanel,
+					subPanelData: { canvasController: this.props.canvasController },
+					leaveSubAreaOpenOnClickOutside: this.props.notificationConfigKeepOpen
 				}
 			];
 			return rightBar.concat(notificationTools);
 		}
 		return rightBar;
+	}
+
+	callExtIsSubAreaDisplayed(state) {
+		if (state) {
+			this.props.canvasController.openNotificationPanel();
+		} else {
+			this.props.canvasController.closeNotificationPanel();
+		}
 	}
 
 	configureToolbarButtonsState(toolbarConfig) {
@@ -206,6 +223,7 @@ class CommonCanvasToolbar extends React.Component {
 
 		if (typeof toolbarConfig !== "undefined") {
 			const editingAllowed = this.props.enableEditingActions;
+			this.applyToolState("multiUndo", toolbarConfig, editingAllowed && this.props.canMultiUndo);
 			this.applyToolState("undo", toolbarConfig, editingAllowed && this.props.canUndo);
 			this.applyToolState("redo", toolbarConfig, editingAllowed && this.props.canRedo);
 			this.applyToolState("cut", toolbarConfig, editingAllowed && this.props.canCutCopy);
@@ -272,17 +290,17 @@ class CommonCanvasToolbar extends React.Component {
 
 		if (this.props.enableToolbarLayout === TOOLBAR_LAYOUT_TOP) {
 			canvasToolbar = (
-				<section aria-label={this.getLabel("toolbar.label")} role="toolbar">
+				<div aria-label={this.getLabel("toolbar.label")} role="navigation" className={"common-canvas-toolbar"} >
 					<Toolbar
 						config={toolbarConfig}
+						containingDivId={this.props.containingDivId}
 						instanceId={this.props.canvasController.getInstanceId()}
 						toolbarActionHandler={this.toolbarActionHandler}
 						additionalText={{ overflowMenuLabel: this.getLabel("toolbar.overflowMenu") }}
 					/>
-				</section>
+				</div>
 			);
 		}
-
 		return canvasToolbar;
 	}
 }
@@ -291,6 +309,7 @@ CommonCanvasToolbar.propTypes = {
 	// Provided by CommonCanvas
 	intl: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	containingDivId: PropTypes.string.isRequired,
 
 	// Provided by redux
 	enableToolbarLayout: PropTypes.string.isRequired,
@@ -302,9 +321,13 @@ CommonCanvasToolbar.propTypes = {
 	isPaletteOpen: PropTypes.bool,
 	isNotificationOpen: PropTypes.bool,
 	notificationMessages: PropTypes.array,
-	notificationConfig: PropTypes.object,
+	notificationConfigExists: PropTypes.object,
+	notificationConfigEnable: PropTypes.bool,
+	notificationConfigLabel: PropTypes.string,
+	notificationConfigKeepOpen: PropTypes.bool,
 	enableInternalObjectModel: PropTypes.bool,
 	enableEditingActions: PropTypes.bool,
+	canMultiUndo: PropTypes.bool,
 	canUndo: PropTypes.bool,
 	canRedo: PropTypes.bool,
 	canCutCopy: PropTypes.bool,
@@ -323,10 +346,14 @@ const mapStateToProps = (state, ownProps) => ({
 	isPaletteEnabled: state.canvasconfig.enablePaletteLayout !== PALETTE_LAYOUT_NONE,
 	isPaletteOpen: state.palette.isOpen,
 	isNotificationOpen: state.notificationpanel.isOpen,
-	notificationConfig: state.notificationpanel.config,
+	notificationConfigExists: state.notificationpanel?.config,
+	notificationConfigEnable: state.notificationpanel?.config?.enable,
+	notificationConfigLabel: state.notificationpanel?.config?.label,
+	notificationConfigKeepOpen: state.notificationpanel?.config?.keepOpen,
 	notificationMessages: state.notifications,
 	enableInternalObjectModel: state.canvasconfig.enableInternalObjectModel,
 	enableEditingActions: state.canvasconfig.enableEditingActions,
+	canMultiUndo: ownProps.canvasController.getAllUndoCommands().length > 1,
 	canUndo: ownProps.canvasController.canUndo(),
 	canRedo: ownProps.canvasController.canRedo(),
 	canCutCopy: ownProps.canvasController.canCutCopy(),

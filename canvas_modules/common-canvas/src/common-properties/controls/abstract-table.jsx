@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,16 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Button, Checkbox } from "carbon-components-react";
+import { Button, Checkbox } from "@carbon/react";
 import FlexibleTable from "./../components/flexible-table";
 import TableButtons from "./../components/table-buttons";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
 import classNames from "classnames";
-import { Add16, TrashCan16, Edit16 } from "@carbon/icons-react";
+import { Add, TrashCan, Edit } from "@carbon/react/icons";
 import { ControlType, EditStyle } from "./../constants/form-constants";
+import { v4 as uuid4 } from "uuid";
 
 import { MESSAGE_KEYS, STATES, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION, ROW_SELECTION, UPDATE_TYPE } from "./../constants/constants";
 
@@ -71,7 +72,7 @@ export default class AbstractTable extends React.Component {
 		this.buildChildItem = this.buildChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
 		this.checkedAll = this.checkedAll.bind(this);
-
+		this.isLightTheme = this.isLightTheme.bind(this);
 
 		if (props.selectedRows && props.selectedRows.length > 0) {
 			this.scrollToRow = props.selectedRows[props.selectedRows.length - 1];
@@ -80,6 +81,7 @@ export default class AbstractTable extends React.Component {
 		this.selectSummaryPropertyName = "table-multi-select-edit-property-" + props.control.name;
 		props.controller.saveControls([{ name: this.selectSummaryPropertyName }]);
 		this.setSelectedSummaryRowValue(props.selectedRows);
+		this.uuid = uuid4();
 	}
 
 	componentDidMount() {
@@ -258,16 +260,20 @@ export default class AbstractTable extends React.Component {
 		const summaryPropertyId = {
 			name: this.selectSummaryPropertyName
 		};
+		const tableControl = this.props.controller.getControl({ name: this.props.control.name });
 		const newSelectedSummaryRow = this.props.controller.getPropertyValue(summaryPropertyId);
 		if (newSelectedSummaryRow && Array.isArray(newSelectedSummaryRow)) {
 			newSelectedSummaryRow[0].forEach((cellValue, colIndex) => {
-				if (!isEqual(cellValue, this.selectedSummaryRowValue[0][colIndex])) {
+				if (cellValue !== null && !isEqual(cellValue, this.selectedSummaryRowValue[0][colIndex])) {
 					// if a column does not have a value, the default value is null and the value returned
 					// from getPropertyValue is undefined causing unneccessary updates and an infinite loop during intialization
 					const testCell = (typeof cellValue === "undefined") ? null : cellValue;
 					this.props.selectedRows.forEach((rowIndex) => {
 						this.props.controller.updatePropertyValue({ name: this.props.control.name, row: rowIndex, col: colIndex }, testCell, true);
 					});
+					if (tableControl.subControls[colIndex].controlType === ControlType.ONEOFSELECT) {
+						this.props.controller.updatePropertyValue({ name: this.selectSummaryPropertyName, row: 0, col: colIndex }, null);
+					}
 				}
 			});
 			this.selectedSummaryRowValue = cloneDeep(newSelectedSummaryRow);
@@ -429,6 +435,10 @@ export default class AbstractTable extends React.Component {
 		}
 	}
 
+	isLightTheme() {
+		return this.props.controller.getLight() && this.props.control.light;
+	}
+
 	makeSelectedEditRow(selectedRows) {
 		if (selectedRows && Array.isArray(selectedRows) && selectedRows.length > 1) {
 			const rowsSelectedLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
@@ -457,7 +467,7 @@ export default class AbstractTable extends React.Component {
 					tableLabel={tableLabel}
 					summaryTable
 					rowSelection={ROW_SELECTION.MULTIPLE}
-					light={this.props.controller.getLight()}
+					light={this.isLightTheme()}
 					emptyTablePlaceholder={this.props.control.additionalText}
 				/>
 			</div>);
@@ -495,9 +505,9 @@ export default class AbstractTable extends React.Component {
 					className="properties-remove-fields-button"
 					disabled={removeDisabled}
 					onClick={removeOnClick}
-					size="small"
+					size="sm"
 					kind="ghost"
-					renderIcon={TrashCan16}
+					renderIcon={TrashCan}
 				>
 					{removeButtonLabel}
 				</Button>
@@ -505,9 +515,9 @@ export default class AbstractTable extends React.Component {
 					className="properties-add-fields-button"
 					disabled={addButtonDisabled}
 					onClick={this.addOnClick.bind(this, this.props.propertyId)}
-					size="small"
+					size="sm"
 					kind="ghost"
-					renderIcon={Add16}
+					renderIcon={Add}
 				>
 					{addButtonLabel}
 				</Button>
@@ -524,9 +534,9 @@ export default class AbstractTable extends React.Component {
 				<Button
 					className="properties-edit-button"
 					onClick={this.editOnClick.bind(this, this.props.propertyId)}
-					size="small"
+					size="sm"
 					kind="ghost"
-					renderIcon={Edit16}
+					renderIcon={Edit}
 				>
 					{tableButtonConfig.label}
 				</Button>
@@ -558,7 +568,7 @@ export default class AbstractTable extends React.Component {
 		}
 	}
 
-	checkedAllValue(colIndex, checked) {
+	checkedAllValue(colIndex, evt, { checked, id }) {
 		const controlValue = this.props.value;
 		if (Array.isArray(controlValue)) {
 			for (let i = 0; i < controlValue.length; i++) {
@@ -677,7 +687,7 @@ export default class AbstractTable extends React.Component {
 				updateRowSelections={rowClickCallback}
 				selectedRows= {this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
-				light={this.props.controller.getLight()}
+				light={this.isLightTheme()}
 				emptyTablePlaceholder={this.props.control.additionalText}
 			/>);
 		return (
@@ -689,9 +699,8 @@ export default class AbstractTable extends React.Component {
 
 	makeHeader(sortFields, filterFields) {
 		const headers = [];
-		for (var j = 0; j < this.props.control.subControls.length; j++) {
+		for (let j = 0; j < this.props.control.subControls.length; j++) {
 			const columnDef = this.props.control.subControls[j];
-			const checkboxName = this.props.control.name + j; // TODO might not be unique
 			// See if the entire column is disabled
 			const colState = this.props.controller.getControlState({ name: this.props.control.name, col: j });
 			const disabled = colState === STATES.DISABLED || colState === STATES.HIDDEN;
@@ -699,7 +708,7 @@ export default class AbstractTable extends React.Component {
 				? (
 					<Checkbox
 						disabled={disabled}
-						id={checkboxName}
+						id={`properties-at-header-cb-${this.uuid}-${this.props.control.name}=${j}`}
 						checked={this.checkedAll(j)}
 						onChange={this.checkedAllValue.bind(this, j)}
 						labelText={columnDef.label.text}
@@ -714,7 +723,9 @@ export default class AbstractTable extends React.Component {
 					"width": columnDef.width,
 					"description": (columnDef.description ? columnDef.description.text : null),
 					"resizable": columnDef.resizable ? columnDef.resizable : false,
-					"operation": (columnDef.generatedValues && columnDef.generatedValues.operation ? columnDef.generatedValues.operation : null) });
+					"operation": (columnDef.generatedValues && columnDef.generatedValues.operation ? columnDef.generatedValues.operation : null),
+					"disabled": disabled
+				});
 				if (columnDef.filterable) {
 					filterFields.push(columnDef.name);
 				}

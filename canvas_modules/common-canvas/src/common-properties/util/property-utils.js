@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 import logger from "../../../utils/logger";
 import { ParamRole } from "../constants/form-constants";
 import { DATA_TYPE, CARBON_ICONS } from "../constants/constants";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isUndefined, isString } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import defaultMessages1 from "../../../locales/common-properties/locales/en.json";
 import defaultMessages2 from "../../../locales/command-actions/locales/en.json";
@@ -532,6 +532,64 @@ function _findCorrespondingValue(input, values) {
 	return input;
 }
 
+// Convert the data types of currentParameters to the type defined in parameterDefs
+function convertValueDataTypes(currentParameters, controls) {
+	const convertedCurrentParameters = {};
+	const currentParams = Object.keys(currentParameters);
+	currentParams.forEach((paramName) => {
+		const originalValue = currentParameters[paramName];
+		if (!isUndefined(originalValue) && controls[paramName]) {
+			const valueType = controls[paramName].valueDef.propType;
+			const isList = controls[paramName].valueDef.isList;
+			if (originalValue) {
+				switch (valueType) {
+				case "string": {
+					if (isList) {
+						convertedCurrentParameters[paramName] = originalValue.map((val) => val.toString());
+					} else {
+						convertedCurrentParameters[paramName] = originalValue.toString();
+					}
+					break;
+				}
+				case "integer": {
+					if (isList) {
+						convertedCurrentParameters[paramName] = originalValue.map((val) => parseInt(val, 10));
+					} else {
+						convertedCurrentParameters[paramName] = parseInt(originalValue, 10);
+					}
+					break;
+				}
+				case "double": {
+					if (isList) {
+						convertedCurrentParameters[paramName] = originalValue.map((val) => parseFloat(val));
+					} else {
+						convertedCurrentParameters[paramName] = parseFloat(originalValue);
+					}
+					break;
+				}
+				case "boolean": {
+					if (isString(originalValue)) {
+						convertedCurrentParameters[paramName] = originalValue === "true";
+					} else { // Assume boolean
+						convertedCurrentParameters[paramName] = Boolean(originalValue);
+					}
+					break;
+				}
+				default: { // arrays, objects, enum, password
+					convertedCurrentParameters[paramName] = originalValue;
+					break;
+				}
+				}
+			} else { // null
+				convertedCurrentParameters[paramName] = originalValue;
+			}
+		} else { // control is missing or current parameter is not set
+			convertedCurrentParameters[paramName] = originalValue;
+		}
+	});
+	return convertedCurrentParameters;
+}
+
 export {
 	toType,
 	formatMessage,
@@ -541,6 +599,7 @@ export {
 	isSubControlStructureObjectType,
 	convertObjectStructureToArray,
 	convertArrayStructureToObject,
+	convertValueDataTypes,
 	getFieldsFromControlValues,
 	copy,
 	stringifyFieldValue,

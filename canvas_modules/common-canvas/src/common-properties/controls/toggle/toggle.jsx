@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Toggle } from "carbon-components-react";
+import { Toggle } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
@@ -54,11 +54,20 @@ class ToggleControl extends React.Component {
 			labelB={labelOn}
 			labelA={labelOff}
 			onToggle={this.handleChange.bind(this)}
-			labelText={this.props.tableControl ? null : this.props.controlItem}
+			aria-labelledby={`${this.props.propertyId?.name}-toggle-label`}
 		/>);
 		const className = classNames("properties-toggle", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				{
+					this.props.tableControl
+						? null
+						: (
+							<div id={`${this.props.propertyId?.name}-toggle-label`} className="properties-toggle-label">
+								{this.props.tableControl ? null : this.props.controlItem}
+							</div>
+						)
+				}
 				{toggleControl}
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

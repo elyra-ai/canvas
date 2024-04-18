@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import ActionImage from ".../../../src/common-properties/actions/image";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 import Controller from "../../../src/common-properties/properties-controller";
@@ -52,7 +52,8 @@ const action = {
 			"height": 20,
 			"width": 25
 		}
-	}
+	},
+	"class_name": "custom-class-for-action-image"
 };
 
 describe("action-image renders correctly", () => {
@@ -141,16 +142,23 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const tooltip = wrapper.find("div[id='tooltipContainer']");
+		const tooltip = wrapper.find("div.tooltipContainer");
 		expect(tooltip).to.have.length(1);
 		expect(tooltip.text()).to.equal("Click to rotate through moon phases.");
 	});
 });
 
 describe("actions using paramDef", () => {
+	let wrapper;
+	let renderedObject;
+	beforeEach(() => {
+		renderedObject = propertyUtils.flyoutEditorForm(ACTION_PARAMDEF);
+		wrapper = renderedObject.wrapper;
+	});
+
 	it("should fire action when image clicked", (done) => {
-		const renderedObject = propertyUtils.flyoutEditorForm(ACTION_PARAMDEF, null, { actionHandler: callback }, { appData: appData });
-		const wrapper = renderedObject.wrapper;
+		renderedObject = propertyUtils.flyoutEditorForm(ACTION_PARAMDEF, null, { actionHandler: callback }, { appData: appData });
+		wrapper = renderedObject.wrapper;
 		function callback(id, inAppData, data) {
 			expect(id).to.equal("moon");
 			expect(inAppData).to.eql(appData);
@@ -161,4 +169,13 @@ describe("actions using paramDef", () => {
 		image.simulate("click");
 	});
 
+	it("action image should have custom classname defined", () => {
+		// class_name defined in uiHints action_info
+		const fallImage = wrapper.find(".properties-action-image").at(3);
+		expect(fallImage.prop("className")).to.equal("properties-action-image right custom-class-for-action-image");
+
+		// class_name not defined in uiHints action_info
+		const winterImage = wrapper.find(".properties-action-image").at(0);
+		expect(winterImage.prop("className")).to.equal("properties-action-image");
+	});
 });

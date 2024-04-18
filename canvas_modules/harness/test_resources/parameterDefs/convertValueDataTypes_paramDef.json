@@ -1,0 +1,437 @@
+{
+	"titleDefinition": {
+		"title": "Convert currentParameter data types"
+	},
+	"current_parameters": {
+		"readonly_text": "This example parameterDef has currentParameters that are in the incorrect data type as defined in the paramter definition. There will be errors on the console where prop checks fail. ",
+		"string_value": "This is a string",
+		"string_value_convert": true,
+		"integer_value": 0,
+		"integer_value_convert": "0",
+		"double_value": 1.25,
+		"double_value_convert": "1.25",
+		"boolean_value": true,
+		"boolean_value_convert": "false",
+		"null_value": null,
+		"time_value": "05:45:09",
+		"timestamp_value": -1847548800000,
+		"dropdown_value": true,
+		"list_value": [
+			"list item 1",
+			true,
+			3
+		],
+		"table_value": [
+			[
+				"Age",
+				"age",
+				""
+			],
+			[
+				"BP",
+				"BP-1",
+				"number"
+			]
+		]
+	},
+	"parameters": [
+		{
+			"id": "readonly_text",
+			"type": "string"
+		},
+		{
+			"id": "string_value",
+			"type": "string"
+		},
+		{
+			"id": "string_value_convert",
+			"type": "string"
+		},
+		{
+			"id": "integer_value",
+			"type": "integer"
+		},
+		{
+			"id": "integer_value_convert",
+			"type": "integer"
+		},
+		{
+			"id": "double_value",
+			"type": "double"
+		},{
+			"id": "double_value_convert",
+			"type": "double"
+		},
+		{
+			"id": "boolean_value",
+			"type": "boolean"
+		},
+		{
+			"id": "boolean_value_convert",
+			"type": "boolean"
+		},
+		{
+			"id": "null_value",
+			"type": "string",
+			"role": "column"
+		},
+		{
+			"id": "time_value",
+			"type": "time"
+		},
+		{
+			"id": "timestamp_value",
+			"type": "timestamp"
+		},
+		{
+			"id": "dropdown_value",
+			"enum": [
+				"true",
+				"false",
+				"red",
+				"orange",
+				"yellow",
+				"green",
+				"blue",
+				"purple"
+			]
+		},
+		{
+			"id": "list_value",
+			"type": "array[string]"
+		},
+		{
+			"id": "table_value",
+			"type": "map[string, table_value]",
+			"role": "column",
+			"default": []
+		}
+	],
+	"complex_types": [
+		{
+			"id": "table_value",
+			"key_definition": {
+				"id": "field",
+				"type": "string",
+				"role": "column"
+			},
+			"parameters": [
+				{
+					"id": "new_name",
+					"type": "string",
+					"role": "new_column"
+				},
+				{
+					"id": "new_type",
+					"enum": [
+						"string",
+						"number",
+						"boolean",
+						"time",
+						"date"
+					]
+				}
+			]
+		}
+	],
+	"uihints": {
+		"id": "convertValuesDataTypes",
+		"label": {
+			"default": "Convert value data types"
+		},
+		"editor_size": "medium",
+		"parameter_info": [
+			{
+				"parameter_ref": "readonly_text",
+				"label": {
+					"default": "Purpose of this test"
+				},
+				"control": "readonly",
+				"separator": "after"
+			},
+			{
+				"parameter_ref": "string_value",
+				"label": {
+					"default": "String"
+				},
+				"description": {
+					"default": "currentParameter value is type 'string'",
+					"placement": "on_panel"
+				}
+			},
+			{
+				"parameter_ref": "string_value_convert",
+				"label": {
+					"default": "String"
+				},
+				"description": {
+					"default": "currentParameter value needs to be converted",
+					"placement": "on_panel"
+				}
+			},
+			{
+				"parameter_ref": "integer_value",
+				"label": {
+					"default": "Integer"
+				},
+				"description": {
+					"default": "currentParameter value is type 'integer'",
+					"placement": "on_panel"
+				}
+			},
+			{
+				"parameter_ref": "integer_value_convert",
+				"label": {
+					"default": "Integer"
+				},
+				"description": {
+					"default": "currentParameter value needs to be converted",
+					"placement": "on_panel"
+				}
+			},
+			{
+				"parameter_ref": "double_value",
+				"label": {
+					"default": "Double"
+				},
+				"description": {
+					"default": "currentParameter value is type 'double'",
+					"placement": "on_panel"
+				}
+			},
+			{
+				"parameter_ref": "double_value_convert",
+				"label": {
+					"default": "Double"
+				},
+				"description": {
+					"default": "currentParameter value needs to be converted",
+					"placement": "on_panel"
+				}
+			},
+			{
+				"parameter_ref": "boolean_value",
+				"label": {
+					"default": "Checkbox"
+				},
+				"description": {
+					"default": "currentParameter value is type 'boolean'"
+				}
+			},
+			{
+				"parameter_ref": "boolean_value_convert",
+				"label": {
+					"default": "Checkbox needs conversion"
+				},
+				"description": {
+					"default": "currentParameter value needs to be converted"
+				}
+			},
+			{
+				"parameter_ref": "null_value",
+				"label": {
+					"default": "Column"
+				},
+				"description": {
+					"default": "currentParameter value is 'null', this will not be converted",
+					"placement": "on_panel"
+				}
+			},
+			{
+				"parameter_ref": "time_value",
+				"label": {
+					"default": "Time format 'H:m:s'"
+				},
+				"description": {
+					"default": "currentParameter value is type 'time', this will not be converted",
+					"placement": "on_panel"
+				},
+				"time_format": "H:m:s",
+				"class_name": "timefield-control-class"
+			},
+			{
+				"parameter_ref": "timestamp_value",
+				"label": {
+					"default": "Timestamp"
+				},
+				"description": {
+					"default": "currentParameter value is type 'timestamp', this will not be converted",
+					"placement": "on_panel"
+				},
+				"control": "timestampfield"
+			},
+			{
+				"parameter_ref": "dropdown_value",
+				"label": {
+					"default": "Dropdown (oneofselect)"
+				},
+				"description": {
+					"default": "currentParameter value needs to be converted",
+					"placement": "on_panel"
+				}
+			},
+			{
+				"parameter_ref": "list_value",
+				"label": {
+					"default": "list of strings"
+				},
+				"description": {
+					"default": "list with a string array value"
+				},
+				"control": "list"
+			},
+			{
+				"parameter_ref": "table_value",
+				"label": {
+					"default": "Table"
+				},
+				"description": {
+					"default": "The current_parameters should remain the same. No data type conversion is done."
+				}
+			}
+		],
+		"complex_type_info": [
+			{
+				"complex_type_ref": "table_value",
+				"label": {
+					"default": "Test"
+				},
+				"key_definition": {
+					"parameter_ref": "field",
+					"label": {
+						"default": "Field"
+					},
+					"width": 26,
+					"summary": true
+				},
+				"parameters": [
+					{
+						"parameter_ref": "new_name",
+						"label": {
+							"default": "New name"
+						},
+						"width": 26,
+						"edit_style": "inline",
+						"filterable": true,
+						"summary": true
+					},
+					{
+						"parameter_ref": "new_type",
+						"label": {
+							"default": "Type"
+						},
+						"description": {
+							"default": "Select data type"
+						},
+						"width": 26,
+						"edit_style": "inline"
+					}
+				]
+			}
+		],
+		"group_info": [
+			{
+				"id": "controls",
+				"label": {
+					"default": "Example parameters"
+				},
+				"type": "controls",
+				"parameter_refs": [
+					"readonly_text",
+					"string_value",
+					"string_value_convert",
+					"integer_value",
+					"integer_value_convert",
+					"double_value",
+					"double_value_convert",
+					"boolean_value",
+					"boolean_value_convert",
+					"null_value",
+					"time_value",
+					"timestamp_value",
+					"dropdown_value",
+					"list_value",
+					"table_value"
+				]
+			}
+		]
+	},
+	"dataset_metadata": [
+		{
+			"fields": [
+				{
+					"name": "Age",
+					"type": "integer",
+					"metadata": {
+						"description": "",
+						"measure": "range",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Sex",
+					"type": "string",
+					"metadata": {
+						"description": "",
+						"measure": "ordered_set",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "BP",
+					"type": "string",
+					"metadata": {
+						"description": "",
+						"measure": "discrete",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Cholesterol",
+					"type": "string",
+					"metadata": {
+						"description": "",
+						"measure": "set",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Na",
+					"type": "double",
+					"metadata": {
+						"description": "",
+						"measure": "flag",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "K",
+					"type": "double",
+					"metadata": {
+						"description": "",
+						"measure": "collection",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Drug",
+					"type": "string",
+					"metadata": {
+						"description": "",
+						"measure": "geospatial",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Ag",
+					"type": "integer",
+					"metadata": {
+						"description": "",
+						"measure": "",
+						"modeling_role": "input"
+					}
+				}
+			]
+		}
+	]
+}

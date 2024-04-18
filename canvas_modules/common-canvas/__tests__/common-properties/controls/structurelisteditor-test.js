@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -748,7 +748,7 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
 
 		// click on subpanel edit for main table
-		let editButton = table.find(".properties-subpanel-button").at(0);
+		let editButton = table.find("button.properties-subpanel-button").at(0);
 		editButton.simulate("click");
 
 		// subPanel table
@@ -970,7 +970,7 @@ describe("structurelisteditor classnames appear correctly", () => {
 		expect(parent).to.have.length(1);
 		expect(parent.find(".nested-child-cell-structurelisteditor-control-class")).to.have.length(1);
 		// click on subpanel edit for first row
-		const editButton = parent.find(".properties-subpanel-button").at(0);
+		const editButton = parent.find("button.properties-subpanel-button").at(0);
 		editButton.simulate("click");
 		expect(wrapper.find(".double-nested-subpanel-structurelisteditor-control-class")).to.have.length(1);
 	});

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import React from "react";
 import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
 import defaultMessages from "../../locales/palette/locales/en.json";
-import { Search } from "carbon-components-react";
+import { Search } from "@carbon/react";
 
 class PaletteFlyoutContentSearch extends React.Component {
 
@@ -52,7 +52,7 @@ class PaletteFlyoutContentSearch extends React.Component {
 			// palette-flyout-search id added for hopscotch tours
 			<div className="palette-flyout-search-container" id="palette-flyout-search">
 				<Search
-					key="palette-flyout-search"
+					id="palette-flyout-search"
 					className="palette-flyout-search"
 					placeholder={placeHolder}
 					onChange={this.handleSearchStringChange}

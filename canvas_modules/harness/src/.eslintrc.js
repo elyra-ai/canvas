@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,23 +18,24 @@ module.exports = {
 		"eslint-config-canvas",
 		"eslint-config-canvas/react"
 	].map(require.resolve),
-		env: {
-		},
-		rules: {
-				// Disable strict warning on ES6 Components
-			"strict": 0,
-			"global-require": 0,
-			"sort-imports": 0,
-			"react/jsx-indent-props": [2, "tab"],
-			"max-len": [2, 180, 4],
-		},
-		globals: {
-				"document": true,
-				"window": true,
-				"location": true,
-				"navigator": true
-		},
-		parserOptions: {
-			"sourceType": "module"
-		}
+	env: {
+	},
+	rules: {
+		// Disable strict warning on ES6 Components
+		"strict": 0,
+		"global-require": 0,
+		"sort-imports": 0,
+		"react/jsx-indent-props": [2, "tab"],
+		"max-len": [2, 180, 4],
+	},
+	globals: {
+		"document": true,
+		"window": true,
+		"location": true,
+		"navigator": true,
+		"fetch": true
+	},
+	parserOptions: {
+		"sourceType": "module"
+	}
 };

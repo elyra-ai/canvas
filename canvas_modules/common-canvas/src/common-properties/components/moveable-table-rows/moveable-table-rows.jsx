@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import { formatMessage } from "./../../util/property-utils";
-import { ArrowUp24, ArrowDown24, UpToTop24, DownToBottom24 } from "@carbon/icons-react";
+import { ArrowUp, ArrowDown, UpToTop, DownToBottom } from "@carbon/react/icons";
 import classNames from "classnames";
 import EmptyTable from "./../empty-table";
 import { MESSAGE_KEYS } from "./../../constants/constants";
@@ -39,7 +39,7 @@ class MoveableTableRows extends React.Component {
 	}
 
 	getMoveableTableRows() {
-		var moveCol = null;
+		let moveCol = null;
 		if (typeof this.props.control.moveableRows !== "undefined" && this.props.control.moveableRows) {
 			const moveImages = this.getTableRowMoveImages();
 			moveCol = (
@@ -52,7 +52,7 @@ class MoveableTableRows extends React.Component {
 		}
 
 		// Added role presentation to fix a11y violation - no headers in the table
-		var content = (<table role="presentation" className="properties-mr-table-container">
+		const content = (<table role="presentation" className="properties-mr-table-container">
 			<tbody>
 				<tr className={classNames("properties-mr-table-content", { "disabled": this.props.disabled })}>
 					<td>
@@ -105,6 +105,8 @@ class MoveableTableRows extends React.Component {
 
 		const topLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_TOP_DESCRIPTION);
 		const upLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION);
+		const UpToTop24 = React.forwardRef((props, ref) => <UpToTop ref={ref} size={24} {...props} />);
+		const ArrowUp24 = React.forwardRef((props, ref) => <ArrowUp ref={ref} size={24} {...props} />);
 		const topImages = (
 			<div key="topImages">
 				<Button
@@ -115,6 +117,7 @@ class MoveableTableRows extends React.Component {
 					renderIcon={UpToTop24}
 					iconDescription={topLabel}
 					tooltipPosition="left"
+					size="sm"
 					hasIconOnly
 				/>
 				<Button
@@ -125,12 +128,15 @@ class MoveableTableRows extends React.Component {
 					renderIcon={ArrowUp24}
 					iconDescription={upLabel}
 					tooltipPosition="left"
+					size="sm"
 					hasIconOnly
 				/>
 			</div>
 		);
 		const bottomLabel = formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_DOWN_DESCRIPTION);
 		const downLabel = formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION);
+		const ArrowDown24 = React.forwardRef((props, ref) => <ArrowDown ref={ref} size={24} {...props} />);
+		const DownToBottom24 = React.forwardRef((props, ref) => <DownToBottom ref={ref} size={24} {...props} />);
 		const bottomImages = (
 			<div key="bottomImages">
 				<Button
@@ -141,6 +147,7 @@ class MoveableTableRows extends React.Component {
 					renderIcon={ArrowDown24}
 					iconDescription={bottomLabel}
 					tooltipPosition="left"
+					size="sm"
 					hasIconOnly
 				/>
 				<Button
@@ -151,6 +158,7 @@ class MoveableTableRows extends React.Component {
 					renderIcon={DownToBottom24}
 					iconDescription={downLabel}
 					tooltipPosition="left"
+					size="sm"
 					hasIconOnly
 				/>
 			</div>

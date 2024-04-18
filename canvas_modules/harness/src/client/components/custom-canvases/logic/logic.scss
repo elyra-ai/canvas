@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,12 +35,12 @@
 		// Style node ellipsis icon.
 		.d3-node-ellipsis-group {
 			.d3-node-ellipsis {
-				fill: $icon-01;
+				fill: $icon-primary;
 			}
 
 			&:hover {
 				.d3-node-ellipsis-background {
-					fill: $ui-03;
+					fill: $layer-accent-01;
 				}
 			}
 		}
@@ -87,7 +87,7 @@
 
 	// Style new connection link line
 	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: $interactive-01;
+		stroke: $button-primary;
 		stroke-width: 2;
 		stroke-dasharray: 1 0;
 		fill: none;

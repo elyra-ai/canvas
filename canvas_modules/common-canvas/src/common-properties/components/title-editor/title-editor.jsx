@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@ import { connect } from "react-redux";
 import { setTitle } from "./../../actions";
 import Isvg from "react-inlinesvg";
 import { get } from "lodash";
-import { TextInput, Button } from "carbon-components-react";
+import { TextInput, Button } from "@carbon/react";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
 import classNames from "classnames";
-import { Help16, Edit16, Close16 } from "@carbon/icons-react";
+import { Help, Edit, Close } from "@carbon/react/icons";
 
 
 class TitleEditor extends Component {
@@ -93,6 +93,9 @@ class TitleEditor extends Component {
 	}
 
 	render() {
+		if (this.props.title === null) {
+			return null;
+		}
 		const propertiesTitleEditButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_LABEL);
 		const helpButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_HELPBUTTON_LABEL);
 		const closeButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
@@ -108,8 +111,8 @@ class TitleEditor extends Component {
 				onClick={this.editTitleClickHandler}
 				tooltipPosition="bottom"
 				tooltipAlignment="end"
-				renderIcon={Edit16}
-				size="small"
+				renderIcon={Edit}
+				size="sm"
 				iconDescription={propertiesTitleEditButtonLabel}
 				hasIconOnly
 			/>);
@@ -121,8 +124,8 @@ class TitleEditor extends Component {
 				data-id="help"
 				onClick={this.helpClickHandler}
 				tooltipPosition="bottom"
-				renderIcon={Help16}
-				size="small"
+				renderIcon={Help}
+				size="sm"
 				iconDescription={helpButtonLabel}
 				hasIconOnly
 			/>)
@@ -132,11 +135,11 @@ class TitleEditor extends Component {
 			? (<div className="properties-close-button">
 				<Button
 					kind="ghost"
-					size="small"
+					size="sm"
 					data-id="close"
 					onClick={this.props.closeHandler}
 					tooltipPosition="left"
-					renderIcon={Close16}
+					renderIcon={Close}
 					iconDescription={closeButtonLabel}
 					hasIconOnly
 				/>
@@ -164,7 +167,8 @@ class TitleEditor extends Component {
 
 		return (
 			<div className={classNames("properties-title-editor",
-				{ "properties-title-with-heading": this.headingEnabled })}
+				{ "properties-title-with-heading": this.headingEnabled },
+				{ "properties-title-right-flyout-tabs-view": this.props.rightFlyoutTabsView })}
 			>
 				{closeButton}
 				{heading}
@@ -182,7 +186,7 @@ class TitleEditor extends Component {
 						ref={this.textInputRef}
 						value={this.props.title}
 						onChange={this.handleTitleChange}
-						onKeyPress={(e) => this._handleKeyPress(e)}
+						onKeyDown={(e) => this._handleKeyPress(e)}
 						readOnly={this.props.labelEditable === false} // shows a non editable icon
 						labelText={this.labelText}
 						hideLabel
@@ -213,6 +217,7 @@ TitleEditor.propTypes = {
 	icon: PropTypes.string,
 	heading: PropTypes.string,
 	showHeading: PropTypes.bool,
+	rightFlyoutTabsView: PropTypes.bool,
 	title: PropTypes.string, // set by redux
 	setTitle: PropTypes.func // set by redux
 };

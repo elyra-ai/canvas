@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,15 +24,12 @@
 	justify-content: center;
 }
 
-.table-row-move-button.bx--btn--ghost {
-	padding: 0;
-	min-height: 24px;
-	margin-bottom: 8px;
+.table-row-move-button.cds--btn--ghost {
+	width: calc(#{$spacing-05} + #{$spacing-01});
 
 	> svg {
-		height: 16px;
-		width: 16px;
-		margin-left: 0;
+		height: $spacing-05;
+		width: $spacing-05;
 	}
 }
 
@@ -46,7 +43,6 @@
 		.properties-mr-table-content {
 			width: 100%;
 			display: flex;
-			border-bottom: 0;
 			&.disabled {
 				pointer-events: none;
 				opacity: 0.5;

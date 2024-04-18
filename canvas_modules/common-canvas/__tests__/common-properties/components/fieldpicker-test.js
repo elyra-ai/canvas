@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -845,7 +845,7 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		const headerCheckboxLabel = tableHeaderRows.find(".properties-vt-header-checkbox").text();
 		const secondColumnLabel = tableHeaderRows
 			.find("div[role='columnheader']")
-			.at(1)
+			.at(0)
 			.text();
 		expect(headerCheckboxLabel).to.equal(`Select all ${secondColumnLabel}`);
 	});

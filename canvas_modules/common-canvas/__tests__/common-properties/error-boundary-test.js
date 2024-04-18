@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
-import { mount } from "enzyme";
+import { mount } from "../_utils_/mount-utils.js";
 import { IntlProvider } from "react-intl";
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 
@@ -56,7 +56,7 @@ describe("The error boundary class should catch errors and display a fallback UI
 			</IntlProvider>
 		);
 		expect(wrapper.find("div.properties-flyout-error-container")).to.have.length(1);
-		expect(wrapper.find("button.properties-apply-button.bx--btn.bx--btn--sm.bx--btn--primary")).to.have.length(1);
-		expect(wrapper.find("button.properties-apply-button.bx--btn.bx--btn--sm.bx--btn--secondary")).to.have.length(0);
+		expect(wrapper.find("button.properties-apply-button.cds--btn.cds--btn--primary")).to.have.length(1);
+		expect(wrapper.find("button.properties-apply-button.cds--btn.cds--btn--secondary")).to.have.length(0);
 	});
 });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import TextArea from "../../../src/common-properties/controls/textarea";
 import { TRUNCATE_LIMIT } from "../../../src/common-properties/constants/constants.js";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
@@ -297,7 +297,7 @@ describe("textarea control renders correctly", () => {
 		const textWrapper = wrapper.find("div[data-id='properties-test-textarea']");
 		expect(textWrapper.find("textarea").prop("disabled")).to.equal(true);
 
-		const validationMsg = textWrapper.find("div.bx--form-requirement");
+		const validationMsg = textWrapper.find("div.cds--form-requirement");
 		expect(validationMsg).to.have.length(1);
 	});
 });

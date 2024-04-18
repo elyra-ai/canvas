@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ function getDropdownItems(wrapper, parameterId) {
 	const dropdownButton = dropdownWrapper.find("button");
 	dropdownButton.simulate("click");
 	dropdownWrapper = wrapper.find(`div[data-id='properties-${parameterId}']`);
-	const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+	const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 	return dropdownList;
 }
 

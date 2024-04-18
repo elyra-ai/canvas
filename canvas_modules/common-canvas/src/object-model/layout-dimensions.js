@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { cloneDeep } from "lodash";
+
 const portsHorizontalDefaultLayout = {
 	nodeLayout: {
 		// Default node sizes. The height might be overridden for nodes with more ports
@@ -21,7 +23,14 @@ const portsHorizontalDefaultLayout = {
 		defaultNodeWidth: 160,
 		defaultNodeHeight: 40,
 
-		// Default node shape. Can be "rectangle" or "port-arcs"
+		// A space separated list of classes that will be added to the group <g>
+		// DOM element for the node.
+		className: "",
+
+		// Displays the node outline shape underneath the image and label.
+		nodeShapeDisplay: true,
+
+		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeOutlineDisplay is true.
 		nodeShape: "port-arcs",
 
 		// SVG path strings to define the shape of your node and its
@@ -29,6 +38,9 @@ const portsHorizontalDefaultLayout = {
 		// based on the nodeShape setting.
 		bodyPath: null,
 		selectionPath: null,
+
+		// Displays the external object specified, as the body of the node
+		nodeExternalObject: false,
 
 		// Display image
 		imageDisplay: true,
@@ -41,6 +53,9 @@ const portsHorizontalDefaultLayout = {
 		imagePosition: "topLeft",
 		imagePosX: 6,
 		imagePosY: 7,
+
+		// Display label
+		labelDisplay: true,
 
 		// Label dimensions
 		labelWidth: 112,
@@ -58,6 +73,12 @@ const portsHorizontalDefaultLayout = {
 		labelOutline: false,
 		labelMaxCharacters: null, // null allows unlimited characters
 		labelAllowReturnKey: false, // true allows line feed to be inserted into label, "save" to make the return key save the label.
+
+		// An array of decorations to be applied to the node. For details see:
+		// https://elyra-ai.github.io/canvas/03.04.01-decorations/
+		// These are added to the node at run time and will not be saved into
+		// the pipeline flow.
+		decorations: [],
 
 		// Positions and dimensions for 9 enumerated default decorator positions.
 		// decoratorWidth and decoratorHeight are the dimensions of the outline
@@ -135,26 +156,19 @@ const portsHorizontalDefaultLayout = {
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
-		// Position of left single input port. Multiple input ports will be
-		// automatically positioned with the Y coordinate being overriden. These
-		// values are an offset from the top left corner of the node outline.
-		// Used when linkDirection is "LeftRight".
-		inputPortLeftPosX: 0,
-		inputPortLeftPosY: 20,
+		// Indicates whether multiple input ports should be automatically
+		// positioned (true) or positioned based on the contents of
+		// inputPortPositions array (false).
+		inputPortAutoPosition: true,
 
-		// Position of top single input port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the top left corner of the node outline.
-		// Used when linkDirection is "TopBottom".
-		inputPortTopPosX: 80,
-		inputPortTopPosY: 0,
-
-		// Position of bottom single input port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the bottom left corner of the node outline.
-		// Used when linkDirection is "BottomTop".
-		inputPortBottomPosX: 80,
-		inputPortBottomPosY: 0,
+		// An array of input port positions. Each element is structured like
+		// this: { x_pos: 5, y_pos: 10, pos: "topLeft" }. x_pos and y_pos are
+		// offsets from the pos point on the node.
+		// The order of the elements corresponds to the order of ports in the
+		// inputs array for the node.
+		inputPortPositions: [
+			{ x_pos: 0, y_pos: 20, pos: "topLeft" }
+		],
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -177,27 +191,19 @@ const portsHorizontalDefaultLayout = {
 		outputPortWidth: 12,
 		outputPortHeight: 12,
 
-		// Position of right single output port. Multiple input ports will be
-		// automatically positioned with the Y coordinate being overriden. These
-		// values are an offset from the top right corner of the node outline.
-		// Used when linkDirection is "LeftRight".
-		outputPortRightPosition: "topRight",
-		outputPortRightPosX: 0,
-		outputPortRightPosY: 20,
+		// Indicates whether multiple output ports should be automatically
+		// positioned (true) or positioned based on the contents of
+		// outputPortPositions array (false).
+		outputPortAutoPosition: true,
 
-		// Position of top single output port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the top left corner of the node outline.
-		// Used when linkDirection is "BottomTop".
-		outputPortTopPosX: 80,
-		outputPortTopPosY: 0,
-
-		// Position of bottom single output port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the bottom left corner of the node outline.
-		// Used when linkDirection is "TopBottom".
-		outputPortBottomPosX: 80,
-		outputPortBottomPosY: 0,
+		// An array of output port positions. Each element is structured like
+		// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
+		// offsets from the pos point on the node.
+		// The order of the elements corresponds to the order of ports in the
+		// outputs array for the node.
+		outputPortPositions: [
+			{ x_pos: 0, y_pos: 20, pos: "topRight" }
+		],
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -206,6 +212,11 @@ const portsHorizontalDefaultLayout = {
 
 		// If output port guide object is "image" use this image.
 		outputPortGuideImage: "",
+
+		// Automatically increases the node size to accommodate its ports so both
+		// input and output ports can be shown within the dimensions of
+		// the node.
+		autoSizeNode: true,
 
 		// Radius of the either the input or output ports when they are set to "circle"
 		portRadius: 3,
@@ -220,6 +231,10 @@ const portsHorizontalDefaultLayout = {
 
 		// Spacing between the port arcs around the ports.
 		portArcSpacing: 3,
+
+		// Position of the context toolbar realtive to the node. Some adjustment
+		// will be made to account for the width of the toolbar.
+		contextToolbarPosition: "topRight",
 
 		// Display of vertical ellipsis to show context menu
 		ellipsisDisplay: true,
@@ -359,7 +374,7 @@ const portsHorizontalDefaultLayout = {
 		// Position of the comment toolbar as an offset from the comment position
 		// (which is the top left corner of the comment bounding box).
 		commentToolbarPosX: -2,
-		commentToolbarPosY: -44,
+		commentToolbarPosY: -36,
 
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
@@ -384,7 +399,7 @@ const portsHorizontalDefaultLayout = {
 		// to switch the data-new-link-over attribute to "yes".
 		nodeProximity: 20,
 
-		// Adds additional area around the ghost areaa dragged from the palette
+		// Adds additional area around the ghost area dragged from the palette
 		// which can increase the possibility of detecting detached links.
 		ghostAreaPadding: 10,
 
@@ -408,7 +423,14 @@ const portsVerticalDefaultLayout = {
 		defaultNodeWidth: 70,
 		defaultNodeHeight: 75,
 
-		// Default node shape. Can be "rectangle" or "port-arcs"
+		// A space separated list of classes that will be added to the group <g>
+		// DOM element for the node.
+		className: "",
+
+		// Displays the node outline shape underneath the image and label.
+		nodeShapeDisplay: true,
+
+		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeOutlineDisplay is true.
 		nodeShape: "rectangle",
 
 		// SVG path strings to define the shape of your node and its
@@ -416,6 +438,9 @@ const portsVerticalDefaultLayout = {
 		// based on the nodeShape setting.
 		bodyPath: null,
 		selectionPath: null,
+
+		// Displays the external object specified, as the body of the node
+		nodeExternalObject: false,
 
 		// Display image
 		imageDisplay: true,
@@ -428,6 +453,9 @@ const portsVerticalDefaultLayout = {
 		imagePosition: "topLeft",
 		imagePosX: 11,
 		imagePosY: 6,
+
+		// Display label
+		labelDisplay: true,
 
 		// Label dimensions
 		labelWidth: 72,
@@ -445,6 +473,12 @@ const portsVerticalDefaultLayout = {
 		labelOutline: false,
 		labelMaxCharacters: null, // null allows unlimited characters
 		labelAllowReturnKey: false, // true allows line feed to be inserted into label, "save" to make the return key save the label.
+
+		// An array of decorations to be applied to the node. For details see:
+		// https://elyra-ai.github.io/canvas/03.04.01-decorations/
+		// These are added to the node at run time and will not be saved into
+		// the pipeline flow.
+		decorations: [],
 
 		// Positions and dimensions for 9 enumerated default decorator positions.
 		// decoratorWidth and decoratorHeight are the dimensions of the outline
@@ -522,26 +556,19 @@ const portsVerticalDefaultLayout = {
 		inputPortWidth: 12,
 		inputPortHeight: 12,
 
-		// Position of left single input port. Multiple input ports will be
-		// automatically positioned with the Y coordinate being overriden. These
-		// values are an offset from the top left corner of the node outline.
-		// Used when linkDirection is "LeftRight".
-		inputPortLeftPosX: 0,
-		inputPortLeftPosY: 29,
+		// Indicates whether multiple input ports should be automatically
+		// positioned (true) or positioned based on the contents of
+		// inputPortPositions array (false).
+		inputPortAutoPosition: true,
 
-		// Position of top single input port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the top left corner of the node outline.
-		// Used when linkDirection is "TopBottom".
-		inputPortTopPosX: 35,
-		inputPortTopPosY: 0,
-
-		// Position of bottom single input port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the bottom left corner of the node outline.
-		// Used when linkDirection is "BottomTop".
-		inputPortBottomPosX: 35,
-		inputPortBottomPosY: 0,
+		// An array of input port positions. Each element is structured like
+		// this: { x_pos: 5, y_pos: 10, pos: "topLeft" }. x_pos and y_pos are
+		// offsets from the pos point on the node.
+		// The order of the elements corresponds to the order of ports in the
+		// inputs array for the node.
+		inputPortPositions: [
+			{ x_pos: 0, y_pos: 29, pos: "topLeft" }
+		],
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -564,27 +591,19 @@ const portsVerticalDefaultLayout = {
 		outputPortWidth: 12,
 		outputPortHeight: 12,
 
-		// Position of right single input port. Multiple input ports will be
-		// automatically positioned with the Y coordinate being overriden. These
-		// values are an offset from the top right corner of the node outline.
-		// Used when linkDirection is "LeftRight".
-		outputPortRightPosition: "topRight",
-		outputPortRightPosX: 0,
-		outputPortRightPosY: 29,
+		// Indicates whether multiple output ports should be automatically
+		// positioned (true) or positioned based on the contents of
+		// outputPortPositions array (false).
+		outputPortAutoPosition: true,
 
-		// Position of top single input port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the top left corner of the node outline.
-		// Used when linkDirection is "BottomTop".
-		outputPortTopPosX: 35,
-		outputPortTopPosY: 0,
-
-		// Position of bottom single input port. Multiple input ports will be
-		// automatically positioned with the X coordinate being overriden. These
-		// values are an offset from the bottom left corner of the node outline.
-		// Used when linkDirection is "TopBottom".
-		outputPortBottomPosX: 35,
-		outputPortBottomPosY: 0,
+		// An array of output port positions. Each element is structured like
+		// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
+		// offsets from the pos point on the node.
+		// The order of the elements corresponds to the order of ports in the
+		// outputs array for the node.
+		outputPortPositions: [
+			{ x_pos: 0, y_pos: 29, pos: "topRight" }
+		],
 
 		// The 'guide' is the object drawn at the mouse position as a new line
 		// is being dragged outwards.
@@ -593,6 +612,11 @@ const portsVerticalDefaultLayout = {
 
 		// If output port guide object is "image" use this image.
 		outputPortGuideImage: "",
+
+		// Automatically increases the node size to accommodate its ports so both
+		// input and output ports can be shown within the dimensions of
+		// the node.
+		autoSizeNode: true,
 
 		// Radius of the either the input or output ports when they are set to "circle"
 		portRadius: 6,
@@ -607,6 +631,10 @@ const portsVerticalDefaultLayout = {
 
 		// Spacing between the port arcs around the ports.
 		portArcSpacing: 0,
+
+		// Position of the context toolbar realtive to the node. Some adjustment
+		// will be made to account for the width of the toolbar.
+		contextToolbarPosition: "topCenter",
 
 		// Display of vertical ellipsis to show context menu
 		ellipsisDisplay: true,
@@ -746,7 +774,7 @@ const portsVerticalDefaultLayout = {
 		// Position of the comment toolbar as an offset from the comment position
 		// (which is the top left corner of the comment bounding box).
 		commentToolbarPosX: -2,
-		commentToolbarPosY: -44,
+		commentToolbarPosY: -36,
 
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
@@ -771,7 +799,7 @@ const portsVerticalDefaultLayout = {
 		// to switch the data-new-link-over attribute to "yes".
 		nodeProximity: 20,
 
-		// Adds additional area around the ghost areaa dragged from the palette
+		// Adds additional area around the ghost area dragged from the palette
 		// which can increase the possibility of detecting detached links.
 		ghostAreaPadding: 10,
 
@@ -794,7 +822,8 @@ export default class LayoutDimensions {
 		let newLayout = this.getDefaultLayout(config);
 
 		if (config) {
-			newLayout = this.overrideNodeLayout(newLayout, overlayLayout); // Do this first because snap-to-grid depends on this.
+			newLayout = this.overridePortPositions(newLayout, config); // Must do this before overrideNodeLayout
+			newLayout = this.overrideNodeLayout(newLayout, overlayLayout); // Must do this before overrideSnapToGrid
 			newLayout = this.overrideCanvasLayout(newLayout, config, overlayLayout);
 			newLayout = this.overrideLinkType(newLayout, config);
 			newLayout = this.overrideSnapToGrid(newLayout, config);
@@ -811,7 +840,7 @@ export default class LayoutDimensions {
 		} else {
 			defaultLayout = portsHorizontalDefaultLayout;
 		}
-		return Object.assign({}, defaultLayout);
+		return cloneDeep(defaultLayout);
 	}
 
 	static overrideNodeLayout(layout, overlayLayout) {
@@ -882,5 +911,27 @@ export default class LayoutDimensions {
 			return (Number.parseInt(snapToGridSizeStr, 10) / 100) * defaultNodeSize;
 		}
 		return Number.parseInt(snapToGridSizeStr, 10);
+	}
+
+	// Overrides the port positioning fields in the layout based on the type of node
+	// and the link direction.
+	static overridePortPositions(layout, config) {
+		if (config.enableLinkDirection === "BottomTop") {
+			layout.nodeLayout.inputPortPositions = [
+				{ x_pos: 0, y_pos: 0, pos: "bottomCenter" }
+			];
+			layout.nodeLayout.outputPortPositions = [
+				{ x_pos: 0, y_pos: 0, pos: "topCenter" }
+			];
+
+		} else if (config.enableLinkDirection === "TopBottom") {
+			layout.nodeLayout.inputPortPositions = [
+				{ x_pos: 0, y_pos: 0, pos: "topCenter" }
+			];
+			layout.nodeLayout.outputPortPositions = [
+				{ x_pos: 0, y_pos: 0, pos: "bottomCenter" }
+			];
+		}
+		return layout;
 	}
 }

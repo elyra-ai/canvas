@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { TextInput } from "carbon-components-react";
+import { TextInput } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { parse, format, isValid } from "date-fns";
@@ -83,7 +83,6 @@ class DatefieldControl extends React.Component {
 					value={this.value}
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
-					light={this.props.controller.getLight() && !this.props.control.light}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ Cypress.Commands.add("toggleCommonCanvasSidePanel", () => {
 });
 
 Cypress.Commands.add("toggleCommonPropertiesSidePanel", () => {
-	cy.get("#harness-action-bar-sidepanel-modal").click();
+	cy.get("#harness-action-bar-sidepanel-properties").click();
 });
 
 Cypress.Commands.add("openCanvasDefinition", (canvasFileName, checkForComment) => {
@@ -60,22 +60,9 @@ Cypress.Commands.add("openCanvasDefinitionForExtraCanvas", (canvasFileName) => {
 	});
 });
 
-Cypress.Commands.add("openCanvasPalette", (paletteName) => {
-	cy.toggleCommonCanvasSidePanel();
-	cy.get("#harness-sidepanel-palette-dropdown").select(paletteName);
-	// Wait until we can get a palette flyout category from the canvas before proceeding. This
-	// allows the canvas to load and display before any more test case steps
-	// are executed. Note: this won't work if the testcase selects a second
-	// canvas while an existing canvas with nodes is displayed.
+Cypress.Commands.add("openCanvasPalette", (paletteFileName) => {
 	cy.document().then((doc) => {
-		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
-			// Palette Layout - Modal
-			cy.get(".palette-dialog-categories");
-		} else {
-			// Palette Layout - Flyout
-			cy.get(".palette-flyout-category");
-		}
-		cy.toggleCommonCanvasSidePanel();
+		doc.setPaletteDropdownSelect(paletteFileName);
 	});
 });
 
@@ -93,12 +80,12 @@ Cypress.Commands.add("openCanvasAPI", (api) => {
 Cypress.Commands.add("dropdownSelect", (dropdownElement, selectedItemName) => {
 	// Get the list of drop down options
 	cy.get(dropdownElement)
-		.find(".bx--dropdown")
+		.find(".cds--dropdown")
 		.click();
 
 	// Select option from drop down list
-	cy.get(".bx--list-box__menu")
-		.find(".bx--list-box__menu-item")
+	cy.get(".cds--list-box__menu")
+		.find(".cds--list-box__menu-item")
 		.then((options) => options.filter((idx) => options[idx].outerText === selectedItemName))
 		.click();
 });
@@ -109,8 +96,8 @@ Cypress.Commands.add("setCanvasConfig", (config) => {
 	});
 });
 
-Cypress.Commands.add("selectNodeFromDropdown", (nodeName) => {
-	cy.dropdownSelect("#harness-sidepanel-api-nodeSelection", nodeName);
+Cypress.Commands.add("selectEntryFromDropdown", (nodeName) => {
+	cy.dropdownSelect("#harness-sidepanel-api-selection", nodeName);
 });
 
 Cypress.Commands.add("selectLinkForDecoration", (linkName) => {
@@ -225,7 +212,7 @@ Cypress.Commands.add("clearNotificationCenterContent", (id) => {
 });
 
 Cypress.Commands.add("toggleNotificationCenterKeepOpen", () => {
-	cy.get("label[for='keepOpen'] .bx--toggle__switch").click();
+	cy.get("label[for='keepOpen'] .cds--toggle__switch").click();
 });
 
 Cypress.Commands.add("selectNotificationMessageType", (type) => {
@@ -295,5 +282,5 @@ Cypress.Commands.add("clickBreadcrumb", (breadCrumb) => {
 });
 
 Cypress.Commands.add("toggleApplyOnBlur", () => {
-	cy.get("label[for='harness-sidepanel-applyOnBlur-toggle']").click();
+	cy.get("div[data-id='properties-applyOnBlur'] label.cds--toggle-input__label").click();
 });

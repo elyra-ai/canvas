@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,100 +14,97 @@
  * limitations under the License.
  */
 
-$notification-panel-header-height: 35px;
+$notification-panel-header-height: 33px;
 $notification-message-height: 48px;
 $notification-left-border-color-width: 4px;
-$toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
-
-// This section adds an ease-in ease-out effect for the notification-panel-container
-.notification-panel-container {
-	transition: 0.25s ease-in-out;
-	opacity: 1;
-	margin-top: 0;
-
-	&.panel-hidden {
-		transition: 0.25s ease-in-out;
-		display: block;
-		opacity: 0;
-		visibility: hidden;
-	}
-}
+$notification-panel-button-container-height: 49px;
 
 .notification-panel {
-	position: absolute;
-	width: 320px;
+	width: 318px;
 	height: fit-content;
-	right: 0;
-	top: $toolbar-button-height;
+	min-height: calc(#{$notification-panel-header-height} + #{$notification-panel-button-container-height} + #{$notification-message-height});
+	max-height: calc(100% - 53px);
+
+	display: grid;
+	flex-direction: column;
+	grid-template-rows: auto 1fr auto;
 }
 
 .notification-panel-header-container {
 	min-height: $notification-panel-header-height;
+	height: fit-content;
 	width: inherit;
-	background-color: $ui-01;
+	background-color: $layer-01;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	border: 1px solid $ui-03;
 	border-bottom: 0;
 	padding: $spacing-05;
-	.notification-panel-header {
-		@include carbon--type-style("productive-heading-02");
+	outline: none; // Turn outline off and use carbon style for focus below.
+
+	&:focus {
+		border-color: $focus;
+		box-shadow: inset 0 0 0 2px $focus;
 	}
+
+	.notification-panel-header {
+		@include type-style("productive-heading-02");
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
 	.notification-panel-subtitle {
-		@include carbon--type-style("helper-text-01");
-		color: $text-02;
+		@include type-style("helper-text-01");
+		color: $text-secondary;
 		padding-top: $spacing-02;
 	}
-	.notification-panel-close-icon {
-		position: absolute;
-		right: $spacing-05;
-		top: ($spacing-05 + $spacing-02);
-		cursor: pointer;
-	}
 }
 
-.notification-panel-clear-all-container {
+.notification-panel-close-button {
+	position: absolute;
+	top: 12px;
+	right: 12px;
+}
+
+.notification-panel-button-container {
 	width: 100%;
-	height: 49px;
-	background-color: $ui-01;
+	height: $notification-panel-button-container-height;
+	background-color: $layer-01;
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	border-left: 1px solid $ui-03;
-	border-right: 1px solid $ui-03;
-	border-bottom: 1px solid $ui-03;
+	justify-content: space-between;
+	border-top: 0;
+	padding: $spacing-03 0;
 	font-weight: 400;
-	padding: $spacing-03 $spacing-05;
-	.bx--btn--ghost.bx--btn--sm {
-		width: fit-content;
-		padding: 0;
-	}
 }
 
-.notification-panel-messages-container {
-	width: inherit;
-	max-height: calc(100% - #{$notification-panel-header-height});
-	height: fit-content;
-}
 .notification-panel-messages {
-	max-height: 500px;
-	height: fit-content;
 	overflow-y: auto;
 	line-height: normal;
-	background-color: $ui-01;
-	border: 1px solid $ui-03;
+	background-color: $layer-01;
+	border-top: 1px solid $layer-accent-01;
+	border-bottom: 1px solid $layer-accent-01;
+	max-height: 448px;
+
 	.notifications-button-container {
-		border-bottom: 1px solid $ui-03;
+		border-bottom: 1px solid $layer-accent-01;
 		min-height: $notification-message-height;
 	}
+
 	.notification-panel-empty-message-container {
 		min-height: $notification-message-height;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		outline: none; // Turn outline off and use carbon style for focus below.
+
+		&:focus {
+			border-color: $focus;
+			box-shadow: inset 0 0 0 2px $focus;
+		}
+
 		.notification-panel-empty-message {
-			@include carbon--type-style("body-short-01");
+			@include type-style("body-short-01");
 			text-align: center;
 			padding-right: 30px;
 			padding-left: 30px;
@@ -123,42 +120,44 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 		display: inline-flex;
 		width: 100%;
 		min-height: $notification-message-height;
-		background-color: $ui-01;
+		background-color: $layer-01;
 		border-style: none;
-		border-left: $notification-left-border-color-width solid $ui-01;
+		border-left: $notification-left-border-color-width solid $layer-01;
 		cursor: default;
 		margin-top: 0; // Required for Safari
 		margin-bottom: 0; // Required for Safari
+		outline: none; // Turn outline off and use carbon style for focus below.
 
-		&.clickable {
-			cursor: pointer;
-		}
-
-		&:active,
 		&:focus {
-			outline: none;
-			border-style: none;
-			border-left: $notification-left-border-color-width solid $ui-01;
+			border-color: $focus;
+			box-shadow: inset 0 0 0 2px $focus;
 		}
 
 		&:hover {
-			background-color: $hover-ui;
+			background-color: $layer-hover-01;
+		}
 
+		&:focus,
+		&:hover {
 			&.unspecified {
 				border-left: $notification-left-border-color-width solid $field-01;
 			}
 			&.error {
-				border-left: $notification-left-border-color-width solid $support-01;
+				border-left: $notification-left-border-color-width solid $support-error;
 			}
 			&.warning {
-				border-left: $notification-left-border-color-width solid $support-03;
+				border-left: $notification-left-border-color-width solid $support-warning;
 			}
 			&.success {
-				border-left: $notification-left-border-color-width solid $support-02;
+				border-left: $notification-left-border-color-width solid $support-success;
 			}
 			&.info {
-				border-left: $notification-left-border-color-width solid $support-04;
+				border-left: $notification-left-border-color-width solid $support-info;
 			}
+		}
+
+		&.clickable {
+			cursor: pointer;
 		}
 
 		.notification-message-type {
@@ -182,24 +181,24 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 			width: 266px;
 
 			.notification-message-title {
-				@include carbon--type-style("productive-heading-01");
-				color: $text-02;
+				@include type-style("productive-heading-01");
+				color: $text-primary;
 				padding-bottom: $spacing-02;
 			}
 
 			.notification-message-subtitle {
-				@include carbon--type-style("label-01");
-				color: $text-01;
+				@include type-style("label-01");
+				color: $text-secondary;
 				hr {
 					margin-bottom: $spacing-03;
 					border-bottom: 0;
-					border-top: solid 1px $ui-03;
+					border-top: solid 1px $layer-accent-01;
 				}
 			}
 
 			.notification-message-content {
-				@include carbon--type-style("label-01");
-				color: $text-02;
+				@include type-style("label-01");
+				color: $text-secondary;
 			}
 		}
 	}
@@ -211,7 +210,7 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 
 .notification-message-timestamp {
 	display: inline-flex;
-	color: $text-02;
+	color: $text-secondary;
 	svg {
 		width: 10px;
 		height: 10px;
@@ -226,6 +225,9 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	}
 }
 
-.notification-message-close:hover {
-	text-decoration: underline;
+.notification-message-close {
+	width: fit-content;
+	&:hover {
+		text-decoration: underline;
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "carbon-components-react";
-import { Settings16 } from "@carbon/icons-react";
-import { v4 as uuid4 } from "uuid";
+import { Button } from "@carbon/react";
+import { Settings } from "@carbon/react/icons";
 import { formatMessage } from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { cloneDeep } from "lodash";
@@ -60,7 +59,6 @@ export default class SubPanelCell extends React.Component {
 		const applyLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL);
 		const rejectLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL);
 		return (
-
 			<SubPanelInvoker ref={ (ref) => (this.subPanelInvoker = ref) }
 				rightFlyout={this.props.rightFlyout}
 				applyLabel={applyLabel}
@@ -68,7 +66,7 @@ export default class SubPanelCell extends React.Component {
 				controller={this.props.controller}
 			>
 				<Tooltip
-					id={uuid4() + "-" + tooltipId}
+					id={tooltipId}
 					tip={subPanelToolTip}
 					direction="left"
 					className="properties-tooltips icon-tooltip"
@@ -76,7 +74,7 @@ export default class SubPanelCell extends React.Component {
 					<Button
 						className="properties-subpanel-button"
 						kind="ghost"
-						renderIcon={Settings16}
+						renderIcon={Settings}
 						onClick={this.showSubPanel}
 						disabled={disabled}
 						iconDescription={subPanelToolTip}

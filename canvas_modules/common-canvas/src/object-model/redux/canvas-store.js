@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import canvasinfo from "./reducers/canvasinfo.js";
 import contextmenu from "./reducers/contextmenu.js";
 import rightflyout from "./reducers/rightflyout.js";
 import bottompanel from "./reducers/bottompanel.js";
+import toppanel from "./reducers/toppanel.js";
 import breadcrumbs from "./reducers/breadcrumbs.js";
 import canvasconfig from "./reducers/canvasconfig.js";
 import canvastoolbar from "./reducers/canvastoolbar.js";
@@ -54,7 +55,8 @@ export default class CanavasStore {
 			texttoolbar,
 			contextmenu,
 			rightflyout,
-			bottompanel
+			bottompanel,
+			toppanel
 		});
 
 		const initialState = {
@@ -69,17 +71,19 @@ export default class CanavasStore {
 			tooltip: {},
 			canvastoolbar: {},
 			texttoolbar: { isOpen: false },
-			contextmenu: { menuDef: [] },
+			contextmenu: { isOpen: false, menuDef: [], source: {} },
 			rightflyout: {},
-			bottompanel: { panelHeight: 393 }
+			bottompanel: { panelHeight: 393 },
+			toppanel: { }
 		};
 
-		let enableDevTools = false;
 		if (typeof window !== "undefined") {
-			enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+			const enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+			this.store = createStore(combinedReducer, initialState, enableDevTools);
+		} else {
+			this.store = createStore(combinedReducer, initialState);
 		}
 
-		this.store = createStore(combinedReducer, initialState, enableDevTools);
 		this.dispatch = this.dispatch.bind(this);
 	}
 
@@ -104,6 +108,10 @@ export default class CanavasStore {
 		return cloneDeep(this.store.getState().palette.content);
 	}
 
+	getPaletteCategory(categoryId) {
+		return cloneDeep(this.store.getState().palette.content.categories.find((c) => c.id === categoryId));
+	}
+
 	getCanvasInfo() {
 		return cloneDeep(this.store.getState().canvasinfo);
 	}
@@ -124,12 +132,40 @@ export default class CanavasStore {
 		return null;
 	}
 
+	isEmpty(pipelineId) {
+		const pipeline = this.getNonClonedPipeline(pipelineId);
+
+		if (pipeline.nodes && pipeline.nodes.length === 0 &&
+				pipeline.comments && pipeline.comments.length === 0 &&
+				pipeline.links && pipeline.links.length === 0) {
+			return true;
+		}
+		return false;
+	}
+
 	// This is a service method for retrieving the internal pipeline. It does NOT
 	// clone the pipeline therefore it should NOT be called from outside this
 	// class because we don't want to surface the intenal data in redux to
 	// the outside world.
 	getNonClonedPipeline(pipelineId) {
 		return this.store.getState().canvasinfo.pipelines.find((p) => p.id === pipelineId);
+	}
+
+	// This is a service method for retrieving selected objects of the type passed
+	// in which can be "nodes", "comments" or "links". It does NOT clone the
+	// resultant array therefore it should NOT be called from outside this
+	// class because we don't want to surface the intenal data in redux to
+	// the outside world.
+	getNonClonedSelectedObjs(type) {
+		const selectedPipelineId = this.getSelectedPipelineId();
+		if (selectedPipelineId) {
+			const pipeline = this.getNonClonedPipeline(selectedPipelineId);
+			if (pipeline && pipeline[type]) {
+				const selectedObjIds = this.getSelectedObjectIds();
+				return pipeline[type].filter((o) => selectedObjIds.includes(o.id));
+			}
+		}
+		return [];
 	}
 
 	getNodes(pipelineId) {
@@ -226,6 +262,10 @@ export default class CanavasStore {
 		return this.store.getState().bottompanel.isOpen;
 	}
 
+	isTopPanelOpen() {
+		return this.store.getState().toppanel.isOpen;
+	}
+
 	getNotificationPanel() {
 		return this.cloneData(this.store.getState().notificationpanel);
 	}
@@ -240,16 +280,43 @@ export default class CanavasStore {
 		return this.getNotificationPanel().isOpen;
 	}
 
-	getContextMenu() {
-		return this.cloneData(this.store.getState().contextmenu);
+	getContextMenuSource() {
+		return this.cloneData(this.store.getState().contextmenu.source);
 	}
 
 	isContextMenuDisplayed() {
-		return !isEmpty(this.store.getState().contextmenu.menuDef);
+		return this.store.getState().contextmenu.isOpen;
 	}
 
 	getSelectionInfo() {
 		return this.cloneData(this.store.getState().selectioninfo);
+	}
+
+	getSelectedPipelineId() {
+		return this.getSelectionInfo().pipelineId;
+	}
+
+	getSelectedObjectIds() {
+		const selectedObjIds = this.store.getState().selectioninfo.selections || [];
+		return this.cloneData(selectedObjIds);
+	}
+
+	getSelectedNodes() {
+		return cloneDeep(this.getNonClonedSelectedObjs("nodes"));
+	}
+
+	getSelectedComments() {
+		return cloneDeep(this.getNonClonedSelectedObjs("comments"));
+	}
+
+	getSelectedLinks() {
+		return cloneDeep(this.getNonClonedSelectedObjs("links"));
+	}
+
+	// Returns true if all the selected objects are links. That is, if the
+	// number of selected links is the same as the number of selected objects.
+	areAllSelectedObjectsLinks() {
+		return this.getNonClonedSelectedObjs("links").length === this.getSelectedObjectIds().length;
 	}
 
 	getExternalPipelineFlows() {

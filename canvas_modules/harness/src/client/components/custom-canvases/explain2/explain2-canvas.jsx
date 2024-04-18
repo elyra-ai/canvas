@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,6 @@ export default class Explain2Canvas extends React.Component {
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Elbow",
 			enableLinkDirection: "BottomTop",
-			enableSnapToGridType: "During",
 			enablePaletteLayout: "None",
 			enableEditingActions: false,
 			enableNodeLayout:

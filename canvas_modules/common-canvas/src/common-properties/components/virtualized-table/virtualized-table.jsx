@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,20 @@
 
 import { Column, Table, AutoSizer } from "react-virtualized";
 import Draggable from "react-draggable";
-import { Checkbox, Loading } from "carbon-components-react";
-import { ArrowUp16, ArrowDown16, ArrowsVertical16, Information16 } from "@carbon/icons-react";
+import { Checkbox, Loading } from "@carbon/react";
+import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
+import TruncatedContentTooltip from "./../truncated-content-tooltip";
 import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
 import { isEmpty, differenceBy, mapValues } from "lodash";
-import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 
 import PropTypes from "prop-types";
 import React from "react";
+import { v4 as uuid4 } from "uuid";
 
 class VirtualizedTable extends React.Component {
 
@@ -37,9 +38,15 @@ class VirtualizedTable extends React.Component {
 		if (nextProps.rowCount !== prevState.rowCount) {
 			updatedState.rowCount = nextProps.rowCount;
 		}
-		// Only get new columns if column label (headerLabel) is different. This is useful when changing "View in tables" dropdown in Expression control.
+
+		const prevStateTableWidth = prevState.columns.reduce((totalWidth, column) => column.width + totalWidth, 0);
+		const nextPropsTableWidth = nextProps.columns.reduce((totalWidth, column) => column.width + totalWidth, 0);
+		const editorSizeUpdated = (prevStateTableWidth !== nextPropsTableWidth);
+
+		// Get new columns if column label (headerLabel) is different. This is useful when changing "View in tables" dropdown in Expression control.
+		// Also when right flyout is expanded/collapsed, width of all columns changes, in this case get new columns with updated widths.
 		// We're not comparing all properties in columns object because width can be different after resizing.
-		if (!prevState.columnResized || !isEmpty(differenceBy(nextProps.columns, prevState.columns, "headerLabel"))) {
+		if (!prevState.columnResized || !isEmpty(differenceBy(nextProps.columns, prevState.columns, "headerLabel")) || editorSizeUpdated) {
 			updatedState.columns = nextProps.columns;
 		}
 		return (updatedState);
@@ -66,6 +73,7 @@ class VirtualizedTable extends React.Component {
 		this.onRowClick = this.onRowClick.bind(this);
 		this.overSelectOption = this.overSelectOption.bind(this);
 		this.resizeColumn = this.resizeColumn.bind(this);
+		this.uuid = uuid4();
 	}
 
 	componentDidUpdate() {
@@ -79,7 +87,7 @@ class VirtualizedTable extends React.Component {
 
 	// This is also triggered when clicking on a checkbox
 	onRowClick(evt, rowData, index) {
-		if (evt.target.className === "bx--select-option") {
+		if (evt.target.className === "cds--select-option") {
 			evt.stopPropagation(); // stop propagation when selecting dropdown select options within table rows
 		} else {
 			// Set selections
@@ -165,8 +173,8 @@ class VirtualizedTable extends React.Component {
 		return isLastColumn;
 	}
 
-	selectAll(selected) {
-		this.props.setAllRowsSelected(selected);
+	selectAll(evt, { checked, id }) {
+		this.props.setAllRowsSelected(checked);
 	}
 
 	// Callback responsible for rendering a cell's contents.
@@ -198,15 +206,16 @@ class VirtualizedTable extends React.Component {
 			{ id: "virtualizedTable.header.checkbox.label", defaultMessage: defaultMessages["virtualizedTable.header.checkbox.label"] },
 			{ header_checkbox_label: headerCheckboxLabel }
 		);
-		const checkbox = this.props.selectable && this.props.rowSelection !== ROW_SELECTION.SINGLE ? (<div role="columnheader" className="properties-vt-header-checkbox">
-			<Checkbox
-				id={`properties-vt-hd-cb-${scrollKey}`}
-				onChange={this.selectAll}
-				checked={this.props.checkedAll}
-				labelText={translatedHeaderCheckboxLabel}
-				hideLabel
-			/>
-		</div>)
+		const checkbox = this.props.selectable && this.props.rowSelection !== ROW_SELECTION.SINGLE
+			? (<div role="checkbox" aria-checked={this.props.checkedAll} className="properties-vt-header-checkbox">
+				<Checkbox
+					id={`properties-vt-hd-cb-${this.uuid}-${scrollKey}`}
+					onChange={this.selectAll}
+					checked={this.props.checkedAll}
+					labelText={translatedHeaderCheckboxLabel}
+					hideLabel
+				/>
+			</div>)
 			: "";
 
 		return (<div className={className} data-role="properties-header-row" role="row" style={style}>
@@ -221,40 +230,32 @@ class VirtualizedTable extends React.Component {
 			let type = null;
 			switch (this.props.sortColumns[dataKey]) {
 			case SORT_DIRECTION.ASC:
-				type = <ArrowUp16 disabled={this.props.tableState === STATES.DISABLED} />;
+				type = <ArrowUp disabled={this.props.tableState === STATES.DISABLED} />;
 				break;
 			case SORT_DIRECTION.DESC:
-				type = <ArrowDown16 disabled={this.props.tableState === STATES.DISABLED} />;
+				type = <ArrowDown disabled={this.props.tableState === STATES.DISABLED} />;
 				break;
 			default:
-				type = <ArrowsVertical16 disabled={this.props.tableState === STATES.DISABLED} />;
+				type = <ArrowsVertical disabled={this.props.tableState === STATES.DISABLED} />;
 			}
 			sortIcon = (<span className="properties-ft-column-sort-icon">
 				{type}
 			</span>);
 		}
 
-		const tooltip = columnData.headerLabel
-			? (<div className="properties-tooltips">
-				<span style= {{ fontWeight: "bold" }}>{columnData.headerLabel}</span>
-			</div>)
-			: null;
-
 		const infoIcon = isEmpty(columnData.description)
 			? null
 			: (<div className="properties-vt-info-icon-tip">
 				<Tooltip
-					id={`properties-tooltip-${columnData.headerLabel}-info`}
+					id="properties-tooltip-info"
 					tip={columnData.description}
 					direction="bottom"
 					className="properties-tooltips"
 					showToolTipOnClick
 				>
-					<Information16 className="properties-vt-info-icon" />
+					<Information className="properties-vt-info-icon" />
 				</Tooltip>
 			</div>);
-
-		const tooltipId = uuid4() + "-tooltip-column-" + dataKey;
 
 		const resizeElem = columnData.resizable && !this.isLastColumn(dataKey)
 			? (<Draggable
@@ -275,26 +276,19 @@ class VirtualizedTable extends React.Component {
 				/>
 			</Draggable>)
 			: "";
-
-		const header = isEmpty(tooltip)
-			? (<div className="properties-vt-label-icon">
-				{label}
-				{infoIcon}
-			</div>)
-			: (<div className="properties-vt-label-tip-icon">
-				<Tooltip
-					id={tooltipId}
-					tip={tooltip}
-					direction="bottom"
-					className="properties-tooltips"
-				>
-					{label}
-				</Tooltip>
-				{infoIcon}
-			</div>);
-
+		const headerDisplayLabel = typeof label === "string" ? (<span>{label}</span>) : label;
+		const header = (<div className="properties-vt-label-tip-icon">
+			<TruncatedContentTooltip
+				tooltipText={columnData.headerLabel}
+				content={headerDisplayLabel}
+				disabled={columnData.disabled}
+			/>
+			{infoIcon}
+		</div>);
 		return (
-			<div className={classNames({ "properties-vt-column-with-resize": resizeElem !== "", "properties-vt-column-without-resize": resizeElem === "" })}>
+			<div data-id={`properties-vt-header-${dataKey}`}
+				className={classNames({ "properties-vt-column-with-resize": resizeElem !== "", "properties-vt-column-without-resize": resizeElem === "" })}
+			>
 				<div className={classNames("properties-vt-column properties-tooltips-container", { "sort-column-active": dataKey === this.props.sortBy })}>
 					{header}
 					{disableSort === false && sortIcon}
@@ -386,7 +380,7 @@ class VirtualizedTable extends React.Component {
 		}
 
 		if (this.props.selectable) {
-			const rowSelected = this.isRowSelected(rowData.originalRowIndex);
+			const rowSelected = this.props.sortDirection ? this.isRowSelected(rowData.index) : this.isRowSelected(rowData.originalRowIndex); // use current row index when Sorted
 			selectedRow = this.props.selectable && rowSelected;
 			if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 				const translatedRowCheckboxLabel = this.props.intl.formatMessage(
@@ -407,7 +401,7 @@ class VirtualizedTable extends React.Component {
 					}}
 				>
 					<Checkbox
-						id={`properties-vt-row-cb-${scrollKey}-${index}`}
+						id={`properties-vt-row-cb-${this.uuid}-${scrollKey}-${index}`}
 						key={`properties-vt-row-cb-${scrollKey}-${index}`}
 						labelText={translatedRowCheckboxLabel}
 						hideLabel
@@ -461,11 +455,6 @@ class VirtualizedTable extends React.Component {
 	render() {
 		const defaultTestHeight = 2000; // 2000 is set to accommodate test data "category-selection-data" with all categories expanded
 
-		// AutoSizer manages width and height properties so the table fills the available space.
-		// It does a direct DOM manipulation to the parent, outside React's VirtualDOM.
-		// Since the actual DOM is not available when unit testing, we are passing in a default
-		// width of 500 and a default height of 300.
-		const tableHeight = this.props.tableHeight || defaultTestHeight;
 		return (
 			<div className="properties-vt">
 				<div className={classNames("properties-vt-autosizer",
@@ -477,7 +466,11 @@ class VirtualizedTable extends React.Component {
 							<Table
 								ref={this.virtualizedTableRef}
 								width={width ? width : 500}
-								height={tableHeight}
+								// AutoSizer manages width and height properties so the table fills the available space.
+								// It does a direct DOM manipulation to the parent, outside React's VirtualDOM.
+								// Since the actual DOM is not available when unit testing, we are passing in a default
+								// width of 500 and a default height of 300.
+								height={this.props.tableHeight || height || defaultTestHeight}
 
 								className="properties-autosized-vt"
 								aria-label={this.props.tableLabel ? this.props.tableLabel : ""}
@@ -500,6 +493,7 @@ class VirtualizedTable extends React.Component {
 
 								sort={this.props.onSort}
 								sortDirection={this.props.sortDirection}
+								tabIndex={-1}
 							>
 								{
 									this.state.columns.map((column) => (

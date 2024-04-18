@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,10 @@ import tableUtils from "./../../_utils_/table-utils";
 
 import { mountWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
-import chai from "chai";
-import chaiEnzyme from "chai-enzyme";
 import sinon from "sinon";
 import fieldPickerParamDef from "./../../test_resources/paramDefs/fieldpicker_paramDef.json";
 import glmmParamDef from "./../../test_resources/paramDefs/glmm_paramDef.json";
 import propertyUtils from "../../_utils_/property-utils";
-
-chai.use(chaiEnzyme()); // Note the invocation at the end
 
 const controller = new Controller();
 
@@ -270,7 +266,39 @@ describe("FlexibleTable renders correctly", () => {
 		expect(searchBarLabel).to.equal("Search in example table");
 	});
 
-	it("Empty `FlexibleTable` should have emptyTablePlaceholder", () => {
+	it("search bar in `FlexibleTable` can have custom placeholder", () => {
+		// To set custom search placeholder, pass the prop "searchPlaceholder" when calling flexible table
+		const searchPlaceholder = "Custom search placeholder";
+		const wrapper = mountWithIntl(
+			<FlexibleTable
+				columns={headers}
+				filterable={filterFields}
+				onFilter={onFilter}
+				data={[]}
+				searchPlaceholder={searchPlaceholder}
+			/>
+		);
+
+		const searchBar = wrapper.find("div.properties-ft-search-container").find("input");
+		expect(searchBar.props()).to.have.property("placeholder", searchPlaceholder);
+	});
+
+	it("search bar in `FlexibleTable` shows default placeholder when searchPlaceholder is not passed", () => {
+		const wrapper = mountWithIntl(
+			<FlexibleTable
+				columns={headers}
+				filterable={filterFields}
+				onFilter={onFilter}
+				data={[]}
+			/>
+		);
+
+		const searchBar = wrapper.find("div.properties-ft-search-container").find("input");
+		expect(searchBar.props()).to.have.property("placeholder", "Find in column Filter Field");
+	});
+
+
+	it("Empty `FlexibleTable` should have emptyTablePlaceholder text", () => {
 		const emptyTablePlaceholder = "This is an empty table placeholder";
 		const wrapper = mountWithIntl(
 			<FlexibleTable
@@ -284,7 +312,29 @@ describe("FlexibleTable renders correctly", () => {
 		expect(tableBody).to.have.length(1);
 		const emptyTableDiv = tableBody.find("div.properties-ft-empty-table");
 		expect(emptyTableDiv).to.have.length(1);
-		expect(emptyTableDiv).to.have.text(emptyTablePlaceholder);
+		expect(emptyTableDiv.text()).to.equal(emptyTablePlaceholder);
+	});
+
+	it("Empty `FlexibleTable` should have emptyTablePlaceholder react element", () => {
+		const emptyTablePlaceholder = (
+			<div className="empty-table-text">
+				<p>This is an empty table placeholder element.</p>
+			</div>
+		);
+		const wrapper = mountWithIntl(
+			<FlexibleTable
+				columns={headers}
+				data={[]}
+				emptyTablePlaceholder={emptyTablePlaceholder}
+			/>
+		);
+
+		const tableBody = wrapper.find("div.properties-ft-control-container");
+		expect(tableBody).to.have.length(1);
+		const emptyTableDiv = tableBody.find("div.properties-ft-empty-table");
+		expect(emptyTableDiv).to.have.length(1);
+		expect(emptyTableDiv.find("div.empty-table-text")).to.have.length(1);
+		expect(emptyTableDiv.text()).to.equal("This is an empty table placeholder element.");
 	});
 
 	it("Empty `FlexibleTable` shows blank text when emptyTablePlaceholder is not defined", () => {
@@ -299,7 +349,7 @@ describe("FlexibleTable renders correctly", () => {
 		expect(tableBody).to.have.length(1);
 		const emptyTableDiv = tableBody.find("div.properties-ft-empty-table");
 		expect(emptyTableDiv).to.have.length(1);
-		expect(emptyTableDiv).to.have.text("");
+		expect(emptyTableDiv.text()).to.equal("");
 	});
 
 	it("Empty `FlexibleTable` uses place_holder_text from uiHints", () => {
@@ -311,7 +361,7 @@ describe("FlexibleTable renders correctly", () => {
 		expect(termsTable).to.have.length(1);
 		const emptyTableDiv = termsTable.find("div.properties-ft-empty-table");
 		expect(emptyTableDiv).to.have.length(1);
-		expect(emptyTableDiv).to.have.text("No terms added");
+		expect(emptyTableDiv.text()).to.equal("No terms added");
 
 
 		// Fields table is an empty table using place_holder_text resource_key
@@ -319,7 +369,22 @@ describe("FlexibleTable renders correctly", () => {
 		expect(fieldsTable).to.have.length(1);
 		const emptyTableDiv1 = fieldsTable.find("div.properties-ft-empty-table");
 		expect(emptyTableDiv1).to.have.length(1);
-		expect(emptyTableDiv1).to.have.text(glmmParamDef.resources["covariance_list.placeholder.label"]);
+		expect(emptyTableDiv1.text()).to.equal(glmmParamDef.resources["covariance_list.placeholder.label"]);
 	});
 
+	it("should readjust height when row changes", () => {
+		const wrapper = mountWithIntl(
+			<FlexibleTable
+				columns={headers}
+				data={rows}
+				rows={5}
+			/>
+		);
+		const orgTableHeight = wrapper.find("FlexibleTable").state("tableHeight");
+		expect(orgTableHeight).to.equal(192);
+
+		wrapper.setProps({ rows: 2 });
+		const newTableHeight = wrapper.find("FlexibleTable").state("tableHeight");
+		expect(newTableHeight).to.equal(96);
+	});
 });

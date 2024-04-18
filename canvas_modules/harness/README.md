@@ -1,6 +1,6 @@
 <!--
 {% comment %}
-Copyright 2017-2022 Elyra Authors
+Copyright 2017-2023 Elyra Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ limitations under the License.
 # Test Harness
 
 ## Environment setup
-- Nodejs `node 16.x`
+- Nodejs `node 20.x`
 
 #### Development setup
 ```sh

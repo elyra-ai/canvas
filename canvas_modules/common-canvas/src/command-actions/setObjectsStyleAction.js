@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@ import Action from "../command-stack/action.js";
 import { forIn } from "lodash";
 
 export default class SetObjectsStyleAction extends Action {
-	constructor(data, objectModel, labelUtil) {
+	constructor(data, canvasController) {
 		super(data);
 		this.data = data;
-		this.objectModel = objectModel;
-		this.labelUtil = labelUtil;
+		this.labelUtil = canvasController.labelUtil;
+		this.objectModel = canvasController.objectModel;
 		this.oldPipelineObjStyles = [];
 		forIn(this.data.pipelineObjectIds, (objectIds, pipelineId) => {
 			const apiPipeline = this.objectModel.getAPIPipeline(pipelineId);

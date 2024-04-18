@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,7 +148,7 @@ describe("control-item renders correctly", () => {
 
 		const tooltip = wrapper.find("div.common-canvas-tooltip");
 		// verify text in tooltip
-		expect(tooltip.find("span#tooltipContainer").text()).to.equal(control.description.text);
+		expect(tooltip.find("span.tooltipContainer").text()).to.equal(control.description.text);
 		// verify link in tooltip
 		expect(tooltip.find("Link")).to.have.length(1);
 		expect(tooltip.find("a").text()).to.equal(tooltipLinkHandlerFunction(control.description.link).label);
@@ -204,7 +204,7 @@ describe("control-item renders correctly", () => {
 
 		const tooltip = wrapper.find("div.common-canvas-tooltip");
 		// verify text in tooltip
-		expect(tooltip.find("span#tooltipContainer").text()).to.equal(control.description.text);
+		expect(tooltip.find("span.tooltipContainer").text()).to.equal(control.description.text);
 		// verify link does not exist in tooltip
 		expect(tooltip.find("Link")).to.have.length(0);
 	});
@@ -249,7 +249,8 @@ describe("control-item renders correctly", () => {
 				accessibleControls={accessibleControls}
 			/>
 		);
-		expect(wrapper.find("span.properties-required-indicator")).to.have.length(1);
+		expect(wrapper.find("span.properties-indicator")).to.have.length(1);
+		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label(required)");
 	});
 
 	it("should be hidden", () => {
@@ -288,6 +289,96 @@ describe("control-item renders correctly", () => {
 		);
 		const controlItem = wrapper.find("div.properties-control-item");
 		expect(controlItem.prop("disabled")).to.equal(true);
+	});
+
+	it("show required indicator when showRequiredIndicator set to true", () => {
+		const controlRequired = {
+			name: "test-control",
+			label: {
+				text: "Control Label"
+			},
+			required: true
+		};
+		const propertiesConfig = { showRequiredIndicator: true };
+		controller.setPropertiesConfig(propertiesConfig);
+		let wrapper = mountWithIntl(
+			<ControlItem
+				store={controller.getStore()}
+				control={controlRequired}
+				propertyId={propertyId}
+				controller={controller}
+				controlObj={controlObj}
+				accessibleControls={accessibleControls}
+			/>
+		);
+		// For required control, show required indicator
+		expect(wrapper.find("span.properties-indicator")).to.have.length(1);
+		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label(required)");
+
+		const controlOptional = {
+			name: "test-control",
+			label: {
+				text: "Control Label"
+			}
+		};
+		wrapper = mountWithIntl(
+			<ControlItem
+				store={controller.getStore()}
+				control={controlOptional}
+				propertyId={propertyId}
+				controller={controller}
+				controlObj={controlObj}
+				accessibleControls={accessibleControls}
+			/>
+		);
+		// For optional control, don't show any indicator
+		expect(wrapper.find("span.properties-indicator")).to.have.length(0);
+		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label");
+	});
+
+	it("show optional indicator when showRequiredIndicator set to false", () => {
+		const controlOptional = {
+			name: "test-control",
+			label: {
+				text: "Control Label"
+			}
+		};
+		const propertiesConfig = { showRequiredIndicator: false };
+		controller.setPropertiesConfig(propertiesConfig);
+		let wrapper = mountWithIntl(
+			<ControlItem
+				store={controller.getStore()}
+				control={controlOptional}
+				propertyId={propertyId}
+				controller={controller}
+				controlObj={controlObj}
+				accessibleControls={accessibleControls}
+			/>
+		);
+		// For optional control, show optional indicator
+		expect(wrapper.find("span.properties-indicator")).to.have.length(1);
+		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label(optional)");
+
+		const controlRequired = {
+			name: "test-control",
+			label: {
+				text: "Control Label"
+			},
+			required: true
+		};
+		wrapper = mountWithIntl(
+			<ControlItem
+				store={controller.getStore()}
+				control={controlRequired}
+				propertyId={propertyId}
+				controller={controller}
+				controlObj={controlObj}
+				accessibleControls={accessibleControls}
+			/>
+		);
+		// For required control, don't show any indicator
+		expect(wrapper.find("span.properties-indicator")).to.have.length(0);
+		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label");
 	});
 
 });

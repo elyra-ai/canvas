@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,46 +14,68 @@
  * limitations under the License.
  */
 
-@import "carbon-components/scss/globals/scss/vars";
-
 $toolbar-icon-label-margin: 8px;
 $toolbar-icon-size: 16px;
 $toolbar-button-height: 40px;
 $toolbar-button-width: 40px;
+$toolbar-button-sm-height: 32px;
+$toolbar-button-sm-width: 32px;
 $toolbar-divider-width: 1px;
 
 .toolbar-div {
 	height: $toolbar-button-height;
 	width: 100%;
-	background-color: $ui-01;
-	border-bottom: $toolbar-divider-width solid $ui-04;
+	background-color: $layer-01;
 	box-sizing: content-box;
 	position: relative;
-
 	display: flex;
 	justify-content: space-between;
+	outline: none; // Turn outline off and use carbon style for focus below.
 
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
 
-	/* Small size toolbar used by common-properties */
+	&:focus {
+		border-color: $button-tertiary;
+		box-shadow: inset 0 0 0 2px $button-tertiary;
+	}
+
+	/* Small size toolbar  */
 	&.toolbar-size-small {
-		height: $spacing-07;
+		height: $toolbar-button-sm-height;
+
 		.toolbar-left-bar {
 			padding: 0;
 		}
+
 		.toolbar-item button,
 		.toolbar-overflow-item > button {
 			padding: 0;
-			height: $spacing-07;
+			height: $toolbar-button-sm-height;
 		}
+
+		.toolbar-sub-menu-item {
+			height: fit-content;
+		}
+
 		.toolbar-item-content {
 			padding: $spacing-02 $spacing-03;
-			height: $spacing-07;
+			height: $toolbar-button-sm-height;
 			align-items: center;
+			min-width: 32px;
 		}
+
 		.toolbar-popover-list button {
 			padding: 0;
+		}
+
+		.toolbar-jsx-item {
+			height: $toolbar-button-sm-height;
+		}
+
+		.toolbar-tick-svg {
+			height: $toolbar-button-sm-height;
+			width: $toolbar-button-sm-height;
 		}
 	}
 }
@@ -76,84 +98,95 @@ $toolbar-divider-width: 1px;
 }
 
 .toolbar-item {
-	background-color: $ui-01;
+	background-color: $layer-01;
 	display: inline-block;
 
-	& button {
+	&.toolbar-item-selected {
+		&.default,
+		&.ghost {
+			& > .toolbar-button-item > button {
+				background-color: $layer-accent-01;
+				border-bottom: 2px solid $button-primary;
+			}
+		}
+	}
+
+	& > .toolbar-button-item > button {
 		padding: 0;
-		height: $toolbar-button-height;
 		min-height: 30px;
+		height: $toolbar-button-height;
 	}
 
 	&.default,
 	&.ghost {
-		& button {
-			background-color: $ui-01;
-		}
+		& > .toolbar-button-item > button {
+			background-color: $layer-01;
 
-		& button:hover {
-			background-color: $hover-field;
-		}
+			&:hover,
+			&:focus {
+				background-color: $skeleton-background;
+			}
 
-		& button:focus {
-			background-color: $hover-field;
-		}
-
-		& button:disabled:hover {
-			background-color: $ui-01;
+			&:disabled:hover {
+				background-color: $layer-01;
+			}
 		}
 	}
 
 	&.tertiary {
-		& button {
-			color: $brand-03;
-			background-color: $ui-01;
-		}
+		& > .toolbar-button-item > button {
+			color: $link-primary;
+			background-color: $layer-01;
 
-		& button:hover {
-			background-color: $hover-field;
-		}
+			&:hover {
+				background-color: $skeleton-background;
+			}
 
-		& button:disabled,
-		& button:disabled:hover {
-			color: $disabled-02;
-			background-color: $ui-01;
+			&:disabled,
+			&:disabled:hover {
+				color: $button-disabled;
+				background-color: $layer-01;
+			}
 		}
 	}
 }
 
-.toolbar-spacer {
+.toolbar-overflow-container {
 	width: 0;
 	display: inline-block;
 }
 
 
 .toolbar-overflow-item {
-	background-color: $ui-01;
+	background-color: $layer-01;
 	display: inline-block;
 
 	& button {
 		padding: 0;
 		height: $toolbar-button-height;
 		min-height: 30px;
-		background-color: $ui-01;
-		border-right: $toolbar-divider-width solid $ui-03;
+		background-color: $layer-01;
+		border-right: $toolbar-divider-width solid $layer-accent-01;
 	}
 
 	& button:hover {
-		background-color: $hover-field;
+		background-color: $skeleton-background;
 	}
 
 	& button:disabled:hover {
-		background-color: $ui-01;
+		background-color: $layer-01;
 	}
 }
 
-.toolbar-overflow-menu-item button {
-	width: 100%;
-	padding-top: 2px;
-	padding-bottom: 2px;
-	min-height: 20px;
+.toolbar-sub-menu-item {
+	& button {
+		width: 100%;
+		padding-top: 0;
+		padding-bottom: 0;
+		padding-left: 16px;
+		padding-right: 16px;
+		min-height: 20px;
+	}
 }
 
 .toolbar-item-content {
@@ -168,16 +201,21 @@ $toolbar-divider-width: 1px;
 	}
 
 	&.default {
-		color: $icon-01; // Used by label and pick up as currentColor in icons.
+		color: $icon-primary; // Used by label and pick up as currentColor in icons.
 	}
 
 	&.disabled.default {
-		color: $disabled-02;
-		fill: $disabled-02; // For custom svg images
+		color: $button-disabled;
+		fill: $button-disabled; // For custom svg images
+		& .toolbar-tick-mark {
+			fill: $button-disabled;
+		}
+		& .toolbar-text-content {
+			stroke: $button-disabled;
+		}
 	}
 
 	.toolbar-icon {
-		height: $toolbar-icon-size;
 		& svg {
 			height: $toolbar-icon-size;
 			width: $toolbar-icon-size;
@@ -185,45 +223,65 @@ $toolbar-divider-width: 1px;
 			-webkit-user-drag: none;
 		}
 	}
-}
 
-.toolbar-text-content {
-	position: absolute;
-	top: 14px;
-	font-size: 9px;
-	line-height: 9px;
-	color: $icon-01;
-}
-
-.toolbar-icon-label {
-	line-height: 16px;
-
-	&.before {
-		padding-right: 8px;
+	.toolbar-text-content {
+		position: absolute;
+		top: 14px;
+		font-size: 9px;
+		line-height: 9px;
+		color: $icon-primary;
 	}
 
-	&.after {
-		padding-left: 8px;
+	.toolbar-icon-label {
+		line-height: 16px;
+
+		&.before {
+			padding-right: 8px;
+		}
+
+		&.after {
+			padding-left: 8px;
+		}
+
+		&.overflow {
+			padding-left: 8px;
+			word-break: break-word;
+			hyphens: auto;
+		}
 	}
 
-	&.overflow {
+	.toolbar-up-down-chevron {
 		padding-left: 8px;
-		word-break: break-word;
-		hyphens: auto;
+		height: 16px;
+		pointer-events: none;
+	}
+
+	// Triangular tick mark in bottom right corner of an expandable icon
+	.toolbar-tick-svg {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		height: $toolbar-button-height;
+		width: $toolbar-button-height;
+		pointer-events: none;
+
+		& .toolbar-tick-mark {
+			fill: $icon-primary;
+		}
 	}
 }
 
 .toolbar-jsx-item {
-	height: 40px;
+	height: $toolbar-button-height;
 	display: inline-flex;
 	align-items: center;
 	vertical-align: top;
 	position: relative;
-	background-color: $ui-01;
+	background-color: $layer-01;
 	padding: 0;
 }
 
-.toolbar-overflow-jsx-item {
+.toolbar-sub-menu-jsx-item {
 	width: 100%;
 	height: 38px;
 	display: inline-flex;
@@ -233,21 +291,9 @@ $toolbar-divider-width: 1px;
 	padding: 0;
 }
 
-.toolbar-item-selected {
-	&.default,
-	&.ghost {
-		& button {
-			background-color: $ui-03;
-			border-color: transparent;
-			box-shadow: none;
-			border-bottom: 2px solid $interactive-01;
-		}
-	}
-}
-
 .toolbar-divider {
-	border-right: $toolbar-divider-width solid $ui-03;
-	background-color: $ui-01;
+	border-right: $toolbar-divider-width solid $layer-accent-01;
+	background-color: $layer-01;
 	display: inline-block;
 	height: $toolbar-button-height;
 	width: 0;
@@ -255,21 +301,32 @@ $toolbar-divider-width: 1px;
 
 .toolbar-divider-overflow {
 	height: 0;
-	border-bottom: $toolbar-divider-width solid $ui-03;
+	border-bottom: $toolbar-divider-width solid $layer-accent-01;
 }
 
 .toolbar-popover-list {
 	width: 200px;
-	z-index: 1;
-	top: calc(#{$toolbar-button-height} + #{$toolbar-divider-width});
+	z-index: 2; // Make sure sub-area appears above bottom panel
 	display: block;
-	position: absolute;
+	position: fixed; // Actual position will be calculated in the code
 	list-style-type: none;
 	padding: 0;
-	border: $toolbar-divider-width solid $ui-03;
-	background-color: $ui-01;
+	border: $toolbar-divider-width solid $layer-accent-01;
+	background-color: $layer-01;
+	opacity: 0;
+	animation: tovisible 0.25s ease-in-out forwards; // Use keyframe to animate panel visibility
+
+	&.submenu {
+		min-width: 100px;
+	}
+
+	&.subpanel {
+		width: fit-content;
+		box-sizing: border-box;
+	}
 }
 
-.toolbar-popover-list-hide {
-	display: none;
+@keyframes tovisible {
+	100% { opacity: 1; }
 }
+

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,15 @@
 
 import React from "react";
 import Isvg from "react-inlinesvg";
-import ReactTooltip from "react-tooltip";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
-import { hot } from "react-hot-loader/root";
+import classNames from "classnames";
+import { v4 as uuid4 } from "uuid";
+
+import { jsPDF } from "jspdf";
+import * as htmlToImage from "html-to-image";
 
 import { getMessages } from "../intl/intl-utils";
 import * as HarnessBundles from "../intl/locales";
@@ -35,8 +39,7 @@ import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales"
 import PaletteBundles from "@elyra/canvas/locales/palette/locales";
 import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
-import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
-import CommonCanvasPackage from "@elyra/canvas/package.json";
+import { CommonCanvas, CanvasController, CommonProperties, ColorPicker } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
@@ -44,14 +47,16 @@ import StagesCanvas from "./components/custom-canvases/stages/stages-canvas";
 import StagesCardNodeCanvas from "./components/custom-canvases/stages-card-node/stages-card-node-canvas";
 import LogicCanvas from "./components/custom-canvases/logic/logic-canvas";
 import ReadOnlyCanvas from "./components/custom-canvases/read-only/read-only";
+import ProgressCanvas from "./components/custom-canvases/progress/progress";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
-import BlueEllipsesCanvas from "./components/custom-canvases/blue-ellipses/blue-ellipses-canvas";
+import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon";
+import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping";
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
-import Console from "./components/console.jsx";
-import SidePanel from "./components/sidepanel.jsx";
+import Console from "./components/console/console.jsx";
+import SidePanel from "./components/sidepanel/sidepanel.jsx";
 
 import CustomSliderPanel from "./components/custom-panels/CustomSliderPanel";
 import CustomTogglePanel from "./components/custom-panels/CustomTogglePanel";
@@ -69,30 +74,35 @@ import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel"
 import * as CustomOpMax from "./custom/condition-ops/customMax";
 import * as CustomNonEmptyListLessThan from "./custom/condition-ops/customNonEmptyListLessThan";
 import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
+import * as CustomOpFilterKeys from "./custom/condition-ops/customFilterKeys";
+import * as CustomOpFilterDuplicates from "./custom/condition-ops/customFilterDuplicates";
+import * as CustomRequiredColumn from "./custom/condition-ops/customRequiredColumn";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
-import { Edit32, Play32, SelectWindow32, StopFilledAlt32, TouchInteraction32, TextScale32 } from "@carbon/icons-react";
+import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
-import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "carbon-components-react";
+import { Add, Chat, ChatOff, ColorPalette, Edit, Play, Scale, Settings, SelectWindow,
+	StopFilledAlt, Subtract, TextScale, TouchInteraction } from "@carbon/react/icons";
+
+import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "@carbon/react";
 
 import {
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
 	SIDE_PANEL_API,
-	SIDE_PANEL,
 	CHOOSE_FROM_LOCATION,
 	INTERACTION_MOUSE,
 	VERTICAL_FORMAT,
 	NONE_SAVE_ZOOM,
 	CURVE_LINKS,
 	DIRECTION_LEFT_RIGHT,
+	IMAGE_DISPLAY_SVG_INLINE,
 	LINK_SELECTION_NONE,
 	ASSOC_STRAIGHT,
 	UNDERLAY_NONE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
-	EXAMPLE_APP_BLUE_ELLIPSES,
 	EXAMPLE_APP_STAGES,
 	EXAMPLE_APP_STAGES_CARD_NODE,
 	EXAMPLE_APP_EXPLAIN,
@@ -100,7 +110,10 @@ import {
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	EXAMPLE_APP_LOGIC,
-	EXAMPLE_READ_ONLY,
+	EXAMPLE_APP_READ_ONLY,
+	EXAMPLE_APP_PROGRESS,
+	EXAMPLE_APP_REACT_NODES_CARBON,
+	EXAMPLE_APP_REACT_NODES_MAPPING,
 	CUSTOM,
 	PALETTE_FLYOUT,
 	PROPERTIES_FLYOUT,
@@ -113,12 +126,14 @@ import {
 	PRIMARY,
 	TOOLBAR_LAYOUT_TOP,
 	TOOLBAR_TYPE_DEFAULT,
+	TOOLBAR_TYPE_SUB_AREAS,
 	TOOLBAR_TYPE_SINGLE_BAR,
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
-	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
+	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE,
+	CATEGORY_VIEW_ACCORDIONS
 } from "./constants/constants.js";
 
 import { STATE_TAG_NONE } from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
@@ -144,7 +159,7 @@ class App extends React.Component {
 			consoleOpened: false,
 			contextMenuInfo: {},
 			openSidepanelCanvas: false,
-			openSidepanelModal: false,
+			openSidepanelProperties: false,
 			openSidepanelAPI: false,
 
 			// Common canvas state variables
@@ -165,6 +180,7 @@ class App extends React.Component {
 			selectedDragWithoutSelect: false,
 			selectedAssocLinkCreation: false,
 			selectedMarkdownInComments: false,
+			selectedContextToolbar: false,
 			selectedSnapToGridType: NONE_DRAG,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
@@ -175,6 +191,7 @@ class App extends React.Component {
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
 			selectedSingleOutputPortDisplay: false,
+			selectedImageDisplay: IMAGE_DISPLAY_SVG_INLINE,
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedLinkSelection: LINK_SELECTION_NONE,
@@ -185,7 +202,10 @@ class App extends React.Component {
 			selectedPaletteLayout: PALETTE_FLYOUT,
 			selectedStateTag: STATE_TAG_NONE,
 			selectedTipConfig: {
-				"palette": true,
+				"palette": {
+					categories: true,
+					nodeTemplates: true
+				},
 				"nodes": true,
 				"ports": true,
 				"decorations": true,
@@ -193,6 +213,7 @@ class App extends React.Component {
 				"stateTag": true
 			},
 			selectedShowBottomPanel: false,
+			selectedShowTopPanel: false,
 			selectedShowRightFlyout: false,
 			selectedRightFlyoutUnderToolbar: false,
 			selectedPanIntoViewOnOpen: false,
@@ -208,6 +229,7 @@ class App extends React.Component {
 			selectedExternalPipelineFlows: true,
 			selectedEditingActions: true,
 			selectedMoveNodesOnSupernodeResize: true,
+			selectedRaiseNodesToTopOnHover: true,
 			selectedResizableNodes: false,
 			selectedDisplayFullLabelOnHover: false,
 			selectedPositionNodeOnRightFlyoutOpen: false,
@@ -217,15 +239,6 @@ class App extends React.Component {
 			selectedBrowserEditMenu: true,
 			selectedBoundingRectangles: false,
 			selectedNodeLayout: null,
-			// Use these settings when enableResizableNodes is tested (these
-			// settings only work with vertical node format).
-			// selectedNodeLayout: {
-			// 	inputPortDisplay: false,
-			// 	outputPortDisplay: false,
-			// 	imagePosition: "middleCenter", imagePosX: -24, imagePosY: -30,
-			// 	labelPosition: "middleCenter", labelPosX: 0, labelPosY: 20,
-			// 	ellipsisPosition: "middleCenter", ellipsisPosX: 22, ellipsisPosY: -36
-			// },
 			selectedCanvasLayout: null,
 			selectedStateTagTip: "",
 
@@ -234,27 +247,42 @@ class App extends React.Component {
 			propertiesInfo2: {},
 			propertiesJson: null,
 			selectedPanel: null,
+			propertiesValidationHandler: true,
+			// Common properties configurable options in the sidepanel
 			propertiesContainerType: PROPERTIES_FLYOUT,
-			displayAdditionalComponents: false,
-			applyOnBlur: false,
-			disableSaveOnRequiredErrors: true,
-			addRemoveRowsPropertyId: {},
-			addRemoveRowsEnabled: true,
-			hideEditButtonPropertyId: {},
-			hideEditButton: false,
-			tableButtonEnabledPropertyId: {},
-			tableButtonEnabledButtonId: "",
-			tableButtonEnabled: true,
-			staticRowsPropertyId: {},
-			staticRowsIndexes: [],
-			disableWideFlyoutPrimaryButtonForPanelId: {},
-			wideFlyoutPrimaryButtonDisabled: false,
-			expressionBuilder: true,
-			heading: false,
-			light: true,
+			categoryView: CATEGORY_VIEW_ACCORDIONS,
 			propertiesSchemaValidation: true,
 			applyPropertiesWithoutEdit: false,
-			propertiesValidationHandler: true,
+			applyOnBlur: false,
+			convertValueDataTypes: false,
+			disableSaveOnRequiredErrors: true,
+			expressionBuilder: true,
+			trimSpaces: true,
+			displayAdditionalComponents: false,
+			heading: false,
+			light: true,
+			showRequiredIndicator: true,
+			showAlertsTab: true,
+			enableResize: true,
+			initialEditorSize: "small",
+			conditionHiddenPropertyHandling: "null",
+			conditionDisabledPropertyHandling: "null",
+			returnValueFiltering: "[]", // parse to array before passing to config
+			disableRowMoveButtonsPropertyIds: "[{ \"name\": \"parameterName\"}]",
+			maxLengthForMultiLineControls: 1024,
+			maxLengthForSingleLineControls: 128,
+			addRemoveRowsPropertyId: "{ \"name\": \"parameterName\"}",
+			addRemoveRowsEnabled: true,
+			hideEditButtonPropertyId: "{ \"name\": \"parameterName\"}",
+			hideEditButton: false,
+			tableButtonEnabledPropertyId: "{ \"name\": \"parameterName\"}",
+			tableButtonEnabledButtonId: "",
+			tableButtonEnabled: true,
+			staticRowsPropertyId: "{ \"name\": \"parameterName\"}",
+			staticRowsIndexes: "",
+			setActiveTab: "",
+			disableWideFlyoutPrimaryButtonForPanelId: "{ \"name\": \"panelName\"}",
+			wideFlyoutPrimaryButtonDisabled: false,
 
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
@@ -269,7 +297,10 @@ class App extends React.Component {
 				enable: true,
 				emptyMessage: "You don't have any notifications right now.",
 				clearAllMessage: "Clear all",
-				keepOpen: true
+				keepOpen: true,
+				secondaryButtonLabel: "Custom action",
+				secondaryButtonCallback: () => this.log("Secondary button clicked"),
+				secondaryButtonDisabled: false
 			},
 			notificationConfig2: {
 				action: "notification",
@@ -311,7 +342,7 @@ class App extends React.Component {
 
 		this.setBreadcrumbsDefinition = this.setBreadcrumbsDefinition.bind(this);
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
-		this.sidePanelModal = this.sidePanelModal.bind(this);
+		this.sidePanelProperties = this.sidePanelProperties.bind(this);
 		this.sidePanelAPI = this.sidePanelAPI.bind(this);
 		this.closeSidePanelModal = this.closeSidePanelModal.bind(this);
 		this.setCanvasDropdownFile = this.setCanvasDropdownFile.bind(this);
@@ -321,35 +352,16 @@ class App extends React.Component {
 
 		this.setStateValue = this.setStateValue.bind(this);
 		this.getStateValue = this.getStateValue.bind(this);
-		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
-		this.useSaveButtonDisable = this.useSaveButtonDisable.bind(this);
-		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
-		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
-		this.useHeading = this.useHeading.bind(this);
-		this.useLightOption = this.useLightOption.bind(this);
-		this.useEditorSize = this.useEditorSize.bind(this);
-		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
-		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
-		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
+		this.setDisableRowMoveButtons = this.setDisableRowMoveButtons.bind(this);
 		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
 		this.setHideEditButton = this.setHideEditButton.bind(this);
-		this.setHideEditButtonDisabled = this.setHideEditButtonDisabled.bind(this);
-		this.setHideEditButtonPropertyId = this.setHideEditButtonPropertyId.bind(this);
-		this.setTableButtonPropertyId = this.setTableButtonPropertyId.bind(this);
-		this.setTableButtonId = this.setTableButtonId.bind(this);
-		this.setTableButtonIdEnabled = this.setTableButtonIdEnabled.bind(this);
 		this.setTableButtonEnabled = this.setTableButtonEnabled.bind(this);
-		this.setStaticRowsPropertyId = this.setStaticRowsPropertyId.bind(this);
-		this.setStaticRowsIndexes = this.setStaticRowsIndexes.bind(this);
 		this.setStaticRows = this.setStaticRows.bind(this);
-		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
-		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
-		this.disableWideFlyoutPrimaryButtonForPanelId = this.disableWideFlyoutPrimaryButtonForPanelId.bind(this);
-		this.setWideFlyoutPrimaryButtonDisabled = this.setWideFlyoutPrimaryButtonDisabled.bind(this);
+		this.setActiveTabTopLevel = this.setActiveTabTopLevel.bind(this);
 		this.disableWideFlyoutPrimaryButton = this.disableWideFlyoutPrimaryButton.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
-		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
+		this.saveToPdf = this.saveToPdf.bind(this);
 		this.getPipelineFlow = this.getPipelineFlow.bind(this);
 		this.setPipelineFlow = this.setPipelineFlow.bind(this);
 		this.addNodeTypeToPalette = this.addNodeTypeToPalette.bind(this);
@@ -359,7 +371,8 @@ class App extends React.Component {
 		this.setNodeDecorations = this.setNodeDecorations.bind(this);
 		this.setLinkDecorations = this.setLinkDecorations.bind(this);
 		this.getZoomToReveal = this.getZoomToReveal.bind(this);
-		this.zoomCanvas = this.zoomCanvas.bind(this);
+		this.zoomCanvasForObj = this.zoomCanvasForObj.bind(this);
+		this.zoomCanvasForLink = this.zoomCanvasForLink.bind(this);
 		this.getPropertyDefName = this.getPropertyDefName.bind(this);
 
 		// common-canvas
@@ -372,6 +385,7 @@ class App extends React.Component {
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 		this.selectionChangeHandler = this.selectionChangeHandler.bind(this);
 		this.selectionChangeHandler2 = this.selectionChangeHandler2.bind(this);
+		this.layoutHandler = this.layoutHandler.bind(this);
 		this.tipHandler = this.tipHandler.bind(this);
 		this.actionLabelHandler = this.actionLabelHandler.bind(this);
 		this.propertiesActionLabelHandler = this.propertiesActionLabelHandler.bind(this);
@@ -384,18 +398,14 @@ class App extends React.Component {
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog2 = this.closePropertiesEditorDialog2.bind(this);
 		this.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect.bind(this);
-		this.enablePropertiesSchemaValidation = this.enablePropertiesSchemaValidation.bind(this);
-		this.enableApplyPropertiesWithoutEdit = this.enableApplyPropertiesWithoutEdit.bind(this);
-		this.setConditionHiddenPropertyHandling = this.setConditionHiddenPropertyHandling.bind(this);
-		this.setConditionDisabledPropertyHandling = this.setConditionDisabledPropertyHandling.bind(this);
 		this.validateProperties = this.validateProperties.bind(this);
+		this.setPropertiesConfigOption = this.setPropertiesConfigOption.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.buttonHandler = this.buttonHandler.bind(this);
 		this.buttonIconHandler = this.buttonIconHandler.bind(this);
 		this.validationHandler = this.validationHandler.bind(this);
 		this.titleChangeHandler = this.titleChangeHandler.bind(this);
-		this.enablePropertiesValidationHandler = this.enablePropertiesValidationHandler.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
@@ -443,13 +453,13 @@ class App extends React.Component {
 				<Isvg src={BlankCanvasImage} className="harness-empty-image" />
 				<span className="harness-empty-text">
 					<FormattedMessage
-						id={ "canvas.emptyText" }
+						id={"canvas.emptyText"}
 						values={{ br: <br /> }}
 					/>
 				</span>
 				<span className="harness-empty-link"
 					onClick={this.handleEmptyCanvasLinkClick}
-				><FormattedMessage id={ "canvas.emptyLink"} /></span>
+				><FormattedMessage id={"canvas.emptyLink"} /></span>
 			</div>
 		);
 
@@ -603,13 +613,12 @@ class App extends React.Component {
 							that.setPropertiesJSON(res);
 						});
 				}
-				that.closeSidePanelModal();
 			});
 		}
 	}
 
 	getLabel(labelId, defaultLabel) {
-		return (<FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />);
+		return (<FormattedMessage id={labelId} defaultMessage={defaultLabel} />);
 	}
 
 	getPropertyDefName(node) {
@@ -793,8 +802,9 @@ class App extends React.Component {
 	}
 
 	setPropertiesJSON(propertiesJson) {
-		this.setState({ propertiesJson: propertiesJson });
-		this.openPropertiesEditorDialog();
+		this.setState({ propertiesJson: propertiesJson }, () => {
+			this.openPropertiesEditorDialog();
+		});
 		this.log("Properties set");
 	}
 
@@ -821,8 +831,10 @@ class App extends React.Component {
 		this.log("API Operation Selected");
 	}
 
-	getPipelineFlow(canvController) {
-		const canvasController = canvController ? canvController : this.canvasController;
+	getPipelineFlow() {
+		// If we're displaying a sample app, get its canvas controller.
+		const canvasController = this.canvasRef?.current ? this.canvasRef.current.canvasController : this.canvasController;
+
 		try {
 			return canvasController.getPipelineFlow();
 		} catch (err) {
@@ -840,7 +852,6 @@ class App extends React.Component {
 			return "Schema validation error";
 		}
 	}
-
 
 	getCanvasInfo() {
 		return this.canvasController.getObjectModel().getCanvasInfoPipeline();
@@ -869,14 +880,6 @@ class App extends React.Component {
 		this.log("Set new node decorations", { nodeId: nodeId, newDecorations: newDecs });
 	}
 
-	setConditionHiddenPropertyHandling(value) {
-		this.setState({ conditionHiddenPropertyHandling: value });
-	}
-
-	setConditionDisabledPropertyHandling(value) {
-		this.setState({ conditionDisabledPropertyHandling: value });
-	}
-
 	setLinkDecorations(linkId, newDecorations) {
 		let newDecs = JSON.parse(newDecorations);
 		if (isEmpty(newDecs)) {
@@ -891,103 +894,101 @@ class App extends React.Component {
 		return this.canvasController.getZoomToReveal([nodeId], xOffset, yOffset); // Need to pass node Id in an array
 	}
 
-	setMaxLengthForMultiLineControls(maxLengthForMultiLineControls) {
-		this.setState({ maxLengthForMultiLineControls: maxLengthForMultiLineControls });
-		this.log("set maxLengthForMultiLineControls ", maxLengthForMultiLineControls);
-	}
+	// Called by properties sidepanel to set state variables
+	setPropertiesConfigOption(option, value) {
+		const newState = {};
+		newState[option] = value;
 
-	setMaxLengthForSingleLineControls(maxLengthForSingleLineControls) {
-		this.setState({ maxLengthForSingleLineControls: maxLengthForSingleLineControls });
-		this.log("set maxLengthForSingleLineControls ", maxLengthForSingleLineControls);
-	}
+		if (option === "applyOnBlur" && value === true) {
+			newState.disableSaveOnRequiredErrors = false;
+		}
 
-	// Textfield to set the propertyId for addRemoveRows
-	setAddRemoveRowsPropertyId(propertyId) {
-		this.setState({ addRemoveRowsPropertyId: propertyId });
-	}
-
-	// Toggle to set addRemoveRows enabled or disabled
-	setAddRemoveRowsEnabled(enabled) {
-		this.setState({ addRemoveRowsEnabled: enabled });
+		this.setState(newState);
+		this.log("set properties option", newState);
 	}
 
 	// Button to call propertiesController to set addRemoveRows
 	setAddRemoveRows() {
 		if (this.propertiesController) {
-			this.propertiesController.setAddRemoveRows(this.state.addRemoveRowsPropertyId, this.state.addRemoveRowsEnabled);
+			try {
+				const addRemovePropertyId = JSON.parse(this.state.addRemoveRowsPropertyId);
+				this.propertiesController.setAddRemoveRows(addRemovePropertyId, this.state.addRemoveRowsEnabled);
+			} catch (ex) {
+				console.error(ex);
+			}
 		}
-	}
-
-	setHideEditButtonPropertyId(propertyId) {
-		this.setState({ hideEditButtonPropertyId: propertyId });
-	}
-
-	setHideEditButtonDisabled(disabled) {
-		this.setState({ hideEditButton: disabled });
 	}
 
 	setHideEditButton() {
 		if (this.propertiesController) {
-			this.propertiesController.setHideEditButton(this.state.hideEditButtonPropertyId, this.state.hideEditButton);
+			try {
+				const editButtonPropertyId = JSON.parse(this.state.hideEditButtonPropertyId);
+				this.propertiesController.setHideEditButton(editButtonPropertyId, this.state.hideEditButton);
+			} catch (ex) {
+				console.error(ex);
+			}
 		}
-	}
-
-	// Textfield to enter the propertyId for custom table buttons
-	setTableButtonPropertyId(propertyId) {
-		this.setState({ tableButtonEnabledPropertyId: propertyId });
-	}
-
-	// Textfield to enter the buttonId for custom table buttons
-	setTableButtonId(buttonId) {
-		this.setState({ tableButtonEnabledButtonId: buttonId });
-	}
-
-	// Toggle to set addRemoveRows enabled or disabled
-	setTableButtonIdEnabled(enabled) {
-		this.setState({ tableButtonEnabled: enabled });
 	}
 
 	// Button to call propertiesController to setTableButtonEnabled
 	setTableButtonEnabled() {
 		if (this.propertiesController) {
-			this.propertiesController.setTableButtonEnabled(this.state.tableButtonEnabledPropertyId, this.state.tableButtonEnabledButtonId, this.state.tableButtonEnabled);
+			try {
+				const tableButtonPropertyId = JSON.parse(this.state.tableButtonEnabledPropertyId);
+				this.propertiesController.setTableButtonEnabled(tableButtonPropertyId, this.state.tableButtonEnabledButtonId, this.state.tableButtonEnabled);
+			} catch (ex) {
+				console.error(ex);
+			}
 		}
-	}
-
-	// Textfield to set the propertyId for staticRows
-	setStaticRowsPropertyId(propertyId) {
-		this.setState({ staticRowsPropertyId: propertyId });
-	}
-
-	// Toggle to set staticRows enabled or disabled
-	setStaticRowsIndexes(indexes) {
-		this.setState({ staticRowsIndexes: indexes });
 	}
 
 	// Button to call propertiesController to set staticRows
 	setStaticRows() {
 		if (this.propertiesController) {
-			this.propertiesController.updateStaticRows(this.state.staticRowsPropertyId, this.state.staticRowsIndexes);
+			try {
+				const staticRowsPropertyId = JSON.parse(this.state.staticRowsPropertyId);
+				const staticRows = JSON.parse(this.state.staticRowsIndexes);
+				this.propertiesController.updateStaticRows(staticRowsPropertyId, staticRows);
+			} catch (ex) {
+				console.error(ex);
+			}
 		}
 	}
 
-	// Textfield to disable Ok button for given summary panel Id
-	disableWideFlyoutPrimaryButtonForPanelId(panelId) {
-		this.setState({ disableWideFlyoutPrimaryButtonForPanelId: panelId });
-	}
-
-	// Toggle to set OK button enabled or disabled
-	setWideFlyoutPrimaryButtonDisabled(disabled) {
-		this.setState({ wideFlyoutPrimaryButtonDisabled: disabled });
+	// Button to call propertiesController to set active top level tab
+	setActiveTabTopLevel() {
+		if (this.propertiesController) {
+			try {
+				const activeTab = this.state.setActiveTab;
+				this.propertiesController.setTopLevelActiveGroupId(activeTab);
+			} catch (ex) {
+				console.error(ex);
+			}
+		}
 	}
 
 	// Button to call propertiesController to set addRemoveRows
 	disableWideFlyoutPrimaryButton() {
 		if (this.propertiesController) {
-			this.propertiesController.setWideFlyoutPrimaryButtonDisabled(this.state.disableWideFlyoutPrimaryButtonForPanelId, this.state.wideFlyoutPrimaryButtonDisabled);
+			try {
+				const wideFlyoutPropertyId = JSON.parse(this.state.disableWideFlyoutPrimaryButtonForPanelId);
+				this.propertiesController.setWideFlyoutPrimaryButtonDisabled(wideFlyoutPropertyId, this.state.wideFlyoutPrimaryButtonDisabled);
+			} catch (ex) {
+				console.error(ex);
+			}
 		}
 	}
 
+	setDisableRowMoveButtons() {
+		if (this.propertiesController) {
+			try {
+				const disableRowMovePropertyIds = JSON.parse(this.state.disableRowMoveButtonsPropertyIds);
+				this.propertiesController.setDisableRowMoveButtons(disableRowMovePropertyIds);
+			} catch (ex) {
+				console.error(ex);
+			}
+		}
+	}
 
 	initLocale() {
 		const languages = { "en": "en", "eo": "eo" };
@@ -1002,10 +1003,10 @@ class App extends React.Component {
 		}
 	}
 
-	zoomCanvas(zoomObject, nodeId) {
+	zoomCanvasForObj(zoomObject, objId) {
 		const pipelineId = this.canvasController.getPrimaryPipelineId();
 		const stylePipelineObj = {};
-		stylePipelineObj[pipelineId] = [nodeId];
+		stylePipelineObj[pipelineId] = [objId];
 		const styleSpec = { body: { default: "fill: coral; stroke: red;", hover: "fill: cornflowerblue; stroke: blue;" } };
 		this.canvasController.removeAllStyles(true);
 		this.canvasController.setObjectsStyle(stylePipelineObj, styleSpec, true);
@@ -1013,9 +1014,56 @@ class App extends React.Component {
 		this.log("Zoomed canvas");
 	}
 
+	zoomCanvasForLink(zoomObject, linkId) {
+		const pipelineId = this.canvasController.getPrimaryPipelineId();
+		const styleLink = {};
+		styleLink[pipelineId] = [linkId];
+		const styleSpec = { line: { default: "stroke: coral; stroke-width: 4px", hover: "stroke: blue; stroke-width: 4px" } };
+		this.canvasController.removeAllStyles(true);
+		this.canvasController.setLinksStyle(styleLink, styleSpec, true);
+		this.canvasController.zoomTo(zoomObject);
+		this.log("Zoomed canvas");
+	}
+
 	clearSavedZoomValues() {
 		this.canvasController.clearSavedZoomValues();
 		this.canvasController2.clearSavedZoomValues();
+	}
+
+	// Saves the canvas objects into and image and then places that image into
+	// a PDF file. Creating the image takes quite a while to execute so it would
+	// probably need a progress indicator if it was implemented in an application.
+	saveToPdf() {
+		const svgAreaElements = document
+			.getElementById("d3-svg-canvas-div-0")
+			.getElementsByClassName("svg-area");
+
+		const dims = this.canvasController.getCanvasDimensionsWithPadding();
+		const heightToWidthRatio = dims.height / dims.width;
+
+		htmlToImage.toPng(svgAreaElements[0], {
+			filter: (node) => this.shouldIncludeInImage(node),
+			height: dims.height,
+			width: dims.width
+		})
+			.then(function(dataUrl) {
+				const img = document.createElement("img"); // new Image();
+				img.src = dataUrl;
+
+				const doc = new jsPDF();
+				doc.addImage(img, "PNG", 10, 10, 190, 190 * heightToWidthRatio);
+				doc.save("common-canvas.pdf");
+			})
+			.catch(function(error) {
+				console.error("An error occurred create the PNG image.", error);
+			});
+	}
+
+	// Returns true if the node passed in should be included in a saved image of the canvas.
+	// The only node that is excluded is the canvas background rectangle which has the
+	// same dimensions as the viewport which is often smaller than the canvas itself.
+	shouldIncludeInImage(node) {
+		return node?.classList ? !(node.classList.contains("d3-svg-background")) : true;
 	}
 
 	generateNodeNotificationMessages(nodeMessages, currentPipelineId) {
@@ -1178,15 +1226,15 @@ class App extends React.Component {
 	sidePanelCanvas() {
 		this.setState({
 			openSidepanelCanvas: !this.state.openSidepanelCanvas,
-			openSidepanelModal: false,
+			openSidepanelProperties: false,
 			openSidepanelAPI: false,
 			selectedPanel: SIDE_PANEL_CANVAS
 		});
 	}
 
-	sidePanelModal() {
+	sidePanelProperties() {
 		this.setState({
-			openSidepanelModal: !this.state.openSidepanelModal,
+			openSidepanelProperties: !this.state.openSidepanelProperties,
 			openSidepanelCanvas: false,
 			openSidepanelAPI: false,
 			selectedPanel: SIDE_PANEL_MODAL
@@ -1197,18 +1245,18 @@ class App extends React.Component {
 		this.setState({
 			openSidepanelAPI: !this.state.openSidepanelAPI,
 			openSidepanelCanvas: false,
-			openSidepanelModal: false,
+			openSidepanelProperties: false,
 			selectedPanel: SIDE_PANEL_API
 		});
 	}
 
 	isSidePanelOpen() {
-		return this.state.openSidepanelCanvas || this.state.openSidepanelModal || this.state.openSidepanelAPI;
+		return this.state.openSidepanelCanvas || this.state.openSidepanelProperties || this.state.openSidepanelAPI;
 	}
 
 	closeSidePanelModal() {
 		this.setState({
-			openSidepanelModal: false,
+			openSidepanelProperties: false,
 			openSidepanelCanvas: false,
 			openSidepanelAPI: false,
 			selectedPanel: null
@@ -1256,55 +1304,6 @@ class App extends React.Component {
 		JavascriptFileDownload(palette, "palette.json");
 	}
 
-	useApplyOnBlur(enabled) {
-		this.setState({ applyOnBlur: enabled });
-		if (enabled) {
-			this.setState({ disableSaveOnRequiredErrors: false });
-		}
-		this.log("apply changes on blur", enabled);
-	}
-
-	useSaveButtonDisable(disabled) {
-		this.setState({ disableSaveOnRequiredErrors: disabled });
-		this.log("save button disabled", disabled);
-	}
-
-	useExpressionBuilder(enabled) {
-		this.setState({ expressionBuilder: enabled });
-		this.log("use expression builder", enabled);
-	}
-
-	useDisplayAdditionalComponents(enabled) {
-		this.setState({ displayAdditionalComponents: enabled });
-		this.log("additional components display", enabled);
-	}
-
-	usePropertiesContainerType(type) {
-		this.setState({ propertiesContainerType: type });
-		this.log("set properties container", type);
-	}
-
-	useHeading(enabled) {
-		this.setState({ heading: enabled });
-		this.log("show heading", enabled);
-	}
-
-	useLightOption(enabled) {
-		this.setState({ light: enabled });
-		this.log("light option", enabled);
-	}
-
-	useEditorSize(editorSize) {
-		this.setState({ initialEditorSize: editorSize });
-		this.log("set editor size ", editorSize);
-	}
-
-	disableRowMoveButtons(propertyIds) {
-		if (this.propertiesController) {
-			this.propertiesController.setDisableRowMoveButtons(propertyIds);
-		}
-	}
-
 	clickActionHandler(source) {
 		this.canvasController.log("-------------------------------");
 		this.canvasController.log("Test Harness clickActionHandler");
@@ -1318,11 +1317,11 @@ class App extends React.Component {
 		// canvas to refresh.
 		// this.log("clickActionHandler()", source);
 		if (source.objectType === "node" &&
-				((this.state.selectedDragWithoutSelect &&
-					source.clickType === "SINGLE_CLICK" &&
-					this.canvasController.getSelectedObjectIds().length === 1) ||
-					(!this.state.selectedDragWithoutSelect &&
-						source.clickType === "DOUBLE_CLICK"))) {
+			((this.state.selectedDragWithoutSelect &&
+				source.clickType === "SINGLE_CLICK" &&
+				this.canvasController.getSelectedObjectIds().length === 1) ||
+				(!this.state.selectedDragWithoutSelect &&
+					source.clickType === "DOUBLE_CLICK"))) {
 			this.editNodeHandler(source.id, source.pipelineId);
 		}
 	}
@@ -1336,11 +1335,11 @@ class App extends React.Component {
 		// canvas to refresh.
 		// this.log("extraCanvasClickActionHandler()", source);
 		if (source.objectType === "node" &&
-				((this.state.selectedDragWithoutSelect &&
-					source.clickType === "SINGLE_CLICK" &&
-					this.canvasController2.getSelectedObjectIds().length === 1) ||
-					(!this.state.selectedDragWithoutSelect &&
-						source.clickType === "DOUBLE_CLICK"))) {
+			((this.state.selectedDragWithoutSelect &&
+				source.clickType === "SINGLE_CLICK" &&
+				this.canvasController2.getSelectedObjectIds().length === 1) ||
+				(!this.state.selectedDragWithoutSelect &&
+					source.clickType === "DOUBLE_CLICK"))) {
 			this.editNodeHandler(source.id, source.pipelineId, true);
 		}
 	}
@@ -1398,7 +1397,7 @@ class App extends React.Component {
 	buttonIconHandler(data, callbackIcon) {
 		// handle custom buttons icon
 		if (data.type === "customButtonIcon") {
-			callbackIcon(<Edit32 />);
+			callbackIcon(<Edit size={32} />);
 		}
 	}
 
@@ -1453,7 +1452,9 @@ class App extends React.Component {
 	contextMenuHandler(source, defaultMenu) {
 		let defMenu = defaultMenu;
 		// Add custom menu items at proper positions: open, preview & execute
-		if (source.type === "node" && source.selectedObjectIds.length === 1) {
+		if (source.type === "node" &&
+				(source.selectedObjectIds.length === 1 ||
+					this.canvasController.isContextToolbarForNonSelectedObj(source))) {
 			defMenu.unshift({ action: "editNode", label: this.getLabel("node_editNode", "CMI: Open") });
 			defMenu.splice(2, 0, { action: "previewNode", label: this.getLabel("node_previewNode", "CMI: Preview") });
 			defMenu.splice(8, 0, { action: "executeNode", label: this.getLabel("node_executeNode", "CMI: Execute") });
@@ -1479,10 +1480,9 @@ class App extends React.Component {
 		const testAsyncExecution = false; // Set to true to test asynchronous activity
 
 		switch (data.editType) {
-
 		case "editComment": {
-		// Uncomment to play with setting the command data.
-		// 	data.content += " -- Added text";
+			// Uncomment to play with setting the command data.
+			// 	data.content += " -- Added text";
 			break;
 		}
 		case "createSuperNodeExternal":
@@ -1532,7 +1532,7 @@ class App extends React.Component {
 		}
 		case "undo": {
 			if (command && command.data &&
-					command.data.editType === "convertSuperNodeExternalToLocal") {
+				command.data.editType === "convertSuperNodeExternalToLocal") {
 				// App needs to make decision here if this command deletes the
 				// external pipeline flow in the repository.
 				window.alert("Reinstate external pipeline flow.");
@@ -1553,6 +1553,14 @@ class App extends React.Component {
 		}
 
 		switch (data.editType) {
+		case "commentsHide": {
+			this.canvasController.hideComments();
+			break;
+		}
+		case "commentsShow": {
+			this.canvasController.showComments();
+			break;
+		}
 		case "displaySubPipeline":
 		case "displayPreviousPipeline": {
 			this.setFlowNotificationMessages();
@@ -1599,13 +1607,6 @@ class App extends React.Component {
 			this.editNodeHandler(data.targetObject.id, data.pipelineId, inExtraCanvas);
 			break;
 		}
-		case "runit": {
-			if (this.state.selectedCanvasDropdownFile === "allTypesCanvas.json" ||
-					this.state.selectedCanvasDropdownFile === "stylesCanvas.json") {
-				this.runProgress();
-			}
-			break;
-		}
 		case "createSuperNodeExternal":
 		case "convertSuperNodeLocalToExternal": {
 			this.externalPipelineFlows[data.externalUrl] =
@@ -1645,13 +1646,15 @@ class App extends React.Component {
 			decorators.push({
 				className: "supernode-zoom-in",
 				position: "top-left",
-				actionHandler: this.decorationAction.bind(this, node, "supernodeZoomIn") });
+				actionHandler: this.decorationAction.bind(this, node, "supernodeZoomIn")
+			});
 		}
 
 		if (node.cacheState !== "disabled") {
 			decorators.push({
 				className: "cache-" + node.cacheState,
-				position: "top-right" });
+				position: "top-right"
+			});
 		}
 		return decorators;
 	}
@@ -1678,7 +1681,7 @@ class App extends React.Component {
 				const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 				const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
 				const propsInfo = {
-					title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
+					title: <FormattedMessage id={"dialog.nodePropertiesTitle"} />,
 					messages: messages,
 					formData: properties.formData,
 					parameterDef: properties,
@@ -1703,7 +1706,7 @@ class App extends React.Component {
 		if (this.currentEditorId) {
 			// don't apply changes if node has been removed
 			if (this.canvasController.getNode(this.currentEditorId, data.selectedPipelineId) &&
-					this.CommonProperties) {
+				this.CommonProperties) {
 				this.CommonProperties.applyPropertiesEditing(false);
 			}
 			this.setState({ showPropertiesDialog: false });
@@ -1717,7 +1720,7 @@ class App extends React.Component {
 		if (this.currentEditorId2) {
 			// don't apply changes if node has been removed
 			if (this.canvasController2.getNode(this.currentEditorId2, data.selectedPipelineId) &&
-					this.CommonProperties2) {
+				this.CommonProperties2) {
 				this.CommonProperties2.applyPropertiesEditing(false);
 			}
 			this.setState({ showPropertiesDialog2: false });
@@ -1725,22 +1728,40 @@ class App extends React.Component {
 		}
 	}
 
+	// The layout handler can be modified to provide node layout overrides
+	// while testing and debugging.
+	layoutHandler() {
+		return {};
+	}
+
 	tipHandler(tipType, data) {
 		if (tipType === "tipTypeLink") {
-			let sourceString = data.link.type === "commentLink" ? "comment" : "detached source";
-			if (data.link.src && data.link.src.outputs) {
-				const srcPort = !data.link.src.outputs ? null : data.link.src.outputs.find(function(port) {
-					return port.id === data.link.srcPortId;
-				});
-				sourceString = `'${data.link.src.label}'` + (srcPort && srcPort.label ? `, port '${srcPort.label}'` : "");
-			}
+			let sourceString = "";
+			let targetString = "";
+			if (data.link.type === "commentLink") {
+				sourceString = "comment";
+				targetString = data.link.trgNode.label;
 
-			let targetString = "detached target";
-			if (data.link.trg && data.link.trg.inputs) {
-				const trgPort = data.link.trg.inputs.find(function(port) {
-					return port.id === data.link.trgPortId;
-				});
-				targetString = `'${data.link.trg.label}'` + (trgPort && trgPort.label ? `, port '${trgPort.label}'` : "");
+			} else if (data.link.type === "associationLink") {
+				sourceString = data.link.srcObj.label;
+				targetString = data.link.trgNode.label;
+
+			} else {
+				sourceString = "detached source";
+				if (data.link.srcObj && data.link.srcObj.outputs) {
+					const srcPort = !data.link.srcObj.outputs ? null : data.link.srcObj.outputs.find(function(port) {
+						return port.id === data.link.srcNodePortId;
+					});
+					sourceString = `'${data.link.srcObj.label}'` + (srcPort && srcPort.label ? `, port '${srcPort.label}'` : "");
+				}
+
+				targetString = "detached target";
+				if (data.link.trgNode && data.link.trgNode.inputs) {
+					const trgPort = data.link.trgNode.inputs.find(function(port) {
+						return port.id === data.link.trgNodePortId;
+					});
+					targetString = `'${data.link.trgNode.label}'` + (trgPort && trgPort.label ? `, port '${trgPort.label}'` : "");
+				}
 			}
 
 			return `Link from ${sourceString} to ${targetString}`;
@@ -1776,12 +1797,13 @@ class App extends React.Component {
 		const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 		const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
 		const propsInfo = {
-			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
+			title: <FormattedMessage id={"dialog.nodePropertiesTitle"} />,
 			formData: properties.formData,
 			parameterDef: properties,
 			additionalComponents: additionalComponents,
 			expressionInfo: expressionInfo,
-			initialEditorSize: this.state.initialEditorSize
+			initialEditorSize: this.state.initialEditorSize,
+			id: uuid4()
 		};
 
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
@@ -1806,17 +1828,6 @@ class App extends React.Component {
 		if (this.propertiesController2) {
 			this.propertiesController2.validatePropertiesValues();
 		}
-	}
-
-	enablePropertiesSchemaValidation() {
-		this.setState({ propertiesSchemaValidation: !this.state.propertiesSchemaValidation });
-	}
-
-	enableApplyPropertiesWithoutEdit() {
-		this.setState({ applyPropertiesWithoutEdit: !this.state.applyPropertiesWithoutEdit });
-	}
-	enablePropertiesValidationHandler() {
-		this.setState({ propertiesValidationHandler: !this.state.propertiesValidationHandler });
 	}
 
 	handleEmptyCanvasLinkClick() {
@@ -1893,13 +1904,13 @@ class App extends React.Component {
 			const propertyId = { name: data.parameter_ref };
 			let value = propertiesController.getPropertyValue(propertyId);
 			switch (value) {
-			case "Full" :
+			case "Full":
 				value = "Waning";
 				break;
-			case "Waning" :
+			case "Waning":
 				value = "New";
 				break;
-			case "New" :
+			case "New":
 				value = "Waxing";
 				break;
 			default:
@@ -1911,16 +1922,16 @@ class App extends React.Component {
 			const propertyId = { name: data.parameter_ref };
 			let value = propertiesController.getPropertyValue(propertyId);
 			switch (value) {
-			case "Perseids" :
+			case "Perseids":
 				value = "Orionids";
 				break;
-			case "Orionids" :
+			case "Orionids":
 				value = "Leonids";
 				break;
-			case "Leonids" :
+			case "Leonids":
 				value = "Geminids";
 				break;
-			case "Geminids" :
+			case "Geminids":
 				value = "Lyrids";
 				break;
 
@@ -1972,7 +1983,7 @@ class App extends React.Component {
 			<CommonProperties
 				ref={(instance) => {
 					this.CommonProperties = instance;
-				} }
+				}}
 				propertiesInfo={this.state.propertiesInfo}
 				propertiesConfig={propertiesConfig}
 				customPanels={[CustomSliderPanel, CustomTogglePanel,
@@ -1980,7 +1991,7 @@ class App extends React.Component {
 					RandomEffectsPanel, CustomSubjectsPanel]}
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
-				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck]}
+				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck, CustomOpFilterKeys, CustomOpFilterDuplicates, CustomRequiredColumn]}
 				light={this.state.light}
 			/>);
 
@@ -2007,7 +2018,7 @@ class App extends React.Component {
 			<CommonProperties
 				ref={(instance) => {
 					this.CommonProperties2 = instance;
-				} }
+				}}
 				propertiesInfo={this.state.propertiesInfo2}
 				propertiesConfig={propertiesConfig}
 				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomButtonPanel, CustomDatasetsPanel,
@@ -2022,18 +2033,33 @@ class App extends React.Component {
 	}
 
 	getPropertiesConfig() {
+		let returnValueFilters = this.state.returnValueFiltering;
+		try {
+			returnValueFilters = JSON.parse(this.state.returnValueFiltering);
+		} catch (ex) {
+			console.error(ex);
+		}
+
 		return {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
-			applyOnBlur: this.state.applyOnBlur,
-			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
-			heading: this.state.heading,
+			categoryView: this.state.categoryView,
 			schemaValidation: this.state.propertiesSchemaValidation,
 			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
+			applyOnBlur: this.state.applyOnBlur,
+			convertValueDataTypes: this.state.convertValueDataTypes,
+			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
+			trimSpaces: this.state.trimSpaces,
+			heading: this.state.heading,
+			showRequiredIndicator: this.state.showRequiredIndicator,
+			showAlertsTab: this.state.showAlertsTab,
+			enableResize: this.state.enableResize,
 			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
 			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
+			returnValueFiltering: returnValueFilters,
 			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
-			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls
+			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
+			locale: this.locale
 		};
 	}
 
@@ -2044,6 +2070,7 @@ class App extends React.Component {
 			enableSnapToGridX: this.state.enteredSnapToGridX,
 			enableSnapToGridY: this.state.enteredSnapToGridY,
 			enableNodeFormatType: this.state.selectedNodeFormatType,
+			enableImageDisplay: this.state.selectedImageDisplay,
 			enableLinkType: this.state.selectedLinkType,
 			enableLinkDirection: this.state.selectedLinkDirection,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
@@ -2058,12 +2085,14 @@ class App extends React.Component {
 			enableLinkReplaceOnNewConnection: this.state.selectedLinkReplaceOnNewConnection,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enableMarkdownInComments: this.state.selectedMarkdownInComments,
+			enableContextToolbar: this.state.selectedContextToolbar,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			enableStateTag: this.state.selectedStateTag,
 			enableToolbarLayout: this.state.selectedToolbarLayout,
 			enableResizableNodes: this.state.selectedResizableNodes,
 			enableInsertNodeDroppedOnLink: this.state.selectedInsertNodeDroppedOnLink,
 			enableMoveNodesOnSupernodeResize: this.state.selectedMoveNodesOnSupernodeResize,
+			enableRaiseNodesToTopOnHover: this.state.selectedRaiseNodesToTopOnHover,
 			enablePositionNodeOnRightFlyoutOpen: this.state.selectedPositionNodeOnRightFlyoutOpen,
 			enableAutoLinkOnlyFromSelNodes: this.state.selectedAutoLinkOnlyFromSelNodes,
 			enableBrowserEditMenu: this.state.selectedBrowserEditMenu,
@@ -2120,37 +2149,90 @@ class App extends React.Component {
 		if (this.state.selectedToolbarType === TOOLBAR_TYPE_DEFAULT) {
 			toolbarConfig = null;
 
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_SUB_AREAS) {
+			const subMenuTextSize = [
+				{ action: "title", label: "Title", enable: true },
+				{ action: "header", label: "Header", enable: true },
+				{ action: "subheader", label: "Subheader", enable: true },
+				{ action: "body", label: "Body", enable: true }
+			];
+
+			const subMenuSize = [
+				{ action: "increase", label: "Increase", enable: true, iconEnabled: (<Add size={32} />) },
+				{ action: "decrease", label: "Decrease", enable: true, iconEnabled: (<Subtract size={32} />) }
+			];
+
+			toolbarConfig = {
+				leftBar: [
+					{ action: "palette", label: "Palette", enable: true },
+					{ divider: true },
+					{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt size={32} />) },
+					{ divider: true },
+					{ action: "run", label: "Run", enable: true, iconEnabled: (<Play size={32} />) },
+					{ divider: true },
+					{ action: "deleteSelectedObjects", label: "Delete", enable: true },
+					{ divider: true },
+					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
+					{ divider: true },
+					{ action: "settingspanel", iconEnabled: (<Settings />), label: "Settings", enable: true,
+						subPanel: AppSettingsPanel, subPanelData: { saveData: (settings) => window.alert("Panel data received by application.\n" + settings) } },
+					{ divider: true },
+					{ action: "text-size-submenu", incLabelWithIcon: "after", iconEnabled: (<TextScale size={32} />), label: "Text Size", enable: true,
+						subMenu: subMenuTextSize, closeSubAreaOnClick: true },
+					{ divider: true },
+					{ action: "size-submenu", iconEnabled: (<Scale size={32} />), label: "Size", enable: true, subMenu: subMenuSize },
+					{ divider: true },
+					{ action: "color-subpanel", iconEnabled: (<ColorPalette size={32} />), label: "Color picker", enable: true,
+						subPanel: ColorPicker, subPanelData: { clickActionHandler: (color) => window.alert("Color selected = " + color) } },
+					{ divider: true },
+					{ action: "undo", label: "Undo", enable: true },
+					{ action: "redo", label: "Redo", enable: true },
+					{ divider: true }
+				],
+				rightBar: [
+					{ divider: true },
+					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
+					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
+					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true }
+				]
+			};
+
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_SINGLE_BAR) {
 			toolbarConfig = [
 				{ action: "palette", label: "Palette", enable: true },
 				{ divider: true },
-				{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt32 />) },
+				{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt size={32} />) },
 				{ action: "runSelection", label: "Run Selection", enable: true, incLabelWithIcon: "before", kind: "primary" },
 				{ divider: true },
-				{ action: "run", label: "Run", enable: true, iconEnabled: (<Play32 />) },
+				{ action: "run", label: "Run", enable: true, iconEnabled: (<Play size={32} />) },
 				{ divider: true },
 				{ action: "undo", label: "Undo", enable: true },
 				{ action: "redo", label: "Redo", enable: true },
-				{ action: "cut", label: "Cut", enable: true, tooltip: "Cut from clipboard" },
-				{ action: "copy", label: "Copy", enable: true, tooltip: "Copy from clipboard" },
-				{ action: "paste", label: "Paste", enable: true, tooltip: "Paste to canvas" },
+				{ divider: true },
 				{ action: "createAutoComment", label: "Add Comment", enable: true },
+				(this.canvasController.isHidingComments()
+					? { action: "commentsToggle", label: "Show comments", enable: true, iconEnabled: (<Chat size={32} />) }
+					: { action: "commentsToggle", label: "Hide comments", enable: true, iconEnabled: (<ChatOff size={32} />) }
+				),
+				{ divider: true },
 				{ action: "deleteSelectedObjects", label: "Delete", enable: true },
+				{ divider: true },
 				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
 				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
 				{ divider: true },
-				{ action: "mouse", iconEnabled: (<SelectWindow32 />), label: "Mouse", enable: true, isSelected: this.state.selectedInteractionType === "Mouse" },
-				{ action: "trackpad", iconEnabled: (<TouchInteraction32 />), label: "Trackpad", enable: true, isSelected: this.state.selectedInteractionType === "Trackpad" },
+				{ action: "mouse", iconEnabled: (<SelectWindow size={32} />), label: "Mouse", enable: true, isSelected: this.state.selectedInteractionType === "Mouse" },
+				{ action: "trackpad", iconEnabled: (<TouchInteraction size={32} />), label: "Trackpad", enable: true, isSelected: this.state.selectedInteractionType === "Trackpad" },
 				{ divider: true }
 			];
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_BEFORE_AFTER) {
 			toolbarConfig = {
 				leftBar: [
-					{ action: "before-enabled", incLabelWithIcon: "before", label: "Before - enabled", enable: true, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
-					{ action: "before-disabled", incLabelWithIcon: "before", label: "Before - disbaled", enable: false, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
-					{ action: "after-enabled", incLabelWithIcon: "after", label: "After - enabled", enable: true, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
-					{ action: "after-disabled", incLabelWithIcon: "after", label: "After - disbaled", enable: false, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+					{ action: "before-enabled", incLabelWithIcon: "before", label: "Before - enabled", enable: true, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
+					{ action: "before-disabled", incLabelWithIcon: "before", label: "Before - disbaled", enable: false, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
+					{ action: "after-enabled", incLabelWithIcon: "after", label: "After - enabled", enable: true, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
+					{ action: "after-disabled", incLabelWithIcon: "after", label: "After - disbaled", enable: false, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
 				],
 				rightBar: [
 					{ divider: true },
@@ -2188,23 +2270,25 @@ class App extends React.Component {
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CARBON_BUTTONS) {
 			toolbarConfig = {
 				leftBar: [
-					{ action: "primary", label: "Primary", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit32 />) },
-					{ action: "danger", label: "Danger", enable: true, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit32 />) },
-					{ action: "secondary", label: "Secondary", enable: true, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit32 />) },
-					{ action: "tertiary", label: "Tertiary", enable: true, incLabelWithIcon: "before", kind: "tertiary", iconEnabled: (<Edit32 />) },
-					{ action: "ghost", label: "Ghost", enable: true, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit32 />) },
-					{ action: "default", label: "Default", enable: true, incLabelWithIcon: "before", iconEnabled: (<Edit32 />) },
+					{ action: "primary", label: "Primary", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit size={32} />) },
+					{ action: "danger", label: "Danger", enable: true, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit size={32} />) },
+					{ action: "secondary", label: "Secondary", enable: true, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit size={32} />) },
+					{ action: "tertiary", label: "Tertiary", enable: true, incLabelWithIcon: "before", kind: "tertiary", iconEnabled: (<Edit size={32} />) },
+					{ action: "ghost", label: "Ghost", enable: true, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit size={32} />) },
+					{ action: "default", label: "Default", enable: true, incLabelWithIcon: "before", iconEnabled: (<Edit size={32} />) },
 				],
 				rightBar: [
-					{ action: "dis-primary", label: "Primary", enable: false, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit32 />) },
-					{ action: "dis-danger", label: "Danger", enable: false, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit32 />) },
-					{ action: "dis-secondary", label: "Secondary", enable: false, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit32 />) },
-					{ action: "dis-ghost", label: "Ghost", enable: false, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit32 />) },
-					{ action: "dis-default", label: "Default", enable: false, incLabelWithIcon: "before", iconEnabled: (<Edit32 />) },
+					{ action: "dis-primary", label: "Primary", enable: false, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit size={32} />) },
+					{ action: "dis-danger", label: "Danger", enable: false, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit size={32} />) },
+					{ action: "dis-secondary", label: "Secondary", enable: false, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit size={32} />) },
+					{ action: "dis-tertiary", label: "Tertiary", enable: false, incLabelWithIcon: "before", kind: "tertiary", iconEnabled: (<Edit size={32} />) },
+					{ action: "dis-ghost", label: "Ghost", enable: false, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit size={32} />) },
+					{ action: "dis-default", label: "Default", enable: false, incLabelWithIcon: "before", iconEnabled: (<Edit size={32} />) },
 				]
 			};
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOM_ACTIONS) {
+			const TextScale32 = React.forwardRef((props, ref) => <TextScale ref={ref} size={32} {...props} />);
 			// This example shows how custom JSX can be provided to the toolbar in the
 			// jsx field to replace the content specified in the other fields. The JSX
 			// added can be customized using the host applications own CSS.
@@ -2213,43 +2297,65 @@ class App extends React.Component {
 					{ action: "undo", label: "Undo", enable: true },
 					{ action: "redo", label: "Redo", enable: true },
 					{ divider: true },
-					{ action: "custom-loading",
+					{
+						action: "custom-loading",
 						tooltip: "A custom loading!",
-						jsx: (
+						jsx: (tabIndex) => (
 							<div style={{ padding: "4px 11px" }}>
-								<InlineLoading status="active" description="Loading..." />
+								<InlineLoading status="active" description="Loading..."
+									className={"toolbar-jsx-obj"}
+									tabIndex={tabIndex}
+								/>
 							</div>
 						)
 					},
 					{ divider: true },
-					{ action: "custom-checkbox",
+					{
+						action: "custom-checkbox",
 						tooltip: "A custom checkbox!",
-						jsx: (
+						jsx: (tabIndex) => (
 							<div style={{ padding: "5px 11px" }}>
-								<Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} />
+								<Checkbox id={"custom-checkbox"} defaultChecked labelText={"Check it out"}
+									onClick={(e) => window.alert("Checkbox clicked!")}
+									className={"toolbar-jsx-obj"}
+									tabIndex={tabIndex}
+								/>
 							</div>
 						)
 					},
 					{ divider: true },
-					{ action: "custom-button",
+					{
+						action: "custom-button",
 						tooltip: "A custom button of type primary!",
-						jsx: (
-							<div className="toolbar-custom-button">
-								<Button id={"btn1"} size="field" kind="primary">Custom button </Button>
-							</div>
+						jsx: (tabIndex) => (
+							<Button id={"custom-button"} size="md" kind="primary"
+								onClick={(e) => window.alert("Button clicked!")}
+								className={"toolbar-jsx-obj"}
+								tabIndex={tabIndex}
+							>
+								Custom button
+							</Button>
 						)
 					},
 					{ divider: true },
-					{ action: "custom-dropdown",
+					{
+						action: "custom-dropdown",
 						tooltip: () => (this.suppressTooltip ? null : "A drop down using the overflow menu!"),
-						jsx: (
+						jsx: (tabIndex) => (
 							<div className="toolbar-custom-button">
 								<OverflowMenu
 									id={"ovf1"}
 									renderIcon={TextScale32}
 									iconDescription={""}
-									onOpen={() => (this.suppressTooltip = true)}
-									onClose={() => (this.suppressTooltip = false)}
+									onOpen={() => (
+										this.suppressTooltip = true)
+									}
+									onClose={() => {
+										this.suppressTooltip = false;
+										window.alert("Option selected");
+									}}
+									className={"toolbar-jsx-obj"}
+									tabIndex={tabIndex}
 								>
 									<OverflowMenuItem itemText="Big" />
 									<OverflowMenuItem itemText="Medium" />
@@ -2281,110 +2387,6 @@ class App extends React.Component {
 		return toolbarConfig;
 	}
 
-	runProgress() {
-		const nodeAnimation =
-			"animation-duration:1000ms; animation-name:wiggle2; " +
-			"animation-iteration-count:infinite; fill: skyblue;";
-
-		const nodeStyle = {
-			body: { default: nodeAnimation, hover: "fill: orange; stroke: coralred; stroke-width: 5;" },
-			// selection_outline: { default: animation },
-			image: { default: null },
-			label: { default: "fill: blue" },
-			text: { default: "fill: white" }
-		};
-
-		const removeNodeStyle = {
-			body: { default: null, hover: null },
-			// selection_outline: { default: animation },
-			image: { default: null },
-			label: { default: null },
-			text: { default: null }
-		};
-
-		// Note: The pipelineId uses special characters for testing purposes.
-		const pipelineId = "`~!@#$%^&*()_+=-{}][|:;<,>.9?/";
-
-		const bindingEntryNode = "id8I6RH2V91XW";
-		const executionNode = "|:;<,>.9?/`~!@#$%^&*()_+=-{}]["; // The executiion node id uses special characters for testing.
-		const superNode = "nodeIDSuperNodePE";
-		const modelNode = "id125TTEEIK7V";
-		const bindingExitNode = "id5KIRGGJ3FYT";
-
-		const objects1 = [];
-		const objects2 = [];
-		const objects3 = [];
-		const objects4 = [];
-
-		objects1[pipelineId] = [bindingEntryNode];
-		objects2[pipelineId] = [executionNode];
-		objects3[pipelineId] = [superNode];
-		objects4[pipelineId] = [modelNode, bindingExitNode];
-
-		const linkAnimation =
-			"animation-duration:1000ms; animation-name:blink; " +
-			"animation-iteration-count:infinite; animation-direction: alternate";
-
-		const linkStyle = {
-			line: { default: linkAnimation, hover: "stroke: yellow; stroke-width: 2" }
-		};
-
-		const removeLinkStyle = {
-			line: { default: null, hover: null }
-		};
-
-		const lnk1 = this.canvasController.getNodeDataLinkFromInfo(bindingEntryNode, "outPort", executionNode, "inPort");
-		const lnk2 = this.canvasController.getNodeDataLinkFromInfo(executionNode, null, superNode, "input2SuperNodePE");
-		const lnk3 = this.canvasController.getNodeDataLinkFromInfo(superNode, null, modelNode, "inPort");
-		const lnk4 = this.canvasController.getNodeDataLinkFromInfo(superNode, "output1SuperNodePE", bindingExitNode, "inPort");
-
-		const link1 = [];
-		const link2 = [];
-		const link3 = [];
-
-		link1[pipelineId] = [lnk1.id];
-		link2[pipelineId] = [lnk2.id];
-		link3[pipelineId] = [lnk3.id, lnk4.id];
-
-		const that = this;
-
-		that.canvasController.setObjectsStyle(objects1, nodeStyle, true);
-
-		setTimeout(() => {
-			that.canvasController.setLinksStyle(link1, linkStyle, true);
-			that.canvasController.setObjectsStyle(objects2, nodeStyle, true);
-		}, 2000);
-
-		setTimeout(() => {
-			that.canvasController.setObjectsStyle(objects1, removeNodeStyle, true);
-			that.canvasController.setLinksStyle(link1, removeLinkStyle, true);
-		}, 4000);
-
-		setTimeout(() => {
-			that.canvasController.setLinksStyle(link2, linkStyle, true);
-			that.canvasController.setObjectsStyle(objects3, nodeStyle, true);
-		}, 6000);
-
-		setTimeout(() => {
-			that.canvasController.setObjectsStyle(objects2, removeNodeStyle, true);
-			that.canvasController.setLinksStyle(link2, removeLinkStyle, true);
-		}, 8000);
-
-		setTimeout(() => {
-			that.canvasController.setLinksStyle(link3, linkStyle, true);
-			that.canvasController.setObjectsStyle(objects4, nodeStyle, true);
-		}, 10000);
-
-		setTimeout(() => {
-			that.canvasController.setLinksStyle(link3, removeLinkStyle, true);
-			that.canvasController.setObjectsStyle(objects3, removeNodeStyle, true);
-		}, 12000);
-
-		setTimeout(() => {
-			that.canvasController.setObjectsStyle(objects4, removeNodeStyle, true);
-		}, 14000);
-	}
-
 	getTempContent() {
 		const text1 = "Common Canvas panel.";
 		const text2 = "Some temporary content for common canvas panel. This panel can display content from the host application.";
@@ -2413,50 +2415,58 @@ class App extends React.Component {
 		const apiLabel = "API";
 		const commonPropertiesModalLabel = "Common Properties Modal";
 		const commonCanvasLabel = "Common Canvas";
+		const todaysDate = new Date();
+		const todaysDateFormatted = "v13-" + todaysDate.toISOString().split("T")[0];
 
-		const navBar = (<header aria-label="Common Canvas Header" role="banner">
+		const navBar = (<div aria-label="Common Canvas Test Harness" role="banner">
 			<div className="harness-app-navbar">
 				<ul className="harness-app-navbar-items">
 					<li className="harness-navbar-li">
 						<span className="harness-title">Common Canvas</span>
-						<span className="harness-version">{"v" + CommonCanvasPackage.version}</span>
+						<span className="harness-version">{todaysDateFormatted}</span>
 					</li>
-					<li className="harness-navbar-li harness-nav-divider" data-tip={consoleLabel}>
-						<a onClick={this.openConsole.bind(this) } aria-label={consoleLabel}>
+					<li className="harness-navbar-li harness-nav-divider" data-tooltip-id="toolbar-tooltip" data-tooltip-content={consoleLabel}>
+						<a onClick={this.openConsole.bind(this) }>
 							<Isvg src={listview32} />
 						</a>
 					</li>
-					<li className="harness-navbar-li" data-tip={downloadFlowLabel}>
-						<a onClick={this.downloadPipelineFlow.bind(this) } aria-label={downloadFlowLabel}>
+					<li className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={downloadFlowLabel}>
+						<a onClick={this.downloadPipelineFlow.bind(this) }>
 							<Isvg src={download32} />
 						</a>
 					</li>
-					<li className="harness-navbar-li" data-tip={downloadPaletteLabel}>
-						<a onClick={this.downloadPalette.bind(this) } aria-label={downloadPaletteLabel}>
+					<li className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={downloadPaletteLabel}>
+						<a onClick={this.downloadPalette.bind(this) }>
 							<Isvg src={download32} />
 						</a>
 					</li>
 					<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
 						{breadcrumbs}
 					</li>
-					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={apiLabel}>
-						<a onClick={this.sidePanelAPI.bind(this) } aria-label={apiLabel}>
+					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
+						data-tooltip-id="toolbar-tooltip" data-tooltip-content={apiLabel}
+					>
+						<a onClick={this.sidePanelAPI.bind(this) }>
 							<Isvg src={api32} />
 						</a>
 					</li>
-					<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip={commonPropertiesModalLabel}>
-						<a onClick={this.sidePanelModal.bind(this) } aria-label={commonPropertiesModalLabel}>
+					<li id="harness-action-bar-sidepanel-properties" className="harness-navbar-li harness-action-bar-sidepanel"
+						data-tooltip-id="toolbar-tooltip" data-tooltip-content={commonPropertiesModalLabel}
+					>
+						<a onClick={this.sidePanelProperties.bind(this) }>
 							<Isvg src={template32} />
 						</a>
 					</li>
-					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={commonCanvasLabel}>
-						<a onClick={this.sidePanelCanvas.bind(this) } aria-label={commonCanvasLabel}>
+					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
+						data-tooltip-id="toolbar-tooltip" data-tooltip-content={commonCanvasLabel}
+					>
+						<a onClick={this.sidePanelCanvas.bind(this) }>
 							<Isvg src={justify32} />
 						</a>
 					</li>
 				</ul>
 			</div>
-		</header>);
+		</div>);
 
 		const commonCanvasConfig = this.getCanvasConfig();
 		const commonCanvasConfig2 = this.getCanvasConfig2();
@@ -2502,6 +2512,7 @@ class App extends React.Component {
 		}
 
 		const bottomPanelContent = this.getTempContent();
+		const topPanelContent = this.getTempContent();
 
 		const rightFlyoutContent = rightFlyoutContentProperties
 			? rightFlyoutContentProperties
@@ -2511,10 +2522,10 @@ class App extends React.Component {
 			<CommonCanvas
 				config={commonCanvasConfig}
 				contextMenuHandler={this.contextMenuHandler}
-				beforeEditActionHandler= {this.beforeEditActionHandler}
-				editActionHandler= {this.editActionHandler}
-				clickActionHandler= {this.clickActionHandler}
-				decorationActionHandler= {this.decorationActionHandler}
+				beforeEditActionHandler={this.beforeEditActionHandler}
+				editActionHandler={this.editActionHandler}
+				clickActionHandler={this.clickActionHandler}
+				decorationActionHandler={this.decorationActionHandler}
 				selectionChangeHandler={this.selectionChangeHandler}
 				layoutHandler={this.layoutHandler}
 				tipHandler={this.tipHandler}
@@ -2527,6 +2538,8 @@ class App extends React.Component {
 				showRightFlyout={showRightFlyoutProperties || this.state.selectedShowRightFlyout}
 				bottomPanelContent={bottomPanelContent}
 				showBottomPanel={this.state.selectedShowBottomPanel}
+				topPanelContent={topPanelContent}
+				showTopPanel={this.state.selectedShowTopPanel}
 				canvasController={this.canvasController}
 			/>);
 
@@ -2571,9 +2584,16 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedExampleApp === EXAMPLE_READ_ONLY) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_READ_ONLY) {
 			firstCanvas = (
 				<ReadOnlyCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_PROGRESS) {
+			firstCanvas = (
+				<ProgressCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
@@ -2599,48 +2619,49 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedExampleApp === EXAMPLE_APP_BLUE_ELLIPSES) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES_CARBON) {
 			firstCanvas = (
-				<BlueEllipsesCanvas
+				<ReactNodesCarbonCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES_MAPPING) {
+			firstCanvas = (
+				<ReactNodesMappingCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
 		}
 
-		const canvasContainerWidth = this.isSidePanelOpen() === false ? "100%" : "calc(100% - " + SIDE_PANEL.MAXIMIXED + ")";
-
 		let commonCanvas;
-		if (this.state.selectedExtraCanvasDisplayed === true) {
+		if (this.state.selectedExtraCanvasDisplayed) {
 			const rightFlyoutContent2 = rightFlyoutContentProperties2
 				? rightFlyoutContentProperties2
 				: this.getTempContent();
 
-			commonCanvas = (
-				<div className="harness-canvas-container double" style={{ width: canvasContainerWidth }}>
-					<div className="harness-canvas-single">
-						{firstCanvas}
-					</div>
-					<div className="harness-canvas-single">
-						<CommonCanvas
-							config={commonCanvasConfig2}
-							contextMenuHandler={this.contextMenuHandler}
-							editActionHandler= {this.extraCanvasEditActionHandler}
-							clickActionHandler= {this.extraCanvasClickActionHandler}
-							toolbarConfig={this.toolbarConfig}
-							canvasController={this.canvasController2}
-							notificationConfig={this.state.notificationConfig2}
-							rightFlyoutContent={rightFlyoutContent2}
-							showRightFlyout={showRightFlyoutProperties2}
-							selectionChangeHandler={this.selectionChangeHandler2}
-						/>
-					</div>
-				</div>);
-		} else {
-			commonCanvas = (
-				<div className="harness-canvas-container" style={{ width: canvasContainerWidth }}>
+			commonCanvas = (<React.Fragment>
+				<div className="harness-canvas-single">
 					{firstCanvas}
-				</div>);
+				</div>
+				<div className="harness-canvas-single">
+					<CommonCanvas
+						config={commonCanvasConfig2}
+						contextMenuHandler={this.contextMenuHandler}
+						editActionHandler={this.extraCanvasEditActionHandler}
+						clickActionHandler={this.extraCanvasClickActionHandler}
+						toolbarConfig={this.toolbarConfig}
+						canvasController={this.canvasController2}
+						notificationConfig={this.state.notificationConfig2}
+						rightFlyoutContent={rightFlyoutContent2}
+						showRightFlyout={showRightFlyoutProperties2}
+						selectionChangeHandler={this.selectionChangeHandler2}
+					/>
+				</div>
+			</React.Fragment>);
+		} else {
+			commonCanvas = firstCanvas;
 		}
 
 		const sidePanelCanvasConfig = {
@@ -2660,69 +2681,64 @@ class App extends React.Component {
 			setPaletteDropdownSelect2: this.setPaletteDropdownSelect2,
 			selectedPaletteDropdownFile: this.state.selectedPaletteDropdownFile,
 			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
-			clearSavedZoomValues: this.clearSavedZoomValues
+			clearSavedZoomValues: this.clearSavedZoomValues,
+			saveToPdf: this.saveToPdf
 		};
 
 		const sidePanelPropertiesConfig = {
+			setPropertiesConfigOption: this.setPropertiesConfigOption,
 			closePropertiesEditorDialog: this.closePropertiesEditorDialog,
 			openPropertiesEditorDialog: this.openPropertiesEditorDialog,
 			validateProperties: this.validateProperties,
 			setPropertiesJSON: this.setPropertiesJSON,
-			showPropertiesDialog: this.state.showPropertiesDialog,
-			usePropertiesContainerType: this.usePropertiesContainerType,
-			propertiesContainerType: this.state.propertiesContainerType,
 			closeSidePanelModal: this.closeSidePanelModal,
+			showPropertiesDialog: this.state.showPropertiesDialog,
+			propertiesContainerType: this.state.propertiesContainerType,
+			categoryView: this.state.categoryView,
 			applyOnBlur: this.state.applyOnBlur,
+			trimSpaces: this.state.trimSpaces,
 			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
-			useApplyOnBlur: this.useApplyOnBlur,
-			useSaveButtonDisable: this.useSaveButtonDisable,
 			expressionBuilder: this.state.expressionBuilder,
-			useExpressionBuilder: this.useExpressionBuilder,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
-			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
 			heading: this.state.heading,
-			useHeading: this.useHeading,
 			light: this.state.light,
-			useLightOption: this.useLightOption,
-			useEditorSize: this.useEditorSize,
-			disableRowMoveButtons: this.disableRowMoveButtons,
+			showRequiredIndicator: this.state.showRequiredIndicator,
+			showAlertsTab: this.state.showAlertsTab,
+			enableResize: this.state.enableResize,
+			returnValueFiltering: this.state.returnValueFiltering,
+			initialEditorSize: this.state.initialEditorSize,
+			setDisableRowMoveButtons: this.setDisableRowMoveButtons,
+			disableRowMoveButtonsPropertyIds: this.state.disableRowMoveButtonsPropertyIds,
 			addRemoveRowsEnabled: this.state.addRemoveRowsEnabled,
-			hideEditButtonEnabled: this.state.hideEditButton,
-			tableButtonEnabled: this.state.tableButtonEnabled,
-			setAddRemoveRowsPropertyId: this.setAddRemoveRowsPropertyId,
-			setAddRemoveRowsEnabled: this.setAddRemoveRowsEnabled,
+			addRemoveRowsPropertyId: this.state.addRemoveRowsPropertyId,
 			setAddRemoveRows: this.setAddRemoveRows,
-			setHideEditButtonEnabled: this.setHideEditButtonDisabled,
+			hideEditButtonEnabled: this.state.hideEditButton,
+			hideEditButtonPropertyId: this.state.hideEditButtonPropertyId,
 			setHideEditButton: this.setHideEditButton,
-			setHideEditButtonPropertyId: this.setHideEditButtonPropertyId,
-			setTableButtonPropertyId: this.setTableButtonPropertyId,
-			setTableButtonId: this.setTableButtonId,
-			setTableButtonIdEnabled: this.setTableButtonIdEnabled,
+			tableButtonEnabled: this.state.tableButtonEnabled,
+			tableButtonEnabledPropertyId: this.state.tableButtonEnabledPropertyId,
+			tableButtonEnabledButtonId: this.state.tableButtonEnabledButtonId,
 			setTableButtonEnabled: this.setTableButtonEnabled,
+			staticRowsPropertyId: this.state.staticRowsPropertyId,
 			staticRowsIndexes: this.state.staticRowsIndexes,
-			setStaticRowsPropertyId: this.setStaticRowsPropertyId,
-			setStaticRowsIndexes: this.setStaticRowsIndexes,
 			setStaticRows: this.setStaticRows,
-			setMaxLengthForMultiLineControls: this.setMaxLengthForMultiLineControls,
-			setMaxLengthForSingleLineControls: this.setMaxLengthForSingleLineControls,
+			setActiveTab: this.state.setActiveTab,
+			setActiveTabTopLevel: this.setActiveTabTopLevel,
+			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
+			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,
 			setPropertiesDropdownSelect: this.setPropertiesDropdownSelect,
-			enablePropertiesSchemaValidation: this.enablePropertiesSchemaValidation,
 			propertiesSchemaValidation: this.state.propertiesSchemaValidation,
-			enableApplyPropertiesWithoutEdit: this.enableApplyPropertiesWithoutEdit,
 			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
-			setConditionHiddenPropertyHandling: this.setConditionHiddenPropertyHandling,
 			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
-			setConditionDisabledPropertyHandling: this.setConditionDisabledPropertyHandling,
 			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
-			enablePropertiesValidationHandler: this.enablePropertiesValidationHandler,
 			propertiesValidationHandler: this.state.propertiesValidationHandler,
 			wideFlyoutPrimaryButtonDisabled: this.state.wideFlyoutPrimaryButtonDisabled,
-			disableWideFlyoutPrimaryButtonForPanelId: this.disableWideFlyoutPrimaryButtonForPanelId,
-			setWideFlyoutPrimaryButtonDisabled: this.setWideFlyoutPrimaryButtonDisabled,
-			disableWideFlyoutPrimaryButton: this.disableWideFlyoutPrimaryButton
+			disableWideFlyoutPrimaryButtonForPanelId: this.state.disableWideFlyoutPrimaryButtonForPanelId,
+			disableWideFlyoutPrimaryButton: this.disableWideFlyoutPrimaryButton,
+			convertValueDataTypes: this.state.convertValueDataTypes
 		};
 
 		const sidePanelAPIConfig = {
@@ -2736,7 +2752,8 @@ class App extends React.Component {
 			setNodeDecorations: this.setNodeDecorations,
 			setLinkDecorations: this.setLinkDecorations,
 			getZoomToReveal: this.getZoomToReveal,
-			zoomCanvas: this.zoomCanvas,
+			zoomCanvasForObj: this.zoomCanvasForObj,
+			zoomCanvasForLink: this.zoomCanvasForLink,
 			appendNotificationMessages: this.appendNotificationMessages,
 			clearNotificationMessages: this.clearNotificationMessages,
 			selectedOperation: this.state.apiSelectedOperation
@@ -2746,12 +2763,14 @@ class App extends React.Component {
 		if (this.state.consoleOpened) {
 			consoleView = (
 				<Console
+					classname={classNames({ "side-panel-open": this.isSidePanelOpen() })}
 					consoleOpened={this.state.consoleOpened}
 					logs={this.state.consoleout}
 				/>
 			);
 		}
 
+		const tooltipFontSize = "13px";
 		const mainView = (<div id="harness-app-container">
 			{navBar}
 			<SidePanel
@@ -2759,26 +2778,31 @@ class App extends React.Component {
 				propertiesConfig={sidePanelPropertiesConfig}
 				apiConfig={sidePanelAPIConfig}
 				openSidepanelCanvas={this.state.openSidepanelCanvas}
-				openSidepanelModal={this.state.openSidepanelModal}
+				openSidepanelProperties={this.state.openSidepanelProperties}
 				openSidepanelAPI={this.state.openSidepanelAPI}
 				selectedPanel={this.state.selectedPanel}
 				log={this.log}
 				setStateValue={this.setStateValue}
 				getStateValue={this.getStateValue}
 			/>
-			{ !isEmpty(this.state.propertiesInfo) ? commonPropertiesContainer : null }
-			{commonCanvas}
+			{!isEmpty(this.state.propertiesInfo) ? commonPropertiesContainer : null}
+			<div className={classNames("harness-canvas-container",
+				{ "double": this.state.selectedExtraCanvasDisplayed },
+				{ "side-panel-open": this.isSidePanelOpen() },
+				{ "console-panel-open": this.state.consoleOpened })}
+			>
+				{commonCanvas}
+			</div>
 			{consoleView}
-
-			<ReactTooltip place="bottom" effect="solid" />
+			<ReactTooltip id="toolbar-tooltip" place="bottom" effect="solid" style={{ fontSize: tooltipFontSize }} />
 		</div>);
 
 		return (
 			<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
-				<div>{mainView}</div>
+				{mainView}
 			</IntlProvider>
 		);
 	}
 }
 
-export default hot(App);
+export default App;

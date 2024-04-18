@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -405,7 +405,7 @@ describe("selectcolumns control displays the proper number of rows", () => {
 		const columnSelect = wrapper.find("div[data-id='properties-ft-columnSelect']");
 		const heightDiv = columnSelect.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.at(0).prop("style");
-		expect(heightStyle).to.eql({ "height": "8rem" }); // includes header
+		expect(heightStyle).to.eql({ "height": 128 }); // includes header
 	});
 
 	it("should display 5 rows in select columns in subpanel", () => {
@@ -418,13 +418,13 @@ describe("selectcolumns control displays the proper number of rows", () => {
 
 		// open the subpanel for the added row
 		tableWrapper = wrapper.find("div[data-id='properties-structurelist2']");
-		const editButton = tableWrapper.find(".properties-subpanel-button").at(0);
+		const editButton = tableWrapper.find("button.properties-subpanel-button").at(0);
 		editButton.simulate("click");
 		const selectColumnsWrapper = wrapper.find("div[data-id='properties-structurelist2_0_1']");
 
 		const heightDiv = selectColumnsWrapper.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.prop("style");
-		expect(heightStyle).to.eql({ "height": "6rem" }); // includes header
+		expect(heightStyle).to.eql({ "height": 96 }); // includes header
 	});
 
 	it("should display 5.5 rows by default in select columns in onpanel", () => {
@@ -454,9 +454,9 @@ describe("selectcolumns control displays the proper number of rows", () => {
 
 		const heightDiv = tableWrapper.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.prop("style");
-		// header height = 2rem, each row height = 2 rem. Total height = 2 + 5.5*(2) = 13rem
+		// header height = 2rem, each row height = 2 rem. Total height = 2 + 5.5*(2) = 13rem * 16 = 208px
 		// This means only 5.5 rows are visible
-		expect(heightStyle).to.eql({ "height": "13rem" }); // includes header
+		expect(heightStyle).to.eql({ "height": 208 }); // includes header
 	});
 });
 
@@ -486,7 +486,7 @@ describe("selectcolumns control functions correctly in a table", () => {
 
 		// Need to reassign tableWrapper after adding row.
 		tableWrapper = wrapper.find("div[data-id='properties-ft-structurelist_sub_panel']");
-		const editButton = tableWrapper.find(".properties-subpanel-button").at(0);
+		const editButton = tableWrapper.find("button.properties-subpanel-button").at(0);
 		editButton.simulate("click"); // open the subpanel for the added row
 
 		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields2");
@@ -494,6 +494,36 @@ describe("selectcolumns control functions correctly in a table", () => {
 
 		// There should be no error messages
 		expect(scController.getErrorMessage({ name: "structurelist_sub_panel" })).to.eql(null);
+	});
+
+	it("should select rows correctly in subpanel", () => {
+		// open the summary on_panel and add a row to the table
+		const summaryPanelWrapper = wrapper.find("div[data-id='properties-selectcolumns-tables-structurelist-summary']");
+		summaryPanelWrapper.find("button").simulate("click");
+
+		// select the add column button
+		let tableWrapper = wrapper.find("div[data-id='properties-ctrl-structurelist_sub_panel']");
+		expect(tableWrapper.length).to.equal(1);
+		const emptyTableButton = tableWrapper.find("button.properties-empty-table-button"); // add row button for empty table
+		emptyTableButton.simulate("click"); // add row button
+
+		// Need to reassign tableWrapper after adding row.
+		tableWrapper = wrapper.find("div[data-id='properties-ft-structurelist_sub_panel']");
+		const editButton = tableWrapper.find("button.properties-subpanel-button").at(0);
+		editButton.simulate("click"); // open the subpanel for the added row
+
+		let fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields2");
+		tableUtils.fieldPicker(fieldPicker, ["age", "Na"]);
+
+		let selectColumnsTable = wrapper.find("div.properties-column-select-table");
+		expect(selectColumnsTable.find("div.properties-vt-row-selected").length).to.equal(2);
+
+		fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields2");
+		tableUtils.fieldPicker(fieldPicker, ["age", "Na", "drug"]);
+
+		selectColumnsTable = wrapper.find("div.properties-column-select-table");
+		expect(selectColumnsTable.find("div.properties-vt-row-selected").length).to.equal(1); // make sure only 1 checkbox is checked now
+
 	});
 
 });
@@ -538,7 +568,7 @@ describe("All checkboxes in selectcolumns must have labels", () => {
 		const headerCheckboxLabel = tableHeaderRows.find(".properties-vt-header-checkbox").text();
 		const secondColumnLabel = tableHeaderRows
 			.find("div[role='columnheader']")
-			.at(1)
+			.at(0)
 			.text();
 		expect(headerCheckboxLabel).to.equal(`Select all ${secondColumnLabel}`);
 	});

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,10 @@ export default class PipelineOutHandler {
 	// in the canvasInfo are the same as those for the pipelineFlow.
 	static createPipelineFlow(canvasInfo) {
 		const copyCanvasInfo = cloneDeep(canvasInfo);
+		// Remove these transitory fields before creating the pipelineFlow.
 		delete copyCanvasInfo.subdueStyle;
+		delete copyCanvasInfo.hideComments;
+
 		const pipelineFlow = Object.assign({}, copyCanvasInfo,
 			{
 				"pipelines": this.createPipelinesFromCanvasInfo(copyCanvasInfo)
@@ -183,7 +186,7 @@ export default class PipelineOutHandler {
 		var newDecorations = [];
 		if (decorations) {
 			decorations.forEach((decoration) => {
-				if (!decoration.temporary) {
+				if (!decoration.temporary && !decoration.jsx) {
 					const dec = Object.assign({}, decoration); // This will only copy over set values and ignore undefineds
 					newDecorations.push(dec);
 				}

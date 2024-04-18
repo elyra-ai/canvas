@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,9 +41,21 @@
 
 .properties-control-nested-panel {
 	padding: 0 0 0 $spacing-05; // Ensure nested panels have a padding
-	border-left: 1px solid $ui-04;
+	border-left: 1px solid $border-strong-01;
 }
 
 .properties-control-nested-panel .properties-control-nested-panel {
-	border-left: 1px solid $ui-03;
+	border-left: 1px solid $layer-accent-01;
+}
+
+// Set the height of the very first panel to be full width inside a tearsheet
+.properties-control-panel.tearsheet-container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	flex-shrink: 10;
+
+	.properties-control-panel.tearsheet-container {
+		height: unset;
+	}
 }

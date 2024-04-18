@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 import nodes from "./nodes.js";
 import comments from "./comments.js";
 import links from "./links.js";
-import { SAVE_ZOOM_PIPELINE_FLOW } from "../../../common-canvas/constants/canvas-constants.js";
 
 export default (state = {}, action) => {
 	switch (action.type) {
@@ -99,16 +98,13 @@ export default (state = {}, action) => {
 	}
 
 	case "SET_ZOOM": {
-		if (action.data.enableSaveZoom === SAVE_ZOOM_PIPELINE_FLOW) {
-			const canvasInfoPipelines = state.pipelines.map((pipeline) => {
-				if (pipeline.id === action.pipelineId) {
-					return Object.assign({}, pipeline, { zoom: { "k": action.data.zoom.k, "x": action.data.zoom.x, "y": action.data.zoom.y } });
-				}
-				return pipeline;
-			});
-			return Object.assign({}, state, { pipelines: canvasInfoPipelines });
-		}
-		return state;
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
+			if (pipeline.id === action.pipelineId) {
+				return Object.assign({}, pipeline, { zoom: { "k": action.data.zoom.k, "x": action.data.zoom.x, "y": action.data.zoom.y } });
+			}
+			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
 	case "ADD_SUPERNODES": {
@@ -151,6 +147,14 @@ export default (state = {}, action) => {
 	case "SET_SUBDUE_STYLE":
 		return Object.assign({}, state, { subdueStyle: action.data.subdueStyle });
 
+	case "HIDE_COMMENTS": {
+		return { ...state, hideComments: true };
+	}
+
+	case "SHOW_COMMENTS": {
+		return { ...state, hideComments: false };
+	}
+
 	case "ADD_NODE":
 	case "REPLACE_NODES":
 	case "REPLACE_NODE":
@@ -173,6 +177,7 @@ export default (state = {}, action) => {
 	case "MOVE_OBJECTS":
 	case "DELETE_OBJECT":
 	case "ADD_LINK":
+	case "SET_LINKS":
 	case "SET_LINK_PROPERTIES":
 	case "SET_LINK_SRC_INFO":
 	case "SET_LINK_TRG_INFO":
@@ -436,7 +441,9 @@ export default (state = {}, action) => {
 	}
 
 	case "SET_OBJECTS_STYLE":
-	case "SET_LINKS_STYLE": {
+	case "SET_LINKS_STYLE":
+	case "SET_OBJECTS_BRANCH_HIGHLIGHT":
+	case "SET_LINKS_BRANCH_HIGHLIGHT": {
 		const pipelineIds = Object.keys(action.data.pipelineObjIds);
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
 			if (pipelineIds.indexOf(pipeline.id) > -1) {
@@ -448,6 +455,16 @@ export default (state = {}, action) => {
 					links: links(pipeline.links, action) });
 			}
 			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
+	case "UNSET_OBJECTS_BRANCH_HIGHLIGHT": {
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
+			return Object.assign({}, pipeline, {
+				nodes: nodes(pipeline.nodes, action),
+				comments: comments(pipeline.comments, action),
+				links: links(pipeline.links, action) });
 		});
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}

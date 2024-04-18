@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,16 @@
  */
 
 /*SidePanel*/
+
 .harness-app-sidepanel {
-	background-color: $ui-01;
+	background-color: $layer-01;
 	top: 50px;
 	position: fixed;
 	right: 0;
-	height: calc(100% - 50px);
-	transition: width 0.5s;
-	color: $text-01;
+	height: calc(100% - $harness-header-height);
+	width: 0;
+	transition: width $harness-sidepanel-transition-time;
+	color: $text-primary;
 	overflow: auto;
 	z-index: 100;
 	box-sizing: border-box;
@@ -30,9 +32,20 @@
 	overflow-x: hidden;
 	padding-top: 5px;
 	padding-bottom: 10px;
-	border-left: 1px solid $ui-03;
-	.bx--fieldset {
+	border-left: 1px solid $layer-accent-01;
+	.cds--fieldset {
 		margin-bottom: 0;
+	}
+
+	&.open {
+		width: $harness-sidepanel-width;
+
+		.properties-title-editor {
+			display: none; // Do not display title within right flyout
+		}
+		.properties-right-flyout {
+			border-left: 0;
+		}
 	}
 }
 
@@ -43,6 +56,14 @@
 	}
 }
 
+.harness-side-panel-header {
+	padding: 0 20px;
+	color: $text-primary;
+	font-size: 16px;
+	font-weight: bold;
+	pointer-events: none;
+}
+
 .harness-sidepanel-children {
 	padding: 5px 10px;
 }
@@ -50,7 +71,7 @@
 .harness-sidepanel-divider {
 	width: 100%;
 	margin: 0 0 10px;
-	border-bottom: 2px solid $ui-03;
+	border-bottom: 1px solid $layer-accent-01;
 	padding: 5px 0;
 }
 
@@ -73,7 +94,7 @@
 
 .harness-sidepanel-radio-group {
 	display: block;
-	.bx--radio-button-wrapper {
+	.cds--radio-button-wrapper {
 		margin-bottom: $spacing-02;
 		> label {
 			justify-content: left; // override carbon style to center justify radio-button labels
@@ -82,11 +103,11 @@
 }
 
 .harness-sidepanel-file-uploader {
-	.bx--label-description,
-	.bx--form-item {
+	.cds--label-description,
+	.cds--form-item {
 		margin-bottom: 0;
 	}
-	.bx--file-container {
+	.cds--file-container {
 		margin-top: 5px;
 	}
 }
@@ -100,10 +121,10 @@
 }
 
 .harness-notification-title, .harness-notification-subtitle, .harness-notification-empty-message, .harness-notification-clear-all {
-	.bx--label {
+	.cds--label {
 		margin: 0;
 	}
-	.bx--text-input__field-wrapper {
+	.cds--text-input__field-wrapper {
 		margin-bottom: 8px;
 	}
 }

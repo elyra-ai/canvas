@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,16 +23,15 @@ import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Logger from "../logging/canvas-logger.js";
-import { OverflowMenu, OverflowMenuItem } from "carbon-components-react";
-import { Code32, Link32, ListBulleted32, ListNumbered32, TextIndentMore32,
-	TextBold32, TextItalic32, TextScale32, TextStrikethrough32 } from "@carbon/icons-react";
+import { Code, Link, ListBulleted, ListNumbered, TextIndentMore,
+	TextBold, TextItalic, TextScale, TextStrikethrough } from "@carbon/react/icons";
 
 class CommonCanvasTextToolbar extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.getLabel = this.getLabel.bind(this);
-		this.logger = new Logger("CC-Toolbar");
+		this.logger = new Logger("CC-Text-Toolbar");
 	}
 
 	getLabel(labelId, substituteObj) {
@@ -61,36 +60,30 @@ class CommonCanvasTextToolbar extends React.Component {
 		const quoteLabel = this.getJsxLabel("texttoolbar.quoteAction", "shift + >");
 		const numberedListLabel = this.getJsxLabel("texttoolbar.numberedListAction", "shift + 7");
 		const bulletedListLabel = this.getJsxLabel("texttoolbar.bulletedListAction", "shift + 8");
-		const headerOptions = (
-			<div>
-				<OverflowMenu id={"headerMenu"} iconDescription={""} renderIcon={TextScale32} >
-					<OverflowMenuItem itemText={this.getLabel("texttoolbar.titleAction")} onClick={(evt) => this.props.actionHandler("title", evt)} />
-					<OverflowMenuItem itemText={this.getLabel("texttoolbar.headerAction")} onClick={(evt) => this.props.actionHandler("header", evt)} />
-					<OverflowMenuItem itemText={this.getLabel("texttoolbar.subheaderAction")} onClick={(evt) => this.props.actionHandler("subheader", evt)} />
-					<OverflowMenuItem itemText={this.getLabel("texttoolbar.bodyAction")} onClick={(evt) => this.props.actionHandler("body", evt)} />
-				</OverflowMenu>
-				<svg className="text-toolbar-tick-svg">
-					<path d="M 39 39 L 39 33 33 39 Z" className="text-toolbar-tick-mark" />
-				</svg>
-			</div>
-		);
+
+		const headerOptions = [
+			{ action: "title", label: this.getLabel("texttoolbar.titleAction"), enable: true },
+			{ action: "header", label: this.getLabel("texttoolbar.headerAction"), enable: true },
+			{ action: "subheader", label: this.getLabel("texttoolbar.subheaderAction"), enable: true },
+			{ action: "body", label: this.getLabel("texttoolbar.bodyAction"), enable: true }
+		];
 
 		return {
 			leftBar: [
-				{ action: "header", tooltip: headerLabel, jsx: headerOptions },
+				{ action: "headerStyle", tooltip: headerLabel, enable: true, subMenu: headerOptions, closeSubAreaOnClick: true, iconEnabled: (<TextScale size={32} />) },
 				{ divider: true },
-				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold32 />) },
-				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic32 />) },
-				{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough32 />) },
+				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold size={32} />) },
+				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic size={32} />) },
+				{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough size={32} />) },
 				{ divider: true },
-				{ action: "code", label: codeLabel, enable: true, iconEnabled: (<Code32 />) },
+				{ action: "code", label: codeLabel, enable: true, iconEnabled: (<Code size={32} />) },
 				{ divider: true },
-				{ action: "link", label: linkLabel, enable: true, iconEnabled: (<Link32 />) },
+				{ action: "link", label: linkLabel, enable: true, iconEnabled: (<Link size={32} />) },
 				{ divider: true },
-				{ action: "quote", label: quoteLabel, enable: true, iconEnabled: (<TextIndentMore32 />) },
+				{ action: "quote", label: quoteLabel, enable: true, iconEnabled: (<TextIndentMore size={32} />) },
 				{ divider: true },
-				{ action: "numberedList", label: numberedListLabel, enable: true, iconEnabled: (<ListNumbered32 />) },
-				{ action: "bulletedList", label: bulletedListLabel, enable: true, iconEnabled: (<ListBulleted32 />) }
+				{ action: "numberedList", label: numberedListLabel, enable: true, iconEnabled: (<ListNumbered size={32} />) },
+				{ action: "bulletedList", label: bulletedListLabel, enable: true, iconEnabled: (<ListBulleted size={32} />) }
 			]
 		};
 	}
@@ -108,6 +101,7 @@ class CommonCanvasTextToolbar extends React.Component {
 						instanceId={this.props.canvasController.getInstanceId()}
 						toolbarActionHandler={this.props.actionHandler}
 						tooltipDirection={"top"}
+						size={"sm"}
 					/>
 				</div>
 			);

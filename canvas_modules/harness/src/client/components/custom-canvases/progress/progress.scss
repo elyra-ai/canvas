@@ -1,0 +1,228 @@
+/*
+ * Copyright 2017-2023 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Some useful variations on Carbon colors
+$blue: #8EB5FF;
+$light-blue: #E9F1FF;
+$dark-blue: #4283FE;
+
+// Node colors for the Regular (Vertical) theme
+$node-body-stroke: $blue;
+$node-body-fill: $light-blue;
+
+$node-port-output-stroke-color: $blue;
+$node-port-output-fill-color: $background;
+
+$node-port-output-connected-stroke-color: $blue;
+$node-port-output-connected-fill-color: $light-blue;
+
+$node-port-output-hover-stroke: $dark-blue;
+$node-port-output-hover-fill: $dark-blue;
+
+$node-port-input-stroke-color: $blue;
+$node-port-input-fill-color: $background;
+
+$node-port-input-connected-stroke-color: $blue;
+$node-port-input-connected-fill-color: $light-blue;
+
+$node-port-input-arrow-connected-stroke-color: $dark-blue;
+$node-port-input-arrow-connected-fill-color: transparent;
+
+$node-port-input-connected-super-binding-stroke-color: $blue;
+$node-port-input-connected-super-binding-fill-color: $light-blue;
+
+/* Override styles for flows.json canvas */
+
+.progress {
+	.d3-node-body-outline {
+		stroke: $node-body-stroke;
+		stroke-width: 2;
+		fill: $node-body-fill;
+	}
+
+	.d3-node-group:hover > .d3-node-body-outline {
+		stroke: $node-body-stroke;
+		stroke-width: 2;
+		fill: $blue;
+	}
+
+	.d3-node-selection-highlight {
+		stroke-width: 0;
+		fill: transparent;
+		pointer-events: none;
+	}
+
+	.d3-node-selection-highlight[data-selected="yes"] {
+		stroke: $link-inverse;
+		stroke-dasharray: 5, 5;
+		stroke-width: 2;
+		fill: transparent;
+		pointer-events: none;
+	}
+
+	.d3-node-group.d3-node-unavailable .d3-node-body-outline,
+	.d3-node-group.d3-node-unavailable .d3-node-label {
+		stroke: $button-disabled;
+		fill: $layer-selected-disabled;
+		color: $button-disabled;
+	}
+
+	.d3-node-label {
+		font-size: 13px;
+	}
+
+	.d3-node-label-entry {
+		font-size: 13px;
+	}
+
+	.d3-node-port-output {
+		stroke: $node-port-output-stroke-color;
+		fill: $node-port-output-fill-color;
+		stroke-width: 2;
+	}
+
+	.d3-node-port-output[connected="yes"] {
+		stroke: $node-port-output-connected-stroke-color;
+		fill: $node-port-output-connected-fill-color;
+		stroke-width: 2;
+	}
+
+	.d3-node-port-output:hover {
+		stroke: $node-port-output-hover-stroke;
+		fill: $node-port-output-hover-fill;
+	}
+
+	.d3-node-port-input {
+		stroke: $node-port-input-stroke-color;
+		fill: $node-port-input-fill-color;
+		stroke-width: 2;
+	}
+
+	.d3-node-port-input-assoc,
+	.d3-node-port-output-assoc {
+		stroke: $node-port-input-stroke-color;
+		fill: $node-port-input-fill-color;
+		stroke-width: 2;
+	}
+
+	.d3-node-port-input-assoc:hover,
+	.d3-node-port-output-assoc:hover {
+		stroke: $node-port-output-hover-stroke;
+		fill: $node-port-output-hover-fill;
+	}
+
+	.d3-node-port-input[connected="yes"] {
+		stroke: $node-port-input-connected-stroke-color;
+		fill: $node-port-input-connected-fill-color;
+		stroke-width: 2;
+
+		.d3-node-port-input-arrow {
+			stroke: $node-port-input-arrow-connected-stroke-color;
+			fill: $node-port-input-arrow-connected-fill-color;
+		}
+	}
+
+	.d3-node-port-input[connected="yes"][isSupernodeBinding="yes"] {
+		stroke: $node-port-input-connected-super-binding-stroke-color;
+		fill: $node-port-input-connected-super-binding-fill-color;
+		stroke-width: 2;
+	}
+
+	.d3-node-port-input-arrow {
+		stroke: transparent;
+		fill: transparent;
+	}
+
+	.d3-comment-selection-highlight {
+		stroke-width: 0;
+		fill: transparent;
+		pointer-events: none;
+	}
+
+	.d3-comment-selection-highlight[data-selected="yes"] {
+		stroke: $link-inverse;
+		stroke-dasharray: 5 5;
+		stroke-width: 2;
+		fill: transparent;
+		pointer-events: none;
+	}
+}
+
+/* Provide animation key frames for sample progress indication in harness */
+@keyframes blink {
+	from {
+		stroke: #008000; // Green
+		stroke-width: 4;
+	}
+	to {
+		stroke: #FFA500; // Orange
+		stroke-width: 4;
+	}
+}
+
+@keyframes wiggle1 {
+	0% {
+		transform-origin: 35px 25px;
+		transform: rotate(3deg);
+	}
+	50% {
+		transform-origin: 35px 25px;
+		transform: rotate(-3deg);
+	}
+	100% {
+		transform-origin: 35px 25px;
+		transform: rotate(3deg);
+	}
+}
+
+@keyframes wiggle2 {
+	0% {
+		transform-origin: 35px 25px;
+		transform: rotate(3deg);
+	}
+	12% {
+		transform-origin: 35px 25px;
+		transform: rotate(-3deg);
+	}
+	25% {
+		transform-origin: 35px 25px;
+		transform: rotate(3deg);
+	}
+	37% {
+		transform-origin: 35px 50px;
+		transform: rotate(-3deg);
+	}
+	50% {
+		transform-origin: 35px 50px;
+		transform: rotate(3deg);
+	}
+	62% {
+		transform-origin: 35px 50px;
+		transform: rotate(-3deg);
+	}
+	75% {
+		transform-origin: 35px 25px;
+		transform: rotate(3deg);
+	}
+	87% {
+		transform-origin: 35px 25px;
+		transform: rotate(-3deg);
+	}
+	100% {
+		transform-origin: 35px 25px;
+		transform: rotate(3deg);
+	}
+}

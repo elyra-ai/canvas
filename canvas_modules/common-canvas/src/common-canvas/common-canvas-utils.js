@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 // objects stored in redux and also the copy of canvas objects maintained by
 // the CanvasRender objects.
 
-import { get, set } from "lodash";
+import { get, has, isNumber, set } from "lodash";
 import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST }
 	from "../common-canvas/constants/canvas-constants.js";
@@ -863,9 +863,16 @@ export default class CanvasUtils {
 	}
 
 	// Returns an array of selected object IDs for nodes, comments and links
-	// that are within the region provided. Links are only included if
+	// that are within the region (inReg) provided. Links are only included if
 	// includeLinks is truthy.
-	static selectInRegion(region, pipeline, includeLinks, linkType, enableAssocLinkType) {
+	static selectInRegion(inReg, pipeline, includeLinks, linkType, enableAssocLinkType) {
+		const region = {
+			x1: inReg.x,
+			y1: inReg.y,
+			x2: inReg.x + inReg.width,
+			y2: inReg.y + inReg.height
+		};
+
 		var regionSelections = [];
 		for (const node of pipeline.nodes) {
 			if (!this.isSuperBindingNode(node) && // Don't include binding nodes in select
@@ -912,11 +919,6 @@ export default class CanvasUtils {
 		return regionSelections;
 	}
 
-	// Returns true if the ID passed in is in the array.
-	static isSelected(nodeId, array) {
-		return array.findIndex((id) => id === nodeId) !== -1;
-	}
-
 	// Return true if the position provided is within the area provided.
 	static isPosInArea(pos, area, pad) {
 		return pos.x_pos > area.x1 - pad &&
@@ -957,7 +959,11 @@ export default class CanvasUtils {
 	// all properties set to zero if no valid objects were provided.
 	// nodeHighlightGap may be 0 or undefined. If it is undefined we use the
 	// nodeHighlightGap in the node's layout.
-	static getCanvasDimensions(nodes, comments, links, commentHighlightGap, nodeHighlightGap) {
+	// If allLinks is set to true, we include the start and end coordinates of all
+	// links passed in. If set to false (or is undefined), we only inlcude
+	// the unconnected ends of semi-detached or fully-detached links. That is,
+	//  where the link has a srcPos and/or a trgPos field.
+	static getCanvasDimensions(nodes, comments, links, commentHighlightGap, nodeHighlightGap, allLinks) {
 		var canvLeft = Infinity;
 		let canvTop = Infinity;
 		var canvRight = -Infinity;
@@ -988,17 +994,29 @@ export default class CanvasUtils {
 		// Take into account semi-detached and fully-detached links, if any.
 		if (links) {
 			links.forEach((link) => {
-				if (link.srcPos) {
-					canvLeft = Math.min(canvLeft, link.srcPos.x_pos);
-					canvTop = Math.min(canvTop, link.srcPos.y_pos);
-					canvRight = Math.max(canvRight, link.srcPos.x_pos);
-					canvBottom = Math.max(canvBottom, link.srcPos.y_pos);
-				}
-				if (link.trgPos) {
-					canvLeft = Math.min(canvLeft, link.trgPos.x_pos);
-					canvTop = Math.min(canvTop, link.trgPos.y_pos);
-					canvRight = Math.max(canvRight, link.trgPos.x_pos);
-					canvBottom = Math.max(canvBottom, link.trgPos.y_pos);
+				if (allLinks) {
+					canvLeft = Math.min(canvLeft, link.x1);
+					canvTop = Math.min(canvTop, link.y1);
+					canvRight = Math.max(canvRight, link.x1);
+					canvBottom = Math.max(canvBottom, link.y1);
+
+					canvLeft = Math.min(canvLeft, link.x2);
+					canvTop = Math.min(canvTop, link.y2);
+					canvRight = Math.max(canvRight, link.x2);
+					canvBottom = Math.max(canvBottom, link.y2);
+				} else {
+					if (link.srcPos) {
+						canvLeft = Math.min(canvLeft, link.srcPos.x_pos);
+						canvTop = Math.min(canvTop, link.srcPos.y_pos);
+						canvRight = Math.max(canvRight, link.srcPos.x_pos);
+						canvBottom = Math.max(canvBottom, link.srcPos.y_pos);
+					}
+					if (link.trgPos) {
+						canvLeft = Math.min(canvLeft, link.trgPos.x_pos);
+						canvTop = Math.min(canvTop, link.trgPos.y_pos);
+						canvRight = Math.max(canvRight, link.trgPos.x_pos);
+						canvBottom = Math.max(canvBottom, link.trgPos.y_pos);
+					}
 				}
 			});
 		}
@@ -1219,4 +1237,76 @@ export default class CanvasUtils {
 		return el.classList && el.classList.contains(className);
 	}
 
+	// Returns the ID of the pipeline referenced by the supernode
+	// passed in.
+	static getSupernodePipelineId(supernode) {
+		if (supernode.type === SUPER_NODE &&
+				has(supernode, "subflow_ref.pipeline_id_ref")) {
+			return supernode.subflow_ref.pipeline_id_ref;
+		}
+		return null;
+	}
+
+	// Convert now deprecated layout fields to the port positions arrays. The layout fields are
+	// expected to provided in pairs. For example: inputPortTopPosX and inputPortTopPosY. However,
+	// if they are not and only one of the pair is provided the functions in svg-canvas-utils.nodes.js
+	// that calculate a x, y coordinate for the port will default to 0 if a value provided is undefined.
+	// TODO - Remove this in a future major release.
+	static convertPortPosInfo(layout) {
+		const newLayout = layout;
+
+		if (!layout) {
+			return newLayout;
+		}
+
+		// If custom fields exist for input ports, write the values into the
+		// inputPortPositions array and delete the redundant fields.
+		if (isNumber(newLayout.inputPortTopPosX) || isNumber(newLayout.inputPortTopPosY)) {
+			newLayout.inputPortPositions = [
+				{ x_pos: newLayout.inputPortTopPosX, y_pos: newLayout.inputPortTopPosY, pos: "topLeft" }
+			];
+			delete newLayout.inputPortTopPosX;
+			delete newLayout.inputPortTopPosY;
+
+		} else if (isNumber(newLayout.inputPortBottomPosX) || isNumber(newLayout.inputPortBottomPosY)) {
+			newLayout.inputPortPositions = [
+				{ x_pos: newLayout.inputPortBottomPosX, y_pos: newLayout.inputPortBottomPosY, pos: "bottomLeft" }
+			];
+			delete newLayout.inputPortBottomPosX;
+			delete newLayout.inputPortBottomPosY;
+
+		} else if (isNumber(newLayout.inputPortLeftPosX) || isNumber(newLayout.inputPortLeftPosY)) {
+			newLayout.inputPortPositions = [
+				{ x_pos: newLayout.inputPortLeftPosX, y_pos: newLayout.inputPortLeftPosY, pos: "topLeft" }
+			];
+			delete newLayout.inputPortLeftPosX;
+			delete newLayout.inputPortLeftPosY;
+		}
+
+		// If custom fields exist for output ports, write the values into the
+		// outputPortPositions array and delete the redundant fields.
+		if (isNumber(newLayout.outputPortTopPosX) || isNumber(newLayout.outputPortTopPosY)) {
+			newLayout.outputPortPositions = [
+				{ x_pos: newLayout.outputPortTopPosX, y_pos: newLayout.outputPortTopPosY, pos: "topLeft" }
+			];
+			delete newLayout.outputPortTopPosX;
+			delete newLayout.outputPortTopPosY;
+
+		} else if (isNumber(newLayout.outputPortBottomPosX) || isNumber(newLayout.outputPortBottomPosY)) {
+			newLayout.outputPortPositions = [
+				{ x_pos: newLayout.outputPortBottomPosX, y_pos: newLayout.outputPortBottomPosY, pos: "bottomLeft" }
+			];
+			delete newLayout.outputPortBottomPosX;
+			delete newLayout.outputPortBottomPosY;
+
+		} else if (isNumber(newLayout.outputPortRightPosX) || isNumber(newLayout.outputPortRightPosY)) {
+			const pos = newLayout.outputPortRightPosition || "topRight";
+			newLayout.outputPortPositions = [
+				{ x_pos: newLayout.outputPortRightPosX, y_pos: newLayout.outputPortRightPosY, pos: pos }
+			];
+			delete newLayout.outputPortRightPosX;
+			delete newLayout.outputPortRightPosY;
+		}
+		return newLayout;
+	}
 }

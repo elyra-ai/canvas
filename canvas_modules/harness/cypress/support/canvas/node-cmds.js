@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,8 @@
  */
 
 Cypress.Commands.add("getNodeWithLabel", (nodeLabel) => {
-	cy.get("body").then(($body) => {
-		if ($body.find(".d3-node-group").length) {
-			cy.get(getNodeGrpSelector())
-				.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));
-		}
-		// No nodes found on canvas
-		return null;
-	});
+	cy.get(getNodeGrpSelector())
+		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));
 });
 
 Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
@@ -75,6 +69,11 @@ Cypress.Commands.add("enterLabelForNodeHitReturn", (nodeLabel, newLabel) => {
 		.type("{enter}");
 });
 
+Cypress.Commands.add("checkNodeDoesntExist", (nodeLabel) => {
+	cy.get(".d3-nodes-links-group")
+		.contains(nodeLabel)
+		.should("not.exist");
+});
 
 Cypress.Commands.add("setNodeImage", (nodeLabel, nodeImage) =>
 	cy.getNodeIdForLabel(nodeLabel)
@@ -148,39 +147,40 @@ function findGrpForLabel(grpArray, nodeLabel) {
 	return null;
 }
 
-// posX and posY parameters is optional
+// posX and posY parameters are optional
 Cypress.Commands.add("clickNode", (nodeName, posX, posY) => {
 	cy.getNodeWithLabel(nodeName).click(posX, posY);
 });
 
-// posX and posY parameters is optional
-Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName, posX, posY) => {
-	// Get the os name to decide whether to click ctrl or cmd
-	cy.useCtrlOrCmdKey().then((selectedKey) => {
-		cy.get("body")
-			.type(selectedKey, { release: false })
-			.getNodeWithLabel(nodeName)
-			.click(posX, posY);
-		// Cancel the command/ctrl key press -- the documentation doesn't say
-		// this needs to be done but if it isn't the command key stays pressed down
-		// causing problems with subsequent selections.
-		cy.get("body")
-			.type(selectedKey, { release: true });
-	});
+
+Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
+	cy.useCtrlOrCmdKey()
+		.then((selectedKey) => {
+			cy.get("body")
+				.type(selectedKey, { release: false })
+				.getNodeWithLabel(nodeName)
+				.click();
+
+			// Cancel the command/ctrl key press -- the documentation doesn't say
+			// this needs to be done but if it isn't the command key stays pressed down
+			// causing problems with subsequent selections.
+			cy.get("body")
+				.type(selectedKey, { release: true });
+		});
 });
 
 Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) => {
-	// Get the os name to decide whether to click ctrl or cmd
-	cy.useCtrlOrCmdKey().then((selectedKey) => {
-		cy.get("body")
-			.type(selectedKey, { release: false })
-			.getNodeWithLabelInSupernode(nodeName, supernodeName)
-			.click();
+	cy.useCtrlOrCmdKey()
+		.then((selectedKey) => {
+			cy.get("body")
+				.type(selectedKey, { release: false })
+				.getNodeWithLabelInSupernode(nodeName, supernodeName)
+				.click();
 
-		// Cancel the command/ctrl key press
-		cy.get("body")
-			.type(selectedKey, { release: true });
-	});
+			// Cancel the command/ctrl key press
+			cy.get("body")
+				.type(selectedKey, { release: true });
+		});
 });
 
 // position parameter is optional
@@ -207,7 +207,8 @@ Cypress.Commands.add("rightClickTargetPortOfNode", (nodeName, trgPortId) => {
 
 Cypress.Commands.add("hoverOverNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
-		.trigger("mouseenter");
+		.trigger("mouseenter")
+		.trigger("mouseover");
 });
 
 Cypress.Commands.add("hoverOverNodeLabel", (nodeName) => {
@@ -312,11 +313,15 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
 			// drag the node to the canvas
 			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel)
+				.trigger("mousedown");
+			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel)
 				.trigger("dragstart", { dataTransfer });
 			cy.get("#harness-app-container")
 				.trigger("drop", canvasX, canvasY, { dataTransfer });
 		} else {
 			// Palette Layout - Flyout
+			cy.get(".palette-list-item-text-div").contains(nodeLabel)
+				.trigger("mousedown");
 			cy.get(".palette-list-item-text-div").contains(nodeLabel)
 				.trigger("dragstart", { dataTransfer });
 			cy.get("#harness-app-container")
@@ -337,6 +342,9 @@ Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 					.then((transform) => {
 						cy.get(srcSelector)
 							.trigger("mousedown", "topLeft", { which: 1, view: win });
+						// Need to wait for the setTimeout to complete at start of node
+						// drag (before inserting node into a link).
+						cy.wait(300); /* eslint cypress/no-unnecessary-waiting: "off" */
 						cy.get("#canvas-div-0")
 							.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })
 							.trigger("mouseup", { which: 1, view: win });
@@ -390,7 +398,7 @@ Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
 });
 
 Cypress.Commands.add("selectAllNodesUsingCtrlOrCmdKey", () => {
-	cy.get("#canvas-div-0").find(".d3-node-image")
+	cy.get("#canvas-div-0").find(".d3-canvas-group .d3-node-image")
 		.then((nodes) => {
 			cy.useCtrlOrCmdKey()
 				.then((selectedKey) => {
@@ -445,7 +453,7 @@ Cypress.Commands.add("clickExpansionIconOfSupernodeInsideSupernode", (supernodeN
 
 Cypress.Commands.add("clickReturnToPreviousButton", () => {
 	cy.get("#canvas-div-0")
-		.find(".d3-back-to-previous-flow-text")
+		.find(".return-to-previous")
 		.eq(0)
 		.click();
 });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,243 +17,205 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import Tooltip from "../tooltip/tooltip.jsx";
-import ArrangeHorizontally from "./../../assets/images/arrange_horizontally.svg";
-import ArrangeVertically from "./../../assets/images/arrange_vertically.svg";
-import ToggleNotificationPanel from "./../../assets/images/notification_counter_icon.svg";
-import PaletteClose from "./../../assets/images/palette/palette_close.svg";
-import PaletteOpen from "./../../assets/images/palette/palette_open.svg";
-import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
+import ToolbarButtonItem from "./toolbar-button-item.jsx";
 
-import { Button } from "carbon-components-react";
-import SVG from "react-inlinesvg";
 import classNames from "classnames";
-import { StopFilledAlt16, Play16, Undo16, Redo16, Cut16, Copy16, Paste16,
-	AddComment16, TrashCan16, ZoomIn16, ZoomOut16 } from "@carbon/icons-react";
-import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO, TOOLBAR_CUT,
-	TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CREATE_AUTO_COMMENT,
-	TOOLBAR_DELETE_SELECTED_OBJECTS, TOOLBAR_ZOOM_IN, TOOLBAR_ZOOM_OUT, TOOLBAR_ZOOM_FIT,
-	TOOLBAR_ARRANGE_HORIZONALLY, TOOLBAR_ARRANGE_VERTICALLY, TOOLBAR_OPEN_PALETTE,
-	TOOLBAR_CLOSE_PALETTE, TOOLBAR_TOGGLE_NOTIFICATION_PANEL }
-	from "../common-canvas/constants/canvas-constants.js";
+import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
+import ToolbarSubPanel from "./toolbar-sub-panel.jsx";
+
+const ESC_KEY = 27;
 
 class ToolbarActionItem extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.state = {
+			subAreaDisplayed: false
+		};
+
+		this.divRef = React.createRef();
+
 		this.actionClickHandler = this.actionClickHandler.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
+		this.openSubArea = this.openSubArea.bind(this);
+		this.closeSubArea = this.closeSubArea.bind(this);
+		this.clickOutside = this.clickOutside.bind(this);
 	}
 
-	// Returns a default icon, if there is one, for the action passed in. The
-	// icon may be overridden by the iconTypeOverride field if it is provided.
-	// It also may be set to disabled state.
-	getDefaultIcon(actionObj) {
-		const iconType = actionObj.iconTypeOverride ? actionObj.iconTypeOverride : actionObj.action;
-		const disabled = !actionObj.enable;
+	// We must remove the eventListener in case this class is unmounted due
+	// to the toolbar getting redrawn.
+	componentWillUnmount() {
+		document.removeEventListener("click", this.clickOutside, false);
+	}
 
-		switch (iconType) {
-		case (TOOLBAR_STOP):
-			return <StopFilledAlt16 disabled={disabled} />;
-		case (TOOLBAR_RUN):
-			return <Play16 disabled={disabled} />;
-		case (TOOLBAR_UNDO):
-			return <Undo16 disabled={disabled} />;
-		case (TOOLBAR_REDO):
-			return <Redo16 disabled={disabled} />;
-		case (TOOLBAR_CUT):
-			return <Cut16 disabled={disabled} />;
-		case (TOOLBAR_COPY):
-			return <Copy16 disabled={disabled} />;
-		case (TOOLBAR_PASTE):
-			return <Paste16 disabled={disabled} />;
-		case (TOOLBAR_CREATE_AUTO_COMMENT):
-			return <AddComment16 disabled={disabled} />;
-		case (TOOLBAR_DELETE_SELECTED_OBJECTS):
-			return <TrashCan16 disabled={disabled} />;
-		case (TOOLBAR_ZOOM_IN):
-			return <ZoomIn16 disabled={disabled} />;
-		case (TOOLBAR_ZOOM_OUT):
-			return <ZoomOut16 disabled={disabled} />;
-
-		case (TOOLBAR_ZOOM_FIT):
-			return <SVG src={ZoomToFit} disabled={disabled} />;
-		case (TOOLBAR_ARRANGE_HORIZONALLY):
-			return <SVG src={ArrangeHorizontally} disabled={disabled} />;
-		case (TOOLBAR_ARRANGE_VERTICALLY):
-			return <SVG src={ArrangeVertically} disabled={disabled} />;
-		case (TOOLBAR_OPEN_PALETTE):
-			return <SVG src={PaletteOpen} disabled={disabled} />;
-		case (TOOLBAR_CLOSE_PALETTE):
-			return <SVG src={PaletteClose} disabled={disabled} />;
-		case (TOOLBAR_TOGGLE_NOTIFICATION_PANEL):
-			return <SVG src={ToggleNotificationPanel} disabled={disabled} />;
-
-		default:
-			return null;
+	onKeyDown(evt) {
+		if (evt.keyCode === ESC_KEY) {
+			this.closeSubArea();
+			return;
 		}
 	}
 
-	generateLabel(label, disable, overflow, incLabelWithIcon) {
-		let className = "toolbar-icon-label";
-		className += this.generateLabelType(overflow, incLabelWithIcon);
-		className += disable ? " disabled" : "";
-		return (<div className={className}>{label}</div>);
+	// Called by toolbar.jsx
+	getBoundingRect() {
+		return this.divRef.current.getBoundingClientRect();
 	}
 
-	generateLabelType(overflow, inLabelWithIcon) {
-		if (overflow) {
-			return " overflow";
-		} else if (inLabelWithIcon === "before") {
-			return " before";
-		} else if (inLabelWithIcon === "after") {
-			return " after";
+	// Called by toolbar.jsx
+	getAction() {
+		return this.props.actionObj.action;
+	}
+
+	// Called by toolbar.jsx
+	isEnabled() {
+		return this.props.actionObj.enable || this.props.actionObj.jsx;
+	}
+
+	// Called by toolbar.jsx and internally
+	isSubAreaDisplayed() {
+		if (this.props.actionObj.setExtIsSubAreaDisplayed &&
+			typeof this.props.actionObj.extIsSubAreaDisplayed !== "undefined") {
+			return this.props.actionObj.extIsSubAreaDisplayed;
 		}
-		return "";
+		return this.state.subAreaDisplayed;
 	}
 
-	generateIcon(actionObj) {
-		let icon = this.getDefaultIcon(actionObj);
+	clickOutside(evt) {
+		if (this.isSubAreaDisplayed()) {
+			const items = document.getElementsByClassName(this.generateActionName());
+			const isOver = items && items.length > 0 ? items[0].contains(evt.target) : false;
 
-		// Host application provided icon. This will override any default icon.
-		if (actionObj.iconEnabled) {
-			const iconEnabled = actionObj.iconEnabled;
-			const iconDisabled = actionObj.iconDisabled || actionObj.iconEnabled;
-			const customIcon = actionObj.enable ? iconEnabled : iconDisabled;
-			const id = "toolbar-icon-" + this.props.instanceId + " -" + actionObj.action;
-
-			if (typeof customIcon === "string") {
-				icon = (<SVG id={id} src={customIcon} disabled={!actionObj.enable} />);
-			} else {
-				icon = customIcon;
+			if (!isOver && !this.props.actionObj.leaveSubAreaOpenOnClickOutside) {
+				this.closeSubArea();
 			}
 		}
+	}
 
-		if (icon) {
-			return (
-				<div className={"toolbar-icon"}>
-					{icon}
-				</div>
-			);
+	openSubArea() {
+		// If host app is controlling display of the sub-area call it to say
+		// sub-area is closing.
+		if (this.props.actionObj.setExtIsSubAreaDisplayed) {
+			this.props.actionObj.setExtIsSubAreaDisplayed(true);
+			return;
 		}
-		return null;
+		this.setState({ subAreaDisplayed: true });
+	}
+
+	closeSubArea(checkCloseSubAreaOnClick) {
+		if (!checkCloseSubAreaOnClick || this.props.actionObj.closeSubAreaOnClick) {
+			// If host app is controlling display of the sub-area call it to say
+			// sub-area is closing.
+			if (this.props.actionObj.setExtIsSubAreaDisplayed) {
+				this.props.actionObj.setExtIsSubAreaDisplayed(false);
+				return;
+			}
+			this.setState({ subAreaDisplayed: false });
+		}
 	}
 
 	actionClickHandler(evt) {
-		this.props.toolbarActionHandler(this.props.actionObj.action, evt);
-	}
+		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
+			if (this.isSubAreaDisplayed()) {
+				document.removeEventListener("click", this.clickOutside, false);
+				this.closeSubArea();
+				this.props.setToolbarFocusAction(this.props.actionObj.action);
 
-	generateButton(actionObj) {
-		let labelBefore = null;
-		let labelAfter = null;
+			} else {
+				document.addEventListener("click", this.clickOutside, false);
+				this.props.closeAnyOpenSubArea();
+				this.props.setToolbarFocusAction(this.props.actionObj.action);
+				this.openSubArea();
+			}
 
-		if (this.props.overflow) {
-			labelAfter = this.generateLabel(actionObj.label, !actionObj.enable, true);
-
-		} else if (actionObj.incLabelWithIcon === "before") {
-			labelBefore = this.generateLabel(actionObj.label, !actionObj.enable, false, actionObj.incLabelWithIcon);
-
-		} else if (actionObj.incLabelWithIcon === "after") {
-			labelAfter = this.generateLabel(actionObj.label, !actionObj.enable, false, actionObj.incLabelWithIcon);
+		} else {
+			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
+			this.props.setToolbarFocusAction(this.props.actionObj.action);
 		}
-
-		const icon = this.generateIcon(actionObj);
-		const textContent = actionObj.textContent ? (<div className="toolbar-text-content"> {actionObj.textContent} </div>) : null;
-
-		const itemContentClassName = classNames(
-			"toolbar-item-content",
-			actionObj.className ? actionObj.className : null,
-			{ "overflow": this.props.overflow, "disabled": !actionObj.enable, "default": !actionObj.kind });
-
-		// If no 'kind' is set, use ghost and then override colors using the "default" class in innerDivClassName.
-		const kind = actionObj.kind || "ghost";
-
-		let buttonContent = (
-			<div className={itemContentClassName}>
-				{labelBefore}
-				{icon}
-				{labelAfter}
-				{textContent}
-			</div>
-		);
-
-		buttonContent = this.wrapInTooltip(buttonContent);
-
-		buttonContent = (
-			<Button kind={kind}
-				onClick={this.actionClickHandler}
-				disabled={!actionObj.enable}
-				onFocus={this.props.onFocus}
-				aria-label={actionObj.label}
-				size={this.props.size}
-			>
-				{buttonContent}
-			</Button>
-		);
-
-		return buttonContent;
 	}
 
-	generateActionName(actionObj) {
+	generateActionName() {
 		return this.props.actionObj.action + "-action";
 	}
 
-	wrapInTooltip(content) {
-		if (!this.props.overflow && (this.showLabelAsTip(this.props.actionObj) || this.props.actionObj.tooltip)) {
-			const actionName = this.generateActionName();
-			const tip = this.props.actionObj.tooltip ? this.props.actionObj.tooltip : this.props.actionObj.label;
-			const tooltipId = actionName + "-" + this.props.instanceId + "-tooltip";
-			const enableTooltip = this.props.actionObj.enable || this.props.actionObj.jsx; // JSX 'tools' don't have enable attr so always display a tooltip for them.
-			const direction = this.props.tooltipDirection ? this.props.tooltipDirection : "bottom";
+	// Returns a sub-area for a cascading menu item. The sub-area can be either a
+	// sub-panel which is a div contaiing whatever the caller passes in within the
+	// supPanel field  OR a sub-menu which is a list of options which is created
+	// from the array of items the caller passes in the subMenu field.
+	generateSubArea() {
+		const actionItemRect = this.divRef.current ? this.divRef.current.getBoundingClientRect() : null;
 
+		if (this.props.actionObj.subPanel) {
 			return (
-				<Tooltip id={tooltipId} tip={tip} disable={!enableTooltip} className="icon-tooltip" direction={direction}>
-					{content}
-				</Tooltip>
+				<ToolbarSubPanel
+					subPanel={this.props.actionObj.subPanel}
+					subPanelData={this.props.actionObj.subPanelData}
+					closeSubArea={this.closeSubArea}
+					setToolbarFocusAction={this.props.setToolbarFocusAction}
+					actionItemRect={actionItemRect}
+					expandDirection={"vertical"}
+					containingDivId={this.props.containingDivId}
+				/>
 			);
 		}
-		return content;
+		return (
+			<ToolbarSubMenu
+				subMenuActions={this.props.actionObj.subMenu}
+				instanceId={this.props.instanceId}
+				toolbarActionHandler={this.props.toolbarActionHandler}
+				closeSubArea={this.closeSubArea}
+				setToolbarFocusAction={this.props.setToolbarFocusAction}
+				actionItemRect={actionItemRect}
+				expandDirection={"vertical"}
+				containingDivId={this.props.containingDivId}
+				parentSelector={this.generateSelector(this.props.actionObj)}
+				isCascadeMenu={false}
+				size={this.props.size}
+			/>
+		);
 	}
 
-	// Returns true if the label should be shown as a tooltip or false if not.
-	// We do not show the label as a tooltip if it is already shown in the
-	// toolbar next to the icon (i.e. incLabelWithIcon is set to something).
-	showLabelAsTip(actionObj) {
-		if (actionObj.label) {
-			if (actionObj.incLabelWithIcon === "before" ||
-					actionObj.incLabelWithIcon === "after") {
-				return false;
-			}
-			return true;
+	generateSelector(actionObj) {
+		if (actionObj.jsx) {
+			return ".toolbar-jsx-item";
 		}
-		return false;
+		return ".toolbar-item";
 	}
 
 	render() {
 		const actionObj = this.props.actionObj;
 		const actionName = this.generateActionName();
-		let divContent = null;
-
-		if (actionObj.jsx) {
-			divContent = this.wrapInTooltip(actionObj.jsx);
-		} else {
-			divContent = this.generateButton(actionObj);
-		}
-
-		const isToolbarItem = this.props.overflow ? null : true; // null wil make data-toolbar-item be removed
 		const kindAsClass = actionObj.kind ? actionObj.kind : "default";
 
 		const itemClassName = classNames(
-			{ "toolbar-overflow-menu-item": this.props.overflow,
-				"toolbar-item": !this.props.overflow && !actionObj.jsx,
-				"toolbar-jsx-item": !this.props.overflow && actionObj.jsx,
-				"toolbar-overflow-jsx-item": this.props.overflow && actionObj.jsx,
-				"toolbar-item-selected": actionObj.isSelected },
+			{
+				"toolbar-item": !actionObj.jsx,
+				"toolbar-jsx-item": actionObj.jsx,
+				"toolbar-item-selected": actionObj.isSelected
+			},
 			kindAsClass,
-			actionName);
+			actionName,
+			this.props.actionObj.className);
+
+		const subArea = this.isSubAreaDisplayed() ? this.generateSubArea() : null;
 
 		return (
-			<div className={itemClassName} data-toolbar-item={isToolbarItem}>
-				{divContent}
+			<div ref={this.divRef} className={itemClassName} data-toolbar-action={actionObj.action} data-toolbar-item
+				onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} onKeyDown={this.onKeyDown}
+			>
+				<div className="toolbar-button-item">
+					<ToolbarButtonItem
+						actionObj={actionObj}
+						actionName={this.generateActionName()}
+						tooltipDirection={this.props.tooltipDirection}
+						instanceId={this.props.instanceId}
+						isInMenu={false}
+						subAreaDisplayed={this.isSubAreaDisplayed()}
+						actionClickHandler={this.actionClickHandler}
+						buttonFocusAction={this.isSubAreaDisplayed() ? null : this.props.toolbarFocusAction}
+						isFocusInToolbar={this.props.isFocusInToolbar}
+						size={this.props.size}
+					/>
+				</div>
+				{subArea}
 			</div>
 		);
 	}
@@ -278,10 +240,19 @@ ToolbarActionItem.propTypes = {
 		]),
 		className: PropTypes.string,
 		textContent: PropTypes.string,
-		iconTypeOverride: PropTypes.string,
 		isSelected: PropTypes.bool,
+		setExtIsSubAreaDisplayed: PropTypes.func,
+		extIsSubAreaDisplayed: PropTypes.bool,
 		kind: PropTypes.string,
-		jsx: PropTypes.object,
+		closeSubAreaOnClick: PropTypes.bool,
+		leaveSubAreaOpenOnClickOutside: PropTypes.bool,
+		subMenu: PropTypes.array,
+		subPanel: PropTypes.any,
+		subPanelData: PropTypes.object,
+		jsx: PropTypes.oneOfType([
+			PropTypes.object,
+			PropTypes.func
+		]),
 		tooltip: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.object,
@@ -291,8 +262,12 @@ ToolbarActionItem.propTypes = {
 	tooltipDirection: PropTypes.oneOf(["top", "bottom"]),
 	toolbarActionHandler: PropTypes.func.isRequired,
 	instanceId: PropTypes.number.isRequired,
-	overflow: PropTypes.bool,
-	onFocus: PropTypes.func,
+	containingDivId: PropTypes.string,
+	closeParentSubArea: PropTypes.func,
+	toolbarFocusAction: PropTypes.string,
+	setToolbarFocusAction: PropTypes.func,
+	isFocusInToolbar: PropTypes.bool,
+	closeAnyOpenSubArea: PropTypes.func,
 	size: PropTypes.oneOf(["md", "sm"])
 };
 

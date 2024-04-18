@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
-import { mount } from "enzyme";
+import { mount } from "../_utils_/mount-utils.js";
 import { IntlProvider } from "react-intl";
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { has } from "lodash";
+import { get, has } from "lodash";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/palette/locales/en.json";
 import Icon from "../icons/icon.jsx";
@@ -63,7 +63,7 @@ class PaletteContentListItem extends React.Component {
 		// We cannot use the dataTransfer object for the nodeTemplate because
 		// the dataTransfer data is not available during dragOver events so we set
 		// the nodeTemplate into the canvas controller.
-		this.props.canvasController.nodeTemplateDragStart(this.props.nodeTypeInfo.nodeType);
+		this.props.canvasController.nodeTemplateDragStart(this.ghostData.nodeTemplate);
 
 		// On firefox, the drag will not start unless something is written to
 		// the dataTransfer object so just write an empty string
@@ -87,8 +87,9 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	onDoubleClick() {
-		if (this.props.canvasController.createAutoNode) {
-			this.props.canvasController.createAutoNode(this.props.nodeTypeInfo.nodeType);
+		if (this.props.canvasController.createAutoNode && !this.isItemDisabled()) {
+			const nodeTemplate = this.props.canvasController.convertNodeTemplate(this.props.nodeTypeInfo.nodeType);
+			this.props.canvasController.createAutoNode(nodeTemplate);
 		}
 	}
 
@@ -118,9 +119,9 @@ class PaletteContentListItem extends React.Component {
 			this.props.nodeTypeInfo.occurrenceInfo.catLabelOccurrences);
 	}
 
-	getHighlightedLabel() {
+	getHighlightedLabel(labelText) {
 		return this.getHighlightedText(
-			this.props.nodeTypeInfo.nodeType.app_data.ui_data.label,
+			labelText,
 			this.props.nodeTypeInfo.occurrenceInfo.nodeLabelOccurrences);
 	}
 
@@ -232,6 +233,21 @@ class PaletteContentListItem extends React.Component {
 		return highlightedElements;
 	}
 
+	// Returns the class to be applied to the main div for this palette
+	// item depending on whether we are displaying search results (or not)
+	// and if there is a special palette class specified (or not).
+	getMainDivClass() {
+		const paletteClass = this.props.nodeTypeInfo?.nodeType?.app_data?.ui_data?.palette_class_name;
+
+		let mainDivClass = this.props.isDisplaySearchResult
+			? "palette-list-item search-result"
+			: "palette-list-item";
+
+		mainDivClass += (paletteClass ? " " + paletteClass : "");
+
+		return mainDivClass;
+	}
+
 	showFullDescription() {
 		this.setState({ showFullDescription: true });
 	}
@@ -240,13 +256,17 @@ class PaletteContentListItem extends React.Component {
 		this.setState({ showFullDescription: false });
 	}
 
-	imageDrag() {
-		return false;
+	// Returns true if this item is disabled and should not be draggable or double-clicked
+	// from the palette.
+	isItemDisabled() {
+		const disabled = this.props.nodeTypeInfo.nodeType?.app_data?.ui_data?.palette_disabled;
+		return !this.props.isEditingEnabled || disabled;
 	}
 
 	render() {
 		let itemText = null;
-		let draggable = this.props.isEditingEnabled ? "true" : "false";
+		let labelText = get(this.props, "nodeTypeInfo.nodeType.app_data.ui_data.label", "");
+		let draggable = this.isItemDisabled() ? "false" : "true";
 		let icon = null;
 
 		if (has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.image")) {
@@ -261,14 +281,13 @@ class PaletteContentListItem extends React.Component {
 			}
 			icon = image.endsWith(".svg")
 				? <SVG src={image} className="palette-list-item-icon" draggable="false" />
-				: <img src={image} className="palette-list-item-icon" draggable="false" />;
+				: <img src={image} className="palette-list-item-icon" draggable="false" alt={""} />;
 		}
 
-		if (has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.label") &&
-				(this.props.isPaletteOpen || !icon)) {
+		if (labelText && (this.props.isPaletteOpen || !icon)) {
 			itemText = this.props.isDisplaySearchResult
-				? this.getHighlightedLabel()
-				: (<span>{this.props.nodeTypeInfo.nodeType.app_data.ui_data.label}</span>);
+				? this.getHighlightedLabel(labelText)
+				: (<span>{labelText}</span>);
 		}
 
 		const ranking = this.props.isShowRanking && this.props.isDisplaySearchResult && has(this.props.nodeTypeInfo, "occurrenceInfo.ranking")
@@ -278,16 +297,15 @@ class PaletteContentListItem extends React.Component {
 		// Special case for when there are no nodes in the category so we show
 		// a dummy node to include the empty text from the category.
 		if (this.props.nodeTypeInfo.category.node_types.length === 0 && this.props.nodeTypeInfo.category.empty_text) {
+			labelText = this.props.nodeTypeInfo.category.empty_text;
 			if (this.props.isPaletteOpen) {
-				itemText = this.props.nodeTypeInfo.category.empty_text;
+				itemText = (<span>{labelText}</span>);
 			}
 			draggable = "false";
 			icon = (<Icon type={CANVAS_CARBON_ICONS.WARNING_UNFILLED} className="palette-list-item-icon-warning" draggable="false" />);
 		}
 
-		const mainDivClass = this.props.isDisplaySearchResult
-			? "palette-list-item search-result"
-			: "palette-list-item";
+		const mainDivClass = this.getMainDivClass();
 
 		const categoryLabel = this.props.isDisplaySearchResult
 			? (<div className={"palette-list-item-category-label"}>{this.getHighlightedCategoryLabel()}</div>)
@@ -303,9 +321,11 @@ class PaletteContentListItem extends React.Component {
 			: null;
 
 		return (
-			<div id={this.props.nodeTypeInfo.nodeType.id}
+			<div
 				data-id={this.props.nodeTypeInfo.nodeType.op}
 				tabIndex={0}
+				role={"button"}
+				aria-label={labelText}
 				draggable={draggable}
 				className={mainDivClass}
 				onMouseOver={this.onMouseOver}

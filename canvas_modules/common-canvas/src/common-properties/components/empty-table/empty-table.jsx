@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import PropTypes from "prop-types";
 import { formatMessage } from "./../../util/property-utils";
 import { MESSAGE_KEYS } from "./../../constants/constants";
 import { ControlType } from "./../../constants/form-constants";
-import { Add16, Edit16 } from "@carbon/icons-react";
-import { Button } from "carbon-components-react";
+import { Add, Edit } from "@carbon/react/icons";
+import { Button } from "@carbon/react";
 
 export default class EmptyTable extends React.Component {
 	constructor(props) {
@@ -54,8 +54,8 @@ export default class EmptyTable extends React.Component {
 				<Button
 					className="properties-empty-table-button"
 					kind="tertiary"
-					size="small"
-					renderIcon={this.isReadonlyTable() ? Edit16 : Add16}
+					size="sm"
+					renderIcon={this.isReadonlyTable() ? Edit : Add}
 					onClick={this.props.emptyTableButtonClickHandler}
 					disabled={this.props.disabled}
 				>

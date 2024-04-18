@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,10 @@ export default class CommandStack {
 			return this.commands.getNext();
 		}
 		return null;
+	}
+
+	getAllUndoCommands() {
+		return this.commands.getUndoCommands().toArray();
 	}
 
 	// need this for validation on unit tests

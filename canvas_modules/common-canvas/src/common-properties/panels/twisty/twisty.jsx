@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import { Accordion, AccordionItem } from "carbon-components-react";
+import { Accordion, AccordionItem } from "@carbon/react";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 

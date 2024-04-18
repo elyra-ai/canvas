@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ describe("tearsheet tests", () => {
 	it("should be hidden but not removed from DOM on the tearsheet close button", () => {
 		controller.setActiveTearsheet("tearsheet1");
 		wrapper.update();
-		wrapper.find("div.properties-tearsheet-panel button.bx--modal-close").simulate("click");
+		wrapper.find("div.properties-tearsheet-panel button.cds--modal-close").simulate("click");
 		wrapper.update();
 		expect(wrapper.find("div.properties-tearsheet-panel.is-visible")).to.have.length(0);
 		expect(wrapper.find("div.properties-tearsheet-panel")).to.have.length(1);
@@ -63,7 +63,7 @@ describe("tearsheet tests", () => {
 		expect(wrapper.find("div.properties-tearsheet-panel.is-visible")).to.have.length(0);
 		expect(wrapper.find("div.properties-tearsheet-panel div[data-id='properties-ctrl-code_rows']")).to.have.length(0);
 		wrapper.update();
-		wrapper.find("div[data-id='properties-hide'] input[type='checkbox']").simulate("click");
+		controller.updatePropertyValue({ name: "hide" }, false);
 		wrapper.update();
 		wrapper.find("div[data-id='properties-ctrl-code_rows'] button.maximize").simulate("click");
 		wrapper.update();
@@ -74,7 +74,7 @@ describe("tearsheet tests", () => {
 });
 
 describe("Tearsheet renders correctly", () => {
-	it("should display buttons in tearsheet if showPropertiesButtons is false", () => {
+	it("should not display buttons in tearsheet if showPropertiesButtons is false", () => {
 		const wrapper = mountWithIntl(<TearSheet
 			open
 			onCloseCallback={Sinon.spy()}
@@ -83,21 +83,25 @@ describe("Tearsheet renders correctly", () => {
 				content: "test content"
 			}}
 			showPropertiesButtons={false}
+			applyOnBlur
 		/>);
 		const tearsheet = wrapper.find("div.properties-tearsheet-panel");
 		expect(tearsheet).to.have.length(1);
 		expect(tearsheet.find("div.properties-tearsheet-header")).to.have.length(1);
-		expect(tearsheet.find("div.properties-tearsheet-header").text()).to.equal("test title");
+		expect(tearsheet.find("div.properties-tearsheet-header > h3").text()).to.equal("test title");
 		expect(tearsheet.find("div.properties-tearsheet-body")).to.have.length(1);
 		expect(tearsheet.find("div.properties-tearsheet-body").text()).to.equal("test content");
 		expect(tearsheet.find("div.properties-tearsheet-body.with-buttons")).to.have.length(0);
 		expect(tearsheet.find("div.properties-modal-buttons")).to.have.length(0);
+
+		// Verify close button is visible
+		expect(tearsheet.find("div.properties-tearsheet-header.hide-close-button")).to.have.length(0);
 	});
 
-	it("should display buttons in tearsheet if showPropertiesButtons is true", () => {
+	it("should display buttons in tearsheet if showPropertiesButtons is true and applyOnBlur is false", () => {
 		const wrapper = mountWithIntl(<TearSheet
 			open
-			onCloseCallback={Sinon.spy()}
+			onCloseCallback={null}
 			tearsheet={{
 				title: "test title",
 				content: "test content"
@@ -112,5 +116,8 @@ describe("Tearsheet renders correctly", () => {
 		expect(tearsheet).to.have.length(1);
 		expect(tearsheet.find("div.properties-tearsheet-body.with-buttons")).to.have.length(1);
 		expect(tearsheet.find("div.properties-modal-buttons")).to.have.length(1);
+
+		// Verify close button is not visible
+		expect(tearsheet.find("div.properties-tearsheet-header.hide-close-button")).to.have.length(1);
 	});
 });

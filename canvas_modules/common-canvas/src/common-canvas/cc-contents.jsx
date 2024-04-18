@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,13 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import CommonCanvasContextMenu from "./cc-context-menu.jsx";
+import CommonCanvasContextToolbar from "./cc-context-toolbar.jsx";
 import CommonCanvasTextToolbar from "./cc-text-toolbar.jsx";
 import CommonCanvasStateTag from "./cc-state-tag.jsx";
 import CanvasUtils from "./common-canvas-utils.js";
-import { FlowData16 } from "@carbon/icons-react";
+import { Button } from "@carbon/react";
+import { FlowData, ArrowLeft } from "@carbon/react/icons";
 import { DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
-
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
 
@@ -91,6 +92,7 @@ class CanvasContents extends React.Component {
 		this.onKeyDown = this.onKeyDown.bind(this);
 		this.onKeyUp = this.onKeyUp.bind(this);
 		this.onMouseMove = this.onMouseMove.bind(this);
+		this.onClickReturnToPrevious = this.onClickReturnToPrevious.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
@@ -110,12 +112,10 @@ class CanvasContents extends React.Component {
 	componentDidMount() {
 		this.logger.log("componentDidMount");
 		this.svgCanvasD3 =
-			new SVGCanvasD3(this.props.canvasInfo,
+			new SVGCanvasD3(this.props.canvasInfo.id,
 				this.svgCanvasDivSelector,
-				this.props.canvasConfig,
 				this.props.canvasController);
-
-		this.svgCanvasD3.setCanvasInfo(this.props.canvasInfo, this.props.canvasConfig);
+		this.setCanvasInfo();
 
 		if (this.props.canvasConfig.enableBrowserEditMenu) {
 			this.addEventListeners();
@@ -123,12 +123,21 @@ class CanvasContents extends React.Component {
 		this.focusOnCanvas();
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps) {
 		this.logger.log("componentDidUpdate");
 		if (this.svgCanvasD3 && !this.isDropZoneDisplayed()) {
-			this.svgCanvasD3.setCanvasInfo(this.props.canvasInfo, this.props.canvasConfig);
-			// Run the afterUpdateCallbacks.
-			this.afterUpdate();
+			if (prevProps.canvasInfo !== this.props.canvasInfo ||
+					prevProps.canvasConfig !== this.props.canvasConfig ||
+					prevProps.breadcrumbs !== this.props.breadcrumbs) {
+				this.setCanvasInfo();
+				// Run the afterUpdateCallbacks.
+				this.afterUpdate();
+
+			// If the only change is selectionInfo, we can call the special method
+			// setSelectionInfo, which will only update the selection highlighting.
+			} else if (prevProps.selectionInfo !== this.props.selectionInfo) {
+				this.svgCanvasD3.setSelectionInfo(this.props.selectionInfo);
+			}
 		}
 
 		// Manage the event browsers in case this config property changes.
@@ -192,12 +201,16 @@ class CanvasContents extends React.Component {
 			} else if (CanvasUtils.isCmndCtrlPressed(evt) &&
 					!evt.shiftKey && evt.keyCode === Z_KEY && actions.undo) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
-				this.props.canvasController.keyboardActionHandler("undo");
+				if (this.props.canvasController.canUndo()) {
+					this.props.canvasController.keyboardActionHandler("undo");
+				}
 
 			} else if (CanvasUtils.isCmndCtrlPressed(evt) &&
 					((evt.shiftKey && evt.keyCode === Z_KEY) || evt.keyCode === Y_KEY && actions.redo)) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
-				this.props.canvasController.keyboardActionHandler("redo");
+				if (this.props.canvasController.canRedo()) {
+					this.props.canvasController.keyboardActionHandler("redo");
+				}
 
 			} else if (CanvasUtils.isCmndCtrlPressed(evt) && evt.keyCode === C_KEY && actions.copyToClipboard) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
@@ -258,6 +271,28 @@ class CanvasContents extends React.Component {
 		}
 	}
 
+	// Handles the click on the "Return to previous flow" button.
+	onClickReturnToPrevious(evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
+		this.props.canvasController.displayPreviousPipeline();
+	}
+
+	setCanvasInfo() {
+		// TODO - Eventually move nodeLayout and canvasLayout into redux and then
+		// pass them into this.svgCanvasD3() as props.
+		const nodeLayout = this.props.canvasController.objectModel.getNodeLayout();
+		const canvasLayout = this.props.canvasController.objectModel.getCanvasLayout();
+		this.svgCanvasD3.setCanvasInfo(
+			this.props.canvasInfo,
+			this.props.selectionInfo,
+			this.props.breadcrumbs,
+			nodeLayout,
+			canvasLayout,
+			this.props.canvasConfig
+		);
+	}
+
 	getLabel(labelId) {
 		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultMessages[labelId] });
 	}
@@ -301,7 +336,7 @@ class CanvasContents extends React.Component {
 			} else {
 				emptyCanvas = (
 					<div className="empty-canvas">
-						<div className="empty-canvas-image"><FlowData16 /></div>
+						<div className="empty-canvas-image"><FlowData /></div>
 						<span className="empty-canvas-text1">{this.getLabel("canvas.flowIsEmpty")}</span>
 						<span className="empty-canvas-text2">{this.getLabel("canvas.addNodeToStart")}</span>
 					</div>);
@@ -310,7 +345,38 @@ class CanvasContents extends React.Component {
 		return emptyCanvas;
 	}
 
+	getReturnToPreviousBtn() {
+		let returnToPrevious = null;
+		if (!this.props.canvasController.isPrimaryPipelineEmpty() &&
+				(this.props.canvasController.isDisplayingFullPageSubFlow() ||
+					this.props.canvasConfig?.enableCanvasLayout?.alwaysDisplayBackToParentFlow)) {
+			const label = this.getLabel("canvas.returnToPrevious");
+			returnToPrevious = (
+				<div className={"return-to-previous"}>
+					<Button kind={"tertiary"}
+						onClick={this.onClickReturnToPrevious}
+						aria-label={label}
+						size={"md"}
+					>
+						<div className={"return-to-previous-content"}>
+							<ArrowLeft />
+							<span>{label}</span>
+						</div>
+					</Button>
+				</div>
+			);
+		}
+		return returnToPrevious;
+	}
+
 	getContextMenu() {
+		if (this.props.canvasConfig.enableContextToolbar) {
+			return (
+				<CommonCanvasContextToolbar
+					canvasController={this.props.canvasController}
+					containingDivId={this.mainCanvasDivId}
+				/>);
+		}
 		return (
 			<CommonCanvasContextMenu
 				canvasController={this.props.canvasController}
@@ -501,44 +567,30 @@ class CanvasContents extends React.Component {
 
 		const stateTag = this.getStateTag();
 		const emptyCanvas = this.getEmptyCanvas();
+		const returnToPreviousBtn = this.getReturnToPreviousBtn();
 		const contextMenu = this.getContextMenu();
 		const textToolbar = this.getTextToolbar();
 		const dropZoneCanvas = this.getDropZone();
 		const svgCanvasDiv = this.getSVGCanvasDiv();
 
-		const mainClassName = this.props.canvasConfig.enableRightFlyoutUnderToolbar
-			? "common-canvas-main"
-			: null;
-
-		let dropDivClassName = this.props.canvasConfig.enableRightFlyoutUnderToolbar
-			? "common-canvas-drop-div-under-toolbar"
-			: "common-canvas-drop-div";
-
-		dropDivClassName = this.props.canvasConfig.enableToolbarLayout === "None"
-			? dropDivClassName + " common-canvas-toolbar-none"
-			: dropDivClassName;
-
-		dropDivClassName = this.props.bottomPanelIsOpen
-			? dropDivClassName + " common-canvas-bottom-panel-is-open"
-			: dropDivClassName;
-
 		return (
-			<main aria-label={this.getLabel("canvas.label")} role="main" className={mainClassName}>
+			<main aria-label={this.getLabel("canvas.label")} role="main">
 				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
 					<div
 						id={this.mainCanvasDivId}
-						className={dropDivClassName}
+						className="common-canvas-drop-div"
 						onDrop={this.drop}
 						onDragOver={this.dragOver}
 						onDragEnter={this.dragEnter}
 						onDragLeave={this.dragLeave}
 					>
-						{emptyCanvas}
 						{svgCanvasDiv}
+						{emptyCanvas}
+						{returnToPreviousBtn}
+						{stateTag}
 						{contextMenu}
 						{textToolbar}
 						{dropZoneCanvas}
-						{stateTag}
 					</div>
 				</ReactResizeDetector>
 			</main>
@@ -554,15 +606,15 @@ CanvasContents.propTypes = {
 	// Provided by Redux
 	canvasConfig: PropTypes.object.isRequired,
 	canvasInfo: PropTypes.object,
-	bottomPanelIsOpen: PropTypes.bool
+	bottomPanelIsOpen: PropTypes.bool,
+	selectionInfo: PropTypes.object,
+	breadcrumbs: PropTypes.array
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	canvasInfo: state.canvasinfo,
 	canvasConfig: state.canvasconfig,
 	bottomPanelIsOpen: state.bottompanel.isOpen,
-	// These two fields are included here so they will trigger a render.
-	// The renderer will retrieve the data for them by calling the canvas controller.
 	selectionInfo: state.selectioninfo,
 	breadcrumbs: state.breadcrumbs
 });

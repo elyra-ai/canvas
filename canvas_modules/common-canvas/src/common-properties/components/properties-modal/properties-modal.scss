@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,21 @@
  */
 
 .properties-modal {
-	.bx--modal-close {
+	.cds--modal-close {
 		display: none;
 	}
-	.bx--modal-container {
+	.cds--modal-container {
 		padding: 0;
 	}
-	.bx--modal-content {
-		margin-bottom: 0;
+	.cds--modal-content {
+		margin-bottom: $spacing-05;
 		padding: 0;
 	}
 	&.noButtons {
-		.bx--modal-footer {
+		.cds--modal-footer {
 			opacity: 0;
 			pointer-events: none;
+			display: none;
 		}
 	}
 }

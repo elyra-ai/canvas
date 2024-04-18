@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,15 +26,6 @@ function _defineConstant(name, value) {
 }
 
 // Public Methods ------------------------------------------------------------->
-_defineConstant("CONSOLE", {
-	MINIMIZED: "0px",
-	MAXIMIXED: "200px"
-});
-
-_defineConstant("SIDE_PANEL", {
-	MINIMIZED: "0px",
-	MAXIMIXED: "240px"
-});
 _defineConstant("SIDE_PANEL_CANVAS", "sidepanel-canvas");
 _defineConstant("SIDE_PANEL_MODAL", "sidepanel-modal");
 _defineConstant("SIDE_PANEL_API", "sidepanel-api");
@@ -69,6 +60,10 @@ _defineConstant("DIRECTION_LEFT_RIGHT", "LeftRight");
 _defineConstant("DIRECTION_TOP_BOTTOM", "TopBottom");
 _defineConstant("DIRECTION_BOTTOM_TOP", "BottomTop");
 
+_defineConstant("IMAGE_DISPLAY_SVG_INLINE", "SVGInline");
+_defineConstant("IMAGE_DISPLAY_LOAD_SVG_TO_DEFS", "LoadSVGToDefs");
+_defineConstant("IMAGE_DISPLAY_SVG_AS_IMAGE", "SVGAsImage");
+
 _defineConstant("LINK_SELECTION_NONE", "None");
 _defineConstant("LINK_SELECTION_LINK_ONLY", "LinkOnly");
 _defineConstant("LINK_SELECTION_HANDLES", "Handles");
@@ -79,8 +74,8 @@ _defineConstant("ASSOC_STRAIGHT", "Straight");
 
 _defineConstant("EXAMPLE_APP_NONE", "None - use options below");
 _defineConstant("EXAMPLE_APP_FLOWS", "Flows");
-_defineConstant("EXAMPLE_READ_ONLY", "Read Only");
-_defineConstant("EXAMPLE_APP_BLUE_ELLIPSES", "Blue Ellipses");
+_defineConstant("EXAMPLE_APP_READ_ONLY", "Read Only");
+_defineConstant("EXAMPLE_APP_PROGRESS", "Progress");
 _defineConstant("EXAMPLE_APP_STAGES", "Stages");
 _defineConstant("EXAMPLE_APP_STAGES_CARD_NODE", "Stages Card Node");
 _defineConstant("EXAMPLE_APP_EXPLAIN", "Explain");
@@ -88,6 +83,8 @@ _defineConstant("EXAMPLE_APP_EXPLAIN2", "Explain2");
 _defineConstant("EXAMPLE_APP_STREAMS", "Streams");
 _defineConstant("EXAMPLE_APP_TABLES", "Tables");
 _defineConstant("EXAMPLE_APP_LOGIC", "Logic");
+_defineConstant("EXAMPLE_APP_REACT_NODES_CARBON", "React Nodes - Carbon Charts");
+_defineConstant("EXAMPLE_APP_REACT_NODES_MAPPING", "React Nodes - Mapping");
 
 _defineConstant("PALETTE_FLYOUT", "Flyout");
 _defineConstant("PALETTE_MODAL", "Modal");
@@ -103,6 +100,7 @@ _defineConstant("TOOLBAR_LAYOUT_NONE", "None");
 _defineConstant("TOOLBAR_LAYOUT_TOP", "Top");
 
 _defineConstant("TOOLBAR_TYPE_DEFAULT", "Default");
+_defineConstant("TOOLBAR_TYPE_SUB_AREAS", "SubAreas");
 _defineConstant("TOOLBAR_TYPE_SINGLE_BAR", "SingleLeftBarArray");
 _defineConstant("TOOLBAR_TYPE_BEFORE_AFTER", "TextBeforeAndAfter");
 _defineConstant("TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE", "CustomizedRightSide");
@@ -122,12 +120,14 @@ _defineConstant("API_SET_OUTPUT_PORT_LABEL", "Set Output Port Label");
 _defineConstant("API_SET_NODE_DECORATIONS", "Set Node Decorations");
 _defineConstant("API_SET_LINK_DECORATIONS", "Set Link Decorations");
 _defineConstant("API_ADD_NOTIFICATION_MESSAGE", "Add Notification Message");
-_defineConstant("API_ZOOM_CANVAS_TO_REVEAL", "Zoom Canvas To Reveal");
+_defineConstant("API_ZOOM_TO_REVEAL_NODE", "Zoom To Reveal Node");
+_defineConstant("API_ZOOM_TO_REVEAL_LINK", "Zoom To Reveal Link");
 
 _defineConstant("INPUT_PORT", "inputPort");
 _defineConstant("OUTPUT_PORT", "outputPort");
 
-_defineConstant("TIP_PALETTE", "Palette");
+_defineConstant("TIP_PALETTE_CATEGORIES", "Palette Categories");
+_defineConstant("TIP_PALETTE_NODE_TEMPLATES", "Palette Node Templates");
 _defineConstant("TIP_NODES", "Nodes");
 _defineConstant("TIP_PORTS", "Ports");
 _defineConstant("TIP_DECORATIONS", "Decorations");
@@ -148,9 +148,5 @@ _defineConstant("PARAMETER_DEFS", "parameterDefs");
 
 _defineConstant("PRIMARY", "Primary");
 
-_defineConstant("EDITOR_SIZE", {
-	UNSET: "unset",
-	SMALL: "small",
-	MEDIUM: "medium",
-	LARGE: "large"
-});
+_defineConstant("CATEGORY_VIEW_ACCORDIONS", "accordions");
+_defineConstant("CATEGORY_VIEW_TABS", "tabs");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -297,9 +297,14 @@ function conditionFilter(propertyId, filterItem, conditionItem, controller, fiel
 		return _handleDmModelingRole(fields, values);
 	case "dmSharedFields":
 		return _handleSharedFields(propertyId, filterItem, controller, fields);
-	default:
+	default: {
+		const operation = controller.getConditionOp(op);
+		if (operation && propertyId.name === filterItem.parameter_ref) { // Custom filter condition
+			return operation(propertyId, conditionItem, controller, fields);
+		}
 		logger.warn("Ignoring unknown condition operation '" + op + "'");
 		return fields;
+	}
 	}
 }
 

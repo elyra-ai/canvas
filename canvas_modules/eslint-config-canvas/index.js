@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ module.exports = {
 		"node": true
 	},
 	"parserOptions": {
-		"ecmaVersion": 2018
+		"ecmaVersion": 2020
 	},
 	"extends": "eslint:recommended",
 	"rules": {

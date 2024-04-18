@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,12 @@ import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
 import * as PropertyUtils from "./../util/property-utils";
-import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL, ACTIONS } from "./../constants/constants";
+import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL, ACTIONS, CATEGORY_VIEW } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
 import { validateParameterDefAgainstSchema } from "../schema-validator/properties-schema-validator.js";
 import { has, isEqual, omit, pick, cloneDeep } from "lodash";
 import Icon from "./../../icons/icon.jsx";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import { Provider } from "react-redux";
 import logger from "../../../utils/logger";
 import TitleEditor from "./../components/title-editor";
@@ -42,6 +42,7 @@ import styles from "./properties-main-widths.scss";
 const FLYOUT_WIDTH_SMALL = parseInt(styles.flyoutWidthSmall, 10);
 const FLYOUT_WIDTH_MEDIUM = parseInt(styles.flyoutWidthMedium, 10);
 const FLYOUT_WIDTH_LARGE = parseInt(styles.flyoutWidthLarge, 10);
+const FLYOUT_WIDTH_MAX = parseInt(styles.flyoutWidthMax, 10);
 
 class PropertiesMain extends React.Component {
 	constructor(props) {
@@ -67,7 +68,7 @@ class PropertiesMain extends React.Component {
 			titleChangeHandler: props.callbacks.titleChangeHandler,
 			tooltipLinkHandler: props.callbacks.tooltipLinkHandler
 		});
-		this.setForm(props.propertiesInfo);
+		this.setForm(props.propertiesInfo, false);
 		this.previousErrorMessages = {};
 		// this has to be after setForm because setForm clears all error messages.
 		// Validate all validationDefinitions but show warning messages for "colDoesExists" condition only
@@ -101,17 +102,24 @@ class PropertiesMain extends React.Component {
 	}
 
 	UNSAFE_componentWillReceiveProps(newProps) { // eslint-disable-line camelcase, react/sort-comp
+		if (this.props.light !== newProps.light) { // set the new light prop in controller
+			this.propertiesController.setLight(newProps.light);
+		}
 		if (newProps.propertiesInfo) {
 			if (!isEqual(Object.keys(newProps.propertiesInfo), Object.keys(this.props.propertiesInfo)) ||
 				(newProps.propertiesInfo.formData && !isEqual(newProps.propertiesInfo.formData, this.props.propertiesInfo.formData)) ||
 				(newProps.propertiesInfo.parameterDef && !isEqual(newProps.propertiesInfo.parameterDef, this.props.propertiesInfo.parameterDef)) ||
 				(newProps.propertiesInfo.appData && !isEqual(newProps.propertiesInfo.appData, this.props.propertiesInfo.appData))) {
-				this.setForm(newProps.propertiesInfo);
+				const sameParameterDefRendered = newProps.propertiesInfo.id === this.props.propertiesInfo.id;
+				this.setForm(newProps.propertiesInfo, sameParameterDefRendered);
 				const newEditorSize = this.propertiesController.getForm().editorSize;
 				if (this.state.editorSize !== newEditorSize) {
 					this.setState({ editorSize: newEditorSize });
 				}
-				this.currentParameters = this.propertiesController.getPropertyValues();
+				// Reset property values for new parameterDef
+				if (newProps.propertiesInfo.id && !sameParameterDefRendered) {
+					this.currentParameters = this.propertiesController.getPropertyValues();
+				}
 				this.propertiesController.setAppData(newProps.propertiesInfo.appData);
 				this.propertiesController.setCustomControls(newProps.customControls);
 				this.propertiesController.setConditionOps(newProps.customConditionOps);
@@ -121,6 +129,10 @@ class PropertiesMain extends React.Component {
 					this.previousErrorMessages = this.propertiesController.getAllErrorMessages();
 				}
 			}
+		}
+
+		if (newProps.propertiesConfig && !isEqual(newProps.propertiesConfig, this.propertiesController.getPropertiesConfig())) {
+			this.propertiesController.setPropertiesConfig(newProps.propertiesConfig);
 		}
 	}
 
@@ -134,7 +146,7 @@ class PropertiesMain extends React.Component {
 		}
 	}
 
-	setForm(propertiesInfo) {
+	setForm(propertiesInfo, sameParameterDefRendered) {
 		let formData = null;
 
 		if (propertiesInfo.formData && Object.keys(propertiesInfo.formData).length !== 0) {
@@ -143,14 +155,14 @@ class PropertiesMain extends React.Component {
 			if (this.props.propertiesConfig.schemaValidation) {
 				validateParameterDefAgainstSchema(propertiesInfo.parameterDef);
 			}
-			formData = Form.makeForm(propertiesInfo.parameterDef, !this.props.propertiesConfig.rightFlyout);
+			formData = Form.makeForm(propertiesInfo.parameterDef, this.props.propertiesConfig.containerType);
 		}
 		// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
 		if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
 			formData.data.datasetMetadata = PropertyUtils.convertInputDataModel(formData.data.inputDataModel);
 		}
 
-		this.propertiesController.setForm(formData, this.props.intl);
+		this.propertiesController.setForm(formData, this.props.intl, sameParameterDefRendered);
 		if (formData) {
 			this.originalTitle = formData.label;
 		}
@@ -188,18 +200,23 @@ class PropertiesMain extends React.Component {
 				return label;
 			}
 		}
-		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_ACTION_LABEL);
+		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_ACTION_LABEL, { node_label: this.propertiesController.getTitle() });
 	}
 
 	getEditorSize() {
 		// Determine whether to persist initialEditorSize or set the defaultEditorSize in certain cases
 		const defaultEditorSize = this.propertiesController.getForm().editorSize;
 		const initialEditorSize = this.props.propertiesInfo.initialEditorSize;
-		if (defaultEditorSize === Size.SMALL && initialEditorSize === Size.LARGE) {
+		// When defaultEditorSize="small", initialEditorSize can be "small" or "medium". For any other value, return defaultEditorSize.
+		// When defaultEditorSize="medium", initialEditorSize can be "medium" or "large". For any other value, return defaultEditorSize.
+		// When defaultEditorSize="large", initialEditorSize can be "large" or "max". For any other value, return defaultEditorSize.
+		if (defaultEditorSize === Size.SMALL && (initialEditorSize === Size.LARGE || initialEditorSize === Size.MAX)) {
 			return defaultEditorSize;
-		} else if (defaultEditorSize === Size.MEDIUM && initialEditorSize === Size.SMALL) {
+		} else if (defaultEditorSize === Size.MEDIUM && (initialEditorSize === Size.SMALL || initialEditorSize === Size.MAX)) {
 			return defaultEditorSize;
-		} else if (defaultEditorSize === Size.LARGE) {
+		} else if (defaultEditorSize === Size.LARGE && (initialEditorSize === Size.SMALL || initialEditorSize === Size.MEDIUM)) {
+			return defaultEditorSize;
+		} else if (defaultEditorSize === Size.MAX) {
 			return defaultEditorSize;
 		}
 		return (initialEditorSize ? initialEditorSize : defaultEditorSize);
@@ -227,7 +244,15 @@ class PropertiesMain extends React.Component {
 					overrideSize = pixelWidth.max;
 				}
 
-			} else if (editorSizeInForm === Size.LARGE && pixelWidth.max) {
+			} else if (editorSizeInForm === Size.LARGE) {
+				if (this.state.editorSize === Size.LARGE && pixelWidth.min) {
+					overrideSize = pixelWidth.min;
+
+				} else if (this.state.editorSize === Size.MAX && pixelWidth.max) {
+					overrideSize = pixelWidth.max;
+				}
+
+			} else if (editorSizeInForm === Size.MAX && pixelWidth.max) {
 				overrideSize = pixelWidth.max;
 			}
 		}
@@ -242,6 +267,10 @@ class PropertiesMain extends React.Component {
 			}
 		} else if (this.propertiesController.getForm().editorSize === Size.MEDIUM) {
 			if (this.state.editorSize === Size.LARGE) {
+				resizeButton = <Icon type={CARBON_ICONS.CHEVRONARROWS.RIGHT} className="properties-resize-caret-right" />;
+			}
+		} else if (this.propertiesController.getForm().editorSize === Size.LARGE) {
+			if (this.state.editorSize === Size.MAX) {
 				resizeButton = <Icon type={CARBON_ICONS.CHEVRONARROWS.RIGHT} className="properties-resize-caret-right" />;
 			}
 		}
@@ -282,6 +311,18 @@ class PropertiesMain extends React.Component {
 					}
 
 				} else if (this.propertiesController.getForm().editorSize === Size.LARGE) {
+					if (pixelWidth.min && !pixelWidth.max && pixelWidth.min >= FLYOUT_WIDTH_MAX) {
+						logger.warn("No resize button shown. Pixel width min size is greater than or equal to default max size: " + FLYOUT_WIDTH_MAX);
+						return false;
+					} else if (!pixelWidth.min && pixelWidth.max && pixelWidth.max <= FLYOUT_WIDTH_LARGE) {
+						logger.warn("No resize button shown. Pixel width max size is less than or equal to default min size: " + FLYOUT_WIDTH_LARGE);
+						return false;
+					} else if (pixelWidth.min >= pixelWidth.max) {
+						logger.warn("No resize button shown. Pixel width min size is greater than or equal to default max size.");
+						return false;
+					}
+
+				} else if (this.propertiesController.getForm().editorSize === Size.MAX) {
 					if (pixelWidth.min) {
 						logger.warn("No resize button shown. Pixel width min size ignored.");
 						return false;
@@ -289,7 +330,7 @@ class PropertiesMain extends React.Component {
 					return false;
 				}
 
-			} else if (this.propertiesController.getForm().editorSize === Size.LARGE) {
+			} else if (this.propertiesController.getForm().editorSize === Size.MAX) {
 				return false;
 			}
 			return true;
@@ -303,7 +344,9 @@ class PropertiesMain extends React.Component {
 	_setValueInforProperties(valueInfo, options) {
 		const applyProperties = options && options.applyProperties === true;
 		const filterHiddenDisabled = this.props.propertiesConfig.conditionReturnValueHandling === CONDITION_RETURN_VALUE_HANDLING.NULL;
-		const properties = this.propertiesController.getPropertyValues({ filterHiddenDisabled: filterHiddenDisabled, applyProperties: applyProperties });
+
+		const properties = this.propertiesController.getPropertyValues({ filterHiddenDisabled: filterHiddenDisabled, applyProperties: applyProperties,
+			valueFilters: this.props.propertiesConfig.returnValueFiltering });
 		if (this.uiParameterKeys.length > 0) {
 			valueInfo.properties = omit(properties, this.uiParameterKeys);
 			valueInfo.uiProperties = pick(properties, this.uiParameterKeys);
@@ -403,6 +446,12 @@ class PropertiesMain extends React.Component {
 			} else {
 				this.updateEditorSize(Size.MEDIUM);
 			}
+		} else if (this.propertiesController.getForm().editorSize === Size.LARGE) {
+			if (this.state.editorSize === Size.LARGE) {
+				this.updateEditorSize(Size.MAX);
+			} else {
+				this.updateEditorSize(Size.LARGE);
+			}
 		}
 	}
 
@@ -415,6 +464,7 @@ class PropertiesMain extends React.Component {
 		}
 		const applyLabel = this.getApplyButtonLabel();
 		const rejectLabel = this.getRejectButtonLabel();
+		const propertiesLabel = this.propertiesController.getTitle();
 
 		const formData = this.propertiesController.getForm();
 		if (formData !== null) {
@@ -434,6 +484,7 @@ class PropertiesMain extends React.Component {
 					icon={formData.icon}
 					heading={formData.heading}
 					showHeading={this.props.propertiesConfig.heading}
+					rightFlyoutTabsView={this.props.propertiesConfig.categoryView === CATEGORY_VIEW.TABS}
 				/>);
 
 				hasHeading = this.props.propertiesConfig.heading && (formData.icon || formData.heading);
@@ -468,6 +519,8 @@ class PropertiesMain extends React.Component {
 				showPropertiesButtons={this.showPropertiesButtons}
 				customPanels={this.props.customPanels}
 				rightFlyout={this.props.propertiesConfig.rightFlyout}
+				categoryView={this.props.propertiesConfig.categoryView}
+				showAlertsTab={this.props.propertiesConfig.showAlertsTab !== false}
 			/>);
 
 			if (this.props.propertiesConfig.containerType === "Editing") {
@@ -475,7 +528,7 @@ class PropertiesMain extends React.Component {
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
 					bsSize={this.state.editorSize}
-					title={this.propertiesController.getTitle()}
+					title={propertiesLabel}
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
 					showPropertiesButtons={this.state.showPropertiesButtons}
@@ -497,9 +550,9 @@ class PropertiesMain extends React.Component {
 			} else if (this.props.propertiesConfig.containerType === "Tearsheet") {
 				propertiesDialog = (<TearSheet
 					open
-					onCloseCallback={cancelHandler}
+					onCloseCallback={this.props.propertiesConfig.applyOnBlur ? this.applyPropertiesEditing.bind(this, true) : null}
 					tearsheet={{
-						title: this.propertiesController.getTitle(),
+						title: propertiesLabel,
 						content: editorForm
 					}}
 					applyLabel={applyLabel}
@@ -507,11 +560,12 @@ class PropertiesMain extends React.Component {
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
 					showPropertiesButtons={this.state.showPropertiesButtons}
+					applyOnBlur={this.props.propertiesConfig.applyOnBlur}
 				/>);
 			} else { // Modal
 				propertiesDialog = (<PropertiesModal
 					onHide={this.props.callbacks.closePropertiesDialog}
-					title={this.propertiesController.getTitle()}
+					title={propertiesLabel}
 					bsSize={this.state.editorSize}
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
@@ -537,11 +591,10 @@ class PropertiesMain extends React.Component {
 			return (
 				<Provider store={this.propertiesController.getStore()}>
 					<aside
-						aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL)}
+						aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
 						role="complementary"
 						ref={ (ref) => (this.commonProperties = ref) }
 						className={className}
-						tabIndex="0"
 						onBlur={this.onBlur}
 						style={overrideStyle}
 					>
@@ -563,9 +616,11 @@ PropertiesMain.propTypes = {
 		applyOnBlur: PropTypes.bool,
 		disableSaveOnRequiredErrors: PropTypes.bool,
 		rightFlyout: PropTypes.bool,
+		categoryView: PropTypes.oneOf([CATEGORY_VIEW.ACCORDIONS, CATEGORY_VIEW.TABS]),
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
 		conditionReturnValueHandling: PropTypes.string,
+		returnValueFiltering: PropTypes.array,
 		heading: PropTypes.bool,
 		buttonLabels: PropTypes.shape({
 			primary: PropTypes.string,
@@ -576,7 +631,11 @@ PropertiesMain.propTypes = {
 		conditionHiddenPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
 		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
 		maxLengthForMultiLineControls: PropTypes.number,
-		maxLengthForSingleLineControls: PropTypes.number
+		maxLengthForSingleLineControls: PropTypes.number,
+		convertValueDataTypes: PropTypes.bool,
+		showRequiredIndicator: PropTypes.bool,
+		showAlertsTab: PropTypes.bool,
+		locale: PropTypes.string
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,

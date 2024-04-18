@@ -2,7 +2,7 @@
 	"doc_type": "pipeline",
 	"version": "3.0",
 	"json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
-	"id": "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159",
+	"id": "987654321-c3d2-4da7-ab5a-2b9573e5e159",
 	"primary_pipeline": "3ae0efae-9a3c-4a1a-9fd9-185f442a81aa",
 	"pipelines": [{
 		"id": "3ae0efae-9a3c-4a1a-9fd9-185f442a81aa",
@@ -62,9 +62,14 @@
 					}
 				},
 				"links": [{
-					"id": "Link One",
+					"id": "Link1",
 					"node_id_ref": "f8ae4e15-86fd-4947-bbec-43c5aa2b8927",
-					"port_id_ref": "outPort"
+					"port_id_ref": "outPort",
+					"app_data": {
+						"stages": {
+							"link_label": "Link One"
+						}
+					}
 				}]
 			}],
 			"outputs": [{
@@ -107,9 +112,14 @@
 					}
 				},
 				"links": [{
-					"id": "Link Two",
+					"id": "Link2",
 					"node_id_ref": "f7cc2320-0d0a-418d-b8bb-6488d5557a26",
-					"port_id_ref": "outPort"
+					"port_id_ref": "outPort",
+					"app_data": {
+						"stages": {
+							"link_label": "Link Two"
+						}
+					}
 				}]
 			}],
 			"outputs": [{
@@ -152,9 +162,14 @@
 					}
 				},
 				"links": [{
-					"id": "Link Three",
+					"id": "Link3",
 					"node_id_ref": "f1004052-23f7-4681-a599-8fdfdcc79427",
-					"port_id_ref": "outPort"
+					"port_id_ref": "outPort",
+					"app_data": {
+						"stages": {
+							"link_label": "Link Three"
+						}
+					}
 				}]
 			}],
 			"outputs": [{
@@ -197,9 +212,14 @@
 					}
 				},
 				"links": [{
-					"id": "Link Four",
+					"id": "Link4",
 					"node_id_ref": "f929659b-2c47-4ece-8dc2-14cdeaed96a9",
-					"port_id_ref": "outPort"
+					"port_id_ref": "outPort",
+					"app_data": {
+						"stages": {
+							"link_label": "Link Four"
+						}
+					}
 				}]
 			}]
 		}, {
@@ -230,9 +250,14 @@
 					}
 				},
 				"links": [{
-					"id": "Link Five",
+					"id": "Link5",
 					"node_id_ref": "f929659b-2c47-4ece-8dc2-14cdeaed96a9",
-					"port_id_ref": "outPort"
+					"port_id_ref": "outPort",
+					"app_data": {
+						"stages": {
+							"link_label": "Link Five"
+						}
+					}
 				}]
 			}]
 		}],

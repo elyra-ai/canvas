@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import Passwordfield from "./../../../src/common-properties/controls/passwordfield";
 import Controller from "./../../../src/common-properties/properties-controller";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import propertyUtils from "../../_utils_/property-utils";
 
@@ -178,7 +178,7 @@ describe("Passwordfield renders correctly", () => {
 			/>
 		);
 		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
-		const messageWrapper = passwordWrapper.find("div.bx--form-requirement");
+		const messageWrapper = passwordWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 	it("Passwordfield eyeIcon tooltip default content appears correctly", () => {

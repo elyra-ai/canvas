@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,6 +54,7 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 	let propertiesConfig = {
 		applyOnBlur: true,
 		rightFlyout: true,
+		trimSpaces: true,
 		containerType: "Custom"
 	};
 	if (propertiesConfigOverrides) {
@@ -99,6 +100,7 @@ function flyoutEditorFormWithIntl(paramDef, propertiesConfigOverrides, callbacks
 	let propertiesConfig = {
 		applyOnBlur: true,
 		rightFlyout: true,
+		trimSpaces: true,
 		containerType: "Custom"
 	};
 	if (propertiesConfigOverrides) {

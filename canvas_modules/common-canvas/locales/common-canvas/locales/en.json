@@ -21,7 +21,9 @@
   "canvas.stateTagReadOnly": "Read-only",
   "canvas.stateTagTipLocked": "This flow is locked and cannot be edited.",
   "canvas.stateTagTipReadOnly": "This flow cannot be edited.",
+  "canvas.returnToPrevious": "Return to previous flow",
   "comment.colorBackground": "Color background",
+  "comment.editComment": "Edit comment",
   "node.createSupernode": "Create supernode",
   "node.createSupernodeExternal": "Create external supernode",
   "node.expandSupernode": "Expand supernode",
@@ -30,6 +32,7 @@
   "node.deconstructSupernode": "Deconstruct supernode",
   "node.convertSupernodeExternalToLocal": "Convert external to local",
   "node.convertSupernodeLocalToExternal": "Convert local to external",
+  "node.renameNode": "Rename",
   "canvas.validateFlow": "Validate Flow",
   "node.editNode": "Open",
   "node.editMenu": "Edit",
@@ -46,7 +49,6 @@
   "texttoolbar.bulletedListAction": "Bulleted List",
   "texttoolbar.numberedListAction": "Numbered List",
   "texttoolbar.titleAction": "Title",
-  "texttoolbar.headerAction": "Header",
   "texttoolbar.subheaderAction": "Subheader",
   "texttoolbar.bodyAction": "Body"
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,6 @@ function setExpressionInfo(inExpressionInfo) {
 				if (inExpressionInfo.fields.field_categories) {
 					inExpressionInfo.fields.field_categories.forEach((fieldCat) => {
 						fieldCat.locLabel = l10nProvider.l10nLabel(fieldCat, fieldCat.id);
-
 						fieldCat.field_columns.field_column_info.locLabel = l10nProvider.l10nLabel(fieldCat.field_columns.field_column_info, fieldCat.id + ".field_column_info");
 						fieldCat.field_columns.value_column_info.locLabel = l10nProvider.l10nLabel(fieldCat.field_columns.value_column_info, fieldCat.id + ".value_column_info");
 

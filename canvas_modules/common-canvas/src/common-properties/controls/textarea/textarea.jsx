@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { TextArea } from "carbon-components-react";
+import { TextArea } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
@@ -34,7 +34,8 @@ class TextareaControl extends React.Component {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
 		this.charLimit = ControlUtils.getCharLimit(props.control, props.controller.getMaxLengthForMultiLineControls());
-		this.id = ControlUtils.getControlId(this.props.propertyId);
+		this.uuid = uuid4();
+		this.id = ControlUtils.getControlId(this.props.propertyId, this.uuid);
 	}
 
 	handleChange(evt) {
@@ -78,27 +79,27 @@ class TextareaControl extends React.Component {
 					value={value}
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
-					light={this.props.controller.getLight() && !this.props.control.light}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={""} messageInfo={errorMessage} />
 			</div>);
 		} else {
-			textArea = (<TextArea
-				{...validationProps}
-				id={this.id}
-				disabled={this.props.state === STATES.DISABLED}
-				placeholder={this.props.control.additionalText}
-				onChange={this.handleChange.bind(this)}
-				value={value}
-				labelText={this.props.controlItem}
-				hideLabel={this.props.tableControl}
-				light={this.props.controller.getLight() && !this.props.control.light}
-			/>);
+			textArea = (
+				<TextArea
+					{...validationProps}
+					id={this.id}
+					disabled={this.props.state === STATES.DISABLED}
+					placeholder={this.props.control.additionalText}
+					onChange={this.handleChange.bind(this)}
+					value={value}
+					labelText={this.props.controlItem}
+					hideLabel={this.props.tableControl}
+				/>
+			);
 		}
 
 		let display = textArea;
 		if (this.props.tableControl) {
-			const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
+			const tooltipId = "tooltip-column-textarea";
 			let disabled = true;
 			if (value && this.props.state !== STATES.DISABLED) {
 				disabled = false;

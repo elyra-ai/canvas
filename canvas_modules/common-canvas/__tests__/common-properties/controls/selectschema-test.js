@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import React from "react";
 import SelectSchemaControl from "../../../src/common-properties/controls/dropdown";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
@@ -64,7 +64,7 @@ describe("selectschema renders correctly", () => {
 		expect(wrapper.prop("controller")).to.equal(controller);
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 	});
-	it("should have '...' as first selected option", () => {
+	it("should have '...' as first selected option for empty list", () => {
 		controller.setPropertyValues(
 			{ "test-selectschema": null }
 		);
@@ -83,7 +83,7 @@ describe("selectschema renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-test-selectschema']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
@@ -127,15 +127,14 @@ describe("selectschema works correctly in common-properties", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropDown = wrapper.find("div[data-id='properties-selectschema'] Dropdown");
-		const dropdownList = dropDown.find("div.bx--list-box__menu-item");
+		const dropdownList = dropDown.find("li.cds--list-box__menu-item");
 		dropdownList.at(0).simulate("click");
 		expect(propertiesController.getPropertyValue({ name: "selectschema" })).to.equal("");
 	});
 	it("selectschema control should have aria-label", () => {
 		const dropDown = wrapper.find("div[data-id='properties-selectschema'] Dropdown");
-		const dropdownAriaLabelledby = dropDown.find(".bx--list-box__menu").prop("aria-labelledby");
-		expect(dropDown.find(`#${dropdownAriaLabelledby}`).text()).to.equal("selectschema*");
-
+		const dropdownAriaLabelledby = dropDown.find(".cds--list-box__menu").prop("aria-labelledby");
+		expect(dropDown.find(`label[id='${dropdownAriaLabelledby}']`).text()).to.equal("selectschema(required)");
 	});
 });
 

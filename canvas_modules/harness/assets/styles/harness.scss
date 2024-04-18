@@ -1,0 +1,43 @@
+/*
+ * Copyright 2017-2024 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use "@carbon/react/scss/themes" as *;
+@import "./carbon.scss";
+
+// Switch the theme's below to change light <-> dark theme for harness
+// Modify common-canvas/src/themes/light.scss to switch common-canvas.
+$theme: $g10; // The light (gray 10) theme
+// $theme: $g90; // The dark theme
+
+:root {
+	@include theme();
+}
+
+// Common variables for App.scss and sidepanel.scss
+$harness-header-height: 50px;
+$harness-sidepanel-width: 320px;
+$harness-sidepanel-transition-time: 0.3s;
+$harness-console-height: 200px;
+
+@import "../../src/client/components/console/console.scss";
+@import "../../src/styles/custom-canvases.scss";
+@import "../../src/styles/canvas-customization.scss";
+@import "../../src/styles/sidepanel.scss";
+@import "../../src/styles/App.scss";
+@import "../../src/styles/properties.scss";
+@import "../../src/styles/custom-datasets-table.scss";
+@import "../../src/styles/custom-controls.scss";
+@import "../../src/styles/glmm.scss";

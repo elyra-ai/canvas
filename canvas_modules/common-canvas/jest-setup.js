@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /* global fetch */
-import Adapter from "enzyme-adapter-react-16";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 import { configure } from "enzyme";
 
 
@@ -30,6 +30,22 @@ console.error = jest.fn(mockConsole(console.error));
 
 // Added to simulate scrollIntoView for react components
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
+
+// Fixes - TypeError: window.matchMedia is not a function
+// https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
+Object.defineProperty(window, "matchMedia", {
+	writable: true,
+	value: jest.fn().mockImplementation((query) => ({
+		matches: false,
+		media: query,
+		onchange: null,
+		addListener: jest.fn(), // deprecated
+		removeListener: jest.fn(), // deprecated
+		addEventListener: jest.fn(),
+		removeEventListener: jest.fn(),
+		dispatchEvent: jest.fn(),
+	})),
+});
 
 function mockConsole(consoleMethod) {
 	const ignoredMessages = ["test was not wrapped in act(...)", "Rendering components directly into document.body is discouraged"];

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,36 @@
  * limitations under the License.
  */
 
-.properties-primaryTabs {
-	.bx--tabs__nav-item {
-		margin-left: 1rem;
-	}
-}
+$primary-tab-height: $spacing-08;
 
 // styling when there is only 1 tab
 .properties-single-category {
 	padding: $spacing-05;
+}
+
+.properties-right-flyout {
+	.properties-editor-form {
+		height: 100%;
+	}
+	.properties-single-category {
+		height: 100%;
+		.properties-sub-tab-container {
+			position: relative;
+			height: 100%;
+		}
+		.properties-subtabs {
+			position: absolute;
+			height: $primary-tab-height;
+			border-bottom: 1px solid $layer-accent-01;
+		}
+		.properties-subtab-panel {
+			height: calc(100% - #{$primary-tab-height});
+			position: relative;
+			top: $primary-tab-height;
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+	}
 }
 
 .properties-category-container {
@@ -35,36 +56,36 @@
 }
 
 .properties-category-title {
-	@include carbon--type-style("body-long-01");
-	text-decoration-color: $text-01;
-	color: $text-01;
+	@include type-style("body-long-01");
+	text-decoration-color: $text-primary;
+	color: $text-primary;
 
 	height: 46px;
 	width: 100%;
 
 	display: flex;
-	background-color: $ui-background;
+	background-color: $background;
 	justify-content: space-between;
 	align-items: center;
 	padding: 0 $spacing-05;
 	border: 0; // override for button styling
 	outline: none; // override for button styling
-	border-bottom: 1px solid $ui-03;
+	border-bottom: 1px solid $layer-accent-01;
 	cursor: pointer;
 	&:hover {
-		background-color: $hover-ui;
+		background-color: $layer-hover-01;
 	}
 	> svg {
 		height: 20px;
 		width: 20px;
-		fill: $icon-01;
+		fill: $icon-primary;
 	}
 }
 
 .properties-category-content {
 	height: 100%;
 	padding: $spacing-05;
-	border-bottom: 1px solid $ui-03;
+	border-bottom: 1px solid $layer-accent-01;
 	display: none;
 	&.show {
 		display: inherit;
@@ -72,7 +93,7 @@
 }
 
 .properties-subtabs, .properties-primaryTabs {
-	.bx--tabs__nav {
+	.cds--tabs__nav {
 		overflow-x: auto; // override carbon so scrollbar doesn't always show
 	}
 }
@@ -82,11 +103,11 @@
 	align-items: center;
 	padding: $spacing-02 0;
 	.properties-static-text {
-		@include carbon--type-style("body-short-01");
-		color: $text-01;
+		@include type-style("body-short-01");
+		color: $text-primary;
 		&.info {
-			@include carbon--type-style("label-01");
-			color: $text-02;
+			@include type-style("label-01");
+			color: $text-secondary;
 		}
 	}
 	svg {
@@ -103,23 +124,39 @@
 
 .properties-link-text-container {
 	display: flex;
+	align-items: center;
 	padding: $spacing-04 0 0 0;
 	svg {
-		margin-right: $spacing-05;
-		margin-top: 1px;
-		width: 16px;
-		height: 16px;
-		flex-shrink: 0;
+		margin-right: $spacing-03;
 	}
 	.properties-link-text {
-		@include carbon--type-style("body-short-01");
+		cursor: pointer;
 	}
 }
 
 .properties-light-enabled {
-	background-color: $ui-01; // Override theme background-color when light option is true
+	background-color: $layer-01; // Override theme background-color when light option is true
 }
 
 .properties-custom-panel + .properties-control-panel {
 	padding-top: $spacing-05; // padding between the two classes
+}
+
+// Display in full height if inside a tearsheet
+.properties-editor-form.tearsheet-container, .properties-editor-form.right-flyout-tabs-view {
+	height: 100%;
+
+	.properties-primaryTabs {
+		position: absolute;
+		height: $primary-tab-height;
+		border-bottom: 1px solid $layer-accent-01;
+	}
+
+	.properties-primary-tab-panel.tearsheet-container, .properties-primary-tab-panel.right-flyout-tabs-view {
+		height: calc(100% - #{$primary-tab-height});
+		position: relative;
+		top: $primary-tab-height;
+		overflow-y: auto;
+		overflow-x: hidden;
+	}
 }

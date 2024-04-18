@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ class PaletteDialogContentGridNode extends React.Component {
 		// We cannot use the dataTransfer object for the nodeTemplate because
 		// the dataTransfer data is not available during dragOver events so we set
 		// the nodeTemplate into the canvas controller.
-		this.props.canvasController.nodeTemplateDragStart(this.props.nodeTemplate);
+		this.props.canvasController.nodeTemplateDragStart(this.ghostData.nodeTemplate);
 
 		// On firefox, the drag will not start unless something is written to
 		// the dataTransfer object so just write an empty string
@@ -74,7 +74,8 @@ class PaletteDialogContentGridNode extends React.Component {
 
 	onDoubleClick() {
 		if (this.props.canvasController.createAutoNode) {
-			this.props.canvasController.createAutoNode(this.props.nodeTemplate);
+			const nodeTemplate = this.props.canvasController.convertNodeTemplate(this.props.nodeTemplate);
+			this.props.canvasController.createAutoNode(nodeTemplate);
 		}
 	}
 

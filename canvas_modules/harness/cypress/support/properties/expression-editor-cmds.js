@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ Cypress.Commands.add("enterTextInExpressionEditor", (text, propertyId) => {
 		.then((selectedKey) => {
 			cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
 				.find(".properties-expression-editor")
-				.find(".CodeMirror")
-				.find(".CodeMirror-code")
+				.find(".cm-editor")
+				.find(".cm-content")
 				.type(selectedKey + "{a}{del}") // Select all and delete existing text in expression editor
 				.type(text + "{ctrl} "); // Type text and ctrl + space to display hints
 		});
@@ -29,7 +29,7 @@ Cypress.Commands.add("enterTextInExpressionEditor", (text, propertyId) => {
 Cypress.Commands.add("selectFirstAutoCompleteForText", (text, propertyId) => {
 	cy.enterTextInExpressionEditor(text, propertyId);
 	// select the first one in the list of hints and make sure it is the text
-	cy.get(".CodeMirror-hints")
+	cy.get(".cm-tooltip-autocomplete")
 		.eq(0)
 		.find("li")
 		.eq(0)
@@ -70,9 +70,9 @@ Cypress.Commands.add("selectFieldFromPropertyInSubPanel", (fieldName, propertyId
 		.find("div[data-role='properties-data-row']")
 		.find(".properties-expr-table-cell")
 		.then((tableCells) => {
-			const cell = getCellMatch(tableCells, fieldName);
+			const cell = getAddCellMatch(tableCells, fieldName);
 			expect(cell).to.not.equal(null);
-			cy.wrap(cell).dblclick({ force: true });
+			cy.wrap(cell).click({ force: true }); // Single click on Add button
 		});
 });
 
@@ -87,10 +87,10 @@ Cypress.Commands.add("triggerBlurInExpressionBuilder", () => {
 		.click({ force: true });
 });
 
-function getCellMatch(tableCells, fieldName) {
+function getAddCellMatch(tableCells, fieldName) {
 	for (let idx = 0; idx < tableCells.length; idx++) {
 		if (tableCells[idx].textContent === fieldName) {
-			return (tableCells[idx]);
+			return (tableCells[idx - 1]); // Add column will be at First index, before the field col
 		}
 	}
 	return null;

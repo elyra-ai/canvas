@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import React from "react";
 import { Provider } from "react-redux";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { shallowWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
@@ -171,7 +171,7 @@ describe("structureeditor control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
@@ -197,7 +197,7 @@ describe("structureeditor control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
@@ -223,7 +223,7 @@ describe("structureeditor control renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
 		dropdownList.at(0).simulate("click");
 		const value = controller.getPropertyValue(propertyId);
@@ -358,9 +358,13 @@ describe("structureeditor control renders correctly with paramDef", () => {
 	it("structureeditor control can be hidden in one go", () => {
 		controller.updatePropertyValue({ name: "hider" }, true);
 		wrapper.update();
-		const structWrapper = wrapper.find("div[data-id='properties-layout_struct']");
-		expect(structWrapper).not.to.be.null;
-		expect(structWrapper.hasClass("hide")).to.be.true;
+		let structWrapper = wrapper.find("div[data-id='properties-layout_struct']");
+		expect(structWrapper).to.have.length(0);
+
+		controller.updatePropertyValue({ name: "hider" }, false);
+		wrapper.update();
+		structWrapper = wrapper.find("div[data-id='properties-layout_struct']");
+		expect(structWrapper).to.have.length(1);
 	});
 
 });
@@ -505,7 +509,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
 
 		// As "Field 3" row is displayed before "Field 5", it will be added as the first row. Modify values in the first row
-		const editButton = firstRow.find(".properties-subpanel-button").at(0);
+		const editButton = firstRow.find("button.properties-subpanel-button").at(0);
 		editButton.simulate("click");
 		const userFields = wrapper.find("div[data-id='properties-userFieldsTable']");
 		userFields.find("textarea").simulate("change", { target: { value: "annotation for newly added Field 3" } });

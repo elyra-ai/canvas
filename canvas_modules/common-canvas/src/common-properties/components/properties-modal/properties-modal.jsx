@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Modal } from "carbon-components-react";
+import { Modal } from "@carbon/react";
 import classNames from "classnames";
 import { Portal } from "react-portal";
 import { Size } from "./../../constants/form-constants";
@@ -29,6 +29,7 @@ export default class PropertiesModal extends Component {
 		switch (this.props.bsSize) {
 		case Size.SMALL: return CARBON_MODAL_SIZE_XSMALL;
 		case Size.LARGE: return CARBON_MODAL_SIZE_LARGE;
+		case Size.MAX: return CARBON_MODAL_SIZE_LARGE;
 		case Size.MEDIUM:
 		default: return CARBON_MODAL_SIZE_SMALL;
 		}
@@ -40,7 +41,7 @@ export default class PropertiesModal extends Component {
 		return (
 			<Portal>
 				<Modal
-					className={classNames("properties-modal", { "noButtons": this.props.showPropertiesButtons === false })}
+					className={classNames("properties-modal", { "noButtons": this.props.showPropertiesButtons === false }, this.props.classNames)}
 					open
 					modalHeading={this.props.title}
 					primaryButtonText={this.props.applyLabel}
@@ -68,4 +69,5 @@ PropertiesModal.propTypes = {
 	showPropertiesButtons: PropTypes.bool,
 	applyLabel: PropTypes.string,
 	rejectLabel: PropTypes.string,
+	classNames: PropTypes.string
 };

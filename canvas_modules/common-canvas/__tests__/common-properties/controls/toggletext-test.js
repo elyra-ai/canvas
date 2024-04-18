@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import React from "react";
 import Toggletext from "../../../src/common-properties/controls/toggletext";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
@@ -61,6 +61,7 @@ propertyUtils.setControls(controller, [control, controlNoIcons]);
 const propertyId = { name: "toggle" };
 
 describe("Toggletext renders correctly", () => {
+	let wrapper;
 
 	beforeEach(() => {
 		controller.setErrorMessages({});
@@ -70,8 +71,12 @@ describe("Toggletext renders correctly", () => {
 		);
 	});
 
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
 	it("Toggletext props should have been defined", () => {
-		const wrapper = mount(
+		wrapper = mount(
 			<Toggletext
 				store={controller.getStore()}
 				control={control}
@@ -85,7 +90,7 @@ describe("Toggletext renders correctly", () => {
 	});
 
 	it("Toggletext should render correctly", () => {
-		const wrapper = mount(
+		wrapper = mount(
 			<Toggletext
 				store={controller.getStore()}
 				control={control}
@@ -96,13 +101,13 @@ describe("Toggletext renders correctly", () => {
 		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
 		const button = toggleWrapper.find("button");
 		expect(button).to.have.length(1);
-		const image = button.find("svg");
+		const image = button.find("InlineSVG");
 		expect(image).to.have.length(1);
 		expect(button.text()).to.equal(control.valueLabels[0]);
 	});
 
 	it("Toggletext should render without icons", () => {
-		const wrapper = mount(
+		wrapper = mount(
 			<Toggletext
 				store={controller.getStore()}
 				control={controlNoIcons}
@@ -119,7 +124,7 @@ describe("Toggletext renders correctly", () => {
 	});
 
 	it("toggletext should set correct value", () => {
-		const wrapper = mount(
+		wrapper = mount(
 			<Toggletext
 				store={controller.getStore()}
 				control={control}
@@ -135,7 +140,7 @@ describe("Toggletext renders correctly", () => {
 
 	it("toggletext renders when disabled", () => {
 		controller.updateControlState(propertyId, "disabled");
-		const wrapper = mount(
+		wrapper = mount(
 			<Toggletext
 				store={controller.getStore()}
 				control={control}
@@ -149,7 +154,7 @@ describe("Toggletext renders correctly", () => {
 
 	it("toggletext renders when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
-		const wrapper = mount(
+		wrapper = mount(
 			<Toggletext
 				store={controller.getStore()}
 				control={control}
@@ -167,7 +172,7 @@ describe("Toggletext renders correctly", () => {
 			type: "warning",
 			text: "bad checkbox value"
 		});
-		const wrapper = mount(
+		wrapper = mount(
 			<Toggletext
 				store={controller.getStore()}
 				control={control}
@@ -187,6 +192,10 @@ describe("toggletext classnames appear correctly", () => {
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(toggletextParamDef);
 		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
 	});
 
 	it("toggletext should have custom classname defined", () => {

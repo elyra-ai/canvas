@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -155,12 +155,7 @@ export default class APIPipeline {
 	}
 
 	isEmpty() {
-		if (this.getNodes() && this.getNodes().length === 0 &&
-				this.getComments() && this.getComments().length === 0 &&
-				this.getLinks() && this.getLinks().length === 0) {
-			return true;
-		}
-		return false;
+		return this.store.isEmpty(this.pipelineId);
 	}
 
 	getObject(objId) {
@@ -1010,6 +1005,7 @@ export default class APIPipeline {
 
 	addComment(data) {
 		this.store.dispatch({ type: "ADD_COMMENT", data: data, pipelineId: this.pipelineId });
+		this.store.dispatch({ type: "SHOW_COMMENTS" });
 	}
 
 	// Returns a position for a new comment added by clicking the 'add comment'
@@ -1237,6 +1233,10 @@ export default class APIPipeline {
 
 	addLink(link) {
 		this.store.dispatch({ type: "ADD_LINK", data: link, pipelineId: this.pipelineId });
+	}
+
+	setLinks(linkList) {
+		this.store.dispatch({ type: "SET_LINKS", data: linkList, pipelineId: this.pipelineId });
 	}
 
 	getLinks() {

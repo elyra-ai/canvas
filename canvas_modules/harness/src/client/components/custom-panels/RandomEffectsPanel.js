@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import { isEqual } from "lodash";
 import CustomEffectsCtrl from "../ctrl/CustomEffectsCtrl.jsx";
-import { Dropdown, Button } from "carbon-components-react";
+import { Dropdown, Button } from "@carbon/react";
 
 class RandomEffectsPanel {
 	static id() {
@@ -314,7 +314,7 @@ class RandomEffectsPanel {
 	makeButtonPanel() {
 		const prevButton = (<Button
 			type="button"
-			size="small"
+			size="sm"
 			kind="ghost"
 			onClick={this.previousEffect}
 			disabled={this.arrayIndex === 0}
@@ -324,13 +324,13 @@ class RandomEffectsPanel {
 		const propertyValue = this.controller.getPropertyValue({ name: "random_effects_list" });
 		const length = propertyValue ? propertyValue.length : 1;
 		const atEnd = this.arrayIndex === length - 1;
-		const hasIntercept = propertyValue ? propertyValue[this.arrayIndex][1] : false;
-		const effects = propertyValue ? propertyValue[this.arrayIndex][0] : null;
+		const hasIntercept = propertyValue && propertyValue[this.arrayIndex] ? propertyValue[this.arrayIndex][1] : false;
+		const effects = propertyValue && propertyValue[this.arrayIndex] ? propertyValue[this.arrayIndex][0] : null;
 		const effectsLen = effects ? effects.length : 0;
 		const disableNext = atEnd && !(hasIntercept || effectsLen);
 		const nextButton = (<Button
 			type="button"
-			size="small"
+			size="sm"
 			kind="ghost"
 			onClick={this.nextEffect}
 			disabled={disableNext}

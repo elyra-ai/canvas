@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,21 +76,37 @@ module.exports = function(grunt) {
 					flatten: false,
 					cwd: "./node_modules/@elyra/canvas/dist/styles",
 					src: ["common-canvas*.css"],
-					dest: ".build"
-				},
-				{
-					expand: true,
-					flatten: false,
-					cwd: "./node_modules/codemirror/",
-					src: ["lib/codemirror.css", "addon/hint/show-hint.css"],
-					dest: ".build/codemirror"
+					dest: ".build/css/common-canvas"
 				},
 				{
 					expand: true,
 					flatten: false,
 					cwd: "./node_modules/react-virtualized/",
 					src: ["styles.css"],
-					dest: ".build/react-virtualized"
+					dest: ".build/css/react-virtualized"
+				},
+				{
+					expand: true,
+					flatten: false,
+					cwd: "./node_modules/@carbon/charts-react/dist",
+					src: ["styles.min.css"],
+					dest: ".build/css/@carbon/charts-react"
+				}]
+			}
+		},
+		sass: {
+			dist: {
+				options: {
+					loadPath: [".", "node_modules"],
+					style: "compressed"
+				},
+				files: [{
+					expand: true,
+					cwd: "./assets/styles",
+					src: ["*.scss"],
+					dest: ".build/css",
+					ext: ".css",
+					noCache: true
 				}]
 			}
 		},
@@ -99,6 +115,7 @@ module.exports = function(grunt) {
 		}
 	});
 
+	grunt.loadNpmTasks("grunt-contrib-sass");
 	grunt.loadNpmTasks("grunt-contrib-clean");
 	grunt.loadNpmTasks("grunt-eslint");
 	grunt.loadNpmTasks("grunt-jsonlint");
@@ -107,7 +124,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-contrib-copy");
 	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint"]);
 
-	var buildTasks = ["clean", "lint", "copy:graphics", "copy:styleguide", "copy:fonts"];
+	var buildTasks = ["clean", "lint", "sass", "copy:graphics", "copy:styleguide", "copy:fonts"];
 	if (IS_PRODUCTION) {
 		buildTasks = buildTasks.concat(["webpack"]);
 	}

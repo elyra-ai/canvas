@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,16 +23,18 @@ const webpack = require("webpack");
 const babelOptions = require("./scripts/babel/babelOptions").babelOptions;
 const constants = require("./lib/constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 // Globals
 
 // Entry & Output files ------------------------------------------------------------>
 
 const entry = [
-	"react-hot-loader/patch",
 	"webpack-hot-middleware/client",
 	"@babel/polyfill",
-	"./src/client/index.js"
+	"./src/client/index.js",
+	"../common-canvas/src/themes/light.scss",
+	"./assets/styles/harness.scss"
 ];
 
 
@@ -47,21 +49,27 @@ const output = {
 };
 
 
-// Loaders ------------------------------------------------------------>
-babelOptions.plugins.push("react-hot-loader/babel"); // needed for HMR support
-
 const rules = [
 	{
 		test: /\.js(x?)$/,
 		loader: "babel-loader",
 		exclude: /node_modules/,
-		query: babelOptions
+		options: babelOptions
 	},
 	{
 		test: /\.s*css$/,
 		use: [
-			{ loader: "style-loader" },
-			{ loader: "css-loader", options: { sourceMap: true, url: false } },
+			{ loader: "style-loader",
+				options: {
+					esModule: false
+				}
+			},
+			{ loader: "css-loader",
+				options: {
+					sourceMap: true,
+					url: false
+				}
+			},
 			{ loader: "postcss-loader",
 				options: {
 					postcssOptions: {
@@ -81,7 +89,9 @@ const rules = [
 	},
 	{
 		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
-		loader: "file-loader?name=graphics/[hash].[ext]"
+		use: [
+			"file-loader?name=graphics/[contenthash].[ext]",
+		],
 	}
 ];
 
@@ -90,8 +100,7 @@ const rules = [
 
 // Plugins ------------------------------------------------------------>
 
-var plugins = [
-	new webpack.optimize.OccurrenceOrderPlugin(),
+const plugins = [
 	new webpack.NoEmitOnErrorsPlugin(),
 	// Generates an `index.html` file with the <script> injected.
 	new HtmlWebpackPlugin({
@@ -103,7 +112,8 @@ var plugins = [
 	new webpack.SourceMapDevToolPlugin({
 		module: true,
 		columns: false
-	})
+	}),
+	new ReactRefreshWebpackPlugin(),
 ];
 
 // Exports ------------------------------------------------------------>
@@ -112,7 +122,6 @@ module.exports = {
 	mode: "development",
 	devtool: false,
 	entry: entry,
-	cache: true,
 	resolve: {
 		modules: [
 			__dirname,
@@ -120,7 +129,7 @@ module.exports = {
 		],
 		alias: {
 			"react": "node_modules/react",
-			"react-dom": "node_modules/@hot-loader/react-dom",
+			"react-dom": "node_modules/react-dom",
 			"react-redux": "node_modules/react-redux",
 			"react-intl": "node_modules/react-intl",
 			"common-canvas": "src/common-canvas-dev.js"

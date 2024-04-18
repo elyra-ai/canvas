@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ import React from "react";
 import { expect } from "chai";
 import Controller from "./../../../src/common-properties/properties-controller";
 import Checkbox from "./../../../src/common-properties/controls/checkbox";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import propertyUtils from "../../_utils_/property-utils";
 import checkboxParamDef from "../../test_resources/paramDefs/checkbox_paramDef.json";
 
@@ -154,7 +154,7 @@ describe("checkbox control tests", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkbox']");
+		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkbox'] > div");
 		expect(checkboxWrapper.hasClass("hide")).to.equal(true);
 	});
 	it("checkbox renders correctly in a table", () => {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@
  */
 
 import { expect } from "chai";
+import { propertyOf } from "lodash";
 import * as PropertyUtils from "./../../../src/common-properties/util/property-utils.js";
 import testUtils from "./../../_utils_/property-utils";
 import Controller from "./../../../src/common-properties/properties-controller";
 import propertyUtils from "./../../_utils_/property-utils";
 import structureTableParamDef from "./../../test_resources/paramDefs/structuretable_paramDef.json";
-
+import convertValuesDataTypesParamDef from "./../../test_resources/paramDefs/convertValueDataTypes_paramDef.json";
 
 describe("dynamic text with expressions", () => {
 	const controller = new Controller();
@@ -333,5 +334,61 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 
 		actual = PropertyUtils.convertArrayStructureToObject(true, subControlObj, nestedStructuresArray);
 		expect(actual).to.eql(currentValues);
+	});
+});
+
+describe("convertValueDataTypestests", () => {
+	const controller = new Controller();
+	controller.setParamDef(convertValuesDataTypesParamDef);
+
+	const expectedValues = {
+		// eslint-disable-next-line max-len
+		"readonly_text": "This example parameterDef has currentParameters that are in the incorrect data type as defined in the paramter definition. There will be errors on the console where prop checks fail. ",
+		"string_value": "This is a string",
+		"string_value_convert": "true",
+		"integer_value": 0,
+		"integer_value_convert": 0,
+		"double_value": 1.25,
+		"double_value_convert": 1.25,
+		"boolean_value": true,
+		"boolean_value_convert": false,
+		"null_value": null,
+		"time_value": "05:45:09",
+		"timestamp_value": -1847548800000,
+		"dropdown_value": "true",
+		"list_value": ["list item 1", "true", "3"],
+		"table_value": [["Age", "age", ""], ["BP", "BP-1", "number"]]
+	};
+
+	it("convertValueDataTypes correctly converts currentParameters data types to what is defined in parameter definitions", () => {
+		const initialValues = propertyOf(convertValuesDataTypesParamDef)("current_parameters");
+		const controls = controller.getControls();
+
+		const actualValues = PropertyUtils.convertValueDataTypes(initialValues, controls);
+		expect(actualValues).to.eql(expectedValues);
+	});
+
+	it("convertValueDataTypes correctly converts currentParameters data types when setting form", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(convertValuesDataTypesParamDef, { convertValueDataTypes: true });
+		const controller2 = renderedObject.controller;
+
+		const expected = Object.assign({}, expectedValues);
+		expected.table_value = [
+			["Age", "age", null], // Invalid option in dropdown will default to null
+			["BP", "BP-1", "number"]
+		];
+
+		const actualValues = controller2.getPropertyValues();
+		expect(actualValues).to.eql(expected);
+	});
+
+	it("convertValueDataTypes correctly handles currentParameters where control is not defined", () => {
+		const initialValues = propertyOf(convertValuesDataTypesParamDef)("current_parameters");
+		initialValues.missingControl = "no control definition";
+		const controls = controller.getControls();
+
+		const actualValues = PropertyUtils.convertValueDataTypes(initialValues, controls);
+		const expected = Object.assign({}, expectedValues, { missingControl: "no control definition" });
+		expect(actualValues).to.eql(expected);
 	});
 });

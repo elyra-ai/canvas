@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@
 			margin: $spacing-01;
 
 			&[disabled] {
-				fill: $disabled-02;
+				fill: $button-disabled;
 			}
 		}
 	}
@@ -90,13 +90,32 @@
 			}
 		}
 	}
+
+	// This only happens when all rows of the table are filtered. The field-picker should never be empty elsewise
+	.properties-ft-empty-table {
+		display: none;
+	}
 }
 
 // This is for field-picker in properties-modal, containerType="Modal"
-.properties-modal, .properties-tearsheet-panel.bx--modal {
+.properties-modal {
 	.properties-fp-table {
+		padding-bottom: $spacing-06;
+		margin-bottom: $spacing-10; // Accommodate footer buttons
+
 		.properties-fp-top-row {
-			display: flex;
+			justify-content: flex-end;
+		}
+	}
+}
+
+// This is for field-picker in tearsheet, containerType="Tearsheet"
+.properties-tearsheet-panel.cds--modal {
+	.properties-fp-table {
+		border-top: 1px solid $layer-accent-01;
+		padding: $spacing-05;
+
+		.properties-fp-top-row {
 			justify-content: flex-end;
 		}
 

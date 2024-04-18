@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,17 +41,19 @@ export default class ContextMenuWrapper extends React.Component {
 	// which is specified in this.props.contextMenuPos object.
 	getCanvasRect() {
 		const containingDiv = document.getElementById(this.props.containingDivId);
-		const clientRect = containingDiv.getBoundingClientRect();
-		const canvasRect = {
-			top: 0,
-			bottom: clientRect.bottom - clientRect.top,
-			left: 0,
-			right: clientRect.right - clientRect.left,
-			height: clientRect.height,
-			width: clientRect.width
-		};
-
-		return canvasRect;
+		if (containingDiv) {
+			const clientRect = containingDiv.getBoundingClientRect();
+			return {
+				top: 0,
+				bottom: clientRect.bottom - clientRect.top,
+				left: 0,
+				right: clientRect.right - clientRect.left,
+				height: clientRect.height,
+				width: clientRect.width
+			};
+		}
+		// Assist Jests tests to run when containingDiv is not available.
+		return { top: 0, bottom: 200, left: 0, right: 50, height: 200, width: 50 };
 	}
 
 	handleClickOutside(e) {

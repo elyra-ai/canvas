@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { Tabs, Tab } from "carbon-components-react";
+import { Tabs, Tab, TabList, TabPanel, TabPanels } from "@carbon/react";
 import { getDataId } from "./../../util/control-utils";
-import { STATES } from "./../../constants/constants.js";
+import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
+import { v4 as uuid4 } from "uuid";
+import { formatMessage } from "./../../util/property-utils";
 
 class Subtabs extends React.Component {
 	constructor(props) {
@@ -27,6 +29,7 @@ class Subtabs extends React.Component {
 		this.state = {
 			activeTabId: ""
 		};
+		this.uuid = uuid4();
 	}
 
 	onClick(tabId) {
@@ -34,10 +37,12 @@ class Subtabs extends React.Component {
 	}
 
 	render() {
-		const subTabs = [];
+		const subTabLists = [];
+		const subTabPanels = [];
 		let activeTab = 0;
 		let tabIdx = 0;
 		const className = this.props.className ? this.props.className : "";
+		const tabListAriaLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.SUBTABS_TABLIST_LABEL);
 		for (let i = 0; i < this.props.tabs.length; i++) {
 			const tab = this.props.tabs[i];
 			// TODO this might not work once we don't rerender on each change
@@ -48,18 +53,23 @@ class Subtabs extends React.Component {
 					activeTab = tabIdx;
 				}
 
-				subTabs.push(
+				subTabLists.push(
 					<Tab
-						key={"subtabs.tab." + i}
+						key={`subtabs.tab.${i}-${this.uuid}`}
 						disabled={panelState === STATES.DISABLED}
-						className="properties-subtab"
-						tabIndex={tabIdx}
-						label={tab.text}
+						className={classNames("properties-subtab", { "properties-leftnav-subtab-item": this.props.leftnav })}
+						title={tab.text}
 						onClick={this.onClick.bind(this, tab.group)}
 						data-id={getDataId({ name: tab.group })}
 					>
-						{subPanelItems}
+						{tab.text}
 					</Tab>
+				);
+
+				subTabPanels.push(
+					<TabPanel key={`subtabs.tab.${i}-${this.uuid}`} className="properties-subtab-panel">
+						{subPanelItems}
+					</TabPanel>
 				);
 				tabIdx++;
 			}
@@ -70,11 +80,20 @@ class Subtabs extends React.Component {
 					"properties-sub-tab-container",
 					{ vertical: !this.props.rightFlyout },
 					{ "properties-control-nested-panel": this.props.nestedPanel },
+					{ "properties-leftnav-container": this.props.leftnav },
 					className
 				)}
 			>
-				<Tabs className="properties-subtabs" selected={activeTab} light={this.props.controller.getLight()}>
-					{subTabs}
+				<Tabs
+					selectedIndex={activeTab}
+					light={this.props.controller.getLight()}
+				>
+					<TabList className={classNames("properties-subtabs", { "properties-leftnav-subtabs": this.props.leftnav })} aria-label={tabListAriaLabel}>
+						{subTabLists}
+					</TabList>
+					<TabPanels>
+						{subTabPanels}
+					</TabPanels>
 				</Tabs>
 			</div>
 		);
@@ -87,7 +106,12 @@ Subtabs.propTypes = {
 	rightFlyout: PropTypes.bool,
 	genUIItem: PropTypes.func.isRequired,
 	className: PropTypes.string,
-	nestedPanel: PropTypes.bool
+	nestedPanel: PropTypes.bool,
+	leftnav: PropTypes.bool
+};
+
+Subtabs.defaultProps = {
+	leftnav: false
 };
 
 export default Subtabs;

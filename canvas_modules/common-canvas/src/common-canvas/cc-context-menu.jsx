@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +17,26 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { isEmpty } from "lodash";
 import ContextMenuWrapper from "../context-menu/context-menu-wrapper.jsx";
 import Logger from "../logging/canvas-logger.js";
 
 class CommonCanvasContextMenu extends React.Component {
 	constructor(props) {
 		super(props);
-		this.logger = new Logger("CC-ContextMenu");
+		this.logger = new Logger("CC-Context-Menu");
 	}
 
 	render() {
 		this.logger.log("render");
 
 		let contextMenu = null;
-		if (!isEmpty(this.props.contextMenuDef)) {
+		if (this.props.showContextMenu) {
 			contextMenu = (
 				<ContextMenuWrapper
 					containingDivId={this.props.containingDivId}
 					contextMenuDef={this.props.contextMenuDef}
 					contextMenuActionHandler={this.props.canvasController.contextMenuActionHandler}
-					contextMenuPos={this.props.canvasController.getContextMenuPos()}
+					contextMenuPos={this.props.contextMenuPos}
 					closeContextMenu={this.props.canvasController.closeContextMenu}
 					stopPropagation
 				/>
@@ -53,11 +52,15 @@ CommonCanvasContextMenu.propTypes = {
 	containingDivId: PropTypes.string.isRequired,
 
 	// Provided by redux
-	contextMenuDef: PropTypes.array.isRequired
+	contextMenuDef: PropTypes.array.isRequired,
+	contextMenuPos: PropTypes.object.isRequired,
+	showContextMenu: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
-	contextMenuDef: state.contextmenu.menuDef
+	contextMenuDef: state.contextmenu.menuDef,
+	contextMenuPos: state.contextmenu.source.cmPos || { x: 0, y: 0 },
+	showContextMenu: state.contextmenu.isOpen
 });
 
 export default connect(mapStateToProps)(CommonCanvasContextMenu);

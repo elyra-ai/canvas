@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { setActiveTab } from "./../../actions";
-import { Tab, Tabs } from "carbon-components-react";
+import { Tab, Tabs, TabList, TabPanel, Link, TabPanels } from "@carbon/react";
 import * as PropertyUtil from "./../../util/property-utils";
-import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE, STATES } from "./../../constants/constants";
-import { cloneDeep, isEmpty, sortBy, get } from "lodash";
+import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE, STATES, CATEGORY_VIEW } from "./../../constants/constants";
+import { cloneDeep, isEmpty, sortBy, get, filter } from "lodash";
 import logger from "./../../../../utils/logger";
 import classNames from "classnames";
 
@@ -87,6 +87,9 @@ class EditorForm extends React.Component {
 	}
 
 	_getMessageCountForCategory(tab) {
+		if (!this.props.showAlertsTab) {
+			return null;
+		}
 		if (tab.group === ALERT_TAB_GROUP) {
 			return " (" + this.messages.length + ")";
 		}
@@ -131,16 +134,21 @@ class EditorForm extends React.Component {
 
 	genPrimaryTabs(key, tabs, propertyId, indexof) {
 		const tabContent = [];
+		const tabLists = [];
+		const tabPanels = [];
 		let hasAlertsTab = false;
 		let modalSelected = 0;
+		let hiddenTabs = 0;
 		const nonTearsheetTabs = tabs.filter((t) => t.content.itemType !== ItemType.TEARSHEET);
 		const tearsheetTabs = tabs.filter((t) => t.content.itemType === ItemType.TEARSHEET);
 		const totalTabs = tearsheetTabs.concat(nonTearsheetTabs);
+		const tabListAriaLabel = PropertyUtil.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.EDITORFORM_TABLIST_LABEL);
 
 		for (let i = 0; i < totalTabs.length; i++) {
 			const tab = totalTabs[i];
 			const tabState = this.props.controller.getPanelState({ name: tab.group });
 			if (tabState === STATES.HIDDEN) {
+				hiddenTabs++;
 				continue;
 			}
 			if (i === 0 && tab.group === ALERT_TAB_GROUP) {
@@ -161,7 +169,7 @@ class EditorForm extends React.Component {
 					</div>
 				);
 			}
-			if (this.props.rightFlyout) {
+			if (this.props.rightFlyout && this.props.categoryView !== CATEGORY_VIEW.TABS) {
 				let panelArrow = <Icon type={CARBON_ICONS.CHEVRONARROWS.DOWN} className="properties-category-caret-down" />;
 				let categoryOpen = false;
 				if (this.props.activeTab === tab.group) {
@@ -170,7 +178,7 @@ class EditorForm extends React.Component {
 				}
 				if (tab.content.itemType !== ItemType.TEARSHEET && nonTearsheetTabs.length === 1) {
 					tabContent.push(
-						<div key={"cat." + key} className="properties-category">
+						<div key={"cat." + key} className="properties-single-category">
 							{panelItems}
 							{additionalComponent}
 						</div>
@@ -195,25 +203,32 @@ class EditorForm extends React.Component {
 				}
 			} else {
 				if (this.props.activeTab === tab.group) {
-					modalSelected = i;
+					modalSelected = i - hiddenTabs; // Adjust the Carbon Tabs index to accomodate hidden tabs
 				}
-				tabContent.push(
+				tabLists.push(
 					<Tab
-						key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
-						tabIndex={i}
-						label={tab.text}
-						title={tab.text}
+						key={tab.group}
+						title={filter([tab.text, this._getMessageCountForCategory(tab)]).join("")}
 						className={classNames({ "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						onClick={this._modalTabsOnClick.bind(this, tab.group)}
 					>
+						{filter([tab.text, this._getMessageCountForCategory(tab)]).join("")}
+					</Tab>
+				);
+
+				tabPanels.push(
+					<TabPanel key={tab.group} className={classNames("properties-primary-tab-panel",
+						{ "tearsheet-container": this.props.controller.isTearsheetContainer() },
+						{ "right-flyout-tabs-view": this.props.rightFlyout && this.props.categoryView === CATEGORY_VIEW.TABS })}
+					>
 						{panelItems}
 						{additionalComponent}
-					</Tab>
+					</TabPanel>
 				);
 			}
 		}
 
-		if (this.props.rightFlyout) {
+		if (this.props.rightFlyout && this.props.categoryView !== CATEGORY_VIEW.TABS) {
 			return (
 				<div key={"cat." + key} className="properties-categories">
 					{tabContent}
@@ -221,8 +236,16 @@ class EditorForm extends React.Component {
 			);
 		}
 		return (
-			<Tabs key={"tab." + key} className="properties-primaryTabs" selected={modalSelected} light={this.props.controller.getLight()}>
-				{tabContent}
+			<Tabs key={"tab." + key}
+				selectedIndex={modalSelected}
+				light={this.props.controller.getLight()}
+			>
+				<TabList className="properties-primaryTabs" aria-label={tabListAriaLabel}>
+					{tabLists}
+				</TabList>
+				<TabPanels>
+					{tabPanels}
+				</TabPanels>
 			</Tabs>
 		);
 	}
@@ -333,9 +356,9 @@ class EditorForm extends React.Component {
 				icon = <Icon type={CONDITION_MESSAGE_TYPE.ERROR} />;
 			}
 			text = (
-				<a className="properties-link-text" onClick={this._handleMessageClick.bind(this, uiItem.controlId)}>
+				<Link className="properties-link-text" onClick={this._handleMessageClick.bind(this, uiItem.controlId)} >
 					{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}
-				</a>);
+				</Link>);
 			return <div key={"link-text." + key} className={textClass} >{icon}{text}</div>;
 		case ("hSeparator"):
 			return <hr key={"h-separator." + key} className="properties-h-separator" />;
@@ -343,6 +366,7 @@ class EditorForm extends React.Component {
 		case ("tearsheet"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("subTabs"):
+			// All Subtabs will become a LeftNav if displayed inside a Tearsheet container
 			return (<Subtabs key={"subtabs." + key}
 				tabs={uiItem.tabs}
 				className={uiItem.className}
@@ -350,6 +374,7 @@ class EditorForm extends React.Component {
 				rightFlyout={this.props.rightFlyout}
 				genUIItem={this.genUIItem}
 				nestedPanel={uiItem.nestedPanel}
+				leftnav={this.props.controller.isTearsheetContainer()}
 			/>);
 		case ("primaryTabs"):
 			return this.genPrimaryTabs(key, uiItem.tabs, inPropertyId, indexof);
@@ -599,7 +624,7 @@ class EditorForm extends React.Component {
 
 	render() {
 		let uiItems = this.props.controller.getUiItems();
-		if (!isEmpty(this.messages) && uiItems[0].itemType === "primaryTabs" && uiItems[0].tabs && uiItems[0].tabs.length > 1) {
+		if (this.props.showAlertsTab && !isEmpty(this.messages) && uiItems[0].itemType === "primaryTabs" && uiItems[0].tabs && uiItems[0].tabs.length > 1) {
 			// create a new copy for uiItems object so that alerts are not added multiple times
 			uiItems = cloneDeep(uiItems);
 			uiItems[0].tabs.unshift(this.genAlertsTab(this.messages)); // add alerts tab to the beginning of the tabs array
@@ -607,28 +632,45 @@ class EditorForm extends React.Component {
 
 		let content = this.genUIContent(uiItems);
 		let wideFly = <div />;
+		let stackedTearsheet;
 
 		const form = this.props.controller.getForm();
 		const title = PropertyUtil.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_LABEL) + " " + form.label;
 
-		if (this.props.rightFlyout && this.state.showFieldPicker) {
-			wideFly = (<WideFlyout
-				showPropertiesButtons={false}
-				show
-				title={title}
-				light={this.props.controller.getLight()}
-			>
-				{this.fieldPicker(title)}
-			</WideFlyout>);
-		} else if (this.state.showFieldPicker) {
-			content = this.fieldPicker(title);
+		if (this.state.showFieldPicker) {
+			if (this.props.rightFlyout) {
+				wideFly = (<WideFlyout
+					showPropertiesButtons={false}
+					show
+					title={title}
+					light={this.props.controller.getLight()}
+				>
+					{this.fieldPicker(title)}
+				</WideFlyout>);
+			} else if (this.props.controller.isTearsheetContainer()) {
+				stackedTearsheet = (<TearSheet
+					open
+					stacked
+					tearsheet={{
+						title: title,
+						content: this.fieldPicker()
+					}}
+				/>);
+			} else {
+				content = this.fieldPicker(title);
+			}
 		}
 
 		return (
-			<div className="properties-editor-form">
+			<div className={classNames("properties-editor-form",
+				{ "tearsheet-container": this.props.controller.isTearsheetContainer() },
+				{ "right-flyout-tabs-view": this.props.rightFlyout && this.props.categoryView === CATEGORY_VIEW.TABS },
+				{ "field-picker": this.state.showFieldPicker })}
+			>
 				{content}
 				{wideFly}
+				{stackedTearsheet}
 			</div>
 		);
 	}
@@ -640,6 +682,8 @@ EditorForm.propTypes = {
 	showPropertiesButtons: PropTypes.func,
 	customPanels: PropTypes.array,
 	rightFlyout: PropTypes.bool,
+	categoryView: PropTypes.oneOf([CATEGORY_VIEW.ACCORDIONS, CATEGORY_VIEW.TABS]),
+	showAlertsTab: PropTypes.bool,
 	activeTab: PropTypes.string, // set by redux
 	setActiveTab: PropTypes.func, // set by redux
 	messages: PropTypes.array // set by redux

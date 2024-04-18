@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { TextInput } from "carbon-components-react";
+import { TextInput } from "@carbon/react";
 import ReadonlyControl from "./../readonly";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES } from "./../../constants/constants.js";
 import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
-import Tooltip from "./../../../tooltip/tooltip.jsx";
+import TruncatedContentTooltip from "./../../components/truncated-content-tooltip";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
+
 
 const arrayValueDelimiter = ", ";
 
@@ -35,7 +36,8 @@ class TextfieldControl extends React.Component {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
 		this.charLimit = ControlUtils.getCharLimit(props.control, props.controller.getMaxLengthForSingleLineControls());
-		this.id = ControlUtils.getControlId(props.propertyId);
+		this.uuid = uuid4();
+		this.id = ControlUtils.getControlId(props.propertyId, this.uuid);
 		this.isList = false;
 		if (this.props.control.valueDef) {
 			if (this.props.control.valueDef.isList) {
@@ -93,41 +95,38 @@ class TextfieldControl extends React.Component {
 			</div>);
 		} else {
 			const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
-			textInput = (<TextInput
-				{...validationProps}
-				autoComplete={this.props.tableControl === true ? "off" : "on"}
-				id={this.id}
-				disabled={ this.props.state === STATES.DISABLED}
-				placeholder={this.props.control.additionalText}
-				onChange={this.handleChange.bind(this)}
-				value={value}
-				labelText={this.props.controlItem}
-				hideLabel={this.props.tableControl}
-				light={this.props.controller.getLight() && !this.props.control.light}
-			/>);
+			textInput = (
+				<TextInput
+					{...validationProps}
+					autoComplete={this.props.tableControl === true ? "off" : "on"}
+					id={this.id}
+					disabled={ this.props.state === STATES.DISABLED}
+					placeholder={this.props.control.additionalText}
+					onChange={this.handleChange.bind(this)}
+					value={value}
+					labelText={this.props.controlItem}
+					hideLabel={this.props.tableControl}
+					ref={(ref) => (this.textInputRef = ref)}
+				/>
+			);
 		}
 
 		let display = textInput;
 		if (this.props.tableControl) {
-			const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
+			const tooltipProps = {};
+			if (this.textInputRef) {
+				tooltipProps.truncatedRef = this.textInputRef;
+			}
 			let disabled = true;
 			if (value && this.props.state !== STATES.DISABLED) {
 				disabled = false;
 			}
-			const tooltip = (
-				<div className="properties-tooltips">
-					{String(value)}
-				</div>
-			);
-			display = (<Tooltip
-				id={tooltipId}
-				tip={tooltip}
-				direction="bottom"
-				className="properties-tooltips"
-				disable={disabled}
-			>
-				{textInput}
-			</Tooltip>);
+			display = (<TruncatedContentTooltip
+				{...tooltipProps}
+				content={textInput}
+				tooltipText={value}
+				disabled={disabled}
+			/>);
 		}
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>

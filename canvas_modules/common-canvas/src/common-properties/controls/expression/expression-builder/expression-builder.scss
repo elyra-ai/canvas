@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ $operator-margin: 50%;
 		width: $operator-width;
 		padding: 0;
 		.properties-operator-button-label {
-			margin: 0 auto;
+			margin: auto;
 		}
 	}
 }
@@ -123,10 +123,10 @@ $operator-margin: 50%;
 	padding-bottom: $spacing-06;
 }
 .properties-expression-table-dropdown-header {
-	@include carbon--type-style("label-01");
+	@include type-style("label-01");
 	padding-bottom: $spacing-02;
 }
 
-.properties-primaryTabs .bx--tabs-trigger {
+.properties-primaryTabs .cds--tabs-trigger {
 	margin-bottom: 5px;
 }

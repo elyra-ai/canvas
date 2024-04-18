@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Button, Dropdown, RadioButton } from "carbon-components-react";
-import { WarningFilled16, ErrorFilled16 } from "@carbon/icons-react";
+import { Button, Dropdown, RadioButton } from "@carbon/react";
+import { WarningFilled, ErrorFilled } from "@carbon/react/icons";
 import { connect } from "react-redux";
 import { isEqual } from "lodash";
 
@@ -76,6 +76,8 @@ class CustomEffectsCtrl extends React.Component {
 	}
 
 	componentDidMount() {
+		this.controller.setAddRemoveRows(this.SOURCE_LIST_ID, false);
+		this.controller.setAddRemoveRows(this.UI_LIST_ID, false);
 		this.sourceListCtrl = this.makeSourceList();
 		this.updateEffectsList();
 		this.currentTermValue = this.emptyEffect();
@@ -243,7 +245,7 @@ class CustomEffectsCtrl extends React.Component {
 			<br />
 			<Button
 				type="button"
-				size="small"
+				size="sm"
 				kind="secondary"
 				onClick={this.moveSelectedFields}
 				disabled={this.state.buildNested}
@@ -462,7 +464,7 @@ class CustomEffectsCtrl extends React.Component {
 		const targetRows = this.controller.getSelectedRows(this.UI_LIST_ID);
 		const downButton = (<Button
 			type="button"
-			size="small"
+			size="sm"
 			kind="secondary"
 			onClick={this.copySourceFieldToTerm}
 			disabled={this.state.buildNested === false || this.termState === "term" || sourceRows.length !== 1}
@@ -471,7 +473,7 @@ class CustomEffectsCtrl extends React.Component {
 		</Button>);
 		const byButton = (<Button
 			type="button"
-			size="small"
+			size="sm"
 			kind="secondary"
 			onClick={this.addByToTerm}
 			disabled={this.state.buildNested === false || this.termState.startsWith("field")}
@@ -480,7 +482,7 @@ class CustomEffectsCtrl extends React.Component {
 		</Button>);
 		const withinButton = (<Button
 			type="button"
-			size="small"
+			size="sm"
 			kind="secondary"
 			onClick={this.addWithinToTerm}
 			disabled={this.state.buildNested === false || this.termState.startsWith("field")}
@@ -489,7 +491,7 @@ class CustomEffectsCtrl extends React.Component {
 		</Button>);
 		const clearButton = (<Button
 			type="button"
-			size="small"
+			size="sm"
 			kind="secondary"
 			onClick={this.clearTerm}
 			disabled={this.state.buildNested === false || this.state.currentTermString === ""}
@@ -498,7 +500,7 @@ class CustomEffectsCtrl extends React.Component {
 		</Button>);
 		const addButton = (<Button
 			type="button"
-			size="small"
+			size="sm"
 			kind="secondary"
 			onClick={this.addTerm}
 			disabled={this.state.buildNested === false ||
@@ -508,7 +510,7 @@ class CustomEffectsCtrl extends React.Component {
 		</Button>);
 		const removeButton = (<Button
 			type="button"
-			size="small"
+			size="sm"
 			kind="secondary"
 			onClick={this.removeTerms}
 			disabled={this.state.buildNested === false || targetRows.length === 0}
@@ -648,9 +650,9 @@ class CustomEffectsCtrl extends React.Component {
 		if (this.props.messageInfo && this.props.messageInfo.text) {
 			messageText = this.props.messageInfo.text;
 			if (this.props.messageInfo.type === "warning") {
-				icon = (<WarningFilled16 className="warning" />);
+				icon = (<WarningFilled className="warning" />);
 			} else if (this.props.messageInfo.type === "error") {
-				icon = (<ErrorFilled16 className="error" />);
+				icon = (<ErrorFilled className="error" />);
 			}
 		}
 		let visibility;

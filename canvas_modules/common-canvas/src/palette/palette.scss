@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 $palette-border-width: 1px;
-$palette-border-color: $ui-03;
+$palette-border-color: $layer-accent-01;
 $palette-search-container-height: 41px;
 
 //--------------------------------------------------------
@@ -27,7 +27,7 @@ $palette-search-container-height: 41px;
 	position: relative;
 	height: 100%;
 	padding-bottom: 5px;
-	background-color: $ui-01;
+	background-color: $layer-01;
 	-webkit-transition: 0.2s;
 	transition: 0.2s;
 	cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
@@ -63,27 +63,27 @@ $palette-search-container-height: 41px;
 	}
 
 	.palette-no-results-title {
-		@include carbon--type-style("body-short-01");
+		@include type-style("body-short-01");
 		width: 100%;
 		padding: 20px 20px 0;
 		text-align: center;
 	}
 
 	.palette-no-results-desc {
-		@include carbon--type-style("caption-01");
+		@include type-style("caption-01");
 		width: 100%;
 		padding: 0 20px;
 		text-align: center;
 	}
 
 	.palette-flyout-restrict-item {
-		@include carbon--type-style("helper-text-01");
+		@include type-style("helper-text-01");
 		width: 100%;
 		padding: $spacing-08 20px;
 	}
 
 	.palette-list-item-desc-button {
-		color: $link-01;
+		color: $link-primary;
 		cursor: pointer;
 		padding: 5px 0 0;
 	}
@@ -99,18 +99,24 @@ $palette-search-container-height: 41px;
 		/* This stops it being dragged incorrectly.*/
 		user-select: none;
 		width: 100%;
+		outline: none; // Turn outline off and use carbon style for focus below.
 
 		&:hover {
-			background-color: $ui-03;
+			background-color: $layer-accent-01;
+		}
+
+		&:focus {
+			border-color: $focus;
+			box-shadow: inset 0 0 0 2px $focus;
 		}
 
 		.palette-list-item-category-label {
-			@include carbon--type-style("caption-01");
+			@include type-style("caption-01");
 			width: 100%;
 			padding: $spacing-05 10px 0 58px;
 
 			& mark {
-				color: $interactive-01;
+				color: $button-primary;
 				background-color: $highlight;
 				font-weight: 500;
 			}
@@ -127,17 +133,17 @@ $palette-search-container-height: 41px;
 
 		.palette-list-item-icon {
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			color: $text-02;
+			color: $text-secondary;
 		}
 
 		.palette-list-item-text-div {
-			@include carbon--type-style("productive-heading-01");
+			@include type-style("productive-heading-01");
 			font-weight: 400;
 			padding: 0 10px;
 			width: calc(100% - 68px);
 			line-height: 1;
 			& mark {
-				color: $interactive-01;
+				color: $button-primary;
 				background-color: $highlight;
 				font-weight: 500;
 			}
@@ -145,24 +151,27 @@ $palette-search-container-height: 41px;
 
 		.palette-list-item-icon-warning {
 			transform: scale(1.5);
-			margin-left: 25px;
+			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
+			line-height: 46px;  /* Must be same as containing div height */
+			color: $text-secondary;
+			margin-left: 0;
 		}
 
 		.palette-list-item-description {
-			@include carbon--type-style("caption-01");
+			@include type-style("caption-01");
 			padding: 0 10px 0 58px;
 			word-break: break-word;
 			width: 100%; // Needed when the description is only one line long
 
 			& mark {
-				color: $interactive-01;
+				color: $button-primary;
 				background-color: $highlight;
 				font-weight: 500;
 			}
 		}
 
 		& .highlight {
-			background-color: $interactive-01;
+			background-color: $button-primary;
 		}
 
 		&.search-result {
@@ -187,27 +196,29 @@ $palette-search-container-height: 41px;
 	position: absolute;
 	overflow-x: hidden;
 	overflow-y: overlay;
-	li .bx--accordion__arrow {
-		margin-top: 15px;
+	li .cds--accordion__arrow {
+		margin: 15px;
 	}
-	.bx--accordion__item--active {
-		button {
-			border-bottom: $palette-border-width solid $palette-border-color;
-		}
-	}
-	.bx--accordion__item {
+	.cds--accordion__item {
 		border-top: 0;
+		&:last-child {
+			border-block-end: 1px solid $border-subtle-01;
+		}
 
-		.bx--accordion__heading {
+		.cds--accordion__heading {
 			padding: 0;
-			.bx--accordion__title {
+			.cds--accordion__title {
 				margin: 0;
 				padding: 0 0 0 11px;
 				height: 45px;
 			}
 		}
+
+		.cds--accordion__wrapper {
+			padding: 0;
+		}
 	}
-	li .bx--accordion__content {
+	li .cds--accordion__content {
 		padding: 0;
 	}
 }
@@ -249,7 +260,7 @@ $palette-search-container-height: 41px;
 .palette-flyout-category-item-icon {
 	width: 20px;  /* Not specifying height preserves the image's aspect ratio. */
 	margin-left: 5px;
-	fill: $icon-01;
+	fill: $icon-primary;
 	padding-top: 4px;
 }
 
@@ -272,18 +283,18 @@ $palette-search-container-height: 41px;
 }
 
 .palette-flyout-category-text-abbr {
-	line-height: 46px;  /* Must be same as containing div height */
+	line-height: 1.2;
 	margin-left: 0;
 }
 
 .palette-flyout-category-text-no-image {
-	line-height: 46px;  /* Must be same as containing div height */
-	margin-left: 16px;
+	line-height: 1.2;
+	margin-left: 10px;
 	width: 170px;
 }
 
 .palette-flyout-category-count {
-	line-height: 46px;  /* Must be same as containing div height */
+	line-height: 1.2;
 	padding-left: 5px;
 }
 
@@ -294,12 +305,12 @@ $palette-search-container-height: 41px;
 		overflow: hidden;
 		// Move the magnifying glass icon to be positioned over the category icons
 		// in the palette, as required from DUX review.
-		.bx--search-magnifier svg {
+		.cds--search-magnifier svg {
 			margin-left: 10px;
 		}
 
 		svg {
-			fill: $icon-01;
+			fill: $icon-primary;
 		}
 
 		// Position the search text to be directly over the category text in the
@@ -322,14 +333,14 @@ $palette-search-container-height: 41px;
 			margin-top: 4px;
 			border-bottom-width: 0;
 
-			&.bx--search-close::before {
+			&.cds--search-close::before {
 				content: none;
 			}
 		}
 	}
 }
 
-.palette-loading-category .bx--accordion__arrow {
+.palette-loading-category .cds--accordion__arrow {
 	display: none;
 }
 
@@ -367,7 +378,7 @@ $palette-search-container-height: 41px;
 		padding-left: 19px;
 
 		&:hover {
-			background-color: $ui-03;
+			background-color: $layer-accent-01;
 		}
 
 		.palette-list-item-icon-and-text {
@@ -381,7 +392,7 @@ $palette-search-container-height: 41px;
 		.palette-list-item-icon {
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
 			line-height: 46px;  /* Must be same as containing div height */
-			color: $text-02;
+			color: $text-secondary;
 			margin-left: 0;
 			margin-right: 10px;
 		}
@@ -401,65 +412,31 @@ $palette-search-container-height: 41px;
 
 		.palette-list-item-icon-warning {
 			transform: scale(1.5);
-			margin-left: 25px;
+			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
+			line-height: 46px;  /* Must be same as containing div height */
+			color: $text-secondary;
+			margin-left: 0;
+			margin-right: 10px;
 		}
 	}
 }
 
 .palette-dialog-topbar {
-	height: 40px;
-	padding: 10px;
-	background-color: $ui-03;
+	height: 41px;
+	background-color: $layer-accent-01;
 	border-bottom: $palette-border-width solid $palette-border-color;
-
-	.left-navbar {
-		height: 20px;
-		float: left;
-		vertical-align: middle;
-		/* Prevent elements from being selectable */
-		/* This stops it being dragged incorrectly.*/
-		user-select: none;
-	}
-
-	.right-navbar {
-		height: 20px;
-		float: right;
-		vertical-align: middle;
-	}
-
-	.secondary-action {
-		margin-left: 10px;
-		display: inline-block;
-		cursor: pointer;
-		width: 20px;
-	}
-
-	.close-icon svg {
-		fill: $interactive-02;
-	}
-
-	.palette-three-way-icon-div {
-		margin-left: 5px;
-		display: inline-block;
-		cursor: pointer;
-		width: 20px;
-		height: 20px;
-		/* Prevent elements from being selectable */
-		/* This stops it being dragged incorrectly.*/
-		user-select: none;
-	}
 }
 
 .palette-dialog-content {
 	height: 404px;  /* palette-div height - topbar height - 6 pixels (for hover zone to aid drag sizing)*/
 	display: flex;
-	background-color: $ui-01;
+	background-color: $layer-01;
 	border-bottom: $palette-border-width solid $palette-border-color;
 	border-right: $palette-border-width solid $palette-border-color;
 }
 
 .palette-dialog-categories {
-	background-color: $ui-03;
+	background-color: $layer-01;
 	width: 130px;
 	min-width: 130px; /* Set a min-width to ensure space for the scroll bar when it is displayed */
 	border-right: $palette-border-width solid $palette-border-color;
@@ -481,7 +458,7 @@ $palette-search-container-height: 41px;
 
 .palette-dialog-category-selected {
 	font-weight: 600;
-	border-color: $interactive-02;
+	border-color: $button-secondary;
 	border-width: 0 0 0 $palette-border-width;
 	border-style: solid;
 	width: 130px;
@@ -510,8 +487,8 @@ $palette-search-container-height: 41px;
 }
 
 .palette-dialog-grid-node-outer:hover {
-	border-color: $interactive-02;
-	color: $interactive-02;
+	border-color: $button-secondary;
+	color: $button-secondary;
 }
 
 .palette-dialog-grid-node-inner {

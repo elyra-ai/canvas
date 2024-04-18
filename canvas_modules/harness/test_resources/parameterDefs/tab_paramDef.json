@@ -28,7 +28,12 @@
     "fields_summary": [
       "Age",
       "Drug"
-    ]
+    ],
+    "readonly_double_subtabs": "If multiple subtabs are defined in a tearsheet, additional padding is required to avoid overlay.",
+    "readonly_nested_panel": "Tearsheet: Display subtabs in panel within group will result in additional padding.",
+    "readonly_primary_panel": "Tearsheet: Display subtabs in primary group will flush the leftnav to the footer buttons.",
+    "hideTab1": false,
+    "hideTab4": false
   },
   "parameters": [
     {
@@ -128,6 +133,26 @@
       "type": "array[string]",
       "role": "column",
       "required": true
+    },
+    {
+      "id": "readonly_double_subtabs",
+      "type": "string"
+    },
+    {
+      "id": "readonly_nested_panel",
+      "type": "string"
+    },
+    {
+      "id": "readonly_primary_panel",
+      "type": "string"
+    },
+    {
+      "id": "hideTab1",
+      "type": "boolean"
+    },
+    {
+      "id": "hideTab4",
+      "type": "boolean"
     }
   ],
   "uihints": {
@@ -262,6 +287,28 @@
         },
         "moveable_rows": true,
         "summary": true
+      },
+      {
+        "parameter_ref": "readonly_double_subtabs",
+        "label": {
+          "default": "Spacer text"
+        },
+        "separator": "before",
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "readonly_nested_panel",
+        "label": {
+          "default": "Subtabs in a panel within primary panel"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "readonly_primary_panel",
+        "label": {
+          "default": "Subtabs in primary panel"
+        },
+        "control": "readonly"
       }
     ],
     "action_info": [{
@@ -283,6 +330,13 @@
         "type": "panels",
         "class_name": "maintab-panel-class",
         "group_info": [
+          {
+            "id": "openTearsheet-action-panel",
+            "type": "actionPanel",
+            "action_refs": [
+              "openTearsheet"
+            ]
+          },
           {
             "id": "conditions",
             "type": "controls",
@@ -333,14 +387,93 @@
                   "fruit",
                   "other"
                 ]
+              },
+              {
+                "id": "nested-subtabs",
+                "label": {
+                  "default": "Nested subtabs"
+                },
+                "type": "subTabs",
+                "class_name": "subtab-panel-nested-class",
+                "group_info": [
+                  {
+                    "id": "range-fields-subtab1",
+                    "type": "controls",
+                    "class_name": "range-fields-subtab1-control-class",
+                    "label": {
+                      "default": "Range Fields"
+                    },
+                    "parameter_refs": [
+                      "fromValue",
+                      "toValue"
+                    ]
+                  },
+                  {
+                    "id": "fruit-subtab1",
+                    "label": {
+                      "default": "Fruit"
+                    },
+                    "type": "controls",
+                    "class_name": "fruit-subtab-control-class2",
+                    "parameter_refs": [
+                      "fruit",
+                      "other"
+                    ]
+                  },
+                  {
+                    "id": "nested-subtabs2",
+                    "label": {
+                      "default": "Nested subtabs2"
+                    },
+                    "type": "subTabs",
+                    "class_name": "subtab-panel-nested-class",
+                    "group_info": [
+                      {
+                        "id": "range-fields-subtab2",
+                        "type": "controls",
+                        "class_name": "range-fields-subtab2-control-class1",
+                        "label": {
+                          "default": "Range Fields"
+                        },
+                        "parameter_refs": [
+                          "fromValue",
+                          "toValue"
+                        ]
+                      },
+                      {
+                        "id": "table-subtab2",
+                        "label": {
+                          "default": "Table SubTab"
+                        },
+                        "type": "controls",
+                        "class_name": "table-subtab-control-class2",
+                        "parameter_refs": [
+                          "fields"
+                        ]
+                      },
+                      {
+                        "id": "fruit-subtab2",
+                        "label": {
+                          "default": "Fruit"
+                        },
+                        "type": "controls",
+                        "class_name": "fruit-subtab-control-class3",
+                        "parameter_refs": [
+                          "fruit",
+                          "other"
+                        ]
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
           {
-            "id": "openTearsheet-action-panel",
-            "type": "actionPanel",
-            "action_refs": [
-              "openTearsheet"
+            "id": "info-spacing",
+            "type": "controls",
+            "parameter_refs": [
+              "readonly_double_subtabs"
             ]
           },
           {
@@ -410,18 +543,19 @@
             "type": "subTabs",
             "group_info": [
               {
-                "id": "range-fields-subtab2",
+                "id": "range-fields-subtab22",
                 "type": "controls",
                 "label": {
                   "default": "Range Fields"
                 },
                 "parameter_refs": [
+                  "readonly_nested_panel",
                   "fromValue2",
                   "toValue2"
                 ]
               },
               {
-                "id": "table-subtab2",
+                "id": "table-subtab22",
                 "label": {
                   "default": "Table SubTab"
                 },
@@ -431,7 +565,7 @@
                 ]
               },
               {
-                "id": "fruit-subtab2",
+                "id": "fruit-subtab22",
                 "label": {
                   "default": "Fruit"
                 },
@@ -442,6 +576,157 @@
                 ]
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "Primary3",
+        "label": {
+          "default": "Tab Test3"
+        },
+        "type": "subTabs",
+        "group_info": [
+          {
+            "id": "tab-condition",
+            "type": "controls",
+            "label": {
+              "default": "Tab Conditions"
+            },
+            "parameter_refs": [
+              "hideTab1",
+              "hideTab4"
+            ]
+          },
+          {
+            "id": "range-fields-subtab3",
+            "type": "controls",
+            "label": {
+              "default": "Range Fields"
+            },
+            "parameter_refs": [
+              "readonly_primary_panel",
+              "fromValue2",
+              "toValue2"
+            ]
+          },
+          {
+            "id": "table-subtab3",
+            "label": {
+              "default": "Table SubTab"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "fields2"
+            ]
+          },
+          {
+            "id": "fruit-subtab3",
+            "label": {
+              "default": "Fruit"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "fruit2",
+              "other2"
+            ]
+          },
+          {
+            "id": "nested-subtabs",
+            "label": {
+              "default": "Nested subtabs"
+            },
+            "type": "subTabs",
+            "class_name": "subtab-panel-nested-class",
+            "group_info": [
+              {
+                "id": "range-fields-subtab33",
+                "type": "controls",
+                "class_name": "range-fields-subtab1-control-class",
+                "label": {
+                  "default": "Range Fields"
+                },
+                "parameter_refs": [
+                  "fromValue",
+                  "toValue"
+                ]
+              },
+              {
+                "id": "fruit-subtab33",
+                "label": {
+                  "default": "Fruit"
+                },
+                "type": "controls",
+                "class_name": "fruit-subtab-control-class2",
+                "parameter_refs": [
+                  "fruit",
+                  "other"
+                ]
+              },
+              {
+                "id": "nested-subtabs13",
+                "label": {
+                  "default": "Nested subtabs3"
+                },
+                "type": "subTabs",
+                "class_name": "subtab-panel-nested-class",
+                "group_info": [
+                  {
+                    "id": "range-fields-subtab13",
+                    "type": "controls",
+                    "class_name": "range-fields-subtab3-control-class1",
+                    "label": {
+                      "default": "Range Fields"
+                    },
+                    "parameter_refs": [
+                      "fromValue",
+                      "toValue"
+                    ]
+                  },
+                  {
+                    "id": "table-subtab13",
+                    "label": {
+                      "default": "Table SubTab"
+                    },
+                    "type": "controls",
+                    "class_name": "table-subtab-control-class3",
+                    "parameter_refs": [
+                      "fields"
+                    ]
+                  },
+                  {
+                    "id": "fruit-subtab13",
+                    "label": {
+                      "default": "Fruit"
+                    },
+                    "type": "controls",
+                    "class_name": "fruit-subtab-control-class3",
+                    "parameter_refs": [
+                      "fruit",
+                      "other"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Primary4",
+        "label": {
+          "default": "Tab Test4"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "tab-hidden-condition",
+            "type": "textPanel",
+            "label": {
+              "default": "Tab Hidden Condition Test"
+            },
+            "description": {
+              "default": "This tab will be visible when the hideTab4 checkbox is selected from Tab Test3."
+            }
           }
         ]
       },
@@ -460,7 +745,7 @@
           "description": {
             "default": "An orange tree can grow to reach 30 feet and live for over a hundred years."
           }
-				}]
+        }]
       }
     ]
   },
@@ -554,6 +839,34 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "Primary"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideTab1",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "Primary4"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideTab4",
             "op": "equals",
             "value": false
           }

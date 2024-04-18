@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,17 +23,15 @@ import TruncatedContentTooltip from "./../truncated-content-tooltip";
 import PropertiesButtons from "./../properties-buttons";
 import * as PropertyUtils from "./../../util/property-utils";
 
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 
 import { MESSAGE_KEYS, DATA_TYPE, SORT_DIRECTION, ROW_SELECTION } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
-import { Reset24 } from "@carbon/icons-react";
+import { Reset } from "@carbon/react/icons";
 
 import { has, isEmpty, sortBy, isEqual } from "lodash";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-
-import { v4 as uuid4 } from "uuid";
 
 export default class FieldPicker extends React.Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -317,13 +315,18 @@ export default class FieldPicker extends React.Component {
 	_genResetButton() {
 		const resetLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL);
+		const Reset24 = React.forwardRef((props, ref) => <Reset ref={ref} size={24} {...props} />);
+		const defaultSelections = this.props.currentFields;
+		const selectedFields = this.state.selectedFields;
+		const isSelectionEqual = defaultSelections.length === selectedFields.length && defaultSelections.every((field) => selectedFields.indexOf(field) > -1);
 		return (
 			<Button
 				className="properties-fp-reset-button-container"
+				disabled={isSelectionEqual}
 				onClick={this.handleReset}
 				renderIcon={Reset24}
 				iconDescription={resetLabel}
-				size="small"
+				size="sm"
 				kind="ghost"
 			>
 				<span>{resetLabel}</span>
@@ -343,7 +346,7 @@ export default class FieldPicker extends React.Component {
 					break;
 				}
 			}
-			const filterTooltipId = uuid4() + "-tooltip-filters-" + ind;
+			const filterTooltipId = "tooltip-filters-" + ind;
 			const dataTypeLabel = PropertyUtils.formatMessage(that.props.controller.getReactIntl(), MESSAGE_KEYS[`FIELDPICKER_${filter.type.toUpperCase()}_LABEL`]);
 			const tooltip = (
 				<div className="properties-tooltips">
@@ -419,7 +422,7 @@ export default class FieldPicker extends React.Component {
 				selectedRows={this.selectedRowsIndex}
 				updateRowSelections={this.updateFieldSelections}
 				rowSelection={ROW_SELECTION.MULTIPLE}
-				light={this.props.controller.getLight()}
+				light={this.props.controller.getLight() && !this.props.controller.isTearsheetContainer()}
 			/>
 		);
 	}

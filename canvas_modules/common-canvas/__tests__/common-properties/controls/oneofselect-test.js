@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import React from "react";
 import OneofselectControl from "../../../src/common-properties/controls/dropdown";
 import propertyUtils from "../../_utils_/property-utils";
 import controlUtils from "../../_utils_/control-utils";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 
@@ -110,7 +110,7 @@ describe("oneofselect renders correctly", () => {
 
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
 		dropdownList.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(control.values[0]);
@@ -134,7 +134,7 @@ describe("oneofselect renders correctly", () => {
 		dropdownButton.simulate("click");
 		// select the first item
 		dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
 		dropdownList.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(control.values[0]);
@@ -197,7 +197,7 @@ describe("oneofselect renders correctly", () => {
 		dropdownButton.simulate("click");
 		dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
 		// select the first item
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(2);
 	});
 	it("dropdown renders messages correctly", () => {
@@ -215,7 +215,7 @@ describe("oneofselect renders correctly", () => {
 			/>
 		);
 		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		const messageWrapper = dropdownWrapper.find("div.bx--form-requirement");
+		const messageWrapper = dropdownWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 });
@@ -237,7 +237,7 @@ describe("oneofselect paramDef works correctly", () => {
 		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		// In oneofselect_paramDef.json, enum value "gold" is assigned a label "Goldilocks"
 		expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.gold.label"]).to.equal("Goldilocks");
 		// Enum label "Goldilocks" has been rendered for enum value "gold".
@@ -249,7 +249,7 @@ describe("oneofselect paramDef works correctly", () => {
 		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
 		dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		// In our paramDef, enum value has a space in it "blue green" and is assigned a label "Blue Green"
 		expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.blue green.label"]).to.equal("Blue Green");
 		// Enum value with a space can be assigned a label and renders as expected.
@@ -275,12 +275,12 @@ describe("oneofselect paramDef works correctly", () => {
 	it("oneofselect control should have aria-label", () => {
 		// Dropdown should have aria-label
 		const dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect']");
-		const dropdownAriaLabelledby = dropdownWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
-		expect(dropdownWrapper.find(`#${dropdownAriaLabelledby}`).text()).to.equal("oneofselect*");
+		const dropdownAriaLabelledby = dropdownWrapper.find(".cds--list-box__menu").prop("aria-labelledby");
+		expect(dropdownWrapper.find(`label[id='${dropdownAriaLabelledby}']`).text()).to.equal("oneofselect(required)");
 
 		// combobox should have aria-label
 		const comboboxWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_custom_value']");
-		const comboboxAriaLabel = comboboxWrapper.find(".bx--list-box__menu").prop("aria-label");
+		const comboboxAriaLabel = comboboxWrapper.find(".cds--list-box__menu").prop("aria-label");
 		expect(comboboxAriaLabel).to.equal("oneofselect custom value allowed");
 	});
 });
@@ -303,10 +303,10 @@ describe("oneofselect filters work correctly", () => {
 		dropdownButton.simulate("click");
 		// validate the correct number of options show up on open
 		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect_filtered']");
-		let dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		let dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.have.length(4);
 		// make sure there isn't warning on first open
-		expect(dropdownWrapper.find("div.bx--form-requirement")).to.have.length(0);
+		expect(dropdownWrapper.find("div.cds--form-requirement")).to.have.length(0);
 		// checked the filter box
 		const checkboxWrapper = wrapper.find("div[data-id='properties-filter']");
 		const checkbox = checkboxWrapper.find("input");
@@ -314,7 +314,7 @@ describe("oneofselect filters work correctly", () => {
 		checkbox.simulate("change");
 		// validate the correct number of options show up on open
 		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect_filtered']");
-		dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.have.length(3);
 	});
 
@@ -466,10 +466,10 @@ describe("oneofselect with custom value allowed works correctly", () => {
 		expect(dropdownInput.text()).to.equal("");
 
 		// Verify dropdown items
-		const dropdownMenu = dropdownWrapper.find(".bx--list-box__menu-icon");
+		const dropdownMenu = dropdownWrapper.find(".cds--list-box__menu-icon");
 		dropdownMenu.simulate("click");
 		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
-		expect(dropdownWrapper.find(".bx--list-box__menu-item")).to.have.length(6);
+		expect(dropdownWrapper.find(".cds--list-box__menu-item")).to.have.length(6);
 	});
 
 	it("should display the custom value entered", () => {
@@ -507,7 +507,7 @@ describe("oneofselect with custom value allowed works correctly", () => {
 		const dropdownInput = dropdownWrapper.find("input");
 		dropdownInput.simulate("click");
 		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
-		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(2);
 	});
 });

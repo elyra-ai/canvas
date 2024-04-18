@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,19 @@
  */
 
 Cypress.Commands.add("clickToolbarPaletteOpen", () => {
-	cy.getToolbarAction(".togglePalette-action").click();
+	cy.getToolbarAction(".paletteOpen-action").click();
 });
 
 Cypress.Commands.add("clickToolbarPaletteOpenInExtraCanvas", () => {
-	cy.getToolbarActionInExtraCanvas(".togglePalette-action").click();
+	cy.getToolbarActionInExtraCanvas(".paletteOpen-action").click();
 });
 
 Cypress.Commands.add("clickToolbarPaletteClose", () => {
-	cy.getToolbarAction(".togglePalette-action").click();
+	cy.getToolbarAction(".paletteClose-action").click();
 });
 
 Cypress.Commands.add("clickToolbarPaletteCloseInExtraCanvas", () => {
-	cy.getToolbarActionInExtraCanvas(".togglePalette-action").click();
+	cy.getToolbarActionInExtraCanvas(".paletteClose-action").click();
 });
 
 Cypress.Commands.add("clickToolbarStop", () => {

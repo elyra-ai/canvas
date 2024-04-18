@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/***************************************************************************/
+/* WARNING:                                                                */
+/* This class is exported from Common Canvas. This means host apps can     */
+/* extend the class and add to, or alter, this class's member variables.   */
+/* So, if the names of any internal this.xxxx variables are changed that   */
+/* needs to be communicated clearly through the release notes, Slack, etc. */
+/***************************************************************************/
+
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Action from "../command-stack/action.js";
 
 export default class DeleteObjectsAction extends Action {
-	constructor(data, objectModel, labelUtil, areDetachableLinksSupported) {
+	constructor(data, canvasController) {
 		super(data);
 		this.data = data;
-		this.objectModel = objectModel;
-		this.labelUtil = labelUtil;
-		this.areDetachableLinksSupported = areDetachableLinksSupported;
+		this.labelUtil = canvasController.labelUtil;
+		this.objectModel = canvasController.objectModel;
+		this.areDetachableLinksSupported = canvasController.areDetachableLinksInUse();
 		this.objectsInfo = [];
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.nodesToDelete = this.objectModel.getSelectedNodes();
@@ -38,7 +47,7 @@ export default class DeleteObjectsAction extends Action {
 		// have their source and target IDs removed (as appropriate based on
 		// whether the source and/or taget object is being deleted) which will
 		// indicate that the node is either partailly or fully detached.
-		if (areDetachableLinksSupported) {
+		if (this.areDetachableLinksSupported) {
 			this.linksToDelete = this.getConnectedLinksToDelete(this.linksToDelete, "nodeLink");
 			this.linksToUpdateInfo = this.getLinksToUpdateInfo();
 

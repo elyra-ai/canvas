@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,13 +98,8 @@ Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel, categoryLabel) => 
 	cy.findNodeInCategory(nodeLabel, categoryLabel).dblclick();
 });
 
-Cypress.Commands.add("hoverOverNodeInCategory", (nodeLabel) => {
-	cy.findNodeIndexInPalette(nodeLabel)
-		.then((nodeIndex) => {
-			cy.get(".palette-list-item")
-				.eq(nodeIndex)
-				.trigger("mouseover");
-		});
+Cypress.Commands.add("hoverOverNodeInCategory", (nodeLabel, categoryLabel) => {
+	cy.findNodeInCategory(nodeLabel, categoryLabel).trigger("mouseover", { buttons: 0 });
 });
 
 Cypress.Commands.add("searchForNodeUsing", (filterText) => {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2176,6 +2176,152 @@ _defineConstant("TIMEFIELD_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("DATEPICKER_PROPS_INFO", {
+	"title": "Datepicker Title",
+	"parameterDef": {
+		"current_parameters": {
+			"datepickerControlName": "2023-03-25T00:00:00.00"
+		},
+		"parameters": [
+			{
+				"id": "datepickerControlName",
+				"type": "date",
+				"required": true
+			}
+		],
+		"uihints": {
+			"id": "datepickers",
+			"parameter_info": [
+				{
+					"parameter_ref": "datepickerControlName",
+					"label": {
+						"default": "Datepicker Control Name"
+					},
+					"description": {
+						"default": "Datepicker test"
+					},
+					"control": "datepicker",
+					"date_format": "Y-m-d",
+					"place_holder_text": {
+						"default": "yyyy-mm-dd"
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "Datepicker Control",
+					"type": "controls",
+					"parameter_refs": [
+						"datepickerControlName"
+					]
+				}
+			]
+		},
+		"resources": {
+			"datepickerControlName.helper": "Helper text provided through resource label `{parameter_ref}.helper`."
+		}
+	}
+});
+_defineConstant("DATEPICKER_RANGE_PROPS_INFO", {
+	"title": "Datepicker Range",
+	"parameterDef": {
+		"current_parameters": {
+			"datepickerControlName": ["2023-03-25T00:00:00.00", "2023-03-30T00:00:00.00"]
+		},
+		"parameters": [
+			{
+				"id": "datepickerControlName",
+				"type": "date"
+			}
+		],
+		"uihints": {
+			"id": "datepickers",
+			"parameter_info": [
+				{
+					"parameter_ref": "datepickerControlName",
+					"label": {
+						"default": "Datepicker Control Name"
+					},
+					"description": {
+						"default": "Datepicker simple test"
+					},
+					"control": "datepickerRange",
+					"date_format": "Y-m-d",
+					"place_holder_text": {
+						"default": "yyyy-mm-dd"
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "Datepicker Range Control",
+					"type": "controls",
+					"parameter_refs": [
+						"datepickerControlName"
+					]
+				}
+			]
+		},
+		"resources": {
+			"datepickerControlName.range.start.label": "Start",
+			"datepickerControlName.range.start.desc": "Start description provided through resource label `{parameter_ref}.range.start.desc`.",
+			"datepickerControlName.range.start.helper": "Start helper",
+			"datepickerControlName.range.end.label": "End",
+			"datepickerControlName.range.end.desc": "End description provided through resource label `{parameter_ref}.range.end.desc`.",
+			"datepickerControlName.range.end.helper": "End helper text."
+		}
+	}
+});
+_defineConstant("SLIDER_PROPS_INFO", {
+	"title": "Slider Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: slider",
+			"editable": false
+		},
+		"current_parameters": {
+			"sliderControlName": 10
+		},
+		"parameters": [
+			{
+				"id": "sliderControlName",
+				"type": "slider",
+				"default": 10
+			}
+		],
+		"uihints": {
+			"id": "sliderControlName",
+			"parameter_info": [
+				{
+					"parameter_ref": "sliderControlName",
+					"label": {
+						"default": "Slider Control Name"
+					},
+					"description": {
+						"default": "Slider test"
+					},
+					"control": "slider",
+					"min_value": 1,
+					"max_value": 100,
+					"increment": 1
+				}
+			],
+			"group_info": [
+				{
+					"id": "sliderControlName",
+					"type": "controls",
+					"parameter_refs": [
+						"sliderControlName"
+					]
+				}
+			]
+		},
+		"resources": {
+			"sliderControlName.min.label": "1",
+			"sliderControlName.max.label": "100"
+		}
+	}
+});
 _defineConstant("CHECKBOX_SINGLE_PROPS_INFO", {
 	"title": "Checkbox Title",
 	"parameterDef": {
@@ -2710,7 +2856,7 @@ _defineConstant("FORCED_CHECKBOX_SET_PROPS_INFO", {
 			"editable": false
 		},
 		"current_parameters": {
-			"someofselectList": ""
+			"someofselectList": []
 		},
 		"parameters": [
 			{
@@ -2820,6 +2966,63 @@ _defineConstant("SELECTSCHEMA_PROPS_INFO", {
 		]
 	}
 });
+_defineConstant("SELECTSCHEMA_EMPTY_PROPS_INFO", {
+	"title": "SelectSchema Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: empty list selectschema",
+			"editable": false
+		},
+		"current_parameters": {
+		},
+		"parameters": [
+			{
+				"id": "selectschema"
+			},
+			{
+				"id": "selectschemaEmptyPlaceholder"
+			}
+		],
+		"uihints": {
+			"id": "selectschemaList",
+			"parameter_info": [
+				{
+					"parameter_ref": "selectschema",
+					"label": {
+						"default": "SelectSchema Empty list Control"
+					},
+					"description": {
+						"default": "selectschema control without dataset_metadata."
+					},
+					"control": "selectschema"
+				},
+				{
+					"parameter_ref": "selectschemaEmptyPlaceholder",
+					"label": {
+						"default": "Disabled SelectSchema Empty list Control with custom placeholder"
+					},
+					"description": {
+						"default": "selectschema control without dataset_metadata. Showing custom placeholder text. This control should be disabled."
+					},
+					"control": "selectschema"
+				}
+			],
+			"group_info": [
+				{
+					"id": "SelectSchema Control",
+					"type": "controls",
+					"parameter_refs": [
+						"selectschema",
+						"selectschemaEmptyPlaceholder"
+					]
+				}
+			]
+		},
+		"resources": {
+			"selectschemaEmptyPlaceholder.emptyList.placeholder": "Custom empty list placeholder text"
+		}
+	}
+});
 _defineConstant("SELECTCOLUMN_PROPS_INFO", {
 	"title": "Select Column Title",
 	"parameterDef": {
@@ -2866,6 +3069,68 @@ _defineConstant("SELECTCOLUMN_PROPS_INFO", {
 				"fields": fields
 			}
 		]
+	}
+});
+_defineConstant("SELECTCOLUMN_EMPTY_PROPS_INFO", {
+	"title": "Select Column Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: empty selectcolumn",
+			"editable": false
+		},
+		"current_parameters": {
+			"selectcolumn": ""
+		},
+		"parameters": [
+			{
+				"id": "selectcolumn",
+				"type": "string",
+				"default": "",
+				"role": "column"
+			},
+			{
+				"id": "selectcolumnEmptyPlaceholder",
+				"type": "string",
+				"default": "",
+				"role": "column"
+			}
+		],
+		"uihints": {
+			"id": "selectcolumn",
+			"parameter_info": [
+				{
+					"parameter_ref": "selectcolumn",
+					"label": {
+						"default": "Select Column Empty list Control"
+					},
+					"description": {
+						"default": "selectcolumn control without dataset_metadata."
+					}
+				},
+				{
+					"parameter_ref": "selectcolumnEmptyPlaceholder",
+					"label": {
+						"default": "Disabled Empty list Control with custom placeholder"
+					},
+					"description": {
+						"default": "selectcolumn control without dataset_metadata. Showing custom placeholder text. This control should be disabled."
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "SelectColumn Control",
+					"type": "controls",
+					"parameter_refs": [
+						"selectcolumn",
+						"selectcolumnEmptyPlaceholder"
+					]
+				}
+			]
+		},
+		"resources": {
+			"selectcolumnEmptyPlaceholder.emptyList.placeholder": "Custom empty list placeholder text"
+		}
 	}
 });
 _defineConstant("SELECTCOLUMN_MULTI_INPUT_PROPS_INFO", {
@@ -3034,7 +3299,7 @@ _defineConstant("TOGGLETEXT_PROPS_INFO", {
 			"editable": false
 		},
 		"current_parameters": {
-			"toggletextOption": ["On"]
+			"toggletextOption": "On"
 		},
 		"parameters": [
 			{
@@ -3076,6 +3341,49 @@ _defineConstant("TOGGLETEXT_PROPS_INFO", {
 		]
 	}
 });
+
+_defineConstant("TOGGLE_PROPS_INFO", {
+	"title": "Toggle Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: toggle",
+			"editable": false
+		},
+		"current_parameters": {
+			"toggle_default": false,
+		},
+		"parameters": [
+			{
+				"id": "toggle_default",
+				"default": false,
+				"type": "boolean"
+			}
+		],
+		"uihints": {
+			"id": "toggle_default",
+			"parameter_info": [
+				{
+					"parameter_ref": "toggle_default",
+					"control": "toggle",
+					"label": {
+						"default": "Toggle Control Name"
+					},
+					"description": {
+						"default": "toggle test"
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "Toggle Control",
+					"parameter_refs": [
+						"toggle_default"
+					]
+				}
+			]
+		}
+	},
+});
 _defineConstant("TOGGLETEXTICONS_PROPS_INFO", {
 	"title": "Toggletext Title",
 	"parameterDef": {
@@ -3084,7 +3392,7 @@ _defineConstant("TOGGLETEXTICONS_PROPS_INFO", {
 			"editable": false
 		},
 		"current_parameters": {
-			"toggletextOption": ["On"]
+			"toggletextOption": "On"
 		},
 		"parameters": [
 			{

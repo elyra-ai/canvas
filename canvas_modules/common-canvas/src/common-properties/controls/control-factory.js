@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,13 @@
 import React from "react";
 
 import { Type, ControlType } from "./../constants/form-constants";
-import { STATES } from "./../constants/constants";
+import { STATES, CONTAINER_TYPE } from "./../constants/constants";
 import classNames from "classnames";
 import { PropertyDef } from "./../form/PropertyDef";
 import { makeControl } from "./../form/EditorForm";
 import { L10nProvider } from "./../util/L10nProvider";
 import * as ControlUtils from "./../util/control-utils";
+import { Layer } from "@carbon/react";
 
 import TextfieldControl from "./textfield";
 import ReadonlyControl from "./readonly";
@@ -33,6 +34,8 @@ import ExpressionControl from "./expression";
 import PasswordControl from "./passwordfield";
 import NumberfieldControl from "./numberfield";
 import DatefieldControl from "./datefield";
+import DatepickerControl from "./datepicker";
+import DatepickerRangeControl from "./datepicker-range";
 import TimefieldControl from "./timefield";
 import CheckboxControl from "./checkbox";
 import ToggleControl from "./toggle";
@@ -46,10 +49,11 @@ import StructureEditorControl from "./structureeditor";
 import StructureTableControl from "./structuretable";
 import StructurelisteditorControl from "./structurelisteditor";
 import ReadonlyTableControl from "./readonlytable";
+import Slider from "./slider";
 
 import ControlItem from "./../components/control-item";
 import ActionFactory from "./../actions/action-factory.js";
-import { has } from "lodash";
+import { has, get } from "lodash";
 
 /*
 * <ControlItem /> should be called from every control.
@@ -59,6 +63,8 @@ const accessibleControls = [
 	ControlType.CHECKBOXSET,
 	ControlType.HIDDEN,
 	ControlType.DATEFIELD,
+	ControlType.DATEPICKER,
+	ControlType.DATEPICKERRANGE,
 	ControlType.NUMBERFIELD,
 	ControlType.SPINNER,
 	ControlType.PASSWORDFIELD,
@@ -78,7 +84,8 @@ const accessibleControls = [
 	ControlType.ONEOFSELECT,
 	ControlType.MULTISELECT,
 	ControlType.SELECTSCHEMA,
-	ControlType.SELECTCOLUMN
+	ControlType.SELECTCOLUMN,
+	ControlType.SLIDER
 ];
 
 const tableControls = [
@@ -93,7 +100,7 @@ const tableControls = [
 export default class ControlFactory {
 
 	constructor(controller) {
-		this.rightFlyout = true;
+		this.rightFlyout = controller ? get(controller.getPropertiesConfig(), "rightFlyout", false) : false;
 		this.controller = controller;
 		this.actionFactory = new ActionFactory(this.controller);
 	}
@@ -113,8 +120,12 @@ export default class ControlFactory {
 	* @param tableInfo
 	*/
 	createControlItem(control, propertyId, tableInfo) {
-		const controlObj = this.createControl(control, propertyId, tableInfo);
 		const hidden = this.controller.getControlState(propertyId) === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
+
+		const controlObj = this.createControl(control, propertyId, tableInfo);
 		const className = control.className ? control.className : "";
 
 		/*
@@ -128,7 +139,7 @@ export default class ControlFactory {
 		// When control-item displays other controls, add padding on control-item
 		return (
 			<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name}
-				className={classNames("properties-ctrl-wrapper", { "hide": hidden }, className)}
+				className={classNames("properties-ctrl-wrapper", className)}
 			>
 				<ControlItem
 					key={"ctrl-item-" + control.name}
@@ -219,6 +230,12 @@ export default class ControlFactory {
 			break;
 		case (ControlType.DATEFIELD):
 			createdControl = (<DatefieldControl {...props} />);
+			break;
+		case (ControlType.DATEPICKER):
+			createdControl = (<DatepickerControl {...props} />);
+			break;
+		case (ControlType.DATEPICKERRANGE):
+			createdControl = (<DatepickerRangeControl {...props} />);
 			break;
 		case (ControlType.TIMEFIELD):
 			createdControl = (<TimefieldControl {...props} />);
@@ -323,9 +340,18 @@ export default class ControlFactory {
 				rightFlyout={this.rightFlyout}
 			/>);
 			break;
+		case (ControlType.SLIDER):
+			createdControl = (<Slider {...props} />);
+			break;
 		default:
 			createdControl = (<ReadonlyControl {...props} />);
 		}
+
+		const createdControlLayered = (
+			<Layer level={this.controller.getLight() && control.light ? 1 : 0} className="properties-control-layer">
+				{createdControl}
+			</Layer>
+		);
 
 		/*
 		* <ControlItem /> should be called from every control.
@@ -347,12 +373,12 @@ export default class ControlFactory {
 						className
 					)}
 				>
-					{createdControl}
+					{createdControlLayered}
 					{action}
 				</div>
 			);
 		}
-		return createdControl;
+		return createdControlLayered;
 	}
 
 	/**
@@ -360,9 +386,11 @@ export default class ControlFactory {
 	* Allows users to user a standard control in a custom control/panel
 	* @param paramDef - see parameter-def schema
 	* @param parameter - name of the parameter to pull from paramDef
+	* @param light - if this control is light themed
+	* @param containerType - the type of container common properties is rendering in
 	* @return control object (form schema) used to create standard react controls
 	*/
-	createFormControl(paramDef, parameter) {
+	createFormControl(paramDef, parameter, light = true, containerType = CONTAINER_TYPE.CUSTOM) {
 		if (!paramDef) {
 			return null;
 		}
@@ -374,7 +402,11 @@ export default class ControlFactory {
 			if (prop.propType() === Type.STRUCTURE && propDef.structureMetadata) {
 				structureDef = propDef.structureMetadata.getStructure(prop.baseType());
 			}
-			const control = makeControl(propDef.parameterMetadata, parameter, null, structureDef, l10nProvider);
+			const additionalInfo = {
+				light: light,
+				containerType: containerType
+			};
+			const control = makeControl(propDef.parameterMetadata, parameter, null, structureDef, l10nProvider, null, null, null, additionalInfo);
 			return control;
 		}
 		return null;

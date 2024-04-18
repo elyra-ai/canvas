@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,8 @@ export default {
 		"lib/properties": "./src/common-properties/index.js",
 		"lib/properties/field-picker": "./src/common-properties/components/field-picker/index.js",
 		"lib/properties/flexible-table": "./src/common-properties/components/flexible-table/index.js",
+		"lib/properties/clem": "./src/common-properties/controls/expression/languages/CLEM-hint.js",
+		"lib/properties/getPythonHints": "./src/common-properties/controls/expression/languages/python-hint.js",
 		"lib/context-menu": "./src/context-menu/context-menu-wrapper.jsx",
 		"lib/command-stack": "./src/command-stack/command-stack.js",
 		"lib/tooltip": "./src/tooltip/tooltip.jsx",

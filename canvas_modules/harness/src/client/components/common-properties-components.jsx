@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { hot } from "react-hot-loader/root";
-import { Button, Dropdown } from "carbon-components-react";
+import { Button, Dropdown } from "@carbon/react";
 import FunctionList from "../constants/json/functionlist.json";
 import {
 	CONTAINERS_RIGHT_FLYOUT_PROPERTIES,
@@ -51,6 +50,8 @@ import {
 	NUMBERFIELD_GENERATOR_PROPS_INFO,
 	DATEFIELD_PROPS_INFO,
 	TIMEFIELD_PROPS_INFO,
+	DATEPICKER_PROPS_INFO,
+	DATEPICKER_RANGE_PROPS_INFO,
 	SPINNER_PROPS_INFO,
 	CHECKBOX_SINGLE_PROPS_INFO,
 	CHECKBOX_SET_PROPS_INFO,
@@ -64,10 +65,13 @@ import {
 	SOMEOFSELECT_PROPS_INFO,
 	FORCED_CHECKBOX_SET_PROPS_INFO,
 	SELECTSCHEMA_PROPS_INFO,
+	SELECTSCHEMA_EMPTY_PROPS_INFO,
 	SELECTCOLUMN_PROPS_INFO,
+	SELECTCOLUMN_EMPTY_PROPS_INFO,
 	SELECTCOLUMN_MULTI_INPUT_PROPS_INFO,
 	SELECTCOLUMNS_PROPS_INFO,
 	SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO,
+	TOGGLE_PROPS_INFO,
 	TOGGLETEXT_PROPS_INFO,
 	TOGGLETEXTICONS_PROPS_INFO,
 	READONLYTABLE_PROPS_INFO,
@@ -86,7 +90,8 @@ import {
 	STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO,
 	STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO,
 	ACTION_PROPS_INFO,
-	ACTION_IMAGE_PROPS_INFO
+	ACTION_IMAGE_PROPS_INFO,
+	SLIDER_PROPS_INFO
 } from "../constants/properties-documentation-constants.js";
 import { CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
@@ -278,7 +283,49 @@ class CommonPropertiesComponents extends React.Component {
 				"parameter_info",
 				"parameter_ref", "label",
 				"description",
+				"control",
 				"date_format"
+			];
+			break;
+		case "datepicker":
+			jsonReplacer = [
+				"current_parameters",
+				"datepickerControlName",
+				"parameters",
+				"id", "type", "default",
+				"uihints",
+				"parameter_info",
+				"parameter_ref", "label",
+				"description",
+				"control",
+				"date_format",
+				"resources",
+				"datepickerControlName.helper",
+				"datepickerControlName.range.start.label",
+				"datepickerControlName.range.start.desc",
+				"datepickerControlName.range.start.helper",
+				"datepickerControlName.range.end.label",
+				"datepickerControlName.range.end.desc",
+				"datepickerControlName.range.end.helper"
+			];
+			break;
+		case "slider":
+			jsonReplacer = [
+				"current_parameters",
+				"sliderControlname",
+				"parameters",
+				"id", "type", "default",
+				"uihints",
+				"parameter_info",
+				"parameter_ref", "label",
+				"description",
+				"control",
+				"min_value",
+				"max_value",
+				"increment",
+				"resources",
+				"sliderControlName.min.label",
+				"sliderControlName.max.label",
 			];
 			break;
 		case "timefield":
@@ -331,7 +378,7 @@ class CommonPropertiesComponents extends React.Component {
 		const openFlyoutButton = (<Button
 			className="harness-properties-documentation-show-flyout-button"
 			type="button"
-			size="small"
+			size="sm"
 			kind="secondary"
 			onClick={() => this.setRightFlyoutState(content)}
 		>
@@ -375,6 +422,8 @@ class CommonPropertiesComponents extends React.Component {
 					"--spinner",
 					"--datefield",
 					"--timefield",
+					"--datepicker",
+					"--datepickerrange",
 					"--checkbox",
 					"--checkboxset",
 					"--radioset",
@@ -384,6 +433,8 @@ class CommonPropertiesComponents extends React.Component {
 					"--selectschema",
 					"--selectcolumn",
 					"--selectcolumns",
+					"--slider",
+					"--toggle",
 					"--toggletext",
 					"Complex",
 					"--structuretable",
@@ -737,7 +788,7 @@ class CommonPropertiesComponents extends React.Component {
 								<Button
 									className="harness-properties-documentation-show-flyout-button"
 									type="button"
-									size="small"
+									size="sm"
 									kind="secondary"
 									onClick={() => this.tearsheetPropertiesController.setActiveTearsheet("tearsheet0")}
 								>
@@ -1153,6 +1204,66 @@ class CommonPropertiesComponents extends React.Component {
 					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--datepicker" className="harness-section-subtitle">datepicker</h3>
+					<p>A datepicker control is rendered for a parameter of <span className="harness-highlight">control=datepicker</span>.
+						The current parameter should be provided in the format specified in the parameter definition for uihint <span className="harness-highlight">date_format</span>.
+						This control is defined in Carbon and internally uses flatpickr, which has date tokens that differ from moment.js and date-fns.
+					<a href="https://flatpickr.js.org/formatting/#date-formatting-tokens"> Flatpickr date formatting tokens </a>.
+						Common properties only support a subset list of tokens with numeric values only. The supported tokens include: <span className="harness-highlight">Y, y, m, n, d, and j</span>.
+						Only valid inputs are accepted. Any invalid dates will be adjusted to a valid date by flatpickr.
+						Common properties accepts ISO formatted dates in current parameters and also returns ISO formatted dates.
+						These same rules apply to <a className="harness-properties-documentation-page-intro-link" href="#/properties#--datepickerrange">datepickerRange</a>.
+					</p>
+					<p>
+						Helper text is available by providing a resource key in the parameterDef. Helper text should not exceed 3 lines.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={DATEPICKER_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(DATEPICKER_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(DATEPICKER_PROPS_INFO.parameterDef, "datepicker")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--datepickerrange" className="harness-section-subtitle">datepicker</h3>
+					<p>A datepickerRange control is rendered for a parameter of <span className="harness-highlight">control=datepickerRange</span>.
+						This control contains start and end inputs for a date range. In addition to the rules
+						from <a className="harness-properties-documentation-page-intro-link" href="#/properties#--datepicker">datepicker</a>,
+						the <span className="harness-highlight">datepickerRange</span> accepts additional uihints for the
+						start <span className="harness-highlight">datepicker_range_start_text</span> and end <span className="harness-highlight">datepicker_range_end_text</span> labels respectively.
+						Common properties accepts ISO formatted dates in current parameters and also returns ISO formatted dates.
+					</p>
+					<p>
+						Helper text is available by providing a resource key in the parameterDef. Helper text should not exceed 3 lines.
+						Similarly, the start, end, and description labels are also available to customize through resource labels.
+						Look at the example json to see the format.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={DATEPICKER_RANGE_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(DATEPICKER_RANGE_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(DATEPICKER_RANGE_PROPS_INFO.parameterDef, "datepicker")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--checkbox" className="harness-section-subtitle">checkbox</h3>
 					<p>A checkbox control is rendered for a parameter of <span className="harness-highlight">type</span> boolean.
 						The value in the <span className="harness-highlight">enum</span> array
@@ -1419,6 +1530,25 @@ class CommonPropertiesComponents extends React.Component {
 							</pre>
 						</div>
 					</div>
+					<p>When <span className="harness-highlight">dataset_metadata</span> is not provided,
+						selectschema control will display default placeholder text <span className="harness-highlight">"..."</span>.
+						This placeholder text can be customized by setting <span className="harness-highlight">[parameter_id].emptyList.placeholder</span> in resources section.
+						When custom empty list placeholder text is provided, common-properties will disable the empty list control.</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={SELECTSCHEMA_EMPTY_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(SELECTSCHEMA_EMPTY_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(SELECTSCHEMA_EMPTY_PROPS_INFO.parameterDef, "all")}
+							</pre>
+						</div>
+					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--selectcolumn" className="harness-section-subtitle">selectcolumn</h3>
@@ -1438,6 +1568,25 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="harness-section-column harness-section-column-code">
 							<pre className="harness-json-block">
 								{this.jsonReplacer(SELECTCOLUMN_PROPS_INFO.parameterDef, "all")}
+							</pre>
+						</div>
+					</div>
+					<p>When <span className="harness-highlight">dataset_metadata</span> is not provided,
+						selectcolumn control will display default placeholder text <span className="harness-highlight">"..."</span>.
+						This placeholder text can be customized by setting <span className="harness-highlight">[parameter_id].emptyList.placeholder</span> in resources section.
+						When custom empty list placeholder text is provided, common-properties will disable the empty list control.</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={SELECTCOLUMN_EMPTY_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(SELECTCOLUMN_EMPTY_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(SELECTCOLUMN_EMPTY_PROPS_INFO.parameterDef, "all")}
 							</pre>
 						</div>
 					</div>
@@ -1517,6 +1666,58 @@ class CommonPropertiesComponents extends React.Component {
 					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--slider" className="harness-section-subtitle">slider</h3>
+					<p>A slider control is rendered for a parameter of <span className="harness-highlight">control=slider</span>.
+						This control contains adjustable content where the value can be increased or decreased by moving the handle along horizontal track.
+						The <span className="harness-highlight">slider</span> accepts additional uihints for the
+						min <span className="harness-highlight">max</span> and increment.
+					</p>
+					<p>
+						The 'Step' is defined using the 'increment' parameter in UI hints. It determines how many increments the input value and slider handle will jump when the handle is moved.
+						Additionally, an input box can be used to enter values within the min_value and max_value range.
+					</p>
+					<p>
+						Helper text is available by providing a resource key in the parameterDef.
+						Similarly, the minimum value and maximum value labels are also available to customize through resource labels.
+						Look at the example json to see the format.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={SLIDER_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(SLIDER_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(SLIDER_PROPS_INFO.parameterDef, "slider")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--toggle" className="harness-section-subtitle">toggle</h3>
+					<p>A two-state control, They are commonly used for “on/off” switches.
+					The <span className="harness-highlight">control</span> must be set to <span className="harness-highlight">toggle</span>.</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={TOGGLE_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(TOGGLE_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(TOGGLE_PROPS_INFO.parameterDef, "control")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--toggletext" className="harness-section-subtitle">toggletext</h3>
 					<p>A two-state control with optional icons that can exist on its own or within table cells.
 						The <span className="harness-highlight">control</span> must be set to <span className="harness-highlight">toggletext</span>.</p>
@@ -1564,6 +1765,7 @@ class CommonPropertiesComponents extends React.Component {
 				<p>Complex types representing lists or maps of basic parameter types are supported
 					via complex type controls. Controls can appear as rows in tables or standing on
 					their own in panels. The following controls are supported for complex types:
+				</p>
 				<ul className="harness-properties-documentation-list-indent">
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--textfield">textfield</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--textarea">textarea</a></li>
@@ -1572,17 +1774,20 @@ class CommonPropertiesComponents extends React.Component {
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--expression">expression</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--code">code</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--toggletext">toggletext</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--toggle">toggle</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--password">password</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--numberfield">numberfield</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--spinner">spinner</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--datefield">datefield</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--timefield">timefield</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--datepicker">datepicker</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--datepickerrange">datepicker</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--checkbox">checkbox</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--radioset">radioset</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--oneofselect">oneofselect</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--selectschema">selectschema</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--slider">slider</a></li>
 				</ul>
-				</p>
 			</div>
 			<div className="harness-properties-documentation-section-content">
 				<div className="harness-properties-documentation-panels-controls-component">
@@ -2067,4 +2272,4 @@ class CommonPropertiesComponents extends React.Component {
 	}
 }
 
-export default hot(CommonPropertiesComponents);
+export default CommonPropertiesComponents;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -261,6 +261,7 @@ export default class CanvasInHandler {
 				label: cat.label,
 				description: cat.description,
 				image: cat.image,
+				is_open: cat.is_open,
 				nodetypes: this.convertNodeTypes(cat.nodetypes)
 			})
 		);

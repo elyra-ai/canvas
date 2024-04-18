@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,72 @@
  */
 
 .properties-sub-tab-container {
-	.bx--tab-content {
+	.cds--tab--list {
+		width: inherit;
+	}
+
+	.cds--tab-content {
 		// override carbon padding
 		padding-left: 0;
 		padding-right: 0;
+	}
+}
+
+// The below styles are required to override the Carbon "Tab" component to look like a leftnav
+$parent-padding: calc(#{$spacing-05} + #{$spacing-05});
+$selected-tab-width: 3px;
+
+.properties-leftnav-container {
+	display: flex;
+	height: calc(100% + #{$parent-padding}); // Include padding from parent
+	margin-top: -$spacing-05;
+	margin-left: -$spacing-05;
+	margin-bottom: calc(-1 * #{$parent-padding});
+
+	.properties-leftnav-subtabs {
+		width: 282px;
+		background-color: $layer-01;
+		border-right: 1px solid $layer-accent-01;
+		padding-top: $spacing-02;
+		height: 100%;
+		max-block-size: none; // To make the height same as parent div
+
+		.cds--tab--list {
+			flex-direction: column;
+			width: 282px;
+		}
+
+		button.properties-leftnav-subtab-item {
+			&:hover {
+				background-color: $layer-hover-01;
+				border-block-end: none !important; // Added !important to override carbon CSS which showed bottom border
+			}
+
+			border-left: $selected-tab-width solid transparent;
+			border-bottom: 0;
+			transition: none; // Prevent border/outline from flickering
+			max-block-size: $spacing-08;
+
+			&:focus, &:active {
+				outline: 0;
+				border-bottom: 0;
+				transition: none; // Prevent border/outline from flickering
+			}
+		}
+
+		button.cds--tabs__nav-item--selected {
+			border-left: $selected-tab-width solid $border-interactive;
+			border-bottom: 0;
+			background-color: $layer-selected-01;
+
+			&:hover {
+				background-color: $layer-hover-01;
+			}
+		}
+	}
+
+	div.cds--tab-content {
+		width: 100%;
+		padding: $spacing-05; // Override padding set by subtab
 	}
 }

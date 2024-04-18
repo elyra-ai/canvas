@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 import React from "react";
 import propertyUtils from "../../_utils_/property-utils";
 import TimefieldControl from "../../../src/common-properties/controls/timefield";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import { format } from "date-fns";
 import Controller from "../../../src/common-properties/properties-controller";
@@ -194,7 +194,7 @@ describe("error messages renders correctly for timefield controls", () => {
 		};
 		const actual = controller.getErrorMessage({ name: "time_hms" });
 		expect(timefieldErrorMessages).to.eql(actual);
-		let messageWrapper = timeWrapper.find("div.bx--form-requirement");
+		let messageWrapper = timeWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// // Now simulate entering a valid time with the correct format.
@@ -202,7 +202,7 @@ describe("error messages renders correctly for timefield controls", () => {
 
 		// Ensure the error message is no longer displayed.
 		timeWrapper = wrapper.find("div[data-id='properties-time_hms']");
-		messageWrapper = timeWrapper.find("div.bx--form-requirement");
+		messageWrapper = timeWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -220,12 +220,12 @@ describe("error messages renders correctly for timefield controls", () => {
 			"required": true,
 			"validation_id": "required_time_hms_594.9764123314005",
 			"type": "error",
-			"text": "You must provide your Required Time H:m:s.",
+			"text": "You must enter a value for Required Time H:m:s.",
 		};
 		const actual = controller.getErrorMessage({ name: "time_hms" });
 
 		expect(timefieldErrorMessages).to.eql(actual);
-		let messageWrapper = timeWrapper.find("div.bx--form-requirement");
+		let messageWrapper = timeWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid time with the correct format.
@@ -233,7 +233,7 @@ describe("error messages renders correctly for timefield controls", () => {
 
 		// Ensure the error message is no longer displayed.
 		timeWrapper = wrapper.find("div[data-id='properties-time_hms']");
-		messageWrapper = timeWrapper.find("div.bx--form-requirement");
+		messageWrapper = timeWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -245,20 +245,20 @@ describe("error messages renders correctly for timefield controls", () => {
 
 		// Ensure an error message is not displayed.
 		timeWrapper = wrapper.find("div[data-id='properties-time_hms_non_req']");
-		const messageWrapper = timeWrapper.find("div.bx--form-requirement");
+		const messageWrapper = timeWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
 	it("should reveal time field when checkbox is clicked", () => {
 		// First check the hidden field is not displayed
 		let timeWrapper = wrapper.find("div[data-id='properties-hidden_time']");
-		expect(timeWrapper.hasClass("hide")).to.equal(true);
+		expect(timeWrapper).to.have.length(0);
 		controller.updatePropertyValue({ name: "hide_time_field" }, false);
 		wrapper.update();
 		// After the checkbox is unchecked there should be no in-line style
 		// applied to the time field (which makes it be hidden).
 		timeWrapper = wrapper.find("div[data-id='properties-hidden_time']");
-		expect(timeWrapper.hasClass("hide")).to.equal(false);
+		expect(timeWrapper).to.have.length(1);
 	});
 
 	it("should enable time field when checkbox is clicked", () => {

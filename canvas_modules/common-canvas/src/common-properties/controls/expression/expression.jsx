@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,92 +19,81 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { UnControlled as CodeMirror } from "react-codemirror2";
 import Icon from "./../../../icons/icon.jsx";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import classNames from "classnames";
-import { isEqual } from "lodash";
+import { isEqual, concat } from "lodash";
 import ValidationMessage from "./../../components/validation-message";
 import WideFlyout from "./../../components/wide-flyout";
 import { formatMessage } from "./../../util/property-utils";
 import ExpressionBuilder from "./expression-builder/expression-builder";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE } from "./../../constants/constants";
-import { Calculator24 } from "@carbon/icons-react";
+import { Calculator } from "@carbon/react/icons";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants";
 import { get } from "lodash";
 import ExpressionToggle from "./expression-toggle/expression-toggle";
 
-import { register as registerPython } from "./languages/python-hint";
-import { register as registerR } from "./languages/r-hint";
-import { register as registerClem } from "./languages/CLEM-hint";
+import { keymap, placeholder } from "@codemirror/view";
+import { defaultKeymap, indentWithTab, insertNewline } from "@codemirror/commands";
+import { basicSetup, EditorView } from "codemirror";
+import { Compartment } from "@codemirror/state";
+import { tags } from "@lezer/highlight";
+import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { python } from "@codemirror/lang-python";
+import { sql } from "@codemirror/lang-sql";
+import { javascript } from "@codemirror/lang-javascript";
 
-// required for server side rendering.
-let cm = null;
-if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
-	cm = require("codemirror");
-	require("codemirror/addon/hint/show-hint");
-	require("codemirror/addon/display/placeholder");
-	require("codemirror/addon/display/autorefresh");
-	require("codemirror/mode/javascript/javascript");
-	require("codemirror/addon/hint/javascript-hint");
-	require("codemirror/addon/hint/sql-hint");
-	require("codemirror/mode/sql/sql");
-	require("codemirror/mode/python/python");
-	require("codemirror/mode/r/r");
-	registerPython(cm);
-	registerR(cm);
-	registerClem(cm);
-}
-
+import { getPythonHints } from "./languages/python-hint";
+import { rLanguage } from "./languages/r-hint";
+import { clem } from "./languages/CLEM-hint";
 
 const pxPerChar = 8.5;
 const pxPerLine = 26;
 const defaultCharPerLine = 30;
 const maxLineHeight = 15 * pxPerLine; // 20 lines
 const minLineHeight = 4 * pxPerLine; // 4 lines
-
 class ExpressionControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			showExpressionBuilder: false,
-			validationInProgress: false
+			validationInProgress: false,
+			expressionEditorHeight: 0
 		};
-
-		this.origHint = "";
+		this.editable = new Compartment; // eslint-disable-line new-parens
+		this.editorRef = React.createRef();
+		this.origHint = [];
 		this.expressionInfo = this.props.controller.getExpressionInfo();
 		this.handleValidate = this.handleValidate.bind(this);
 		this.hasValidate = this.hasValidate.bind(this);
 		this.cancelExpressionBuilder = this.cancelExpressionBuilder.bind(this);
 		this.hideExpressionBuilder = this.hideExpressionBuilder.bind(this);
 		this.showExpressionBuilder = this.showExpressionBuilder.bind(this);
-		this.editorDidMount = this.editorDidMount.bind(this);
 		this.addonHints = this.addonHints.bind(this);
 		this.getDatasetFields = this.getDatasetFields.bind(this);
 		this.handleBlur = this.handleBlur.bind(this);
-		this.handleKeyDown = this.handleKeyDown.bind(this);
+		this.createCodeMirrorEditor = this.createCodeMirrorEditor.bind(this);
+		this.events = this.events.bind(this);
+		this.handleUpdate = this.handleUpdate.bind(this);
+		this.setCodeMirrorEditable = this.setCodeMirrorEditable.bind(this);
+		this.getCodemirrorState = this.getCodemirrorState.bind(this);
+	}
 
-		this.handleChange = (editor, data, newValue) => {
-			// this is needed when characters are added into the expression builder because
-			// entering chars does not go through onChange() in expression builder.
-			// This is needed to adjust the selection position in code mirror.
-			if (Array.isArray(data.text) && data.text.length === 1 && data.text[0].length === 1 && this.props.onSelectionChange) {
-				// if a string was replaced, need to calc newPos from the 'data.from' otherwise use 'data.to'
-				const newPos = (data.removed[0].length > 0) ? { line: data.from.line, ch: data.from.ch + 1 } : { line: data.to.line, ch: data.to.ch + 1 };
-				this.props.onSelectionChange([{ anchor: newPos, head: newPos }]);
-			}
-			if (this.state.validateIcon) {
-				this.setState({
-					validateIcon: null
-				});
-				this.props.controller.updateErrorMessage(this.props.propertyId, DEFAULT_VALIDATION_MESSAGE);
-			}
-		};
+	componentDidMount() {
+		this.createCodeMirrorEditor();
 	}
 
 	// this is needed to ensure expression builder selection works.
 	componentDidUpdate(prevProps) {
+		// When code is edited in expression builder, reflect changes in expression flyout
+		if (!isEqual(this.getCodemirrorState()?.doc.toString(), this.props.value)) {
+			this.editor.dispatch({ changes: { from: 0, to: this.getCodemirrorState()?.doc.length, insert: this.props.value } });
+		}
+		// Toggle editable mode in Codemirror editor
+		if (!isEqual(prevProps.state, this.props.state)) {
+			this.setCodeMirrorEditable(!(this.props.state === STATES.DISABLED));
+		}
 		if (
 			this.props.selectionRange &&
 			this.props.selectionRange.length > 0 &&
@@ -112,17 +101,21 @@ class ExpressionControl extends React.Component {
 			this.editor
 		) {
 			this.props.selectionRange.forEach((selected) => {
-				this.editor.setSelection(selected.anchor, selected.head);
+				this.editor.dispatch({ selection: selected });
 			});
 			this.editor.focus();
 		}
 	}
 
-	// reset to the original autocomplete handler
-	componentWillUnmount() {
-		if (this.origHint && cm) {
-			cm.registerHelper("hint", this.props.control.language, this.origHint);
-		}
+	getCodemirrorState() {
+		return this.editor?.viewState?.state;
+	}
+
+	// Set codemirror editor non-editable when disabled
+	setCodeMirrorEditable(value) {
+		this.editor.dispatch({
+			effects: this.editable.reconfigure(EditorView.editable.of(value))
+		});
 	}
 
 	// get the set of dataset field names
@@ -130,39 +123,24 @@ class ExpressionControl extends React.Component {
 		const results = [];
 		const fields = this.props.controller.getDatasetMetadataFields();
 		for (const field of fields) {
-			results.push(field.name);
+			results.push({ label: field.name, type: "variable" });
 		}
 		return results;
 	}
 
 	// Add the dataset field names to the autocomplete list
-	addonHints(editor, options) {
-		var results = {};
-		var cur = editor.getCursor();
-		var token = editor.getTokenAt(cur);
-		if (this.origHint) {
-			// get the list of autocomplete names from the language autocomplete handler
-			results = this.origHint(editor, options);
-
-			// add to the start of the autocomplete list the set of dataset field names that complete the
-			// string that has been entered.
-			var parameters = this.getDatasetFields();
-			for (var i = 0; i < parameters.length; ++i) {
-				const parameter = parameters[i];
-				if (parameter.lastIndexOf(token.string, 0) === 0 && results.list.indexOf(parameter) === -1) {
-					results.list.unshift(parameter);
-				} else if (token.string === " " && token.type === null) {
-					results.list.unshift(parameter);
-				}
-			}
+	addonHints(context) {
+		const word = context.matchBefore(/\w*/);
+		if (word.from === word.to && !context.explicit) {
+			return null;
 		}
-		return results;
+		return {
+			from: word.from,
+			options: concat(this.origHint, this.getDatasetFields())
+		};
 	}
 
-	// Save original autocomplete handler and then register our custom handler
-	// that will add data set filed names to autocomplete list.
-	editorDidMount(editor, next) {
-		this.editor = editor;
+	createCodeMirrorEditor() {
 		// set the default height, should be between 4 and 20 lines
 		const controlWidth = (this.expressionEditorDiv) ? this.expressionEditorDiv.clientWidth : 0;
 		const charPerLine = (controlWidth > 0) ? controlWidth / pxPerChar : defaultCharPerLine;
@@ -172,9 +150,8 @@ class ExpressionControl extends React.Component {
 		// let an explicit prop override the calculated height
 		height = this.props.control.rows ? pxPerLine * this.props.control.rows : height;
 		height = this.props.height ? this.props.height : height;
-		this.editor.setSize(null, Math.max(Math.floor(height), minLineHeight));
+		this.setState({ expressionEditorHeight: Math.max(Math.floor(height), minLineHeight) });
 
-		this.origHint = editor.getHelper({ line: 0, ch: 0 }, "hint");
 		// this next line is a hack to overcome a Codemirror problem.  To support SparkSQL, a subset of SQL,
 		// we need to register with Codemirror the language as the value of "text/x-hive". When Codemirror
 		// registers the autocomplete addon it registers is as "sql" not the subset "text/x-hive"
@@ -183,22 +160,60 @@ class ExpressionControl extends React.Component {
 		let language = this.props.control.language;
 		switch (this.props.control.language) {
 		case "text/x-hive":
-			language = "sql";
+			language = sql();
 			break;
 		case "text/x-python":
-			language = "python";
+			language = python();
+			this.origHint = getPythonHints();
 			break;
 		case "text/x-rsrc":
-			language = "r";
+			language = rLanguage(); // custom language
+			break;
+		case "javascript":
+			language = javascript();
 			break;
 		default:
-		}
-		if (cm) {
-			cm.registerHelper("hint", language, this.addonHints);
+			language = clem(); // custom language
 		}
 
+		// Custom completions add to the language completions
+		const customCompletions = language.language.data.of({
+			autocomplete: this.addonHints
+		});
+
+		// Syntax highlighting
+		const myHighlightStyle = HighlightStyle.define([
+			{ tag: tags.keyword, class: "cm-keyword" },
+			{ tag: tags.number, class: "cm-number" },
+			{ tag: tags.definition(tags.name), class: "cm-def" },
+			{ tag: tags.comment, class: "cm-comment" },
+			{ tag: tags.variableName, class: "cm-variable" },
+			{ tag: tags.punctuation, class: "cm-punctuation" },
+			{ tag: tags.propertyName, class: "cm-property" },
+			{ tag: tags.operator, class: "cm-operator" },
+			{ tag: tags.string, class: "cm-string" },
+			{ tag: tags.meta, class: "cm-meta" }
+		]);
+
+		this.editor = new EditorView({
+			doc: this.props.value,
+			extensions: [
+				keymap.of([{ key: "Enter", run: insertNewline }, indentWithTab, defaultKeymap]), // This should be before basicSetup to insertNewLine on "Enter"
+				customCompletions,
+				syntaxHighlighting(myHighlightStyle),
+				basicSetup,
+				this.events(),
+				language,
+				placeholder(this.props.control.additionalText),
+				this.handleUpdate(),
+				this.editable.of(EditorView.editable.of(!(this.props.state === STATES.DISABLED)))
+			],
+			parent: this.editorRef.current
+		});
+
+		// Set editor in the expression-builder
 		if (this.props.editorDidMount) {
-			this.props.editorDidMount(editor, next);
+			this.props.editorDidMount(this.editor);
 		}
 	}
 
@@ -232,7 +247,6 @@ class ExpressionControl extends React.Component {
 				validateIcon: response.type,
 				validationInProgress: false
 			});
-			this.editor.display.input.blur();
 		});
 	}
 
@@ -240,31 +254,60 @@ class ExpressionControl extends React.Component {
 		return typeof this.props.controller.getHandlers().validationHandler === "function";
 	}
 
-	handleKeyDown(editor, evt) {
-		// this is needed to move the cursor to the new line if selection is being used in the expression builder.
-		if (evt.code === "Enter") {
-			if (this.props.selectionRange && this.props.selectionRange.length > 0 && this.props.onSelectionChange) {
-				const newPos = { line: this.props.selectionRange[0].anchor.line + 1, ch: 0 };
-				this.props.onSelectionChange([{ anchor: newPos, head: newPos }]);
+	// Event handlers for CM6
+	events() {
+		const that = this;
+		const eventHandlers = EditorView.domEventHandlers({
+			blur(evt, view) {
+				that.handleBlur(view, evt);
 			}
-		}
+		});
+		return eventHandlers;
 	}
 
 	handleBlur(editor, evt) {
-		if (this.props.onBlur) {
+		const cancelButtonClicked = evt && evt.relatedTarget && evt.relatedTarget.classList.contains("properties-cancel-button");
+		if (this.props.onBlur && !cancelButtonClicked) {
 			// this will ensure the expression builder can save values onBlur
 			this.props.onBlur(editor, evt);
 		} else {
-			const newValue = this.editor.getValue();
+			const newValue = editor?.viewState?.state?.doc.toString();
 			// don't validate when opening the expression builder
 			const skipValidate = evt && evt.relatedTarget && evt.relatedTarget.classList.contains("properties-expression-button");
 			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidate);
 		}
 	}
 
+	handleUpdate() {
+		const onUpdate = EditorView.updateListener.of((viewUpdate) => {
+			if (viewUpdate.docChanged) {
+				// this is needed when a single character is added into the expression builder because
+				// entering chars does not go through onChange() in expression builder.
+				// This is needed to adjust the selection position in code mirror.
+				if (
+					Array.isArray(viewUpdate.changedRanges) &&
+					viewUpdate.changedRanges.length === 1 &&
+					Math.abs(viewUpdate.changes.newLength - viewUpdate.changes.length) === 1 &&
+					this.props.onSelectionChange
+				) {
+					const newPos = viewUpdate.changedRanges[0].toB;
+					this.props.onSelectionChange([{ anchor: newPos, head: newPos }]);
+				}
+				if (this.state.validateIcon) {
+					this.setState({
+						validateIcon: null
+					});
+					this.props.controller.updateErrorMessage(this.props.propertyId, DEFAULT_VALIDATION_MESSAGE);
+				}
+			}
+		});
+		return onUpdate;
+	}
+
 	_showBuilderButton() {
 		// only show the button if there are function lists available and
 		// not explicitly told not to by the this.props.builder
+		// TODO: Design: how to display builder outside of right flyout?
 		return this.props.builder && this.props.rightFlyout && this.expressionInfo.functionCategories && Object.keys(this.expressionInfo.functionCategories).length > 0;
 	}
 
@@ -275,11 +318,11 @@ class ExpressionControl extends React.Component {
 			messageInfo = null;
 		}
 
-		const theme = (this.props.state === STATES.DISABLED) ? "disabled" : messageType;
 		const reactIntl = this.props.controller.getReactIntl();
+		const Calculator24 = React.forwardRef((props, ref) => <Calculator ref={ref} size={24} {...props} />);
 
 		const button = this._showBuilderButton() ? (
-			<Button kind="ghost" size="small"
+			<Button kind="ghost" size="sm"
 				className="properties-expression-button"
 				disabled={this.props.state === STATES.DISABLED}
 				onClick={this.showExpressionBuilder}
@@ -308,15 +351,7 @@ class ExpressionControl extends React.Component {
 				{validateIcon}
 			</div>)
 			: null;
-		const mirrorOptions = {
-			mode: this.props.control.language,
-			placeholder: this.props.control.additionalText,
-			theme: theme + " custom",
-			readOnly: (this.props.state === STATES.DISABLED) ? "nocursor" : false,
-			extraKeys: { "Ctrl-Space": "autocomplete" },
-			autoRefresh: true,
-			lineNumbers: true
-		};
+
 		const applyLabel = formatMessage(reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL);
 		const rejectLabel = formatMessage(reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
 		const expressonTitle = formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE);
@@ -328,7 +363,7 @@ class ExpressionControl extends React.Component {
 			applyLabel={applyLabel}
 			rejectLabel={rejectLabel}
 			title={expressonTitle}
-			light={this.props.controller.getLight()}
+			light={this.props.controller.getLight() && this.props.control.light}
 		>
 			<div>
 				<ExpressionBuilder
@@ -339,7 +374,8 @@ class ExpressionControl extends React.Component {
 			</div>
 		</WideFlyout>) : null;
 
-		const className = classNames(`properties-expression-editor ${messageType}`, { "properties-light-disabled": this.props.control.light || !this.props.controller.getLight() });
+		const className = classNames(`properties-expression-editor ${messageType}`,
+			{ "properties-light-disabled": !this.props.control.light || !this.props.controller.getLight() });
 
 		const expressionLink = (<div className="properties-expression-link-container" >
 			{button}
@@ -365,6 +401,8 @@ class ExpressionControl extends React.Component {
 			/>);
 		}
 
+		const codemirrorClassName = classNames(`elyra-CodeMirror ${messageType} ${this.props.state}`);
+
 		return (
 			<div className="properties-expression-editor-wrapper" >
 				{this.props.controlItem}
@@ -375,15 +413,7 @@ class ExpressionControl extends React.Component {
 					<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
 						className={className}
 					>
-						<CodeMirror
-							ref= { (ref) => (this.codeMirror = ref)}
-							options={mirrorOptions}
-							onChange={this.handleChange}
-							onKeyDown={this.handleKeyDown}
-							onBlur={this.handleBlur}
-							editorDidMount={this.editorDidMount}
-							value={this.props.value}
-						/>
+						<div className={codemirrorClassName} ref={this.editorRef} style={{ height: this.state.expressionEditorHeight }} />
 						<ValidationMessage state={this.props.state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 					</div>
 				</div>

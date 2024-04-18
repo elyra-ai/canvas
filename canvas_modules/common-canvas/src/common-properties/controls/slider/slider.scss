@@ -1,0 +1,48 @@
+/*
+ * Copyright 2017-2023 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
+.properties-slider {
+	.cds--slider-container { 
+		min-width: 100%;
+		
+		.cds--slider { 
+			min-width: unset; // Default Carbon Component Slider has a fixed min-width of 12.5rem so unset it to make it responsive
+		}
+
+		.cds--slider-text-input {
+			text-align: center;
+		}
+	}
+	&.error {
+		.cds--text-input--invalid, .cds--text-input {
+			outline: unset;
+			outline-offset: unset;
+		}
+		input[type="number"]:not([disabled]) {
+			border: 2px solid $support-error;
+		}
+	}
+	&.warning {
+		.cds--text-input--invalid, .cds--text-input {
+			outline: unset;
+			outline-offset: unset;
+		}
+		input[type="number"]:not([disabled]) {
+			border: 2px solid $support-warning;
+		}
+	}
+	
+}

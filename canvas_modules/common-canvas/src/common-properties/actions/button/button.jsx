@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import { STATES, CARBON_BUTTON_KIND, CARBON_BUTTON_SIZE } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
-import { v4 as uuid4 } from "uuid";
 import { has } from "lodash";
 
 class ButtonAction extends React.Component {
@@ -30,7 +29,6 @@ class ButtonAction extends React.Component {
 		this.state = {
 		};
 		this.applyAction = this.applyAction.bind(this);
-		this.uuid = uuid4();
 	}
 
 	getActionButtonKind() {
@@ -55,7 +53,7 @@ class ButtonAction extends React.Component {
 		}
 		switch (this.props.action.button.size) {
 		case CARBON_BUTTON_SIZE.SMALL: return CARBON_BUTTON_SIZE.SMALL;
-		case CARBON_BUTTON_SIZE.MEDIUM: return CARBON_BUTTON_SIZE.DEFAULT; // TODO: update this after upgrading to carbon 11.x
+		case CARBON_BUTTON_SIZE.MEDIUM: return CARBON_BUTTON_SIZE.MEDIUM;
 		case CARBON_BUTTON_SIZE.LARGE: return CARBON_BUTTON_SIZE.LARGE;
 		case CARBON_BUTTON_SIZE.EXTRA_LARGE: return CARBON_BUTTON_SIZE.EXTRA_LARGE;
 		default: return CARBON_BUTTON_SIZE.SMALL;
@@ -72,7 +70,8 @@ class ButtonAction extends React.Component {
 	}
 
 	render() {
-		const className = classNames("properties-action-button", { "hide": this.props.state === STATES.HIDDEN });
+		const customClassName = this.props.action.className ? this.props.action.className : "";
+		const className = classNames("properties-action-button", { "hide": this.props.state === STATES.HIDDEN }, customClassName);
 		const disabled = this.props.state === STATES.DISABLED;
 		const actionButtonKind = this.getActionButtonKind();
 		const actionButtonSize = this.getActionButtonSize();
@@ -90,7 +89,7 @@ class ButtonAction extends React.Component {
 
 		let display = button;
 		if (this.props.action.description) {
-			const tooltipId = this.uuid + "-tooltip-action-" + this.props.action.name;
+			const tooltipId = "tooltip-action-" + this.props.action.name;
 			const tooltip = (
 				<div className="properties-tooltips">
 					{this.props.action.description.text}

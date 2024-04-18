@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,6 +78,18 @@ export default (state = [], action) => {
 		});
 	}
 
+	case "SET_IS_OPEN_CATEGORY": {
+		return state.map((category) => {
+			if (category.id === action.data.categoryId) {
+				return Object.assign({}, category, { is_open: action.data.isOpen });
+			}
+			return category;
+		});
+	}
+
+	case "SET_IS_OPEN_ALL_CATEGORIES": {
+		return state.map((category) => Object.assign({}, category, { is_open: action.data.isOpen }));
+	}
 	default:
 		return state;
 	}

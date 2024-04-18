@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,12 @@ import PropTypes from "prop-types";
 
 import { get } from "lodash";
 
+import { Edit } from "@carbon/react/icons";
+
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import StagesCardNodeFlow from "./stagesCardNodeCanvas.json";
-import StagesCardNodePalette from "./stagesCardNodePalette.json";
+import StagesCardNodePalette from "../../../../../test_resources/palettes/stagesPalette.json";
 
 export default class DetachedCanvas extends React.Component {
 	constructor(props) {
@@ -41,17 +43,18 @@ export default class DetachedCanvas extends React.Component {
 		const pId = this.canvasController.getPrimaryPipelineId();
 		const pipelineLinkDecorations =
 			this.canvasController.getLinks().map((link) => {
-				const decs = this.getDecorationsArray(link.id);
+				const linkLabel = get(link, "app_data.stages.link_label", "");
+				const decs = this.getDecorationsArray(linkLabel);
 				return { linkId: link.id, pipelineId: pId, decorations: decs };
 			});
 		this.canvasController.setLinksMultiDecorations(pipelineLinkDecorations);
 
 		this.canvasController.getNodes().forEach((n) => {
-			this.canvasController.setNodeDecorations(n.id, this.getDecorations(n));
+			this.canvasController.setNodeDecorations(n.id, this.getNodeDecorations(n));
 		});
 	}
 
-	getDecorations(data) {
+	getNodeDecorations(node) {
 		return [
 			{
 				id: "toolbar_background",
@@ -64,7 +67,7 @@ export default class DetachedCanvas extends React.Component {
 			},
 			{
 				id: "second_label",
-				label: get(data, "app_data.stages.secondary_label", ""),
+				label: get(node, "app_data.stages.secondary_label", ""),
 				position: "topLeft",
 				x_pos: 60,
 				y_pos: 28,
@@ -90,6 +93,7 @@ export default class DetachedCanvas extends React.Component {
 			enableAutoLinkOnlyFromSelNodes: true,
 			enableSingleOutputPortDisplay: true,
 			enableMarkdownInComments: true,
+			enableContextToolbar: true,
 			enableResizableNodes: true,
 			enableNarrowPalette: false,
 			paletteInitialState: true,
@@ -133,11 +137,11 @@ export default class DetachedCanvas extends React.Component {
 				outputPortRightPosX: 0,
 				outputPortRightPosY: 0,
 				outputPortObject: "image",
-				outputPortImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				outputPortImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,
 				outputPortHeight: 20,
 				outputPortGuideObject: "image",
-				outputPortGuideImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg"
+				outputPortGuideImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg"
 			},
 			enableCanvasLayout: {
 				commentHighlightGap: 3,
@@ -145,11 +149,11 @@ export default class DetachedCanvas extends React.Component {
 				linkGap: 4,
 				displayLinkOnOverlap: false,
 				linkStartHandleObject: "image",
-				linkStartHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateStart.svg",
+				linkStartHandleImage: "/images/custom-canvases/stages/decorations/dragStateStart.svg",
 				linkStartHandleWidth: 20,
 				linkStartHandleHeight: 20,
 				linkEndHandleObject: "image",
-				linkEndHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				linkEndHandleImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				linkEndHandleWidth: 20,
 				linkEndHandleHeight: 20,
 				linkHandleRaiseToTop: true
@@ -161,12 +165,13 @@ export default class DetachedCanvas extends React.Component {
 	getDecorationsArray(linkLabel) {
 		const decs = [
 			{ id: "dec-0", position: "source", path: "M 0 -5 A 5 5 0 1 1 0 5 A 5 5 0 1 1 0 -5", class_name: "det-link-dot", temporary: true },
-			{ id: "dec-1", position: "source", image: "images/up-triangle.svg", class_name: "det-tri",
+			{ id: "dec-1", position: "source", image: "images/custom-canvases/stages/decorations/tri-up.svg", class_name: "det-tri",
 				distance: 40, x_pos: -7, y_pos: -7, width: 14, height: 14, outline: true, tooltip: "Up Triangle", temporary: true },
-			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", class_name: "det-tri",
+			{ id: "dec-2", position: "target", image: "images/custom-canvases/stages/decorations/tri-down.svg", class_name: "det-tri",
 				distance: -40, x_pos: -7, y_pos: -7, width: 14, height: 14, outline: true, tooltip: "Down Triangle", temporary: true },
 			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background", temporary: true },
-			{ id: "dec-4", position: "middle", label: linkLabel, x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
+			{ id: "link-label", position: "middle", label: linkLabel, label_editable: true, label_allow_return_key: "save",
+				x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
 		];
 		return decs;
 	}
@@ -200,7 +205,7 @@ export default class DetachedCanvas extends React.Component {
 	decorationActionHandler() {
 		this.canvasController.displaySubPipeline({
 			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
-			pipelineFlowId: "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159"
+			pipelineFlowId: "987654321-c3d2-4da7-ab5a-2b9573e5e159"
 		});
 	}
 
@@ -224,16 +229,21 @@ export default class DetachedCanvas extends React.Component {
 			const outputs = this.canvasController.getNodeOutputPorts(data.selectedObjects[0].id);
 			const newOutputs = outputs.concat(this.getNewPort(outputs.length + 1));
 			this.canvasController.setNodeOutputPorts(data.selectedObjects[0].id, newOutputs);
+		} else if (data.editType === "renameLinkLabel") {
+			this.canvasController.setLinkDecorationLabelEditingMode("link-label", data.id, data.pipelineId);
 		}
 	}
 
 	contextMenuHandler(source, defaultMenu) {
-		if (source.selectedObjectIds.length === 1) {
-			return defaultMenu.concat([
-				{ divider: true }, { action: "addPort", label: "Add port" }
-			]);
+		const newMenu = defaultMenu;
+
+		if (source.type === "link") {
+			newMenu.unshift(
+				{ action: "renameLinkLabel", label: "Rename", icon: (<Edit />) }
+			);
 		}
-		return defaultMenu;
+
+		return newMenu;
 	}
 
 	clickActionHandler(source) {

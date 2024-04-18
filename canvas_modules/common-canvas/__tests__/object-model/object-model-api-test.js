@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,6 @@ import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CL
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import CanvasUtils from "../../src/common-canvas/common-canvas-utils.js";
 import PasteAction from "../../src/command-actions/pasteAction.js";
-import LabelUtil from "../../src/common-canvas/label-util.js";
 
 const canvasController = new CanvasController();
 const objectModel = canvasController.getObjectModel();
@@ -800,12 +799,13 @@ describe("ObjectModel API handle model OK", () => {
 			objectModel.getAPIPipeline().getLink("7ec57e11-fe0b-4bc8-a3b8-b72920bf1a55"),
 			objectModel.getAPIPipeline().getLink(uniqueCommentLinkId)];
 
+		// Hack the canvas controller's getViewPortDimensions() method to return some
+		// dummy viewport dimensions.
+		canvasController.getViewPortDimensions = () => ({ x: 0, y: 0, width: 1100, height: 640 });
+
 		// Simulate the objects copying from the clipboard by making a copy of them.
 		const copyCloneData = JSON.parse(JSON.stringify(cloneData));
-
-		const labelUtil = new LabelUtil();
-		const dummyViewportDimensions = { x: 0, y: 0, width: 1100, height: 640 };
-		const cloneAction = new PasteAction(copyCloneData, objectModel, labelUtil, dummyViewportDimensions, false);
+		const cloneAction = new PasteAction(copyCloneData, canvasController);
 		cloneAction.do();
 
 		const actualCanvas = objectModel.getCanvasInfoPipeline();

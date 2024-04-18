@@ -1,0 +1,873 @@
+{
+	"current_parameters": {
+		"propertiesContainerType": "Flyout",
+		"categoryView": "accordions",
+		"propertiesSchemaValidation": true,
+		"applyPropertiesWithoutEdit": false,
+		"applyOnBlur": false,
+		"convertValueDataTypes": false,
+		"disableSaveOnRequiredErrors": true,
+		"expressionBuilder": true,
+		"enablePropertiesValidationHandler": true,
+		"trimSpaces": true,
+		"displayAdditionalComponents": false,
+		"heading": false,
+		"light": true,
+		"showRequiredIndicator": true,
+		"showAlertsTab": true,
+		"enableResize": true,
+		"initialEditorSize": "small",
+		"conditionHiddenPropertyHandling": "null",
+		"conditionDisabledPropertyHandling": "null",
+		"returnValueFiltering": "",
+		"disableRowMoveButtonsPropertyIds": "",
+		"maxLengthForMultiLineControls": 1024,
+		"maxLengthForSingleLineControls": 128,
+		"addRemoveRowsPropertyId": "{ \"name\": \"parameterName\"}",
+		"addRemoveRowsEnabled": true,
+		"hideEditButtonPropertyId": "{ \"name\": \"parameterName\"}",
+		"hideEditButton": false,
+		"tableButtonEnabledPropertyId": "{ \"name\": \"parameterName\"}",
+		"tableButtonEnabledButtonId": "",
+		"tableButtonEnabled": true,
+		"staticRowsPropertyId": "{ \"name\": \"parameterName\"}",
+		"staticRowsIndexes": "",
+		"setActiveTab": "",
+		"disableWideFlyoutPrimaryButtonForPanelId": "{ \"name\": \"panelId\"}",
+		"wideFlyoutPrimaryButtonDisabled": false
+	},
+	"parameters": [
+		{
+			"id": "propertiesContainerType",
+			"enum": [
+				"Flyout",
+				"Modal",
+				"Tearsheet"
+			],
+			"default": "Flyout"
+		},
+		{
+			"id": "categoryView",
+			"enum": [
+				"accordions",
+				"tabs"
+			],
+			"default": "accordions"
+		},
+		{
+			"id": "propertiesSchemaValidation",
+			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "applyPropertiesWithoutEdit",
+			"default": false,
+			"type": "boolean"
+		},
+		{
+			"id": "applyOnBlur",
+			"default": false,
+			"type": "boolean"
+		},
+		{
+			"id": "convertValueDataTypes",
+			"default": false,
+			"type": "boolean"
+		},
+		{
+			"id": "disableSaveOnRequiredErrors",
+			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "expressionBuilder",
+			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "enablePropertiesValidationHandler",
+			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "trimSpaces",
+			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "displayAdditionalComponents",
+			"default": false,
+			"type": "boolean"
+		},
+		{
+			"id": "heading",
+			"default": false,
+			"type": "boolean"
+		},
+		{
+			"id": "light",
+			"default": false,
+			"type": "boolean"
+		},
+		{
+			"id": "showRequiredIndicator",
+			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "showAlertsTab",
+			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "enableResize",
+			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "initialEditorSize",
+			"enum": [
+				"small",
+				"medium",
+				"large",
+				"max"
+			],
+			"default": "small"
+		},
+		{
+			"id": "conditionHiddenPropertyHandling",
+			"enum": [
+				"null",
+				"value"
+			],
+			"default": "null"
+		},
+		{
+			"id": "conditionDisabledPropertyHandling",
+			"enum": [
+				"null",
+				"value"
+			],
+			"default": "null"
+		},
+		{
+			"id": "returnValueFiltering",
+			"type": "string"
+		},
+		{
+			"id": "disableRowMoveButtonsPropertyIds",
+			"type": "string"
+		},
+		{
+			"id": "maxLengthForMultiLineControls",
+			"type": "integer"
+		},
+		{
+			"id": "maxLengthForSingleLineControls",
+			"type": "integer"
+		},
+		{
+			"id": "addRemoveRowsPropertyId",
+			"type": "string"
+		},
+		{
+			"id": "addRemoveRowsEnabled",
+			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "hideEditButtonPropertyId",
+			"type": "string"
+		},
+		{
+			"id": "hideEditButton",
+			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "tableButtonEnabledPropertyId",
+			"type": "string"
+		},
+		{
+			"id": "tableButtonEnabledButtonId",
+			"type": "string"
+		},
+		{
+			"id": "tableButtonEnabled",
+			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "staticRowsPropertyId",
+			"type": "string"
+		},
+		{
+			"id": "staticRowsIndexes",
+			"type": "string"
+		},
+		{
+			"id": "setActiveTab",
+			"type": "string"
+		},
+		{
+			"id": "disableWideFlyoutPrimaryButtonForPanelId",
+			"type": "string"
+		},
+		{
+			"id": "wideFlyoutPrimaryButtonDisabled",
+			"default": true,
+			"type": "boolean"
+		}
+	],
+	"uihints": {
+		"id": "harness-properties",
+		"parameter_info": [
+			{
+				"parameter_ref": "propertiesContainerType",
+				"label": {
+					"default": "containerType"
+				}
+			},
+			{
+				"parameter_ref": "categoryView",
+				"label": {
+					"default": "categoryView"
+				},
+				"description": {
+					"default": "View categories in right flyout. Set this option when containerType: Custom and rightFlyout: true."
+				}
+			},
+			{
+				"parameter_ref": "propertiesSchemaValidation",
+				"label": {
+					"default": "schemaValidation"
+				},
+				"description": {
+					"default": "Enable parameterDef schema validation"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "applyPropertiesWithoutEdit",
+				"label": {
+					"default": "applyPropertiesWithoutEdit"
+				},
+				"description": {
+					"default": "Apply properties without changes"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "applyOnBlur",
+				"label": {
+					"default": "applyOnBlur"
+				},
+				"description": {
+					"default": "Apply changes on blur"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "convertValueDataTypes",
+				"label": {
+					"default": "convertValueDataTypes"
+				},
+				"description": {
+					"default": "Convert currentParameter values to data type defined in parameterDef, propertiesConfig option: 'convertValueDataTypes'"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "disableSaveOnRequiredErrors",
+				"label": {
+					"default": "disableSaveOnRequiredErrors"
+				},
+				"description": {
+					"default": "Set save button disabled if required properties is empty. Should not be enabled if 'applyOnBlur' is set to true"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "expressionBuilder",
+				"label": {
+					"default": "expressionInfo"
+				},
+				"description": {
+					"default": "Show Expression Builder"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "enablePropertiesValidationHandler",
+				"label": {
+					"default": "Enable validation in expression control"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "trimSpaces",
+				"label": {
+					"default": "trimSpaces"
+				},
+				"description": {
+					"default": "Enable trimSpaces"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "displayAdditionalComponents",
+				"label": {
+					"default": "additionalComponents"
+				},
+				"description": {
+					"default": "Display additional components"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "heading",
+				"label": {
+					"default": "heading"
+				},
+				"description": {
+					"default": "Show panel heading (icon and label)"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "light",
+				"label": {
+					"default": "light"
+				},
+				"description": {
+					"default": "Enable light option"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "showRequiredIndicator",
+				"label": {
+					"default": "showRequiredIndicator"
+				},
+				"description": {
+					"default": "Show required label indicator"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "showAlertsTab",
+				"label": {
+					"default": "showAlertsTab"
+				},
+				"description": {
+					"default": "Show 'Alerts' tab"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "enableResize",
+				"label": {
+					"default": "enableResize"
+				},
+				"description": {
+					"default": "Adds a button that allows the right side flyout to expand/collapse between two sizes"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "initialEditorSize",
+				"label": {
+					"default": "initialEditorSize"
+				},
+				"description": {
+					"default": "Select editor size"
+				},
+				"control": "oneofselect"
+			},
+			{
+				"parameter_ref": "conditionHiddenPropertyHandling",
+				"label": {
+					"default": "conditionHiddenPropertyHandling"
+				},
+				"control": "oneofselect"
+			},
+			{
+				"parameter_ref": "conditionDisabledPropertyHandling",
+				"label": {
+					"default": "conditionDisabledPropertyHandling"
+				},
+				"control": "oneofselect"
+			},
+			{
+				"parameter_ref": "returnValueFiltering",
+				"label": {
+					"default": "returnValueFiltering"
+				},
+				"description": {
+					"default": "Filter returned values when applying property changes. Enter array of values in the format: [1, 4, \"text\"]"
+				},
+				"place_holder_text": {
+					"default": "[1, 4, \"text\"]"
+				}
+			},
+			{
+				"parameter_ref": "disableRowMoveButtonsPropertyIds",
+				"label": {
+					"default": "setDisableRowMoveButtons"
+				},
+				"description": {
+					"default": "Disable row move buttons for propertyId array. Enter an array of PropertyIds Format: [{\"name\": \"unique_id_for_control\"}]"
+				}
+			},
+			{
+				"parameter_ref": "maxLengthForMultiLineControls",
+				"label": {
+					"default": "maxLengthForMultiLineControls"
+				},
+				"description": {
+					"default": "Maximum characters allowed for multi-line string controls like textarea"
+				},
+				"range": {
+					"min": 0
+				}
+			},
+			{
+				"parameter_ref": "maxLengthForSingleLineControls",
+				"label": {
+					"default": "maxLengthForSingleLineControls"
+				},
+				"description": {
+					"default": "Maximum characters allowed for single-line string controls like textfield"
+				},
+				"range": {
+					"min": 0
+				}
+			},
+			{
+				"parameter_ref": "addRemoveRowsPropertyId",
+				"label": {
+					"default": "setAddRemoveRows"
+				},
+				"description": {
+					"default": "Set the propertyId for enabling/disabling addRemoveRows"
+				},
+				"place_holder_text": {
+					"default": "{\"name\": \"parameterName\"}"
+				},
+				"separator": "before"
+			},
+			{
+				"parameter_ref": "addRemoveRowsEnabled",
+				"label": {
+					"default": "Set addRemoveRows enabled for the propertyId entered above"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "hideEditButtonPropertyId",
+				"label": {
+					"default": "setHideEditButton"
+				},
+				"description": {
+					"default": "Set the propertyId for hide/show hideEditButton"
+				},
+				"place_holder_text": {
+					"default": "{\"name\": \"parameterName\"}"
+				},
+				"separator": "before"
+			},
+			{
+				"parameter_ref": "hideEditButton",
+				"label": {
+					"default": "Set hideEditButton show for the propertyId entered above"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "tableButtonEnabledPropertyId",
+				"label": {
+					"default": "setTableButtonEnabled"
+				},
+				"description": {
+					"default": "Set the propertyId for enabling/disabling a custom table button"
+				},
+				"place_holder_text": {
+					"default": "{\"name\": \"parameterName\"}"
+				},
+				"separator": "before"
+			},
+			{
+				"parameter_ref": "tableButtonEnabledButtonId",
+				"label": {
+					"default": "Set the buttonId for the custom table button"
+				},
+				"place_holder_text": {
+					"default": "custom table button id"
+				}
+			},
+			{
+				"parameter_ref": "tableButtonEnabled",
+				"label": {
+					"default": "Set custom table button enabled for the propertyId and buttonId entered above"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "staticRowsPropertyId",
+				"label": {
+					"default": "updateStaticRows"
+				},
+				"description": {
+					"default": "Set the propertyId for setting static rows"
+				},
+				"place_holder_text": {
+					"default": "{\"name\": \"parameterName\"}"
+				},
+				"separator": "before"
+			},
+			{
+				"parameter_ref": "staticRowsIndexes",
+				"label": {
+					"default": "Set the indexes for static rows"
+				},
+				"description": {
+					"default": "Indexes format: [Array of row indexes]"
+				},
+				"place_holder_text": {
+					"default": "[0, 1]"
+				}
+			},
+			{
+				"parameter_ref": "setActiveTab",
+				"label": {
+					"default": "Set the active tab in top level"
+				},
+				"description": {
+					"default": "Active tab in string format"
+				},
+				"place_holder_text": {
+					"default": ""
+				}
+			},
+			{
+				"parameter_ref": "disableWideFlyoutPrimaryButtonForPanelId",
+				"label": {
+					"default": "setWideFlyoutPrimaryButtonDisabled"
+				},
+				"description": {
+					"default": "Set the summary panel id for enabling/disabling OK button in Wide Flyout"
+				},
+				"place_holder_text": {
+					"default": "{\"name\": \"panelId\"}"
+				},
+				"separator": "before"
+			},
+			{
+				"parameter_ref": "wideFlyoutPrimaryButtonDisabled",
+				"label": {
+					"default": "Set OK button disabled for the summary panelId entered above"
+				},
+				"control": "toggle"
+			}
+		],
+		"action_info": [
+			{
+				"id": "submit-disable-row-move-buttons",
+				"label": {
+					"resource_key": "Submit"
+				},
+				"control": "button",
+				"button": {
+					"kind": "primary",
+					"size": "sm"
+				},
+				"data": {
+					"parameter_ref_id": "disableRowMoveButtonsPropertyIds",
+					"actionCallback": "setDisableRowMoveButtons"
+				}
+			},
+			{
+				"id": "submit-add-remove-rows",
+				"label": {
+					"resource_key": "Submit"
+				},
+				"control": "button",
+				"button": {
+					"kind": "primary",
+					"size": "sm"
+				},
+				"data": {
+					"parameter_ref_id": "addRemoveRowsPropertyId",
+					"parameter_ref_enabled": "addRemoveRowsEnabled",
+					"actionCallback": "setAddRemoveRows"
+				}
+			},
+			{
+				"id": "submit-hide-edit-button",
+				"label": {
+					"resource_key": "Submit"
+				},
+				"control": "button",
+				"button": {
+					"kind": "primary",
+					"size": "sm"
+				},
+				"data": {
+					"parameter_ref_id": "hideEditButtonPropertyId",
+					"parameter_ref_enabled": "hideEditButton",
+					"actionCallback": "setHideEditButton"
+				}
+			},
+			{
+				"id": "submit-enable-custom-table-button",
+				"label": {
+					"resource_key": "Submit"
+				},
+				"control": "button",
+				"button": {
+					"kind": "primary",
+					"size": "sm"
+				},
+				"data": {
+					"parameter_ref_id": "tableButtonEnabledPropertyId",
+					"parameter_ref_data": "tableButtonEnabledButtonId",
+					"parameter_ref_enabled": "tableButtonEnabled",
+					"actionCallback": "setTableButtonEnabled"
+				}
+			},
+			{
+				"id": "submit-static-rows",
+				"label": {
+					"resource_key": "Submit"
+				},
+				"control": "button",
+				"button": {
+					"kind": "primary",
+					"size": "sm"
+				},
+				"data": {
+					"parameter_ref_id": "staticRowsPropertyId",
+					"parameter_ref_data": "staticRowsIndexes",
+					"actionCallback": "setStaticRows"
+				}
+			},
+			{
+				"id": "submit-active-tabs",
+				"label": {
+					"resource_key": "Submit"
+				},
+				"control": "button",
+				"button": {
+					"kind": "primary",
+					"size": "sm"
+				},
+				"data": {
+					"parameter_ref_data": "setActiveTab",
+					"actionCallback": "setActiveTabTopLevel"
+				}
+			},
+			{
+				"id": "submit-enable-wide-flyout-button",
+				"label": {
+					"resource_key": "Submit"
+				},
+				"control": "button",
+				"button": {
+					"kind": "primary",
+					"size": "sm"
+				},
+				"data": {
+					"parameter_ref_id": "disableWideFlyoutPrimaryButtonForPanelId",
+					"parameter_ref_enabled": "wideFlyoutPrimaryButtonDisabled",
+					"actionCallback": "setWideFlyoutPrimaryButtonDisabled"
+				}
+			}
+		],
+		"group_info": [
+			{
+				"id": "Config Options",
+				"type": "controls",
+				"parameter_refs": [
+					"propertiesContainerType",
+					"categoryView",
+					"propertiesSchemaValidation",
+					"applyPropertiesWithoutEdit",
+					"applyOnBlur",
+					"convertValueDataTypes",
+					"disableSaveOnRequiredErrors",
+					"trimSpaces",
+					"heading",
+					"showRequiredIndicator",
+					"showAlertsTab",
+					"enableResize",
+					"conditionHiddenPropertyHandling",
+					"conditionDisabledPropertyHandling",
+					"returnValueFiltering",
+					"maxLengthForMultiLineControls",
+					"maxLengthForSingleLineControls"
+				]
+			},
+			{
+				"id": "Props info",
+				"type": "controls",
+				"parameter_refs": [
+					"initialEditorSize",
+					"expressionBuilder",
+					"displayAdditionalComponents"
+				]
+			},
+			{
+				"id": "Common Properties Props",
+				"type": "controls",
+				"parameter_refs": [
+					"light"
+				]
+			},
+			{
+				"id": "Harness options",
+				"type": "controls",
+				"parameter_refs": [
+					"enablePropertiesValidationHandler"
+				]
+			},
+			{
+				"id": "Controller Actions",
+				"type": "panels",
+				"group_info": [
+					{
+						"id": "disabled-row-move-buttons-controls",
+						"type": "controls",
+						"parameter_refs": [
+							"disableRowMoveButtonsPropertyIds"
+						]
+					},
+					{
+						"id": "disabled-row-move-buttons-panel",
+						"type": "actionPanel",
+						"action_refs": [
+							"submit-disable-row-move-buttons"
+						]
+					},
+					{
+						"id": "add-remove-rows-controls",
+						"type": "controls",
+						"parameter_refs": [
+							"addRemoveRowsPropertyId",
+							"addRemoveRowsEnabled"
+						]
+					},
+					{
+						"id": "add-remove-rows-panel",
+						"type": "actionPanel",
+						"action_refs": [
+							"submit-add-remove-rows"
+						]
+					},
+					{
+						"id": "hide-edit-button-controls",
+						"type": "controls",
+						"parameter_refs": [
+							"hideEditButtonPropertyId",
+							"hideEditButton"
+						]
+					},
+					{
+						"id": "hide-edit-button-panel",
+						"type": "actionPanel",
+						"action_refs": [
+							"submit-hide-edit-button"
+						]
+					},
+					{
+						"id": "custom-table-button-controls",
+						"type": "controls",
+						"parameter_refs": [
+							"tableButtonEnabledPropertyId",
+							"tableButtonEnabledButtonId",
+							"tableButtonEnabled"
+						]
+					},
+					{
+						"id": "custom-table-button-panel",
+						"type": "actionPanel",
+						"action_refs": [
+							"submit-enable-custom-table-button"
+						]
+					},
+					{
+						"id": "static-rows-controls",
+						"type": "controls",
+						"parameter_refs": [
+							"staticRowsPropertyId",
+							"staticRowsIndexes"
+						]
+					},		
+					{
+						"id": "static-rows-panel",
+						"type": "actionPanel",
+						"action_refs": [
+							"submit-static-rows"
+						]
+					},
+					{
+						"id": "active-tab-controls",
+						"type": "controls",
+						"parameter_refs": [
+							"setActiveTab"
+						]
+					},
+					{
+						"id": "static-rows-panel",
+						"type": "actionPanel",
+						"action_refs": [
+							"submit-active-tabs"
+						]
+					},
+					{
+						"id": "wide-flyout-button-controls",
+						"type": "controls",
+						"parameter_refs": [
+							"disableWideFlyoutPrimaryButtonForPanelId",
+							"wideFlyoutPrimaryButtonDisabled"
+						]
+					},
+					{
+						"id": "wide-flyout-button-panel",
+						"type": "actionPanel",
+						"action_refs": [
+							"submit-enable-wide-flyout-button"
+						]
+					}
+				]
+			}
+		]
+	},
+	"conditions": [
+		{
+			"visible": {
+			  "parameter_refs": [
+				"categoryView"
+			  ],
+			  "evaluate": {
+				"condition": {
+				  "parameter_ref": "propertiesContainerType",
+				  "op": "equals",
+				  "value": "Flyout"
+				}
+			  }
+			}
+		}
+	],
+	"resources": {
+		"addRemoveRowsEnabled.toggle.on.label": "enable",
+		"addRemoveRowsEnabled.toggle.off.label": "disable",
+		"hideEditButton.toggle.on.label": "show",
+		"hideEditButton.toggle.off.label": "hide",
+		"tableButtonEnabled.toggle.on.label": "enable",
+		"tableButtonEnabled.toggle.off.label": "disable",
+		"showRequiredIndicator.toggle.on.label": "required",
+		"showRequiredIndicator.toggle.off.label": "optional",
+		"showAlertsTab.toggle.on.label": "show",
+		"showAlertsTab.toggle.off.label": "hide"
+	}
+}

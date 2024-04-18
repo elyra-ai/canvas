@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,22 +34,22 @@ Cypress.Commands.add("verifyNoTextOverflow", (propertyId) => {
 });
 
 Cypress.Commands.add("verifyPropertiesFlyoutTitle", (givenTitle) => {
-	cy.get(".properties-title-editor-input input")
+	cy.get(".common-canvas-right-side-items .properties-title-editor-input input")
 		.should("have.value", givenTitle);
 });
 
 Cypress.Commands.add("verifyMessageInPropertiesTitleEditor", (message, type) => {
-	cy.get(".properties-title-editor")
-		.find(".bx--form-requirement")
+	cy.get(".common-canvas-right-side-items .properties-title-editor")
+		.find(".cds--form-requirement")
 		.should("have.text", message);
 
 	if (type === "warning") {
-		cy.get(".properties-title-editor")
-			.find(".bx--text-input__field-wrapper--warning")
+		cy.get(".common-canvas-right-side-items .properties-title-editor")
+			.find(".cds--text-input__field-wrapper--warning")
 			.should("have.length", 1);
 	} else if (type === "error") {
-		cy.get(".properties-title-editor")
-			.find(".bx--text-input__field-wrapper")
+		cy.get(".common-canvas-right-side-items .properties-title-editor")
+			.find(".cds--text-input__field-wrapper")
 			.should("have.attr", "data-invalid", "true");
 	}
 });
@@ -60,153 +60,12 @@ Cypress.Commands.add("verifyPropertiesFlyoutDoesNotExist", () => {
 });
 
 /** Verify the tooltip over the given text is 'visible'
-* @param label: label of the container shown in the UI
+* @param container: the container shown in the UI
+* @param visible: "visible" or "hidden"
 * @param text: text shown in the tip
+* @param tipLocation: the location of the tooltip
 */
-Cypress.Commands.add("verifyTipForLabelIsVisibleAtLocation", (label, tipLocation, text) => {
-	// Verify the tip for label "Mode" is visible on the "top" with text "Include or discard rows"
-	cy.getControlContainerFromName(label)
-		.then((container) => {
-			cy.get(".common-canvas-tooltip")
-				.then((tips) => {
-					// Get the visible tip
-					let visibleTip;
-					for (var idx = 0; idx < tips.length; idx++) {
-						if (tips[idx].textContent === text) {
-							visibleTip = tips[idx];
-							break;
-						}
-					}
-
-					if (visibleTip) {
-						// Verify tip is visible
-						cy.wrap(visibleTip).should("have.attr", "aria-hidden", "false");
-						// Verify text in tip
-						cy.wrap(visibleTip).should("have.text", text);
-						// Verify tip location
-						/* TODO: visibleTip has style="left: 1105.24px; top: 258.722px;"
-						* Get these values of left and top and store in tipLeft and tipTop.
-						* Need to write loop for "top" comparing containerTop and tipTop
-						*/
-						const containerLeft = container[0].getBoundingClientRect().x;
-						const tipLeft = visibleTip.getBoundingClientRect().x;
-						if (tipLocation === "left") {
-							expect(tipLeft).to.be.lessThan(containerLeft);
-						} else if (tipLocation === "right") {
-							expect(tipLeft).to.be.greaterThan(containerLeft);
-						}
-					}
-				});
-		});
-});
-
-/** Verify the tooltip over the given text is 'hidden'
-* @param label: label of the container shown in the UI
-* @param text: text shown in the tip
-*/
-Cypress.Commands.add("verifyTipForLabelIsHidden", (label, text) => {
-	cy.getControlContainerFromName(label)
-		.then((container) => {
-			cy.get(".common-canvas-tooltip")
-				.then((tips) => {
-					// Get the tip
-					let hiddenTip;
-					for (var idx = 0; idx < tips.length; idx++) {
-						if (tips[idx].textContent === text) {
-							hiddenTip = tips[idx];
-							break;
-						}
-					}
-
-					if (hiddenTip) {
-						// Verify tip is hidden
-						cy.wrap(hiddenTip).should("be.hidden");
-					}
-				});
-		});
-});
-
-/** Verify the tooltip over the given text in the summaryPanel is 'visible'
-* @param text: value displayed in summary panels
-* @param summaryName: name of summaryPanel
-* @param visible: string value of 'visible' when tooltip is showing, other values for tooltip hidden
-*/
-Cypress.Commands.add("verifyTipWithTextInSummaryPanel", (text, summaryName, visible) => {
-	cy.getSummaryFromName(summaryName)
-		.then((summary) => {
-			cy.get(".common-canvas-tooltip")
-				.then((tips) => {
-					// Get the visible tip
-					let visibleTip;
-					for (var idx = 0; idx < tips.length; idx++) {
-						if (tips[idx].textContent === text) {
-							visibleTip = tips[idx];
-							break;
-						}
-					}
-
-					if (visibleTip) {
-						// Verify tip is visible or hidden
-						if (visible === "visible") {
-							cy.wrap(visibleTip).should("have.attr", "aria-hidden", "false");
-						} else if (visible === "hidden") {
-							cy.wrap(visibleTip).should("have.attr", "aria-hidden", "true");
-						}
-						// Verify text in tip
-						cy.wrap(visibleTip).should("have.text", text);
-						// Verify tip location
-						/* TODO: visibleTip has style="left: 1105.24px; top: 258.722px;"
-						* Get these values of left and top and store in tipLeft and tipTop.
-						* Fix the commented code below.
-						*/
-						const summaryTop = summary[0].getBoundingClientRect().y;
-						const tipTop = visibleTip.getBoundingClientRect().y;
-						expect(tipTop).to.be.greaterThan(summaryTop);
-						// const summaryLeft = summary[0].getBoundingClientRect().x;
-						// const tipLeft = visibleTip.getBoundingClientRect().x;
-						// expect(tipLeft).to.be.greaterThan(summaryLeft);
-					}
-				});
-		});
-});
-
-Cypress.Commands.add("verifyTipForValidationIconInSummaryPanel", (summaryPanelId, text) => {
-	cy.findValidationIconInSummaryPanel(summaryPanelId)
-		.then((validationIcon) => {
-			cy.get(".common-canvas-tooltip")
-				.then((tips) => {
-					// Get the visible tip
-					let visibleTip;
-					for (var idx = 0; idx < tips.length; idx++) {
-						if (tips[idx].textContent === text) {
-							visibleTip = tips[idx];
-							break;
-						}
-					}
-
-					if (visibleTip) {
-						// Verify tip is visible
-						cy.wrap(visibleTip).should("have.attr", "aria-hidden", "false");
-						// Verify text in tip
-						cy.wrap(visibleTip).should("have.text", text);
-						// Verify tip location
-						/* TODO: visibleTip has style="left: 1223.23px; top: 224.972px;"
-						* Get these values of left and top and store in tipLeft and tipTop.
-						* Fix the commented code below.
-						*/
-						const validationIconTop = validationIcon[0].getBoundingClientRect().y;
-						const tipTop = visibleTip.getBoundingClientRect().y;
-						expect(tipTop).to.be.greaterThan(validationIconTop);
-
-						// const validationIconLeft = validationIcon[0].getBoundingClientRect().x;
-						// const tipLeft = visibleTip.getBoundingClientRect().x;
-						// expect(tipLeft).to.be.greaterThan(validationIconLeft);
-					}
-				});
-		});
-});
-
-Cypress.Commands.add("verifyTipDirectionForAction", (actionName, text, direction) => {
+Cypress.Commands.add("verifyTip", (container, visible, text, direction) => {
 	cy.get(".common-canvas-tooltip")
 		.then((tips) => {
 			// Get the visible tip
@@ -219,12 +78,42 @@ Cypress.Commands.add("verifyTipDirectionForAction", (actionName, text, direction
 			}
 
 			if (visibleTip) {
-				// Verify tip is visible
-				cy.wrap(visibleTip).should("have.attr", "aria-hidden", "false");
+				// Verify tip is visible or hidden
+				if (visible === "visible") {
+					cy.wrap(visibleTip).should("have.attr", "aria-hidden", "false");
+				} else {
+					cy.wrap(visibleTip).should("have.attr", "aria-hidden", "true");
+				}
 				// Verify text in tip
-				cy.wrap(visibleTip).should("have.text", text);
-				// Verify tip direction
-				cy.wrap(visibleTip).should("have.attr", "direction", direction);
+				if (text) {
+					cy.wrap(visibleTip).should("have.text", text);
+				}
+
+				// Verify tip location
+				if (direction) {
+					// Verify tip direction
+					cy.wrap(visibleTip).should("have.attr", "direction", direction);
+
+					if (container) {
+
+						/* TODO: visibleTip has style="left: 1105.24px; top: 258.722px;"
+								* Get these values of left and top and store in tipLeft and tipTop.
+								* Need to write loop for "top" comparing containerTop and tipTop
+								*/
+						const containerLeft = container[0].getBoundingClientRect().x;
+						const tipLeft = visibleTip.getBoundingClientRect().x;
+						const containerTop = container[0].getBoundingClientRect().y;
+						const tipTop = visibleTip.getBoundingClientRect().y;
+						if (direction === "left") {
+							expect(tipLeft).to.be.lessThan(containerLeft);
+						} else if (direction === "right") {
+							expect(tipLeft).to.be.greaterThan(containerLeft);
+						} else if (direction === "top") {
+							expect(tipTop).to.be.greaterThan(containerTop);
+						}
+					}
+
+				}
 			}
 		});
 });
@@ -236,7 +125,7 @@ Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type, property
 	const testWord = (type === "string") ? "\"" + word + "\"" : word;
 	cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
 		.find(".properties-expression-editor")
-		.find(".CodeMirror-line")
+		.find(".cm-line")
 		.then((codeMirrorLine) => {
 			for (let idx = 0; idx < codeMirrorLine.length; idx++) {
 				if (codeMirrorLine[idx].textContent.includes(testWord)) {
@@ -253,7 +142,7 @@ Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type, property
 
 Cypress.Commands.add("verifyNumberOfHintsInExpressionEditor", (hintCount) => {
 	// Enter "is" in ExpressionEditor and press autocomplete and verify that 18 autocomplete hints are displayed
-	cy.get(".CodeMirror-hints")
+	cy.get(".cm-tooltip-autocomplete")
 		.eq(0)
 		.find("li")
 		.should("have.length", hintCount);
@@ -262,7 +151,7 @@ Cypress.Commands.add("verifyNumberOfHintsInExpressionEditor", (hintCount) => {
 Cypress.Commands.add("verifyTypeOfSelectedAutoComplete", (selectedText, type) => {
 	const searchClass = ".cm-" + type;
 	cy.get(".properties-expression-editor")
-		.find(".CodeMirror-line")
+		.find(".cm-line")
 		.find(searchClass)
 		.should("have.class", "cm-" + type)
 		.should("have.text", selectedText);
@@ -275,7 +164,7 @@ Cypress.Commands.add("verifyTypeOfEnteredTextInExpressionEditor", (enteredText, 
 		.then((text) => {
 			const searchClass = ".cm-" + type;
 			cy.get(".properties-expression-editor")
-				.find(".CodeMirror-line")
+				.find(".cm-line")
 				.find(searchClass)
 				.should("have.class", "cm-" + type)
 				.should("have.text", setText);
@@ -284,7 +173,7 @@ Cypress.Commands.add("verifyTypeOfEnteredTextInExpressionEditor", (enteredText, 
 
 Cypress.Commands.add("verifyPlaceholderTextInExpressionEditor", (text) => {
 	cy.get(".properties-expression-editor")
-		.find(".CodeMirror-placeholder")
+		.find(".cm-placeholder")
 		.should("have.text", text);
 });
 

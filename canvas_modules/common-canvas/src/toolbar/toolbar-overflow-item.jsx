@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,47 +17,142 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { Button } from "carbon-components-react";
-import { OverflowMenuVertical16 } from "@carbon/icons-react";
+import { v4 as uuid4 } from "uuid";
+import { Button } from "@carbon/react";
+import { OverflowMenuVertical } from "@carbon/react/icons";
+import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
 
 class ToolbarOverflowItem extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			showExtendedMenu: false
+		};
+
+		this.buttonRef = React.createRef();
+
+		this.uuid = uuid4();
 		this.toggleExtendedMenu = this.toggleExtendedMenu.bind(this);
+		this.clickOutside = this.clickOutside.bind(this);
+		this.closeSubArea = this.closeSubArea.bind(this);
 	}
 
+	componentDidUpdate() {
+		if (this.props.toolbarFocusAction === this.props.action && this.props.isFocusInToolbar && !this.state.showExtendedMenu) {
+			this.buttonRef.current.focus();
+		}
+	}
+
+	// We must remove the eventListener in case this class is unmounted due
+	// to the toolbar getting redrawn.
+	componentWillUnmount() {
+		document.removeEventListener("click", this.clickOutside, false);
+	}
+
+	// Called by toolbar.jsx
+	getAction() {
+		return this.props.action;
+	}
+
+	// Called by toolbar.jsx
+	isSubAreaDisplayed() {
+		return this.state.showExtendedMenu;
+	}
+
+	// Called by toolbar.jsx and internally
+	closeSubArea() {
+		this.setState({ showExtendedMenu: false });
+	}
+
+	openSubMenu() {
+		this.setState({ showExtendedMenu: true });
+	}
+
+	genOverflowButtonClassName() {
+		return "toolbar-overflow-container " + this.genIndexClassName() + " " + this.genUuidClassName();
+	}
+
+	genIndexClassName() {
+		return "toolbar-index-" + this.props.index;
+	}
+
+	genUuidClassName() {
+		return "toolbar-uuid-" + this.uuid;
+	}
+
+	// When the overflow item is clicked to open the overflow menu we must set the
+	// index of the overflow items so the overflow menu can be correctly constructed.
+	// The overflow index values are used to split out the overflow menu action items
+	// from the left bar and right bar.
+	// When the overflow menu is closed we set the overflow index values to null.
 	toggleExtendedMenu() {
-		this.props.toggleExtendedMenu(this.props.index);
+		if (this.state.showExtendedMenu) {
+			document.removeEventListener("click", this.clickOutside, false);
+			this.props.setOverflowIndex(null); // Clear the indexes
+			this.closeSubArea();
+			this.props.setToolbarFocusAction(this.props.action); // This will not set focus on this item
+
+		} else {
+			document.addEventListener("click", this.clickOutside, false);
+			this.props.closeAnyOpenSubArea();
+			this.props.setOverflowIndex(this.props.index);
+			this.openSubMenu();
+			this.props.setToolbarFocusAction(this.props.action);
+		}
+	}
+
+	clickOutside(evt) {
+		if (this.state.showExtendedMenu) {
+			// Selector for the overflow-container that contains the overflow icon
+			// and submenu (if submenu is open).
+			const selector = "." + this.genIndexClassName();
+			const isClickInOverflowContainer = evt.target.closest(selector);
+			if (!isClickInOverflowContainer) {
+				this.setState({ showExtendedMenu: false });
+			}
+		}
 	}
 
 	render() {
-		const menuItems = this.props.showExtendedMenu ? this.props.generateExtensionMenuItems(this.props.index) : [];
-		const subMenuClassName = this.props.showExtendedMenu ? "" : "toolbar-popover-list-hide";
-
 		let overflowMenu = null;
-		if (menuItems.length > 0) {
+		if (this.state.showExtendedMenu) {
+			const actionItemRect = this.buttonRef.current.getBoundingClientRect();
 			overflowMenu = (
-				<div className={"toolbar-popover-list " + subMenuClassName}>
-					{menuItems}
-				</div>
+				<ToolbarSubMenu
+					ref={this.subMenuRef}
+					subMenuActions={this.props.subMenuActions}
+					instanceId={this.props.instanceId}
+					toolbarActionHandler={this.props.toolbarActionHandler}
+					closeSubArea={this.closeSubArea}
+					setToolbarFocusAction={this.props.setToolbarFocusAction}
+					actionItemRect={actionItemRect}
+					expandDirection={"vertical"}
+					containingDivId={this.props.containingDivId}
+					parentSelector={".toolbar-overflow-container"}
+					isOverflowMenu
+					isCascadeMenu={false}
+					size={this.props.size}
+				/>
 			);
 		}
 
-		const className = "toolbar-spacer toolbar-index-" + this.props.index;
+		const tabIndex = this.props.toolbarFocusAction === this.props.action ? 0 : -1;
 
 		return (
-			<div className={className} >
+			<div className={this.genOverflowButtonClassName()} data-toolbar-action={this.props.action}>
 				<div className={"toolbar-overflow-item"}>
-					<Button kind="ghost"
-						tabIndex={-1}
+					<Button
+						ref={this.buttonRef}
+						kind="ghost"
+						tabIndex={tabIndex}
 						onClick={this.toggleExtendedMenu}
-						onFocus={this.props.onFocus}
 						aria-label={this.props.label}
 						size={this.props.size}
 					>
 						<div className="toolbar-item-content default">
 							<div className="toolbar-icon">
-								<OverflowMenuVertical16 />
+								<OverflowMenuVertical />
 							</div>
 						</div>
 					</Button>
@@ -69,13 +164,19 @@ class ToolbarOverflowItem extends React.Component {
 }
 
 ToolbarOverflowItem.propTypes = {
-	showExtendedMenu: PropTypes.bool.isRequired,
-	toggleExtendedMenu: PropTypes.func.isRequired,
 	index: PropTypes.number.isRequired,
-	generateExtensionMenuItems: PropTypes.func,
-	onFocus: PropTypes.func,
+	action: PropTypes.string,
 	label: PropTypes.string,
-	size: PropTypes.oneOf(["md", "sm"])
+	size: PropTypes.oneOf(["md", "sm"]),
+	subMenuActions: PropTypes.array,
+	setOverflowIndex: PropTypes.func,
+	toolbarActionHandler: PropTypes.func,
+	instanceId: PropTypes.number.isRequired,
+	containingDivId: PropTypes.string,
+	toolbarFocusAction: PropTypes.string,
+	setToolbarFocusAction: PropTypes.func,
+	isFocusInToolbar: PropTypes.bool,
+	closeAnyOpenSubArea: PropTypes.func
 };
 
 export default ToolbarOverflowItem;

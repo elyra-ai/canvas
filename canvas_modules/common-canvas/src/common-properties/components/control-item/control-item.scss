@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,14 +40,17 @@
 	display: flex;
 	align-items: center;
 	padding-bottom: $spacing-03;
-	label, .properties-required-indicator {
-		@include carbon--type-style("label-01");
-		color: $text-02;
+	label, .properties-indicator {
+		@include type-style("label-01");
+		color: $text-secondary;
+	}
+	.properties-indicator {
+		padding-left: $spacing-02;
 	}
 	&.table-control {
-		label, .properties-required-indicator {
-			@include carbon--type-style("productive-heading-01");
-			color: $text-01;
+		label, .properties-indicator {
+			@include type-style("productive-heading-01");
+			color: $text-primary;
 		}
 	}
 }
@@ -63,13 +66,14 @@
 }
 
 .properties-control-description {
-	@include carbon--type-style("helper-text-01");
-	color: $text-02;
+	@include type-style("helper-text-01");
+	color: $text-secondary;
 	padding-bottom: $spacing-03;
+	white-space: pre-wrap; // Add a line break for \n
 }
 
-// Removed padding in properties-label-container because .bx--label has margin-bottom: $spacing-03
-.bx--label {
+// Removed padding in properties-label-container because .cds--label has margin-bottom: $spacing-03
+.cds--label {
 	.properties-label-container {
 		padding-bottom: 0;
 	}

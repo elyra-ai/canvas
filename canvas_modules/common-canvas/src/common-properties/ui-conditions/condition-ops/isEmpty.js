@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { ControlType } from "../../constants/form-constants";
 import logger from "./../../../../utils/logger";
 
 function op() {
@@ -21,6 +22,7 @@ function op() {
 }
 
 function evaluate(paramInfo, param2Info, value, controller) {
+	const propertiesConfig = controller.getPropertiesConfig();
 	const dataType = typeof paramInfo.value;
 	switch (dataType) {
 	case "undefined":
@@ -28,10 +30,15 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	case "boolean":
 		return false;
 	case "string":
-		return paramInfo.value.trim().length === 0;
+		return propertiesConfig.trimSpaces ? paramInfo.value.trim().length === 0 : paramInfo.value.length === 0;
 	case "number":
 		return paramInfo.value === null;
 	case "object":
+		if (paramInfo.control && paramInfo.control.controlType === ControlType.DATEPICKERRANGE) {
+			const startDate = paramInfo.value[0].trim();
+			const endDate = paramInfo.value[1].trim();
+			return startDate === "" && endDate === ""; // DATEPICKERRANGE is empty if both start and end dates are empty
+		}
 		return paramInfo.value === null ? true : paramInfo.value.length === 0;
 	default:
 		logger.warn("Ignoring condition operation 'isEmpty' for parameter_ref " + paramInfo.param + " with input data type " + dataType);

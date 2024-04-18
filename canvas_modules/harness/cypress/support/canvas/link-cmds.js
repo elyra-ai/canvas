@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,6 +84,10 @@ Cypress.Commands.add("enterLabelForLinkDecHitReturn", (linkLabel, decId, newLabe
 		.type("{enter}");
 });
 
+Cypress.Commands.add("checkLinkDoesntExist", (linkId) => {
+	cy.get(getLinkSelector(linkId, "grp"))
+		.should("not.exist");
+});
 
 function getLinkSelector(linkId, element) {
 	const inst = document.extraCanvas === true ? "1" : "0";
@@ -182,13 +186,13 @@ Cypress.Commands.add("linkNodeOutputPortToNodeInputPort", (srcNodeName, srcPortI
 		.then((srcSelector) => {
 			cy.getNodePortSelector(trgNodeName, "input", trgPortId)
 				.then((trgSelector) => {
-					// We're using { force: true } on mousemove and mouseup triggers
-					// to disable element visibility errorCheck from Cypress
-					cy.get(srcSelector)
-						.trigger("mousedown", { button: 0 });
-					cy.get(trgSelector)
-						.trigger("mousemove", { force: true })
-						.trigger("mouseup", { force: true });
+					cy.window().then((win) => {
+						cy.get(srcSelector)
+							.trigger("mousedown", { which: 1, view: win });
+						cy.get(trgSelector)
+							.trigger("mousemove", { view: win })
+							.trigger("mouseup", { which: 1, view: win, force: true });
+					});
 				});
 		});
 });
@@ -199,13 +203,13 @@ Cypress.Commands.add("linkNodeOutputPortToNodeInputPortInSupernode",
 			.then((srcSelector) => {
 				cy.getNodePortSelectorInSupernode(supernodeName, trgNodeName, "input", trgPortId)
 					.then((trgSelector) => {
-						// We're using { force: true } on mousemove and mouseup triggers
-						// to disable element visibility errorCheck from Cypress
-						cy.get(srcSelector)
-							.trigger("mousedown", { button: 0 });
-						cy.get(trgSelector)
-							.trigger("mousemove", { force: true })
-							.trigger("mouseup", { force: true });
+						cy.window().then((win) => {
+							cy.get(srcSelector)
+								.trigger("mousedown", { which: 1, view: win });
+							cy.get(trgSelector)
+								.trigger("mousemove", { view: win })
+								.trigger("mouseup", { which: 1, view: win, force: true });
+						});
 					});
 			});
 	});
@@ -218,11 +222,13 @@ Cypress.Commands.add("linkNodeOutputPortToNode", (srcNodeName, srcPortId, trgNod
 		.then((srcSelector) => {
 			cy.getNodeWithLabel(trgNodeName)
 				.then((trgSelector) => {
-					cy.get(srcSelector)
-						.trigger("mousedown", { button: 0 });
-					cy.get(trgSelector)
-						.trigger("mousemove", { force: true })
-						.trigger("mouseup", { force: true });
+					cy.window().then((win) => {
+						cy.get(srcSelector)
+							.trigger("mousedown", { which: 1, view: win });
+						cy.get(trgSelector)
+							.trigger("mousemove", { view: win })
+							.trigger("mouseup", { which: 1, view: win, force: true });
+					});
 				});
 		});
 });
@@ -233,11 +239,13 @@ Cypress.Commands.add("linkNodeOutputPortToPointOnCanvas", (srcNodeName, srcPortI
 	// is set to true.
 	cy.getNodePortSelector(srcNodeName, "output", srcPortId)
 		.then((srcSelector) => {
-			cy.get(srcSelector)
-				.trigger("mousedown", { button: 0 });
-			cy.get(".d3-svg-canvas-div > .svg-area")
-				.trigger("mousemove", { force: true })
-				.trigger("mouseup", xPos, yPos, { force: true });
+			cy.window().then((win) => {
+				cy.get(srcSelector)
+					.trigger("mousedown", { which: 1, view: win });
+				cy.get(".d3-svg-canvas-div > .svg-area")
+					.trigger("mousemove", { view: win })
+					.trigger("mouseup", xPos, yPos, { which: 1, view: win, force: true });
+			});
 		});
 });
 
@@ -274,7 +282,7 @@ Cypress.Commands.add("getNodePortSelectorInSupernode", (supernodeName, nodeName,
 
 Cypress.Commands.add("getNodePortTipSelector", (portId) => {
 	const inst = document.extraCanvas === true ? "1" : "0";
-	const portTipSelector = `[data-id='node_port_tip_${inst}_${portId}']`;
+	const portTipSelector = `[data-id*='node_port_tip_${inst}_${portId}']`;
 	return portTipSelector;
 });
 
@@ -366,18 +374,13 @@ Cypress.Commands.add("hoverOverLinkName", (linkName) => {
 	cy.getLinkWithLabel(linkName)
 		.children()
 		.eq(1)
-		.trigger("mouseenter", { force: true });
+		.trigger("mouseenter", { force: true })
+		.trigger("mouseover", { force: true });
 });
 
 Cypress.Commands.add("getLinkUsingLinkId", (linkId) => {
-	cy.get("body").then(($body) => {
-		if ($body.find(".d3-link-group").length) {
-			cy.get(getLinkGrpSelector())
-				.then((grpArray) => findGrpForLinkId(grpArray, linkId));
-		}
-		// No nodes found on canvas
-		return null;
-	});
+	cy.get(getLinkGrpSelector())
+		.then((grpArray) => findGrpForLinkId(grpArray, linkId));
 });
 
 function getLinkGrpSelector() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,10 +38,8 @@
 }
 
 .properties-error-content {
-	padding: 0 10px;
-	font-size: 14px;
-	font-weight: 300;
-	line-height: 16px;
+	@include type-style("label-02");
+	padding: 0 $spacing-06;
 }
 
 .properties-modal-container {
@@ -49,7 +47,7 @@
 	align-items: left;
 }
 
-.bx--tabs--scrollable .bx--tabs--scrollable__nav-item.properties-hidden-container,
+.cds--tabs .cds--tabs__nav-item.properties-hidden-container,
 .properties-hidden-container {
 	display: none;
 }

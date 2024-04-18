@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,41 +15,41 @@
  */
 
 .canvas-icon .stroke, .canvas-icon.stroke {
-	stroke: $icon-01;
+	stroke: $icon-primary;
 }
 
 .canvas-icon .fill, .canvas-icon.fill {
-	fill: $icon-01;
+	fill: $icon-primary;
 }
 
 .canvas-icon[disabled] {
-	fill: $disabled-02;
+	fill: $button-disabled;
 }
 
 svg.properties-icon, svg.canvas-icon {
-	fill: $icon-01;
+	fill: $icon-primary;
 }
 
 svg.canvas-state-icon-error {
-	fill: $support-01;
+	fill: $support-error;
 }
 
 svg.canvas-state-icon-success {
-	fill: $support-02;
+	fill: $support-success;
 }
 
 svg.canvas-state-icon-warning {
-	fill: $support-03;
+	fill: $support-warning;
 	[data-icon-path="inner-path"] { // exclamation mark
-		fill: $ui-05;
+		fill: $layer-selected-inverse;
 		opacity: 1;
 	}
 }
 
 svg.canvas-state-icon-info {
-	fill: $support-04;
+	fill: $support-info;
 }
 
 svg.canvas-state-icon-information-hollow {
-	fill: $icon-01;
+	fill: $icon-secondary;
 }

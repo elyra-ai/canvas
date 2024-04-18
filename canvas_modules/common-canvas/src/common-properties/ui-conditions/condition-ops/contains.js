@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ function op() {
 }
 
 function evaluate(paramInfo, param2Info, value, controller) {
-	const unsupportedControls = ["checkbox", "numberfield", "passwordfield"];
+	const unsupportedControls = ["checkbox", "numberfield", "passwordfield", "datepicker", "datepickerRange"];
 	if (unsupportedControls.indexOf(paramInfo.control.controlType) < 0) {
 		const dataType = typeof paramInfo.value;
 		if (typeof param2Info !== "undefined") {

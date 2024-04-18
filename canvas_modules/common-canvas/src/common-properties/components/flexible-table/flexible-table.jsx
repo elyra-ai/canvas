@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import React from "react";
 import { injectIntl } from "react-intl";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import { Search } from "carbon-components-react";
+import { Search, Layer } from "@carbon/react";
 import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
 import { REM_ROW_HEIGHT, REM_HEADER_HEIGHT, ONE_REM_HEIGHT, SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
 import ReactResizeDetector from "react-resize-detector";
@@ -61,6 +61,7 @@ class FlexibleTable extends React.Component {
 		this.onSort = this.onSort.bind(this);
 		this.sortHeaderClick = this.sortHeaderClick.bind(this);
 		this._updateTableWidth = this._updateTableWidth.bind(this);
+		this._updateRows = this._updateRows.bind(this);
 		this._adjustTableHeight = this._adjustTableHeight.bind(this);
 		this.handleCheckedRow = this.handleCheckedRow.bind(this);
 		this.handleCheckedAllRows = this.handleCheckedAllRows.bind(this);
@@ -74,8 +75,11 @@ class FlexibleTable extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (prevProps.rows !== this.props.rows ||
-			prevProps.columns !== this.props.columns ||
+		if (prevProps.rows !== this.props.rows) {
+			this._updateRows();
+		}
+
+		if (prevProps.columns !== this.props.columns ||
 			prevProps.noAutoSize !== this.props.noAutoSize) {
 			this._adjustTableHeight();
 		}
@@ -113,6 +117,9 @@ class FlexibleTable extends React.Component {
 		if (row.columns && has(row.columns[0], "content.props.children.props.propertyId.propertyId")) {
 			// this is a nested control
 			rowIndex = this.getLastChildPropertyIdRow(row.columns[0].content.props.children.props.propertyId, index);
+		} else if (row.columns && has(row.columns[0], "content.props.children.props.propertyId.index")) {
+			// for rows that have multi-select controls in them
+			rowIndex = row.columns[0].content.props.children.props.propertyId.index;
 		} else if (row.columns && has(row.columns[0], "content.props.children.props.propertyId.row")) {
 			rowIndex = row.columns[0].content.props.children.props.propertyId.row;
 		} else if (typeof row.rowKey === "number") { // expression tables uses rowKey
@@ -240,30 +247,41 @@ class FlexibleTable extends React.Component {
 		}
 	}
 
+	_updateRows() {
+		if (this.props.rows && this.props.rows !== this.state.rows) {
+			this.setState({ rows: this.props.rows }, () => {
+				this._adjustTableHeight();
+			});
+		}
+	}
+
 	_adjustTableHeight() {
 		if (this.props.noAutoSize) {
 			return;
 		}
+
 		let newHeight = this.state.tableHeight;
 		let dynamicH = this.state.dynamicHeight;
 		const multiSelectTableHeight = REM_ROW_HEIGHT + REM_HEADER_HEIGHT;
 		if (Array.isArray(this.props.data) && this.props.data.length < this.state.rows) {
-			newHeight = (REM_ROW_HEIGHT * this.props.data.length + REM_HEADER_HEIGHT + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) + "rem";
+			newHeight = (REM_ROW_HEIGHT * this.props.data.length + REM_HEADER_HEIGHT + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) * ONE_REM_HEIGHT;
 		} else if (this.state.rows > 0) {
-			newHeight = (REM_ROW_HEIGHT * this.state.rows + REM_HEADER_HEIGHT + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) + "rem";
+			newHeight = (REM_ROW_HEIGHT * this.state.rows + REM_HEADER_HEIGHT + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) * ONE_REM_HEIGHT;
 		} else if (this.state.rows === 0) { // only display header
-			newHeight = REM_HEADER_HEIGHT + "rem";
+			newHeight = REM_HEADER_HEIGHT * ONE_REM_HEIGHT;
 		} else if (this.state.rows === -1) {
 			if (this.flexibleTable) {
 				const labelAndDescriptionHeight = 50; // possible dynamically set this in the future
 				const ftHeaderHeight = (typeof this.flexibleTableHeader !== "undefined") ? ReactDOM.findDOMNode(this.flexibleTableHeader).getBoundingClientRect().height : 0;
 				const flyoutHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-wf-children");
-				if (flyoutHeight === 0) {
-					newHeight = "100vh"; // set full window height if flyout height not found
+				const tearsheetHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-primary-tab-panel");
+				if (flyoutHeight === 0 && tearsheetHeight === 0) {
+					newHeight = "100vh"; // set full window height if flyout & tearsheet height not found
 					dynamicH = -1;
 				} else {
-					newHeight = `calc(${flyoutHeight - ftHeaderHeight - labelAndDescriptionHeight}px - 3.5rem)`; // 3.5rem to adjust padding
-					dynamicH = (flyoutHeight - ftHeaderHeight - labelAndDescriptionHeight) - (3.5 * 16);
+					const totalHeight = flyoutHeight !== 0 ? flyoutHeight : tearsheetHeight;
+					newHeight = `calc(${totalHeight - ftHeaderHeight - labelAndDescriptionHeight}px - ${(3.5 * ONE_REM_HEIGHT)}px)`; // 3.5rem to adjust padding
+					dynamicH = (totalHeight - ftHeaderHeight - labelAndDescriptionHeight) - (3.5 * 16);
 				}
 			}
 		}
@@ -354,7 +372,7 @@ class FlexibleTable extends React.Component {
 		const checked = data.selected;
 		const overSelectOption = data.isOverSelectOption;
 
-		if (!this.props.data[displayedRowIndex].disabled) {
+		if (!this.props.data[displayedRowIndex].disabled && typeof this.props.updateRowSelections === "function") {
 			if (overSelectOption) { // Checkbox is clicked
 				let current = this.props.selectedRows ? this.props.selectedRows : [];
 				if (data.selectMultipleRows) { // multiple rows selected/deselected using shift key
@@ -372,7 +390,7 @@ class FlexibleTable extends React.Component {
 				// Sort ascending because we want to add selected rows in the same order as they're displayed in the table
 				current.sort((a, b) => a - b);
 				this.props.updateRowSelections(current);
-			} else if (this.props.rowSelection === ROW_SELECTION.SINGLE && typeof this.props.updateRowSelections !== "undefined") { // Table row is clicked
+			} else if (this.props.rowSelection === ROW_SELECTION.SINGLE) { // Table row is clicked
 				this.props.updateRowSelections(data.index, evt, this.props.data[data.index].rowKey);
 			}
 		}
@@ -466,10 +484,9 @@ class FlexibleTable extends React.Component {
 		let searchBar = null;
 
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
-			const placeHolder = this.props.intl.formatMessage(
-				{ id: "table.search.placeholder", defaultMessage: defaultMessages["table.search.placeholder"] },
-				{ column_name: searchLabel }
-			);
+			const placeHolder = typeof this.props.searchPlaceholder !== "undefined"
+				? this.props.searchPlaceholder
+				: this.props.intl.formatMessage({ id: "table.search.placeholder", defaultMessage: defaultMessages["table.search.placeholder"] }, { column_name: searchLabel });
 			const searchBarLabel = this.props.intl.formatMessage(
 				{ id: "table.search.label", defaultMessage: defaultMessages["table.search.label"] },
 				{ table_name: this.props.tableLabel }
@@ -477,15 +494,16 @@ class FlexibleTable extends React.Component {
 
 			searchBar = (
 				<div className={classNames("properties-ft-search-container", { "disabled": disabled })}>
-					<Search
-						className="properties-ft-search-text"
-						placeholder={placeHolder}
-						onChange={this.handleFilterChange}
-						disabled={disabled}
-						size="sm"
-						labelText={searchBarLabel}
-						light={this.props.light}
-					/>
+					<Layer level={this.props.light ? 1 : 0}>
+						<Search
+							className="properties-ft-search-text"
+							placeholder={placeHolder}
+							onChange={this.handleFilterChange}
+							disabled={disabled}
+							size="sm"
+							labelText={searchBarLabel}
+						/>
+					</Layer>
 				</div>
 			);
 		}
@@ -501,7 +519,7 @@ class FlexibleTable extends React.Component {
 		}
 
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
-		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass + this.props.messageInfo.type;
+		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass;
 		const ftHeader = (searchBar || this.props.topRightPanel)
 			? (<div className="properties-ft-table-header" ref={ (ref) => (this.flexibleTableHeader = ref) }>
 				{searchBar}
@@ -517,22 +535,24 @@ class FlexibleTable extends React.Component {
 			)
 			: null;
 
+		const ftClassname = classNames("properties-ft-control-container", { "properties-light-disabled": !this.props.light });
+
 		let tableHeight = 0;
 		const multiSelectEditRowsRem = 2 * REM_HEADER_HEIGHT; // multi-select adds two rows when selectedEditRow
 		const multiSelectEditRowsPixels = multiSelectEditRowsRem * ONE_REM_HEIGHT;
 		if (this.state.rows !== -1 && this.state.tableHeight) {
 			const remHeight = parseInt(this.state.tableHeight, 10);
-			tableHeight = (remHeight - (this.props.selectedEditRow ? multiSelectEditRowsRem : 0)) * ONE_REM_HEIGHT;
+			tableHeight = (remHeight - (this.props.selectedEditRow ? multiSelectEditRowsRem : 0));
 		} else if (this.state.rows === -1 && this.state.dynamicHeight && this.state.dynamicHeight !== -1) {
 			tableHeight = this.state.dynamicHeight - (this.props.selectedEditRow ? multiSelectEditRowsPixels : 0);
 		}
 
 		return (
-			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container" ref={ (ref) => (this.flexibleTable = ref) }>
+			<div data-id={"properties-ft-" + this.props.scrollKey} className={ftClassname} ref={ (ref) => (this.flexibleTable = ref) }>
 				{ftHeader}
 				<div className="properties-ft-container-panel">
 					<ReactResizeDetector handleWidth onResize={this._updateTableWidth}>
-						<div className="properties-ft-container-wrapper" style={ heightStyle }>
+						<div className={classNames("properties-ft-container-wrapper", this.props.messageInfo ? this.props.messageInfo.type : "")} style={ heightStyle }>
 							<div className={messageClass}>
 								{this.props.selectedEditRow}
 								<VirtualizedTable
@@ -581,7 +601,11 @@ FlexibleTable.propTypes = {
 	sortable: PropTypes.array,
 	columns: PropTypes.array.isRequired,
 	data: PropTypes.array.isRequired,
-	emptyTablePlaceholder: PropTypes.string,
+	emptyTablePlaceholder: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.element
+	]),
+	searchPlaceholder: PropTypes.string,
 	filterable: PropTypes.array,
 	filterBy: PropTypes.string,
 	filterKeyword: PropTypes.string,

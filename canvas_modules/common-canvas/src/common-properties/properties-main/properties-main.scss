@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ $properties-modal-buttons-height: $spacing-10;
 	width: 0;
 	height: 100%;
 	overflow: hidden;
-	border-left: 1px solid $ui-03;
+	border-left: 1px solid $layer-accent-01;
 	outline: none;
 	&.properties-small {
 		width: $common-properties-small-flyout-width;
@@ -34,6 +34,9 @@ $properties-modal-buttons-height: $spacing-10;
 	&.properties-large {
 		width: $common-properties-large-flyout-width;
 	}
+	&.properties-max {
+		width: $common-properties-max-flyout-width;
+	}
 	&:hover {
 		.properties-btn-resize {
 			visibility: visible;
@@ -41,7 +44,7 @@ $properties-modal-buttons-height: $spacing-10;
 		}
 	}
 	.properties-btn-resize {
-		transition: visibility $duration--moderate-02, opacity $duration--moderate-02;
+		transition: visibility $duration-moderate-01, opacity $duration-moderate-01;
 		opacity: 0;
 		visibility: hidden;
 		position: absolute;
@@ -50,15 +53,15 @@ $properties-modal-buttons-height: $spacing-10;
 		z-index: 1; // needs to sit on top of common-properties div
 		min-height: 24px;
 		min-width: 24px;
-		background-color: $ui-01;
-		border: 1px $ui-04 solid;
+		background-color: $layer-01;
+		border: 1px $border-strong-01 solid;
 		padding: 2px;
 		justify-content: center;
 		&:hover {
-			background-color: $ui-03;
+			background-color: $layer-accent-01;
 		}
 		svg {
-			fill: $icon-01;
+			fill: $icon-primary;
 			width: 16px;
 			height: 16px;
 		}
@@ -83,9 +86,9 @@ $properties-modal-buttons-height: $spacing-10;
 }
 
 .properties-light-enabled {
-	background-color: $ui-01; // Override theme background-color when light option is true
+	background-color: $layer-01; // Override theme background-color when light option is true
 }
 
 .properties-light-disabled {
-	background-color: $ui-background;
+	background-color: $background;
 }

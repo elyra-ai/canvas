@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,10 @@ import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disabl
 import { LINK_SELECTION_LINK_ONLY, PALETTE_LAYOUT_NONE,
 	STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY }
 	from "../../../../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
-import DetachedCanvasFlow from "./detachedCanvas.json";
-import DetachedPalette from "./detachedPalette.json";
+import DetachedCanvasFlow from "./readOnlyCanvas.json";
+import DetachedPalette from "./readOnlyPalette.json";
 
-import { Edit16, EditOff16, Locked16 } from "@carbon/icons-react";
+import { Edit, EditOff, Locked } from "@carbon/react/icons";
 
 export default class ReadOnlyCanvas extends React.Component {
 	constructor(props) {
@@ -65,9 +65,9 @@ export default class ReadOnlyCanvas extends React.Component {
 			{ action: "createAutoComment", label: "Add Comment" },
 			{ action: "deleteSelectedObjects", label: "Delete" },
 			{ divider: true },
-			{ action: "edit", label: "Edit", iconEnabled: (<Edit16 />), enable: true, isSelected: this.state.editState === STATE_TAG_NONE },
-			{ action: "readOnly", label: "Read-only", iconEnabled: (<EditOff16 />), enable: true, isSelected: this.state.editState === STATE_TAG_READ_ONLY },
-			{ action: "locked", label: "Locked", iconEnabled: (<Locked16 />), enable: true, isSelected: this.state.editState === STATE_TAG_LOCKED },
+			{ action: "edit", label: "Edit", iconEnabled: (<Edit />), enable: true, isSelected: this.state.editState === STATE_TAG_NONE },
+			{ action: "readOnly", label: "Read-only", iconEnabled: (<EditOff />), enable: true, isSelected: this.state.editState === STATE_TAG_READ_ONLY },
+			{ action: "locked", label: "Locked", iconEnabled: (<Locked />), enable: true, isSelected: this.state.editState === STATE_TAG_LOCKED },
 			{ divider: true }
 		];
 
@@ -76,7 +76,7 @@ export default class ReadOnlyCanvas extends React.Component {
 
 	getConfig() {
 		const config = Object.assign({}, this.props.config, {
-			enableParentClass: "writable",
+			enableParentClass: "read-only",
 			enableNodeFormatType: "Vertical",
 			enableLinkType: "Straight",
 			enableLinkDirection: "LeftRight",
@@ -122,22 +122,22 @@ export default class ReadOnlyCanvas extends React.Component {
 				inputPortDisplay: false,
 				outputPortRightPosX: 4,
 				outputPortObject: "image",
-				outputPortImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				outputPortImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,
 				outputPortHeight: 20,
 				outputPortGuideObject: "image",
-				outputPortGuideImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg"
+				outputPortGuideImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg"
 			},
 			enableCanvasLayout: {
 				dataLinkArrowHead: "M -5 5 L 0 0 -5 -5",
 				linkGap: 4,
 				displayLinkOnOverlap: false,
 				linkStartHandleObject: "image",
-				linkStartHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateStart.svg",
+				linkStartHandleImage: "/images/custom-canvases/stages/decorations/dragStateStart.svg",
 				linkStartHandleWidth: 20,
 				linkStartHandleHeight: 20,
 				linkEndHandleObject: "image",
-				linkEndHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				linkEndHandleImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				linkEndHandleWidth: 20,
 				linkEndHandleHeight: 20,
 				linkHandleRaiseToTop: true
@@ -160,9 +160,9 @@ export default class ReadOnlyCanvas extends React.Component {
 	getDecorationsArray(linkLabel) {
 		const decs = [
 			{ id: "dec-0", position: "source", path: "M 0 -5 A 5 5 0 1 1 0 5 A 5 5 0 1 1 0 -5", class_name: "det-link-dot", temporary: true },
-			{ id: "dec-1", position: "source", image: "images/up-triangle.svg", class_name: "det-tri",
+			{ id: "dec-1", position: "source", image: "images/custom-canvases/stages/decorations/tri-up.svg", class_name: "det-tri",
 				distance: 40, x_pos: -7, y_pos: -7, width: 14, height: 14, outline: true, tooltip: "Up Triangle", temporary: true },
-			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", class_name: "det-tri",
+			{ id: "dec-2", position: "target", image: "images/custom-canvases/stages/decorations/tri-down.svg", class_name: "det-tri",
 				distance: -40, x_pos: -7, y_pos: -7, width: 14, height: 14, outline: true, tooltip: "Down Triangle", temporary: true },
 			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background", temporary: true },
 			{ id: "dec-4", position: "middle", label: linkLabel, x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
@@ -184,7 +184,7 @@ export default class ReadOnlyCanvas extends React.Component {
 	decorationActionHandler() {
 		this.canvasController.displaySubPipeline({
 			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
-			pipelineFlowId: "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159"
+			pipelineFlowId: "45634789c3d2-4da7-ab5a-2b9573e5e159"
 		});
 	}
 

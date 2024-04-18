@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,21 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { v4 as uuid4 } from "uuid";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { has } from "lodash";
+import { Checkbox } from "@carbon/react";
 
 // Reusable component to show tooltip if the content is truncated
 export default class TruncatedContentTooltip extends React.Component {
 
 	render() {
 		let tooltipText = this.props.tooltipText;
+		let truncatedRef = this.props.truncatedRef;
 		if (typeof this.props.tooltipText !== "object") {
 			tooltipText = String(this.props.tooltipText);
+		}
+		if (this.props.content && this.props.content.type === Checkbox && this.tooltipRef && this.tooltipRef.firstChild) {
+			truncatedRef = this.tooltipRef.firstChild.lastChild; // checkbox label is in div -> label -> span
 		}
 		const tooltip = (
 			<div className="properties-tooltips">
@@ -36,14 +40,17 @@ export default class TruncatedContentTooltip extends React.Component {
 		return (
 			<div className="properties-truncated-tooltip">
 				<Tooltip
-					id={`${uuid4()}-properties`}
+					id="properties"
 					tip={tooltip}
 					direction="bottom"
 					className="properties-tooltips"
 					disable={has(this.props, "disabled") ? this.props.disabled : true}
 					showToolTipIfTruncated
+					truncatedRef={truncatedRef}
 				>
-					{this.props.content}
+					<div ref={(ref) => (this.tooltipRef = ref)}>
+						{this.props.content}
+					</div>
 				</Tooltip>
 			</div>
 		);
@@ -51,7 +58,8 @@ export default class TruncatedContentTooltip extends React.Component {
 }
 
 TruncatedContentTooltip.propTypes = {
-	content: PropTypes.element.isRequired,
+	content: PropTypes.element,
+	truncatedRef: PropTypes.object,
 	tooltipText: PropTypes.oneOfType([
 		PropTypes.string.isRequired,
 		PropTypes.object.isRequired,

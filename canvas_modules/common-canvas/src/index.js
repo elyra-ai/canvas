@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,21 @@
  */
 
 import { CommonCanvas, CanvasController } from "./common-canvas/index";
-import { CommonProperties, PropertiesController, FieldPicker, FlexibleTable } from "./common-properties/index";
+import { CommonProperties, PropertiesController, FieldPicker, FlexibleTable, clem, getPythonHints } from "./common-properties/index";
 import CommandStack from "./command-stack/command-stack";
 import * as FlowValidation from "./flow-validation/validate-flow";
 import ContextMenuWrapper from "./context-menu/context-menu-wrapper";
 import ToolTip from "./tooltip/tooltip";
+import ColorPicker from "./color-picker";
 
-export { CommonCanvas, CanvasController, CommonProperties, PropertiesController, FieldPicker, FlexibleTable,
-	CommandStack, FlowValidation, ContextMenuWrapper, ToolTip };
+import CreateAutoNodeAction from "../src/command-actions/createAutoNodeAction";
+import CreateNodeAction from "../src/command-actions/createNodeAction";
+import CreateNodeLinkAction from "../src/command-actions/createNodeLinkAction";
+import DeleteObjectsAction from "../src/command-actions/deleteObjectsAction";
+import DisconnectObjectsAction from "../src/command-actions/disconnectObjectsAction";
+import PasteAction from "../src/command-actions/pasteAction";
+
+
+export { CommonCanvas, CanvasController, CommonProperties, PropertiesController, FieldPicker, FlexibleTable, clem, getPythonHints,
+	CommandStack, FlowValidation, ContextMenuWrapper, ToolTip, ColorPicker,
+	CreateAutoNodeAction, CreateNodeAction, CreateNodeLinkAction, DeleteObjectsAction, DisconnectObjectsAction, PasteAction };

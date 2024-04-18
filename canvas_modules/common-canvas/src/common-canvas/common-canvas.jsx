@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ import React from "react";
 import { Provider } from "react-redux";
 import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
-import Palette from "../palette/palette.jsx";
-import CommonCanvasTooltip from "./cc-tooltip.jsx";
 import CommonCanvasCentralItems from "./cc-central-items.jsx";
 import Logger from "../logging/canvas-logger.js";
 
@@ -43,21 +41,6 @@ class CommonCanvas extends React.Component {
 		this.initializeController(this.props);
 	}
 
-	// Prevent the default behavior (which is to show a plus-sign pointer) as
-	// an object is being dragged over the common canvas components.
-	// Note: this is overriden by the canvas area itself to allow external objects
-	// to be dragged over it.
-	onDragOver(evt) {
-		evt.preventDefault();
-	}
-
-	// Prevent an object being dropped on the common canvas causing a file
-	// download event (which is the default!). Note: this is overriden by the
-	// canvas area itself to allow external objects to be dropped on it.
-	onDrop(evt) {
-		evt.preventDefault();
-	}
-
 	initializeController(props) {
 		this.logger.logStartTimer("initializeController");
 		props.canvasController.setCanvasConfig(props.config);
@@ -69,6 +52,8 @@ class CommonCanvas extends React.Component {
 			{ content: props.rightFlyoutContent, isOpen: props.showRightFlyout });
 		props.canvasController.setBottomPanelConfig(
 			{ content: props.bottomPanelContent, isOpen: props.showBottomPanel });
+		props.canvasController.setTopPanelConfig(
+			{ content: props.topPanelContent, isOpen: props.showTopPanel });
 
 		props.canvasController.setHandlers({
 			contextMenuHandler: props.contextMenuHandler,
@@ -85,44 +70,12 @@ class CommonCanvas extends React.Component {
 		this.logger.logEndTimer("initializeController");
 	}
 
-	generateClass() {
-		let className = "common-canvas";
-
-		className += (
-			!this.isEditingAllowed()
-				? " config-editing-actions-false"
-				: "");
-
-		className += (
-			this.props.config && this.props.config.enableParentClass
-				? " " + this.props.config.enableParentClass
-				: "");
-
-		return className;
-	}
-
-	isEditingAllowed() {
-		return this.props.config &&
-			(typeof this.props.config.enableEditingActions === "undefined" ||
-				this.props.config.enableEditingActions === true);
-	}
-
 	render() {
 		this.logger.log("render");
 
-		const tip = (<CommonCanvasTooltip canvasController={this.props.canvasController} />);
-		const palette = (<Palette canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
-		const centralItems = (<CommonCanvasCentralItems canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
-
-		const className = this.generateClass();
-
 		return (
 			<Provider store={this.props.canvasController.getStore()}>
-				<div className={className} onDragOver={this.onDragOver} onDrop={this.onDrop}>
-					{palette}
-					{centralItems}
-					{tip}
-				</div>
+				<CommonCanvasCentralItems canvasController={this.props.canvasController} containingDivId={this.containingDivId} />
 			</Provider>
 		);
 	}
@@ -152,7 +105,9 @@ CommonCanvas.propTypes = {
 	rightFlyoutContent: PropTypes.object,
 	showRightFlyout: PropTypes.bool,
 	bottomPanelContent: PropTypes.object,
-	showBottomPanel: PropTypes.bool
+	showBottomPanel: PropTypes.bool,
+	topPanelContent: PropTypes.object,
+	showTopPanel: PropTypes.bool
 };
 
 export default injectIntl(CommonCanvas);

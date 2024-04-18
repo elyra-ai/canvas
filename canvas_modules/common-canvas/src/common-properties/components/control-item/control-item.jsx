@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
+import { STATES, CARBON_ICONS, MESSAGE_KEYS } from "./../../constants/constants.js";
 import { ControlType } from "./../../constants/form-constants";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { isEmpty } from "lodash";
-import { v4 as uuid4 } from "uuid";
+import { isEmpty, get } from "lodash";
 import Icon from "./../../../icons/icon.jsx";
 import ActionFactory from "./../../actions/action-factory.js";
+import { formatMessage } from "./../../util/property-utils";
 
 class ControlItem extends React.Component {
 	constructor(props) {
 		super(props);
 		this.actionFactory = new ActionFactory(this.props.controller);
-		this.uuid = uuid4();
+		this.showRequiredIndicator = props.controller ? get(props.controller.getPropertiesConfig(), "showRequiredIndicator", true) : true;
 	}
 
 	render() {
@@ -54,7 +54,7 @@ class ControlItem extends React.Component {
 						this.props.control.description.link.propertyId = this.props.propertyId;
 					}
 					tooltip = (<Tooltip
-						id={`${this.uuid}-tooltip-label-${this.props.control.name}`}
+						id={`tooltip-label-${this.props.control.name}`}
 						tip={this.props.control.description.text}
 						link={this.props.control.description.link ? this.props.control.description.link : null}
 						tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
@@ -66,14 +66,24 @@ class ControlItem extends React.Component {
 					</Tooltip>);
 				}
 			}
-			let requiredIndicator;
-			if (this.props.control.required) {
-				requiredIndicator = <span className="properties-required-indicator">*</span>;
+			let indicator;
+			if (this.showRequiredIndicator && this.props.control.required) {
+				indicator = (
+					<span className="properties-indicator">
+						{formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.LABEL_INDICATOR_REQUIRED)}
+					</span>
+				);
+			} else if (!this.showRequiredIndicator && !("required" in this.props.control)) {
+				indicator = (
+					<span className="properties-indicator">
+						{formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.LABEL_INDICATOR_OPTIONAL)}
+					</span>
+				);
 			}
 			label = (
 				<div className={classNames("properties-label-container", { "table-control": this.props.tableControl === true })}>
 					<label className="properties-control-label">{this.props.control.label.text}</label>
-					{requiredIndicator}
+					{indicator}
 					{tooltip}
 				</div>);
 		}

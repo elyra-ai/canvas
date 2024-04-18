@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -132,11 +132,6 @@ export const HIGHLIGHT_BRANCH = "branch";
 export const HIGHLIGHT_UPSTREAM = "upstream";
 export const HIGHLIGHT_DOWNSTREAM = "downstream";
 
-export const HIGHLIGHT_FILL = "#bad8ff";
-export const HIGHLIGHT_HOVER_FILL = "#a0c8fe";
-export const HIGHLIGHT_STROKE = "#152935";
-export const HIGHLIGHT_STROKE_WIDTH = "3px";
-
 export const BINDING = "binding";
 export const SUPER_NODE = "super_node";
 export const MODEL_NODE = "model_node";
@@ -178,7 +173,14 @@ export const TOOLBAR_REDO = "redo";
 export const TOOLBAR_CUT = "cut";
 export const TOOLBAR_COPY = "copy";
 export const TOOLBAR_PASTE = "paste";
+export const TOOLBAR_CLIPBOARD = "clipboard";
+export const TOOLBAR_CREATE_COMMENT = "createComment";
 export const TOOLBAR_CREATE_AUTO_COMMENT = "createAutoComment";
+export const TOOLBAR_SET_COMMENT_EDIT_MODE = "setCommentEditingMode";
+export const TOOLBAR_SHOW_COMMENTS = "commentsShow";
+export const TOOLBAR_HIDE_COMMENTS = "commentsHide";
+export const TOOLBAR_COLOR_BACKGROUND = "colorBackground";
+export const TOOLBAR_DELETE_LINK = "deleteLink";
 export const TOOLBAR_DELETE_SELECTED_OBJECTS = "deleteSelectedObjects";
 export const TOOLBAR_ZOOM_IN = "zoomIn";
 export const TOOLBAR_ZOOM_OUT = "zoomOut";
@@ -188,6 +190,11 @@ export const TOOLBAR_ARRANGE_VERTICALLY = "arrangeVertically";
 export const TOOLBAR_TOGGLE_NOTIFICATION_PANEL = "toggleNotificationPanel";
 export const TOOLBAR_OPEN_PALETTE = "paletteOpen";
 export const TOOLBAR_CLOSE_PALETTE = "paletteClose";
+export const TOOLBAR_TOGGLE_PALETTE = "paletteToggle";
+export const TOOLBAR_EXPAND_SUPERNODE_IN_PLACE = "expandSuperNodeInPlace";
+export const TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE = "collapseSuperNodeInPlace";
+export const TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE = "displaySubPipeline";
+export const TOOLBAR_SET_NODE_LABEL_EDIT = "setNodeLabelEditingMode";
 
 export const EDIT_ICON =
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\">" +
@@ -223,12 +230,6 @@ export const NODE_WARNING_ICON =
 	"<path d=\"M8 1C4.2 1 1 4.2 1 8s3.2 7 7 7 7-3.1 7-7-3.1-7-7-7zm-.5 3h1v5h-1V4zm.5 8.2c-.4 0-.8-.4-.8-.8s.3-.8.8-.8c.4 0 .8.4.8.8s-.4.8-.8.8z\"></path>" +
 	"<path style=\"stroke-width: 0; fill: #161616; opacity: 1;\" d=\"M7.5 4h1v5h-1V4zm.5 8.2c-.4 0-.8-.4-.8-.8s.3-.8.8-.8c.4 0 .8.4.8.8s-.4.8-.8.8z\"></path>" +
 	"</svg>";
-
-export const LEFT_ARROW_ICON =
-	"<svg focusable=\"false\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\" " +
-	"width=\"16\" height=\"16\" viewBox=\"0 0 32 32\" aria-hidden=\"true\" style=\"will-change: transform;\">" +
-	"<path d=\"M13 26L14.41 24.59 6.83 17 29 17 29 15 6.83 15 14.41 7.41 13 6 3 16 13 26z\"></path>" +
-	"<title>Arrow left</title></svg>";
 
 // This image is stored in the format to be shown as an <img> in the JSX
 // created by palette-flyout-content-category render method.

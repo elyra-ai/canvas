@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
  */
 
 import React from "react";
-import { mountWithIntl } from "../_utils_/intl-utils";
+import { renderWithIntl } from "../_utils_/intl-utils";
 import { expect } from "chai";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
 import sinon from "sinon";
+import { fireEvent } from "@testing-library/react";
 
 describe("Toolbar renders correctly", () => {
 
@@ -39,13 +40,12 @@ describe("Toolbar renders correctly", () => {
 				{ action: "deleteSelectedObjects", label: "Delete", enable: true }
 			]
 		};
-		const canvasToolbar = createToolbar(toolbarConfig);
-		expect(canvasToolbar.find(".toolbar-div")).to.have.length(1);
-		expect(canvasToolbar.find(".toolbar-left-bar")).to.have.length(1);
-		expect(canvasToolbar.find(".toolbar-right-bar")).to.have.length(1);
-		expect(canvasToolbar.find(".toolbar-item")).to.have.length(10);
-		expect(canvasToolbar.find(".toolbar-divider")).to.have.length(2);
-		expect(canvasToolbar.find(".toolbar-spacer")).to.have.length(10);
+		const { container } = createToolbar(toolbarConfig);
+		expect(container.getElementsByClassName("toolbar-div")).to.have.length(1);
+		expect(container.getElementsByClassName("toolbar-left-bar")).to.have.length(1);
+		expect(container.getElementsByClassName("toolbar-item")).to.have.length(10);
+		expect(container.getElementsByClassName("toolbar-divider")).to.have.length(2);
+		expect(container.getElementsByClassName("toolbar-overflow-container")).to.have.length(10);
 	});
 
 	it("should render a Toolbar with just a right bar defined", () => {
@@ -59,14 +59,14 @@ describe("Toolbar renders correctly", () => {
 			]
 		};
 
-		const canvasToolbar = createToolbar(toolbarConfig);
-		expect(canvasToolbar.find(".toolbar-div")).to.have.length(1);
-		expect(canvasToolbar.find(".toolbar-left-bar")).to.have.length(1);
-		expect(canvasToolbar.find(".toolbar-right-bar")).to.have.length(1);
-		expect(canvasToolbar.find(".toolbar-item")).to.have.length(4);
-		expect(canvasToolbar.find(".toolbar-divider")).to.have.length(1);
-		// No spacers created for the right bar
-		expect(canvasToolbar.find(".toolbar-spacer")).to.have.length(0);
+		const { container } = createToolbar(toolbarConfig);
+
+		expect(container.getElementsByClassName("toolbar-left-bar")).to.have.length(1);
+		expect(container.getElementsByClassName("toolbar-right-bar")).to.have.length(1);
+		expect(container.getElementsByClassName("toolbar-item")).to.have.length(4);
+		expect(container.getElementsByClassName("toolbar-divider")).to.have.length(1);
+		// No toolbar-overflow-container created for the right bar
+		expect(container.getElementsByClassName("toolbar-overflow-container")).to.have.length(0);
 	});
 
 	it("should register a click when clicked on an enabled toolbar item", () => {
@@ -80,12 +80,11 @@ describe("Toolbar renders correctly", () => {
 			]
 		};
 		const toolbarActionHandler = sinon.spy();
-		const canvasToolbar = createToolbar(toolbarConfig, toolbarActionHandler);
+		const { container } = createToolbar(toolbarConfig, toolbarActionHandler);
 
-		canvasToolbar.find(".zoomIn-action button")
-			.at(0)
-			.simulate("click");
-		expect(toolbarActionHandler.calledOnce).to.equal(true);
+		const el = container.querySelector(".zoomIn-action button");
+		fireEvent.click(el);
+		expect(toolbarActionHandler.calledOnce).to.be.true;
 
 	});
 
@@ -100,12 +99,11 @@ describe("Toolbar renders correctly", () => {
 			]
 		};
 		const toolbarActionHandler = sinon.spy();
-		const canvasToolbar = createToolbar(toolbarConfig, toolbarActionHandler);
+		const { container } = createToolbar(toolbarConfig, toolbarActionHandler);
 
-		canvasToolbar.find(".zoomToFit-action button")
-			.at(0)
-			.simulate("click");
-		expect(toolbarActionHandler.calledOnce).to.equal(false);
+		const el = container.querySelector(".zoomToFit-action button");
+		fireEvent.click(el);
+		expect(toolbarActionHandler.calledOnce).to.be.false;
 	});
 
 	it("should render a Toolbar with medium size buttons", () => {
@@ -117,17 +115,21 @@ describe("Toolbar renders correctly", () => {
 				{ action: "run", label: "Run Pipeline", enable: false },
 			]
 		};
-		const canvasToolbar = createToolbar(toolbarConfig, sinon.spy(), "md");
+		const { container } = createToolbar(toolbarConfig, sinon.spy(), "md");
 		// Select the toolbar medium buttons
-		const overflowButtons = canvasToolbar.find(".toolbar-overflow-item button");
-		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
+		const overflowButtons = container.querySelectorAll(".toolbar-overflow-item button");
+		const defaultButtons = container.querySelectorAll(".toolbar-item.default button");
 
 		expect(overflowButtons).to.have.length(3);
 		expect(defaultButtons).to.have.length(3);
 
 		// Verify if the buttons show up with medium size
-		expect(overflowButtons.find(".bx--btn--md")).to.have.length(3);
-		expect(defaultButtons.find(".bx--btn--md")).to.have.length(3);
+		overflowButtons.forEach((button) => {
+			expect(button.classList.contains("cds--btn--md")).to.be.true;
+		});
+		defaultButtons.forEach((button) => {
+			expect(button.classList.contains("cds--btn--md")).to.be.true;
+		});
 	});
 
 	it("should render a Toolbar with small size buttons", () => {
@@ -139,28 +141,32 @@ describe("Toolbar renders correctly", () => {
 				{ action: "run", label: "Run Pipeline", enable: false },
 			]
 		};
-		const canvasToolbar = createToolbar(toolbarConfig, sinon.spy(), "sm");
+		const { container } = createToolbar(toolbarConfig, sinon.spy(), "sm");
 		// Select the toolbar small buttons
-		const overflowButtons = canvasToolbar.find(".toolbar-overflow-item button");
-		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
+		const overflowButtons = container.querySelectorAll(".toolbar-overflow-item button");
+		const defaultButtons = container.querySelectorAll(".toolbar-item.default button");
 
 		expect(overflowButtons).to.have.length(3);
 		expect(defaultButtons).to.have.length(3);
 
 		// Verify if the buttons show up with small size
-		expect(overflowButtons.find(".bx--btn--sm")).to.have.length(3);
-		expect(defaultButtons.find(".bx--btn--sm")).to.have.length(3);
+		overflowButtons.forEach((button) => {
+			expect(button.classList.contains("cds--btn--sm")).to.be.true;
+		});
+		defaultButtons.forEach((button) => {
+			expect(button.classList.contains("cds--btn--sm")).to.be.true;
+		});
 	});
 
 	it("should render a Toolbar buttons with only icons ", () => {
 		const toolbarConfig = {
 			leftBar: [
-				{ action: "cut", enable: true, incLabelWithIcon: "none" },
+				{ action: "cut", enable: true, incLabelWithIcon: "no" },
 			]
 		};
-		const canvasToolbar = createToolbar(toolbarConfig);
+		const { container } = createToolbar(toolbarConfig);
 		// Select the toolbar only icons buttons
-		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
+		const defaultButtons = container.querySelectorAll(".toolbar-item.default button");
 
 		expect(defaultButtons).to.have.length(1);
 	});
@@ -171,18 +177,21 @@ describe("Toolbar renders correctly", () => {
 				{ action: "run", label: "Before - enabled", enable: true, incLabelWithIcon: "before" },
 			]
 		};
-		const canvasToolbar = createToolbar(toolbarConfig);
+		const { container } = createToolbar(toolbarConfig);
 		// Select the toolbar only icons buttons
-		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
+		const defaultButtons = container.querySelectorAll(".toolbar-item.default button");
 
 		expect(defaultButtons).to.have.length(1);
-		expect(defaultButtons.find(".bx--btn--icon-only")).to.have.length(0);
+
+		defaultButtons.forEach((button) => {
+			expect(button.classList.contains(".cds--btn--icon-only")).to.be.false;
+		});
 	});
 });
 
 function createToolbar(config, actionHandler, size) {
 	const toolbarActionHandler = actionHandler || sinon.spy();
-	const canvasToolbar = mountWithIntl(
+	const canvasToolbar = renderWithIntl(
 		<Toolbar
 			config={config}
 			instanceId={0}

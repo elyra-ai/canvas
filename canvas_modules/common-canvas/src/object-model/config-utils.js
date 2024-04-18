@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 // This class contains utility functions that may be used for working with
 // the canvas config object.
 
-import { isMatch, isMatchWith } from "lodash";
+import { isMatch, isMatchWith, omit } from "lodash";
 import LayoutDimensions from "./layout-dimensions.js";
 import { ASSOC_STRAIGHT, LINK_SELECTION_NONE } from "../common-canvas/constants/canvas-constants";
 
-export default class CanvasUtils {
+export default class ConfigUtils {
 
 	// Returns a config object which is the result of merging config into
 	// startConfig.
@@ -62,11 +62,13 @@ export default class CanvasUtils {
 			enableInternalObjectModel: true,
 			enablePaletteLayout: "Flyout",
 			enableToolbarLayout: "Top",
+			enableImageDisplay: "SVGInline",
 			enableResizableNodes: false,
 			enableInsertNodeDroppedOnLink: false,
 			enableHighlightNodeOnNewLinkDrag: false,
 			enableHighlightUnavailableNodes: false,
 			enableMoveNodesOnSupernodeResize: true,
+			enableRaiseNodesToTopOnHover: true,
 			enableExternalPipelineFlows: true,
 			enableEditingActions: true,
 			enableDisplayFullLabelOnHover: false,
@@ -77,6 +79,7 @@ export default class CanvasUtils {
 			enableBrowserEditMenu: true,
 			enableMarkdownInComments: false,
 			enableAutoLinkOnlyFromSelNodes: false,
+			enableContextToolbar: false,
 			enableSaveZoom: "None",
 			enableSnapToGridType: "None",
 			enableSnapToGridX: null,
@@ -96,7 +99,10 @@ export default class CanvasUtils {
 			enableCanvasLayout: {}, // Not documented
 			enableUseCardFromOriginalPorts: false, // Not documented
 			tipConfig: {
-				"palette": true,
+				"palette": {
+					categories: true,
+					nodesTemplates: true
+				},
 				"nodes": true,
 				"ports": true,
 				"decorations": true,
@@ -110,6 +116,16 @@ export default class CanvasUtils {
 		config.enableCanvasLayout = newLayout.canvasLayout;
 
 		return config;
+	}
+
+	// Returns true if the two canvas config object compare the same. This is
+	// used to decide if a full refresh of the canvas is required. It omits
+	// some fields that do not need to be taken into account when deciding
+	// if a full refresh of the canvas is required.
+	static compareCanvasConfigsOmitFields(c1, c2) {
+		const config1 = this.omitFields(c1);
+		const config2 = this.omitFields(c2);
+		return this.compareCanvasConfigs(config1, config2);
 	}
 
 	// Returns true if the two canvas config object compare the same.
@@ -142,6 +158,15 @@ export default class CanvasUtils {
 		}
 
 		return state;
+	}
+
+	// Some fields can be omitted from the config comparison becuase they do not
+	// need to cause a full canvas refresh.
+	// TODO - It would probably be better to go through the config fields and
+	// decide which require a full refresh of the canvas and only compare those
+	// fields rather than omitting certain fields.
+	static omitFields(config) {
+		return omit(config, ["enableEditingActions", "enableDropZoneOnExternalDrag", "enableStateTag"]);
 	}
 
 	// Returns true if the contents of enablePositionNode1 and enablePositionNode2 are

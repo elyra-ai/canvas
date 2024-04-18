@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { isEmpty } from "lodash";
-import { Checkbox } from "carbon-components-react";
+import { Checkbox } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 import Icon from "./../../../icons/icon";
 
@@ -34,13 +33,13 @@ class CheckboxControl extends React.Component {
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 	}
 
-	handleChange(value) {
-		this.props.controller.updatePropertyValue(this.props.propertyId, value);
+	handleChange(evt, { checked, id }) {
+		this.props.controller.updatePropertyValue(this.props.propertyId, checked);
 	}
 
 	render() {
 		const label = this.props.control.label ? this.props.control.label.text : "";
-		const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
+		const tooltipId = "tooltip-" + this.props.control.name;
 		let tooltip = "";
 		if (this.props.control.description && !(this.props.state === STATES.DISABLED || this.props.state === STATES.HIDDEN) && !this.props.tableControl) {
 			tooltip = (
@@ -70,18 +69,18 @@ class CheckboxControl extends React.Component {
 			</span>
 		);
 		return (
-			<div className={classNames("properties-checkbox", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}
-				data-id={ControlUtils.getDataId(this.props.propertyId)}
-			>
-				<Checkbox
-					disabled={this.props.state === STATES.DISABLED}
-					id={this.id}
-					labelText={checkboxLabel}
-					onChange={this.handleChange.bind(this)}
-					checked={Boolean(this.props.value)}
-					hideLabel={this.props.tableControl}
-				/>
-				{tooltipIcon}
+			<div data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				<div className={classNames("properties-checkbox", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}>
+					<Checkbox
+						disabled={this.props.state === STATES.DISABLED}
+						id={this.id}
+						labelText={checkboxLabel}
+						onChange={this.handleChange.bind(this)}
+						checked={Boolean(this.props.value)}
+						hideLabel={this.props.tableControl}
+					/>
+					{tooltipIcon}
+				</div>
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)} />
 			</div>
 		);
