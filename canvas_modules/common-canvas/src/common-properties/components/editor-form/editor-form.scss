@@ -83,12 +83,12 @@ $primary-tab-height: $spacing-08;
 .properties-categories {
 	.cds--accordion__item--active .cds--accordion__content {
 		// 24px padding between accordion title and content (issue #3106)
-		padding: $spacing-06 $spacing-05 $spacing-05;
+		padding: $spacing-02 $spacing-05 $spacing-05;
 
 		/*  
-		Accordion Carbon Component currently doesn't support Accordions inside an Accordion
-		By default inner Accordions will be in open state and won't close on click
-	*/
+			Accordion Carbon Component currently doesn't support Accordions inside an Accordion
+			By default inner Accordions will be in open state and won't close on click
+		*/
 
 		// Handle Initial state where Accordion is closed to hide the content and rotate arrow to indicate the same.
 		.cds--accordion__item {
@@ -115,6 +115,17 @@ $primary-tab-height: $spacing-08;
 	// Remove Default borders for Accordions
 	.cds--accordion__item {
 		border-top: 0px;
+		border-bottom: 1px solid var(--cds-layer-accent-01, #e0e0e0);
+	}
+
+	// Remove default accordion padding
+	.cds--accordion__item--active .cds--accordion__wrapper {
+		padding-block-end: 0px;
+	}
+
+	//Override default accordionitem height to match with previous panels
+	.cds--accordion__heading {
+		min-block-size: 46px;
 	}
 }
 
@@ -145,7 +156,6 @@ $primary-tab-height: $spacing-08;
 .properties-link-text-container {
 	display: flex;
 	align-items: center;
-	padding: $spacing-04 0 0 0;
 	svg {
 		margin-right: $spacing-03;
 	}
