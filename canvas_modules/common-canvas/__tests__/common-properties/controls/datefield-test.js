@@ -163,22 +163,6 @@ describe("datefield-control renders correctly", () => {
 		expect(input.getDOMNode().placeholder).to.equal(control.additionalText);
 	});
 
-	it("should render `DatefieldControl` with light mode enabled", () => {
-		controller.setLight(true);
-		const wrapper = mount(
-			<DatefieldControl
-				store={controller.getStore()}
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				controlItem={controlItem}
-			/>
-		);
-		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		expect(dateWrapper.find(".cds--layer-two")).to.have.length(1); // light enabled
-		expect(dateWrapper.find(".cds--layer-one")).to.have.length(0); // light disabled
-	});
-
 	it("should render `DatefieldControl` with light mode disabled", () => {
 		controller.setLight(false);
 		const wrapper = mount(
@@ -340,6 +324,12 @@ describe("error messages renders correctly for datefield controls", () => {
 		// applied to the date field (which makes it show as enabled).
 		dateWrapper = wrapper.find("div[data-id='properties-disabled_date']");
 		expect(dateWrapper.find("input").prop("disabled")).to.equal(false);
+	});
+
+	it("should render `DatefieldControl` with light mode enabled", () => {
+		const dateWrapper = wrapper.find("div[data-id='properties-ctrl-date_mdy']");
+		expect(dateWrapper.find(".cds--layer-two")).to.have.length(1); // light enabled
+		expect(dateWrapper.find(".cds--layer-one")).to.have.length(0); // light disabled
 	});
 });
 
