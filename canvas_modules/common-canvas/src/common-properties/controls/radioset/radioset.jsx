@@ -199,6 +199,10 @@ class RadiosetControl extends React.Component {
 				name: this.props.propertyId.name,
 				row: i
 			};
+			const labelWithInfo = (<div className="label-tooltip-container">
+				{valueSet.valueLabels[i]}
+				{tooltipIcon}
+			</div>);
 			buttons.push(
 				<div key={i} className="properties-radioset-panel">
 					<div className="properties-radioset-tooltip">
@@ -206,12 +210,11 @@ class RadiosetControl extends React.Component {
 							key={i}
 							id={ControlUtils.getControlId(id, this.uuid)}
 							disabled={disabled || itemDisabled}
-							labelText={valueSet.valueLabels[i]}
+							labelText={labelWithInfo}
 							value={val}
 							onChange={this.handleChange}
 							checked={checked}
 						/>
-						{tooltipIcon}
 					</div>
 					{optionalPanel}
 				</div>
