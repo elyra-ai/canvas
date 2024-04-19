@@ -564,6 +564,7 @@ describe("Test undo/redo property values and title in common-properties", functi
 		// However backspace no longer removes the default value from the field.
 		// Find a way to test an invlaid value in a field.
 		// cy.backspaceTextFieldValue("samplingRatio");
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3759
 
 		cy.saveFlyout();
 
