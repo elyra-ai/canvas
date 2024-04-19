@@ -389,3 +389,21 @@ describe("radioset classnames appear correctly", () => {
 		expect(wrapper.find(".table-subpanel-radioset-control-class")).to.have.length(1);
 	});
 });
+
+describe("should use Carbon RadioButtonGroup", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(radioParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("radioset should use Carbon RadioButtonGroup", () => {
+		const radioBoolean = (wrapper.find("div[data-id='properties-radioBooleanWithEnum']"));
+		const radioGroup = radioBoolean.find("fieldset.cds--radio-button-group");
+		expect(radioGroup).to.have.length(1);
+		// horizontal radioset should have carbon's cds--radio-button-group--label-right class
+		const radioGroupHorizontal = radioBoolean.find("fieldset.cds--radio-button-group--label-right");
+		expect(radioGroupHorizontal).to.have.length(1);
+	});
+
+});
