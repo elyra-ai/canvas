@@ -63,7 +63,7 @@ $primary-tab-height: $spacing-08;
 		*/
 
 		// Handle Initial state where Accordion is closed to hide the content and rotate arrow to indicate the same.
-		.properties-category-content {
+		.cds--accordion__item {
 			.cds--accordion__content {
 				display: none;
 			}
