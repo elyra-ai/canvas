@@ -24,7 +24,7 @@ import * as d3Fetch from "d3-fetch";
 const d3 = Object.assign({}, d3Selection, d3Fetch);
 
 const markdownIt = require("markdown-it")({
-	html: false, // Don't allow HTML to be executed in comments.
+	html: true, // Allow HTML to be executed in comments.
 	linkify: false, // Don't convert strings, in URL format, to be links.
 	typographer: true
 });
