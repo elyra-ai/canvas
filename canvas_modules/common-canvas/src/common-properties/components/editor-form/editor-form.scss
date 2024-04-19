@@ -46,33 +46,6 @@ $primary-tab-height: $spacing-08;
 	}
 }
 
-.properties-category-title {
-	@include type-style("body-long-01");
-	text-decoration-color: $text-primary;
-	color: $text-primary;
-
-	height: 46px;
-	width: 100%;
-
-	display: flex;
-	background-color: $background;
-	justify-content: space-between;
-	align-items: center;
-	padding: 0 $spacing-05;
-	border: 0; // override for button styling
-	outline: none; // override for button styling
-	border-bottom: 1px solid $layer-accent-01;
-	cursor: pointer;
-	&:hover {
-		background-color: $layer-hover-01;
-	}
-	> svg {
-		height: 20px;
-		width: 20px;
-		fill: $icon-primary;
-	}
-}
-
 .properties-subtabs,
 .properties-primaryTabs {
 	.cds--tabs__nav {
@@ -81,9 +54,8 @@ $primary-tab-height: $spacing-08;
 }
 
 .properties-categories {
-	.cds--accordion__item--active .cds--accordion__content {
-		// 24px padding between accordion title and content (issue #3106)
-		padding: $spacing-02 $spacing-05 $spacing-05;
+	.properties-category-content .cds--accordion__content {
+		padding: $spacing-05;
 
 		/*  
 			Accordion Carbon Component currently doesn't support Accordions inside an Accordion
@@ -91,7 +63,7 @@ $primary-tab-height: $spacing-08;
 		*/
 
 		// Handle Initial state where Accordion is closed to hide the content and rotate arrow to indicate the same.
-		.cds--accordion__item {
+		.properties-category-content {
 			.cds--accordion__content {
 				display: none;
 			}
@@ -113,19 +85,14 @@ $primary-tab-height: $spacing-08;
 	}
 
 	// Remove Default borders for Accordions
-	.cds--accordion__item {
+	.properties-category-content {
 		border-top: 0px;
 		border-bottom: 1px solid $layer-accent-01;
 	}
 
 	// Remove default accordion padding
-	.cds--accordion__item--active .cds--accordion__wrapper {
-		padding-block-end: 0px;
-	}
-
-	//Override default accordionitem height to match with previous panels
-	.cds--accordion__heading {
-		min-block-size: 46px;
+	.properties-category-content .cds--accordion__wrapper { 
+		padding: 0;
 	}
 }
 
