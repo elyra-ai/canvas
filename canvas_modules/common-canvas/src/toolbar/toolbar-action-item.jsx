@@ -24,6 +24,7 @@ import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
 import ToolbarSubPanel from "./toolbar-sub-panel.jsx";
 
 const ESC_KEY = 27;
+const DOWN_ARROW_KEY = 40;
 
 class ToolbarActionItem extends React.Component {
 	constructor(props) {
@@ -51,8 +52,14 @@ class ToolbarActionItem extends React.Component {
 	onKeyDown(evt) {
 		if (evt.keyCode === ESC_KEY) {
 			this.closeSubArea();
-			return;
+
+		} else if (evt.keyCode === DOWN_ARROW_KEY) {
+			if (this.hasSubArea()) {
+				this.openSubArea();
+			}
 		}
+		// Left and Right arrow clicks are caught in the
+		// toolbar.jsx onKeyDown method.
 	}
 
 	// Called by toolbar.jsx
@@ -90,6 +97,10 @@ class ToolbarActionItem extends React.Component {
 		}
 	}
 
+	hasSubArea() {
+		return this.props.actionObj.subMenu || this.props.actionObj.subPanel;
+	}
+
 	openSubArea() {
 		// If host app is controlling display of the sub-area call it to say
 		// sub-area is closing.
@@ -112,8 +123,9 @@ class ToolbarActionItem extends React.Component {
 		}
 	}
 
-	actionClickHandler(evt) {
-		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
+	actionClickHandler(evt, chevronClicked) {
+		if (this.hasSubArea() &&
+			(this.props.actionObj.purpose !== "dual" || chevronClicked)) {
 			if (this.isSubAreaDisplayed()) {
 				document.removeEventListener("click", this.clickOutside, false);
 				this.closeSubArea();
@@ -127,6 +139,7 @@ class ToolbarActionItem extends React.Component {
 			}
 
 		} else {
+			this.closeSubArea();
 			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
 			this.props.setToolbarFocusAction(this.props.actionObj.action);
 		}
@@ -229,6 +242,7 @@ ToolbarActionItem.propTypes = {
 			PropTypes.object
 		]),
 		incLabelWithIcon: PropTypes.oneOf(["no", "before", "after"]),
+		purpose: PropTypes.oneOf(["single", "dual"]),
 		enable: PropTypes.bool,
 		iconEnabled: PropTypes.oneOfType([
 			PropTypes.string,

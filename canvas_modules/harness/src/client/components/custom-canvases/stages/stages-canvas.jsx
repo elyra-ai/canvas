@@ -53,10 +53,9 @@ export default class DetachedCanvas extends React.Component {
 	getToolbarConfig() {
 		const toolbarConfig = {
 			leftBar: [
-				{ action: "undo", label: "Undo", enable: true },
-				{ action: "multiUndo",
-					label: "Multiple Undo",
-					iconEnabled: (<ChevronDown size={32} />),
+				{ action: "undo",
+					label: "Undo",
+					purpose: "dual",
 					subPanel: MultiUndoPanel,
 					subPanelData: { canvasController: this.canvasController } },
 				{ action: "redo", label: "Redo", enable: true },

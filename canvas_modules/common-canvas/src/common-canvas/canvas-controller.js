@@ -1434,6 +1434,12 @@ export default class CanvasController {
 		return this.getCommandStack().getAllUndoCommands();
 	}
 
+	// Returns an array of all redoable commands currently on the
+	// command stack.
+	getAllRedoCommands() {
+		return this.getCommandStack().getAllRedoCommands();
+	}
+
 	// Returns a string which is the label that descibes the next undoable
 	// command.
 	getUndoLabel() {
