@@ -25,6 +25,7 @@ import ToolbarSubPanel from "./toolbar-sub-panel.jsx";
 
 const ESC_KEY = 27;
 const DOWN_ARROW_KEY = 40;
+const TOOLBAR_ICON_WIDTH = 40;
 
 class ToolbarActionItem extends React.Component {
 	constructor(props) {
@@ -154,7 +155,10 @@ class ToolbarActionItem extends React.Component {
 	// supPanel field  OR a sub-menu which is a list of options which is created
 	// from the array of items the caller passes in the subMenu field.
 	generateSubArea() {
-		const actionItemRect = this.divRef.current ? this.divRef.current.getBoundingClientRect() : null;
+		let actionItemRect = this.divRef.current ? this.divRef.current.getBoundingClientRect() : null;
+		actionItemRect = (actionItemRect && this.props.actionObj.purpose === "dual")
+			? this.adjustForDual(actionItemRect)
+			: actionItemRect;
 
 		if (this.props.actionObj.subPanel) {
 			return (
@@ -184,6 +188,22 @@ class ToolbarActionItem extends React.Component {
 				size={this.props.size}
 			/>
 		);
+	}
+
+	// For a dual-purpose toolbar button, adjusts the rectangle dimensions so
+	// the sub-panel is opened based on the location of the right chevron of
+	// the dual button.
+	adjustForDual(actionItemRect) {
+		return {
+			height: actionItemRect.height,
+			width: actionItemRect.width,
+			top: actionItemRect.top,
+			bottom: actionItemRect.bottom,
+			left: actionItemRect.left + TOOLBAR_ICON_WIDTH,
+			right: actionItemRect.right + TOOLBAR_ICON_WIDTH,
+			x: actionItemRect.x + TOOLBAR_ICON_WIDTH,
+			y: actionItemRect.y
+		};
 	}
 
 	generateSelector(actionObj) {
