@@ -32,7 +32,7 @@ class App extends React.Component {
 
 This code will display this:
 
-<img src="../assets/common-canvas-app-tiny.png" width="800" />
+<img src="../assets/cc-app-tiny.png" width="800" />
 
 
 The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny) is available as part of the test harness funciton. Click here to begin and try: dragging a node, editing a comment (double click on it), drag a node from the palette, click a button on the toolbar, zoom in using the scroll gesture.
