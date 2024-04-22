@@ -317,7 +317,7 @@ describe("Test tip location adjusted based on boundaries of browser", function()
 			.then((container) => {
 				cy.verifyTip(container, "visible", "Include or discard rows", "bottom");
 			});
-		cy.clickAtCoordinatesInCommonProperties(300, 155);
+		cy.clickAtCoordinatesInCommonProperties(300, 165);
 		cy.getControlContainerFromName("Modeler CLEM Condition Expression")
 			.then((container) => {
 				cy.verifyTip(container, "visible", "Enter a boolean expression to use for filtering rows", "bottom");
