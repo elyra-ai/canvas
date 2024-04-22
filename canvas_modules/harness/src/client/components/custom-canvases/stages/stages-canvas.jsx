@@ -19,6 +19,8 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
+import { Edit16 } from "@carbon/icons-react";
+
 import MultiUndoPanel from "./multi-undo-panel";
 import StagesCanvasFlow from "./stagesCanvas.json";
 import StagesPalette from "../../../../../test_resources/palettes/stagesPalette.json";

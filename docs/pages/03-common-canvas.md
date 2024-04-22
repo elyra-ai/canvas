@@ -1,7 +1,7 @@
 # Getting started with Common Canvas
 
 ## Common Canvas React Object
-   Common-canvas is a react component that can be used in your react application to display a fully-functional canvas user interface including the function mentioned above. The `<CommonCanvas>` component is displayed in a `<div>` provided by your application. Here's some sample code to show the minimum needed to get a working canvas.
+   Common-canvas is a react component that can be used in your react application to display a fully-functional canvas user interface. The `<CommonCanvas>` component is displayed in a `<div>` provided by your application. Here's some sample code to show the [minimum code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js) needed to get a working canvas.
 
 ```
 import React from "react";
@@ -29,6 +29,14 @@ class App extends React.Component {
 	}
 }
 ```
+
+This code will display this:
+
+<img src="../assets/cc-app-tiny.png" width="800" />
+
+
+The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny) is available as part of the test harness funciton. Click here to begin and try: dragging a node, editing a comment (double click on it), drag a node from the palette, click a button on the toolbar, zoom in using the scroll gesture.
+
 
 ## Canvas Controller
 
