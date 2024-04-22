@@ -132,7 +132,7 @@ Cypress.Commands.add("isCommentSelected", (commentText) => {
 
 Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText, saveComment = true) => {
 	cy.getCommentWithText(originalCommentText)
-		.dblclick()
+		.dblclick({force: true})
 		.get("textarea")
 		.clear()
 		.type(newCommentText);

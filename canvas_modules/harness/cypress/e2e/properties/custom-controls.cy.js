@@ -25,9 +25,7 @@ describe("Test of custom panels", function() {
 		// TODO: this next click is a workaround, the next click on the toggle won't trigger
 		// an onClick unless elsewhere on the panel is clicked first. remove when fixed
 		cy.get(".harness-custom-control-custom-toggle").first()
-			.find(".cds--form-item")
-			.click();
-		cy.get(".harness-custom-control-custom-toggle label").first()
+			.find(".cds--toggle__switch")
 			.click();
 		// custom toggle should have an error
 		cy.get("#custom_toggle2").should("have.attr", "disabled");
@@ -54,7 +52,7 @@ describe("Test of custom panels", function() {
 
 function verifySliderDropDown(elements) {
 	cy.get("div[data-id='properties-color']").click();
-	cy.get("#downshift-4-menu > div")
+	cy.get(".cds--list-box__menu > li")
 		.should("have.length", elements);
 	cy.get("div[data-id='properties-color']").click();
 }

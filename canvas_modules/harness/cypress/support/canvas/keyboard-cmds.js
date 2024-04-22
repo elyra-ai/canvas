@@ -32,7 +32,7 @@ Cypress.Commands.add("shortcutKeysPaste", () => {
 Cypress.Commands.add("shortcutKeysUndo", () => {
 	cy.get("#canvas-div-0").click(1, 1); // Put foucs on the SVG area, ready for key press
 	// Press Ctrl/Cmnd+z to Undo
-	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{z}", { release: false }));
+	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{z}", { release: true }));
 });
 
 Cypress.Commands.add("shortcutKeysRedo", () => {
@@ -40,7 +40,7 @@ Cypress.Commands.add("shortcutKeysRedo", () => {
 	// Press Ctrl/Cmnd+Shift+z to Redo
 	cy.useCtrlOrCmdKey().then((selectedKey) => {
 		cy.useShiftKey().then((shiftKey) => {
-			cy.get("body").type(selectedKey + shiftKey + "{z}", { release: false });
+			cy.get("body").type(selectedKey + shiftKey + "{z}", { release: true });
 		});
 	});
 });

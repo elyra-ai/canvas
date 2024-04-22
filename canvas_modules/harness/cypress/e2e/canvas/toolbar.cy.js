@@ -112,6 +112,7 @@ describe("Test for toolbar resize", function() {
 	});
 
 	it("Test number of items in toolbar for different window sizes", function() {
+		cy.wait(10);
 		cy.viewport(400, 600);
 		cy.verifyNumberOfItemsInToolbar(8);
 
@@ -311,6 +312,7 @@ describe("Test overrideAutoEnableDisable toolbar config option", function() {
 	});
 
 	it("Test overrideAutoEnableDisable leaves all standard buttons in default state", function() {
+		cy.wait(10);
 		cy.verifyToolbarButtonEnabled("undo", false);
 		cy.verifyToolbarButtonEnabled("redo", false);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Elyra Authors
+ * Copyright 2023-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,28 +25,39 @@ export default class SvgCanvasExternal {
 	}
 
 	addNodeExternalObject(node, i, foreignObjects) {
-		const container = foreignObjects[i];
-		const root = createRoot(container);
-
-		root.render(
+		const jsx = (
 			<node.layout.nodeExternalObject
 				nodeData={node}
 				canvasController={this.ren.canvasController}
 				externalUtils={this}
 			/>
 		);
+		this.renderExternalObject(jsx, foreignObjects[i]);
 	}
 
 	addDecExternalObject(dec, i, foreignObjects) {
-		const container = foreignObjects[i];
-		const root = createRoot(container);
-		root.render(dec.jsx);
+		this.renderExternalObject(dec.jsx, foreignObjects[i]);
+	}
+
+	renderExternalObject(jsx, container) {
+		if (!container.root) {
+			container.root = createRoot(container);
+		}
+		container.root.render(jsx);
 	}
 
 	removeExternalObject(obj, i, foreignObjects) {
 		const container = foreignObjects[i];
-		const root = createRoot(container);
-		root.unmount();
+		if (!container.root) {
+			container.root = createRoot(container);
+		}
+		// Unmount in Timeout to stop this warning from appearing:
+		// "Warning: Attempted to synchronously unmount a root while
+		// React was already rendering."
+		setTimeout(() => {
+			container.root.unmount();
+			container.root = null;
+		});
 	}
 
 	getActiveNodes() {

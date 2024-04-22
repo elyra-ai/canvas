@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Slider, Layer } from "@carbon/react";
+import { Slider } from "@carbon/react";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
@@ -50,23 +50,21 @@ class SliderControl extends React.Component {
 			<div className={classNames("properties-slider ", { "hide": this.props.state === STATES.HIDDEN },
 				this.props.messageInfo ? this.props.messageInfo.type : null)} data-id={ControlUtils.getDataId(this.props.propertyId)}
 			>
-				<Layer level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
-					<Slider
-						value={this.props.value !== null && typeof this.props.value !== "undefined" ? this.props.value : minValue}
-						min={minValue}
-						max={maxValue}
-						minLabel={minLabel}
-						maxLabel={maxLabel}
-						step={step}
-						labelText={this.props.controlItem}
-						onChange={this.handleChange}
-						disabled={this.props.state === STATES.DISABLED}
-						ariaLabelInput={formatMessage(this.reactIntl, MESSAGE_KEYS.SLIDER_NUMBER_INPUT_LABEL)}
-						formatLabel={
-							(val, label) => label || val
-						}
-					/>
-				</Layer>
+				<Slider
+					value={this.props.value !== null && typeof this.props.value !== "undefined" ? this.props.value : minValue}
+					min={minValue}
+					max={maxValue}
+					minLabel={minLabel}
+					maxLabel={maxLabel}
+					step={step}
+					labelText={this.props.controlItem}
+					onChange={this.handleChange}
+					disabled={this.props.state === STATES.DISABLED}
+					ariaLabelInput={formatMessage(this.reactIntl, MESSAGE_KEYS.SLIDER_NUMBER_INPUT_LABEL)}
+					formatLabel={
+						(val, label) => label || val
+					}
+				/>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>
 		);

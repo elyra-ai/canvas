@@ -2424,17 +2424,17 @@ class App extends React.Component {
 						<span className="harness-title">Common Canvas</span>
 						<span className="harness-version">{todaysDateFormatted}</span>
 					</li>
-					<li className="harness-navbar-li harness-nav-divider" data-tip={consoleLabel}>
+					<li className="harness-navbar-li harness-nav-divider" data-tooltip-id="toolbar-tooltip" data-tooltip-content={consoleLabel}>
 						<a onClick={this.openConsole.bind(this) }>
 							<Isvg src={listview32} />
 						</a>
 					</li>
-					<li className="harness-navbar-li" data-tip={downloadFlowLabel}>
+					<li className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={downloadFlowLabel}>
 						<a onClick={this.downloadPipelineFlow.bind(this) }>
 							<Isvg src={download32} />
 						</a>
 					</li>
-					<li className="harness-navbar-li" data-tip={downloadPaletteLabel}>
+					<li className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={downloadPaletteLabel}>
 						<a onClick={this.downloadPalette.bind(this) }>
 							<Isvg src={download32} />
 						</a>
@@ -2442,17 +2442,23 @@ class App extends React.Component {
 					<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
 						{breadcrumbs}
 					</li>
-					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={apiLabel}>
+					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
+						data-tooltip-id="toolbar-tooltip" data-tooltip-content={apiLabel}
+					>
 						<a onClick={this.sidePanelAPI.bind(this) }>
 							<Isvg src={api32} />
 						</a>
 					</li>
-					<li id="harness-action-bar-sidepanel-properties" className="harness-navbar-li harness-action-bar-sidepanel" data-tip={commonPropertiesModalLabel}>
+					<li id="harness-action-bar-sidepanel-properties" className="harness-navbar-li harness-action-bar-sidepanel"
+						data-tooltip-id="toolbar-tooltip" data-tooltip-content={commonPropertiesModalLabel}
+					>
 						<a onClick={this.sidePanelProperties.bind(this) }>
 							<Isvg src={template32} />
 						</a>
 					</li>
-					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={commonCanvasLabel}>
+					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
+						data-tooltip-id="toolbar-tooltip" data-tooltip-content={commonCanvasLabel}
+					>
 						<a onClick={this.sidePanelCanvas.bind(this) }>
 							<Isvg src={justify32} />
 						</a>
@@ -2763,6 +2769,7 @@ class App extends React.Component {
 			);
 		}
 
+		const tooltipFontSize = "13px";
 		const mainView = (<div id="harness-app-container">
 			{navBar}
 			<SidePanel
@@ -2786,7 +2793,7 @@ class App extends React.Component {
 				{commonCanvas}
 			</div>
 			{consoleView}
-			<ReactTooltip place="bottom" effect="solid" />
+			<ReactTooltip id="toolbar-tooltip" place="bottom" effect="solid" style={{ fontSize: tooltipFontSize }} />
 		</div>);
 
 		return (

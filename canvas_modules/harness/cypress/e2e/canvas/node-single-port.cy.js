@@ -27,6 +27,7 @@ describe("Test only single port is shown with enableSingleOutputPortDisplay set 
 		// After setting the config field, just one of the two ports
 		// should be rendered.
 		cy.setCanvasConfig({ "selectedSingleOutputPortDisplay": true });
+		cy.wait(10);
 		cy.verifyNumberOfPortsOnNode("Discard Fields", "output", 1);
 	});
 });

@@ -89,6 +89,9 @@ describe("Test dropping a node on a link with enableInsertNodeDroppedOnLink opti
 		// from within the canvas UI not palette
 		cy.verifyNumberOfPortDataLinks(4);
 		cy.dragNodeToPosition("Select", 490, 340);
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Select").click();
 		cy.moveNodeToPosition("Select", 490, 240);
 		// There should now be one extra link because, on inserting the node, we
 		// removed the old link and added two new ones.
@@ -102,6 +105,9 @@ describe("Test dropping a node on a link with enableInsertNodeDroppedOnLink opti
 		cy.clickCategory("Record Ops");
 		cy.dragNodeToPosition("Sort", 500, 600);
 
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Sort").click();
 		// Move the Select node from the canvas onto the link between the
 		// Execution node and the Supernode.
 		cy.moveNodeToPosition("Sort", 400, 200);
@@ -198,6 +204,9 @@ describe("Test dropping a node, with existing links, on the canvas onto a link w
 	});
 
 	it("Drag node with output link from stream on the canvas onto a link - should 'work'", function() {
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Sample").click();
 		// Move the Sample node from the canvas onto the link between the
 		// Execution node and the Supernode.
 		cy.moveNodeToPosition("Sample", 400, 200);
