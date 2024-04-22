@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
-import { ChevronDown, Edit } from "@carbon/react/icons";
+import { Edit } from "@carbon/react/icons";
 
 import MultiUndoPanel from "./multi-undo-panel";
 
