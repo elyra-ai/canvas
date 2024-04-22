@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { DatePicker, DatePickerInput, Layer } from "@carbon/react";
+import { DatePicker, DatePickerInput } from "@carbon/react";
 import classNames from "classnames";
 
 import ValidationMessage from "../../components/validation-message";
@@ -71,28 +71,26 @@ class DatepickerControl extends React.Component {
 
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<Layer level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
-					<DatePicker
-						className="properties-datepicker-wrapper-parent"
-						datePickerType={DATEPICKER_TYPE.SINGLE}
-						dateFormat={this.dateFormat}
-						onChange={this.handleChange.bind(this)}
-						locale={this.locale}
-					>
-						<DatePickerInput
-							{...validationProps}
-							id={this.id}
-							className="properties-datepicker-wrapper-input"
-							placeholder={this.props.control.additionalText}
-							labelText={!this.props.tableControl && this.props.controlItem}
-							disabled={this.props.state === STATES.DISABLED}
-							size={this.getDatepickerSize()}
-							onChange={this.handleInputChange.bind(this)}
-							value={this.state.value}
-							helperText={!this.props.tableControl && helperText}
-						/>
-					</DatePicker>
-				</Layer>
+				<DatePicker
+					className="properties-datepicker-wrapper-parent"
+					datePickerType={DATEPICKER_TYPE.SINGLE}
+					dateFormat={this.dateFormat}
+					onChange={this.handleChange.bind(this)}
+					locale={this.locale}
+				>
+					<DatePickerInput
+						{...validationProps}
+						id={this.id}
+						className="properties-datepicker-wrapper-input"
+						placeholder={this.props.control.additionalText}
+						labelText={!this.props.tableControl && this.props.controlItem}
+						disabled={this.props.state === STATES.DISABLED}
+						size={this.getDatepickerSize()}
+						onChange={this.handleInputChange.bind(this)}
+						value={this.state.value}
+						helperText={!this.props.tableControl && helperText}
+					/>
+				</DatePicker>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);

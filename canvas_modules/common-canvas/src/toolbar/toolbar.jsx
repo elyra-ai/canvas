@@ -152,11 +152,11 @@ class Toolbar extends React.Component {
 		const refWithOpenSubArea = this.getRefWithOpenSubArea();
 
 		if (refWithOpenSubArea) {
-			const action = refWithOpenSubArea.current.getAction();
+			const action = refWithOpenSubArea.current?.getAction();
 			const isFocusActionWithOpenSubAreaFocusable = this.isFocusActionFocusable(action, focusableItemRefs);
 
 			if (!isFocusActionWithOpenSubAreaFocusable) {
-				refWithOpenSubArea.current.closeSubArea();
+				refWithOpenSubArea.current?.closeSubArea();
 
 			} else {
 				// This forces a refresh that will cause the position of any
@@ -175,12 +175,12 @@ class Toolbar extends React.Component {
 	// Returns the ref to any item that currently has an open sub-area or null
 	// if no item has an open sub-area.
 	getRefWithOpenSubArea() {
-		let subAreaOpenRef = this.leftItemRefs.find((ref) => ref.current.isSubAreaDisplayed());
+		let subAreaOpenRef = this.leftItemRefs.find((ref) => ref.current?.isSubAreaDisplayed());
 		if (!subAreaOpenRef) {
-			subAreaOpenRef = this.rightItemRefs.find((ref) => ref.current.isSubAreaDisplayed());
+			subAreaOpenRef = this.rightItemRefs.find((ref) => ref.current?.isSubAreaDisplayed());
 		}
 		if (!subAreaOpenRef) {
-			subAreaOpenRef = this.overflowItemRefs.find((ref) => ref.current.isSubAreaDisplayed());
+			subAreaOpenRef = this.overflowItemRefs.find((ref) => ref.current?.isSubAreaDisplayed());
 		}
 		return subAreaOpenRef;
 	}
@@ -245,7 +245,7 @@ class Toolbar extends React.Component {
 	}
 
 	getRefAction(ref) {
-		return ref.current.getAction();
+		return ref.current?.getAction();
 	}
 
 	// Returns an array of references to focusable (that is enabled)
@@ -270,17 +270,17 @@ class Toolbar extends React.Component {
 		let overflowItemRef = null;
 
 		for (let i = 0; i < this.leftItemRefs.length; i++) {
-			const itemRect = this.leftItemRefs[i].current.getBoundingRect();
+			const itemRect = this.leftItemRefs[i].current?.getBoundingRect();
 
-			if (itemRect.top === topRowY) {
-				if (this.leftItemRefs[i].current.isEnabled()) {
+			if (itemRect?.top === topRowY) {
+				if (this.leftItemRefs[i].current?.isEnabled()) {
 					focusableItemRefs.push(this.leftItemRefs[i]);
 				}
 
 			} else if (!overflowItemRef) {
 				const leftRefAction = this.getRefAction(this.leftItemRefs[i]);
 				const overflowAction = this.getOverflowAction(leftRefAction);
-				overflowItemRef = this.overflowItemRefs.find((oRef) => oRef.current.getAction() === overflowAction);
+				overflowItemRef = this.overflowItemRefs.find((oRef) => oRef.current?.getAction() === overflowAction);
 				if (overflowItemRef) {
 					focusableItemRefs.push(overflowItemRef);
 				}
@@ -303,8 +303,8 @@ class Toolbar extends React.Component {
 		const topRowY = this.findToolbarTopYCoordinate();
 
 		for (let i = 0; i < this.rightItemRefs.length; i++) {
-			if (this.rightItemRefs[i].current.isEnabled()) {
-				const refRect = this.rightItemRefs[i].current.getBoundingRect();
+			if (this.rightItemRefs[i].current?.isEnabled()) {
+				const refRect = this.rightItemRefs[i].current?.getBoundingRect();
 
 				if (refRect.top === topRowY) {
 					focusableItemRefs.push(this.rightItemRefs[i]);
@@ -355,7 +355,7 @@ class Toolbar extends React.Component {
 	// items. (It may not be if it has been placed in the overflow menu).
 	isFocusActionFocusable(focusAction, focusableItemRefs) {
 		const indexFocusAction = focusableItemRefs.findIndex((ref) =>
-			ref.current.props.actionObj?.action === focusAction);
+			ref.current?.props.actionObj?.action === focusAction);
 		return indexFocusAction > -1;
 	}
 
@@ -367,7 +367,7 @@ class Toolbar extends React.Component {
 		let rightItemRef = null;
 
 		for (let i = 0; i < this.rightItemRefs.length; i++) {
-			const itemRect = this.rightItemRefs[i].current.getBoundingRect();
+			const itemRect = this.rightItemRefs[i].current?.getBoundingRect();
 			if (itemRect.top !== topRowY && rightItemRef === null) {
 				rightItemRef = this.rightItemRefs[i];
 			}
@@ -379,8 +379,8 @@ class Toolbar extends React.Component {
 	// used to detecg which toolbar items are on the top (visible)
 	// row and which are wrapped onto other rows.
 	findToolbarTopYCoordinate() {
-		const rect = this.toolbarRef.current.getBoundingClientRect();
-		return rect.top;
+		const rect = this.toolbarRef.current?.getBoundingClientRect();
+		return rect?.top;
 	}
 
 	// Generates an array of toolbar items from the toolbarActions array passed in. When
@@ -495,17 +495,17 @@ class Toolbar extends React.Component {
 	}
 
 	closeSubAreaOnRef(ref) {
-		if (ref.current.props.actionObj.setExtIsSubAreaDisplayed) {
-			ref.current.props.actionObj.setExtIsSubAreaDisplayed(false);
+		if (ref.current?.props.actionObj.setExtIsSubAreaDisplayed) {
+			ref.current?.props.actionObj.setExtIsSubAreaDisplayed(false);
 
-		} else if (ref.current.state.subAreaDisplayed) {
-			ref.current.closeSubArea();
+		} else if (ref.current?.state.subAreaDisplayed) {
+			ref.current?.closeSubArea();
 		}
 	}
 
 	closeOverflowMenuOnRef(ref) {
-		if (ref.current.state.showExtendedMenu) {
-			ref.current.closeSubArea();
+		if (ref.current?.state.showExtendedMenu) {
+			ref.current?.closeSubArea();
 		}
 	}
 

@@ -464,6 +464,20 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 		});
 	});
 });
+describe("Add HTML to Markdown Comments", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedMarkdownInComments": true });
+	});
+	it("Test adding html in header markdown.", function() {
+		// html: true
+		addHTML({
+			htmlText: "<h1>Header 1</h1>"
+		});
+
+		// if html: false, <h1>Header 1</h1> would become <p>&lt;h1&gt;Header 1&lt;/h1&gt;</p>
+	});
+});
 
 function addMarkdownWithToolbar(d) {
 	cy.clickToolbarAddComment();
@@ -487,4 +501,13 @@ function addMarkdownWithKeyboard(d) {
 
 	cy.clickCanvasAt(5, 5);
 	cy.verifyCommentContainsHTML(d.markdownText, d.html);
+}
+
+function addHTML(d) {
+	cy.clickToolbarAddComment();
+	cy.verifyNumberOfComments(1);
+	cy.editTextInComment("", d.htmlText, false);
+
+	cy.clickCanvasAt(5, 5);
+	cy.verifyCommentContainsHTML(d.htmlText, d.htmlText);
 }
