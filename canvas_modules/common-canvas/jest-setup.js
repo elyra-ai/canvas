@@ -48,7 +48,10 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 function mockConsole(consoleMethod) {
-	const ignoredMessages = ["test was not wrapped in act(...)", "Rendering components directly into document.body is discouraged"];
+	const ignoredMessages = [
+		"test was not wrapped in act(...)", "Rendering components directly into document.body is discouraged",
+		"Warning: ReactDOM.render is no longer supported in React 18. Use createRoot instead. Until you switch to the new API, your app will behave as if it's running React 17. Learn more: https://reactjs.org/link/switch-to-createroot"
+	];
 	return (message, ...args) => {
 		const hasIgnoredMessage = ignoredMessages.some((ignoredMessage) => message && typeof message === "string" && message.includes(ignoredMessage));
 		if (!hasIgnoredMessage) {

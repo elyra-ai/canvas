@@ -28,8 +28,12 @@ echo "npm install"
 npm install
 echo "npm run build"
 npm run build
-echo "Run jest tests"
-npm run test-coverage
+if [[ "${DISABLE_JEST_TESTS}" == "true" ]]; then
+  echo "Skipping jest tests when deploying to https://ibm.biz/elyra-canvas-test-harness"
+else
+  echo "Run jest tests"
+  npm run test-coverage
+fi
 
 echo "cd $WORKING_DIR"
 cd $WORKING_DIR

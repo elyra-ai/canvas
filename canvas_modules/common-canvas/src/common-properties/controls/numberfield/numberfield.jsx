@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { NumberInput, Button, Layer } from "@carbon/react";
+import { NumberInput, Button } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
@@ -158,23 +158,21 @@ class NumberfieldControl extends React.Component {
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<Layer className="properties-numberfield-layer" level={this.props.controller.getLight() && this.props.control.light ? 1 : 0}>
-					<NumberInput
-						{...validationProps}
-						ref= { (ref) => (this.numberInput = ref)}
-						id={this.id}
-						onChange={this.handleChange.bind(this)}
-						disabled={disabled}
-						step={this.props.control.increment}
-						value={controlValue}
-						placeholder={this.props.control.additionalText}
-						label={this.props.controlItem}
-						hideLabel={this.props.tableControl}
-						allowEmpty
-						hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
-						onInput={this.onInput.bind(this)}
-					/>
-				</Layer>
+				<NumberInput
+					{...validationProps}
+					ref= { (ref) => (this.numberInput = ref)}
+					id={this.id}
+					onChange={this.handleChange.bind(this)}
+					disabled={disabled}
+					step={this.props.control.increment}
+					value={controlValue}
+					placeholder={this.props.control.additionalText}
+					label={this.props.controlItem}
+					hideLabel={this.props.tableControl}
+					allowEmpty
+					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
+					onInput={this.onInput.bind(this)}
+				/>
 				{numberGenerator}
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

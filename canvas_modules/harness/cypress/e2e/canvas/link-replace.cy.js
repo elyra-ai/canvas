@@ -26,6 +26,7 @@ describe("Test link can be replaced when selectedLinkReplaceOnNewConnection is s
 	it("Test a link is replaced when target node's port is 0:1 and maxed out", function() {
 		// This link creation should work because Out 0:1 has no link so far
 		cy.linkNodeOutputPortToNodeInputPort("Out 0:1", "outPort", "In 0:1", "inPort");
+		cy.wait(10);
 		cy.verifyNumberOfPortDataLinks(1);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Out 0:1", "outPort", "In 0:1", "inPort", 1);
@@ -61,6 +62,7 @@ describe("Test link can be replaced when selectedLinkReplaceOnNewConnection is s
 	it("Test a link is NOT replaced when target node's port is 0:2 and maxed out", function() {
 		// This link creation should work because '0:1 & 0:2' port 'InputPort2' has no link so far
 		cy.linkNodeOutputPortToNodeInputPort("Out 0:1", "outPort", "0:1 & 0:2", "InputPort2");
+		cy.wait(10);
 		cy.verifyNumberOfPortDataLinks(1);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Out 0:1", "outPort", "0:1 & 0:2", "InputPort2", 1);

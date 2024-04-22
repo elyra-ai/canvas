@@ -184,6 +184,7 @@ describe("Test coloring comments", function() {
 		cy.getCommentWithText("Hello Canvas!")
 			.rightclick();
 		cy.clickColorFromContextSubmenu("Color background", "teal-50");
+		cy.wait(10);
 		cy.verifyCommentColor("Hello Canvas!", "teal-50");
 	});
 
@@ -199,6 +200,7 @@ describe("Test coloring comments", function() {
 		cy.getCommentWithText("Orange 40").rightclick();
 		cy.clickColorFromContextSubmenu("Color background", "cyan-20");
 
+		cy.wait(10);
 		cy.verifyCommentColor("Default", "cyan-20");
 		cy.verifyCommentColor("White 0", "cyan-20");
 		cy.verifyCommentColor("Yellow 20", "cyan-20");
@@ -207,6 +209,7 @@ describe("Test coloring comments", function() {
 
 		cy.clickToolbarUndo();
 
+		cy.wait(10);
 		cy.verifyCommentColor("Default", "");
 		cy.verifyCommentColor("White 0", "white-0");
 		cy.verifyCommentColor("Yellow 20", "yellow-20");
@@ -215,6 +218,7 @@ describe("Test coloring comments", function() {
 
 		cy.clickToolbarRedo();
 
+		cy.wait(10);
 		cy.verifyCommentColor("Default", "cyan-20");
 		cy.verifyCommentColor("White 0", "cyan-20");
 		cy.verifyCommentColor("Yellow 20", "cyan-20");
@@ -460,6 +464,20 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 		});
 	});
 });
+describe("Add HTML to Markdown Comments", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedMarkdownInComments": true });
+	});
+	it("Test adding html in header markdown.", function() {
+		// html: true
+		addHTML({
+			htmlText: "<h1>Header 1</h1>"
+		});
+
+		// if html: false, <h1>Header 1</h1> would become <p>&lt;h1&gt;Header 1&lt;/h1&gt;</p>
+	});
+});
 
 function addMarkdownWithToolbar(d) {
 	cy.clickToolbarAddComment();
@@ -483,4 +501,13 @@ function addMarkdownWithKeyboard(d) {
 
 	cy.clickCanvasAt(5, 5);
 	cy.verifyCommentContainsHTML(d.markdownText, d.html);
+}
+
+function addHTML(d) {
+	cy.clickToolbarAddComment();
+	cy.verifyNumberOfComments(1);
+	cy.editTextInComment("", d.htmlText, false);
+
+	cy.clickCanvasAt(5, 5);
+	cy.verifyCommentContainsHTML(d.htmlText, d.htmlText);
 }

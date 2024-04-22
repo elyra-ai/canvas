@@ -23,6 +23,7 @@ import { PropertyDef } from "./../form/PropertyDef";
 import { makeControl } from "./../form/EditorForm";
 import { L10nProvider } from "./../util/L10nProvider";
 import * as ControlUtils from "./../util/control-utils";
+import { Layer } from "@carbon/react";
 
 import TextfieldControl from "./textfield";
 import ReadonlyControl from "./readonly";
@@ -346,6 +347,12 @@ export default class ControlFactory {
 			createdControl = (<ReadonlyControl {...props} />);
 		}
 
+		const createdControlLayered = (
+			<Layer level={this.controller.getLight() && control.light ? 1 : 0} className="properties-control-layer">
+				{createdControl}
+			</Layer>
+		);
+
 		/*
 		* <ControlItem /> should be called from every control.
 		* Adding this temporary condition so that we can change one control at a time.
@@ -366,12 +373,12 @@ export default class ControlFactory {
 						className
 					)}
 				>
-					{createdControl}
+					{createdControlLayered}
 					{action}
 				</div>
 			);
 		}
-		return createdControl;
+		return createdControlLayered;
 	}
 
 	/**
