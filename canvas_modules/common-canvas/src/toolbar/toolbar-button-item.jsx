@@ -197,20 +197,24 @@ class ToolbarButtonItem extends React.Component {
 
 		const itemContentClassName = classNames(
 			"toolbar-item-content",
-			{ "overflow": this.props.isInMenu, "disabled": !actionObj.enable, "default": !actionObj.kind });
+			{ "is-in-menu": this.props.isInMenu, "disabled": !actionObj.enable, "default": !actionObj.kind });
 
 		// If no 'kind' is set, use ghost and then override colors using the "default" class in innerDivClassName.
 		const kind = actionObj.kind || "ghost";
 
-		const chevronIcon = this.generateChevronIcon(actionObj);
+		const chevronDiv = this.generateChevronDiv(actionObj);
+
+		const mainClassName = actionObj.purpose ? "content-main dual" : "content-main";
 
 		let buttonContent = (
 			<div className={itemContentClassName}>
-				{labelBefore}
-				{icon}
-				{labelAfter}
-				{textContent}
-				{chevronIcon}
+				<div className={mainClassName}>
+					{labelBefore}
+					{icon}
+					{labelAfter}
+					{textContent}
+				</div>
+				{chevronDiv}
 			</div>
 		);
 
@@ -237,39 +241,44 @@ class ToolbarButtonItem extends React.Component {
 		return button;
 	}
 
-	// Returns a chevron icon if the action icon is displaying a sub-menu or
-	// sub-panel. The chevron will:
-	//  * point right if this action item is in a drop down menu
-	//  * point down if this action item is displayed with text in the toolbar
-	//    and the menu isn't displayed
-	//  * point up if this action item is displayed with text in the toolbar
-	//    and the menu is displayed
-	//  * be a mini-chevron (small triangle in the bottom right of icon) if this
-	//    action item isn't displayed with text.
-	generateChevronIcon(actionObj) {
+	// Returns a civ containing a chevron icon. If the action icon is displaying
+	// a sub-menu or sub-panel. The chevron will:
+	//  * point right if this action item is in a drop down menu.
+	//  * point down and be regular size if this action item is displayed with
+	//    text in the toolbar and the menu isn't displayed.
+	//  * point up and be regular size if this action item is displayed with
+	//    text in the toolbar and the menu is displayed.
+	//  * point down and be a mini-chevron if this action item is displayed without
+	//    text in the toolbar and the menu isn't displayed.
+	//  * point up and be a mini-chevron if this action item is displayed without
+	//    text in the toolbar and the menu is displayed.
+	generateChevronDiv(actionObj) {
 		if (actionObj.subMenu || actionObj.subPanel) {
 			if (this.props.isInMenu) {
-				return (<ChevronRight16 />);
+				return <div className={"toolbar-right-chevron"}><ChevronRight16 /></div>;
 			}
 			if (actionObj.incLabelWithIcon === "before" ||
 					actionObj.incLabelWithIcon === "after") {
 				const chev = this.props.subAreaDisplayed ? (<ChevronUp16 />) : (<ChevronDown16 />);
 				return (<div className={"toolbar-up-down-chevron"}>{chev}</div>);
 			}
-			return this.generateChevronMini();
+			if (actionObj.purpose === "dual") {
+				const chevMini = this.props.subAreaDisplayed ? (<ChevronUp16 />) : (<ChevronDown16 />);
+				return (<div className={"toolbar-up-down-chevron-mini"} onClick={this.miniChevronClicked.bind(this)}>{chevMini}</div>);
+			}
+			const path = this.props.size === "sm" ? "M 29 29 L 29 23 23 29 Z" : "M 37 37 L 37 30 30 37 Z";
+			return (
+				<svg className="toolbar-tick-svg">
+					<path d={path} className="toolbar-tick-mark" />
+				</svg>
+			);
 		}
 		return null;
 	}
 
-	// Returns an svg to display the little triangle that appears in the bottom
-	// right corner of icons that, when clicked, show a drop down menu.
-	generateChevronMini() {
-		const path = this.props.size === "sm" ? "M 29 29 L 29 23 23 29 Z" : "M 37 37 L 37 30 30 37 Z";
-		return (
-			<svg className="toolbar-tick-svg">
-				<path d={path} className="toolbar-tick-mark" />
-			</svg>
-		);
+	miniChevronClicked(evt) {
+		this.props.actionClickHandler(evt, true);
+		evt.stopPropagation();
 	}
 
 	// Creates a <div> containing the JSX in the actionObj.jsx field, wrapped in a tooltip
@@ -341,6 +350,7 @@ ToolbarButtonItem.propTypes = {
 			PropTypes.object
 		]),
 		incLabelWithIcon: PropTypes.oneOf(["no", "before", "after"]),
+		purpose: PropTypes.oneOf(["single", "dual"]),
 		enable: PropTypes.bool,
 		iconEnabled: PropTypes.oneOfType([
 			PropTypes.string,

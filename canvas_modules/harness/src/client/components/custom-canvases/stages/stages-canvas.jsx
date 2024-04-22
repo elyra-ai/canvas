@@ -19,8 +19,6 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
-import { ChevronDown16, Edit16 } from "@carbon/icons-react";
-
 import MultiUndoPanel from "./multi-undo-panel";
 import StagesCanvasFlow from "./stagesCanvas.json";
 import StagesPalette from "../../../../../test_resources/palettes/stagesPalette.json";
@@ -52,10 +50,9 @@ export default class DetachedCanvas extends React.Component {
 	getToolbarConfig() {
 		const toolbarConfig = {
 			leftBar: [
-				{ action: "undo", label: "Undo", enable: true },
-				{ action: "multiUndo",
-					label: "Multiple Undo",
-					iconEnabled: (<ChevronDown16 />),
+				{ action: "undo",
+					label: "Undo",
+					purpose: "dual",
 					subPanel: MultiUndoPanel,
 					subPanelData: { canvasController: this.canvasController } },
 				{ action: "redo", label: "Redo", enable: true },
