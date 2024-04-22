@@ -90,7 +90,7 @@ class ToolbarOverflowItem extends React.Component {
 		this.props.setOverflowIndex(this.props.index);
 		this.setState({ showExtendedMenu: true });
 		this.props.setToolbarFocusAction(this.props.action);
-}
+	}
 
 	genOverflowButtonClassName() {
 		return "toolbar-overflow-container " + this.genIndexClassName() + " " + this.genUuidClassName();
