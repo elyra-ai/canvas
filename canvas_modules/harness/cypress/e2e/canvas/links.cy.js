@@ -131,6 +131,9 @@ describe("Test elbow connections from multi-port source nodes", function() {
 			"M 108 483.5 L 128 483.5 Q 138 483.5 138 473.5 L 138 387 Q 138 377 148 377 L 319 377"
 		);
 
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Neural Net").click();
 		// Move node on canvas and verify updated link paths
 		cy.moveNodeToPosition("Neural Net", 50, 530);
 		cy.verifyNumberOfPortDataLinks(6);
@@ -150,6 +153,9 @@ describe("Test elbow connections from multi-port source nodes", function() {
 			"144 511.5 L 30 511.5 Q 20 511.5 20 521.25 L 20 547 Q 20 557 30 557 L 50 557"
 		);
 
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Select3").click();
 		cy.moveNodeToPosition("Select3", 150, 400);
 		cy.verifyNumberOfPortDataLinks(6);
 		cy.verifyLinkPath(
@@ -187,6 +193,9 @@ describe("Test elbow connections from multi-port source nodes", function() {
 			"L 415 475 Q 405 475 405 485 L 405 535 Q 405 545 415 545 L 435 545"
 		);
 
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Select").click();
 		// Move the target node so one link line continues to go over the top of
 		// both nodes and one goes underneath both nodes.
 		cy.moveNodeToPosition("Select", 440, 450);
@@ -201,6 +210,9 @@ describe("Test elbow connections from multi-port source nodes", function() {
 			"L 420 430 Q 410 430 410 440 L 410 469 Q 410 479 420 479 L 440 479"
 		);
 
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Select").click();
 		// Move the target node so both link lines go over the source node and
 		// under the target node.
 		cy.moveNodeToPosition("Select", 440, 400);
@@ -215,6 +227,9 @@ describe("Test elbow connections from multi-port source nodes", function() {
 			"L 420 485 Q 410 485 410 475 L 410 439 Q 410 429 420 429 L 440 429"
 		);
 
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Select").click();
 		// Move the target node so both link lines go under the source node and
 		// over the target node.
 		cy.moveNodeToPosition("Select", 440, 600);
@@ -698,6 +713,9 @@ describe("Test selectedLinkSelection = 'Detachable' configuration option", funct
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Record Ops");
 		cy.dragNodeToPosition("Sample", 300, 450);
+		// TODO -- Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Sample").click();
 
 		// Drag the node from the canvas to the detached links
 		cy.moveNodeToPosition("Sample", 200, 350);
