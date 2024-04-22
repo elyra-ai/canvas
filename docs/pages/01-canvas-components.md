@@ -23,7 +23,7 @@ The common-canvas user can perform operations such as:
 
 Common canvas has several constituent parts that can be visible to the user and can be customized by the application:
 
-<img src="../assets/common-canvas-elements.png" width="900" />
+<img src="../assets/cc-elements.png" width="900" />
 
 * [Flow editor](01.01-flow-editor.md) - the main area of the UI where the flow is displayed and edited
 * [Palette](01.02-palette.md) - a set of node templates that can be dragged to the canvas to create new nodes
@@ -35,7 +35,7 @@ Common canvas has several constituent parts that can be visible to the user and 
 
 In addition, there are three optional panels where application specific output can be displayed such as
 properties, log info or data previews.
-<img src="../assets/common-canvas-panels.png" width="900" />
+<img src="../assets/cc-panels.png" width="900" />
 
 * Right side flyout - a panel, often used to display node properties
 * Top panel - a panel which can be used to display other app related information
@@ -45,7 +45,7 @@ properties, log info or data previews.
 ## Common Properties
 [Common properties](04-common-properties.md) allows the application to display a Carbon compliant properties panel or dialog with just a Javascript (JSON) object as input. Common properties supports the most commonly used UI components and also allows custom components to be added into its visual output.
 
-<img src="../assets/common-properties-example.png" width="300" />
+<img src="../assets/cp-example.png" width="300" />
 
 
 
