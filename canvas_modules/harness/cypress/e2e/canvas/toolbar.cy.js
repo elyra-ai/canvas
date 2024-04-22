@@ -278,6 +278,32 @@ describe("Test toolbar button enable/disable", function() {
 	});
 });
 
+describe("Test dual purpose toolbar button", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedToolbarType": "SubAreas" });
+	});
+
+	it("Test clicking both parts of the dual purpose button executes appropriately", function() {
+
+		// Add a couple of comments - this will enable the undo button.
+		cy.clickToolbarAddComment();
+		cy.clickToolbarAddComment();
+		cy.verifyNumberOfComments(2);
+
+		// Click the left side of the dual-purpose undo button. This
+		// should undo the last action.
+		cy.clickToolbarDualButtonLeftSide("undo");
+		cy.verifyNumberOfComments(1);
+
+		// Click the right side of the dual-purpose undo button. This
+		// should open the sub-panel associated with the button.
+		cy.clickToolbarDualButtonRightSide("undo");
+		cy.verifyNumberOfComments(1);
+		cy.verifyToolbarSubPanelIsOpen("undo");
+	});
+});
+
 describe("Test overrideAutoEnableDisable toolbar config option", function() {
 	beforeEach(() => {
 		cy.visit("/");
