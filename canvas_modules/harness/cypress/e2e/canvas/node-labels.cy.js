@@ -135,6 +135,7 @@ describe("Test editing node labels - Vertical node", function() {
 
 	it("Vertical node - Test editing using the context menu 'Rename' action", function() {
 		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true } });
+		cy.wait(0);
 		cy.getNodeWithLabel("Binding (entry) node").rightclick();
 		cy.clickOptionFromContextMenu("Rename");
 		cy.enterLabelForNode("Binding (entry) node", "A renamed label is better than a new label");

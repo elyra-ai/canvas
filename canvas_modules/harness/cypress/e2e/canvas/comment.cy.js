@@ -184,6 +184,7 @@ describe("Test coloring comments", function() {
 		cy.getCommentWithText("Hello Canvas!")
 			.rightclick();
 		cy.clickColorFromContextSubmenu("Color background", "teal-50");
+		cy.wait(10);
 		cy.verifyCommentColor("Hello Canvas!", "teal-50");
 	});
 
@@ -199,6 +200,7 @@ describe("Test coloring comments", function() {
 		cy.getCommentWithText("Orange 40").rightclick();
 		cy.clickColorFromContextSubmenu("Color background", "cyan-20");
 
+		cy.wait(10);
 		cy.verifyCommentColor("Default", "cyan-20");
 		cy.verifyCommentColor("White 0", "cyan-20");
 		cy.verifyCommentColor("Yellow 20", "cyan-20");
@@ -207,6 +209,7 @@ describe("Test coloring comments", function() {
 
 		cy.clickToolbarUndo();
 
+		cy.wait(10);
 		cy.verifyCommentColor("Default", "");
 		cy.verifyCommentColor("White 0", "white-0");
 		cy.verifyCommentColor("Yellow 20", "yellow-20");
@@ -215,6 +218,7 @@ describe("Test coloring comments", function() {
 
 		cy.clickToolbarRedo();
 
+		cy.wait(10);
 		cy.verifyCommentColor("Default", "cyan-20");
 		cy.verifyCommentColor("White 0", "cyan-20");
 		cy.verifyCommentColor("Yellow 20", "cyan-20");

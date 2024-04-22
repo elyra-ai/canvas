@@ -554,6 +554,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
+		cy.wait(10);
 		cy.verifyNumberOfLinks(13);
 
 		// Revert back to otriginal canvas
@@ -572,6 +573,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
+		cy.wait(10);
 		cy.verifyNumberOfLinks(13);
 
 		// Revert back to otriginal canvas
@@ -590,6 +592,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
+		cy.wait(10);
 		cy.verifyNumberOfLinks(13);
 	});
 
@@ -608,6 +611,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
+		cy.wait(10);
 		cy.verifyNumberOfLinks(14);
 
 		// Revert back to otriginal canvas
@@ -625,6 +629,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
+		cy.wait(10);
 		cy.verifyNumberOfLinks(14);
 
 		// Revert back to otriginal canvas
@@ -642,6 +647,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
+		cy.wait(10);
 		cy.verifyNumberOfLinks(14);
 	});
 
@@ -665,6 +671,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
+		cy.wait(10);
 		cy.verifyNumberOfLinks(12); // Goes to 12 because one of the comment links is deleted during the 'cut'
 		cy.verifyNumberOfPortDataLinks(8);
 		cy.verifyNumberOfCommentLinks(3);
@@ -695,6 +702,7 @@ describe("Test clipboard with detachable links enabled", function() {
 
 		// Total count of links stays at 13 because one of the comment links is
 		// deleted during the 'cut' but a node link is added when the node is pasted.
+		cy.wait(10);
 		cy.verifyNumberOfLinks(13);
 		cy.verifyNumberOfPortDataLinks(9);
 		cy.verifyNumberOfCommentLinks(3);
@@ -725,6 +733,7 @@ describe("Test clipboard with detachable links enabled", function() {
 
 		// Total count of links stays at 13 because one of the comment links is
 		// deleted during the 'cut' but a node link is added when the node is pasted.
+		cy.wait(10);
 		cy.verifyNumberOfLinks(13);
 		cy.verifyNumberOfPortDataLinks(9);
 		cy.verifyNumberOfCommentLinks(3);
@@ -753,6 +762,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
+		cy.wait(10);
 		cy.verifyNumberOfLinks(14);
 		cy.verifyNumberOfPortDataLinks(9);
 		cy.verifyNumberOfCommentLinks(4);
@@ -780,6 +790,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
+		cy.wait(10);
 		cy.verifyNumberOfLinks(15);
 		cy.verifyNumberOfPortDataLinks(10);
 		cy.verifyNumberOfCommentLinks(4);
@@ -807,6 +818,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
+		cy.wait(10);
 		cy.verifyNumberOfLinks(15);
 		cy.verifyNumberOfPortDataLinks(10);
 		cy.verifyNumberOfCommentLinks(4);
@@ -834,6 +846,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
+		cy.wait(10);
 		cy.verifyNumberOfLinks(16);
 		cy.verifyNumberOfPortDataLinks(11);
 		cy.verifyNumberOfCommentLinks(4);

@@ -77,6 +77,7 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 			[{ "id": "123", "image": "/images/decorators/zoom-in_32.svg",
 				"tooltip": "Zoom zoom!",
 				"x_pos": "0", "y_pos": "0" }]);
+		cy.wait(10);
 		cy.hoverOverLinkDecoration("Discard Fields-Define Types", "123");
 		cy.verifyTipForDecoration("Zoom zoom!");
 	});
@@ -94,6 +95,7 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 			[{ "id": "123", "label": "A node label decoration",
 				"tooltip": "A tooltip for a label decoration!",
 				"x_pos": "-20", "y_pos": "-20" }]);
+		cy.wait(10);
 		cy.hoverOverNodeDecoration("DRUG1n", "123");
 		cy.verifyTipForDecoration("A tooltip for a label decoration!");
 	});
@@ -110,6 +112,7 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 			[{ "id": "123", "label": "A node label decoration",
 				"tooltip": "A tooltip for a label decoration!",
 				"x_pos": "-20", "y_pos": "-20" }]);
+		cy.wait(10);
 		cy.hoverOverNodeDecoration("DRUG1n", "123");
 		cy.verifyTipDoesNotShowForDecoration();
 	});
@@ -130,7 +133,7 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 				"label_editable": true, "label_single_line": true, "height": 28, "width": 130,
 				"tooltip": "A tooltip for a label decoration!",
 				"x_pos": "-20", "y_pos": "-30" }]);
-
+		cy.wait(10);
 		cy.hoverOverNodeDecoration("DRUG1n", "123");
 		cy.verifyTipForDecoration("A tooltip for a label decoration!");
 	});
@@ -156,12 +159,12 @@ describe("Test to check if tips don't show up for the palette, nodes, ports and 
 		cy.clickToolbarPaletteOpen();
 
 		cy.hoverOverCategory("Import");
-		cy.wait(500);
+		cy.wait(10);
 		cy.verifyTipDoesNotShowForCategory("Import");
 
 		cy.clickCategory("Import");
 		cy.hoverOverNodeInCategory("Var. File", "Import");
-		cy.wait(500);
+		cy.wait(10);
 		cy.verifyTipDoesNotShowForNodeTemplate("Var. File", "Import");
 
 		cy.hoverOverNode("Define Types");
@@ -185,12 +188,12 @@ describe("Test to check if tips don't show up for the palette, nodes, ports and 
 		cy.clickToolbarPaletteOpen();
 
 		cy.hoverOverCategory("Import");
-		cy.wait(500);
+		cy.wait(10);
 		cy.verifyTipDoesNotShowForCategory("Import");
 
 		cy.clickCategory("Import");
 		cy.hoverOverNodeInCategory("Var. File", "Import");
-		cy.wait(500);
+		cy.wait(10);
 		cy.verifyTipDoesNotShowForNodeTemplate("Var. File", "Import");
 	});
 });
@@ -216,7 +219,7 @@ describe("Test to check if tips are hidden on scroll", function() {
 
 		cy.get(".palette-flyout-categories")
 			.scrollTo("bottom", { ensureScrollable: false });
-		cy.wait(500);
+		cy.wait(10);
 		cy.verifyTipDoesNotShowForCategory("Import");
 	});
 
@@ -314,7 +317,7 @@ describe("Test tip location adjusted based on boundaries of browser", function()
 			.then((container) => {
 				cy.verifyTip(container, "visible", "Include or discard rows", "bottom");
 			});
-		cy.clickAtCoordinatesInCommonProperties(300, 155);
+		cy.clickAtCoordinatesInCommonProperties(300, 165);
 		cy.getControlContainerFromName("Modeler CLEM Condition Expression")
 			.then((container) => {
 				cy.verifyTip(container, "visible", "Enter a boolean expression to use for filtering rows", "bottom");
@@ -441,6 +444,7 @@ describe("Test generated tooltips for undo/redo actions", function() {
 		// Enable Detachable links option
 		cy.setCanvasConfig({ "selectedLinkSelection": "Detachable" });
 
+		cy.wait(10);
 		// Case 7: Delete links
 		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 		cy.shortcutKeysDelete();
