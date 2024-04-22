@@ -61,10 +61,21 @@ $toolbar-divider-width: 1px;
 		}
 
 		.toolbar-item-content {
-			padding: $spacing-02 $spacing-03;
 			height: $toolbar-button-sm-height;
 			align-items: center;
 			min-width: 32px;
+
+			&.is-in-menu {
+				padding-left: 10px;
+			}
+
+			& .content-main {
+				padding: 0;
+			}
+
+			& .overflow-item {
+				padding: 6px;
+			}
 		}
 
 		.toolbar-popover-list button {
@@ -195,11 +206,53 @@ $toolbar-divider-width: 1px;
 	width: inherit;
 	display: flex;
 	justify-content: center;
-	padding: 11px;
 
-	&.overflow {
+	&.disabled {
+		pointer-events: none;
+
+		& .content-main:hover,
+		& .toolbar-up-down-chevron-mini:hover {
+			pointer-events: none;
+		}
+	}
+
+	& .content-main {
+		padding: 11px;
+		display: flex;
+
+		&.dual:hover {
+			background-color: $background-selected-hover;
+		}
+	}
+
+	& .toolbar-up-down-chevron {
+		padding: 11px 8px 11px 0;
+		pointer-events: none;
+	}
+
+	& .toolbar-up-down-chevron-mini {
+		padding: 11px 2px;
+
+		&:hover {
+			background-color: $background-selected-hover;
+		}
+	}
+
+	& .toolbar-right-chevron {
+		padding: 9px 0 2px;
+		pointer-events: none;
+	}
+
+	& .overflow-item {
+		padding: 11px;
+	}
+
+	&.is-in-menu {
 		justify-content: left;
-		padding: 8px 0;
+
+		& .content-main {
+			padding: 8px 0 6px;
+		}
 	}
 
 	&.default {
@@ -228,10 +281,13 @@ $toolbar-divider-width: 1px;
 
 	.toolbar-text-content {
 		position: absolute;
-		top: 14px;
+		width: 11px;
+		top: 15px;
+		left: 13px;
 		font-size: 9px;
 		line-height: 9px;
 		color: $icon-01;
+		text-align: center;
 	}
 
 	.toolbar-icon-label {
@@ -250,12 +306,6 @@ $toolbar-divider-width: 1px;
 			word-break: break-word;
 			hyphens: auto;
 		}
-	}
-
-	.toolbar-up-down-chevron {
-		padding-left: 8px;
-		height: 16px;
-		pointer-events: none;
 	}
 
 	// Triangular tick mark in bottom right corner of an expandable icon
