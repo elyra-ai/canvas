@@ -1011,6 +1011,10 @@ Cypress.Commands.add("verifyToolbarButtonEnabled", (action, state) => {
 		});
 });
 
+Cypress.Commands.add("verifyToolbarSubPanelIsOpen", (action, state) => {
+	cy.getToolbarAction("." + action + "-action .toolbar-popover-list");
+});
+
 Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
 	cy.getPipeline()
 		.then((pipeline) => {
