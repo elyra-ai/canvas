@@ -152,6 +152,14 @@ Cypress.Commands.add("getToolbarActionInOverflowMenu", (action) => {
 	cy.getCanvasToolbar().find(overflowMenuAction);
 });
 
+Cypress.Commands.add("clickToolbarDualButtonLeftSide", (action) => {
+	cy.getToolbarAction("." + action + "-action .content-main").click();
+});
+
+Cypress.Commands.add("clickToolbarDualButtonRightSide", (action) => {
+	cy.getToolbarAction("." + action + "-action .toolbar-up-down-chevron-mini").click();
+});
+
 Cypress.Commands.add("getToolbarAction", (action) => {
 	cy.getCanvasToolbar().find(action);
 });
