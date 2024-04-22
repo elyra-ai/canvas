@@ -20,7 +20,7 @@ Cypress.Commands.add("openPropertyDefinition", (propertyFileName) => {
 });
 
 Cypress.Commands.add("toggleCategory", (categoryName) => {
-	cy.get(".common-canvas-right-side-items .properties-category-title")
+	cy.get(".common-canvas-right-side-items .cds--accordion__heading")
 		.contains(categoryName)
 		.click();
 });

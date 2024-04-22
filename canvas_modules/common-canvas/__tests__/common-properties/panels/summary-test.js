@@ -120,7 +120,7 @@ describe("summary panel renders error/warning status correctly", () => {
 
 		// check that Alerts tab is added
 		const alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		const alertButton = alertCategory.find("button.properties-category-title");
+		const alertButton = alertCategory.find("button.cds--accordion__heading");
 		expect(alertButton.text()).to.equal("Alerts (1)");
 		alertButton.simulate("click");
 		const alertList = alertCategory.find("div.properties-link-text-container.warning");
@@ -130,7 +130,7 @@ describe("summary panel renders error/warning status correctly", () => {
 
 		// click on the link should open up structure list table category
 		warningMsg.simulate("click");
-		expect(wrapper.find("div.properties-category-content.show")).to.have.length(1);
+		expect(wrapper.find("li.properties-category-content.show")).to.have.length(1);
 
 		// check that warning icon is shown in summary
 		let tableCategory = wrapper.find("div[data-id='properties-Derive-Node']");
@@ -186,7 +186,7 @@ describe("summary panel renders error/warning status correctly", () => {
 
 		// check that Alerts tab is added and that is shows error message before warning message
 		let alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		expect(alertCategory.find("button.properties-category-title").text()).to.equal("Alerts (2)");
+		expect(alertCategory.find("button.cds--accordion__heading").text()).to.equal("Alerts (2)");
 		let alertList = alertCategory.find("div.properties-link-text-container");
 		expect(alertList).to.have.length(2);
 		const errorWrapper = alertCategory.find("div.properties-link-text-container.error");
@@ -197,7 +197,7 @@ describe("summary panel renders error/warning status correctly", () => {
 		expect(warningWrapper.find("a.properties-link-text").text()).to.equal("Expression cell table cannot be empty");
 		// check that summary icon is an error icon
 		let tableCategory = wrapper.find("div.properties-category-container").at(1); // Structure list table category
-		expect(tableCategory.find("button.properties-category-title").text()).to.equal("Structure List Table (2)");
+		expect(tableCategory.find("button.cds--accordion__heading").text()).to.equal("Structure List Table (2)");
 		let summary = tableCategory.find("div.properties-summary-link-container");
 		expect(summary.find("svg.error")).to.have.length(1);
 
@@ -212,7 +212,7 @@ describe("summary panel renders error/warning status correctly", () => {
 
 		// check that Alerts tab is added and that is shows error message before warning message
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		expect(alertCategory.find("button.properties-category-title").text()).to.equal("Alerts (1)");
+		expect(alertCategory.find("button.cds--accordion__heading").text()).to.equal("Alerts (1)");
 		alertList = alertCategory.find("div.properties-link-text-container");
 		expect(alertList).to.have.length(1);
 		warningWrapper = alertCategory.find("div.properties-link-text-container.warning");
@@ -220,7 +220,7 @@ describe("summary panel renders error/warning status correctly", () => {
 		expect(warningWrapper.find("a.properties-link-text").text()).to.equal("Expression cell table cannot be empty");
 		// check that summary icon is an error icon
 		tableCategory = wrapper.find("div.properties-category-container").at(1); // Structure list table category
-		expect(tableCategory.find("button.properties-category-title").text()).to.equal("Structure List Table (1)");
+		expect(tableCategory.find("button.cds--accordion__heading").text()).to.equal("Structure List Table (1)");
 		summary = tableCategory.find("div.properties-summary-link-container");
 		expect(summary.find("svg.warning")).to.have.length(1);
 	});
