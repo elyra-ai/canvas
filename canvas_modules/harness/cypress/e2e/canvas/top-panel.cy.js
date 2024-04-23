@@ -28,12 +28,12 @@ describe("Testing top panel", function() {
 		// Test top panel is decreased in size successfully with right flyout open
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
 		cy.verifyTopPanelHeight(113);
-		cy.verifyTopPanelWidth(807.4375);
+		cy.verifyTopPanelWidth(814);
 
 		// Test top panel is decreased in size successfully with palette open.
 		cy.clickToolbarPaletteOpen();
 		cy.verifyTopPanelHeight(113);
-		cy.verifyTopPanelWidth(653.484375);
+		cy.verifyTopPanelWidth(659);
 
 		// Test top panel is decreased in size successfully with palette open and right flyout closed
 		cy.setCanvasConfig({ "selectedShowRightFlyout": false });

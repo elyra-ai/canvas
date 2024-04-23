@@ -706,6 +706,7 @@ Cypress.Commands.add("verifyJsxDecorationOnLink", (linkLabel, decoratorId, xPos,
 });
 
 Cypress.Commands.add("verifyDecorationTransformOnNode", (nodeName, decoratorId, xPos, yPos) => {
+	cy.wait(10);
 	cy.getNodeWithLabel(nodeName)
 		.find(".d3-node-dec-group")
 		.then((decorators) => {
@@ -823,7 +824,9 @@ Cypress.Commands.add("verifyBottomPanelHeight", (height) => {
 
 Cypress.Commands.add("verifyBottomPanelWidth", (width) => {
 	cy.get(".bottom-panel").should((element) => {
-		expect(element).to.have.css("width", `${width}px`);
+		// Use compareCloseTo here because top-panel width is slighyly different
+		// on the build machine to its width when running tests on a local machine.
+		compareCloseTo(element[0].offsetWidth, width);
 	});
 });
 
@@ -1006,6 +1009,10 @@ Cypress.Commands.add("verifyToolbarButtonEnabled", (action, state) => {
 			const enabled = !classList.includes("cds--btn--disabled");
 			expect(enabled).to.equal(state);
 		});
+});
+
+Cypress.Commands.add("verifyToolbarSubPanelIsOpen", (action, state) => {
+	cy.getToolbarAction("." + action + "-action .toolbar-popover-list");
 });
 
 Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {

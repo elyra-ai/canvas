@@ -22,6 +22,7 @@ describe("Test adding links to target nodes with maxed out cardinalities", funct
 
 	it("Test a maxed out target node doesn't accept a new connection", function() {
 		cy.linkNodeOutputPortToNodeInputPort("Out 0:1", "outPort", "In 0:1", "inPort");
+		cy.wait(10);
 		cy.verifyNumberOfPortDataLinks(1);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Out 0:1", "outPort", "In 0:1", "inPort", 1);
@@ -35,6 +36,7 @@ describe("Test adding links to target nodes with maxed out cardinalities", funct
 
 	it("Test a maxed out target node second port doesn't accept a new connection", function() {
 		cy.linkNodeOutputPortToNodeInputPort("Out 0:1", "outPort", "0:1 & 0:2", "InputPort2");
+		cy.wait(10);
 		cy.verifyNumberOfPortDataLinks(1);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Out 0:1", "outPort", "0:1 & 0:2", "InputPort2", 1);
@@ -56,6 +58,8 @@ describe("Test adding links to target nodes with maxed out cardinalities", funct
 	it("Test a maxed out target node all ports don't accept a new connection", function() {
 		// This should create the link because inPort1 can accept an input links
 		cy.linkNodeOutputPortToNodeInputPort("Out 0:1", "outPort", "All 0:1", "inPort1");
+
+		cy.wait(10);
 		cy.verifyNumberOfPortDataLinks(1);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Out 0:1", "outPort", "All 0:1", "inPort1", 1);
@@ -100,6 +104,7 @@ describe("Test adding links to target nodes with maxed out cardinalities", funct
 	it("Test a maxed out target node doesn't accept a new connection when link dropped on node body", function() {
 		// This should create the link because inPort4 can accept an input links
 		cy.linkNodeOutputPortToNode("Out 0:1", "outPort", "In 0:1");
+		cy.wait(10);
 		cy.verifyNumberOfPortDataLinks(1);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Out 0:1", "outPort", "In 0:1", "inPort", 1);
@@ -120,6 +125,7 @@ describe("Test adding links to target nodes with maxed out cardinalities", funct
 	it("Test a maxed out target node doesn't accept a new connection when link dropped on node body", function() {
 		// This should create the link and default it to the first input port
 		cy.linkNodeOutputPortToNode("Out 0:1", "outPort", "0:1 & 0:2");
+		cy.wait(10);
 		cy.verifyNumberOfPortDataLinks(1);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Out 0:1", "outPort", "0:1 & 0:2", "InputPort1", 1);
@@ -152,6 +158,7 @@ describe("Test adding links from source nodes with maxed out cardinalities", fun
 
 	it("Test a maxed out source node single port 0:1 cannot create a new connection", function() {
 		cy.linkNodeOutputPortToNodeInputPort("Out 0:1", "outPort", "In 0:1", "inPort");
+		cy.wait(10);
 		cy.verifyNumberOfPortDataLinks(1);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Out 0:1", "outPort", "In 0:1", "inPort", 1);
@@ -166,6 +173,7 @@ describe("Test adding links from source nodes with maxed out cardinalities", fun
 	it("Test a maxed out source node single port 0:3 cannot create a new connection", function() {
 		// This link creation should work because Out 0:3 doesn't have any links
 		cy.linkNodeOutputPortToNodeInputPort("Out 0:3", "outPort", "In 0:1", "inPort");
+		cy.wait(10);
 		cy.verifyNumberOfPortDataLinks(1);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Out 0:3", "outPort", "In 0:1", "inPort", 1);
@@ -206,6 +214,7 @@ describe("Test moving links with handles rejects links to target nodes with maxe
 
 		// This link creation should work because Out 0:1 has no link so far
 		cy.linkNodeOutputPortToNodeInputPort("Out 0:1", "outPort", "In 0:1", "inPort");
+		cy.wait(10);
 		cy.verifyNumberOfPortDataLinks(1);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Out 0:1", "outPort", "In 0:1", "inPort", 1);

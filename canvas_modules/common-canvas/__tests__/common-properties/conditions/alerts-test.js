@@ -42,13 +42,13 @@ describe("condition messages should add alerts tab", () => {
 		randomInput.simulate("change", { target: { value: "", validity: { badInput: false } } });
 		// get alerts tabs
 		let alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		let alertButton = alertCategory.find("button.properties-category-title");
+		let alertButton = alertCategory.find("button.cds--accordion__heading");
 		expect(alertButton.text()).to.equal("Alerts (2)");
 		alertButton.simulate("click");
 
 		// ensure that alert tab is open
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		const alertDiv = alertCategory.find("div.properties-category-content.show"); // Alerts div
+		const alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(2);
@@ -59,17 +59,17 @@ describe("condition messages should add alerts tab", () => {
 		alertList.at(0).find("a.properties-link-text")
 			.simulate("click");
 		let valuesCategory = wrapper.find("div.properties-category-container").at(1); // Values category
-		expect(valuesCategory.find("button.properties-category-title").text()).to.equal("Values (2)");
+		expect(valuesCategory.find("button.cds--accordion__heading").text()).to.equal("Values (2)");
 
 		// regenerate random number should decrease alert list
-		let valuesDiv = valuesCategory.find("div.properties-category-content.show"); // Values div
+		let valuesDiv = valuesCategory.find("li.properties-category-content.show"); // Values div
 		expect(valuesDiv).to.have.length(1);
 		const generator = valuesDiv.find("button.properties-number-generator");
 		expect(generator).to.have.length(2);
 		generator.at(0).simulate("click");
 
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		alertButton = alertCategory.find("button.properties-category-title");
+		alertButton = alertCategory.find("button.cds--accordion__heading");
 		expect(alertButton.text()).to.equal("Alerts (1)");
 		alertButton.simulate("click");
 
@@ -81,22 +81,22 @@ describe("condition messages should add alerts tab", () => {
 
 		// enter new integer value to remove all Alerts
 		valuesCategory = wrapper.find("div.properties-category-container").at(1); // Values category
-		expect(valuesCategory.find("button.properties-category-title").text()).to.equal("Values (1)");
+		expect(valuesCategory.find("button.cds--accordion__heading").text()).to.equal("Values (1)");
 
-		valuesDiv = valuesCategory.find("div.properties-category-content.show"); // Values category
+		valuesDiv = valuesCategory.find("li.properties-category-content.show"); // Values category
 		expect(valuesDiv).to.have.length(1);
 		integerInput = valuesDiv.find("div[data-id='properties-number_int'] input");
 		expect(integerInput).to.have.length(1);
 		integerInput.simulate("change", { target: { value: "1" } });
 
 		valuesCategory = wrapper.find("div.properties-category-container").at(0); // Values category
-		expect(valuesCategory.find("button.properties-category-title").text()).to.equal("Values");
+		expect(valuesCategory.find("button.cds--accordion__heading").text()).to.equal("Values");
 	});
 	// Skipping this test till carbon 11 bug is fixed - https://github.com/carbon-design-system/carbon/issues/15985
 	it.skip("alerts should not show messages for hidden controls", () => {
 		// open the conditions tabs
 		const conditionsCategory = wrapper.find("div.properties-category-container").at(1); // Conditions category
-		const conditionsButton = conditionsCategory.find("button.properties-category-title");
+		const conditionsButton = conditionsCategory.find("button.cds--accordion__heading");
 		expect(conditionsButton.text()).to.equal("Conditions");
 		conditionsButton.simulate("click");
 
@@ -114,13 +114,13 @@ describe("condition messages should add alerts tab", () => {
 
 		// get alerts tabs
 		let alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		const alertButton = alertCategory.find("button.properties-category-title");
+		const alertButton = alertCategory.find("button.cds--accordion__heading");
 		expect(alertButton.text()).to.equal("Alerts (1)");
 		alertButton.simulate("click");
 
 		// ensure that alert tab is open
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		let alertDiv = alertCategory.find("div.properties-category-content.show"); // Alerts div
+		let alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(1);
@@ -132,7 +132,7 @@ describe("condition messages should add alerts tab", () => {
 
 		// there should be no alerts for the hidden field
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		alertDiv = alertCategory.find("div.properties-category-content.show"); // Alerts div
+		alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(0);
 	});
@@ -151,13 +151,13 @@ describe("condition messages should add alerts tab for tables", () => {
 		// validate the Alerts tab has 2 warnings
 		// get alerts tabs
 		let alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		const alertButton = alertCategory.find("button.properties-category-title");
+		const alertButton = alertCategory.find("button.cds--accordion__heading");
 		expect(alertButton.text()).to.equal("Alerts (2)");
 		alertButton.simulate("click");
 
 		// ensure that alert tab is open
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		let alertDiv = alertCategory.find("div.properties-category-content.show"); // Alerts div
+		let alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(2);
@@ -190,7 +190,7 @@ describe("condition messages should add alerts tab for tables", () => {
 
 		// validate the Alerts tab has only 1 warning
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		alertDiv = alertCategory.find("div.properties-category-content.show"); // Alerts div
+		alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(1);
@@ -200,7 +200,7 @@ describe("condition messages should add alerts tab for tables", () => {
 	it("alerts should not show messages for hidden table controls", () => {
 		// open the conditions tabs
 		const conditionsCategory = wrapper.find("div.properties-category-container").at(5); // Conditions category
-		const conditionsButton = conditionsCategory.find("button.properties-category-title");
+		const conditionsButton = conditionsCategory.find("button.cds--accordion__heading");
 		expect(conditionsButton.text()).to.equal("Conditions");
 		conditionsButton.simulate("click");
 
@@ -234,13 +234,13 @@ describe("condition messages should add alerts tab for tables", () => {
 		// validate the Alerts tab has the error
 		// get alerts tabs
 		let alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		const alertButton = alertCategory.find("button.properties-category-title");
+		const alertButton = alertCategory.find("button.cds--accordion__heading");
 		expect(alertButton.text()).to.equal("Alerts (3)");
 		alertButton.simulate("click");
 
 		// ensure that alert tab is open
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		let alertDiv = alertCategory.find("div.properties-category-content.show"); // Alerts div
+		let alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(3);
@@ -267,7 +267,7 @@ describe("condition messages should add alerts tab for tables", () => {
 
 		// Verify the Error is cleared from Alerts tab
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		alertDiv = alertCategory.find("div.properties-category-content.show"); // Alerts div
+		alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(2);
 		expect(alertList.at(0).text()).to.not.equal("The field cannot contain 'number'");
@@ -292,7 +292,7 @@ describe("Show/hide Alerts tab based on showAlertsTab boolean in propertiesConfi
 		expect(allCategories).to.have.length(3);
 
 		allCategories.forEach((category, idx) => {
-			const categoryTitle = category.find("button.properties-category-title").text();
+			const categoryTitle = category.find("button.cds--accordion__heading").text();
 			expect(categoryTitle).to.equal(categoryLabels[idx]);
 		});
 	});
@@ -308,7 +308,7 @@ describe("Show/hide Alerts tab based on showAlertsTab boolean in propertiesConfi
 		expect(allCategories).to.have.length(4);
 
 		allCategories.forEach((category, idx) => {
-			const categoryTitle = category.find("button.properties-category-title").text();
+			const categoryTitle = category.find("button.cds--accordion__heading").text();
 			expect(categoryTitle).to.equal(categoryLabels[idx]);
 		});
 	});
@@ -324,7 +324,7 @@ describe("Show/hide Alerts tab based on showAlertsTab boolean in propertiesConfi
 		expect(allCategories).to.have.length(4);
 
 		allCategories.forEach((category, idx) => {
-			const categoryTitle = category.find("button.properties-category-title").text();
+			const categoryTitle = category.find("button.cds--accordion__heading").text();
 			expect(categoryTitle).to.equal(categoryLabels[idx]);
 		});
 	});
