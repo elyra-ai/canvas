@@ -17,7 +17,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { IntlProvider } from "react-intl";
-import { mount } from "./mount-utils.js";
+import { mount, render } from "./mount-utils.js";
 import sinon from "sinon";
 
 
@@ -88,6 +88,88 @@ export function createIntlCommonCanvas(
 
 
 	const wrapper = mount(
+		<IntlProvider key="IntlProvider1" locale={ locale } messages={messages}>
+			<CommonCanvas
+				config={config}
+				contextMenuHandler={contextMenuHandler}
+				beforeEditActionHandler={beforeEditActionHandler}
+				editActionHandler={editActionHandler}
+				clickActionHandler={clickActionHandler}
+				decorationActionHandler={decorationActionHandler}
+				selectionChangeHandler={selectionChangeHandler}
+				tipHandler={tipHandler}
+				toolbarConfig={toolbarConfig}
+				notificationConfig={notificationConfig}
+				contextMenuConfig={contextMenuConfig}
+				showRightFlyout={showRightFlyout}
+				showBottomPanel={showBottomPanel}
+				canvasController={canvasController}
+			/>
+		</IntlProvider>
+	);
+	return wrapper;
+}
+
+export function createIntlCommonCanvasRTL(
+	config,
+	contextMenuHandler,
+	beforeEditActionHandler,
+	editActionHandler,
+	clickActionHandler,
+	decorationActionHandler,
+	selectionChangeHandler,
+	tipHandler,
+	showBottomPanel,
+	showRightFlyout,
+	toolbarConfig,
+	notificationConfig,
+	contextMenuConfig,
+	canvasController) {
+
+
+	const wrapper = render(
+		<IntlProvider key="IntlProvider1" locale={ locale } messages={messages}>
+			<CommonCanvas
+				config={config}
+				contextMenuHandler={contextMenuHandler}
+				beforeEditActionHandler={beforeEditActionHandler}
+				editActionHandler={editActionHandler}
+				clickActionHandler={clickActionHandler}
+				decorationActionHandler={decorationActionHandler}
+				selectionChangeHandler={selectionChangeHandler}
+				tipHandler={tipHandler}
+				toolbarConfig={toolbarConfig}
+				notificationConfig={notificationConfig}
+				contextMenuConfig={contextMenuConfig}
+				showRightFlyout={showRightFlyout}
+				showBottomPanel={showBottomPanel}
+				canvasController={canvasController}
+			/>
+		</IntlProvider>
+	);
+	return wrapper;
+}
+
+export function createIntlCommonCanvasRTLRerender(
+	config,
+	contextMenuHandler,
+	beforeEditActionHandler,
+	editActionHandler,
+	clickActionHandler,
+	decorationActionHandler,
+	selectionChangeHandler,
+	tipHandler,
+	showBottomPanel,
+	showRightFlyout,
+	toolbarConfig,
+	notificationConfig,
+	contextMenuConfig,
+	canvasController,
+	rerender
+) {
+
+
+	const wrapper = rerender(
 		<IntlProvider key="IntlProvider1" locale={ locale } messages={messages}>
 			<CommonCanvas
 				config={config}
