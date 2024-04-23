@@ -102,7 +102,7 @@
               "x_pos": 10,
               "y_pos": 10,
               "width": 200,
-              "height": 180,
+              "height": 192,
               "class_name": "",
               "content": "This canvas tests addition of custom attributes to a node. The node on the right has two custom attributes addded to it called data-attr1 and data-attr2. If you look at the dom in the debugger tools you should see them set on the node's image. The node on the right is shown with a faded out image if the data-attr1 custom attribute is applied correctly.",
               "associated_id_refs": []
