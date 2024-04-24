@@ -1396,7 +1396,7 @@ export default class CanvasController {
 	}
 
 	// Undoes a number of commands on the command stack as indicated by the
-	// 'count' parameter. If 'count' is bigger than the number of commands
+	// 'count' parameter. If 'count' is bigger than the number of undoable commands
 	// on the stack, all undoable commands currently on the command stack
 	// will be undone. Uses the editActionHandler method which will cause
 	// the app's editActionHandler to be called.
@@ -1412,6 +1412,17 @@ export default class CanvasController {
 	// method which will cause the app's editActionHandler to be called.
 	redo() {
 		if (this.canRedo()) {
+			this.editActionHandler({ editType: "redo", editSource: "controller" });
+		}
+	}
+
+	// Redoes a number of commands on the command stack as indicated by the
+	// 'count' parameter. If 'count' is bigger than the number of redoable commands
+	// on the stack, all redoable commands currently on the command stack
+	// will be redone. Uses the editActionHandler method which will cause
+	// the app's editActionHandler to be called.
+	redoMulti(count) {
+		for (let i = 0; i < count && this.canRedo(); i++) {
 			this.editActionHandler({ editType: "redo", editSource: "controller" });
 		}
 	}
