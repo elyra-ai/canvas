@@ -386,7 +386,7 @@
               "id": "id42ESQA3VPXB",
               "x_pos": 32,
               "y_pos": 13.200000000000001,
-              "width": 200,
+              "width": 246,
               "height": 64,
               "class_name": "canvas-comment",
               "content": "This canvas shows the 4 different node types and three link types: node links, association links and comments links.",

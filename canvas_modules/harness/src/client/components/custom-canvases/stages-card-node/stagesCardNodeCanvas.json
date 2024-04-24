@@ -266,7 +266,7 @@
 				"comments": [{
 					"id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
 					"x_pos": 0,
-					"y_pos": 21.45,
+					"y_pos": 10,
 					"width": 320,
 					"height": 150.15,
 					"class_name": "d3-comment-rect",
