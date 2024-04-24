@@ -274,7 +274,7 @@
               "width": 175,
               "height": 52,
               "class_name": "d3-comment-rect",
-              "content": "This canvas shows a flow of data processing nodes..",
+              "content": "This canvas shows a flow of data processing nodes.",
               "associated_id_refs": []
             }
           ]
