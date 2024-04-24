@@ -371,8 +371,8 @@
               "id": "36ab82d5-b015-47f4-a295-2a8aedabcc21",
               "x_pos": 781,
               "y_pos": 276,
-              "width": 146,
-              "height": 66,
+              "width": 147,
+              "height": 88,
               "class_name": "canvas-comment",
               "content": " This node shows a decorator with a zoom-in image and a yellow background rectangle.",
               "associated_id_refs": [

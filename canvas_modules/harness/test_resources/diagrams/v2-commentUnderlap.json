@@ -297,7 +297,7 @@
               "x_pos": 773,
               "y_pos": 49,
               "width": 128,
-              "height": 112,
+              "height": 145,
               "class_name": "canvas-comment",
               "content": " This canvas should show two large boxes each containing 3 nodes. The nodes and links should all appear on top of the comment boxes.",
               "associated_id_refs": []
