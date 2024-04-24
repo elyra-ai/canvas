@@ -360,7 +360,7 @@
               "id": "id42ESQA3VPXB",
               "x_pos": 17.5,
               "y_pos": 15,
-              "width": 200,
+              "width": 228,
               "height": 76,
               "class_name": "canvas-comment",
               "content": "This canvas shows nodes with different cardinalities for testing to make sure links are not crated when maximum cardinalities are hit.",
