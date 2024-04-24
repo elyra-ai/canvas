@@ -415,7 +415,7 @@
               "x_pos": 316,
               "y_pos": 34,
               "width": 200,
-              "height": 136,
+              "height": 157,
               "class_name": "canvas-comment",
               "content": "This comment has a dark salmon fill color and a dark red border with red text. The selection highlighting is gold. \n\nOn hover, its body become dark khaki with a dark olive green border and dark blue text and the selection highlight becomes black. ",
               "associated_id_refs": [],
@@ -466,7 +466,7 @@
               "x_pos": 44,
               "y_pos": 33,
               "width": 236,
-              "height": 88,
+              "height": 105,
               "class_name": "d3-comment-rect",
               "content": "This canvas shows various canvas objects styles using the 'app_data.ui_data.style' field for nodes, comments and links. These styles override the styles set in the CSS classes applied to the objects.",
               "associated_id_refs": []
