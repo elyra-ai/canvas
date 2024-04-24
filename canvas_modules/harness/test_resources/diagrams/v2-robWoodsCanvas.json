@@ -140,7 +140,7 @@
                   "class_name": "node-cache-empty",
                   "hotspot": false,
                   "id": "cache",
-                  "image": "/canvas/images/cache_empty_32.svg"
+                  "image": ""
                 }
               ]
             }
@@ -288,7 +288,7 @@
                   "class_name": "node-cache-empty",
                   "hotspot": false,
                   "id": "cache",
-                  "image": "/canvas/images/cache_empty_32.svg"
+                  "image": ""
                 }
               ]
             }
@@ -1652,7 +1652,7 @@
                   "class_name": "node-cache-empty",
                   "hotspot": false,
                   "id": "cache",
-                  "image": "/canvas/images/cache_empty_32.svg"
+                  "image": ""
                 }
               ]
             }
@@ -2086,7 +2086,7 @@
                   "class_name": "node-cache-empty",
                   "hotspot": false,
                   "id": "cache",
-                  "image": "/canvas/images/cache_empty_32.svg"
+                  "image": ""
                 }
               ]
             }
@@ -2279,7 +2279,7 @@
                   "class_name": "node-cache-empty",
                   "hotspot": false,
                   "id": "cache",
-                  "image": "/canvas/images/cache_empty_32.svg"
+                  "image": ""
                 }
               ]
             }
@@ -2437,7 +2437,7 @@
                   "class_name": "node-cache-empty",
                   "hotspot": false,
                   "id": "cache",
-                  "image": "/canvas/images/cache_empty_32.svg"
+                  "image": ""
                 }
               ]
             }
@@ -3551,7 +3551,7 @@
                   "class_name": "node-cache-empty",
                   "hotspot": false,
                   "id": "cache",
-                  "image": "/canvas/images/cache_empty_32.svg"
+                  "image": ""
                 }
               ]
             }
@@ -3955,7 +3955,7 @@
                   "class_name": "node-cache-empty",
                   "hotspot": false,
                   "id": "cache",
-                  "image": "/canvas/images/cache_empty_32.svg"
+                  "image": ""
                 }
               ]
             }
@@ -5491,7 +5491,7 @@
                   "class_name": "node-cache-empty",
                   "hotspot": false,
                   "id": "cache",
-                  "image": "/canvas/images/cache_empty_32.svg"
+                  "image": ""
                 }
               ]
             }

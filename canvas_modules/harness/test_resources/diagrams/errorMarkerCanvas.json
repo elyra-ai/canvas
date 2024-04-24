@@ -280,8 +280,8 @@
               "id": "7480223f-8e7a-4c67-b987-2a31e327545b",
               "x_pos": 56,
               "y_pos": 18,
-              "width": 175,
-              "height": 88,
+              "width": 177,
+              "height": 105,
               "class_name": "d3-comment-rect",
               "content": "This canvas shows examples of different error nodes in both the primary pipeline and also on a supernode and on a node inside a supernode.",
               "associated_id_refs": []
