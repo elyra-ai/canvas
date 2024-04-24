@@ -117,8 +117,8 @@
               "id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
               "x_pos": 28,
               "y_pos": 36,
-              "width": 175,
-              "height": 76,
+              "width": 196,
+              "height": 84,
               "class_name": "d3-comment-rect",
               "content": "This canvas shows a flow of data processing nodes where enableDetachableLinks is switched on.",
               "associated_id_refs": []

@@ -423,7 +423,7 @@
               "x_pos": 35,
               "y_pos": 30,
               "width": 437.5,
-              "height": 75,
+              "height": 89,
               "class_name": "d3-comment-rect",
               "content": "This canvas shows examples of circular flows. This allows us to test whether the branch highlighting code can successfully handle such flows. \n\nCircular flows are sometimes encountered by the Streams monitor product. ",
               "associated_id_refs": []
