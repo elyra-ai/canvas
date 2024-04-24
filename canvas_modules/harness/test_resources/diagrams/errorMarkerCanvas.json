@@ -296,7 +296,6 @@
               "content": "Error node",
               "associated_id_refs": [
                 {
-                  "id": "a3dfd9a7-44b2-41d3-9e19-190c215d02f7",
                   "node_ref": "f37f8ae1-b314-4d17-a0ad-3942bcfea01a",
                   "class_name": "d3-comment-link"
                 }
@@ -312,7 +311,6 @@
               "content": "Warning node",
               "associated_id_refs": [
                 {
-                  "id": "a624777b-c7aa-4a8d-9a39-ac85b4031d22",
                   "node_ref": "a6edc3e8-6fc5-43fd-8d0c-15033014cab7",
                   "class_name": "d3-comment-link"
                 }
@@ -328,7 +326,6 @@
               "content": "Warning on a supernode",
               "associated_id_refs": [
                 {
-                  "id": "3e6fdb5d-5968-4397-8e15-2b113cdba9ef",
                   "node_ref": "ef026438-7ebc-4b0b-9609-1e49f9821f57",
                   "class_name": "d3-comment-link"
                 }
@@ -344,7 +341,6 @@
               "content": "Error node inside a supernode",
               "associated_id_refs": [
                 {
-                  "id": "874affa5-c81b-48cf-afe5-0ac975d0d7dc",
                   "node_ref": "88c1216d-ad22-4f38-b29d-a57007336f09",
                   "class_name": "d3-comment-link"
                 }
@@ -439,7 +435,6 @@
               },
               "links": [
                 {
-                  "id": "d9c2309d-7bff-4caa-9da4-5e5cc614e823",
                   "node_id_ref": "id8I6RH2V91XW",
                   "port_id_ref": "outPort",
                   "app_data": {
@@ -492,7 +487,6 @@
               },
               "links": [
                 {
-                  "id": "bc9fa03a-23a3-4d86-bdb5-4fb3d41cec5f",
                   "node_id_ref": "6f704d84-85be-4520-9d76-57fe2295b310",
                   "port_id_ref": "outPort",
                   "app_data": {
@@ -519,7 +513,6 @@
               "content": "This is connected to the select node",
               "associated_id_refs": [
                 {
-                  "id": "0ddc9976-c5a1-46bd-8470-2174d70597c9",
                   "node_ref": "6f704d84-85be-4520-9d76-57fe2295b310",
                   "class_name": "d3-comment-link"
                 }
@@ -568,7 +561,6 @@
               },
               "links": [
                 {
-                  "id": "08106378-43b2-4d0f-b91f-d2b9f91cca4a",
                   "node_id_ref": "06593576-88e5-41e3-b879-74c3861cc34a",
                   "port_id_ref": "output_ac584be2-8a3c-474f-a046-e10a3665b875_inPort",
                   "app_data": {
