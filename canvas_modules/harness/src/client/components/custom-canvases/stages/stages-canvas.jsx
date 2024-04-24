@@ -21,8 +21,7 @@ import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disabl
 
 import { Edit } from "@carbon/react/icons";
 
-import MultiUndoPanel from "./multi-undo-panel";
-import MultiRedoPanel from "./multi-redo-panel";
+import MultiCommandPanel from "./multi-command-panel";
 
 import StagesCanvasFlow from "./stagesCanvas.json";
 import StagesPalette from "../../../../../test_resources/palettes/stagesPalette.json";
@@ -57,13 +56,13 @@ export default class DetachedCanvas extends React.Component {
 				{ action: "undo",
 					label: "Undo",
 					purpose: "dual",
-					subPanel: MultiUndoPanel,
-					subPanelData: { canvasController: this.canvasController } },
+					subPanel: MultiCommandPanel,
+					subPanelData: { canvasController: this.canvasController, command: "undo" } },
 				{ action: "redo",
 					label: "Redo",
 					purpose: "dual",
-					subPanel: MultiRedoPanel,
-					subPanelData: { canvasController: this.canvasController } },
+					subPanel: MultiCommandPanel,
+					subPanelData: { canvasController: this.canvasController, command: "redo" } },
 				{ divider: true },
 				{ action: "cut", label: "Cut", enable: true },
 				{ action: "copy", label: "Copy", enable: true },

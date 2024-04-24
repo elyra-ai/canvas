@@ -20,12 +20,14 @@ import { Checkbox, Button } from "@carbon/react";
 
 const TAB_KEY = 9;
 
-class MultiRedoPanel extends React.Component {
+class MultiCommandPanel extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.allRedoCommands = this.props.subPanelData.canvasController.getAllRedoCommands().reverse();
-		const checked = Array(this.allRedoCommands.length);
+		this.allCommands = this.props.subPanelData.command === "undo"
+			? this.props.subPanelData.canvasController.getAllUndoCommands()
+			: this.props.subPanelData.canvasController.getAllRedoCommands().reverse();
+		const checked = Array(this.allCommands.length);
 		checked.fill(false);
 		this.state = {
 			checked: checked
@@ -75,8 +77,12 @@ class MultiRedoPanel extends React.Component {
 		const current = this.state.checked.indexOf(true);
 		if (current > -1) {
 			const checkedPos = current;
-			const count = this.allRedoCommands.length - checkedPos;
-			this.props.subPanelData.canvasController.redoMulti(count);
+			const count = this.allCommands.length - checkedPos;
+			if (this.props.subPanelData.command === "undo") {
+				this.props.subPanelData.canvasController.undoMulti(count);
+			} else {
+				this.props.subPanelData.canvasController.redoMulti(count);
+			}
 		}
 		this.props.closeSubPanel();
 
@@ -84,7 +90,7 @@ class MultiRedoPanel extends React.Component {
 
 	generateCheckboxes() {
 		const checkBoxes = [];
-		this.allRedoCommands.forEach((cmnd, i) => {
+		this.allCommands.forEach((cmnd, i) => {
 			const id = String(i);
 			checkBoxes.push(
 				<Checkbox id={id} key={id} labelText={cmnd.getLabel()} onChange={this.onChange} checked={this.state.checked[i]} />
@@ -105,9 +111,9 @@ class MultiRedoPanel extends React.Component {
 	}
 }
 
-MultiRedoPanel.propTypes = {
+MultiCommandPanel.propTypes = {
 	closeSubPanel: PropTypes.func,
 	subPanelData: PropTypes.object
 };
 
-export default MultiRedoPanel;
+export default MultiCommandPanel;
