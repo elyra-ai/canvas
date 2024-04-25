@@ -22,6 +22,7 @@ import TextfieldControl from "./../textfield";
 import AbstractTable from "./../abstract-table.jsx";
 import FlexibleTable from "./../../components/flexible-table";
 import MoveableTableRows from "./../../components/moveable-table-rows";
+import TableToolbar from "./../../components/table-toolbar";
 import ValidationMessage from "./../../components/validation-message";
 import { formatMessage } from "./../../util/property-utils";
 import { getDataId } from "./../../util/control-utils";
@@ -117,6 +118,22 @@ class ListControl extends AbstractTable {
 		return headers;
 	}
 
+	makeTableToolbar() {
+		if (this.props.addRemoveRows || this.props.control?.moveableRows) {
+			return (
+				<TableToolbar
+					controller={this.props.controller}
+					propertyId={this.props.propertyId}
+					selectedRows={this.props.selectedRows}
+					tableState={this.props.state}
+					addRemoveRows={this.props.addRemoveRows}
+					moveableRows={this.props.control?.moveableRows}
+				/>
+			);
+		}
+		return null;
+	}
+
 	render() {
 		const headers = this.makeHeader();
 
@@ -136,6 +153,7 @@ class ListControl extends AbstractTable {
 			delete this.scrollToRow;
 		}
 		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+		const tableToolbar = this.makeTableToolbar();
 		const table =	(
 			<FlexibleTable
 				columns={headers}
@@ -152,6 +170,7 @@ class ListControl extends AbstractTable {
 				updateRowSelections={this.updateRowSelections}
 				light={this.props.controller.getLight() && this.props.control.light}
 				emptyTablePlaceholder={this.props.control.additionalText}
+				selectedEditRow={tableToolbar}
 			/>);
 
 		const tableContainer = (<div>

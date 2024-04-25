@@ -103,8 +103,8 @@ class MoveableTableRows extends React.Component {
 		}
 
 
-		const topLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_TOP_DESCRIPTION);
-		const upLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION);
+		const topLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_TOP);
+		const upLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_UP);
 		const UpToTop24 = React.forwardRef((props, ref) => <UpToTop ref={ref} size={24} {...props} />);
 		const ArrowUp24 = React.forwardRef((props, ref) => <ArrowUp ref={ref} size={24} {...props} />);
 		const topImages = (
@@ -133,8 +133,8 @@ class MoveableTableRows extends React.Component {
 				/>
 			</div>
 		);
-		const bottomLabel = formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_DOWN_DESCRIPTION);
-		const downLabel = formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION);
+		const bottomLabel = formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_BOTTOM);
+		const downLabel = formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DOWN);
 		const ArrowDown24 = React.forwardRef((props, ref) => <ArrowDown ref={ref} size={24} {...props} />);
 		const DownToBottom24 = React.forwardRef((props, ref) => <DownToBottom ref={ref} size={24} {...props} />);
 		const bottomImages = (

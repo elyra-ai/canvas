@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "@carbon/react";
-import { Settings } from "@carbon/react/icons";
+import { Edit } from "@carbon/react/icons";
 import { formatMessage } from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { cloneDeep } from "lodash";
@@ -74,7 +74,7 @@ export default class SubPanelCell extends React.Component {
 					<Button
 						className="properties-subpanel-button"
 						kind="ghost"
-						renderIcon={Settings}
+						renderIcon={Edit}
 						onClick={this.showSubPanel}
 						disabled={disabled}
 						iconDescription={subPanelToolTip}

@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import FlexibleTable from "./../../components/flexible-table";
 import MoveableTableRows from "./../../components/moveable-table-rows";
+import TableToolbar from "./../../components/table-toolbar";
 import AbstractTable from "./../abstract-table.jsx";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
@@ -108,6 +109,22 @@ class SelectColumnsControl extends AbstractTable {
 		return headers;
 	}
 
+	makeTableToolbar() {
+		if (this.props.addRemoveRows || this.props.control?.moveableRows) {
+			return (
+				<TableToolbar
+					controller={this.props.controller}
+					propertyId={this.props.propertyId}
+					selectedRows={this.props.selectedRows}
+					tableState={this.props.state}
+					addRemoveRows={this.props.addRemoveRows}
+					moveableRows={this.props.control?.moveableRows}
+				/>
+			);
+		}
+		return null;
+	}
+
 	render() {
 		const headers = this.makeHeader();
 
@@ -123,6 +140,7 @@ class SelectColumnsControl extends AbstractTable {
 			delete this.scrollToRow;
 		}
 		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+		const tableToolbar = this.makeTableToolbar();
 		const table =	(
 			<FlexibleTable
 				columns={headers}
@@ -139,6 +157,7 @@ class SelectColumnsControl extends AbstractTable {
 				updateRowSelections={this.updateRowSelections}
 				light={this.props.controller.getLight() && this.props.control.light}
 				emptyTablePlaceholder={this.props.control.additionalText}
+				selectedEditRow={tableToolbar}
 			/>);
 
 		const content = (

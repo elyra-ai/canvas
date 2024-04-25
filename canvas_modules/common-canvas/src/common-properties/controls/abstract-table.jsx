@@ -31,6 +31,7 @@ import { v4 as uuid4 } from "uuid";
 import { MESSAGE_KEYS, STATES, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION, ROW_SELECTION, UPDATE_TYPE } from "./../constants/constants";
 
 import { isEqual, findIndex, sortBy, cloneDeep } from "lodash";
+import TableToolbar from "../components/table-toolbar/table-toolbar.jsx";
 
 /* eslint max-depth: ["error", 5] */
 
@@ -440,39 +441,48 @@ export default class AbstractTable extends React.Component {
 	}
 
 	makeSelectedEditRow(selectedRows) {
-		if (selectedRows && Array.isArray(selectedRows) && selectedRows.length > 1) {
-			const rowsSelectedLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL);
-			const rowsSelectedAction = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.MULTI_SELECTED_ROW_ACTION);
-			const title = selectedRows.length + " " + rowsSelectedLabel + " " + rowsSelectedAction;
-			const rows = [];
-			const sortFields = [];
-			const filterFields = [];
-			const headers = (this.props.control.header === false) ? [] : this.makeHeader(sortFields, filterFields);
-			const showHeader = false;
-			const value = this.props.controller.getPropertyValue({ name: this.selectSummaryPropertyName });
-			this.makeCells(rows, value, null, this.selectSummaryPropertyName, true);
-			const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
-			return (<div className="properties-at-selectedEditRows" >
-				<div className="properties-selectedEditRows-title" >
-					<span >{title}</span>
-				</div>
-				<FlexibleTable
-					showHeader={showHeader}
-					columns={headers}
-					data={rows}
-					rows={0}
-					scrollKey={this.selectSummaryPropertyName}
-					tableLabel={tableLabel}
-					summaryTable
-					rowSelection={ROW_SELECTION.MULTIPLE}
-					light={this.isLightTheme()}
-					emptyTablePlaceholder={this.props.control.additionalText}
-				/>
-			</div>);
-		}
-		return null;
+		// if (selectedRows && Array.isArray(selectedRows) && selectedRows.length > 0) {
+		// const rowsSelectedLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
+		// 	MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL);
+		// const rowsSelectedAction = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
+		// 	MESSAGE_KEYS.MULTI_SELECTED_ROW_ACTION);
+		// const title = selectedRows.length + " " + rowsSelectedLabel + " " + rowsSelectedAction;
+		const rows = [];
+		// const sortFields = [];
+		// const filterFields = [];
+		// const headers = (this.props.control.header === false) ? [] : this.makeHeader(sortFields, filterFields);
+		// const showHeader = false;
+		const value = this.props.controller.getPropertyValue({ name: this.selectSummaryPropertyName });
+		this.makeCells(rows, value, null, this.selectSummaryPropertyName, true);
+		// const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+		return (
+			<TableToolbar
+				controller={this.props.controller}
+				propertyId={this.props.propertyId}
+				selectedRows={selectedRows}
+				addRemoveRows={this.props.addRemoveRows}
+				multiSelectEdit={this.props.control.rowSelection === ROW_SELECTION.MULTIPLE}
+			/>
+		);
+		// return (<div className="properties-at-selectedEditRows" >
+		// 	<div className="properties-selectedEditRows-title" >
+		// 		<span >{title}</span>
+		// 	</div>
+		// 	<FlexibleTable
+		// 		showHeader={showHeader}
+		// 		columns={headers}
+		// 		data={rows}
+		// 		rows={0}
+		// 		scrollKey={this.selectSummaryPropertyName}
+		// 		tableLabel={tableLabel}
+		// 		summaryTable
+		// 		rowSelection={ROW_SELECTION.MULTIPLE}
+		// 		light={this.isLightTheme()}
+		// 		emptyTablePlaceholder={this.props.control.additionalText}
+		// 	/>
+		// </div>);
+	// }
+	// return null;
 	}
 
 	makeAddRemoveButtonPanel(tableState, tableButtonConfig) {
@@ -638,9 +648,10 @@ export default class AbstractTable extends React.Component {
 		const controlValue = this.props.value;
 		this.makeCells(rows, controlValue, tableState);
 
-		const selectedEditRow = this.props.control.rowSelection === ROW_SELECTION.MULTIPLE
-			? this.makeSelectedEditRow(this.props.selectedRows)
-			: null;
+		// const selectedEditRow = this.props.control.rowSelection === ROW_SELECTION.MULTIPLE
+		// 	? this.makeSelectedEditRow(this.props.selectedRows)
+		// 	: null;
+		const selectedEditRow = this.makeSelectedEditRow(this.props.selectedRows);
 		let topRightPanel = null;
 		if (customButtons) {
 			topRightPanel = this.makeCustomButtonsPanel(tableState, customButtons);

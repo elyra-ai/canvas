@@ -1531,7 +1531,7 @@
 					"default": "If 'Text' field is 'European' then 'Sport' will not be allowed to change to 'Football'.",
 					"placement": "on_panel"
 				},
-				"rows": -1
+				"rows": 4
 			},
 			{
 				"parameter_ref": "ST_mse_table_II",
@@ -2247,6 +2247,7 @@
 			{
 				"complex_type_ref": "ST_mse_table",
 				"row_selection": "multiple-edit",
+				"moveable_rows": true,
 				"key_definition": {
 					"parameter_ref": "field",
 					"width": 10,

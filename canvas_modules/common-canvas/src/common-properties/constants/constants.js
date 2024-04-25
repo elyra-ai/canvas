@@ -93,10 +93,6 @@ export const MESSAGE_KEYS = {
 	EXPRESSION_NO_FUNCTIONS: "expression.no.functions",
 	MULTI_SELECTED_ROW_LABEL: "multi.selected.row.label",
 	MULTI_SELECTED_ROW_ACTION: "multi.selected.row.action",
-	MOVEABLE_TABLE_BUTTON_TOP_DESCRIPTION: "moveable.table.button.top",
-	MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION: "moveable.table.button.up",
-	MOVEABLE_TABLE_BUTTON_DOWN_DESCRIPTION: "moveable.table.button.down",
-	MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION: "moveable.table.button.bottom",
 	LIST_TABLE_LABEL: "list.table.label",
 	DROPDOWN_TOOLTIP_OPENMENU: "dropdown.tooltip.openMenu",
 	DROPDOWN_TOOLTIP_CLOSEMENU: "dropdown.tooltip.closeMenu",
@@ -121,7 +117,15 @@ export const MESSAGE_KEYS = {
 	DATEPICKER_RANGE_END_LABEL: "datepickerRangeEnd.default.label",
 	SLIDER_NUMBER_INPUT_LABEL: "slider.numberInput.label",
 	EDITORFORM_TABLIST_LABEL: "editorForm.tabList.label",
-	SUBTABS_TABLIST_LABEL: "subTabs.tabList.label"
+	SUBTABS_TABLIST_LABEL: "subTabs.tabList.label",
+	TABLE_TOOLBAR_BUTTON_TOP: "table.toolbar.button.top",
+	TABLE_TOOLBAR_BUTTON_UP: "table.toolbar.button.up",
+	TABLE_TOOLBAR_BUTTON_DOWN: "table.toolbar.button.down",
+	TABLE_TOOLBAR_BUTTON_BOTTOM: "table.toolbar.button.bottom",
+	TABLE_TOOLBAR_BUTTON_DELETE: "table.toolbar.button.delete",
+	TABLE_TOOLBAR_BUTTON_EDIT: "table.toolbar.button.edit",
+	TABLE_TOOLBAR_BUTTON_CANCEL: "table.toolbar.button.cancel",
+
 };
 
 export const TRUNCATE_LIMIT = 10000;
