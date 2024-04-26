@@ -194,10 +194,11 @@ describe("Passwordfield renders correctly", () => {
 		// Verify the eye icon
 		const eyeIcon = passwordWrapper.find("button");
 		expect(eyeIcon).to.have.length(1);
+		const eyeIconAriaLabelledBy = eyeIcon.prop("aria-labelledby");
 		// Verify custom tooltip content
-		expect(eyeIcon.at(0).text()).to.equal(control.tooltip.defaultShow);
+		expect(passwordWrapper.find(`span[id='${eyeIconAriaLabelledBy}']`).text()).to.equal(control.tooltip.defaultShow);
 		eyeIcon.simulate("click");
-		expect(eyeIcon.at(0).text()).to.equal(control.tooltip.defaultHide);
+		expect(passwordWrapper.find(`span[id='${eyeIconAriaLabelledBy}']`).text()).to.equal(control.tooltip.defaultHide);
 	});
 });
 
@@ -217,10 +218,11 @@ describe("passwordfield classnames appear correctly", () => {
 		// Verify the eye icon
 		const eyeIcon = passwordWrapper.find("button");
 		expect(eyeIcon).to.have.length(1);
+		const eyeIconAriaLabelledBy = eyeIcon.prop("aria-labelledby");
 		// Verify custom tooltip content
-		expect(eyeIcon.text()).to.equal(control.tooltip.customShow);
+		expect(passwordWrapper.find(`span[id='${eyeIconAriaLabelledBy}']`).text()).to.equal(control.tooltip.customShow);
 		eyeIcon.simulate("click");
-		expect(eyeIcon.text()).to.equal(control.tooltip.customHide);
+		expect(passwordWrapper.find(`span[id='${eyeIconAriaLabelledBy}']`).text()).to.equal(control.tooltip.customHide);
 	});
 
 	it("passwordfield should have custom classname defined in table cells", () => {
