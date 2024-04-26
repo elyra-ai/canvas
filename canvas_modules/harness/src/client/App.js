@@ -83,7 +83,7 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
 import { Add, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
-	Help, OpenPanelFilledBottom, Scale, Settings, SelectWindow,
+	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
 	StopFilledAlt, Subtract, TextScale, TouchInteraction } from "@carbon/react/icons";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "@carbon/react";
