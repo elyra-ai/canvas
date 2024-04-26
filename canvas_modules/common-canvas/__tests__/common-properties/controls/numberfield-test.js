@@ -171,8 +171,7 @@ describe("numberfield control works correctly", () => {
 		integerNumber.simulate("change", { target: { value: "44" } });
 		expect(controller.getPropertyValue(numPropertyId)).to.equal(44);
 	});
-	// Skipping this test till carbon 11 bug is fixed - https://github.com/carbon-design-system/carbon/issues/15985
-	it.skip("should allow a null value to be set in an integer field", () => {
+	it("should allow a null value to be set in an integer field", () => {
 		const numPropertyId = { name: "number_int" };
 		const integerNumber = wrapper.find("div[data-id='properties-number_int'] input");
 		integerNumber.simulate("change", { target: { value: "", validity: { badInput: false } } });
