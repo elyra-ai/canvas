@@ -31,8 +31,7 @@ describe("condition messages should add alerts tab", () => {
 		wrapper.unmount();
 	});
 
-	// Skipping this test till carbon 11 bug is fixed - https://github.com/carbon-design-system/carbon/issues/15985
-	it.skip("control should have error message from null input and generator should trigger validation", () => {
+	it("control should have error message from null input and generator should trigger validation", () => {
 		let integerInput = wrapper.find("div[data-id='properties-number_int'] input");
 		expect(integerInput).to.have.length(1);
 		integerInput.simulate("change", { target: { value: "", validity: { badInput: false } } });
@@ -92,8 +91,7 @@ describe("condition messages should add alerts tab", () => {
 		valuesCategory = wrapper.find("div.properties-category-container").at(0); // Values category
 		expect(valuesCategory.find("button.cds--accordion__heading").text()).to.equal("Values");
 	});
-	// Skipping this test till carbon 11 bug is fixed - https://github.com/carbon-design-system/carbon/issues/15985
-	it.skip("alerts should not show messages for hidden controls", () => {
+	it("alerts should not show messages for hidden controls", () => {
 		// open the conditions tabs
 		const conditionsCategory = wrapper.find("div.properties-category-container").at(1); // Conditions category
 		const conditionsButton = conditionsCategory.find("button.cds--accordion__heading");
