@@ -125,6 +125,10 @@ $harness-navbar-icon-width: 48px;
 		&:hover {
 			background-color: $layer-accent-01;
 		}
+
+		& svg {
+			color: $icon_primary;
+		}
 	}
 }
 
@@ -142,6 +146,7 @@ $harness-navbar-icon-width: 48px;
 	display: inline-flex;
 	flex-wrap: wrap;
 	overflow-y: auto;
+	line-height: 8px;
 }
 
 .harness-pipeline-breadcrumbs {
