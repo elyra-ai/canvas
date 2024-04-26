@@ -41,9 +41,11 @@ propertiesInfo: {
   id: "{id}"	                            // Unique parameter definition ID [Optional]
 }
 ```
-[parameterDef schema and examples](https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/parameter-defs)
-[Common Properties Parameter Definition](04.01-parameter-definition.md)
-[`expressionInfo` schema and examples](https://github.com/elyra-ai/pipeline-schemas/tree/master)
+See the [Common Properties Parameter Definition](04.01-parameter-definition.md) page for more details.
+
+The parameterDef object must conform to  the [parameterDef schema](https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/parameter-defs)
+
+The expressionInfo object must conform to the [expressionInfo schema](https://github.com/elyra-ai/pipeline-schemas/tree/main/common-canvas/expression)
 
 or...
 
@@ -61,7 +63,7 @@ propertiesInfo: {
 ```
 formData [schema](https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/form)
 
-The optional messages attribute can be used to set validation messages associated with a node.  The format of the message objects is defined in [Pipelin Flow UI schema](https://github.com/elyra-ai/pipeline-schemas/blob/master/common-pipeline/pipeline-flow/pipeline-flow-ui-v1-schema.json)
+The optional messages attribute can be used to set validation messages associated with a node.  The format of the message objects is defined in [Pipeline Flow UI schema](https://github.com/elyra-ai/pipeline-schemas/blob/main/common-pipeline/pipeline-flow/pipeline-flow-ui-v3-schema.json)
 
 ### Step 3 : Display the properties editor
 
