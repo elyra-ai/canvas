@@ -208,4 +208,4 @@ The top panel appears below the toolbar and between the palette and the right fl
 - topPanelContent: content to display in the top panel which is a JSX object. Nothing is displayed by default.
 
 #### Localization
-You can customize `<CommonCanvas>` using the `<IntlProvider>` object to [display translated text](#localization)
+You can customize `<CommonCanvas>` using the `<IntlProvider>` object to [display translated text](02-set-up.md/#localization)
