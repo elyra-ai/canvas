@@ -2460,7 +2460,7 @@ class App extends React.Component {
 							<FlowData size={16} />
 						</a>
 					</li>
-					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
+					<li id="harness-action-bar-sidepanel-help" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
 						data-tooltip-id="toolbar-tooltip" data-tooltip-content={docsLabel}
 					>
 						<a href="https://elyra-ai.github.io/canvas/" target={"_blank"} >
