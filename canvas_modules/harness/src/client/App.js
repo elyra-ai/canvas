@@ -2414,11 +2414,11 @@ class App extends React.Component {
 		const todaysDate = new Date();
 		const todaysDateFormatted = "v13 - " + todaysDate.toISOString().split("T")[0];
 
-		const navBar = (<div aria-label="Common Canvas Test Harness" role="banner">
+		const navBar = (<div aria-label="Elyra Canvas Test Harness" role="banner">
 			<div className="harness-app-navbar">
 				<ul className="harness-app-navbar-items">
 					<li className="harness-navbar-li">
-						<span className="harness-title">Common Canvas</span>
+						<span className="harness-title">Elyra Canvas</span>
 						<span className="harness-version">{todaysDateFormatted}</span>
 					</li>
 					<li className="harness-navbar-li harness-nav-divider" data-tooltip-id="toolbar-tooltip" data-tooltip-content={consoleLabel}>
