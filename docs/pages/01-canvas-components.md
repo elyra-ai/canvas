@@ -29,7 +29,7 @@ Common canvas has several constituent parts that can be visible to the user and 
 * [Palette](01.02-palette.md) - a set of node templates that can be dragged to the canvas to create new nodes
 * [Context menu](01.03-context-menu.md) - a menu of options for nodes, comments, etc
 * [Context toolbar](01.04-context-toolbar.md) - a menu of options for nodes, comments, etc presented as a small toolbar
-* Toolbar - a set of tools across the top of the UI
+* [Toolbar](01.05-toolbar.md) - a set of tools across the top of the UI
 * Notification panel - a panel for displaying runtime and other messages to your user
 * State Tag - a small pill shaped component that appears over the canvas to indicate its state: locked or read-only.
 

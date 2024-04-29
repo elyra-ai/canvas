@@ -60,6 +60,7 @@ nav:
     - Palette: 01.02-palette.md
     - Context Menu: 01.03-context-menu.md
     - Context Toolbar: 01.04-context-toolbar.md
+    - Toolbar: 01.05-toolbar.md
 
   - Initial Setup:
     - 02-set-up.md
