@@ -60,15 +60,6 @@ class NumberfieldControl extends React.Component {
 		}
 	}
 
-	onInput(evt) {
-		// There's a specific case when manually deleting negative number (eg. -1), 1 is deleted first and then - becomes an invalid number
-		// After user deletes - sign , onInput is called however onChange event isn't triggered.
-		// At this time, invalidNumber state variable is true but the evt.target.value will be a valid "empty" number because - sign was deleted.
-		if (this.state.invalidNumber && evt.target.validity && !evt.target.validity.badInput) {
-			this.handleChange(evt);
-		}
-	}
-
 	handleChange(evt, { value, direction }) {
 		// When stepper buttons are clicked, evt.type = click
 		// When user changes the value manually without clicking stepper buttons, evt.type = change
@@ -79,9 +70,9 @@ class NumberfieldControl extends React.Component {
 
 		if (
 			evt.target.validity && evt.target.validity.badInput ||
-			(!isFinite(evt.target.value))
+			(!isFinite(value))
 		) {
-			// Note - When user enters an invalid number, evt.target.value is set to "".
+			// Note - When user enters an invalid number, value is set to "".
 			// It is difficult to differentiate between empty value and invalid input because both return "".
 			// It's not possible to add a seaparte condition for invalid input because we never get the actual invalid number entered by the user.
 			// So, setting error message for invalid input here instead of using conditions.
@@ -171,7 +162,6 @@ class NumberfieldControl extends React.Component {
 					hideLabel={this.props.tableControl}
 					allowEmpty
 					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
-					onInput={this.onInput.bind(this)}
 				/>
 				{numberGenerator}
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />

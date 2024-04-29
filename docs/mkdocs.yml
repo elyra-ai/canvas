@@ -106,7 +106,7 @@ nav:
 
   - Common Properties:
     - Getting started: 04-common-properties.md
-    - Parameter Definitions: 04.01-parameter-definition.md
+    - Parameter Definition: 04.01-parameter-definition.md
     - Callbacks: 04.02-callbacks.md
     - UI Hints: 04.03-ui-hints.md
     - Controls: 04.04-controls.md
