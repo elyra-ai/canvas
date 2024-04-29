@@ -446,9 +446,9 @@
               "x_pos": 17.5,
               "y_pos": 15,
               "width": 237,
-              "height": 76,
+              "height": 128,
               "class_name": "canvas-comment",
-              "content": "This canvas shows examples of detached links. There are three types:\n1. Fully detached\n2. Semi-detached from source node\n3. Semi-detached from target node",
+              "content": "This canvas shows examples of detached links. There are three types:\n1. Fully detached\n2. Semi-detached from source node\n3. Semi-detached from target node\n\nTo see them you must have 'Link Selection' set to 'Detachable'.",
               "associated_id_refs": []
             },
             {

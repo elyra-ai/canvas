@@ -673,8 +673,8 @@
               "id": "36ab82d5-b015-47f4-a295-2a8aedabcc21",
               "x_pos": 781,
               "y_pos": 276,
-              "width": 146,
-              "height": 66,
+              "width": 147,
+              "height": 88,
               "class_name": "canvas-comment",
               "content": " This node shows a decorator with a zoom-in image and a yellow background rectangle.",
               "associated_id_refs": [
@@ -689,8 +689,8 @@
               "id": "e81af759-8ceb-4f71-b4ef-e32fa6b5ba79",
               "x_pos": 88,
               "y_pos": 430,
-              "width": 113,
-              "height": 64,
+              "width": 114,
+              "height": 85.00003051757812,
               "class_name": "d3-comment-rect",
               "content": "This node has a decorator at a custom position of x = -10 y = -10",
               "associated_id_refs": [
@@ -706,7 +706,7 @@
               "x_pos": 782,
               "y_pos": 383,
               "width": 164,
-              "height": 40,
+              "height": 50,
               "class_name": "d3-comment-rect",
               "content": "This node has two label decorators",
               "associated_id_refs": [
