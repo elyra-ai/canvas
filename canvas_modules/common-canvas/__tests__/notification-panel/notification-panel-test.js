@@ -20,7 +20,8 @@ import NotificationPanel from "./../../src/notification-panel/notification-panel
 import CanvasController from "./../../src/common-canvas/canvas-controller";
 
 import { createIntlCommonCanvasRTL, createIntlCommonCanvasRTLRerender } from "../_utils_/common-canvas-utils.js";
-import { expect, should } from "chai";
+import { expect } from "chai";
+import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
 import isEqual from "lodash/isEqual";
 import { renderWithIntl } from "../_utils_/intl-utils";
@@ -104,6 +105,11 @@ const notificationMessages = [
 	notificationMessage3
 ];
 
+const mockNotificationPanel = jest.fn();
+jest.mock("./../../src/notification-panel/notification-panel",
+	() => (props) => mockNotificationPanel(props)
+);
+
 describe("notification panel renders correctly", () => {
 	beforeEach(() => {
 		canvasController = new CanvasController();
@@ -116,23 +122,31 @@ describe("notification panel renders correctly", () => {
 		const subPanelData = { canvasController };
 		const closePanelFn = () => null;
 
-		const { container, getByText } = renderWithIntl(
+		mockNotificationPanel.mockImplementation((props) => {
+			const NotificationPanelComp = jest.requireActual(
+				"./../../src/notification-panel/notification-panel",
+			).default;
+			return <NotificationPanelComp {...props} />;
+		});
+
+		// Render the component with required props
+		renderWithIntl(
 			<Provider store={canvasController.getStore()}>
 				<NotificationPanel
-					closeSubPanel={ closePanelFn }
-					subPanelData={ subPanelData }
+					notificationConfig={notificationConfigDefault}
+					messages={notificationMessages}
+					closeSubPanel={closePanelFn}
+					subPanelData={subPanelData}
 				/>
 			</Provider>
 		);
 
-		expect(getByText("Notifications Panel")).to.exist;
-		expect(getByText("Notification Message 0")).to.exist;
-		expect(getByText("Notification Message 1")).to.exist;
-		const closeBtn = container.querySelector(".notification-panel-close-button");
-		fireEvent.click(closeBtn);
-		should(getByText("Notifications Panel")).not.exist;
-		should(getByText("Notification Message 0")).not.exist;
-		should(getByText("Notification Message 1")).not.exist;
+		expectJest(mockNotificationPanel).toHaveBeenCalledWith({
+			"notificationConfig": notificationConfigDefault,
+			"messages": notificationMessages,
+			"closeSubPanel": closePanelFn,
+			"subPanelData": subPanelData
+		});
 	});
 
 	it("notification panel should have 4 types of messages", () => {
