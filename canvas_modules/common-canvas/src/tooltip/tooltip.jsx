@@ -80,7 +80,7 @@ class ToolTip extends React.Component {
 					this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
 				}
 
-				const linkElement = this.targetRef.querySelector("a");
+				const linkElement = this.targetRef?.querySelector("a");
 
 				// Focus on link when tooltip with link is opened
 				if (linkElement) {

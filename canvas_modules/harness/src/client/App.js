@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,8 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
-import { Add, Chat, ChatOff, ColorPalette, Edit, Play, Scale, Settings, SelectWindow,
+import { Add, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
+	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
 	StopFilledAlt, Subtract, TextScale, TouchInteraction } from "@carbon/react/icons";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "@carbon/react";
@@ -141,11 +142,6 @@ import { STATE_TAG_NONE } from "../../../common-canvas/src/common-canvas/constan
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
 import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../test_resources/diagrams/externalSubFlowCanvas2.json";
 
-import listview32 from "../graphics/list-view_32.svg";
-import download32 from "../graphics/save_32.svg";
-import justify32 from "../graphics/justify_32.svg";
-import api32 from "../graphics/api_32.svg";
-import template32 from "ibm-design-icons/dist/svg/object-based/template_32.svg";
 import FormsService from "./services/FormsService";
 
 import ExpressionInfo from "./constants/json/functionlist.json";
@@ -2411,56 +2407,64 @@ class App extends React.Component {
 		const consoleLabel = "console";
 		const downloadFlowLabel = "Download pipeline flow";
 		const downloadPaletteLabel = "Download palette";
-		const apiLabel = "API";
-		const commonPropertiesModalLabel = "Common Properties Modal";
+		const apiLabel = "Common Canvas API";
+		const docsLabel = "Elyra Canvas Docs";
+		const commonPropertiesModalLabel = "Common Properties";
 		const commonCanvasLabel = "Common Canvas";
 		const todaysDate = new Date();
-		const todaysDateFormatted = "v13-" + todaysDate.toISOString().split("T")[0];
+		const todaysDateFormatted = "v13 - " + todaysDate.toISOString().split("T")[0];
 
-		const navBar = (<div aria-label="Common Canvas Test Harness" role="banner">
+		const navBar = (<div aria-label="Elyra Canvas Test Harness" role="banner">
 			<div className="harness-app-navbar">
 				<ul className="harness-app-navbar-items">
 					<li className="harness-navbar-li">
-						<span className="harness-title">Common Canvas</span>
+						<span className="harness-title">Elyra Canvas</span>
 						<span className="harness-version">{todaysDateFormatted}</span>
 					</li>
 					<li className="harness-navbar-li harness-nav-divider" data-tooltip-id="toolbar-tooltip" data-tooltip-content={consoleLabel}>
 						<a onClick={this.openConsole.bind(this) }>
-							<Isvg src={listview32} />
+							<OpenPanelFilledBottom size={16} />
 						</a>
 					</li>
 					<li className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={downloadFlowLabel}>
 						<a onClick={this.downloadPipelineFlow.bind(this) }>
-							<Isvg src={download32} />
+							<Download size={16} />
 						</a>
 					</li>
 					<li className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={downloadPaletteLabel}>
 						<a onClick={this.downloadPalette.bind(this) }>
-							<Isvg src={download32} />
+							<Download size={16} />
 						</a>
 					</li>
 					<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
 						{breadcrumbs}
 					</li>
-					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
-						data-tooltip-id="toolbar-tooltip" data-tooltip-content={apiLabel}
-					>
-						<a onClick={this.sidePanelAPI.bind(this) }>
-							<Isvg src={api32} />
-						</a>
-					</li>
-					<li id="harness-action-bar-sidepanel-properties" className="harness-navbar-li harness-action-bar-sidepanel"
+					<li id="harness-action-bar-sidepanel-properties" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
 						data-tooltip-id="toolbar-tooltip" data-tooltip-content={commonPropertiesModalLabel}
 					>
 						<a onClick={this.sidePanelProperties.bind(this) }>
-							<Isvg src={template32} />
+							<GuiManagement size={16} />
+						</a>
+					</li>
+					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-action-bar-sidepanel"
+						data-tooltip-id="toolbar-tooltip" data-tooltip-content={apiLabel}
+					>
+						<a onClick={this.sidePanelAPI.bind(this) }>
+							<Api size={16} />
 						</a>
 					</li>
 					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
 						data-tooltip-id="toolbar-tooltip" data-tooltip-content={commonCanvasLabel}
 					>
 						<a onClick={this.sidePanelCanvas.bind(this) }>
-							<Isvg src={justify32} />
+							<FlowData size={16} />
+						</a>
+					</li>
+					<li id="harness-action-bar-sidepanel-help" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
+						data-tooltip-id="toolbar-tooltip" data-tooltip-content={docsLabel}
+					>
+						<a href="https://elyra-ai.github.io/canvas/" target={"_blank"} >
+							<Help size={16} />
 						</a>
 					</li>
 				</ul>
