@@ -79,7 +79,7 @@ export default class AbstractTable extends React.Component {
 			this.scrollToRow = props.selectedRows[props.selectedRows.length - 1];
 		}
 
-		this.selectSummaryPropertyName = "table-multi-select-edit-property-" + props.control.name;
+		this.selectSummaryPropertyName = "table-multi-select-edit-property-" + props.control?.name;
 		props.controller.saveControls([{ name: this.selectSummaryPropertyName }]);
 		this.setSelectedSummaryRowValue(props.selectedRows);
 		this.uuid = uuid4();
@@ -461,7 +461,11 @@ export default class AbstractTable extends React.Component {
 				propertyId={this.props.propertyId}
 				selectedRows={selectedRows}
 				addRemoveRows={this.props.addRemoveRows}
+				moveableRows={this.props.control?.moveableRows}
 				multiSelectEdit={this.props.control.rowSelection === ROW_SELECTION.MULTIPLE}
+				removeSelectedRows={this.removeSelected}
+				setScrollToRow={this.setScrollToRow}
+				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 			/>
 		);
 		// return (<div className="properties-at-selectedEditRows" >

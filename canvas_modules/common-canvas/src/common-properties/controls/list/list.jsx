@@ -128,6 +128,9 @@ class ListControl extends AbstractTable {
 					tableState={this.props.state}
 					addRemoveRows={this.props.addRemoveRows}
 					moveableRows={this.props.control?.moveableRows}
+					removeSelectedRows={this.removeSelected}
+					setScrollToRow={this.setScrollToRow}
+					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 				/>
 			);
 		}

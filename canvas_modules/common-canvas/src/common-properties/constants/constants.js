@@ -91,6 +91,7 @@ export const MESSAGE_KEYS = {
 	EXPRESSION_MAXIMIZE_LABEL: "expression.maximize.label",
 	EXPRESSION_MINIMIZE_LABEL: "expression.minimize.label",
 	EXPRESSION_NO_FUNCTIONS: "expression.no.functions",
+	SINGLE_SELECTED_ROW_LABEL: "single.selected.row.label",
 	MULTI_SELECTED_ROW_LABEL: "multi.selected.row.label",
 	MULTI_SELECTED_ROW_ACTION: "multi.selected.row.action",
 	LIST_TABLE_LABEL: "list.table.label",
