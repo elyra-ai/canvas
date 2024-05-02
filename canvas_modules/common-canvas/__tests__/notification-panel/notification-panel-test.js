@@ -110,6 +110,13 @@ jest.mock("./../../src/notification-panel/notification-panel",
 	() => (props) => mockNotificationPanel(props)
 );
 
+mockNotificationPanel.mockImplementation((props) => {
+	const NotificationPanelComp = jest.requireActual(
+		"./../../src/notification-panel/notification-panel",
+	).default;
+	return <NotificationPanelComp {...props} />;
+});
+
 describe("notification panel renders correctly", () => {
 	beforeEach(() => {
 		canvasController = new CanvasController();
@@ -121,13 +128,6 @@ describe("notification panel renders correctly", () => {
 		canvasController.openNotificationPanel();
 		const subPanelData = { canvasController };
 		const closePanelFn = () => null;
-
-		mockNotificationPanel.mockImplementation((props) => {
-			const NotificationPanelComp = jest.requireActual(
-				"./../../src/notification-panel/notification-panel",
-			).default;
-			return <NotificationPanelComp {...props} />;
-		});
 
 		// Render the component with required props
 		renderWithIntl(
