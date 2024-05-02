@@ -19,13 +19,13 @@ import { Provider } from "react-redux";
 import NotificationPanel from "./../../src/notification-panel/notification-panel";
 import CanvasController from "./../../src/common-canvas/canvas-controller";
 
-import { createIntlCommonCanvasRTL, createIntlCommonCanvasRTLRerender } from "../_utils_/common-canvas-utils.js";
+import { createIntlCommonCanvasRTL } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
 import isEqual from "lodash/isEqual";
 import { renderWithIntl } from "../_utils_/intl-utils";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, waitFor } from "@testing-library/react";
 
 let canvasController = new CanvasController();
 
@@ -322,10 +322,10 @@ describe("toolbar notification icon state renders correctly", () => {
 		canvasController = new CanvasController();
 	});
 
-	it("notification icon should be empty in toolbar if no messages", () => {
+	it("notification icon should be empty in toolbar if no messages", async() => {
 		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
 		canvasController.openNotificationPanel();
-		const { container, rerender } = createIntlCommonCanvasRTL(
+		const { container } = createIntlCommonCanvasRTL(
 			canvasConfig,
 			contextMenuHandler,
 			beforeEditActionHandler,
@@ -347,30 +347,16 @@ describe("toolbar notification icon state renders correctly", () => {
 		expect(container.querySelectorAll(".notification-panel-empty-message-container")).to.have.length(1);
 
 		canvasController.setNotificationMessages([notificationMessage0]);
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		expect(container.querySelectorAll(".toggleNotificationPanel-action")).to.have.length(1);
-		expect(container.querySelectorAll(".notification-panel-empty-message-container")).to.have.length(0);
+
+		await waitFor(() => {
+			expect(container.querySelectorAll(".toggleNotificationPanel-action")).to.have.length(1);
+			expect(container.querySelectorAll(".notification-panel-empty-message-container")).to.have.length(0);
+		});
 	});
 
-	it("notification icon should be in correct states in toolbar", () => {
+	it("notification icon should be in correct states in toolbar", async() => {
 		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
-		const { container, rerender } = createIntlCommonCanvasRTL(
+		const { container } = createIntlCommonCanvasRTL(
 			canvasConfig,
 			contextMenuHandler,
 			beforeEditActionHandler,
@@ -388,166 +374,43 @@ describe("toolbar notification icon state renders correctly", () => {
 		);
 
 		canvasController.setNotificationMessages([notificationMessage0]);
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		const notificationIcon = container.querySelectorAll(".toggleNotificationPanel-action");
-		expect(notificationIcon).to.have.length(1);
-		expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.info")).to.have.length(1);
+		await waitFor(() => {
+			const notificationIcon = container.querySelectorAll(".toggleNotificationPanel-action");
+			expect(notificationIcon).to.have.length(1);
+			expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.info")).to.have.length(1);
+		});
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.success")).to.have.length(1);
 
+		await waitFor(() => {
+			expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.success")).to.have.length(1);
+		});
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2]);
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.warning")).to.have.length(1);
+		await waitFor(() => {
+			expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.warning")).to.have.length(1);
+		});
 
 		canvasController.setNotificationMessages(notificationMessages);
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.error")).to.have.length(1);
+		await waitFor(() => {
+			expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.error")).to.have.length(1);
+		});
 
 		expect(canvasController.getNotificationMessages().length).to.equal(4);
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2]);
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.warning")).to.have.length(1);
+		await waitFor(() => {
+			expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.warning")).to.have.length(1);
+		});
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.success")).to.have.length(1);
-
+		await waitFor(() => {
+			expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.success")).to.have.length(1);
+		});
 		canvasController.setNotificationMessages([notificationMessage0]);
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.info")).to.have.length(1);
+		await waitFor(() => {
+			expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.info")).to.have.length(1);
+		});
 		canvasController.setNotificationMessages([]);
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
 		// TODO need to fix
 		// notificationIcon = wrapper.find(".toggleNotificationPanel-action");
 		// expect(notificationIcon).to.have.length(1);
@@ -561,9 +424,9 @@ describe("notification counter and color updates correctly", () => {
 		canvasController = new CanvasController();
 	});
 
-	it("notification counter updates correctly", () => {
+	it("notification counter updates correctly", async() => {
 		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
-		const { container, rerender } = createIntlCommonCanvasRTL(
+		const { container } = createIntlCommonCanvasRTL(
 			canvasConfig,
 			contextMenuHandler,
 			beforeEditActionHandler,
@@ -583,77 +446,33 @@ describe("notification counter and color updates correctly", () => {
 		expect(notificationCounter.textContent).to.equal(" 0 ");
 		canvasController.setNotificationMessages([notificationMessage0]);
 
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		const notificationIcon = container.querySelectorAll(".toggleNotificationPanel-action");
-		notificationCounter = container.querySelector(".toolbar-item.notificationCounterIcon .toolbar-text-content");
-		expect(notificationIcon).to.have.length(1);
-		expect(notificationCounter.textContent).to.equal(" 1 ");
-		expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.info")).to.have.length(1);
+		await waitFor(() => {
+			const notificationIcon = container.querySelectorAll(".toggleNotificationPanel-action");
+			notificationCounter = container.querySelector(".toolbar-item.notificationCounterIcon .toolbar-text-content");
+			expect(notificationIcon).to.have.length(1);
+			expect(notificationCounter.textContent).to.equal(" 1 ");
+			expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.info")).to.have.length(1);
+		});
+
 		canvasController.setNotificationMessages(Array(9).fill(notificationMessage0));
 
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		notificationCounter = container.querySelector(".toolbar-item.notificationCounterIcon .toolbar-text-content");
-		expect(notificationCounter.textContent).to.equal(" 9 ");
-		expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.info")).to.have.length(1);
+		await waitFor(() => {
+			notificationCounter = container.querySelector(".toolbar-item.notificationCounterIcon .toolbar-text-content");
+			expect(notificationCounter.textContent).to.equal(" 9 ");
+			expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.info")).to.have.length(1);
+		});
 		canvasController.setNotificationMessages(Array(10).fill(notificationMessage0));
 
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		notificationCounter = container.querySelector(".toolbar-item.notificationCounterIcon .toolbar-text-content");
-		expect(notificationCounter.textContent).to.equal(" 9+ ");
-		expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.info")).to.have.length(1);
+		await waitFor(() => {
+			notificationCounter = container.querySelector(".toolbar-item.notificationCounterIcon .toolbar-text-content");
+			expect(notificationCounter.textContent).to.equal(" 9+ ");
+			expect(container.querySelectorAll(".toolbar-item.notificationCounterIcon.info")).to.have.length(1);
+		});
 	});
 
-	it("notification dot updates to indicate the correct message type", () => {
+	it("notification dot updates to indicate the correct message type", async() => {
 		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
-		const { container, rerender } = createIntlCommonCanvasRTL(
+		const { container } = createIntlCommonCanvasRTL(
 			canvasConfig,
 			contextMenuHandler,
 			beforeEditActionHandler,
@@ -675,92 +494,32 @@ describe("notification counter and color updates correctly", () => {
 		expect(indicatorClasses).to.equal("toolbar-item default toggleNotificationPanel-action notificationCounterIcon");
 
 		canvasController.setNotificationMessages([notificationMessage0]);
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		notificationIcon = container.querySelector(".toolbar-item.toggleNotificationPanel-action");
-		indicatorClasses = notificationIcon.className;
-		expect(indicatorClasses).to.equal("toolbar-item default toggleNotificationPanel-action notificationCounterIcon info");
+		await waitFor(() => {
+			notificationIcon = container.querySelector(".toolbar-item.toggleNotificationPanel-action");
+			indicatorClasses = notificationIcon.className;
+			expect(indicatorClasses).to.equal("toolbar-item default toggleNotificationPanel-action notificationCounterIcon info");
+		});
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
-		createIntlCommonCanvasRTL(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		notificationIcon = container.querySelector(".toolbar-item.toggleNotificationPanel-action");
-		indicatorClasses = notificationIcon.className;
-		expect(indicatorClasses).to.equal("toolbar-item default toggleNotificationPanel-action notificationCounterIcon success");
+		await waitFor(() => {
+			notificationIcon = container.querySelector(".toolbar-item.toggleNotificationPanel-action");
+			indicatorClasses = notificationIcon.className;
+			expect(indicatorClasses).to.equal("toolbar-item default toggleNotificationPanel-action notificationCounterIcon success");
+		});
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2]);
-		createIntlCommonCanvasRTL(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		notificationIcon = container.querySelector(".toolbar-item.toggleNotificationPanel-action");
-		indicatorClasses = notificationIcon.className;
-		expect(indicatorClasses).to.equal("toolbar-item default toggleNotificationPanel-action notificationCounterIcon warning");
+		await waitFor(() => {
+			notificationIcon = container.querySelector(".toolbar-item.toggleNotificationPanel-action");
+			indicatorClasses = notificationIcon.className;
+			expect(indicatorClasses).to.equal("toolbar-item default toggleNotificationPanel-action notificationCounterIcon warning");
+		});
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2, notificationMessage3]);
-		createIntlCommonCanvasRTL(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		notificationIcon = container.querySelector(".toolbar-item.toggleNotificationPanel-action");
-		indicatorClasses = notificationIcon.className;
-		expect(indicatorClasses).to.equal("toolbar-item default toggleNotificationPanel-action notificationCounterIcon error");
+		await waitFor(() => {
+			notificationIcon = container.querySelector(".toolbar-item.toggleNotificationPanel-action");
+			indicatorClasses = notificationIcon.className;
+			expect(indicatorClasses).to.equal("toolbar-item default toggleNotificationPanel-action notificationCounterIcon error");
+		});
 	});
 });
 
@@ -770,9 +529,9 @@ describe("notification center buttons work properly", () => {
 		canvasController = new CanvasController();
 	});
 
-	it("notification clear all button doesn't render when disabled", () => {
+	it("notification clear all button doesn't render when disabled", async() => {
 		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
-		const { container, rerender } = createIntlCommonCanvasRTL(
+		const { container } = createIntlCommonCanvasRTL(
 			canvasConfig,
 			contextMenuHandler,
 			beforeEditActionHandler,
@@ -793,32 +552,17 @@ describe("notification center buttons work properly", () => {
 		// Open the notification center
 		const notificationButton = container.querySelector(".toggleNotificationPanel-action button");
 		fireEvent.click(notificationButton);
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		expect(container.querySelectorAll(".notification-panel")).to.have.length(1);
+		await waitFor(() => {
+			expect(container.querySelectorAll(".notification-panel")).to.have.length(1);
 
-		// Check that there is no clear all button
-		expect(container.querySelectorAll(".notification-panel button.notification-panel-clear-all")).to.have.length(0);
+			// Check that there is no clear all button
+			expect(container.querySelectorAll(".notification-panel button.notification-panel-clear-all")).to.have.length(0);
+		});
 	});
 
-	it("notification clear all button renders and works when enabled", () => {
+	it("notification clear all button renders and works when enabled", async() => {
 		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom", clearAllMessage: "clear all" };
-		const { container, rerender } = createIntlCommonCanvasRTL(
+		const { container } = createIntlCommonCanvasRTL(
 			canvasConfig,
 			contextMenuHandler,
 			beforeEditActionHandler,
@@ -840,24 +584,9 @@ describe("notification center buttons work properly", () => {
 		// open the notification center
 		const notificationButton = container.querySelector(".toggleNotificationPanel-action button");
 		fireEvent.click(notificationButton);
-		createIntlCommonCanvasRTL(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		expect(container.querySelectorAll(".notification-panel")).to.have.length(1);
+		await waitFor(() => {
+			expect(container.querySelectorAll(".notification-panel")).to.have.length(1);
+		});
 
 		// check that there are no messages and the clear all button is disabled
 		let clearAllButton = container.querySelector(".notification-panel button.notification-panel-clear-all");
@@ -868,24 +597,9 @@ describe("notification center buttons work properly", () => {
 
 		// add a message and check if the clear all button is enabled
 		canvasController.setNotificationMessages([notificationMessage0]);
-		createIntlCommonCanvasRTL(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		clearAllButton = container.querySelector(".notification-panel button.notification-panel-clear-all");
+		await waitFor(() => {
+			clearAllButton = container.querySelector(".notification-panel button.notification-panel-clear-all");
+		});
 		expect(clearAllButton.disabled).to.equal(false);
 		expect(container.querySelectorAll(".notification-panel .notification-panel-empty-message").length).to.equal(0);
 		expect(container.querySelectorAll(".notification-panel .notifications").length).to.equal(1);
@@ -893,34 +607,18 @@ describe("notification center buttons work properly", () => {
 
 		// after clicking the clear all button, messages should be removed and button disabled again
 		fireEvent.click(clearAllButton);
-		createIntlCommonCanvasRTL(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-
-		clearAllButton = container.querySelector(".notification-panel button.notification-panel-clear-all");
-		expect(clearAllButton.disabled).to.equal(true);
-		expect(container.querySelectorAll(".notification-panel .notification-panel-empty-message").length).to.equal(1);
-		expect(container.querySelectorAll(".notification-panel .notifications").length).to.equal(0);
-		expect(canvasController.getNotificationMessages().length).to.equal(0);
+		await waitFor(() => {
+			clearAllButton = container.querySelector(".notification-panel button.notification-panel-clear-all");
+			expect(clearAllButton.disabled).to.equal(true);
+			expect(container.querySelectorAll(".notification-panel .notification-panel-empty-message").length).to.equal(1);
+			expect(container.querySelectorAll(".notification-panel .notifications").length).to.equal(0);
+			expect(canvasController.getNotificationMessages().length).to.equal(0);
+		});
 	});
 
-	it("notification close button", () => {
+	it("notification close button", async() => {
 		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
-		const { container, rerender } = createIntlCommonCanvasRTL(
+		const { container } = createIntlCommonCanvasRTL(
 			canvasConfig,
 			contextMenuHandler,
 			beforeEditActionHandler,
@@ -942,50 +640,15 @@ describe("notification center buttons work properly", () => {
 		const notificationButton = container.querySelector(".toggleNotificationPanel-action button");
 		fireEvent.click(notificationButton);
 		expect(container.querySelectorAll(".notification-panel")).to.have.length(1);
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-
-		// click the close button
-		fireEvent.click(container.querySelector(".notification-panel-close-button .cds--btn--sm"));
-
-		// check that notification panel is closed
-		createIntlCommonCanvasRTLRerender(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		expect(container.querySelectorAll(".notification-panel")).to.have.length(0);
+		await waitFor(() => {
+			// click the close button
+			fireEvent.click(container.querySelector(".notification-panel-close-button .cds--btn--sm"));
+			expect(container.querySelectorAll(".notification-panel")).to.have.length(0);
+		});
 
 	});
 
-	it("notification secondary button renders and works when specified", () => {
+	it("notification secondary button renders and works when specified", async() => {
 		const spySecondaryButtonCallback = sinon.spy();
 		const notificationConfig = {
 			action: "notification",
@@ -997,7 +660,7 @@ describe("notification center buttons work properly", () => {
 			secondaryButtonCallback: spySecondaryButtonCallback,
 			secondaryButtonDisabled: false
 		};
-		const { container, rerender } = createIntlCommonCanvasRTL(
+		const { container } = createIntlCommonCanvasRTL(
 			canvasConfig,
 			contextMenuHandler,
 			beforeEditActionHandler,
@@ -1018,25 +681,9 @@ describe("notification center buttons work properly", () => {
 		// open the notification center
 		const notificationButton = container.querySelector(".toggleNotificationPanel-action button");
 		fireEvent.click(notificationButton);
-		createIntlCommonCanvasRTL(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-		expect(container.querySelectorAll(".notification-panel")).to.have.length(1);
-
+		await waitFor(() => {
+			expect(container.querySelectorAll(".notification-panel")).to.have.length(1);
+		});
 		// check that secondary button is enabled and callback works
 		let secondaryButton = container.querySelector(".notification-panel button.notification-panel-secondary-button");
 		expect(secondaryButton.disabled).to.equal(false);
@@ -1047,27 +694,11 @@ describe("notification center buttons work properly", () => {
 		// disable secondary button
 		notificationConfig.secondaryButtonDisabled = true;
 		canvasController.setNotificationPanelConfig(notificationConfig);
-		createIntlCommonCanvasRTL(
-			canvasConfig,
-			contextMenuHandler,
-			beforeEditActionHandler,
-			editActionHandler,
-			clickActionHandler,
-			decorationActionHandler,
-			selectionChangeHandler,
-			tipHandler,
-			canvasParameters.showBottomPanel,
-			canvasParameters.showRightFlyout,
-			toolbarConfig,
-			notificationConfig,
-			contextMenuConfig,
-			canvasController,
-			rerender
-		);
-
-		// verify secondary button is disabled
-		secondaryButton = container.querySelector(".notification-panel button.notification-panel-secondary-button");
-		expect(secondaryButton.disabled).to.equal(true);
+		await waitFor(() => {
+			// verify secondary button is disabled
+			secondaryButton = container.querySelector(".notification-panel button.notification-panel-secondary-button");
+			expect(secondaryButton.disabled).to.equal(true);
+		});
 	});
 });
 
