@@ -89,6 +89,15 @@ class EditorForm extends React.Component {
 		return true;
 	}
 
+	componentDidUpdate() {
+		// Scroll to the selected accordion even when clicked from Alerts tab
+		const activeTabId = this.props.activeTab;
+		const activeTabElement = document.getElementsByClassName(`${activeTabId}`);
+		if (activeTabId && activeTabElement.length > 0) {
+			activeTabElement[0].scrollIntoView({ behavior: "smooth" });
+		}
+	}
+
 	_getMessageCountForCategory(tab) {
 		if (!this.props.showAlertsTab) {
 			return null;
@@ -205,7 +214,7 @@ class EditorForm extends React.Component {
 								open={ this.defaultOpenTab === tab.group || this.alertOpenTab === tab.group }
 								onHeadingClick={this._showCategoryPanel.bind(this, tab.group)}
 								className={`${classNames("properties-category-content",
-									{ "show": categoryOpen })}`}
+									{ "show": categoryOpen }, tab.group)}`}
 							>
 								{panelItems}
 								{additionalComponent}
