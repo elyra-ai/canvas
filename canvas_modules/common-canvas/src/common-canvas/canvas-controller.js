@@ -1248,7 +1248,7 @@ export default class CanvasController {
 	}
 
 	// Deletes a link
-	// source - An array of links
+	// link - the link object to be deleted
 	// pipelineId - The ID of the pipeline
 	deleteLink(link, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).deleteLink(link);
