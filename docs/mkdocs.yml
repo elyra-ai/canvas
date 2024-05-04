@@ -56,7 +56,6 @@ nav:
       - Links: 01.01.02-links.md
       - Comments: 01.01.03-comments.md
       - Decorations: 01.01.04-decorations.md
-      - Background: 01.01.05-background.md
     - Palette: 01.02-palette.md
     - Context Menu: 01.03-context-menu.md
     - Context Toolbar: 01.04-context-toolbar.md
@@ -94,7 +93,8 @@ nav:
       - Notification Messages: 03.04.05-notification-messages.md
       - Styling Canvas Objects: 03.04.06-styling-objects.md
     - Keyboard Support: 03.05-keyboard-support.md
-    - Node Layout: 03.06-node-layout.md
+    - Node Customization: 03.06.01-node-customization.md
+    - Comment Customization: 03.06.02-comment-customization.md
     - Node Creation from External Object: 03.07-external-objects.md
     - External Pipeline Flows: 03.08-external-pipeline-flows.md
     - Read Only or Locked Flows: 03.09-read-only-or-locked-flows.md
@@ -114,8 +114,8 @@ nav:
     - Custom Components: 04.06-custom-components.md
     - Properties Controller: 04.07-properties-controller.md
 
-  - Troubleshooting:
-    - 05-troubleshooting.md
+  - FAQ:
+    - 05-faq.md
 
   - Contributing:
     - 06-contributing.md
@@ -124,6 +124,7 @@ nav:
 
 markdown_extensions:
   - admonition:
+  - pymdownx.details:
   - codehilite:
   - extra:
   - pymdownx.magiclink:
