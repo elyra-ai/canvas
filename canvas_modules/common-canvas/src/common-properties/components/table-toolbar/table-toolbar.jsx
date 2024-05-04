@@ -21,11 +21,15 @@ import { Button } from "@carbon/react";
 import { TrashCan, Edit, UpToTop, ChevronUp, ChevronDown, DownToBottom } from "@carbon/react/icons";
 import { MESSAGE_KEYS, STATES } from "../../constants/constants";
 import { formatMessage } from "../../util/property-utils";
+import SubPanelInvoker from "./../../panels/sub-panel/invoker";
+import { cloneDeep } from "lodash";
 
 class TableToolbar extends React.Component {
 	constructor(props) {
 		super(props);
 		this.handleCancel = this.handleCancel.bind(this);
+		this.showSubPanel = this.showSubPanel.bind(this);
+		this.onSubPanelHidden = this.onSubPanelHidden.bind(this);
 		this.getTableRowMoveButtons = this.getTableRowMoveButtons.bind(this);
 		this.topMoveRow = this.topMoveRow.bind(this);
 		this.upMoveRow = this.upMoveRow.bind(this);
@@ -35,9 +39,33 @@ class TableToolbar extends React.Component {
 		this.getMaxValue = this.getMaxValue.bind(this);
 	}
 
-	handleCancel() {
-		// Clear row selection
-		this.props.controller.updateSelectedRows(this.props.propertyId, []);
+	onSubPanelHidden(applyChanges) {
+		// on cancel reset back to original value
+		if (!applyChanges) {
+			this.props.controller.updatePropertyValue(this.props?.multiSelectEditRowPropertyId, this.initialMultiSelectEditRowValue);
+			this.props.controller.updatePropertyValue(this.props.propertyId, this.initialControlValue);
+			this.props.controller.setErrorMessages(this.initialMessages);
+			this.props.controller.setControlStates(this.initialStates);
+		}
+	}
+
+	getLeastValue() {
+		let leastValue = 0;
+		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
+		if (staticRows && staticRows.length > 0 && staticRows.includes(0)) {
+			leastValue = staticRows[staticRows.length - 1];
+		}
+		return leastValue;
+	}
+
+	getMaxValue() {
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		let maxValue = controlValue.length - 1;
+		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
+		if (staticRows && staticRows.length > 0 && staticRows.includes(controlValue.length - 1)) {
+			maxValue = staticRows[0] - 1;
+		}
+		return maxValue;
 	}
 
 	// enabled the move up and down arrows based on which row is selected
@@ -75,7 +103,7 @@ class TableToolbar extends React.Component {
 		const moveUpLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_UP);
 		const moveDownLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DOWN);
 		const moveBottomLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_BOTTOM);
-		
+
 		return (
 			<>
 				<Button
@@ -120,25 +148,6 @@ class TableToolbar extends React.Component {
 				/>
 			</>
 		);
-	}
-
-	getLeastValue() {
-		let leastValue = 0;
-		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
-		if (staticRows && staticRows.length > 0 && staticRows.includes(0)) {
-			leastValue = staticRows[staticRows.length - 1];
-		}
-		return leastValue;
-	}
-
-	getMaxValue() {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		let maxValue = controlValue.length - 1;
-		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
-		if (staticRows && staticRows.length > 0 && staticRows.includes(controlValue.length - 1)) {
-			maxValue = staticRows[0] - 1;
-		}
-		return maxValue;
 	}
 
 	topMoveRow() {
@@ -249,14 +258,32 @@ class TableToolbar extends React.Component {
 		this.props.setCurrentControlValueSelected(controlValue, selected);
 	}
 
+	handleCancel() {
+		// Clear row selection
+		this.props.controller.updateSelectedRows(this.props.propertyId, []);
+	}
+
+	showSubPanel() {
+		// sets the current value for parameter.  Used on cancel
+		this.initialMultiSelectEditRowValue = cloneDeep(this.props.controller.getPropertyValue(this.props?.multiSelectEditRowPropertyId));
+		this.initialControlValue = cloneDeep(this.props.controller.getPropertyValue(this.props.propertyId));
+		this.initialMessages = this.props.controller.getAllErrorMessages();
+		this.initialStates = this.props.controller.getControlStates();
+		this.subPanelInvoker.showSubDialog("Update selected rows", this.props?.multiSelectEditSubPanel, this.onSubPanelHidden); // TODO: Get title from design
+	}
+
 	render() {
 		if ((this.props.addRemoveRows || this.props.moveableRows || this.props.multiSelectEdit) && this.props.selectedRows.length > 0) {
 			const singleRowSelectedLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL); // item selected
 			const multiRowsSelectedLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL); // items selected
-			const title = (this.props.selectedRows.length === 1) ? `${this.props.selectedRows.length} ${singleRowSelectedLabel}` : `${this.props.selectedRows.length} ${multiRowsSelectedLabel}`;
+			const title = (this.props.selectedRows.length === 1)
+				? `${this.props.selectedRows.length} ${singleRowSelectedLabel}`
+				: `${this.props.selectedRows.length} ${multiRowsSelectedLabel}`;
 			const editLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_EDIT);
 			const deleteLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DELETE);
 			const cancelLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_CANCEL);
+			const applyLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL);
+			const rejectLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL);
 
 			return (
 				<div className="properties-table-toolbar" >
@@ -266,20 +293,46 @@ class TableToolbar extends React.Component {
 					<div className="properties-action-list">
 						{
 							this.props.moveableRows
-							? (this.getTableRowMoveButtons())
-							: null
+								? (this.getTableRowMoveButtons())
+								: null
 						}
 						{
 							this.props.addRemoveRows
-								? (<Button size="sm" renderIcon={TrashCan} hasIconOnly iconDescription={deleteLabel} tooltipPosition="bottom" onClick={this.props.removeSelectedRows} />)
+								? (<Button
+									size="sm"
+									renderIcon={TrashCan}
+									hasIconOnly
+									iconDescription={deleteLabel}
+									tooltipPosition="bottom"
+									onClick={this.props.removeSelectedRows}
+								/>)
 								: null
 						}
 						{
-							this.props.multiSelectEdit && this.props.selectedRows.length > 1
-								? (<Button size="sm" renderIcon={Edit} hasIconOnly iconDescription={editLabel} tooltipPosition="bottom" onClick={() => console.log("Edit")} />)
+							this.props.multiSelectEdit
+								? (
+									<SubPanelInvoker ref={ (ref) => (this.subPanelInvoker = ref) }
+										rightFlyout={this.props.rightFlyout}
+										applyLabel={applyLabel}
+										rejectLabel={rejectLabel}
+										controller={this.props.controller}
+									>
+										<Button
+											className="properties-subpanel-button"
+											size="sm"
+											renderIcon={Edit}
+											hasIconOnly
+											iconDescription={editLabel}
+											tooltipPosition="bottom"
+											onClick={this.showSubPanel}
+										/>
+									</SubPanelInvoker>
+								)
 								: null
 						}
-						<Button size="sm" className="properties-action-cancel" onClick={this.handleCancel}>{cancelLabel}</Button>
+						<Button size="sm" className="properties-action-cancel" onClick={this.handleCancel}>
+							{cancelLabel}
+						</Button>
 					</div>
 				</div>
 			);
@@ -296,11 +349,14 @@ TableToolbar.propTypes = {
 	removeSelectedRows: PropTypes.func.isRequired,
 	setScrollToRow: PropTypes.func.isRequired,
 	setCurrentControlValueSelected: PropTypes.func.isRequired,
+	rightFlyout: PropTypes.bool,
 	tableState: PropTypes.string,
 	addRemoveRows: PropTypes.bool,
 	moveableRows: PropTypes.bool,
 	multiSelectEdit: PropTypes.bool,
-	disableRowMoveButtons: PropTypes.bool, // set by redux
+	multiSelectEditSubPanel: PropTypes.element,
+	multiSelectEditRowPropertyId: PropTypes.object,
+	disableRowMoveButtons: PropTypes.bool // set by redux,
 };
 
 const mapStateToProps = (state, ownProps) => ({

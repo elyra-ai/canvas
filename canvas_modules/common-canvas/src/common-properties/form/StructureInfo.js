@@ -74,6 +74,16 @@ export class StructureDef {
 		}
 		return false;
 	}
+	hasInlinePanel() {
+		if (this.parameterMetadata) {
+			for (const param of this.parameterMetadata.paramDefs) {
+				if (param.isInlineEdit()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	keyAttributeIndex() {
 		if (this.keyDefinition) {
 			// Assume the key is always in the first column

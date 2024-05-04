@@ -272,7 +272,9 @@ class FlexibleTable extends React.Component {
 		} else if (this.state.rows === -1) {
 			if (this.flexibleTable) {
 				const labelAndDescriptionHeight = 50; // possible dynamically set this in the future
-				const ftHeaderHeight = (typeof this.flexibleTableHeader !== "undefined") ? ReactDOM.findDOMNode(this.flexibleTableHeader).getBoundingClientRect().height : 0;
+				const ftHeaderHeight = (this.flexibleTableHeader && typeof this.flexibleTableHeader !== "undefined")
+					? ReactDOM.findDOMNode(this.flexibleTableHeader).getBoundingClientRect().height
+					: 0;
 				const flyoutHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-wf-children");
 				const tearsheetHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-primary-tab-panel");
 				if (flyoutHeight === 0 && tearsheetHeight === 0) {
@@ -520,7 +522,8 @@ class FlexibleTable extends React.Component {
 
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass;
-		const ftHeader = (searchBar || this.props.topRightPanel)
+		// Table toolbar replaces ftHeader when 1+ rows are selected
+		const ftHeader = ((searchBar || this.props.topRightPanel) && this.props.selectedRows.length === 0)
 			? (<div className="properties-ft-table-header" ref={ (ref) => (this.flexibleTableHeader = ref) }>
 				{searchBar}
 				{this.props.topRightPanel}

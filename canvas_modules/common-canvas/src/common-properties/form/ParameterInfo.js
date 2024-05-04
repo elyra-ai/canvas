@@ -194,6 +194,14 @@ export class ParameterDef {
 		return false;
 	}
 
+	// For multi select edit subpanel, fields having editStyle "inline" and undefined can be edited in the subpanel
+	isInlineEdit() {
+		if (this.editStyle === EditStyle.INLINE || typeof this.editStyle === "undefined") {
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Determines if the given parameter object represents a compound field.
 	 *

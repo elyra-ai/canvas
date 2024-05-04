@@ -71,6 +71,7 @@ export default class AbstractTable extends React.Component {
 		this.makeEditButtonPanel = this.makeEditButtonPanel.bind(this);
 		this.makeCustomButtonsPanel = this.makeCustomButtonsPanel.bind(this);
 		this.buildChildItem = this.buildChildItem.bind(this);
+		this.buildMultiSelectEditChildItem = this.buildMultiSelectEditChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
 		this.checkedAll = this.checkedAll.bind(this);
 		this.isLightTheme = this.isLightTheme.bind(this);
@@ -273,7 +274,7 @@ export default class AbstractTable extends React.Component {
 						this.props.controller.updatePropertyValue({ name: this.props.control.name, row: rowIndex, col: colIndex }, testCell, true);
 					});
 					if (tableControl.subControls[colIndex].controlType === ControlType.ONEOFSELECT) {
-						this.props.controller.updatePropertyValue({ name: this.selectSummaryPropertyName, row: 0, col: colIndex }, null);
+						this.props.controller.updatePropertyValue({ name: this.selectSummaryPropertyName, row: 0, col: colIndex }, testCell);
 					}
 				}
 			});
@@ -441,33 +442,65 @@ export default class AbstractTable extends React.Component {
 	}
 
 	makeSelectedEditRow(selectedRows) {
-		// if (selectedRows && Array.isArray(selectedRows) && selectedRows.length > 0) {
-		// const rowsSelectedLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-		// 	MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL);
-		// const rowsSelectedAction = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-		// 	MESSAGE_KEYS.MULTI_SELECTED_ROW_ACTION);
-		// const title = selectedRows.length + " " + rowsSelectedLabel + " " + rowsSelectedAction;
-		const rows = [];
-		// const sortFields = [];
-		// const filterFields = [];
-		// const headers = (this.props.control.header === false) ? [] : this.makeHeader(sortFields, filterFields);
-		// const showHeader = false;
-		const value = this.props.controller.getPropertyValue({ name: this.selectSummaryPropertyName });
-		this.makeCells(rows, value, null, this.selectSummaryPropertyName, true);
-		// const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
-		return (
-			<TableToolbar
-				controller={this.props.controller}
-				propertyId={this.props.propertyId}
-				selectedRows={selectedRows}
-				addRemoveRows={this.props.addRemoveRows}
-				moveableRows={this.props.control?.moveableRows}
-				multiSelectEdit={this.props.control.rowSelection === ROW_SELECTION.MULTIPLE}
-				removeSelectedRows={this.removeSelected}
-				setScrollToRow={this.setScrollToRow}
-				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-			/>
-		);
+		if (selectedRows && Array.isArray(selectedRows) && selectedRows.length > 0) {
+			// const rowsSelectedLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
+			// 	MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL);
+			// const rowsSelectedAction = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
+			// 	MESSAGE_KEYS.MULTI_SELECTED_ROW_ACTION);
+			// const title = selectedRows.length + " " + rowsSelectedLabel + " " + rowsSelectedAction;
+			// const rows = [];
+			// const sortFields = [];
+			// const filterFields = [];
+			// const headers = (this.props.control.header === false) ? [] : this.makeHeader(sortFields, filterFields);
+			// const showHeader = false;
+			// const value = this.props.controller.getPropertyValue({ name: this.selectSummaryPropertyName });
+			// this.makeCells(rows, value, null, this.selectSummaryPropertyName, true);
+			// const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+			const multiSelectEditRowPropertyId = {
+				name: this.selectSummaryPropertyName,
+				row: 0
+			};
+			let multiSelectEditSubPanel = null;
+			if (this.isSelectSummaryEdit(selectedRows)) {
+				multiSelectEditSubPanel = this.buildMultiSelectEditChildItem(multiSelectEditRowPropertyId);
+			}
+			return (
+				<>
+					<TableToolbar
+						controller={this.props.controller}
+						propertyId={this.props.propertyId}
+						selectedRows={selectedRows}
+						addRemoveRows={this.props.addRemoveRows}
+						moveableRows={this.props.control?.moveableRows}
+						multiSelectEdit={this.isSelectSummaryEdit(selectedRows)}
+						removeSelectedRows={this.removeSelected}
+						setScrollToRow={this.setScrollToRow}
+						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+						rightFlyout={this.props.rightFlyout}
+						multiSelectEditSubPanel={multiSelectEditSubPanel}
+						multiSelectEditRowPropertyId={multiSelectEditRowPropertyId}
+					/>
+					{/* {
+						selectedRows.length > 1
+							? (<div className="properties-at-selectedEditRows" >
+								<FlexibleTable
+									showHeader={showHeader}
+									columns={headers}
+									data={rows}
+									rows={0}
+									scrollKey={this.selectSummaryPropertyName}
+									tableLabel={tableLabel}
+									summaryTable
+									rowSelection={ROW_SELECTION.MULTIPLE}
+									light={this.isLightTheme()}
+									emptyTablePlaceholder={this.props.control.additionalText}
+								/>
+							</div>)
+							: null
+					} */}
+				</>
+			);
+		}
 		// return (<div className="properties-at-selectedEditRows" >
 		// 	<div className="properties-selectedEditRows-title" >
 		// 		<span >{title}</span>
@@ -485,8 +518,8 @@ export default class AbstractTable extends React.Component {
 		// 		emptyTablePlaceholder={this.props.control.additionalText}
 		// 	/>
 		// </div>);
-	// }
-	// return null;
+		// }
+		return null;
 	}
 
 	makeAddRemoveButtonPanel(tableState, tableButtonConfig) {
@@ -800,6 +833,8 @@ export default class AbstractTable extends React.Component {
 		}
 
 		const subItemButton = this.props.buildUIItem(rowIndex, this.props.control.childItem, propertyId, this.indexOfColumn);
+		// When 2+ rows are selected, disable edit icon in the selected rows to prompt the users to click on Edit icon in the table toolbar
+		const disableSubPanelCell = (tableState === STATES.DISABLED || (this.isSelectSummaryEdit(this.props.selectedRows) && this.props.selectedRows.includes(rowIndex)));
 		// Hack to decompose the button into our own in-table link
 		const subCell = (
 			<div className="properties-table-subcell">
@@ -807,7 +842,7 @@ export default class AbstractTable extends React.Component {
 					label={subItemButton.props.label}
 					title={subItemButton.props.title}
 					panel={subItemButton.props.panel}
-					disabled={tableState === STATES.DISABLED}
+					disabled={disableSubPanelCell}
 					controller={this.props.controller}
 					propertyId={this.props.propertyId}
 					rightFlyout={this.props.rightFlyout}
@@ -818,6 +853,12 @@ export default class AbstractTable extends React.Component {
 			width: TABLE_SUBPANEL_BUTTON_WIDTH,
 			content: subCell
 		};
+	}
+
+	// Multi select edit subpanel to update all selected rows
+	buildMultiSelectEditChildItem(multiSelectEditRowPropertyId) {
+		const multiSelectEditSubItemButton = this.props.buildUIItem(0, this.props.control.multiSelectEditChildItem, multiSelectEditRowPropertyId, this.indexOfColumn);
+		return multiSelectEditSubItemButton.props.panel;
 	}
 }
 

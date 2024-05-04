@@ -28,6 +28,8 @@
 	}
 
 	.properties-action-list {
+		display: flex;
+		align-items: center;
 		.properties-action-cancel {
 			width: $spacing-05;
 		}
