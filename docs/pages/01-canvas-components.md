@@ -45,7 +45,7 @@ properties, log info or data previews.
 
 
 ## Common Properties
-[Common Properties](01.10-common-properties.md) allows the application to display a Carbon compliant properties panel or dialog with just a Javascript (JSON) object as input. Common properties supports the most commonly used UI components and also allows custom components to be added into its visual output.
+[Common Properties](01.10-common-properties.md) allows the application to display a Carbon compliant properties panel or dialog with just a Javascript (JSON) object as input. Common Properties supports the most commonly used UI components and also allows custom components to be added into its visual output.
 
 <img src="../assets/cp-example.png" width="300" />
 

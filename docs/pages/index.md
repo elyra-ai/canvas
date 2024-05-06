@@ -40,7 +40,7 @@ The elyra-ai/canvas repo contains three main modules:
 
 * [Common Properties](04-common-properties.md) - This contains properties functionality which is packaged into the [elyra/canvas NPM module](https://www.npmjs.com/package/@elyra/canvas) and deployed to the NPM registry. It provides a way to translate a JSON document, which describes a set of properties with UI hints, into a working properties dialog panel.
 
-	Common properties is a React component and has an associated properties controller object.
+	Common Properties is a React component and has an associated properties controller object.
 
 * [Test Harness](https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness#test-harness) - This is a node.js application that wrappers `<CommonCanvas>` and `<CommonProperties>`. Although it is primarily for testing it does provides a UI that:
 	* Displays a set of sample applications

@@ -1,7 +1,7 @@
 # Getting started with Common Properties
 
 ## Introduction
-Common properties will display a set of controls (such as radio buttons, checkboxes, etc.) to allow the user to view and set property values. Common Properties takes a JSON object (called the paramDef object) as input. The paramDef object describes the properties to be displayed as controls in the Common Properties React object.
+Common Properties will display a set of controls (such as radio buttons, checkboxes, etc.) to allow the user to view and set property values. Common Properties takes a JSON object (called the paramDef object) as input. The paramDef object describes the properties to be displayed as controls in the Common Properties React object.
 
 You can look at the harness/src/client/App.js file of this repo to see examples of code that uses the common properties component.
 
