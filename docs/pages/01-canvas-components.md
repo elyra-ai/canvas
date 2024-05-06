@@ -5,7 +5,7 @@ The Elyra Canvas package delivers two decoupled React objects: Common Canvas and
 <img src="../assets/components.png" width="900" />
 
 ## Common Canvas
-Common canvas displays a flow of data operations as nodes and links (edges) which the user can create and edit to get the flow they want. These visual flows of data operations are translated into data processing steps performed by a back-end server. Common canvas provides functionality for the visual display of flows in the browser and leaves persistence and execution of data flows to the application.
+Common Canvas displays a flow of data operations as nodes and links (edges) which the user can create and edit to get the flow they want. These visual flows of data operations are typically translated into data processing steps performed by the application. Common canvas provides UI functionality for the visual display of flows in the browser and leaves persistence and execution of data flows to the application.
 
 The common-canvas user can perform operations such as:
 

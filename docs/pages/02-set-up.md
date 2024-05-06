@@ -105,7 +105,7 @@ You may find that there is a pause in common canvas behavior, such as when the c
 );
 ```
 The fonts will need to be imported from carbon before carbon styles and placed in a public `/fonts` directory.
-You can see an example of this in the common-canvas test harness (which is the equivalent of a host application) in this repo. That is, the [common.scss file](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) contains the lines above and the grunt build files ensures the fonts are copied from `/node_modules/@ibm/plex` to the `<carbon fonts folder>` directory. We added following config in [Gruntfile](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L64) for copying fonts -
+You can see an example of this in the Elyra Canvas Test Harness (which is the equivalent of a host application) in this repo. That is, the [common.scss file](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) contains the lines above and the grunt build files ensures the fonts are copied from `/node_modules/@ibm/plex` to the `<carbon fonts folder>` directory. We added following config in [Gruntfile](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L64) for copying fonts -
 ```
 copy: {
 	fonts: {
@@ -124,7 +124,7 @@ var buildTasks = ["copy:fonts"];
 
 ### 3rd party styling
 
-If you are using common-properties then also include the react-virtualized styles:
+If you are using Common Properties then also include the react-virtualized styles:
   - react-virtualized/styles.css
 
 

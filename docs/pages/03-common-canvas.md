@@ -1,7 +1,7 @@
 # Getting started with Common Canvas
 
 ## Common Canvas React Object
-   Common-canvas is a react component that can be used in your react application to display a fully-functional canvas user interface. The `<CommonCanvas>` component is displayed in a `<div>` provided by your application. Here's some sample code to show the [minimum code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js) needed to get a working canvas.
+   Common Canvas is a react component that can be used in your react application to display a fully-functional canvas user interface. The `<CommonCanvas>` component is displayed in a `<div>` provided by your application. Here's some sample code to show the [minimum code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js) needed to get a working canvas.
 
 ```
 import React from "react";
@@ -63,12 +63,12 @@ The [CanvasController](03.04-canvas-controller.md) provides an API which allows 
 ### Hello Canvas!
   You can start by looking at these two 'hello  world' examples for using common canvas:
 
-* This first one called [app-tiny.js](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js) has the bare minimum necessary to get a fully functioning common-canvas to appear including all the basic functionality, a palette and a flow of nodes and links.
-* The second, called [app-small.js](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-small.js), shows many of the options available to a common-canvas developer such as configurations and callback handlers.
+* This first one called [app-tiny.js](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js) has the bare minimum necessary to get a fully functioning Common Canvas to appear including all the basic functionality, a palette and a flow of nodes and links.
+* The second, called [app-small.js](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-small.js), shows many of the options available to a Common Canvas developer such as configurations and callback handlers.
 
 You can also look at the [App.js](https://github.com/elyra-ai/canvas/blob/49ed634e3353d8f5c58eb8409ed8e1009f19c87a/canvas_modules/harness/src/client/App.js) file in the test harness section of this repo to see examples of code that uses the common canvas component.
 
-   Now let's walk through the different steps to get common-canvas working:
+   Now let's walk through the different steps to get Common Canvas working:
 
 
 ### Step 1 : Install Elyra Canvas NPM module
@@ -78,7 +78,7 @@ Enter:
      npm install @elyra/canvas
 ```
 
-### Step 2 : Import Common-canvas
+### Step 2 : Import Common Canvas
 
 To use common canvas in your react application you need to do the following. First import the CommonCanvas react component and CanvasController class from the Elyra Canvas library.  Elyra Canvas produces both `esm` and `cjs` outputs.  By default `esm` will be used when webpack is used to build the consuming application.
 

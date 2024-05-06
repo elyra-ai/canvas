@@ -94,7 +94,7 @@ var messages = i18nData.messages;
 - propertiesConfig `object`:
     - containerType `string`: type of container to display the properties, can be "Modal", "Tearsheet", or "Custom".  default: `"Custom"`
     - rightFlyout `boolean`: If set to true, groups will be displayed as an accordion. If false, groups are displayed as tabs. default: `false`
-    - applyOnBlur `boolean`: calls applyPropertyChanges when focus leave common-properties.  default: `false`
+    - applyOnBlur `boolean`: calls applyPropertyChanges when focus leave Common Properties.  default: `false`
     - disableSaveOnRequiredErrors `boolean`: Disable the properties editor "save" button if there are required errors
     - enableResize `boolean`: adds a button that allows the right-side fly-out editor to expand/collapse between small and medium sizes. default: `true`
     - conditionReturnValueHandling `string`: used to determine how hidden or disabled control values are returned in applyPropertyChanges callback.  Current options are "value" or "null".  default: `"value"`
@@ -116,7 +116,7 @@ var messages = i18nData.messages;
 - customPanels `array`: array of custom panels.  See [Custom Panels](04.06-custom-components.md#custom-panels) section of the Common Properties Custom Components page.
 - customControls `array`: array of custom controls. See [Custom Controls](04.06-custom-components.md#custom-controls) section of the Common Properties Custom Components page..
 - customConditionOps `array`: array of custom condition operators.  See [Custom Condition Operators](04.06-custom-components.md#custom-condition-operators) section of the Custom Components page.
-- light `boolean`: Carbon controls in common-properties will use light mode. When the `light` option is disabled, the background color will be the same as the Carbon theme background. When the `light` option is enabled, the background color is set to $ui-01. Defaults to `true`
+- light `boolean`: Carbon controls in Common Properties will use light mode. When the `light` option is disabled, the background color will be the same as the Carbon theme background. When the `light` option is enabled, the background color is set to $ui-01. Defaults to `true`
 
 **Internationalization and override of labels in CommonProperties**
 The CommonProperties dialogs have a set of labels that can have customized and internationalized values.  CommonProperties uses the react-intl package to provide internationalization of these labels.  This requires the `IntlProvider` element to wrap the `CommonProperties` element.

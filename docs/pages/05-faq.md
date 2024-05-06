@@ -1,7 +1,7 @@
 # Frequently asked questions
 
 
-## Common-Canvas
+## Common Canvas
 
 ### Questions about Nodes
 
@@ -14,7 +14,7 @@
     Yes, ’nodeExternalObject` is supported for supernodes. The way it works is:
 
 	* If the supernode is collapsed (that is, it looks like a regular node) then the React node is used in the same way as for a regular node
-	* If the supernode it expanded in-place, then the React object is still used in the same way and the `<svg>` area that displays the sub-flow is displayed by common-canvas over the top of the node body.
+	* If the supernode it expanded in-place, then the React object is still used in the same way and the `<svg>` area that displays the sub-flow is displayed by Common Canvas over the top of the node body.
 	* If the user is viewing the supernode ‘full-page’ then the sub-flow is rendered in the usual way since the parent supernode is not visible at that point.
 
 	There is an example of this in the ‘React Nodes - Carbon Charts’ sample application in the test harness.
@@ -54,7 +54,7 @@
 
     That’s the way markdown works. It removes white space in the entered text. For example, if you enter similar text into  a comment in a GitHub issue and look at the preview you’ll see the whitespace is removed.
 
-	Common-canvas is using a third party library to convert what the user enters to the HTML that is displayed so the removal of whitespace is not under its control.
+	Common Canvas is using a third party library to convert what the user enters to the HTML that is displayed so the removal of whitespace is not under its control.
 
     However, Comments support the ability to enter HTML directly into the markdown text. HTML can be used to preserve whitespace and do many other styling and customizations to the text.
 
