@@ -61,6 +61,10 @@ nav:
     - Context Toolbar: 01.04-context-toolbar.md
     - Toolbar: 01.05-toolbar.md
     - Notification Panel: 01.06-notification-panel.md
+    - State Tag: 01.07-state-tag.md
+    - Tooltips: 01.08-tooltips.md
+    - Panels: 01.09-panels.md
+    - Common Properties: 01.10-common-properties.md
 
   - Initial Setup:
     - 02-set-up.md
