@@ -119,6 +119,7 @@ nav:
     - Conditions: 04.05-conditions.md
     - Custom Components: 04.06-custom-components.md
     - Properties Controller: 04.07-properties-controller.md
+    - Properties Config: 04.08-properties-config.md
 
   - FAQ:
     - 05-faq.md
