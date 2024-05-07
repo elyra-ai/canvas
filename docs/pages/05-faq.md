@@ -1,5 +1,10 @@
 # Frequently asked questions
 
+## History
+
+??? question "What is the relationship  between Elyra Canvas and the Elyra AI Toolkit?"
+
+    Elyra Canvas is a repo inside the [Elyra AI Toolkit](https://github.com/elyra-ai). The Elyra repo in the toolkit is dependent on Elyra Canvas but Elyra Canvas is not dependent on it or any repo in the toolkit other than the [Elyra Pipeline Schemas](https://github.com/elyra-ai/pipeline-schemas) repo.
 
 ## Common Canvas
 
@@ -24,7 +29,7 @@
 
 ??? question "When displaying React nodes using nodeExternalObject field, how can the application pass in its own props to the component?"
 
-	The application can add whatever it wants to pass in as a field in either the nodeData object or the canvasController — making sure not to over write any of the existing fields that are there by default of course. So if you wanted to pass in your own data on a node-by-node basis you could set a field in the app_data field of each node. Something like:
+	The application can add whatever it wants to pass in as a field in either the nodeData object or the Canvas Controller — making sure not to over write any of the existing fields that are there by default of course. So if you wanted to pass in your own data on a node-by-node basis you could set a field in the app_data field of each node. Something like:
 
 	```js
 		const nodeId = "123";

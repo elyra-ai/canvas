@@ -24,11 +24,13 @@ display connected nodes representing any kind of operations.
 mulltiple properties windows - for when you have a multitude of node types each with their own range of properties.
 * Is delivered as a package from the [**NPM registry**](https://www.npmjs.com/package/@elyra/canvas)
 * Conforms to the [**IBM Carbon**](https://carbondesignsystem.com/all-about-carbon/what-is-carbon/) visual design language - and therefore plugs in easily to any application wishing to follow the Carbon standards including dark mode and light mode themes.
-* Delivers built-in **accessibility** so there's no need to worry about keyboard
-navigation, accessible color themes, screen reader integration, etc.
+* Delivers built-in **accessibility** so there's no need to worry about keyboard navigation, accessible colors, screen reader integration, etc.
 * Is translated into **12 languages**.
 * Is the mainstay of several IBM products/applications.
 
+## Try Elyra Canvas
+
+The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny) is a demonstration application which is produced with only a [few lines of code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js). You can try: dragging a node, editing a comment (double click on it), drag a node from the palette, click a button on the toolbar, zoom in and out using the scroll gesture.
 
 ## Elyra Canvas Modules
 
