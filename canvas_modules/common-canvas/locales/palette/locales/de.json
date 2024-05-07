@@ -3,8 +3,8 @@
   "palette.flyout.search.noresults": "Keine Ergebnisse gefunden.",
   "palette.flyout.search.adjustsearch": "Passen Sie Ihre Suche an, um die gesuchten Elemente zu finden.",
   "palette.flyout.search.resultsrestricted": "Die Ergebnisse sind auf 10 Knoten beschränkt. Grenzen Sie Ihre Suche ein.",
-  "palette.flyout.search.more": "Mehr anzeigen",
-  "palette.flyout.search.less": "Weniger anzeigen",
+  "palette.flyout.search.more": "Anzeige erweitern",
+  "palette.flyout.search.less": "Anzeige reduzieren",
   "palette.flyout.label": "Flyout-Palette",
   "palette.dialog.label": "Dialogpalette"
 }
