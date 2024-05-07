@@ -69,18 +69,18 @@ class CheckboxControl extends React.Component {
 			</span>
 		);
 		return (
-			<div className={classNames("properties-checkbox", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}
-				data-id={ControlUtils.getDataId(this.props.propertyId)}
-			>
-				<Checkbox
-					disabled={this.props.state === STATES.DISABLED}
-					id={this.id}
-					labelText={checkboxLabel}
-					onChange={this.handleChange.bind(this)}
-					checked={Boolean(this.props.value)}
-					hideLabel={this.props.tableControl}
-				/>
-				{tooltipIcon}
+			<div data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				<div className={classNames("properties-checkbox", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}>
+					<Checkbox
+						disabled={this.props.state === STATES.DISABLED}
+						id={this.id}
+						labelText={checkboxLabel}
+						onChange={this.handleChange.bind(this)}
+						checked={Boolean(this.props.value)}
+						hideLabel={this.props.tableControl}
+					/>
+					{tooltipIcon}
+				</div>
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)} />
 			</div>
 		);
