@@ -229,7 +229,7 @@ export default class CanvasController {
 		this.instanceId = instanceId;
 	}
 
-	// Return a unique identifier for this instance of common canvas.
+	// Return a unique identifier for this instance of Common Canvas.
 	getInstanceId() {
 		return this.instanceId;
 	}
@@ -251,7 +251,7 @@ export default class CanvasController {
 	// Pipeline flow methods
 	// ---------------------------------------------------------------------------
 
-	// Loads the pipelineFlow document provided into common-canvas and displays it.
+	// Loads the pipelineFlow document provided into Common Canvas and displays it.
 	// The document must conform to the pipelineFlow schema as documented in the
 	// elyra-ai pipeline-schemas repo. Documents conforming to older versions may be
 	// provided but they will be upgraded to the most recent version.
@@ -287,14 +287,14 @@ export default class CanvasController {
 	}
 
 	// Returns the external pipeline flow for the url passed in. The external
-	// flow must have been loaded through some common canvas action for this
+	// flow must have been loaded through some common-canvas action for this
 	// method to be able to return anything.
 	getExternalPipelineFlow(url) {
 		return this.objectModel.getExternalPipelineFlow(url);
 	}
 
 	// Returns the internal format of all canvas data stored in memory by
-	// common-canvas. Nodes, comments and links are returned in the internal
+	// Common Canvas. Nodes, comments and links are returned in the internal
 	// format.
 	getCanvasInfo() {
 		return this.objectModel.getCanvasInfo();
@@ -374,13 +374,13 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 
 	// Loads a canvas document (in the format used by WML Canvas) into
-	// common-canvas and displays it.
+	// Common Canvas and displays it.
 	setCanvas(canvas) {
 		this.objectModel.setCanvas(canvas); // TODO - Remove this method when WML Canvas moves to pipeline flow
 	}
 
 	// Loads a canvas palette document (in the format used by WML Canvas) into
-	// common-canvas and displays it in the palette.
+	// Common Canvas and displays it in the palette.
 	setPaletteData(paletteData) {
 		this.objectModel.setPaletteData(paletteData); // TODO - Remove this method when WML Canvas moves to pipeline flow
 	}
@@ -401,7 +401,7 @@ export default class CanvasController {
 		this.objectModel.setPipelineFlowPalette(palette);
 	}
 
-	// Clears the palette data from common-canvas.
+	// Clears the palette data from Common Canvas.
 	clearPaletteData() {
 		this.objectModel.clearPaletteData();
 	}
@@ -1248,7 +1248,7 @@ export default class CanvasController {
 	}
 
 	// Deletes a link
-	// source - An array of links
+	// link - the link object to be deleted
 	// pipelineId - The ID of the pipeline
 	deleteLink(link, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).deleteLink(link);
@@ -1488,7 +1488,7 @@ export default class CanvasController {
 	// Returns the current array of breadcrumbs. There will one breadcrumb object
 	// for each level of supernode that the user has navigated into. This array
 	// can be used to display breadcrumbs to the user to show where they are
-	// within the navigation hierarchy within common canvas.
+	// within the navigation hierarchy within Common Canvas.
 	getBreadcrumbs() {
 		return this.objectModel.getBreadcrumbs();
 	}
@@ -1707,7 +1707,7 @@ export default class CanvasController {
 
 	// Adds the breadcrumbs provided to the current set of breadcrumbs and then
 	// displays "full page" the pipeline identified by the last of the additional
-	// set of breadcrumbs. This is a convenience function for the common-canvas.
+	// set of breadcrumbs. This is a convenience function for Common Canvas.
 	displaySubPipelineForBreadcrumbs(addBreadcrumbs) {
 		const lastBreadcrumb = addBreadcrumbs[addBreadcrumbs.length - 1];
 		const supernode = this.getSupernodeFromBreadcrumb(lastBreadcrumb);
@@ -2168,7 +2168,7 @@ export default class CanvasController {
 		this.editActionHandler(data);
 	}
 
-	// Called when a data object is dragged from outside common canvas.
+	// Called when a data object is dragged from outside Common Canvas.
 	// The data object must contain the 'action' field that is passed to
 	// the host app from editActionHandler. The editActionHandler method
 	// does not intercept this action.
@@ -2714,7 +2714,7 @@ export default class CanvasController {
 	}
 
 	// Returns false if the host application did not provided an external pipeline
-	// flow when requested by common-canvas setting the externalPipelineFlowLoad
+	// flow when requested by Common Canvas setting the externalPipelineFlowLoad
 	// boolean to true. Returns true otherwise which will be the case when no
 	// external pipeline was requested.
 	wasExtPipelineFlowLoadSuccessful(data) {

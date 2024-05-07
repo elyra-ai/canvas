@@ -34,15 +34,15 @@ navigation, accessible color themes, screen reader integration, etc.
 
 The elyra-ai/canvas repo contains three main modules:
 
-* [Common-Canvas](03-common-canvas.md) - This contains canvas functionality which is packaged into the [elyra/canvas NPM module](https://www.npmjs.com/package/@elyra/canvas) and deployed to the NPM registry. It provides a way for an application to display a flow of data operations (shown as a set of nodes connected with links) to the user and to allows the user to interact with the display to modify the flow.
+* [Common Canvas](03-common-canvas.md) - This contains canvas functionality which is packaged into the [elyra/canvas NPM module](https://www.npmjs.com/package/@elyra/canvas) and deployed to the NPM registry. It provides a way for an application to display a flow of data operations (shown as a set of nodes connected with links) to the user and to allows the user to interact with the display to modify the flow.
 
-	Common canvas is a react component which can be imported, and is assisted by a regular JavaScript class called `CanvasController` which provides an API and handles the internal data model of the flow. Common canvas is highly customizable where node shape and appearance, colors, styles layout etc can all be customized by your application code. Common canvas handles flows parsed from, and serialized into, a pipeline flow JSON document. It's palette of available nodes is also customized usging a JSON document
+	Common Canvas is a React component and is assisted by a regular JavaScript class called `CanvasController` which provides an API and handles the internal data model of the flow. While Common Canvas will display a working flow editor with little initial development work, it is highly customizable, where node shape and appearance, colors, styles layout etc can all be customized by the application. Common Canvas handles flows parsed from, and serialized into, a pipeline flow JSON document. It's palette of available nodes is also customized by the application providing a JSON document that descibes groups of nodes.
 
-* [Common-Properties](04-common-properties.md) - This contains properties functionality which is packaged into the [elyra/canvas NPM module](https://www.npmjs.com/package/@elyra/canvas) and deployed to the NPM registry. It provides a way to translate a JSON document, which describes a set of properties with UI hints, into a working properties dialog panel.
+* [Common Properties](04-common-properties.md) - This contains properties functionality which is packaged into the [elyra/canvas NPM module](https://www.npmjs.com/package/@elyra/canvas) and deployed to the NPM registry. It provides a way to translate a JSON document, which describes a set of properties with UI hints, into a working properties dialog panel.
 
-	Common properties is a React component and has an associated properties controller object.
+	Common Properties is a React component and has an associated properties controller object.
 
-* [Test Harness](https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness#test-harness) - This is a node.js application that wrappers `>CommonCanvas />` and `<CommonProperties />`. Although it is primarily for testing it does provides a UI that:
+* [Test Harness](https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness#test-harness) - This is a node.js application that wrappers `<CommonCanvas>` and `<CommonProperties>`. Although it is primarily for testing it does provides a UI that:
 	* Displays a set of sample applications
 	* Is a sandbox to try out different Elyra Canvas features.
 

@@ -33,9 +33,11 @@ const portsHorizontalDefaultLayout = {
 		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeOutlineDisplay is true.
 		nodeShape: "port-arcs",
 
-		// SVG path strings to define the shape of your node and its
-		// selection highlighting. If set to null the paths will be set by default
-		// based on the nodeShape setting.
+		// An SVG path or a function that returns an SVG path. The paths define the node
+		// shape and its selection highlighting respectively. If set to null, the paths
+		// will be set by default based on the nodeShape setting.
+		// If these fields are set to functions they will be called in real-time as the node
+		// is being sized (provided enableResizableNodes config field is set to true).
 		bodyPath: null,
 		selectionPath: null,
 
@@ -433,9 +435,11 @@ const portsVerticalDefaultLayout = {
 		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeOutlineDisplay is true.
 		nodeShape: "rectangle",
 
-		// SVG path strings to define the shape of your node and its
-		// selection highlighting. If set to null the paths will be set by default
-		// based on the nodeShape setting.
+		// An SVG path or a function that returns an SVG path. The paths define the node
+		// shape and its selection highlighting respectively. If set to null, the paths
+		// will be set by default based on the nodeShape setting.
+		// If these fields are set to functions they will be called in real-time as the node
+		// is being sized (provided enableResizableNodes config field is set to true).
 		bodyPath: null,
 		selectionPath: null,
 
