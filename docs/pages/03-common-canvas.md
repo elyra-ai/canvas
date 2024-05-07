@@ -36,7 +36,7 @@ This code will display this:
 <img src="../assets/cc-app-tiny.png" width="800" />
 
 
-The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny) is available as part of the test harness funciton. Click [here](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny) to see the app running. You can try: dragging a node, editing a comment (double click on it), drag a node from the palette, click a button on the toolbar, zoom in using the scroll gesture.
+The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny) is available as part of the test harness function. Click [here](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny) to see the app running. You can try: dragging a node, editing a comment (double click on it), drag a node from the palette, click a button on the toolbar, zoom in and out using the scroll gesture.
 
 Some sample code to look at:
 
@@ -48,9 +48,9 @@ Some sample code to look at:
 
 ## Canvas Controller
 
-The only mandatory prop for the `<CommonCanvas>` component is a regular JavaScript class called the [CanvasController](03.04-canvas-controller.md).
+The only mandatory prop for the `<CommonCanvas>` component is a regular JavaScript class called the [Canvas Controller](03.04-canvas-controller.md).
 
-The CanvasController handles calls from the host application and actions performed by the user. It then updates the internal object model which stores:
+The Canvas Controller handles calls from the host application and actions performed by the user. It then updates the internal object model which stores:
 
 1. The data that describes the flow of nodes, links and comments (called a pipelineFlow);
 2. The data that describes the definition of the palette which contains node templates that can dragged to add nodes to the canvas;
@@ -60,7 +60,7 @@ The CanvasController handles calls from the host application and actions perform
 6. Layout information
 7. And more ...
 
-The [CanvasController](03.04-canvas-controller.md) provides an API which allows the application to:
+The [Canvas Controller](03.04-canvas-controller.md) provides an API which allows the application to:
 
 1. Set a new Pipeline Flow
 2. Get the current pipelineFlow (after the user has edited it)
@@ -148,7 +148,7 @@ Inside your render code, add the following:
         </div>
     );
 ```
-The `<div>` should have the dimensions you want for your canvas to display in your page. For the canvasController prop, pass the instance of canvas controller created earlier. This is the only mandatory property. After providing this, and running your code, you will have a fully functioning canvas including: a palette; default toolbar; context menus; direct manipulation (move and resize) etc. To customize these behaviors and presentation continue with the sections below.
+The `<div>` should have the dimensions you want for your canvas to display in your page. For the `canvasController` prop, pass the instance of canvas controller created earlier. This is the only mandatory property. After providing this, and running your code, you will have a fully functioning canvas including: a palette; default toolbar; context menus; direct manipulation (move and resize) etc. To customize these behaviors and presentation continue with the sections below.
 
 See the [Localization](02-set-up.md/#localization) section of the Initial Setup page to see how `<IntlProvider>` can be configured.
 
