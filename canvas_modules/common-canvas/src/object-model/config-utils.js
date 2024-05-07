@@ -101,7 +101,7 @@ export default class ConfigUtils {
 			tipConfig: {
 				"palette": {
 					categories: true,
-					nodesTemplates: true
+					nodeTemplates: true
 				},
 				"nodes": true,
 				"ports": true,
