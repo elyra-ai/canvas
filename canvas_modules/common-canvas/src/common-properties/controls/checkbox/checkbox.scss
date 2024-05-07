@@ -26,7 +26,6 @@
 	}
 	.bx--form-item.bx--checkbox-wrapper {
 		flex: initial; // override carbon style to show tooltipIcon next to checkbox label
-		margin-block-start: 0.1875rem;
 	}
 	&.hide {
 		display: none;
