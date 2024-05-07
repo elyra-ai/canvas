@@ -1,6 +1,6 @@
 {
 	"dialog.nodePropertiesTitle": "[Esperanto~Node Properties~eo]",
-	"canvas.emptyText": "[Esperanto~Welcome to the Common Canvas test harness.{br}Your flow is empty!~~~~~~~~~~~~eo]",
+	"canvas.emptyText": "[Esperanto~Welcome to the Elyra Canvas test harness.{br}Your flow is empty!~~~~~~~~~~~~eo]",
 	"canvas.emptyLink": "[Esperanto~Click here to take a tour~~~~~~eo]",
 	"expression.value.column": "[Esperanto~Custom Value~eo]",
 	"expression.value.column.description": "[Esperanto~Testing custom desc from app~~~~~~~~eo]",
