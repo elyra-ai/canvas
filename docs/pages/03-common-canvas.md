@@ -100,7 +100,7 @@ To control the canvas you'll need an instance of the canvas controller. Create a
 
 ### Step 4 : Set the palette data
 
-Next you'll need to populate the palette data.  This step is optional if you don't want to use the palette and just want to display a flow (step 5) instead.
+Next you'll need to populate the palette data.  This step is optional if you don't want to use the palette.
 
 The palette data will specify the nodes (split into categories) that will appear in the palette. This is done by calling the canvas controller with:
 
