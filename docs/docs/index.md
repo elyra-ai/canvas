@@ -12,7 +12,7 @@ flows of linked nodes.
 
 ## Elyra Canvas Features
 
-Elyra Canvas: V12.x
+Elyra Canvas:
 
 * Provides a **comprehensive set of out-of-the-box UI components** needed to build
 an application such as: flow editor, palette, toolbar, context menu, tooltips, command stack,
