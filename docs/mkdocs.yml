@@ -15,7 +15,7 @@
 #
 site_name: Elyra Canvas
 repo_url: https://github.com/elyra-ai/canvas
-docs_dir: pages
+docs_dir: docs
 
 theme:
     name: material
@@ -29,6 +29,11 @@ theme:
       - content.action.edit
       - navigation.tabs
       - navigation.indexes
+
+# Customization
+extra:
+  version:
+    provider: mike
 
 plugins:
     - search
