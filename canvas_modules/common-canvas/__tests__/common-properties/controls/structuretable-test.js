@@ -542,7 +542,7 @@ describe("condition renders correctly with structure table control", () => {
 		propertyUtils.openSummaryPanel(wrapper, "dummy_types-summary-panel");
 
 		// verify the table is HIDDEN
-		const cellControlDiv = wrapper.find("div[data-id='properties-dummy_types_0_4']");
+		const cellControlDiv = wrapper.find("div[data-id='properties-dummy_types_0_4']").find(".properties-checkbox");
 		expect(cellControlDiv.hasClass("hide")).to.be.true;
 		expect(renderedController.getControlState({ name: "dummy_types", row: 0, col: 4 })).to.equal("hidden");
 	});

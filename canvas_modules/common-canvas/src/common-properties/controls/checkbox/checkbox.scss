@@ -27,9 +27,6 @@
 	.bx--form-item.bx--checkbox-wrapper {
 		flex: initial; // override carbon style to show tooltipIcon next to checkbox label
 	}
-	.properties-validation-message {
-		flex: 0 1 100%;
-	}
 	&.hide {
 		display: none;
 	}
