@@ -35,15 +35,15 @@ Next, you'll need to populate propertiesInfo, which is a required prop, with:
 
 ```js
 this.propertiesInfo = {
-  parameterDef: this.parameterDef,          // Parameter definitions/hints/conditions [Required]
-  appData: "{user-defined}",                // User data returned in applyPropertyChanges [Optional]
-  additionalComponents: "{components}",     // Additional component(s) to display [Optional]
-  messages: "[node_messages]",              // Node messages array [Optional]
-  expressionInfo: this.expressionInfo,      // Information for expression builder [Optional],
-  initialEditorSize: "{size}",	            // This value will override the value of editor_size in
-                                            // uiHints. This can have a value of "small", "medium",
-                                            // "large", or null [Optional]
-  id: "{id}"                                // Unique parameter definition ID [Optional]
+  parameterDef: this.parameterDef,          // Required - Parameter definitions/hints/conditions
+  appData: "{user-defined}",                // Optional - User data returned in applyPropertyChanges
+  additionalComponents: "{components}",     // Optional - Additional component(s) to display
+  messages: "[node_messages]",              // Optional - Node messages array
+  expressionInfo: this.expressionInfo,      // Optional - Information for expression builde
+  initialEditorSize: "{size}",              // Optional - This value will override the value of
+                                            // editor_size in uiHints. This can have a value of
+                                            // "small", "medium", "large", or null
+  id: "{id}"                                // Optional - Unique parameter definition ID
 }
 ```
 See the Common Properties [Parameter Definition](04.01-parameter-definition.md) page for more details about 'paramDef'.
@@ -61,12 +61,12 @@ The optional messages attribute can be used to set validation messages associate
           formData: this.formData,
           appData: "{user data returned back in applyPropertyChanges}", // Optional
           additionalComponents: "{additional control(s) to display}",   // Optional
-          messages: "[node_messages]",                                  // Node messages array [Optional]
-          expressionInfo: this.expressionInfo,                          // Information for expression builder [Optional]
-          initialEditorSize: "{size}",	                                // This value will override the value of editor_size in
-                                                                        // uiHints. This can have a value of "small", "medium",
-                                                                        // "large", or null [Optional]
-          id: "{id}"                                                    // Unique parameter definition ID [Optional]
+          messages: "[node_messages]",                                  // Optional - Node messages array
+          expressionInfo: this.expressionInfo,                          // Optional - Information for expression builder
+          initialEditorSize: "{size}",                                  // Optional - This value will override the value of
+                                                                        // editor_size in uiHints. This can have a value of
+                                                                        // "small", "medium", "large", or null
+          id: "{id}"                                                    // Optional - Unique parameter definition ID
       }
     ```
     See the [formData schema](https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/form)
@@ -119,9 +119,9 @@ applyPropertiesEditing(closeEditor)
 
 ### Using CommonProperties in CommonCanvas right-flyout panel
 
-[Common Canvas](03-common-canvas.md) has a [right-flyout panel](03-common-canvas.md#right-flyout-panel-parameters) that can render a React object. It can be used to render Common Properties in a flyout panel.
+[Common Canvas](03-common-canvas.md) has a [right-flyout panel](03-common-canvas.md#right-flyout-panel-parameters) that can render a React object. It can be used to render Common Properties in the right-flyout as follows:
 
-Create a CommonProperties object with containerType set to "Custom" and rightFlyout set to true.
+Create a `<CommonProperties>` object with `containerType` set to `"Custom"` and `rightFlyout` set to `true`.
 ```html
     const rightFlyoutContent = (
         <CommonProperties
@@ -132,7 +132,7 @@ Create a CommonProperties object with containerType set to "Custom" and rightFly
     );
 ```
 
-Pass the CommonProperties object into CommonCanvas's `rightFlyoutContent` props. Also set the `showRightFlyout` boolean to tell CommonCanvas when the rightFlyout should be displayed (true) or hidden (false).
+Pass the `<CommonProperties>` object into the `rightFlyoutContent` prop of Common Canvas. Also, set the `showRightFlyout` boolean to tell Common Canvas the rightFlyout should be displayed (true) or hidden (false).
 ```html
     <CommonCanvas
         canvasController={canvasController}
