@@ -24,6 +24,7 @@ theme:
     favicon: assets/FlowIcon.png
     palette:
         scheme: default
+        primary: black
     features:
       - content.code.copy
       - content.action.edit
