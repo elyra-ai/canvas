@@ -1,7 +1,7 @@
 {
   "toolbar.palette": "Tavolozza",
-  "toolbar.zoomIn": "Ingrandisci",
-  "toolbar.zoomOut": "Riduci",
+  "toolbar.zoomIn": "Zoom avanti",
+  "toolbar.zoomOut": "Zoom indietro",
   "toolbar.zoomToFit": "Adatta alla finestra",
   "toolbar.overflowMenu": "Menu di overflow",
   "toolbar.label": "Barra degli strumenti area di disegno"

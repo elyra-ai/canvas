@@ -4,7 +4,7 @@
   "palette.flyout.search.adjustsearch": "Provare a modificare la ricerca per trovare quanto richiesto.",
   "palette.flyout.search.resultsrestricted": "Risultati limitati a 10 nodi. Provare a perfezionare la ricerca.",
   "palette.flyout.search.more": "Mostra di più",
-  "palette.flyout.search.less": "Nascondi dettagli",
+  "palette.flyout.search.less": "Mostra di meno",
   "palette.flyout.label": "Tavolozza flyout",
   "palette.dialog.label": "Tavolozza finestra di dialogo"
 }
