@@ -14,9 +14,10 @@
 # limitations under the License.
 #
 site_name: Elyra Canvas
-repo_url: https://github.com/elyra-ai/canvas/tree/v12.x
-docs_dir: pages
+repo_url: https://github.com/elyra-ai/canvas
+docs_dir: docs
 
+# Configuration
 theme:
     name: material
     highlightjs: true
@@ -30,96 +31,101 @@ theme:
       - navigation.tabs
       - navigation.indexes
 
+# Customization
+extra:
+  version:
+    provider: mike
+
 plugins:
-    - search
+  - macros:
+      module_name: mkdocs
 
 extra_css:
-  - v12/css/styles.css
+  - css/styles.css
 
 extra_javascript:
-  - v12/js/links-in-new-tabs.js
+  - js/links-in-new-tabs.js
 
-edit_uri: edit/main/docs/
+edit_uri: ""
 
 # Documentation and theme
 copyright: 'Copyright  &copy; 2024 Elyra Authors, an open source project and all are welcome to contribute! Maintained by the Elyra Authors Team'
 
 nav:
   - Home:
-    - v12/index.md
-
+    - index.md
   - Components:
-    - Components Overview: v12/01-canvas-components.md
+    - Components Overview: 01-canvas-components.md
     - Flow Editor:
-      - Editor Overview: v12/01.01-flow-editor.md
-      - Nodes: v12/01.01.01-nodes.md
-      - Links: v12/01.01.02-links.md
-      - Comments: v12/01.01.03-comments.md
-      - Decorations: v12/01.01.04-decorations.md
-      - Background: v12/01.01.05-background.md
-    - Palette: v12/01.02-palette.md
-    - Context Menu: v12/01.03-context-menu.md
-    - Context Toolbar: v12/01.04-context-toolbar.md
+      - Editor Overview: 01.01-flow-editor.md
+      - Nodes: 01.01.01-nodes.md
+      - Links: 01.01.02-links.md
+      - Comments: 01.01.03-comments.md
+      - Decorations: 01.01.04-decorations.md
+      - Background: 01.01.05-background.md
+    - Palette: 01.02-palette.md
+    - Context Menu: 01.03-context-menu.md
+    - Context Toolbar: 01.04-context-toolbar.md
 
   - Initial Setup:
-    - v12/02-set-up.md
+    - 02-set-up.md
 
   - Common Canvas:
-    - Getting Started: v12/03-common-canvas.md
+    - Getting Started: 03-common-canvas.md
     - Config Objects:
-      - Configuration Overview: v12/03.02-configuration.md
-      - Canvas Config: v12/03.02.01-canvas-config.md
-      - Toolbar Config: v12/03.02.02-toolbar-config.md
-      - Notification Config: v12/03.02.03-notification-config.md
-      - Context Menu Config: v12/03.02.04-context-menu-config.md
-      - Keyboard Config: v12/03.02.05-keyboard-config.md
+      - Configuration Overview: 03.02-configuration.md
+      - Canvas Config: 03.02.01-canvas-config.md
+      - Toolbar Config: 03.02.02-toolbar-config.md
+      - Notification Config: 03.02.03-notification-config.md
+      - Context Menu Config: 03.02.04-context-menu-config.md
+      - Keyboard Config: 03.02.05-keyboard-config.md
     - Callbacks:
-      - Callbacks Overview: v12/03.03-callbacks.md
-      - Context Menu Handler: v12/03.03.01-context-menu-handler.md
-      - Before Edit Action Handler: v12/03.03.02-before-edit-action-handler.md
-      - Edit Action Handler: v12/03.03.03-edit-action-handler.md
-      - Layout Handler: v12/03.03.04-layout-handler.md
-      - Decoration Action Handler: v12/03.03.05-decoration-action-handler.md
-      - Tip Handler: v12/03.03.06-tip-handler.md
-      - ID Generator Handler: v12/03.03.07-id-generator-handler.md
-      - Selection Change Handler: v12/03.03.08-selection-change-handler.md
-      - Click Action Handler: v12/03.03.09-click-action-handler.md
-      - Action Label Handler: v12/03.03.10-action-label-handler.md
+      - Callbacks Overview: 03.03-callbacks.md
+      - Context Menu Handler: 03.03.01-context-menu-handler.md
+      - Before Edit Action Handler: 03.03.02-before-edit-action-handler.md
+      - Edit Action Handler: 03.03.03-edit-action-handler.md
+      - Layout Handler: 03.03.04-layout-handler.md
+      - Decoration Action Handler: 03.03.05-decoration-action-handler.md
+      - Tip Handler: 03.03.06-tip-handler.md
+      - ID Generator Handler: 03.03.07-id-generator-handler.md
+      - Selection Change Handler: 03.03.08-selection-change-handler.md
+      - Click Action Handler: 03.03.09-click-action-handler.md
+      - Action Label Handler: 03.03.10-action-label-handler.md
     - Canvas Controller:
-      - API: v12/03.04-canvas-controller.md
-      - Decorations: v12/03.04.01-decorations.md
-      - Object Structure: v12/03.04.02-api-object-structure.md
-      - Creating New Canvas Nodes: v12/03.04.03-creating-new-canvas-nodes.md
-      - Notification Messages: v12/03.04.05-notification-messages.md
-      - Styling Canvas Objects: v12/03.04.06-styling-objects.md
-    - Keyboard Support: v12/03.05-keyboard-support.md
-    - Node Layout: v12/03.06-node-layout.md
-    - Node Creation from External Object: v12/03.07-external-objects.md
-    - External Pipeline Flows: v12/03.08-external-pipeline-flows.md
-    - Read Only or Locked Flows: v12/03.09-read-only-or-locked-flows.md
-    - Commmand Stack: v12/03.10-command-stack.md
-    - Internal Actions: v12/03.11-internal-actions.md
+      - API: 03.04-canvas-controller.md
+      - Decorations: 03.04.01-decorations.md
+      - Object Structure: 03.04.02-api-object-structure.md
+      - Creating New Canvas Nodes: 03.04.03-creating-new-canvas-nodes.md
+      - Notification Messages: 03.04.05-notification-messages.md
+      - Styling Canvas Objects: 03.04.06-styling-objects.md
+    - Keyboard Support: 03.05-keyboard-support.md
+    - Node Layout: 03.06-node-layout.md
+    - Node Creation from External Object: 03.07-external-objects.md
+    - External Pipeline Flows: 03.08-external-pipeline-flows.md
+    - Read Only or Locked Flows: 03.09-read-only-or-locked-flows.md
+    - Commmand Stack: 03.10-command-stack.md
+    - Internal Actions: 03.11-internal-actions.md
     - Deprecated:
-      - Context Menu Wrapper: v12/03.30.01-context-menu-wrapper.md
-      - Flow Validation: v12/03.30.02-flow-validation.md
+      - Context Menu Wrapper: 03.30.01-context-menu-wrapper.md
+      - Flow Validation: 03.30.02-flow-validation.md
 
   - Common Properties:
-    - Getting started: v12/04-common-properties.md
-    - Parameter Definitions: v12/04.01-parameter-definition.md
-    - Callbacks: v12/04.02-callbacks.md
-    - UI Hints: v12/04.03-ui-hints.md
-    - Controls: v12/04.04-controls.md
-    - Conditions: v12/04.05-conditions.md
-    - Custom Components: v12/04.06-custom-components.md
-    - Properties Controller: v12/04.07-properties-controller.md
+    - Getting started: 04-common-properties.md
+    - Parameter Definitions: 04.01-parameter-definition.md
+    - Callbacks: 04.02-callbacks.md
+    - UI Hints: 04.03-ui-hints.md
+    - Controls: 04.04-controls.md
+    - Conditions: 04.05-conditions.md
+    - Custom Components: 04.06-custom-components.md
+    - Properties Controller: 04.07-properties-controller.md
 
   - Troubleshooting:
-    - v12/05-troubleshooting.md
+    - 05-troubleshooting.md
 
   - Contributing:
-    - v12/06-contributing.md
-    - v12/06.01-style-guidelines.md
-    - v12/06.02-testing-guidelines.md
+    - 06-contributing.md
+    - 06.01-style-guidelines.md
+    - 06.02-testing-guidelines.md
 
 markdown_extensions:
   - admonition:
