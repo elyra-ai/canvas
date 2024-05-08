@@ -121,7 +121,7 @@ applyPropertiesEditing(closeEditor)
 
 [Common Canvas](03-common-canvas.md) has a [right-flyout panel](03-common-canvas.md#right-flyout-panel-parameters) that can render a React object. It can be used to render Common Properties in the right-flyout as follows:
 
-Create a CommonProperties object with containerType set to "Custom" and rightFlyout set to true.
+Create a `<CommonProperties>` object with `containerType` set to `"Custom"` and `rightFlyout` set to `true`.
 ```html
     const rightFlyoutContent = (
         <CommonProperties
@@ -132,7 +132,7 @@ Create a CommonProperties object with containerType set to "Custom" and rightFly
     );
 ```
 
-Pass the `<CommonProperties>` object into CommonCanvas's `rightFlyoutContent` prop. Also, set the `showRightFlyout` boolean to tell CommonCanvasthe rightFlyout should be displayed (true) or hidden (false).
+Pass the `<CommonProperties>` object into the `rightFlyoutContent` prop of Common Canvas. Also, set the `showRightFlyout` boolean to tell Common Canvas the rightFlyout should be displayed (true) or hidden (false).
 ```html
     <CommonCanvas
         canvasController={canvasController}
