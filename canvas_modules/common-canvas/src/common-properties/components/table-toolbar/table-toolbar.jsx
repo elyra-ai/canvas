@@ -305,6 +305,7 @@ class TableToolbar extends React.Component {
 									iconDescription={deleteLabel}
 									tooltipPosition="bottom"
 									onClick={this.props.removeSelectedRows}
+									className="properties-action-delete"
 								/>)
 								: null
 						}
