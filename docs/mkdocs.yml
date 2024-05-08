@@ -37,8 +37,7 @@ extra:
     provider: mike
 
 plugins:
-  - macros:
-      module_name: mkdocs
+  - search
 
 extra_css:
   - css/styles.css
@@ -46,7 +45,7 @@ extra_css:
 extra_javascript:
   - js/links-in-new-tabs.js
 
-edit_uri: ""
+edit_uri: edit/main/docs/
 
 # Documentation and theme
 copyright: 'Copyright  &copy; 2024 Elyra Authors, an open source project and all are welcome to contribute! Maintained by the Elyra Authors Team'
@@ -54,6 +53,7 @@ copyright: 'Copyright  &copy; 2024 Elyra Authors, an open source project and all
 nav:
   - Home:
     - index.md
+
   - Components:
     - Components Overview: 01-canvas-components.md
     - Flow Editor:
