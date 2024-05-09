@@ -137,7 +137,7 @@ class SelectColumnsControl extends AbstractTable {
 		};
 
 		const rows = this.makeRows(this.props.value, this.props.state);
-		const topRightPanel = this.makeAddRemoveButtonPanel(this.props.state, tableButtonConfig);
+		const topRightPanel = this.makeAddButtonPanel(this.props.state, tableButtonConfig);
 		let rowToScrollTo;
 		if (Number.isInteger(this.scrollToRow) && rows.length > this.scrollToRow) {
 			rowToScrollTo = this.scrollToRow;

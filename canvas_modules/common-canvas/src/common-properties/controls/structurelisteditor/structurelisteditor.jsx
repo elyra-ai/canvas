@@ -43,8 +43,6 @@ class StructurelisteditorControl extends AbstractTable {
 		const tableButtonConfig = {
 			addButtonLabel: formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_LABEL),
-			removeButtonLabel: formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.STRUCTURELISTEDITOR_REMOVEBUTTON_LABEL),
 			addButtonFunction: this.addRow
 		};
 

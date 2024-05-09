@@ -1,9 +1,7 @@
 {
   "subPanel.button.tooltip": "[Esperanto~Edit~eo]",
   "structureListEditor.addButton.label": "[Esperanto~Add value~~~~eo]",
-  "structureListEditor.removeButton.label": "[Esperanto~Remove~eo]",
   "structureTable.addButton.label": "[Esperanto~Add columns~eo]",
-  "structureTable.removeButton.label": "[Esperanto~Remove~eo]",
   "fieldPicker.saveButton.label": "[Esperanto~Select Fields for~~~eo]",
   "fieldPicker.saveButton.modal.label": "[Esperanto~Save and continue~~~eo]",
   "fieldPicker.resetButton.label": "[Esperanto~Reset ~eo]",

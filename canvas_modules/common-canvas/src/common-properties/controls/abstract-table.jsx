@@ -24,7 +24,7 @@ import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
 import classNames from "classnames";
-import { Add, TrashCan, Edit } from "@carbon/react/icons";
+import { Add, Edit } from "@carbon/react/icons";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 import { v4 as uuid4 } from "uuid";
 
@@ -37,19 +37,10 @@ import TableToolbar from "../components/table-toolbar/table-toolbar.jsx";
 
 export default class AbstractTable extends React.Component {
 
-	static getDerivedStateFromProps(nextProps, prevState) {
-		const enableRemoveIcon = (nextProps.selectedRows.length !== 0);
-		if (prevState.enableRemoveIcon !== enableRemoveIcon) {
-			return ({ enableRemoveIcon: enableRemoveIcon });
-		}
-		return ({});
-	}
-
 	constructor(props) {
 		super(props);
 		this.state = {
-			filterText: null,
-			enableRemoveIcon: false
+			filterText: null
 		};
 		this.onPanelContainer = [];
 		// used to determine if column controls can be inline or if field picker is used
@@ -67,7 +58,7 @@ export default class AbstractTable extends React.Component {
 		this.onSort = this.onSort.bind(this);
 		this.setScrollToRow = this.setScrollToRow.bind(this);
 		this.includeInFilter = this.includeInFilter.bind(this);
-		this.makeAddRemoveButtonPanel = this.makeAddRemoveButtonPanel.bind(this);
+		this.makeAddButtonPanel = this.makeAddButtonPanel.bind(this);
 		this.makeEditButtonPanel = this.makeEditButtonPanel.bind(this);
 		this.makeCustomButtonsPanel = this.makeCustomButtonsPanel.bind(this);
 		this.buildChildItem = this.buildChildItem.bind(this);
@@ -284,10 +275,6 @@ export default class AbstractTable extends React.Component {
 
 	updateRowSelections(selection) {
 		this.props.controller.updateSelectedRows(this.props.propertyId, selection);
-		// react throws warning when modal because the button does not exist at this moment
-		if (this.props.rightFlyout) {
-			this.setState({ enableRemoveIcon: (selection.length !== 0) });
-		}
 		this.setSelectedSummaryRowValue(selection);
 	}
 
@@ -523,18 +510,10 @@ export default class AbstractTable extends React.Component {
 		return null;
 	}
 
-	makeAddRemoveButtonPanel(tableState, tableButtonConfig) {
+	makeAddButtonPanel(tableState, tableButtonConfig) {
 		this.onFieldPickerCloseCallback = (tableButtonConfig && tableButtonConfig.fieldPickerCloseFunction)
 			? tableButtonConfig.fieldPickerCloseFunction.bind(this)
 			: null;
-
-		const removeOnClick = (tableButtonConfig && tableButtonConfig.removeButtonFunction)
-			? tableButtonConfig.removeButtonFunction
-			: this.removeSelected;
-		const removeButtonLabel = (tableButtonConfig && tableButtonConfig.removeButtonLabel) ? tableButtonConfig.removeButtonLabel
-			: PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
-		const removeDisabled = !this.state.enableRemoveIcon || tableState === STATES.DISABLED;
-
 
 		let addButtonDisabled = false;
 		this.addOnClickCallback = (tableButtonConfig && tableButtonConfig.addButtonFunction)
@@ -549,16 +528,6 @@ export default class AbstractTable extends React.Component {
 
 		return (
 			<div className="properties-at-buttons-container">
-				<Button
-					className="properties-remove-fields-button"
-					disabled={removeDisabled}
-					onClick={removeOnClick}
-					size="sm"
-					kind="ghost"
-					renderIcon={TrashCan}
-				>
-					{removeButtonLabel}
-				</Button>
 				<Button
 					className="properties-add-fields-button"
 					disabled={addButtonDisabled}
@@ -699,7 +668,7 @@ export default class AbstractTable extends React.Component {
 			}
 
 		} else if (this.props.addRemoveRows) {
-			topRightPanel = this.makeAddRemoveButtonPanel(tableState, tableButtonConfig);
+			topRightPanel = this.makeAddButtonPanel(tableState, tableButtonConfig);
 		}
 
 		let rowToScrollTo;
