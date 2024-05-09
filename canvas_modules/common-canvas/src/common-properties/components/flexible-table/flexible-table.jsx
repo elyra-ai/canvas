@@ -523,6 +523,7 @@ class FlexibleTable extends React.Component {
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass;
 		// Table toolbar replaces ftHeader when 1+ rows are selected
+		// TODO: need to improve this condition when tableToolbar exists only then hide the other ftHeader.
 		const ftHeader = ((searchBar || this.props.topRightPanel) && this.props.selectedRows.length === 0)
 			? (<div className="properties-ft-table-header" ref={ (ref) => (this.flexibleTableHeader = ref) }>
 				{searchBar}

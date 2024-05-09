@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import FlexibleTable from "./../../components/flexible-table";
-import MoveableTableRows from "./../../components/moveable-table-rows";
+import EmptyTable from "../../components/empty-table/empty-table.jsx";
 import TableToolbar from "./../../components/table-toolbar";
 import AbstractTable from "./../abstract-table.jsx";
 import ValidationMessage from "./../../components/validation-message";
@@ -122,6 +122,7 @@ class SelectColumnsControl extends AbstractTable {
 					removeSelectedRows={this.removeSelected}
 					setScrollToRow={this.setScrollToRow}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+					isReadonlyTable={false}
 				/>
 			);
 		}
@@ -175,18 +176,17 @@ class SelectColumnsControl extends AbstractTable {
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)} className="properties-column-select" >
 				{this.props.controlItem}
-				<MoveableTableRows
-					tableContainer={content}
-					control={this.props.control}
-					controller={this.props.controller}
-					propertyId={this.props.propertyId}
-					setScrollToRow={this.setScrollToRow}
-					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-					disabled={this.props.state === STATES.DISABLED}
-					isEmptyTable={isEmpty(this.props.value)}
-					emptyTableButtonLabel={this.emptyTableButtonLabel}
-					emptyTableButtonClickHandler={this.emptyTableButtonClickHandler}
-				/>
+				{
+					isEmpty(this.props.value) && this.props.addRemoveRows
+						? <EmptyTable
+							control={this.props.control}
+							controller={this.props.controller}
+							emptyTableButtonLabel={this.emptyTableButtonLabel}
+							emptyTableButtonClickHandler={this.emptyTableButtonClickHandler}
+							disabled={this.props.state === STATES.DISABLED}
+						/>
+						: content
+				}
 			</div>
 		);
 	}

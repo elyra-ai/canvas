@@ -19,7 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import AbstractTable from "./../abstract-table.jsx";
-import MoveableTableRows from "./../../components/moveable-table-rows";
+import EmptyTable from "../../components/empty-table/empty-table.jsx";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
 
@@ -70,18 +70,17 @@ class ReadonlyTableControl extends AbstractTable {
 			>
 				{this.props.controlItem}
 				<div className="properties-readonly-table">
-					<MoveableTableRows
-						tableContainer={content}
-						control={this.props.control}
-						controller={this.props.controller}
-						propertyId={this.props.propertyId}
-						setScrollToRow={this.setScrollToRow}
-						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-						disabled={this.props.state === STATES.DISABLED}
-						isEmptyTable={isEmpty(this.props.value)}
-						emptyTableButtonLabel={buttonLabel}
-						emptyTableButtonClickHandler={this.editCallback}
-					/>
+					{
+						isEmpty(this.props.value) && this.props.addRemoveRows
+							? <EmptyTable
+								control={this.props.control}
+								controller={this.props.controller}
+								emptyTableButtonLabel={buttonLabel}
+								emptyTableButtonClickHandler={this.editCallback}
+								disabled={this.props.state === STATES.DISABLED}
+							/>
+							: content
+					}
 				</div>
 			</div>
 		);

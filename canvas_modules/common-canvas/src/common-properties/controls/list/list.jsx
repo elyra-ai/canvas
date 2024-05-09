@@ -21,7 +21,7 @@ import NumberfieldControl from "./../numberfield";
 import TextfieldControl from "./../textfield";
 import AbstractTable from "./../abstract-table.jsx";
 import FlexibleTable from "./../../components/flexible-table";
-import MoveableTableRows from "./../../components/moveable-table-rows";
+import EmptyTable from "../../components/empty-table/empty-table.jsx";
 import TableToolbar from "./../../components/table-toolbar";
 import ValidationMessage from "./../../components/validation-message";
 import { formatMessage } from "./../../util/property-utils";
@@ -131,6 +131,7 @@ class ListControl extends AbstractTable {
 					removeSelectedRows={this.removeSelected}
 					setScrollToRow={this.setScrollToRow}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+					isReadonlyTable={false}
 				/>
 			);
 		}
@@ -186,18 +187,17 @@ class ListControl extends AbstractTable {
 		return (
 			<div data-id={getDataId(this.props.propertyId)} className="properties-list-control" >
 				{this.props.controlItem}
-				<MoveableTableRows
-					tableContainer={tableContainer}
-					control={this.props.control}
-					controller={this.props.controller}
-					propertyId={this.props.propertyId}
-					setScrollToRow={this.setScrollToRow}
-					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-					disabled={this.props.state === STATES.DISABLED}
-					isEmptyTable={isEmpty(this.props.value)}
-					emptyTableButtonLabel={tableButtonConfig.addButtonLabel}
-					emptyTableButtonClickHandler={this.addRow}
-				/>
+				{
+					isEmpty(this.props.value) && this.props.addRemoveRows
+						? <EmptyTable
+							control={this.props.control}
+							controller={this.props.controller}
+							emptyTableButtonLabel={tableButtonConfig.addButtonLabel}
+							emptyTableButtonClickHandler={this.addRow}
+							disabled={this.props.state === STATES.DISABLED}
+						/>
+						: tableContainer
+				}
 			</div>
 		);
 	}

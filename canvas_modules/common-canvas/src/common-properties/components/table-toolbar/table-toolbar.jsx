@@ -297,7 +297,7 @@ class TableToolbar extends React.Component {
 								: null
 						}
 						{
-							this.props.addRemoveRows
+							(this.props.addRemoveRows && !this.props.isReadonlyTable)
 								? (<Button
 									size="sm"
 									renderIcon={TrashCan}
@@ -352,6 +352,7 @@ TableToolbar.propTypes = {
 	setCurrentControlValueSelected: PropTypes.func.isRequired,
 	rightFlyout: PropTypes.bool,
 	tableState: PropTypes.string,
+	isReadonlyTable: PropTypes.bool,
 	addRemoveRows: PropTypes.bool,
 	moveableRows: PropTypes.bool,
 	multiSelectEdit: PropTypes.bool,

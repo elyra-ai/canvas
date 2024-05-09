@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import AbstractTable from "./../abstract-table.jsx";
-import MoveableTableRows from "./../../components/moveable-table-rows";
+import EmptyTable from "../../components/empty-table/empty-table.jsx";
 import { formatMessage } from "./../../util/property-utils";
 import ValidationMessage from "./../../components/validation-message";
 import { MESSAGE_KEYS, STATES } from "./../../constants/constants";
@@ -66,18 +66,17 @@ class StructurelisteditorControl extends AbstractTable {
 				<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 					className="properties-sle-container"
 				>
-					<MoveableTableRows
-						tableContainer={tableContainer}
-						control={this.props.control}
-						controller={this.props.controller}
-						propertyId={this.props.propertyId}
-						setScrollToRow={this.setScrollToRow}
-						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-						disabled={this.props.state === STATES.DISABLED}
-						isEmptyTable={isEmpty(this.props.value)}
-						emptyTableButtonLabel={tableButtonConfig.addButtonLabel}
-						emptyTableButtonClickHandler={this.addRow}
-					/>
+					{
+						isEmpty(this.props.value) && this.props.addRemoveRows
+							? <EmptyTable
+								control={this.props.control}
+								controller={this.props.controller}
+								emptyTableButtonLabel={tableButtonConfig.addButtonLabel}
+								emptyTableButtonClickHandler={this.addRow}
+								disabled={this.props.state === STATES.DISABLED}
+							/>
+							: tableContainer
+					}
 				</div>
 				<div>
 					{onPanelContainer}
