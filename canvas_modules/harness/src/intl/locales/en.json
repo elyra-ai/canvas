@@ -1,6 +1,6 @@
 {
   "dialog.nodePropertiesTitle": "Node Properties",
-  "canvas.emptyText": "Welcome to the Common Canvas test harness.{br}Your flow is empty!",
+  "canvas.emptyText": "Welcome to the Elyra Canvas test harness.{br}Your flow is empty!",
   "canvas.emptyLink": "Click here to take a tour",
   "expression.value.column": "Custom Value",
   "expression.value.column.description": "Testing custom desc from app",

@@ -9,7 +9,7 @@
   "edit.pasteSelection": "粘贴",
   "canvas.label": "画布",
   "canvas.addComment": "新建注释",
-  "canvas.selectAll": "全部选中",
+  "canvas.selectAll": "全选",
   "canvas.undo": "撤销",
   "canvas.redo": "重做",
   "canvas.undoCommand": "撤销：{undo_command}",
