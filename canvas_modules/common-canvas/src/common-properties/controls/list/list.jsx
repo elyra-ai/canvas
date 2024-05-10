@@ -132,6 +132,7 @@ class ListControl extends AbstractTable {
 					setScrollToRow={this.setScrollToRow}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 					isReadonlyTable={false}
+					smallFlyout={this.props.rightFlyout && this.props.controller.getEditorSize() === "small"}
 				/>
 			);
 		}
@@ -206,6 +207,7 @@ ListControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	controlItem: PropTypes.element,
+	rightFlyout: PropTypes.bool,
 	selectedRows: PropTypes.array, // set by redux
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux

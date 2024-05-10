@@ -79,6 +79,8 @@
   "expression.no.functions": "[Esperanto~No functions found.~~~~~eo]",
   "single.selected.row.label": "[Esperanto~item selected~eo]",
   "multi.selected.row.label": "[Esperanto~items selected~eo]",
+  "single.selected.row.label.small.flyout": "[Esperanto~item~eo]",
+  "multi.selected.row.label.small.flyout": "[Esperanto~items~eo]",
   "multi.selected.row.action": "[Esperanto~Changing a value in this row will change the value in all allowed selected rows.~~~~~~~~~~eo]",
   "datetimefield.format.error.message": "[Esperanto~Invalid format object provided. Check input definitions.~~~~~~~~eo]",
   "datepickerRangeStart.default.label": "[Esperanto~Start~eo]",

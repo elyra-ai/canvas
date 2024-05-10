@@ -467,6 +467,7 @@ export default class AbstractTable extends React.Component {
 						multiSelectEditSubPanel={multiSelectEditSubPanel}
 						multiSelectEditRowPropertyId={multiSelectEditRowPropertyId}
 						isReadonlyTable={this.isReadonlyTable()}
+						smallFlyout={false}
 					/>
 					{/* {
 						selectedRows.length > 1

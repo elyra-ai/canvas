@@ -274,8 +274,12 @@ class TableToolbar extends React.Component {
 
 	render() {
 		if ((this.props.addRemoveRows || this.props.moveableRows || this.props.multiSelectEdit) && this.props.selectedRows.length > 0) {
-			const singleRowSelectedLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL); // item selected
-			const multiRowsSelectedLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL); // items selected
+			const singleRowSelectedLabel = (this.props.smallFlyout)
+				? formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL_SMALL_FLYOUT) // item
+				:formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL); // item selected
+			const multiRowsSelectedLabel = (this.props.smallFlyout)
+				? formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL_SMALL_FLYOUT) // items
+				: formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL); // items selected
 			const title = (this.props.selectedRows.length === 1)
 				? `${this.props.selectedRows.length} ${singleRowSelectedLabel}`
 				: `${this.props.selectedRows.length} ${multiRowsSelectedLabel}`;
@@ -351,6 +355,7 @@ TableToolbar.propTypes = {
 	setScrollToRow: PropTypes.func.isRequired,
 	setCurrentControlValueSelected: PropTypes.func.isRequired,
 	rightFlyout: PropTypes.bool,
+	smallFlyout: PropTypes.bool, // list control in right flyout having editor size small
 	tableState: PropTypes.string,
 	isReadonlyTable: PropTypes.bool,
 	addRemoveRows: PropTypes.bool,
