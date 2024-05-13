@@ -242,7 +242,7 @@ class EditorForm extends React.Component {
 
 		if (this.props.rightFlyout && this.props.categoryView !== CATEGORY_VIEW.TABS) {
 			return (
-				<>
+				<React.Fragment key={"tabContent." + key}>
 					{tabContent.length ? (<div key={"cat." + key} className="properties-categories">
 						{tabContent}
 					</div>) : null}
@@ -251,7 +251,7 @@ class EditorForm extends React.Component {
 							{tabContentAcc}
 						</div>
 					</Accordion>) : null}
-				</>
+				</React.Fragment>
 			);
 		}
 		return (
