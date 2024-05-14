@@ -38,6 +38,8 @@ class MultiSelectControl extends React.Component {
 		this.state = {
 			shouldRender: true
 		};
+		this.multiSelectDropdown = this.genSelectOptions(props.value);
+		this.selectedOptions = props.value;
 	}
 
 	componentDidMount() {
@@ -45,8 +47,12 @@ class MultiSelectControl extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
+		if (!isEqual(this.props.value, prevProps.value)) {
+			this.multiSelectDropdown = this.genSelectOptions(this.props.value);
+		}
 		// only update if filter options have changed. Fixes issue where filter options are updated after value in setProperties
 		if (!isEqual(this.props.controlOpts, prevProps.controlOpts)) {
+			this.multiSelectDropdown = this.genSelectOptions(this.props.value);
 			this.updateValueFromFilterEnum();
 		}
 		this.setShouldRender(prevProps);
@@ -112,11 +118,15 @@ class MultiSelectControl extends React.Component {
 		for (let i = 0; i < evt?.selectedItems?.length; i++) {
 			controlValues.push(evt.selectedItems[i].id);
 		}
+		if (!isEqual(this.selectedOptions, controlValues)) {
+			// Selected options changed from UI
+			this.selectedOptions = controlValues;
+			this.multiSelectDropdown = this.genSelectOptions(controlValues);
+		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, controlValues);
 	}
 
 	render() {
-		const multiSelectDropdown = this.genSelectOptions(this.props.value);
 		// workaround to recreate react component on filter_enum
 		if (!this.state.shouldRender) {
 			return null;
@@ -135,7 +145,7 @@ class MultiSelectControl extends React.Component {
 		const defaultOptionsSelectedLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL);
 
 		let label = "";
-		if (multiSelectDropdown.selectedOptions.length === 0) { // Display message for no options selected
+		if (this.multiSelectDropdown.selectedOptions.length === 0) { // Display message for no options selected
 			label = this.props.controller.getResource(overrideEmptyLabelKey, defaultEmptyLabel);
 		} else { // Display message for multiple options selected
 			label = this.props.controller.getResource(overrideOptionsSelectedLabelKey, defaultOptionsSelectedLabel);
@@ -150,8 +160,8 @@ class MultiSelectControl extends React.Component {
 					id={`${ControlUtils.getDataId(this.props.propertyId)}-multiselect-filterable`}
 					disabled={this.props.state === STATES.DISABLED}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-					items={multiSelectDropdown.options}
-					initialSelectedItems={multiSelectDropdown.selectedOptions}
+					items={this.multiSelectDropdown.options}
+					initialSelectedItems={this.multiSelectDropdown.selectedOptions}
 					onChange={this.handleOnChange}
 					placeholder={label}
 					titleText={this.props.tableControl ? null : this.props.controlItem}
@@ -164,8 +174,8 @@ class MultiSelectControl extends React.Component {
 					id={`${ControlUtils.getDataId(this.props.propertyId)}-multiselect`}
 					disabled={this.props.state === STATES.DISABLED}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-					items={multiSelectDropdown.options}
-					selectedItems={multiSelectDropdown.selectedOptions}
+					items={this.multiSelectDropdown.options}
+					selectedItems={this.multiSelectDropdown.selectedOptions}
 					onChange={this.handleOnChange}
 					label={label}
 					titleText={this.props.tableControl ? null : this.props.controlItem}
