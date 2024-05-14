@@ -75,7 +75,7 @@ class EditorForm extends React.Component {
 		this.visibleTearsheet = null;
 		this.defaultOpenTab = props.activeTab;
 		this.alertOpenTab = null;
-
+		this.scrollToAlert = false;
 	}
 
 
@@ -89,12 +89,15 @@ class EditorForm extends React.Component {
 		return true;
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps) {
 		// Scroll to the selected accordion even when clicked from Alerts tab
-		const activeTabId = this.props.activeTab;
-		const activeTabElement = document.getElementsByClassName(`${activeTabId}`);
-		if (activeTabId && activeTabElement.length > 0) {
-			activeTabElement[0].scrollIntoView({ behavior: "smooth" });
+		if (this.scrollToAlert || prevProps.activeTab !== this.props.activeTab) {
+			const activeTabId = this.props.activeTab;
+			const activeTabElement = document.getElementsByClassName(`${activeTabId}`);
+			if (activeTabId && activeTabElement.length > 0) {
+				activeTabElement[0].scrollIntoView({ behavior: "smooth" });
+			}
+			this.scrollToAlert = false;
 		}
 	}
 
@@ -147,6 +150,7 @@ class EditorForm extends React.Component {
 		if (this.defaultOpenTab === this.alertOpenTab) {
 			this.defaultOpenTab = null;
 		}
+		this.scrollToAlert = true;
 		this.props.setActiveTab(control.parentCategoryId);
 	}
 
