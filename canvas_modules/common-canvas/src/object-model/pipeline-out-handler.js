@@ -135,7 +135,7 @@ export default class PipelineOutHandler {
 	static createNodeUiData(ciNode) {
 		const uiData = {
 			label: ciNode.label,
-			image: ciNode.image,
+			image: (typeof ciNode.image === "object" ? "" : ciNode.image),
 			x_pos: ciNode.x_pos,
 			y_pos: ciNode.y_pos
 		};

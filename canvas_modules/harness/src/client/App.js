@@ -51,6 +51,7 @@ import ProgressCanvas from "./components/custom-canvases/progress/progress";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
+import JsxIconsCanvas from "./components/custom-canvases/jsx-icons/jsx-icons-canvas";
 import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon";
 import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping";
 
@@ -82,7 +83,7 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
-import { Add, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
+import { Add, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FaceCool, FlowData, GuiManagement,
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
 	StopFilledAlt, Subtract, TextScale, TouchInteraction } from "@carbon/react/icons";
 
@@ -113,6 +114,7 @@ import {
 	EXAMPLE_APP_LOGIC,
 	EXAMPLE_APP_READ_ONLY,
 	EXAMPLE_APP_PROGRESS,
+	EXAMPLE_APP_JSX_ICONS,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	CUSTOM,
@@ -2618,6 +2620,13 @@ class App extends React.Component {
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_STREAMS) {
 			firstCanvas = (
 				<StreamsCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_JSX_ICONS) {
+			firstCanvas = (
+				<JsxIconsCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>

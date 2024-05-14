@@ -47,7 +47,7 @@ class PaletteContentListItem extends React.Component {
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
-		this.onKeyPress = this.onKeyPress.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 	}
 
 	onMouseDown() {
@@ -74,7 +74,7 @@ class PaletteContentListItem extends React.Component {
 		}
 	}
 
-	onKeyPress(e) {
+	onKeyDown(e) {
 		// e.key === " " is needed to allow Cypress test in palette.js to run on the build machine!
 		if (e.key === " " || e.code === "Space" || e.keyCode === 32) {
 			this.onDoubleClick();
@@ -279,9 +279,14 @@ class PaletteContentListItem extends React.Component {
 			} else if (image === USE_DEFAULT_EXT_ICON) {
 				image = SUPERNODE_EXT_ICON;
 			}
-			icon = image.endsWith(".svg")
-				? <SVG src={image} className="palette-list-item-icon" draggable="false" />
-				: <img src={image} className="palette-list-item-icon" draggable="false" alt={""} />;
+
+			if (typeof image === "object" && React.isValidElement(image)) {
+				icon = image;
+			} else if (typeof image === "string") {
+				icon = image.endsWith(".svg")
+					? <SVG src={image} className="palette-list-item-icon" draggable="false" />
+					: <img src={image} className="palette-list-item-icon" draggable="false" alt={""} />;
+			}
 		}
 
 		if (labelText && (this.props.isPaletteOpen || !icon)) {
@@ -330,7 +335,7 @@ class PaletteContentListItem extends React.Component {
 				className={mainDivClass}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
-				onKeyPress={this.props.isEditingEnabled ? this.onKeyPress : null}
+				onKeyDown={this.props.isEditingEnabled ? this.onKeyDown : null}
 				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
 				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}
 				onDragEnd={this.props.isEditingEnabled ? this.onDragEnd : null}

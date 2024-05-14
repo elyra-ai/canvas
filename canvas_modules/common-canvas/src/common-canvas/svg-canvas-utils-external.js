@@ -24,6 +24,10 @@ export default class SvgCanvasExternal {
 		this.ren = renderer;
 	}
 
+	isValidJsxElement(el) {
+		return React.isValidElement(el);
+	}
+
 	addNodeExternalObject(node, i, foreignObjects) {
 		const jsx = (
 			<node.layout.nodeExternalObject
@@ -33,6 +37,10 @@ export default class SvgCanvasExternal {
 			/>
 		);
 		this.renderExternalObject(jsx, foreignObjects[i]);
+	}
+
+	addNodeImageExternalObject(image, i, foreignObjects) {
+		this.renderExternalObject(image, foreignObjects[i]);
 	}
 
 	addDecExternalObject(dec, i, foreignObjects) {

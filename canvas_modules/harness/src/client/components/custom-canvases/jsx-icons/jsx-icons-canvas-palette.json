@@ -1,0 +1,360 @@
+{
+	"version": "3.0",
+	"categories": [
+	  {
+		"label": "Inputs",
+		"description": "Input icons from Carbon Icons",
+		"image": "FolderOpen",
+		"id": "canvas-inputs",
+		"node_types": [
+		  {
+			"id": "",
+			"type": "binding",
+			"op": "DataTable",
+			"outputs": [
+			  {
+				"id": "outPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": -1
+					},
+					"label": "Output Port"
+				  }
+				}
+			  }
+			],
+			"parameters": {},
+			"app_data": {
+			  "ui_data": {
+				"label": "Data Table",
+				"description": "Data table icon",
+				"image": "",
+				"x_pos": 0,
+				"y_pos": 0
+			  }
+			}
+		  },
+		  {
+			"id": "",
+			"type": "binding",
+			"op": "DB2Database",
+			"outputs": [
+			  {
+				"id": "outPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": -1
+					},
+					"label": "Output Port"
+				  }
+				}
+			  }
+			],
+			"parameters": {},
+			"app_data": {
+			  "ui_data": {
+				"label": "DB2 Database",
+				"description": "DB2 Database icon",
+				"image": "",
+				"x_pos": 0,
+				"y_pos": 0
+			  }
+			}
+		  }
+		]
+	  },
+	  {
+		"label": "Operations",
+		"description": "Operation icons from Carbon Icons",
+		"image": "Folder",
+		"id": "canvas-operations",
+		"node_types": [
+		  {
+			"id": "",
+			"type": "execution_node",
+			"op": "MachineLearning",
+			"inputs": [
+			  {
+				"id": "inPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": 1
+					},
+					"label": "Input Port"
+				  }
+				}
+			  }
+			],
+			"outputs": [
+			  {
+				"id": "outPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": -1
+					},
+					"label": "Output Port"
+				  }
+				}
+			  }
+			],
+			"parameters": {},
+			"app_data": {
+			  "ui_data": {
+				"label": "Machine Learning",
+				"description": "Machine Learning icon",
+				"image": "",
+				"x_pos": 0,
+				"y_pos": 0
+			  }
+			}
+		  },
+		  {
+			"id": "",
+			"type": "execution_node",
+			"op": "JoinInner",
+			"inputs": [
+			  {
+				"id": "inPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": 1
+					},
+					"label": "Input Port"
+				  }
+				}
+			  }
+			],
+			"outputs": [
+			  {
+				"id": "outPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": -1
+					},
+					"label": "Output Port"
+				  }
+				}
+			  }
+			],
+			"parameters": {},
+			"app_data": {
+			  "ui_data": {
+				"label": "Join Inner",
+				"description": "Join Inner icon",
+				"image": "",
+				"x_pos": 0,
+				"y_pos": 0
+			  }
+			}
+		  },
+		  {
+			"id": "",
+			"type": "execution_node",
+			"op": "FaceCool",
+			"inputs": [
+			  {
+				"id": "inPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": 1
+					},
+					"label": "Input Port"
+				  }
+				}
+			  }
+			],
+			"outputs": [
+			  {
+				"id": "outPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": -1
+					},
+					"label": "Output Port"
+				  }
+				}
+			  }
+			],
+			"parameters": {},
+			"app_data": {
+			  "ui_data": {
+				"label": "Face Cool",
+				"description": "Face Cool icon",
+				"image": "",
+				"x_pos": 0,
+				"y_pos": 0
+			  }
+			}
+		  },
+		  {
+			"id": "",
+			"type": "execution_node",
+			"op": "CurrencyPound",
+			"inputs": [
+			  {
+				"id": "inPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": 1
+					},
+					"label": "Input Port"
+				  }
+				}
+			  }
+			],
+			"outputs": [
+			  {
+				"id": "outPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": -1
+					},
+					"label": "Output Port"
+				  }
+				}
+			  }
+			],
+			"parameters": {},
+			"app_data": {
+			  "ui_data": {
+				"label": "Currency Pound",
+				"description": "Currency Pound icon",
+				"image": "",
+				"x_pos": 0,
+				"y_pos": 0
+			  }
+			}
+		  },
+		  {
+			"id": "",
+			"type": "execution_node",
+			"op": "Fish",
+			"inputs": [
+			  {
+				"id": "inPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": 1
+					},
+					"label": "Input Port"
+				  }
+				}
+			  }
+			],
+			"outputs": [
+			  {
+				"id": "outPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": -1
+					},
+					"label": "Output Port"
+				  }
+				}
+			  }
+			],
+			"parameters": {},
+			"app_data": {
+			  "ui_data": {
+				"label": "Fish",
+				"description": "Fish icon",
+				"image": "",
+				"x_pos": 0,
+				"y_pos": 0
+			  }
+			}
+		  }
+		]
+	  },
+	  {
+		"label": "Outputs",
+		"description": "Output icons from Carbon Icons",
+		"image": "FolderMoveTo",
+		"id": "canvas-outputs",
+		"node_types": [
+		  {
+			"id": "",
+			"type": "binding",
+			"op": "ChartColumn",
+			"inputs": [
+			  {
+				"id": "inPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": 1
+					},
+					"label": "Input Port"
+				  }
+				}
+			  }
+			],
+			"parameters": {},
+			"app_data": {
+			  "ui_data": {
+				"label": "Chart Column",
+				"description": "Chart Column icon",
+				"image": "",
+				"x_pos": 0,
+				"y_pos": 0
+			  }
+			}
+		  },
+		  {
+			"id": "",
+			"type": "binding",
+			"op": "Debug",
+			"inputs": [
+			  {
+				"id": "inPort",
+				"app_data": {
+				  "ui_data": {
+					"cardinality": {
+					  "min": 0,
+					  "max": 1
+					},
+					"label": "Input Port"
+				  }
+				}
+			  }
+			],
+			"parameters": {},
+			"app_data": {
+			  "ui_data": {
+				"label": "Debug",
+				"description": "Debug icon",
+				"image": "",
+				"x_pos": 0,
+				"y_pos": 0
+			  }
+			}
+		  }
+		]
+	  }
+	]
+  }

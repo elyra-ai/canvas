@@ -116,9 +116,14 @@ class PaletteDialogContentGridNode extends React.Component {
 				image = SUPERNODE_EXT_ICON;
 			}
 
-			icon = image.endsWith(".svg")
-				? <SVG src={image} className="node-icon" alt={label} />
-				: <img src={image} className="node-icon" alt={label} />;
+			if (typeof image === "object" && React.isValidElement(image)) {
+				icon = image;
+
+			} else if (typeof image === "string") {
+				icon = image.endsWith(".svg")
+					? <SVG src={image} className="node-icon" alt={label} />
+					: <img src={image} className="node-icon" alt={label} />;
+			}
 		}
 
 		let draggable = this.props.isEditingEnabled ? "true" : "false";
