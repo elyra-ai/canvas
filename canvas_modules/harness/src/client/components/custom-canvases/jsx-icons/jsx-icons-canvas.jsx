@@ -59,7 +59,8 @@ export default class JsxIconsCanvas extends React.Component {
 	getConfig() {
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "jsx-icons-canvas",
-			enableNodeFormatType: "Horizontal"
+			enableNodeFormatType: "Horizontal",
+			enableMarkdownInComments: true
 		});
 		return config;
 	}
@@ -68,7 +69,7 @@ export default class JsxIconsCanvas extends React.Component {
 		switch (op) {
 		case "DataTable":
 			return (<DataTable size={20} />);
-		case "DB2Database":
+		case "Db2Database":
 			return (<Db2Database size={20} />);
 		case "MachineLearning":
 			return (<MachineLearning size={20} />);

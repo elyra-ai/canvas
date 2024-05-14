@@ -11,14 +11,14 @@
         {
           "id": "b8807b58-4436-4f3d-a888-3148ca1a25b4",
           "type": "binding",
-          "op": "DB2Database",
+          "op": "Db2Database",
           "app_data": {
             "ui_data": {
               "label": "DB2 Database",
               "image": "",
-              "x_pos": 49,
-              "y_pos": 190,
-              "description": "DB2 Database icon"
+              "x_pos": 52,
+              "y_pos": 234,
+              "description": "Node using the 'Db2Database' Carbon icon"
             }
           },
           "outputs": [
@@ -44,9 +44,9 @@
             "ui_data": {
               "label": "Machine Learning",
               "image": "",
-              "x_pos": 296,
-              "y_pos": 190,
-              "description": "Machine Learning icon"
+              "x_pos": 299,
+              "y_pos": 234,
+              "description": "Node using the 'MachineLearning' Carbon icon"
             }
           },
           "inputs": [
@@ -93,27 +93,46 @@
             "ui_data": {
               "label": "Join Inner",
               "image": "",
-              "x_pos": 300,
-              "y_pos": 269,
-              "description": "Join Inner icon"
+              "x_pos": 303,
+              "y_pos": 313,
+              "description": "Node using the 'JoinInner' Carbon icon"
             }
           },
           "inputs": [
             {
-              "id": "inPort",
+              "id": "inPort1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
                     "min": 0,
                     "max": 1
                   },
-                  "label": "Input Port"
+                  "label": "Input Port 1"
                 }
               },
               "links": [
                 {
                   "id": "0ec12265-a93a-4c98-8e52-68ccada984e7",
                   "node_id_ref": "b8807b58-4436-4f3d-a888-3148ca1a25b4",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port 2"
+                }
+              },
+              "links": [
+                {
+                  "id": "e39c1b5d-7edd-4fe2-bd3e-21720c8211aa",
+                  "node_id_ref": "889e3a97-e89b-4cb5-8794-5f2fe7c0eaf0",
                   "port_id_ref": "outPort"
                 }
               ]
@@ -142,9 +161,9 @@
             "ui_data": {
               "label": "Chart Column",
               "image": "",
-              "x_pos": 550,
-              "y_pos": 190,
-              "description": "Chart Column icon"
+              "x_pos": 553,
+              "y_pos": 234,
+              "description": "Node using the 'ChartColumn' Carbon icon"
             }
           },
           "inputs": [
@@ -172,14 +191,14 @@
         {
           "id": "4e920a73-d3ea-4fd3-8770-59b88be89190",
           "type": "binding",
-          "op": "Document",
+          "op": "FaceCool",
           "app_data": {
             "ui_data": {
-              "label": "Document",
+              "label": "Face Cool",
               "image": "",
-              "x_pos": 552,
-              "y_pos": 269,
-              "description": "Document icon"
+              "x_pos": 555,
+              "y_pos": 313,
+              "description": "Node using the 'FaceCool' Carbon icon"
             }
           },
           "inputs": [
@@ -203,6 +222,34 @@
               ]
             }
           ]
+        },
+        {
+          "id": "889e3a97-e89b-4cb5-8794-5f2fe7c0eaf0",
+          "type": "binding",
+          "op": "DataTable",
+          "app_data": {
+            "ui_data": {
+              "label": "Data Table",
+              "image": "",
+              "x_pos": 50,
+              "y_pos": 371,
+              "description": "Node using the 'DataTable' Carbon icon"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
         }
       ],
       "app_data": {
@@ -210,12 +257,12 @@
           "comments": [
             {
               "id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
-              "x_pos": 18,
-              "y_pos": 14.4,
-              "width": 190,
-              "height": 100,
+              "x_pos": 51,
+              "y_pos": 57,
+              "width": 265,
+              "height": 114,
               "class_name": "d3-comment-rect bkg-col-cyan-20",
-              "content": "This canvas shows a flow of nodes and a palette that all use JSX objects as their icons. In fact, they are imported from the Carbon Icons library. ",
+              "content": "## JSX Icons Canvas\nThis canvas shows a palette and a flow of nodes that all use JSX objects as their icons. The icons are all imported from the <a href=\"https://carbondesignsystem.com/elements/icons/library\" target=\"_blank\">Carbon Icons library</a>. ",
               "associated_id_refs": []
             }
           ]

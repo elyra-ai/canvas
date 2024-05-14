@@ -1758,6 +1758,13 @@ export default class SVGCanvasRenderer {
 	}
 
 	removeNodes(removeSel) {
+		// Remove any JSX images for the nodes being removed to
+		// unmount their React objects.
+		removeSel
+			.selectAll(".d3-foreign-object-node-image")
+			.each((d, idx, exts) =>
+				this.externalUtils.removeExternalObject(d, idx, exts));
+
 		// Remove any JSX decorations for the nodes being removed to
 		// unmount their React objects.
 		removeSel
