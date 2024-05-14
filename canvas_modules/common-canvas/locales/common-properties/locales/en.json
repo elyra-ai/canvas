@@ -82,7 +82,7 @@
   "multi.selected.row.label": "items selected",
   "single.selected.row.label.small.flyout": "item",
   "multi.selected.row.label.small.flyout": "items",
-  "multi.selected.row.action": "Changing a value in this row will change the value in all allowed selected rows.",
+  "multi.select.edit.subpanel.title": "Update selected rows",
   "datetimefield.format.error.message": "Invalid format object provided. Check input definitions.",
   "datepickerRangeStart.default.label": "Start",
   "datepickerRangeEnd.default.label": "End",

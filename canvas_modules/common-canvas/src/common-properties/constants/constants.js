@@ -93,7 +93,7 @@ export const MESSAGE_KEYS = {
 	MULTI_SELECTED_ROW_LABEL: "multi.selected.row.label",
 	SINGLE_SELECTED_ROW_LABEL_SMALL_FLYOUT: "single.selected.row.label.small.flyout",
 	MULTI_SELECTED_ROW_LABEL_SMALL_FLYOUT: "multi.selected.row.label.small.flyout",
-	MULTI_SELECTED_ROW_ACTION: "multi.selected.row.action",
+	MULTI_SELECT_EDIT_SUBPANEL_TITLE: "multi.select.edit.subpanel.title",
 	LIST_TABLE_LABEL: "list.table.label",
 	DROPDOWN_TOOLTIP_OPENMENU: "dropdown.tooltip.openMenu",
 	DROPDOWN_TOOLTIP_CLOSEMENU: "dropdown.tooltip.closeMenu",

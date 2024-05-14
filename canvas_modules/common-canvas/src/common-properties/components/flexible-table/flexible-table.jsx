@@ -262,11 +262,10 @@ class FlexibleTable extends React.Component {
 
 		let newHeight = this.state.tableHeight;
 		let dynamicH = this.state.dynamicHeight;
-		const multiSelectTableHeight = REM_ROW_HEIGHT + REM_HEADER_HEIGHT;
 		if (Array.isArray(this.props.data) && this.props.data.length < this.state.rows) {
-			newHeight = (REM_ROW_HEIGHT * this.props.data.length + REM_HEADER_HEIGHT + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) * ONE_REM_HEIGHT;
+			newHeight = (REM_ROW_HEIGHT * this.props.data.length + REM_HEADER_HEIGHT) * ONE_REM_HEIGHT;
 		} else if (this.state.rows > 0) {
-			newHeight = (REM_ROW_HEIGHT * this.state.rows + REM_HEADER_HEIGHT + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) * ONE_REM_HEIGHT;
+			newHeight = (REM_ROW_HEIGHT * this.state.rows + REM_HEADER_HEIGHT) * ONE_REM_HEIGHT;
 		} else if (this.state.rows === 0) { // only display header
 			newHeight = REM_HEADER_HEIGHT * ONE_REM_HEIGHT;
 		} else if (this.state.rows === -1) {
@@ -522,10 +521,12 @@ class FlexibleTable extends React.Component {
 
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass;
+		// We don't show TableToolbar for Fieldpicker, applying appropriate header styles for fieldpicker table
+		const ftHeaderClassname = classNames("properties-ft-table-header",
+			{ "no-rows-selected": this.props.selectedRows?.length === 0, "fieldpicker-table": this.props.scrollKey === "field-picker" });
 		// Table toolbar replaces ftHeader when 1+ rows are selected
-		// TODO: need to improve this condition when tableToolbar exists only then hide the other ftHeader.
-		const ftHeader = ((searchBar || this.props.topRightPanel) && this.props.selectedRows.length === 0)
-			? (<div className="properties-ft-table-header" ref={ (ref) => (this.flexibleTableHeader = ref) }>
+		const ftHeader = ((searchBar || this.props.topRightPanel))
+			? (<div className={ftHeaderClassname} ref={ (ref) => (this.flexibleTableHeader = ref) }>
 				{searchBar}
 				{this.props.topRightPanel}
 			</div>)
@@ -542,13 +543,11 @@ class FlexibleTable extends React.Component {
 		const ftClassname = classNames("properties-ft-control-container", { "properties-light-disabled": !this.props.light });
 
 		let tableHeight = 0;
-		const multiSelectEditRowsRem = 2 * REM_HEADER_HEIGHT; // multi-select adds two rows when selectedEditRow
-		const multiSelectEditRowsPixels = multiSelectEditRowsRem * ONE_REM_HEIGHT;
 		if (this.state.rows !== -1 && this.state.tableHeight) {
 			const remHeight = parseInt(this.state.tableHeight, 10);
-			tableHeight = (remHeight - (this.props.selectedEditRow ? multiSelectEditRowsRem : 0));
+			tableHeight = remHeight;
 		} else if (this.state.rows === -1 && this.state.dynamicHeight && this.state.dynamicHeight !== -1) {
-			tableHeight = this.state.dynamicHeight - (this.props.selectedEditRow ? multiSelectEditRowsPixels : 0);
+			tableHeight = this.state.dynamicHeight;
 		}
 
 		return (
@@ -558,7 +557,6 @@ class FlexibleTable extends React.Component {
 					<ReactResizeDetector handleWidth onResize={this._updateTableWidth}>
 						<div className={classNames("properties-ft-container-wrapper", this.props.messageInfo ? this.props.messageInfo.type : "")} style={ heightStyle }>
 							<div className={messageClass}>
-								{this.props.selectedEditRow}
 								<VirtualizedTable
 									tableLabel={this.props.tableLabel}
 									tableHeight={tableHeight}
@@ -618,7 +616,6 @@ FlexibleTable.propTypes = {
 	onSort: PropTypes.func,
 	onFilter: PropTypes.func,
 	showHeader: PropTypes.bool,
-	selectedEditRow: PropTypes.object,
 	topRightPanel: PropTypes.object,
 	scrollKey: PropTypes.string,
 	tableLabel: PropTypes.string,

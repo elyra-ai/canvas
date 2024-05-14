@@ -27,6 +27,7 @@ import { cloneDeep } from "lodash";
 class TableToolbar extends React.Component {
 	constructor(props) {
 		super(props);
+		this.reactIntl = this.props.controller.getReactIntl();
 		this.handleCancel = this.handleCancel.bind(this);
 		this.showSubPanel = this.showSubPanel.bind(this);
 		this.onSubPanelHidden = this.onSubPanelHidden.bind(this);
@@ -99,10 +100,10 @@ class TableToolbar extends React.Component {
 		}
 
 
-		const moveTopLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_TOP);
-		const moveUpLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_UP);
-		const moveDownLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DOWN);
-		const moveBottomLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_BOTTOM);
+		const moveTopLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_TOP);
+		const moveUpLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_UP);
+		const moveDownLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DOWN);
+		const moveBottomLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_BOTTOM);
 
 		return (
 			<>
@@ -269,25 +270,26 @@ class TableToolbar extends React.Component {
 		this.initialControlValue = cloneDeep(this.props.controller.getPropertyValue(this.props.propertyId));
 		this.initialMessages = this.props.controller.getAllErrorMessages();
 		this.initialStates = this.props.controller.getControlStates();
-		this.subPanelInvoker.showSubDialog("Update selected rows", this.props?.multiSelectEditSubPanel, this.onSubPanelHidden); // TODO: Get title from design
+		const multiSelectEditSubPanelTitle = formatMessage(this.reactIntl, MESSAGE_KEYS.MULTI_SELECT_EDIT_SUBPANEL_TITLE);
+		this.subPanelInvoker.showSubDialog(multiSelectEditSubPanelTitle, this.props?.multiSelectEditSubPanel, this.onSubPanelHidden);
 	}
 
 	render() {
 		if ((this.props.addRemoveRows || this.props.moveableRows || this.props.multiSelectEdit) && this.props.selectedRows.length > 0) {
 			const singleRowSelectedLabel = (this.props.smallFlyout)
-				? formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL_SMALL_FLYOUT) // item
-				:formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL); // item selected
+				? formatMessage(this.reactIntl, MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL_SMALL_FLYOUT) // item
+				: formatMessage(this.reactIntl, MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL); // item selected
 			const multiRowsSelectedLabel = (this.props.smallFlyout)
-				? formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL_SMALL_FLYOUT) // items
-				: formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL); // items selected
+				? formatMessage(this.reactIntl, MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL_SMALL_FLYOUT) // items
+				: formatMessage(this.reactIntl, MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL); // items selected
 			const title = (this.props.selectedRows.length === 1)
 				? `${this.props.selectedRows.length} ${singleRowSelectedLabel}`
 				: `${this.props.selectedRows.length} ${multiRowsSelectedLabel}`;
-			const editLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_EDIT);
-			const deleteLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DELETE);
-			const cancelLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_CANCEL);
-			const applyLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL);
-			const rejectLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL);
+			const editLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_EDIT);
+			const deleteLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DELETE);
+			const cancelLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_CANCEL);
+			const applyLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL);
+			const rejectLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
 
 			return (
 				<div className="properties-table-toolbar" >

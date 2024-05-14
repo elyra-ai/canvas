@@ -149,14 +149,15 @@ class ListControl extends AbstractTable {
 		};
 
 		const rows = this.makeRows(this.props.value, this.props.state, headers);
-		const topRightPanel = this.makeAddButtonPanel(this.props.state, tableButtonConfig);
+		const tableToolbar = this.makeTableToolbar();
+		const topRightPanel = (this.props.selectedRows.length > 0 && tableToolbar) ? tableToolbar : this.makeAddButtonPanel(this.props.state, tableButtonConfig);
 		let rowToScrollTo;
 		if (Number.isInteger(this.scrollToRow) && rows.length > this.scrollToRow) {
 			rowToScrollTo = this.scrollToRow;
 			delete this.scrollToRow;
 		}
 		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
-		const tableToolbar = this.makeTableToolbar();
+
 		const table =	(
 			<FlexibleTable
 				columns={headers}
@@ -173,7 +174,6 @@ class ListControl extends AbstractTable {
 				updateRowSelections={this.updateRowSelections}
 				light={this.props.controller.getLight() && this.props.control.light}
 				emptyTablePlaceholder={this.props.control.additionalText}
-				selectedEditRow={tableToolbar}
 			/>);
 
 		const tableContainer = (<div>

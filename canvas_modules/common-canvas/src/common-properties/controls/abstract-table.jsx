@@ -428,21 +428,8 @@ export default class AbstractTable extends React.Component {
 		return this.props.controller.getLight() && this.props.control.light;
 	}
 
-	makeSelectedEditRow(selectedRows) {
-		if (selectedRows && Array.isArray(selectedRows) && selectedRows.length > 0) {
-			// const rowsSelectedLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-			// 	MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL);
-			// const rowsSelectedAction = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-			// 	MESSAGE_KEYS.MULTI_SELECTED_ROW_ACTION);
-			// const title = selectedRows.length + " " + rowsSelectedLabel + " " + rowsSelectedAction;
-			// const rows = [];
-			// const sortFields = [];
-			// const filterFields = [];
-			// const headers = (this.props.control.header === false) ? [] : this.makeHeader(sortFields, filterFields);
-			// const showHeader = false;
-			// const value = this.props.controller.getPropertyValue({ name: this.selectSummaryPropertyName });
-			// this.makeCells(rows, value, null, this.selectSummaryPropertyName, true);
-			// const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+	makeTableToolbar(selectedRows) {
+		if ((this.props.addRemoveRows || this.props.control?.moveableRows || this.isSelectSummaryEdit(selectedRows)) && selectedRows?.length > 0) {
 			const multiSelectEditRowPropertyId = {
 				name: this.selectSummaryPropertyName,
 				row: 0
@@ -469,45 +456,9 @@ export default class AbstractTable extends React.Component {
 						isReadonlyTable={this.isReadonlyTable()}
 						smallFlyout={false}
 					/>
-					{/* {
-						selectedRows.length > 1
-							? (<div className="properties-at-selectedEditRows" >
-								<FlexibleTable
-									showHeader={showHeader}
-									columns={headers}
-									data={rows}
-									rows={0}
-									scrollKey={this.selectSummaryPropertyName}
-									tableLabel={tableLabel}
-									summaryTable
-									rowSelection={ROW_SELECTION.MULTIPLE}
-									light={this.isLightTheme()}
-									emptyTablePlaceholder={this.props.control.additionalText}
-								/>
-							</div>)
-							: null
-					} */}
 				</>
 			);
 		}
-		// return (<div className="properties-at-selectedEditRows" >
-		// 	<div className="properties-selectedEditRows-title" >
-		// 		<span >{title}</span>
-		// 	</div>
-		// 	<FlexibleTable
-		// 		showHeader={showHeader}
-		// 		columns={headers}
-		// 		data={rows}
-		// 		rows={0}
-		// 		scrollKey={this.selectSummaryPropertyName}
-		// 		tableLabel={tableLabel}
-		// 		summaryTable
-		// 		rowSelection={ROW_SELECTION.MULTIPLE}
-		// 		light={this.isLightTheme()}
-		// 		emptyTablePlaceholder={this.props.control.additionalText}
-		// 	/>
-		// </div>);
-		// }
 		return null;
 	}
 
@@ -656,18 +607,16 @@ export default class AbstractTable extends React.Component {
 		const controlValue = this.props.value;
 		this.makeCells(rows, controlValue, tableState);
 
-		// const selectedEditRow = this.props.control.rowSelection === ROW_SELECTION.MULTIPLE
-		// 	? this.makeSelectedEditRow(this.props.selectedRows)
-		// 	: null;
-		const selectedEditRow = this.makeSelectedEditRow(this.props.selectedRows);
+		const tableToolbar = this.makeTableToolbar(this.props.selectedRows);
 		let topRightPanel = null;
-		if (customButtons) {
+		if (this.props.selectedRows.length > 0 && tableToolbar) {
+			topRightPanel = tableToolbar;
+		} else if (customButtons) {
 			topRightPanel = this.makeCustomButtonsPanel(tableState, customButtons);
 		} else if (this.isReadonlyTable()) {
 			if (!this.props.hideEditButton) {
 				topRightPanel = this.makeEditButtonPanel(tableState, tableButtonConfig);
 			}
-
 		} else if (this.props.addRemoveRows) {
 			topRightPanel = this.makeAddButtonPanel(tableState, tableButtonConfig);
 		}
@@ -697,7 +646,6 @@ export default class AbstractTable extends React.Component {
 				onFilter={this.onFilter}
 				onSort={this.onSort}
 				topRightPanel={topRightPanel}
-				selectedEditRow={selectedEditRow}
 				scrollKey={this.props.control.name}
 				tableState={tableState}
 				messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)}
