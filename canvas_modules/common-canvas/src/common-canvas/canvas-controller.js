@@ -2300,7 +2300,7 @@ export default class CanvasController {
 			if (pasteObjects) {
 				data.objects = pasteObjects;
 			} else {
-				return;
+				return false;
 			}
 		}
 
