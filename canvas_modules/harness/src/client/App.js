@@ -86,7 +86,7 @@ import { Add, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowDat
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
 	StopFilledAlt, Subtract, TextScale, TouchInteraction } from "@carbon/react/icons";
 
-import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "@carbon/react";
+import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
 
 import {
 	SIDE_PANEL_CANVAS,
@@ -146,10 +146,13 @@ import FormsService from "./services/FormsService";
 
 import ExpressionInfo from "./constants/json/functionlist.json";
 
+import { Theme } from "@carbon/react";
+
 class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			darkMode: false,
 			breadcrumbsDef: [],
 			consoleout: [],
 			consoleOpened: false,
@@ -2393,6 +2396,13 @@ class App extends React.Component {
 		);
 	}
 
+	hadnleThemeChange() {
+		this.setState((prevState) => ({
+			...prevState,
+			darkMode: !prevState.darkMode
+		}));
+	}
+
 	render() {
 		this.canvasController.log("-------------------------------");
 		this.canvasController.log("Test Harness render");
@@ -2407,6 +2417,7 @@ class App extends React.Component {
 		const consoleLabel = "console";
 		const downloadFlowLabel = "Download pipeline flow";
 		const downloadPaletteLabel = "Download palette";
+		const switchTheme = "Switch Theme";
 		const apiLabel = "Common Canvas API";
 		const docsLabel = "Elyra Canvas Docs";
 		const commonPropertiesModalLabel = "Common Properties";
@@ -2438,6 +2449,16 @@ class App extends React.Component {
 					</li>
 					<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
 						{breadcrumbs}
+					</li>
+					<li className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={switchTheme}>
+						<Toggle
+							size="sm"
+							labelA="Light"
+							labelB="Dark"
+							toggled={this.state.darkMode}
+							onToggle={this.hadnleThemeChange.bind(this)}
+							className="toggle-theme"
+						/>
 					</li>
 					<li id="harness-action-bar-sidepanel-properties" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
 						data-tooltip-id="toolbar-tooltip" data-tooltip-content={commonPropertiesModalLabel}
@@ -2802,7 +2823,9 @@ class App extends React.Component {
 
 		return (
 			<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
-				{mainView}
+				<Theme theme={this.state.darkMode ? "g100" : "g10"}>
+					{mainView}
+				</Theme>
 			</IntlProvider>
 		);
 	}

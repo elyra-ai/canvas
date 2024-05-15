@@ -113,7 +113,7 @@ $harness-navbar-icon-width: 48px;
 	display: block;
 	align-items: center;
 
-	a {
+	a, .toggle-theme {
 		display: block;
 		text-align: center;
 		padding: 14px;
@@ -130,6 +130,10 @@ $harness-navbar-icon-width: 48px;
 			color: $icon_primary;
 		}
 	}
+
+	.toggle-theme {
+        width: 65px;
+    }
 }
 
 .harness-action-bar-sidepanel {
