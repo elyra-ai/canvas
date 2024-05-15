@@ -2294,6 +2294,14 @@ export default class CanvasController {
 				data.editType === "deconstructSuperNode" ||
 				data.editType === "convertSuperNodeExternalToLocal") {
 			data = this.preProcessForExternalPipelines(data);
+
+		} else if (data.editType === "paste") {
+			const pasteObjects = this.objectModel.getObjectsToPaste();
+			if (pasteObjects) {
+				data.objects = pasteObjects;
+			} else {
+				return false;
+			}
 		}
 
 		// Check with host application if it wants to proceed with the command
@@ -2618,13 +2626,9 @@ export default class CanvasController {
 				break;
 			}
 			case "paste": {
-				const pasteObjects = this.objectModel.getObjectsToPaste();
-				if (pasteObjects) {
-					data.objects = pasteObjects;
-					command = new PasteAction(data, this);
-					this.commandStack.do(command);
-					data = command.getData();
-				}
+				command = new PasteAction(data, this);
+				this.commandStack.do(command);
+				data = command.getData();
 				break;
 			}
 			case "undo": {
