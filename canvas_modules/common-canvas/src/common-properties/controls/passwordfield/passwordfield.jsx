@@ -27,6 +27,8 @@ import { formatMessage } from "./../../util/property-utils";
 class PasswordControl extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.reactIntl = props.controller.getReactIntl();
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 	}
 

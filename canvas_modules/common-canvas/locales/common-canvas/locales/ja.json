@@ -9,7 +9,7 @@
   "edit.pasteSelection": "貼り付け",
   "canvas.label": "キャンバス",
   "canvas.addComment": "新規コメント",
-  "canvas.selectAll": "すべてを選択する",
+  "canvas.selectAll": "すべて選択",
   "canvas.undo": "元に戻す",
   "canvas.redo": "やり直し",
   "canvas.undoCommand": "元に戻す: {undo_command}",
@@ -34,7 +34,7 @@
   "node.convertSupernodeLocalToExternal": "ローカルから外部に変換",
   "node.renameNode": "名前の変更",
   "canvas.validateFlow": "フローの検証",
-  "node.editNode": "開く",
+  "node.editNode": "オープン",
   "node.editMenu": "編集",
   "node.disconnectNode": "切断",
   "node.saveToPalette": "パレットに保存",
@@ -50,5 +50,5 @@
   "texttoolbar.numberedListAction": "番号付きリスト",
   "texttoolbar.titleAction": "役職",
   "texttoolbar.subheaderAction": "サブヘッダー",
-  "texttoolbar.bodyAction": "本文"
+  "texttoolbar.bodyAction": "Body"
 }

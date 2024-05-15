@@ -75,7 +75,7 @@ class EditorForm extends React.Component {
 		this.visibleTearsheet = null;
 		this.defaultOpenTab = props.activeTab;
 		this.alertOpenTab = null;
-
+		this.scrollToAlert = false;
 	}
 
 
@@ -87,6 +87,18 @@ class EditorForm extends React.Component {
 			this.messages = this._getGroupedMessages(nextProps.messages);
 		}
 		return true;
+	}
+
+	componentDidUpdate(prevProps) {
+		// Scroll to the selected accordion even when clicked from Alerts tab
+		if (this.scrollToAlert || prevProps.activeTab !== this.props.activeTab) {
+			const activeTabId = this.props.activeTab;
+			const activeTabElement = document.getElementsByClassName(`${activeTabId}`);
+			if (activeTabId && activeTabElement.length > 0) {
+				activeTabElement[0].scrollIntoView({ behavior: "smooth" });
+			}
+			this.scrollToAlert = false;
+		}
 	}
 
 	_getMessageCountForCategory(tab) {
@@ -138,6 +150,7 @@ class EditorForm extends React.Component {
 		if (this.defaultOpenTab === this.alertOpenTab) {
 			this.defaultOpenTab = null;
 		}
+		this.scrollToAlert = true;
 		this.props.setActiveTab(control.parentCategoryId);
 	}
 
@@ -205,7 +218,7 @@ class EditorForm extends React.Component {
 								open={ this.defaultOpenTab === tab.group || this.alertOpenTab === tab.group }
 								onHeadingClick={this._showCategoryPanel.bind(this, tab.group)}
 								className={`${classNames("properties-category-content",
-									{ "show": categoryOpen })}`}
+									{ "show": categoryOpen }, tab.group)}`}
 							>
 								{panelItems}
 								{additionalComponent}
@@ -242,7 +255,7 @@ class EditorForm extends React.Component {
 
 		if (this.props.rightFlyout && this.props.categoryView !== CATEGORY_VIEW.TABS) {
 			return (
-				<>
+				<React.Fragment key={"tabContent." + key} >
 					{tabContent.length ? (<div key={"cat." + key} className="properties-categories">
 						{tabContent}
 					</div>) : null}
@@ -251,7 +264,7 @@ class EditorForm extends React.Component {
 							{tabContentAcc}
 						</div>
 					</Accordion>) : null}
-				</>
+				</React.Fragment>
 			);
 		}
 		return (
