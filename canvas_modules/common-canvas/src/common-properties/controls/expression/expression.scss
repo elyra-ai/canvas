@@ -23,7 +23,7 @@
 		width: 100%;
 		background: $field-02;
 		color: $text-primary;
-	
+
 		.cm-gutters {
 			border-right: none;
 			background-color: inherit;
@@ -52,7 +52,8 @@
 			background-color: $background-active;
 		}
 		&.cm-focused .cm-selectionBackground, ::selection {
-			background: $support-info-inverse !important; //add !important to override the selected text style
+			/* stylelint-disable-next-line declaration-no-important */
+			background: $support-info-inverse !important; // add !important to override the selected text style
 		}
 		.cm-tooltip-autocomplete {
 			z-index: 1110;
