@@ -39,7 +39,7 @@ export default class JsxIconsCanvas extends React.Component {
 
 	getConvertedPalette(palette) {
 		palette.categories.forEach((cat) => {
-			cat.image = this.convertOpToImage(cat.image);
+			cat.image = this.convertOpToImage(cat.app_data.icon);
 			cat.node_types.forEach((nt) => {
 				nt.app_data.ui_data.image = this.convertOpToImage(nt.op);
 			});
@@ -60,7 +60,8 @@ export default class JsxIconsCanvas extends React.Component {
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "jsx-icons-canvas",
 			enableNodeFormatType: "Horizontal",
-			enableMarkdownInComments: true
+			enableMarkdownInComments: true,
+			enableContextToolbar: true
 		});
 		return config;
 	}

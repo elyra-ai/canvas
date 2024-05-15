@@ -4,7 +4,10 @@
 	  {
 		"label": "Inputs",
 		"description": "Inputs category using the 'FolderOpen' Carbon icon",
-		"image": "FolderOpen",
+		"image": "",
+		"app_data": {
+			"icon": "FolderOpen"
+		},
 		"id": "canvas-inputs",
 		"node_types": [
 		  {
@@ -70,7 +73,10 @@
 	  {
 		"label": "Operations",
 		"description": "Operations category using the 'Folder' Carbon icon",
-		"image": "Folder",
+		"image": "",
+		"app_data": {
+			"icon": "Folder"
+		},
 		"id": "canvas-operations",
 		"node_types": [
 		  {
@@ -305,7 +311,10 @@
 	  {
 		"label": "Outputs",
 		"description": "Outputs category using the 'FolderMoveTo' Carbon icon",
-		"image": "FolderMoveTo",
+		"image": "",
+		"app_data": {
+			"icon": "FolderMoveTo"
+		},
 		"id": "canvas-outputs",
 		"node_types": [
 		  {

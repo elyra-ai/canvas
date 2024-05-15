@@ -2692,10 +2692,11 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns a DOM element for the image of the node passed in to be appended
-	// to the node.
+	// to the node element.
 	getImageElement(node) {
 		const nodeImage = this.getNodeImage(node);
 		const imageType = this.getImageType(nodeImage);
+
 		if (imageType === "jsx") {
 			return d3.create("svg:foreignObject")
 				.attr("tabindex", -1)
@@ -2704,14 +2705,12 @@ export default class SVGCanvasRenderer {
 
 		} else if (imageType === "svg") {
 			return d3.create("svg")
-				.attr("tabindex", -1)
 				.attr("class", "d3-node-image")
 				.node();
 
 		}
 		// If imageType is "image" or null, we create an image element
 		return d3.create("svg:image")
-			.attr("tabindex", -1)
 			.attr("class", "d3-node-image")
 			.node();
 	}
