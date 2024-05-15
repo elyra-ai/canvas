@@ -35,6 +35,7 @@ export default class JsxIconsCanvas extends React.Component {
 		this.canvasController.setPipelineFlow(this.getConvertedFlow(JsxIconsCanvasFlow));
 
 		this.getConfig = this.getConfig.bind(this);
+		this.beforeEditActionHandler = this.beforeEditActionHandler.bind(this);
 	}
 
 	getConvertedPalette(palette) {
@@ -95,12 +96,24 @@ export default class JsxIconsCanvas extends React.Component {
 		}
 	}
 
+	// If nodes are pasted into the canvas ensure their image fields
+	// are set appropriately.
+	beforeEditActionHandler(data, command) {
+		if (data.editType === "paste") {
+			data.objects?.nodes?.forEach((n) => {
+				n.image = this.convertOpToImage(n.op);
+			});
+		}
+		return data;
+	}
+
 	render() {
 		const config = this.getConfig();
 
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
+				beforeEditActionHandler={this.beforeEditActionHandler}
 				config={config}
 			/>
 		);
