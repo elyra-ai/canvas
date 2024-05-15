@@ -2396,7 +2396,7 @@ class App extends React.Component {
 		);
 	}
 
-	hadnleThemeChange() {
+	handleThemeChange() {
 		this.setState((prevState) => ({
 			...prevState,
 			darkMode: !prevState.darkMode
@@ -2456,7 +2456,7 @@ class App extends React.Component {
 							labelA="Light"
 							labelB="Dark"
 							toggled={this.state.darkMode}
-							onToggle={this.hadnleThemeChange.bind(this)}
+							onToggle={this.handleThemeChange.bind(this)}
 							className="toggle-theme"
 						/>
 					</li>
