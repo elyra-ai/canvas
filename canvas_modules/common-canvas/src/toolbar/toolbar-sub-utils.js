@@ -35,10 +35,13 @@ export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection,
 
 	const thisAreaRect = areaRef.getBoundingClientRect();
 
-	const outsideBottom = thisAreaRect.bottom - containingDivRect.bottom;
-	const outsideRight = thisAreaRect.right - containingDivRect.right;
+	// Calculate the amount that the panel/menu is outside of the containing div
+	// edges. Positive value means it is outside. Negative is inside.
+	const outsideBottom = actionItemRect.bottom + thisAreaRect.height - containingDivRect.bottom;
 
 	if (expandDirection === "vertical") {
+		const outsideRight = actionItemRect.left + thisAreaRect.width - containingDivRect.right;
+
 		if (outsideBottom > 0) {
 			const topGap = actionItemRect.top - containingDivRect.top;
 			const newTop = (topGap > thisAreaRect.height)
@@ -54,6 +57,8 @@ export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection,
 		}
 
 	} else {
+		const outsideRight = actionItemRect.right + thisAreaRect.width - containingDivRect.right;
+
 		if (outsideBottom > 0) {
 			const newTop = thisAreaRect.top - outsideBottom - 2;
 			areaRef.style.top = newTop + "px";
