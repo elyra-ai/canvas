@@ -434,6 +434,19 @@ $link-highlight-color: $support-info;
 	color: $icon-primary;
 }
 
+// Styles for JSX node and decoration image. Making the svg
+// inherit the width and height from the containing foreignObject
+// will cause the SVG to stretch to whatever dimensions the app
+// has set for the node or decoration image.
+.d3-foreign-object-node-image,
+.d3-foreign-object-dec-jsx {
+	outline: none;
+	svg {
+		width: inherit;
+		height: inherit;
+	}
+}
+
 // Remove the foreign object outline when the foreign object has focus.
 .d3-foreign-object-dec-ext:focus {
 	outline: none;
