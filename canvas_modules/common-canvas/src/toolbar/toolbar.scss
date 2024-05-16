@@ -74,6 +74,10 @@ $toolbar-divider-width: 1px;
 			& .overflow-item {
 				padding: 6px;
 			}
+
+			& .toolbar-right-chevron {
+				padding: 4px 0 0;
+			}
 		}
 
 		.toolbar-popover-list button {
@@ -237,7 +241,7 @@ $toolbar-divider-width: 1px;
 	}
 
 	& .toolbar-right-chevron {
-		padding: 4px 0 0;
+		padding: 9px 0 2px;
 		pointer-events: none;
 	}
 
