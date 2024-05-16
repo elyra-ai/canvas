@@ -36,8 +36,8 @@ $toolbar-divider-width: 1px;
 	-webkit-user-drag: none;
 
 	&:focus {
-		border-color: $button-tertiary;
-		box-shadow: inset 0 0 0 2px $button-tertiary;
+		border-color: transparent;
+		box-shadow: inset 0 0 0 1px $focus;
 	}
 
 	/* Small size toolbar  */
