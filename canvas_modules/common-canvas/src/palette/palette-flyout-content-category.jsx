@@ -164,7 +164,10 @@ class PaletteFlyoutContentCategory extends React.Component {
 	getItemImage() {
 		let itemImage = null;
 		if (this.props.category.image && this.props.category.image !== "") {
-			if (this.props.category.image.endsWith(".svg")) {
+			if (typeof this.props.category.image === "object" && React.isValidElement(this.props.category.image)) {
+				itemImage = this.props.category.image;
+
+			} else if (this.props.category.image.endsWith(".svg")) {
 				itemImage = (
 					<div>
 						<SVG src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" />
