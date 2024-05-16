@@ -152,7 +152,6 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			darkMode: false,
 			breadcrumbsDef: [],
 			consoleout: [],
 			consoleOpened: false,
@@ -2399,7 +2398,7 @@ class App extends React.Component {
 	handleThemeChange() {
 		this.setState((prevState) => ({
 			...prevState,
-			darkMode: !prevState.darkMode
+			light: !prevState.light,
 		}));
 	}
 
@@ -2455,7 +2454,7 @@ class App extends React.Component {
 							size="sm"
 							labelA="Light"
 							labelB="Dark"
-							toggled={this.state.darkMode}
+							toggled={!this.state.light}
 							onToggle={this.handleThemeChange.bind(this)}
 							className="toggle-theme"
 						/>
@@ -2823,7 +2822,7 @@ class App extends React.Component {
 
 		return (
 			<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
-				<Theme theme={this.state.darkMode ? "g100" : "g10"}>
+				<Theme theme={this.state.light ? "g10" : "g90"}>
 					{mainView}
 				</Theme>
 			</IntlProvider>

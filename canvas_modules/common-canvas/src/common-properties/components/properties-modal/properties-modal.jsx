@@ -16,6 +16,7 @@
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Theme } from "@carbon/react";
 import { Modal } from "@carbon/react";
 import classNames from "classnames";
 import { Portal } from "react-portal";
@@ -40,21 +41,23 @@ export default class PropertiesModal extends Component {
 
 		return (
 			<Portal>
-				<Modal
-					className={classNames("properties-modal", { "noButtons": this.props.showPropertiesButtons === false }, this.props.classNames)}
-					open
-					modalHeading={this.props.title}
-					primaryButtonText={this.props.applyLabel}
-					secondaryButtonText={this.props.rejectLabel}
-					onRequestSubmit={this.props.okHandler}
-					onSecondarySubmit={this.props.cancelHandler}
-					aria-label=""
-					size={modalSize}
-				>
-					<div className="properties-modal-children">
-						{this.props.children}
-					</div>
-				</Modal>
+				<Theme theme={this.props.light ? "g10" : "g90"}>
+					<Modal
+						className={classNames("properties-modal", { "noButtons": this.props.showPropertiesButtons === false }, this.props.classNames)}
+						open
+						modalHeading={this.props.title}
+						primaryButtonText={this.props.applyLabel}
+						secondaryButtonText={this.props.rejectLabel}
+						onRequestSubmit={this.props.okHandler}
+						onSecondarySubmit={this.props.cancelHandler}
+						aria-label=""
+						size={modalSize}
+					>
+						<div className="properties-modal-children">
+							{this.props.children}
+						</div>
+					</Modal>
+				</Theme>
 			</Portal>
 		);
 	}
@@ -69,5 +72,6 @@ PropertiesModal.propTypes = {
 	showPropertiesButtons: PropTypes.bool,
 	applyLabel: PropTypes.string,
 	rejectLabel: PropTypes.string,
-	classNames: PropTypes.string
+	classNames: PropTypes.string,
+	light: PropTypes.bool
 };

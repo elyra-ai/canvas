@@ -521,6 +521,7 @@ class PropertiesMain extends React.Component {
 				rightFlyout={this.props.propertiesConfig.rightFlyout}
 				categoryView={this.props.propertiesConfig.categoryView}
 				showAlertsTab={this.props.propertiesConfig.showAlertsTab !== false}
+				light={this.props.light}
 			/>);
 
 			if (this.props.propertiesConfig.containerType === "Editing") {
@@ -561,6 +562,7 @@ class PropertiesMain extends React.Component {
 					cancelHandler={cancelHandler}
 					showPropertiesButtons={this.state.showPropertiesButtons}
 					applyOnBlur={this.props.propertiesConfig.applyOnBlur}
+					light={this.props.light}
 				/>);
 			} else { // Modal
 				propertiesDialog = (<PropertiesModal
@@ -572,6 +574,7 @@ class PropertiesMain extends React.Component {
 					showPropertiesButtons={this.state.showPropertiesButtons}
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
+					light={this.props.light}
 				>
 					{editorForm}
 				</PropertiesModal>);
