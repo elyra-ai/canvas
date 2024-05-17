@@ -118,7 +118,7 @@ $panel-border-color: $border-subtle-01;
 	.toolbar-overflow-item {
 		button:focus {
 			border-color: transparent;
-			box-shadow: inset 2px 2px $button-tertiary, inset -6px -2px $button-tertiary;
+			box-shadow: inset 2px 2px $focus, inset -6px -2px $focus;
 		}
 	}
 }
