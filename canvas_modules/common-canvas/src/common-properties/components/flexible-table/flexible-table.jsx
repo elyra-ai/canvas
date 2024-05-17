@@ -524,10 +524,13 @@ class FlexibleTable extends React.Component {
 		// We don't show TableToolbar for Fieldpicker, applying appropriate header styles for fieldpicker table
 		const ftHeaderClassname = classNames("properties-ft-table-header",
 			{ "no-rows-selected": this.props.selectedRows?.length === 0, "fieldpicker-table": this.props.scrollKey === "field-picker" });
+		// When topRightPanel has Add button, it has this.props.topRightPanel.props.className = "properties-at-buttons-container"
+		const topRightPanelHasTableToolbar = (typeof this.props.topRightPanel !== "undefined" && this.props.topRightPanel !== null &&
+			typeof this.props.topRightPanel.props.className === "undefined");
 		// Table toolbar replaces ftHeader when 1+ rows are selected
 		const ftHeader = ((searchBar || this.props.topRightPanel))
 			? (<div className={ftHeaderClassname} ref={ (ref) => (this.flexibleTableHeader = ref) }>
-				{searchBar}
+				{ topRightPanelHasTableToolbar ? null : searchBar}
 				{this.props.topRightPanel}
 			</div>)
 			: null;

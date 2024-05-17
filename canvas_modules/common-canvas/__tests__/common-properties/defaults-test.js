@@ -138,6 +138,12 @@ describe("add rows in tables with correct default values", () => {
 		expect(tableRows).to.have.length(1);
 		expect(wideflyout.find("div[data-id='properties-columnStructureTableDefault_0_1'] button").text()).to.equal("Ascending");
 
+		// added row is selected by default which shows table toolbar
+		// Cancel row selections from table toolbar, so that "Add columns" button shows up in the header
+		const tableToolbar = wrapper.find("div.properties-table-toolbar");
+		const cancelButton = tableToolbar.find("button.properties-action-cancel");
+		cancelButton.simulate("click");
+
 		// change the parameter_ref control value and then add a new row.
 		renderedController.updatePropertyValue({ name: "CST_DefaultSortOrder" }, "Descending");
 		fieldPickerWrapper = tableUtils.openFieldPicker(wrapper, "properties-structureTableDefault-default");

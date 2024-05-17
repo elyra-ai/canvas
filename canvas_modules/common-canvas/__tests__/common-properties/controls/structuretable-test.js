@@ -361,19 +361,39 @@ describe("structuretable control renders correctly", () => {
 			</Provider>
 		);
 
-		expect(wrapper.find("div[data-id='properties-keys']")).to.have.length(1);
+		const tableWrapper = wrapper.find("div[data-id='properties-keys']");
+		expect(tableWrapper).to.have.length(1);
 		// should have a search bar
 		expect(wrapper.find("div.properties-ft-search-container")).to.have.length(1);
-		// should have add/remove buttons
+		// should have add button
 		const buttons = wrapper.find(".properties-at-buttons-container");
 		expect(buttons).to.have.length(1);
 		expect(buttons.find("button.properties-add-fields-button")).to.have.length(1);
-		expect(buttons.find("button.properties-remove-fields-button")).to.have.length(1);
-		expect(buttons.find("button.properties-remove-fields-button").prop("disabled")).to.equal(true);
-		// should have moveable table rows
-		const moveableRowsContainer = wrapper.find(".properties-mr-button-container");
-		expect(moveableRowsContainer).to.have.length(1);
-		expect(moveableRowsContainer.find("button.table-row-move-button[disabled=true]")).to.have.length(4);
+		// verify table toolbar doesn't exist
+		let tableToolbar = wrapper.find("div.properties-table-toolbar");
+		expect(tableToolbar).to.have.length(0);
+
+		// select the first row in the table
+		const tableData = tableUtils.getTableRows(tableWrapper);
+		expect(tableData).to.have.length(6);
+
+		tableUtils.selectCheckboxes(tableData, [0]);
+
+		// verify table toolbar exists
+		tableToolbar = wrapper.find("div.properties-table-toolbar");
+		expect(tableToolbar).to.have.length(1);
+
+		// table toolbar should have delete and row move buttons
+		const deleteButton = tableToolbar.find("button.properties-action-delete");
+		expect(deleteButton).to.have.length(1);
+		const moveTopButton = tableToolbar.find("button.table-row-move-top-button");
+		const moveUpButton = tableToolbar.find("button.table-row-move-up-button");
+		const moveDownButton = tableToolbar.find("button.table-row-move-down-button");
+		const moveBottomButton = tableToolbar.find("button.table-row-move-bottom-button");
+		expect(moveTopButton).to.have.length(1);
+		expect(moveUpButton).to.have.length(1);
+		expect(moveDownButton).to.have.length(1);
+		expect(moveBottomButton).to.have.length(1);
 	});
 
 	it("Should display header labels with tooltip and info icon correctly", () => {
@@ -383,7 +403,6 @@ describe("structuretable control renders correctly", () => {
 		const table = propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnDefaultIndex-summary-panel");
 		const header = tableUtils.getTableHeaderRows(table);
 		expect(header).to.have.length(1);
-		// console.log(header.debug());
 
 		const columns = header.find(".properties-vt-column");
 		expect(columns).to.have.length(7);
@@ -414,8 +433,14 @@ describe("structuretable control renders correctly", () => {
 			</Provider>
 		);
 
+		let tableWrapper = wrapper.find("div[data-id='properties-keys']");
+		// Clear selected rows from table toolbar
+		const tableToolbar = wrapper.find("div.properties-table-toolbar");
+		const cancelButton = tableToolbar.find("button.properties-action-cancel");
+		cancelButton.simulate("click");
+
 		// select the add column button
-		const tableWrapper = wrapper.find("div[data-id='properties-keys']");
+		tableWrapper = wrapper.find("div[data-id='properties-keys']");
 		const addFieldsButtons = tableWrapper.find("button.properties-add-fields-button"); // field picker buttons
 		addFieldsButtons.at(0).simulate("click"); // open filter picker
 
@@ -423,7 +448,7 @@ describe("structuretable control renders correctly", () => {
 		expect(openFieldPicker).to.have.property("callCount", 1);
 	});
 
-	it("should select row and remove button row should be removed", () => {
+	it("should select row and click delete button, row should be removed", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
@@ -438,10 +463,10 @@ describe("structuretable control renders correctly", () => {
 			</Provider>
 		);
 
-		// ensure the remove column button is disabled
-		let tableWrapper = wrapper.find("div[data-id='properties-keys']");
-		let removeFieldsButtons = tableWrapper.find("button.properties-remove-fields-button"); // field picker buttons
-		expect(removeFieldsButtons.prop("disabled")).to.equal(true);
+		// ensure the table toolbar doesn't exist
+		const tableWrapper = wrapper.find("div[data-id='properties-keys']");
+		let tableToolbar = wrapper.find("div.properties-table-toolbar");
+		expect(tableToolbar).to.have.length(0);
 
 		// select the first row in the table
 		const tableData = tableUtils.getTableRows(tableWrapper);
@@ -449,11 +474,12 @@ describe("structuretable control renders correctly", () => {
 
 		tableUtils.selectCheckboxes(tableData, [0]);
 
-		// ensure removed button is enabled and select it
-		tableWrapper = wrapper.find("div[data-id='properties-keys']");
-		removeFieldsButtons = tableWrapper.find("button.properties-remove-fields-button"); // field picker buttons
-		expect(removeFieldsButtons.prop("disabled")).to.equal(false);
-		removeFieldsButtons.at(0).simulate("click"); // remove a row
+		// ensure table toolbar has delete button select it
+		tableToolbar = wrapper.find("div.properties-table-toolbar");
+		expect(tableToolbar).to.have.length(1);
+		const deleteButton = tableToolbar.find("button.properties-action-delete");
+		expect(deleteButton).to.have.length(1);
+		deleteButton.simulate("click"); // remove a row
 
 		// validate the first row is deleted
 		const tableRows = controller.getPropertyValue(propertyId);
@@ -795,16 +821,18 @@ describe("structuretable multiselect edit works", () => {
 		// select the first row in the table
 		tableUtils.selectCheckboxes(wrapper, [0]);
 
-		// verify that the select summary row is not present
-		let selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
-		expect(selectedEditRow).to.have.length(0);
+		// verify that the edit button is not present in table toolbar
+		const tableToolbar = wrapper.find("div.properties-table-toolbar");
+		expect(tableToolbar).to.have.length(1);
+		let editButton = wrapper.find("button.properties-action-multi-select-edit");
+		expect(editButton).to.have.length(0);
 
-		// multiple select the four row in the table
+		// multiple select the four rows in the table
 		tableUtils.selectCheckboxes(wrapper, [1, 2, 3]);
 
-		// verify that the select summary row is present
-		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
-		expect(selectedEditRow).to.have.length(1);
+		// verify that the edit button is present
+		editButton = wrapper.find("button.properties-action-multi-select-edit");
+		expect(editButton).to.have.length(1);
 	});
 	it("mse table should show header even when rows are filtered", () => {
 		propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
@@ -812,10 +840,11 @@ describe("structuretable multiselect edit works", () => {
 		const tableData = tableUtils.getTableRows(wrapper);
 		expect(tableData).to.have.length(4);
 
-		// verify that the select summary row is not present
-		let selectedEditRow = wrapper.find("div.properties-at-selectedEditRows").find("tr");
-		expect(selectedEditRow).to.have.length(0);
+		// verify that the table toolbar is not present
+		let tableToolbar = wrapper.find("div.properties-table-toolbar");
+		expect(tableToolbar).to.have.length(0);
 
+		// Select some rows
 		const input = wrapper.find("div.properties-ft-search-container").find("input");
 		expect(input).to.have.length(1);
 		input.simulate("change", { target: { value: "k" } });
@@ -827,20 +856,16 @@ describe("structuretable multiselect edit works", () => {
 		expect(selectedRows[0]).to.equal(2);
 		expect(selectedRows[1]).to.equal(3);
 
-		// verify that the select summary row is present
-		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows").find(".properties-vt-row-checkbox");
-		expect(selectedEditRow).to.have.length(1);
-
-		// verify the select header row is 32px in height
-		const selectHeaderTable = wrapper.find("div.properties-at-selectedEditRows").find("div.properties-ft-container-wrapper");
-		const heightStyle = selectHeaderTable.prop("style");
-		expect(heightStyle).to.eql({ "height": 32 });
+		// verify that the table toolbar is present and it has edit button
+		tableToolbar = wrapper.find("div.properties-table-toolbar");
+		expect(tableToolbar).to.have.length(1);
+		const editButton = tableToolbar.find("button.properties-action-multi-select-edit");
+		expect(editButton).to.have.length(1);
 	});
 });
 
 describe("structuretable multiselect edit works incrementally", () => {
 	const HEADER_CHECKBOX_SELECT_ALL = "div[data-role='properties-header-row'] div.properties-vt-header-checkbox input[type='checkbox']";
-	const HEADER_COLUMN_SELECT_DROPDOWN = "div.properties-vt-row-non-interactive div.ReactVirtualized__Table__rowColumn";
 	const SELECT_ALL_ROWS = "div[data-role='properties-data-row'] div.properties-vt-row-checkbox input[type='checkbox']";
 
 	const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
@@ -856,26 +881,38 @@ describe("structuretable multiselect edit works incrementally", () => {
 			const rowCheckbox = wrapper.find(SELECT_ALL_ROWS).at(row);
 			expect(rowCheckbox.props().checked).to.be.true;
 		}
-	});
-	it("Checks & Sets MSE Value for first two", () => {
-		const oneOfSelect = wrapper.find(HEADER_COLUMN_SELECT_DROPDOWN)
-			.at(2);
-		const oneOfSelectOptions = oneOfSelect.find("option");
-		expect(oneOfSelectOptions.at(0).instance().selected).to.equal(true);
-		expect(oneOfSelectOptions.at(0).text()).to.equal("Select");
-		expect(oneOfSelectOptions).to.have.length(5);
 
-		oneOfSelect.find("select").simulate("change", { target: { value: "Baseball" } });
+		// Click edit button in table toolbar
+		let tableToolbar = wrapper.find("div.properties-table-toolbar");
+		let editButton = tableToolbar.find("button.properties-action-multi-select-edit");
+		editButton.simulate("click");
 
-		const rowValues = renderedController.getPropertyValue(propertyIdMSEII);
+		// A new panel opens which shows editable columns
+		let wideFlyoutPanel = wrapper.find(".properties-wf-children");
+		let dropdownWrapper = wideFlyoutPanel.find("div[data-id='properties-ctrl-dummy_entry_sport_name']").find(".properties-dropdown");
+		let dropdownButton = dropdownWrapper.find("button");
+		dropdownButton.simulate("click");
+		let dropdownList = wrapper.find("li.cds--list-box__menu-item");
+		expect(dropdownList).to.have.length(4);
+		// Select "Baseball" for Sport
+		expect(dropdownList.at(3).text()).to.equal("Baseball");
+		dropdownList.at(3).simulate("click");
+
+		// Save wide flyout
+		wrapper.find(".properties-modal-buttons").find("button.properties-apply-button")
+			.at(0)
+			.simulate("click");
+
+		// verify selected rows have "Baseball" selected in Sports column
+		let rowValues = renderedController.getPropertyValue(propertyIdMSEII);
 		for (const row of [0, 1]) {
 			expect(rowValues[row][2]).to.equal("Baseball");
 		}
 		for (const row of [2, 3]) {
 			expect(rowValues[row][2]).to.not.equal("Baseball");
 		}
-	});
-	it("Selects All using header shortcut", () => {
+
+		// Select all rows using header shortcut
 		wrapper.find(HEADER_CHECKBOX_SELECT_ALL)
 			.simulate("change", { target: { checked: true } });
 
@@ -885,11 +922,27 @@ describe("structuretable multiselect edit works incrementally", () => {
 			const rowCheckbox = wrapper.find(SELECT_ALL_ROWS).at(row);
 			expect(rowCheckbox.props().checked).to.be.true;
 		}
-	});
-	it("Sets MSE Value for selected", () => {
-		wrapper.find(HEADER_COLUMN_SELECT_DROPDOWN + " select")
-			.simulate("change", { target: { value: "Baseball" } });
-		const rowValues = renderedController.getPropertyValue(propertyIdMSEII);
+
+		// Select Baseball for Sport again
+		tableToolbar = wrapper.find("div.properties-table-toolbar");
+		editButton = tableToolbar.find("button.properties-action-multi-select-edit");
+		editButton.simulate("click");
+
+		wideFlyoutPanel = wrapper.find(".properties-wf-children");
+		dropdownWrapper = wideFlyoutPanel.find("div[data-id='properties-ctrl-dummy_entry_sport_name']").find(".properties-dropdown");
+		dropdownButton = dropdownWrapper.find("button");
+		dropdownButton.simulate("click");
+		dropdownList = wrapper.find("li.cds--list-box__menu-item");
+		expect(dropdownList).to.have.length(4);
+		expect(dropdownList.at(3).text()).to.equal("Baseball");
+		dropdownList.at(3).simulate("click");
+
+		// Save wide flyout
+		wrapper.find(".properties-modal-buttons").find("button.properties-apply-button")
+			.at(0)
+			.simulate("click");
+
+		rowValues = renderedController.getPropertyValue(propertyIdMSEII);
 		for (const row of [0, 1, 2, 3]) {
 			expect(rowValues[row][2]).to.equal("Baseball");
 		}

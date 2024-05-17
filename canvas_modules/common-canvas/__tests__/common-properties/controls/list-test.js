@@ -128,7 +128,6 @@ describe("list renders correctly for array[string]", () => {
 		});
 
 		expect(wrapper.find("button.properties-add-fields-button")).to.have.length(1);
-		expect(wrapper.find("button.properties-remove-fields-button")).to.have.length(1);
 		expect(getTableRows(wrapper)).to.have.length(2);
 	});
 
@@ -156,7 +155,7 @@ describe("list renders correctly for array[string]", () => {
 		]);
 	});
 
-	it("should add/remove Textfield rows to `list` control when clicking add/remove button", () => {
+	it("should add/remove Textfield rows to `list` control when clicking add/delete button", () => {
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
 				<List
@@ -168,24 +167,23 @@ describe("list renders correctly for array[string]", () => {
 			</Provider>
 		);
 		const addButton = wrapper.find("button.properties-add-fields-button");
-		let removeButton = wrapper.find("button.properties-remove-fields-button");
 
 		// add 2 rows
 		addButton.simulate("click");
 		addButton.simulate("click");
 		expect(controller.getPropertyValue(listStringPopertyId)).to.eql(listStringCurrentValues.concat(["", ""]));
 		expect(wrapper.find("TextfieldControl")).to.have.length(4); // Ensure new Textfields are added
-		expect(removeButton.prop("disabled")).to.equal(true);
 
 		// select the third row in the table
 		const tableData = getTableRows(wrapper);
 		expect(tableData).to.have.length(4);
 		selectCheckboxes(wrapper, [2]);
-		// ensure removed button is enabled and select it
-		removeButton = wrapper.find("button.properties-remove-fields-button");
-		expect(removeButton.prop("disabled")).to.equal(false);
-		removeButton.simulate("click");
-		// validate the third row is deleted
+		// ensure Table toolbar has Delete button and select it
+		const tableToolbar = wrapper.find("div.properties-table-toolbar");
+		const deleteButton = tableToolbar.find("button.properties-action-delete");
+		expect(deleteButton).to.have.length(1);
+		deleteButton.simulate("click");
+
 		expect(controller.getPropertyValue(listStringPopertyId)).to.eql(listStringCurrentValues.concat([""]));
 	});
 
@@ -316,7 +314,6 @@ describe("list renders correctly for array[integer]", () => {
 		});
 
 		expect(wrapper.find("button.properties-add-fields-button")).to.have.length(1);
-		expect(wrapper.find("button.properties-remove-fields-button")).to.have.length(1);
 		expect(getTableRows(wrapper)).to.have.length(2);
 	});
 
@@ -344,7 +341,7 @@ describe("list renders correctly for array[integer]", () => {
 		]);
 	});
 
-	it("should add/remove Numberfield rows to `list` control when clicking add/remove button", () => {
+	it("should add/remove Numberfield rows to `list` control when clicking add/delete button", () => {
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
 				<List
@@ -356,7 +353,6 @@ describe("list renders correctly for array[integer]", () => {
 			</Provider>
 		);
 		const addButton = wrapper.find("button.properties-add-fields-button");
-		let removeButton = wrapper.find("button.properties-remove-fields-button");
 
 		// add 2 rows
 		addButton.simulate("click");
@@ -364,16 +360,17 @@ describe("list renders correctly for array[integer]", () => {
 		expect(controller.getPropertyValue(listIntegerPopertyId))
 			.to.eql(listIntegerCurrentValues.concat([null, null]));
 		expect(wrapper.find("NumberfieldControl")).to.have.length(4); // Ensure new Numberfields are added
-		expect(removeButton.prop("disabled")).to.equal(true);
 
 		// select the third row in the table
 		const tableData = getTableRows(wrapper);
 		expect(tableData).to.have.length(4);
 		selectCheckboxes(wrapper, [2]);
-		// ensure removed button is enabled and select it
-		removeButton = wrapper.find("button.properties-remove-fields-button");
-		expect(removeButton.prop("disabled")).to.equal(false);
-		removeButton.simulate("click");
+		// ensure Table toolbar has Delete button and select it
+		const tableToolbar = wrapper.find("div.properties-table-toolbar");
+		const deleteButton = tableToolbar.find("button.properties-action-delete");
+		expect(deleteButton).to.have.length(1);
+		deleteButton.simulate("click");
+
 		// validate the third row is deleted
 		expect(controller.getPropertyValue(listIntegerPopertyId))
 			.to.eql(listIntegerCurrentValues.concat([null]));

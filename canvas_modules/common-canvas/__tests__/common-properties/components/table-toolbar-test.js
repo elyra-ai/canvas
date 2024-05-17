@@ -21,6 +21,9 @@ import { expect } from "chai";
 import sinon from "sinon";
 import Controller from "../../../src/common-properties/properties-controller";
 import { STATES } from "../../../src/common-properties/constants/constants";
+import propertyUtils from "../../_utils_/property-utils";
+import tableUtils from "../../_utils_/table-utils";
+import structureListEditorParamDef from "../../test_resources/paramDefs/structurelisteditor_paramDef.json";
 
 const removeSelectedRows = sinon.spy();
 const setScrollToRow = sinon.spy();
@@ -833,5 +836,132 @@ describe("TableToolbar row move buttons work correctly", () => {
 		const tableRows = controller.getPropertyValue(propertyId);
 		expect(tableRows[0][0]).to.equal("Age");
 		expect(tableRows[rows.length - 2][0]).to.equal("Na");
+	});
+});
+
+describe("TableToolbar multi select edit button works correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structureListEditorParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should edit multiple rows using the Edit button in table toolbar", () => {
+		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
+
+		// select the first row in the table
+		let tableRows = tableUtils.getTableRows(summaryPanel);
+		expect(tableRows).to.have.length(4);
+		tableUtils.selectCheckboxes(summaryPanel, [0]);
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
+
+		// verify that the "Edit" button is not present in table toolbar because you selected only 1 row
+		let tableToolbar = wrapper.find("div.properties-table-toolbar");
+		let multiSelectEditButton = tableToolbar.find("button.properties-action-multi-select-edit");
+		expect(multiSelectEditButton).to.have.length(0);
+
+		// select four rows in the table
+		tableUtils.selectCheckboxes(summaryPanel, [1, 2, 3]);
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
+
+		// verify that the "Edit" button is present in table toolbar
+		tableToolbar = wrapper.find("div.properties-table-toolbar");
+		multiSelectEditButton = tableToolbar.find("button.properties-action-multi-select-edit");
+		expect(multiSelectEditButton).to.have.length(1);
+
+		// Click the multiSelectEditButton in table toolbar
+		multiSelectEditButton.simulate("click");
+
+		// A new panel opens which shows editable columns
+		let wideFlyoutPanel = wrapper.find(".properties-wf-children");
+		let editableColumns = wideFlyoutPanel.find(".properties-editstyle-inline").find(".properties-ctrl-wrapper");
+		expect(editableColumns).to.have.length(2); // Animals column has edit_style: "subpanel". Can't edit from selectedEditCells.
+
+		// Set 44 for Integer field
+		let integerNumber = editableColumns.at(0).find("input");
+		integerNumber.simulate("change", { target: { value: "44" } });
+
+
+		// Save wide flyout
+		wrapper.find(".properties-modal-buttons").find("button.properties-apply-button")
+			.at(0)
+			.simulate("click");
+
+		// verify that the values have changed in the selected rows.
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
+		tableRows = tableUtils.getTableRows(summaryPanel);
+		tableRows.forEach((row) => {
+			const integerField = row.find("input").at(1);
+			expect(integerField.props()).to.have.property("value", 44);
+		});
+
+		// Click the multiSelectEditButton in table toolbar
+		multiSelectEditButton.simulate("click");
+
+		// A new panel opens which shows editable columns
+		wideFlyoutPanel = wrapper.find(".properties-wf-children");
+		editableColumns = wideFlyoutPanel.find(".properties-editstyle-inline").find(".properties-ctrl-wrapper");
+		expect(editableColumns).to.have.length(2); // Animals column has edit_style: "subpanel". Can't edit from selectedEditCells.
+
+		// Set 100 for Integer field
+		integerNumber = editableColumns.at(0).find("input");
+		integerNumber.simulate("change", { target: { value: "100" } });
+
+		// Cancel wide flyout
+		wrapper.find(".properties-modal-buttons").find("button.properties-cancel-button")
+			.at(0)
+			.simulate("click");
+
+		// verify that the values have NOT changed in the selected rows.
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
+		tableRows = tableUtils.getTableRows(summaryPanel);
+		tableRows.forEach((row) => {
+			const integerField = row.find("input").at(1);
+			expect(integerField.prop("value")).to.not.equal(100);
+		});
+	});
+
+	it("should disable Edit button in selected rows when table toolbar has Edit button", () => {
+		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
+
+		// select the first row in the table
+		let tableRows = tableUtils.getTableRows(summaryPanel);
+		expect(tableRows).to.have.length(4);
+		tableUtils.selectCheckboxes(summaryPanel, [0]);
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
+
+		// verify that the "Edit" button is not present in table toolbar because you selected only 1 row
+		let tableToolbar = wrapper.find("div.properties-table-toolbar");
+		let multiSelectEditButton = tableToolbar.find("button.properties-action-multi-select-edit");
+		expect(multiSelectEditButton).to.have.length(0);
+
+		// verify Edit button in ALL rows is enabled
+		tableRows = tableUtils.getTableRows(summaryPanel);
+		tableRows.forEach((row) => {
+			const editRowButton = row.find("button.properties-subpanel-button");
+			expect(editRowButton.props()).to.have.property("disabled", false);
+		});
+
+		// select four rows in the table
+		tableUtils.selectCheckboxes(summaryPanel, [1, 2, 3]);
+		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
+
+		// verify that the "Edit" button is present in table toolbar
+		tableToolbar = wrapper.find("div.properties-table-toolbar");
+		multiSelectEditButton = tableToolbar.find("button.properties-action-multi-select-edit");
+		expect(multiSelectEditButton).to.have.length(1);
+
+		// verify Edit button in ALL rows is disabled
+		tableRows = tableUtils.getTableRows(summaryPanel);
+		tableRows.forEach((row) => {
+			const checkbox = row.find(".properties-vt-row-checkbox").find("input");
+			expect(checkbox.props()).to.have.property("checked", true); // row is selected
+			const editRowButton = row.find("button.properties-subpanel-button");
+			expect(editRowButton.props()).to.have.property("disabled", true); // edit button in a row is disabled
+		});
 	});
 });

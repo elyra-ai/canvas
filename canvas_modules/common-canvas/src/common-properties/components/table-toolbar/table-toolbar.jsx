@@ -325,7 +325,7 @@ class TableToolbar extends React.Component {
 										controller={this.props.controller}
 									>
 										<Button
-											className="properties-subpanel-button"
+											className="properties-action-multi-select-edit"
 											size="sm"
 											renderIcon={Edit}
 											hasIconOnly

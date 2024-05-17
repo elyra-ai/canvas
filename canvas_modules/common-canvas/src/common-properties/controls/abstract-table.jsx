@@ -265,7 +265,7 @@ export default class AbstractTable extends React.Component {
 						this.props.controller.updatePropertyValue({ name: this.props.control.name, row: rowIndex, col: colIndex }, testCell, true);
 					});
 					if (tableControl.subControls[colIndex].controlType === ControlType.ONEOFSELECT) {
-						this.props.controller.updatePropertyValue({ name: this.selectSummaryPropertyName, row: 0, col: colIndex }, testCell);
+						this.props.controller.updatePropertyValue({ name: this.selectSummaryPropertyName, row: 0, col: colIndex }, null);
 					}
 				}
 			});
