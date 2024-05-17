@@ -25,7 +25,7 @@ import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import * as PropertyUtils from "./../../util/property-utils";
 import { isEmpty } from "lodash";
-
+import classNames from "classnames";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
 
 import ReadonlyControl from "./../readonly";
@@ -146,6 +146,7 @@ class SelectColumnsControl extends AbstractTable {
 			delete this.scrollToRow;
 		}
 		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+		const tableClassName = classNames("properties-column-select-table", { "disabled": this.props.state === STATES.DISABLED });
 
 		const table =	(
 			<FlexibleTable
@@ -167,7 +168,7 @@ class SelectColumnsControl extends AbstractTable {
 
 		const content = (
 			<div>
-				<div className="properties-column-select-table">
+				<div className={tableClassName}>
 					{table}
 				</div>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />

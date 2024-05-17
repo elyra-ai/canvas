@@ -24,6 +24,7 @@ import ValidationMessage from "./../../components/validation-message";
 import { MESSAGE_KEYS, STATES } from "./../../constants/constants";
 import * as ControlUtils from "./../../util/control-utils";
 import { isEmpty } from "lodash";
+import classNames from "classnames";
 
 class StructurelisteditorControl extends AbstractTable {
 
@@ -48,9 +49,10 @@ class StructurelisteditorControl extends AbstractTable {
 
 		const customButtons = this.props.control && this.props.control.buttons;
 		const table = this.createTable(this.props.state, tableButtonConfig, customButtons);
+		const tableClassName = classNames("properties-sle properties-sle-buttons", { "disabled": this.props.state === STATES.DISABLED });
 
 		const tableContainer = (<div>
-			<div className="properties-sle properties-sle-buttons">
+			<div className={tableClassName}>
 				{table}
 			</div>
 			<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />

@@ -22,7 +22,7 @@ import AbstractTable from "./../abstract-table.jsx";
 import EmptyTable from "../../components/empty-table/empty-table.jsx";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
-
+import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { isEmpty } from "lodash";
@@ -56,9 +56,10 @@ class ReadonlyTableControl extends AbstractTable {
 
 		const customButtons = this.props.control && this.props.control.buttons;
 		const table = this.createTable(this.props.state, tableButtonConfig, customButtons);
+		const tableClassName = classNames("properties-rt properties-rt-buttons", { "disabled": this.props.state === STATES.DISABLED });
 		const content = (
 			<div>
-				<div className="properties-rt properties-rt-buttons">
+				<div className={tableClassName}>
 					{table}
 				</div>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />

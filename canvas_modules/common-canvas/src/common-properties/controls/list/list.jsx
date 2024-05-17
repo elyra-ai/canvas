@@ -29,6 +29,7 @@ import { getDataId } from "./../../util/control-utils";
 import { MESSAGE_KEYS, STATES } from "./../../constants/constants.js";
 import { Type } from "./../../constants/form-constants.js";
 import { isEmpty } from "lodash";
+import classNames from "classnames";
 
 const NUMBER_TYPES = [Type.INTEGER, Type.DOUBLE, Type.LONG];
 class ListControl extends AbstractTable {
@@ -157,6 +158,7 @@ class ListControl extends AbstractTable {
 			delete this.scrollToRow;
 		}
 		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+		const tableClassName = classNames("properties-list-table", { "disabled": this.props.state === STATES.DISABLED });
 
 		const table =	(
 			<FlexibleTable
@@ -177,7 +179,7 @@ class ListControl extends AbstractTable {
 			/>);
 
 		const tableContainer = (<div>
-			<div className="properties-list-table">
+			<div className={tableClassName}>
 				{table}
 			</div>
 			<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />

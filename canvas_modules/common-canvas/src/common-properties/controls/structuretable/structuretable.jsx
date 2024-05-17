@@ -23,7 +23,7 @@ import EmptyTable from "../../components/empty-table/empty-table.jsx";
 import * as PropertyUtils from "./../../util/property-utils";
 import { Type, ParamRole } from "./../../constants/form-constants";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
-
+import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
 import { reject, findIndex, cloneDeep, isEmpty } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
@@ -163,9 +163,10 @@ class StructureTableControl extends AbstractTable {
 
 		const customButtons = this.props.control && this.props.control.buttons;
 		const table = this.createTable(this.props.state, tableButtonConfig, customButtons);
+		const tableClassName = classNames("properties-st properties-st-buttons", { "disabled": this.props.state === STATES.DISABLED });
 		const content = (
 			<div>
-				<div className="properties-st properties-st-buttons">
+				<div className={tableClassName}>
 					{table}
 				</div>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
