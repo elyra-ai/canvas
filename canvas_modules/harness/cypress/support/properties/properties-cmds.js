@@ -207,6 +207,14 @@ Cypress.Commands.add("selectAllRowsInTable", (propertyId) => {
 		.click();
 });
 
+// Click on "Cancel" button in Table toolbar
+Cypress.Commands.add("cancelRowSelection", (propertyId) => {
+	cy.get(`div[data-id='properties-ft-${propertyId}']`)
+		.find(".properties-table-toolbar")
+		.find("button.properties-action-cancel")
+		.click();
+});
+
 Cypress.Commands.add("clickButtonInTable", (buttonName, propertyId) => {
 	cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
 		.then((tableDiv) => {
@@ -222,7 +230,8 @@ Cypress.Commands.add("clickButtonInTable", (buttonName, propertyId) => {
 					.click();
 			} else {
 				cy.wrap(tableDiv)
-					.find(".properties-remove-fields-button")
+					.find(".properties-table-toolbar")
+					.find("button.properties-action-delete")
 					.click();
 			}
 		});
