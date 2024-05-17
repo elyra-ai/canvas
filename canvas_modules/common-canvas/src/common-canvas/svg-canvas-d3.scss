@@ -44,7 +44,7 @@ $node-warning-color: $support-warning; // Warning yellow
 // Node label properties
 $node-label-color: $text-primary;
 $node-label-font-size: 12px;
-$node-label-font-weight: 500;
+$node-label-font-weight: 600;
 $node-label-display-border: 2px;
 $node-label-entry-border: 6px;
 $node-label-edit-icon-hover-color: $layer-accent-01;
@@ -432,6 +432,19 @@ $link-highlight-color: $support-info;
 	// the icon doesn't have any hard coded fill color set.
 	fill: currentColor;
 	color: $icon-primary;
+}
+
+// Styles for JSX node and decoration image. Making the svg
+// inherit the width and height from the containing foreignObject
+// will cause the SVG to stretch to whatever dimensions the app
+// has set for the node or decoration image.
+.d3-foreign-object-node-image,
+.d3-foreign-object-dec-jsx {
+	outline: none;
+	svg {
+		width: inherit;
+		height: inherit;
+	}
 }
 
 // Remove the foreign object outline when the foreign object has focus.

@@ -786,7 +786,6 @@ export default class SVGCanvasRenderer {
 	// is dragged from the palette, in case the dimensions of the ghost node
 	// have changed because the canvas has been zoomed.
 	getGhostNode(node) {
-		const that = this;
 		const ghostDivSel = this.getGhostDivSel();
 		const zoomScale = this.zoomUtils.getZoomScale();
 
@@ -823,13 +822,9 @@ export default class SVGCanvasRenderer {
 			.attr("height", node.height);
 
 		if (!this.nodeLayout.nodeExternalObject) {
-			const nodeImage = this.getNodeImage(node);
-			const nodeImageType = this.getImageType(nodeImage);
-
 			ghostGrp
-				.append(nodeImageType)
-				.attr("class", "d3-node-image")
-				.each(function() { that.setNodeImageContent(this, node); })
+				.append(() => this.getImageElement(node))
+				.each((d, idx, imgs) => this.setNodeImageContent(node, idx, imgs))
 				.attr("x", this.nodeUtils.getNodeImagePosX(node))
 				.attr("y", this.nodeUtils.getNodeImagePosY(node))
 				.attr("width", this.nodeUtils.getNodeImageWidth(node))
@@ -1682,12 +1677,10 @@ export default class SVGCanvasRenderer {
 			.data((d) => (d.layout.imageDisplay ? [d] : []), (d) => d.id)
 			.join(
 				(enter) =>
-					enter
-						.append((d) => this.getImageElement(d))
-						.attr("class", "d3-node-image")
+					enter.append((d) => this.getImageElement(d))
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
-			.each((d, idx, imgs) => this.setNodeImageContent(imgs[idx], d))
+			.each((d, idx, imgs) => this.setNodeImageContent(d, idx, imgs))
 			.attr("x", (d) => this.nodeUtils.getNodeImagePosX(d))
 			.attr("y", (d) => this.nodeUtils.getNodeImagePosY(d))
 			.attr("width", (d) => this.nodeUtils.getNodeImageWidth(d))
@@ -1765,6 +1758,13 @@ export default class SVGCanvasRenderer {
 	}
 
 	removeNodes(removeSel) {
+		// Remove any JSX images for the nodes being removed to
+		// unmount their React objects.
+		removeSel
+			.selectAll(".d3-foreign-object-node-image")
+			.each((d, idx, exts) =>
+				this.externalUtils.removeExternalObject(d, idx, exts));
+
 		// Remove any JSX decorations for the nodes being removed to
 		// unmount their React objects.
 		removeSel
@@ -2438,7 +2438,7 @@ export default class SVGCanvasRenderer {
 				.attr("y", this.decUtils.getDecPadding(dec, d, objType))
 				.attr("width", this.decUtils.getDecWidth(dec, d, objType) - (2 * this.decUtils.getDecPadding(dec, d, objType)))
 				.attr("height", this.decUtils.getDecHeight(dec, d, objType) - (2 * this.decUtils.getDecPadding(dec, d, objType)))
-				.each(() => this.setImageContent(imageSel, dec.image));
+				.each(() => this.setDecImageContent(imageSel, dec.image));
 		} else {
 			imageSel.remove();
 		}
@@ -2584,21 +2584,33 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Sets the image specified in the node passed in into the DOM image object
-	// passed in.
-	setNodeImageContent(imageObj, node) {
-		const nodeImage = this.getNodeImage(node);
-		const imageSel = d3.select(imageObj);
-		this.setImageContent(imageSel, nodeImage);
+	// passed in specified by imgs[i].
+	setNodeImageContent(node, i, imgs) {
+		const image = this.getNodeImage(node);
+		const imageType = this.getImageType(image);
+
+		if (imageType === "jsx") {
+			this.externalUtils.addNodeImageExternalObject(image, i, imgs);
+		} else {
+			const imageSel = d3.select(imgs[i]);
+			this.setImageContent(imageSel, image, imageType);
+		}
+	}
+
+	// Sets the image specified for the decoration into the D3 selection
+	// of the decoration image.
+	setDecImageContent(imageSel, image) {
+		const imageType = this.getImageType(image);
+		this.setImageContent(imageSel, image, imageType);
 	}
 
 	// Sets the image passed in into the D3 image selection passed in. This loads
 	// svg files as inline SVG while other image files are loaded with href.
-	setImageContent(imageSel, image) {
+	setImageContent(imageSel, image, imageType) {
 		if (image !== imageSel.attr("data-image")) {
-			const nodeImageType = this.getImageType(image);
 			// Save image field in DOM object to avoid unnecessary image refreshes.
 			imageSel.attr("data-image", image);
-			if (nodeImageType === "svg") {
+			if (imageType === "svg") {
 				if (this.config.enableImageDisplay === "LoadSVGToDefs") {
 					this.loadSVGToDefs(imageSel, image);
 
@@ -2663,20 +2675,44 @@ export default class SVGCanvasRenderer {
 		return d.image;
 	}
 
-	// Returns the type of image passed in, either "svg" or "image". This will
-	// be used to append an svg or image element to the DOM.
+	// Returns the type of image passed in, either "svg" or "image" or
+	// "jsx" or null (if no image was provided).
+	// This will be used to append an svg or image element to the DOM.
 	getImageType(nodeImage) {
-		return nodeImage && nodeImage.endsWith(".svg") && this.config.enableImageDisplay !== "SVGAsImage" ? "svg" : "image";
+		if (nodeImage) {
+			if (typeof nodeImage === "object") {
+				if (this.externalUtils.isValidJsxElement(nodeImage)) {
+					return "jsx";
+				}
+			} else if (typeof nodeImage === "string") {
+				return	nodeImage.endsWith(".svg") && this.config.enableImageDisplay !== "SVGAsImage" ? "svg" : "image";
+			}
+		}
+		return null;
 	}
 
-	// Returns a DOM element for the image of the node passed in.
+	// Returns a DOM element for the image of the node passed in to be appended
+	// to the node element.
 	getImageElement(node) {
 		const nodeImage = this.getNodeImage(node);
 		const imageType = this.getImageType(nodeImage);
-		if (imageType === "image") {
-			return d3.create("svg:image").node();
+
+		if (imageType === "jsx") {
+			return d3.create("svg:foreignObject")
+				.attr("tabindex", -1)
+				.attr("class", "d3-foreign-object-node-image d3-node-image")
+				.node();
+
+		} else if (imageType === "svg") {
+			return d3.create("svg")
+				.attr("class", "d3-node-image")
+				.node();
+
 		}
-		return d3.create("svg").node();
+		// If imageType is "image" or null, we create an image element
+		return d3.create("svg:image")
+			.attr("class", "d3-node-image")
+			.node();
 	}
 
 	setNodeStyles(d, type, nodeGrp) {

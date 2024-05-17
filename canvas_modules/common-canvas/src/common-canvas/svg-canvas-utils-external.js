@@ -24,6 +24,10 @@ export default class SvgCanvasExternal {
 		this.ren = renderer;
 	}
 
+	isValidJsxElement(el) {
+		return React.isValidElement(el);
+	}
+
 	addNodeExternalObject(node, i, foreignObjects) {
 		const jsx = (
 			<node.layout.nodeExternalObject
@@ -35,28 +39,32 @@ export default class SvgCanvasExternal {
 		this.renderExternalObject(jsx, foreignObjects[i]);
 	}
 
+	addNodeImageExternalObject(image, i, foreignObjects) {
+		this.renderExternalObject(image, foreignObjects[i]);
+	}
+
 	addDecExternalObject(dec, i, foreignObjects) {
 		this.renderExternalObject(dec.jsx, foreignObjects[i]);
 	}
 
 	renderExternalObject(jsx, container) {
-		if (!container.root) {
-			container.root = createRoot(container);
+		if (!container.ccExtRoot) {
+			container.ccExtRoot = createRoot(container);
 		}
-		container.root.render(jsx);
+		container.ccExtRoot.render(jsx);
 	}
 
 	removeExternalObject(obj, i, foreignObjects) {
 		const container = foreignObjects[i];
-		if (!container.root) {
-			container.root = createRoot(container);
+		if (!container.ccExtRoot) {
+			container.ccExtRoot = createRoot(container);
 		}
 		// Unmount in Timeout to stop this warning from appearing:
 		// "Warning: Attempted to synchronously unmount a root while
 		// React was already rendering."
 		setTimeout(() => {
-			container.root.unmount();
-			container.root = null;
+			container.ccExtRoot.unmount();
+			container.ccExtRoot = null;
 		});
 	}
 
