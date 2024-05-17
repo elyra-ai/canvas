@@ -263,9 +263,9 @@ export default class SidePanelForms extends React.Component {
 		this.props.setStateValue("selectedExampleApp", value);
 	}
 
-	tipConfigChange(checked, target) {
+	tipConfigChange(event, { checked, id }) {
 		const tipConf = Object.assign({}, this.props.getStateValue("selectedTipConfig"));
-		switch (target) {
+		switch (id) {
 		case "tip_palette_categories":
 			set(tipConf, "palette.categories", checked);
 			break;
