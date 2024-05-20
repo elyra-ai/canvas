@@ -43,4 +43,6 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material
-      - run: mkdocs gh-deploy --force
+       run: pip install mike
+      # - run: mike delete --all
+      - run: mike deploy --push --update-aliases v13 latest
