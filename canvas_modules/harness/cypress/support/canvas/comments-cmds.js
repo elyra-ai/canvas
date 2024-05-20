@@ -331,3 +331,11 @@ Cypress.Commands.add("selectTextInComment", (textToSelect, commentText) => {
 			tas[0].setSelectionRange(start, end);
 		});
 });
+
+Cypress.Commands.add("hoverOverComment", (commentText) => {
+	cy.getCommentWithText(commentText)
+		.trigger("mouseenter");
+	cy.getCommentWithText(commentText)
+		.trigger("mouseover");
+});
+

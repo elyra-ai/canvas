@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 /* eslint max-len: "off" */
 
 import * as testUtils from "../../utils/eventlog-utils";
-import { extractTransformValues } from "./utils-cmds.js";
+import { extractTransformValues, getToolbarTopRowItems } from "./utils-cmds.js";
 
 const mainCanvasSelector = "#canvas-div-0 > #d3-svg-canvas-div-0 > .svg-area > .d3-canvas-group > .d3-nodes-links-group > ";
 const dataLinkSelector = mainCanvasSelector + ".d3-link-group.d3-data-link .d3-link-line";
@@ -602,8 +602,8 @@ Cypress.Commands.add("verifyNumberOfSelectedObjects", (noOfSelectedObjects) => {
 		});
 });
 
-Cypress.Commands.add("verifyOptionInContextMenu", (optionName) => {
-	cy.getOptionFromContextMenu(optionName).should("have.length", 1);
+Cypress.Commands.add("verifyOptionInContextToolbar", (optionName) => {
+	cy.getOptionFromContextToolbar(optionName).should("have.length", 1);
 });
 
 Cypress.Commands.add("verifyOptionNotInContextMenu", (optionName) => {
@@ -621,6 +621,33 @@ Cypress.Commands.add("verifyContextMenuPosition", (distFromLeft, distFromTop) =>
 		.invoke("css", "top")
 		.then((cssValue) => {
 			cy.verifyPixelValueInCompareRange(distFromTop, cssValue);
+		});
+});
+
+Cypress.Commands.add("verifyContextToolbarPosition", (distFromLeft, distFromTop) => {
+	cy.get(".context-toolbar").first()
+		.invoke("css", "left")
+		.then((cssValue) => {
+			cy.verifyPixelValueInCompareRange(distFromLeft, cssValue);
+		});
+	cy.get(".context-toolbar").first()
+		.invoke("css", "top")
+		.then((cssValue) => {
+			cy.verifyPixelValueInCompareRange(distFromTop, cssValue);
+		});
+});
+
+Cypress.Commands.add("verifyContextToolbarNotVisible", () => {
+	cy.get(".context-toolbar")
+		.should("not.exist");
+});
+
+Cypress.Commands.add("verifyContextToolbarNonOverflowItems", (noOfItems) => {
+	cy.get(".context-toolbar")
+		.find(".toolbar-item")
+		.then((items) => {
+			const topRowItems = getToolbarTopRowItems(items);
+			expect(topRowItems.length).equal(noOfItems);
 		});
 });
 

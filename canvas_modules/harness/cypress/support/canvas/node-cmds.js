@@ -210,7 +210,8 @@ Cypress.Commands.add("rightClickTargetPortOfNode", (nodeName, trgPortId) => {
 
 Cypress.Commands.add("hoverOverNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
-		.trigger("mouseenter")
+		.trigger("mouseenter");
+	cy.getNodeWithLabel(nodeName)
 		.trigger("mouseover");
 });
 

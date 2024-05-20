@@ -126,11 +126,18 @@ $panel-border-color: $border-subtle-01;
 .text-toolbar,
 .context-toolbar  {
 	position: absolute;
-	// top and left will be calculated and set for the text toolbar programmatically
-	// top, left and width will be calculated and set for the context toolbar programmatically
+	// For text toolbar - top and left will be calculated and set programmatically
+	// For context toolbar - top, left and width will be calculated and set programmatically.
+	// 'width' is set for the context toolbar because the overflow button must be forced to
+	// appear by setting the width approriately (see cc-context-toolbar.jsx).
 	top: 0;
 	left: 0;
 	width: fit-content;
+	// This bottom border allows the canvas context toolbar to disappear, if the mouse
+	// cursor is immediately moved away from the toolbar, after it opens. That's because,
+	// when the toolbar opens, the border will be underneath the mouse cursor and so the
+	// mouseLeave event is fired when the cursor is moved away.
+	border-bottom: 4px solid transparent;
 
 	.toolbar-div {
 		// Position the div 'relative' to text-toolbar so we can animate its
