@@ -606,6 +606,10 @@ Cypress.Commands.add("verifyOptionInContextToolbar", (optionName) => {
 	cy.getOptionFromContextToolbar(optionName).should("have.length", 1);
 });
 
+Cypress.Commands.add("verifyOptionInContextMenu", (optionName) => {
+	cy.getOptionFromContextMenu(optionName).should("have.length", 1);
+});
+
 Cypress.Commands.add("verifyOptionNotInContextMenu", (optionName) => {
 	cy.getOptionFromContextMenu(optionName).should("not.exist");
 });
