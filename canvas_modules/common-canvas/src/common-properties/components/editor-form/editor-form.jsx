@@ -270,7 +270,6 @@ class EditorForm extends React.Component {
 		return (
 			<Tabs key={"tab." + key}
 				selectedIndex={modalSelected}
-				light={this.props.controller.getLight()}
 			>
 				<TabList className="properties-primaryTabs" aria-label={tabListAriaLabel}>
 					{tabLists}

@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import { setTitle } from "./../../actions";
 import Isvg from "react-inlinesvg";
 import { get } from "lodash";
-import { TextInput, Button } from "@carbon/react";
+import { TextInput, Button, Layer } from "@carbon/react";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
 import classNames from "classnames";
@@ -181,25 +181,26 @@ class TitleEditor extends Component {
 					}
 				)}
 				>
-					<TextInput
-						id={this.id}
-						ref={this.textInputRef}
-						value={this.props.title}
-						onChange={this.handleTitleChange}
-						onKeyDown={(e) => this._handleKeyPress(e)}
-						readOnly={this.props.labelEditable === false} // shows a non editable icon
-						labelText={this.labelText}
-						hideLabel
-						size="sm"
-						onFocus={this.textInputOnFocus}
-						onBlur={this.textInputOnBlur}
-						light={this.props.controller.getLight()}
-						invalid={titleWithErrror}
-						invalidText={get(this.state.titleValidation, "message")}
-						warn={titleWithWarning}
-						warnText={get(this.state.titleValidation, "message")}
-						{... this.state.focused && { className: "properties-title-editor-focused" }}
-					/>
+					<Layer level={this.props.controller.getLight() ? 1 : 0} className="properties-title-editor-layer">
+						<TextInput
+							id={this.id}
+							ref={this.textInputRef}
+							value={this.props.title}
+							onChange={this.handleTitleChange}
+							onKeyDown={(e) => this._handleKeyPress(e)}
+							readOnly={this.props.labelEditable === false} // shows a non editable icon
+							labelText={this.labelText}
+							hideLabel
+							size="sm"
+							onFocus={this.textInputOnFocus}
+							onBlur={this.textInputOnBlur}
+							invalid={titleWithErrror}
+							invalidText={get(this.state.titleValidation, "message")}
+							warn={titleWithWarning}
+							warnText={get(this.state.titleValidation, "message")}
+							{... this.state.focused && { className: "properties-title-editor-focused" }}
+						/>
+					</Layer>
 					{titleValidationTypes.includes(get(this.state.titleValidation, "type")) ? null : propertiesTitleEdit}
 				</div>
 				{!this.headingEnabled && !titleValidationTypes.includes(get(this.state.titleValidation, "type")) ? helpButton : null}
