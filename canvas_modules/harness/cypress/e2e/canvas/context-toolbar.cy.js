@@ -55,7 +55,7 @@ describe("Test of context toolbar", function() {
 		// Open the overflow menu
 		cy.clickContextToolbarOverflowButton();
 
-		// See if we can click the disonnect option in the overflow menu
+		// See if we can click the disconnect option in the overflow menu
 		cy.verifyNumberOfLinks(8);
 		cy.clickOptionFromContextToolbarOverflow("Disconnect");
 		cy.verifyNumberOfLinks(7);
