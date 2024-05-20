@@ -25,16 +25,20 @@ theme:
     favicon: assets/FlowIcon.png
     palette:
         scheme: default
+        primary: black
     features:
       - content.code.copy
       - content.action.edit
       - navigation.tabs
       - navigation.indexes
 
-# Customization
 extra:
   version:
     provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: http://github.com/elyra-ai/canvas
+      name: Elyra Canvas on GitHub
 
 plugins:
     - search
@@ -48,7 +52,7 @@ extra_javascript:
 edit_uri: edit/main/docs/
 
 # Documentation and theme
-copyright: 'Copyright  &copy; 2024 Elyra Authors, an open source project and all are welcome to contribute! Maintained by the Elyra Authors Team'
+copyright: 'Copyright  &copy; 2024 Elyra Authors, an open source project! Maintained by the Elyra Authors Team'
 
 nav:
   - Home:
