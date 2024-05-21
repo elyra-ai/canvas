@@ -68,20 +68,22 @@ Cypress.Commands.add("clickEditIconForLinkDecLabel", (linkLabel) => {
 });
 
 Cypress.Commands.add("enterLabelForLinkDec", (linkLabel, decId, newLabel) => {
-	cy.getLinkWithLabel(linkLabel).as("link");
-	cy.get("@link").find("[data-id='link_dec_group_0_" + decId + "'] > foreignObject > textarea");
-	cy.get("@link").clear();
-	cy.get("@link").type(newLabel);
+	cy.getLinkWithLabel(linkLabel)
+		.find("[data-id='link_dec_group_0_" + decId + "'] > foreignObject > textarea")
+		.as("textarea");
+	cy.get("@textarea").clear();
+	cy.get("@textarea").type(newLabel);
 	// Click canvas to complete text entry
 	cy.get("#canvas-div-0").click(1, 1);
 });
 
 Cypress.Commands.add("enterLabelForLinkDecHitReturn", (linkLabel, decId, newLabel) => {
-	cy.getLinkWithLabel(linkLabel).as("link");
-	cy.get("@link").find("[data-id='link_dec_group_0_" + decId + "'] > foreignObject > textarea");
-	cy.get("@link").clear();
-	cy.get("@link").type(newLabel);
-	cy.get("@link").type("{enter}");
+	cy.getLinkWithLabel(linkLabel)
+		.find("[data-id='link_dec_group_0_" + decId + "'] > foreignObject > textarea")
+		.as("textarea");
+	cy.get("@textarea").clear();
+	cy.get("@textarea").type(newLabel);
+	cy.get("@textarea").type("{enter}");
 });
 
 Cypress.Commands.add("checkLinkDoesntExist", (linkId) => {

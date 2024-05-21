@@ -201,9 +201,9 @@ Cypress.Commands.add("updatePipelineflowToAddInputOutputPortsToNode", (nodeName)
 			cy.get("#harness-sidepanel-api-pipelineFlow")
 				.find("textarea")
 				.as("textArea");
-			cy.get("@textARea")
+			cy.get("@textArea")
 				.clear();
-			cy.get("@textARea")
+			cy.get("@textArea")
 				.type(newPipelineFlow, { parseSpecialCharSequences: false });
 		});
 });
