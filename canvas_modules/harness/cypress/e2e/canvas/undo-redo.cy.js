@@ -773,7 +773,7 @@ function verifySamplingRatioParameterValueInConsole(parameterName, value) {
 	});
 }
 
-// This funciton commented out because calling code is temporarily commented out
+// This function is commented out because the calling code is temporarily commented out,
 // waiting to be fixed.
 // function verifyErrorMessageForSamplingRatioParameterInConsole(messageType, parameterName, message) {
 // 	cy.document().then((doc) => {
