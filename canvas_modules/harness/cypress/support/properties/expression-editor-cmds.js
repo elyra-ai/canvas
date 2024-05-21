@@ -21,7 +21,10 @@ Cypress.Commands.add("enterTextInExpressionEditor", (text, propertyId) => {
 				.find(".properties-expression-editor")
 				.find(".cm-editor")
 				.find(".cm-content")
-				.type(selectedKey + "{a}{del}") // Select all and delete existing text in expression editor
+				.as("editorContent");
+			cy.get("@editorContent")
+				.type(selectedKey + "{a}{del}"); // Select all and delete existing text in expression editor
+			cy.get("@editorContent")
 				.type(text + "{ctrl} "); // Type text and ctrl + space to display hints
 		});
 });

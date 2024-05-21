@@ -163,6 +163,8 @@ describe("Test adding a decorator to a node", function() {
 	});
 
 	it("Test adding a JSX decoration to a node.", function() {
+		// (<Play />) below causes a lint error but its not clear how to fix it. This
+		// doesn't seem to stop the test from running successfully.
 		cy.setNodeDecorations("Top Left",
 			[{ "id": "123", "jsx": (<Play />), "x_pos": "20", "y_pos": "-20" }]
 		);

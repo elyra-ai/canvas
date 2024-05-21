@@ -53,9 +53,10 @@ Cypress.Commands.add("setTextFieldValue", (propertyId, labelText) => {
 	// This is a workaround for issue -
 	// cy.type() on input[type='number'] prepends text to current value instead of appending
 	cy.get("div[data-id='properties-" + propertyId + "']").find("input")
-		.focus()
-		.type("{selectall}")
-		.type(labelText);
+		.as("input");
+	cy.get("@input").focus();
+	cy.get("@input").type("{selectall}");
+	cy.get("@input").type(labelText);
 });
 
 Cypress.Commands.add("backspaceTextFieldValue", (propertyId) => {
@@ -96,9 +97,10 @@ Cypress.Commands.add("clickPropertiesFlyoutTitleEditIcon", () => {
 Cypress.Commands.add("enterNewPropertiesFlyoutTitle", (newTitle) => {
 	cy.get(".common-canvas-right-side-items div.properties-title-editor-input")
 		.find("input")
-		.focus()
-		.type("{selectall}")
-		.type(newTitle);
+		.as("input");
+	cy.get("@input").focus();
+	cy.get("@input").type("{selectall}");
+	cy.get("@input").type(newTitle);
 });
 
 Cypress.Commands.add("clickAtCoordinatesInCommonProperties", (x, y) => {

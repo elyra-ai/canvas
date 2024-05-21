@@ -773,22 +773,24 @@ function verifySamplingRatioParameterValueInConsole(parameterName, value) {
 	});
 }
 
-function verifyErrorMessageForSamplingRatioParameterInConsole(messageType, parameterName, message) {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
-		expect(lastEventLog.data.messages.length).not.equal(0);
-		for (var idx = 0; idx < lastEventLog.data.messages.length; idx++) {
-			if (lastEventLog.data.messages[idx].text === message &&
-					lastEventLog.data.messages[idx].type === messageType &&
-					lastEventLog.data.messages[idx].id_ref === parameterName) {
-				expect(lastEventLog.data.messages[idx].text).to.equal(message);
-				expect(lastEventLog.data.messages[idx].type).to.equal(messageType);
-				expect(lastEventLog.data.messages[idx].id_ref).to.equal(parameterName);
-				break;
-			}
-		}
-	});
-}
+// This funciton commented out because calling code is temporarily commented out
+// waiting to be fixed.
+// function verifyErrorMessageForSamplingRatioParameterInConsole(messageType, parameterName, message) {
+// 	cy.document().then((doc) => {
+// 		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
+// 		expect(lastEventLog.data.messages.length).not.equal(0);
+// 		for (var idx = 0; idx < lastEventLog.data.messages.length; idx++) {
+// 			if (lastEventLog.data.messages[idx].text === message &&
+// 					lastEventLog.data.messages[idx].type === messageType &&
+// 					lastEventLog.data.messages[idx].id_ref === parameterName) {
+// 				expect(lastEventLog.data.messages[idx].text).to.equal(message);
+// 				expect(lastEventLog.data.messages[idx].type).to.equal(messageType);
+// 				expect(lastEventLog.data.messages[idx].id_ref).to.equal(parameterName);
+// 				break;
+// 			}
+// 		}
+// 	});
+// }
 
 function verifyNoErrorMessageInConsole() {
 	cy.document().then((doc) => {

@@ -48,10 +48,12 @@ Cypress.Commands.add("resizeObjectToDimensions", (srcBodySelector, srcSizingSele
 			cy.getCanvasTranslateCoords()
 				.then((transform) => {
 					cy.get(srcSizingSelector)
-						.trigger("mouseenter", startPosition, { view: win })
+						.trigger("mouseenter", startPosition, { view: win });
+					cy.get(srcSizingSelector)
 						.trigger("mousedown", startPosition, { view: win });
 					cy.get("#canvas-div-0")
-						.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })
+						.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win });
+					cy.get("#canvas-div-0")
 						.trigger("mouseup", canvasX + transform.x, canvasY + transform.y, { view: win });
 				});
 		});
