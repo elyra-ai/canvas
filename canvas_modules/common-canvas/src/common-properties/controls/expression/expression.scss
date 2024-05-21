@@ -49,7 +49,8 @@
 			background-color: $background-selected; // works for both dark n light
 		}
 		.cm-activeLineGutter {
-			background-color: $background-active;
+			background-color: $text-placeholder;
+			color: $text-inverse;
 		}
 		&.cm-focused .cm-selectionBackground, ::selection {
 			/* stylelint-disable-next-line declaration-no-important */
@@ -114,9 +115,6 @@
 .properties-light-disabled {
 	.elyra-CodeMirror .cm-editor {
 		background: $field-01;
-		.cm-activeLineGutter {
-			background-color: $background-inverse-hover;
-		}
 	}
 }
 
