@@ -17,7 +17,6 @@
 @use "@carbon/react/scss/themes" as *;
 @import "./carbon.scss";
 
-
 // Switch the theme's below to change light <-> dark theme for harness
 // Modify common-canvas/src/themes/light.scss to switch common-canvas.
 $theme: $g10; // The light (gray 10) theme
