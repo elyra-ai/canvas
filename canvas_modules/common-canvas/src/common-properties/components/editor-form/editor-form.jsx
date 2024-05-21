@@ -534,7 +534,6 @@ class EditorForm extends React.Component {
 						onCloseCallback={onCloseCallback}
 						key={panel.id}
 						tearsheet={this.visibleTearsheet}
-						light={this.props.controller.getLight()}
 					/>
 				);
 			}

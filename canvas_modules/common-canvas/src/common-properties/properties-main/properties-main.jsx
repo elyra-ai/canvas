@@ -562,7 +562,6 @@ class PropertiesMain extends React.Component {
 					cancelHandler={cancelHandler}
 					showPropertiesButtons={this.state.showPropertiesButtons}
 					applyOnBlur={this.props.propertiesConfig.applyOnBlur}
-					light={this.props.light}
 				/>);
 			} else { // Modal
 				propertiesDialog = (<PropertiesModal
@@ -574,7 +573,6 @@ class PropertiesMain extends React.Component {
 					showPropertiesButtons={this.state.showPropertiesButtons}
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
-					light={this.props.light}
 				>
 					{editorForm}
 				</PropertiesModal>);

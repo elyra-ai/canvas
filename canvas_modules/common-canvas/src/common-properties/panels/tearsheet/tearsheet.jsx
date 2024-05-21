@@ -16,7 +16,6 @@
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Theme } from "@carbon/react";
 import { injectIntl } from "react-intl";
 import classNames from "classnames";
 import { formatMessage } from "./../../util/property-utils";
@@ -45,36 +44,34 @@ class TearSheet extends Component {
 
 		return (
 			<Portal>
-				<Theme theme={this.props.light ? "g10" : "g90" }>
-					<ComposedModal
-						className={classNames("properties-tearsheet-panel", { "properties-tearsheet-stacked": this.props.stacked })}
-						open={this.props.open}
-						size="lg"
-						aria-label={formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: title })}
-						preventCloseOnClickOutside
-					>
-						{title === null
-							? null
-							: (<ModalHeader
-								className={classNames("properties-tearsheet-header",
-									{ "with-buttons": displayFooterButtons },
-									{ "with-tabs": displayTabs },
-									{ "hide-close-button": typeof this.props.onCloseCallback !== "function" })}
-								title={title}
-								buttonOnClick={this.props.onCloseCallback}
-							>
-								{description ? (<p>{description}</p>) : null}
-							</ModalHeader>)
-						}
-						<ModalBody className={classNames("properties-tearsheet-body",
-							{ "with-buttons": displayFooterButtons },
-							{ "with-tabs": displayTabs })}
+				<ComposedModal
+					className={classNames("properties-tearsheet-panel", { "properties-tearsheet-stacked": this.props.stacked })}
+					open={this.props.open}
+					size="lg"
+					aria-label={formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: title })}
+					preventCloseOnClickOutside
+				>
+					{title === null
+						? null
+						: (<ModalHeader
+							className={classNames("properties-tearsheet-header",
+								{ "with-buttons": displayFooterButtons },
+								{ "with-tabs": displayTabs },
+								{ "hide-close-button": typeof this.props.onCloseCallback !== "function" })}
+							title={title}
+							buttonOnClick={this.props.onCloseCallback}
 						>
-							{content}
-						</ModalBody>
-						{buttons}
-					</ComposedModal>
-				</Theme>
+							{description ? (<p>{description}</p>) : null}
+						</ModalHeader>)
+					}
+					<ModalBody className={classNames("properties-tearsheet-body",
+						{ "with-buttons": displayFooterButtons },
+						{ "with-tabs": displayTabs })}
+					>
+						{content}
+					</ModalBody>
+					{buttons}
+				</ComposedModal>
 			</Portal>);
 	}
 }
@@ -96,16 +93,14 @@ TearSheet.propTypes = {
 	okHandler: PropTypes.func, // Required if showPropertiesButtons is true
 	cancelHandler: PropTypes.func, // Required if showPropertiesButtons is true
 	applyOnBlur: PropTypes.bool.isRequired,
-	intl: PropTypes.object.isRequired,
-	light: PropTypes.bool
+	intl: PropTypes.object.isRequired
 };
 
 TearSheet.defaultProps = {
 	open: false,
 	showPropertiesButtons: false,
 	applyOnBlur: false,
-	stacked: false,
-	light: true
+	stacked: false
 };
 
 export default injectIntl(TearSheet);
