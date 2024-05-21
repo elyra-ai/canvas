@@ -23,9 +23,16 @@ $theme: $g10; // The light (gray 10) theme
 // $theme: $g90; // The dark theme
 
 :root {
-	@include theme();
+	@include theme($g10);
 }
 
+[data-carbon-theme="g90"] {
+	@include theme($g90);
+}
+
+[data-carbon-theme="g10"] {
+	@include theme($g10);
+}
 // Common variables for App.scss and sidepanel.scss
 $harness-header-height: 50px;
 $harness-sidepanel-width: 320px;

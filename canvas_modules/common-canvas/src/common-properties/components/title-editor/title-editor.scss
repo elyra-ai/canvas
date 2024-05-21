@@ -53,10 +53,11 @@
 	&.properties-title-editor-with-help {
 		width: calc(100% - #{$spacing-07} - #{$spacing-03}); // subtract the size of the help button and 8px to align with Close icon when applyOnBlur is set
 	}
-	.cds--form-item.cds--text-input-wrapper {
+	.properties-title-editor-layer {
 		// allow edit icon to be at the end of text input
 		width: 100%;
-
+	}
+	.cds--form-item.cds--text-input-wrapper {
 		input { //override styling from carbon
 			@include type-style("productive-heading-02");
 			color: $text-primary;
