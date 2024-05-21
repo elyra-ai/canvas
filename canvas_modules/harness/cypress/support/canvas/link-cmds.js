@@ -70,8 +70,9 @@ Cypress.Commands.add("clickEditIconForLinkDecLabel", (linkLabel) => {
 Cypress.Commands.add("enterLabelForLinkDec", (linkLabel, decId, newLabel) => {
 	cy.getLinkWithLabel(linkLabel)
 		.find("[data-id='link_dec_group_0_" + decId + "'] > foreignObject > textarea")
-		.clear()
-		.type(newLabel);
+		.as("textarea");
+	cy.get("@textarea").clear();
+	cy.get("@textarea").type(newLabel);
 	// Click canvas to complete text entry
 	cy.get("#canvas-div-0").click(1, 1);
 });
@@ -79,9 +80,10 @@ Cypress.Commands.add("enterLabelForLinkDec", (linkLabel, decId, newLabel) => {
 Cypress.Commands.add("enterLabelForLinkDecHitReturn", (linkLabel, decId, newLabel) => {
 	cy.getLinkWithLabel(linkLabel)
 		.find("[data-id='link_dec_group_0_" + decId + "'] > foreignObject > textarea")
-		.clear()
-		.type(newLabel)
-		.type("{enter}");
+		.as("textarea");
+	cy.get("@textarea").clear();
+	cy.get("@textarea").type(newLabel);
+	cy.get("@textarea").type("{enter}");
 });
 
 Cypress.Commands.add("checkLinkDoesntExist", (linkId) => {
@@ -114,9 +116,9 @@ Cypress.Commands.add("moveLinkHandleToPos", (linkId, element, xPos, yPos) => {
 	cy.window().then((win) => {
 		cy.get(getLinkSelector(linkId, element))
 			.trigger("mousedown", { view: win });
-		cy.get(".d3-svg-canvas-div > .svg-area")
-			.trigger("mousemove", xPos, yPos)
-			.trigger("mouseup", xPos, yPos, { view: win });
+		cy.get(".d3-svg-canvas-div > .svg-area").as("canvasDiv");
+		cy.get("@canvasDiv").trigger("mousemove", xPos, yPos);
+		cy.get("@canvasDiv").trigger("mouseup", xPos, yPos, { view: win });
 	});
 });
 
@@ -140,9 +142,8 @@ Cypress.Commands.add("moveLinkHandleToNodeByLinkId", (linkId, element, nodeName)
 			.then((trgSelector) => {
 				cy.get(getLinkSelector(linkId, element))
 					.trigger("mousedown", { view: win });
-				cy.get(trgSelector)
-					.trigger("mousemove", { force: true, view: win })
-					.trigger("mouseup", { force: true, view: win });
+				cy.get(trgSelector).trigger("mousemove", { force: true, view: win });
+				cy.get(trgSelector).trigger("mouseup", { force: true, view: win });
 			});
 	});
 });
@@ -167,9 +168,8 @@ Cypress.Commands.add("moveLinkHandleToPortByLinkId", (linkId, element, nodeName,
 			.then((trgSelector) => {
 				cy.get(getLinkSelector(linkId, element))
 					.trigger("mousedown", { view: win });
-				cy.get(trgSelector)
-					.trigger("mousemove", { force: true, view: win })
-					.trigger("mouseup", { force: true, view: win });
+				cy.get(trgSelector).trigger("mousemove", { force: true, view: win });
+				cy.get(trgSelector).trigger("mouseup", { force: true, view: win });
 			});
 	});
 });
@@ -189,9 +189,8 @@ Cypress.Commands.add("linkNodeOutputPortToNodeInputPort", (srcNodeName, srcPortI
 					cy.window().then((win) => {
 						cy.get(srcSelector)
 							.trigger("mousedown", { which: 1, view: win });
-						cy.get(trgSelector)
-							.trigger("mousemove", { view: win })
-							.trigger("mouseup", { which: 1, view: win, force: true });
+						cy.get(trgSelector).trigger("mousemove", { view: win });
+						cy.get(trgSelector).trigger("mouseup", { which: 1, view: win, force: true });
 					});
 				});
 		});
@@ -206,9 +205,8 @@ Cypress.Commands.add("linkNodeOutputPortToNodeInputPortInSupernode",
 						cy.window().then((win) => {
 							cy.get(srcSelector)
 								.trigger("mousedown", { which: 1, view: win });
-							cy.get(trgSelector)
-								.trigger("mousemove", { view: win })
-								.trigger("mouseup", { which: 1, view: win, force: true });
+							cy.get(trgSelector).trigger("mousemove", { view: win });
+							cy.get(trgSelector).trigger("mouseup", { which: 1, view: win, force: true });
 						});
 					});
 			});
@@ -225,9 +223,8 @@ Cypress.Commands.add("linkNodeOutputPortToNode", (srcNodeName, srcPortId, trgNod
 					cy.window().then((win) => {
 						cy.get(srcSelector)
 							.trigger("mousedown", { which: 1, view: win });
-						cy.get(trgSelector)
-							.trigger("mousemove", { view: win })
-							.trigger("mouseup", { which: 1, view: win, force: true });
+						cy.get(trgSelector).trigger("mousemove", { view: win });
+						cy.get(trgSelector).trigger("mouseup", { which: 1, view: win, force: true });
 					});
 				});
 		});
@@ -242,9 +239,9 @@ Cypress.Commands.add("linkNodeOutputPortToPointOnCanvas", (srcNodeName, srcPortI
 			cy.window().then((win) => {
 				cy.get(srcSelector)
 					.trigger("mousedown", { which: 1, view: win });
-				cy.get(".d3-svg-canvas-div > .svg-area")
-					.trigger("mousemove", { view: win })
-					.trigger("mouseup", xPos, yPos, { which: 1, view: win, force: true });
+				cy.get(".d3-svg-canvas-div > .svg-area").as("svgArea");
+				cy.get("@svgArea").trigger("mousemove", { view: win });
+				cy.get("@svgArea").trigger("mouseup", xPos, yPos, { which: 1, view: win, force: true });
 			});
 		});
 });
@@ -371,11 +368,11 @@ Cypress.Commands.add("deleteLinkAt", (linkX, linkY) => {
 });
 
 Cypress.Commands.add("hoverOverLinkName", (linkName) => {
-	cy.getLinkWithLabel(linkName)
-		.children()
+	cy.getLinkWithLabel(linkName).children()
 		.eq(1)
-		.trigger("mouseenter", { force: true })
-		.trigger("mouseover", { force: true });
+		.as("firstLink");
+	cy.get("@firstLink").trigger("mouseenter", { force: true });
+	cy.get("@firstLink").trigger("mouseover", { force: true });
 });
 
 Cypress.Commands.add("getLinkUsingLinkId", (linkId) => {
@@ -411,9 +408,8 @@ Cypress.Commands.add("clickLink", (linkId) => {
 Cypress.Commands.add("ctrlOrCmdClickLink", (linkId) => {
 	// Get the os name to decide whether to click ctrl or cmd
 	cy.useCtrlOrCmdKey().then((selectedKey) => {
-		cy.get("body")
-			.type(selectedKey, { release: false })
-			.getLinkUsingLinkId(linkId)
+		cy.get("body").type(selectedKey, { release: false });
+		cy.get("body").getLinkUsingLinkId(linkId)
 			.click();
 		// Cancel the command/ctrl key press -- the documentation doesn't say
 		// this needs to be done but if it isn't the command key stays pressed down
