@@ -86,7 +86,6 @@ class Subtabs extends React.Component {
 			>
 				<Tabs
 					selectedIndex={activeTab}
-					light={this.props.controller.getLight()}
 				>
 					<TabList className={classNames("properties-subtabs", { "properties-leftnav-subtabs": this.props.leftnav })} aria-label={tabListAriaLabel}>
 						{subTabLists}
