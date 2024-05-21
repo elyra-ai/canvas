@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@use '@carbon/react/scss/themes' as *;
+@use "@carbon/react/scss/themes" as *;
 @import "./carbon.scss";
 
 
@@ -22,7 +22,7 @@
 // Modify common-canvas/src/themes/light.scss to switch common-canvas.
 $theme: $g10; // The light (gray 10) theme
 // $theme: $g90; // The dark theme
-  
+
 :root {
 	@include theme($g10);
 }
