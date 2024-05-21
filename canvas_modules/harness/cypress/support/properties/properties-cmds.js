@@ -233,6 +233,7 @@ Cypress.Commands.add("clickButtonInTable", (buttonName, propertyId) => {
 // StructureListEditorControl commands
 Cypress.Commands.add("selectFieldInFieldPickerPanel", (fieldName, dataType, panelName) => {
 	// Following logic works based on assumption  - fieldName in each row is unique
+	/* eslint cypress/unsafe-to-chain-command: "off" */
 	let rowNumber;
 	cy.getWideFlyoutPanel(panelName)
 		.find("div[data-role='properties-data-row']")
@@ -241,6 +242,7 @@ Cypress.Commands.add("selectFieldInFieldPickerPanel", (fieldName, dataType, pane
 				rowNumber = index;
 				return false;
 			}
+			return true;
 		})
 		.then((rows) => {
 			cy.wrap(rows)
