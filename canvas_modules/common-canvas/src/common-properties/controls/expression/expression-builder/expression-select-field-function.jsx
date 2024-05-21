@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Add } from "@carbon/react/icons";
 import { Button } from "@carbon/react";
-import { Switch, ContentSwitcher, Dropdown } from "@carbon/react";
+import { Switch, ContentSwitcher, Dropdown, Layer } from "@carbon/react";
 import FlexibleTable from "./../../../components/flexible-table/flexible-table";
 import TruncatedContentTooltip from "./../../../components/truncated-content-tooltip";
 import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
@@ -605,15 +605,16 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		};
 		return (
 			<div className="properties-expression-function-select">
-				<Dropdown
-					id={"properties-expression-function-select-dropdown-" + this.uuid}
-					light={this.props.controller.getLight()}
-					label={label}
-					items={items}
-					onChange={this.onFunctionCatChange}
-					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-					titleText={header}
-				/>
+				<Layer level={this.props.controller.getLight() ? 1 : 0}>
+					<Dropdown
+						id={"properties-expression-function-select-dropdown-" + this.uuid}
+						label={label}
+						items={items}
+						onChange={this.onFunctionCatChange}
+						translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+						titleText={header}
+					/>
+				</Layer>
 			</div>);
 	}
 
@@ -634,15 +635,16 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		};
 		return (
 			<div className="properties-expression-field-select">
-				<Dropdown
-					id={"properties-expression-field-select-dropdown-" + this.uuid}
-					light={this.props.controller.getLight()}
-					label={label}
-					items={newItems}
-					onChange={this.onFieldCatChange}
-					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-					titleText={header}
-				/>
+				<Layer level={this.props.controller.getLight() ? 1 : 0}>
+					<Dropdown
+						id={"properties-expression-field-select-dropdown-" + this.uuid}
+						label={label}
+						items={newItems}
+						onChange={this.onFieldCatChange}
+						translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+						titleText={header}
+					/>
+				</Layer>
 			</div>);
 	}
 
