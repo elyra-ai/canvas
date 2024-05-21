@@ -148,7 +148,6 @@ import FormsService from "./services/FormsService";
 
 import ExpressionInfo from "./constants/json/functionlist.json";
 
-import { Theme } from "@carbon/react";
 
 class App extends React.Component {
 	constructor(props) {
@@ -261,6 +260,7 @@ class App extends React.Component {
 			displayAdditionalComponents: false,
 			heading: false,
 			light: true,
+			lightTheme: false,
 			showRequiredIndicator: true,
 			showAlertsTab: true,
 			enableResize: true,
@@ -2398,9 +2398,11 @@ class App extends React.Component {
 	}
 
 	handleThemeChange() {
+		document.documentElement.setAttribute("data-carbon-theme", this.state.lightTheme ? "g10" : "g90");
+
 		this.setState((prevState) => ({
 			...prevState,
-			light: !prevState.light,
+			lightTheme: !prevState.lightTheme,
 		}));
 	}
 
@@ -2456,7 +2458,7 @@ class App extends React.Component {
 							size="sm"
 							labelA="Light"
 							labelB="Dark"
-							toggled={!this.state.light}
+							toggled={this.state.lightTheme}
 							onToggle={this.handleThemeChange.bind(this)}
 							className="toggle-theme"
 						/>
@@ -2831,9 +2833,7 @@ class App extends React.Component {
 
 		return (
 			<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
-				<Theme theme={this.state.light ? "g10" : "g90"}>
-					{mainView}
-				</Theme>
+				{mainView}
 			</IntlProvider>
 		);
 	}

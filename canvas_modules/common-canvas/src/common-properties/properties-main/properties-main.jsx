@@ -521,7 +521,6 @@ class PropertiesMain extends React.Component {
 				rightFlyout={this.props.propertiesConfig.rightFlyout}
 				categoryView={this.props.propertiesConfig.categoryView}
 				showAlertsTab={this.props.propertiesConfig.showAlertsTab !== false}
-				light={this.props.light}
 			/>);
 
 			if (this.props.propertiesConfig.containerType === "Editing") {

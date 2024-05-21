@@ -15,7 +15,6 @@
  */
 
 import React, { Component } from "react";
-
 import PropTypes from "prop-types";
 import { Modal } from "@carbon/react";
 import classNames from "classnames";
@@ -70,6 +69,5 @@ PropertiesModal.propTypes = {
 	showPropertiesButtons: PropTypes.bool,
 	applyLabel: PropTypes.string,
 	rejectLabel: PropTypes.string,
-	classNames: PropTypes.string,
-	light: PropTypes.bool
+	classNames: PropTypes.string
 };
