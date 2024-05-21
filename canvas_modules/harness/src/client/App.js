@@ -87,7 +87,7 @@ import { Add, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowDat
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
 	StopFilledAlt, Subtract, TextScale, TouchInteraction } from "@carbon/react/icons";
 
-import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "@carbon/react";
+import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
 
 import {
 	SIDE_PANEL_CANVAS,
@@ -147,6 +147,7 @@ import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../test_resources/diagrams/externalSu
 import FormsService from "./services/FormsService";
 
 import ExpressionInfo from "./constants/json/functionlist.json";
+
 
 class App extends React.Component {
 	constructor(props) {
@@ -259,6 +260,7 @@ class App extends React.Component {
 			displayAdditionalComponents: false,
 			heading: false,
 			light: true,
+			lightTheme: false,
 			showRequiredIndicator: true,
 			showAlertsTab: true,
 			enableResize: true,
@@ -2395,6 +2397,15 @@ class App extends React.Component {
 		);
 	}
 
+	handleThemeChange() {
+		document.documentElement.setAttribute("data-carbon-theme", this.state.lightTheme ? "g10" : "g90");
+
+		this.setState((prevState) => ({
+			...prevState,
+			lightTheme: !prevState.lightTheme,
+		}));
+	}
+
 	render() {
 		this.canvasController.log("-------------------------------");
 		this.canvasController.log("Test Harness render");
@@ -2409,6 +2420,7 @@ class App extends React.Component {
 		const consoleLabel = "console";
 		const downloadFlowLabel = "Download pipeline flow";
 		const downloadPaletteLabel = "Download palette";
+		const switchTheme = "Switch Theme";
 		const apiLabel = "Common Canvas API";
 		const docsLabel = "Elyra Canvas Docs";
 		const commonPropertiesModalLabel = "Common Properties";
@@ -2440,6 +2452,17 @@ class App extends React.Component {
 					</li>
 					<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
 						{breadcrumbs}
+					</li>
+					<li className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={switchTheme}>
+						<Toggle
+							id="harness-toggle-theme"
+							size="sm"
+							labelA="Light"
+							labelB="Dark"
+							toggled={this.state.lightTheme}
+							onToggle={this.handleThemeChange.bind(this)}
+							className="toggle-theme"
+						/>
 					</li>
 					<li id="harness-action-bar-sidepanel-properties" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
 						data-tooltip-id="toolbar-tooltip" data-tooltip-content={commonPropertiesModalLabel}
