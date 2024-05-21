@@ -45,6 +45,17 @@
 			}
 		}
 
+		.cm-activeLine {
+			background-color: $background-selected; // works for both dark n light
+		}
+		.cm-activeLineGutter {
+			background-color: $text-placeholder;
+			color: $text-inverse;
+		}
+		&.cm-focused .cm-selectionBackground, ::selection {
+			/* stylelint-disable-next-line declaration-no-important */
+			background: $support-info-inverse !important; // add !important to override the selected text style
+		}
 		.cm-tooltip-autocomplete {
 			z-index: 1110;
 			ul {
