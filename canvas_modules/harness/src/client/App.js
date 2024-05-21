@@ -2455,6 +2455,7 @@ class App extends React.Component {
 					</li>
 					<li className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={switchTheme}>
 						<Toggle
+							id="harness-toggle-theme"
 							size="sm"
 							labelA="Light"
 							labelB="Dark"
