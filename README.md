@@ -66,11 +66,23 @@ npm install
 3. Install required mkdocs packages using pip3.
 ```
 pip3 install -r requirements.txt
+pip3 install mike
 ```
 
-4. Run below command to start mkdocs server.
-```
-mkdocs serve
+4. Run below commands to use `mike` to deploy multiple versions of docs.
+```sh
+# Initially delete everything from gh-pages branch.
+mike delete --all
+
+# This command will create a folder named as v13 in gh-pages branch.
+mike deploy --push --update-aliases v13 latest
+mike set-default v13
+
+# This command will create a folder named as v12.x in gh-pages branch.
+mike deploy --push --update-aliases v12.x
+
+# Test changes in local.
+mike serve
 ```
 
 5. When complete, open the browser: http://127.0.0.1:8000/
