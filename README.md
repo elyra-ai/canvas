@@ -71,8 +71,11 @@ pip3 install mike
 
 4. Run below commands to use `mike` to deploy multiple versions of docs.
 ```sh
-# Initially delete everything from gh-pages branch.
-mike delete --all
+# Initially delete everything from gh-pages branch to start creating version folders.
+mike delete --all 
+
+# If above command throws an error please run below mkdocs command and then run mike deploy
+mkdocs gh-deploy --force
 
 # This command will create a folder named as v13 in gh-pages branch.
 mike deploy --push --update-aliases v13 latest
