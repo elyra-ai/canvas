@@ -228,6 +228,8 @@ Cypress.Commands.add("verifyRowInSelectColumnsTable", (propertyId, fieldName, ro
 
 Cypress.Commands.add("verifyFieldIsSelectedInFieldPickerPanel", (fieldName, dataType, panelName) => {
 	// Following logic works based on assumption  - fieldName in each row is unique
+	// It is difficult to unchain the following code so this is switching off the lint check:
+	/* eslint cypress/unsafe-to-chain-command: "off" */
 	let rowNumber;
 	cy.getWideFlyoutPanel(panelName)
 		.find("div[data-role='properties-data-row']")
@@ -236,6 +238,7 @@ Cypress.Commands.add("verifyFieldIsSelectedInFieldPickerPanel", (fieldName, data
 				rowNumber = index;
 				return false;
 			}
+			return true;
 		})
 		.then((rows) => {
 			cy.wrap(rows)

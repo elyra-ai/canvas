@@ -80,9 +80,8 @@ Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 	// Get the os name to decide whether to click ctrl or cmd
 	cy.useCtrlOrCmdKey()
 		.then((selectedKey) => {
-			cy.get("body")
-				.type(selectedKey, { release: false })
-				.getCommentWithText(commentText)
+			cy.get("body").type(selectedKey, { release: false });
+			cy.get("body").getCommentWithText(commentText)
 				.click();
 			// Cancel the command/ctrl key press -- the documentation doesn't say
 			// this needs to be done but if it isn't the command key stays pressed down
@@ -97,7 +96,8 @@ Cypress.Commands.add("ctrlOrCmdClickCommentInSupernode", (commentText, supernode
 	cy.useCtrlOrCmdKey()
 		.then((selectedKey) => {
 			cy.get("body")
-				.type(selectedKey, { release: false })
+				.type(selectedKey, { release: false });
+			cy.get("body")
 				.getCommentWithTextInSupernode(commentText, supernodeName)
 				.click();
 
@@ -131,11 +131,12 @@ Cypress.Commands.add("isCommentSelected", (commentText) => {
 });
 
 Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText, saveComment = true) => {
-	cy.getCommentWithText(originalCommentText)
-		.dblclick({force: true})
-		.get("textarea")
-		.clear()
-		.type(newCommentText);
+	cy.getCommentWithText(originalCommentText).as("comment");
+	cy.get("@comment").dblclick({ force: true });
+	cy.get("@comment").get("textarea")
+		.as("textarea");
+	cy.get("@textarea").clear();
+	cy.get("@textarea").type(newCommentText);
 
 	// Click somewhere on canvas to save comment
 	if (saveComment) {
@@ -144,33 +145,36 @@ Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText, 
 });
 
 Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newCommentText) => {
-	cy.getCommentWithTextInSubFlow(originalCommentText)
-		.dblclick()
-		.get("textarea")
-		.clear()
-		.type(newCommentText);
+	cy.getCommentWithTextInSubFlow(originalCommentText).as("comment");
+	cy.get("@comment").dblclick();
+	cy.get("@comment").get("textarea")
+		.as("textarea");
+	cy.get("@textarea").clear();
+	cy.get("@textarea").type(newCommentText);
 
 	// Click somewhere on canvas to save comment
 	cy.get(`#canvas-div-${document.instanceId}`).click();
 });
 
 Cypress.Commands.add("editTextInCommentInSubFlowNested", (originalCommentText, newCommentText) => {
-	cy.getCommentWithTextInSubFlowNested(originalCommentText)
-		.dblclick()
-		.get("textarea")
-		.clear()
-		.type(newCommentText);
+	cy.getCommentWithTextInSubFlowNested(originalCommentText).as("comment");
+	cy.get("@comment").dblclick();
+	cy.get("@comment").get("textarea")
+		.as("textarea");
+	cy.get("@textarea").clear();
+	cy.get("@textarea").type(newCommentText);
 
 	// Click somewhere on canvas to save comment
 	cy.get("#canvas-div-0").click();
 });
 
 Cypress.Commands.add("editTextInCommentInSupernode", (originalCommentText, newCommentText, supernodeName) => {
-	cy.getCommentWithTextInSupernode(originalCommentText, supernodeName)
-		.dblclick()
-		.get("textarea")
-		.clear()
-		.type(newCommentText);
+	cy.getCommentWithTextInSupernode(originalCommentText, supernodeName).as("comment");
+	cy.get("@comment").dblclick();
+	cy.get("@comment").get("textarea")
+		.as("textarea");
+	cy.get("@textarea").clear();
+	cy.get("@textarea").type(newCommentText);
 
 	// Click somewhere on canvas to save comment
 	cy.get("#canvas-div-0").click();
@@ -192,7 +196,8 @@ Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) =>
 						cy.get(srcSelector)
 							.trigger("mousedown", "topLeft", { which: 1, view: win });
 						cy.get("#canvas-div-0")
-							.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })
+							.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win });
+						cy.get("#canvas-div-0")
 							.trigger("mouseup", { which: 1, view: win });
 					});
 				});
@@ -225,7 +230,8 @@ Cypress.Commands.add("dragAndDrop", (srcSelector, srcXPos, srcYPos, trgSelector,
 		cy.get(srcSelector)
 			.trigger("mousedown", srcXPos, srcYPos, { which: 1, view: win });
 		cy.get(trgSelector)
-			.trigger("mousemove", trgXPos, trgYPos, { view: win })
+			.trigger("mousemove", trgXPos, trgYPos, { view: win });
+		cy.get(trgSelector)
 			.trigger("mouseup", trgXPos, trgYPos, { which: 1, view: win });
 	});
 });
@@ -288,9 +294,9 @@ Cypress.Commands.add("deleteCommentUsingKeyboard", (commentText) => {
 	// Delete comment by pressing 'Delete' key on keyboard
 	cy.useDeleteKey()
 		.then((deleteKey) => {
-			cy.getCommentWithText(commentText)
-				.click()
-				.type(deleteKey);
+			cy.getCommentWithText(commentText).as("comment");
+			cy.get("@comment").click();
+			cy.get("@comment").type(deleteKey);
 		});
 });
 

@@ -106,7 +106,10 @@ Cypress.Commands.add("searchForNodeUsing", (filterText) => {
 	cy.get(".palette-flyout-search").click();
 	cy.get(".palette-flyout-search")
 		.find("input")
-		.type("{selectall}")
+		.as("input");
+	cy.get("@input")
+		.type("{selectall}");
+	cy.get("@input")
 		.type(filterText);
 });
 
