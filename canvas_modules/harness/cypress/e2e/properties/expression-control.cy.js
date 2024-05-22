@@ -169,7 +169,7 @@ describe("Test of Python and R expression controls", function() {
 		cy.verifyTypeOfWordInExpressionEditor("# syntax testing", "comment", "conditionExpr");
 		cy.verifyTypeOfWordInExpressionEditor("1", "number", "conditionExpr");
 		cy.verifyTypeOfWordInExpressionEditor("text\"", "string", "conditionExpr");
-		cy.verifyTypeOfWordInExpressionEditor('\n', "string", "conditionExpr");
+		cy.verifyTypeOfWordInExpressionEditor("\n", "string", "conditionExpr");
 		cy.verifyTypeOfWordInExpressionEditor("=", "operator", "conditionExpr");
 		cy.verifyTypeOfWordInExpressionEditor("function", "keyword", "conditionExpr");
 		cy.verifyTypeOfWordInExpressionEditor("Inf", "keyword", "conditionExpr");

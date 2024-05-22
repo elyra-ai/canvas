@@ -18,160 +18,24 @@
 // canvas.
 
 
-// Some useful variations on Carbon colors
-$blue: #8EB5FF;
-$light-blue: #E9F1FF;
-$dark-blue: #4283FE;
-
-// Node colors for the Regular (Vertical) theme
-$node-body-stroke: $blue;
-$node-body-fill: $light-blue;
-
-$node-port-output-stroke-color: $blue;
-$node-port-output-fill-color: $background;
-
-$node-port-output-connected-stroke-color: $blue;
-$node-port-output-connected-fill-color: $light-blue;
-
-$node-port-output-hover-stroke: $dark-blue;
-$node-port-output-hover-fill: $dark-blue;
-
-$node-port-input-stroke-color: $blue;
-$node-port-input-fill-color: $background;
-
-$node-port-input-connected-stroke-color: $blue;
-$node-port-input-connected-fill-color: $light-blue;
-
-$node-port-input-arrow-connected-stroke-color: $dark-blue;
-$node-port-input-arrow-connected-fill-color: transparent;
-
-$node-port-input-connected-super-binding-stroke-color: $blue;
-$node-port-input-connected-super-binding-fill-color: $light-blue;
+/* The test harness adds 'classic-vertical' as the 'enableParentClass'
+    when the vertical node format is selected.
+*/
 
 .classic-vertical {
-	.d3-node-body-outline {
-		stroke: $node-body-stroke;
-		stroke-width: 2;
-		fill: $node-body-fill;
-	}
-
-	.d3-node-group:hover {
-		.d3-node-body-outline {
-			stroke: $node-body-stroke;
-			stroke-width: 2;
-			fill: $blue;
-		}
-	}
-
-	.d3-node-group.d3-branch-highlight:hover {
-		.d3-node-body-outline {
-			stroke: $border-strong-01;
-			stroke-width: 2px;
-			fill: $button-tertiary-hover;
-		}
-	}
-
-	.d3-node-selection-highlight {
-		stroke-width: 0;
-		fill: transparent;
-		pointer-events: none;
-	}
-
-	.d3-node-selection-highlight[data-selected="yes"] {
-		stroke: $link-inverse;
-		stroke-dasharray: 5, 5;
-		stroke-width: 2;
-		fill: transparent;
-		pointer-events: none;
-	}
-
-	.d3-node-group.d3-node-unavailable .d3-node-body-outline,
-	.d3-node-group.d3-node-unavailable .d3-node-label {
-		stroke: $button-disabled;
-		fill: $layer-selected-disabled;
-		color: $button-disabled;
-	}
-
-	.d3-node-label {
-		font-size: 13px;
-		color: $text-primary;
-	}
-
-	.d3-node-label-entry {
-		font-size: 13px;
-	}
-
 	.d3-node-port-output {
-		stroke: $node-port-output-stroke-color;
-		fill: $node-port-output-fill-color;
-		stroke-width: 2;
-	}
-
-	.d3-node-port-output[connected="yes"] {
-		stroke: $node-port-output-connected-stroke-color;
-		fill: $node-port-output-connected-fill-color;
-		stroke-width: 2;
-	}
-
-	.d3-node-port-output:hover {
-		stroke: $node-port-output-hover-stroke;
-		fill: $node-port-output-hover-fill;
+		fill: $layer-01;
+		stroke-width: 1;
 	}
 
 	.d3-node-port-input {
-		stroke: $node-port-input-stroke-color;
-		fill: $node-port-input-fill-color;
-		stroke-width: 2;
+		stroke: $background-inverse;
 	}
 
-	.d3-node-port-input-assoc,
-	.d3-node-port-output-assoc {
-		stroke: $node-port-input-stroke-color;
-		fill: $node-port-input-fill-color;
-		stroke-width: 2;
-	}
-
-	.d3-node-port-input-assoc:hover,
-	.d3-node-port-output-assoc:hover {
-		stroke: $node-port-output-hover-stroke;
-		fill: $node-port-output-hover-fill;
-	}
-
-	.d3-node-port-input[connected="yes"] {
-		stroke: $node-port-input-connected-stroke-color;
-		fill: $node-port-input-connected-fill-color;
-		stroke-width: 2;
-
-		.d3-node-port-input-arrow {
-			stroke: $node-port-input-arrow-connected-stroke-color;
-			fill: $node-port-input-arrow-connected-fill-color;
-		}
-	}
-
-	.d3-node-port-input[connected="yes"][isSupernodeBinding="yes"] {
-		stroke: $node-port-input-connected-super-binding-stroke-color;
-		fill: $node-port-input-connected-super-binding-fill-color;
-		stroke-width: 2;
-	}
-
-	.d3-node-port-input-arrow {
-		stroke: transparent;
-		fill: transparent;
-		pointer-events: none;
-	}
-
-	.d3-comment-selection-highlight {
-		stroke-width: 0;
-		fill: transparent;
-		pointer-events: none;
-	}
-
+	.d3-node-selection-highlight[data-selected="yes"],
 	.d3-comment-selection-highlight[data-selected="yes"] {
-		stroke: $link-inverse;
-		stroke-dasharray: 5 5;
+		stroke-dasharray: 5, 5;
 		stroke-width: 2;
-		fill: transparent;
-		pointer-events: none;
 	}
 }
 
