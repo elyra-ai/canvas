@@ -871,7 +871,7 @@ describe("structuretable multiselect edit works incrementally", () => {
 	const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
 	const wrapper = renderedObject.wrapper;
 	const renderedController = renderedObject.controller;
-	it("Opens mse table II multiselect and selects two rows", () => {
+	it("structuretable multiselect edit works incrementally", () => {
 		// Open mse Summary Panel in structuretableParamDef
 		propertyUtils.openSummaryPanel(wrapper, "ST_mse_table_II-summary-panel");
 
@@ -923,7 +923,7 @@ describe("structuretable multiselect edit works incrementally", () => {
 			expect(rowCheckbox.props().checked).to.be.true;
 		}
 
-		// Select Baseball for Sport again
+		// Select Football for Sport
 		tableToolbar = wrapper.find("div.properties-table-toolbar");
 		editButton = tableToolbar.find("button.properties-action-multi-select-edit");
 		editButton.simulate("click");
@@ -934,8 +934,8 @@ describe("structuretable multiselect edit works incrementally", () => {
 		dropdownButton.simulate("click");
 		dropdownList = wrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.have.length(4);
-		expect(dropdownList.at(3).text()).to.equal("Baseball");
-		dropdownList.at(3).simulate("click");
+		expect(dropdownList.at(0).text()).to.equal("Football");
+		dropdownList.at(0).simulate("click");
 
 		// Save wide flyout
 		wrapper.find(".properties-modal-buttons").find("button.properties-apply-button")
@@ -944,7 +944,7 @@ describe("structuretable multiselect edit works incrementally", () => {
 
 		rowValues = renderedController.getPropertyValue(propertyIdMSEII);
 		for (const row of [0, 1, 2, 3]) {
-			expect(rowValues[row][2]).to.equal("Baseball");
+			expect(rowValues[row][2]).to.equal("Football");
 		}
 	});
 });

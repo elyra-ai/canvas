@@ -257,7 +257,7 @@ export default class AbstractTable extends React.Component {
 		const newSelectedSummaryRow = this.props.controller.getPropertyValue(summaryPropertyId);
 		if (newSelectedSummaryRow && Array.isArray(newSelectedSummaryRow)) {
 			newSelectedSummaryRow[0].forEach((cellValue, colIndex) => {
-				if (cellValue !== null && !isEqual(cellValue, this.selectedSummaryRowValue[0][colIndex])) {
+				if (!isEqual(cellValue, this.selectedSummaryRowValue[0][colIndex])) {
 					// if a column does not have a value, the default value is null and the value returned
 					// from getPropertyValue is undefined causing unneccessary updates and an infinite loop during intialization
 					const testCell = (typeof cellValue === "undefined") ? null : cellValue;
@@ -265,7 +265,7 @@ export default class AbstractTable extends React.Component {
 						this.props.controller.updatePropertyValue({ name: this.props.control.name, row: rowIndex, col: colIndex }, testCell, true);
 					});
 					if (tableControl.subControls[colIndex].controlType === ControlType.ONEOFSELECT) {
-						this.props.controller.updatePropertyValue({ name: this.selectSummaryPropertyName, row: 0, col: colIndex }, null);
+						this.props.controller.updatePropertyValue({ name: this.selectSummaryPropertyName, row: 0, col: colIndex }, testCell);
 					}
 				}
 			});

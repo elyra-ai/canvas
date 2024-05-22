@@ -15,7 +15,7 @@
  */
 
 import { Separator } from "../constants/form-constants";
-import { Type, ParamRole, EditStyle } from "../constants/form-constants";
+import { Type, ParamRole, EditStyle, ControlType } from "../constants/form-constants";
 import { ResourceDef } from "../util/L10nProvider";
 import { propertyOf } from "lodash";
 import { toType } from "../util/property-utils";
@@ -196,7 +196,7 @@ export class ParameterDef {
 
 	// For multi select edit subpanel, fields having editStyle "inline" and undefined can be edited in the subpanel
 	isInlineEdit() {
-		if (this.editStyle === EditStyle.INLINE || typeof this.editStyle === "undefined") {
+		if ((this.editStyle === EditStyle.INLINE || typeof this.editStyle === "undefined") && this.control !== ControlType.READONLY) {
 			return true;
 		}
 		return false;
