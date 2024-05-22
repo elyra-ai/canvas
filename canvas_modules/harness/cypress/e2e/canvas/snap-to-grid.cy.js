@@ -39,7 +39,7 @@ describe("Test dragged node snaps to grid", function() {
 		// Make the same change with Snap To Grid set to "During"
 		// and verify the node is at a different position.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "During" });
-		cy.wait(10)
+		cy.wait(10);
 		cy.verifyNodeTransform("Binding (entry) node", 87.5, 105);
 		cy.moveNodeToPosition("Binding (entry) node", 321, 281);
 		cy.verifyNodeTransform("Binding (entry) node", 315, 285);
