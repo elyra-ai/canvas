@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,27 +124,11 @@ Cypress.Commands.add("clearAllNotificationMessages", () => {
 });
 
 Cypress.Commands.add("clickToolbarOverflow", () => {
-	cy.getToolbarOverflowItem().click();
+	cy.getCanvasToolbarOverflowItem().click();
 });
 
-
-Cypress.Commands.add("getToolbarOverflowItem", () => {
-	cy.getCanvasToolbar()
-		.find(".toolbar-overflow-item")
-		.then((items) => {
-			let overflowItem = null;
-			let topRow = 0;
-			for (let i = 0; i < items.length; i++) {
-				const rect = items[i].getBoundingClientRect();
-				if (i === 0) {
-					topRow = rect.top;
-				}
-				if (rect.top === topRow) {
-					overflowItem = items[i];
-				}
-			}
-			return overflowItem;
-		});
+Cypress.Commands.add("getCanvasToolbarOverflowItem", () => {
+	cy.findOverflowItem(cy.getCanvasToolbar());
 });
 
 Cypress.Commands.add("getToolbarActionInOverflowMenu", (action) => {

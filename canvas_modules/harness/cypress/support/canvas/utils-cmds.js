@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,10 +48,12 @@ Cypress.Commands.add("resizeObjectToDimensions", (srcBodySelector, srcSizingSele
 			cy.getCanvasTranslateCoords()
 				.then((transform) => {
 					cy.get(srcSizingSelector)
-						.trigger("mouseenter", startPosition, { view: win })
+						.trigger("mouseenter", startPosition, { view: win });
+					cy.get(srcSizingSelector)
 						.trigger("mousedown", startPosition, { view: win });
 					cy.get("#canvas-div-0")
-						.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })
+						.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win });
+					cy.get("#canvas-div-0")
 						.trigger("mouseup", canvasX + transform.x, canvasY + transform.y, { view: win });
 				});
 		});
@@ -92,3 +94,41 @@ export function extractTransformValues(transform) {
 
 	return { x: 0, y: 0, k: 1 };
 }
+
+Cypress.Commands.add("findOverflowItem", (bar) => {
+	bar
+		.find(".toolbar-overflow-item")
+		.then((items) => {
+			let overflowItem = null;
+			let topRow = 0;
+			for (let i = 0; i < items.length; i++) {
+				const rect = items[i].getBoundingClientRect();
+				if (i === 0) {
+					topRow = rect.top;
+				}
+				if (rect.top === topRow) {
+					overflowItem = items[i];
+				}
+			}
+			return overflowItem;
+		});
+});
+
+
+// Returns an array of items frm the array passed in that are
+// on thw top row of the toolbar.
+export function getToolbarTopRowItems(items) {
+	const topRowItems = [];
+	let topRow = 0;
+	for (let i = 0; i < items.length; i++) {
+		const rect = items[i].getBoundingClientRect();
+		if (i === 0) {
+			topRow = rect.top;
+		}
+		if (rect.top === topRow) {
+			topRowItems.push(items[i]);
+		}
+	}
+	return topRowItems;
+}
+

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,8 +57,10 @@ Cypress.Commands.add("clickNodeLabelEditIcon", (nodeLabel) => {
 Cypress.Commands.add("enterLabelForNode", (nodeLabel, newLabel) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.find("foreignObject > textarea")
-		.clear()
-		.type(newLabel);
+		.as("nodeLabel");
+	cy.get("@nodeLabel").clear();
+	cy.get("@nodeLabel").type(newLabel);
+
 	// Click canvas to complete text entry
 	cy.get("#canvas-div-0").click(1, 1);
 });
@@ -66,9 +68,10 @@ Cypress.Commands.add("enterLabelForNode", (nodeLabel, newLabel) => {
 Cypress.Commands.add("enterLabelForNodeHitReturn", (nodeLabel, newLabel) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.find("foreignObject > textarea")
-		.clear()
-		.type(newLabel)
-		.type("{enter}");
+		.as("nodeLabel");
+	cy.get("@nodeLabel").clear();
+	cy.get("@nodeLabel").type(newLabel);
+	cy.get("@nodeLabel").type("{enter}");
 });
 
 Cypress.Commands.add("checkNodeDoesntExist", (nodeLabel) => {
@@ -159,7 +162,8 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	cy.useCtrlOrCmdKey()
 		.then((selectedKey) => {
 			cy.get("body")
-				.type(selectedKey, { release: false })
+				.type(selectedKey, { release: false });
+			cy.get("body")
 				.getNodeWithLabel(nodeName)
 				.click();
 
@@ -175,7 +179,8 @@ Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) 
 	cy.useCtrlOrCmdKey()
 		.then((selectedKey) => {
 			cy.get("body")
-				.type(selectedKey, { release: false })
+				.type(selectedKey, { release: false });
+			cy.get("body")
 				.getNodeWithLabelInSupernode(nodeName, supernodeName)
 				.click();
 
@@ -210,7 +215,8 @@ Cypress.Commands.add("rightClickTargetPortOfNode", (nodeName, trgPortId) => {
 
 Cypress.Commands.add("hoverOverNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
-		.trigger("mouseenter")
+		.trigger("mouseenter");
+	cy.getNodeWithLabel(nodeName)
 		.trigger("mouseover");
 });
 
@@ -259,8 +265,10 @@ Cypress.Commands.add("clickEditIconForNodeDecLabel", (nodeName) => {
 Cypress.Commands.add("enterLabelForNodeDec", (nodeName, decId, newLabel) => {
 	cy.getNodeWithLabel(nodeName)
 		.find("[data-id='node_dec_group_0_" + decId + "'] > foreignObject > textarea")
-		.clear()
-		.type(newLabel);
+		.as("textarea");
+	cy.get("@textarea").clear();
+	cy.get("@textarea").type(newLabel);
+
 	// Click canvas to complete text entry
 	cy.get("#canvas-div-0").click(1, 1);
 });
@@ -268,9 +276,10 @@ Cypress.Commands.add("enterLabelForNodeDec", (nodeName, decId, newLabel) => {
 Cypress.Commands.add("enterLabelForNodeDecHitReturn", (nodeName, decId, newLabel) => {
 	cy.getNodeWithLabel(nodeName)
 		.find("[data-id='node_dec_group_0_" + decId + "'] > foreignObject > textarea")
-		.clear()
-		.type(newLabel)
-		.type("{enter}");
+		.as("textarea");
+	cy.get("@textarea").clear();
+	cy.get("@textarea").type(newLabel);
+	cy.get("@textarea").type("{enter}");
 });
 
 
@@ -351,7 +360,8 @@ Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 						// drag (before inserting node into a link).
 						cy.wait(300); /* eslint cypress/no-unnecessary-waiting: "off" */
 						cy.get("#canvas-div-0")
-							.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })
+							.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win });
+						cy.get("#canvas-div-0")
 							.trigger("mouseup", { which: 1, view: win });
 					});
 			});
@@ -369,7 +379,10 @@ Cypress.Commands.add("deleteNodeUsingKeyboard", (nodeName) => {
 	cy.useDeleteKey()
 		.then((deleteKey) => {
 			cy.getNodeWithLabel(nodeName)
-				.click()
+				.as("nodeLabel");
+			cy.get("@nodeLabel")
+				.click();
+			cy.get("@nodeLabel")
 				.type(deleteKey);
 		});
 });
@@ -385,7 +398,10 @@ Cypress.Commands.add("deleteNodeInSupernodeUsingKeyboard", (nodeName, supernodeN
 	cy.useDeleteKey()
 		.then((deleteKey) => {
 			cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
-				.click()
+				.as("nodeLabel");
+			cy.get("@nodeLabel")
+				.click();
+			cy.get("@nodeLabel")
 				.type(deleteKey);
 		});
 });
@@ -481,7 +497,8 @@ Cypress.Commands.add("ctrlOrCmdClickExpandedCanvasBackgroundOfSupernode", (super
 	// Get the os name to decide whether to click ctrl or cmd
 	cy.useCtrlOrCmdKey().then((selectedKey) => {
 		cy.get("body")
-			.type(selectedKey, { release: false })
+			.type(selectedKey, { release: false });
+		cy.get("body")
 			.getNodeWithLabel(supernodeName)
 			.find(".svg-area")
 			.eq(0)
