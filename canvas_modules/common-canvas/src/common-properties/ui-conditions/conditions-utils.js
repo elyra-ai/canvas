@@ -723,7 +723,7 @@ function _validateInput(propertyId, controller, control, showErrors) {
 					if (isError) {
 						errorSet = true;
 					}
-				} else if (!isError && !errorSet) {
+				} else if ((!isError && !errorSet) || (!isError && errorSet)) {
 					const msg = controller.getErrorMessage(msgPropertyId, false, false, false);
 					if (!isEmpty(msg) && (msg.validation_id === errorMessage.validation_id)) {
 						controller.updateErrorMessage(msgPropertyId, DEFAULT_VALIDATION_MESSAGE);

@@ -168,17 +168,17 @@ describe("condition messages should add alerts tab for tables", () => {
 		const summaryButton = summary.find("button.properties-summary-link-button");
 		summaryButton.simulate("click");
 
-		let tableWrapper = wrapper.find("div[data-id='properties-ft-structuretableNoHeader']");
+		const tableWrapper = wrapper.find("div[data-id='properties-ft-structuretableNoHeader']");
 		// select first 2 rows in table
 		const tableData = tableUtils.getTableRows(tableWrapper);
 		expect(tableData).to.have.length(2);
 
 		tableUtils.selectCheckboxes(tableData, [0, 1]);
-		// ensure removed button is enabled and select it
-		tableWrapper = wrapper.find("div[data-id='properties-ft-structuretableNoHeader']");
-		const removeFieldsButtons = tableWrapper.find("button.properties-remove-fields-button"); // field picker buttons
-		expect(removeFieldsButtons.prop("disabled")).to.equal(false);
-		removeFieldsButtons.at(0).simulate("click"); // remove a row
+		// ensure table toolbar has delete button and select it
+		const tableToolbar = wrapper.find("div.properties-table-toolbar");
+		const deleteButton = tableToolbar.find("button.properties-action-delete");
+		expect(deleteButton).to.have.length(1);
+		deleteButton.simulate("click"); // remove a row
 
 		// Save wide flyout
 		const okButton = wrapper.find(".properties-wf-content")

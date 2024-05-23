@@ -127,6 +127,9 @@ export class Control {
 		if (settings.childItem) {
 			this.childItem = settings.childItem;
 		}
+		if (settings.multiSelectEditChildItem) {
+			this.multiSelectEditChildItem = settings.multiSelectEditChildItem;
+		}
 		if (settings.layout) {
 			this.layout = settings.layout;
 		}

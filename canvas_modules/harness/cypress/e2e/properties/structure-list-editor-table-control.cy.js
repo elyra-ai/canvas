@@ -37,6 +37,7 @@ describe("Test of subpanel editing of selectcolumns in a structurelisteditor", f
 		cy.verifyRowInSelectColumnsTable("fields2", "Na", 2);
 
 		// Go back into field picker and verify the two options are still selected
+		cy.cancelRowSelection("fields2");
 		cy.clickButtonInTable("Add", "fields2");
 		cy.verifyFieldIsSelectedInFieldPickerPanel("BP", "string", "Select Fields for Select Columns");
 		cy.verifyFieldIsSelectedInFieldPickerPanel("Na", "double", "Select Fields for Select Columns");

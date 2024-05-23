@@ -110,8 +110,9 @@ Cypress.Commands.add("selectLinkForDecoration", (linkName) => {
 Cypress.Commands.add("updateDecorationsJSON", (decoratorsJSON) => {
 	cy.get("#harness-sidepanel-api-decorations")
 		.find("textarea")
-		.clear()
-		.type(decoratorsJSON);
+		.as("textArea");
+	cy.get("@textArea").clear();
+	cy.get("@textArea").type(decoratorsJSON);
 });
 
 Cypress.Commands.add("selectNodeLabelFromDropDown", (nodeName) => {
@@ -124,31 +125,36 @@ Cypress.Commands.add("selectPortFromDropDown", (portName) => {
 
 Cypress.Commands.add("setNewLabel", (newNodeName) => {
 	cy.get("#harness-newLabel")
-		.clear()
+		.clear();
+	cy.get("#harness-newLabel")
 		.type(newNodeName);
 });
 
 Cypress.Commands.add("setCategoryId", (categoryId) => {
 	cy.get("#harness-categoryId")
-		.clear()
+		.clear();
+	cy.get("#harness-categoryId")
 		.type(categoryId);
 });
 
 Cypress.Commands.add("setXPercentOffset", (xOffSet) => {
 	cy.get("#harness-zoom-canvas-x-position")
-		.clear()
+		.clear();
+	cy.get("#harness-zoom-canvas-x-position")
 		.type(xOffSet);
 });
 
 Cypress.Commands.add("setYPercentOffset", (yOffSet) => {
 	cy.get("#harness-zoom-canvas-y-position")
-		.clear()
+		.clear();
+	cy.get("#harness-zoom-canvas-y-position")
 		.type(yOffSet);
 });
 
 Cypress.Commands.add("setCategoryName", (categoryName) => {
 	cy.get("#harness-categoryName")
-		.clear()
+		.clear();
+	cy.get("#harness-categoryName")
 		.type(categoryName);
 });
 
@@ -194,7 +200,10 @@ Cypress.Commands.add("updatePipelineflowToAddInputOutputPortsToNode", (nodeName)
 			const newPipelineFlow = JSON.stringify(pipelineFlow);
 			cy.get("#harness-sidepanel-api-pipelineFlow")
 				.find("textarea")
-				.clear()
+				.as("textArea");
+			cy.get("@textArea")
+				.clear();
+			cy.get("@textArea")
 				.type(newPipelineFlow, { parseSpecialCharSequences: false });
 		});
 });
@@ -205,7 +214,8 @@ Cypress.Commands.add("clickOutsideNotificationPanel", () => {
 
 Cypress.Commands.add("setNotificationCenterContent", (id, content) => {
 	cy.get("#" + id)
-		.clear()
+		.clear();
+	cy.get("#" + id)
 		.type(content);
 });
 
@@ -233,14 +243,18 @@ Cypress.Commands.add("selectNotificationMessageType", (type) => {
 
 Cypress.Commands.add("setNotificationMessageTitle", (title) => {
 	cy.get("#harness-messageTitle")
-		.clear()
+		.clear();
+	cy.get("#harness-messageTitle")
 		.type(title);
 });
 
 Cypress.Commands.add("setNotificationMessageContent", (content) => {
 	cy.get("#harness-sidepanel-api-nm-content")
 		.find("textarea")
-		.clear()
+		.as("textArea");
+	cy.get("@textArea")
+		.clear();
+	cy.get("@textArea")
 		.type(content);
 });
 
