@@ -2296,10 +2296,12 @@ export default class SVGCanvasRenderer {
 	hideEditIcon(spanObj) {
 		if (!this.mouseOverLabelEditIcon) {
 			const labelObj = spanObj.parentElement;
-			const foreignObj = labelObj.parentElement;
-			const nodeObj = foreignObj.parentElement;
-			const nodeGrpSel = d3.select(nodeObj);
-			nodeGrpSel.selectAll(".d3-label-edit-icon-group").remove();
+			if (labelObj) {
+				const foreignObj = labelObj.parentElement;
+				const nodeObj = foreignObj.parentElement;
+				const nodeGrpSel = d3.select(nodeObj);
+				nodeGrpSel.selectAll(".d3-label-edit-icon-group").remove();
+			}
 		}
 	}
 
