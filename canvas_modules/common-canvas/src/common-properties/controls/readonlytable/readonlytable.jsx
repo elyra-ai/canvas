@@ -19,10 +19,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import AbstractTable from "./../abstract-table.jsx";
-import MoveableTableRows from "./../../components/moveable-table-rows";
+import EmptyTable from "../../components/empty-table/empty-table.jsx";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
-
+import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { isEmpty } from "lodash";
@@ -56,9 +56,10 @@ class ReadonlyTableControl extends AbstractTable {
 
 		const customButtons = this.props.control && this.props.control.buttons;
 		const table = this.createTable(this.props.state, tableButtonConfig, customButtons);
+		const tableClassName = classNames("properties-rt properties-rt-buttons", { "disabled": this.props.state === STATES.DISABLED });
 		const content = (
 			<div>
-				<div className="properties-rt properties-rt-buttons">
+				<div className={tableClassName}>
 					{table}
 				</div>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
@@ -70,18 +71,17 @@ class ReadonlyTableControl extends AbstractTable {
 			>
 				{this.props.controlItem}
 				<div className="properties-readonly-table">
-					<MoveableTableRows
-						tableContainer={content}
-						control={this.props.control}
-						controller={this.props.controller}
-						propertyId={this.props.propertyId}
-						setScrollToRow={this.setScrollToRow}
-						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-						disabled={this.props.state === STATES.DISABLED}
-						isEmptyTable={isEmpty(this.props.value)}
-						emptyTableButtonLabel={buttonLabel}
-						emptyTableButtonClickHandler={this.editCallback}
-					/>
+					{
+						isEmpty(this.props.value) && this.props.addRemoveRows
+							? <EmptyTable
+								control={this.props.control}
+								controller={this.props.controller}
+								emptyTableButtonLabel={buttonLabel}
+								emptyTableButtonClickHandler={this.editCallback}
+								disabled={this.props.state === STATES.DISABLED}
+							/>
+							: content
+					}
 				</div>
 			</div>
 		);

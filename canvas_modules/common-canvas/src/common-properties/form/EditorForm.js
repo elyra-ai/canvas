@@ -18,8 +18,8 @@
 
 import { Control } from "./ControlInfo";
 import { UIItem } from "./UIItem";
-import { GroupType, PanelType, Type, ControlType, ParamRole, ORIENTATIONS } from "../constants/form-constants";
-import { CONTAINER_TYPE } from "../constants/constants";
+import { GroupType, PanelType, Type, ControlType, ParamRole, ORIENTATIONS, EditStyle } from "../constants/form-constants";
+import { CONTAINER_TYPE, ROW_SELECTION } from "../constants/constants";
 import logger from "../../../utils/logger";
 import { StructureDef } from "./StructureInfo";
 import { Action } from "./ActionInfo";
@@ -150,13 +150,13 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	switch (group.groupType()) {
 	case GroupType.CONTROLS:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName, nestedPanel,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo)));
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo, EditStyle.SUBPANEL)));
 	case GroupType.COLUMN_SELECTION:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, groupClassName, nestedPanel,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo)));
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo, EditStyle.SUBPANEL)));
 	case GroupType.ADDITIONAL: {
 		const panel = new ControlPanel(groupName, PanelType.GENERAL, groupClassName, nestedPanel,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo));
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo, EditStyle.SUBPANEL));
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
 		return UIItem.makeAdditionalLink(groupLabel, groupLabel, panel);
 	}
@@ -269,7 +269,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 /**
  * Called on a base property group.
  */
-function _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo) {
+function _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo, editStyle) {
 	const uiItems = [];
 	const panelInsertedFor = [];
 	if (!Array.isArray(group.parameterNames())) {
@@ -278,11 +278,13 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 	group.parameterNames().forEach(function(paramName) {
 		// Assume property definition exists
 		const prop = parameterMetadata.getParameter(paramName);
+		// Edit attributes in subpanel when edit_style = "subpanel" or multi select edit rows having edit_style = "inline"
+		const parameterEditStyle = (editStyle === EditStyle.SUBPANEL) ? prop.isSubPanelEdit() : prop.isInlineEdit();
 		let structureDef;
 		if (prop.propType() === Type.STRUCTURE && structureMetadata) {
 			structureDef = structureMetadata.getStructure(prop.baseType());
 		}
-		if (!(group instanceof StructureDef) || (group instanceof StructureDef && prop.isSubPanelEdit())) {
+		if (!(group instanceof StructureDef) || (group instanceof StructureDef && parameterEditStyle)) {
 			const ctrl = _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata, structureMetadata, null, additionalInfo);
 			const control = UIItem.makeControl(ctrl);
 			if (prop.separatorBefore()) {
@@ -450,6 +452,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	let keyIndex;
 	let defaultRow;
 	let childItem;
+	let multiSelectEditChildItem;
 	let moveableRows = parameter.moveableRows;
 	let rowSelection;
 	let addRemoveRows;
@@ -515,8 +518,13 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 			const structureDef = isSubControl && structureMetadata ? structureMetadata.getStructure(parameter.baseType()) : structureDefinition;
 
 			if (structureDef) {
+				// Subpanel for editing attributes having editStyle: subpanel
 				if (structureDef.hasSubPanel()) {
 					childItem = _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata, additionalInfo);
+				}
+				// Multi select edit Subpanel for editing attributes having editStyle: inline
+				if (structureDef.rowSelection === ROW_SELECTION.MULTIPLE && structureDef.hasInlinePanel()) {
+					multiSelectEditChildItem = _makeInlineEditStyleSubPanel(structureDef, l10nProvider, structureMetadata, additionalInfo);
 				}
 				keyIndex = structureDef.keyAttributeIndex();
 				// The defaultRow allows the UI to create a new row with sensible settings
@@ -630,6 +638,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.keyIndex = keyIndex;
 	settings.defaultRow = defaultRow;
 	settings.childItem = childItem;
+	settings.multiSelectEditChildItem = multiSelectEditChildItem;
 	settings.moveableRows = moveableRows;
 	settings.required = required;
 	settings.language = parameter.language;
@@ -708,7 +717,27 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata, a
 			structureDef,
 			structureMetadata,
 			l10nProvider,
-			additionalInfo)
+			additionalInfo,
+			EditStyle.SUBPANEL)
+	);
+	const groupLabel = l10nProvider.l10nLabel(structureDef, structureDef.name);
+	return UIItem.makeAdditionalLink("...", groupLabel, panel);
+}
+
+function _makeInlineEditStyleSubPanel(structureDef, l10nProvider, structureMetadata, additionalInfo) {
+	// For multi select edit, create a subpanel that can be used to update the inline attributes affecting selected rows
+	const panel = new ControlPanel(
+		structureDef.name,
+		PanelType.GENERAL,
+		"properties-editstyle-inline",
+		false,
+		_makeControls(structureDef.parameterMetadata,
+			structureDef.actionMetadata,
+			structureDef,
+			structureMetadata,
+			l10nProvider,
+			additionalInfo,
+			EditStyle.INLINE)
 	);
 	const groupLabel = l10nProvider.l10nLabel(structureDef, structureDef.name);
 	return UIItem.makeAdditionalLink("...", groupLabel, panel);

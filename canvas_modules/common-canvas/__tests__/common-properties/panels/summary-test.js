@@ -103,17 +103,22 @@ describe("summary panel renders error/warning status correctly", () => {
 		let wideflyout = propertyUtils.openSummaryPanel(wrapper, "Derive-Node");
 		tableUtils.clickTableRows(wideflyout, [0]);
 
-		// ensure remove button is enabled and click it
+		// ensure table toolbar has Delete button and click it
 		wideflyout = wrapper.find("div.properties-wf-content.show");
-		const enabledRemoveColumnButton = wideflyout.find("button.properties-remove-fields-button");
-		expect(enabledRemoveColumnButton).to.have.length(2);
-		expect(enabledRemoveColumnButton.at(0).prop("disabled")).to.be.false;
-		expect(enabledRemoveColumnButton.at(1).prop("disabled")).to.equal(true);
-		enabledRemoveColumnButton.at(0).simulate("click");
+		let tableWrapper = wideflyout.find("div[data-id='properties-expressionCellTable']");
+		let tableToolbar = tableWrapper.find("div.properties-table-toolbar");
+		let deleteButton = tableToolbar.find("button.properties-action-delete");
+		expect(deleteButton).to.have.length(1);
+		deleteButton.simulate("click");
 
 		// remove second row
 		tableUtils.clickTableRows(wideflyout, [0]);
-		enabledRemoveColumnButton.at(0).simulate("click");
+		wideflyout = wrapper.find("div.properties-wf-content.show");
+		tableWrapper = wideflyout.find("div[data-id='properties-expressionCellTable']");
+		tableToolbar = tableWrapper.find("div.properties-table-toolbar");
+		deleteButton = tableToolbar.find("button.properties-action-delete");
+		expect(deleteButton).to.have.length(1);
+		deleteButton.simulate("click");
 
 		// close fly-out
 		wideflyout.find("button.properties-apply-button").simulate("click");
@@ -155,16 +160,24 @@ describe("summary panel renders error/warning status correctly", () => {
 		tableUtils.clickTableRows(wideflyout, [0]);
 
 		wideflyout = wrapper.find("div.properties-wf-content.show");
-		// ensure remove button is enabled and click it
-		const enabledRemoveColumnButton = wideflyout.find("button.properties-remove-fields-button");
-		expect(enabledRemoveColumnButton).to.have.length(2);
-		expect(enabledRemoveColumnButton.at(0).prop("disabled")).to.be.false;
-		expect(enabledRemoveColumnButton.at(1).prop("disabled")).to.equal(true);
-		enabledRemoveColumnButton.at(0).simulate("click");
+		// ensure table toolbar has Delete button and click it
+		let tableWrapper = wideflyout.find("div[data-id='properties-expressionCellTable']");
+		const tableToolbar = tableWrapper.find("div.properties-table-toolbar");
+		let deleteButton = tableToolbar.find("button.properties-action-delete");
+		expect(deleteButton).to.have.length(1);
+		deleteButton.simulate("click");
 
 		// remove second row
 		tableUtils.clickTableRows(wideflyout, [0]);
-		enabledRemoveColumnButton.at(0).simulate("click");
+		wideflyout = wrapper.find("div.properties-wf-content.show");
+		tableWrapper = wideflyout.find("div[data-id='properties-expressionCellTable']");
+		deleteButton = tableWrapper.find("div.properties-table-toolbar").find("button.properties-action-delete");
+		expect(deleteButton).to.have.length(1);
+		deleteButton.simulate("click");
+
+		// check that all rows were removed
+		wideflyout = wrapper.find("div.properties-wf-content.show");
+		expect(tableUtils.getTableRows(wideflyout.find("div[data-id='properties-expressionCellTable']"))).to.have.length(0);
 
 		wideflyout = wrapper.find("div.properties-wf-content.show");
 		expect(tableUtils.getTableRows(wideflyout.find("div[data-id='properties-ft-structurelisteditorTableInput']"))).to.have.length(11);
@@ -172,7 +185,9 @@ describe("summary panel renders error/warning status correctly", () => {
 		const tableInputBodyData = wideflyout.find("div[data-id='properties-ft-structurelisteditorTableInput']");
 		summarypanelParamDef.current_parameters.structurelisteditorTableInput.forEach((value) => {
 			tableUtils.selectCheckboxes(tableInputBodyData, [0]);
-			const tableInputRemoveButton = wideflyout.find("button.properties-remove-fields-button");
+			const tableInputRemoveButton = wrapper.find("div[data-id='properties-ft-structurelisteditorTableInput']")
+				.find("div.properties-table-toolbar")
+				.find("button.properties-action-delete");
 			expect(tableInputRemoveButton).to.have.length(1);
 
 			tableInputRemoveButton.simulate("click");

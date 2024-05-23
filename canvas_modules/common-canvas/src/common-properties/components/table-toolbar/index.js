@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-.properties-column-select-table.disabled {
-	pointer-events: none;
-	opacity: 0.5;
-}
+import TableToolbar from "./table-toolbar.jsx";
+export default TableToolbar;

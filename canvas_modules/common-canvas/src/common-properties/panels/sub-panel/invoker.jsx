@@ -85,10 +85,10 @@ export default class SubPanelInvoker extends React.Component {
 		}
 
 		return (
-			<div>
+			<>
 				{propertiesDialog}
 				{this.props.children}
-			</div>
+			</>
 		);
 	}
 }

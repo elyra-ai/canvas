@@ -109,7 +109,6 @@ describe("selectcolumns renders correctly", () => {
 			</Provider>
 		);
 		expect(wrapper.find("button.properties-add-fields-button")).to.have.length(1);
-		expect(wrapper.find("button.properties-remove-fields-button")).to.have.length(1);
 		expect(tableUtils.getTableRows(wrapper)).to.have.length(3);
 	});
 
@@ -151,11 +150,11 @@ describe("selectcolumns renders correctly", () => {
 		const tableData = tableUtils.getTableRows(wrapper);
 		expect(tableData).to.have.length(3);
 		tableUtils.selectCheckboxes(wrapper, [1]);
-		// ensure removed button is enabled and select it
-		const enabledRemoveColumnButton = wrapper.find("button.properties-remove-fields-button");
-		expect(enabledRemoveColumnButton).to.have.length(1);
-		expect(enabledRemoveColumnButton.prop("disabled")).to.equal(false);
-		enabledRemoveColumnButton.simulate("click");
+		// ensure Table toolbar has delete button and select it
+		const tableToolbar = wrapper.find("div.properties-table-toolbar");
+		const deleteButton = tableToolbar.find("button.properties-action-delete");
+		expect(deleteButton).to.have.length(1);
+		deleteButton.simulate("click");
 		// validate the second row is deleted
 		expect(controller.getPropertyValue(propertyId)).to.have.same.members(["Age", "K"]);
 	});
@@ -517,6 +516,13 @@ describe("selectcolumns control functions correctly in a table", () => {
 
 		let selectColumnsTable = wrapper.find("div.properties-column-select-table");
 		expect(selectColumnsTable.find("div.properties-vt-row-selected").length).to.equal(2);
+
+		// Since 2 rows are selected, table toolbar shows up
+		// Clear row selection to show "Add columns" button
+		const tableToolbar = wrapper.find("div.properties-table-toolbar");
+		const cancelButton = tableToolbar.find("button.properties-action-cancel");
+		expect(cancelButton).to.have.length(1);
+		cancelButton.simulate("click");
 
 		fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields2");
 		tableUtils.fieldPicker(fieldPicker, ["age", "Na", "drug"]);

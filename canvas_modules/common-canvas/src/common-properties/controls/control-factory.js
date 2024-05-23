@@ -200,7 +200,10 @@ export default class ControlFactory {
 			createdControl = (<ToggleControl {...props} />);
 			break;
 		case (ControlType.LIST):
-			createdControl = (<ListControl {...props} />);
+			createdControl = (<ListControl
+				{...props}
+				rightFlyout={this.rightFlyout}
+			/>);
 			break;
 		case (ControlType.EXPRESSION):
 			createdControl = (<ExpressionControl
