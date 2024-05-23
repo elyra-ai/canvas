@@ -33,6 +33,10 @@
 @import "./datepicker-range/datepicker-range";
 @import "./datepicker/datepicker";
 @import "./slider/slider";
+@import "./list/list";
+@import "./readonlytable/readonlytable";
+@import "./structurelisteditor/structurelisteditor";
+@import "./structuretable/structuretable";
 
 .properties-ctrl-wrapper {
 	padding-bottom: $spacing-05; // Adds padding to the control

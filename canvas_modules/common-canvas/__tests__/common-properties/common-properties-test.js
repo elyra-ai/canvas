@@ -195,10 +195,11 @@ describe("CommonProperties works correctly in flyout", () => {
 		// make some changes
 		tableUtils.selectCheckboxes(commonProperties, [0]);
 
-		// ensure remove button is enabled and click it
-		const enabledRemoveColumnButton = wrapper.find("button.properties-remove-fields-button");
-		expect(enabledRemoveColumnButton).to.have.length(1);
-		enabledRemoveColumnButton.simulate("click");
+		// ensure table toolbar has delete and click it
+		let tableToolbar = wrapper.find("div.properties-table-toolbar");
+		let deleteButton = tableToolbar.find("button.properties-action-delete");
+		expect(deleteButton).to.have.length(1);
+		deleteButton.simulate("click");
 
 		// save again: should save changes
 		commonProperties.simulate("blur");
@@ -212,7 +213,9 @@ describe("CommonProperties works correctly in flyout", () => {
 
 		// make more changes
 		tableUtils.selectCheckboxes(commonProperties, [0]);
-		enabledRemoveColumnButton.simulate("click");
+		tableToolbar = wrapper.find("div.properties-table-toolbar");
+		deleteButton = tableToolbar.find("button.properties-action-delete");
+		deleteButton.simulate("click");
 
 		// save again, should trigger a save
 		commonProperties.simulate("blur");
@@ -228,10 +231,11 @@ describe("CommonProperties works correctly in flyout", () => {
 		// make some changes
 		tableUtils.selectCheckboxes(wrapper, [0]);
 
-		// ensure remove button is enabled and click it
-		const enabledRemoveColumnButton = wrapper.find("button.properties-remove-fields-button");
-		expect(enabledRemoveColumnButton).to.have.length(1);
-		enabledRemoveColumnButton.simulate("click");
+		// ensure table toolbar has delete and click it
+		const tableToolbar = wrapper.find("div.properties-table-toolbar");
+		const deleteButton = tableToolbar.find("button.properties-action-delete");
+		expect(deleteButton).to.have.length(1);
+		deleteButton.simulate("click");
 
 		// save again: should save changes
 		wrapper.find("aside.properties-right-flyout")
