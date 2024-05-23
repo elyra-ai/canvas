@@ -18,13 +18,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import FlexibleTable from "./../../components/flexible-table";
-import MoveableTableRows from "./../../components/moveable-table-rows";
+import EmptyTable from "../../components/empty-table/empty-table.jsx";
+import TableToolbar from "./../../components/table-toolbar";
 import AbstractTable from "./../abstract-table.jsx";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import * as PropertyUtils from "./../../util/property-utils";
 import { isEmpty } from "lodash";
-
+import classNames from "classnames";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
 
 import ReadonlyControl from "./../readonly";
@@ -108,6 +109,27 @@ class SelectColumnsControl extends AbstractTable {
 		return headers;
 	}
 
+	makeTableToolbar() {
+		if (this.props.addRemoveRows || this.props.control?.moveableRows) {
+			return (
+				<TableToolbar
+					controller={this.props.controller}
+					propertyId={this.props.propertyId}
+					selectedRows={this.props.selectedRows}
+					tableState={this.props.state}
+					addRemoveRows={this.props.addRemoveRows}
+					moveableRows={this.props.control?.moveableRows}
+					removeSelectedRows={this.removeSelected}
+					setScrollToRow={this.setScrollToRow}
+					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+					isReadonlyTable={false}
+					smallFlyout={false}
+				/>
+			);
+		}
+		return null;
+	}
+
 	render() {
 		const headers = this.makeHeader();
 
@@ -116,13 +138,16 @@ class SelectColumnsControl extends AbstractTable {
 		};
 
 		const rows = this.makeRows(this.props.value, this.props.state);
-		const topRightPanel = this.makeAddRemoveButtonPanel(this.props.state, tableButtonConfig);
+		const tableToolbar = this.makeTableToolbar();
+		const topRightPanel = (this.props.selectedRows.length > 0 && tableToolbar) ? tableToolbar : this.makeAddButtonPanel(this.props.state, tableButtonConfig);
 		let rowToScrollTo;
 		if (Number.isInteger(this.scrollToRow) && rows.length > this.scrollToRow) {
 			rowToScrollTo = this.scrollToRow;
 			delete this.scrollToRow;
 		}
 		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+		const tableClassName = classNames("properties-column-select-table", { "disabled": this.props.state === STATES.DISABLED });
+
 		const table =	(
 			<FlexibleTable
 				columns={headers}
@@ -143,7 +168,7 @@ class SelectColumnsControl extends AbstractTable {
 
 		const content = (
 			<div>
-				<div className="properties-column-select-table">
+				<div className={tableClassName}>
 					{table}
 				</div>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
@@ -153,18 +178,17 @@ class SelectColumnsControl extends AbstractTable {
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)} className="properties-column-select" >
 				{this.props.controlItem}
-				<MoveableTableRows
-					tableContainer={content}
-					control={this.props.control}
-					controller={this.props.controller}
-					propertyId={this.props.propertyId}
-					setScrollToRow={this.setScrollToRow}
-					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-					disabled={this.props.state === STATES.DISABLED}
-					isEmptyTable={isEmpty(this.props.value)}
-					emptyTableButtonLabel={this.emptyTableButtonLabel}
-					emptyTableButtonClickHandler={this.emptyTableButtonClickHandler}
-				/>
+				{
+					isEmpty(this.props.value) && this.props.addRemoveRows
+						? <EmptyTable
+							control={this.props.control}
+							controller={this.props.controller}
+							emptyTableButtonLabel={this.emptyTableButtonLabel}
+							emptyTableButtonClickHandler={this.emptyTableButtonClickHandler}
+							disabled={this.props.state === STATES.DISABLED}
+						/>
+						: content
+				}
 			</div>
 		);
 	}
