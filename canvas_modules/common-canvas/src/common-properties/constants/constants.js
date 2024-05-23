@@ -17,9 +17,7 @@
 export const MESSAGE_KEYS = {
 	SUBPANEL_BUTTON_TOOLTIP: "subPanel.button.tooltip",
 	STRUCTURELISTEDITOR_ADDBUTTON_LABEL: "structureListEditor.addButton.label",
-	STRUCTURELISTEDITOR_REMOVEBUTTON_LABEL: "structureListEditor.removeButton.label",
 	STRUCTURETABLE_ADDBUTTON_LABEL: "structureTable.addButton.label",
-	STRUCTURETABLE_REMOVEBUTTON_LABEL: "structureTable.removeButton.label",
 	FIELDPICKER_SAVEBUTTON_LABEL: "fieldPicker.saveButton.label",
 	FIELDPICKER_SAVEBUTTON_MODAL_LABEL: "fieldPicker.saveButton.modal.label",
 	FIELDPICKER_RESETBUTTON_LABEL: "fieldPicker.resetButton.label",
@@ -91,12 +89,11 @@ export const MESSAGE_KEYS = {
 	EXPRESSION_MAXIMIZE_LABEL: "expression.maximize.label",
 	EXPRESSION_MINIMIZE_LABEL: "expression.minimize.label",
 	EXPRESSION_NO_FUNCTIONS: "expression.no.functions",
+	SINGLE_SELECTED_ROW_LABEL: "single.selected.row.label",
 	MULTI_SELECTED_ROW_LABEL: "multi.selected.row.label",
-	MULTI_SELECTED_ROW_ACTION: "multi.selected.row.action",
-	MOVEABLE_TABLE_BUTTON_TOP_DESCRIPTION: "moveable.table.button.top",
-	MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION: "moveable.table.button.up",
-	MOVEABLE_TABLE_BUTTON_DOWN_DESCRIPTION: "moveable.table.button.down",
-	MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION: "moveable.table.button.bottom",
+	SINGLE_SELECTED_ROW_LABEL_SMALL_FLYOUT: "single.selected.row.label.small.flyout",
+	MULTI_SELECTED_ROW_LABEL_SMALL_FLYOUT: "multi.selected.row.label.small.flyout",
+	MULTI_SELECT_EDIT_SUBPANEL_TITLE: "multi.select.edit.subpanel.title",
 	LIST_TABLE_LABEL: "list.table.label",
 	DROPDOWN_TOOLTIP_OPENMENU: "dropdown.tooltip.openMenu",
 	DROPDOWN_TOOLTIP_CLOSEMENU: "dropdown.tooltip.closeMenu",
@@ -121,7 +118,15 @@ export const MESSAGE_KEYS = {
 	DATEPICKER_RANGE_END_LABEL: "datepickerRangeEnd.default.label",
 	SLIDER_NUMBER_INPUT_LABEL: "slider.numberInput.label",
 	EDITORFORM_TABLIST_LABEL: "editorForm.tabList.label",
-	SUBTABS_TABLIST_LABEL: "subTabs.tabList.label"
+	SUBTABS_TABLIST_LABEL: "subTabs.tabList.label",
+	TABLE_TOOLBAR_BUTTON_TOP: "table.toolbar.button.top",
+	TABLE_TOOLBAR_BUTTON_UP: "table.toolbar.button.up",
+	TABLE_TOOLBAR_BUTTON_DOWN: "table.toolbar.button.down",
+	TABLE_TOOLBAR_BUTTON_BOTTOM: "table.toolbar.button.bottom",
+	TABLE_TOOLBAR_BUTTON_DELETE: "table.toolbar.button.delete",
+	TABLE_TOOLBAR_BUTTON_EDIT: "table.toolbar.button.edit",
+	TABLE_TOOLBAR_BUTTON_CANCEL: "table.toolbar.button.cancel",
+
 };
 
 export const TRUNCATE_LIMIT = 10000;

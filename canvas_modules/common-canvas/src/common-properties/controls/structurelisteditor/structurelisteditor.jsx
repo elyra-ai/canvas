@@ -18,12 +18,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import AbstractTable from "./../abstract-table.jsx";
-import MoveableTableRows from "./../../components/moveable-table-rows";
+import EmptyTable from "../../components/empty-table/empty-table.jsx";
 import { formatMessage } from "./../../util/property-utils";
 import ValidationMessage from "./../../components/validation-message";
 import { MESSAGE_KEYS, STATES } from "./../../constants/constants";
 import * as ControlUtils from "./../../util/control-utils";
 import { isEmpty } from "lodash";
+import classNames from "classnames";
 
 class StructurelisteditorControl extends AbstractTable {
 
@@ -43,16 +44,15 @@ class StructurelisteditorControl extends AbstractTable {
 		const tableButtonConfig = {
 			addButtonLabel: formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_LABEL),
-			removeButtonLabel: formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.STRUCTURELISTEDITOR_REMOVEBUTTON_LABEL),
 			addButtonFunction: this.addRow
 		};
 
 		const customButtons = this.props.control && this.props.control.buttons;
 		const table = this.createTable(this.props.state, tableButtonConfig, customButtons);
+		const tableClassName = classNames("properties-sle properties-sle-buttons", { "disabled": this.props.state === STATES.DISABLED });
 
 		const tableContainer = (<div>
-			<div className="properties-sle properties-sle-buttons">
+			<div className={tableClassName}>
 				{table}
 			</div>
 			<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
@@ -66,18 +66,17 @@ class StructurelisteditorControl extends AbstractTable {
 				<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 					className="properties-sle-container"
 				>
-					<MoveableTableRows
-						tableContainer={tableContainer}
-						control={this.props.control}
-						controller={this.props.controller}
-						propertyId={this.props.propertyId}
-						setScrollToRow={this.setScrollToRow}
-						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-						disabled={this.props.state === STATES.DISABLED}
-						isEmptyTable={isEmpty(this.props.value)}
-						emptyTableButtonLabel={tableButtonConfig.addButtonLabel}
-						emptyTableButtonClickHandler={this.addRow}
-					/>
+					{
+						isEmpty(this.props.value) && this.props.addRemoveRows
+							? <EmptyTable
+								control={this.props.control}
+								controller={this.props.controller}
+								emptyTableButtonLabel={tableButtonConfig.addButtonLabel}
+								emptyTableButtonClickHandler={this.addRow}
+								disabled={this.props.state === STATES.DISABLED}
+							/>
+							: tableContainer
+					}
 				</div>
 				<div>
 					{onPanelContainer}

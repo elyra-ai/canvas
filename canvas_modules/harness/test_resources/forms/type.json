@@ -881,41 +881,47 @@
 																		},
 																		{
 																			"name": "value_mode",
-																			"sortable": false,
-																			"visible": true,
-																			"description": {
-																				"text": "Enables you to specify options for reading data values from the data set, or use the Specify option to specify measurement levels and values "
-																			},
-																			"separateLabel": true,
 																			"label": {
 																				"text": "Value mode"
 																			},
-																			"language": "CLEM",
-																			"editStyle": "inline",
-																			"values": [
-																				"Read",
-																				"Pass",
-																				"Specify",
-																				"Read+",
-																				"Current"
-																			],
+																			"description": {
+																				"text": "Enables you to specify options for reading data values from the data set, or use the Specify option to specify measurement levels and values "
+																			},
+																			"labelVisible": true,
 																			"controlType": "oneofselect",
-																			"required": false,
-																			"valueLabels": [
-																				"Read",
-																				"Pass",
-																				"Specify",
-																				"Extend",
-																				"Current"
-																			],
-																			"width": 28,
 																			"valueDef": {
 																				"propType": "string",
 																				"isList": false,
 																				"isMap": false,
 																				"defaultValue": "Read"
 																			},
-																			"labelVisible": true
+																			"role": "enum",
+																			"values": [
+																				"Read",
+																				"Pass",
+																				"Specify",
+																				"Read+",
+																				"local"
+																			],
+																			"valueLabels": [
+																				"Read",
+																				"Pass",
+																				"Specify",
+																				"Extend",
+																				"local"
+																			],
+																			"valueDescs": [
+																				null,
+																				null,
+																				null,
+																				null,
+																				null
+																			],
+																			"sortable": false,
+																			"visible": true,
+																			"width": 28,
+																			"editStyle": "inline",
+																			"light": true
 																		},
 																		{
 																			"name": "values",
@@ -1163,6 +1169,165 @@
 																			"labelVisible": false
 																		}
 																	],
+																	"multiSelectEditChildItem": {
+																		"itemType": "additionalLink",
+																		"panel": {
+																			"id": "TypeEntry",
+																			"panelType": "general",
+																			"nestedPanel": false,
+																			"uiItems": [
+																				{
+																					"itemType": "control",
+																					"control": {
+																						"name": "measure_type",
+																						"label": {
+																							"text": "Measure"
+																						},
+																						"description": {
+																							"text": "This is the measurement level, used to describe characteristics of the data in a given field."
+																						},
+																						"labelVisible": true,
+																						"controlType": "oneofselect",
+																						"valueDef": {
+																							"propType": "string",
+																							"isList": false,
+																							"isMap": false,
+																							"defaultValue": "Default"
+																						},
+																						"role": "enum",
+																						"values": [
+																							"Range",
+																							"Discrete",
+																							"Flag",
+																							"Set",
+																							"OrderedSet",
+																							"Typeless"
+																						],
+																						"valueLabels": [
+																							"Continuous",
+																							"Categorical",
+																							"Flag",
+																							"Nominal",
+																							"Ordinal",
+																							"Typeless"
+																						],
+																						"valueDescs": [
+																							null,
+																							null,
+																							null,
+																							null,
+																							null,
+																							null
+																						],
+																						"sortable": true,
+																						"filterable": false,
+																						"light": true
+																					}
+																				},
+																				{
+																					"itemType": "control",
+																					"control": {
+																						"name": "role",
+																						"label": {
+																							"text": "Role"
+																						},
+																						"description": {
+																							"text": "Role Used to tell modeling nodes whether fields will be Input (predictor fields) or Target (predicted fields) for a machine-learning process. Both and None are also available roles, along with Partition, which indicates a field used to partition records into separate samples for training, testing, and validation."
+																						},
+																						"labelVisible": true,
+																						"controlType": "oneofselect",
+																						"valueDef": {
+																							"propType": "string",
+																							"isList": false,
+																							"isMap": false,
+																							"defaultValue": "Input"
+																						},
+																						"role": "enum",
+																						"values": [
+																							"Input",
+																							"Target",
+																							"Both",
+																							"None",
+																							"Partition",
+																							"Split",
+																							"Frequency",
+																							"RecordID"
+																						],
+																						"valueLabels": [
+																							"Input",
+																							"Target",
+																							"Both",
+																							"None",
+																							"Partition",
+																							"Split",
+																							"Frequency",
+																							"Record ID"
+																						],
+																						"valueDescs": [
+																							null,
+																							null,
+																							null,
+																							null,
+																							null,
+																							null,
+																							null,
+																							null
+																						],
+																						"sortable": true,
+																						"light": true
+																					}
+																				},
+																				{
+																					"itemType": "control",
+																					"control": {
+																						"name": "value_mode",
+																						"label": {
+																							"text": "Value mode"
+																						},
+																						"description": {
+																							"text": "Enables you to specify options for reading data values from the data set, or use the Specify option to specify measurement levels and values "
+																						},
+																						"labelVisible": true,
+																						"controlType": "oneofselect",
+																						"valueDef": {
+																							"propType": "string",
+																							"isList": false,
+																							"isMap": false,
+																							"defaultValue": "Read"
+																						},
+																						"role": "enum",
+																						"values": [
+																							"Read",
+																							"Pass",
+																							"Specify",
+																							"Read+",
+																							"local"
+																						],
+																						"valueLabels": [
+																							"Read",
+																							"Pass",
+																							"Specify",
+																							"Extend",
+																							"local"
+																						],
+																						"valueDescs": [
+																							null,
+																							null,
+																							null,
+																							null,
+																							null
+																						],
+																						"sortable": false,
+																						"light": true
+																					}
+																				}
+																			],
+																			"open": false,
+																			"className": "properties-editstyle-inline"
+																		},
+																		"text": "...",
+																		"secondaryText": "Field Definition"
+																	},
 																	"language": "CLEM",
 																	"addRemoveRows": false,
 																	"keyIndex": 0,

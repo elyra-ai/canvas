@@ -333,7 +333,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	});
 
-	it("should select row and remove button row should be removed", () => {
+	it("should select row and click Delete button in table toolbar, row should be removed", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
@@ -347,19 +347,20 @@ describe("StructureListEditorControl renders correctly", () => {
 			</Provider>
 		);
 
-		// ensure the remove column button is disabled
-		let removeColumnButton = wrapper.find("button.properties-remove-fields-button");
-		expect(removeColumnButton.prop("disabled")).to.equal(true);
+		// ensure the table toolbar doesn't exist
+		let tableToolbar = wrapper.find("div.properties-table-toolbar");
+		expect(tableToolbar).to.have.length(0);
 
 		// select the first row in the table
 		const tableData = tableUtils.getTableRows(wrapper);
 		expect(tableData).to.have.length(6);
 		tableUtils.selectCheckboxes(wrapper, [0]);
 
-		// ensure removed button is enabled and select it
-		removeColumnButton = wrapper.find("button.properties-remove-fields-button");
-		expect(removeColumnButton.prop("disabled")).to.equal(false);
-		removeColumnButton.simulate("click");
+		// ensure table toolbar has Delete button and select it
+		tableToolbar = wrapper.find("div.properties-table-toolbar");
+		expect(tableToolbar).to.have.length(1);
+		const deleteButton = tableToolbar.find("button.properties-action-delete");
+		deleteButton.simulate("click");
 
 		// validate the first row is deleted
 		const tableRows = controller.getPropertyValue(propertyId);
@@ -367,7 +368,7 @@ describe("StructureListEditorControl renders correctly", () => {
 		expect(tableRows[0][0]).to.equal("one");
 	});
 
-	it("should select multiple rows and see the select summary row", () => {
+	it("should select multiple rows and see the 'Edit' button in table toolbar", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
@@ -386,16 +387,19 @@ describe("StructureListEditorControl renders correctly", () => {
 		expect(tableData).to.have.length(6);
 		tableUtils.selectCheckboxes(wrapper, [0]);
 
-		// verify that the select summary row is not present
-		let selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
-		expect(selectedEditRow).to.have.length(0);
+		// verify that the table toolbar doesn't have Edit button
+		let tableToolbar = wrapper.find("div.properties-table-toolbar");
+		expect(tableToolbar).to.have.length(1);
+		let editButton = tableToolbar.find("button.properties-action-multi-select-edit");
+		expect(editButton).to.have.length(0);
 
 		// multiple select the four row in the table
 		tableUtils.selectCheckboxes(wrapper, [1, 2, 3, 4, 5]);
 
-		// verify that the select summary row is present
-		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows");
-		expect(selectedEditRow).to.have.length(1);
+		// verify that the table toolbar has Edit button
+		tableToolbar = wrapper.find("div.properties-table-toolbar");
+		editButton = tableToolbar.find("button.properties-action-multi-select-edit");
+		expect(editButton).to.have.length(1);
 	});
 
 });
@@ -434,7 +438,7 @@ describe("StructureListEditor render from paramdef", () => {
 	});
 
 	it("Error messages should not change when adding rows", () => {
-		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "inlineEditingTableError-summary-panel");
+		const summaryPanel = propertyUtils.openSummaryPanel(wrapper, "inlineEditingTableError-summary-panel");
 		const checkboxCell = summaryPanel.find("input[type='checkbox']").at(1);
 		checkboxCell.getDOMNode().checked = false;
 		checkboxCell.simulate("change");
@@ -468,14 +472,20 @@ describe("StructureListEditor render from paramdef", () => {
 		}, required: false, type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } } };
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
-		// select the localhost row in the table
+		// table has 2 rows
+		expect(tableUtils.getTableRows(wrapper)).to.have.length(2);
+
+		// select the first row in the table
 		tableUtils.clickTableRows(wrapper, [0]);
 
-		// ensure removed button is enabled and select it
-		summaryPanel = wrapper.find("div.properties-wf-content.show");
-		const removeColumnButton = summaryPanel.find("button.properties-remove-fields-button");
-		expect(removeColumnButton.prop("disabled")).to.equal(false);
-		removeColumnButton.simulate("click");
+		// ensure table toolbar has Delete button and select it
+		const tableToolbar = wrapper.find("div.properties-table-toolbar");
+		const deleteButton = tableToolbar.find("button.properties-action-delete");
+		expect(deleteButton).to.have.length(1);
+		deleteButton.simulate("click");
+
+		// verify row is deleted
+		expect(tableUtils.getTableRows(wrapper)).to.have.length(1);
 	});
 	it("Error messages should not change when deleting rows", () => {
 		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "inlineEditingTableError-summary-panel");
@@ -512,8 +522,9 @@ describe("StructureListEditor render from paramdef", () => {
 
 		// remove the first row and ensure the error message is associated with the correct row.
 		tableUtils.clickTableRows(summaryPanel, [0]);
-		const removeColumnButton = summaryPanel.find("button.properties-remove-fields-button");
-		removeColumnButton.simulate("click");
+		const tableToolbar = wrapper.find("div.properties-table-toolbar");
+		let deleteButton = tableToolbar.find("button.properties-action-delete");
+		deleteButton.simulate("click");
 
 		const messages = renderedController.getAllErrorMessages();
 		const rowErrorMsg = { "1": { "3": { propertyId: {
@@ -528,7 +539,8 @@ describe("StructureListEditor render from paramdef", () => {
 		tableData = tableUtils.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(2);
 		tableUtils.clickTableRows(summaryPanel, [1]);
-		removeColumnButton.simulate("click");
+		deleteButton = wrapper.find("div.properties-table-toolbar").find("button.properties-action-delete");
+		deleteButton.simulate("click");
 		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
 		expect(actual).to.equal(null);
 	});
@@ -595,7 +607,7 @@ describe("StructureListEditor render from paramdef", () => {
 		// select the first row and move it to the bottom and make sure the error messages stay aligned.
 		tableUtils.clickTableRows(summaryPanel, [0]);
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
-		const moveRowBottom = summaryPanel.find("button.table-row-move-button").at(3);
+		const moveRowBottom = wrapper.find("div.properties-table-toolbar").find("button.table-row-move-bottom-button");
 		moveRowBottom.simulate("click");
 		let messages = renderedController.getAllErrorMessages();
 		let rowErrorMsg = {
@@ -612,12 +624,16 @@ describe("StructureListEditor render from paramdef", () => {
 		};
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
+		// Clear row selection
+		const cancelButton = wrapper.find("div.properties-table-toolbar").find("button.properties-action-cancel");
+		cancelButton.simulate("click");
+
 		// select the second from the last row and move it to the top and make sure the error messages stay aligned.
 		tableData = tableUtils.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(5);
 		tableUtils.clickTableRows(summaryPanel, [3]);
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
-		const moveRowTop = summaryPanel.find("button.table-row-move-button").at(0);
+		const moveRowTop = wrapper.find("div.properties-table-toolbar").find("button.table-row-move-top-button");
 		moveRowTop.simulate("click");
 
 		messages = renderedController.getAllErrorMessages();
@@ -649,34 +665,53 @@ describe("StructureListEditor render from paramdef", () => {
 		tableUtils.selectCheckboxes(summaryPanel, [0]);
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
 
-		// verify that the select summary row is not present
-		let selectedEditRow = summaryPanel.find("div.properties-at-selectedEditRows");
-		expect(selectedEditRow).to.have.length(0);
+		// verify that the "Edit" button is not present in table toolbar
+		let tableToolbar = wrapper.find("div.properties-table-toolbar");
+		let multiSelectEditButton = tableToolbar.find("button.properties-action-multi-select-edit");
+		expect(multiSelectEditButton).to.have.length(0);
 
-		// multiple select the four row in the table
+		// multiple select four rows in the table
 		tableUtils.selectCheckboxes(summaryPanel, [1, 2, 3]);
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
 
-		// verify that the select summary row is present
-		selectedEditRow = summaryPanel.find("div.properties-at-selectedEditRows");
-		expect(selectedEditRow).to.have.length(1);
+		// verify that the "Edit" button is present in table toolbar
+		tableToolbar = wrapper.find("div.properties-table-toolbar");
+		multiSelectEditButton = tableToolbar.find("button.properties-action-multi-select-edit");
+		expect(multiSelectEditButton).to.have.length(1);
 
-		// change a value in the select summary row.
-		const selectedEditCells = selectedEditRow.find(".properties-table-cell-control");
-		expect(selectedEditCells).to.have.length(2); // Animals column has edit_style: "subpanel". Can't edit from selectedEditCells.
-		const integerNumber = selectedEditCells.at(0).find("input");
+		// verify that the Edit button in selected rows is disabled
+		const selectedRows = tableUtils.getTableRows(wrapper);
+		selectedRows.forEach((row) => {
+			const checkbox = row.find(".properties-vt-row-checkbox").find("input");
+			expect(checkbox.props()).to.have.property("checked", true);
+			const editRowButton = row.find("button.properties-subpanel-button");
+			expect(editRowButton.props()).to.have.property("disabled", true);
+		});
+
+		// Click the multiSelectEditButton in table toolbar
+		multiSelectEditButton.simulate("click");
+
+		// A new panel opens which shows editable columns
+		const wideFlyoutPanel = wrapper.find(".properties-wf-children");
+		const editableColumns = wideFlyoutPanel.find(".properties-editstyle-inline").find(".properties-ctrl-wrapper");
+		expect(editableColumns).to.have.length(2); // Animals column has edit_style: "subpanel". Can't edit from selectedEditCells.
+
+		// Set 44 for Integer field
+		const integerNumber = editableColumns.at(0).find("input");
 		integerNumber.simulate("change", { target: { value: "44" } });
+
+		// Save wide flyout
+		wrapper.find(".properties-modal-buttons").find("button.properties-apply-button")
+			.at(0)
+			.simulate("click");
 
 		// verify that the values have changed in the selected rows.
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "SLE_mse_panel");
 		tableRows = tableUtils.getTableRows(summaryPanel);
-		// need to add one to the row count because multiple rows are still selected
-		// and the selectedSummaryRow is still rendered as the first row, so the tableRows
-		// contains the selectedSummaryRow and the table data rows are indexed +1.
-		expect(tableRows.at(1).find("input")
+		expect(tableRows.at(0).find("input")
 			.at(1)
 			.prop("value")).to.equal(44);
-		expect(tableRows.at(4).find("input")
+		expect(tableRows.at(3).find("input")
 			.at(1)
 			.prop("value")).to.equal(44);
 
@@ -700,21 +735,19 @@ describe("StructureListEditor render from paramdef", () => {
 
 	it("should render empty table content when StructureListEditor is empty", () => {
 		propertyUtils.openSummaryPanel(wrapper, "structurelisteditorTableInput-summary-panel");
-		wrapper.update();
 		let tableWrapper = wrapper.find("div[data-id='properties-ctrl-structurelisteditorTableInput']");
 		expect(tableWrapper).to.have.length(1);
 
 		// Select all rows in configureTableInput
 		tableWrapper.find(".properties-vt-header-checkbox input").simulate("change", { target: { checked: true } });
-		wrapper.update();
 		tableWrapper = wrapper.find("div[data-id='properties-ctrl-structurelisteditorTableInput']");
 		const rows = tableUtils.getTableRows(tableWrapper);
 		const selectedRows = tableUtils.validateSelectedRowNum(rows);
 		expect(selectedRows.length).to.equal(rows.length);
 
 		// Remove all rows
-		tableWrapper.find("button.properties-remove-fields-button").simulate("click");
-		wrapper.update();
+		const deleteButton = wrapper.find("div.properties-table-toolbar").find("button.properties-action-delete");
+		deleteButton.simulate("click");
 		tableWrapper = wrapper.find("div[data-id='properties-ctrl-structurelisteditorTableInput']");
 
 		// Verify empty table content is rendered
