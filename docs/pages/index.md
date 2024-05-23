@@ -22,11 +22,11 @@ display connected nodes representing any kind of operations.
 * Is fast to get running - and **easy to customize**  - with extensive customization capability.
 * Delivers a JSON powered **properties management** component to allow easy, no-code handling of
 mulltiple properties windows - for when you have a multitude of node types each with their own range of properties.
-* Is delivered as a package from the [**NPM registry**](https://www.npmjs.com/package/@elyra/canvas)
 * Conforms to the [**IBM Carbon**](https://carbondesignsystem.com/all-about-carbon/what-is-carbon/) visual design language - and therefore plugs in easily to any application wishing to follow the Carbon standards including dark mode and light mode themes.
 * Delivers built-in **accessibility** so there's no need to worry about keyboard navigation, accessible colors, screen reader integration, etc.
 * Is translated into **12 languages**.
 * Is the mainstay of several IBM products/applications.
+* Is delivered as a package from the [**NPM registry**](https://www.npmjs.com/package/@elyra/canvas)
 
 ## Try Elyra Canvas
 
@@ -44,7 +44,7 @@ The elyra-ai/canvas repo contains three main modules:
 
 	Common Properties is a React component and has an associated properties controller object.
 
-* [Test Harness](https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness#test-harness) - This is a node.js application that wrappers `<CommonCanvas>` and `<CommonProperties>`. Although it is primarily for testing it does provides a UI that:
+* [Test Harness](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/) - This is a node.js application that wrappers `<CommonCanvas>` and `<CommonProperties>`. Although it is primarily for testing it does provides a UI that:
 	* Displays a set of sample applications
 	* Is a sandbox to try out different Elyra Canvas features.
 
