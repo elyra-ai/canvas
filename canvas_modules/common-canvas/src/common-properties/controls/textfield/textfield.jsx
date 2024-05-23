@@ -90,7 +90,7 @@ class TextfieldControl extends React.Component {
 					controller={this.props.controller}
 					tableControl={this.props.tableControl}
 				/>
-				// TODO this could conflict with the below ValidationMessage.
+				{/* // TODO this could conflict with the below ValidationMessage. */}
 				<ValidationMessage inTable={this.props.tableControl} state={""} messageInfo={errorMessage} />
 			</div>);
 		} else {
