@@ -63,16 +63,16 @@ You can install `@elyra/canvas` in your project by using one of these methods:
 
 -  Run the following command using [npm](https://www.npmjs.com/):
 ```
-	npm install @elyra/canvas --save-dev
+npm install @elyra/canvas --save-dev
 ```
 - Add this to your package.json file, where x.x.x is the latest build: 
 ```
-	"@elyra/canvas": "x.x.x"
+"@elyra/canvas": "x.x.x"
 ```
 
 Then run:
 ```
-	npm install
+npm install
 ```
 
 For more details about installation and getting started in Elyra Canvas, check out:
