@@ -86,6 +86,9 @@ mike deploy --push --update-aliases v12.x
 
 # Test changes in local.
 mike serve
+
+# If above changes doesn't reflect any changes made to docs please run below mkdocs command
+mkdocs serve
 ```
 
 5. When complete, open the browser: http://127.0.0.1:8000/
