@@ -48,11 +48,11 @@ The Elyra Canvas package delivers two decoupled React objects: Common Canvas and
 ### Try Elyra Canvas
 
 The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny) is a demonstration application that is produced with only a [few lines of code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js). You can use it to try these features of Elyra Canvas: 
-	* Dragging a node
-	* Editing a comment (by double clicking on it)
-	* Dragging a node from the palette
-	* Clicking a button on the toolbar
-	* Zooming in and out using the scroll gesture
+- Dragging a node
+- Editing a comment (by double clicking on it)
+- Dragging a node from the palette
+- Clicking a button on the toolbar
+- Zooming in and out using the scroll gesture
 
 
 ## Getting started
@@ -61,19 +61,19 @@ Elyra Canvas requires react, react-dom, react-intl, and react-redux libraries to
 
 You can install `@elyra/canvas` in your project by using one of these methods: 
 
-	* Run the following command using [npm](https://www.npmjs.com/):
-	```
+-  Run the following command using [npm](https://www.npmjs.com/):
+```
 	npm install @elyra/canvas --save-dev
-	```
-	* Add this to your package.json file, where x.x.x is the latest build: 
-	```
+```
+- Add this to your package.json file, where x.x.x is the latest build: 
+```
 	"@elyra/canvas": "x.x.x"
-	```
+```
 
-	Then run:
-	```
+Then run:
+```
 	npm install
-	```
+```
 
 For more details about installation and getting started in Elyra Canvas, check out:
 - [Elyra Canvas Initial Setup](https://elyra-ai.github.io/canvas/02-set-up/)
