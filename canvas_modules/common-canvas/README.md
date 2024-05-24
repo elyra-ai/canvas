@@ -48,20 +48,11 @@ The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengi
 
 Elyra Canvas requires react, react-dom, react-intl, and react-redux libraries to be installed. For versions requirements, see `peerDependencies` in [package.json](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/common-canvas/package.json).
 
-You can install `@elyra/canvas` in your project by using one of these methods: 
+You can install `@elyra/canvas` in your project using: 
 
 -  Run the following command using [npm](https://www.npmjs.com/):
 ```
 npm install @elyra/canvas --save-dev
-```
-- Add this to your package.json file, where x.x.x is the latest build: 
-```
-"@elyra/canvas": "x.x.x"
-```
-
-Then run:
-```
-npm install
 ```
 
 For more details about installation and getting started in Elyra Canvas, check out:
