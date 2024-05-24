@@ -17,6 +17,7 @@ limitations under the License.
 -->
 
 ## elyra/canvas
+
 Elyra Canvas is an open-source library, which provides **React** objects that enable applications to **quickly** create a **fully functional flow editor**. Users can easily create and edit the flows of linked nodes by using the **flow editor**.
 
 <p>
@@ -27,19 +28,7 @@ Elyra Canvas is an open-source library, which provides **React** objects that en
 
 ### Elyra Canvas Modules
 
-The elyra-ai/canvas repo contains three main modules:
-
-* [Common Canvas](https://elyra-ai.github.io/canvas/03-common-canvas/) - This contains canvas functionality, which is packaged into the [elyra/canvas NPM module](https://www.npmjs.com/package/@elyra/canvas) and deployed to the NPM registry. It provides a way for an application to display a flow of data operations (shown as a set of nodes connected with links) to the user, and it allows the user to interact with the display to modify the flow.
-
-	Common Canvas is a React component. It is assisted by a regular JavaScript class called `CanvasController`, which provides an API and handles the internal data model of the flow. While Common Canvas can display a working flow editor with little initial development work, it is highly customizable. The node shape and appearance, colors, styles, layout, and more can all be customized by the application. Common Canvas handles flows parsed from, and serialized into, a pipeline flow JSON document. Its palette of available nodes is also customized by the application, which can provide a JSON document that describes groups of nodes.
-
-* [Common Properties](https://elyra-ai.github.io/canvas/04-common-properties/) - This contains properties functionality, which is packaged into the [elyra/canvas NPM module](https://www.npmjs.com/package/@elyra/canvas) and deployed to the NPM registry. It provides a way to translate a JSON document, which describes a set of properties with UI hints, into a working properties dialog panel.
-
-	Common Properties is a React component and has an associated properties controller object.
-
-* [Test Harness](https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness#test-harness) - This is a node.js application that wrappers `<CommonCanvas>` and `<CommonProperties>`. Although it is primarily for testing, the UI can be useful in other ways:
-	* For displaying a set of sample applications
-	* For trying out different Elyra Canvas features in a sandbox environment
+The elyra-ai/canvas repo contains three main modules: Common Canvas, Common Properties and Test Harness. For more details, see [this documentation](https://elyra-ai.github.io/canvas/#elyra-canvas-modules).
 
 ### Elyra Canvas Components Overview
 
@@ -86,11 +75,3 @@ For more details about installation and getting started in Elyra Canvas, check o
 If you're looking for `@elyra/canvas` documentation, check out:
 - [Documentation](https://elyra-ai.github.io/canvas/)
 - [Test Harness Playground](https://ibm.biz/elyra-canvas-test-harness)
-
-## 🙌 Contributing
-
-We're always looking for contributors to help us fix bugs, build new features, or help us improve the project documentation. If you're interested, definitely check out our [Contributing Guide](https://elyra-ai.github.io/canvas/06-contributing/)!
-
-## 📝 License
-
-Licensed under the **Apache-2.0**
