@@ -87,7 +87,7 @@ mike deploy --push --update-aliases v12.x
 # Test changes in local.
 mike serve
 
-# If above command doesn't reflect any changes made to docs please run below mkdocs command
+# If you are working on Elyra Canvas documentation content, you should run the following command, instead of the mike serve command, to see your changes immediately reflected in the browser.
 mkdocs serve
 ```
 
