@@ -240,6 +240,7 @@ class App extends React.Component {
 			selectedNodeLayout: null,
 			selectedCanvasLayout: null,
 			selectedStateTagTip: "",
+			enableLinksOverNodes: false,
 
 			// Common properties state variables
 			propertiesInfo: {},
@@ -2111,7 +2112,8 @@ class App extends React.Component {
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
 			enableSingleOutputPortDisplay: this.state.selectedSingleOutputPortDisplay,
 			enableNodeLayout: this.state.selectedNodeLayout,
-			enableCanvasLayout: this.state.selectedCanvasLayout
+			enableCanvasLayout: this.state.selectedCanvasLayout,
+			enableLinksOverNodes: this.state.enableLinksOverNodes
 		};
 
 		return canvasConfig;

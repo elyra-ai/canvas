@@ -1976,7 +1976,9 @@ export default class SVGCanvasRenderer {
 					return;
 				}
 				const nodeGrp = d3.select(d3Event.currentTarget);
-				this.raiseNodeToTop(nodeGrp);
+				if (!this.config.enableLinksOverNodes) {
+					this.raiseNodeToTop(nodeGrp);
+				}
 				this.setNodeStyles(d, "hover", nodeGrp);
 				if (this.config.enableContextToolbar) {
 					this.addContextToolbar(d3Event, d, "node");
@@ -4129,7 +4131,7 @@ export default class SVGCanvasRenderer {
 			});
 		}
 
-		if (!this.isMoving() && !this.isSizing()) {
+		if (!this.isMoving() && !this.isSizing() && !this.config.enableLinksOverNodes) {
 			this.setDisplayOrder(joinedLinkGrps);
 		}
 
@@ -4204,7 +4206,7 @@ export default class SVGCanvasRenderer {
 			.on("mouseleave", (d3Event, link) => {
 				const targetObj = d3Event.currentTarget;
 
-				if (!targetObj.getAttribute("data-selected")) {
+				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes) {
 					this.lowerLinkToBottom(targetObj);
 				}
 				this.setLinkLineStyles(targetObj, link, "default");
