@@ -107,8 +107,7 @@ describe("Test if tips show up in table headers correctly", function() {
 		cy.saveWideFlyout("Configure Rename fields");
 	});
 
-	// TODO : Enable this test after fixing table tooltip issue.
-	it.skip("Test if tips show when checkbox in header has ellipsis", function() {
+	it("Test if tips show when checkbox in header has ellipsis", function() {
 		cy.toggleCategory("More Tables");
 		cy.openSubPanel("Configure Dummy Types");
 		cy.get(".properties-wf-children div[data-id='properties-vt-header-override']")
