@@ -756,6 +756,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableLinksOverNodes = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedLinksOverNodes"
+				labelText="Enable Links Over Nodes"
+				toggled={this.props.getStateValue("selectedLinksOverNodes")}
+				onToggle={(val) => this.setStateValue(val, "selectedLinksOverNodes")}
+			/>
+		</div>);
+
 		var enableImageDisplay = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-selection">
 			<FormGroup
 				legendText="Enable Image Display"
@@ -1564,6 +1573,8 @@ export default class SidePanelForms extends React.Component {
 					{enableLinkReplaceOnNewConnection}
 					{divider}
 					{enableAssocLinkCreation}
+					{divider}
+					{enableLinksOverNodes}
 					{divider}
 					{assocLinkType}
 					{divider}
