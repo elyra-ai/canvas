@@ -151,10 +151,18 @@
 		}
 	}
 
-	.d3-data-link .d3-link-line,
-	.d3-data-link .d3-link-line-arrow-head {
-		fill: none;
-		stroke: $layer-selected-inverse;
-		stroke-width: 1;
+	.d3-link-group.d3-data-link {
+		.d3-link-line,
+		.d3-link-line-arrow-head {
+			stroke: $layer-selected-inverse;
+			stroke-width: 1px;
+		}
+
+		&:hover {
+			.d3-link-line,
+			.d3-link-line-arrow-head {
+				stroke-width: 2px;
+			}
+		}
 	}
 }

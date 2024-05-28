@@ -50,6 +50,7 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 			enableResizableNodes: true,
 			enableMarkdownInComments: true,
 			enableDropZoneOnExternalDrag: true,
+			enableContextToolbar: true,
 			enableHighlightNodeOnNewLinkDrag: true,
 			tipConfig: {
 				palette: true,
