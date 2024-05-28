@@ -51,7 +51,7 @@ function dumpStacks(commands) {
 }
 */
 
-describe("command stack handle commmands OK", () => {
+describe("command stack handle commands OK", () => {
 	const action1 = new testAction("a1");
 	const action2 = new testAction("a2");
 	const action3 = new testAction("a3");
