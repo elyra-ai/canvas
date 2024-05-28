@@ -72,7 +72,12 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 				ellipsisPosX: -30,
 				imageDisplay: false,
 				labelDisplay: false,
-				inputPortDisplay: false,
+
+				inputPortObject: "image",
+				inputPortImage: "/images/custom-canvases/flows/decorations/dragStateArrow.svg",
+				inputPortWidth: 20,
+				inputPortHeight: 20,
+
 				outputPortRightPosX: 5,
 				outputPortRightPosY: 30,
 				outputPortObject: "image",
