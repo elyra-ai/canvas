@@ -112,7 +112,7 @@ nav:
     - Node Creation from External Object: 03.07-external-objects.md
     - External Pipeline Flows: 03.08-external-pipeline-flows.md
     - Read Only or Locked Flows: 03.09-read-only-or-locked-flows.md
-    - Commmand Stack: 03.10-command-stack.md
+    - Command Stack: 03.10-command-stack.md
     - Internal Actions: 03.11-internal-actions.md
     - Deprecated:
       - Context Menu Wrapper: 03.30.01-context-menu-wrapper.md
