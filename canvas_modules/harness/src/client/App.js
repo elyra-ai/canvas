@@ -1683,7 +1683,6 @@ class App extends React.Component {
 				const propsInfo = {
 					title: <FormattedMessage id={"dialog.nodePropertiesTitle"} />,
 					messages: messages,
-					formData: properties.formData,
 					parameterDef: properties,
 					appData: appData,
 					additionalComponents: additionalComponents,
@@ -1798,7 +1797,6 @@ class App extends React.Component {
 		const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
 		const propsInfo = {
 			title: <FormattedMessage id={"dialog.nodePropertiesTitle"} />,
-			formData: properties.formData,
 			parameterDef: properties,
 			additionalComponents: additionalComponents,
 			expressionInfo: expressionInfo,

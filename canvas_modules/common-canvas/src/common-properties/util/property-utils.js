@@ -153,43 +153,6 @@ function getTableFieldIndex(control) {
 	return -1;
 }
 
-// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
-/**
- * Converts old style Modeler inputDataModel into newer datasetMetadata
- */
-function convertInputDataModel(dataModel) {
-	const datasetMetadata = {};
-	datasetMetadata.fields = [];
-	if (dataModel && dataModel.columns) {
-		for (const column of dataModel.columns) {
-			const field = {};
-			field.name = column.name;
-			field.type = convertType(column.storage);
-			field.metadata = {};
-			field.metadata.description = "";
-			if (column.measure) {
-				field.metadata.measure = column.measure.toLowerCase();
-			}
-			if (column.modelingRole) {
-				field.metadata.modeling_role = column.modelingRole.toLowerCase();
-			}
-			datasetMetadata.fields.push(field);
-		}
-	}
-	return datasetMetadata;
-}
-
-/**
- * Converts from Modeler storage to WML type.
- */
-function convertType(storage) {
-	let retVal = storage.toLowerCase();
-	if (storage === "Real") {
-		retVal = "double";
-	}
-	return retVal;
-}
-
 /**
  * Returns true if any subControl within control has 'structureType === object'
  */
@@ -595,7 +558,6 @@ export {
 	formatMessage,
 	evaluateText,
 	getTableFieldIndex,
-	convertInputDataModel,
 	isSubControlStructureObjectType,
 	convertObjectStructureToArray,
 	convertArrayStructureToObject,
