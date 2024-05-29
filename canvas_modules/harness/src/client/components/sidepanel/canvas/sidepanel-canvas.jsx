@@ -126,7 +126,7 @@ export default class SidePanelForms extends React.Component {
 		this.tipConfigChange = this.tipConfigChange.bind(this);
 		this.onDragStart = this.onDragStart.bind(this);
 	}
-	// should be changed to componentDidMount but causes FVT tests to fail
+
 	componentDidMount() { // eslint-disable-line camelcase, react/sort-comp
 		const that = this;
 
