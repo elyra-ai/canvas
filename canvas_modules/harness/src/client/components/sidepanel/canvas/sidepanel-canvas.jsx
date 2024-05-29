@@ -127,7 +127,7 @@ export default class SidePanelForms extends React.Component {
 		this.onDragStart = this.onDragStart.bind(this);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
-	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
+	componentDidMount() { // eslint-disable-line camelcase, react/sort-comp
 		const that = this;
 
 		FormsService.getFiles("diagrams")

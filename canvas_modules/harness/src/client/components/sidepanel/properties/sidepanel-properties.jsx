@@ -119,7 +119,7 @@ export default class SidePanelProperties extends React.Component {
 		};
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
-	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
+	componentDidMount() { // eslint-disable-line camelcase, react/sort-comp
 		const that = this;
 		FormsService.getFiles(FORMS)
 			.then(function(res) {
