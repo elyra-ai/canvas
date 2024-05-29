@@ -53,6 +53,8 @@ class FlexibleTable extends React.Component {
 		this.rowHeight = this.rowHeight.bind(this);
 		this.rowGetter = this.rowGetter.bind(this);
 
+		this.tableRef = React.createRef();
+
 		this.getOriginalRowIndex = this.getOriginalRowIndex.bind(this);
 		this.getLastChildPropertyIdRow = this.getLastChildPropertyIdRow.bind(this);
 
@@ -557,8 +559,11 @@ class FlexibleTable extends React.Component {
 			<div data-id={"properties-ft-" + this.props.scrollKey} className={ftClassname} ref={ (ref) => (this.flexibleTable = ref) }>
 				{ftHeader}
 				<div className="properties-ft-container-panel">
-					<ReactResizeDetector handleWidth onResize={this._updateTableWidth}>
-						<div className={classNames("properties-ft-container-wrapper", this.props.messageInfo ? this.props.messageInfo.type : "")} style={ heightStyle }>
+					<ReactResizeDetector handleWidth onResize={this._updateTableWidth} targetRef={this.tableRef}>
+						<div className={classNames("properties-ft-container-wrapper", this.props.messageInfo ? this.props.messageInfo.type : "")}
+							style={ heightStyle }
+							ref={this.tableRef}
+						>
 							<div className={messageClass}>
 								<VirtualizedTable
 									tableLabel={this.props.tableLabel}
