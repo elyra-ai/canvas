@@ -59,26 +59,16 @@ export default class FlowsProperties extends React.Component {
 			.then(function(res) {
 				const response = res;
 				if (node) {
-					if (response.formData) {
-						if (!isEmpty(node.parameters)) {
-							response.formData.data.currentParameters = node.parameters;
-						}
-						if (!isEmpty(node.uiParameters)) {
-							response.formData.data.uiCurrentParameters = node.uiParameters;
-						}
-						response.formData.label = node.label;
-					} else {
-						if (!isEmpty(node.parameters)) {
-							response.current_parameters = node.parameters;
-						}
-						if (!isEmpty(node.uiParameters)) {
-							response.current_ui_parameters = node.uiParameters;
-						}
-						if (!response.titleDefinition) {
-							response.titleDefinition = {};
-						}
-						response.titleDefinition.title = node.label;
+					if (!isEmpty(node.parameters)) {
+						response.current_parameters = node.parameters;
 					}
+					if (!isEmpty(node.uiParameters)) {
+						response.current_ui_parameters = node.uiParameters;
+					}
+					if (!response.titleDefinition) {
+						response.titleDefinition = {};
+					}
+					response.titleDefinition.title = node.label;
 				}
 				callback(response);
 			});
