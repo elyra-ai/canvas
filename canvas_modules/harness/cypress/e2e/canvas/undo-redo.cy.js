@@ -167,17 +167,17 @@ describe("Test basic undo/redo operations", function() {
 		cy.clickToolbarRedo();
 		cy.verifyNumberOfComments(0);
 
-		// Set column name in common-properties
-		cy.openPropertyDefinition("spark.AddColumn.json");
-		cy.setTextFieldValue("colName", "testValue");
+		// Set a text value in common-properties
+		cy.openPropertyDefinition("textfield_paramDef.json");
+		cy.setTextFieldValue("string_empty", "testValue");
 		cy.saveFlyout();
-		verifyColumnNameEntryInConsole("testValue");
+		verifyTextEntryInConsole("testValue");
 
 		// Undo and redo using toolbar
 		cy.clickToolbarUndo();
-		verifyTextValueIsNotPresentInColumnName("testValue");
+		verifyTextValueIsNotPresentInTextField("testValue");
 		cy.clickToolbarRedo();
-		verifyTextValueIsPresentInColumnName("testValue");
+		verifyTextValueIsPresentInTextField("testValue");
 	});
 });
 
@@ -759,10 +759,10 @@ function verifyNewPropertiesFlyoutTitleEntryInConsole(newTitle) {
 	});
 }
 
-function verifyColumnNameEntryInConsole(columnName) {
+function verifyTextEntryInConsole(textEntry) {
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(columnName).to.equal(lastEventLog.data.form.colName);
+		expect(textEntry).to.equal(lastEventLog.data.form.string_empty);
 	});
 }
 
@@ -799,17 +799,17 @@ function verifyNoErrorMessageInConsole() {
 	});
 }
 
-function verifyTextValueIsNotPresentInColumnName(columnName) {
+function verifyTextValueIsNotPresentInTextField(textField) {
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc, 2);
-		expect("").to.equal(lastEventLog.data.form.colName);
+		expect("").to.equal(lastEventLog.data.form.string_empty);
 	});
 }
 
-function verifyTextValueIsPresentInColumnName(columnName) {
+function verifyTextValueIsPresentInTextField(textField) {
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc, 2);
-		expect(columnName).to.equal(lastEventLog.data.form.colName);
+		expect(textField).to.equal(lastEventLog.data.form.string_empty);
 	});
 }
 
