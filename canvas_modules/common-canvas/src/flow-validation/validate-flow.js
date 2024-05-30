@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import Form from "../common-properties/form/Form";
-import { convertInputDataModel } from "../common-properties/util/property-utils";
 import PropertiesController from "../common-properties/properties-controller";
 import logger from "../../utils/logger";
 import { isEqual } from "lodash";
@@ -71,10 +70,6 @@ function _getFormData(nodeId, pipelineId, getParameterData, canvasController) {
 			formData = Form.makeForm(parameterData.data);
 		} else {
 			formData = parameterData.data.formData;
-		}
-		// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
-		if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
-			formData.data.datasetMetadata = convertInputDataModel(formData.data.inputDataModel);
 		}
 	} else {
 		logger.warn("flow-validation", { message: "No parameter def found for node " + nodeId });

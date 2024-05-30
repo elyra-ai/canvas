@@ -53,24 +53,6 @@ The expressionInfo object must conform to the [expressionInfo schema](https://gi
 The optional messages attribute can be used to set validation messages associated with a node. The format of the message objects is defined in [Pipeline Flow UI schema](https://github.com/elyra-ai/pipeline-schemas/blob/main/common-pipeline/pipeline-flow/pipeline-flow-ui-v3-schema.json)
 
 
-??? warning "Providing Form Data - deprecated"
-
-    A now deprecated alternative to using the paramDef is to provide a formData object in the propertiesInfo.
-    ```js
-      this.propertiesInfo = {
-          formData: this.formData,
-          appData: "{user data returned back in applyPropertyChanges}", // Optional
-          additionalComponents: "{additional control(s) to display}",   // Optional
-          messages: "[node_messages]",                                  // Optional - Node messages array
-          expressionInfo: this.expressionInfo,                          // Optional - Information for expression builder
-          initialEditorSize: "{size}",                                  // Optional - This value will override the value of
-                                                                        // editor_size in uiHints. This can have a value of
-                                                                        // "small", "medium", "large", or null
-          id: "{id}"                                                    // Optional - Unique parameter definition ID
-      }
-    ```
-    See the [formData schema](https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/form)
-
 ### Step 3 : Display the Common Properties object
 
 Finally, you'll need to display the Common Properties object. Inside your render code, add the following:
