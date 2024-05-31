@@ -1976,9 +1976,7 @@ export default class SVGCanvasRenderer {
 					return;
 				}
 				const nodeGrp = d3.select(d3Event.currentTarget);
-				if (!this.config.enableLinksOverNodes) {
-					this.raiseNodeToTop(nodeGrp);
-				}
+				this.raiseNodeToTop(nodeGrp);
 				this.setNodeStyles(d, "hover", nodeGrp);
 				if (this.config.enableContextToolbar) {
 					this.addContextToolbar(d3Event, d, "node");
@@ -4466,7 +4464,9 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableRaiseNodesToTopOnHover &&
 			!this.isDragging() &&
 			this.activePipeline.getSelectedLinksCount() === 0 &&
-			!this.isEditingText()) {
+			!this.isEditingText() &&
+			!this.config.enableLinksOverNodes
+		) {
 			nodeGrp.raise();
 		}
 	}
