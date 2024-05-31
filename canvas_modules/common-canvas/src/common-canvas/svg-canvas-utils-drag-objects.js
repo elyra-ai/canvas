@@ -563,6 +563,9 @@ export default class SVGCanvasUtilsDragObjects {
 		if (this.draggingObjectData.dragObjects?.length > 0) {
 			this.draggingObjectData.dragStartX = this.draggingObjectData.dragObjects[0].x_pos;
 			this.draggingObjectData.dragStartY = this.draggingObjectData.dragObjects[0].y_pos;
+
+			// Apply the 'd3-is-moving' class to the objects being dragged.
+			this.switchIsMovingClass(this.draggingObjectData.dragObjects, true);
 		}
 
 		// If we are dragging an 'insertable' node, set it to be translucent so
@@ -654,7 +657,6 @@ export default class SVGCanvasUtilsDragObjects {
 			this.ren.displaySVGToFitSupernode();
 		}
 
-
 		if (this.existingNodeInsertableIntoLink) {
 			const link = this.ren.getLinkAtMousePos(d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
 			// Set highlighting when there is no link because this will turn
@@ -697,6 +699,9 @@ export default class SVGCanvasUtilsDragObjects {
 		// stops the node flashing when the user just selects the node.
 		clearTimeout(this.startNodeInsertingInLink);
 		clearTimeout(this.startNodeAttachingToDetachedLinks);
+
+		// Remove the 'd3-is-moving' class from the objects being dragged.
+		this.switchIsMovingClass(draggingObjectData.dragObjects, false);
 
 		// If the pointer hasn't moved and enableDragWithoutSelect is enabled we interpret
 		// that as a select on the object.
@@ -774,6 +779,18 @@ export default class SVGCanvasUtilsDragObjects {
 		}
 
 		return selectedObjects;
+	}
+
+	// Switches the 'd3-is-moving' class on and off for the objects currently
+	// being dragged, based on the state passed in.
+	switchIsMovingClass(dragObjects, state) {
+		dragObjects.forEach((obj) => {
+			if (CanvasUtils.isNode(obj)) {
+				this.ren.getNodeGroupSelectionById(obj.id).classed("d3-is-moving", state);
+			} else {
+				this.ren.getCommentGroupSelectionById(obj.id).classed("d3-is-monving", state);
+			}
+		});
 	}
 
 	// Returns true if the current drag objects array has a single node which
