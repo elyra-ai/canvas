@@ -16,7 +16,6 @@
 
 import React from "react";
 import CommonContextMenu from "./../../src/context-menu/common-context-menu";
-import { render } from "../_utils_/mount-utils.js";
 import { createIntlCommonCanvasRTL } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
@@ -61,7 +60,7 @@ describe("CommonContextMenu renders correctly", () => {
 		const _menuDefinition = getMenuDefinition();
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
-		const container = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />)
+		const container = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
 		
 		expectJest(mockContextMenu).toHaveBeenCalledWith({
 			"contextHandler": _contextHandler,
