@@ -23,13 +23,13 @@ import { expect } from "chai";
 describe("Icon renders correctly", () => {
 
 	it("should render a div when type unknown", () => {
-		const icon  = render(<Icon type="unknown"/>);
+		const icon = render(<Icon type="unknown" />);
 		// divs have generic roles, thus when icon is set to unknown, there is supposed to be 2 elements with generic roles
 		expect(icon.getAllByRole("generic")).to.have.length(2);
 	});
 
 	it("should render a svg when type known", () => {
-		const { container } = render(<Icon type="double"/>);
+		const { container } = render(<Icon type="double" />);
 		expect(container.getElementsByClassName("canvas-icon")).to.have.length(1);
 	});
 
