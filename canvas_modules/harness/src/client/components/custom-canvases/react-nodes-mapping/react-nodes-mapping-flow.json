@@ -62,7 +62,7 @@
 							"label": "Stage Variables",
 							"image": "",
 							"x_pos": 40,
-							"y_pos": 400,
+							"y_pos": 428,
 							"description": "Stage varibales for this transformer.",
 							"is_resized": true,
 							"resize_width": 400,
@@ -91,7 +91,16 @@
 					"inputs": [
 						{ "id": "111" },
 						{ "id": "222" },
-						{ "id": "333" },
+						{
+							"id": "333",
+							"links": [
+								{
+									"id": "504aa60b-7422-4adb-adf4-2b6215f46a15",
+									"node_id_ref": "11111",
+									"port_id_ref": "222"
+								}
+							]
+						},
 						{ "id": "444" },
 						{ "id": "555" },
 						{ "id": "666" },
@@ -103,16 +112,7 @@
 						{ "id": "456" },
 						{ "id": "789" },
 						{ "id": "012" },
-						{ 
-							"id": "345",
-							"links": [
-								{
-									"id": "504aa60b-7422-4adb-adf4-2b6215f46a15",
-									"node_id_ref": "11111",
-									"port_id_ref": "111"
-								}
-							] 
-						}
+						{ "id": "345" }
 					],
 					"outputs": [
 					]
@@ -187,7 +187,7 @@
 							"label": "Link_3",
 							"image": "",
 							"x_pos": 608,
-							"y_pos": 400,
+							"y_pos": 428,
 							"description": "Output link columns for this transformer.",
 							"is_resized": true,
 							"resize_width": 600,

@@ -80,7 +80,8 @@ export default class ReactNodesMappingCanvas extends React.Component {
 			enableCanvasLayout: {
 				dataLinkArrowHead: true,
 				linkGap: 4
-			}
+			},
+			enableLinksOverNodes: true
 		});
 		return config;
 	}
