@@ -32,6 +32,9 @@ const CONTAINER_GAP = 48;
 const DEFAUT_NODE_WIDTH = 400;
 const DEFAUT_NODE_HEIGHT = 30;
 
+// Amount in pixels to move the ports over the nodes
+const PORT_POS_INDENT = 8;
+
 
 class MappingContainerNode extends React.Component {
 	constructor(props) {
@@ -356,7 +359,7 @@ class MappingContainerNode extends React.Component {
 			: this.props.nodeData.inputs.map((port) =>
 				({
 					id: port.id,
-					cx: 0,
+					cx: PORT_POS_INDENT,
 					cy: this.isContainerResized() ? this.getFieldElementPortPosY(port.id, nodeDivRect, scrollDivRect) : (headerDivRect.height / 2)
 				}));
 
@@ -365,7 +368,7 @@ class MappingContainerNode extends React.Component {
 			: this.props.nodeData.outputs.map((port) =>
 				({
 					id: port.id,
-					cx: nodeDivRect.width,
+					cx: nodeDivRect.width - PORT_POS_INDENT,
 					cy: this.isContainerResized() ? this.getFieldElementPortPosY(port.id, nodeDivRect, scrollDivRect) : (headerDivRect.height / 2)
 				}));
 
