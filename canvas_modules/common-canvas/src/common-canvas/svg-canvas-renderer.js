@@ -4460,6 +4460,7 @@ export default class SVGCanvasRenderer {
 	// * We are currently dragging to create a new link, or to move objects or detached links
 	// * There are one or more selected links
 	// * We are editing text
+	// * The app has indicated links should be displayed over nodes
 	raiseNodeToTop(nodeGrp) {
 		if (this.config.enableRaiseNodesToTopOnHover &&
 			!this.isDragging() &&
