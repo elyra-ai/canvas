@@ -4131,7 +4131,7 @@ export default class SVGCanvasRenderer {
 			});
 		}
 
-		if (!this.isMoving() && !this.isSizing()) {
+		if (!this.isMoving() && !this.isSizing() && !this.config.enableLinksOverNodes) {
 			this.setDisplayOrder(joinedLinkGrps);
 		}
 
@@ -4206,7 +4206,7 @@ export default class SVGCanvasRenderer {
 			.on("mouseleave", (d3Event, link) => {
 				const targetObj = d3Event.currentTarget;
 
-				if (!targetObj.getAttribute("data-selected")) {
+				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes) {
 					this.lowerLinkToBottom(targetObj);
 				}
 				this.setLinkLineStyles(targetObj, link, "default");
@@ -4460,11 +4460,14 @@ export default class SVGCanvasRenderer {
 	// * We are currently dragging to create a new link, or to move objects or detached links
 	// * There are one or more selected links
 	// * We are editing text
+	// * The app has indicated links should be displayed over nodes
 	raiseNodeToTop(nodeGrp) {
 		if (this.config.enableRaiseNodesToTopOnHover &&
 			!this.isDragging() &&
 			this.activePipeline.getSelectedLinksCount() === 0 &&
-			!this.isEditingText()) {
+			!this.isEditingText() &&
+			!this.config.enableLinksOverNodes
+		) {
 			nodeGrp.raise();
 		}
 	}
