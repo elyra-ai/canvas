@@ -81,8 +81,6 @@ mkdocs gh-deploy --force
 mike deploy --push --update-aliases v13 latest
 mike set-default v13
 
-# This command will create a folder named as v12.x in gh-pages branch.
-mike deploy --push --update-aliases v12.x
 
 # Test changes in local.
 mike serve
