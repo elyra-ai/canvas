@@ -57,12 +57,12 @@ describe("CommonContextMenu renders correctly", () => {
 
 	it("all required props should have been defined", () => {
 
-		//Make sure the component rendered, RTL doesn't have a good way of testing props
 		const _contextHandler = sinon.spy();
 		const _menuDefinition = getMenuDefinition();
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
 		const container = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />)
+		
 		expectJest(mockContextMenu).toHaveBeenCalledWith({
 			"contextHandler": _contextHandler,
 			"menuDefinition": _menuDefinition,
@@ -76,13 +76,8 @@ describe("CommonContextMenu renders correctly", () => {
 		const _menuDefinition = getMenuDefinition();
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
-		// const wrapper = render(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		//context-menu-item has the role "menuitem"
-		const { container } = createContextMenu();
-		// wrapper.debug();
+		const { container } = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
 		
-		// expect(wrapper.getAllByRole("menuitem")).to.have.length(2);
-		// expect(wrapper.getByText(".context-menu-divider")).to.have.length(1);
 		expect(container.getElementsByClassName("context-menu-item")).to.have.length(2);
 		expect(container.getElementsByClassName("context-menu-divider")).to.have.length(1);
 	});
@@ -92,7 +87,8 @@ describe("CommonContextMenu renders correctly", () => {
 		const _menuDefinition = getMenuDefinition();
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
-		const wrapper = render(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
+		const wrapper = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
+		
 		// <div class="context-menu-item" role ="menuitem">Do something</div>
 		fireEvent.click(wrapper.getByText('Do something'));
 		expect(_contextHandler.calledOnce).to.equal(true);
@@ -104,14 +100,17 @@ describe("CommonContextMenu renders correctly", () => {
 		const _canvasRect = { width: 1000, height: 1000, left: 0, top: 0, right: 1000, bottom: 1000 };
 		const _mousePos = { x: 950, y: 100 };
 		const { container } = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		// expect(wrapper.prop("contextHandler")).to.equal(_contextHandler);
-		// expect(wrapper.prop("menuDefinition")).to.equal(_menuDefinition);
-		// const wrapper = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
+		
+		expectJest(mockContextMenu).toHaveBeenCalledWith({
+			"contextHandler": _contextHandler,
+			"menuDefinition": _menuDefinition,
+			"canvasRect": _canvasRect,
+			"mousePos": _mousePos
+		});
 
-		// wrapper.debug();
 		const subMenuItem = container.getElementsByClassName("context-menu-submenu")[0];
-		// const subMenuItem = subMenuItems.item(0); //subMenuItems doesn't exist
 		const style = subMenuItem.style;
+
 		// If left property is negative, the submenu is on the left of the main menu.
 		expect(style.left).to.equal("-160px");
 	});
@@ -426,19 +425,3 @@ function isCreateSupernodeThere(defaultMenu) {
 	return isCreateSupernode;
 }
 
-function createContextMenu(){
-	const _contextHandler = sinon.spy();
-	const _menuDefinition = getMenuDefinition();
-	const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
-	const _mousePos = { x: 20, y: 20 };
-
-	const wrapper = renderWithIntl(
-		<CommonContextMenu 
-		contextHandler={_contextHandler} 
-		menuDefinition={_menuDefinition} 
-		canvasRect={_canvasRect} 
-		mousePos={_mousePos} />
-	);
-	return wrapper;
-	
-}
