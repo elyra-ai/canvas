@@ -60,8 +60,7 @@ describe("CommonContextMenu renders correctly", () => {
 		const _menuDefinition = getMenuDefinition();
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
-		const container = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		
+		renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
 		expectJest(mockContextMenu).toHaveBeenCalledWith({
 			"contextHandler": _contextHandler,
 			"menuDefinition": _menuDefinition,
@@ -76,7 +75,7 @@ describe("CommonContextMenu renders correctly", () => {
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
 		const { container } = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		
+
 		expect(container.getElementsByClassName("context-menu-item")).to.have.length(2);
 		expect(container.getElementsByClassName("context-menu-divider")).to.have.length(1);
 	});
@@ -87,9 +86,8 @@ describe("CommonContextMenu renders correctly", () => {
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
 		const wrapper = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		
 		// <div class="context-menu-item" role ="menuitem">Do something</div>
-		fireEvent.click(wrapper.getByText('Do something'));
+		fireEvent.click(wrapper.getByText("Do something"));
 		expect(_contextHandler.calledOnce).to.equal(true);
 	});
 
@@ -98,15 +96,14 @@ describe("CommonContextMenu renders correctly", () => {
 		const _menuDefinition = getNestedMenuDefinition();
 		const _canvasRect = { width: 1000, height: 1000, left: 0, top: 0, right: 1000, bottom: 1000 };
 		const _mousePos = { x: 950, y: 100 };
-		const { container } = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		
+		const wrapper = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
+		const { container } = wrapper;
 		expectJest(mockContextMenu).toHaveBeenCalledWith({
 			"contextHandler": _contextHandler,
 			"menuDefinition": _menuDefinition,
 			"canvasRect": _canvasRect,
 			"mousePos": _mousePos
 		});
-
 		const subMenuItem = container.getElementsByClassName("context-menu-submenu")[0];
 		const style = subMenuItem.style;
 
