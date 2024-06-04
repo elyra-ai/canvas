@@ -15,11 +15,13 @@
  */
 
 import React from "react";
-import CommonContextMenu from "../../src/context-menu/common-context-menu.jsx";
-import { mount } from "../_utils_/mount-utils.js";
-import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
+import CommonContextMenu from "./../../src/context-menu/common-context-menu";
+import { render } from "../_utils_/mount-utils.js";
+import { createIntlCommonCanvasRTL } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
+import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
+import { fireEvent } from "@testing-library/react";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import getContextMenuDefiniton from "../../src/common-canvas/canvas-controller-menu-utils";
 import supernodeFlow from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
@@ -36,19 +38,37 @@ import manyNodesCommentsObj from "../test_resources/json/context-menu-test_manyN
 import expSupernodeCommentObj from "../test_resources/json/context-menu-test_expSupernodePlusCommentObject.json";
 import collSupernodeCommentObj from "../test_resources/json/context-menu-test_collSupernodePlusCommentObject.json";
 import nonContiguousSelection from "../test_resources/json/context-menu-test_noncontiguous-selection.json";
+import { renderWithIntl } from "../_utils_/intl-utils.js";
+
+
+const mockContextMenu = jest.fn();
+jest.mock("../../src/context-menu/common-context-menu",
+	() => (props) => mockContextMenu(props)
+);
+
+mockContextMenu.mockImplementation((props) => {
+	const ContextMenuComp = jest.requireActual(
+		"./../../src/context-menu/common-context-menu",
+	).default;
+	return <ContextMenuComp {...props} />;
+});
 
 describe("CommonContextMenu renders correctly", () => {
 
 	it("all required props should have been defined", () => {
+
+		//Make sure the component rendered, RTL doesn't have a good way of testing props
 		const _contextHandler = sinon.spy();
 		const _menuDefinition = getMenuDefinition();
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
-		const wrapper = mount(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		expect(wrapper.prop("contextHandler")).to.equal(_contextHandler);
-		expect(wrapper.prop("menuDefinition")).to.equal(_menuDefinition);
-		expect(wrapper.prop("canvasRect")).to.equal(_canvasRect);
-		expect(wrapper.prop("mousePos")).to.equal(_mousePos);
+		const container = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />)
+		expectJest(mockContextMenu).toHaveBeenCalledWith({
+			"contextHandler": _contextHandler,
+			"menuDefinition": _menuDefinition,
+			"canvasRect": _canvasRect,
+			"mousePos": _mousePos
+		});
 	});
 
 	it("should render two context menu items and one divider components", () => {
@@ -56,9 +76,15 @@ describe("CommonContextMenu renders correctly", () => {
 		const _menuDefinition = getMenuDefinition();
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
-		const wrapper = mount(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		expect(wrapper.find(".context-menu-item")).to.have.length(2);
-		expect(wrapper.find(".context-menu-divider")).to.have.length(1);
+		// const wrapper = render(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
+		//context-menu-item has the role "menuitem"
+		const { container } = createContextMenu();
+		// wrapper.debug();
+		
+		// expect(wrapper.getAllByRole("menuitem")).to.have.length(2);
+		// expect(wrapper.getByText(".context-menu-divider")).to.have.length(1);
+		expect(container.getElementsByClassName("context-menu-item")).to.have.length(2);
+		expect(container.getElementsByClassName("context-menu-divider")).to.have.length(1);
 	});
 
 	it("simulates click events", () => {
@@ -66,9 +92,9 @@ describe("CommonContextMenu renders correctly", () => {
 		const _menuDefinition = getMenuDefinition();
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
-		const wrapper = mount(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		wrapper.find(".context-menu-item").at(0)
-			.simulate("click");
+		const wrapper = render(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
+		// <div class="context-menu-item" role ="menuitem">Do something</div>
+		fireEvent.click(wrapper.getByText('Do something'));
 		expect(_contextHandler.calledOnce).to.equal(true);
 	});
 
@@ -77,13 +103,15 @@ describe("CommonContextMenu renders correctly", () => {
 		const _menuDefinition = getNestedMenuDefinition();
 		const _canvasRect = { width: 1000, height: 1000, left: 0, top: 0, right: 1000, bottom: 1000 };
 		const _mousePos = { x: 950, y: 100 };
-		const wrapper = mount(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		expect(wrapper.prop("contextHandler")).to.equal(_contextHandler);
-		expect(wrapper.prop("menuDefinition")).to.equal(_menuDefinition);
+		const { container } = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
+		// expect(wrapper.prop("contextHandler")).to.equal(_contextHandler);
+		// expect(wrapper.prop("menuDefinition")).to.equal(_menuDefinition);
+		// const wrapper = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
 
-		const subMenuItems = wrapper.find(".context-menu-submenu");
-		const subMenuItem = subMenuItems.at(0);
-		const style = subMenuItem.prop("style");
+		// wrapper.debug();
+		const subMenuItem = container.getElementsByClassName("context-menu-submenu")[0];
+		// const subMenuItem = subMenuItems.item(0); //subMenuItems doesn't exist
+		const style = subMenuItem.style;
 		// If left property is negative, the submenu is on the left of the main menu.
 		expect(style.left).to.equal("-160px");
 	});
@@ -368,7 +396,7 @@ function createCommonCanvas(config, canvasController, canvasParams, contextMenuC
 		enable: true
 	};
 	const canvasParameters = canvasParams || {};
-	const wrapper = createIntlCommonCanvas(
+	const wrapper = createIntlCommonCanvasRTL(
 		config,
 		contextMenuHandler,
 		beforeEditActionHandler,
@@ -396,4 +424,21 @@ function isCreateSupernodeThere(defaultMenu) {
 		}
 	});
 	return isCreateSupernode;
+}
+
+function createContextMenu(){
+	const _contextHandler = sinon.spy();
+	const _menuDefinition = getMenuDefinition();
+	const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
+	const _mousePos = { x: 20, y: 20 };
+
+	const wrapper = renderWithIntl(
+		<CommonContextMenu 
+		contextHandler={_contextHandler} 
+		menuDefinition={_menuDefinition} 
+		canvasRect={_canvasRect} 
+		mousePos={_mousePos} />
+	);
+	return wrapper;
+	
 }
