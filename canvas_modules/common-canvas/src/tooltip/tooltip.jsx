@@ -462,6 +462,9 @@ class ToolTip extends React.Component {
 						target="_blank"
 						rel="noopener"
 						visited={false}
+						onMouseDown={(evt) => {
+							evt.preventDefault();
+						}}
 					>
 						{linkInformation.label}
 					</Link>
