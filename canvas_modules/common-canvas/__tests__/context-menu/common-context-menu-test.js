@@ -86,7 +86,8 @@ describe("CommonContextMenu renders correctly", () => {
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
 		const wrapper = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		// <div class="context-menu-item" role ="menuitem">Do something</div>
+		// To simulate click events, we want to click on the menu item, and one of the menu items has the text "Do something"
+		// so we use getByText to click the on that specific menu item
 		fireEvent.click(wrapper.getByText("Do something"));
 		expect(_contextHandler.calledOnce).to.equal(true);
 	});
