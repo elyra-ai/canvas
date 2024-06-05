@@ -15,7 +15,7 @@
  */
 
 import React from "react";
-import { mount, shallow } from "enzyme";
+import { render } from "@testing-library/react";
 import Icon from "../../src/icons/icon.jsx";
 import { expect } from "chai";
 
@@ -23,23 +23,23 @@ import { expect } from "chai";
 describe("Icon renders correctly", () => {
 
 	it("should render a div when type unknown", () => {
-		const icon = shallow(<Icon type="unknown" />);
-		expect(icon.find("div")).to.have.length(1);
+		const icon = render(<Icon type="unknown" />);
+		// divs have generic roles, thus when icon is set to unknown, there is supposed to be 2 elements with generic roles
+		expect(icon.getAllByRole("generic")).to.have.length(2);
 	});
 
 	it("should render a svg when type known", () => {
-		const icon = mount(<Icon type="double" />);
-
-		expect(icon.find("svg")).to.have.length(1);
+		const { container } = render(<Icon type="double" />);
+		expect(container.getElementsByClassName("canvas-icon")).to.have.length(1);
 	});
 
 	it("should render a svg with class name", () => {
-		const icon = mount(<Icon type="integer" className="svg-test-class" />);
-		expect(icon.find("svg.svg-test-class")).to.have.length(1);
+		const { container } = render(<Icon type="integer" className="svg-test-class" />);
+		expect(container.getElementsByClassName("svg-test-class")).to.have.length(1);
 	});
 
 	it("should render a svg with class 'properties-icon'", () => {
-		const icon = mount(<Icon type="measurement-empty" />);
-		expect(icon.find("svg.properties-icon")).to.have.length(1);
+		const { container } = render(<Icon type="measurement-empty" />);
+		expect(container.getElementsByClassName("properties-icon")).to.have.length(1);
 	});
 });
