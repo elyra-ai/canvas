@@ -124,7 +124,6 @@ import {
 	INPUT_PORT,
 	OUTPUT_PORT,
 	NOTIFICATION_MESSAGE_TYPE,
-	FORMS,
 	PARAMETER_DEFS,
 	PRIMARY,
 	TOOLBAR_LAYOUT_TOP,
@@ -240,6 +239,7 @@ class App extends React.Component {
 			selectedNodeLayout: null,
 			selectedCanvasLayout: null,
 			selectedStateTagTip: "",
+			selectedLinksOverNodes: false,
 
 			// Common properties state variables
 			propertiesInfo: {},
@@ -320,7 +320,6 @@ class App extends React.Component {
 		this.currentEditorId2 = null;
 
 		this.consoleout = [];
-		this.availableForms = [];
 		this.availableParamDefs = [];
 
 		this.openConsole = this.openConsole.bind(this);
@@ -483,10 +482,6 @@ class App extends React.Component {
 	componentDidMount() {
 		this.setBreadcrumbsDefinition();
 		const that = this;
-		FormsService.getFiles(FORMS)
-			.then(function(res) {
-				that.availableForms = res;
-			});
 		FormsService.getFiles(PARAMETER_DEFS)
 			.then(function(res) {
 				that.availableParamDefs = res;
@@ -602,17 +597,10 @@ class App extends React.Component {
 				propertiesFileChooserVisible: false
 			}, function() {
 				that.log("Submit common properties file", that.state.selectedPropertiesDropdownFile);
-				if (selectedPropertiesFileCategory === PARAMETER_DEFS) {
-					FormsService.getFileContent(PARAMETER_DEFS, that.state.selectedPropertiesDropdownFile)
-						.then(function(res) {
-							that.setPropertiesJSON(res);
-						});
-				} else {
-					FormsService.getFileContent(FORMS, that.state.selectedPropertiesDropdownFile)
-						.then(function(res) {
-							that.setPropertiesJSON(res);
-						});
-				}
+				FormsService.getFileContent(PARAMETER_DEFS, that.state.selectedPropertiesDropdownFile)
+					.then(function(res) {
+						that.setPropertiesJSON(res);
+					});
 			});
 		}
 	}
@@ -623,14 +611,7 @@ class App extends React.Component {
 
 	getPropertyDefName(node) {
 		if (node.op) {
-			let foundName = this.availableForms.find((name) => name.startsWith(node.op));
-			if (foundName) {
-				return {
-					fileName: foundName,
-					type: FORMS
-				};
-			}
-			foundName = this.availableParamDefs.find((name) => name.startsWith(node.op));
+			const foundName = this.availableParamDefs.find((name) => name.startsWith(node.op));
 			if (foundName) {
 				return {
 					fileName: foundName,
@@ -640,7 +621,7 @@ class App extends React.Component {
 		}
 		return {
 			fileName: "default.json",
-			type: FORMS
+			type: PARAMETER_DEFS
 		};
 	}
 
@@ -653,26 +634,16 @@ class App extends React.Component {
 			.then(function(res) {
 				const response = res;
 				if (node) {
-					if (response.formData) {
-						if (!isEmpty(node.parameters)) {
-							response.formData.data.currentParameters = node.parameters;
-						}
-						if (!isEmpty(node.uiParameters)) {
-							response.formData.data.uiCurrentParameters = node.uiParameters;
-						}
-						response.formData.label = node.label;
-					} else {
-						if (!isEmpty(node.parameters)) {
-							response.current_parameters = node.parameters;
-						}
-						if (!isEmpty(node.uiParameters)) {
-							response.current_ui_parameters = node.uiParameters;
-						}
-						if (!response.titleDefinition) {
-							response.titleDefinition = {};
-						}
-						response.titleDefinition.title = node.label;
+					if (!isEmpty(node.parameters)) {
+						response.current_parameters = node.parameters;
 					}
+					if (!isEmpty(node.uiParameters)) {
+						response.current_ui_parameters = node.uiParameters;
+					}
+					if (!response.titleDefinition) {
+						response.titleDefinition = {};
+					}
+					response.titleDefinition.title = node.label;
 				}
 				callback(response);
 			});
@@ -1683,7 +1654,6 @@ class App extends React.Component {
 				const propsInfo = {
 					title: <FormattedMessage id={"dialog.nodePropertiesTitle"} />,
 					messages: messages,
-					formData: properties.formData,
 					parameterDef: properties,
 					appData: appData,
 					additionalComponents: additionalComponents,
@@ -1798,7 +1768,6 @@ class App extends React.Component {
 		const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
 		const propsInfo = {
 			title: <FormattedMessage id={"dialog.nodePropertiesTitle"} />,
-			formData: properties.formData,
 			parameterDef: properties,
 			additionalComponents: additionalComponents,
 			expressionInfo: expressionInfo,
@@ -2111,7 +2080,8 @@ class App extends React.Component {
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
 			enableSingleOutputPortDisplay: this.state.selectedSingleOutputPortDisplay,
 			enableNodeLayout: this.state.selectedNodeLayout,
-			enableCanvasLayout: this.state.selectedCanvasLayout
+			enableCanvasLayout: this.state.selectedCanvasLayout,
+			enableLinksOverNodes: this.state.selectedLinksOverNodes
 		};
 
 		return canvasConfig;

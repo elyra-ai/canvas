@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,152 +18,36 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "@carbon/react";
-import { formatMessage } from "./../../util/property-utils";
-import { ArrowUp, ArrowDown, UpToTop, DownToBottom } from "@carbon/react/icons";
-import classNames from "classnames";
-import EmptyTable from "./../empty-table";
-import { MESSAGE_KEYS } from "./../../constants/constants";
+import { TrashCan, Edit, UpToTop, ChevronUp, ChevronDown, DownToBottom } from "@carbon/react/icons";
+import { MESSAGE_KEYS, STATES } from "../../constants/constants";
+import { formatMessage } from "../../util/property-utils";
+import SubPanelInvoker from "./../../panels/sub-panel/invoker";
+import { cloneDeep } from "lodash";
 
-class MoveableTableRows extends React.Component {
+class TableToolbar extends React.Component {
 	constructor(props) {
 		super(props);
-
-		this.getTableRowMoveImages = this.getTableRowMoveImages.bind(this);
+		this.reactIntl = this.props.controller.getReactIntl();
+		this.handleCancel = this.handleCancel.bind(this);
+		this.showSubPanel = this.showSubPanel.bind(this);
+		this.onSubPanelHidden = this.onSubPanelHidden.bind(this);
+		this.getTableRowMoveButtons = this.getTableRowMoveButtons.bind(this);
 		this.topMoveRow = this.topMoveRow.bind(this);
 		this.upMoveRow = this.upMoveRow.bind(this);
 		this.downMoveRow = this.downMoveRow.bind(this);
 		this.bottomMoveRow = this.bottomMoveRow.bind(this);
-		this.getMoveableTableRows = this.getMoveableTableRows.bind(this);
 		this.getLeastValue = this.getLeastValue.bind(this);
 		this.getMaxValue = this.getMaxValue.bind(this);
 	}
 
-	getMoveableTableRows() {
-		let moveCol = null;
-		if (typeof this.props.control.moveableRows !== "undefined" && this.props.control.moveableRows) {
-			const moveImages = this.getTableRowMoveImages();
-			moveCol = (
-				<div
-					className="properties-mr-button-container"
-				>
-					{moveImages}
-				</div>
-			);
+	onSubPanelHidden(applyChanges) {
+		// on cancel reset back to original value
+		if (!applyChanges) {
+			this.props.controller.updatePropertyValue(this.props?.multiSelectEditRowPropertyId, this.initialMultiSelectEditRowValue);
+			this.props.controller.updatePropertyValue(this.props.propertyId, this.initialControlValue);
+			this.props.controller.setErrorMessages(this.initialMessages);
+			this.props.controller.setControlStates(this.initialStates);
 		}
-
-		// Added role presentation to fix a11y violation - no headers in the table
-		const content = (<table role="presentation" className="properties-mr-table-container">
-			<tbody>
-				<tr className={classNames("properties-mr-table-content", { "disabled": this.props.disabled })}>
-					<td>
-						{this.props.tableContainer}
-					</td>
-					<td>
-						{moveCol}
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		);
-
-		return (
-			<div>
-				{content}
-			</div>
-		);
-	}
-
-	// enabled the move up and down arrows based on which row is selected
-	getTableRowMoveImages() {
-		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort();
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		let topEnabled = (
-			!this.props.disableRowMoveButtons &&
-			(selected.length !== 0 && selected[0] !== 0) &&
-			!this.props.disabled
-		);
-		let bottomEnabled = (
-			!this.props.disableRowMoveButtons &&
-			(selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) &&
-			!this.props.disabled
-		);
-		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
-		if (selected.length > 0 && staticRows.length > 0 && staticRows.includes(selected[0])) {
-			topEnabled = false;
-			bottomEnabled = false;
-		} else if (selected[0] === staticRows[staticRows.length - 1] + 1) {
-			topEnabled = false;
-			bottomEnabled = (
-				!this.props.disableRowMoveButtons &&
-				(selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) &&
-				!this.props.disabled
-			);
-		} else if (selected[0] === staticRows[0] - 1) {
-			bottomEnabled = false;
-		}
-
-
-		const topLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_TOP_DESCRIPTION);
-		const upLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION);
-		const UpToTop24 = React.forwardRef((props, ref) => <UpToTop ref={ref} size={24} {...props} />);
-		const ArrowUp24 = React.forwardRef((props, ref) => <ArrowUp ref={ref} size={24} {...props} />);
-		const topImages = (
-			<div key="topImages">
-				<Button
-					className="table-row-move-button"
-					onClick={this.topMoveRow}
-					disabled={!topEnabled}
-					kind="ghost"
-					renderIcon={UpToTop24}
-					iconDescription={topLabel}
-					tooltipPosition="left"
-					size="sm"
-					hasIconOnly
-				/>
-				<Button
-					className="table-row-move-button"
-					onClick={this.upMoveRow}
-					disabled={!topEnabled}
-					kind="ghost"
-					renderIcon={ArrowUp24}
-					iconDescription={upLabel}
-					tooltipPosition="left"
-					size="sm"
-					hasIconOnly
-				/>
-			</div>
-		);
-		const bottomLabel = formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_DOWN_DESCRIPTION);
-		const downLabel = formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION);
-		const ArrowDown24 = React.forwardRef((props, ref) => <ArrowDown ref={ref} size={24} {...props} />);
-		const DownToBottom24 = React.forwardRef((props, ref) => <DownToBottom ref={ref} size={24} {...props} />);
-		const bottomImages = (
-			<div key="bottomImages">
-				<Button
-					className="table-row-move-button"
-					onClick={this.downMoveRow}
-					disabled={!bottomEnabled}
-					kind="ghost"
-					renderIcon={ArrowDown24}
-					iconDescription={bottomLabel}
-					tooltipPosition="left"
-					size="sm"
-					hasIconOnly
-				/>
-				<Button
-					className="table-row-move-button"
-					onClick={this.bottomMoveRow}
-					disabled={!bottomEnabled}
-					kind="ghost"
-					renderIcon={DownToBottom24}
-					iconDescription={downLabel}
-					tooltipPosition="left"
-					size="sm"
-					hasIconOnly
-				/>
-			</div>
-		);
-		return [topImages, bottomImages];
 	}
 
 	getLeastValue() {
@@ -185,7 +69,89 @@ class MoveableTableRows extends React.Component {
 		return maxValue;
 	}
 
-	topMoveRow(evt) {
+	// enabled the move up and down arrows based on which row is selected
+	getTableRowMoveButtons() {
+		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort();
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		const tableDisabled = this.props.tableState === STATES.DISABLED;
+		let topEnabled = (
+			!this.props.disableRowMoveButtons &&
+			(selected.length !== 0 && selected[0] !== 0) &&
+			!tableDisabled
+		);
+		let bottomEnabled = (
+			!this.props.disableRowMoveButtons &&
+			(selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) &&
+			!tableDisabled
+		);
+		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
+		if (selected.length > 0 && staticRows.length > 0 && staticRows.includes(selected[0])) {
+			topEnabled = false;
+			bottomEnabled = false;
+		} else if (selected[0] === staticRows[staticRows.length - 1] + 1) {
+			topEnabled = false;
+			bottomEnabled = (
+				!this.props.disableRowMoveButtons &&
+				(selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) &&
+				!tableDisabled
+			);
+		} else if (selected[0] === staticRows[0] - 1) {
+			bottomEnabled = false;
+		}
+
+
+		const moveTopLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_TOP);
+		const moveUpLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_UP);
+		const moveDownLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DOWN);
+		const moveBottomLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_BOTTOM);
+
+		return (
+			<>
+				<Button
+					className="table-row-move-top-button"
+					onClick={this.topMoveRow}
+					disabled={!topEnabled}
+					renderIcon={UpToTop}
+					iconDescription={moveTopLabel}
+					tooltipPosition="bottom"
+					size="sm"
+					hasIconOnly
+				/>
+				<Button
+					className="table-row-move-up-button"
+					onClick={this.upMoveRow}
+					disabled={!topEnabled}
+					renderIcon={ChevronUp}
+					iconDescription={moveUpLabel}
+					tooltipPosition="bottom"
+					size="sm"
+					hasIconOnly
+				/>
+				<Button
+					className="table-row-move-down-button"
+					onClick={this.downMoveRow}
+					disabled={!bottomEnabled}
+					renderIcon={ChevronDown}
+					iconDescription={moveDownLabel}
+					tooltipPosition="bottom"
+					size="sm"
+					hasIconOnly
+				/>
+				<Button
+					className="table-row-move-bottom-button"
+					onClick={this.bottomMoveRow}
+					disabled={!bottomEnabled}
+					renderIcon={DownToBottom}
+					iconDescription={moveBottomLabel}
+					tooltipPosition="bottom"
+					size="sm"
+					hasIconOnly
+				/>
+			</>
+		);
+	}
+
+	topMoveRow() {
 		var selected = this.props.controller.getSelectedRows(this.props.propertyId).sort(function(a, b) {
 			return a - b;
 		});
@@ -210,7 +176,7 @@ class MoveableTableRows extends React.Component {
 		this.props.setCurrentControlValueSelected(controlValue, selected);
 	}
 
-	upMoveRow(evt) {
+	upMoveRow() {
 		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort(function(a, b) {
 			return a - b;
 		});
@@ -244,7 +210,7 @@ class MoveableTableRows extends React.Component {
 		}
 	}
 
-	downMoveRow(evt) {
+	downMoveRow() {
 		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort(function(a, b) {
 			return a - b;
 		});
@@ -271,7 +237,7 @@ class MoveableTableRows extends React.Component {
 		}
 	}
 
-	bottomMoveRow(evt) {
+	bottomMoveRow() {
 		var selected = this.props.controller.getSelectedRows(this.props.propertyId).sort(function(a, b) {
 			return a - b;
 		});
@@ -293,46 +259,120 @@ class MoveableTableRows extends React.Component {
 		this.props.setCurrentControlValueSelected(controlValue, selected);
 	}
 
-	render() {
-		return (
-			this.props.isEmptyTable && this.props.addRemoveRows
-				? <EmptyTable
-					control={this.props.control}
-					controller={this.props.controller}
-					emptyTableButtonLabel={this.props.emptyTableButtonLabel}
-					emptyTableButtonClickHandler={this.props.emptyTableButtonClickHandler}
-					disabled={this.props.disabled}
-				/>
-				: this.getMoveableTableRows()
-		);
+	handleCancel() {
+		// Clear row selection
+		this.props.controller.updateSelectedRows(this.props.propertyId, []);
 	}
+
+	showSubPanel() {
+		// sets the current value for parameter.  Used on cancel
+		this.initialMultiSelectEditRowValue = cloneDeep(this.props.controller.getPropertyValue(this.props?.multiSelectEditRowPropertyId));
+		this.initialControlValue = cloneDeep(this.props.controller.getPropertyValue(this.props.propertyId));
+		this.initialMessages = this.props.controller.getAllErrorMessages();
+		this.initialStates = this.props.controller.getControlStates();
+		const multiSelectEditSubPanelTitle = formatMessage(this.reactIntl, MESSAGE_KEYS.MULTI_SELECT_EDIT_SUBPANEL_TITLE);
+		this.subPanelInvoker.showSubDialog(multiSelectEditSubPanelTitle, this.props?.multiSelectEditSubPanel, this.onSubPanelHidden);
+	}
+
+	render() {
+		if ((this.props.addRemoveRows || this.props.moveableRows || this.props.multiSelectEdit) && this.props.selectedRows.length > 0) {
+			const singleRowSelectedLabel = (this.props.smallFlyout)
+				? formatMessage(this.reactIntl, MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL_SMALL_FLYOUT) // item
+				: formatMessage(this.reactIntl, MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL); // item selected
+			const multiRowsSelectedLabel = (this.props.smallFlyout)
+				? formatMessage(this.reactIntl, MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL_SMALL_FLYOUT) // items
+				: formatMessage(this.reactIntl, MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL); // items selected
+			const title = (this.props.selectedRows.length === 1)
+				? `${this.props.selectedRows.length} ${singleRowSelectedLabel}`
+				: `${this.props.selectedRows.length} ${multiRowsSelectedLabel}`;
+			const editLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_EDIT);
+			const deleteLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DELETE);
+			const cancelLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_CANCEL);
+			const applyLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL);
+			const rejectLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
+
+			return (
+				<div className="properties-table-toolbar" >
+					<div className="properties-batch-summary" >
+						<span >{title}</span>
+					</div>
+					<div className="properties-action-list">
+						{
+							this.props.moveableRows
+								? (this.getTableRowMoveButtons())
+								: null
+						}
+						{
+							(this.props.addRemoveRows && !this.props.isReadonlyTable)
+								? (<Button
+									size="sm"
+									renderIcon={TrashCan}
+									hasIconOnly
+									iconDescription={deleteLabel}
+									tooltipPosition="bottom"
+									onClick={this.props.removeSelectedRows}
+									className="properties-action-delete"
+								/>)
+								: null
+						}
+						{
+							this.props.multiSelectEdit
+								? (
+									<SubPanelInvoker ref={ (ref) => (this.subPanelInvoker = ref) }
+										rightFlyout={this.props.rightFlyout}
+										applyLabel={applyLabel}
+										rejectLabel={rejectLabel}
+										controller={this.props.controller}
+									>
+										<Button
+											className="properties-action-multi-select-edit"
+											size="sm"
+											renderIcon={Edit}
+											hasIconOnly
+											iconDescription={editLabel}
+											tooltipPosition="bottom"
+											onClick={this.showSubPanel}
+										/>
+									</SubPanelInvoker>
+								)
+								: null
+						}
+						<Button size="sm" className="properties-action-cancel" onClick={this.handleCancel}>
+							{cancelLabel}
+						</Button>
+					</div>
+				</div>
+			);
+		}
+		return null;
+	}
+
 }
 
-MoveableTableRows.propTypes = {
-	control: PropTypes.object.isRequired,
+TableToolbar.propTypes = {
 	controller: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
-	setCurrentControlValueSelected: PropTypes.func.isRequired,
+	selectedRows: PropTypes.array.isRequired,
+	removeSelectedRows: PropTypes.func.isRequired,
 	setScrollToRow: PropTypes.func.isRequired,
-	tableContainer: PropTypes.object.isRequired,
-	disabled: PropTypes.bool,
-	isEmptyTable: PropTypes.bool.isRequired,
-	emptyTableButtonLabel: PropTypes.string,
-	emptyTableButtonClickHandler: PropTypes.func,
-	disableRowMoveButtons: PropTypes.bool, // set by redux
-	addRemoveRows: PropTypes.bool, // set by redux
-	tableButtons: PropTypes.object // set in by redux
-};
-
-MoveableTableRows.defaultProps = {
-	addRemoveRows: true
+	setCurrentControlValueSelected: PropTypes.func.isRequired,
+	rightFlyout: PropTypes.bool,
+	smallFlyout: PropTypes.bool, // list control in right flyout having editor size small
+	tableState: PropTypes.string,
+	isReadonlyTable: PropTypes.bool,
+	addRemoveRows: PropTypes.bool,
+	moveableRows: PropTypes.bool,
+	multiSelectEdit: PropTypes.bool,
+	multiSelectEditSubPanel: PropTypes.element,
+	multiSelectEditRowPropertyId: PropTypes.object,
+	disableRowMoveButtons: PropTypes.bool // set by redux,
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	// check if row move buttons should be disabled for given propertyId
-	disableRowMoveButtons: ownProps.controller.isDisableRowMoveButtons(ownProps.propertyId),
-	addRemoveRows: ownProps.controller.getAddRemoveRows(ownProps.propertyId),
-	tableButtons: ownProps.controller.getTableButtons(ownProps.propertyId)
+	disableRowMoveButtons: ownProps.controller.isDisableRowMoveButtons(ownProps.propertyId)
 });
 
-export default connect(mapStateToProps)(MoveableTableRows);
+export default connect(mapStateToProps)(TableToolbar);
+
+

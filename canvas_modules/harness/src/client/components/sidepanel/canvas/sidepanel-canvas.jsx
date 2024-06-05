@@ -126,8 +126,8 @@ export default class SidePanelForms extends React.Component {
 		this.tipConfigChange = this.tipConfigChange.bind(this);
 		this.onDragStart = this.onDragStart.bind(this);
 	}
-	// should be changed to componentDidMount but causes FVT tests to fail
-	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
+
+	componentDidMount() { // eslint-disable-line camelcase, react/sort-comp
 		const that = this;
 
 		FormsService.getFiles("diagrams")
@@ -753,6 +753,15 @@ export default class SidePanelForms extends React.Component {
 				labelText="Enable Association Link Creation"
 				toggled={this.props.getStateValue("selectedAssocLinkCreation")}
 				onToggle={(val) => this.setStateValue(val, "selectedAssocLinkCreation")}
+			/>
+		</div>);
+
+		var enableLinksOverNodes = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedLinksOverNodes"
+				labelText="Enable Links Over Nodes"
+				toggled={this.props.getStateValue("selectedLinksOverNodes")}
+				onToggle={(val) => this.setStateValue(val, "selectedLinksOverNodes")}
 			/>
 		</div>);
 
@@ -1564,6 +1573,8 @@ export default class SidePanelForms extends React.Component {
 					{enableLinkReplaceOnNewConnection}
 					{divider}
 					{enableAssocLinkCreation}
+					{divider}
+					{enableLinksOverNodes}
 					{divider}
 					{assocLinkType}
 					{divider}

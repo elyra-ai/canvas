@@ -144,7 +144,6 @@ _defineConstant("NOTIFICATION_MESSAGE_TYPE", {
 });
 
 _defineConstant("LOCAL_FILE_OPTION", "Local File");
-_defineConstant("FORMS", "forms");
 _defineConstant("PARAMETER_DEFS", "parameterDefs");
 
 _defineConstant("PRIMARY", "Primary");
