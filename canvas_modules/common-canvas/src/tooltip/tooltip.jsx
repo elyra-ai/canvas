@@ -33,6 +33,8 @@ class ToolTip extends React.Component {
 		this.pendingTooltip = null;
 		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
 		this.tabKeyPressed = false;
+		// Tooltip should not close if link inside tooltip is clicked.
+		this.linkClicked = false;
 	}
 
 	componentDidMount() {
@@ -343,7 +345,7 @@ class ToolTip extends React.Component {
 	}
 
 	hideTooltipOnScrollAndResize(evt) {
-		if (this.state.isTooltipVisible) {
+		if (this.state.isTooltipVisible && !this.linkClicked) {
 			this.setTooltipVisible(false);
 		}
 	}
@@ -419,7 +421,7 @@ class ToolTip extends React.Component {
 		if (this.props.className) {
 			tipClass += " " + this.props.className;
 		}
-		let linkClicked = false;
+		this.linkClicked = false;
 		let link = null;
 		if (this.state.isTooltipVisible && this.props.tooltipLinkHandler && this.props.link) {
 			const linkInformation = this.props.tooltipLinkHandler(this.props.link);
@@ -443,16 +445,17 @@ class ToolTip extends React.Component {
 						}
 					}}
 					onBlur={() => {
-						if (linkClicked) { // Keep tooltip open when link is clicked
+						if (this.linkClicked) { // Keep tooltip open when link is clicked
 							this.setTooltipVisible(true);
 						} else { // Close the tooltip and shift focus to tooltip icon
 							this.triggerRef.focus();
+							this.linkClicked = false;
 							this.setTooltipVisible(false);
 						}
 					}
 					}
 					onClick={() => {
-						linkClicked = true;
+						this.linkClicked = true;
 					}}
 				>
 					<Link
@@ -462,6 +465,9 @@ class ToolTip extends React.Component {
 						target="_blank"
 						rel="noopener"
 						visited={false}
+						onMouseDown={(evt) => {
+							evt.preventDefault();
+						}}
 					>
 						{linkInformation.label}
 					</Link>
