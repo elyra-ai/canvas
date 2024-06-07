@@ -170,6 +170,7 @@ class ToolbarActionItem extends React.Component {
 					actionItemRect={actionItemRect}
 					expandDirection={"vertical"}
 					containingDivId={this.props.containingDivId}
+					isCascadeMenu={false}
 				/>
 			);
 		}
