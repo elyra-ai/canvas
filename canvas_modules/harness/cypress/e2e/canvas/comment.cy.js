@@ -238,7 +238,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some title text!",
 			textToHighlight: "title",
 			action: "headerStyle",
-			menuAction: "title",
+			menuAction: "Title",
 			markdownText: "# Some title text!",
 			html: "<h1>Some title text!</h1>\n"
 		});
@@ -249,7 +249,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some header text!",
 			textToHighlight: "header",
 			action: "headerStyle",
-			menuAction: "header",
+			menuAction: "Header",
 			markdownText: "## Some header text!",
 			html: "<h2>Some header text!</h2>\n"
 		});
@@ -260,7 +260,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some subheader text!",
 			textToHighlight: "subheader",
 			action: "headerStyle",
-			menuAction: "subheader",
+			menuAction: "Subheader",
 			markdownText: "### Some subheader text!",
 			html: "<h3>Some subheader text!</h3>\n"
 		});
@@ -271,7 +271,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "## Some body text!", // Set initial text to be a header so it can change to body.
 			textToHighlight: "body",
 			action: "headerStyle",
-			menuAction: "body",
+			menuAction: "Body",
 			markdownText: "Some body text!",
 			html: "<p>Some body text!</p>\n"
 		});

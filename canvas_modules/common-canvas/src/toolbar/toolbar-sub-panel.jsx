@@ -65,7 +65,9 @@ class ToolbarSubPanel extends React.Component {
 	}
 
 	render() {
-		const style = generateSubAreaStyle(this.props.expandDirection, this.props.actionItemRect);
+		const style = this.props.isCascadeMenu
+			? generateSubAreaStyle(this.props.expandDirection, this.props.actionItemRect)
+			: null;
 
 		if (this.props.subPanel) {
 			return (
@@ -87,6 +89,7 @@ ToolbarSubPanel.propTypes = {
 	closeSubArea: PropTypes.func,
 	setToolbarFocusAction: PropTypes.func,
 	actionItemRect: PropTypes.object,
+	isCascadeMenu: PropTypes.bool,
 	expandDirection: PropTypes.string.isRequired,
 	containingDivId: PropTypes.string
 };

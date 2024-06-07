@@ -19,7 +19,7 @@ Cypress.Commands.add("clickTextToolbarOption", (action, menuAction) => {
 
 	// The header action causes a menu to appear so we handle that usng menuAction.
 	if (action === "headerStyle") {
-		cy.getTextToolbarAction(menuAction).click();
+		cy.getOptionFromTextToolbarOverflow(menuAction).click({ force: true });
 	}
 });
 
@@ -29,4 +29,19 @@ Cypress.Commands.add("getTextToolbarAction", (action) => {
 
 Cypress.Commands.add("getTextToolbar", () => {
 	cy.get(".text-toolbar");
+});
+
+Cypress.Commands.add("getOptionFromTextToolbarOverflow", (optionName) => {
+	cy.getTextToolbar()
+		.find(".toolbar-popover-list")
+		.find(".toolbar-sub-menu-item")
+		.find("button")
+		.then((options) => {
+			for (let idx = 0; idx < options.length; idx++) {
+				if (options[idx].outerText === optionName) {
+					return options[idx];
+				}
+			}
+			return null;
+		});
 });
