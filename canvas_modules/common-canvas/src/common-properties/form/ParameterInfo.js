@@ -171,6 +171,9 @@ export class ParameterDef {
 		if (settings.className) {
 			this.className = settings.className;
 		}
+		if (settings.helperText) {
+			this.helperText = settings.helperText;
+		}
 	}
 
 	isList() {
@@ -376,7 +379,8 @@ export class ParameterDef {
 				"uionly": propertyOf(param)("uionly"),
 				"actionRef": propertyOf(uihint)("action_ref"),
 				"customValueAllowed": propertyOf(uihint)("custom_value_allowed"),
-				"className": propertyOf(uihint)("class_name")
+				"className": propertyOf(uihint)("class_name"),
+				"helperText": propertyOf(uihint)("helper_text")
 			});
 		}
 		return null;

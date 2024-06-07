@@ -224,7 +224,8 @@
         },
         "place_holder_text": {
           "default": "Enter a string"
-        }
+        },
+        "helper_text": "Enter a string11212"
       },
       {
         "parameter_ref": "string_longControlName",

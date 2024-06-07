@@ -117,6 +117,7 @@ class CheckboxsetControl extends React.Component {
 					labelText={this.props.control.valueLabels[i]}
 					onChange={this.handleChange.bind(this, val)}
 					checked={checked}
+					helperText={this.props.control.helperText}
 				/>
 				{tooltipIcon}
 			</div>);

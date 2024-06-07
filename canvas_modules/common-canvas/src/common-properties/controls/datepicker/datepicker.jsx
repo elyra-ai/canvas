@@ -64,7 +64,6 @@ class DatepickerControl extends React.Component {
 	}
 
 	render() {
-		const helperText = this.props.controller.getResource(`${this.props.control.name}.helper`, null);
 		const className = classNames("properties-datepicker", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
@@ -88,7 +87,7 @@ class DatepickerControl extends React.Component {
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputChange.bind(this)}
 						value={this.state.value}
-						helperText={!this.props.tableControl && helperText}
+						helperText={this.props.control.helperText}
 					/>
 				</DatePicker>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />

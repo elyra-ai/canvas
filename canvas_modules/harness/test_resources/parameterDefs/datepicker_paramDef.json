@@ -101,7 +101,8 @@
         "class_name": "datepicker-control-unique-class",
 				"place_holder_text": {
 					"default": "Enter a date: mm-dd-yyyy"
-				}
+				},
+				"helper_text": "Datepicker helper-text"
       },
 			{
 				"parameter_ref": "datepicker_required",
