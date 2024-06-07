@@ -35,6 +35,11 @@ export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection,
 
 	const thisAreaRect = areaRef.getBoundingClientRect();
 
+	// If one of our parent objects contains the "floating-toolbar" class, we assume
+	// the toolbar is displayed in an 'absolute' position. This changes the offset calculations
+	// for the sub-area being displayed.
+	const isFloatingToolbar = areaRef.closest(".floating-toolbar");
+
 	// Calculate the amount that the panel/menu is outside of the containing div
 	// edges. Positive value means it is outside. Negative is inside.
 	const outsideBottom = actionItemRect.bottom + thisAreaRect.height - containingDivRect.bottom;
@@ -45,14 +50,16 @@ export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection,
 		if (outsideBottom > 0) {
 			const topGap = actionItemRect.top - containingDivRect.top;
 			const newTop = (topGap > thisAreaRect.height)
-				? actionItemRect.top - thisAreaRect.height
-				: actionItemRect.bottom - outsideBottom;
+				? -(thisAreaRect.height)
+				: -(outsideBottom);
 
 			areaRef.style.top = newTop + "px";
 		}
 
 		if (outsideRight > 0) {
-			const newLeft = actionItemRect.left - outsideRight;
+			const newLeft = isFloatingToolbar
+				? actionItemRect.width - outsideRight
+				: actionItemRect.left - containingDivRect.left - outsideRight;
 			areaRef.style.left = newLeft + "px";
 		}
 
@@ -60,12 +67,12 @@ export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection,
 		const outsideRight = actionItemRect.right + thisAreaRect.width - containingDivRect.right;
 
 		if (outsideBottom > 0) {
-			const newTop = thisAreaRect.top - outsideBottom - 2;
+			const newTop = -(outsideBottom + 2);
 			areaRef.style.top = newTop + "px";
 		}
 
 		if (outsideRight > 0) {
-			const newLeft = actionItemRect.left - thisAreaRect.width;
+			const newLeft = -(thisAreaRect.width);
 			areaRef.style.left = newLeft + "px";
 		}
 	}
@@ -78,13 +85,13 @@ export function generateSubAreaStyle(expandDirection, actionItemRect) {
 
 	if (expandDirection === "vertical") {
 		return {
-			top: actionItemRect.bottom + 1,
+			top: actionItemRect.height + 1,
 			left: actionItemRect.left
 		};
 	}
 	return {
-		top: actionItemRect.top - 1,
-		left: actionItemRect.left + actionItemRect.width
+		top: -1,
+		left: actionItemRect.width
 	};
 }
 

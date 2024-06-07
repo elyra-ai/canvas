@@ -34,13 +34,14 @@ Cypress.Commands.add("getOptionFromContextToolbar", (optionName) => {
 });
 
 Cypress.Commands.add("clickOptionFromContextToolbarOverflow", (optionName) => {
-	cy.getOptionFromContextToolbarOverflow(optionName).click();
+	cy.getOptionFromContextToolbarOverflow(optionName).click({ force: true });
 });
 
 Cypress.Commands.add("getOptionFromContextToolbarOverflow", (optionName) => {
 	cy.getContextToolbar()
 		.find(".toolbar-popover-list")
 		.find(".toolbar-sub-menu-item")
+		.find("button")
 		.then((options) => {
 			for (let idx = 0; idx < options.length; idx++) {
 				if (options[idx].outerText === optionName) {
