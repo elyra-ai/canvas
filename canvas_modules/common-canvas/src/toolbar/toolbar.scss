@@ -194,6 +194,7 @@ $toolbar-divider-width: 1px;
 }
 
 .toolbar-sub-menu-item {
+	position: relative; // Allows any cascade sub-menu to be positioned absolutely
 	& button {
 		width: 100%;
 		padding-top: 0;
@@ -362,7 +363,7 @@ $toolbar-divider-width: 1px;
 	width: 200px;
 	z-index: 2; // Make sure sub-area appears above bottom panel
 	display: block;
-	position: fixed; // Actual position will be calculated in the code
+	position: absolute; // Actual position will be calculated in the code
 	list-style-type: none;
 	padding: 0;
 	border: $toolbar-divider-width solid $layer-accent-01;

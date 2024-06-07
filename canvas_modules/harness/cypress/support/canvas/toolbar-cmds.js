@@ -120,7 +120,7 @@ Cypress.Commands.add("dismissNotificationMessage", (index) => {
 });
 
 Cypress.Commands.add("clearAllNotificationMessages", () => {
-	cy.get("button.notification-panel-clear-all").click();
+	cy.get("button.notification-panel-clear-all").click({ force: true });
 });
 
 Cypress.Commands.add("clickToolbarOverflow", () => {
