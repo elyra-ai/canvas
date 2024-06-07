@@ -225,7 +225,7 @@
         "place_holder_text": {
           "default": "Enter a string"
         },
-        "helper_text": "Enter a string11212"
+        "helper_text": "Textfield Helper Text"
       },
       {
         "parameter_ref": "string_longControlName",
