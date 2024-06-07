@@ -1369,7 +1369,7 @@ Cypress.Commands.add("verifyLatestNotificationMessage", (messagesLength, type, t
 Cypress.Commands.add("clickNotificationAtIndex", (index) => {
 	cy.get(".notifications-button-container .notifications")
 		.eq(index)
-		.click();
+		.click({ force: true });
 });
 
 Cypress.Commands.add("verifyNotificationCenterExists", () => {
