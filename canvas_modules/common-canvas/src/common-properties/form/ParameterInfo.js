@@ -172,7 +172,7 @@ export class ParameterDef {
 			this.className = settings.className;
 		}
 		if (settings.helperText) {
-			this.helperText = settings.helperText;
+			this.helperText = ResourceDef.make(settings.helperText);
 		}
 	}
 
@@ -279,6 +279,14 @@ export class ParameterDef {
 	 */
 	getAdditionalText(l10nProvider) {
 		return l10nProvider.l10nResource(this.placeHolderText);
+	}
+
+	/**
+	 * Returns the "additionalHelperText" attribute which can be used to include additional
+	 * helper text associated with the property control on the UI.
+	*/
+	getAdditionalHelperText(l10nProvider) {
+		return l10nProvider.l10nResource(this.helperText);
 	}
 
 	getTextAfter(l10nProvider) {

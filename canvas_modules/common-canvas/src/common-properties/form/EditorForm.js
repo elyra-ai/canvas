@@ -431,6 +431,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	const parameter = isSubControl ? subControl : parameterMetadata.getParameter(paramName);
 
 	const additionalText = parameter.getAdditionalText(l10nProvider);
+	const additionalHelperText = parameter.getAdditionalHelperText(l10nProvider);
 	const orientation = parameter.orientation;
 	const required = parameter.required;
 	if (parameter.numberGenerator) {
@@ -665,7 +666,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.customValueAllowed = parameter.customValueAllowed;
 	settings.className = parameter.className;
 	settings.buttons = buttons;
-	settings.helperText = parameter.helperText;
+	settings.helperText = additionalHelperText;
 	settings.light = _isControlLight(additionalInfo.light, additionalInfo.containerType, parameter.isSubPanelEdit());
 	if (isSubControl) {
 		settings.visible = parameter.visible;

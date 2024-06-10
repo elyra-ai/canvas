@@ -111,16 +111,20 @@ class DatepickerRangeControl extends React.Component {
 	render() {
 		const datepickerRangeStartLabel = `${this.props.control.name}.range.start.label`;
 		const datepickerRangeStartDesc = `${this.props.control.name}.range.start.desc`;
+		const datepickerRangeStartHelper = `${this.props.control.name}.range.start.helper`;
 		const datepickerRangeEndLabel = `${this.props.control.name}.range.end.label`;
 		const datepickerRangeEndDesc = `${this.props.control.name}.range.end.desc`;
+		const datepickerRangeEndHelper = `${this.props.control.name}.range.end.helper`;
 
 		const defaultDatepickerRangeStartLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.DATEPICKER_RANGE_START_LABEL);
 		const defaultDatepickerRangeEndLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.DATEPICKER_RANGE_END_LABEL);
 
 		let startLabel = this.props.controller.getResource(datepickerRangeStartLabel, defaultDatepickerRangeStartLabel);
 		const startDesc = this.props.controller.getResource(datepickerRangeStartDesc, null);
+		const startHelperText = this.props.controller.getResource(datepickerRangeStartHelper, null);
 		let endLabel = this.props.controller.getResource(datepickerRangeEndLabel, defaultDatepickerRangeEndLabel);
 		const endDesc = this.props.controller.getResource(datepickerRangeEndDesc, null);
+		const endHelperText = this.props.controller.getResource(datepickerRangeEndHelper, null);
 
 		startLabel = this.createInfoDesc(startLabel, startDesc, "start");
 		endLabel = this.createInfoDesc(endLabel, endDesc, "end");
@@ -148,7 +152,7 @@ class DatepickerRangeControl extends React.Component {
 						onChange={this.handleInputStartChange.bind(this)}
 						value={this.state.valueStart}
 						onBlur={this.onStartBlur.bind(this)}
-						helperText={this.props.control.helperText}
+						helperText={!this.props.tableControl && startHelperText}
 					/>
 					<DatePickerInput
 						{...validationProps}
@@ -160,7 +164,7 @@ class DatepickerRangeControl extends React.Component {
 						onChange={this.handleInputEndChange.bind(this)}
 						value={this.state.valueEnd}
 						onBlur={this.onEndBlur.bind(this)}
-						helperText={this.props.control.helperText}
+						helperText={!this.props.tableControl && endHelperText}
 					/>
 				</DatePicker>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
