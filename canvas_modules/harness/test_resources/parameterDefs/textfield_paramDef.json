@@ -166,7 +166,10 @@
         "description": {
           "default": "textfield with parameter value set to 'testing'"
         },
-        "class_name": "string-textfield-control-class"
+        "class_name": "string-textfield-control-class",
+        "helper_text": {
+          "default": "textfield with parameter value set to 'testing'"
+        }
       },
       {
         "parameter_ref": "string_charLimit",
@@ -224,8 +227,7 @@
         },
         "place_holder_text": {
           "default": "Enter a string"
-        },
-        "helper_text": "Textfield Helper Text"
+        }
       },
       {
         "parameter_ref": "string_longControlName",

@@ -199,6 +199,9 @@
         "label": {
           "default": "Field null"
         },
+        "helper_text": {
+          "default": "selectcolumn with parameter value set to 'null'"
+        },
         "description": {
           "default": "selectcolumn with parameter value set to 'null'"
         }

@@ -102,8 +102,10 @@
 				"place_holder_text": {
 					"default": "Enter a date: mm-dd-yyyy"
 				},
-				"helper_text": "Datepicker helper-text"
-      },
+				"helper_text": {
+					"default": "Enter a date in the datepicker"
+				}
+      		},
 			{
 				"parameter_ref": "datepicker_required",
 				"label": {
