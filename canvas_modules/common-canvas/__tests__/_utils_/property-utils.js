@@ -17,7 +17,7 @@
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
 import * as UiConditionsParser from "../../src/common-properties/ui-conditions/ui-conditions-parser.js";
-import { mountWithIntlMessages, renderWithIntl } from "./intl-utils";
+import { mountWithIntl, mountWithIntlMessages, renderWithIntl } from "./intl-utils";
 import { expect } from "chai";
 import cloneDeep from "lodash/cloneDeep";
 
@@ -32,6 +32,51 @@ function controllerHandler(propertyController) {
 }
 
 function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverrides, propertiesInfoOverrides) {
+	const applyPropertyChanges = sinon.spy();
+	const closePropertiesDialog = sinon.spy();
+	let callbacks = {
+		applyPropertyChanges: applyPropertyChanges,
+		closePropertiesDialog: closePropertiesDialog,
+		controllerHandler: controllerHandler
+	};
+	if (callbacksOverrides) {
+		callbacks = Object.assign(callbacks, callbacksOverrides);
+	}
+
+	let propertiesInfo = {
+		parameterDef: cloneDeep(paramDef)
+	};
+
+	if (propertiesInfoOverrides) {
+		propertiesInfo = Object.assign(propertiesInfo, propertiesInfoOverrides);
+	}
+
+	let propertiesConfig = {
+		applyOnBlur: true,
+		rightFlyout: true,
+		trimSpaces: true,
+		containerType: "Custom"
+	};
+	if (propertiesConfigOverrides) {
+		propertiesConfig = Object.assign(propertiesConfig, propertiesConfigOverrides);
+	}
+
+	const wrapper = mountWithIntl(
+		<div className="properties-right-flyout">
+			<CommonProperties
+				propertiesInfo={propertiesInfo}
+				propertiesConfig={propertiesConfig}
+				callbacks={callbacks}
+				customControls={[CustomTableControl, CustomToggleControl]}
+				customConditionOps={[CustomOpMax]}
+			/>
+		</div>
+	);
+
+	return { wrapper: wrapper, controller: renderedController, callbacks: callbacks };
+}
+
+function flyoutEditorFormRender(paramDef, propertiesConfigOverrides, callbacksOverrides, propertiesInfoOverrides) {
 	const applyPropertyChanges = sinon.spy();
 	const closePropertiesDialog = sinon.spy();
 	let callbacks = {
@@ -160,6 +205,7 @@ function getParameterFromParamDef(parameterId, paramDef) {
 
 module.exports = {
 	flyoutEditorForm: flyoutEditorForm,
+	flyoutEditorFormRender: flyoutEditorFormRender,
 	flyoutEditorFormWithIntl: flyoutEditorFormWithIntl,
 	setControls: setControls,
 	genLongString: genLongString,

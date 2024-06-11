@@ -168,12 +168,12 @@ describe("actions using paramDef", () => {
 	let wrapper;
 	let renderedObject;
 	beforeEach(() => {
-		renderedObject = propertyUtils.flyoutEditorForm(ACTION_PARAMDEF);
+		renderedObject = propertyUtils.flyoutEditorFormRender(ACTION_PARAMDEF);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("should fire action when image clicked", (done) => {
-		renderedObject = propertyUtils.flyoutEditorForm(ACTION_PARAMDEF, null, { actionHandler: callback }, { appData: appData });
+		renderedObject = propertyUtils.flyoutEditorFormRender(ACTION_PARAMDEF, null, { actionHandler: callback }, { appData: appData });
 		wrapper = renderedObject.wrapper;
 		function callback(id, inAppData, data) {
 			expect(id).to.equal("moon");
