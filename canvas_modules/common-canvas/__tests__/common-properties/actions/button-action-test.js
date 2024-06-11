@@ -15,9 +15,9 @@
  */
 
 import React from "react";
-import { Provider, createStore } from "react-redux";
+import { Provider } from "react-redux";
 import ActionButton from "./../../../src/common-properties/actions/button";
-import { mount, render } from "../../_utils_/mount-utils.js";
+import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
@@ -25,8 +25,6 @@ import Controller from "./../../../src/common-properties/properties-controller";
 import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
 import propertyUtils from "../../_utils_/property-utils";
 import { fireEvent } from "@testing-library/react";
-import { ja } from "../../../../harness/src/intl/locales/index.js";
-import { screen } from '@testing-library/dom'
 
 
 const actionHandler = sinon.spy();
@@ -55,9 +53,9 @@ const action = {
 	"class_name": "custom-class-for-action-button"
 };
 
-  const mockActionButton = jest.fn();
-  jest.mock("./../../../src/common-properties/actions/button",
-  		() => (props) => mockActionButton(props)
+const mockActionButton = jest.fn();
+jest.mock("./../../../src/common-properties/actions/button",
+	() => (props) => mockActionButton(props)
 );
 
 mockActionButton.mockImplementation((props) => {
@@ -212,7 +210,7 @@ describe("action-button renders correctly", () => {
 	});
 });
 
- describe("actions using paramDef", () => {
+describe("actions using paramDef", () => {
 	let wrapper;
 	let renderedObject;
 	beforeEach(() => {
@@ -235,11 +233,11 @@ describe("action-button renders correctly", () => {
 
 	it("action button should have custom classname defined", () => {
 		// class_name defined in uiHints action_info
-		const incrementButton = wrapper.getAllByRole("button", {name: /increment/i})[0];
+		const incrementButton = wrapper.getAllByRole("button", { name: /increment/i })[0];
 		expect(incrementButton.parentElement.parentElement.parentElement.className).to.equal("properties-action-button custom-class-for-action-button");
 
 		// class_name not defined in uiHints action_info
-		const decrementButton = wrapper.getAllByRole("button", {name: /decrement/i})[0];
+		const decrementButton = wrapper.getAllByRole("button", { name: /decrement/i })[0];
 		expect(decrementButton.parentElement.className).to.equal("properties-action-button");
 	});
 });

@@ -72,7 +72,7 @@ mockActionImage.mockImplementation((props) => {
 describe("action-image renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = render(
+		render(
 			<Provider store={controller.getStore()}>
 				<ActionImage
 					action={action}
