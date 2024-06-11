@@ -17,13 +17,14 @@
 import React from "react";
 import { Provider } from "react-redux";
 import ActionImage from ".../../../src/common-properties/actions/image";
-import { mount } from "../../_utils_/mount-utils.js";
+import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 import Controller from "../../../src/common-properties/properties-controller";
-
+import { expect as expectJest } from "@jest/globals";
 import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
 import propertyUtils from "../../_utils_/property-utils";
+import { fireEvent } from "@testing-library/react";
 
 const actionHandler = sinon.spy();
 const controller = new Controller();
@@ -56,10 +57,22 @@ const action = {
 	"class_name": "custom-class-for-action-image"
 };
 
+const mockActionImage = jest.fn();
+jest.mock(".../../../src/common-properties/actions/image",
+	() => (props) => mockActionImage(props)
+);
+
+mockActionImage.mockImplementation((props) => {
+	const ActionImageComp = jest.requireActual(
+		".../../../src/common-properties/actions/image",
+	).default;
+	return <ActionImageComp {...props} />;
+});
+
 describe("action-image renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<Provider store={controller.getStore()}>
 				<ActionImage
 					action={action}
@@ -67,14 +80,13 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-
-		const image = wrapper.find("ImageAction");
-		expect(image).to.have.length(1);
-		expect(image.prop("action")).to.equal(action);
-		expect(image.prop("controller")).to.equal(controller);
+		expectJest(mockActionImage).toHaveBeenCalledWith({
+			"action": action,
+			"controller": controller
+		});
 	});
 	it("should render a `ActionImage`", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<Provider store={controller.getStore()}>
 				<ActionImage
 					action={action}
@@ -82,11 +94,11 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const image = wrapper.find("img");
-		expect(image).to.have.length(1);
-		expect(image.prop("height")).to.equal(20);
-		expect(image.prop("width")).to.equal(25);
-		expect(wrapper.find(".right")).to.have.length(1);
+		wrapper.debug();
+		const image = wrapper.getByRole("img");
+		expect(image.height).to.equal(20);
+		expect(image.width).to.equal(25);
+		expect(image.parentElement.parentElement.parentElement.parentElement.className).to.equal("properties-action-image right");
 	});
 	it("should fire action when image clicked", (done) => {
 		function callback(id, inAppData, data) {
@@ -96,7 +108,7 @@ describe("action-image renders correctly", () => {
 			done();
 		}
 		controller.setHandlers({ actionHandler: callback });
-		const wrapper = mount(
+		const wrapper = render(
 			<Provider store={controller.getStore()}>
 				<ActionImage
 					action={action}
@@ -104,12 +116,12 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const image = wrapper.find("img");
-		image.simulate("click");
+		const image = wrapper.getByRole("img");
+		fireEvent.click(image);
 	});
 	it("action image renders when disabled", () => {
 		controller.updateActionState(actionStateId, "disabled");
-		const wrapper = mount(
+		const wrapper = render(
 			<Provider store={controller.getStore()}>
 				<ActionImage
 					action={action}
@@ -117,12 +129,13 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const imageWrapper = wrapper.find(".properties-action-image");
-		expect(imageWrapper.hasClass("disabled")).to.equal(true);
+		const image = wrapper.getByRole("img");
+		const imageWrapper = image.parentElement.parentElement.parentElement.parentElement;
+		expect(imageWrapper.className.includes("disabled")).to.equal(true);
 	});
 	it("action image renders when hidden", () => {
 		controller.updateActionState(actionStateId, "hidden");
-		const wrapper = mount(
+		const wrapper = render(
 			<Provider store={controller.getStore()}>
 				<ActionImage
 					action={action}
@@ -130,11 +143,12 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const imageWrapper = wrapper.find(".properties-action-image");
-		expect(imageWrapper.hasClass("hide")).to.equal(true);
+		const image = wrapper.getByRole("img");
+		const imageWrapper = image.parentElement.parentElement.parentElement.parentElement;
+		expect(imageWrapper.className.includes("hide")).to.equal(true);
 	});
 	it("action image renders tooltip", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<Provider store={controller.getStore()}>
 				<ActionImage
 					action={action}
@@ -142,9 +156,11 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const tooltip = wrapper.find("div.tooltipContainer");
+		const tooltip = wrapper.getAllByText("Click to rotate through moon phases.");
+		const tooltipWrapper = tooltip[0].parentElement;
 		expect(tooltip).to.have.length(1);
-		expect(tooltip.text()).to.equal("Click to rotate through moon phases.");
+		expect(tooltipWrapper.className).to.equal("tooltipContainer");
+		expect(tooltip[0].textContent).to.equal("Click to rotate through moon phases.");
 	});
 });
 
@@ -165,17 +181,19 @@ describe("actions using paramDef", () => {
 			expect(data.parameter_ref).to.equal("moon_phase");
 			done();
 		}
-		const image = wrapper.find("div[data-id='properties-ctrl-moon_phase']").find("div[data-id='moon'] img");
-		image.simulate("click");
+		const image = wrapper.getAllByRole("img")[21];
+		fireEvent.click(image);
 	});
 
 	it("action image should have custom classname defined", () => {
 		// class_name defined in uiHints action_info
-		const fallImage = wrapper.find(".properties-action-image").at(3);
-		expect(fallImage.prop("className")).to.equal("properties-action-image right custom-class-for-action-image");
+		const images = wrapper.getAllByRole("img");
+		const fallImage = images[3];
+		const winterImage = images[0];
+
+		expect(fallImage.parentElement.parentElement.parentElement.parentElement.className).to.equal("properties-action-image right custom-class-for-action-image");
 
 		// class_name not defined in uiHints action_info
-		const winterImage = wrapper.find(".properties-action-image").at(0);
-		expect(winterImage.prop("className")).to.equal("properties-action-image");
+		expect(winterImage.parentElement.parentElement.parentElement.parentElement.className).to.equal("properties-action-image");
 	});
 });

@@ -17,7 +17,7 @@
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
 import * as UiConditionsParser from "../../src/common-properties/ui-conditions/ui-conditions-parser.js";
-import { mountWithIntl, mountWithIntlMessages } from "./intl-utils";
+import { mountWithIntl, mountWithIntlMessages, renderWithIntl } from "./intl-utils";
 import { expect } from "chai";
 import cloneDeep from "lodash/cloneDeep";
 
@@ -61,7 +61,7 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 		propertiesConfig = Object.assign(propertiesConfig, propertiesConfigOverrides);
 	}
 
-	const wrapper = mountWithIntl(
+	const wrapper = renderWithIntl(
 		<div className="properties-right-flyout">
 			<CommonProperties
 				propertiesInfo={propertiesInfo}
