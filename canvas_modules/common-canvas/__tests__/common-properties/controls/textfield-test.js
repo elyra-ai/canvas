@@ -306,6 +306,23 @@ describe("textfield renders correctly", () => {
 		const messageWrapper = textWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
+
+	it("textfield renders helpertext correctly", () => {
+		control.helperText = "textfield helpertext";
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<Textfield
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const helpTextWrapper = wrapper.find("div[data-id='properties-test-text']");
+		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
+	});
 });
 
 describe("textfield list works correctly", () => {
