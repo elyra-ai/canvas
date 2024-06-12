@@ -596,7 +596,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		const first = items.slice(0, 1);
 		const last = items.slice(1);
 		items = first.concat({ value: this.recentUseCat, label: this.recentUseCat }, last);
-		const label = (this.state.functionCategory === this.recentUseCat) ? this.recentUseCat : this.props.functionList[this.state.functionCategory].locLabel;
+		const selectedFunctionItem = (this.state.functionCategory === this.recentUseCat) ? this.recentUseCat : this.props.functionList[this.state.functionCategory].locLabel;
 		const header = formatMessage(this.reactIntl,
 			MESSAGE_KEYS.TABLE_SEARCH_HEADER);
 		const listBoxMenuIconTranslationIds = {
@@ -608,7 +608,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				<Layer level={this.props.controller.getLight() ? 1 : 0}>
 					<Dropdown
 						id={"properties-expression-function-select-dropdown-" + this.uuid}
-						label={label}
+						label="Choose from below Function List ..."
+						selectedItem={selectedFunctionItem}
 						items={items}
 						onChange={this.onFunctionCatChange}
 						translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
@@ -620,13 +621,18 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	_makeFieldDropdown() {
 		const items = [];
+		let selectedFieldItemLabel = "";
+		const selectedField = this.fields.field_categories.find((category) => category.id === this.state.fieldCategory);
+		if (selectedField) {
+			selectedFieldItemLabel = selectedField.locLabel;
+		}
 		for (let i = 0; i < this.fields.field_categories.length; i++) {
 			items.push({ value: this.fields.field_categories[i].id, label: this.fields.field_categories[i].locLabel });
 		}
 		const first = items.slice(0, 1);
 		const last = items.slice(1);
 		const newItems = first.concat({ value: this.recentUseCat, label: this.recentUseCat }, last);
-		const label = (this.state.fieldCategory === this.recentUseCat) ? this.recentUseCat : items[0].label;
+		const selectedFieldItem = (this.state.fieldCategory === this.recentUseCat) ? this.recentUseCat : selectedFieldItemLabel;
 		const header = formatMessage(this.reactIntl,
 			MESSAGE_KEYS.TABLE_SEARCH_HEADER);
 		const listBoxMenuIconTranslationIds = {
@@ -638,7 +644,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				<Layer level={this.props.controller.getLight() ? 1 : 0}>
 					<Dropdown
 						id={"properties-expression-field-select-dropdown-" + this.uuid}
-						label={label}
+						label="Choose from below Field List ..."
+						selectedItem={selectedFieldItem}
 						items={newItems}
 						onChange={this.onFieldCatChange}
 						translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
