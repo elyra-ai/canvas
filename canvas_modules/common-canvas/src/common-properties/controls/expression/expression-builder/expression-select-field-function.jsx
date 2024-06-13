@@ -608,7 +608,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				<Layer level={this.props.controller.getLight() ? 1 : 0}>
 					<Dropdown
 						id={"properties-expression-function-select-dropdown-" + this.uuid}
-						label={selectedFunctionItem}
+						label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FUNCTIONS_DROPDOWN_TITLE)}
 						selectedItem={selectedFunctionItem}
 						items={items}
 						onChange={this.onFunctionCatChange}
@@ -644,7 +644,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				<Layer level={this.props.controller.getLight() ? 1 : 0}>
 					<Dropdown
 						id={"properties-expression-field-select-dropdown-" + this.uuid}
-						label={selectedFieldItem}
+						label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELDS_DROPDOWN_TITLE)}
 						selectedItem={selectedFieldItem}
 						items={newItems}
 						onChange={this.onFieldCatChange}
