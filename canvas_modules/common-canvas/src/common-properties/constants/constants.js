@@ -68,7 +68,7 @@ export const MESSAGE_KEYS = {
 	EXPRESSION_VALUES_EMPTY_TABLE_LABEL: "expression.values.empty.table.label",
 	EXPRESSION_FUNCTIONS_TABLE_LABEL: "expression.functions.table.label",
 	EXPRESSION_FIELDS_DROPDOWN_TITLE: "expression.fields.dropdown",
-	EXPRESSION_FUNCTIONS_DROPDOWN_TITLE: "expression.function.dropdown",
+	EXPRESSION_FUNCTIONS_DROPDOWN_TITLE: "expression.functions.dropdown",
 	EXPRESSION_FIELDS_TITLE: "expression.fields.title",
 	EXPRESSION_VALUES_TITLE: "expression.values.title",
 	EXPRESSION_FIELD_COLUMN: "expression.field.column",
