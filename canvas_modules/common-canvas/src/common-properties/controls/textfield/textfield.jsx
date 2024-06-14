@@ -102,6 +102,7 @@ class TextfieldControl extends React.Component {
 					id={this.id}
 					disabled={ this.props.state === STATES.DISABLED}
 					placeholder={this.props.control.additionalText}
+					helperText={this.props.control.helperText}
 					onChange={this.handleChange.bind(this)}
 					value={value}
 					labelText={this.props.controlItem}

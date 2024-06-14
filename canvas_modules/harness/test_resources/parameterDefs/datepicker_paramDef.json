@@ -4,83 +4,80 @@
   },
   "current_parameters": {
     "datepicker": "2023-03-17T00:00:00.00",
-		"datepicker_required": "2023-03-17T00:00:00.00",
-		"datepicker_null": null,
-		"hide_datepicker": true,
-		"hidden_datepicker": "2023-03-17T00:00:00.00",
-		"disable_datepicker": true,
-		"disabled_datepicker": "2023-03-17T00:00:00.00",
-		"datepicker_table": [
-			[
-				"2023-03-16T00:00:00.00",
-				"2023-03-17T00:00:00.00",
-				"2023-03-18T00:00:00.00"
-			],
-			[
-				null,
-				"2023-03-17T00:00:00.00",
-				null
-			]
-		]
+    "datepicker_required": "2023-03-17T00:00:00.00",
+    "datepicker_null": null,
+    "hide_datepicker": true,
+    "hidden_datepicker": "2023-03-17T00:00:00.00",
+    "disable_datepicker": true,
+    "disabled_datepicker": "2023-03-17T00:00:00.00",
+    "datepicker_table": [
+      [
+        "2023-03-16T00:00:00.00",
+        "2023-03-17T00:00:00.00",
+        "2023-03-18T00:00:00.00"
+      ],
+      [null, "2023-03-17T00:00:00.00", null]
+    ]
   },
   "parameters": [
     {
       "id": "datepicker",
       "type": "date"
     },
-		{
-			"id": "datepicker_required",
-			"type": "date",
-			"required": true
-		},
-		{
-			"id": "datepicker_undefined",
-			"type": "date"
-		},
-		{
-			"id": "datepicker_null",
-			"type": "date"
-		},
-		{
-			"id": "hide_datepicker",
-			"type": "boolean"
-		},
-		{
-			"id": "hidden_datepicker",
-			"type": "date",
-			"required": true
-		},
-		{
-			"id": "disable_datepicker",
-			"type": "boolean"
-		},
-		{
-			"id": "disabled_datepicker",
-			"type": "date"
-		},
-		{
-			"id": "datepicker_table",
-			"type": "array[datepicker_types]"
-		}
+    {
+      "id": "datepicker_required",
+      "type": "date",
+      "required": true
+    },
+    {
+      "id": "datepicker_undefined",
+      "type": "date"
+    },
+    {
+      "id": "datepicker_null",
+      "type": "date"
+    },
+    {
+      "id": "hide_datepicker",
+      "type": "boolean"
+    },
+    {
+      "id": "hidden_datepicker",
+      "type": "date",
+      "required": true
+    },
+    {
+      "id": "disable_datepicker",
+      "type": "boolean"
+    },
+    {
+      "id": "disabled_datepicker",
+      "type": "date"
+    },
+    {
+      "id": "datepicker_table",
+      "type": "array[datepicker_types]"
+    }
   ],
   "complex_types": [
-		{
-			"id": "datepicker_types",
-			"parameters": [
-				{
-					"id": "datepicker_cell",
-					"type": "date"
-				},
-				{
-					"id": "datepicker_on_panel",
-					"type": "date"
-				},
-				{
-					"id": "datepicker_sub_panel",
-					"type": "date"
-				}
-			]
-		}],
+    {
+      "id": "datepicker_types",
+      "parameters": [
+        {
+          "id": "datepicker_cell",
+          "type": "date"
+        },
+        {
+          "id": "datepicker_on_panel",
+          "type": "date"
+        },
+        {
+          "id": "datepicker_sub_panel",
+          "type": "date"
+        }
+      ]
+    }
+  ],
   "uihints": {
     "id": "datepicker",
     "icon": "images/default.svg",
@@ -96,154 +93,157 @@
         "description": {
           "default": "Datepicker with value of '2023-03-17T00:00:00' in m-d-Y format."
         },
-				"control": "datepicker",
+        "control": "datepicker",
         "date_format": "m-d-Y",
         "class_name": "datepicker-control-unique-class",
-				"place_holder_text": {
-					"default": "Enter a date: mm-dd-yyyy"
-				}
+        "place_holder_text": {
+          "default": "Enter a date: mm-dd-yyyy"
+        },
+        "helper_text": {
+          "default": "Enter a date in the datepicker"
+        }
       },
-			{
-				"parameter_ref": "datepicker_required",
-				"label": {
-					"default": "Date format: Date Y-m-d"
-				},
-				"description": {
-					"default": "Datepicker with no initial value, in Y-m-d format."
-				},
-				"control": "datepicker",
-				"class_name": "datepicker-control-class",
-				"place_holder_text": {
-					"default": "Date format: yyyy-mm-dd"
-				}
-			},
-			{
-				"parameter_ref": "datepicker_undefined",
-				"label": {
-					"default": "Date format: Y-n-j"
-				},
-				"description": {
-					"default": "Datepicker without initial value. This date format accepts single digit month and day."
-				},
-				"control": "datepicker",
-				"date_format": "Y-n-j",
-				"class_name": "datepicker-control-class",
-				"place_holder_text": {
-					"default": "Date: yyyy-m-d"
-				}
-			},
-			{
-				"parameter_ref": "datepicker_null",
-				"label": {
-					"default": "Date format: y-n-j"
-				},
-				"description": {
-					"default": "Datepicker with initial value set to null."
-				},
-				"control": "datepicker",
-				"date_format": "y-n-j",
-				"class_name": "datepicker-control-class",
-				"place_holder_text": {
-					"default": "yy-m-d"
-				}
-			},
-			{
-				"parameter_ref": "hide_datepicker",
-				"label": {
-					"default": "Hide 'hidden_datepicker'"
-				}
-			},
-			{
-				"parameter_ref": "hidden_datepicker",
-				"label": {
-					"default": "Datepicker: Y-m-d"
-				},
-				"description": {
-					"default": "Datepicker will be hidden if above checkbox is checked."
-				},
-				"control": "datepicker",
-				"date_format": "Y-m-d",
-				"class_name": "datepicker-control-class",
-				"place_holder_text": {
-					"default": "yyyy-mm-dd"
-				}
-			},
-			{
-				"parameter_ref": "disable_datepicker",
-				"label": {
-					"default": "Disable 'hidden_datepicker'"
-				}
-			},
-			{
-				"parameter_ref": "disabled_datepicker",
-				"label": {
-					"default": "Datepicker: Y-m-d"
-				},
-				"description": {
-					"default": "Datepicker will be disabled if above checkbox is checked."
-				},
-				"control": "datepicker",
-				"date_format": "Y-m-d",
-				"class_name": "datepicker-control-class",
-				"place_holder_text": {
-					"default": "yyyy-mm-dd"
-				}
-			},
-			{
-				"parameter_ref": "datepicker_table",
-				"label": {
-					"default": "Datepicker table"
-				}
-			}
+      {
+        "parameter_ref": "datepicker_required",
+        "label": {
+          "default": "Date format: Date Y-m-d"
+        },
+        "description": {
+          "default": "Datepicker with no initial value, in Y-m-d format."
+        },
+        "control": "datepicker",
+        "class_name": "datepicker-control-class",
+        "place_holder_text": {
+          "default": "Date format: yyyy-mm-dd"
+        }
+      },
+      {
+        "parameter_ref": "datepicker_undefined",
+        "label": {
+          "default": "Date format: Y-n-j"
+        },
+        "description": {
+          "default": "Datepicker without initial value. This date format accepts single digit month and day."
+        },
+        "control": "datepicker",
+        "date_format": "Y-n-j",
+        "class_name": "datepicker-control-class",
+        "place_holder_text": {
+          "default": "Date: yyyy-m-d"
+        }
+      },
+      {
+        "parameter_ref": "datepicker_null",
+        "label": {
+          "default": "Date format: y-n-j"
+        },
+        "description": {
+          "default": "Datepicker with initial value set to null."
+        },
+        "control": "datepicker",
+        "date_format": "y-n-j",
+        "class_name": "datepicker-control-class",
+        "place_holder_text": {
+          "default": "yy-m-d"
+        }
+      },
+      {
+        "parameter_ref": "hide_datepicker",
+        "label": {
+          "default": "Hide 'hidden_datepicker'"
+        }
+      },
+      {
+        "parameter_ref": "hidden_datepicker",
+        "label": {
+          "default": "Datepicker: Y-m-d"
+        },
+        "description": {
+          "default": "Datepicker will be hidden if above checkbox is checked."
+        },
+        "control": "datepicker",
+        "date_format": "Y-m-d",
+        "class_name": "datepicker-control-class",
+        "place_holder_text": {
+          "default": "yyyy-mm-dd"
+        }
+      },
+      {
+        "parameter_ref": "disable_datepicker",
+        "label": {
+          "default": "Disable 'hidden_datepicker'"
+        }
+      },
+      {
+        "parameter_ref": "disabled_datepicker",
+        "label": {
+          "default": "Datepicker: Y-m-d"
+        },
+        "description": {
+          "default": "Datepicker will be disabled if above checkbox is checked."
+        },
+        "control": "datepicker",
+        "date_format": "Y-m-d",
+        "class_name": "datepicker-control-class",
+        "place_holder_text": {
+          "default": "yyyy-mm-dd"
+        }
+      },
+      {
+        "parameter_ref": "datepicker_table",
+        "label": {
+          "default": "Datepicker table"
+        }
+      }
     ],
     "complex_type_info": [
-			{
-				"complex_type_ref": "datepicker_types",
-				"parameters": [
-					{
-						"parameter_ref": "datepicker_cell",
-						"width": 10,
-						"label": {
-							"default": "Table cell"
-						},
-						"control": "datepicker",
-						"date_format": "Y-m-d",
-						"class_name": "table-datepicker-control-class",
-						"place_holder_text": {
-							"default": "yyyy-mm-dd"
-						}
-					},
-					{
-						"parameter_ref": "datepicker_on_panel",
-						"width": 10,
-						"label": {
-							"default": "on_panel"
-						},
-						"control": "datepicker",
-						"date_format": "Y-m-d",
-						"class_name": "table-on-panel-datepicker-control-class",
-						"edit_style": "on_panel",
-						"place_holder_text": {
-							"default": "yyyy-mm-dd"
-						}
-					},
-					{
-						"parameter_ref": "datepicker_sub_panel",
-						"width": 10,
-						"label": {
-							"default": "sub_panel"
-						},
-						"control": "datepicker",
-						"date_format": "Y-m-d",
-						"edit_style": "subpanel",
-						"class_name": "table-subpanel-datepicker-control-class",
-						"place_holder_text": {
-							"default": "yyyy-mm-dd"
-						}
-					}
-				]
-			}
-		],
+      {
+        "complex_type_ref": "datepicker_types",
+        "parameters": [
+          {
+            "parameter_ref": "datepicker_cell",
+            "width": 10,
+            "label": {
+              "default": "Table cell"
+            },
+            "control": "datepicker",
+            "date_format": "Y-m-d",
+            "class_name": "table-datepicker-control-class",
+            "place_holder_text": {
+              "default": "yyyy-mm-dd"
+            }
+          },
+          {
+            "parameter_ref": "datepicker_on_panel",
+            "width": 10,
+            "label": {
+              "default": "on_panel"
+            },
+            "control": "datepicker",
+            "date_format": "Y-m-d",
+            "class_name": "table-on-panel-datepicker-control-class",
+            "edit_style": "on_panel",
+            "place_holder_text": {
+              "default": "yyyy-mm-dd"
+            }
+          },
+          {
+            "parameter_ref": "datepicker_sub_panel",
+            "width": 10,
+            "label": {
+              "default": "sub_panel"
+            },
+            "control": "datepicker",
+            "date_format": "Y-m-d",
+            "edit_style": "subpanel",
+            "class_name": "table-subpanel-datepicker-control-class",
+            "place_holder_text": {
+              "default": "yyyy-mm-dd"
+            }
+          }
+        ]
+      }
+    ],
     "group_info": [
       {
         "id": "datepicker-values",
@@ -252,84 +252,78 @@
         },
         "type": "controls",
         "parameter_refs": [
-					"datepicker",
-					"datepicker_required",
-					"datepicker_undefined",
-					"datepicker_null"
+          "datepicker",
+          "datepicker_required",
+          "datepicker_undefined",
+          "datepicker_null"
         ]
       },
-			{
-				"id": "datepicker-conditions",
-				"label": {
-					"default": "Conditions"
-				},
-				"type": "controls",
-				"parameter_refs": [
-					"hide_datepicker",
-					"hidden_datepicker",
-					"disable_datepicker",
-					"disabled_datepicker"
-				]
-			},
-			{
-				"id": "datepicker-table-panels",
-				"label": {
-					"default": "Table"
-				},
-				"type": "panels",
-				"group_info": [
-					{
-						"id": "datepicker-table-summary",
-						"type": "summaryPanel",
-						"label": {
-							"default": "Edit datepicker table"
-						},
-						"group_info": [
-							{
-								"id": "datepicker-table-summary-ctrls",
-								"parameter_refs": [
-									"datepicker_table"
-								]
-							}
-						]
-					}
-				]
-			}
+      {
+        "id": "datepicker-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "hide_datepicker",
+          "hidden_datepicker",
+          "disable_datepicker",
+          "disabled_datepicker"
+        ]
+      },
+      {
+        "id": "datepicker-table-panels",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "datepicker-table-summary",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Edit datepicker table"
+            },
+            "group_info": [
+              {
+                "id": "datepicker-table-summary-ctrls",
+                "parameter_refs": ["datepicker_table"]
+              }
+            ]
+          }
+        ]
+      }
     ]
   },
   "conditions": [
-		{
-			"visible": {
-				"parameter_refs": [
-					"hidden_datepicker"
-				],
-				"evaluate": {
-					"condition": {
-						"parameter_ref": "hide_datepicker",
-						"op": "equals",
-						"value": false
-					}
-				}
-			}
-		},
-		{
-			"enabled": {
-				"parameter_refs": [
-					"disabled_datepicker"
-				],
-				"evaluate": {
-					"condition": {
-						"parameter_ref": "disable_datepicker",
-						"op": "equals",
-						"value": false
-					}
-				}
-			}
-		}
-	],
-	"resources": {
-		"datepicker_required.helper": "A date is required.",
-		"datepicker_undefined.helper": "There is no initial value.",
-		"datepicker_null.helper": "Some really long text that will extend past the control. The helper text should wrap to next line."
-	}
+    {
+      "visible": {
+        "parameter_refs": ["hidden_datepicker"],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide_datepicker",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": ["disabled_datepicker"],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable_datepicker",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ],
+  "resources": {
+    "datepicker_required.helper": "A date is required.",
+    "datepicker_undefined.helper": "There is no initial value.",
+    "datepicker_null.helper": "Some really long text that will extend past the control. The helper text should wrap to next line."
+  }
 }

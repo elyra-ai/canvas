@@ -304,6 +304,9 @@
         "description": {
           "default": "multiselect with parameter value set to 'blue'"
         },
+        "helper_text": {
+          "default": "MultiSelect with parameter vallue set to 'blue'"
+        },
         "control": "multiselect"
       },
       {

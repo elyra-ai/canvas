@@ -161,7 +161,10 @@
         "description": {
           "default": "numberfield with parameter value set to '10'"
         },
-        "class_name": "numberfield-control-class"
+        "class_name": "numberfield-control-class",
+        "helper_text": {
+          "default": "numberfield with parameter value set to '10'"
+        }
       },
       {
         "parameter_ref": "number_dbl",

@@ -199,6 +199,22 @@ describe("checkbox control tests", () => {
 		const messageWrapper = checkboxWrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
 	});
+	it("Checkbox helperText is rendered correctly", () => {
+		control.helperText = "Checkbox helperText";
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<Checkbox
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const helpTextWrapper = wrapper.find("div[data-id='properties-test-checkbox']");
+		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
+	});
 });
 
 describe("checkbox classnames appear correctly", () => {

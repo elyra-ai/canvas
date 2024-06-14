@@ -195,6 +195,9 @@ export class Control {
 		if (settings.buttons) {
 			this.buttons = settings.buttons;
 		}
+		if (settings.helperText) {
+			this.helperText = settings.helperText;
+		}
 		this.light = get(settings, "light", true);
 	}
 }
