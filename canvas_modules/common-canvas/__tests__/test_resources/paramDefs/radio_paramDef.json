@@ -273,7 +273,10 @@
           "default": "RadioSet with enum string type"
         },
         "resource_key": "withradioString",
-        "class_name": "radioset-control-class"
+        "class_name": "radioset-control-class",
+        "helper_text": {
+          "default": "RadioSet with enum string type"
+        }
       },
       {
         "parameter_ref": "radioBooleanWithEnum",

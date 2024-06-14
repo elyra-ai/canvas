@@ -22,6 +22,7 @@ import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import datefieldParamDef from "../../test_resources/paramDefs/datefield_paramDef.json";
+import DateField from "../../../src/common-properties/controls/datefield";
 
 const DATEFIELD_PARAM_DEF = require("../../test_resources/paramDefs/datefield_paramDef.json");
 
@@ -176,6 +177,22 @@ describe("datefield-control renders correctly", () => {
 		);
 		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
 		expect(dateWrapper.find(".cds--text-input--light")).to.have.length(0);
+	});
+	it("Datefield helperText is rendered correctly", () => {
+		control.helperText = "Datefield helperText";
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<DateField
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const helpTextWrapper = wrapper.find("div[data-id='properties-test-datefield']");
+		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
 	});
 });
 

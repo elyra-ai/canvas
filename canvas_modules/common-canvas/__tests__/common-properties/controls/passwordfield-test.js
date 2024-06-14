@@ -200,6 +200,23 @@ describe("Passwordfield renders correctly", () => {
 		eyeIcon.simulate("click");
 		expect(passwordWrapper.find(`span[id='${eyeIconAriaLabelledBy}']`).text()).to.equal(control.tooltip.defaultHide);
 	});
+
+	it("Passwordfield helperText is rendered correctly", () => {
+		control.helperText = "Passwordfield helperText";
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<Passwordfield
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const helpTextWrapper = wrapper.find("div[data-id='properties-test-password']");
+		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
+	});
 });
 
 describe("passwordfield classnames appear correctly", () => {

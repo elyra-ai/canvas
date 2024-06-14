@@ -187,7 +187,10 @@
         "description": {
           "default": "textarea with sting value"
         },
-        "class_name": "string-textarea-control-class"
+        "class_name": "string-textarea-control-class",
+        "helper_text": {
+          "default": "textarea with string value"
+        }
       },
       {
         "parameter_ref": "string_array",

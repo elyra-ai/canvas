@@ -5,14 +5,8 @@
   "current_parameters": {
     "checkbox": true,
     "checkbox_null": null,
-    "checkbox_table": [
-      [
-        true
-      ]
-    ],
-    "checkbox_table_cond": [
-      []
-    ],
+    "checkbox_table": [[true]],
+    "checkbox_table_cond": [[]],
     "checkbox_error": false,
     "checkbox_warning": false,
     "disable": true,
@@ -134,6 +128,9 @@
         "parameter_ref": "checkbox_default",
         "label": {
           "default": "checkbox default"
+        },
+        "helper_text": {
+          "default": "check/uncheck the checkbox"
         },
         "description": {
           "default": "checkbox with a default value of 'true'\nThis text should be on a new line.\nThis text should also be on a new line."
@@ -297,10 +294,7 @@
             "group_info": [
               {
                 "id": "checkbox-table-summary-ctrls",
-                "parameter_refs": [
-                  "checkbox_table",
-                  "checkbox_table_cond"
-                ]
+                "parameter_refs": ["checkbox_table", "checkbox_table_cond"]
               }
             ]
           }
@@ -383,9 +377,7 @@
     },
     {
       "visible": {
-        "parameter_refs": [
-          "checkbox_hidden"
-        ],
+        "parameter_refs": ["checkbox_hidden"],
         "evaluate": {
           "condition": {
             "parameter_ref": "hide",
@@ -397,9 +389,7 @@
     },
     {
       "enabled": {
-        "parameter_refs": [
-          "checkbox_disable"
-        ],
+        "parameter_refs": ["checkbox_disable"],
         "evaluate": {
           "condition": {
             "parameter_ref": "disable",

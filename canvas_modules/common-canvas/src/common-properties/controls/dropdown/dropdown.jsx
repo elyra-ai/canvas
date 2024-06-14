@@ -228,6 +228,7 @@ class DropDown extends React.Component {
 					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
 					onChange={this.handleChange}
 					value={selection}
+					helperText={this.props.control.helperText}
 				>
 					{ options }
 				</Select>
@@ -246,6 +247,7 @@ class DropDown extends React.Component {
 					onInputChange={this.handleOnInputChange}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText={this.props.controlItem}
+					helperText={this.props.control.helperText}
 				/>
 			);
 		} else {
@@ -261,6 +263,7 @@ class DropDown extends React.Component {
 					label={this.emptyLabel}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText={this.props.controlItem}
+					helperText={this.props.control.helperText}
 				/>
 			);
 		}
