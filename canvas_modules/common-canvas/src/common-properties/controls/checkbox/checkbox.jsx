@@ -78,6 +78,7 @@ class CheckboxControl extends React.Component {
 						onChange={this.handleChange.bind(this)}
 						checked={Boolean(this.props.value)}
 						hideLabel={this.props.tableControl}
+						helperText={this.props.control.helperText}
 					/>
 					{tooltipIcon}
 				</div>

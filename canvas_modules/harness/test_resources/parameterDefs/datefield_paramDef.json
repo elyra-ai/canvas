@@ -151,14 +151,17 @@
       {
         "parameter_ref": "date_ymd_placeholder",
         "label": {
-          "default": "Date Y-M-D with null and placeholder"
+          "default": "Date Y-M-D with null, helper text and placeholder"
         },
         "description": {
-          "default": "Optional datefield with null and placeholder text"
+          "default": "Optional datefield with null, placeholder text and helper text"
         },
         "date_format": "YYYY-M-D",
         "place_holder_text": {
           "default": "Enter a date: YYYY-MM-DD"
+        },
+        "helper_text": {
+          "default": "Enter a date in YYYY-M-D format"
         }
       },
       {

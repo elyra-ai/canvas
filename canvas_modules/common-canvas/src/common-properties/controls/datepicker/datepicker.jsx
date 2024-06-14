@@ -88,7 +88,7 @@ class DatepickerControl extends React.Component {
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputChange.bind(this)}
 						value={this.state.value}
-						helperText={!this.props.tableControl && helperText}
+						helperText={(!this.props.tableControl && helperText) || this.props.control.helperText}
 					/>
 				</DatePicker>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />

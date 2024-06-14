@@ -171,6 +171,9 @@ export class ParameterDef {
 		if (settings.className) {
 			this.className = settings.className;
 		}
+		if (settings.helperText) {
+			this.helperText = ResourceDef.make(settings.helperText);
+		}
 	}
 
 	isList() {
@@ -278,6 +281,14 @@ export class ParameterDef {
 		return l10nProvider.l10nResource(this.placeHolderText);
 	}
 
+	/**
+	 * Returns the "additionalHelperText" attribute which can be used to include additional
+	 * helper text associated with the property control on the UI.
+	*/
+	getAdditionalHelperText(l10nProvider) {
+		return l10nProvider.l10nResource(this.helperText);
+	}
+
 	getTextAfter(l10nProvider) {
 		return l10nProvider.l10nResource(this.textAfter);
 	}
@@ -376,7 +387,8 @@ export class ParameterDef {
 				"uionly": propertyOf(param)("uionly"),
 				"actionRef": propertyOf(uihint)("action_ref"),
 				"customValueAllowed": propertyOf(uihint)("custom_value_allowed"),
-				"className": propertyOf(uihint)("class_name")
+				"className": propertyOf(uihint)("class_name"),
+				"helperText": propertyOf(uihint)("helper_text")
 			});
 		}
 		return null;
