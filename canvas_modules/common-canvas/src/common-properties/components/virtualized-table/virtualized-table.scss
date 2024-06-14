@@ -121,14 +121,6 @@
 		margin-right: $spacing-02;
 	}
 
-	.properties-vt-double-click:first-of-type {
-		.properties-vt-row-class {
-			border-top: 1px solid transparent;
-			&.properties-vt-row-selected {
-				border-top: 1px solid $layer-accent-hover-01;
-			}
-		}
-	}
 
 	.properties-vt-row-class {
 		line-height: 20px;
@@ -184,6 +176,8 @@
 	}
 
 	.properties-vt-row-selected {
+		color: $button-primary;
+		border: 1px solid $button-primary;
 		background-color: $layer-selected-01;
 		border-bottom: 1px solid $layer-accent-hover-01;
 		&:hover {
@@ -202,6 +196,8 @@
 			padding-left: 3px;
 		}
 		.properties-vt-row-selected {
+			color: $button-primary;
+			border: 1px solid $button-primary;
 			border-left: 4px solid $button-primary;
 			padding-left: 0;
 			&:not(.properties-vt-row-disabled):hover {
