@@ -604,7 +604,8 @@ class FlexibleTable extends React.Component {
 FlexibleTable.defaultProps = {
 	showHeader: true,
 	light: true,
-	emptyTablePlaceholder: ""
+	emptyTablePlaceholder: "",
+	selectedRows: [] // Required for consumers using FlexibleTable directly
 };
 
 FlexibleTable.propTypes = {
