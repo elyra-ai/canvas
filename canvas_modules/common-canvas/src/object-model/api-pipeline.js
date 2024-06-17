@@ -889,7 +889,7 @@ export default class APIPipeline {
 		const verticalSpacing = canvasLayout.autoLayoutVerticalSpacing;
 		let horizontalSpacing = canvasLayout.autoLayoutHorizontalSpacing;
 		if (direction === DAGRE_HORIZONTAL) {
-			horizontalSpacing = 0;
+			horizontalSpacing = 1;
 		}
 
 		var g = dagre.graphlib.json.read(inputGraph);
