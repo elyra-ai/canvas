@@ -24,7 +24,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import { expect as expectJest } from "@jest/globals";
 import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
 import propertyUtils from "../../_utils_/property-utils";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, within } from "@testing-library/react";
 
 const actionHandler = sinon.spy();
 const controller = new Controller();
@@ -94,7 +94,6 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		wrapper.debug();
 		const image = wrapper.getByRole("img");
 		expect(image.height).to.equal(20);
 		expect(image.width).to.equal(25);
@@ -181,7 +180,9 @@ describe("actions using paramDef", () => {
 			expect(data.parameter_ref).to.equal("moon_phase");
 			done();
 		}
-		const image = wrapper.getAllByRole("img")[21];
+		const { container } = wrapper;
+		const imageWrapper = container.querySelector("div[data-id='properties-ctrl-moon_phase']");
+		const image = within(imageWrapper).getByRole("img");
 		fireEvent.click(image);
 	});
 
@@ -190,9 +191,7 @@ describe("actions using paramDef", () => {
 		const images = wrapper.getAllByRole("img");
 		const fallImage = images[3];
 		const winterImage = images[0];
-
 		expect(fallImage.parentElement.parentElement.parentElement.parentElement.className).to.equal("properties-action-image right custom-class-for-action-image");
-
 		// class_name not defined in uiHints action_info
 		expect(winterImage.parentElement.parentElement.parentElement.parentElement.className).to.equal("properties-action-image");
 	});

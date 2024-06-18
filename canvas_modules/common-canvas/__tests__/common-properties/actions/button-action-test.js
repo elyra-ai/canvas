@@ -24,7 +24,7 @@ import sinon from "sinon";
 import Controller from "./../../../src/common-properties/properties-controller";
 import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
 import propertyUtils from "../../_utils_/property-utils";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, within } from "@testing-library/react";
 
 
 const actionHandler = sinon.spy();
@@ -126,7 +126,9 @@ describe("action-button renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const button = wrapper.getByRole("button");
+		const { container } = wrapper;
+		const buttonWrapper = container.querySelector("div[data-id='increment']");
+		const button = within(buttonWrapper).getByRole("button");
 		expect(button.disabled).to.equal(true);
 	});
 	it("action button renders when hidden", () => {
@@ -140,9 +142,8 @@ describe("action-button renders correctly", () => {
 			</Provider>
 		);
 		const { container } = wrapper;
-		const buttonWrapper = container.getElementsByClassName("hide");
-		expect(buttonWrapper).to.have.length(1);
-		expect(wrapper.getAllByRole("button")).to.have.length(1);
+		const buttonWrapper = container.querySelector("div[data-id='increment']");
+		expect(buttonWrapper.className.includes("hide")).to.equal(true);
 	});
 	it("action button renders tooltip", () => {
 		const wrapper = render(
@@ -227,7 +228,9 @@ describe("actions using paramDef", () => {
 			expect(data.parameter_ref).to.equal("number");
 			done();
 		}
-		const button = wrapper.getAllByRole("button")[38];
+		const { container } = wrapper;
+		const div = container.querySelector("div[data-id='increment']");
+		const button = within(div).getByRole('button');
 		fireEvent.click(button);
 	});
 
