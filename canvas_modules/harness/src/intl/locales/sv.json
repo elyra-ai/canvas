@@ -1,6 +1,6 @@
 {
   "dialog.nodePropertiesTitle": "Nodegenskaper",
-  "canvas.emptyText": "Välkommen till den gemensamma arbetsytans testsvit.{br}Ditt flöde är tomt!",
+  "canvas.emptyText": "Välkommen till Elyra Canvas test harness.{br}Ditt flöde är tomt!",
   "canvas.emptyLink": "Klicka här om du vill ha en genomgång",
   "expression.value.column": "Anpassat värde",
   "expression.value.column.description": "Testar anpassad beskr. från app",
