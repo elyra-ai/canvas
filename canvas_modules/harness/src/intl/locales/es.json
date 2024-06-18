@@ -1,6 +1,6 @@
 {
   "dialog.nodePropertiesTitle": "Propiedades de nodos",
-  "canvas.emptyText": "Bienvenido a la infraestructura de pruebas automáticas de Common Canvas.{br}Su flujo está vacío.",
+  "canvas.emptyText": "Bienvenido al arnés de prueba de Elyra Canvas.{br}Su flujo está vacío.",
   "canvas.emptyLink": "Pulse aquí para realizar una visita guiada",
   "expression.value.column": "Valor personalizado",
   "expression.value.column.description": "Prueba de la descripción personalizada de la app",
