@@ -855,7 +855,20 @@ export default class APIPipeline {
 	dagreAutolayout(direction, canvasInfoPipeline) {
 		const canvasLayout = this.objectModel.getCanvasLayout();
 
+		const dummyNodeIds = [];
 		var nodeLinks = canvasInfoPipeline.links.filter((link) => {
+
+			// If there is no srcNodeId create a dummy node id and attach to the detached link
+			if (!link.srcNodeId) {
+				link.srcNodeId = "temp-src-node-" + link.id;
+				dummyNodeIds.push(link.srcNodeId);
+			}
+			// If there is no trgNodeId create a dummy node id and attach to the detached link
+			if (!link.trgNodeId) {
+				link.trgNodeId = "temp-trg-node-" + link.id;
+				dummyNodeIds.push(link.trgNodeId);
+			}
+
 			return link.type === NODE_LINK || link.type === ASSOCIATION_LINK;
 		});
 
@@ -871,6 +884,11 @@ export default class APIPipeline {
 			}
 
 			return { "v": node.id, "value": { width: newWidth, height: node.height } };
+		});
+
+		// Push the dummy Nodes to nodeData so that dagre treats them as nodes attached to detached links
+		dummyNodeIds.forEach((dummyNodeId) => {
+			nodesData.push({ "v": dummyNodeId, "value": { width: 150, height: 80 } });
 		});
 
 		// possible values: TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
@@ -889,7 +907,7 @@ export default class APIPipeline {
 		const verticalSpacing = canvasLayout.autoLayoutVerticalSpacing;
 		let horizontalSpacing = canvasLayout.autoLayoutHorizontalSpacing;
 		if (direction === DAGRE_HORIZONTAL) {
-			horizontalSpacing = 1;
+			horizontalSpacing = 0;
 		}
 
 		var g = dagre.graphlib.json.read(inputGraph);
