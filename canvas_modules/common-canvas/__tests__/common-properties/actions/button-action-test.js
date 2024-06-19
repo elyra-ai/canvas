@@ -230,7 +230,7 @@ describe("actions using paramDef", () => {
 		}
 		const { container } = wrapper;
 		const div = container.querySelector("div[data-id='increment']");
-		const button = within(div).getByRole('button');
+		const button = within(div).getByRole("button");
 		fireEvent.click(button);
 	});
 

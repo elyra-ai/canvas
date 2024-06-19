@@ -31,7 +31,7 @@ function controllerHandler(propertyController) {
 	renderedController = propertyController;
 }
 
-function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverrides, propertiesInfoOverrides, isRender=false) {
+function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverrides, propertiesInfoOverrides, isRender = false) {
 	const applyPropertyChanges = sinon.spy();
 	const closePropertiesDialog = sinon.spy();
 	let callbacks = {
@@ -61,7 +61,7 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 		propertiesConfig = Object.assign(propertiesConfig, propertiesConfigOverrides);
 	}
 	let wrapper;
-	if (isRender){
+	if (isRender) {
 		wrapper = renderWithIntl(
 			<div className="properties-right-flyout">
 				<CommonProperties
@@ -71,10 +71,8 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 					customControls={[CustomTableControl, CustomToggleControl]}
 					customConditionOps={[CustomOpMax]}
 				/>
-			</div>
-		);
-	}
-	else {
+			</div>);
+	} else {
 		wrapper = mountWithIntl(
 			<div className="properties-right-flyout">
 				<CommonProperties
