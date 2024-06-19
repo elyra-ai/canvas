@@ -843,21 +843,26 @@ export default class APIPipeline {
 	autoLayout(layoutDirection) {
 		const canvasInfoPipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
 		let movedNodesInfo = {};
+		let movedLinksInfo = {};
 		if (layoutDirection === VERTICAL) {
-			movedNodesInfo = this.dagreAutolayout(DAGRE_VERTICAL, canvasInfoPipeline);
+			[movedNodesInfo, movedLinksInfo] = this.dagreAutolayout(DAGRE_VERTICAL, canvasInfoPipeline);
 		} else {
-			movedNodesInfo = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasInfoPipeline);
+			[movedNodesInfo, movedLinksInfo] = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasInfoPipeline);
 		}
 
-		this.sizeAndPositionObjects(movedNodesInfo);
+		this.sizeAndPositionObjects(movedNodesInfo, movedLinksInfo);
 	}
 
 	dagreAutolayout(direction, canvasInfoPipeline) {
 		const canvasLayout = this.objectModel.getCanvasLayout();
 
-		const dummyNodeIds = [];
 		var nodeLinks = canvasInfoPipeline.links.filter((link) => {
+			return link.type === NODE_LINK || link.type === ASSOCIATION_LINK;
+		});
 
+		const dummyNodeIds = [];
+
+		nodeLinks.forEach((link) => {
 			// If there is no srcNodeId create a dummy node id and attach to the detached link
 			if (!link.srcNodeId) {
 				link.srcNodeId = "temp-src-node-" + link.id;
@@ -868,8 +873,6 @@ export default class APIPipeline {
 				link.trgNodeId = "temp-trg-node-" + link.id;
 				dummyNodeIds.push(link.trgNodeId);
 			}
-
-			return link.type === NODE_LINK || link.type === ASSOCIATION_LINK;
 		});
 
 		var edges = nodeLinks.map((link) => {
@@ -924,8 +927,9 @@ export default class APIPipeline {
 
 		const outputGraph = dagre.graphlib.json.write(g);
 		const movedNodesInfo = this.convertGraphToMovedNodes(outputGraph, canvasInfoPipeline.nodes);
+		const movedLinksInfo = this.convertGraphToMoveLinks(outputGraph, canvasInfoPipeline.links);
 
-		return movedNodesInfo;
+		return [movedNodesInfo, movedLinksInfo];
 	}
 
 	// Returns an array of move node actions that can be used to reposition the
@@ -951,7 +955,64 @@ export default class APIPipeline {
 				height: node.height
 			};
 		});
+
+		outputGraph.nodes.forEach((node) => {
+			if (!movedNodesInfo[node.v]) {
+				movedNodesInfo[node.v] = {
+					id: node.id,
+					x_pos: lookup[node.v].value.x - (lookup[node.v].value.width / 2),
+					y_pos: lookup[node.v].value.y - (lookup[node.v].value.height / 2),
+					width: node.width,
+					height: node.height
+				};
+			}
+		});
+
 		return movedNodesInfo;
+	}
+
+	// Returns an array of move link actions that can be used to reposition the
+	// links based on the provided Dagre output graph.
+	// Iterate nodes and check if there are any dummy nodes.
+	// If there are dummy nodes then links should have x/y cordinates as per dummy_nodes.
+	convertGraphToMoveLinks(outputGraph, canvasInfoPipelineLinks) {
+		let movedLinksInfo = [];
+		const linksPos = [];
+
+		const nodes = outputGraph.nodes;
+
+		nodes.forEach((node) => {
+			const linkProps = {};
+			if (node.v.startsWith("temp-src-node-")) {
+				// Record the x and y position of this node to be assigned to the detached link
+				linkProps.id = node.v.split("temp-src-node-")[1];
+				linkProps.srcPos = {
+					x: node.value.x,
+					y: node.value.y
+				};
+				linksPos.push(linkProps);
+			} else if (node.v.startsWith("temp-trg-node-")) {
+				linkProps.id = node.v.split("temp-trg-node-")[1];
+				linkProps.trgPos = {
+					x: node.value.x,
+					y: node.value.y
+				};
+				linksPos.push(linkProps);
+			}
+		});
+
+		movedLinksInfo = canvasInfoPipelineLinks.map((link) => {
+			if (link?.srcPos) {
+				link.srcPos.x_pos = linksPos.find((lnk) => lnk.id === link.id).srcPos.x;
+				link.srcPos.y_pos = linksPos.find((lnk) => lnk.id === link.id).srcPos.y;
+			} else if (link?.trgPos) {
+				link.trgPos.x_pos = linksPos.find((lnk) => lnk.id === link.id).trgPos.x;
+				link.trgPos.y_pos = linksPos.find((lnk) => lnk.id === link.id).trgPos.y;
+			}
+			return link;
+		});
+
+		return movedLinksInfo;
 	}
 
 
