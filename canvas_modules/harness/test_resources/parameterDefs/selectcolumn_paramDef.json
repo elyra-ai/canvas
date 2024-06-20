@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "field": "Age",
+    "field_readonly": "Age",
     "field_null": null,
     "field_empty_string": "",
     "field_placeholder": "",
@@ -31,6 +32,12 @@
   "parameters": [
     {
       "id": "field",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "field_readonly",
       "type": "string",
       "role": "column",
       "required": true
@@ -193,6 +200,17 @@
           "default": "selectcolumn with parameter value set to 'Age'"
         },
         "class_name": "selectcolumn-control-class"
+      },
+      {
+        "parameter_ref": "field_readonly",
+        "label": {
+          "default": "Field"
+        },
+        "description": {
+          "default": "readonly selectcolumn with parameter value set to 'Age'"
+        },
+        "class_name": "selectcolumn-control-class",
+        "read_only": true
       },
       {
         "parameter_ref": "field_null",
@@ -468,7 +486,8 @@
               "field_default",
               "field_placeholder",
               "field_empty_list",
-              "field_empty_list_custom_placeholder"
+              "field_empty_list_custom_placeholder",
+              "field_readonly"
             ]
           }
         ]

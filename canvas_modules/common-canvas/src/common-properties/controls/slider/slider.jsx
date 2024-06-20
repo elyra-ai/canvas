@@ -64,6 +64,7 @@ class SliderControl extends React.Component {
 					formatLabel={
 						(val, label) => label || val
 					}
+					readOnly={this.props.control.readOnly}
 				/>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>

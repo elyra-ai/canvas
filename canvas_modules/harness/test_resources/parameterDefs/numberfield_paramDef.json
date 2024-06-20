@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "number_int": 10,
+    "number_int_readonly": 10,
     "number_dbl": 11.012,
     "number_null": null,
     "number_random": 12345,
@@ -25,6 +26,11 @@
   "parameters": [
     {
       "id": "number_int",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "number_int_readonly",
       "type": "integer",
       "required": true
     },
@@ -165,6 +171,20 @@
         "helper_text": {
           "default": "numberfield with parameter value set to '10'"
         }
+      },
+      {
+        "parameter_ref": "number_int_readonly",
+        "label": {
+          "default": "Integer"
+        },
+        "description": {
+          "default": "Readonly numberfield with parameter value set to '10'"
+        },
+        "class_name": "numberfield-control-class",
+        "helper_text": {
+          "default": "Readonly numberfield with parameter value set to '10'"
+        },
+        "read_only": true
       },
       {
         "parameter_ref": "number_dbl",
@@ -424,7 +444,8 @@
           "number_random",
           "number_random_resource_key",
           "number_longControlName",
-          "number_placeholder"
+          "number_placeholder",
+          "number_int_readonly"
         ]
       },
       {

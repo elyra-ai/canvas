@@ -667,6 +667,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.className = parameter.className;
 	settings.buttons = buttons;
 	settings.helperText = additionalHelperText;
+	settings.readOnly = parameter.readOnly;
 	settings.light = _isControlLight(additionalInfo.light, additionalInfo.containerType, parameter.isSubPanelEdit());
 	if (isSubControl) {
 		settings.visible = parameter.visible;

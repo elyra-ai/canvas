@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "datepicker": "2023-03-17T00:00:00.00",
+    "datepicker_readonly": "2023-03-17T00:00:00.00",
     "datepicker_required": "2023-03-17T00:00:00.00",
     "datepicker_null": null,
     "hide_datepicker": true,
@@ -22,6 +23,10 @@
   "parameters": [
     {
       "id": "datepicker",
+      "type": "date"
+    },
+    {
+      "id": "datepicker_readonly",
       "type": "date"
     },
     {
@@ -102,6 +107,25 @@
         "helper_text": {
           "default": "Enter a date in the datepicker"
         }
+      },
+      {
+        "parameter_ref": "datepicker_readonly",
+        "label": {
+          "default": "Date format: m-d-Y"
+        },
+        "description": {
+          "default": "Datepicker with value of '2023-03-17T00:00:00' in m-d-Y format."
+        },
+        "control": "datepicker",
+        "date_format": "m-d-Y",
+        "class_name": "datepicker-control-unique-class",
+        "place_holder_text": {
+          "default": "Enter a date: mm-dd-yyyy"
+        },
+        "helper_text": {
+          "default": "This is a readonly datepicker"
+        },
+        "read_only": true
       },
       {
         "parameter_ref": "datepicker_required",
@@ -255,7 +279,8 @@
           "datepicker",
           "datepicker_required",
           "datepicker_undefined",
-          "datepicker_null"
+          "datepicker_null",
+          "datepicker_readonly"
         ]
       },
       {

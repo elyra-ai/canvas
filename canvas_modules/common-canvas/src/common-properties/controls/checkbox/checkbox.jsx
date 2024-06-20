@@ -79,6 +79,7 @@ class CheckboxControl extends React.Component {
 						checked={Boolean(this.props.value)}
 						hideLabel={this.props.tableControl}
 						helperText={this.props.control.helperText}
+						readOnly={this.props.control.readOnly}
 					/>
 					{tooltipIcon}
 				</div>

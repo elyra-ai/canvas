@@ -80,6 +80,7 @@ class TextareaControl extends React.Component {
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					helperText={this.props.control.helperText}
+					readOnly={this.props.control.readOnly}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={""} messageInfo={errorMessage} />
 			</div>);
@@ -95,6 +96,7 @@ class TextareaControl extends React.Component {
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					helperText={this.props.control.helperText}
+					readOnly={this.props.control.readOnly}
 				/>
 			);
 		}
