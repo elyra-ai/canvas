@@ -235,12 +235,14 @@ describe("actions using paramDef", () => {
 	});
 
 	it("action button should have custom classname defined", () => {
+		const { container } = wrapper;
 		// class_name defined in uiHints action_info
-		const incrementButton = wrapper.getAllByRole("button", { name: /increment/i })[0];
-		expect(incrementButton.parentElement.parentElement.parentElement.className).to.equal("properties-action-button custom-class-for-action-button");
+		// const incrementButton = wrapper.find("div[data-id='increment']");
+		const incrementButton = container.querySelector("div[data-id='increment']");
+		expect(incrementButton.className).to.equal("properties-action-button custom-class-for-action-button");
 
 		// class_name not defined in uiHints action_info
-		const decrementButton = wrapper.getAllByRole("button", { name: /decrement/i })[0];
-		expect(decrementButton.parentElement.className).to.equal("properties-action-button");
+		const decrementButton = container.querySelector("div[data-id='decrement']");
+		expect(decrementButton.className).to.equal("properties-action-button");
 	});
 });
