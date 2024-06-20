@@ -959,11 +959,11 @@ export default class APIPipeline {
 		outputGraph.nodes.forEach((node) => {
 			if (!movedNodesInfo[node.v]) {
 				movedNodesInfo[node.v] = {
-					id: node.id,
+					id: node.v,
 					x_pos: lookup[node.v].value.x - (lookup[node.v].value.width / 2),
 					y_pos: lookup[node.v].value.y - (lookup[node.v].value.height / 2),
-					width: node.width,
-					height: node.height
+					width: node.value.width,
+					height: node.value.height
 				};
 			}
 		});
