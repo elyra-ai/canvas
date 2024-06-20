@@ -23,7 +23,7 @@ import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
 import Controller from "./../../../src/common-properties/properties-controller";
 import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
-import propertyUtils from "../../_utils_/property-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { fireEvent, within } from "@testing-library/react";
 
 
@@ -215,12 +215,12 @@ describe("actions using paramDef", () => {
 	let wrapper;
 	let renderedObject;
 	beforeEach(() => {
-		renderedObject = propertyUtils.flyoutEditorFormRender(ACTION_PARAMDEF);
+		renderedObject = propertyUtilsRTL.flyoutEditorForm(ACTION_PARAMDEF);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("should fire action when button clicked", (done) => {
-		renderedObject = propertyUtils.flyoutEditorFormRender(ACTION_PARAMDEF, null, { actionHandler: callback }, { appData: appData });
+		renderedObject = propertyUtilsRTL.flyoutEditorForm(ACTION_PARAMDEF, null, { actionHandler: callback }, { appData: appData });
 		wrapper = renderedObject.wrapper;
 		function callback(id, inAppData, data) {
 			expect(id).to.equal("increment");

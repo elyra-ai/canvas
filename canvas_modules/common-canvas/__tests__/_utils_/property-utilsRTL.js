@@ -17,16 +17,15 @@
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
 import * as UiConditionsParser from "../../src/common-properties/ui-conditions/ui-conditions-parser.js";
-import { mountWithIntl, mountWithIntlMessages } from "./intl-utils";
+import { renderWithIntl } from "./intl-utils";
 import { expect } from "chai";
 import cloneDeep from "lodash/cloneDeep";
-
 import CustomTableControl from "./custom-controls/CustomTableControl";
 import CustomToggleControl from "./custom-controls/CustomToggleControl";
 import CustomOpMax from "./custom-condition-ops/customMax";
-
 import sinon from "sinon";
-import summary from "../../src/common-properties/panels/summary/summary.jsx";
+import { fireEvent } from "@testing-library/react";
+
 var renderedController;
 function controllerHandler(propertyController) {
 	renderedController = propertyController;
@@ -61,65 +60,16 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 	if (propertiesConfigOverrides) {
 		propertiesConfig = Object.assign(propertiesConfig, propertiesConfigOverrides);
 	}
-	
-	const wrapper = mountWithIntl(
-		<div className="properties-right-flyout">
-			<CommonProperties
-				propertiesInfo={propertiesInfo}
-				propertiesConfig={propertiesConfig}
-				callbacks={callbacks}
-				customControls={[CustomTableControl, CustomToggleControl]}
-				customConditionOps={[CustomOpMax]}
-			/>
-		</div>
-	);
-	
-	return { wrapper: wrapper, controller: renderedController, callbacks: callbacks };
-}
-
-// Uses 'mountWithIntlMessages()' to allow for custom resources to be applied from the test harness
-function flyoutEditorFormWithIntl(paramDef, propertiesConfigOverrides, callbacksOverrides, propertiesInfoOverrides) {
-	const applyPropertyChanges = sinon.spy();
-	const closePropertiesDialog = sinon.spy();
-	let callbacks = {
-		applyPropertyChanges: applyPropertyChanges,
-		closePropertiesDialog: closePropertiesDialog,
-		controllerHandler: controllerHandler
-	};
-	if (callbacksOverrides) {
-		callbacks = Object.assign(callbacks, callbacksOverrides);
-	}
-
-	let propertiesInfo = {
-		parameterDef: cloneDeep(paramDef)
-	};
-
-	if (propertiesInfoOverrides) {
-		propertiesInfo = Object.assign(propertiesInfo, propertiesInfoOverrides);
-	}
-
-	let propertiesConfig = {
-		applyOnBlur: true,
-		rightFlyout: true,
-		trimSpaces: true,
-		containerType: "Custom"
-	};
-	if (propertiesConfigOverrides) {
-		propertiesConfig = Object.assign(propertiesConfig, propertiesConfigOverrides);
-	}
-
-	const wrapper = mountWithIntlMessages(
-		<div className="properties-right-flyout">
-			<CommonProperties
-				propertiesInfo={propertiesInfo}
-				propertiesConfig={propertiesConfig}
-				callbacks={callbacks}
-				customControls={[CustomTableControl, CustomToggleControl]}
-				customConditionOps={[CustomOpMax]}
-			/>
-		</div>
-	);
-
+	const wrapper = renderWithIntl(
+        <div className="properties-right-flyout">
+            <CommonProperties
+                propertiesInfo={propertiesInfo}
+                propertiesConfig={propertiesConfig}
+                callbacks={callbacks}
+                customControls={[CustomTableControl, CustomToggleControl]}
+                customConditionOps={[CustomOpMax]}
+            />
+        </div>);
 	return { wrapper: wrapper, controller: renderedController, callbacks: callbacks };
 }
 
@@ -140,12 +90,12 @@ function genLongString(length) {
 	return str;
 }
 
-function openSummaryPanel(wrapper, panelId) {
-	const summaryPanel = wrapper.find(`div[data-id='properties-${panelId}']`);
-	expect(summaryPanel).to.have.length(1);
-	summaryPanel.find("button.properties-summary-link-button")
-		.simulate("click");
-	return wrapper.find("div.properties-wf-content.show");
+function openSummaryPanel(wrapper, panelId){
+	const { container } = wrapper;
+	const summaryPanel = container.querySelector(`div[data-id='properties-${panelId}']`);
+	expect(summaryPanel).to.exist;
+	fireEvent.click(summaryPanel.querySelector("button.properties-summary-link-button"));
+	return container.querySelector("div.properties-wf-content.show");
 }
 
 function getParameterFromParamDef(parameterId, paramDef) {
@@ -161,7 +111,6 @@ function getParameterFromParamDef(parameterId, paramDef) {
 
 module.exports = {
 	flyoutEditorForm: flyoutEditorForm,
-	flyoutEditorFormWithIntl: flyoutEditorFormWithIntl,
 	setControls: setControls,
 	genLongString: genLongString,
 	openSummaryPanel: openSummaryPanel,
