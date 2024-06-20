@@ -61,16 +61,18 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 		propertiesConfig = Object.assign(propertiesConfig, propertiesConfigOverrides);
 	}
 	const wrapper = renderWithIntl(
-        <div className="properties-right-flyout">
-            <CommonProperties
-                propertiesInfo={propertiesInfo}
-                propertiesConfig={propertiesConfig}
-                callbacks={callbacks}
-                customControls={[CustomTableControl, CustomToggleControl]}
-                customConditionOps={[CustomOpMax]}
-            />
-        </div>);
+		<div className="properties-right-flyout">
+			<CommonProperties
+				propertiesInfo={propertiesInfo}
+				propertiesConfig={propertiesConfig}
+				callbacks={callbacks}
+				customControls={[CustomTableControl, CustomToggleControl]}
+				customConditionOps={[CustomOpMax]}
+			/>
+		</div>
+	);
 	return { wrapper: wrapper, controller: renderedController, callbacks: callbacks };
+
 }
 
 function setControls(controller, controls) {
@@ -90,7 +92,7 @@ function genLongString(length) {
 	return str;
 }
 
-function openSummaryPanel(wrapper, panelId){
+function openSummaryPanel(wrapper, panelId) {
 	const { container } = wrapper;
 	const summaryPanel = container.querySelector(`div[data-id='properties-${panelId}']`);
 	expect(summaryPanel).to.exist;
