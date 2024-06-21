@@ -1260,7 +1260,7 @@ export default class PropertiesController {
 
 		this.propertiesStore.setPropertyValues(inValues);
 
-		if (options && options.isInitProps) {
+		if (options?.isInitProps || options?.setDefaultValues) {
 			// Evaluate conditional defaults based on current_parameters upon loading of view
 			// For a given parameter_ref, if multiple conditions evaluate to true only the first one is used.
 			const conditionalDefaultValues = {};

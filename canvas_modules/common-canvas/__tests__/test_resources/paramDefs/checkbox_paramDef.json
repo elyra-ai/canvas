@@ -310,6 +310,30 @@
   },
   "conditions": [
     {
+      "default_value": {
+        "parameter_ref": "checkbox_null",
+        "value": true,
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "checkbox_error",
+                "op": "equals",
+                "value": true
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "checkbox_warning",
+                "op": "equals",
+                "value": true
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
       "validation": {
         "fail_message": {
           "type": "error",
