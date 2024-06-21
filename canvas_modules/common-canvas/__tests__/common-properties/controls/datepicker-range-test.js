@@ -49,6 +49,7 @@ describe("datepicker-range-control renders correctly", () => {
 			{ "test-datepicker-range": ["2023-03-17T00:00:00.00", "2023-03-30T00:00:00.00"] }
 		);
 	});
+
 	it("props should have been defined", () => {
 		const wrapper = mount(
 			<DatepickerRangeControl
@@ -130,6 +131,25 @@ describe("datepicker-range-control renders correctly", () => {
 		const inputEnd = dateWrapper.find("input").at(1);
 		expect(inputStart.prop("value")).to.equal("02-28-2023"); // Verify formatted value is displayed
 		expect(inputEnd.prop("value")).to.equal("02-28-2024"); // Verify formatted value is displayed
+	});
+
+	it("should render readonly props", () => {
+		control.readOnly = true;
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<DatepickerRangeControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				controlItem={controlItem}
+			/>
+		);
+
+		const readOnlyWrapper = wrapper.find("div[data-id='properties-test-datepicker-range']");
+		expect(readOnlyWrapper.find("ForwardRef(DatePicker)").prop("readOnly")).to.equal(control.readOnly);
 	});
 });
 

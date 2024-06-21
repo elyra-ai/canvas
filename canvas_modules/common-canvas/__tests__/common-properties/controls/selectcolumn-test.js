@@ -214,6 +214,23 @@ describe("selectcolumn control renders correctly", () => {
 		const helpTextWrapper = wrapper.find("div[data-id='properties-targetField']");
 		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
 	});
+
+	it("SelectColumn readonly is rendered correctly", () => {
+		control.readOnly = true;
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<SelectColumn
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const readOnlyWrapper = wrapper.find("div[data-id='properties-targetField']");
+		expect(readOnlyWrapper.find("Dropdown").prop("readOnly")).to.equal(control.readOnly);
+	});
 });
 
 describe("selectcolumn control renders correctly with paramDef", () => {

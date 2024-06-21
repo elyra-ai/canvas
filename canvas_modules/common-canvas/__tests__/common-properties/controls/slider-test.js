@@ -122,6 +122,23 @@ describe("SliderControl renders correctly", () => {
 		expect(wrapper.find("ValidationMessage")).to.have.length(1);
 	});
 
+	it("renders Slider with readonly control", () => {
+		control.readOnly = true;
+		const wrapper = mount(
+			<Provider store = {
+				controller.getStore()
+			}
+			>
+				<SliderControl control = {control}
+					propertyId = {propertyId}
+					controller = {controller}
+					controlItem = "Slider Label"
+				/>
+			</Provider>
+		);
+		expect(wrapper.find("Slider").prop("readOnly")).to.equal(true);
+	});
+
 	it("handles change event correctly", () => {
 		const wrapper = mount(
 			<Provider store = {
