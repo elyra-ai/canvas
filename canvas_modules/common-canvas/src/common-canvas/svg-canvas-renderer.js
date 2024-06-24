@@ -5194,7 +5194,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns the angle for the arrow head for freeform links.
 	getAngleBasedForFreeformLink(d) {
-		const selfRefLink = d.srcNodeId === d.trgNodeId;
+		const selfRefLink = d.srcNodeId && d.trgNodeId && d.srcNodeId === d.trgNodeId;
 		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT && !selfRefLink) {
 			return Math.atan2((d.y2 - d.y1), (d.x2 - d.x1)) * (180 / Math.PI);
 		}

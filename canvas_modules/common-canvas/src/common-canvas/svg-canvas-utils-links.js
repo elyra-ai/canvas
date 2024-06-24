@@ -667,7 +667,7 @@ export default class SvgCanvasLinks {
 	// line from source to target.
 	getStraightPath(link, minInitialLine) {
 		// Self-referencing link.
-		if (link.srcNodeId === link.trgNodeId) {
+		if (link.srcNodeId && link.trgNodeId && link.srcNodeId === link.trgNodeId) {
 			return this.selfRefLinkPath(link, minInitialLine);
 		}
 
