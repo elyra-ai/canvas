@@ -138,7 +138,7 @@ module.exports = {
 	},
 	output: output,
 	module: {
-		rules: rules,
+		rules: rules
 	},
 	plugins: plugins
 };

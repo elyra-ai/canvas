@@ -31,7 +31,6 @@ import "./canvas/utils-cmds";
 import "./canvas/verification-cmds";
 import "./canvas/operation-cmds";
 import "./canvas/palette-cmds";
-console.log("Code coverage support is loaded");
 import '@cypress/code-coverage/support'
 
 // turn off screenshots when running in headless mode.
