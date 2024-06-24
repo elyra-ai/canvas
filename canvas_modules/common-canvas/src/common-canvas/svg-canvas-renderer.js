@@ -32,8 +32,8 @@ const markdownIt = require("markdown-it")({
 import { escape as escapeText, forOwn, get } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
-	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
-	LINK_DIR_LEFT_RIGHT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
+	LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
+	LINK_DIR_LEFT_RIGHT, LINK_DIR_RIGHT_LEFT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP, LINK_DIR_FREEFORM,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_IMAGE,
@@ -60,6 +60,7 @@ import SvgCanvasZoom from "./svg-canvas-utils-zoom.js";
 import SVGCanvasPipeline from "./svg-canvas-pipeline";
 
 const NINETY_DEGREES = 90;
+const ONE_EIGHTY_DEGREES = 180;
 
 export default class SVGCanvasRenderer {
 	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config, supernodeInfo = {}) {
@@ -517,12 +518,16 @@ export default class SVGCanvasRenderer {
 			// Position the binding nodes.
 			this.activePipeline.nodes.forEach((d) => {
 				if (d.isSupernodeInputBinding) {
-					d.x_pos = transformedSVGRect.x - d.width;
+					d.x_pos = this.canvasLayout.linkDirection === LINK_DIR_LEFT_RIGHT
+						? transformedSVGRect.x - d.width
+						: transformedSVGRect.x + transformedSVGRect.width;
 					const y = this.nodeUtils.getSupernodePortYOffset(d.id, supernodeDatum.inputs) - topAreaHeight;
 					d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.outputs[0].cy;
 				}
 				if (d.isSupernodeOutputBinding) {
-					d.x_pos = transformedSVGRect.x + transformedSVGRect.width;
+					d.x_pos = this.canvasLayout.linkDirection === LINK_DIR_LEFT_RIGHT
+						? transformedSVGRect.x + transformedSVGRect.width
+						: transformedSVGRect.x - d.width;
 					const y = this.nodeUtils.getSupernodePortYOffset(d.id, supernodeDatum.outputs) - topAreaHeight;
 					d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.inputs[0].cy;
 				}
@@ -1888,7 +1893,7 @@ export default class SVGCanvasRenderer {
 				if (node.layout.inputPortObject !== PORT_OBJECT_IMAGE) {
 					obj
 						.attr("d", this.getPortArrowPath(port))
-						.attr("transform", this.getPortArrowPathTransform(port));
+						.attr("transform", this.getInputPortArrowPathTransform(port));
 				}
 			});
 
@@ -1951,7 +1956,8 @@ export default class SVGCanvasRenderer {
 						.attr("x", port.cx - (node.layout.outputPortWidth / 2))
 						.attr("y", port.cy - (node.layout.outputPortHeight / 2))
 						.attr("width", node.layout.outputPortWidth)
-						.attr("height", node.layout.outputPortHeight);
+						.attr("height", node.layout.outputPortHeight)
+						.attr("transform", this.getPortImageTransform(port));
 				} else {
 					obj
 						.attr("r", this.getPortRadius(node))
@@ -2973,7 +2979,7 @@ export default class SVGCanvasRenderer {
 		const nodeGrp = d3.select(nodeObj);
 		nodeGrp.selectAll("." + portArrowClassName)
 			.attr("d", (port) => this.getPortArrowPath(port))
-			.attr("transform", (port) => this.getPortArrowPathTransform(port));
+			.attr("transform", (port) => this.getInputPortArrowPathTransform(port));
 	}
 
 	// Returns true if the port (from a node template) passed in has a max
@@ -3297,31 +3303,33 @@ export default class SVGCanvasRenderer {
 			return this.getPortArcsNodeShapePathVertical(data, data.inputs, data.inputPortsWidth, data.outputs, data.outputPortsWidth);
 		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
 			return this.getPortArcsNodeShapePathVertical(data, data.outputs, data.outputPortsWidth, data.inputs, data.inputPortsWidth);
+		} else if (this.canvasLayout.linkDirection === LINK_DIR_RIGHT_LEFT) {
+			return this.getPortArcsNodeShapePathHoriz(data, data.outputs, data.outputPortsHeight, data.inputs, data.inputPortsHeight);
 		}
 
-		return this.getPortArcsNodeShapePathLeftRight(data);
+		return this.getPortArcsNodeShapePathHoriz(data, data.inputs, data.inputPortsHeight, data.outputs, data.outputPortsHeight);
 	}
 
 	// Returns a path that will draw the outline shape for the 'port-arcs' display
-	// which shows arcs around each of the node circles for left to right link direction.
-	getPortArcsNodeShapePathLeftRight(data) {
+	// which shows arcs around each of the node circles for the horizontal (LeftRight and RightLeft) directions.
+	getPortArcsNodeShapePathHoriz(data, leftPorts, leftPortsHeight, rightPorts, rightPortsHeight) {
 		let path = "M 0 0 L " + data.width + " 0 "; // Draw line across the top of the node
 
-		if (data.outputs && data.outputs.length > 0) {
+		if (rightPorts && rightPorts.length > 0) {
 			let endPoint = data.layout.portArcOffset;
 
 			// Draw straight segment down to ports (if needed)
-			if (data.outputPortsHeight < data.height) {
-				endPoint = data.outputs[0].cy - data.layout.portArcRadius;
+			if (rightPortsHeight < data.height) {
+				endPoint = rightPorts[0].cy - data.layout.portArcRadius;
 			}
 
 			path += " L " + data.width + " " + endPoint;
 
 			// Draw port arcs
-			data.outputs.forEach((port, index) => {
+			rightPorts.forEach((port, index) => {
 				endPoint += (data.layout.portArcRadius * 2);
 				path += " A " + data.layout.portArcRadius + " " + data.layout.portArcRadius + " 180 0 1 " + data.width + " " + endPoint;
-				if (index < data.outputs.length - 1) {
+				if (index < rightPorts.length - 1) {
 					endPoint += data.layout.portArcSpacing;
 					path += " L " + data.width + " " + endPoint;
 				}
@@ -3330,26 +3338,26 @@ export default class SVGCanvasRenderer {
 			// Draw finishing segment to bottom right corner
 			path += " L " + data.width + " " + data.height;
 
-		// If no output ports just draw a straight line.
+		// If no right-side ports just draw a straight line.
 		} else {
 			path += " L " + data.width + " " + data.height;
 		}
 
 		path += " L 0 " + data.height; // Draw line across the bottom of the node
 
-		if (data.inputs && data.inputs.length > 0) {
+		if (leftPorts && leftPorts.length > 0) {
 			let endPoint2 = data.height - data.layout.portArcOffset;
 
-			if (data.inputPortsHeight < data.height) {
-				endPoint2 = data.inputs[data.inputs.length - 1].cy + data.layout.portArcRadius;
+			if (leftPortsHeight < data.height) {
+				endPoint2 = leftPorts[leftPorts.length - 1].cy + data.layout.portArcRadius;
 			}
 
 			path += " L 0 " + endPoint2;
 
-			data.inputs.forEach((port, index) => {
+			leftPorts.forEach((port, index) => {
 				endPoint2 -= (data.layout.portArcRadius * 2);
 				path += " A " + data.layout.portArcRadius + " " + data.layout.portArcRadius + " 180 0 1 0 " + endPoint2;
-				if (index < data.inputs.length - 1) {
+				if (index < leftPorts.length - 1) {
 					endPoint2 -= data.layout.portArcSpacing;
 					path += " L 0 " + endPoint2;
 				}
@@ -3357,13 +3365,13 @@ export default class SVGCanvasRenderer {
 
 			path += " Z"; // Draw finishing segment back to origin
 		} else {
-			path += " Z"; // If no input ports just draw a straight line.
+			path += " Z"; // If no left-side ports just draw a straight line.
 		}
 		return path;
 	}
 
 	// Returns a path that will draw the outline shape for the 'port-arcs' display
-	// which shows arcs around each of the node circles for vertical link directions.
+	// which shows arcs around each of the node circles for vertical (TopBottom and BottomTop) directions.
 	getPortArcsNodeShapePathVertical(data, topPorts, topPortsWidth, bottomPorts, bottomPortsWidth) {
 		let path = "M 0 0 L 0 " + data.height; // Draw line down the left of the node
 
@@ -3390,7 +3398,7 @@ export default class SVGCanvasRenderer {
 			// Draw finishing segment to bottom right corner
 			path += " L " + data.width + " " + data.height;
 
-		// If no output ports just draw a straight line.
+		// If no bottom ports just draw a straight line.
 		} else {
 			path += " L " + data.width + " " + data.height;
 		}
@@ -3417,7 +3425,7 @@ export default class SVGCanvasRenderer {
 
 			path += " Z"; // Draw finishing segment back to origin
 		} else {
-			path += " Z"; // If no input ports just draw a straight line.
+			path += " Z"; // If no top ports just draw a straight line.
 		}
 		return path;
 	}
@@ -3464,6 +3472,7 @@ export default class SVGCanvasRenderer {
 					ports.length === 1) {
 				ports[0].cx = xPos;
 				ports[0].cy = yPos;
+				ports[0].dir = CanvasUtils.getPortDir(ports[0].cx, ports[0].cy, node);
 			} else {
 				// If we are only going to display a single port, we set all the
 				// port positions to be the same as if there is only one port.
@@ -3496,6 +3505,7 @@ export default class SVGCanvasRenderer {
 		ports.forEach((p) => {
 			p.cx = xPosition;
 			p.cy = yPos;
+			p.dir = CanvasUtils.getPortDir(p.cx, p.cy, node);
 		});
 	}
 
@@ -3528,6 +3538,7 @@ export default class SVGCanvasRenderer {
 			xPosition += (node.layout.portArcRadius * multiplier);
 			p.cx = xPosition;
 			p.cy = yPos;
+			p.dir = CanvasUtils.getPortDir(p.cx, p.cy, node);
 			xPosition += ((node.layout.portArcRadius + node.layout.portArcSpacing) * multiplier);
 		});
 	}
@@ -3541,6 +3552,7 @@ export default class SVGCanvasRenderer {
 					ports.length === 1) {
 				ports[0].cx = xPos;
 				ports[0].cy = yPos;
+				ports[0].dir = CanvasUtils.getPortDir(ports[0].cx, ports[0].cy, node);
 
 			} else {
 				// If we are only going to display a single port, we set all the
@@ -3574,6 +3586,7 @@ export default class SVGCanvasRenderer {
 		ports.forEach((p) => {
 			p.cx = xPos;
 			p.cy = yPosition;
+			p.dir = CanvasUtils.getPortDir(p.cx, p.cy, node);
 		});
 	}
 
@@ -3606,6 +3619,7 @@ export default class SVGCanvasRenderer {
 			yPosition += (node.layout.portArcRadius * multiplier);
 			p.cx = xPos;
 			p.cy = yPosition;
+			p.dir = CanvasUtils.getPortDir(p.cx, p.cy, node);
 			yPosition += ((node.layout.portArcRadius + node.layout.portArcSpacing) * multiplier);
 		});
 	}
@@ -3626,6 +3640,7 @@ export default class SVGCanvasRenderer {
 			}
 			p.cx = xPos;
 			p.cy = yPos;
+			p.dir = CanvasUtils.getPortDir(p.cx, p.cy, node);
 		});
 	}
 
@@ -4051,8 +4066,7 @@ export default class SVGCanvasRenderer {
 		// Add displayed link line arrow heads
 		newLinkGrps
 			.filter((d) => (d.type === NODE_LINK && this.canvasLayout.dataLinkArrowHead) ||
-											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
-											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
+							(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead))
 			.append("path")
 			.attr("class", "d3-link-line-arrow-head");
 
@@ -4103,8 +4117,7 @@ export default class SVGCanvasRenderer {
 		// Update link line arrow head
 		joinedLinkGrps
 			.filter((d) => (d.type === NODE_LINK && this.canvasLayout.dataLinkArrowHead) ||
-											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
-											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
+							(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead))
 			.selectAll(".d3-link-line-arrow-head")
 			.datum((d) => this.activePipeline.getLink(d.id))
 			.attr("d", (d) => this.getArrowHead(d))
@@ -4501,8 +4514,8 @@ export default class SVGCanvasRenderer {
 
 		let linksArray = [];
 
-		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
-			this.updateLinksForNodes();
+		if (this.canvasLayout.linkDirection === LINK_DIR_FREEFORM) {
+			this.updateFreeformLinksForNodes();
 		}
 
 		this.activePipeline.links.forEach((link) => {
@@ -4577,6 +4590,9 @@ export default class SVGCanvasRenderer {
 			link.y2 = coords.y2;
 			link.originX = coords.originX;
 			link.originY = coords.originY;
+			link.srcDir = coords.srcDir;
+			link.trgDir = coords.trgDir;
+
 			return link;
 		}
 		return null;
@@ -4597,22 +4613,29 @@ export default class SVGCanvasRenderer {
 		if (!srcObj) {
 			coords.x1 = link.srcPos.x_pos;
 			coords.y1 = link.srcPos.y_pos;
+			coords.srcDir = this.getSrcDirForDetachedLink(link, coords.x1, coords.y1);
 
 		} else {
-			if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
+			if (this.canvasLayout.linkDirection === LINK_DIR_FREEFORM) {
 				const endPos = { x: link.trgPos.x_pos, y: link.trgPos.y_pos };
-				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(srcObj, endPos, link.srcOriginInfo);
+				const startPos = this.linkUtils.getNewFreeformNodeLinkStartPos(srcObj, endPos, link.srcOriginInfo);
 				coords.x1 = startPos.x;
 				coords.y1 = startPos.y;
 				coords.originX = startPos.originX;
 				coords.originY = startPos.originY;
+				coords.srcDir = startPos.dir;
 
 			} else {
 				srcPortId = this.getSourcePortId(link, srcObj);
-				const port = this.getOutputPort(srcObj, srcPortId);
+				let port = this.getOutputPort(srcObj, srcPortId);
+				if (!port) {
+					port = this.getInputPort(srcObj, srcPortId);
+				}
+
 				if (port) {
 					coords.x1 = srcObj.x_pos + port.cx;
 					coords.y1 = srcObj.y_pos + port.cy;
+					coords.srcDir = port.dir;
 				}
 			}
 		}
@@ -4620,13 +4643,15 @@ export default class SVGCanvasRenderer {
 		if (!trgNode) {
 			coords.x2 = link.trgPos.x_pos;
 			coords.y2 = link.trgPos.y_pos;
+			coords.trgDir = this.getTrgDirForDetachedLink(link, coords.x2, coords.y2);
 
 		} else {
-			if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
+			if (this.canvasLayout.linkDirection === LINK_DIR_FREEFORM) {
 				const endPos = { x: link.srcPos.x_pos, y: link.srcPos.y_pos };
-				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(trgNode, endPos, link.trgOriginInfo);
+				const startPos = this.linkUtils.getNewFreeformNodeLinkStartPos(trgNode, endPos, link.trgOriginInfo);
 				coords.x2 = startPos.x;
 				coords.y2 = startPos.y;
+				coords.trgDir = startPos.dir;
 
 			} else {
 				trgPortId = this.getTargetPortId(link, trgNode);
@@ -4634,6 +4659,7 @@ export default class SVGCanvasRenderer {
 				if (port) {
 					coords.x2 = trgNode.x_pos + port.cx;
 					coords.y2 = trgNode.y_pos + port.cy;
+					coords.trgDir = port.dir;
 				}
 			}
 		}
@@ -4651,8 +4677,84 @@ export default class SVGCanvasRenderer {
 		link.y2 = coords.y2;
 		link.originX = coords.originX;
 		link.originY = coords.originY;
+		link.srcDir = coords.srcDir;
+		link.trgDir = coords.trgDir;
 
 		return link;
+	}
+
+	// Returns a direction ("n", "s", "e" or "w") for the source end of a detached link.
+	getSrcDirForDetachedLink(link, x, y) {
+		if (link.trgNode) {
+			// If we have a trgDir and it fits with the linkDirection currently employed we
+			// can set the srcDir accordingly. These will be the default cases for ports that
+			// are positioned based on link direction.
+			if (link.trgDir === WEST && this.canvasLayout.linkDirection === LINK_DIR_LEFT_RIGHT) {
+				return EAST;
+
+			} else if (link.trgDir === EAST && this.canvasLayout.linkDirection === LINK_DIR_RIGHT_LEFT) {
+				return WEST;
+
+			} else if (link.trgDir === SOUTH && this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+				return NORTH;
+
+			} else if (link.trgDir === NORTH && this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
+				return SOUTH;
+			}
+
+			// If the trgDir does not fit with one of the link directions then the trgDir
+			// is associated with a port that is in a custom position. In that case, calculate
+			// the srcDir based on the coordinates of the target point in relation to the trgNode.
+			const srcDir = CanvasUtils.getPortDir((x - link.trgNode.x_pos), (y - link.trgNode.y_pos), link.trgNode);
+			return this.reverseDir(srcDir);
+		}
+		// If there is no target node then this is a fully detached link so set the source
+		// direction based on the position relative to the
+		const dir = CanvasUtils.getPortDir((x - link.trgPos.x_pos), (y - link.trgPos.y_pos), { width: 10, height: 10, }); // Pass in a dummy node
+		return this.reverseDir(dir);
+	}
+
+	// Returns a direction ("n", "s", "e" or "w") for the target end of a detached link.
+	getTrgDirForDetachedLink(link, x, y) {
+		if (link.srcObj) {
+			// If we have a trgDir and it fits with the linkDirection currently employed we
+			// can set the srcDir accordingly. These will be the default cases for ports that
+			// are positioned based on link direction.
+			if (link.srcDir === EAST && this.canvasLayout.linkDirection === LINK_DIR_LEFT_RIGHT) {
+				return WEST;
+
+			} else if (link.srcDir === WEST && this.canvasLayout.linkDirection === LINK_DIR_RIGHT_LEFT) {
+				return EAST;
+
+			} else if (link.srcDir === NORTH && this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+				return SOUTH;
+
+			} else if (link.srcDir === SOUTH && this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
+				return NORTH;
+			}
+
+			// If the srcDir does not fit with one of the link directions then the srcDir
+			// is associated with a port that is in a custom position. In that case, calculate
+			// the trgDir based on the coordinates of the target point in relation to the srcObj.
+			const srcDir = CanvasUtils.getPortDir((x - link.srcObj.x_pos), (y - link.srcObj.y_pos), link.srcObj);
+			return this.reverseDir(srcDir);
+		}
+		const dir = CanvasUtils.getPortDir((x - link.srcPos.x_pos), (y - link.srcPos.y_pos), { width: 10, height: 10, }); // Pass in a dummy node
+		return this.reverseDir(dir);
+	}
+
+	reverseDir(dir) {
+		switch (dir) {
+		case NORTH:
+			return SOUTH;
+		case SOUTH:
+			return NORTH;
+		case EAST:
+			return WEST;
+		case WEST:
+		default:
+			return EAST;
+		}
 	}
 
 	getOutputPort(srcNode, srcPortId) {
@@ -4819,17 +4921,17 @@ export default class SVGCanvasRenderer {
 	// Updates the data links for all the nodes with two optional fields
 	// (called srcOriginInfo and trgOriginInfo) based on the location of the
 	// nodes the links go from and to. The info in these fields is used to
-	// calculate the starting and ending position of straight line links.
+	// calculate the starting and ending position of freeform line links.
 	// This ensures that input and output links that go in a certain direction
 	// (NORTH, SOUTH, EAST or WEST) are grouped together so they can be
-	// separated out when straight lines are drawn between nodes.
-	updateLinksForNodes() {
-		this.activePipeline.nodes.forEach((n) => this.updateLinksForNode(n));
+	// separated out when freeform lines are drawn between nodes.
+	updateFreeformLinksForNodes() {
+		this.activePipeline.nodes.forEach((n) => this.updateFreeformLinksForNode(n));
 	}
 
 	// Updates the links going into and out of the node passed in with up to
 	// two new fields (called srcOriginInfo and trgOriginInfo).
-	updateLinksForNode(node) {
+	updateFreeformLinksForNode(node) {
 		const linksInfo = {};
 		linksInfo.n = [];
 		linksInfo.s = [];
@@ -4839,7 +4941,13 @@ export default class SVGCanvasRenderer {
 		// Update the linksInfo arrays for each direction: n, s, e and w.
 		this.activePipeline.links.forEach((link) => {
 			if (link.type === NODE_LINK) {
-				if (link.trgNode && link.trgNode.id === node.id) {
+				// Self-referencing link
+				if (node.id === link.srcObj?.id &&
+						link.srcObj?.id === link.trgNode?.id) {
+					linksInfo[NORTH].push({ type: "in", endNode: link.srcObj, link });
+					linksInfo[EAST].push({ type: "out", endNode: link.trgNode, link });
+
+				} else if (link.trgNode && link.trgNode.id === node.id) {
 					if (link.srcObj) {
 						const dir = this.getDirAdjusted(link.trgNode, link.srcObj);
 						linksInfo[dir].push({ type: "in", endNode: link.srcObj, link });
@@ -5034,8 +5142,8 @@ export default class SVGCanvasRenderer {
 
 	// Returns the transform to position and, if ncessecary, rotate the port
 	// circle arrow.
-	getPortArrowPathTransform(port) {
-		const angle = this.getAngleBasedOnLinkDirection();
+	getInputPortArrowPathTransform(port) {
+		const angle = this.getAngleBasedForInputPorts(port.dir);
 		return `translate(${port.cx}, ${port.cy}) rotate(${angle})`;
 	}
 
@@ -5060,30 +5168,76 @@ export default class SVGCanvasRenderer {
 	// the elbow lines. Otherwise it returns an angle so the arrow head is
 	// relevant to the slope of the straight link being drawn.
 	// TODO -- This doesn't handle "Curve" link types very well (in fact for
-	// curves it returns the same as for "Straight" links) becauset it is very
+	// curves it returns the same as for "Straight" links) because it is very
 	// difficult to write an algorithm that gives the correct angle for a
 	// "Curve" link to make it look presentable. I know, I tried!
-	getArrowHeadTransform(d) {
-		const angle =
-			this.canvasLayout.linkType === LINK_TYPE_ELBOW ||
-			this.canvasLayout.linkType === LINK_TYPE_CURVE
-				? this.getAngleBasedOnLinkDirection()
-				: Math.atan2((d.y2 - d.y1), (d.x2 - d.x1)) * (180 / Math.PI);
+	getArrowHeadTransform(link) {
+		let angle = 0;
 
-		return `translate(${d.x2}, ${d.y2}) rotate(${angle})`;
+		if (this.canvasLayout.linkDirection === LINK_DIR_FREEFORM) {
+			angle = this.getAngleBasedForFreeformLink(link);
+
+		} else {
+			angle = this.getAngleBasedForInputPorts(link.trgDir);
+		}
+
+		return `translate(${link.x2}, ${link.y2}) rotate(${angle})`;
 	}
 
-	// Returns the angle for the arrow head when perpndicular arrows are in
-	// us such as when a the link type is "Elbow" or when we are displaying an
-	// arrow head inside a port circle.
-	getAngleBasedOnLinkDirection() {
-		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-			return NINETY_DEGREES;
+	// Returns a rotation transform for an image displayed for an
+	// output port.
+	getPortImageTransform(port) {
+		const angle = this.getAngleBasedForOutputPorts(port.dir);
 
-		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+		return `rotate(${angle},${port.cx},${port.cy})`;
+	}
+
+	// Returns the angle for the arrow head for freeform links.
+	getAngleBasedForFreeformLink(d) {
+		const selfRefLink = d.srcNodeId === d.trgNodeId;
+		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT && !selfRefLink) {
+			return Math.atan2((d.y2 - d.y1), (d.x2 - d.x1)) * (180 / Math.PI);
+		}
+
+		// For other freeform link types we return an appropriate direction
+		// at right angles to the node.
+		return this.getAngleBasedForInputPorts(d.trgDir);
+	}
+
+	// Returns the angle for the output port of a source node when
+	// connections to ports are being made.
+	getAngleBasedForOutputPorts(dir) {
+		switch (dir) {
+		case NORTH: {
 			return -NINETY_DEGREES;
 		}
-		return 0;
+		case SOUTH: {
+			return NINETY_DEGREES;
+		}
+		case WEST: {
+			return ONE_EIGHTY_DEGREES;
+		}
+		default:
+			return 0;
+		}
+	}
+
+	// Returns the angle for the input port of a target node when
+	// connections to ports are being made.
+	getAngleBasedForInputPorts(dir) {
+		switch (dir) {
+		case NORTH: {
+			return NINETY_DEGREES;
+		}
+		case SOUTH: {
+			return -NINETY_DEGREES;
+		}
+		case WEST: {
+			return 0;
+		}
+		default:
+			return ONE_EIGHTY_DEGREES;
+		}
 	}
 
 	canOpenTip(tipType) {
