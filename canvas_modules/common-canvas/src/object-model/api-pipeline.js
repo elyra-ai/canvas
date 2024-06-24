@@ -936,7 +936,7 @@ export default class APIPipeline {
 	// nodes based on the provided Dagre output graph. (The node width and height
 	// are included in the output because the move nodes action expects them).
 	convertGraphToMovedNodes(outputGraph, canvasInfoPipelineNodes) {
-		const movedNodesInfo = [];
+		const movedNodesInfo = {};
 		const lookup = {};
 
 		for (var i = 0, len = outputGraph.nodes.length; i < len; i++) {
@@ -955,19 +955,6 @@ export default class APIPipeline {
 				height: node.height
 			};
 		});
-
-		outputGraph.nodes.forEach((node) => {
-			if (!movedNodesInfo[node.v]) {
-				movedNodesInfo[node.v] = {
-					id: node.v,
-					x_pos: lookup[node.v].value.x - (lookup[node.v].value.width / 2),
-					y_pos: lookup[node.v].value.y - (lookup[node.v].value.height / 2),
-					width: node.value.width,
-					height: node.value.height
-				};
-			}
-		});
-
 		return movedNodesInfo;
 	}
 
@@ -1005,9 +992,11 @@ export default class APIPipeline {
 			if (link?.srcPos) {
 				link.srcPos.x_pos = linksPos.find((lnk) => lnk.id === link.id).srcPos.x;
 				link.srcPos.y_pos = linksPos.find((lnk) => lnk.id === link.id).srcPos.y;
+				delete link.srcNodeId;
 			} else if (link?.trgPos) {
 				link.trgPos.x_pos = linksPos.find((lnk) => lnk.id === link.id).trgPos.x;
 				link.trgPos.y_pos = linksPos.find((lnk) => lnk.id === link.id).trgPos.y;
+				delete link.trgNodeId;
 			}
 			return link;
 		});
