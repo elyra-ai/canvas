@@ -152,7 +152,7 @@ export default class SvgCanvasLinks {
 			if (this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
 				coords = this.getAssociationCurveLinkCoords(srcObj, trgNode, assocLinkVariation);
 			} else {
-				coords = this.getNodeLinkCoordsForFreeform(srcObj, trgNode, link);
+				coords = this.getAssociationLinkCoords(srcObj, trgNode);
 			}
 		} else {
 			coords = this.getCommentLinkCoords(srcObj, trgNode);
@@ -195,8 +195,7 @@ export default class SvgCanvasLinks {
 			}
 		}
 
-		if (link.type === ASSOCIATION_LINK ||
-			(this.canvasLayout.linkType === LINK_TYPE_STRAIGHT && !selfRefLink)) {
+		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT && !selfRefLink) {
 			const startPos = CanvasUtils.getOuterCoord(
 				srcNode.x_pos,
 				srcNode.y_pos,
@@ -432,6 +431,45 @@ export default class SvgCanvasLinks {
 
 		return { x1: startPos.x, y1: startPos.y, x2: endPos.x, y2: endPos.y };
 	}
+
+	getAssociationLinkCoords(srcNode, trgNode) {
+		const srcCenterX = this.nodeUtils.getNodeCenterPosX(srcNode);
+		const srcCenterY = this.nodeUtils.getNodeCenterPosY(srcNode);
+
+		const trgCenterX = this.nodeUtils.getNodeCenterPosX(trgNode);
+		const trgCenterY = this.nodeUtils.getNodeCenterPosY(trgNode);
+
+		const startPos = CanvasUtils.getOuterCoord(
+			srcNode.x_pos,
+			srcNode.y_pos,
+			srcNode.width,
+			srcNode.height,
+			this.canvasLayout.linkGap,
+			srcCenterX, // OriginX
+			srcCenterY, // OriginY
+			trgCenterX, // EndX
+			trgCenterY); // EndY
+
+		const endPos = CanvasUtils.getOuterCoord(
+			trgNode.x_pos,
+			trgNode.y_pos,
+			trgNode.width,
+			trgNode.height,
+			this.canvasLayout.linkGap,
+			trgCenterX, // OriginX
+			trgCenterY, // OriginY
+			srcCenterX, // EndX
+			srcCenterY); // EndY
+
+		return {
+			originX: startPos.originX, originY: startPos.originY,
+			x1: startPos.x, y1: startPos.y,
+			x2: endPos.x, y2: endPos.y,
+			srcDir: startPos.dir,
+			trgDir: endPos.dir
+		};
+	}
+
 
 	// Returns the path info, for the link passed in, which describes either a
 	// Elbow, Curve, Parallax or Straight connector line. This method can be called
