@@ -388,7 +388,10 @@
         "description": {
           "default": "oneofselect with parameter value set to 'blue'"
         },
-        "class_name": "oneofselect-control-class"
+        "class_name": "oneofselect-control-class",
+        "helper_text": {
+          "default": "oneofselect helper text"
+        }
       },
       {
         "parameter_ref": "oneofselect_custom_value",

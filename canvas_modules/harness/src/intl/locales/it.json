@@ -1,6 +1,6 @@
 {
   "dialog.nodePropertiesTitle": "Proprietà dei nodi",
-  "canvas.emptyText": "Benvenuto nel test Common Canvas harness.{br}Il flusso è vuoto.",
+  "canvas.emptyText": "Benvenuti nel framework di test Elyra Canvas.{br}Il flusso è vuoto.",
   "canvas.emptyLink": "Fare clic qui per fare un tour",
   "expression.value.column": "Valore personalizzato",
   "expression.value.column.description": "Verifica della descrizione personalizzata dall'app",

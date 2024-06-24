@@ -1241,6 +1241,14 @@ describe("Properties Controller handlers", () => {
 		expect(propertyListener.calledWith({
 			action: "SET_PROPERTIES"
 		})).to.be.true;
+
+		// Verify default_value condition is run when calling setPropertyValues() with setDefaultValues === true
+		expect(controller.getPropertyValues()).to.have.property("checkbox_null", null);
+		controller.setPropertyValues({
+			"checkbox_error": true,
+			"checkbox_warning": true
+		}, { setDefaultValues: true });
+		expect(controller.getPropertyValues()).to.have.property("checkbox_null", true);
 	});
 	it("should set default values having 0 or ' ' when setPropertyValues() is called with option { setDefaultValues: true }", () => {
 		const renderedObject = testUtils.flyoutEditorForm(oneofselectParamDef);

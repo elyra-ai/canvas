@@ -234,7 +234,7 @@ class CommonCanvasContextToolbar extends React.Component {
 			({ x, y } = this.adjustPosToFit(x, y, toolbarWidth, ICON_SIZE_PLUS_GAP));
 
 			contextToolbar = (
-				<div className={"context-toolbar"} style={{ left: x, top: y, width: toolbarWidth }}
+				<div className={"context-toolbar floating-toolbar"} style={{ left: x, top: y, width: toolbarWidth }}
 					onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}
 				>
 					<Toolbar

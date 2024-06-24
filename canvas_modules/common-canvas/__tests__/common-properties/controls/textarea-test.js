@@ -300,6 +300,21 @@ describe("textarea control renders correctly", () => {
 		const validationMsg = textWrapper.find("div.cds--form-requirement");
 		expect(validationMsg).to.have.length(1);
 	});
+
+	it("textarea should have helper text", () => {
+		control.helperText = "Textarea helperText";
+		controller.setPropertyValues({});
+		const wrapper = mount(
+			<TextArea
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const helpTextWrapper = wrapper.find("div[data-id='properties-test-textarea']");
+		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
+	});
 });
 
 describe("textarea classnames appear correctly", () => {

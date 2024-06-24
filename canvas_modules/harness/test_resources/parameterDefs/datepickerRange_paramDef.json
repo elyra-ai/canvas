@@ -101,6 +101,9 @@
         "class_name": "datepicker-range-control-unique-class",
 				"place_holder_text": {
 					"default": "yyyy-mm-dd"
+				},
+				"helper_text": {
+					"default": "Y-m-d format"
 				}
       },
 			{
