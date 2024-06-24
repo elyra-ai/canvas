@@ -152,7 +152,7 @@ export default class SvgCanvasLinks {
 			if (this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
 				coords = this.getAssociationCurveLinkCoords(srcObj, trgNode, assocLinkVariation);
 			} else {
-				coords = this.getNodeLinkCoordsForFreeform(srcObj, trgNode);
+				coords = this.getNodeLinkCoordsForFreeform(srcObj, trgNode, link);
 			}
 		} else {
 			coords = this.getCommentLinkCoords(srcObj, trgNode);
@@ -167,7 +167,9 @@ export default class SvgCanvasLinks {
 		let trgCenterX;
 		let trgCenterY;
 
-		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center" && !CanvasUtils.isExpanded(srcNode)) {
+		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center" &&
+				this.canvasLayout.linkType === LINK_TYPE_STRAIGHT &&
+				!CanvasUtils.isExpanded(srcNode)) {
 			srcCenterX = this.nodeUtils.getNodeImageCenterPosX(srcNode);
 			srcCenterY = this.nodeUtils.getNodeImageCenterPosY(srcNode);
 		} else {
@@ -179,7 +181,9 @@ export default class SvgCanvasLinks {
 			}
 		}
 
-		if (trgNode.layout.drawNodeLinkLineFromTo === "image_center" && !CanvasUtils.isExpanded(trgNode)) {
+		if (trgNode.layout.drawNodeLinkLineFromTo === "image_center" &&
+				this.canvasLayout.linkType === LINK_TYPE_STRAIGHT &&
+				!CanvasUtils.isExpanded(trgNode)) {
 			trgCenterX = this.nodeUtils.getNodeImageCenterPosX(trgNode);
 			trgCenterY = this.nodeUtils.getNodeImageCenterPosY(trgNode);
 		} else {
@@ -191,7 +195,8 @@ export default class SvgCanvasLinks {
 			}
 		}
 
-		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT && !selfRefLink) {
+		if (link.type === ASSOCIATION_LINK ||
+			(this.canvasLayout.linkType === LINK_TYPE_STRAIGHT && !selfRefLink)) {
 			const startPos = CanvasUtils.getOuterCoord(
 				srcNode.x_pos,
 				srcNode.y_pos,

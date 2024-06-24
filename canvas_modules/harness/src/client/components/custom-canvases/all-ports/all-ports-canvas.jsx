@@ -67,8 +67,6 @@ export default class AllPortsCanvas extends React.Component {
 				links: false
 			},
 			enableNodeLayout: {
-				drawNodeLinkLineFromTo: "node_center",
-				drawCommentLinkLineTo: "node_center",
 				nodeHighlightGap: 6,
 
 				autoSizeNode: false,

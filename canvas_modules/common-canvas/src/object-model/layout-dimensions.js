@@ -126,7 +126,8 @@ const portsHorizontalDefaultLayout = {
 		nodeCornerResizeArea: 10,
 
 		// What point to draw the data links from and to when enableLinkType is set
-		// to "Straight". Possible values are "image_center" or "node_center".
+		// to "Straight" and enableLinkDirection is set to "Freeform".
+		// Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "node_center",
 
 		// What point to draw the comment to node link line to. Possible values
@@ -529,7 +530,8 @@ const portsVerticalDefaultLayout = {
 		nodeCornerResizeArea: 10,
 
 		// What point to draw the data links from and to when enableLinkType is set
-		// to "Straight". Possible values are "image_center" or "node_center".
+		// to "Straight" and enableLinkDirection is set to "Freeform".
+		// Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "node_center",
 
 		// What point to draw the comment to node link line to. Possible values

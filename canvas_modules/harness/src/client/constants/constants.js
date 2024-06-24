@@ -55,7 +55,7 @@ _defineConstant("HORIZONTAL_FORMAT", "Horizontal");
 _defineConstant("CURVE_LINKS", "Curve");
 _defineConstant("ELBOW_LINKS", "Elbow");
 _defineConstant("STRAIGHT_LINKS", "Straight");
-_defineConstant("ANGLE_LINKS", "Angle");
+_defineConstant("PARALLAX_LINKS", "Parallax");
 
 _defineConstant("DIRECTION_FREEFORM", "Freeform");
 _defineConstant("DIRECTION_LEFT_RIGHT", "LeftRight");
