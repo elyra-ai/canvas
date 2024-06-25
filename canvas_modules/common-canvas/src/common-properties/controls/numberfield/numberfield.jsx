@@ -163,7 +163,7 @@ class NumberfieldControl extends React.Component {
 					allowEmpty
 					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
 					helperText={this.props.control.helperText}
-					readOnly={this.props.control.readOnly}
+					readOnly={this.props.control.readOnly || this.props.readOnly}
 				/>
 				{numberGenerator}
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
@@ -183,7 +183,8 @@ NumberfieldControl.propTypes = {
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.number, // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux,
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({

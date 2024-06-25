@@ -55,7 +55,7 @@ class ToggleControl extends React.Component {
 			labelA={labelOff}
 			onToggle={this.handleChange.bind(this)}
 			aria-labelledby={`${this.props.propertyId?.name}-toggle-label`}
-			readOnly={this.props.control.readOnly}
+			readOnly={this.props.control.readOnly || this.props.readOnly}
 		/>);
 		const className = classNames("properties-toggle", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (
@@ -85,7 +85,8 @@ ToggleControl.propTypes = {
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.bool, // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({
