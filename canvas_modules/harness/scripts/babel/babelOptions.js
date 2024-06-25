@@ -18,7 +18,7 @@
 const babelOptions = {
 	babelrc: false, // required so webpack ignores the .babelrc file used for testing in root of project
 	presets: ["@babel/preset-react", "@babel/preset-env"],
-	plugins: ["lodash", "@babel/plugin-proposal-class-properties", "@babel/plugin-transform-runtime"],
+	plugins: ["lodash", "@babel/plugin-proposal-class-properties", "@babel/plugin-transform-runtime", "istanbul"],
 };
 
 exports.babelOptions = babelOptions;
