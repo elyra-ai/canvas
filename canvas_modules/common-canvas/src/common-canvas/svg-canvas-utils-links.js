@@ -86,60 +86,6 @@ export default class SvgCanvasLinks {
 			endPos.y);
 	}
 
-	// Returns the lineArray passed in with connection path info added to it.
-	addConnectionPaths(links) {
-		links.forEach((link) => {
-			// Only necessary to get the path info, if the start and end coords of
-			// the link have changed.
-			if (link.coordsUpdated) {
-				link.pathInfo = this.getConnectorPathInfo(link);
-			}
-		});
-		return links;
-	}
-
-	// Returns an SVG path string for the link (described by the line passed in)
-	// based on the connection and link type in the layout info.
-	getConnectorPathInfo(link, drawingNewLinkMinInitialLine) {
-		const minInitialLine = this.getMinInitialLine(link, drawingNewLinkMinInitialLine);
-
-		if (link.type === NODE_LINK) {
-			if (this.canvasLayout.linkDirection === LINK_DIR_FREEFORM &&
-					this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
-				return this.getStraightPath(link, minInitialLine);
-			}
-			return this.getNodeLinkPathInfo(link, minInitialLine);
-
-		} else if (link.type === ASSOCIATION_LINK &&
-								this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
-			return this.getAssociationCurvePath(link, minInitialLine);
-		}
-
-		return this.getStraightPath(link, minInitialLine);
-	}
-
-	// Returns the minInitialLine layout variable that will be either zero for a
-	// comment link or from the link-data object (if the size has been
-	// pre-calculated for elbow style connections) or from the source node
-	// object (data.src) if we are drawing an existing connection or from
-	// this.drawingNewLinkData.minInitialLine if we are dynamically drawing
-	// a new link.
-	getMinInitialLine(link, drawingNewLinkMinInitialLine) {
-		let minInitialLine;
-		if (link.type === COMMENT_LINK) {
-			minInitialLine = 0;
-		} else if (link.minInitialLineForElbow) {
-			minInitialLine = link.minInitialLineForElbow;
-		} else if (link.srcObj && link.srcObj.layout) {
-			minInitialLine = link.srcObj.layout.minInitialLine;
-		} else if (drawingNewLinkMinInitialLine) {
-			minInitialLine = drawingNewLinkMinInitialLine;
-		} else {
-			minInitialLine = 30;
-		}
-		return minInitialLine;
-	}
-
 	getLinkCoords(link, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation) {
 		let coords = null;
 		if (link.type === NODE_LINK) {
@@ -470,6 +416,59 @@ export default class SvgCanvasLinks {
 		};
 	}
 
+	// Returns the lineArray passed in with connection path info added to it.
+	addConnectionPaths(links) {
+		links.forEach((link) => {
+			// Only necessary to get the path info, if the start and end coords of
+			// the link have changed.
+			if (link.coordsUpdated) {
+				link.pathInfo = this.getConnectorPathInfo(link);
+			}
+		});
+		return links;
+	}
+
+	// Returns an SVG path string for the link (described by the line passed in)
+	// based on the connection and link type in the layout info.
+	getConnectorPathInfo(link, drawingNewLinkMinInitialLine) {
+		const minInitialLine = this.getMinInitialLine(link, drawingNewLinkMinInitialLine);
+
+		if (link.type === NODE_LINK) {
+			if (this.canvasLayout.linkDirection === LINK_DIR_FREEFORM &&
+					this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
+				return this.getStraightPath(link, minInitialLine);
+			}
+			return this.getNodeLinkPathInfo(link, minInitialLine);
+
+		} else if (link.type === ASSOCIATION_LINK &&
+								this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
+			return this.getAssociationCurvePath(link, minInitialLine);
+		}
+
+		return this.getStraightPath(link, minInitialLine);
+	}
+
+	// Returns the minInitialLine layout variable that will be either zero for a
+	// comment link or from the link-data object (if the size has been
+	// pre-calculated for elbow style connections) or from the source node
+	// object (data.src) if we are drawing an existing connection or from
+	// this.drawingNewLinkData.minInitialLine if we are dynamically drawing
+	// a new link.
+	getMinInitialLine(link, drawingNewLinkMinInitialLine) {
+		let minInitialLine;
+		if (link.type === COMMENT_LINK) {
+			minInitialLine = 0;
+		} else if (link.minInitialLineForElbow) {
+			minInitialLine = link.minInitialLineForElbow;
+		} else if (link.srcObj && link.srcObj.layout) {
+			minInitialLine = link.srcObj.layout.minInitialLine;
+		} else if (drawingNewLinkMinInitialLine) {
+			minInitialLine = drawingNewLinkMinInitialLine;
+		} else {
+			minInitialLine = 30;
+		}
+		return minInitialLine;
+	}
 
 	// Returns the path info, for the link passed in, which describes either a
 	// Elbow, Curve, Parallax or Straight connector line. This method can be called

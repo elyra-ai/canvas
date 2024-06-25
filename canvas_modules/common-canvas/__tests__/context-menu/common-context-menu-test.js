@@ -17,7 +17,7 @@
 import React from "react";
 import CommonContextMenu from "../../src/context-menu/common-context-menu.jsx";
 import { mount } from "../_utils_/mount-utils.js";
-import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
+import { createIntlCommonCanvas } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 import CanvasController from "../../src/common-canvas/canvas-controller";

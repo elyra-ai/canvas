@@ -23,8 +23,6 @@ import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST }
 	from "../common-canvas/constants/canvas-constants.js";
 
-const FORTY_FIVE_DGREES_IN_RADIANS = 0.785398;
-
 export default class CanvasUtils {
 
 	static getObjectPositions(objects) {
@@ -419,8 +417,10 @@ export default class CanvasUtils {
 	// would be taken by an outgoing link from a source node
 	// or an incoming link to a target node.
 	static getPortDir(x, y, node) {
-		const xFromCenter = x - (node.width / 2);
-		const yFromCenter = y - (node.height / 2);
+		const halfNodeWidth = (node.width / 2);
+		const halfNodeHeight = (node.height / 2);
+		const xFromCenter = x - halfNodeWidth;
+		const yFromCenter = y - halfNodeHeight;
 		// In the center horizontally
 		if (xFromCenter === 0) {
 			if (yFromCenter > 0) {
@@ -431,24 +431,28 @@ export default class CanvasUtils {
 		// To the right
 		} else if (xFromCenter > 0) {
 			const angleToRight = Math.atan(yFromCenter / xFromCenter);
+			const angleToBottomRight = Math.atan(halfNodeHeight / halfNodeWidth);
+			const angleTopRight = -angleToBottomRight;
 			if (angleToRight === 0) {
 				return EAST;
-			} else if (angleToRight > FORTY_FIVE_DGREES_IN_RADIANS) {
-				return SOUTH;
-			} else if (angleToRight < -FORTY_FIVE_DGREES_IN_RADIANS) {
+			} else if (angleToRight < angleTopRight) {
 				return NORTH;
+			} else if (angleToRight > angleToBottomRight) {
+				return SOUTH;
 			}
 			return EAST;
 
 		}
 		// To the left
-		const angleToLeft = Math.atan(yFromCenter / -xFromCenter);
+		const angleToLeft = Math.atan(yFromCenter / xFromCenter);
+		const angleToTopLeft = Math.atan(halfNodeHeight / halfNodeWidth);
+		const angleToBottomLeft = -angleToTopLeft;
 		if (angleToLeft === 0) {
 			return WEST;
-		} else if (angleToLeft > FORTY_FIVE_DGREES_IN_RADIANS) {
-			return SOUTH;
-		} else if (angleToLeft < -FORTY_FIVE_DGREES_IN_RADIANS) {
+		} else if (angleToLeft > angleToTopLeft) {
 			return NORTH;
+		} else if (angleToLeft < angleToBottomLeft) {
+			return SOUTH;
 		}
 		return WEST;
 	}
