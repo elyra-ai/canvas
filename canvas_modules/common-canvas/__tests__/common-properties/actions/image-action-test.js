@@ -193,9 +193,8 @@ describe("actions using paramDef", () => {
 
 		const fallImage = images[3];
 		expect(fallImage.className).to.equal("properties-action-image right custom-class-for-action-image");
-		
 		// class_name not defined in uiHints action_info
-		const winterImage = images[0]
+		const winterImage = images[0];
 		expect(winterImage.className).to.equal("properties-action-image");
 	});
 });
