@@ -198,6 +198,22 @@ describe("selectcolumn control renders correctly", () => {
 		dropdownList.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal("");
 	});
+	it("SelectColumn helperText is rendered correctly", () => {
+		control.helperText = "SelectColumn helperText";
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<SelectColumn
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const helpTextWrapper = wrapper.find("div[data-id='properties-targetField']");
+		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
+	});
 });
 
 describe("selectcolumn control renders correctly with paramDef", () => {

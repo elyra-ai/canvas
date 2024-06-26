@@ -216,6 +216,23 @@ describe("multiselect renders correctly", () => {
 		const messageWrapper = multiselectWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
+
+	it("MultiSelectControl helperText is rendered correctly", () => {
+		control.helperText = "MultiSelectControl helperText";
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<MultiSelectControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const helpTextWrapper = wrapper.find("div[data-id='properties-test-multiselect']");
+		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
+	});
 });
 
 describe("multiselect paramDef works correctly", () => {

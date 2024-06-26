@@ -218,6 +218,22 @@ describe("oneofselect renders correctly", () => {
 		const messageWrapper = dropdownWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
+	it("oneofselect helperText is rendered correctly", () => {
+		control.helperText = "Oneofselect helperText";
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<OneofselectControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const helpTextWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
+	});
 });
 
 describe("oneofselect paramDef works correctly", () => {

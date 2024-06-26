@@ -127,6 +127,7 @@ class ToolbarSubMenuItem extends React.Component {
 					actionItemRect={actionItemRect}
 					expandDirection={"horizontal"}
 					containingDivId={this.props.containingDivId}
+					isCascadeMenu
 				/>
 			);
 		}

@@ -109,6 +109,9 @@
         "description": {
           "default": "Required timefield with value set to '5:45:9' with H:m:s format"
         },
+        "helper_text": {
+          "default": "Required timefield with value set to '5:45:9' with H:m:s format"
+        },
         "time_format": "H:m:s",
         "class_name": "timefield-control-class"
       },

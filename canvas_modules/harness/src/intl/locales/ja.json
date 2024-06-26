@@ -1,6 +1,6 @@
 {
   "dialog.nodePropertiesTitle": "ノードのプロパティー",
-  "canvas.emptyText": "共通キャンバス・テスト・ハーネスへようこそ。{br}フローが空です。",
+  "canvas.emptyText": "Elyraキャンバス・テスト・ハーネスへようこそ。{br}フローは空です。",
   "canvas.emptyLink": "ここをクリックしてツアーを見る",
   "expression.value.column": "カスタム値",
   "expression.value.column.description": "アプリからのカスタム説明のテスト",

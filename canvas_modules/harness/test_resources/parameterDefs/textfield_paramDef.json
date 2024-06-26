@@ -166,7 +166,10 @@
         "description": {
           "default": "textfield with parameter value set to 'testing'"
         },
-        "class_name": "string-textfield-control-class"
+        "class_name": "string-textfield-control-class",
+        "helper_text": {
+          "default": "textfield with parameter value set to 'testing'"
+        }
       },
       {
         "parameter_ref": "string_charLimit",
