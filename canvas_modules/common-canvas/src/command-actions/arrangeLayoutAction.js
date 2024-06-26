@@ -26,6 +26,9 @@ export default class ArrangeLayoutAction extends Action {
 
 		// Copy the nodes to remember their original positions.
 		this.existingNodes = this.apiPipeline.getNodes().map((n) => Object.assign({}, n));
+		// Copy the links to remember their original positions.
+		// This will also allow detached/semi-detached links to restore their positions.
+		this.existingLinks = this.apiPipeline.getLinks().map((n) => Object.assign({}, n));
 	}
 
 	// Standard methods
@@ -35,6 +38,9 @@ export default class ArrangeLayoutAction extends Action {
 
 	undo() {
 		this.apiPipeline.replaceNodes(this.existingNodes);
+
+		// Update links and detached/semi-detached links to restore its position.
+		this.apiPipeline.updateLinks(this.existingLinks);
 	}
 
 	redo() {
