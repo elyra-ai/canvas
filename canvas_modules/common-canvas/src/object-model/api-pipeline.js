@@ -963,42 +963,63 @@ export default class APIPipeline {
 	// Iterate nodes and check if there are any dummy nodes.
 	// If there are dummy nodes then links should have x/y cordinates as per dummy_nodes.
 	convertGraphToMoveLinks(outputGraph, canvasInfoPipelineLinks) {
-		let movedLinksInfo = [];
+		const movedLinksInfo = {};
 		const linksPos = [];
 
 		const nodes = outputGraph.nodes;
 
 		nodes.forEach((node) => {
-			const linkProps = {};
+			// Record the x and y position of dummy node to be assigned to the detached link.
+			// A fully detached link can have both temp-src-node and temp-trg-node
 			if (node.v.startsWith("temp-src-node-")) {
-				// Record the x and y position of this node to be assigned to the detached link
-				linkProps.id = node.v.split("temp-src-node-")[1];
-				linkProps.srcPos = {
-					x: node.value.x,
-					y: node.value.y
+				const dummyNodeId = node.v.split("temp-src-node-")[1];
+
+				linksPos[dummyNodeId] = {
+					...linksPos[node.v.split("temp-src-node-")[1]],
+					srcPos: {
+						x: node.value.x,
+						y: node.value.y
+					}
 				};
-				linksPos.push(linkProps);
-			} else if (node.v.startsWith("temp-trg-node-")) {
-				linkProps.id = node.v.split("temp-trg-node-")[1];
-				linkProps.trgPos = {
-					x: node.value.x,
-					y: node.value.y
+			}
+			if (node.v.startsWith("temp-trg-node-")) {
+				const dummyNodeId = node.v.split("temp-trg-node-")[1];
+
+				linksPos[dummyNodeId] = {
+					...linksPos[node.v.split("temp-trg-node-")[1]],
+					trgPos: {
+						x: node.value.x,
+						y: node.value.y
+					}
 				};
-				linksPos.push(linkProps);
 			}
 		});
 
-		movedLinksInfo = canvasInfoPipelineLinks.map((link) => {
-			if (link?.srcPos) {
-				link.srcPos.x_pos = linksPos.find((lnk) => lnk.id === link.id).srcPos.x;
-				link.srcPos.y_pos = linksPos.find((lnk) => lnk.id === link.id).srcPos.y;
-				delete link.srcNodeId;
-			} else if (link?.trgPos) {
-				link.trgPos.x_pos = linksPos.find((lnk) => lnk.id === link.id).trgPos.x;
-				link.trgPos.y_pos = linksPos.find((lnk) => lnk.id === link.id).trgPos.y;
-				delete link.trgNodeId;
+		canvasInfoPipelineLinks.forEach((link) => {
+			// If it is a semi detached or a detached link update its src/trg pos based on dummy node cordinates.
+			if (link?.srcPos || link?.trgPos) {
+				if (link?.srcPos) {
+					movedLinksInfo[link.id] = Object.assign(link, {
+						srcPos: {
+							x_pos: linksPos[link.id].srcPos.x,
+							y_pos: linksPos[link.id].srcPos.y
+						}
+					});
+				}
+				if (link?.trgPos) {
+					movedLinksInfo[link.id] = Object.assign(link, {
+						trgPos: {
+							x_pos: linksPos[link.id].trgPos.x,
+							y_pos: linksPos[link.id].trgPos.y
+						}
+					});
+				}
+				delete movedLinksInfo[link.id].srcNodeId;
+				delete movedLinksInfo[link.id].trgNodeId;
+			} else {
+				// If it is not a detached/semi-detached link retain its original properties.
+				movedLinksInfo[link.id] = link;
 			}
-			return link;
 		});
 
 		return movedLinksInfo;
