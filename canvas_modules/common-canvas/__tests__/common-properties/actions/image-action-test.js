@@ -188,11 +188,14 @@ describe("actions using paramDef", () => {
 
 	it("action image should have custom classname defined", () => {
 		// class_name defined in uiHints action_info
-		const images = wrapper.getAllByRole("img");
+		const { container } = wrapper;
+		const images = container.querySelectorAll(".properties-action-image");
+
 		const fallImage = images[3];
-		const winterImage = images[0];
-		expect(fallImage.parentElement.parentElement.parentElement.parentElement.className).to.equal("properties-action-image right custom-class-for-action-image");
+		expect(fallImage.className).to.equal("properties-action-image right custom-class-for-action-image");
+		
 		// class_name not defined in uiHints action_info
-		expect(winterImage.parentElement.parentElement.parentElement.parentElement.className).to.equal("properties-action-image");
+		const winterImage = images[0]
+		expect(winterImage.className).to.equal("properties-action-image");
 	});
 });
