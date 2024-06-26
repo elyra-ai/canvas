@@ -57,7 +57,7 @@ export default class ConfigUtils {
 			enableLinkDirection: "LeftRight",
 			enableLinkSelection: LINK_SELECTION_NONE,
 			enableLinkReplaceOnNewConnection: false,
-			enableSelfRefLink: false,
+			enableSelfRefLinks: false,
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,
