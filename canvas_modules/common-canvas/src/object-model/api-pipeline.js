@@ -876,9 +876,12 @@ export default class APIPipeline {
 			}
 		});
 
+		const layout = this.objectModel.getCanvasConfig()?.enableNodeLayout;
+		const dummyWidth = layout?.defaultNodeWidth ? layout.defaultNodeWidth : 150;
+		const dummyHeight = layout?.defaultNodeHeight ? layout.defaultNodeHeight : 80;
 		// Push the dummy Nodes to nodeData so that dagre treats them as nodes attached to detached links
 		dummyNodeIds.forEach((dummyNodeId) => {
-			nodesData.push({ "v": dummyNodeId, "value": { width: 150, height: 80 } });
+			nodesData.push({ "v": dummyNodeId, "value": { width: dummyWidth, height: dummyHeight } });
 		});
 
 		var edges = nodeLinks.map((link) => {
