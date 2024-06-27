@@ -1150,11 +1150,12 @@ export default class APIPipeline {
 		const srcNode = this.getNode(srcInfo.id);
 		const trgNode = this.getNode(trgInfo.id);
 		const links = this.getLinks();
+		const selfRefLinks = this.objectModel.getCanvasConfig().enableSelfRefLinks;
 
 		if ((srcInfo.srcPos && trgInfo.trgPos) || // Fully detached
 				(srcInfo.srcPos && CanvasUtils.isTrgConnectionAllowedWithDetachedLinks(trgInfo.portId, trgNode, links)) || // Semi-detached
 				(trgInfo.trgPos && CanvasUtils.isSrcConnectionAllowedWithDetachedLinks(srcInfo.portId, srcNode, links)) || // Semi-detached
-				(CanvasUtils.isConnectionAllowed(srcInfo.portId, trgInfo.portId, srcNode, trgNode, links, data.type))) { // Fully attached
+				(CanvasUtils.isConnectionAllowed(srcInfo.portId, trgInfo.portId, srcNode, trgNode, links, data.type, selfRefLinks))) { // Fully attached
 			const link = {};
 			link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": srcNode, "targetNode": trgNode });
 			link.type = data.type;

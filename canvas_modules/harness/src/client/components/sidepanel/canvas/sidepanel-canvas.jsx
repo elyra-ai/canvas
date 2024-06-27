@@ -39,7 +39,10 @@ import {
 	CURVE_LINKS,
 	ELBOW_LINKS,
 	STRAIGHT_LINKS,
+	PARALLAX_LINKS,
+	DIRECTION_FREEFORM,
 	DIRECTION_LEFT_RIGHT,
+	DIRECTION_RIGHT_LEFT,
 	DIRECTION_TOP_BOTTOM,
 	DIRECTION_BOTTOM_TOP,
 	IMAGE_DISPLAY_SVG_INLINE,
@@ -65,6 +68,7 @@ import {
 	EXAMPLE_APP_READ_ONLY,
 	EXAMPLE_APP_PROGRESS,
 	EXAMPLE_APP_JSX_ICONS,
+	EXAMPLE_APP_ALL_PORTS,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	PALETTE_FLYOUT,
@@ -1014,6 +1018,24 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableStraightLinksAsFreeform = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedStraightLinksAsFreeform" // Set ID to corresponding field in App.js state
+				labelText="Enable Straight Links as Freeform"
+				toggled={this.props.getStateValue("selectedStraightLinksAsFreeform")}
+				onToggle={(val) => this.setStateValue(val, "selectedStraightLinksAsFreeform")}
+			/>
+		</div>);
+
+		var enableSelfRefLinks = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedSelfRefLinks" // Set ID to corresponding field in App.js state
+				labelText="Enable Self Referencing Links"
+				toggled={this.props.getStateValue("selectedSelfRefLinks")}
+				onToggle={(val) => this.setStateValue(val, "selectedSelfRefLinks")}
+			/>
+		</div>);
+
 		var interactionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-interaction-type">
 			<FormGroup
 				legendText="Interaction Type"
@@ -1084,6 +1106,10 @@ export default class SidePanelForms extends React.Component {
 						labelText={ELBOW_LINKS}
 					/>
 					<RadioButton
+						value={PARALLAX_LINKS}
+						labelText={PARALLAX_LINKS}
+					/>
+					<RadioButton
 						value={STRAIGHT_LINKS}
 						labelText={STRAIGHT_LINKS}
 					/>
@@ -1103,8 +1129,16 @@ export default class SidePanelForms extends React.Component {
 					orientation="vertical"
 				>
 					<RadioButton
+						value={DIRECTION_FREEFORM}
+						labelText={DIRECTION_FREEFORM}
+					/>
+					<RadioButton
 						value={DIRECTION_LEFT_RIGHT}
 						labelText={DIRECTION_LEFT_RIGHT}
+					/>
+					<RadioButton
+						value={DIRECTION_RIGHT_LEFT}
+						labelText={DIRECTION_RIGHT_LEFT}
 					/>
 					<RadioButton
 						value={DIRECTION_TOP_BOTTOM}
@@ -1172,6 +1206,10 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={EXAMPLE_APP_TABLES}
 						labelText={EXAMPLE_APP_TABLES}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_ALL_PORTS}
+						labelText={EXAMPLE_APP_ALL_PORTS}
 					/>
 					<RadioButton
 						value={EXAMPLE_APP_REACT_NODES_CARBON}
@@ -1554,6 +1592,8 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableHighlightUnavailableNodes}
 					{divider}
+					{enableSelfRefLinks}
+					{divider}
 					{enableSingleOutputPortDisplay}
 					{divider}
 					{displayFullLabelOnHover}
@@ -1569,6 +1609,8 @@ export default class SidePanelForms extends React.Component {
 					{linkDirection}
 					{divider}
 					{enableLinkSelection}
+					{divider}
+					{enableStraightLinksAsFreeform}
 					{divider}
 					{enableLinkReplaceOnNewConnection}
 					{divider}
