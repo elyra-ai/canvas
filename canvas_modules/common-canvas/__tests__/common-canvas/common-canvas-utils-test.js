@@ -26,7 +26,7 @@ describe("Test Common Canvas utility functions", () => {
 		// Create a dummy node
 		const node = { width: 70, height: 160 };
 
-		// WEST -- These tests should returtn "w"
+		// WEST -- These tests should return "w"
 		let dir = CanvasUtils.getPortDir(0, 1, node);
 		expect(dir).toEqual("w");
 		dir = CanvasUtils.getPortDir(0, node.height - 1, node);
@@ -34,7 +34,7 @@ describe("Test Common Canvas utility functions", () => {
 		dir = CanvasUtils.getPortDir(0, (node.height / 2) - 1, node);
 		expect(dir).toEqual("w");
 
-		// EAST -- These tests should returtn "e"
+		// EAST -- These tests should return "e"
 		dir = CanvasUtils.getPortDir(node.width, 1, node);
 		expect(dir).toEqual("e");
 		dir = CanvasUtils.getPortDir(node.width, node.height - 1, node);
@@ -42,7 +42,7 @@ describe("Test Common Canvas utility functions", () => {
 		dir = CanvasUtils.getPortDir(node.width, (node.height / 2), node);
 		expect(dir).toEqual("e");
 
-		// NORTH -- These tests should returtn "n"
+		// NORTH -- These tests should return "n"
 		dir = CanvasUtils.getPortDir(node.width - 1, 0, node);
 		expect(dir).toEqual("n");
 		dir = CanvasUtils.getPortDir(1, 0, node);
@@ -50,7 +50,7 @@ describe("Test Common Canvas utility functions", () => {
 		dir = CanvasUtils.getPortDir((node.width / 2), 0, node);
 		expect(dir).toEqual("n");
 
-		// SOUTH -- These tests should returtn "s"
+		// SOUTH -- These tests should return "s"
 		dir = CanvasUtils.getPortDir(node.width - 1, node.height, node);
 		expect(dir).toEqual("s");
 		dir = CanvasUtils.getPortDir(1, node.height, node);
