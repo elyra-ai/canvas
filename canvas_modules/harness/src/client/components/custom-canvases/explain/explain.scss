@@ -33,12 +33,14 @@
 		font-weight: 600;
 		text-align: center;
 		user-select: none; // Prevents text highlighting on drag over
+		color: #161616;
 	}
 
 	.small_text {
 		font-size: 11px;
 		text-align: center;
 		user-select: none; // Prevents text highlighting on drag over
+		color: #161616;
 	}
 
 	.dark_purple > .d3-node-body-outline {
