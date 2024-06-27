@@ -40,9 +40,12 @@ export const INTERACTION_CARBON = "Carbon";
 export const LINK_TYPE_CURVE = "Curve";
 export const LINK_TYPE_ELBOW = "Elbow";
 export const LINK_TYPE_STRAIGHT = "Straight";
+export const LINK_TYPE_PARALLAX = "Parallax";
 
 // Values for enableLinkDirection config parameter
+export const LINK_DIR_FREEFORM = "Freeform";
 export const LINK_DIR_LEFT_RIGHT = "LeftRight";
+export const LINK_DIR_RIGHT_LEFT = "RightLeft";
 export const LINK_DIR_TOP_BOTTOM = "TopBottom";
 export const LINK_DIR_BOTTOM_TOP = "BottomTop";
 

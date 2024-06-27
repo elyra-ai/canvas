@@ -235,7 +235,6 @@ export default class ProgressCanvas extends React.Component {
 		this.canvasController.setLinksStyle(this.link1, removeLinkStyle, true);
 		this.canvasController.setLinksStyle(this.link2, removeLinkStyle, true);
 		this.canvasController.setLinksStyle(this.link3, removeLinkStyle, true);
-		this.canvasController.setLinksStyle(this.link4, removeLinkStyle, true);
 	}
 
 	clearNodeDecorations() {
