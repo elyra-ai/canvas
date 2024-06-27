@@ -165,6 +165,7 @@ class MultiSelectControl extends React.Component {
 					onChange={this.handleOnChange}
 					placeholder={label}
 					titleText={this.props.tableControl ? null : this.props.controlItem}
+					helperText={this.props.control.helperText}
 				/>
 			);
 		} else {
@@ -179,6 +180,7 @@ class MultiSelectControl extends React.Component {
 					onChange={this.handleOnChange}
 					label={label}
 					titleText={this.props.tableControl ? null : this.props.controlItem}
+					helperText={this.props.control.helperText}
 				/>
 			);
 		}

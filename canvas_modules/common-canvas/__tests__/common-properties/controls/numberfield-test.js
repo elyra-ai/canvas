@@ -144,6 +144,23 @@ describe("numberfield-control renders correctly", () => {
 		const messageWrapper = textWrapper.find("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
+
+	it("NumberfieldControl helperText is rendered correctly", () => {
+		control.helperText = "NumberfieldControl helperText";
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<NumberfieldControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const helpTextWrapper = wrapper.find("div[data-id='properties-test-number']");
+		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
+	});
 });
 
 describe("numberfield control works correctly", () => {

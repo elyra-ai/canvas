@@ -103,6 +103,24 @@ describe("datepicker-control renders correctly", () => {
 		expect(input.prop("value")).to.equal("10-29-2023");
 	});
 
+	it("should have helperText rendered correctly in `DatepickerControl`", () => {
+		control.helperText = "Datepicker helperText";
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<DatepickerControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				controlItem={controlItem}
+			/>
+		);
+		const helpTextWrapper = wrapper.find("div[data-id='properties-test-datepicker']");
+		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
+	});
+
 	it("should allow a valid date to be updated in `DatepickerControl`", () => {
 		const wrapper = mount(
 			<DatepickerControl

@@ -160,6 +160,24 @@ describe("timefield-control renders correctly", () => {
 		const input = timeWrapper.find("input");
 		expect(input.getDOMNode().placeholder).to.equal(control.additionalText);
 	});
+
+	it("should set helpertext text in `TimefieldControl`", () => {
+		control.helperText = "TimefieldControl helpertext";
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<TimefieldControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				controlItem={controlItem}
+			/>
+		);
+		const helpTextWrapper = wrapper.find("div[data-id='properties-test-timefield']");
+		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
+	});
 });
 
 describe("error messages renders correctly for timefield controls", () => {
