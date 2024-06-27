@@ -94,10 +94,11 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const image = wrapper.getByRole("img");
-		expect(image.height).to.equal(20);
-		expect(image.width).to.equal(25);
-		expect(image.parentElement.parentElement.parentElement.parentElement.className).to.equal("properties-action-image right");
+		const { container } = wrapper;
+		const image = container.querySelectorAll("img");
+		expect(image[0].height).to.equal(20);
+		expect(image[0].width).to.equal(25);
+		expect(container.querySelectorAll(".right")).to.have.length(1);
 	});
 	it("should fire action when image clicked", (done) => {
 		function callback(id, inAppData, data) {
@@ -128,8 +129,8 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const image = wrapper.getByRole("img");
-		const imageWrapper = image.parentElement.parentElement.parentElement.parentElement;
+		const { container } = wrapper;
+		const imageWrapper = container.querySelector(".properties-action-image");
 		expect(imageWrapper.className.includes("disabled")).to.equal(true);
 	});
 	it("action image renders when hidden", () => {
@@ -142,8 +143,8 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const image = wrapper.getByRole("img");
-		const imageWrapper = image.parentElement.parentElement.parentElement.parentElement;
+		const { container } = wrapper;
+		const imageWrapper = container.querySelector(".properties-action-image");
 		expect(imageWrapper.className.includes("hide")).to.equal(true);
 	});
 	it("action image renders tooltip", () => {
