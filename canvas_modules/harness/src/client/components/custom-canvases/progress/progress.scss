@@ -18,6 +18,7 @@
 $blue: #8EB5FF;
 $light-blue: #E9F1FF;
 $dark-blue: #4283FE;
+$black: #161616;
 
 // Node colors for the Regular (Vertical) theme
 $node-body-stroke: $blue;
@@ -82,6 +83,8 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 
 	.d3-node-label {
 		font-size: 13px;
+		color: $black;
+		
 	}
 
 	.d3-node-label-entry {

@@ -21,6 +21,7 @@
 	.d3-node-group {
 		.d3-foreign-object-external-node {
 			outline: none; // Suppress the tab highlighting
+			color: $text-primary;
 		}
 
 		.node-container {
@@ -39,7 +40,7 @@
 		.node-header {
 			height: 30px;
 			padding: 5px;
-			background-color: #FFFFFF;
+			background-color: $background;
 			display: grid;
 			grid-template-columns: auto 1fr auto 30px;
 
@@ -62,7 +63,7 @@
 		.scrollable-row {
 			height: 30px;
 			padding: 5px;
-			background-color: #F4F4F4;
+			background-color: $background;
 			border-width: 2px;
 			border-color: #FFFFFF;
 			border-style: solid;
@@ -72,20 +73,20 @@
 				grid-template-columns: 16px 20px 130px 175px 190px 20px;
 			}
 			&:hover {
-				background-color: #E5E5E5;
+				background-color: #909090;
 			}
 		}
 
 		.node-no-columns {
 			height: 30px;
 			padding: 5px;
-			background-color: #F4F4F4;
+			background-color: $background;
 		}
 
 		.node-footer {
 			height: 30px;
 			padding: 5px;
-			background-color: #FFFFFF;
+			background-color: $background;
 
 			.footer-label {
 				font-size: 12px;
