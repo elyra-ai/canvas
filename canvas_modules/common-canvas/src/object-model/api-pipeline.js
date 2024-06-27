@@ -861,6 +861,7 @@ export default class APIPipeline {
 		});
 
 		const dummyNodeIds = [];
+		let nodesData = [];
 
 		nodeLinks.forEach((link) => {
 			// If there is no srcNodeId create a dummy node id and attach to the detached link
@@ -875,11 +876,17 @@ export default class APIPipeline {
 			}
 		});
 
+		// Push the dummy Nodes to nodeData so that dagre treats them as nodes attached to detached links
+		dummyNodeIds.forEach((dummyNodeId) => {
+			nodesData.push({ "v": dummyNodeId, "value": { width: 150, height: 80 } });
+		});
+
 		var edges = nodeLinks.map((link) => {
 			return { "v": link.srcNodeId, "w": link.trgNodeId, "value": { "points": [] } };
 		});
 
-		var nodesData = canvasInfoPipeline.nodes.map((node) => {
+		// Add actual nodes to nodesData and adjust width if necessary
+		nodesData = nodesData.concat(canvasInfoPipeline.nodes.map((node) => {
 			let newWidth = node.width;
 			if (direction === DAGRE_HORIZONTAL) {
 				newWidth = node.width +
@@ -887,12 +894,7 @@ export default class APIPipeline {
 			}
 
 			return { "v": node.id, "value": { width: newWidth, height: node.height } };
-		});
-
-		// Push the dummy Nodes to nodeData so that dagre treats them as nodes attached to detached links
-		dummyNodeIds.forEach((dummyNodeId) => {
-			nodesData.push({ "v": dummyNodeId, "value": { width: 150, height: 80 } });
-		});
+		}));
 
 		// possible values: TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
 		// default TB for vertical layout
@@ -972,24 +974,24 @@ export default class APIPipeline {
 			// Record the x and y position of dummy node to be assigned to the detached link.
 			// A fully detached link can have both temp-src-node and temp-trg-node
 			if (node.v.startsWith("temp-src-node-")) {
-				const dummyNodeId = node.v.split("temp-src-node-")[1];
+				const linkId = node.v.split("temp-src-node-")[1];
 
-				linksPos[dummyNodeId] = {
-					...linksPos[node.v.split("temp-src-node-")[1]],
+				linksPos[linkId] = {
 					srcPos: {
-						x: node.value.x,
-						y: node.value.y
+						x_pos: node.value.x,
+						y_pos: node.value.y
 					}
 				};
 			}
 			if (node.v.startsWith("temp-trg-node-")) {
-				const dummyNodeId = node.v.split("temp-trg-node-")[1];
+				const linkId = node.v.split("temp-trg-node-")[1];
 
-				linksPos[dummyNodeId] = {
-					...linksPos[node.v.split("temp-trg-node-")[1]],
+				linksPos[linkId] = {
+					// If it is a fully detached link include srcPos cordinates.
+					...linksPos[linkId],
 					trgPos: {
-						x: node.value.x,
-						y: node.value.y
+						x_pos: node.value.x,
+						y_pos: node.value.y
 					}
 				};
 			}
@@ -998,22 +1000,7 @@ export default class APIPipeline {
 		canvasInfoPipelineLinks.forEach((link) => {
 			// If it is a semi detached or a detached link update its src/trg pos based on dummy node cordinates.
 			if (link?.srcPos || link?.trgPos) {
-				if (link?.srcPos) {
-					movedLinksInfo[link.id] = Object.assign(link, {
-						srcPos: {
-							x_pos: linksPos[link.id].srcPos.x,
-							y_pos: linksPos[link.id].srcPos.y
-						}
-					});
-				}
-				if (link?.trgPos) {
-					movedLinksInfo[link.id] = Object.assign(link, {
-						trgPos: {
-							x_pos: linksPos[link.id].trgPos.x,
-							y_pos: linksPos[link.id].trgPos.y
-						}
-					});
-				}
+				movedLinksInfo[link.id] = Object.assign({ id: link.id }, linksPos[link.id]);
 				delete movedLinksInfo[link.id].srcNodeId;
 				delete movedLinksInfo[link.id].trgNodeId;
 			} else {
