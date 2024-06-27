@@ -30,7 +30,7 @@ mulltiple properties windows - for when you have a multitude of node types each 
 
 ## What's in this documentation
 
-The 'Home' and 'Components' tabs give a comprehensive overview of Elyra Canvas features so this is useful for any reader assessing common canvas suitability for their application.  Developers can then jump to the remaining tabs startiing with 'Initial Setup' to get intall done and then moving on to either the 'Common Canvas' or 'Common Properties' tabs (or both) depending on which component is of interest.
+The 'Home' and 'Components' tabs give a comprehensive overview of Elyra Canvas features so this is useful for any reader assessing the suitability of Elyra Canvas for their application.  Developers can then jump to the remaining tabs startiing with 'Initial Setup' to get common setup such as install done, and then moving on to either the 'Common Canvas' or 'Common Properties' tabs (or both) depending on which component is of interest.
 
 ## Try Elyra Canvas
 
