@@ -3619,28 +3619,6 @@ export default class SVGCanvasRenderer {
 			yPosition += (node.layout.portArcRadius * multiplier);
 			p.cx = xPos;
 			p.cy = yPosition;
-
-			// West
-			p.dir = CanvasUtils.getPortDir(0, 1, node);
-			p.dir = CanvasUtils.getPortDir(0, node.height - 1, node);
-			p.dir = CanvasUtils.getPortDir(0, (node.height / 2) - 1, node);
-
-			// East
-			p.dir = CanvasUtils.getPortDir(node.width, 1, node);
-			p.dir = CanvasUtils.getPortDir(node.width, node.height - 1, node);
-			p.dir = CanvasUtils.getPortDir(node.width, (node.height / 2), node);
-
-			// North
-			p.dir = CanvasUtils.getPortDir(node.width - 1, 0, node);
-			p.dir = CanvasUtils.getPortDir(1, 0, node);
-			p.dir = CanvasUtils.getPortDir((node.width / 2), 0, node);
-
-			// South
-			p.dir = CanvasUtils.getPortDir(node.width - 1, node.height, node);
-			p.dir = CanvasUtils.getPortDir(1, node.height, node);
-			p.dir = CanvasUtils.getPortDir((node.width / 2), node.height, node);
-
-
 			p.dir = CanvasUtils.getPortDir(p.cx, p.cy, node);
 			yPosition += ((node.layout.portArcRadius + node.layout.portArcSpacing) * multiplier);
 		});
