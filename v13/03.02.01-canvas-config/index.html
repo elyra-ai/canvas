@@ -1198,6 +1198,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#enableselfreflinks" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSelfRefLinks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enableinsertnodedroppedonlink" class="md-nav__link">
     <span class="md-ellipsis">
       enableInsertNodeDroppedOnLink
@@ -1297,6 +1306,15 @@
   <a href="#enablelinkdirection" class="md-nav__link">
     <span class="md-ellipsis">
       enableLinkDirection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablestraightlinksasfreeform" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableStraightLinksAsFreeform
     </span>
   </a>
   
@@ -3115,6 +3133,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#enableselfreflinks" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSelfRefLinks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enableinsertnodedroppedonlink" class="md-nav__link">
     <span class="md-ellipsis">
       enableInsertNodeDroppedOnLink
@@ -3214,6 +3241,15 @@
   <a href="#enablelinkdirection" class="md-nav__link">
     <span class="md-ellipsis">
       enableLinkDirection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablestraightlinksasfreeform" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableStraightLinksAsFreeform
     </span>
   </a>
   
@@ -3698,6 +3734,8 @@ and this is how it is specified to Common Canvas:
 <p>This is a simple Javascript object, the properties of which override the default node layout properties. For more details see the <a href="../03.06.01-node-customization/">node customization</a> section.</p>
 <h4 id="enableresizablenodes"><strong>enableResizableNodes</strong><a class="headerlink" href="#enableresizablenodes" title="Permanent link">&para;</a></h4>
 <p>This is a boolean. The default is false. If set to true, the user can resize nodes by dragging the edges of the node to increase or decrease the width and/or height of the node. When hovering the mouse cursor over the edge of the node the user will see a sizing cursor to indicate the resize function is available. This option works best when the node has a background rectangle that shows the extent of the sizing area.</p>
+<h4 id="enableselfreflinks"><strong>enableSelfRefLinks</strong><a class="headerlink" href="#enableselfreflinks" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true, the user is allowed to create a link that points to the node the link originated from: a loop-back link. This is created by the user by dragging from the output port on the node and dropping the new link onto the same node.</p>
 <h4 id="enableinsertnodedroppedonlink"><strong>enableInsertNodeDroppedOnLink</strong><a class="headerlink" href="#enableinsertnodedroppedonlink" title="Permanent link">&para;</a></h4>
 <p>This is a boolean. The default is false. If set to true, the user can drag nodes from the palette or from the canvas and drop them onto existing links in the flow. This causes the dropped node to be inserted between the two nodes joined by the link, meaning new links are created that join the new node to the previously joined nodes and the old link is removed. When the user performs the drop Common Canvas will call the editActionHandler with one of two possible commands:</p>
 <ul>
@@ -3727,14 +3765,23 @@ and this is how it is specified to Common Canvas:
 </code></pre></div></p>
 <h2 id="links">Links<a class="headerlink" href="#links" title="Permanent link">&para;</a></h2>
 <h4 id="enablelinktype"><strong>enableLinkType</strong><a class="headerlink" href="#enablelinktype" title="Permanent link">&para;</a></h4>
-<p>This can be &ldquo;Curve&rdquo;, &ldquo;Elbow&rdquo;, or &ldquo;Straight&rdquo;. &ldquo;Curve&rdquo; is the default. This will set the link style used to connect nodes.</p>
+<p>This can be &ldquo;Curve&rdquo;, &ldquo;Elbow&rdquo;, &ldquo;Parallax&rdquo; or &ldquo;Straight&rdquo;. &ldquo;Curve&rdquo; is the default. This will set the link style used to connect nodes.</p>
 <h4 id="enablelinkdirection"><strong>enableLinkDirection</strong><a class="headerlink" href="#enablelinkdirection" title="Permanent link">&para;</a></h4>
-<p>This can be &ldquo;LeftRight&rdquo;, &ldquo;TopBottom&rdquo;, or &ldquo;BottomTop&rdquo;. &ldquo;LeftRight&rdquo; is the default. This will set the input and output port positions on nodes to facilitate links being drawn in the direction specified.</p>
+<p>This can be &ldquo;Freeform&rdquo;, &ldquo;LeftRight&rdquo;, &ldquo;RightLeft&rdquo;, &ldquo;TopBottom&rdquo;, or &ldquo;BottomTop&rdquo;. &ldquo;LeftRight&rdquo; is the default. This will either specify that the links should be free floating and not connected to ports (&ldquo;Freeform&rdquo;) or will specify that link should be drawn from the source node&rsquo;s output port to the target node&rsquo;s input port. The four different non-freeform combinations control the default positioning of ports on the nodes as described below.</p>
 <ul>
-<li>For &ldquo;LeftRight&rdquo; output ports will be on the right and input ports will be on the left of the nodes</li>
-<li>For &ldquo;TopBottom&rdquo; output ports will be on the bottom and input ports will be on the top of the nodes</li>
-<li>For &ldquo;BottomTop&rdquo; output ports will be on the top and input ports will be on the bottom of the nodes</li>
+<li>For &ldquo;Freeform&rdquo; links are drawn between nodes without any reference to the port positions.</li>
+<li>For &ldquo;LeftRight&rdquo; output ports will be on the right of the node and input ports will be on the left of the node</li>
+<li>For &ldquo;RightLeft&rdquo; output ports will be on the left of the node and input ports will be on the right of the node</li>
+<li>For &ldquo;TopBottom&rdquo; output ports will be on the bottom of the node and input ports will be on the top of the node</li>
+<li>For &ldquo;BottomTop&rdquo; output ports will be on the top of the node and input ports will be on the bottom of the node</li>
 </ul>
+<h4 id="enablestraightlinksasfreeform"><strong>enableStraightLinksAsFreeform</strong><a class="headerlink" href="#enablestraightlinksasfreeform" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is true. If set to true then, when <code>enableLinkType</code> is set to &ldquo;Straight&rdquo;, <code>enableLinkDirection</code> will alwyas be treated as if it is set to &ldquo;Freeform&rdquo;. If it is set to false, Common Canvas will use whatever value is specified in <code>enableLinkDirection</code> when <code>enableLinkType</code> is set to &ldquo;Straight&rdquo;.</p>
+<p>This config field was introduced to enforce the previous Elyra Canvas v13 behavior, where &ldquo;Straight&rdquo; links are automatically displayed as &ldquo;Freeform&rdquo;.</p>
+<div class="admonition warning">
+<p class="admonition-title">enableStraightLinksAsFreeform - deprecated</p>
+<p>This field is deprecated and will be removed in the next major Elyra Canvas version so it is recommeneded that applications using Straight links explicitely set <code>enableLinkDirection</code> to &ldquo;Freeform&rdquo; now because that will be mandatory when migrating to the next verion.</p>
+</div>
 <h4 id="enablelinkselection"><strong>enableLinkSelection</strong><a class="headerlink" href="#enablelinkselection" title="Permanent link">&para;</a></h4>
 <p>This can be: &ldquo;None&rdquo;, &ldquo;LinkOnly&rdquo;, &ldquo;Handles&rdquo; or &ldquo;Detachable&rdquo;. The default is &ldquo;None&rdquo;. These have the following affect on the canvas:</p>
 <ul>

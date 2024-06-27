@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#link-customizaiton" class="md-skip">
+        <a href="#link-customization" class="md-skip">
           Skip to content
         </a>
       
@@ -1822,6 +1822,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#overriding-node-port-locations-to-customize-link-display" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overriding node port locations to customize link display
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#customizing-comment-appearance-with-css" class="md-nav__link">
     <span class="md-ellipsis">
       Customizing comment appearance with CSS
@@ -2563,6 +2572,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#overriding-node-port-locations-to-customize-link-display" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overriding node port locations to customize link display
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#customizing-comment-appearance-with-css" class="md-nav__link">
     <span class="md-ellipsis">
       Customizing comment appearance with CSS
@@ -2645,12 +2663,14 @@
   
 
 
-<h1 id="link-customizaiton">Link Customizaiton<a class="headerlink" href="#link-customizaiton" title="Permanent link">&para;</a></h1>
-<p>Links can be customized by the application in the following ways:</p>
+<h1 id="link-customization">Link Customization<a class="headerlink" href="#link-customization" title="Permanent link">&para;</a></h1>
+<p>Common Canvas provides a number of ways the <a href="../01.01.02-links/">links can be displayed</a>. Links can be customized by the application in the following ways:</p>
 <ul>
 <li>Setting the <a href="../03.02.01-canvas-config/#links">link fields</a> in  the canvas configuration.</li>
 <li>Customizing comment appearance with CSS (see below).</li>
 </ul>
+<h2 id="overriding-node-port-locations-to-customize-link-display">Overriding node port locations to customize link display<a class="headerlink" href="#overriding-node-port-locations-to-customize-link-display" title="Permanent link">&para;</a></h2>
+<p>The positions of ports on nodes affect the direction that links are drawn to/fom the ports. See this <a href="../03.06.01-node-customization/#overriding-port-positions-and-link-directions">overriding port positions</a> section in the node customization page for more details.</p>
 <h2 id="customizing-comment-appearance-with-css">Customizing comment appearance with CSS<a class="headerlink" href="#customizing-comment-appearance-with-css" title="Permanent link">&para;</a></h2>
 <h3 id="link-dom-construction">Link DOM Construction<a class="headerlink" href="#link-dom-construction" title="Permanent link">&para;</a></h3>
 <p>Links are drawn on the canvas using SVG elements in the DOM. Each link has a top level group <code>&lt;g&gt;</code> element and inside it some SVG paths. The first displayed path is the selection area. This is invisible but provides a selection/hover area for mouse interactions on the link. The second is a path to represent the link itself which is drawn over the top of the selection area path:</p>
