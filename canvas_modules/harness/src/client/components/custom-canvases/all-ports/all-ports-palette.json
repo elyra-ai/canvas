@@ -1,0 +1,372 @@
+{
+  "version": "3.0",
+  "categories": [
+    {
+      "label": "Output Ports",
+      "image": "/images/palette-categories/sources_open.svg",
+      "id": "output-ports",
+      "node_types": [
+        {
+          "id": "out-north",
+          "type": "execution_node",
+          "op": "north-output-port",
+          "app_data": {
+            "ui_data": {
+              "label": "North output port node",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "A node with 1 north output node"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "North Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "out-south",
+          "type": "execution_node",
+          "op": "south-output-port",
+          "app_data": {
+            "ui_data": {
+              "label": "South output port node",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "A node with 1 south output node"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "South Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "out-east",
+          "type": "execution_node",
+          "op": "east-output-port",
+          "app_data": {
+            "ui_data": {
+              "label": "East output port node",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "A node with 1 east output node"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "East Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "out-west",
+          "type": "execution_node",
+          "op": "west-output-port",
+          "app_data": {
+            "ui_data": {
+              "label": "West output port node",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "A node with 1 west output node"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "West Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Input Ports",
+      "image": "/images/palette-categories/sources_open.svg",
+      "id": "input-ports",
+      "node_types": [
+        {
+          "id": "in-north",
+          "type": "execution_node",
+          "op": "north-input-port",
+          "app_data": {
+            "ui_data": {
+              "label": "North input port node",
+              "image": "images/custom-canvases/flows/palette/icons/table.svg",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "A node with 1 north input node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "North Input Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "in-south",
+          "type": "execution_node",
+          "op": "south-input-port",
+          "app_data": {
+            "ui_data": {
+              "label": "South input port node",
+              "image": "images/custom-canvases/flows/palette/icons/table.svg",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "A node with 1 south input node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "South Input Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "in-east",
+          "type": "execution_node",
+          "op": "east-input-port",
+          "app_data": {
+            "ui_data": {
+              "label": "East input port node",
+              "image": "images/custom-canvases/flows/palette/icons/table.svg",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "A node with 1 east input node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "in-outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "East Input Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "in-west",
+          "type": "execution_node",
+          "op": "west-input-port",
+          "app_data": {
+            "ui_data": {
+              "label": "West input port node",
+              "image": "images/custom-canvases/flows/palette/icons/table.svg",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "A node with 1 west input node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "West Input Port"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "All Ports",
+      "image": "/images/palette-categories/sources_open.svg",
+      "id": "all-ports",
+      "node_types": [
+        {
+          "id": "12345",
+          "type": "execution_node",
+          "op": "allports",
+          "app_data": {
+            "ui_data": {
+              "label": "All ports node",
+              "image": "images/custom-canvases/flows/palette/icons/userinput.svg",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "A node with 4 input and 4 output ports"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port 1"
+                }
+              },
+              "links": [
+              ]
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port 2"
+                }
+              },
+              "links": [
+              ]
+            },
+            {
+              "id": "inPort3",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port 3"
+                }
+              },
+              "links": [
+              ]
+            },
+            {
+              "id": "inPort4",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port 4"
+                }
+              },
+              "links": [
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            },
+            {
+              "id": "outPort3",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 3"
+                }
+              }
+            },
+            {
+              "id": "outPort4",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 4"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

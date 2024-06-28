@@ -16,7 +16,7 @@
 
 import React from "react";
 import CommonContextMenu from "./../../src/context-menu/common-context-menu";
-import { createIntlCommonCanvasRTL } from "../_utils_/common-canvas-utils.js";
+import { createIntlCommonCanvasRTL } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";

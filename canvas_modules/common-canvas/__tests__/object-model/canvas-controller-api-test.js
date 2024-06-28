@@ -18,7 +18,7 @@
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
-import { createCommonCanvas } from "../_utils_/common-canvas-utils.js";
+import { createCommonCanvas } from "../_utils_/cc-utils.js";
 
 // Imports from harness test resources
 import startCanvas from "../test_resources/json/startCanvas.json";

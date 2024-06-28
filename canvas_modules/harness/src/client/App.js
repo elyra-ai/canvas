@@ -52,6 +52,7 @@ import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
 import JsxIconsCanvas from "./components/custom-canvases/jsx-icons/jsx-icons-canvas";
+import AllPortsCanvas from "./components/custom-canvases/all-ports/all-ports-canvas";
 import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon";
 import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping";
 
@@ -115,6 +116,7 @@ import {
 	EXAMPLE_APP_READ_ONLY,
 	EXAMPLE_APP_PROGRESS,
 	EXAMPLE_APP_JSX_ICONS,
+	EXAMPLE_APP_ALL_PORTS,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	CUSTOM,
@@ -194,6 +196,8 @@ class App extends React.Component {
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedLinkSelection: LINK_SELECTION_NONE,
 			selectedLinkReplaceOnNewConnection: false,
+			selectedStraightLinksAsFreeform: true,
+			selectedSelfRefLinks: false,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
 			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedExampleApp: EXAMPLE_APP_NONE,
@@ -2052,6 +2056,8 @@ class App extends React.Component {
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableLinkSelection: this.state.selectedLinkSelection,
 			enableLinkReplaceOnNewConnection: this.state.selectedLinkReplaceOnNewConnection,
+			enableStraightLinksAsFreeform: this.state.selectedStraightLinksAsFreeform,
+			enableSelfRefLinks: this.state.selectedSelfRefLinks,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enableMarkdownInComments: this.state.selectedMarkdownInComments,
 			enableContextToolbar: this.state.selectedContextToolbar,
@@ -2620,6 +2626,13 @@ class App extends React.Component {
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_JSX_ICONS) {
 			firstCanvas = (
 				<JsxIconsCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_ALL_PORTS) {
+			firstCanvas = (
+				<AllPortsCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
