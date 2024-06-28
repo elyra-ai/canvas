@@ -22,7 +22,7 @@ import Toolbar from "../../src/toolbar/toolbar.jsx";
 import CanvasBottomPanel from "../../src/common-canvas/cc-bottom-panel.jsx";
 import CommonCanvasRightFlyout from "../../src/common-canvas/cc-right-flyout.jsx";
 import CommonCanvasStateTag from "../../src/common-canvas/cc-state-tag.jsx";
-import { createCommonCanvas } from "../_utils_/common-canvas-utils.js";
+import { createCommonCanvas } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 
