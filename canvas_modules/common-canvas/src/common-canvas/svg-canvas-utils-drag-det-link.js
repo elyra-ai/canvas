@@ -435,7 +435,8 @@ export default class SVGCanvasUtilsDragDetLink {
 			executeCommand = false;
 		}
 		if (srcNode && trgNode &&
-				!CanvasUtils.isConnectionAllowedWithDetachedLinks(newLink.srcNodePortId, newLink.trgNodePortId, srcNode, trgNode, links)) {
+				!CanvasUtils.isConnectionAllowedWithDetachedLinks(newLink.srcNodePortId, newLink.trgNodePortId,
+					srcNode, trgNode, links, this.ren.config.enableSelfRefLinks)) {
 			executeCommand = false;
 		}
 		return executeCommand;

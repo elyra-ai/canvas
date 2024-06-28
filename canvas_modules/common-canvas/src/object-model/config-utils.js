@@ -53,9 +53,11 @@ export default class ConfigUtils {
 			enableInteractionType: "Mouse",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Curve",
+			enableStraightLinksAsFreeform: false, // TODO - Remove in next major release.
 			enableLinkDirection: "LeftRight",
 			enableLinkSelection: LINK_SELECTION_NONE,
 			enableLinkReplaceOnNewConnection: false,
+			enableSelfRefLinks: false,
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,

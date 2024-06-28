@@ -16,7 +16,7 @@
 						"ui_data": {
 							"label": "Link_1",
 							"image": "",
-							"x_pos": 40,
+							"x_pos": 90,
 							"y_pos": 180,
 							"description": "Input link columns for this transformer",
 							"is_resized": true,
@@ -41,16 +41,27 @@
 					"inputs": [
 					],
 					"outputs": [
-						{ "id": "111" },
-						{ "id": "222" },
-						{ "id": "333"},
-						{ "id": "444" },
-						{ "id": "555" },
-						{ "id": "666" },
-						{ "id": "777" },
-						{ "id": "888" },
-						{ "id": "999" },
-						{ "id": "000" }
+						{ "id": "right-111", "app_data": "to-outputs" },
+						{ "id": "right-222", "app_data": "to-outputs" },
+						{ "id": "right-333", "app_data": "to-outputs" },
+						{ "id": "right-444", "app_data": "to-outputs" },
+						{ "id": "right-555", "app_data": "to-outputs" },
+						{ "id": "right-666", "app_data": "to-outputs" },
+						{ "id": "right-777", "app_data": "to-outputs" },
+						{ "id": "right-888", "app_data": "to-outputs" },
+						{ "id": "right-999", "app_data": "to-outputs" },
+						{ "id": "right-000", "app_data": "to-outputs" },
+						{ "id": "left-111", "app_data": "to-stage-var" },
+						{ "id": "left-222", "app_data": "to-stage-var" },
+						{ "id": "left-333", "app_data": "to-stage-var" },
+						{ "id": "left-444", "app_data": "to-stage-var" },
+						{ "id": "left-555", "app_data": "to-stage-var" },
+						{ "id": "left-666", "app_data": "to-stage-var" },
+						{ "id": "left-777", "app_data": "to-stage-vars" },
+						{ "id": "left-888", "app_data": "to-stage-var" },
+						{ "id": "left-999", "app_data": "to-stage-var" },
+						{ "id": "left-000", "app_data": "to-stage-var" }
+
 					]
 				},
 				{
@@ -61,7 +72,7 @@
 						"ui_data": {
 							"label": "Stage Variables",
 							"image": "",
-							"x_pos": 40,
+							"x_pos": 90,
 							"y_pos": 428,
 							"description": "Stage varibales for this transformer.",
 							"is_resized": true,
@@ -97,7 +108,7 @@
 								{
 									"id": "504aa60b-7422-4adb-adf4-2b6215f46a15",
 									"node_id_ref": "11111",
-									"port_id_ref": "222"
+									"port_id_ref": "left-222"
 								}
 							]
 						},
@@ -125,7 +136,7 @@
 						"ui_data": {
 							"label": "Loop condition",
 							"image": "",
-							"x_pos": 40,
+							"x_pos": 90,
 							"y_pos": 676,
 							"description": "The loop conditions for this transformer.",
 							"is_resized": true,
@@ -150,7 +161,7 @@
 						"ui_data": {
 							"label": "Link_2",
 							"image": "",
-							"x_pos": 608,
+							"x_pos": 658,
 							"y_pos": 180,
 							"description": "Output link columns for this transformer.",
 							"is_resized": true,
@@ -170,7 +181,7 @@
 								{
 									"id": "178354559-8739-3adb-adf7-62897ad862a5",
 									"node_id_ref": "11111",
-									"port_id_ref": "777"
+									"port_id_ref": "right-777"
 								}
 							]
 						}
@@ -186,7 +197,7 @@
 						"ui_data": {
 							"label": "Link_3",
 							"image": "",
-							"x_pos": 608,
+							"x_pos": 658,
 							"y_pos": 428,
 							"description": "Output link columns for this transformer.",
 							"is_resized": true,
@@ -211,7 +222,7 @@
 						"ui_data": {
 							"label": "Link_4",
 							"image": "",
-							"x_pos": 608,
+							"x_pos": 658,
 							"y_pos": 676,
 							"description": "Output link columns for this transformer.",
 							"is_resized": true,
@@ -234,7 +245,7 @@
 					"comments": [
 						{
 							"id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
-							"x_pos": 55,
+							"x_pos": 105,
 							"y_pos": 20,
 							"width": 400,
 							"height": 112,

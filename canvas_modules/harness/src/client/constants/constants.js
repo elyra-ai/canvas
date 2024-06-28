@@ -55,8 +55,11 @@ _defineConstant("HORIZONTAL_FORMAT", "Horizontal");
 _defineConstant("CURVE_LINKS", "Curve");
 _defineConstant("ELBOW_LINKS", "Elbow");
 _defineConstant("STRAIGHT_LINKS", "Straight");
+_defineConstant("PARALLAX_LINKS", "Parallax");
 
+_defineConstant("DIRECTION_FREEFORM", "Freeform");
 _defineConstant("DIRECTION_LEFT_RIGHT", "LeftRight");
+_defineConstant("DIRECTION_RIGHT_LEFT", "RightLeft");
 _defineConstant("DIRECTION_TOP_BOTTOM", "TopBottom");
 _defineConstant("DIRECTION_BOTTOM_TOP", "BottomTop");
 
@@ -84,6 +87,7 @@ _defineConstant("EXAMPLE_APP_STREAMS", "Streams");
 _defineConstant("EXAMPLE_APP_TABLES", "Tables");
 _defineConstant("EXAMPLE_APP_LOGIC", "Logic");
 _defineConstant("EXAMPLE_APP_JSX_ICONS", "JSX Icons");
+_defineConstant("EXAMPLE_APP_ALL_PORTS", "All Ports");
 _defineConstant("EXAMPLE_APP_REACT_NODES_CARBON", "React Nodes - Carbon Charts");
 _defineConstant("EXAMPLE_APP_REACT_NODES_MAPPING", "React Nodes - Mapping");
 
