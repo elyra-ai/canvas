@@ -139,10 +139,14 @@
 			background-color: $layer-hover-01;
 		}
 		.properties-vt-row-doubleClick{
-			color: $button-primary;
-			border: 1px solid $button-primary;
-			background-color: $background-active;
 			border-left: 4px solid $button-primary;
+			cursor: pointer;
+			&:focus,
+			&:active {
+				color: $button-primary;
+				border: 1px solid $button-primary;
+				background-color: $background-active;
+			}
 		}
 		.properties-table-cell-control {
 			// Required for numberfields within react-virtualized table cell
@@ -194,6 +198,7 @@
 		&:hover {
 			background-color: $layer-accent-hover-01;
 		}
+		cursor: pointer;
 	}
 
 	.properties-vt-single-selection {
@@ -207,6 +212,7 @@
 			padding-left: 3px;
 		}
 		.properties-vt-row-selected {
+			cursor: pointer;
 			border-left: 4px solid $button-primary;
 			padding-left: 0;
 			&:not(.properties-vt-row-disabled):hover {
@@ -214,10 +220,14 @@
 			}
 		}
 		.properties-vt-row-doubleClick{
-			color: $button-primary;
-			border: 1px solid $button-primary;
 			border-left: 4px solid $button-primary;
-			background-color: $background-active;
+			cursor: pointer;
+			&:focus,
+			&:active {
+				color: $button-primary;
+				border: 1px solid $button-primary;
+				background-color: $background-active;
+			}
 		}
 	}
 
