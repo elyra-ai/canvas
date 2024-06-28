@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/FlowIcon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.25">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
     
     
       
@@ -81,6 +81,10 @@
       
     </div>
     
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
     
       
 
@@ -142,7 +146,7 @@
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -1854,6 +1858,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#overriding-port-positions-and-link-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overriding port positions and link directions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#customizing-node-colors-and-styles-with-css" class="md-nav__link">
     <span class="md-ellipsis">
       Customizing node colors and styles with CSS
@@ -2688,6 +2701,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#overriding-port-positions-and-link-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overriding port positions and link directions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#customizing-node-colors-and-styles-with-css" class="md-nav__link">
     <span class="md-ellipsis">
       Customizing node colors and styles with CSS
@@ -3104,6 +3126,27 @@ Alternatively, JSX images can be injected directly into the pipeline flow object
 <p>Also, when nodes are pasted into the canvas the application will need to ensure the image fields of those nodes are set appropriately.</p>
 <p>A new sample application called ‘JSX Icons’ has been added to the test harness to show Carbon icons being used as node images.</p>
 <p><img src="../assets/cc-node-image-jsx-app.png" width="700" /></p>
+<h2 id="overriding-port-positions-and-link-directions">Overriding port positions and link directions<a class="headerlink" href="#overriding-port-positions-and-link-directions" title="Permanent link">&para;</a></h2>
+<p>The four &lsquo;ports&rsquo; options for <a href="../03.02.01-canvas-config/#enablelinkdirection">enableLinkDirection</a> canvas config (&ldquo;LeftRight&rdquo;, &ldquo;RightLeft&rdquo;, &ldquo;TopBottom&rdquo; and &ldquo;BottomTop&rdquo;) will control the default position of the input and output ports at the boundaries of the nodes as follows:</p>
+<ul>
+<li>For &ldquo;LeftRight&rdquo; output ports will be on the right of the node and input ports will be on the left of the node</li>
+<li>For &ldquo;RightLeft&rdquo; output ports will be on the left of the node and input ports will be on the right of the node</li>
+<li>For &ldquo;TopBottom&rdquo; output ports will be on the bottom of the node and input ports will be on the top of the node</li>
+<li>For &ldquo;BottomTop&rdquo; output ports will be on the top of the node and input ports will be on the bottom of the node</li>
+</ul>
+<p>However, the application can customize the position of the ports using the <code>enableNodeLayout</code> object in the canvas config. This object has these fields:</p>
+<ul>
+<li><code>inputPortAutoPosition</code> and <code>inputPortPositions</code> to customize input ports and</li>
+<li><code>outputPortAutoPosition</code> and <code>outputPortPositions</code> to customize output ports.</li>
+</ul>
+<p>When ports are positioned on the node they are assigned one of four &lsquo;directions&rsquo; that links will be drawn from/to. These directions are dependent on the diagonal quadrant of the node the port is positioned in.</p>
+<p>As an extreme example, if these fields are used to customize a node with four input ports (black circles) and four output ports (blue arrows) like this:</p>
+<p><img src="../assets/cc-link-multi-ports.png" width="200" /></p>
+<p>Common Canvas will assign a direction to the input and output ports are follows:</p>
+<p><img src="../assets/cc-link-multi-ports-quadrants.png" width="200" /></p>
+<p>This will be used to draw links as follows:</p>
+<p><img src="../assets/cc-link-multi-ports-connected.png" width="350" /></p>
+<p>Note that the same technique is used to assign port &lsquo;directions&rsquo; to the ports of the surrounding nodes as well as the center node.</p>
 <h2 id="customizing-node-colors-and-styles-with-css">Customizing node colors and styles with CSS<a class="headerlink" href="#customizing-node-colors-and-styles-with-css" title="Permanent link">&para;</a></h2>
 <h3 id="node-dom-construction">Node DOM Construction<a class="headerlink" href="#node-dom-construction" title="Permanent link">&para;</a></h3>
 <p>Node elements are drawn as SVG elements in the SVG area provided by the <a href="../01.01-flow-editor/">Flow Editor</a> and are grouped together using a group <code>&lt;g&gt;</code> element.</p>
@@ -3295,10 +3338,10 @@ Note: You can use the <a href="../03.02.01-canvas-config/#enableparentclass"><co
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.footer"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.footer"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
+      <script src="../assets/javascripts/bundle.ad660dcc.min.js"></script>
       
         <script src="../js/links-in-new-tabs.js"></script>
       

@@ -22,3 +22,12 @@ th {
   max-width: 71rem;
 }
 
+.md-version__list {
+  background-color: black;
+}
+
+.md-version__link {
+  background-color: black;
+  color: white;
+  transition: color 0.3s ease;
+}
