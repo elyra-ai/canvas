@@ -36,22 +36,9 @@ import {
 	INTERACTION_MOUSE,
 	INTERACTION_TRACKPAD,
 	INTERACTION_CARBON,
-	CURVE_LINKS,
-	ELBOW_LINKS,
-	STRAIGHT_LINKS,
-	PARALLAX_LINKS,
-	DIRECTION_FREEFORM,
-	DIRECTION_LEFT_RIGHT,
-	DIRECTION_RIGHT_LEFT,
-	DIRECTION_TOP_BOTTOM,
-	DIRECTION_BOTTOM_TOP,
 	IMAGE_DISPLAY_SVG_INLINE,
 	IMAGE_DISPLAY_LOAD_SVG_TO_DEFS,
 	IMAGE_DISPLAY_SVG_AS_IMAGE,
-	LINK_SELECTION_NONE,
-	LINK_SELECTION_LINK_ONLY,
-	LINK_SELECTION_HANDLES,
-	LINK_SELECTION_DETACHABLE,
 	ASSOC_RIGHT_SIDE_CURVE,
 	ASSOC_STRAIGHT,
 	UNDERLAY_NONE,
@@ -69,6 +56,8 @@ import {
 	EXAMPLE_APP_PROGRESS,
 	EXAMPLE_APP_JSX_ICONS,
 	EXAMPLE_APP_ALL_PORTS,
+	EXAMPLE_APP_PARALLAX,
+	EXAMPLE_APP_NETWORK,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	PALETTE_FLYOUT,
@@ -93,8 +82,21 @@ import {
 	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
 } from "../../../constants/constants.js";
 
-import { STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY }
-	from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
+import { STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY,
+	LINK_METHOD_FREEFORM, LINK_METHOD_PORTS,
+	LINK_DIR_LEFT_RIGHT,
+	LINK_DIR_RIGHT_LEFT,
+	LINK_DIR_TOP_BOTTOM,
+	LINK_DIR_BOTTOM_TOP,
+	LINK_TYPE_CURVE,
+	LINK_TYPE_ELBOW,
+	LINK_TYPE_STRAIGHT,
+	LINK_TYPE_PARALLAX,
+	LINK_SELECTION_NONE,
+	LINK_SELECTION_LINK_ONLY,
+	LINK_SELECTION_HANDLES,
+	LINK_SELECTION_DETACHABLE
+} from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
 
 import FormsService from "../../../services/FormsService";
 
@@ -1098,28 +1100,52 @@ export default class SidePanelForms extends React.Component {
 					orientation="vertical"
 				>
 					<RadioButton
-						value={CURVE_LINKS}
-						labelText={CURVE_LINKS}
+						value={LINK_TYPE_CURVE}
+						labelText={LINK_TYPE_CURVE}
 					/>
 					<RadioButton
-						value={ELBOW_LINKS}
-						labelText={ELBOW_LINKS}
+						value={LINK_TYPE_ELBOW}
+						labelText={LINK_TYPE_ELBOW}
 					/>
 					<RadioButton
-						value={PARALLAX_LINKS}
-						labelText={PARALLAX_LINKS}
+						value={LINK_TYPE_PARALLAX}
+						labelText={LINK_TYPE_PARALLAX}
 					/>
 					<RadioButton
-						value={STRAIGHT_LINKS}
-						labelText={STRAIGHT_LINKS}
+						value={LINK_TYPE_STRAIGHT}
+						labelText={LINK_TYPE_STRAIGHT}
 					/>
 				</RadioButtonGroup>
 			</FormGroup>
 		</div>);
 
+		var linkMethod = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-direction">
+			<FormGroup
+				legendText="Link Method"
+			>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedLinkMethod" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedLinkMethod")}
+					orientation="vertical"
+				>
+					<RadioButton
+						value={LINK_METHOD_PORTS}
+						labelText={LINK_METHOD_PORTS}
+					/>
+					<RadioButton
+						value={LINK_METHOD_FREEFORM}
+						labelText={LINK_METHOD_FREEFORM}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
+		</div>);
+
+
 		var linkDirection = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-direction">
 			<FormGroup
-				legendText="Link Direction"
+				legendText="Link Direction (Node port position)"
 			>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
@@ -1129,24 +1155,20 @@ export default class SidePanelForms extends React.Component {
 					orientation="vertical"
 				>
 					<RadioButton
-						value={DIRECTION_FREEFORM}
-						labelText={DIRECTION_FREEFORM}
+						value={LINK_DIR_LEFT_RIGHT}
+						labelText={LINK_DIR_LEFT_RIGHT}
 					/>
 					<RadioButton
-						value={DIRECTION_LEFT_RIGHT}
-						labelText={DIRECTION_LEFT_RIGHT}
+						value={LINK_DIR_RIGHT_LEFT}
+						labelText={LINK_DIR_RIGHT_LEFT}
 					/>
 					<RadioButton
-						value={DIRECTION_RIGHT_LEFT}
-						labelText={DIRECTION_RIGHT_LEFT}
+						value={LINK_DIR_TOP_BOTTOM}
+						labelText={LINK_DIR_TOP_BOTTOM}
 					/>
 					<RadioButton
-						value={DIRECTION_TOP_BOTTOM}
-						labelText={DIRECTION_TOP_BOTTOM}
-					/>
-					<RadioButton
-						value={DIRECTION_BOTTOM_TOP}
-						labelText={DIRECTION_BOTTOM_TOP}
+						value={LINK_DIR_BOTTOM_TOP}
+						labelText={LINK_DIR_BOTTOM_TOP}
 					/>
 				</RadioButtonGroup>
 			</FormGroup>
@@ -1210,6 +1232,14 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={EXAMPLE_APP_ALL_PORTS}
 						labelText={EXAMPLE_APP_ALL_PORTS}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_PARALLAX}
+						labelText={EXAMPLE_APP_PARALLAX}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_NETWORK}
+						labelText={EXAMPLE_APP_NETWORK}
 					/>
 					<RadioButton
 						value={EXAMPLE_APP_REACT_NODES_CARBON}
@@ -1594,6 +1624,8 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableSelfRefLinks}
 					{divider}
+					{linkDirection}
+					{divider}
 					{enableSingleOutputPortDisplay}
 					{divider}
 					{displayFullLabelOnHover}
@@ -1606,7 +1638,7 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{linkType}
 					{divider}
-					{linkDirection}
+					{linkMethod}
 					{divider}
 					{enableLinkSelection}
 					{divider}

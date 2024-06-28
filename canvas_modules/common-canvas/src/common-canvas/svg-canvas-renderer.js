@@ -33,7 +33,8 @@ import { escape as escapeText, forOwn, get } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
-	LINK_DIR_LEFT_RIGHT, LINK_DIR_RIGHT_LEFT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP, LINK_DIR_FREEFORM,
+	LINK_DIR_LEFT_RIGHT, LINK_DIR_RIGHT_LEFT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
+	LINK_METHOD_FREEFORM,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_IMAGE,
@@ -4514,7 +4515,7 @@ export default class SVGCanvasRenderer {
 
 		let linksArray = [];
 
-		if (this.canvasLayout.linkDirection === LINK_DIR_FREEFORM) {
+		if (this.canvasLayout.linkMethod === LINK_METHOD_FREEFORM) {
 			this.updateFreeformLinksForNodes();
 		}
 
@@ -4616,7 +4617,7 @@ export default class SVGCanvasRenderer {
 			coords.srcDir = this.getSrcDirForDetachedLink(link, coords.x1, coords.y1);
 
 		} else {
-			if (this.canvasLayout.linkDirection === LINK_DIR_FREEFORM) {
+			if (this.canvasLayout.linkMethod === LINK_METHOD_FREEFORM) {
 				const endPos = { x: link.trgPos.x_pos, y: link.trgPos.y_pos };
 				const startPos = this.linkUtils.getNewFreeformNodeLinkStartPos(srcObj, endPos, link.srcOriginInfo);
 				coords.x1 = startPos.x;
@@ -4646,7 +4647,7 @@ export default class SVGCanvasRenderer {
 			coords.trgDir = this.getTrgDirForDetachedLink(link, coords.x2, coords.y2);
 
 		} else {
-			if (this.canvasLayout.linkDirection === LINK_DIR_FREEFORM) {
+			if (this.canvasLayout.linkMethod === LINK_METHOD_FREEFORM) {
 				const endPos = { x: link.srcPos.x_pos, y: link.srcPos.y_pos };
 				const startPos = this.linkUtils.getNewFreeformNodeLinkStartPos(trgNode, endPos, link.trgOriginInfo);
 				coords.x2 = startPos.x;
@@ -5174,7 +5175,7 @@ export default class SVGCanvasRenderer {
 	getArrowHeadTransform(link) {
 		let angle = 0;
 
-		if (this.canvasLayout.linkDirection === LINK_DIR_FREEFORM) {
+		if (this.canvasLayout.linkMethod === LINK_METHOD_FREEFORM) {
 			angle = this.getAngleBasedForFreeformLink(link);
 
 		} else {

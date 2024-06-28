@@ -54,6 +54,7 @@ export default class ConfigUtils {
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Curve",
 			enableStraightLinksAsFreeform: false, // TODO - Remove in next major release.
+			enableLinkMethod: "Ports",
 			enableLinkDirection: "LeftRight",
 			enableLinkSelection: LINK_SELECTION_NONE,
 			enableLinkReplaceOnNewConnection: false,

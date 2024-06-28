@@ -53,6 +53,8 @@ import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canva
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
 import JsxIconsCanvas from "./components/custom-canvases/jsx-icons/jsx-icons-canvas";
 import AllPortsCanvas from "./components/custom-canvases/all-ports/all-ports-canvas";
+import ParallaxCanvas from "./components/custom-canvases/parallax/parallax-canvas";
+import NetworkCanvas from "./components/custom-canvases/network/network-canvas";
 import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon";
 import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping";
 
@@ -98,10 +100,7 @@ import {
 	INTERACTION_MOUSE,
 	VERTICAL_FORMAT,
 	NONE_SAVE_ZOOM,
-	CURVE_LINKS,
-	DIRECTION_LEFT_RIGHT,
 	IMAGE_DISPLAY_SVG_INLINE,
-	LINK_SELECTION_NONE,
 	ASSOC_STRAIGHT,
 	UNDERLAY_NONE,
 	EXAMPLE_APP_NONE,
@@ -117,6 +116,8 @@ import {
 	EXAMPLE_APP_PROGRESS,
 	EXAMPLE_APP_JSX_ICONS,
 	EXAMPLE_APP_ALL_PORTS,
+	EXAMPLE_APP_PARALLAX,
+	EXAMPLE_APP_NETWORK,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	CUSTOM,
@@ -140,7 +141,13 @@ import {
 	CATEGORY_VIEW_ACCORDIONS
 } from "./constants/constants.js";
 
-import { STATE_TAG_NONE } from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
+import {
+	STATE_TAG_NONE,
+	LINK_TYPE_CURVE,
+	LINK_DIR_LEFT_RIGHT,
+	LINK_METHOD_PORTS,
+	LINK_SELECTION_NONE
+} from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
 import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../test_resources/diagrams/externalSubFlowCanvas2.json";
@@ -192,8 +199,9 @@ class App extends React.Component {
 			selectedZoomIntoSubFlows: false,
 			selectedSingleOutputPortDisplay: false,
 			selectedImageDisplay: IMAGE_DISPLAY_SVG_INLINE,
-			selectedLinkType: CURVE_LINKS,
-			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
+			selectedLinkType: LINK_TYPE_CURVE,
+			selectedLinkMethod: LINK_METHOD_PORTS,
+			selectedLinkDirection: LINK_DIR_LEFT_RIGHT,
 			selectedLinkSelection: LINK_SELECTION_NONE,
 			selectedLinkReplaceOnNewConnection: false,
 			selectedStraightLinksAsFreeform: true,
@@ -2045,6 +2053,7 @@ class App extends React.Component {
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableImageDisplay: this.state.selectedImageDisplay,
 			enableLinkType: this.state.selectedLinkType,
+			enableLinkMethod: this.state.selectedLinkMethod,
 			enableLinkDirection: this.state.selectedLinkDirection,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
 			enableParentClass: this.getParentClass(),
@@ -2633,6 +2642,20 @@ class App extends React.Component {
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_ALL_PORTS) {
 			firstCanvas = (
 				<AllPortsCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_PARALLAX) {
+			firstCanvas = (
+				<ParallaxCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_NETWORK) {
+			firstCanvas = (
+				<NetworkCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
