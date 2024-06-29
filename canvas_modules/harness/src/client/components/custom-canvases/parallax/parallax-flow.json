@@ -2,7 +2,7 @@
   "doc_type": "pipeline",
   "version": "3.0",
   "json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
-  "id": "parallax-flow-123",
+  "id": "parallax-pipeline-flow",
   "primary_pipeline": "54321",
   "pipelines": [
     {
