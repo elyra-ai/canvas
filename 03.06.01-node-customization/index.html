@@ -3147,6 +3147,8 @@ Alternatively, JSX images can be injected directly into the pipeline flow object
 <p>This will be used to draw links as follows:</p>
 <p><img src="../assets/cc-link-multi-ports-connected.png" width="350" /></p>
 <p>Note that the same technique is used to assign port &lsquo;directions&rsquo; to the ports of the surrounding nodes as well as the center node.</p>
+<p>This means an application like the one shown below can be built, where the links exit from the left of the &lsquo;Inp_1&rsquo; node and point to the &lsquo;Stage Variables&rsquo; node below it, but other links exist the &lsquo;Inp_1&rsquo; node on the right and point to the &lsquo;Out_2&rsquo;. This is achieved by positioning some (invisible) output nodes on the left of &lsquo;Inp_1&rsquo; and some on the right of &lsquo;Inp_1&rsquo;. Common Canvas takes care of drawing the links in the appropriate direction based on the port positions.</p>
+<p><img src="../assets/cc-link-mapping-transformer.png" width="900" /></p>
 <h2 id="customizing-node-colors-and-styles-with-css">Customizing node colors and styles with CSS<a class="headerlink" href="#customizing-node-colors-and-styles-with-css" title="Permanent link">&para;</a></h2>
 <h3 id="node-dom-construction">Node DOM Construction<a class="headerlink" href="#node-dom-construction" title="Permanent link">&para;</a></h3>
 <p>Node elements are drawn as SVG elements in the SVG area provided by the <a href="../01.01-flow-editor/">Flow Editor</a> and are grouped together using a group <code>&lt;g&gt;</code> element.</p>
