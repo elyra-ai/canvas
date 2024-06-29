@@ -983,8 +983,9 @@ export default class LayoutDimensions {
 	// TODO -- the second part of this if should be removed when enableStraightLinksAsFreeform
 	// is removed in the next major release.
 	static overrideArrowHead(layout, config) {
-		if (config.enableLinkMethod === LINK_METHOD_FREEFORM ||
-				(config.enableStraightLinksAsFreeform && config.enableLinkType === LINK_TYPE_STRAIGHT)) {
+		if ((config.enableLinkMethod === LINK_METHOD_FREEFORM ||
+				(config.enableStraightLinksAsFreeform && config.enableLinkType === LINK_TYPE_STRAIGHT)) &&
+				!layout.canvasLayout.dataLinkArrowHead) {
 			layout.canvasLayout.dataLinkArrowHead = true;
 		}
 		return layout;

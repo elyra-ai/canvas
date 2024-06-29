@@ -66,7 +66,7 @@ export default class NetworkCanvas extends React.Component {
 				outputPortGuideImageRotate: true
 			},
 			enableCanvasLayout: {
-				dataLinkArrowHead: "M 0 0 L -5 -4 -5 4 Z"
+				dataLinkArrowHead: "M 0 0 L -5 -2 -5 2 Z"
 			}
 		});
 		return config;
