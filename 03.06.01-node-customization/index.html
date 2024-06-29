@@ -3085,19 +3085,19 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">customNodeLayout</span><span class="p">;</span>
 </code></pre></div></p>
 <h2 id="overriding-port-positions-and-link-directions">Overriding port positions and link directions<a class="headerlink" href="#overriding-port-positions-and-link-directions" title="Permanent link">&para;</a></h2>
-<p>The four options for <a href="../03.02.01-canvas-config/#enablelinkdirection">enableLinkDirection</a> canvas config (&ldquo;LeftRight&rdquo;, &ldquo;RightLeft&rdquo;, &ldquo;TopBottom&rdquo; and &ldquo;BottomTop&rdquo;) will control the default position of the input and output ports at the boundaries of the nodes as follows:</p>
+<p>The four options for <a href="../03.02.01-canvas-config/#enablelinkdirection">enableLinkDirection</a> in the canvas config are &ldquo;LeftRight&rdquo;, &ldquo;RightLeft&rdquo;, &ldquo;TopBottom&rdquo; and &ldquo;BottomTop&rdquo;. These will control the default position of the input and output ports at the boundaries of the nodes as follows:</p>
 <ul>
-<li>For &ldquo;LeftRight&rdquo; output ports will be on the right of the node and input ports will be on the left of the node</li>
-<li>For &ldquo;RightLeft&rdquo; output ports will be on the left of the node and input ports will be on the right of the node</li>
-<li>For &ldquo;TopBottom&rdquo; output ports will be on the bottom of the node and input ports will be on the top of the node</li>
-<li>For &ldquo;BottomTop&rdquo; output ports will be on the top of the node and input ports will be on the bottom of the node</li>
+<li>For &ldquo;LeftRight&rdquo; input ports will be on the left of the node and output ports will be on the right of the node</li>
+<li>For &ldquo;RightLeft&rdquo; input ports will be on the right of the node and output ports will be on the left of the node</li>
+<li>For &ldquo;TopBottom&rdquo; input ports will be on the top of the node and output ports will be on the bottom of the node</li>
+<li>For &ldquo;BottomTop&rdquo; input ports will be on the bottom of the node and output ports will be on the top of the node</li>
 </ul>
-<p>The application can customize these default position of the ports using the <code>enableNodeLayout</code> object in the canvas config. This object has these fields:</p>
+<p>The application can customize these port default positions using the <code>enableNodeLayout</code> object in the canvas config. This object has these fields for port placement customization:</p>
 <ul>
 <li><code>inputPortAutoPosition</code> and <code>inputPortPositions</code> to customize input ports and</li>
 <li><code>outputPortAutoPosition</code> and <code>outputPortPositions</code> to customize output ports.</li>
 </ul>
-<p>So for example, with the following settings
+<p>So for example, the following settings:</p>
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nx">enableNodeLayout</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nx">inputPortAutoPosition</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
@@ -3108,7 +3108,7 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 </code></pre></div>
-will position the input ports like this</p>
+<p>will position the input ports like this:</p>
 <p><img src="../assets/cc-node-port-custom.png" width="100" /></p>
 <p>If nodes are set to be resizeable (enableResizeableNodes: true) and the nodes is resized it will look like this, because the second port is tied to the &ldquo;bottomLeft&rdquo; position:</p>
 <p><img src="../assets/cc-node-port-custom-resize.png" width="100" /></p>
@@ -3119,8 +3119,7 @@ will position the input ports like this</p>
 <p><img src="../assets/cc-link-multi-ports-quadrants.png" width="200" /></p>
 <p>If the config field <a href="../03.02.01-canvas-config/#enablelinkmethod">enableLinkMethod</a> is set to &ldquo;Ports&rdquo;, and <a href="../03.02.01-canvas-config/#enablelinktype">enableLinkType</a> is set to &ldquo;Curve&rdquo;, the links will be drawn as follows:</p>
 <p><img src="../assets/cc-link-multi-ports-connected.png" width="350" /></p>
-<p>Note that the same technique is used to assign port &lsquo;directions&rsquo; to the ports of the surrounding nodes as well as the center node.</p>
-<p>This means an application like the one shown below can be built, where the links exit from the left of the &lsquo;Inp_1&rsquo; node and point to the &lsquo;Stage Variables&rsquo; node below it, but other links exist the &lsquo;Inp_1&rsquo; node on the right and point to the &lsquo;Out_2&rsquo;. This is achieved by positioning some (invisible) output nodes on the left of &lsquo;Inp_1&rsquo; and some on the right of &lsquo;Inp_1&rsquo;. Common Canvas takes care of drawing the links in the appropriate direction based on the port positions.</p>
+<p>This means an application like the one shown below can be built, where the links exit from the left of the &lsquo;Inp_1&rsquo; node and point to the &lsquo;Stage Variables&rsquo; node below it. Meanwhile, other links exist the &lsquo;Inp_1&rsquo; node on its right and point to the &lsquo;Out_2&rsquo; node. This is achieved by positioning some (invisible) output nodes on the left of &lsquo;Inp_1&rsquo; and some on the right of &lsquo;Inp_1&rsquo;. Common Canvas takes care of drawing the links in the appropriate direction based on the port positions.</p>
 <p><img src="../assets/cc-link-mapping-transformer.png" width="900" /></p>
 <h2 id="node-image-as-a-url">Node image as a URL<a class="headerlink" href="#node-image-as-a-url" title="Permanent link">&para;</a></h2>
 <p><a href="../01.01.01-nodes/#node-image">Images</a> are displayed for the nodes in the flow editor canvas and the palette. The internal definition of a node in the pipeline flow object and palette object are exactly the same.</p>
