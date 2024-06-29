@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-/* Override styles for flows.json canvas */
-
-.all-ports-canvas {
+.network-canvas {
 
 	// ----------------------------------------------------
 	// Node Styles
@@ -25,6 +23,22 @@
 
 		.d3-node-port-input {
 			stroke: $background-inverse;
+		}
+
+		.d3-node-port-output {
+			opacity: 0;
+			transform: translateX(-8px);
+			transition: opacity 0.1s cubic-bezier(0.4, 0.14, 0.3, 1), transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			transition-delay: 0.125s;
+		}
+
+		&:hover {
+			.d3-node-port-output {
+				opacity: 1;
+				transform: translateX(0);
+				transition: opacity 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				transition-delay: 0.125s;
+			}
 		}
 
 		.d3-node-selection-highlight[data-selected="yes"],
@@ -38,12 +52,16 @@
 	// Link Styles
 	// ----------------------------------------------------
 
-	// Style new connection link line
-	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: $button-primary;
-		stroke-width: 2;
-		stroke-dasharray: 1 0;
-		fill: none;
+	.d3-link-group {
+		.d3-link-line {
+			stroke: #8C8C8C;
+			stroke-width: 2;
+		}
+		.d3-link-line-arrow-head {
+			stroke: #8C8C8C;
+			stroke-width: 2;
+			fill: #8C8C8C;
+		}
 	}
 
 	// ----------------------------------------------------

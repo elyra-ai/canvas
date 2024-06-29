@@ -21,7 +21,7 @@ import CanvasUtils from "./common-canvas-utils.js";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_LEFT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT, LINK_TYPE_PARALLAX,
-	LINK_DIR_FREEFORM,
+	LINK_METHOD_FREEFORM,
 	NORTH, SOUTH, EAST, WEST }
 	from "./constants/canvas-constants";
 
@@ -89,7 +89,7 @@ export default class SvgCanvasLinks {
 	getLinkCoords(link, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation) {
 		let coords = null;
 		if (link.type === NODE_LINK) {
-			if (this.canvasLayout.linkDirection === LINK_DIR_FREEFORM) {
+			if (this.canvasLayout.linkMethod === LINK_METHOD_FREEFORM) {
 				coords = this.getNodeLinkCoordsForFreeform(srcObj, trgNode, link);
 			} else {
 				coords = this.getNodeLinkCoordsForPortsConnection(srcObj, srcPortId, trgNode, trgPortId);
@@ -434,7 +434,7 @@ export default class SvgCanvasLinks {
 		const minInitialLine = this.getMinInitialLine(link, drawingNewLinkMinInitialLine);
 
 		if (link.type === NODE_LINK) {
-			if (this.canvasLayout.linkDirection === LINK_DIR_FREEFORM &&
+			if (this.canvasLayout.linkMethod === LINK_METHOD_FREEFORM &&
 					this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
 				return this.getStraightPath(link, minInitialLine);
 			}
