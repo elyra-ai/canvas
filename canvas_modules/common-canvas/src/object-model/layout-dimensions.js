@@ -15,12 +15,18 @@
  */
 
 import { cloneDeep } from "lodash";
-import { LINK_DIR_FREEFORM, LINK_TYPE_STRAIGHT } from "../common-canvas/constants/canvas-constants";
+import {
+	LINK_METHOD_FREEFORM,
+	LINK_METHOD_PORTS,
+	LINK_TYPE_STRAIGHT,
+	LINK_DIR_LEFT_RIGHT
+} from "../common-canvas/constants/canvas-constants";
 
 const portsHorizontalDefaultLayout = {
 	nodeLayout: {
-		// Default node sizes. The height might be overridden for nodes with more ports
-		// than will fit in the default size.
+		// Default node sizes. These dimensions might be overridden for nodes that have
+		// more ports than will fit in the default size if inputPortAutoPosition is.
+		// set to true and outputPortAutoPosition is set to true. (See below).
 		defaultNodeWidth: 160,
 		defaultNodeHeight: 40,
 
@@ -126,7 +132,7 @@ const portsHorizontalDefaultLayout = {
 		nodeCornerResizeArea: 10,
 
 		// What point to draw the data links from and to when enableLinkType is set
-		// to "Straight" and enableLinkDirection is set to "Freeform".
+		// to "Straight" and enableLinkMethod is set to "Freeform".
 		// Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "node_center",
 
@@ -291,8 +297,12 @@ const portsHorizontalDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for links
 		// ---------------------------------------------------------------------------
-		// Specifies which direction the nodes will be linked up
-		linkDirection: "LeftRight",
+		// Specifies which method the links will use. Either: "Ports" or "Freeform"
+		linkMethod: LINK_METHOD_PORTS,
+
+		// TODO - this should be changed to be a node layout property called 'portPlacement'
+		// in the next major release.
+		linkDirection: LINK_DIR_LEFT_RIGHT,
 
 		// Whether to display a link line when linked node/comments overlap. For
 		// straight links we don't want to show the link when objects overlap but
@@ -423,8 +433,9 @@ const portsHorizontalDefaultLayout = {
 
 const portsVerticalDefaultLayout = {
 	nodeLayout: {
-		// Default node sizes. The height might be overridden for nodes with more ports
-		// than will fit in the default size.
+		// Default node sizes. These dimensions might be overridden for nodes that have
+		// more ports than will fit in the default size if inputPortAutoPosition is.
+		// set to true and outputPortAutoPosition is set to true. (See below).
 		defaultNodeWidth: 70,
 		defaultNodeHeight: 75,
 
@@ -530,7 +541,7 @@ const portsVerticalDefaultLayout = {
 		nodeCornerResizeArea: 10,
 
 		// What point to draw the data links from and to when enableLinkType is set
-		// to "Straight" and enableLinkDirection is set to "Freeform".
+		// to "Straight" and enableLinkMethod is set to "Freeform".
 		// Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "node_center",
 
@@ -695,8 +706,13 @@ const portsVerticalDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for links
 		// ---------------------------------------------------------------------------
-		// Specifies which direction the nodes will be linked up
-		linkDirection: "LeftRight",
+		// Specifies which method the links will use. Either: "Ports" or "Freeform"
+		linkMethod: LINK_METHOD_PORTS,
+
+		// Specifies the default placement of ports on a node.
+		// TODO - this should be changed to be a node layout property called 'portPlacement'
+		// in the next major release.
+		linkDirection: LINK_DIR_LEFT_RIGHT,
 
 		// Whether to display a link line when linked node/comments overlap. For
 		// straight links we don't want to show the link when objects overlap but
@@ -862,12 +878,14 @@ export default class LayoutDimensions {
 	static overrideCanvasLayout(layout, config, overlayLayout) {
 		// TODO - In a future major release the enableStraightLinksAsFreeform field should be
 		// removed and this ovverride code should be returned to its original behavior where
-		// config.enableLinkDirection should directly override linkDirection in the canvasLayout.
-		const linkDirection = (config.enableLinkType === "Straight" && config.enableStraightLinksAsFreeform)
-			? "Freeform"
-			: config.enableLinkDirection;
+		// config.enableLinkMethod should directly override linkMethod in the canvasLayout.
+		const linkMethod = (config.enableLinkType === "Straight" && config.enableStraightLinksAsFreeform)
+			? LINK_METHOD_FREEFORM
+			: config.enableLinkMethod;
 
-		layout.canvasLayout = Object.assign({}, layout.canvasLayout, { linkDirection }, overlayLayout.canvasLayout || {});
+		const linkDirection = config.enableLinkDirection;
+
+		layout.canvasLayout = Object.assign({}, layout.canvasLayout, { linkMethod, linkDirection }, overlayLayout.canvasLayout || {});
 
 		return layout;
 	}
@@ -963,10 +981,11 @@ export default class LayoutDimensions {
 
 	// Sets the default arrow head for node (data) links to true for freeform links.
 	// TODO -- the second part of this if should be removed when enableStraightLinksAsFreeform
-	// in the next major release.
+	// is removed in the next major release.
 	static overrideArrowHead(layout, config) {
-		if (config.enableLinkDirection === LINK_DIR_FREEFORM ||
-				(config.enableStraightLinksAsFreeform && config.enableLinkType === LINK_TYPE_STRAIGHT)) {
+		if ((config.enableLinkMethod === LINK_METHOD_FREEFORM ||
+				(config.enableStraightLinksAsFreeform && config.enableLinkType === LINK_TYPE_STRAIGHT)) &&
+				!layout.canvasLayout.dataLinkArrowHead) {
 			layout.canvasLayout.dataLinkArrowHead = true;
 		}
 		return layout;
