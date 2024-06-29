@@ -1840,6 +1840,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#overriding-port-positions-and-link-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overriding port positions and link directions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#node-image-as-a-url" class="md-nav__link">
     <span class="md-ellipsis">
       Node image as a URL
@@ -1852,15 +1861,6 @@
   <a href="#node-image-as-jsx" class="md-nav__link">
     <span class="md-ellipsis">
       Node image as JSX
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#overriding-port-positions-and-link-directions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Overriding port positions and link directions
     </span>
   </a>
   
@@ -2683,6 +2683,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#overriding-port-positions-and-link-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overriding port positions and link directions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#node-image-as-a-url" class="md-nav__link">
     <span class="md-ellipsis">
       Node image as a URL
@@ -2695,15 +2704,6 @@
   <a href="#node-image-as-jsx" class="md-nav__link">
     <span class="md-ellipsis">
       Node image as JSX
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#overriding-port-positions-and-link-directions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Overriding port positions and link directions
     </span>
   </a>
   
@@ -2781,8 +2781,9 @@
 <p>The possible node layout properties are shown below with the values they have when <code>enableNodeFormatType = "Horizontal"</code>. You can see the values for both sets of properties by looking at the <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/common-canvas/src/object-model/layout-dimensions.js">layout-dimensions.js program</a></p>
 <details class="note">
 <summary>Default node layout fields for <code>Horizontal</code> node format</summary>
-<div class="highlight"><pre><span></span><code>// Default node sizes. The height might be overridden for nodes with more ports
-// than will fit in the default size.
+<div class="highlight"><pre><span></span><code>// Default node sizes. These dimensions might be overridden for nodes that have
+// more ports than will fit in the default size if inputPortAutoPosition is.
+// set to true and outputPortAutoPosition is set to true. (See below).
 defaultNodeWidth: 160,
 defaultNodeHeight: 40,
 
@@ -2888,7 +2889,8 @@ errorHeight: 10.5,
 nodeCornerResizeArea: 10,
 
 // What point to draw the data links from and to when enableLinkType is set
-// to &quot;Straight&quot;. Possible values are &quot;image_center&quot; or &quot;node_center&quot;.
+// to &quot;Straight&quot; and enableLinkMethod is set to &quot;Freeform&quot;.
+// Possible values are &quot;image_center&quot; or &quot;node_center&quot;.
 drawNodeLinkLineFromTo: &quot;node_center&quot;,
 
 // What point to draw the comment to node link line to. Possible values
@@ -2921,26 +2923,19 @@ inputPortImage: &quot;&quot;,
 inputPortWidth: 12,
 inputPortHeight: 12,
 
-// Position of left single input port. Multiple input ports will be
-// automatically positioned with the Y coordinate being overriden. These
-// values are an offset from the top left corner of the node outline.
-// Used when linkDirection is &quot;LeftRight&quot;.
-inputPortLeftPosX: 0,
-inputPortLeftPosY: 20,
+// Indicates whether multiple input ports should be automatically
+// positioned (true) or positioned based on the contents of
+// inputPortPositions array (false).
+inputPortAutoPosition: true,
 
-// Position of top single input port. Multiple input ports will be
-// automatically positioned with the X coordinate being overriden. These
-// values are an offset from the top left corner of the node outline.
-// Used when linkDirection is &quot;TopBottom&quot;.
-inputPortTopPosX: 80,
-inputPortTopPosY: 0,
-
-// Position of bottom single input port. Multiple input ports will be
-// automatically positioned with the X coordinate being overriden. These
-// values are an offset from the bottom left corner of the node outline.
-// Used when linkDirection is &quot;BottomTop&quot;.
-inputPortBottomPosX: 80,
-inputPortBottomPosY: 0,
+// An array of input port positions. Each element is structured like
+// this: { x_pos: 5, y_pos: 10, pos: &quot;topLeft&quot; }. x_pos and y_pos are
+// offsets from the pos point on the node.
+// The order of the elements corresponds to the order of ports in the
+// inputs array for the node.
+inputPortPositions: [
+    { x_pos: 0, y_pos: 20, pos: &quot;topLeft&quot; }
+],
 
 // The &#39;guide&#39; is the object drawn at the mouse position as a new line
 // is being dragged outwards.
@@ -2963,27 +2958,19 @@ outputPortImage: &quot;&quot;,
 outputPortWidth: 12,
 outputPortHeight: 12,
 
-// Position of right single output port. Multiple input ports will be
-// automatically positioned with the Y coordinate being overriden. These
-// values are an offset from the top right corner of the node outline.
-// Used when linkDirection is &quot;LeftRight&quot;.
-outputPortRightPosition: &quot;topRight&quot;,
-outputPortRightPosX: 0,
-outputPortRightPosY: 20,
+// Indicates whether multiple output ports should be automatically
+// positioned (true) or positioned based on the contents of
+// outputPortPositions array (false).
+outputPortAutoPosition: true,
 
-// Position of top single output port. Multiple input ports will be
-// automatically positioned with the X coordinate being overriden. These
-// values are an offset from the top left corner of the node outline.
-// Used when linkDirection is &quot;BottomTop&quot;.
-outputPortTopPosX: 80,
-outputPortTopPosY: 0,
-
-// Position of bottom single output port. Multiple input ports will be
-// automatically positioned with the X coordinate being overriden. These
-// values are an offset from the bottom left corner of the node outline.
-// Used when linkDirection is &quot;TopBottom&quot;.
-outputPortBottomPosX: 80,
-outputPortBottomPosY: 0,
+// An array of output port positions. Each element is structured like
+// this: { x_pos: 5, y_pos: 10, pos: &quot;topRight&quot; }. x_pos and y_pos are
+// offsets from the pos point on the node.
+// The order of the elements corresponds to the order of ports in the
+// outputs array for the node.
+outputPortPositions: [
+    { x_pos: 0, y_pos: 20, pos: &quot;topRight&quot; }
+],
 
 // The &#39;guide&#39; is the object drawn at the mouse position as a new line
 // is being dragged outwards.
@@ -3097,6 +3084,44 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">customNodeLayout</span><span class="p">;</span>
 </code></pre></div></p>
+<h2 id="overriding-port-positions-and-link-directions">Overriding port positions and link directions<a class="headerlink" href="#overriding-port-positions-and-link-directions" title="Permanent link">&para;</a></h2>
+<p>The four options for <a href="../03.02.01-canvas-config/#enablelinkdirection">enableLinkDirection</a> canvas config (&ldquo;LeftRight&rdquo;, &ldquo;RightLeft&rdquo;, &ldquo;TopBottom&rdquo; and &ldquo;BottomTop&rdquo;) will control the default position of the input and output ports at the boundaries of the nodes as follows:</p>
+<ul>
+<li>For &ldquo;LeftRight&rdquo; output ports will be on the right of the node and input ports will be on the left of the node</li>
+<li>For &ldquo;RightLeft&rdquo; output ports will be on the left of the node and input ports will be on the right of the node</li>
+<li>For &ldquo;TopBottom&rdquo; output ports will be on the bottom of the node and input ports will be on the top of the node</li>
+<li>For &ldquo;BottomTop&rdquo; output ports will be on the top of the node and input ports will be on the bottom of the node</li>
+</ul>
+<p>The application can customize these default position of the ports using the <code>enableNodeLayout</code> object in the canvas config. This object has these fields:</p>
+<ul>
+<li><code>inputPortAutoPosition</code> and <code>inputPortPositions</code> to customize input ports and</li>
+<li><code>outputPortAutoPosition</code> and <code>outputPortPositions</code> to customize output ports.</li>
+</ul>
+<p>So for example, with the following settings
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">enableNodeLayout</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">inputPortAutoPosition</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">inputPortPositions</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nx">x_pos</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">y_pos</span><span class="o">:</span><span class="w"> </span><span class="mf">5</span><span class="p">,</span><span class="w"> </span><span class="nx">pos</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;topLeft&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nx">x_pos</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">y_pos</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">5</span><span class="p">,</span><span class="w"> </span><span class="nx">pos</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;bottomLeft&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+</code></pre></div>
+will position the input ports like this</p>
+<p><img src="../assets/cc-node-port-custom.png" width="100" /></p>
+<p>If nodes are set to be resizeable (enableResizeableNodes: true) and the nodes is resized it will look like this, because the second port is tied to the &ldquo;bottomLeft&rdquo; position:</p>
+<p><img src="../assets/cc-node-port-custom-resize.png" width="100" /></p>
+<p>When ports are positioned on the node regardless of whether they are positioned by default or have customized positions, they are assigned one of four &lsquo;directions&rsquo; that links will be drawn from/to. These directions are dependent on the diagonal quadrant of the node the port is positioned within.</p>
+<p>As an extreme example, if these fields are used to customize a node with four input ports (black circles) and four output ports (blue arrows) like this:</p>
+<p><img src="../assets/cc-link-multi-ports.png" width="200" /></p>
+<p>Common Canvas will assign a direction to the input and output ports are follows:</p>
+<p><img src="../assets/cc-link-multi-ports-quadrants.png" width="200" /></p>
+<p>If the config field <a href="../03.02.01-canvas-config/#enablelinkmethod">enableLinkMethod</a> is set to &ldquo;Ports&rdquo;, and <a href="../03.02.01-canvas-config/#enablelinktype">enableLinkType</a> is set to &ldquo;Curve&rdquo;, the links will be drawn as follows:</p>
+<p><img src="../assets/cc-link-multi-ports-connected.png" width="350" /></p>
+<p>Note that the same technique is used to assign port &lsquo;directions&rsquo; to the ports of the surrounding nodes as well as the center node.</p>
+<p>This means an application like the one shown below can be built, where the links exit from the left of the &lsquo;Inp_1&rsquo; node and point to the &lsquo;Stage Variables&rsquo; node below it, but other links exist the &lsquo;Inp_1&rsquo; node on the right and point to the &lsquo;Out_2&rsquo;. This is achieved by positioning some (invisible) output nodes on the left of &lsquo;Inp_1&rsquo; and some on the right of &lsquo;Inp_1&rsquo;. Common Canvas takes care of drawing the links in the appropriate direction based on the port positions.</p>
+<p><img src="../assets/cc-link-mapping-transformer.png" width="900" /></p>
 <h2 id="node-image-as-a-url">Node image as a URL<a class="headerlink" href="#node-image-as-a-url" title="Permanent link">&para;</a></h2>
 <p><a href="../01.01.01-nodes/#node-image">Images</a> are displayed for the nodes in the flow editor canvas and the palette. The internal definition of a node in the pipeline flow object and palette object are exactly the same.</p>
 <p>Typically, the <a href="https://github.com/elyra-ai/pipeline-schemas/blob/90e436eda2c153c6026c0d649fc6adfece004951/common-pipeline/pipeline-flow/pipeline-flow-ui-v3-schema.json#L136">image field</a> of a node object in the pipeline flow (or palette) is a URL that references an image file on the server. This can be any type of image that can be displayed in an <code>&lt;image&gt;</code> tag however, if the file is recognized as an SVG file by having the <code>.svg</code> extension, the contents of the file will be loaded as inline SVG in the DOM. This allows more image customization using CSS.</p>
@@ -3126,29 +3151,6 @@ Alternatively, JSX images can be injected directly into the pipeline flow object
 <p>Also, when nodes are pasted into the canvas the application will need to ensure the image fields of those nodes are set appropriately.</p>
 <p>A new sample application called ‘JSX Icons’ has been added to the test harness to show Carbon icons being used as node images.</p>
 <p><img src="../assets/cc-node-image-jsx-app.png" width="700" /></p>
-<h2 id="overriding-port-positions-and-link-directions">Overriding port positions and link directions<a class="headerlink" href="#overriding-port-positions-and-link-directions" title="Permanent link">&para;</a></h2>
-<p>The four &lsquo;ports&rsquo; options for <a href="../03.02.01-canvas-config/#enablelinkdirection">enableLinkDirection</a> canvas config (&ldquo;LeftRight&rdquo;, &ldquo;RightLeft&rdquo;, &ldquo;TopBottom&rdquo; and &ldquo;BottomTop&rdquo;) will control the default position of the input and output ports at the boundaries of the nodes as follows:</p>
-<ul>
-<li>For &ldquo;LeftRight&rdquo; output ports will be on the right of the node and input ports will be on the left of the node</li>
-<li>For &ldquo;RightLeft&rdquo; output ports will be on the left of the node and input ports will be on the right of the node</li>
-<li>For &ldquo;TopBottom&rdquo; output ports will be on the bottom of the node and input ports will be on the top of the node</li>
-<li>For &ldquo;BottomTop&rdquo; output ports will be on the top of the node and input ports will be on the bottom of the node</li>
-</ul>
-<p>However, the application can customize the position of the ports using the <code>enableNodeLayout</code> object in the canvas config. This object has these fields:</p>
-<ul>
-<li><code>inputPortAutoPosition</code> and <code>inputPortPositions</code> to customize input ports and</li>
-<li><code>outputPortAutoPosition</code> and <code>outputPortPositions</code> to customize output ports.</li>
-</ul>
-<p>When ports are positioned on the node they are assigned one of four &lsquo;directions&rsquo; that links will be drawn from/to. These directions are dependent on the diagonal quadrant of the node the port is positioned in.</p>
-<p>As an extreme example, if these fields are used to customize a node with four input ports (black circles) and four output ports (blue arrows) like this:</p>
-<p><img src="../assets/cc-link-multi-ports.png" width="200" /></p>
-<p>Common Canvas will assign a direction to the input and output ports are follows:</p>
-<p><img src="../assets/cc-link-multi-ports-quadrants.png" width="200" /></p>
-<p>This will be used to draw links as follows:</p>
-<p><img src="../assets/cc-link-multi-ports-connected.png" width="350" /></p>
-<p>Note that the same technique is used to assign port &lsquo;directions&rsquo; to the ports of the surrounding nodes as well as the center node.</p>
-<p>This means an application like the one shown below can be built, where the links exit from the left of the &lsquo;Inp_1&rsquo; node and point to the &lsquo;Stage Variables&rsquo; node below it, but other links exist the &lsquo;Inp_1&rsquo; node on the right and point to the &lsquo;Out_2&rsquo;. This is achieved by positioning some (invisible) output nodes on the left of &lsquo;Inp_1&rsquo; and some on the right of &lsquo;Inp_1&rsquo;. Common Canvas takes care of drawing the links in the appropriate direction based on the port positions.</p>
-<p><img src="../assets/cc-link-mapping-transformer.png" width="900" /></p>
 <h2 id="customizing-node-colors-and-styles-with-css">Customizing node colors and styles with CSS<a class="headerlink" href="#customizing-node-colors-and-styles-with-css" title="Permanent link">&para;</a></h2>
 <h3 id="node-dom-construction">Node DOM Construction<a class="headerlink" href="#node-dom-construction" title="Permanent link">&para;</a></h3>
 <p>Node elements are drawn as SVG elements in the SVG area provided by the <a href="../01.01-flow-editor/">Flow Editor</a> and are grouped together using a group <code>&lt;g&gt;</code> element.</p>
