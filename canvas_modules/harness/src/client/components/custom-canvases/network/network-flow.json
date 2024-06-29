@@ -2,7 +2,7 @@
   "doc_type": "pipeline",
   "version": "3.0",
   "json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
-  "id": "all-ports-123",
+  "id": "network-pipeline-flow",
   "primary_pipeline": "54321",
   "pipelines": [
     {
@@ -16,8 +16,8 @@
             "ui_data": {
               "label": "Database - 4",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": -735,
-              "y_pos": 540,
+              "x_pos": 17.5,
+              "y_pos": 405,
               "description": "Database node"
             }
           },
@@ -58,8 +58,8 @@
             "ui_data": {
               "label": "Database - 6",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": -735,
-              "y_pos": 810,
+              "x_pos": 17.5,
+              "y_pos": 675,
               "description": "Database node"
             }
           },
@@ -107,8 +107,8 @@
             "ui_data": {
               "label": "Application - 8",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": -735,
-              "y_pos": 645,
+              "x_pos": 17.5,
+              "y_pos": 510,
               "description": "Application node"
             }
           },
@@ -149,8 +149,8 @@
             "ui_data": {
               "label": "Database - 5",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": -542.5,
-              "y_pos": 645,
+              "x_pos": 210,
+              "y_pos": 510,
               "description": "Database node"
             }
           },
@@ -203,8 +203,8 @@
             "ui_data": {
               "label": "Commissions Calculator",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": -402.5,
-              "y_pos": 495,
+              "x_pos": 350,
+              "y_pos": 360,
               "description": "Application node"
             }
           },
@@ -257,8 +257,8 @@
             "ui_data": {
               "label": "Database - 2",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": -227.5,
-              "y_pos": 495,
+              "x_pos": 525,
+              "y_pos": 360,
               "description": "Database node"
             }
           },
@@ -311,8 +311,8 @@
             "ui_data": {
               "label": "Queue Manager - 1",
               "image": "images/custom-canvases/flows/palette/icons/userinput.svg",
-              "x_pos": -402.5,
-              "y_pos": 810,
+              "x_pos": 350,
+              "y_pos": 675,
               "description": "Queue Manager node"
             }
           },
@@ -370,8 +370,8 @@
             "ui_data": {
               "label": "Application - 6",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": -227.5,
-              "y_pos": 735,
+              "x_pos": 525,
+              "y_pos": 600,
               "description": "Application node"
             }
           },
@@ -412,8 +412,8 @@
             "ui_data": {
               "label": "Application - 3",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": -70,
-              "y_pos": 645,
+              "x_pos": 682.5,
+              "y_pos": 510,
               "description": "Application node"
             }
           },
@@ -461,8 +461,8 @@
             "ui_data": {
               "label": "Application - 2",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": -35,
-              "y_pos": 315,
+              "x_pos": 717.5,
+              "y_pos": 180,
               "description": "Application node"
             }
           },
@@ -525,8 +525,8 @@
             "ui_data": {
               "label": "Database - 1",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": -192.5,
-              "y_pos": 165,
+              "x_pos": 560,
+              "y_pos": 30,
               "description": "Database node"
             }
           },
@@ -579,8 +579,8 @@
             "ui_data": {
               "label": "Application - 5",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": 122.5,
-              "y_pos": 165,
+              "x_pos": 875,
+              "y_pos": 30,
               "description": "Application node"
             }
           },
@@ -633,8 +633,8 @@
             "ui_data": {
               "label": "Queue Manager - 2",
               "image": "images/custom-canvases/flows/palette/icons/userinput.svg",
-              "x_pos": 140,
-              "y_pos": 435,
+              "x_pos": 892.5,
+              "y_pos": 300,
               "description": "Queue Manager node"
             }
           },
@@ -687,8 +687,8 @@
             "ui_data": {
               "label": "Application - 7",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": -35,
-              "y_pos": 465,
+              "x_pos": 717.5,
+              "y_pos": 330,
               "description": "Application node"
             }
           },
@@ -729,8 +729,8 @@
             "ui_data": {
               "label": "Database - 3",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 140,
-              "y_pos": 600,
+              "x_pos": 892.5,
+              "y_pos": 465,
               "description": "Database node"
             }
           },
@@ -778,8 +778,8 @@
             "ui_data": {
               "label": "Application - 4",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": -70,
-              "y_pos": 825,
+              "x_pos": 682.5,
+              "y_pos": 690,
               "description": "Application node"
             }
           },
@@ -820,8 +820,8 @@
             "ui_data": {
               "label": "Queue Manager - 3",
               "image": "images/custom-canvases/flows/palette/icons/userinput.svg",
-              "x_pos": 70,
-              "y_pos": 810,
+              "x_pos": 822.5,
+              "y_pos": 675,
               "description": "Queue Manager node"
             }
           },
@@ -860,8 +860,8 @@
           "comments": [
             {
               "id": "e6381626-0d9e-4e22-9943-80ccaaee4ebb",
-              "x_pos": -735,
-              "y_pos": 165,
+              "x_pos": 17.5,
+              "y_pos": 30,
               "width": 350,
               "height": 180,
               "class_name": "bkg-col-teal-20",
