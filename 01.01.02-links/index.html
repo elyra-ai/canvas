@@ -686,19 +686,19 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#between-ports-links" class="md-nav__link">
+  <a href="#ports-links" class="md-nav__link">
     <span class="md-ellipsis">
-      Between-Ports Links
+      Ports Links
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Between-Ports Links">
+    <nav class="md-nav" aria-label="Ports Links">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#overriding-port-position-and-direction" class="md-nav__link">
+  <a href="#overriding-port-position-and-link-direction" class="md-nav__link">
     <span class="md-ellipsis">
-      Overriding port position and direction
+      Overriding port position and link direction
     </span>
   </a>
   
@@ -2620,19 +2620,19 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#between-ports-links" class="md-nav__link">
+  <a href="#ports-links" class="md-nav__link">
     <span class="md-ellipsis">
-      Between-Ports Links
+      Ports Links
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Between-Ports Links">
+    <nav class="md-nav" aria-label="Ports Links">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#overriding-port-position-and-direction" class="md-nav__link">
+  <a href="#overriding-port-position-and-link-direction" class="md-nav__link">
     <span class="md-ellipsis">
-      Overriding port position and direction
+      Overriding port position and link direction
     </span>
   </a>
   
@@ -2743,7 +2743,7 @@
 <thead>
 <tr>
 <th>Type</th>
-<th>Between Ports</th>
+<th>Ports</th>
 <th>Freeform</th>
 </tr>
 </thead>
@@ -2771,35 +2771,36 @@
 </tbody>
 </table>
 <h3 id="freeform-links">Freeform Links<a class="headerlink" href="#freeform-links" title="Permanent link">&para;</a></h3>
-<p>The <a href="../03.02.01-canvas-config/#enablelinkdirection">enableLinkDirection</a> config field can be set to &ldquo;Freeform&rdquo;. With this option, links are drawn directly between nodes without any reference to ports.</p>
-<p>Here is an example of a &ldquo;Freeform&rdquo; Straight link:</p>
+<p>The <a href="../03.02.01-canvas-config/#enablelinkmethid">enableLinkMethod</a> config field can be set to &ldquo;Freeform&rdquo;. With this option, links are drawn directly between nodes without any reference to ports.</p>
+<p>Here is an example of a &ldquo;Freeform&rdquo; link with a &ldquo;Straight link type:</p>
 <p><img src="../assets/cc-link-freeform-straight.gif" width="350" /></p>
 <p>The &ldquo;Freeform&rdquo; display is useful for flows where no particular direction of the flow needs to be enforced and also where the flow has nodes with multiple ports but the ports do not need to be shown in any particular order or context.</p>
 <p>When more than one link enters or exits into/from one side of the node the freeform links will be drawn to maintain some reasonable separation like this:</p>
 <p><img src="../assets/cc-link-freeform-curve-separation.gif" width="350" />
 <img src="../assets/cc-link-freeform-straight-separation.gif" width="350" /></p>
-<h3 id="between-ports-links">Between-Ports Links<a class="headerlink" href="#between-ports-links" title="Permanent link">&para;</a></h3>
-<p>When links are specified to be drawn between ports there are 4 possible choices for <a href="../03.02.01-canvas-config/#enablelinkdirection">enableLinkDirection</a>: &ldquo;LeftRight&rdquo;, &ldquo;RightLeft&rdquo;, &ldquo;TopBottom&rdquo; or &ldquo;BottomTop&rdquo;. With these settings, when common canvas draws the links it will maintain the flow from output ports to input ports regardless of where the nodes are positioned relative to one another.</p>
-<p>Here is an example of the &ldquo;LeftRight&rdquo; links direction with a &ldquo;Curve&rdquo; link type:</p>
+<h3 id="ports-links">Ports Links<a class="headerlink" href="#ports-links" title="Permanent link">&para;</a></h3>
+<p>When <a href="../03.02.01-canvas-config/#enablelinkmethid">enableLinkMethod</a> is set to &ldquo;Ports&rdquo;, Common Canvas draws the links to maintain the flow from output ports to input ports regardless of where the nodes are positioned relative to one another.</p>
+<p>Here is an example of the &ldquo;Ports&rdquo; links method with a &ldquo;Curve&rdquo; link type:</p>
 <p><img src="../assets/cc-link-ports.gif" width="350" /></p>
-<p>The four non-freeform settings will alter the default position for the inpt and output ports on the nodes as follows:</p>
+<p>Links between ports can be useful if the application wants to allow the user to create loops in the flow, like this:</p>
+<p><img src="../assets/cc-link-ports-elbow-loop.png" width="850" /></p>
+<h4 id="overriding-port-position-and-link-direction">Overriding port position and link direction<a class="headerlink" href="#overriding-port-position-and-link-direction" title="Permanent link">&para;</a></h4>
+<p>Applications can configure Common Canvas to position ports by default in one of four different orientations:</p>
 <ul>
 <li>For &ldquo;LeftRight&rdquo; output ports will be on the right of the node and input ports will be on the left of the node</li>
 <li>For &ldquo;RightLeft&rdquo; output ports will be on the left of the node and input ports will be on the right of the node</li>
 <li>For &ldquo;TopBottom&rdquo; output ports will be on the bottom of the node and input ports will be on the top of the node</li>
 <li>For &ldquo;BottomTop&rdquo; output ports will be on the top of the node and input ports will be on the bottom of the node</li>
 </ul>
-<p>Links between ports can be useful if the application wants to allow the user to create loops in the flow, like this:</p>
-<p><img src="../assets/cc-link-ports-elbow-loop.png" width="850" /></p>
-<h4 id="overriding-port-position-and-direction">Overriding port position and direction<a class="headerlink" href="#overriding-port-position-and-direction" title="Permanent link">&para;</a></h4>
-<p>The four &lsquo;ports&rsquo; options for enableLinkDirection will control the default position of the input and otput ports as described above however, the application can customize the position of the ports on the node and the position of the ports will affect the way <a href="../03.06.01-node-customization/#overriding-port-positions-and-link-directions">links are drawn from/to the port</a>.</p>
+<p>The application can further customize the position of the ports on the node if desired.</p>
+<p>The position of the ports will affect the way <a href="../03.06.01-node-customization/#overriding-port-positions-and-link-directions">links are drawn from/to the port</a>.</p>
 <p>This can result in this kind of display where links draw into/out of ports in multiple different directions:</p>
 <p><img src="../assets/cc-link-multi-ports-connected.png" width="350" /></p>
 <h3 id="self-referencing-links">Self-referencing links<a class="headerlink" href="#self-referencing-links" title="Permanent link">&para;</a></h3>
 <p>If the <a href="../03.02.01-canvas-config/#enableselfreflinks">enableSelfRefLinks</a> canvas config field is set to true, the user can create links that loop back to the node they originated from. These are created by the user dragging from the output port on the node and dropping the new link onto a input port, or the body, of the same node.</p>
-<p>Here&rsquo;s an example of an elbow, freeform, self-referencing link.</p>
+<p>Here&rsquo;s an example of a self-referencing link using a &ldquo;Freeform&rdquo; link method with an &ldquo;Elbow&rdquo; link type.</p>
 <p><img src="../assets/cc-link-freeform-elbow-self-ref.png" width="200" /></p>
-<p>Self-referencing links behave the same as other links and can be displayed in the same combinations of link types (Curve, Elbow, Parallax and Straight) and link directions (Freeform or Ports) as other links.</p>
+<p>Self-referencing links behave the same as other links and can be displayed in the same combinations of link types (Curve, Elbow, Parallax and Straight) and link methods (Freeform or Ports) as other links.</p>
 <h3 id="detached-links">Detached links<a class="headerlink" href="#detached-links" title="Permanent link">&para;</a></h3>
 <p>Note: Typically data links must be drawn between nodes however, if the config field <a href="../03.02.01-canvas-config/#enablelinkselection">enableLinkSelection</a> is set to <code>Detachable</code>, the links are allowed to be drawn to and/or from arbitrary points on the canvas.</p>
 <p>With this option, the start and end of existing links can be dragged away from the nodes they are connected to and dropped onto an arbitrary point on the canvas to create a &lsquo;detached&rsquo; link. Additionally, the end of any detached link that originates from, or points to, a point on the canvas can be dragged to a node to form a connection. Also, nodes can be dragged to the available ends of those &lsquo;detached&rsquo; links to form a connection.</p>

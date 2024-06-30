@@ -1834,12 +1834,7 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
+          <li class="md-nav__item">
   <a href="#overriding-port-positions-and-link-directions" class="md-nav__link">
     <span class="md-ellipsis">
       Overriding port positions and link directions
@@ -1847,8 +1842,32 @@
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
+  <a href="#node-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node Images
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Node Images">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-image-layout-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node image layout fields
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#node-image-as-a-url" class="md-nav__link">
     <span class="md-ellipsis">
       Node image as a URL
@@ -1856,13 +1875,18 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#node-image-as-jsx" class="md-nav__link">
     <span class="md-ellipsis">
       Node image as JSX
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2677,12 +2701,7 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
+          <li class="md-nav__item">
   <a href="#overriding-port-positions-and-link-directions" class="md-nav__link">
     <span class="md-ellipsis">
       Overriding port positions and link directions
@@ -2690,8 +2709,32 @@
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
+  <a href="#node-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node Images
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Node Images">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-image-layout-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node image layout fields
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#node-image-as-a-url" class="md-nav__link">
     <span class="md-ellipsis">
       Node image as a URL
@@ -2699,13 +2742,18 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#node-image-as-jsx" class="md-nav__link">
     <span class="md-ellipsis">
       Node image as JSX
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3016,7 +3064,7 @@ ellipsisHoverAreaPadding: 2
 <h3 id="node-element-positioning">Node Element positioning<a class="headerlink" href="#node-element-positioning" title="Permanent link">&para;</a></h3>
 <p>Node elements are positioned on the node as an x/y offset from one of nine positions:</p>
 <p><img src="../assets/cc-node-elements-pos.png" width="350" /></p>
-<p>The default for most elements is <code>topLeft</code>. The position is useful when nodes are resizeable because, as a node is resized, the element will remain tied to its position. So if, for example, an element is tied to <code>topRight</code> and the node is resized to be wider the element will move to remain at the same offset from the <code>topRight</code> position.</p>
+<p>The default for most elements is <code>topLeft</code>. The position is useful when nodes are resizable because, as a node is resized, the element will remain tied to its position. So if, for example, an element is tied to <code>topRight</code> and the node is resized to be wider the element will move to remain at the same offset from the <code>topRight</code> position.</p>
 <p>The PosX and PosY properties for each element is an offset from the associated anchor position where PosX is the number of pixels <strong>to the right</strong> of the anchor position and PosY is a number of pixels <strong>down from</strong> the anchor position. Negative values can be provided to specify an offset <strong>to the left</strong> and <strong>up from</strong> the anchor position.</p>
 <p>For example, these settings:
 <div class="highlight"><pre><span></span><code>    {
@@ -3084,7 +3132,7 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">customNodeLayout</span><span class="p">;</span>
 </code></pre></div></p>
-<h2 id="overriding-port-positions-and-link-directions">Overriding port positions and link directions<a class="headerlink" href="#overriding-port-positions-and-link-directions" title="Permanent link">&para;</a></h2>
+<h3 id="overriding-port-positions-and-link-directions">Overriding port positions and link directions<a class="headerlink" href="#overriding-port-positions-and-link-directions" title="Permanent link">&para;</a></h3>
 <p>The four options for <a href="../03.02.01-canvas-config/#enablelinkdirection">enableLinkDirection</a> in the canvas config are &ldquo;LeftRight&rdquo;, &ldquo;RightLeft&rdquo;, &ldquo;TopBottom&rdquo; and &ldquo;BottomTop&rdquo;. These will control the default position of the input and output ports at the boundaries of the nodes as follows:</p>
 <ul>
 <li>For &ldquo;LeftRight&rdquo; input ports will be on the left of the node and output ports will be on the right of the node</li>
@@ -3110,9 +3158,9 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 </code></pre></div>
 <p>will position the input ports like this:</p>
 <p><img src="../assets/cc-node-port-custom.png" width="100" /></p>
-<p>If nodes are set to be resizeable (enableResizeableNodes: true) and the nodes is resized it will look like this, because the second port is tied to the &ldquo;bottomLeft&rdquo; position:</p>
+<p>If nodes are set to be resizeable (<a href="../03.02.01-canvas-config/#enableresizablenodes">enableResizableNodes</a> set to <code>true</code>) and the nodes is resized it will look like this, because the second port is tied to the &ldquo;bottomLeft&rdquo; position:</p>
 <p><img src="../assets/cc-node-port-custom-resize.png" width="100" /></p>
-<p>When ports are positioned on the node regardless of whether they are positioned by default or have customized positions, they are assigned one of four &lsquo;directions&rsquo; that links will be drawn from/to. These directions are dependent on the diagonal quadrant of the node the port is positioned within.</p>
+<p>When ports are positioned on the node, regardless of whether they are positioned by default or have customized positions, they are assigned one of four &lsquo;directions&rsquo; that links will be drawn to/from. These directions are dependent on the diagonal quadrant of the node the port is positioned within.</p>
 <p>As an extreme example, if these fields are used to customize a node with four input ports (black circles) and four output ports (blue arrows) like this:</p>
 <p><img src="../assets/cc-link-multi-ports.png" width="200" /></p>
 <p>Common Canvas will assign a direction to the input and output ports are follows:</p>
@@ -3121,10 +3169,25 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 <p><img src="../assets/cc-link-multi-ports-connected.png" width="350" /></p>
 <p>This means an application like the one shown below can be built, where the links exit from the left of the &lsquo;Inp_1&rsquo; node and point to the &lsquo;Stage Variables&rsquo; node below it. Meanwhile, other links exist the &lsquo;Inp_1&rsquo; node on its right and point to the &lsquo;Out_2&rsquo; node. This is achieved by positioning some (invisible) output nodes on the left of &lsquo;Inp_1&rsquo; and some on the right of &lsquo;Inp_1&rsquo;. Common Canvas takes care of drawing the links in the appropriate direction based on the port positions.</p>
 <p><img src="../assets/cc-link-mapping-transformer.png" width="900" /></p>
-<h2 id="node-image-as-a-url">Node image as a URL<a class="headerlink" href="#node-image-as-a-url" title="Permanent link">&para;</a></h2>
-<p><a href="../01.01.01-nodes/#node-image">Images</a> are displayed for the nodes in the flow editor canvas and the palette. The internal definition of a node in the pipeline flow object and palette object are exactly the same.</p>
+<h2 id="node-images">Node Images<a class="headerlink" href="#node-images" title="Permanent link">&para;</a></h2>
+<p>For most flows, nodes are defined with an <a href="../01.01.01-nodes/#node-image">image (icon)</a> that conveys the purpose of the node. They are displayed for the nodes in the flow and the palette. The nodes image can be provided as a URL or JSX object. Images can also be customized using node layout fields.</p>
+<h3 id="node-image-layout-fields">Node image layout fields<a class="headerlink" href="#node-image-layout-fields" title="Permanent link">&para;</a></h3>
+<p>The following fields can be set in the node layout to customize images within a node:
+<div class="highlight"><pre><span></span><code>    // Display image
+    imageDisplay: true,
+
+    // Image dimensions
+    imageWidth: 26,
+    imageHeight: 26,
+
+    // Image position
+    imagePosition: &quot;topLeft&quot;,
+    imagePosX: 6,
+    imagePosY: 7,
+</code></pre></div></p>
+<h3 id="node-image-as-a-url">Node image as a URL<a class="headerlink" href="#node-image-as-a-url" title="Permanent link">&para;</a></h3>
 <p>Typically, the <a href="https://github.com/elyra-ai/pipeline-schemas/blob/90e436eda2c153c6026c0d649fc6adfece004951/common-pipeline/pipeline-flow/pipeline-flow-ui-v3-schema.json#L136">image field</a> of a node object in the pipeline flow (or palette) is a URL that references an image file on the server. This can be any type of image that can be displayed in an <code>&lt;image&gt;</code> tag however, if the file is recognized as an SVG file by having the <code>.svg</code> extension, the contents of the file will be loaded as inline SVG in the DOM. This allows more image customization using CSS.</p>
-<p>The management of images can be controlled using the <a href="../03.02.01-canvas-config/#enableimagedisplay"><code>enableImageDisplay</code></a> canvas config field.</p>
+<p>The loading and management of images can be controlled using the <a href="../03.02.01-canvas-config/#enableimagedisplay"><code>enableImageDisplay</code></a> canvas config field.</p>
 <div class="admonition note">
 <p class="admonition-title">Data URLs</p>
 <p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs">Data URLs</a> can be used to embed an image file within the pipeline flow JSON however, this is not recommended for production use since it leads to bloated pipeline flow files because of the amount of data stored for each image and the repetition of images across multiple nodes of the same type.</p>
@@ -3133,7 +3196,7 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 <p class="admonition-title">Alternative palette image</p>
 <p>The node definition contains a <a href="https://github.com/elyra-ai/pipeline-schemas/blob/90e436eda2c153c6026c0d649fc6adfece004951/common-pipeline/pipeline-flow/pipeline-flow-ui-v3-schema.json#L208n">palette image field</a> which, if specified, will be displayed as the node&rsquo;s image only on the palette.</p>
 </div>
-<h2 id="node-image-as-jsx">Node image as JSX<a class="headerlink" href="#node-image-as-jsx" title="Permanent link">&para;</a></h2>
+<h3 id="node-image-as-jsx">Node image as JSX<a class="headerlink" href="#node-image-as-jsx" title="Permanent link">&para;</a></h3>
 <p>Images can also be provided to Common Canvas as JSX objects. This means, for example, that the application can provide <a href="https://carbondesignsystem.com/elements/icons/library">Carbon icons</a> as node images in the palette and on the canvas. Since JSX objects cannot be stringified, the application must programmatically set the node image field to reference the appropriate JSX object.</p>
 <p>Also, when data is retrieved from Common Canvas using either <code>canvasController.getPipelineFlow()</code> or <code>canvasController.getPaletteData()</code>, the returned node object will not contain any image information.</p>
 <p>The node image can be set something like this (where &ldquo;123&rdquo; is the node Id):</p>
@@ -3145,7 +3208,7 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 Alternatively, JSX images can be injected directly into the pipeline flow object or palette object before it is provided to Common Canvas.</p>
 <div class="admonition note">
 <p class="admonition-title">Size prop</p>
-<p>Note, the <code>size</code> prop is used when the icon is displayed in the palette however in the node the icon will be sized based on the <code>imageHeight</code> and <code>imageWidth</code> fields in the nodeLayout object specified in the <code>enableNodeLayout</code> field of the canvas config object.</p>
+<p>Note, the <code>size</code> prop is used when the icon is displayed in the palette however for a node in the flow the icon will be sized based on the <code>imageHeight</code> and <code>imageWidth</code> fields in the nodeLayout object specified in the <code>enableNodeLayout</code> field of the canvas config object.</p>
 </div>
 <p>Also, when nodes are pasted into the canvas the application will need to ensure the image fields of those nodes are set appropriately.</p>
 <p>A new sample application called ‘JSX Icons’ has been added to the test harness to show Carbon icons being used as node images.</p>
