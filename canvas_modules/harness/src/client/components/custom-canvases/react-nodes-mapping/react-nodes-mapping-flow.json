@@ -2,7 +2,7 @@
 	"doc_type": "pipeline",
 	"version": "3.0",
 	"json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
-	"id": "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159",
+	"id": "react-nodes-pipeline-flow",
 	"primary_pipeline": "3ae0efae-9a3c-4a1a-9fd9-185f442a81aa",
 	"pipelines": [
 		{
