@@ -36,7 +36,6 @@ export default class DetachedCanvas extends React.Component {
 		this.getConfig = this.getConfig.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
-		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
 
 		// Add decorations to the links
@@ -202,13 +201,6 @@ export default class DetachedCanvas extends React.Component {
 			`Q ${leftEdge} ${topEdge} ${leftEdge + corner} ${topEdge} Z`;
 	}
 
-	decorationActionHandler() {
-		this.canvasController.displaySubPipeline({
-			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
-			pipelineFlowId: "987654321-c3d2-4da7-ab5a-2b9573e5e159"
-		});
-	}
-
 	editActionHandler(data, command) {
 		if (data.editType === "linkNodes") {
 			this.createDecorations(data.linkIds[0]);
@@ -266,7 +258,6 @@ export default class DetachedCanvas extends React.Component {
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
-				decorationActionHandler={this.decorationActionHandler}
 				editActionHandler={this.editActionHandler}
 				clickActionHandler={this.clickActionHandler}
 				contextMenuHandler={this.contextMenuHandler}

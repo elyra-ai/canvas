@@ -1064,7 +1064,7 @@
               "width": 350,
               "height": 190,
               "class_name": "d3-comment-rect bkg-col-green-20",
-              "content": "## Parallax Canvas\n\n### This canvas shows a flow using the Paralax link type with some customized 'horizontal' layout nodes. Some of the nodes have self-referencing links that loop back on themselves. ",
+              "content": "## Parallax Canvas\n\n### This canvas shows a flow using the Parallax link type with some customized port positions on the nodes. Some of the nodes have self-referencing links that loop back on themselves. ",
               "associated_id_refs": []
             }
           ]

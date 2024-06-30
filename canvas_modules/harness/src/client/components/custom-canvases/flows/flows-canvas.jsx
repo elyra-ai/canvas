@@ -98,11 +98,11 @@ export default class FlowsCanvas extends React.Component {
 		return config;
 	}
 
-	decorationActionHandler() {
-		this.canvasController.displaySubPipeline({
-			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
-			pipelineFlowId: "123456789-c3d2-4da7-ab5a-2b9573e5e159"
-		});
+	decorationActionHandler(data) {
+		this.canvasController.displaySubPipelineForSupernode(
+			data.id,
+			this.canvasController.getCurrentPipelineId()
+		);
 	}
 
 	clickActionHandler(source) {
