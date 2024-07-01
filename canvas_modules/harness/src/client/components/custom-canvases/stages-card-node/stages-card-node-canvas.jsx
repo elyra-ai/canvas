@@ -80,6 +80,7 @@ export default class DetachedCanvas extends React.Component {
 			enableParentClass: "stages-card-node",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Straight",
+			enableLinkMethod: "Freeform",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",

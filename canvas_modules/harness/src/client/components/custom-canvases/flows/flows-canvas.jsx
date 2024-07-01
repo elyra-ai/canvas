@@ -41,6 +41,7 @@ export default class FlowsCanvas extends React.Component {
 			enableParentClass: "flows",
 			enableNodeFormatType: "Vertical",
 			enableLinkType: "Straight",
+			enableLinkMethod: "Freeform",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",
