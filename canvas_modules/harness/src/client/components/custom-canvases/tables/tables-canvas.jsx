@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
-import TablesCanvasFlow from "./tablesCanvas.json";
+import TablesFlow from "./tables-flow.json";
 
 
 export default class TablesCanvas extends React.Component {
@@ -27,7 +27,7 @@ export default class TablesCanvas extends React.Component {
 		super(props);
 
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(TablesCanvasFlow);
+		this.canvasController.setPipelineFlow(TablesFlow);
 
 		this.left = 10;
 		this.right = 210;

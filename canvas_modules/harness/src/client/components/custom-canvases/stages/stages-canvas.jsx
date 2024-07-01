@@ -23,14 +23,14 @@ import { Edit } from "@carbon/react/icons";
 
 import MultiCommandPanel from "./multi-command-panel";
 
-import StagesCanvasFlow from "./stagesCanvas.json";
+import StagesFlow from "./stages-flow.json";
 import StagesPalette from "../../../../../test_resources/palettes/stagesPalette.json";
 
 export default class DetachedCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(StagesCanvasFlow);
+		this.canvasController.setPipelineFlow(StagesFlow);
 		this.canvasController.setPipelineFlowPalette(StagesPalette);
 
 		this.getConfig = this.getConfig.bind(this);
@@ -85,6 +85,7 @@ export default class DetachedCanvas extends React.Component {
 			enableParentClass: "stages",
 			enableNodeFormatType: "Vertical",
 			enableLinkType: "Straight",
+			enableLinkMethod: "Freeform",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",

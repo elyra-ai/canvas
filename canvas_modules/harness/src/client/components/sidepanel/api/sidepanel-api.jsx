@@ -35,7 +35,7 @@ import {
 	INPUT_PORT,
 	OUTPUT_PORT,
 	NOTIFICATION_MESSAGE_TYPE
-} from "../../../constants/constants.js";
+} from "../../../constants/harness-constants.js";
 
 const defaultNodeType = {
 	"id": "custop",

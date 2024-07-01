@@ -17,8 +17,8 @@
             "ui_data": {
               "label": "File_Name_1.csv",
               "image": "",
-              "x_pos": 183,
-              "y_pos": 96,
+              "x_pos": 57,
+              "y_pos": 114,
               "description": "File One",
               "decorations": [
                 {
@@ -97,8 +97,8 @@
             "ui_data": {
               "label": "File_Name_2.csv",
               "image": "",
-              "x_pos": 596,
-              "y_pos": 46,
+              "x_pos": 470,
+              "y_pos": 64,
               "description": "File Two",
               "decorations": [
                 {
@@ -150,8 +150,8 @@
             "ui_data": {
               "label": "File_Name_3.csv",
               "image": "",
-              "x_pos": 595,
-              "y_pos": 120,
+              "x_pos": 469,
+              "y_pos": 138,
               "description": "File Three",
               "decorations": [
                 {
@@ -203,8 +203,8 @@
             "ui_data": {
               "label": "File_Name_4.csv",
               "image": "",
-              "x_pos": 595,
-              "y_pos": 210,
+              "x_pos": 469,
+              "y_pos": 228,
               "description": "File Four",
               "decorations": [
                 {
@@ -256,8 +256,8 @@
             "ui_data": {
               "label": "File_Name_5.csv",
               "image": "",
-              "x_pos": 595,
-              "y_pos": 300,
+              "x_pos": 469,
+              "y_pos": 318,
               "description": "File Five",
               "decorations": [
                 {
@@ -304,7 +304,11 @@
       ],
       "app_data": {
         "ui_data": {
-          "zoom": 100,
+          "zoom": {
+            "x": 0,
+            "y": 0,
+            "k": 1
+          },
           "comments": []
         }
       },
