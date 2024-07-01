@@ -20,14 +20,14 @@ import PropTypes from "prop-types";
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import { CharacterSentenceCase, CharacterWholeNumber } from "@carbon/react/icons";
 
-import StreamsCanvasFlow from "./streams.json";
+import StreamsFlow from "./streams-flow.json";
 
 export default class StreamsCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(StreamsCanvasFlow);
+		this.canvasController.setPipelineFlow(StreamsFlow);
 
 		// The below overrides were provided by Mary Komor from the Streams team
 		this.config = Object.assign({}, props.config, {

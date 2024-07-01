@@ -20,12 +20,11 @@ import * as UiConditionsParser from "../../src/common-properties/ui-conditions/u
 import { mountWithIntl, mountWithIntlMessages } from "./intl-utils";
 import { expect } from "chai";
 import cloneDeep from "lodash/cloneDeep";
-
 import CustomTableControl from "./custom-controls/CustomTableControl";
 import CustomToggleControl from "./custom-controls/CustomToggleControl";
 import CustomOpMax from "./custom-condition-ops/customMax";
-
 import sinon from "sinon";
+
 var renderedController;
 function controllerHandler(propertyController) {
 	renderedController = propertyController;
@@ -60,7 +59,6 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 	if (propertiesConfigOverrides) {
 		propertiesConfig = Object.assign(propertiesConfig, propertiesConfigOverrides);
 	}
-
 	const wrapper = mountWithIntl(
 		<div className="properties-right-flyout">
 			<CommonProperties

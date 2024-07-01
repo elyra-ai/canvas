@@ -105,6 +105,154 @@ describe("Test node and comment combination link disconnection", function() {
 	});
 });
 
+describe("Test basic link construction", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("allTypesCanvas.json");
+	});
+
+	it("Test all 8 combinations of link type and link method", function() {
+
+		// Test the 4 Ports (LeftRight) combinations
+
+		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkMethod": "Ports" });
+		cy.verifyLinkPath(
+			"Binding (entry) node", "outPort", "Execution node", "inPort",
+			"M 159 128.5 C 228 128.5 228 167.5 297 167.5"
+		);
+
+		cy.setCanvasConfig({ "selectedLinkType": "Elbow", "selectedLinkMethod": "Ports" });
+		cy.wait(10);
+		cy.verifyLinkPath(
+			"Binding (entry) node", "outPort", "Execution node", "inPort",
+			"M 159 128.5 L 179 128.5 Q 189 128.5 189 138.5 L 189 157.5 Q 189 167.5 199 167.5 L 297 167.5"
+		);
+
+		cy.setCanvasConfig({ "selectedLinkType": "Parallax", "selectedLinkMethod": "Ports" });
+		cy.wait(10);
+		cy.verifyLinkPath(
+			"Binding (entry) node", "outPort", "Execution node", "inPort",
+			"M 159 128.5 L 189 128.5 L 267 167.5 L 297 167.5"
+		);
+
+		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkMethod": "Ports" });
+		cy.wait(10);
+		cy.verifyLinkPath(
+			"Binding (entry) node", "outPort", "Execution node", "inPort",
+			"M 166 144.875 L 290 168.125"
+		);
+
+		// Test the 4 Freeform combinations
+
+		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkMethod": "Freeform" });
+		cy.wait(10);
+		cy.verifyLinkPath(
+			"Binding (entry) node", "outPort", "Execution node", "inPort",
+			"M 166 137 C 228 137 228 176 290 176"
+		);
+
+		cy.setCanvasConfig({ "selectedLinkType": "Elbow", "selectedLinkMethod": "Freeform" });
+		cy.wait(10);
+		cy.verifyLinkPath(
+			"Binding (entry) node", "outPort", "Execution node", "inPort",
+			"M 166 137 L 186 137 Q 196 137 196 147 L 196 166 Q 196 176 206 176 L 290 176"
+		);
+
+		cy.setCanvasConfig({ "selectedLinkType": "Parallax", "selectedLinkMethod": "Freeform" });
+		cy.wait(10);
+		cy.verifyLinkPath(
+			"Binding (entry) node", "outPort", "Execution node", "inPort",
+			"M 166 137 L 196 137 L 260 176 L 290 176"
+		);
+
+		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkMethod": "Freeform" });
+		cy.wait(10);
+		cy.verifyLinkPath(
+			"Binding (entry) node", "outPort", "Execution node", "inPort",
+			"M 166 144.875 L 290 168.125"
+		);
+	});
+
+	it("Test 8 cominations of creation and construction of self-referencing link", function() {
+
+		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkMethod": "Ports",
+			"selectedSelfRefLinks": true, "selectedLinkSelection": "LinkOnly" });
+
+		// Delete the two links connected to the Execution node
+		cy.wait(10);
+		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		cy.clickToolbarDelete();
+
+		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.clickToolbarDelete();
+
+		// Create a self-refernceing link on the Execution node
+		cy.linkNodeOutputPortToNodeInputPort(
+			"Execution node", "outPort", "Execution node", "inPort");
+
+		// Test the 4 Ports (Left Right) combinations
+
+		cy.verifyLinkPath(
+			"Execution node", "outPort", "Execution node", "inPort",
+			"M 367 167.5 Q 397 167.5 397 143 Q 397 118.5 332 118.5 L 332 " +
+			"118.5 Q 267 118.5 267 143 Q 267 167.5 297 167.5"
+		);
+
+		cy.setCanvasConfig({ "selectedLinkType": "Elbow", "selectedLinkMethod": "Ports" });
+		cy.wait(10);
+		cy.verifyLinkPath(
+			"Execution node", "outPort", "Execution node", "inPort",
+			"M 367 167.5 L 387 167.5 Q 397 167.5 397 157.5 L 397 128.5 Q 397 " +
+			"118.5 387 118.5 L 277 118.5 Q 267 118.5 267 128.5 L 267 157.5 Q 267 " +
+			"167.5 277 167.5 L 297 167.5"
+		);
+
+		cy.setCanvasConfig({ "selectedLinkType": "Parallax", "selectedLinkMethod": "Ports" });
+		cy.wait(10);
+		cy.verifyLinkPath(
+			"Execution node", "outPort", "Execution node", "inPort",
+			"M 367 167.5 L 397 167.5 L 397 118.5 L 267 118.5 L 267 167.5 L 297 167.5"
+		);
+
+		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkMethod": "Ports" });
+		cy.wait(10);
+		cy.verifyLinkPath(
+			"Execution node", "outPort", "Execution node", "inPort",
+			"M 374 176 L 404 101.5 332  101.5 332 131.5"
+		);
+
+		// Test the 4 Freeform combinations
+
+		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkMethod": "Freeform" });
+		cy.verifyLinkPath(
+			"Execution node", "outPort", "Execution node", "inPort",
+			"M 374 176 L 404 101.5 332  101.5 332 131.5"
+		);
+
+		cy.setCanvasConfig({ "selectedLinkType": "Elbow", "selectedLinkMethod": "Freeform" });
+		cy.wait(10);
+		cy.verifyLinkPath(
+			"Execution node", "outPort", "Execution node", "inPort",
+			"M 374 176 L 394 176 Q 404 176 404 166 L 404 111.5 Q 404 101.5 394 101.5 " +
+			"L 342 101.5 Q 332 101.5 332 111.5 L 332 131.5"
+		);
+
+		cy.setCanvasConfig({ "selectedLinkType": "Parallax", "selectedLinkMethod": "Freeform" });
+		cy.wait(10);
+		cy.verifyLinkPath(
+			"Execution node", "outPort", "Execution node", "inPort",
+			"M 374 176 L 404 176 L 404 101.5 L 332 101.5 L 332 131.5"
+		);
+
+		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkMethod": "Freeform" });
+		cy.wait(10);
+		cy.verifyLinkPath(
+			"Execution node", "outPort", "Execution node", "inPort",
+			"M 374 176 L 404 101.5 332  101.5 332 131.5"
+		);
+	});
+});
+
 describe("Test elbow connections from multi-port source nodes", function() {
 	beforeEach(() => {
 		cy.visit("/");
