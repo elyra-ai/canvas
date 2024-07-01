@@ -25,8 +25,8 @@
 	.d3-node-group {
 		// Style the node body so it doesn't appear.
 		.d3-node-body-outline {
-			fill: #FFFFFF;
-			stroke: #3E3E3E;
+			fill: $background;
+			stroke: $border-inverse;
 		}
 
 		&.d3-node-supernode-expanded > .d3-node-body-outline {
@@ -41,6 +41,7 @@
 			stroke-width: 1;
 			fill: transparent;
 			pointer-events: none;
+			background-color: $background;
 		}
 
 		// Style node input ports so they don't appear.
@@ -87,7 +88,7 @@
 		/* Hover over d3-node-group */
 		&:hover {
 			.d3-node-body-outline {
-				fill: #E5E5E5;
+				fill: #807F7F;
 				stroke: #3E3E3E;
 			}
 
@@ -119,6 +120,8 @@
 				cursor: context-menu;
 			}
 		}
+
+		
 
 	}
 
