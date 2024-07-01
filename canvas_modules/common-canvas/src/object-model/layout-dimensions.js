@@ -19,7 +19,8 @@ import {
 	LINK_METHOD_FREEFORM,
 	LINK_METHOD_PORTS,
 	LINK_TYPE_STRAIGHT,
-	LINK_DIR_LEFT_RIGHT
+	LINK_DIR_LEFT_RIGHT,
+	NODE_FORMAT_VERTICAL
 } from "../common-canvas/constants/canvas-constants";
 
 const portsHorizontalDefaultLayout = {
@@ -860,7 +861,7 @@ export default class LayoutDimensions {
 
 	static getDefaultLayout(config) {
 		let defaultLayout;
-		if (config && config.enableNodeFormatType === "Vertical") {
+		if (config && config.enableNodeFormatType === NODE_FORMAT_VERTICAL) {
 			defaultLayout = portsVerticalDefaultLayout;
 
 		} else {

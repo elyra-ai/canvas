@@ -19,7 +19,11 @@
 
 import { isMatch, isMatchWith, omit } from "lodash";
 import LayoutDimensions from "./layout-dimensions.js";
-import { ASSOC_STRAIGHT, LINK_SELECTION_NONE } from "../common-canvas/constants/canvas-constants";
+import {
+	ASSOC_STRAIGHT,
+	LINK_SELECTION_NONE,
+	NODE_FORMAT_HORIZONTAL
+} from "../common-canvas/constants/canvas-constants";
 
 export default class ConfigUtils {
 
@@ -51,7 +55,7 @@ export default class ConfigUtils {
 			// TODO Remove this when paletteInitialState is removed from common-canvas.
 			// paletteInitialState: false,
 			enableInteractionType: "Mouse",
-			enableNodeFormatType: "Horizontal",
+			enableNodeFormatType: NODE_FORMAT_HORIZONTAL,
 			enableLinkType: "Curve",
 			enableStraightLinksAsFreeform: false, // TODO - Remove in next major release.
 			enableLinkMethod: "Ports",

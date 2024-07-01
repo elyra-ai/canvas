@@ -97,12 +97,6 @@ import {
 	SIDE_PANEL_MODAL,
 	SIDE_PANEL_API,
 	CHOOSE_FROM_LOCATION,
-	INTERACTION_MOUSE,
-	VERTICAL_FORMAT,
-	NONE_SAVE_ZOOM,
-	IMAGE_DISPLAY_SVG_INLINE,
-	ASSOC_STRAIGHT,
-	UNDERLAY_NONE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_STAGES,
@@ -121,15 +115,12 @@ import {
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	CUSTOM,
-	PALETTE_FLYOUT,
 	PROPERTIES_FLYOUT,
-	NONE_DRAG,
 	INPUT_PORT,
 	OUTPUT_PORT,
 	NOTIFICATION_MESSAGE_TYPE,
 	PARAMETER_DEFS,
 	PRIMARY,
-	TOOLBAR_LAYOUT_TOP,
 	TOOLBAR_TYPE_DEFAULT,
 	TOOLBAR_TYPE_SUB_AREAS,
 	TOOLBAR_TYPE_SINGLE_BAR,
@@ -139,14 +130,23 @@ import {
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
 	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE,
 	CATEGORY_VIEW_ACCORDIONS
-} from "./constants/constants.js";
+} from "./constants/harness-constants.js";
 
 import {
+	NODE_FORMAT_VERTICAL,
+	INTERACTION_MOUSE,
+	SNAP_TO_GRID_NONE,
+	SAVE_ZOOM_NONE,
 	STATE_TAG_NONE,
 	LINK_TYPE_CURVE,
 	LINK_DIR_LEFT_RIGHT,
 	LINK_METHOD_PORTS,
-	LINK_SELECTION_NONE
+	LINK_SELECTION_NONE,
+	ASSOC_STRAIGHT,
+	IMAGE_DISPLAY_SVG_INLINE,
+	UNDERLAY_NONE,
+	PALETTE_LAYOUT_FLYOUT,
+	TOOLBAR_LAYOUT_TOP
 } from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
@@ -188,14 +188,14 @@ class App extends React.Component {
 			selectedAssocLinkCreation: false,
 			selectedMarkdownInComments: false,
 			selectedContextToolbar: false,
-			selectedSnapToGridType: NONE_DRAG,
+			selectedSnapToGridType: SNAP_TO_GRID_NONE,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
 			selectedInteractionType: INTERACTION_MOUSE,
-			selectedNodeFormatType: VERTICAL_FORMAT,
+			selectedNodeFormatType: NODE_FORMAT_VERTICAL,
 			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
 			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
-			selectedSaveZoom: NONE_SAVE_ZOOM,
+			selectedSaveZoom: SAVE_ZOOM_NONE,
 			selectedZoomIntoSubFlows: false,
 			selectedSingleOutputPortDisplay: false,
 			selectedImageDisplay: IMAGE_DISPLAY_SVG_INLINE,
@@ -209,7 +209,7 @@ class App extends React.Component {
 			selectedAssocLinkType: ASSOC_STRAIGHT,
 			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedExampleApp: EXAMPLE_APP_NONE,
-			selectedPaletteLayout: PALETTE_FLYOUT,
+			selectedPaletteLayout: PALETTE_LAYOUT_FLYOUT,
 			selectedStateTag: STATE_TAG_NONE,
 			selectedTipConfig: {
 				"palette": {
