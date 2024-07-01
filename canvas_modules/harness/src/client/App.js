@@ -46,8 +46,8 @@ import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
 import StagesCanvas from "./components/custom-canvases/stages/stages-canvas";
 import StagesCardNodeCanvas from "./components/custom-canvases/stages-card-node/stages-card-node-canvas";
 import LogicCanvas from "./components/custom-canvases/logic/logic-canvas";
-import ReadOnlyCanvas from "./components/custom-canvases/read-only/read-only";
-import ProgressCanvas from "./components/custom-canvases/progress/progress";
+import ReadOnlyCanvas from "./components/custom-canvases/read-only/read-only-canvas";
+import ProgressCanvas from "./components/custom-canvases/progress/progress-canvas";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
@@ -55,8 +55,8 @@ import JsxIconsCanvas from "./components/custom-canvases/jsx-icons/jsx-icons-can
 import AllPortsCanvas from "./components/custom-canvases/all-ports/all-ports-canvas";
 import ParallaxCanvas from "./components/custom-canvases/parallax/parallax-canvas";
 import NetworkCanvas from "./components/custom-canvases/network/network-canvas";
-import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon";
-import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping";
+import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon-canvas";
+import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping-canvas";
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console/console.jsx";

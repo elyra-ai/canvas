@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
-import Explain2CanvasFlow from "./explain2Canvas.json";
+import Explain2Flow from "./explain2-flow.json";
 
 
 const DEFAULT_HEIGHT = 80;
@@ -32,7 +32,7 @@ export default class Explain2Canvas extends React.Component {
 		super(props);
 
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(Explain2CanvasFlow);
+		this.canvasController.setPipelineFlow(Explain2Flow);
 
 		this.config = Object.assign({}, props.config, {
 			enableParentClass: "explain2",
