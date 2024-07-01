@@ -56,6 +56,9 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		this.fields = this._makeDatasetFields(props.controller.getDatasetMetadataFields(), props.controller.getExpressionInfo().fields);
 		this.resources = get(props.controller.getExpressionInfo(), "resources", {});
 		this.state = {
+			doubleClickedFieldRow: [],
+			doubleClickedValueRow: [],
+			doubleClickedFunctionRow: [],
 			fieldSelected: 0,
 			valueSelected: 0,
 			functionSelected: 0,
@@ -120,12 +123,15 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	onFieldTableClick(row, evt, rowKey) {
 		this.setState({
 			fieldSelected: rowKey,
-			valueSelected: 0
+			valueSelected: 0,
+			doubleClickedValueRow: [],
+			doubleClickedFieldRow: [],
+			doubleClickedFunctionRow: []
 		});
 
 	}
-
-	onAddFieldClick(rowKey) {
+	// field table - called on row doubleclick & also Add btn click.
+	onAddFieldClick(evt, rowKey, index) {
 		const field = this.state.currentFieldDataset[rowKey];
 		let value = field.id;
 		if (this.state.fieldCategory !== this.recentUseCat) {
@@ -138,6 +144,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			}
 			this.props.onChange(value);
 		}
+		this.setState({ doubleClickedFieldRow: [rowKey] });
 	}
 
 	onFieldFilter(filterString) {
@@ -146,11 +153,13 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	onValueTableClick(row, evt, rowKey) {
 		this.setState({
-			valueSelected: rowKey
+			valueSelected: rowKey,
+			doubleClickedValueRow: []
 		});
 	}
 
-	onAddValueClick(rowKey) {
+	// value table - called on row doubleclick & also Add btn click.
+	onAddValueClick(evt, rowKey, index) {
 		if (this.props.onChange) {
 			const field = this.state.currentFieldDataset[this.state.fieldSelected];
 			const quote = "\"";
@@ -165,7 +174,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			}
 		}
 		this.setState({
-			valueSelected: rowKey
+			valueSelected: rowKey,
+			doubleClickedValueRow: [rowKey]
 		});
 	}
 
@@ -179,7 +189,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		});
 	}
 
-	onAddFunctionClick(rowKey) {
+	// function table - called on row doubleclick & also Add btn click.
+	onAddFunctionClick(evt, rowKey, index) {
 		let field;
 		if (this.state.functionCategory === this.recentUseCat) {
 			field = this.props.controller.getExpressionRecentlyUsed()[rowKey];
@@ -191,6 +202,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		if (this.props.onChange) {
 			this.props.onChange(value);
 		}
+		this.setState({ doubleClickedFunctionRow: [rowKey] });
 	}
 
 	onFunctionFilter(filterString) {
@@ -278,24 +290,24 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				kind="ghost"
 				size="sm"
 			>
-				<Add aria-label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN)} />
+				{<Add className="add-btn-svg" aria-label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN)} />}
 			</Button>
 		);
 		return addValueButtonContent;
 	}
 
-	handleAddButtonClick(index, tableType) {
+	handleAddButtonClick(index, tableType, evt) {
 		switch (tableType) {
 		case "value": {
-			this.onAddValueClick(index);
+			this.onAddValueClick(evt, index);
 			break;
 		}
 		case "field": {
-			this.onAddFieldClick(index);
+			this.onAddFieldClick(evt, index);
 			break;
 		}
 		case "function": {
-			this.onAddFunctionClick(index);
+			this.onAddFunctionClick(evt, index);
 			break;
 		}
 		default:
@@ -508,6 +520,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						tableLabel={fieldsTableLabel}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onFieldTableClick}
+						onRowDoubleClick={this.onAddFieldClick}
+						doubleClickedRow = {this.state.doubleClickedFieldRow}
 						selectedRows={[selectedField]}
 						onSort={this.setSortColumn.bind(this, "fieldTable")}
 						light={this.props.controller.getLight()}
@@ -525,6 +539,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						tableLabel={valuesTableLabel}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onValueTableClick}
+						onRowDoubleClick={this.onAddValueClick}
+						doubleClickedRow = {this.state.doubleClickedValueRow}
 						selectedRows={[selectedValue]}
 						onSort={this.setSortColumn.bind(this, "valuesTable")}
 						light={this.props.controller.getLight()}
@@ -693,6 +709,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						tableLabel={functionsTableLabel}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onFunctionTableClick}
+						onRowDoubleClick={this.onAddFunctionClick}
+						doubleClickedRow = {this.state.doubleClickedFunctionRow}
 						selectedRows={[selectedFunction]}
 						onSort={this.setSortColumn.bind(this, "functionTable")}
 						light={this.props.controller.getLight()}
