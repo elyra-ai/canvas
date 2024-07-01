@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "time_hms": "05:45:09",
+    "time_hms_readonly": "05:45:09",
     "time_HHmmss": "05:45:09",
     "time_hms_non_req": "06:30:00",
     "time_hms_null": null,
@@ -22,6 +23,10 @@
       "id": "time_hms",
       "type": "time",
       "required": true
+    },
+    {
+      "id": "time_hms_readonly",
+      "type": "time"
     },
     {
       "id": "time_HHmmss",
@@ -114,6 +119,21 @@
         },
         "time_format": "H:m:s",
         "class_name": "timefield-control-class"
+      },
+      {
+        "parameter_ref": "time_hms_readonly",
+        "label": {
+          "default": "Required Time H:m:s"
+        },
+        "description": {
+          "default": "Readonly timefield with value set to '5:45:9' with H:m:s format"
+        },
+        "helper_text": {
+          "default": "Readonly timefield with value set to '5:45:9' with H:m:s format"
+        },
+        "time_format": "H:m:s",
+        "class_name": "timefield-control-class",
+        "read_only": true
       },
       {
         "parameter_ref": "time_HHmmss",
@@ -256,6 +276,7 @@
         "type": "controls",
         "parameter_refs": [
           "time_hms",
+          "time_hms_readonly",
           "time_HHmmss",
           "time_hms_non_req",
           "time_hms_null",

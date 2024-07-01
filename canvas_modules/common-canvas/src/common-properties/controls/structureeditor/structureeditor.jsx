@@ -83,7 +83,8 @@ class StructureEditorControl extends React.Component {
 				if (parentPropertyId.name !== childPropertyId.name) {
 					propertyId = this.props.controller.setChildPropertyId(parentPropertyId, childPropertyId);
 				}
-				row.push(this.controlFactory.createControlItem(control, propertyId));
+				const isReadOnly = this.props.control.readOnly;
+				row.push(this.controlFactory.createControlItem(control, propertyId, null, isReadOnly));
 			}
 		}
 		return row;

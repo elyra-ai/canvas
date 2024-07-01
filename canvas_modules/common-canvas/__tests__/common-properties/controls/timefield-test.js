@@ -178,6 +178,24 @@ describe("timefield-control renders correctly", () => {
 		const helpTextWrapper = wrapper.find("div[data-id='properties-test-timefield']");
 		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
 	});
+
+	it("should set readonly control in `TimefieldControl`", () => {
+		control.readOnly = true;
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<TimefieldControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				controlItem={controlItem}
+			/>
+		);
+		const readOnlyWrapper = wrapper.find("div[data-id='properties-test-timefield']");
+		expect(readOnlyWrapper.find("TextInput").prop("readOnly")).to.equal(control.readOnly);
+	});
 });
 
 describe("error messages renders correctly for timefield controls", () => {

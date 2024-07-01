@@ -30,6 +30,11 @@
       "first_field_checkbox": false,
       "field_annotation": [ "there", "you" ]
     },
+    "readonly_structureeditorObjectType": {
+      "first_field": "hi",
+      "first_field_checkbox": false,
+      "field_annotation": [ "there", "you" ]
+    },
     "nestedStructureeditor": [
       "name",
       23,
@@ -354,6 +359,11 @@
     },
     {
       "id": "structureeditorObjectType",
+      "type": "fieldLayout",
+      "default": []
+    },
+    {
+      "id": "readonly_structureeditorObjectType",
       "type": "fieldLayout",
       "default": []
     },
@@ -780,6 +790,16 @@
         }
       },
       {
+        "parameter_ref": "readonly_structureeditorObjectType",
+        "label": {
+          "default": "Layout Controls"
+        },
+        "description": {
+          "default": "Layout Controls"
+        },
+        "read_only": true
+      },
+      {
         "parameter_ref": "nestedStructureeditor",
         "label": {
           "default": "Nested Layout Controls"
@@ -838,7 +858,8 @@
           "default": "Object"
         },
         "parameter_refs": [
-          "structureeditorObjectType"
+          "structureeditorObjectType",
+          "readonly_structureeditorObjectType"
         ]
       },
       {

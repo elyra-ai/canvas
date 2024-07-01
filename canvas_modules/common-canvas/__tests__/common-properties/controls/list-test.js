@@ -568,6 +568,11 @@ describe("list renders correctly as a nested control", () => {
 		expected = [["Cholesterol", 5, "Ascending", ["new value list 0", "new value list 1"]], ["Na", 6, "Ascending", ["new value list 10"]]];
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 	});
+
+	it("readonly list should have button disabled", () => {
+		const readOnlyWrapper = wrapper.find(".string-list-control-class-readonly");
+		expect(readOnlyWrapper.find("button").prop("disabled")).to.equal(true);
+	});
 });
 
 describe("list classnames appear correctly", () => {

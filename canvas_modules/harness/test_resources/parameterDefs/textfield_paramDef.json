@@ -15,6 +15,7 @@
     "string_hidden": "testing",
     "disable": true,
     "string_disabled": "testing",
+    "string_readonly": "Read only text...",
     "string_condition_handling": "testing",
     "string_table": [
       [
@@ -104,6 +105,11 @@
     },
     {
       "id": "string_disabled",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "string_readonly",
       "type": "string",
       "required": true
     },
@@ -281,6 +287,13 @@
         }
       },
       {
+        "parameter_ref": "string_readonly",
+        "label": {
+          "default": "Readonly String"
+        },
+        "read_only": true
+      },
+      {
         "parameter_ref": "string_condition_handling",
         "label": {
           "default": "string condition handling"
@@ -383,7 +396,8 @@
           "string_undefined",
           "string_null",
           "string_placeholder",
-          "string_longControlName"
+          "string_longControlName",
+          "string_readonly"
         ]
       },
       {

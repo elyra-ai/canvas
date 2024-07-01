@@ -213,7 +213,7 @@ export default class AbstractTable extends React.Component {
 	}
 
 	isReadonlyTable() {
-		return this.props.control.controlType === ControlType.READONLYTABLE;
+		return this.props.control.controlType === ControlType.READONLYTABLE || this.readOnly;
 	}
 
 	indexOfColumn(controlId) {
@@ -482,7 +482,7 @@ export default class AbstractTable extends React.Component {
 			<div className="properties-at-buttons-container">
 				<Button
 					className="properties-add-fields-button"
-					disabled={addButtonDisabled}
+					disabled={this.readOnly || addButtonDisabled}
 					onClick={this.addOnClick.bind(this, this.props.propertyId)}
 					size="sm"
 					kind="ghost"
@@ -506,6 +506,7 @@ export default class AbstractTable extends React.Component {
 					size="sm"
 					kind="ghost"
 					renderIcon={Edit}
+					disabled={this.readOnly}
 				>
 					{tableButtonConfig.label}
 				</Button>

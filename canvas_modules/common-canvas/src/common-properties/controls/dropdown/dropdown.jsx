@@ -264,6 +264,7 @@ class DropDown extends React.Component {
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText={this.props.controlItem}
 					helperText={this.props.control.helperText}
+					readOnly={this.props.control.readOnly}
 				/>
 			);
 		}

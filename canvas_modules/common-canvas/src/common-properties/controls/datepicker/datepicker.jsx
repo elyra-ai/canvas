@@ -77,6 +77,7 @@ class DatepickerControl extends React.Component {
 					dateFormat={this.dateFormat}
 					onChange={this.handleChange.bind(this)}
 					locale={this.locale}
+					readOnly={this.props.control.readOnly}
 				>
 					<DatePickerInput
 						{...validationProps}

@@ -57,6 +57,11 @@ describe("radio renders and works correctly with different enum types", () => {
 		expect(controlDiv.find("div.cds--form__helper-text").text()).to.equal("RadioSet with enum string type");
 	});
 
+	it("radioset control with string enum with readonly prop", () => {
+		const controlDivWrapper = wrapper.find("div[data-id='properties-ci-radioString_readonly']");
+		expect(controlDivWrapper.find("RadioButtonGroup").prop("readOnly")).to.equal(true);
+	});
+
 	it("radioset control with boolean enum", () => {
 		const controlDiv = wrapper.find("div[data-id='properties-ci-radioBooleanWithEnum']");
 		const label = controlDiv.find("label.properties-control-label");

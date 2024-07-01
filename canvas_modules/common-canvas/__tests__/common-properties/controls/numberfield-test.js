@@ -161,6 +161,23 @@ describe("numberfield-control renders correctly", () => {
 		const helpTextWrapper = wrapper.find("div[data-id='properties-test-number']");
 		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
 	});
+
+	it("NumberfieldControl readOnly is rendered correctly", () => {
+		control.readOnly = true;
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<NumberfieldControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const readOnlyWrapper = wrapper.find("div[data-id='properties-test-number']");
+		expect(readOnlyWrapper.find("ForwardRef(NumberInput)").prop("readOnly")).to.equal(control.readOnly);
+	});
 });
 
 describe("numberfield control works correctly", () => {

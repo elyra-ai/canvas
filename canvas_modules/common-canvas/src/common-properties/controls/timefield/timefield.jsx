@@ -82,6 +82,7 @@ class TimefieldControl extends React.Component {
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					helperText={this.props.control.helperText}
+					readOnly={this.props.control.readOnly}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

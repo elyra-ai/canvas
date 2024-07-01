@@ -174,6 +174,9 @@ export class ParameterDef {
 		if (settings.helperText) {
 			this.helperText = ResourceDef.make(settings.helperText);
 		}
+		if (settings.readOnly) {
+			this.readOnly = settings.readOnly;
+		}
 	}
 
 	isList() {
@@ -388,7 +391,8 @@ export class ParameterDef {
 				"actionRef": propertyOf(uihint)("action_ref"),
 				"customValueAllowed": propertyOf(uihint)("custom_value_allowed"),
 				"className": propertyOf(uihint)("class_name"),
-				"helperText": propertyOf(uihint)("helper_text")
+				"helperText": propertyOf(uihint)("helper_text"),
+				"readOnly": propertyOf(uihint)("read_only")
 			});
 		}
 		return null;

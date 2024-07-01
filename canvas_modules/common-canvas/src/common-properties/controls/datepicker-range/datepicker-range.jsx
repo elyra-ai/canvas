@@ -141,6 +141,7 @@ class DatepickerRangeControl extends React.Component {
 					onChange={this.handleDateRangeChange.bind(this)}
 					locale={this.locale}
 					allowInput
+					readOnly={this.props.control.readOnly}
 				>
 					<DatePickerInput
 						{...validationProps}

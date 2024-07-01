@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "checkbox": true,
+    "checkbox_readonly": true,
     "checkbox_null": null,
     "checkbox_table": [[true]],
     "checkbox_table_cond": [[]],
@@ -15,6 +16,10 @@
   "parameters": [
     {
       "id": "checkbox",
+      "type": "boolean"
+    },
+    {
+      "id": "checkbox_readonly",
       "type": "boolean"
     },
     {
@@ -75,6 +80,10 @@
           "type": "boolean"
         },
         {
+          "id": "checkbox_readonly",
+          "type": "boolean"
+        },
+        {
           "id": "checkbox2",
           "type": "boolean"
         },
@@ -111,6 +120,23 @@
           }
         },
         "class_name": "checkbox-control-class"
+      },
+      {
+        "parameter_ref": "checkbox_readonly",
+        "label": {
+          "default": "checkbox readonly"
+        },
+        "description": {
+          "default": "checkbox",
+          "link": {
+            "id": "link_for_checkbox",
+            "data": {
+              "something": "option data"
+            }
+          }
+        },
+        "class_name": "checkbox-control-class",
+        "read_only": true
       },
       {
         "parameter_ref": "checkbox_table",
@@ -258,6 +284,7 @@
         "type": "controls",
         "parameter_refs": [
           "checkbox",
+          "checkbox_readonly",
           "checkbox_default",
           "checkbox_undefined",
           "checkbox_null"
