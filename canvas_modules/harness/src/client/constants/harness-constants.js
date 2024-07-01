@@ -30,10 +30,6 @@ _defineConstant("SIDE_PANEL_CANVAS", "sidepanel-canvas");
 _defineConstant("SIDE_PANEL_MODAL", "sidepanel-modal");
 _defineConstant("SIDE_PANEL_API", "sidepanel-api");
 
-// Used by the autoLayout method in CanvasController
-_defineConstant("HORIZONTAL", "horizontal");
-_defineConstant("VERTICAL", "vertical");
-
 _defineConstant("EXAMPLE_APP_NONE", "None - use options below");
 _defineConstant("EXAMPLE_APP_FLOWS", "Flows");
 _defineConstant("EXAMPLE_APP_READ_ONLY", "Read Only");
