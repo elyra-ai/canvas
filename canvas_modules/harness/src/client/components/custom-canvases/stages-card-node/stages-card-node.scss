@@ -26,7 +26,7 @@
 		// Style the node body so it doesn't appear.
 		.d3-node-body-outline {
 			fill: $background;
-			stroke: #3E3E3E;
+			stroke: $border-inverse;
 		}
 
 		&.d3-node-supernode-expanded > .d3-node-body-outline {
@@ -120,6 +120,8 @@
 				cursor: context-menu;
 			}
 		}
+
+		
 
 	}
 
