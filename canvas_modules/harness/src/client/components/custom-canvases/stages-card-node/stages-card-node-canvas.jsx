@@ -23,7 +23,7 @@ import { Edit } from "@carbon/react/icons";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
-import StagesCardNodeFlow from "./stagesCardNodeCanvas.json";
+import StagesCardNodeFlow from "./stages-card-node-flow.json";
 import StagesCardNodePalette from "../../../../../test_resources/palettes/stagesPalette.json";
 
 export default class DetachedCanvas extends React.Component {
@@ -80,6 +80,7 @@ export default class DetachedCanvas extends React.Component {
 			enableParentClass: "stages-card-node",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Straight",
+			enableLinkMethod: "Freeform",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",

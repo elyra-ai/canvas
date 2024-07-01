@@ -19,15 +19,15 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
-import LogicCanvasFlow from "./logicCanvas.json";
-import LogicPalette from "./logicPalette.json";
+import LogicFlow from "./logic-flow.json";
+import LogicPalette from "./logic-palette.json";
 
 
 export default class LogicCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(LogicCanvasFlow);
+		this.canvasController.setPipelineFlow(LogicFlow);
 		this.canvasController.setPipelineFlowPalette(LogicPalette);
 
 		this.getConfig = this.getConfig.bind(this);
@@ -40,9 +40,10 @@ export default class LogicCanvas extends React.Component {
 			enableParentClass: "logic-canvas",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Straight",
+			enableLinkMethod: "Freeform",
 			enableLinkDirection: "TopBottom",
-			enableSnapToGridType: "During",
 			enableLinkSelection: "LinkOnly",
+			enableSnapToGridType: "During",
 			paletteInitialState: true,
 			enableInsertNodeDroppedOnLink: true,
 			enableHighlightNodeOnNewLinkDrag: true,

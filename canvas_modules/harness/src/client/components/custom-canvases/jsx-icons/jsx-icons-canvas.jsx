@@ -23,16 +23,16 @@ import { ChartColumn, CurrencyPound, Db2Database, DataTable, Debug, FaceCool,
 	Fish, Folder, FolderOpen, FolderMoveTo,
 	JoinInner, MachineLearning } from "@carbon/react/icons";
 
-import JsxIconsCanvasFlow from "./jsx-icons-canvas-flow.json";
-import JsxIconsCanvasPalette from "./jsx-icons-canvas-palette.json";
+import JsxIconsFlow from "./jsx-icons-flow.json";
+import JsxIconsPalette from "./jsx-icons-palette.json";
 
 export default class JsxIconsCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasController = new CanvasController();
 
-		this.canvasController.setPipelineFlowPalette(this.getConvertedPalette(JsxIconsCanvasPalette));
-		this.canvasController.setPipelineFlow(this.getConvertedFlow(JsxIconsCanvasFlow));
+		this.canvasController.setPipelineFlowPalette(this.getConvertedPalette(JsxIconsPalette));
+		this.canvasController.setPipelineFlow(this.getConvertedFlow(JsxIconsFlow));
 
 		this.getConfig = this.getConfig.bind(this);
 		this.beforeEditActionHandler = this.beforeEditActionHandler.bind(this);

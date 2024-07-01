@@ -20,9 +20,9 @@ import PropTypes from "prop-types";
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import { LINK_SELECTION_LINK_ONLY, PALETTE_LAYOUT_NONE,
 	STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY }
-	from "../../../../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
-import DetachedCanvasFlow from "./readOnlyCanvas.json";
-import DetachedPalette from "./readOnlyPalette.json";
+	from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
+import ReadOnlyFlow from "./read-only-flow.json";
+import ReadOnlyPalette from "./read-only-palette.json";
 
 import { Edit, EditOff, Locked } from "@carbon/react/icons";
 
@@ -35,8 +35,8 @@ export default class ReadOnlyCanvas extends React.Component {
 		};
 
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(DetachedCanvasFlow);
-		this.canvasController.setPipelineFlowPalette(DetachedPalette);
+		this.canvasController.setPipelineFlow(ReadOnlyFlow);
+		this.canvasController.setPipelineFlowPalette(ReadOnlyPalette);
 
 		this.getConfig = this.getConfig.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
@@ -78,6 +78,7 @@ export default class ReadOnlyCanvas extends React.Component {
 			enableParentClass: "read-only",
 			enableNodeFormatType: "Vertical",
 			enableLinkType: "Straight",
+			enableLinkMethod: "Freeform",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",

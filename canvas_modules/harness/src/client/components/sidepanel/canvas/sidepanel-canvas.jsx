@@ -23,26 +23,8 @@ import { TextInput, FileUploader, Button, Select, SelectItemGroup, SelectItem, C
 	from "@carbon/react";
 import { get, set } from "lodash";
 import {
-	NONE_SAVE_ZOOM,
-	LOCAL_STORAGE,
-	PIPELINE_FLOW,
-	NONE_DRAG,
-	DURING_DRAG,
-	AFTER_DRAG,
 	CHOOSE_FROM_LOCATION,
 	LOCAL_FILE_OPTION,
-	VERTICAL_FORMAT,
-	HORIZONTAL_FORMAT,
-	INTERACTION_MOUSE,
-	INTERACTION_TRACKPAD,
-	INTERACTION_CARBON,
-	IMAGE_DISPLAY_SVG_INLINE,
-	IMAGE_DISPLAY_LOAD_SVG_TO_DEFS,
-	IMAGE_DISPLAY_SVG_AS_IMAGE,
-	ASSOC_RIGHT_SIDE_CURVE,
-	ASSOC_STRAIGHT,
-	UNDERLAY_NONE,
-	UNDERLAY_VARIABLE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_STAGES,
@@ -60,9 +42,6 @@ import {
 	EXAMPLE_APP_NETWORK,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
-	PALETTE_FLYOUT,
-	PALETTE_MODAL,
-	PALETTE_NONE,
 	TIP_PALETTE_CATEGORIES,
 	TIP_PALETTE_NODE_TEMPLATES,
 	TIP_NODES,
@@ -70,8 +49,6 @@ import {
 	TIP_DECORATIONS,
 	TIP_LINKS,
 	TIP_STATE_TAG,
-	TOOLBAR_LAYOUT_NONE,
-	TOOLBAR_LAYOUT_TOP,
 	TOOLBAR_TYPE_DEFAULT,
 	TOOLBAR_TYPE_SUB_AREAS,
 	TOOLBAR_TYPE_SINGLE_BAR,
@@ -80,10 +57,22 @@ import {
 	TOOLBAR_TYPE_CARBON_BUTTONS,
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
 	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
-} from "../../../constants/constants.js";
+} from "../../../constants/harness-constants.js";
 
-import { STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY,
-	LINK_METHOD_FREEFORM, LINK_METHOD_PORTS,
+import {
+	NODE_FORMAT_VERTICAL,
+	NODE_FORMAT_HORIZONTAL,
+	STATE_TAG_NONE,
+	STATE_TAG_LOCKED,
+	STATE_TAG_READ_ONLY,
+	SNAP_TO_GRID_NONE,
+	SNAP_TO_GRID_AFTER,
+	SNAP_TO_GRID_DURING,
+	SAVE_ZOOM_NONE,
+	SAVE_ZOOM_PIPELINE_FLOW,
+	SAVE_ZOOM_LOCAL_STORAGE,
+	LINK_METHOD_PORTS,
+	LINK_METHOD_FREEFORM,
 	LINK_DIR_LEFT_RIGHT,
 	LINK_DIR_RIGHT_LEFT,
 	LINK_DIR_TOP_BOTTOM,
@@ -95,7 +84,22 @@ import { STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY,
 	LINK_SELECTION_NONE,
 	LINK_SELECTION_LINK_ONLY,
 	LINK_SELECTION_HANDLES,
-	LINK_SELECTION_DETACHABLE
+	LINK_SELECTION_DETACHABLE,
+	ASSOC_RIGHT_SIDE_CURVE,
+	ASSOC_STRAIGHT,
+	INTERACTION_MOUSE,
+	INTERACTION_TRACKPAD,
+	INTERACTION_CARBON,
+	IMAGE_DISPLAY_SVG_INLINE,
+	IMAGE_DISPLAY_LOAD_SVG_TO_DEFS,
+	IMAGE_DISPLAY_SVG_AS_IMAGE,
+	UNDERLAY_NONE,
+	UNDERLAY_VARIABLE,
+	PALETTE_LAYOUT_FLYOUT,
+	PALETTE_LAYOUT_MODAL,
+	PALETTE_LAYOUT_NONE,
+	TOOLBAR_LAYOUT_NONE,
+	TOOLBAR_LAYOUT_TOP
 } from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
 
 import FormsService from "../../../services/FormsService";
@@ -557,16 +561,16 @@ export default class SidePanelForms extends React.Component {
 						orientation="vertical"
 					>
 						<RadioButton
-							value={NONE_SAVE_ZOOM}
-							labelText={NONE_SAVE_ZOOM}
+							value={SAVE_ZOOM_NONE}
+							labelText={SAVE_ZOOM_NONE}
 						/>
 						<RadioButton
-							value={LOCAL_STORAGE}
-							labelText={LOCAL_STORAGE}
+							value={SAVE_ZOOM_LOCAL_STORAGE}
+							labelText={SAVE_ZOOM_LOCAL_STORAGE}
 						/>
 						<RadioButton
-							value={PIPELINE_FLOW}
-							labelText={PIPELINE_FLOW}
+							value={SAVE_ZOOM_PIPELINE_FLOW}
+							labelText={SAVE_ZOOM_PIPELINE_FLOW}
 						/>
 					</RadioButtonGroup>
 				</FormGroup>
@@ -609,16 +613,16 @@ export default class SidePanelForms extends React.Component {
 						orientation="vertical"
 					>
 						<RadioButton
-							value={NONE_DRAG}
-							labelText={NONE_DRAG}
+							value={SNAP_TO_GRID_NONE}
+							labelText={SNAP_TO_GRID_NONE}
 						/>
 						<RadioButton
-							value={DURING_DRAG}
-							labelText={DURING_DRAG}
+							value={SNAP_TO_GRID_DURING}
+							labelText={SNAP_TO_GRID_DURING}
 						/>
 						<RadioButton
-							value={AFTER_DRAG}
-							labelText={AFTER_DRAG}
+							value={SNAP_TO_GRID_AFTER}
+							labelText={SNAP_TO_GRID_AFTER}
 						/>
 					</RadioButtonGroup>
 				</FormGroup>
@@ -1077,12 +1081,12 @@ export default class SidePanelForms extends React.Component {
 					orientation="vertical"
 				>
 					<RadioButton
-						value={VERTICAL_FORMAT}
-						labelText={VERTICAL_FORMAT}
+						value={NODE_FORMAT_VERTICAL}
+						labelText={NODE_FORMAT_VERTICAL}
 					/>
 					<RadioButton
-						value={HORIZONTAL_FORMAT}
-						labelText={HORIZONTAL_FORMAT}
+						value={NODE_FORMAT_HORIZONTAL}
+						labelText={NODE_FORMAT_HORIZONTAL}
 					/>
 				</RadioButtonGroup>
 			</FormGroup>
@@ -1269,16 +1273,16 @@ export default class SidePanelForms extends React.Component {
 					orientation="vertical"
 				>
 					<RadioButton
-						value={PALETTE_FLYOUT}
-						labelText={PALETTE_FLYOUT}
+						value={PALETTE_LAYOUT_FLYOUT}
+						labelText={PALETTE_LAYOUT_FLYOUT}
 					/>
 					<RadioButton
-						value={PALETTE_MODAL}
-						labelText={PALETTE_MODAL}
+						value={PALETTE_LAYOUT_MODAL}
+						labelText={PALETTE_LAYOUT_MODAL}
 					/>
 					<RadioButton
-						value={PALETTE_NONE}
-						labelText={PALETTE_NONE}
+						value={PALETTE_LAYOUT_NONE}
+						labelText={PALETTE_LAYOUT_NONE}
 					/>
 				</RadioButtonGroup>
 			</FormGroup>
