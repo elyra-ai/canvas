@@ -1,0 +1,281 @@
+{
+	"doc_type": "pipeline",
+	"version": "3.0",
+	"json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+	"id": "987654321-c3d2-4da7-ab5a-2b9573e5e159",
+	"primary_pipeline": "3ae0efae-9a3c-4a1a-9fd9-185f442a81aa",
+	"pipelines": [{
+		"id": "3ae0efae-9a3c-4a1a-9fd9-185f442a81aa",
+		"nodes": [{
+			"id": "f8ae4e15-86fd-4947-bbec-43c5aa2b8927",
+			"type": "binding",
+			"op": "amazon_s3",
+			"app_data": {
+				"stages": {
+					"secondary_label": "First label"
+				},
+				"ui_data": {
+					"label": "Amazon S3",
+					"image": "/images/custom-canvases/stages/palette/AmazonS3PX.svg",
+					"x_pos": 0,
+					"y_pos": 193.04999999999998,
+					"description": "Data in Aamzon S3"
+				}
+			},
+			"outputs": [{
+				"id": "outPort",
+				"app_data": {
+					"ui_data": {
+						"cardinality": {
+							"min": 0,
+							"max": 1
+						},
+						"label": "Output Port"
+					}
+				}
+			}]
+		}, {
+			"id": "f7cc2320-0d0a-418d-b8bb-6488d5557a26",
+			"type": "execution_node",
+			"op": "sort",
+			"app_data": {
+				"stages": {
+					"secondary_label": "Second label"
+				},
+				"ui_data": {
+					"label": "Sort",
+					"image": "/images/custom-canvases/stages/palette/PxSort.svg",
+					"x_pos": 400,
+					"y_pos": 193.04999999999998,
+					"description": "Sorts the data"
+				}
+			},
+			"inputs": [{
+				"id": "inPort",
+				"app_data": {
+					"ui_data": {
+						"cardinality": {
+							"min": 0,
+							"max": 1
+						},
+						"label": "Input Port"
+					}
+				},
+				"links": [{
+					"id": "Link1",
+					"node_id_ref": "f8ae4e15-86fd-4947-bbec-43c5aa2b8927",
+					"port_id_ref": "outPort",
+					"app_data": {
+						"stages": {
+							"link_label": "Link One"
+						}
+					}
+				}]
+			}],
+			"outputs": [{
+				"id": "outPort",
+				"app_data": {
+					"ui_data": {
+						"cardinality": {
+							"min": 0,
+							"max": -1
+						},
+						"label": "Output Port"
+					}
+				}
+			}]
+		}, {
+			"id": "f1004052-23f7-4681-a599-8fdfdcc79427",
+			"type": "execution_node",
+			"op": "filter",
+			"app_data": {
+				"stages": {
+					"secondary_label": "Third label"
+				},
+				"ui_data": {
+					"label": "Filter",
+					"image": "/images/custom-canvases/stages/palette/PxFilter.svg",
+					"x_pos": 760,
+					"y_pos": 193.04999999999998,
+					"description": "Samples the data"
+				}
+			},
+			"inputs": [{
+				"id": "inPort",
+				"app_data": {
+					"ui_data": {
+						"cardinality": {
+							"min": 0,
+							"max": 1
+						},
+						"label": "Input Port"
+					}
+				},
+				"links": [{
+					"id": "Link2",
+					"node_id_ref": "f7cc2320-0d0a-418d-b8bb-6488d5557a26",
+					"port_id_ref": "outPort",
+					"app_data": {
+						"stages": {
+							"link_label": "Link Two"
+						}
+					}
+				}]
+			}],
+			"outputs": [{
+				"id": "outPort",
+				"app_data": {
+					"ui_data": {
+						"cardinality": {
+							"min": 0,
+							"max": -1
+						},
+						"label": "Output Port"
+					}
+				}
+			}]
+		}, {
+			"id": "f929659b-2c47-4ece-8dc2-14cdeaed96a9",
+			"type": "execution_node",
+			"op": "merge",
+			"app_data": {
+				"stages": {
+					"secondary_label": "Fourth label"
+				},
+				"ui_data": {
+					"label": "Merge",
+					"image": "/images/custom-canvases/stages/palette/PxMerge.svg",
+					"x_pos": 1160,
+					"y_pos": 193.04999999999998,
+					"description": "Combines data from multiple data sources"
+				}
+			},
+			"inputs": [{
+				"id": "inPort",
+				"app_data": {
+					"ui_data": {
+						"cardinality": {
+							"min": 0,
+							"max": 1
+						},
+						"label": "Input Port"
+					}
+				},
+				"links": [{
+					"id": "Link3",
+					"node_id_ref": "f1004052-23f7-4681-a599-8fdfdcc79427",
+					"port_id_ref": "outPort",
+					"app_data": {
+						"stages": {
+							"link_label": "Link Three"
+						}
+					}
+				}]
+			}],
+			"outputs": [{
+				"id": "outPort",
+				"app_data": {
+					"ui_data": {
+						"cardinality": {
+							"min": 0,
+							"max": -1
+						},
+						"label": "Output Port"
+					}
+				}
+			}]
+		}, {
+			"id": "6eb20e0c-fc13-4581-bd0a-d62b3b2b5d32",
+			"type": "binding",
+			"op": "peek",
+			"app_data": {
+				"stages": {
+					"secondary_label": "Fifth label"
+				},
+				"ui_data": {
+					"label": "Peek",
+					"image": "/images/custom-canvases/stages/palette/PxPeek.svg",
+					"x_pos": 1560,
+					"y_pos": 193.04999999999998,
+					"description": "Enables a peek at something."
+				}
+			},
+			"inputs": [{
+				"id": "inPort",
+				"app_data": {
+					"ui_data": {
+						"cardinality": {
+							"min": 0,
+							"max": 1
+						},
+						"label": "Input Port"
+					}
+				},
+				"links": [{
+					"id": "Link4",
+					"node_id_ref": "f929659b-2c47-4ece-8dc2-14cdeaed96a9",
+					"port_id_ref": "outPort",
+					"app_data": {
+						"stages": {
+							"link_label": "Link Four"
+						}
+					}
+				}]
+			}]
+		}, {
+			"id": "003181b3-a406-4dfb-8574-308e7b76f8d6",
+			"type": "binding",
+			"op": "remove_duplicates",
+			"app_data": {
+				"stages": {
+					"secondary_label": "Sixth label"
+				},
+				"ui_data": {
+					"label": "Remove Duplicates",
+					"image": "/images/custom-canvases/stages/palette/PxRemDup.svg",
+					"x_pos": 1560,
+					"y_pos": 386.09999999999997,
+					"description": "Removes duplcate rows"
+				}
+			},
+			"inputs": [{
+				"id": "inPort",
+				"app_data": {
+					"ui_data": {
+						"cardinality": {
+							"min": 0,
+							"max": 1
+						},
+						"label": "Input Port"
+					}
+				},
+				"links": [{
+					"id": "Link5",
+					"node_id_ref": "f929659b-2c47-4ece-8dc2-14cdeaed96a9",
+					"port_id_ref": "outPort",
+					"app_data": {
+						"stages": {
+							"link_label": "Link Five"
+						}
+					}
+				}]
+			}]
+		}],
+		"app_data": {
+			"ui_data": {
+				"comments": [{
+					"id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
+					"x_pos": 0,
+					"y_pos": 10,
+					"width": 320,
+					"height": 150.15,
+					"class_name": "d3-comment-rect",
+					"content": "# Stages Card Node Canvas\n\n## This canvas shows card nodes showing stages.",
+					"associated_id_refs": []
+				}]
+			}
+		},
+		"runtime_ref": ""
+	}],
+	"schemas": []
+}
