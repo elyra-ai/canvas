@@ -46,14 +46,17 @@ import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
 import StagesCanvas from "./components/custom-canvases/stages/stages-canvas";
 import StagesCardNodeCanvas from "./components/custom-canvases/stages-card-node/stages-card-node-canvas";
 import LogicCanvas from "./components/custom-canvases/logic/logic-canvas";
-import ReadOnlyCanvas from "./components/custom-canvases/read-only/read-only";
-import ProgressCanvas from "./components/custom-canvases/progress/progress";
+import ReadOnlyCanvas from "./components/custom-canvases/read-only/read-only-canvas";
+import ProgressCanvas from "./components/custom-canvases/progress/progress-canvas";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
 import JsxIconsCanvas from "./components/custom-canvases/jsx-icons/jsx-icons-canvas";
-import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon";
-import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping";
+import AllPortsCanvas from "./components/custom-canvases/all-ports/all-ports-canvas";
+import ParallaxCanvas from "./components/custom-canvases/parallax/parallax-canvas";
+import NetworkCanvas from "./components/custom-canvases/network/network-canvas";
+import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon-canvas";
+import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping-canvas";
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console/console.jsx";
@@ -94,15 +97,6 @@ import {
 	SIDE_PANEL_MODAL,
 	SIDE_PANEL_API,
 	CHOOSE_FROM_LOCATION,
-	INTERACTION_MOUSE,
-	VERTICAL_FORMAT,
-	NONE_SAVE_ZOOM,
-	CURVE_LINKS,
-	DIRECTION_LEFT_RIGHT,
-	IMAGE_DISPLAY_SVG_INLINE,
-	LINK_SELECTION_NONE,
-	ASSOC_STRAIGHT,
-	UNDERLAY_NONE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_STAGES,
@@ -115,18 +109,18 @@ import {
 	EXAMPLE_APP_READ_ONLY,
 	EXAMPLE_APP_PROGRESS,
 	EXAMPLE_APP_JSX_ICONS,
+	EXAMPLE_APP_ALL_PORTS,
+	EXAMPLE_APP_PARALLAX,
+	EXAMPLE_APP_NETWORK,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	CUSTOM,
-	PALETTE_FLYOUT,
 	PROPERTIES_FLYOUT,
-	NONE_DRAG,
 	INPUT_PORT,
 	OUTPUT_PORT,
 	NOTIFICATION_MESSAGE_TYPE,
 	PARAMETER_DEFS,
 	PRIMARY,
-	TOOLBAR_LAYOUT_TOP,
 	TOOLBAR_TYPE_DEFAULT,
 	TOOLBAR_TYPE_SUB_AREAS,
 	TOOLBAR_TYPE_SINGLE_BAR,
@@ -136,9 +130,24 @@ import {
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
 	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE,
 	CATEGORY_VIEW_ACCORDIONS
-} from "./constants/constants.js";
+} from "./constants/harness-constants.js";
 
-import { STATE_TAG_NONE } from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
+import {
+	NODE_FORMAT_VERTICAL,
+	INTERACTION_MOUSE,
+	SNAP_TO_GRID_NONE,
+	SAVE_ZOOM_NONE,
+	STATE_TAG_NONE,
+	LINK_TYPE_CURVE,
+	LINK_DIR_LEFT_RIGHT,
+	LINK_METHOD_PORTS,
+	LINK_SELECTION_NONE,
+	ASSOC_STRAIGHT,
+	IMAGE_DISPLAY_SVG_INLINE,
+	UNDERLAY_NONE,
+	PALETTE_LAYOUT_FLYOUT,
+	TOOLBAR_LAYOUT_TOP
+} from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
 import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../test_resources/diagrams/externalSubFlowCanvas2.json";
@@ -179,25 +188,28 @@ class App extends React.Component {
 			selectedAssocLinkCreation: false,
 			selectedMarkdownInComments: false,
 			selectedContextToolbar: false,
-			selectedSnapToGridType: NONE_DRAG,
+			selectedSnapToGridType: SNAP_TO_GRID_NONE,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
 			selectedInteractionType: INTERACTION_MOUSE,
-			selectedNodeFormatType: VERTICAL_FORMAT,
+			selectedNodeFormatType: NODE_FORMAT_VERTICAL,
 			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
 			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
-			selectedSaveZoom: NONE_SAVE_ZOOM,
+			selectedSaveZoom: SAVE_ZOOM_NONE,
 			selectedZoomIntoSubFlows: false,
 			selectedSingleOutputPortDisplay: false,
 			selectedImageDisplay: IMAGE_DISPLAY_SVG_INLINE,
-			selectedLinkType: CURVE_LINKS,
-			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
+			selectedLinkType: LINK_TYPE_CURVE,
+			selectedLinkMethod: LINK_METHOD_PORTS,
+			selectedLinkDirection: LINK_DIR_LEFT_RIGHT,
 			selectedLinkSelection: LINK_SELECTION_NONE,
 			selectedLinkReplaceOnNewConnection: false,
+			selectedStraightLinksAsFreeform: true,
+			selectedSelfRefLinks: false,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
 			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedExampleApp: EXAMPLE_APP_NONE,
-			selectedPaletteLayout: PALETTE_FLYOUT,
+			selectedPaletteLayout: PALETTE_LAYOUT_FLYOUT,
 			selectedStateTag: STATE_TAG_NONE,
 			selectedTipConfig: {
 				"palette": {
@@ -2041,6 +2053,7 @@ class App extends React.Component {
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableImageDisplay: this.state.selectedImageDisplay,
 			enableLinkType: this.state.selectedLinkType,
+			enableLinkMethod: this.state.selectedLinkMethod,
 			enableLinkDirection: this.state.selectedLinkDirection,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
 			enableParentClass: this.getParentClass(),
@@ -2052,6 +2065,8 @@ class App extends React.Component {
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableLinkSelection: this.state.selectedLinkSelection,
 			enableLinkReplaceOnNewConnection: this.state.selectedLinkReplaceOnNewConnection,
+			enableStraightLinksAsFreeform: this.state.selectedStraightLinksAsFreeform,
+			enableSelfRefLinks: this.state.selectedSelfRefLinks,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enableMarkdownInComments: this.state.selectedMarkdownInComments,
 			enableContextToolbar: this.state.selectedContextToolbar,
@@ -2620,6 +2635,27 @@ class App extends React.Component {
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_JSX_ICONS) {
 			firstCanvas = (
 				<JsxIconsCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_ALL_PORTS) {
+			firstCanvas = (
+				<AllPortsCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_PARALLAX) {
+			firstCanvas = (
+				<ParallaxCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_NETWORK) {
+			firstCanvas = (
+				<NetworkCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
