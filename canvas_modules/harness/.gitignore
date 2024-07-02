@@ -54,3 +54,6 @@ fingerprints.json
 # Pen test related
 pen-test/temp.json
 pen-test/cookies
+
+.nyc_output
+instrumented
