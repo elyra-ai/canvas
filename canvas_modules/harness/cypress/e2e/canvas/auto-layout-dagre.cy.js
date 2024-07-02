@@ -122,6 +122,77 @@ describe("Test for toolbar horizontal and vertical layout", function() {
 	});
 });
 
+describe("Test for toolbar horizontal and vertical layout for a detached link", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("detachedLinksCanvas.json");
+		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray",
+			"selectedLinkSelection": "Detachable" });
+	});
+
+	it("Test a detached link can be created and test horizontal and vertical autolayout", function() {
+		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfLinks(13);
+
+		// Create detached link
+		cy.linkNodeOutputPortToPointOnCanvas("Binding (entry) node", "outPort", 200, 500);
+		cy.verifyNumberOfPortDataLinks(9); // One new data link should be created.
+		cy.verifyNumberOfLinks(14);
+
+		// Click on vertical autolayout button
+		cy.clickToolbarArrangeVertically();
+		cy.clickToolbarZoomToFit();
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNodeTransform("Binding (entry) node", 70, 165);
+		cy.verifyNodeTransform("Execution node", 332.5, 165);
+		cy.verifyNodeTransform("Select", 709, 428.5);
+		cy.verifyNodeTransform("Super node", 542.5, 165);
+		cy.verifyNodeTransform("Model Node", 700, 270);
+		cy.verifyNodeTransform("Binding (exit) node", 542.5, 390);
+		cy.verifyNumberOfPortDataLinks(9);
+		cy.verifyNumberOfLinks(14);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNodeTransform("Binding (entry) node", 200, 50);
+		cy.verifyNodeTransform("Execution node", 500, 205);
+		cy.verifyNodeTransform("Select", 500, 670);
+		cy.verifyNodeTransform("Super node", 500, 360);
+		cy.verifyNodeTransform("Model Node", 350, 670);
+		cy.verifyNodeTransform("Binding (exit) node", 565, 515);
+		cy.verifyNumberOfPortDataLinks(9); // The data link should have been added back.
+		cy.verifyNumberOfLinks(14);
+
+		// Click on horizontal autolayout button
+		cy.clickToolbarArrangeHorizontally();
+		cy.clickToolbarZoomToFit();
+
+		// Undo
+		cy.clickToolbarUndo();
+		cy.verifyNodeTransform("Binding (entry) node", 200, 50);
+		cy.verifyNodeTransform("Execution node", 500, 205);
+		cy.verifyNodeTransform("Select", 500, 670);
+		cy.verifyNodeTransform("Super node", 500, 360);
+		cy.verifyNodeTransform("Model Node", 350, 670);
+		cy.verifyNodeTransform("Binding (exit) node", 565, 515);
+		cy.verifyNumberOfPortDataLinks(9);
+		cy.verifyNumberOfLinks(14);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNodeTransform("Binding (entry) node", 50, 205);
+		cy.verifyNodeTransform("Execution node", 200, 515);
+		cy.verifyNodeTransform("Select", 650, 515);
+		cy.verifyNodeTransform("Super node", 350, 515);
+		cy.verifyNodeTransform("Model Node", 650, 360);
+		cy.verifyNodeTransform("Binding (exit) node", 500, 582.5);
+		cy.verifyNumberOfPortDataLinks(9);
+		cy.verifyNumberOfLinks(14);
+	});
+});
+
 describe("Test the horizontal layout of a multiport node with many descendants", function() {
 	beforeEach(() => {
 		cy.visit("/");
