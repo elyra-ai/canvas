@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import { Play, StopFilledAlt } from "@carbon/react/icons";
 
-import ProgressCanvasFlow from "./progress.json";
+import ProgressFlow from "./progress-flow.json";
 import ProgressPalette from "../../../../../test_resources/palettes/modelerPalette.json";
 
 const nodeAnimation =
@@ -71,7 +71,7 @@ export default class ProgressCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(ProgressCanvasFlow);
+		this.canvasController.setPipelineFlow(ProgressFlow);
 		this.canvasController.setPipelineFlowPalette(ProgressPalette);
 
 		this.getConfig = this.getConfig.bind(this);
@@ -235,7 +235,6 @@ export default class ProgressCanvas extends React.Component {
 		this.canvasController.setLinksStyle(this.link1, removeLinkStyle, true);
 		this.canvasController.setLinksStyle(this.link2, removeLinkStyle, true);
 		this.canvasController.setLinksStyle(this.link3, removeLinkStyle, true);
-		this.canvasController.setLinksStyle(this.link4, removeLinkStyle, true);
 	}
 
 	clearNodeDecorations() {

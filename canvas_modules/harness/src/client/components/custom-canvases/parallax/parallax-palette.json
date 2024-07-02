@@ -1,0 +1,898 @@
+{
+  "version": "3.0",
+  "categories": [
+    {
+      "label": "Blue Nodes",
+      "image": "/images/palette-categories/sources_open.svg",
+      "id": "blue-nodes",
+      "node_types": [
+        {
+          "id": "oracle-node",
+          "type": "execution_node",
+          "op": "oracle",
+          "app_data": {
+            "ui_data": {
+              "label": "Oracle",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "Oracle node",
+              "class_name": "blue"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 2"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "filesystem-node",
+          "type": "execution_node",
+          "op": "filesystem",
+          "app_data": {
+            "ui_data": {
+              "label": "Filesystem",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "Filesyatem node",
+              "class_name": "blue"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 2"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "terradata-node",
+          "type": "execution_node",
+          "op": "terradata",
+          "app_data": {
+            "ui_data": {
+              "label": "Terradata",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "Terradata node",
+              "class_name": "blue"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 2"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "mssql-node",
+          "type": "execution_node",
+          "op": "mssql",
+          "app_data": {
+            "ui_data": {
+              "label": "MSSql",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "MSSql node",
+              "class_name": "blue"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 2"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Red Nodes",
+      "image": "/images/palette-categories/sources_open.svg",
+      "id": "red-nodes",
+      "node_types": [
+        {
+          "id": "ifpc-node",
+          "type": "execution_node",
+          "op": "IFPC",
+          "app_data": {
+            "ui_data": {
+              "label": "IFPC",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "IFPC node",
+              "class_name": "red"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 2"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "ssis-node",
+          "type": "execution_node",
+          "op": "ssis",
+          "app_data": {
+            "ui_data": {
+              "label": "SSIS",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "SSIS node",
+              "class_name": "red"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 2"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Salmon Nodes",
+      "image": "/images/palette-categories/sources_open.svg",
+      "id": "salmon-nodes",
+      "node_types": [
+        {
+          "id": "teradata-tpt-node",
+          "type": "execution_node",
+          "op": "Teradata TPT",
+          "app_data": {
+            "ui_data": {
+              "label": "Teradata TPT",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "Teradata TPT node",
+              "class_name": "salmon"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 2"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "teradata-ddl-node",
+          "type": "execution_node",
+          "op": "Teradata DDL",
+          "app_data": {
+            "ui_data": {
+              "label": "Teradata DDL",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "Teradata DDL node",
+              "class_name": "salmon"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 2"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "teradata-bteq-node",
+          "type": "execution_node",
+          "op": "Teradata BTEQ",
+          "app_data": {
+            "ui_data": {
+              "label": "Teradata BTEQ",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "Teradata BTEQ node",
+              "class_name": "salmon"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 2"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "mssql-ddl-node",
+          "type": "execution_node",
+          "op": "mssql-ddl",
+          "app_data": {
+            "ui_data": {
+              "label": "MSSQL DDL",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "MSSQL DDL node",
+              "class_name": "salmon"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 2"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Teal Nodes",
+      "image": "/images/palette-categories/sources_open.svg",
+      "id": "teal-nodes",
+      "node_types": [
+        {
+          "id": "ssrs-node",
+          "type": "execution_node",
+          "op": "SSRS",
+          "app_data": {
+            "ui_data": {
+              "label": "SSRS",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "SSRS node",
+              "class_name": "teal"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 2"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "excel-node",
+          "type": "execution_node",
+          "op": "excel",
+          "app_data": {
+            "ui_data": {
+              "label": "Excel",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "Excel node",
+              "class_name": "teal"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 2"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Gray Nodes",
+      "image": "/images/palette-categories/sources_open.svg",
+      "id": "gray-nodes",
+      "node_types": [
+        {
+          "id": "ssas-node",
+          "type": "execution_node",
+          "op": "SSAS",
+          "app_data": {
+            "ui_data": {
+              "label": "SSAS",
+              "x_pos": 89,
+              "y_pos": 99.5,
+              "description": "SSAS node",
+              "class_name": "gray"
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            },
+            {
+              "id": "inPort2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 2"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
