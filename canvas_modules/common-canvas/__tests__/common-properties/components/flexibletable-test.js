@@ -17,14 +17,15 @@
 import React from "react";
 import FlexibleTable from "../../../src/common-properties/components/flexible-table";
 import Controller from "../../../src/common-properties/properties-controller";
-import tableUtils from "./../../_utils_/table-utils";
-
-import { mountWithIntl } from "../../_utils_/intl-utils";
+import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
+import { renderWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
+import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
 import fieldPickerParamDef from "./../../test_resources/paramDefs/fieldpicker_paramDef.json";
 import glmmParamDef from "./../../test_resources/paramDefs/glmm_paramDef.json";
-import propertyUtils from "../../_utils_/property-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
+import { fireEvent } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -113,10 +114,22 @@ const alignTop = true;
 const scrollToRow = 3;
 
 
+const mockFlexibleTable = jest.fn();
+jest.mock("../../../src/common-properties/components/flexible-table",
+	() => (props) => mockFlexibleTable(props)
+);
+
+mockFlexibleTable.mockImplementation((props) => {
+	const FlexibleTableComp = jest.requireActual(
+		"../../../src/common-properties/components/flexible-table",
+	).default;
+	return <FlexibleTableComp {...props} />;
+});
+
 describe("FlexibleTable renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = mountWithIntl(
+		renderWithIntl(
 			<FlexibleTable
 				sortable={sortFields}
 				filterable={filterFields}
@@ -130,18 +143,21 @@ describe("FlexibleTable renders correctly", () => {
 			/>
 		);
 
-		expect(wrapper.prop("sortable")).to.equal(sortFields);
-		expect(wrapper.prop("filterable")).to.equal(filterFields);
-		expect(wrapper.prop("columns")).to.equal(headers);
-		expect(wrapper.prop("data")).to.equal(rows);
-		expect(wrapper.prop("scrollToRow")).to.equal(scrollToRow);
-		expect(wrapper.prop("alignTop")).to.equal(alignTop);
-		expect(wrapper.prop("onFilter")).to.equal(onFilter);
-		expect(wrapper.prop("onSort")).to.equal(onSort);
+		expectJest(mockFlexibleTable).toHaveBeenCalledWith({
+			"sortable": sortFields,
+			"filterable": filterFields,
+			"columns": headers,
+			"data": rows,
+			"scrollToRow": scrollToRow,
+			"alignTop": alignTop,
+			"onFilter": onFilter,
+			"onSort": onSort,
+			"controller": controller,
+		});
 	});
 
 	it("should render a `FlexibleTable`", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FlexibleTable
 				sortable={sortFields}
 				filterable={filterFields}
@@ -154,21 +170,23 @@ describe("FlexibleTable renders correctly", () => {
 				controller={controller}
 			/>
 		);
-		const table = wrapper.find("div.properties-ft-control-container");
+		const { container } = wrapper;
+
+		const table = container.getElementsByClassName("properties-ft-control-container");
 		expect(table).to.have.length(1);
-		expect(tableUtils.getTableHeaderRows(table)).to.have.length(1);
-		expect(table.find(".properties-ft-container-panel")).to.have.length(1);
-		expect(tableUtils.getTableRows(table)).to.have.length(6);
+		expect(tableUtilsRTL.getTableHeaderRows(table[0])).to.have.length(1);
+		expect(table[0].querySelectorAll(".properties-ft-container-panel")).to.have.length(1);
+		expect(tableUtilsRTL.getTableRows(table[0])).to.have.length(6);
 
 	});
 
 	it("should return filter text in `FlexibleTable`", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FlexibleTable
 				sortable={sortFields}
 				filterable={filterFields}
 				columns={headers}
-				data={rows}
+				data={rows}s
 				scrollToRow={scrollToRow}
 				alignTop={alignTop}
 				onFilter={onFilter}
@@ -176,15 +194,15 @@ describe("FlexibleTable renders correctly", () => {
 				controller={controller}
 			/>
 		);
-
-		const input = wrapper.find("div.properties-ft-search-container").find("input");
+		const { container } = wrapper;
+		const input = container.querySelector("div.properties-ft-search-container").querySelectorAll("input");
 		expect(input).to.have.length(1);
-		input.simulate("change", { target: { value: "e" } });
+		fireEvent.change(input[0], { target: { value: "e" } });
 		// the verification is that the onFilter function gets the text as input
 	});
 
 	it("should return sort text in `FlexibleTable`", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FlexibleTable
 				sortable={sortFields}
 				filterable={filterFields}
@@ -197,33 +215,38 @@ describe("FlexibleTable renders correctly", () => {
 				controller={controller}
 			/>
 		);
+		const { container } = wrapper;
 		// verify that no columns are active sort column class
-		var input = wrapper.find(".properties-vt-column.sort-column-active");
+		let input = container.querySelectorAll(".properties-vt-column.sort-column-active");
 		expect(input).to.have.length(0);
 
 		// sort the first sort column
-		tableUtils.clickHeaderColumnSort(wrapper, 0);
+		tableUtilsRTL.clickHeaderColumnSort(container, 0);
 		// the verification is that the onSort function gets invoked with proper column name
 
 		// verify that the first sort column has the active sort column class
-		input = wrapper.find(".properties-vt-column.sort-column-active");
+		input = container.querySelectorAll(".properties-vt-column.sort-column-active");
 		expect(input).to.have.length(1);
-		expect(input.find("div.tooltip-trigger").text()).to.equals("Field Name");
+		expect(input[0].querySelector("div.tooltip-trigger").textContent).to.equals("Field Name");
 
 		// sort the second sort column
-		tableUtils.clickHeaderColumnSort(wrapper, 1);
+		tableUtilsRTL.clickHeaderColumnSort(container, 1);
 		expect(input).to.have.length(1);
 		// the verification is that the onSort function gets invoked with proper column name
 
 		// verify that the first sort column is not active and the second sort column is active
-		input = wrapper.find(".ReactVirtualized__Table__sortableHeaderColumn").find(".properties-vt-column");
+		const sortCol = container.querySelectorAll(".ReactVirtualized__Table__sortableHeaderColumn");
+		input = [];
+		for (let i = 0; i < sortCol.length; i++) {
+			input.push(sortCol[i].querySelector(".properties-vt-column"));
+		}
 		expect(input).to.have.length(2);
-		expect(input.at(0).hasClass("sort-column-active")).to.be.false;
-		expect(input.at(1).hasClass("sort-column-active")).to.be.true;
+		expect(input[0].className.includes("sort-column-activ")).to.be.false;
+		expect(input[1].className.includes("sort-column-active")).to.be.true;
 	});
 
 	it("should handle row click in `FlexibleTable`", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FlexibleTable
 				sortable={sortFields}
 				filterable={filterFields}
@@ -238,16 +261,17 @@ describe("FlexibleTable renders correctly", () => {
 				updateRowSelections={updateRowSelections}
 			/>
 		);
-		const tableBody = wrapper.find("div.properties-ft-control-container");
+		const { container } = wrapper;
+		const tableBody = container.querySelectorAll("div.properties-ft-control-container");
 		expect(tableBody).to.have.length(1);
-		tableUtils.clickTableRows(tableBody, [0]);
+		tableUtilsRTL.clickTableRows(tableBody[0], [0]);
 		expect(updateRowSelections).to.have.property("callCount", 1);
 	});
 
 	it("search bar in `FlexibleTable` should have label", () => {
 		// We need getReactIntl() in the controller which will set the tableLabel in searchBarLabel
-		const renderedObject = propertyUtils.flyoutEditorForm(fieldPickerParamDef);
-		const wrapper = mountWithIntl(
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(fieldPickerParamDef);
+		const wrapper = renderWithIntl(
 			<FlexibleTable
 				sortable={sortFields}
 				filterable={filterFields}
@@ -261,15 +285,15 @@ describe("FlexibleTable renders correctly", () => {
 				tableLabel="example"
 			/>
 		);
-
-		const searchBarLabel = wrapper.find("div.properties-ft-search-container").text();
+		const { container } = wrapper;
+		const searchBarLabel = container.querySelector("div.properties-ft-search-container").textContent;
 		expect(searchBarLabel).to.equal("Search in example table");
 	});
 
 	it("search bar in `FlexibleTable` can have custom placeholder", () => {
 		// To set custom search placeholder, pass the prop "searchPlaceholder" when calling flexible table
 		const searchPlaceholder = "Custom search placeholder";
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FlexibleTable
 				columns={headers}
 				filterable={filterFields}
@@ -278,13 +302,13 @@ describe("FlexibleTable renders correctly", () => {
 				searchPlaceholder={searchPlaceholder}
 			/>
 		);
-
-		const searchBar = wrapper.find("div.properties-ft-search-container").find("input");
-		expect(searchBar.props()).to.have.property("placeholder", searchPlaceholder);
+		const { container } = wrapper;
+		const searchBar = container.querySelector("div.properties-ft-search-container").querySelector("input");
+		expect(searchBar.placeholder).to.equal(searchPlaceholder);
 	});
 
 	it("search bar in `FlexibleTable` shows default placeholder when searchPlaceholder is not passed", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FlexibleTable
 				columns={headers}
 				filterable={filterFields}
@@ -292,27 +316,27 @@ describe("FlexibleTable renders correctly", () => {
 				data={[]}
 			/>
 		);
-
-		const searchBar = wrapper.find("div.properties-ft-search-container").find("input");
-		expect(searchBar.props()).to.have.property("placeholder", "Find in column Filter Field");
+		const { container } = wrapper;
+		const searchBar = container.querySelector("div.properties-ft-search-container").querySelector("input");
+		expect(searchBar.placeholder).to.equal("Find in column Filter Field");
 	});
 
 
 	it("Empty `FlexibleTable` should have emptyTablePlaceholder text", () => {
 		const emptyTablePlaceholder = "This is an empty table placeholder";
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FlexibleTable
 				columns={headers}
 				data={[]}
 				emptyTablePlaceholder={emptyTablePlaceholder}
 			/>
 		);
-
-		const tableBody = wrapper.find("div.properties-ft-control-container");
+		const { container } = wrapper;
+		const tableBody = container.querySelectorAll("div.properties-ft-control-container");
 		expect(tableBody).to.have.length(1);
-		const emptyTableDiv = tableBody.find("div.properties-ft-empty-table");
+		const emptyTableDiv = tableBody[0].querySelectorAll("div.properties-ft-empty-table");
 		expect(emptyTableDiv).to.have.length(1);
-		expect(emptyTableDiv.text()).to.equal(emptyTablePlaceholder);
+		expect(emptyTableDiv[0].textContent).to.equal(emptyTablePlaceholder);
 	});
 
 	it("Empty `FlexibleTable` should have emptyTablePlaceholder react element", () => {
@@ -321,70 +345,72 @@ describe("FlexibleTable renders correctly", () => {
 				<p>This is an empty table placeholder element.</p>
 			</div>
 		);
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FlexibleTable
 				columns={headers}
 				data={[]}
 				emptyTablePlaceholder={emptyTablePlaceholder}
 			/>
 		);
-
-		const tableBody = wrapper.find("div.properties-ft-control-container");
+		const { container } = wrapper;
+		const tableBody = container.querySelectorAll("div.properties-ft-control-container");
 		expect(tableBody).to.have.length(1);
-		const emptyTableDiv = tableBody.find("div.properties-ft-empty-table");
+		const emptyTableDiv = tableBody[0].querySelectorAll("div.properties-ft-empty-table");
 		expect(emptyTableDiv).to.have.length(1);
-		expect(emptyTableDiv.find("div.empty-table-text")).to.have.length(1);
-		expect(emptyTableDiv.text()).to.equal("This is an empty table placeholder element.");
+		expect(emptyTableDiv[0].querySelectorAll("div.empty-table-text")).to.have.length(1);
+		expect(emptyTableDiv[0].textContent).to.equal("This is an empty table placeholder element.");
 	});
 
 	it("Empty `FlexibleTable` shows blank text when emptyTablePlaceholder is not defined", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FlexibleTable
 				columns={headers}
 				data={[]}
 			/>
 		);
+		const { container } = wrapper;
 
-		const tableBody = wrapper.find("div.properties-ft-control-container");
+		const tableBody = container.querySelectorAll("div.properties-ft-control-container");
 		expect(tableBody).to.have.length(1);
-		const emptyTableDiv = tableBody.find("div.properties-ft-empty-table");
+		const emptyTableDiv = tableBody[0].querySelectorAll("div.properties-ft-empty-table");
 		expect(emptyTableDiv).to.have.length(1);
-		expect(emptyTableDiv.text()).to.equal("");
+		expect(emptyTableDiv[0].textContent).to.equal("");
 	});
 
 	it("Empty `FlexibleTable` uses place_holder_text from uiHints", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(glmmParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(glmmParamDef);
 		const wrapper = renderedObject.wrapper;
-
+		const { container } = wrapper;
 		// Terms table is an empty table using place_holder_text default value
-		const termsTable = wrapper.find("div[data-id='properties-ctrl-emeansUI']");
+		const termsTable = container.querySelectorAll("div[data-id='properties-ctrl-emeansUI']");
 		expect(termsTable).to.have.length(1);
-		const emptyTableDiv = termsTable.find("div.properties-ft-empty-table");
+		const emptyTableDiv = termsTable[0].querySelectorAll("div.properties-ft-empty-table");
 		expect(emptyTableDiv).to.have.length(1);
-		expect(emptyTableDiv.text()).to.equal("No terms added");
+		expect(emptyTableDiv[0].textContent).to.equal("No terms added");
 
 
 		// Fields table is an empty table using place_holder_text resource_key
-		const fieldsTable = wrapper.find("div[data-id='properties-ctrl-covariance_list']");
+		const fieldsTable = container.querySelectorAll("div[data-id='properties-ctrl-covariance_list']");
 		expect(fieldsTable).to.have.length(1);
-		const emptyTableDiv1 = fieldsTable.find("div.properties-ft-empty-table");
+		const emptyTableDiv1 = fieldsTable[0].querySelectorAll("div.properties-ft-empty-table");
 		expect(emptyTableDiv1).to.have.length(1);
-		expect(emptyTableDiv1.text()).to.equal(glmmParamDef.resources["covariance_list.placeholder.label"]);
+		expect(emptyTableDiv1[0].textContent).to.equal(glmmParamDef.resources["covariance_list.placeholder.label"]);
 	});
 
 	it("should readjust height when row changes", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FlexibleTable
 				columns={headers}
 				data={rows}
 				rows={5}
 			/>
 		);
-		const orgTableHeight = wrapper.find("FlexibleTable").state("tableHeight");
-		expect(orgTableHeight).to.equal(192);
+		const { container, rerender } = wrapper;
+		const orgTable = container.querySelector(".properties-ft-container-wrapper");
+		expect(orgTable.style.height).to.equal("192px");
 
-		wrapper.setProps({ rows: 2 });
-		const newTableHeight = wrapper.find("FlexibleTable").state("tableHeight");
-		expect(newTableHeight).to.equal(96);
+		rerender(<FlexibleTable columns={headers} data={rows} rows={2} />);
+		const newTable = container.querySelector(".properties-ft-container-wrapper");
+		expect(newTable.style.height).to.equal("96px");
 	});
 });

@@ -16,8 +16,23 @@
 
 import React from "react";
 import ValidationMessage from "../../../src/common-properties/components/validation-message";
-import { mount } from "../../_utils_/mount-utils.js";
+import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
+import { expect as expectJest } from "@jest/globals";
+import { within } from "@testing-library/react";
+
+
+const mockValidationMessage = jest.fn();
+jest.mock("../../../src/common-properties/components/validation-message",
+	() => (props) => mockValidationMessage(props)
+);
+
+mockValidationMessage.mockImplementation((props) => {
+	const ValidationMessageComp = jest.requireActual(
+		"../../../src/common-properties/components/validation-message",
+	).default;
+	return <ValidationMessageComp {...props} />;
+});
 
 const warningMessage = {
 	text: "Testing validation message",
@@ -34,7 +49,7 @@ const infoMessage = {
 
 describe("validation-message renders correctly", () => {
 	it("props should have been defined", () => {
-		const wrapper = mount(
+		render(
 			<ValidationMessage
 				messageInfo={warningMessage}
 				state="hidden"
@@ -42,108 +57,119 @@ describe("validation-message renders correctly", () => {
 				tableOnly
 			/>
 		);
-		expect(wrapper.prop("messageInfo")).to.equal(warningMessage);
-		expect(wrapper.prop("state")).to.equal("hidden");
-		expect(wrapper.prop("inTable")).to.equal(true);
-		expect(wrapper.prop("tableOnly")).to.equal(true);
+		expectJest(mockValidationMessage).toHaveBeenCalledWith({
+			"messageInfo": warningMessage,
+			"state": "hidden",
+			"inTable": true,
+			"tableOnly": true
+		});
 	});
 	it("validation-message renders error message correctly", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<ValidationMessage
 				messageInfo={errorMessage}
 			/>
 		);
-		const messageWrapper = wrapper.find("div.properties-validation-message");
+		const { container } = wrapper;
+		const messageWrapper = container.getElementsByClassName("properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper.find("div.icon svg.canvas-state-icon-error")).to.have.length(0);
-		expect(messageWrapper.find("span").text()).to.equal(errorMessage.text);
+		expect(messageWrapper[0].getElementsByClassName("canvas-state-icon-error")).to.have.length(0);
+		expect(messageWrapper[0].querySelector("span").textContent).to.equal(errorMessage.text);
 	});
 	it("validation-message renders error message correctly in table", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<ValidationMessage
 				messageInfo={errorMessage}
 				inTable
 			/>
 		);
-		const messageWrapper = wrapper.find("div.properties-validation-message");
+		const { container } = wrapper;
+		const messageWrapper = container.getElementsByClassName("properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper.find("div.icon svg.canvas-state-icon-error")).to.have.length(1);
-		expect(messageWrapper.find("span").text()).to.equal(errorMessage.text);
+		expect(messageWrapper[0].getElementsByClassName("canvas-state-icon-error")).to.have.length(1);
+		expect(wrapper.getByText(/Testing validation message/).textContent).to.equal(errorMessage.text);
 	});
 	it("validation-message renders warning message correctly", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<ValidationMessage
 				messageInfo={warningMessage}
 			/>
 		);
-		const messageWrapper = wrapper.find("div.properties-validation-message");
+		const { container } = wrapper;
+		const messageWrapper = container.getElementsByClassName("properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper.find("div.icon svg.canvas-state-icon-warning")).to.have.length(0);
-		expect(messageWrapper.find("span").text()).to.equal(warningMessage.text);
+		expect(within(messageWrapper[0]).queryAllByRole("svg")).to.have.length(0);
+		expect(messageWrapper[0].querySelector("span").textContent).to.equal(warningMessage.text);
 
 	});
 	it("validation-message renders warning message correctly in table", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<ValidationMessage
 				messageInfo={warningMessage}
 				inTable
 			/>
 		);
-		const messageWrapper = wrapper.find("div.properties-validation-message");
+		const { container } = wrapper;
+		const messageWrapper = container.getElementsByClassName("properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper.find("div.icon svg.canvas-state-icon-warning")).to.have.length(1);
-		expect(messageWrapper.find("span").text()).to.equal(warningMessage.text);
-
+		expect(messageWrapper[0].getElementsByClassName("canvas-state-icon-warning")).to.have.length(1);
+		expect(wrapper.getByText(/Testing validation message/).textContent).to.equal(warningMessage.text);
 	});
 	it("validation-message renders info message correctly", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<ValidationMessage
 				messageInfo={infoMessage}
 			/>
 		);
-		const messageWrapper = wrapper.find("div.properties-validation-message");
+		const { container } = wrapper;
+		const messageWrapper = container.getElementsByClassName("properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper.find("div.icon svg.canvas-state-icon-info")).to.have.length(0);
-		expect(messageWrapper.find("span").text()).to.equal(infoMessage.text);
+		expect(messageWrapper[0].getElementsByClassName("canvas-state-icon-info")).to.have.length(0);
+		expect(messageWrapper[0].querySelector("span").textContent).to.equal(infoMessage.text);
 	});
 	it("validation-message renders correctly when no message set", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<ValidationMessage />
 		);
-		expect(wrapper.find("div.properties-validation-message")).to.have.length(0);
+		const { container } = wrapper;
+		expect(container.getElementsByClassName("properties-validation-message")).to.have.length(0);
 	});
 	it("validation-message renders correctly when tableOnly set", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<ValidationMessage messageInfo={infoMessage} tableOnly />
 		);
-		expect(wrapper.find("div.properties-validation-message")).to.have.length(0);
+		const { container } = wrapper;
+		expect(container.getElementsByClassName("properties-validation-message")).to.have.length(0);
 	});
 	it("validation-message doesn't display when state 'hidden'", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<ValidationMessage
 				messageInfo={errorMessage}
 				state={"hidden"}
 			/>
 		);
-		expect(wrapper.find("div.properties-validation-message.hide")).to.have.length(1);
+		const { container } = wrapper;
+		expect(container.getElementsByClassName("properties-validation-message error hide")).to.have.length(1);
 	});
 	it("validation-message doesn't display when state 'disabled'", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<ValidationMessage
 				messageInfo={errorMessage}
 				state={"disabled"}
 			/>
 		);
-		expect(wrapper.find("div.properties-validation-message.hide")).to.have.length(1);
+		const { container } = wrapper;
+		expect(container.getElementsByClassName("properties-validation-message error hide")).to.have.length(1);
 	});
 	it("validation-message display when in a table ", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<ValidationMessage
 				messageInfo={errorMessage}
 				inTable
 			/>
 		);
-		expect(wrapper.find("div.properties-validation-message.inTable")).to.have.length(1);
+		const { container } = wrapper;
+		expect(container.getElementsByClassName("properties-validation-message error inTable")).to.have.length(1);
 	});
 
 });

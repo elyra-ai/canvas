@@ -100,6 +100,7 @@ function openSummaryPanel(wrapper, panelId) {
 	return container.querySelector("div.properties-wf-content.show");
 }
 
+
 function getParameterFromParamDef(parameterId, paramDef) {
 	const parameters = paramDef.parameters;
 	let parameterFound = null;
