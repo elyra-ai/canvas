@@ -75,6 +75,10 @@ export default class ReactNodesMappingCanvas extends React.Component {
 				labelDisplay: false,
 				inputPortDisplay: false,
 				outputPortDisplay: false,
+				outputPortAutoPosition: false,
+				outputPortPositions: [
+					{ x_pos: 0, y_pos: 29, pos: "topLeft" }
+				],
 				autoSizeNode: false
 			},
 			enableCanvasLayout: {

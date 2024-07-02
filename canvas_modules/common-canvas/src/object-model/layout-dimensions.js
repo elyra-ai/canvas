@@ -15,6 +15,7 @@
  */
 
 import { cloneDeep } from "lodash";
+import { LINK_DIR_FREEFORM, LINK_TYPE_STRAIGHT } from "../common-canvas/constants/canvas-constants";
 
 const portsHorizontalDefaultLayout = {
 	nodeLayout: {
@@ -125,7 +126,8 @@ const portsHorizontalDefaultLayout = {
 		nodeCornerResizeArea: 10,
 
 		// What point to draw the data links from and to when enableLinkType is set
-		// to "Straight". Possible values are "image_center" or "node_center".
+		// to "Straight" and enableLinkDirection is set to "Freeform".
+		// Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "node_center",
 
 		// What point to draw the comment to node link line to. Possible values
@@ -316,7 +318,8 @@ const portsHorizontalDefaultLayout = {
 		wrapAroundSpacing: 20,
 		wrapAroundNodePadding: 10,
 
-		// This can be overrriden from common-canvas config properties
+		// This is initialized by enableLinkType in the canvas config.
+		// It can be "Curve", "Elbow", Angle" or "Straight".
 		linkType: "Curve",
 
 		// Display an arrow head on the comment-to-node links. May be set to true to
@@ -527,7 +530,8 @@ const portsVerticalDefaultLayout = {
 		nodeCornerResizeArea: 10,
 
 		// What point to draw the data links from and to when enableLinkType is set
-		// to "Straight". Possible values are "image_center" or "node_center".
+		// to "Straight" and enableLinkDirection is set to "Freeform".
+		// Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "node_center",
 
 		// What point to draw the comment to node link line to. Possible values
@@ -718,7 +722,8 @@ const portsVerticalDefaultLayout = {
 		wrapAroundSpacing: 20,
 		wrapAroundNodePadding: 10,
 
-		// This can be overrriden from common-canvas config properties
+		// This is initialized by enableLinkType in the canvas config.
+		// It can be "Curve", "Elbow", Angle" or "Straight".
 		linkType: "Curve",
 
 		// Display an arrow head on the comment-to-node links. May be set to true to
@@ -832,6 +837,7 @@ export default class LayoutDimensions {
 			newLayout = this.overrideLinkType(newLayout, config);
 			newLayout = this.overrideSnapToGrid(newLayout, config);
 			newLayout = this.overrideAutoLayout(newLayout, config);
+			newLayout = this.overrideArrowHead(newLayout, config);
 		}
 		return newLayout;
 	}
@@ -854,7 +860,14 @@ export default class LayoutDimensions {
 	}
 
 	static overrideCanvasLayout(layout, config, overlayLayout) {
-		layout.canvasLayout = Object.assign({}, layout.canvasLayout, { linkDirection: config.enableLinkDirection }, overlayLayout.canvasLayout || {});
+		// TODO - In a future major release the enableStraightLinksAsFreeform field should be
+		// removed and this ovverride code should be returned to its original behavior where
+		// config.enableLinkDirection should directly override linkDirection in the canvasLayout.
+		const linkDirection = (config.enableLinkType === "Straight" && config.enableStraightLinksAsFreeform)
+			? "Freeform"
+			: config.enableLinkDirection;
+
+		layout.canvasLayout = Object.assign({}, layout.canvasLayout, { linkDirection }, overlayLayout.canvasLayout || {});
 
 		return layout;
 	}
@@ -935,6 +948,26 @@ export default class LayoutDimensions {
 			layout.nodeLayout.outputPortPositions = [
 				{ x_pos: 0, y_pos: 0, pos: "bottomCenter" }
 			];
+
+		} else if (config.enableLinkDirection === "RightLeft") {
+			const yPos = layout.nodeLayout.inputPortPositions[0].y_pos;
+			layout.nodeLayout.inputPortPositions = [
+				{ x_pos: 0, y_pos: yPos, pos: "topRight" }
+			];
+			layout.nodeLayout.outputPortPositions = [
+				{ x_pos: 0, y_pos: yPos, pos: "topLeft" }
+			];
+		}
+		return layout;
+	}
+
+	// Sets the default arrow head for node (data) links to true for freeform links.
+	// TODO -- the second part of this if should be removed when enableStraightLinksAsFreeform
+	// in the next major release.
+	static overrideArrowHead(layout, config) {
+		if (config.enableLinkDirection === LINK_DIR_FREEFORM ||
+				(config.enableStraightLinksAsFreeform && config.enableLinkType === LINK_TYPE_STRAIGHT)) {
+			layout.canvasLayout.dataLinkArrowHead = true;
 		}
 		return layout;
 	}
