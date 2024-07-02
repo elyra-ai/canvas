@@ -125,71 +125,102 @@ describe("Test for toolbar horizontal and vertical layout", function() {
 describe("Test for toolbar horizontal and vertical layout for a detached link", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.openCanvasDefinition("detachedLinksCanvas.json");
 		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray",
 			"selectedLinkSelection": "Detachable" });
+		cy.openCanvasDefinition("detachedLinksCanvas.json");
 	});
 
-	it("Test a detached link can be created and test horizontal and vertical autolayout", function() {
-		cy.verifyNumberOfPortDataLinks(8);
-		cy.verifyNumberOfLinks(13);
+	it("Test horizontal and vertical autolayout of detached links", function() {
+		// Create a function to verify the initial layout.
+		const verifyInitialLayout = () => {
+			cy.verifyNumberOfLinks(13);
+			cy.verifyNumberOfNodes(6);
 
-		// Create detached link
-		cy.linkNodeOutputPortToPointOnCanvas("Binding (entry) node", "outPort", 200, 500);
-		cy.verifyNumberOfPortDataLinks(9); // One new data link should be created.
-		cy.verifyNumberOfLinks(14);
+			// Verify the original positions of the three semi-detached links.
+			cy.verifyDetachedLinkPathFromSource("Binding (entry) node", "outPort", 1, [
+				"M 140 194 Q 220 194 220 350"
+			]);
 
-		// Click on vertical autolayout button
-		cy.clickToolbarArrangeVertically();
-		cy.clickToolbarZoomToFit();
+			cy.verifyDetachedLinkPathToTarget("Execution node", "inPort", 1, [
+				"M 260 360 Q 260 194 332.5 194"
+			]);
 
-		// Undo
-		cy.clickToolbarUndo();
-		cy.verifyNodeTransform("Binding (entry) node", 70, 165);
-		cy.verifyNodeTransform("Execution node", 332.5, 165);
-		cy.verifyNodeTransform("Select", 709, 428.5);
-		cy.verifyNodeTransform("Super node", 542.5, 165);
-		cy.verifyNodeTransform("Model Node", 700, 270);
-		cy.verifyNodeTransform("Binding (exit) node", 542.5, 390);
-		cy.verifyNumberOfPortDataLinks(9);
-		cy.verifyNumberOfLinks(14);
+			cy.verifyDetachedLinkPathFromSource("Binding (exit) node", "outPort", 1, [
+				"M 612.5 419 C 674.2556762695312 419 674.2556762695312 " +
+				"381.00567626953125 736.0113525390625 381.00567626953125"
+			]);
+		};
 
-		// Redo
-		cy.clickToolbarRedo();
-		cy.verifyNodeTransform("Binding (entry) node", 200, 50);
-		cy.verifyNodeTransform("Execution node", 500, 205);
-		cy.verifyNodeTransform("Select", 500, 670);
-		cy.verifyNodeTransform("Super node", 500, 360);
-		cy.verifyNodeTransform("Model Node", 350, 670);
-		cy.verifyNodeTransform("Binding (exit) node", 565, 515);
-		cy.verifyNumberOfPortDataLinks(9); // The data link should have been added back.
-		cy.verifyNumberOfLinks(14);
+		// Create a function to verify the horizontal layout.
+		const verifyHorizontalAutoLayout = () => {
+			cy.verifyNumberOfLinks(13);
+			cy.verifyNumberOfNodes(6);
 
-		// Click on horizontal autolayout button
+			// Verify the horizontal positions of the three semi-detached links.
+			cy.verifyDetachedLinkPathFromSource("Binding (entry) node", "outPort", 1, [
+				"M 120 234 C 180 234 180 242.5 240 242.5"
+			]);
+
+			cy.verifyDetachedLinkPathToTarget("Execution node", "inPort", 1, [
+				"M 90 397.5 C 145 397.5 145 389 200 389"
+			]);
+
+			cy.verifyDetachedLinkPathFromSource("Binding (exit) node", "outPort", 1, [
+				"M 570 466.5 C 630 466.5 630 562.5 690 562.5"
+			]);
+		};
+
+		// Create a function to verify the vertical layout.
+		const verifyVerticalAutoLayout = () => {
+			cy.verifyNumberOfLinks(13);
+			cy.verifyNumberOfNodes(6);
+
+			// Verify the vertical positions of the three semi-detached links.
+			cy.verifyDetachedLinkPathFromSource("Binding (entry) node", "outPort", 1, [
+				"M 270 79 Q 300 79 300 145.75 Q 300 212.5 250 212.5 L 250 212.5 Q 200 212.5 200 242.5"
+			]);
+
+			cy.verifyDetachedLinkPathToTarget("Execution node", "inPort", 1, [
+				"M 350 87.5 Q 350 117.5 335 117.5 Q 320 117.5 320 175.75 L 320 175.75 Q 320 234 350 234"
+			]);
+
+			cy.verifyDetachedLinkPathFromSource("Binding (exit) node", "outPort", 1, [
+				"M 495 544 Q 525 544 525 610.75 Q 525 677.5 517.5 677.5 L 517.5 677.5 Q 510 677.5 510 707.5"
+			]);
+		};
+
+		// Make sure the initial layout is correct.
+		verifyInitialLayout();
+
+		// Do vertical autolayout and verify layout
 		cy.clickToolbarArrangeHorizontally();
 		cy.clickToolbarZoomToFit();
+		verifyHorizontalAutoLayout();
 
-		// Undo
+		// Undo and verify layout
 		cy.clickToolbarUndo();
-		cy.verifyNodeTransform("Binding (entry) node", 200, 50);
-		cy.verifyNodeTransform("Execution node", 500, 205);
-		cy.verifyNodeTransform("Select", 500, 670);
-		cy.verifyNodeTransform("Super node", 500, 360);
-		cy.verifyNodeTransform("Model Node", 350, 670);
-		cy.verifyNodeTransform("Binding (exit) node", 565, 515);
-		cy.verifyNumberOfPortDataLinks(9);
-		cy.verifyNumberOfLinks(14);
+		verifyInitialLayout();
 
-		// Redo
+		// Redo and verify layout
 		cy.clickToolbarRedo();
-		cy.verifyNodeTransform("Binding (entry) node", 50, 205);
-		cy.verifyNodeTransform("Execution node", 200, 515);
-		cy.verifyNodeTransform("Select", 650, 515);
-		cy.verifyNodeTransform("Super node", 350, 515);
-		cy.verifyNodeTransform("Model Node", 650, 360);
-		cy.verifyNodeTransform("Binding (exit) node", 500, 582.5);
-		cy.verifyNumberOfPortDataLinks(9);
-		cy.verifyNumberOfLinks(14);
+		verifyHorizontalAutoLayout();
+
+		// Undo to get back to original layout
+		cy.clickToolbarUndo();
+		verifyInitialLayout();
+
+		// Do vertical autolayout and verify layout
+		cy.clickToolbarArrangeVertically();
+		cy.clickToolbarZoomToFit();
+		verifyVerticalAutoLayout();
+
+		// Undo and verify layout
+		cy.clickToolbarUndo();
+		verifyInitialLayout();
+
+		// Redo and verify layout
+		cy.clickToolbarRedo();
+		verifyVerticalAutoLayout();
 	});
 });
 
