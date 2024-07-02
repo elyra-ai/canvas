@@ -5,10 +5,9 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "NODE_ENV=development node index.js",
-    "cypress:run": "cypress open",
     "build": "npx stylelint 'src/**/*.scss' 'assets/**/*.scss' && grunt",
     "test": "npx cypress open",
-    "coverage": "npx nyc --reporter=html --reporter=text-summary",
+    "coverage": "npx cypress run && npx nyc --reporter=html --reporter=text-summary",
     "bundle-report": "NODE_ENV=production BUNDLE_REPORT=true grunt",
     "start-prod": "NODE_ENV=production node index.js",
     "build-prod": "npx stylelint 'src/**/*.scss' 'assets/**/*.scss' && NODE_ENV=production grunt --max-old-space-size=8192"
@@ -67,8 +66,6 @@
     "grunt-yamllint": "0.3.0",
     "html-webpack-plugin": "5.6.0",
     "ibm-design-icons": "2.1.4",
-    "istanbul": "0.4.5",
-    "istanbul-instrumenter-loader": "3.0.1",
     "mini-css-extract-plugin": "2.8.1",
     "nyc": "17.0.0",
     "object-assign": "4.1.1",
