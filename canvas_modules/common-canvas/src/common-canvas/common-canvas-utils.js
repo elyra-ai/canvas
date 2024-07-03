@@ -835,6 +835,53 @@ export default class CanvasUtils {
 		return false;
 	}
 
+	// Returns a source port Id if one exists in the link, otherwise defaults
+	// to the first available port on the source node.
+	static getSourcePortId(link, srcNode) {
+		var srcPortId;
+		if (link.srcNodePortId) {
+			srcPortId = link.srcNodePortId;
+		} else if (srcNode.outputs && srcNode.outputs.length > 0) {
+			srcPortId = srcNode.outputs[0].id;
+		} else {
+			srcPortId = null;
+		}
+		return srcPortId;
+	}
+
+	// Returns a target port Id if one exists in the link, otherwise defaults
+	// to the first available port on the target node.
+	static getTargetPortId(link, trgNode) {
+		var trgPortId;
+		if (link.trgNodePortId) {
+			trgPortId = link.trgNodePortId;
+		} else if (trgNode.inputs && trgNode.inputs.length > 0) {
+			trgPortId = trgNode.inputs[0].id;
+		} else {
+			trgPortId = null;
+		}
+		return trgPortId;
+	}
+
+
+	// Returns the port referenced by srcPortId from the node referenced
+	// by srcNode.
+	static getOutputPort(srcPortId, srcNode) {
+		if (srcNode && srcNode.outputs) {
+			return srcNode.outputs.find((p) => p.id === srcPortId);
+		}
+		return null;
+	}
+
+	// Returns the port referenced by trgPortId from the node referenced
+	// by trgNode.
+	static getInputPort(trgPortId, trgNode) {
+		if (trgNode && trgNode.inputs) {
+			return trgNode.inputs.find((p) => p.id === trgPortId);
+		}
+		return null;
+	}
+
 	// Returns the port from the port array indicated by the portId or null
 	// if no port can be found.
 	static getPort(portId, portArray) {
