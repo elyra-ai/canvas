@@ -4601,8 +4601,8 @@ export default class SVGCanvasRenderer {
 		// Only proceed if we have a source and a target node/comment and the
 		// conditions are right for displaying the link.
 		if (srcObj && trgNode && this.shouldDisplayLink(srcObj, trgNode, link.type)) {
-			const srcPortId = this.getSourcePortId(link, srcObj);
-			const trgPortId = this.getTargetPortId(link, trgNode);
+			const srcPortId = CanvasUtils.getSourcePortId(link, srcObj);
+			const trgPortId = CanvasUtils.getTargetPortId(link, trgNode);
 			const assocLinkVariation =
 				link.type === ASSOCIATION_LINK && this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE
 					? this.getAssocLinkVariation(srcObj, trgNode)
@@ -4697,6 +4697,10 @@ export default class SVGCanvasRenderer {
 		return link;
 	}
 
+	// Returns an info object for the source end of the link, with:
+	// x1 and y1 - Coordinate of the start of the link line.
+	// srcDir - Direction ("n", "s", "e" or "w") the link line should be drawn.
+	// originX and originY = The theoretical start point of the link line from.
 	getSourceEndInfo(link, srcObj) {
 		const info = {};
 
@@ -4710,10 +4714,11 @@ export default class SVGCanvasRenderer {
 			info.srcDir = startPos.dir;
 
 		} else {
-			const srcPortId = this.getSourcePortId(link, srcObj);
-			let port = this.getOutputPort(srcObj, srcPortId);
+			const srcPortId = CanvasUtils.getSourcePortId(link, srcObj);
+			let port = CanvasUtils.getOutputPort(srcPortId, srcObj);
+			// If no port, we must be handling a new association link being drawn from an input port.
 			if (!port) {
-				port = this.getInputPort(srcObj, srcPortId);
+				port = CanvasUtils.getInputPort(srcPortId, srcObj);
 			}
 
 			if (port) {
@@ -4725,6 +4730,9 @@ export default class SVGCanvasRenderer {
 		return info;
 	}
 
+	// Returns an info object for the target end of the link, with:
+	// x1 and y1 - Coordinate of the end of the link line.
+	// srcDir - Direction ("n", "s", "e" or "w") the link line should be drawn to.
 	getTargetEndInfo(link, trgNode) {
 		const info = {};
 
@@ -4736,8 +4744,8 @@ export default class SVGCanvasRenderer {
 			info.trgDir = startPos.dir;
 
 		} else {
-			const trgPortId = this.getTargetPortId(link, trgNode);
-			const port = this.getInputPort(trgNode, trgPortId);
+			const trgPortId = CanvasUtils.getTargetPortId(link, trgNode);
+			const port = CanvasUtils.getInputPort(trgPortId, trgNode);
 			if (port) {
 				info.x2 = trgNode.x_pos + port.cx;
 				info.y2 = trgNode.y_pos + port.cy;
@@ -4747,7 +4755,7 @@ export default class SVGCanvasRenderer {
 		return info;
 	}
 
-
+	// Returns a default source direction.
 	getDefaultSrcDirForPorts() {
 		if (this.canvasLayout.linkDirection === LINK_DIR_LEFT_RIGHT) {
 			return EAST;
@@ -4827,6 +4835,7 @@ export default class SVGCanvasRenderer {
 		return this.reverseDir(dir);
 	}
 
+	// Returns the reverse of the direction passed in.
 	reverseDir(dir) {
 		switch (dir) {
 		case NORTH:
@@ -4839,48 +4848,6 @@ export default class SVGCanvasRenderer {
 		default:
 			return EAST;
 		}
-	}
-
-	getOutputPort(srcNode, srcPortId) {
-		if (srcNode && srcNode.outputs) {
-			return srcNode.outputs.find((p) => p.id === srcPortId);
-		}
-		return null;
-	}
-
-	getInputPort(trgNode, trgPortId) {
-		if (trgNode && trgNode.inputs) {
-			return trgNode.inputs.find((p) => p.id === trgPortId);
-		}
-		return null;
-	}
-
-	// Returns a source port Id if one exists in the link, otherwise defaults
-	// to the first available port on the source node.
-	getSourcePortId(link, srcNode) {
-		var srcPortId;
-		if (link.srcNodePortId) {
-			srcPortId = link.srcNodePortId;
-		} else if (srcNode.outputs && srcNode.outputs.length > 0) {
-			srcPortId = srcNode.outputs[0].id;
-		} else {
-			srcPortId = null;
-		}
-		return srcPortId;
-	}
-
-	// Returns a target port Id if one exists in the link, otherwise defaults
-	// to the first available port on the target node.
-	getTargetPortId(link, trgNode) {
-		var trgPortId;
-		if (link.trgNodePortId) {
-			trgPortId = link.trgNodePortId;
-		} else if (trgNode.inputs && trgNode.inputs.length > 0) {
-			trgPortId = trgNode.inputs[0].id;
-		} else {
-			trgPortId = null;
-		}
-		return trgPortId;
 	}
 
 	// Returns true if a link should be displayed and false if not. The link
