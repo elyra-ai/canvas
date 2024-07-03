@@ -7,7 +7,7 @@
     "start": "NODE_ENV=development node index.js",
     "build": "npx stylelint 'src/**/*.scss' 'assets/**/*.scss' && grunt",
     "test": "npx cypress open",
-    "coverage": "npx cypress run && npx nyc --reporter=html --reporter=text-summary",
+    "coverage": "npx cypress run && npx nyc report --reporter=html --reporter=text-summary",
     "bundle-report": "NODE_ENV=production BUNDLE_REPORT=true grunt",
     "start-prod": "NODE_ENV=production node index.js",
     "build-prod": "npx stylelint 'src/**/*.scss' 'assets/**/*.scss' && NODE_ENV=production grunt --max-old-space-size=8192"
