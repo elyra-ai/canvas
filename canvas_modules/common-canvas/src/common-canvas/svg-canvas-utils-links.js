@@ -119,8 +119,8 @@ export default class SvgCanvasLinks {
 			srcCenterX = this.nodeUtils.getNodeImageCenterPosX(srcNode);
 			srcCenterY = this.nodeUtils.getNodeImageCenterPosY(srcNode);
 		} else {
-			if (link && link.srcOriginInfo) {
-				({ x: srcCenterX, y: srcCenterY } = this.getCenterOffset(srcNode, link.srcOriginInfo, selfRefLink));
+			if (link && link.srcFreeformInfo) {
+				({ x: srcCenterX, y: srcCenterY } = this.getCenterOffset(srcNode, link.srcFreeformInfo, selfRefLink));
 			} else {
 				srcCenterX = this.nodeUtils.getNodeCenterPosX(srcNode);
 				srcCenterY = this.nodeUtils.getNodeCenterPosY(srcNode);
@@ -133,8 +133,8 @@ export default class SvgCanvasLinks {
 			trgCenterX = this.nodeUtils.getNodeImageCenterPosX(trgNode);
 			trgCenterY = this.nodeUtils.getNodeImageCenterPosY(trgNode);
 		} else {
-			if (link && link.trgOriginInfo) {
-				({ x: trgCenterX, y: trgCenterY } = this.getCenterOffset(trgNode, link.trgOriginInfo, selfRefLink));
+			if (link && link.trgFreeformInfo) {
+				({ x: trgCenterX, y: trgCenterY } = this.getCenterOffset(trgNode, link.trgFreeformInfo, selfRefLink));
 			} else {
 				trgCenterX = this.nodeUtils.getNodeCenterPosX(trgNode);
 				trgCenterY = this.nodeUtils.getNodeCenterPosY(trgNode);
@@ -176,29 +176,29 @@ export default class SvgCanvasLinks {
 			let y1;
 			let x2;
 			let y2;
-			if (link.srcOriginInfo.dir === EAST) {
+			if (link.srcFreeformInfo.dir === EAST) {
 				x1 = srcCenterX + this.canvasLayout.linkGap;
 				y1 = srcCenterY;
-			} else if (link.srcOriginInfo.dir === WEST) {
+			} else if (link.srcFreeformInfo.dir === WEST) {
 				x1 = srcCenterX - this.canvasLayout.linkGap;
 				y1 = srcCenterY;
-			} else if (link.srcOriginInfo.dir === SOUTH) {
+			} else if (link.srcFreeformInfo.dir === SOUTH) {
 				x1 = srcCenterX;
 				y1 = srcCenterY + this.canvasLayout.linkGap;
-			} else if (link.srcOriginInfo.dir === NORTH) {
+			} else if (link.srcFreeformInfo.dir === NORTH) {
 				x1 = srcCenterX;
 				y1 = srcCenterY - this.canvasLayout.linkGap;
 			}
-			if (link.trgOriginInfo.dir === EAST) {
+			if (link.trgFreeformInfo.dir === EAST) {
 				x2 = trgCenterX + this.canvasLayout.linkGap;
 				y2 = trgCenterY;
-			} else if (link.trgOriginInfo.dir === WEST) {
+			} else if (link.trgFreeformInfo.dir === WEST) {
 				x2 = trgCenterX - this.canvasLayout.linkGap;
 				y2 = trgCenterY;
-			} else if (link.trgOriginInfo.dir === SOUTH) {
+			} else if (link.trgFreeformInfo.dir === SOUTH) {
 				x2 = trgCenterX;
 				y2 = trgCenterY + this.canvasLayout.linkGap;
-			} else if (link.trgOriginInfo.dir === NORTH) {
+			} else if (link.trgFreeformInfo.dir === NORTH) {
 				x2 = trgCenterX;
 				y2 = trgCenterY - this.canvasLayout.linkGap;
 			}
@@ -206,8 +206,8 @@ export default class SvgCanvasLinks {
 				originX: 0, originY: 0,
 				x1: x1, y1: y1,
 				x2: x2, y2: y2,
-				srcDir: link.srcOriginInfo.dir,
-				trgDir: link.trgOriginInfo.dir
+				srcDir: link.srcFreeformInfo.dir,
+				trgDir: link.trgFreeformInfo.dir
 			};
 		}
 	}
