@@ -1,0 +1,24 @@
+{
+  "extends": "@istanbuljs/nyc-config-babel",
+  "all": true,
+  "reporter": [
+    "html",
+    "text-summary"
+  ],
+  "include": [
+    "src/**/*.js",
+    "./cypress/e2e/**/*.js"  
+  ],
+  "instrument": true,
+  "sourceMap": true,
+  "require": [
+    "./scripts/babel/babelOptions.js"
+  ],
+  "webpack": {
+    "config": [
+      "./webpack.config.dev.js",
+      "./webpack.config.prod.js"
+    ]
+  }
+
+}
