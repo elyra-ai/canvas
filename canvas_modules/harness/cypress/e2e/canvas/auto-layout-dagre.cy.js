@@ -138,11 +138,11 @@ describe("Test for toolbar horizontal and vertical layout for a detached link", 
 
 			// Verify the original positions of the three semi-detached links.
 			cy.verifyDetachedLinkPathFromSource("Binding (entry) node", "outPort", 1, [
-				"M 140 194 Q 220 194 220 350"
+				"M 140 194 C 180 194 180 350 220 350"
 			]);
 
 			cy.verifyDetachedLinkPathToTarget("Execution node", "inPort", 1, [
-				"M 260 360 Q 260 194 332.5 194"
+				"M 260 360 C 296.25 360 296.25 194 332.5 194"
 			]);
 
 			cy.verifyDetachedLinkPathFromSource("Binding (exit) node", "outPort", 1, [
@@ -177,15 +177,18 @@ describe("Test for toolbar horizontal and vertical layout for a detached link", 
 
 			// Verify the vertical positions of the three semi-detached links.
 			cy.verifyDetachedLinkPathFromSource("Binding (entry) node", "outPort", 1, [
-				"M 270 79 Q 300 79 300 145.75 Q 300 212.5 250 212.5 L 250 212.5 Q 200 212.5 200 242.5"
+				"M 270 79 Q 300 79 300 119.875 Q 300 160.75 235 160.75 L 235 160.75 " +
+				"Q 170 160.75 170 201.625 Q 170 242.5 200 242.5"
 			]);
 
 			cy.verifyDetachedLinkPathToTarget("Execution node", "inPort", 1, [
-				"M 350 87.5 Q 350 117.5 335 117.5 Q 320 117.5 320 175.75 L 320 175.75 Q 320 234 350 234"
+				"M 350 87.5 Q 380 87.5 380 124.125 Q 380 160.75 350 160.75 " +
+				"L 350 160.75 Q 320 160.75 320 197.375 Q 320 234 350 234"
 			]);
 
 			cy.verifyDetachedLinkPathFromSource("Binding (exit) node", "outPort", 1, [
-				"M 495 544 Q 525 544 525 610.75 Q 525 677.5 517.5 677.5 L 517.5 677.5 Q 510 677.5 510 707.5"
+				"M 495 544 Q 525 544 525 584.875 Q 525 625.75 502.5 625.75 " +
+				"L 502.5 625.75 Q 480 625.75 480 666.625 Q 480 707.5 510 707.5"
 			]);
 		};
 
