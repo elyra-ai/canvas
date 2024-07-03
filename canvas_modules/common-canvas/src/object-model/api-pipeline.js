@@ -843,15 +843,19 @@ export default class APIPipeline {
 	autoLayout(layoutDirection) {
 		const canvasInfoPipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
 		let movedNodesInfo = {};
+		let movedLinksInfo = {};
 		if (layoutDirection === VERTICAL) {
-			movedNodesInfo = this.dagreAutolayout(DAGRE_VERTICAL, canvasInfoPipeline);
+			[movedNodesInfo, movedLinksInfo] = this.dagreAutolayout(DAGRE_VERTICAL, canvasInfoPipeline);
 		} else {
-			movedNodesInfo = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasInfoPipeline);
+			[movedNodesInfo, movedLinksInfo] = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasInfoPipeline);
 		}
 
-		this.sizeAndPositionObjects(movedNodesInfo);
+		this.sizeAndPositionObjects(movedNodesInfo, movedLinksInfo);
 	}
 
+	// Returns two arrays containing info to indicate new auto-layout
+	// positions for nodes and, if present, fully-detached and semi-detached
+	// links. Uses the Dagre library to calculate the new positions.
 	dagreAutolayout(direction, canvasInfoPipeline) {
 		const canvasLayout = this.objectModel.getCanvasLayout();
 
@@ -859,21 +863,46 @@ export default class APIPipeline {
 			return link.type === NODE_LINK || link.type === ASSOCIATION_LINK;
 		});
 
+		let nodesData = [];
+
+		// Calculate some default dimensions for nodes.
+		const layout = this.objectModel.getCanvasConfig()?.enableNodeLayout;
+		const defaultWidth = layout?.defaultNodeWidth ? layout.defaultNodeWidth : 150;
+		const defaultHeight = layout?.defaultNodeHeight ? layout.defaultNodeHeight : 80;
+
+		// Create an array of edges, from the node links, to be passed to Dagre.
+		// At the same time, for any semi-detached or fully-detached links we
+		// create a temporary node so Dagre will also autlayout the ends of
+		// detached links.
 		var edges = nodeLinks.map((link) => {
-			return { "v": link.srcNodeId, "w": link.trgNodeId, "value": { "points": [] } };
+			let srcNodeId = link.srcNodeId;
+			let trgNodeId = link.trgNodeId;
+
+			if (link.srcPos) {
+				srcNodeId = "temp-src-node-" + link.id;
+				nodesData.push({ "v": srcNodeId, "value": { width: defaultWidth, height: defaultHeight } });
+			}
+
+			if (link.trgPos) {
+				trgNodeId = "temp-trg-node-" + link.id;
+				nodesData.push({ "v": trgNodeId, "value": { width: defaultWidth, height: defaultHeight } });
+			}
+			return { "v": srcNodeId, "w": trgNodeId, "value": { "points": [] } };
 		});
 
-		var nodesData = canvasInfoPipeline.nodes.map((node) => {
+		// Add actual nodes to nodesData and adjust width if necessary
+		nodesData = nodesData.concat(canvasInfoPipeline.nodes.map((node) => {
 			let newWidth = node.width;
 			if (direction === DAGRE_HORIZONTAL) {
+				const padding = this.getPaddingForNode(node, canvasLayout, canvasInfoPipeline);
 				newWidth = node.width +
-					Math.max(this.getPaddingForNode(node, canvasLayout, canvasInfoPipeline), canvasLayout.autoLayoutHorizontalSpacing);
+					Math.max(padding, canvasLayout.autoLayoutHorizontalSpacing);
 			}
 
 			return { "v": node.id, "value": { width: newWidth, height: node.height } };
-		});
+		}));
 
-		// possible values: TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
+		// Possible values: TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
 		// default TB for vertical layout
 		// set to LR for horizontal layout
 		var value = { };
@@ -906,15 +935,16 @@ export default class APIPipeline {
 
 		const outputGraph = dagre.graphlib.json.write(g);
 		const movedNodesInfo = this.convertGraphToMovedNodes(outputGraph, canvasInfoPipeline.nodes);
+		const movedLinksInfo = this.convertGraphToMovedLinks(outputGraph);
 
-		return movedNodesInfo;
+		return [movedNodesInfo, movedLinksInfo];
 	}
 
 	// Returns an array of move node actions that can be used to reposition the
 	// nodes based on the provided Dagre output graph. (The node width and height
 	// are included in the output because the move nodes action expects them).
 	convertGraphToMovedNodes(outputGraph, canvasInfoPipelineNodes) {
-		const movedNodesInfo = [];
+		const movedNodesInfo = {};
 		const lookup = {};
 
 		for (var i = 0, len = outputGraph.nodes.length; i < len; i++) {
@@ -936,6 +966,44 @@ export default class APIPipeline {
 		return movedNodesInfo;
 	}
 
+	// Returns an array of move link actions that can be used to reposition the
+	// links based on the provided Dagre output graph.
+	// Iterate nodes and check if there are any temporary nodes and if so,
+	// use the x/y coordinates of those nodes as the start/end of the
+	// corresponding detached link.
+	convertGraphToMovedLinks(outputGraph) {
+		const movedLinksInfo = [];
+
+		const outNodes = outputGraph.nodes;
+
+		// Record the x and y position of temporary node to be assigned to the detached link.
+		// A fully detached link can have both temp-src-node and temp-trg-node
+		outNodes.forEach((node) => {
+			if (node.v.startsWith("temp-src-node-")) {
+				const linkId = node.v.split("temp-src-node-")[1];
+
+				movedLinksInfo[linkId] = {
+					srcPos: {
+						x_pos: node.value.x - (node.value.width / 2),
+						y_pos: node.value.y
+					}
+				};
+			}
+			if (node.v.startsWith("temp-trg-node-")) {
+				const linkId = node.v.split("temp-trg-node-")[1];
+
+				movedLinksInfo[linkId] = {
+					// If it is a fully detached link include srcPos cordinates.
+					...movedLinksInfo[linkId],
+					trgPos: {
+						x_pos: node.value.x - (node.value.width / 2),
+						y_pos: node.value.y
+					}
+				};
+			}
+		});
+		return movedLinksInfo;
+	}
 
 	// Returns a width that can be added to the node width for auto-layout.
 	// This extra width is what is needed to display the connection lines
