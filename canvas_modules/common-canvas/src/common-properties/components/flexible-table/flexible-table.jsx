@@ -578,7 +578,6 @@ class FlexibleTable extends React.Component {
 									rowSelection={this.props.rowSelection}
 									disableHeader={!this.props.showHeader}
 									onRowDoubleClick={this.props.onRowDoubleClick}
-									doubleClickedRow = {this.props.doubleClickedRow}
 									rowsSelected={this.props.selectedRows}
 									checkedAll={this.state.checkedAllRows}
 									setRowsSelected={this.handleCheckedRow}
@@ -635,7 +634,6 @@ FlexibleTable.propTypes = {
 	messageInfo: PropTypes.object,
 	updateRowSelections: PropTypes.func,
 	onRowDoubleClick: PropTypes.func,
-	doubleClickedRow: PropTypes.array,
 	selectedRows: PropTypes.array,
 	rowSelection: PropTypes.string,
 	summaryTable: PropTypes.bool,

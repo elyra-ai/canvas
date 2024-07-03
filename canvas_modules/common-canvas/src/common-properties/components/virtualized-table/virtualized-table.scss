@@ -138,15 +138,9 @@
 			// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
 			background-color: $layer-hover-01;
 		}
-		.properties-vt-row-doubleClick{
-			border-left: 4px solid $button-primary;
-			cursor: pointer;
-			&:focus,
-			&:active {
-				color: $button-primary;
-				border: 1px solid $button-primary;
-				background-color: $background-active;
-			}
+		&:focus {
+			color: $button-primary;
+			border: 1px solid $button-primary;
 		}
 		.properties-table-cell-control {
 			// Required for numberfields within react-virtualized table cell
@@ -210,6 +204,10 @@
 		// Table rows
 		.properties-vt-row-class {
 			padding-left: 3px;
+			&:focus {
+				color: $button-primary;
+				border: 1px solid $button-primary;
+		}
 		}
 		.properties-vt-row-selected {
 			cursor: pointer;
@@ -217,16 +215,6 @@
 			padding-left: 0;
 			&:not(.properties-vt-row-disabled):hover {
 				border-left: 4px solid $button-primary;
-			}
-		}
-		.properties-vt-row-doubleClick{
-			border-left: 4px solid $button-primary;
-			cursor: pointer;
-			&:focus,
-			&:active {
-				color: $button-primary;
-				border: 1px solid $button-primary;
-				background-color: $background-active;
 			}
 		}
 	}

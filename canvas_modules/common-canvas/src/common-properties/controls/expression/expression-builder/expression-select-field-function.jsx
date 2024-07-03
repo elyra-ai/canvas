@@ -56,9 +56,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		this.fields = this._makeDatasetFields(props.controller.getDatasetMetadataFields(), props.controller.getExpressionInfo().fields);
 		this.resources = get(props.controller.getExpressionInfo(), "resources", {});
 		this.state = {
-			doubleClickedFieldRow: [],
-			doubleClickedValueRow: [],
-			doubleClickedFunctionRow: [],
 			fieldSelected: 0,
 			valueSelected: 0,
 			functionSelected: 0,
@@ -123,10 +120,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	onFieldTableClick(row, evt, rowKey) {
 		this.setState({
 			fieldSelected: rowKey,
-			valueSelected: 0,
-			doubleClickedValueRow: [],
-			doubleClickedFieldRow: [],
-			doubleClickedFunctionRow: []
+			valueSelected: 0
 		});
 
 	}
@@ -144,7 +138,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			}
 			this.props.onChange(value);
 		}
-		this.setState({ doubleClickedFieldRow: [rowKey] });
 	}
 
 	onFieldFilter(filterString) {
@@ -153,8 +146,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 	onValueTableClick(row, evt, rowKey) {
 		this.setState({
-			valueSelected: rowKey,
-			doubleClickedValueRow: []
+			valueSelected: rowKey
 		});
 	}
 
@@ -174,8 +166,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			}
 		}
 		this.setState({
-			valueSelected: rowKey,
-			doubleClickedValueRow: [rowKey]
+			valueSelected: rowKey
 		});
 	}
 
@@ -202,7 +193,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		if (this.props.onChange) {
 			this.props.onChange(value);
 		}
-		this.setState({ doubleClickedFunctionRow: [rowKey] });
 	}
 
 	onFunctionFilter(filterString) {
@@ -521,7 +511,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onFieldTableClick}
 						onRowDoubleClick={this.onAddFieldClick}
-						doubleClickedRow = {this.state.doubleClickedFieldRow}
 						selectedRows={[selectedField]}
 						onSort={this.setSortColumn.bind(this, "fieldTable")}
 						light={this.props.controller.getLight()}
@@ -540,7 +529,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onValueTableClick}
 						onRowDoubleClick={this.onAddValueClick}
-						doubleClickedRow = {this.state.doubleClickedValueRow}
 						selectedRows={[selectedValue]}
 						onSort={this.setSortColumn.bind(this, "valuesTable")}
 						light={this.props.controller.getLight()}
@@ -710,7 +698,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onFunctionTableClick}
 						onRowDoubleClick={this.onAddFunctionClick}
-						doubleClickedRow = {this.state.doubleClickedFunctionRow}
 						selectedRows={[selectedFunction]}
 						onSort={this.setSortColumn.bind(this, "functionTable")}
 						light={this.props.controller.getLight()}

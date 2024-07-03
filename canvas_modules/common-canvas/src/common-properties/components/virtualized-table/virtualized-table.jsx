@@ -73,7 +73,6 @@ class VirtualizedTable extends React.Component {
 		this.onRowClick = this.onRowClick.bind(this);
 		this.overSelectOption = this.overSelectOption.bind(this);
 		this.resizeColumn = this.resizeColumn.bind(this);
-		this.getDoubleClickedRow = this.getDoubleClickedRow.bind(this);
 		this.uuid = uuid4();
 	}
 
@@ -114,9 +113,6 @@ class VirtualizedTable extends React.Component {
 		}
 	}
 
-	getDoubleClickedRow() {
-		return this.props.doubleClickedRow;
-	}
 
 	getCheckboxLabelColumnIndex(columns) {
 		// If 1st column is Index, use the next column for labeling
@@ -444,7 +440,6 @@ class VirtualizedTable extends React.Component {
 				className={classNames(className,
 					{ "properties-vt-row-selected": selectedRow },
 					{ "properties-vt-row-disabled": rowDisabled },
-					{ "properties-vt-row-doubleClick": this.getDoubleClickedRow()?.indexOf(rowData.rowKey) > -1 },
 					{ "properties-vt-row-non-interactive": !this.props.selectable } // ReadonlyTable with single row selection is non-interactive.
 				)}
 				data-role="properties-data-row"
@@ -544,7 +539,6 @@ VirtualizedTable.propTypes = {
 		PropTypes.number.isRequired
 	]),
 	onRowDoubleClick: PropTypes.func,
-	doubleClickedRow: PropTypes.array,
 	rowsSelected: PropTypes.array, // Required if selectable is true
 	checkedAll: PropTypes.bool, // Required if selectable is true
 	setRowsSelected: PropTypes.func, // Required if selectable is true
