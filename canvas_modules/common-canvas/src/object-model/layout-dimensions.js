@@ -341,6 +341,19 @@ const portsHorizontalDefaultLayout = {
 		// get a default arrow head or to an SVG string for a custom arrow head.
 		dataLinkArrowHead: false,
 
+		// Offset amounts for the link's context toolbar from its default
+		// position.
+		linkContextToolbarPosX: 0,
+		linkContextToolbarPosY: 0,
+
+		// The distance in pixels between the start and end points of the link
+		// below which the alternative decorations for the link will be displayed.
+		linkDistanceForAltDecorations: 150,
+
+		// Alternative decorations for the link. If specified, this should be an
+		// array of decoration objects.
+		linkAltDecorations: null,
+
 		// Link handle for input port can be "circle" or "image".
 		linkStartHandleObject: "circle",
 
@@ -750,6 +763,19 @@ const portsVerticalDefaultLayout = {
 		// Display an arrow head on the data links. May be set to true to
 		// get a default arrow head or to an SVG string for a custom arrow head.
 		dataLinkArrowHead: false,
+
+		// Offset amounts for the link's context toolbar from its default
+		// position.
+		linkContextToolbarPosX: 0,
+		linkContextToolbarPosY: 0,
+
+		// The distance in pixels between the start and end points of the link,
+		// below which the alternative decorations for the link will be displayed.
+		linkDistanceForAltDecorations: 150,
+
+		// Alternative decorations for the link. If specified, this should be an
+		// array of decoration objects.
+		linkAltDecorations: null,
 
 		// Link handle for input port can be "circle" or "image".
 		linkStartHandleObject: "circle",

@@ -53,9 +53,9 @@ Cypress.Commands.add("moveMouseToCoordinates", (x, y) => {
 	cy.get(".d3-svg-canvas-div").trigger("mousemove", x, y);
 });
 
-// Within ZoomIn or ZoomOut, move the mouse to the {x,y} position
+// Move the mouse to the {x,y} position in the palette
 Cypress.Commands.add("moveMouseToPaletteArea", (x, y) => {
-	cy.get(".palette-flyout-categories").trigger("mousemove", x, y);
+	cy.get(".palette-flyout-div").trigger("mousemove", x, y);
 });
 
 // Selects a region on the canvas by 'pulling out' a rectangle over

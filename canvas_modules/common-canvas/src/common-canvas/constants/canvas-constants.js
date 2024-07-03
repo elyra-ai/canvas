@@ -70,7 +70,7 @@ export const SNAP_TO_GRID_DURING = "During";
 // Values for enablePaletteLayout config parameter
 export const PALETTE_LAYOUT_NONE = "None";
 export const PALETTE_LAYOUT_FLYOUT = "Flyout";
-export const PALETTE_LAYOUT_MODAL = "Modal";
+export const PALETTE_LAYOUT_DIALOG = "Dialog";
 
 // Values for enableToolbarLayout config parameter
 export const TOOLBAR_LAYOUT_NONE = "None";
@@ -162,6 +162,10 @@ export const SAVED_NODES_CATEGORY_ID = "savedNodes";
 export const USE_DEFAULT_ICON = "useDefaultIcon";
 export const USE_DEFAULT_EXT_ICON = "useDefaultExtIcon";
 
+// Comment types
+export const WYSIWYG = "WYSIWYG";
+export const MARKDOWN = "markdown";
+
 // Directions
 export const NORTH = "n";
 export const SOUTH = "s";
@@ -196,6 +200,8 @@ export const TOOLBAR_PASTE = "paste";
 export const TOOLBAR_CLIPBOARD = "clipboard";
 export const TOOLBAR_CREATE_COMMENT = "createComment";
 export const TOOLBAR_CREATE_AUTO_COMMENT = "createAutoComment";
+export const TOOLBAR_CREATE_WYSIWYG_COMMENT = "createWYSIWYGComment";
+export const TOOLBAR_CREATE_AUTO_WYSIWYG_COMMENT = "createAutoWysiwygComment";
 export const TOOLBAR_SET_COMMENT_EDIT_MODE = "setCommentEditingMode";
 export const TOOLBAR_SHOW_COMMENTS = "commentsShow";
 export const TOOLBAR_HIDE_COMMENTS = "commentsHide";

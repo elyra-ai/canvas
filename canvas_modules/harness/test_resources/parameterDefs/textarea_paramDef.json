@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "string": "testing, textarea, control",
+    "string_readonly": "testing readonly textarea control",
     "string_array": [],
     "string_charLimit": [
       "testing"
@@ -76,6 +77,10 @@
   "parameters": [
     {
       "id": "string",
+      "type": "string"
+    },
+    {
+      "id": "string_readonly",
       "type": "string"
     },
     {
@@ -191,6 +196,21 @@
         "helper_text": {
           "default": "textarea with string value"
         }
+      },
+      {
+        "parameter_ref": "string_readonly",
+        "label": {
+          "default": "string"
+        },
+        "control": "textarea",
+        "description": {
+          "default": "Readonly textarea with sting value"
+        },
+        "class_name": "string-textarea-control-class",
+        "helper_text": {
+          "default": "Readonly textarea with string value"
+        },
+        "read_only": true
       },
       {
         "parameter_ref": "string_array",
@@ -384,6 +404,7 @@
         "parameter_refs": [
           "string",
           "string_array",
+          "string_readonly",
           "string_charLimit",
           "string_default",
           "string_empty",

@@ -20,23 +20,23 @@ Cypress.Commands.add("openPropertyDefinition", (propertyFileName) => {
 });
 
 Cypress.Commands.add("toggleCategory", (categoryName) => {
-	cy.get(".common-canvas-right-side-items .cds--accordion__heading")
+	cy.get(".right-flyout-panel .cds--accordion__heading")
 		.contains(categoryName)
 		.click();
 });
 
 Cypress.Commands.add("saveFlyout", () => {
-	cy.get(".common-canvas-right-side-items " +
+	cy.get(".right-flyout-panel " +
 		".properties-modal-buttons button[data-id='properties-apply-button']").click();
 });
 
 Cypress.Commands.add("closeFlyout", () => {
 	// When applyOnBlur set to true, show Close icon in properties title
-	cy.get(".common-canvas-right-side-items .properties-close-button > span").click({ force: true });
+	cy.get(".right-flyout-panel .properties-close-button > span").click({ force: true });
 });
 
 Cypress.Commands.add("openSubPanel", (title) => {
-	cy.get(".common-canvas-right-side-items .properties-summary-link-button").contains(title)
+	cy.get(".right-flyout-panel .properties-summary-link-button").contains(title)
 		.click();
 });
 
@@ -91,11 +91,11 @@ Cypress.Commands.add("saveWideFlyout", (panelName) => {
 });
 
 Cypress.Commands.add("clickPropertiesFlyoutTitleEditIcon", () => {
-	cy.get(".common-canvas-right-side-items button.properties-title-editor-btn.edit").click();
+	cy.get(".right-flyout-panel button.properties-title-editor-btn.edit").click();
 });
 
 Cypress.Commands.add("enterNewPropertiesFlyoutTitle", (newTitle) => {
-	cy.get(".common-canvas-right-side-items div.properties-title-editor-input")
+	cy.get(".right-flyout-panel div.properties-title-editor-input")
 		.find("input")
 		.as("input");
 	cy.get("@input").focus();
@@ -105,7 +105,7 @@ Cypress.Commands.add("enterNewPropertiesFlyoutTitle", (newTitle) => {
 
 Cypress.Commands.add("clickAtCoordinatesInCommonProperties", (x, y) => {
 	// common-properties tooltip will be displayed onclick
-	cy.get(".common-canvas-right-side-items .right-flyout-panel")
+	cy.get(".right-flyout-panel")
 		.trigger("click", x, y);
 });
 

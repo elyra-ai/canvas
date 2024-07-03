@@ -22,7 +22,8 @@ import LayoutDimensions from "./layout-dimensions.js";
 import {
 	ASSOC_STRAIGHT,
 	LINK_SELECTION_NONE,
-	NODE_FORMAT_HORIZONTAL
+	NODE_FORMAT_HORIZONTAL,
+	PALETTE_LAYOUT_FLYOUT
 } from "../common-canvas/constants/canvas-constants";
 
 export default class ConfigUtils {
@@ -57,7 +58,7 @@ export default class ConfigUtils {
 			enableInteractionType: "Mouse",
 			enableNodeFormatType: NODE_FORMAT_HORIZONTAL,
 			enableLinkType: "Curve",
-			enableStraightLinksAsFreeform: false, // TODO - Remove in next major release.
+			enableStraightLinksAsFreeform: true, // TODO - Remove in next major release.
 			enableLinkMethod: "Ports",
 			enableLinkDirection: "LeftRight",
 			enableLinkSelection: LINK_SELECTION_NONE,
@@ -67,7 +68,7 @@ export default class ConfigUtils {
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,
 			enableInternalObjectModel: true,
-			enablePaletteLayout: "Flyout",
+			enablePaletteLayout: PALETTE_LAYOUT_FLYOUT,
 			enableToolbarLayout: "Top",
 			enableImageDisplay: "SVGInline",
 			enableResizableNodes: false,
@@ -80,11 +81,13 @@ export default class ConfigUtils {
 			enableEditingActions: true,
 			enableDisplayFullLabelOnHover: false,
 			enableDropZoneOnExternalDrag: false,
+			enableLeftFlyoutUnderToolbar: false,
 			enableRightFlyoutUnderToolbar: false,
 			enablePanIntoViewOnOpen: false,
 			enableZoomIntoSubFlows: false,
 			enableBrowserEditMenu: true,
 			enableMarkdownInComments: false,
+			enableWYSIWYGComments: false,
 			enableAutoLinkOnlyFromSelNodes: false,
 			enableContextToolbar: false,
 			enableSaveZoom: "None",

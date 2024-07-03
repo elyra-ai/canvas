@@ -15,6 +15,7 @@
     "node": "20.x"
   },
   "dependencies": {
+    "@ibm/plex": "^6.4.1",
     "body-parser": "1.20.2",
     "compression": "1.7.4",
     "express": "4.19.2",
@@ -36,7 +37,7 @@
     "@babel/preset-react": "7.24.1",
     "@carbon/charts": "1.15.3",
     "@carbon/charts-react": "1.15.3",
-    "@carbon/react": "^1.52.0",
+    "@carbon/react": "1.62.0-rc.0",
     "@elyra/canvas": "file:../common-canvas",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.11",
     "ajv": "8.12.0",

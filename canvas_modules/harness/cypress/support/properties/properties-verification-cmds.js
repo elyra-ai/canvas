@@ -34,21 +34,21 @@ Cypress.Commands.add("verifyNoTextOverflow", (propertyId) => {
 });
 
 Cypress.Commands.add("verifyPropertiesFlyoutTitle", (givenTitle) => {
-	cy.get(".common-canvas-right-side-items .properties-title-editor-input input")
+	cy.get(".right-flyout-panel .properties-title-editor-input input")
 		.should("have.value", givenTitle);
 });
 
 Cypress.Commands.add("verifyMessageInPropertiesTitleEditor", (message, type) => {
-	cy.get(".common-canvas-right-side-items .properties-title-editor")
+	cy.get(".right-flyout-panel .properties-title-editor")
 		.find(".cds--form-requirement")
 		.should("have.text", message);
 
 	if (type === "warning") {
-		cy.get(".common-canvas-right-side-items .properties-title-editor")
+		cy.get(".right-flyout-panel .properties-title-editor")
 			.find(".cds--text-input__field-wrapper--warning")
 			.should("have.length", 1);
 	} else if (type === "error") {
-		cy.get(".common-canvas-right-side-items .properties-title-editor")
+		cy.get(".right-flyout-panel .properties-title-editor")
 			.find(".cds--text-input__field-wrapper")
 			.should("have.attr", "data-invalid", "true");
 	}

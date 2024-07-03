@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import {
 	EXAMPLE_APP_ALL_PORTS,
 	EXAMPLE_APP_PARALLAX,
 	EXAMPLE_APP_NETWORK,
+	EXAMPLE_APP_WYSIWYG,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	TIP_PALETTE_CATEGORIES,
@@ -96,7 +97,7 @@ import {
 	UNDERLAY_NONE,
 	UNDERLAY_VARIABLE,
 	PALETTE_LAYOUT_FLYOUT,
-	PALETTE_LAYOUT_MODAL,
+	PALETTE_LAYOUT_DIALOG,
 	PALETTE_LAYOUT_NONE,
 	TOOLBAR_LAYOUT_NONE,
 	TOOLBAR_LAYOUT_TOP
@@ -649,6 +650,16 @@ export default class SidePanelForms extends React.Component {
 			</div>
 		</div>);
 
+		var enableShowLeftFlyout = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedShowLeftFlyout" // Set ID to corresponding field in App.js state
+				labelText="Open Left Flyout (Only applicable when Palette Layout is set to None)}"
+				toggled={this.props.getStateValue("selectedShowLeftFlyout")}
+				onToggle={(val) => this.setStateValue(val, "selectedShowLeftFlyout")}
+			/>
+		</div>);
+
+
 		var enableShowRightFlyout = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedShowRightFlyout" // Set ID to corresponding field in App.js state
@@ -685,6 +696,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableWYSIWYGComments = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedWYSIWYGComments" // Set ID to corresponding field in App.js state
+				labelText="Enable Wysiwyg Editor"
+				toggled={this.props.getStateValue("selectedWYSIWYGComments")}
+				onToggle={(val) => this.setStateValue(val, "selectedWYSIWYGComments")}
+			/>
+		</div>);
+
 		var enableContextToolbar = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedContextToolbar" // Set ID to corresponding field in App.js state
@@ -718,6 +738,15 @@ export default class SidePanelForms extends React.Component {
 				labelText="Enable Browser Edit Menu"
 				toggled={this.props.getStateValue("selectedBrowserEditMenu")}
 				onToggle={(val) => this.setStateValue(val, "selectedBrowserEditMenu")}
+			/>
+		</div>);
+
+		var enableLeftFlyoutUnderToolbar = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedLeftFlyoutUnderToolbar" // Set ID to corresponding field in App.js state
+				labelText="Enable Left Flyout Under Toolbar"
+				toggled={this.props.getStateValue("selectedLeftFlyoutUnderToolbar")}
+				onToggle={(val) => this.setStateValue(val, "selectedLeftFlyoutUnderToolbar")}
 			/>
 		</div>);
 
@@ -1246,6 +1275,10 @@ export default class SidePanelForms extends React.Component {
 						labelText={EXAMPLE_APP_NETWORK}
 					/>
 					<RadioButton
+						value={EXAMPLE_APP_WYSIWYG}
+						labelText={EXAMPLE_APP_WYSIWYG}
+					/>
+					<RadioButton
 						value={EXAMPLE_APP_REACT_NODES_CARBON}
 						labelText={EXAMPLE_APP_REACT_NODES_CARBON}
 					/>
@@ -1277,8 +1310,8 @@ export default class SidePanelForms extends React.Component {
 						labelText={PALETTE_LAYOUT_FLYOUT}
 					/>
 					<RadioButton
-						value={PALETTE_LAYOUT_MODAL}
-						labelText={PALETTE_LAYOUT_MODAL}
+						value={PALETTE_LAYOUT_DIALOG}
+						labelText={PALETTE_LAYOUT_DIALOG}
 					/>
 					<RadioButton
 						value={PALETTE_LAYOUT_NONE}
@@ -1660,6 +1693,8 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableMarkdownInComments}
 					{divider}
+					{enableWYSIWYGComments}
+					{divider}
 					<div className="harness-side-panel-header">Drag, Pan, Zoom and Select</div>
 					{divider}
 					{saveZoom}
@@ -1676,6 +1711,12 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{toolbarType}
 					{divider}
+					<div className="harness-side-panel-header">Left Flyout</div>
+					{divider}
+					{enableShowLeftFlyout}
+					{divider}
+					{enableLeftFlyoutUnderToolbar}
+					{divider}
 					<div className="harness-side-panel-header">Right Flyout</div>
 					{divider}
 					{enableShowRightFlyout}
@@ -1684,13 +1725,13 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enablePositionNodeOnRightFlyoutOpen}
 					{divider}
-					<div className="harness-side-panel-header">Bottom Panel</div>
-					{divider}
-					{enableShowBottomPanel}
-					{divider}
 					<div className="harness-side-panel-header">Top Panel</div>
 					{divider}
 					{enableShowTopPanel}
+					{divider}
+					<div className="harness-side-panel-header">Bottom Panel</div>
+					{divider}
+					{enableShowBottomPanel}
 					{divider}
 					<div className="harness-side-panel-header">Context Menu</div>
 					{divider}

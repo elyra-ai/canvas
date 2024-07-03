@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import { PropertyDef } from "./PropertyDef";
 import { propertyOf } from "lodash";
-import { makePrimaryTab } from "./EditorForm";
+import { makePrimaryTab, makeActions } from "./EditorForm";
 import { UIItem } from "./UIItem";
 import { L10nProvider } from "../util/L10nProvider";
 import { translateMessages } from "./Conditions";
@@ -24,7 +24,7 @@ import { Size } from "../constants/form-constants";
 import { CONTAINER_TYPE } from "../constants/constants";
 
 export default class Form {
-	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions, resources, icon, heading) {
+	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions, resources, icon, heading, title, titleUiItems) {
 		this.componentId = componentId;
 		this.label = label;
 		this.labelEditable = labelEditable;
@@ -38,6 +38,12 @@ export default class Form {
 		this.resources = resources;
 		this.icon = icon;
 		this.heading = heading;
+		if (title) {
+			this.title = title;
+		}
+		if (titleUiItems?.length > 0) {
+			this.titleUiItems = titleUiItems;
+		}
 	}
 
 	/**
@@ -57,6 +63,10 @@ export default class Form {
 				for (const group of propDef.groupMetadata.groups) {
 					tabs.push(makePrimaryTab(propDef, group, l10nProvider, containerType));
 				}
+			}
+			let titleUiItems = [];
+			if (propDef.titleMetadata && propDef.actionMetadata) {
+				titleUiItems = makeActions(null, propDef.actionMetadata, propDef.titleMetadata.Title, null, l10nProvider);
 			}
 
 			const currentParameters = propertyOf(paramDef)("current_parameters");
@@ -79,7 +89,9 @@ export default class Form {
 				translateMessages(conditions, l10nProvider),
 				resources,
 				propDef.icon,
-				l10nProvider.l10nResource(propDef.heading)
+				l10nProvider.l10nResource(propDef.heading),
+				propDef.titleMetadata,
+				titleUiItems
 			);
 		}
 		return null;

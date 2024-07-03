@@ -15,7 +15,7 @@
  */
 
 import { get } from "lodash";
-import { LINK_SELECTION_NONE, SUPER_NODE } from "./constants/canvas-constants";
+import { LINK_SELECTION_NONE, SUPER_NODE, WYSIWYG } from "./constants/canvas-constants";
 
 // Global constant to handle the canvas controller.
 let cc = null;
@@ -25,7 +25,7 @@ let cc = null;
 export default function getContextMenuDefiniton(source, canvasController) {
 	cc = canvasController;
 
-	const defMenu = createDefaultContextMenu(source);
+	const defMenu = createDefaultContextMenu(source, cc.getCanvasConfig().enableWYSIWYGComments);
 	let menuDefinition;
 
 	if (typeof cc.handlers.contextMenuHandler === "function") {
@@ -98,6 +98,7 @@ const filterOutUnwantedDividers = (menuDef) => {
 // out editing actions that should be unavailable with a read-only canvas.
 const isEditingAction = (action) =>
 	action === "createComment" ||
+	action === "createWYSIWYGComment" ||
 	action === "colorBackground" ||
 	action === "disconnectNode" ||
 	action === "setNodeLabelEditingMode" ||
@@ -121,17 +122,20 @@ const isEditingAction = (action) =>
 
 // Returns a default context menu definition for the source object and canvas
 // controller passed in.
-const createDefaultContextMenu = (source) => {
+const createDefaultContextMenu = (source, enableWYSIWYGComments) => {
 	let menuDefinition = [];
 	const menuForNonSelectedObj = cc.isContextToolbarForNonSelectedObj(source);
 
 	// Select all & add comment: canvas only
 	if (source.type === "canvas") {
-		menuDefinition = menuDefinition.concat([
-			{ action: "createComment", label: getLabel("canvas.addComment"), toolbarItem: true },
-			{ action: "selectAll", label: getLabel("canvas.selectAll") },
-			{ divider: true }
-		]);
+
+		menuDefinition = menuDefinition.concat(
+			createCommentMenu(enableWYSIWYGComments),
+			[
+				{ action: "selectAll", label: getLabel("canvas.selectAll") },
+				{ divider: true }
+			]
+		);
 	}
 	// Rename node
 	if (source.type === "node" && get(source, "targetObject.layout.labelEditable", false)) {
@@ -147,6 +151,7 @@ const createDefaultContextMenu = (source) => {
 	}
 	// Color objects
 	if (source.type === "comment" &&
+			source.targetObject?.contentType !== WYSIWYG &&
 			get(cc, "contextMenuConfig.defaultMenuEntries.colorBackground", true)) {
 		menuDefinition = menuDefinition.concat(
 			{ action: "colorBackground", label: getLabel("comment.colorBackground") },
@@ -292,6 +297,16 @@ const createDefaultContextMenu = (source) => {
 	}
 
 	return menuDefinition;
+};
+
+const createCommentMenu = (enableWYSIWYGComments) => {
+	if (enableWYSIWYGComments) {
+		return [
+			{ action: "createComment", label: getLabel("canvas.addComment"), toolbarItem: true },
+			{ action: "createWYSIWYGComment", label: getLabel("canvas.addWysiwygComment"), toolbarItem: true }
+		];
+	}
+	return { action: "createComment", label: getLabel("canvas.addComment"), toolbarItem: true };
 };
 
 const createEditMenu = (source, includePaste) => {

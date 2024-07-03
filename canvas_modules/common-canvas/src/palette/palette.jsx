@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import PaletteDialog from "../palette/palette-dialog.jsx";
 import PaletteFlyout from "../palette/palette-flyout.jsx";
 import Logger from "../logging/canvas-logger.js";
 
-import { PALETTE_LAYOUT_FLYOUT, PALETTE_LAYOUT_MODAL }
+import { PALETTE_LAYOUT_FLYOUT, PALETTE_LAYOUT_NONE }
 	from "../common-canvas/constants/canvas-constants";
 
 class Palette extends React.Component {
@@ -34,50 +33,33 @@ class Palette extends React.Component {
 	render() {
 		this.logger.log("render");
 
-		let palette = null;
-
-		if (this.props.enablePaletteLayout === PALETTE_LAYOUT_FLYOUT) {
-			palette = (<PaletteFlyout
-				enableNarrowPalette={this.props.enableNarrowPalette}
-				paletteJSON={this.props.paletteJSON}
-				showPalette={this.props.showPalette}
+		return (
+			<PaletteFlyout
 				canvasController={this.props.canvasController}
-				isEditingEnabled={this.props.isEditingEnabled}
-			/>);
-		} else if (this.props.enablePaletteLayout === PALETTE_LAYOUT_MODAL) {
-			palette = (<PaletteDialog
 				paletteJSON={this.props.paletteJSON}
-				showPalette={this.props.showPalette}
-				parentDivId={this.props.containingDivId}
-				canvasController={this.props.canvasController}
 				isEditingEnabled={this.props.isEditingEnabled}
-			/>);
-		}
-
-		return palette;
+				isPaletteWide={this.props.isPaletteWide}
+			/>
+		);
 	}
 }
 
 Palette.propTypes = {
 	// Provided by common-canvas
 	canvasController: PropTypes.object.isRequired,
-	containingDivId: PropTypes.string.isRequired,
 
 	// Provided by redux
-	enablePaletteLayout: PropTypes.string,
-	enableNarrowPalette: PropTypes.bool,
 	paletteJSON: PropTypes.object,
-	showPalette: PropTypes.bool,
-	isEditingEnabled: PropTypes.bool
+	isEditingEnabled: PropTypes.bool,
+	isPaletteWide: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({
-	enablePaletteLayout: state.canvasconfig.enablePaletteLayout,
-	enableNarrowPalette: state.canvasconfig.enableNarrowPalette,
-	isEditingEnabled: state.canvasconfig.enableEditingActions,
 	paletteJSON: state.palette.content,
-	// TODO - No need to do this when paletteInitialState is removed
-	showPalette: typeof state.palette.isOpen === "undefined" ? false : state.palette.isOpen
+	isEditingEnabled: state.canvasconfig.enableEditingActions,
+	isPaletteWide: state.canvasconfig.enablePaletteLayout === PALETTE_LAYOUT_NONE ||
+		(state.canvasconfig.enablePaletteLayout === PALETTE_LAYOUT_FLYOUT &&
+			state.palette.isOpen)
 });
 
 export default connect(mapStateToProps)(Palette);

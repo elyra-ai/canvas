@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,16 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { setTitle } from "./../../actions";
 import Isvg from "react-inlinesvg";
 import { get } from "lodash";
-import { TextInput, Button, Layer } from "@carbon/react";
-import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
-import * as PropertyUtils from "./../../util/property-utils";
 import classNames from "classnames";
 import { Help, Edit, Close } from "@carbon/react/icons";
+import { TextInput, Button, Layer } from "@carbon/react";
+
+import { setTitle } from "./../../actions";
+import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
+import * as PropertyUtils from "./../../util/property-utils";
+import ActionFactory from "../../actions/action-factory.js";
 
 
 class TitleEditor extends Component {
@@ -90,6 +92,24 @@ class TitleEditor extends Component {
 			});
 		}
 		this.props.setTitle(newTitle);
+	}
+
+	createTitleActions() {
+		if (this.props.titleInfo && this.props.titleInfo.Title.actionIds().length > 0) {
+			this.actionFactory = new ActionFactory(this.props.controller);
+			const actions = [];
+			this.props.titleInfo.Title.actionIds().forEach((actionRef, idx) => {
+				const actionMetadata = this.props.controller.getAction({ name: actionRef });
+				const action = this.actionFactory.generateAction(`${actionRef}-${idx}`, actionMetadata);
+				actions.push(<div className="cds--css-grid-column cds--col-span-50" key={`${actionRef}-${idx}`}>
+					{action}
+				</div>);
+			});
+			return (<div className="properties-title-editor-actions cds--css-grid cds--css-grid--narrow">
+				{actions}
+			</div>);
+		}
+		return null;
 	}
 
 	render() {
@@ -204,6 +224,7 @@ class TitleEditor extends Component {
 					{titleValidationTypes.includes(get(this.state.titleValidation, "type")) ? null : propertiesTitleEdit}
 				</div>
 				{!this.headingEnabled && !titleValidationTypes.includes(get(this.state.titleValidation, "type")) ? helpButton : null}
+				{this.createTitleActions()}
 			</div>
 		);
 	}
@@ -219,6 +240,7 @@ TitleEditor.propTypes = {
 	heading: PropTypes.string,
 	showHeading: PropTypes.bool,
 	rightFlyoutTabsView: PropTypes.bool,
+	titleInfo: PropTypes.object,
 	title: PropTypes.string, // set by redux
 	setTitle: PropTypes.func // set by redux
 };

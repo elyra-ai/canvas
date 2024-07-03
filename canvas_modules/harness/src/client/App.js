@@ -55,6 +55,7 @@ import JsxIconsCanvas from "./components/custom-canvases/jsx-icons/jsx-icons-can
 import AllPortsCanvas from "./components/custom-canvases/all-ports/all-ports-canvas";
 import ParallaxCanvas from "./components/custom-canvases/parallax/parallax-canvas";
 import NetworkCanvas from "./components/custom-canvases/network/network-canvas";
+import WysiwygCommentsCanvas from "./components/custom-canvases/wysiwyg-comments/wysiwyg-comments-canvas";
 import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon-canvas";
 import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping-canvas";
 
@@ -112,6 +113,7 @@ import {
 	EXAMPLE_APP_ALL_PORTS,
 	EXAMPLE_APP_PARALLAX,
 	EXAMPLE_APP_NETWORK,
+	EXAMPLE_APP_WYSIWYG,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	CUSTOM,
@@ -187,6 +189,7 @@ class App extends React.Component {
 			selectedDragWithoutSelect: false,
 			selectedAssocLinkCreation: false,
 			selectedMarkdownInComments: false,
+			selectedWYSIWYGComments: false,
 			selectedContextToolbar: false,
 			selectedSnapToGridType: SNAP_TO_GRID_NONE,
 			enteredSnapToGridX: "",
@@ -224,6 +227,8 @@ class App extends React.Component {
 			},
 			selectedShowBottomPanel: false,
 			selectedShowTopPanel: false,
+			selectedShowLeftFlyout: false,
+			selectedLeftFlyoutUnderToolbar: false,
 			selectedShowRightFlyout: false,
 			selectedRightFlyoutUnderToolbar: false,
 			selectedPanIntoViewOnOpen: false,
@@ -2069,6 +2074,7 @@ class App extends React.Component {
 			enableSelfRefLinks: this.state.selectedSelfRefLinks,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enableMarkdownInComments: this.state.selectedMarkdownInComments,
+			enableWYSIWYGComments: this.state.selectedWYSIWYGComments,
 			enableContextToolbar: this.state.selectedContextToolbar,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			enableStateTag: this.state.selectedStateTag,
@@ -2087,6 +2093,7 @@ class App extends React.Component {
 			enableBoundingRectangles: this.state.selectedBoundingRectangles,
 			enableCanvasUnderlay: this.state.selectedCanvasUnderlay,
 			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
+			enableLeftFlyoutUnderToolbar: this.state.selectedLeftFlyoutUnderToolbar,
 			enableRightFlyoutUnderToolbar: this.state.selectedRightFlyoutUnderToolbar,
 			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
 			dropZoneCanvasContent: this.state.selectedDisplayCustomizedDropZoneContent ? this.dropZoneCanvasDiv : null,
@@ -2155,7 +2162,7 @@ class App extends React.Component {
 					{ divider: true },
 					{ action: "run", label: "Run", enable: true, iconEnabled: (<Play size={32} />) },
 					{ divider: true },
-					{ action: "createAutoComment", label: "Add Comment", enable: true },
+					{ action: "createAutoComment", label: "Markdown Comment", enable: true },
 					{ divider: true },
 					{ action: "deleteSelectedObjects", label: "Delete", enable: true },
 					{ divider: true },
@@ -2371,11 +2378,12 @@ class App extends React.Component {
 		return toolbarConfig;
 	}
 
-	getTempContent() {
+	getTempContent(vertical) {
 		const text1 = "Common Canvas panel.";
 		const text2 = "Some temporary content for common canvas panel. This panel can display content from the host application.";
+		const className = "harness-panel-temp-content" + (vertical ? " vertical" : "");
 		return (
-			<div className="harness-panel-temp-content">
+			<div className={className}>
 				<div className="title">{text1}</div>
 				<div className="text">{text2}</div>
 			</div>
@@ -2529,7 +2537,9 @@ class App extends React.Component {
 
 		const rightFlyoutContent = rightFlyoutContentProperties
 			? rightFlyoutContentProperties
-			: this.getTempContent();
+			: this.getTempContent(true);
+
+		const leftFlyoutContent = this.getTempContent(true);
 
 		var firstCanvas = (
 			<CommonCanvas
@@ -2547,6 +2557,8 @@ class App extends React.Component {
 				notificationConfig={this.state.notificationConfig}
 				contextMenuConfig={contextMenuConfig}
 				keyboardConfig={keyboardConfig}
+				leftFlyoutContent={leftFlyoutContent}
+				showLeftFlyout={this.state.selectedShowLeftFlyout}
 				rightFlyoutContent={rightFlyoutContent}
 				showRightFlyout={showRightFlyoutProperties || this.state.selectedShowRightFlyout}
 				bottomPanelContent={bottomPanelContent}
@@ -2653,6 +2665,7 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
+
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_NETWORK) {
 			firstCanvas = (
 				<NetworkCanvas
@@ -2660,6 +2673,15 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
+
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_WYSIWYG) {
+			firstCanvas = (
+				<WysiwygCommentsCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES_CARBON) {
 			firstCanvas = (
 				<ReactNodesCarbonCanvas
@@ -2680,7 +2702,7 @@ class App extends React.Component {
 		if (this.state.selectedExtraCanvasDisplayed) {
 			const rightFlyoutContent2 = rightFlyoutContentProperties2
 				? rightFlyoutContentProperties2
-				: this.getTempContent();
+				: this.getTempContent(true);
 
 			commonCanvas = (<React.Fragment>
 				<div className="harness-canvas-single">

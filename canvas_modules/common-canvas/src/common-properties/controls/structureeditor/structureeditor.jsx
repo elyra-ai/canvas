@@ -83,7 +83,8 @@ class StructureEditorControl extends React.Component {
 				if (parentPropertyId.name !== childPropertyId.name) {
 					propertyId = this.props.controller.setChildPropertyId(parentPropertyId, childPropertyId);
 				}
-				row.push(this.controlFactory.createControlItem(control, propertyId));
+				const isReadOnly = this.props.readOnly;
+				row.push(this.controlFactory.createControlItem(control, propertyId, null, isReadOnly));
 			}
 		}
 		return row;
@@ -162,7 +163,8 @@ StructureEditorControl.propTypes = {
 	rightFlyout: PropTypes.bool,
 	state: PropTypes.string, // passed in by redux
 	value: PropTypes.array, // passed in by redux
-	messageInfo: PropTypes.object // passed in by redux
+	messageInfo: PropTypes.object, // passed in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({

@@ -513,7 +513,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onRowDoubleClick={this.onAddFieldClick}
 						selectedRows={[selectedField]}
 						onSort={this.setSortColumn.bind(this, "fieldTable")}
-						light={this.props.controller.getLight()}
+						light={!this.props.controller.getLight()}
 						emptyTablePlaceholder={emptyFieldsLabel}
 					/>
 				</div>
@@ -531,7 +531,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onRowDoubleClick={this.onAddValueClick}
 						selectedRows={[selectedValue]}
 						onSort={this.setSortColumn.bind(this, "valuesTable")}
-						light={this.props.controller.getLight()}
+						light={!this.props.controller.getLight()}
 						emptyTablePlaceholder={emptyValuesLabel}
 					/>
 				</div>
@@ -685,24 +685,26 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS));
 
 		return (
-			<div className="properties-functions-table-container" >
-				<div className="properties-functions-table" >
-					<FlexibleTable
-						columns={headers}
-						data={data}
-						sortable={["function", "return"]}
-						filterable={["function"]}
-						onFilter={this.onFunctionFilter}
-						rows={EXPRESSION_TABLE_ROWS}
-						tableLabel={functionsTableLabel}
-						rowSelection={ROW_SELECTION.SINGLE}
-						updateRowSelections={this.onFunctionTableClick}
-						onRowDoubleClick={this.onAddFunctionClick}
-						selectedRows={[selectedFunction]}
-						onSort={this.setSortColumn.bind(this, "functionTable")}
-						light={this.props.controller.getLight()}
-						emptyTablePlaceholder={functionsEmptyLabel}
-					/>
+			<div className="properties-functions-table-helper-container">
+				<div className="properties-functions-table-container">
+					<div className="properties-functions-table" >
+						<FlexibleTable
+							columns={headers}
+							data={data}
+							sortable={["function", "return"]}
+							filterable={["function"]}
+							onFilter={this.onFunctionFilter}
+							rows={EXPRESSION_TABLE_ROWS}
+							tableLabel={functionsTableLabel}
+							rowSelection={ROW_SELECTION.SINGLE}
+							updateRowSelections={this.onFunctionTableClick}
+							onRowDoubleClick={this.onAddFunctionClick}
+							selectedRows={[selectedFunction]}
+							onSort={this.setSortColumn.bind(this, "functionTable")}
+							light={!this.props.controller.getLight()}
+							emptyTablePlaceholder={functionsEmptyLabel}
+						/>
+					</div>
 				</div>
 				<div className="properties-help-table-container" >
 					{table.helpContainer}

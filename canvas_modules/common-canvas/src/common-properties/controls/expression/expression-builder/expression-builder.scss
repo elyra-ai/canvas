@@ -18,16 +18,15 @@
 $field-function-width: 85%;
 $operators-width: 15%;
 $fields-table-margin: 52%;
-$fields-table-width: 48%;
+$fields-table-width: 50%;
 $values-table-width: 48%;
-$functions-table-margin: 70%;
-$functions-table-width: 68%;
+$functions-table-margin: 53%;
+$functions-table-width: 100%;
 $functions-help-width: 28%;
 $operator-width: 36px;
 $operator-margin: 50%;
 
-.properties-expression-selection-container, .properties-field-and-values-table-container,
-.properties-functions-table-container {
+.properties-expression-selection-container {
 	width: 100%;
 	tbody {
 		tr {
@@ -36,13 +35,30 @@ $operator-margin: 50%;
 	}
 }
 
+/* Adding 50% width to adjust in Tearsheet */
+.properties-expression-function-select, /* Functions Dropdown */
+.properties-functions-table-container, /* Functions Table */
+.properties-field-and-values-table-container .properties-expression-field-select { /* Fields Table and Dropdown */
+	width: 50%;
+}
+
+.properties-expression-builder {
+	padding: $spacing-06 $spacing-07;
+	margin-bottom: 0;
+
+	.elyra-CodeMirror {
+		.cm-editor {
+			background: $field-01;
+		}
+	}
+}
 
 .properties-expression-selection-container {
 	padding-top: $spacing-03;
 }
 
 .properties-expression-selection-operator {
-	padding-bottom: $spacing-07;
+	padding-bottom: $spacing-04;
 }
 
 .properties-field-table-container {
@@ -80,6 +96,7 @@ $operator-margin: 50%;
 
 .properties-function-help-text {
 	overflow-wrap: break-word;
+	padding-top: $spacing-03;
 }
 
 .properties-operator-title {
@@ -113,13 +130,13 @@ $operator-margin: 50%;
 .properties-expression-selection-content-switcher {
 	padding-bottom: $spacing-08;
 	div {
-		max-width: 50%;
+		max-width: 30%;
 		float: right;
 	}
 }
 
 .properties-expression-field-select, .properties-expression-function-select {
-	padding-top: $spacing-06;
+	padding-top: $spacing-03;
 	padding-bottom: $spacing-06;
 }
 .properties-expression-table-dropdown-header {

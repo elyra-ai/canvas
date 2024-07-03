@@ -58,7 +58,7 @@ $properties-buttons-height: $spacing-10;
 	.properties-tearsheet-body {
 		padding: $spacing-06 $spacing-07;
 		margin-bottom: 0;
-		.cds--multi-select, .cds--dropdown, .cds--number input[type=number], .cds--text-input, .cds--text-area, .cds--date-picker__input {	// override carbon's modal
+		.cds--multi-select, .cds--dropdown, .cds--list-box__menu, .cds--search-input, .cds--number input[type=number], .cds--text-input, .cds--text-area, .cds--date-picker__input {	// override carbon's modal
 			background-color: $layer-01;
 		}
 	}

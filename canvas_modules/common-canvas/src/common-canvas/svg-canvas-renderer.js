@@ -34,14 +34,15 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
 	LINK_DIR_LEFT_RIGHT, LINK_DIR_RIGHT_LEFT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
-	LINK_METHOD_FREEFORM,
+	LINK_METHOD_FREEFORM, LINK_METHOD_PORTS,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
-	NORTH, SOUTH, EAST, WEST }
+	NORTH, SOUTH, EAST, WEST,
+	WYSIWYG }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
@@ -103,6 +104,7 @@ export default class SVGCanvasRenderer {
 			this.canvasController,
 			this.canvasDiv,
 			this.activePipeline,
+			this.removeTempCursorOverlay.bind(this), // Function
 			this.displayComments.bind(this), // Function
 			this.displayLinks.bind(this), // Function
 			this.getCommentToolbarPos.bind(this) // Function
@@ -257,6 +259,7 @@ export default class SVGCanvasRenderer {
 	// so the canvas can be redisplayed.
 	setCanvasInfoRenderer(canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config) {
 		this.logger.logStartTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
+
 		this.config = config;
 		this.canvasInfo = canvasInfo;
 		this.selectionInfo = selectionInfo;
@@ -277,6 +280,7 @@ export default class SVGCanvasRenderer {
 			this.canvasController,
 			this.canvasDiv,
 			this.activePipeline,
+			this.removeTempCursorOverlay.bind(this), // Function
 			this.displayComments.bind(this), // Function
 			this.displayLinks.bind(this), // Function
 			this.getCommentToolbarPos.bind(this) // Function
@@ -1485,12 +1489,11 @@ export default class SVGCanvasRenderer {
 	// Repositions the comment toolbar so it is always over the top of the
 	// comment being edited.
 	repositionCommentToolbar() {
-		if (this.config.enableMarkdownInComments &&
-				this.dispUtils.isDisplayingFullPage() &&
-				this.svgCanvasTextArea.isEditingText()) {
+		if (this.dispUtils.isDisplayingFullPage() &&
+			this.svgCanvasTextArea.isEditingText()) {
 			// If a node label or text decoration is being edited com will be undefined.
 			const com = this.activePipeline.getComment(this.svgCanvasTextArea.getEditingTextId());
-			if (com) {
+			if (com && (com.contentType === WYSIWYG || this.config.enableMarkdownInComments)) {
 				const pos = this.getCommentToolbarPos(com);
 				this.canvasController.moveTextToolbar(pos.x, pos.y);
 			}
@@ -2027,7 +2030,7 @@ export default class SVGCanvasRenderer {
 				this.logger.logStartTimer("Node Group - mouse down");
 				d3Event.stopPropagation();
 				if (this.svgCanvasTextArea.isEditingText()) {
-					this.svgCanvasTextArea.completeEditing();
+					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (!this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, "node");
@@ -2825,9 +2828,9 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	getContextToolbarPos(objType, d) {
+	getDefaultContextToolbarPos(objType, d) {
 		if (objType === "link") {
-			return d.pathInfo.centerPoint;
+			return { ...d.pathInfo.centerPoint };
 
 		} else if (objType === "node" && d.layout.contextToolbarPosition === "topCenter" && !d.is_expanded) {
 			return { x: d.x_pos + (d.width / 2), y: d.y_pos };
@@ -2836,11 +2839,13 @@ export default class SVGCanvasRenderer {
 		return { x: d.x_pos + d.width, y: d.y_pos };
 	}
 
-	addContextToolbar(d3Event, d, objType) {
+	addContextToolbar(d3Event, d, objType, xPos, yPos) {
 		if (!this.isSizing() && !this.isDragging() &&
 				!this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
 			this.canvasController.setMouseInObject(d.id);
-			let pos = this.getContextToolbarPos(objType, d);
+			let pos = this.getDefaultContextToolbarPos(objType, d);
+			pos.x = xPos ? pos.x + xPos : pos.x;
+			pos.y = yPos ? pos.y + yPos : pos.y;
 			pos = this.zoomUtils.unTransformPos(pos);
 			this.openContextMenu(d3Event, objType, d, null, pos);
 		}
@@ -3694,50 +3699,32 @@ export default class SVGCanvasRenderer {
 	}
 
 	createComments(enter) {
+		this.logger.logStartTimer("createComments");
+
 		const newCommentGroups = enter
 			.append("g")
 			.attr("data-id", (c) => this.getId("comment_grp", c.id))
 			.call(this.attachCommentGroupListeners.bind(this));
 
-		// Comment Sizing Area
-		newCommentGroups
-			.append("rect")
-			.attr("class", "d3-comment-sizing")
-			.call(this.attachCommentSizingListeners.bind(this));
-
-		// Comment Selection Highlighting Outline
-		newCommentGroups
-			.append("rect")
-			.attr("class", "d3-comment-selection-highlight");
-
-		// Background Rectangle
-		newCommentGroups
-			.append("rect")
-			.attr("width", (c) => c.width)
-			.attr("height", (c) => c.height)
-			.attr("x", 0)
-			.attr("y", 0)
-			.attr("class", "d3-comment-rect");
-
-		// Comment Text
-		newCommentGroups
-			.append("foreignObject")
-			.attr("class", "d3-foreign-object-comment-text")
-			.attr("x", 0)
-			.attr("y", 0)
-			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-			.attr("class", "d3-comment-text");
+		this.logger.logEndTimer("createComments");
 
 		return newCommentGroups;
 	}
 
 	updateComments(joinedCommentGrps) {
-		joinedCommentGrps
-			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
-			.attr("class", (c) => this.getCommentGroupClass(c));
+		this.logger.logStartTimer("updateComments");
 
 		// Comment Sizing Area
-		joinedCommentGrps.selectChildren(".d3-comment-sizing")
+		joinedCommentGrps
+			.selectChildren(".d3-comment-sizing")
+			.data((d) => ([d]), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("rect")
+						.attr("class", "d3-comment-sizing")
+						.call(this.attachCommentSizingListeners.bind(this))
+			)
 			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("x", -this.canvasLayout.commentSizingArea)
 			.attr("y", -this.canvasLayout.commentSizingArea)
@@ -3746,7 +3733,15 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-comment-sizing");
 
 		// Comment Selection Highlighting Outline
-		joinedCommentGrps.selectChildren(".d3-comment-selection-highlight")
+		joinedCommentGrps
+			.selectChildren(".d3-comment-selection-highlight")
+			.data((d) => ([d]), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("rect")
+						.attr("class", "d3-comment-selection-highlight")
+			)
 			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("x", -this.canvasLayout.commentHighlightGap)
 			.attr("y", -this.canvasLayout.commentHighlightGap)
@@ -3755,25 +3750,90 @@ export default class SVGCanvasRenderer {
 			.attr("data-selected", (c) => (this.activePipeline.isSelected(c.id) ? "yes" : "no"))
 			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
 
-		// Comment Body
-		joinedCommentGrps.selectChildren(".d3-comment-rect")
+		// Comment Body - only used for regular/markdown comments
+		joinedCommentGrps
+			.selectChildren(".d3-comment-rect")
+			.data((c) => (c.contentType !== WYSIWYG ? [c] : []), (c) => c.id)
+			.join(
+				(enter) =>
+					enter
+						.append("rect")
+						.attr("class", "d3-comment-selection-highlight")
+			)
 			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("height", (c) => c.height)
 			.attr("width", (c) => c.width)
 			.attr("class", "d3-comment-rect")
 			.attr("style", (c) => this.getCommentBodyStyle(c, "default"));
 
-		// Comment Text
-		joinedCommentGrps.selectChildren(".d3-foreign-object-comment-text")
+
+		// Comment Text - for regular/markdown comment
+		joinedCommentGrps
+			.selectChildren(".d3-foreign-object-comment-text")
+			.data((c) => (c.contentType !== WYSIWYG ? [c] : []), (c) => c.id)
+			.join(
+				(enter) => {
+					const fo = enter
+						.append("foreignObject")
+						.attr("class", "d3-foreign-object-comment-text")
+						.attr("x", 0)
+						.attr("y", 0);
+					fo
+						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+						.attr("class", "d3-comment-text");
+					return fo;
+				}
+			)
 			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("width", (c) => c.width)
 			.attr("height", (c) => c.height)
 			.select("div")
-			.attr("style", (c) => this.getNodeLabelStyle(c, "default"))
+			.attr("style", (c) => this.getCommentTextStyle(c, "default"))
 			.html((c) => (
 				this.config.enableMarkdownInComments
 					? markdownIt.render(c.content)
-					: escapeText(c.content)));
+					: escapeText(c.content))
+			);
+
+		// Comment Text - for WYSIWYG comment
+		joinedCommentGrps
+			.selectChildren(".d3-foreign-object-comment-text-wysiwyg")
+			.data((c) => (c.contentType === WYSIWYG ? [c] : []), (c) => c.id)
+			.join(
+				(enter) => {
+					const fo = enter
+						.append("foreignObject")
+						.attr("class", "d3-foreign-object-comment-text-wysiwyg")
+						.attr("x", 0)
+						.attr("y", 0);
+					fo
+						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+						.attr("class", "d3-comment-text-wysiwyg-outer")
+						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+						.attr("class", "d3-comment-text-wysiwyg");
+					return fo;
+				}
+			)
+			.datum((c) => this.activePipeline.getComment(c.id))
+			.attr("width", (c) => c.width)
+			.attr("height", (c) => c.height)
+
+			.select(".d3-comment-text-wysiwyg-outer")
+
+			.select(".d3-comment-text-wysiwyg")
+			.attr("style", null) // Wipe the in-line styles before applying
+
+			.each((d, i, commentTexts) => {
+				if (d.formats?.length > 0) {
+					d.formats.forEach((f) => {
+						const { field, value } = CanvasUtils.convertFormat(f);
+						d3.select(commentTexts[i]).style(field, value);
+					});
+				}
+			})
+
+			// .attr("style", (c) => this.getCommentTextStyle(c, "default"))
+			.html((c) => escapeText(c.content));
 
 		// Add or remove drag object behavior for the comment groups.
 		if (this.config.enableEditingActions) {
@@ -3793,7 +3853,6 @@ export default class SVGCanvasRenderer {
 				if (this.isDragging()) {
 					return;
 				}
-				this.setCommentStyles(d, "hover", d3.select(d3Event.currentTarget));
 				if (this.config.enableEditingActions && d.id !== this.svgCanvasTextArea.getEditingTextId()) {
 					this.createCommentPort(d3Event.currentTarget, d);
 				}
@@ -3802,7 +3861,6 @@ export default class SVGCanvasRenderer {
 				}
 			})
 			.on("mouseleave", (d3Event, d) => {
-				this.setCommentStyles(d, "default", d3.select(d3Event.currentTarget));
 				if (this.config.enableContextToolbar) {
 					this.removeContextToolbar();
 				}
@@ -3813,9 +3871,10 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.logStartTimer("Comment Group - mouse down");
+
 				d3Event.stopPropagation();
 				if (this.svgCanvasTextArea.isEditingText()) {
-					this.svgCanvasTextArea.completeEditing();
+					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (!this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, "comment");
@@ -3858,7 +3917,7 @@ export default class SVGCanvasRenderer {
 			.on("mousedown", (d3Event, d) => {
 				this.dragObjectUtils.mouseDownCommentSizingArea();
 			})
-			// Use mousemove here rather than mouseenter so the cursor will change
+			// Use mousemove and mouseenter so the cursor will change
 			// if the pointer moves from one area of the node outline to another
 			// (eg. from east area to north-east area) without exiting the node outline.
 			// A mouseenter is triggered when the sizing operation stops and the
@@ -4130,7 +4189,10 @@ export default class SVGCanvasRenderer {
 		joinedLinkGrps.each((d, i, linkGrps) => {
 			if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
 				const linkGrp = d3.select(linkGrps[i]).selectAll(".d3-link-decorations-group");
-				this.displayDecorations(d, DEC_LINK, linkGrp, d.decorations);
+				const decorations = this.shouldDisplayAltDecorations(d)
+					? this.canvasLayout.linkAltDecorations
+					: d.decorations;
+				this.displayDecorations(d, DEC_LINK, linkGrp, decorations);
 			}
 		});
 
@@ -4157,7 +4219,7 @@ export default class SVGCanvasRenderer {
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.svgCanvasTextArea.isEditingText()) {
-					this.svgCanvasTextArea.completeEditing();
+					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 					this.selectObjectD3Event(d3Event, d, "link");
@@ -4192,7 +4254,10 @@ export default class SVGCanvasRenderer {
 				this.setLinkLineStyles(targetObj, link, "hover");
 
 				if (this.config.enableContextToolbar) {
-					this.addContextToolbar(d3Event, link, "link");
+					this.addContextToolbar(d3Event, link, "link",
+						this.canvasLayout.linkContextToolbarPosX,
+						this.canvasLayout.linkContextToolbarPosY
+					);
 				}
 			})
 			// This will be called when the mouse cursor enters the link or moves out of
@@ -4220,7 +4285,9 @@ export default class SVGCanvasRenderer {
 			.on("mouseleave", (d3Event, link) => {
 				const targetObj = d3Event.currentTarget;
 
-				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes) {
+				// isEditingText is used to check whether Label Decoration is in Edit Mode
+				// to avoid Decoration Textarea to be closed on mouseleave.
+				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes && !this.isEditingText()) {
 					this.lowerLinkToBottom(targetObj);
 				}
 				this.setLinkLineStyles(targetObj, link, "default");
@@ -4230,6 +4297,13 @@ export default class SVGCanvasRenderer {
 					this.removeContextToolbar();
 				}
 			});
+	}
+
+	// Returns true if the alternative decorations for the link line
+	// should be displayed.
+	shouldDisplayAltDecorations(link) {
+		return (this.canvasLayout.linkAltDecorations &&
+			CanvasUtils.getLinkDistance(link) < this.canvasLayout.linkDistanceForAltDecorations);
 	}
 
 	// Creates a new start handle and a new end handle for the link groups
@@ -4510,6 +4584,35 @@ export default class SVGCanvasRenderer {
 		return link.decorations && link.decorations.length > 0;
 	}
 
+	// Returns an array of links taken from the active pipeline, that contain
+	// additional fields to describe how the link line should be drawn.
+	// Additional fields
+	// -----------------
+	// These are added by the updateFreeformLinksForNodes function:
+	// srcFreeformInfo - Added for freeform links. Indicates the starting point of the
+	//                   link line used so the starts don't bunch up together if more
+	//                   than one link enters or exits on one side of the node.
+	// trgFreeformInfo - Added for freeform links. Indicates the ending point of the
+	//                   link line used so the ends don't bunch up together if more
+	//                   than one link enters or exists on one side of the node.
+	//
+	// These are added by the getAttachedLinkObj and getDetachedLinkObj functions:
+	// x1 and y1           - Coordinates of the start of the line
+	// x2 and y2           - Coordinates of the end of the line
+	// coordsUpdated       - A booelan - true means the cordinates are different to before.
+	//                       Used for performance to prevent unneccessary line drawing.
+	// srcDir              - Direction ("n", "s", "e" or "W") of the source of the line
+	// trgDir              - Direction ("n", "s", "e" or "W") of the target of the line
+	// originX and originY - The theoretical origin in the source node of the line
+	// assocLinkVariation  - Either "curveRight", "curveLeft" or "doubleBack". Indicates
+	//                       the style used for drawing association links
+	//
+	// These fields are added by the addConnectionPaths function:
+	// pathinfo - an object containing:
+	//   - elements    - An array of elements that make up the path of the link line
+	//   - path        - The SVG path used to draw the link line
+	//   - centerPoint - The x,y cordinate of the center of the link line. Used for
+	//                   positioning decorations and the context toolbar.
 	buildLinksArray() {
 		this.logger.logStartTimer("buildLinksArray");
 
@@ -4526,10 +4629,10 @@ export default class SVGCanvasRenderer {
 					this.dragDetLinkUtils.isLinkBeingDragged(link)) ||
 					this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) &&
 					(!link.srcObj || !link.trgNode)) {
-				linkObj = this.getDetachedLineObj(link);
+				linkObj = this.getDetachedLinkObj(link);
 
 			} else {
-				linkObj = this.getAttachedLineObj(link);
+				linkObj = this.getAttachedLinkObj(link);
 			}
 			if (linkObj) {
 				linksArray.push(linkObj);
@@ -4550,7 +4653,10 @@ export default class SVGCanvasRenderer {
 		return linksArray;
 	}
 
-	getAttachedLineObj(link) {
+	// Returns the link object passed in with additional fields to descibe an fully
+	// attached link. This is called when both srcNode AND trgNode set to node
+	// objects indicating a link that is attached at the source and taget ends.
+	getAttachedLinkObj(link) {
 		const srcObj = link.srcObj;
 		const trgNode = link.trgNode;
 
@@ -4569,8 +4675,8 @@ export default class SVGCanvasRenderer {
 		// Only proceed if we have a source and a target node/comment and the
 		// conditions are right for displaying the link.
 		if (srcObj && trgNode && this.shouldDisplayLink(srcObj, trgNode, link.type)) {
-			const srcPortId = this.getSourcePortId(link, srcObj);
-			const trgPortId = this.getTargetPortId(link, trgNode);
+			const srcPortId = CanvasUtils.getSourcePortId(link, srcObj);
+			const trgPortId = CanvasUtils.getTargetPortId(link, trgNode);
 			const assocLinkVariation =
 				link.type === ASSOCIATION_LINK && this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE
 					? this.getAssocLinkVariation(srcObj, trgNode)
@@ -4599,70 +4705,60 @@ export default class SVGCanvasRenderer {
 		return null;
 	}
 
-	// Returns a line object describing the detached (or semi-detached) link
-	// passed in. This will only ever be called when either srcNode OR trgNode
-	// are null (indicating a semi-detached link) or when both are null indicating
-	// a fully-detached link.
-	getDetachedLineObj(link) {
+	// Returns the link object passed in with additional fields to describe
+	// a fully-detached or semi-detached link. This will only ever
+	// be called when either srcNode OR trgNode are null indicating a
+	// semi-detached link, or when both are null, indicating a fully-detached link.
+	getDetachedLinkObj(link) {
 		const srcObj = link.srcObj;
 		const trgNode = link.trgNode;
 
-		let srcPortId = null;
-		let trgPortId = null;
-		const coords = {};
+		const coords = { x1: link.x1, y1: link.y1, x2: link.x2, y2: link.y2 };
 
-		if (!srcObj) {
-			coords.x1 = link.srcPos.x_pos;
-			coords.y1 = link.srcPos.y_pos;
-			coords.srcDir = this.getSrcDirForDetachedLink(link, coords.x1, coords.y1);
+		// Fully-detached link.
+		if (!srcObj && !trgNode) {
+			link.x1 = link.srcPos.x_pos;
+			link.y1 = link.srcPos.y_pos;
+			link.x2 = link.trgPos.x_pos;
+			link.y2 = link.trgPos.y_pos;
+			link.originX = 0;
+			link.originY = 0;
 
-		} else {
 			if (this.canvasLayout.linkMethod === LINK_METHOD_FREEFORM) {
-				const endPos = { x: link.trgPos.x_pos, y: link.trgPos.y_pos };
-				const startPos = this.linkUtils.getNewFreeformNodeLinkStartPos(srcObj, endPos, link.srcOriginInfo);
-				coords.x1 = startPos.x;
-				coords.y1 = startPos.y;
-				coords.originX = startPos.originX;
-				coords.originY = startPos.originY;
-				coords.srcDir = startPos.dir;
-
+				link.srcDir = CanvasUtils.getPortDir((link.x2 - link.x1), (link.y2 - link.y1), { width: 10, height: 10, }); // Pass in a dummy node
+				link.trgDir = this.reverseDir(link.srcDir);
 			} else {
-				srcPortId = this.getSourcePortId(link, srcObj);
-				let port = this.getOutputPort(srcObj, srcPortId);
-				if (!port) {
-					port = this.getInputPort(srcObj, srcPortId);
-				}
-
-				if (port) {
-					coords.x1 = srcObj.x_pos + port.cx;
-					coords.y1 = srcObj.y_pos + port.cy;
-					coords.srcDir = port.dir;
-				}
+				link.srcDir = this.getDefaultSrcDirForPorts();
+				link.trgDir = this.reverseDir(link.srcDir);
 			}
-		}
 
-		if (!trgNode) {
-			coords.x2 = link.trgPos.x_pos;
-			coords.y2 = link.trgPos.y_pos;
-			coords.trgDir = this.getTrgDirForDetachedLink(link, coords.x2, coords.y2);
+		// Semi-detached at source end.
+		} else if (trgNode) {
+			const trgInfo = this.getTargetEndInfo(link, trgNode);
 
+			link.x1 = link.srcPos.x_pos;
+			link.y1 = link.srcPos.y_pos;
+			link.x2 = trgInfo.x2;
+			link.y2 = trgInfo.y2;
+			link.trgDir = trgInfo.trgDir;
+			link.originX = 0;
+			link.originY = 0;
+
+			link.srcDir = this.getSrcDirForDetachedLink(link, link.x1, link.y1);
+
+		// Semi-detached at target end.
 		} else {
-			if (this.canvasLayout.linkMethod === LINK_METHOD_FREEFORM) {
-				const endPos = { x: link.srcPos.x_pos, y: link.srcPos.y_pos };
-				const startPos = this.linkUtils.getNewFreeformNodeLinkStartPos(trgNode, endPos, link.trgOriginInfo);
-				coords.x2 = startPos.x;
-				coords.y2 = startPos.y;
-				coords.trgDir = startPos.dir;
+			const srcInfo = this.getSourceEndInfo(link, srcObj);
 
-			} else {
-				trgPortId = this.getTargetPortId(link, trgNode);
-				const port = this.getInputPort(trgNode, trgPortId);
-				if (port) {
-					coords.x2 = trgNode.x_pos + port.cx;
-					coords.y2 = trgNode.y_pos + port.cy;
-					coords.trgDir = port.dir;
-				}
-			}
+			link.x1 = srcInfo.x1;
+			link.y1 = srcInfo.y1;
+			link.x2 = link.trgPos.x_pos;
+			link.y2 = link.trgPos.y_pos;
+			link.srcDir = srcInfo.srcDir;
+			link.originX = srcInfo.originX;
+			link.originY = srcInfo.originY;
+
+			link.trgDir = this.getTrgDirForDetachedLink(link, link.x2, link.y2);
 		}
 
 		// Set additional calculated fields on link object.
@@ -4672,35 +4768,103 @@ export default class SVGCanvasRenderer {
 			link.x2 !== coords.x2 ||
 			link.y2 !== coords.y2;
 
-		link.x1 = coords.x1;
-		link.y1 = coords.y1;
-		link.x2 = coords.x2;
-		link.y2 = coords.y2;
-		link.originX = coords.originX;
-		link.originY = coords.originY;
-		link.srcDir = coords.srcDir;
-		link.trgDir = coords.trgDir;
-
 		return link;
+	}
+
+	// Returns an info object for the source end of the link, with:
+	// x1 and y1 - Coordinate of the start of the link line.
+	// srcDir - Direction ("n", "s", "e" or "w") the link line should be drawn.
+	// originX and originY = The theoretical start point of the link line from.
+	getSourceEndInfo(link, srcObj) {
+		const info = {};
+
+		if (this.canvasLayout.linkMethod === LINK_METHOD_FREEFORM) {
+			const endPos = { x: link.trgPos.x_pos, y: link.trgPos.y_pos };
+			const startPos = this.linkUtils.getNewFreeformNodeLinkStartPos(srcObj, endPos, link.srcFreeformInfo);
+			info.x1 = startPos.x;
+			info.y1 = startPos.y;
+			info.originX = startPos.originX;
+			info.originY = startPos.originY;
+			info.srcDir = startPos.dir;
+
+		} else {
+			const srcPortId = CanvasUtils.getSourcePortId(link, srcObj);
+			let port = CanvasUtils.getOutputPort(srcPortId, srcObj);
+			// If no port, we must be handling a new association link being drawn from an input port.
+			if (!port) {
+				port = CanvasUtils.getInputPort(srcPortId, srcObj);
+			}
+
+			if (port) {
+				info.x1 = srcObj.x_pos + port.cx;
+				info.y1 = srcObj.y_pos + port.cy;
+				info.srcDir = port.dir;
+			}
+		}
+		return info;
+	}
+
+	// Returns an info object for the target end of the link, with:
+	// x1 and y1 - Coordinate of the end of the link line.
+	// srcDir - Direction ("n", "s", "e" or "w") the link line should be drawn to.
+	getTargetEndInfo(link, trgNode) {
+		const info = {};
+
+		if (this.canvasLayout.linkMethod === LINK_METHOD_FREEFORM) {
+			const endPos = { x: link.srcPos.x_pos, y: link.srcPos.y_pos };
+			const startPos = this.linkUtils.getNewFreeformNodeLinkStartPos(trgNode, endPos, link.trgFreeformInfo);
+			info.x2 = startPos.x;
+			info.y2 = startPos.y;
+			info.trgDir = startPos.dir;
+
+		} else {
+			const trgPortId = CanvasUtils.getTargetPortId(link, trgNode);
+			const port = CanvasUtils.getInputPort(trgPortId, trgNode);
+			if (port) {
+				info.x2 = trgNode.x_pos + port.cx;
+				info.y2 = trgNode.y_pos + port.cy;
+				info.trgDir = port.dir;
+			}
+		}
+		return info;
+	}
+
+	// Returns a default source direction.
+	getDefaultSrcDirForPorts() {
+		if (this.canvasLayout.linkDirection === LINK_DIR_LEFT_RIGHT) {
+			return EAST;
+
+		} else if (this.canvasLayout.linkDirection === LINK_DIR_RIGHT_LEFT) {
+			return WEST;
+
+		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+			return NORTH;
+
+		} else if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
+			return SOUTH;
+		}
+		return EAST;
 	}
 
 	// Returns a direction ("n", "s", "e" or "w") for the source end of a detached link.
 	getSrcDirForDetachedLink(link, x, y) {
 		if (link.trgNode) {
-			// If we have a trgDir and it fits with the linkDirection currently employed we
-			// can set the srcDir accordingly. These will be the default cases for ports that
-			// are positioned based on link direction.
-			if (link.trgDir === WEST && this.canvasLayout.linkDirection === LINK_DIR_LEFT_RIGHT) {
-				return EAST;
+			if (this.canvasLayout.linkMethod === LINK_METHOD_PORTS) {
+				// If we have a trgDir and it fits with the linkDirection currently employed we
+				// can set the srcDir accordingly. These will be the default cases for ports that
+				// are positioned based on link direction.
+				if (link.trgDir === WEST && this.canvasLayout.linkDirection === LINK_DIR_LEFT_RIGHT) {
+					return EAST;
 
-			} else if (link.trgDir === EAST && this.canvasLayout.linkDirection === LINK_DIR_RIGHT_LEFT) {
-				return WEST;
+				} else if (link.trgDir === EAST && this.canvasLayout.linkDirection === LINK_DIR_RIGHT_LEFT) {
+					return WEST;
 
-			} else if (link.trgDir === SOUTH && this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-				return NORTH;
+				} else if (link.trgDir === SOUTH && this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+					return NORTH;
 
-			} else if (link.trgDir === NORTH && this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-				return SOUTH;
+				} else if (link.trgDir === NORTH && this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
+					return SOUTH;
+				}
 			}
 
 			// If the trgDir does not fit with one of the link directions then the trgDir
@@ -4710,7 +4874,7 @@ export default class SVGCanvasRenderer {
 			return this.reverseDir(srcDir);
 		}
 		// If there is no target node then this is a fully detached link so set the source
-		// direction based on the position relative to the
+		// direction based on the position relative to the target.
 		const dir = CanvasUtils.getPortDir((x - link.trgPos.x_pos), (y - link.trgPos.y_pos), { width: 10, height: 10, }); // Pass in a dummy node
 		return this.reverseDir(dir);
 	}
@@ -4718,20 +4882,21 @@ export default class SVGCanvasRenderer {
 	// Returns a direction ("n", "s", "e" or "w") for the target end of a detached link.
 	getTrgDirForDetachedLink(link, x, y) {
 		if (link.srcObj) {
-			// If we have a trgDir and it fits with the linkDirection currently employed we
-			// can set the srcDir accordingly. These will be the default cases for ports that
-			// are positioned based on link direction.
-			if (link.srcDir === EAST && this.canvasLayout.linkDirection === LINK_DIR_LEFT_RIGHT) {
-				return WEST;
+			if (this.canvasLayout.linkMethod === LINK_METHOD_PORTS) {
+				// If there is a srcDir for the link we return a trgDir if the srcDir matches the
+				// linkDirection (port placement) currently in use.
+				if (link.srcDir === EAST && this.canvasLayout.linkDirection === LINK_DIR_LEFT_RIGHT) {
+					return WEST;
 
-			} else if (link.srcDir === WEST && this.canvasLayout.linkDirection === LINK_DIR_RIGHT_LEFT) {
-				return EAST;
+				} else if (link.srcDir === WEST && this.canvasLayout.linkDirection === LINK_DIR_RIGHT_LEFT) {
+					return EAST;
 
-			} else if (link.srcDir === NORTH && this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-				return SOUTH;
+				} else if (link.srcDir === NORTH && this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+					return SOUTH;
 
-			} else if (link.srcDir === SOUTH && this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-				return NORTH;
+				} else if (link.srcDir === SOUTH && this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
+					return NORTH;
+				}
 			}
 
 			// If the srcDir does not fit with one of the link directions then the srcDir
@@ -4744,6 +4909,7 @@ export default class SVGCanvasRenderer {
 		return this.reverseDir(dir);
 	}
 
+	// Returns the reverse of the direction passed in.
 	reverseDir(dir) {
 		switch (dir) {
 		case NORTH:
@@ -4756,48 +4922,6 @@ export default class SVGCanvasRenderer {
 		default:
 			return EAST;
 		}
-	}
-
-	getOutputPort(srcNode, srcPortId) {
-		if (srcNode && srcNode.outputs) {
-			return srcNode.outputs.find((p) => p.id === srcPortId);
-		}
-		return null;
-	}
-
-	getInputPort(trgNode, trgPortId) {
-		if (trgNode && trgNode.inputs) {
-			return trgNode.inputs.find((p) => p.id === trgPortId);
-		}
-		return null;
-	}
-
-	// Returns a source port Id if one exists in the link, otherwise defaults
-	// to the first available port on the source node.
-	getSourcePortId(link, srcNode) {
-		var srcPortId;
-		if (link.srcNodePortId) {
-			srcPortId = link.srcNodePortId;
-		} else if (srcNode.outputs && srcNode.outputs.length > 0) {
-			srcPortId = srcNode.outputs[0].id;
-		} else {
-			srcPortId = null;
-		}
-		return srcPortId;
-	}
-
-	// Returns a target port Id if one exists in the link, otherwise defaults
-	// to the first available port on the target node.
-	getTargetPortId(link, trgNode) {
-		var trgPortId;
-		if (link.trgNodePortId) {
-			trgPortId = link.trgNodePortId;
-		} else if (trgNode.inputs && trgNode.inputs.length > 0) {
-			trgPortId = trgNode.inputs[0].id;
-		} else {
-			trgPortId = null;
-		}
-		return trgPortId;
 	}
 
 	// Returns true if a link should be displayed and false if not. The link
@@ -4920,7 +5044,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Updates the data links for all the nodes with two optional fields
-	// (called srcOriginInfo and trgOriginInfo) based on the location of the
+	// (called srcFreeformInfo and trgFreeformInfo) based on the location of the
 	// nodes the links go from and to. The info in these fields is used to
 	// calculate the starting and ending position of freeform line links.
 	// This ensures that input and output links that go in a certain direction
@@ -4931,7 +5055,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Updates the links going into and out of the node passed in with up to
-	// two new fields (called srcOriginInfo and trgOriginInfo).
+	// two new fields (called srcFreeformInfo and trgFreeformInfo).
 	updateFreeformLinksForNode(node) {
 		const linksInfo = {};
 		linksInfo.n = [];
@@ -5088,13 +5212,13 @@ export default class SVGCanvasRenderer {
 	updateLinksInfo(linksDirArray, dir) {
 		linksDirArray.forEach((li, i) => {
 			if (li.type === "out") {
-				li.link.srcOriginInfo = {
+				li.link.srcFreeformInfo = {
 					dir: dir,
 					idx: i,
 					len: linksDirArray.length
 				};
 			} else {
-				li.link.trgOriginInfo = {
+				li.link.trgFreeformInfo = {
 					dir: dir,
 					idx: i,
 					len: linksDirArray.length
