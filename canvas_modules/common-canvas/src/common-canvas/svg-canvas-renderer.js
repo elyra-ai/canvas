@@ -3694,50 +3694,32 @@ export default class SVGCanvasRenderer {
 	}
 
 	createComments(enter) {
+		this.logger.logStartTimer("createComments");
+
 		const newCommentGroups = enter
 			.append("g")
 			.attr("data-id", (c) => this.getId("comment_grp", c.id))
 			.call(this.attachCommentGroupListeners.bind(this));
 
-		// Comment Sizing Area
-		newCommentGroups
-			.append("rect")
-			.attr("class", "d3-comment-sizing")
-			.call(this.attachCommentSizingListeners.bind(this));
-
-		// Comment Selection Highlighting Outline
-		newCommentGroups
-			.append("rect")
-			.attr("class", "d3-comment-selection-highlight");
-
-		// Background Rectangle
-		newCommentGroups
-			.append("rect")
-			.attr("width", (c) => c.width)
-			.attr("height", (c) => c.height)
-			.attr("x", 0)
-			.attr("y", 0)
-			.attr("class", "d3-comment-rect");
-
-		// Comment Text
-		newCommentGroups
-			.append("foreignObject")
-			.attr("class", "d3-foreign-object-comment-text")
-			.attr("x", 0)
-			.attr("y", 0)
-			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-			.attr("class", "d3-comment-text");
+		this.logger.logEndTimer("createComments");
 
 		return newCommentGroups;
 	}
 
 	updateComments(joinedCommentGrps) {
-		joinedCommentGrps
-			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
-			.attr("class", (c) => this.getCommentGroupClass(c));
+		this.logger.logStartTimer("updateComments");
 
 		// Comment Sizing Area
-		joinedCommentGrps.selectChildren(".d3-comment-sizing")
+		joinedCommentGrps
+			.selectChildren(".d3-comment-sizing")
+			.data((d) => ([d]), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("rect")
+						.attr("class", "d3-comment-sizing")
+						.call(this.attachCommentSizingListeners.bind(this))
+			)
 			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("x", -this.canvasLayout.commentSizingArea)
 			.attr("y", -this.canvasLayout.commentSizingArea)
@@ -3746,7 +3728,15 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-comment-sizing");
 
 		// Comment Selection Highlighting Outline
-		joinedCommentGrps.selectChildren(".d3-comment-selection-highlight")
+		joinedCommentGrps
+			.selectChildren(".d3-comment-selection-highlight")
+			.data((d) => ([d]), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("rect")
+						.attr("class", "d3-comment-selection-highlight")
+			)
 			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("x", -this.canvasLayout.commentHighlightGap)
 			.attr("y", -this.canvasLayout.commentHighlightGap)
@@ -3756,7 +3746,15 @@ export default class SVGCanvasRenderer {
 			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
 
 		// Comment Body
-		joinedCommentGrps.selectChildren(".d3-comment-rect")
+		joinedCommentGrps
+			.selectChildren(".d3-comment-rect")
+			.data((d) => ([d]), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("rect")
+						.attr("class", "d3-comment-selection-highlight")
+			)
 			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("height", (c) => c.height)
 			.attr("width", (c) => c.width)
@@ -3764,7 +3762,22 @@ export default class SVGCanvasRenderer {
 			.attr("style", (c) => this.getCommentBodyStyle(c, "default"));
 
 		// Comment Text
-		joinedCommentGrps.selectChildren(".d3-foreign-object-comment-text")
+		joinedCommentGrps
+			.selectChildren(".d3-foreign-object-comment-text")
+			.data((d) => ([d]), (d) => d.id)
+			.join(
+				(enter) => {
+					const fo = enter
+						.append("foreignObject")
+						.attr("class", "d3-foreign-object-comment-text")
+						.attr("x", 0)
+						.attr("y", 0);
+					fo
+						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+						.attr("class", "d3-comment-text");
+					return fo;
+				}
+			)
 			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("width", (c) => c.width)
 			.attr("height", (c) => c.height)
