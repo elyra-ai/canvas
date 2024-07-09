@@ -3782,7 +3782,7 @@ export default class SVGCanvasRenderer {
 			.attr("width", (c) => c.width)
 			.attr("height", (c) => c.height)
 			.select("div")
-			.attr("style", (c) => this.getNodeLabelStyle(c, "default"))
+			.attr("style", (c) => this.getCommentTextStyle(c, "default"))
 			.html((c) => (
 				this.config.enableMarkdownInComments
 					? markdownIt.render(c.content)
