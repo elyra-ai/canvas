@@ -28,6 +28,10 @@ mulltiple properties windows - for when you have a multitude of node types each 
 * Is the mainstay of several IBM products/applications.
 * Is delivered as a package from the [**NPM registry**](https://www.npmjs.com/package/@elyra/canvas)
 
+## What's in this documentation
+
+The 'Home' and 'Components' tabs give a comprehensive overview of Elyra Canvas features so this is useful for any reader assessing the suitability of Elyra Canvas for their application.  Developers can then jump to the remaining tabs startiing with 'Initial Setup' to get common setup such as install done, and then moving on to either the 'Common Canvas' or 'Common Properties' tabs (or both) depending on which component is of interest.
+
 ## Try Elyra Canvas
 
 * The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny) is a demonstration application which is produced with only a [few lines of code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js). You can use it to try these features of Elyra Canvas:

@@ -402,7 +402,7 @@ Cypress.Commands.add("getLinkLineUsingLinkId", (linkId) => {
 });
 
 Cypress.Commands.add("clickLink", (linkId) => {
-	cy.getLinkUsingLinkId(linkId).click();
+	cy.getLinkUsingLinkId(linkId).click({ force: true });
 });
 
 Cypress.Commands.add("ctrlOrCmdClickLink", (linkId) => {

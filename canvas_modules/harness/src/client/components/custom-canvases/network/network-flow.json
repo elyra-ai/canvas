@@ -1,0 +1,878 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "network-pipeline-flow",
+  "primary_pipeline": "54321",
+  "pipelines": [
+    {
+      "id": "54321",
+      "nodes": [
+        {
+          "id": "7c3c5c9e-11c0-4d23-9a7d-1a0f87bc1b7a",
+          "type": "execution_node",
+          "op": "database",
+          "app_data": {
+            "ui_data": {
+              "label": "Database - 4",
+              "image": "images/custom-canvases/flows/palette/icons/table.svg",
+              "x_pos": 17.5,
+              "y_pos": 405,
+              "description": "Database node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "eb916832-1392-4f12-aa9a-0b8aad168928",
+          "type": "execution_node",
+          "op": "database",
+          "app_data": {
+            "ui_data": {
+              "label": "Database - 6",
+              "image": "images/custom-canvases/flows/palette/icons/table.svg",
+              "x_pos": 17.5,
+              "y_pos": 675,
+              "description": "Database node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              },
+              "links": [
+                {
+                  "id": "f20e375b-486b-4116-af08-1e0361415f8a",
+                  "node_id_ref": "2d9d4e07-afc8-4200-bc96-3267c5ef7318",
+                  "port_id_ref": "outPort1"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "2d9d4e07-afc8-4200-bc96-3267c5ef7318",
+          "type": "execution_node",
+          "op": "application",
+          "app_data": {
+            "ui_data": {
+              "label": "Application - 8",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 17.5,
+              "y_pos": 510,
+              "description": "Application node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "d1f30c76-b7f5-4f09-a655-31083af25bee",
+          "type": "execution_node",
+          "op": "database",
+          "app_data": {
+            "ui_data": {
+              "label": "Database - 5",
+              "image": "images/custom-canvases/flows/palette/icons/table.svg",
+              "x_pos": 210,
+              "y_pos": 510,
+              "description": "Database node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              },
+              "links": [
+                {
+                  "id": "19fe00d8-5564-4fc7-8f13-6340a9c0043d",
+                  "node_id_ref": "2d9d4e07-afc8-4200-bc96-3267c5ef7318",
+                  "port_id_ref": "outPort1"
+                },
+                {
+                  "id": "5a3a7c33-2d00-4dbe-b8d5-8c1305b905fc",
+                  "node_id_ref": "26b2b823-2e93-4275-a62d-f84888bd8977",
+                  "port_id_ref": "outPort1"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "f1b999ee-eed5-49da-8a11-fb208e2fe72e",
+          "type": "execution_node",
+          "op": "application",
+          "app_data": {
+            "ui_data": {
+              "label": "Commissions Calculator",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 350,
+              "y_pos": 360,
+              "description": "Application node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              },
+              "links": [
+                {
+                  "id": "48ef30bb-6ec7-4ed9-af7e-86995689616a",
+                  "node_id_ref": "f9d3e9b7-f8c9-4d82-8479-e141ebd47350",
+                  "port_id_ref": "outPort1"
+                },
+                {
+                  "id": "68c1e542-f101-4e31-b4ad-9dd687814af6",
+                  "node_id_ref": "7c3c5c9e-11c0-4d23-9a7d-1a0f87bc1b7a",
+                  "port_id_ref": "outPort1"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "45eccbfb-a502-4d7b-877c-e23539e9929d",
+          "type": "execution_node",
+          "op": "database",
+          "app_data": {
+            "ui_data": {
+              "label": "Database - 2",
+              "image": "images/custom-canvases/flows/palette/icons/table.svg",
+              "x_pos": 525,
+              "y_pos": 360,
+              "description": "Database node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              },
+              "links": [
+                {
+                  "id": "0210f715-ec84-4713-9a93-6cba103a9783",
+                  "node_id_ref": "26b2b823-2e93-4275-a62d-f84888bd8977",
+                  "port_id_ref": "outPort1"
+                },
+                {
+                  "id": "5d8f1247-aa22-4f1d-be3c-b7fab7d935b4",
+                  "node_id_ref": "2a99033c-0db7-4666-95b5-95de5d4fb308",
+                  "port_id_ref": "outPort1"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "f9d3e9b7-f8c9-4d82-8479-e141ebd47350",
+          "type": "execution_node",
+          "op": "queue-manager",
+          "app_data": {
+            "ui_data": {
+              "label": "Queue Manager - 1",
+              "image": "images/custom-canvases/flows/palette/icons/userinput.svg",
+              "x_pos": 350,
+              "y_pos": 675,
+              "description": "Queue Manager node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              },
+              "links": [
+                {
+                  "id": "1e25361c-d544-4193-be5b-fb13cfedc34b",
+                  "node_id_ref": "f1b999ee-eed5-49da-8a11-fb208e2fe72e",
+                  "port_id_ref": "outPort1"
+                },
+                {
+                  "id": "508c629d-8074-4714-9b64-9e1e9f7e3224",
+                  "node_id_ref": "79adff0f-7286-457c-9ac2-41aa52119579",
+                  "port_id_ref": "outPort1"
+                },
+                {
+                  "id": "bb96895c-5cbc-45a3-a505-e484e3c6f12c",
+                  "node_id_ref": "26b2b823-2e93-4275-a62d-f84888bd8977",
+                  "port_id_ref": "outPort1"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "2a99033c-0db7-4666-95b5-95de5d4fb308",
+          "type": "execution_node",
+          "op": "application",
+          "app_data": {
+            "ui_data": {
+              "label": "Application - 6",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 525,
+              "y_pos": 600,
+              "description": "Application node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "26b2b823-2e93-4275-a62d-f84888bd8977",
+          "type": "execution_node",
+          "op": "application",
+          "app_data": {
+            "ui_data": {
+              "label": "Application - 3",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 682.5,
+              "y_pos": 510,
+              "description": "Application node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              },
+              "links": [
+                {
+                  "id": "0b3b25ee-8ef5-4843-ae09-32fbfb9f1852",
+                  "node_id_ref": "d1f30c76-b7f5-4f09-a655-31083af25bee",
+                  "port_id_ref": "outPort1"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "fba04d26-ba48-40a0-af92-37ae59cacaaa",
+          "type": "execution_node",
+          "op": "application",
+          "app_data": {
+            "ui_data": {
+              "label": "Application - 2",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 717.5,
+              "y_pos": 180,
+              "description": "Application node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              },
+              "links": [
+                {
+                  "id": "31f49b03-0b83-40fb-a4a6-a6abb4f54a94",
+                  "node_id_ref": "45eccbfb-a502-4d7b-877c-e23539e9929d",
+                  "port_id_ref": "outPort1"
+                },
+                {
+                  "id": "abf2d4ee-46c9-435d-8937-5a11cc18849b",
+                  "node_id_ref": "a6c1fcd7-3d8b-4d7b-8990-0261a6c9fda6",
+                  "port_id_ref": "outPort1"
+                },
+                {
+                  "id": "b696f1fb-6adc-4357-9d77-24629d851ce3",
+                  "node_id_ref": "29bcfe48-3a35-4145-9957-3e7e7fda4e54",
+                  "port_id_ref": "outPort1"
+                },
+                {
+                  "id": "c6d1b9a7-afc7-4660-8ab3-6776bc61fb26",
+                  "node_id_ref": "db525d21-1ad7-4f87-a073-ff185e3ca89e",
+                  "port_id_ref": "outPort1"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "a6c1fcd7-3d8b-4d7b-8990-0261a6c9fda6",
+          "type": "execution_node",
+          "op": "database",
+          "app_data": {
+            "ui_data": {
+              "label": "Database - 1",
+              "image": "images/custom-canvases/flows/palette/icons/table.svg",
+              "x_pos": 560,
+              "y_pos": 30,
+              "description": "Database node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              },
+              "links": [
+                {
+                  "id": "60ec3823-3144-41d0-b924-113aacfbb3b4",
+                  "node_id_ref": "fba04d26-ba48-40a0-af92-37ae59cacaaa",
+                  "port_id_ref": "outPort1"
+                },
+                {
+                  "id": "442a9874-6c31-45a3-b214-3fc9d3a871f2",
+                  "node_id_ref": "29bcfe48-3a35-4145-9957-3e7e7fda4e54",
+                  "port_id_ref": "outPort1"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "29bcfe48-3a35-4145-9957-3e7e7fda4e54",
+          "type": "execution_node",
+          "op": "application",
+          "app_data": {
+            "ui_data": {
+              "label": "Application - 5",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 875,
+              "y_pos": 30,
+              "description": "Application node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              },
+              "links": [
+                {
+                  "id": "a2c1f2dc-dc81-4b6e-bc66-c47aa74d6d4a",
+                  "node_id_ref": "a6c1fcd7-3d8b-4d7b-8990-0261a6c9fda6",
+                  "port_id_ref": "outPort1"
+                },
+                {
+                  "id": "f8305809-2115-4ef9-a6bf-906b53d603e8",
+                  "node_id_ref": "fba04d26-ba48-40a0-af92-37ae59cacaaa",
+                  "port_id_ref": "outPort1"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "db525d21-1ad7-4f87-a073-ff185e3ca89e",
+          "type": "execution_node",
+          "op": "queue-manager",
+          "app_data": {
+            "ui_data": {
+              "label": "Queue Manager - 2",
+              "image": "images/custom-canvases/flows/palette/icons/userinput.svg",
+              "x_pos": 892.5,
+              "y_pos": 300,
+              "description": "Queue Manager node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              },
+              "links": [
+                {
+                  "id": "7d242fe3-1719-42c9-8208-61ddf44dc2bc",
+                  "node_id_ref": "cd14647c-b6f1-4b3b-a726-8e5f48fb8fb1",
+                  "port_id_ref": "outPort1"
+                },
+                {
+                  "id": "94f432f0-8650-453e-8cc4-14d5dfd2d909",
+                  "node_id_ref": "fba04d26-ba48-40a0-af92-37ae59cacaaa",
+                  "port_id_ref": "outPort1"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "cd14647c-b6f1-4b3b-a726-8e5f48fb8fb1",
+          "type": "execution_node",
+          "op": "application",
+          "app_data": {
+            "ui_data": {
+              "label": "Application - 7",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 717.5,
+              "y_pos": 330,
+              "description": "Application node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "06a50396-219a-4ad0-bdf3-2d2b5710de35",
+          "type": "execution_node",
+          "op": "database",
+          "app_data": {
+            "ui_data": {
+              "label": "Database - 3",
+              "image": "images/custom-canvases/flows/palette/icons/table.svg",
+              "x_pos": 892.5,
+              "y_pos": 465,
+              "description": "Database node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              },
+              "links": [
+                {
+                  "id": "f5e6a4de-9893-4526-b5c2-b22025a42ee6",
+                  "node_id_ref": "cd14647c-b6f1-4b3b-a726-8e5f48fb8fb1",
+                  "port_id_ref": "outPort1"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "14634b4b-355f-44fe-97c3-ab9a07a45d73",
+          "type": "execution_node",
+          "op": "application",
+          "app_data": {
+            "ui_data": {
+              "label": "Application - 4",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 682.5,
+              "y_pos": 690,
+              "description": "Application node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "79adff0f-7286-457c-9ac2-41aa52119579",
+          "type": "execution_node",
+          "op": "queue-manager",
+          "app_data": {
+            "ui_data": {
+              "label": "Queue Manager - 3",
+              "image": "images/custom-canvases/flows/palette/icons/userinput.svg",
+              "x_pos": 822.5,
+              "y_pos": 675,
+              "description": "Queue Manager node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port 1"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 1"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "e6381626-0d9e-4e22-9943-80ccaaee4ebb",
+              "x_pos": 17.5,
+              "y_pos": 30,
+              "width": 350,
+              "height": 180,
+              "class_name": "bkg-col-teal-20",
+              "content": "# Network Canvas\n\n### This shows a network of nodes using the \"Freeform\" Link Method  and the \"Elbow\" Link Type",
+              "associated_id_refs": []
+            }
+          ]
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}

@@ -17,7 +17,7 @@
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import CommonCanvasTextToolbar from "../../src/common-canvas/cc-text-toolbar.jsx";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
-import { createIntlCommonCanvasTextToolbar } from "../_utils_/common-canvas-utils.js";
+import { createIntlCommonCanvasTextToolbar } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
 
 const canvasController = new CanvasController();

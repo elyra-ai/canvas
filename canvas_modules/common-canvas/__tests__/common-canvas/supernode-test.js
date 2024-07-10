@@ -18,7 +18,7 @@
 import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import deepFreeze from "deep-freeze";
-import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
+import { createIntlCommonCanvas } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 

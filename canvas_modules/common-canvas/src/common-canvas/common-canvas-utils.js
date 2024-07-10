@@ -23,7 +23,6 @@ import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST }
 	from "../common-canvas/constants/canvas-constants.js";
 
-
 export default class CanvasUtils {
 
 	static getObjectPositions(objects) {
@@ -310,10 +309,12 @@ export default class CanvasUtils {
 
 		var startPointX;
 		var startPointY;
+		let dir = NORTH;
 
 		if (originToEndX === 0) {
 			startPointX = originX;
 			startPointY = (endY < originY) ? topEdge : bottomEdge;
+			dir = originToEndY > 0 ? NORTH : SOUTH;
 
 		} else if (endX > originX) {
 			const topRightRatio = originTopOffsetY / (originX - rightEdge);
@@ -328,10 +329,12 @@ export default class CanvasUtils {
 			} else if (ratioRight > botRightRatio) {
 				startPointX = originX + (originBottomOffsetY / ratioRight);
 				startPointY = bottomEdge;
+				dir = SOUTH;
 			// East
 			} else {
 				startPointX = rightEdge;
 				startPointY = originY + (originRightOffsetX * ratioRight);
+				dir = EAST;
 			}
 		// End point is to the left of center
 		} else {
@@ -347,14 +350,16 @@ export default class CanvasUtils {
 			} else if (ratioLeft < botLeftRatio) {
 				startPointX = originX + (originBottomOffsetY / ratioLeft);
 				startPointY = bottomEdge;
+				dir = SOUTH;
 			// West
 			} else {
 				startPointX = leftEdge;
 				startPointY = originY - (originLeftOffsetX * ratioLeft);
+				dir = WEST;
 			}
 		}
 
-		return { x: startPointX, y: startPointY, originX, originY };
+		return { x: startPointX, y: startPointY, originX, originY, dir };
 	}
 
 	// Returns a direction NORTH, SOUTH, EAST or WEST which is the direction
@@ -407,6 +412,52 @@ export default class CanvasUtils {
 		return dir;
 	}
 
+	// Returns a direction (n, s, e or w) of a port at the
+	// x, y position on a node. This is the direction that
+	// would be taken by an outgoing link from a source node
+	// or an incoming link to a target node.
+	static getPortDir(x, y, node) {
+		const halfNodeWidth = (node.width / 2);
+		const halfNodeHeight = (node.height / 2);
+		const xFromCenter = x - halfNodeWidth;
+		const yFromCenter = y - halfNodeHeight;
+		// In the center horizontally
+		if (xFromCenter === 0) {
+			if (yFromCenter > 0) {
+				return SOUTH;
+			}
+			return NORTH;
+
+		// To the right
+		} else if (xFromCenter > 0) {
+			const angleToRight = Math.atan(yFromCenter / xFromCenter);
+			const angleToBottomRight = Math.atan(halfNodeHeight / halfNodeWidth);
+			const angleTopRight = -angleToBottomRight;
+			if (angleToRight === 0) {
+				return EAST;
+			} else if (angleToRight < angleTopRight) {
+				return NORTH;
+			} else if (angleToRight > angleToBottomRight) {
+				return SOUTH;
+			}
+			return EAST;
+
+		}
+		// To the left
+		const angleToLeft = Math.atan(yFromCenter / xFromCenter);
+		const angleToTopLeft = Math.atan(halfNodeHeight / halfNodeWidth);
+		const angleToBottomLeft = -angleToTopLeft;
+		if (angleToLeft === 0) {
+			return WEST;
+		} else if (angleToLeft > angleToTopLeft) {
+			return NORTH;
+		} else if (angleToLeft < angleToBottomLeft) {
+			return SOUTH;
+		}
+		return WEST;
+	}
+
+
 	// Returns true if the line described by x1, y1, x2, y2 either intersects or
 	// is fully inside the rectangle described by rx1, ry1, rx2, ry2.
 	static lineIntersectRectangle(x1, y1, x2, y2, rx1, ry1, rx2, ry2) {
@@ -445,20 +496,36 @@ export default class CanvasUtils {
 		return null;
 	}
 
+	// Return the center point of a quadratic bezier curve where p0 is the
+	// start point, p1 is the control point and p2 is the end point.
+	// This works for either the x or y coordinate.
+	static getCenterPointQuadBezier(p0, p1, p2) {
+		const t = 0.5;
+		return (1 - t) * (1 - t) * p0 + 2 * (1 - t) * t * p1 + t * t * p2;
+	}
+
+	// Return the center point of a cubic bezier curve where p0 is the
+	// start point, p1 and p2 are the control points and p3 is the end point.
+	// This works for either the x or y coordinate.
+	static getCenterPointCubicBezier(p0, p1, p2, p3) {
+		const t = 0.5;
+		return (1 - t) * (1 - t) * (1 - t) * p0 + 3 * (1 - t) * (1 - t) * t * p1 + 3 * (1 - t) * t * t * p2 + t * t * t * p3;
+	}
+
 	// Returns true if a link of type `type` can be created between the two
 	// node/port combinations provided given the set of current links provided.
-	static isConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, type) {
+	static isConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, type, selfRefLinkAllowed) {
 		if (type === ASSOCIATION_LINK) {
 			return this.isAssocConnectionAllowed(srcNode, trgNode, links);
 		}
-		return this.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links);
+		return this.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed);
 	}
 
 	// Returns true if a node-node data link can be created between the two
 	// node/port combinations provided on a canvas where detached links are
 	// allowed, given the set of current link provided.
-	static isConnectionAllowedWithDetachedLinks(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
-		if (srcNode && trgNode && srcNode.id === trgNode.id) { // Cannot connect to ourselves, currently.
+	static isConnectionAllowedWithDetachedLinks(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed) {
+		if (srcNode && trgNode && srcNode.id === trgNode.id && !selfRefLinkAllowed) { // Cannot connect to ourselves.
 			return false;
 		}
 
@@ -509,9 +576,9 @@ export default class CanvasUtils {
 
 	// Returns true if an existing link to the target node and port can be
 	// replaced with a new link from the srcNode to the trgNode and trgPortId.
-	static isDataLinkReplacementAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+	static isDataLinkReplacementAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed) {
 
-		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
+		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed)) {
 			return false;
 		}
 
@@ -530,9 +597,9 @@ export default class CanvasUtils {
 	// Returns true if a regular node-node data link can be created between the
 	// two node/port combinations provided, given the current set of links
 	// passed in.
-	static isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+	static isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed) {
 
-		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
+		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed)) {
 			return false;
 		}
 
@@ -546,13 +613,13 @@ export default class CanvasUtils {
 	// Returns true if a regular node-node data link can be created between the
 	// two node/port combinations provided, without checking on cardinalities of
 	// the source or target nodes.
-	static isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+	static isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed) {
 
 		if (!srcNode || !trgNode) { // Source or target are not valid.
 			return false;
 		}
 
-		if (srcNode.id === trgNode.id) { // Cannot connect to ourselves, currently.
+		if (srcNode.id === trgNode.id && !selfRefLinkAllowed) { // Cannot connect to ourselves.
 			return false;
 		}
 
@@ -766,6 +833,53 @@ export default class CanvasUtils {
 			return true;
 		}
 		return false;
+	}
+
+	// Returns a source port Id if one exists in the link, otherwise defaults
+	// to the first available port on the source node.
+	static getSourcePortId(link, srcNode) {
+		var srcPortId;
+		if (link.srcNodePortId) {
+			srcPortId = link.srcNodePortId;
+		} else if (srcNode.outputs && srcNode.outputs.length > 0) {
+			srcPortId = srcNode.outputs[0].id;
+		} else {
+			srcPortId = null;
+		}
+		return srcPortId;
+	}
+
+	// Returns a target port Id if one exists in the link, otherwise defaults
+	// to the first available port on the target node.
+	static getTargetPortId(link, trgNode) {
+		var trgPortId;
+		if (link.trgNodePortId) {
+			trgPortId = link.trgNodePortId;
+		} else if (trgNode.inputs && trgNode.inputs.length > 0) {
+			trgPortId = trgNode.inputs[0].id;
+		} else {
+			trgPortId = null;
+		}
+		return trgPortId;
+	}
+
+
+	// Returns the port referenced by srcPortId from the node referenced
+	// by srcNode.
+	static getOutputPort(srcPortId, srcNode) {
+		if (srcNode && srcNode.outputs) {
+			return srcNode.outputs.find((p) => p.id === srcPortId);
+		}
+		return null;
+	}
+
+	// Returns the port referenced by trgPortId from the node referenced
+	// by trgNode.
+	static getInputPort(trgPortId, trgNode) {
+		if (trgNode && trgNode.inputs) {
+			return trgNode.inputs.find((p) => p.id === trgPortId);
+		}
+		return null;
 	}
 
 	// Returns the port from the port array indicated by the portId or null
