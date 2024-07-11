@@ -23,7 +23,8 @@ import sharedFieldsParamDef from "../../test_resources/paramDefs/sharedFields_pa
 describe("Condition dmSharedFields test cases", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(sharedFieldsParamDef);
+		// TODO revert this test to use rightFlyout once https://github.com/carbon-design-system/carbon/issues/16944 is fixed
+		const renderedObject = propertyUtils.flyoutEditorForm(sharedFieldsParamDef, { rightFlyout: false, containerType: "Tearsheet" });
 		wrapper = renderedObject.wrapper;
 	});
 	afterEach(() => {
@@ -37,12 +38,12 @@ describe("Condition dmSharedFields test cases", () => {
 		tableUtils.fieldPicker(fieldPicker, [], ["Age", "BP", "Cholesterol"]);
 
 		// Validate the available fields in the table control
-		const summaryPanel = propertyUtils.openSummaryPanel(wrapper, "structuretable_filter-summary-panel");
+		// const summaryPanel = propertyUtils.openSummaryPanel(wrapper, "structuretable_filter-summary-panel");
 		fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretable_filter");
 		const tableRows = tableUtils.getTableRows(fieldPicker);
 		expect(tableRows).to.have.length(3); // Other fields should be filtered out
 		// close summary panel
-		summaryPanel.find("button.properties-apply-button").simulate("click");
+		// summaryPanel.find("button.properties-apply-button").simulate("click");
 
 		// Check the available fields in the weight dropdown
 		const weightDropDown = wrapper.find("div[data-id='properties-regression_weight_field'] Dropdown");

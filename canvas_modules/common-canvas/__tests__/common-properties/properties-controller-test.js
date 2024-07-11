@@ -2418,9 +2418,10 @@ describe("Properties Controller getTopLevelActiveGroupId", () => {
 });
 
 describe("Properties Controller setTopLevelActiveGroup", () => {
+	// TODO revert this test to use rightFlyout once https://github.com/carbon-design-system/carbon/issues/16944 is fixed
 	it("should set the top level active group id in properties controller", () => {
 		reset();
-		const renderedObject = testUtils.flyoutEditorForm(tabParamDef);
+		const renderedObject = testUtils.flyoutEditorForm(tabParamDef, { rightFlyout: false, containerType: "Tearsheet" });
 		controller = renderedObject.controller;
 		const wrapper = renderedObject.wrapper;
 
@@ -2429,8 +2430,10 @@ describe("Properties Controller setTopLevelActiveGroup", () => {
 		expect(topLevelActiveGroupId).to.equal("Primary3");
 
 		// Select Condition in accordion
-		const conditionsCategory = wrapper.find("div.properties-category-container").at(2);
-		conditionsCategory.find("button.cds--accordion__heading").simulate("click");
+		// const conditionsCategory = wrapper.find("div.properties-category-container").at(2);
+		// conditionsCategory.find("button.cds--accordion__heading").simulate("click");
+		const tab2 = wrapper.find("button[title='Tab Test2']");
+		tab2.simulate("click");
 		topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
 		expect(topLevelActiveGroupId).to.equal("Primary2");
 	});

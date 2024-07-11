@@ -353,7 +353,8 @@ describe("FlexibleTable renders correctly", () => {
 	});
 
 	it("Empty `FlexibleTable` uses place_holder_text from uiHints", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(glmmParamDef);
+		// TODO revert this test to use rightFlyout once https://github.com/carbon-design-system/carbon/issues/16944 is fixed
+		const renderedObject = propertyUtils.flyoutEditorForm(glmmParamDef, { rightFlyout: false, containerType: "Tearsheet" });
 		const wrapper = renderedObject.wrapper;
 
 		// Terms table is an empty table using place_holder_text default value

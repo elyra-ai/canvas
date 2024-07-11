@@ -22,7 +22,8 @@ import { expect } from "chai";
 describe("subtabs renders correctly", () => {
 	var wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(tabParamDef);
+		// TODO revert this test to use rightFlyout once https://github.com/carbon-design-system/carbon/issues/16944 is fixed
+		const renderedObject = propertyUtils.flyoutEditorForm(tabParamDef, { rightFlyout: false, containerType: "Tearsheet" });
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -33,7 +34,7 @@ describe("subtabs renders correctly", () => {
 	it("should have displayed the 4 tabs created with 6 nested subtabs", () => {
 		const tabContainer = wrapper.find("div[data-id='properties-Primary'] div.properties-sub-tab-container");
 		// should render 1 control panel
-		expect(tabContainer.find("button.properties-subtab")).to.have.length(10);
+		expect(tabContainer.find("button.properties-subtab")).to.have.length(13);
 	});
 });
 
@@ -41,7 +42,8 @@ describe("subtabs visible and enabled conditions work correctly", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(tabParamDef, { categoryView: "tabs" });
+		// TODO revert this test to use rightFlyout once https://github.com/carbon-design-system/carbon/issues/16944 is fixed
+		const renderedObject = propertyUtils.flyoutEditorForm(tabParamDef, { rightFlyout: false, containerType: "Tearsheet", categoryView: "tabs" });
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
@@ -100,7 +102,8 @@ describe("subtabs visible and enabled conditions work correctly", () => {
 describe("subtabs classNames applied correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(tabParamDef);
+		// TODO revert this test to use rightFlyout once https://github.com/carbon-design-system/carbon/issues/16944 is fixed
+		const renderedObject = propertyUtils.flyoutEditorForm(tabParamDef, { rightFlyout: false, containerType: "Tearsheet" });
 		wrapper = renderedObject.wrapper;
 	});
 
