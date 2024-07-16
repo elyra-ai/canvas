@@ -59,7 +59,7 @@
     "@babel/plugin-transform-runtime": "7.11.5",
     "@babel/preset-env": "7.11.5",
     "@babel/preset-react": "7.10.4",
-    "@carbon/react": "1.61.0-rc.1",
+    "@carbon/react": "1.62.0-rc.0",
     "@rollup/plugin-babel": "5.3.0",
     "@rollup/plugin-commonjs": "21.0.1",
     "@rollup/plugin-json": "4.1.0",
