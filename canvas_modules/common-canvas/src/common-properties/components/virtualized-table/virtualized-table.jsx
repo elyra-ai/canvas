@@ -384,12 +384,8 @@ class VirtualizedTable extends React.Component {
 		}
 
 		if (this.props.selectable) {
-			let rowSelected = this.props.sortDirection ? this.isRowSelected(rowData.index) : this.isRowSelected(rowData.originalRowIndex); // use current row index when Sorted
+			const rowSelected = this.props.sortDirection ? this.isRowSelected(rowData.index) : this.isRowSelected(rowData.originalRowIndex); // use current row index when Sorted
 
-			// disable checkbox click if its a readonly table
-			if (this.props.readOnly) {
-				rowSelected = false;
-			}
 			selectedRow = this.props.selectable && rowSelected;
 			if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 				const translatedRowCheckboxLabel = this.props.intl.formatMessage(
