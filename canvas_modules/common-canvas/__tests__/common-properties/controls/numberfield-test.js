@@ -173,6 +173,7 @@ describe("numberfield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				readOnly
 			/>
 		);
 		const readOnlyWrapper = wrapper.find("div[data-id='properties-test-number']");

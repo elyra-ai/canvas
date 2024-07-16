@@ -145,6 +145,7 @@ describe("datepicker-range-control renders correctly", () => {
 				controller={controller}
 				propertyId={propertyId}
 				controlItem={controlItem}
+				readOnly
 			/>
 		);
 

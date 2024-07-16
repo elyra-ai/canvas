@@ -335,23 +335,7 @@ describe("textfield renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-			/>
-		);
-		const readOnlyWrapper = wrapper.find("div[data-id='properties-test-text']");
-		expect(readOnlyWrapper.find("TextInput").prop("readOnly")).to.equal(control.readOnly);
-	});
-
-	it("textfield renders readonly correctly", () => {
-		control.readOnly = true;
-		controller.setPropertyValues(
-			{ }
-		);
-		const wrapper = mount(
-			<Textfield
-				store={controller.getStore()}
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
+				readOnly
 			/>
 		);
 		const readOnlyWrapper = wrapper.find("div[data-id='properties-test-text']");

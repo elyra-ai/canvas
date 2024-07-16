@@ -133,10 +133,11 @@ describe("SliderControl renders correctly", () => {
 					propertyId = {propertyId}
 					controller = {controller}
 					controlItem = "Slider Label"
+					readOnly
 				/>
 			</Provider>
 		);
-		expect(wrapper.find("Slider").prop("readOnly")).to.equal(true);
+		expect(wrapper.find("Slider").prop("readOnly")).to.equal(control.readOnly);
 	});
 
 	it("handles change event correctly", () => {

@@ -100,10 +100,11 @@ describe("toggle renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				readOnly
 			/>
 		);
 		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
-		expect(toggleWrapper.find("Toggle").prop("readOnly")).to.equal(true);
+		expect(toggleWrapper.find("Toggle").prop("readOnly")).to.equal(control.readOnly);
 	});
 
 });

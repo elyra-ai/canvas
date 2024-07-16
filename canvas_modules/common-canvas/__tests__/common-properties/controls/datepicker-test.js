@@ -133,6 +133,7 @@ describe("datepicker-control renders correctly", () => {
 				controller={controller}
 				propertyId={propertyId}
 				controlItem={controlItem}
+				readOnly
 			/>
 		);
 		const readOnlyWrapper = wrapper.find("div[data-id='properties-test-datepicker']");
