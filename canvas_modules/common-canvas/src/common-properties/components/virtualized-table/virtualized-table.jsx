@@ -385,7 +385,6 @@ class VirtualizedTable extends React.Component {
 
 		if (this.props.selectable) {
 			const rowSelected = this.props.sortDirection ? this.isRowSelected(rowData.index) : this.isRowSelected(rowData.originalRowIndex); // use current row index when Sorted
-
 			selectedRow = this.props.selectable && rowSelected;
 			if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 				const translatedRowCheckboxLabel = this.props.intl.formatMessage(
