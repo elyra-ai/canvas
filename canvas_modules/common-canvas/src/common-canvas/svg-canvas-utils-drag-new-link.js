@@ -270,7 +270,7 @@ export default class SVGCanvasUtilsDragNewLink {
 				}
 			};
 
-		const link = this.ren.getDetachedLineObj(inLink);
+		const link = this.ren.getDetachedLinkObj(inLink);
 		this.drawingNewLinkData.linkArray = this.ren.linkUtils.addConnectionPaths([link]);
 
 		if (this.ren.config.enableAssocLinkCreation) {
