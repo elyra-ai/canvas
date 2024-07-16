@@ -167,7 +167,7 @@ export default class ControlFactory {
 		props.control = control;
 		props.controller = this.controller;
 		props.propertyId = propertyId;
-		props.readOnly = isReadOnly;
+		props.readOnly = isReadOnly || control.readOnly;
 		props.controlItem = (
 			<ControlItem
 				key={"ctrl-item-" + control.name}

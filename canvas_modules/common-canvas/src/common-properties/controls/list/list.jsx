@@ -37,7 +37,6 @@ class ListControl extends AbstractTable {
 		super(props);
 		this.addRow = this.addRow.bind(this);
 		this.reactIntl = props.controller.getReactIntl();
-		this.readOnly = this.props.control.readOnly;
 	}
 
 	addRow() {
@@ -63,7 +62,7 @@ class ListControl extends AbstractTable {
 					controller={this.props.controller}
 					controlItem={listHeader}
 					tableControl
-					readOnly={this.props.control.readOnly}
+					readOnly={this.props.readOnly}
 				/>
 			</div>);
 		}
@@ -74,7 +73,7 @@ class ListControl extends AbstractTable {
 				controller={this.props.controller}
 				controlItem={listHeader}
 				tableControl
-				readOnly={this.props.control.readOnly}
+				readOnly={this.props.readOnly}
 			/>
 		</div>);
 	}
@@ -179,7 +178,7 @@ class ListControl extends AbstractTable {
 				updateRowSelections={this.updateRowSelections}
 				light={this.props.controller.getLight() && this.props.control.light}
 				emptyTablePlaceholder={this.props.control.additionalText}
-				readOnly={this.props.control.readOnly || this.props.readOnly}
+				readOnly={this.props.readOnly}
 			/>);
 
 		const tableContainer = (<div>

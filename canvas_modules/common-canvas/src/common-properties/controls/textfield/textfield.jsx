@@ -108,7 +108,7 @@ class TextfieldControl extends React.Component {
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					ref={(ref) => (this.textInputRef = ref)}
-					readOnly={this.props.control.readOnly || this.props.readOnly}
+					readOnly={this.props.readOnly}
 				/>
 			);
 		}

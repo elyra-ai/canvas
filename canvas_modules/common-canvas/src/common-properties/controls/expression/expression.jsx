@@ -92,7 +92,7 @@ class ExpressionControl extends React.Component {
 		}
 		// Toggle editable mode in Codemirror editor
 		if (!isEqual(prevProps.state, this.props.state)) {
-			this.setCodeMirrorEditable(!(this.props.state === STATES.DISABLED) || !this.props.control.readOnly);
+			this.setCodeMirrorEditable(!(this.props.state === STATES.DISABLED) || !this.props.readOnly);
 		}
 		if (
 			this.props.selectionRange &&
@@ -206,7 +206,7 @@ class ExpressionControl extends React.Component {
 				language,
 				placeholder(this.props.control.additionalText),
 				this.handleUpdate(),
-				this.editable.of(EditorView.editable.of(!(this.props.state === STATES.DISABLED || this.props.control.readOnly)))
+				this.editable.of(EditorView.editable.of(!(this.props.state === STATES.DISABLED || this.props.readOnly)))
 			],
 			parent: this.editorRef.current
 		});
@@ -324,7 +324,7 @@ class ExpressionControl extends React.Component {
 		const button = this._showBuilderButton() ? (
 			<Button kind="ghost" size="sm"
 				className="properties-expression-button"
-				disabled={this.props.state === STATES.DISABLED || this.props.control.readOnly}
+				disabled={this.props.state === STATES.DISABLED || this.props.readOnly}
 				onClick={this.showExpressionBuilder}
 				renderIcon={Calculator24}
 				iconDescription={formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_ICON_DESCRIPTION)}
@@ -349,7 +349,7 @@ class ExpressionControl extends React.Component {
 					className="validateLink"
 					kind="ghost"
 					onClick={this.handleValidate}
-					disabled={this.props.state === STATES.DISABLED || this.state.validationInProgress || this.props.control.readOnly}
+					disabled={this.props.state === STATES.DISABLED || this.state.validationInProgress || this.props.readOnly}
 				>
 					{validateLabel}
 				</Button>

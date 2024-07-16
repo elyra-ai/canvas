@@ -141,7 +141,7 @@ class DatepickerRangeControl extends React.Component {
 					onChange={this.handleDateRangeChange.bind(this)}
 					locale={this.locale}
 					allowInput
-					readOnly={this.props.control.readOnly}
+					readOnly={this.props.readOnly}
 				>
 					<DatePickerInput
 						{...validationProps}
@@ -182,7 +182,8 @@ DatepickerRangeControl.propTypes = {
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({

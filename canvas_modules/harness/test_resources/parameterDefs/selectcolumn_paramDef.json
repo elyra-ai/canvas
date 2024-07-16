@@ -204,7 +204,7 @@
       {
         "parameter_ref": "field_readonly",
         "label": {
-          "default": "Field"
+          "default": "Readonly Field"
         },
         "description": {
           "default": "readonly selectcolumn with parameter value set to 'Age'"

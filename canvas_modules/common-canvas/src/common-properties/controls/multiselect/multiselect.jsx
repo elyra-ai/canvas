@@ -166,7 +166,7 @@ class MultiSelectControl extends React.Component {
 					placeholder={label}
 					titleText={this.props.tableControl ? null : this.props.controlItem}
 					helperText={this.props.control.helperText}
-					readOnly={this.props.control.readOnly}
+					readOnly={this.props.readOnly}
 				/>
 			);
 		} else {
@@ -182,7 +182,7 @@ class MultiSelectControl extends React.Component {
 					label={label}
 					titleText={this.props.tableControl ? null : this.props.controlItem}
 					helperText={this.props.control.helperText}
-					readOnly={this.props.control.readOnly}
+					readOnly={this.props.readOnly}
 				/>
 			);
 		}
@@ -207,7 +207,8 @@ MultiSelectControl.propTypes = {
 	controlOpts: PropTypes.object, // pass in by redux
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => {
