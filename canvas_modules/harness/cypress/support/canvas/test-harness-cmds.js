@@ -88,8 +88,10 @@ Cypress.Commands.add("dropdownSelect", (dropdownElement, selectedItemName) => {
 	// Select option from drop down list
 	cy.get(".cds--list-box__menu")
 		.find(".cds--list-box__menu-item")
-		.then((options) => options.filter((idx) => options[idx].outerText === selectedItemName))
-		.click();
+		.then((options) => {
+			const opt = options.filter((idx) => options[idx].outerText === selectedItemName);
+			opt.click();
+		});
 });
 
 Cypress.Commands.add("setCanvasConfig", (config) => {
