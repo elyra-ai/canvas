@@ -482,7 +482,7 @@ export default class AbstractTable extends React.Component {
 			<div className="properties-at-buttons-container">
 				<Button
 					className="properties-add-fields-button"
-					disabled={this.props.readOnly || addButtonDisabled}
+					disabled={addButtonDisabled || this.props.readOnly}
 					onClick={this.addOnClick.bind(this, this.props.propertyId)}
 					size="sm"
 					kind="ghost"
