@@ -92,6 +92,21 @@ describe("toggle renders correctly", () => {
 		expect(toggleWrapper.hasClass("hide")).to.equal(true);
 	});
 
+	it("toggle renders when readonly", () => {
+		control.readOnly = true;
+		const wrapper = mount(
+			<Toggle
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				readOnly
+			/>
+		);
+		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
+		expect(toggleWrapper.find("Toggle").prop("readOnly")).to.equal(control.readOnly);
+	});
+
 });
 
 describe("toggle classnames appear correctly", () => {

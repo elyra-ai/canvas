@@ -7,6 +7,10 @@
       0,
       20
     ],
+    "readonly_checkboxset_number": [
+      0,
+      20
+    ],
     "checkboxset_null": null,
     "error": false,
     "warning": false,
@@ -40,6 +44,16 @@
   "parameters": [
     {
       "id": "checkboxset_number",
+      "type": "array[integer]",
+      "enum": [
+        0,
+        10,
+        20,
+        30
+      ]
+    },
+    {
+      "id": "readonly_checkboxset_number",
       "type": "array[integer]",
       "enum": [
         0,
@@ -219,6 +233,18 @@
         "class_name": "checkboxset-control-class"
       },
       {
+        "parameter_ref": "readonly_checkboxset_number",
+        "label": {
+          "default": "Readonly Number Checkboxset"
+        },
+        "description": {
+          "default": "readonly checkboxset with integers for values"
+        },
+        "control": "checkboxset",
+        "class_name": "checkboxset-control-class",
+        "read_only": true
+      },
+      {
         "parameter_ref": "checkboxset_null",
         "label": {
           "default": "Null value checkboxset"
@@ -379,6 +405,7 @@
         "type": "controls",
         "parameter_refs": [
           "checkboxset_number",
+          "readonly_checkboxset_number",
           "checkboxset_null",
           "checkboxset_undefined",
           "checkboxset_default"

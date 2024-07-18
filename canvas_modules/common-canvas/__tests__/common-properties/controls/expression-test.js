@@ -693,7 +693,7 @@ describe("expression handles no expression builder resources correctly", () => {
 	it("CommonProperties renders with validateLink set true", () => {
 		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
 		const renderedObject = propertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, callbacks, propertiesInfo);
-		expect(renderedObject.wrapper.find("button.validateLink")).to.have.length(7); // there are 8 expressions in this paramdef, 1 is hidden
+		expect(renderedObject.wrapper.find("button.validateLink")).to.have.length(8); // there are 9 (including one readonly) expressions in this paramdef, 1 is hidden
 	});
 
 	it("CommonProperties renders with validateLink and callback is called on click", () => {
@@ -702,6 +702,17 @@ describe("expression handles no expression builder resources correctly", () => {
 		const wrapper = renderedObject.wrapper;
 		wrapper.find("div[data-id='properties-ctrl-expression'] button.validateLink").simulate("click");
 		expect(renderedObject.callbacks.validationHandler).to.have.property("callCount", 1);
+	});
+
+	it("CommonProperties renders with readonly expression", () => {
+		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
+		const renderedObject = propertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, callbacks, propertiesInfo);
+		const wrapper = renderedObject.wrapper;
+		const readOnlyWrapper = wrapper.find(".expression-control-class-readonly");
+		const validateButton = readOnlyWrapper.find(".validateLink button");
+		const expButton = readOnlyWrapper.find("button.properties-expression-button");
+		expect(validateButton.prop("disabled")).to.equal(true);
+		expect(expButton.prop("disabled")).to.equal(true);
 	});
 
 

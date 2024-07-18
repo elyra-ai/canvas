@@ -92,7 +92,7 @@ class ExpressionControl extends React.Component {
 		}
 		// Toggle editable mode in Codemirror editor
 		if (!isEqual(prevProps.state, this.props.state)) {
-			this.setCodeMirrorEditable(!(this.props.state === STATES.DISABLED));
+			this.setCodeMirrorEditable(!(this.props.state === STATES.DISABLED) || !this.props.readOnly);
 		}
 		if (
 			this.props.selectionRange &&
@@ -206,7 +206,7 @@ class ExpressionControl extends React.Component {
 				language,
 				placeholder(this.props.control.additionalText),
 				this.handleUpdate(),
-				this.editable.of(EditorView.editable.of(!(this.props.state === STATES.DISABLED)))
+				this.editable.of(EditorView.editable.of(!(this.props.state === STATES.DISABLED || this.props.readOnly)))
 			],
 			parent: this.editorRef.current
 		});
@@ -324,7 +324,7 @@ class ExpressionControl extends React.Component {
 		const button = this._showBuilderButton() ? (
 			<Button kind="ghost" size="sm"
 				className="properties-expression-button"
-				disabled={this.props.state === STATES.DISABLED}
+				disabled={this.props.state === STATES.DISABLED || this.props.readOnly}
 				onClick={this.showExpressionBuilder}
 				renderIcon={Calculator24}
 				iconDescription={formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_ICON_DESCRIPTION)}
@@ -345,7 +345,12 @@ class ExpressionControl extends React.Component {
 			: formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_VALIDATE_LABEL);
 		const validateLink = this.hasValidate() && this.props.validateLink ? (
 			<div className="properties-expression-validate" disabled={this.props.state === STATES.DISABLED}>
-				<Button className="validateLink" kind="ghost" onClick={this.handleValidate} disabled={this.props.state === STATES.DISABLED || this.state.validationInProgress}>
+				<Button
+					className="validateLink"
+					kind="ghost"
+					onClick={this.handleValidate}
+					disabled={this.props.state === STATES.DISABLED || this.state.validationInProgress || this.props.readOnly}
+				>
 					{validateLabel}
 				</Button>
 				{validateIcon}
@@ -442,7 +447,8 @@ ExpressionControl.propTypes = {
 	height: PropTypes.number, // height in px
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.string, // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 ExpressionControl.defaultProps = {

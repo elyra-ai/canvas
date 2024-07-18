@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "expression": "Age >= 55",
+    "expression_readonly": "Age >= 55",
     "enableExpression": false,
     "expr": "ab\ncd\nef",
     "visibleExpression": false,
@@ -18,6 +19,11 @@
   "parameters": [
     {
       "id": "expression",
+      "type": "string",
+      "role": "expression"
+    },
+    {
+      "id": "expression_readonly",
       "type": "string",
       "role": "expression"
     },
@@ -128,6 +134,21 @@
           "default": "Press ctrl-space to autocomplete, enter a '?' for validate to fail."
         },
         "class_name": "expression-control-class"
+      },
+      {
+        "parameter_ref": "expression_readonly",
+        "language": "CLEM",
+        "label": {
+          "default": "Expression"
+        },
+        "description": {
+          "default": "Enter a Clem expression"
+        },
+        "text_before": {
+          "default": "Press ctrl-space to autocomplete, enter a '?' for validate to fail."
+        },
+        "class_name": "expression-control-class-readonly",
+        "read_only": true
       },
       {
         "parameter_ref": "defaultExpr",
@@ -294,6 +315,7 @@
         },
         "parameter_refs": [
           "expression",
+          "expression_readonly",
           "defaultExpr",
           "placeHolderExpr"
         ]
