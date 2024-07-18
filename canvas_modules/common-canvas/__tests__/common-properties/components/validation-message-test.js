@@ -98,7 +98,7 @@ describe("validation-message renders correctly", () => {
 		const { container } = wrapper;
 		const messageWrapper = container.getElementsByClassName("properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(within(messageWrapper[0]).queryAllByRole("svg")).to.have.length(0);
+		expect(messageWrapper[0].querySelectorAll("svg.canvas-state-icon-warning")).to.have.length(0);
 		expect(messageWrapper[0].querySelector("span").textContent).to.equal(warningMessage.text);
 
 	});

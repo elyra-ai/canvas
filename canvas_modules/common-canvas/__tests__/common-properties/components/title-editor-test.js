@@ -110,9 +110,9 @@ describe("title-editor renders correctly", () => {
 			/>
 		);
 		const { container } = wrapper;
-		const helpButtonCont = container.querySelector(".properties-title-editor-btn[data-id='help']");
-		expect(helpButtonCont).to.exist;
-		fireEvent.click(helpButtonCont);
+		const helpButtonCont = container.querySelectorAll(".properties-title-editor-btn[data-id='help']");
+		expect(helpButtonCont).to.have.length(1);
+		fireEvent.click(helpButtonCont[0]);
 	});
 	it("test with no help", () => {
 		const wrapper = renderWithIntl(
@@ -152,7 +152,7 @@ describe("title-editor renders correctly", () => {
 		);
 		const { container } = wrapper;
 		const input = container.querySelector("input");
-		const titleEdit = wrapper.getAllByRole("button")[0];
+		const titleEdit = container.querySelector(".properties-title-editor-btn[data-id='edit']");
 		fireEvent.click(titleEdit);
 		expect(input.focus).to.exist;
 	});

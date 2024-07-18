@@ -165,12 +165,11 @@ describe("control-item renders correctly", () => {
 		);
 		const { container } = wrapper;
 		expect(container.querySelector("label.properties-control-label").textContent).to.equal(control.label.text);
-		const tooltipTrigger = wrapper.getByRole("button");
+		const tooltipTrigger = container.querySelector("div.tooltip-trigger");
 		fireEvent.click(tooltipTrigger);
 		expect(tooltipLinkHandler.calledOnce).to.equal(true);
 		expect(tooltipLinkHandler.calledWith(control.description.link)).to.be.true;
 
-		// const tooltip = wrapper.find("div.common-canvas-tooltip");
 		const tooltip = wrapper.getByRole("tooltip");
 		// verify text in tooltip
 		expect(within(tooltip).getByText("Control Description").textContent).to.equal(control.description.text);

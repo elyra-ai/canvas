@@ -241,7 +241,7 @@ describe("FlexibleTable renders correctly", () => {
 			input.push(sortCol[i].querySelector(".properties-vt-column"));
 		}
 		expect(input).to.have.length(2);
-		expect(input[0].className.includes("sort-column-activ")).to.be.false;
+		expect(input[0].className.includes("sort-column-active")).to.be.false;
 		expect(input[1].className.includes("sort-column-active")).to.be.true;
 	});
 
