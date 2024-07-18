@@ -20,14 +20,14 @@ $operators-width: 15%;
 $fields-table-margin: 52%;
 $fields-table-width: 48%;
 $values-table-width: 48%;
-$functions-table-margin: 70%;
-$functions-table-width: 68%;
+$functions-table-margin: 53%;
+$functions-table-width: 100%;
 $functions-help-width: 28%;
 $operator-width: 36px;
 $operator-margin: 50%;
 
-.properties-expression-selection-container, .properties-field-and-values-table-container,
-.properties-functions-table-container {
+.properties-expression-selection-container
+.properties-expression-function-table-container {
 	width: 100%;
 	tbody {
 		tr {
@@ -36,6 +36,22 @@ $operator-margin: 50%;
 	}
 }
 
+.properties-field-and-values-table-container,
+.properties-expression-function-select,
+.properties-functions-table-container {
+	width: 50%;
+	tbody {
+		tr {
+			border-bottom: 0;
+		}
+	}
+}
+
+
+.properties-expression-builder {
+	padding: $spacing-06 $spacing-07;
+	margin-bottom: 0;
+}
 
 .properties-expression-selection-container {
 	padding-top: $spacing-03;
@@ -113,7 +129,7 @@ $operator-margin: 50%;
 .properties-expression-selection-content-switcher {
 	padding-bottom: $spacing-08;
 	div {
-		max-width: 50%;
+		max-width: 30%;
 		float: right;
 	}
 }
