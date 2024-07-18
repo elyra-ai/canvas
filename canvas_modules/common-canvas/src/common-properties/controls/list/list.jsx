@@ -62,6 +62,7 @@ class ListControl extends AbstractTable {
 					controller={this.props.controller}
 					controlItem={listHeader}
 					tableControl
+					readOnly={this.props.readOnly}
 				/>
 			</div>);
 		}
@@ -72,6 +73,7 @@ class ListControl extends AbstractTable {
 				controller={this.props.controller}
 				controlItem={listHeader}
 				tableControl
+				readOnly={this.props.readOnly}
 			/>
 		</div>);
 	}
@@ -176,6 +178,7 @@ class ListControl extends AbstractTable {
 				updateRowSelections={this.updateRowSelections}
 				light={this.props.controller.getLight() && this.props.control.light}
 				emptyTablePlaceholder={this.props.control.additionalText}
+				readOnly={this.props.readOnly}
 			/>);
 
 		const tableContainer = (<div>
@@ -215,7 +218,8 @@ ListControl.propTypes = {
 	value: PropTypes.array, // pass in by redux
 	messageInfo: PropTypes.object, // pass in by redux
 	addRemoveRows: PropTypes.bool, // set by redux
-	tableButtons: PropTypes.object // set in by redux
+	tableButtons: PropTypes.object, // set in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({

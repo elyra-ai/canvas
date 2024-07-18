@@ -194,6 +194,24 @@ describe("datefield-control renders correctly", () => {
 		const helpTextWrapper = wrapper.find("div[data-id='properties-test-datefield']");
 		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
 	});
+
+	it("DateField renders readonly correctly", () => {
+		control.readOnly = true;
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<DateField
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				readOnly
+			/>
+		);
+		const readOnlyWrapper = wrapper.find("div[data-id='properties-test-datefield']");
+		expect(readOnlyWrapper.find("TextInput").prop("readOnly")).to.equal(control.readOnly);
+	});
 });
 
 describe("error messages renders correctly for datefield controls", () => {

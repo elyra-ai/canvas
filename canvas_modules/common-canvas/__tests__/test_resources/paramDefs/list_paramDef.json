@@ -8,6 +8,11 @@
       "list item 2",
       "list item 3"
     ],
+    "list_string_readonly": [
+      "list item 1",
+      "list item 2",
+      "list item 3"
+    ],
     "list_integer": [
       10,
       20,
@@ -45,6 +50,10 @@
   "parameters": [
     {
       "id": "list_string",
+      "type": "array[string]"
+    },
+    {
+      "id": "list_string_readonly",
       "type": "array[string]"
     },
     {
@@ -160,6 +169,19 @@
         "control": "list",
         "moveable_rows": true,
         "class_name": "string-list-control-class"
+      },
+      {
+        "parameter_ref": "list_string_readonly",
+        "label": {
+          "default": "list of strings"
+        },
+        "description": {
+          "default": "list with a string array value"
+        },
+        "control": "list",
+        "moveable_rows": true,
+        "class_name": "string-list-control-class-readonly",
+        "read_only": true
       },
       {
         "parameter_ref": "list_integer",
@@ -364,6 +386,7 @@
         "type": "controls",
         "parameter_refs": [
           "list_string",
+          "list_string_readonly",
           "list_integer"
         ]
       },

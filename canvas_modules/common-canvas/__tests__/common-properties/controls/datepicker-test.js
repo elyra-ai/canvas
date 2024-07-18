@@ -121,6 +121,25 @@ describe("datepicker-control renders correctly", () => {
 		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
 	});
 
+	it("should have readonly rendered correctly in `DatepickerControl`", () => {
+		control.readOnly = true;
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<DatepickerControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				controlItem={controlItem}
+				readOnly
+			/>
+		);
+		const readOnlyWrapper = wrapper.find("div[data-id='properties-test-datepicker']");
+		expect(readOnlyWrapper.find("ForwardRef(DatePicker)").prop("readOnly")).to.equal(control.readOnly);
+	});
+
 	it("should allow a valid date to be updated in `DatepickerControl`", () => {
 		const wrapper = mount(
 			<DatepickerControl
