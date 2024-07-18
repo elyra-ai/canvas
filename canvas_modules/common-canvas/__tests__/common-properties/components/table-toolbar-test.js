@@ -912,8 +912,8 @@ describe("TableToolbar multi select edit button works correctly", () => {
 
 		// verify that the "Edit" button is not present in table toolbar because you selected only 1 row
 		let tableToolbar = container.querySelector("div.properties-table-toolbar");
-		let multiSelectEditButton = tableToolbar.querySelector("button.properties-action-multi-select-edit");
-		expect(multiSelectEditButton).to.not.exist;
+		let multiSelectEditButton = tableToolbar.querySelectorAll("button.properties-action-multi-select-edit");
+		expect(multiSelectEditButton).to.have.length(0);
 
 		// select four rows in the table
 		tableUtilsRTL.selectCheckboxes(summaryPanel, [1, 2, 3]);
@@ -921,11 +921,11 @@ describe("TableToolbar multi select edit button works correctly", () => {
 
 		// verify that the "Edit" button is present in table toolbar
 		tableToolbar = container.querySelector("div.properties-table-toolbar");
-		multiSelectEditButton = tableToolbar.querySelector("button.properties-action-multi-select-edit");
-		expect(multiSelectEditButton).to.exist;
+		multiSelectEditButton = tableToolbar.querySelectorAll("button.properties-action-multi-select-edit");
+		expect(multiSelectEditButton).to.have.length(1);
 
 		// Click the multiSelectEditButton in table toolbars
-		fireEvent.click(multiSelectEditButton);
+		fireEvent.click(multiSelectEditButton[0]);
 
 		// A new panel opens which shows editable columns
 		let wideFlyoutPanel = container.getElementsByClassName("properties-wf-children");
@@ -954,7 +954,7 @@ describe("TableToolbar multi select edit button works correctly", () => {
 		});
 
 		// Click the multiSelectEditButton in table toolbar
-		fireEvent.click(multiSelectEditButton);
+		fireEvent.click(multiSelectEditButton[0]);
 
 		// A new panel opens which shows editable columns
 		wideFlyoutPanel = container.getElementsByClassName("properties-wf-children");
@@ -996,8 +996,8 @@ describe("TableToolbar multi select edit button works correctly", () => {
 
 		// verify that the "Edit" button is not present in table toolbar because you selected only 1 row
 		let tableToolbar = container.querySelector("div.properties-table-toolbar");
-		let multiSelectEditButton = tableToolbar.querySelector("button.properties-action-multi-select-edit");
-		expect(multiSelectEditButton).to.not.exist;
+		let multiSelectEditButton = tableToolbar.querySelectorAll("button.properties-action-multi-select-edit");
+		expect(multiSelectEditButton).to.have.length(0);
 
 		// verify Edit button in ALL rows is enabled
 		tableRows = tableUtilsRTL.getTableRows(summaryPanel);
@@ -1012,8 +1012,8 @@ describe("TableToolbar multi select edit button works correctly", () => {
 
 		// verify that the "Edit" button is present in table toolbar
 		tableToolbar = container.querySelector("div.properties-table-toolbar");
-		multiSelectEditButton = tableToolbar.querySelector("button.properties-action-multi-select-edit");
-		expect(multiSelectEditButton).to.exist;
+		multiSelectEditButton = tableToolbar.querySelectorAll("button.properties-action-multi-select-edit");
+		expect(multiSelectEditButton).to.have.length(1);
 
 		// verify Edit button in ALL rows is disabled
 		tableRows = tableUtilsRTL.getTableRows(summaryPanel);
