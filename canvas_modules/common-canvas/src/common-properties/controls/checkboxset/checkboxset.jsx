@@ -131,6 +131,9 @@ class CheckboxsetControl extends React.Component {
 					<div className={classNames("properties-checkboxset-container", this.props.messageInfo ? this.props.messageInfo.type : null)}>
 						{checkboxes}
 					</div>
+					<div className="properties-checkboxset cds--form__helper-text">
+						{this.props.control.helperText}
+					</div>
 					<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 				</div>
 			</fieldset>
