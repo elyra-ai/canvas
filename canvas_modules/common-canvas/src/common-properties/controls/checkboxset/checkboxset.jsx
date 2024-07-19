@@ -117,6 +117,7 @@ class CheckboxsetControl extends React.Component {
 					labelText={this.props.control.valueLabels[i]}
 					onChange={this.handleChange.bind(this, val)}
 					checked={checked}
+					readOnly={this.props.readOnly}
 				/>
 				{tooltipIcon}
 			</div>);
@@ -149,7 +150,8 @@ CheckboxsetControl.propTypes = {
 		PropTypes.object,
 		PropTypes.array
 	]), // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => {
