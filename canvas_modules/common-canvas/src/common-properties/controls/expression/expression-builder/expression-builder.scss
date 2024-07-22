@@ -45,6 +45,15 @@ $operator-margin: 50%;
 			border-bottom: 0;
 		}
 	}
+
+	.properties-vt div[data-role=properties-data-row] {
+		background-color: $field-01;
+	}
+
+	.cds--list-box__menu-item {
+		background-color: $field-01;
+	}
+	
 }
 
 
@@ -81,7 +90,7 @@ $operator-margin: 50%;
 	float: left;
 	.properties-ft-search-container {
 		width: 100%;
-	}
+	}	
 }
 
 .properties-help-table-container {
