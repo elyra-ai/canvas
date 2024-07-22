@@ -510,7 +510,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						updateRowSelections={this.onFieldTableClick}
 						selectedRows={[selectedField]}
 						onSort={this.setSortColumn.bind(this, "fieldTable")}
-						light={this.props.controller.getLight()}
+						light={!this.props.controller.getLight()}
 						emptyTablePlaceholder={emptyFieldsLabel}
 					/>
 				</div>
@@ -527,7 +527,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						updateRowSelections={this.onValueTableClick}
 						selectedRows={[selectedValue]}
 						onSort={this.setSortColumn.bind(this, "valuesTable")}
-						light={this.props.controller.getLight()}
+						light={!this.props.controller.getLight()}
 						emptyTablePlaceholder={emptyValuesLabel}
 					/>
 				</div>
