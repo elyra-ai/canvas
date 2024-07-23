@@ -244,6 +244,14 @@ export default class PipelineInHandler {
 				newComment.class_name = comment.class_name;
 			}
 
+			if (has(comment, "contentType")) {
+				newComment.contentType = comment.contentType;
+			}
+
+			if (has(comment, "formats")) {
+				newComment.formats = comment.formats;
+			}
+
 			if (has(comment, "style")) {
 				newComment.style = comment.style;
 			}

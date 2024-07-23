@@ -23,8 +23,16 @@ import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Logger from "../logging/canvas-logger.js";
-import { Code, Link, ListBulleted, ListNumbered, TextIndentMore,
-	TextBold, TextItalic, TextScale, TextStrikethrough } from "@carbon/react/icons";
+import ColorPicker from "../color-picker";
+import {
+	AlignBoxTopCenter, AlignBoxMiddleCenter, AlignBoxBottomCenter,
+	Code, ColorPalette, Link, ListBulleted, ListNumbered, SquareOutline,
+	TextAlignCenter, TextAlignLeft, TextAlignRight, TextColor, TextFont, TextIndentMore,
+	TextBold, TextItalic, TextUnderline, TextScale, TextStrikethrough
+} from "@carbon/react/icons";
+import {
+	MARKDOWN, WYSIWYG
+} from "./constants/canvas-constants.js";
 
 class CommonCanvasTextToolbar extends React.Component {
 	constructor(props) {
@@ -51,41 +59,147 @@ class CommonCanvasTextToolbar extends React.Component {
 	}
 
 	getTextToolbar() {
-		const headerLabel = this.getJsxLabel("texttoolbar.headerAction", ">", "<");
 		const boldLabel = this.getJsxLabel("texttoolbar.boldAction", "b");
 		const italicsLabel = this.getJsxLabel("texttoolbar.italicsAction", "i");
 		const strikethroughLabel = this.getJsxLabel("texttoolbar.strikethroughAction", "shift + x");
-		const codeLabel = this.getJsxLabel("texttoolbar.codeAction", "e");
-		const linkLabel = this.getJsxLabel("texttoolbar.linkAction", "k");
-		const quoteLabel = this.getJsxLabel("texttoolbar.quoteAction", "shift + >");
-		const numberedListLabel = this.getJsxLabel("texttoolbar.numberedListAction", "shift + 7");
-		const bulletedListLabel = this.getJsxLabel("texttoolbar.bulletedListAction", "shift + 8");
 
-		const headerOptions = [
-			{ action: "title", label: this.getLabel("texttoolbar.titleAction"), enable: true },
-			{ action: "header", label: this.getLabel("texttoolbar.headerAction"), enable: true },
-			{ action: "subheader", label: this.getLabel("texttoolbar.subheaderAction"), enable: true },
-			{ action: "body", label: this.getLabel("texttoolbar.bodyAction"), enable: true }
-		];
 
-		return {
-			leftBar: [
-				{ action: "headerStyle", tooltip: headerLabel, enable: true, subMenu: headerOptions, closeSubAreaOnClick: true, iconEnabled: (<TextScale size={32} />) },
-				{ divider: true },
-				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold size={32} />) },
-				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic size={32} />) },
-				{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough size={32} />) },
-				{ divider: true },
-				{ action: "code", label: codeLabel, enable: true, iconEnabled: (<Code size={32} />) },
-				{ divider: true },
-				{ action: "link", label: linkLabel, enable: true, iconEnabled: (<Link size={32} />) },
-				{ divider: true },
-				{ action: "quote", label: quoteLabel, enable: true, iconEnabled: (<TextIndentMore size={32} />) },
-				{ divider: true },
-				{ action: "numberedList", label: numberedListLabel, enable: true, iconEnabled: (<ListNumbered size={32} />) },
-				{ action: "bulletedList", label: bulletedListLabel, enable: true, iconEnabled: (<ListBulleted size={32} />) }
-			]
-		};
+		if (this.props.contentType === MARKDOWN) {
+			const headerLabel = this.getJsxLabel("texttoolbar.headerAction", ">", "<");
+			const codeLabel = this.getJsxLabel("texttoolbar.codeAction", "e");
+			const linkLabel = this.getJsxLabel("texttoolbar.linkAction", "k");
+			const quoteLabel = this.getJsxLabel("texttoolbar.quoteAction", "shift + >");
+			const numberedListLabel = this.getJsxLabel("texttoolbar.numberedListAction", "shift + 7");
+			const bulletedListLabel = this.getJsxLabel("texttoolbar.bulletedListAction", "shift + 8");
+
+			const headerOptions = [
+				{ action: "title", label: this.getLabel("texttoolbar.titleAction"), enable: true },
+				{ action: "header", label: this.getLabel("texttoolbar.headerAction"), enable: true },
+				{ action: "subheader", label: this.getLabel("texttoolbar.subheaderAction"), enable: true },
+				{ action: "body", label: this.getLabel("texttoolbar.bodyAction"), enable: true }
+			];
+
+			return {
+				leftBar: [
+					{ action: "headerStyle", tooltip: headerLabel, enable: true, subMenu: headerOptions, closeSubAreaOnClick: true, iconEnabled: (<TextScale size={32} />) },
+					{ divider: true },
+					{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold size={32} />) },
+					{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic size={32} />) },
+					{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough size={32} />) },
+					{ divider: true },
+					{ action: "code", label: codeLabel, enable: true, iconEnabled: (<Code size={32} />) },
+					{ divider: true },
+					{ action: "link", label: linkLabel, enable: true, iconEnabled: (<Link size={32} />) },
+					{ divider: true },
+					{ action: "quote", label: quoteLabel, enable: true, iconEnabled: (<TextIndentMore size={32} />) },
+					{ divider: true },
+					{ action: "numberedList", label: numberedListLabel, enable: true, iconEnabled: (<ListNumbered size={32} />) },
+					{ action: "bulletedList", label: bulletedListLabel, enable: true, iconEnabled: (<ListBulleted size={32} />) }
+				]
+			};
+		} else if (this.props.contentType === WYSIWYG) {
+			const subMenuAlignHorizontal = [
+				{ action: "align-left", label: "Left", enable: true, iconEnabled: (<TextAlignLeft size={32} />) },
+				{ action: "align-center", label: "Center", enable: true, iconEnabled: (<TextAlignCenter size={32} />) },
+				{ action: "align-right", label: "Right", enable: true, iconEnabled: (<TextAlignRight size={32} />) }
+			];
+
+			const subMenuAlignVertical = [
+				{ action: "align-top", label: "Top", enable: true, iconEnabled: (<AlignBoxTopCenter size={32} />) },
+				{ action: "align-middle", label: "Middle", enable: true, iconEnabled: (<AlignBoxMiddleCenter size={32} />) },
+				{ action: "align-bottom", label: "Bottom", enable: true, iconEnabled: (<AlignBoxBottomCenter size={32} />) }
+			];
+
+			const subMenuTextSize = [
+				{ action: "text-size-12", label: "12", enable: true },
+				{ action: "text-size-16", label: "16", enable: true },
+				{ action: "text-size-20", label: "20", enable: true },
+				{ action: "text-size-24", label: "24", enable: true },
+				{ action: "text-size-28", label: "28", enable: true }
+			];
+
+			const subMenuOutline = [
+				{ action: "outline-none", label: "No outline", enable: true },
+				{ action: "outline-visible", label: "Solid outline", enable: true }
+			];
+
+
+			const subMenuFont = [
+				{ action: "font-ibm-plex", label: "IBM Plex", enable: true },
+				{ action: "font-helvetica", label: "Helvetica", enable: true },
+				{ action: "font-auto", label: "Auto", enable: true },
+				{ action: "font-cursive", label: "Cursive", enable: true },
+				{ action: "font-fantasy", label: "Fantasy", enable: true }
+			];
+
+			return {
+				leftBar: [
+					{ action: "submenu-font",
+						label: "Font",
+						iconEnabled: (<TextFont size={32} />),
+						enable: true,
+						subMenu: subMenuFont,
+						closeSubAreaOnClick: true
+					},
+					{ action: "submenu-text-size",
+						label: "Text size",
+						iconEnabled: (<TextScale size={32} />),
+						enable: true,
+						subMenu: subMenuTextSize,
+						closeSubAreaOnClick: true
+					},
+					{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold size={32} />) },
+					{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic size={32} />) },
+					{ action: "underline", label: "Underline", enable: true, iconEnabled: (<TextUnderline size={32} />) },
+					{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough size={32} />) },
+					{ divider: true },
+					{ action: "submenu-text-color",
+						label: "Color text",
+						iconEnabled: (<TextColor size={32} />),
+						enable: true,
+						subPanel: ColorPicker,
+						subPanelData: {
+							colorCount: 48,
+							clickActionHandler: (color) => this.props.actionHandler("text-color", color)
+						},
+						closeSubAreaOnClick: true
+					},
+					{ action: "submenu-align-horiz",
+						label: "Align horizontally",
+						iconEnabled: (<TextAlignCenter size={32} />),
+						enable: true,
+						subMenu: subMenuAlignHorizontal,
+						closeSubAreaOnClick: true
+					},
+					{ action: "submenu-align-vert",
+						label: "Align vertically",
+						iconEnabled: (<AlignBoxMiddleCenter size={32} />),
+						enable: true,
+						subMenu: subMenuAlignVertical,
+						closeSubAreaOnClick: true
+					},
+					{ action: "submenu-background-color",
+						label: "Color background",
+						iconEnabled: (<ColorPalette size={32} />),
+						enable: true,
+						subPanel: ColorPicker,
+						subPanelData: {
+							colorCount: 48,
+							clickActionHandler: (color) => this.props.actionHandler("background-color", color)
+						},
+						closeSubAreaOnClick: true
+					},
+					{ action: "sub-menu-outline",
+						label: "Outline",
+						iconEnabled: (<SquareOutline size={32} />),
+						enable: true,
+						subMenu: subMenuOutline,
+						closeSubAreaOnClick: true
+					}
+				]
+			};
+		}
+		return { leftBar: [] };
 	}
 
 	render() {
@@ -120,6 +234,7 @@ CommonCanvasTextToolbar.propTypes = {
 	isOpen: PropTypes.bool.isRequired,
 	pos_x: PropTypes.number,
 	pos_y: PropTypes.number,
+	contentType: PropTypes.oneOf([MARKDOWN, WYSIWYG]),
 	actionHandler: PropTypes.func,
 	blurHandler: PropTypes.func
 };
@@ -128,6 +243,7 @@ const mapStateToProps = (state, ownProps) => ({
 	isOpen: state.texttoolbar.isOpen,
 	pos_x: state.texttoolbar.pos_x,
 	pos_y: state.texttoolbar.pos_y,
+	contentType: state.texttoolbar.contentType,
 	actionHandler: state.texttoolbar.actionHandler,
 	blurHandler: state.texttoolbar.blurHandler
 });

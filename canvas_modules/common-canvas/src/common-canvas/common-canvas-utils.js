@@ -1319,6 +1319,111 @@ export default class CanvasUtils {
 		return null;
 	}
 
+	// Returns an object containing a CSS field and value that
+	// can be applied to a <div> contining text based on the
+	// format type and action passed in.
+	static convertFormat(format) {
+		switch (format.type) {
+		case "bold":
+			return { field: "font-weight", value: "600" };
+
+		case "italics":
+			return { field: "font-style", value: "italic" };
+
+		case "fontType": {
+			switch (format.value) {
+			default:
+			case "font-ibm-plex":
+				return { field: "font-family", value: "IBM Plex Sans" };
+			case "font-helvetica":
+				return { field: "font-family", value: "Helvetica Neue" };
+			case "font-auto":
+				return { field: "font-family", value: "auto" };
+			case "font-cursive":
+				return { field: "font-family", value: "cursive" };
+			case "font-fantasy":
+				return { field: "font-family", value: "fantasy" };
+			}
+		}
+
+		case "textDecoration": {
+			switch (format.value) {
+			default:
+			case "strikethrough":
+				return { field: "text-decoration", value: "line-through" };
+			case "underline":
+				return { field: "text-decoration", value: "underline" };
+			case "strikethrough underline":
+			case "underline strikethrough":
+				return { field: "text-decoration", value: "underline line-through" };
+			}
+		}
+
+		case "textColor": {
+			return { field: "color", value: format.value };
+			// return this.convertColorAction(format.value, "color");
+		}
+
+		case "backgroundColor": {
+			return { field: "background-color", value: format.value };
+			// return this.convertColorAction(format.value, "background-color");
+		}
+
+		case "textSize": {
+			switch (format.value) {
+			default:
+			case "text-size-12":
+				return { field: "font-size", value: "12px" };
+			case "text-size-16":
+				return { field: "font-size", value: "16px" };
+			case "text-size-20":
+				return { field: "font-size", value: "20px" };
+			case "text-size-24":
+				return { field: "font-size", value: "24px" };
+			case "text-size-28":
+				return { field: "font-size", value: "28px" };
+			}
+		}
+
+		case "outlineStyle": {
+			switch (format.value) {
+			default:
+			case "outline-solid":
+				return { field: "border-width", value: "1px" };
+			case "outline-none":
+				return { field: "border-width", value: "0" };
+			}
+		}
+
+		case "alignHorizontally": {
+			switch (format.value) {
+			default:
+			case "align-left":
+				return { field: "text-align", value: "left" };
+			case "align-center":
+				return { field: "text-align", value: "center" };
+			case "align-right":
+				return { field: "text-align", value: "right" };
+			}
+		}
+
+		case "alignVertically": {
+			switch (format.value) {
+			default:
+			case "align-top":
+				return { field: "vertical-align", value: "top" };
+			case "align-middle":
+				return { field: "vertical-align", value: "middle" };
+			case "align-bottom":
+				return { field: "vertical-align", value: "bottom" };
+			}
+		}
+
+		default:
+			return { field: format.type, value: format.value };
+		}
+	}
+
 	// Returns the element passed in, or an ancestor of the element, if either
 	// contains the classNames passed in. Otherwise it returns null if the
 	// className cannot be found. For example, if this element is a child of the

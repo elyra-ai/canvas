@@ -17,6 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
+import colorArray from "./color-set.js";
 
 const TAB_KEY = 9;
 const RETURN_KEY = 13;
@@ -26,10 +27,14 @@ const UP_ARROW_KEY = 38;
 const RIGHT_ARROW_KEY = 39;
 const DOWN_ARROW_KEY = 40;
 
+// These dimensions should match the values in color-picker.scss
+const COLOR_DIMENSION = 20;
+const COLOR_PADDING = 5;
+const COLOR_DIM_PLUS_PAD = COLOR_DIMENSION + COLOR_PADDING;
+
+
 // These values must reflect the layout of the color picker panel
 // decribed by the SCSS/CSS.
-const COLORS_IN_ROW = 6;
-const TOTAL_COLORS = 12;
 
 class ColorPicker extends React.Component {
 	constructor(props) {
@@ -38,8 +43,11 @@ class ColorPicker extends React.Component {
 
 		this.colorIndex = 0;
 
+		this.colorsPerRow = props.subPanelData.colorCount === 48 ? 7 : 6;
+		this.totalColors = props.subPanelData.colorCount === 48 ? 48 : 12;
+
 		this.refss = [];
-		for (let i = 0; i < TOTAL_COLORS; i++) {
+		for (let i = 0; i < this.totalColors; i++) {
 			this.refss.push(React.createRef());
 		}
 		this.onClick = this.onClick.bind(this);
@@ -59,7 +67,7 @@ class ColorPicker extends React.Component {
 		if (evt.keyCode === RIGHT_ARROW_KEY) {
 			evt.stopPropagation();
 			this.colorIndex++;
-			if (this.colorIndex > TOTAL_COLORS - 1) {
+			if (this.colorIndex > this.totalColors - 1) {
 				this.colorIndex = 0;
 			}
 
@@ -67,21 +75,21 @@ class ColorPicker extends React.Component {
 			evt.stopPropagation();
 			this.colorIndex--;
 			if (this.colorIndex < 0) {
-				this.colorIndex = TOTAL_COLORS - 1;
+				this.colorIndex = this.totalColors - 1;
 			}
 
 		} else if (evt.keyCode === UP_ARROW_KEY) {
 			evt.stopPropagation();
-			this.colorIndex -= COLORS_IN_ROW;
+			this.colorIndex -= this.colorsPerRow;
 			if (this.colorIndex < 0) {
-				this.colorIndex += COLORS_IN_ROW;
+				this.colorIndex += this.colorsPerRow;
 			}
 
 		} else if (evt.keyCode === DOWN_ARROW_KEY) {
 			evt.stopPropagation();
-			this.colorIndex += COLORS_IN_ROW;
+			this.colorIndex += this.colorsPerRow;
 			if (this.colorIndex > 11) {
-				this.colorIndex -= COLORS_IN_ROW;
+				this.colorIndex -= this.colorsPerRow;
 			}
 
 		} else if (evt.keyCode === SPACE_KEY ||
@@ -109,8 +117,30 @@ class ColorPicker extends React.Component {
 		this.props.closeSubPanel();
 	}
 
+
 	render() {
 		this.logger.log("render");
+		if (this.props.subPanelData.colorCount === 48) {
+			const colorDivs = colorArray.map((c, i) =>
+				(<div key={"key" + i} ref={this.refss[i]} tabIndex={"-1"} data-color={c}
+					style={{ backgroundColor: c }}
+					className={"color-picker-item" + (c === "transparent" ? " color-transparent" : "") }
+				/>));
+
+			const rowCount = Math.ceil(this.totalColors / this.colorsPerRow);
+
+			const style = {
+				width: (this.colorsPerRow * COLOR_DIM_PLUS_PAD) + COLOR_PADDING,
+				height: (rowCount * COLOR_DIM_PLUS_PAD) + COLOR_PADDING
+			};
+
+			return (
+				<div className="color-picker color-count-12" style={style} tabIndex={"-1"} onClick={this.onClick} onKeyDown={this.onKeyDown}>
+					{colorDivs}
+				</div>
+			);
+		}
+
 		return (
 			<div className="color-picker" tabIndex={"-1"} onClick={this.onClick} onKeyDown={this.onKeyDown}>
 				<div ref={this.refss[0]} tabIndex={"-1"} data-color={"bkg-col-white-0"} className="color-picker-item white-0" />

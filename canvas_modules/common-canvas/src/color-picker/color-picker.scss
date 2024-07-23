@@ -20,11 +20,17 @@
 	display: flex;
 	flex-wrap: wrap;
 
+	&.color-count-12 {
+		height: 115px;
+	}
+
 	.color-picker-item {
 		width: 20px;
 		height: 20px;
 		margin: 5px 0 0 5px;
 		cursor: pointer;
+		border: $border-subtle-02 1px solid;
+
 		&.white-0 {
 			background-color: $layer-01; // In dark-mode, white-0 will be interpreted as black.
 			border: 1px solid $gray-50;
@@ -40,5 +46,18 @@
 		&.green-50 { background-color: $green-50; }
 		&.teal-50 { background-color: $teal-50; }
 		&.cyan-50 { background-color: $cyan-50; }
+
+		&.color-transparent {
+			border-color: $icon-primary;
+			// Drawn a diagonal line across the sqaure
+			background:
+				linear-gradient(to top left,
+				rgba(0,0,0,0) 0%,
+				rgba(0,0,0,0) calc(50% - 0.8px),
+				$icon-primary 50%,
+				rgba(0,0,0,0) calc(50% + 0.8px),
+				rgba(0,0,0,0) 100%),
+		}
 	}
+
 }

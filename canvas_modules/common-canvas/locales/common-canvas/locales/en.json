@@ -9,6 +9,7 @@
   "edit.pasteSelection": "Paste",
   "canvas.label": "Canvas",
   "canvas.addComment": "New comment",
+  "canvas.addWysiwygComment": "New WYSIWYG comment",
   "canvas.selectAll": "Select all",
   "canvas.undo": "Undo",
   "canvas.redo": "Redo",

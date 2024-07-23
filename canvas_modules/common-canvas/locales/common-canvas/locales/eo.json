@@ -9,6 +9,7 @@
 	"edit.pasteSelection": "[Esperanto~Paste~eo]",
 	"canvas.label": "[Esperanto~Canvas~eo]",
 	"canvas.addComment": "[Esperanto~New comment~eo]",
+	"canvas.addWysiwygComment": "[Esperanto~New WYSIWYG comment~~~~~eo]",
 	"canvas.selectAll": "[Esperanto~Select all~~~~~~eo]",
 	"canvas.undo": "[Esperanto~Undo~eo]",
 	"canvas.redo": "[Esperanto~Redo~eo]",

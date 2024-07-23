@@ -84,7 +84,7 @@ $comment-text-color: $text-primary;
 $comment-text-font-size: 12px;
 $comment-text-font-weight: 500;
 $comment-text-font-family: "ibm-plex-sans", Helvetica Neue, Arial, sans-serif;
-$comment-text-line-height: 14px;
+$comment-text-line-height: 1.2;
 $comment-text-display-border: 8px;
 $comment-text-entry-border: $comment-text-display-border - 2px; // Remove 2px to allow for focus border
 
@@ -114,8 +114,25 @@ $link-highlight-color: $support-info;
 .d3-foreign-object-text-entry {
 	// Don't handle events - let objects inside foreign object handle them.
 	pointer-events: none;
-	// Allows the focus highlight to be visible on FF and Safari
+	// Allows the focus highlight to be visible
 	overflow: visible;
+}
+
+.d3-foreign-object-comment-text-wysiwyg,
+.d3-foreign-object-text-entry-wysiwyg {
+	// Don't handle events - let objects inside foreign object handle them.
+	pointer-events: none;
+	// We hide overflow with wysiwyg text editing
+	overflow: hidden;
+}
+
+.d3-foreign-object-text-entry-wysiwyg:focus {
+	outline: none;
+}
+
+.d3-foreign-object-text-entry-wysiwyg:focus-within {
+	outline: none;
+	box-shadow: 0 0 0 2px $focus;
 }
 
 // Declare our own focus highlighting for text entry.
@@ -321,6 +338,7 @@ $link-highlight-color: $support-info;
 	// second line if the text is greater than two lines. -webkit-line-clamp
 	// can be overriden by the application to support more than 2 lines.
 	display: -webkit-box; // stylelint-disable-line value-no-vendor-prefix
+	line-clamp: 2;
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
 
@@ -904,6 +922,48 @@ g.bkg-col-cyan-50 {
 		@include d3-text-entry-focus-mixin;
 	}
 }
+
+.d3-comment-text-wysiwyg-outer {
+	display: table;
+	pointer-events: none;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+}
+
+.d3-comment-text-wysiwyg {
+	@include d3-comment-mixin;
+	background-color: $comment-fill-color;
+	padding: $comment-text-display-border;
+	border-color: $comment-outline-color;
+	border-width: 1px;
+	user-select: none;
+	overflow: hidden;
+	display: table-cell;
+}
+
+.d3-comment-text-entry-wysiwyg-outer {
+	display: table;
+	pointer-events: none;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	outline: none;
+}
+
+.d3-comment-text-entry-wysiwyg {
+	@include d3-comment-mixin;
+	padding: $comment-text-display-border;
+	border-width: 1px;
+	background-color: $field-01;
+	outline: none;
+	user-select: none;
+	overflow: hidden;
+	display: table-cell;
+	cursor: text;
+}
+
+
 
 /* Link styles for branch highlighting */
 
