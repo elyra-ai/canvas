@@ -36,26 +36,28 @@ $operator-margin: 50%;
 	}
 }
 
-.properties-field-and-values-table-container,
-.properties-expression-function-select,
-.properties-functions-table-container {
+
+.properties-field-and-values-table-container, /* In Tearsheet Fields dropdown and table should occupy 50% width */
+.properties-expression-function-select, /* In Tearsheet Functions dropdown should occupy 50% width */
+.properties-functions-table-container { /* In Tearsheet Functions table should occupy 50% width */
 	width: 50%;
 	tbody {
 		tr {
 			border-bottom: 0;
 		}
 	}
-
-	.cds--list-box__menu-item {
-		background-color: $field-01;
-	}
-	
 }
 
 
 .properties-expression-builder {
 	padding: $spacing-06 $spacing-07;
 	margin-bottom: 0;
+
+	.elyra-CodeMirror {
+		.cm-editor {
+			background: $field-01;
+		}
+	}
 }
 
 .properties-expression-selection-container {

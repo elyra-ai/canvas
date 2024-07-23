@@ -696,7 +696,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 							updateRowSelections={this.onFunctionTableClick}
 							selectedRows={[selectedFunction]}
 							onSort={this.setSortColumn.bind(this, "functionTable")}
-							light={this.props.controller.getLight()}
+							light={!this.props.controller.getLight()}
 							emptyTablePlaceholder={functionsEmptyLabel}
 						/>
 					</div>
