@@ -173,7 +173,7 @@ class CommonCanvasTextToolbar extends React.Component {
 						enable: true,
 						subPanel: ColorPicker,
 						subPanelData: {
-							colorCount: 48,
+							type: WYSIWYG,
 							clickActionHandler: (color) => this.props.actionHandler("text-color", color)
 						},
 						closeSubAreaOnClick: true
@@ -198,7 +198,7 @@ class CommonCanvasTextToolbar extends React.Component {
 						enable: true,
 						subPanel: ColorPicker,
 						subPanelData: {
-							colorCount: 48,
+							type: WYSIWYG,
 							clickActionHandler: (color) => this.props.actionHandler("background-color", color)
 						},
 						closeSubAreaOnClick: true

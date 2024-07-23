@@ -49,14 +49,9 @@
 
 		&.color-transparent {
 			border-color: $icon-primary;
-			// Drawn a diagonal line across the sqaure
+			// Drawn a diagonal line across the square
 			background:
-				linear-gradient(to top left,
-				rgba(0,0,0,0) 0%,
-				rgba(0,0,0,0) calc(50% - 0.8px),
-				$icon-primary 50%,
-				rgba(0,0,0,0) calc(50% + 0.8px),
-				rgba(0,0,0,0) 100%),
+				linear-gradient(to top left, #FFFFFF calc(50% - 0.8px), $icon-primary 50%, #FFFFFF calc(50% + 0.8px), #FFFFFF 100%);
 		}
 	}
 

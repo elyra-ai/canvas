@@ -19,6 +19,8 @@ import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
 import colorArray from "./color-set.js";
 
+import { WYSIWYG } from "../common-canvas/constants/canvas-constants.js";
+
 const TAB_KEY = 9;
 const RETURN_KEY = 13;
 const SPACE_KEY = 32;
@@ -43,8 +45,8 @@ class ColorPicker extends React.Component {
 
 		this.colorIndex = 0;
 
-		this.colorsPerRow = props.subPanelData.colorCount === 48 ? 7 : 6;
-		this.totalColors = props.subPanelData.colorCount === 48 ? 48 : 12;
+		this.colorsPerRow = props.subPanelData.type === WYSIWYG ? 8 : 6;
+		this.totalColors = props.subPanelData.type === WYSIWYG ? 49 : 12;
 
 		this.refss = [];
 		for (let i = 0; i < this.totalColors; i++) {
@@ -120,7 +122,7 @@ class ColorPicker extends React.Component {
 
 	render() {
 		this.logger.log("render");
-		if (this.props.subPanelData.colorCount === 48) {
+		if (this.props.subPanelData.type === WYSIWYG) {
 			const colorDivs = colorArray.map((c, i) =>
 				(<div key={"key" + i} ref={this.refss[i]} tabIndex={"-1"} data-color={c}
 					style={{ backgroundColor: c }}
