@@ -1331,19 +1331,8 @@ export default class CanvasUtils {
 			return { field: "font-style", value: "italic" };
 
 		case "fontType": {
-			switch (format.value) {
-			default:
-			case "font-ibm-plex":
-				return { field: "font-family", value: "IBM Plex Sans" };
-			case "font-helvetica":
-				return { field: "font-family", value: "Helvetica Neue" };
-			case "font-auto":
-				return { field: "font-family", value: "auto" };
-			case "font-cursive":
-				return { field: "font-family", value: "cursive" };
-			case "font-fantasy":
-				return { field: "font-family", value: "fantasy" };
-			}
+			const fontFamily = this.getFontFamily(format.value);
+			return { field: "font-family", value: fontFamily };
 		}
 
 		case "textDecoration": {
@@ -1361,28 +1350,15 @@ export default class CanvasUtils {
 
 		case "textColor": {
 			return { field: "color", value: format.value };
-			// return this.convertColorAction(format.value, "color");
 		}
 
 		case "backgroundColor": {
 			return { field: "background-color", value: format.value };
-			// return this.convertColorAction(format.value, "background-color");
 		}
 
 		case "textSize": {
-			switch (format.value) {
-			default:
-			case "text-size-12":
-				return { field: "font-size", value: "12px" };
-			case "text-size-16":
-				return { field: "font-size", value: "16px" };
-			case "text-size-20":
-				return { field: "font-size", value: "20px" };
-			case "text-size-24":
-				return { field: "font-size", value: "24px" };
-			case "text-size-28":
-				return { field: "font-size", value: "28px" };
-			}
+			const size = format.value.substring(10);
+			return { field: "font-size", value: `${size}px` };
 		}
 
 		case "outlineStyle": {
@@ -1421,6 +1397,23 @@ export default class CanvasUtils {
 
 		default:
 			return { field: format.type, value: format.value };
+		}
+	}
+
+	// Returns a font family for the font action passed in.
+	static getFontFamily(action) {
+		switch (action) {
+		default:
+		case ("font-ibm-plex-sans"): return "\"IBM Plex Sans\", sans-serif";
+		case ("font-ibm-plex-serif"): return "\"IBM Plex Serif\", serif";
+		case ("font-ibm-plex-condensed"): return "IBM Plex Condensed";
+		case ("font-ibm-plex-mono"): return "\"IBM Plex Mono\", monospace";
+		case ("font-arial"): return "\"Arial\", sans-serif";
+		case ("font-comic-sans-ms"): return "\"Comic Sans MS\", sans-serif";
+		case ("font-gill-sans"): return "\"Gill Sans\", sans-serif";
+		case ("font-helvetica-neue"): return "\"Helvetica Neue\", sans-serif";
+		case ("font-times-new-roman"): return "\"Times New Roman\", serif";
+		case ("font-verdana"): return "\"Verdana\", sans-serif";
 		}
 	}
 

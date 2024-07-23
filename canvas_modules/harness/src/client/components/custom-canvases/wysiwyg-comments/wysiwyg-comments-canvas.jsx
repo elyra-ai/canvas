@@ -21,11 +21,14 @@ import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disabl
 
 import { AddComment } from "@carbon/react/icons";
 
+import WysiwygCommentsFlow from "./wysiwyg-comments-flow.json";
+
 export default class WysiwygCommentsCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.canvasController = new CanvasController();
+		this.canvasController.setPipelineFlow(WysiwygCommentsFlow);
 
 		this.getConfig = this.getConfig.bind(this);
 	}

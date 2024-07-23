@@ -111,11 +111,20 @@ class CommonCanvasTextToolbar extends React.Component {
 			];
 
 			const subMenuTextSize = [
+				{ action: "text-size-8", label: "8", enable: true },
+				{ action: "text-size-9", label: "9", enable: true },
+				{ action: "text-size-10", label: "10", enable: true },
+				{ action: "text-size-11", label: "11", enable: true },
 				{ action: "text-size-12", label: "12", enable: true },
-				{ action: "text-size-16", label: "16", enable: true },
-				{ action: "text-size-20", label: "20", enable: true },
+				{ action: "text-size-14", label: "14", enable: true },
+				{ action: "text-size-18", label: "18", enable: true },
 				{ action: "text-size-24", label: "24", enable: true },
-				{ action: "text-size-28", label: "28", enable: true }
+				{ action: "text-size-30", label: "30", enable: true },
+				{ action: "text-size-36", label: "36", enable: true },
+				{ action: "text-size-48", label: "48", enable: true },
+				{ action: "text-size-60", label: "60", enable: true },
+				{ action: "text-size-72", label: "72", enable: true },
+				{ action: "text-size-96", label: "96", enable: true }
 			];
 
 			const subMenuOutline = [
@@ -125,11 +134,16 @@ class CommonCanvasTextToolbar extends React.Component {
 
 
 			const subMenuFont = [
-				{ action: "font-ibm-plex", label: "IBM Plex", enable: true },
-				{ action: "font-helvetica", label: "Helvetica", enable: true },
-				{ action: "font-auto", label: "Auto", enable: true },
-				{ action: "font-cursive", label: "Cursive", enable: true },
-				{ action: "font-fantasy", label: "Fantasy", enable: true }
+				{ action: "font-ibm-plex-sans", label: "IBM Plex Sans", enable: true },
+				{ action: "font-ibm-plex-serif", label: "IBM Plex Serif", enable: true },
+				{ action: "font-ibm-plex-condensed", label: "IBM Plex Condensed", enable: true },
+				{ action: "font-ibm-plex-mono", label: "IBM Plex Mono", enable: true },
+				{ action: "font-arial", label: "Arial", enable: true },
+				{ action: "font-comic-sans-ms", label: "Comic Sans MS", enable: true },
+				{ action: "font-gill-sans", label: "Gill Sans", enable: true },
+				{ action: "font-helvetica-neue", label: "Helvetica Neue", enable: true },
+				{ action: "font-times-new-roman", label: "Times New Roman", enable: true },
+				{ action: "font-verdana", label: "Verdana", enable: true }
 			];
 
 			return {
