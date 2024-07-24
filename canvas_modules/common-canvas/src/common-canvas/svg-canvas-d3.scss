@@ -83,7 +83,6 @@ $comment-text-color: $text-primary;
 // Comment properties
 $comment-text-font-size: 12px;
 $comment-text-font-weight: 500;
-$comment-text-font-family: "ibm-plex-sans", Helvetica Neue, Arial, sans-serif;
 $comment-text-line-height: 1.2;
 $comment-text-display-border: 8px;
 $comment-text-entry-border: $comment-text-display-border - 2px; // Remove 2px to allow for focus border
@@ -762,7 +761,6 @@ g.bkg-col-cyan-50 {
 	p {
 		font-size: $comment-text-font-size;
 		font-weight: $comment-text-font-weight;
-		font-family: $comment-text-font-family;
 		line-height: $comment-text-line-height;
 		letter-spacing: 0.15px;
 	}
@@ -889,7 +887,6 @@ g.bkg-col-cyan-50 {
 	background-color: transparent;
 	font-size: $comment-text-font-size;
 	font-weight: $comment-text-font-weight;
-	font-family: $comment-text-font-family;
 	resize: none;
 	border-style: solid;
 	border-color: transparent;

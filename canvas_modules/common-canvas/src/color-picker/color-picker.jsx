@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
-import colorArray from "./color-set.js";
+import colorSetArray from "./color-set.js";
 
 import { WYSIWYG } from "../common-canvas/constants/canvas-constants.js";
 
@@ -46,7 +46,7 @@ class ColorPicker extends React.Component {
 		this.colorIndex = 0;
 
 		this.colorsPerRow = props.subPanelData.type === WYSIWYG ? 8 : 6;
-		this.totalColors = props.subPanelData.type === WYSIWYG ? 49 : 12;
+		this.totalColors = props.subPanelData.type === WYSIWYG ? colorSetArray.length : 12;
 
 		this.refss = [];
 		for (let i = 0; i < this.totalColors; i++) {
@@ -123,7 +123,7 @@ class ColorPicker extends React.Component {
 	render() {
 		this.logger.log("render");
 		if (this.props.subPanelData.type === WYSIWYG) {
-			const colorDivs = colorArray.map((c, i) =>
+			const colorDivs = colorSetArray.map((c, i) =>
 				(<div key={"key" + i} ref={this.refss[i]} tabIndex={"-1"} data-color={c}
 					style={{ backgroundColor: c }}
 					className={"color-picker-item" + (c === "transparent" ? " color-transparent" : "") }
