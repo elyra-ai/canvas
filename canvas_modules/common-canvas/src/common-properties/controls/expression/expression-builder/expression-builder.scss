@@ -26,8 +26,7 @@ $functions-help-width: 28%;
 $operator-width: 36px;
 $operator-margin: 50%;
 
-.properties-expression-selection-container
-.properties-expression-function-table-container {
+.properties-expression-selection-container {
 	width: 100%;
 	tbody {
 		tr {
@@ -36,17 +35,13 @@ $operator-margin: 50%;
 	}
 }
 
-
-.properties-expression-function-select, /* In Tearsheet Functions dropdown should occupy 50% width */
-.properties-functions-table-container { /* In Tearsheet Functions table should occupy 50% width */
+/* Adding 50% width to adjust in Tearsheet */
+.properties-expression-function-select, /* Functions Dropdown */
+.properties-functions-table-container, /* Functions Table */
+.properties-field-and-values-table-container .properties-expression-field-select { /* Fields Table and Dropdown */
 	width: 50%;
 }
 
-.properties-field-and-values-table-container { /* In Tearsheet Fields dropdown and table should occupy 50% width */
-	.properties-expression-field-select {
-		width: 50%
-	}
-}
 .properties-expression-builder {
 	padding: $spacing-06 $spacing-07;
 	margin-bottom: 0;
