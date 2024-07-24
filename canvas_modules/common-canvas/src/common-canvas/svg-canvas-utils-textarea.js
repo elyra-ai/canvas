@@ -228,6 +228,10 @@ export default class SvgCanvasTextArea {
 	wysiwygActionHandler(action, extra) {
 		this.logger.log("wysiwygActionHandler - action = " + action);
 
+		if (!this.editingTextData.newFormats) {
+			this.editingTextData.newFormats = [];
+		}
+
 		if (action === "align-left" || action === "align-center" || action === "align-right") {
 			this.addReplaceFormat("alignHorizontally", action);
 
@@ -266,16 +270,10 @@ export default class SvgCanvasTextArea {
 	}
 
 	hasFormat(type) {
-		if (!this.editingTextData.newFormats) {
-			this.editingTextData.newFormats = [];
-		}
 		return this.editingTextData.newFormats?.find((f) => f.type === type);
 	}
 
 	addReplaceFormat(type, action) {
-		if (!this.editingTextData.newFormats) {
-			this.editingTextData.newFormats = [];
-		}
 		let format = this.hasFormat(type);
 		if (format) {
 			format.value = action;
@@ -287,15 +285,11 @@ export default class SvgCanvasTextArea {
 		const { field, value } = CanvasUtils.convertFormat(format);
 
 		if (field && value) {
-			this.setStyle(field, value);
+			this.setWysiwygStyle(field, value);
 		}
 	}
 
 	addAdditionalFormat(type, action) {
-		if (!this.editingTextData.newFormats) {
-			this.editingTextData.newFormats = [];
-		}
-
 		let format = this.hasFormat(type);
 		if (format) {
 			if (format.value.includes(action)) {
@@ -315,7 +309,7 @@ export default class SvgCanvasTextArea {
 		const { field, value } = CanvasUtils.convertFormat(format);
 
 		if (field && value) {
-			this.setStyle(field, value);
+			this.setWysiwygStyle(field, value);
 		}
 	}
 
@@ -326,7 +320,7 @@ export default class SvgCanvasTextArea {
 		const { field, value } = CanvasUtils.convertFormat(format);
 
 		if (field && value) {
-			this.setStyle(field, value);
+			this.setWysiwygStyle(field, value);
 		}
 	}
 
@@ -337,11 +331,11 @@ export default class SvgCanvasTextArea {
 		const { field } = CanvasUtils.convertFormat({ type });
 
 		if (field) {
-			this.setStyle(field, null);
+			this.setWysiwygStyle(field, null);
 		}
 	}
 
-	setStyle(field, value) {
+	setWysiwygStyle(field, value) {
 		if (field === "background-color" && value === "transparent") {
 			d3.select(this.editingTextData.parentDomObj).selectAll(".d3-comment-text-wysiwyg")
 				.style("background-color", "transparent");
@@ -452,10 +446,12 @@ export default class SvgCanvasTextArea {
 		// Temporarily set the height to zero so the scrollHeight will get set to
 		// the full height of the text in the textarea. This allows us to close up
 		// the text area when the lines of text reduce.
-		this.foreignObject.style("height", 0);
-		const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
-		this.textAreaHeight = scrollHeight;
-		this.foreignObject.style("height", this.textAreaHeight + "px");
+		if (this.foreignObject) {
+			this.foreignObject.style("height", 0);
+			const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
+			this.textAreaHeight = scrollHeight;
+			this.foreignObject.style("height", this.textAreaHeight + "px");
+		}
 	}
 
 	saveNodeLabelChanges(taData, newText) {
