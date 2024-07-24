@@ -72,7 +72,41 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 		</div>
 	);
 	return { wrapper: wrapper, controller: renderedController, callbacks: callbacks };
+}
 
+function flyoutEditorFormRerender(paramDef, propertiesConfigOverrides, callbacksOverrides, propertiesInfoOverrides) {
+	const applyPropertyChanges = sinon.spy();
+	const closePropertiesDialog = sinon.spy();
+	let callbacks = {
+		applyPropertyChanges: applyPropertyChanges,
+		closePropertiesDialog: closePropertiesDialog,
+		controllerHandler: controllerHandler
+	};
+	if (callbacksOverrides) {
+		callbacks = Object.assign(callbacks, callbacksOverrides);
+	}
+
+	let propertiesInfo = {
+		parameterDef: cloneDeep(paramDef)
+	};
+
+	if (propertiesInfoOverrides) {
+		propertiesInfo = Object.assign(propertiesInfo, propertiesInfoOverrides);
+	}
+
+	let propertiesConfig = {
+		applyOnBlur: true,
+		rightFlyout: true,
+		trimSpaces: true,
+		containerType: "Custom"
+	};
+	if (propertiesConfigOverrides) {
+		propertiesConfig = Object.assign(propertiesConfig, propertiesConfigOverrides);
+	}
+
+	const customControls = [CustomTableControl, CustomToggleControl];
+	const customConditionOps = [CustomOpMax];
+	return { propertiesInfo: propertiesInfo, propertiesConfig: propertiesConfig, callbacks: callbacks, customControls: customControls, customConditionOps: customConditionOps };
 }
 
 function setControls(controller, controls) {
@@ -114,6 +148,7 @@ function getParameterFromParamDef(parameterId, paramDef) {
 
 module.exports = {
 	flyoutEditorForm: flyoutEditorForm,
+	flyoutEditorFormRerender: flyoutEditorFormRerender,
 	setControls: setControls,
 	genLongString: genLongString,
 	openSummaryPanel: openSummaryPanel,
