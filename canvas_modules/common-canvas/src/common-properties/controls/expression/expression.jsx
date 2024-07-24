@@ -87,9 +87,6 @@ class ExpressionControl extends React.Component {
 	// this is needed to ensure expression builder selection works.
 	componentDidUpdate(prevProps) {
 		// When code is edited in expression builder, reflect changes in expression flyout
-		if (!isEqual(this.getCodemirrorState()?.doc.toString(), this.props.value)) {
-			this.editor.dispatch({ changes: { from: 0, to: this.getCodemirrorState()?.doc.length, insert: this.props.value } });
-		}
 		// Toggle editable mode in Codemirror editor
 		if (!isEqual(prevProps.state, this.props.state)) {
 			this.setCodeMirrorEditable(!(this.props.state === STATES.DISABLED) || !this.props.readOnly);
@@ -104,6 +101,9 @@ class ExpressionControl extends React.Component {
 				this.editor.dispatch({ selection: selected });
 			});
 			this.editor.focus();
+		}
+		if (!isEqual(this.getCodemirrorState()?.doc.toString(), this.props.value)) {
+			this.editor.dispatch({ changes: { from: 0, to: this.getCodemirrorState()?.doc?.length, insert: this.props.value } });
 		}
 	}
 
