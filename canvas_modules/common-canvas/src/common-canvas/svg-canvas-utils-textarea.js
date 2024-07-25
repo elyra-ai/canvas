@@ -246,6 +246,12 @@ export default class SvgCanvasTextArea {
 
 		} else if (action === "background-color") {
 			this.addReplaceFormat("backgroundColor", extra);
+			// If a text color has not yet been specified, we set an appropriate
+			// text color (either black or white) based on the darkness of the background.
+			if (!this.hasFormat("textColor")) {
+				const isDark = CanvasUtils.isDarkColor(extra);
+				this.addReplaceFormat("textColor", (isDark ? "#FFFFFF" : "#000000"));
+			}
 
 		} else if (action.startsWith("text-size")) {
 			this.addReplaceFormat("textSize", action);

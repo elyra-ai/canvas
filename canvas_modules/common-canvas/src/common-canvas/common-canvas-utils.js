@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/* eslint no-bitwise: "off" */
+
 // This class contains utility functions that may be used for both the canvas
 // objects stored in redux and also the copy of canvas objects maintained by
 // the CanvasRender objects.
@@ -1317,6 +1319,21 @@ export default class CanvasUtils {
 			return className;
 		}
 		return null;
+	}
+
+	// Returns true if the hex passed in is for a dark color where 'dark'
+	// is described as a color that would require white text to be used
+	// if the hex color was used for a background color.
+	static isDarkColor(hex) {
+		const c = hex.substring(1);	// strip #
+		const rgb = parseInt(c, 16); // convert rrggbb to decimal
+
+		const r = (rgb >> 16) & 0xff; // extract red
+		const g = (rgb >> 8) & 0xff; // extract green
+		const b = (rgb >> 0) & 0xff; // extract blue
+
+		const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+		return (luma < 80);
 	}
 
 	// Returns an object containing a CSS field and value that
