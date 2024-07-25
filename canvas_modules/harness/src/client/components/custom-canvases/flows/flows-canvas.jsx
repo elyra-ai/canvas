@@ -19,9 +19,8 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
-import FlowsCanvasFlow from "./flowsCanvas.json";
-import FlowsPalette from "./flowsPalette.json";
-import FlowsLoadingPalette from "./flowsLoadingPalette.json";
+import FlowsFlow from "./flows-flow.json";
+import FlowsPalette from "./flows-palette.json";
 import FlowsProperties from "./flows-properties";
 
 export default class FlowsCanvas extends React.Component {
@@ -29,10 +28,8 @@ export default class FlowsCanvas extends React.Component {
 		super(props);
 		this.propertiesRef = React.createRef();
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(FlowsCanvasFlow);
-		this.canvasController.setPipelineFlowPalette(FlowsLoadingPalette);
-
-		this.activateLoadingCanvas();
+		this.canvasController.setPipelineFlow(FlowsFlow);
+		this.canvasController.setPipelineFlowPalette(FlowsPalette);
 
 		this.getConfig = this.getConfig.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
@@ -44,6 +41,7 @@ export default class FlowsCanvas extends React.Component {
 			enableParentClass: "flows",
 			enableNodeFormatType: "Vertical",
 			enableLinkType: "Straight",
+			enableLinkMethod: "Freeform",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",
@@ -98,11 +96,11 @@ export default class FlowsCanvas extends React.Component {
 		return config;
 	}
 
-	decorationActionHandler() {
-		this.canvasController.displaySubPipeline({
-			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
-			pipelineFlowId: "123456789-c3d2-4da7-ab5a-2b9573e5e159"
-		});
+	decorationActionHandler(data) {
+		this.canvasController.displaySubPipelineForSupernode(
+			data.id,
+			this.canvasController.getCurrentPipelineId()
+		);
 	}
 
 	clickActionHandler(source) {
@@ -111,20 +109,6 @@ export default class FlowsCanvas extends React.Component {
 				source.clickType === "DOUBLE_CLICK") {
 			this.propertiesRef.current.editNodeHandler(source.id, source.pipelineId);
 		}
-	}
-
-	activateLoadingCanvas() {
-		this.canvasController.setCategoryLoadingText("recordOp", "Loading record ops");
-		this.canvasController.setCategoryLoadingText("fieldOp", "Loading field ops");
-		this.canvasController.setCategoryLoadingText("modeling", "Loading modeling");
-		this.canvasController.setCategoryLoadingText("TextMining", "Loading text mining");
-		this.canvasController.setCategoryLoadingText("graph", "Loading graphs");
-		this.canvasController.setCategoryLoadingText("output", "Loading outputs");
-		this.canvasController.setCategoryLoadingText("export", "Loading exports");
-		this.canvasController.setCategoryLoadingText("models", "Loading models");
-		setTimeout(() => {
-			this.canvasController.setPipelineFlowPalette(FlowsPalette);
-		}, 3000);
 	}
 
 	render() {

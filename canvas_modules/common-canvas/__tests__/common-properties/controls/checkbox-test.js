@@ -215,6 +215,24 @@ describe("checkbox control tests", () => {
 		const helpTextWrapper = wrapper.find("div[data-id='properties-test-checkbox']");
 		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
 	});
+
+	it("Checkbox readonly is rendered correctly", () => {
+		control.readOnly = true;
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<Checkbox
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				readOnly
+			/>
+		);
+		const readOnlyWrapper = wrapper.find("div[data-id='properties-test-checkbox']");
+		expect(readOnlyWrapper.find("Checkbox").prop("readOnly")).to.equal(control.readOnly);
+	});
 });
 
 describe("checkbox classnames appear correctly", () => {
