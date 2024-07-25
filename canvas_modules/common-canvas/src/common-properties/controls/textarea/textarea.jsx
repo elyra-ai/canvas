@@ -80,6 +80,7 @@ class TextareaControl extends React.Component {
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					helperText={this.props.control.helperText}
+					readOnly={this.props.readOnly}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={""} messageInfo={errorMessage} />
 			</div>);
@@ -95,6 +96,7 @@ class TextareaControl extends React.Component {
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					helperText={this.props.control.helperText}
+					readOnly={this.props.readOnly}
 				/>
 			);
 		}
@@ -143,7 +145,8 @@ TextareaControl.propTypes = {
 		PropTypes.string,
 		PropTypes.array
 	]), // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({

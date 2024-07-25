@@ -20,9 +20,9 @@ import PropTypes from "prop-types";
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import { LINK_SELECTION_LINK_ONLY, PALETTE_LAYOUT_NONE,
 	STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY }
-	from "../../../../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
-import DetachedCanvasFlow from "./readOnlyCanvas.json";
-import DetachedPalette from "./readOnlyPalette.json";
+	from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
+import ReadOnlyFlow from "./read-only-flow.json";
+import ReadOnlyPalette from "./read-only-palette.json";
 
 import { Edit, EditOff, Locked } from "@carbon/react/icons";
 
@@ -35,13 +35,12 @@ export default class ReadOnlyCanvas extends React.Component {
 		};
 
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(DetachedCanvasFlow);
-		this.canvasController.setPipelineFlowPalette(DetachedPalette);
+		this.canvasController.setPipelineFlow(ReadOnlyFlow);
+		this.canvasController.setPipelineFlowPalette(ReadOnlyPalette);
 
 		this.getConfig = this.getConfig.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
-		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
 
 		// Add decorations to the links
@@ -79,6 +78,7 @@ export default class ReadOnlyCanvas extends React.Component {
 			enableParentClass: "read-only",
 			enableNodeFormatType: "Vertical",
 			enableLinkType: "Straight",
+			enableLinkMethod: "Freeform",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",
@@ -181,13 +181,6 @@ export default class ReadOnlyCanvas extends React.Component {
 		};
 	}
 
-	decorationActionHandler() {
-		this.canvasController.displaySubPipeline({
-			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
-			pipelineFlowId: "45634789c3d2-4da7-ab5a-2b9573e5e159"
-		});
-	}
-
 	editActionHandler(data, command) {
 		if (data.editType === "linkNodes") {
 			this.createDecorations(data.linkIds[0]);
@@ -259,7 +252,6 @@ export default class ReadOnlyCanvas extends React.Component {
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
-				decorationActionHandler={this.decorationActionHandler}
 				editActionHandler={this.editActionHandler}
 				clickActionHandler={this.clickActionHandler}
 				contextMenuHandler={this.contextMenuHandler}

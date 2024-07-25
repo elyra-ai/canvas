@@ -27,7 +27,11 @@
 			stroke: $background-inverse;
 		}
 
-
+		.d3-node-selection-highlight[data-selected="yes"],
+		.d3-comment-selection-highlight[data-selected="yes"] {
+			stroke-dasharray: 5, 5;
+			stroke-width: 2;
+		}
 	}
 
 	// ----------------------------------------------------

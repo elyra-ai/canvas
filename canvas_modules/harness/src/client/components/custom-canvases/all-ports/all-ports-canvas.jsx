@@ -30,7 +30,7 @@ export default class AllPortsCanvas extends React.Component {
 
 		this.state = {
 			linkType: "Curve",
-			linkDirection: "LeftRight",
+			linkMethod: "Ports",
 			portsLocation: "East"
 		};
 
@@ -50,7 +50,7 @@ export default class AllPortsCanvas extends React.Component {
 			enableParentClass: "all-ports-canvas",
 			enableNodeFormatType: "Vertical",
 			enableLinkType: this.state.linkType,
-			enableLinkDirection: this.state.linkDirection,
+			enableLinkMethod: this.state.linkMethod,
 			enableLinkSelection: "Detachable",
 			enableStraightLinksAsFreeform: false,
 			enableSelfRefLinks: true,
@@ -59,7 +59,6 @@ export default class AllPortsCanvas extends React.Component {
 			enableSaveZoom: "LocalStorage",
 			enableResizableNodes: true,
 			enableSnapToGridType: "During",
-			// enableLinksOverNodes: true,
 			tipConfig: {
 				palette: true,
 				nodes: true,
@@ -116,8 +115,8 @@ export default class AllPortsCanvas extends React.Component {
 			{ action: "Parallax", label: "Parallax", enable: true }
 		];
 
-		const subMenuLinkDirection = [
-			{ action: "LeftRight", label: "Ports", enable: true },
+		const subMenuLinkMethod = [
+			{ action: "Ports", label: "Ports", enable: true },
 			{ action: "Freeform", label: "Freeform", enable: true }
 		];
 
@@ -133,9 +132,9 @@ export default class AllPortsCanvas extends React.Component {
 				{ action: "undo" },
 				{ action: "redo" },
 				{ divider: true },
-				{ action: "linkDir", label: this.state.linkDirection === "LeftRight" ? "Ports" : "Freeform",
+				{ action: "linkMethod", label: this.state.linkMethod,
 					incLabelWithIcon: "after", iconEnabled: (<FlowConnection size={32} />),
-					subMenu: subMenuLinkDirection, enable: true, closeSubAreaOnClick: true },
+					subMenu: subMenuLinkMethod, enable: true, closeSubAreaOnClick: true },
 				{ divider: true },
 				{ action: "linkType", label: this.state.linkType, incLabelWithIcon: "after",
 					iconEnabled: (<DirectionCurve size={32} />),
@@ -156,8 +155,8 @@ export default class AllPortsCanvas extends React.Component {
 		if (data.editType === "Curve" || data.editType === "Elbow" || data.editType === "Straight" || data.editType === "Parallax") {
 			this.setState({ linkType: data.editType });
 
-		} else if (data.editType === "LeftRight" || data.editType === "Freeform") {
-			this.setState({ linkDirection: data.editType });
+		} else if (data.editType === "Ports" || data.editType === "Freeform") {
+			this.setState({ linkMethod: data.editType });
 
 		} else if (data.editType === "North" || data.editType === "South" || data.editType === "East" || data.editType === "West") {
 			this.changePortsLocation(data.editType);

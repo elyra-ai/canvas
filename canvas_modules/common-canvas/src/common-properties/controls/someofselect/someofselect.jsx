@@ -111,6 +111,7 @@ class SomeofselectControl extends React.Component {
 					showHeader={false}
 					light={this.props.controller.getLight() && this.props.control.light}
 					emptyTablePlaceholder={this.props.control.additionalText}
+					readOnly={this.props.readOnly}
 				/>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>
@@ -128,7 +129,8 @@ SomeofselectControl.propTypes = {
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux
 	messageInfo: PropTypes.object, // pass in by redux
-	controlOpts: PropTypes.object // pass in by redux
+	controlOpts: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({

@@ -16,8 +16,8 @@
             "ui_data": {
               "label": "East output port node",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": 297.5,
-              "y_pos": 420,
+              "x_pos": 315,
+              "y_pos": 450,
               "description": "A node with 1 east output node"
             }
           },
@@ -44,8 +44,8 @@
             "ui_data": {
               "label": "West input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 87.5,
-              "y_pos": 240,
+              "x_pos": 105,
+              "y_pos": 270,
               "description": "A node with 1 west input node"
             }
           },
@@ -79,8 +79,8 @@
             "ui_data": {
               "label": "West input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 87.5,
-              "y_pos": 420,
+              "x_pos": 105,
+              "y_pos": 450,
               "description": "A node with 1 west input node"
             }
           },
@@ -114,8 +114,8 @@
             "ui_data": {
               "label": "West input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 87.5,
-              "y_pos": 615,
+              "x_pos": 105,
+              "y_pos": 645,
               "description": "A node with 1 west input node"
             }
           },
@@ -149,8 +149,8 @@
             "ui_data": {
               "label": "West input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 507.5,
-              "y_pos": 240,
+              "x_pos": 525,
+              "y_pos": 270,
               "description": "A node with 1 west input node"
             }
           },
@@ -184,8 +184,8 @@
             "ui_data": {
               "label": "West input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 507.5,
-              "y_pos": 615,
+              "x_pos": 525,
+              "y_pos": 645,
               "description": "A node with 1 west input node"
             }
           },
@@ -219,8 +219,8 @@
             "ui_data": {
               "label": "East input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 700,
-              "y_pos": 240,
+              "x_pos": 717.5,
+              "y_pos": 270,
               "description": "A node with 1 east input node"
             }
           },
@@ -254,8 +254,8 @@
             "ui_data": {
               "label": "East output port node",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": 927.5,
-              "y_pos": 420,
+              "x_pos": 945,
+              "y_pos": 450,
               "description": "A node with 1 east output node"
             }
           },
@@ -282,8 +282,8 @@
             "ui_data": {
               "label": "East input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 1137.5,
-              "y_pos": 255,
+              "x_pos": 1155,
+              "y_pos": 285,
               "description": "A node with 1 east input node"
             }
           },
@@ -317,8 +317,8 @@
             "ui_data": {
               "label": "East input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 700,
-              "y_pos": 630,
+              "x_pos": 717.5,
+              "y_pos": 660,
               "description": "A node with 1 east input node"
             }
           },
@@ -352,8 +352,8 @@
             "ui_data": {
               "label": "East input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 1137.5,
-              "y_pos": 630,
+              "x_pos": 1155,
+              "y_pos": 660,
               "description": "A node with 1 east input node"
             }
           },
@@ -387,8 +387,8 @@
             "ui_data": {
               "label": "East input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 700,
-              "y_pos": 420,
+              "x_pos": 717.5,
+              "y_pos": 450,
               "description": "A node with 1 east input node"
             }
           },
@@ -422,8 +422,8 @@
             "ui_data": {
               "label": "East output port node",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": 297.5,
-              "y_pos": 1035,
+              "x_pos": 315,
+              "y_pos": 1065,
               "description": "A node with 1 east output node"
             }
           },
@@ -450,8 +450,8 @@
             "ui_data": {
               "label": "North input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 87.5,
-              "y_pos": 870,
+              "x_pos": 105,
+              "y_pos": 900,
               "description": "A node with 1 north input node"
             }
           },
@@ -485,8 +485,8 @@
             "ui_data": {
               "label": "North input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 507.5,
-              "y_pos": 870,
+              "x_pos": 525,
+              "y_pos": 900,
               "description": "A node with 1 north input node"
             }
           },
@@ -520,8 +520,8 @@
             "ui_data": {
               "label": "North input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 507.5,
-              "y_pos": 1215,
+              "x_pos": 525,
+              "y_pos": 1245,
               "description": "A node with 1 north input node"
             }
           },
@@ -555,8 +555,8 @@
             "ui_data": {
               "label": "North input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 87.5,
-              "y_pos": 1215,
+              "x_pos": 105,
+              "y_pos": 1245,
               "description": "A node with 1 north input node"
             }
           },
@@ -590,8 +590,8 @@
             "ui_data": {
               "label": "East output port node",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": 910,
-              "y_pos": 1035,
+              "x_pos": 927.5,
+              "y_pos": 1065,
               "description": "A node with 1 east output node"
             }
           },
@@ -618,8 +618,8 @@
             "ui_data": {
               "label": "South input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 700,
-              "y_pos": 870,
+              "x_pos": 717.5,
+              "y_pos": 900,
               "description": "A node with 1 south input node"
             }
           },
@@ -653,8 +653,8 @@
             "ui_data": {
               "label": "South input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 1137.5,
-              "y_pos": 870,
+              "x_pos": 1155,
+              "y_pos": 900,
               "description": "A node with 1 south input node"
             }
           },
@@ -688,8 +688,8 @@
             "ui_data": {
               "label": "South input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 1137.5,
-              "y_pos": 1215,
+              "x_pos": 1155,
+              "y_pos": 1245,
               "description": "A node with 1 south input node"
             }
           },
@@ -723,8 +723,8 @@
             "ui_data": {
               "label": "South input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 700,
-              "y_pos": 1215,
+              "x_pos": 717.5,
+              "y_pos": 1245,
               "description": "A node with 1 south input node"
             }
           },
@@ -758,8 +758,8 @@
             "ui_data": {
               "label": "South input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 700,
-              "y_pos": 1035,
+              "x_pos": 717.5,
+              "y_pos": 1065,
               "description": "A node with 1 south input node"
             }
           },
@@ -793,8 +793,8 @@
             "ui_data": {
               "label": "North input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 87.5,
-              "y_pos": 1035,
+              "x_pos": 105,
+              "y_pos": 1065,
               "description": "A node with 1 north input node"
             }
           },
@@ -828,8 +828,8 @@
             "ui_data": {
               "label": "All ports node",
               "image": "images/custom-canvases/flows/palette/icons/userinput.svg",
-              "x_pos": 402.5,
-              "y_pos": 1590,
+              "x_pos": 420,
+              "y_pos": 1620,
               "description": "A node with 4 input and 4 output ports"
             }
           },
@@ -970,8 +970,8 @@
             "ui_data": {
               "label": "North input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 472.5,
-              "y_pos": 1815,
+              "x_pos": 490,
+              "y_pos": 1845,
               "description": "A node with 1 north input node"
             }
           },
@@ -1005,8 +1005,8 @@
             "ui_data": {
               "label": "South input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 437.5,
-              "y_pos": 1410,
+              "x_pos": 455,
+              "y_pos": 1440,
               "description": "A node with 1 south input node"
             }
           },
@@ -1040,8 +1040,8 @@
             "ui_data": {
               "label": "East input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 157.5,
-              "y_pos": 1650,
+              "x_pos": 175,
+              "y_pos": 1680,
               "description": "A node with 1 east input node"
             }
           },
@@ -1075,8 +1075,8 @@
             "ui_data": {
               "label": "West input port node",
               "image": "images/custom-canvases/flows/palette/icons/table.svg",
-              "x_pos": 665,
-              "y_pos": 1650,
+              "x_pos": 682.5,
+              "y_pos": 1680,
               "description": "A node with 1 west input node"
             }
           },
@@ -1110,8 +1110,8 @@
             "ui_data": {
               "label": "North output port node",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": 332.5,
-              "y_pos": 1815,
+              "x_pos": 350,
+              "y_pos": 1845,
               "description": "A node with 1 north output node"
             }
           },
@@ -1138,8 +1138,8 @@
             "ui_data": {
               "label": "South output port node",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": 297.5,
-              "y_pos": 1410,
+              "x_pos": 315,
+              "y_pos": 1440,
               "description": "A node with 1 south output node"
             }
           },
@@ -1166,8 +1166,8 @@
             "ui_data": {
               "label": "East output port node",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": 157.5,
-              "y_pos": 1530,
+              "x_pos": 175,
+              "y_pos": 1560,
               "description": "A node with 1 east output node"
             }
           },
@@ -1194,8 +1194,8 @@
             "ui_data": {
               "label": "West output port node",
               "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
-              "x_pos": 665,
-              "y_pos": 1545,
+              "x_pos": 682.5,
+              "y_pos": 1575,
               "description": "A node with 1 west output node"
             }
           },
@@ -1222,8 +1222,8 @@
             "ui_data": {
               "label": "All ports node",
               "image": "images/custom-canvases/flows/palette/icons/userinput.svg",
-              "x_pos": 1032.5,
-              "y_pos": 1590,
+              "x_pos": 1050,
+              "y_pos": 1620,
               "description": "A node with 4 input and 4 output ports"
             }
           },
@@ -1341,8 +1341,8 @@
           "comments": [
             {
               "id": "123",
-              "x_pos": 0,
-              "y_pos": 15,
+              "x_pos": 17.5,
+              "y_pos": 45,
               "width": 262.5,
               "height": 135,
               "class_name": "d3-comment-rect bkg-col-orange-40",
@@ -1351,8 +1351,8 @@
             },
             {
               "id": "84d7fcf0-be52-4e7b-a056-0bfb1f9bdbc9",
-              "x_pos": 210,
-              "y_pos": 165,
+              "x_pos": 227.5,
+              "y_pos": 195,
               "width": 175,
               "height": 42,
               "content": "## East -> West",
@@ -1360,8 +1360,8 @@
             },
             {
               "id": "c403eefa-3ffd-4cd1-8af8-92f73833bebc",
-              "x_pos": 857.5,
-              "y_pos": 165,
+              "x_pos": 875,
+              "y_pos": 195,
               "width": 175,
               "height": 42,
               "content": "## East -> East",
@@ -1369,8 +1369,8 @@
             },
             {
               "id": "6799cc71-310e-4941-a3ea-7ba2a8178aeb",
-              "x_pos": 227.5,
-              "y_pos": 780,
+              "x_pos": 245,
+              "y_pos": 810,
               "width": 175,
               "height": 42,
               "content": "## East -> North",
@@ -1378,8 +1378,8 @@
             },
             {
               "id": "a1d2c3a0-17a6-4c39-94e0-1c29602edddd",
-              "x_pos": 857.5,
-              "y_pos": 780,
+              "x_pos": 875,
+              "y_pos": 810,
               "width": 175,
               "height": 42,
               "content": "## East -> South",

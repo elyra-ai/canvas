@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "date_mdy": "11-05-2018",
+    "readonly_date_mdy": "11-05-2018",
     "date_ymd": "2018-01-07",
     "date_ymd_non_req": "2018-01-08",
     "date_ymd_null": null,
@@ -21,6 +22,11 @@
   "parameters": [
     {
       "id": "date_mdy",
+      "type": "date",
+      "required": true
+    },
+    {
+      "id": "readonly_date_mdy",
       "type": "date",
       "required": true
     },
@@ -117,6 +123,18 @@
         },
         "date_format": "M-D-Y",
         "class_name": "datefield-control-class"
+      },
+      {
+        "parameter_ref": "readonly_date_mdy",
+        "label": {
+          "default": "Readonly Date M-D-Y"
+        },
+        "description": {
+          "default": "Readonly Required datefield with value set to '2018-5-11' with M-D-Y format"
+        },
+        "date_format": "M-D-Y",
+        "class_name": "datefield-control-class",
+        "read_only": true
       },
       {
         "parameter_ref": "date_ymd",
@@ -276,6 +294,7 @@
         "type": "controls",
         "parameter_refs": [
           "date_mdy",
+          "readonly_date_mdy",
           "date_ymd",
           "date_ymd_non_req",
           "date_ymd_null",

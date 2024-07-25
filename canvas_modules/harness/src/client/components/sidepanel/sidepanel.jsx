@@ -24,7 +24,7 @@ import {
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
 	SIDE_PANEL_API
-} from "../../constants/constants.js";
+} from "../../constants/harness-constants.js";
 
 export default class SidePanel extends React.Component {
 

@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { get } from "lodash";
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
-import ExplainCanvasFlow from "./explainCanvas.json";
+import ExplainFlow from "./explain-flow.json";
 
 
 export default class ExplainCanvas extends React.Component {
@@ -26,11 +26,12 @@ export default class ExplainCanvas extends React.Component {
 		super(props);
 
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(ExplainCanvasFlow);
+		this.canvasController.setPipelineFlow(ExplainFlow);
 
 		this.config = Object.assign({}, props.config, {
 			enableParentClass: "explain",
 			enableLinkType: "Straight",
+			enableLinkMethod: "Freeform",
 			enablePaletteLayout: "None",
 			enableEditingActions: false,
 			enableNodeFormatType: "Vertical",

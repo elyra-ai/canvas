@@ -1691,11 +1691,10 @@ export default class CanvasController {
 		}
 	}
 
-	// Displays a pipeline for the supernode (identifid by the supernodeId
-	// parameter) in the pipeline (identifid by the pipelineId parameter). For
-	// correct breadcrumb generation this pipeline should be the one in the last
-	// of the current set of breadcumbs. That is, the pipeline currently shown
-	// "full page" in the canvas.
+	// Displays a pipeline for a supernode (identifid by the supernodeId
+	// parameter) in a parent pipeline (identifid by the pipelineId parameter).
+	// This parent pipeline should be the last of the current set of breadcumbs.
+	// That is, the pipeline currently shown "full page" in the canvas.
 	displaySubPipelineForSupernode(supernodeId, pipelineId) {
 		const sn = this.getNode(supernodeId, pipelineId);
 		if (sn && sn.type === SUPER_NODE) {

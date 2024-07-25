@@ -38,7 +38,7 @@ import {
 	CHOOSE_FROM_LOCATION,
 	LOCAL_FILE_OPTION,
 	PARAMETER_DEFS
-} from "../../../constants/constants.js";
+} from "../../../constants/harness-constants.js";
 
 import FormsService from "../../../services/FormsService";
 

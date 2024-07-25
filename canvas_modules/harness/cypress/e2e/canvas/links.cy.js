@@ -111,31 +111,31 @@ describe("Test basic link construction", function() {
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
-	it("Test all 8 combinations of link type and link direction", function() {
+	it("Test all 8 combinations of link type and link method", function() {
 
 		// Test the 4 Ports (LeftRight) combinations
 
-		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkDirection": "LeftRight" });
+		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkMethod": "Ports" });
 		cy.verifyLinkPath(
 			"Binding (entry) node", "outPort", "Execution node", "inPort",
 			"M 159 128.5 C 228 128.5 228 167.5 297 167.5"
 		);
 
-		cy.setCanvasConfig({ "selectedLinkType": "Elbow", "selectedLinkDirection": "LeftRight" });
+		cy.setCanvasConfig({ "selectedLinkType": "Elbow", "selectedLinkMethod": "Ports" });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Binding (entry) node", "outPort", "Execution node", "inPort",
 			"M 159 128.5 L 179 128.5 Q 189 128.5 189 138.5 L 189 157.5 Q 189 167.5 199 167.5 L 297 167.5"
 		);
 
-		cy.setCanvasConfig({ "selectedLinkType": "Parallax", "selectedLinkDirection": "LeftRight" });
+		cy.setCanvasConfig({ "selectedLinkType": "Parallax", "selectedLinkMethod": "Ports" });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Binding (entry) node", "outPort", "Execution node", "inPort",
 			"M 159 128.5 L 189 128.5 L 267 167.5 L 297 167.5"
 		);
 
-		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkDirection": "LeftRight" });
+		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkMethod": "Ports" });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Binding (entry) node", "outPort", "Execution node", "inPort",
@@ -144,28 +144,28 @@ describe("Test basic link construction", function() {
 
 		// Test the 4 Freeform combinations
 
-		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkDirection": "Freeform" });
+		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkMethod": "Freeform" });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Binding (entry) node", "outPort", "Execution node", "inPort",
 			"M 166 137 C 228 137 228 176 290 176"
 		);
 
-		cy.setCanvasConfig({ "selectedLinkType": "Elbow", "selectedLinkDirection": "Freeform" });
+		cy.setCanvasConfig({ "selectedLinkType": "Elbow", "selectedLinkMethod": "Freeform" });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Binding (entry) node", "outPort", "Execution node", "inPort",
 			"M 166 137 L 186 137 Q 196 137 196 147 L 196 166 Q 196 176 206 176 L 290 176"
 		);
 
-		cy.setCanvasConfig({ "selectedLinkType": "Parallax", "selectedLinkDirection": "Freeform" });
+		cy.setCanvasConfig({ "selectedLinkType": "Parallax", "selectedLinkMethod": "Freeform" });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Binding (entry) node", "outPort", "Execution node", "inPort",
 			"M 166 137 L 196 137 L 260 176 L 290 176"
 		);
 
-		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkDirection": "Freeform" });
+		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkMethod": "Freeform" });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Binding (entry) node", "outPort", "Execution node", "inPort",
@@ -175,7 +175,7 @@ describe("Test basic link construction", function() {
 
 	it("Test 8 cominations of creation and construction of self-referencing link", function() {
 
-		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkDirection": "LeftRight",
+		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkMethod": "Ports",
 			"selectedSelfRefLinks": true, "selectedLinkSelection": "LinkOnly" });
 
 		// Delete the two links connected to the Execution node
@@ -198,7 +198,7 @@ describe("Test basic link construction", function() {
 			"118.5 Q 267 118.5 267 143 Q 267 167.5 297 167.5"
 		);
 
-		cy.setCanvasConfig({ "selectedLinkType": "Elbow", "selectedLinkDirection": "LeftRight" });
+		cy.setCanvasConfig({ "selectedLinkType": "Elbow", "selectedLinkMethod": "Ports" });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Execution node", "outPort", "Execution node", "inPort",
@@ -207,14 +207,14 @@ describe("Test basic link construction", function() {
 			"167.5 277 167.5 L 297 167.5"
 		);
 
-		cy.setCanvasConfig({ "selectedLinkType": "Parallax", "selectedLinkDirection": "LeftRight" });
+		cy.setCanvasConfig({ "selectedLinkType": "Parallax", "selectedLinkMethod": "Ports" });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Execution node", "outPort", "Execution node", "inPort",
 			"M 367 167.5 L 397 167.5 L 397 118.5 L 267 118.5 L 267 167.5 L 297 167.5"
 		);
 
-		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkDirection": "LeftRight" });
+		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkMethod": "Ports" });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Execution node", "outPort", "Execution node", "inPort",
@@ -223,13 +223,13 @@ describe("Test basic link construction", function() {
 
 		// Test the 4 Freeform combinations
 
-		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkDirection": "Freeform" });
+		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkMethod": "Freeform" });
 		cy.verifyLinkPath(
 			"Execution node", "outPort", "Execution node", "inPort",
 			"M 374 176 L 404 101.5 332  101.5 332 131.5"
 		);
 
-		cy.setCanvasConfig({ "selectedLinkType": "Elbow", "selectedLinkDirection": "Freeform" });
+		cy.setCanvasConfig({ "selectedLinkType": "Elbow", "selectedLinkMethod": "Freeform" });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Execution node", "outPort", "Execution node", "inPort",
@@ -237,14 +237,14 @@ describe("Test basic link construction", function() {
 			"L 342 101.5 Q 332 101.5 332 111.5 L 332 131.5"
 		);
 
-		cy.setCanvasConfig({ "selectedLinkType": "Parallax", "selectedLinkDirection": "Freeform" });
+		cy.setCanvasConfig({ "selectedLinkType": "Parallax", "selectedLinkMethod": "Freeform" });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Execution node", "outPort", "Execution node", "inPort",
 			"M 374 176 L 404 176 L 404 101.5 L 332 101.5 L 332 131.5"
 		);
 
-		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkDirection": "Freeform" });
+		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkMethod": "Freeform" });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Execution node", "outPort", "Execution node", "inPort",
