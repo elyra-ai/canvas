@@ -230,7 +230,10 @@
           "default": "checkboxset with integers for values"
         },
         "control": "checkboxset",
-        "class_name": "checkboxset-control-class"
+        "class_name": "checkboxset-control-class",
+        "helper_text": {
+          "default": "checkboxset helpertext"
+        }
       },
       {
         "parameter_ref": "readonly_checkboxset_number",

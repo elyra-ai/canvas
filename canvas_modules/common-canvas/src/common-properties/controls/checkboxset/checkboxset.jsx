@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Checkbox } from "@carbon/react";
+import { Checkbox, CheckboxGroup } from "@carbon/react";
 import * as ControlUtils from "./../../util/control-utils";
 import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
@@ -123,17 +123,18 @@ class CheckboxsetControl extends React.Component {
 			</div>);
 		}
 		return (
-			<fieldset>
-				<legend>
-					{this.props.controlItem}
-				</legend>
-				<div className={classNames("properties-checkboxset", { "hide": this.props.state === STATES.HIDDEN })} data-id={ControlUtils.getDataId(this.props.propertyId)} >
+			<div className={classNames("properties-checkboxset", { "hide": this.props.state === STATES.HIDDEN })} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				<CheckboxGroup
+					legendText={this.props.controlItem}
+					helperText={this.props.control.helperText}
+					readOnly={this.props.readOnly}
+				>
 					<div className={classNames("properties-checkboxset-container", this.props.messageInfo ? this.props.messageInfo.type : null)}>
 						{checkboxes}
 					</div>
-					<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
-				</div>
-			</fieldset>
+				</CheckboxGroup>
+				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
+			</div>
 		);
 	}
 }
