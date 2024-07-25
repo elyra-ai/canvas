@@ -518,7 +518,7 @@ export default class SvgCanvasTextArea {
 		this.canvasController.editActionHandler(data);
 	}
 
-	// Displays a text area to allow text entry and editing for: comments;
+	// Displays a text area to allow text entry and editing for: regular comments (not WYSIWYG);
 	// node labels; or text decorations on either a node or link.
 	displayTextArea(data) {
 		this.textAreaHeight = data.height; // Save for comparison during auto-resize
@@ -537,80 +537,7 @@ export default class SvgCanvasTextArea {
 			.append("xhtml:textarea")
 			.attr("class", data.className)
 			.text(unescapeText(data.text))
-			.on("keydown", (d3Event) => {
-				// If user hits return/enter
-				if (d3Event.keyCode === RETURN_KEY) {
-					if (data.allowReturnKey === "save") {
-						this.textContentSaved = true;
-						this.saveAndCloseTextArea(data, d3Event.target.value, d3Event);
-						return;
-
-					// Don't accept return key press when text is all on one line or
-					// if application doesn't want line feeds inserted in the label.
-					} else if (data.singleLine || !data.allowReturnKey) {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					}
-				}
-				// If user presses ESC key revert back to original text by just
-				// closing the text area.
-				if (d3Event.keyCode === ESC_KEY) {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.textAreaEscKeyPressed = true;
-					this.closeTextArea(data);
-				}
-				// Prevent user entering more than any allowed maximum for characters.
-				if (data.maxCharacters &&
-						d3Event.target.value.length >= data.maxCharacters &&
-						!this.textAreaAllowedKeys(d3Event)) {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				}
-				// Call any specific keyboard handler for the type of
-				// text being edited.
-				if (data.keyboardInputCallback) {
-					data.keyboardInputCallback(d3Event);
-				}
-			})
-			.on("keyup", (d3Event) => {
-				data.autoSizeCallback(d3Event.target, data);
-			})
-			.on("paste", (d3Event) => {
-				this.logger.log("Text area - Paste - Scroll Ht = " + d3Event.target.scrollHeight);
-				// Allow some time for pasted text (from context menu) to be
-				// loaded into the text area. Otherwise the text is not there
-				// and the auto size does not increase the height correctly.
-				setTimeout(data.autoSizeCallback, 500, d3Event.target, data);
-			})
-			.on("blur", (d3Event, d) => {
-				this.logger.log("Text area - blur");
-				// If the esc key was pressed to cause the blur event just return
-				// so label returns to what it was before editing started.
-				if (this.textAreaEscKeyPressed) {
-					this.textAreaEscKeyPressed = false;
-					return;
-				}
-
-				// If the text label has been saved by the user hitting the return key
-				// we just return since there's nothing further to do.
-				if (this.textContentSaved) {
-					this.textContentSaved = false;
-					return;
-				}
-
-				// If the user clicked on an element in the text toolbar to cause the
-				// blur event, just return.
-				if (d3Event.relatedTarget && CanvasUtils.getParentElementWithClass(d3Event.relatedTarget, "text-toolbar")) {
-					return;
-				}
-
-				this.saveAndCloseTextArea(data, d3Event.target.value, d3Event);
-			})
-			.on("focus", (d3Event, d) => {
-				this.logger.log("Text area - focus");
-				data.autoSizeCallback(d3Event.target, data);
-			})
-			.on("mousedown click dblclick contextmenu", (d3Event, d) => {
-				d3Event.stopPropagation(); // Allow default behavior to show system contenxt menu
-			});
+			.call(this.attachTextEntryListeners.bind(this));
 
 		textArea.node().focus();
 
@@ -628,17 +555,19 @@ export default class SvgCanvasTextArea {
 			const commentEntry = this.foreignObject.selectAll("textarea");
 			const commentEntryElement = commentEntry.node();
 			this.textContentSaved = true;
-			this.saveAndCloseTextArea(this.editingTextData, commentEntryElement.value, evt);
+			this.saveAndCloseTextArea(this.editingTextData, commentEntryElement, evt);
 
 		} else if (this.foreignObjectWysiwyg) {
 			const commentEntry = this.foreignObjectWysiwyg.selectAll(".d3-comment-text-entry-wysiwyg");
 			const commentEntryElement = commentEntry.node();
 			this.textContentSaved = true;
-			this.saveAndCloseTextArea(this.editingTextData, commentEntryElement.innerText, evt);
+			this.saveAndCloseTextArea(this.editingTextData, commentEntryElement, evt);
 		}
 	}
 
-	saveAndCloseTextArea(data, newValue, d3Event) {
+	saveAndCloseTextArea(data, element, d3Event) {
+		const newValue = this.foreignObjectWysiwyg ? element.innerText : element.value;
+
 		// If there is no text for the label and textCanBeEmpty is false
 		// just return, so label returns to what it was before editing started.
 		if (!newValue && !data.textCanBeEmpty) {
@@ -713,8 +642,18 @@ export default class SvgCanvasTextArea {
 			(d3Event.keyCode === A_KEY && CanvasUtils.isCmndCtrlPressed(d3Event));
 	}
 
-	// Displays a text area to allow text entry and editing for: comments;
-	// node labels; or text decorations on either a node or link.
+	// Displays a <div> to allow text entry and editing of WYSIWYG comments. This is
+	// different to the way other text entry (regular comments, node labels,
+	// text decorations) are handled because the <div>, that is contained within a
+	// parent <div>, is styled so the text can be aligned at the top, middle and
+	// bottom of the parent. Evetually it is possible that we could remove the
+	// <textarea> approach and just use this <div> approach. Note: For this <div>
+	// approach we do not display a <rect> underneath the text, as is done with
+	// the <textarea>, so styling (e.g. background color) is applied to the <div>.
+	// If me migrate all text entry to use the <div> approach we could get rid of
+	// the underlying <rect> completely but this woukd change styling because the
+	// <rect> uses stroke/fill whereas the <div> uses color/background-color. So
+	// this overhaul should probably be done as part of a major release.
 	displayEditableDiv(data) {
 		this.textAreaHeight = data.height; // Save for comparison during auto-resize
 		this.editingText = true;
@@ -739,7 +678,6 @@ export default class SvgCanvasTextArea {
 		this.textAreaWysiwyg = this.foreignObjectWysiwyg
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 			.attr("class", "d3-comment-text-entry-wysiwyg-outer")
-			// .attr("class", data.className)
 
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 			.attr("class", "d3-comment-text-entry-wysiwyg")
@@ -753,12 +691,50 @@ export default class SvgCanvasTextArea {
 				}
 			})
 			.text(unescapeText(data.text))
+			.call(this.attachTextEntryListeners.bind(this));
+
+		// We set the focus on the inside div even though the focus
+		// highlighting is displayed for the forign object. This allows
+		// key strokes to do to the <div>.
+		this.canvasDiv.selectAll(".d3-comment-text-entry-wysiwyg")
+			.node()
+			.focus();
+
+		// Set the cusrsor to the end of the text.
+		this.setCursor(this.textAreaWysiwyg.node(), data.text?.length || 0);
+	}
+
+	// Sets the cursor position in the editable <div>
+	setCursor(el, pos) {
+		// var el = document.getElementById("editable")
+		var range = document.createRange();
+		var sel = window.getSelection();
+
+		if (el.childNodes?.length > 0) {
+			range.setStart(el.childNodes[0], pos);
+			range.collapse(true);
+
+			sel.removeAllRanges();
+			sel.addRange(range);
+		}
+	}
+
+
+	// Attaches a common set of event listeners to the <textarea> (used for entry of
+	// regular comments, node label and text decorations) OR the editable <div> used
+	// for entry of WYSIWYG comments. The behavior of the listeners is the same in this
+	// code but lower level functions may behave differently depending on what element
+	// <textarea> or <div> is used for text entry.
+	attachTextEntryListeners(textEntrySel) {
+		const data = this.editingTextData;
+
+		textEntrySel
 			.on("keydown", (d3Event) => {
 				// If user hits return/enter
 				if (d3Event.keyCode === RETURN_KEY) {
 					if (data.allowReturnKey === "save") {
 						this.textContentSaved = true;
-						this.saveAndCloseTextArea(data, d3Event.target.value, d3Event);
+						this.saveAndCloseTextArea(data, d3Event.target, d3Event);
 						return;
 
 					// Don't accept return key press when text is all on one line or
@@ -819,7 +795,7 @@ export default class SvgCanvasTextArea {
 					return;
 				}
 
-				this.saveAndCloseTextArea(data, d3Event.target.innerText, d3Event);
+				this.saveAndCloseTextArea(data, d3Event.target, d3Event);
 			})
 			.on("focus", (d3Event, d) => {
 				this.logger.log("Text area - focus");
@@ -828,32 +804,5 @@ export default class SvgCanvasTextArea {
 			.on("mousedown click dblclick contextmenu", (d3Event, d) => {
 				d3Event.stopPropagation(); // Allow default behavior to show system contenxt menu
 			});
-
-		// We set the focus on the inside div even though the focus
-		// highlighting is displayed for the forign object. This allows
-		// key strokes to do to the <div>.
-		this.canvasDiv.selectAll(".d3-comment-text-entry-wysiwyg")
-			.node()
-			.focus();
-
-		// Set the cusrsor to the end of the text.
-		this.setCursor(this.textAreaWysiwyg.node(), data.text?.length || 0);
 	}
-
-	// Sets the cursor position in the editable <div>
-	setCursor(el, pos) {
-		// var el = document.getElementById("editable")
-		var range = document.createRange();
-		var sel = window.getSelection();
-
-		if (el.childNodes?.length > 0) {
-			range.setStart(el.childNodes[0], pos);
-			range.collapse(true);
-
-			sel.removeAllRanges();
-			sel.addRange(range);
-		}
-	}
-
-
 }
