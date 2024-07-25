@@ -196,7 +196,7 @@ describe("Right flyout category views", () => {
 		expect(categoryContainers).to.have.length(3);
 
 		// Verify properties title has bottom border
-		const titleEditor = container.getElementsByClassName("properties-title-editor")[0];
+		const titleEditor = container.querySelector(".properties-title-editor");
 		expect(titleEditor.className.includes("properties-title-right-flyout-tabs-view")).to.equal(false);
 	});
 });

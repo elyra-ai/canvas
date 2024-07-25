@@ -519,7 +519,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(selected).to.have.length(5);
 
 		fireEvent.click(fieldpicker.querySelector("button[data-id='properties-apply-button']"));
-		container.querySelectorAll("button[data-id='properties-apply-button']")[0];
+		fireEvent.click(container.querySelectorAll("button[data-id='properties-apply-button']")[0]);
 		const summaryPanel = container.querySelector("div[data-id='properties-structuretableMultiInputSchema-summary-panel']");
 		const fieldSummary = summaryPanel.querySelectorAll("table.properties-summary-table");
 		expect(fieldSummary).to.have.length(1);
