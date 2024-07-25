@@ -212,49 +212,9 @@
 				"associated_id_refs": []
 			  },
 			  {
-				"id": "f14a691a-5553-45ff-ba22-2c7d9ecfdade",
-				"x_pos": 691.0290374755859,
-				"y_pos": 59.939186096191406,
-				"width": 246,
-				"height": 51,
-				"contentType": "WYSIWYG",
-				"formats": [
-				  {
-					"type": "fontType",
-					"value": "font-arial"
-				  },
-				  {
-					"type": "textSize",
-					"value": "text-size-8"
-				  }
-				],
-				"content": "8",
-				"associated_id_refs": []
-			  },
-			  {
-				"id": "d33a1f65-d1b2-47ab-a375-07e121f7951c",
-				"x_pos": 692.9868316223259,
-				"y_pos": 139.51842079632104,
-				"width": 246,
-				"height": 51,
-				"contentType": "WYSIWYG",
-				"formats": [
-				  {
-					"type": "fontType",
-					"value": "font-arial"
-				  },
-				  {
-					"type": "textSize",
-					"value": "text-size-9"
-				  }
-				],
-				"content": "9",
-				"associated_id_refs": []
-			  },
-			  {
 				"id": "146869f2-a00e-48e4-825d-b52ade9d52c4",
-				"x_pos": 691.1615686978162,
-				"y_pos": 215.86247531441688,
+				"x_pos": 684.1615686978162,
+				"y_pos": 63.86247531441688,
 				"width": 246,
 				"height": 51,
 				"contentType": "WYSIWYG",
@@ -273,8 +233,8 @@
 			  },
 			  {
 				"id": "a20621a4-20a7-410b-a940-4ca7f27abfa6",
-				"x_pos": 689.2837982177734,
-				"y_pos": 284.6067199707031,
+				"x_pos": 682.2837982177734,
+				"y_pos": 132.60671997070312,
 				"width": 246,
 				"height": 51,
 				"contentType": "WYSIWYG",
@@ -293,8 +253,8 @@
 			  },
 			  {
 				"id": "e2842e51-8e6f-41a0-a8c5-ed71a04632fb",
-				"x_pos": 691.1616766325014,
-				"y_pos": 363.3919075755538,
+				"x_pos": 684.1616766325014,
+				"y_pos": 211.39190757555377,
 				"width": 246,
 				"height": 51,
 				"contentType": "WYSIWYG",
@@ -313,8 +273,8 @@
 			  },
 			  {
 				"id": "3c93087f-12ed-4b11-8424-639cb3d6b9e3",
-				"x_pos": 690.4475184048474,
-				"y_pos": 450.41000329516135,
+				"x_pos": 683.4475184048474,
+				"y_pos": 298.41000329516135,
 				"width": 246,
 				"height": 51,
 				"contentType": "WYSIWYG",
@@ -333,8 +293,8 @@
 			  },
 			  {
 				"id": "1e3cda40-1437-4d5a-89fc-63f4722bd804",
-				"x_pos": 691.044770064199,
-				"y_pos": 529.4347978559057,
+				"x_pos": 684.044770064199,
+				"y_pos": 377.4347978559057,
 				"width": 246,
 				"height": 51,
 				"contentType": "WYSIWYG",
@@ -353,8 +313,8 @@
 			  },
 			  {
 				"id": "ce19085a-59fa-41b5-a729-11ca9a104f1a",
-				"x_pos": 694.127565376814,
-				"y_pos": 613.1309136075963,
+				"x_pos": 687.127565376814,
+				"y_pos": 461.1309136075963,
 				"width": 246,
 				"height": 44.6368408203125,
 				"contentType": "WYSIWYG",
@@ -373,8 +333,8 @@
 			  },
 			  {
 				"id": "cbcaa057-0ace-45b4-a2c1-8dad30a59ae5",
-				"x_pos": 978.2736519001365,
-				"y_pos": 66.53457851769167,
+				"x_pos": 980.2736519001365,
+				"y_pos": 67.53457851769167,
 				"width": 246,
 				"height": 46.12738037109375,
 				"contentType": "WYSIWYG",
@@ -393,8 +353,8 @@
 			  },
 			  {
 				"id": "ba7bac39-09d2-4f7a-9437-e50593c1a4c4",
-				"x_pos": 982.678110762831,
-				"y_pos": 141.41034654729447,
+				"x_pos": 984.678110762831,
+				"y_pos": 142.41034654729447,
 				"width": 246,
 				"height": 51.65924072265625,
 				"contentType": "WYSIWYG",
@@ -413,8 +373,8 @@
 			  },
 			  {
 				"id": "1ec9637b-428b-4adf-8b86-f50b2e23e721",
-				"x_pos": 982.6781248984582,
-				"y_pos": 225.09513377126814,
+				"x_pos": 984.6781248984582,
+				"y_pos": 226.09513377126814,
 				"width": 246,
 				"height": 74,
 				"contentType": "WYSIWYG",
@@ -433,8 +393,8 @@
 			  },
 			  {
 				"id": "d5a1b71f-fce6-446f-b84c-0743239a7bb9",
-				"x_pos": 985.6143386675296,
-				"y_pos": 324.9295374491704,
+				"x_pos": 987.6143386675296,
+				"y_pos": 325.9295374491704,
 				"width": 246,
 				"height": 88,
 				"contentType": "WYSIWYG",
@@ -453,8 +413,8 @@
 			  },
 			  {
 				"id": "e8555eca-5d8a-4d69-bb0a-183bcdd5e42b",
-				"x_pos": 987.3606121535129,
-				"y_pos": 436.06917860116437,
+				"x_pos": 989.3606121535129,
+				"y_pos": 437.06917860116437,
 				"width": 246,
 				"height": 102,
 				"contentType": "WYSIWYG",
@@ -473,8 +433,8 @@
 			  },
 			  {
 				"id": "a189d223-28d4-4986-bae7-2ea88232a928",
-				"x_pos": 991.3012978199741,
-				"y_pos": 565.9623207247328,
+				"x_pos": 993.3012978199741,
+				"y_pos": 566.9623207247328,
 				"width": 246,
 				"height": 131,
 				"contentType": "WYSIWYG",

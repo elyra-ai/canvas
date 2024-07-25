@@ -111,8 +111,6 @@ class CommonCanvasTextToolbar extends React.Component {
 			];
 
 			const subMenuTextSize = [
-				{ action: "text-size-8", label: "8", enable: true },
-				{ action: "text-size-9", label: "9", enable: true },
 				{ action: "text-size-10", label: "10", enable: true },
 				{ action: "text-size-11", label: "11", enable: true },
 				{ action: "text-size-12", label: "12", enable: true },
