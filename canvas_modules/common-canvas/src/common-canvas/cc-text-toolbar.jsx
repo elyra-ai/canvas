@@ -59,12 +59,10 @@ class CommonCanvasTextToolbar extends React.Component {
 	}
 
 	getTextToolbar() {
-		const boldLabel = this.getJsxLabel("texttoolbar.boldAction", "b");
-		const italicsLabel = this.getJsxLabel("texttoolbar.italicsAction", "i");
-		const strikethroughLabel = this.getJsxLabel("texttoolbar.strikethroughAction", "shift + x");
-
-
 		if (this.props.contentType === MARKDOWN) {
+			const boldLabel = this.getJsxLabel("texttoolbar.boldAction", "b");
+			const italicsLabel = this.getJsxLabel("texttoolbar.italicsAction", "i");
+			const strikethroughLabel = this.getJsxLabel("texttoolbar.strikethroughAction", "shift + x");
 			const headerLabel = this.getJsxLabel("texttoolbar.headerAction", ">", "<");
 			const codeLabel = this.getJsxLabel("texttoolbar.codeAction", "e");
 			const linkLabel = this.getJsxLabel("texttoolbar.linkAction", "k");
@@ -98,16 +96,22 @@ class CommonCanvasTextToolbar extends React.Component {
 				]
 			};
 		} else if (this.props.contentType === WYSIWYG) {
-			const subMenuAlignHorizontal = [
-				{ action: "align-left", label: "Left", enable: true, iconEnabled: (<TextAlignLeft size={32} />) },
-				{ action: "align-center", label: "Center", enable: true, iconEnabled: (<TextAlignCenter size={32} />) },
-				{ action: "align-right", label: "Right", enable: true, iconEnabled: (<TextAlignRight size={32} />) }
-			];
+			const boldLabel = this.getLabel("texttoolbar.boldAction");
+			const italicsLabel = this.getLabel("texttoolbar.italicsAction");
+			const underlineLabel = this.getLabel("texttoolbar.underline");
+			const strikethroughLabel = this.getLabel("texttoolbar.strikethroughAction");
 
-			const subMenuAlignVertical = [
-				{ action: "align-top", label: "Top", enable: true, iconEnabled: (<AlignBoxTopCenter size={32} />) },
-				{ action: "align-middle", label: "Middle", enable: true, iconEnabled: (<AlignBoxMiddleCenter size={32} />) },
-				{ action: "align-bottom", label: "Bottom", enable: true, iconEnabled: (<AlignBoxBottomCenter size={32} />) }
+			const subMenuFont = [
+				{ action: "font-ibm-plex-sans", label: this.getLabel("texttoolbar.fontIBMPlexSans"), enable: true },
+				{ action: "font-ibm-plex-serif", label: this.getLabel("texttoolbar.fontIBMPlexSerif"), enable: true },
+				{ action: "font-ibm-plex-condensed", label: this.getLabel("texttoolbar.fontIBMPlexCon"), enable: true },
+				{ action: "font-ibm-plex-mono", label: this.getLabel("texttoolbar.fontIBMPlexMono"), enable: true },
+				{ action: "font-arial", label: this.getLabel("texttoolbar.fontArial"), enable: true },
+				{ action: "font-comic-sans-ms", label: this.getLabel("texttoolbar.fontComicSansMS"), enable: true },
+				{ action: "font-gill-sans", label: this.getLabel("texttoolbar.fontGillSans"), enable: true },
+				{ action: "font-helvetica-neue", label: this.getLabel("texttoolbar.fontHelveticaNeue"), enable: true },
+				{ action: "font-times-new-roman", label: this.getLabel("texttoolbar.fontTimesNewRoman"), enable: true },
+				{ action: "font-verdana", label: this.getLabel("texttoolbar.fontVerdana"), enable: true }
 			];
 
 			const subMenuTextSize = [
@@ -125,36 +129,34 @@ class CommonCanvasTextToolbar extends React.Component {
 				{ action: "text-size-96", label: "96", enable: true }
 			];
 
-			const subMenuOutline = [
-				{ action: "outline-none", label: "No outline", enable: true },
-				{ action: "outline-visible", label: "Solid outline", enable: true }
+			const subMenuAlignHorizontal = [
+				{ action: "align-left", label: this.getLabel("texttoolbar.alignHorizLeft"), enable: true, iconEnabled: (<TextAlignLeft size={32} />) },
+				{ action: "align-center", label: this.getLabel("texttoolbar.alignHorizCenter"), enable: true, iconEnabled: (<TextAlignCenter size={32} />) },
+				{ action: "align-right", label: this.getLabel("texttoolbar.alignHorizRight"), enable: true, iconEnabled: (<TextAlignRight size={32} />) }
 			];
 
+			const subMenuAlignVertical = [
+				{ action: "align-top", label: this.getLabel("texttoolbar.alignVertTop"), enable: true, iconEnabled: (<AlignBoxTopCenter size={32} />) },
+				{ action: "align-middle", label: this.getLabel("texttoolbar.alignVertMiddle"), enable: true, iconEnabled: (<AlignBoxMiddleCenter size={32} />) },
+				{ action: "align-bottom", label: this.getLabel("texttoolbar.alignVertBottom"), enable: true, iconEnabled: (<AlignBoxBottomCenter size={32} />) }
+			];
 
-			const subMenuFont = [
-				{ action: "font-ibm-plex-sans", label: "IBM Plex Sans", enable: true },
-				{ action: "font-ibm-plex-serif", label: "IBM Plex Serif", enable: true },
-				{ action: "font-ibm-plex-condensed", label: "IBM Plex Condensed", enable: true },
-				{ action: "font-ibm-plex-mono", label: "IBM Plex Mono", enable: true },
-				{ action: "font-arial", label: "Arial", enable: true },
-				{ action: "font-comic-sans-ms", label: "Comic Sans MS", enable: true },
-				{ action: "font-gill-sans", label: "Gill Sans", enable: true },
-				{ action: "font-helvetica-neue", label: "Helvetica Neue", enable: true },
-				{ action: "font-times-new-roman", label: "Times New Roman", enable: true },
-				{ action: "font-verdana", label: "Verdana", enable: true }
+			const subMenuOutline = [
+				{ action: "outline-none", label: this.getLabel("texttoolbar.outlineNone"), enable: true },
+				{ action: "outline-visible", label: this.getLabel("texttoolbar.outlineSolid"), enable: true }
 			];
 
 			return {
 				leftBar: [
 					{ action: "submenu-font",
-						label: "Font",
+						label: this.getLabel("texttoolbar.fontAction"),
 						iconEnabled: (<TextFont size={32} />),
 						enable: true,
 						subMenu: subMenuFont,
 						closeSubAreaOnClick: true
 					},
 					{ action: "submenu-text-size",
-						label: "Text size",
+						label: this.getLabel("texttoolbar.textSize"),
 						iconEnabled: (<TextScale size={32} />),
 						enable: true,
 						subMenu: subMenuTextSize,
@@ -162,11 +164,11 @@ class CommonCanvasTextToolbar extends React.Component {
 					},
 					{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold size={32} />) },
 					{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic size={32} />) },
-					{ action: "underline", label: "Underline", enable: true, iconEnabled: (<TextUnderline size={32} />) },
+					{ action: "underline", label: underlineLabel, enable: true, iconEnabled: (<TextUnderline size={32} />) },
 					{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough size={32} />) },
 					{ divider: true },
 					{ action: "submenu-text-color",
-						label: "Color text",
+						label: this.getLabel("texttoolbar.colorText"),
 						iconEnabled: (<TextColor size={32} />),
 						enable: true,
 						subPanel: ColorPicker,
@@ -177,21 +179,21 @@ class CommonCanvasTextToolbar extends React.Component {
 						closeSubAreaOnClick: true
 					},
 					{ action: "submenu-align-horiz",
-						label: "Align horizontally",
+						label: this.getLabel("texttoolbar.alignHoriz"),
 						iconEnabled: (<TextAlignCenter size={32} />),
 						enable: true,
 						subMenu: subMenuAlignHorizontal,
 						closeSubAreaOnClick: true
 					},
 					{ action: "submenu-align-vert",
-						label: "Align vertically",
+						label: this.getLabel("texttoolbar.alignVert"),
 						iconEnabled: (<AlignBoxMiddleCenter size={32} />),
 						enable: true,
 						subMenu: subMenuAlignVertical,
 						closeSubAreaOnClick: true
 					},
 					{ action: "submenu-background-color",
-						label: "Color background",
+						label: this.getLabel("texttoolbar.colorBackground"),
 						iconEnabled: (<ColorPalette size={32} />),
 						enable: true,
 						subPanel: ColorPicker,
@@ -202,7 +204,7 @@ class CommonCanvasTextToolbar extends React.Component {
 						closeSubAreaOnClick: true
 					},
 					{ action: "sub-menu-outline",
-						label: "Outline",
+						label: this.getLabel("texttoolbar.outline"),
 						iconEnabled: (<SquareOutline size={32} />),
 						enable: true,
 						subMenu: subMenuOutline,
