@@ -623,6 +623,11 @@ export default class SvgCanvasTextArea {
 			this.foreignObject = null;
 
 		} else if (this.foreignObjectWysiwyg) {
+			// Ensure hidden text display <div> is visible again
+			d3.select(this.editingTextData.parentDomObj)
+				.selectAll(".d3-comment-text-wysiwyg")
+				.style("display", null);
+			// Tidy up
 			this.foreignObjectWysiwyg.remove();
 			this.foreignObjectWysiwyg = null;
 		}
