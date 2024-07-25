@@ -19,8 +19,6 @@ import ValidationMessage from "../../../src/common-properties/components/validat
 import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
-import { within } from "@testing-library/react";
-
 
 const mockValidationMessage = jest.fn();
 jest.mock("../../../src/common-properties/components/validation-message",
