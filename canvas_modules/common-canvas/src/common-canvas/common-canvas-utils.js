@@ -1325,7 +1325,7 @@ export default class CanvasUtils {
 	// is defined as a color that would require white text to be used
 	// if the hex color was a background color.
 	static isDarkColor(hex) {
-		const c = hex.substring(1);	// strip #
+		const c = hex.substring(1); // strip #
 		const rgb = parseInt(c, 16); // convert rrggbb to decimal
 
 		const r = (rgb >> 16) & 0xff; // extract red

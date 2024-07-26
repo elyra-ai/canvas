@@ -225,11 +225,11 @@ export default class SvgCanvasTextArea {
 	}
 
 	// Handles any actions requested on the comment text to appy WYSIWYG
-	// actions to the text. evt can be either a d3Event object from D3 when
-	// this method is called from keyboard entry in the textarea or it can be
-	// a synthetic event object from React when called from the text toolbar.
-	wysiwygActionHandler(action, extra) {
-		this.logger.log("wysiwygActionHandler - action = " + action);
+	// actions to the <div>. Actions can have an 'extra' parameter which
+	// contains additional info. For example, "background-color" action
+	// will have an extra paremeter containing the color as a hex value.
+	wysiwygActionHandler(action, evt, extra) {
+		this.logger.log("wysiwygActionHandler - action = " + action + " extra = " + extra);
 
 		if (!this.editingTextData.newFormats) {
 			this.editingTextData.newFormats = [];

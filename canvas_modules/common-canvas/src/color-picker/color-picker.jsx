@@ -115,7 +115,7 @@ class ColorPicker extends React.Component {
 
 	selectColor(evt) {
 		const color = evt.target.dataset.color;
-		this.props.subPanelData.clickActionHandler(color);
+		this.props.subPanelData.clickActionHandler(color, evt);
 		this.props.closeSubPanel();
 	}
 
