@@ -79,7 +79,9 @@ export default (state = [], action) => {
 					height: action.data.height,
 					width: action.data.width,
 					x_pos: action.data.x_pos ? action.data.x_pos : comment.x_pos,
-					y_pos: action.data.y_pos ? action.data.y_pos : comment.y_pos
+					y_pos: action.data.y_pos ? action.data.y_pos : comment.y_pos,
+					contentType: action.data.contentType,
+					formats: action.data.formats
 				});
 				return newComment;
 			}
@@ -245,6 +247,12 @@ function getCommentFromData(data) {
 	};
 	if (typeof data.class_name !== "undefined") {
 		newComment.class_name = data.class_name;
+	}
+	if (typeof data.contentType !== "undefined") {
+		newComment.contentType = data.contentType;
+	}
+	if (typeof data.formats !== "undefined") {
+		newComment.formats = data.formats;
 	}
 	return newComment;
 }

@@ -162,6 +162,10 @@ export const SAVED_NODES_CATEGORY_ID = "savedNodes";
 export const USE_DEFAULT_ICON = "useDefaultIcon";
 export const USE_DEFAULT_EXT_ICON = "useDefaultExtIcon";
 
+// Comment types
+export const WYSIWYG = "WYSIWYG";
+export const MARKDOWN = "markdown";
+
 // Directions
 export const NORTH = "n";
 export const SOUTH = "s";

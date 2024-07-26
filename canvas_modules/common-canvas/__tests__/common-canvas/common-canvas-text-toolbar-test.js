@@ -17,6 +17,7 @@
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import CommonCanvasTextToolbar from "../../src/common-canvas/cc-text-toolbar.jsx";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
+import { MARKDOWN } from "../../src/common-canvas/constants/canvas-constants.js";
 import { createIntlCommonCanvasTextToolbar } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
 
@@ -38,7 +39,7 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 
 	it("should render <Toolbar> inside <CommonCanvasTextToolbar/> when open", () => {
 		wrapper = createIntlCommonCanvasTextToolbar({}, canvasController);
-		canvasController.openTextToolbar(100, 200, () => { /**/ });
+		canvasController.openTextToolbar(100, 200, MARKDOWN, () => { /**/ });
 		wrapper.update();
 
 		expect(wrapper.find(CommonCanvasTextToolbar)).to.have.length(1);
