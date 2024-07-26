@@ -85,6 +85,7 @@ export default class ConfigUtils {
 			enableZoomIntoSubFlows: false,
 			enableBrowserEditMenu: true,
 			enableMarkdownInComments: false,
+			enableWYSIWYGComments: false,
 			enableAutoLinkOnlyFromSelNodes: false,
 			enableContextToolbar: false,
 			enableSaveZoom: "None",

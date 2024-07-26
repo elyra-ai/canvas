@@ -40,6 +40,7 @@ import {
 	EXAMPLE_APP_ALL_PORTS,
 	EXAMPLE_APP_PARALLAX,
 	EXAMPLE_APP_NETWORK,
+	EXAMPLE_APP_WYSIWYG,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	TIP_PALETTE_CATEGORIES,
@@ -685,6 +686,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableWYSIWYGComments = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedWYSIWYGComments" // Set ID to corresponding field in App.js state
+				labelText="Enable Wysiwyg Editor"
+				toggled={this.props.getStateValue("selectedWYSIWYGComments")}
+				onToggle={(val) => this.setStateValue(val, "selectedWYSIWYGComments")}
+			/>
+		</div>);
+
 		var enableContextToolbar = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedContextToolbar" // Set ID to corresponding field in App.js state
@@ -1246,6 +1256,10 @@ export default class SidePanelForms extends React.Component {
 						labelText={EXAMPLE_APP_NETWORK}
 					/>
 					<RadioButton
+						value={EXAMPLE_APP_WYSIWYG}
+						labelText={EXAMPLE_APP_WYSIWYG}
+					/>
+					<RadioButton
 						value={EXAMPLE_APP_REACT_NODES_CARBON}
 						labelText={EXAMPLE_APP_REACT_NODES_CARBON}
 					/>
@@ -1659,6 +1673,8 @@ export default class SidePanelForms extends React.Component {
 					<div className="harness-side-panel-header">Comments</div>
 					{divider}
 					{enableMarkdownInComments}
+					{divider}
+					{enableWYSIWYGComments}
 					{divider}
 					<div className="harness-side-panel-header">Drag, Pan, Zoom and Select</div>
 					{divider}
