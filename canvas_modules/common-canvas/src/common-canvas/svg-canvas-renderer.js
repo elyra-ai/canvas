@@ -41,7 +41,8 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
-	NORTH, SOUTH, EAST, WEST }
+	NORTH, SOUTH, EAST, WEST,
+	WYSIWYG }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
@@ -103,6 +104,7 @@ export default class SVGCanvasRenderer {
 			this.canvasController,
 			this.canvasDiv,
 			this.activePipeline,
+			this.removeTempCursorOverlay.bind(this), // Function
 			this.displayComments.bind(this), // Function
 			this.displayLinks.bind(this), // Function
 			this.getCommentToolbarPos.bind(this) // Function
@@ -257,6 +259,7 @@ export default class SVGCanvasRenderer {
 	// so the canvas can be redisplayed.
 	setCanvasInfoRenderer(canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config) {
 		this.logger.logStartTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
+
 		this.config = config;
 		this.canvasInfo = canvasInfo;
 		this.selectionInfo = selectionInfo;
@@ -277,6 +280,7 @@ export default class SVGCanvasRenderer {
 			this.canvasController,
 			this.canvasDiv,
 			this.activePipeline,
+			this.removeTempCursorOverlay.bind(this), // Function
 			this.displayComments.bind(this), // Function
 			this.displayLinks.bind(this), // Function
 			this.getCommentToolbarPos.bind(this) // Function
@@ -1485,12 +1489,11 @@ export default class SVGCanvasRenderer {
 	// Repositions the comment toolbar so it is always over the top of the
 	// comment being edited.
 	repositionCommentToolbar() {
-		if (this.config.enableMarkdownInComments &&
-				this.dispUtils.isDisplayingFullPage() &&
-				this.svgCanvasTextArea.isEditingText()) {
+		if (this.dispUtils.isDisplayingFullPage() &&
+			this.svgCanvasTextArea.isEditingText()) {
 			// If a node label or text decoration is being edited com will be undefined.
 			const com = this.activePipeline.getComment(this.svgCanvasTextArea.getEditingTextId());
-			if (com) {
+			if (com && (com.contentType === WYSIWYG || this.config.enableMarkdownInComments)) {
 				const pos = this.getCommentToolbarPos(com);
 				this.canvasController.moveTextToolbar(pos.x, pos.y);
 			}
@@ -2027,7 +2030,7 @@ export default class SVGCanvasRenderer {
 				this.logger.logStartTimer("Node Group - mouse down");
 				d3Event.stopPropagation();
 				if (this.svgCanvasTextArea.isEditingText()) {
-					this.svgCanvasTextArea.completeEditing();
+					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (!this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, "node");
@@ -3745,10 +3748,10 @@ export default class SVGCanvasRenderer {
 			.attr("data-selected", (c) => (this.activePipeline.isSelected(c.id) ? "yes" : "no"))
 			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
 
-		// Comment Body
+		// Comment Body - only used for regular/markdown comments
 		joinedCommentGrps
 			.selectChildren(".d3-comment-rect")
-			.data((d) => ([d]), (d) => d.id)
+			.data((c) => (c.contentType !== WYSIWYG ? [c] : []), (c) => c.id)
 			.join(
 				(enter) =>
 					enter
@@ -3761,10 +3764,11 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-comment-rect")
 			.attr("style", (c) => this.getCommentBodyStyle(c, "default"));
 
-		// Comment Text
+
+		// Comment Text - for regular/markdown comment
 		joinedCommentGrps
 			.selectChildren(".d3-foreign-object-comment-text")
-			.data((d) => ([d]), (d) => d.id)
+			.data((c) => (c.contentType !== WYSIWYG ? [c] : []), (c) => c.id)
 			.join(
 				(enter) => {
 					const fo = enter
@@ -3786,7 +3790,48 @@ export default class SVGCanvasRenderer {
 			.html((c) => (
 				this.config.enableMarkdownInComments
 					? markdownIt.render(c.content)
-					: escapeText(c.content)));
+					: escapeText(c.content))
+			);
+
+		// Comment Text - for WYSIWYG comment
+		joinedCommentGrps
+			.selectChildren(".d3-foreign-object-comment-text-wysiwyg")
+			.data((c) => (c.contentType === WYSIWYG ? [c] : []), (c) => c.id)
+			.join(
+				(enter) => {
+					const fo = enter
+						.append("foreignObject")
+						.attr("class", "d3-foreign-object-comment-text-wysiwyg")
+						.attr("x", 0)
+						.attr("y", 0);
+					fo
+						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+						.attr("class", "d3-comment-text-wysiwyg-outer")
+						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+						.attr("class", "d3-comment-text-wysiwyg");
+					return fo;
+				}
+			)
+			.datum((c) => this.activePipeline.getComment(c.id))
+			.attr("width", (c) => c.width)
+			.attr("height", (c) => c.height)
+
+			.select(".d3-comment-text-wysiwyg-outer")
+
+			.select(".d3-comment-text-wysiwyg")
+			.attr("style", null) // Wipe the in-line styles before applying
+
+			.each((d, i, commentTexts) => {
+				if (d.formats?.length > 0) {
+					d.formats.forEach((f) => {
+						const { field, value } = CanvasUtils.convertFormat(f);
+						d3.select(commentTexts[i]).style(field, value);
+					});
+				}
+			})
+
+			// .attr("style", (c) => this.getCommentTextStyle(c, "default"))
+			.html((c) => escapeText(c.content));
 
 		// Add or remove drag object behavior for the comment groups.
 		if (this.config.enableEditingActions) {
@@ -3806,7 +3851,6 @@ export default class SVGCanvasRenderer {
 				if (this.isDragging()) {
 					return;
 				}
-				this.setCommentStyles(d, "hover", d3.select(d3Event.currentTarget));
 				if (this.config.enableEditingActions && d.id !== this.svgCanvasTextArea.getEditingTextId()) {
 					this.createCommentPort(d3Event.currentTarget, d);
 				}
@@ -3815,7 +3859,6 @@ export default class SVGCanvasRenderer {
 				}
 			})
 			.on("mouseleave", (d3Event, d) => {
-				this.setCommentStyles(d, "default", d3.select(d3Event.currentTarget));
 				if (this.config.enableContextToolbar) {
 					this.removeContextToolbar();
 				}
@@ -3826,9 +3869,10 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.logStartTimer("Comment Group - mouse down");
+
 				d3Event.stopPropagation();
 				if (this.svgCanvasTextArea.isEditingText()) {
-					this.svgCanvasTextArea.completeEditing();
+					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (!this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, "comment");
@@ -3871,7 +3915,7 @@ export default class SVGCanvasRenderer {
 			.on("mousedown", (d3Event, d) => {
 				this.dragObjectUtils.mouseDownCommentSizingArea();
 			})
-			// Use mousemove here rather than mouseenter so the cursor will change
+			// Use mousemove and mouseenter so the cursor will change
 			// if the pointer moves from one area of the node outline to another
 			// (eg. from east area to north-east area) without exiting the node outline.
 			// A mouseenter is triggered when the sizing operation stops and the
@@ -4170,7 +4214,7 @@ export default class SVGCanvasRenderer {
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.svgCanvasTextArea.isEditingText()) {
-					this.svgCanvasTextArea.completeEditing();
+					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 					this.selectObjectD3Event(d3Event, d, "link");
