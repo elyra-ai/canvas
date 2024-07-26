@@ -133,11 +133,12 @@ class ColorPicker extends React.Component {
 
 			const style = {
 				width: (this.colorsPerRow * COLOR_DIM_PLUS_PAD) + COLOR_PADDING,
-				height: (rowCount * COLOR_DIM_PLUS_PAD) + COLOR_PADDING
+				height: (rowCount * COLOR_DIM_PLUS_PAD) + COLOR_PADDING,
+				paddingBottom: "4px"
 			};
 
 			return (
-				<div className="color-picker color-count-12" style={style} tabIndex={"-1"} onClick={this.onClick} onKeyDown={this.onKeyDown}>
+				<div className="color-picker" style={style} tabIndex={"-1"} onClick={this.onClick} onKeyDown={this.onKeyDown}>
 					{colorDivs}
 				</div>
 			);

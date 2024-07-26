@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,9 @@ const SEVEN_KEY = 55;
 const EIGHT_KEY = 56;
 
 const SCROLL_PADDING = 12;
+
+const WHITE = "#FFFFFF";
+const BLACK = "#000000";
 
 export default class SvgCanvasTextArea {
 
@@ -246,12 +249,7 @@ export default class SvgCanvasTextArea {
 
 		} else if (action === "background-color") {
 			this.addReplaceFormat("backgroundColor", extra);
-			// If a text color has not yet been specified, we set an appropriate
-			// text color (either black or white) based on the darkness of the background.
-			if (!this.hasFormat("textColor")) {
-				const isDark = CanvasUtils.isDarkColor(extra);
-				this.addReplaceFormat("textColor", (isDark ? "#FFFFFF" : "#000000"));
-			}
+			this.setTextColorAppropriately(extra);
 
 		} else if (action.startsWith("text-size")) {
 			this.addReplaceFormat("textSize", action);
@@ -264,6 +262,22 @@ export default class SvgCanvasTextArea {
 
 		} else if (action === "bold" || action === "italics") {
 			this.toggleFormat(action);
+		}
+	}
+
+	// Sets the text color appropriately for the background color passed in.
+	// If a text color has not yet been specified, or a text color has been
+	// specified and it is either black or white, sets an appropriate
+	// text color (either black or white) based on the darkness of the background.
+	setTextColorAppropriately(backgroundColor) {
+		const textColorFormat = this.hasFormat("textColor");
+
+		if (!textColorFormat ||
+				textColorFormat.value === WHITE ||
+				textColorFormat.value === BLACK) {
+			const isDark = CanvasUtils.isDarkColor(backgroundColor);
+			this.addReplaceFormat("textColor", (isDark ? WHITE : BLACK));
+
 		}
 	}
 

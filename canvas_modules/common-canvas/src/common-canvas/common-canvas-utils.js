@@ -1322,8 +1322,8 @@ export default class CanvasUtils {
 	}
 
 	// Returns true if the hex passed in is for a dark color where 'dark'
-	// is described as a color that would require white text to be used
-	// if the hex color was used for a background color.
+	// is defined as a color that would require white text to be used
+	// if the hex color was a background color.
 	static isDarkColor(hex) {
 		const c = hex.substring(1);	// strip #
 		const rgb = parseInt(c, 16); // convert rrggbb to decimal
@@ -1333,7 +1333,7 @@ export default class CanvasUtils {
 		const b = (rgb >> 0) & 0xff; // extract blue
 
 		const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
-		return (luma < 80);
+		return (luma < 108);
 	}
 
 	// Returns an object containing a CSS field and value that
