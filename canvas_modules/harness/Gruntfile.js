@@ -66,7 +66,7 @@ module.exports = function(grunt) {
 					expand: true,
 					flatten: false,
 					cwd: "./node_modules/@ibm/plex",
-					src: ["@(IBM-Plex-Sans|IBM-Plex-Mono)/**"],
+					src: ["IBM-Plex*/**"],
 					dest: ".build/fonts"
 				}]
 			},
