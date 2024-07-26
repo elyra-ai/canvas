@@ -79,6 +79,7 @@ class CheckboxControl extends React.Component {
 						checked={Boolean(this.props.value)}
 						hideLabel={this.props.tableControl}
 						helperText={this.props.control.helperText}
+						readOnly={this.props.readOnly}
 					/>
 					{tooltipIcon}
 				</div>
@@ -95,7 +96,8 @@ CheckboxControl.propTypes = {
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.bool, // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({

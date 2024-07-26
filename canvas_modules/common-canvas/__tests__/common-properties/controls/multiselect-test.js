@@ -233,6 +233,23 @@ describe("multiselect renders correctly", () => {
 		const helpTextWrapper = wrapper.find("div[data-id='properties-test-multiselect']");
 		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
 	});
+
+	it("MultiSelectControl readOnly is rendered correctly", () => {
+		control.helperText = true;
+		controller.setPropertyValues(
+			{ }
+		);
+		const wrapper = mount(
+			<MultiSelectControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const readOnlyWrapper = wrapper.find("div[data-id='properties-test-multiselect']");
+		expect(readOnlyWrapper.find("MultiSelect").prop("readOnly")).to.equal(control.readOnly);
+	});
 });
 
 describe("multiselect paramDef works correctly", () => {

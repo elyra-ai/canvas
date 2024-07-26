@@ -198,6 +198,9 @@ export class Control {
 		if (settings.helperText) {
 			this.helperText = settings.helperText;
 		}
+		if (settings.readOnly) {
+			this.readOnly = settings.readOnly;
+		}
 		this.light = get(settings, "light", true);
 	}
 }

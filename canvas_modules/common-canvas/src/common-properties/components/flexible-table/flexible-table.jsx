@@ -589,6 +589,7 @@ class FlexibleTable extends React.Component {
 									sortDirection={this.state.columnSortDir[this.state.currentSortColumn]}
 									tableState={this.props.tableState}
 									light={this.props.light}
+									readOnly={this.props.readOnly}
 									{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex, scrollToAlignment: "center" })}
 								/>
 							</div>
@@ -638,7 +639,8 @@ FlexibleTable.propTypes = {
 	rowSelection: PropTypes.string,
 	summaryTable: PropTypes.bool,
 	light: PropTypes.bool,
-	intl: PropTypes.object.isRequired
+	intl: PropTypes.object.isRequired,
+	readOnly: PropTypes.bool
 };
 
 export default injectIntl(FlexibleTable);

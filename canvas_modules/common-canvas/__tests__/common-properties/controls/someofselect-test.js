@@ -104,6 +104,26 @@ describe("SomeOfSelectControl renders correctly", () => {
 		tableUtils.selectCheckboxes(wrapper, [0]);
 		expect(controller.getPropertyValue(propertyId)).to.have.length(0);
 	});
+	it("SomeOfSelectControl handles readonly correctly", () => {
+		controller.setPropertyValues(
+			{ "test-someofselect": ["Order"] }
+		);
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<SomeOfSelectControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					readOnly
+				/>
+			</Provider>
+		);
+		const someofselectWrapper = wrapper.find("div[data-id='properties-test-someofselect']");
+		const firstCheckbox = someofselectWrapper.find("Checkbox").first();
+		const secondCheckbox = someofselectWrapper.find("Checkbox").first();
+		expect(firstCheckbox.prop("readOnly")).to.equal(true);
+		expect(secondCheckbox.prop("readOnly")).to.equal(true);
+	});
 	it("SomeOfSelectControl handles null correctly", () => {
 		controller.setPropertyValues(
 			{ "test-someofselect": null }

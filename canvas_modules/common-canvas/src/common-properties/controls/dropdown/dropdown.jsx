@@ -229,6 +229,7 @@ class DropDown extends React.Component {
 					onChange={this.handleChange}
 					value={selection}
 					helperText={this.props.control.helperText}
+					readOnly={this.props.readOnly}
 				>
 					{ options }
 				</Select>
@@ -264,6 +265,7 @@ class DropDown extends React.Component {
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText={this.props.controlItem}
 					helperText={this.props.control.helperText}
+					readOnly={this.props.readOnly}
 				/>
 			);
 		}
@@ -294,7 +296,8 @@ DropDown.propTypes = {
 		PropTypes.string,
 		PropTypes.object
 	]), // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => {

@@ -115,12 +115,15 @@ class RadiosetControl extends React.Component {
 	}
 
 	handleChange(evt) {
-		const oldVal = this.props.controller.getPropertyValue(this.props.propertyId);
-		const newVal = this.convertTargetValue(evt);
-		this.props.controller.updatePropertyValue(this.props.propertyId, newVal);
+		// Disable radio button switch if it is readOnly
+		if (!this.props.readOnly) {
+			const oldVal = this.props.controller.getPropertyValue(this.props.propertyId);
+			const newVal = this.convertTargetValue(evt);
+			this.props.controller.updatePropertyValue(this.props.propertyId, newVal);
 
-		if (oldVal !== newVal) {
-			this.setEnabledStateOfOptionalPanels(newVal);
+			if (oldVal !== newVal) {
+				this.setEnabledStateOfOptionalPanels(newVal);
+			}
 		}
 	}
 
@@ -230,6 +233,7 @@ class RadiosetControl extends React.Component {
 					name="radio-button-group"
 					orientation={this.props.control.orientation}
 					helperText={this.props.control.helperText}
+					readOnly={this.props.readOnly}
 				>
 					{buttons}
 				</RadioButtonGroup>
@@ -252,7 +256,8 @@ RadiosetControl.propTypes = {
 		PropTypes.bool
 	]), // pass in by redux
 	messageInfo: PropTypes.object, // pass in by redux
-	controlOpts: PropTypes.object // pass in by redux
+	controlOpts: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({

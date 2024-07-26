@@ -315,6 +315,22 @@ describe("textarea control renders correctly", () => {
 		const helpTextWrapper = wrapper.find("div[data-id='properties-test-textarea']");
 		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
 	});
+
+	it("textarea should have readonly control", () => {
+		control.readOnly = true;
+		controller.setPropertyValues({});
+		const wrapper = mount(
+			<TextArea
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				readOnly
+			/>
+		);
+		const readOnlyWrapper = wrapper.find("div[data-id='properties-test-textarea']");
+		expect(readOnlyWrapper.find("TextArea").prop("readOnly")).to.equal(control.readOnly);
+	});
 });
 
 describe("textarea classnames appear correctly", () => {
