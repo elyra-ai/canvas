@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/* eslint no-bitwise: "off" */
+
 // This class contains utility functions that may be used for both the canvas
 // objects stored in redux and also the copy of canvas objects maintained by
 // the CanvasRender objects.
@@ -1317,6 +1319,119 @@ export default class CanvasUtils {
 			return className;
 		}
 		return null;
+	}
+
+	// Returns true if the hex passed in is for a dark color where 'dark'
+	// is defined as a color that would require white text to be used
+	// if the hex color was a background color.
+	static isDarkColor(hex) {
+		const c = hex.substring(1); // strip #
+		const rgb = parseInt(c, 16); // convert rrggbb to decimal
+
+		const r = (rgb >> 16) & 0xff; // extract red
+		const g = (rgb >> 8) & 0xff; // extract green
+		const b = (rgb >> 0) & 0xff; // extract blue
+
+		const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+		return (luma < 108);
+	}
+
+	// Returns an object containing a CSS field and value that
+	// can be applied to a <div> contining text based on the
+	// format type and action passed in.
+	static convertFormat(format) {
+		switch (format.type) {
+		case "bold":
+			return { field: "font-weight", value: "600" };
+
+		case "italics":
+			return { field: "font-style", value: "italic" };
+
+		case "fontType": {
+			const fontFamily = this.getFontFamily(format.value);
+			return { field: "font-family", value: fontFamily };
+		}
+
+		case "textDecoration": {
+			switch (format.value) {
+			default:
+			case "strikethrough":
+				return { field: "text-decoration", value: "line-through" };
+			case "underline":
+				return { field: "text-decoration", value: "underline" };
+			case "strikethrough underline":
+			case "underline strikethrough":
+				return { field: "text-decoration", value: "underline line-through" };
+			}
+		}
+
+		case "textColor": {
+			return { field: "color", value: format.value };
+		}
+
+		case "backgroundColor": {
+			return { field: "background-color", value: format.value };
+		}
+
+		case "textSize": {
+			const size = format.value.substring(10);
+			return { field: "font-size", value: `${size}px` };
+		}
+
+		case "outlineStyle": {
+			switch (format.value) {
+			default:
+			case "outline-solid":
+				return { field: "border-width", value: "1px" };
+			case "outline-none":
+				return { field: "border-width", value: "0" };
+			}
+		}
+
+		case "alignHorizontally": {
+			switch (format.value) {
+			default:
+			case "align-left":
+				return { field: "text-align", value: "left" };
+			case "align-center":
+				return { field: "text-align", value: "center" };
+			case "align-right":
+				return { field: "text-align", value: "right" };
+			}
+		}
+
+		case "alignVertically": {
+			switch (format.value) {
+			default:
+			case "align-top":
+				return { field: "vertical-align", value: "top" };
+			case "align-middle":
+				return { field: "vertical-align", value: "middle" };
+			case "align-bottom":
+				return { field: "vertical-align", value: "bottom" };
+			}
+		}
+
+		default:
+			return { field: format.type, value: format.value };
+		}
+	}
+
+	// Returns a font family for the font action passed in.
+	static getFontFamily(action) {
+		switch (action) {
+		default:
+		case ("font-ibm-plex-sans"): return "\"IBM Plex Sans\", sans-serif";
+		case ("font-ibm-plex-serif"): return "\"IBM Plex Serif\", serif";
+		case ("font-ibm-plex-condensed"): return "IBM Plex Condensed";
+		case ("font-ibm-plex-mono"): return "\"IBM Plex Mono\", monospace";
+		case ("font-arial"): return "\"Arial\", sans-serif";
+		case ("font-comic-sans-ms"): return "\"Comic Sans MS\", sans-serif";
+		case ("font-gill-sans"): return "\"Gill Sans\", sans-serif";
+		case ("font-helvetica-neue"): return "\"Helvetica Neue\", sans-serif";
+		case ("font-times-new-roman"): return "\"Times New Roman\", serif";
+		case ("font-verdana"): return "\"Verdana\", sans-serif";
+		}
 	}
 
 	// Returns the element passed in, or an ancestor of the element, if either
