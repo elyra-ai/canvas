@@ -391,6 +391,7 @@ class CanvasContents extends React.Component {
 		return (
 			<CommonCanvasTextToolbar
 				canvasController={this.props.canvasController}
+				containingDivId={this.mainCanvasDivId}
 			/>);
 	}
 
