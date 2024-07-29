@@ -56,9 +56,9 @@ export function adjustSubAreaPosition(subAreaRef, containingDivId, expandDirecti
 			// the toolbar is displayed in an 'absolute' position. This changes the offset calculations
 			// for the sub-area being displayed.
 			const floatingToolbar = subAreaRef.closest(".floating-toolbar");
-			const toolbarRect = floatingToolbar.getBoundingClientRect();
+
 			const newLeft = floatingToolbar
-				? actionItemRect.left - toolbarRect.left - outsideRight
+				? actionItemRect.left - floatingToolbar.getBoundingClientRect().left - outsideRight
 				: actionItemRect.left - containingDivRect.left - outsideRight;
 			subAreaRef.style.left = newLeft + "px";
 		}
