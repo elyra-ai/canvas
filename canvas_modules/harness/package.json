@@ -15,6 +15,7 @@
     "node": "20.x"
   },
   "dependencies": {
+    "@ibm/plex": "^6.4.1",
     "body-parser": "1.20.2",
     "compression": "1.7.4",
     "express": "4.19.2",
