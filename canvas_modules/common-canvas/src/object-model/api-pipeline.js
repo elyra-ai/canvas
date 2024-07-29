@@ -1057,6 +1057,13 @@ export default class APIPipeline {
 			linkIds: [],
 			selectedObjectIds: []
 		};
+		if (source.contentType) {
+			comment.contentType = source.contentType;
+		}
+
+		if (source.formats) {
+			comment.formats = source.formats;
+		}
 
 		// Adjust for snap to grid, if necessary.
 		comment = this.objectModel.setCommentAttributes(comment);

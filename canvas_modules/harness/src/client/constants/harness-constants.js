@@ -45,6 +45,7 @@ _defineConstant("EXAMPLE_APP_JSX_ICONS", "JSX Icons");
 _defineConstant("EXAMPLE_APP_ALL_PORTS", "All Ports");
 _defineConstant("EXAMPLE_APP_PARALLAX", "Parallax");
 _defineConstant("EXAMPLE_APP_NETWORK", "Network");
+_defineConstant("EXAMPLE_APP_WYSIWYG", "WYSIWYG Comments");
 _defineConstant("EXAMPLE_APP_REACT_NODES_CARBON", "React Nodes - Carbon Charts");
 _defineConstant("EXAMPLE_APP_REACT_NODES_MAPPING", "React Nodes - Mapping");
 
