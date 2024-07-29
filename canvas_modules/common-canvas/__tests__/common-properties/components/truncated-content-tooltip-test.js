@@ -16,31 +16,47 @@
 
 import React from "react";
 import TruncatedContentTooltip from "../../../src/common-properties/components/truncated-content-tooltip";
-import { mount } from "../../_utils_/mount-utils.js";
-import { expect } from "chai";
+import { render } from "../../_utils_/mount-utils.js";
+import { expect as expectJest } from "@jest/globals";
 
+
+const mockTruncatedContentTooltip = jest.fn();
+jest.mock("../../../src/common-properties/components/truncated-content-tooltip",
+	() => (props) => mockTruncatedContentTooltip(props)
+);
+
+mockTruncatedContentTooltip.mockImplementation((props) => {
+	const TruncatedContentTooltipComp = jest.requireActual(
+		"../../../src/common-properties/components/truncated-content-tooltip",
+	).default;
+	return <TruncatedContentTooltipComp {...props} />;
+});
 
 describe("truncated-content-tooltip renders correctly", () => {
 	it("props should have been defined", () => {
-		const wrapper = mount(
+		render(
 			<TruncatedContentTooltip
 				content={<span>test</span>}
 				tooltipText="tip"
 				disabled
 			/>
 		);
-		expect(wrapper.prop("tooltipText")).to.equal("tip");
-		expect(wrapper.prop("content")).to.exist;
-		expect(wrapper.prop("disabled")).to.equal(true);
+		expectJest(mockTruncatedContentTooltip).toHaveBeenCalledWith({
+			"content": <span>test</span>,
+			"tooltipText": "tip",
+			"disabled": true
+		});
 	});
 
 	it("truncated-content-tooltip should render when no content specified", () => {
-		const wrapper = mount(
+		render(
 			<TruncatedContentTooltip
 				tooltipText="tip"
 			/>
 		);
-		expect(wrapper.prop("tooltipText")).to.equal("tip");
+		expectJest(mockTruncatedContentTooltip).toHaveBeenCalledWith({
+			"tooltipText": "tip"
+		});
 	});
 
 });
