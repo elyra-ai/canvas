@@ -219,7 +219,7 @@ export const ONE_REM_HEIGHT = 16;
 export const REM_ROW_HEIGHT = 2; // in rem
 export const REM_HEADER_HEIGHT = 2; // in rem
 
-export const EXPRESSION_TABLE_ROWS = 7;
+export const EXPRESSION_TABLE_ROWS = 5; // Adjust as per Tearsheet
 
 export const TABLE_SUBPANEL_BUTTON_WIDTH = "36px";
 
