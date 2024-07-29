@@ -233,7 +233,7 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		if (this.props.isOpen) {
 			textToolbar = (
-				<div className={"text-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }} onBlur={this.props.blurHandler}>
+				<div className={"text-toolbar floating-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }} onBlur={this.props.blurHandler}>
 					<Toolbar
 						config={this.getTextToolbar()}
 						instanceId={this.props.canvasController.getInstanceId()}
