@@ -237,6 +237,7 @@ class CommonCanvasTextToolbar extends React.Component {
 					<Toolbar
 						config={this.getTextToolbar()}
 						instanceId={this.props.canvasController.getInstanceId()}
+						containingDivId={this.props.containingDivId}
 						toolbarActionHandler={this.props.actionHandler}
 						tooltipDirection={"top"}
 						size={"sm"}
@@ -253,6 +254,7 @@ CommonCanvasTextToolbar.propTypes = {
 	// Provided by CommonCanvas
 	intl: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	containingDivId: PropTypes.string.isRequired,
 
 	// Provided by redux
 	isOpen: PropTypes.bool.isRequired,
