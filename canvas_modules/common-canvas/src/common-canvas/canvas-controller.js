@@ -55,7 +55,9 @@ import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import getContextMenuDefiniton from "./canvas-controller-menu-utils.js";
 import { get, isEmpty } from "lodash";
-import { LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE, SNAP_TO_GRID_NONE, SUPER_NODE } from "./constants/canvas-constants";
+import { LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE,
+	SNAP_TO_GRID_NONE, SUPER_NODE, WYSIWYG
+} from "./constants/canvas-constants";
 
 // Global instance ID counter
 var commonCanvasControllerInstanceId = 0;
@@ -2054,8 +2056,8 @@ export default class CanvasController {
 		}
 	}
 
-	openTextToolbar(xPos, yPos, actionHandler, blurHandler) {
-		this.objectModel.setTextToolbarDef({ isOpen: true, pos_x: xPos, pos_y: yPos, actionHandler, blurHandler });
+	openTextToolbar(xPos, yPos, contentType, actionHandler, blurHandler) {
+		this.objectModel.setTextToolbarDef({ isOpen: true, pos_x: xPos, pos_y: yPos, contentType, actionHandler, blurHandler });
 	}
 
 	closeTextToolbar() {
@@ -2455,8 +2457,24 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
+			case "createWYSIWYGComment": {
+				data.contentType = WYSIWYG;
+				data.formats = [];
+				command = new CreateCommentAction(data, this);
+				this.commandStack.do(command);
+				break;
+			}
 			case "createAutoComment": {
 				data.mousePos = this.getNewCommentPosition(data.pipelineId);
+				command = new CreateCommentAction(data, this);
+				this.commandStack.do(command);
+				data = command.getData();
+				break;
+			}
+			case "createAutoWYSIWYGComment": {
+				data.mousePos = this.getNewCommentPosition(data.pipelineId);
+				data.contentType = WYSIWYG;
+				data.formats = [];
 				command = new CreateCommentAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();

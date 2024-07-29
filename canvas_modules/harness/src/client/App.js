@@ -55,6 +55,7 @@ import JsxIconsCanvas from "./components/custom-canvases/jsx-icons/jsx-icons-can
 import AllPortsCanvas from "./components/custom-canvases/all-ports/all-ports-canvas";
 import ParallaxCanvas from "./components/custom-canvases/parallax/parallax-canvas";
 import NetworkCanvas from "./components/custom-canvases/network/network-canvas";
+import WysiwygCommentsCanvas from "./components/custom-canvases/wysiwyg-comments/wysiwyg-comments-canvas";
 import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon-canvas";
 import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping-canvas";
 
@@ -112,6 +113,7 @@ import {
 	EXAMPLE_APP_ALL_PORTS,
 	EXAMPLE_APP_PARALLAX,
 	EXAMPLE_APP_NETWORK,
+	EXAMPLE_APP_WYSIWYG,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	CUSTOM,
@@ -187,6 +189,7 @@ class App extends React.Component {
 			selectedDragWithoutSelect: false,
 			selectedAssocLinkCreation: false,
 			selectedMarkdownInComments: false,
+			selectedWYSIWYGComments: false,
 			selectedContextToolbar: false,
 			selectedSnapToGridType: SNAP_TO_GRID_NONE,
 			enteredSnapToGridX: "",
@@ -2069,6 +2072,7 @@ class App extends React.Component {
 			enableSelfRefLinks: this.state.selectedSelfRefLinks,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enableMarkdownInComments: this.state.selectedMarkdownInComments,
+			enableWYSIWYGComments: this.state.selectedWYSIWYGComments,
 			enableContextToolbar: this.state.selectedContextToolbar,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			enableStateTag: this.state.selectedStateTag,
@@ -2155,7 +2159,7 @@ class App extends React.Component {
 					{ divider: true },
 					{ action: "run", label: "Run", enable: true, iconEnabled: (<Play size={32} />) },
 					{ divider: true },
-					{ action: "createAutoComment", label: "Add Comment", enable: true },
+					{ action: "createAutoComment", label: "Markdown Comment", enable: true },
 					{ divider: true },
 					{ action: "deleteSelectedObjects", label: "Delete", enable: true },
 					{ divider: true },
@@ -2653,6 +2657,7 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
+
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_NETWORK) {
 			firstCanvas = (
 				<NetworkCanvas
@@ -2660,6 +2665,15 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
+
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_WYSIWYG) {
+			firstCanvas = (
+				<WysiwygCommentsCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES_CARBON) {
 			firstCanvas = (
 				<ReactNodesCarbonCanvas

@@ -353,6 +353,12 @@ export default class PipelineOutHandler {
 			if (comment.class_name) {
 				newCom.class_name = comment.class_name;
 			}
+			if (comment.contentType) {
+				newCom.contentType = comment.contentType;
+			}
+			if (comment.formats) {
+				newCom.formats = comment.formats;
+			}
 			newCom.content = comment.content;
 			newCom.associated_id_refs = this.createCommentLinks(canvasInfoLinks, comment.id);
 
