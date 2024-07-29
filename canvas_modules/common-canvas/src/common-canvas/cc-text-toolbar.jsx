@@ -233,10 +233,11 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		if (this.props.isOpen) {
 			textToolbar = (
-				<div className={"text-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }} onBlur={this.props.blurHandler}>
+				<div className={"text-toolbar floating-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }} onBlur={this.props.blurHandler}>
 					<Toolbar
 						config={this.getTextToolbar()}
 						instanceId={this.props.canvasController.getInstanceId()}
+						containingDivId={this.props.containingDivId}
 						toolbarActionHandler={this.props.actionHandler}
 						tooltipDirection={"top"}
 						size={"sm"}
@@ -253,6 +254,7 @@ CommonCanvasTextToolbar.propTypes = {
 	// Provided by CommonCanvas
 	intl: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	containingDivId: PropTypes.string.isRequired,
 
 	// Provided by redux
 	isOpen: PropTypes.bool.isRequired,
