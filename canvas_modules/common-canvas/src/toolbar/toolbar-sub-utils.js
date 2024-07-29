@@ -24,8 +24,8 @@
 // Adjust the position of the sub-area to make sure it doesn't extend
 // outside the containing divs boundary. We need to do this after the subarea
 // has been mounted so we can query its size and position.
-export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection, actionItemRect) {
-	if (!areaRef || !actionItemRect || !containingDivId) {
+export function adjustSubAreaPosition(subAreaRef, containingDivId, expandDirection, actionItemRect) {
+	if (!subAreaRef || !actionItemRect || !containingDivId) {
 		return;
 	}
 	const containingDiv = document.getElementById(containingDivId);
@@ -33,47 +33,47 @@ export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection,
 		? containingDiv.getBoundingClientRect()
 		: { top: -1000, bottom: 1000, left: -1000, right: 1000 }; // To enable Jest tests.
 
-	const thisAreaRect = areaRef.getBoundingClientRect();
-
-	// If one of our parent objects contains the "floating-toolbar" class, we assume
-	// the toolbar is displayed in an 'absolute' position. This changes the offset calculations
-	// for the sub-area being displayed.
-	const isFloatingToolbar = areaRef.closest(".floating-toolbar");
+	const subAreaRect = subAreaRef.getBoundingClientRect();
 
 	// Calculate the amount that the panel/menu is outside of the containing div
 	// edges. Positive value means it is outside. Negative is inside.
-	const outsideBottom = actionItemRect.bottom + thisAreaRect.height - containingDivRect.bottom;
+	const outsideBottom = actionItemRect.bottom + subAreaRect.height - containingDivRect.bottom;
 
 	if (expandDirection === "vertical") {
-		const outsideRight = actionItemRect.left + thisAreaRect.width - containingDivRect.right;
+		const outsideRight = actionItemRect.left + subAreaRect.width - containingDivRect.right;
 
 		if (outsideBottom > 0) {
 			const topGap = actionItemRect.top - containingDivRect.top;
-			const newTop = (topGap > thisAreaRect.height)
-				? -(thisAreaRect.height)
+			const newTop = (topGap > subAreaRect.height)
+				? -(subAreaRect.height)
 				: -(outsideBottom);
 
-			areaRef.style.top = newTop + "px";
+			subAreaRef.style.top = newTop + "px";
 		}
 
 		if (outsideRight > 0) {
-			const newLeft = isFloatingToolbar
-				? actionItemRect.width - outsideRight
+			// If one of our parent objects contains the "floating-toolbar" class, we assume
+			// the toolbar is displayed in an 'absolute' position. This changes the offset calculations
+			// for the sub-area being displayed.
+			const floatingToolbar = subAreaRef.closest(".floating-toolbar");
+
+			const newLeft = floatingToolbar
+				? actionItemRect.left - floatingToolbar.getBoundingClientRect().left - outsideRight
 				: actionItemRect.left - containingDivRect.left - outsideRight;
-			areaRef.style.left = newLeft + "px";
+			subAreaRef.style.left = newLeft + "px";
 		}
 
 	} else {
-		const outsideRight = actionItemRect.right + thisAreaRect.width - containingDivRect.right;
+		const outsideRight = actionItemRect.right + subAreaRect.width - containingDivRect.right;
 
 		if (outsideBottom > 0) {
 			const newTop = -(outsideBottom + 2);
-			areaRef.style.top = newTop + "px";
+			subAreaRef.style.top = newTop + "px";
 		}
 
 		if (outsideRight > 0) {
-			const newLeft = -(thisAreaRect.width);
-			areaRef.style.left = newLeft + "px";
+			const newLeft = -(subAreaRect.width);
+			subAreaRef.style.left = newLeft + "px";
 		}
 	}
 }
