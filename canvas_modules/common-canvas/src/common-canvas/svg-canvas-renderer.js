@@ -2828,7 +2828,7 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	getContextToolbarPos(objType, d) {
+	getDefaultContextToolbarPos(objType, d) {
 		if (objType === "link") {
 			return { ...d.pathInfo.centerPoint };
 
@@ -2843,7 +2843,7 @@ export default class SVGCanvasRenderer {
 		if (!this.isSizing() && !this.isDragging() &&
 				!this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
 			this.canvasController.setMouseInObject(d.id);
-			let pos = this.getContextToolbarPos(objType, d);
+			let pos = this.getDefaultContextToolbarPos(objType, d);
 			pos.x = xPos ? pos.x + xPos : pos.x;
 			pos.y = yPos ? pos.y + yPos : pos.y;
 			pos = this.zoomUtils.unTransformPos(pos);
