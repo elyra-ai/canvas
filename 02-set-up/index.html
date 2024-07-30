@@ -1015,18 +1015,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#loading-fonts" class="md-nav__link">
+  <a href="#3rd-party-styling" class="md-nav__link">
     <span class="md-ellipsis">
-      Loading Fonts
+      3rd party styling
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3rd-party-styling" class="md-nav__link">
+  <a href="#loading-fonts" class="md-nav__link">
     <span class="md-ellipsis">
-      3rd party styling
+      Loading Fonts
     </span>
   </a>
   
@@ -2618,18 +2618,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#loading-fonts" class="md-nav__link">
+  <a href="#3rd-party-styling" class="md-nav__link">
     <span class="md-ellipsis">
-      Loading Fonts
+      3rd party styling
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3rd-party-styling" class="md-nav__link">
+  <a href="#loading-fonts" class="md-nav__link">
     <span class="md-ellipsis">
-      3rd party styling
+      Loading Fonts
     </span>
   </a>
   
@@ -2741,14 +2741,20 @@ where x.x.x is the latest build and then run:
 <div class="highlight"><pre><span></span><code><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">includePaths</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node_modules&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 <p>Again, you can refer to the test harness <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/harness.scss">harness.scss</a> and <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss">common.scss</a> files for sample code.</p>
+<h3 id="3rd-party-styling">3rd party styling<a class="headerlink" href="#3rd-party-styling" title="Permanent link">&para;</a></h3>
+<p>If you are using Common Properties then also include the react-virtualized styles:
+  - react-virtualized/styles.css</p>
 <h3 id="loading-fonts">Loading Fonts<a class="headerlink" href="#loading-fonts" title="Permanent link">&para;</a></h3>
-<p>You may find that there is a pause in common-canvas behavior, such as when the context menu is first displayed, which is caused by fonts being loaded. This can be fixed by adding the following to the <code>.scss</code> file for your application:
+<p>To get correct and efficient display of fonts in Elyra Canvas, the build process for your application should copy the IBM Plex font files from <code>/node_modules/@ibm/plex</code>to a <code>./fonts</code> folder and the following should be added to the <code>.scss</code> file for your application:</p>
 <div class="highlight"><pre><span></span><code>@use &quot;@carbon/react&quot; as * with (
     $font-path: &quot;/fonts&quot;
 );
+
+$font-prefix: &#39;./fonts&#39;;
+@import &#39;node_modules/@ibm/plex/scss/ibm-plex.scss&#39;;
 </code></pre></div>
-The fonts will need to be imported from carbon before carbon styles and placed in a public <code>/fonts</code> directory.
-You can see an example of this in the Elyra Canvas Test Harness (which is the equivalent of a host application) in this repo. That is, the <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss">common.scss file</a> contains the lines above and the grunt build files ensures the fonts are copied from <code>/node_modules/@ibm/plex</code> to the <code>&lt;carbon fonts folder&gt;</code> directory. We added following config in <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L64">Gruntfile</a> for copying fonts -
+<p>You can see an example of this in the <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss">common.scss</a> file for the Elyra Canvas Test Harness. The Test Harness is the equivalent of a host application.</p>
+<p>The <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L64">Gruntfile</a> that builds the Test Harness contains the following, that ensures the fonts are copied from <code>/node_modules/@ibm/plex</code> to the <code>&lt;carbon fonts folder&gt;</code>:
 <div class="highlight"><pre><span></span><code>copy: {
     fonts: {
         files: [{
@@ -2760,12 +2766,9 @@ You can see an example of this in the Elyra Canvas Test Harness (which is the eq
         }]
     }
 }
-
+...
 var buildTasks = [&quot;copy:fonts&quot;];
 </code></pre></div></p>
-<h3 id="3rd-party-styling">3rd party styling<a class="headerlink" href="#3rd-party-styling" title="Permanent link">&para;</a></h3>
-<p>If you are using Common Properties then also include the react-virtualized styles:
-  - react-virtualized/styles.css</p>
 
 
 
