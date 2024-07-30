@@ -144,7 +144,7 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		const subMenuOutline = [
 			{ action: "outline-none", label: this.getLabel("texttoolbar.outlineNone"), enable: true },
-			{ action: "outline-visible", label: this.getLabel("texttoolbar.outlineSolid"), enable: true }
+			{ action: "outline-solid", label: this.getLabel("texttoolbar.outlineSolid"), enable: true }
 		];
 
 		return {
