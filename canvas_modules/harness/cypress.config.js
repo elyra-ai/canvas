@@ -12,7 +12,7 @@ module.exports = defineConfig({
 	e2e: {
 		setupNodeEvents(on, config) {
 			// `cy.log()` command's output can be seen on the screen along with test steps
-			require('@cypress/code-coverage/task')(on, config)
+			require("@cypress/code-coverage/task")(on, config)
 			on("task", {
 				log(message) {
 					console.log(message); /* eslint no-console: "off" */
@@ -22,7 +22,7 @@ module.exports = defineConfig({
 			return config;
 		},
 		baseUrl: "http://localhost:3001",
-		specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
-		supportFile: 'cypress/support/e2e.js',
+		specPattern: "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
+		supportFile: "cypress/support/e2e.js",
 	},
 });

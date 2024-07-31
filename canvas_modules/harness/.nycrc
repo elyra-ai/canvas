@@ -3,11 +3,12 @@
   "all": true,
   "reporter": [
     "html",
-    "text-summary"
+    "text-summary",
+    "l-cov"
   ],
   "include": [
     "src/**/*.js",
-    "./cypress/e2e/**/*.js"  
+    "../common-canvas/src"  
   ],
   "instrument": true,
   "sourceMap": true,
