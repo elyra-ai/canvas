@@ -1423,7 +1423,7 @@ export default class CanvasUtils {
 		default:
 		case ("font-ibm-plex-sans"): return "\"IBM Plex Sans\", sans-serif";
 		case ("font-ibm-plex-serif"): return "\"IBM Plex Serif\", serif";
-		case ("font-ibm-plex-condensed"): return "IBM Plex Condensed";
+		case ("font-ibm-plex-sans-condensed"): return "IBM Plex Sans Condensed";
 		case ("font-ibm-plex-mono"): return "\"IBM Plex Mono\", monospace";
 		case ("font-arial"): return "\"Arial\", sans-serif";
 		case ("font-comic-sans-ms"): return "\"Comic Sans MS\", sans-serif";
