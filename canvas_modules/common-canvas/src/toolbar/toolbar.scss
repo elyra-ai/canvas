@@ -72,7 +72,7 @@ $toolbar-divider-width: 1px;
 			}
 
 			& .overflow-item {
-				padding: 6px;
+				padding: 0 $spacing-03 0 0;
 			}
 
 			& .toolbar-right-chevron {
@@ -274,6 +274,7 @@ $toolbar-divider-width: 1px;
 	}
 
 	.toolbar-icon {
+		height: 16px;
 		& svg {
 			height: $toolbar-icon-size;
 			width: $toolbar-icon-size;
