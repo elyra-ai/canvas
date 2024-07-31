@@ -17,14 +17,15 @@
 /* eslint no-sparse-arrays: "off"*/
 
 import { expect } from "chai";
-import propertyUtils from "../../_utils_/property-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import hiddenParamDef from "../../test_resources/paramDefs/hidden_paramDef.json";
+import { fireEvent } from "@testing-library/react";
 
 describe("hidden control works correctly", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(hiddenParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(hiddenParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
@@ -34,29 +35,32 @@ describe("hidden control works correctly", () => {
 	});
 
 	it("validate hidden control isn't shown", () => {
+		const { container } = wrapper;
 		const hiddenPropertyId = { name: "hidden" };
-		const hiddenControl = wrapper.find("div[data-id='properties-hidden']");
+		const hiddenControl = container.querySelector("div[data-id='properties-hidden']");
 		expect(hiddenControl).not.to.be.undefined;
 		// should still set/get value correctly
 		expect(controller.getPropertyValue(hiddenPropertyId)).to.equal("hidden");
 		// expect control item for the textfield control, table in paramDef, and textfield control in table
-		expect(wrapper.find("div.properties-control-item")).to.have.length(3);
+		expect(container.querySelectorAll("div.properties-control-item")).to.have.length(3);
 	});
 
 	it("validate hidden table control isn't shown", () => {
-		const hiddenControl = wrapper.find("div[data-id='properties-hidden_table_ctl']");
+		const { container } = wrapper;
+		const hiddenControl = container.querySelector("div[data-id='properties-hidden_table_ctl']");
 		expect(hiddenControl).not.to.be.undefined;
 	});
 
 
 	it("validate hidden table control isn't shown", () => {
+		const { container } = wrapper;
 		const hiddenPropertyId = { name: "hidden_table" };
 		// validate only 1 cell value is visible
-		expect(wrapper.find("div.properties-table-cell-control")).to.have.length(1);
+		expect(container.querySelectorAll("div.properties-table-cell-control")).to.have.length(1);
 		// validate only 1 header for textfield
-		expect(wrapper.find("div.properties-vt-column")).to.have.length(1);
-		wrapper.find("button.properties-add-fields-button").simulate("click");
-		wrapper.find("div[data-id='properties-hidden_table_1_1'] input").simulate("change", { target: { value: "My new value" } });
+		expect(container.querySelectorAll("div.properties-vt-column")).to.have.length(1);
+		fireEvent.click(container.querySelector("button.properties-add-fields-button"));
+		fireEvent.change(container.querySelector("div[data-id='properties-hidden_table_1_1'] input"), { target: { value: "My new value" } });
 		expect(controller.getPropertyValue(hiddenPropertyId)).to.eql([["Hopper", "Turing"], [, "My new value"]]);
 	});
 
@@ -65,16 +69,18 @@ describe("hidden control works correctly", () => {
 describe("hidden classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(hiddenParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(hiddenParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("hidden should have custom classname defined", () => {
-		expect(wrapper.find(".hidden-control-class")).to.have.length(1);
+		const { container } = wrapper;
+		expect(container.querySelectorAll(".hidden-control-class")).to.have.length(1);
 	});
 
 	it("hidden should not have custom classname defined in table cells", () => {
+		const { container } = wrapper;
 		// hidden controls are not rendered in table, classname should not be found
-		expect(wrapper.find(".table-hidden-control-class")).to.have.length(0);
+		expect(container.querySelectorAll(".table-hidden-control-class")).to.have.length(0);
 	});
 });
