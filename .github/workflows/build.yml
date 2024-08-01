@@ -52,16 +52,6 @@ jobs:
       run: npm run --prefix canvas_modules/common-canvas test-coverage
     - name: SonarCloud Scan
       uses: sonarsource/sonarcloud-github-action@v1
-      with:
-        args: >
-          -Dsonar.organization=my-organization
-          -Dsonar.projectKey=my-projectkey
-          -Dsonar.sources=canvas_modules/common-canvas/src
-          -Dsonar.tests=canvas_modules/common-canvas/__tests__
-          -Dsonar.verbose=true
-          -Dsonar.javascript.lcov.reportPaths=canvas_modules/common-canvas/coverage/lcov.info
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   tag:
     runs-on: ubuntu-latest
