@@ -49,7 +49,7 @@ jobs:
     - name: Run tests
       run: npm run --prefix canvas_modules/common-canvas test-coverage
     - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@2.3.0
+      uses: sonarsource/sonarcloud-github-action@v1
       with:
         args: >
           -Dsonar.organization=my-organization
