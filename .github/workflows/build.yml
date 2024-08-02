@@ -50,6 +50,10 @@ jobs:
       run: npm install --prefix canvas_modules/common-canvas
     - name: Run tests
       run: npm run --prefix canvas_modules/common-canvas test-coverage
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets. SONARCLOUD_TOKEN }}
 
   tag:
     runs-on: ubuntu-latest
