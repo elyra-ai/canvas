@@ -105,7 +105,7 @@ class CommonCanvasTextToolbar extends React.Component {
 		const subMenuFont = [
 			{ action: "font-ibm-plex-sans", label: this.getLabel("texttoolbar.fontIBMPlexSans"), enable: true },
 			{ action: "font-ibm-plex-serif", label: this.getLabel("texttoolbar.fontIBMPlexSerif"), enable: true },
-			{ action: "font-ibm-plex-condensed", label: this.getLabel("texttoolbar.fontIBMPlexCon"), enable: true },
+			{ action: "font-ibm-plex-sans-condensed", label: this.getLabel("texttoolbar.fontIBMPlexSansCon"), enable: true },
 			{ action: "font-ibm-plex-mono", label: this.getLabel("texttoolbar.fontIBMPlexMono"), enable: true },
 			{ action: "font-arial", label: this.getLabel("texttoolbar.fontArial"), enable: true },
 			{ action: "font-comic-sans-ms", label: this.getLabel("texttoolbar.fontComicSansMS"), enable: true },
