@@ -41,6 +41,7 @@ jobs:
     - run: ./canvas_modules/harness/functional_test.sh
 
   sonarcloud:
+    if: github.repository == 'elyra-ai/canvas'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -54,7 +55,6 @@ jobs:
       uses: SonarSource/sonarcloud-github-action@v1
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
 
   tag:
     runs-on: ubuntu-latest
