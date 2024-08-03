@@ -55,6 +55,7 @@ jobs:
       uses: SonarSource/sonarcloud-github-action@v1
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
 
   tag:
     runs-on: ubuntu-latest
