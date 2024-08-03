@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,8 @@ class CommonCanvas extends React.Component {
 		props.canvasController.setKeyboardConfig(props.keyboardConfig);
 		props.canvasController.setToolbarConfig(props.toolbarConfig);
 		props.canvasController.setNotificationPanelConfig(props.notificationConfig);
+		props.canvasController.setLeftFlyoutConfig(
+			{ content: props.leftFlyoutContent, isOpen: props.showLeftFlyout });
 		props.canvasController.setRightFlyoutConfig(
 			{ content: props.rightFlyoutContent, isOpen: props.showRightFlyout });
 		props.canvasController.setBottomPanelConfig(

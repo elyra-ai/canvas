@@ -29,23 +29,20 @@ class PaletteFlyout extends React.Component {
 	render() {
 		let className = "palette-flyout-div";
 
-		if (this.props.showPalette) {
+		if (this.props.isPaletteWide) {
 			className += " palette-flyout-div-open";
 		} else {
-			className += " palette-flyout-div-closed";
-			if (this.props.enableNarrowPalette) {
-				className += " palette-flyout-div-narrow";
-			}
+			className += " palette-flyout-div-narrow";
 		}
 
 		return (
 			<nav aria-label={this.props.intl.formatMessage({ id: "palette.flyout.label", defaultMessage: defaultMessages["palette.flyout.label"] })} role="navigation">
 				<div className={className}>
 					<PaletteFlyoutContent
-						paletteJSON={this.props.paletteJSON}
 						canvasController={this.props.canvasController}
-						isPaletteOpen={this.props.showPalette}
+						paletteJSON={this.props.paletteJSON}
 						isEditingEnabled={this.props.isEditingEnabled}
+						isPaletteWide={this.props.isPaletteWide}
 					/>
 				</div>
 			</nav>
@@ -55,11 +52,10 @@ class PaletteFlyout extends React.Component {
 
 PaletteFlyout.propTypes = {
 	intl: PropTypes.object.isRequired,
-	paletteJSON: PropTypes.object.isRequired,
-	showPalette: PropTypes.bool.isRequired,
-	enableNarrowPalette: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	isEditingEnabled: PropTypes.bool.isRequired
+	paletteJSON: PropTypes.object.isRequired,
+	isEditingEnabled: PropTypes.bool.isRequired,
+	isPaletteWide: PropTypes.bool
 };
 
 export default injectIntl(PaletteFlyout);

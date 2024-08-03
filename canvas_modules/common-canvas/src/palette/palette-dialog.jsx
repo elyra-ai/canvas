@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 
 import React from "react";
+import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
 import defaultMessages from "../../locales/palette/locales/en.json";
@@ -199,7 +200,6 @@ class PaletteDialog extends React.Component {
 		contentDiv.style.height = newContentHeight;
 		contentDiv.childNodes[0].style.height = newContentHeight;
 		contentDiv.childNodes[1].style.height = newContentHeight;
-		contentDiv.childNodes[2].style.height = newContentHeight;
 	}
 
 	setSizingHoverEdge(ev, paletteDiv) {
@@ -311,7 +311,7 @@ class PaletteDialog extends React.Component {
 
 	movePalette(ev) {
 		const paletteDiv = this.getPaletteDiv();
-		const canvasDiv = document.getElementById(this.props.parentDivId);
+		const canvasDiv = document.getElementById(this.props.containingDivId);
 
 		let newLeft = ev.clientX - this.dragOffsetX;
 		let newTop = ev.clientY - this.dragOffsetY;
@@ -339,7 +339,7 @@ class PaletteDialog extends React.Component {
 
 	resizePalette(ev) {
 		const paletteDiv = this.getPaletteDiv();
-		const canvasDiv = document.getElementById(this.props.parentDivId);
+		const canvasDiv = document.getElementById(this.props.containingDivId);
 
 		// When manually resizing, set isMaximized to false in case the user
 		// is resizing a maximized window.
@@ -420,7 +420,7 @@ class PaletteDialog extends React.Component {
 	// into the canvas.
 	windowResize() {
 		const paletteDiv = this.getPaletteDiv();
-		const canvasDiv = document.getElementById(this.props.parentDivId);
+		const canvasDiv = document.getElementById(this.props.containingDivId);
 
 		if (canvasDiv) {
 			if (this.isMaximized) {
@@ -477,7 +477,7 @@ class PaletteDialog extends React.Component {
 	// Called when the user double clicks the title bar.
 	windowMaximize() {
 		const paletteDiv = this.getPaletteDiv();
-		const canvasDiv = document.getElementById(this.props.parentDivId);
+		const canvasDiv = document.getElementById(this.props.containingDivId);
 
 		if (canvasDiv) {
 			if (this.isMaximized) {
@@ -527,14 +527,11 @@ class PaletteDialog extends React.Component {
 	}
 
 	render() {
-		const displayValue = this.props.showPalette ? "block" : "none";
-
 		return (
 			<nav aria-label={this.props.intl.formatMessage({ id: "palette.dialog.label", defaultMessage: defaultMessages["palette.dialog.label"] })} role="navigation">
 				<div className="palette-dialog-div"
 					ref="palette"
 					onMouseDown={this.mouseDownOnPalette}
-					style={{ display: displayValue }}
 				>
 					<PaletteDialogTopbar mouseDownMethod={this.mouseDownOnTopBar}
 						showGridMethod={this.showGrid}
@@ -554,12 +551,21 @@ class PaletteDialog extends React.Component {
 }
 
 PaletteDialog.propTypes = {
+	// From injectIntl
 	intl: PropTypes.object.isRequired,
-	paletteJSON: PropTypes.object.isRequired,
-	showPalette: PropTypes.bool.isRequired,
-	parentDivId: PropTypes.string.isRequired,
+
+	// Provided by common-canvas
 	canvasController: PropTypes.object.isRequired,
-	isEditingEnabled: PropTypes.bool.isRequired
+	containingDivId: PropTypes.string.isRequired,
+
+	// Provided by redux
+	paletteJSON: PropTypes.object,
+	isEditingEnabled: PropTypes.bool
 };
 
-export default injectIntl(PaletteDialog);
+const mapStateToProps = (state, ownProps) => ({
+	paletteJSON: state.palette.content,
+	isEditingEnabled: state.canvasconfig.enableEditingActions
+});
+
+export default connect(mapStateToProps)(injectIntl(PaletteDialog));

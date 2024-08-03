@@ -37,8 +37,8 @@ $palette-search-container-height: 41px;
 }
 
 .palette-flyout-div-open {
+	width: 256px;
 	.palette-flyout-content {
-		width: 256px;
 		transition: 0.2s ease-in-out;
 	}
 }
@@ -54,6 +54,11 @@ $palette-search-container-height: 41px;
 }
 
 .palette-flyout-content {
+	display: grid;
+	grid-template-rows: auto min-content;
+	grid-template-columns: 100%;
+	max-height: 0; // Clips the height of the grid to content.
+
 	.palette-scroll {
 		overflow-y: hidden; /*prevents multiple scroll bars in flyout*/
 	}
@@ -191,11 +196,10 @@ $palette-search-container-height: 41px;
 }
 
 .palette-flyout-categories {
-	height: calc(100% - #{$palette-search-container-height});
-	width: 100%;
-	position: absolute;
 	overflow-x: hidden;
-	overflow-y: overlay;
+	overflow-y: scroll;
+	min-height: 0;
+
 	li .cds--accordion__arrow {
 		margin: 15px;
 	}
