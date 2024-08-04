@@ -88,9 +88,6 @@ const paletteSpec = {
 };
 
 function createPalette() {
-	// const closePaletteCallback = sinon.spy();
-	// const createTempNodeCallback = sinon.spy();
-	// const deleteTempNodeCallback = sinon.spy();
 	const canvasController = new CanvasController();
 
 	const popupPalette = renderWithIntl(
