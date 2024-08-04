@@ -89,13 +89,15 @@ class CommonCanvasCentralItems extends React.Component {
 		);
 	}
 
-	// Returns true if the left flyout panel should be displayed. The application
+	// Returns true if the left flyout should be displayed. The application
 	// can choose to:
-	// * use the in-built Palette behavior or
-	// * to control the left flyout panel as needed
-	// Setting the config field enablePaletteLayout to None indicates the
-	// application wants to control the left flyout panel itself.
-	isLeftFlyoutOpen() {
+	// * Use the in-built <Palette> behavior indicated by setting the
+	//   config field enablePaletteLayout to "Flyout"
+	// * To put its own contents in the left flyout panel. This is
+	//   indicated by setting the config field enablePaletteLayout to
+	//   "None" and providing some JSX in the leftFlyoutContent field
+	//   of <CommonCanvas>.
+	isLeftPanelOpen() {
 		if (this.props.enablePaletteLayout === PALETTE_LAYOUT_DIALOG) {
 			return false;
 		}
@@ -112,14 +114,19 @@ class CommonCanvasCentralItems extends React.Component {
 		return false;
 	}
 
-	// Returns a JSX object for the contents of the left flyout. If the application
-	// sets enablePaletteLayout to None this indicates the app wamts its own cntent
-	// to go into the left flyout panel.
+	// Returns a JSX object for the contents of the left panel. If the application
+	// sets enablePaletteLayout to None this indicates the app wamts its own content
+	// to go into the left panel provided by leftFlyoutContent provided to <CommonCanvas>
+	// otherwise if enablePaletteLayout is "Flyout" the app wants Common Canvas to
+	// provide the regular <Palette>.
 	generateLeftFlyout() {
-		return (this.props.enablePaletteLayout === PALETTE_LAYOUT_NONE && this.props.leftFlyoutIsOpen
-			? (<CommonCanvasLeftFlyout />)
-			: (<Palette canvasController={this.props.canvasController} />)
-		);
+		if (this.props.enablePaletteLayout === PALETTE_LAYOUT_NONE && this.props.leftFlyoutIsOpen) {
+			return (<CommonCanvasLeftFlyout />);
+
+		} else if (this.props.enablePaletteLayout === PALETTE_LAYOUT_FLYOUT) {
+			return (<Palette canvasController={this.props.canvasController} />);
+		}
+		return null;
 	}
 
 	render() {
@@ -132,7 +139,7 @@ class CommonCanvasCentralItems extends React.Component {
 			/>
 		);
 		const rightFlyout = (<CommonCanvasRightFlyout />);
-		const leftFlyoutIsOpen = this.isLeftFlyoutOpen();
+		const leftFlyoutIsOpen = this.isLeftPanelOpen();
 		const leftFlyout = leftFlyoutIsOpen ? this.generateLeftFlyout() : null;
 
 		const topCenterBottom = this.generateTopCenterBottom();
@@ -219,13 +226,11 @@ class CommonCanvasCentralItems extends React.Component {
 				templateCols += this.props.rightFlyoutIsOpen ? " auto" : "";
 
 				const centerItems = (
-					<div className="common-canvas-right-side-items">
-						<div id={this.props.containingDivId} className="common-canvas-grid-vertical"
-							style={{ gridTemplateRows: templateRows }}
-						>
-							{canvasToolbar}
-							{topCenterBottom}
-						</div>
+					<div id={this.props.containingDivId} className="common-canvas-grid-vertical"
+						style={{ gridTemplateRows: templateRows }}
+					>
+						{canvasToolbar}
+						{topCenterBottom}
 					</div>
 				);
 				panels = (
@@ -240,7 +245,7 @@ class CommonCanvasCentralItems extends React.Component {
 			}
 		}
 
-		const dialogPalette = this.props.enablePaletteLayout === PALETTE_LAYOUT_DIALOG && this.props.leftFlyoutIsOpen
+		const dialogPalette = this.props.enablePaletteLayout === PALETTE_LAYOUT_DIALOG && this.props.paletteIsOpen
 			? (<PaletteDialog canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />)
 			: null;
 

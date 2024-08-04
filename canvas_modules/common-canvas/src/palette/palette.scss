@@ -43,12 +43,6 @@ $palette-search-container-height: 41px;
 	}
 }
 
-// Center search icon when narrow palette
-.palette-flyout-div-closed {
-	transition: 0.2s ease-in-out;
-	width: 0;
-}
-
 .palette-flyout-div-narrow {
 	width: 72px;
 }
