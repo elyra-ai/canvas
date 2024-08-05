@@ -99,15 +99,26 @@ options: { includePaths: ["node_modules"] }
 Again, you can refer to the test harness [harness.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/harness.scss) and [common.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) files for sample code.
 
 
+### 3rd party styling
+
+If you are using Common Properties then also include the react-virtualized styles:
+  - react-virtualized/styles.css
+
 ### Loading Fonts
-You may find that there is a pause in common-canvas behavior, such as when the context menu is first displayed, which is caused by fonts being loaded. This can be fixed by adding the following to the `.scss` file for your application:
+To get correct and efficient display of fonts in Elyra Canvas, the build process for your application should copy the IBM Plex font files from `/node_modules/@ibm/plex`to a `./fonts` folder and the following should be added to the `.scss` file for your application:
+
 ```
 @use "@carbon/react" as * with (
 	$font-path: "/fonts"
 );
+
+$font-prefix: './fonts';
+@import 'node_modules/@ibm/plex/scss/ibm-plex.scss';
 ```
-The fonts will need to be imported from carbon before carbon styles and placed in a public `/fonts` directory.
-You can see an example of this in the Elyra Canvas Test Harness (which is the equivalent of a host application) in this repo. That is, the [common.scss file](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) contains the lines above and the grunt build files ensures the fonts are copied from `/node_modules/@ibm/plex` to the `<carbon fonts folder>` directory. We added following config in [Gruntfile](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L64) for copying fonts -
+
+You can see an example of this in the [common.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) file for the Elyra Canvas Test Harness. The Test Harness is the equivalent of a host application.
+
+The [Gruntfile](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L64) that builds the Test Harness contains the following, that ensures the fonts are copied from `/node_modules/@ibm/plex` to the `<carbon fonts folder>`:
 ```
 copy: {
 	fonts: {
@@ -120,14 +131,10 @@ copy: {
 		}]
 	}
 }
-
+...
 var buildTasks = ["copy:fonts"];
 ```
 
-### 3rd party styling
-
-If you are using Common Properties then also include the react-virtualized styles:
-  - react-virtualized/styles.css
 
 
 
