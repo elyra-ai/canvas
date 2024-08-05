@@ -17,8 +17,8 @@
 import { propertyOf } from "lodash";
 
 class Title {
-	constructor(actions) {
-		this.actions = actions;
+	constructor(title) {
+		this.actions = title.action_refs || [];
 	}
 
 	static makeTitle(uiGroup) {

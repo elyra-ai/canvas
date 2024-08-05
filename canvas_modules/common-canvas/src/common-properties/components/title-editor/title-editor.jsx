@@ -95,10 +95,10 @@ class TitleEditor extends Component {
 	}
 
 	createTitleActions() {
-		if (this.props.titleInfo) {
+		if (this.props.titleInfo && this.props.titleInfo.Title.actionIds().length > 0) {
 			this.actionFactory = new ActionFactory(this.props.controller);
 			const actions = [];
-			this.props.titleInfo.Title.actionIds().action_refs.forEach((actionRef, idx) => {
+			this.props.titleInfo.Title.actionIds().forEach((actionRef, idx) => {
 				const actionMetadata = this.props.controller.getAction({ name: actionRef });
 				const action = this.actionFactory.generateAction(`${actionRef}-${idx}`, actionMetadata);
 				actions.push(<div className="cds--css-grid-column cds--sm:col-span-4" key={`${actionRef}-${idx}`}>
