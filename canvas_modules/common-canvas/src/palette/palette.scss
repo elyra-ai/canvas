@@ -51,7 +51,6 @@ $palette-search-container-height: 41px;
 	display: grid;
 	grid-template-rows: auto 1fr;
 	grid-template-columns: 100%;
-	max-height: 0; // Clips the height of the grid to content.
 
 	.palette-scroll {
 		overflow-y: hidden; /*prevents multiple scroll bars in flyout*/
@@ -192,7 +191,6 @@ $palette-search-container-height: 41px;
 .palette-flyout-categories {
 	overflow-x: hidden;
 	overflow-y: scroll;
-	min-height: 0;
 
 	li .cds--accordion__arrow {
 		margin: 15px;
