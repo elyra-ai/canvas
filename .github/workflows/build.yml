@@ -41,9 +41,8 @@ jobs:
     - run: ./canvas_modules/harness/functional_test.sh
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
-      secrets: inherit
       env:
-        SONAR_TOKEN: ${{ secrets. SONAR_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   tag:
     runs-on: ubuntu-latest
