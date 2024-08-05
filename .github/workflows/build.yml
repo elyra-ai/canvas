@@ -39,6 +39,10 @@ jobs:
     - run: ./canvas_modules/common-canvas/build.sh
     - run: ./canvas_modules/harness/build.sh test
     - run: ./canvas_modules/harness/functional_test.sh
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets. SONAR_TOKEN }}
 
   tag:
     runs-on: ubuntu-latest
