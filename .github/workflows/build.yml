@@ -40,7 +40,7 @@ jobs:
     - run: ./canvas_modules/harness/build.sh test
     - run: ./canvas_modules/harness/functional_test.sh
     - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@master
+      uses: SonarSource/sonarcloud-github-action@v2.3.0
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
