@@ -16,7 +16,7 @@
 
 // code is a subset of expression control. Most tests are under the expression control.
 
-import propertyUtils from "../../_utils_/property-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { expect } from "chai";
 import ExpressionInfo from "../../test_resources/json/expression-function-list.json";
 import CodeParamdef from "../../test_resources/paramDefs/code_paramDef.json";
@@ -35,19 +35,22 @@ describe("code control tests", () => {
 	it("Code control doesn't render with validateLink", () => {
 		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
 		propertiesInfo.expressionInfo.validateLink = true;
-		const renderedObject = propertyUtils.flyoutEditorForm(CodeParamdef, propertiesConfig, null, propertiesInfo);
-		expect(renderedObject.wrapper.find("button.validateLink")).to.have.length(0); // no validation links should be shown for code controls
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(CodeParamdef, propertiesConfig, null, propertiesInfo);
+		const wrapper = renderedObject.wrapper;
+		const { container } = wrapper;
+		expect(container.querySelectorAll("button.validateLink")).to.have.length(0); // no validation links should be shown for code controls
 	});
 });
 
 describe("code classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(CodeParamdef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(CodeParamdef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("code should have custom classname defined", () => {
-		expect(wrapper.find(".code-control-class")).to.have.length(1);
+		const { container } = wrapper;
+		expect(container.querySelectorAll(".code-control-class")).to.have.length(1);
 	});
 });
