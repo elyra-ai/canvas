@@ -18,7 +18,7 @@
 Cypress.Commands.add("findCategory", (categoryLabel) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
-		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Dialog") {
 			cy.get(".palette-dialog-categories > div")
 				.then((categories) => {
 					let category = null;
@@ -77,7 +77,7 @@ Cypress.Commands.add("findCategoryAccordionItemButton", (categoryLabel) => {
 Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
-		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Dialog") {
 			cy.get(".palette-dialog-grid-node-inner > .palette-dialog-grid-node-text")
 				.contains(nodeLabel)
 				.parent()
@@ -116,7 +116,7 @@ Cypress.Commands.add("searchForNodeUsing", (filterText) => {
 Cypress.Commands.add("findNodeIndexInPalette", (nodeName) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
-		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Dialog") {
 			cy.get(".palette-dialog-grid-node-text")
 				.then((listItems) => {
 					let nodeIndex = -1;

@@ -25,17 +25,17 @@ describe("Testing top panel", function() {
 		cy.verifyTopPanelHeight(97);
 		cy.verifyTopPanelWidth(1328);
 
-		// Test top panel is decreased in size successfully with right flyout open
+		// Test top panel stays same size with right flyout open
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
-		cy.verifyTopPanelHeight(113);
-		cy.verifyTopPanelWidth(814);
+		cy.verifyTopPanelHeight(97);
+		cy.verifyTopPanelWidth(1028);
 
-		// Test top panel is decreased in size successfully with palette open.
+		// Test top panel stays same size with palette open.
 		cy.clickToolbarPaletteOpen();
-		cy.verifyTopPanelHeight(113);
-		cy.verifyTopPanelWidth(659);
+		cy.verifyTopPanelHeight(97);
+		cy.verifyTopPanelWidth(844);
 
-		// Test top panel is decreased in size successfully with palette open and right flyout closed
+		// Test top panel stays same size with palette open and right flyout closed
 		cy.setCanvasConfig({ "selectedShowRightFlyout": false });
 		cy.verifyTopPanelHeight(97);
 		cy.verifyTopPanelWidth(1143);

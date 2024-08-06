@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -170,11 +170,11 @@ describe("Palette renders correctly", () => {
 
 		const importCat = getByText("Import");
 		fireEvent.click(importCat);
-		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
-			showPalette
+		rerender(<PaletteFlyout
+			paletteJSON={canvasController.getPaletteData()}
 			canvasController={canvasController}
 			isEditingEnabled
-			enableNarrowPalette
+			isPaletteWide
 		/>);
 
 		expect(container.querySelectorAll(".palette-content-list")).to.have.length(1);
@@ -188,10 +188,9 @@ describe("Palette renders correctly", () => {
 		fireEvent.click(outputsCat);
 		rerender(<PaletteFlyout
 			paletteJSON={canvasController.getPaletteData()}
-			showPalette
 			canvasController={canvasController}
 			isEditingEnabled
-			enableNarrowPalette
+			isPaletteWide
 		/>);
 
 		expect(container.querySelectorAll(".palette-content-list")).to.have.length(2);
@@ -209,20 +208,18 @@ describe("Palette renders correctly", () => {
 		fireEvent.click(importCat);
 
 		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
-			showPalette
 			canvasController={canvasController}
 			isEditingEnabled
-			enableNarrowPalette
+			isPaletteWide
 		/>);
 
 		const outputsCat = getByText("Outputs");
 		fireEvent.click(outputsCat);
 
 		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
-			showPalette
 			canvasController={canvasController}
 			isEditingEnabled
-			enableNarrowPalette
+			isPaletteWide
 		/>);
 
 		expect(container.getElementsByClassName("palette-content-list")).to.have.length(2);
@@ -235,10 +232,9 @@ describe("Palette renders correctly", () => {
 		const importCat2 = getByText("Import");
 		fireEvent.click(importCat2);
 		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
-			showPalette
 			canvasController={canvasController}
 			isEditingEnabled
-			enableNarrowPalette
+			isPaletteWide
 		/>);
 
 		// When the Import category is closed and the Outputs category is opened
@@ -259,10 +255,9 @@ describe("Palette renders correctly", () => {
 
 		canvasController.openAllPaletteCategories();
 		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
-			showPalette
 			canvasController={canvasController}
 			isEditingEnabled
-			enableNarrowPalette
+			isPaletteWide
 		/>);
 
 		expect(container.getElementsByClassName("palette-content-list")).to.have.length(2);
@@ -272,10 +267,9 @@ describe("Palette renders correctly", () => {
 
 		canvasController.closeAllPaletteCategories();
 		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
-			showPalette
 			canvasController={canvasController}
 			isEditingEnabled
-			enableNarrowPalette
+			isPaletteWide
 		/>);
 
 		expect(container.getElementsByClassName("palette-content-list")).to.have.length(0);
@@ -321,16 +315,6 @@ describe("Palette renders correctly", () => {
 		expect(container.getElementsByClassName("palette-flyout-div-open")).to.have.length(1);
 	});
 
-	it("palette should be hidden", () => {
-		const config = {
-			showNarrowPalette: false,
-			showPalette: false
-		};
-		const { container } = createMountedPalette(config);
-
-		expect(container.getElementsByClassName("palette-flyout-div-closed")).to.have.length(1);
-	});
-
 	it("open palette should show correct values for category and node with and without an image", () => {
 		const canvasController = new CanvasController();
 		const config = {
@@ -346,10 +330,9 @@ describe("Palette renders correctly", () => {
 		fireEvent.click(category);
 
 		rerender(<PaletteFlyout paletteJSON={canvasController.getPaletteData()}
-			showPalette
 			canvasController={canvasController}
 			isEditingEnabled
-			enableNarrowPalette
+			isPaletteWide
 		/>);
 
 		expect(container.getElementsByClassName("palette-list-item-icon-and-text")).to.have.length(2);
@@ -375,10 +358,9 @@ describe("Palette renders correctly", () => {
 
 		rerender(<PaletteFlyout
 			paletteJSON={canvasController.getPaletteData()}
-			showPalette
 			canvasController={canvasController}
 			isEditingEnabled
-			enableNarrowPalette
+			isPaletteWide
 		/>);
 
 		expect(container.getElementsByClassName("palette-list-item-icon-and-text")).to.have.length(2);
@@ -391,20 +373,17 @@ describe("Palette renders correctly", () => {
 
 function createMountedPalette(config) {
 	const canvasController = (config && config.canvasController) ? config.canvasController : new CanvasController();
-	const showPalette = (config && typeof config.showPalette === "boolean") ? config.showPalette : true;
 	const palette = (config && config.palette) ? config.palette : testPalette2;
 	const isEditingEnabled = (config && config.isEditingEnabled) ? config.isEditingEnabled : true;
-	const enableNarrowPalette = (config && config.enableNarrowPalette) ? config.enableNarrowPalette : true;
 
 	canvasController.setPipelineFlowPalette(palette);
 
 	const wrapper = renderWithIntl(
 		<PaletteFlyout
 			paletteJSON={palette}
-			showPalette={showPalette}
 			canvasController={canvasController}
 			isEditingEnabled={isEditingEnabled}
-			enableNarrowPalette={enableNarrowPalette}
+			isPaletteWide
 		/>
 	);
 	return wrapper;

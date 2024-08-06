@@ -93,7 +93,7 @@ class PaletteDialogContent extends React.Component {
 					category={category}
 					nodeTypeInfos={nodeTypeInfos}
 					canvasController={this.props.canvasController}
-					isPaletteOpen
+					isPaletteWide
 					isEditingEnabled={this.props.isEditingEnabled}
 				/>);
 		return (

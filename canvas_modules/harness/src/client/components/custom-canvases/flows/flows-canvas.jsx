@@ -51,6 +51,7 @@ export default class FlowsCanvas extends React.Component {
 			enableDropZoneOnExternalDrag: true,
 			enableContextToolbar: true,
 			enableHighlightNodeOnNewLinkDrag: true,
+			enableRightFlyoutUnderToolbar: true,
 			tipConfig: {
 				palette: true,
 				nodes: true,

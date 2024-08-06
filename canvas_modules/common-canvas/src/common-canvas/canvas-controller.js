@@ -170,6 +170,11 @@ export default class CanvasController {
 		this.objectModel.setNotificationPanelConfig(config);
 	}
 
+	setLeftFlyoutConfig(config) {
+		this.logger.log("Setting Left Flyout Config");
+		this.objectModel.setLeftFlyoutConfig(config);
+	}
+
 	setRightFlyoutConfig(config) {
 		this.logger.log("Setting Right Flyout Config");
 		this.objectModel.setRightFlyoutConfig(config);
@@ -1663,6 +1668,10 @@ export default class CanvasController {
 
 	toggleNotificationPanel() {
 		this.objectModel.toggleNotificationPanel();
+	}
+
+	isLeftFlyoutOpen() {
+		return this.objectModel.isLeftFlyoutOpen();
 	}
 
 	isRightFlyoutOpen() {

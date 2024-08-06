@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,23 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { CommonCanvas, CanvasController, Palette } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
-import { Edit } from "@carbon/react/icons";
+import { Edit, OpenPanelFilledLeft, Search } from "@carbon/react/icons";
 
 import MultiCommandPanel from "./multi-command-panel";
 
 import StagesFlow from "./stages-flow.json";
 import StagesPalette from "../../../../../test_resources/palettes/stagesPalette.json";
 
-export default class DetachedCanvas extends React.Component {
+export default class StagesCanvas extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			leftFlyout: null
+		};
+
 		this.canvasController = new CanvasController();
 		this.canvasController.setPipelineFlow(StagesFlow);
 		this.canvasController.setPipelineFlowPalette(StagesPalette);
@@ -52,6 +57,9 @@ export default class DetachedCanvas extends React.Component {
 	getToolbarConfig() {
 		const toolbarConfig = {
 			leftBar: [
+				{ action: "left-flyout-palette", enable: true, iconEnabled: (<OpenPanelFilledLeft size={32} />) },
+				{ action: "left-flyout-search", enable: true, iconEnabled: (<Search size={32} />) },
+				{ divider: true },
 				{ action: "undo",
 					label: "Undo",
 					purpose: "dual",
@@ -84,6 +92,10 @@ export default class DetachedCanvas extends React.Component {
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "stages",
 			enableNodeFormatType: "Vertical",
+			enablePaletteLayout: "None",
+			enableNarrowPalette: false,
+			enableLeftFlyoutUnderToolbar: true,
+			enableRightFlyoutUnderToolbar: true,
 			enableLinkType: "Straight",
 			enableLinkMethod: "Freeform",
 			enableLinkDirection: "LeftRight",
@@ -102,8 +114,6 @@ export default class DetachedCanvas extends React.Component {
 			enableMarkdownInComments: true,
 			enableContextToolbar: true,
 			enableResizableNodes: true,
-			enableNarrowPalette: false,
-			paletteInitialState: true,
 			tipConfig: {
 				palette: true,
 				nodes: true,
@@ -191,7 +201,23 @@ export default class DetachedCanvas extends React.Component {
 	}
 
 	editActionHandler(data, command) {
-		if (data.editType === "linkNodes") {
+		if (data.editType === "left-flyout-palette") {
+			if (this.state.leftFlyout === "palette") {
+				this.setState({ leftFlyout: null });
+
+			} else {
+				this.setState({ leftFlyout: "palette" });
+			}
+
+		} else if (data.editType === "left-flyout-search") {
+			if (this.state.leftFlyout === "search") {
+				this.setState({ leftFlyout: null });
+
+			} else {
+				this.setState({ leftFlyout: "search" });
+			}
+
+		} else if (data.editType === "linkNodes") {
 			this.createDecorations(data.linkIds[0]);
 
 		} else if (data.editType === "redo" && command.data.editType === "linkNodes") {
@@ -249,6 +275,22 @@ export default class DetachedCanvas extends React.Component {
 		const config = this.getConfig();
 		const toolbarConfig = this.getToolbarConfig();
 
+		let showLeftFlyout = false;
+		let leftFlyoutContent = null;
+
+		if (this.state.leftFlyout === "palette") {
+			showLeftFlyout = true;
+			leftFlyoutContent = (<Palette canvasController={this.canvasController} />);
+
+		} else if (this.state.leftFlyout === "search") {
+			showLeftFlyout = true;
+			leftFlyoutContent = (
+				<div style={{ width: "300px", padding: "20px" }}>
+					This panel could contain Search controls to provde a sophisticated search experience.
+				</div>
+			);
+		}
+
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
@@ -257,11 +299,13 @@ export default class DetachedCanvas extends React.Component {
 				contextMenuHandler={this.contextMenuHandler}
 				toolbarConfig={toolbarConfig}
 				config={config}
+				showLeftFlyout={showLeftFlyout}
+				leftFlyoutContent={leftFlyoutContent}
 			/>
 		);
 	}
 }
 
-DetachedCanvas.propTypes = {
+StagesCanvas.propTypes = {
 	config: PropTypes.object
 };

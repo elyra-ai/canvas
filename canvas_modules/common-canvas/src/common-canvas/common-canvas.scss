@@ -35,20 +35,6 @@ $panel-border-color: $border-subtle-01;
 	font-size: 14px;
 }
 
-.common-canvas-items-container {
-	height: 100%;
-	position: relative;
-	width: 100%;
-	display: grid;
-	grid-template-columns: 1fr;
-	/* grid-template-rows is set dynamically in cc-central-items */
-}
-
-.common-canvas-right-side-items {
-	width: 100%;
-	display: flex;
-}
-
 .common-canvas-drop-div {
 	height: 100%;
 	width: 100%;
@@ -58,9 +44,14 @@ $panel-border-color: $border-subtle-01;
 	position: relative; // This allows the State Tag to have positio: absolute
 }
 
+.left-flyout-panel,
 .right-flyout-panel {
-	height: 100%;
-	position: relative;
+	// This combination of height and min-height enable scrolling in the child panel,
+	// I believe this is because it sets a specific height on the CSS grid cell,
+	// so the contents of the panel can adjust themselves to the height accordingly.
+	height: 0;
+	min-height: 100%;
+
 	user-select: none; /* Prevent elements from being selectable */
 	background-color: $layer-01;
 }
@@ -172,31 +163,25 @@ $panel-border-color: $border-subtle-01;
 	}
 }
 
-/* Alternative layout for common-canvas components where canvas and right-side
- * flyout appear under the toolbar and the right-side flyout does not compress
- * the toolbar when it is opened. These are used when the config field
- * enableRightFlyoutUnderToolbar is true. */
+/* Styles for Grid layout of Common Canvas panels: toolbar panel, top panel
+ * bottom panel, left flyout and right flyout. Left flyout and right flyout
+ * can appear under the toolbar or at the side of the toolbar.
+ */
 
-.common-canvas-right-side-items-under-toolbar {
-	display: grid;
-	/* grid-template-rows is set dynamically in cc-central-items */
-	grid-template-columns: 1fr;
-	width: 100%;
-}
-
-.common-canvas-items-container-under-toolbar {
+.common-canvas-grid-vertical {
 	height: 100%;
 	width: 100%;
 	display: grid;
-	grid-template-rows: 1fr auto;
-	/* grid-template-columns is set dynamically in cc-central-items */
+	/* grid-template-rows is set dynamically in cc-panels.jsx */
+	grid-template-columns: 1fr;
 }
 
-.common-canvas-with-top-and-bottom-panel {
+.common-canvas-grid-horizontal {
+	height: 100%;
 	width: 100%;
 	display: grid;
-	/* grid-template-rows is set dynamically in cc-central-items */
-	grid-template-columns: 1fr;
+	grid-template-rows: 1fr;
+	/* grid-template-columns is set dynamically in cc-panels.jsx */
 }
 
 /* Styles for empty canvas objects */
