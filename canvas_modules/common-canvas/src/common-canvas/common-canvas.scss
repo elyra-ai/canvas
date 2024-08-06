@@ -172,7 +172,7 @@ $panel-border-color: $border-subtle-01;
 	height: 100%;
 	width: 100%;
 	display: grid;
-	/* grid-template-rows is set dynamically in cc-central-items */
+	/* grid-template-rows is set dynamically in cc-panels.jsx */
 	grid-template-columns: 1fr;
 }
 
@@ -181,7 +181,7 @@ $panel-border-color: $border-subtle-01;
 	width: 100%;
 	display: grid;
 	grid-template-rows: 1fr;
-	/* grid-template-columns is set dynamically in cc-central-items */
+	/* grid-template-columns is set dynamically in cc-panels.jsx */
 }
 
 /* Styles for empty canvas objects */

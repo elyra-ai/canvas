@@ -18,7 +18,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
-import CommonCanvasCentralItems from "./cc-central-items.jsx";
+import CommonCanvasPanels from "./cc-panels.jsx";
 import Logger from "../logging/canvas-logger.js";
 
 
@@ -77,7 +77,7 @@ class CommonCanvas extends React.Component {
 
 		return (
 			<Provider store={this.props.canvasController.getStore()}>
-				<CommonCanvasCentralItems canvasController={this.props.canvasController} containingDivId={this.containingDivId} />
+				<CommonCanvasPanels canvasController={this.props.canvasController} containingDivId={this.containingDivId} />
 			</Provider>
 		);
 	}
