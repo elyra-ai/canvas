@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-import propertyUtils from "../../_utils_/property-utils";
-import tableUtils from "./../../_utils_/table-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
+import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import { expect } from "chai";
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
+import { fireEvent } from "@testing-library/react";
 
 
 describe("Condition allow_change test cases", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
@@ -34,13 +35,14 @@ describe("Condition allow_change test cases", () => {
 
 
 	it("Test the not allow a change to a field.", () => {
-		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
+		const { container } = wrapper;
+		let summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
 
 		// select the first row in the table
-		const tableRows = tableUtils.getTableRows(summaryPanel);
+		const tableRows = tableUtilsRTL.getTableRows(summaryPanel);
 		expect(tableRows).to.have.length(4);
-		tableRows.at(0).simulate("click");
-		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
+		fireEvent.click(tableRows[0]);
+		summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
 
 		const sportPropertyId = {
 			name: "ST_mse_table",
@@ -56,20 +58,22 @@ describe("Condition allow_change test cases", () => {
 		expect(controller.getPropertyValue(textPropertyId)).to.equal("European");
 
 		// attempt to change the sport field to "Football"
-		const toggleWrapper = wrapper.find("div[data-id='properties-ST_mse_table_0_2']");
-		const button = toggleWrapper.find("button");
-		button.simulate("click");
+		const toggleWrapper = container.querySelector("div[data-id='properties-ST_mse_table_0_2']");
+		const button = toggleWrapper.querySelector("button");
+		fireEvent.click(button);
 		// change is not allowed.
 		expect(controller.getPropertyValue(sportPropertyId)).to.equal("Soccer");
 	});
 	it("Test the allow a change to a field.", () => {
-		let summaryPanel = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
+		const { container } = wrapper;
+		let summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
 
 		// select the first row in the table
-		const tableRows = tableUtils.getTableRows(summaryPanel);
+		const tableRows = tableUtilsRTL.getTableRows(summaryPanel);
 		expect(tableRows).to.have.length(4);
-		tableRows.at(0).simulate("click");
-		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
+		fireEvent.click(tableRows[0]);
+		// tableRows.at(0).simulate("click");
+		summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
 
 		const sportPropertyId = {
 			name: "ST_mse_table",
@@ -85,9 +89,9 @@ describe("Condition allow_change test cases", () => {
 		expect(controller.getPropertyValue(textPropertyId)).to.equal("Canadian");
 
 		// attempt to change the sport field to "Football"
-		const toggleWrapper = wrapper.find("div[data-id='properties-ST_mse_table_2_2']");
-		const button = toggleWrapper.find("button");
-		button.simulate("click");
+		const toggleWrapper = container.querySelector("div[data-id='properties-ST_mse_table_2_2']");
+		const button = toggleWrapper.querySelector("button");
+		fireEvent.click(button);
 		// change is allowed.
 		expect(controller.getPropertyValue(sportPropertyId)).to.equal("Football");
 	});

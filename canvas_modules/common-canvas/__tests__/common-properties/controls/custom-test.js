@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-import propertyUtils from "../../_utils_/property-utils";
-import tableUtils from "./../../_utils_/table-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
+import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import customControlParamDef from "../../test_resources/paramDefs/custom-ctrl-op_paramDef.json";
 import { expect } from "chai";
+import { fireEvent } from "@testing-library/react";
 
 describe("custom control renders correctly", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(customControlParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(customControlParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
@@ -33,67 +34,71 @@ describe("custom control renders correctly", () => {
 	});
 
 	it("should show the correct custom controls", () => {
-		const customToggles = wrapper.find("div.custom-toggle");
+		const { container } = wrapper;
+		const customToggles = container.querySelectorAll("div.custom-toggle");
 		expect(customToggles).to.have.length(3);// includes table toggles
-		const tableCustomToggles = tableUtils.getTableRows(wrapper.find("div[data-id='properties-structuretable']"));
+		const tableCustomToggles = tableUtilsRTL.getTableRows(container.querySelector("div[data-id='properties-structuretable']"));
 		expect(tableCustomToggles).to.have.length(2);
 		// This summary text comes from the custom control
-		const cellText = wrapper.find("span.properties-field-type div.text");
+		const cellText = container.querySelectorAll("span.properties-field-type div.text");
 		expect(cellText).to.have.length(2);
-		expect(cellText.at(0).text()).to.equal("20-low");
-		expect(cellText.at(1).text()).to.equal("50-high");
+		expect(cellText[0].textContent).to.equal("20-low");
+		expect(cellText[1].textContent).to.equal("50-high");
 	});
 
 	it("updating custom controls should work correctly", () => {
-		let tableToggle = wrapper.find("button#structuretable_1_1");
-		tableToggle.simulate("click");
-		const customToggle = wrapper.find("button#custom_toggle");
-		customToggle.simulate("click");
+		const { container } = wrapper;
+		let tableToggle = container.querySelector("button#structuretable_1_1");
+		fireEvent.click(tableToggle);
+		const customToggle = container.querySelector("button#custom_toggle");
+		fireEvent.click(customToggle);
 		expect(controller.getPropertyValue({ name: "custom_toggle" })).to.equal(false);
 		expect(controller.getPropertyValue({ name: "structuretable", row: 1, col: 1 })).to.equal(false);
 		expect(controller.getPropertyValue({ name: "structuretable", row: 0, col: 1 })).to.equal(false);
-		tableToggle = wrapper.find("button#structuretable_0_1");
-		tableToggle.simulate("click");
+		tableToggle = container.querySelector("button#structuretable_0_1");
+		fireEvent.click(tableToggle);
 		expect(controller.getPropertyValue({ name: "structuretable", row: 0, col: 1 })).to.equal(true);
 	});
 
 	it("validate custom table is rendered below standard table", () => {
-		let customTable = wrapper.find("div.custom-table");
+		const { container } = wrapper;
+		let customTable = container.querySelectorAll("div.custom-table");
 		expect(customTable).to.have.length(0);
-		const tableData = tableUtils.getTableRows(wrapper);
-		tableUtils.selectCheckboxes(tableData, [0]);
-		customTable = wrapper.find("div.custom-table");
+		const tableData = tableUtilsRTL.getTableRows(container);
+		tableUtilsRTL.selectCheckboxes(tableData, [0]);
+		customTable = container.querySelectorAll("div.custom-table");
 		expect(customTable).to.have.length(1);
-		const rows = customTable.find("tr");
+		const rows = customTable[0].querySelectorAll("tr");
 		// table should have 1 data row and a header row
 		expect(rows).to.have.length(2);
 	});
 
 	it("validate changing toggle value (custom control) changes enum values", () => {
+		const { container } = wrapper;
 		// select the first item
-		let dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
-		const dropdownButton = dropdownWrapper.find("button");
-		dropdownButton.simulate("click"); // open dropdown
-		dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
-		let dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		let dropdownWrapper = container.querySelector("div[data-id='properties-colors']");
+		const dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton); // open dropdown
+		dropdownWrapper = container.querySelector("div[data-id='properties-colors']");
+		let dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(1); // should have 1 item. Before custom toggle changes
 
-		const customToggle = wrapper.find("div[data-id='properties-ci-custom_toggle']");
+		const customToggle = container.querySelectorAll("div[data-id='properties-ci-custom_toggle']");
 		expect(customToggle).to.have.length(1);
-		const toggle = customToggle.find("button");
-		toggle.simulate("click");
-		dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
+		const toggle = customToggle[0].querySelector("button");
+		fireEvent.click(toggle);
+		// toggle.simulate("click");
+		dropdownWrapper = container.querySelector("div[data-id='properties-colors']");
 
 		// select the first item
-		dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
-		dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		dropdownWrapper = container.querySelector("div[data-id='properties-colors']");
+		dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(3); // should have 3 items. Custom toggle control updates the values
 
-		toggle.simulate("click");
-
+		fireEvent.click(toggle);
 		// select the first item
-		dropdownWrapper = wrapper.find("div[data-id='properties-colors']");
-		dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		dropdownWrapper = container.querySelector("div[data-id='properties-colors']");
+		dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(2); // should have 2 items. Custom toggle control updates the values
 	});
 });
@@ -101,16 +106,18 @@ describe("custom control renders correctly", () => {
 describe("custom control classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(customControlParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(customControlParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("custom control should have custom classname defined", () => {
-		expect(wrapper.find(".custom-control-class")).to.have.length(1);
+		const { container } = wrapper;
+		expect(container.querySelectorAll(".custom-control-class")).to.have.length(1);
 	});
 
 	it("custom control should have custom classname defined in table cells", () => {
-		expect(wrapper.find(".table-custom-control-class")).to.have.length(2);
-		expect(wrapper.find(".table-on-panel-custom-control-class")).to.have.length(2);
+		const { container } = wrapper;
+		expect(container.querySelectorAll(".table-custom-control-class")).to.have.length(2);
+		expect(container.querySelectorAll(".table-on-panel-custom-control-class")).to.have.length(2);
 	});
 });
