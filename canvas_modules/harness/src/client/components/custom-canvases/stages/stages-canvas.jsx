@@ -170,6 +170,8 @@ export default class StagesCanvas extends React.Component {
 				linkEndHandleWidth: 20,
 				linkEndHandleHeight: 20,
 				linkHandleRaiseToTop: true,
+				linkContextToolbarPosX: 0,
+				linkContextToolbarPosY: -15,
 				linkLengthForAltDecorations: 150,
 				linkAltDecorations: [
 					{ id: "alt-123", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background" },
