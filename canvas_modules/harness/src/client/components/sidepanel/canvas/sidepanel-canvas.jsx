@@ -653,7 +653,7 @@ export default class SidePanelForms extends React.Component {
 		var enableShowLeftFlyout = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedShowLeftFlyout" // Set ID to corresponding field in App.js state
-				labelText={<div>Open Left Flyout<br />Only applicable whne Palette Layout is None</div>}
+				labelText="Open Left Flyout (Only applicable when Palette Layout is set to None)}"
 				toggled={this.props.getStateValue("selectedShowLeftFlyout")}
 				onToggle={(val) => this.setStateValue(val, "selectedShowLeftFlyout")}
 			/>
