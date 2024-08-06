@@ -4282,7 +4282,9 @@ export default class SVGCanvasRenderer {
 			.on("mouseleave", (d3Event, link) => {
 				const targetObj = d3Event.currentTarget;
 
-				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes) {
+				// isEditingText is used to check whether Label Decoration is in Edit Mode
+				// to avoid Decoration Textarea to be closed on mouseleave.
+				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes && !this.isEditingText()) {
 					this.lowerLinkToBottom(targetObj);
 				}
 				this.setLinkLineStyles(targetObj, link, "default");
