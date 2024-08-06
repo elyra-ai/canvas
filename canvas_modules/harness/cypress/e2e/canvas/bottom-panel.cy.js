@@ -23,7 +23,7 @@ describe("Testing bottom panel", function() {
 	it("Testing bottom panel sizing", function() {
 		// Test bottom panel is reduced in size successfully
 		cy.moveBottomPanelDivider(500);
-		cy.verifyBottomPanelHeight(210.99441528320312);
+		cy.verifyBottomPanelHeight(211);
 		cy.verifyBottomPanelWidth(1328);
 
 		// Test bottom panel is increased in size successfully
@@ -41,7 +41,7 @@ describe("Testing bottom panel", function() {
 	it("Testing bottom panel max height", function() {
 		// Test bottom panel does not exceed max-size successfully
 		cy.moveBottomPanelDivider(50);
-		cy.verifyBottomPanelHeight(650.1281127929688);
+		cy.verifyBottomPanelHeight(650);
 
 		// Test bottom panel does not exceed max-size successfully with the right flyout open
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
@@ -53,12 +53,12 @@ describe("Testing bottom panel", function() {
 	it("Testing bottom panel min height", function() {
 		// Test bottom panel does not go under the min-size
 		cy.moveBottomPanelDivider(640);
-		cy.verifyBottomPanelHeight(74.998046875);
+		cy.verifyBottomPanelHeight(75);
 
 		// Test bottom panel does not go under the min-size with the right flyout open
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
 		cy.moveBottomPanelDivider(640);
-		cy.verifyBottomPanelHeight(74.998046875);
+		cy.verifyBottomPanelHeight(75);
 		cy.verifyBottomPanelWidth(1028);
 	});
 

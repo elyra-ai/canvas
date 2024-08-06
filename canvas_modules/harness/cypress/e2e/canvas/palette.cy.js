@@ -95,15 +95,15 @@ describe("Test adding node type to palette Flyout Panel", function() {
 	});
 });
 
-describe("Test adding node type to palette Modal Panel", function() {
+describe("Test adding node type to palette Dialog Panel", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedPaletteLayout": "Modal" });
+		cy.setCanvasConfig({ "selectedPaletteLayout": "Dialog" });
 		cy.clickToolbarPaletteOpen();
 		cy.openCanvasAPI("Add PaletteItem");
 	});
 
-	it("Test adding node type to palette Modal Panel", function() {
+	it("Test adding node type to palette Dialog Panel", function() {
 		cy.setCategoryId("newCategory");
 		cy.setCategoryName("New Category");
 		cy.submitAPI();
@@ -127,16 +127,16 @@ describe("Test adding node type to existing category to palette Flyout Panel", f
 	});
 });
 
-describe("Test adding node type to existing category to palette Modal Panel", function() {
+describe("Test adding node type to existing category to palette Dialog Panel", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedPaletteLayout": "Modal" });
+		cy.setCanvasConfig({ "selectedPaletteLayout": "Dialog" });
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.clickToolbarPaletteOpen();
 		cy.openCanvasAPI("Add PaletteItem");
 	});
 
-	it("Test adding node type to existing category to palette Modal Panel", function() {
+	it("Test adding node type to existing category to palette Dialog Panel", function() {
 		cy.setCategoryId("output");
 		cy.submitAPI();
 		cy.verifyNodeIsAddedInPaletteCategory("Custom Node Type", "Outputs");
@@ -223,15 +223,15 @@ describe("Test aspect ratio of images is preserved", function() {
 	});
 });
 
-describe("Test nodes in Modal palette have data-id attribute", function() {
+describe("Test nodes in Dialog palette have data-id attribute", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedPaletteLayout": "Modal" });
+		cy.setCanvasConfig({ "selectedPaletteLayout": "Dialog" });
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.clickToolbarPaletteOpen();
 	});
 
-	it("Nodes in Modal palette should have data-id attribute", function() {
+	it("Nodes in Dialog palette should have data-id attribute", function() {
 		cy.clickCategory("Import");
 		cy.verifyNodeHasDataId("Var. File", "variablefile", "Import");
 		cy.verifyNodeHasDataId("Database", "database", "Import");
