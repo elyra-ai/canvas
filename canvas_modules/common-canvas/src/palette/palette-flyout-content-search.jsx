@@ -40,7 +40,7 @@ class PaletteFlyoutContentSearch extends React.Component {
 	}
 
 	searchOnClick() {
-		if (!this.props.isPaletteOpen) {
+		if (!this.props.isPaletteWide) {
 			this.props.canvasController.openPalette();
 		}
 	}
@@ -69,7 +69,7 @@ class PaletteFlyoutContentSearch extends React.Component {
 PaletteFlyoutContentSearch.propTypes = {
 	intl: PropTypes.object.isRequired,
 	handleSearchStringChange: PropTypes.func.isRequired,
-	isPaletteOpen: PropTypes.bool.isRequired,
+	isPaletteWide: PropTypes.bool,
 	canvasController: PropTypes.object.isRequired
 };
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@ import {
 	UNDERLAY_NONE,
 	UNDERLAY_VARIABLE,
 	PALETTE_LAYOUT_FLYOUT,
-	PALETTE_LAYOUT_MODAL,
+	PALETTE_LAYOUT_DIALOG,
 	PALETTE_LAYOUT_NONE,
 	TOOLBAR_LAYOUT_NONE,
 	TOOLBAR_LAYOUT_TOP
@@ -650,6 +650,16 @@ export default class SidePanelForms extends React.Component {
 			</div>
 		</div>);
 
+		var enableShowLeftFlyout = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedShowLeftFlyout" // Set ID to corresponding field in App.js state
+				labelText={<div>Open Left Flyout<br />Only applicable whne Palette Layout is None</div>}
+				toggled={this.props.getStateValue("selectedShowLeftFlyout")}
+				onToggle={(val) => this.setStateValue(val, "selectedShowLeftFlyout")}
+			/>
+		</div>);
+
+
 		var enableShowRightFlyout = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedShowRightFlyout" // Set ID to corresponding field in App.js state
@@ -728,6 +738,15 @@ export default class SidePanelForms extends React.Component {
 				labelText="Enable Browser Edit Menu"
 				toggled={this.props.getStateValue("selectedBrowserEditMenu")}
 				onToggle={(val) => this.setStateValue(val, "selectedBrowserEditMenu")}
+			/>
+		</div>);
+
+		var enableLeftFlyoutUnderToolbar = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedLeftFlyoutUnderToolbar" // Set ID to corresponding field in App.js state
+				labelText="Enable Left Flyout Under Toolbar"
+				toggled={this.props.getStateValue("selectedLeftFlyoutUnderToolbar")}
+				onToggle={(val) => this.setStateValue(val, "selectedLeftFlyoutUnderToolbar")}
 			/>
 		</div>);
 
@@ -1291,8 +1310,8 @@ export default class SidePanelForms extends React.Component {
 						labelText={PALETTE_LAYOUT_FLYOUT}
 					/>
 					<RadioButton
-						value={PALETTE_LAYOUT_MODAL}
-						labelText={PALETTE_LAYOUT_MODAL}
+						value={PALETTE_LAYOUT_DIALOG}
+						labelText={PALETTE_LAYOUT_DIALOG}
 					/>
 					<RadioButton
 						value={PALETTE_LAYOUT_NONE}
@@ -1692,6 +1711,12 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{toolbarType}
 					{divider}
+					<div className="harness-side-panel-header">Left Flyout</div>
+					{divider}
+					{enableShowLeftFlyout}
+					{divider}
+					{enableLeftFlyoutUnderToolbar}
+					{divider}
 					<div className="harness-side-panel-header">Right Flyout</div>
 					{divider}
 					{enableShowRightFlyout}
@@ -1700,13 +1725,13 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enablePositionNodeOnRightFlyoutOpen}
 					{divider}
-					<div className="harness-side-panel-header">Bottom Panel</div>
-					{divider}
-					{enableShowBottomPanel}
-					{divider}
 					<div className="harness-side-panel-header">Top Panel</div>
 					{divider}
 					{enableShowTopPanel}
+					{divider}
+					<div className="harness-side-panel-header">Bottom Panel</div>
+					{divider}
+					{enableShowBottomPanel}
 					{divider}
 					<div className="harness-side-panel-header">Context Menu</div>
 					{divider}

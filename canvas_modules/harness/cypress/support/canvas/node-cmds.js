@@ -324,7 +324,7 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 	cy.document().then((doc) => {
 		const dataTransfer = new DataTransfer();
 		// Palette Layout - Modal
-		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Dialog") {
 			// drag the node to the canvas
 			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel)
 				.trigger("mousedown");

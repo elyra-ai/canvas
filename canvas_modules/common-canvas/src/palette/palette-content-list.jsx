@@ -37,7 +37,7 @@ class PaletteContentList extends React.Component {
 						nodeTypeInfo={{ nodeType: {}, category: this.props.category }}
 						isDisplaySearchResult={false}
 						canvasController={this.props.canvasController}
-						isPaletteOpen={this.props.isPaletteOpen}
+						isPaletteWide={this.props.isPaletteWide}
 						isEditingEnabled={this.props.isEditingEnabled}
 					/>
 				</div>
@@ -52,7 +52,7 @@ class PaletteContentList extends React.Component {
 						nodeTypeInfo={this.props.nodeTypeInfos[idx]}
 						isDisplaySearchResult={false}
 						canvasController={this.props.canvasController}
-						isPaletteOpen={this.props.isPaletteOpen}
+						isPaletteWide={this.props.isPaletteWide}
 						isEditingEnabled={this.props.isEditingEnabled}
 					/>
 				);
@@ -71,7 +71,7 @@ PaletteContentList.propTypes = {
 	category: PropTypes.object.isRequired,
 	nodeTypeInfos: PropTypes.array.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	isPaletteOpen: PropTypes.bool.isRequired,
+	isPaletteWide: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
 };
 

@@ -137,7 +137,9 @@ describe("Test clipboard with no link selection enabled", function() {
 		cy.clickNode("DRUG1n");
 		cy.shortcutKeysCut();
 
-		cy.moveMouseToPaletteArea(0, 100);
+		// Test the default paste works OK when the mouse cursor is not
+		// over the canvas area.
+		cy.moveMouseToPaletteArea(0, 100); // Moves the mouse cursor away from the canvas area
 		cy.shortcutKeysPaste();
 		cy.verifyNodeTransform("DRUG1n", 96, 219);
 
@@ -150,7 +152,9 @@ describe("Test clipboard with no link selection enabled", function() {
 		cy.clickNode("DRUG1n");
 		cy.shortcutKeysCut();
 
-		cy.moveMouseToPaletteArea(0, 100);
+		// Test the default paste works OK when the mouse cursor is not
+		// over the canvas area.
+		cy.moveMouseToPaletteArea(0, 100); // Moves the mouse cursor away from the canvas area
 		cy.shortcutKeysPaste();
 		cy.verifyNodeTransform("DRUG1n", 96, 219);
 	});

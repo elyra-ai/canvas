@@ -16,15 +16,16 @@
 
 import { expect } from "chai";
 import { validateInput } from "./../../../src/common-properties/ui-conditions/conditions-utils.js";
-import propertyUtils from "./../../_utils_/property-utils";
+import propertyUtilsRTL from "./../../_utils_/property-utilsRTL";
 import readOnlyParamDef from "./../../test_resources/paramDefs/readonly_paramDef.json";
+import { fireEvent } from "@testing-library/react";
 
 
 describe("validateInput validates input and updates controller correctly", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(readOnlyParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(readOnlyParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 		controller.setErrorMessages({});
@@ -35,14 +36,14 @@ describe("validateInput validates input and updates controller correctly", () =>
 	});
 
 	it("validateInput will update controller error messages when multiple error messages are present in a validation set", () => {
-		const summaryPanelTable = propertyUtils.openSummaryPanel(wrapper, "readonly-table-summary");
+		const summaryPanelTable = propertyUtilsRTL.openSummaryPanel(wrapper, "readonly-table-summary");
 		let messages = controller.getErrorMessages();
 		expect(JSON.stringify(messages)).to.equal(JSON.stringify({}));
 		const propId = { name: "readonly_table_cond", row: 0, col: 0 };
 		const control = controller.getControl(propId);
-		const rowOneCheckbox = summaryPanelTable.find("input[type='checkbox']").at(5);
-		rowOneCheckbox.getDOMNode().checked = false;
-		rowOneCheckbox.simulate("change");
+		const rowOneCheckbox = summaryPanelTable.querySelectorAll("input[type='checkbox']")[5];
+		rowOneCheckbox.setAttribute("checked", false);
+		fireEvent.click(rowOneCheckbox);
 		validateInput(propId, controller, control);
 		let expected =
 			{
@@ -63,11 +64,11 @@ describe("validateInput validates input and updates controller correctly", () =>
 			};
 		messages = controller.getErrorMessages();
 		expect(JSON.stringify(messages.readonly_table_cond)).to.eql(JSON.stringify(expected));
-		const rowTwoCheckbox = summaryPanelTable.find("input[type='checkbox']").at(7);
-		rowTwoCheckbox.getDOMNode().checked = true;
-		rowTwoCheckbox.simulate("change");
-		rowTwoCheckbox.getDOMNode().checked = false;
-		rowTwoCheckbox.simulate("change");
+		const rowTwoCheckbox = summaryPanelTable.querySelectorAll("input[type='checkbox']")[7];
+		rowTwoCheckbox.setAttribute("checked", true);
+		fireEvent.click(rowTwoCheckbox);
+		rowTwoCheckbox.setAttribute("checked", false);
+		fireEvent.click(rowTwoCheckbox);
 		validateInput(propId, controller, control);
 		expected =
 				{

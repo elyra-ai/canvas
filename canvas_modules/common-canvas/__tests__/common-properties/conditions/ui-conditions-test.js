@@ -16,14 +16,14 @@
 
 import { expect } from "chai";
 import { validateInput } from "./../../../src/common-properties/ui-conditions/ui-conditions.js";
-import propertyUtils from "./../../_utils_/property-utils";
+import propertyUtilsRTL from "./../../_utils_/property-utilsRTL";
 import structureeditorParamDef from "../../test_resources/paramDefs/structureeditor_paramDef.json";
 
 describe("validateInput returns the correct boolean for the given condition", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structureeditorParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structureeditorParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 		controller.setErrorMessages({});

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,11 @@
  */
 
 import React from "react";
-import { renderWithIntl } from "../_utils_/intl-utils";
-import PaletteDialog from "../../src/palette/palette-dialog.jsx";
+import { renderWithIntl } from "../_utils_/intl-utils.js";
+import PaletteDialogUnder from "../../src/palette/palette-dialog-under.jsx";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
-import sinon from "sinon";
 
-
-describe("Palette renders correctly", () => {
+describe("Palette Dialog renders correctly", () => {
 
 	it("should use a `.palette-div` CSS class", () => {
 		const { container: popupPaletteContainer } = createPalette();
@@ -90,17 +88,12 @@ const paletteSpec = {
 };
 
 function createPalette() {
-	const closePaletteCallback = sinon.spy();
-	const createTempNodeCallback = sinon.spy();
-	const deleteTempNodeCallback = sinon.spy();
 	const canvasController = new CanvasController();
+
 	const popupPalette = renderWithIntl(
-		<PaletteDialog paletteJSON={paletteSpec}
-			showPalette
-			closePalette={closePaletteCallback}
-			createTempNode={createTempNodeCallback}
-			deleteTempNode={deleteTempNodeCallback}
-			parentDivId="parent-div-id"
+		<PaletteDialogUnder
+			paletteJSON={paletteSpec}
+			containingDivId="parent-div-id"
 			canvasController={canvasController}
 			isEditingEnabled
 

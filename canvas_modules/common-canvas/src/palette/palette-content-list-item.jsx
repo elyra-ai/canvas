@@ -289,7 +289,7 @@ class PaletteContentListItem extends React.Component {
 			}
 		}
 
-		if (labelText && (this.props.isPaletteOpen || !icon)) {
+		if (labelText && (this.props.isPaletteWide || !icon)) {
 			itemText = this.props.isDisplaySearchResult
 				? this.getHighlightedLabel(labelText)
 				: (<span>{labelText}</span>);
@@ -303,7 +303,7 @@ class PaletteContentListItem extends React.Component {
 		// a dummy node to include the empty text from the category.
 		if (this.props.nodeTypeInfo.category.node_types.length === 0 && this.props.nodeTypeInfo.category.empty_text) {
 			labelText = this.props.nodeTypeInfo.category.empty_text;
-			if (this.props.isPaletteOpen) {
+			if (this.props.isPaletteWide) {
 				itemText = (<span>{labelText}</span>);
 			}
 			draggable = "false";
@@ -359,7 +359,7 @@ PaletteContentListItem.propTypes = {
 	isDisplaySearchResult: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	isEditingEnabled: PropTypes.bool.isRequired,
-	isPaletteOpen: PropTypes.bool.isRequired,
+	isPaletteWide: PropTypes.bool,
 	isShowRanking: PropTypes.bool
 };
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import propertyUtils from "./../../_utils_/property-utils";
+import propertyUtilsRTL from "./../../_utils_/property-utilsRTL";
 import defaultsParamDef from "./../../test_resources/paramDefs/defaults_paramDef.json";
 import { expect } from "chai";
 
@@ -21,7 +21,7 @@ describe("Condition default_value test cases", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(defaultsParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(defaultsParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
@@ -32,77 +32,85 @@ describe("Condition default_value test cases", () => {
 	it("If default value is defined in current_parameters, use default value from current_parameters", () => {
 		// current_parameters_default has default value defined in current_parameters and default_value condition.
 		// Higher preference is given to the value in current_parameters
-		const field2 = wrapper.find("div[data-id='properties-current_parameters_default'] input");
+		const { container } = wrapper;
+		const field2 = container.querySelectorAll("div[data-id='properties-current_parameters_default'] input");
 		expect(field2).to.have.length(1);
-		expect(field2.prop("value")).to.equal(defaultsParamDef.current_parameters.current_parameters_default);
+		expect(field2[0].value).to.equal(defaultsParamDef.current_parameters.current_parameters_default);
 	});
 
 	it("If default value is defined in current_ui_parameters, use default value from current_ui_parameters", () => {
 		// current_ui_parameters_default has default value defined in current_ui_parameters and default_value condition.
 		// Higher preference is given to the value in current_ui_parameters
-		const uiField2 = wrapper.find("div[data-id='properties-current_ui_parameters_default'] input");
+		const { container } = wrapper;
+		const uiField2 = container.querySelectorAll("div[data-id='properties-current_ui_parameters_default'] input");
 		expect(uiField2).to.have.length(1);
-		expect(uiField2.prop("value")).to.equal(defaultsParamDef.current_ui_parameters.current_ui_parameters_default);
+		expect(uiField2[0].value).to.equal(defaultsParamDef.current_ui_parameters.current_ui_parameters_default);
 	});
 
 	it(`If default value is NOT defined in current_parameters and default_value condition is defined,
  use value from default_value condition if the condition evaluate to true`, () => {
 		// conditional_default has default value defined in default_value condition
 		// Verify "mode" is "Include"
+		const { container } = wrapper;
 		expect(controller.getPropertyValue({ name: "mode" })).to.equal("Include");
 
 		// default_value condition evaluate to true when mode is Include.
-		const field1 = wrapper.find("div[data-id='properties-conditional_default'] textarea");
+		const field1 = container.querySelectorAll("div[data-id='properties-conditional_default'] textarea");
 		expect(field1).to.have.length(1);
 		const defaultValueConditions = defaultsParamDef.conditions.filter((cond) => cond.default_value.parameter_ref === "conditional_default");
-		expect(field1.text()).to.equal(defaultValueConditions[0].default_value.value.join());
+		expect(field1[0].textContent).to.equal(defaultValueConditions[0].default_value.value.join());
 	});
 
 	it(`If default value is NOT defined in current_parameters and default_value condition is defined,
  use default value from parameters if the condition evaluate to false`, () => {
 		// default_value condition for ui_conditional_default evaluate to false
 		// Verify "mode" is "Include"
+		const { container } = wrapper;
 		expect(controller.getPropertyValue({ name: "mode" })).to.equal("Include");
 
 		// default_value condition evaluate to false because mode is NOT Discard
-		const uiField1 = wrapper.find("div[data-id='properties-ui_conditional_default'] textarea");
+		const uiField1 = container.querySelectorAll("div[data-id='properties-ui_conditional_default'] textarea");
 		expect(uiField1).to.have.length(1);
 		const uiParameterDefinition = defaultsParamDef.uihints.ui_parameters.filter((param) => param.id === "ui_conditional_default");
-		expect(uiField1.text()).to.equal(uiParameterDefinition[0].default.join());
-		expect(uiField1.text()).to.not.equal(defaultsParamDef.conditions[0].default_value.value.join());
+		expect(uiField1[0].textContent).to.equal(uiParameterDefinition[0].default.join());
+		expect(uiField1[0].textContent).to.not.equal(defaultsParamDef.conditions[0].default_value.value.join());
 	});
 
 	it("If default value is NOT defined in current_parameters and default_value condition, use default value from parameters", () => {
 		// parameters_default has default value defined ONLY in parameters
-		const field3 = wrapper.find("div[data-id='properties-parameters_default'] input");
+		const { container } = wrapper;
+		const field3 = container.querySelectorAll("div[data-id='properties-parameters_default'] input");
 		expect(field3).to.have.length(1);
 		const parameterDefinition = defaultsParamDef.parameters.filter((param) => param.id === "parameters_default");
-		expect(field3.prop("value")).to.equal(parameterDefinition[0].default);
+		expect(field3[0].value).to.equal(parameterDefinition[0].default);
 	});
 
 	it("If default value is NOT defined in current_ui_parameters and default_value condition, use default value from ui_parameters", () => {
 		// ui_parameters_default has default value defined ONLY in ui_parameters
-		const uiField3 = wrapper.find("div[data-id='properties-ui_parameters_default'] input");
+		const { container } = wrapper;
+		const uiField3 = container.querySelectorAll("div[data-id='properties-ui_parameters_default'] input");
 		expect(uiField3).to.have.length(1);
 		const uiParameterDefinition = defaultsParamDef.uihints.ui_parameters.filter((param) => param.id === "ui_parameters_default");
-		expect(uiField3.prop("value")).to.equal(uiParameterDefinition[0].default);
+		expect(uiField3[0].value).to.equal(uiParameterDefinition[0].default);
 	});
 
 	it("If multiple default_value conditions evaluate to true, only first one is used.", () => {
 		// 2 default_value conditions evaluate to true for conditional_default control
+		const { container } = wrapper;
 		const defaultValueConditions = defaultsParamDef.conditions.filter((cond) => cond.default_value.parameter_ref === "conditional_default");
 		expect(defaultValueConditions).to.have.length(2);
-		const field1 = wrapper.find("div[data-id='properties-conditional_default'] textarea");
+		const field1 = container.querySelector("div[data-id='properties-conditional_default'] textarea");
 		// Verify value from 1st condition is used
-		expect(field1.text()).to.equal(defaultValueConditions[0].default_value.value.join());
+		expect(field1.textContent).to.equal(defaultValueConditions[0].default_value.value.join());
 		// Verify value from 2nd condition is NOT used
-		expect(field1.text()).to.not.equal(defaultValueConditions[1].default_value.value.join());
+		expect(field1.textContent).to.not.equal(defaultValueConditions[1].default_value.value.join());
 	});
 
 	it("If default value is NOT defined in current_parameters, default_value condition and parameters default, don't set any default value", () => {
 		// no_default doesn't have any default value
-		const field4 = wrapper.find("div[data-id='properties-no_default'] input");
+		const { container } = wrapper;
+		const field4 = container.querySelectorAll("div[data-id='properties-no_default'] input");
 		expect(field4).to.have.length(1);
-		expect(field4.prop("value")).to.equal("");
+		expect(field4[0].value).to.equal("");
 	});
 });

@@ -195,6 +195,9 @@ $harness-navbar-icon-width: 48px;
 	& .text {
 		font-size: 16px;
 	}
+	&.vertical {
+		width: 300px;
+	}
 }
 
 .harness-color-picker {

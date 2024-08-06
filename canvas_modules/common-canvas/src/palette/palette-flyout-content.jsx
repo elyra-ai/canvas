@@ -70,13 +70,14 @@ class PaletteFlyoutContent extends React.Component {
 		const contentDivs = [];
 		for (let idx = 0; idx < categories.length; idx++) {
 			const category = categories[idx];
+
 			contentDivs.push(
 				<div key={category.label + "-container"}>
 					<PaletteFlyoutContentCategory
 						key={category.id}
 						category={category}
 						canvasController={this.props.canvasController}
-						isPaletteOpen={this.props.isPaletteOpen}
+						isPaletteWide={this.props.isPaletteWide}
 						isEditingEnabled={this.props.isEditingEnabled}
 					/>
 				</div>
@@ -102,7 +103,7 @@ class PaletteFlyoutContent extends React.Component {
 				key={"filtered-nodes"}
 				nodeTypeInfos={filteredNodeTypeInfos}
 				canvasController={this.props.canvasController}
-				isPaletteOpen={this.props.isPaletteOpen}
+				isPaletteWide={this.props.isPaletteWide}
 				isEditingEnabled={this.props.isEditingEnabled}
 				// isShowRanking // Uncomment this to show ranking for debuggig ranking algorithm
 				isNodeTypeInfosArrayTruncated={isNodeTypeInfosArrayTruncated}
@@ -122,7 +123,7 @@ class PaletteFlyoutContent extends React.Component {
 
 	render() {
 		this.categories = this.getUniqueCategories(this.props.paletteJSON.categories);
-		const contentDivs = this.props.isPaletteOpen && this.state.searchString
+		const contentDivs = this.props.isPaletteWide && this.state.searchString
 			? this.getFilteredContentDivs(this.categories)
 			: this.getContentDivs(this.categories);
 
@@ -134,9 +135,9 @@ class PaletteFlyoutContent extends React.Component {
 
 		const contentSearch = (
 			<PaletteFlyoutContentSearch
-				handleSearchStringChange={this.handleSearchStringChange}
-				isPaletteOpen={this.props.isPaletteOpen}
 				canvasController={this.props.canvasController}
+				handleSearchStringChange={this.handleSearchStringChange}
+				isPaletteWide={this.props.isPaletteWide}
 			/>
 		);
 
@@ -150,10 +151,10 @@ class PaletteFlyoutContent extends React.Component {
 }
 
 PaletteFlyoutContent.propTypes = {
-	paletteJSON: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	isPaletteOpen: PropTypes.bool.isRequired,
-	isEditingEnabled: PropTypes.bool.isRequired
+	paletteJSON: PropTypes.object.isRequired,
+	isEditingEnabled: PropTypes.bool.isRequired,
+	isPaletteWide: PropTypes.bool
 };
 
 export default PaletteFlyoutContent;
