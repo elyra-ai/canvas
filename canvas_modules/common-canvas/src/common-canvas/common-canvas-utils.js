@@ -498,6 +498,14 @@ export default class CanvasUtils {
 		return null;
 	}
 
+	// Returns the distance from the start point to finsih point of the link line.
+	static getLinkDistance(link) {
+		const x = link.x2 - link.x1;
+		const y = link.y2 - link.y1;
+
+		return Math.sqrt((x * x) + (y * y));
+	}
+
 	// Return the center point of a quadratic bezier curve where p0 is the
 	// start point, p1 is the control point and p2 is the end point.
 	// This works for either the x or y coordinate.

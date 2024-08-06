@@ -33,10 +33,10 @@ import { PALETTE_LAYOUT_FLYOUT, PALETTE_LAYOUT_DIALOG, PALETTE_LAYOUT_NONE }
 	from "../common-canvas/constants/canvas-constants";
 
 
-class CommonCanvasCentralItems extends React.Component {
+class CommonCanvasPanels extends React.Component {
 	constructor(props) {
 		super(props);
-		this.logger = new Logger("CC-CentralItems");
+		this.logger = new Logger("CC-Panels");
 	}
 
 	// Prevent the default behavior (which is to show a plus-sign pointer) as
@@ -261,7 +261,7 @@ class CommonCanvasCentralItems extends React.Component {
 	}
 }
 
-CommonCanvasCentralItems.propTypes = {
+CommonCanvasPanels.propTypes = {
 	// Provided by CommonCanvas
 	canvasController: PropTypes.object.isRequired,
 	containingDivId: PropTypes.string.isRequired,
@@ -296,4 +296,4 @@ const mapStateToProps = (state, ownProps) => ({
 	rightFlyoutIsOpen: state.rightflyout.isOpen
 });
 
-export default connect(mapStateToProps)(CommonCanvasCentralItems);
+export default connect(mapStateToProps)(CommonCanvasPanels);

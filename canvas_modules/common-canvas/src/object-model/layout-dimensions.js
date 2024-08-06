@@ -346,6 +346,14 @@ const portsHorizontalDefaultLayout = {
 		linkContextToolbarPosX: 0,
 		linkContextToolbarPosY: 0,
 
+		// The distance in pixels between the start and end points of the link
+		// below which the alternative decorations for the link will be displayed.
+		linkDistanceForAltDecorations: 150,
+
+		// Alternative decorations for the link. If specified, this should be an
+		// array of decoration objects.
+		linkAltDecorations: null,
+
 		// Link handle for input port can be "circle" or "image".
 		linkStartHandleObject: "circle",
 
@@ -760,6 +768,14 @@ const portsVerticalDefaultLayout = {
 		// position.
 		linkContextToolbarPosX: 0,
 		linkContextToolbarPosY: 0,
+
+		// The distance in pixels between the start and end points of the link,
+		// below which the alternative decorations for the link will be displayed.
+		linkDistanceForAltDecorations: 150,
+
+		// Alternative decorations for the link. If specified, this should be an
+		// array of decoration objects.
+		linkAltDecorations: null,
 
 		// Link handle for input port can be "circle" or "image".
 		linkStartHandleObject: "circle",
