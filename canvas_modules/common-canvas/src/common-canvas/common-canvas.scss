@@ -46,14 +46,14 @@ $panel-border-color: $border-subtle-01;
 
 .left-flyout-panel {
 	height: 100%;
-	position: relative;
 	user-select: none; /* Prevent elements from being selectable */
 	background-color: $layer-01;
 }
 
 .right-flyout-panel {
-	height: 100%;
-	position: relative;
+	// This combination of height and min-height enable scrolling in the child panel
+	height: 0;
+	min-height: 100%;
 	user-select: none; /* Prevent elements from being selectable */
 	background-color: $layer-01;
 }
