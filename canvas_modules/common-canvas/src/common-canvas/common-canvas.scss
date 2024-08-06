@@ -44,16 +44,14 @@ $panel-border-color: $border-subtle-01;
 	position: relative; // This allows the State Tag to have positio: absolute
 }
 
-.left-flyout-panel {
-	height: 100%;
-	user-select: none; /* Prevent elements from being selectable */
-	background-color: $layer-01;
-}
-
+.left-flyout-panel,
 .right-flyout-panel {
-	// This combination of height and min-height enable scrolling in the child panel
+	// This combination of height and min-height enable scrolling in the child panel,
+	// I believe this is because it sets a specific height on the CSS grid cell,
+	// so the contents of the panel can adjust themselves to the height accordingly.
 	height: 0;
 	min-height: 100%;
+
 	user-select: none; /* Prevent elements from being selectable */
 	background-color: $layer-01;
 }

@@ -34,14 +34,13 @@ class Palette extends React.Component {
 		this.logger.log("render");
 
 		return (
-			<div className="palette-scroll-div">
-				<PaletteFlyout
-					canvasController={this.props.canvasController}
-					paletteJSON={this.props.paletteJSON}
-					isEditingEnabled={this.props.isEditingEnabled}
-					isPaletteWide={this.props.isPaletteWide}
-				/>
-			</div>);
+			<PaletteFlyout
+				canvasController={this.props.canvasController}
+				paletteJSON={this.props.paletteJSON}
+				isEditingEnabled={this.props.isEditingEnabled}
+				isPaletteWide={this.props.isPaletteWide}
+			/>
+		);
 	}
 }
 
