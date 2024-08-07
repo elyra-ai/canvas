@@ -169,7 +169,14 @@ export default class StagesCanvas extends React.Component {
 				linkEndHandleImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				linkEndHandleWidth: 20,
 				linkEndHandleHeight: 20,
-				linkHandleRaiseToTop: true
+				linkHandleRaiseToTop: true,
+				linkContextToolbarPosX: 0,
+				linkContextToolbarPosY: -15,
+				linkLengthForAltDecorations: 150,
+				linkAltDecorations: [
+					{ id: "alt-123", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background" },
+					{ id: "alt-456", label: "XXX", x_pos: -10, y_pos: -10 }
+				]
 			}
 		});
 		return config;
