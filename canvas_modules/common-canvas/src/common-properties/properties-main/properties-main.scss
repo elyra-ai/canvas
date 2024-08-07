@@ -25,6 +25,9 @@ $properties-modal-buttons-height: $spacing-10;
 	overflow: hidden;
 	border-left: 1px solid $layer-accent-01;
 	outline: none;
+	display: flex;
+	flex-direction: column;
+
 	&.properties-small {
 		width: $common-properties-small-flyout-width;
 	}

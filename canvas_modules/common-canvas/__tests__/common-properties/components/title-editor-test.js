@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,12 @@ import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
 import { renderWithIntl } from "../../_utils_/intl-utils";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, within } from "@testing-library/react";
 
-const controller = new Controller();
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
+import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
+
+let controller = new Controller();
 controller.setTitle("test title");
 const form = {
 	componentId: "test-id"
@@ -398,5 +401,34 @@ describe("title-editor renders correctly", () => {
 		// Verify TitleEditor isn't rendered
 		const titleEditor = container.getElementsByClassName("properties-title-editor");
 		expect(titleEditor).to.have.length(0);
+	});
+});
+
+describe("Title editor actions", () => {
+	let renderedObject;
+	beforeEach(() => {
+		renderedObject = propertyUtilsRTL.flyoutEditorForm(ACTION_PARAMDEF);
+		controller = new Controller();
+	});
+
+	it("title editor should render actions if defined", () => {
+		const spyPropertyActionHandler = sinon.spy();
+		renderedObject = propertyUtilsRTL.flyoutEditorForm(ACTION_PARAMDEF, null, { actionHandler: spyPropertyActionHandler }, { appData: appData });
+		const { container } = renderedObject.wrapper;
+		const actions = container.querySelector(".properties-title-editor-actions");
+		const buttons = within(actions).getAllByRole("button");
+		expect(buttons.length).to.equal(2);
+
+		expect(buttons[0].textContent).to.equal("Increment");
+		expect(buttons[1].textContent).to.equal("Decrement");
+
+		fireEvent.click(buttons[0]);
+
+		expect(spyPropertyActionHandler.calledOnce).to.equal(true);
+		expect(spyPropertyActionHandler.calledWith(
+			ACTION_PARAMDEF.uihints.title_info.action_refs[0],
+			appData,
+			{ parameter_ref: "number" }
+		)).to.be.true;
 	});
 });
