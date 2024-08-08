@@ -39,10 +39,22 @@ jobs:
     - run: ./canvas_modules/common-canvas/build.sh
     - run: ./canvas_modules/harness/build.sh test
     - run: ./canvas_modules/harness/functional_test.sh
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v2
+
+  sonarcloud:
+    if: github.ref == 'refs/heads/main'
+    if: github.repository == 'elyra-ai/canvas'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
       with:
-        path: ./canvas_modules/common-canvas/coverage/lcov.info
+        node-version: 20.x
+    - name: Install common-canvas dependencies
+      run: npm install --prefix canvas_modules/common-canvas
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v1
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
 
   tag:
     runs-on: ubuntu-latest
