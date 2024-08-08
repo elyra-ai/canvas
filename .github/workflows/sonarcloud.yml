@@ -1,0 +1,27 @@
+name: Sonarcloud Analysis
+
+on:
+  push:
+    branches:
+      - main
+  
+jobs:
+  sonarcloud:
+    if: github.repository == 'elyra-ai/canvas'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        node-version: 20.x
+    - name: Install common-canvas dependencies
+      run: npm install --prefix canvas_modules/common-canvas
+    - name: Download Coverage Report
+      uses: actions/download-artifact@v2
+      with:
+        name: coverage-report
+        path: "./canvas_modules/common-canvas/coverage"
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v1
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
