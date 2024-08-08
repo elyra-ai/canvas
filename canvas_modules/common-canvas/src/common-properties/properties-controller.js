@@ -170,7 +170,8 @@ export default class PropertiesController {
 			this._parseUiConditions();
 			// should be done before running any validations
 			const controls = [];
-			UiConditionsParser.parseControls(controls, this.actions, this.form);
+			UiConditionsParser.parseControls(controls, this.actions, this.form); // parse form uiItems
+			UiConditionsParser.parseControls(null, this.actions, { uiItems: this.form.titleUiItems }); // parse title_info uiItems
 			this.saveControls(controls); // saves controls without the subcontrols
 			this._parseSummaryControls(controls);
 			this.parsePanelTree();
