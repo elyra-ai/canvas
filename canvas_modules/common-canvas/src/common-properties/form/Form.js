@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import { PropertyDef } from "./PropertyDef";
 import { propertyOf } from "lodash";
-import { makePrimaryTab } from "./EditorForm";
+import { makePrimaryTab, makeActions } from "./EditorForm";
 import { UIItem } from "./UIItem";
 import { L10nProvider } from "../util/L10nProvider";
 import { translateMessages } from "./Conditions";
@@ -61,6 +61,10 @@ export default class Form {
 					tabs.push(makePrimaryTab(propDef, group, l10nProvider, containerType));
 				}
 			}
+			let titleActions = [];
+			if (propDef.titleMetadata && propDef.actionMetadata) {
+				titleActions = makeActions(null, propDef.actionMetadata, propDef.titleMetadata.Title, null, l10nProvider);
+			}
 
 			const currentParameters = propertyOf(paramDef)("current_parameters");
 			const data = {
@@ -76,7 +80,7 @@ export default class Form {
 				propDef.help,
 				propDef.editorSizeHint(editorSizeDefault),
 				propDef.pixelWidth,
-				[UIItem.makePrimaryTabs(tabs)],
+				[UIItem.makePrimaryTabs(tabs)].concat(titleActions),
 				_defaultButtons(),
 				data,
 				translateMessages(conditions, l10nProvider),

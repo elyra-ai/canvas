@@ -420,7 +420,7 @@ describe("Title editor actions", () => {
 		expect(buttons.length).to.equal(2);
 
 		expect(buttons[0].textContent).to.equal("Increment");
-		expect(buttons[1].textContent).to.equal("Decrement");
+		expect(buttons[1].textContent).to.equal("Run");
 
 		fireEvent.click(buttons[0]);
 
