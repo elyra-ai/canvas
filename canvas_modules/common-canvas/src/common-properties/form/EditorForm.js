@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -856,5 +856,5 @@ function _parameterValueDescription(parameter, l10nProvider) {
 
 
 export {
-	makePrimaryTab, _makeControl as makeControl
+	makePrimaryTab, _makeControl as makeControl, _makeActions as makeActions
 };

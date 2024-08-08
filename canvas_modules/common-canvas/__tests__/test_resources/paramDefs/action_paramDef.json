@@ -158,7 +158,7 @@
     "title_info": {
       "action_refs": [
         "increment",
-        "decrement"
+        "run_action"
       ]
     },
     "parameter_info": [
@@ -716,6 +716,14 @@
             "width": 25
           }
         }
+      },
+      {
+        "id": "run_action",
+        "label": {
+          "resource_key": "run_action"
+        },
+        "control": "button",
+        "data": {}
       }
     ],
     "group_info": [
@@ -918,7 +926,6 @@
               "disable_image_text"
             ]
           }
-
         ]
       },
       {
@@ -1010,8 +1017,6 @@
         }
       }
     }
-
-
   ],
   "dataset_metadata": [
     {
@@ -1085,13 +1090,14 @@
   "resources": {
     "increment": "Increment",
     "decrement": "Decrement",
+    "run_action": "Run",
     "dm-update": "Add Field",
-    "winter":    "Winter",
-    "summer":    "Summer",
-    "fall":      "Fall",
-    "spring":    "Spring",
-    "moon":      "Moon",
-    "meteor":    "Meteor",
+    "winter": "Winter",
+    "summer": "Summer",
+    "fall": "Fall",
+    "spring": "Spring",
+    "moon": "Moon",
+    "meteor": "Meteor",
     "weather.action.panel.label": "Weather action panel label",
     "weather.action.panel.desc": "Weather action panel description"
   }
