@@ -189,7 +189,7 @@ $palette-search-container-height: 41px;
 
 .palette-flyout-categories {
 	overflow-x: hidden;
-	overflow-y: scroll;
+	overflow-y: auto;
 	min-height:100%;
 	height:0;
 
