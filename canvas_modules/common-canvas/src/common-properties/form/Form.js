@@ -24,7 +24,7 @@ import { Size } from "../constants/form-constants";
 import { CONTAINER_TYPE } from "../constants/constants";
 
 export default class Form {
-	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions, resources, icon, heading, title) {
+	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions, resources, icon, heading, title, titleUiItems) {
 		this.componentId = componentId;
 		this.label = label;
 		this.labelEditable = labelEditable;
@@ -40,6 +40,9 @@ export default class Form {
 		this.heading = heading;
 		if (title) {
 			this.title = title;
+		}
+		if (titleUiItems?.length > 0) {
+			this.titleUiItems = titleUiItems;
 		}
 	}
 
@@ -61,9 +64,9 @@ export default class Form {
 					tabs.push(makePrimaryTab(propDef, group, l10nProvider, containerType));
 				}
 			}
-			let titleActions = [];
+			let titleUiItems = [];
 			if (propDef.titleMetadata && propDef.actionMetadata) {
-				titleActions = makeActions(null, propDef.actionMetadata, propDef.titleMetadata.Title, null, l10nProvider);
+				titleUiItems = makeActions(null, propDef.actionMetadata, propDef.titleMetadata.Title, null, l10nProvider);
 			}
 
 			const currentParameters = propertyOf(paramDef)("current_parameters");
@@ -80,14 +83,15 @@ export default class Form {
 				propDef.help,
 				propDef.editorSizeHint(editorSizeDefault),
 				propDef.pixelWidth,
-				[UIItem.makePrimaryTabs(tabs)].concat(titleActions),
+				[UIItem.makePrimaryTabs(tabs)],
 				_defaultButtons(),
 				data,
 				translateMessages(conditions, l10nProvider),
 				resources,
 				propDef.icon,
 				l10nProvider.l10nResource(propDef.heading),
-				propDef.titleMetadata
+				propDef.titleMetadata,
+				titleUiItems
 			);
 		}
 		return null;
