@@ -33,9 +33,9 @@ See [here](https://github.com/elyra-ai/canvas/tree/main/canvas_modules/harness) 
 ## Quality and Coverage
 We use SonarCloud to ensure code quality and maintain high test coverage. You can view the detailed analysis and results by following the link below:
 
-[![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=your-project-key&metric=alert_status)](https://sonarcloud.io/dashboard?id=your-project-key)
+[![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=elyra-ai_canvas&metric=alert_status)](https://sonarcloud.io/dashboard?id=elyra-ai_canvas)
 
-[View SonarCloud Results](https://sonarcloud.io/dashboard?id=your-project-key)
+[View SonarCloud Results](https://sonarcloud.io/dashboard?id=elyra-ai_canvas)
 
 ## Using local version of common-canvas and/or common-properties
 Clone elyra/canvas
