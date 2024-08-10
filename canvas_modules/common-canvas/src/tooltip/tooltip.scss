@@ -19,7 +19,7 @@
 }
 
 .common-canvas-tooltip {
-	font-size: 12px;
+	font-size: $spacing-04;
 	position: fixed;
 	padding: $spacing-05;
 	background-color: $background-inverse;
@@ -33,7 +33,7 @@
 	pointer-events: none;
 	word-wrap: break-word;
 	max-width: 228px;
-	border-radius: 2px;
+	border-radius: $spacing-01;
 	white-space: pre-wrap; // Add a line break for \n in tooltip
 	.cds--link {
 		display: block;
@@ -119,7 +119,7 @@
 
 .tip-palette-category {
 	font-size: 10px;
-	padding-bottom: 4px;
+	padding-bottom: $spacing-02;
 	color: $text-inverse;
 }
 
@@ -129,13 +129,13 @@
 }
 
 .tip-palette-desc, .tip-node-desc {
-	padding-top: 4px;
+	padding-top: $spacing-02;
 }
 
 .tip-node-status {
 	position: absolute;
-	width: 12px;
-	height: 12px;
+	width: $spacing-04;
+	height: $spacing-04;
 	right: $spacing-05;
 	top: $spacing-03;
 	&.warning {

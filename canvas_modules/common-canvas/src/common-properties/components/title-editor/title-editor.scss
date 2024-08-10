@@ -112,7 +112,7 @@
 
 // warning and invalid icons should be aligned with close icon. And input field should stretch full width
 .properties-title-editor-with-warning, .properties-title-editor-with-error {
-	width: calc(100% - 2px); // subtract 2px for input active right border
+	width: calc(100% - $spacing-01); // subtract 2px for input active right border
 }
 
 // Close icon without heading

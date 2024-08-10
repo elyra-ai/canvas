@@ -54,19 +54,19 @@ $properties-modal-buttons-height: $spacing-10;
 		top: 50%;
 		left: -13px;
 		z-index: 1; // needs to sit on top of common-properties div
-		min-height: 24px;
-		min-width: 24px;
+		min-height: $spacing-06;
+		min-width: $spacing-06;
 		background-color: $layer-01;
 		border: 1px $border-strong-01 solid;
-		padding: 2px;
+		padding: $spacing-01;
 		justify-content: center;
 		&:hover {
 			background-color: $layer-accent-01;
 		}
 		svg {
 			fill: $icon-primary;
-			width: 16px;
-			height: 16px;
+			width: $spacing-05;
+			height: $spacing-05;
 		}
 	}
 }

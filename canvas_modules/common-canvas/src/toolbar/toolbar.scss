@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-$toolbar-icon-label-margin: 8px;
-$toolbar-icon-size: 16px;
-$toolbar-button-height: 40px;
-$toolbar-button-width: 40px;
-$toolbar-button-sm-height: 32px;
-$toolbar-button-sm-width: 32px;
+$toolbar-icon-label-margin: $spacing-03;
+$toolbar-icon-size: $spacing-05;
+$toolbar-button-height: $spacing-08;
+$toolbar-button-width: $spacing-08;
+$toolbar-button-sm-height: $spacing-07;
+$toolbar-button-sm-width: $spacing-07;
 $toolbar-divider-width: 1px;
 
 .toolbar-div {
@@ -61,7 +61,7 @@ $toolbar-divider-width: 1px;
 		.toolbar-item-content {
 			height: $toolbar-button-sm-height;
 			align-items: center;
-			min-width: 32px;
+			min-width: $spacing-07;
 
 			&.is-in-menu {
 				padding-left: 10px;
@@ -76,7 +76,7 @@ $toolbar-divider-width: 1px;
 			}
 
 			& .toolbar-right-chevron {
-				padding: 4px 0 0;
+				padding: $spacing-02 0 0;
 			}
 		}
 
@@ -121,7 +121,7 @@ $toolbar-divider-width: 1px;
 		&.ghost {
 			& > .toolbar-button-item > button {
 				background-color: $layer-accent-01;
-				border-bottom: 2px solid $button-primary;
+				border-bottom: $spacing-01 solid $button-primary;
 			}
 		}
 	}
@@ -199,8 +199,8 @@ $toolbar-divider-width: 1px;
 		width: 100%;
 		padding-top: 0;
 		padding-bottom: 0;
-		padding-left: 16px;
-		padding-right: 16px;
+		padding-left: $spacing-05;
+		padding-right: $spacing-05;
 		min-height: 20px;
 	}
 }
@@ -229,12 +229,12 @@ $toolbar-divider-width: 1px;
 	}
 
 	& .toolbar-up-down-chevron {
-		padding: 11px 8px 11px 0;
+		padding: 11px $spacing-03 11px 0;
 		pointer-events: none;
 	}
 
 	& .toolbar-up-down-chevron-mini {
-		padding: 11px 2px;
+		padding: 11px $spacing-01;
 
 		&:hover {
 			background-color: $background-selected-hover;
@@ -242,7 +242,7 @@ $toolbar-divider-width: 1px;
 	}
 
 	& .toolbar-right-chevron {
-		padding: 9px 0 2px;
+		padding: 9px 0 $spacing-01;
 		pointer-events: none;
 	}
 
@@ -254,7 +254,7 @@ $toolbar-divider-width: 1px;
 		justify-content: left;
 
 		& .content-main {
-			padding: 8px 0 6px;
+			padding: $spacing-03 0 6px;
 		}
 	}
 
@@ -274,7 +274,7 @@ $toolbar-divider-width: 1px;
 	}
 
 	.toolbar-icon {
-		height: 16px;
+		height: $spacing-05;
 		& svg {
 			height: $toolbar-icon-size;
 			width: $toolbar-icon-size;
@@ -295,18 +295,18 @@ $toolbar-divider-width: 1px;
 	}
 
 	.toolbar-icon-label {
-		line-height: 16px;
+		line-height: $spacing-05;
 
 		&.before {
-			padding-right: 8px;
+			padding-right: $spacing-03;
 		}
 
 		&.after {
-			padding-left: 8px;
+			padding-left: $spacing-03;
 		}
 
 		&.overflow {
-			padding-left: 8px;
+			padding-left: $spacing-03;
 			word-break: break-word;
 			hyphens: auto;
 		}
