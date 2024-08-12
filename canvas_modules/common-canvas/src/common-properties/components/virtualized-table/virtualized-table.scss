@@ -138,10 +138,6 @@
 			// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
 			background-color: $layer-hover-01;
 		}
-		&:focus {
-			color: $button-primary;
-			border: 1px solid $button-primary;
-		}
 		.properties-table-cell-control {
 			// Required for numberfields within react-virtualized table cell
 			.properties-numberfield {
@@ -192,7 +188,6 @@
 		&:hover {
 			background-color: $layer-accent-hover-01;
 		}
-		cursor: pointer;
 	}
 
 	.properties-vt-single-selection {
@@ -204,13 +199,8 @@
 		// Table rows
 		.properties-vt-row-class {
 			padding-left: 3px;
-			&:focus {
-				color: $button-primary;
-				border: 1px solid $button-primary;
-			}
 		}
 		.properties-vt-row-selected {
-			cursor: pointer;
 			border-left: 4px solid $button-primary;
 			padding-left: 0;
 			&:not(.properties-vt-row-disabled):hover {

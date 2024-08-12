@@ -499,7 +499,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		return (
 			<div className="properties-field-and-values-table-container" >
 				{fieldCategory}
-				<div className="properties-field-table-container" >
+				<div className="properties-field-table-container expression-builder-table" >
 					<FlexibleTable
 						columns={fieldHeaders}
 						data={tableData}
@@ -517,7 +517,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						emptyTablePlaceholder={emptyFieldsLabel}
 					/>
 				</div>
-				<div className="properties-value-table-container" >
+				<div className="properties-value-table-container expression-builder-table" >
 					<FlexibleTable
 						columns={valueHeader}
 						data={valuesTableData}
@@ -686,7 +686,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 
 		return (
 			<div className="properties-functions-table-helper-container">
-				<div className="properties-functions-table-container">
+				<div className="properties-functions-table-container expression-builder-table">
 					<div className="properties-functions-table" >
 						<FlexibleTable
 							columns={headers}
