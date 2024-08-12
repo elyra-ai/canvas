@@ -138,6 +138,7 @@
 			// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
 			background-color: $layer-hover-01;
 		}
+
 		.properties-table-cell-control {
 			// Required for numberfields within react-virtualized table cell
 			.properties-numberfield {
