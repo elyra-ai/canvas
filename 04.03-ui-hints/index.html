@@ -2206,6 +2206,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#title-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      Title-info
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#action-info" class="md-nav__link">
     <span class="md-ellipsis">
       Action Info
@@ -2602,6 +2611,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#title-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      Title-info
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#action-info" class="md-nav__link">
     <span class="md-ellipsis">
       Action Info
@@ -2963,6 +2981,19 @@
 <span class="w">       </span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w"> </span><span class="p">]</span>
+</code></pre></div></p>
+<h2 id="title-info">Title-info<a class="headerlink" href="#title-info" title="Permanent link">&para;</a></h2>
+<p>The title_info sections defines what will be displayed in the title section alongside the <code>titleDefinition</code>.</p>
+<p>Title info attributes.</p>
+<ul>
+<li><code>action_refs</code> (<em>array[string]</em>) List of action to be displayed in the title section. Each action_ref must have a corresponding action defined in the action_info section.</li>
+</ul>
+<p>Example title info section:
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;title_info&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="s2">&quot;action_refs&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;increment&quot;</span>
+<span class="w">   </span><span class="p">]</span>
+<span class="p">}</span>
 </code></pre></div></p>
 <h2 id="action-info">Action Info<a class="headerlink" href="#action-info" title="Permanent link">&para;</a></h2>
 <p>The action_info section defines an action.  Actions are used to callback to the application to perform an operation.</p>
