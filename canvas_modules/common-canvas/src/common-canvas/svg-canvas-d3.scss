@@ -735,15 +735,15 @@ g.bkg-col-cyan-50 {
 @mixin d3-comment-markdown {
 	// Styles need for HTML elemnets genereted from markdown.
 	h1 {
-		font-size: $spacing-07;
+		font-size: 28px;
 		font-weight: 500;
 	}
 	h2 {
-		font-size: $spacing-06;
+		font-size: 22px;
 		font-weight: 500;
 	}
 	h3 {
-		font-size: $spacing-05;
+		font-size: 18px;
 		font-weight: 500;
 	}
 	h4 {

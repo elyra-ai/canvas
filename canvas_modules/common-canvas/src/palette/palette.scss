@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-$palette-border-width: 1px;
+$palette-border-width: $spacing-01;
 $palette-border-color: $layer-accent-01;
 $palette-search-container-height: 41px;
 
@@ -86,7 +86,7 @@ $palette-search-container-height: 41px;
 	}
 
 	.palette-list-item {
-		height: $spacing-09;
+		height: 46px;
 		border-width: 0;
 		display: flex;
 		flex-direction: column;
@@ -129,7 +129,7 @@ $palette-search-container-height: 41px;
 		}
 
 		.palette-list-item-icon {
-			width: $spacing-07; /* Not specifying height preserves the image's aspect ratio. */
+			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
 			color: $text-secondary;
 		}
 
@@ -148,8 +148,8 @@ $palette-search-container-height: 41px;
 
 		.palette-list-item-icon-warning {
 			transform: scale(1.5);
-			width: $spacing-07; /* Not specifying height preserves the image's aspect ratio. */
-			line-height: $spacing-09;  /* Must be same as containing div height */
+			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
+			line-height: 46px;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
 		}
@@ -387,8 +387,8 @@ $palette-search-container-height: 41px;
 		}
 
 		.palette-list-item-icon {
-			width: $spacing-07; /* Not specifying height preserves the image's aspect ratio. */
-			line-height: $spacing-09;  /* Must be same as containing div height */
+			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
+			line-height: 46px;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
 			margin-right: $spacing-04;
@@ -409,8 +409,8 @@ $palette-search-container-height: 41px;
 
 		.palette-list-item-icon-warning {
 			transform: scale(1.5);
-			width: $spacing-07; /* Not specifying height preserves the image's aspect ratio. */
-			line-height: $spacing-09;  /* Must be same as containing div height */
+			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
+			line-height: 46px;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
 			margin-right: $spacing-04;

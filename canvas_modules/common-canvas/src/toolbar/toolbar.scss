@@ -20,7 +20,7 @@ $toolbar-button-height: $spacing-08;
 $toolbar-button-width: $spacing-08;
 $toolbar-button-sm-height: $spacing-07;
 $toolbar-button-sm-width: $spacing-07;
-$toolbar-divider-width: $spacing-01;
+$toolbar-divider-width: 1px;
 
 .toolbar-div {
 	height: $toolbar-button-height;
@@ -220,7 +220,7 @@ $toolbar-divider-width: $spacing-01;
 	}
 
 	& .content-main {
-		padding: $spacing-04;
+		padding: 11px;
 		display: flex;
 
 		&.dual:hover {
