@@ -43,9 +43,9 @@ $node-warning-color: $support-warning; // Warning yellow
 
 // Node label properties
 $node-label-color: $text-primary;
-$node-label-font-size: 12px;
+$node-label-font-size: $spacing-04;
 $node-label-font-weight: 600;
-$node-label-display-border: 2px;
+$node-label-display-border: $spacing-01;
 $node-label-entry-border: 6px;
 $node-label-edit-icon-hover-color: $layer-accent-01;
 
@@ -81,11 +81,11 @@ $comment-fill-color: $layer-01;
 $comment-text-color: $text-primary;
 
 // Comment properties
-$comment-text-font-size: 12px;
+$comment-text-font-size: $spacing-04;
 $comment-text-font-weight: 500;
 $comment-text-line-height: 1.2;
-$comment-text-display-border: 8px;
-$comment-text-entry-border: $comment-text-display-border - 2px; // Remove 2px to allow for focus border
+$comment-text-display-border: $spacing-03;
+$comment-text-entry-border: $comment-text-display-border - $spacing-01; // Remove 2px to allow for focus border
 
 // Link colors
 $comment-link-color: $border-strong-01;
@@ -735,15 +735,15 @@ g.bkg-col-cyan-50 {
 @mixin d3-comment-markdown {
 	// Styles need for HTML elemnets genereted from markdown.
 	h1 {
-		font-size: 28px;
+		font-size: $spacing-07;
 		font-weight: 500;
 	}
 	h2 {
-		font-size: 22px;
+		font-size: $spacing-06;
 		font-weight: 500;
 	}
 	h3 {
-		font-size: 18px;
+		font-size: $spacing-05;
 		font-weight: 500;
 	}
 	h4 {
@@ -751,7 +751,7 @@ g.bkg-col-cyan-50 {
 		font-weight: 500;
 	}
 	h5 {
-		font-size: 14px;
+		font-size: $spacing-05;
 		font-weight: 500;
 	}
 	h6 {
@@ -775,7 +775,7 @@ g.bkg-col-cyan-50 {
 	}
 	blockquote {
 		padding: 0 $spacing-04;
-		border-left: 3px solid $layer-accent-01;
+		border-left: $spacing-02 solid $layer-accent-01;
 		line-height: $spacing-03;
 	}
 	code {
@@ -792,7 +792,7 @@ g.bkg-col-cyan-50 {
 		line-height: $comment-text-line-height;
 		background-color: $layer-02;
 		padding: $spacing-02;
-		border: 1px solid $layer-accent-01;
+		border: $spacing-01 solid $layer-accent-01;
 		border-radius: $spacing-02;
 		white-space: pre-wrap;
 		code {
@@ -802,7 +802,7 @@ g.bkg-col-cyan-50 {
 	table {
 		width: 100%;
 		max-width: 100%;
-		margin-bottom: 20px;
+		margin-bottom: $spacing-06;
 		border-spacing: 0;
 		border-collapse: collapse;
 		box-sizing: border-box;
@@ -847,14 +847,14 @@ g.bkg-col-cyan-50 {
 		// A paragraph is generated in a list item when a blank line is entered
 		// between two if the list items in the input text.
 		p {
-			margin: 0 0 10px;
+			margin: 0 0 $spacing-04;
 			margin-block-start: -14px; // Will keep the paragraph on same line as marker
 		}
 	}
 	ul {
 		list-style-type: disc;
-		padding-inline-start: 30px;
-		line-height: 14px;
+		padding-inline-start: $spacing-07;
+		line-height: $spacing-05;
 		margin-top: 0;
 	}
 	ul ul {
@@ -869,7 +869,7 @@ g.bkg-col-cyan-50 {
 	}
 	ol {
 		list-style-type: decimal;
-		padding-inline-start: 30px;
+		padding-inline-start: $spacing-07;
 		line-height: 14px;
 		margin-top: 0;
 	}
@@ -936,7 +936,7 @@ g.bkg-col-cyan-50 {
 	background-color: $comment-fill-color;
 	padding: $comment-text-display-border;
 	border-color: $comment-outline-color;
-	border-width: 1px;
+	border-width: $spacing-01;
 	user-select: none;
 	overflow: hidden;
 	display: table-cell;
@@ -954,7 +954,7 @@ g.bkg-col-cyan-50 {
 .d3-comment-text-entry-wysiwyg {
 	@include d3-comment-mixin;
 	padding: $comment-text-display-border;
-	border-width: 1px;
+	border-width: $spacing-01;
 	background-color: $field-01;
 	outline: none;
 	user-select: none;
@@ -976,7 +976,7 @@ g.bkg-col-cyan-50 {
 .d3-link-group.d3-branch-highlight:hover {
 	.d3-link-line {
 		stroke: $background-inverse;
-		stroke-width: 3px;
+		stroke-width: $spacing-02;
 	}
 }
 

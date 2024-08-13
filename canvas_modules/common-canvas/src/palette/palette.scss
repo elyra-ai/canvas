@@ -23,10 +23,10 @@ $palette-search-container-height: 41px;
 //--------------------------------------------------------
 .palette-flyout-div {
 	border-right: $palette-border-width solid $palette-border-color;
-	font-size: 14px;
+	font-size: $spacing-05;
 	position: relative;
 	height: 100%;
-	padding-bottom: 5px;
+	padding-bottom: $spacing-02;
 	background-color: $layer-01;
 	-webkit-transition: 0.2s;
 	transition: 0.2s;
@@ -62,36 +62,36 @@ $palette-search-container-height: 41px;
 	.palette-no-results-title {
 		@include type-style("body-short-01");
 		width: 100%;
-		padding: 20px 20px 0;
+		padding: $spacing-06 $spacing-06 0;
 		text-align: center;
 	}
 
 	.palette-no-results-desc {
 		@include type-style("caption-01");
 		width: 100%;
-		padding: 0 20px;
+		padding: 0 $spacing-06;
 		text-align: center;
 	}
 
 	.palette-flyout-restrict-item {
 		@include type-style("helper-text-01");
 		width: 100%;
-		padding: $spacing-08 20px;
+		padding: $spacing-08 $spacing-06;
 	}
 
 	.palette-list-item-desc-button {
 		color: $link-primary;
 		cursor: pointer;
-		padding: 5px 0 0;
+		padding: $spacing-02 0 0;
 	}
 
 	.palette-list-item {
-		height: 46px;
+		height: $spacing-09;
 		border-width: 0;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding: 9px 10px;
+		padding: $spacing-03 $spacing-04;
 		/* Prevent elements from being selectable */
 		/* This stops it being dragged incorrectly.*/
 		user-select: none;
@@ -110,7 +110,7 @@ $palette-search-container-height: 41px;
 		.palette-list-item-category-label {
 			@include type-style("caption-01");
 			width: 100%;
-			padding: $spacing-05 10px 0 58px;
+			padding: $spacing-05 $spacing-04 0 58px;
 
 			& mark {
 				color: $button-primary;
@@ -125,18 +125,18 @@ $palette-search-container-height: 41px;
 			width: 100%;
 			align-items: center;
 			height: 100%;
-			margin-left: 20px;
+			margin-left: $spacing-06;
 		}
 
 		.palette-list-item-icon {
-			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
+			width: $spacing-07; /* Not specifying height preserves the image's aspect ratio. */
 			color: $text-secondary;
 		}
 
 		.palette-list-item-text-div {
 			@include type-style("productive-heading-01");
 			font-weight: 400;
-			padding: 0 10px;
+			padding: 0 $spacing-04;
 			width: calc(100% - 68px);
 			line-height: 1;
 			& mark {
@@ -148,15 +148,15 @@ $palette-search-container-height: 41px;
 
 		.palette-list-item-icon-warning {
 			transform: scale(1.5);
-			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			line-height: 46px;  /* Must be same as containing div height */
+			width: $spacing-07; /* Not specifying height preserves the image's aspect ratio. */
+			line-height: $spacing-09;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
 		}
 
 		.palette-list-item-description {
 			@include type-style("caption-01");
-			padding: 0 10px 0 58px;
+			padding: 0 $spacing-04 0 58px;
 			word-break: break-word;
 			width: 100%; // Needed when the description is only one line long
 
@@ -172,16 +172,16 @@ $palette-search-container-height: 41px;
 		}
 
 		&.search-result {
-			min-height: 46px;
+			min-height: $spacing-09;
 			height: fit-content;
 			padding-bottom: $spacing-05;
 			padding-top: 0px;
 			padding-left: 0px;
 			border-bottom: $palette-border-width solid $palette-border-color;
-			padding-right: 6px;
+			padding-right: $spacing-03;
 			.palette-list-item-icon-and-text {
-				min-height: 30px;
-				padding-left: 10px;
+				min-height: $spacing-07;
+				padding-left: $spacing-04;
 			}
 		}
 	}
@@ -194,7 +194,7 @@ $palette-search-container-height: 41px;
 	height:0;
 
 	li .cds--accordion__arrow {
-		margin: 15px;
+		margin: $spacing-05;
 	}
 	.cds--accordion__item {
 		border-top: 0;
@@ -206,8 +206,8 @@ $palette-search-container-height: 41px;
 			padding: 0;
 			.cds--accordion__title {
 				margin: 0;
-				padding: 0 0 0 11px;
-				height: 45px;
+				padding: 0 0 0 $spacing-04;
+				height: $spacing-09;
 			}
 		}
 
@@ -239,7 +239,7 @@ $palette-search-container-height: 41px;
 	display: flex;
 	align-items: center;
 	min-height: 44px;
-	padding-left: 11px;
+	padding-left: $spacing-04;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	user-select: none;
@@ -255,8 +255,8 @@ $palette-search-container-height: 41px;
 }
 
 .palette-flyout-category-item-icon {
-	width: 20px;  /* Not specifying height preserves the image's aspect ratio. */
-	margin-left: 5px;
+	width: $spacing-06;  /* Not specifying height preserves the image's aspect ratio. */
+	margin-left: $spacing-02;
 	fill: $icon-primary;
 	padding-top: $spacing-02;
 }
@@ -286,13 +286,13 @@ $palette-search-container-height: 41px;
 
 .palette-flyout-category-text-no-image {
 	line-height: 1.2;
-	margin-left: 10px;
+	margin-left: $spacing-04;
 	width: 170px;
 }
 
 .palette-flyout-category-count {
 	line-height: 1.2;
-	padding-left: 5px;
+	padding-left: $spacing-02;
 }
 
 .palette-flyout-search-container {
@@ -303,7 +303,7 @@ $palette-search-container-height: 41px;
 		// Move the magnifying glass icon to be positioned over the category icons
 		// in the palette, as required from DUX review.
 		.cds--search-magnifier svg {
-			margin-left: 10px;
+			margin-left: $spacing-04;
 		}
 
 		svg {
@@ -352,8 +352,8 @@ $palette-search-container-height: 41px;
 	/* width = (3 * grid_node_width) + category_min_width + (3 * hoverZoneSize)*/
 	height: 450px;  /* If this is changed see palette-content height below */
 	/* height = (3 * grid_node_height) + (2 * hoverZoneSize) + palette-dialog-topbar height + padding */
-	font-size: 14px;
-	border: 3px solid transparent; /* transparent border provides sizing hover zone */
+	font-size: $spacing-05;
+	border: $spacing-01 solid transparent; /* transparent border provides sizing hover zone */
 	cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
 	z-index: 2;
 	/* Prevent elements from being selectable */
@@ -362,8 +362,8 @@ $palette-search-container-height: 41px;
 	display: block;
 
 	.palette-list-item {
-		height: 46px;
-		border-width: 1px;
+		height: $spacing-09;
+		border-width: $spacing-01;
 		border-color: $palette-border-color;
 		border-style: solid;
 		display: flex;
@@ -382,16 +382,16 @@ $palette-search-container-height: 41px;
 			display: flex;
 			flex-direction: row;
 			width: 100%;
-			height: 46px;
+			height: $spacing-09;
 			align-items: center;
 		}
 
 		.palette-list-item-icon {
-			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			line-height: 46px;  /* Must be same as containing div height */
+			width: $spacing-07; /* Not specifying height preserves the image's aspect ratio. */
+			line-height: $spacing-09;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
-			margin-right: 10px;
+			margin-right: $spacing-04;
 		}
 
 		.palette-list-item-text-div {
@@ -409,17 +409,17 @@ $palette-search-container-height: 41px;
 
 		.palette-list-item-icon-warning {
 			transform: scale(1.5);
-			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			line-height: 46px;  /* Must be same as containing div height */
+			width: $spacing-07; /* Not specifying height preserves the image's aspect ratio. */
+			line-height: $spacing-09;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
-			margin-right: 10px;
+			margin-right: $spacing-04;
 		}
 	}
 }
 
 .palette-dialog-topbar {
-	height: 41px;
+	height: $spacing-08;
 	background-color: $layer-accent-01;
 	border-bottom: $palette-border-width solid $palette-border-color;
 }
@@ -441,7 +441,7 @@ $palette-search-container-height: 41px;
 }
 
 .palette-dialog-category {
-	padding: 10px;
+	padding: $spacing-04;
 	border-width: 0 0 0 $palette-border-width;
 	cursor: pointer;
 	/* Prevent elements from being selectable */
@@ -461,8 +461,8 @@ $palette-search-container-height: 41px;
 	width: 130px;
 	min-width: 130px;
 	padding-left: $spacing-03;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	padding-top: $spacing-04;
+	padding-bottom: $spacing-04;
 	cursor: pointer;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
@@ -475,7 +475,7 @@ $palette-search-container-height: 41px;
 	display: inline-block; /* This makes the nodes layout across and then down inside the content area. */
 	vertical-align: middle; /* This makes the contents of this div align in the middle vertically. */
 	text-align: center;     /* This makes the contents of this div (text and icon) align in the center horizontally. */
-	border-width: 1px;
+	border-width: $spacing-01;
 	border-color: $palette-border-color;
 	border-style: solid;
 	/* Prevent elements from being selectable */
@@ -503,17 +503,17 @@ $palette-search-container-height: 41px;
 
 .palette-dialog-grid-node-icon-warning {
 	transform: scale(4);
-	margin-top: 25px;
+	margin-top: $spacing-06;
 }
 
 .palette-dialog-grid-node-text-warning {
 	width: 100%;
-	padding-top: 30px;
+	padding-top: $spacing-07;
 }
 
 .palette-dialog-grid-node-text {
 	width: 100%;
-	padding-top: 6px;
+	padding-top: $spacing-03;
 }
 
 //--------------------------------------------------------

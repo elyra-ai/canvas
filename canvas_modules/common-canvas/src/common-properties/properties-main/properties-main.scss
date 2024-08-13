@@ -19,11 +19,11 @@ $properties-modal-buttons-height: $spacing-10;
 
 .properties-right-flyout {
 	// Set the font explicitly to 14px to shrink them across the entire properties editor
-	font-size: 14px;
+	font-size: $spacing-05;
 	width: 0;
 	height: 100%;
 	overflow: hidden;
-	border-left: 1px solid $layer-accent-01;
+	border-left: $spacing-01 solid $layer-accent-01;
 	outline: none;
 	display: flex;
 	flex-direction: column;
@@ -57,7 +57,7 @@ $properties-modal-buttons-height: $spacing-10;
 		min-height: $spacing-06;
 		min-width: $spacing-06;
 		background-color: $layer-01;
-		border: 1px $border-strong-01 solid;
+		border: $spacing-01 $border-strong-01 solid;
 		padding: $spacing-01;
 		justify-content: center;
 		&:hover {

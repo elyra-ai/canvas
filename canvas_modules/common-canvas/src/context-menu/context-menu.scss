@@ -78,7 +78,7 @@
 }
 
 .context-menu-divider {
-	height: 1px;
+	height: $spacing-01;
 	display: block;
 	overflow: hidden;
 	background-color: $layer-accent-01;

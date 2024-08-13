@@ -21,14 +21,14 @@
 @import "./properties-main/properties-main";
 
 .properties-error-heading .properties-validation-message {
-	padding: $spacing-08 10px 0;
+	padding: $spacing-08 $spacing-04 0;
 	align-items: left;
 	-webkit-box-align: left;
 	display: flex;
 }
 
 .properties-error-heading .properties-validation-message span {
-	font-size: 20px;
+	font-size: $spacing-06;
 	font-weight: 300;
 	font-style: italic;
 }

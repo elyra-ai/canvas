@@ -29,7 +29,7 @@
 		.properties-vt-row-disabled {
 			opacity: 0.5;
 			&:hover {
-				border-bottom: 1px solid $layer-accent-01;
+				border-bottom: $spacing-01 solid $layer-accent-01;
 			}
 		}
 	}
@@ -123,16 +123,16 @@
 
 	.properties-vt-double-click:first-of-type {
 		.properties-vt-row-class {
-			border-top: 1px solid transparent;
+			border-top: $spacing-01 solid transparent;
 			&.properties-vt-row-selected {
-				border-top: 1px solid $layer-accent-hover-01;
+				border-top: $spacing-01 solid $layer-accent-hover-01;
 			}
 		}
 	}
 
 	.properties-vt-row-class {
 		line-height: 20px;
-		border-bottom: 1px solid $layer-accent-01;
+		border-bottom: $spacing-01 solid $layer-accent-01;
 
 		&:hover:not(.properties-vt-row-non-interactive):not(.properties-vt-row-selected) {
 			// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
@@ -143,14 +143,14 @@
 			// Required for numberfields within react-virtualized table cell
 			.properties-numberfield {
 				input {
-					margin-bottom: 5px;
+					margin-bottom: $spacing-02;
 				}
 			}
 
 			// Required for textarea to be visible in a table cell
 			.properties-textarea textarea {
 				resize: none;
-				height: 42px;
+				height: $spacing-08;
 				min-width: 100%;
 			}
 		}
@@ -185,7 +185,7 @@
 
 	.properties-vt-row-selected {
 		background-color: $layer-selected-01;
-		border-bottom: 1px solid $layer-accent-hover-01;
+		border-bottom: $spacing-01 solid $layer-accent-hover-01;
 		&:hover {
 			background-color: $layer-accent-hover-01;
 		}
@@ -194,12 +194,12 @@
 	.properties-vt-single-selection {
 		// Table header
 		div[data-role="properties-header-row"] {
-			padding-left: 3px;
+			padding-left: $spacing-02;
 		}
 
 		// Table rows
 		.properties-vt-row-class {
-			padding-left: 3px;
+			padding-left: $spacing-02;
 		}
 		.properties-vt-row-selected {
 			border-left: $spacing-02 solid $button-primary;

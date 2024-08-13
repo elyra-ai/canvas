@@ -43,7 +43,7 @@ $properties-buttons-height: $spacing-10;
 	// Start:: These styles are to display only parameters in a Tearsheet
 	.properties-tearsheet-header {
 		padding: $spacing-06 $spacing-07;
-		border-bottom: 1px solid $layer-accent-01;
+		border-bottom: $spacing-01 solid $layer-accent-01;
 		margin-bottom: 0;
 		h3 {
 			@include type-style("productive-heading-04");
@@ -87,7 +87,7 @@ $properties-buttons-height: $spacing-10;
 
 			.properties-primaryTabs {
 				background-color: $layer-01;
-				border-bottom: 1px solid $layer-accent-01;
+				border-bottom: $spacing-01 solid $layer-accent-01;
 				margin-bottom: $spacing-05;
 				padding-left: $spacing-05;
 			}
@@ -96,7 +96,7 @@ $properties-buttons-height: $spacing-10;
 
 	.properties-tearsheet-body.with-buttons {
 		height: calc(100% - #{$properties-buttons-height});
-		border-bottom: 1px solid $layer-accent-01;
+		border-bottom: $spacing-01 solid $layer-accent-01;
 	}
 
 	.properties-tearsheet-body.with-tabs {

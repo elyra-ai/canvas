@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-$notification-panel-header-height: 33px;
+$notification-panel-header-height: $spacing-07;
 $notification-message-height: $spacing-09;
 $notification-left-border-color-width: $spacing-02;
-$notification-panel-button-container-height: 49px;
+$notification-panel-button-container-height: $spacing-09;
 
 .notification-panel {
 	width: 318px;
@@ -82,12 +82,12 @@ $notification-panel-button-container-height: 49px;
 	overflow-y: auto;
 	line-height: normal;
 	background-color: $layer-01;
-	border-top: 1px solid $layer-accent-01;
-	border-bottom: 1px solid $layer-accent-01;
+	border-top: $spacing-01 solid $layer-accent-01;
+	border-bottom: $spacing-01 solid $layer-accent-01;
 	max-height: 448px;
 
 	.notifications-button-container {
-		border-bottom: 1px solid $layer-accent-01;
+		border-bottom: $spacing-01 solid $layer-accent-01;
 		min-height: $notification-message-height;
 	}
 
@@ -106,8 +106,8 @@ $notification-panel-button-container-height: 49px;
 		.notification-panel-empty-message {
 			@include type-style("body-short-01");
 			text-align: center;
-			padding-right: 30px;
-			padding-left: 30px;
+			padding-right: $spacing-07;
+			padding-left: $spacing-07;
 		}
 	}
 
@@ -192,7 +192,7 @@ $notification-panel-button-container-height: 49px;
 				hr {
 					margin-bottom: $spacing-03;
 					border-bottom: 0;
-					border-top: solid 1px $layer-accent-01;
+					border-top: solid $spacing-01 $layer-accent-01;
 				}
 			}
 
@@ -212,14 +212,14 @@ $notification-panel-button-container-height: 49px;
 	display: inline-flex;
 	color: $text-secondary;
 	svg {
-		width: 10px;
-		height: 10px;
-		margin-right: 3px;
-		margin-top: 3px;
+		width: $spacing-04;
+		height: $spacing-04;
+		margin-right: $spacing-02;
+		margin-top: $spacing-02;
 	}
 
 	.notification-message-string {
-		font-size: 10px;
+		font-size: $spacing-04;
 		margin-top: auto;
 		margin-bottom: auto;
 	}

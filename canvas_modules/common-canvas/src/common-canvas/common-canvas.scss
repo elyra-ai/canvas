@@ -69,7 +69,7 @@ $panel-border-color: $border-subtle-01;
 	border-top: $panel-border-color;
 	cursor: row-resize;
 	flex: 0 0 $spacing-01;
-	border-top-width: 1px;
+	border-top-width: $spacing-01;
 	background: $layer-01;
 	transition: all 0.2s ease-in;
 	&:hover {
@@ -97,7 +97,7 @@ $panel-border-color: $border-subtle-01;
 .text-toolbar {
 	.toolbar-div {
 		animation: raise-toolbar 0.3s linear;
-		border: 1px solid $border-strong-01;
+		border: $spacing-01 solid $border-strong-01;
 	}
 }
 
@@ -227,12 +227,12 @@ $panel-border-color: $border-subtle-01;
 
 .return-to-previous {
 	position: absolute;
-	left: 15px;
-	top: 15px;
+	left: $spacing-05;
+	top: $spacing-05;
 	background-color: $background;
 	& button {
 		background-color: $background;
-		padding-right: 20px;
+		padding-right: $spacing-06;
 	}
 	& button:hover,
 	& button:focus {
@@ -243,9 +243,9 @@ $panel-border-color: $border-subtle-01;
 		display: flex;
 		background-color: transparent;
 		& svg {
-			margin-top: 1px;
+			margin-top: $spacing-01;
 			margin-left: $spacing-02;
-			margin-right: 7px;
+			margin-right: $spacing-03;
 		}
 		& span {
 			padding-bottom: $spacing-01;
@@ -271,10 +271,10 @@ $panel-border-color: $border-subtle-01;
 
 .dropzone-canvas-rect {
 	position: absolute;
-	top: 30px;
-	left: 30px;
-	right: 30px;
-	bottom: 30px;
+	top: $spacing-07;
+	left: $spacing-07;
+	right: $spacing-07;
+	bottom: $spacing-07;
 	border-color: $border-strong-01;
 	border-style: dashed;
 	border-width: $spacing-01;
@@ -305,18 +305,18 @@ $panel-border-color: $border-subtle-01;
 	left: 50%;
 	top: $spacing-05;
 	transform: translate(-50%, 0%);
-	border-radius: 20px;
-	padding: 9px 0;
+	border-radius: $spacing-06;
+	padding: $spacing-03 0;
 	user-select: none; /* Prevent elements from being selectable */
 
 	svg {
 		color: $text-inverse;
 		position: relative;
-		top: 3px;
-		margin-left: 14px;
+		top: $spacing-02;
+		margin-left: $spacing-05;
 	}
 
 	span {
-		margin: 0 $spacing-05 0 10px;
+		margin: 0 $spacing-05 0 $spacing-04;
 	}
 }

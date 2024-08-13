@@ -20,7 +20,7 @@ $toolbar-button-height: $spacing-08;
 $toolbar-button-width: $spacing-08;
 $toolbar-button-sm-height: $spacing-07;
 $toolbar-button-sm-width: $spacing-07;
-$toolbar-divider-width: 1px;
+$toolbar-divider-width: $spacing-01;
 
 .toolbar-div {
 	height: $toolbar-button-height;
@@ -37,7 +37,7 @@ $toolbar-divider-width: 1px;
 
 	&:focus {
 		border-color: transparent;
-		box-shadow: inset 0 0 0 1px $focus;
+		box-shadow: inset 0 0 0 $spacing-01 $focus;
 	}
 
 	/* Small size toolbar  */
@@ -64,7 +64,7 @@ $toolbar-divider-width: 1px;
 			min-width: $spacing-07;
 
 			&.is-in-menu {
-				padding-left: 10px;
+				padding-left: $spacing-04;
 			}
 
 			& .content-main {
@@ -98,7 +98,7 @@ $toolbar-divider-width: 1px;
 .toolbar-left-bar {
 	flex-shrink: 5000000; // Make sure left bar always shrinks first
 	display: block;
-	padding-right: 42px;
+	padding-right: $spacing-08;
 	overflow: hidden;
 	align-items: center;
 }
@@ -128,7 +128,7 @@ $toolbar-divider-width: 1px;
 
 	& > .toolbar-button-item > button {
 		padding: 0;
-		min-height: 30px;
+		min-height: $spacing-07;
 		height: $toolbar-button-height;
 	}
 
@@ -179,7 +179,7 @@ $toolbar-divider-width: 1px;
 	& button {
 		padding: 0;
 		height: $toolbar-button-height;
-		min-height: 30px;
+		min-height: $spacing-07;
 		background-color: $layer-01;
 		border-right: $toolbar-divider-width solid $layer-accent-01;
 	}
@@ -201,7 +201,7 @@ $toolbar-divider-width: 1px;
 		padding-bottom: 0;
 		padding-left: $spacing-05;
 		padding-right: $spacing-05;
-		min-height: 20px;
+		min-height: $spacing-06;
 	}
 }
 
@@ -220,7 +220,7 @@ $toolbar-divider-width: 1px;
 	}
 
 	& .content-main {
-		padding: 11px;
+		padding: $spacing-04;
 		display: flex;
 
 		&.dual:hover {
@@ -229,12 +229,12 @@ $toolbar-divider-width: 1px;
 	}
 
 	& .toolbar-up-down-chevron {
-		padding: 11px $spacing-03 11px 0;
+		padding: $spacing-04 $spacing-03 $spacing-04 0;
 		pointer-events: none;
 	}
 
 	& .toolbar-up-down-chevron-mini {
-		padding: 11px $spacing-01;
+		padding: $spacing-04 $spacing-01;
 
 		&:hover {
 			background-color: $background-selected-hover;
@@ -242,19 +242,19 @@ $toolbar-divider-width: 1px;
 	}
 
 	& .toolbar-right-chevron {
-		padding: 9px 0 $spacing-01;
+		padding: $spacing-03 0 $spacing-01;
 		pointer-events: none;
 	}
 
 	& .overflow-item {
-		padding: 11px;
+		padding: $spacing-04;
 	}
 
 	&.is-in-menu {
 		justify-content: left;
 
 		& .content-main {
-			padding: $spacing-03 0 6px;
+			padding: $spacing-03 0 $spacing-03;
 		}
 	}
 
@@ -285,11 +285,11 @@ $toolbar-divider-width: 1px;
 
 	.toolbar-text-content {
 		position: absolute;
-		width: 11px;
-		top: 15px;
-		left: 13px;
-		font-size: 9px;
-		line-height: 9px;
+		width: $spacing-04;
+		top: $spacing-05;
+		left: $spacing-04;
+		font-size: $spacing-03;
+		line-height: $spacing-03;
 		color: $icon-primary;
 		text-align: center;
 	}
@@ -339,7 +339,7 @@ $toolbar-divider-width: 1px;
 
 .toolbar-sub-menu-jsx-item {
 	width: 100%;
-	height: 38px;
+	height: $spacing-08;
 	display: inline-flex;
 	align-items: center;
 	vertical-align: top;

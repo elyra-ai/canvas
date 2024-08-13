@@ -16,7 +16,7 @@
 
 .properties-dropdown {
 	.cds--list-box--expanded .cds--list-box__menu {
-		margin-bottom: 1px; // Show dropdown menu border above Save/Cancel buttons
+		margin-bottom: $spacing-01; // Show dropdown menu border above Save/Cancel buttons
 	}
 	&.hide {
 		display: none;

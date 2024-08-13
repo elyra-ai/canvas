@@ -23,7 +23,7 @@
 	position: fixed;
 	padding: $spacing-05;
 	background-color: $background-inverse;
-	border: 1px solid $background-inverse;
+	border: $spacing-01 solid $background-inverse;
 	font-weight: 400;
 	opacity: 90%;
 	color: $text-inverse;
@@ -53,11 +53,11 @@
 }
 
 .common-canvas-tooltip[direction="top"] {
-	transform: translate3d(0, 22px, 0);
+	transform: translate3d(0, $spacing-06, 0);
 }
 
 .common-canvas-tooltip[direction="left"] {
-	transform: translate3d(22px, 0, 0);
+	transform: translate3d($spacing-06, 0, 0);
 }
 
 .common-canvas-tooltip[direction="bottom"] {
@@ -74,8 +74,8 @@
 
 .common-canvas-tooltip .tipArrow {
 	position: absolute;
-	width: 10px;
-	height: 14px;
+	width: $spacing-04;
+	height: $spacing-05;
 }
 
 .common-canvas-tooltip[direction="top"] .tipArrow {
@@ -112,13 +112,13 @@
 }
 
 .tip-palette-item, .tip-node {
-	min-width: 80px;
+	min-width: $spacing-11;
 	max-width: 180px;
 	text-align: left;
 }
 
 .tip-palette-category {
-	font-size: 10px;
+	font-size: $spacing-04;
 	padding-bottom: $spacing-02;
 	color: $text-inverse;
 }
