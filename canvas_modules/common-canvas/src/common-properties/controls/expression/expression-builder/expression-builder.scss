@@ -68,6 +68,18 @@ $operator-margin: 50%;
 		width: 100%;
 	}
 }
+.expression-builder-table{
+	.properties-vt-row-selected {
+		cursor: pointer;
+	}
+	.properties-vt-row-class {
+		&:focus {
+			color: $button-primary;
+			border: 1px solid $button-primary;
+		}
+	}
+	
+}
 
 .properties-value-table-container {
 	width: $values-table-width;
@@ -146,4 +158,10 @@ $operator-margin: 50%;
 
 .properties-primaryTabs .cds--tabs-trigger {
 	margin-bottom: 5px;
+}
+
+.expression-add-field-button {
+	svg.add-btn-svg {
+		fill: $button-primary;
+	}
 }
