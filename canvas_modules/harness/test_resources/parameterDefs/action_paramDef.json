@@ -158,7 +158,8 @@
     "title_info": {
       "action_refs": [
         "increment",
-        "run_action"
+        "run_action",
+        "decrement"
       ]
     },
     "parameter_info": [

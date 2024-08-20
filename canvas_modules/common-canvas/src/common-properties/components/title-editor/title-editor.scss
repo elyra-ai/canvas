@@ -21,27 +21,45 @@
 
 	.properties-title-editor-actions {
 		padding: $spacing-05 0 0 $spacing-05;
+		display: flex;
+		flex-flow: wrap;
 
-		.properties-action-button {
-			padding-bottom: $spacing-05;
-			width: 100%;
+		.properties-title-editor-action-btn {
+			margin-right: $spacing-05;
 
-			button {
-				width: 100%;
-				overflow: hidden;
-				white-space: nowrap;
-				display: block;
-				text-overflow: ellipsis;
+			.properties-action-button {
+				padding-bottom: $spacing-05;
 			}
 
-			.cds--btn { // Override Carbon padding within a button to allow more text to display
-				--cds-layout-density-padding-inline-local: 0;
-				padding: 6px 15px;
+			.properties-action-image {
+				padding: 0;
 			}
 		}
+	}
+}
 
-		.properties-action-image {
-			padding: 0;
+// Action buttons within a small right flyout will take up 50% width and display 2 buttons per row
+.properties-right-flyout.properties-small {
+	.properties-title-editor-actions {
+		.properties-title-editor-action-btn {
+			width: calc(50% - #{$spacing-05});
+
+			.properties-action-button {
+				width: 100%;
+
+				button {
+					width: 100%;
+					overflow: hidden;
+					white-space: nowrap;
+					display: block;
+					text-overflow: ellipsis;
+				}
+
+				.cds--btn { // Override Carbon padding within a button to allow more text to display
+					--cds-layout-density-padding-inline-local: 0;
+					padding: 6px 15px;
+				}
+			}
 		}
 	}
 }

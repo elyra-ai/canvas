@@ -101,11 +101,11 @@ class TitleEditor extends Component {
 			this.props.titleInfo.Title.actionIds().forEach((actionRef, idx) => {
 				const actionMetadata = this.props.controller.getAction({ name: actionRef });
 				const action = this.actionFactory.generateAction(`${actionRef}-${idx}`, actionMetadata);
-				actions.push(<div className="cds--css-grid-column cds--col-span-50" key={`${actionRef}-${idx}`}>
+				actions.push(<div className="properties-title-editor-action-btn" key={`${actionRef}-${idx}`}>
 					{action}
 				</div>);
 			});
-			return (<div className="properties-title-editor-actions cds--css-grid cds--css-grid--narrow">
+			return (<div className="properties-title-editor-actions">
 				{actions}
 			</div>);
 		}
