@@ -192,7 +192,7 @@
         {
           "id": "",
           "type": "execution_node",
-          "op": "shape-node",
+          "op": "shape-node-square",
           "inputs": [
             {
               "id": "inPort",
@@ -237,7 +237,7 @@
         {
           "id": "",
           "type": "execution_node",
-          "op": "shape-node",
+          "op": "shape-node-circle",
           "inputs": [
             {
               "id": "inPort",
@@ -282,7 +282,7 @@
         {
           "id": "",
           "type": "execution_node",
-          "op": "shape-node",
+          "op": "shape-node-rounded-square",
           "inputs": [
             {
               "id": "inPort",

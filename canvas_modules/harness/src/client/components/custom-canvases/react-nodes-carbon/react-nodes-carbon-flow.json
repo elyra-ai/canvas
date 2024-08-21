@@ -11,7 +11,7 @@
         {
           "id": "178a4e3c-6cdf-4465-914d-b9d71c5ef6b8",
           "type": "execution_node",
-          "op": "shape-node",
+          "op": "shape-node-square",
           "app_data": {
             "react_nodes_data": {
               "shape": "square"
@@ -56,7 +56,7 @@
         {
           "id": "8a9fbf9d-88b0-4ccc-a0bb-55e2defcb973",
           "type": "execution_node",
-          "op": "shape-node",
+          "op": "shape-node-circle",
           "app_data": {
             "react_nodes_data": {
               "shape": "circle"
@@ -108,7 +108,7 @@
         {
           "id": "d904953e-ca2f-4c4d-b593-f71dbd99fe5d",
           "type": "execution_node",
-          "op": "shape-node",
+          "op": "shape-node-rounded-square",
           "app_data": {
             "react_nodes_data": {
               "shape": "rounded-square"
@@ -362,7 +362,7 @@
         {
           "id": "3248f99f-30b9-441f-8c81-931122a0bfce",
           "type": "execution_node",
-          "op": "shape-node",
+          "op": "shape-node-rounded-square",
           "app_data": {
             "react_nodes_data": {
               "shape": "rounded-square"
@@ -492,7 +492,7 @@
         {
           "id": "b134fd69-1ea8-4f0e-8ead-3ada4914b654",
           "type": "execution_node",
-          "op": "shape-node",
+          "op": "shape-node-circle",
           "app_data": {
             "react_nodes_data": {
               "shape": "circle"
