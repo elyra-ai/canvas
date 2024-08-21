@@ -310,7 +310,7 @@
         {
           "id": "54cc0a7e-abf0-496e-992d-573a73ace37d",
           "type": "execution_node",
-          "op": "card-node-regular",
+          "op": "card-node-regular-curved-corners",
           "app_data": {
             "react_nodes_data": {
               "shape": "curved-corners"

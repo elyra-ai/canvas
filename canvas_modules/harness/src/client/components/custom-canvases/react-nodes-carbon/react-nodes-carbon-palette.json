@@ -139,7 +139,7 @@
         {
           "id": "",
           "type": "execution_node",
-          "op": "card-node-regular",
+          "op": "card-node-regular-curved-corners",
           "outputs": [
             {
               "id": "outPort",

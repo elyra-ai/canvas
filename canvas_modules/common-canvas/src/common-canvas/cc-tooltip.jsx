@@ -96,7 +96,7 @@ class CommonCanvasTooltip extends React.Component {
 					} else if (this.props.canvasController.getObjectModel().hasWarningMessage(this.props.node)) {
 						icon = (<Icon type={WARNING} className="tip-node-status warning" />);
 					}
-					const nodeType = this.props.canvasController.getObjectModel().getPaletteNodeById(this.props.node.id);
+					const nodeType = this.props.canvasController.getObjectModel().getPaletteNode(this.props.node.op);
 					let nodeLabel = this.props.node.label;
 					const nodeTypeLabel = nodeType && nodeType.app_data && nodeType.app_data.ui_data ? nodeType.app_data.ui_data.label : nodeLabel;
 					if (nodeLabel !== nodeTypeLabel) {
