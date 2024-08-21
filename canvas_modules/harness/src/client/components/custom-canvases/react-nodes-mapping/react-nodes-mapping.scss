@@ -16,6 +16,8 @@
 
 /* Override styles for react-nodes sample application. */
 
+$nodes-mapping-height: 30px;
+
 .react-nodes-scrollable {
 
 	.d3-node-group {
@@ -38,7 +40,7 @@
 		}
 
 		.node-header {
-			height: 30px;
+			height: $nodes-mapping-height;
 			padding: 5px;
 			background-color: $background;
 			display: grid;
@@ -61,7 +63,7 @@
 		}
 
 		.scrollable-row {
-			height: 30px;
+			height: $nodes-mapping-height;
 			padding: 5px;
 			background-color: $background;
 			border-width: 2px;
@@ -78,13 +80,13 @@
 		}
 
 		.node-no-columns {
-			height: 30px;
+			height: $nodes-mapping-height;
 			padding: 5px;
 			background-color: $background;
 		}
 
 		.node-footer {
-			height: 30px;
+			height: $nodes-mapping-height;
 			padding: 5px;
 			background-color: $background;
 
