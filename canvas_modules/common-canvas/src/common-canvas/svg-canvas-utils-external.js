@@ -30,6 +30,10 @@ export default class SvgCanvasExternal {
 		return React.isValidElement(el);
 	}
 
+	isReact18() {
+		return React.version.split(".")[0] === "18";
+	}
+
 	addNodeExternalObject(node, i, foreignObjects) {
 		const jsx = (
 			<node.layout.nodeExternalObject
@@ -51,7 +55,7 @@ export default class SvgCanvasExternal {
 
 	renderExternalObject(jsx, container) {
 		// createRoot only available in React v18
-		if (createRoot) {
+		if (this.isReact18()) {
 			if (!container.ccExtRoot) {
 				container.ccExtRoot = createRoot(container);
 			}
@@ -65,7 +69,7 @@ export default class SvgCanvasExternal {
 
 	removeExternalObject(obj, i, foreignObjects) {
 		// createRoot only available in React v18
-		if (createRoot) {
+		if (this.isReact18()) {
 			const container = foreignObjects[i];
 			if (!container.ccExtRoot) {
 				container.ccExtRoot = createRoot(container);
