@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-$properties-wf-title-height: $spacing-08;
+$properties-wf-title-height: 41px;
 $properties-modal-buttons-height: $spacing-10;
 
 .properties-wf-overlay {
@@ -51,7 +51,7 @@ $properties-modal-buttons-height: $spacing-10;
 		display: flex;
 		align-items: center;
 		height: $properties-wf-title-height;
-		border-bottom: $spacing-01 solid $layer-accent-01;
+		border-bottom: 1px solid $layer-accent-01;
 	}
 	.properties-wf-children {
 		padding: $spacing-05;

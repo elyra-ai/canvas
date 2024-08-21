@@ -53,10 +53,10 @@ $row-left-padding: $spacing-02;
 	position: relative;
 	overflow: hidden;
 	&.error {
-		border: $spacing-01 solid $support-error;
+		border: 1px solid $support-error;
 	}
 	&.warning {
-		border: $spacing-01 solid $support-warning;
+		border: 1px solid $support-warning;
 	}
 }
 

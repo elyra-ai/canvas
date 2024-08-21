@@ -43,7 +43,7 @@ $node-warning-color: $support-warning; // Warning yellow
 
 // Node label properties
 $node-label-color: $text-primary;
-$node-label-font-size: $spacing-04;
+$node-label-font-size: 12px;
 $node-label-font-weight: 600;
 $node-label-display-border: $spacing-01;
 $node-label-entry-border: 6px;
@@ -81,7 +81,7 @@ $comment-fill-color: $layer-01;
 $comment-text-color: $text-primary;
 
 // Comment properties
-$comment-text-font-size: $spacing-04;
+$comment-text-font-size: 12px;
 $comment-text-font-weight: 500;
 $comment-text-line-height: 1.2;
 $comment-text-display-border: $spacing-03;
@@ -747,15 +747,15 @@ g.bkg-col-cyan-50 {
 		font-weight: 500;
 	}
 	h4 {
-		font-size: $spacing-05;
+		font-size: 16px;
 		font-weight: 500;
 	}
 	h5 {
-		font-size: $spacing-05;
+		font-size: 14px;
 		font-weight: 500;
 	}
 	h6 {
-		font-size: $spacing-04;
+		font-size: 12px;
 		font-weight: 500;
 	}
 	p {
@@ -775,8 +775,8 @@ g.bkg-col-cyan-50 {
 	}
 	blockquote {
 		padding: 0 $spacing-04;
-		border-left: $spacing-02 solid $layer-accent-01;
-		line-height: $spacing-03;
+		border-left: 3px solid $layer-accent-01;
+		line-height: 8px;
 	}
 	code {
 		font-size: $comment-text-font-size;
@@ -792,7 +792,7 @@ g.bkg-col-cyan-50 {
 		line-height: $comment-text-line-height;
 		background-color: $layer-02;
 		padding: $spacing-02;
-		border: $spacing-01 solid $layer-accent-01;
+		border: 1px solid $layer-accent-01;
 		border-radius: $spacing-02;
 		white-space: pre-wrap;
 		code {
@@ -802,7 +802,7 @@ g.bkg-col-cyan-50 {
 	table {
 		width: 100%;
 		max-width: 100%;
-		margin-bottom: $spacing-06;
+		margin-bottom: 20px;
 		border-spacing: 0;
 		border-collapse: collapse;
 		box-sizing: border-box;
@@ -810,7 +810,7 @@ g.bkg-col-cyan-50 {
 		color: $text-primary;
 		thead {
 			@include type-style("productive-heading-01");
-			font-size: $spacing-04;
+			font-size: 12px;
 			display: table-header-group;
 			vertical-align: middle;
 			border-color: inherit;
@@ -823,7 +823,7 @@ g.bkg-col-cyan-50 {
 		}
 		tbody {
 			@include type-style("body-short-01");
-			font-size: $spacing-04;
+			font-size: 12px;
 			tr {
 				border-bottom: $spacing-01 solid $layer-accent-01;
 				background-color: $layer-02;
@@ -847,14 +847,14 @@ g.bkg-col-cyan-50 {
 		// A paragraph is generated in a list item when a blank line is entered
 		// between two if the list items in the input text.
 		p {
-			margin: 0 0 $spacing-04;
+			margin: 0 0 10px;
 			margin-block-start: -14px; // Will keep the paragraph on same line as marker
 		}
 	}
 	ul {
 		list-style-type: disc;
-		padding-inline-start: $spacing-07;
-		line-height: $spacing-05;
+		padding-inline-start: 30px;
+		line-height: 14px;
 		margin-top: 0;
 	}
 	ul ul {
@@ -869,7 +869,7 @@ g.bkg-col-cyan-50 {
 	}
 	ol {
 		list-style-type: decimal;
-		padding-inline-start: $spacing-07;
+		padding-inline-start: 30px;
 		line-height: 14px;
 		margin-top: 0;
 	}
@@ -936,7 +936,7 @@ g.bkg-col-cyan-50 {
 	background-color: $comment-fill-color;
 	padding: $comment-text-display-border;
 	border-color: $comment-outline-color;
-	border-width: $spacing-01;
+	border-width: 1px;
 	user-select: none;
 	overflow: hidden;
 	display: table-cell;
@@ -954,7 +954,7 @@ g.bkg-col-cyan-50 {
 .d3-comment-text-entry-wysiwyg {
 	@include d3-comment-mixin;
 	padding: $comment-text-display-border;
-	border-width: $spacing-01;
+	border-width: 1px;
 	background-color: $field-01;
 	outline: none;
 	user-select: none;
@@ -976,7 +976,7 @@ g.bkg-col-cyan-50 {
 .d3-link-group.d3-branch-highlight:hover {
 	.d3-link-line {
 		stroke: $background-inverse;
-		stroke-width: $spacing-02;
+		stroke-width: 3px;
 	}
 }
 

@@ -17,7 +17,7 @@
 .properties-title-editor {
 	font-size: 0;
 	padding: $spacing-05 0;
-	border-bottom: $spacing-01 $layer-accent-01 solid;
+	border-bottom: 1px $layer-accent-01 solid;
 
 	.properties-title-editor-actions {
 		padding: $spacing-05 0 0 $spacing-05;
@@ -36,7 +36,7 @@
 
 			.cds--btn { // Override Carbon padding within a button to allow more text to display
 				--cds-layout-density-padding-inline-local: 0;
-				padding: $spacing-03 $spacing-05;
+				padding: 6px 15px;
 			}
 		}
 
@@ -71,7 +71,7 @@
 }
 .properties-title-editor-input {
 	width: calc(100% - #{$spacing-03}); // subtract 8px to align with Close icon when applyOnBlur is set
-	top: $spacing-01; // align input with bottom border
+	top: 1px; // align input with bottom border
 	position: relative;
 	display: inline-flex;
 	align-items: center;
@@ -100,7 +100,7 @@
 			margin: $spacing-02 0 0 $spacing-05; // 4px top padding for error/warning message
 		}
 		.cds--text-input__field-wrapper--warning input {
-			border-bottom: $spacing-01 solid $border-strong-01;
+			border-bottom: 1px solid $border-strong-01;
 		}
 	}
 

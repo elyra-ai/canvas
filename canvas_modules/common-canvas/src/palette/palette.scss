@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-$palette-border-width: $spacing-01;
+$palette-border-width: 1px;
 $palette-border-color: $layer-accent-01;
 $palette-search-container-height: 41px;
 
@@ -23,7 +23,7 @@ $palette-search-container-height: 41px;
 //--------------------------------------------------------
 .palette-flyout-div {
 	border-right: $palette-border-width solid $palette-border-color;
-	font-size: $spacing-05;
+	font-size: 14px;
 	position: relative;
 	height: 100%;
 	padding-bottom: $spacing-02;
@@ -136,7 +136,7 @@ $palette-search-container-height: 41px;
 		.palette-list-item-text-div {
 			@include type-style("productive-heading-01");
 			font-weight: 400;
-			padding: 0 $spacing-04;
+			padding: 0 6px;
 			width: calc(100% - 68px);
 			line-height: 1;
 			& mark {
@@ -352,7 +352,7 @@ $palette-search-container-height: 41px;
 	/* width = (3 * grid_node_width) + category_min_width + (3 * hoverZoneSize)*/
 	height: 450px;  /* If this is changed see palette-content height below */
 	/* height = (3 * grid_node_height) + (2 * hoverZoneSize) + palette-dialog-topbar height + padding */
-	font-size: $spacing-05;
+	font-size: 14px;
 	border: $spacing-01 solid transparent; /* transparent border provides sizing hover zone */
 	cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
 	z-index: 2;

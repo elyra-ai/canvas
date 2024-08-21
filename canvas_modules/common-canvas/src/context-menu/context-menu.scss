@@ -18,7 +18,7 @@
 
 .context-menu-popover {
 	cursor: pointer;
-	min-width: $spacing-13;
+	min-width: 160px;
 	background-color: $layer-01;
 	-webkit-background-clip: padding-box;
 	background-clip: padding-box;
@@ -78,7 +78,7 @@
 }
 
 .context-menu-divider {
-	height: $spacing-01;
+	height: 1px;
 	display: block;
 	overflow: hidden;
 	background-color: $layer-accent-01;

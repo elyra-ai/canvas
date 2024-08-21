@@ -37,7 +37,7 @@ $toolbar-divider-width: 1px;
 
 	&:focus {
 		border-color: transparent;
-		box-shadow: inset 0 0 0 $spacing-01 $focus;
+		box-shadow: inset 0 0 0 1px $focus;
 	}
 
 	/* Small size toolbar  */
@@ -64,7 +64,7 @@ $toolbar-divider-width: 1px;
 			min-width: $spacing-07;
 
 			&.is-in-menu {
-				padding-left: $spacing-04;
+				padding-left: 10px;
 			}
 
 			& .content-main {
@@ -98,7 +98,7 @@ $toolbar-divider-width: 1px;
 .toolbar-left-bar {
 	flex-shrink: 5000000; // Make sure left bar always shrinks first
 	display: block;
-	padding-right: $spacing-08;
+	padding-right: 42px;
 	overflow: hidden;
 	align-items: center;
 }
@@ -128,7 +128,7 @@ $toolbar-divider-width: 1px;
 
 	& > .toolbar-button-item > button {
 		padding: 0;
-		min-height: $spacing-07;
+		min-height: 30px;
 		height: $toolbar-button-height;
 	}
 
@@ -201,7 +201,7 @@ $toolbar-divider-width: 1px;
 		padding-bottom: 0;
 		padding-left: $spacing-05;
 		padding-right: $spacing-05;
-		min-height: $spacing-06;
+		min-height: 20px;
 	}
 }
 
@@ -229,12 +229,12 @@ $toolbar-divider-width: 1px;
 	}
 
 	& .toolbar-up-down-chevron {
-		padding: $spacing-04 $spacing-03 $spacing-04 0;
+		padding: 11px 8px 11px 0;
 		pointer-events: none;
 	}
 
 	& .toolbar-up-down-chevron-mini {
-		padding: $spacing-04 $spacing-01;
+		padding: 11px $spacing-01;
 
 		&:hover {
 			background-color: $background-selected-hover;
@@ -247,7 +247,7 @@ $toolbar-divider-width: 1px;
 	}
 
 	& .overflow-item {
-		padding: $spacing-04;
+		padding: 11px;
 	}
 
 	&.is-in-menu {
@@ -288,7 +288,7 @@ $toolbar-divider-width: 1px;
 		width: $spacing-04;
 		top: $spacing-05;
 		left: $spacing-04;
-		font-size: $spacing-03;
+		font-size: 9px;
 		line-height: $spacing-03;
 		color: $icon-primary;
 		text-align: center;

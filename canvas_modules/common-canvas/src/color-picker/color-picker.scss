@@ -21,15 +21,15 @@
 	flex-wrap: wrap;
 
 	.color-picker-item {
-		width: $spacing-06;
-		height: $spacing-06;
-		margin: $spacing-02 0 0 $spacing-02;
+		width: 20px;
+		height: 20px;
+		margin: 5px 0 0 5px;
 		cursor: pointer;
-		border: $border-subtle-02 $spacing-01 solid;
+		border: $border-subtle-02 1px solid;
 
 		&.white-0 {
 			background-color: $layer-01; // In dark-mode, white-0 will be interpreted as black.
-			border: $spacing-01 solid $gray-50;
+			border: 1px solid $gray-50;
 		}
 		&.yellow-20 { background-color: $yellow-20; }
 		&.gray-20 { background-color: $gray-20; }

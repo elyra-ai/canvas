@@ -82,12 +82,12 @@ $notification-panel-button-container-height: $spacing-09;
 	overflow-y: auto;
 	line-height: normal;
 	background-color: $layer-01;
-	border-top: $spacing-01 solid $layer-accent-01;
-	border-bottom: $spacing-01 solid $layer-accent-01;
+	border-top: 1px solid $layer-accent-01;
+	border-bottom: 1px solid $layer-accent-01;
 	max-height: 448px;
 
 	.notifications-button-container {
-		border-bottom: $spacing-01 solid $layer-accent-01;
+		border-bottom: 1px solid $layer-accent-01;
 		min-height: $notification-message-height;
 	}
 
@@ -192,7 +192,7 @@ $notification-panel-button-container-height: $spacing-09;
 				hr {
 					margin-bottom: $spacing-03;
 					border-bottom: 0;
-					border-top: solid $spacing-01 $layer-accent-01;
+					border-top: solid 1px $layer-accent-01;
 				}
 			}
 
@@ -212,14 +212,14 @@ $notification-panel-button-container-height: $spacing-09;
 	display: inline-flex;
 	color: $text-secondary;
 	svg {
-		width: $spacing-04;
-		height: $spacing-04;
-		margin-right: $spacing-02;
-		margin-top: $spacing-02;
+		width: 10px;
+		height: 10px;
+		margin-right: 3px;
+		margin-top: 3px;
 	}
 
 	.notification-message-string {
-		font-size: $spacing-04;
+		font-size: 10px;
 		margin-top: auto;
 		margin-bottom: auto;
 	}

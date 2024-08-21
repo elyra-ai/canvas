@@ -40,7 +40,7 @@ $selected-tab-width: 3px;
 	.properties-leftnav-subtabs {
 		width: 282px;
 		background-color: $layer-01;
-		border-right: $spacing-01 solid $layer-accent-01;
+		border-right: 1px solid $layer-accent-01;
 		padding-top: $spacing-02;
 		height: 100%;
 		max-block-size: none; // To make the height same as parent div

@@ -69,7 +69,7 @@ $panel-border-color: $border-subtle-01;
 	border-top: $panel-border-color;
 	cursor: row-resize;
 	flex: 0 0 $spacing-01;
-	border-top-width: $spacing-01;
+	border-top-width: 1px;
 	background: $layer-01;
 	transition: all 0.2s ease-in;
 	&:hover {
@@ -97,7 +97,7 @@ $panel-border-color: $border-subtle-01;
 .text-toolbar {
 	.toolbar-div {
 		animation: raise-toolbar 0.3s linear;
-		border: $spacing-01 solid $border-strong-01;
+		border: 1px solid $border-strong-01;
 	}
 }
 
@@ -243,9 +243,9 @@ $panel-border-color: $border-subtle-01;
 		display: flex;
 		background-color: transparent;
 		& svg {
-			margin-top: $spacing-01;
-			margin-left: $spacing-02;
-			margin-right: $spacing-03;
+			margin-top: 1px;
+			margin-left: 4px;
+			margin-right: 7px;
 		}
 		& span {
 			padding-bottom: $spacing-01;
@@ -297,6 +297,8 @@ $panel-border-color: $border-subtle-01;
 
 .state-tag {
 	@include type-style("productive-heading-01");
+	display: flex;
+	align-items: center;
 	color: $text-inverse;
 	background-color: $background-inverse;
 	width: fit-content;
@@ -312,8 +314,8 @@ $panel-border-color: $border-subtle-01;
 	svg {
 		color: $text-inverse;
 		position: relative;
-		top: $spacing-02;
-		margin-left: $spacing-05;
+		top: 0;
+		margin-left: 14px;
 	}
 
 	span {

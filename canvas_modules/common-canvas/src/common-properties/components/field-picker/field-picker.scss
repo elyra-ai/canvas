@@ -112,7 +112,7 @@
 // This is for field-picker in tearsheet, containerType="Tearsheet"
 .properties-tearsheet-panel.cds--modal {
 	.properties-fp-table {
-		border-top: $spacing-01 solid $layer-accent-01;
+		border-top: 1px solid $layer-accent-01;
 		padding: $spacing-05;
 
 		.properties-fp-top-row {

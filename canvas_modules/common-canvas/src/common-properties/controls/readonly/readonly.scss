@@ -45,10 +45,10 @@
 		display: flex;
 		align-items: center;
 		.properties-field-type-icon {
-			width: $spacing-05;
-			height: $spacing-05;
+			width: 15px;
+			height: 15px;
 			float: left;
-			margin-right: $spacing-02;
+			margin-right: 5px;
 			flex-shrink: 0; // prevent icon from shrinking if text too long
 
 			svg {
