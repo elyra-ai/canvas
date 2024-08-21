@@ -191,6 +191,11 @@ class DropDown extends React.Component {
 		}
 	}
 
+	// Filter Oneofselect items as per entered input.
+	filterItems(list) {
+		return list?.item?.label?.toLowerCase().includes(list?.inputValue?.toLowerCase());
+	}
+
 	render() {
 		let dropDown;
 		if (this.props.control.controlType === ControlType.SELECTSCHEMA) {
@@ -249,6 +254,7 @@ class DropDown extends React.Component {
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText={this.props.controlItem}
 					helperText={this.props.control.helperText}
+					shouldFilterItem={this.filterItems}
 				/>
 			);
 		} else {

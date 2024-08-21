@@ -521,10 +521,28 @@ describe("oneofselect with custom value allowed works correctly", () => {
 		);
 		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
 		const dropdownInput = dropdownWrapper.find("input");
-		dropdownInput.simulate("click");
+		// Enter '' in input to check [one, three] are filtered using enumFilter and shouldFilterItem
+		dropdownInput.simulate("change", { target: { value: "" } });
 		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
 		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(2);
+	});
+
+	it("Validate oneofselect filters correctly using shouldFilterItem", () => {
+		const wrapper = mount(
+			<OneofselectControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
+		const dropdownInput = dropdownWrapper.find("input");
+		dropdownInput.simulate("change", { target: { value: "one" } });
+		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		expect(dropdownList).to.be.length(1);
 	});
 });
 
