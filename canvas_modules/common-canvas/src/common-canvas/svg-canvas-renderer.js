@@ -642,14 +642,6 @@ export default class SVGCanvasRenderer {
 		this.dragObjectUtils.isMoving();
 	}
 
-	// Returns true if the node should have a resizing area. We should display
-	// a sizing area even for collapsed supernodes so it is available if/when
-	// the supernode is expanded
-	shouldDisplayNodeSizingArea(node) {
-		return !CanvasUtils.isSuperBindingNode(node) &&
-			(CanvasUtils.isSupernode(node) || this.config.enableResizableNodes);
-	}
-
 	getAllNodeGroupsSelection() {
 		return this.nodesLinksGrp.selectChildren(".d3-node-group");
 	}
@@ -1616,7 +1608,7 @@ export default class SVGCanvasRenderer {
 		// Node Sizing Area
 		nonBindingNodeGrps
 			.selectChildren(".d3-node-sizing")
-			.data((d) => (this.shouldDisplayNodeSizingArea(d) ? [d] : []), (d) => d.id)
+			.data((d) => (CanvasUtils.isNodeResizable(d, this.config) ? [d] : []), (d) => d.id)
 			.join(
 				(enter) =>
 					enter
