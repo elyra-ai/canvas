@@ -258,7 +258,7 @@
         {
           "id": "5d47eb47-bac4-4f47-a279-01d39133f118",
           "type": "execution_node",
-          "op": "regular-card-node",
+          "op": "card-node-with-color",
           "app_data": {
             "react_nodes_data": {
               "color": "#EAC348"
@@ -544,7 +544,7 @@
         {
           "id": "08384753-ad6e-4ee7-abab-e7ede93d3b50",
           "type": "execution_node",
-          "op": "regular-card-node",
+          "op": "card-node-with-color",
           "app_data": {
             "react_nodes_data": {
               "color": "#EAC348"

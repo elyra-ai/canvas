@@ -94,7 +94,7 @@
         {
           "id": "",
           "type": "execution_node",
-          "op": "regular-card-node",
+          "op": "card-node-with-color",
           "outputs": [
             {
               "id": "outPort",
