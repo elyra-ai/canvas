@@ -103,7 +103,7 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 	}
 
 	layoutHandler(node) {
-		if (node.op === "shape-node") {
+		if (node?.op && node.op.includes("shape-node")) {
 			const config = {
 				selectionPath: "M -4 -4 h 36 v 36 h -36 Z",
 				nodeExternalObject: ShapeNodeWrapper,
