@@ -522,6 +522,17 @@ export default class CanvasUtils {
 		return (1 - t) * (1 - t) * (1 - t) * p0 + 3 * (1 - t) * (1 - t) * t * p1 + 3 * (1 - t) * t * t * p2 + t * t * t * p3;
 	}
 
+	// Returns true if the node passed in should be resizeable. All nodes are resizabele
+	// except binding nodes in a sub-flow when enableResizableNodes is switched on.
+	static isNodeResizable(node, config) {
+		if (!config.enableEditingActions ||
+				this.isSuperBindingNode(node) ||
+				(!config.enableResizableNodes && !this.isExpandedSupernode(node))) {
+			return false;
+		}
+		return true;
+	}
+
 	// Returns true if a link of type `type` can be created between the two
 	// node/port combinations provided given the set of current links provided.
 	static isConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, type, selfRefLinkAllowed) {

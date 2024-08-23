@@ -225,7 +225,7 @@ Cypress.Commands.add("hoverOverNodeLabel", (nodeName) => {
 	cy.wait(10);
 	cy.getNodeWithLabel(nodeName)
 		.find("> foreignObject > .d3-node-label > span")
-		.trigger("mouseenter");
+		.trigger("mouseenter", { force: true });
 });
 
 Cypress.Commands.add("hoverOverNodeInSupernode", (nodeName, supernodeName) => {
