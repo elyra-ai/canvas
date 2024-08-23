@@ -105,7 +105,7 @@ class CommonCanvasTextToolbar extends React.Component {
 		const subMenuFont = [
 			{ action: "font-ibm-plex-sans", label: this.getLabel("texttoolbar.fontIBMPlexSans"), enable: true },
 			{ action: "font-ibm-plex-serif", label: this.getLabel("texttoolbar.fontIBMPlexSerif"), enable: true },
-			{ action: "font-ibm-plex-condensed", label: this.getLabel("texttoolbar.fontIBMPlexCon"), enable: true },
+			{ action: "font-ibm-plex-sans-condensed", label: this.getLabel("texttoolbar.fontIBMPlexSansCon"), enable: true },
 			{ action: "font-ibm-plex-mono", label: this.getLabel("texttoolbar.fontIBMPlexMono"), enable: true },
 			{ action: "font-arial", label: this.getLabel("texttoolbar.fontArial"), enable: true },
 			{ action: "font-comic-sans-ms", label: this.getLabel("texttoolbar.fontComicSansMS"), enable: true },
@@ -144,7 +144,7 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		const subMenuOutline = [
 			{ action: "outline-none", label: this.getLabel("texttoolbar.outlineNone"), enable: true },
-			{ action: "outline-visible", label: this.getLabel("texttoolbar.outlineSolid"), enable: true }
+			{ action: "outline-solid", label: this.getLabel("texttoolbar.outlineSolid"), enable: true }
 		];
 
 		return {
@@ -233,10 +233,11 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		if (this.props.isOpen) {
 			textToolbar = (
-				<div className={"text-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }} onBlur={this.props.blurHandler}>
+				<div className={"text-toolbar floating-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }} onBlur={this.props.blurHandler}>
 					<Toolbar
 						config={this.getTextToolbar()}
 						instanceId={this.props.canvasController.getInstanceId()}
+						containingDivId={this.props.containingDivId}
 						toolbarActionHandler={this.props.actionHandler}
 						tooltipDirection={"top"}
 						size={"sm"}
@@ -253,6 +254,7 @@ CommonCanvasTextToolbar.propTypes = {
 	// Provided by CommonCanvas
 	intl: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	containingDivId: PropTypes.string.isRequired,
 
 	// Provided by redux
 	isOpen: PropTypes.bool.isRequired,

@@ -303,7 +303,7 @@ const createCommentMenu = (enableWYSIWYGComments) => {
 	if (enableWYSIWYGComments) {
 		return [
 			{ action: "createComment", label: getLabel("canvas.addComment"), toolbarItem: true },
-			{ action: "createWYSIWYGComment", label: getLabel("canvas.addWysiwygComment") }
+			{ action: "createWYSIWYGComment", label: getLabel("canvas.addWysiwygComment"), toolbarItem: true }
 		];
 	}
 	return { action: "createComment", label: getLabel("canvas.addComment"), toolbarItem: true };

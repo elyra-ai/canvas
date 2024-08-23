@@ -2828,9 +2828,9 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	getContextToolbarPos(objType, d) {
+	getDefaultContextToolbarPos(objType, d) {
 		if (objType === "link") {
-			return d.pathInfo.centerPoint;
+			return { ...d.pathInfo.centerPoint };
 
 		} else if (objType === "node" && d.layout.contextToolbarPosition === "topCenter" && !d.is_expanded) {
 			return { x: d.x_pos + (d.width / 2), y: d.y_pos };
@@ -2839,11 +2839,13 @@ export default class SVGCanvasRenderer {
 		return { x: d.x_pos + d.width, y: d.y_pos };
 	}
 
-	addContextToolbar(d3Event, d, objType) {
+	addContextToolbar(d3Event, d, objType, xPos, yPos) {
 		if (!this.isSizing() && !this.isDragging() &&
 				!this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
 			this.canvasController.setMouseInObject(d.id);
-			let pos = this.getContextToolbarPos(objType, d);
+			let pos = this.getDefaultContextToolbarPos(objType, d);
+			pos.x = xPos ? pos.x + xPos : pos.x;
+			pos.y = yPos ? pos.y + yPos : pos.y;
 			pos = this.zoomUtils.unTransformPos(pos);
 			this.openContextMenu(d3Event, objType, d, null, pos);
 		}
@@ -4249,7 +4251,10 @@ export default class SVGCanvasRenderer {
 				this.setLinkLineStyles(targetObj, link, "hover");
 
 				if (this.config.enableContextToolbar) {
-					this.addContextToolbar(d3Event, link, "link");
+					this.addContextToolbar(d3Event, link, "link",
+						this.canvasLayout.linkContextToolbarPosX,
+						this.canvasLayout.linkContextToolbarPosY
+					);
 				}
 			})
 			// This will be called when the mouse cursor enters the link or moves out of
@@ -4277,7 +4282,9 @@ export default class SVGCanvasRenderer {
 			.on("mouseleave", (d3Event, link) => {
 				const targetObj = d3Event.currentTarget;
 
-				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes) {
+				// isEditingText is used to check whether Label Decoration is in Edit Mode
+				// to avoid Decoration Textarea to be closed on mouseleave.
+				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes && !this.isEditingText()) {
 					this.lowerLinkToBottom(targetObj);
 				}
 				this.setLinkLineStyles(targetObj, link, "default");

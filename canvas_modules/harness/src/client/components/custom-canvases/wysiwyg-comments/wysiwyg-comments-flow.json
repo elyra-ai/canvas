@@ -61,7 +61,7 @@
 				"formats": [
 				  {
 					"type": "fontType",
-					"value": "font-ibm-plex-condensed"
+					"value": "font-ibm-plex-sans-condensed"
 				  },
 				  {
 					"type": "textSize",

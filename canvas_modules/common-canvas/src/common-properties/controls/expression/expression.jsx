@@ -24,7 +24,7 @@ import { Button } from "@carbon/react";
 import classNames from "classnames";
 import { isEqual, concat } from "lodash";
 import ValidationMessage from "./../../components/validation-message";
-import WideFlyout from "./../../components/wide-flyout";
+import TearSheet from "../../panels/tearsheet/index.js";
 import { formatMessage } from "./../../util/property-utils";
 import ExpressionBuilder from "./expression-builder/expression-builder";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE } from "./../../constants/constants";
@@ -361,15 +361,7 @@ class ExpressionControl extends React.Component {
 		const rejectLabel = formatMessage(reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
 		const expressonTitle = formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE);
 
-		const flyout = this.state.showExpressionBuilder ? (<WideFlyout
-			cancelHandler={this.cancelExpressionBuilder}
-			okHandler={this.hideExpressionBuilder}
-			show={this.state.showExpressionBuilder}
-			applyLabel={applyLabel}
-			rejectLabel={rejectLabel}
-			title={expressonTitle}
-			light={this.props.controller.getLight() && this.props.control.light}
-		>
+		const expBuilder = (
 			<div>
 				<ExpressionBuilder
 					control={this.props.control}
@@ -377,7 +369,21 @@ class ExpressionControl extends React.Component {
 					propertyId={this.props.propertyId}
 				/>
 			</div>
-		</WideFlyout>) : null;
+		);
+
+		const flyout = this.state.showExpressionBuilder ? (<TearSheet
+			open
+			onCloseCallback={this.cancelExpressionBuilder}
+			okHandler={this.hideExpressionBuilder}
+			cancelHandler={this.cancelExpressionBuilder}
+			showPropertiesButtons
+			applyLabel={applyLabel}
+			rejectLabel={rejectLabel}
+			tearsheet={{
+				title: expressonTitle,
+				content: expBuilder
+			}}
+		/>) : null;
 
 		const className = classNames(`properties-expression-editor ${messageType}`,
 			{ "properties-light-disabled": !this.props.control.light || !this.props.controller.getLight() });

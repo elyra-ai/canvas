@@ -41,7 +41,7 @@ class ToolbarSubMenu extends React.Component {
 	}
 
 	componentDidMount() {
-		if (this.props.containingDivId && this.props.subMenuActions.length > 0) {
+		if (this.props.containingDivId && this.props.subMenuActions?.length > 0) {
 			adjustSubAreaPosition(this.areaRef,
 				this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
 		}
@@ -53,7 +53,7 @@ class ToolbarSubMenu extends React.Component {
 
 	componentDidUpdate() {
 		if (this.state.focusAction !== "subarea") {
-			const actionObj = this.props.subMenuActions.find((sma) => sma.action === this.state.focusAction);
+			const actionObj = this.props.subMenuActions?.find((sma) => sma.action === this.state.focusAction);
 			if (!actionObj?.enable) {
 				const actionToSet = this.getClosestEnabledAction(this.state.focusAction);
 				if (actionToSet !== null) {
@@ -117,18 +117,18 @@ class ToolbarSubMenu extends React.Component {
 	}
 
 	getClosestEnabledAction(action) {
-		const index = this.props.subMenuActions.findIndex((sma) => sma.action === action);
+		const index = this.props.subMenuActions?.findIndex((sma) => sma.action === action);
 		let newAction = null;
 		let indexUp = index + 1;
 		let indexDown = index - 1;
 
-		while ((indexDown > -1 || indexUp < this.props.subMenuActions.length) && newAction === null) {
+		while ((indexDown > -1 || indexUp < this.props.subMenuActions?.length) && newAction === null) {
 			if (indexDown > -1 && this.props.subMenuActions[indexDown].enable) {
 				newAction = this.props.subMenuActions[indexDown].action;
 			} else {
 				indexDown--;
 			}
-			if (indexUp < this.props.subMenuActions.length && this.props.subMenuActions[indexUp].enable) {
+			if (indexUp < this.props.subMenuActions?.length && this.props.subMenuActions[indexUp].enable) {
 				newAction = this.props.subMenuActions[indexUp].action;
 			} else {
 				indexUp++;
@@ -140,7 +140,7 @@ class ToolbarSubMenu extends React.Component {
 	getFocusableActions() {
 		const focusableActions = [];
 
-		for (let i = 0; i < this.props.subMenuActions.length; i++) {
+		for (let i = 0; i < this.props.subMenuActions?.length; i++) {
 			if (this.props.subMenuActions[i].enable || this.props.subMenuActions[i].jsx) {
 				focusableActions.push(this.props.subMenuActions[i]);
 			}
@@ -170,7 +170,7 @@ class ToolbarSubMenu extends React.Component {
 	generateSubMenuItems() {
 		const newItems = [];
 
-		for (let i = 0; i < this.props.subMenuActions.length; i++) {
+		for (let i = 0; i < this.props.subMenuActions?.length; i++) {
 			const actionObj = this.props.subMenuActions[i];
 			if (actionObj) {
 				newItems.push(this.generateSubMenuItem(actionObj, i));
@@ -214,7 +214,7 @@ class ToolbarSubMenu extends React.Component {
 	}
 
 	render() {
-		if (this.props.subMenuActions.length > 0) {
+		if (this.props.subMenuActions?.length > 0) {
 			const style = this.props.isCascadeMenu
 				? generateSubAreaStyle(this.props.expandDirection, this.props.actionItemRect)
 				: null;
@@ -234,7 +234,7 @@ class ToolbarSubMenu extends React.Component {
 }
 
 ToolbarSubMenu.propTypes = {
-	subMenuActions: PropTypes.array.isRequired,
+	subMenuActions: PropTypes.array, // subMenuActions may occasionally be null, when menu is refreshed by React.
 	instanceId: PropTypes.number.isRequired,
 	toolbarActionHandler: PropTypes.func,
 	closeSubArea: PropTypes.func,
