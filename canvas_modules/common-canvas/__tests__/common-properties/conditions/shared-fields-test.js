@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-import propertyUtils from "../../_utils_/property-utils";
-import tableUtils from "./../../_utils_/table-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
+import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import { expect } from "chai";
 import sharedFieldsParamDef from "../../test_resources/paramDefs/sharedFields_paramDef.json";
+import { fireEvent } from "@testing-library/react";
 
 
 describe("Condition dmSharedFields test cases", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(sharedFieldsParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(sharedFieldsParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 	afterEach(() => {
@@ -32,86 +33,93 @@ describe("Condition dmSharedFields test cases", () => {
 
 
 	it("Test the available fields.", () => {
+		const { container } = wrapper;
 		// Validate the available fields in the selectColumns control
-		let fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-input_fields");
-		tableUtils.fieldPicker(fieldPicker, [], ["Age", "BP", "Cholesterol"]);
+		let fieldPicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-input_fields");
+		tableUtilsRTL.fieldPicker(fieldPicker, [], ["Age", "BP", "Cholesterol"]);
 
 		// Validate the available fields in the table control
-		const summaryPanel = propertyUtils.openSummaryPanel(wrapper, "structuretable_filter-summary-panel");
-		fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretable_filter");
-		const tableRows = tableUtils.getTableRows(fieldPicker);
+		const summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "structuretable_filter-summary-panel");
+		fieldPicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretable_filter");
+		const tableRows = tableUtilsRTL.getTableRows(fieldPicker);
 		expect(tableRows).to.have.length(3); // Other fields should be filtered out
-		// close summary panel
-		summaryPanel.find("button.properties-apply-button").simulate("click");
+		fireEvent.click(summaryPanel.querySelector("button.properties-apply-button"));
 
 		// Check the available fields in the weight dropdown
-		const weightDropDown = wrapper.find("div[data-id='properties-regression_weight_field'] Dropdown");
-		let options = weightDropDown.prop("items"); // by Type
-		let expectedOptions = [
-			{ label: "...", value: "" },
-			{ label: "K", value: "K" },
-			{ label: "BP", value: "BP" }
-		];
+		const weightDropDown = container.querySelector("div[data-id='properties-regression_weight_field']");
+		const weightDropDownButton = weightDropDown.querySelector("button.cds--list-box__field");
+		fireEvent.click(weightDropDownButton);
+		const weightDropDownItems = container.querySelectorAll(".cds--list-box__menu-item__option");
+		let options = [];
+		weightDropDownItems.forEach((element) => {
+			options.push(element.textContent);
+		});
+		let expectedOptions = ["...", "K", "BP"];
 		expect(options).to.eql(expectedOptions);
 
 		// Check the available fields in the offset dropdown
-		const offsetDropDown = wrapper.find("div[data-id='properties-offset_field'] Dropdown");
-		options = offsetDropDown.prop("items"); // by Type
-		expectedOptions = [
-			{ label: "...", value: "" },
-			{ label: "Na", value: "Na" }
-		];
+		const offsetDropDown = container.querySelector("div[data-id='properties-offset_field']");
+		const offSetDropDownButton = offsetDropDown.querySelector("button.cds--list-box__field");
+		fireEvent.click(offSetDropDownButton);
+		const offsetDropDownItems = offsetDropDown.querySelectorAll(".cds--list-box__menu-item__option");
+		options = [];
+		offsetDropDownItems.forEach((element) => {
+			options.push(element.textContent);
+		});
+		expectedOptions = ["...", "Na"];
 		expect(options).to.eql(expectedOptions);
 	});
 
 	it("Test allow a change to a field to filter another field's choices.", () => {
-		let selectedFields = tableUtils.getTableRows(wrapper.find("div[data-id='properties-input_fields']"));
+		const { container } = wrapper;
+		let selectedFields = tableUtilsRTL.getTableRows(container.querySelector("div[data-id='properties-input_fields']"));
 		expect(selectedFields).to.have.length(2); // Age and Cholesterol already selected
 		// Select another field `BP` in the selectColumns control
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-input_fields");
-		tableUtils.fieldPicker(fieldPicker, ["BP"], ["Age", "BP", "Cholesterol"]);
-		selectedFields = tableUtils.getTableRows(wrapper.find("div[data-id='properties-input_fields']"));
+		const fieldPicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-input_fields");
+		tableUtilsRTL.fieldPicker(fieldPicker, ["BP"], ["Age", "BP", "Cholesterol"]);
+		selectedFields = tableUtilsRTL.getTableRows(container.querySelector("div[data-id='properties-input_fields']"));
 		expect(selectedFields).to.have.length(3); // Age, BP, and Cholesterol selected
 
-		const weightDropDown = wrapper.find("div[data-id='properties-regression_weight_field'] Dropdown");
-		const options = weightDropDown.prop("items"); // by Type
-		const expectedOptions = [
-			{ label: "...", value: "" },
-			{ label: "K", value: "K" }
-		];
+		const weightDropDown = container.querySelector("div[data-id='properties-regression_weight_field']");
+		const weightDropDownButton = weightDropDown.querySelector("button.cds--list-box__field");
+		fireEvent.click(weightDropDownButton);
+		const weightDropDownItems = container.querySelectorAll(".cds--list-box__menu-item__option");
+		const options = [];
+		weightDropDownItems.forEach((element) => {
+			options.push(element.textContent);
+		});
+		const expectedOptions = ["...", "K"];
 		expect(options).to.eql(expectedOptions);
 	});
 
 	it("Shares fields between dmSharedFields and columnSelection panel", () => {
+		const { container } = wrapper;
 		// Validate the available fields in the selectColumns control
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-column_selection_fields");
-		tableUtils.fieldPicker(fieldPicker, [], ["Age", "Sex", "BP", "Na", "K", "Drug"]);
+		const fieldPicker = tableUtilsRTL.openFieldPicker(container, "properties-column_selection_fields");
+		tableUtilsRTL.fieldPicker(fieldPicker, [], ["Age", "Sex", "BP", "Na", "K", "Drug"]);
 
 		// Check the available fields in the single chooser dropdown
-		const weightDropDown = wrapper.find("div[data-id='properties-column_selection_chooser'] Dropdown");
-		let options = weightDropDown.prop("items"); // by Type
-		let expectedOptions = [
-			{ label: "...", value: "" },
-			{ label: "Sex", value: "Sex" },
-			{ label: "Cholesterol", value: "Cholesterol" },
-			{ label: "Na", value: "Na" },
-			{ label: "K", value: "K" },
-			{ label: "Drug", value: "Drug" }
-		];
+		const weightDropDown = container.querySelector("div[data-id='properties-column_selection_chooser']");
+		const weightDropDownButton = weightDropDown.querySelector("button.cds--list-box__field");
+		fireEvent.click(weightDropDownButton);
+		const weightDropDownItems = container.querySelectorAll(".cds--list-box__menu-item__option");
+		let options = [];
+		weightDropDownItems.forEach((element) => {
+			options.push(element.textContent);
+		});
+		let expectedOptions = ["...", "Sex", "Cholesterol", "Na", "K", "Drug"];
 		expect(options).to.eql(expectedOptions);
 
 		// Check the available fields in the offset dropdown
-		const offsetDropDown = wrapper.find("div[data-id='properties-dmSharedFields_chooser'] Dropdown");
-		options = offsetDropDown.prop("items"); // by Type
-		expectedOptions = [
-			{ label: "...", value: "" },
-			{ label: "Age", value: "Age" },
-			{ label: "Sex", value: "Sex" },
-			{ label: "BP", value: "BP" },
-			{ label: "Na", value: "Na" },
-			{ label: "K", value: "K" },
-			{ label: "Drug", value: "Drug" }
-		];
+		const offsetDropDown = container.querySelector("div[data-id='properties-dmSharedFields_chooser']");
+		const offSetDropDownButton = offsetDropDown.querySelector("button.cds--list-box__field");
+		fireEvent.click(offSetDropDownButton);
+		const offsetDropDownItems = offsetDropDown.querySelectorAll(".cds--list-box__menu-item__option");
+		options = [];
+		offsetDropDownItems.forEach((element) => {
+			options.push(element.textContent);
+		});
+		expectedOptions = ["...", "Age", "Sex", "BP", "Na", "K", "Drug"];
 		expect(options).to.eql(expectedOptions);
 	});
 });

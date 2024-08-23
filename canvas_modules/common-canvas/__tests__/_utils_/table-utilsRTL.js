@@ -24,6 +24,14 @@ function openFieldPicker(container, dataIdName) {
 	return container.querySelector("div.properties-fp-table");
 }
 
+// When table has 0 rows, click on Add columns button to open FieldPicker
+function openFieldPickerForEmptyTable(container, dataIdName) {
+	const tableWrapper = container.querySelector("div[data-id=\"" + dataIdName + "\"]");
+	const emptyTableButton = tableWrapper.querySelector("button.properties-empty-table-button");
+	fireEvent.click(emptyTableButton); // open field picker
+	return container.querySelector("div.properties-fp-table");
+}
+
 // expectedFields is optional
 // fieldsToSelect is an array of field names or objects with name and schema. ex: { "name": "age", "schema": "schema1" }
 function fieldPicker(fieldpickerContainer, fieldsToSelect, expectedFields) {
@@ -133,6 +141,17 @@ function selectCheckboxes(container, rows) {
 	}
 }
 
+// Select checkbox using space or enter keys
+function selectCheckboxesUsingKeyboard(container, rows) {
+	const checkboxes = getTableRows(container);
+	for (const row of rows) {
+		const checkbox = checkboxes[row].querySelector(".properties-vt-row-checkbox");
+		fireEvent.focus(checkbox);
+		fireEvent.keyDown(checkbox, { code: "Enter" });
+		fireEvent.blur(checkbox);
+	}
+}
+
 function selectCheckboxesRows(tableRows, rows) {
 	for (const row of rows) {
 		const checkbox = tableRows[row].querySelector(".properties-vt-row-checkbox");
@@ -142,7 +161,24 @@ function selectCheckboxesRows(tableRows, rows) {
 	}
 }
 
-function shiftSelectCheckbox(rows, rowNumber) {
+/*
+* Select/deselect multiple rows by shift + selecting row number
+* @param wrapper
+* @param rows - single row number.
+*/
+function shiftSelectCheckbox(container, rowNumber) {
+	const rows = getTableRows(container);
+	const checkboxes = [];
+	rows.forEach((row) => {
+		checkboxes.push(row.querySelector(".properties-vt-row-checkbox"));
+	});
+	// row index start from 0 instead of 1 so subtract 1 from rowNumber
+	fireEvent.mouseEnter(checkboxes[rowNumber - 1]);
+	fireEvent.mouseDown(checkboxes[rowNumber - 1], { shiftKey: true });
+	fireEvent.mouseLeave(checkboxes[rowNumber - 1]);
+}
+
+function shiftSelectCheckboxRows(rows, rowNumber) {
 	const checkboxes = [];
 	for (const row of rows) {
 		checkboxes.push(row.querySelector(".properties-vt-row-checkbox"));
@@ -151,6 +187,23 @@ function shiftSelectCheckbox(rows, rowNumber) {
 	fireEvent.mouseEnter(checkboxes[rowNumber - 1]);
 	fireEvent.mouseDown(checkboxes[rowNumber - 1], { shiftKey: true });
 	fireEvent.mouseLeave(checkboxes[rowNumber - 1]);
+}
+
+/*
+* Select the checkbox from the table header that is not the `Select row` column
+* @param wrapper
+* @param index - the column index that contains a checkbox to select
+* @param checked - true to select the checkbox, false to deselect checkbox
+*/
+function selectHeaderColumnCheckbox(container, index, checked) {
+	const columns = getTableHeaderRows(container)[0]
+		.querySelectorAll(".properties-vt-column");
+	const column = columns[index];
+	const tableCheckboxHeader = column.querySelector(".tooltip-trigger").querySelector("input");
+	fireEvent.click(tableCheckboxHeader);
+	if (!checked) {
+		fireEvent.click(tableCheckboxHeader);
+	}
 }
 
 function selectFieldPickerHeaderCheckbox(container) {
@@ -181,8 +234,19 @@ function validateSelectedRowNumRows(rows) {
 	return res;
 }
 
+function validateSelectedCheckbox(checkboxes) {
+	const res = [];
+	for (const checkbox of checkboxes) {
+		if (checkbox.checked === true) {
+			res.push(checkbox);
+		}
+	}
+	return res;
+}
+
 module.exports = {
 	openFieldPicker: openFieldPicker,
+	openFieldPickerForEmptyTable: openFieldPickerForEmptyTable,
 	fieldPicker: fieldPicker,
 	verifyFieldPickerRow: verifyFieldPickerRow,
 	getTableHeaderRows: getTableHeaderRows,
@@ -190,9 +254,13 @@ module.exports = {
 	clickTableRows: clickTableRows,
 	clickHeaderColumnSort: clickHeaderColumnSort,
 	selectCheckboxes: selectCheckboxes,
+	selectCheckboxesUsingKeyboard: selectCheckboxesUsingKeyboard,
 	selectCheckboxesRows: selectCheckboxesRows,
 	shiftSelectCheckbox: shiftSelectCheckbox,
+	shiftSelectCheckboxRows: shiftSelectCheckboxRows,
+	selectHeaderColumnCheckbox: selectHeaderColumnCheckbox,
 	selectFieldPickerHeaderCheckbox: selectFieldPickerHeaderCheckbox,
 	validateSelectedRowNum: validateSelectedRowNum,
-	validateSelectedRowNumRows: validateSelectedRowNumRows
+	validateSelectedRowNumRows: validateSelectedRowNumRows,
+	validateSelectedCheckbox: validateSelectedCheckbox,
 };

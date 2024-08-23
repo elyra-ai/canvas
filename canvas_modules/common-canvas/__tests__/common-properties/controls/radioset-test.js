@@ -15,16 +15,17 @@
  */
 
 import { expect } from "chai";
-import propertyUtils from "../../_utils_/property-utils";
-import tableUtils from "./../../_utils_/table-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
+import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import radioParamDef from "../../test_resources/paramDefs/radio_paramDef.json";
+import { fireEvent, waitFor } from "@testing-library/react";
 
 describe("radio renders and works correctly with different enum types", () => {
 
 	let wrapper;
 	let renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(radioParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(radioParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});
@@ -32,214 +33,232 @@ describe("radio renders and works correctly with different enum types", () => {
 		wrapper.unmount();
 	});
 
-	it("radioset tooltip with string enum Gini & Entropy are displayed ", () => {
-		const radioStringContainer = wrapper.find("div[data-id='properties-ci-radioString']");
-		const tooltipConatiner = radioStringContainer.find("div.tooltipContainer");
+	it("radioset tooltip with string enum Gini & Entropy are displayed ", async() => {
+		const tooltipContainer1 = wrapper.queryAllByText("desc for Gini");
+		const tooltipContainer2 = wrapper.queryAllByText("desc for Entropy");
 		// Verify Entropy Tooltips text
-		expect(tooltipConatiner.at(0).text()).to.equal("desc for Gini");
+		expect(tooltipContainer1[0].textContent).to.equal("desc for Gini");
+		expect(tooltipContainer1[0].parentElement.className).to.equal("tooltipContainer");
 		// Verify Gini Tooltips text
-		expect(tooltipConatiner.at(1).text()).to.equal("desc for Entropy");
+		expect(tooltipContainer2[0].textContent).to.equal("desc for Entropy");
+		expect(tooltipContainer2[0].parentElement.className).to.equal("tooltipContainer");
 	});
 
-	it("radioset control with string enum", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioString']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio String");
+	it("radioset control with string enum", async() => {
+		const { container } = wrapper;
+		const controlDiv = container.querySelector("div[data-id='properties-ci-radioString']");
+		const label = controlDiv.querySelector("label.properties-control-label");
+		expect(label.textContent).to.equal("Radio String");
 		expect(renderedController.getPropertyValue({ name: "radioString" })).to.equal("entropy");
-		const radioGroup = wrapper.find("div[data-id='properties-radioString']");
-		const radioStringGini = radioGroup.find("input[value='gini']");
-		radioStringGini.simulate("change", { target: { checked: true, value: "gini" } });
-		expect(renderedController.getPropertyValue({ name: "radioString" })).to.equal("gini");
+
+		const radioGroup = container.querySelector("div[data-id='properties-radioString']");
+		const radioStringGini = radioGroup.querySelector("input[value='gini']");
+		fireEvent.click(radioStringGini);
+		await waitFor(() => {
+			expect(renderedController.getPropertyValue({ name: "radioString" })).to.equal("gini");
+		});
 	});
 
 	it("radioset control with string enum helper text is visible", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioString']");
-		expect(controlDiv.find("div.cds--form__helper-text").text()).to.equal("RadioSet with enum string type");
+		const controlDiv = wrapper.container.querySelector("div[data-id='properties-ci-radioString']");
+		expect(controlDiv.querySelector("div.cds--form__helper-text").textContent).to.equal("RadioSet with enum string type");
 	});
 
 	it("radioset control with string enum with readonly prop", () => {
-		const controlDivWrapper = wrapper.find("div[data-id='properties-ci-radioString_readonly']");
-		expect(controlDivWrapper.find("RadioButtonGroup").prop("readOnly")).to.equal(true);
+		const controlDivWrapper = wrapper.container.querySelector("div[data-id='properties-ci-radioString_readonly']");
+		expect(controlDivWrapper.querySelector("fieldset").className.includes("readonly")).to.equal(true);
 	});
 
 	it("radioset control with boolean enum", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioBooleanWithEnum']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Boolean with Enum");
+		const { container } = wrapper;
+		const controlDiv = container.querySelector("div[data-id='properties-ci-radioBooleanWithEnum']");
+		const label = controlDiv.querySelector("label.properties-control-label");
+		expect(label.textContent).to.equal("Radio Boolean with Enum");
 		expect(renderedController.getPropertyValue({ name: "radioBooleanWithEnum" })).to.equal(true);
-		const radioGroup = wrapper.find("div[data-id='properties-radioBooleanWithEnum']");
-		const radioFalseBoolean = radioGroup.find("input[value='false']");
-		radioFalseBoolean.simulate("change", { target: { checked: true, value: false } });
+		const radioGroup = container.querySelector("div[data-id='properties-radioBooleanWithEnum']");
+		const radioFalseBoolean = radioGroup.querySelector("input[value='false']");
+		fireEvent.click(radioFalseBoolean);
 		expect(renderedController.getPropertyValue({ name: "radioBooleanWithEnum" })).to.equal(false);
 	});
 
 	it("radioset control for boolean without enum", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioBooleanWithoutEnum']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Boolean without Enum");
+		const { container } = wrapper;
+		const controlDiv = container.querySelector("div[data-id='properties-ci-radioBooleanWithoutEnum']");
+		const label = controlDiv.querySelector("label.properties-control-label");
+		expect(label.textContent).to.equal("Radio Boolean without Enum");
 		expect(renderedController.getPropertyValue({ name: "radioBooleanWithoutEnum" })).to.equal(true);
-		const radioGroup = wrapper.find("div[data-id='properties-radioBooleanWithoutEnum']");
-		const radioFalseBoolean = radioGroup.find("input[value='false']");
-		radioFalseBoolean.simulate("change", { target: { checked: true, value: false } });
+		const radioGroup = container.querySelector("div[data-id='properties-radioBooleanWithoutEnum']");
+		const radioFalseBoolean = radioGroup.querySelector("input[value='false']");
+		fireEvent.click(radioFalseBoolean);
 		expect(renderedController.getPropertyValue({ name: "radioBooleanWithoutEnum" })).to.equal(false);
 	});
 
 	it("radioset control for boolean with labels", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioBooleanWithLabels']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Boolean with Labels");
+		const { container } = wrapper;
+		const controlDiv = container.querySelector("div[data-id='properties-ci-radioBooleanWithLabels']");
+		const label = controlDiv.querySelector("label.properties-control-label");
+		expect(label.textContent).to.equal("Radio Boolean with Labels");
 		expect(renderedController.getPropertyValue({ name: "radioBooleanWithLabels" })).to.equal(false);
-		const radioGroup = wrapper.find("div[data-id='properties-radioBooleanWithLabels']");
-		const radioTrueBoolean = radioGroup.find("input[value='true']");
-		radioTrueBoolean.simulate("change", { target: { checked: true, value: true } });
+		const radioGroup = container.querySelector("div[data-id='properties-radioBooleanWithLabels']");
+		const radioTrueBoolean = radioGroup.querySelector("input[value='true']");
+		fireEvent.click(radioTrueBoolean);
 		expect(renderedController.getPropertyValue({ name: "radioBooleanWithLabels" })).to.equal(true);
 	});
 
 	it("radioset control with number enum", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioInteger']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Number");
+		const { container } = wrapper;
+		const controlDiv = container.querySelector("div[data-id='properties-ci-radioInteger']");
+		const label = controlDiv.querySelector("label.properties-control-label");
+		expect(label.textContent).to.equal("Radio Number");
 		expect(renderedController.getPropertyValue({ name: "radioInteger" })).to.equal(2);
-		const radioGroup = wrapper.find("div[data-id='properties-radioInteger']");
-		const radioIntegerOne = radioGroup.find("input[value=1]");
-		radioIntegerOne.simulate("change", { target: { checked: true, value: 1 } });
+		const radioGroup = container.querySelector("div[data-id='properties-radioInteger']");
+		const radioIntegerOne = radioGroup.querySelector("input[value='1']");
+		fireEvent.click(radioIntegerOne);
 		expect(renderedController.getPropertyValue({ name: "radioInteger" })).to.equal(1);
 	});
 
 	it("radioset control with double enum", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioDouble']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Double");
+		const { container } = wrapper;
+		const controlDiv = container.querySelector("div[data-id='properties-ci-radioDouble']");
+		const label = controlDiv.querySelector("label.properties-control-label");
+		expect(label.textContent).to.equal("Radio Double");
 		expect(renderedController.getPropertyValue({ name: "radioDouble" })).to.equal(1.23);
-		const radioGroup = wrapper.find("div[data-id='properties-radioDouble']");
-		const radioDouble = radioGroup.find("input[type='radio']");
-		radioDouble.at(1).simulate("change", { target: { checked: false, value: 3.23 } });
+		const radioGroup = container.querySelector("div[data-id='properties-radioDouble']");
+		const radioDouble = radioGroup.querySelectorAll("input[type='radio']");
+		fireEvent.click(radioDouble[1]);
 		expect(renderedController.getPropertyValue({ name: "radioDouble" })).to.equal(3.23);
 	});
 
 	it("radioset control with default value", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioDefault']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Default");
+		const { container } = wrapper;
+		const controlDiv = container.querySelector("div[data-id='properties-ci-radioDefault']");
+		const label = controlDiv.querySelector("label.properties-control-label");
+		expect(label.textContent).to.equal("Radio Default");
 		expect(renderedController.getPropertyValue({ name: "radioDefault" })).to.equal(23);
-		const radioGroup = wrapper.find("div[data-id='properties-radioDefault']");
-		const radioDefault = radioGroup.find("input[value=32]");
-		radioDefault.simulate("change", { target: { checked: true, value: 32 } });
+		const radioGroup = container.querySelector("div[data-id='properties-radioDefault']");
+		const radioDefault = radioGroup.querySelector("input[value='32']");
+		fireEvent.click(radioDefault);
 		expect(renderedController.getPropertyValue({ name: "radioDefault" })).to.equal(32);
 	});
 
 	it("radioset control undefined", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioUndefined']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Undefined");
+		const { container } = wrapper;
+		const controlDiv = container.querySelector("div[data-id='properties-ci-radioUndefined']");
+		const label = controlDiv.querySelector("label.properties-control-label");
+		expect(label.textContent).to.equal("Radio Undefined");
 		expect(renderedController.getPropertyValue({ name: "radioUndefined" })).is.undefined;
-		const radioGroup = wrapper.find("div[data-id='properties-radioUndefined']");
-		const radioUndefined = radioGroup.find("input[value='entropy']");
-		radioUndefined.simulate("change", { target: { checked: true, value: "entropy" } });
+		const radioGroup = container.querySelector("div[data-id='properties-radioUndefined']");
+		const radioUndefined = radioGroup.querySelector("input[value='entropy']");
+		fireEvent.click(radioUndefined);
 		expect(renderedController.getPropertyValue({ name: "radioUndefined" })).to.equal("entropy");
 	});
 
 	it("radioset control with null value", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioNull']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Null");
+		const { container } = wrapper;
+		const controlDiv = container.querySelector("div[data-id='properties-ci-radioNull']");
+		const label = controlDiv.querySelector("label.properties-control-label");
+		expect(label.textContent).to.equal("Radio Null");
 		expect(renderedController.getPropertyValue({ name: "radioNull" })).to.equal(null);
-		const radioGroup = wrapper.find("div[data-id='properties-radioNull']");
-		const radioNull = radioGroup.find("input[value='entropy']");
-		radioNull.simulate("change", { target: { checked: true, value: "entropy" } });
+		const radioGroup = container.querySelector("div[data-id='properties-radioNull']");
+		const radioNull = radioGroup.querySelector("input[value='entropy']");
+		fireEvent.click(radioNull);
 		expect(renderedController.getPropertyValue({ name: "radioNull" })).to.equal("entropy");
 	});
 
 	it("radioset control with long label wrapped", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioLabelWrapped']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Label Wrapped");
+		const { container } = wrapper;
+		const controlDiv = container.querySelector("div[data-id='properties-ci-radioLabelWrapped']");
+		const label = controlDiv.querySelector("label.properties-control-label");
+		expect(label.textContent).to.equal("Radio Label Wrapped");
 		expect(renderedController.getPropertyValue({ name: "radioLabelWrapped" })).to.equal("firstN");
-		const radioGroup = wrapper.find("div[data-id='properties-radioLabelWrapped']");
-		const radioOneInN = radioGroup.find("input[value='oneInN']");
-		radioOneInN.simulate("change", { target: { checked: true, value: "oneInN" } });
+		const radioGroup = container.querySelector("div[data-id='properties-radioLabelWrapped']");
+		const radioOneInN = radioGroup.querySelector("input[value='oneInN']");
+		fireEvent.click(radioOneInN);
 		expect(renderedController.getPropertyValue({ name: "radioLabelWrapped" })).to.equal("oneInN");
-		const radioLongLabel = radioGroup.find("input[value='longLabel']");
-		radioLongLabel.simulate("change", { target: { checked: true, value: "longLabel" } });
+		const radioLongLabel = radioGroup.querySelector("input[value='longLabel']");
+		fireEvent.click(radioLongLabel);
 		expect(renderedController.getPropertyValue({ name: "radioLabelWrapped" })).to.equal("longLabel");
 	});
 
 	it("radioset control with error", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioError']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Error");
+		const { container } = wrapper;
+		const controlDiv = container.querySelector("div[data-id='properties-ci-radioError']");
+		const label = controlDiv.querySelector("label.properties-control-label");
+		expect(label.textContent).to.equal("Radio Error");
 		expect(renderedController.getPropertyValue({ name: "radioError" })).to.equal("gini");
-		let radioGroup = wrapper.find("div[data-id='properties-radioError']");
-		const radioError = radioGroup.find("input[value='entropy']");
-		radioError.simulate("change", { target: { checked: true, value: "entropy" } });
+		let radioGroup = container.querySelector("div[data-id='properties-radioError']");
+		const radioError = radioGroup.querySelector("input[value='entropy']");
+		fireEvent.click(radioError);
 		expect(renderedController.getPropertyValue({ name: "radioError" })).to.equal("entropy");
-		radioGroup = wrapper.find("div[data-id='properties-radioError']");
-		const messageWrapper = radioGroup.find("div.properties-validation-message");
+		radioGroup = container.querySelector("div[data-id='properties-radioError']");
+		const messageWrapper = radioGroup.querySelectorAll("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
 	});
 
 	it("radioset control disabled", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioDisable']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Disabled");
-		const checkboxsetWrapper = wrapper.find("div[data-id='properties-disable']");
-		const checkbox = checkboxsetWrapper.find("input");
+		const { container } = wrapper;
+		const controlDiv = container.querySelector("div[data-id='properties-ci-radioDisable']");
+		const label = controlDiv.querySelector("label.properties-control-label");
+		expect(label.textContent).to.equal("Radio Disabled");
+		const checkboxsetWrapper = container.querySelector("div[data-id='properties-disable']");
+		const checkbox = checkboxsetWrapper.querySelector("input");
 		// checked the disable box
-		checkbox.getDOMNode().checked = true;
-		checkbox.simulate("change");
+		checkbox.setAttribute("checked", true);
+		fireEvent.click(checkbox);
 		expect(renderedController.getPropertyValue({ name: "radioDisable" })).to.equal("gini");
-		const radioGroup = wrapper.find("div[data-id='properties-radioDisable']");
-		const radioDisable = radioGroup.find("input[value='entropy']");
-		radioDisable.simulate("change", { target: { checked: true, value: "entropy" } });
+		const radioGroup = container.querySelector("div[data-id='properties-radioDisable']");
+		const radioDisable = radioGroup.querySelector("input[value='entropy']");
+		fireEvent.click(radioDisable);
 		expect(renderedController.getPropertyValue({ name: "radioDisable" })).to.equal("entropy");
 	});
 
 	it("radioset control selected items disabled", () => {
-		let checkboxsetWrapper = wrapper.find("div[data-id='properties-disable_one']");
-		let checkbox = checkboxsetWrapper.find("input");
+		const { container } = wrapper;
+		let checkboxsetWrapper = container.querySelector("div[data-id='properties-disable_one']");
+		let checkbox = checkboxsetWrapper.querySelector("input");
 		// checked the disable box
-		checkbox.getDOMNode().checked = true;
-		checkbox.simulate("change");
+		checkbox.setAttribute("checked", true);
+		fireEvent.click(checkbox);
 		expect(renderedController.getPropertyValue({ name: "radioDisableSome" })).to.equal("oranges");
 
-		checkboxsetWrapper = wrapper.find("div[data-id='properties-disable_two']");
-		checkbox = checkboxsetWrapper.find("input");
-		checkbox.getDOMNode().checked = true;
-		checkbox.simulate("change");
+		checkboxsetWrapper = container.querySelector("div[data-id='properties-disable_two']");
+		checkbox = checkboxsetWrapper.querySelector("input");
+		checkbox.setAttribute("checked", true);
+		fireEvent.click(checkbox);
 		expect(renderedController.getPropertyValue({ name: "radioDisableSome" })).to.equal("pears");
 
-		const radioGroup = wrapper.find("div[data-id='properties-radioDisableSome']");
-		const options = radioGroup.find("div.properties-radioset-panel");
+		const radioGroup = container.querySelector("div[data-id='properties-radioDisableSome']");
+		const options = radioGroup.querySelectorAll("div.properties-radioset-panel");
 		expect(options).to.have.length(4);
-		let radioWrapper = options.at(1).find("input");
-		expect(radioWrapper.prop("disabled")).to.equal(true);
-		radioWrapper = options.at(2).find("input");
-		expect(radioWrapper.prop("disabled")).to.equal(false);
-		radioWrapper = options.at(3).find("input");
-		expect(radioWrapper.prop("disabled")).to.equal(true);
+		let radioWrapper = options[1].querySelector("input");
+		expect(radioWrapper.disabled).to.equal(true);
+		radioWrapper = options[2].querySelector("input");
+		expect(radioWrapper.disabled).to.equal(false);
+		radioWrapper = options[3].querySelector("input");
+		expect(radioWrapper.disabled).to.equal(true);
 	});
 
 
 	it("radioset control hidden", () => {
-		let controlDiv = wrapper.find("div[data-id='properties-ci-radioHidden']");
+		const { container } = wrapper;
+		let controlDiv = container.querySelectorAll("div[data-id='properties-ci-radioHidden']");
 		expect(controlDiv).to.have.length(0);
 
-		const checkboxsetWrapper = wrapper.find("div[data-id='properties-hide']");
-		const checkbox = checkboxsetWrapper.find("input");
+		const checkboxsetWrapper = container.querySelector("div[data-id='properties-hide']");
+		const checkbox = checkboxsetWrapper.querySelector("input");
 
 		// unchecked the hidden box
-		checkbox.getDOMNode().checked = false;
-		checkbox.simulate("change");
+		checkbox.setAttribute("checked", false);
+		fireEvent.click(checkbox);
 
-		wrapper.update();
-		controlDiv = wrapper.find("div[data-id='properties-ci-radioHidden']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Hidden");
+		controlDiv = container.querySelector("div[data-id='properties-ci-radioHidden']");
+		const label = controlDiv.querySelector("label.properties-control-label");
+		expect(label.textContent).to.equal("Radio Hidden");
 
 		expect(renderedController.getPropertyValue({ name: "radioHidden" })).to.equal("gini");
-		const radioGroup = wrapper.find("div[data-id='properties-radioHidden']");
-		const radioHidden = radioGroup.find("input[value='entropy']");
-		radioHidden.simulate("change", { target: { checked: true, value: "entropy" } });
+		const radioGroup = container.querySelector("div[data-id='properties-radioHidden']");
+		const radioHidden = radioGroup.querySelector("input[value='entropy']");
+		fireEvent.click(radioHidden);
 		expect(renderedController.getPropertyValue({ name: "radioHidden" })).to.equal("entropy");
 	});
 
@@ -249,7 +268,7 @@ describe("radio filtered enum works correctly", () => {
 	let wrapper;
 	let renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(radioParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(radioParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});
@@ -258,23 +277,24 @@ describe("radio filtered enum works correctly", () => {
 	});
 
 	it("Validate radioFilter should have options filtered by enum_filter", () => {
-		let radioGroup = wrapper.find("div[data-id='properties-radioFilter']");
+		const { container } = wrapper;
+		let radioGroup = container.querySelector("div[data-id='properties-radioFilter']");
 		// validate the correct number of options show up on open
-		let options = radioGroup.find("div.properties-radioset-panel");
+		let options = radioGroup.querySelectorAll("div.properties-radioset-panel");
 		expect(options).to.have.length(3);
 		// make sure there isn't warning on first open
-		expect(radioGroup.find("div.properties-validation-message")).to.have.length(0);
+		expect(radioGroup.querySelectorAll("div.properties-validation-message")).to.have.length(0);
 		// checked the filter box
-		const checkboxWrapper = wrapper.find("div[data-id='properties-filter']");
-		const checkbox = checkboxWrapper.find("input");
-		checkbox.getDOMNode().checked = true;
-		checkbox.simulate("change");
-		radioGroup = wrapper.find("div[data-id='properties-radioFilter']");
-		options = radioGroup.find("div.properties-radioset-panel");
+		const checkboxWrapper = container.querySelector("div[data-id='properties-filter']");
+		const checkbox = checkboxWrapper.querySelector("input");
+		checkbox.setAttribute("checked", true);
+		fireEvent.click(checkbox);
+		radioGroup = container.querySelector("div[data-id='properties-radioFilter']");
+		options = radioGroup.querySelectorAll("div.properties-radioset-panel");
 		expect(options).to.have.length(2);
 	});
 
-	it("Validate radioFilter should clear the property value if filtered", () => {
+	it("Validate radioFilter should clear the property value if filtered", async() => {
 		const propertyId = { name: "radioFilter" };
 		// value was initially set to "yellow" but on open the value is cleared by the filter
 		expect(renderedController.getPropertyValue(propertyId)).to.be.equal(null);
@@ -282,16 +302,20 @@ describe("radio filtered enum works correctly", () => {
 		expect(renderedController.getPropertyValue(propertyId)).to.equal("green");
 		renderedController.updatePropertyValue({ name: "filter" }, true);
 		// "green" isn't part of the filter so the value should be cleared
-		expect(renderedController.getPropertyValue(propertyId)).to.equal(null);
+		await waitFor(() => {
+			expect(renderedController.getPropertyValue(propertyId)).to.equal(null);
+		});
 	});
 
-	it("Validate radioFilter should set default value if current value is filtered out", () => {
+	it("Validate radioFilter should set default value if current value is filtered out", async() => {
 		const propertyId = { name: "radioFilterDefault" };
 		// value was initially set to "yellow" but on open the value is cleared by the filter
 		expect(renderedController.getPropertyValue(propertyId)).to.equal("yellow");
 		renderedController.updatePropertyValue({ name: "filterDefault" }, true);
 		// "yellow" isn't part of the filter so the value should be cleared and the default value should be set
-		expect(renderedController.getPropertyValue(propertyId)).to.equal("blue");
+		await waitFor(() => {
+			expect(renderedController.getPropertyValue(propertyId)).to.equal("blue");
+		});
 	});
 
 });
@@ -303,80 +327,82 @@ describe("radioset works in table correctly", () => {
 	let renderedController;
 	const tableRadioPropertyId = { name: "radioset_table_error" };
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(radioParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(radioParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
-		const controlDiv = wrapper.find("button.properties-summary-link-button");
-		controlDiv.simulate("click");
-		tableDiv = wrapper.find(".properties-vt");
+		const controlDiv = wrapper.container.querySelector("button.properties-summary-link-button");
+		fireEvent.click(controlDiv);
+		// controlDiv.simulate("click");
+		tableDiv = wrapper.container.querySelector(".properties-vt");
 	});
 	afterEach(() => {
 		wrapper.unmount();
 	});
 
 	it("Validation enum in table cell default to select control instead of radioset", () => {
-		const inlineEnum = wrapper.find("div[data-id='properties-radioset_table_error_0_0'].properties-dropdown");
+		const inlineEnum = wrapper.container.querySelectorAll("div[data-id='properties-radioset_table_error_0_0'].properties-dropdown");
 		expect(inlineEnum).to.have.length(1);
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][0]).to.equal("dog");
 	});
 
 	it("Check basic use of onpanel radiosets in table flyout", () => {
-		tableUtils.clickTableRows(tableDiv, [0]);
-		tableDiv = wrapper.find(".properties-vt");
-		expect(tableDiv.find(".properties-vt-row-selected")).to.have.length(1);
+		const { container } = wrapper;
+		tableUtilsRTL.clickTableRows(tableDiv, [0]);
+		tableDiv = container.querySelector(".properties-vt");
+		expect(tableDiv.querySelectorAll(".properties-vt-row-selected")).to.have.length(1);
 
-		const onPanelRadioset = wrapper.find("div[data-id='properties-radioset_col2']");
-		const onPanelRadios = onPanelRadioset.find("input.cds--radio-button");
+		const onPanelRadioset = container.querySelector("div[data-id='properties-radioset_col2']");
+		const onPanelRadios = onPanelRadioset.querySelectorAll("input.cds--radio-button");
 		expect(onPanelRadios).to.have.length(4);
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][1]).to.equal("pear");
-		onPanelRadios.at(1).simulate("change");
+		fireEvent.click(onPanelRadios[1]);
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][1]).to.equal("orange");
 	});
 
 	it("Check basic use of subpanel radiosets in table flyout", () => {
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][3]).to.equal("red");
-		const subpanelButton = tableDiv.find(".properties-table-subcell").find("button.properties-subpanel-button");
+		const subpanelButton = tableDiv.querySelector(".properties-table-subcell").querySelectorAll("button.properties-subpanel-button");
 		expect(subpanelButton).to.have.length(1);
-		subpanelButton.simulate("click");
-		const subpanelRadioset = wrapper.find("div[data-id='properties-radioset_col3']");
-		const subpanelRadios = subpanelRadioset.find("input.cds--radio-button");
+		fireEvent.click(subpanelButton[0]);
+		const subpanelRadioset = wrapper.container.querySelector("div[data-id='properties-radioset_col3']");
+		const subpanelRadios = subpanelRadioset.querySelectorAll("input.cds--radio-button");
 		expect(subpanelRadios).to.have.length(6);
-		subpanelRadios.at(1).simulate("change");
+		fireEvent.click(subpanelRadios[1]);
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][3]).to.equal("green");
 	});
 
 	it("Check disable interactivity in table flyout", () => {
+		const { container } = wrapper;
 		// test on panel disable
-		tableUtils.clickTableRows(tableDiv, [0]);
-		tableDiv = wrapper.find(".properties-vt");
-
-		const onPanelRadioset = wrapper.find("div[data-id='properties-radioset_col2']");
-		const onPanelRadios = onPanelRadioset.find("input.cds--radio-button");
+		tableUtilsRTL.clickTableRows(tableDiv, [0]);
+		tableDiv = container.querySelector(".properties-vt");
+		const onPanelRadioset = container.querySelector("div[data-id='properties-radioset_col2']");
+		const onPanelRadios = onPanelRadioset.querySelectorAll("input.cds--radio-button");
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][1]).to.equal("pear");
-		onPanelRadios.at(1).simulate("change");
+		fireEvent.click(onPanelRadios[1]);
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][1]).to.equal("orange");
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][2]).to.equal(false);
-		const disableOnpanelCheckbox = wrapper.find("div[data-id='properties-ci-radioset_col2_checkbox']");
-		const checkbox = disableOnpanelCheckbox.find("input");
-		checkbox.getDOMNode().checked = true;
-		checkbox.simulate("change");
+		const disableOnpanelCheckbox = container.querySelector("div[data-id='properties-ci-radioset_col2_checkbox']");
+		const checkbox = disableOnpanelCheckbox.querySelector("input");
+		checkbox.setAttribute("checked", true);
+		fireEvent.click(checkbox);
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][2]).to.equal(true);
 		expect(onPanelRadios).to.have.length(4);
-		onPanelRadios.at(0).simulate("change");
+		fireEvent.click(onPanelRadios[0]);
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][1]).to.equal("apple");
-		onPanelRadios.at(2).simulate("change");
+		fireEvent.click(onPanelRadios[2]);
 		// confirm that "pear" is disabled and result defaults to first entry in set
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][1]).to.equal("apple");
 		// test subpanel disable
 		renderedController.updatePropertyValue({ col: 0, row: 0, ...tableRadioPropertyId }, "cat");
-		const subpanelButton = tableDiv.find(".properties-table-subcell").find("button.properties-subpanel-button");
-		subpanelButton.simulate("click");
-		const subpanelRadioset = wrapper.find("div[data-id='properties-radioset_col3']");
-		const subpanelRadios = subpanelRadioset.find("input.cds--radio-button");
-		subpanelRadios.at(1).simulate("change");
+		const subpanelButton = tableDiv.querySelector(".properties-table-subcell").querySelector("button.properties-subpanel-button");
+		fireEvent.click(subpanelButton);
+		const subpanelRadioset = container.querySelector("div[data-id='properties-radioset_col3']");
+		const subpanelRadios = subpanelRadioset.querySelectorAll("input.cds--radio-button");
+		fireEvent.click(subpanelRadios[1]);
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][3]).to.equal("green");
 		// selecting the disabled option should default to first radio in the list, red, instead of orange
-		subpanelRadios.at(4).simulate("change");
+		fireEvent.click(subpanelRadios[4]);
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][3]).to.equal("red");
 	});
 });
@@ -384,35 +410,35 @@ describe("radioset works in table correctly", () => {
 describe("radioset classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(radioParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(radioParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("radioset should have custom classname defined", () => {
-		expect(wrapper.find(".radioset-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".radioset-control-class")).to.have.length(1);
 	});
 
 	it("radioset should have custom classname defined in table cells", () => {
-		propertyUtils.openSummaryPanel(wrapper, "radioset_table-error-panel");
-		expect(wrapper.find(".table-radioset-control-class")).to.have.length(1);
-		expect(wrapper.find(".table-on-panel-radioset-control-class")).to.have.length(1);
-		expect(wrapper.find(".table-subpanel-radioset-control-class")).to.have.length(1);
+		propertyUtilsRTL.openSummaryPanel(wrapper, "radioset_table-error-panel");
+		expect(wrapper.container.querySelectorAll(".table-radioset-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".table-on-panel-radioset-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".table-subpanel-radioset-control-class")).to.have.length(1);
 	});
 });
 
 describe("should use Carbon RadioButtonGroup", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(radioParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(radioParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("radioset should use Carbon RadioButtonGroup", () => {
-		const radioBoolean = (wrapper.find("div[data-id='properties-radioBooleanWithEnum']"));
-		const radioGroup = radioBoolean.find("fieldset.cds--radio-button-group");
+		const radioBoolean = (wrapper.container.querySelector("div[data-id='properties-radioBooleanWithEnum']"));
+		const radioGroup = radioBoolean.querySelectorAll("fieldset.cds--radio-button-group");
 		expect(radioGroup).to.have.length(1);
 		// horizontal radioset should have carbon's cds--radio-button-group--label-right class
-		const radioGroupHorizontal = radioBoolean.find("fieldset.cds--radio-button-group--label-right");
+		const radioGroupHorizontal = radioBoolean.querySelectorAll("fieldset.cds--radio-button-group--label-right");
 		expect(radioGroupHorizontal).to.have.length(1);
 	});
 
