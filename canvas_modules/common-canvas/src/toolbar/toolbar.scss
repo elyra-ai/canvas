@@ -179,7 +179,7 @@ $toolbar-divider-width: 1px;
 	& button {
 		padding: 0;
 		height: $toolbar-button-height;
-		min-height: $spacing-07;
+		min-height: 30px;
 		background-color: $layer-01;
 		border-right: $toolbar-divider-width solid $layer-accent-01;
 	}
@@ -209,6 +209,7 @@ $toolbar-divider-width: 1px;
 	width: inherit;
 	display: flex;
 	justify-content: center;
+	align-items: center;
 
 	&.disabled {
 		pointer-events: none;
