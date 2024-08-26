@@ -266,29 +266,25 @@ class DropDown extends React.Component {
 					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
 					type="default"
 					items={dropDown.options}
-					itemToElement={(item) => {
-						return item ? (
-							<span className="icon-support" style={{color: 'black'}}>
-								<span>{item.value}</span>
-								<Password style={{ float: 'right' }}/>
-						  	</span>
-							) : (
-						  	''
-							)
-						}	
+					itemToElement={(item) => (item ? (
+						<span className="icon-support" style={{ color: "black" }}>
+							<span>{ item.value }</span>
+							<Password style={{ float: "right" }} />
+						</span>
+					) : (
+						" "
+					))
 					}
 					onChange={this.handleChange}
 					selectedItem={dropDown.selectedOption}
-					itemToString={(item) => {
-						return item ? (
-							<span className="icon-support" style={{color: 'black', display: 'flex', justifyContent: 'space-between'}}>
-								<span style ={{alignSelf: 'flex-start'}}>{item.value}</span>
-								<Password style={{ alignSelf: 'flex-end' }}/>
-						  	</span>
-							) : (
-						  	''
-							)
-						}	
+					itemToString={(item) => (item ? (
+						<span className="icon-support" style={{ color: "black", display: "flex", justifyContent: "space-between" }}>
+							<span style ={{ alignSelf: "flex-start" }}>{ item.value }</span>
+							<Password style={{ alignSelf: "flex-end" }} />
+						</span>
+					) : (
+						" "
+					))
 					}
 					label={this.emptyLabel}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
