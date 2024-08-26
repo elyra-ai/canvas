@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 @import "./properties-main-widths.scss";
 $properties-modal-buttons-height: $spacing-10;
+$properties-resize-button-size: $spacing-06;
 
 .properties-right-flyout {
 	// Set the font explicitly to 14px to shrink them across the entire properties editor
@@ -30,15 +31,27 @@ $properties-modal-buttons-height: $spacing-10;
 
 	&.properties-small {
 		width: $common-properties-small-flyout-width;
+		.properties-btn-resize {
+			right: calc(#{$common-properties-small-flyout-width} - (#{$properties-resize-button-size} / 2));
+		}
 	}
 	&.properties-medium {
 		width: $common-properties-medium-flyout-width;
+		.properties-btn-resize {
+			right: calc(#{$common-properties-medium-flyout-width} - (#{$properties-resize-button-size} / 2));
+		}
 	}
 	&.properties-large {
 		width: $common-properties-large-flyout-width;
+		.properties-btn-resize {
+			right: calc(#{$common-properties-large-flyout-width} - (#{$properties-resize-button-size} / 2));
+		}
 	}
 	&.properties-max {
 		width: $common-properties-max-flyout-width;
+		.properties-btn-resize {
+			right: calc(#{$common-properties-max-flyout-width} - (#{$properties-resize-button-size} / 2));
+		}
 	}
 	&:hover {
 		.properties-btn-resize {
@@ -52,14 +65,14 @@ $properties-modal-buttons-height: $spacing-10;
 		visibility: hidden;
 		position: absolute;
 		top: 50%;
-		left: -13px;
 		z-index: 1; // needs to sit on top of common-properties div
-		min-height: $spacing-06;
-		min-width: $spacing-06;
+		min-height: $properties-resize-button-size;
+		min-width: $properties-resize-button-size;
 		background-color: $layer-01;
 		border: 1px $border-strong-01 solid;
 		padding: $spacing-01;
 		justify-content: center;
+		align-items: center;
 		&:hover {
 			background-color: $layer-accent-01;
 		}
