@@ -26,6 +26,7 @@ import * as PropertyUtils from "./../../util/property-utils.js";
 import { ControlType } from "./../../constants/form-constants";
 import { MESSAGE_KEYS, STATES, UPDATE_TYPE } from "./../../constants/constants.js";
 import { formatMessage } from "./../../util/property-utils";
+import { Password } from "@carbon/icons-react";
 
 class DropDown extends React.Component {
 	constructor(props) {
@@ -259,8 +260,32 @@ class DropDown extends React.Component {
 					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
 					type="default"
 					items={dropDown.options}
+					itemToElement={(item) => {
+						console.log(item);
+						return item ? (
+							<span className="icon-support" style={{color: 'black'}}>
+								<span>{item.value}</span>
+								<Password style={{ float: 'right' }}/>
+						  	</span>
+							) : (
+						  	''
+							)
+						}	
+					}
 					onChange={this.handleChange}
 					selectedItem={dropDown.selectedOption}
+					itemToString={(item) => {
+						console.log(item);
+						return item ? (
+							<span className="icon-support" style={{color: 'black', display: 'flex', justifyContent: 'space-between'}}>
+								<span style ={{alignSelf: 'flex-start'}}>{item.value}</span>
+								<Password style={{ alignSelf: 'flex-end' }}/>
+						  	</span>
+							) : (
+						  	''
+							)
+						}	
+					}
 					label={this.emptyLabel}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText={this.props.controlItem}
