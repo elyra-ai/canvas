@@ -267,7 +267,6 @@ class DropDown extends React.Component {
 					type="default"
 					items={dropDown.options}
 					itemToElement={(item) => {
-						console.log(item);
 						return item ? (
 							<span className="icon-support" style={{color: 'black'}}>
 								<span>{item.value}</span>
@@ -281,7 +280,6 @@ class DropDown extends React.Component {
 					onChange={this.handleChange}
 					selectedItem={dropDown.selectedOption}
 					itemToString={(item) => {
-						console.log(item);
 						return item ? (
 							<span className="icon-support" style={{color: 'black', display: 'flex', justifyContent: 'space-between'}}>
 								<span style ={{alignSelf: 'flex-start'}}>{item.value}</span>
