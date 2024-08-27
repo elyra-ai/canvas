@@ -102,9 +102,6 @@ class ExpressionControl extends React.Component {
 			});
 			this.editor.focus();
 		}
-		if (!isEqual(this.getCodemirrorState()?.doc.toString(), this.props.value)) {
-			this.editor.dispatch({ changes: { from: 0, to: this.getCodemirrorState()?.doc?.length, insert: this.props.value } });
-		}
 	}
 
 	getCodemirrorState() {
