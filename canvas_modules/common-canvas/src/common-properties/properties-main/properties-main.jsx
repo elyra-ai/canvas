@@ -592,11 +592,11 @@ class PropertiesMain extends React.Component {
 						onBlur={this.onBlur}
 						style={overrideStyle}
 					>
-						{resizeBtn}
 						{propertiesTitle}
 						{propertiesDialog}
 						{buttonsContainer}
 					</aside>
+					{resizeBtn}
 				</Provider>
 			);
 		}
