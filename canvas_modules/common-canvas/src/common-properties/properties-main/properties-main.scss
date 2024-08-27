@@ -69,9 +69,12 @@ $properties-resize-button-size: $spacing-06;
 	}
 }
 
-aside:hover + button {
-	visibility: visible;
-	opacity: 1;
+.common-canvas .right-flyout-panel {
+	// Set the 'properties-btn-resize' visible when the 'properties-right-flyout' is hovered
+	aside:hover + button {
+		visibility: visible;
+		opacity: 1;
+	}
 }
 
 .properties-right-flyout > .properties-custom-container {
