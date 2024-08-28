@@ -26,7 +26,6 @@ import * as PropertyUtils from "./../../util/property-utils.js";
 import { ControlType } from "./../../constants/form-constants";
 import { MESSAGE_KEYS, STATES, UPDATE_TYPE } from "./../../constants/constants.js";
 import { formatMessage } from "./../../util/property-utils";
-import { Password } from "@carbon/icons-react";
 
 class DropDown extends React.Component {
 	constructor(props) {
@@ -267,25 +266,21 @@ class DropDown extends React.Component {
 					type="default"
 					items={dropDown.options}
 					itemToElement={(item) => (item ? (
-						<span className="icon-support" style={{ color: "black" }}>
+						<span>
 							<span>{ item.value }</span>
-							<Password style={{ float: "right" }} />
+							{this.props.renderIcon && this.props.renderIcon(item)}
 						</span>
-					) : (
-						" "
-					))
-					}
+					) : " "
+					)}
 					onChange={this.handleChange}
 					selectedItem={dropDown.selectedOption}
 					itemToString={(item) => (item ? (
-						<span className="icon-support" style={{ color: "black", display: "flex", justifyContent: "space-between" }}>
-							<span style ={{ alignSelf: "flex-start" }}>{ item.value }</span>
-							<Password style={{ alignSelf: "flex-end" }} />
+						<span>
+							<span>{ item.value }</span>
+							{this.props.renderIcon && this.props.renderIcon(item)}
 						</span>
-					) : (
-						" "
-					))
-					}
+					) : " "
+					)}
 					label={this.emptyLabel}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText={this.props.controlItem}
@@ -322,7 +317,8 @@ DropDown.propTypes = {
 		PropTypes.object
 	]), // pass in by redux
 	messageInfo: PropTypes.object, // pass in by redux
-	readOnly: PropTypes.bool
+	readOnly: PropTypes.bool,
+	renderIcon: PropTypes.func
 };
 
 const mapStateToProps = (state, ownProps) => {
