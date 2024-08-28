@@ -118,6 +118,18 @@ function clickTableRows(container, rows) {
 
 /*
 * @param wrapper
+* @param rows - array of row numbers to check
+*/
+function dblClickTableRows(container, rows) {
+	const tableRows = container.querySelectorAll(".properties-vt-double-click");
+	for (const row of rows) {
+		fireEvent.dblClick(tableRows[row]);
+	}
+}
+
+
+/*
+* @param wrapper
 * @param col - index of column to sort
 */
 function clickHeaderColumnSort(container, col) {
@@ -252,6 +264,7 @@ module.exports = {
 	getTableHeaderRows: getTableHeaderRows,
 	getTableRows: getTableRows,
 	clickTableRows: clickTableRows,
+	dblClickTableRows: dblClickTableRows,
 	clickHeaderColumnSort: clickHeaderColumnSort,
 	selectCheckboxes: selectCheckboxes,
 	selectCheckboxesUsingKeyboard: selectCheckboxesUsingKeyboard,
