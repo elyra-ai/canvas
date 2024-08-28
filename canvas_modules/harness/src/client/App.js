@@ -227,6 +227,8 @@ class App extends React.Component {
 			},
 			selectedShowBottomPanel: false,
 			selectedShowTopPanel: false,
+			selectedShowLeftFlyout: false,
+			selectedLeftFlyoutUnderToolbar: false,
 			selectedShowRightFlyout: false,
 			selectedRightFlyoutUnderToolbar: false,
 			selectedPanIntoViewOnOpen: false,
@@ -2091,6 +2093,7 @@ class App extends React.Component {
 			enableBoundingRectangles: this.state.selectedBoundingRectangles,
 			enableCanvasUnderlay: this.state.selectedCanvasUnderlay,
 			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
+			enableLeftFlyoutUnderToolbar: this.state.selectedLeftFlyoutUnderToolbar,
 			enableRightFlyoutUnderToolbar: this.state.selectedRightFlyoutUnderToolbar,
 			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
 			dropZoneCanvasContent: this.state.selectedDisplayCustomizedDropZoneContent ? this.dropZoneCanvasDiv : null,
@@ -2375,11 +2378,12 @@ class App extends React.Component {
 		return toolbarConfig;
 	}
 
-	getTempContent() {
+	getTempContent(vertical) {
 		const text1 = "Common Canvas panel.";
 		const text2 = "Some temporary content for common canvas panel. This panel can display content from the host application.";
+		const className = "harness-panel-temp-content" + (vertical ? " vertical" : "");
 		return (
-			<div className="harness-panel-temp-content">
+			<div className={className}>
 				<div className="title">{text1}</div>
 				<div className="text">{text2}</div>
 			</div>
@@ -2533,7 +2537,9 @@ class App extends React.Component {
 
 		const rightFlyoutContent = rightFlyoutContentProperties
 			? rightFlyoutContentProperties
-			: this.getTempContent();
+			: this.getTempContent(true);
+
+		const leftFlyoutContent = this.getTempContent(true);
 
 		var firstCanvas = (
 			<CommonCanvas
@@ -2551,6 +2557,8 @@ class App extends React.Component {
 				notificationConfig={this.state.notificationConfig}
 				contextMenuConfig={contextMenuConfig}
 				keyboardConfig={keyboardConfig}
+				leftFlyoutContent={leftFlyoutContent}
+				showLeftFlyout={this.state.selectedShowLeftFlyout}
 				rightFlyoutContent={rightFlyoutContent}
 				showRightFlyout={showRightFlyoutProperties || this.state.selectedShowRightFlyout}
 				bottomPanelContent={bottomPanelContent}
@@ -2694,7 +2702,7 @@ class App extends React.Component {
 		if (this.state.selectedExtraCanvasDisplayed) {
 			const rightFlyoutContent2 = rightFlyoutContentProperties2
 				? rightFlyoutContentProperties2
-				: this.getTempContent();
+				: this.getTempContent(true);
 
 			commonCanvas = (<React.Fragment>
 				<div className="harness-canvas-single">

@@ -498,6 +498,14 @@ export default class CanvasUtils {
 		return null;
 	}
 
+	// Returns the distance from the start point to finsih point of the link line.
+	static getLinkDistance(link) {
+		const x = link.x2 - link.x1;
+		const y = link.y2 - link.y1;
+
+		return Math.sqrt((x * x) + (y * y));
+	}
+
 	// Return the center point of a quadratic bezier curve where p0 is the
 	// start point, p1 is the control point and p2 is the end point.
 	// This works for either the x or y coordinate.
@@ -512,6 +520,17 @@ export default class CanvasUtils {
 	static getCenterPointCubicBezier(p0, p1, p2, p3) {
 		const t = 0.5;
 		return (1 - t) * (1 - t) * (1 - t) * p0 + 3 * (1 - t) * (1 - t) * t * p1 + 3 * (1 - t) * t * t * p2 + t * t * t * p3;
+	}
+
+	// Returns true if the node passed in should be resizeable. All nodes are resizabele
+	// except binding nodes in a sub-flow when enableResizableNodes is switched on.
+	static isNodeResizable(node, config) {
+		if (!config.enableEditingActions ||
+				this.isSuperBindingNode(node) ||
+				(!config.enableResizableNodes && !this.isExpandedSupernode(node))) {
+			return false;
+		}
+		return true;
 	}
 
 	// Returns true if a link of type `type` can be created between the two

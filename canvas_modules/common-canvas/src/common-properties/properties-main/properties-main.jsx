@@ -477,6 +477,7 @@ class PropertiesMain extends React.Component {
 					icon={formData.icon}
 					heading={formData.heading}
 					showHeading={this.props.propertiesConfig.heading}
+					titleInfo={formData.title}
 					rightFlyoutTabsView={this.props.propertiesConfig.categoryView === CATEGORY_VIEW.TABS}
 				/>);
 
@@ -591,11 +592,11 @@ class PropertiesMain extends React.Component {
 						onBlur={this.onBlur}
 						style={overrideStyle}
 					>
-						{resizeBtn}
 						{propertiesTitle}
 						{propertiesDialog}
 						{buttonsContainer}
 					</aside>
+					{resizeBtn}
 				</Provider>
 			);
 		}

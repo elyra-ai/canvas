@@ -21,6 +21,7 @@ import * as FlowValidation from "./flow-validation/validate-flow";
 import ContextMenuWrapper from "./context-menu/context-menu-wrapper";
 import ToolTip from "./tooltip/tooltip";
 import ColorPicker from "./color-picker";
+import Palette from "./palette";
 
 import CreateAutoNodeAction from "../src/command-actions/createAutoNodeAction";
 import CreateNodeAction from "../src/command-actions/createNodeAction";
@@ -31,5 +32,5 @@ import PasteAction from "../src/command-actions/pasteAction";
 
 
 export { CommonCanvas, CanvasController, CommonProperties, PropertiesController, FieldPicker, FlexibleTable, clem, getPythonHints,
-	CommandStack, FlowValidation, ContextMenuWrapper, ToolTip, ColorPicker,
+	CommandStack, FlowValidation, ContextMenuWrapper, ToolTip, ColorPicker, Palette,
 	CreateAutoNodeAction, CreateNodeAction, CreateNodeLinkAction, DeleteObjectsAction, DisconnectObjectsAction, PasteAction };

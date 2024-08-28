@@ -91,8 +91,7 @@ export default class SVGCanvasUtilsDragObjects {
 	}
 
 	mouseEnterNodeSizingArea(d3Event, d) {
-		if (this.ren.config.enableEditingActions && // Only set cursor when we are able to resize nodes
-				this.isNodeResizable(d) &&
+		if (CanvasUtils.isNodeResizable(d, this.ren.config) &&
 				!this.ren.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
 			let cursorType = "default";
 			if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
@@ -105,7 +104,7 @@ export default class SVGCanvasUtilsDragObjects {
 	}
 
 	mouseDownNodeSizingArea(d) {
-		if (this.isNodeResizable(d)) {
+		if (CanvasUtils.isNodeResizable(d, this.ren.config)) {
 			this.nodeSizing = true;
 			// Note - node resizing and finalization of size is handled by drag functions.
 			this.ren.addTempCursorOverlay(this.nodeSizingCursor);
@@ -279,19 +278,6 @@ export default class SVGCanvasUtilsDragObjects {
 		return cursorType;
 	}
 
-	// Returns true if the node should be resizeable. Expanded supernodes are
-	// always resizabele and all other nodes, except collapsed supernodes, are
-	// resizeable when enableResizableNodes is switched on.
-	isNodeResizable(node) {
-		if (!this.ren.config.enableEditingActions ||
-				CanvasUtils.isSuperBindingNode(node) ||
-				CanvasUtils.isCollapsedSupernode(node) ||
-				(!this.ren.config.enableResizableNodes && !CanvasUtils.isExpandedSupernode(node))) {
-			return false;
-		}
-		return true;
-	}
-
 	// Sets the size and position of the node in the canvasInfo.nodes
 	// array based on the position of the pointer during the resize action
 	// then redraws the nodes and links (the link positions may move based
@@ -305,7 +291,7 @@ export default class SVGCanvasUtilsDragObjects {
 			this.nodeSizingDirection, minWidth, minHeight);
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
-			if (CanvasUtils.isSupernode(resizeObj) &&
+			if (CanvasUtils.isExpandedSupernode(resizeObj) &&
 					this.ren.config.enableMoveNodesOnSupernodeResize) {
 				const objectsInfo = CanvasUtils.moveSurroundingObjects(
 					oldSupernode,
@@ -338,7 +324,7 @@ export default class SVGCanvasUtilsDragObjects {
 			this.ren.displayMovedLinks();
 			this.ren.displayCanvasAccoutrements();
 
-			if (CanvasUtils.isSupernode(resizeObj)) {
+			if (CanvasUtils.isExpandedSupernode(resizeObj)) {
 				if (this.ren.dispUtils.isDisplayingSubFlow()) {
 					this.ren.displayBindingNodesToFitSVG();
 				}
@@ -530,7 +516,7 @@ export default class SVGCanvasUtilsDragObjects {
 	// bottom of the frame. Then the bigger of that height versus the default
 	// supernode minimum height is retunred.
 	getMinHeight(node) {
-		if (CanvasUtils.isSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			const minHt = Math.max(node.inputPortsHeight, node.outputPortsHeight) +
 				this.ren.canvasLayout.supernodeTopAreaHeight + this.ren.canvasLayout.supernodeSVGAreaPadding;
 			return Math.max(this.ren.canvasLayout.supernodeMinHeight, minHt);
@@ -540,7 +526,7 @@ export default class SVGCanvasUtilsDragObjects {
 
 	// Returns the minimum allowed width for the node passed in.
 	getMinWidth(node) {
-		if (CanvasUtils.isSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.ren.canvasLayout.supernodeMinWidth;
 		}
 		return node.layout.defaultNodeWidth;

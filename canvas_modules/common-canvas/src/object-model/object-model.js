@@ -1259,6 +1259,18 @@ export default class ObjectModel {
 	}
 
 	// ---------------------------------------------------------------------------
+	// Left flyout methods
+	// ---------------------------------------------------------------------------
+
+	setLeftFlyoutConfig(config) {
+		this.store.dispatch({ type: "SET_LEFT_FLYOUT_CONFIG", data: { config: config } });
+	}
+
+	isLeftFlyoutOpen() {
+		return this.store.isLeftFlyoutOpen();
+	}
+
+	// ---------------------------------------------------------------------------
 	// Right flyout methods
 	// ---------------------------------------------------------------------------
 

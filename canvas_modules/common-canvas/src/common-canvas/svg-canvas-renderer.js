@@ -642,14 +642,6 @@ export default class SVGCanvasRenderer {
 		this.dragObjectUtils.isMoving();
 	}
 
-	// Returns true if the node should have a resizing area. We should display
-	// a sizing area even for collapsed supernodes so it is available if/when
-	// the supernode is expanded
-	shouldDisplayNodeSizingArea(node) {
-		return !CanvasUtils.isSuperBindingNode(node) &&
-			(CanvasUtils.isSupernode(node) || this.config.enableResizableNodes);
-	}
-
 	getAllNodeGroupsSelection() {
 		return this.nodesLinksGrp.selectChildren(".d3-node-group");
 	}
@@ -1616,7 +1608,7 @@ export default class SVGCanvasRenderer {
 		// Node Sizing Area
 		nonBindingNodeGrps
 			.selectChildren(".d3-node-sizing")
-			.data((d) => (this.shouldDisplayNodeSizingArea(d) ? [d] : []), (d) => d.id)
+			.data((d) => (CanvasUtils.isNodeResizable(d, this.config) ? [d] : []), (d) => d.id)
 			.join(
 				(enter) =>
 					enter
@@ -4189,7 +4181,10 @@ export default class SVGCanvasRenderer {
 		joinedLinkGrps.each((d, i, linkGrps) => {
 			if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
 				const linkGrp = d3.select(linkGrps[i]).selectAll(".d3-link-decorations-group");
-				this.displayDecorations(d, DEC_LINK, linkGrp, d.decorations);
+				const decorations = this.shouldDisplayAltDecorations(d)
+					? this.canvasLayout.linkAltDecorations
+					: d.decorations;
+				this.displayDecorations(d, DEC_LINK, linkGrp, decorations);
 			}
 		});
 
@@ -4294,6 +4289,13 @@ export default class SVGCanvasRenderer {
 					this.removeContextToolbar();
 				}
 			});
+	}
+
+	// Returns true if the alternative decorations for the link line
+	// should be displayed.
+	shouldDisplayAltDecorations(link) {
+		return (this.canvasLayout.linkAltDecorations &&
+			CanvasUtils.getLinkDistance(link) < this.canvasLayout.linkDistanceForAltDecorations);
 	}
 
 	// Creates a new start handle and a new end handle for the link groups

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,50 @@
 	font-size: 0;
 	padding: $spacing-05 0;
 	border-bottom: 1px $layer-accent-01 solid;
+
+	.properties-title-editor-actions {
+		padding: $spacing-05 0 0 $spacing-05;
+		display: flex;
+		flex-flow: wrap;
+
+		.properties-title-editor-action-btn {
+			margin-right: $spacing-05;
+
+			.properties-action-button {
+				padding-bottom: $spacing-05;
+			}
+
+			.properties-action-image {
+				padding: 0;
+			}
+		}
+	}
+}
+
+// Action buttons within a small right flyout will take up 50% width and display 2 buttons per row
+.properties-right-flyout.properties-small {
+	.properties-title-editor-actions {
+		.properties-title-editor-action-btn {
+			width: calc(50% - #{$spacing-05});
+
+			.properties-action-button {
+				width: 100%;
+
+				button {
+					width: 100%;
+					overflow: hidden;
+					white-space: nowrap;
+					display: block;
+					text-overflow: ellipsis;
+				}
+
+				.cds--btn { // Override Carbon padding within a button to allow more text to display
+					--cds-layout-density-padding-inline-local: 0;
+					padding: 6px 15px;
+				}
+			}
+		}
+	}
 }
 
 .properties-title-right-flyout-tabs-view {

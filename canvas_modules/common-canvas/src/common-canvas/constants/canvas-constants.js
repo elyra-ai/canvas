@@ -70,7 +70,7 @@ export const SNAP_TO_GRID_DURING = "During";
 // Values for enablePaletteLayout config parameter
 export const PALETTE_LAYOUT_NONE = "None";
 export const PALETTE_LAYOUT_FLYOUT = "Flyout";
-export const PALETTE_LAYOUT_MODAL = "Modal";
+export const PALETTE_LAYOUT_DIALOG = "Dialog";
 
 // Values for enableToolbarLayout config parameter
 export const TOOLBAR_LAYOUT_NONE = "None";

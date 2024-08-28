@@ -561,6 +561,22 @@ describe("expression-builder select from tables correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.equal(" Age");
 	});
 
+	it("expression builder select a field on double clicking row", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const fieldTable = wrapper.find("div.properties-field-table-container");
+		tableUtils.dblClickTableRows(fieldTable, [0]);
+		expect(controller.getPropertyValue(propertyId)).to.equal(" Age");
+	});
+
 	it("expression builder select a field value", () => {
 		reset();
 		const wrapper = renderWithIntl(
@@ -576,6 +592,22 @@ describe("expression-builder select from tables correctly", () => {
 		const valueTable = container.querySelector("div.properties-value-table-container");
 		const addButtons = getAddButtonsList(tableUtilsRTL.getTableRows(valueTable));
 		fireEvent.click(addButtons[0]);
+		expect(controller.getPropertyValue(propertyId)).to.equal(" 21");
+	});
+
+	it("expression builder select a Value on double clicking row", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const valueTable = wrapper.find("div.properties-value-table-container");
+		tableUtils.dblClickTableRows(valueTable, [0]);
 		expect(controller.getPropertyValue(propertyId)).to.equal(" 21");
 	});
 

@@ -231,7 +231,7 @@ describe("Test to check if tips are hidden on scroll", function() {
 			.then((container) => {
 				cy.verifyTip(container, "visible", "Try pressing Increment or Descrement buttons", "bottom");
 			});
-		cy.get(".common-canvas-right-side-items .properties-custom-container")
+		cy.get(".right-flyout-panel .properties-custom-container")
 			.scrollTo("bottom", { ensureScrollable: false });
 		cy.getControlContainerFromName("Integer")
 			.then((container) => {

@@ -106,9 +106,11 @@ describe("CommonCanvas renders correctly", () => {
 		expect(wrapper.find(CanvasContents)).to.have.length(1);
 	});
 
-	it("should render one <PaletteDialog/> component when enablePaletteLayout is set to Modal", () => {
-		const config = { enablePaletteLayout: "Modal" };
+	it("should render one <PaletteDialog/> component when enablePaletteLayout is set to Dialog", () => {
+		const config = { enablePaletteLayout: "Dialog" };
 		const wrapper = createCommonCanvas(config, canvasController);
+		canvasController.openPalette();
+		wrapper.update();
 		expect(wrapper.find(PaletteDialog)).to.have.length(1);
 	});
 

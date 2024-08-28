@@ -567,6 +567,23 @@ describe("oneofselect with custom value allowed works correctly", () => {
 		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(2);
 	});
+
+	it("Validate oneofselect filters correctly using shouldFilterItem", () => {
+		const wrapper = mount(
+			<OneofselectControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
+		const dropdownInput = dropdownWrapper.find("input");
+		dropdownInput.simulate("change", { target: { value: "one" } });
+		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
+		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		expect(dropdownList).to.be.length(1);
+	});
 });
 
 describe("oneofselect classnames appear correctly", () => {

@@ -82,6 +82,7 @@ class ButtonAction extends React.Component {
 				kind={actionButtonKind}
 				onClick={this.applyAction}
 				disabled={disabled}
+				title={this.props.action.label.text}
 			>
 				{this.props.action.label.text}
 			</Button>

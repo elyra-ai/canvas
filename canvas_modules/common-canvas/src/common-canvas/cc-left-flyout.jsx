@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,43 +19,43 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
 
-class CommonCanvasRightFlyout extends React.Component {
+class CommonCanvasLeftFlyout extends React.Component {
 	constructor(props) {
 		super(props);
-		this.logger = new Logger("CC-RightFlyout");
+		this.logger = new Logger("CC-LeftFlyout");
 	}
 
 	render() {
 		this.logger.log("render");
 
-		let rightFlyout = <div />; // For no content, return empty <div> so grid siziing for parent <div> work correctly.
+		let leftFlyout = <div />; // For no content, return empty <div> so grid siziing for parent <div> work correctly.
 
 		if (this.props.content && this.props.isOpen) {
-			const rfClass = this.props.enableRightFlyoutUnderToolbar
-				? "right-flyout-panel under-toolbar"
-				: "right-flyout-panel";
-			rightFlyout = (
-				<div className={rfClass}>
+			const lfClass = this.props.enableLeftFlyoutUnderToolbar
+				? "left-flyout-panel under-toolbar"
+				: "left-flyout-panel";
+			leftFlyout = (
+				<div className={lfClass}>
 					{this.props.content}
 				</div>
 			);
 		}
 
-		return rightFlyout;
+		return leftFlyout;
 	}
 }
 
-CommonCanvasRightFlyout.propTypes = {
+CommonCanvasLeftFlyout.propTypes = {
 	// Provided by Redux
 	isOpen: PropTypes.bool,
 	content: PropTypes.object,
-	enableRightFlyoutUnderToolbar: PropTypes.bool
+	enableLeftFlyoutUnderToolbar: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({
-	isOpen: state.rightflyout.isOpen,
-	content: state.rightflyout.content,
-	enableRightFlyoutUnderToolbar: state.canvasconfig.enableRightFlyoutUnderToolbar
+	isOpen: state.leftflyout.isOpen,
+	content: state.leftflyout.content,
+	enableLeftFlyoutUnderToolbar: state.canvasconfig.enableLeftFlyoutUnderToolbar
 });
 
-export default connect(mapStateToProps)(CommonCanvasRightFlyout);
+export default connect(mapStateToProps)(CommonCanvasLeftFlyout);

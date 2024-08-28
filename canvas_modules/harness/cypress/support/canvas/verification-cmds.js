@@ -849,13 +849,13 @@ Cypress.Commands.add("verifyNodeDimensions", (nodeLabel, width, height) => {
 
 Cypress.Commands.add("verifyBottomPanelHeight", (height) => {
 	cy.get(".bottom-panel").should((element) => {
-		expect(element).to.have.css("height", `${height}px`);
+		compareCloseTo(element[0].offsetHeight, height);
 	});
 });
 
 Cypress.Commands.add("verifyBottomPanelWidth", (width) => {
 	cy.get(".bottom-panel").should((element) => {
-		// Use compareCloseTo here because top-panel width is slighyly different
+		// Use compareCloseTo here because bottom-panel width is slighyly different
 		// on the build machine to its width when running tests on a local machine.
 		compareCloseTo(element[0].offsetWidth, width);
 	});
@@ -863,7 +863,7 @@ Cypress.Commands.add("verifyBottomPanelWidth", (width) => {
 
 Cypress.Commands.add("verifyTopPanelHeight", (height) => {
 	cy.get(".top-panel").should((element) => {
-		expect(element).to.have.css("height", `${height}px`);
+		compareCloseTo(element[0].offsetHeight, height);
 	});
 });
 
@@ -1378,14 +1378,6 @@ Cypress.Commands.add("verifyNotificationCenterExists", () => {
 
 Cypress.Commands.add("verifyNotificationCenterDoesntExist", (hidden) => {
 	cy.get(".notification-panel").should("not.exist");
-});
-
-Cypress.Commands.add("verifyNodeWidthHeight", (nodeLabel, nodeWidth, nodeHeight) => {
-	cy.getNodeWithLabel(nodeLabel).get(".d3-node-body-outline")
-		.should((element) => {
-			expect(element).to.have.css("height", `${nodeHeight}px`);
-			expect(element).to.have.css("width", `${nodeWidth}px`);
-		});
 });
 
 Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {

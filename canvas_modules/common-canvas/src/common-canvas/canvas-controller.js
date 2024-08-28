@@ -170,6 +170,11 @@ export default class CanvasController {
 		this.objectModel.setNotificationPanelConfig(config);
 	}
 
+	setLeftFlyoutConfig(config) {
+		this.logger.log("Setting Left Flyout Config");
+		this.objectModel.setLeftFlyoutConfig(config);
+	}
+
 	setRightFlyoutConfig(config) {
 		this.logger.log("Setting Right Flyout Config");
 		this.objectModel.setRightFlyoutConfig(config);
@@ -1665,6 +1670,10 @@ export default class CanvasController {
 		this.objectModel.toggleNotificationPanel();
 	}
 
+	isLeftFlyoutOpen() {
+		return this.objectModel.isLeftFlyoutOpen();
+	}
+
 	isRightFlyoutOpen() {
 		return this.objectModel.isRightFlyoutOpen();
 	}
@@ -1810,7 +1819,7 @@ export default class CanvasController {
 	// the viewport, a zoom object will be returned that can be used to zoom them
 	// so they appear at the nearest side of the viewport to where they are
 	// currently positioned.
-	// The zoom object retuurned has three fields:
+	// The zoom object returned has three fields:
 	// x: Is the horizontal translate amount which is a number indicating the
 	//    pixel amount to move. Negative left and positive right
 	// y: Is the vertical translate amount which is a number indicating the

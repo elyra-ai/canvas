@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,36 @@
  * limitations under the License.
  */
 
-import { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation, ColorPicker, Palette } from "@elyra/canvas";
+import { propertyOf } from "lodash";
 
-export { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation, ColorPicker, Palette };
+class Title {
+	constructor(title) {
+		this.actions = title.action_refs || [];
+	}
+
+	static makeTitle(uiGroup) {
+		if (uiGroup) {
+			return new Title(
+				propertyOf(uiGroup)("action_refs")
+			);
+		}
+		return null;
+	}
+
+	actionIds() {
+		return this.actions;
+	}
+}
+
+export class TitleMetadata {
+	constructor(title) {
+		this.Title = title;
+	}
+
+	static makeTitleMetadata(title) {
+		if (title) {
+			return new TitleMetadata(new Title(title));
+		}
+		return null;
+	}
+}
