@@ -569,7 +569,7 @@ describe("oneofselect with custom value allowed works correctly", () => {
 	});
 
 	it("Validate oneofselect filters correctly using shouldFilterItem", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -577,11 +577,12 @@ describe("oneofselect with custom value allowed works correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
-		const dropdownInput = dropdownWrapper.find("input");
-		dropdownInput.simulate("change", { target: { value: "one" } });
-		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
-		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		const dropdownInput = dropdownWrapper.querySelector("input");
+		fireEvent.change(dropdownInput, { target: { value: "one" } });
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
 	});
 });
