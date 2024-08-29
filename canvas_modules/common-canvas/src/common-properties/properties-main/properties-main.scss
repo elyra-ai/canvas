@@ -31,60 +31,51 @@ $properties-resize-button-size: $spacing-06;
 
 	&.properties-small {
 		width: $common-properties-small-flyout-width;
-		.properties-btn-resize {
-			right: calc(#{$common-properties-small-flyout-width} - (#{$properties-resize-button-size} / 2));
-		}
 	}
 	&.properties-medium {
 		width: $common-properties-medium-flyout-width;
-		.properties-btn-resize {
-			right: calc(#{$common-properties-medium-flyout-width} - (#{$properties-resize-button-size} / 2));
-		}
 	}
 	&.properties-large {
 		width: $common-properties-large-flyout-width;
-		.properties-btn-resize {
-			right: calc(#{$common-properties-large-flyout-width} - (#{$properties-resize-button-size} / 2));
-		}
 	}
 	&.properties-max {
 		width: $common-properties-max-flyout-width;
-		.properties-btn-resize {
-			right: calc(#{$common-properties-max-flyout-width} - (#{$properties-resize-button-size} / 2));
-		}
-	}
-	&:hover {
-		.properties-btn-resize {
-			visibility: visible;
-			opacity: 1;
-		}
-	}
-	.properties-btn-resize {
-		transition: visibility $duration-moderate-01, opacity $duration-moderate-01;
-		opacity: 0;
-		visibility: hidden;
-		position: absolute;
-		top: 50%;
-		z-index: 1; // needs to sit on top of common-properties div
-		min-height: $properties-resize-button-size;
-		min-width: $properties-resize-button-size;
-		background-color: $layer-01;
-		border: 1px $border-strong-01 solid;
-		padding: $spacing-01;
-		justify-content: center;
-		align-items: center;
-		&:hover {
-			background-color: $layer-accent-01;
-		}
-		svg {
-			fill: $icon-primary;
-			width: $spacing-05;
-			height: $spacing-05;
-		}
 	}
 }
 
+.properties-btn-resize {
+	transition: visibility $duration-moderate-01, opacity $duration-moderate-01;
+	opacity: 0;
+	visibility: hidden;
+	position: relative;
+	right: calc(#{$properties-resize-button-size} / 2);
+	bottom: 50%;
+	min-height: $properties-resize-button-size;
+	min-width: $properties-resize-button-size;
+	background-color: $layer-01;
+	border: 1px $border-strong-01 solid;
+	padding: $spacing-01;
+	justify-content: center;
+	align-items: center;
+	&:hover {
+		background-color: $layer-accent-01;
+		visibility: visible;
+		opacity: 1;
+	}
+	svg {
+		fill: $icon-primary;
+		width: $spacing-05;
+		height: $spacing-05;
+	}
+}
 
+.common-canvas .right-flyout-panel {
+	// Set the 'properties-btn-resize' visible when the 'properties-right-flyout' is hovered
+	aside:hover + button {
+		visibility: visible;
+		opacity: 1;
+	}
+}
 
 .properties-right-flyout > .properties-custom-container {
 	height: calc(100% - 65px - #{$properties-modal-buttons-height}); // Properties title - 65px
