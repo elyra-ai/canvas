@@ -235,7 +235,8 @@ $toolbar-divider-width: 1px;
 	}
 
 	& .toolbar-up-down-chevron-mini {
-		padding: 11px $spacing-01;
+		padding-right: $spacing-03;
+		height: $spacing-05;
 
 		&:hover {
 			background-color: $background-selected-hover;
@@ -255,7 +256,7 @@ $toolbar-divider-width: 1px;
 		justify-content: left;
 
 		& .content-main {
-			padding: $spacing-03 0 $spacing-03;
+			padding: $spacing-03 0;
 		}
 	}
 
@@ -340,7 +341,7 @@ $toolbar-divider-width: 1px;
 
 .toolbar-sub-menu-jsx-item {
 	width: 100%;
-	height: $spacing-08;
+	height: 38px;
 	display: inline-flex;
 	align-items: center;
 	vertical-align: top;

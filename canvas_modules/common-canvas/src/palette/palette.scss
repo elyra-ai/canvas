@@ -17,6 +17,7 @@
 $palette-border-width: 1px;
 $palette-border-color: $layer-accent-01;
 $palette-search-container-height: 41px;
+$palette-dialog-list-item-height: $spacing-09;
 
 //--------------------------------------------------------
 // Classes used by Flyout palette
@@ -62,21 +63,21 @@ $palette-search-container-height: 41px;
 	.palette-no-results-title {
 		@include type-style("body-short-01");
 		width: 100%;
-		padding: $spacing-06 $spacing-06 0;
+		padding: $spacing-05 $spacing-05 0;
 		text-align: center;
 	}
 
 	.palette-no-results-desc {
 		@include type-style("caption-01");
 		width: 100%;
-		padding: 0 $spacing-06;
+		padding: 0 $spacing-05;
 		text-align: center;
 	}
 
 	.palette-flyout-restrict-item {
 		@include type-style("helper-text-01");
 		width: 100%;
-		padding: $spacing-08 $spacing-06;
+		padding: $spacing-08 $spacing-05;
 	}
 
 	.palette-list-item-desc-button {
@@ -125,7 +126,7 @@ $palette-search-container-height: 41px;
 			width: 100%;
 			align-items: center;
 			height: 100%;
-			margin-left: $spacing-06;
+			margin-left: $spacing-05;
 		}
 
 		.palette-list-item-icon {
@@ -136,7 +137,7 @@ $palette-search-container-height: 41px;
 		.palette-list-item-text-div {
 			@include type-style("productive-heading-01");
 			font-weight: 400;
-			padding: 0 6px;
+			padding: 0 $spacing-04;
 			width: calc(100% - 68px);
 			line-height: 1;
 			& mark {
@@ -149,14 +150,14 @@ $palette-search-container-height: 41px;
 		.palette-list-item-icon-warning {
 			transform: scale(1.5);
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			line-height: 46px;  /* Must be same as containing div height */
+			line-height: $palette-dialog-list-item-height;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
 		}
 
 		.palette-list-item-description {
 			@include type-style("caption-01");
-			padding: 0 $spacing-04 0 58px;
+			padding: 0 $spacing-04 0 60px;
 			word-break: break-word;
 			width: 100%; // Needed when the description is only one line long
 
@@ -204,11 +205,6 @@ $palette-search-container-height: 41px;
 
 		.cds--accordion__heading {
 			padding: 0;
-			.cds--accordion__title {
-				margin: 0;
-				padding: 0 0 0 $spacing-04;
-				height: $spacing-09;
-			}
 		}
 
 		.cds--accordion__wrapper {
@@ -303,7 +299,7 @@ $palette-search-container-height: 41px;
 		// Move the magnifying glass icon to be positioned over the category icons
 		// in the palette, as required from DUX review.
 		.cds--search-magnifier svg {
-			margin-left: $spacing-04;
+			margin-left: 10px;
 		}
 
 		svg {
@@ -316,7 +312,7 @@ $palette-search-container-height: 41px;
 			background: $field-01;
 			height: 100%;
 			padding-right: $spacing-09;
-			padding-left: 52px;
+			padding-left: 53px;
 		}
 
 		// Position the x icon button to the right (when it appears after the user
@@ -353,7 +349,7 @@ $palette-search-container-height: 41px;
 	height: 450px;  /* If this is changed see palette-content height below */
 	/* height = (3 * grid_node_height) + (2 * hoverZoneSize) + palette-dialog-topbar height + padding */
 	font-size: 14px;
-	border: $spacing-01 solid transparent; /* transparent border provides sizing hover zone */
+	border: 3px solid transparent; /* transparent border provides sizing hover zone */
 	cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
 	z-index: 2;
 	/* Prevent elements from being selectable */
@@ -363,7 +359,7 @@ $palette-search-container-height: 41px;
 
 	.palette-list-item {
 		height: $spacing-09;
-		border-width: $spacing-01;
+		border-width: 1px;
 		border-color: $palette-border-color;
 		border-style: solid;
 		display: flex;
@@ -388,7 +384,7 @@ $palette-search-container-height: 41px;
 
 		.palette-list-item-icon {
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			line-height: 46px;  /* Must be same as containing div height */
+			line-height: $palette-dialog-list-item-height;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
 			margin-right: $spacing-04;
@@ -410,7 +406,7 @@ $palette-search-container-height: 41px;
 		.palette-list-item-icon-warning {
 			transform: scale(1.5);
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			line-height: 46px;  /* Must be same as containing div height */
+			line-height: $palette-dialog-list-item-height;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
 			margin-right: $spacing-04;
