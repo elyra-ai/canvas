@@ -268,7 +268,7 @@ class DropDown extends React.Component {
 					itemToElement={(item) => (item ? (
 						<span>
 							<span>{ item.value }</span>
-							{this.props.renderIcon && this.props.renderIcon(item)}
+							{this.props.iconCallBack && this.props.iconCallBack(this.props.propertyId, item.data, item.enum)}
 						</span>
 					) : " "
 					)}
@@ -277,7 +277,7 @@ class DropDown extends React.Component {
 					itemToString={(item) => (item ? (
 						<span>
 							<span>{ item.value }</span>
-							{this.props.renderIcon && this.props.renderIcon(item)}
+							{this.props.iconCallBack && this.props.iconCallBack(this.props.propertyId, item.data, item.enum)}
 						</span>
 					) : " "
 					)}
@@ -318,7 +318,7 @@ DropDown.propTypes = {
 	]), // pass in by redux
 	messageInfo: PropTypes.object, // pass in by redux
 	readOnly: PropTypes.bool,
-	renderIcon: PropTypes.func
+	iconCallBack: PropTypes.func
 };
 
 const mapStateToProps = (state, ownProps) => {
