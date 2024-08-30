@@ -4562,13 +4562,17 @@ export default class SVGCanvasRenderer {
 	}
 
 	raiseLinkToTop(obj) {
+		// Add handles-detachable-hover class to avoid firefox hover issue
 		d3.select(obj)
-			.raise();
+			.raise()
+			.classed("handles-detachable-hover", true);
 	}
 
 	lowerLinkToBottom(obj) {
+		// Remove handles-detachable-hover class to avoid firefox hover issue
 		d3.select(obj)
-			.lower();
+			.lower()
+			.classed("handles-detachable-hover", false);
 	}
 
 	// Returns true if the link passed in has one or more decorations.
