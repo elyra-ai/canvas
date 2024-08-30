@@ -89,7 +89,9 @@ class ToolbarActionItem extends React.Component {
 
 	clickOutside(evt) {
 		if (this.isSubAreaDisplayed()) {
-			const items = document.getElementsByClassName(this.generateActionName());
+			const toolbarSelector = `.toolbar-div[instanceid='${this.props.instanceId}']`;
+			const toolbarElement = document.querySelector(toolbarSelector);
+			const items = toolbarElement.getElementsByClassName(this.generateActionName());
 			const isOver = items && items.length > 0 ? items[0].contains(evt.target) : false;
 
 			if (!isOver && !this.props.actionObj.leaveSubAreaOpenOnClickOutside) {
