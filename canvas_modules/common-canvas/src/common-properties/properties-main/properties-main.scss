@@ -28,6 +28,7 @@ $properties-resize-button-size: $spacing-06;
 	outline: none;
 	display: flex;
 	flex-direction: column;
+	position: relative;
 
 	&.properties-small {
 		width: $common-properties-small-flyout-width;
@@ -40,7 +41,7 @@ $properties-resize-button-size: $spacing-06;
 	}
 	&.properties-max {
 		width: $common-properties-max-flyout-width;
-	}
+	 }
 }
 
 .properties-btn-resize {
@@ -98,4 +99,19 @@ $properties-resize-button-size: $spacing-06;
 
 .properties-light-disabled {
 	background-color: $background;
+}
+
+.properties-resize-handle {
+	width: 2px;
+	cursor: ew-resize;
+	background: $layer-01;
+	position: absolute;
+	left: -1;
+	top: 0;
+	bottom: 0;
+	z-index: 10;
+	transition: all 0.2s ease-in;
+	&:hover {
+		background: $button-tertiary;
+	}
 }

@@ -30,7 +30,6 @@ import { Size } from "./../constants/form-constants";
 import { validateParameterDefAgainstSchema } from "../schema-validator/properties-schema-validator.js";
 import { has, isEqual, omit, pick, cloneDeep } from "lodash";
 import Icon from "./../../icons/icon.jsx";
-import { Button } from "@carbon/react";
 import { Provider } from "react-redux";
 import logger from "../../../utils/logger";
 import TitleEditor from "./../components/title-editor";
@@ -95,6 +94,10 @@ class PropertiesMain extends React.Component {
 		this._getResizeButton = this._getResizeButton.bind(this);
 		this._isResizeButtonRequired = this._isResizeButtonRequired.bind(this);
 		this.onBlur = this.onBlur.bind(this);
+
+		this.startResizing = this.startResizing.bind(this);
+		this.resizeElement = this.resizeElement.bind(this);
+		this.stopResizing = this.stopResizing.bind(this);
 	}
 
 	componentDidMount() {
@@ -426,6 +429,28 @@ class PropertiesMain extends React.Component {
 		this.propertiesController.setEditorSize(newEditorSize);
 	}
 
+	startResizing(e) {
+		this.resizing = true;
+		this.startX = e.clientX;
+		this.startWidth = this.commonProperties.offsetWidth;
+
+		document.addEventListener("mousemove", this.resizeElement);
+		document.addEventListener("mouseup", this.stopResizing);
+	}
+
+	resizeElement(e) {
+		if (this.resizing) {
+			const newWidth = this.startWidth + (this.startX - e.clientX);
+			this.commonProperties.style.width = `${newWidth}px`;
+		}
+	}
+
+	stopResizing() {
+		this.resizing = false;
+		document.removeEventListener("mousemove", this.resizeElement);
+		document.removeEventListener("mouseup", this.stopResizing);
+	}
+
 	resize() {
 		if (this.propertiesController.getForm().editorSize === Size.SMALL) {
 			if (this.state.editorSize === Size.SMALL) {
@@ -464,7 +489,6 @@ class PropertiesMain extends React.Component {
 			let propertiesDialog = [];
 			let propertiesTitle = <div />;
 			let buttonsContainer = <div />;
-			let resizeBtn = null;
 			let hasHeading = false;
 
 			if (this.props.propertiesConfig.rightFlyout) {
@@ -492,18 +516,6 @@ class PropertiesMain extends React.Component {
 					showPropertiesButtons={this.state.showPropertiesButtons}
 					disableSaveOnRequiredErrors={this.props.propertiesConfig.disableSaveOnRequiredErrors}
 				/>);
-				if (this._isResizeButtonRequired()) {
-					const resizeIcon = this._getResizeButton();
-					// Resize button label can be "Expand" or "Contract"
-					const resizeBtnLabel = (resizeIcon.props && resizeIcon.props.className === "properties-resize-caret-left")
-						? PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_RESIZEBUTTON_EXPAND_LABEL)
-						: PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_RESIZEBUTTON_CONTRACT_LABEL);
-					resizeBtn = (
-						<Button kind="ghost" className="properties-btn-resize" onClick={this.resize.bind(this)} aria-label={resizeBtnLabel} >
-							{resizeIcon}
-						</Button>
-					);
-				}
 			}
 
 			const editorForm = (<EditorForm
@@ -584,6 +596,10 @@ class PropertiesMain extends React.Component {
 			}
 			return (
 				<Provider store={this.propertiesController.getStore()}>
+					{this._isResizeButtonRequired() && <div
+						className="properties-resize-handle"
+						onMouseDown={this.startResizing}
+					/>}
 					<aside
 						aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
 						role="complementary"
@@ -596,7 +612,6 @@ class PropertiesMain extends React.Component {
 						{propertiesDialog}
 						{buttonsContainer}
 					</aside>
-					{resizeBtn}
 				</Provider>
 			);
 		}
