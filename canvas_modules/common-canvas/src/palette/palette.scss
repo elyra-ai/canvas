@@ -111,7 +111,7 @@ $palette-dialog-list-item-height: $spacing-09;
 		.palette-list-item-category-label {
 			@include type-style("caption-01");
 			width: 100%;
-			padding: $spacing-05 10px 0 58px;
+			padding: $spacing-05 $spacing-04 0 60px;
 
 			& mark {
 				color: $button-primary;
