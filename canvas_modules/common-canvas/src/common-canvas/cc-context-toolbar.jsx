@@ -118,7 +118,7 @@ class CommonCanvasContextToolbar extends React.Component {
 		// If we have some overflow menu items, we reduce the width by five pixels
 		// which forces the overflow menu and the overflow icon to be shown. We
 		// use 5 pixels because this is how many are needed to make the toolbar
-		// work correcty with differnet browser magnificaitons.
+		// work correcty with different browser magnifications.
 		const reduction = overflowMenuItems.length > 0 ? 5 : 0;
 		return buttonsWidth + dividersWidth - reduction;
 	}

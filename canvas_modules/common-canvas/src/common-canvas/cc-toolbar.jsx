@@ -204,8 +204,8 @@ class CommonCanvasToolbar extends React.Component {
 		return rightBar;
 	}
 
-	// Returns a string to be displayed over the top of the default notificaiton
-	// icon. The string shows the number of notificaiton messages up to a maximum
+	// Returns a string to be displayed over the top of the default notification
+	// icon. The string shows the number of notification messages up to a maximum
 	// of nine. If the application provides its own icon in notificationConfigIcon,
 	// the 'text content' is not displayed so null is returned.
 	generateTextContent() {
