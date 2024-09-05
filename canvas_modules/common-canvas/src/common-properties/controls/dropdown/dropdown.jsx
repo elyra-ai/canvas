@@ -206,6 +206,8 @@ class DropDown extends React.Component {
 			dropDown = this.genSelectOptions(this.props.value);
 		}
 
+		const { iconCallBack } = this.props;
+
 		const listBoxMenuIconTranslationIds = {
 			"close.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLOSEMENU),
 			"open.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_OPENMENU),
@@ -268,7 +270,7 @@ class DropDown extends React.Component {
 					itemToElement={(item) => (item ? (
 						<span>
 							<span>{ item.value }</span>
-							{this.props.iconCallBack && this.props.iconCallBack(this.props.propertyId, item.data, item.enum)}
+							{iconCallBack && iconCallBack(this.props.propertyId, item.data, item.enum)}
 						</span>
 					) : " "
 					)}
@@ -277,7 +279,7 @@ class DropDown extends React.Component {
 					itemToString={(item) => (item ? (
 						<span>
 							<span>{ item.value }</span>
-							{this.props.iconCallBack && this.props.iconCallBack(this.props.propertyId, item.data, item.enum)}
+							{iconCallBack && iconCallBack(this.props.propertyId, item.data, item.enum)}
 						</span>
 					) : " "
 					)}

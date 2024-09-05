@@ -266,7 +266,8 @@ CommonProperties.propTypes = {
 		validationHandler: PropTypes.func,
 		titleChangeHandler: PropTypes.func,
 		propertiesActionLabelHandler: PropTypes.func,
-		tooltipLinkHandler: PropTypes.func
+		tooltipLinkHandler: PropTypes.func,
+		iconCallBack: PropTypes.func
 	}),
 	customPanels: PropTypes.array,
 	customControls: PropTypes.array,
