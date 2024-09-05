@@ -65,6 +65,7 @@ $toolbar-divider-width: 1px;
 
 			&.is-in-menu {
 				padding-left: 10px;
+				padding-right: 10px;
 			}
 
 			& .content-main {
@@ -77,6 +78,10 @@ $toolbar-divider-width: 1px;
 
 			& .toolbar-right-chevron {
 				padding: 4px 0 0;
+			}
+
+			& .checkmark {
+				padding-top: 4px;
 			}
 		}
 
@@ -209,6 +214,7 @@ $toolbar-divider-width: 1px;
 	width: inherit;
 	display: flex;
 	justify-content: center;
+	grid-template-columns: 1fr 16px;
 
 	&.disabled {
 		pointer-events: none;
@@ -251,11 +257,18 @@ $toolbar-divider-width: 1px;
 	}
 
 	&.is-in-menu {
-		justify-content: left;
+		justify-content: space-between;
 
 		& .content-main {
 			padding: 8px 0 6px;
 		}
+	}
+
+	& .checkmark {
+		pointer-events: none;
+		padding-top: 5px;
+		padding-left: 5px;
+
 	}
 
 	&.default {
@@ -309,6 +322,7 @@ $toolbar-divider-width: 1px;
 			padding-left: 8px;
 			word-break: break-word;
 			hyphens: auto;
+			text-wrap: nowrap;
 		}
 	}
 
@@ -361,7 +375,6 @@ $toolbar-divider-width: 1px;
 }
 
 .toolbar-popover-list {
-	width: 200px;
 	z-index: 2; // Make sure sub-area appears above bottom panel
 	display: block;
 	position: absolute; // Actual position will be calculated in the code
@@ -373,7 +386,7 @@ $toolbar-divider-width: 1px;
 	animation: tovisible 0.25s ease-in-out forwards; // Use keyframe to animate panel visibility
 
 	&.submenu {
-		min-width: 100px;
+		min-width: 150px;
 	}
 
 	&.subpanel {

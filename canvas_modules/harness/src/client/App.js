@@ -2147,7 +2147,7 @@ class App extends React.Component {
 			const subMenuTextSize = [
 				{ action: "title", label: "Title", enable: true },
 				{ action: "header", label: "Header", enable: true },
-				{ action: "subheader", label: "Subheader", enable: true },
+				{ action: "subheader", label: "Subheader", enable: true, isSelected: true },
 				{ action: "body", label: "Body", enable: true }
 			];
 
