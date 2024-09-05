@@ -30,6 +30,7 @@ import { Size } from "./../constants/form-constants";
 import { validateParameterDefAgainstSchema } from "../schema-validator/properties-schema-validator.js";
 import { has, isEqual, omit, pick, cloneDeep } from "lodash";
 import Icon from "./../../icons/icon.jsx";
+import { Button } from "@carbon/react";
 import { Provider } from "react-redux";
 import logger from "../../../utils/logger";
 import TitleEditor from "./../components/title-editor";
@@ -86,6 +87,12 @@ class PropertiesMain extends React.Component {
 			showPropertiesButtons: true,
 			editorSize: editorSize
 		};
+		this.flyoutWidth = {
+			small: "320px",
+			medium: "480px",
+			large: "640px",
+			max: "900px"
+		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 		this.updateEditorSize = this.updateEditorSize.bind(this);
@@ -94,10 +101,7 @@ class PropertiesMain extends React.Component {
 		this._getResizeButton = this._getResizeButton.bind(this);
 		this._isResizeButtonRequired = this._isResizeButtonRequired.bind(this);
 		this.onBlur = this.onBlur.bind(this);
-
-		this.startResizing = this.startResizing.bind(this);
-		this.resizeElement = this.resizeElement.bind(this);
-		this.stopResizing = this.stopResizing.bind(this);
+		this.updateRightFlyoutWidth = this.updateRightFlyoutWidth.bind(this);
 	}
 
 	componentDidMount() {
@@ -422,33 +426,19 @@ class PropertiesMain extends React.Component {
 		this.setState({ showPropertiesButtons: state });
 	}
 
+	updateRightFlyoutWidth(size) {
+		const element = document.querySelector(".right-flyout-panel");
+		if (element) {
+			element.style.width = this.flyoutWidth[size];
+		}
+	}
+
 	updateEditorSize(newEditorSize) {
 		this.setState({
 			editorSize: newEditorSize
 		});
 		this.propertiesController.setEditorSize(newEditorSize);
-	}
-
-	startResizing(e) {
-		this.resizing = true;
-		this.startX = e.clientX;
-		this.startWidth = this.commonProperties.offsetWidth;
-
-		document.addEventListener("mousemove", this.resizeElement);
-		document.addEventListener("mouseup", this.stopResizing);
-	}
-
-	resizeElement(e) {
-		if (this.resizing) {
-			const newWidth = this.startWidth + (this.startX - e.clientX);
-			this.commonProperties.style.width = `${newWidth}px`;
-		}
-	}
-
-	stopResizing() {
-		this.resizing = false;
-		document.removeEventListener("mousemove", this.resizeElement);
-		document.removeEventListener("mouseup", this.stopResizing);
+		this.updateRightFlyoutWidth(newEditorSize);
 	}
 
 	resize() {
@@ -489,7 +479,7 @@ class PropertiesMain extends React.Component {
 			let propertiesDialog = [];
 			let propertiesTitle = <div />;
 			let buttonsContainer = <div />;
-			let resizeComp = null;
+			let resizeBtn = null;
 			let hasHeading = false;
 
 			if (this.props.propertiesConfig.rightFlyout) {
@@ -521,16 +511,13 @@ class PropertiesMain extends React.Component {
 				if (this._isResizeButtonRequired()) {
 					const resizeIcon = this._getResizeButton();
 					// Resize button label can be "Expand" or "Contract"
-					const resizeCompLabel = (resizeIcon.props && resizeIcon.props.className === "properties-resize-caret-left")
+					const resizeBtnLabel = (resizeIcon.props && resizeIcon.props.className === "properties-resize-caret-left")
 						? PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_RESIZEBUTTON_EXPAND_LABEL)
 						: PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_RESIZEBUTTON_CONTRACT_LABEL);
-					resizeComp = (
-						<div
-							kind="ghost"
-							className="properties-resize-handle"
-							onMouseDown={this.startResizing}
-							aria-label={resizeCompLabel}
-						/>
+					resizeBtn = (
+						<Button kind="ghost" className="properties-btn-resize" onClick={this.resize.bind(this)} aria-label={resizeBtnLabel} >
+							{resizeIcon}
+						</Button>
 					);
 				}
 			}
@@ -613,7 +600,6 @@ class PropertiesMain extends React.Component {
 			}
 			return (
 				<Provider store={this.propertiesController.getStore()}>
-					{this._isResizeButtonRequired() && resizeComp}
 					<aside
 						aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
 						role="complementary"
@@ -626,6 +612,7 @@ class PropertiesMain extends React.Component {
 						{propertiesDialog}
 						{buttonsContainer}
 					</aside>
+					{resizeBtn}
 				</Provider>
 			);
 		}

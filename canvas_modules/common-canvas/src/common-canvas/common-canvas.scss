@@ -56,6 +56,21 @@ $panel-border-color: $border-subtle-01;
 	background-color: $layer-01;
 }
 
+.right-flyout-resize-handle {
+	width: 2px;
+	cursor: ew-resize;
+	background: $layer-01;
+	position: absolute;
+	left: -1;
+	top: 0;
+	bottom: 0;
+	z-index: 10;
+	transition: all 0.2s ease-in;
+	&:hover {
+		background: $border-interactive;
+	}
+}
+
 .bottom-panel {
 	display: flex;
 	flex-direction: column;

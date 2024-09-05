@@ -23,6 +23,33 @@ class CommonCanvasRightFlyout extends React.Component {
 	constructor(props) {
 		super(props);
 		this.logger = new Logger("CC-RightFlyout");
+
+		this.onMouseDown = this.onMouseDown.bind(this);
+		this.onMouseMoveX = this.onMouseMoveX.bind(this);
+		this.onMouseUp = this.onMouseUp.bind(this);
+	}
+
+	onMouseDown(e) {
+		if (e.button === 0) {
+			document.addEventListener("mousemove", this.onMouseMoveX, true);
+			document.addEventListener("mouseup", this.onMouseUp, true);
+			this.posX = e.clientX;
+			this.startWidth = this.commonCanvasRightFlyout.offsetWidth;
+
+			e.preventDefault();
+		}
+	}
+
+	onMouseUp() {
+		document.removeEventListener("mousemove", this.onMouseMoveX, true);
+		document.removeEventListener("mouseup", this.onMouseUp, true);
+	}
+
+	onMouseMoveX(e) {
+		if (e.clientX) {
+			const newWidth = this.startWidth + (this.posX - e.clientX);
+			this.commonCanvasRightFlyout.style.width = `${newWidth}px`;
+		}
 	}
 
 	render() {
@@ -35,7 +62,12 @@ class CommonCanvasRightFlyout extends React.Component {
 				? "right-flyout-panel under-toolbar"
 				: "right-flyout-panel";
 			rightFlyout = (
-				<div className={rfClass}>
+				<div className={rfClass} id="right-flyout-panel" ref={ (ref) => (this.commonCanvasRightFlyout = ref) }>
+					<div
+						kind="ghost"
+						className="right-flyout-resize-handle"
+						onMouseDown={this.onMouseDown}
+					/>
 					{this.props.content}
 				</div>
 			);
