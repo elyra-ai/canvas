@@ -164,6 +164,13 @@ class CommonCanvasTextToolbar extends React.Component {
 		const selectedTextColor = (this.getFormatValue("textColor", this.props.formats) || "#000000");
 		const selectedBackgroundColor = (this.getFormatValue("backgroundColor", this.props.formats) || "#FFFFFF");
 
+		// Get the current values (or defaults) for bold/italics/underline/striketrough attributes
+		const boldSeletced = this.getFormatType("bold", this.props.formats);
+		const italicsSelected = this.getFormatType("italics", this.props.formats);
+		const textDec = this.getFormatValue("textDecoration", this.props.formats);
+		const underlineSelected = textDec?.includes("underline");
+		const strikethroughSelected = textDec?.includes("strikethrough");
+
 		return {
 			leftBar: [
 				{ action: "submenu-font",
@@ -180,10 +187,10 @@ class CommonCanvasTextToolbar extends React.Component {
 					subMenu: subMenuTextSize,
 					closeSubAreaOnClick: true
 				},
-				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold size={32} />) },
-				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic size={32} />) },
-				{ action: "underline", label: underlineLabel, enable: true, iconEnabled: (<TextUnderline size={32} />) },
-				{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough size={32} />) },
+				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold size={32} />), isSelected: boldSeletced },
+				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic size={32} />), isSelected: italicsSelected },
+				{ action: "underline", label: underlineLabel, enable: true, iconEnabled: (<TextUnderline size={32} />), isSelected: underlineSelected },
+				{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough size={32} />), isSelected: strikethroughSelected },
 				{ divider: true },
 				{ action: "submenu-text-color",
 					label: this.getLabel("texttoolbar.colorText"),
@@ -247,9 +254,15 @@ class CommonCanvasTextToolbar extends React.Component {
 	// Returns the value for the format type passed in from the array of
 	// formats passed in.
 	getFormatValue(type, formats) {
+		const format = this.getFormatType(type, formats);
+		return format?.value;
+	}
+
+	// Returns the format for the type passed in from the array of
+	// formats passed in.
+	getFormatType(type, formats) {
 		if (formats) {
-			const format = formats.find((f) => f.type === type);
-			return format?.value;
+			return formats.find((f) => f.type === type);
 		}
 		return null;
 	}
