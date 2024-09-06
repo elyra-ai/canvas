@@ -15,7 +15,7 @@
 				"id": "bdf013da-58ec-4592-b971-7f3ecbdb9d77",
 				"x_pos": 70,
 				"y_pos": 60,
-				"width": 246,
+				"width": 286,
 				"height": 51,
 				"contentType": "WYSIWYG",
 				"formats": [
@@ -35,7 +35,7 @@
 				"id": "5538b3ba-1f7e-465d-8290-e778364c113d",
 				"x_pos": 70,
 				"y_pos": 135,
-				"width": 246,
+				"width": 286,
 				"height": 51,
 				"contentType": "WYSIWYG",
 				"formats": [
@@ -55,7 +55,7 @@
 				"id": "7091b5c8-2e51-4180-a84a-7812c583c8e2",
 				"x_pos": 70,
 				"y_pos": 210,
-				"width": 246,
+				"width": 290,
 				"height": 51,
 				"contentType": "WYSIWYG",
 				"formats": [
@@ -68,14 +68,14 @@
 					"value": "text-size-24"
 				  }
 				],
-				"content": "IBM Plex Condensed",
+				"content": "IBM Plex Sans Condensed",
 				"associated_id_refs": []
 			  },
 			  {
 				"id": "ac260f24-d5c5-4723-a222-6028b8ed3c11",
 				"x_pos": 70,
 				"y_pos": 285,
-				"width": 246,
+				"width": 287,
 				"height": 51,
 				"contentType": "WYSIWYG",
 				"formats": [
@@ -95,7 +95,7 @@
 				"id": "cd3d2ca8-00ee-4622-9fee-ecd09a5d2477",
 				"x_pos": 70,
 				"y_pos": 360,
-				"width": 246,
+				"width": 285,
 				"height": 51,
 				"contentType": "WYSIWYG",
 				"formats": [
@@ -461,11 +461,11 @@
 				"formats": [
 				  {
 					"type": "backgroundColor",
-					"value": "#B7EEBF"
+					"value": "#A7F0BA"
 				  },
 				  {
 					"type": "textColor",
-					"value": "#E75B5C"
+					"value": "#FC7B1D"
 				  },
 				  {
 					"type": "fontType",
