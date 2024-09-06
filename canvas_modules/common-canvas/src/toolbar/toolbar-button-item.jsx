@@ -210,7 +210,7 @@ class ToolbarButtonItem extends React.Component {
 
 		const mainClassName = actionObj.purpose ? "content-main dual" : "content-main";
 
-		const checkMark = this.props.actionObj.isSelected && this.props.isInMenu ? (<div className={"checkmark"}> <Checkmark size={"20"} /></div>) : null;
+		const checkMark = this.props.actionObj.isSelected && this.props.isInMenu ? (<div className={"checkmark"}> <Checkmark /></div>) : null;
 
 		let buttonContent = (
 			<div className={itemContentClassName}>

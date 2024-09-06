@@ -81,7 +81,7 @@ $toolbar-divider-width: 1px;
 			}
 
 			& .checkmark {
-				padding-top: 4px;
+				padding-top: $spacing-02;
 			}
 		}
 
@@ -266,9 +266,7 @@ $toolbar-divider-width: 1px;
 
 	& .checkmark {
 		pointer-events: none;
-		padding-top: 5px;
-		padding-left: 5px;
-
+		padding-top: $spacing-03;
 	}
 
 	&.default {
