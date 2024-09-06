@@ -165,8 +165,8 @@ class CommonCanvasTextToolbar extends React.Component {
 		const selectedBackgroundColor = (this.getFormatValue("backgroundColor", this.props.formats) || "#FFFFFF");
 
 		// Get the current values (or defaults) for bold/italics/underline/striketrough attributes
-		const boldSeletced = this.getFormatType("bold", this.props.formats);
-		const italicsSelected = this.getFormatType("italics", this.props.formats);
+		const boldSeletced = (Boolean)(this.getFormatType("bold", this.props.formats));
+		const italicsSelected = (Boolean)(this.getFormatType("italics", this.props.formats));
 		const textDec = this.getFormatValue("textDecoration", this.props.formats);
 		const underlineSelected = textDec?.includes("underline");
 		const strikethroughSelected = textDec?.includes("strikethrough");
