@@ -98,7 +98,7 @@ $toolbar-divider-width: 1px;
 .toolbar-left-bar {
 	flex-shrink: 5000000; // Make sure left bar always shrinks first
 	display: block;
-	padding-right: $spacing-08;
+	padding-right: 42px;
 	overflow: hidden;
 	align-items: center;
 }
@@ -244,7 +244,7 @@ $toolbar-divider-width: 1px;
 	}
 
 	& .toolbar-right-chevron {
-		padding: $spacing-03 0 $spacing-01;
+		padding: 9px 0 $spacing-01;
 		pointer-events: none;
 	}
 
@@ -287,11 +287,11 @@ $toolbar-divider-width: 1px;
 
 	.toolbar-text-content {
 		position: absolute;
-		width: $spacing-04;
-		top: $spacing-05;
+		width: 11px;
+		top: 15px;
 		left: 13px;
 		font-size: 9px;
-		line-height: $spacing-03;
+		line-height: 9px;
 		color: $icon-primary;
 		text-align: center;
 	}

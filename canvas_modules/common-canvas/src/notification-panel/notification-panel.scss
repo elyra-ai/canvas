@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-$notification-panel-header-height: $spacing-07;
+$notification-panel-header-height: 33px;
 $notification-message-height: $spacing-09;
 $notification-left-border-color-width: $spacing-02;
-$notification-panel-button-container-height: $spacing-09;
+$notification-panel-button-container-height: 49px;
 
 .notification-panel {
 	width: 318px;
@@ -106,8 +106,8 @@ $notification-panel-button-container-height: $spacing-09;
 		.notification-panel-empty-message {
 			@include type-style("body-short-01");
 			text-align: center;
-			padding-right: $spacing-07;
-			padding-left: $spacing-07;
+			padding-right: 30px;
+			padding-left: 30px;
 		}
 	}
 

@@ -227,12 +227,12 @@ $panel-border-color: $border-subtle-01;
 
 .return-to-previous {
 	position: absolute;
-	left: $spacing-05;
-	top: $spacing-05;
+	left: 15px;
+	top: 15px;
 	background-color: $background;
 	& button {
 		background-color: $background;
-		padding-right: $spacing-06;
+		padding-right: 20px;
 	}
 	& button:hover,
 	& button:focus {
@@ -271,10 +271,10 @@ $panel-border-color: $border-subtle-01;
 
 .dropzone-canvas-rect {
 	position: absolute;
-	top: $spacing-07;
-	left: $spacing-07;
-	right: $spacing-07;
-	bottom: $spacing-07;
+	top: 30px;
+	left: 30px;
+	right: 30px;
+	bottom: 30px;
 	border-color: $border-strong-01;
 	border-style: dashed;
 	border-width: $spacing-01;
@@ -307,8 +307,8 @@ $panel-border-color: $border-subtle-01;
 	left: 50%;
 	top: $spacing-05;
 	transform: translate(-50%, 0%);
-	border-radius: $spacing-06;
-	padding: $spacing-03 0;
+	border-radius: 20px;
+	padding: 9px 0;
 	user-select: none; /* Prevent elements from being selectable */
 
 	svg {
@@ -317,6 +317,6 @@ $panel-border-color: $border-subtle-01;
 	}
 
 	span {
-		margin: 0 $spacing-05 0 $spacing-04;
+		margin: 0 $spacing-05 0 10px;
 	}
 }

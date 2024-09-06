@@ -27,7 +27,7 @@ $palette-dialog-list-item-height: $spacing-09;
 	font-size: 14px;
 	position: relative;
 	height: 100%;
-	padding-bottom: $spacing-02;
+	padding-bottom: 5px;
 	background-color: $layer-01;
 	-webkit-transition: 0.2s;
 	transition: 0.2s;
@@ -63,27 +63,27 @@ $palette-dialog-list-item-height: $spacing-09;
 	.palette-no-results-title {
 		@include type-style("body-short-01");
 		width: 100%;
-		padding: $spacing-05 $spacing-05 0;
+		padding: 20px 20px 0;
 		text-align: center;
 	}
 
 	.palette-no-results-desc {
 		@include type-style("caption-01");
 		width: 100%;
-		padding: 0 $spacing-05;
+		padding: 0 20px;
 		text-align: center;
 	}
 
 	.palette-flyout-restrict-item {
 		@include type-style("helper-text-01");
 		width: 100%;
-		padding: $spacing-08 $spacing-05;
+		padding: $spacing-08 20px;
 	}
 
 	.palette-list-item-desc-button {
 		color: $link-primary;
 		cursor: pointer;
-		padding: $spacing-02 0 0;
+		padding: 5px 0 0;
 	}
 
 	.palette-list-item {
@@ -92,7 +92,7 @@ $palette-dialog-list-item-height: $spacing-09;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding: $spacing-03 $spacing-04;
+		padding: 9px 10px;
 		/* Prevent elements from being selectable */
 		/* This stops it being dragged incorrectly.*/
 		user-select: none;
@@ -111,7 +111,7 @@ $palette-dialog-list-item-height: $spacing-09;
 		.palette-list-item-category-label {
 			@include type-style("caption-01");
 			width: 100%;
-			padding: $spacing-05 $spacing-04 0 60px;
+			padding: $spacing-05 10px 0 58px;
 
 			& mark {
 				color: $button-primary;
@@ -173,16 +173,16 @@ $palette-dialog-list-item-height: $spacing-09;
 		}
 
 		&.search-result {
-			min-height: $spacing-09;
+			min-height: 46px;
 			height: fit-content;
 			padding-bottom: $spacing-05;
 			padding-top: 0px;
 			padding-left: 0px;
 			border-bottom: $palette-border-width solid $palette-border-color;
-			padding-right: $spacing-03;
+			padding-right: 6px;
 			.palette-list-item-icon-and-text {
-				min-height: $spacing-07;
-				padding-left: $spacing-04;
+				min-height: 30px;
+				padding-left: 10px;
 			}
 		}
 	}
@@ -195,7 +195,7 @@ $palette-dialog-list-item-height: $spacing-09;
 	height:0;
 
 	li .cds--accordion__arrow {
-		margin: $spacing-05;
+		margin: 15px;
 	}
 	.cds--accordion__item {
 		border-top: 0;
@@ -235,7 +235,7 @@ $palette-dialog-list-item-height: $spacing-09;
 	display: flex;
 	align-items: center;
 	min-height: 44px;
-	padding-left: $spacing-04;
+	padding-left: 11px;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	user-select: none;
@@ -282,13 +282,13 @@ $palette-dialog-list-item-height: $spacing-09;
 
 .palette-flyout-category-text-no-image {
 	line-height: 1.2;
-	margin-left: $spacing-04;
+	margin-left: 10px;
 	width: 170px;
 }
 
 .palette-flyout-category-count {
 	line-height: 1.2;
-	padding-left: $spacing-02;
+	padding-left: 5px;
 }
 
 .palette-flyout-search-container {
@@ -358,7 +358,7 @@ $palette-dialog-list-item-height: $spacing-09;
 	display: block;
 
 	.palette-list-item {
-		height: $spacing-09;
+		height: 46px;
 		border-width: 1px;
 		border-color: $palette-border-color;
 		border-style: solid;
@@ -378,7 +378,7 @@ $palette-dialog-list-item-height: $spacing-09;
 			display: flex;
 			flex-direction: row;
 			width: 100%;
-			height: $spacing-09;
+			height: 46px;
 			align-items: center;
 		}
 
@@ -387,7 +387,7 @@ $palette-dialog-list-item-height: $spacing-09;
 			line-height: $palette-dialog-list-item-height;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
-			margin-right: $spacing-04;
+			margin-right: 10px;
 		}
 
 		.palette-list-item-text-div {
@@ -409,7 +409,7 @@ $palette-dialog-list-item-height: $spacing-09;
 			line-height: $palette-dialog-list-item-height;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
-			margin-right: $spacing-04;
+			margin-right: 10px;
 		}
 	}
 }
@@ -499,17 +499,17 @@ $palette-dialog-list-item-height: $spacing-09;
 
 .palette-dialog-grid-node-icon-warning {
 	transform: scale(4);
-	margin-top: $spacing-06;
+	margin-top: 25px;
 }
 
 .palette-dialog-grid-node-text-warning {
 	width: 100%;
-	padding-top: $spacing-07;
+	padding-top: 30px;
 }
 
 .palette-dialog-grid-node-text {
 	width: 100%;
-	padding-top: $spacing-03;
+	padding-top: 6px;
 }
 
 //--------------------------------------------------------
