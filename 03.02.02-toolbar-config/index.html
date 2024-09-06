@@ -2733,10 +2733,13 @@ Where:</p>
 <p><strong>tooltip</strong> - A string or JSX object. The tooltip that will be displayed for the action. If this is not provided the label will be displayed as the tooltip instead.</p>
 </li>
 <li>
-<p><strong>isSelected</strong> - A boolean. When set to true the toolbar button displays a selection highlight (which is a blue bar along the bottom border of the toolbar item). This is useful for implementing a button that switches on and off a mode, as opposed to a regular button which does not have any state.</p>
+<p><strong>isSelected</strong> - A boolean. When set to true the toolbar button displays a selection highlight. This is displayed as either a blue bar along the bottom border of buttons in the toolbar</p>
 <p><img src="../assets/cc-toolbar-action-selected-none.png" width="40" />
 <img src="../assets/cc-toolbar-action-selected.png" width="40" /></p>
-<p>This property can also be used to indicate a current state between a number of mutually exclusive settings. In this case, one button would be added to the toolbar for each setting and then the <code>isSelected</code> property would be set to true for the setting that is currently active. Then, when the user clicks a different option in the set, the code would set <code>isSelected</code> to true for that button and set it to false for the previously selected button. (This would give behavior like a radio button set.)</p>
+<p>or a checkmark for items that appear in sub-menus.</p>
+<p><img src="../assets/cc-toolbar-action-selected-menu.png" width="180" /></p>
+<p>When applied This is useful for implementing a button that switches on and off a mode, as opposed to a regular button which does not have any state.</p>
+<p>This property can also be used to indicate a current state between a number of mutually exclusive settings. In this case, one button would be added to the toolbar for each setting and then the <code>isSelected</code> property would be set to true for the setting that is currently active. Then, when the user clicks a different option in the set, the application code would set <code>isSelected</code> to true for that button and set it to false for the previously selected button. (This would give behavior like a radio button set.)</p>
 </li>
 <li>
 <p><strong>className</strong> - This a string that will be appended to the <code>class</code> field for the top-level <code>&lt;div&gt;</code> that surrounds the action button. This can be used to set application-specific CSS for the button.</p>
