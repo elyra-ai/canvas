@@ -80,12 +80,14 @@ export default class CanavasStore {
 			toppanel: { }
 		};
 
-		if (typeof window !== "undefined") {
-			const enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
-			this.store = createStore(combinedReducer, initialState, enableDevTools);
-		} else {
-			this.store = createStore(combinedReducer, initialState);
-		}
+		// This code removed because it was causing slowdown in the test harness with the
+		// debugger open in the latest version of Chrome.
+		// if (typeof window !== "undefined") {
+		// 	const enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+		// 	this.store = createStore(combinedReducer, initialState, enableDevTools);
+		// } else {
+		this.store = createStore(combinedReducer, initialState);
+		// }
 
 		this.dispatch = this.dispatch.bind(this);
 	}
