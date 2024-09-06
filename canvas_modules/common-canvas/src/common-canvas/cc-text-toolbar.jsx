@@ -295,7 +295,7 @@ CommonCanvasTextToolbar.propTypes = {
 	// Provided by CommonCanvas
 	intl: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	containingDivId: PropTypes.string.isRequired,
+	containingDivId: PropTypes.string,
 
 	// Provided by redux
 	isOpen: PropTypes.bool.isRequired,
