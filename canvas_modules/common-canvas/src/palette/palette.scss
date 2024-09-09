@@ -17,7 +17,7 @@
 $palette-border-width: 1px;
 $palette-border-color: $layer-accent-01;
 $palette-search-container-height: 41px;
-$palette-dialog-list-item-height: $spacing-09;
+$palette-dialog-list-item-height: 46px;
 
 //--------------------------------------------------------
 // Classes used by Flyout palette
@@ -137,7 +137,7 @@ $palette-dialog-list-item-height: $spacing-09;
 		.palette-list-item-text-div {
 			@include type-style("productive-heading-01");
 			font-weight: 400;
-			padding: 0 $spacing-04;
+			padding: 0 10px;
 			width: calc(100% - 68px);
 			line-height: 1;
 			& mark {
@@ -157,7 +157,7 @@ $palette-dialog-list-item-height: $spacing-09;
 
 		.palette-list-item-description {
 			@include type-style("caption-01");
-			padding: 0 $spacing-04 0 60px;
+			padding: 0 10px 0 58px;
 			word-break: break-word;
 			width: 100%; // Needed when the description is only one line long
 
@@ -312,7 +312,7 @@ $palette-dialog-list-item-height: $spacing-09;
 			background: $field-01;
 			height: 100%;
 			padding-right: $spacing-09;
-			padding-left: 53px;
+			padding-left: 52px;
 		}
 
 		// Position the x icon button to the right (when it appears after the user
