@@ -923,6 +923,15 @@ g.bkg-col-cyan-50 {
 	}
 }
 
+.d3-comment-text-wysiwyg-scroll,
+.d3-comment-text-entry-wysiwyg-scroll {
+	pointer-events: unset;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	height: 100%;
+	width: 100%;
+}
+
 .d3-comment-text-wysiwyg-outer {
 	display: table;
 	pointer-events: none;

@@ -107,7 +107,9 @@ export default class SVGCanvasRenderer {
 			this.removeTempCursorOverlay.bind(this), // Function
 			this.displayComments.bind(this), // Function
 			this.displayLinks.bind(this), // Function
-			this.getCommentToolbarPos.bind(this) // Function
+			this.getCommentToolbarPos.bind(this), // Function
+			this.addCanvasZoomBehavior.bind(this), // Function
+			this.removeCanvasZoomBehavior.bind(this) // Function
 		);
 
 		this.dispUtils.setDisplayState();
@@ -283,7 +285,9 @@ export default class SVGCanvasRenderer {
 			this.removeTempCursorOverlay.bind(this), // Function
 			this.displayComments.bind(this), // Function
 			this.displayLinks.bind(this), // Function
-			this.getCommentToolbarPos.bind(this) // Function
+			this.getCommentToolbarPos.bind(this), // Function
+			this.addCanvasZoomBehavior.bind(this), // Function
+			this.removeCanvasZoomBehavior.bind(this) // Function
 		);
 
 
@@ -325,7 +329,6 @@ export default class SVGCanvasRenderer {
 		this.superRenderers.forEach((renderer) => {
 			renderer.setSelectionInfo(selectionInfo);
 		});
-
 	}
 
 	// Returns a subset of renderers, from the current set of super renderers,
@@ -1293,7 +1296,7 @@ export default class SVGCanvasRenderer {
 	// the populated case we do.
 	resetCanvasSVGBehaviors() {
 		// Remove zoom behaviors from canvasSVG area.
-		this.canvasSVG.on(".zoom", null);
+		this.removeCanvasZoomBehavior();
 
 		// If there are no nodes or comments we don't apply any zoom behaviors
 		// to the SVG area. We only attach the zoom behaviour to the top most SVG
@@ -1301,8 +1304,7 @@ export default class SVGCanvasRenderer {
 		// or a sub-pipeline full page.
 		if (!this.activePipeline.isEmptyOrBindingsOnly() &&
 				this.dispUtils.isDisplayingFullPage()) {
-			this.canvasSVG
-				.call(this.zoomUtils.getZoomHandler());
+			this.canvasSVG.call(this.zoomUtils.getZoomHandler());
 		}
 
 		// These behaviors will be applied to SVG areas at the top level and
@@ -1341,6 +1343,17 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Zoom - context menu");
 				this.openContextMenu(d3Event, "canvas");
 			});
+	}
+
+	// When adding back zoom behavior we need to reset all canvas behaviors
+	// because the ".zoom" events will have been removed from this.canvasSVG
+	// whenn removeCanvasZoomBehavior was called.
+	addCanvasZoomBehavior() {
+		this.resetCanvasSVGBehaviors();
+	}
+
+	removeCanvasZoomBehavior() {
+		this.canvasSVG.on(".zoom", null);
 	}
 
 	// Resets the pointer cursor on the background rectangle in the Canvas SVG area.
@@ -3800,6 +3813,8 @@ export default class SVGCanvasRenderer {
 						.attr("y", 0);
 					fo
 						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+						.attr("class", "d3-comment-text-wysiwyg-scroll")
+						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 						.attr("class", "d3-comment-text-wysiwyg-outer")
 						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 						.attr("class", "d3-comment-text-wysiwyg");
@@ -3810,6 +3825,7 @@ export default class SVGCanvasRenderer {
 			.attr("width", (c) => c.width)
 			.attr("height", (c) => c.height)
 
+			.select(".d3-comment-text-wysiwyg-scroll")
 			.select(".d3-comment-text-wysiwyg-outer")
 
 			.select(".d3-comment-text-wysiwyg")
@@ -3851,6 +3867,9 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableContextToolbar) {
 					this.addContextToolbar(d3Event, d, "comment");
 				}
+				if (this.canvasLayout.commentIsScrollable && this.commentHasScrollableText(d3Event.currentTarget)) {
+					this.removeCanvasZoomBehavior(); // Remove canvas zoom behavior to allow scrolling of comment
+				}
 			})
 			.on("mouseleave", (d3Event, d) => {
 				if (this.config.enableContextToolbar) {
@@ -3858,6 +3877,9 @@ export default class SVGCanvasRenderer {
 				}
 				if (this.config.enableEditingActions) {
 					this.deleteCommentPort(d3Event.currentTarget);
+				}
+				if (this.canvasLayout.commentIsScrollable) {
+					this.addCanvasZoomBehavior(); // Add back zoom behavior to reenable canvas zooming
 				}
 			})
 			// Use mouse down instead of click because it gets called before drag start.
@@ -3902,6 +3924,23 @@ export default class SVGCanvasRenderer {
 				}
 				this.openContextMenu(d3Event, "comment", d);
 			});
+	}
+
+	// Returns true if the comment has scrollable text or not. That is if the contents
+	// of the comment's scroll <div> is bigger that the scroll <div> can accommodate.
+	// When a comment is being edited, it will have a foreignObject containing its own
+	// scroll <div> over the top of the foreignObject used to display the comment.
+	commentHasScrollableText(element) {
+		// Look for entry foreign object first because, if present it will be over the top
+		// of the display foreign object and it will be handling scrollable text.
+		let scrollDiv = element.getElementsByClassName("d3-comment-text-entry-wysiwyg-scroll");
+		if (!scrollDiv[0]) {
+			scrollDiv = element.getElementsByClassName("d3-comment-text-wysiwyg-scroll");
+		}
+		if (scrollDiv[0].clientHeight < scrollDiv[0].scrollHeight) {
+			return true;
+		}
+		return false;
 	}
 
 	attachCommentSizingListeners(commentGrps) {
@@ -3985,6 +4024,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayCommentTextArea(comment, parentDomObj) {
+		comment.isScrollable = this.canvasLayout.commentIsScrollable; // TODO - read from comment layout when canvas layout is refactored.
 		this.svgCanvasTextArea.displayCommentTextArea(comment, parentDomObj);
 	}
 

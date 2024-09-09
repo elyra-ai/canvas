@@ -393,6 +393,9 @@ const portsHorizontalDefaultLayout = {
 		// The gap between a comment and its sizing area rectangle
 		commentSizingArea: 10,
 
+		// The scollable status of the comment.
+		commentIsScrollable: true,
+
 		// Add comment toolbar action, default offset from viewport
 		addCommentOffsetX: 30,
 		addCommentOffsetY: 50,
@@ -815,6 +818,9 @@ const portsVerticalDefaultLayout = {
 
 		// The gap between a comment and its sizing area rectangle
 		commentSizingArea: 10,
+
+		// The scollable status of the comment.
+		commentIsScrollable: true,
 
 		// Add comment toolbar action, default offset from viewport
 		addCommentOffsetX: 30,

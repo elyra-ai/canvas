@@ -55,7 +55,8 @@ export default class SvgCanvasTextArea {
 
 	constructor(config, dispUtils, nodeUtils, decUtils, canvasController,
 		canvasDiv, activePipeline, removeTempCursorOverlay,
-		displayCommentsCallback, displayLinksCallback, getCommentToolbarPosCallback) {
+		displayCommentsCallback, displayLinksCallback, getCommentToolbarPosCallback,
+		addCanvasZoomBehavior, removeCanvasZoomBehavior) {
 
 		this.config = config;
 		this.dispUtils = dispUtils;
@@ -68,6 +69,8 @@ export default class SvgCanvasTextArea {
 		this.displayCommentsCallback = displayCommentsCallback;
 		this.displayLinksCallback = displayLinksCallback;
 		this.getCommentToolbarPosCallback = getCommentToolbarPosCallback;
+		this.addCanvasZoomBehavior = addCanvasZoomBehavior;
+		this.removeCanvasZoomBehavior = removeCanvasZoomBehavior;
 
 		this.logger = new Logger("SvgCanvasTextArea");
 
@@ -102,6 +105,7 @@ export default class SvgCanvasTextArea {
 			yPos: 0,
 			width: d.width,
 			height: d.height,
+			isScrollable: d.isScrollable, // TODO - read from comment layout when canvas layout is refactored.
 			contentType: d.contentType,
 			formats: d.formats,
 			newFormats: cloneDeep(d.formats),
@@ -386,21 +390,41 @@ export default class SvgCanvasTextArea {
 	autoSizeComment(textArea, data) {
 		this.logger.log("autoSizeComment - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 
-		const pad = data.contentType === WYSIWYG ? 0 : SCROLL_PADDING;
-		const scrollHeight = textArea.scrollHeight + pad;
-
-		if (this.textAreaHeight < scrollHeight) {
-			this.textAreaHeight = scrollHeight;
-			if (this.foreignObject) {
-				this.foreignObject.style("height", this.textAreaHeight + "px");
-
-			} else if (this.foreignObjectWysiwyg) {
-				this.foreignObjectWysiwyg.style("height", this.textAreaHeight + "px");
+		if (data.isScrollable) {
+			if (this.commentHasScrollableText(data.parentDomObj)) {
+				this.removeCanvasZoomBehavior();
+			} else {
+				this.addCanvasZoomBehavior();
 			}
-			this.activePipeline.getComment(data.id).height = this.textAreaHeight;
-			this.displayCommentsCallback();
-			this.displayLinksCallback();
+
+		} else {
+			const pad = data.contentType === WYSIWYG ? 0 : SCROLL_PADDING;
+			const scrollHeight = textArea.scrollHeight + pad;
+
+			if (this.textAreaHeight < scrollHeight) {
+				this.textAreaHeight = scrollHeight;
+				if (this.foreignObject) {
+					this.foreignObject.style("height", this.textAreaHeight + "px");
+
+				} else if (this.foreignObjectWysiwyg) {
+					this.foreignObjectWysiwyg.style("height", this.textAreaHeight + "px");
+				}
+				this.activePipeline.getComment(data.id).height = this.textAreaHeight;
+				this.displayCommentsCallback();
+				this.displayLinksCallback();
+			}
 		}
+	}
+
+	// Returns true if the scroll <div>, in the foreignObject used for text entry,
+	// has contents that are bigger than what the scroll <div> can accommodate.
+	commentHasScrollableText(element) {
+		const scrollDiv = element.getElementsByClassName("d3-comment-text-entry-wysiwyg-scroll");
+
+		if (scrollDiv[0].clientHeight < scrollDiv[0].scrollHeight) {
+			return true;
+		}
+		return false;
 	}
 
 	saveCommentChanges(taData, newText, newHeight) {
@@ -704,6 +728,9 @@ export default class SvgCanvasTextArea {
 			.attr("y", data.yPos);
 
 		this.textAreaWysiwyg = this.foreignObjectWysiwyg
+			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+			.attr("class", "d3-comment-text-entry-wysiwyg-scroll")
+
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 			.attr("class", "d3-comment-text-entry-wysiwyg-outer")
 
