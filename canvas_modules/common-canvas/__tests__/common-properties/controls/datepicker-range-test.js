@@ -198,9 +198,9 @@ describe("error messages renders correctly for datepickerRange controls", () => 
 		fireEvent.blur(inputStart, { target: { value: "" } }); // Update internal value
 		fireEvent.change(inputEnd, { target: { value: "" } }); // This will update the display value
 		fireEvent.blur(inputEnd, { target: { value: "" } }); // Update internal value
+		dateWrapper = container.querySelector("div[data-id='properties-ctrl-datepicker_range_required']");
 
 		waitFor(() => {
-			dateWrapper = container.querySelector("div[data-id='properties-ctrl-datepicker_range_required']");
 			inputStart = dateWrapper.querySelectorAll("input")[0];
 			inputEnd = dateWrapper.querySelectorAll("input")[1];
 			expect(inputStart.value).to.equal(""); // Verify formatted value is displayed
