@@ -184,7 +184,6 @@ class CommonCanvasToolbar extends React.Component {
 
 	optionallyAddNotificationTool(rightBar) {
 		if (this.props.notificationConfigExists) {
-			const notificationCount = this.props.notificationMessages.length;
 			const notificationTools = [
 				{ divider: true },
 				{ action: TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
@@ -193,7 +192,8 @@ class CommonCanvasToolbar extends React.Component {
 					extIsSubAreaDisplayed: this.props.isNotificationOpen,
 					setExtIsSubAreaDisplayed: this.callExtIsSubAreaDisplayed.bind(this),
 					className: this.getNotificationClassName(),
-					textContent: (notificationCount > 9) ? "9+" : notificationCount.toString(),
+					iconEnabled: this.props.notificationConfigIcon,
+					textContent: this.generateTextContent(),
 					subPanel: NotificationPanel,
 					subPanelData: { canvasController: this.props.canvasController },
 					leaveSubAreaOpenOnClickOutside: this.props.notificationConfigKeepOpen
@@ -202,6 +202,18 @@ class CommonCanvasToolbar extends React.Component {
 			return rightBar.concat(notificationTools);
 		}
 		return rightBar;
+	}
+
+	// Returns a string to be displayed over the top of the default notification
+	// icon. The string shows the number of notification messages up to a maximum
+	// of nine. If the application provides its own icon in notificationConfigIcon,
+	// the 'text content' is not displayed so null is returned.
+	generateTextContent() {
+		if (this.props.notificationConfigIcon) {
+			return null;
+		}
+		const notificationCount = this.props.notificationMessages.length;
+		return (notificationCount > 9) ? "9+" : notificationCount.toString();
 	}
 
 	callExtIsSubAreaDisplayed(state) {
@@ -323,6 +335,7 @@ CommonCanvasToolbar.propTypes = {
 	notificationConfigExists: PropTypes.object,
 	notificationConfigEnable: PropTypes.bool,
 	notificationConfigLabel: PropTypes.string,
+	notificationConfigIcon: PropTypes.string,
 	notificationConfigKeepOpen: PropTypes.bool,
 	enableInternalObjectModel: PropTypes.bool,
 	enableEditingActions: PropTypes.bool,
@@ -347,6 +360,7 @@ const mapStateToProps = (state, ownProps) => ({
 	notificationConfigExists: state.notificationpanel?.config,
 	notificationConfigEnable: state.notificationpanel?.config?.enable,
 	notificationConfigLabel: state.notificationpanel?.config?.label,
+	notificationConfigIcon: state.notificationpanel?.config?.toolbarIcon,
 	notificationConfigKeepOpen: state.notificationpanel?.config?.keepOpen,
 	notificationMessages: state.notifications,
 	enableInternalObjectModel: state.canvasconfig.enableInternalObjectModel,
