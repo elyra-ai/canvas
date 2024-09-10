@@ -43,6 +43,7 @@ describe("Condition dmSharedFields test cases", () => {
 		fieldPicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretable_filter");
 		const tableRows = tableUtilsRTL.getTableRows(fieldPicker);
 		expect(tableRows).to.have.length(3); // Other fields should be filtered out
+		// close summary panel
 		fireEvent.click(summaryPanel.querySelector("button.properties-apply-button"));
 
 		// Check the available fields in the weight dropdown

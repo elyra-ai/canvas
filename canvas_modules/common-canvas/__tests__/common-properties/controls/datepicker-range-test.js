@@ -192,12 +192,20 @@ describe("error messages renders correctly for datepickerRange controls", () => 
 		const propertyId = { "name": "datepicker_range_required" };
 		// Simulate entering an empty string in a required field
 		let dateWrapper = container.querySelector("div[data-id='properties-ctrl-datepicker_range_required']");
-		const inputStart = dateWrapper.querySelectorAll("input")[0];
-		const inputEnd = dateWrapper.querySelectorAll("input")[1];
+		let inputStart = dateWrapper.querySelectorAll("input")[0];
+		let inputEnd = dateWrapper.querySelectorAll("input")[1];
 		fireEvent.change(inputStart, { target: { value: "" } }); // This will update the display value
 		fireEvent.blur(inputStart, { target: { value: "" } }); // Update internal value
 		fireEvent.change(inputEnd, { target: { value: "" } }); // This will update the display value
 		fireEvent.blur(inputEnd, { target: { value: "" } }); // Update internal value
+
+		waitFor(() => {
+			dateWrapper = container.querySelector("div[data-id='properties-ctrl-datepicker_range_required']");
+			inputStart = dateWrapper.querySelectorAll("input")[0];
+			inputEnd = dateWrapper.querySelectorAll("input")[1];
+			expect(inputStart.value).to.equal(""); // Verify formatted value is displayed
+			expect(inputEnd.value).to.equal(""); // Verify formatted value is displayed
+		});
 		// Check an error message is displayed with the expected error message.
 		const expectedDatepickerErrorMessages = {
 			"propertyId": propertyId,

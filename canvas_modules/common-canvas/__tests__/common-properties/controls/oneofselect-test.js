@@ -562,11 +562,14 @@ describe("oneofselect with custom value allowed works correctly", () => {
 		const { container } = wrapper;
 		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
 		const dropdownInput = dropdownWrapper.querySelector("input");
-		fireEvent.click(dropdownInput);
+		// Enter '' in input to check [one, three] are filtered using enumFilter and shouldFilterItem
+		fireEvent.change(dropdownInput, { target: { value: "" } });
+		// dropdownInput.simulate("change", { target: { value: "" } });
 		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
 		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(2);
 	});
+
 
 	it("Validate oneofselect filters correctly using shouldFilterItem", () => {
 		const wrapper = render(

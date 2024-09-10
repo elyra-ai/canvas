@@ -491,7 +491,7 @@ describe("expression-builder renders correctly", () => {
 			expect(expectedReturnType).to.eql(actualReturnType);
 		});
 	});
-	// cannot find valuesTable
+	// TODO cannot find valuesTable
 	it.skip("expression builder displays table header descriptions in info icon", async() => {
 		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(ExpressionParamdef, propertiesConfig, callbacks, propertiesInfo);

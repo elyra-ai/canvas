@@ -332,7 +332,6 @@ describe("radioset works in table correctly", () => {
 		renderedController = renderedObject.controller;
 		const controlDiv = wrapper.container.querySelector("button.properties-summary-link-button");
 		fireEvent.click(controlDiv);
-		// controlDiv.simulate("click");
 		tableDiv = wrapper.container.querySelector(".properties-vt");
 	});
 	afterEach(() => {
