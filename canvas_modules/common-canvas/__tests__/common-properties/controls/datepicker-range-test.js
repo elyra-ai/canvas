@@ -194,13 +194,13 @@ describe("error messages renders correctly for datepickerRange controls", () => 
 		let dateWrapper = container.querySelector("div[data-id='properties-ctrl-datepicker_range_required']");
 		let inputStart = dateWrapper.querySelectorAll("input")[0];
 		let inputEnd = dateWrapper.querySelectorAll("input")[1];
-		fireEvent.change(inputStart, { target: { value: "" } }); // This will update the display value
-		fireEvent.blur(inputStart, { target: { value: "" } }); // Update internal value
-		fireEvent.change(inputEnd, { target: { value: "" } }); // This will update the display value
-		fireEvent.blur(inputEnd, { target: { value: "" } }); // Update internal value
-		dateWrapper = container.querySelector("div[data-id='properties-ctrl-datepicker_range_required']");
 
 		waitFor(() => {
+			fireEvent.change(inputStart, { target: { value: "" } }); // This will update the display value
+			fireEvent.blur(inputStart, { target: { value: "" } }); // Update internal value
+			fireEvent.change(inputEnd, { target: { value: "" } }); // This will update the display value
+			fireEvent.blur(inputEnd, { target: { value: "" } }); // Update internal value
+			dateWrapper = container.querySelector("div[data-id='properties-ctrl-datepicker_range_required']");
 			inputStart = dateWrapper.querySelectorAll("input")[0];
 			inputEnd = dateWrapper.querySelectorAll("input")[1];
 			expect(inputStart.value).to.equal(""); // Verify formatted value is displayed
@@ -220,7 +220,6 @@ describe("error messages renders correctly for datepickerRange controls", () => 
 		expect(messageWrapper).to.have.length(2); // Each input will display an error
 
 		// Now simulate entering a valid date with the correct format.
-
 		fireEvent.change(inputStart, { target: { value: "2023/10/01" } }); // This will update the display value
 		fireEvent.blur(inputStart, { target: { value: "2023/10/01" } }); // Update internal value
 		fireEvent.change(inputEnd, { target: { value: "2024/01/10" } }); // This will update the display value
