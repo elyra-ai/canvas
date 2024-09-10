@@ -129,6 +129,7 @@ export default class SvgCanvasTextArea {
 			if (d.contentType === WYSIWYG) {
 				this.canvasController.openTextToolbar(
 					pos.x, pos.y,
+					this.editingTextData.newFormats,
 					WYSIWYG,
 					this.wysiwygActionHandler.bind(this),
 					this.blurInTextToolbar.bind(this)
@@ -137,6 +138,7 @@ export default class SvgCanvasTextArea {
 			} else if (this.config.enableMarkdownInComments) {
 				this.canvasController.openTextToolbar(
 					pos.x, pos.y,
+					null,
 					MARKDOWN,
 					this.markdownActionHandler.bind(this),
 					this.blurInTextToolbar.bind(this)
@@ -263,6 +265,7 @@ export default class SvgCanvasTextArea {
 		} else if (action === "bold" || action === "italics") {
 			this.toggleFormat(action);
 		}
+		this.canvasController.updateTextToolbarFormats(this.editingTextData.newFormats);
 	}
 
 	// Sets the text color appropriately for the background color passed in.

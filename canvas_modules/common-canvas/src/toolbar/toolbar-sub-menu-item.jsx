@@ -61,8 +61,8 @@ class ToolbarSubMenuItem extends React.Component {
 
 	clickOutside(evt) {
 		if (this.state.subAreaDisplayed) {
-			const items = document.getElementsByClassName(this.generateActionName());
-			const isOver = items?.length > 0 ? items[0].contains(evt.target) : false;
+			const selector = `.${this.generateActionName()}[instanceid='${this.props.instanceId}']`;
+			const isOver = evt.target.closest(selector);
 
 			if (!isOver && !this.props.actionObj.leaveSubAreaOpenOnClickOutside) {
 				this.closeSubArea();
@@ -167,7 +167,8 @@ class ToolbarSubMenuItem extends React.Component {
 		const subArea = this.state.subAreaDisplayed ? this.generateSubArea() : null;
 
 		return (
-			<div ref={this.divRef} className={itemClassName} data-toolbar-action={actionObj.action}
+			<div ref={this.divRef} className={itemClassName} instanceid={this.props.instanceId}
+				data-toolbar-action={actionObj.action}
 				onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} onKeyDown={this.onKeyDown}
 			>
 				<div>
