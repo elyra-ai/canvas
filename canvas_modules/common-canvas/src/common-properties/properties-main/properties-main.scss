@@ -29,6 +29,7 @@ $properties-resize-button-size: $spacing-06;
 	display: flex;
 	flex-direction: column;
 	position: relative;
+	transition: motion(entrance, expressive) $duration-moderate-01;
 
 	// &.properties-small {
 	// 	width: $common-properties-small-flyout-width;

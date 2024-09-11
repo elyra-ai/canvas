@@ -28,7 +28,7 @@ import classNames from "classnames";
 import { StopFilledAlt, Play, Undo, Redo, Chat, ChatOff, Result,
 	Cut, Copy, Paste, Edit,	ColorPalette, Maximize, Minimize,
 	Launch, AddComment, TrashCan, ZoomIn, ZoomOut,
-	ChevronRight, ChevronDown, ChevronUp,
+	Checkmark, ChevronRight, ChevronDown, ChevronUp,
 	CenterToFit, OpenPanelFilledLeft } from "@carbon/react/icons";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
@@ -210,6 +210,8 @@ class ToolbarButtonItem extends React.Component {
 
 		const mainClassName = actionObj.purpose ? "content-main dual" : "content-main";
 
+		const checkMark = this.props.actionObj.isSelected && this.props.isInMenu ? (<div className={"checkmark"}> <Checkmark /></div>) : null;
+
 		let buttonContent = (
 			<div className={itemContentClassName}>
 				<div className={mainClassName}>
@@ -219,6 +221,7 @@ class ToolbarButtonItem extends React.Component {
 					{textContent}
 				</div>
 				{chevronDiv}
+				{checkMark}
 			</div>
 		);
 
@@ -245,7 +248,7 @@ class ToolbarButtonItem extends React.Component {
 		return button;
 	}
 
-	// Returns a civ containing a chevron icon. If the action icon is displaying
+	// Returns a <div> containing a chevron icon. If the action icon is displaying
 	// a sub-menu or sub-panel. The chevron will:
 	//  * point right if this action item is in a drop down menu.
 	//  * point down and be regular size if this action item is displayed with
