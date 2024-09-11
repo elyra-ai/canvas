@@ -61,7 +61,7 @@ describe("toggle renders correctly", () => {
 	});
 
 	// "toggled" attribute not showing up
-	it.skip("toggle should set correct value", () => {
+	it("toggle should set correct value", () => {
 		const wrapper = render(
 			<Toggle
 				store={controller.getStore()}
@@ -72,11 +72,11 @@ describe("toggle renders correctly", () => {
 		);
 		const { container } = wrapper;
 		const toggleWrapper = container.querySelector("div[data-id='properties-toggle']");
-		const toggle = toggleWrapper.find("Toggle");
-		expect(toggle.prop("toggled")).to.equal(true);
-		fireEvent.click(toggleWrapper.querySelector("button"));
+		const toggleButton = toggleWrapper.querySelector("button");
+		// Replacing toggled prop with aria-checked since cannot retrieve props in RTL
+		expect(toggleButton.getAttribute("aria-checked")).to.equal("true");
+		fireEvent.click(toggleButton);
 		expect(controller.getPropertyValue(propertyId)).to.equal(false);
-
 	});
 
 	it("toggle props should have been defined", () => {
