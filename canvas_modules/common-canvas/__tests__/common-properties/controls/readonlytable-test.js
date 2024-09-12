@@ -16,14 +16,16 @@
 
 import React from "react";
 import ReadonlyTableControl from "../../../src/common-properties/controls/readonlytable";
-import { mountWithIntl, shallowWithIntl } from "../../_utils_/intl-utils";
+import { renderWithIntl } from "../../_utils_/intl-utils";
 import { Provider } from "react-redux";
 import { expect } from "chai";
+import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
-import propertyUtils from "../../_utils_/property-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import readonlyTableParamDef from "../../test_resources/paramDefs/readonlyTable_paramDef.json";
+import { fireEvent } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -90,10 +92,21 @@ function genUIItem() {
 	return <div />;
 }
 
+const mockReadonlyTable = jest.fn();
+jest.mock("../../../src/common-properties/controls/readonlytable",
+	() => (props) => mockReadonlyTable(props)
+);
+
+mockReadonlyTable.mockImplementation((props) => {
+	const ReadonlyTableComp = jest.requireActual(
+		"../../../src/common-properties/controls/readonlytable",
+	).default;
+	return <ReadonlyTableComp {...props} />;
+});
 
 describe("readonlytable control renders correctly", () => {
 	it("props should have been defined", () => {
-		const wrapper = shallowWithIntl(
+		renderWithIntl(
 			<ReadonlyTableControl
 				store={controller.getStore()}
 				control={control}
@@ -103,17 +116,20 @@ describe("readonlytable control renders correctly", () => {
 				rightFlyout
 			/>
 		);
-
-		expect(wrapper.dive().prop("control")).to.equal(control);
-		expect(wrapper.dive().prop("controller")).to.equal(controller);
-		expect(wrapper.dive().prop("propertyId")).to.equal(propertyId);
-		expect(wrapper.dive().prop("buildUIItem")).to.equal(genUIItem);
+		expectJest(mockReadonlyTable).toHaveBeenCalledWith({
+			"store": controller.getStore(),
+			"controller": controller,
+			"control": control,
+			"propertyId": propertyId,
+			"buildUIItem": genUIItem,
+			"rightFlyout": true
+		});
 	});
 
 	it("should render empty table content for `readonlytable` control", () => {
 		// We need getReactIntl() in the controller which will set the empty table text
-		const renderedObject = propertyUtils.flyoutEditorForm(readonlyTableParamDef);
-		const wrapper = mountWithIntl(
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(readonlyTableParamDef);
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<ReadonlyTableControl
 					control={control}
@@ -124,21 +140,21 @@ describe("readonlytable control renders correctly", () => {
 				/>
 			</Provider>
 		);
-
-		expect(wrapper.find("div[data-id='properties-keys']")).to.have.length(1);
+		const { container } = wrapper;
+		expect(container.querySelectorAll("div[data-id='properties-keys']")).to.have.length(1);
 		// Verify empty table content is rendered
-		expect(wrapper.find("div.properties-empty-table")).to.have.length(1);
-		expect(wrapper.find("div.properties-empty-table span")
-			.text()).to.be.equal("To begin, click \"Edit\"");
-		expect(wrapper.find("button.properties-empty-table-button")).to.have.length(1);
-		expect(wrapper.find("button.properties-empty-table-button").text()).to.be.equal("Edit");
+		expect(container.querySelectorAll("div.properties-empty-table")).to.have.length(1);
+		expect(container.querySelector("div.properties-empty-table span")
+			.textContent).to.be.equal("To begin, click \"Edit\"");
+		expect(container.querySelectorAll("button.properties-empty-table-button")).to.have.length(1);
+		expect(container.querySelector("button.properties-empty-table-button").textContent).to.be.equal("Edit");
 	});
 
 	let wrapper;
 	let renderedController;
 	const buttonHandler = sinon.spy();
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(readonlyTableParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(readonlyTableParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 		renderedController.setHandlers({
@@ -151,44 +167,44 @@ describe("readonlytable control renders correctly", () => {
 	});
 
 	it("should render a `readonlytable` control with edit button", () => {
-		const tables = propertyUtils.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
-		const table = tables.find("div[data-id='properties-ft-readonlyStructureTableControl']");
+		const tables = propertyUtilsRTL.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
+		const table = tables.querySelector("div[data-id='properties-ft-readonlyStructureTableControl']");
 
 		// ensure the edit button exists
-		const editButton = table.find("button.properties-edit-button");
+		const editButton = table.querySelectorAll("button.properties-edit-button");
 		expect(editButton).to.have.length(1);
-		expect(editButton.text()).to.equal("Edit");
+		expect(editButton[0].textContent).to.equal("Edit");
 
-		editButton.simulate("click");
+		fireEvent.click(editButton[0]);
 		expect(buttonHandler).to.have.property("callCount", 1);
 		expect(buttonHandler.calledWith({ type: "edit", propertyId: { name: "readonlyStructureTableControl" } })).to.be.true;
 	});
 
 	it("should render a `readonlytable` control with a custom edit button label", () => {
-		const tables = propertyUtils.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
-		const table = tables.find("div[data-id='properties-ft-readonlyStructurelistTableControl']");
-		const editButton = table.find("button.properties-edit-button");
-		expect(editButton.text()).to.equal("Edit test");
+		const tables = propertyUtilsRTL.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
+		const table = tables.querySelector("div[data-id='properties-ft-readonlyStructurelistTableControl']");
+		const editButton = table.querySelector("button.properties-edit-button");
+		expect(editButton.textContent).to.equal("Edit test");
 	});
 
 	it("`readonlytable` control should have aria-label", () => {
-		const tables = propertyUtils.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
+		const tables = propertyUtilsRTL.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
 		const table = tables
-			.find("div[data-id='properties-ft-readonlyStructurelistTableControl']")
-			.find(".properties-vt-autosizer")
-			.find(".ReactVirtualized__Table");
-		expect(table.props()).to.have.property("aria-label", "ReadonlyTable - structurelisteditor");
+			.querySelector("div[data-id='properties-ft-readonlyStructurelistTableControl']")
+			.querySelector(".properties-vt-autosizer")
+			.querySelector(".ReactVirtualized__Table");
+		expect(table.getAttribute("aria-label")).to.equal("ReadonlyTable - structurelisteditor");
 	});
 
 	it("`readonlytable` control with single row selection should be non-interactive", () => {
-		const tables = propertyUtils.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
+		const tables = propertyUtilsRTL.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
 		const table = tables
-			.find("div[data-id='properties-ft-readonlyStructurelistTableControl']")
-			.find(".properties-vt-autosizer")
-			.find(".ReactVirtualized__Table");
-		const rows = table.find("div[data-role='properties-data-row']");
+			.querySelector("div[data-id='properties-ft-readonlyStructurelistTableControl']")
+			.querySelector(".properties-vt-autosizer")
+			.querySelector(".ReactVirtualized__Table");
+		const rows = table.querySelectorAll("div[data-role='properties-data-row']");
 		rows.forEach((row) => {
-			expect(row.hasClass("properties-vt-row-non-interactive")).to.equal(true);
+			expect(row.className.includes("properties-vt-row-non-interactive")).to.equal(true);
 		});
 	});
 });
@@ -198,7 +214,7 @@ describe("readonlytable control conditions", () => {
 	let renderedController;
 	const buttonHandler = sinon.spy();
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(readonlyTableParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(readonlyTableParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 		renderedController.setHandlers({
@@ -211,33 +227,33 @@ describe("readonlytable control conditions", () => {
 	});
 
 	it("a hidden `readonlyTable` control should not be shown", () => {
-		const tables = propertyUtils.openSummaryPanel(wrapper, "readonlyTable-conditions-summary-panel");
-		const table = tables.find("div[data-id='properties-ci-readonlyTableHidden']");
+		const tables = propertyUtilsRTL.openSummaryPanel(wrapper, "readonlyTable-conditions-summary-panel");
+		const table = tables.querySelectorAll("div[data-id='properties-ci-readonlyTableHidden']");
 		expect(table).to.have.length(0);
 	});
 
 	it("a disabled `readonlytable` control should be disabled", () => {
-		const tables = propertyUtils.openSummaryPanel(wrapper, "readonlyTable-conditions-summary-panel");
-		const table = tables.find("div[data-id='properties-ci-readonlyTableDisabled']");
-		expect(table.prop("disabled")).to.equal(true);
+		const tables = propertyUtilsRTL.openSummaryPanel(wrapper, "readonlyTable-conditions-summary-panel");
+		const table = tables.querySelector("div[data-id='properties-ci-readonlyTableDisabled']");
+		expect(table.outerHTML.includes("disabled")).to.equal(true);
 	});
 });
 
 describe("readonlyTable classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(readonlyTableParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(readonlyTableParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("readonlyTable should have custom classname defined", () => {
-		propertyUtils.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
-		expect(wrapper.find(".readonlytable-control-class")).to.have.length(1);
+		propertyUtilsRTL.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
+		expect(wrapper.container.querySelectorAll(".readonlytable-control-class")).to.have.length(1);
 	});
 
 	it("readonlyTable should have custom classname defined in table cells", () => {
-		propertyUtils.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
-		expect(wrapper.find(".nested-parent-readonlytable-control-class")).to.have.length(1);
-		expect(wrapper.find(".nested-subpanel-readonlytable-control-class")).to.have.length(3);
+		propertyUtilsRTL.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
+		expect(wrapper.container.querySelectorAll(".nested-parent-readonlytable-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".nested-subpanel-readonlytable-control-class")).to.have.length(3);
 	});
 });

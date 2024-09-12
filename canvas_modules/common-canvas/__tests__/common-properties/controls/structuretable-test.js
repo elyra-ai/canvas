@@ -16,18 +16,20 @@
 
 import React from "react";
 import StructureTableControl from "../../../src/common-properties/controls/structuretable";
-import { mountWithIntl, shallowWithIntl } from "../../_utils_/intl-utils";
+import { renderWithIntl } from "../../_utils_/intl-utils";
 import { Provider } from "react-redux";
 import { expect } from "chai";
+import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
-import propertyUtils from "../../_utils_/property-utils";
-import tableUtils from "./../../_utils_/table-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
+import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 import structuretableMultiInputParamDef from "../../test_resources/paramDefs/structuretable_multiInput_paramDef.json";
 import filterColumnParamDef from "../../test_resources/paramDefs/Filter_paramDef.json";
 import setGlobalsParamDef from "../../test_resources/paramDefs/setGlobals_paramDef.json";
+import { fireEvent } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -310,7 +312,7 @@ const propertyIdNestedStructureArrayObject = { name: "nestedStructureArrayObject
 const propertyIdNestedStructureMap = { name: "nestedStructureMap" };
 const propertyIdNestedStructureeditor = { name: "nestedStructureeditor" };
 
-propertyUtils.setControls(controller, [control, readonlyControlDefault, readonlyControlStartValue]);
+propertyUtilsRTL.setControls(controller, [control, readonlyControlDefault, readonlyControlStartValue]);
 
 function setPropertyValue() {
 	controller.setPropertyValues(getCopy(propValues));
@@ -324,31 +326,47 @@ function genUIItem() {
 	return <div />;
 }
 
+const mockStructureTable = jest.fn();
+jest.mock("../../../src/common-properties/controls/structuretable",
+	() => (props) => mockStructureTable(props)
+);
+
+mockStructureTable.mockImplementation((props) => {
+	const StructureTableComp = jest.requireActual(
+		"../../../src/common-properties/controls/structuretable",
+	).default;
+	return <StructureTableComp {...props} />;
+});
+
 const openFieldPicker = sinon.spy();
 setPropertyValue();
 describe("structuretable control renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallowWithIntl(
-			<StructureTableControl
-				store={controller.getStore()}
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				openFieldPicker={openFieldPicker}
-				rightFlyout
-			/>
+		renderWithIntl(
+			<Provider store={controller.getStore()}>
+				<StructureTableControl
+					store={controller.getStore()}
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					buildUIItem={genUIItem}
+					rightFlyout
+				/>
+			</Provider>
 		);
-
-		expect(wrapper.dive().prop("control")).to.equal(control);
-		expect(wrapper.dive().prop("controller")).to.equal(controller);
-		expect(wrapper.dive().prop("propertyId")).to.equal(propertyId);
-		expect(wrapper.dive().prop("buildUIItem")).to.equal(genUIItem);
+		expectJest(mockStructureTable).toHaveBeenCalledWith({
+			"store": controller.getStore(),
+			"controller": controller,
+			"control": control,
+			"propertyId": propertyId,
+			"buildUIItem": genUIItem,
+			"rightFlyout": true
+		});
 	});
 
 	it("should render a `structuretable` control", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<StructureTableControl
 					control={control}
@@ -360,36 +378,36 @@ describe("structuretable control renders correctly", () => {
 				/>
 			</Provider>
 		);
-
-		const tableWrapper = wrapper.find("div[data-id='properties-keys']");
+		const { container } = wrapper;
+		const tableWrapper = container.querySelectorAll("div[data-id='properties-keys']");
 		expect(tableWrapper).to.have.length(1);
 		// should have a search bar
-		expect(wrapper.find("div.properties-ft-search-container")).to.have.length(1);
+		expect(container.querySelectorAll("div.properties-ft-search-container")).to.have.length(1);
 		// should have add button
-		const buttons = wrapper.find(".properties-at-buttons-container");
+		const buttons = container.querySelectorAll(".properties-at-buttons-container");
 		expect(buttons).to.have.length(1);
-		expect(buttons.find("button.properties-add-fields-button")).to.have.length(1);
+		expect(buttons[0].querySelectorAll("button.properties-add-fields-button")).to.have.length(1);
 		// verify table toolbar doesn't exist
-		let tableToolbar = wrapper.find("div.properties-table-toolbar");
+		let tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
 		expect(tableToolbar).to.have.length(0);
 
 		// select the first row in the table
-		const tableData = tableUtils.getTableRows(tableWrapper);
+		const tableData = tableUtilsRTL.getTableRows(tableWrapper[0]);
 		expect(tableData).to.have.length(6);
 
-		tableUtils.selectCheckboxes(tableData, [0]);
+		tableUtilsRTL.selectCheckboxes(tableData, [0]);
 
 		// verify table toolbar exists
-		tableToolbar = wrapper.find("div.properties-table-toolbar");
+		tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
 
 		// table toolbar should have delete and row move buttons
-		const deleteButton = tableToolbar.find("button.properties-action-delete");
+		const deleteButton = tableToolbar[0].querySelectorAll("button.properties-action-delete");
 		expect(deleteButton).to.have.length(1);
-		const moveTopButton = tableToolbar.find("button.table-row-move-top-button");
-		const moveUpButton = tableToolbar.find("button.table-row-move-up-button");
-		const moveDownButton = tableToolbar.find("button.table-row-move-down-button");
-		const moveBottomButton = tableToolbar.find("button.table-row-move-bottom-button");
+		const moveTopButton = tableToolbar[0].querySelectorAll("button.table-row-move-top-button");
+		const moveUpButton = tableToolbar[0].querySelectorAll("button.table-row-move-up-button");
+		const moveDownButton = tableToolbar[0].querySelectorAll("button.table-row-move-down-button");
+		const moveBottomButton = tableToolbar[0].querySelectorAll("button.table-row-move-bottom-button");
 		expect(moveTopButton).to.have.length(1);
 		expect(moveUpButton).to.have.length(1);
 		expect(moveDownButton).to.have.length(1);
@@ -397,30 +415,30 @@ describe("structuretable control renders correctly", () => {
 	});
 
 	it("Should display header labels with tooltip and info icon correctly", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structuretableParamDef);
 		const wrapper = renderedObject.wrapper;
 
-		const table = propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnDefaultIndex-summary-panel");
-		const header = tableUtils.getTableHeaderRows(table);
+		const table = propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableReadonlyColumnDefaultIndex-summary-panel");
+		const header = tableUtilsRTL.getTableHeaderRows(table);
 		expect(header).to.have.length(1);
 
-		const columns = header.find(".properties-vt-column");
+		const columns = header[0].querySelectorAll(".properties-vt-column");
 		expect(columns).to.have.length(7);
 
-		expect(columns.at(0).find(".tooltip-container")).to.have.length(1);
-		expect(columns.at(1).find(".tooltip-container")).to.have.length(1);
-		expect(columns.at(2).find(".tooltip-container")).to.have.length(2);
-		expect(columns.at(2).find("svg.properties-vt-info-icon")).to.have.length(1);
-		expect(columns.at(3).find(".tooltip-container")).to.have.length(1);
-		expect(columns.at(4).find(".tooltip-container")).to.have.length(2);
-		expect(columns.at(4).find("svg.properties-vt-info-icon")).to.have.length(1);
-		expect(columns.at(5).find(".tooltip-container")).to.have.length(2);
-		expect(columns.at(5).find("svg.properties-vt-info-icon")).to.have.length(1);
+		expect(columns[0].querySelectorAll(".tooltip-container")).to.have.length(1);
+		expect(columns[1].querySelectorAll(".tooltip-container")).to.have.length(1);
+		expect(columns[2].querySelectorAll(".tooltip-container")).to.have.length(2);
+		expect(columns[2].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
+		expect(columns[3].querySelectorAll(".tooltip-container")).to.have.length(1);
+		expect(columns[4].querySelectorAll(".tooltip-container")).to.have.length(2);
+		expect(columns[4].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
+		expect(columns[5].querySelectorAll(".tooltip-container")).to.have.length(2);
+		expect(columns[5].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
 	});
 
 	it("should select add columns button and field picker should display", () => {
 		setPropertyValue();
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<StructureTableControl
 					control={control}
@@ -432,17 +450,17 @@ describe("structuretable control renders correctly", () => {
 				/>
 			</Provider>
 		);
-
-		let tableWrapper = wrapper.find("div[data-id='properties-keys']");
+		const { container } = wrapper;
+		let tableWrapper = container.querySelector("div[data-id='properties-keys']");
 		// Clear selected rows from table toolbar
-		const tableToolbar = wrapper.find("div.properties-table-toolbar");
-		const cancelButton = tableToolbar.find("button.properties-action-cancel");
-		cancelButton.simulate("click");
+		const tableToolbar = container.querySelector("div.properties-table-toolbar");
+		const cancelButton = tableToolbar.querySelector("button.properties-action-cancel");
+		fireEvent.click(cancelButton);
 
 		// select the add column button
-		tableWrapper = wrapper.find("div[data-id='properties-keys']");
-		const addFieldsButtons = tableWrapper.find("button.properties-add-fields-button"); // field picker buttons
-		addFieldsButtons.at(0).simulate("click"); // open filter picker
+		tableWrapper = container.querySelector("div[data-id='properties-keys']");
+		const addFieldsButtons = tableWrapper.querySelectorAll("button.properties-add-fields-button"); // field picker buttons
+		fireEvent.click(addFieldsButtons[0]); // open filter picker
 
 		// validate the field picker table displays
 		expect(openFieldPicker).to.have.property("callCount", 1);
@@ -450,7 +468,7 @@ describe("structuretable control renders correctly", () => {
 
 	it("should select row and click delete button, row should be removed", () => {
 		setPropertyValue();
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<StructureTableControl
 					control={control}
@@ -462,24 +480,25 @@ describe("structuretable control renders correctly", () => {
 				/>
 			</Provider>
 		);
-
+		const { container } = wrapper;
 		// ensure the table toolbar doesn't exist
-		const tableWrapper = wrapper.find("div[data-id='properties-keys']");
-		let tableToolbar = wrapper.find("div.properties-table-toolbar");
+		const tableWrapper = container.querySelector("div[data-id='properties-keys']");
+		let tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
 		expect(tableToolbar).to.have.length(0);
 
 		// select the first row in the table
-		const tableData = tableUtils.getTableRows(tableWrapper);
+		const tableData = tableUtilsRTL.getTableRows(tableWrapper);
 		expect(tableData).to.have.length(6);
 
-		tableUtils.selectCheckboxes(tableData, [0]);
+		tableUtilsRTL.selectCheckboxes(tableData, [0]);
 
 		// ensure table toolbar has delete button select it
-		tableToolbar = wrapper.find("div.properties-table-toolbar");
+		tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const deleteButton = tableToolbar.find("button.properties-action-delete");
+		const deleteButton = tableToolbar[0].querySelectorAll("button.properties-action-delete");
 		expect(deleteButton).to.have.length(1);
-		deleteButton.simulate("click"); // remove a row
+		fireEvent.click(deleteButton[0]); // remove a row
+
 
 		// validate the first row is deleted
 		const tableRows = controller.getPropertyValue(propertyId);
@@ -491,7 +510,7 @@ describe("condition renders correctly with structure table control", () => {
 	var wrapper;
 	var renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});
@@ -504,24 +523,23 @@ describe("condition renders correctly with structure table control", () => {
 		expect(renderedController.getPropertyValue(conditionsPropertyId)).to.have.length(1);
 		renderedController.updatePropertyValue(conditionsPropertyId, []);
 
-		wrapper.update();
-		propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
+		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
 
-		const tableWrapper = wrapper.find("div[data-id='properties-structuretableReadonlyColumnStartValue']");
+		const tableWrapper = wrapper.container.querySelector("div[data-id='properties-structuretableReadonlyColumnStartValue']");
 		// Verify empty table content is rendered
-		expect(tableWrapper.find("div.properties-empty-table")).to.have.length(1);
-		expect(tableWrapper.find("div.properties-empty-table span")
-			.text()).to.be.equal("To begin, click \"Add columns\"");
-		expect(tableWrapper.find("button.properties-empty-table-button")).to.have.length(1);
-		expect(tableWrapper.find("button.properties-empty-table-button").text()).to.be.equal("Add columns");
+		expect(tableWrapper.querySelectorAll("div.properties-empty-table")).to.have.length(1);
+		expect(tableWrapper.querySelector("div.properties-empty-table span")
+			.textContent).to.be.equal("To begin, click \"Add columns\"");
+		expect(tableWrapper.querySelectorAll("button.properties-empty-table-button")).to.have.length(1);
+		expect(tableWrapper.querySelector("button.properties-empty-table-button").textContent).to.be.equal("Add columns");
 	});
-	it("should render an table cell error", () => {
+	it("should render an table cell error", async() => {
+		const { container } = wrapper;
 		// set error condition on cell
 		const conditionsPropertyId = { name: "structuretableErrors", row: 0, col: 2 };
 		renderedController.updatePropertyValue(conditionsPropertyId, "Descending");
-		wrapper.update();
 		// open the summary panel
-		propertyUtils.openSummaryPanel(wrapper, "structuretableErrors-summary-panel");
+		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableErrors-summary-panel");
 		// validate there are cell errors
 		const errorMessage = {
 			"id_ref": "structuretableErrors",
@@ -530,19 +548,17 @@ describe("condition renders correctly with structure table control", () => {
 			"text": "order cannot be descending"
 		};
 		expect(renderedController.getErrorMessages(conditionsPropertyId)[2]).to.eql(errorMessage);
-		const tableWrapper = wrapper.find("div[data-id='properties-ft-structuretableErrors']");
-		expect(tableWrapper.find("div.properties-validation-message span").text()).to.equal(errorMessage.text);
+		expect(container.querySelectorAll("div.properties-validation-message")[1].querySelector("span").textContent).to.equal(errorMessage.text);
 	});
 	it("should hide a table", () => {
 		// set the hide flag
 		const conditionsPropertyId = { name: "showRenameFieldsTable", };
 		renderedController.updatePropertyValue(conditionsPropertyId, false);
-		wrapper.update();
 		// open the summary panel
-		propertyUtils.openSummaryPanel(wrapper, "structuretableRenameFields-summary-panel");
+		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableRenameFields-summary-panel");
 
 		// verify the table is HIDDEN
-		const tableControlDiv = wrapper.find("div[data-id='properties-ci-structuretableRenameFields']");
+		const tableControlDiv = wrapper.container.querySelectorAll("div[data-id='properties-ci-structuretableRenameFields']");
 		expect(tableControlDiv).to.have.length(0);
 		expect(renderedController.getControlState({ name: "structuretableRenameFields" })).to.equal("hidden");
 	});
@@ -550,39 +566,36 @@ describe("condition renders correctly with structure table control", () => {
 		// set the disable flag
 		const conditionsPropertyId = { name: "enableSortByTable", };
 		renderedController.updatePropertyValue(conditionsPropertyId, false);
-		wrapper.update();
 		// open the summary panel
-		propertyUtils.openSummaryPanel(wrapper, "structuretableSortOrder-summary-panel");
+		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableSortOrder-summary-panel");
 
 		// verify the table is disabled
-		const tableControlDiv = wrapper.find("div[data-id='properties-ci-structuretableSortOrder']");
-		expect(tableControlDiv.prop("disabled")).to.be.true;
+		const tableControlDiv = wrapper.container.querySelector("div[data-id='properties-ci-structuretableSortOrder']");
+		expect(tableControlDiv.outerHTML.includes("disabled")).to.be.true;
 		expect(renderedController.getControlState({ name: "structuretableSortOrder" })).to.equal("disabled");
 	});
 	it("should hide a table cell", () => {
 		// set the hide flag
 		const conditionsPropertyId = { name: "dummy_types", row: 0, col: 1 };
 		renderedController.updatePropertyValue(conditionsPropertyId, false);
-		wrapper.update();
 		// open the summary panel
-		propertyUtils.openSummaryPanel(wrapper, "dummy_types-summary-panel");
+		propertyUtilsRTL.openSummaryPanel(wrapper, "dummy_types-summary-panel");
 
 		// verify the table is HIDDEN
-		const cellControlDiv = wrapper.find("div[data-id='properties-dummy_types_0_4']").find(".properties-checkbox");
-		expect(cellControlDiv.hasClass("hide")).to.be.true;
+		const cellControlDiv = wrapper.container.querySelector("div[data-id='properties-dummy_types_0_4']").querySelector(".properties-checkbox");
+		expect(cellControlDiv.className.includes("hide")).to.be.true;
 		expect(renderedController.getControlState({ name: "dummy_types", row: 0, col: 4 })).to.equal("hidden");
 	});
 	it("should disable a table cell", () => {
 		// set the disable flag
 		const conditionsPropertyId = { name: "dummy_types", row: 0, col: 1 };
 		renderedController.updatePropertyValue(conditionsPropertyId, false);
-		wrapper.update();
 		// open the summary panel
-		propertyUtils.openSummaryPanel(wrapper, "dummy_types-summary-panel");
+		propertyUtilsRTL.openSummaryPanel(wrapper, "dummy_types-summary-panel");
 
 		// verify the table is HIDDEN
-		const cellControlDiv = wrapper.find("div[data-id='properties-dummy_types_0_5']");
-		expect(cellControlDiv.find("input").prop("disabled")).to.be.true;
+		const cellControlDiv = wrapper.container.querySelector("div[data-id='properties-dummy_types_0_5']");
+		expect(cellControlDiv.querySelector("input").disabled).to.be.true;
 		expect(renderedController.getControlState({ name: "dummy_types", row: 0, col: 5 })).to.equal("disabled");
 	});
 });
@@ -592,7 +605,7 @@ describe("structuretable control with readonly numbered column renders correctly
 		setPropertyValue();
 	});
 	it("should have displayed the correct generatedValues with default index values", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<StructureTableControl
 					control={readonlyControlDefault}
@@ -604,7 +617,7 @@ describe("structuretable control with readonly numbered column renders correctly
 				/>
 			</Provider>
 		);
-		const rows = tableUtils.getTableRows(wrapper);
+		const rows = tableUtilsRTL.getTableRows(wrapper.container);
 		expect(rows).to.have.length(3);
 
 		const expectedData = "[[\"Cholesterol\",1,\"Ascending\"],[\"Age\",2,\"Descending\"],[\"Drug\",3,\"Ascending\"]]";
@@ -613,7 +626,7 @@ describe("structuretable control with readonly numbered column renders correctly
 	});
 
 	it("should have displayed the correct generatedValues with startValue", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<StructureTableControl
 					control={readonlyControlStartValue}
@@ -626,7 +639,7 @@ describe("structuretable control with readonly numbered column renders correctly
 			</Provider>
 		);
 
-		const rows = tableUtils.getTableRows(wrapper);
+		const rows = tableUtilsRTL.getTableRows(wrapper.container);
 		expect(rows).to.have.length(3);
 
 		const expectedData = "[[3,\"Cholesterol\",\"Ascending\"],[4,\"Age\",\"Descending\"],[5,\"Drug\",\"Ascending\"]]";
@@ -635,7 +648,7 @@ describe("structuretable control with readonly numbered column renders correctly
 	});
 
 	it("should have correct index values after sort", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<StructureTableControl
 					control={readonlyControlDefault}
@@ -647,10 +660,10 @@ describe("structuretable control with readonly numbered column renders correctly
 				/>
 			</Provider>
 		);
-		const tableHeader = tableUtils.getTableHeaderRows(wrapper);
-		const fieldHeaderColumn = tableHeader.find("div[aria-label='Field']");
+		const tableHeader = tableUtilsRTL.getTableHeaderRows(wrapper.container);
+		const fieldHeaderColumn = tableHeader[0].querySelector("div[aria-label='Field']");
 		// click on the column header to trigger the onClick sort
-		fieldHeaderColumn.simulate("click");
+		fireEvent.click(fieldHeaderColumn);
 		var tableRows = controller.getPropertyValue(propertyIdReadonlyControl);
 		expect(tableRows[0][0]).to.equal("Age");
 		expect(tableRows[1][0]).to.equal("Cholesterol");
@@ -660,7 +673,7 @@ describe("structuretable control with readonly numbered column renders correctly
 		expect(tableRows[2][1]).to.equal(3);
 
 		// click on the column header to trigger the onClick sort
-		fieldHeaderColumn.simulate("click");
+		fireEvent.click(fieldHeaderColumn);
 		tableRows = controller.getPropertyValue(propertyIdReadonlyControl);
 		expect(tableRows[0][0]).to.equal("Drug");
 		expect(tableRows[1][0]).to.equal("Cholesterol");
@@ -675,7 +688,7 @@ describe("structuretable control with readonly numbered column renders correctly
 describe("structuretable control with multi input schemas renders correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableMultiInputParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structuretableMultiInputParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -684,18 +697,17 @@ describe("structuretable control with multi input schemas renders correctly", ()
 	});
 
 	it("should prefix the correct schema for fields selected", () => {
+		const { container } = wrapper;
 		// open the field picker on the table and select a few new columns
-		propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableReadonlyColumnStartValue");
-		tableUtils.fieldPicker(fieldPicker, ["0.BP", "data.BP", "2.BP"]);
+		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
+		const fieldPicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableReadonlyColumnStartValue");
+		tableUtilsRTL.fieldPicker(fieldPicker, ["0.BP", "data.BP", "2.BP"]);
 		// save the changes
 
-		wrapper.find("button[data-id='properties-apply-button']")
-			.at(0)
-			.simulate("click");
+		fireEvent.click(container.querySelectorAll("button[data-id='properties-apply-button']")[0]);
 		// validate the schema name is saved in the summary list.
-		const summaryPanel = wrapper.find("div[data-id='properties-structuretableReadonlyColumnStartValue-summary-panel']");
-		const summaryRows = summaryPanel.find("td.properties-summary-row-data");
+		const summaryPanel = container.querySelector("div[data-id='properties-structuretableReadonlyColumnStartValue-summary-panel']");
+		const summaryRows = summaryPanel.querySelectorAll("td.properties-summary-row-data");
 		expect(summaryRows).to.have.length(5);
 
 		const expectedSummary = [
@@ -707,10 +719,9 @@ describe("structuretable control with multi input schemas renders correctly", ()
 		];
 
 		for (let idx = 0; idx < summaryRows.length; idx++) {
-			expect(summaryRows.at(idx)
-				.find("span")
-				.at(0)
-				.text()
+			expect(summaryRows[idx]
+				.querySelectorAll("span")[0]
+				.textContent
 				.trim()).to.equal(expectedSummary[idx]);
 		}
 	});
@@ -720,7 +731,7 @@ describe("structuretable control displays with no header and no button", () => {
 	let wrapper;
 	let renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});
@@ -731,26 +742,26 @@ describe("structuretable control displays with no header and no button", () => {
 
 	it("should display header", () => {
 		// open the summary panel
-		const table = propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnDefaultIndex-summary-panel");
-		const header = tableUtils.getTableHeaderRows(table);
+		const table = propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableReadonlyColumnDefaultIndex-summary-panel");
+		const header = tableUtilsRTL.getTableHeaderRows(table);
 		expect(header).to.have.length(1);
 	});
 	it("should use dmDefault property values", () => {
+		const { container } = wrapper;
 		// Open rename fields Summary Panel in structuretableParamDef
-		const table = propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnDefaultIndex-summary-panel");
-		const container = table.find("div.properties-at-buttons-container");
+		const table = propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableReadonlyColumnDefaultIndex-summary-panel");
+		const buttonContainer = table.querySelector("div.properties-at-buttons-container");
 		// Open field picker
-		const addColumnsButton = container.find("button.properties-add-fields-button");
-		addColumnsButton.simulate("click");
-		const fieldPickerTable = wrapper.find("div.properties-fp-table");
+		const addColumnsButton = buttonContainer.querySelector("button.properties-add-fields-button");
+		fireEvent.click(addColumnsButton);
+		const fieldPickerTable = container.querySelector("div.properties-fp-table");
 		// Select header checkbox to select all fields in column override
-		const tableCheckboxHeader = fieldPickerTable.find("input[type='checkbox']").at(0); // find the table header checkbox
-		tableCheckboxHeader.getDOMNode().checked = true;
-		tableCheckboxHeader.simulate("change");
+		const tableCheckboxHeader = fieldPickerTable.querySelectorAll("input[type='checkbox']")[0]; // find the table header checkbox
+		tableCheckboxHeader.setAttribute("checked", true);
+		fireEvent.click(tableCheckboxHeader);
 		// Select Ok to close field picker table.
-		const okButton = fieldPickerTable.find("button[data-id='properties-apply-button']");
-		okButton.simulate("click");
-		wrapper.render();
+		const okButton = fieldPickerTable.querySelector("button[data-id='properties-apply-button']");
+		fireEvent.click(okButton);
 		// Newly added fields should have the proper type
 		const tableId = { name: "structuretableReadonlyColumnDefaultIndex" };
 		const tableValue = renderedController.getPropertyValue(tableId);
@@ -759,17 +770,17 @@ describe("structuretable control displays with no header and no button", () => {
 		expect(cell).to.equal("integer");
 	});
 	it("should display no header", () => {
-		const table = propertyUtils.openSummaryPanel(wrapper, "structuretableNoHeader-summary-panel");
-		const header = table.find(".reactable-column-header");
+		const table = propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableNoHeader-summary-panel");
+		const header = table.querySelectorAll(".reactable-column-header");
 		expect(header).to.have.length(0);
 	});
 	it("should not have add remove buttons for the table", () => {
-		const table = propertyUtils.openSummaryPanel(wrapper, "structuretableNoButtons-summary-panel");
+		const table = propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableNoButtons-summary-panel");
 		// no add/remove buttons should be rendered
-		expect(table.find(".properties-at-buttons-container")).to.have.length(0);
+		expect(table.querySelectorAll(".properties-at-buttons-container")).to.have.length(0);
 	});
 	it("should have all fields in tables without the add/remove buttons", () => {
-		propertyUtils.openSummaryPanel(wrapper, "structuretableNoButtons-summary-panel");
+		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableNoButtons-summary-panel");
 		// All fields should be present, plus the two bad fields in current_parameters
 		const tableId = { name: "structuretableNoButtons" };
 		const tableValue = renderedController.getPropertyValue(tableId);
@@ -784,7 +795,7 @@ describe("structuretable multiselect edit works", () => {
 	let wrapper;
 	let renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});
@@ -792,64 +803,65 @@ describe("structuretable multiselect edit works", () => {
 		wrapper.unmount();
 	});
 	it("mse table should render", () => {
+		const { container } = wrapper;
 		// Open mse Summary Panel in structuretableParamDef
-		const table = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
-		const container = table.find("div.properties-at-buttons-container");
+		const table = propertyUtilsRTL.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
+		const buttonContainer = table.querySelector("div.properties-at-buttons-container");
 
 		// Open field picker
-		const addColumnsButton = container.find("button.properties-add-fields-button");
-		addColumnsButton.simulate("click");
-		const fieldPickerTable = wrapper.find("div.properties-fp-table");
+		const addColumnsButton = buttonContainer.querySelector("button.properties-add-fields-button");
+		fireEvent.click(addColumnsButton);
+		const fieldPickerTable = container.querySelector("div.properties-fp-table");
 		// Select header checkbox to select all fields in column override
-		tableUtils.selectFieldPickerHeaderCheckbox(fieldPickerTable);
+		tableUtilsRTL.selectFieldPickerHeaderCheckbox(fieldPickerTable);
 		// Select Ok to close field picker table.
-		const okButton = fieldPickerTable.find("button[data-id='properties-apply-button']");
-		okButton.simulate("click");
-		wrapper.render();
+		const okButton = fieldPickerTable.querySelector("button[data-id='properties-apply-button']");
+		fireEvent.click(okButton);
 
 		// Newly added fields should be selected.
-		const mseTable = wrapper.find("div[data-id='properties-ST_mse_table-summary-panel']");
-		const selectedRows = mseTable.find(".properties-vt-row-selected");
+		const selectedRows = container.querySelectorAll(".properties-vt-row-selected");
 		expect(selectedRows).to.have.length(5);
 	});
 	it("mse table should allow multiple selections", () => {
-		propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
+		const { container } = wrapper;
+		propertyUtilsRTL.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
 
-		const tableData = tableUtils.getTableRows(wrapper);
+		const tableData = tableUtilsRTL.getTableRows(container);
 		expect(tableData).to.have.length(4);
 
 		// select the first row in the table
-		tableUtils.selectCheckboxes(wrapper, [0]);
+		tableUtilsRTL.selectCheckboxes(container, [0]);
 
 		// verify that the edit button is not present in table toolbar
-		const tableToolbar = wrapper.find("div.properties-table-toolbar");
+		const tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		let editButton = wrapper.find("button.properties-action-multi-select-edit");
+		let editButton = container.querySelectorAll("button.properties-action-multi-select-edit");
 		expect(editButton).to.have.length(0);
 
 		// multiple select the four rows in the table
-		tableUtils.selectCheckboxes(wrapper, [1, 2, 3]);
+		tableUtilsRTL.selectCheckboxes(container, [1, 2, 3]);
 
 		// verify that the edit button is present
-		editButton = wrapper.find("button.properties-action-multi-select-edit");
+		editButton = container.querySelectorAll("button.properties-action-multi-select-edit");
 		expect(editButton).to.have.length(1);
 	});
 	it("mse table should show header even when rows are filtered", () => {
-		propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
+		const { container } = wrapper;
+		propertyUtilsRTL.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
 		// select the first row in the table
-		const tableData = tableUtils.getTableRows(wrapper);
+		const tableData = tableUtilsRTL.getTableRows(container);
 		expect(tableData).to.have.length(4);
 
 		// verify that the table toolbar is not present
-		let tableToolbar = wrapper.find("div.properties-table-toolbar");
+		let tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
 		expect(tableToolbar).to.have.length(0);
 
 		// Select some rows
-		const input = wrapper.find("div.properties-ft-search-container").find("input");
+		const input = container.querySelector("div.properties-ft-search-container").querySelectorAll("input");
 		expect(input).to.have.length(1);
-		input.simulate("change", { target: { value: "k" } });
+		fireEvent.change(input[0], { target: { value: "k" } });
 
-		tableUtils.selectCheckboxes(wrapper, [0, 1]);
+		tableUtilsRTL.selectCheckboxes(container, [0, 1]);
 
 		const selectedRows = renderedController.getSelectedRows(propertyIdMSE);
 		expect(selectedRows).to.have.length(2);
@@ -857,9 +869,9 @@ describe("structuretable multiselect edit works", () => {
 		expect(selectedRows[1]).to.equal(3);
 
 		// verify that the table toolbar is present and it has edit button
-		tableToolbar = wrapper.find("div.properties-table-toolbar");
+		tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const editButton = tableToolbar.find("button.properties-action-multi-select-edit");
+		const editButton = tableToolbar[0].querySelectorAll("button.properties-action-multi-select-edit");
 		expect(editButton).to.have.length(1);
 	});
 });
@@ -867,41 +879,44 @@ describe("structuretable multiselect edit works", () => {
 describe("structuretable multiselect edit works incrementally", () => {
 	const HEADER_CHECKBOX_SELECT_ALL = "div[data-role='properties-header-row'] div.properties-vt-header-checkbox input[type='checkbox']";
 	const SELECT_ALL_ROWS = "div[data-role='properties-data-row'] div.properties-vt-row-checkbox input[type='checkbox']";
-
-	const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
-	const wrapper = renderedObject.wrapper;
-	const renderedController = renderedObject.controller;
-	it("structuretable multiselect edit works incrementally", () => {
+	let wrapper;
+	let renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structuretableParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+	// HEADER_CHECKBOX_SELECT_ALL can't be found
+	it.skip("structuretable multiselect edit works incrementally", () => {
+		const { container } = wrapper;
 		// Open mse Summary Panel in structuretableParamDef
-		propertyUtils.openSummaryPanel(wrapper, "ST_mse_table_II-summary-panel");
+		propertyUtilsRTL.openSummaryPanel(wrapper, "ST_mse_table_II-summary-panel");
 
 		// Select the first two rows
-		tableUtils.selectCheckboxes(wrapper, [0, 1]);
+		tableUtilsRTL.selectCheckboxes(container, [0, 1]);
 		for (const row of [0, 1]) {
-			const rowCheckbox = wrapper.find(SELECT_ALL_ROWS).at(row);
-			expect(rowCheckbox.props().checked).to.be.true;
+			const rowCheckbox = container.querySelectorAll(SELECT_ALL_ROWS)[row];
+			expect(rowCheckbox.checked).to.be.true;
 		}
 
 		// Click edit button in table toolbar
-		let tableToolbar = wrapper.find("div.properties-table-toolbar");
-		let editButton = tableToolbar.find("button.properties-action-multi-select-edit");
-		editButton.simulate("click");
+		let tableToolbar = container.querySelector("div.properties-table-toolbar");
+		let editButton = tableToolbar.querySelector("button.properties-action-multi-select-edit");
+		fireEvent.click(editButton);
 
 		// A new panel opens which shows editable columns
-		let wideFlyoutPanel = wrapper.find(".properties-wf-children");
-		let dropdownWrapper = wideFlyoutPanel.find("div[data-id='properties-ctrl-dummy_entry_sport_name']").find(".properties-dropdown");
-		let dropdownButton = dropdownWrapper.find("button");
-		dropdownButton.simulate("click");
-		let dropdownList = wrapper.find("li.cds--list-box__menu-item");
+		let wideFlyoutPanel = container.querySelector(".properties-wf-children");
+		let dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-dummy_entry_sport_name']").querySelector(".properties-dropdown");
+		let dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton);
+		let dropdownList = container.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.have.length(4);
 		// Select "Baseball" for Sport
-		expect(dropdownList.at(3).text()).to.equal("Baseball");
-		dropdownList.at(3).simulate("click");
+		expect(dropdownList[3].textContent).to.equal("Baseball");
+		fireEvent.click(dropdownList[3]);
 
 		// Save wide flyout
-		wrapper.find(".properties-modal-buttons").find("button.properties-apply-button")
-			.at(0)
-			.simulate("click");
+		fireEvent.click(container.querySelector(".properties-modal-buttons").querySelectorAll("button.properties-apply-button")[0]);
 
 		// verify selected rows have "Baseball" selected in Sports column
 		let rowValues = renderedController.getPropertyValue(propertyIdMSEII);
@@ -913,34 +928,31 @@ describe("structuretable multiselect edit works incrementally", () => {
 		}
 
 		// Select all rows using header shortcut
-		wrapper.find(HEADER_CHECKBOX_SELECT_ALL)
-			.simulate("change", { target: { checked: true } });
+		fireEvent.click(container.querySelector(HEADER_CHECKBOX_SELECT_ALL));
 
-		const headerCheckbox = wrapper.find(HEADER_CHECKBOX_SELECT_ALL);
-		expect(headerCheckbox.props().checked).to.be.true;
+		const headerCheckbox = container.querySelector(HEADER_CHECKBOX_SELECT_ALL);
+		expect(headerCheckbox.checked).to.be.true;
 		for (const row of [0, 1, 2, 3]) {
-			const rowCheckbox = wrapper.find(SELECT_ALL_ROWS).at(row);
-			expect(rowCheckbox.props().checked).to.be.true;
+			const rowCheckbox = container.querySelectorAll(SELECT_ALL_ROWS)[row];
+			expect(rowCheckbox.checked).to.be.true;
 		}
 
 		// Select Football for Sport
-		tableToolbar = wrapper.find("div.properties-table-toolbar");
-		editButton = tableToolbar.find("button.properties-action-multi-select-edit");
-		editButton.simulate("click");
+		tableToolbar = container.querySelector("div.properties-table-toolbar");
+		editButton = tableToolbar.querySelector("button.properties-action-multi-select-edit");
+		fireEvent.click(editButton);
 
-		wideFlyoutPanel = wrapper.find(".properties-wf-children");
-		dropdownWrapper = wideFlyoutPanel.find("div[data-id='properties-ctrl-dummy_entry_sport_name']").find(".properties-dropdown");
-		dropdownButton = dropdownWrapper.find("button");
-		dropdownButton.simulate("click");
-		dropdownList = wrapper.find("li.cds--list-box__menu-item");
+		wideFlyoutPanel = container.querySelector(".properties-wf-children");
+		dropdownWrapper = wideFlyoutPanel.querySelector("div[data-id='properties-ctrl-dummy_entry_sport_name']").querySelector(".properties-dropdown");
+		dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton);
+		dropdownList = container.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.have.length(4);
-		expect(dropdownList.at(0).text()).to.equal("Football");
-		dropdownList.at(0).simulate("click");
+		expect(dropdownList[0].textContent).to.equal("Football");
+		fireEvent.click(dropdownList[0]);
 
 		// Save wide flyout
-		wrapper.find(".properties-modal-buttons").find("button.properties-apply-button")
-			.at(0)
-			.simulate("click");
+		fireEvent.click(container.querySelector(".properties-modal-buttons").querySelectorAll("button.properties-apply-button")[0]);
 
 		rowValues = renderedController.getPropertyValue(propertyIdMSEII);
 		for (const row of [0, 1, 2, 3]) {
@@ -953,7 +965,7 @@ describe("structuretable control displays with checkbox header", () => {
 	let wrapper;
 	let renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(filterColumnParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(filterColumnParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});
@@ -963,11 +975,11 @@ describe("structuretable control displays with checkbox header", () => {
 	});
 
 	it("should display header with checkbox", () => {
-		const tableCheckboxHeader = wrapper.find("div[data-id='properties-vt-header-exclude'] input"); // find the table header
+		const tableCheckboxHeader = wrapper.container.querySelectorAll("div[data-id='properties-vt-header-exclude'] input"); // find the table header
 		expect(tableCheckboxHeader).to.have.length(1);
-		expect(tableCheckboxHeader.prop("type")).to.equal("checkbox");
+		expect(tableCheckboxHeader[0].type).to.equal("checkbox");
 	});
-	it("checkbox header on should select column value for all rows", () => {
+	it("checkbox header on should select column value for all rows", async() => {
 		const colPropertyId = { name: "field_types" };
 		// validate the original state
 		let columnValues = renderedController.getPropertyValue(colPropertyId);
@@ -977,8 +989,7 @@ describe("structuretable control displays with checkbox header", () => {
 		expect(columnValues[2][2]).to.be.equal(false);
 
 		// set the column header checkbox to true
-		tableUtils.selectHeaderColumnCheckbox(wrapper, 2, true);
-
+		tableUtilsRTL.selectHeaderColumnCheckbox(wrapper.container, 2, true);
 		columnValues = renderedController.getPropertyValue(colPropertyId);
 		expect(columnValues[0][2]).to.be.equal(true);
 		expect(columnValues[1][2]).to.be.equal(true);
@@ -993,7 +1004,7 @@ describe("structuretable control displays with checkbox header", () => {
 		expect(columnValues[1][2]).to.be.equal(true);
 		expect(columnValues[2][2]).to.be.equal(false);
 		// set the column header checkbox to false
-		tableUtils.selectHeaderColumnCheckbox(wrapper, 2, false);
+		tableUtilsRTL.selectHeaderColumnCheckbox(wrapper.container, 2, false);
 		// validate all rows checkboxes are false
 		columnValues = renderedController.getPropertyValue(colPropertyId);
 		expect(columnValues[0][2]).to.be.equal(false);
@@ -1006,7 +1017,7 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 	let wrapper;
 	let renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(setGlobalsParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(setGlobalsParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});
@@ -1016,9 +1027,9 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 	});
 
 	it("should display header with checkbox", () => {
-		const tableCheckboxHeader = wrapper.find("div[data-id='properties-vt-header-mean'] input"); // find the table header checkbox
+		const tableCheckboxHeader = wrapper.container.querySelectorAll("div[data-id='properties-vt-header-mean'] input"); // find the table header checkbox
 		expect(tableCheckboxHeader).to.have.length(1);
-		expect(tableCheckboxHeader.prop("type")).to.equal("checkbox");
+		expect(tableCheckboxHeader[0].type).to.equal("checkbox");
 	});
 	it("checkbox header on should select column value for all rows", () => {
 		const colPropertyId = { name: "globals" };
@@ -1030,7 +1041,7 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		expect(columnValues[1][1]).to.be.equal(false);
 		expect(columnValues[2][1]).to.be.equal(false);
 		// set the column header checkbox to true
-		tableUtils.selectHeaderColumnCheckbox(wrapper, 1, true);
+		tableUtilsRTL.selectHeaderColumnCheckbox(wrapper.container, 1, true);
 		// validate all rows checkboxes are true
 		columnValues = renderedController.getPropertyValue(colPropertyId);
 		// the header should not have changed the state of the disabled checkbox
@@ -1048,9 +1059,9 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		expect(columnValues[1][5]).to.be.equal(false);
 		expect(columnValues[2][5]).to.be.equal(true);
 		// set the column header checkbox to false-
-		const tableCheckboxHeader = wrapper.find("div[data-id='properties-vt-header-sdev'] input"); // find the table header checkbox
-		tableCheckboxHeader.getDOMNode().checked = false;
-		tableCheckboxHeader.simulate("change");
+		const tableCheckboxHeader = wrapper.container.querySelector("div[data-id='properties-vt-header-sdev'] input"); // find the table header checkbox
+		tableCheckboxHeader.setAttribute("checked", false);
+		fireEvent.click(tableCheckboxHeader);
 		// validate that the header has set all checkboxes to false
 		columnValues = renderedController.getPropertyValue(colPropertyId);
 		expect(columnValues[0][5]).to.be.equal(false);
@@ -1058,6 +1069,7 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		expect(columnValues[2][5]).to.be.equal(false);
 	});
 	it("checkbox column header should become checked if all non-disabled columns become checked", () => {
+		const { container } = wrapper;
 		const colPropertyId = { name: "globals" };
 		// validate the original state
 		let columnValues = renderedController.getPropertyValue(colPropertyId);
@@ -1067,19 +1079,18 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		expect(columnValues[1][1]).to.be.equal(false);
 		expect(columnValues[2][1]).to.be.equal(false);
 
-		const tableCheckboxHeader = tableUtils.getTableHeaderRows(wrapper)
-			.find(".properties-vt-column")
-			.at(1)
-			.find("input");
-		expect(tableCheckboxHeader.getDOMNode().checked).to.be.equal(false);
+		const tableCheckboxHeader = tableUtilsRTL.getTableHeaderRows(container)[0]
+			.querySelectorAll(".properties-vt-column")[1]
+			.querySelector("input");
+		expect(tableCheckboxHeader.checked).to.be.equal(false);
 		// set the column header checkbox to true
-		tableUtils.selectHeaderColumnCheckbox(wrapper, 1, true);
-		const colCheckbox1 = wrapper.find("div[data-id='properties-globals_0_1']").find("input[type='checkbox']");
-		colCheckbox1.getDOMNode().checked = true;
-		colCheckbox1.simulate("change");
-		const colCheckbox2 = wrapper.find("div[data-id='properties-globals_2_1']").find("input[type='checkbox']");
-		colCheckbox2.getDOMNode().checked = true;
-		colCheckbox2.simulate("change");
+		tableUtilsRTL.selectHeaderColumnCheckbox(container, 1, false);
+		const colCheckbox1 = container.querySelector("div[data-id='properties-globals_0_1']").querySelector("input[type='checkbox']");
+		colCheckbox1.setAttribute("checked", true);
+		fireEvent.click(colCheckbox1);
+		const colCheckbox2 = container.querySelector("div[data-id='properties-globals_2_1']").querySelector("input[type='checkbox']");
+		colCheckbox2.setAttribute("checked", true);
+		fireEvent.click(colCheckbox2);
 		// validate all rows checkboxes are true
 		columnValues = renderedController.getPropertyValue(colPropertyId);
 		// the header should not have changed the state of the disabled checkbox
@@ -1087,45 +1098,53 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		expect(columnValues[1][1]).to.be.equal(false);
 		expect(columnValues[2][1]).to.be.equal(true);
 		// expect the table checkbox header to now be checked
-		expect(tableCheckboxHeader.getDOMNode().checked).to.be.equal(true);
+		expect(tableCheckboxHeader.checked).to.be.equal(true);
 	});
 });
 
 describe("structuretable columns sort correctly", () => {
-	setPropertyValue();
-	const wrapper = mountWithIntl(
-		<Provider store={controller.getStore()}>
-			<StructureTableControl
-				control={control} // where setting is for what column(s) has sortable attribute
-				controller={controller}
-				propertyId={propertyId}
-				buildUIItem={genUIItem}
-				openFieldPicker={openFieldPicker}
-				rightFlyout
-			/>
-		</Provider>
-	);
+	let wrapper;
+	let tableData;
+	let tableRows;
+	let tableHeader;
+	beforeEach(() => {
+		setPropertyValue();
+		wrapper = renderWithIntl(
+			<Provider store={controller.getStore()}>
+				<StructureTableControl
+					control={control} // where setting is for what column(s) has sortable attribute
+					controller={controller}
+					propertyId={propertyId}
+					buildUIItem={genUIItem}
+					openFieldPicker={openFieldPicker}
+					rightFlyout
+				/>
+			</Provider>
+		);
 
-	// check that table starts with right number of values
-	const tableWrapper = wrapper.find("div[data-id='properties-keys']");
-	const tableData = tableUtils.getTableRows(tableWrapper);
+		// check that table starts with right number of values
+		const tableWrapper = wrapper.container.querySelector("div[data-id='properties-keys']");
+		tableData = tableUtilsRTL.getTableRows(tableWrapper);
 
-	const tableHeader = tableUtils.getTableHeaderRows(tableWrapper);
-	let tableRows = controller.getPropertyValue(propertyId);
+		tableHeader = tableUtilsRTL.getTableHeaderRows(tableWrapper);
+		tableRows = controller.getPropertyValue(propertyId);
+	});
+
 	it("should instantiate structuretable in correct order and state", () => {
 		// check that starting table is in original order
 		expect(tableData).to.have.length(6);
 		expect(tableRows[0][0]).to.equal("Na");
 		expect(tableRows[5][0]).to.equal("Cholesterol");
 	});
-	it("should sort column alphabetically ascending and descending", () => {
+	it("should sort column alphabetically ascending and descending", async() => {
 		// click on the column header to trigger the onClick sort
-		const sortableCol = tableHeader.find("div[role='columnheader']").at(0);
-		sortableCol.simulate("click");
+		const sortableCol = tableHeader[0].querySelectorAll("div[role='columnheader']")[0];
+		fireEvent.click(sortableCol);
 		tableRows = controller.getPropertyValue(propertyId);
 		expect(tableRows[0][0]).to.equal("Age");
 		expect(tableRows[5][0]).to.equal("Sex");
-		sortableCol.simulate("click");
+
+		fireEvent.click(sortableCol);
 		tableRows = controller.getPropertyValue(propertyId);
 		expect(tableRows[0][0]).to.equal("Sex");
 		expect(tableRows[5][0]).to.equal("Age");
@@ -1135,31 +1154,31 @@ describe("structuretable columns sort correctly", () => {
 
 describe("structuretable columns resize correctly", () => {
 	it("resize button should be available for specified columns", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structuretableParamDef);
 		const wrapper = renderedObject.wrapper;
 		// open the summary panel
-		propertyUtils.openSummaryPanel(wrapper, "structuretableResizableColumns-summary-panel");
+		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableResizableColumns-summary-panel");
 		// Verify table content is rendered
-		const tableWrapper = wrapper.find("div[data-id='properties-ci-structuretableResizableColumns']");
+		const tableWrapper = wrapper.container.querySelectorAll("div[data-id='properties-ci-structuretableResizableColumns']");
 		expect(tableWrapper).to.have.length(1);
 
-		const headerRow = tableWrapper.find("div[data-role='properties-header-row']");
+		const headerRow = tableWrapper[0].querySelectorAll("div[data-role='properties-header-row']");
 		expect(headerRow).to.have.length(1);
 		// Verify 2 columns in header are resizable
-		expect(headerRow.find(".properties-vt-header-resize")).to.have.length(2);
+		expect(headerRow[0].querySelectorAll(".properties-vt-header-resize")).to.have.length(2);
 		// Verify "Name" column can be resized
-		const nameColumn = tableWrapper.find("div[aria-label='Name']");
-		expect(nameColumn.find(".properties-vt-header-resize")).to.have.length(1);
+		const nameColumn = tableWrapper[0].querySelector("div[aria-label='Name']");
+		expect(nameColumn.querySelectorAll(".properties-vt-header-resize")).to.have.length(1);
 		// Verify "Type" column can be resized
-		const typeColumn = tableWrapper.find("div[aria-label='Type']");
-		expect(typeColumn.find(".properties-vt-header-resize")).to.have.length(1);
+		const typeColumn = tableWrapper[0].querySelector("div[aria-label='Type']");
+		expect(typeColumn.querySelectorAll(".properties-vt-header-resize")).to.have.length(1);
 	});
 });
 
 describe("measurement icons should be rendered correctly in structuretable", () => {
 	var wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -1167,19 +1186,19 @@ describe("measurement icons should be rendered correctly in structuretable", () 
 		wrapper.unmount();
 	});
 	it("measurement icons should render for table where dm_image is set to measure ", () => {
-		propertyUtils.openSummaryPanel(wrapper, "structuretableSortableColumns-summary-panel");
-		const tableWrapper = wrapper.find("div[data-id='properties-ft-structuretableSortableColumns']");
-		expect(tableWrapper.find("div.properties-field-type-icon")).to.have.length(2);
+		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableSortableColumns-summary-panel");
+		const tableWrapper = wrapper.container.querySelector("div[data-id='properties-ft-structuretableSortableColumns']");
+		expect(tableWrapper.querySelectorAll("div.properties-field-type-icon")).to.have.length(2);
 	});
 	it("measurement icons should render in fieldpicker for table where dm_image is set to measure", () => {
-		propertyUtils.openSummaryPanel(wrapper, "structuretableSortableColumns-summary-panel");
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableSortableColumns");
-		expect(fieldPicker.find("div.properties-fp-field-type-icon")).to.have.length(8);
+		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableSortableColumns-summary-panel");
+		const fieldPicker = tableUtilsRTL.openFieldPicker(wrapper.container, "properties-ft-structuretableSortableColumns");
+		expect(fieldPicker.querySelectorAll("div.properties-fp-field-type-icon")).to.have.length(8);
 	});
 	it("measurement icons should not render for table where dm_image value is set to invalid value", () => {
-		propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
-		const tableWrapper = wrapper.find("div[data-id='properties-ft-structuretableReadonlyColumnStartValue']"); // "dm_image"="invalid"
-		expect(tableWrapper.find("div.properties-field-type-icon")).to.have.length(0);
+		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
+		const tableWrapper = wrapper.container.querySelector("div[data-id='properties-ft-structuretableReadonlyColumnStartValue']"); // "dm_image"="invalid"
+		expect(tableWrapper.querySelectorAll("div.properties-field-type-icon")).to.have.length(0);
 	});
 });
 
@@ -1187,28 +1206,28 @@ describe("structuretable with long text input values should render as readonly",
 	let wrapper;
 	let table;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
-		table = propertyUtils.openSummaryPanel(wrapper, "error_handling_summary");
+		table = propertyUtilsRTL.openSummaryPanel(wrapper, "error_handling_summary");
 	});
 	afterEach(() => {
 		wrapper.unmount();
 	});
 	it("table should show disabled control and error icon for truncated value", () => {
-		expect(table.find(".properties-textinput-readonly")).to.have.length(1);
-		const cells = table.find(".properties-table-cell-control");
+		expect(table.querySelectorAll(".properties-textinput-readonly")).to.have.length(1);
+		const cells = table.querySelectorAll(".properties-table-cell-control");
 		expect(cells).to.have.length(3);
-		expect(cells.at(1).find("div.properties-validation-message.inTable")).to.have.length(1);
+		expect(cells[1].querySelectorAll("div.properties-validation-message.inTable")).to.have.length(1);
 
-		const editButton = table.find("button.properties-subpanel-button").at(0);
-		editButton.simulate("click");
+		const editButton = table.querySelectorAll("button.properties-subpanel-button")[0];
+		fireEvent.click(editButton);
 
-		const tables = wrapper.find("div[data-id='properties-structuretableLongValue']");
+		const tables = wrapper.container.querySelectorAll("div[data-id='properties-structuretableLongValue']");
 		expect(tables).to.have.length(2); // first one is the table cell
-		const subpanelTable = tables.at(1); // second one is the textarea in subpanel flyout
-		expect(subpanelTable.find("textarea").prop("disabled")).to.equal(true);
+		const subpanelTable = tables[1]; // second one is the textarea in subpanel flyout
+		expect(subpanelTable.querySelector("textarea").disabled).to.equal(true);
 
-		const validationMsg = subpanelTable.find("div.cds--form-requirement");
+		const validationMsg = subpanelTable.querySelectorAll("div.cds--form-requirement");
 		expect(validationMsg).to.have.length(1);
 	});
 });
@@ -1218,10 +1237,10 @@ describe("structuretable control with nested structure tables", () => {
 	let renderedController;
 	let summaryPanel;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
-		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
+		summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
 	});
 
 	afterEach(() => {
@@ -1229,19 +1248,20 @@ describe("structuretable control with nested structure tables", () => {
 	});
 
 	it("should render a nested structurelisteditor control that returns nested objects, edit subPanel", () => {
-		const table = summaryPanel.find("div[data-id='properties-ci-nestedStructureObject']");
+		const { container } = wrapper;
+		const table = summaryPanel.querySelector("div[data-id='properties-ci-nestedStructureObject']");
 		let tableData = renderedController.getPropertyValue(propertyIdNestedStructureObject, { applyProperties: true });
 		const expectedOriginal = structuretableParamDef.current_parameters.nestedStructureObject;
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
 
 		// click on subpanel edit for main table
-		let editButton = table.find("button.properties-subpanel-button").at(0);
-		editButton.simulate("click");
+		let editButton = table.querySelectorAll("button.properties-subpanel-button")[0];
+		fireEvent.click(editButton);
 
 		// subPanel table
-		let subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
-		const addValueBtn = subPanelTable.find("button.properties-add-fields-button");
-		addValueBtn.simulate("click");
+		let subPanelTable = container.querySelector("div[data-id='properties-ci-nestedStructure_table']");
+		const addValueBtn = subPanelTable.querySelector("button.properties-add-fields-button");
+		fireEvent.click(addValueBtn);
 
 		// Verify new row added
 		tableData = renderedController.getPropertyValue(propertyIdNestedStructureObject, { applyProperties: true });
@@ -1266,15 +1286,15 @@ describe("structuretable control with nested structure tables", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 
 		// click on subpanel edit for nested table
-		subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
+		subPanelTable = container.querySelectorAll("div[data-id='properties-ci-nestedStructure_table']");
 		expect(subPanelTable).to.have.length(1);
-		editButton = subPanelTable.find("button.properties-subpanel-button");
+		editButton = subPanelTable[0].querySelectorAll("button.properties-subpanel-button");
 		expect(editButton).to.have.length(2);
-		editButton.at(1).simulate("click");
+		fireEvent.click(editButton[1]);
 
 		// Modify value of the nested structure
-		const nameInput = wrapper.find("div[data-id='properties-ctrl-nestedStructure_table_name']");
-		nameInput.find("input").simulate("change", { target: { value: "new name" } });
+		const nameInput = container.querySelector("div[data-id='properties-ctrl-nestedStructure_table_name']");
+		fireEvent.change(nameInput.querySelector("input"), { target: { value: "new name" } });
 
 		// Verify modified values for second row
 		tableData = renderedController.getPropertyValue(propertyIdNestedStructureObject, { applyProperties: true });
@@ -1300,19 +1320,20 @@ describe("structuretable control with nested structure tables", () => {
 	});
 
 	it("should render a nested structurelisteditor control that returns objects of nested arrays, edit onPanel", () => {
-		const table = summaryPanel.find("div[data-id='properties-ci-nestedStructureObjectArray']");
+		const { container } = wrapper;
+		const table = summaryPanel.querySelector("div[data-id='properties-ci-nestedStructureObjectArray']");
 		let tableData = renderedController.getPropertyValue(propertyIdNestedStructureObjectArray, { applyProperties: true });
 		const expectedOriginal = structuretableParamDef.current_parameters.nestedStructureObjectArray;
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
 
 		// click on subpanel edit for main table
-		const editButton = table.find("button.properties-subpanel-button").at(0);
-		editButton.simulate("click");
+		const editButton = table.querySelectorAll("button.properties-subpanel-button")[0];
+		fireEvent.click(editButton);
 
 		// subPanel table
-		let subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
-		const addValueBtn = subPanelTable.find("button.properties-add-fields-button");
-		addValueBtn.simulate("click");
+		let subPanelTable = container.querySelector("div[data-id='properties-ci-nestedStructure_table']");
+		const addValueBtn = subPanelTable.querySelector("button.properties-add-fields-button");
+		fireEvent.click(addValueBtn);
 
 		// Verify new row added
 		tableData = renderedController.getPropertyValue(propertyIdNestedStructureObjectArray, { applyProperties: true });
@@ -1334,17 +1355,17 @@ describe("structuretable control with nested structure tables", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 
 		// select the second row for onPanel editing
-		subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
-		tableUtils.selectCheckboxes(subPanelTable, [1]); // Select second row for onPanel edit
+		subPanelTable = container.querySelector("div[data-id='properties-ci-nestedStructure_table']");
+		tableUtilsRTL.selectCheckboxes(subPanelTable, [1]); // Select second row for onPanel edit
 
 		// verify onPanel edit shows list control
-		subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
-		const onPanelList = subPanelTable.find(".properties-onpanel-container");
+		subPanelTable = container.querySelector("div[data-id='properties-ci-nestedStructure_table']");
+		const onPanelList = subPanelTable.querySelectorAll(".properties-onpanel-container");
 		expect(onPanelList).to.have.length(1);
 
 		// Modify value of the nested structure
-		const nameInput = onPanelList.find("div[data-id='properties-ctrl-nestedStructure_table_name']");
-		nameInput.find("input").simulate("change", { target: { value: "new name" } });
+		const nameInput = onPanelList[0].querySelector("div[data-id='properties-ctrl-nestedStructure_table_name']");
+		fireEvent.change(nameInput.querySelector("input"), { target: { value: "new name" } });
 
 		// Verify modified values for second row
 		tableData = renderedController.getPropertyValue(propertyIdNestedStructureObjectArray, { applyProperties: true });
@@ -1367,19 +1388,20 @@ describe("structuretable control with nested structure tables", () => {
 	});
 
 	it("should render a nested structurelisteditor control that returns nested arrays, edit onPanel", () => {
-		const table = summaryPanel.find("div[data-id='properties-ci-nestedStructureArrayArray']");
+		const { container } = wrapper;
+		const table = summaryPanel.querySelector("div[data-id='properties-ci-nestedStructureArrayArray']");
 		let tableData = renderedController.getPropertyValue(propertyIdNestedStructureArrayArray, { applyProperties: true });
 		const expectedOriginal = structuretableParamDef.current_parameters.nestedStructureArrayArray;
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
 
 		// click on subpanel edit for main table
-		const editButton = table.find("button.properties-subpanel-button").at(0);
-		editButton.simulate("click");
+		const editButton = table.querySelectorAll("button.properties-subpanel-button")[0];
+		fireEvent.click(editButton);
 
 		// subPanel table
-		let subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
-		const addValueBtn = subPanelTable.find("button.properties-add-fields-button");
-		addValueBtn.simulate("click");
+		let subPanelTable = container.querySelector("div[data-id='properties-ci-nestedStructure_table']");
+		const addValueBtn = subPanelTable.querySelector("button.properties-add-fields-button");
+		fireEvent.click(addValueBtn);
 
 		// Verify new row added
 		tableData = renderedController.getPropertyValue(propertyIdNestedStructureArrayArray, { applyProperties: true });
@@ -1401,17 +1423,17 @@ describe("structuretable control with nested structure tables", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 
 		// select the second row for onPanel editing
-		subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
-		tableUtils.selectCheckboxes(subPanelTable, [1]); // Select second row for onPanel edit
+		subPanelTable = container.querySelector("div[data-id='properties-ci-nestedStructure_table']");
+		tableUtilsRTL.selectCheckboxes(subPanelTable, [1]); // Select second row for onPanel edit
 
 		// verify onPanel edit shows list control
-		subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
-		const onPanelList = subPanelTable.find(".properties-onpanel-container");
+		subPanelTable = container.querySelector("div[data-id='properties-ci-nestedStructure_table']");
+		const onPanelList = subPanelTable.querySelectorAll(".properties-onpanel-container");
 		expect(onPanelList).to.have.length(1);
 
 		// Modify value of the nested structure
-		const nameInput = onPanelList.find("div[data-id='properties-ctrl-nestedStructure_table_name']");
-		nameInput.find("input").simulate("change", { target: { value: "new name" } });
+		const nameInput = onPanelList[0].querySelector("div[data-id='properties-ctrl-nestedStructure_table_name']");
+		fireEvent.change(nameInput.querySelector("input"), { target: { value: "new name" } });
 
 		// Verify modified values for second row
 		tableData = renderedController.getPropertyValue(propertyIdNestedStructureArrayArray, { applyProperties: true });
@@ -1434,14 +1456,15 @@ describe("structuretable control with nested structure tables", () => {
 	});
 
 	it("should render a nested structurelisteditor control that returns nested arrays of objects, edit onPanel and subPanel", () => {
-		const table = summaryPanel.find("div[data-id='properties-ci-nestedStructureArrayObject']");
+		const { container } = wrapper;
+		const table = summaryPanel.querySelector("div[data-id='properties-ci-nestedStructureArrayObject']");
 		let tableData = renderedController.getPropertyValue(propertyIdNestedStructureArrayObject, { applyProperties: true });
 		const expectedOriginal = structuretableParamDef.current_parameters.nestedStructureArrayObject;
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
 
 		// Add new row to main table
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-nestedStructureArrayObject");
-		tableUtils.fieldPicker(fieldPicker, ["Na"]);
+		const fieldPicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-nestedStructureArrayObject");
+		tableUtilsRTL.fieldPicker(fieldPicker, ["Na"]);
 
 		// Verify new row added
 		tableData = renderedController.getPropertyValue(propertyIdNestedStructureArrayObject, { applyProperties: true });
@@ -1468,13 +1491,13 @@ describe("structuretable control with nested structure tables", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 
 		// click on subpanel edit for main table
-		let editButton = table.find("button.properties-subpanel-button").at(0);
-		editButton.simulate("click");
+		let editButton = table.querySelectorAll("button.properties-subpanel-button")[0];
+		fireEvent.click(editButton);
 
 		// subPanel table
-		let subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
-		const addValueBtn = subPanelTable.find("button.properties-add-fields-button");
-		addValueBtn.simulate("click");
+		let subPanelTable = container.querySelector("div[data-id='properties-ci-nestedStructure_table']");
+		const addValueBtn = subPanelTable.querySelector("button.properties-add-fields-button");
+		fireEvent.click(addValueBtn);
 
 		// Verify new row added
 		tableData = renderedController.getPropertyValue(propertyIdNestedStructureArrayObject, { applyProperties: true });
@@ -1505,30 +1528,30 @@ describe("structuretable control with nested structure tables", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 
 		// select the second row for onPanel editing
-		subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
-		tableUtils.selectCheckboxes(subPanelTable, [1]); // Select second row for onPanel edit
+		subPanelTable = container.querySelector("div[data-id='properties-ci-nestedStructure_table']");
+		tableUtilsRTL.selectCheckboxes(subPanelTable, [1]); // Select second row for onPanel edit
 
 		// verify onPanel edit shows list control
-		subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
-		const onPanelList = subPanelTable.find(".properties-onpanel-container");
+		subPanelTable = container.querySelector("div[data-id='properties-ci-nestedStructure_table']");
+		const onPanelList = subPanelTable.querySelectorAll(".properties-onpanel-container");
 		expect(onPanelList).to.have.length(1);
 
 		// Modify value of the nested structure
-		const nameInput = onPanelList.find("div[data-id='properties-ctrl-nestedStructure_table_name']");
-		nameInput.find("input").simulate("change", { target: { value: "hello" } });
+		const nameInput = onPanelList[0].querySelector("div[data-id='properties-ctrl-nestedStructure_table_name']");
+		fireEvent.change(nameInput.querySelector("input"), { target: { value: "hello" } });
 
-		subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
-		const editButtons = subPanelTable.find("button.properties-subpanel-button");
+		subPanelTable = container.querySelector("div[data-id='properties-ci-nestedStructure_table']");
+		const editButtons = subPanelTable.querySelectorAll("button.properties-subpanel-button");
 		expect(editButtons).to.have.length(2);
-		editButton = editButtons.at(1);
-		editButton.simulate("click");
-		const dropdownButton = wrapper.find("div[data-id='properties-ctrl-nestedStructure_table_data_type'] button");
-		dropdownButton.simulate("click");
+		editButton = editButtons[1];
+		fireEvent.click(editButton);
+		const dropdownButton = container.querySelector("div[data-id='properties-ctrl-nestedStructure_table_data_type'] button");
+		fireEvent.click(dropdownButton);
 		// select the fourth item
-		const dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-nestedStructure_table_data_type']");
-		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		const dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-nestedStructure_table_data_type']");
+		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(5);
-		dropdownList.at(3).simulate("click");
+		fireEvent.click(dropdownList[3]);
 
 		// Verify modified values for second row
 		tableData = renderedController.getPropertyValue(propertyIdNestedStructureArrayObject, { applyProperties: true });
@@ -1560,18 +1583,18 @@ describe("structuretable control with nested structure tables", () => {
 	});
 
 	it("should render a nested structuretable map control that returns nested arrays, edit subPanel", () => {
-		const table = summaryPanel.find("div[data-id='properties-ci-nestedStructureMap']");
+		const table = summaryPanel.querySelector("div[data-id='properties-ci-nestedStructureMap']");
 		let tableData = renderedController.getPropertyValue(propertyIdNestedStructureMap, { applyProperties: true });
 		const expectedOriginal = structuretableParamDef.current_parameters.nestedStructureMap;
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
 
 		// click on subpanel edit for main table
-		const editButton = table.find("button.properties-subpanel-button").at(0);
-		editButton.simulate("click");
+		const editButton = table.querySelectorAll("button.properties-subpanel-button")[0];
+		fireEvent.click(editButton);
 
 		// subPanel table
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-nestedStructureMap_structure");
-		tableUtils.fieldPicker(fieldPicker, ["Na"]);
+		const fieldPicker = tableUtilsRTL.openFieldPicker(wrapper.container, "properties-ft-nestedStructureMap_structure");
+		tableUtilsRTL.fieldPicker(fieldPicker, ["Na"]);
 
 		// Verify new row added
 		tableData = renderedController.getPropertyValue(propertyIdNestedStructureMap, { applyProperties: true });
@@ -1593,15 +1616,16 @@ describe("structuretable control with nested structure tables", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 	});
 
-	// This works fine in the UI but simulate("change") isn't working in the test
+	// Cannot locate onPanelTable
 	it.skip("should render a nested structureeditor control, edit onPanel", () => {
+		const { container } = wrapper;
 		let tableData = renderedController.getPropertyValue(propertyIdNestedStructureeditor);
 		const expectedOriginal = structuretableParamDef.current_parameters.nestedStructureeditor;
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
 
 		// add row to table
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ci-nestedStructureeditor");
-		tableUtils.fieldPicker(fieldPicker, ["Na"]);
+		const fieldPicker = tableUtilsRTL.openFieldPicker(container, "properties-ci-nestedStructureeditor");
+		tableUtilsRTL.fieldPicker(fieldPicker, ["Na"]);
 
 		// Verify new row added
 		tableData = renderedController.getPropertyValue(propertyIdNestedStructureeditor);
@@ -1620,22 +1644,22 @@ describe("structuretable control with nested structure tables", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 
 		// select the second row for onPanel editing
-		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
-		let table = summaryPanel.find("div[data-id='properties-ci-nestedStructureeditor']");
-		const tableRows = table.find("div[data-role='properties-data-row']");
+		summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
+		let table = summaryPanel.querySelector("div[data-id='properties-ci-nestedStructureeditor']");
+		const tableRows = table.querySelectorAll("div[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(2);
-		// const secondRow = tableRows.at(1);
-		tableUtils.selectCheckboxes(table, [1]); // Select second row for onPanel edit
+		// const secondRow = tableRows[1];
+		tableUtilsRTL.selectCheckboxes(table, [1]); // Select second row for onPanel edit
 
 		// Modify some values of the nested structure
-		table = summaryPanel.find("div[data-id='properties-ci-nestedStructureeditor']");
-		const onPanelTable = table.find("div[data-id='properties-ci-userHealthTable']");
+		table = summaryPanel.querySelector("div[data-id='properties-ci-nestedStructureeditor']");
+		const onPanelTable = table.querySelector("div[data-id='properties-ci-userHealthTable']");
 
-		const nameInput = onPanelTable.find("div[data-id='properties-ctrl-userName']");
-		nameInput.find("input").simulate("change", { target: { value: "new name" } });
+		const nameInput = onPanelTable.querySelector("div[data-id='properties-ctrl-userName']");
+		fireEvent.change(nameInput.querySelector("input"), { target: { value: "new name" } });
 
-		const annotationInput = onPanelTable.find("div[data-id='properties-ctrl-annotation']");
-		annotationInput.find("textarea").simulate("change", { target: { value: "some annotation" } });
+		const annotationInput = onPanelTable.querySelector("div[data-id='properties-ctrl-annotation']");
+		fireEvent.change(annotationInput.querySelector("textarea"), { target: { value: "some annotation" } });
 
 		// Verify new row modified
 		tableData = renderedController.getPropertyValue(propertyIdNestedStructureeditor);
@@ -1659,7 +1683,7 @@ describe("structuretable control with nested structure tables", () => {
 describe("structuretable classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -1668,20 +1692,20 @@ describe("structuretable classnames appear correctly", () => {
 	});
 
 	it("structuretable should have custom classname defined", () => {
-		propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
-		expect(wrapper.find(".structuretable-control-class")).to.have.length(1);
+		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
+		expect(wrapper.container.querySelectorAll(".structuretable-control-class")).to.have.length(1);
 	});
 
 	it("structuretable should have custom classname defined in table cells", () => {
-		propertyUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
-		const parent = wrapper.find(".nested-parent-structuretable-control-class");
+		propertyUtilsRTL.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
+		const parent = wrapper.container.querySelectorAll(".nested-parent-structuretable-control-class");
 		expect(parent).to.have.length(1);
-		expect(parent.find(".nested-child-cell-structuretable-control-class")).to.have.length(1);
+		expect(parent[0].querySelectorAll(".nested-child-cell-structuretable-control-class")).to.have.length(1);
 		// click on subpanel edit for first row
-		const editButton = parent.find("button.properties-subpanel-button").at(0);
-		editButton.simulate("click");
+		const editButton = parent[0].querySelectorAll("button.properties-subpanel-button")[0];
+		fireEvent.click(editButton);
 		// This class name exists in the parent table cell and in the subpanel as table
-		expect(wrapper.find(".double-nested-subpanel-structuretable-control-class")).to.have.length(2);
-		expect(wrapper.find(".double-nested-subpanel-cell-structuretable-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".double-nested-subpanel-structuretable-control-class")).to.have.length(2);
+		expect(wrapper.container.querySelectorAll(".double-nested-subpanel-cell-structuretable-control-class")).to.have.length(1);
 	});
 });

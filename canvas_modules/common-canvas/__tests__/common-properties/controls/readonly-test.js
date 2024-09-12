@@ -17,9 +17,10 @@
 import React from "react";
 import Readonly from "../../../src/common-properties/controls/readonly";
 import Controller from "../../../src/common-properties/properties-controller";
-import { mount } from "../../_utils_/mount-utils.js";
+import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
-import propertyUtils from "../../_utils_/property-utils";
+import { expect as expectJest } from "@jest/globals";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import readonlyParamDef from "../../test_resources/paramDefs/readonly_paramDef.json";
 
 const controller = new Controller();
@@ -36,6 +37,18 @@ const controlWithValues = {
 
 const propertyId = { name: "test-readonly" };
 
+const mockReadonly = jest.fn();
+jest.mock("../../../src/common-properties/controls/readonly",
+	() => (props) => mockReadonly(props)
+);
+
+mockReadonly.mockImplementation((props) => {
+	const ReadonlyComp = jest.requireActual(
+		"../../../src/common-properties/controls/readonly",
+	).default;
+	return <ReadonlyComp {...props} />;
+});
+
 describe("textfield-control renders correctly", () => {
 	beforeEach(() => {
 		controller.setErrorMessages({});
@@ -45,7 +58,7 @@ describe("textfield-control renders correctly", () => {
 		);
 	});
 	it("readonly props should have been defined", () => {
-		const wrapper = mount(
+		render(
 			<Readonly
 				store={controller.getStore()}
 				control={control}
@@ -54,12 +67,15 @@ describe("textfield-control renders correctly", () => {
 			/>
 		);
 
-		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("controller")).to.equal(controller);
-		expect(wrapper.prop("propertyId")).to.equal(propertyId);
+		expectJest(mockReadonly).toHaveBeenCalledWith({
+			"store": controller.getStore(),
+			"controller": controller,
+			"control": control,
+			"propertyId": propertyId,
+		});
 	});
 	it("readonly should render correctly", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<Readonly
 				store={controller.getStore()}
 				control={control}
@@ -67,16 +83,16 @@ describe("textfield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const readonlyWrapper = wrapper.find("div[data-id='properties-test-readonly']");
-		const text = readonlyWrapper.find("span");
+		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
+		const text = readonlyWrapper.querySelectorAll("span");
 		expect(text).to.have.length(1);
-		expect(text.text()).to.equal("Test value");
+		expect(text[0].textContent).to.equal("Test value");
 	});
 	it("readonly should render with labels if possible", () => {
 		controller.setPropertyValues(
 			{ "test-readonly": "value 1" }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<Readonly
 				store={controller.getStore()}
 				control={controlWithValues}
@@ -85,17 +101,17 @@ describe("textfield-control renders correctly", () => {
 				value="value 1"
 			/>
 		);
-		const readonlyWrapper = wrapper.find("div[data-id='properties-test-readonly']");
-		const text = readonlyWrapper.find("span");
+		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
+		const text = readonlyWrapper.querySelectorAll("span");
 
 		expect(text).to.have.length(1);
-		expect(text.text()).to.equal("label 1");
+		expect(text[0].textContent).to.equal("label 1");
 	});
 	it("readonly handles null correctly", () => {
 		controller.setPropertyValues(
 			{ "test-readonly": null }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<Readonly
 				store={controller.getStore()}
 				control={control}
@@ -103,15 +119,15 @@ describe("textfield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const readonlyWrapper = wrapper.find("div[data-id='properties-test-readonly']");
-		const text = readonlyWrapper.find("span");
-		expect(text.text()).to.equal("");
+		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
+		const text = readonlyWrapper.querySelector("span");
+		expect(text.textContent).to.equal("");
 	});
 	it("readonly handles undefined correctly", () => {
 		controller.setPropertyValues(
 			{ }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<Readonly
 				store={controller.getStore()}
 				control={control}
@@ -119,13 +135,13 @@ describe("textfield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const readonlyWrapper = wrapper.find("div[data-id='properties-test-readonly']");
-		const text = readonlyWrapper.find("span");
-		expect(text.text()).to.equal("");
+		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
+		const text = readonlyWrapper.querySelector("span");
+		expect(text.textContent).to.equal("");
 	});
 	it("readonly renders when disabled", () => {
 		controller.updateControlState(propertyId, "disabled");
-		const wrapper = mount(
+		const wrapper = render(
 			<Readonly
 				store={controller.getStore()}
 				control={control}
@@ -133,12 +149,12 @@ describe("textfield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const readonlyWrapper = wrapper.find("div[data-id='properties-test-readonly']");
-		expect(readonlyWrapper.find("span").prop("disabled")).to.equal(true);
+		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
+		expect(readonlyWrapper.querySelector("span").outerHTML.includes("disabled")).to.equal(true);
 	});
 	it("readonly renders when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
-		const wrapper = mount(
+		const wrapper = render(
 			<Readonly
 				store={controller.getStore()}
 				control={control}
@@ -146,8 +162,8 @@ describe("textfield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const readonlyWrapper = wrapper.find("div[data-id='properties-test-readonly']");
-		expect(readonlyWrapper.hasClass("hide")).to.equal(true);
+		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
+		expect(readonlyWrapper.className.includes("hide")).to.equal(true);
 	});
 	it("readonly renders messages correctly", () => {
 		controller.updateErrorMessage(propertyId, {
@@ -155,7 +171,7 @@ describe("textfield-control renders correctly", () => {
 			type: "warning",
 			text: "bad value"
 		});
-		const wrapper = mount(
+		const wrapper = render(
 			<Readonly
 				store={controller.getStore()}
 				control={control}
@@ -163,8 +179,8 @@ describe("textfield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const readonlyWrapper = wrapper.find("div[data-id='properties-test-readonly']");
-		const messageWrapper = readonlyWrapper.find("div.properties-validation-message");
+		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
+		const messageWrapper = readonlyWrapper.querySelectorAll("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
 	});
 });
@@ -172,19 +188,19 @@ describe("textfield-control renders correctly", () => {
 describe("readonly classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(readonlyParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(readonlyParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("readonly should have custom classname defined", () => {
-		expect(wrapper.find(".readonly-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".readonly-control-class")).to.have.length(1);
 	});
 
 	it("readonly should have custom classname defined in table cells", () => {
-		propertyUtils.openSummaryPanel(wrapper, "readonly-table-summary");
-		const tableControlDiv = wrapper.find("div[data-id='properties-readonly-table-summary-ctrls']");
-		expect(tableControlDiv.find(".table-readonly-control-class")).to.have.length(1);
-		expect(tableControlDiv.find(".table-on-panel-readonly-control-class")).to.have.length(1);
-		expect(tableControlDiv.find(".table-subpanel-readonly-control-class")).to.have.length(1);
+		propertyUtilsRTL.openSummaryPanel(wrapper, "readonly-table-summary");
+		const tableControlDiv = wrapper.container.querySelector("div[data-id='properties-readonly-table-summary-ctrls']");
+		expect(tableControlDiv.querySelectorAll(".table-readonly-control-class")).to.have.length(1);
+		expect(tableControlDiv.querySelectorAll(".table-on-panel-readonly-control-class")).to.have.length(1);
+		expect(tableControlDiv.querySelectorAll(".table-subpanel-readonly-control-class")).to.have.length(1);
 	});
 });
