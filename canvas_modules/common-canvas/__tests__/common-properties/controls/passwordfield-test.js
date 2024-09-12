@@ -17,11 +17,13 @@
 import React from "react";
 import Passwordfield from "./../../../src/common-properties/controls/passwordfield";
 import Controller from "./../../../src/common-properties/properties-controller";
-import { mount } from "../../_utils_/mount-utils.js";
+import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
-import propertyUtils from "../../_utils_/property-utils";
+import { expect as expectJest } from "@jest/globals";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 
 import passwordfieldParamDef from "../../test_resources/paramDefs/passwordfield_paramDef.json";
+import { fireEvent } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -38,9 +40,20 @@ const control = {
 		isList: false
 	}
 };
-propertyUtils.setControls(controller, [control]);
+propertyUtilsRTL.setControls(controller, [control]);
 const propertyId = { name: "test-password" };
 
+const mockPasswordfield = jest.fn();
+jest.mock("./../../../src/common-properties/controls/passwordfield",
+	() => (props) => mockPasswordfield(props)
+);
+
+mockPasswordfield.mockImplementation((props) => {
+	const PasswordfieldComp = jest.requireActual(
+		"./../../../src/common-properties/controls/passwordfield",
+	).default;
+	return <PasswordfieldComp {...props} />;
+});
 
 describe("Passwordfield renders correctly", () => {
 	beforeEach(() => {
@@ -51,7 +64,7 @@ describe("Passwordfield renders correctly", () => {
 		);
 	});
 	it("Passwordfield props should have been defined", () => {
-		const wrapper = mount(
+		render(
 			<Passwordfield
 				store={controller.getStore()}
 				control={control}
@@ -59,12 +72,15 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("controller")).to.equal(controller);
-		expect(wrapper.prop("propertyId")).to.equal(propertyId);
+		expectJest(mockPasswordfield).toHaveBeenCalledWith({
+			"store": controller.getStore(),
+			"controller": controller,
+			"control": control,
+			"propertyId": propertyId,
+		});
 	});
 	it("Passwordfield type set correctly", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<Passwordfield
 				store={controller.getStore()}
 				control={control}
@@ -72,12 +88,12 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
-		const input = passwordWrapper.find("input");
-		expect(input.getDOMNode().type).to.equal("password");
+		const passwordWrapper = wrapper.container.querySelector("div[data-id='properties-test-password']");
+		const input = passwordWrapper.querySelector("input");
+		expect(input.type).to.equal("password");
 	});
 	it("Passwordfield should update value", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<Passwordfield
 				store={controller.getStore()}
 				control={control}
@@ -85,13 +101,13 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
-		const input = passwordWrapper.find("input");
-		input.simulate("change", { target: { value: "My secret password" } });
+		const passwordWrapper = wrapper.container.querySelector("div[data-id='properties-test-password']");
+		const input = passwordWrapper.querySelector("input");
+		fireEvent.change(input, { target: { value: "My secret password" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal("My secret password");
 	});
 	it("Passwordfield should set placeholder", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<Passwordfield
 				store={controller.getStore()}
 				control={control}
@@ -99,15 +115,15 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
-		const input = passwordWrapper.find("input");
-		expect(input.getDOMNode().placeholder).to.equal(control.additionalText);
+		const passwordWrapper = wrapper.container.querySelector("div[data-id='properties-test-password']");
+		const input = passwordWrapper.querySelector("input");
+		expect(input.placeholder).to.equal(control.additionalText);
 	});
 	it("Passwordfield handles null correctly", () => {
 		controller.setPropertyValues(
 			{ "test-password": null }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<Passwordfield
 				store={controller.getStore()}
 				control={control}
@@ -115,16 +131,16 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
-		const input = passwordWrapper.find("input");
-		input.simulate("change", { target: { value: "My new value" } });
+		const passwordWrapper = wrapper.container.querySelector("div[data-id='properties-test-password']");
+		const input = passwordWrapper.querySelector("input");
+		fireEvent.change(input, { target: { value: "My new value" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal("My new value");
 	});
 	it("Passwordfield handles undefined correctly", () => {
 		controller.setPropertyValues(
 			{ }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<Passwordfield
 				store={controller.getStore()}
 				control={control}
@@ -132,14 +148,14 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
-		const input = passwordWrapper.find("input");
-		input.simulate("change", { target: { value: "My new value" } });
+		const passwordWrapper = wrapper.container.querySelector("div[data-id='properties-test-password']");
+		const input = passwordWrapper.querySelector("input");
+		fireEvent.change(input, { target: { value: "My new value" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal("My new value");
 	});
 	it("readonly renders when disabled", () => {
 		controller.updateControlState(propertyId, "disabled");
-		const wrapper = mount(
+		const wrapper = render(
 			<Passwordfield
 				store={controller.getStore()}
 				control={control}
@@ -147,12 +163,12 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
-		expect(passwordWrapper.find("input").prop("disabled")).to.equal(true);
+		const passwordWrapper = wrapper.container.querySelector("div[data-id='properties-test-password']");
+		expect(passwordWrapper.querySelector("input").disabled).to.equal(true);
 	});
 	it("Passwordfield renders when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
-		const wrapper = mount(
+		const wrapper = render(
 			<Passwordfield
 				store={controller.getStore()}
 				control={control}
@@ -160,8 +176,8 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
-		expect(passwordWrapper.hasClass("hide")).to.equal(true);
+		const passwordWrapper = wrapper.container.querySelector("div[data-id='properties-test-password']");
+		expect(passwordWrapper.className.includes("hide")).to.equal(true);
 	});
 	it("Passwordfield renders messages correctly", () => {
 		controller.updateErrorMessage(propertyId, {
@@ -169,7 +185,7 @@ describe("Passwordfield renders correctly", () => {
 			type: "warning",
 			text: "bad checkbox value"
 		});
-		const wrapper = mount(
+		const wrapper = render(
 			<Passwordfield
 				store={controller.getStore()}
 				control={control}
@@ -177,12 +193,12 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
-		const messageWrapper = passwordWrapper.find("div.cds--form-requirement");
+		const passwordWrapper = wrapper.container.querySelector("div[data-id='properties-test-password']");
+		const messageWrapper = passwordWrapper.querySelectorAll("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 	it("Passwordfield eyeIcon tooltip default content appears correctly", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<Passwordfield
 				store={controller.getStore()}
 				control={control}
@@ -190,15 +206,15 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
+		const passwordWrapper = wrapper.container.querySelector("div[data-id='properties-test-password']");
 		// Verify the eye icon
-		const eyeIcon = passwordWrapper.find("button");
+		const eyeIcon = passwordWrapper.querySelectorAll("button");
 		expect(eyeIcon).to.have.length(1);
-		const eyeIconAriaLabelledBy = eyeIcon.prop("aria-labelledby");
+		const eyeIconAriaLabelledBy = eyeIcon[0].getAttribute("aria-labelledby");
 		// Verify custom tooltip content
-		expect(passwordWrapper.find(`span[id='${eyeIconAriaLabelledBy}']`).text()).to.equal(control.tooltip.defaultShow);
-		eyeIcon.simulate("click");
-		expect(passwordWrapper.find(`span[id='${eyeIconAriaLabelledBy}']`).text()).to.equal(control.tooltip.defaultHide);
+		expect(passwordWrapper.querySelector(`span[id='${eyeIconAriaLabelledBy}']`).textContent).to.equal(control.tooltip.defaultShow);
+		fireEvent.click(eyeIcon[0]);
+		expect(passwordWrapper.querySelector(`span[id='${eyeIconAriaLabelledBy}']`).textContent).to.equal(control.tooltip.defaultHide);
 	});
 
 	it("Passwordfield helperText is rendered correctly", () => {
@@ -206,7 +222,7 @@ describe("Passwordfield renders correctly", () => {
 		controller.setPropertyValues(
 			{ }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<Passwordfield
 				store={controller.getStore()}
 				control={control}
@@ -214,39 +230,39 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const helpTextWrapper = wrapper.find("div[data-id='properties-test-password']");
-		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
+		const helpTextWrapper = wrapper.container.querySelector("div[data-id='properties-test-password']");
+		expect(helpTextWrapper.querySelector("div.cds--form__helper-text").textContent).to.equal(control.helperText);
 	});
 });
 
 describe("passwordfield classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(passwordfieldParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(passwordfieldParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("passwordfield should have custom classname defined", () => {
-		expect(wrapper.find(".passwordfield-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".passwordfield-control-class")).to.have.length(1);
 	});
 
 	it("Passwordfield eyeIcon tooltip custom content appears correctly", () => {
-		const passwordWrapper = wrapper.find("div[data-id='properties-pwd']");
+		const passwordWrapper = wrapper.container.querySelector("div[data-id='properties-pwd']");
 		// Verify the eye icon
-		const eyeIcon = passwordWrapper.find("button");
+		const eyeIcon = passwordWrapper.querySelectorAll("button");
 		expect(eyeIcon).to.have.length(1);
-		const eyeIconAriaLabelledBy = eyeIcon.prop("aria-labelledby");
+		const eyeIconAriaLabelledBy = eyeIcon[0].getAttribute("aria-labelledby");
 		// Verify custom tooltip content
-		expect(passwordWrapper.find(`span[id='${eyeIconAriaLabelledBy}']`).text()).to.equal(control.tooltip.customShow);
-		eyeIcon.simulate("click");
-		expect(passwordWrapper.find(`span[id='${eyeIconAriaLabelledBy}']`).text()).to.equal(control.tooltip.customHide);
+		expect(passwordWrapper.querySelector(`span[id='${eyeIconAriaLabelledBy}']`).textContent).to.equal(control.tooltip.customShow);
+		fireEvent.click(eyeIcon[0]);
+		expect(passwordWrapper.querySelector(`span[id='${eyeIconAriaLabelledBy}']`).textContent).to.equal(control.tooltip.customHide);
 	});
 
 	it("passwordfield should have custom classname defined in table cells", () => {
-		propertyUtils.openSummaryPanel(wrapper, "passwordfield-table-summary");
-		const tableControlDiv = wrapper.find("div[data-id='properties-passwordfield-table-summary-ctrls']");
-		expect(tableControlDiv.find(".table-passwordfield-control-class")).to.have.length(3);
-		expect(tableControlDiv.find(".table-on-panel-passwordfield-control-class")).to.have.length(3);
-		expect(tableControlDiv.find(".table-subpanel-passwordfield-control-class")).to.have.length(3);
+		propertyUtilsRTL.openSummaryPanel(wrapper, "passwordfield-table-summary");
+		const tableControlDiv = wrapper.container.querySelector("div[data-id='properties-passwordfield-table-summary-ctrls']");
+		expect(tableControlDiv.querySelectorAll(".table-passwordfield-control-class")).to.have.length(3);
+		expect(tableControlDiv.querySelectorAll(".table-on-panel-passwordfield-control-class")).to.have.length(3);
+		expect(tableControlDiv.querySelectorAll(".table-subpanel-passwordfield-control-class")).to.have.length(3);
 	});
 });

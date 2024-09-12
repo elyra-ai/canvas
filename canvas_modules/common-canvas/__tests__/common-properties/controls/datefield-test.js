@@ -16,15 +16,30 @@
 /* eslint no-console: "off" */
 
 import React from "react";
-import propertyUtils from "../../_utils_/property-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import DatefieldControl from "../../../src/common-properties/controls/datefield";
-import { mount } from "../../_utils_/mount-utils.js";
+import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
+import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
+import CommonProperties from "./../../../src/common-properties/common-properties.jsx";
 import datefieldParamDef from "../../test_resources/paramDefs/datefield_paramDef.json";
 import DateField from "../../../src/common-properties/controls/datefield";
+import { fireEvent } from "@testing-library/react";
 
 const DATEFIELD_PARAM_DEF = require("../../test_resources/paramDefs/datefield_paramDef.json");
+
+const mockDatefield = jest.fn();
+jest.mock("../../../src/common-properties/controls/datefield",
+	() => (props) => mockDatefield(props)
+);
+
+mockDatefield.mockImplementation((props) => {
+	const DatefieldComp = jest.requireActual(
+		"../../../src/common-properties/controls/datefield",
+	).default;
+	return <DatefieldComp {...props} />;
+});
 
 describe("datefield-control renders correctly", () => {
 	const controller = new Controller();
@@ -39,7 +54,7 @@ describe("datefield-control renders correctly", () => {
 		light: true
 	};
 	const controlItem = <span>"Label"</span>;
-	propertyUtils.setControls(controller, [control]);
+	propertyUtilsRTL.setControls(controller, [control]);
 	const propertyId = { name: "test-datefield" };
 
 	beforeEach(() => {
@@ -50,7 +65,7 @@ describe("datefield-control renders correctly", () => {
 		);
 	});
 	it("props should have been defined", () => {
-		const wrapper = mount(
+		render(
 			<DatefieldControl
 				store={controller.getStore()}
 				control={control}
@@ -59,13 +74,17 @@ describe("datefield-control renders correctly", () => {
 				controlItem={controlItem}
 			/>
 		);
-		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("controller")).to.equal(controller);
-		expect(wrapper.prop("propertyId")).to.equal(propertyId);
+		expectJest(mockDatefield).toHaveBeenCalledWith({
+			"store": controller.getStore(),
+			"controller": controller,
+			"control": control,
+			"propertyId": propertyId,
+			"controlItem": controlItem
+		});
 	});
 
 	it("should render a `DatefieldControl`", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<DatefieldControl
 				store={controller.getStore()}
 				control={control}
@@ -74,13 +93,14 @@ describe("datefield-control renders correctly", () => {
 				controlItem={controlItem}
 			/>
 		);
-		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		const input = dateWrapper.find("input");
+		const { container } = wrapper;
+		const dateWrapper = container.querySelector("div[data-id='properties-test-datefield']");
+		const input = dateWrapper.querySelectorAll("input");
 		expect(input).to.have.length(1);
 	});
 
 	it("should allow a valid date to be entered in `DatefieldControl`", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<DatefieldControl
 				store={controller.getStore()}
 				control={control}
@@ -89,14 +109,15 @@ describe("datefield-control renders correctly", () => {
 				controlItem={controlItem}
 			/>
 		);
-		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		const input = dateWrapper.find("input");
-		input.simulate("change", { target: { value: "2018-04-23" } });
+		const { container } = wrapper;
+		const dateWrapper = container.querySelector("div[data-id='properties-test-datefield']");
+		const input = dateWrapper.querySelector("input");
+		fireEvent.change(input, { target: { value: "2018-04-23" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal("2018-04-23");
 	});
 
 	it("should allow invalid format date to be entered in `DatefieldControl`", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<DatefieldControl
 				store={controller.getStore()}
 				control={control}
@@ -105,9 +126,10 @@ describe("datefield-control renders correctly", () => {
 				controlItem={controlItem}
 			/>
 		);
-		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		const input = dateWrapper.find("input");
-		input.simulate("change", { target: { value: "2-25-2016" } });
+		const { container } = wrapper;
+		const dateWrapper = container.querySelector("div[data-id='properties-test-datefield']");
+		const input = dateWrapper.querySelector("input");
+		fireEvent.change(input, { target: { value: "2-25-2016" } });
 
 		// When invalid dates are entered they are not rejected but accepted and a messages is displayed
 		// under the entry field to explain the error (see testcase below in next 'describe' section).
@@ -119,7 +141,7 @@ describe("datefield-control renders correctly", () => {
 
 
 	it("should set correct state null in `DatefieldControl`", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<DatefieldControl
 				store={controller.getStore()}
 				control={control}
@@ -128,14 +150,15 @@ describe("datefield-control renders correctly", () => {
 				controlItem={controlItem}
 			/>
 		);
-		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		const input = dateWrapper.find("input");
-		input.simulate("change", { target: { value: "" } });
+		const { container } = wrapper;
+		const dateWrapper = container.querySelector("div[data-id='properties-test-datefield']");
+		const input = dateWrapper.querySelector("input");
+		fireEvent.change(input, { target: { value: "" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal(null);
 	});
 
 	it("should set correct control type in `DatefieldControl`", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<DatefieldControl
 				store={controller.getStore()}
 				control={control}
@@ -144,13 +167,14 @@ describe("datefield-control renders correctly", () => {
 				controlItem={controlItem}
 			/>
 		);
-		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		const input = dateWrapper.find("input");
-		expect(input.getDOMNode().type).to.equal("text");
+		const { container } = wrapper;
+		const dateWrapper = container.querySelector("div[data-id='properties-test-datefield']");
+		const input = dateWrapper.querySelector("input");
+		expect(input.type).to.equal("text");
 	});
 
 	it("should set placeholder text in `DatefieldControl`", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<DatefieldControl
 				store={controller.getStore()}
 				control={control}
@@ -159,14 +183,15 @@ describe("datefield-control renders correctly", () => {
 				controlItem={controlItem}
 			/>
 		);
-		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		const input = dateWrapper.find("input");
-		expect(input.getDOMNode().placeholder).to.equal(control.additionalText);
+		const { container } = wrapper;
+		const dateWrapper = container.querySelector("div[data-id='properties-test-datefield']");
+		const input = dateWrapper.querySelector("input");
+		expect(input.placeholder).to.equal(control.additionalText);
 	});
 
 	it("should render `DatefieldControl` with light mode disabled", () => {
 		controller.setLight(false);
-		const wrapper = mount(
+		const wrapper = render(
 			<DatefieldControl
 				store={controller.getStore()}
 				control={control}
@@ -175,15 +200,16 @@ describe("datefield-control renders correctly", () => {
 				controlItem={controlItem}
 			/>
 		);
-		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		expect(dateWrapper.find(".cds--text-input--light")).to.have.length(0);
+		const { container } = wrapper;
+		const dateWrapper = container.querySelector("div[data-id='properties-test-datefield']");
+		expect(dateWrapper.querySelectorAll(".cds--text-input--light")).to.have.length(0);
 	});
 	it("Datefield helperText is rendered correctly", () => {
 		control.helperText = "Datefield helperText";
 		controller.setPropertyValues(
 			{ }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<DateField
 				store={controller.getStore()}
 				control={control}
@@ -191,8 +217,9 @@ describe("datefield-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const helpTextWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
+		const { container } = wrapper;
+		const helpTextWrapper = container.querySelector("div[data-id='properties-test-datefield']");
+		expect(helpTextWrapper.querySelector("div.cds--form__helper-text").textContent).to.equal(control.helperText);
 	});
 
 	it("DateField renders readonly correctly", () => {
@@ -200,7 +227,7 @@ describe("datefield-control renders correctly", () => {
 		controller.setPropertyValues(
 			{ }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<DateField
 				store={controller.getStore()}
 				control={control}
@@ -209,8 +236,9 @@ describe("datefield-control renders correctly", () => {
 				readOnly
 			/>
 		);
-		const readOnlyWrapper = wrapper.find("div[data-id='properties-test-datefield']");
-		expect(readOnlyWrapper.find("TextInput").prop("readOnly")).to.equal(control.readOnly);
+		const { container } = wrapper;
+		const readOnlyWrapper = container.querySelector("div[data-id='properties-test-datefield']");
+		expect(readOnlyWrapper.querySelector("input").readOnly).to.equal(control.readOnly);
 	});
 });
 
@@ -218,7 +246,7 @@ describe("error messages renders correctly for datefield controls", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(DATEFIELD_PARAM_DEF);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(DATEFIELD_PARAM_DEF);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
@@ -227,13 +255,13 @@ describe("error messages renders correctly for datefield controls", () => {
 	});
 
 	it("should show error message when date with invalid format is entered", () => {
-
+		const { container } = wrapper;
 		// Simulate entering an invalid date information
-		let dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
-		const input = dateWrapper.find("input");
-		input.simulate("change", { target: { value: "qqqqq" } });
+		let dateWrapper = container.querySelector("div[data-id='properties-date_ymd']");
+		const input = dateWrapper.querySelector("input");
+		fireEvent.change(input, { target: { value: "qqqqq" } });
 
-		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
+		dateWrapper = container.querySelector("div[data-id='properties-date_ymd']");
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
 			"propertyId": {
@@ -246,15 +274,15 @@ describe("error messages renders correctly for datefield controls", () => {
 		};
 		const actual = controller.getErrorMessage({ name: "date_ymd" });
 		expect(datefieldErrorMessages).to.eql(actual);
-		let messageWrapper = dateWrapper.find("div.cds--form-requirement");
+		let messageWrapper = dateWrapper.querySelectorAll("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
-		input.simulate("change", { target: { value: "2012-2-25" } });
+		fireEvent.change(input, { target: { value: "2012-2-25" } });
 
-		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
+		dateWrapper = container.querySelector("div[data-id='properties-date_ymd']");
 		// Ensure the error message is no longer displayed.
-		messageWrapper = dateWrapper.find("div.cds--form-requirement");
+		messageWrapper = dateWrapper.querySelectorAll("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -263,11 +291,12 @@ describe("error messages renders correctly for datefield controls", () => {
 	// but cannot be parsed as ISO format dates.
 	it("should show error message when date with year number more than 9999 is entered", () => {
 		// Simulate entering an invalid date information
-		let dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
-		const input = dateWrapper.find("input");
-		input.simulate("change", { target: { value: "10000-1-1" } });
+		const { container } = wrapper;
+		let dateWrapper = container.querySelector("div[data-id='properties-date_ymd']");
+		const input = dateWrapper.querySelector("input");
+		fireEvent.change(input, { target: { value: "10000-1-1" } });
 
-		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
+		dateWrapper = container.querySelector("div[data-id='properties-date_ymd']");
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
 			"propertyId": {
@@ -281,25 +310,26 @@ describe("error messages renders correctly for datefield controls", () => {
 		const actual = controller.getErrorMessage({ name: "date_ymd" });
 
 		expect(datefieldErrorMessages).to.eql(actual);
-		let messageWrapper = dateWrapper.find("div.cds--form-requirement");
+		let messageWrapper = dateWrapper.querySelectorAll("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
-		input.simulate("change", { target: { value: "9999-2-25" } });
+		fireEvent.change(input, { target: { value: "9999-2-25" } });
 
 		// Ensure the error message is no longer displayed.
-		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
-		messageWrapper = dateWrapper.find("div.cds--form-requirement");
+		dateWrapper = container.querySelector("div[data-id='properties-date_ymd']");
+		messageWrapper = dateWrapper.querySelectorAll("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
 	it("should show error message when empty string is entered in a required field", () => {
 		// Simulate entering an empty string in a required field
-		let dateWrapper = wrapper.find("div[data-id='properties-date_mdy']");
-		const input = dateWrapper.find("input");
-		input.simulate("change", { target: { value: "" } });
+		const { container } = wrapper;
+		let dateWrapper = container.querySelector("div[data-id='properties-date_mdy']");
+		const input = dateWrapper.querySelector("input");
+		fireEvent.change(input, { target: { value: "" } });
 
-		dateWrapper = wrapper.find("div[data-id='properties-date_mdy']");
+		dateWrapper = container.querySelector("div[data-id='properties-date_mdy']");
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
 			"propertyId": {
@@ -312,77 +342,106 @@ describe("error messages renders correctly for datefield controls", () => {
 		};
 		const actual = controller.getErrorMessage({ name: "date_mdy" });
 		expect(datefieldErrorMessages).to.eql(actual);
-		let messageWrapper = dateWrapper.find("div.cds--form-requirement");
+		let messageWrapper = dateWrapper.querySelectorAll("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
-		input.simulate("change", { target: { value: "2-25-1958" } });
+		fireEvent.change(input, { target: { value: "2-25-1958" } });
 
 		// Ensure the error message is no longer displayed.
-		dateWrapper = wrapper.find("div[data-id='properties-date_mdy']");
-		messageWrapper = dateWrapper.find("div.cds--form-requirement");
+		dateWrapper = container.querySelector("div[data-id='properties-date_mdy']");
+		messageWrapper = dateWrapper.querySelectorAll("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
 	it("should not show error message when empty string is entered in a non-required field", () => {
 		// Simulate entering an empty string in a non-required field
-		let dateWrapper = wrapper.find("div[data-id='properties-date_ymd_non_req']");
-		const input = dateWrapper.find("input");
-		input.simulate("change", { target: { value: "" } });
+		const { container } = wrapper;
+		let dateWrapper = container.querySelector("div[data-id='properties-date_ymd_non_req']");
+		const input = dateWrapper.querySelector("input");
+		fireEvent.change(input, { target: { value: "" } });
 
 		// Ensure an error message is not displayed.
-		dateWrapper = wrapper.find("div[data-id='properties-date_ymd_non_req']");
-		const messageWrapper = dateWrapper.find("div.cds--form-requirement");
+		dateWrapper = container.querySelector("div[data-id='properties-date_ymd_non_req']");
+		const messageWrapper = dateWrapper.querySelectorAll("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
 	it("should reveal date field when checkbox is clicked", () => {
 		// First check the hidden field is not displayed (style.display should be
 		// set to 'none').
-		let dateWrapper = wrapper.find("div[data-id='properties-hidden_date']");
+		const { container, rerender } = wrapper;
+		let dateWrapper = container.querySelectorAll("div[data-id='properties-hidden_date']");
 		expect(dateWrapper).to.have.length(0);
 		controller.updatePropertyValue({ name: "hide_date_field" }, false);
-		wrapper.update();
+		const rerendered = propertyUtilsRTL.flyoutEditorFormRerender(DATEFIELD_PARAM_DEF);
+		const { propertiesInfo, propertiesConfig, callbacks, customControls, customConditionOps } = rerendered;
+		rerender(
+			<div className="properties-right-flyout">
+				<CommonProperties
+					propertiesInfo={propertiesInfo}
+					propertiesConfig={propertiesConfig}
+					callbacks={callbacks}
+					customControls={customControls}
+					customConditionOps={customConditionOps}
+				/>
+			</div>);
+
 		// After the checkbox is unchecked there should be no in-line style
 		// applied to the date field (which makes it be hidden).
-		dateWrapper = wrapper.find("div[data-id='properties-hidden_date']");
+		dateWrapper = container.querySelectorAll("div[data-id='properties-hidden_date']");
 		expect(dateWrapper).to.have.length(1);
 	});
 
 	it("should enable date field when checkbox is clicked", () => {
 		// First check the disbaled field is showing disabled color.
-		let dateWrapper = wrapper.find("div[data-id='properties-disabled_date']");
-		expect(dateWrapper.find("input").prop("disabled")).to.equal(true);
+		const { container, rerender } = wrapper;
+		let dateWrapper = container.querySelector("div[data-id='properties-disabled_date']");
+		expect(dateWrapper.querySelector("input").disabled).to.equal(true);
 		controller.updatePropertyValue({ name: "disable_date_field" }, false);
-		wrapper.update();
+		const rerendered = propertyUtilsRTL.flyoutEditorFormRerender(DATEFIELD_PARAM_DEF);
+		const { propertiesInfo, propertiesConfig, callbacks, customControls, customConditionOps } = rerendered;
+		rerender(
+			<div className="properties-right-flyout">
+				<CommonProperties
+					propertiesInfo={propertiesInfo}
+					propertiesConfig={propertiesConfig}
+					callbacks={callbacks}
+					customControls={customControls}
+					customConditionOps={customConditionOps}
+				/>
+			</div>);
 		// After the checkbox is unchecked there should be no in-line style
 		// applied to the date field (which makes it show as enabled).
-		dateWrapper = wrapper.find("div[data-id='properties-disabled_date']");
-		expect(dateWrapper.find("input").prop("disabled")).to.equal(false);
+		dateWrapper = container.querySelector("div[data-id='properties-disabled_date']");
+		expect(dateWrapper.querySelector("input").disabled).to.equal(false);
 	});
 
 	it("should render `DatefieldControl` with light mode enabled", () => {
-		const dateWrapper = wrapper.find("div[data-id='properties-ctrl-date_mdy']");
-		expect(dateWrapper.find(".cds--layer-two")).to.have.length(1); // light enabled
-		expect(dateWrapper.find(".cds--layer-one")).to.have.length(0); // light disabled
+		const { container } = wrapper;
+		const dateWrapper = container.querySelector("div[data-id='properties-ctrl-date_mdy']");
+		expect(dateWrapper.querySelectorAll(".cds--layer-two")).to.have.length(1); // light enabled
+		expect(dateWrapper.querySelectorAll(".cds--layer-one")).to.have.length(0); // light disabled
 	});
 });
 
 describe("datefield classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(datefieldParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(datefieldParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("datefield should have custom classname defined", () => {
-		expect(wrapper.find(".datefield-control-class")).to.have.length(1);
+		const { container } = wrapper;
+		expect(container.querySelectorAll(".datefield-control-class")).to.have.length(1);
 	});
 
 	it("datefield should have custom classname defined in table cells", () => {
-		propertyUtils.openSummaryPanel(wrapper, "datefield-table-summary");
-		expect(wrapper.find(".table-datefield-control-class")).to.have.length(1);
-		expect(wrapper.find(".table-on-panel-datefield-control-class")).to.have.length(1);
-		expect(wrapper.find(".table-subpanel-datefield-control-class")).to.have.length(1);
+		const { container } = wrapper;
+		propertyUtilsRTL.openSummaryPanel(wrapper, "datefield-table-summary");
+		expect(container.querySelectorAll(".table-datefield-control-class")).to.have.length(1);
+		expect(container.querySelectorAll(".table-on-panel-datefield-control-class")).to.have.length(1);
+		expect(container.querySelectorAll(".table-subpanel-datefield-control-class")).to.have.length(1);
 	});
 });
