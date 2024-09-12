@@ -19,6 +19,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
 
+const MIN_WIDTH = 300;
+const MAX_WIDTH_EXTEND_PERCENT = 0.7; // Should cover atmost 70% of available width
 class CommonCanvasRightFlyout extends React.Component {
 	constructor(props) {
 		super(props);
@@ -48,8 +50,22 @@ class CommonCanvasRightFlyout extends React.Component {
 	onMouseMoveX(e) {
 		if (e.clientX) {
 			const newWidth = this.startWidth + (this.posX - e.clientX);
-			this.commonCanvasRightFlyout.style.width = `${newWidth}px`;
+			this.commonCanvasRightFlyout.style.width = `${this.limitWidth(newWidth)}px`;
 		}
+	}
+
+	limitWidth(wth) {
+		const canvasContainer = document.getElementById(this.props.containingDivId);
+		let width = wth;
+
+		if (canvasContainer) {
+			// Max Width should be 70% of the total available width (canvas + rightflyout)
+			const totalAvialableWidth = canvasContainer.getBoundingClientRect().width + this.commonCanvasRightFlyout.offsetWidth;
+			const maxWidth = MAX_WIDTH_EXTEND_PERCENT * totalAvialableWidth;
+			width = Math.min(Math.max(width, MIN_WIDTH), maxWidth);
+		}
+
+		return width;
 	}
 
 	render() {
@@ -78,6 +94,10 @@ class CommonCanvasRightFlyout extends React.Component {
 }
 
 CommonCanvasRightFlyout.propTypes = {
+	// Provided by Common Canvas
+	canvasController: PropTypes.object,
+	containingDivId: PropTypes.string,
+
 	// Provided by Redux
 	isOpen: PropTypes.bool,
 	content: PropTypes.object,
