@@ -31,18 +31,18 @@ $properties-resize-button-size: $spacing-06;
 	position: relative;
 	transition: motion(entrance, expressive) $duration-moderate-01;
 
-	// &.properties-small {
-	// 	width: $common-properties-small-flyout-width;
-	// }
-	// &.properties-medium {
-	// 	width: $common-properties-medium-flyout-width;
-	// }
-	// &.properties-large {
-	// 	width: $common-properties-large-flyout-width;
-	// }
-	// &.properties-max {
-	// 	width: $common-properties-max-flyout-width;
-	// }
+	&.properties-small {
+		width: $common-properties-small-flyout-width;
+	}
+	&.properties-medium {
+		width: $common-properties-medium-flyout-width;
+	}
+	&.properties-large {
+		width: $common-properties-large-flyout-width;
+	}
+	&.properties-max {
+		width: $common-properties-max-flyout-width;
+	}
 }
 
 .properties-btn-resize {

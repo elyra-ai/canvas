@@ -51,6 +51,12 @@ class CommonCanvasRightFlyout extends React.Component {
 		if (e.clientX) {
 			const newWidth = this.startWidth + (this.posX - e.clientX);
 			this.commonCanvasRightFlyout.style.width = `${this.limitWidth(newWidth)}px`;
+
+			// In case of Common Properties remove hardcoded width to allow content to take full width.
+			const righFlyoutChildNode = this.commonCanvasRightFlyout.childNodes[1];
+			if (righFlyoutChildNode && righFlyoutChildNode.className.includes("properties-right-flyout")) {
+				righFlyoutChildNode.classList.remove("properties-small", "properties-medium", "properties-large", "properties-max");
+			}
 		}
 	}
 
