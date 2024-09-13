@@ -42,7 +42,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	NORTH, SOUTH, EAST, WEST,
-	WYSIWYG}
+	WYSIWYG }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";

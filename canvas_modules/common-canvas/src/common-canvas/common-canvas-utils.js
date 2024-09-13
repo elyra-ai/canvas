@@ -1355,8 +1355,8 @@ export default class CanvasUtils {
 		return (luma < 108);
 	}
 
-	// Applies the outlineStyle format to the D3 comment selection passed in
-	// if one exists in the formats array passed in.
+	// Applies the outlineStyle format to the D3 comment selection passed in,
+	// if one exists, in the formats array passed in.
 	static applyOutlineStyle(commentSel, formats) {
 		if (formats?.length > 0) {
 			formats.forEach((f) => {
@@ -1368,7 +1368,7 @@ export default class CanvasUtils {
 		}
 	}
 
-	// Applies all formats from the formats array that are not outlineStyle to the
+	// Applies all formats from the formats array, that are not outlineStyle, to the
 	// D3 comment selection passed in.
 	static applyNonOutlineStyle(commentSel, formats) {
 		if (formats?.length > 0) {
