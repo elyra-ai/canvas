@@ -209,17 +209,18 @@ export default class SvgCanvasTextArea {
 	markdownActionHandler(action, evt) {
 		this.logger.log("markdownActionHandler - action = " + action);
 
-		var sel = window.getSelection();
+		const textDiv = this.canvasDiv.selectAll(".d3-comment-text-entry")
+			.node();
 
-		const start = Math.min(sel.anchorOffset, sel.focusOffset);
-		const end = Math.max(sel.anchorOffset, sel.focusOffset);
-		const text = sel.anchorNode.nodeValue;
+		const pos = CanvasUtils.getSelectionPositions(textDiv);
+
+		const text = textDiv.innerText;
 
 		if (text) { // In Firefox, text can sometimes be null when adding newlines.
-			const mdObj = SvgCanvasMarkdown.processMarkdownAction(action, text, start, end);
+			const mdObj = SvgCanvasMarkdown.processMarkdownAction(action, text, pos.start, pos.end);
 			if (mdObj) {
 				evt.preventDefault();
-				this.addTextToTextArea(mdObj, sel.anchorNode, text);
+				this.addTextToTextArea(mdObj, textDiv);
 			}
 		}
 	}
@@ -370,25 +371,17 @@ export default class SvgCanvasTextArea {
 	// passed in. We use execCommand because this adds the inserted text to the
 	// textarea's undo/redo stack whereas setting the text directly into the
 	// textarea control does not.
-	addTextToTextArea(mdObj, commentEntryElement, oldText) {
+	addTextToTextArea(mdObj, commentEntryElement) {
 		this.addingTextToTextArea = true;
-
 		const newText = unescapeText(mdObj.newText);
-		this.replaceText(commentEntryElement, oldText, newText, mdObj.newStart, mdObj.newEnd);
+
+		commentEntryElement.focus();
+		CanvasUtils.selectNodeContents(commentEntryElement);
+
+		document.execCommand("insertText", false, newText);
+		CanvasUtils.selectNodeRange(commentEntryElement, mdObj.newStart, mdObj.newEnd);
 
 		this.addingTextToTextArea = false;
-	}
-
-	replaceText(commentEntryElement, oldText, newText, start, end) {
-		this.setCursor(commentEntryElement, 0, oldText.length);
-		var sel = window.getSelection();
-		const range = sel.getRangeAt(0);
-		range.deleteContents();
-
-		const textNode = document.createTextNode(newText);
-		range.insertNode(textNode);
-
-		this.setCursor(textNode, start, end);
 	}
 
 	autoSizeComment(textArea, data) {
@@ -480,8 +473,8 @@ export default class SvgCanvasTextArea {
 	}
 
 	// Increases the size of the editable multi-line text area for a label based
-	//  on the characters entered, and also ensures the maximum number of
-	//  characters for the label, if one is provided, is not exceeded.
+	// on the characters entered, and also ensures the maximum number of
+	// characters for the label, if one is provided, is not exceeded.
 	// This callback works for editable multi-line node labels and also
 	// editable multi-line text decorations for either nodes or links.
 	autoSizeMultiLineLabel(textArea, data) {

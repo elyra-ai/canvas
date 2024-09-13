@@ -43,7 +43,7 @@
             {
               "id": "ee6f7895-ccef-4189-9940-398c41c07c38",
               "x_pos": 24.966171264648438,
-              "y_pos": 509.3447265625,
+              "y_pos": 521.72900390625,
               "width": 242.50255393981934,
               "height": 281.0437316894531,
               "class_name": "d3-comment-rect",
@@ -55,7 +55,7 @@
               "x_pos": 27.606948852539062,
               "y_pos": 336.63519287109375,
               "width": 242,
-              "height": 152,
+              "height": 172.02658081054688,
               "content": "Headings using repeated equals\n\nHeading One\n========\n\nHeading using repeated dashes\n\nHeading Two\n---------",
               "associated_id_refs": []
             },
