@@ -1355,6 +1355,32 @@ export default class CanvasUtils {
 		return (luma < 108);
 	}
 
+	// Applies the outlineStyle format to the D3 comment selection passed in
+	// if one exists in the formats array passed in.
+	static applyOutlineStyle(commentSel, formats) {
+		if (formats?.length > 0) {
+			formats.forEach((f) => {
+				if (f.type === "outlineStyle") { // Only apply outline style to outer <div>
+					const { field, value } = CanvasUtils.convertFormat(f);
+					commentSel.style(field, value);
+				}
+			});
+		}
+	}
+
+	// Applies all formats from the formats array that are not outlineStyle to the
+	// D3 comment selection passed in.
+	static applyNonOutlineStyle(commentSel, formats) {
+		if (formats?.length > 0) {
+			formats.forEach((f) => {
+				if (f.type !== "outlineStyle") { // Only apply outline style to outer <div>
+					const { field, value } = CanvasUtils.convertFormat(f);
+					commentSel.style(field, value);
+				}
+			});
+		}
+	}
+
 	// Returns an object containing a CSS field and value that
 	// can be applied to a <div> contining text based on the
 	// format type and action passed in.

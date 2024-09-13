@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 /* eslint no-invalid-this: "off" */
+/* eslint no-lonely-if: "off" */
 
 import * as d3Selection from "d3-selection";
 const d3 = Object.assign({}, d3Selection);
@@ -46,7 +47,7 @@ const RAB_KEY = 190; // Right angle bracket >
 const SEVEN_KEY = 55;
 const EIGHT_KEY = 56;
 
-const SCROLL_PADDING = 12;
+const SCROLL_PADDING = 2;
 
 const WHITE = "#FFFFFF";
 const BLACK = "#000000";
@@ -105,11 +106,10 @@ export default class SvgCanvasTextArea {
 			yPos: 0,
 			width: d.width,
 			height: d.height,
-			isScrollable: d.isScrollable, // TODO - read from comment layout when canvas layout is refactored.
+			autoSize: d.autoSize, // TODO - read from comment layout when canvas layout is refactored.
 			contentType: d.contentType,
 			formats: d.formats,
 			newFormats: cloneDeep(d.formats),
-			className: "d3-comment-entry",
 			parentDomObj: parentDomObj,
 			keyboardInputCallback: d.contentType !== WYSIWYG && this.config.enableMarkdownInComments
 				? this.commentKeyboardHandler.bind(this)
@@ -119,14 +119,7 @@ export default class SvgCanvasTextArea {
 			closeTextAreaCallback: this.closeCommentTextArea.bind(this)
 		};
 
-
-		// A WYSIWG comment is edited by making the inner <div> editable.
-		// Regular comments are edited with a textarea.
-		if (d.contentType === WYSIWYG) {
-			this.displayEditableDiv(this.editingTextData);
-		} else {
-			this.displayTextArea(this.editingTextData);
-		}
+		this.displayEditableDiv(this.editingTextData);
 
 		if (this.dispUtils.isDisplayingFullPage()) {
 			const pos = this.getCommentToolbarPosCallback(d);
@@ -175,10 +168,9 @@ export default class SvgCanvasTextArea {
 		// If there is a relatedTarget and it is set to one of the elements for the
 		// textarea, texttoolbar, etc we ignore the blur event.
 		if (evt.relatedTarget &&
-				(CanvasUtils.getParentElementWithClass(evt.relatedTarget, "d3-comment-entry") ||
-					CanvasUtils.getParentElementWithClass(evt.relatedTarget, "d3-comment-text-entry-wysiwyg") ||
-					CanvasUtils.getParentElementWithClass(evt.relatedTarget, "text-toolbar") ||
-					CanvasUtils.getParentElementWithClass(evt.relatedTarget, "cds--overflow-menu-options__btn"))) {
+				(CanvasUtils.getParentElementWithClass(evt.relatedTarget, "d3-comment-text-entry") ||
+				CanvasUtils.getParentElementWithClass(evt.relatedTarget, "text-toolbar") ||
+				CanvasUtils.getParentElementWithClass(evt.relatedTarget, "cds--overflow-menu-options__btn"))) {
 			return;
 		}
 
@@ -217,16 +209,18 @@ export default class SvgCanvasTextArea {
 	markdownActionHandler(action, evt) {
 		this.logger.log("markdownActionHandler - action = " + action);
 
-		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
-		const commentEntryElement = commentEntry.node();
-		const start = commentEntryElement.selectionStart;
-		const end = commentEntryElement.selectionEnd;
-		const text = commentEntryElement.value;
+		var sel = window.getSelection();
 
-		const mdObj = SvgCanvasMarkdown.processMarkdownAction(action, text, start, end);
-		if (mdObj) {
-			evt.preventDefault();
-			this.addTextToTextArea(mdObj, commentEntryElement);
+		const start = Math.min(sel.anchorOffset, sel.focusOffset);
+		const end = Math.max(sel.anchorOffset, sel.focusOffset);
+		const text = sel.anchorNode.nodeValue;
+
+		if (text) { // In Firefox, text can sometimes be null when adding newlines.
+			const mdObj = SvgCanvasMarkdown.processMarkdownAction(action, text, start, end);
+			if (mdObj) {
+				evt.preventDefault();
+				this.addTextToTextArea(mdObj, sel.anchorNode, text);
+			}
 		}
 	}
 
@@ -284,7 +278,6 @@ export default class SvgCanvasTextArea {
 				textColorFormat.value === BLACK) {
 			const isDark = CanvasUtils.isDarkColor(backgroundColor);
 			this.addReplaceFormat("textColor", (isDark ? WHITE : BLACK));
-
 		}
 	}
 
@@ -364,54 +357,63 @@ export default class SvgCanvasTextArea {
 
 	setWysiwygStyle(field, value) {
 		if (field === "background-color" && value === "transparent") {
-			d3.select(this.editingTextData.parentDomObj).selectAll(".d3-comment-text-wysiwyg")
+			d3.select(this.editingTextData.parentDomObj).selectAll(".d3-comment-text")
 				.style("background-color", "transparent");
 		}
-		const commentEntry = this.foreignObjectWysiwyg.selectAll(".d3-comment-text-entry-wysiwyg");
+		const commentEntry = this.foreignObjectComment.selectAll(".d3-comment-text-entry");
 		commentEntry.style(field, value);
 		const commentEntryElement = commentEntry.node();
 		commentEntryElement.focus();
 	}
 
-	// Replaces the text in the currently displayed textarea with the text
+	// Replaces the text in the currently displayed <div> with the text
 	// passed in. We use execCommand because this adds the inserted text to the
 	// textarea's undo/redo stack whereas setting the text directly into the
 	// textarea control does not.
-	addTextToTextArea(mdObj, commentEntryElement) {
+	addTextToTextArea(mdObj, commentEntryElement, oldText) {
 		this.addingTextToTextArea = true;
-		const text = unescapeText(mdObj.newText);
-		commentEntryElement.focus();
-		commentEntryElement.select();
-		document.execCommand("insertText", false, text);
-		commentEntryElement.setSelectionRange(mdObj.newStart, mdObj.newEnd);
+
+		const newText = unescapeText(mdObj.newText);
+		this.replaceText(commentEntryElement, oldText, newText, mdObj.newStart, mdObj.newEnd);
+
 		this.addingTextToTextArea = false;
+	}
+
+	replaceText(commentEntryElement, oldText, newText, start, end) {
+		this.setCursor(commentEntryElement, 0, oldText.length);
+		var sel = window.getSelection();
+		const range = sel.getRangeAt(0);
+		range.deleteContents();
+
+		const textNode = document.createTextNode(newText);
+		range.insertNode(textNode);
+
+		this.setCursor(textNode, start, end);
 	}
 
 	autoSizeComment(textArea, data) {
 		this.logger.log("autoSizeComment - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 
-		if (data.isScrollable) {
-			if (this.commentHasScrollableText(data.parentDomObj)) {
-				this.removeCanvasZoomBehavior();
-			} else {
-				this.addCanvasZoomBehavior();
-			}
-
-		} else {
-			const pad = data.contentType === WYSIWYG ? 0 : SCROLL_PADDING;
-			const scrollHeight = textArea.scrollHeight + pad;
+		if (data.autoSize) {
+			const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
 
 			if (this.textAreaHeight < scrollHeight) {
 				this.textAreaHeight = scrollHeight;
 				if (this.foreignObject) {
 					this.foreignObject.style("height", this.textAreaHeight + "px");
 
-				} else if (this.foreignObjectWysiwyg) {
-					this.foreignObjectWysiwyg.style("height", this.textAreaHeight + "px");
+				} else if (this.foreignObjectComment) {
+					this.foreignObjectComment.style("height", this.textAreaHeight + "px");
 				}
 				this.activePipeline.getComment(data.id).height = this.textAreaHeight;
 				this.displayCommentsCallback();
 				this.displayLinksCallback();
+			}
+		} else {
+			if (this.commentHasScrollableText(data.parentDomObj)) {
+				this.removeCanvasZoomBehavior();
+			} else {
+				this.addCanvasZoomBehavior();
 			}
 		}
 	}
@@ -419,7 +421,7 @@ export default class SvgCanvasTextArea {
 	// Returns true if the scroll <div>, in the foreignObject used for text entry,
 	// has contents that are bigger than what the scroll <div> can accommodate.
 	commentHasScrollableText(element) {
-		const scrollDiv = element.getElementsByClassName("d3-comment-text-entry-wysiwyg-scroll");
+		const scrollDiv = element.getElementsByClassName("d3-comment-text-entry-scroll");
 
 		if (scrollDiv[0].clientHeight < scrollDiv[0].scrollHeight) {
 			return true;
@@ -519,7 +521,7 @@ export default class SvgCanvasTextArea {
 		this.displayDiv.attr("style", this.displayDivStyle);
 	}
 
-	// Displays a text area for an editable text decoration on either a node
+	// Displays a <textarea> for editable a text decoration on either a node
 	// or link.
 	displayDecLabelTextArea(dec, obj, objType, parentDomObj) {
 		// Save the current style for the display <div> and set the style so the
@@ -565,8 +567,10 @@ export default class SvgCanvasTextArea {
 		this.canvasController.editActionHandler(data);
 	}
 
-	// Displays a text area to allow text entry and editing for: regular comments (not WYSIWYG);
-	// node labels; or text decorations on either a node or link.
+	// Displays a <textarea> to allow text entry and editing for: node labels; or
+	// text decorations on either a node or link.
+	// Evetually it is possible that we could remove the <textarea> approach
+	// and just use the <div> approach used in displayEditableDiv.
 	displayTextArea(data) {
 		this.textAreaHeight = data.height; // Save for comparison during auto-resize
 		this.editingText = true;
@@ -604,8 +608,8 @@ export default class SvgCanvasTextArea {
 			this.textContentSaved = true;
 			this.saveAndCloseTextArea(this.editingTextData, commentEntryElement, evt);
 
-		} else if (this.foreignObjectWysiwyg) {
-			const commentEntry = this.foreignObjectWysiwyg.selectAll(".d3-comment-text-entry-wysiwyg");
+		} else if (this.foreignObjectComment) {
+			const commentEntry = this.foreignObjectComment.selectAll(".d3-comment-text-entry");
 			const commentEntryElement = commentEntry.node();
 			this.textContentSaved = true;
 			this.saveAndCloseTextArea(this.editingTextData, commentEntryElement, evt);
@@ -613,7 +617,7 @@ export default class SvgCanvasTextArea {
 	}
 
 	saveAndCloseTextArea(data, element, d3Event) {
-		const newValue = this.foreignObjectWysiwyg ? element.innerText : element.value;
+		const newValue = this.foreignObjectComment ? element.innerText : element.value;
 
 		// If there is no text for the label and textCanBeEmpty is false
 		// just return, so label returns to what it was before editing started.
@@ -630,7 +634,7 @@ export default class SvgCanvasTextArea {
 				!this.areFormatsTheSame(data.formats, data.newFormats)) {
 			data.saveTextChangesCallback(data, newText, this.textAreaHeight);
 		} else {
-			d3.select(data.parentDomObj).selectAll(".d3-comment-text-wysiwyg")
+			d3.select(data.parentDomObj).selectAll(".d3-comment-text")
 				.style("display", "table-cell");
 		}
 	}
@@ -669,14 +673,14 @@ export default class SvgCanvasTextArea {
 			this.foreignObject.remove();
 			this.foreignObject = null;
 
-		} else if (this.foreignObjectWysiwyg) {
-			// Ensure hidden text display <div> is visible again
+		} else if (this.foreignObjectComment) {
+			// Ensure hidden foreign object used for display is visible again
 			d3.select(this.editingTextData.parentDomObj)
-				.selectAll(".d3-comment-text-wysiwyg")
+				.selectAll(".d3-foreign-object-comment-text")
 				.style("display", null);
 			// Tidy up
-			this.foreignObjectWysiwyg.remove();
-			this.foreignObjectWysiwyg = null;
+			this.foreignObjectComment.remove();
+			this.foreignObjectComment = null;
 		}
 		this.editingText = false;
 		this.editingTextId = "";
@@ -694,90 +698,92 @@ export default class SvgCanvasTextArea {
 			(d3Event.keyCode === A_KEY && CanvasUtils.isCmndCtrlPressed(d3Event));
 	}
 
-	// Displays a <div> to allow text entry and editing of WYSIWYG comments. This is
-	// different to the way other text entry (regular comments, node labels,
-	// text decorations) are handled because the <div>, that is contained within a
+	// Displays a <div> to allow text entry and editing of (regular or WYSIWYG)
+	// comments. This is different to the way other text entry (node labels,
+	// text decorations) is handled because the <div>, that is contained within a
 	// parent <div>, is styled so the text can be aligned at the top, middle and
-	// bottom of the parent. Evetually it is possible that we could remove the
-	// <textarea> approach and just use this <div> approach. Note: For this <div>
-	// approach we do not display a <rect> underneath the text, as is done with
-	// the <textarea>, so styling (e.g. background color) is applied to the <div>.
-	// If me migrate all text entry to use the <div> approach we could get rid of
-	// the underlying <rect> completely but this woukd change styling because the
-	// <rect> uses stroke/fill whereas the <div> uses color/background-color. So
-	// this overhaul should probably be done as part of a major release.
+	// bottom of the parent.
 	displayEditableDiv(data) {
 		this.textAreaHeight = data.height; // Save for comparison during auto-resize
 		this.editingText = true;
 		this.editingTextId = data.id;
 
-		// If the user makes the <div> background color transparent the text
-		// entry <div> will be transparent. This hides the text of the
-		// underlying comment <div> so it is not seen during editing.
+		// This hides the foreign object used for displaying the comment. This
+		// is necessary because, if the user changes the comment's background color
+		// to transparent, the underlying display comment would be visible and
+		// differences between it and the comment entry control would show as a
+		// ugly display.
 		// This change will be reserved when the canvas refreshes when text
 		// editing is complete or when editing ends with nothing saved.
-		d3.select(data.parentDomObj).selectAll(".d3-comment-text-wysiwyg")
+		d3.select(data.parentDomObj).selectAll(".d3-foreign-object-comment-text")
 			.style("display", "none");
 
-		this.foreignObjectWysiwyg = d3.select(data.parentDomObj)
+		this.foreignObjectComment = d3.select(data.parentDomObj)
 			.append("foreignObject")
-			.attr("class", "d3-foreign-object-text-entry-wysiwyg")
+			.attr("class", "d3-foreign-object-comment-text-entry")
 			.attr("width", data.width)
 			.attr("height", data.height)
 			.attr("x", data.xPos)
 			.attr("y", data.yPos);
 
-		this.textAreaWysiwyg = this.foreignObjectWysiwyg
+		this.foreignObjectComment
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-			.attr("class", "d3-comment-text-entry-wysiwyg-scroll")
+			.attr("class", "d3-comment-text-entry-scroll")
+			.each((d, i, commentTexts) => {
+				const commentElement = d3.select(commentTexts[i]);
+				CanvasUtils.applyOutlineStyle(commentElement, d.formats); // Only apply outlineStyle format here
+			})
 
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-			.attr("class", "d3-comment-text-entry-wysiwyg-outer")
+			.attr("class", "d3-comment-text-entry-outer")
 
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-			.attr("class", "d3-comment-text-entry-wysiwyg")
+			.attr("class", "d3-comment-text-entry")
 			.attr("contentEditable", true)
 			.each((d, i, commentTexts) => {
-				if (d.formats?.length > 0) {
-					d.formats.forEach((f) => {
-						const { field, value } = CanvasUtils.convertFormat(f);
-						d3.select(commentTexts[i]).style(field, value);
-					});
-				}
+				const commentElement = d3.select(commentTexts[i]);
+				CanvasUtils.applyNonOutlineStyle(commentElement, d.formats); // Apply all formats except outlineStyle
 			})
 			.text(unescapeText(data.text))
 			.call(this.attachTextEntryListeners.bind(this));
 
-		// We set the focus on the inside div even though the focus
+		// Get the text <div> element.
+		const textDiv = this.canvasDiv.selectAll(".d3-comment-text-entry")
+			.node();
+
+		// We set the focus on the innermost <div> even though the focus
 		// highlighting is displayed for the forign object. This allows
-		// key strokes to do to the <div>.
-		this.canvasDiv.selectAll(".d3-comment-text-entry-wysiwyg")
-			.node()
-			.focus();
+		// key strokes to go to the <div>.
+		textDiv.focus();
 
 		// Set the cusrsor to the end of the text.
-		this.setCursor(this.textAreaWysiwyg.node(), data.text?.length || 0);
+		if (textDiv.childNodes.length > 0) {
+			this.setCursor(textDiv.childNodes[0], data.text?.length || 0);
+		}
+		// Scroll to the bottom of the text
+		textDiv.scrollIntoView({ behavior: "instant", block: "end" });
 	}
 
 	// Sets the cursor position in the editable <div>
-	setCursor(el, pos) {
-		// var el = document.getElementById("editable")
+	setCursor(el, pos, posEnd) {
 		var range = document.createRange();
 		var sel = window.getSelection();
 
-		if (el.childNodes?.length > 0) {
-			range.setStart(el.childNodes[0], pos);
-			range.collapse(true);
+		range.setStart(el, pos);
 
-			sel.removeAllRanges();
-			sel.addRange(range);
+		if (posEnd) {
+			range.setEnd(el, posEnd);
+		} else {
+			range.collapse(true);
 		}
+
+		sel.removeAllRanges();
+		sel.addRange(range);
 	}
 
-
 	// Attaches a common set of event listeners to the <textarea> (used for entry of
-	// regular comments, node label and text decorations) OR the editable <div> used
-	// for entry of WYSIWYG comments. The behavior of the listeners is the same in this
+	// node label and text decorations) OR to the editable <div> used for entry of
+	// regular or WYSIWYG comments. The behavior of the listeners is the same in this
 	// code but lower level functions may behave differently depending on what element
 	// <textarea> or <div> is used for text entry.
 	attachTextEntryListeners(textEntrySel) {

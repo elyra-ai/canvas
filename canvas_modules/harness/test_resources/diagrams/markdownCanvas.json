@@ -36,7 +36,7 @@
               "x_pos": 912.9190673828125,
               "y_pos": 47.322113037109375,
               "width": 431.1923828125,
-              "height": 379.28912353515625,
+              "height": 404.604248046875,
               "content": "### Block Quotes\n\n#### Single blockquote\n\nPreceding text\n> Blockquote text\n\nSucceeding text\n\n-------\n\n#### Nested blockquotes\n\n> Blockquotes can also be nested...\n>> ...by using additional greater-than signs right next to each other...\n> > > ...or with spaces between arrows.\n\n\n\n\n",
               "associated_id_refs": []
             },
@@ -62,7 +62,7 @@
             {
               "id": "524e502f-bd1e-4b06-9e86-8b404e18213a",
               "x_pos": 302.3590045134859,
-              "y_pos": 580.9782112294338,
+              "y_pos": 590.7457893544338,
               "width": 241.98770141601562,
               "height": 181,
               "content": "## Dividing lines\n\nAll dashes\n\n--------\n\nAll underscores\n______\n",
@@ -70,8 +70,8 @@
             },
             {
               "id": "925f0e6f-38a3-4818-be8e-fe174ad78cd5",
-              "x_pos": 1389.93798828125,
-              "y_pos": 362.6741943359375,
+              "x_pos": 1385.93798828125,
+              "y_pos": 449.61529541015625,
               "width": 357,
               "height": 316,
               "content": "### GIF file embedded\n\nSpaceX Rockets Landing from gify.com\n\n![Rocket Landing](https://media.giphy.com/media/3ohs4gSs3V0Q7qOtKU/giphy.gif)",
@@ -82,7 +82,7 @@
               "x_pos": 1381.3721923828125,
               "y_pos": 54.286827087402344,
               "width": 362,
-              "height": 274,
+              "height": 365.9761657714844,
               "content": "## Image (jpg) file embedded\n\nThe Green - Mountsorrel - from free-images.com\n\n![The green - Mountsorrel](http://free-images.com/or/c6bf/mountsorrel_village_green_2006.jpg)",
               "associated_id_refs": []
             },
@@ -91,17 +91,17 @@
               "x_pos": 299.72172313164435,
               "y_pos": 42.11345072811703,
               "width": 247.87200927734375,
-              "height": 516.5646667480469,
+              "height": 528.7740783691406,
               "class_name": "d3-comment-rect bkg-col-white-0",
               "content": "## Lists\n\n1. Defenders\n    1. Fullbacks\n        1. Castagne\n        2. Riccardo\n        3. Justin\n        4. Thomas\n    1. Centrebacks\n        1. Evans\n        1. Fofana\n1. Goalkeeper - Schmeichel\n1. Midfield\n    - Central\n        * Tielemans\n        * Dewsbury-Hall\n        * Maddison\n    - Wingers\n        - Albrigton\n        - Lookman\n        - Barnes\n1. Forward - Vardy\n\nManagers\n\n1. ***Rodgers*** **\n1. Puel\n1. Shakespeare\n1. *Ranieri* ***\n1. *Pearson* ****\n\n** Won FA Cup & Community Shield\n*** Won Premier League\n**** Won promotion to Premier League\n\n\n",
               "associated_id_refs": []
             },
             {
               "id": "aff2d2cc-70dc-4a2f-8538-84f6525ac039",
-              "x_pos": 914.5120239257812,
-              "y_pos": 457.9549560546875,
+              "x_pos": 915.8444213867188,
+              "y_pos": 473.9434509277344,
               "width": 433.528564453125,
-              "height": 452.82647705078125,
+              "height": 479.3634033203125,
               "content": "## Tables\n\n##### Regular columns\n\n| Player | Description |\n| ------ | ----------- |\n| Vardy   |Legend. World-class striker. Fast as lightning. |\n| KDH | Brilliant new prospect. Tenacious mid-fielder. |\n| Thomas    | Young left full back. Has a FA Cup winners medal. |\n\n##### Right aligned columns\n\n| Option | Description |\n| ------:| -----------:|\n| Vardy   | Legend. World-class striker. Fast as lightning. |\n| KDH | Brilliant new prospect. Tenacious mid-fielder. |\n| Thomas    | Young left full back. Has a FA Cup winners medal. |\n",
               "associated_id_refs": []
             }

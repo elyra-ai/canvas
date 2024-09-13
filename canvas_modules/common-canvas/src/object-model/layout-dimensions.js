@@ -393,8 +393,9 @@ const portsHorizontalDefaultLayout = {
 		// The gap between a comment and its sizing area rectangle
 		commentSizingArea: 10,
 
-		// The scollable status of the comment.
-		commentIsScrollable: true,
+		// The auto-size status of the comment.
+		// true means the comment height will increase if necessary to show text as it is entered.
+		commentAutoSize: true,
 
 		// Add comment toolbar action, default offset from viewport
 		addCommentOffsetX: 30,
@@ -819,8 +820,9 @@ const portsVerticalDefaultLayout = {
 		// The gap between a comment and its sizing area rectangle
 		commentSizingArea: 10,
 
-		// The scollable status of the comment.
-		commentIsScrollable: true,
+		// The auto-size status of the comment.
+		// true means the comment height will increase if necessary to show text as it is entered.
+		commentAutoSize: true,
 
 		// Add comment toolbar action, default offset from viewport
 		addCommentOffsetX: 30,

@@ -42,7 +42,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	NORTH, SOUTH, EAST, WEST,
-	WYSIWYG }
+	WYSIWYG}
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
@@ -3755,69 +3755,24 @@ export default class SVGCanvasRenderer {
 			.attr("data-selected", (c) => (this.activePipeline.isSelected(c.id) ? "yes" : "no"))
 			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
 
-		// Comment Body - only used for regular/markdown comments
-		joinedCommentGrps
-			.selectChildren(".d3-comment-rect")
-			.data((c) => (c.contentType !== WYSIWYG ? [c] : []), (c) => c.id)
-			.join(
-				(enter) =>
-					enter
-						.append("rect")
-						.attr("class", "d3-comment-selection-highlight")
-			)
-			.datum((c) => this.activePipeline.getComment(c.id))
-			.attr("height", (c) => c.height)
-			.attr("width", (c) => c.width)
-			.attr("class", "d3-comment-rect")
-			.attr("style", (c) => this.getCommentBodyStyle(c, "default"));
-
-
-		// Comment Text - for regular/markdown comment
+		// Comment Text
 		joinedCommentGrps
 			.selectChildren(".d3-foreign-object-comment-text")
-			.data((c) => (c.contentType !== WYSIWYG ? [c] : []), (c) => c.id)
+			.data((d) => [d], (d) => d.id)
 			.join(
 				(enter) => {
 					const fo = enter
 						.append("foreignObject")
-						.attr("class", "d3-foreign-object-comment-text")
+						.attr("class", (d) => "d3-foreign-object-comment-text")
 						.attr("x", 0)
 						.attr("y", 0);
 					fo
 						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-						.attr("class", "d3-comment-text");
-					return fo;
-				}
-			)
-			.datum((c) => this.activePipeline.getComment(c.id))
-			.attr("width", (c) => c.width)
-			.attr("height", (c) => c.height)
-			.select("div")
-			.attr("style", (c) => this.getCommentTextStyle(c, "default"))
-			.html((c) => (
-				this.config.enableMarkdownInComments
-					? markdownIt.render(c.content)
-					: escapeText(c.content))
-			);
-
-		// Comment Text - for WYSIWYG comment
-		joinedCommentGrps
-			.selectChildren(".d3-foreign-object-comment-text-wysiwyg")
-			.data((c) => (c.contentType === WYSIWYG ? [c] : []), (c) => c.id)
-			.join(
-				(enter) => {
-					const fo = enter
-						.append("foreignObject")
-						.attr("class", "d3-foreign-object-comment-text-wysiwyg")
-						.attr("x", 0)
-						.attr("y", 0);
-					fo
+						.attr("class", "d3-comment-text-scroll")
 						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-						.attr("class", "d3-comment-text-wysiwyg-scroll")
+						.attr("class", "d3-comment-text-outer")
 						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-						.attr("class", "d3-comment-text-wysiwyg-outer")
-						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-						.attr("class", "d3-comment-text-wysiwyg");
+						.attr("class", (d) => "d3-comment-text" + (d.contentType !== WYSIWYG ? " markdown" : ""));
 					return fo;
 				}
 			)
@@ -3825,23 +3780,30 @@ export default class SVGCanvasRenderer {
 			.attr("width", (c) => c.width)
 			.attr("height", (c) => c.height)
 
-			.select(".d3-comment-text-wysiwyg-scroll")
-			.select(".d3-comment-text-wysiwyg-outer")
-
-			.select(".d3-comment-text-wysiwyg")
-			.attr("style", null) // Wipe the in-line styles before applying
-
+			.select(".d3-comment-text-scroll")
 			.each((d, i, commentTexts) => {
-				if (d.formats?.length > 0) {
-					d.formats.forEach((f) => {
-						const { field, value } = CanvasUtils.convertFormat(f);
-						d3.select(commentTexts[i]).style(field, value);
-					});
-				}
+				const commentElement = d3.select(commentTexts[i]);
+				CanvasUtils.applyOutlineStyle(commentElement, d.formats); // Only apply outlineStyle format here
 			})
 
-			// .attr("style", (c) => this.getCommentTextStyle(c, "default"))
-			.html((c) => escapeText(c.content));
+			.select(".d3-comment-text-outer")
+			.select(".d3-comment-text")
+			.attr("style", null) // Wipe the in-line styles before applying formats
+
+		// .attr("style", (c) => this.getCommentBodyStyle(c, "default"));
+		// .attr("style", (c) => this.getCommentTextStyle(c, "default"))
+
+			.each((d, i, commentTexts) => {
+				const commentElement = d3.select(commentTexts[i]);
+				CanvasUtils.applyNonOutlineStyle(commentElement, d.formats); // Apply all formats except outlineStyle
+
+			})
+
+			.html((d) =>
+				(d.contentType !== WYSIWYG && this.config.enableMarkdownInComments
+					? markdownIt.render(d.content)
+					: escapeText(d.content))
+			);
 
 		// Add or remove drag object behavior for the comment groups.
 		if (this.config.enableEditingActions) {
@@ -3867,7 +3829,7 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableContextToolbar) {
 					this.addContextToolbar(d3Event, d, "comment");
 				}
-				if (this.canvasLayout.commentIsScrollable && this.commentHasScrollableText(d3Event.currentTarget)) {
+				if (this.commentHasScrollableText(d3Event.currentTarget)) {
 					this.removeCanvasZoomBehavior(); // Remove canvas zoom behavior to allow scrolling of comment
 				}
 			})
@@ -3878,9 +3840,8 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableEditingActions) {
 					this.deleteCommentPort(d3Event.currentTarget);
 				}
-				if (this.canvasLayout.commentIsScrollable) {
-					this.addCanvasZoomBehavior(); // Add back zoom behavior to reenable canvas zooming
-				}
+
+				this.addCanvasZoomBehavior(); // Add back zoom behavior to reenable canvas zooming
 			})
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
@@ -3933,9 +3894,9 @@ export default class SVGCanvasRenderer {
 	commentHasScrollableText(element) {
 		// Look for entry foreign object first because, if present it will be over the top
 		// of the display foreign object and it will be handling scrollable text.
-		let scrollDiv = element.getElementsByClassName("d3-comment-text-entry-wysiwyg-scroll");
+		let scrollDiv = element.getElementsByClassName("d3-comment-text-entry-scroll");
 		if (!scrollDiv[0]) {
-			scrollDiv = element.getElementsByClassName("d3-comment-text-wysiwyg-scroll");
+			scrollDiv = element.getElementsByClassName("d3-comment-text-scroll");
 		}
 		if (scrollDiv[0].clientHeight < scrollDiv[0].scrollHeight) {
 			return true;
@@ -4002,7 +3963,7 @@ export default class SVGCanvasRenderer {
 
 	setCommentBodyStyles(d, type, comGrp) {
 		const style = this.getCommentBodyStyle(d, type);
-		comGrp.selectChildren(".d3-comment-rect").attr("style", style);
+		comGrp.selectChildren(".d3-comment-text").attr("style", style);
 	}
 
 	setCommentTextStyles(d, type, comGrp) {
@@ -4024,7 +3985,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayCommentTextArea(comment, parentDomObj) {
-		comment.isScrollable = this.canvasLayout.commentIsScrollable; // TODO - read from comment layout when canvas layout is refactored.
+		comment.autoSize = this.canvasLayout.commentAutoSize; // TODO - read from comment layout when canvas layout is refactored.
 		this.svgCanvasTextArea.displayCommentTextArea(comment, parentDomObj);
 	}
 
@@ -4508,7 +4469,7 @@ export default class SVGCanvasRenderer {
 		// If the comment has a classname that isn't the default use it!
 		if (d.class_name &&
 				d.class_name !== "canvas-comment" &&
-				d.class_name !== "d3-comment-rect") {
+				d.class_name !== "d3-comment-rect") { // Left in for historical reasons
 			customClass = " " + d.class_name;
 		}
 
