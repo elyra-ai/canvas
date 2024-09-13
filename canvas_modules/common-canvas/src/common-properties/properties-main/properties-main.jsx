@@ -570,13 +570,16 @@ class PropertiesMain extends React.Component {
 					{editorForm}
 				</PropertiesModal>);
 			}
+
+			// If Custom width is set
+			const customWidth = this.propertiesController.getForm().pixelWidth;
 			const className = classNames("properties-wrapper",
 				{
 					"properties-right-flyout": this.props.propertiesConfig.rightFlyout,
 					"properties-light-enabled": this.props.light,
 					"properties-light-disabled": !this.props.light
 				},
-				`properties-${this.state.editorSize}`);
+				customWidth ? "properties-custom-width" : `properties-${this.state.editorSize}`);
 			const overrideSize = this._getOverrideSize();
 			let overrideStyle = null;
 			if (overrideSize !== null) {
