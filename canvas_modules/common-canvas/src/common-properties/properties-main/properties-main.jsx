@@ -571,15 +571,21 @@ class PropertiesMain extends React.Component {
 				</PropertiesModal>);
 			}
 
-			// If Custom width is set
+			// If Custom width is set adjust classname to format action buttons
 			const customWidth = this.propertiesController.getForm().pixelWidth;
+			let propertiesSizeClassname = `properties-${this.state.editorSize}`;
+			if (customWidth) {
+				if (this.state.editorSize === Size.SMALL) {
+					propertiesSizeClassname = "properties-small-custom";
+				}
+			}
 			const className = classNames("properties-wrapper",
 				{
 					"properties-right-flyout": this.props.propertiesConfig.rightFlyout,
 					"properties-light-enabled": this.props.light,
 					"properties-light-disabled": !this.props.light
 				},
-				customWidth ? "properties-custom-width" : `properties-${this.state.editorSize}`);
+				propertiesSizeClassname);
 			const overrideSize = this._getOverrideSize();
 			let overrideStyle = null;
 			if (overrideSize !== null) {
