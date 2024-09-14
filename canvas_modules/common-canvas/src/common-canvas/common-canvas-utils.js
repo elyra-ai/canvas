@@ -1416,11 +1416,12 @@ export default class CanvasUtils {
 	}
 
 	// Selects the range of characters in the text DOM node passed in
-	// between the start and end positions passed in. The
-	// DOM node is expected to contain text which is stored in a
-	// set of child nodes that are text objects.
-	static selectNodeRange(domNode, start, end) {
-		var range = document.createRange();
+	// between the start and end positions passed in. The DOM node is
+	// expected to contain text which is stored in a set of child nodes
+	// that are text objects. selection is an optional object containing
+	// the current selection which is provided by the Cypress test cases.
+	static selectNodeRange(domNode, start, end, selection) {
+		const range = document.createRange();
 
 		let startTextNode;
 		let endTextNode;
@@ -1443,7 +1444,7 @@ export default class CanvasUtils {
 		range.setStart(startTextNode, startTextPos);
 		range.setEnd(endTextNode, endTextPos);
 
-		var sel = window.getSelection();
+		const sel = selection ? selection : window.getSelection();
 		sel.removeAllRanges();
 		sel.addRange(range);
 	}

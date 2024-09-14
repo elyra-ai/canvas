@@ -732,7 +732,7 @@ export default class SvgCanvasTextArea {
 
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 			.attr("class", "d3-comment-text-entry")
-			.attr("contentEditable", true)
+			.attr("contentEditable", this.getContentEditableValue())
 			.each((d, i, commentTexts) => {
 				const commentElement = d3.select(commentTexts[i]);
 				CanvasUtils.applyNonOutlineStyle(commentElement, d.formats); // Apply all formats except outlineStyle
@@ -755,6 +755,14 @@ export default class SvgCanvasTextArea {
 		}
 		// Scroll to the bottom of the text
 		textDiv.scrollIntoView({ behavior: "instant", block: "end" });
+	}
+
+	// Returns a value for the contentEditable field on a <div>. The
+	// value "plaintext-only" prevents rich text being pasted into the <div>.
+	// Crappy Firefox doesn't accept that value and doesn't even treat
+	// the string as truthy, meaning we have to actually return a boolean true!!
+	getContentEditableValue() {
+		return navigator.userAgent.includes("Firefox") ? true : "plaintext-only";
 	}
 
 	// Sets the cursor position in the editable <div>
