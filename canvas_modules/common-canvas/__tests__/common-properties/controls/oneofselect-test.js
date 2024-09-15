@@ -16,14 +16,27 @@
 
 import React from "react";
 import OneofselectControl from "../../../src/common-properties/controls/dropdown";
-import propertyUtils from "../../_utils_/property-utils";
-import controlUtils from "../../_utils_/control-utils";
-import { mount } from "../../_utils_/mount-utils.js";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
+import controlUtilsRTL from "../../_utils_/control-utilsRTL";
+import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
+import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import oneofselectParamDef from "../../test_resources/paramDefs/oneofselect_paramDef.json";
+import { fireEvent, waitFor } from "@testing-library/react";
 
+const mockOneofselectControl = jest.fn();
+jest.mock("../../../src/common-properties/controls/dropdown",
+	() => (props) => mockOneofselectControl(props)
+);
+
+mockOneofselectControl.mockImplementation((props) => {
+	const OneofselectControlComp = jest.requireActual(
+		"../../../src/common-properties/controls/dropdown",
+	).default;
+	return <OneofselectControlComp {...props} />;
+});
 
 describe("oneofselect renders correctly", () => {
 
@@ -59,13 +72,13 @@ describe("oneofselect renders correctly", () => {
 			"Ranked condition"
 		]
 	};
-	propertyUtils.setControls(controller, [control]);
+	propertyUtilsRTL.setControls(controller, [control]);
 	afterEach(() => {
 		controller.setErrorMessages({});
 		controller.setControlStates({});
 	});
 	it("props should have been defined", () => {
-		const wrapper = mount(
+		render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -73,13 +86,16 @@ describe("oneofselect renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("controller")).to.equal(controller);
-		expect(wrapper.prop("propertyId")).to.equal(propertyId);
+		expectJest(mockOneofselectControl).toHaveBeenCalledWith({
+			"store": controller.getStore(),
+			"controller": controller,
+			"control": control,
+			"propertyId": propertyId,
+		});
 	});
 
 	it("should render a oneofselect with empty value label", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -88,14 +104,14 @@ describe("oneofselect renders correctly", () => {
 			/>
 		);
 
-		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
+		const dropdownWrapper = wrapper.container.querySelector("div[data-id='properties-test-oneofselect']");
+		expect(dropdownWrapper.querySelector("button > span").textContent).to.equal(emptyValueIndicator);
 	});
 	it("dropdown handles null correctly", () => {
 		controller.setPropertyValues(
 			{ propertyName: null }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -103,23 +119,24 @@ describe("oneofselect renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		let dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
-		const dropdownButton = dropdownWrapper.find("button");
-		dropdownButton.simulate("click");
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-test-oneofselect']");
+		expect(dropdownWrapper.querySelector("button > span").textContent).to.equal(emptyValueIndicator);
+		const dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton);
 
 		// select the first item
-		dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		dropdownWrapper = container.querySelector("div[data-id='properties-test-oneofselect']");
+		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
-		dropdownList.at(0).simulate("click");
+		fireEvent.click(dropdownList[0]);
 		expect(controller.getPropertyValue(propertyId)).to.equal(control.values[0]);
 	});
 	it("dropdown handles undefined correctly", () => {
 		controller.setPropertyValues(
 			{ }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -127,16 +144,17 @@ describe("oneofselect renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		let dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-test-oneofselect']");
+		expect(dropdownWrapper.querySelector("button > span").textContent).to.equal(emptyValueIndicator);
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("button");
-		dropdownButton.simulate("click");
+		const dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton);
 		// select the first item
-		dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		dropdownWrapper = container.querySelector("div[data-id='properties-test-oneofselect']");
+		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
-		dropdownList.at(0).simulate("click");
+		fireEvent.click(dropdownList[0]);
 		expect(controller.getPropertyValue(propertyId)).to.equal(control.values[0]);
 	});
 	it("oneofselect placeholder rendered correctly", () => {
@@ -144,7 +162,7 @@ describe("oneofselect renders correctly", () => {
 		controller.setPropertyValues(
 			{ }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -152,12 +170,12 @@ describe("oneofselect renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		expect(dropdownWrapper.find("button > span").text()).to.equal(control.additionalText);
+		const dropdownWrapper = wrapper.container.querySelector("div[data-id='properties-test-oneofselect']");
+		expect(dropdownWrapper.querySelector("button > span").textContent).to.equal(control.additionalText);
 	});
 	it("dropdown renders when disabled", () => {
 		controller.updateControlState(propertyId, "disabled");
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -165,12 +183,12 @@ describe("oneofselect renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		expect(dropdownWrapper.find("Dropdown").prop("disabled")).to.equal(true);
+		const dropdownWrapper = wrapper.container.querySelector("div[data-id='properties-test-oneofselect']");
+		expect(dropdownWrapper.querySelector("button").disabled).to.equal(true);
 	});
 	it("dropdown renders when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -178,12 +196,12 @@ describe("oneofselect renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		expect(dropdownWrapper.hasClass("hide")).to.equal(true);
+		const dropdownWrapper = wrapper.container.querySelector("div[data-id='properties-test-oneofselect']");
+		expect(dropdownWrapper.className.includes("hide")).to.equal(true);
 	});
 	it("Validate oneofselect filtered correctly", () => {
 		controller.setControlStates({ "test-oneofselect": { "enumFilter": ["order", "gtt"] } });
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -191,13 +209,14 @@ describe("oneofselect renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		let dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-test-oneofselect']");
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("button");
-		dropdownButton.simulate("click");
-		dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
+		const dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton);
+		dropdownWrapper = container.querySelector("div[data-id='properties-test-oneofselect']");
 		// select the first item
-		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(2);
 	});
 	it("dropdown renders messages correctly", () => {
@@ -206,7 +225,7 @@ describe("oneofselect renders correctly", () => {
 			type: "warning",
 			text: "bad dropdown value"
 		});
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -214,8 +233,8 @@ describe("oneofselect renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		const messageWrapper = dropdownWrapper.find("div.cds--form-requirement");
+		const dropdownWrapper = wrapper.container.querySelector("div[data-id='properties-test-oneofselect']");
+		const messageWrapper = dropdownWrapper.querySelectorAll("div.cds--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 	it("oneofselect helperText is rendered correctly", () => {
@@ -223,7 +242,7 @@ describe("oneofselect renders correctly", () => {
 		controller.setPropertyValues(
 			{ }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -231,8 +250,8 @@ describe("oneofselect renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const helpTextWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		expect(helpTextWrapper.find("div.cds--form__helper-text").text()).to.equal(control.helperText);
+		const helpTextWrapper = wrapper.container.querySelector("div[data-id='properties-test-oneofselect']");
+		expect(helpTextWrapper.querySelector("div.cds--form__helper-text").textContent).to.equal(control.helperText);
 	});
 });
 
@@ -240,7 +259,7 @@ describe("oneofselect paramDef works correctly", () => {
 	let wrapper;
 	let renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(oneofselectParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});
@@ -249,54 +268,57 @@ describe("oneofselect paramDef works correctly", () => {
 	});
 
 	it("oneofselect allows enum label different from enum value", () => {
-		let dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
-		const dropdownButton = dropdownWrapper.find("button");
-		dropdownButton.simulate("click");
-		dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
-		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
+		const dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton);
+		dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
+		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		// In oneofselect_paramDef.json, enum value "gold" is assigned a label "Goldilocks"
 		expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.gold.label"]).to.equal("Goldilocks");
 		// Enum label "Goldilocks" has been rendered for enum value "gold".
-		expect(dropdownList.at(9).text()).to.equal("Goldilocks");
+		expect(dropdownList[9].textContent).to.equal("Goldilocks");
 	});
 
 	it("oneofselect allows enum label to be created for an enum value with space", () => {
-		let dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
-		const dropdownButton = dropdownWrapper.find("button");
-		dropdownButton.simulate("click");
-		dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
-		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
+		const dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton);
+		dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
+		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		// In our paramDef, enum value has a space in it "blue green" and is assigned a label "Blue Green"
 		expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.blue green.label"]).to.equal("Blue Green");
 		// Enum value with a space can be assigned a label and renders as expected.
-		expect(dropdownList.at(8).text()).to.equal("Blue Green");
+		expect(dropdownList[8].textContent).to.equal("Blue Green");
 	});
 
 	it("dropdown renders correctly in a table", () => {
 		const propertyId = { name: "oneofselect_table_error", row: 0, col: 0 };
-		const panel = propertyUtils.openSummaryPanel(wrapper, "oneofselect_table-error-panel");
-		const table = panel.find("div[data-id='properties-ft-oneofselect_table_error']");
+		const panel = propertyUtilsRTL.openSummaryPanel(wrapper, "oneofselect_table-error-panel");
+		const table = panel.querySelector("div[data-id='properties-ft-oneofselect_table_error']");
 
 		// Combobox should not be rendered in a table even though 'custom_value_allowed' is set to true
-		const dropdownSelect = table.find(".properties-dropdown").find("select");
+		const dropdownSelect = table.querySelector(".properties-dropdown").querySelectorAll("select");
 		expect(dropdownSelect).to.have.length(1);
-		expect(table.find(".properties-dropdown").find("input")).to.have.length(0);
+		expect(table.querySelector(".properties-dropdown").querySelectorAll("input")).to.have.length(0);
 
 		// verify able to select a new option
 		expect(renderedController.getPropertyValue(propertyId)).to.be.equal("cat");
-		dropdownSelect.simulate("change", { target: { value: "horse" } });
+		fireEvent.change(dropdownSelect[0], { target: { value: "horse" } });
 		expect(renderedController.getPropertyValue(propertyId)).to.be.equal("horse");
 	});
 
 	it("oneofselect control should have aria-label", () => {
+		const { container } = wrapper;
 		// Dropdown should have aria-label
-		const dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect']");
-		const dropdownAriaLabelledby = dropdownWrapper.find(".cds--list-box__menu").prop("aria-labelledby");
-		expect(dropdownWrapper.find(`label[id='${dropdownAriaLabelledby}']`).text()).to.equal("oneofselect(required)");
+		const dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-oneofselect']");
+		const dropdownAriaLabelledby = dropdownWrapper.querySelector(".cds--list-box__menu").getAttribute("aria-labelledby");
+		expect(dropdownWrapper.querySelector(`label[id='${dropdownAriaLabelledby}']`).textContent).to.equal("oneofselect(required)");
 
 		// combobox should have aria-label
-		const comboboxWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_custom_value']");
-		const comboboxAriaLabel = comboboxWrapper.find(".cds--list-box__menu").prop("aria-label");
+		const comboboxWrapper = container.querySelector("div[data-id='properties-ctrl-oneofselect_custom_value']");
+		const comboboxAriaLabel = comboboxWrapper.querySelector(".cds--list-box__menu").getAttribute("aria-label");
 		expect(comboboxAriaLabel).to.equal("oneofselect custom value allowed");
 	});
 });
@@ -305,7 +327,7 @@ describe("oneofselect filters work correctly", () => {
 	let wrapper;
 	let renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(oneofselectParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});
@@ -314,27 +336,28 @@ describe("oneofselect filters work correctly", () => {
 	});
 
 	it("Validate oneofselect should have options filtered by enum_filter", () => {
-		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect_filtered']");
-		const dropdownButton = dropdownWrapper.find("button");
-		dropdownButton.simulate("click");
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect_filtered']");
+		const dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton);
 		// validate the correct number of options show up on open
-		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect_filtered']");
-		let dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect_filtered']");
+		let dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.have.length(4);
 		// make sure there isn't warning on first open
-		expect(dropdownWrapper.find("div.cds--form-requirement")).to.have.length(0);
+		expect(dropdownWrapper.querySelectorAll("div.cds--form-requirement")).to.have.length(0);
 		// checked the filter box
-		const checkboxWrapper = wrapper.find("div[data-id='properties-filter']");
-		const checkbox = checkboxWrapper.find("input");
-		checkbox.getDOMNode().checked = true;
-		checkbox.simulate("change");
+		const checkboxWrapper = container.querySelector("div[data-id='properties-filter']");
+		const checkbox = checkboxWrapper.querySelector("input");
+		checkbox.setAttribute("checked", true);
+		fireEvent.click(checkbox);
 		// validate the correct number of options show up on open
-		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect_filtered']");
-		dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect_filtered']");
+		dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.have.length(3);
 	});
 
-	it("Validate oneofselect should clear the property value if filtered", () => {
+	it("Validate oneofselect should clear the property value if filtered", async() => {
 		const propertyId = { name: "oneofselect_filtered" };
 		// value was initially set to "purple" but on open the value is cleared by the filter
 		expect(renderedController.getPropertyValue(propertyId)).to.be.equal(null);
@@ -342,16 +365,20 @@ describe("oneofselect filters work correctly", () => {
 		expect(renderedController.getPropertyValue(propertyId)).to.equal("orange");
 		renderedController.updatePropertyValue({ name: "filter" }, true);
 		// "orange" isn't part of the filter so the value should be cleared
-		expect(renderedController.getPropertyValue(propertyId)).to.equal(null);
+		await waitFor(() => {
+			expect(renderedController.getPropertyValue(propertyId)).to.equal(null);
+		});
 	});
 
-	it("Validate oneofselect should set default value if current value is filtered out", () => {
+	it("Validate oneofselect should set default value if current value is filtered out", async() => {
 		const propertyId = { name: "oneofselect_filtered_default" };
 		// value was initially set to "purple" but on open the value is cleared by the filter
 		expect(renderedController.getPropertyValue(propertyId)).to.equal("purple");
 		renderedController.updatePropertyValue({ name: "filter" }, true);
-		// "purple" isn't part of the filter so the value should be cleared and the default value should be set
-		expect(renderedController.getPropertyValue(propertyId)).to.equal("blue");
+		// "purple" isn't part of the filter so the value should be cleared and the default value should be set\
+		await waitFor(() => {
+			expect(renderedController.getPropertyValue(propertyId)).to.equal("blue");
+		});
 	});
 
 	// https://github.ibm.com/NGP-TWC/wml-canvas-planning/issues/4873
@@ -372,6 +399,7 @@ describe("oneofselect filters work correctly", () => {
 	});
 
 	it("Validate oneofselect can have multiple enum_filter conditions on the same parameter_ref", () => {
+		const { container } = wrapper;
 		const propertyIdInput = { name: "filter_input" };
 		const propertyId1 = { name: "oneofselect_filtered_1" };
 		const propertyId2 = { name: "oneofselect_filtered_2" };
@@ -401,15 +429,15 @@ describe("oneofselect filters work correctly", () => {
 		renderedController.updatePropertyValue(propertyIdInput, 3);
 		// validate the correct number of options show up on open
 		expect(renderedController.getPropertyValue(propertyId1)).to.be.equal(null);
-		let dropdownList = controlUtils.getDropdownItems(wrapper, propertyId1.name);
+		let dropdownList = controlUtilsRTL.getDropdownItems(container, propertyId1.name);
 		expect(dropdownList).to.have.length(6);
 		expect(renderedController.getControlEnumFilterStates(propertyId1)).to.equal(null);
 		expect(renderedController.getPropertyValue(propertyId2)).to.be.equal("blue");
-		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId2.name);
+		dropdownList = controlUtilsRTL.getDropdownItems(container, propertyId2.name);
 		expect(dropdownList).to.have.length(6);
 		expect(renderedController.getControlEnumFilterStates(propertyId2)).to.equal(null);
 		expect(renderedController.getPropertyValue(propertyId3)).to.be.equal(null);
-		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId3.name);
+		dropdownList = controlUtilsRTL.getDropdownItems(container, propertyId3.name);
 		expect(dropdownList).to.have.length(3);
 		expect(renderedController.getControlEnumFilterStates(propertyId3)).to.eql(["red", "blue", "green"]);
 
@@ -461,13 +489,13 @@ describe("oneofselect with custom value allowed works correctly", () => {
 			"Six"
 		]
 	};
-	propertyUtils.setControls(controller, [control]);
+	propertyUtilsRTL.setControls(controller, [control]);
 	afterEach(() => {
 		controller.setErrorMessages({});
 		controller.setControlStates({});
 	});
 	it("should render a combobox dropdown", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -475,21 +503,27 @@ describe("oneofselect with custom value allowed works correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		expect(wrapper.prop("control")).to.equal(control);
-		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
-		const dropdownInput = dropdownWrapper.find("input");
+		const { container } = wrapper;
+		expectJest(mockOneofselectControl).toHaveBeenCalledWith({
+			"store": controller.getStore(),
+			"controller": controller,
+			"control": control,
+			"propertyId": propertyId,
+		});
+		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		const dropdownInput = dropdownWrapper.querySelectorAll("input");
 		expect(dropdownInput).to.have.length(1);
-		expect(dropdownInput.text()).to.equal("");
+		expect(dropdownInput.textContent).to.be.undefined;
 
 		// Verify dropdown items
-		const dropdownMenu = dropdownWrapper.find(".cds--list-box__menu-icon");
-		dropdownMenu.simulate("click");
-		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
-		expect(dropdownWrapper.find(".cds--list-box__menu-item")).to.have.length(6);
+		const dropdownMenu = dropdownWrapper.querySelector(".cds--list-box__menu-icon");
+		fireEvent.click(dropdownMenu);
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		expect(dropdownWrapper.querySelectorAll(".cds--list-box__menu-item")).to.have.length(6);
 	});
 
 	it("should display the custom value entered", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -497,21 +531,27 @@ describe("oneofselect with custom value allowed works correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		expect(wrapper.prop("control")).to.equal(control);
-		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
-		let dropdownInput = dropdownWrapper.find("input");
+		const { container } = wrapper;
+		expectJest(mockOneofselectControl).toHaveBeenCalledWith({
+			"store": controller.getStore(),
+			"controller": controller,
+			"control": control,
+			"propertyId": propertyId,
+		});
+		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		let dropdownInput = dropdownWrapper.querySelector("input");
 
-		dropdownInput.simulate("change", { target: { value: "custom" } });
-		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
-		dropdownInput = dropdownWrapper.find("input");
+		fireEvent.change(dropdownInput, { target: { value: "custom" } });
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		dropdownInput = dropdownWrapper.querySelector("input");
 
 		expect(controller.getPropertyValue(propertyId)).to.equal("custom");
-		expect(dropdownInput.instance().value).to.equal("custom");
+		expect(dropdownInput.value).to.equal("custom");
 	});
 
 	it("Validate oneofselect with custom value filtered correctly", () => {
 		controller.setControlStates({ "oneofselect-custom": { "enumFilter": ["one", "three"] } });
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -519,17 +559,20 @@ describe("oneofselect with custom value allowed works correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
-		const dropdownInput = dropdownWrapper.find("input");
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		const dropdownInput = dropdownWrapper.querySelector("input");
 		// Enter '' in input to check [one, three] are filtered using enumFilter and shouldFilterItem
-		dropdownInput.simulate("change", { target: { value: "" } });
-		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
-		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		fireEvent.change(dropdownInput, { target: { value: "" } });
+		// dropdownInput.simulate("change", { target: { value: "" } });
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(2);
 	});
 
+
 	it("Validate oneofselect filters correctly using shouldFilterItem", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
@@ -537,11 +580,12 @@ describe("oneofselect with custom value allowed works correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
-		const dropdownInput = dropdownWrapper.find("input");
-		dropdownInput.simulate("change", { target: { value: "one" } });
-		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
-		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		const dropdownInput = dropdownWrapper.querySelector("input");
+		fireEvent.change(dropdownInput, { target: { value: "one" } });
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
 	});
 });
@@ -549,18 +593,18 @@ describe("oneofselect with custom value allowed works correctly", () => {
 describe("oneofselect classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(oneofselectParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("oneofselect should have custom classname defined", () => {
-		expect(wrapper.find(".oneofselect-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".oneofselect-control-class")).to.have.length(1);
 	});
 
 	it("oneofselect should have custom classname defined in table cells", () => {
-		propertyUtils.openSummaryPanel(wrapper, "oneofselect_table-error-panel");
-		expect(wrapper.find(".table-oneofselect-control-class")).to.have.length(1);
-		expect(wrapper.find(".table-on-panel-oneofselect-control-class")).to.have.length(1);
-		expect(wrapper.find(".table-subpanel-oneofselect-control-class")).to.have.length(1);
+		propertyUtilsRTL.openSummaryPanel(wrapper, "oneofselect_table-error-panel");
+		expect(wrapper.container.querySelectorAll(".table-oneofselect-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".table-on-panel-oneofselect-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".table-subpanel-oneofselect-control-class")).to.have.length(1);
 	});
 });
