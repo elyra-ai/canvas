@@ -3790,9 +3790,6 @@ export default class SVGCanvasRenderer {
 			.select(".d3-comment-text")
 			.attr("style", null) // Wipe the in-line styles before applying formats
 
-		// .attr("style", (c) => this.getCommentBodyStyle(c, "default"));
-		// .attr("style", (c) => this.getCommentTextStyle(c, "default"))
-
 			.each((d, i, commentTexts) => {
 				const commentElement = d3.select(commentTexts[i]);
 				CanvasUtils.applyNonOutlineStyle(commentElement, d.formats); // Apply all formats except outlineStyle

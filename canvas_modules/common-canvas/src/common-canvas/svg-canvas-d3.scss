@@ -117,8 +117,7 @@ $link-highlight-color: $support-info;
 	overflow: visible;
 }
 
-.d3-foreign-object-comment-text,
-.d3-foreign-object-text-entry {
+.d3-foreign-object-comment-text {
 	// Don't handle events - let objects inside foreign object handle them.
 	pointer-events: none;
 	overflow: hidden;
@@ -137,7 +136,6 @@ $link-highlight-color: $support-info;
 	outline: none;
 }
 
-.d3-foreign-object-text-entry:focus-within,
 .d3-foreign-object-comment-text-entry:focus-within {
 	@include d3-text-entry-focus-mixin;
 }

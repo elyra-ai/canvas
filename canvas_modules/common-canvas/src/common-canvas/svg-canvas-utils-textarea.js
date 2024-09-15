@@ -47,7 +47,8 @@ const RAB_KEY = 190; // Right angle bracket >
 const SEVEN_KEY = 55;
 const EIGHT_KEY = 56;
 
-const SCROLL_PADDING = 2;
+const SCROLL_PADDING_COMMENT = 2;
+const SCROLL_PADDING_LABEL = 12;
 
 const WHITE = "#FFFFFF";
 const BLACK = "#000000";
@@ -119,7 +120,7 @@ export default class SvgCanvasTextArea {
 			closeTextAreaCallback: this.closeCommentTextArea.bind(this)
 		};
 
-		this.displayEditableDiv(this.editingTextData);
+		this.displayEditableComment(this.editingTextData);
 
 		if (this.dispUtils.isDisplayingFullPage()) {
 			const pos = this.getCommentToolbarPosCallback(d);
@@ -388,12 +389,13 @@ export default class SvgCanvasTextArea {
 		this.logger.log("autoSizeComment - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 
 		if (data.autoSize) {
-			const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
+			const pad = this.foreignObjectLabel ? SCROLL_PADDING_LABEL : SCROLL_PADDING_COMMENT;
+			const scrollHeight = textArea.scrollHeight + pad;
 
 			if (this.textAreaHeight < scrollHeight) {
 				this.textAreaHeight = scrollHeight;
-				if (this.foreignObject) {
-					this.foreignObject.style("height", this.textAreaHeight + "px");
+				if (this.foreignObjectLabel) {
+					this.foreignObjectLabel.style("height", this.textAreaHeight + "px");
 
 				} else if (this.foreignObjectComment) {
 					this.foreignObjectComment.style("height", this.textAreaHeight + "px");
@@ -463,13 +465,14 @@ export default class SvgCanvasTextArea {
 			yPos: this.nodeUtils.getNodeLabelTextAreaPosY(node),
 			width: this.nodeUtils.getNodeLabelTextAreaWidth(node),
 			height: this.nodeUtils.getNodeLabelTextAreaHeight(node),
+			autoSize: true,
 			className: this.nodeUtils.getNodeLabelTextAreaClass(node),
 			parentDomObj: parentDomObj,
 			autoSizeCallback: this.autoSizeMultiLineLabel.bind(this),
 			saveTextChangesCallback: this.saveNodeLabelChanges.bind(this),
 			closeTextAreaCallback: this.closeEntryTextArea.bind(this)
 		};
-		this.displayTextArea(this.editingTextData);
+		this.displayEditableLabel(this.editingTextData);
 	}
 
 	// Increases the size of the editable multi-line text area for a label based
@@ -488,11 +491,11 @@ export default class SvgCanvasTextArea {
 		// Temporarily set the height to zero so the scrollHeight will get set to
 		// the full height of the text in the textarea. This allows us to close up
 		// the text area when the lines of text reduce.
-		if (this.foreignObject) {
-			this.foreignObject.style("height", 0);
-			const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
+		if (this.foreignObjectLabel) {
+			this.foreignObjectLabel.style("height", 0);
+			const scrollHeight = textArea.scrollHeight + SCROLL_PADDING_LABEL;
 			this.textAreaHeight = scrollHeight;
-			this.foreignObject.style("height", this.textAreaHeight + "px");
+			this.foreignObjectLabel.style("height", this.textAreaHeight + "px");
 		}
 	}
 
@@ -535,6 +538,7 @@ export default class SvgCanvasTextArea {
 			yPos: this.decUtils.getDecLabelTextAreaPosY(),
 			width: this.decUtils.getDecLabelTextAreaWidth(dec, obj, objType),
 			height: this.decUtils.getDecLabelTextAreaHeight(dec, obj, objType),
+			autoSize: true,
 			className: this.decUtils.getDecLabelTextAreaClass(dec),
 			parentDomObj: parentDomObj,
 			objId: obj.id,
@@ -543,7 +547,7 @@ export default class SvgCanvasTextArea {
 			saveTextChangesCallback: this.saveDecLabelChanges.bind(this),
 			closeTextAreaCallback: this.closeEntryTextArea.bind(this)
 		};
-		this.displayTextArea(this.editingTextData);
+		this.displayEditableLabel(this.editingTextData);
 	}
 
 	// Handles saved changes to editable text decorations.
@@ -563,13 +567,13 @@ export default class SvgCanvasTextArea {
 	// Displays a <textarea> to allow text entry and editing for: node labels; or
 	// text decorations on either a node or link.
 	// Evetually it is possible that we could remove the <textarea> approach
-	// and just use the <div> approach used in displayEditableDiv.
-	displayTextArea(data) {
+	// and just use the <div> approach used in displayEditableComment.
+	displayEditableLabel(data) {
 		this.textAreaHeight = data.height; // Save for comparison during auto-resize
 		this.editingText = true;
 		this.editingTextId = data.id;
 
-		this.foreignObject = d3.select(data.parentDomObj)
+		this.foreignObjectLabel = d3.select(data.parentDomObj)
 			.append("foreignObject")
 			.attr("class", "d3-foreign-object-text-entry")
 			.attr("width", data.width)
@@ -577,7 +581,7 @@ export default class SvgCanvasTextArea {
 			.attr("x", data.xPos)
 			.attr("y", data.yPos);
 
-		const textArea = this.foreignObject
+		const textArea = this.foreignObjectLabel
 			.append("xhtml:textarea")
 			.attr("class", data.className)
 			.text(unescapeText(data.text))
@@ -595,8 +599,8 @@ export default class SvgCanvasTextArea {
 		// in the comment sizing area.
 		this.removeTempCursorOverlay();
 
-		if (this.foreignObject) {
-			const commentEntry = this.foreignObject.selectAll("textarea");
+		if (this.foreignObjectLabel) {
+			const commentEntry = this.foreignObjectLabel.selectAll("textarea");
 			const commentEntryElement = commentEntry.node();
 			this.textContentSaved = true;
 			this.saveAndCloseTextArea(this.editingTextData, commentEntryElement, evt);
@@ -662,9 +666,9 @@ export default class SvgCanvasTextArea {
 		if (data.closeTextAreaCallback) {
 			data.closeTextAreaCallback(data.id);
 		}
-		if (this.foreignObject) {
-			this.foreignObject.remove();
-			this.foreignObject = null;
+		if (this.foreignObjectLabel) {
+			this.foreignObjectLabel.remove();
+			this.foreignObjectLabel = null;
 
 		} else if (this.foreignObjectComment) {
 			// Ensure hidden foreign object used for display is visible again
@@ -696,7 +700,7 @@ export default class SvgCanvasTextArea {
 	// text decorations) is handled because the <div>, that is contained within a
 	// parent <div>, is styled so the text can be aligned at the top, middle and
 	// bottom of the parent.
-	displayEditableDiv(data) {
+	displayEditableComment(data) {
 		this.textAreaHeight = data.height; // Save for comparison during auto-resize
 		this.editingText = true;
 		this.editingTextId = data.id;
