@@ -54,6 +54,7 @@
   "expression.values.empty.table.label": "Aucune valeur trouvée",
   "expression.functions.table.label": "Table Fonctions",
   "expression.fields.dropdown": "Zones",
+  "expression.functions.dropdown": "Fonctions générales",
   "expression.add.column": "Ajouter",
   "expression.fields.title": "Zones",
   "expression.values.title": "Valeurs",
