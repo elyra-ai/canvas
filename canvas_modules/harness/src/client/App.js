@@ -2242,8 +2242,6 @@ class App extends React.Component {
 				{ divider: true }
 			];
 
-
-
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_BEFORE_AFTER) {
 			toolbarConfig = {
 				leftBar: [
