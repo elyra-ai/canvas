@@ -875,6 +875,13 @@ Cypress.Commands.add("verifyTopPanelWidth", (width) => {
 	});
 });
 
+Cypress.Commands.add("verifyLeftPanelWidth", (width) => {
+	cy.get(".palette-flyout-div").should((element) => {
+		// Use compareCloseTo here because top-panel width is slighyly different
+		// on the build machine to its width when running tests on a local machine.
+		compareCloseTo(element[0].offsetWidth, width);
+	});
+});
 
 Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => {
 	cy.getCommentWithText(commentText)
