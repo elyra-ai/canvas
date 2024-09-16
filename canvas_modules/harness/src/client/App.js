@@ -87,9 +87,9 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
-import { Add, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
+import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
-	StopFilledAlt, Subtract, TextScale, TouchInteraction } from "@carbon/react/icons";
+	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification } from "@carbon/react/icons";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
 
@@ -126,6 +126,7 @@ import {
 	TOOLBAR_TYPE_DEFAULT,
 	TOOLBAR_TYPE_SUB_AREAS,
 	TOOLBAR_TYPE_SINGLE_BAR,
+	TOOLBAR_TYPE_CUSTOMIZE_AUTO,
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
@@ -311,7 +312,6 @@ class App extends React.Component {
 				label: "Notifications",
 				notificationHeader: "Notification Center",
 				notificationSubtitle: "subtitle",
-				toolbarIcon: null,
 				enable: true,
 				emptyMessage: "You don't have any notifications right now.",
 				clearAllMessage: "Clear all",
@@ -325,7 +325,6 @@ class App extends React.Component {
 				label: "Notifications",
 				notificationHeader: "Notification Center Canvas 2",
 				notificationSubtitle: "subtitle",
-				toolbarIcon: null,
 				enable: true,
 				emptyMessage: "You don't have any notifications right now.",
 				clearAllMessage: "Clear all",
@@ -2218,6 +2217,32 @@ class App extends React.Component {
 				{ action: "trackpad", iconEnabled: (<TouchInteraction size={32} />), label: "Trackpad", enable: true, isSelected: this.state.selectedInteractionType === "Trackpad" },
 				{ divider: true }
 			];
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOMIZE_AUTO) {
+			toolbarConfig = [
+				{ action: "cut", label: "Cut" },
+				{ action: "copy", label: "Copy" },
+				{ action: "paste", label: "Paste" },
+				{ divider: true },
+				{ action: "undo", label: "Undo" },
+				{ action: "redo", label: "Redo" },
+				{ divider: true },
+				{ action: "togglePalette",
+					label: this.canvasController.isPaletteOpen() ? "Close Palette" : "Open Palette",
+					iconEnabled: this.canvasController.isPaletteOpen() ? (<SubtractAlt />) : (<AddAlt />),
+					incLabelWithIcon: "after"
+				},
+				{ divider: true },
+				{ action: "toggleNotificationPanel", iconEnabled: (<Notification />) },
+				{ divider: true },
+				{ action: "deleteSelectedObjects", label: "Delete" },
+				{ divider: true },
+				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
+				{ divider: true }
+			];
+
+
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_BEFORE_AFTER) {
 			toolbarConfig = {
