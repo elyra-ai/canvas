@@ -894,7 +894,7 @@ g.bkg-col-cyan-50 {
 .d3-comment-text-entry-scroll {
 	pointer-events: unset;
 	overflow-x: hidden;
-	overflow-y: scroll;
+	overflow-y: auto;
 	border-color: $comment-border-color;
 	border-width: $comment-border-width;
 	border-style: solid;
