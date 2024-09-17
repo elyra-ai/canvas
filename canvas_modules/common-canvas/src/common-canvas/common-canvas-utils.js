@@ -1355,6 +1355,100 @@ export default class CanvasUtils {
 		return (luma < 108);
 	}
 
+	// Applies the outlineStyle format to the D3 comment selection passed in,
+	// if one exists, in the formats array passed in.
+	static applyOutlineStyle(commentSel, formats) {
+		if (formats?.length > 0) {
+			formats.forEach((f) => {
+				if (f.type === "outlineStyle") { // Only apply outline style to outer <div>
+					const { field, value } = CanvasUtils.convertFormat(f);
+					commentSel.style(field, value);
+				}
+			});
+		}
+	}
+
+	// Applies all formats from the formats array, that are not outlineStyle, to the
+	// D3 comment selection passed in.
+	static applyNonOutlineStyle(commentSel, formats) {
+		if (formats?.length > 0) {
+			formats.forEach((f) => {
+				if (f.type !== "outlineStyle") { // Only apply outline style to outer <div>
+					const { field, value } = CanvasUtils.convertFormat(f);
+					commentSel.style(field, value);
+				}
+			});
+		}
+	}
+
+	// Returns an object contaiing the start and end positions
+	// of any current selection in the domNode passed in. The
+	// DOM node is expected to contain text which is stored in a
+	// set of child nodes that are text objects.
+	static getSelectionPositions(domNode) {
+		const sel = window.getSelection();
+		let anchorPos;
+		let focusPos;
+		let runningLen = 0;
+		domNode.childNodes.forEach((cn) => {
+			if (cn.nodeValue) {
+				const textLen = cn.nodeValue.length;
+				if (cn === sel.anchorNode) {
+					anchorPos = runningLen + sel.anchorOffset;
+				}
+				if (cn === sel.focusNode) {
+					focusPos = runningLen + sel.focusOffset;
+				}
+				runningLen += textLen;
+			}
+		});
+		return { start: Math.min(anchorPos, focusPos), end: Math.max(anchorPos, focusPos) };
+	}
+
+	// Selects the entire contents of the DOM node passed in.
+	static selectNodeContents(domNode) {
+		var range = document.createRange();
+		range.selectNodeContents(domNode);
+
+		var sel = window.getSelection();
+		sel.removeAllRanges();
+		sel.addRange(range);
+	}
+
+	// Selects the range of characters in the text DOM node passed in
+	// between the start and end positions passed in. The DOM node is
+	// expected to contain text which is stored in a set of child nodes
+	// that are text objects. selection is an optional object containing
+	// the current selection which is provided by the Cypress test cases.
+	static selectNodeRange(domNode, start, end, selection) {
+		const range = document.createRange();
+
+		let startTextNode;
+		let endTextNode;
+		let startTextPos;
+		let endTextPos;
+		let runningLen = 0;
+		domNode.childNodes.forEach((cn) => {
+			const textLen = cn.nodeValue.length;
+			runningLen += textLen;
+			if (start <= runningLen && !startTextNode) {
+				startTextNode = cn;
+				startTextPos = textLen - (runningLen - start);
+			}
+			if (end <= runningLen && !endTextNode) {
+				endTextNode = cn;
+				endTextPos = textLen - (runningLen - end);
+			}
+		});
+
+		range.setStart(startTextNode, startTextPos);
+		range.setEnd(endTextNode, endTextPos);
+
+		const sel = selection ? selection : window.getSelection();
+		sel.removeAllRanges();
+		sel.addRange(range);
+	}
+
 	// Returns an object containing a CSS field and value that
 	// can be applied to a <div> contining text based on the
 	// format type and action passed in.
