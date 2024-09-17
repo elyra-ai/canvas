@@ -102,19 +102,19 @@
 
 /*  Override styles for comments in commentColorCanvas.json and commentUnderlap.json */
 
-.canvas-comment-1 .d3-comment-rect {
-	fill: #B98BA6;
-	stroke: #000000;
+.canvas-comment-1 .d3-comment-text {
+	background-color: #B98BA6;
+	color: #000000;
 }
 
-.canvas-comment-2 .d3-comment-rect {
-	fill: #A6C8E4;
-	stroke: #000000;
+.canvas-comment-2 .d3-comment-text{
+	background-color: #A6C8E4;
+	color: #000000;
 }
 
-.canvas-comment-3 .d3-comment-rect {
-	fill: #A6C8E4;
-	stroke: #000000;
+.canvas-comment-3 .d3-comment-text {
+	background-color: #A6C8E4;
+	color: #000000;
 }
 
 /* These styles are used in the portsColorCanvas.json canvas file. */
