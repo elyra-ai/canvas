@@ -1188,7 +1188,16 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Toolbar action object definition">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automatic-toolbar-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automatic toolbar items
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Automatic toolbar items">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2553,7 +2562,16 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Toolbar action object definition">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automatic-toolbar-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automatic toolbar items
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Automatic toolbar items">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2660,12 +2678,7 @@ Where:</p>
 <p><strong>overrideAutoEnableDisable</strong> - a boolean. The default is false. By default Common Canvas has an auto-enablement feature that controls the enablement of common tools in the toolbar based on user actions (e.g enable the <code>Delete</code> icon when items are selected). If <code>overrideAutoEnableDisable</code> set to true it will switch off the auto-enablement feature. This is useful if the host application wants to disable all the nodes under certain circumstances. If set to true, the <code>enable</code> property in the action items for each tool is used to decide whether to display the icon as enabled or disabled. If set to false or omitted, Common Canvas will handle the auto-enablement of common actions. (See the <code>action</code>section below for more details.)</p>
 </li>
 </ul>
-<p>Two toolbar items are automatically added to the toolbar:</p>
-<ul>
-<li>A palette action which is used for opening and closing the <a href="../01.02-palette/">palette</a>. This is added to the left side of the toolbar if the <a href="../03.02.01-canvas-config/#enablepalettelayout"><code>enablePaletteLayout</code></a> field is set to either &ldquo;Flyout&rdquo; (the default) or &ldquo;Modal&rdquo; in the canvas configuration.</li>
-<li>A notification panel action which is used to open and close the notifications panel. This will be added to the right side of the toolbar if a <a href="../03.02.01-canvas-config/#notification-config-object">notification configuration</a> object is specified to the <code>&lt;CommonCanvas&gt;</code> react object.</li>
-</ul>
-<p>The toolbar will display the objects in the same order they are defined in the arrays.</p>
+<p>The toolbar will display the objects in the same order they are defined in the leftBar and rightBar arrays.</p>
 <h3 id="toolbar-action-object-definition">Toolbar action object definition<a class="headerlink" href="#toolbar-action-object-definition" title="Permanent link">&para;</a></h3>
 <p>Here is an example of an action object which must contain a unique <code>action</code> field as a minimum.
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="p">{</span>
@@ -2748,6 +2761,32 @@ Where:</p>
 <p><strong>textContent</strong> - This is an additional string that will be displayed on top of the action button. It can be used to specify adittional information to enahance the icon. For example, a count of messages could be displayed over a icon that, when clicked, shows a messages panel.</p>
 </li>
 </ul>
+<h3 id="automatic-toolbar-items">Automatic toolbar items<a class="headerlink" href="#automatic-toolbar-items" title="Permanent link">&para;</a></h3>
+<p>Two toolbar items are automatically added to the toolbar:</p>
+<ul>
+<li>A palette action which is used for opening and closing the <a href="../01.02-palette/">palette</a>. This is added to the left side of the toolbar if the <a href="../03.02.01-canvas-config/#enablepalettelayout"><code>enablePaletteLayout</code></a> field is set to either &ldquo;Flyout&rdquo; (the default) or &ldquo;Modal&rdquo; in the canvas configuration.</li>
+<li>A notification panel action which is used to open and close the notifications panel. This will be added to the right side of the toolbar if a <a href="../03.02.01-canvas-config/#notification-config-object">notification configuration</a> object is specified to the <code>&lt;CommonCanvas&gt;</code> react object.</li>
+</ul>
+<p>The position and a subset of fields for these items can be customized by providing an appropriate object in either the leftBar or rightBar arrays. The <code>action</code> field for the items should be either &ldquo;togglePalette&rdquo; or &ldquo;toggleNotificationPanel&rdquo;. Any of the following fields can be optionally provided to override the default values: label, iconEnabled, incLabelWithIcon and tooltip.</p>
+<p>For example, if the application provides the following in, say, the leftBar array:
+ <div class="highlight"><pre><span></span><code>   import { AddAlt, SubtractAlt, Notification } from &quot;@carbon/react/icons&quot;;
+   ...
+
+   const toolbarConfig = {
+       leftBar: [
+           ...
+           { action: &quot;togglePalette&quot;,
+             label: this.canvasController.isPaletteOpen() ? &quot;Close Palette&quot; : &quot;Open Palette&quot;,
+              iconEnabled: this.canvasController.isPaletteOpen() ? (&lt;SubtractAlt /&gt;) : (&lt;AddAlt /&gt;),
+              incLabelWithIcon: &quot;after&quot; },
+           { divider: true },
+           { action: &quot;toggleNotificationPanel&quot;, iconEnabled: (&lt;Notification /&gt;) },
+           ...
+       ]
+   };
+</code></pre></div></p>
+<p>Will look like this:</p>
+<p><img src="../assets/cc-toolbar-auto-customize.png" width="500" /></p>
 <h4 id="sub-area-properties">Sub-area properties<a class="headerlink" href="#sub-area-properties" title="Permanent link">&para;</a></h4>
 <p>The toolbar button can show a &lsquo;sub-area&rsquo; below the button when the button is clicked. This can be either a <a href="../01.05-toolbar/#sub-menu">sub-menu</a> which is a list of text options or a <a href="../01.05-toolbar/#sub-panel">sub-panel</a> which is a small window that can show whatever the application wants such as settings or messages.</p>
 <ul>
