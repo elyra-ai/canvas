@@ -1466,5 +1466,5 @@ function getCommentSelectionOutlineSelector(comment) {
 }
 
 function getCommentBodySelector(comment) {
-	return "[data-id='" + comment.getAttribute("data-id") + "'] > .d3-comment-rect";
+	return "[data-id='" + comment.getAttribute("data-id") + "'] > .d3-foreign-object-comment-text";
 }

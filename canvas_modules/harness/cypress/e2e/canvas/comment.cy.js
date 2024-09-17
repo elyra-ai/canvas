@@ -332,7 +332,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some quote text!",
 			textToHighlight: "quote",
 			action: "quote",
-			markdownText: "> Some quote text!\n",
+			markdownText: "> Some quote text!\n\n",
 			html: "<blockquote>\n<p>Some quote text!</p>\n</blockquote>\n"
 		});
 	});
@@ -340,9 +340,9 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 	it("Test adding numbered list markdown.", function() {
 		addMarkdownWithToolbar({
 			initialText: "Some numbered list text!",
-			textToHighlight: "numberedList",
+			textToHighlight: "numbered list",
 			action: "numberedList",
-			markdownText: "1. Some numbered list text!\n",
+			markdownText: "1. Some numbered list text!\n\n",
 			html: "<ol>\n<li>Some numbered list text!</li>\n</ol>\n"
 		});
 	});
@@ -350,9 +350,9 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 	it("Test adding bulleted list markdown.", function() {
 		addMarkdownWithToolbar({
 			initialText: "Some bulleted list text!",
-			textToHighlight: "bulletedList",
+			textToHighlight: "bulleted list",
 			action: "bulletedList",
-			markdownText: "* Some bulleted list text!\n",
+			markdownText: "* Some bulleted list text!\n\n",
 			html: "<ul>\n<li>Some bulleted list text!</li>\n</ul>\n"
 		});
 	});
@@ -439,7 +439,7 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 			initialText: "Some quote text!",
 			textToHighlight: "quote",
 			action: "quote",
-			markdownText: "> Some quote text!\n",
+			markdownText: "> Some quote text!\n\n",
 			html: "<blockquote>\n<p>Some quote text!</p>\n</blockquote>\n"
 		});
 	});
@@ -447,9 +447,9 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 	it("Test adding numbered list markdown.", function() {
 		addMarkdownWithKeyboard({
 			initialText: "Some numbered list text!",
-			textToHighlight: "numberedList",
+			textToHighlight: "numbered list",
 			action: "numberedList",
-			markdownText: "1. Some numbered list text!\n",
+			markdownText: "1. Some numbered list text!\n\n",
 			html: "<ol>\n<li>Some numbered list text!</li>\n</ol>\n"
 		});
 	});
@@ -457,9 +457,9 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 	it("Test adding bulleted list markdown.", function() {
 		addMarkdownWithKeyboard({
 			initialText: "Some bulleted list text!",
-			textToHighlight: "bulletedList",
+			textToHighlight: "bulleted list",
 			action: "bulletedList",
-			markdownText: "* Some bulleted list text!\n",
+			markdownText: "* Some bulleted list text!\n\n",
 			html: "<ul>\n<li>Some bulleted list text!</li>\n</ul>\n"
 		});
 	});
