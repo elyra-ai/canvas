@@ -27,6 +27,7 @@ import { ERROR, WARNING, SUCCESS, INFO, PALETTE_LAYOUT_NONE,
 	NOTIFICATION_ICON_CLASS, TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_LAYOUT_TOP,
 	TOOLBAR_TOGGLE_PALETTE }
 	from "../common-canvas/constants/canvas-constants";
+import { SidePanelOpenFilled, SidePanelCloseFilled } from "@carbon/react/icons";
 
 class CommonCanvasToolbar extends React.Component {
 	constructor(props) {
@@ -177,9 +178,10 @@ class CommonCanvasToolbar extends React.Component {
 			// is to be performed. So add them as additional classes. Also, jest tests require them.
 			// TODO - In next major release, remove "paletteClose-action" and "paletteOpen-action"
 			const className = this.props.isPaletteOpen ? "closePalette-action paletteClose-action" : "openPalette-action paletteOpen-action";
+			const icon = this.props.isPaletteOpen ? (<SidePanelCloseFilled />) : (<SidePanelOpenFilled />);
 
 			const togglePaletteAction =
-				{ action: TOOLBAR_TOGGLE_PALETTE, label: paletteLabel, enable: true,
+				{ action: TOOLBAR_TOGGLE_PALETTE, label: paletteLabel, enable: true, iconEnabled: icon,
 					isSelected: this.props.isPaletteOpen, className };
 
 			const lbIdx = this.getToolIndexByAction(TOOLBAR_TOGGLE_PALETTE, leftBar);
