@@ -75,7 +75,8 @@ $node-port-input-arrow-connected-stroke-color: $background-inverse;
 $node-port-input-arrow-connected-fill-color: transparent;
 
 // Comment colors
-$comment-outline-color: $layer-active-02;
+$comment-border-color: $layer-active-02;
+$comment-border-width: 1px;
 $comment-outline-hover-color: $background-inverse-hover;
 $comment-fill-color: $layer-01;
 $comment-text-color: $text-primary;
@@ -109,7 +110,6 @@ $link-highlight-color: $support-info;
 .d3-foreign-object-ghost-label,
 .d3-foreign-object-node-label,
 .d3-foreign-object-dec-label,
-.d3-foreign-object-comment-text,
 .d3-foreign-object-text-entry {
 	// Don't handle events - let objects inside foreign object handle them.
 	pointer-events: none;
@@ -117,21 +117,10 @@ $link-highlight-color: $support-info;
 	overflow: visible;
 }
 
-.d3-foreign-object-comment-text-wysiwyg,
-.d3-foreign-object-text-entry-wysiwyg {
+.d3-foreign-object-comment-text {
 	// Don't handle events - let objects inside foreign object handle them.
 	pointer-events: none;
-	// We hide overflow with wysiwyg text editing
 	overflow: hidden;
-}
-
-.d3-foreign-object-text-entry-wysiwyg:focus {
-	outline: none;
-}
-
-.d3-foreign-object-text-entry-wysiwyg:focus-within {
-	outline: none;
-	box-shadow: 0 0 0 2px $focus;
 }
 
 // Declare our own focus highlighting for text entry.
@@ -140,6 +129,15 @@ $link-highlight-color: $support-info;
 	outline: none;
 	// Add our own focus highlighting with our own color and square corners
 	box-shadow: 0 0 0 2px $focus;
+}
+
+.d3-foreign-object-text-entry:focus,
+.d3-foreign-object-comment-text-entry:focus {
+	outline: none;
+}
+
+.d3-foreign-object-comment-text-entry:focus-within {
+	@include d3-text-entry-focus-mixin;
 }
 
 /* Pull-out region rectangle used for object selection */
@@ -646,30 +644,16 @@ $link-highlight-color: $support-info;
 /* Comment styles */
 
 .d3-comment-group:hover {
-	.d3-comment-rect {
-		stroke: $comment-outline-hover-color
+	.d3-comment-text-scroll {
+		border-color: $comment-outline-hover-color;
+		border-width: 1px;
+		border-style: solid;
 	}
-}
-
-/* Style for default comment background rectangle */
-.d3-comment-rect {
-	fill: $comment-fill-color;
-	stroke: $comment-outline-color;
-	stroke-width: 1;
-
-	/* Prevent elements from being selectable */
-	/* This stops it being dragged incorrectly. */
-	user-select: none;
 }
 
 @mixin d3-comment-color-overrides($background-color, $text-color) {
-	.d3-comment-rect {
-		fill: $background-color;
-	}
-	.d3-comment-text {
-		color: $text-color;
-	}
-	.d3-comment-entry {
+	.d3-comment-text,
+	.d3-comment-text-entry {
 		background-color: $background-color;
 		color: $text-color;
 	}
@@ -905,25 +889,20 @@ g.bkg-col-cyan-50 {
 	word-break: break-word;
 }
 
-.d3-comment-text {
-	@include d3-comment-mixin;
-	@include d3-comment-markdown;
-	border-width: $comment-text-display-border;
-	user-select: none;
-}
-
 /* Style for comment text entry when shown in an HTML textarea control. */
-.d3-comment-entry {
-	@include d3-comment-mixin;
-	background-color: $field-01;
-	border-width: $comment-text-entry-border;
-
-	&:focus {
-		@include d3-text-entry-focus-mixin;
-	}
+.d3-comment-text-scroll,
+.d3-comment-text-entry-scroll {
+	pointer-events: unset;
+	overflow-x: hidden;
+	overflow-y: auto;
+	border-color: $comment-border-color;
+	border-width: $comment-border-width;
+	border-style: solid;
+	height: 100%;
+	width: 100%;
 }
 
-.d3-comment-text-wysiwyg-outer {
+.d3-comment-text-outer {
 	display: table;
 	pointer-events: none;
 	overflow: hidden;
@@ -931,18 +910,20 @@ g.bkg-col-cyan-50 {
 	height: 100%;
 }
 
-.d3-comment-text-wysiwyg {
+.d3-comment-text {
 	@include d3-comment-mixin;
 	background-color: $comment-fill-color;
 	padding: $comment-text-display-border;
-	border-color: $comment-outline-color;
-	border-width: 1px;
 	user-select: none;
 	overflow: hidden;
 	display: table-cell;
+
+	&.markdown {
+		@include d3-comment-markdown;
+	}
 }
 
-.d3-comment-text-entry-wysiwyg-outer {
+.d3-comment-text-entry-outer {
 	display: table;
 	pointer-events: none;
 	overflow: hidden;
@@ -951,10 +932,10 @@ g.bkg-col-cyan-50 {
 	outline: none;
 }
 
-.d3-comment-text-entry-wysiwyg {
+.d3-comment-text-entry {
 	@include d3-comment-mixin;
 	padding: $comment-text-display-border;
-	border-width: 1px;
+	border-width: $comment-border-width;
 	background-color: $field-01;
 	outline: none;
 	user-select: none;
@@ -962,8 +943,6 @@ g.bkg-col-cyan-50 {
 	display: table-cell;
 	cursor: text;
 }
-
-
 
 /* Link styles for branch highlighting */
 

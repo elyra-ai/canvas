@@ -52,6 +52,7 @@ import {
 	TIP_STATE_TAG,
 	TOOLBAR_TYPE_DEFAULT,
 	TOOLBAR_TYPE_SUB_AREAS,
+	TOOLBAR_TYPE_CUSTOMIZE_AUTO,
 	TOOLBAR_TYPE_SINGLE_BAR,
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
@@ -102,8 +103,6 @@ import {
 	TOOLBAR_LAYOUT_NONE,
 	TOOLBAR_LAYOUT_TOP
 } from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
-
-import { Notification } from "@carbon/react/icons";
 
 import FormsService from "../../../services/FormsService";
 
@@ -1403,6 +1402,10 @@ export default class SidePanelForms extends React.Component {
 						labelText={TOOLBAR_TYPE_SUB_AREAS}
 					/>
 					<RadioButton
+						value={TOOLBAR_TYPE_CUSTOMIZE_AUTO}
+						labelText={TOOLBAR_TYPE_CUSTOMIZE_AUTO}
+					/>
+					<RadioButton
 						value={TOOLBAR_TYPE_SINGLE_BAR}
 						labelText={TOOLBAR_TYPE_SINGLE_BAR}
 					/>
@@ -1566,15 +1569,6 @@ export default class SidePanelForms extends React.Component {
 				labelText="Disable the notification center secondary button"
 				toggled={this.props.getStateValue("notificationConfig").secondaryButtonDisabled}
 				onToggle={(val) => this.notificationConfigToggle("notificationConfig", "secondaryButtonDisabled", val)}
-			/>
-			<Toggle
-				id="toolbarIcon" // Set ID to corresponding field in App.js state
-				labelText="Set toolbar icon to Bell icon"
-				toggled={this.props.getStateValue("notificationConfig").toolbarIcon}
-				onToggle={(val) => (val
-					? this.notificationConfigToggle("notificationConfig", "toolbarIcon", (<Notification size={"32"} />))
-					: this.notificationConfigToggle("notificationConfig", "toolbarIcon", null))
-				}
 			/>
 		</div>);
 

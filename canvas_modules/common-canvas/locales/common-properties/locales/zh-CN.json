@@ -54,6 +54,7 @@
   "expression.values.empty.table.label": "找不到值",
   "expression.functions.table.label": "函数表",
   "expression.fields.dropdown": "字段",
+  "expression.functions.dropdown": "一般函数",
   "expression.add.column": "添加",
   "expression.fields.title": "字段",
   "expression.values.title": "值",

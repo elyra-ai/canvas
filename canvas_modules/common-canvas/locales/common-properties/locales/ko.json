@@ -54,6 +54,7 @@
   "expression.values.empty.table.label": "값을 찾을 수 없음",
   "expression.functions.table.label": "함수 테이블",
   "expression.fields.dropdown": "필드(E)",
+  "expression.functions.dropdown": "일반 함수",
   "expression.add.column": "추가",
   "expression.fields.title": "필드(E)",
   "expression.values.title": "값",
