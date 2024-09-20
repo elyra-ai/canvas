@@ -152,6 +152,11 @@
   "uihints": {
     "id": "actions",
     "icon": "images/actions.svg",
+    "editor_size": "small",
+    "pixel_width": {
+      "min": 400,
+      "max": 400
+    },
     "label": {
       "default": "Action Test"
     },
