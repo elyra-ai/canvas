@@ -154,8 +154,8 @@
     "icon": "images/actions.svg",
     "editor_size": "small",
     "pixel_width": {
-      "min": 400,
-      "max": 400
+      "min": 600,
+      "max": 900
     },
     "label": {
       "default": "Action Test"

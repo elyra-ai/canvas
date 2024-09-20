@@ -571,8 +571,17 @@ class PropertiesMain extends React.Component {
 				</PropertiesModal>);
 			}
 
-			// If Custom width is set adjust classname to format action buttons
 			let propertiesSizeClassname = `properties-${this.state.editorSize}`;
+
+			const overrideSize = this._getOverrideSize();
+			let overrideStyle = null;
+			if (overrideSize !== null) {
+				if (this.state.editorSize === Size.SMALL) {
+					propertiesSizeClassname = "properties-small-custom";
+				}
+				overrideStyle = { width: overrideSize + "px" };
+			}
+
 			const className = classNames("properties-wrapper",
 				{
 					"properties-right-flyout": this.props.propertiesConfig.rightFlyout,
@@ -580,14 +589,6 @@ class PropertiesMain extends React.Component {
 					"properties-light-disabled": !this.props.light
 				},
 				propertiesSizeClassname);
-			const overrideSize = this._getOverrideSize();
-			let overrideStyle = null;
-			if (overrideSize !== null) {
-				overrideStyle = { width: overrideSize + "px" };
-				if (this.state.editorSize === Size.SMALL) {
-					propertiesSizeClassname = "properties-small-custom";
-				}
-			}
 			return (
 				<Provider store={this.propertiesController.getStore()}>
 					<aside
