@@ -5063,8 +5063,8 @@ export default class SVGCanvasRenderer {
 				// Self-referencing link
 				if (node.id === link.srcObj?.id &&
 						link.srcObj?.id === link.trgNode?.id) {
-					linksInfo[NORTH].push({ type: "in", endNode: link.srcObj, link });
-					linksInfo[EAST].push({ type: "out", endNode: link.trgNode, link });
+					linksInfo[NORTH].push({ type: "in", startNode: link.srcObj, endNode: link.trgNode, link });
+					linksInfo[EAST].push({ type: "out", startNode: link.srcObj, endNode: link.trgNode, link });
 
 				} else if (link.trgNode && link.trgNode.id === node.id) {
 					if (link.srcObj) {
@@ -5174,16 +5174,30 @@ export default class SVGCanvasRenderer {
 				});
 			});
 
-			// Set an angle for each linkDir so that they can be sorted. Angle is from the
+			// Set an angle for each linkDir so that they can be sorted so they do not
+			// overlap when being drawn to or from the node. The angle is from the
 			// center of the node we are handling to their projected end point.
 			linksDirArray.forEach((ld) => {
 				ld.angle = CanvasUtils.calculateAngle(startCenter.x, startCenter.y, ld.x, ld.y);
 
 				// Make sure the angles for links on the EAST side of the node are
 				// increasing in the clockwise direction by decrementing the angles from
-				// 270 to 360 by 360 degrees.
+				// 270 to 360 by 360 degrees. (This is because calculateAngle returns
+				// positive angles from the 3 o'clock position in clockwise direction.)
 				if (dir === EAST && ld.angle >= 270) {
 					ld.angle -= 360;
+				}
+
+				// For self-referencing links we overwrite the angle to ensure that
+				// the outward direction (EAST) is always drawn at the top of any
+				// EAST links and the inward direction (NORTH) is always drawn to
+				// the right of any NORTH links.
+				if (ld.startNode && ld.endNode && ld.startNode === ld.endNode) {
+					if (dir === EAST) {
+						ld.angle = -90;
+					} else if (dir === NORTH) {
+						ld.angle = 360;
+					}
 				}
 			});
 

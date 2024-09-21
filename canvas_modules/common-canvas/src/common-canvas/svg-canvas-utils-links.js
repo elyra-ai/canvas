@@ -732,6 +732,7 @@ export default class SvgCanvasLinks {
 
 		const path = "M " + link.x1 + " " + link.y1 +
 			" L " +
+			rightInc + " " + link.y1 + " " +
 			rightInc + " " + topInc + " " +
 			link.x2 + "  " + topInc + " " +
 			link.x2 + " " + link.y2;
