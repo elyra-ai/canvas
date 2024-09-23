@@ -52,6 +52,7 @@ import {
 	TIP_STATE_TAG,
 	TOOLBAR_TYPE_DEFAULT,
 	TOOLBAR_TYPE_SUB_AREAS,
+	TOOLBAR_TYPE_CUSTOMIZE_AUTO,
 	TOOLBAR_TYPE_SINGLE_BAR,
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
@@ -253,16 +254,10 @@ export default class SidePanelForms extends React.Component {
 		this.props.setStateValue(fieldName, notificationConfig);
 	}
 
-	notificationConfigToggle(value, control) {
-		let id = control;
-		let fieldName = "notificationConfig";
-		if (id.slice(-1) === "2") {
-			id = control.slice(0, -1);
-			fieldName = "notificationConfig2";
-		}
-		const notificationConfig = this.props.getStateValue(fieldName);
-		notificationConfig[id] = value;
-		this.props.setStateValue(notificationConfig, fieldName);
+	notificationConfigToggle(notifConfig, field, value) {
+		const configObj = this.props.getStateValue(notifConfig);
+		configObj[field] = value;
+		this.props.setStateValue(notifConfig, configObj);
 	}
 
 	exampleAppOptionChange(value) {
@@ -1407,6 +1402,10 @@ export default class SidePanelForms extends React.Component {
 						labelText={TOOLBAR_TYPE_SUB_AREAS}
 					/>
 					<RadioButton
+						value={TOOLBAR_TYPE_CUSTOMIZE_AUTO}
+						labelText={TOOLBAR_TYPE_CUSTOMIZE_AUTO}
+					/>
+					<RadioButton
 						value={TOOLBAR_TYPE_SINGLE_BAR}
 						labelText={TOOLBAR_TYPE_SINGLE_BAR}
 					/>
@@ -1563,13 +1562,13 @@ export default class SidePanelForms extends React.Component {
 				id="keepOpen" // Set ID to corresponding field in App.js state
 				labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
 				toggled={this.props.getStateValue("notificationConfig").keepOpen}
-				onToggle={(val) => this.setStateValue(val, "notificationConfig")}
+				onToggle={(val) => this.notificationConfigToggle("notificationConfig", "keepOpen", val)}
 			/>
 			<Toggle
 				id="secondaryButtonDisabled" // Set ID to corresponding field in App.js state
 				labelText="Disable the notification center secondary button"
 				toggled={this.props.getStateValue("notificationConfig").secondaryButtonDisabled}
-				onToggle={(val) => this.setStateValue(val, "secondaryButtonDisabled")}
+				onToggle={(val) => this.notificationConfigToggle("notificationConfig", "secondaryButtonDisabled", val)}
 			/>
 		</div>);
 
@@ -1616,7 +1615,7 @@ export default class SidePanelForms extends React.Component {
 				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
 				labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
 				toggled={this.props.getStateValue("notificationConfig2").keepOpen}
-				onToggle={(val) => this.setStateValue(val, "notificationConfig2")}
+				onToggle={(val) => this.notificationConfigToggle("notificationConfig2", "keepOpen", val)}
 			/>
 		</div>);
 

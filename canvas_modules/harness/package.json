@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@ibm/plex": "^6.4.1",
-    "body-parser": "1.20.2",
+    "body-parser": "1.20.3",
     "compression": "1.7.4",
     "express": "4.19.2",
     "express-session": "1.18.0",
@@ -85,7 +85,7 @@
     "source-map-loader": "5.0.0",
     "style-loader": "3.3.4",
     "stylelint": "13.13.1",
-    "webpack": "5.91.0",
+    "webpack": "5.94.0",
     "webpack-bundle-analyzer": "4.10.1",
     "webpack-dev-middleware": "7.1.1",
     "webpack-hot-middleware": "2.26.1",

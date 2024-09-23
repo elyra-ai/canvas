@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,11 +123,17 @@ class ColorPicker extends React.Component {
 	render() {
 		this.logger.log("render");
 		if (this.props.subPanelData.type === WYSIWYG) {
-			const colorDivs = colorSetArray.map((c, i) =>
-				(<div key={"key" + i} ref={this.refss[i]} tabIndex={"-1"} data-color={c}
+
+			const colorDivs = colorSetArray.map((c, i) => {
+				let className = "color-picker-item" + (c === "transparent" ? " color-transparent" : "");
+				className += this.props.subPanelData.selectedColor === c ? " selected" : "";
+
+				return (<div key={"key" + i} ref={this.refss[i]} tabIndex={"-1"}
+					data-color={c}
 					style={{ backgroundColor: c }}
-					className={"color-picker-item" + (c === "transparent" ? " color-transparent" : "") }
-				/>));
+					className={className}
+				/>);
+			});
 
 			const rowCount = Math.ceil(this.totalColors / this.colorsPerRow);
 

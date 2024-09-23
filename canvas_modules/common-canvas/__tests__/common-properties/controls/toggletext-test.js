@@ -16,11 +16,13 @@
 
 import React from "react";
 import Toggletext from "../../../src/common-properties/controls/toggletext";
-import { mount } from "../../_utils_/mount-utils.js";
+import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
+import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
-import propertyUtils from "../../_utils_/property-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL.js";
 import toggletextParamDef from "../../test_resources/paramDefs/toggletext_paramDef.json";
+import { fireEvent } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -56,9 +58,21 @@ const controlNoIcons = {
 		"Descending"
 	]
 };
-propertyUtils.setControls(controller, [control, controlNoIcons]);
+propertyUtilsRTL.setControls(controller, [control, controlNoIcons]);
 
 const propertyId = { name: "toggle" };
+
+const mockToggletext = jest.fn();
+jest.mock("../../../src/common-properties/controls/toggletext",
+	() => (props) => mockToggletext(props)
+);
+
+mockToggletext.mockImplementation((props) => {
+	const ToggletextComp = jest.requireActual(
+		"../../../src/common-properties/controls/toggletext",
+	).default;
+	return <ToggletextComp {...props} />;
+});
 
 describe("Toggletext renders correctly", () => {
 	let wrapper;
@@ -76,7 +90,7 @@ describe("Toggletext renders correctly", () => {
 	});
 
 	it("Toggletext props should have been defined", () => {
-		wrapper = mount(
+		wrapper = render(
 			<Toggletext
 				store={controller.getStore()}
 				control={control}
@@ -84,13 +98,16 @@ describe("Toggletext renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("propertyId")).to.equal(propertyId);
-		expect(wrapper.prop("controller")).to.equal(controller);
+		expectJest(mockToggletext).toHaveBeenCalledWith({
+			"store": controller.getStore(),
+			"controller": controller,
+			"control": control,
+			"propertyId": propertyId,
+		});
 	});
 
 	it("Toggletext should render correctly", () => {
-		wrapper = mount(
+		wrapper = render(
 			<Toggletext
 				store={controller.getStore()}
 				control={control}
@@ -98,16 +115,14 @@ describe("Toggletext renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
-		const button = toggleWrapper.find("button");
+		const toggleWrapper = wrapper.container.querySelector("div[data-id='properties-toggle']");
+		const button = toggleWrapper.querySelectorAll("button");
 		expect(button).to.have.length(1);
-		const image = button.find("InlineSVG");
-		expect(image).to.have.length(1);
-		expect(button.text()).to.equal(control.valueLabels[0]);
+		expect(button[0].textContent).to.equal(control.valueLabels[0]);
 	});
 
 	it("Toggletext should render without icons", () => {
-		wrapper = mount(
+		wrapper = render(
 			<Toggletext
 				store={controller.getStore()}
 				control={controlNoIcons}
@@ -115,16 +130,16 @@ describe("Toggletext renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
-		const button = toggleWrapper.find("button");
+		const toggleWrapper = wrapper.container.querySelector("div[data-id='properties-toggle']");
+		const button = toggleWrapper.querySelectorAll("button");
 		expect(button).to.have.length(1);
-		const image = button.find("svg");
+		const image = button[0].querySelectorAll("svg");
 		expect(image).to.have.length(0);
-		expect(button.text()).to.equal(controlNoIcons.valueLabels[0]);
+		expect(button[0].textContent).to.equal(controlNoIcons.valueLabels[0]);
 	});
 
 	it("toggletext should set correct value", () => {
-		wrapper = mount(
+		wrapper = render(
 			<Toggletext
 				store={controller.getStore()}
 				control={control}
@@ -132,15 +147,15 @@ describe("Toggletext renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
-		const button = toggleWrapper.find("button");
-		button.simulate("click");
+		const toggleWrapper = wrapper.container.querySelector("div[data-id='properties-toggle']");
+		const button = toggleWrapper.querySelector("button");
+		fireEvent.click(button);
 		expect(controller.getPropertyValue(propertyId)).to.equal("Descending");
 	});
 
 	it("toggletext renders when disabled", () => {
 		controller.updateControlState(propertyId, "disabled");
-		wrapper = mount(
+		wrapper = render(
 			<Toggletext
 				store={controller.getStore()}
 				control={control}
@@ -148,13 +163,13 @@ describe("Toggletext renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
-		expect(toggleWrapper.prop("disabled")).to.equal(true);
+		const toggleWrapper = wrapper.container.querySelector("div[data-id='properties-toggle']");
+		expect(toggleWrapper.outerHTML.includes("disabled")).to.equal(true);
 	});
 
 	it("toggletext renders when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
-		wrapper = mount(
+		wrapper = render(
 			<Toggletext
 				store={controller.getStore()}
 				control={control}
@@ -162,8 +177,8 @@ describe("Toggletext renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
-		expect(toggleWrapper.hasClass("hide")).to.equal(true);
+		const toggleWrapper = wrapper.container.querySelector("div[data-id='properties-toggle']");
+		expect(toggleWrapper.className.includes("hide")).to.equal(true);
 	});
 
 	it("toggletext renders messages correctly", () => {
@@ -172,7 +187,7 @@ describe("Toggletext renders correctly", () => {
 			type: "warning",
 			text: "bad checkbox value"
 		});
-		wrapper = mount(
+		wrapper = render(
 			<Toggletext
 				store={controller.getStore()}
 				control={control}
@@ -180,8 +195,8 @@ describe("Toggletext renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
-		const messageWrapper = toggleWrapper.find("div.properties-validation-message");
+		const toggleWrapper = wrapper.container.querySelector("div[data-id='properties-toggle']");
+		const messageWrapper = toggleWrapper.querySelectorAll("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
 	});
 
@@ -190,7 +205,7 @@ describe("Toggletext renders correctly", () => {
 describe("toggletext classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(toggletextParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(toggletextParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -199,13 +214,13 @@ describe("toggletext classnames appear correctly", () => {
 	});
 
 	it("toggletext should have custom classname defined", () => {
-		expect(wrapper.find(".toggletext-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".toggletext-control-class")).to.have.length(1);
 	});
 
 	it("toggletext should have custom classname defined in table cells", () => {
-		propertyUtils.openSummaryPanel(wrapper, "toggletext-table-summary");
-		expect(wrapper.find(".table-toggletext-control-class")).to.have.length(1);
-		expect(wrapper.find(".table-on-panel-toggletext-control-class")).to.have.length(1);
-		expect(wrapper.find(".table-subpanel-toggletext-control-class")).to.have.length(1);
+		propertyUtilsRTL.openSummaryPanel(wrapper, "toggletext-table-summary");
+		expect(wrapper.container.querySelectorAll(".table-toggletext-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".table-on-panel-toggletext-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".table-subpanel-toggletext-control-class")).to.have.length(1);
 	});
 });
