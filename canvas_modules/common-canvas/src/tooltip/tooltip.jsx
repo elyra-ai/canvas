@@ -154,7 +154,7 @@ class ToolTip extends React.Component {
 	}
 
 	showTooltipWithDelay() {
-
+		// console.log("showTooltipWithDelay");
 		// set a delay on displaying the tooltip
 		if (!this.pendingTooltip && this.showTooltip()) {
 			const that = this;
@@ -329,6 +329,7 @@ class ToolTip extends React.Component {
 	}
 
 	toggleTooltipOnClick(evt) {
+		// console.log("toggleTooltipOnClick");
 		// 'blur' event occurs before 'click' event. Because of this, onBlur function is called which hides the tooltip.
 		// To prevent this default behavior, stopPropagation and preventDefault is used.
 		evt.stopPropagation();
@@ -356,7 +357,20 @@ class ToolTip extends React.Component {
 		if (this.props.children) {
 			// when children are passed in, tooltip will handle show/hide, otherwise consumer has to hide show/hide tooltip
 			const mouseover = () => this.setTooltipVisible(true);
-			const mouseleave = () => this.setTooltipVisible(false);
+			// const mouseleave = () => this.setTooltipVisible(false);
+			let mouseleave;
+			if (this.props.hoverable) {
+				mouseleave = () => {
+					console.log(this.props.hoverable);
+					setTimeout(() => {
+						if (!this.inTooltip) {
+							this.setTooltipVisible(false);
+						}
+					}, 100);
+				};
+			} else {
+				mouseleave = () => this.setTooltipVisible(false);
+			}
 			const mousedown = () => this.setTooltipVisible(false);
 			// `focus` event occurs before `click`. Adding timeout in onFocus function to ensure click is executed first.
 			// Ref - https://stackoverflow.com/a/49512400
@@ -487,6 +501,13 @@ class ToolTip extends React.Component {
 						aria-hidden={!this.state.isTooltipVisible}
 						direction={this.props.direction}
 						ref={(ref) => (this.targetRef = ref)}
+						onMouseEnter={() => {
+							this.inTooltip = true;
+						}}
+						onMouseLeave={() => {
+							this.inTooltip = false;
+							this.setTooltipVisible(false);
+						}}
 					>
 						<svg className="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
@@ -522,14 +543,17 @@ ToolTip.propTypes = {
 	showToolTipIfTruncated: PropTypes.bool, // Set to true to only display tooltip if full text does not fit in displayable width
 	truncatedRef: PropTypes.object,
 	delay: PropTypes.number,
-	showToolTipOnClick: PropTypes.bool
+	showToolTipOnClick: PropTypes.bool,
+	hoverable: PropTypes.bool, // if true, can hover over to the tooltip, instead of immedieatly disappearing.
+	inTooltip: PropTypes.bool
 };
 
 ToolTip.defaultProps = {
 	delay: 200,
 	direction: "bottom",
 	showToolTipIfTruncated: false, // False will always show Tooltip even when whole word can be displayed
-	showToolTipOnClick: false
+	showToolTipOnClick: false,
+	hoverable: false
 };
 
 export default ToolTip;
