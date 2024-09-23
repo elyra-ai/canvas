@@ -17,9 +17,9 @@
 import React from "react";
 import Readonly from "../../../src/common-properties/controls/readonly";
 import Controller from "../../../src/common-properties/properties-controller";
-import { mountWithIntl } from "../../_utils_/intl-utils";
+import { renderWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
-import propertyUtils from "../../_utils_/property-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import timestampParamDef from "../../test_resources/paramDefs/timestamp_paramDef.json";
 
 const controller = new Controller();
@@ -48,7 +48,7 @@ describe("timestamp-control renders correctly", () => {
 		controller.setPropertyValues(
 			{ "test-timestamp": 1557250591087 }
 		);
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<Readonly
 				store={controller.getStore()}
 				control={control}
@@ -56,17 +56,17 @@ describe("timestamp-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const readonlyWrapper = wrapper.find("div[data-id='properties-test-timestamp']");
-		const text = readonlyWrapper.find("span");
+		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-timestamp']");
+		const text = readonlyWrapper.querySelectorAll("span");
 		expect(text).to.have.length(1);
-		expect(text.text()).to.contain("Tuesday, May 7, 2019");
+		expect(text[0].textContent).to.contain("Tuesday, May 7, 2019");
 	});
 
 	it("timestamp should render if valid timestamp is passed in and control type readonly", () => {
 		controller.setPropertyValues(
 			{ "test-timestamp": 1557250591087 }
 		);
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<Readonly
 				store={controller.getStore()}
 				control={controlReadonly}
@@ -74,17 +74,17 @@ describe("timestamp-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const readonlyWrapper = wrapper.find("div[data-id='properties-test-timestamp']");
-		const text = readonlyWrapper.find("span");
+		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-timestamp']");
+		const text = readonlyWrapper.querySelectorAll("span");
 		expect(text).to.have.length(1);
-		expect(text.text()).to.contain("Tuesday, May 7, 2019");
+		expect(text[0].textContent).to.contain("Tuesday, May 7, 2019");
 	});
 
 	it("readonly should render nothing when invalid timestamp is passed in", () => {
 		controller.setPropertyValues(
 			{ "test-timestamp": "invalid field" }
 		);
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<Readonly
 				store={controller.getStore()}
 				control={control}
@@ -92,17 +92,17 @@ describe("timestamp-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const readonlyWrapper = wrapper.find("div[data-id='properties-test-timestamp']");
-		const text = readonlyWrapper.find("span");
+		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-timestamp']");
+		const text = readonlyWrapper.querySelectorAll("span");
 		expect(text).to.have.length(1);
-		expect(text.text()).to.equal("");
+		expect(text[0].textContent).to.equal("");
 	});
 
 	it("readonly renders nothing when null timestamp is passed in", () => {
 		controller.setPropertyValues(
 			{ "test-timestamp": null }
 		);
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<Readonly
 				store={controller.getStore()}
 				control={control}
@@ -110,9 +110,9 @@ describe("timestamp-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const readonlyWrapper = wrapper.find("div[data-id='properties-test-timestamp']");
-		const text = readonlyWrapper.find("span");
-		expect(text.text()).to.equal("");
+		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-timestamp']");
+		const text = readonlyWrapper.querySelector("span");
+		expect(text.textContent).to.equal("");
 	});
 
 });
@@ -120,24 +120,24 @@ describe("timestamp-control renders correctly", () => {
 describe("timestamp classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(timestampParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(timestampParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("timestamp should have custom classname defined", () => {
-		expect(wrapper.find(".timestampfield-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".timestampfield-control-class")).to.have.length(1);
 	});
 
 	it("timestamp should display correctly", () => {
-		const readonlyWrapper = wrapper.find("div[data-id='properties-timestamp_field_timestamp']");
-		const text = readonlyWrapper.find("span");
-		expect(text.text()).to.contain("Friday, June 16, 1911");
+		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-timestamp_field_timestamp']");
+		const text = readonlyWrapper.querySelector("span");
+		expect(text.textContent).to.contain("Friday, June 16, 1911");
 	});
 
 	it("timestamp should have custom classname defined in table cells", () => {
-		propertyUtils.openSummaryPanel(wrapper, "timestamp-table-panels");
-		expect(wrapper.find(".table-timestamp-control-class")).to.have.length(1);
-		expect(wrapper.find(".table-on-panel-timestamp-control-class")).to.have.length(1);
-		expect(wrapper.find(".table-subpanel-timestamp-control-class")).to.have.length(1);
+		propertyUtilsRTL.openSummaryPanel(wrapper, "timestamp-table-panels");
+		expect(wrapper.container.querySelectorAll(".table-timestamp-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".table-on-panel-timestamp-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".table-subpanel-timestamp-control-class")).to.have.length(1);
 	});
 });

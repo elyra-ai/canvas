@@ -305,6 +305,28 @@ describe("Test dual purpose toolbar button", function() {
 	});
 });
 
+describe("Test customized palette and notification panel buttons", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedToolbarType": "CustomizeAutoItems" });
+	});
+
+	it("Test clicking palette and notification panel buttons appear OK", function() {
+
+		// Check the customized palette and notification panel buttons appear OK
+		cy.verifyToolbarButtonEnabled("togglePalette", true);
+		cy.verifyToolbarButtonEnabled("toggleNotificationPanel", true);
+
+		// Click the customized palette button and make sure it opens the palette
+		cy.clickToolbarPaletteOpen();
+		cy.verifyLeftPanelWidth(256);
+
+		// Click the customized notification panel button and make sure it opens the notification panel
+		cy.clickToolbarNotifications();
+		cy.verifyToolbarSubPanelIsOpen("toggleNotificationPanel");
+	});
+});
+
 describe("Test overrideAutoEnableDisable toolbar config option", function() {
 	beforeEach(() => {
 		cy.visit("/");

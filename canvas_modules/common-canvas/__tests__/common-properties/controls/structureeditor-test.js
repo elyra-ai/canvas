@@ -16,18 +16,31 @@
 
 import React from "react";
 import { Provider } from "react-redux";
-import { mount } from "../../_utils_/mount-utils.js";
-import { shallowWithIntl } from "../../_utils_/intl-utils";
+import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
+import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 
-import propertyUtils from "../../_utils_/property-utils";
-import tableUtils from "./../../_utils_/table-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
+import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import StructureEditorControl from "../../../src/common-properties/controls/structureeditor";
 import structureeditorParamDef from "../../test_resources/paramDefs/structureeditor_paramDef.json";
+import { fireEvent, waitFor } from "@testing-library/react";
 
 
 const emptyValueIndicator = "...";
+
+const mockStructureEditor = jest.fn();
+jest.mock("../../../src/common-properties/controls/structureeditor",
+	() => (props) => mockStructureEditor(props)
+);
+
+mockStructureEditor.mockImplementation((props) => {
+	const StructureEditorComp = jest.requireActual(
+		"../../../src/common-properties/controls/structureeditor",
+	).default;
+	return <StructureEditorComp {...props} />;
+});
 
 describe("structureeditor control renders correctly", () => {
 	const control = {
@@ -105,7 +118,7 @@ describe("structureeditor control renders correctly", () => {
 	const propertyId = { name: control.name };
 	const controller = new Controller();
 
-	propertyUtils.setControls(controller, [control]);
+	propertyUtilsRTL.setControls(controller, [control]);
 
 	beforeEach(() => {
 		controller.setDatasetMetadata({ fields: fields });
@@ -117,18 +130,23 @@ describe("structureeditor control renders correctly", () => {
 
 	it("props should have been defined", () => {
 
-		const wrapper = shallowWithIntl(
-			<StructureEditorControl
-				store={controller.getStore()}
-				control={control}
-				propertyId={propertyId}
-				controller = {controller}
-			/>
+		render(
+			<Provider store={controller.getStore()}>
+				<StructureEditorControl
+					store={controller.getStore()}
+					control={control}
+					propertyId={propertyId}
+					controller = {controller}
+				/>
+			</Provider>
 		);
 
-		expect(wrapper.dive().prop("control")).to.equal(control);
-		expect(wrapper.dive().prop("propertyId")).to.equal(propertyId);
-		expect(wrapper.dive().prop("controller")).to.equal(controller);
+		expectJest(mockStructureEditor).toHaveBeenCalledWith({
+			"store": controller.getStore(),
+			"controller": controller,
+			"control": control,
+			"propertyId": propertyId,
+		});
 	});
 
 	it("structureeditor renders messages correctly", () => {
@@ -137,7 +155,7 @@ describe("structureeditor control renders correctly", () => {
 			type: "warning",
 			text: "bad value"
 		});
-		const wrapper = mount(
+		const wrapper = render(
 			<Provider store={controller.getStore()}>
 				<StructureEditorControl
 					control={control}
@@ -146,8 +164,8 @@ describe("structureeditor control renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields']");
-		const messageWrapper = dropdownWrapper.find("div.properties-validation-message");
+		const dropdownWrapper = wrapper.container.querySelector("div[data-id='properties-group-o-fields']");
+		const messageWrapper = dropdownWrapper.querySelectorAll("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
 	});
 
@@ -155,7 +173,7 @@ describe("structureeditor control renders correctly", () => {
 		controller.setPropertyValues(
 			{ "group-o-fields": null }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<Provider store={controller.getStore()}>
 				<StructureEditorControl
 					control={control}
@@ -164,16 +182,17 @@ describe("structureeditor control renders correctly", () => {
 				/>
 			</Provider>
 		);
-		let dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-group-o-fields_0']");
+		expect(dropdownWrapper.querySelector("button > span").textContent).to.equal(emptyValueIndicator);
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("button");
-		dropdownButton.simulate("click");
+		const dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton);
 		// select the first item
-		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		dropdownWrapper = container.querySelector("div[data-id='properties-group-o-fields_0']");
+		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
-		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
+		expect(dropdownList[0].textContent).to.equal(emptyValueIndicator);
 	});
 
 	it("should have '...' as first selected option when fields is empty", () => {
@@ -181,7 +200,7 @@ describe("structureeditor control renders correctly", () => {
 		controller.setPropertyValues(
 			{ "group-o-fields": null }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<Provider store={controller.getStore()}>
 				<StructureEditorControl
 					control={control}
@@ -190,23 +209,24 @@ describe("structureeditor control renders correctly", () => {
 				/>
 			</Provider>
 		);
-		let dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-group-o-fields_0']");
+		expect(dropdownWrapper.querySelector("button > span").textContent).to.equal(emptyValueIndicator);
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("button");
-		dropdownButton.simulate("click");
+		const dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton);
 		// select the first item
-		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		dropdownWrapper = container.querySelector("div[data-id='properties-group-o-fields_0']");
+		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
-		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
+		expect(dropdownList[0].textContent).to.equal(emptyValueIndicator);
 	});
 
 	it("should allow empty string to be set as valid field in structureeditor control", () => {
 		controller.setPropertyValues(
 			{ "group-o-fields": ["age", true] }
 		);
-		const wrapper = mount(
+		const wrapper = render(
 			<Provider store={controller.getStore()}>
 				<StructureEditorControl
 					control={control}
@@ -215,17 +235,17 @@ describe("structureeditor control renders correctly", () => {
 				/>
 			</Provider>
 		);
-
-		let dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		expect(dropdownWrapper.find("button > span").text()).to.equal("age"); // should be the value for the control
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-group-o-fields_0']");
+		expect(dropdownWrapper.querySelector("button > span").textContent).to.equal("age"); // should be the value for the control
 		// open the dropdown
-		const dropdownButton = dropdownWrapper.find("button");
-		dropdownButton.simulate("click");
+		const dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton);
 		// select the first item
-		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		const dropdownList = dropdownWrapper.find("li.cds--list-box__menu-item");
+		dropdownWrapper = container.querySelector("div[data-id='properties-group-o-fields_0']");
+		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(4);
-		dropdownList.at(0).simulate("click");
+		fireEvent.click(dropdownList[0]);
 		const value = controller.getPropertyValue(propertyId);
 		expect(value).to.eql(["", true]);
 	});
@@ -235,7 +255,7 @@ describe("structureeditor control renders correctly with paramDef", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structureeditorParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structureeditorParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
@@ -244,66 +264,63 @@ describe("structureeditor control renders correctly with paramDef", () => {
 	});
 
 	it("structureeditor control will lay out controls in the proper order", () => {
-		const structWrapper = wrapper.find("div[data-id='properties-layout_struct']");
+		const structWrapper = wrapper.container.querySelector("div[data-id='properties-layout_struct']");
 		expect(structWrapper).not.to.be.null;
-		const rows = structWrapper.find("tr");
+		const rows = structWrapper.querySelectorAll("tr");
 		expect(rows.length).to.equal(2);
-		const cells = rows.at(0).find("td");
+		const cells = rows[0].querySelectorAll("td");
 		expect(cells.length).to.equal(2);
-		const checkbox = cells.at(0).find("div[data-id='properties-layout_struct_2']");
+		const checkbox = cells[0].querySelector("div[data-id='properties-layout_struct_2']");
 		expect(checkbox).not.to.be.null;
-		const textbox = cells.at(1).find("div[data-id='properties-layout_struct_1']");
+		const textbox = cells[1].querySelector("div[data-id='properties-layout_struct_1']");
 		expect(textbox).not.to.be.null;
 	});
 
 	it("structureeditor conditions work correctly", () => {
-		let checkboxWrapper = wrapper.find("div[data-id='properties-field_type_2']");
-		let checkbox = checkboxWrapper.find("input");
-		expect(checkbox.getDOMNode().checked).to.equal(false);
+		const { container } = wrapper;
+		let checkboxWrapper = container.querySelector("div[data-id='properties-field_type_2']");
+		let checkbox = checkboxWrapper.querySelector("input");
+		expect(checkbox.checked).to.equal(false);
 		// Verify the disabled state
-		let textboxWrapper = wrapper.find("div[data-id='properties-field_type_1']");
-		expect(textboxWrapper.find("input").prop("disabled")).to.equal(true);
+		let textboxWrapper = container.querySelector("div[data-id='properties-field_type_1']");
+		expect(textboxWrapper.querySelector("input").disabled).to.equal(true);
 		// Check the checkbox
-		checkbox.getDOMNode().checked = true;
-		checkbox.simulate("change");
+		checkbox.setAttribute("checked", true);
+		fireEvent.click(checkbox);
 		expect(controller.getPropertyValue({ name: "field_type" })[2]).to.equal(true);
 		// Verify the enabled state
-		textboxWrapper = wrapper.find("div[data-id='properties-field_type_1']");
-		expect(textboxWrapper.find("input").prop("disabled")).to.equal(false);
+		textboxWrapper = container.querySelector("div[data-id='properties-field_type_1']");
+		expect(textboxWrapper.querySelector("input").disabled).to.equal(false);
 
-		checkboxWrapper = wrapper.find("div[data-id='properties-layout_struct_2']");
-		checkbox = checkboxWrapper.find("input");
-		expect(checkbox.getDOMNode().checked).to.equal(false);
+		checkboxWrapper = container.querySelector("div[data-id='properties-layout_struct_2']");
+		checkbox = checkboxWrapper.querySelector("input");
+		expect(checkbox.checked).to.equal(false);
 		// Verify the disabled state
-		textboxWrapper = wrapper.find("div[data-id='properties-layout_struct_1']");
-		expect(textboxWrapper.find("input").prop("disabled")).not.to.be.null;
+		textboxWrapper = container.querySelector("div[data-id='properties-layout_struct_1']");
+		expect(textboxWrapper.querySelector("input").disabled).not.to.be.null;
 		// Check the checkbox
-		checkbox.getDOMNode().checked = true;
-		checkbox.simulate("change");
+		checkbox.setAttribute("checked", true);
+		fireEvent.click(checkbox, true);
 		const structValue = controller.getPropertyValue({ name: "layout_struct" });
 		expect(structValue[2]).to.equal(true);
 		// Verify the enabled state
-		textboxWrapper = wrapper.find("div[data-id='properties-layout_struct_1']");
-		expect(textboxWrapper.find("input").prop("disabled")).to.equal(false);
+		textboxWrapper = container.querySelector("div[data-id='properties-layout_struct_1']");
+		expect(textboxWrapper.querySelector("input").disabled).to.equal(false);
 	});
 
 	it("structureeditor control will have updated options by the controller", () => {
-		let dropdownField1 = wrapper.find("div[data-id='properties-field_type_0'] Dropdown");
-		let field1Options = dropdownField1.prop("items");	// Field1 Panel
-		const field1OptionsExpectedOptions = [
-			{ label: "...", value: "" },
-			{ label: "Field 1", value: "Field 1" },
-			{ label: "Field 2", value: "Field 2" },
-			{ label: "Field 3", value: "Field 3" },
-			{ label: "Field 4", value: "Field 4" },
-			{ label: "Field 5", value: "Field 5" },
-			{ label: "Field 6", value: "Field 6" },
-			{ label: "Field 7", value: "Field 7" },
-			{ label: "Field 8", value: "Field 8" },
-			{ label: "Field 9", value: "Field 9" },
-			{ label: "Field 10", value: "Field 10" }
-		];
-		expect(field1Options).to.eql(field1OptionsExpectedOptions);
+		const { container } = wrapper;
+		let dropdownField1 = container.querySelector("div[data-id='properties-field_type_0']");
+		let dropdownButton1 = dropdownField1.querySelector("button");
+		fireEvent.click(dropdownButton1);
+		let field1Options = dropdownField1.querySelectorAll(".cds--list-box__menu-item__option"); // Field1 Panel
+		let options = [];
+		field1Options.forEach((element) => {
+			options.push(element.textContent);
+		});
+		const field1OptionsExpectedOptions = ["...", "Field 1", "Field 2", "Field 3", "Field 4", "Field 5", "Field 6", "Field 7", "Field 8", "Field 9", "Field 10"];
+		expect(options).to.eql(field1OptionsExpectedOptions);
+		fireEvent.click(dropdownButton1);
 
 		const datasetMetadata = controller.getDatasetMetadata();
 
@@ -330,41 +347,44 @@ describe("structureeditor control renders correctly with paramDef", () => {
 		datasetMetadata[0].fields.push(newField1);
 		datasetMetadata[0].fields.push(newField2);
 		controller.setDatasetMetadata(datasetMetadata);
-		wrapper.update();
-		dropdownField1 = wrapper.find("div[data-id='properties-field_type_0'] Dropdown");
-		field1Options = dropdownField1.prop("items");
+		dropdownField1 = container.querySelector("div[data-id='properties-field_type_0']");
+		dropdownButton1 = dropdownField1.querySelector("button");
+		fireEvent.click(dropdownButton1);
+		field1Options = dropdownField1.querySelectorAll(".cds--list-box__menu-item__option"); // Field1 Panel
+		options = [];
+		field1Options.forEach((element) => {
+			options.push(element.textContent);
+		});
 
-		const dropDownValue1 = {
-			"label": "stringAndDiscrete2",
-			"value": "stringAndDiscrete2"
-		};
-		const dropDownValue2 = {
-			"label": "stringAndSet2",
-			"value": "stringAndSet2"
-		};
+		const dropDownValue1 = "stringAndDiscrete2";
+		const dropDownValue2 = "stringAndSet2";
 		field1OptionsExpectedOptions.push(dropDownValue1);
 		field1OptionsExpectedOptions.push(dropDownValue2);
-		expect(field1Options).to.eql(field1OptionsExpectedOptions);
+		expect(options).to.eql(field1OptionsExpectedOptions);
 	});
 
-	it("structureeditor control can be disabled in one go", () => {
+	it("structureeditor control can be disabled in one go", async() => {
 		controller.updatePropertyValue({ name: "disabler" }, true);
-		wrapper.update();
-		const structWrapper = wrapper.find("div[data-id='properties-ci-layout_struct']");
-		expect(structWrapper).not.to.be.null;
-		expect(structWrapper.prop("disabled")).to.be.true;
+		await waitFor(() => {
+			const structWrapper = wrapper.container.querySelector("div[data-id='properties-ci-layout_struct']");
+			expect(structWrapper).not.to.be.null;
+			expect(structWrapper.outerHTML.includes("disabled")).to.be.true;
+		});
+
 	});
 
-	it("structureeditor control can be hidden in one go", () => {
+	it("structureeditor control can be hidden in one go", async() => {
 		controller.updatePropertyValue({ name: "hider" }, true);
-		wrapper.update();
-		let structWrapper = wrapper.find("div[data-id='properties-layout_struct']");
-		expect(structWrapper).to.have.length(0);
+		await waitFor(() => {
+			const structWrapper = wrapper.container.querySelectorAll("div[data-id='properties-layout_struct']");
+			expect(structWrapper).to.have.length(0);
+		});
 
 		controller.updatePropertyValue({ name: "hider" }, false);
-		wrapper.update();
-		structWrapper = wrapper.find("div[data-id='properties-layout_struct']");
-		expect(structWrapper).to.have.length(1);
+		await waitFor(() => {
+			const structWrapper = wrapper.container.querySelectorAll("div[data-id='properties-layout_struct']");
+			expect(structWrapper).to.have.length(1);
+		});
 	});
 
 });
@@ -373,7 +393,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structureeditorParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structureeditorParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
@@ -382,17 +402,18 @@ describe("structureeditor control renders correctly in a nested structure", () =
 	});
 
 	it("structureeditor control can be nested in a structureeditor", () => {
+		const { container } = wrapper;
 		const propertyId = { name: "nestedStructureeditor" };
-		const structure = wrapper.find("div[data-id='properties-ci-nestedStructureeditor']");
+		const structure = container.querySelector("div[data-id='properties-ci-nestedStructureeditor']");
 		let actual = controller.getPropertyValue(propertyId);
 		let expected = structureeditorParamDef.current_parameters.nestedStructureeditor;
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
 
-		const addressInput = structure.find("div[data-id='properties-ctrl-userAddress']").find("input");
-		addressInput.simulate("change", { target: { value: "some new address" } });
+		const addressInput = structure.querySelector("div[data-id='properties-ctrl-userAddress']").querySelector("input");
+		fireEvent.change(addressInput, { target: { value: "some new address" } });
 
-		const zipInput = structure.find("div[data-id='properties-ctrl-userZip']").find("input");
-		zipInput.simulate("change", { target: { value: 99999 } });
+		const zipInput = structure.querySelector("div[data-id='properties-ctrl-userZip']").querySelector("input");
+		fireEvent.change(zipInput, { target: { value: 99999 } });
 
 		// Verify modified values
 		actual = controller.getPropertyValue(propertyId);
@@ -407,26 +428,28 @@ describe("structureeditor control renders correctly in a nested structure", () =
 	});
 
 	it("structurelisteditor control can be nested in a structureeditor", () => {
+		const { container } = wrapper;
 		const propertyId = { name: "nestedStructureeditorTable" };
-		let structure = wrapper.find("div[data-id='properties-ci-nestedStructureeditorTable']");
+		let structure = container.querySelector("div[data-id='properties-ci-nestedStructureeditorTable']");
 		let actual = controller.getPropertyValue(propertyId);
 		let expected = structureeditorParamDef.current_parameters.nestedStructureeditorTable;
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
 
 		// Add a new row to the nested table
-		const addValueBtn = structure.find("button.properties-add-fields-button");
+		const addValueBtn = structure.querySelectorAll("button.properties-add-fields-button");
 		expect(addValueBtn).to.have.length(1);
-		addValueBtn.simulate("click");
+		fireEvent.click(addValueBtn[0]);
+		// addValueBtn.simulate("click");
 
 		// Verify there are three rows
-		structure = wrapper.find("div[data-id='properties-ci-nestedStructureeditorTable']");
-		const tableRows = structure.find("div[data-role='properties-data-row']");
+		structure = container.querySelector("div[data-id='properties-ci-nestedStructureeditorTable']");
+		const tableRows = structure.querySelectorAll("div[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(3);
-		const thirdRow = tableRows.at(2);
+		const thirdRow = tableRows[2];
 
 		// Modify values in the third row
-		const addressInput = thirdRow.find(".properties-textfield").find("input");
-		addressInput.simulate("change", { target: { value: "add third address" } });
+		const addressInput = thirdRow.querySelector(".properties-textfield").querySelector("input");
+		fireEvent.change(addressInput, { target: { value: "add third address" } });
 		// Verify modified values
 		actual = controller.getPropertyValue(propertyId);
 		expected = [
@@ -447,14 +470,14 @@ describe("structureeditor control renders correctly in a nested structure", () =
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
 
 		// Click on subpanel to edit the hidden fields 'userZipTable' and 'annotationTable'
-		const editButton = thirdRow.find("button.properties-subpanel-button");
+		const editButton = thirdRow.querySelectorAll("button.properties-subpanel-button");
 		expect(editButton).to.have.length(1);
-		editButton.simulate("click");
+		fireEvent.click(editButton[0]);
 
-		const zipInput = wrapper.find("div[data-id='properties-ctrl-userZipTable']").find("input");
-		zipInput.simulate("change", { target: { value: 99999 } });
-		const annotationInput = wrapper.find("div[data-id='properties-ctrl-annotationTable']").find("textarea");
-		annotationInput.simulate("change", { target: { value: "Set a dummy zip code" } });
+		const zipInput = container.querySelector("div[data-id='properties-ctrl-userZipTable']").querySelector("input");
+		fireEvent.change(zipInput, { target: { value: 99999 } });
+		const annotationInput = container.querySelector("div[data-id='properties-ctrl-annotationTable']").querySelector("textarea");
+		fireEvent.change(annotationInput, { target: { value: "Set a dummy zip code" } });
 
 		// Verify modified values
 		actual = controller.getPropertyValue(propertyId);
@@ -477,21 +500,22 @@ describe("structureeditor control renders correctly in a nested structure", () =
 	});
 
 	it("structuretable control can be nested in a structureeditor", () => {
+		const { container } = wrapper;
 		const propertyId = { name: "nestedStructuretable" };
-		let structure = wrapper.find("div[data-id='properties-ci-nestedStructuretable']");
+		let structure = container.querySelector("div[data-id='properties-ci-nestedStructuretable']");
 		let actual = controller.getPropertyValue(propertyId);
 		let expected = structureeditorParamDef.current_parameters.nestedStructuretable;
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
 
 		// Add a new row to the nested table
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ci-userFieldsInfo");
-		tableUtils.fieldPicker(fieldPicker, ["Field 3"]);
+		const fieldPicker = tableUtilsRTL.openFieldPicker(container, "properties-ci-userFieldsInfo");
+		tableUtilsRTL.fieldPicker(fieldPicker, ["Field 3"]);
 
 		// Verify there are two rows
-		structure = wrapper.find("div[data-id='properties-ci-nestedStructuretable']");
-		const tableRows = structure.find("div[data-role='properties-data-row']");
+		structure = container.querySelector("div[data-id='properties-ci-nestedStructuretable']");
+		const tableRows = structure.querySelectorAll("div[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(2);
-		const firstRow = tableRows.at(0);
+		const firstRow = tableRows[0];
 
 		actual = controller.getPropertyValue(propertyId);
 		expected = [
@@ -509,10 +533,10 @@ describe("structureeditor control renders correctly in a nested structure", () =
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
 
 		// As "Field 3" row is displayed before "Field 5", it will be added as the first row. Modify values in the first row
-		const editButton = firstRow.find("button.properties-subpanel-button").at(0);
-		editButton.simulate("click");
-		const userFields = wrapper.find("div[data-id='properties-userFieldsTable']");
-		userFields.find("textarea").simulate("change", { target: { value: "annotation for newly added Field 3" } });
+		const editButton = firstRow.querySelectorAll("button.properties-subpanel-button")[0];
+		fireEvent.click(editButton);
+		const userFields = container.querySelector("div[data-id='properties-userFieldsTable']");
+		fireEvent.change(userFields.querySelector("textarea"), { target: { value: "annotation for newly added Field 3" } });
 
 		// Verify updated values
 		actual = controller.getPropertyValue(propertyId);
@@ -535,18 +559,18 @@ describe("structureeditor control renders correctly in a nested structure", () =
 describe("structureeditor classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structureeditorParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structureeditorParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("structureeditor should have custom classname defined", () => {
-		expect(wrapper.find(".structureeditor-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".structureeditor-control-class")).to.have.length(1);
 	});
 
 	it("structureeditor should have custom classname defined in table cells", () => {
-		const parent = wrapper.find(".nested-structureeditor-control-class");
+		const parent = wrapper.container.querySelectorAll(".nested-structureeditor-control-class");
 		expect(parent).to.have.length(1);
-		expect(parent.find(".nested-structureeditor-cell-control-class")).to.have.length(1);
-		expect(parent.find(".double-nested-structureeditor-cell-control-class")).to.have.length(1);
+		expect(parent[0].querySelectorAll(".nested-structureeditor-cell-control-class")).to.have.length(1);
+		expect(parent[0].querySelectorAll(".double-nested-structureeditor-cell-control-class")).to.have.length(1);
 	});
 });
