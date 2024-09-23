@@ -154,7 +154,6 @@ class ToolTip extends React.Component {
 	}
 
 	showTooltipWithDelay() {
-		// console.log("showTooltipWithDelay");
 		// set a delay on displaying the tooltip
 		if (!this.pendingTooltip && this.showTooltip()) {
 			const that = this;
@@ -329,7 +328,6 @@ class ToolTip extends React.Component {
 	}
 
 	toggleTooltipOnClick(evt) {
-		// console.log("toggleTooltipOnClick");
 		// 'blur' event occurs before 'click' event. Because of this, onBlur function is called which hides the tooltip.
 		// To prevent this default behavior, stopPropagation and preventDefault is used.
 		evt.stopPropagation();
@@ -361,7 +359,6 @@ class ToolTip extends React.Component {
 			let mouseleave;
 			if (this.props.hoverable) {
 				mouseleave = () => {
-					console.log(this.props.hoverable);
 					setTimeout(() => {
 						if (!this.inTooltip) {
 							this.setTooltipVisible(false);
