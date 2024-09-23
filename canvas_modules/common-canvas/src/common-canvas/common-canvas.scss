@@ -64,7 +64,7 @@ $panel-border-color: $border-subtle-01;
 	left: -1;
 	top: 0;
 	bottom: 0;
-	z-index: 1;
+	z-index: 10;
 	transition: all 0.2s ease-in;
 	&:hover {
 		background: $border-interactive;

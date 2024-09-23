@@ -37,7 +37,7 @@ import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
 
 import { injectIntl } from "react-intl";
-import styles from "./properties-main-widths.scss";
+import styles from "./properties-main-widths.module.scss";
 
 const FLYOUT_WIDTH_SMALL = parseInt(styles.flyoutWidthSmall, 10);
 const FLYOUT_WIDTH_MEDIUM = parseInt(styles.flyoutWidthMedium, 10);
@@ -88,10 +88,10 @@ class PropertiesMain extends React.Component {
 			editorSize: editorSize
 		};
 		this.flyoutWidth = {
-			small: "320px",
-			medium: "480px",
-			large: "640px",
-			max: "900px"
+			small: FLYOUT_WIDTH_SMALL,
+			medium: FLYOUT_WIDTH_MEDIUM,
+			large: FLYOUT_WIDTH_LARGE,
+			max: FLYOUT_WIDTH_MAX
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
@@ -429,7 +429,7 @@ class PropertiesMain extends React.Component {
 	updateRightFlyoutWidth(size) {
 		const element = document.querySelector(".right-flyout-panel");
 		if (element) {
-			element.style.width = this.flyoutWidth[size];
+			element.style.width = `${this.flyoutWidth[size]}px`;
 		}
 	}
 
