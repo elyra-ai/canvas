@@ -123,7 +123,6 @@ class CanvasContents extends React.Component {
 		if (this.props.canvasConfig.enableBrowserEditMenu) {
 			this.addEventListeners();
 		}
-		this.focusOnCanvas();
 	}
 
 	componentDidUpdate(prevProps) {
@@ -149,6 +148,7 @@ class CanvasContents extends React.Component {
 		} else {
 			this.removeEventListeners();
 		}
+		this.focusOnCanvas();
 	}
 
 	componentWillUnmount() {
