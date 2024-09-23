@@ -35,6 +35,7 @@ class ToolTip extends React.Component {
 		this.tabKeyPressed = false;
 		// Tooltip should not close if link inside tooltip is clicked.
 		this.linkClicked = false;
+		this.inTooltip = false;
 	}
 
 	componentDidMount() {
@@ -154,6 +155,7 @@ class ToolTip extends React.Component {
 	}
 
 	showTooltipWithDelay() {
+
 		// set a delay on displaying the tooltip
 		if (!this.pendingTooltip && this.showTooltip()) {
 			const that = this;
@@ -355,7 +357,6 @@ class ToolTip extends React.Component {
 		if (this.props.children) {
 			// when children are passed in, tooltip will handle show/hide, otherwise consumer has to hide show/hide tooltip
 			const mouseover = () => this.setTooltipVisible(true);
-			// const mouseleave = () => this.setTooltipVisible(false);
 			let mouseleave;
 			if (this.props.hoverable) {
 				mouseleave = () => {
@@ -541,8 +542,7 @@ ToolTip.propTypes = {
 	truncatedRef: PropTypes.object,
 	delay: PropTypes.number,
 	showToolTipOnClick: PropTypes.bool,
-	hoverable: PropTypes.bool, // if true, can hover over to the tooltip, instead of immedieatly disappearing.
-	inTooltip: PropTypes.bool
+	hoverable: PropTypes.bool, // If true, can hover over to the tooltip, instead of immediately disappearing.
 };
 
 ToolTip.defaultProps = {
