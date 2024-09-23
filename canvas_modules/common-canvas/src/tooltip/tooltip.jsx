@@ -35,7 +35,7 @@ class ToolTip extends React.Component {
 		this.tabKeyPressed = false;
 		// Tooltip should not close if link inside tooltip is clicked.
 		this.linkClicked = false;
-		this.inTooltip = false;
+		this.inTooltip = false; // A boolean variable that determines if the cursor is in the tooltip
 	}
 
 	componentDidMount() {
