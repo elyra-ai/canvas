@@ -23,6 +23,7 @@ import tooltip from "./reducers/tooltip.js";
 import palette from "./reducers/palette.js";
 import canvasinfo from "./reducers/canvasinfo.js";
 import contextmenu from "./reducers/contextmenu.js";
+import leftflyout from "./reducers/leftflyout.js";
 import rightflyout from "./reducers/rightflyout.js";
 import bottompanel from "./reducers/bottompanel.js";
 import toppanel from "./reducers/toppanel.js";
@@ -54,6 +55,7 @@ export default class CanavasStore {
 			canvastoolbar,
 			texttoolbar,
 			contextmenu,
+			leftflyout,
 			rightflyout,
 			bottompanel,
 			toppanel
@@ -72,17 +74,20 @@ export default class CanavasStore {
 			canvastoolbar: {},
 			texttoolbar: { isOpen: false },
 			contextmenu: { isOpen: false, menuDef: [], source: {} },
+			leftflyout: {},
 			rightflyout: {},
 			bottompanel: { panelHeight: 393 },
 			toppanel: { }
 		};
 
-		if (typeof window !== "undefined") {
-			const enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
-			this.store = createStore(combinedReducer, initialState, enableDevTools);
-		} else {
-			this.store = createStore(combinedReducer, initialState);
-		}
+		// This code removed because it was causing slowdown in the test harness with the
+		// debugger open in the latest version of Chrome.
+		// if (typeof window !== "undefined") {
+		// 	const enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+		// 	this.store = createStore(combinedReducer, initialState, enableDevTools);
+		// } else {
+		this.store = createStore(combinedReducer, initialState);
+		// }
 
 		this.dispatch = this.dispatch.bind(this);
 	}

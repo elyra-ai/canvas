@@ -118,7 +118,7 @@ class CommonCanvasContextToolbar extends React.Component {
 		// If we have some overflow menu items, we reduce the width by five pixels
 		// which forces the overflow menu and the overflow icon to be shown. We
 		// use 5 pixels because this is how many are needed to make the toolbar
-		// work correcty with differnet browser magnificaitons.
+		// work correcty with different browser magnifications.
 		const reduction = overflowMenuItems.length > 0 ? 5 : 0;
 		return buttonsWidth + dividersWidth - reduction;
 	}
@@ -234,7 +234,7 @@ class CommonCanvasContextToolbar extends React.Component {
 			({ x, y } = this.adjustPosToFit(x, y, toolbarWidth, ICON_SIZE_PLUS_GAP));
 
 			contextToolbar = (
-				<div className={"context-toolbar"} style={{ left: x, top: y, width: toolbarWidth }}
+				<div className={"context-toolbar floating-toolbar"} style={{ left: x, top: y, width: toolbarWidth }}
 					onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}
 				>
 					<Toolbar

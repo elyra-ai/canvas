@@ -191,6 +191,11 @@ class DropDown extends React.Component {
 		}
 	}
 
+	// Filter Oneofselect items as per entered input.
+	filterItems(list) {
+		return list?.item?.label?.toLowerCase().includes(list?.inputValue?.toLowerCase());
+	}
+
 	render() {
 		let dropDown;
 		if (this.props.control.controlType === ControlType.SELECTSCHEMA) {
@@ -228,6 +233,8 @@ class DropDown extends React.Component {
 					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
 					onChange={this.handleChange}
 					value={selection}
+					helperText={this.props.control.helperText}
+					readOnly={this.props.readOnly}
 				>
 					{ options }
 				</Select>
@@ -246,6 +253,8 @@ class DropDown extends React.Component {
 					onInputChange={this.handleOnInputChange}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText={this.props.controlItem}
+					helperText={this.props.control.helperText}
+					shouldFilterItem={this.filterItems}
 				/>
 			);
 		} else {
@@ -261,6 +270,8 @@ class DropDown extends React.Component {
 					label={this.emptyLabel}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText={this.props.controlItem}
+					helperText={this.props.control.helperText}
+					readOnly={this.props.readOnly}
 				/>
 			);
 		}
@@ -291,7 +302,8 @@ DropDown.propTypes = {
 		PropTypes.string,
 		PropTypes.object
 	]), // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => {

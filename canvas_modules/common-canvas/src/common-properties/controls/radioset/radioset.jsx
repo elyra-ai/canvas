@@ -21,10 +21,9 @@ import { isEqual } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
 import * as ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
 import ValidationMessage from "./../../components/validation-message";
-import { RadioButton } from "@carbon/react";
+import { RadioButton, RadioButtonGroup } from "@carbon/react";
 import classNames from "classnames";
 import { STATES, UPDATE_TYPE } from "./../../constants/constants.js";
-import { ORIENTATIONS } from "./../../constants/form-constants.js";
 import { v4 as uuid4 } from "uuid";
 import { Information } from "@carbon/react/icons";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
@@ -116,12 +115,15 @@ class RadiosetControl extends React.Component {
 	}
 
 	handleChange(evt) {
-		const oldVal = this.props.controller.getPropertyValue(this.props.propertyId);
-		const newVal = this.convertTargetValue(evt);
-		this.props.controller.updatePropertyValue(this.props.propertyId, newVal);
+		// Disable radio button switch if it is readOnly
+		if (!this.props.readOnly) {
+			const oldVal = this.props.controller.getPropertyValue(this.props.propertyId);
+			const newVal = this.convertTargetValue(evt);
+			this.props.controller.updatePropertyValue(this.props.propertyId, newVal);
 
-		if (oldVal !== newVal) {
-			this.setEnabledStateOfOptionalPanels(newVal);
+			if (oldVal !== newVal) {
+				this.setEnabledStateOfOptionalPanels(newVal);
+			}
 		}
 	}
 
@@ -200,6 +202,10 @@ class RadiosetControl extends React.Component {
 				name: this.props.propertyId.name,
 				row: i
 			};
+			const labelWithInfo = (<div className="label-tooltip-container">
+				{valueSet.valueLabels[i]}
+				{tooltipIcon}
+			</div>);
 			buttons.push(
 				<div key={i} className="properties-radioset-panel">
 					<div className="properties-radioset-tooltip">
@@ -207,12 +213,11 @@ class RadiosetControl extends React.Component {
 							key={i}
 							id={ControlUtils.getControlId(id, this.uuid)}
 							disabled={disabled || itemDisabled}
-							labelText={valueSet.valueLabels[i]}
+							labelText={labelWithInfo}
 							value={val}
 							onChange={this.handleChange}
 							checked={checked}
 						/>
-						{tooltipIcon}
 					</div>
 					{optionalPanel}
 				</div>
@@ -223,12 +228,15 @@ class RadiosetControl extends React.Component {
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 				className={classNames("properties-radioset ", { "hide": this.props.state === STATES.HIDDEN })}
 			>
-				<div
-					className={classNames("properties-radio-button-group", this.props.messageInfo ? this.props.messageInfo.type : null,
-						{ "horizontal": this.props.control.orientation !== ORIENTATIONS.VERTICAL })} disabled={this.props.state === STATES.DISABLED}
+				<RadioButtonGroup className={classNames("properties-radio-button-group", this.props.messageInfo ? this.props.messageInfo.type : null)}
+					disabled={this.props.state === STATES.DISABLED}
+					name="radio-button-group"
+					orientation={this.props.control.orientation}
+					helperText={this.props.control.helperText}
+					readOnly={this.props.readOnly}
 				>
 					{buttons}
-				</div>
+				</RadioButtonGroup>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>
 		);
@@ -248,7 +256,8 @@ RadiosetControl.propTypes = {
 		PropTypes.bool
 	]), // pass in by redux
 	messageInfo: PropTypes.object, // pass in by redux
-	controlOpts: PropTypes.object // pass in by redux
+	controlOpts: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({

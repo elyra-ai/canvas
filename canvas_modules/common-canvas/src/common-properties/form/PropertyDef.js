@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { TitleMetadata } from "./TitleInfo";
 import { GroupMetadata } from "./GroupInfo";
 import { ActionMetadata } from "./ActionInfo";
 import { ParameterMetadata } from "./ParameterInfo";
@@ -24,7 +25,9 @@ import { ResourceDef } from "../util/L10nProvider";
 import { propertyOf } from "lodash";
 
 export class PropertyDef {
-	constructor(cname, icon, editorSize, pixelWidth, label, labelEditable, help, description, structureMetadata, parameterMetadata, groupMetadata, actionMetadata, heading) {
+	constructor(cname, icon, editorSize, pixelWidth, label, labelEditable, help,
+		description, structureMetadata, parameterMetadata, groupMetadata,
+		actionMetadata, heading, titleMetadata) {
 		this.name = cname;
 		this.icon = icon;
 		this.editorSize = editorSize;
@@ -38,6 +41,7 @@ export class PropertyDef {
 		this.groupMetadata = groupMetadata;
 		this.actionMetadata = actionMetadata;
 		this.heading = heading;
+		this.titleMetadata = titleMetadata;
 	}
 
 	/**
@@ -61,6 +65,7 @@ export class PropertyDef {
 			propertyOf(uihints)("parameter_info"), propertyOf(uihints)("ui_parameters"));
 		const actionMetadata = ActionMetadata.makeActionMetadata(propertyOf(uihints)("action_info"));
 		const groupMetadata = GroupMetadata.makeGroupMetadata(propertyOf(uihints)("group_info"), parameterMetadata.getParameters());
+		const titleMetadata = TitleMetadata.makeTitleMetadata(propertyOf(uihints)("title_info"));
 
 		const label = titleDefinition && titleDefinition.title ? titleDefinition.title : null;
 		const labelEditable = titleDefinition && typeof titleDefinition.editable !== "undefined" ? titleDefinition.editable : DEFAULT_LABEL_EDITABLE;
@@ -78,7 +83,8 @@ export class PropertyDef {
 			parameterMetadata,
 			groupMetadata,
 			actionMetadata,
-			propertyOf(uihints)("label")
+			propertyOf(uihints)("label"),
+			titleMetadata
 		);
 	}
 }

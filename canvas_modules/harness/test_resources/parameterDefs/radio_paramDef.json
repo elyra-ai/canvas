@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "radioString": "entropy",
+    "radioString_readonly": "entropy",
     "radioBooleanWithEnum": true,
     "radioBooleanWithoutEnum": true,
     "radioBooleanWithLabels": false,
@@ -39,6 +40,13 @@
         "entropy"
       ],
       "required": true
+    },
+    {
+      "id": "radioString_readonly",
+      "enum": [
+        "gini",
+        "entropy"
+      ]
     },
     {
       "id": "radioBooleanWithEnum",
@@ -273,7 +281,25 @@
           "default": "RadioSet with enum string type"
         },
         "resource_key": "withradioString",
-        "class_name": "radioset-control-class"
+        "class_name": "radioset-control-class",
+        "helper_text": {
+          "default": "RadioSet with enum string type"
+        }
+      },
+      {
+        "parameter_ref": "radioString_readonly",
+        "label": {
+          "default": "Readonly Radio String"
+        },
+        "description": {
+          "default": "Readonly RadioSet with enum string type"
+        },
+        "resource_key": "withradioString",
+        "class_name": "radioset-control-class",
+        "helper_text": {
+          "default": "Readonly RadioSet with enum string type"
+        },
+        "read_only": true
       },
       {
         "parameter_ref": "radioBooleanWithEnum",
@@ -567,6 +593,7 @@
         "parameter_refs": [
           "radioString",
           "radioBooleanWithEnum",
+          "radioString_readonly",
           "radioBooleanWithoutEnum",
           "radioBooleanWithLabels",
           "radioInteger",

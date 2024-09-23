@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@
 		height: 20px;
 		margin: 5px 0 0 5px;
 		cursor: pointer;
+		border: $border-subtle-02 1px solid;
+
 		&.white-0 {
 			background-color: $layer-01; // In dark-mode, white-0 will be interpreted as black.
 			border: 1px solid $gray-50;
@@ -40,5 +42,17 @@
 		&.green-50 { background-color: $green-50; }
 		&.teal-50 { background-color: $teal-50; }
 		&.cyan-50 { background-color: $cyan-50; }
+
+		&.color-transparent {
+			border-color: $icon-primary;
+			// Drawn a diagonal line across the square
+			background:
+				linear-gradient(to top left, $icon-inverse calc(50% - 1.2px), $icon-primary 50%, $icon-inverse calc(50% + 1.2px), $icon-inverse 100%);
+		}
+
+		&.selected {
+			outline: solid $layer-selected-inverse 2px;
+		}
 	}
+
 }

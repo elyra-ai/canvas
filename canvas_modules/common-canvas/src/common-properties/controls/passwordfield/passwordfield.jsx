@@ -27,6 +27,8 @@ import { formatMessage } from "./../../util/property-utils";
 class PasswordControl extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.reactIntl = props.controller.getReactIntl();
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 	}
 
@@ -62,6 +64,7 @@ class PasswordControl extends React.Component {
 					tooltipAlignment="end"
 					showPasswordLabel={showPasswordLabel}
 					hidePasswordLabel={hidePasswordLabel}
+					helperText={this.props.control.helperText}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>);

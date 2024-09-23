@@ -107,7 +107,6 @@ class PropertiesMain extends React.Component {
 		}
 		if (newProps.propertiesInfo) {
 			if (!isEqual(Object.keys(newProps.propertiesInfo), Object.keys(this.props.propertiesInfo)) ||
-				(newProps.propertiesInfo.formData && !isEqual(newProps.propertiesInfo.formData, this.props.propertiesInfo.formData)) ||
 				(newProps.propertiesInfo.parameterDef && !isEqual(newProps.propertiesInfo.parameterDef, this.props.propertiesInfo.parameterDef)) ||
 				(newProps.propertiesInfo.appData && !isEqual(newProps.propertiesInfo.appData, this.props.propertiesInfo.appData))) {
 				const sameParameterDefRendered = newProps.propertiesInfo.id === this.props.propertiesInfo.id;
@@ -149,17 +148,11 @@ class PropertiesMain extends React.Component {
 	setForm(propertiesInfo, sameParameterDefRendered) {
 		let formData = null;
 
-		if (propertiesInfo.formData && Object.keys(propertiesInfo.formData).length !== 0) {
-			formData = propertiesInfo.formData;
-		} else if (propertiesInfo.parameterDef) {
+		if (propertiesInfo.parameterDef) {
 			if (this.props.propertiesConfig.schemaValidation) {
 				validateParameterDefAgainstSchema(propertiesInfo.parameterDef);
 			}
 			formData = Form.makeForm(propertiesInfo.parameterDef, this.props.propertiesConfig.containerType);
-		}
-		// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
-		if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
-			formData.data.datasetMetadata = PropertyUtils.convertInputDataModel(formData.data.inputDataModel);
 		}
 
 		this.propertiesController.setForm(formData, this.props.intl, sameParameterDefRendered);
@@ -484,6 +477,7 @@ class PropertiesMain extends React.Component {
 					icon={formData.icon}
 					heading={formData.heading}
 					showHeading={this.props.propertiesConfig.heading}
+					titleInfo={formData.title}
 					rightFlyoutTabsView={this.props.propertiesConfig.categoryView === CATEGORY_VIEW.TABS}
 				/>);
 
@@ -598,11 +592,11 @@ class PropertiesMain extends React.Component {
 						onBlur={this.onBlur}
 						style={overrideStyle}
 					>
-						{resizeBtn}
 						{propertiesTitle}
 						{propertiesDialog}
 						{buttonsContainer}
 					</aside>
+					{resizeBtn}
 				</Provider>
 			);
 		}

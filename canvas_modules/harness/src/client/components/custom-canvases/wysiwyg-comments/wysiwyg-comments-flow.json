@@ -1,0 +1,500 @@
+{
+	"doc_type": "pipeline",
+	"version": "3.0",
+	"json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+	"id": "9e4cae44-800e-4809-9903-935efba1e5a4",
+	"primary_pipeline": "19511a95-ad6b-457d-9fa2-ef5938ffe9c9",
+	"pipelines": [
+	  {
+		"id": "19511a95-ad6b-457d-9fa2-ef5938ffe9c9",
+		"nodes": [],
+		"app_data": {
+		  "ui_data": {
+			"comments": [
+			  {
+				"id": "146869f2-a00e-48e4-825d-b52ade9d52c4",
+				"x_pos": 684.1615686978162,
+				"y_pos": 63.86247531441688,
+				"width": 246,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-arial"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-10"
+				  }
+				],
+				"content": "10",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "a20621a4-20a7-410b-a940-4ca7f27abfa6",
+				"x_pos": 682.2837982177734,
+				"y_pos": 132.60671997070312,
+				"width": 246,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-arial"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-11"
+				  }
+				],
+				"content": "11",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "e2842e51-8e6f-41a0-a8c5-ed71a04632fb",
+				"x_pos": 684.1616766325014,
+				"y_pos": 211.39190757555377,
+				"width": 246,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-arial"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-12"
+				  }
+				],
+				"content": "12",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "3c93087f-12ed-4b11-8424-639cb3d6b9e3",
+				"x_pos": 683.4475184048474,
+				"y_pos": 298.41000329516135,
+				"width": 246,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-arial"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-14"
+				  }
+				],
+				"content": "14",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "1e3cda40-1437-4d5a-89fc-63f4722bd804",
+				"x_pos": 684.044770064199,
+				"y_pos": 377.4347978559057,
+				"width": 246,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-arial"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-18"
+				  }
+				],
+				"content": "18",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "ce19085a-59fa-41b5-a729-11ca9a104f1a",
+				"x_pos": 687.127565376814,
+				"y_pos": 461.1309136075963,
+				"width": 246,
+				"height": 48.74359130859375,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-arial"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-24"
+				  }
+				],
+				"content": "24\n",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "cbcaa057-0ace-45b4-a2c1-8dad30a59ae5",
+				"x_pos": 685.8794258259178,
+				"y_pos": 539.8960134542151,
+				"width": 246,
+				"height": 58.11402130126953,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-arial"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-30"
+				  }
+				],
+				"content": "30",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "ba7bac39-09d2-4f7a-9437-e50593c1a4c4",
+				"x_pos": 981.3515726768935,
+				"y_pos": 62.574592152763216,
+				"width": 246,
+				"height": 60.22113037109375,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-arial"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-36"
+				  }
+				],
+				"content": "36",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "1ec9637b-428b-4adf-8b86-f50b2e23e721",
+				"x_pos": 981.3515868125207,
+				"y_pos": 146.2593793767369,
+				"width": 246,
+				"height": 80.8494873046875,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-arial"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-48"
+				  }
+				],
+				"content": "48",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "d5a1b71f-fce6-446f-b84c-0743239a7bb9",
+				"x_pos": 984.2878005815921,
+				"y_pos": 246.09378305463918,
+				"width": 246,
+				"height": 95.44854736328125,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-arial"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-60"
+				  }
+				],
+				"content": "60",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "e8555eca-5d8a-4d69-bb0a-183bcdd5e42b",
+				"x_pos": 986.0340740675754,
+				"y_pos": 357.2334242066331,
+				"width": 246,
+				"height": 112.77734375,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-arial"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-72"
+				  }
+				],
+				"content": "72",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "a189d223-28d4-4986-bae7-2ea88232a928",
+				"x_pos": 989.9747597340366,
+				"y_pos": 487.1265663302015,
+				"width": 246,
+				"height": 138.368408203125,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-arial"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-96"
+				  }
+				],
+				"content": "96",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "6b90eaf8-33e7-4f62-b9e0-a7dfa7e1a872",
+				"x_pos": 34.23129285067438,
+				"y_pos": 16.43437248722114,
+				"width": 366.111083984375,
+				"height": 156.4444580078125,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "backgroundColor",
+					"value": "#A7F0BA"
+				  },
+				  {
+					"type": "textColor",
+					"value": "#FC7B1D"
+				  },
+				  {
+					"type": "fontType",
+					"value": "font-comic-sans-ms"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-24"
+				  },
+				  {
+					"type": "alignHorizontally",
+					"value": "align-center"
+				  },
+				  {
+					"type": "alignVertically",
+					"value": "align-middle"
+				  },
+				  {
+					"type": "bold"
+				  }
+				],
+				"content": "Elyra Canvas supports WYSIWYG comments",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "67e6f161-657f-440d-9c66-894f075979da",
+				"x_pos": 40.53332700935067,
+				"y_pos": 255.09600741307065,
+				"width": 286,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-ibm-plex-sans"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-24"
+				  }
+				],
+				"content": "IBM Plex Sans",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "401f12dc-d096-4f69-868c-56268c5f764b",
+				"x_pos": 40.53332700935067,
+				"y_pos": 330.09600741307065,
+				"width": 286,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-ibm-plex-serif"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-24"
+				  }
+				],
+				"content": "IBM Plex Serif",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "446683c7-3d3b-4ce8-9fc1-caf8e017b13d",
+				"x_pos": 40.53332700935067,
+				"y_pos": 405.09600741307065,
+				"width": 290,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-ibm-plex-sans-condensed"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-24"
+				  }
+				],
+				"content": "IBM Plex Sans Condensed",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "cb5ef75b-eddd-4b2a-a9af-c0d64386aae4",
+				"x_pos": 40.53332700935067,
+				"y_pos": 480.09600741307065,
+				"width": 287,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-ibm-plex-mono"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-24"
+				  }
+				],
+				"content": "IBM Plex Mono",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "f94d73a8-e6ce-4537-ac4b-238e15a1e3a5",
+				"x_pos": 40.53332700935067,
+				"y_pos": 555.0960074130708,
+				"width": 285,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-arial"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-24"
+				  }
+				],
+				"content": "Arial",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "7f54c1e6-79ed-42aa-9b88-93bbedc7ee2e",
+				"x_pos": 355.5333270093506,
+				"y_pos": 255.09600741307065,
+				"width": 246,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-comic-sans-ms"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-24"
+				  }
+				],
+				"content": "Comic Sans MS",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "31c83724-74de-4bd5-b9ca-fe6b17dbdc52",
+				"x_pos": 355.5333270093506,
+				"y_pos": 330.09600741307065,
+				"width": 246,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-gill-sans"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-24"
+				  }
+				],
+				"content": "Gill Sans",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "7bfe9257-2a62-4041-8a0e-eebe7bb9708d",
+				"x_pos": 355.5333270093506,
+				"y_pos": 405.09600741307065,
+				"width": 246,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-helvetica-neue"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-24"
+				  }
+				],
+				"content": "Helvetica Neue",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "fbd6797f-b21e-44e7-a7bb-27573798df89",
+				"x_pos": 355.5333270093506,
+				"y_pos": 480.09600741307065,
+				"width": 246,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-times-new-roman"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-24"
+				  }
+				],
+				"content": "Times New Roman",
+				"associated_id_refs": []
+			  },
+			  {
+				"id": "e9f80498-c29f-407a-a858-de830f18abb7",
+				"x_pos": 355.5333270093506,
+				"y_pos": 555.0960074130708,
+				"width": 246,
+				"height": 51,
+				"contentType": "WYSIWYG",
+				"formats": [
+				  {
+					"type": "fontType",
+					"value": "font-verdana"
+				  },
+				  {
+					"type": "textSize",
+					"value": "text-size-24"
+				  }
+				],
+				"content": "Verdana",
+				"associated_id_refs": []
+			  }
+			]
+		  }
+		},
+		"runtime_ref": ""
+	  }
+	],
+	"schemas": []
+  }

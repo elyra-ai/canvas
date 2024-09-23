@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ class CommonCanvasRightFlyout extends React.Component {
 	render() {
 		this.logger.log("render");
 
-		let rightFlyout = null;
+		let rightFlyout = <div />; // For no content, return empty <div> so grid siziing for parent <div> work correctly.
 
 		if (this.props.content && this.props.isOpen) {
 			const rfClass = this.props.enableRightFlyoutUnderToolbar

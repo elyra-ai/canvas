@@ -56,7 +56,7 @@ describe("Test of action image tooltip direction", function() {
 		// ---------------------------------------------------------------------------
 
 		// Click "Conditions" catgeory
-		cy.get(".common-canvas-right-side-items .properties-category-title").eq(2)
+		cy.get(".right-flyout-panel .cds--accordion__heading").eq(2)
 			.click();
 		// For "image_cond_hide" image, tooltip_direction is not specified
 		cy.hoverOverActionImage("image_cond_hide");

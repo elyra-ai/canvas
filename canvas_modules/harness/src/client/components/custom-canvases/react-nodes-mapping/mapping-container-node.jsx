@@ -32,6 +32,9 @@ const CONTAINER_GAP = 48;
 const DEFAUT_NODE_WIDTH = 400;
 const DEFAUT_NODE_HEIGHT = 30;
 
+// Amount in pixels to move the ports over the nodes
+const PORT_POS_INDENT = 8;
+
 
 class MappingContainerNode extends React.Component {
 	constructor(props) {
@@ -193,9 +196,13 @@ class MappingContainerNode extends React.Component {
 			if (data) {
 				const srcInfo = JSON.parse(data);
 
+				// Convert incoming field so it references the appropriate port
+				// ID from the input container.
+				const fields = this.getFieldsWithToPortIds(srcInfo.srcFields);
+
 				// Add fields, create ports and add links
 				const command = new LinkInputToOutputAction(
-					srcInfo.srcNodeId, srcInfo.srcFields,
+					srcInfo.srcNodeId, fields,
 					this.props.nodeData.id, this.props.canvasController);
 				if (command.isDoable()) {
 					const commandStack = this.props.canvasController.getCommandStack();
@@ -356,7 +363,7 @@ class MappingContainerNode extends React.Component {
 			: this.props.nodeData.inputs.map((port) =>
 				({
 					id: port.id,
-					cx: 0,
+					cx: PORT_POS_INDENT,
 					cy: this.isContainerResized() ? this.getFieldElementPortPosY(port.id, nodeDivRect, scrollDivRect) : (headerDivRect.height / 2)
 				}));
 
@@ -365,8 +372,12 @@ class MappingContainerNode extends React.Component {
 			: this.props.nodeData.outputs.map((port) =>
 				({
 					id: port.id,
-					cx: nodeDivRect.width,
-					cy: this.isContainerResized() ? this.getFieldElementPortPosY(port.id, nodeDivRect, scrollDivRect) : (headerDivRect.height / 2)
+					cx: port.id.startsWith("right")
+						? nodeDivRect.width - PORT_POS_INDENT
+						: PORT_POS_INDENT,
+					cy: this.isContainerResized()
+						? this.getFieldElementPortPosY(this.getStripPortId(port.id), nodeDivRect, scrollDivRect)
+						: (headerDivRect.height / 2)
 				}));
 
 		this.props.externalUtils.setPortPositions({
@@ -374,6 +385,10 @@ class MappingContainerNode extends React.Component {
 			inputPositions,
 			outputPositions
 		});
+	}
+
+	getStripPortId(id) {
+		return id.startsWith("right") ? id.substring(6) : id.substring(5);
 	}
 
 	getNodeDivRect() {
@@ -463,15 +478,25 @@ class MappingContainerNode extends React.Component {
 	}
 
 	getMapping(field) {
-		const mappingLink = this.props.canvasController.getLinks()
+		const links = this.props.canvasController.getLinks();
+		const mappingLink = links
 			.find((l) => l.trgNodeId === this.props.nodeData.id && l.trgNodePortId === field.id);
 		if (mappingLink) {
 			const sourceNode = this.props.externalUtils.getActiveNode(mappingLink.srcNodeId);
 			const sourceField = sourceNode.app_data.table_data.fields
-				.find((f) => f.id === mappingLink.srcNodePortId);
+				.find((f) => f.id === this.getStripPortId(mappingLink.srcNodePortId));
 			return sourceNode.label + "." + sourceField.label;
 		}
 		return "";
+	}
+
+	getFieldsWithToPortIds(fields) {
+		const prefix = this.props.nodeData.op === "output_link" ? "right-" : "left-";
+		return fields.map((f) => {
+			const fieldCopy = { ...f };
+			fieldCopy.id = prefix + fieldCopy.id;
+			return fieldCopy;
+		});
 	}
 
 	isContainerResized() {

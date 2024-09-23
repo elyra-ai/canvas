@@ -15,14 +15,25 @@
  */
 
 Cypress.Commands.add("enterTextInExpressionEditor", (text, propertyId) => {
+	const clipboardData = new DataTransfer();
+	clipboardData.setData("text/plain", text);
+	const pasteEvent = new ClipboardEvent("paste", {
+		clipboardData
+	});
+
 	cy.useCtrlOrCmdKey()
 		.then((selectedKey) => {
 			cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
 				.find(".properties-expression-editor")
 				.find(".cm-editor")
 				.find(".cm-content")
-				.type(selectedKey + "{a}{del}") // Select all and delete existing text in expression editor
-				.type(text + "{ctrl} "); // Type text and ctrl + space to display hints
+				.as("editorContent");
+			cy.get("@editorContent")
+				.type(selectedKey + "{a}{del}"); // Select all and delete existing text in expression editor
+			cy.get(".cm-editor [role='textbox']") // Paste text in place of typing https://stackoverflow.com/questions/55362875/how-to-type-using-cypress-type-inside-the-codemirror-editor
+				.trigger("paste", pasteEvent);
+			cy.get("@editorContent")
+				.type("{ctrl} "); // Type ctrl + space to display hints
 		});
 });
 

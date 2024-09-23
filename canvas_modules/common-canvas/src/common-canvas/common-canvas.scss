@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,20 +35,6 @@ $panel-border-color: $border-subtle-01;
 	font-size: 14px;
 }
 
-.common-canvas-items-container {
-	height: 100%;
-	position: relative;
-	width: 100%;
-	display: grid;
-	grid-template-columns: 1fr;
-	/* grid-template-rows is set dynamically in cc-central-items */
-}
-
-.common-canvas-right-side-items {
-	width: 100%;
-	display: flex;
-}
-
 .common-canvas-drop-div {
 	height: 100%;
 	width: 100%;
@@ -58,9 +44,14 @@ $panel-border-color: $border-subtle-01;
 	position: relative; // This allows the State Tag to have positio: absolute
 }
 
+.left-flyout-panel,
 .right-flyout-panel {
-	height: 100%;
-	position: relative;
+	// This combination of height and min-height enable scrolling in the child panel,
+	// I believe this is because it sets a specific height on the CSS grid cell,
+	// so the contents of the panel can adjust themselves to the height accordingly.
+	height: 0;
+	min-height: 100%;
+
 	user-select: none; /* Prevent elements from being selectable */
 	background-color: $layer-01;
 }
@@ -118,13 +109,7 @@ $panel-border-color: $border-subtle-01;
 	.toolbar-overflow-item {
 		button:focus {
 			border-color: transparent;
-			box-shadow: inset 2px 2px $button-tertiary, inset -6px -2px $button-tertiary;
-		}
-		// Set padding so overflow icon appears in the center (horizontally). This
-		// offsets the 5px which are set in the code to make the overflow icon
-		// be generated correctly.
-		.toolbar-item-content {
-			padding-left: 4px;
+			box-shadow: inset 2px 2px $focus, inset -6px -2px $focus;
 		}
 	}
 }
@@ -132,11 +117,18 @@ $panel-border-color: $border-subtle-01;
 .text-toolbar,
 .context-toolbar  {
 	position: absolute;
-	// top and left will be calculated and set for the text toolbar programmatically
-	// top, left and width will be calculated and set for the context toolbar programmatically
+	// For text toolbar - top and left will be calculated and set programmatically
+	// For context toolbar - top, left and width will be calculated and set programmatically.
+	// 'width' is set for the context toolbar because the overflow button must be forced to
+	// appear by setting the width approriately (see cc-context-toolbar.jsx).
 	top: 0;
 	left: 0;
 	width: fit-content;
+	// This bottom border allows the canvas context toolbar to disappear, if the mouse
+	// cursor is immediately moved away from the toolbar, after it opens. That's because,
+	// when the toolbar opens, the border will be underneath the mouse cursor and so the
+	// mouseLeave event is fired when the cursor is moved away.
+	border-bottom: 4px solid transparent;
 
 	.toolbar-div {
 		// Position the div 'relative' to text-toolbar so we can animate its
@@ -171,31 +163,25 @@ $panel-border-color: $border-subtle-01;
 	}
 }
 
-/* Alternative layout for common-canvas components where canvas and right-side
- * flyout appear under the toolbar and the right-side flyout does not compress
- * the toolbar when it is opened. These are used when the config field
- * enableRightFlyoutUnderToolbar is true. */
+/* Styles for Grid layout of Common Canvas panels: toolbar panel, top panel
+ * bottom panel, left flyout and right flyout. Left flyout and right flyout
+ * can appear under the toolbar or at the side of the toolbar.
+ */
 
-.common-canvas-right-side-items-under-toolbar {
-	display: grid;
-	/* grid-template-rows is set dynamically in cc-central-items */
-	grid-template-columns: 1fr;
-	width: 100%;
-}
-
-.common-canvas-items-container-under-toolbar {
+.common-canvas-grid-vertical {
 	height: 100%;
 	width: 100%;
 	display: grid;
-	grid-template-rows: 1fr auto;
-	/* grid-template-columns is set dynamically in cc-central-items */
+	/* grid-template-rows is set dynamically in cc-panels.jsx */
+	grid-template-columns: 1fr;
 }
 
-.common-canvas-with-top-and-bottom-panel {
+.common-canvas-grid-horizontal {
+	height: 100%;
 	width: 100%;
 	display: grid;
-	/* grid-template-rows is set dynamically in cc-central-items */
-	grid-template-columns: 1fr;
+	grid-template-rows: 1fr;
+	/* grid-template-columns is set dynamically in cc-panels.jsx */
 }
 
 /* Styles for empty canvas objects */

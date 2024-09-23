@@ -47,7 +47,7 @@ class PaletteContentListItem extends React.Component {
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
-		this.onKeyPress = this.onKeyPress.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 	}
 
 	onMouseDown() {
@@ -74,7 +74,7 @@ class PaletteContentListItem extends React.Component {
 		}
 	}
 
-	onKeyPress(e) {
+	onKeyDown(e) {
 		// e.key === " " is needed to allow Cypress test in palette.js to run on the build machine!
 		if (e.key === " " || e.code === "Space" || e.keyCode === 32) {
 			this.onDoubleClick();
@@ -279,12 +279,17 @@ class PaletteContentListItem extends React.Component {
 			} else if (image === USE_DEFAULT_EXT_ICON) {
 				image = SUPERNODE_EXT_ICON;
 			}
-			icon = image.endsWith(".svg")
-				? <SVG src={image} className="palette-list-item-icon" draggable="false" />
-				: <img src={image} className="palette-list-item-icon" draggable="false" alt={""} />;
+
+			if (typeof image === "object" && React.isValidElement(image)) {
+				icon = image;
+			} else if (typeof image === "string") {
+				icon = image.endsWith(".svg")
+					? <SVG src={image} className="palette-list-item-icon" draggable="false" />
+					: <img src={image} className="palette-list-item-icon" draggable="false" alt={""} />;
+			}
 		}
 
-		if (labelText && (this.props.isPaletteOpen || !icon)) {
+		if (labelText && (this.props.isPaletteWide || !icon)) {
 			itemText = this.props.isDisplaySearchResult
 				? this.getHighlightedLabel(labelText)
 				: (<span>{labelText}</span>);
@@ -298,7 +303,7 @@ class PaletteContentListItem extends React.Component {
 		// a dummy node to include the empty text from the category.
 		if (this.props.nodeTypeInfo.category.node_types.length === 0 && this.props.nodeTypeInfo.category.empty_text) {
 			labelText = this.props.nodeTypeInfo.category.empty_text;
-			if (this.props.isPaletteOpen) {
+			if (this.props.isPaletteWide) {
 				itemText = (<span>{labelText}</span>);
 			}
 			draggable = "false";
@@ -330,7 +335,7 @@ class PaletteContentListItem extends React.Component {
 				className={mainDivClass}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
-				onKeyPress={this.props.isEditingEnabled ? this.onKeyPress : null}
+				onKeyDown={this.props.isEditingEnabled ? this.onKeyDown : null}
 				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
 				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}
 				onDragEnd={this.props.isEditingEnabled ? this.onDragEnd : null}
@@ -354,7 +359,7 @@ PaletteContentListItem.propTypes = {
 	isDisplaySearchResult: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	isEditingEnabled: PropTypes.bool.isRequired,
-	isPaletteOpen: PropTypes.bool.isRequired,
+	isPaletteWide: PropTypes.bool,
 	isShowRanking: PropTypes.bool
 };
 

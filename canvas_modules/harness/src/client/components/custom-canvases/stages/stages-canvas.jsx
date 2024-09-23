@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +17,31 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { CommonCanvas, CanvasController, Palette } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
-import { ChevronDown, Edit } from "@carbon/react/icons";
+import { Edit, OpenPanelFilledLeft, Search } from "@carbon/react/icons";
 
-import MultiUndoPanel from "./multi-undo-panel";
+import MultiCommandPanel from "./multi-command-panel";
 
-import StagesCanvasFlow from "./stagesCanvas.json";
+import StagesFlow from "./stages-flow.json";
 import StagesPalette from "../../../../../test_resources/palettes/stagesPalette.json";
 
-export default class DetachedCanvas extends React.Component {
+export default class StagesCanvas extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			leftFlyout: null
+		};
+
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(StagesCanvasFlow);
+		this.canvasController.setPipelineFlow(StagesFlow);
 		this.canvasController.setPipelineFlowPalette(StagesPalette);
 
 		this.getConfig = this.getConfig.bind(this);
 		this.getToolbarConfig = this.getToolbarConfig.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
-		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
 
 		// Add decorations to the links
@@ -53,13 +57,19 @@ export default class DetachedCanvas extends React.Component {
 	getToolbarConfig() {
 		const toolbarConfig = {
 			leftBar: [
-				{ action: "undo", label: "Undo", enable: true },
-				{ action: "multiUndo",
-					label: "Multiple Undo",
-					iconEnabled: (<ChevronDown size={32} />),
-					subPanel: MultiUndoPanel,
-					subPanelData: { canvasController: this.canvasController } },
-				{ action: "redo", label: "Redo", enable: true },
+				{ action: "left-flyout-palette", enable: true, iconEnabled: (<OpenPanelFilledLeft size={32} />) },
+				{ action: "left-flyout-search", enable: true, iconEnabled: (<Search size={32} />) },
+				{ divider: true },
+				{ action: "undo",
+					label: "Undo",
+					purpose: "dual",
+					subPanel: MultiCommandPanel,
+					subPanelData: { canvasController: this.canvasController, command: "undo" } },
+				{ action: "redo",
+					label: "Redo",
+					purpose: "dual",
+					subPanel: MultiCommandPanel,
+					subPanelData: { canvasController: this.canvasController, command: "redo" } },
 				{ divider: true },
 				{ action: "cut", label: "Cut", enable: true },
 				{ action: "copy", label: "Copy", enable: true },
@@ -82,7 +92,12 @@ export default class DetachedCanvas extends React.Component {
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "stages",
 			enableNodeFormatType: "Vertical",
+			enablePaletteLayout: "None",
+			enableNarrowPalette: false,
+			enableLeftFlyoutUnderToolbar: true,
+			enableRightFlyoutUnderToolbar: true,
 			enableLinkType: "Straight",
+			enableLinkMethod: "Freeform",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",
@@ -99,8 +114,6 @@ export default class DetachedCanvas extends React.Component {
 			enableMarkdownInComments: true,
 			enableContextToolbar: true,
 			enableResizableNodes: true,
-			enableNarrowPalette: false,
-			paletteInitialState: true,
 			tipConfig: {
 				palette: true,
 				nodes: true,
@@ -156,7 +169,14 @@ export default class DetachedCanvas extends React.Component {
 				linkEndHandleImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				linkEndHandleWidth: 20,
 				linkEndHandleHeight: 20,
-				linkHandleRaiseToTop: true
+				linkHandleRaiseToTop: true,
+				linkContextToolbarPosX: 0,
+				linkContextToolbarPosY: -15,
+				linkLengthForAltDecorations: 150,
+				linkAltDecorations: [
+					{ id: "alt-123", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background" },
+					{ id: "alt-456", label: "XXX", x_pos: -10, y_pos: -10 }
+				]
 			}
 		});
 		return config;
@@ -187,15 +207,24 @@ export default class DetachedCanvas extends React.Component {
 		};
 	}
 
-	decorationActionHandler() {
-		this.canvasController.displaySubPipeline({
-			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
-			pipelineFlowId: "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159"
-		});
-	}
-
 	editActionHandler(data, command) {
-		if (data.editType === "linkNodes") {
+		if (data.editType === "left-flyout-palette") {
+			if (this.state.leftFlyout === "palette") {
+				this.setState({ leftFlyout: null });
+
+			} else {
+				this.setState({ leftFlyout: "palette" });
+			}
+
+		} else if (data.editType === "left-flyout-search") {
+			if (this.state.leftFlyout === "search") {
+				this.setState({ leftFlyout: null });
+
+			} else {
+				this.setState({ leftFlyout: "search" });
+			}
+
+		} else if (data.editType === "linkNodes") {
 			this.createDecorations(data.linkIds[0]);
 
 		} else if (data.editType === "redo" && command.data.editType === "linkNodes") {
@@ -253,20 +282,37 @@ export default class DetachedCanvas extends React.Component {
 		const config = this.getConfig();
 		const toolbarConfig = this.getToolbarConfig();
 
+		let showLeftFlyout = false;
+		let leftFlyoutContent = null;
+
+		if (this.state.leftFlyout === "palette") {
+			showLeftFlyout = true;
+			leftFlyoutContent = (<Palette canvasController={this.canvasController} />);
+
+		} else if (this.state.leftFlyout === "search") {
+			showLeftFlyout = true;
+			leftFlyoutContent = (
+				<div style={{ width: "300px", padding: "20px" }}>
+					This panel could contain Search controls to provde a sophisticated search experience.
+				</div>
+			);
+		}
+
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
-				decorationActionHandler={this.decorationActionHandler}
 				editActionHandler={this.editActionHandler}
 				clickActionHandler={this.clickActionHandler}
 				contextMenuHandler={this.contextMenuHandler}
 				toolbarConfig={toolbarConfig}
 				config={config}
+				showLeftFlyout={showLeftFlyout}
+				leftFlyoutContent={leftFlyoutContent}
 			/>
 		);
 	}
 }
 
-DetachedCanvas.propTypes = {
+StagesCanvas.propTypes = {
 	config: PropTypes.object
 };

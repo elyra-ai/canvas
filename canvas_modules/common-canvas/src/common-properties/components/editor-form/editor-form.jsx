@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { setActiveTab } from "./../../actions";
-import { Tab, Tabs, TabList, TabPanel, Link, TabPanels } from "@carbon/react";
+import { Tab, Tabs, TabList, TabPanel, Link, TabPanels, Accordion, AccordionItem } from "@carbon/react";
 import * as PropertyUtil from "./../../util/property-utils";
 import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE, STATES, CATEGORY_VIEW } from "./../../constants/constants";
 import { cloneDeep, isEmpty, sortBy, get, filter } from "lodash";
@@ -73,8 +73,11 @@ class EditorForm extends React.Component {
 		this.FIRST_TEARSHEET_ID = null;
 		this.TEARSHEETS = {};
 		this.visibleTearsheet = null;
-
+		this.defaultOpenTab = props.activeTab;
+		this.alertOpenTab = null;
+		this.scrollToAlert = false;
 	}
+
 
 	shouldComponentUpdate(nextProps, nextState) {
 		if (!this.props.controller.isSummaryPanelShowing() && !this.props.controller.isSubPanelsShowing()) {
@@ -84,6 +87,18 @@ class EditorForm extends React.Component {
 			this.messages = this._getGroupedMessages(nextProps.messages);
 		}
 		return true;
+	}
+
+	componentDidUpdate(prevProps) {
+		// Scroll to the selected accordion even when clicked from Alerts tab
+		if (this.scrollToAlert || prevProps.activeTab !== this.props.activeTab) {
+			const activeTabId = this.props.activeTab;
+			const activeTabElement = document.getElementsByClassName(`${activeTabId}`);
+			if (activeTabId && activeTabElement.length > 0) {
+				activeTabElement[0].scrollIntoView({ behavior: "smooth" });
+			}
+			this.scrollToAlert = false;
+		}
 	}
 
 	_getMessageCountForCategory(tab) {
@@ -120,11 +135,22 @@ class EditorForm extends React.Component {
 		if (this.props.activeTab === panelId) {
 			activeTab = "";
 		}
+		if (this.alertOpenTab === panelId) {
+			this.alertOpenTab = null;
+		}
+		if (this.defaultOpenTab === panelId) {
+			this.defaultOpenTab = null;
+		}
 		this.props.setActiveTab(activeTab);
 	}
 
 	_handleMessageClick(controlId, ev) {
 		const control = this.props.controller.getControl(controlId);
+		this.alertOpenTab = control.parentCategoryId;
+		if (this.defaultOpenTab === this.alertOpenTab) {
+			this.defaultOpenTab = null;
+		}
+		this.scrollToAlert = true;
 		this.props.setActiveTab(control.parentCategoryId);
 	}
 
@@ -134,6 +160,7 @@ class EditorForm extends React.Component {
 
 	genPrimaryTabs(key, tabs, propertyId, indexof) {
 		const tabContent = [];
+		const tabContentAcc = [];
 		const tabLists = [];
 		const tabPanels = [];
 		let hasAlertsTab = false;
@@ -170,10 +197,8 @@ class EditorForm extends React.Component {
 				);
 			}
 			if (this.props.rightFlyout && this.props.categoryView !== CATEGORY_VIEW.TABS) {
-				let panelArrow = <Icon type={CARBON_ICONS.CHEVRONARROWS.DOWN} className="properties-category-caret-down" />;
 				let categoryOpen = false;
 				if (this.props.activeTab === tab.group) {
-					panelArrow = <Icon type={CARBON_ICONS.CHEVRONARROWS.UP} className="properties-category-caret-up" />;
 					categoryOpen = true;
 				}
 				if (tab.content.itemType !== ItemType.TEARSHEET && nonTearsheetTabs.length === 1) {
@@ -184,20 +209,20 @@ class EditorForm extends React.Component {
 						</div>
 					);
 				} else {
-					tabContent.push(
+					tabContentAcc.push(
 						<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
 							className={classNames("properties-category-container", { "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						>
-							<button type="button" onClick={this._showCategoryPanel.bind(this, tab.group)}
-								className={classNames("properties-category-title", { "properties-light-enabled": this.props.controller.getLight() }) }
+							<AccordionItem title={`${tab.text}${this._getMessageCountForCategory(tab) ? this._getMessageCountForCategory(tab) : ""}`}
+								// Open Tab with Alert Message when from Alerts Tab or a open Default Tab
+								open={ this.defaultOpenTab === tab.group || this.alertOpenTab === tab.group }
+								onHeadingClick={this._showCategoryPanel.bind(this, tab.group)}
+								className={`${classNames("properties-category-content",
+									{ "show": categoryOpen }, tab.group)}`}
 							>
-								{tab.text}{this._getMessageCountForCategory(tab)}
-								{panelArrow}
-							</button>
-							<div className={classNames("properties-category-content", { "show": categoryOpen }) }>
 								{panelItems}
 								{additionalComponent}
-							</div>
+							</AccordionItem>
 						</div>
 					);
 				}
@@ -230,15 +255,21 @@ class EditorForm extends React.Component {
 
 		if (this.props.rightFlyout && this.props.categoryView !== CATEGORY_VIEW.TABS) {
 			return (
-				<div key={"cat." + key} className="properties-categories">
-					{tabContent}
-				</div>
+				<React.Fragment key={"tabContent." + key} >
+					{tabContent.length ? (<div key={"cat." + key} className="properties-categories">
+						{tabContent}
+					</div>) : null}
+					{tabContentAcc.length ? (<Accordion size="lg">
+						<div key={"cat." + key} className="properties-categories">
+							{tabContentAcc}
+						</div>
+					</Accordion>) : null}
+				</React.Fragment>
 			);
 		}
 		return (
 			<Tabs key={"tab." + key}
 				selectedIndex={modalSelected}
-				light={this.props.controller.getLight()}
 			>
 				<TabList className="properties-primaryTabs" aria-label={tabListAriaLabel}>
 					{tabLists}

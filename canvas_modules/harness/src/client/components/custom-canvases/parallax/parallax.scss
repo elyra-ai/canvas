@@ -1,0 +1,105 @@
+/*
+ * Copyright 2024 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.parallax-canvas {
+
+	// ----------------------------------------------------
+	// Node Styles
+	// ----------------------------------------------------
+	.d3-node-group {
+
+		.d3-node-label{
+			color: #000000;
+		}
+
+		.d3-node-port-input {
+			stroke: $background-inverse;
+		}
+
+		&.blue {
+			.d3-node-body-outline {
+				fill: #DCE2F4;
+			}
+		}
+
+		&.red {
+			.d3-node-body-outline {
+				fill: #F3CED1;
+			}
+		}
+
+		&.salmon {
+			.d3-node-body-outline {
+				fill: #F7E3D9;
+			}
+		}
+
+		&.teal {
+			.d3-node-body-outline {
+				fill: #D5FBFA;
+			}
+		}
+
+		&.gray {
+			.d3-node-body-outline {
+				fill: #EEEEEE;
+			}
+		}
+
+		.d3-node-port-output {
+			opacity: 0;
+			transform: translateX(-8px);
+			transition: opacity 0.1s cubic-bezier(0.4, 0.14, 0.3, 1), transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			transition-delay: 0.125s;
+		}
+
+		&:hover {
+			.d3-node-port-output {
+				opacity: 1;
+				transform: translateX(0);
+				transition: opacity 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				transition-delay: 0.125s;
+			}
+		}
+
+		.d3-node-selection-highlight[data-selected="yes"],
+		.d3-comment-selection-highlight[data-selected="yes"] {
+			stroke-dasharray: 5, 5;
+			stroke-width: 2;
+		}
+	}
+
+	// ----------------------------------------------------
+	// Link Styles
+	// ----------------------------------------------------
+
+	.d3-link-group {
+		.d3-link-line {
+			stroke: #8C8C8C;
+			stroke-width: 2;
+		}
+		.d3-link-line-arrow-head {
+			stroke: #8C8C8C;
+			stroke-width: 2;
+			fill: #FEFCFC;
+		}
+	}
+
+	// ----------------------------------------------------
+	// Comment Styles
+	// ----------------------------------------------------
+
+}

@@ -106,6 +106,7 @@ describe("Test if tips show up in table headers correctly", function() {
 		cy.verifyTip(null, "visible", "Output name");
 		cy.saveWideFlyout("Configure Rename fields");
 	});
+
 	it("Test if tips show when checkbox in header has ellipsis", function() {
 		cy.toggleCategory("More Tables");
 		cy.openSubPanel("Configure Dummy Types");

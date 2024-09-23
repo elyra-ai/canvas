@@ -21,13 +21,15 @@ import NumberfieldControl from "./../numberfield";
 import TextfieldControl from "./../textfield";
 import AbstractTable from "./../abstract-table.jsx";
 import FlexibleTable from "./../../components/flexible-table";
-import MoveableTableRows from "./../../components/moveable-table-rows";
+import EmptyTable from "../../components/empty-table/empty-table.jsx";
+import TableToolbar from "./../../components/table-toolbar";
 import ValidationMessage from "./../../components/validation-message";
 import { formatMessage } from "./../../util/property-utils";
 import { getDataId } from "./../../util/control-utils";
 import { MESSAGE_KEYS, STATES } from "./../../constants/constants.js";
 import { Type } from "./../../constants/form-constants.js";
 import { isEmpty } from "lodash";
+import classNames from "classnames";
 
 const NUMBER_TYPES = [Type.INTEGER, Type.DOUBLE, Type.LONG];
 class ListControl extends AbstractTable {
@@ -60,6 +62,7 @@ class ListControl extends AbstractTable {
 					controller={this.props.controller}
 					controlItem={listHeader}
 					tableControl
+					readOnly={this.props.readOnly}
 				/>
 			</div>);
 		}
@@ -70,6 +73,7 @@ class ListControl extends AbstractTable {
 				controller={this.props.controller}
 				controlItem={listHeader}
 				tableControl
+				readOnly={this.props.readOnly}
 			/>
 		</div>);
 	}
@@ -117,25 +121,47 @@ class ListControl extends AbstractTable {
 		return headers;
 	}
 
+	makeTableToolbar() {
+		if (this.props.addRemoveRows || this.props.control?.moveableRows) {
+			return (
+				<TableToolbar
+					controller={this.props.controller}
+					propertyId={this.props.propertyId}
+					selectedRows={this.props.selectedRows}
+					tableState={this.props.state}
+					addRemoveRows={this.props.addRemoveRows}
+					moveableRows={this.props.control?.moveableRows}
+					removeSelectedRows={this.removeSelected}
+					setScrollToRow={this.setScrollToRow}
+					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+					isReadonlyTable={false}
+					smallFlyout={this.props.rightFlyout && this.props.controller.getEditorSize() === "small"}
+				/>
+			);
+		}
+		return null;
+	}
+
 	render() {
 		const headers = this.makeHeader();
 
 		const tableButtonConfig = {
 			addButtonLabel: formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_LABEL),
-			removeButtonLabel: formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.STRUCTURELISTEDITOR_REMOVEBUTTON_LABEL),
 			addButtonFunction: this.addRow
 		};
 
 		const rows = this.makeRows(this.props.value, this.props.state, headers);
-		const topRightPanel = this.makeAddRemoveButtonPanel(this.props.state, tableButtonConfig);
+		const tableToolbar = this.makeTableToolbar();
+		const topRightPanel = (this.props.selectedRows.length > 0 && tableToolbar) ? tableToolbar : this.makeAddButtonPanel(this.props.state, tableButtonConfig);
 		let rowToScrollTo;
 		if (Number.isInteger(this.scrollToRow) && rows.length > this.scrollToRow) {
 			rowToScrollTo = this.scrollToRow;
 			delete this.scrollToRow;
 		}
 		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+		const tableClassName = classNames("properties-list-table", { "disabled": this.props.state === STATES.DISABLED });
+
 		const table =	(
 			<FlexibleTable
 				columns={headers}
@@ -152,10 +178,11 @@ class ListControl extends AbstractTable {
 				updateRowSelections={this.updateRowSelections}
 				light={this.props.controller.getLight() && this.props.control.light}
 				emptyTablePlaceholder={this.props.control.additionalText}
+				readOnly={this.props.readOnly}
 			/>);
 
 		const tableContainer = (<div>
-			<div className="properties-list-table">
+			<div className={tableClassName}>
 				{table}
 			</div>
 			<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
@@ -164,18 +191,17 @@ class ListControl extends AbstractTable {
 		return (
 			<div data-id={getDataId(this.props.propertyId)} className="properties-list-control" >
 				{this.props.controlItem}
-				<MoveableTableRows
-					tableContainer={tableContainer}
-					control={this.props.control}
-					controller={this.props.controller}
-					propertyId={this.props.propertyId}
-					setScrollToRow={this.setScrollToRow}
-					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-					disabled={this.props.state === STATES.DISABLED}
-					isEmptyTable={isEmpty(this.props.value)}
-					emptyTableButtonLabel={tableButtonConfig.addButtonLabel}
-					emptyTableButtonClickHandler={this.addRow}
-				/>
+				{
+					isEmpty(this.props.value) && this.props.addRemoveRows
+						? <EmptyTable
+							control={this.props.control}
+							controller={this.props.controller}
+							emptyTableButtonLabel={tableButtonConfig.addButtonLabel}
+							emptyTableButtonClickHandler={this.addRow}
+							disabled={this.props.state === STATES.DISABLED}
+						/>
+						: tableContainer
+				}
 			</div>
 		);
 	}
@@ -186,12 +212,14 @@ ListControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	controlItem: PropTypes.element,
+	rightFlyout: PropTypes.bool,
 	selectedRows: PropTypes.array, // set by redux
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux
 	messageInfo: PropTypes.object, // pass in by redux
 	addRemoveRows: PropTypes.bool, // set by redux
-	tableButtons: PropTypes.object // set in by redux
+	tableButtons: PropTypes.object, // set in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({

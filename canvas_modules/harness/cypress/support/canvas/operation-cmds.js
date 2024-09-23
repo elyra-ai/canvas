@@ -25,7 +25,8 @@ Cypress.Commands.add("clickCanvasAt", (x, y) => {
 Cypress.Commands.add("mouseUpDownOnCanvasAt", (x, y) => {
 	cy.window().then((win) => {
 		cy.get("#canvas-div-0")
-			.trigger("mousedown", x, y, { which: 1, view: win })
+			.trigger("mousedown", x, y, { which: 1, view: win });
+		cy.get("#canvas-div-0")
 			.trigger("mouseup", x, y, { which: 1, view: win });
 	});
 });
@@ -36,9 +37,12 @@ Cypress.Commands.add("panCanvasToPosition", (canvasX, canvasY) => {
 		cy.getCanvasTranslateCoords()
 			.then((transform) => {
 				cy.get("#canvas-div-0")
-					.trigger("keydown", { keyCode: 32, release: false })
-					.trigger("mousedown", "topLeft", { which: 1, view: win })
-					.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })
+					.trigger("keydown", { keyCode: 32, release: false });
+				cy.get("#canvas-div-0")
+					.trigger("mousedown", "topLeft", { which: 1, view: win });
+				cy.get("#canvas-div-0")
+					.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win });
+				cy.get("#canvas-div-0")
 					.trigger("mouseup", { which: 1, view: win });
 			});
 	});
@@ -49,9 +53,9 @@ Cypress.Commands.add("moveMouseToCoordinates", (x, y) => {
 	cy.get(".d3-svg-canvas-div").trigger("mousemove", x, y);
 });
 
-// Within ZoomIn or ZoomOut, move the mouse to the {x,y} position
+// Move the mouse to the {x,y} position in the palette
 Cypress.Commands.add("moveMouseToPaletteArea", (x, y) => {
-	cy.get(".palette-flyout-categories").trigger("mousemove", x, y);
+	cy.get(".palette-flyout-div").trigger("mousemove", x, y);
 });
 
 // Selects a region on the canvas by 'pulling out' a rectangle over
@@ -61,8 +65,10 @@ Cypress.Commands.add("selectWithRegion", (x1, y1, x2, y2) => {
 		cy.getCanvasTranslateCoords()
 			.then((transform) => {
 				cy.get(".d3-svg-canvas-div")
-					.trigger("mousedown", x1 + transform.x, y1 + transform.y, { shiftKey: true, which: 1, view: win })
-					.trigger("mousemove", x2 + transform.x, y2 + transform.y, { view: win })
+					.trigger("mousedown", x1 + transform.x, y1 + transform.y, { shiftKey: true, which: 1, view: win });
+				cy.get("#canvas-div-0")
+					.trigger("mousemove", x2 + transform.x, y2 + transform.y, { view: win });
+				cy.get("#canvas-div-0")
 					.trigger("mouseup", x2 + transform.x, y2 + transform.y, { which: 1, view: win });
 			});
 	});
@@ -75,7 +81,8 @@ Cypress.Commands.add("moveBottomPanelDivider", (y) => {
 		cy.get(".bottom-panel .bottom-panel-drag")
 			.trigger("mousedown", "center", { view: win, button: 0 });
 		cy.get("#canvas-div-0")
-			.trigger("mousemove", 200, y, { view: win, force: true })
+			.trigger("mousemove", 200, y, { view: win, force: true });
+		cy.get("#canvas-div-0")
 			.trigger("mouseup", 200, y, { view: win, force: true });
 	});
 });

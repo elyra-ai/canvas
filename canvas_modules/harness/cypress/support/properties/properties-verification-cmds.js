@@ -34,21 +34,21 @@ Cypress.Commands.add("verifyNoTextOverflow", (propertyId) => {
 });
 
 Cypress.Commands.add("verifyPropertiesFlyoutTitle", (givenTitle) => {
-	cy.get(".common-canvas-right-side-items .properties-title-editor-input input")
+	cy.get(".right-flyout-panel .properties-title-editor-input input")
 		.should("have.value", givenTitle);
 });
 
 Cypress.Commands.add("verifyMessageInPropertiesTitleEditor", (message, type) => {
-	cy.get(".common-canvas-right-side-items .properties-title-editor")
+	cy.get(".right-flyout-panel .properties-title-editor")
 		.find(".cds--form-requirement")
 		.should("have.text", message);
 
 	if (type === "warning") {
-		cy.get(".common-canvas-right-side-items .properties-title-editor")
+		cy.get(".right-flyout-panel .properties-title-editor")
 			.find(".cds--text-input__field-wrapper--warning")
 			.should("have.length", 1);
 	} else if (type === "error") {
-		cy.get(".common-canvas-right-side-items .properties-title-editor")
+		cy.get(".right-flyout-panel .properties-title-editor")
 			.find(".cds--text-input__field-wrapper")
 			.should("have.attr", "data-invalid", "true");
 	}
@@ -191,7 +191,7 @@ Cypress.Commands.add("verifyControlIsDisplayed", (propertyId) => {
 Cypress.Commands.add("verifyValueInSummaryPanelForCategory", (value, summaryName, rowNumber, categoryName) => {
 	cy.get(".right-flyout-panel")
 		.find(".properties-category-container")
-		.find(".properties-category-title")
+		.find(".cds--accordion__title")
 		.contains(categoryName)
 		.should("exist");
 
@@ -228,6 +228,8 @@ Cypress.Commands.add("verifyRowInSelectColumnsTable", (propertyId, fieldName, ro
 
 Cypress.Commands.add("verifyFieldIsSelectedInFieldPickerPanel", (fieldName, dataType, panelName) => {
 	// Following logic works based on assumption  - fieldName in each row is unique
+	// It is difficult to unchain the following code so this is switching off the lint check:
+	/* eslint cypress/unsafe-to-chain-command: "off" */
 	let rowNumber;
 	cy.getWideFlyoutPanel(panelName)
 		.find("div[data-role='properties-data-row']")
@@ -236,6 +238,7 @@ Cypress.Commands.add("verifyFieldIsSelectedInFieldPickerPanel", (fieldName, data
 				rowNumber = index;
 				return false;
 			}
+			return true;
 		})
 		.then((rows) => {
 			cy.wrap(rows)

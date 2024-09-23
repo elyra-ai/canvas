@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from "react";
 import * as testUtils from "../../utils/eventlog-utils";
 import { Play } from "@carbon/react/icons";
+import React from "react";
 
 describe("Test adding a decorator to a node", function() {
 	beforeEach(() => {
@@ -247,24 +247,28 @@ describe("Test adding a decorator to a link", function() {
 			[{ "id": "555", "position": "source",
 				"distance": 30 }]
 		);
+		cy.wait(10);
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 410, 243.5);
 
 		// Test negative distance from target position
 		cy.setLinkDecorations("Bottom Left-Bottom Right",
 			[{ "id": "555", "position": "target", "distance": -30 }]
 		);
+		cy.wait(10);
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 566, 243.5);
 
 		// Test negative distance from middle position
 		cy.setLinkDecorations("Bottom Left-Bottom Right",
 			[{ "id": "555", "position": "middle", "distance": -20 }]
 		);
+		cy.wait(10);
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 468, 243.5);
 
 		// Test positive distance from middle position
 		cy.setLinkDecorations("Bottom Left-Bottom Right",
 			[{ "id": "555", "position": "middle", "distance": 20 }]
 		);
+		cy.wait(10);
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 508, 243.5);
 	});
 
@@ -338,7 +342,9 @@ describe("Test adding a decorator to a link", function() {
 			[{ "id": "123", "path": "M 0 0 L 0 -20 -10 -30 -20 -20 -20 0 Z",
 				"tooltip": "Inform - Educate - Entertain",
 				"x_pos": "40", "y_pos": "15" }]);
+		cy.wait(10);
 		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
+		cy.wait(10);
 		cy.verifyTipForDecoration("Inform - Educate - Entertain");
 	});
 

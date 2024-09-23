@@ -55,7 +55,11 @@ import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import getContextMenuDefiniton from "./canvas-controller-menu-utils.js";
 import { get, isEmpty } from "lodash";
-import { LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE, SNAP_TO_GRID_NONE, SUPER_NODE } from "./constants/canvas-constants";
+import { LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE,
+	SNAP_TO_GRID_NONE, SUPER_NODE, WYSIWYG
+} from "./constants/canvas-constants";
+
+import { cloneDeep } from "lodash";
 
 // Global instance ID counter
 var commonCanvasControllerInstanceId = 0;
@@ -168,6 +172,11 @@ export default class CanvasController {
 		this.objectModel.setNotificationPanelConfig(config);
 	}
 
+	setLeftFlyoutConfig(config) {
+		this.logger.log("Setting Left Flyout Config");
+		this.objectModel.setLeftFlyoutConfig(config);
+	}
+
 	setRightFlyoutConfig(config) {
 		this.logger.log("Setting Right Flyout Config");
 		this.objectModel.setRightFlyoutConfig(config);
@@ -229,7 +238,7 @@ export default class CanvasController {
 		this.instanceId = instanceId;
 	}
 
-	// Return a unique identifier for this instance of common canvas.
+	// Return a unique identifier for this instance of Common Canvas.
 	getInstanceId() {
 		return this.instanceId;
 	}
@@ -251,7 +260,7 @@ export default class CanvasController {
 	// Pipeline flow methods
 	// ---------------------------------------------------------------------------
 
-	// Loads the pipelineFlow document provided into common-canvas and displays it.
+	// Loads the pipelineFlow document provided into Common Canvas and displays it.
 	// The document must conform to the pipelineFlow schema as documented in the
 	// elyra-ai pipeline-schemas repo. Documents conforming to older versions may be
 	// provided but they will be upgraded to the most recent version.
@@ -287,14 +296,14 @@ export default class CanvasController {
 	}
 
 	// Returns the external pipeline flow for the url passed in. The external
-	// flow must have been loaded through some common canvas action for this
+	// flow must have been loaded through some common-canvas action for this
 	// method to be able to return anything.
 	getExternalPipelineFlow(url) {
 		return this.objectModel.getExternalPipelineFlow(url);
 	}
 
 	// Returns the internal format of all canvas data stored in memory by
-	// common-canvas. Nodes, comments and links are returned in the internal
+	// Common Canvas. Nodes, comments and links are returned in the internal
 	// format.
 	getCanvasInfo() {
 		return this.objectModel.getCanvasInfo();
@@ -374,13 +383,13 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 
 	// Loads a canvas document (in the format used by WML Canvas) into
-	// common-canvas and displays it.
+	// Common Canvas and displays it.
 	setCanvas(canvas) {
 		this.objectModel.setCanvas(canvas); // TODO - Remove this method when WML Canvas moves to pipeline flow
 	}
 
 	// Loads a canvas palette document (in the format used by WML Canvas) into
-	// common-canvas and displays it in the palette.
+	// Common Canvas and displays it in the palette.
 	setPaletteData(paletteData) {
 		this.objectModel.setPaletteData(paletteData); // TODO - Remove this method when WML Canvas moves to pipeline flow
 	}
@@ -401,7 +410,7 @@ export default class CanvasController {
 		this.objectModel.setPipelineFlowPalette(palette);
 	}
 
-	// Clears the palette data from common-canvas.
+	// Clears the palette data from Common Canvas.
 	clearPaletteData() {
 		this.objectModel.clearPaletteData();
 	}
@@ -1248,7 +1257,7 @@ export default class CanvasController {
 	}
 
 	// Deletes a link
-	// source - An array of links
+	// link - the link object to be deleted
 	// pipelineId - The ID of the pipeline
 	deleteLink(link, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).deleteLink(link);
@@ -1396,7 +1405,7 @@ export default class CanvasController {
 	}
 
 	// Undoes a number of commands on the command stack as indicated by the
-	// 'count' parameter. If 'count' is bigger than the number of commands
+	// 'count' parameter. If 'count' is bigger than the number of undoable commands
 	// on the stack, all undoable commands currently on the command stack
 	// will be undone. Uses the editActionHandler method which will cause
 	// the app's editActionHandler to be called.
@@ -1412,6 +1421,17 @@ export default class CanvasController {
 	// method which will cause the app's editActionHandler to be called.
 	redo() {
 		if (this.canRedo()) {
+			this.editActionHandler({ editType: "redo", editSource: "controller" });
+		}
+	}
+
+	// Redoes a number of commands on the command stack as indicated by the
+	// 'count' parameter. If 'count' is bigger than the number of redoable commands
+	// on the stack, all redoable commands currently on the command stack
+	// will be redone. Uses the editActionHandler method which will cause
+	// the app's editActionHandler to be called.
+	redoMulti(count) {
+		for (let i = 0; i < count && this.canRedo(); i++) {
 			this.editActionHandler({ editType: "redo", editSource: "controller" });
 		}
 	}
@@ -1432,6 +1452,12 @@ export default class CanvasController {
 	// command stack.
 	getAllUndoCommands() {
 		return this.getCommandStack().getAllUndoCommands();
+	}
+
+	// Returns an array of all redoable commands currently on the
+	// command stack.
+	getAllRedoCommands() {
+		return this.getCommandStack().getAllRedoCommands();
 	}
 
 	// Returns a string which is the label that descibes the next undoable
@@ -1471,7 +1497,7 @@ export default class CanvasController {
 	// Returns the current array of breadcrumbs. There will one breadcrumb object
 	// for each level of supernode that the user has navigated into. This array
 	// can be used to display breadcrumbs to the user to show where they are
-	// within the navigation hierarchy within common canvas.
+	// within the navigation hierarchy within Common Canvas.
 	getBreadcrumbs() {
 		return this.objectModel.getBreadcrumbs();
 	}
@@ -1646,6 +1672,10 @@ export default class CanvasController {
 		this.objectModel.toggleNotificationPanel();
 	}
 
+	isLeftFlyoutOpen() {
+		return this.objectModel.isLeftFlyoutOpen();
+	}
+
 	isRightFlyoutOpen() {
 		return this.objectModel.isRightFlyoutOpen();
 	}
@@ -1674,11 +1704,10 @@ export default class CanvasController {
 		}
 	}
 
-	// Displays a pipeline for the supernode (identifid by the supernodeId
-	// parameter) in the pipeline (identifid by the pipelineId parameter). For
-	// correct breadcrumb generation this pipeline should be the one in the last
-	// of the current set of breadcumbs. That is, the pipeline currently shown
-	// "full page" in the canvas.
+	// Displays a pipeline for a supernode (identifid by the supernodeId
+	// parameter) in a parent pipeline (identifid by the pipelineId parameter).
+	// This parent pipeline should be the last of the current set of breadcumbs.
+	// That is, the pipeline currently shown "full page" in the canvas.
 	displaySubPipelineForSupernode(supernodeId, pipelineId) {
 		const sn = this.getNode(supernodeId, pipelineId);
 		if (sn && sn.type === SUPER_NODE) {
@@ -1690,7 +1719,7 @@ export default class CanvasController {
 
 	// Adds the breadcrumbs provided to the current set of breadcrumbs and then
 	// displays "full page" the pipeline identified by the last of the additional
-	// set of breadcrumbs. This is a convenience function for the common-canvas.
+	// set of breadcrumbs. This is a convenience function for Common Canvas.
 	displaySubPipelineForBreadcrumbs(addBreadcrumbs) {
 		const lastBreadcrumb = addBreadcrumbs[addBreadcrumbs.length - 1];
 		const supernode = this.getSupernodeFromBreadcrumb(lastBreadcrumb);
@@ -1792,7 +1821,7 @@ export default class CanvasController {
 	// the viewport, a zoom object will be returned that can be used to zoom them
 	// so they appear at the nearest side of the viewport to where they are
 	// currently positioned.
-	// The zoom object retuurned has three fields:
+	// The zoom object returned has three fields:
 	// x: Is the horizontal translate amount which is a number indicating the
 	//    pixel amount to move. Negative left and positive right
 	// y: Is the vertical translate amount which is a number indicating the
@@ -2038,8 +2067,8 @@ export default class CanvasController {
 		}
 	}
 
-	openTextToolbar(xPos, yPos, actionHandler, blurHandler) {
-		this.objectModel.setTextToolbarDef({ isOpen: true, pos_x: xPos, pos_y: yPos, actionHandler, blurHandler });
+	openTextToolbar(xPos, yPos, formats, contentType, actionHandler, blurHandler) {
+		this.objectModel.setTextToolbarDef({ isOpen: true, pos_x: xPos, pos_y: yPos, formats, contentType, actionHandler, blurHandler });
 	}
 
 	closeTextToolbar() {
@@ -2048,6 +2077,10 @@ export default class CanvasController {
 
 	moveTextToolbar(xPos, yPos) {
 		this.objectModel.setTextToolbarDef({ pos_x: xPos, pos_y: yPos });
+	}
+
+	updateTextToolbarFormats(formats) {
+		this.objectModel.setTextToolbarDef({ formats: cloneDeep(formats) }); // Clone to force mapToState refresh.
 	}
 
 	// Processes the drop of an 'external' object, either from the desktop or
@@ -2151,7 +2184,7 @@ export default class CanvasController {
 		this.editActionHandler(data);
 	}
 
-	// Called when a data object is dragged from outside common canvas.
+	// Called when a data object is dragged from outside Common Canvas.
 	// The data object must contain the 'action' field that is passed to
 	// the host app from editActionHandler. The editActionHandler method
 	// does not intercept this action.
@@ -2277,6 +2310,14 @@ export default class CanvasController {
 				data.editType === "deconstructSuperNode" ||
 				data.editType === "convertSuperNodeExternalToLocal") {
 			data = this.preProcessForExternalPipelines(data);
+
+		} else if (data.editType === "paste") {
+			const pasteObjects = this.objectModel.getObjectsToPaste();
+			if (pasteObjects) {
+				data.objects = pasteObjects;
+			} else {
+				return false;
+			}
 		}
 
 		// Check with host application if it wants to proceed with the command
@@ -2365,15 +2406,15 @@ export default class CanvasController {
 			this.objectModel.setZoom(data.zoom, data.pipelineId);
 			break;
 		}
-		case "paletteToggle": {
+		case "togglePalette": {
 			this.togglePalette();
 			break;
 		}
-		case "paletteOpen": {
+		case "openPalette": {
 			this.openPalette();
 			break;
 		}
-		case "paletteClose": {
+		case "closePalette": {
 			this.closePalette();
 			break;
 		}
@@ -2431,8 +2472,24 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
+			case "createWYSIWYGComment": {
+				data.contentType = WYSIWYG;
+				data.formats = [];
+				command = new CreateCommentAction(data, this);
+				this.commandStack.do(command);
+				break;
+			}
 			case "createAutoComment": {
 				data.mousePos = this.getNewCommentPosition(data.pipelineId);
+				command = new CreateCommentAction(data, this);
+				this.commandStack.do(command);
+				data = command.getData();
+				break;
+			}
+			case "createAutoWYSIWYGComment": {
+				data.mousePos = this.getNewCommentPosition(data.pipelineId);
+				data.contentType = WYSIWYG;
+				data.formats = [];
 				command = new CreateCommentAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
@@ -2601,13 +2658,9 @@ export default class CanvasController {
 				break;
 			}
 			case "paste": {
-				const pasteObjects = this.objectModel.getObjectsToPaste();
-				if (pasteObjects) {
-					data.objects = pasteObjects;
-					command = new PasteAction(data, this);
-					this.commandStack.do(command);
-					data = command.getData();
-				}
+				command = new PasteAction(data, this);
+				this.commandStack.do(command);
+				data = command.getData();
 				break;
 			}
 			case "undo": {
@@ -2697,7 +2750,7 @@ export default class CanvasController {
 	}
 
 	// Returns false if the host application did not provided an external pipeline
-	// flow when requested by common-canvas setting the externalPipelineFlowLoad
+	// flow when requested by Common Canvas setting the externalPipelineFlowLoad
 	// boolean to true. Returns true otherwise which will be the case when no
 	// external pipeline was requested.
 	wasExtPipelineFlowLoadSuccessful(data) {

@@ -90,7 +90,7 @@ class TextfieldControl extends React.Component {
 					controller={this.props.controller}
 					tableControl={this.props.tableControl}
 				/>
-				// TODO this could conflict with the below ValidationMessage.
+				{/* // TODO this could conflict with the below ValidationMessage. */}
 				<ValidationMessage inTable={this.props.tableControl} state={""} messageInfo={errorMessage} />
 			</div>);
 		} else {
@@ -102,11 +102,13 @@ class TextfieldControl extends React.Component {
 					id={this.id}
 					disabled={ this.props.state === STATES.DISABLED}
 					placeholder={this.props.control.additionalText}
+					helperText={this.props.control.helperText}
 					onChange={this.handleChange.bind(this)}
 					value={value}
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					ref={(ref) => (this.textInputRef = ref)}
+					readOnly={this.props.readOnly}
 				/>
 			);
 		}
@@ -151,7 +153,8 @@ TextfieldControl.propTypes = {
 		PropTypes.string,
 		PropTypes.array
 	]), // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 

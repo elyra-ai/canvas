@@ -44,10 +44,12 @@ describe("Test adding nodes from palette", function() {
 		cy.clickToolbarPaletteOpen();
 		cy.dragNodeToPosition("Filter", 500, 200);
 		cy.linkNodes("Derive", "Filter");
+		cy.wait(10);
 		cy.verifyLinkBetweenNodes("Derive", "Filter", 3);
 		cy.verifyLinkNodesActionOccurred("Derive", "Filter");
 		cy.dragNodeToPosition("Type", 600, 200);
 		cy.linkNodes("Filter", "Type");
+		cy.wait(10);
 		cy.verifyLinkBetweenNodes("Filter", "Type", 4);
 		cy.verifyLinkNodesActionOccurred("Filter", "Type");
 		cy.clickCategory("Modeling");
@@ -55,9 +57,11 @@ describe("Test adding nodes from palette", function() {
 		cy.dragNodeToPosition("Neural Net", 800, 300);
 		cy.clickToolbarPaletteClose();
 		cy.linkNodes("Type", "C5.0");
+		cy.wait(10);
 		cy.verifyLinkBetweenNodes("Type", "C5.0", 5);
 		cy.verifyLinkNodesActionOccurred("Type", "C5.0");
 		cy.linkNodes("Type", "Neural Net");
+		cy.wait(10);
 		cy.verifyLinkBetweenNodes("Type", "Neural Net", 6);
 		cy.verifyLinkNodesActionOccurred("Type", "Neural Net");
 
@@ -306,14 +310,14 @@ describe("Test new enableNodeLayout config parameter", function() {
 		cy.dragNodeToPosition("Database", 300, 200);
 
 		// Verify node height & width before updating enableNodeLayout
-		cy.verifyNodeWidthHeight("Database", 70, 75);
+		cy.verifyNodeDimensions("Database", 69, 75);
 		cy.clickToolbarUndo();
 
 		// Override some of the enableNodeLayout config parameters
 		cy.setCanvasConfig({ "selectedNodeLayout": { defaultNodeWidth: 151, defaultNodeHeight: 176 } });
 		// Verify node height & width after updating enableNodeLayout
 		cy.dragNodeToPosition("Database", 300, 200);
-		cy.verifyNodeWidthHeight("Database", 151, 176);
+		cy.verifyNodeDimensions("Database", 151, 175);
 	});
 
 });

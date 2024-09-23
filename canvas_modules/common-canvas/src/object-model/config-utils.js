@@ -19,7 +19,12 @@
 
 import { isMatch, isMatchWith, omit } from "lodash";
 import LayoutDimensions from "./layout-dimensions.js";
-import { ASSOC_STRAIGHT, LINK_SELECTION_NONE } from "../common-canvas/constants/canvas-constants";
+import {
+	ASSOC_STRAIGHT,
+	LINK_SELECTION_NONE,
+	NODE_FORMAT_HORIZONTAL,
+	PALETTE_LAYOUT_FLYOUT
+} from "../common-canvas/constants/canvas-constants";
 
 export default class ConfigUtils {
 
@@ -51,16 +56,19 @@ export default class ConfigUtils {
 			// TODO Remove this when paletteInitialState is removed from common-canvas.
 			// paletteInitialState: false,
 			enableInteractionType: "Mouse",
-			enableNodeFormatType: "Horizontal",
+			enableNodeFormatType: NODE_FORMAT_HORIZONTAL,
 			enableLinkType: "Curve",
+			enableStraightLinksAsFreeform: true, // TODO - Remove in next major release.
+			enableLinkMethod: "Ports",
 			enableLinkDirection: "LeftRight",
 			enableLinkSelection: LINK_SELECTION_NONE,
 			enableLinkReplaceOnNewConnection: false,
+			enableSelfRefLinks: false,
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,
 			enableInternalObjectModel: true,
-			enablePaletteLayout: "Flyout",
+			enablePaletteLayout: PALETTE_LAYOUT_FLYOUT,
 			enableToolbarLayout: "Top",
 			enableImageDisplay: "SVGInline",
 			enableResizableNodes: false,
@@ -73,11 +81,13 @@ export default class ConfigUtils {
 			enableEditingActions: true,
 			enableDisplayFullLabelOnHover: false,
 			enableDropZoneOnExternalDrag: false,
+			enableLeftFlyoutUnderToolbar: false,
 			enableRightFlyoutUnderToolbar: false,
 			enablePanIntoViewOnOpen: false,
 			enableZoomIntoSubFlows: false,
 			enableBrowserEditMenu: true,
 			enableMarkdownInComments: false,
+			enableWYSIWYGComments: false,
 			enableAutoLinkOnlyFromSelNodes: false,
 			enableContextToolbar: false,
 			enableSaveZoom: "None",
@@ -101,7 +111,7 @@ export default class ConfigUtils {
 			tipConfig: {
 				"palette": {
 					categories: true,
-					nodesTemplates: true
+					nodeTemplates: true
 				},
 				"nodes": true,
 				"ports": true,

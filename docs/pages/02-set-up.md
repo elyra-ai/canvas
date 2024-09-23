@@ -4,7 +4,7 @@
 
 You'll need to build your application with Elyra Canvas.
 
-* Elyra Canvas requires react, react-dom, react-intl, and react-redux libraries to be installed. See peerDependencies in package.json for versions requirements.
+* Elyra Canvas requires react, react-dom, react-intl, and react-redux libraries to be installed. See peerDependencies in [package.json](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/common-canvas/package.json) for versions requirements.
 
 Use the command:
 ```sh
@@ -21,14 +21,16 @@ npm install
 ```
 
 ## Localization
-You must wrapper `<CommonCanvas>` and `<CommonProperties>` in an `<IntlProvider>` object.
 
-If you want to display translated text, the sample code below shows how `<IntlProvider>` should be initialized. Your code can set `this.locale` to indicate which language should override the default which, in this sample code, is set to English `en`. The default locale will be used if `this.locale` is set to a language which is not currently supported.
+If you want to see text displayed by Elyra Canvas components in different languages you must wrapper `<CommonCanvas>` and `<CommonProperties>`in an `<IntlProvider>` object.
 
-If you want to provide translations for your own application's text you can import your own bundles and load them into the `this.messages` object along with the common canvas and common properties text. If you do this you will have to move `<IntlProvider/>` so that it wrappers your React objects as well as `<CommonCanvas/>` and/or `<CommonProperties>`.
+The sample code below shows how `<IntlProvider>` should be imported and initialized. Your code can set `this.locale` to indicate which language should override the default which, in this sample code, is set to English `en`. The default locale will be used if `this.locale` is set to a language which is not currently supported.
+
+If you want to provide translations for your own application's text you can import your own bundles and load them into the `this.messages` object along with the common-canvas and common-properties text. If you do this you will have to move `<IntlProvider/>` so that it wrappers your React objects as well as `<CommonCanvas/>` and/or `<CommonProperties>`.
 
 ```js
 import { IntlProvider } from "react-intl";
+
 import CommandActionsBundles from "@elyra/canvas/locales/command-actions/locales";
 import CommonCanvasBundles from "@elyra/canvas/locales/common-canvas/locales";
 import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales";
@@ -71,7 +73,7 @@ When building your application you will need to load fonts and override styles:
 ### CSS styling for quick start
 
 
-If you just want to get up and running and don't care about scss then import these regular css files:
+If you just want to get up and running and don't care about scss then import these regular CSS files:
 
   - @elyra/canvas/dist/styles/common-canvas.min.css
     - version 8.x and older @elyra/canvas/dist/common-canvas.min.css
@@ -81,7 +83,7 @@ More information about carbon components can be found here https://carbondesigns
 
 ### SCSS styling (recommended)
 
-If you want to use the full power of scss styling with variable overrides etc then include these imports in your main scss file:
+If you want to use the full power of scss styling with variable overrides etc then include these imports in your main SCSS file:
 ```
 @use "@carbon/react"; // Bring in all the styles for Carbon in your root/global stylesheet
 @import "@elyra/canvas/src/index.scss";
@@ -97,15 +99,26 @@ options: { includePaths: ["node_modules"] }
 Again, you can refer to the test harness [harness.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/harness.scss) and [common.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) files for sample code.
 
 
+### 3rd party styling
+
+If you are using Common Properties then also include the react-virtualized styles:
+  - react-virtualized/styles.css
+
 ### Loading Fonts
-You may find that there is a pause in common canvas behavior, such as when the context menu is first displayed, which is caused by fonts being loaded. This can be fixed by adding the following to the `.scss` file for your application:
+To get correct and efficient display of fonts in Elyra Canvas, the build process for your application should copy the IBM Plex font files from `/node_modules/@ibm/plex`to a `./fonts` folder and the following should be added to the `.scss` file for your application:
+
 ```
 @use "@carbon/react" as * with (
 	$font-path: "/fonts"
 );
+
+$font-prefix: './fonts';
+@import 'node_modules/@ibm/plex/scss/ibm-plex.scss';
 ```
-The fonts will need to be imported from carbon before carbon styles and placed in a public `/fonts` directory.
-You can see an example of this in the common-canvas test harness (which is the equivalent of a host application) in this repo. That is, the [common.scss file](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) contains the lines above and the grunt build files ensures the fonts are copied from `/node_modules/@ibm/plex` to the `<carbon fonts folder>` directory. We added following config in [Gruntfile](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L64) for copying fonts -
+
+You can see an example of this in the [common.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) file for the Elyra Canvas Test Harness. The Test Harness is the equivalent of a host application.
+
+The [Gruntfile](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L64) that builds the Test Harness contains the following, that ensures the fonts are copied from `/node_modules/@ibm/plex` to the `<carbon fonts folder>`:
 ```
 copy: {
 	fonts: {
@@ -118,14 +131,10 @@ copy: {
 		}]
 	}
 }
-
+...
 var buildTasks = ["copy:fonts"];
 ```
 
-### 3rd party styling
-
-If you are using common-properties then also include the react-virtualized styles:
-  - react-virtualized/styles.css
 
 
 

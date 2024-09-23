@@ -37,23 +37,20 @@ $palette-search-container-height: 41px;
 }
 
 .palette-flyout-div-open {
-	.palette-flyout-content {
-		width: 256px;
-		transition: 0.2s ease-in-out;
-	}
-}
-
-// Center search icon when narrow palette
-.palette-flyout-div-closed {
-	transition: 0.2s ease-in-out;
-	width: 0;
+	width: 256px;
 }
 
 .palette-flyout-div-narrow {
 	width: 72px;
 }
 
+.palette-nav {
+	height: 100%;
+}
+
 .palette-flyout-content {
+	height: calc(100% - $palette-search-container-height);
+
 	.palette-scroll {
 		overflow-y: hidden; /*prevents multiple scroll bars in flyout*/
 	}
@@ -116,7 +113,7 @@ $palette-search-container-height: 41px;
 			padding: $spacing-05 10px 0 58px;
 
 			& mark {
-				color: $button-primary;
+				color: $interactive;
 				background-color: $highlight;
 				font-weight: 500;
 			}
@@ -143,7 +140,7 @@ $palette-search-container-height: 41px;
 			width: calc(100% - 68px);
 			line-height: 1;
 			& mark {
-				color: $button-primary;
+				color: $interactive;
 				background-color: $highlight;
 				font-weight: 500;
 			}
@@ -164,7 +161,7 @@ $palette-search-container-height: 41px;
 			width: 100%; // Needed when the description is only one line long
 
 			& mark {
-				color: $button-primary;
+				color: $interactive;
 				background-color: $highlight;
 				font-weight: 500;
 			}
@@ -191,11 +188,11 @@ $palette-search-container-height: 41px;
 }
 
 .palette-flyout-categories {
-	height: calc(100% - #{$palette-search-container-height});
-	width: 100%;
-	position: absolute;
 	overflow-x: hidden;
-	overflow-y: overlay;
+	overflow-y: auto;
+	min-height:100%;
+	height:0;
+
 	li .cds--accordion__arrow {
 		margin: 15px;
 	}

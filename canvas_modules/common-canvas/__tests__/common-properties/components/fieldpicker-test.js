@@ -17,12 +17,13 @@
 import React from "react";
 import FieldPicker from "./../../../src/common-properties/components/field-picker";
 import Controller from "./../../../src/common-properties/properties-controller";
-import propertyUtils from "./../../_utils_/property-utils";
-import tableUtils from "./../../_utils_/table-utils";
-import { mountWithIntl } from "../../_utils_/intl-utils";
+import propertyUtilsRTL from "./../../_utils_/property-utilsRTL";
+import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
+import { renderWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
-
+import { expect as expectJest } from "@jest/globals";
 import fieldPickerParamDef from "./../../test_resources/paramDefs/fieldpicker_paramDef.json";
+import { fireEvent } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -148,28 +149,41 @@ function closeFieldPicker() {
 }
 
 function clickFilter(wrapper, type, enabled) {
-	let filters = wrapper.find("button.properties-fp-filter");
+	const { container } = wrapper;
+	let filters = container.querySelectorAll("button.properties-fp-filter");
 	filters.forEach((filter) => {
-		if (filter.prop("data-type") === type) {
-			filter.simulate("click");
+		if (filter.getAttribute("data-type") === type) {
+			fireEvent.click(filter);
 		}
 	});
-	filters = wrapper.find("button.properties-fp-filter");
+	filters = container.querySelectorAll("button.properties-fp-filter");
 	filters.forEach((filter) => {
-		if (filter.prop("data-type") === type) {
+		if (filter.getAttribute("data-type") === type) {
 			if (enabled === true) {
-				expect(filter.find("svg").prop("disabled")).to.equal(false);
+				expect(filter.querySelector("svg").outerHTML.includes("disabled")).to.equal(false);
 			} else {
-				expect(filter.find("svg").prop("disabled")).to.equal(true);
+				expect(filter.querySelector("svg").outerHTML.includes("disabled")).to.equal(true);
 			}
 		}
 	});
 }
 
+const mockFieldPicker = jest.fn();
+jest.mock("./../../../src/common-properties/components/field-picker",
+	() => (props) => mockFieldPicker(props)
+);
+
+mockFieldPicker.mockImplementation((props) => {
+	const FieldPickerComp = jest.requireActual(
+		"./../../../src/common-properties/components/field-picker",
+	).default;
+	return <FieldPickerComp {...props} />;
+});
+
 describe("field-picker-control renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = mountWithIntl(
+		renderWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
@@ -179,14 +193,17 @@ describe("field-picker-control renders correctly", () => {
 				title="Field Picker Test"
 			/>
 		);
-
-		expect(wrapper.prop("closeFieldPicker")).to.equal(closeFieldPicker);
-		expect(wrapper.prop("currentFields")).to.equal(currentFields);
-		expect(wrapper.prop("fields")).to.equal(filteredDataset);
+		expectJest(mockFieldPicker).toHaveBeenCalledWith({
+			"closeFieldPicker": closeFieldPicker,
+			"currentFields": currentFields,
+			"fields": filteredDataset,
+			"controller": controller,
+			"title": "Field Picker Test"
+		});
 	});
 
 	it("should render a `FieldPicker`", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
@@ -196,13 +213,14 @@ describe("field-picker-control renders correctly", () => {
 				title="Field Picker Test"
 			/>
 		);
-		expect(wrapper.find("button.properties-fp-reset-button-container")).to.have.length(1);
-		expect(wrapper.find("ul.properties-fp-filter-list")).to.have.length(1);
-		expect(wrapper.find("div.properties-ft-control-container")).to.have.length(1);
+		const { container } = wrapper;
+		expect(container.querySelectorAll("button.properties-fp-reset-button-container")).to.have.length(1);
+		expect(container.querySelectorAll("ul.properties-fp-filter-list")).to.have.length(1);
+		expect(container.querySelectorAll("div.properties-ft-control-container")).to.have.length(1);
 	});
 
 	it("should set correct state values in `FieldPicker`", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
@@ -212,17 +230,18 @@ describe("field-picker-control renders correctly", () => {
 				title="Field Picker Test"
 			/>
 		);
+		const { container } = wrapper;
 		// with intl support wrapper.state() does not work.
 		// looking for equivalent confirmation in the DOM
-		const fieldPickerRows = tableUtils.getTableRows(wrapper);
+		const fieldPickerRows = tableUtilsRTL.getTableRows(container);
 		expect(fieldPickerRows).to.have.length(filteredDataset.length);
-		expect(wrapper.find("div.properties-tooltips-filter")).to.have.length(6); // list of filters
-		const selected = tableUtils.validateSelectedRowNum(fieldPickerRows);
+		expect(container.querySelectorAll("div.properties-tooltips-filter")).to.have.length(6); // list of filters
+		const selected = tableUtilsRTL.validateSelectedRowNum(container);
 		expect(selected).to.have.length(currentFields.length); // controlValues rendered correctly
 	});
 
 	it("should add additional field to newControlValues in `FieldPicker`", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
@@ -232,14 +251,15 @@ describe("field-picker-control renders correctly", () => {
 				title="Field Picker Test"
 			/>
 		);
-		tableUtils.selectCheckboxes(wrapper, [0]);
-		const fieldPickerRows = tableUtils.getTableRows(wrapper);
-		const selected = tableUtils.validateSelectedRowNum(fieldPickerRows);
+		const { container } = wrapper;
+		tableUtilsRTL.selectCheckboxes(container, [0]);
+		const fieldPickerRows = tableUtilsRTL.getTableRows(container);
+		const selected = tableUtilsRTL.validateSelectedRowNumRows(fieldPickerRows);
 		expect(selected).to.have.length(4);
 	});
 
 	it("should reset to initial values in `FieldPicker`", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
@@ -249,19 +269,20 @@ describe("field-picker-control renders correctly", () => {
 				title="Field Picker Test"
 			/>
 		);
-		tableUtils.selectCheckboxes(wrapper, [1]);
-		const fieldPickerRows = tableUtils.getTableRows(wrapper);
-		let selected = tableUtils.validateSelectedRowNum(fieldPickerRows);
+		const { container } = wrapper;
+		tableUtilsRTL.selectCheckboxes(container, [1]);
+		const fieldPickerRows = tableUtilsRTL.getTableRows(container);
+		let selected = tableUtilsRTL.validateSelectedRowNumRows(fieldPickerRows);
 		expect(selected).to.have.length(4);
 
-		wrapper.find("button.properties-fp-reset-button-container").simulate("click");
-		const resetBoxs = tableUtils.getTableRows(wrapper);
-		selected = tableUtils.validateSelectedRowNum(resetBoxs);
+		fireEvent.click(container.querySelector("button.properties-fp-reset-button-container"));
+		const resetBoxs = tableUtilsRTL.getTableRows(container);
+		selected = tableUtilsRTL.validateSelectedRowNumRows(resetBoxs);
 		expect(selected).to.have.length(3);
 	});
 
 	it("should set correct filtered type in `FieldPicker`", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
@@ -271,12 +292,13 @@ describe("field-picker-control renders correctly", () => {
 				title="Field Picker Test"
 			/>
 		);
+		const { container } = wrapper;
 		clickFilter(wrapper, "integer");
-		expect(tableUtils.getTableRows(wrapper)).to.have.length(9);
+		expect(tableUtilsRTL.getTableRows(container)).to.have.length(9);
 	});
 
 	it("should select all in filtered type in `FieldPicker`", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
@@ -286,6 +308,8 @@ describe("field-picker-control renders correctly", () => {
 				title="Field Picker Test"
 			/>
 		);
+		const { container } = wrapper;
+
 		// disable a set of icons except double
 		clickFilter(wrapper, "integer");
 		clickFilter(wrapper, "string");
@@ -293,9 +317,11 @@ describe("field-picker-control renders correctly", () => {
 		clickFilter(wrapper, "time");
 		clickFilter(wrapper, "timestamp");
 
+		// wrapper.debug("", Infinity);
+
 		// select the remaining rows
-		expect(tableUtils.getTableRows(wrapper)).to.have.length(2);
-		tableUtils.selectFieldPickerHeaderCheckbox(wrapper);
+		expect(tableUtilsRTL.getTableRows(container)).to.have.length(2);
+		tableUtilsRTL.selectFieldPickerHeaderCheckbox(container);
 
 		//  enable the icons so that we can get a valid count of all selected rows.
 		clickFilter(wrapper, "integer", true);
@@ -305,13 +331,13 @@ describe("field-picker-control renders correctly", () => {
 		clickFilter(wrapper, "timestamp", true);
 
 		// validate the number of rows selected
-		const rows = tableUtils.getTableRows(wrapper);
-		const rowsSelected = tableUtils.validateSelectedRowNum(rows);
+		const rows = tableUtilsRTL.getTableRows(container);
+		const rowsSelected = tableUtilsRTL.validateSelectedRowNumRows(rows);
 		expect(rowsSelected).to.have.length(4);
 	});
 
 	it("should search correct keyword in `FieldPicker`", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
@@ -321,20 +347,21 @@ describe("field-picker-control renders correctly", () => {
 				title="Field Picker Test"
 			/>
 		);
+		const { container } = wrapper;
 
-		const searchContainer = wrapper.find("div.properties-ft-search-container");
-		const input = searchContainer.find("input[type='text']");
-		input.simulate("change", { target: { value: "Time" } });
-		expect(tableUtils.getTableRows(wrapper)).to.have.length(2);
+		const searchContainer = container.querySelector("div.properties-ft-search-container");
+		const input = searchContainer.querySelector("input[type='text']");
+		fireEvent.change(input, { target: { value: "Time" } });
+		expect(tableUtilsRTL.getTableRows(container)).to.have.length(2);
 		// test case insensitive
-		input.simulate("change", { target: { value: "TIME" } });
-		expect(tableUtils.getTableRows(wrapper)).to.have.length(2);
-		searchContainer.find("button").simulate("click"); // click on the x button to remove search value
-		expect(tableUtils.getTableRows(wrapper)).to.have.length(filteredDataset.length);
+		fireEvent.change(input, { target: { value: "TIME" } });
+		expect(tableUtilsRTL.getTableRows(container)).to.have.length(2);
+		fireEvent.click(searchContainer.querySelector("button")); // click on the x button to remove search value
+		expect(tableUtilsRTL.getTableRows(container)).to.have.length(filteredDataset.length);
 	});
 
 	it("should set checkedAll to true in `FieldPicker`", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
@@ -344,17 +371,18 @@ describe("field-picker-control renders correctly", () => {
 				title="Field Picker Test"
 			/>
 		);
-		tableUtils.selectFieldPickerHeaderCheckbox(wrapper);
+		const { container } = wrapper;
+		tableUtilsRTL.selectFieldPickerHeaderCheckbox(container);
 
 		// with intl support wrapper.state() does not work.
 		// looking for equivalent confirmation in the DOM
-		const rows = tableUtils.getTableRows(wrapper);
-		const selected = tableUtils.validateSelectedRowNum(rows);
+		const rows = tableUtilsRTL.getTableRows(container);
+		const selected = tableUtilsRTL.validateSelectedRowNumRows(rows);
 		expect(selected).to.have.length(filteredDataset.length);
 	});
 
 	it("`FieldPicker` table should have aria-label", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
@@ -364,17 +392,18 @@ describe("field-picker-control renders correctly", () => {
 				title="Field Picker Test"
 			/>
 		);
-		const fieldPickerTable = wrapper.find(".properties-vt-autosizer").find(".ReactVirtualized__Table");
-		expect(fieldPickerTable.props()).to.have.property("aria-label", "Field Picker Test");
+		const { container } = wrapper;
+		const fieldPickerTable = container.querySelector(".properties-vt-autosizer").querySelector(".ReactVirtualized__Table");
+		expect(fieldPickerTable.getAttribute("aria-label")).to.equal("Field Picker Test");
 	});
 });
 
 describe("field-picker-control with multi input schemas renders correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(fieldPickerParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(fieldPickerParamDef);
 		wrapper = renderedObject.wrapper;
-		propertyUtils.openSummaryPanel(wrapper, "structuretableMultiInputSchema-summary-panel");
+		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableMultiInputSchema-summary-panel");
 	});
 
 	afterEach(() => {
@@ -382,25 +411,27 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 	});
 
 	it("should display the correct schema for each field", () => {
-		const fieldpicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
-		const tableRows = tableUtils.getTableRows(fieldpicker);
+		const { container } = wrapper;
+		const fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
+		const tableRows = tableUtilsRTL.getTableRows(fieldpicker);
 		expect(tableRows.length).to.equal(29);
 		// verify first and last row from each schema
-		tableUtils.verifyFieldPickerRow(tableRows.at(0), "Age - This is a long truncated label. You can see the entire label in a tooltip.", "0");
-		tableUtils.verifyFieldPickerRow(tableRows.at(5), "Time", "0");
-		tableUtils.verifyFieldPickerRow(tableRows.at(6), "Age", "data_1");
-		tableUtils.verifyFieldPickerRow(tableRows.at(11), "Timestamp", "data_1");
-		tableUtils.verifyFieldPickerRow(tableRows.at(12), "Drug", "data_2");
-		tableUtils.verifyFieldPickerRow(tableRows.at(17), "Date", "data_2");
-		tableUtils.verifyFieldPickerRow(tableRows.at(18), "Age", "3");
-		tableUtils.verifyFieldPickerRow(tableRows.at(23), "drug3", "3");
-		tableUtils.verifyFieldPickerRow(tableRows.at(24), "Age", "schema");
-		tableUtils.verifyFieldPickerRow(tableRows.at(28), "drugs", "schema");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(0), "Age - This is a long truncated label. You can see the entire label in a tooltip.", "0");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(5), "Time", "0");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(6), "Age", "data_1");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(11), "Timestamp", "data_1");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(12), "Drug", "data_2");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(17), "Date", "data_2");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(18), "Age", "3");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(23), "drug3", "3");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(24), "Age", "schema");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(28), "drugs", "schema");
 	});
 
 	it("should be able to filter type and select all", () => {
-		const fieldpicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
-		const filterIcons = fieldpicker.find("div.properties-tooltips-filter");
+		const { container } = wrapper;
+		const fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
+		const filterIcons = fieldpicker.querySelectorAll("div.properties-tooltips-filter");
 		expect(filterIcons.length).to.equal(6);
 
 		clickFilter(wrapper, "integer");
@@ -409,37 +440,35 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		clickFilter(wrapper, "double");
 		clickFilter(wrapper, "timestamp");
 
-		tableUtils.selectFieldPickerHeaderCheckbox(fieldpicker);
-		let checkAll = fieldpicker.find(".properties-vt-header-checkbox")
-			.find("input[type='checkbox']");
+		tableUtilsRTL.selectFieldPickerHeaderCheckbox(fieldpicker);
+		let checkAll = fieldpicker.querySelector(".properties-vt-header-checkbox")
+			.querySelector("input[type='checkbox']");
 
-		expect(checkAll.getDOMNode().checked).to.be.equal(true);
-		let rows = tableUtils.getTableRows(wrapper);
-		let selected = tableUtils.validateSelectedRowNum(rows);
+		expect(checkAll.checked).to.be.equal(true);
+		let rows = tableUtilsRTL.getTableRows(container);
+		let selected = tableUtilsRTL.validateSelectedRowNumRows(rows);
 		expect(selected).to.have.length(1);
 
 		clickFilter(wrapper, "timestamp", true);
-		checkAll = fieldpicker.find(".properties-vt-header-checkbox")
-			.find("input[type='checkbox']");
-		expect(checkAll.prop("checked")).to.be.false;
+		checkAll = fieldpicker.querySelector(".properties-vt-header-checkbox")
+			.querySelector("input[type='checkbox']");
+		expect(checkAll.checked).to.be.false;
 
-		checkAll.getDOMNode().checked = true;
-		checkAll.simulate("change");
-		checkAll = fieldpicker.find(".properties-vt-header-checkbox")
-			.find("input[type='checkbox']");
-		expect(checkAll.getDOMNode().checked).to.be.equal(true);
+		checkAll.setAttribute("checked", true);
+		fireEvent.click(checkAll);
+		checkAll = fieldpicker.querySelector(".properties-vt-header-checkbox")
+			.querySelector("input[type='checkbox']");
+		expect(checkAll.checked).to.be.equal(true);
 
-		rows = tableUtils.getTableRows(wrapper);
-		selected = tableUtils.validateSelectedRowNum(rows);
+		rows = tableUtilsRTL.getTableRows(container);
+		selected = tableUtilsRTL.validateSelectedRowNumRows(rows);
 		expect(selected).to.have.length(3);
-		fieldpicker.find("button[data-id='properties-apply-button']").simulate("click");
-		wrapper.find("button[data-id='properties-apply-button']")
-			.at(0)
-			.simulate("click");
-		const summaryPanel = wrapper.find("div[data-id='properties-structuretableMultiInputSchema-summary-panel']");
-		const fieldSummary = summaryPanel.find("table.properties-summary-table");
+		fireEvent.click(fieldpicker.querySelector("button[data-id='properties-apply-button']"));
+		fireEvent.click(container.querySelectorAll("button[data-id='properties-apply-button']")[0]);
+		const summaryPanel = container.querySelector("div[data-id='properties-structuretableMultiInputSchema-summary-panel']");
+		const fieldSummary = summaryPanel.querySelectorAll("table.properties-summary-table");
 		expect(fieldSummary).to.have.length(1);
-		const summaryRows = summaryPanel.find("tr.properties-summary-row");
+		const summaryRows = summaryPanel.querySelectorAll("tr.properties-summary-row");
 		expect(summaryRows).to.have.length(6);
 
 		const expectedSummaryRows = [
@@ -452,51 +481,49 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		];
 
 		for (let idx = 0; idx < summaryRows.length; idx++) {
-			expect(summaryRows.at(idx)
-				.find("span")
-				.at(0)
-				.text()
+			expect(summaryRows[idx]
+				.querySelector("span")
+				.textContent
 				.trim()).to.equal(expectedSummaryRows[idx]);
 		}
 	});
 
 	it("should be able to search 'time' and select all fields from all schemas", () => {
-		let fieldpicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
-		const tableRows = tableUtils.getTableRows(fieldpicker);
+		const { container } = wrapper;
+		let fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
+		const tableRows = tableUtilsRTL.getTableRows(fieldpicker);
 		expect(tableRows.length).to.equal(29);
 
-		const searchContainer = fieldpicker.find("div.properties-ft-search-container");
-		const input = searchContainer.find("input[type='text']");
-		input.simulate("change", { target: { value: "Time" } });
+		const searchContainer = fieldpicker.querySelector("div.properties-ft-search-container");
+		const input = searchContainer.querySelector("input[type='text']");
+		fireEvent.change(input, { target: { value: "Time" } });
 
-		fieldpicker = wrapper.find("div.properties-fp-table");
-		expect(tableUtils.getTableRows(fieldpicker)).to.have.length(5);
+		fieldpicker = container.querySelector("div.properties-fp-table");
+		expect(tableUtilsRTL.getTableRows(fieldpicker)).to.have.length(5);
 
-		tableUtils.verifyFieldPickerRow(tableRows.at(0), "Time", "0");
-		tableUtils.verifyFieldPickerRow(tableRows.at(1), "Time", "data_1");
-		tableUtils.verifyFieldPickerRow(tableRows.at(2), "Timestamp", "data_1");
-		tableUtils.verifyFieldPickerRow(tableRows.at(3), "Time", "data_2");
-		tableUtils.verifyFieldPickerRow(tableRows.at(4), "Timestamp", "data_2");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(0), "Time", "0");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(1), "Time", "data_1");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(2), "Timestamp", "data_1");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(3), "Time", "data_2");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows.at(4), "Timestamp", "data_2");
 
-		tableUtils.selectFieldPickerHeaderCheckbox(fieldpicker);
-		const checkAll = tableUtils.getTableHeaderRows(fieldpicker)
-			.find(".properties-vt-header-checkbox")
-			.find("input");
-		expect(checkAll.getDOMNode().checked).to.be.equal(true);
+		tableUtilsRTL.selectFieldPickerHeaderCheckbox(fieldpicker);
+		const checkAll = tableUtilsRTL.getTableHeaderRows(fieldpicker)[0]
+			.querySelector(".properties-vt-header-checkbox")
+			.querySelector("input");
+		expect(checkAll.checked).to.be.equal(true);
 
-		fieldpicker = wrapper.find("div.properties-fp-table");
-		const rows = tableUtils.getTableRows(fieldpicker);
-		const selected = tableUtils.validateSelectedRowNum(rows);
+		fieldpicker = container.querySelector("div.properties-fp-table");
+		const rows = tableUtilsRTL.getTableRows(fieldpicker);
+		const selected = tableUtilsRTL.validateSelectedRowNumRows(rows);
 		expect(selected).to.have.length(5);
 
-		fieldpicker.find("button[data-id='properties-apply-button']").simulate("click");
-		wrapper.find("button[data-id='properties-apply-button']")
-			.at(0)
-			.simulate("click");
-		const summaryPanel = wrapper.find("div[data-id='properties-structuretableMultiInputSchema-summary-panel']");
-		const fieldSummary = summaryPanel.find("table.properties-summary-table");
+		fireEvent.click(fieldpicker.querySelector("button[data-id='properties-apply-button']"));
+		fireEvent.click(container.querySelectorAll("button[data-id='properties-apply-button']")[0]);
+		const summaryPanel = container.querySelector("div[data-id='properties-structuretableMultiInputSchema-summary-panel']");
+		const fieldSummary = summaryPanel.querySelectorAll("table.properties-summary-table");
 		expect(fieldSummary).to.have.length(1);
-		const summaryRows = summaryPanel.find("tr.properties-summary-row");
+		const summaryRows = summaryPanel.querySelectorAll("tr.properties-summary-row");
 		expect(summaryRows).to.have.length(8);
 
 		const expectedSummaryRows = [
@@ -511,44 +538,42 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		];
 
 		for (let idx = 0; idx < summaryRows.length; idx++) {
-			expect(summaryRows.at(idx)
-				.find("span")
-				.at(0)
-				.text()
+			expect(summaryRows[idx]
+				.querySelectorAll("span")[0]
+				.textContent
 				.trim()).to.equal(expectedSummaryRows[idx]);
 		}
 	});
 
 	it("should be able to search 'time', filter 'time', and selct all fields", () => {
-		let fieldpicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
-		const searchContainer = fieldpicker.find("div.properties-ft-search-container");
-		const input = searchContainer.find("input[type='text']");
-		input.simulate("change", { target: { value: "time" } });
+		const { container } = wrapper;
+		let fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
+		const searchContainer = fieldpicker.querySelector("div.properties-ft-search-container");
+		const input = searchContainer.querySelector("input[type='text']");
+		fireEvent.change(input, { target: { value: "time" } });
 
 		clickFilter(wrapper, "time");
-		fieldpicker = wrapper.find("div.properties-fp-table");
-		const tableRows = tableUtils.getTableRows(fieldpicker);
+		fieldpicker = container.querySelector("div.properties-fp-table");
+		const tableRows = tableUtilsRTL.getTableRows(fieldpicker);
 		expect(tableRows.length).to.equal(2);
 
-		tableUtils.verifyFieldPickerRow(tableRows.at(0), "Timestamp", "data_1");
-		tableUtils.verifyFieldPickerRow(tableRows.at(1), "Timestamp", "data_2");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows[0], "Timestamp", "data_1");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows[1], "Timestamp", "data_2");
 
-		tableUtils.selectFieldPickerHeaderCheckbox(fieldpicker);
-		const checkAll = tableUtils.getTableHeaderRows(fieldpicker)
-			.find(".properties-vt-header-checkbox")
-			.find("input");
-		expect(checkAll.getDOMNode().checked).to.be.equal(true);
+		tableUtilsRTL.selectFieldPickerHeaderCheckbox(fieldpicker);
+		const checkAll = tableUtilsRTL.getTableHeaderRows(fieldpicker)[0]
+			.querySelector(".properties-vt-header-checkbox")
+			.querySelector("input");
+		expect(checkAll.checked).to.be.equal(true);
 
-		fieldpicker = wrapper.find("div.properties-fp-table");
-		const rows = tableUtils.getTableRows(fieldpicker);
-		const selected = tableUtils.validateSelectedRowNum(rows);
+		fieldpicker = container.querySelector("div.properties-fp-table");
+		const rows = tableUtilsRTL.getTableRows(fieldpicker);
+		const selected = tableUtilsRTL.validateSelectedRowNumRows(rows);
 		expect(selected).to.have.length(2);
 
-		fieldpicker.find("button[data-id='properties-apply-button']").simulate("click");
-		wrapper.find("button[data-id='properties-apply-button']")
-			.at(0)
-			.simulate("click");
-		const fieldSummary = wrapper.find("table.properties-summary-table").find("tr.properties-summary-row");
+		fireEvent.click(fieldpicker.querySelector("button[data-id='properties-apply-button']"));
+		fireEvent.click(container.querySelectorAll("button[data-id='properties-apply-button']")[0]);
+		const fieldSummary = container.querySelector("table.properties-summary-table").querySelector("tr.properties-summary-row");
 		const expectedSummaryRows = [
 			"BADVAR",
 			"0.BADVAR",
@@ -558,34 +583,35 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		];
 
 		for (let idx = 0; idx < fieldSummary.length; idx++) {
-			expect(fieldSummary.at(idx)
-				.find("span")
-				.at(0)
-				.text()
+			expect(fieldSummary[idx]
+				.querySelectorAll("span")[0]
+				.textContent
 				.trim()).to.equal(expectedSummaryRows[idx]);
 		}
 	});
 
 	it("should be able to select all and display schema.field names correctly in table", () => {
-		const fieldpicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
-		tableUtils.selectFieldPickerHeaderCheckbox(fieldpicker);
-		const checkAll = tableUtils.getTableHeaderRows(fieldpicker)
-			.find(".properties-vt-header-checkbox")
-			.find("input");
-		expect(checkAll.getDOMNode().checked).to.be.equal(true);
+		const { container } = wrapper;
+		const fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
+		tableUtilsRTL.selectFieldPickerHeaderCheckbox(fieldpicker);
+		const checkAll = tableUtilsRTL.getTableHeaderRows(fieldpicker)[0]
+			.querySelector(".properties-vt-header-checkbox")
+			.querySelector("input");
+		expect(checkAll.checked).to.be.equal(true);
 
-		const rows = tableUtils.getTableRows(wrapper);
-		const selected = tableUtils.validateSelectedRowNum(rows);
+		const rows = tableUtilsRTL.getTableRows(container);
+		const selected = tableUtilsRTL.validateSelectedRowNumRows(rows);
 		expect(selected).to.have.length(29);
 	});
 
 	it("should be able to sort by schema name", () => {
-		const fieldpicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
-		const sortable = fieldpicker.find(".ReactVirtualized__Table__sortableHeaderColumn");
+		const { container } = wrapper;
+		const fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
+		const sortable = fieldpicker.querySelectorAll(".ReactVirtualized__Table__sortableHeaderColumn");
 		expect(sortable).to.have.length(3);
 
-		tableUtils.clickHeaderColumnSort(fieldpicker, 1);
-		const tableRows = tableUtils.getTableRows(fieldpicker);
+		tableUtilsRTL.clickHeaderColumnSort(fieldpicker, 1);
+		const tableRows = tableUtilsRTL.getTableRows(fieldpicker);
 		expect(tableRows.length).to.equal(29);
 
 		const expectedOrder = [
@@ -597,28 +623,29 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		];
 
 		for (let idx = 0; idx < tableRows.length; idx++) {
-			expect(tableRows.find(".properties-fp-schema").at(idx)
-				.text())
+			expect(tableRows[idx].querySelector(".properties-fp-schema")
+				.textContent)
 				.to.equal(expectedOrder[idx]);
 		}
 
-		sortable.at(1).simulate("click");
+		fireEvent.click(sortable[1]);
 		let reverseIdx = tableRows.length - 1;
 		for (let idx = 0; idx < tableRows.length; idx++) {
-			expect(tableRows.find(".properties-fp-schema").at(idx)
-				.text())
+			expect(tableRows[idx].querySelector(".properties-fp-schema")
+				.textContent)
 				.to.equal(expectedOrder[reverseIdx]);
 			reverseIdx--;
 		}
 	});
 
 	it("should be able to sort by data type", () => {
-		const fieldpicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
-		const sortable = fieldpicker.find(".ReactVirtualized__Table__sortableHeaderColumn");
+		const { container } = wrapper;
+		const fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
+		const sortable = fieldpicker.querySelectorAll(".ReactVirtualized__Table__sortableHeaderColumn");
 		expect(sortable).to.have.length(3);
 
-		tableUtils.clickHeaderColumnSort(fieldpicker, 2);
-		const tableRows = tableUtils.getTableRows(fieldpicker);
+		tableUtilsRTL.clickHeaderColumnSort(fieldpicker, 2);
+		const tableRows = tableUtilsRTL.getTableRows(fieldpicker);
 		expect(tableRows.length).to.equal(29);
 
 		const expectedOrder = [
@@ -631,50 +658,49 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		];
 
 		for (let idx = 0; idx < tableRows.length; idx++) {
-			expect(tableRows.find(".properties-fp-field-type").at(idx)
-				.text())
+			expect(tableRows[idx].querySelector(".properties-fp-field-type")
+				.textContent)
 				.to.equal(expectedOrder[idx]);
 		}
 
-		sortable.at(2).simulate("click");
+		fireEvent.click(sortable[2]);
 		let reverseIdx = tableRows.length - 1;
 		for (let idx = 0; idx < tableRows.length; idx++) {
-			expect(tableRows.find(".properties-fp-field-type").at(idx)
-				.text())
+			expect(tableRows[idx].querySelector(".properties-fp-field-type")
+				.textContent)
 				.to.equal(expectedOrder[reverseIdx]);
 			reverseIdx--;
 		}
 	});
 
 	it("should be able to select the same field name from different schemas", () => {
-		let fieldpicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
-		const search = fieldpicker.find("div.properties-ft-search-container").find("input[type='text']");
-		search.simulate("change", { target: { value: "age" } });
-		fieldpicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
+		const { container } = wrapper;
+		let fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
+		const search = fieldpicker.querySelector("div.properties-ft-search-container").querySelector("input[type='text']");
+		fireEvent.change(search, { target: { value: "age" } });
+		fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
 
-		const tableRows = tableUtils.getTableRows(fieldpicker);
+		const tableRows = tableUtilsRTL.getTableRows(fieldpicker);
 		expect(tableRows.length).to.equal(5);
 
-		tableUtils.verifyFieldPickerRow(tableRows.at(0), "Age - This is a long truncated label. You can see the entire label in a tooltip.", "0");
-		tableUtils.verifyFieldPickerRow(tableRows.at(1), "age", "0");
-		tableUtils.verifyFieldPickerRow(tableRows.at(2), "Age", "data_1");
-		tableUtils.verifyFieldPickerRow(tableRows.at(3), "Age", "3");
-		tableUtils.verifyFieldPickerRow(tableRows.at(4), "Age", "schema");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows[0], "Age - This is a long truncated label. You can see the entire label in a tooltip.", "0");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows[1], "age", "0");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows[2], "Age", "data_1");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows[3], "Age", "3");
+		tableUtilsRTL.verifyFieldPickerRow(tableRows[4], "Age", "schema");
 
-		tableUtils.fieldPicker(wrapper.find("div.properties-fp-table"), ["0.age", "data_1.Age", "3.Age"]);
+		tableUtilsRTL.fieldPicker(container.querySelector("div.properties-fp-table"), ["0.age", "data_1.Age", "3.Age"]);
 
-		wrapper.find("button[data-id='properties-apply-button']")
-			.at(0)
-			.simulate("click");
-		const summaryPanel = 	wrapper.find("div[data-id='properties-structuretableMultiInputSchema-summary-panel']");
-		const fieldSummary = summaryPanel.find("table.properties-summary-table");
+		fireEvent.click(container.querySelectorAll("button[data-id='properties-apply-button']")[0]);
+
+		const summaryPanel = container.querySelector("div[data-id='properties-structuretableMultiInputSchema-summary-panel']");
+		const fieldSummary = summaryPanel.querySelectorAll("table.properties-summary-table");
 		expect(fieldSummary).to.have.length(1);
-		const summaryRows = summaryPanel.find("tr.properties-summary-row");
+		const summaryRows = summaryPanel.querySelectorAll("tr.properties-summary-row");
 		// This actually also tests for bad incoming field names. Without the proper
 		// bad field name filtering we have in the field picker, the test below would
 		// return 6 instead of 3 because of the bad input field names in the test file.
 		expect(summaryRows).to.have.length(6);
-
 		const expectedSummaryRows = [
 			"BADVAR",
 			"0.BADVAR",
@@ -685,10 +711,9 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		];
 
 		for (let idx = 0; idx < summaryRows.length; idx++) {
-			expect(summaryRows.at(idx)
-				.find("span")
-				.at(0)
-				.text()
+			expect(summaryRows[idx]
+				.querySelector("span")
+				.textContent
 				.trim()).to.equal(expectedSummaryRows[idx]);
 		}
 	});
@@ -701,10 +726,9 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 	let renderedController;
 	let fieldpicker;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(fieldPickerParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(fieldPickerParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
-		fieldpicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields");
 	});
 
 	afterEach(() => {
@@ -712,10 +736,12 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 	});
 
 	it("should show warning from invalid field names in the selectcolumns control", () => {
-		const selectRows = tableUtils.getTableRows(wrapper.find(".properties-column-select-table"));
+		const { container } = wrapper;
+		fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-fields");
+		const selectRows = tableUtilsRTL.getTableRows(container.querySelector(".properties-column-select-table"));
 		expect(selectRows.length).to.equal(5);
-		fieldpicker.find("button[data-id='properties-apply-button']").simulate("click");
-		const selectRows2 = tableUtils.getTableRows(wrapper.find(".properties-column-select-table"));
+		fireEvent.click(fieldpicker.querySelector("button[data-id='properties-apply-button']"));
+		const selectRows2 = tableUtilsRTL.getTableRows(container.querySelector(".properties-column-select-table"));
 		expect(selectRows2.length).to.equal(5);
 
 		const warningMessage = {
@@ -777,6 +803,7 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 	});
 
 	it("selectcolumns control will have updated options by the controller", () => {
+		const { container } = wrapper;
 		const datasetMetadata = renderedController.getDatasetMetadata();
 
 		const newField1 = {
@@ -825,8 +852,8 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		datasetMetadata[0].fields.push(newField4);
 
 		renderedController.setDatasetMetadata(datasetMetadata);
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields");
-		tableUtils.fieldPicker(fieldPicker, [],
+		const fieldPicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-fields");
+		tableUtilsRTL.fieldPicker(fieldPicker, [],
 			["Age - This is a long truncated label. You can see the entire label in a tooltip.", "age", "Sex", "BP", "Cholesterol", "Time", "age5", "BP5", "Na5", "drug5",
 				"Age", "Na", "K", "Drug", "Time",
 				"Timestamp", "Drug", "drug", "drug2", "Time", "Timestamp", "Date", "Age", "BP",
@@ -834,31 +861,38 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		);
 	});
 	it("fieldpicker will receive updated props from selectcolumns control ", () => {
+		const { container } = wrapper;
 		renderedController.updatePropertyValue({ name: "fields" }, []);
-		wrapper.update();
-		const selectRows = wrapper.find("tr.column-select-table-row");
+		const selectRows = container.querySelectorAll("tr.column-select-table-row");
 		expect(selectRows.length).to.equal(0);
 	});
 
 	it("checkbox in selectcolumns table header should have label", () => {
-		const tableHeaderRows = tableUtils.getTableHeaderRows(fieldpicker);
-		const headerCheckboxLabel = tableHeaderRows.find(".properties-vt-header-checkbox").text();
-		const secondColumnLabel = tableHeaderRows
-			.find("div[role='columnheader']")
-			.at(0)
-			.text();
+		const { container } = wrapper;
+		fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-fields");
+		const tableHeaderRows = tableUtilsRTL.getTableHeaderRows(fieldpicker);
+		const headerCheckboxLabel = tableHeaderRows[0].querySelector(".properties-vt-header-checkbox").textContent;
+		const secondColumnLabel = tableHeaderRows[0]
+			.querySelector("div[role='columnheader']")
+			.textContent;
 		expect(headerCheckboxLabel).to.equal(`Select all ${secondColumnLabel}`);
 	});
 
 	it("checkbox in selectcolumns table row should have label", () => {
-		const tableRows = tableUtils.getTableRows(fieldpicker);
-		const rowCheckboxes = tableRows.find(".properties-vt-row-checkbox");
-		const fieldNames = tableRows.find(".properties-fp-field");
+		const { container } = wrapper;
+		fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-fields");
+		const tableRows = tableUtilsRTL.getTableRows(fieldpicker);
+		const fieldNames = [];
+		const rowCheckboxes = [];
+		for (let i = 0; i < tableRows.length; i++) {
+			rowCheckboxes.push(tableRows[i].querySelector((".properties-vt-row-checkbox")));
+			fieldNames.push(tableRows[i].querySelector((".properties-fp-field")));
+		}
 		expect(fieldNames).to.have.length(29);
-		const tableName = wrapper.find(".properties-wf-title").text();
+		const tableName = container.querySelector(".properties-wf-title").textContent;
 
 		tableRows.forEach((row, index) => {
-			const rowCheckboxLabel = rowCheckboxes.at(index).text();
+			const rowCheckboxLabel = rowCheckboxes[index].textContent;
 			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1} from ${tableName}`);
 		});
 	});
@@ -868,9 +902,9 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 describe("field-picker control multiple rows selection", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(fieldPickerParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(fieldPickerParamDef);
 		wrapper = renderedObject.wrapper;
-		propertyUtils.openSummaryPanel(wrapper, "structuretableMultiInputSchema-summary-panel");
+		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableMultiInputSchema-summary-panel");
 	});
 
 	afterEach(() => {
@@ -878,86 +912,78 @@ describe("field-picker control multiple rows selection", () => {
 	});
 
 	it("should select/deselect multiple rows in fieldPicker table using shift key", () => {
+		const { container } = wrapper;
 		let fieldPicker;
 		let tableRows;
-		fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
-		tableRows = tableUtils.getTableRows(fieldPicker);
+		fieldPicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
+		tableRows = tableUtilsRTL.getTableRows(fieldPicker);
 		expect(tableRows.length).to.equal(29);
 
 		// Verify no rows are selected
-		const selected = tableUtils.validateSelectedRowNum(tableRows);
+		const selected = tableUtilsRTL.validateSelectedRowNumRows(tableRows);
 		expect(selected).to.have.length(0);
 
 		// Shift + select 8th row
-		tableUtils.shiftSelectCheckbox(tableRows, 8);
-		// Update wrapper
-		wrapper.update();
-		fieldPicker = wrapper.find("div.properties-fp-table");
-		tableRows = tableUtils.getTableRows(fieldPicker);
+		tableUtilsRTL.shiftSelectCheckboxRows(tableRows, 8);
+		fieldPicker = container.querySelector("div.properties-fp-table");
+		tableRows = tableUtilsRTL.getTableRows(fieldPicker);
 		// Verify 1-8 rows are selected
-		expect(tableUtils.validateSelectedRowNum(tableRows)).to.have.length(8);
+		expect(tableUtilsRTL.validateSelectedRowNumRows(tableRows)).to.have.length(8);
 
 		// shift + select 15th row
-		tableUtils.shiftSelectCheckbox(tableRows, 15);
-		// Update wrapper
-		wrapper.update();
-		fieldPicker = wrapper.find("div.properties-fp-table");
-		tableRows = tableUtils.getTableRows(fieldPicker);
+		tableUtilsRTL.shiftSelectCheckboxRows(tableRows, 15);
+		fieldPicker = container.querySelector("div.properties-fp-table");
+		tableRows = tableUtilsRTL.getTableRows(fieldPicker);
 		// Verify 1-15 rows are selected
-		expect(tableUtils.validateSelectedRowNum(tableRows)).to.have.length(15);
+		expect(tableUtilsRTL.validateSelectedRowNumRows(tableRows)).to.have.length(15);
 
 		// shift + select 5th row -- this will deselect 5-15 rows.
-		tableUtils.shiftSelectCheckbox(tableRows, 5);
-		// Update wrapper
-		wrapper.update();
-		fieldPicker = wrapper.find("div.properties-fp-table");
-		tableRows = tableUtils.getTableRows(fieldPicker);
+		tableUtilsRTL.shiftSelectCheckboxRows(tableRows, 5);
+		fieldPicker = container.querySelector("div.properties-fp-table");
+		tableRows = tableUtilsRTL.getTableRows(fieldPicker);
 		// 5-15 rows will be deselected. And 1-4 rows will remain selected
-		expect(tableUtils.validateSelectedRowNum(tableRows)).to.have.length(4);
+		expect(tableUtilsRTL.validateSelectedRowNumRows(tableRows)).to.have.length(4);
 
 		// shift + select 1st row -- this will deselect all rows
-		tableUtils.shiftSelectCheckbox(tableRows, 1);
-		// Update wrapper
-		wrapper.update();
-		fieldPicker = wrapper.find("div.properties-fp-table");
-		tableRows = tableUtils.getTableRows(fieldPicker);
+		tableUtilsRTL.shiftSelectCheckboxRows(tableRows, 1);
+		fieldPicker = container.querySelector("div.properties-fp-table");
+		tableRows = tableUtilsRTL.getTableRows(fieldPicker);
 		// Verify all rows are deselected
-		expect(tableUtils.validateSelectedRowNum(tableRows)).to.have.length(0);
+		expect(tableUtilsRTL.validateSelectedRowNumRows(tableRows)).to.have.length(0);
 
 		// shift + select 29th row -- this will select all rows
-		tableUtils.shiftSelectCheckbox(tableRows, 29);
-		// Update wrapper
-		wrapper.update();
-		fieldPicker = wrapper.find("div.properties-fp-table");
-		tableRows = tableUtils.getTableRows(fieldPicker);
+		tableUtilsRTL.shiftSelectCheckboxRows(tableRows, 29);
+		fieldPicker = container.querySelector("div.properties-fp-table");
+		tableRows = tableUtilsRTL.getTableRows(fieldPicker);
 		// Verify all rows are selected
-		expect(tableUtils.validateSelectedRowNum(tableRows)).to.have.length(29);
+		expect(tableUtilsRTL.validateSelectedRowNumRows(tableRows)).to.have.length(29);
 	});
 
 	it("should add rows as per their row number in the table irrespective of the user selection order", () => {
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
-		const tableRows = tableUtils.getTableRows(fieldPicker);
-		const fieldNames = fieldPicker.find(".properties-fp-field-name");
-		const schemaNames = fieldPicker.find(".properties-fp-schema");
+		const { container } = wrapper;
+		const fieldPicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
+		const tableRows = tableUtilsRTL.getTableRows(fieldPicker);
+		const fieldNames = fieldPicker.querySelectorAll(".properties-fp-field-name");
+		const schemaNames = fieldPicker.querySelectorAll(".properties-fp-schema");
 		expect(tableRows.length).to.equal(29);
 
 		// Verify no rows are selected
-		const selected = tableUtils.validateSelectedRowNum(tableRows);
+		const selected = tableUtilsRTL.validateSelectedRowNumRows(tableRows);
 		expect(selected).to.have.length(0);
 
 		// select row number in random order
-		tableUtils.selectCheckboxes(tableRows, [1, 15, 10, 12, 9]);
-		fieldPicker.find("button[data-id='properties-apply-button']").simulate("click");
+		tableUtilsRTL.selectCheckboxes(tableRows, [1, 15, 10, 12, 9]);
+		fireEvent.click(fieldPicker.querySelector("button[data-id='properties-apply-button']"));
 
-		const renameFieldTable = wrapper.find("div[data-id='properties-ft-structuretableMultiInputSchema']");
-		const secondColumn = renameFieldTable.find(".properties-field-type-icon + .properties-field-type");
+		const renameFieldTable = container.querySelector("div[data-id='properties-ft-structuretableMultiInputSchema']");
+		const secondColumn = renameFieldTable.querySelectorAll(".properties-field-type-icon + .properties-field-type");
 
 		// Even though we selected [1, 15, 10, 12, 9], they should be displayed as [1, 9, 10, 12, 15]
-		expect(secondColumn.at(3).text()).to.equal(schemaNames.at(1).text() + "." + fieldNames.at(1).text());
-		expect(secondColumn.at(4).text()).to.equal(schemaNames.at(9).text() + "." + fieldNames.at(9).text());
-		expect(secondColumn.at(5).text()).to.equal(schemaNames.at(10).text() + "." + fieldNames.at(10).text());
-		expect(secondColumn.at(6).text()).to.equal(schemaNames.at(12).text() + "." + fieldNames.at(12).text());
-		expect(secondColumn.at(7).text()).to.equal(schemaNames.at(15).text() + "." + fieldNames.at(15).text());
+		expect(secondColumn[3].textContent).to.equal(schemaNames[1].textContent + "." + fieldNames[1].textContent);
+		expect(secondColumn[4].textContent).to.equal(schemaNames[9].textContent + "." + fieldNames[9].textContent);
+		expect(secondColumn[5].textContent).to.equal(schemaNames[10].textContent + "." + fieldNames[10].textContent);
+		expect(secondColumn[6].textContent).to.equal(schemaNames[12].textContent + "." + fieldNames[12].textContent);
+		expect(secondColumn[7].textContent).to.equal(schemaNames[15].textContent + "." + fieldNames[15].textContent);
 	});
 
 });

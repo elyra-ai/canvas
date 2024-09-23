@@ -15,7 +15,7 @@
  */
 
 import { Separator } from "../constants/form-constants";
-import { Type, ParamRole, EditStyle } from "../constants/form-constants";
+import { Type, ParamRole, EditStyle, ControlType } from "../constants/form-constants";
 import { ResourceDef } from "../util/L10nProvider";
 import { propertyOf } from "lodash";
 import { toType } from "../util/property-utils";
@@ -171,6 +171,12 @@ export class ParameterDef {
 		if (settings.className) {
 			this.className = settings.className;
 		}
+		if (settings.helperText) {
+			this.helperText = ResourceDef.make(settings.helperText);
+		}
+		if (settings.readOnly) {
+			this.readOnly = settings.readOnly;
+		}
 	}
 
 	isList() {
@@ -189,6 +195,14 @@ export class ParameterDef {
 
 	isSubPanelEdit() {
 		if (this.editStyle === EditStyle.SUBPANEL) {
+			return true;
+		}
+		return false;
+	}
+
+	// For multi select edit subpanel, fields having editStyle "inline" and undefined can be edited in the subpanel
+	isInlineEdit() {
+		if ((this.editStyle === EditStyle.INLINE || typeof this.editStyle === "undefined") && this.control !== ControlType.READONLY) {
 			return true;
 		}
 		return false;
@@ -268,6 +282,14 @@ export class ParameterDef {
 	 */
 	getAdditionalText(l10nProvider) {
 		return l10nProvider.l10nResource(this.placeHolderText);
+	}
+
+	/**
+	 * Returns the "additionalHelperText" attribute which can be used to include additional
+	 * helper text associated with the property control on the UI.
+	*/
+	getAdditionalHelperText(l10nProvider) {
+		return l10nProvider.l10nResource(this.helperText);
 	}
 
 	getTextAfter(l10nProvider) {
@@ -368,7 +390,9 @@ export class ParameterDef {
 				"uionly": propertyOf(param)("uionly"),
 				"actionRef": propertyOf(uihint)("action_ref"),
 				"customValueAllowed": propertyOf(uihint)("custom_value_allowed"),
-				"className": propertyOf(uihint)("class_name")
+				"className": propertyOf(uihint)("class_name"),
+				"helperText": propertyOf(uihint)("helper_text"),
+				"readOnly": propertyOf(uihint)("read_only")
 			});
 		}
 		return null;

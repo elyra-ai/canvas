@@ -15,13 +15,23 @@
  */
 import React from "react";
 import { createRoot } from "react-dom/client";
+import ReactDOM from "react-dom";
 
 import Logger from "../logging/canvas-logger.js";
+import CanvasUtils from "./common-canvas-utils.js";
 
 export default class SvgCanvasExternal {
 	constructor(renderer) {
 		this.logger = new Logger("SVGCanvasExternal");
 		this.ren = renderer;
+	}
+
+	isValidJsxElement(el) {
+		return React.isValidElement(el);
+	}
+
+	isReact18OrHigher() {
+		return Number(React.version.split(".")[0]) >= 18;
 	}
 
 	addNodeExternalObject(node, i, foreignObjects) {
@@ -35,29 +45,47 @@ export default class SvgCanvasExternal {
 		this.renderExternalObject(jsx, foreignObjects[i]);
 	}
 
+	addNodeImageExternalObject(image, i, foreignObjects) {
+		this.renderExternalObject(image, foreignObjects[i]);
+	}
+
 	addDecExternalObject(dec, i, foreignObjects) {
 		this.renderExternalObject(dec.jsx, foreignObjects[i]);
 	}
 
 	renderExternalObject(jsx, container) {
-		if (!container.root) {
-			container.root = createRoot(container);
+		// createRoot only available in React v18
+		if (this.isReact18OrHigher()) {
+			if (!container.ccExtRoot) {
+				container.ccExtRoot = createRoot(container);
+			}
+			container.ccExtRoot.render(jsx);
+
+		// Prior to React v18 we use ReatDOM.render
+		} else {
+			ReactDOM.render(jsx, container);
 		}
-		container.root.render(jsx);
 	}
 
 	removeExternalObject(obj, i, foreignObjects) {
-		const container = foreignObjects[i];
-		if (!container.root) {
-			container.root = createRoot(container);
+		// createRoot only available in React v18
+		if (this.isReact18OrHigher()) {
+			const container = foreignObjects[i];
+			if (!container.ccExtRoot) {
+				container.ccExtRoot = createRoot(container);
+			}
+			// Unmount in Timeout to stop this warning from appearing:
+			// "Warning: Attempted to synchronously unmount a root while
+			// React was already rendering."
+			setTimeout(() => {
+				container.ccExtRoot.unmount();
+				container.ccExtRoot = null;
+			});
+
+		// Prior to React v18 we use ReatDOM.unmountComponentAtNode
+		} else {
+			ReactDOM.unmountComponentAtNode(foreignObjects[i]);
 		}
-		// Unmount in Timeout to stop this warning from appearing:
-		// "Warning: Attempted to synchronously unmount a root while
-		// React was already rendering."
-		setTimeout(() => {
-			container.root.unmount();
-			container.root = null;
-		});
 	}
 
 	getActiveNodes() {
@@ -77,6 +105,7 @@ export default class SvgCanvasExternal {
 				const inp = node.inputs.find((input) => input.id === inputPos.id);
 				inp.cx = inputPos.cx / k;
 				inp.cy = inputPos.cy / k;
+				inp.dir = CanvasUtils.getPortDir(inp.cx, inp.cy, node);
 			});
 		}
 		if (info.outputPositions) {
@@ -84,6 +113,7 @@ export default class SvgCanvasExternal {
 				const out = node.outputs.find((output) => output.id === outputPos.id);
 				out.cx = outputPos.cx / k;
 				out.cy = outputPos.cy / k;
+				out.dir = CanvasUtils.getPortDir(out.cx, out.cy, node);
 			});
 		}
 		this.ren.displayMovedLinks();

@@ -7,6 +7,9 @@
     "multiselect": [
       "blue"
     ],
+    "multiselect_readonly": [
+      "blue"
+    ],
     "multiselect_multiple_selected": [
       "orange",
       "yellow"
@@ -79,6 +82,17 @@
         "purple"
       ],
       "required": true
+    },
+    {
+      "id": "multiselect_readonly",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ]
     },
     {
       "id": "multiselect_multiple_selected",
@@ -304,7 +318,24 @@
         "description": {
           "default": "multiselect with parameter value set to 'blue'"
         },
+        "helper_text": {
+          "default": "MultiSelect with parameter vallue set to 'blue'"
+        },
         "control": "multiselect"
+      },
+      {
+        "parameter_ref": "multiselect_readonly",
+        "label": {
+          "default": "Readonly multiselect one option selected"
+        },
+        "description": {
+          "default": "Readonly multiselect with parameter value set to 'blue'"
+        },
+        "helper_text": {
+          "default": "Readonly MultiSelect with parameter vallue set to 'blue'"
+        },
+        "control": "multiselect",
+        "read_only": true
       },
       {
         "parameter_ref": "multiselect_multiple_selected",
@@ -518,7 +549,8 @@
           "multiselect_filterable",
           "multiselect_filterable_single",
           "multiselect_filterable_multiple_selected",
-          "multiselect_custom_labels"
+          "multiselect_custom_labels",
+          "multiselect_readonly"
         ]
       },
       {

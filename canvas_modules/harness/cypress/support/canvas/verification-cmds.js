@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 /* eslint max-len: "off" */
 
 import * as testUtils from "../../utils/eventlog-utils";
-import { extractTransformValues } from "./utils-cmds.js";
+import { extractTransformValues, getToolbarTopRowItems } from "./utils-cmds.js";
 
 const mainCanvasSelector = "#canvas-div-0 > #d3-svg-canvas-div-0 > .svg-area > .d3-canvas-group > .d3-nodes-links-group > ";
 const dataLinkSelector = mainCanvasSelector + ".d3-link-group.d3-data-link .d3-link-line";
@@ -602,6 +602,10 @@ Cypress.Commands.add("verifyNumberOfSelectedObjects", (noOfSelectedObjects) => {
 		});
 });
 
+Cypress.Commands.add("verifyOptionInContextToolbar", (optionName) => {
+	cy.getOptionFromContextToolbar(optionName).should("have.length", 1);
+});
+
 Cypress.Commands.add("verifyOptionInContextMenu", (optionName) => {
 	cy.getOptionFromContextMenu(optionName).should("have.length", 1);
 });
@@ -621,6 +625,33 @@ Cypress.Commands.add("verifyContextMenuPosition", (distFromLeft, distFromTop) =>
 		.invoke("css", "top")
 		.then((cssValue) => {
 			cy.verifyPixelValueInCompareRange(distFromTop, cssValue);
+		});
+});
+
+Cypress.Commands.add("verifyContextToolbarPosition", (distFromLeft, distFromTop) => {
+	cy.get(".context-toolbar").first()
+		.invoke("css", "left")
+		.then((cssValue) => {
+			cy.verifyPixelValueInCompareRange(distFromLeft, cssValue);
+		});
+	cy.get(".context-toolbar").first()
+		.invoke("css", "top")
+		.then((cssValue) => {
+			cy.verifyPixelValueInCompareRange(distFromTop, cssValue);
+		});
+});
+
+Cypress.Commands.add("verifyContextToolbarNotVisible", () => {
+	cy.get(".context-toolbar")
+		.should("not.exist");
+});
+
+Cypress.Commands.add("verifyContextToolbarNonOverflowItems", (noOfItems) => {
+	cy.get(".context-toolbar")
+		.find(".toolbar-item")
+		.then((items) => {
+			const topRowItems = getToolbarTopRowItems(items);
+			expect(topRowItems.length).equal(noOfItems);
 		});
 });
 
@@ -706,6 +737,7 @@ Cypress.Commands.add("verifyJsxDecorationOnLink", (linkLabel, decoratorId, xPos,
 });
 
 Cypress.Commands.add("verifyDecorationTransformOnNode", (nodeName, decoratorId, xPos, yPos) => {
+	cy.wait(10);
 	cy.getNodeWithLabel(nodeName)
 		.find(".d3-node-dec-group")
 		.then((decorators) => {
@@ -817,19 +849,21 @@ Cypress.Commands.add("verifyNodeDimensions", (nodeLabel, width, height) => {
 
 Cypress.Commands.add("verifyBottomPanelHeight", (height) => {
 	cy.get(".bottom-panel").should((element) => {
-		expect(element).to.have.css("height", `${height}px`);
+		compareCloseTo(element[0].offsetHeight, height);
 	});
 });
 
 Cypress.Commands.add("verifyBottomPanelWidth", (width) => {
 	cy.get(".bottom-panel").should((element) => {
-		expect(element).to.have.css("width", `${width}px`);
+		// Use compareCloseTo here because bottom-panel width is slighyly different
+		// on the build machine to its width when running tests on a local machine.
+		compareCloseTo(element[0].offsetWidth, width);
 	});
 });
 
 Cypress.Commands.add("verifyTopPanelHeight", (height) => {
 	cy.get(".top-panel").should((element) => {
-		expect(element).to.have.css("height", `${height}px`);
+		compareCloseTo(element[0].offsetHeight, height);
 	});
 });
 
@@ -841,6 +875,13 @@ Cypress.Commands.add("verifyTopPanelWidth", (width) => {
 	});
 });
 
+Cypress.Commands.add("verifyLeftPanelWidth", (width) => {
+	cy.get(".palette-flyout-div").should((element) => {
+		// Use compareCloseTo here because top-panel width is slighyly different
+		// on the build machine to its width when running tests on a local machine.
+		compareCloseTo(element[0].offsetWidth, width);
+	});
+});
 
 Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => {
 	cy.getCommentWithText(commentText)
@@ -1006,6 +1047,10 @@ Cypress.Commands.add("verifyToolbarButtonEnabled", (action, state) => {
 			const enabled = !classList.includes("cds--btn--disabled");
 			expect(enabled).to.equal(state);
 		});
+});
+
+Cypress.Commands.add("verifyToolbarSubPanelIsOpen", (action, state) => {
+	cy.getToolbarAction("." + action + "-action .toolbar-popover-list");
 });
 
 Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
@@ -1331,7 +1376,7 @@ Cypress.Commands.add("verifyLatestNotificationMessage", (messagesLength, type, t
 Cypress.Commands.add("clickNotificationAtIndex", (index) => {
 	cy.get(".notifications-button-container .notifications")
 		.eq(index)
-		.click();
+		.click({ force: true });
 });
 
 Cypress.Commands.add("verifyNotificationCenterExists", () => {
@@ -1340,14 +1385,6 @@ Cypress.Commands.add("verifyNotificationCenterExists", () => {
 
 Cypress.Commands.add("verifyNotificationCenterDoesntExist", (hidden) => {
 	cy.get(".notification-panel").should("not.exist");
-});
-
-Cypress.Commands.add("verifyNodeWidthHeight", (nodeLabel, nodeWidth, nodeHeight) => {
-	cy.getNodeWithLabel(nodeLabel).get(".d3-node-body-outline")
-		.should((element) => {
-			expect(element).to.have.css("height", `${nodeHeight}px`);
-			expect(element).to.have.css("width", `${nodeWidth}px`);
-		});
 });
 
 Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
@@ -1436,5 +1473,5 @@ function getCommentSelectionOutlineSelector(comment) {
 }
 
 function getCommentBodySelector(comment) {
-	return "[data-id='" + comment.getAttribute("data-id") + "'] > .d3-comment-rect";
+	return "[data-id='" + comment.getAttribute("data-id") + "'] > .d3-foreign-object-comment-text";
 }

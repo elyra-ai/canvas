@@ -40,7 +40,6 @@ export default (state = {}, action) => {
 	case "SET_PALETTE_OPEN_STATE":
 		return Object.assign({}, state, { isOpen: action.data.isOpen });
 
-
 	default:
 		return state;
 	}

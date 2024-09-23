@@ -24,11 +24,21 @@ theme:
     favicon: assets/FlowIcon.png
     palette:
         scheme: default
+        primary: black
     features:
       - content.code.copy
       - content.action.edit
       - navigation.tabs
       - navigation.indexes
+      - navigation.footer
+
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: http://github.com/elyra-ai/canvas
+      name: Elyra Canvas on GitHub
 
 plugins:
     - search
@@ -42,7 +52,7 @@ extra_javascript:
 edit_uri: edit/main/docs/
 
 # Documentation and theme
-copyright: 'Copyright  &copy; 2024 Elyra Authors, an open source project and all are welcome to contribute! Maintained by the Elyra Authors Team'
+copyright: 'Copyright  &copy; 2024 Elyra Authors, an open source project! Maintained by the Elyra Authors Team'
 
 nav:
   - Home:
@@ -55,10 +65,16 @@ nav:
       - Nodes: 01.01.01-nodes.md
       - Links: 01.01.02-links.md
       - Comments: 01.01.03-comments.md
-      - Background: 01.01.04-background.md
+      - Decorations: 01.01.04-decorations.md
     - Palette: 01.02-palette.md
     - Context Menu: 01.03-context-menu.md
     - Context Toolbar: 01.04-context-toolbar.md
+    - Toolbar: 01.05-toolbar.md
+    - Notification Panel: 01.06-notification-panel.md
+    - State Tag: 01.07-state-tag.md
+    - Tooltips: 01.08-tooltips.md
+    - Panels: 01.09-panels.md
+    - Common Properties: 01.10-common-properties.md
 
   - Initial Setup:
     - 02-set-up.md
@@ -92,11 +108,13 @@ nav:
       - Notification Messages: 03.04.05-notification-messages.md
       - Styling Canvas Objects: 03.04.06-styling-objects.md
     - Keyboard Support: 03.05-keyboard-support.md
-    - Node Layout: 03.06-node-layout.md
+    - Node Customization: 03.06.01-node-customization.md
+    - Comment Customization: 03.06.02-comment-customization.md
+    - Link Customization: 03.06.03-link-customization.md
     - Node Creation from External Object: 03.07-external-objects.md
     - External Pipeline Flows: 03.08-external-pipeline-flows.md
     - Read Only or Locked Flows: 03.09-read-only-or-locked-flows.md
-    - Commmand Stack: 03.10-command-stack.md
+    - Command Stack: 03.10-command-stack.md
     - Internal Actions: 03.11-internal-actions.md
     - Deprecated:
       - Context Menu Wrapper: 03.30.01-context-menu-wrapper.md
@@ -104,16 +122,17 @@ nav:
 
   - Common Properties:
     - Getting started: 04-common-properties.md
-    - Parameter Definitions: 04.01-parameter-definition.md
+    - Parameter Definition: 04.01-parameter-definition.md
     - Callbacks: 04.02-callbacks.md
     - UI Hints: 04.03-ui-hints.md
     - Controls: 04.04-controls.md
     - Conditions: 04.05-conditions.md
     - Custom Components: 04.06-custom-components.md
     - Properties Controller: 04.07-properties-controller.md
+    - Properties Config: 04.08-properties-config.md
 
-  - Troubleshooting:
-    - 05-troubleshooting.md
+  - FAQ:
+    - 05-faq.md
 
   - Contributing:
     - 06-contributing.md
@@ -122,6 +141,7 @@ nav:
 
 markdown_extensions:
   - admonition:
+  - pymdownx.details:
   - codehilite:
   - extra:
   - pymdownx.magiclink:

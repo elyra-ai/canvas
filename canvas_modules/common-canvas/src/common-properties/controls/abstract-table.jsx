@@ -24,31 +24,23 @@ import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
 import classNames from "classnames";
-import { Add, TrashCan, Edit } from "@carbon/react/icons";
+import { Add, Edit } from "@carbon/react/icons";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 import { v4 as uuid4 } from "uuid";
 
 import { MESSAGE_KEYS, STATES, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION, ROW_SELECTION, UPDATE_TYPE } from "./../constants/constants";
 
 import { isEqual, findIndex, sortBy, cloneDeep } from "lodash";
+import TableToolbar from "../components/table-toolbar/table-toolbar.jsx";
 
 /* eslint max-depth: ["error", 5] */
 
 export default class AbstractTable extends React.Component {
 
-	static getDerivedStateFromProps(nextProps, prevState) {
-		const enableRemoveIcon = (nextProps.selectedRows.length !== 0);
-		if (prevState.enableRemoveIcon !== enableRemoveIcon) {
-			return ({ enableRemoveIcon: enableRemoveIcon });
-		}
-		return ({});
-	}
-
 	constructor(props) {
 		super(props);
 		this.state = {
-			filterText: null,
-			enableRemoveIcon: false
+			filterText: null
 		};
 		this.onPanelContainer = [];
 		// used to determine if column controls can be inline or if field picker is used
@@ -66,10 +58,11 @@ export default class AbstractTable extends React.Component {
 		this.onSort = this.onSort.bind(this);
 		this.setScrollToRow = this.setScrollToRow.bind(this);
 		this.includeInFilter = this.includeInFilter.bind(this);
-		this.makeAddRemoveButtonPanel = this.makeAddRemoveButtonPanel.bind(this);
+		this.makeAddButtonPanel = this.makeAddButtonPanel.bind(this);
 		this.makeEditButtonPanel = this.makeEditButtonPanel.bind(this);
 		this.makeCustomButtonsPanel = this.makeCustomButtonsPanel.bind(this);
 		this.buildChildItem = this.buildChildItem.bind(this);
+		this.buildMultiSelectEditChildItem = this.buildMultiSelectEditChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
 		this.checkedAll = this.checkedAll.bind(this);
 		this.isLightTheme = this.isLightTheme.bind(this);
@@ -78,7 +71,7 @@ export default class AbstractTable extends React.Component {
 			this.scrollToRow = props.selectedRows[props.selectedRows.length - 1];
 		}
 
-		this.selectSummaryPropertyName = "table-multi-select-edit-property-" + props.control.name;
+		this.selectSummaryPropertyName = "table-multi-select-edit-property-" + props.control?.name;
 		props.controller.saveControls([{ name: this.selectSummaryPropertyName }]);
 		this.setSelectedSummaryRowValue(props.selectedRows);
 		this.uuid = uuid4();
@@ -220,7 +213,7 @@ export default class AbstractTable extends React.Component {
 	}
 
 	isReadonlyTable() {
-		return this.props.control.controlType === ControlType.READONLYTABLE;
+		return this.props.control.controlType === ControlType.READONLYTABLE || this.props.readOnly;
 	}
 
 	indexOfColumn(controlId) {
@@ -264,7 +257,7 @@ export default class AbstractTable extends React.Component {
 		const newSelectedSummaryRow = this.props.controller.getPropertyValue(summaryPropertyId);
 		if (newSelectedSummaryRow && Array.isArray(newSelectedSummaryRow)) {
 			newSelectedSummaryRow[0].forEach((cellValue, colIndex) => {
-				if (cellValue !== null && !isEqual(cellValue, this.selectedSummaryRowValue[0][colIndex])) {
+				if (!isEqual(cellValue, this.selectedSummaryRowValue[0][colIndex])) {
 					// if a column does not have a value, the default value is null and the value returned
 					// from getPropertyValue is undefined causing unneccessary updates and an infinite loop during intialization
 					const testCell = (typeof cellValue === "undefined") ? null : cellValue;
@@ -272,7 +265,7 @@ export default class AbstractTable extends React.Component {
 						this.props.controller.updatePropertyValue({ name: this.props.control.name, row: rowIndex, col: colIndex }, testCell, true);
 					});
 					if (tableControl.subControls[colIndex].controlType === ControlType.ONEOFSELECT) {
-						this.props.controller.updatePropertyValue({ name: this.selectSummaryPropertyName, row: 0, col: colIndex }, null);
+						this.props.controller.updatePropertyValue({ name: this.selectSummaryPropertyName, row: 0, col: colIndex }, testCell);
 					}
 				}
 			});
@@ -282,10 +275,6 @@ export default class AbstractTable extends React.Component {
 
 	updateRowSelections(selection) {
 		this.props.controller.updateSelectedRows(this.props.propertyId, selection);
-		// react throws warning when modal because the button does not exist at this moment
-		if (this.props.rightFlyout) {
-			this.setState({ enableRemoveIcon: (selection.length !== 0) });
-		}
 		this.setSelectedSummaryRowValue(selection);
 	}
 
@@ -439,54 +428,44 @@ export default class AbstractTable extends React.Component {
 		return this.props.controller.getLight() && this.props.control.light;
 	}
 
-	makeSelectedEditRow(selectedRows) {
-		if (selectedRows && Array.isArray(selectedRows) && selectedRows.length > 1) {
-			const rowsSelectedLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL);
-			const rowsSelectedAction = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.MULTI_SELECTED_ROW_ACTION);
-			const title = selectedRows.length + " " + rowsSelectedLabel + " " + rowsSelectedAction;
-			const rows = [];
-			const sortFields = [];
-			const filterFields = [];
-			const headers = (this.props.control.header === false) ? [] : this.makeHeader(sortFields, filterFields);
-			const showHeader = false;
-			const value = this.props.controller.getPropertyValue({ name: this.selectSummaryPropertyName });
-			this.makeCells(rows, value, null, this.selectSummaryPropertyName, true);
-			const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
-			return (<div className="properties-at-selectedEditRows" >
-				<div className="properties-selectedEditRows-title" >
-					<span >{title}</span>
-				</div>
-				<FlexibleTable
-					showHeader={showHeader}
-					columns={headers}
-					data={rows}
-					rows={0}
-					scrollKey={this.selectSummaryPropertyName}
-					tableLabel={tableLabel}
-					summaryTable
-					rowSelection={ROW_SELECTION.MULTIPLE}
-					light={this.isLightTheme()}
-					emptyTablePlaceholder={this.props.control.additionalText}
-				/>
-			</div>);
+	makeTableToolbar(selectedRows) {
+		if ((this.props.addRemoveRows || this.props.control?.moveableRows || this.isSelectSummaryEdit(selectedRows)) && selectedRows?.length > 0) {
+			const multiSelectEditRowPropertyId = {
+				name: this.selectSummaryPropertyName,
+				row: 0
+			};
+			let multiSelectEditSubPanel = null;
+			if (this.isSelectSummaryEdit(selectedRows)) {
+				multiSelectEditSubPanel = this.buildMultiSelectEditChildItem(multiSelectEditRowPropertyId);
+			}
+			return (
+				<>
+					<TableToolbar
+						controller={this.props.controller}
+						propertyId={this.props.propertyId}
+						selectedRows={selectedRows}
+						addRemoveRows={this.props.addRemoveRows}
+						moveableRows={this.props.control?.moveableRows}
+						multiSelectEdit={this.isSelectSummaryEdit(selectedRows)}
+						removeSelectedRows={this.removeSelected}
+						setScrollToRow={this.setScrollToRow}
+						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+						rightFlyout={this.props.rightFlyout}
+						multiSelectEditSubPanel={multiSelectEditSubPanel}
+						multiSelectEditRowPropertyId={multiSelectEditRowPropertyId}
+						isReadonlyTable={this.isReadonlyTable()}
+						smallFlyout={false}
+					/>
+				</>
+			);
 		}
 		return null;
 	}
 
-	makeAddRemoveButtonPanel(tableState, tableButtonConfig) {
+	makeAddButtonPanel(tableState, tableButtonConfig) {
 		this.onFieldPickerCloseCallback = (tableButtonConfig && tableButtonConfig.fieldPickerCloseFunction)
 			? tableButtonConfig.fieldPickerCloseFunction.bind(this)
 			: null;
-
-		const removeOnClick = (tableButtonConfig && tableButtonConfig.removeButtonFunction)
-			? tableButtonConfig.removeButtonFunction
-			: this.removeSelected;
-		const removeButtonLabel = (tableButtonConfig && tableButtonConfig.removeButtonLabel) ? tableButtonConfig.removeButtonLabel
-			: PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
-		const removeDisabled = !this.state.enableRemoveIcon || tableState === STATES.DISABLED;
-
 
 		let addButtonDisabled = false;
 		this.addOnClickCallback = (tableButtonConfig && tableButtonConfig.addButtonFunction)
@@ -502,18 +481,8 @@ export default class AbstractTable extends React.Component {
 		return (
 			<div className="properties-at-buttons-container">
 				<Button
-					className="properties-remove-fields-button"
-					disabled={removeDisabled}
-					onClick={removeOnClick}
-					size="sm"
-					kind="ghost"
-					renderIcon={TrashCan}
-				>
-					{removeButtonLabel}
-				</Button>
-				<Button
 					className="properties-add-fields-button"
-					disabled={addButtonDisabled}
+					disabled={addButtonDisabled || this.props.readOnly}
 					onClick={this.addOnClick.bind(this, this.props.propertyId)}
 					size="sm"
 					kind="ghost"
@@ -537,6 +506,7 @@ export default class AbstractTable extends React.Component {
 					size="sm"
 					kind="ghost"
 					renderIcon={Edit}
+					disabled={this.props.readOnly}
 				>
 					{tableButtonConfig.label}
 				</Button>
@@ -638,19 +608,18 @@ export default class AbstractTable extends React.Component {
 		const controlValue = this.props.value;
 		this.makeCells(rows, controlValue, tableState);
 
-		const selectedEditRow = this.props.control.rowSelection === ROW_SELECTION.MULTIPLE
-			? this.makeSelectedEditRow(this.props.selectedRows)
-			: null;
+		const tableToolbar = this.makeTableToolbar(this.props.selectedRows);
 		let topRightPanel = null;
-		if (customButtons) {
+		if (this.props.selectedRows.length > 0 && tableToolbar) {
+			topRightPanel = tableToolbar;
+		} else if (customButtons) {
 			topRightPanel = this.makeCustomButtonsPanel(tableState, customButtons);
 		} else if (this.isReadonlyTable()) {
 			if (!this.props.hideEditButton) {
 				topRightPanel = this.makeEditButtonPanel(tableState, tableButtonConfig);
 			}
-
 		} else if (this.props.addRemoveRows) {
-			topRightPanel = this.makeAddRemoveButtonPanel(tableState, tableButtonConfig);
+			topRightPanel = this.makeAddButtonPanel(tableState, tableButtonConfig);
 		}
 
 		let rowToScrollTo;
@@ -678,7 +647,6 @@ export default class AbstractTable extends React.Component {
 				onFilter={this.onFilter}
 				onSort={this.onSort}
 				topRightPanel={topRightPanel}
-				selectedEditRow={selectedEditRow}
 				scrollKey={this.props.control.name}
 				tableState={tableState}
 				messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)}
@@ -785,6 +753,8 @@ export default class AbstractTable extends React.Component {
 		}
 
 		const subItemButton = this.props.buildUIItem(rowIndex, this.props.control.childItem, propertyId, this.indexOfColumn);
+		// When 2+ rows are selected, disable edit icon in the selected rows to prompt the users to click on Edit icon in the table toolbar
+		const disableSubPanelCell = (tableState === STATES.DISABLED || (this.isSelectSummaryEdit(this.props.selectedRows) && this.props.selectedRows.includes(rowIndex)));
 		// Hack to decompose the button into our own in-table link
 		const subCell = (
 			<div className="properties-table-subcell">
@@ -792,7 +762,7 @@ export default class AbstractTable extends React.Component {
 					label={subItemButton.props.label}
 					title={subItemButton.props.title}
 					panel={subItemButton.props.panel}
-					disabled={tableState === STATES.DISABLED}
+					disabled={disableSubPanelCell}
 					controller={this.props.controller}
 					propertyId={this.props.propertyId}
 					rightFlyout={this.props.rightFlyout}
@@ -803,6 +773,12 @@ export default class AbstractTable extends React.Component {
 			width: TABLE_SUBPANEL_BUTTON_WIDTH,
 			content: subCell
 		};
+	}
+
+	// Multi select edit subpanel to update all selected rows
+	buildMultiSelectEditChildItem(multiSelectEditRowPropertyId) {
+		const multiSelectEditSubItemButton = this.props.buildUIItem(0, this.props.control.multiSelectEditChildItem, multiSelectEditRowPropertyId, this.indexOfColumn);
+		return multiSelectEditSubItemButton.props.panel;
 	}
 }
 
@@ -817,7 +793,8 @@ AbstractTable.propTypes = {
 	selectedRows: PropTypes.array, // set by redux
 	addRemoveRows: PropTypes.bool, // set by redux
 	tableButtons: PropTypes.object, // set in by redux
-	hideEditButton: PropTypes.bool // set by redux
+	hideEditButton: PropTypes.bool, // set by redux
+	readOnly: PropTypes.bool
 };
 
 AbstractTable.defaultProps = {

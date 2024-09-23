@@ -113,7 +113,7 @@ $harness-navbar-icon-width: 48px;
 	display: block;
 	align-items: center;
 
-	a {
+	a, .toggle-theme {
 		display: block;
 		text-align: center;
 		padding: 14px;
@@ -125,6 +125,14 @@ $harness-navbar-icon-width: 48px;
 		&:hover {
 			background-color: $layer-accent-01;
 		}
+
+		& svg {
+			color: $icon_primary;
+		}
+	}
+
+	.toggle-theme {
+		width: 65px;
 	}
 }
 
@@ -142,6 +150,7 @@ $harness-navbar-icon-width: 48px;
 	display: inline-flex;
 	flex-wrap: wrap;
 	overflow-y: auto;
+	line-height: 8px;
 }
 
 .harness-pipeline-breadcrumbs {
@@ -185,6 +194,9 @@ $harness-navbar-icon-width: 48px;
 	user-select: none;
 	& .text {
 		font-size: 16px;
+	}
+	&.vertical {
+		width: 300px;
 	}
 }
 

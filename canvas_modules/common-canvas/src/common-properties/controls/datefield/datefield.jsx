@@ -79,10 +79,12 @@ class DatefieldControl extends React.Component {
 					id={this.id}
 					disabled={this.props.state === STATES.DISABLED}
 					placeholder={this.props.control.additionalText}
+					helperText={this.props.control.helperText}
 					onChange={this.handleChange.bind(this)}
 					value={this.value}
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
+					readOnly={this.props.readOnly}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
@@ -98,7 +100,8 @@ DatefieldControl.propTypes = {
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.string, // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({

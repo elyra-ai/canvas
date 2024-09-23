@@ -1,6 +1,6 @@
 {
   "dialog.nodePropertiesTitle": "Propriedades do Nó",
-  "canvas.emptyText": "Bem-vindo à rotina de teste do Canvas Comum.{br}Seu fluxo está vazio!",
+  "canvas.emptyText": "Bem-vindo à rotina de testes Elyra Canvas.{br}Seu fluxo está vazio!",
   "canvas.emptyLink": "Clique aqui para fazer um tour",
   "expression.value.column": "Valor customizado",
   "expression.value.column.description": "Testando a descrição customizada do aplicativo",

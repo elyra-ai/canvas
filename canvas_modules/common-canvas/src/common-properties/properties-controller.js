@@ -170,7 +170,8 @@ export default class PropertiesController {
 			this._parseUiConditions();
 			// should be done before running any validations
 			const controls = [];
-			UiConditionsParser.parseControls(controls, this.actions, this.form);
+			UiConditionsParser.parseControls(controls, this.actions, this.form); // parse form uiItems
+			UiConditionsParser.parseControls(null, this.actions, { uiItems: this.form.titleUiItems }); // parse title_info uiItems
 			this.saveControls(controls); // saves controls without the subcontrols
 			this._parseSummaryControls(controls);
 			this.parsePanelTree();
@@ -1260,7 +1261,7 @@ export default class PropertiesController {
 
 		this.propertiesStore.setPropertyValues(inValues);
 
-		if (options && options.isInitProps) {
+		if (options?.isInitProps || options?.setDefaultValues) {
 			// Evaluate conditional defaults based on current_parameters upon loading of view
 			// For a given parameter_ref, if multiple conditions evaluate to true only the first one is used.
 			const conditionalDefaultValues = {};

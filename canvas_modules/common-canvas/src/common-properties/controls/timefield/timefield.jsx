@@ -81,6 +81,8 @@ class TimefieldControl extends React.Component {
 					value={this.value}
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
+					helperText={this.props.control.helperText}
+					readOnly={this.props.readOnly}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
@@ -96,7 +98,8 @@ TimefieldControl.propTypes = {
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.string, // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({

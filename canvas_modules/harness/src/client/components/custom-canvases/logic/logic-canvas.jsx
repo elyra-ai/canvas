@@ -18,16 +18,17 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { ColorPalette } from "@carbon/react/icons";
 
-import LogicCanvasFlow from "./logicCanvas.json";
-import LogicPalette from "./logicPalette.json";
+import LogicFlow from "./logic-flow.json";
+import LogicPalette from "./logic-palette.json";
 
 
 export default class LogicCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(LogicCanvasFlow);
+		this.canvasController.setPipelineFlow(LogicFlow);
 		this.canvasController.setPipelineFlowPalette(LogicPalette);
 
 		this.getConfig = this.getConfig.bind(this);
@@ -40,9 +41,11 @@ export default class LogicCanvas extends React.Component {
 			enableParentClass: "logic-canvas",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Straight",
+			enableLinkMethod: "Freeform",
 			enableLinkDirection: "TopBottom",
-			enableSnapToGridType: "During",
 			enableLinkSelection: "LinkOnly",
+			enableSnapToGridType: "During",
+			enableContextToolbar: true,
 			paletteInitialState: true,
 			enableInsertNodeDroppedOnLink: true,
 			enableHighlightNodeOnNewLinkDrag: true,
@@ -118,12 +121,31 @@ export default class LogicCanvas extends React.Component {
 		// Implement
 	}
 
+	contextMenuHandler(source, defaultMenu) {
+		if (source.type === "link") {
+			const subMenuColorLink = [
+				{ action: "default-color", label: "Default Color", enable: true },
+				{ action: "red-color", label: "Red", enable: true },
+				{ action: "yellow-colorr", label: "Yellow", enable: true },
+				{ action: "green-color", label: "Green", enable: true }
+			];
+
+			return [
+				{ action: "color-submenu", icon: (<ColorPalette size={32} />), label: "Color link", enable: true,
+					submenu: true, menu: subMenuColorLink, toolbarItem: true },
+				{ action: "deleteSelectedObjects", enable: true, toolbarItem: true }
+			];
+		}
+		return defaultMenu;
+	}
+
 	render() {
 		const config = this.getConfig();
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
 				editActionHandler={this.editActionHandler}
+				contextMenuHandler={this.contextMenuHandler}
 				config={config}
 			/>
 		);

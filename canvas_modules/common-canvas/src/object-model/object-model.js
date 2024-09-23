@@ -1259,6 +1259,18 @@ export default class ObjectModel {
 	}
 
 	// ---------------------------------------------------------------------------
+	// Left flyout methods
+	// ---------------------------------------------------------------------------
+
+	setLeftFlyoutConfig(config) {
+		this.store.dispatch({ type: "SET_LEFT_FLYOUT_CONFIG", data: { config: config } });
+	}
+
+	isLeftFlyoutOpen() {
+		return this.store.isLeftFlyoutOpen();
+	}
+
+	// ---------------------------------------------------------------------------
 	// Right flyout methods
 	// ---------------------------------------------------------------------------
 
@@ -1544,7 +1556,8 @@ export default class ObjectModel {
 			retval = true;
 		} else {
 			for (const link of pipeline.getLinks()) {
-				if (link.srcNodeId === startNodeId) {
+				if (link.srcNodeId === startNodeId &&
+					link.srcNodeId !== link.trgNodeId) { // Ignore self-referencing links
 					const newRetval = this.findNodesInSubGraph(link.trgNodeId, endNodeId, selection, pipelineId);
 					if (newRetval !== true) {
 						selection.pop();

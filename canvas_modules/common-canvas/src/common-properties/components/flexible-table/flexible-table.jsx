@@ -53,6 +53,8 @@ class FlexibleTable extends React.Component {
 		this.rowHeight = this.rowHeight.bind(this);
 		this.rowGetter = this.rowGetter.bind(this);
 
+		this.tableRef = React.createRef();
+
 		this.getOriginalRowIndex = this.getOriginalRowIndex.bind(this);
 		this.getLastChildPropertyIdRow = this.getLastChildPropertyIdRow.bind(this);
 
@@ -262,17 +264,18 @@ class FlexibleTable extends React.Component {
 
 		let newHeight = this.state.tableHeight;
 		let dynamicH = this.state.dynamicHeight;
-		const multiSelectTableHeight = REM_ROW_HEIGHT + REM_HEADER_HEIGHT;
 		if (Array.isArray(this.props.data) && this.props.data.length < this.state.rows) {
-			newHeight = (REM_ROW_HEIGHT * this.props.data.length + REM_HEADER_HEIGHT + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) * ONE_REM_HEIGHT;
+			newHeight = (REM_ROW_HEIGHT * this.props.data.length + REM_HEADER_HEIGHT) * ONE_REM_HEIGHT;
 		} else if (this.state.rows > 0) {
-			newHeight = (REM_ROW_HEIGHT * this.state.rows + REM_HEADER_HEIGHT + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) * ONE_REM_HEIGHT;
+			newHeight = (REM_ROW_HEIGHT * this.state.rows + REM_HEADER_HEIGHT) * ONE_REM_HEIGHT;
 		} else if (this.state.rows === 0) { // only display header
 			newHeight = REM_HEADER_HEIGHT * ONE_REM_HEIGHT;
 		} else if (this.state.rows === -1) {
 			if (this.flexibleTable) {
 				const labelAndDescriptionHeight = 50; // possible dynamically set this in the future
-				const ftHeaderHeight = (typeof this.flexibleTableHeader !== "undefined") ? ReactDOM.findDOMNode(this.flexibleTableHeader).getBoundingClientRect().height : 0;
+				const ftHeaderHeight = (this.flexibleTableHeader && typeof this.flexibleTableHeader !== "undefined")
+					? ReactDOM.findDOMNode(this.flexibleTableHeader).getBoundingClientRect().height
+					: 0;
 				const flyoutHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-wf-children");
 				const tearsheetHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-primary-tab-panel");
 				if (flyoutHeight === 0 && tearsheetHeight === 0) {
@@ -520,9 +523,16 @@ class FlexibleTable extends React.Component {
 
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass;
-		const ftHeader = (searchBar || this.props.topRightPanel)
-			? (<div className="properties-ft-table-header" ref={ (ref) => (this.flexibleTableHeader = ref) }>
-				{searchBar}
+		// We don't show TableToolbar for Fieldpicker, applying appropriate header styles for fieldpicker table
+		const ftHeaderClassname = classNames("properties-ft-table-header",
+			{ "no-rows-selected": this.props.selectedRows?.length === 0, "fieldpicker-table": this.props.scrollKey === "field-picker" });
+		// When topRightPanel has Add button, it has this.props.topRightPanel.props.className = "properties-at-buttons-container"
+		const topRightPanelHasTableToolbar = (typeof this.props.topRightPanel !== "undefined" && this.props.topRightPanel !== null &&
+			typeof this.props.topRightPanel.props.className === "undefined");
+		// Table toolbar replaces ftHeader when 1+ rows are selected
+		const ftHeader = ((searchBar || this.props.topRightPanel))
+			? (<div className={ftHeaderClassname} ref={ (ref) => (this.flexibleTableHeader = ref) }>
+				{ topRightPanelHasTableToolbar ? null : searchBar}
 				{this.props.topRightPanel}
 			</div>)
 			: null;
@@ -538,23 +548,23 @@ class FlexibleTable extends React.Component {
 		const ftClassname = classNames("properties-ft-control-container", { "properties-light-disabled": !this.props.light });
 
 		let tableHeight = 0;
-		const multiSelectEditRowsRem = 2 * REM_HEADER_HEIGHT; // multi-select adds two rows when selectedEditRow
-		const multiSelectEditRowsPixels = multiSelectEditRowsRem * ONE_REM_HEIGHT;
 		if (this.state.rows !== -1 && this.state.tableHeight) {
 			const remHeight = parseInt(this.state.tableHeight, 10);
-			tableHeight = (remHeight - (this.props.selectedEditRow ? multiSelectEditRowsRem : 0));
+			tableHeight = remHeight;
 		} else if (this.state.rows === -1 && this.state.dynamicHeight && this.state.dynamicHeight !== -1) {
-			tableHeight = this.state.dynamicHeight - (this.props.selectedEditRow ? multiSelectEditRowsPixels : 0);
+			tableHeight = this.state.dynamicHeight;
 		}
 
 		return (
 			<div data-id={"properties-ft-" + this.props.scrollKey} className={ftClassname} ref={ (ref) => (this.flexibleTable = ref) }>
 				{ftHeader}
 				<div className="properties-ft-container-panel">
-					<ReactResizeDetector handleWidth onResize={this._updateTableWidth}>
-						<div className={classNames("properties-ft-container-wrapper", this.props.messageInfo ? this.props.messageInfo.type : "")} style={ heightStyle }>
+					<ReactResizeDetector handleWidth onResize={this._updateTableWidth} targetRef={this.tableRef}>
+						<div className={classNames("properties-ft-container-wrapper", this.props.messageInfo ? this.props.messageInfo.type : "")}
+							style={ heightStyle }
+							ref={this.tableRef}
+						>
 							<div className={messageClass}>
-								{this.props.selectedEditRow}
 								<VirtualizedTable
 									tableLabel={this.props.tableLabel}
 									tableHeight={tableHeight}
@@ -579,6 +589,7 @@ class FlexibleTable extends React.Component {
 									sortDirection={this.state.columnSortDir[this.state.currentSortColumn]}
 									tableState={this.props.tableState}
 									light={this.props.light}
+									readOnly={this.props.readOnly}
 									{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex, scrollToAlignment: "center" })}
 								/>
 							</div>
@@ -594,7 +605,8 @@ class FlexibleTable extends React.Component {
 FlexibleTable.defaultProps = {
 	showHeader: true,
 	light: true,
-	emptyTablePlaceholder: ""
+	emptyTablePlaceholder: "",
+	selectedRows: [] // Required for consumers using FlexibleTable directly
 };
 
 FlexibleTable.propTypes = {
@@ -614,7 +626,6 @@ FlexibleTable.propTypes = {
 	onSort: PropTypes.func,
 	onFilter: PropTypes.func,
 	showHeader: PropTypes.bool,
-	selectedEditRow: PropTypes.object,
 	topRightPanel: PropTypes.object,
 	scrollKey: PropTypes.string,
 	tableLabel: PropTypes.string,
@@ -628,7 +639,8 @@ FlexibleTable.propTypes = {
 	rowSelection: PropTypes.string,
 	summaryTable: PropTypes.bool,
 	light: PropTypes.bool,
-	intl: PropTypes.object.isRequired
+	intl: PropTypes.object.isRequired,
+	readOnly: PropTypes.bool
 };
 
 export default injectIntl(FlexibleTable);

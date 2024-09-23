@@ -184,6 +184,7 @@ describe("Test coloring comments", function() {
 		cy.getCommentWithText("Hello Canvas!")
 			.rightclick();
 		cy.clickColorFromContextSubmenu("Color background", "teal-50");
+		cy.wait(10);
 		cy.verifyCommentColor("Hello Canvas!", "teal-50");
 	});
 
@@ -199,6 +200,7 @@ describe("Test coloring comments", function() {
 		cy.getCommentWithText("Orange 40").rightclick();
 		cy.clickColorFromContextSubmenu("Color background", "cyan-20");
 
+		cy.wait(10);
 		cy.verifyCommentColor("Default", "cyan-20");
 		cy.verifyCommentColor("White 0", "cyan-20");
 		cy.verifyCommentColor("Yellow 20", "cyan-20");
@@ -207,6 +209,7 @@ describe("Test coloring comments", function() {
 
 		cy.clickToolbarUndo();
 
+		cy.wait(10);
 		cy.verifyCommentColor("Default", "");
 		cy.verifyCommentColor("White 0", "white-0");
 		cy.verifyCommentColor("Yellow 20", "yellow-20");
@@ -215,6 +218,7 @@ describe("Test coloring comments", function() {
 
 		cy.clickToolbarRedo();
 
+		cy.wait(10);
 		cy.verifyCommentColor("Default", "cyan-20");
 		cy.verifyCommentColor("White 0", "cyan-20");
 		cy.verifyCommentColor("Yellow 20", "cyan-20");
@@ -234,7 +238,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some title text!",
 			textToHighlight: "title",
 			action: "headerStyle",
-			menuAction: "title",
+			menuAction: "Title",
 			markdownText: "# Some title text!",
 			html: "<h1>Some title text!</h1>\n"
 		});
@@ -245,7 +249,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some header text!",
 			textToHighlight: "header",
 			action: "headerStyle",
-			menuAction: "header",
+			menuAction: "Header",
 			markdownText: "## Some header text!",
 			html: "<h2>Some header text!</h2>\n"
 		});
@@ -256,7 +260,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some subheader text!",
 			textToHighlight: "subheader",
 			action: "headerStyle",
-			menuAction: "subheader",
+			menuAction: "Subheader",
 			markdownText: "### Some subheader text!",
 			html: "<h3>Some subheader text!</h3>\n"
 		});
@@ -267,7 +271,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "## Some body text!", // Set initial text to be a header so it can change to body.
 			textToHighlight: "body",
 			action: "headerStyle",
-			menuAction: "body",
+			menuAction: "Body",
 			markdownText: "Some body text!",
 			html: "<p>Some body text!</p>\n"
 		});
@@ -328,7 +332,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some quote text!",
 			textToHighlight: "quote",
 			action: "quote",
-			markdownText: "> Some quote text!\n",
+			markdownText: "> Some quote text!\n\n",
 			html: "<blockquote>\n<p>Some quote text!</p>\n</blockquote>\n"
 		});
 	});
@@ -336,9 +340,9 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 	it("Test adding numbered list markdown.", function() {
 		addMarkdownWithToolbar({
 			initialText: "Some numbered list text!",
-			textToHighlight: "numberedList",
+			textToHighlight: "numbered list",
 			action: "numberedList",
-			markdownText: "1. Some numbered list text!\n",
+			markdownText: "1. Some numbered list text!\n\n",
 			html: "<ol>\n<li>Some numbered list text!</li>\n</ol>\n"
 		});
 	});
@@ -346,9 +350,9 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 	it("Test adding bulleted list markdown.", function() {
 		addMarkdownWithToolbar({
 			initialText: "Some bulleted list text!",
-			textToHighlight: "bulletedList",
+			textToHighlight: "bulleted list",
 			action: "bulletedList",
-			markdownText: "* Some bulleted list text!\n",
+			markdownText: "* Some bulleted list text!\n\n",
 			html: "<ul>\n<li>Some bulleted list text!</li>\n</ul>\n"
 		});
 	});
@@ -435,7 +439,7 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 			initialText: "Some quote text!",
 			textToHighlight: "quote",
 			action: "quote",
-			markdownText: "> Some quote text!\n",
+			markdownText: "> Some quote text!\n\n",
 			html: "<blockquote>\n<p>Some quote text!</p>\n</blockquote>\n"
 		});
 	});
@@ -443,9 +447,9 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 	it("Test adding numbered list markdown.", function() {
 		addMarkdownWithKeyboard({
 			initialText: "Some numbered list text!",
-			textToHighlight: "numberedList",
+			textToHighlight: "numbered list",
 			action: "numberedList",
-			markdownText: "1. Some numbered list text!\n",
+			markdownText: "1. Some numbered list text!\n\n",
 			html: "<ol>\n<li>Some numbered list text!</li>\n</ol>\n"
 		});
 	});
@@ -453,11 +457,25 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 	it("Test adding bulleted list markdown.", function() {
 		addMarkdownWithKeyboard({
 			initialText: "Some bulleted list text!",
-			textToHighlight: "bulletedList",
+			textToHighlight: "bulleted list",
 			action: "bulletedList",
-			markdownText: "* Some bulleted list text!\n",
+			markdownText: "* Some bulleted list text!\n\n",
 			html: "<ul>\n<li>Some bulleted list text!</li>\n</ul>\n"
 		});
+	});
+});
+describe("Add HTML to Markdown Comments", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedMarkdownInComments": true });
+	});
+	it("Test adding html in header markdown.", function() {
+		// html: true
+		addHTML({
+			htmlText: "<h1>Header 1</h1>"
+		});
+
+		// if html: false, <h1>Header 1</h1> would become <p>&lt;h1&gt;Header 1&lt;/h1&gt;</p>
 	});
 });
 
@@ -483,4 +501,13 @@ function addMarkdownWithKeyboard(d) {
 
 	cy.clickCanvasAt(5, 5);
 	cy.verifyCommentContainsHTML(d.markdownText, d.html);
+}
+
+function addHTML(d) {
+	cy.clickToolbarAddComment();
+	cy.verifyNumberOfComments(1);
+	cy.editTextInComment("", d.htmlText, false);
+
+	cy.clickCanvasAt(5, 5);
+	cy.verifyCommentContainsHTML(d.htmlText, d.htmlText);
 }

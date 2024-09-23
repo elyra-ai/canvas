@@ -17,7 +17,7 @@
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import CommonCanvasToolbar from "../../src/common-canvas/cc-toolbar.jsx";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
-import { createIntlCommonCanvasToolbar } from "../_utils_/common-canvas-utils.js";
+import { createIntlCommonCanvasToolbar } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
 
 const canvasController = new CanvasController();
@@ -54,7 +54,7 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 		expect(wrapper.find(".toolbar-item")).to.have.length(5);
 		expect(wrapper.find(".toolbar-divider")).to.have.length(2);
 
-		expect(wrapper.find(".toolbar-item.paletteClose-action")).to.have.length(1);
+		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.zoomIn-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.zoomOut-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.zoomToFit-action")).to.have.length(1);
@@ -77,7 +77,7 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 		expect(wrapper.find(".toolbar-item")).to.have.length(5);
 		expect(wrapper.find(".toolbar-divider")).to.have.length(2);
 
-		expect(wrapper.find(".toolbar-item.paletteClose-action")).to.have.length(1);
+		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.zoomIn-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.zoomOut-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.zoomToFit-action")).to.have.length(1);
@@ -100,7 +100,7 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 		expect(wrapper.find(".toolbar-item")).to.have.length(2);
 		expect(wrapper.find(".toolbar-divider")).to.have.length(2);
 
-		expect(wrapper.find(".toolbar-item.paletteClose-action")).to.have.length(1);
+		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
 	});
 
@@ -128,7 +128,7 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 		expect(wrapper.find(".toolbar-item")).to.have.length(10);
 		expect(wrapper.find(".toolbar-divider")).to.have.length(3);
 
-		expect(wrapper.find(".toolbar-item.paletteClose-action")).to.have.length(1);
+		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.undo-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.redo-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.cut-action")).to.have.length(1);
@@ -168,7 +168,7 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 		expect(wrapper.find(".toolbar-item")).to.have.length(7);
 		expect(wrapper.find(".toolbar-divider")).to.have.length(3);
 
-		expect(wrapper.find(".toolbar-item.paletteClose-action")).to.have.length(1);
+		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.undo-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.redo-action")).to.have.length(1);
 
@@ -207,7 +207,7 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 		expect(wrapper.find(".toolbar-item")).to.have.length(6);
 		expect(wrapper.find(".toolbar-divider")).to.have.length(2);
 
-		expect(wrapper.find(".toolbar-item.paletteClose-action")).to.have.length(0);
+		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(0);
 		expect(wrapper.find(".toolbar-item.undo-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.redo-action")).to.have.length(1);
 
@@ -247,7 +247,7 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 		expect(wrapper.find(".toolbar-item")).to.have.length(6);
 		expect(wrapper.find(".toolbar-divider")).to.have.length(2);
 
-		expect(wrapper.find(".toolbar-item.paletteClose-action")).to.have.length(1);
+		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.undo-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.redo-action")).to.have.length(1);
 
@@ -294,7 +294,7 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 		expect(wrapper.find(".toolbar-item.palette-action")).to.have.length(0);
 
 		// Should have a "togglePalette" action.
-		expect(wrapper.find(".toolbar-item.paletteClose-action")).to.have.length(1);
+		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.undo-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.redo-action")).to.have.length(1);
 
@@ -371,7 +371,7 @@ describe("Common Canvas Toolbar renders correctly with config as ARRAY", () => {
 		expect(wrapper.find(".toolbar-item")).to.have.length(5);
 		expect(wrapper.find(".toolbar-divider")).to.have.length(2);
 
-		expect(wrapper.find(".toolbar-item.paletteClose-action")).to.have.length(1);
+		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.zoomIn-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.zoomOut-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.zoomToFit-action")).to.have.length(1);
@@ -391,6 +391,6 @@ describe("Common Canvas Toolbar renders correctly with config as ARRAY", () => {
 		expect(wrapper.find(".toolbar-item.palette-action")).to.have.length(0);
 
 		// Should have a "togglePalette" action.
-		expect(wrapper.find(".toolbar-item.paletteClose-action")).to.have.length(1);
+		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
 	});
 });

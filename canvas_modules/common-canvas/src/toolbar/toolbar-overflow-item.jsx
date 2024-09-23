@@ -22,6 +22,9 @@ import { Button } from "@carbon/react";
 import { OverflowMenuVertical } from "@carbon/react/icons";
 import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
 
+const ESC_KEY = 27;
+const DOWN_ARROW_KEY = 40;
+
 class ToolbarOverflowItem extends React.Component {
 	constructor(props) {
 		super(props);
@@ -36,6 +39,7 @@ class ToolbarOverflowItem extends React.Component {
 		this.toggleExtendedMenu = this.toggleExtendedMenu.bind(this);
 		this.clickOutside = this.clickOutside.bind(this);
 		this.closeSubArea = this.closeSubArea.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 	}
 
 	componentDidUpdate() {
@@ -50,6 +54,18 @@ class ToolbarOverflowItem extends React.Component {
 		document.removeEventListener("click", this.clickOutside, false);
 	}
 
+	onKeyDown(evt) {
+		if (evt.keyCode === ESC_KEY) {
+			this.closeSubArea();
+
+		} else if (evt.keyCode === DOWN_ARROW_KEY) {
+			this.openSubArea();
+		}
+		// Left and Right arrow clicks are caught in the
+		// toolbar.jsx onKeyDown method.
+	}
+
+
 	// Called by toolbar.jsx
 	getAction() {
 		return this.props.action;
@@ -62,11 +78,18 @@ class ToolbarOverflowItem extends React.Component {
 
 	// Called by toolbar.jsx and internally
 	closeSubArea() {
+		document.removeEventListener("click", this.clickOutside, false);
+		this.props.setOverflowIndex(null); // Clear the indexes
 		this.setState({ showExtendedMenu: false });
+		this.props.setToolbarFocusAction(this.props.action); // This will not set focus on this item
 	}
 
-	openSubMenu() {
+	openSubArea() {
+		document.addEventListener("click", this.clickOutside, false);
+		this.props.closeAnyOpenSubArea();
+		this.props.setOverflowIndex(this.props.index);
 		this.setState({ showExtendedMenu: true });
+		this.props.setToolbarFocusAction(this.props.action);
 	}
 
 	genOverflowButtonClassName() {
@@ -88,17 +111,10 @@ class ToolbarOverflowItem extends React.Component {
 	// When the overflow menu is closed we set the overflow index values to null.
 	toggleExtendedMenu() {
 		if (this.state.showExtendedMenu) {
-			document.removeEventListener("click", this.clickOutside, false);
-			this.props.setOverflowIndex(null); // Clear the indexes
 			this.closeSubArea();
-			this.props.setToolbarFocusAction(this.props.action); // This will not set focus on this item
 
 		} else {
-			document.addEventListener("click", this.clickOutside, false);
-			this.props.closeAnyOpenSubArea();
-			this.props.setOverflowIndex(this.props.index);
-			this.openSubMenu();
-			this.props.setToolbarFocusAction(this.props.action);
+			this.openSubArea();
 		}
 	}
 
@@ -147,11 +163,12 @@ class ToolbarOverflowItem extends React.Component {
 						kind="ghost"
 						tabIndex={tabIndex}
 						onClick={this.toggleExtendedMenu}
+						onKeyDown={this.onKeyDown}
 						aria-label={this.props.label}
 						size={this.props.size}
 					>
 						<div className="toolbar-item-content default">
-							<div className="toolbar-icon">
+							<div className="toolbar-icon overflow-item">
 								<OverflowMenuVertical />
 							</div>
 						</div>

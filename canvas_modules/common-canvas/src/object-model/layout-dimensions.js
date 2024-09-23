@@ -15,11 +15,19 @@
  */
 
 import { cloneDeep } from "lodash";
+import {
+	LINK_METHOD_FREEFORM,
+	LINK_METHOD_PORTS,
+	LINK_TYPE_STRAIGHT,
+	LINK_DIR_LEFT_RIGHT,
+	NODE_FORMAT_VERTICAL
+} from "../common-canvas/constants/canvas-constants";
 
 const portsHorizontalDefaultLayout = {
 	nodeLayout: {
-		// Default node sizes. The height might be overridden for nodes with more ports
-		// than will fit in the default size.
+		// Default node sizes. These dimensions might be overridden for nodes that have
+		// more ports than will fit in the default size if inputPortAutoPosition is.
+		// set to true and outputPortAutoPosition is set to true. (See below).
 		defaultNodeWidth: 160,
 		defaultNodeHeight: 40,
 
@@ -33,9 +41,11 @@ const portsHorizontalDefaultLayout = {
 		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeOutlineDisplay is true.
 		nodeShape: "port-arcs",
 
-		// SVG path strings to define the shape of your node and its
-		// selection highlighting. If set to null the paths will be set by default
-		// based on the nodeShape setting.
+		// An SVG path or a function that returns an SVG path. The paths define the node
+		// shape and its selection highlighting respectively. If set to null, the paths
+		// will be set by default based on the nodeShape setting.
+		// If these fields are set to functions they will be called in real-time as the node
+		// is being sized (provided enableResizableNodes config field is set to true).
 		bodyPath: null,
 		selectionPath: null,
 
@@ -123,7 +133,8 @@ const portsHorizontalDefaultLayout = {
 		nodeCornerResizeArea: 10,
 
 		// What point to draw the data links from and to when enableLinkType is set
-		// to "Straight". Possible values are "image_center" or "node_center".
+		// to "Straight" and enableLinkMethod is set to "Freeform".
+		// Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "node_center",
 
 		// What point to draw the comment to node link line to. Possible values
@@ -287,8 +298,12 @@ const portsHorizontalDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for links
 		// ---------------------------------------------------------------------------
-		// Specifies which direction the nodes will be linked up
-		linkDirection: "LeftRight",
+		// Specifies which method the links will use. Either: "Ports" or "Freeform"
+		linkMethod: LINK_METHOD_PORTS,
+
+		// TODO - this should be changed to be a node layout property called 'portPlacement'
+		// in the next major release.
+		linkDirection: LINK_DIR_LEFT_RIGHT,
 
 		// Whether to display a link line when linked node/comments overlap. For
 		// straight links we don't want to show the link when objects overlap but
@@ -314,7 +329,8 @@ const portsHorizontalDefaultLayout = {
 		wrapAroundSpacing: 20,
 		wrapAroundNodePadding: 10,
 
-		// This can be overrriden from common-canvas config properties
+		// This is initialized by enableLinkType in the canvas config.
+		// It can be "Curve", "Elbow", Angle" or "Straight".
 		linkType: "Curve",
 
 		// Display an arrow head on the comment-to-node links. May be set to true to
@@ -324,6 +340,19 @@ const portsHorizontalDefaultLayout = {
 		// Display an arrow head on the data links. May be set to true to
 		// get a default arrow head or to an SVG string for a custom arrow head.
 		dataLinkArrowHead: false,
+
+		// Offset amounts for the link's context toolbar from its default
+		// position.
+		linkContextToolbarPosX: 0,
+		linkContextToolbarPosY: 0,
+
+		// The distance in pixels between the start and end points of the link
+		// below which the alternative decorations for the link will be displayed.
+		linkDistanceForAltDecorations: 150,
+
+		// Alternative decorations for the link. If specified, this should be an
+		// array of decoration objects.
+		linkAltDecorations: null,
 
 		// Link handle for input port can be "circle" or "image".
 		linkStartHandleObject: "circle",
@@ -363,6 +392,10 @@ const portsHorizontalDefaultLayout = {
 
 		// The gap between a comment and its sizing area rectangle
 		commentSizingArea: 10,
+
+		// The auto-size status of the comment.
+		// true means the comment height will increase if necessary to show text as it is entered.
+		commentAutoSize: true,
 
 		// Add comment toolbar action, default offset from viewport
 		addCommentOffsetX: 30,
@@ -418,8 +451,9 @@ const portsHorizontalDefaultLayout = {
 
 const portsVerticalDefaultLayout = {
 	nodeLayout: {
-		// Default node sizes. The height might be overridden for nodes with more ports
-		// than will fit in the default size.
+		// Default node sizes. These dimensions might be overridden for nodes that have
+		// more ports than will fit in the default size if inputPortAutoPosition is.
+		// set to true and outputPortAutoPosition is set to true. (See below).
 		defaultNodeWidth: 70,
 		defaultNodeHeight: 75,
 
@@ -433,9 +467,11 @@ const portsVerticalDefaultLayout = {
 		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeOutlineDisplay is true.
 		nodeShape: "rectangle",
 
-		// SVG path strings to define the shape of your node and its
-		// selection highlighting. If set to null the paths will be set by default
-		// based on the nodeShape setting.
+		// An SVG path or a function that returns an SVG path. The paths define the node
+		// shape and its selection highlighting respectively. If set to null, the paths
+		// will be set by default based on the nodeShape setting.
+		// If these fields are set to functions they will be called in real-time as the node
+		// is being sized (provided enableResizableNodes config field is set to true).
 		bodyPath: null,
 		selectionPath: null,
 
@@ -523,7 +559,8 @@ const portsVerticalDefaultLayout = {
 		nodeCornerResizeArea: 10,
 
 		// What point to draw the data links from and to when enableLinkType is set
-		// to "Straight". Possible values are "image_center" or "node_center".
+		// to "Straight" and enableLinkMethod is set to "Freeform".
+		// Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "node_center",
 
 		// What point to draw the comment to node link line to. Possible values
@@ -687,8 +724,13 @@ const portsVerticalDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for links
 		// ---------------------------------------------------------------------------
-		// Specifies which direction the nodes will be linked up
-		linkDirection: "LeftRight",
+		// Specifies which method the links will use. Either: "Ports" or "Freeform"
+		linkMethod: LINK_METHOD_PORTS,
+
+		// Specifies the default placement of ports on a node.
+		// TODO - this should be changed to be a node layout property called 'portPlacement'
+		// in the next major release.
+		linkDirection: LINK_DIR_LEFT_RIGHT,
 
 		// Whether to display a link line when linked node/comments overlap. For
 		// straight links we don't want to show the link when objects overlap but
@@ -714,7 +756,8 @@ const portsVerticalDefaultLayout = {
 		wrapAroundSpacing: 20,
 		wrapAroundNodePadding: 10,
 
-		// This can be overrriden from common-canvas config properties
+		// This is initialized by enableLinkType in the canvas config.
+		// It can be "Curve", "Elbow", Angle" or "Straight".
 		linkType: "Curve",
 
 		// Display an arrow head on the comment-to-node links. May be set to true to
@@ -724,6 +767,19 @@ const portsVerticalDefaultLayout = {
 		// Display an arrow head on the data links. May be set to true to
 		// get a default arrow head or to an SVG string for a custom arrow head.
 		dataLinkArrowHead: false,
+
+		// Offset amounts for the link's context toolbar from its default
+		// position.
+		linkContextToolbarPosX: 0,
+		linkContextToolbarPosY: 0,
+
+		// The distance in pixels between the start and end points of the link,
+		// below which the alternative decorations for the link will be displayed.
+		linkDistanceForAltDecorations: 150,
+
+		// Alternative decorations for the link. If specified, this should be an
+		// array of decoration objects.
+		linkAltDecorations: null,
 
 		// Link handle for input port can be "circle" or "image".
 		linkStartHandleObject: "circle",
@@ -763,6 +819,10 @@ const portsVerticalDefaultLayout = {
 
 		// The gap between a comment and its sizing area rectangle
 		commentSizingArea: 10,
+
+		// The auto-size status of the comment.
+		// true means the comment height will increase if necessary to show text as it is entered.
+		commentAutoSize: true,
 
 		// Add comment toolbar action, default offset from viewport
 		addCommentOffsetX: 30,
@@ -828,13 +888,14 @@ export default class LayoutDimensions {
 			newLayout = this.overrideLinkType(newLayout, config);
 			newLayout = this.overrideSnapToGrid(newLayout, config);
 			newLayout = this.overrideAutoLayout(newLayout, config);
+			newLayout = this.overrideArrowHead(newLayout, config);
 		}
 		return newLayout;
 	}
 
 	static getDefaultLayout(config) {
 		let defaultLayout;
-		if (config && config.enableNodeFormatType === "Vertical") {
+		if (config && config.enableNodeFormatType === NODE_FORMAT_VERTICAL) {
 			defaultLayout = portsVerticalDefaultLayout;
 
 		} else {
@@ -850,7 +911,16 @@ export default class LayoutDimensions {
 	}
 
 	static overrideCanvasLayout(layout, config, overlayLayout) {
-		layout.canvasLayout = Object.assign({}, layout.canvasLayout, { linkDirection: config.enableLinkDirection }, overlayLayout.canvasLayout || {});
+		// TODO - In a future major release the enableStraightLinksAsFreeform field should be
+		// removed and this ovverride code should be returned to its original behavior where
+		// config.enableLinkMethod should directly override linkMethod in the canvasLayout.
+		const linkMethod = (config.enableLinkType === "Straight" && config.enableStraightLinksAsFreeform)
+			? LINK_METHOD_FREEFORM
+			: config.enableLinkMethod;
+
+		const linkDirection = config.enableLinkDirection;
+
+		layout.canvasLayout = Object.assign({}, layout.canvasLayout, { linkMethod, linkDirection }, overlayLayout.canvasLayout || {});
 
 		return layout;
 	}
@@ -931,6 +1001,27 @@ export default class LayoutDimensions {
 			layout.nodeLayout.outputPortPositions = [
 				{ x_pos: 0, y_pos: 0, pos: "bottomCenter" }
 			];
+
+		} else if (config.enableLinkDirection === "RightLeft") {
+			const yPos = layout.nodeLayout.inputPortPositions[0].y_pos;
+			layout.nodeLayout.inputPortPositions = [
+				{ x_pos: 0, y_pos: yPos, pos: "topRight" }
+			];
+			layout.nodeLayout.outputPortPositions = [
+				{ x_pos: 0, y_pos: yPos, pos: "topLeft" }
+			];
+		}
+		return layout;
+	}
+
+	// Sets the default arrow head for node (data) links to true for freeform links.
+	// TODO -- the second part of this if should be removed when enableStraightLinksAsFreeform
+	// is removed in the next major release.
+	static overrideArrowHead(layout, config) {
+		if ((config.enableLinkMethod === LINK_METHOD_FREEFORM ||
+				(config.enableStraightLinksAsFreeform && config.enableLinkType === LINK_TYPE_STRAIGHT)) &&
+				!layout.canvasLayout.dataLinkArrowHead) {
+			layout.canvasLayout.dataLinkArrowHead = true;
 		}
 		return layout;
 	}

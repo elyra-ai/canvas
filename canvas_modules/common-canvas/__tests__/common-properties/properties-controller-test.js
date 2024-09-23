@@ -1241,6 +1241,14 @@ describe("Properties Controller handlers", () => {
 		expect(propertyListener.calledWith({
 			action: "SET_PROPERTIES"
 		})).to.be.true;
+
+		// Verify default_value condition is run when calling setPropertyValues() with setDefaultValues === true
+		expect(controller.getPropertyValues()).to.have.property("checkbox_null", null);
+		controller.setPropertyValues({
+			"checkbox_error": true,
+			"checkbox_warning": true
+		}, { setDefaultValues: true });
+		expect(controller.getPropertyValues()).to.have.property("checkbox_null", true);
 	});
 	it("should set default values having 0 or ' ' when setPropertyValues() is called with option { setDefaultValues: true }", () => {
 		const renderedObject = testUtils.flyoutEditorForm(oneofselectParamDef);
@@ -2402,7 +2410,7 @@ describe("Properties Controller getTopLevelActiveGroupId", () => {
 
 		// Select Conditions accordion
 		const conditionsCategory = wrapper.find("div.properties-category-container").at(1);
-		conditionsCategory.find("button.properties-category-title").simulate("click");
+		conditionsCategory.find("button.cds--accordion__heading").simulate("click");
 		topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
 		expect(topLevelActiveGroupId).to.equal("checkboxset-conditions");
 
@@ -2422,7 +2430,7 @@ describe("Properties Controller setTopLevelActiveGroup", () => {
 
 		// Select Condition in accordion
 		const conditionsCategory = wrapper.find("div.properties-category-container").at(2);
-		conditionsCategory.find("button.properties-category-title").simulate("click");
+		conditionsCategory.find("button.cds--accordion__heading").simulate("click");
 		topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
 		expect(topLevelActiveGroupId).to.equal("Primary2");
 	});

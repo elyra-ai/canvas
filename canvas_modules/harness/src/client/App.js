@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,13 +46,18 @@ import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
 import StagesCanvas from "./components/custom-canvases/stages/stages-canvas";
 import StagesCardNodeCanvas from "./components/custom-canvases/stages-card-node/stages-card-node-canvas";
 import LogicCanvas from "./components/custom-canvases/logic/logic-canvas";
-import ReadOnlyCanvas from "./components/custom-canvases/read-only/read-only";
-import ProgressCanvas from "./components/custom-canvases/progress/progress";
+import ReadOnlyCanvas from "./components/custom-canvases/read-only/read-only-canvas";
+import ProgressCanvas from "./components/custom-canvases/progress/progress-canvas";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
-import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon";
-import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping";
+import JsxIconsCanvas from "./components/custom-canvases/jsx-icons/jsx-icons-canvas";
+import AllPortsCanvas from "./components/custom-canvases/all-ports/all-ports-canvas";
+import ParallaxCanvas from "./components/custom-canvases/parallax/parallax-canvas";
+import NetworkCanvas from "./components/custom-canvases/network/network-canvas";
+import WysiwygCommentsCanvas from "./components/custom-canvases/wysiwyg-comments/wysiwyg-comments-canvas";
+import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon-canvas";
+import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping-canvas";
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console/console.jsx";
@@ -82,25 +87,17 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
-import { Add, Chat, ChatOff, ColorPalette, Edit, Play, Scale, Settings, SelectWindow,
-	StopFilledAlt, Subtract, TextScale, TouchInteraction } from "@carbon/react/icons";
+import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
+	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
+	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification } from "@carbon/react/icons";
 
-import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "@carbon/react";
+import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
 
 import {
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
 	SIDE_PANEL_API,
 	CHOOSE_FROM_LOCATION,
-	INTERACTION_MOUSE,
-	VERTICAL_FORMAT,
-	NONE_SAVE_ZOOM,
-	CURVE_LINKS,
-	DIRECTION_LEFT_RIGHT,
-	IMAGE_DISPLAY_SVG_INLINE,
-	LINK_SELECTION_NONE,
-	ASSOC_STRAIGHT,
-	UNDERLAY_NONE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_STAGES,
@@ -112,43 +109,56 @@ import {
 	EXAMPLE_APP_LOGIC,
 	EXAMPLE_APP_READ_ONLY,
 	EXAMPLE_APP_PROGRESS,
+	EXAMPLE_APP_JSX_ICONS,
+	EXAMPLE_APP_ALL_PORTS,
+	EXAMPLE_APP_PARALLAX,
+	EXAMPLE_APP_NETWORK,
+	EXAMPLE_APP_WYSIWYG,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	CUSTOM,
-	PALETTE_FLYOUT,
 	PROPERTIES_FLYOUT,
-	NONE_DRAG,
 	INPUT_PORT,
 	OUTPUT_PORT,
 	NOTIFICATION_MESSAGE_TYPE,
-	FORMS,
 	PARAMETER_DEFS,
 	PRIMARY,
-	TOOLBAR_LAYOUT_TOP,
 	TOOLBAR_TYPE_DEFAULT,
 	TOOLBAR_TYPE_SUB_AREAS,
 	TOOLBAR_TYPE_SINGLE_BAR,
+	TOOLBAR_TYPE_CUSTOMIZE_AUTO,
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
 	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE,
 	CATEGORY_VIEW_ACCORDIONS
-} from "./constants/constants.js";
+} from "./constants/harness-constants.js";
 
-import { STATE_TAG_NONE } from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
+import {
+	NODE_FORMAT_VERTICAL,
+	INTERACTION_MOUSE,
+	SNAP_TO_GRID_NONE,
+	SAVE_ZOOM_NONE,
+	STATE_TAG_NONE,
+	LINK_TYPE_CURVE,
+	LINK_DIR_LEFT_RIGHT,
+	LINK_METHOD_PORTS,
+	LINK_SELECTION_NONE,
+	ASSOC_STRAIGHT,
+	IMAGE_DISPLAY_SVG_INLINE,
+	UNDERLAY_NONE,
+	PALETTE_LAYOUT_FLYOUT,
+	TOOLBAR_LAYOUT_TOP
+} from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
 import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../test_resources/diagrams/externalSubFlowCanvas2.json";
 
-import listview32 from "../graphics/list-view_32.svg";
-import download32 from "../graphics/save_32.svg";
-import justify32 from "../graphics/justify_32.svg";
-import api32 from "../graphics/api_32.svg";
-import template32 from "ibm-design-icons/dist/svg/object-based/template_32.svg";
 import FormsService from "./services/FormsService";
 
 import ExpressionInfo from "./constants/json/functionlist.json";
+
 
 class App extends React.Component {
 	constructor(props) {
@@ -180,26 +190,30 @@ class App extends React.Component {
 			selectedDragWithoutSelect: false,
 			selectedAssocLinkCreation: false,
 			selectedMarkdownInComments: false,
+			selectedWYSIWYGComments: false,
 			selectedContextToolbar: false,
-			selectedSnapToGridType: NONE_DRAG,
+			selectedSnapToGridType: SNAP_TO_GRID_NONE,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
 			selectedInteractionType: INTERACTION_MOUSE,
-			selectedNodeFormatType: VERTICAL_FORMAT,
+			selectedNodeFormatType: NODE_FORMAT_VERTICAL,
 			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
 			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
-			selectedSaveZoom: NONE_SAVE_ZOOM,
+			selectedSaveZoom: SAVE_ZOOM_NONE,
 			selectedZoomIntoSubFlows: false,
 			selectedSingleOutputPortDisplay: false,
 			selectedImageDisplay: IMAGE_DISPLAY_SVG_INLINE,
-			selectedLinkType: CURVE_LINKS,
-			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
+			selectedLinkType: LINK_TYPE_CURVE,
+			selectedLinkMethod: LINK_METHOD_PORTS,
+			selectedLinkDirection: LINK_DIR_LEFT_RIGHT,
 			selectedLinkSelection: LINK_SELECTION_NONE,
 			selectedLinkReplaceOnNewConnection: false,
+			selectedStraightLinksAsFreeform: true,
+			selectedSelfRefLinks: false,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
 			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedExampleApp: EXAMPLE_APP_NONE,
-			selectedPaletteLayout: PALETTE_FLYOUT,
+			selectedPaletteLayout: PALETTE_LAYOUT_FLYOUT,
 			selectedStateTag: STATE_TAG_NONE,
 			selectedTipConfig: {
 				"palette": {
@@ -214,6 +228,8 @@ class App extends React.Component {
 			},
 			selectedShowBottomPanel: false,
 			selectedShowTopPanel: false,
+			selectedShowLeftFlyout: false,
+			selectedLeftFlyoutUnderToolbar: false,
 			selectedShowRightFlyout: false,
 			selectedRightFlyoutUnderToolbar: false,
 			selectedPanIntoViewOnOpen: false,
@@ -241,6 +257,7 @@ class App extends React.Component {
 			selectedNodeLayout: null,
 			selectedCanvasLayout: null,
 			selectedStateTagTip: "",
+			selectedLinksOverNodes: false,
 
 			// Common properties state variables
 			propertiesInfo: {},
@@ -261,6 +278,7 @@ class App extends React.Component {
 			displayAdditionalComponents: false,
 			heading: false,
 			light: true,
+			lightTheme: false,
 			showRequiredIndicator: true,
 			showAlertsTab: true,
 			enableResize: true,
@@ -320,7 +338,6 @@ class App extends React.Component {
 		this.currentEditorId2 = null;
 
 		this.consoleout = [];
-		this.availableForms = [];
 		this.availableParamDefs = [];
 
 		this.openConsole = this.openConsole.bind(this);
@@ -483,10 +500,6 @@ class App extends React.Component {
 	componentDidMount() {
 		this.setBreadcrumbsDefinition();
 		const that = this;
-		FormsService.getFiles(FORMS)
-			.then(function(res) {
-				that.availableForms = res;
-			});
 		FormsService.getFiles(PARAMETER_DEFS)
 			.then(function(res) {
 				that.availableParamDefs = res;
@@ -602,17 +615,10 @@ class App extends React.Component {
 				propertiesFileChooserVisible: false
 			}, function() {
 				that.log("Submit common properties file", that.state.selectedPropertiesDropdownFile);
-				if (selectedPropertiesFileCategory === PARAMETER_DEFS) {
-					FormsService.getFileContent(PARAMETER_DEFS, that.state.selectedPropertiesDropdownFile)
-						.then(function(res) {
-							that.setPropertiesJSON(res);
-						});
-				} else {
-					FormsService.getFileContent(FORMS, that.state.selectedPropertiesDropdownFile)
-						.then(function(res) {
-							that.setPropertiesJSON(res);
-						});
-				}
+				FormsService.getFileContent(PARAMETER_DEFS, that.state.selectedPropertiesDropdownFile)
+					.then(function(res) {
+						that.setPropertiesJSON(res);
+					});
 			});
 		}
 	}
@@ -623,14 +629,7 @@ class App extends React.Component {
 
 	getPropertyDefName(node) {
 		if (node.op) {
-			let foundName = this.availableForms.find((name) => name.startsWith(node.op));
-			if (foundName) {
-				return {
-					fileName: foundName,
-					type: FORMS
-				};
-			}
-			foundName = this.availableParamDefs.find((name) => name.startsWith(node.op));
+			const foundName = this.availableParamDefs.find((name) => name.startsWith(node.op));
 			if (foundName) {
 				return {
 					fileName: foundName,
@@ -640,7 +639,7 @@ class App extends React.Component {
 		}
 		return {
 			fileName: "default.json",
-			type: FORMS
+			type: PARAMETER_DEFS
 		};
 	}
 
@@ -653,26 +652,16 @@ class App extends React.Component {
 			.then(function(res) {
 				const response = res;
 				if (node) {
-					if (response.formData) {
-						if (!isEmpty(node.parameters)) {
-							response.formData.data.currentParameters = node.parameters;
-						}
-						if (!isEmpty(node.uiParameters)) {
-							response.formData.data.uiCurrentParameters = node.uiParameters;
-						}
-						response.formData.label = node.label;
-					} else {
-						if (!isEmpty(node.parameters)) {
-							response.current_parameters = node.parameters;
-						}
-						if (!isEmpty(node.uiParameters)) {
-							response.current_ui_parameters = node.uiParameters;
-						}
-						if (!response.titleDefinition) {
-							response.titleDefinition = {};
-						}
-						response.titleDefinition.title = node.label;
+					if (!isEmpty(node.parameters)) {
+						response.current_parameters = node.parameters;
 					}
+					if (!isEmpty(node.uiParameters)) {
+						response.current_ui_parameters = node.uiParameters;
+					}
+					if (!response.titleDefinition) {
+						response.titleDefinition = {};
+					}
+					response.titleDefinition.title = node.label;
 				}
 				callback(response);
 			});
@@ -1683,7 +1672,6 @@ class App extends React.Component {
 				const propsInfo = {
 					title: <FormattedMessage id={"dialog.nodePropertiesTitle"} />,
 					messages: messages,
-					formData: properties.formData,
 					parameterDef: properties,
 					appData: appData,
 					additionalComponents: additionalComponents,
@@ -1798,7 +1786,6 @@ class App extends React.Component {
 		const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
 		const propsInfo = {
 			title: <FormattedMessage id={"dialog.nodePropertiesTitle"} />,
-			formData: properties.formData,
 			parameterDef: properties,
 			additionalComponents: additionalComponents,
 			expressionInfo: expressionInfo,
@@ -2072,6 +2059,7 @@ class App extends React.Component {
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableImageDisplay: this.state.selectedImageDisplay,
 			enableLinkType: this.state.selectedLinkType,
+			enableLinkMethod: this.state.selectedLinkMethod,
 			enableLinkDirection: this.state.selectedLinkDirection,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
 			enableParentClass: this.getParentClass(),
@@ -2083,8 +2071,11 @@ class App extends React.Component {
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableLinkSelection: this.state.selectedLinkSelection,
 			enableLinkReplaceOnNewConnection: this.state.selectedLinkReplaceOnNewConnection,
+			enableStraightLinksAsFreeform: this.state.selectedStraightLinksAsFreeform,
+			enableSelfRefLinks: this.state.selectedSelfRefLinks,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enableMarkdownInComments: this.state.selectedMarkdownInComments,
+			enableWYSIWYGComments: this.state.selectedWYSIWYGComments,
 			enableContextToolbar: this.state.selectedContextToolbar,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			enableStateTag: this.state.selectedStateTag,
@@ -2103,6 +2094,7 @@ class App extends React.Component {
 			enableBoundingRectangles: this.state.selectedBoundingRectangles,
 			enableCanvasUnderlay: this.state.selectedCanvasUnderlay,
 			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
+			enableLeftFlyoutUnderToolbar: this.state.selectedLeftFlyoutUnderToolbar,
 			enableRightFlyoutUnderToolbar: this.state.selectedRightFlyoutUnderToolbar,
 			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
 			dropZoneCanvasContent: this.state.selectedDisplayCustomizedDropZoneContent ? this.dropZoneCanvasDiv : null,
@@ -2111,7 +2103,8 @@ class App extends React.Component {
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
 			enableSingleOutputPortDisplay: this.state.selectedSingleOutputPortDisplay,
 			enableNodeLayout: this.state.selectedNodeLayout,
-			enableCanvasLayout: this.state.selectedCanvasLayout
+			enableCanvasLayout: this.state.selectedCanvasLayout,
+			enableLinksOverNodes: this.state.selectedLinksOverNodes
 		};
 
 		return canvasConfig;
@@ -2153,7 +2146,7 @@ class App extends React.Component {
 			const subMenuTextSize = [
 				{ action: "title", label: "Title", enable: true },
 				{ action: "header", label: "Header", enable: true },
-				{ action: "subheader", label: "Subheader", enable: true },
+				{ action: "subheader", label: "Subheader", enable: true, isSelected: true },
 				{ action: "body", label: "Body", enable: true }
 			];
 
@@ -2170,10 +2163,12 @@ class App extends React.Component {
 					{ divider: true },
 					{ action: "run", label: "Run", enable: true, iconEnabled: (<Play size={32} />) },
 					{ divider: true },
+					{ action: "createAutoComment", label: "Markdown Comment", enable: true },
+					{ divider: true },
 					{ action: "deleteSelectedObjects", label: "Delete", enable: true },
 					{ divider: true },
-					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
-					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
+					{ action: "undo", label: "Undo", enable: true, purpose: "dual", subPanel: AppSettingsPanel, subPanelData: {} },
+					{ action: "redo", label: "Redo", enable: true },
 					{ divider: true },
 					{ action: "settingspanel", iconEnabled: (<Settings />), label: "Settings", enable: true,
 						subPanel: AppSettingsPanel, subPanelData: { saveData: (settings) => window.alert("Panel data received by application.\n" + settings) } },
@@ -2185,9 +2180,6 @@ class App extends React.Component {
 					{ divider: true },
 					{ action: "color-subpanel", iconEnabled: (<ColorPalette size={32} />), label: "Color picker", enable: true,
 						subPanel: ColorPicker, subPanelData: { clickActionHandler: (color) => window.alert("Color selected = " + color) } },
-					{ divider: true },
-					{ action: "undo", label: "Undo", enable: true },
-					{ action: "redo", label: "Redo", enable: true },
 					{ divider: true }
 				],
 				rightBar: [
@@ -2223,6 +2215,30 @@ class App extends React.Component {
 				{ divider: true },
 				{ action: "mouse", iconEnabled: (<SelectWindow size={32} />), label: "Mouse", enable: true, isSelected: this.state.selectedInteractionType === "Mouse" },
 				{ action: "trackpad", iconEnabled: (<TouchInteraction size={32} />), label: "Trackpad", enable: true, isSelected: this.state.selectedInteractionType === "Trackpad" },
+				{ divider: true }
+			];
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOMIZE_AUTO) {
+			toolbarConfig = [
+				{ action: "cut", label: "Cut" },
+				{ action: "copy", label: "Copy" },
+				{ action: "paste", label: "Paste" },
+				{ divider: true },
+				{ action: "undo", label: "Undo" },
+				{ action: "redo", label: "Redo" },
+				{ divider: true },
+				{ action: "togglePalette",
+					label: this.canvasController.isPaletteOpen() ? "Close Palette" : "Open Palette",
+					iconEnabled: this.canvasController.isPaletteOpen() ? (<SubtractAlt />) : (<AddAlt />),
+					incLabelWithIcon: "after"
+				},
+				{ divider: true },
+				{ action: "toggleNotificationPanel", iconEnabled: (<Notification />) },
+				{ divider: true },
+				{ action: "deleteSelectedObjects", label: "Delete" },
+				{ divider: true },
+				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
 				{ divider: true }
 			];
 
@@ -2387,15 +2403,25 @@ class App extends React.Component {
 		return toolbarConfig;
 	}
 
-	getTempContent() {
+	getTempContent(vertical) {
 		const text1 = "Common Canvas panel.";
 		const text2 = "Some temporary content for common canvas panel. This panel can display content from the host application.";
+		const className = "harness-panel-temp-content" + (vertical ? " vertical" : "");
 		return (
-			<div className="harness-panel-temp-content">
+			<div className={className}>
 				<div className="title">{text1}</div>
 				<div className="text">{text2}</div>
 			</div>
 		);
+	}
+
+	handleThemeChange() {
+		document.documentElement.setAttribute("data-carbon-theme", this.state.lightTheme ? "g10" : "g90");
+
+		this.setState((prevState) => ({
+			...prevState,
+			lightTheme: !prevState.lightTheme,
+		}));
 	}
 
 	render() {
@@ -2412,56 +2438,76 @@ class App extends React.Component {
 		const consoleLabel = "console";
 		const downloadFlowLabel = "Download pipeline flow";
 		const downloadPaletteLabel = "Download palette";
-		const apiLabel = "API";
-		const commonPropertiesModalLabel = "Common Properties Modal";
+		const switchTheme = "Switch Theme";
+		const apiLabel = "Common Canvas API";
+		const docsLabel = "Elyra Canvas Docs";
+		const commonPropertiesModalLabel = "Common Properties";
 		const commonCanvasLabel = "Common Canvas";
 		const todaysDate = new Date();
-		const todaysDateFormatted = "v13-" + todaysDate.toISOString().split("T")[0];
+		const todaysDateFormatted = "v13 - " + todaysDate.toISOString().split("T")[0];
 
-		const navBar = (<div aria-label="Common Canvas Test Harness" role="banner">
+		const navBar = (<div aria-label="Elyra Canvas Test Harness" role="banner">
 			<div className="harness-app-navbar">
 				<ul className="harness-app-navbar-items">
 					<li className="harness-navbar-li">
-						<span className="harness-title">Common Canvas</span>
+						<span className="harness-title">Elyra Canvas</span>
 						<span className="harness-version">{todaysDateFormatted}</span>
 					</li>
 					<li className="harness-navbar-li harness-nav-divider" data-tooltip-id="toolbar-tooltip" data-tooltip-content={consoleLabel}>
 						<a onClick={this.openConsole.bind(this) }>
-							<Isvg src={listview32} />
+							<OpenPanelFilledBottom size={16} />
 						</a>
 					</li>
 					<li className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={downloadFlowLabel}>
 						<a onClick={this.downloadPipelineFlow.bind(this) }>
-							<Isvg src={download32} />
+							<Download size={16} />
 						</a>
 					</li>
 					<li className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={downloadPaletteLabel}>
 						<a onClick={this.downloadPalette.bind(this) }>
-							<Isvg src={download32} />
+							<Download size={16} />
 						</a>
 					</li>
 					<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
 						{breadcrumbs}
 					</li>
-					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
-						data-tooltip-id="toolbar-tooltip" data-tooltip-content={apiLabel}
-					>
-						<a onClick={this.sidePanelAPI.bind(this) }>
-							<Isvg src={api32} />
-						</a>
+					<li className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={switchTheme}>
+						<Toggle
+							id="harness-toggle-theme"
+							size="sm"
+							labelA="Light"
+							labelB="Dark"
+							toggled={this.state.lightTheme}
+							onToggle={this.handleThemeChange.bind(this)}
+							className="toggle-theme"
+						/>
 					</li>
-					<li id="harness-action-bar-sidepanel-properties" className="harness-navbar-li harness-action-bar-sidepanel"
+					<li id="harness-action-bar-sidepanel-properties" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
 						data-tooltip-id="toolbar-tooltip" data-tooltip-content={commonPropertiesModalLabel}
 					>
 						<a onClick={this.sidePanelProperties.bind(this) }>
-							<Isvg src={template32} />
+							<GuiManagement size={16} />
+						</a>
+					</li>
+					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-action-bar-sidepanel"
+						data-tooltip-id="toolbar-tooltip" data-tooltip-content={apiLabel}
+					>
+						<a onClick={this.sidePanelAPI.bind(this) }>
+							<Api size={16} />
 						</a>
 					</li>
 					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
 						data-tooltip-id="toolbar-tooltip" data-tooltip-content={commonCanvasLabel}
 					>
 						<a onClick={this.sidePanelCanvas.bind(this) }>
-							<Isvg src={justify32} />
+							<FlowData size={16} />
+						</a>
+					</li>
+					<li id="harness-action-bar-sidepanel-help" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
+						data-tooltip-id="toolbar-tooltip" data-tooltip-content={docsLabel}
+					>
+						<a href="https://elyra-ai.github.io/canvas/" target={"_blank"} >
+							<Help size={16} />
 						</a>
 					</li>
 				</ul>
@@ -2516,7 +2562,9 @@ class App extends React.Component {
 
 		const rightFlyoutContent = rightFlyoutContentProperties
 			? rightFlyoutContentProperties
-			: this.getTempContent();
+			: this.getTempContent(true);
+
+		const leftFlyoutContent = this.getTempContent(true);
 
 		var firstCanvas = (
 			<CommonCanvas
@@ -2534,6 +2582,8 @@ class App extends React.Component {
 				notificationConfig={this.state.notificationConfig}
 				contextMenuConfig={contextMenuConfig}
 				keyboardConfig={keyboardConfig}
+				leftFlyoutContent={leftFlyoutContent}
+				showLeftFlyout={this.state.selectedShowLeftFlyout}
 				rightFlyoutContent={rightFlyoutContent}
 				showRightFlyout={showRightFlyoutProperties || this.state.selectedShowRightFlyout}
 				bottomPanelContent={bottomPanelContent}
@@ -2619,6 +2669,44 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_JSX_ICONS) {
+			firstCanvas = (
+				<JsxIconsCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_ALL_PORTS) {
+			firstCanvas = (
+				<AllPortsCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_PARALLAX) {
+			firstCanvas = (
+				<ParallaxCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_NETWORK) {
+			firstCanvas = (
+				<NetworkCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_WYSIWYG) {
+			firstCanvas = (
+				<WysiwygCommentsCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES_CARBON) {
 			firstCanvas = (
 				<ReactNodesCarbonCanvas
@@ -2639,7 +2727,7 @@ class App extends React.Component {
 		if (this.state.selectedExtraCanvasDisplayed) {
 			const rightFlyoutContent2 = rightFlyoutContentProperties2
 				? rightFlyoutContentProperties2
-				: this.getTempContent();
+				: this.getTempContent(true);
 
 			commonCanvas = (<React.Fragment>
 				<div className="harness-canvas-single">

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,10 @@ export const DEFAULT_NOTIFICATION_HEADER = "Notifications";
 // Used by both toolbar and notification panel.
 export const NOTIFICATION_ICON_CLASS = "notificationCounterIcon";
 
+// Values for enableNodeFormatType config parameter
+export const NODE_FORMAT_VERTICAL = "Vertical";
+export const NODE_FORMAT_HORIZONTAL = "Horizontal";
+
 // Values for enableInteractionType config parameter
 export const INTERACTION_MOUSE = "Mouse";
 export const INTERACTION_TRACKPAD = "Trackpad";
@@ -40,9 +44,15 @@ export const INTERACTION_CARBON = "Carbon";
 export const LINK_TYPE_CURVE = "Curve";
 export const LINK_TYPE_ELBOW = "Elbow";
 export const LINK_TYPE_STRAIGHT = "Straight";
+export const LINK_TYPE_PARALLAX = "Parallax";
+
+// Values for enableLinkMethod config parameter
+export const LINK_METHOD_PORTS = "Ports";
+export const LINK_METHOD_FREEFORM = "Freeform";
 
 // Values for enableLinkDirection config parameter
 export const LINK_DIR_LEFT_RIGHT = "LeftRight";
+export const LINK_DIR_RIGHT_LEFT = "RightLeft";
 export const LINK_DIR_TOP_BOTTOM = "TopBottom";
 export const LINK_DIR_BOTTOM_TOP = "BottomTop";
 
@@ -60,7 +70,7 @@ export const SNAP_TO_GRID_DURING = "During";
 // Values for enablePaletteLayout config parameter
 export const PALETTE_LAYOUT_NONE = "None";
 export const PALETTE_LAYOUT_FLYOUT = "Flyout";
-export const PALETTE_LAYOUT_MODAL = "Modal";
+export const PALETTE_LAYOUT_DIALOG = "Dialog";
 
 // Values for enableToolbarLayout config parameter
 export const TOOLBAR_LAYOUT_NONE = "None";
@@ -75,10 +85,20 @@ export const STATE_TAG_NONE = "None";
 export const STATE_TAG_LOCKED = "Locked";
 export const STATE_TAG_READ_ONLY = "ReadOnly";
 
-// Values for enableSaveZoom
+// Values for enableUnderlay config parameter
+export const UNDERLAY_NONE = "None";
+export const UNDERLAY_VARIABLE = "Variable";
+
+// Values for enableSaveZoom config parameter
 export const SAVE_ZOOM_NONE = "None";
 export const SAVE_ZOOM_PIPELINE_FLOW = "Pipelineflow";
 export const SAVE_ZOOM_LOCAL_STORAGE = "LocalStorage";
+
+// Values for enableImageDisplay config parameter
+export const IMAGE_DISPLAY_SVG_INLINE = "SVGInline";
+export const IMAGE_DISPLAY_LOAD_SVG_TO_DEFS = "LoadSVGToDefs";
+export const IMAGE_DISPLAY_SVG_AS_IMAGE = "SVGAsImage";
+
 
 export const ERROR = "error";
 export const WARNING = "warning";
@@ -142,6 +162,10 @@ export const SAVED_NODES_CATEGORY_ID = "savedNodes";
 export const USE_DEFAULT_ICON = "useDefaultIcon";
 export const USE_DEFAULT_EXT_ICON = "useDefaultExtIcon";
 
+// Comment types
+export const WYSIWYG = "WYSIWYG";
+export const MARKDOWN = "markdown";
+
 // Directions
 export const NORTH = "n";
 export const SOUTH = "s";
@@ -176,6 +200,8 @@ export const TOOLBAR_PASTE = "paste";
 export const TOOLBAR_CLIPBOARD = "clipboard";
 export const TOOLBAR_CREATE_COMMENT = "createComment";
 export const TOOLBAR_CREATE_AUTO_COMMENT = "createAutoComment";
+export const TOOLBAR_CREATE_WYSIWYG_COMMENT = "createWYSIWYGComment";
+export const TOOLBAR_CREATE_AUTO_WYSIWYG_COMMENT = "createAutoWysiwygComment";
 export const TOOLBAR_SET_COMMENT_EDIT_MODE = "setCommentEditingMode";
 export const TOOLBAR_SHOW_COMMENTS = "commentsShow";
 export const TOOLBAR_HIDE_COMMENTS = "commentsHide";
@@ -188,9 +214,9 @@ export const TOOLBAR_ZOOM_FIT = "zoomToFit";
 export const TOOLBAR_ARRANGE_HORIZONALLY = "arrangeHorizontally";
 export const TOOLBAR_ARRANGE_VERTICALLY = "arrangeVertically";
 export const TOOLBAR_TOGGLE_NOTIFICATION_PANEL = "toggleNotificationPanel";
-export const TOOLBAR_OPEN_PALETTE = "paletteOpen";
-export const TOOLBAR_CLOSE_PALETTE = "paletteClose";
-export const TOOLBAR_TOGGLE_PALETTE = "paletteToggle";
+export const TOOLBAR_OPEN_PALETTE = "openPalette";
+export const TOOLBAR_CLOSE_PALETTE = "closePalette";
+export const TOOLBAR_TOGGLE_PALETTE = "togglePalette";
 export const TOOLBAR_EXPAND_SUPERNODE_IN_PLACE = "expandSuperNodeInPlace";
 export const TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE = "collapseSuperNodeInPlace";
 export const TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE = "displaySubPipeline";

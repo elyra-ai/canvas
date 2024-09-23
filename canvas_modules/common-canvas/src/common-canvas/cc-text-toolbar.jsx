@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,16 @@ import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Logger from "../logging/canvas-logger.js";
-import { Code, Link, ListBulleted, ListNumbered, TextIndentMore,
-	TextBold, TextItalic, TextScale, TextStrikethrough } from "@carbon/react/icons";
+import ColorPicker from "../color-picker";
+import {
+	AlignBoxTopCenter, AlignBoxMiddleCenter, AlignBoxBottomCenter,
+	Code, ColorPalette, Link, ListBulleted, ListNumbered, SquareOutline,
+	TextAlignCenter, TextAlignLeft, TextAlignRight, TextColor, TextFont, TextIndentMore,
+	TextBold, TextItalic, TextUnderline, TextScale, TextStrikethrough
+} from "@carbon/react/icons";
+import {
+	MARKDOWN, WYSIWYG
+} from "./constants/canvas-constants.js";
 
 class CommonCanvasTextToolbar extends React.Component {
 	constructor(props) {
@@ -50,11 +58,11 @@ class CommonCanvasTextToolbar extends React.Component {
 		);
 	}
 
-	getTextToolbar() {
-		const headerLabel = this.getJsxLabel("texttoolbar.headerAction", ">", "<");
+	getMarkdownToolbar() {
 		const boldLabel = this.getJsxLabel("texttoolbar.boldAction", "b");
 		const italicsLabel = this.getJsxLabel("texttoolbar.italicsAction", "i");
 		const strikethroughLabel = this.getJsxLabel("texttoolbar.strikethroughAction", "shift + x");
+		const headerLabel = this.getJsxLabel("texttoolbar.headerAction", ">", "<");
 		const codeLabel = this.getJsxLabel("texttoolbar.codeAction", "e");
 		const linkLabel = this.getJsxLabel("texttoolbar.linkAction", "k");
 		const quoteLabel = this.getJsxLabel("texttoolbar.quoteAction", "shift + >");
@@ -88,6 +96,188 @@ class CommonCanvasTextToolbar extends React.Component {
 		};
 	}
 
+	getWysiwygToolbar() {
+		const boldLabel = this.getLabel("texttoolbar.boldAction");
+		const italicsLabel = this.getLabel("texttoolbar.italicsAction");
+		const underlineLabel = this.getLabel("texttoolbar.underline");
+		const strikethroughLabel = this.getLabel("texttoolbar.strikethroughAction");
+
+		// Set up array for sub-menus. isSelected is set to true for any default option.
+		const subMenuFont = [
+			{ action: "font-ibm-plex-sans", label: this.getLabel("texttoolbar.fontIBMPlexSans"), enable: true, isSelected: true },
+			{ action: "font-ibm-plex-serif", label: this.getLabel("texttoolbar.fontIBMPlexSerif"), enable: true },
+			{ action: "font-ibm-plex-sans-condensed", label: this.getLabel("texttoolbar.fontIBMPlexSansCon"), enable: true },
+			{ action: "font-ibm-plex-mono", label: this.getLabel("texttoolbar.fontIBMPlexMono"), enable: true },
+			{ action: "font-arial", label: this.getLabel("texttoolbar.fontArial"), enable: true },
+			{ action: "font-comic-sans-ms", label: this.getLabel("texttoolbar.fontComicSansMS"), enable: true },
+			{ action: "font-gill-sans", label: this.getLabel("texttoolbar.fontGillSans"), enable: true },
+			{ action: "font-helvetica-neue", label: this.getLabel("texttoolbar.fontHelveticaNeue"), enable: true },
+			{ action: "font-times-new-roman", label: this.getLabel("texttoolbar.fontTimesNewRoman"), enable: true },
+			{ action: "font-verdana", label: this.getLabel("texttoolbar.fontVerdana"), enable: true }
+		];
+
+		const subMenuTextSize = [
+			{ action: "text-size-10", label: "10", enable: true },
+			{ action: "text-size-11", label: "11", enable: true },
+			{ action: "text-size-12", label: "12", enable: true, isSelected: true },
+			{ action: "text-size-14", label: "14", enable: true },
+			{ action: "text-size-18", label: "18", enable: true },
+			{ action: "text-size-24", label: "24", enable: true },
+			{ action: "text-size-30", label: "30", enable: true },
+			{ action: "text-size-36", label: "36", enable: true },
+			{ action: "text-size-48", label: "48", enable: true },
+			{ action: "text-size-60", label: "60", enable: true },
+			{ action: "text-size-72", label: "72", enable: true },
+			{ action: "text-size-96", label: "96", enable: true }
+		];
+
+		const subMenuAlignHorizontal = [
+			{ action: "align-left", label: this.getLabel("texttoolbar.alignHorizLeft"), enable: true, iconEnabled: (<TextAlignLeft size={32} />), isSelected: true },
+			{ action: "align-center", label: this.getLabel("texttoolbar.alignHorizCenter"), enable: true, iconEnabled: (<TextAlignCenter size={32} />) },
+			{ action: "align-right", label: this.getLabel("texttoolbar.alignHorizRight"), enable: true, iconEnabled: (<TextAlignRight size={32} />) }
+		];
+
+		const subMenuAlignVertical = [
+			{ action: "align-top", label: this.getLabel("texttoolbar.alignVertTop"), enable: true, iconEnabled: (<AlignBoxTopCenter size={32} />), isSelected: true },
+			{ action: "align-middle", label: this.getLabel("texttoolbar.alignVertMiddle"), enable: true, iconEnabled: (<AlignBoxMiddleCenter size={32} />) },
+			{ action: "align-bottom", label: this.getLabel("texttoolbar.alignVertBottom"), enable: true, iconEnabled: (<AlignBoxBottomCenter size={32} />) }
+		];
+
+		const subMenuOutline = [
+			{ action: "outline-none", label: this.getLabel("texttoolbar.outlineNone"), enable: true },
+			{ action: "outline-solid", label: this.getLabel("texttoolbar.outlineSolid"), enable: true, isSelected: true }
+		];
+
+		// In the arrays above the default option has its isSelected field set to true. We
+		// now override the isSelected field, if necessary, for all menus, based on whether
+		// the corresponding format has been set in the formats array. So if, for example, the
+		// font is set to 'Comic Sans' the element for that font in subMenuFont will have its
+		// isSelected field set to true and the element for the default font or previously
+		// selected font will have its isSelected field set to false.
+		this.setSelectedMenuElement("fontType", this.props.formats, subMenuFont);
+		this.setSelectedMenuElement("textSize", this.props.formats, subMenuTextSize);
+		this.setSelectedMenuElement("alignHorizontally", this.props.formats, subMenuAlignHorizontal);
+		this.setSelectedMenuElement("alignVertically", this.props.formats, subMenuAlignVertical);
+		this.setSelectedMenuElement("outlineStyle", this.props.formats, subMenuOutline);
+
+		// Get current values (or defaults) for text and background color.
+		const selectedTextColor = (this.getFormatValue("textColor", this.props.formats) || "#000000");
+		const selectedBackgroundColor = (this.getFormatValue("backgroundColor", this.props.formats) || "#FFFFFF");
+
+		// Get the current values (or defaults) for bold/italics/underline/striketrough attributes
+		const boldSeletced = (Boolean)(this.getFormatType("bold", this.props.formats));
+		const italicsSelected = (Boolean)(this.getFormatType("italics", this.props.formats));
+		const textDec = this.getFormatValue("textDecoration", this.props.formats);
+		const underlineSelected = textDec?.includes("underline");
+		const strikethroughSelected = textDec?.includes("strikethrough");
+
+		return {
+			leftBar: [
+				{ action: "submenu-font",
+					label: this.getLabel("texttoolbar.fontAction"),
+					iconEnabled: (<TextFont size={32} />),
+					enable: true,
+					subMenu: subMenuFont,
+					closeSubAreaOnClick: true
+				},
+				{ action: "submenu-text-size",
+					label: this.getLabel("texttoolbar.textSize"),
+					iconEnabled: (<TextScale size={32} />),
+					enable: true,
+					subMenu: subMenuTextSize,
+					closeSubAreaOnClick: true
+				},
+				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold size={32} />), isSelected: boldSeletced },
+				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic size={32} />), isSelected: italicsSelected },
+				{ action: "underline", label: underlineLabel, enable: true, iconEnabled: (<TextUnderline size={32} />), isSelected: underlineSelected },
+				{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough size={32} />), isSelected: strikethroughSelected },
+				{ divider: true },
+				{ action: "submenu-text-color",
+					label: this.getLabel("texttoolbar.colorText"),
+					iconEnabled: (<TextColor size={32} />),
+					enable: true,
+					subPanel: ColorPicker,
+					subPanelData: {
+						type: WYSIWYG,
+						selectedColor: selectedTextColor,
+						clickActionHandler: (color, evt) => this.props.actionHandler("text-color", evt, color)
+					},
+					closeSubAreaOnClick: true
+				},
+				{ action: "submenu-align-horiz",
+					label: this.getLabel("texttoolbar.alignHoriz"),
+					iconEnabled: (<TextAlignCenter size={32} />),
+					enable: true,
+					subMenu: subMenuAlignHorizontal,
+					closeSubAreaOnClick: true
+				},
+				{ action: "submenu-align-vert",
+					label: this.getLabel("texttoolbar.alignVert"),
+					iconEnabled: (<AlignBoxMiddleCenter size={32} />),
+					enable: true,
+					subMenu: subMenuAlignVertical,
+					closeSubAreaOnClick: true
+				},
+				{ action: "submenu-background-color",
+					label: this.getLabel("texttoolbar.colorBackground"),
+					iconEnabled: (<ColorPalette size={32} />),
+					enable: true,
+					subPanel: ColorPicker,
+					subPanelData: {
+						type: WYSIWYG,
+						selectedColor: selectedBackgroundColor,
+						clickActionHandler: (color, evt) => this.props.actionHandler("background-color", evt, color)
+					},
+					closeSubAreaOnClick: true
+				},
+				{ action: "sub-menu-outline",
+					label: this.getLabel("texttoolbar.outline"),
+					iconEnabled: (<SquareOutline size={32} />),
+					enable: true,
+					subMenu: subMenuOutline,
+					closeSubAreaOnClick: true
+				}
+			]
+		};
+	}
+
+	// Sets the isSelected field to true of the element in the menu
+	// passed in corresponding to the currently specified value for that menu
+	// in the formats array,
+	setSelectedMenuElement(type, formats, menu) {
+		const value = this.getFormatValue(type, formats);
+		if (value) {
+			menu.forEach((me) => (me.isSelected = (me.action === value)));
+		}
+	}
+
+	// Returns the value for the format type passed in from the array of
+	// formats passed in.
+	getFormatValue(type, formats) {
+		const format = this.getFormatType(type, formats);
+		return format?.value;
+	}
+
+	// Returns the format for the type passed in from the array of
+	// formats passed in.
+	getFormatType(type, formats) {
+		if (formats) {
+			return formats.find((f) => f.type === type);
+		}
+		return null;
+	}
+
+	getTextToolbar() {
+		if (this.props.contentType === MARKDOWN) {
+			return this.getMarkdownToolbar();
+
+		} else if (this.props.contentType === WYSIWYG) {
+			return this.getWysiwygToolbar();
+		}
+
+		return { leftBar: [] };
+	}
+
 	render() {
 		this.logger.log("render");
 
@@ -95,10 +285,13 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		if (this.props.isOpen) {
 			textToolbar = (
-				<div className={"text-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }} onBlur={this.props.blurHandler}>
+				<div className={"text-toolbar floating-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }}
+					onBlur={this.props.blurHandler}
+				>
 					<Toolbar
 						config={this.getTextToolbar()}
 						instanceId={this.props.canvasController.getInstanceId()}
+						containingDivId={this.props.containingDivId}
 						toolbarActionHandler={this.props.actionHandler}
 						tooltipDirection={"top"}
 						size={"sm"}
@@ -115,11 +308,14 @@ CommonCanvasTextToolbar.propTypes = {
 	// Provided by CommonCanvas
 	intl: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	containingDivId: PropTypes.string,
 
 	// Provided by redux
 	isOpen: PropTypes.bool.isRequired,
 	pos_x: PropTypes.number,
 	pos_y: PropTypes.number,
+	formats: PropTypes.array,
+	contentType: PropTypes.oneOf([MARKDOWN, WYSIWYG]),
 	actionHandler: PropTypes.func,
 	blurHandler: PropTypes.func
 };
@@ -128,6 +324,8 @@ const mapStateToProps = (state, ownProps) => ({
 	isOpen: state.texttoolbar.isOpen,
 	pos_x: state.texttoolbar.pos_x,
 	pos_y: state.texttoolbar.pos_y,
+	formats: state.texttoolbar.formats,
+	contentType: state.texttoolbar.contentType,
 	actionHandler: state.texttoolbar.actionHandler,
 	blurHandler: state.texttoolbar.blurHandler
 });

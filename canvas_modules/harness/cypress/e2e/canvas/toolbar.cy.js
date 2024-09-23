@@ -112,6 +112,7 @@ describe("Test for toolbar resize", function() {
 	});
 
 	it("Test number of items in toolbar for different window sizes", function() {
+		cy.wait(10);
 		cy.viewport(400, 600);
 		cy.verifyNumberOfItemsInToolbar(8);
 
@@ -278,6 +279,54 @@ describe("Test toolbar button enable/disable", function() {
 	});
 });
 
+describe("Test dual purpose toolbar button", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedToolbarType": "SubAreas" });
+	});
+
+	it("Test clicking both parts of the dual purpose button executes appropriately", function() {
+
+		// Add a couple of comments - this will enable the undo button.
+		cy.clickToolbarAddComment();
+		cy.clickToolbarAddComment();
+		cy.verifyNumberOfComments(2);
+
+		// Click the left side of the dual-purpose undo button. This
+		// should undo the last action.
+		cy.clickToolbarDualButtonLeftSide("undo");
+		cy.verifyNumberOfComments(1);
+
+		// Click the right side of the dual-purpose undo button. This
+		// should open the sub-panel associated with the button.
+		cy.clickToolbarDualButtonRightSide("undo");
+		cy.verifyNumberOfComments(1);
+		cy.verifyToolbarSubPanelIsOpen("undo");
+	});
+});
+
+describe("Test customized palette and notification panel buttons", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedToolbarType": "CustomizeAutoItems" });
+	});
+
+	it("Test clicking palette and notification panel buttons appear OK", function() {
+
+		// Check the customized palette and notification panel buttons appear OK
+		cy.verifyToolbarButtonEnabled("togglePalette", true);
+		cy.verifyToolbarButtonEnabled("toggleNotificationPanel", true);
+
+		// Click the customized palette button and make sure it opens the palette
+		cy.clickToolbarPaletteOpen();
+		cy.verifyLeftPanelWidth(256);
+
+		// Click the customized notification panel button and make sure it opens the notification panel
+		cy.clickToolbarNotifications();
+		cy.verifyToolbarSubPanelIsOpen("toggleNotificationPanel");
+	});
+});
+
 describe("Test overrideAutoEnableDisable toolbar config option", function() {
 	beforeEach(() => {
 		cy.visit("/");
@@ -285,6 +334,7 @@ describe("Test overrideAutoEnableDisable toolbar config option", function() {
 	});
 
 	it("Test overrideAutoEnableDisable leaves all standard buttons in default state", function() {
+		cy.wait(10);
 		cy.verifyToolbarButtonEnabled("undo", false);
 		cy.verifyToolbarButtonEnabled("redo", false);
 

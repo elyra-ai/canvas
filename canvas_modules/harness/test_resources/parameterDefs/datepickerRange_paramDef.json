@@ -4,6 +4,7 @@
   },
   "current_parameters": {
 		"datepicker_range": ["2023-03-17T00:00:00.00", "2023-03-30T00:00:00.00"],
+		"datepicker_range_readonly": ["2023-03-17T00:00:00.00", "2023-03-30T00:00:00.00"],
 		"datepicker_range_required": ["2023-03-17T00:00:00.00", "2023-03-27T00:00:00.00"],
 		"datepicker_range_null": [null, null],
 		"hide_datepicker_range": true,
@@ -26,6 +27,10 @@
   "parameters": [
 		{
 			"id": "datepicker_range",
+			"type": "date"
+		},
+		{
+			"id": "datepicker_range_readonly",
 			"type": "date"
 		},
 		{
@@ -101,8 +106,27 @@
         "class_name": "datepicker-range-control-unique-class",
 				"place_holder_text": {
 					"default": "yyyy-mm-dd"
+				},
+				"helper_text": {
+					"default": "Y-m-d format"
 				}
       },
+			{
+				"parameter_ref": "datepicker_range_readonly",
+				"label": {
+					"default": "Readonly date: Y/m/d"
+				},
+				"description": {
+					"default": "Datepicker as readonly in Y/m/d format."
+				},
+				"control": "datepickerRange",
+				"date_format": "Y/m/d",
+				"class_name": "datepicker-range-control-class",
+				"place_holder_text": {
+					"default": "yyyy/mm/dd"
+				},
+				"read_only": true
+			},
 			{
 				"parameter_ref": "datepicker_range_required",
 				"label": {
@@ -268,7 +292,8 @@
 					"datepicker_range",
 					"datepicker_range_required",
 					"datepicker_range_empty",
-					"datepicker_range_null"
+					"datepicker_range_null",
+					"datepicker_range_readonly"
         ]
       },
 			{

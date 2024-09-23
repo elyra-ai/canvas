@@ -4,15 +4,10 @@
   },
   "current_parameters": {
     "checkbox": true,
+    "checkbox_readonly": true,
     "checkbox_null": null,
-    "checkbox_table": [
-      [
-        true
-      ]
-    ],
-    "checkbox_table_cond": [
-      []
-    ],
+    "checkbox_table": [[true]],
+    "checkbox_table_cond": [[]],
     "checkbox_error": false,
     "checkbox_warning": false,
     "disable": true,
@@ -21,6 +16,10 @@
   "parameters": [
     {
       "id": "checkbox",
+      "type": "boolean"
+    },
+    {
+      "id": "checkbox_readonly",
       "type": "boolean"
     },
     {
@@ -81,6 +80,10 @@
           "type": "boolean"
         },
         {
+          "id": "checkbox_readonly",
+          "type": "boolean"
+        },
+        {
           "id": "checkbox2",
           "type": "boolean"
         },
@@ -119,6 +122,23 @@
         "class_name": "checkbox-control-class"
       },
       {
+        "parameter_ref": "checkbox_readonly",
+        "label": {
+          "default": "checkbox readonly"
+        },
+        "description": {
+          "default": "checkbox",
+          "link": {
+            "id": "link_for_checkbox",
+            "data": {
+              "something": "option data"
+            }
+          }
+        },
+        "class_name": "checkbox-control-class",
+        "read_only": true
+      },
+      {
         "parameter_ref": "checkbox_table",
         "label": {
           "default": "Checkbox in a table"
@@ -134,6 +154,9 @@
         "parameter_ref": "checkbox_default",
         "label": {
           "default": "checkbox default"
+        },
+        "helper_text": {
+          "default": "check/uncheck the checkbox"
         },
         "description": {
           "default": "checkbox with a default value of 'true'\nThis text should be on a new line.\nThis text should also be on a new line."
@@ -261,6 +284,7 @@
         "type": "controls",
         "parameter_refs": [
           "checkbox",
+          "checkbox_readonly",
           "checkbox_default",
           "checkbox_undefined",
           "checkbox_null"
@@ -297,10 +321,7 @@
             "group_info": [
               {
                 "id": "checkbox-table-summary-ctrls",
-                "parameter_refs": [
-                  "checkbox_table",
-                  "checkbox_table_cond"
-                ]
+                "parameter_refs": ["checkbox_table", "checkbox_table_cond"]
               }
             ]
           }
@@ -309,6 +330,30 @@
     ]
   },
   "conditions": [
+    {
+      "default_value": {
+        "parameter_ref": "checkbox_null",
+        "value": true,
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "checkbox_error",
+                "op": "equals",
+                "value": true
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "checkbox_warning",
+                "op": "equals",
+                "value": true
+              }
+            }
+          ]
+        }
+      }
+    },
     {
       "validation": {
         "fail_message": {
@@ -383,9 +428,7 @@
     },
     {
       "visible": {
-        "parameter_refs": [
-          "checkbox_hidden"
-        ],
+        "parameter_refs": ["checkbox_hidden"],
         "evaluate": {
           "condition": {
             "parameter_ref": "hide",
@@ -397,9 +440,7 @@
     },
     {
       "enabled": {
-        "parameter_refs": [
-          "checkbox_disable"
-        ],
+        "parameter_refs": ["checkbox_disable"],
         "evaluate": {
           "condition": {
             "parameter_ref": "disable",

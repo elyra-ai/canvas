@@ -77,6 +77,7 @@ class DatepickerControl extends React.Component {
 					dateFormat={this.dateFormat}
 					onChange={this.handleChange.bind(this)}
 					locale={this.locale}
+					readOnly={this.props.readOnly}
 				>
 					<DatePickerInput
 						{...validationProps}
@@ -88,7 +89,7 @@ class DatepickerControl extends React.Component {
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputChange.bind(this)}
 						value={this.state.value}
-						helperText={!this.props.tableControl && helperText}
+						helperText={(!this.props.tableControl && helperText) || this.props.control.helperText}
 					/>
 				</DatePicker>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
@@ -105,7 +106,8 @@ DatepickerControl.propTypes = {
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.string, // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({

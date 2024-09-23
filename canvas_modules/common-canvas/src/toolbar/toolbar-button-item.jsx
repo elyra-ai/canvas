@@ -28,11 +28,13 @@ import classNames from "classnames";
 import { StopFilledAlt, Play, Undo, Redo, Chat, ChatOff, Result,
 	Cut, Copy, Paste, Edit,	ColorPalette, Maximize, Minimize,
 	Launch, AddComment, TrashCan, ZoomIn, ZoomOut,
-	ChevronRight, ChevronDown, ChevronUp,
+	Checkmark, ChevronRight, ChevronDown, ChevronUp,
 	CenterToFit, OpenPanelFilledLeft } from "@carbon/react/icons";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
-	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT, TOOLBAR_COLOR_BACKGROUND,
+	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT,
+	TOOLBAR_CREATE_WYSIWYG_COMMENT, TOOLBAR_CREATE_AUTO_WYSIWYG_COMMENT,
+	TOOLBAR_COLOR_BACKGROUND,
 	TOOLBAR_DELETE_SELECTED_OBJECTS, TOOLBAR_DELETE_LINK,
 	TOOLBAR_ZOOM_IN, TOOLBAR_ZOOM_OUT, TOOLBAR_ZOOM_FIT,
 	TOOLBAR_ARRANGE_HORIZONALLY, TOOLBAR_ARRANGE_VERTICALLY,
@@ -94,6 +96,8 @@ class ToolbarButtonItem extends React.Component {
 			return <Paste disabled={disabled} />;
 		case (TOOLBAR_CREATE_COMMENT):
 		case (TOOLBAR_CREATE_AUTO_COMMENT):
+		case (TOOLBAR_CREATE_WYSIWYG_COMMENT):
+		case (TOOLBAR_CREATE_AUTO_WYSIWYG_COMMENT):
 			return <AddComment disabled={disabled} />;
 		case (TOOLBAR_SHOW_COMMENTS):
 			return <Chat disabled={disabled} />;
@@ -197,20 +201,27 @@ class ToolbarButtonItem extends React.Component {
 
 		const itemContentClassName = classNames(
 			"toolbar-item-content",
-			{ "overflow": this.props.isInMenu, "disabled": !actionObj.enable, "default": !actionObj.kind });
+			{ "is-in-menu": this.props.isInMenu, "disabled": !actionObj.enable, "default": !actionObj.kind });
 
 		// If no 'kind' is set, use ghost and then override colors using the "default" class in innerDivClassName.
 		const kind = actionObj.kind || "ghost";
 
-		const chevronIcon = this.generateChevronIcon(actionObj);
+		const chevronDiv = this.generateChevronDiv(actionObj);
+
+		const mainClassName = actionObj.purpose ? "content-main dual" : "content-main";
+
+		const checkMark = this.props.actionObj.isSelected && this.props.isInMenu ? (<div className={"checkmark"}> <Checkmark /></div>) : null;
 
 		let buttonContent = (
 			<div className={itemContentClassName}>
-				{labelBefore}
-				{icon}
-				{labelAfter}
-				{textContent}
-				{chevronIcon}
+				<div className={mainClassName}>
+					{labelBefore}
+					{icon}
+					{labelAfter}
+					{textContent}
+				</div>
+				{chevronDiv}
+				{checkMark}
 			</div>
 		);
 
@@ -237,39 +248,44 @@ class ToolbarButtonItem extends React.Component {
 		return button;
 	}
 
-	// Returns a chevron icon if the action icon is displaying a sub-menu or
-	// sub-panel. The chevron will:
-	//  * point right if this action item is in a drop down menu
-	//  * point down if this action item is displayed with text in the toolbar
-	//    and the menu isn't displayed
-	//  * point up if this action item is displayed with text in the toolbar
-	//    and the menu is displayed
-	//  * be a mini-chevron (small triangle in the bottom right of icon) if this
-	//    action item isn't displayed with text.
-	generateChevronIcon(actionObj) {
+	// Returns a <div> containing a chevron icon. If the action icon is displaying
+	// a sub-menu or sub-panel. The chevron will:
+	//  * point right if this action item is in a drop down menu.
+	//  * point down and be regular size if this action item is displayed with
+	//    text in the toolbar and the menu isn't displayed.
+	//  * point up and be regular size if this action item is displayed with
+	//    text in the toolbar and the menu is displayed.
+	//  * point down and be a mini-chevron if this action item is displayed without
+	//    text in the toolbar and the menu isn't displayed.
+	//  * point up and be a mini-chevron if this action item is displayed without
+	//    text in the toolbar and the menu is displayed.
+	generateChevronDiv(actionObj) {
 		if (actionObj.subMenu || actionObj.subPanel) {
 			if (this.props.isInMenu) {
-				return <ChevronRight />;
+				return <div className={"toolbar-right-chevron"}><ChevronRight /></div>;
 			}
 			if (actionObj.incLabelWithIcon === "before" ||
 					actionObj.incLabelWithIcon === "after") {
 				const chev = this.props.subAreaDisplayed ? (<ChevronUp />) : (<ChevronDown />);
 				return (<div className={"toolbar-up-down-chevron"}>{chev}</div>);
 			}
-			return this.generateChevronMini();
+			if (actionObj.purpose === "dual") {
+				const chevMini = this.props.subAreaDisplayed ? (<ChevronUp size={12} />) : (<ChevronDown size={12} />);
+				return (<div className={"toolbar-up-down-chevron-mini"} onClick={this.miniChevronClicked.bind(this)}>{chevMini}</div>);
+			}
+			const path = this.props.size === "sm" ? "M 29 29 L 29 23 23 29 Z" : "M 37 37 L 37 30 30 37 Z";
+			return (
+				<svg className="toolbar-tick-svg">
+					<path d={path} className="toolbar-tick-mark" />
+				</svg>
+			);
 		}
 		return null;
 	}
 
-	// Returns an svg to display the little triangle that appears in the bottom
-	// right corner of icons that, when clicked, show a drop down menu.
-	generateChevronMini() {
-		const path = this.props.size === "sm" ? "M 29 29 L 29 23 23 29 Z" : "M 37 37 L 37 30 30 37 Z";
-		return (
-			<svg className="toolbar-tick-svg">
-				<path d={path} className="toolbar-tick-mark" />
-			</svg>
-		);
+	miniChevronClicked(evt) {
+		this.props.actionClickHandler(evt, true);
+		evt.stopPropagation();
 	}
 
 	// Creates a <div> containing the JSX in the actionObj.jsx field, wrapped in a tooltip
@@ -341,6 +357,7 @@ ToolbarButtonItem.propTypes = {
 			PropTypes.object
 		]),
 		incLabelWithIcon: PropTypes.oneOf(["no", "before", "after"]),
+		purpose: PropTypes.oneOf(["single", "dual"]),
 		enable: PropTypes.bool,
 		iconEnabled: PropTypes.oneOfType([
 			PropTypes.string,

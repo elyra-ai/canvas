@@ -37,9 +37,8 @@ import {
 import {
 	CHOOSE_FROM_LOCATION,
 	LOCAL_FILE_OPTION,
-	FORMS,
 	PARAMETER_DEFS
-} from "../../../constants/constants.js";
+} from "../../../constants/harness-constants.js";
 
 import FormsService from "../../../services/FormsService";
 
@@ -118,13 +117,9 @@ export default class SidePanelProperties extends React.Component {
 			applyPropertyChanges: this.applyPropertyChanges
 		};
 	}
-	// should be changed to componentDidMount but causes FVT tests to fail
-	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
+
+	componentDidMount() { // eslint-disable-line camelcase, react/sort-comp
 		const that = this;
-		FormsService.getFiles(FORMS)
-			.then(function(res) {
-				that.setState({ commonPropertiesFormsFiles: res });
-			});
 		FormsService.getFiles(PARAMETER_DEFS)
 			.then(function(res) {
 				that.setState({ commonPropertiesParamDefsFiles: res });
@@ -153,17 +148,10 @@ export default class SidePanelProperties extends React.Component {
 	getSelectedFile() {
 		const that = this;
 		this.props.log("Submit common properties file", this.props.propertiesConfig.selectedPropertiesDropdownFile);
-		if (this.props.propertiesConfig.selectedPropertiesFileCategory === PARAMETER_DEFS) {
-			FormsService.getFileContent(PARAMETER_DEFS, this.props.propertiesConfig.selectedPropertiesDropdownFile)
-				.then(function(res) {
-					that.props.propertiesConfig.setPropertiesJSON(res);
-				});
-		} else {
-			FormsService.getFileContent(FORMS, this.props.propertiesConfig.selectedPropertiesDropdownFile)
-				.then(function(res) {
-					that.props.propertiesConfig.setPropertiesJSON(res);
-				});
-		}
+		FormsService.getFileContent(PARAMETER_DEFS, this.props.propertiesConfig.selectedPropertiesDropdownFile)
+			.then(function(res) {
+				that.props.propertiesConfig.setPropertiesJSON(res);
+			});
 	}
 
 	submitProperties() {
@@ -226,7 +214,6 @@ export default class SidePanelProperties extends React.Component {
 		for (const option of this.state.commonPropertiesFormsFiles) {
 			formOptions.push(<SelectItem key={"form-option-" + key++} text={option} value={option} />);
 		}
-		options.push(<SelectItemGroup key ={"form-option"} label = {FORMS}>{formOptions}</SelectItemGroup>);
 		return options;
 	}
 

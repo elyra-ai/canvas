@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "slider": 50,
+    "slider_readonly": 50,
     "slider_double": 0.5,
     "slider_null": null,
     "slider_error": 50,
@@ -20,6 +21,10 @@
     },
     {
       "id": "slider",
+      "type": "integer"
+    },
+    {
+      "id": "slider_readonly",
       "type": "integer"
     },
     {
@@ -90,6 +95,21 @@
         "max_value": 100,
         "increment": 10,
         "class_name": "slider-control-class"
+      },
+      {
+        "parameter_ref": "slider_readonly",
+        "label": {
+          "default": "Readonly Slider Testing"
+        },
+        "description": {
+          "default": "Readonly Slider Testing"
+        },
+        "control": "slider",
+        "min_value": 10,
+        "max_value": 100,
+        "increment": 10,
+        "class_name": "slider-control-class",
+        "read_only": true
       },
       {
         "parameter_ref": "slider_double",
@@ -212,6 +232,7 @@
         "parameter_refs": [
           "slider",
           "slider_double",
+          "slider_readonly",
           "slider_empty",
           "slider_null",
           "slider_undefined"

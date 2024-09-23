@@ -49,7 +49,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	getDisplayLabel() {
-		if (this.props.isPaletteOpen === true) {
+		if (this.props.isPaletteWide === true) {
 			return this.props.category.label;
 
 		// With narrow palette, if there's no image just display first 3 letters
@@ -68,7 +68,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 		// InlineLoading component.
 
 		let description = "";
-		if (this.props.isPaletteOpen) {
+		if (this.props.isPaletteWide) {
 			description = this.props.category.loading_text;
 		}
 
@@ -139,7 +139,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 	getItemText() {
 		let itemText = null;
 		const label = this.getDisplayLabel();
-		if (this.props.isPaletteOpen === true) {
+		if (this.props.isPaletteWide) {
 			const className = this.props.category.image ? "palette-flyout-category-text" : "palette-flyout-category-text-no-image";
 			itemText = (
 				<span className={className}>
@@ -164,7 +164,10 @@ class PaletteFlyoutContentCategory extends React.Component {
 	getItemImage() {
 		let itemImage = null;
 		if (this.props.category.image && this.props.category.image !== "") {
-			if (this.props.category.image.endsWith(".svg")) {
+			if (typeof this.props.category.image === "object" && React.isValidElement(this.props.category.image)) {
+				itemImage = this.props.category.image;
+
+			} else if (this.props.category.image.endsWith(".svg")) {
 				itemImage = (
 					<div>
 						<SVG src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" />
@@ -195,7 +198,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 					category={this.props.category}
 					nodeTypeInfos={nodeTypeInfos}
 					canvasController={this.props.canvasController}
-					isPaletteOpen={this.props.isPaletteOpen}
+					isPaletteWide={this.props.isPaletteWide}
 					isEditingEnabled={this.props.isEditingEnabled}
 				/>
 			);
@@ -232,7 +235,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 PaletteFlyoutContentCategory.propTypes = {
 	category: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	isPaletteOpen: PropTypes.bool.isRequired,
+	isPaletteWide: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
 };
 

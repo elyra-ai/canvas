@@ -36,8 +36,8 @@ $toolbar-divider-width: 1px;
 	-webkit-user-drag: none;
 
 	&:focus {
-		border-color: $button-tertiary;
-		box-shadow: inset 0 0 0 2px $button-tertiary;
+		border-color: transparent;
+		box-shadow: inset 0 0 0 1px $focus;
 	}
 
 	/* Small size toolbar  */
@@ -59,10 +59,30 @@ $toolbar-divider-width: 1px;
 		}
 
 		.toolbar-item-content {
-			padding: $spacing-02 $spacing-03;
 			height: $toolbar-button-sm-height;
 			align-items: center;
 			min-width: 32px;
+
+			&.is-in-menu {
+				padding-left: 10px;
+				padding-right: 10px;
+			}
+
+			& .content-main {
+				padding: 0;
+			}
+
+			& .overflow-item {
+				padding: 0 $spacing-03 0 0;
+			}
+
+			& .toolbar-right-chevron {
+				padding: 4px 0 0;
+			}
+
+			& .checkmark {
+				padding-top: $spacing-02;
+			}
 		}
 
 		.toolbar-popover-list button {
@@ -179,6 +199,7 @@ $toolbar-divider-width: 1px;
 }
 
 .toolbar-sub-menu-item {
+	position: relative; // Allows any cascade sub-menu to be positioned absolutely
 	& button {
 		width: 100%;
 		padding-top: 0;
@@ -193,11 +214,59 @@ $toolbar-divider-width: 1px;
 	width: inherit;
 	display: flex;
 	justify-content: center;
-	padding: 11px;
+	grid-template-columns: 1fr 16px;
 
-	&.overflow {
-		justify-content: left;
-		padding: 8px 0;
+	&.disabled {
+		pointer-events: none;
+
+		& .content-main:hover,
+		& .toolbar-up-down-chevron-mini:hover {
+			pointer-events: none;
+		}
+	}
+
+	& .content-main {
+		padding: 11px;
+		display: flex;
+
+		&.dual:hover {
+			background-color: $background-selected-hover;
+		}
+	}
+
+	& .toolbar-up-down-chevron {
+		padding: 11px 8px 11px 0;
+		pointer-events: none;
+	}
+
+	& .toolbar-up-down-chevron-mini {
+		padding: 11px 2px;
+
+		&:hover {
+			background-color: $background-selected-hover;
+		}
+	}
+
+	& .toolbar-right-chevron {
+		padding: 9px 0 2px;
+		pointer-events: none;
+	}
+
+	& .overflow-item {
+		padding: 11px;
+	}
+
+	&.is-in-menu {
+		justify-content: space-between;
+
+		& .content-main {
+			padding: 8px 0 6px;
+		}
+	}
+
+	& .checkmark {
+		pointer-events: none;
+		padding-top: $spacing-03;
 	}
 
 	&.default {
@@ -216,6 +285,7 @@ $toolbar-divider-width: 1px;
 	}
 
 	.toolbar-icon {
+		height: 16px;
 		& svg {
 			height: $toolbar-icon-size;
 			width: $toolbar-icon-size;
@@ -226,10 +296,13 @@ $toolbar-divider-width: 1px;
 
 	.toolbar-text-content {
 		position: absolute;
-		top: 14px;
+		width: 11px;
+		top: 15px;
+		left: 13px;
 		font-size: 9px;
 		line-height: 9px;
 		color: $icon-primary;
+		text-align: center;
 	}
 
 	.toolbar-icon-label {
@@ -247,13 +320,8 @@ $toolbar-divider-width: 1px;
 			padding-left: 8px;
 			word-break: break-word;
 			hyphens: auto;
+			text-wrap: nowrap;
 		}
-	}
-
-	.toolbar-up-down-chevron {
-		padding-left: 8px;
-		height: 16px;
-		pointer-events: none;
 	}
 
 	// Triangular tick mark in bottom right corner of an expandable icon
@@ -305,10 +373,9 @@ $toolbar-divider-width: 1px;
 }
 
 .toolbar-popover-list {
-	width: 200px;
 	z-index: 2; // Make sure sub-area appears above bottom panel
 	display: block;
-	position: fixed; // Actual position will be calculated in the code
+	position: absolute; // Actual position will be calculated in the code
 	list-style-type: none;
 	padding: 0;
 	border: $toolbar-divider-width solid $layer-accent-01;
@@ -317,7 +384,7 @@ $toolbar-divider-width: 1px;
 	animation: tovisible 0.25s ease-in-out forwards; // Use keyframe to animate panel visibility
 
 	&.submenu {
-		min-width: 100px;
+		min-width: 150px;
 	}
 
 	&.subpanel {

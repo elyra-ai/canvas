@@ -20,7 +20,7 @@ import { FormattedMessage } from "react-intl";
 import { CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import { isEmpty } from "lodash";
 import FormsService from "../../../services/FormsService";
-import { FORMS, PARAMETER_DEFS, CUSTOM } from "../../../constants/constants.js";
+import { PARAMETER_DEFS, CUSTOM } from "../../../constants/harness-constants.js";
 import CustomTableControl from "../../../components/custom-controls/CustomTableControl";
 
 export default class FlowsProperties extends React.Component {
@@ -31,7 +31,6 @@ export default class FlowsProperties extends React.Component {
 			propertiesInfo: {},
 			light: true
 		};
-		this.availableForms = [];
 		this.availableParamDefs = [];
 		this.getNodeForm = this.getNodeForm.bind(this);
 		this.getPropertyDefName = this.getPropertyDefName.bind(this);
@@ -40,10 +39,6 @@ export default class FlowsProperties extends React.Component {
 	}
 	componentDidMount() {
 		const that = this;
-		FormsService.getFiles(FORMS)
-			.then(function(res) {
-				that.availableForms = res;
-			});
 		FormsService.getFiles(PARAMETER_DEFS)
 			.then(function(res) {
 				that.availableParamDefs = res;
@@ -59,26 +54,16 @@ export default class FlowsProperties extends React.Component {
 			.then(function(res) {
 				const response = res;
 				if (node) {
-					if (response.formData) {
-						if (!isEmpty(node.parameters)) {
-							response.formData.data.currentParameters = node.parameters;
-						}
-						if (!isEmpty(node.uiParameters)) {
-							response.formData.data.uiCurrentParameters = node.uiParameters;
-						}
-						response.formData.label = node.label;
-					} else {
-						if (!isEmpty(node.parameters)) {
-							response.current_parameters = node.parameters;
-						}
-						if (!isEmpty(node.uiParameters)) {
-							response.current_ui_parameters = node.uiParameters;
-						}
-						if (!response.titleDefinition) {
-							response.titleDefinition = {};
-						}
-						response.titleDefinition.title = node.label;
+					if (!isEmpty(node.parameters)) {
+						response.current_parameters = node.parameters;
 					}
+					if (!isEmpty(node.uiParameters)) {
+						response.current_ui_parameters = node.uiParameters;
+					}
+					if (!response.titleDefinition) {
+						response.titleDefinition = {};
+					}
+					response.titleDefinition.title = node.label;
 				}
 				callback(response);
 			});
@@ -86,14 +71,7 @@ export default class FlowsProperties extends React.Component {
 
 	getPropertyDefName(node) {
 		if (node.op) {
-			let foundName = this.availableForms.find((name) => name.startsWith(node.op));
-			if (foundName) {
-				return {
-					fileName: foundName,
-					type: FORMS
-				};
-			}
-			foundName = this.availableParamDefs.find((name) => name.startsWith(node.op));
+			const foundName = this.availableParamDefs.find((name) => name.startsWith(node.op));
 			if (foundName) {
 				return {
 					fileName: foundName,
@@ -103,7 +81,7 @@ export default class FlowsProperties extends React.Component {
 		}
 		return {
 			fileName: "default.json",
-			type: FORMS
+			type: PARAMETER_DEFS
 		};
 	}
 

@@ -70,6 +70,9 @@ class CanvasContents extends React.Component {
 		this.dragX = null;
 		this.dragY = null;
 
+		// Reference for the contents <div>
+		this.contentsRef = React.createRef();
+
 		// Record whether we added the event listeners or not.
 		this.eventListenersAdded = false;
 
@@ -388,6 +391,7 @@ class CanvasContents extends React.Component {
 		return (
 			<CommonCanvasTextToolbar
 				canvasController={this.props.canvasController}
+				containingDivId={this.mainCanvasDivId}
 			/>);
 	}
 
@@ -575,9 +579,10 @@ class CanvasContents extends React.Component {
 
 		return (
 			<main aria-label={this.getLabel("canvas.label")} role="main">
-				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
+				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange} targetRef={this.contentsRef}>
 					<div
 						id={this.mainCanvasDivId}
+						ref={this.contentsRef}
 						className="common-canvas-drop-div"
 						onDrop={this.drop}
 						onDragOver={this.dragOver}

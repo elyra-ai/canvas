@@ -11,7 +11,7 @@
         {
           "id": "178a4e3c-6cdf-4465-914d-b9d71c5ef6b8",
           "type": "execution_node",
-          "op": "shape-node",
+          "op": "shape-node-square",
           "app_data": {
             "react_nodes_data": {
               "shape": "square"
@@ -56,7 +56,7 @@
         {
           "id": "8a9fbf9d-88b0-4ccc-a0bb-55e2defcb973",
           "type": "execution_node",
-          "op": "shape-node",
+          "op": "shape-node-circle",
           "app_data": {
             "react_nodes_data": {
               "shape": "circle"
@@ -108,7 +108,7 @@
         {
           "id": "d904953e-ca2f-4c4d-b593-f71dbd99fe5d",
           "type": "execution_node",
-          "op": "shape-node",
+          "op": "shape-node-rounded-square",
           "app_data": {
             "react_nodes_data": {
               "shape": "rounded-square"
@@ -258,7 +258,7 @@
         {
           "id": "5d47eb47-bac4-4f47-a279-01d39133f118",
           "type": "execution_node",
-          "op": "regular-card-node",
+          "op": "card-node-with-color",
           "app_data": {
             "react_nodes_data": {
               "color": "#EAC348"
@@ -310,7 +310,7 @@
         {
           "id": "54cc0a7e-abf0-496e-992d-573a73ace37d",
           "type": "execution_node",
-          "op": "card-node-regular",
+          "op": "card-node-regular-curved-corners",
           "app_data": {
             "react_nodes_data": {
               "shape": "curved-corners"
@@ -362,7 +362,7 @@
         {
           "id": "3248f99f-30b9-441f-8c81-931122a0bfce",
           "type": "execution_node",
-          "op": "shape-node",
+          "op": "shape-node-rounded-square",
           "app_data": {
             "react_nodes_data": {
               "shape": "rounded-square"
@@ -475,8 +475,8 @@
               "id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
               "x_pos": 55,
               "y_pos": 20,
-              "width": 400,
-              "height": 112,
+              "width": 440,
+              "height": 120,
               "class_name": "bkg-col-green-20",
               "content": "## React Objects Canvas\n\nThis sample app shows the React objects, CardNode and ShapeNode, from the Carbon-Charts library being used to display the body of canvas nodes. The selection highlighting, ports, overflow icon and tip for the nodes are provided by common-canvas.",
               "associated_id_refs": []
@@ -492,7 +492,7 @@
         {
           "id": "b134fd69-1ea8-4f0e-8ead-3ada4914b654",
           "type": "execution_node",
-          "op": "shape-node",
+          "op": "shape-node-circle",
           "app_data": {
             "react_nodes_data": {
               "shape": "circle"
@@ -544,7 +544,7 @@
         {
           "id": "08384753-ad6e-4ee7-abab-e7ede93d3b50",
           "type": "execution_node",
-          "op": "regular-card-node",
+          "op": "card-node-with-color",
           "app_data": {
             "react_nodes_data": {
               "color": "#EAC348"

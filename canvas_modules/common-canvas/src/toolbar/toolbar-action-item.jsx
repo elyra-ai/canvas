@@ -24,6 +24,8 @@ import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
 import ToolbarSubPanel from "./toolbar-sub-panel.jsx";
 
 const ESC_KEY = 27;
+const DOWN_ARROW_KEY = 40;
+const TOOLBAR_ICON_WIDTH = 40;
 
 class ToolbarActionItem extends React.Component {
 	constructor(props) {
@@ -51,8 +53,14 @@ class ToolbarActionItem extends React.Component {
 	onKeyDown(evt) {
 		if (evt.keyCode === ESC_KEY) {
 			this.closeSubArea();
-			return;
+
+		} else if (evt.keyCode === DOWN_ARROW_KEY) {
+			if (this.hasSubArea()) {
+				this.openSubArea();
+			}
 		}
+		// Left and Right arrow clicks are caught in the
+		// toolbar.jsx onKeyDown method.
 	}
 
 	// Called by toolbar.jsx
@@ -81,13 +89,17 @@ class ToolbarActionItem extends React.Component {
 
 	clickOutside(evt) {
 		if (this.isSubAreaDisplayed()) {
-			const items = document.getElementsByClassName(this.generateActionName());
-			const isOver = items && items.length > 0 ? items[0].contains(evt.target) : false;
+			const selector = `.${this.generateActionName()}[instanceid='${this.props.instanceId}']`;
+			const isOver = evt.target.closest(selector);
 
 			if (!isOver && !this.props.actionObj.leaveSubAreaOpenOnClickOutside) {
 				this.closeSubArea();
 			}
 		}
+	}
+
+	hasSubArea() {
+		return this.props.actionObj.subMenu || this.props.actionObj.subPanel;
 	}
 
 	openSubArea() {
@@ -112,8 +124,9 @@ class ToolbarActionItem extends React.Component {
 		}
 	}
 
-	actionClickHandler(evt) {
-		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
+	actionClickHandler(evt, chevronClicked) {
+		if (this.hasSubArea() &&
+			(this.props.actionObj.purpose !== "dual" || chevronClicked)) {
 			if (this.isSubAreaDisplayed()) {
 				document.removeEventListener("click", this.clickOutside, false);
 				this.closeSubArea();
@@ -127,6 +140,7 @@ class ToolbarActionItem extends React.Component {
 			}
 
 		} else {
+			this.closeSubArea();
 			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
 			this.props.setToolbarFocusAction(this.props.actionObj.action);
 		}
@@ -141,7 +155,10 @@ class ToolbarActionItem extends React.Component {
 	// supPanel field  OR a sub-menu which is a list of options which is created
 	// from the array of items the caller passes in the subMenu field.
 	generateSubArea() {
-		const actionItemRect = this.divRef.current ? this.divRef.current.getBoundingClientRect() : null;
+		let actionItemRect = this.divRef.current ? this.divRef.current.getBoundingClientRect() : null;
+		actionItemRect = (actionItemRect && this.props.actionObj.purpose === "dual")
+			? this.adjustForDual(actionItemRect)
+			: actionItemRect;
 
 		if (this.props.actionObj.subPanel) {
 			return (
@@ -153,6 +170,7 @@ class ToolbarActionItem extends React.Component {
 					actionItemRect={actionItemRect}
 					expandDirection={"vertical"}
 					containingDivId={this.props.containingDivId}
+					isCascadeMenu={false}
 				/>
 			);
 		}
@@ -171,6 +189,22 @@ class ToolbarActionItem extends React.Component {
 				size={this.props.size}
 			/>
 		);
+	}
+
+	// For a dual-purpose toolbar button, adjusts the rectangle dimensions so
+	// the sub-panel is opened based on the location of the right chevron of
+	// the dual button.
+	adjustForDual(actionItemRect) {
+		return {
+			height: actionItemRect.height,
+			width: actionItemRect.width,
+			top: actionItemRect.top,
+			bottom: actionItemRect.bottom,
+			left: actionItemRect.left + TOOLBAR_ICON_WIDTH,
+			right: actionItemRect.right + TOOLBAR_ICON_WIDTH,
+			x: actionItemRect.x + TOOLBAR_ICON_WIDTH,
+			y: actionItemRect.y
+		};
 	}
 
 	generateSelector(actionObj) {
@@ -198,7 +232,8 @@ class ToolbarActionItem extends React.Component {
 		const subArea = this.isSubAreaDisplayed() ? this.generateSubArea() : null;
 
 		return (
-			<div ref={this.divRef} className={itemClassName} data-toolbar-action={actionObj.action} data-toolbar-item
+			<div ref={this.divRef} className={itemClassName} instanceid={this.props.instanceId}
+				data-toolbar-action={actionObj.action} data-toolbar-item
 				onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} onKeyDown={this.onKeyDown}
 			>
 				<div className="toolbar-button-item">
@@ -229,6 +264,7 @@ ToolbarActionItem.propTypes = {
 			PropTypes.object
 		]),
 		incLabelWithIcon: PropTypes.oneOf(["no", "before", "after"]),
+		purpose: PropTypes.oneOf(["single", "dual"]),
 		enable: PropTypes.bool,
 		iconEnabled: PropTypes.oneOfType([
 			PropTypes.string,

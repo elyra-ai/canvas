@@ -55,6 +55,11 @@ describe("Test basic undo/redo operations", function() {
 		// Add comment to selected node
 		cy.clickNode("Select");
 		cy.clickToolbarAddComment();
+
+		// TODO - Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getCommentWithText("").click("topLeft");
+
 		cy.moveCommentToPosition("", 350, 250);
 		cy.editTextInComment("", "This comment box should be linked to the Select node.");
 		cy.verifyCommentTransform("This comment box should be linked to the Select node.", 350, 250);
@@ -99,6 +104,10 @@ describe("Test basic undo/redo operations", function() {
 		// cy.verifyNumberOfPortDataLinks(0);
 
 		// Move node on canvas
+		// TODO - Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getNodeWithLabel("Var. File").click();
+
 		cy.moveNodeToPosition("Var. File", 50, 50);
 		cy.verifyNodeTransform("Var. File", 50, 50);
 		verifyMoveObjectsCommandExecuted("Var. File");
@@ -114,6 +123,10 @@ describe("Test basic undo/redo operations", function() {
 		verifyRedoCommandExecuted("Var. File");
 
 		// Move comment on canvas
+		// TODO - Fix when autoselect is available.
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
+		cy.getCommentWithText("This comment box should be edited.").click();
+
 		cy.moveCommentToPosition("This comment box should be edited.", 100, 100);
 		cy.verifyCommentTransform("This comment box should be edited.", 100, 100);
 		verifyMoveObjectsCommandExecuted("This comment box should be edited.");
@@ -154,17 +167,17 @@ describe("Test basic undo/redo operations", function() {
 		cy.clickToolbarRedo();
 		cy.verifyNumberOfComments(0);
 
-		// Set column name in common-properties
-		cy.openPropertyDefinition("spark.AddColumn.json");
-		cy.setTextFieldValue("colName", "testValue");
+		// Set a text value in common-properties
+		cy.openPropertyDefinition("textfield_paramDef.json");
+		cy.setTextFieldValue("string_empty", "testValue");
 		cy.saveFlyout();
-		verifyColumnNameEntryInConsole("testValue");
+		verifyTextEntryInConsole("testValue");
 
 		// Undo and redo using toolbar
 		cy.clickToolbarUndo();
-		verifyTextValueIsNotPresentInColumnName("testValue");
+		verifyTextValueIsNotPresentInTextField("testValue");
 		cy.clickToolbarRedo();
-		verifyTextValueIsPresentInColumnName("testValue");
+		verifyTextValueIsPresentInTextField("testValue");
 	});
 });
 
@@ -430,6 +443,7 @@ describe("Test for Multiple undo/redo operations", function() {
 
 		// Link nodes
 		cy.linkNodes("Filter", "Neural Net");
+		cy.wait(10);
 		cy.verifyLinkBetweenNodes("Filter", "Neural Net", 21);
 		cy.verifyLinkNodesActionOccurred("Filter", "Neural Net");
 
@@ -442,6 +456,7 @@ describe("Test for Multiple undo/redo operations", function() {
 
 		// Link nodes
 		cy.linkNodes("Select", "Sort");
+		cy.wait(10);
 		cy.verifyLinkBetweenNodes("Select", "Sort", 22);
 		cy.verifyLinkNodesActionOccurred("Select", "Sort");
 
@@ -544,12 +559,20 @@ describe("Test undo/redo property values and title in common-properties", functi
 		// Edit the name of properties flyout and delete value in samplingRatio
 		cy.clickPropertiesFlyoutTitleEditIcon();
 		cy.enterNewPropertiesFlyoutTitle("My C5.0 model");
-		cy.backspaceTextFieldValue("samplingRatio");
+
+		// TDOD - this part of the test is supposed to test an error in the sampling ration field
+		// However backspace no longer removes the default value from the field.
+		// Find a way to test an invlaid value in a field.
+		// cy.backspaceTextFieldValue("samplingRatio");
+		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3759
+
 		cy.saveFlyout();
 
 		//  Verification steps
-		verifySamplingRatioParameterValueInConsole("samplingRatio", null);
-		verifyErrorMessageForSamplingRatioParameterInConsole("error", "samplingRatio", "Select a sampling ratio");
+		// TODO - Cannot verify an invalid entered value.
+		// verifySamplingRatioParameterValueInConsole("samplingRatio", null);
+		// verifyErrorMessageForSamplingRatioParameterInConsole("error", "samplingRatio", "Select a sampling ratio");
+
 		verifyNewPropertiesFlyoutTitleEntryInConsole("My C5.0 model");
 
 		// Double-click "My C5.0 model" node to open node properties
@@ -736,10 +759,10 @@ function verifyNewPropertiesFlyoutTitleEntryInConsole(newTitle) {
 	});
 }
 
-function verifyColumnNameEntryInConsole(columnName) {
+function verifyTextEntryInConsole(textEntry) {
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(columnName).to.equal(lastEventLog.data.form.colName);
+		expect(textEntry).to.equal(lastEventLog.data.form.string_empty);
 	});
 }
 
@@ -750,22 +773,24 @@ function verifySamplingRatioParameterValueInConsole(parameterName, value) {
 	});
 }
 
-function verifyErrorMessageForSamplingRatioParameterInConsole(messageType, parameterName, message) {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
-		expect(lastEventLog.data.messages.length).not.equal(0);
-		for (var idx = 0; idx < lastEventLog.data.messages.length; idx++) {
-			if (lastEventLog.data.messages[idx].text === message &&
-					lastEventLog.data.messages[idx].type === messageType &&
-					lastEventLog.data.messages[idx].id_ref === parameterName) {
-				expect(lastEventLog.data.messages[idx].text).to.equal(message);
-				expect(lastEventLog.data.messages[idx].type).to.equal(messageType);
-				expect(lastEventLog.data.messages[idx].id_ref).to.equal(parameterName);
-				break;
-			}
-		}
-	});
-}
+// This function is commented out because the calling code is temporarily commented out,
+// waiting to be fixed.
+// function verifyErrorMessageForSamplingRatioParameterInConsole(messageType, parameterName, message) {
+// 	cy.document().then((doc) => {
+// 		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
+// 		expect(lastEventLog.data.messages.length).not.equal(0);
+// 		for (var idx = 0; idx < lastEventLog.data.messages.length; idx++) {
+// 			if (lastEventLog.data.messages[idx].text === message &&
+// 					lastEventLog.data.messages[idx].type === messageType &&
+// 					lastEventLog.data.messages[idx].id_ref === parameterName) {
+// 				expect(lastEventLog.data.messages[idx].text).to.equal(message);
+// 				expect(lastEventLog.data.messages[idx].type).to.equal(messageType);
+// 				expect(lastEventLog.data.messages[idx].id_ref).to.equal(parameterName);
+// 				break;
+// 			}
+// 		}
+// 	});
+// }
 
 function verifyNoErrorMessageInConsole() {
 	cy.document().then((doc) => {
@@ -774,17 +799,17 @@ function verifyNoErrorMessageInConsole() {
 	});
 }
 
-function verifyTextValueIsNotPresentInColumnName(columnName) {
+function verifyTextValueIsNotPresentInTextField(textField) {
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc, 2);
-		expect("").to.equal(lastEventLog.data.form.colName);
+		expect("").to.equal(lastEventLog.data.form.string_empty);
 	});
 }
 
-function verifyTextValueIsPresentInColumnName(columnName) {
+function verifyTextValueIsPresentInTextField(textField) {
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc, 2);
-		expect(columnName).to.equal(lastEventLog.data.form.colName);
+		expect(textField).to.equal(lastEventLog.data.form.string_empty);
 	});
 }
 

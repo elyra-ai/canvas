@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/* eslint no-bitwise: "off" */
+
 // This class contains utility functions that may be used for both the canvas
 // objects stored in redux and also the copy of canvas objects maintained by
 // the CanvasRender objects.
@@ -22,7 +24,6 @@ import { get, has, isNumber, set } from "lodash";
 import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST }
 	from "../common-canvas/constants/canvas-constants.js";
-
 
 export default class CanvasUtils {
 
@@ -310,10 +311,12 @@ export default class CanvasUtils {
 
 		var startPointX;
 		var startPointY;
+		let dir = NORTH;
 
 		if (originToEndX === 0) {
 			startPointX = originX;
 			startPointY = (endY < originY) ? topEdge : bottomEdge;
+			dir = originToEndY > 0 ? NORTH : SOUTH;
 
 		} else if (endX > originX) {
 			const topRightRatio = originTopOffsetY / (originX - rightEdge);
@@ -328,10 +331,12 @@ export default class CanvasUtils {
 			} else if (ratioRight > botRightRatio) {
 				startPointX = originX + (originBottomOffsetY / ratioRight);
 				startPointY = bottomEdge;
+				dir = SOUTH;
 			// East
 			} else {
 				startPointX = rightEdge;
 				startPointY = originY + (originRightOffsetX * ratioRight);
+				dir = EAST;
 			}
 		// End point is to the left of center
 		} else {
@@ -347,14 +352,16 @@ export default class CanvasUtils {
 			} else if (ratioLeft < botLeftRatio) {
 				startPointX = originX + (originBottomOffsetY / ratioLeft);
 				startPointY = bottomEdge;
+				dir = SOUTH;
 			// West
 			} else {
 				startPointX = leftEdge;
 				startPointY = originY - (originLeftOffsetX * ratioLeft);
+				dir = WEST;
 			}
 		}
 
-		return { x: startPointX, y: startPointY, originX, originY };
+		return { x: startPointX, y: startPointY, originX, originY, dir };
 	}
 
 	// Returns a direction NORTH, SOUTH, EAST or WEST which is the direction
@@ -407,6 +414,52 @@ export default class CanvasUtils {
 		return dir;
 	}
 
+	// Returns a direction (n, s, e or w) of a port at the
+	// x, y position on a node. This is the direction that
+	// would be taken by an outgoing link from a source node
+	// or an incoming link to a target node.
+	static getPortDir(x, y, node) {
+		const halfNodeWidth = (node.width / 2);
+		const halfNodeHeight = (node.height / 2);
+		const xFromCenter = x - halfNodeWidth;
+		const yFromCenter = y - halfNodeHeight;
+		// In the center horizontally
+		if (xFromCenter === 0) {
+			if (yFromCenter > 0) {
+				return SOUTH;
+			}
+			return NORTH;
+
+		// To the right
+		} else if (xFromCenter > 0) {
+			const angleToRight = Math.atan(yFromCenter / xFromCenter);
+			const angleToBottomRight = Math.atan(halfNodeHeight / halfNodeWidth);
+			const angleTopRight = -angleToBottomRight;
+			if (angleToRight === 0) {
+				return EAST;
+			} else if (angleToRight < angleTopRight) {
+				return NORTH;
+			} else if (angleToRight > angleToBottomRight) {
+				return SOUTH;
+			}
+			return EAST;
+
+		}
+		// To the left
+		const angleToLeft = Math.atan(yFromCenter / xFromCenter);
+		const angleToTopLeft = Math.atan(halfNodeHeight / halfNodeWidth);
+		const angleToBottomLeft = -angleToTopLeft;
+		if (angleToLeft === 0) {
+			return WEST;
+		} else if (angleToLeft > angleToTopLeft) {
+			return NORTH;
+		} else if (angleToLeft < angleToBottomLeft) {
+			return SOUTH;
+		}
+		return WEST;
+	}
+
+
 	// Returns true if the line described by x1, y1, x2, y2 either intersects or
 	// is fully inside the rectangle described by rx1, ry1, rx2, ry2.
 	static lineIntersectRectangle(x1, y1, x2, y2, rx1, ry1, rx2, ry2) {
@@ -445,20 +498,55 @@ export default class CanvasUtils {
 		return null;
 	}
 
+	// Returns the distance from the start point to finsih point of the link line.
+	static getLinkDistance(link) {
+		const x = link.x2 - link.x1;
+		const y = link.y2 - link.y1;
+
+		return Math.sqrt((x * x) + (y * y));
+	}
+
+	// Return the center point of a quadratic bezier curve where p0 is the
+	// start point, p1 is the control point and p2 is the end point.
+	// This works for either the x or y coordinate.
+	static getCenterPointQuadBezier(p0, p1, p2) {
+		const t = 0.5;
+		return (1 - t) * (1 - t) * p0 + 2 * (1 - t) * t * p1 + t * t * p2;
+	}
+
+	// Return the center point of a cubic bezier curve where p0 is the
+	// start point, p1 and p2 are the control points and p3 is the end point.
+	// This works for either the x or y coordinate.
+	static getCenterPointCubicBezier(p0, p1, p2, p3) {
+		const t = 0.5;
+		return (1 - t) * (1 - t) * (1 - t) * p0 + 3 * (1 - t) * (1 - t) * t * p1 + 3 * (1 - t) * t * t * p2 + t * t * t * p3;
+	}
+
+	// Returns true if the node passed in should be resizeable. All nodes are resizabele
+	// except binding nodes in a sub-flow when enableResizableNodes is switched on.
+	static isNodeResizable(node, config) {
+		if (!config.enableEditingActions ||
+				this.isSuperBindingNode(node) ||
+				(!config.enableResizableNodes && !this.isExpandedSupernode(node))) {
+			return false;
+		}
+		return true;
+	}
+
 	// Returns true if a link of type `type` can be created between the two
 	// node/port combinations provided given the set of current links provided.
-	static isConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, type) {
+	static isConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, type, selfRefLinkAllowed) {
 		if (type === ASSOCIATION_LINK) {
 			return this.isAssocConnectionAllowed(srcNode, trgNode, links);
 		}
-		return this.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links);
+		return this.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed);
 	}
 
 	// Returns true if a node-node data link can be created between the two
 	// node/port combinations provided on a canvas where detached links are
 	// allowed, given the set of current link provided.
-	static isConnectionAllowedWithDetachedLinks(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
-		if (srcNode && trgNode && srcNode.id === trgNode.id) { // Cannot connect to ourselves, currently.
+	static isConnectionAllowedWithDetachedLinks(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed) {
+		if (srcNode && trgNode && srcNode.id === trgNode.id && !selfRefLinkAllowed) { // Cannot connect to ourselves.
 			return false;
 		}
 
@@ -509,9 +597,9 @@ export default class CanvasUtils {
 
 	// Returns true if an existing link to the target node and port can be
 	// replaced with a new link from the srcNode to the trgNode and trgPortId.
-	static isDataLinkReplacementAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+	static isDataLinkReplacementAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed) {
 
-		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
+		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed)) {
 			return false;
 		}
 
@@ -530,9 +618,9 @@ export default class CanvasUtils {
 	// Returns true if a regular node-node data link can be created between the
 	// two node/port combinations provided, given the current set of links
 	// passed in.
-	static isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+	static isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed) {
 
-		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
+		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed)) {
 			return false;
 		}
 
@@ -546,13 +634,13 @@ export default class CanvasUtils {
 	// Returns true if a regular node-node data link can be created between the
 	// two node/port combinations provided, without checking on cardinalities of
 	// the source or target nodes.
-	static isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+	static isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed) {
 
 		if (!srcNode || !trgNode) { // Source or target are not valid.
 			return false;
 		}
 
-		if (srcNode.id === trgNode.id) { // Cannot connect to ourselves, currently.
+		if (srcNode.id === trgNode.id && !selfRefLinkAllowed) { // Cannot connect to ourselves.
 			return false;
 		}
 
@@ -766,6 +854,53 @@ export default class CanvasUtils {
 			return true;
 		}
 		return false;
+	}
+
+	// Returns a source port Id if one exists in the link, otherwise defaults
+	// to the first available port on the source node.
+	static getSourcePortId(link, srcNode) {
+		var srcPortId;
+		if (link.srcNodePortId) {
+			srcPortId = link.srcNodePortId;
+		} else if (srcNode.outputs && srcNode.outputs.length > 0) {
+			srcPortId = srcNode.outputs[0].id;
+		} else {
+			srcPortId = null;
+		}
+		return srcPortId;
+	}
+
+	// Returns a target port Id if one exists in the link, otherwise defaults
+	// to the first available port on the target node.
+	static getTargetPortId(link, trgNode) {
+		var trgPortId;
+		if (link.trgNodePortId) {
+			trgPortId = link.trgNodePortId;
+		} else if (trgNode.inputs && trgNode.inputs.length > 0) {
+			trgPortId = trgNode.inputs[0].id;
+		} else {
+			trgPortId = null;
+		}
+		return trgPortId;
+	}
+
+
+	// Returns the port referenced by srcPortId from the node referenced
+	// by srcNode.
+	static getOutputPort(srcPortId, srcNode) {
+		if (srcNode && srcNode.outputs) {
+			return srcNode.outputs.find((p) => p.id === srcPortId);
+		}
+		return null;
+	}
+
+	// Returns the port referenced by trgPortId from the node referenced
+	// by trgNode.
+	static getInputPort(trgPortId, trgNode) {
+		if (trgNode && trgNode.inputs) {
+			return trgNode.inputs.find((p) => p.id === trgPortId);
+		}
+		return null;
 	}
 
 	// Returns the port from the port array indicated by the portId or null
@@ -1203,6 +1338,213 @@ export default class CanvasUtils {
 			return className;
 		}
 		return null;
+	}
+
+	// Returns true if the hex passed in is for a dark color where 'dark'
+	// is defined as a color that would require white text to be used
+	// if the hex color was a background color.
+	static isDarkColor(hex) {
+		const c = hex.substring(1); // strip #
+		const rgb = parseInt(c, 16); // convert rrggbb to decimal
+
+		const r = (rgb >> 16) & 0xff; // extract red
+		const g = (rgb >> 8) & 0xff; // extract green
+		const b = (rgb >> 0) & 0xff; // extract blue
+
+		const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+		return (luma < 108);
+	}
+
+	// Applies the outlineStyle format to the D3 comment selection passed in,
+	// if one exists, in the formats array passed in.
+	static applyOutlineStyle(commentSel, formats) {
+		if (formats?.length > 0) {
+			formats.forEach((f) => {
+				if (f.type === "outlineStyle") { // Only apply outline style to outer <div>
+					const { field, value } = CanvasUtils.convertFormat(f);
+					commentSel.style(field, value);
+				}
+			});
+		}
+	}
+
+	// Applies all formats from the formats array, that are not outlineStyle, to the
+	// D3 comment selection passed in.
+	static applyNonOutlineStyle(commentSel, formats) {
+		if (formats?.length > 0) {
+			formats.forEach((f) => {
+				if (f.type !== "outlineStyle") { // Only apply outline style to outer <div>
+					const { field, value } = CanvasUtils.convertFormat(f);
+					commentSel.style(field, value);
+				}
+			});
+		}
+	}
+
+	// Returns an object contaiing the start and end positions
+	// of any current selection in the domNode passed in. The
+	// DOM node is expected to contain text which is stored in a
+	// set of child nodes that are text objects.
+	static getSelectionPositions(domNode) {
+		const sel = window.getSelection();
+		let anchorPos;
+		let focusPos;
+		let runningLen = 0;
+		domNode.childNodes.forEach((cn) => {
+			if (cn.nodeValue) {
+				const textLen = cn.nodeValue.length;
+				if (cn === sel.anchorNode) {
+					anchorPos = runningLen + sel.anchorOffset;
+				}
+				if (cn === sel.focusNode) {
+					focusPos = runningLen + sel.focusOffset;
+				}
+				runningLen += textLen;
+			}
+		});
+		return { start: Math.min(anchorPos, focusPos), end: Math.max(anchorPos, focusPos) };
+	}
+
+	// Selects the entire contents of the DOM node passed in.
+	static selectNodeContents(domNode) {
+		var range = document.createRange();
+		range.selectNodeContents(domNode);
+
+		var sel = window.getSelection();
+		sel.removeAllRanges();
+		sel.addRange(range);
+	}
+
+	// Selects the range of characters in the text DOM node passed in
+	// between the start and end positions passed in. The DOM node is
+	// expected to contain text which is stored in a set of child nodes
+	// that are text objects. selection is an optional object containing
+	// the current selection which is provided by the Cypress test cases.
+	static selectNodeRange(domNode, start, end, selection) {
+		const range = document.createRange();
+
+		let startTextNode;
+		let endTextNode;
+		let startTextPos;
+		let endTextPos;
+		let runningLen = 0;
+		domNode.childNodes.forEach((cn) => {
+			const textLen = cn.nodeValue.length;
+			runningLen += textLen;
+			if (start <= runningLen && !startTextNode) {
+				startTextNode = cn;
+				startTextPos = textLen - (runningLen - start);
+			}
+			if (end <= runningLen && !endTextNode) {
+				endTextNode = cn;
+				endTextPos = textLen - (runningLen - end);
+			}
+		});
+
+		range.setStart(startTextNode, startTextPos);
+		range.setEnd(endTextNode, endTextPos);
+
+		const sel = selection ? selection : window.getSelection();
+		sel.removeAllRanges();
+		sel.addRange(range);
+	}
+
+	// Returns an object containing a CSS field and value that
+	// can be applied to a <div> contining text based on the
+	// format type and action passed in.
+	static convertFormat(format) {
+		switch (format.type) {
+		case "bold":
+			return { field: "font-weight", value: "600" };
+
+		case "italics":
+			return { field: "font-style", value: "italic" };
+
+		case "fontType": {
+			const fontFamily = this.getFontFamily(format.value);
+			return { field: "font-family", value: fontFamily };
+		}
+
+		case "textDecoration": {
+			switch (format.value) {
+			default:
+			case "strikethrough":
+				return { field: "text-decoration", value: "line-through" };
+			case "underline":
+				return { field: "text-decoration", value: "underline" };
+			case "strikethrough underline":
+			case "underline strikethrough":
+				return { field: "text-decoration", value: "underline line-through" };
+			}
+		}
+
+		case "textColor": {
+			return { field: "color", value: format.value };
+		}
+
+		case "backgroundColor": {
+			return { field: "background-color", value: format.value };
+		}
+
+		case "textSize": {
+			const size = format.value.substring(10);
+			return { field: "font-size", value: `${size}px` };
+		}
+
+		case "outlineStyle": {
+			switch (format.value) {
+			default:
+			case "outline-solid":
+				return { field: "border-width", value: "1px" };
+			case "outline-none":
+				return { field: "border-width", value: "0" };
+			}
+		}
+
+		case "alignHorizontally": {
+			switch (format.value) {
+			default:
+			case "align-left":
+				return { field: "text-align", value: "left" };
+			case "align-center":
+				return { field: "text-align", value: "center" };
+			case "align-right":
+				return { field: "text-align", value: "right" };
+			}
+		}
+
+		case "alignVertically": {
+			switch (format.value) {
+			default:
+			case "align-top":
+				return { field: "vertical-align", value: "top" };
+			case "align-middle":
+				return { field: "vertical-align", value: "middle" };
+			case "align-bottom":
+				return { field: "vertical-align", value: "bottom" };
+			}
+		}
+
+		default:
+			return { field: format.type, value: format.value };
+		}
+	}
+
+	// Returns a font family for the font action passed in.
+	static getFontFamily(action) {
+		switch (action) {
+		default:
+		case ("font-ibm-plex-sans"): return "\"IBM Plex Sans\", sans-serif";
+		case ("font-ibm-plex-serif"): return "\"IBM Plex Serif\", serif";
+		case ("font-ibm-plex-sans-condensed"): return "IBM Plex Sans Condensed";
+		case ("font-ibm-plex-mono"): return "\"IBM Plex Mono\", monospace";
+		case ("font-arial"): return "\"Arial\", sans-serif";
+		case ("font-comic-sans-ms"): return "\"Comic Sans MS\", sans-serif";
+		case ("font-gill-sans"): return "\"Gill Sans\", sans-serif";
+		case ("font-helvetica-neue"): return "\"Helvetica Neue\", sans-serif";
+		case ("font-times-new-roman"): return "\"Times New Roman\", serif";
+		case ("font-verdana"): return "\"Verdana\", sans-serif";
+		}
 	}
 
 	// Returns the element passed in, or an ancestor of the element, if either

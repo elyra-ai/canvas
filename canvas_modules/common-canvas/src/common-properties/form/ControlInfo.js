@@ -127,6 +127,9 @@ export class Control {
 		if (settings.childItem) {
 			this.childItem = settings.childItem;
 		}
+		if (settings.multiSelectEditChildItem) {
+			this.multiSelectEditChildItem = settings.multiSelectEditChildItem;
+		}
 		if (settings.layout) {
 			this.layout = settings.layout;
 		}
@@ -191,6 +194,12 @@ export class Control {
 		}
 		if (settings.buttons) {
 			this.buttons = settings.buttons;
+		}
+		if (settings.helperText) {
+			this.helperText = settings.helperText;
+		}
+		if (settings.readOnly) {
+			this.readOnly = settings.readOnly;
 		}
 		this.light = get(settings, "light", true);
 	}

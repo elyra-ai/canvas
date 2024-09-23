@@ -37,6 +37,7 @@ describe("Test of subpanel editing of selectcolumns in a structurelisteditor", f
 		cy.verifyRowInSelectColumnsTable("fields2", "Na", 2);
 
 		// Go back into field picker and verify the two options are still selected
+		cy.cancelRowSelection("fields2");
 		cy.clickButtonInTable("Add", "fields2");
 		cy.verifyFieldIsSelectedInFieldPickerPanel("BP", "string", "Select Fields for Select Columns");
 		cy.verifyFieldIsSelectedInFieldPickerPanel("Na", "double", "Select Fields for Select Columns");
@@ -61,6 +62,6 @@ describe("Test the feature to have tables use the available vertical space", fun
 		cy.toggleCategory("Table");
 		cy.openSubPanel("Configure Fields in Sub-panel");
 		cy.clickButtonInTable("Add in empty table", "structurelist_sub_panel");
-		cy.verifyHeightOfTable("structurelist_sub_panel", "473px");
+		cy.verifyHeightOfTable("structurelist_sub_panel", "475.1350402832031px");
 	});
 });

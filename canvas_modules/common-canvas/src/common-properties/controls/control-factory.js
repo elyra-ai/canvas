@@ -119,13 +119,13 @@ export default class ControlFactory {
 	* @param propertyId
 	* @param tableInfo
 	*/
-	createControlItem(control, propertyId, tableInfo) {
+	createControlItem(control, propertyId, tableInfo, readOnly = false) {
 		const hidden = this.controller.getControlState(propertyId) === STATES.HIDDEN;
 		if (hidden) {
 			return null; // Do not render hidden controls
 		}
 
-		const controlObj = this.createControl(control, propertyId, tableInfo);
+		const controlObj = this.createControl(control, propertyId, tableInfo, readOnly);
 		const className = control.className ? control.className : "";
 
 		/*
@@ -154,7 +154,7 @@ export default class ControlFactory {
 	}
 
 	// Creates all controls that can be standalone or in tables
-	createControl(control, propertyId, tableInfo) {
+	createControl(control, propertyId, tableInfo, isReadOnly = false) {
 		if (!control || !propertyId) {
 			return null;
 		}
@@ -167,6 +167,7 @@ export default class ControlFactory {
 		props.control = control;
 		props.controller = this.controller;
 		props.propertyId = propertyId;
+		props.readOnly = isReadOnly || control.readOnly;
 		props.controlItem = (
 			<ControlItem
 				key={"ctrl-item-" + control.name}
@@ -200,7 +201,10 @@ export default class ControlFactory {
 			createdControl = (<ToggleControl {...props} />);
 			break;
 		case (ControlType.LIST):
-			createdControl = (<ListControl {...props} />);
+			createdControl = (<ListControl
+				{...props}
+				rightFlyout={this.rightFlyout}
+			/>);
 			break;
 		case (ControlType.EXPRESSION):
 			createdControl = (<ExpressionControl

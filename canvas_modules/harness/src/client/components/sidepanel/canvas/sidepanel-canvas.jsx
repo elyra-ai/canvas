@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,36 +23,8 @@ import { TextInput, FileUploader, Button, Select, SelectItemGroup, SelectItem, C
 	from "@carbon/react";
 import { get, set } from "lodash";
 import {
-	NONE_SAVE_ZOOM,
-	LOCAL_STORAGE,
-	PIPELINE_FLOW,
-	NONE_DRAG,
-	DURING_DRAG,
-	AFTER_DRAG,
 	CHOOSE_FROM_LOCATION,
 	LOCAL_FILE_OPTION,
-	VERTICAL_FORMAT,
-	HORIZONTAL_FORMAT,
-	INTERACTION_MOUSE,
-	INTERACTION_TRACKPAD,
-	INTERACTION_CARBON,
-	CURVE_LINKS,
-	ELBOW_LINKS,
-	STRAIGHT_LINKS,
-	DIRECTION_LEFT_RIGHT,
-	DIRECTION_TOP_BOTTOM,
-	DIRECTION_BOTTOM_TOP,
-	IMAGE_DISPLAY_SVG_INLINE,
-	IMAGE_DISPLAY_LOAD_SVG_TO_DEFS,
-	IMAGE_DISPLAY_SVG_AS_IMAGE,
-	LINK_SELECTION_NONE,
-	LINK_SELECTION_LINK_ONLY,
-	LINK_SELECTION_HANDLES,
-	LINK_SELECTION_DETACHABLE,
-	ASSOC_RIGHT_SIDE_CURVE,
-	ASSOC_STRAIGHT,
-	UNDERLAY_NONE,
-	UNDERLAY_VARIABLE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_STAGES,
@@ -64,11 +36,13 @@ import {
 	EXAMPLE_APP_LOGIC,
 	EXAMPLE_APP_READ_ONLY,
 	EXAMPLE_APP_PROGRESS,
+	EXAMPLE_APP_JSX_ICONS,
+	EXAMPLE_APP_ALL_PORTS,
+	EXAMPLE_APP_PARALLAX,
+	EXAMPLE_APP_NETWORK,
+	EXAMPLE_APP_WYSIWYG,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
-	PALETTE_FLYOUT,
-	PALETTE_MODAL,
-	PALETTE_NONE,
 	TIP_PALETTE_CATEGORIES,
 	TIP_PALETTE_NODE_TEMPLATES,
 	TIP_NODES,
@@ -76,20 +50,59 @@ import {
 	TIP_DECORATIONS,
 	TIP_LINKS,
 	TIP_STATE_TAG,
-	TOOLBAR_LAYOUT_NONE,
-	TOOLBAR_LAYOUT_TOP,
 	TOOLBAR_TYPE_DEFAULT,
 	TOOLBAR_TYPE_SUB_AREAS,
+	TOOLBAR_TYPE_CUSTOMIZE_AUTO,
 	TOOLBAR_TYPE_SINGLE_BAR,
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
 	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
-} from "../../../constants/constants.js";
+} from "../../../constants/harness-constants.js";
 
-import { STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY }
-	from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
+import {
+	NODE_FORMAT_VERTICAL,
+	NODE_FORMAT_HORIZONTAL,
+	STATE_TAG_NONE,
+	STATE_TAG_LOCKED,
+	STATE_TAG_READ_ONLY,
+	SNAP_TO_GRID_NONE,
+	SNAP_TO_GRID_AFTER,
+	SNAP_TO_GRID_DURING,
+	SAVE_ZOOM_NONE,
+	SAVE_ZOOM_PIPELINE_FLOW,
+	SAVE_ZOOM_LOCAL_STORAGE,
+	LINK_METHOD_PORTS,
+	LINK_METHOD_FREEFORM,
+	LINK_DIR_LEFT_RIGHT,
+	LINK_DIR_RIGHT_LEFT,
+	LINK_DIR_TOP_BOTTOM,
+	LINK_DIR_BOTTOM_TOP,
+	LINK_TYPE_CURVE,
+	LINK_TYPE_ELBOW,
+	LINK_TYPE_STRAIGHT,
+	LINK_TYPE_PARALLAX,
+	LINK_SELECTION_NONE,
+	LINK_SELECTION_LINK_ONLY,
+	LINK_SELECTION_HANDLES,
+	LINK_SELECTION_DETACHABLE,
+	ASSOC_RIGHT_SIDE_CURVE,
+	ASSOC_STRAIGHT,
+	INTERACTION_MOUSE,
+	INTERACTION_TRACKPAD,
+	INTERACTION_CARBON,
+	IMAGE_DISPLAY_SVG_INLINE,
+	IMAGE_DISPLAY_LOAD_SVG_TO_DEFS,
+	IMAGE_DISPLAY_SVG_AS_IMAGE,
+	UNDERLAY_NONE,
+	UNDERLAY_VARIABLE,
+	PALETTE_LAYOUT_FLYOUT,
+	PALETTE_LAYOUT_DIALOG,
+	PALETTE_LAYOUT_NONE,
+	TOOLBAR_LAYOUT_NONE,
+	TOOLBAR_LAYOUT_TOP
+} from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
 
 import FormsService from "../../../services/FormsService";
 
@@ -125,8 +138,8 @@ export default class SidePanelForms extends React.Component {
 		this.tipConfigChange = this.tipConfigChange.bind(this);
 		this.onDragStart = this.onDragStart.bind(this);
 	}
-	// should be changed to componentDidMount but causes FVT tests to fail
-	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
+
+	componentDidMount() { // eslint-disable-line camelcase, react/sort-comp
 		const that = this;
 
 		FormsService.getFiles("diagrams")
@@ -241,16 +254,10 @@ export default class SidePanelForms extends React.Component {
 		this.props.setStateValue(fieldName, notificationConfig);
 	}
 
-	notificationConfigToggle(value, control) {
-		let id = control;
-		let fieldName = "notificationConfig";
-		if (id.slice(-1) === "2") {
-			id = control.slice(0, -1);
-			fieldName = "notificationConfig2";
-		}
-		const notificationConfig = this.props.getStateValue(fieldName);
-		notificationConfig[id] = value;
-		this.props.setStateValue(notificationConfig, fieldName);
+	notificationConfigToggle(notifConfig, field, value) {
+		const configObj = this.props.getStateValue(notifConfig);
+		configObj[field] = value;
+		this.props.setStateValue(notifConfig, configObj);
 	}
 
 	exampleAppOptionChange(value) {
@@ -262,9 +269,9 @@ export default class SidePanelForms extends React.Component {
 		this.props.setStateValue("selectedExampleApp", value);
 	}
 
-	tipConfigChange(checked, target) {
+	tipConfigChange(event, { checked, id }) {
 		const tipConf = Object.assign({}, this.props.getStateValue("selectedTipConfig"));
-		switch (target) {
+		switch (id) {
 		case "tip_palette_categories":
 			set(tipConf, "palette.categories", checked);
 			break;
@@ -550,16 +557,16 @@ export default class SidePanelForms extends React.Component {
 						orientation="vertical"
 					>
 						<RadioButton
-							value={NONE_SAVE_ZOOM}
-							labelText={NONE_SAVE_ZOOM}
+							value={SAVE_ZOOM_NONE}
+							labelText={SAVE_ZOOM_NONE}
 						/>
 						<RadioButton
-							value={LOCAL_STORAGE}
-							labelText={LOCAL_STORAGE}
+							value={SAVE_ZOOM_LOCAL_STORAGE}
+							labelText={SAVE_ZOOM_LOCAL_STORAGE}
 						/>
 						<RadioButton
-							value={PIPELINE_FLOW}
-							labelText={PIPELINE_FLOW}
+							value={SAVE_ZOOM_PIPELINE_FLOW}
+							labelText={SAVE_ZOOM_PIPELINE_FLOW}
 						/>
 					</RadioButtonGroup>
 				</FormGroup>
@@ -602,16 +609,16 @@ export default class SidePanelForms extends React.Component {
 						orientation="vertical"
 					>
 						<RadioButton
-							value={NONE_DRAG}
-							labelText={NONE_DRAG}
+							value={SNAP_TO_GRID_NONE}
+							labelText={SNAP_TO_GRID_NONE}
 						/>
 						<RadioButton
-							value={DURING_DRAG}
-							labelText={DURING_DRAG}
+							value={SNAP_TO_GRID_DURING}
+							labelText={SNAP_TO_GRID_DURING}
 						/>
 						<RadioButton
-							value={AFTER_DRAG}
-							labelText={AFTER_DRAG}
+							value={SNAP_TO_GRID_AFTER}
+							labelText={SNAP_TO_GRID_AFTER}
 						/>
 					</RadioButtonGroup>
 				</FormGroup>
@@ -637,6 +644,16 @@ export default class SidePanelForms extends React.Component {
 				/>
 			</div>
 		</div>);
+
+		var enableShowLeftFlyout = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedShowLeftFlyout" // Set ID to corresponding field in App.js state
+				labelText="Open Left Flyout (Only applicable when Palette Layout is set to None)}"
+				toggled={this.props.getStateValue("selectedShowLeftFlyout")}
+				onToggle={(val) => this.setStateValue(val, "selectedShowLeftFlyout")}
+			/>
+		</div>);
+
 
 		var enableShowRightFlyout = (<div className="harness-sidepanel-children">
 			<Toggle
@@ -674,6 +691,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableWYSIWYGComments = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedWYSIWYGComments" // Set ID to corresponding field in App.js state
+				labelText="Enable Wysiwyg Editor"
+				toggled={this.props.getStateValue("selectedWYSIWYGComments")}
+				onToggle={(val) => this.setStateValue(val, "selectedWYSIWYGComments")}
+			/>
+		</div>);
+
 		var enableContextToolbar = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedContextToolbar" // Set ID to corresponding field in App.js state
@@ -707,6 +733,15 @@ export default class SidePanelForms extends React.Component {
 				labelText="Enable Browser Edit Menu"
 				toggled={this.props.getStateValue("selectedBrowserEditMenu")}
 				onToggle={(val) => this.setStateValue(val, "selectedBrowserEditMenu")}
+			/>
+		</div>);
+
+		var enableLeftFlyoutUnderToolbar = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedLeftFlyoutUnderToolbar" // Set ID to corresponding field in App.js state
+				labelText="Enable Left Flyout Under Toolbar"
+				toggled={this.props.getStateValue("selectedLeftFlyoutUnderToolbar")}
+				onToggle={(val) => this.setStateValue(val, "selectedLeftFlyoutUnderToolbar")}
 			/>
 		</div>);
 
@@ -752,6 +787,15 @@ export default class SidePanelForms extends React.Component {
 				labelText="Enable Association Link Creation"
 				toggled={this.props.getStateValue("selectedAssocLinkCreation")}
 				onToggle={(val) => this.setStateValue(val, "selectedAssocLinkCreation")}
+			/>
+		</div>);
+
+		var enableLinksOverNodes = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedLinksOverNodes"
+				labelText="Enable Links Over Nodes"
+				toggled={this.props.getStateValue("selectedLinksOverNodes")}
+				onToggle={(val) => this.setStateValue(val, "selectedLinksOverNodes")}
 			/>
 		</div>);
 
@@ -1004,6 +1048,24 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableStraightLinksAsFreeform = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedStraightLinksAsFreeform" // Set ID to corresponding field in App.js state
+				labelText="Enable Straight Links as Freeform"
+				toggled={this.props.getStateValue("selectedStraightLinksAsFreeform")}
+				onToggle={(val) => this.setStateValue(val, "selectedStraightLinksAsFreeform")}
+			/>
+		</div>);
+
+		var enableSelfRefLinks = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedSelfRefLinks" // Set ID to corresponding field in App.js state
+				labelText="Enable Self Referencing Links"
+				toggled={this.props.getStateValue("selectedSelfRefLinks")}
+				onToggle={(val) => this.setStateValue(val, "selectedSelfRefLinks")}
+			/>
+		</div>);
+
 		var interactionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-interaction-type">
 			<FormGroup
 				legendText="Interaction Type"
@@ -1043,12 +1105,12 @@ export default class SidePanelForms extends React.Component {
 					orientation="vertical"
 				>
 					<RadioButton
-						value={VERTICAL_FORMAT}
-						labelText={VERTICAL_FORMAT}
+						value={NODE_FORMAT_VERTICAL}
+						labelText={NODE_FORMAT_VERTICAL}
 					/>
 					<RadioButton
-						value={HORIZONTAL_FORMAT}
-						labelText={HORIZONTAL_FORMAT}
+						value={NODE_FORMAT_HORIZONTAL}
+						labelText={NODE_FORMAT_HORIZONTAL}
 					/>
 				</RadioButtonGroup>
 			</FormGroup>
@@ -1066,24 +1128,52 @@ export default class SidePanelForms extends React.Component {
 					orientation="vertical"
 				>
 					<RadioButton
-						value={CURVE_LINKS}
-						labelText={CURVE_LINKS}
+						value={LINK_TYPE_CURVE}
+						labelText={LINK_TYPE_CURVE}
 					/>
 					<RadioButton
-						value={ELBOW_LINKS}
-						labelText={ELBOW_LINKS}
+						value={LINK_TYPE_ELBOW}
+						labelText={LINK_TYPE_ELBOW}
 					/>
 					<RadioButton
-						value={STRAIGHT_LINKS}
-						labelText={STRAIGHT_LINKS}
+						value={LINK_TYPE_PARALLAX}
+						labelText={LINK_TYPE_PARALLAX}
+					/>
+					<RadioButton
+						value={LINK_TYPE_STRAIGHT}
+						labelText={LINK_TYPE_STRAIGHT}
 					/>
 				</RadioButtonGroup>
 			</FormGroup>
 		</div>);
 
+		var linkMethod = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-direction">
+			<FormGroup
+				legendText="Link Method"
+			>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedLinkMethod" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedLinkMethod")}
+					orientation="vertical"
+				>
+					<RadioButton
+						value={LINK_METHOD_PORTS}
+						labelText={LINK_METHOD_PORTS}
+					/>
+					<RadioButton
+						value={LINK_METHOD_FREEFORM}
+						labelText={LINK_METHOD_FREEFORM}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
+		</div>);
+
+
 		var linkDirection = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-direction">
 			<FormGroup
-				legendText="Link Direction"
+				legendText="Link Direction (Node port position)"
 			>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
@@ -1093,16 +1183,20 @@ export default class SidePanelForms extends React.Component {
 					orientation="vertical"
 				>
 					<RadioButton
-						value={DIRECTION_LEFT_RIGHT}
-						labelText={DIRECTION_LEFT_RIGHT}
+						value={LINK_DIR_LEFT_RIGHT}
+						labelText={LINK_DIR_LEFT_RIGHT}
 					/>
 					<RadioButton
-						value={DIRECTION_TOP_BOTTOM}
-						labelText={DIRECTION_TOP_BOTTOM}
+						value={LINK_DIR_RIGHT_LEFT}
+						labelText={LINK_DIR_RIGHT_LEFT}
 					/>
 					<RadioButton
-						value={DIRECTION_BOTTOM_TOP}
-						labelText={DIRECTION_BOTTOM_TOP}
+						value={LINK_DIR_TOP_BOTTOM}
+						labelText={LINK_DIR_TOP_BOTTOM}
+					/>
+					<RadioButton
+						value={LINK_DIR_BOTTOM_TOP}
+						labelText={LINK_DIR_BOTTOM_TOP}
 					/>
 				</RadioButtonGroup>
 			</FormGroup>
@@ -1140,6 +1234,10 @@ export default class SidePanelForms extends React.Component {
 						labelText={EXAMPLE_APP_PROGRESS}
 					/>
 					<RadioButton
+						value={EXAMPLE_APP_JSX_ICONS}
+						labelText={EXAMPLE_APP_JSX_ICONS}
+					/>
+					<RadioButton
 						value={EXAMPLE_APP_LOGIC}
 						labelText={EXAMPLE_APP_LOGIC}
 					/>
@@ -1158,6 +1256,22 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={EXAMPLE_APP_TABLES}
 						labelText={EXAMPLE_APP_TABLES}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_ALL_PORTS}
+						labelText={EXAMPLE_APP_ALL_PORTS}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_PARALLAX}
+						labelText={EXAMPLE_APP_PARALLAX}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_NETWORK}
+						labelText={EXAMPLE_APP_NETWORK}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_WYSIWYG}
+						labelText={EXAMPLE_APP_WYSIWYG}
 					/>
 					<RadioButton
 						value={EXAMPLE_APP_REACT_NODES_CARBON}
@@ -1187,16 +1301,16 @@ export default class SidePanelForms extends React.Component {
 					orientation="vertical"
 				>
 					<RadioButton
-						value={PALETTE_FLYOUT}
-						labelText={PALETTE_FLYOUT}
+						value={PALETTE_LAYOUT_FLYOUT}
+						labelText={PALETTE_LAYOUT_FLYOUT}
 					/>
 					<RadioButton
-						value={PALETTE_MODAL}
-						labelText={PALETTE_MODAL}
+						value={PALETTE_LAYOUT_DIALOG}
+						labelText={PALETTE_LAYOUT_DIALOG}
 					/>
 					<RadioButton
-						value={PALETTE_NONE}
-						labelText={PALETTE_NONE}
+						value={PALETTE_LAYOUT_NONE}
+						labelText={PALETTE_LAYOUT_NONE}
 					/>
 				</RadioButtonGroup>
 			</FormGroup>
@@ -1286,6 +1400,10 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={TOOLBAR_TYPE_SUB_AREAS}
 						labelText={TOOLBAR_TYPE_SUB_AREAS}
+					/>
+					<RadioButton
+						value={TOOLBAR_TYPE_CUSTOMIZE_AUTO}
+						labelText={TOOLBAR_TYPE_CUSTOMIZE_AUTO}
 					/>
 					<RadioButton
 						value={TOOLBAR_TYPE_SINGLE_BAR}
@@ -1444,13 +1562,13 @@ export default class SidePanelForms extends React.Component {
 				id="keepOpen" // Set ID to corresponding field in App.js state
 				labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
 				toggled={this.props.getStateValue("notificationConfig").keepOpen}
-				onToggle={(val) => this.setStateValue(val, "notificationConfig")}
+				onToggle={(val) => this.notificationConfigToggle("notificationConfig", "keepOpen", val)}
 			/>
 			<Toggle
 				id="secondaryButtonDisabled" // Set ID to corresponding field in App.js state
 				labelText="Disable the notification center secondary button"
 				toggled={this.props.getStateValue("notificationConfig").secondaryButtonDisabled}
-				onToggle={(val) => this.setStateValue(val, "secondaryButtonDisabled")}
+				onToggle={(val) => this.notificationConfigToggle("notificationConfig", "secondaryButtonDisabled", val)}
 			/>
 		</div>);
 
@@ -1497,7 +1615,7 @@ export default class SidePanelForms extends React.Component {
 				disabled={!this.props.getStateValue("selectedExtraCanvasDisplayed")}
 				labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
 				toggled={this.props.getStateValue("notificationConfig2").keepOpen}
-				onToggle={(val) => this.setStateValue(val, "notificationConfig2")}
+				onToggle={(val) => this.notificationConfigToggle("notificationConfig2", "keepOpen", val)}
 			/>
 		</div>);
 
@@ -1540,6 +1658,10 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableHighlightUnavailableNodes}
 					{divider}
+					{enableSelfRefLinks}
+					{divider}
+					{linkDirection}
+					{divider}
 					{enableSingleOutputPortDisplay}
 					{divider}
 					{displayFullLabelOnHover}
@@ -1552,19 +1674,25 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{linkType}
 					{divider}
-					{linkDirection}
+					{linkMethod}
 					{divider}
 					{enableLinkSelection}
+					{divider}
+					{enableStraightLinksAsFreeform}
 					{divider}
 					{enableLinkReplaceOnNewConnection}
 					{divider}
 					{enableAssocLinkCreation}
+					{divider}
+					{enableLinksOverNodes}
 					{divider}
 					{assocLinkType}
 					{divider}
 					<div className="harness-side-panel-header">Comments</div>
 					{divider}
 					{enableMarkdownInComments}
+					{divider}
+					{enableWYSIWYGComments}
 					{divider}
 					<div className="harness-side-panel-header">Drag, Pan, Zoom and Select</div>
 					{divider}
@@ -1582,6 +1710,12 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{toolbarType}
 					{divider}
+					<div className="harness-side-panel-header">Left Flyout</div>
+					{divider}
+					{enableShowLeftFlyout}
+					{divider}
+					{enableLeftFlyoutUnderToolbar}
+					{divider}
 					<div className="harness-side-panel-header">Right Flyout</div>
 					{divider}
 					{enableShowRightFlyout}
@@ -1590,13 +1724,13 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enablePositionNodeOnRightFlyoutOpen}
 					{divider}
-					<div className="harness-side-panel-header">Bottom Panel</div>
-					{divider}
-					{enableShowBottomPanel}
-					{divider}
 					<div className="harness-side-panel-header">Top Panel</div>
 					{divider}
 					{enableShowTopPanel}
+					{divider}
+					<div className="harness-side-panel-header">Bottom Panel</div>
+					{divider}
+					{enableShowBottomPanel}
 					{divider}
 					<div className="harness-side-panel-header">Context Menu</div>
 					{divider}

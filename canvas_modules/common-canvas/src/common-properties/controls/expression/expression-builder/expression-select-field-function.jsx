@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Add } from "@carbon/react/icons";
 import { Button } from "@carbon/react";
-import { Switch, ContentSwitcher, Dropdown } from "@carbon/react";
+import { Switch, ContentSwitcher, Dropdown, Layer } from "@carbon/react";
 import FlexibleTable from "./../../../components/flexible-table/flexible-table";
 import TruncatedContentTooltip from "./../../../components/truncated-content-tooltip";
 import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
@@ -124,8 +124,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		});
 
 	}
-
-	onAddFieldClick(rowKey) {
+	// field table - called on row doubleclick & also Add btn click.
+	onAddFieldClick(evt, rowKey, index) {
 		const field = this.state.currentFieldDataset[rowKey];
 		let value = field.id;
 		if (this.state.fieldCategory !== this.recentUseCat) {
@@ -150,7 +150,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		});
 	}
 
-	onAddValueClick(rowKey) {
+	// value table - called on row doubleclick & also Add btn click.
+	onAddValueClick(evt, rowKey, index) {
 		if (this.props.onChange) {
 			const field = this.state.currentFieldDataset[this.state.fieldSelected];
 			const quote = "\"";
@@ -179,7 +180,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		});
 	}
 
-	onAddFunctionClick(rowKey) {
+	// function table - called on row doubleclick & also Add btn click.
+	onAddFunctionClick(evt, rowKey, index) {
 		let field;
 		if (this.state.functionCategory === this.recentUseCat) {
 			field = this.props.controller.getExpressionRecentlyUsed()[rowKey];
@@ -278,24 +280,24 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				kind="ghost"
 				size="sm"
 			>
-				<Add aria-label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN)} />
+				{<Add className="add-btn-svg" aria-label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN)} />}
 			</Button>
 		);
 		return addValueButtonContent;
 	}
 
-	handleAddButtonClick(index, tableType) {
+	handleAddButtonClick(index, tableType, evt) {
 		switch (tableType) {
 		case "value": {
-			this.onAddValueClick(index);
+			this.onAddValueClick(evt, index);
 			break;
 		}
 		case "field": {
-			this.onAddFieldClick(index);
+			this.onAddFieldClick(evt, index);
 			break;
 		}
 		case "function": {
-			this.onAddFunctionClick(index);
+			this.onAddFunctionClick(evt, index);
 			break;
 		}
 		default:
@@ -497,7 +499,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		return (
 			<div className="properties-field-and-values-table-container" >
 				{fieldCategory}
-				<div className="properties-field-table-container" >
+				<div className="properties-field-table-container expression-builder-table" >
 					<FlexibleTable
 						columns={fieldHeaders}
 						data={tableData}
@@ -508,13 +510,14 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						tableLabel={fieldsTableLabel}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onFieldTableClick}
+						onRowDoubleClick={this.onAddFieldClick}
 						selectedRows={[selectedField]}
 						onSort={this.setSortColumn.bind(this, "fieldTable")}
-						light={this.props.controller.getLight()}
+						light={!this.props.controller.getLight()}
 						emptyTablePlaceholder={emptyFieldsLabel}
 					/>
 				</div>
-				<div className="properties-value-table-container" >
+				<div className="properties-value-table-container expression-builder-table" >
 					<FlexibleTable
 						columns={valueHeader}
 						data={valuesTableData}
@@ -525,9 +528,10 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						tableLabel={valuesTableLabel}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onValueTableClick}
+						onRowDoubleClick={this.onAddValueClick}
 						selectedRows={[selectedValue]}
 						onSort={this.setSortColumn.bind(this, "valuesTable")}
-						light={this.props.controller.getLight()}
+						light={!this.props.controller.getLight()}
 						emptyTablePlaceholder={emptyValuesLabel}
 					/>
 				</div>
@@ -596,7 +600,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		const first = items.slice(0, 1);
 		const last = items.slice(1);
 		items = first.concat({ value: this.recentUseCat, label: this.recentUseCat }, last);
-		const label = (this.state.functionCategory === this.recentUseCat) ? this.recentUseCat : this.props.functionList[this.state.functionCategory].locLabel;
+		const selectedFunctionItem = (this.state.functionCategory === this.recentUseCat) ? this.recentUseCat : this.props.functionList[this.state.functionCategory].locLabel;
 		const header = formatMessage(this.reactIntl,
 			MESSAGE_KEYS.TABLE_SEARCH_HEADER);
 		const listBoxMenuIconTranslationIds = {
@@ -605,27 +609,34 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		};
 		return (
 			<div className="properties-expression-function-select">
-				<Dropdown
-					id={"properties-expression-function-select-dropdown-" + this.uuid}
-					light={this.props.controller.getLight()}
-					label={label}
-					items={items}
-					onChange={this.onFunctionCatChange}
-					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-					titleText={header}
-				/>
+				<Layer level={this.props.controller.getLight() ? 1 : 0}>
+					<Dropdown
+						id={"properties-expression-function-select-dropdown-" + this.uuid}
+						label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FUNCTIONS_DROPDOWN_TITLE)}
+						selectedItem={selectedFunctionItem}
+						items={items}
+						onChange={this.onFunctionCatChange}
+						translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+						titleText={header}
+					/>
+				</Layer>
 			</div>);
 	}
 
 	_makeFieldDropdown() {
 		const items = [];
+		let selectedFieldItemLabel = "";
+		const selectedField = this.fields.field_categories.find((category) => category.id === this.state.fieldCategory);
+		if (selectedField) {
+			selectedFieldItemLabel = selectedField.locLabel;
+		}
 		for (let i = 0; i < this.fields.field_categories.length; i++) {
 			items.push({ value: this.fields.field_categories[i].id, label: this.fields.field_categories[i].locLabel });
 		}
 		const first = items.slice(0, 1);
 		const last = items.slice(1);
 		const newItems = first.concat({ value: this.recentUseCat, label: this.recentUseCat }, last);
-		const label = (this.state.fieldCategory === this.recentUseCat) ? this.recentUseCat : items[0].label;
+		const selectedFieldItem = (this.state.fieldCategory === this.recentUseCat) ? this.recentUseCat : selectedFieldItemLabel;
 		const header = formatMessage(this.reactIntl,
 			MESSAGE_KEYS.TABLE_SEARCH_HEADER);
 		const listBoxMenuIconTranslationIds = {
@@ -634,15 +645,17 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		};
 		return (
 			<div className="properties-expression-field-select">
-				<Dropdown
-					id={"properties-expression-field-select-dropdown-" + this.uuid}
-					light={this.props.controller.getLight()}
-					label={label}
-					items={newItems}
-					onChange={this.onFieldCatChange}
-					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
-					titleText={header}
-				/>
+				<Layer level={this.props.controller.getLight() ? 1 : 0}>
+					<Dropdown
+						id={"properties-expression-field-select-dropdown-" + this.uuid}
+						label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELDS_DROPDOWN_TITLE)}
+						selectedItem={selectedFieldItem}
+						items={newItems}
+						onChange={this.onFieldCatChange}
+						translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+						titleText={header}
+					/>
+				</Layer>
 			</div>);
 	}
 
@@ -672,23 +685,26 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS));
 
 		return (
-			<div className="properties-functions-table-container" >
-				<div className="properties-functions-table" >
-					<FlexibleTable
-						columns={headers}
-						data={data}
-						sortable={["function", "return"]}
-						filterable={["function"]}
-						onFilter={this.onFunctionFilter}
-						rows={EXPRESSION_TABLE_ROWS}
-						tableLabel={functionsTableLabel}
-						rowSelection={ROW_SELECTION.SINGLE}
-						updateRowSelections={this.onFunctionTableClick}
-						selectedRows={[selectedFunction]}
-						onSort={this.setSortColumn.bind(this, "functionTable")}
-						light={this.props.controller.getLight()}
-						emptyTablePlaceholder={functionsEmptyLabel}
-					/>
+			<div className="properties-functions-table-helper-container">
+				<div className="properties-functions-table-container expression-builder-table">
+					<div className="properties-functions-table" >
+						<FlexibleTable
+							columns={headers}
+							data={data}
+							sortable={["function", "return"]}
+							filterable={["function"]}
+							onFilter={this.onFunctionFilter}
+							rows={EXPRESSION_TABLE_ROWS}
+							tableLabel={functionsTableLabel}
+							rowSelection={ROW_SELECTION.SINGLE}
+							updateRowSelections={this.onFunctionTableClick}
+							onRowDoubleClick={this.onAddFunctionClick}
+							selectedRows={[selectedFunction]}
+							onSort={this.setSortColumn.bind(this, "functionTable")}
+							light={!this.props.controller.getLight()}
+							emptyTablePlaceholder={functionsEmptyLabel}
+						/>
+					</div>
 				</div>
 				<div className="properties-help-table-container" >
 					{table.helpContainer}
