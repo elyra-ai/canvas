@@ -576,6 +576,7 @@ class PropertiesMain extends React.Component {
 			const overrideSize = this._getOverrideSize();
 			let overrideStyle = null;
 			if (overrideSize !== null) {
+				// Add custom classname when editor size is small so that title-editor styling is not applied
 				if (this.state.editorSize === Size.SMALL) {
 					propertiesSizeClassname = "properties-small-custom";
 				}
