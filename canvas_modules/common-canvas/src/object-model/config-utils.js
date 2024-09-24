@@ -99,6 +99,7 @@ export default class ConfigUtils {
 			enableSingleOutputPortDisplay: false,
 			enableNarrowPalette: true,
 			schemaValidation: false,
+			enableFocusOnMount: true,
 			enableBoundingRectangles: false, // Not documented
 			enableCanvasUnderlay: "None", // Not documented
 			enableParentClass: "", // Not documented
