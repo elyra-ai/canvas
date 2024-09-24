@@ -113,7 +113,7 @@ $palette-search-container-height: 41px;
 			padding: $spacing-05 10px 0 58px;
 
 			& mark {
-				color: $button-primary;
+				color: $interactive;
 				background-color: $highlight;
 				font-weight: 500;
 			}
@@ -140,7 +140,7 @@ $palette-search-container-height: 41px;
 			width: calc(100% - 68px);
 			line-height: 1;
 			& mark {
-				color: $button-primary;
+				color: $interactive;
 				background-color: $highlight;
 				font-weight: 500;
 			}
@@ -161,7 +161,7 @@ $palette-search-container-height: 41px;
 			width: 100%; // Needed when the description is only one line long
 
 			& mark {
-				color: $button-primary;
+				color: $interactive;
 				background-color: $highlight;
 				font-weight: 500;
 			}

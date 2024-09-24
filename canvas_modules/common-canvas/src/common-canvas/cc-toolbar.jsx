@@ -27,6 +27,7 @@ import { ERROR, WARNING, SUCCESS, INFO, PALETTE_LAYOUT_NONE,
 	NOTIFICATION_ICON_CLASS, TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_LAYOUT_TOP,
 	TOOLBAR_TOGGLE_PALETTE }
 	from "../common-canvas/constants/canvas-constants";
+import { SidePanelOpenFilled, SidePanelCloseFilled } from "@carbon/react/icons";
 
 class CommonCanvasToolbar extends React.Component {
 	constructor(props) {
@@ -99,6 +100,12 @@ class CommonCanvasToolbar extends React.Component {
 		return className;
 	}
 
+	// Returns the index of the action passed in, in the
+	// 'bar' passed in.
+	getToolIndexByAction(action, bar) {
+		return bar?.findIndex((a) => a.action === action);
+	}
+
 	generateToolbarConfig() {
 		let config = this.copyConfig();
 
@@ -113,10 +120,8 @@ class CommonCanvasToolbar extends React.Component {
 			config = this.getDefaultToolbar();
 		}
 
-		config = Object.assign({}, config,
-			{ leftBar: this.optionallyAddPaletteTool(config.leftBar || []) },
-			{ rightBar: this.optionallyAddNotificationTool(config.rightBar || []) }
-		);
+		config = this.optionallyAddPaletteTool(config);
+		config = this.optionallyAddNotificationTool(config);
 
 		return config;
 	}
@@ -148,7 +153,10 @@ class CommonCanvasToolbar extends React.Component {
 		this.props.canvasController.toolbarActionHandler(action);
 	}
 
-	optionallyAddPaletteTool(leftBar) {
+	optionallyAddPaletteTool(config) {
+		const leftBar = config.leftBar || [];
+		const rightBar = config.rightBar || [];
+
 		let paletteLabel = this.getLabel("toolbar.palette");
 
 		// If the leftBar contains and old palette action and if followed by a
@@ -163,30 +171,63 @@ class CommonCanvasToolbar extends React.Component {
 			}
 		}
 
-		// Add the new togglePalette icon if the palette is enabled.
+		// Add a new togglePalette icon if the palette is enabled and the app
+		// has not provided its own palette action.
 		if (this.props.isPaletteEnabled) {
 			// Applications may need to detect these legacy classes to detect which action
 			// is to be performed. So add them as additional classes. Also, jest tests require them.
-			const className = this.props.isPaletteOpen ? "paletteClose-action" : "paletteOpen-action";
+			// TODO - In next major release, remove "paletteClose-action" and "paletteOpen-action"
+			const className = this.props.isPaletteOpen ? "closePalette-action paletteClose-action" : "openPalette-action paletteOpen-action";
+			const icon = this.props.isPaletteOpen ? (<SidePanelCloseFilled />) : (<SidePanelOpenFilled />);
 
-			const paletteOpenClose =
-				{ action: TOOLBAR_TOGGLE_PALETTE, label: paletteLabel, enable: true,
+			const togglePaletteAction =
+				{ action: TOOLBAR_TOGGLE_PALETTE, label: paletteLabel, enable: true, iconEnabled: icon,
 					isSelected: this.props.isPaletteOpen, className };
 
-			const paletteTools = [
-				paletteOpenClose,
-				{ divider: true }
-			];
-			return paletteTools.concat(newLeftBar);
+			const lbIdx = this.getToolIndexByAction(TOOLBAR_TOGGLE_PALETTE, leftBar);
+			const rbIdx = this.getToolIndexByAction(TOOLBAR_TOGGLE_PALETTE, rightBar);
+
+			if (lbIdx > -1) {
+				const lbAction = leftBar[lbIdx];
+				config.leftBar[lbIdx] = {
+					...togglePaletteAction,
+					label: lbAction.label ? lbAction.label : paletteLabel,
+					iconEnabled: lbAction.iconEnabled ? lbAction.iconEnabled : null, // null means Icon provided by the toolbar
+					incLabelWithIcon: lbAction.incLabelWithIcon ? lbAction.incLabelWithIcon : null,
+					tooltip: lbAction.tooltip ? lbAction.tooltip : null
+				};
+
+			} else if (rbIdx > -1) {
+				const rbAction = rightBar[rbIdx];
+				config.rightBar[rbIdx] = {
+					...togglePaletteAction,
+					label: rbAction.label ? rbAction.label : paletteLabel,
+					iconEnabled: rbAction.iconEnabled ? rbAction.iconEnabled : null, // null means Icon provided by the toolbar
+					incLabelWithIcon: rbAction.incLabelWithIcon ? rbAction.incLabelWithIcon : null,
+					tooltip: rbAction.tooltip ? rbAction.tooltip : null
+				};
+
+			} else {
+				const paletteTools = [
+					togglePaletteAction,
+					{ divider: true }
+				];
+				config.leftBar = paletteTools.concat(newLeftBar);
+			}
 		}
-		return newLeftBar;
+		return config;
 	}
 
-	optionallyAddNotificationTool(rightBar) {
+	optionallyAddNotificationTool(config) {
+		const leftBar = config.leftBar || [];
+		const rightBar = config.rightBar || [];
+
+		// Add a new toggleNotificationPanel icon if the notification panel exists
+		// and the app has not provided its own notification panel action.
 		if (this.props.notificationConfigExists) {
 			const notificationCount = this.props.notificationMessages.length;
-			const notificationTools = [
-				{ divider: true },
+
+			const toggleNotificationAction =
 				{ action: TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
 					label: this.props.notificationConfigLabel,
 					enable: this.props.notificationConfigEnable,
@@ -197,11 +238,41 @@ class CommonCanvasToolbar extends React.Component {
 					subPanel: NotificationPanel,
 					subPanelData: { canvasController: this.props.canvasController },
 					leaveSubAreaOpenOnClickOutside: this.props.notificationConfigKeepOpen
-				}
-			];
-			return rightBar.concat(notificationTools);
+				};
+
+			const lbIdx = this.getToolIndexByAction(TOOLBAR_TOGGLE_NOTIFICATION_PANEL, leftBar);
+			const rbIdx = this.getToolIndexByAction(TOOLBAR_TOGGLE_NOTIFICATION_PANEL, rightBar);
+
+			if (lbIdx > -1) {
+				const lbAction = leftBar[lbIdx];
+				config.leftBar[lbIdx] = {
+					...toggleNotificationAction,
+					iconEnabled: lbAction.iconEnabled ? lbAction.iconEnabled : null, // null means Icon provided by the toolbar
+					incLabelWithIcon: lbAction.incLabelWithIcon ? lbAction.incLabelWithIcon : null,
+					tooltip: lbAction.tooltip ? lbAction.tooltip : null,
+					textContent: null // Assume text conents is not needed with customized action
+				};
+
+			} else if (rbIdx > -1) {
+				const rbAction = rightBar[rbIdx];
+				config.rightBar[rbIdx] = {
+					...toggleNotificationAction,
+					iconEnabled: rbAction.iconEnabled ? rbAction.iconEnabled : null, // null means Icon provided by the toolbar
+					incLabelWithIcon: rbAction.incLabelWithIcon ? rbAction.incLabelWithIcon : null,
+					tooltip: rbAction.tooltip ? rbAction.tooltip : null,
+					textContent: null }; // Assume text conents is not needed with customized action
+
+
+			} else {
+				const notificationTools = [
+					{ divider: true },
+					toggleNotificationAction
+				];
+
+				config.rightBar = config.rightBar.concat(notificationTools);
+			}
 		}
-		return rightBar;
+		return config;
 	}
 
 	callExtIsSubAreaDisplayed(state) {
