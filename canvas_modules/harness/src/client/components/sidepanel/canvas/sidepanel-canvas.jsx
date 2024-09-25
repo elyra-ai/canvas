@@ -718,6 +718,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enablePaletteHeader = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedPaletteHeader" // Set ID to corresponding field in App.js state
+				labelText="Enable Palette Header"
+				toggled={this.props.getStateValue("selectedPaletteHeader")}
+				onToggle={(val) => this.setStateValue(val, "selectedPaletteHeader")}
+			/>
+		</div>);
+
 		var enableAutoLinkOnlyFromSelNodes = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedAutoLinkOnlyFromSelNodes" // Set ID to corresponding field in App.js state
@@ -1643,6 +1652,8 @@ export default class SidePanelForms extends React.Component {
 					{paletteInput}
 					{divider}
 					{paletteLayout}
+					{divider}
+					{enablePaletteHeader}
 					{divider}
 					{enableAutoLinkOnlyFromSelNodes}
 					{divider}
