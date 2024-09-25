@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/FlowIcon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.36">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.37">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.06209087.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -1498,6 +1498,15 @@
   <a href="#enableautolinkonlyfromselnodes" class="md-nav__link">
     <span class="md-ellipsis">
       enableAutoLinkOnlyFromSelNodes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablepaletteheader" class="md-nav__link">
+    <span class="md-ellipsis">
+      enablePaletteHeader
     </span>
   </a>
   
@@ -3448,6 +3457,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#enablepaletteheader" class="md-nav__link">
+    <span class="md-ellipsis">
+      enablePaletteHeader
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enablenarrowpalette" class="md-nav__link">
     <span class="md-ellipsis">
       enableNarrowPalette
@@ -3877,6 +3895,8 @@ The tips displayed by the palette can be further refined. For example, this woul
 <p>This can be: &ldquo;Modal&rdquo; or &ldquo;Flyout&rdquo; or &ldquo;None&rdquo;. The default is &ldquo;Flyout&rdquo;. &ldquo;Flyout&rdquo; displays a panel on the left side of the canvas containing the palette icons and &ldquo;Modal&rdquo; shows the palette icons in a dialog window. &ldquo;None&rdquo; stops the palette from appearing.</p>
 <h4 id="enableautolinkonlyfromselnodes"><strong>enableAutoLinkOnlyFromSelNodes</strong><a class="headerlink" href="#enableautolinkonlyfromselnodes" title="Permanent link">&para;</a></h4>
 <p>This is a boolean. The default is false. When set to true the auto-add function (where double clicking a node in the palette automatically adds it to the canvas) will only link up nodes when a node is already selected on the canvas and then, only if the selected node can be linked to the node that was double clicked. If false, the auto-add function will make a best guess at which node the double-clicked node should be added to.</p>
+<h4 id="enablepaletteheader"><strong>enablePaletteHeader</strong><a class="headerlink" href="#enablepaletteheader" title="Permanent link">&para;</a></h4>
+<p>This is a JSX object that will displayed in an open, wide palette. It is positioned below the Seach bar and above the categories and nodes. The default is null, which means nothing will be displayed. This option can be used by the application to add application specific function into the palette, for example, a button could be added.</p>
 <h4 id="enablenarrowpalette"><strong>enableNarrowPalette</strong><a class="headerlink" href="#enablenarrowpalette" title="Permanent link">&para;</a></h4>
 <p>This is a boolean.  true is the default.  If true when the palette is closed the narrow palette will be shown.  When false the palette completely closes.</p>
 <div class="admonition warning">
@@ -4288,7 +4308,7 @@ will override the style from the common-canvas CSS
     <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.footer"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.56dfad97.min.js"></script>
+      <script src="../assets/javascripts/bundle.d6f25eb3.min.js"></script>
       
         <script src="../js/links-in-new-tabs.js"></script>
       
