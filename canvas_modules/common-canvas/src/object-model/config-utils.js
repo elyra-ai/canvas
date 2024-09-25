@@ -69,6 +69,7 @@ export default class ConfigUtils {
 			enableDragWithoutSelect: false,
 			enableInternalObjectModel: true,
 			enablePaletteLayout: PALETTE_LAYOUT_FLYOUT,
+			enablePaletteHeader: null,
 			enableToolbarLayout: "Top",
 			enableImageDisplay: "SVGInline",
 			enableResizableNodes: false,
