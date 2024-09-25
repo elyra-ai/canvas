@@ -35,7 +35,7 @@ class ToolTip extends React.Component {
 		this.tabKeyPressed = false;
 		// Tooltip should not close if link inside tooltip is clicked.
 		this.linkClicked = false;
-		this.inTooltip = false; // A boolean variable that determines if the cursor is in the tooltip
+		this.inTooltip = false; // A boolean variable that determines if the cursor is over the tooltip
 	}
 
 	componentDidMount() {
@@ -542,7 +542,7 @@ ToolTip.propTypes = {
 	truncatedRef: PropTypes.object,
 	delay: PropTypes.number,
 	showToolTipOnClick: PropTypes.bool,
-	hoverable: PropTypes.bool, // If true, can hover over to the tooltip, instead of immediately disappearing.
+	hoverable: PropTypes.bool, // If true, mouse cursor can be hovered over to the tooltip, instead of immediately disappearing.
 };
 
 ToolTip.defaultProps = {
