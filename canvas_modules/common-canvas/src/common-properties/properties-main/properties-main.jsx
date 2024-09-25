@@ -570,18 +570,24 @@ class PropertiesMain extends React.Component {
 					{editorForm}
 				</PropertiesModal>);
 			}
+
+			let propertiesSizeClassname = `properties-${this.state.editorSize}`;
+
+			const overrideSize = this._getOverrideSize();
+			let overrideStyle = null;
+			if (overrideSize !== null) {
+				// Add custom classname when custom editor size is set
+				propertiesSizeClassname = "properties-custom-size";
+				overrideStyle = { width: overrideSize + "px" };
+			}
+
 			const className = classNames("properties-wrapper",
 				{
 					"properties-right-flyout": this.props.propertiesConfig.rightFlyout,
 					"properties-light-enabled": this.props.light,
 					"properties-light-disabled": !this.props.light
 				},
-				`properties-${this.state.editorSize}`);
-			const overrideSize = this._getOverrideSize();
-			let overrideStyle = null;
-			if (overrideSize !== null) {
-				overrideStyle = { width: overrideSize + "px" };
-			}
+				propertiesSizeClassname);
 			return (
 				<Provider store={this.propertiesController.getStore()}>
 					<aside
