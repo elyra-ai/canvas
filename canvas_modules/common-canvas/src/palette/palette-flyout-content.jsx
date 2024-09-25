@@ -141,9 +141,14 @@ class PaletteFlyoutContent extends React.Component {
 			/>
 		);
 
+		const paletteHeader = this.props.paletteHeader && !this.state.searchString && this.props.isPaletteWide
+			? this.props.paletteHeader
+			: null;
+
 		return (
 			<div className="palette-flyout-content">
 				{contentSearch}
+				{paletteHeader}
 				{contentCategories}
 			</div>
 		);
@@ -153,6 +158,7 @@ class PaletteFlyoutContent extends React.Component {
 PaletteFlyoutContent.propTypes = {
 	canvasController: PropTypes.object.isRequired,
 	paletteJSON: PropTypes.object.isRequired,
+	paletteHeader: PropTypes.object,
 	isEditingEnabled: PropTypes.bool.isRequired,
 	isPaletteWide: PropTypes.bool
 };
