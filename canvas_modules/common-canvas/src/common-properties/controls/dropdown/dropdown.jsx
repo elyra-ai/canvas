@@ -332,7 +332,8 @@ DropDown.propTypes = {
 		PropTypes.object
 	]), // pass in by redux
 	messageInfo: PropTypes.object, // pass in by redux
-	readOnly: PropTypes.bool
+	readOnly: PropTypes.bool,
+	iconCallBack: PropTypes.func
 };
 
 const mapStateToProps = (state, ownProps) => {
