@@ -369,12 +369,26 @@ describe("Palette renders correctly", () => {
 		const category2 = findCategoryElement(container, "category-image");
 		expect(category2.querySelectorAll("img")).to.have.length(1);
 	});
+
+
+	it("should display a header area when one is specified in the config", async() => {
+		const config = {
+			showPalette: true,
+			palette: testPalette3NoDesc,
+			paletteHeader: (<div className="test-header" style={{ height: "50px" }}><span>Test text</span></div>)
+		};
+		const { container } = createMountedPalette(config);
+
+		expect(container.getElementsByClassName("test-header")).to.have.length(1);
+
+	});
 });
 
 function createMountedPalette(config) {
 	const canvasController = (config && config.canvasController) ? config.canvasController : new CanvasController();
 	const palette = (config && config.palette) ? config.palette : testPalette2;
 	const isEditingEnabled = (config && config.isEditingEnabled) ? config.isEditingEnabled : true;
+	const paletteHeader = (config && config.paletteHeader) ? config.paletteHeader : null;
 
 	canvasController.setPipelineFlowPalette(palette);
 
@@ -383,6 +397,7 @@ function createMountedPalette(config) {
 			paletteJSON={palette}
 			canvasController={canvasController}
 			isEditingEnabled={isEditingEnabled}
+			paletteHeader={paletteHeader}
 			isPaletteWide
 		/>
 	);

@@ -215,6 +215,7 @@ class App extends React.Component {
 			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedExampleApp: EXAMPLE_APP_NONE,
 			selectedPaletteLayout: PALETTE_LAYOUT_FLYOUT,
+			selectedPaletteHeader: false,
 			selectedStateTag: STATE_TAG_NONE,
 			selectedTipConfig: {
 				"palette": {
@@ -465,6 +466,16 @@ class App extends React.Component {
 		document.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect;
 		this.locale = "en";
 		this.initLocale();
+
+		// Sample palette header object for display below the Search bar and above
+		// the scrollable area for categories and nodes.
+		this.paletteHeader = (
+			<div style={{ borderBottom: "1px solid lightgray", height: "fit-content", padding: "12px 50px 12px" }} >
+				<Button kind="tertiary" onClick={() => window.alert("Test button clikced!")}>
+					Test Button
+				</Button>
+			</div>
+		);
 
 		// Create the empty canvas div so we don't create a new object on each render
 		// which would cause a refresh.
@@ -2093,6 +2104,7 @@ class App extends React.Component {
 			enableWYSIWYGComments: this.state.selectedWYSIWYGComments,
 			enableContextToolbar: this.state.selectedContextToolbar,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
+			enablePaletteHeader: this.state.selectedPaletteHeader ? this.paletteHeader : null,
 			enableStateTag: this.state.selectedStateTag,
 			enableToolbarLayout: this.state.selectedToolbarLayout,
 			enableResizableNodes: this.state.selectedResizableNodes,
