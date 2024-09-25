@@ -54,6 +54,7 @@ class DropDown extends React.Component {
 		this.genSelectOptions = this.genSelectOptions.bind(this);
 		this.genFieldSelectOptions = this.genFieldSelectOptions.bind(this);
 		this.updateValueFromFilterEnum = this.updateValueFromFilterEnum.bind(this);
+		this.testIconCallBack = this.testIconCallBack.bind(this);
 	}
 
 	componentDidMount() {
@@ -85,6 +86,20 @@ class DropDown extends React.Component {
 		}
 
 		return selectedOption;
+	}
+
+	testIconCallBack(propertyId, enumValue) {
+		const propertyIconHandler = this.props.controller.getHandlers().propertyIconHandler;
+		let callbackIcon = null;
+		if (propertyIconHandler) {
+			propertyIconHandler({
+				propertyId: this.props.propertyId,
+				enumValue: enumValue
+			}, (appIcon) => {
+				callbackIcon = appIcon;
+			});
+		}
+		return callbackIcon;
 	}
 
 	genSchemaSelectOptions(selectedValue) {
@@ -265,6 +280,20 @@ class DropDown extends React.Component {
 					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
 					type="default"
 					items={dropDown.options}
+					itemToString={(item) => (item ? (
+						<div className="item-name">
+							<div>{ item.label }</div>
+							<div className="custom-icon-label">{this.testIconCallBack()}</div>
+						</div>
+					) : ""
+					)}
+					itemToElement={(item) => (item ? (
+						<div data-id={`properties-${this.props.propertyId}`} className="item-name">
+							<div>{ item.label }</div>
+							<div className="custom-icon">{this.testIconCallBack()}</div>
+						</div>
+					) : ""
+					)}
 					onChange={this.handleChange}
 					selectedItem={dropDown.selectedOption}
 					label={this.emptyLabel}

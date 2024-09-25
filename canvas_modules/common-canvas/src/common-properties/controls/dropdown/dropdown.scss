@@ -23,6 +23,20 @@
 	}
 
 }
+
+.cds--dropdown{
+	.item-name{
+		display: flex;
+		justify-content: space-between;
+		.custom-icon-label{
+			float: right;
+			padding-left: 180px;
+		}
+		.custom-icon{
+			float: right;
+		}
+	}
+}
 .properties-table-cell-control {
 	.properties-dropdown {
 		.cds--select.cds--select--inline {
