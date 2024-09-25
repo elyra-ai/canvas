@@ -52,6 +52,10 @@ $palette-search-container-height: 41px;
 	}
 }
 
+.palette-nav {
+	height: 100%;
+}
+
 .palette-flyout-content {
 	position: absolute; // Needed to allow the scroll of categories/nodes to work.
 	height: 100%;

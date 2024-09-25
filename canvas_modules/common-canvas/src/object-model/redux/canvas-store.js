@@ -259,6 +259,10 @@ export default class CanavasStore {
 		return this.cloneData(this.store.getState().tooltip);
 	}
 
+	isLeftFlyoutOpen() {
+		return this.store.getState().leftflyout.isOpen;
+	}
+
 	isRightFlyoutOpen() {
 		return this.store.getState().rightflyout.isOpen;
 	}
