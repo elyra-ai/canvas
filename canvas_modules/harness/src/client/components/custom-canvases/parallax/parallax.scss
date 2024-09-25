@@ -21,6 +21,10 @@
 	// ----------------------------------------------------
 	.d3-node-group {
 
+		.d3-node-label{
+			color: #000000;
+		}
+
 		.d3-node-port-input {
 			stroke: $background-inverse;
 		}
