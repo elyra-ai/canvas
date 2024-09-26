@@ -22,6 +22,7 @@ import { CommonCanvas, CanvasController, Palette } from "common-canvas"; // esli
 import { Edit, OpenPanelFilledLeft, Search } from "@carbon/react/icons";
 
 import MultiCommandPanel from "./multi-command-panel";
+import AppDecoration from "./app-decoration.jsx";
 
 import StagesFlow from "./stages-flow.json";
 import StagesPalette from "../../../../../test_resources/palettes/stagesPalette.json";
@@ -264,10 +265,25 @@ export default class StagesCanvas extends React.Component {
 	}
 
 	clickActionHandler(source) {
-		if (source.clickType === "DOUBLE_CLICK") {
+		if (source.objectType === "node" &&
+				source.clickType === "DOUBLE_CLICK") {
 			const node = this.canvasController.getNode(source.id, source.pipelineId);
+
 			if (node && node.type === "super_node") {
 				this.canvasController.displaySubPipelineForSupernode(source.id, source.pipelineId);
+
+			} else {
+				const decs = (this.canvasController.getNodeDecorations(source.id))
+					? null
+					: [{
+						id: "123",
+						jsx: (<AppDecoration node={node} />),
+						x_pos: -10,
+						y_pos: -115,
+						width: 250,
+						height: 90
+					}];
+				this.canvasController.setNodeDecorations(source.id, decs);
 			}
 		}
 	}
