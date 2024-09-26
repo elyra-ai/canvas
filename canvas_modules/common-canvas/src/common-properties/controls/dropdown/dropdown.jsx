@@ -280,7 +280,7 @@ class DropDown extends React.Component {
 					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
 					type="default"
 					items={dropDown.options}
-					itemToString={(item) => (item ? (
+					renderSelectedItem={(item) => (item ? (
 						<div className="properties-dropdown-label">
 							<div className="custom-icon-label">{ item.label }</div>
 							{ this.getItemIcon() }
