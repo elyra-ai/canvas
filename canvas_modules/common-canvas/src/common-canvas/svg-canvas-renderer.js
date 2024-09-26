@@ -5040,7 +5040,7 @@ export default class SVGCanvasRenderer {
 	// Updates the data links for all the nodes with two optional fields
 	// (called srcFreeformInfo and trgFreeformInfo) based on the location of the
 	// nodes the links go from and to. The info in these fields is used to
-	// calculate the starting and ending position of freeform line links.
+	// calculate the starting and ending position of freeform link lines.
 	// This ensures that input and output links that go in a certain direction
 	// (NORTH, SOUTH, EAST or WEST) are grouped together so they can be
 	// separated out when freeform lines are drawn between nodes.
@@ -5063,13 +5063,13 @@ export default class SVGCanvasRenderer {
 				// Self-referencing link
 				if (node.id === link.srcObj?.id &&
 						link.srcObj?.id === link.trgNode?.id) {
-					linksInfo[NORTH].push({ type: "in", endNode: link.srcObj, link });
-					linksInfo[EAST].push({ type: "out", endNode: link.trgNode, link });
+					linksInfo[NORTH].push({ type: "in", startNode: link.srcObj, endNode: link.trgNode, link });
+					linksInfo[EAST].push({ type: "out", startNode: link.srcObj, endNode: link.trgNode, link });
 
 				} else if (link.trgNode && link.trgNode.id === node.id) {
 					if (link.srcObj) {
-						const dir = this.getDirAdjusted(link.trgNode, link.srcObj);
-						linksInfo[dir].push({ type: "in", endNode: link.srcObj, link });
+						const dir = this.getDirToNode(link.trgNode, link.srcObj);
+						linksInfo[dir].push({ type: "in", startNode: link.trgNode, endNode: link.srcObj, link });
 
 					} else if (link.srcPos) {
 						const dir = this.getDirToEndPos(link.trgNode, link.srcPos.x_pos, link.srcPos.y_pos);
@@ -5078,8 +5078,8 @@ export default class SVGCanvasRenderer {
 
 				} else if (link.srcObj && link.srcObj.id === node.id) {
 					if (link.trgNode) {
-						const dir = this.getDirAdjusted(link.srcObj, link.trgNode);
-						linksInfo[dir].push({ type: "out", endNode: link.trgNode, link });
+						const dir = this.getDirToNode(link.srcObj, link.trgNode);
+						linksInfo[dir].push({ type: "out", startNode: link.srcObj, endNode: link.trgNode, link });
 
 					} else if (link.trgPos) {
 						const dir = this.getDirToEndPos(link.srcObj, link.trgPos.x_pos, link.trgPos.y_pos);
@@ -5089,40 +5089,20 @@ export default class SVGCanvasRenderer {
 			}
 		});
 
-		linksInfo.n = this.sortLinksInfo(linksInfo.n, NORTH);
-		linksInfo.s = this.sortLinksInfo(linksInfo.s, SOUTH);
-		linksInfo.e = this.sortLinksInfo(linksInfo.e, EAST);
-		linksInfo.w = this.sortLinksInfo(linksInfo.w, WEST);
+		const startCenter = {
+			x: node.x_pos + node.width / 2,
+			y: node.y_pos + node.height / 2
+		};
+
+		linksInfo.n = this.sortLinksInfo(linksInfo.n, NORTH, startCenter);
+		linksInfo.s = this.sortLinksInfo(linksInfo.s, SOUTH, startCenter);
+		linksInfo.e = this.sortLinksInfo(linksInfo.e, EAST, startCenter);
+		linksInfo.w = this.sortLinksInfo(linksInfo.w, WEST, startCenter);
 
 		this.updateLinksInfo(linksInfo.n, NORTH);
 		this.updateLinksInfo(linksInfo.s, SOUTH);
 		this.updateLinksInfo(linksInfo.e, EAST);
 		this.updateLinksInfo(linksInfo.w, WEST);
-	}
-
-	// Returns the direction of a link from the start node to the end node
-	// as either NORTH, SOUTH, EAST or WEST. Some direction combinations
-	// have to be overriden to prevent link lines overlapping.
-	getDirAdjusted(startNode, endNode) {
-		let dir = this.getDirToNode(startNode, endNode);
-
-		// When start -> end is SOUTH and end -> start is WEST the returned direction
-		// becomes EAST instead of SOUTH to prevent link lines overlapping.
-		if (dir === SOUTH) {
-			const dir2 = this.getDirToNode(endNode, startNode);
-			if (dir2 === WEST) {
-				dir = EAST;
-			}
-
-		// When start -> end is NORTH and end -> start is EAST the returned direction
-		// becomes WEST instead of NORTH to prevent link lines overlapping.
-		} else if (dir === NORTH) {
-			const dir2 = this.getDirToNode(endNode, startNode);
-			if (dir2 === EAST) {
-				dir = WEST;
-			}
-		}
-		return dir;
 	}
 
 	// Returns the direction (NORTH, SOUTH, EAST or WEST) from the start node
@@ -5148,10 +5128,13 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns the linksDirArray passed in with the linkInfo objects in the
-	// array ordered by the position of the end of each link line, depending on
-	// the direction (dir) of the lines. This is achieved by spliting the links
-	// into groups where links in the same group go to/from the same node.
-	sortLinksInfo(linksDirArrayIn, dir) {
+	// array ordered by the angle that each link makes with the center of the
+	// start node. When handling multiple links that go to the same node
+	// the links have to be grouped where links in the same group go to/from
+	// the same node. For groups, the x and y are *projected* corrdinates to
+	// allow us to calculate the angles and ordering etc. The actual x and y
+	// for the links is calculated in getAttachedLinkObj and getDetachedLinkObj.
+	sortLinksInfo(linksDirArrayIn, dir, startCenter) {
 		let linksDirArray = linksDirArrayIn;
 		if (linksDirArray.length > 1) {
 			const groups = this.getLinkInfoGroups(linksDirArray);
@@ -5168,23 +5151,72 @@ export default class SVGCanvasRenderer {
 						li.x = this.nodeUtils.getNodeCenterPosX(node);
 						li.y = node.y_pos + ((node.height / parts) * (i + 1));
 					}
+					// Special case where links that go SOUTH from the node and
+					// point to the WEST of the end node, get crossed over each other.
+					// In this case the x coordinates of the link items need to be
+					// reversed.
+					if (dir === SOUTH) {
+						const reverseDir = this.getDirToNode(li.endNode, li.startNode);
+						if (reverseDir === WEST) {
+							li.x = node.x_pos + ((node.width / parts) * (group.length - i));
+						}
+					}
+					// Special case where links that go NORTH from the node and
+					// point to the EAST of the end node, get crossed over each other.
+					// In this case the x coordinates of the link items need to be
+					// reversed.
+					if (dir === NORTH) {
+						const reverseDir = this.getDirToNode(li.endNode, li.startNode);
+						if (reverseDir === EAST) {
+							li.x = node.x_pos + ((node.width / parts) * (group.length - i));
+						}
+					}
 				});
 			});
 
-			// For NORTH and SOUTH links we sort linksDirArray by the x coordinate
-			// of the end of each link. For EAST and WEST we sort by the y
-			// coordinate.
-			if (dir === NORTH || dir === SOUTH) {
-				linksDirArray = linksDirArray.sort((a, b) => (a.x > b.x ? 1 : -1));
+			// Set an angle for each linkDir so that they can be sorted so they do not
+			// overlap when being drawn to or from the node. The angle is from the
+			// center of the node we are handling to their projected end point.
+			linksDirArray.forEach((ld) => {
+				ld.angle = CanvasUtils.calculateAngle(startCenter.x, startCenter.y, ld.x, ld.y);
+
+				// Make sure the angles for links on the EAST side of the node are
+				// increasing in the clockwise direction by decrementing the angles from
+				// 270 to 360 by 360 degrees. (This is because calculateAngle returns
+				// positive angles from the 3 o'clock position in clockwise direction.)
+				if (dir === EAST && ld.angle >= 270) {
+					ld.angle -= 360;
+				}
+
+				// For self-referencing links we overwrite the angle to ensure that
+				// the outward direction (EAST) is always drawn at the top of any
+				// EAST links and the inward direction (NORTH) is always drawn to
+				// the right of any NORTH links.
+				if (ld.startNode && ld.endNode && ld.startNode === ld.endNode) {
+					if (dir === EAST) {
+						ld.angle = -90;
+					} else if (dir === NORTH) {
+						ld.angle = 360;
+					}
+				}
+			});
+
+			// Sort the linksDirArray by the angle that each link forms with the
+			// center of the start node.
+			if (dir === NORTH || dir === EAST) {
+				linksDirArray = linksDirArray.sort((a, b) => (a.angle > b.angle ? 1 : -1));
 			} else {
-				linksDirArray = linksDirArray.sort((a, b) => (a.y > b.y ? 1 : -1));
+				linksDirArray = linksDirArray.sort((a, b) => (a.angle < b.angle ? 1 : -1));
 			}
 		}
 		return linksDirArray;
 	}
 
-	// Returns a 'groups' object where each field is index by a node ID and
-	// contains an array of linkInfo objects that go to/from the node.
+	// Returns a 'groups' object where each field is indexed by a node ID and
+	// contains an array of linkInfo objects that go to/from the node. Note:
+	// endNode is the target node for link that point away from the node we
+	// are handling and is the source node for links the point to the node
+	// we are handling.
 	getLinkInfoGroups(linksDirArray) {
 		const groups = {};
 		linksDirArray.forEach((li) => {
