@@ -89,7 +89,7 @@ import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
 import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
-	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification } from "@carbon/react/icons";
+	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification, Save } from "@carbon/react/icons";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
 
@@ -2167,6 +2167,22 @@ class App extends React.Component {
 				{ action: "decrease", label: "Decrease", enable: true, iconEnabled: (<Subtract size={32} />) }
 			];
 
+			const saveReloadTooltip =
+					(<div>
+						<br />
+						<p style={ { fontSize: "12px" } } ><strong>jjennings</strong> saved the flow at 8:18AM.</p>
+						<br />
+						<ul>
+							<li><p style={ { fontSize: "12px" } }><strong>Reload</strong> to view changes. Caution: you will lose your changes.</p></li>
+							<li><p style={ { fontSize: "12px" } } ><strong>Save as</strong> to save your changes as a new flow</p></li>
+						</ul>
+						<br />
+						<div style={ { display: "flex", justifyContent: "space-between" } }>
+							<Button kind="secondary" size="sm" style={ { width: "30px", height: "10px", color: "lightblue" } }>Save</Button>
+							<Button kind="danger" size="sm" style={ { width: "30px", height: "10px" } }>Reload</Button>
+						</div>
+					</div>);
+
 			toolbarConfig = {
 				leftBar: [
 					{ action: "palette", label: "Palette", enable: true },
@@ -2192,7 +2208,8 @@ class App extends React.Component {
 					{ divider: true },
 					{ action: "color-subpanel", iconEnabled: (<ColorPalette size={32} />), label: "Color picker", enable: true,
 						subPanel: ColorPicker, subPanelData: { clickActionHandler: (color) => window.alert("Color selected = " + color) } },
-					{ divider: true }
+					{ divider: true },
+					{ action: "save", iconEnabled: (<Save size={32} />), enable: true, tooltip: saveReloadTooltip }
 				],
 				rightBar: [
 					{ divider: true },

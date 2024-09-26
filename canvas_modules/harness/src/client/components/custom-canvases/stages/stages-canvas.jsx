@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint no-alert: "off" */
 
 import React from "react";
 import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController, Palette } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
+import { Button } from "@carbon/react";
 import { Edit, OpenPanelFilledLeft, Search } from "@carbon/react/icons";
 
 import MultiCommandPanel from "./multi-command-panel";
@@ -32,7 +34,8 @@ export default class StagesCanvas extends React.Component {
 		super(props);
 
 		this.state = {
-			leftFlyout: null
+			leftFlyout: null,
+			showLeftFlyout: false
 		};
 
 		this.canvasController = new CanvasController();
@@ -53,12 +56,26 @@ export default class StagesCanvas extends React.Component {
 				return { linkId: link.id, pipelineId: pId, decorations: decs };
 			});
 		this.canvasController.setLinksMultiDecorations(pipelineLinkDecorations);
+
+		// Palette header object - used in a real application to open an asset browser.
+		this.paletteHeader = (
+			<div style={{ borderBottom: "1px solid lightgray", height: "fit-content", padding: "20px 18px 20px" }} >
+				<Button kind="tertiary" size="sm" onClick={() => window.alert("In a real application an Asset Browser would open now.")}>
+					Add asset to canvas +
+				</Button>
+			</div>
+		);
 	}
 
 	getToolbarConfig() {
+		// The code below can be used if flipping between the two palette icons with the arrow is needed
+		// const icon = this.state.showLeftFlyout ? (<SidePanelCloseFilled />) : (<SidePanelOpenFilled />);
+
+		const icon = (<OpenPanelFilledLeft />);
+
 		const toolbarConfig = {
 			leftBar: [
-				{ action: "left-flyout-palette", enable: true, iconEnabled: (<OpenPanelFilledLeft size={32} />) },
+				{ action: "left-flyout-palette", enable: true, iconEnabled: icon },
 				{ action: "left-flyout-search", enable: true, iconEnabled: (<Search size={32} />) },
 				{ divider: true },
 				{ action: "undo",
@@ -115,6 +132,7 @@ export default class StagesCanvas extends React.Component {
 			enableMarkdownInComments: true,
 			enableContextToolbar: true,
 			enableResizableNodes: true,
+			enablePaletteHeader: this.paletteHeader,
 			tipConfig: {
 				palette: true,
 				nodes: true,
@@ -211,18 +229,18 @@ export default class StagesCanvas extends React.Component {
 	editActionHandler(data, command) {
 		if (data.editType === "left-flyout-palette") {
 			if (this.state.leftFlyout === "palette") {
-				this.setState({ leftFlyout: null });
+				this.setState({ leftFlyout: null, showLeftFlyout: false });
 
 			} else {
-				this.setState({ leftFlyout: "palette" });
+				this.setState({ leftFlyout: "palette", showLeftFlyout: true });
 			}
 
 		} else if (data.editType === "left-flyout-search") {
 			if (this.state.leftFlyout === "search") {
-				this.setState({ leftFlyout: null });
+				this.setState({ leftFlyout: null, showLeftFlyout: false });
 
 			} else {
-				this.setState({ leftFlyout: "search" });
+				this.setState({ leftFlyout: "search", showLeftFlyout: true });
 			}
 
 		} else if (data.editType === "linkNodes") {
@@ -298,15 +316,12 @@ export default class StagesCanvas extends React.Component {
 		const config = this.getConfig();
 		const toolbarConfig = this.getToolbarConfig();
 
-		let showLeftFlyout = false;
 		let leftFlyoutContent = null;
 
 		if (this.state.leftFlyout === "palette") {
-			showLeftFlyout = true;
 			leftFlyoutContent = (<Palette canvasController={this.canvasController} />);
 
 		} else if (this.state.leftFlyout === "search") {
-			showLeftFlyout = true;
 			leftFlyoutContent = (
 				<div style={{ width: "300px", padding: "20px" }}>
 					This panel could contain Search controls to provde a sophisticated search experience.
@@ -322,7 +337,7 @@ export default class StagesCanvas extends React.Component {
 				contextMenuHandler={this.contextMenuHandler}
 				toolbarConfig={toolbarConfig}
 				config={config}
-				showLeftFlyout={showLeftFlyout}
+				showLeftFlyout={this.state.showLeftFlyout}
 				leftFlyoutContent={leftFlyoutContent}
 			/>
 		);

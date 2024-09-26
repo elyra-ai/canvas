@@ -364,6 +364,23 @@ export default class CanvasUtils {
 		return { x: startPointX, y: startPointY, originX, originY, dir };
 	}
 
+	// Assisted by WCA@IBM
+	// Latest GenAI contribution: ibm/granite-20b-code-instruct-v2
+	// Returns the angle between two points where the angle
+	// returned is always positive. The angle starts at the 3 o'clock
+	// position which is 0 degrees and increases in a clock-wise
+	// direction.
+	static calculateAngle(x1, y1, x2, y2) {
+		const dx = x2 - x1;
+		const dy = y2 - y1;
+		const angle = Math.atan2(dy, dx);
+		let angleInDegrees = angle * (180 / Math.PI);
+		if (angleInDegrees < 0) {
+			angleInDegrees += 360;
+		}
+		return angleInDegrees;
+	}
+
 	// Returns a direction NORTH, SOUTH, EAST or WEST which is the direction
 	// from the origin position within the rectangle described by x, y, w and h
 	// to the end position described by endX and endY.
