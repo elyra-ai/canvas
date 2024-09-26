@@ -15,6 +15,9 @@
  */
 
 .properties-dropdown {
+	.cds--list-box__label {
+		width: 100%
+	}
 	.cds--list-box--expanded .cds--list-box__menu {
 		margin-bottom: 1px; // Show dropdown menu border above Save/Cancel buttons
 	}
@@ -56,10 +59,6 @@
 			}
 		}
 	}
-}
-
-.cds--list-box__label {
-	width: 100%
 }
 
 .properties-dropdown-label {
