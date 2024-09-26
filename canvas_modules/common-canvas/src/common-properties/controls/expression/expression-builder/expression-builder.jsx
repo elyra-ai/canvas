@@ -38,7 +38,7 @@ export default class ExpressionBuilder extends React.Component {
 		const value = (typeof newValue === "string") ? newValue : newValue.toString();
 		const somethingSelected = this.getCodemirrorState()?.selection.ranges.some((r) => !r.empty);
 		let cursor = this.getCodemirrorState()?.selection.main.head;
-		if (cursor === 0 && !somethingSelected) { // TODO: Doesn't work when I explicitly set the cursor to 0
+		if (isNaN(cursor) && !somethingSelected) { // TODO: Doesn't work when I explicitly set the cursor to 0
 			// When nothing selected, set cursor at the end of the line
 			this.editor.dispatch({ selection: { anchor: this.getCodemirrorState()?.doc.length } });
 			cursor = this.getCodemirrorState()?.selection.main.head;
