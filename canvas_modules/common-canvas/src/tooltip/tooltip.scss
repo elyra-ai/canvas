@@ -30,7 +30,6 @@
 	line-height: 1.2;
 	text-align: left;
 	z-index: 10000; // Modal layout has z-index 9000. Show tooltip on top of modal.
-	pointer-events: none;
 	word-wrap: break-word;
 	max-width: 228px;
 	border-radius: 2px;
