@@ -54,7 +54,7 @@ class DropDown extends React.Component {
 		this.genSelectOptions = this.genSelectOptions.bind(this);
 		this.genFieldSelectOptions = this.genFieldSelectOptions.bind(this);
 		this.updateValueFromFilterEnum = this.updateValueFromFilterEnum.bind(this);
-		this.testIconCallBack = this.testIconCallBack.bind(this);
+		this.getItemIcon = this.getItemIcon.bind(this);
 	}
 
 	componentDidMount() {
@@ -88,7 +88,7 @@ class DropDown extends React.Component {
 		return selectedOption;
 	}
 
-	testIconCallBack(propertyId, enumValue) {
+	getItemIcon(propertyId, enumValue) {
 		const propertyIconHandler = this.props.controller.getHandlers().propertyIconHandler;
 		let callbackIcon = null;
 		if (propertyIconHandler) {
@@ -281,16 +281,9 @@ class DropDown extends React.Component {
 					type="default"
 					items={dropDown.options}
 					itemToString={(item) => (item ? (
-						<div className="item-name">
+						<div className="properties-dropdown-label">
 							<div>{ item.label }</div>
-							<div className="custom-icon-label">{this.testIconCallBack()}</div>
-						</div>
-					) : ""
-					)}
-					itemToElement={(item) => (item ? (
-						<div data-id={`properties-${this.props.propertyId}`} className="item-name">
-							<div>{ item.label }</div>
-							<div className="custom-icon">{this.testIconCallBack()}</div>
+							<div className="custom-icon">{this.getItemIcon()}</div>
 						</div>
 					) : ""
 					)}
@@ -332,8 +325,7 @@ DropDown.propTypes = {
 		PropTypes.object
 	]), // pass in by redux
 	messageInfo: PropTypes.object, // pass in by redux
-	readOnly: PropTypes.bool,
-	iconCallBack: PropTypes.func
+	readOnly: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => {

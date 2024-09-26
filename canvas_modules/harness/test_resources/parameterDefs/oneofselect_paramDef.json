@@ -45,7 +45,6 @@
         "blue",
         "purple"
       ],
-      "enableIconCallBack": true,
       "required": true
     },
     {

@@ -73,7 +73,6 @@ class CommonProperties extends React.Component {
 				callbacks= {this.props.callbacks}
 				customControls={this.props.customControls}
 				customConditionOps={this.props.customConditionOps}
-				iconSwitch={this.props.propertiesConfig.iconSwitch}
 				light={this.props.light}
 			/>);
 		return propertiesMain;
@@ -253,8 +252,7 @@ CommonProperties.propTypes = {
 		convertValueDataTypes: PropTypes.bool,
 		showRequiredIndicator: PropTypes.bool,
 		showAlertsTab: PropTypes.bool,
-		locale: PropTypes.string,
-		iconSwitch: PropTypes.bool
+		locale: PropTypes.string
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
@@ -269,8 +267,7 @@ CommonProperties.propTypes = {
 		titleChangeHandler: PropTypes.func,
 		propertiesActionLabelHandler: PropTypes.func,
 		tooltipLinkHandler: PropTypes.func,
-		propertyIconHandler: PropTypes.func,
-		iconCallBack: PropTypes.func
+		propertyIconHandler: PropTypes.func
 	}),
 	customPanels: PropTypes.array,
 	customControls: PropTypes.array,
@@ -296,8 +293,7 @@ CommonProperties.defaultProps = {
 		convertValueDataTypes: false,
 		showRequiredIndicator: true,
 		showAlertsTab: true,
-		locale: DEFAULT_LOCALE,
-		iconSwitch: false
+		locale: DEFAULT_LOCALE
 	},
 	callbacks: {
 	},

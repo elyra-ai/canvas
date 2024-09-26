@@ -1408,7 +1408,7 @@ class App extends React.Component {
 		const propertyId = { "name": "oneofselect" };
 		const { iconSwitch } = this.state;
 		if (iconSwitch === true && data.propertyId.name === propertyId.name) {
-			callbackIcon(<Password className="custom-icon" />);
+			callbackIcon(<Password />);
 		} else {
 			callbackIcon(null);
 		}
