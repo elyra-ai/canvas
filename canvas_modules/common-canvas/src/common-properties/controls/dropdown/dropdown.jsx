@@ -282,8 +282,8 @@ class DropDown extends React.Component {
 					items={dropDown.options}
 					itemToString={(item) => (item ? (
 						<div className="properties-dropdown-label">
-							<div>{ item.label }</div>
-							<div className="custom-icon">{this.getItemIcon()}</div>
+							<div className="custom-icon-label">{ item.label }</div>
+							{ this.getItemIcon() }
 						</div>
 					) : ""
 					)}
