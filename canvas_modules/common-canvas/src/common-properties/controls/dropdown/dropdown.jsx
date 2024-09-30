@@ -55,6 +55,7 @@ class DropDown extends React.Component {
 		this.genFieldSelectOptions = this.genFieldSelectOptions.bind(this);
 		this.updateValueFromFilterEnum = this.updateValueFromFilterEnum.bind(this);
 		this.getItemIcon = this.getItemIcon.bind(this);
+		this.renderItem = this.renderItem.bind(this);
 	}
 
 	componentDidMount() {
@@ -88,7 +89,7 @@ class DropDown extends React.Component {
 		return selectedOption;
 	}
 
-	getItemIcon(propertyId, enumValue) {
+	getItemIcon(enumValue) {
 		const propertyIconHandler = this.props.controller.getHandlers().propertyIconHandler;
 		let callbackIcon = null;
 		if (propertyIconHandler) {
@@ -211,6 +212,15 @@ class DropDown extends React.Component {
 		return list?.item?.label?.toLowerCase().includes(list?.inputValue?.toLowerCase());
 	}
 
+	renderItem(item) {
+		return item ? (
+			<div className="properties-dropdown-label">
+				<div className="custom-icon-label">{ item.label }</div>
+				{ this.getItemIcon()}
+			</div>
+		) : "";
+	}
+
 	render() {
 		let dropDown;
 		if (this.props.control.controlType === ControlType.SELECTSCHEMA) {
@@ -226,13 +236,6 @@ class DropDown extends React.Component {
 			"open.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_OPENMENU),
 			"clear.selection": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLEARSELECTION)
 		};
-
-		const renderItem = (item) => (item ? (
-			<div className="properties-dropdown-label">
-				<div className="custom-icon-label">{ item.label }</div>
-				{ this.getItemIcon() }
-			</div>
-		) : "");
 
 		let dropdownComponent = null;
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
@@ -287,8 +290,8 @@ class DropDown extends React.Component {
 					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
 					type="default"
 					items={dropDown.options}
-					itemToElement={(item) => renderItem(item)}
-					renderSelectedItem={(item) => renderItem(item)}
+					itemToElement={this.renderItem}
+					renderSelectedItem={this.renderItem}
 					onChange={this.handleChange}
 					selectedItem={dropDown.selectedOption}
 					label={this.emptyLabel}
