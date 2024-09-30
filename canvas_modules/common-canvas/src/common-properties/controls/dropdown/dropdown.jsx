@@ -227,6 +227,13 @@ class DropDown extends React.Component {
 			"clear.selection": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLEARSELECTION)
 		};
 
+		const renderItem = (item) => (item ? (
+			<div className="properties-dropdown-label">
+				<div className="custom-icon-label">{ item.label }</div>
+				{ this.getItemIcon() }
+			</div>
+		) : "");
+
 		let dropdownComponent = null;
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		if (this.props.tableControl) {
@@ -280,13 +287,8 @@ class DropDown extends React.Component {
 					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
 					type="default"
 					items={dropDown.options}
-					renderSelectedItem={(item) => (item ? (
-						<div className="properties-dropdown-label">
-							<div className="custom-icon-label">{ item.label }</div>
-							{ this.getItemIcon() }
-						</div>
-					) : ""
-					)}
+					itemToElement={(item) => renderItem(item)}
+					renderSelectedItem={(item) => renderItem(item)}
 					onChange={this.handleChange}
 					selectedItem={dropDown.selectedOption}
 					label={this.emptyLabel}
