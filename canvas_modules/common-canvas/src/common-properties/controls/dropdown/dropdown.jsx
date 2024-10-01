@@ -91,7 +91,7 @@ class DropDown extends React.Component {
 
 	getItemIcon(enumValue) {
 		const propertyIconHandler = this.props.controller.getHandlers().propertyIconHandler;
-		let callbackIcon = null;
+		let callbackIcon;
 		if (propertyIconHandler) {
 			propertyIconHandler({
 				propertyId: this.props.propertyId,
@@ -216,7 +216,7 @@ class DropDown extends React.Component {
 		return item ? (
 			<div className="properties-dropdown-label">
 				<div className="custom-icon-label">{ item.label }</div>
-				{ this.getItemIcon()}
+				{ this.getItemIcon(item.value) }
 			</div>
 		) : "";
 	}

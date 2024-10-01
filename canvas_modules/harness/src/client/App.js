@@ -1405,9 +1405,8 @@ class App extends React.Component {
 	}
 
 	propertyIconHandler(data, callbackIcon) {
-		const propertyId = { "name": "oneofselect" };
 		const { iconSwitch } = this.state;
-		if (iconSwitch === true && data.propertyId.name === propertyId.name) {
+		if (iconSwitch === true && data.propertyId.name === "oneofselect" && data.enumValue === "orange") {
 			callbackIcon(<Password />);
 		} else {
 			callbackIcon(null);

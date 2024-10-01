@@ -33,7 +33,7 @@ import oneofselectParamDef from "../test_resources/paramDefs/oneofselect_paramDe
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
 import structureEditorParamDef from "../test_resources/paramDefs/structureeditor_paramDef.json";
 import { IntlProvider } from "react-intl";
-import { Password } from "@carbon/icons-react";
+import { AiGenerate, Password } from "@carbon/icons-react";
 
 import { CARBON_MODAL_SIZE_XSMALL, CARBON_MODAL_SIZE_SMALL, CARBON_MODAL_SIZE_LARGE } from "./../../src/common-properties/constants/constants";
 
@@ -311,6 +311,43 @@ describe("CommonProperties works correctly in flyout", () => {
 		const customIcon = wrapper.find("svg.custom-icon");
 		expect(customIcon.exists()).to.be.true;
 	});
+
+	it("Should render the correct icon for a specific propertyId", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef, { iconSwitch: true }, {
+			propertyIconHandler: (data, callbackIcon) => {
+				if (data.propertyId.name === "oneofselect") {
+					callbackIcon(<Password className="custom-icon-1" />);
+				} else if (data.propertyId === "") {
+					callbackIcon(<AiGenerate className="custom-icon-2" />);
+				}
+			}
+		});
+		wrapper = renderedObject.wrapper;
+		wrapper.update();
+		const customIcon1 = wrapper.find("svg.custom-icon-1");
+		expect(customIcon1.exists()).to.be.true;
+		const customIcon2 = wrapper.find("svg.custom-icon-2");
+		expect(customIcon2.exists()).to.be.false;
+	});
+
+	it("Should render the correct icon for a specific enum value", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef, { iconSwitch: true }, {
+			propertyIconHandler: (data, callbackIcon) => {
+				if (data.enumValue === "blue") {
+					callbackIcon(<Password className="custom-icon-1" />);
+				} else if (data.propertyId === "") {
+					callbackIcon(<AiGenerate className="custom-icon-2" />);
+				}
+			}
+		});
+		wrapper = renderedObject.wrapper;
+		wrapper.update();
+		const customIcon1 = wrapper.find("svg.custom-icon-1");
+		expect(customIcon1.exists()).to.be.true;
+		const customIcon2 = wrapper.find("svg.custom-icon-2");
+		expect(customIcon2.exists()).to.be.false;
+	});
+
 
 	it("When enableResize=true resize button should be rendered", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { enableResize: true });
