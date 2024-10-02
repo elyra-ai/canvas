@@ -54,6 +54,7 @@
   "expression.values.empty.table.label": "値が見つかりませんでした",
   "expression.functions.table.label": "関数の表",
   "expression.fields.dropdown": "フィールド",
+  "expression.functions.dropdown": "一般関数",
   "expression.add.column": "追加",
   "expression.fields.title": "フィールド",
   "expression.values.title": "値",

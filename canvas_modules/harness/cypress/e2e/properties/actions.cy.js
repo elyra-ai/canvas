@@ -29,6 +29,7 @@ describe("Test of action image tooltip direction", function() {
 		cy.hoverOverActionImage("fall");
 		cy.verifyTip(null, "visible",
 			"This is a long tooltip for action image. Adding this line makes it a multi-line tooltip.", "left");
+		cy.hoverOverControl("weather-action-panel");
 
 		// Test: action image tooltip direction right
 		// ------------------------------------------
@@ -36,6 +37,7 @@ describe("Test of action image tooltip direction", function() {
 		// For "spring" image, tooltip_direction is set to "right" in paramDef
 		cy.hoverOverActionImage("spring");
 		cy.verifyTip(null, "visible", "Spring", "right");
+		cy.hoverOverControl("weather-action-panel");
 
 
 		// Test: action image tooltip direction top
@@ -44,6 +46,7 @@ describe("Test of action image tooltip direction", function() {
 		// For "summer" image, tooltip_direction is set to "top" in paramDef
 		cy.hoverOverActionImage("summer");
 		cy.verifyTip(null, "visible", "Summer", "top");
+		cy.hoverOverControl("weather-action-panel");
 
 		// Test: action image tooltip direction bottom
 		// -------------------------------------------
@@ -51,6 +54,7 @@ describe("Test of action image tooltip direction", function() {
 		// For "winter" image, tooltip_direction is set to "bottom" in paramDef
 		cy.hoverOverActionImage("winter");
 		cy.verifyTip(null, "visible", "Winter", "bottom");
+		cy.hoverOverControl("weather-action-panel");
 
 		// Test: "When tooltip_direction is not specified, default direction is bottom
 		// ---------------------------------------------------------------------------

@@ -36,7 +36,7 @@ export default class WysiwygCommentsCanvas extends React.Component {
 	getConfig() {
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "wysiwyg-canvas",
-			enableNodeFormatType: "Horizontal",
+			enableNodeFormatType: "Vertical",
 			enableMarkdownInComments: true,
 			enableWYSIWYGComments: true,
 			enableContextToolbar: true,
@@ -45,6 +45,10 @@ export default class WysiwygCommentsCanvas extends React.Component {
 				nodes: true,
 				ports: false,
 				links: false
+			},
+			enableCanvasLayout: {
+				commentHighlightGap: 5,
+				commentAutoSize: false
 			}
 		});
 		return config;

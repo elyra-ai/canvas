@@ -37,6 +37,7 @@ class Palette extends React.Component {
 			<PaletteFlyout
 				canvasController={this.props.canvasController}
 				paletteJSON={this.props.paletteJSON}
+				paletteHeader={this.props.paletteHeader}
 				isEditingEnabled={this.props.isEditingEnabled}
 				isPaletteWide={this.props.isPaletteWide}
 			/>
@@ -50,6 +51,7 @@ Palette.propTypes = {
 
 	// Provided by redux
 	paletteJSON: PropTypes.object,
+	paletteHeader: PropTypes.object,
 	isEditingEnabled: PropTypes.bool,
 	isPaletteWide: PropTypes.bool
 };
@@ -57,6 +59,7 @@ Palette.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
 	paletteJSON: state.palette.content,
 	isEditingEnabled: state.canvasconfig.enableEditingActions,
+	paletteHeader: state.canvasconfig.enablePaletteHeader,
 	isPaletteWide: state.canvasconfig.enablePaletteLayout === PALETTE_LAYOUT_NONE ||
 		(state.canvasconfig.enablePaletteLayout === PALETTE_LAYOUT_FLYOUT &&
 			state.palette.isOpen)

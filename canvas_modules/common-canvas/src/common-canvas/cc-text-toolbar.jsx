@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,8 +102,9 @@ class CommonCanvasTextToolbar extends React.Component {
 		const underlineLabel = this.getLabel("texttoolbar.underline");
 		const strikethroughLabel = this.getLabel("texttoolbar.strikethroughAction");
 
+		// Set up array for sub-menus. isSelected is set to true for any default option.
 		const subMenuFont = [
-			{ action: "font-ibm-plex-sans", label: this.getLabel("texttoolbar.fontIBMPlexSans"), enable: true },
+			{ action: "font-ibm-plex-sans", label: this.getLabel("texttoolbar.fontIBMPlexSans"), enable: true, isSelected: true },
 			{ action: "font-ibm-plex-serif", label: this.getLabel("texttoolbar.fontIBMPlexSerif"), enable: true },
 			{ action: "font-ibm-plex-sans-condensed", label: this.getLabel("texttoolbar.fontIBMPlexSansCon"), enable: true },
 			{ action: "font-ibm-plex-mono", label: this.getLabel("texttoolbar.fontIBMPlexMono"), enable: true },
@@ -118,7 +119,7 @@ class CommonCanvasTextToolbar extends React.Component {
 		const subMenuTextSize = [
 			{ action: "text-size-10", label: "10", enable: true },
 			{ action: "text-size-11", label: "11", enable: true },
-			{ action: "text-size-12", label: "12", enable: true },
+			{ action: "text-size-12", label: "12", enable: true, isSelected: true },
 			{ action: "text-size-14", label: "14", enable: true },
 			{ action: "text-size-18", label: "18", enable: true },
 			{ action: "text-size-24", label: "24", enable: true },
@@ -131,21 +132,44 @@ class CommonCanvasTextToolbar extends React.Component {
 		];
 
 		const subMenuAlignHorizontal = [
-			{ action: "align-left", label: this.getLabel("texttoolbar.alignHorizLeft"), enable: true, iconEnabled: (<TextAlignLeft size={32} />) },
+			{ action: "align-left", label: this.getLabel("texttoolbar.alignHorizLeft"), enable: true, iconEnabled: (<TextAlignLeft size={32} />), isSelected: true },
 			{ action: "align-center", label: this.getLabel("texttoolbar.alignHorizCenter"), enable: true, iconEnabled: (<TextAlignCenter size={32} />) },
 			{ action: "align-right", label: this.getLabel("texttoolbar.alignHorizRight"), enable: true, iconEnabled: (<TextAlignRight size={32} />) }
 		];
 
 		const subMenuAlignVertical = [
-			{ action: "align-top", label: this.getLabel("texttoolbar.alignVertTop"), enable: true, iconEnabled: (<AlignBoxTopCenter size={32} />) },
+			{ action: "align-top", label: this.getLabel("texttoolbar.alignVertTop"), enable: true, iconEnabled: (<AlignBoxTopCenter size={32} />), isSelected: true },
 			{ action: "align-middle", label: this.getLabel("texttoolbar.alignVertMiddle"), enable: true, iconEnabled: (<AlignBoxMiddleCenter size={32} />) },
 			{ action: "align-bottom", label: this.getLabel("texttoolbar.alignVertBottom"), enable: true, iconEnabled: (<AlignBoxBottomCenter size={32} />) }
 		];
 
 		const subMenuOutline = [
 			{ action: "outline-none", label: this.getLabel("texttoolbar.outlineNone"), enable: true },
-			{ action: "outline-solid", label: this.getLabel("texttoolbar.outlineSolid"), enable: true }
+			{ action: "outline-solid", label: this.getLabel("texttoolbar.outlineSolid"), enable: true, isSelected: true }
 		];
+
+		// In the arrays above the default option has its isSelected field set to true. We
+		// now override the isSelected field, if necessary, for all menus, based on whether
+		// the corresponding format has been set in the formats array. So if, for example, the
+		// font is set to 'Comic Sans' the element for that font in subMenuFont will have its
+		// isSelected field set to true and the element for the default font or previously
+		// selected font will have its isSelected field set to false.
+		this.setSelectedMenuElement("fontType", this.props.formats, subMenuFont);
+		this.setSelectedMenuElement("textSize", this.props.formats, subMenuTextSize);
+		this.setSelectedMenuElement("alignHorizontally", this.props.formats, subMenuAlignHorizontal);
+		this.setSelectedMenuElement("alignVertically", this.props.formats, subMenuAlignVertical);
+		this.setSelectedMenuElement("outlineStyle", this.props.formats, subMenuOutline);
+
+		// Get current values (or defaults) for text and background color.
+		const selectedTextColor = (this.getFormatValue("textColor", this.props.formats) || "#000000");
+		const selectedBackgroundColor = (this.getFormatValue("backgroundColor", this.props.formats) || "#FFFFFF");
+
+		// Get the current values (or defaults) for bold/italics/underline/striketrough attributes
+		const boldSeletced = (Boolean)(this.getFormatType("bold", this.props.formats));
+		const italicsSelected = (Boolean)(this.getFormatType("italics", this.props.formats));
+		const textDec = this.getFormatValue("textDecoration", this.props.formats);
+		const underlineSelected = textDec?.includes("underline");
+		const strikethroughSelected = textDec?.includes("strikethrough");
 
 		return {
 			leftBar: [
@@ -163,10 +187,10 @@ class CommonCanvasTextToolbar extends React.Component {
 					subMenu: subMenuTextSize,
 					closeSubAreaOnClick: true
 				},
-				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold size={32} />) },
-				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic size={32} />) },
-				{ action: "underline", label: underlineLabel, enable: true, iconEnabled: (<TextUnderline size={32} />) },
-				{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough size={32} />) },
+				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold size={32} />), isSelected: boldSeletced },
+				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic size={32} />), isSelected: italicsSelected },
+				{ action: "underline", label: underlineLabel, enable: true, iconEnabled: (<TextUnderline size={32} />), isSelected: underlineSelected },
+				{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough size={32} />), isSelected: strikethroughSelected },
 				{ divider: true },
 				{ action: "submenu-text-color",
 					label: this.getLabel("texttoolbar.colorText"),
@@ -175,6 +199,7 @@ class CommonCanvasTextToolbar extends React.Component {
 					subPanel: ColorPicker,
 					subPanelData: {
 						type: WYSIWYG,
+						selectedColor: selectedTextColor,
 						clickActionHandler: (color, evt) => this.props.actionHandler("text-color", evt, color)
 					},
 					closeSubAreaOnClick: true
@@ -200,6 +225,7 @@ class CommonCanvasTextToolbar extends React.Component {
 					subPanel: ColorPicker,
 					subPanelData: {
 						type: WYSIWYG,
+						selectedColor: selectedBackgroundColor,
 						clickActionHandler: (color, evt) => this.props.actionHandler("background-color", evt, color)
 					},
 					closeSubAreaOnClick: true
@@ -213,6 +239,32 @@ class CommonCanvasTextToolbar extends React.Component {
 				}
 			]
 		};
+	}
+
+	// Sets the isSelected field to true of the element in the menu
+	// passed in corresponding to the currently specified value for that menu
+	// in the formats array,
+	setSelectedMenuElement(type, formats, menu) {
+		const value = this.getFormatValue(type, formats);
+		if (value) {
+			menu.forEach((me) => (me.isSelected = (me.action === value)));
+		}
+	}
+
+	// Returns the value for the format type passed in from the array of
+	// formats passed in.
+	getFormatValue(type, formats) {
+		const format = this.getFormatType(type, formats);
+		return format?.value;
+	}
+
+	// Returns the format for the type passed in from the array of
+	// formats passed in.
+	getFormatType(type, formats) {
+		if (formats) {
+			return formats.find((f) => f.type === type);
+		}
+		return null;
 	}
 
 	getTextToolbar() {
@@ -233,7 +285,9 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		if (this.props.isOpen) {
 			textToolbar = (
-				<div className={"text-toolbar floating-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }} onBlur={this.props.blurHandler}>
+				<div className={"text-toolbar floating-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }}
+					onBlur={this.props.blurHandler}
+				>
 					<Toolbar
 						config={this.getTextToolbar()}
 						instanceId={this.props.canvasController.getInstanceId()}
@@ -254,12 +308,13 @@ CommonCanvasTextToolbar.propTypes = {
 	// Provided by CommonCanvas
 	intl: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	containingDivId: PropTypes.string.isRequired,
+	containingDivId: PropTypes.string,
 
 	// Provided by redux
 	isOpen: PropTypes.bool.isRequired,
 	pos_x: PropTypes.number,
 	pos_y: PropTypes.number,
+	formats: PropTypes.array,
 	contentType: PropTypes.oneOf([MARKDOWN, WYSIWYG]),
 	actionHandler: PropTypes.func,
 	blurHandler: PropTypes.func
@@ -269,6 +324,7 @@ const mapStateToProps = (state, ownProps) => ({
 	isOpen: state.texttoolbar.isOpen,
 	pos_x: state.texttoolbar.pos_x,
 	pos_y: state.texttoolbar.pos_y,
+	formats: state.texttoolbar.formats,
 	contentType: state.texttoolbar.contentType,
 	actionHandler: state.texttoolbar.actionHandler,
 	blurHandler: state.texttoolbar.blurHandler

@@ -54,6 +54,7 @@
   "expression.values.empty.table.label": "Inga värden hittades",
   "expression.functions.table.label": "Funktionstabell",
   "expression.fields.dropdown": "Fält",
+  "expression.functions.dropdown": "Allmänna funktioner",
   "expression.add.column": "Lägg till",
   "expression.fields.title": "Fält",
   "expression.values.title": "Värden",

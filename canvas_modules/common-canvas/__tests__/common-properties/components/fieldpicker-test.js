@@ -924,35 +924,35 @@ describe("field-picker control multiple rows selection", () => {
 		expect(selected).to.have.length(0);
 
 		// Shift + select 8th row
-		tableUtilsRTL.shiftSelectCheckbox(tableRows, 8);
+		tableUtilsRTL.shiftSelectCheckboxRows(tableRows, 8);
 		fieldPicker = container.querySelector("div.properties-fp-table");
 		tableRows = tableUtilsRTL.getTableRows(fieldPicker);
 		// Verify 1-8 rows are selected
 		expect(tableUtilsRTL.validateSelectedRowNumRows(tableRows)).to.have.length(8);
 
 		// shift + select 15th row
-		tableUtilsRTL.shiftSelectCheckbox(tableRows, 15);
+		tableUtilsRTL.shiftSelectCheckboxRows(tableRows, 15);
 		fieldPicker = container.querySelector("div.properties-fp-table");
 		tableRows = tableUtilsRTL.getTableRows(fieldPicker);
 		// Verify 1-15 rows are selected
 		expect(tableUtilsRTL.validateSelectedRowNumRows(tableRows)).to.have.length(15);
 
 		// shift + select 5th row -- this will deselect 5-15 rows.
-		tableUtilsRTL.shiftSelectCheckbox(tableRows, 5);
+		tableUtilsRTL.shiftSelectCheckboxRows(tableRows, 5);
 		fieldPicker = container.querySelector("div.properties-fp-table");
 		tableRows = tableUtilsRTL.getTableRows(fieldPicker);
 		// 5-15 rows will be deselected. And 1-4 rows will remain selected
 		expect(tableUtilsRTL.validateSelectedRowNumRows(tableRows)).to.have.length(4);
 
 		// shift + select 1st row -- this will deselect all rows
-		tableUtilsRTL.shiftSelectCheckbox(tableRows, 1);
+		tableUtilsRTL.shiftSelectCheckboxRows(tableRows, 1);
 		fieldPicker = container.querySelector("div.properties-fp-table");
 		tableRows = tableUtilsRTL.getTableRows(fieldPicker);
 		// Verify all rows are deselected
 		expect(tableUtilsRTL.validateSelectedRowNumRows(tableRows)).to.have.length(0);
 
 		// shift + select 29th row -- this will select all rows
-		tableUtilsRTL.shiftSelectCheckbox(tableRows, 29);
+		tableUtilsRTL.shiftSelectCheckboxRows(tableRows, 29);
 		fieldPicker = container.querySelector("div.properties-fp-table");
 		tableRows = tableUtilsRTL.getTableRows(fieldPicker);
 		// Verify all rows are selected

@@ -58,6 +58,7 @@ _defineConstant("EDITING", "Editing");
 _defineConstant("TOOLBAR_TYPE_DEFAULT", "Default");
 _defineConstant("TOOLBAR_TYPE_SUB_AREAS", "SubAreas");
 _defineConstant("TOOLBAR_TYPE_SINGLE_BAR", "SingleLeftBarArray");
+_defineConstant("TOOLBAR_TYPE_CUSTOMIZE_AUTO", "CustomizeAutoItems");
 _defineConstant("TOOLBAR_TYPE_BEFORE_AFTER", "TextBeforeAndAfter");
 _defineConstant("TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE", "CustomizedRightSide");
 _defineConstant("TOOLBAR_TYPE_CARBON_BUTTONS", "CarbonButtons");

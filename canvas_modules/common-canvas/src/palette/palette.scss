@@ -39,10 +39,18 @@ $palette-dialog-list-item-height: 46px;
 
 .palette-flyout-div-open {
 	width: 256px;
+
+	.palette-flyout-content {
+		grid-template-columns: 256px;
+	}
 }
 
 .palette-flyout-div-narrow {
 	width: 72px;
+
+	.palette-flyout-content {
+		grid-template-columns: 72px;
+	}
 }
 
 .palette-nav {
@@ -50,7 +58,11 @@ $palette-dialog-list-item-height: 46px;
 }
 
 .palette-flyout-content {
-	height: calc(100% - $palette-search-container-height);
+	position: absolute; // Needed to allow the scroll of categories/nodes to work.
+	height: 100%;
+	display: grid;
+	grid-template-rows: $palette-search-container-height auto 1fr;
+	// grid-template-columns is set based on narrow or open palette
 
 	.palette-scroll {
 		overflow-y: hidden; /*prevents multiple scroll bars in flyout*/
@@ -114,7 +126,7 @@ $palette-dialog-list-item-height: 46px;
 			padding: $spacing-05 10px 0 58px;
 
 			& mark {
-				color: $button-primary;
+				color: $interactive;
 				background-color: $highlight;
 				font-weight: 500;
 			}
@@ -141,7 +153,7 @@ $palette-dialog-list-item-height: 46px;
 			width: calc(100% - 68px);
 			line-height: 1;
 			& mark {
-				color: $button-primary;
+				color: $interactive;
 				background-color: $highlight;
 				font-weight: 500;
 			}
@@ -162,7 +174,7 @@ $palette-dialog-list-item-height: 46px;
 			width: 100%; // Needed when the description is only one line long
 
 			& mark {
-				color: $button-primary;
+				color: $interactive;
 				background-color: $highlight;
 				font-weight: 500;
 			}
@@ -191,8 +203,6 @@ $palette-dialog-list-item-height: 46px;
 .palette-flyout-categories {
 	overflow-x: hidden;
 	overflow-y: auto;
-	min-height:100%;
-	height:0;
 
 	li .cds--accordion__arrow {
 		margin: 15px;
@@ -293,6 +303,8 @@ $palette-dialog-list-item-height: 46px;
 
 .palette-flyout-search-container {
 	height: $palette-search-container-height;
+	width: calc(100% - 1px);
+
 	.palette-flyout-search {
 		height: 100%;
 		overflow: hidden;
