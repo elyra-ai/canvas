@@ -89,7 +89,7 @@ import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
 import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
-	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification } from "@carbon/react/icons";
+	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification, Save } from "@carbon/react/icons";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
 
@@ -214,6 +214,7 @@ class App extends React.Component {
 			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedExampleApp: EXAMPLE_APP_NONE,
 			selectedPaletteLayout: PALETTE_LAYOUT_FLYOUT,
+			selectedPaletteHeader: false,
 			selectedStateTag: STATE_TAG_NONE,
 			selectedTipConfig: {
 				"palette": {
@@ -462,6 +463,16 @@ class App extends React.Component {
 		document.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect;
 		this.locale = "en";
 		this.initLocale();
+
+		// Sample palette header object for display below the Search bar and above
+		// the scrollable area for categories and nodes.
+		this.paletteHeader = (
+			<div style={{ borderBottom: "1px solid lightgray", height: "fit-content", padding: "12px 50px 12px" }} >
+				<Button kind="tertiary" onClick={() => window.alert("Test button clikced!")}>
+					Test Button
+				</Button>
+			</div>
+		);
 
 		// Create the empty canvas div so we don't create a new object on each render
 		// which would cause a refresh.
@@ -2078,6 +2089,7 @@ class App extends React.Component {
 			enableWYSIWYGComments: this.state.selectedWYSIWYGComments,
 			enableContextToolbar: this.state.selectedContextToolbar,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
+			enablePaletteHeader: this.state.selectedPaletteHeader ? this.paletteHeader : null,
 			enableStateTag: this.state.selectedStateTag,
 			enableToolbarLayout: this.state.selectedToolbarLayout,
 			enableResizableNodes: this.state.selectedResizableNodes,
@@ -2155,6 +2167,22 @@ class App extends React.Component {
 				{ action: "decrease", label: "Decrease", enable: true, iconEnabled: (<Subtract size={32} />) }
 			];
 
+			const saveReloadTooltip =
+					(<div>
+						<br />
+						<p style={ { fontSize: "12px" } } ><strong>jjennings</strong> saved the flow at 8:18AM.</p>
+						<br />
+						<ul>
+							<li><p style={ { fontSize: "12px" } }><strong>Reload</strong> to view changes. Caution: you will lose your changes.</p></li>
+							<li><p style={ { fontSize: "12px" } } ><strong>Save as</strong> to save your changes as a new flow</p></li>
+						</ul>
+						<br />
+						<div style={ { display: "flex", justifyContent: "space-between" } }>
+							<Button kind="secondary" size="sm" style={ { width: "30px", height: "10px", color: "lightblue" } }>Save</Button>
+							<Button kind="danger" size="sm" style={ { width: "30px", height: "10px" } }>Reload</Button>
+						</div>
+					</div>);
+
 			toolbarConfig = {
 				leftBar: [
 					{ action: "palette", label: "Palette", enable: true },
@@ -2180,7 +2208,8 @@ class App extends React.Component {
 					{ divider: true },
 					{ action: "color-subpanel", iconEnabled: (<ColorPalette size={32} />), label: "Color picker", enable: true,
 						subPanel: ColorPicker, subPanelData: { clickActionHandler: (color) => window.alert("Color selected = " + color) } },
-					{ divider: true }
+					{ divider: true },
+					{ action: "save", iconEnabled: (<Save size={32} />), enable: true, tooltip: saveReloadTooltip }
 				],
 				rightBar: [
 					{ divider: true },
