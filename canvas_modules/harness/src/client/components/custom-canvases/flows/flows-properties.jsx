@@ -101,7 +101,8 @@ export default class FlowsProperties extends React.Component {
 			returnValueFiltering: [],
 			maxLengthForMultiLineControls: 1024,
 			maxLengthForSingleLineControls: 128,
-			locale: "en"
+			locale: "en",
+			iconSwitch: false
 		};
 	}
 

@@ -27,6 +27,7 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
+import { Password } from "@carbon/icons-react";
 
 import { jsPDF } from "jspdf";
 import * as htmlToImage from "html-to-image";
@@ -283,6 +284,7 @@ class App extends React.Component {
 			showRequiredIndicator: true,
 			showAlertsTab: true,
 			enableResize: true,
+			iconSwitch: false,
 			initialEditorSize: "small",
 			conditionHiddenPropertyHandling: "null",
 			conditionDisabledPropertyHandling: "null",
@@ -422,6 +424,7 @@ class App extends React.Component {
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.buttonHandler = this.buttonHandler.bind(this);
 		this.buttonIconHandler = this.buttonIconHandler.bind(this);
+		this.propertyIconHandler = this.propertyIconHandler.bind(this);
 		this.validationHandler = this.validationHandler.bind(this);
 		this.titleChangeHandler = this.titleChangeHandler.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
@@ -1401,6 +1404,15 @@ class App extends React.Component {
 		}
 	}
 
+	propertyIconHandler(data, callbackIcon) {
+		const { iconSwitch } = this.state;
+		if (iconSwitch === true && data.propertyId.name === "oneofselect" && data.enumValue === "orange") {
+			callbackIcon(<Password />);
+		} else {
+			callbackIcon(null);
+		}
+	}
+
 	validationHandler(controller, propertyId, value, appData, callback) {
 		const response = {
 			type: "error",
@@ -1971,7 +1983,8 @@ class App extends React.Component {
 			buttonIconHandler: this.buttonIconHandler,
 			titleChangeHandler: this.titleChangeHandler,
 			propertiesActionLabelHandler: this.propertiesActionLabelHandler,
-			tooltipLinkHandler: this.tooltipLinkHandler
+			tooltipLinkHandler: this.tooltipLinkHandler,
+			propertyIconHandler: this.propertyIconHandler
 		};
 		if (this.state.propertiesValidationHandler) {
 			callbacks.validationHandler = this.validationHandler;
@@ -2057,7 +2070,8 @@ class App extends React.Component {
 			returnValueFiltering: returnValueFilters,
 			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
 			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
-			locale: this.locale
+			locale: this.locale,
+			iconSwitch: this.state.iconSwitch
 		};
 	}
 
@@ -2814,6 +2828,7 @@ class App extends React.Component {
 			categoryView: this.state.categoryView,
 			applyOnBlur: this.state.applyOnBlur,
 			trimSpaces: this.state.trimSpaces,
+			iconSwitch: this.state.iconSwitch,
 			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			expressionBuilder: this.state.expressionBuilder,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
