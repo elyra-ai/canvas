@@ -215,7 +215,6 @@ $toolbar-divider-width: 1px;
 	display: flex;
 	justify-content: center;
 	grid-template-columns: 1fr 16px;
-	align-items: center;
 
 	&.disabled {
 		pointer-events: none;
