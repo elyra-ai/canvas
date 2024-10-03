@@ -102,6 +102,18 @@ class ExpressionControl extends React.Component {
 			});
 			this.editor.focus();
 		}
+		if (!isEqual(prevProps.value, this.props.value)) {
+			this.editor.focus();
+			const selection = this.editor.state.selection.main;
+			this.editor.dispatch({
+				changes: {
+					from: 0,
+					to: this.getCodemirrorState()?.doc?.length,
+					insert: this.props.value },
+				selection: {
+					anchor: selection.anchor,
+					head: selection.head } });
+		}
 	}
 
 	getCodemirrorState() {
@@ -253,6 +265,7 @@ class ExpressionControl extends React.Component {
 
 	// Event handlers for CM6
 	events() {
+		console.log("events");
 		const that = this;
 		const eventHandlers = EditorView.domEventHandlers({
 			blur(evt, view) {
