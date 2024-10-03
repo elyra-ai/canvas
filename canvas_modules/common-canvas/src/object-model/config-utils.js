@@ -69,6 +69,7 @@ export default class ConfigUtils {
 			enableDragWithoutSelect: false,
 			enableInternalObjectModel: true,
 			enablePaletteLayout: PALETTE_LAYOUT_FLYOUT,
+			enablePaletteHeader: null,
 			enableToolbarLayout: "Top",
 			enableImageDisplay: "SVGInline",
 			enableResizableNodes: false,
@@ -99,6 +100,7 @@ export default class ConfigUtils {
 			enableSingleOutputPortDisplay: false,
 			enableNarrowPalette: true,
 			schemaValidation: false,
+			enableFocusOnMount: true,
 			enableBoundingRectangles: false, // Not documented
 			enableCanvasUnderlay: "None", // Not documented
 			enableParentClass: "", // Not documented

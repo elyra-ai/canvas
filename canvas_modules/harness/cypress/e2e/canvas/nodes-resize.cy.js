@@ -85,28 +85,28 @@ describe("Test adding resizing nodes", function() {
 
 		// Test the two links from Node 2 to Node 1
 		cy.verifyLinkPath("Node 2", "outPort1", "Node 1", "inPort",
-			"M 231.62981184143024 188.49662691354752 L 457.8811607037008 454.3276824951172");
+			"M 239 188 L 457 454");
 		cy.verifyLinkPath("Node 2", "outPort2", "Node 1", "inPort",
-			"M 191.06748102181547 188.49662691354752 L 435.2596130371094 463.8410519984919");
+			"M 183 188 L 435 465");
 
 		// Test the one link from Node 1 to Node 3
 		cy.verifyLinkPath("Node 1", "outPort", "Node 3", "inPort",
-			"M 435.2596130371094 536.74108289395 L 153.09522247314453 414.152362905051");
+			"M 435 536 L 153 414");
 
 		// Test the one link from Node 1 to Node 4
 		cy.verifyLinkPath("Node 1", "outPort", "Node 4", "inPort",
-			"M 549.2596130371094 501.21871949140086 L 713.8162978100015 327.1740475337241");
+			"M 549 501 L 713 327");
 
 		// Test the two detached links pointing away from Node 1
 		cy.verifyDetachedLinkPathFromSource("Node 1", "outPort", 2, [
-			"M 527.9181758114686 454.3276824951172 L 728 134",
-			"M 435.2596130371094 642.5937664374292 L 338 667"
+			"M 527 454 L 728 134",
+			"M 435 642 L 338 667"
 		]);
 
 		// Test the two detached links pointing at Node 1
 		cy.verifyDetachedLinkPathToTarget("Node 1", "inPort", 2, [
-			"M 764 644 L 549.2596130371094 618.3914396565383",
-			"M 158 644 L 435.2596130371094 603.2709500023171"
+			"M 764 644 L 549 618",
+			"M 158 644 L 435 603"
 		]);
 
 	});
@@ -144,28 +144,28 @@ function verifyOnOpen() {
 
 	// Test the two links from Node 2 to Node 1
 	cy.verifyLinkPath("Node 2", "outPort1", "Node 1", "inPort",
-		"M 242.630126953125 132.52344837411354 L 435.2596130371094 228.94234778966086");
+		"M 242 139 L 435 230");
 	cy.verifyLinkPath("Node 2", "outPort2", "Node 1", "inPort",
-		"M 237.00137409101524 188.49662691354752 L 435.2596130371094 305.67435851625555");
+		"M 242 188 L 435 305");
 
 	// Test the one link from Node 1 to Node 3
 	cy.verifyLinkPath("Node 1", "outPort", "Node 3", "inPort",
-		"M 435.2596130371094 414.5440487350059 L 153.09522247314453 398.32003960221454");
+		"M 435 414 L 153 398");
 
 	// Test the one link from Node 1 to Node 4
 	cy.verifyLinkPath("Node 1", "outPort", "Node 4", "inPort",
-		"M 538.2596130371094 391.7122543839917 L 713.8162978100015 303.78745532835455");
+		"M 538 391 L 713 303");
 
 	// Test the two detached links pointing away from Node 1
 	cy.verifyDetachedLinkPathFromSource("Node 1", "outPort", 2, [
-		"M 538.2596130371094 260.9572649119533 L 728 134",
-		"M 435.2596130371094 610.3088228810263 L 338 667"
+		"M 538 260 L 728 134",
+		"M 435 610 L 338 667"
 	]);
 
 	// Test the two detached links pointing at Node 1
 	cy.verifyDetachedLinkPathToTarget("Node 1", "inPort", 2, [
-		"M 764 644 L 538.2596130371094 558.9883811067392",
-		"M 158 644 L 435.2596130371094 521.6279149026254"
+		"M 764 644 L 538 558.9883811067392",
+		"M 158 644 L 435 521"
 	]);
 
 }

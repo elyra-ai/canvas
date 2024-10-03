@@ -38,10 +38,18 @@ $palette-search-container-height: 41px;
 
 .palette-flyout-div-open {
 	width: 256px;
+
+	.palette-flyout-content {
+		grid-template-columns: 256px;
+	}
 }
 
 .palette-flyout-div-narrow {
 	width: 72px;
+
+	.palette-flyout-content {
+		grid-template-columns: 72px;
+	}
 }
 
 .palette-nav {
@@ -49,7 +57,11 @@ $palette-search-container-height: 41px;
 }
 
 .palette-flyout-content {
-	height: calc(100% - $palette-search-container-height);
+	position: absolute; // Needed to allow the scroll of categories/nodes to work.
+	height: 100%;
+	display: grid;
+	grid-template-rows: $palette-search-container-height auto 1fr;
+	// grid-template-columns is set based on narrow or open palette
 
 	.palette-scroll {
 		overflow-y: hidden; /*prevents multiple scroll bars in flyout*/
@@ -190,8 +202,6 @@ $palette-search-container-height: 41px;
 .palette-flyout-categories {
 	overflow-x: hidden;
 	overflow-y: auto;
-	min-height:100%;
-	height:0;
 
 	li .cds--accordion__arrow {
 		margin: 15px;
@@ -297,6 +307,8 @@ $palette-search-container-height: 41px;
 
 .palette-flyout-search-container {
 	height: $palette-search-container-height;
+	width: calc(100% - 1px);
+
 	.palette-flyout-search {
 		height: 100%;
 		overflow: hidden;
