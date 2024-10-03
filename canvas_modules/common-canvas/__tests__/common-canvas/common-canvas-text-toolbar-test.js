@@ -39,7 +39,7 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 
 	it("should render <Toolbar> inside <CommonCanvasTextToolbar/> when open", () => {
 		wrapper = createIntlCommonCanvasTextToolbar({}, canvasController);
-		canvasController.openTextToolbar(100, 200, MARKDOWN, () => { /**/ });
+		canvasController.openTextToolbar(100, 200, [], MARKDOWN, () => { /**/ });
 		wrapper.update();
 
 		expect(wrapper.find(CommonCanvasTextToolbar)).to.have.length(1);
@@ -63,7 +63,7 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 
 	it("should render text toolbar in new position when moved", () => {
 		wrapper = createIntlCommonCanvasTextToolbar({}, canvasController);
-		canvasController.openTextToolbar(100, 200, () => { /**/ });
+		canvasController.openTextToolbar(100, 200, [], () => { /**/ });
 		wrapper.update();
 
 		expect(wrapper.find(".text-toolbar").get(0).props.style.left).to.equal(100);
@@ -78,7 +78,7 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 
 	it("should NOT render <Toolbar/> after it is closed", () => {
 		wrapper = createIntlCommonCanvasTextToolbar({}, canvasController);
-		canvasController.openTextToolbar(100, 200, () => { /**/ });
+		canvasController.openTextToolbar(100, 200, [], () => { /**/ });
 		wrapper.update();
 
 		expect(wrapper.find(CommonCanvasTextToolbar)).to.have.length(1);

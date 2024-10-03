@@ -107,7 +107,9 @@ export default class SVGCanvasRenderer {
 			this.removeTempCursorOverlay.bind(this), // Function
 			this.displayComments.bind(this), // Function
 			this.displayLinks.bind(this), // Function
-			this.getCommentToolbarPos.bind(this) // Function
+			this.getCommentToolbarPos.bind(this), // Function
+			this.addCanvasZoomBehavior.bind(this), // Function
+			this.removeCanvasZoomBehavior.bind(this) // Function
 		);
 
 		this.dispUtils.setDisplayState();
@@ -283,7 +285,9 @@ export default class SVGCanvasRenderer {
 			this.removeTempCursorOverlay.bind(this), // Function
 			this.displayComments.bind(this), // Function
 			this.displayLinks.bind(this), // Function
-			this.getCommentToolbarPos.bind(this) // Function
+			this.getCommentToolbarPos.bind(this), // Function
+			this.addCanvasZoomBehavior.bind(this), // Function
+			this.removeCanvasZoomBehavior.bind(this) // Function
 		);
 
 
@@ -325,7 +329,6 @@ export default class SVGCanvasRenderer {
 		this.superRenderers.forEach((renderer) => {
 			renderer.setSelectionInfo(selectionInfo);
 		});
-
 	}
 
 	// Returns a subset of renderers, from the current set of super renderers,
@@ -1293,7 +1296,7 @@ export default class SVGCanvasRenderer {
 	// the populated case we do.
 	resetCanvasSVGBehaviors() {
 		// Remove zoom behaviors from canvasSVG area.
-		this.canvasSVG.on(".zoom", null);
+		this.removeCanvasZoomBehavior();
 
 		// If there are no nodes or comments we don't apply any zoom behaviors
 		// to the SVG area. We only attach the zoom behaviour to the top most SVG
@@ -1301,8 +1304,7 @@ export default class SVGCanvasRenderer {
 		// or a sub-pipeline full page.
 		if (!this.activePipeline.isEmptyOrBindingsOnly() &&
 				this.dispUtils.isDisplayingFullPage()) {
-			this.canvasSVG
-				.call(this.zoomUtils.getZoomHandler());
+			this.canvasSVG.call(this.zoomUtils.getZoomHandler());
 		}
 
 		// These behaviors will be applied to SVG areas at the top level and
@@ -1341,6 +1343,17 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Zoom - context menu");
 				this.openContextMenu(d3Event, "canvas");
 			});
+	}
+
+	// When adding back zoom behavior we need to reset all canvas behaviors
+	// because the ".zoom" events will have been removed from this.canvasSVG
+	// whenn removeCanvasZoomBehavior was called.
+	addCanvasZoomBehavior() {
+		this.resetCanvasSVGBehaviors();
+	}
+
+	removeCanvasZoomBehavior() {
+		this.canvasSVG.on(".zoom", null);
 	}
 
 	// Resets the pointer cursor on the background rectangle in the Canvas SVG area.
@@ -3742,67 +3755,24 @@ export default class SVGCanvasRenderer {
 			.attr("data-selected", (c) => (this.activePipeline.isSelected(c.id) ? "yes" : "no"))
 			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
 
-		// Comment Body - only used for regular/markdown comments
-		joinedCommentGrps
-			.selectChildren(".d3-comment-rect")
-			.data((c) => (c.contentType !== WYSIWYG ? [c] : []), (c) => c.id)
-			.join(
-				(enter) =>
-					enter
-						.append("rect")
-						.attr("class", "d3-comment-selection-highlight")
-			)
-			.datum((c) => this.activePipeline.getComment(c.id))
-			.attr("height", (c) => c.height)
-			.attr("width", (c) => c.width)
-			.attr("class", "d3-comment-rect")
-			.attr("style", (c) => this.getCommentBodyStyle(c, "default"));
-
-
-		// Comment Text - for regular/markdown comment
+		// Comment Text
 		joinedCommentGrps
 			.selectChildren(".d3-foreign-object-comment-text")
-			.data((c) => (c.contentType !== WYSIWYG ? [c] : []), (c) => c.id)
+			.data((d) => [d], (d) => d.id)
 			.join(
 				(enter) => {
 					const fo = enter
 						.append("foreignObject")
-						.attr("class", "d3-foreign-object-comment-text")
+						.attr("class", (d) => "d3-foreign-object-comment-text")
 						.attr("x", 0)
 						.attr("y", 0);
 					fo
 						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-						.attr("class", "d3-comment-text");
-					return fo;
-				}
-			)
-			.datum((c) => this.activePipeline.getComment(c.id))
-			.attr("width", (c) => c.width)
-			.attr("height", (c) => c.height)
-			.select("div")
-			.attr("style", (c) => this.getCommentTextStyle(c, "default"))
-			.html((c) => (
-				this.config.enableMarkdownInComments
-					? markdownIt.render(c.content)
-					: escapeText(c.content))
-			);
-
-		// Comment Text - for WYSIWYG comment
-		joinedCommentGrps
-			.selectChildren(".d3-foreign-object-comment-text-wysiwyg")
-			.data((c) => (c.contentType === WYSIWYG ? [c] : []), (c) => c.id)
-			.join(
-				(enter) => {
-					const fo = enter
-						.append("foreignObject")
-						.attr("class", "d3-foreign-object-comment-text-wysiwyg")
-						.attr("x", 0)
-						.attr("y", 0);
-					fo
+						.attr("class", "d3-comment-text-scroll")
 						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-						.attr("class", "d3-comment-text-wysiwyg-outer")
+						.attr("class", "d3-comment-text-outer")
 						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-						.attr("class", "d3-comment-text-wysiwyg");
+						.attr("class", (d) => "d3-comment-text" + (d.contentType !== WYSIWYG ? " markdown" : ""));
 					return fo;
 				}
 			)
@@ -3810,22 +3780,27 @@ export default class SVGCanvasRenderer {
 			.attr("width", (c) => c.width)
 			.attr("height", (c) => c.height)
 
-			.select(".d3-comment-text-wysiwyg-outer")
-
-			.select(".d3-comment-text-wysiwyg")
-			.attr("style", null) // Wipe the in-line styles before applying
-
+			.select(".d3-comment-text-scroll")
 			.each((d, i, commentTexts) => {
-				if (d.formats?.length > 0) {
-					d.formats.forEach((f) => {
-						const { field, value } = CanvasUtils.convertFormat(f);
-						d3.select(commentTexts[i]).style(field, value);
-					});
-				}
+				const commentElement = d3.select(commentTexts[i]);
+				CanvasUtils.applyOutlineStyle(commentElement, d.formats); // Only apply outlineStyle format here
 			})
 
-			// .attr("style", (c) => this.getCommentTextStyle(c, "default"))
-			.html((c) => escapeText(c.content));
+			.select(".d3-comment-text-outer")
+			.select(".d3-comment-text")
+			.attr("style", null) // Wipe the in-line styles before applying formats
+
+			.each((d, i, commentTexts) => {
+				const commentElement = d3.select(commentTexts[i]);
+				CanvasUtils.applyNonOutlineStyle(commentElement, d.formats); // Apply all formats except outlineStyle
+
+			})
+
+			.html((d) =>
+				(d.contentType !== WYSIWYG && this.config.enableMarkdownInComments
+					? markdownIt.render(d.content)
+					: escapeText(d.content))
+			);
 
 		// Add or remove drag object behavior for the comment groups.
 		if (this.config.enableEditingActions) {
@@ -3851,6 +3826,9 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableContextToolbar) {
 					this.addContextToolbar(d3Event, d, "comment");
 				}
+				if (this.commentHasScrollableText(d3Event.currentTarget)) {
+					this.removeCanvasZoomBehavior(); // Remove canvas zoom behavior to allow scrolling of comment
+				}
 			})
 			.on("mouseleave", (d3Event, d) => {
 				if (this.config.enableContextToolbar) {
@@ -3859,6 +3837,8 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableEditingActions) {
 					this.deleteCommentPort(d3Event.currentTarget);
 				}
+
+				this.addCanvasZoomBehavior(); // Add back zoom behavior to reenable canvas zooming
 			})
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
@@ -3902,6 +3882,23 @@ export default class SVGCanvasRenderer {
 				}
 				this.openContextMenu(d3Event, "comment", d);
 			});
+	}
+
+	// Returns true if the comment has scrollable text or not. That is if the contents
+	// of the comment's scroll <div> is bigger that the scroll <div> can accommodate.
+	// When a comment is being edited, it will have a foreignObject containing its own
+	// scroll <div> over the top of the foreignObject used to display the comment.
+	commentHasScrollableText(element) {
+		// Look for entry foreign object first because, if present it will be over the top
+		// of the display foreign object and it will be handling scrollable text.
+		let scrollDiv = element.getElementsByClassName("d3-comment-text-entry-scroll");
+		if (!scrollDiv[0]) {
+			scrollDiv = element.getElementsByClassName("d3-comment-text-scroll");
+		}
+		if (scrollDiv[0].clientHeight < scrollDiv[0].scrollHeight) {
+			return true;
+		}
+		return false;
 	}
 
 	attachCommentSizingListeners(commentGrps) {
@@ -3963,7 +3960,7 @@ export default class SVGCanvasRenderer {
 
 	setCommentBodyStyles(d, type, comGrp) {
 		const style = this.getCommentBodyStyle(d, type);
-		comGrp.selectChildren(".d3-comment-rect").attr("style", style);
+		comGrp.selectChildren(".d3-comment-text").attr("style", style);
 	}
 
 	setCommentTextStyles(d, type, comGrp) {
@@ -3985,6 +3982,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayCommentTextArea(comment, parentDomObj) {
+		comment.autoSize = this.canvasLayout.commentAutoSize; // TODO - read from comment layout when canvas layout is refactored.
 		this.svgCanvasTextArea.displayCommentTextArea(comment, parentDomObj);
 	}
 
@@ -4468,7 +4466,7 @@ export default class SVGCanvasRenderer {
 		// If the comment has a classname that isn't the default use it!
 		if (d.class_name &&
 				d.class_name !== "canvas-comment" &&
-				d.class_name !== "d3-comment-rect") {
+				d.class_name !== "d3-comment-rect") { // Left in for historical reasons
 			customClass = " " + d.class_name;
 		}
 
@@ -5042,7 +5040,7 @@ export default class SVGCanvasRenderer {
 	// Updates the data links for all the nodes with two optional fields
 	// (called srcFreeformInfo and trgFreeformInfo) based on the location of the
 	// nodes the links go from and to. The info in these fields is used to
-	// calculate the starting and ending position of freeform line links.
+	// calculate the starting and ending position of freeform link lines.
 	// This ensures that input and output links that go in a certain direction
 	// (NORTH, SOUTH, EAST or WEST) are grouped together so they can be
 	// separated out when freeform lines are drawn between nodes.
@@ -5065,13 +5063,13 @@ export default class SVGCanvasRenderer {
 				// Self-referencing link
 				if (node.id === link.srcObj?.id &&
 						link.srcObj?.id === link.trgNode?.id) {
-					linksInfo[NORTH].push({ type: "in", endNode: link.srcObj, link });
-					linksInfo[EAST].push({ type: "out", endNode: link.trgNode, link });
+					linksInfo[NORTH].push({ type: "in", startNode: link.srcObj, endNode: link.trgNode, link });
+					linksInfo[EAST].push({ type: "out", startNode: link.srcObj, endNode: link.trgNode, link });
 
 				} else if (link.trgNode && link.trgNode.id === node.id) {
 					if (link.srcObj) {
-						const dir = this.getDirAdjusted(link.trgNode, link.srcObj);
-						linksInfo[dir].push({ type: "in", endNode: link.srcObj, link });
+						const dir = this.getDirToNode(link.trgNode, link.srcObj);
+						linksInfo[dir].push({ type: "in", startNode: link.trgNode, endNode: link.srcObj, link });
 
 					} else if (link.srcPos) {
 						const dir = this.getDirToEndPos(link.trgNode, link.srcPos.x_pos, link.srcPos.y_pos);
@@ -5080,8 +5078,8 @@ export default class SVGCanvasRenderer {
 
 				} else if (link.srcObj && link.srcObj.id === node.id) {
 					if (link.trgNode) {
-						const dir = this.getDirAdjusted(link.srcObj, link.trgNode);
-						linksInfo[dir].push({ type: "out", endNode: link.trgNode, link });
+						const dir = this.getDirToNode(link.srcObj, link.trgNode);
+						linksInfo[dir].push({ type: "out", startNode: link.srcObj, endNode: link.trgNode, link });
 
 					} else if (link.trgPos) {
 						const dir = this.getDirToEndPos(link.srcObj, link.trgPos.x_pos, link.trgPos.y_pos);
@@ -5091,40 +5089,20 @@ export default class SVGCanvasRenderer {
 			}
 		});
 
-		linksInfo.n = this.sortLinksInfo(linksInfo.n, NORTH);
-		linksInfo.s = this.sortLinksInfo(linksInfo.s, SOUTH);
-		linksInfo.e = this.sortLinksInfo(linksInfo.e, EAST);
-		linksInfo.w = this.sortLinksInfo(linksInfo.w, WEST);
+		const startCenter = {
+			x: node.x_pos + node.width / 2,
+			y: node.y_pos + node.height / 2
+		};
+
+		linksInfo.n = this.sortLinksInfo(linksInfo.n, NORTH, startCenter);
+		linksInfo.s = this.sortLinksInfo(linksInfo.s, SOUTH, startCenter);
+		linksInfo.e = this.sortLinksInfo(linksInfo.e, EAST, startCenter);
+		linksInfo.w = this.sortLinksInfo(linksInfo.w, WEST, startCenter);
 
 		this.updateLinksInfo(linksInfo.n, NORTH);
 		this.updateLinksInfo(linksInfo.s, SOUTH);
 		this.updateLinksInfo(linksInfo.e, EAST);
 		this.updateLinksInfo(linksInfo.w, WEST);
-	}
-
-	// Returns the direction of a link from the start node to the end node
-	// as either NORTH, SOUTH, EAST or WEST. Some direction combinations
-	// have to be overriden to prevent link lines overlapping.
-	getDirAdjusted(startNode, endNode) {
-		let dir = this.getDirToNode(startNode, endNode);
-
-		// When start -> end is SOUTH and end -> start is WEST the returned direction
-		// becomes EAST instead of SOUTH to prevent link lines overlapping.
-		if (dir === SOUTH) {
-			const dir2 = this.getDirToNode(endNode, startNode);
-			if (dir2 === WEST) {
-				dir = EAST;
-			}
-
-		// When start -> end is NORTH and end -> start is EAST the returned direction
-		// becomes WEST instead of NORTH to prevent link lines overlapping.
-		} else if (dir === NORTH) {
-			const dir2 = this.getDirToNode(endNode, startNode);
-			if (dir2 === EAST) {
-				dir = WEST;
-			}
-		}
-		return dir;
 	}
 
 	// Returns the direction (NORTH, SOUTH, EAST or WEST) from the start node
@@ -5150,10 +5128,13 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns the linksDirArray passed in with the linkInfo objects in the
-	// array ordered by the position of the end of each link line, depending on
-	// the direction (dir) of the lines. This is achieved by spliting the links
-	// into groups where links in the same group go to/from the same node.
-	sortLinksInfo(linksDirArrayIn, dir) {
+	// array ordered by the angle that each link makes with the center of the
+	// start node. When handling multiple links that go to the same node
+	// the links have to be grouped where links in the same group go to/from
+	// the same node. For groups, the x and y are *projected* corrdinates to
+	// allow us to calculate the angles and ordering etc. The actual x and y
+	// for the links is calculated in getAttachedLinkObj and getDetachedLinkObj.
+	sortLinksInfo(linksDirArrayIn, dir, startCenter) {
 		let linksDirArray = linksDirArrayIn;
 		if (linksDirArray.length > 1) {
 			const groups = this.getLinkInfoGroups(linksDirArray);
@@ -5170,23 +5151,72 @@ export default class SVGCanvasRenderer {
 						li.x = this.nodeUtils.getNodeCenterPosX(node);
 						li.y = node.y_pos + ((node.height / parts) * (i + 1));
 					}
+					// Special case where links that go SOUTH from the node and
+					// point to the WEST of the end node, get crossed over each other.
+					// In this case the x coordinates of the link items need to be
+					// reversed.
+					if (dir === SOUTH) {
+						const reverseDir = this.getDirToNode(li.endNode, li.startNode);
+						if (reverseDir === WEST) {
+							li.x = node.x_pos + ((node.width / parts) * (group.length - i));
+						}
+					}
+					// Special case where links that go NORTH from the node and
+					// point to the EAST of the end node, get crossed over each other.
+					// In this case the x coordinates of the link items need to be
+					// reversed.
+					if (dir === NORTH) {
+						const reverseDir = this.getDirToNode(li.endNode, li.startNode);
+						if (reverseDir === EAST) {
+							li.x = node.x_pos + ((node.width / parts) * (group.length - i));
+						}
+					}
 				});
 			});
 
-			// For NORTH and SOUTH links we sort linksDirArray by the x coordinate
-			// of the end of each link. For EAST and WEST we sort by the y
-			// coordinate.
-			if (dir === NORTH || dir === SOUTH) {
-				linksDirArray = linksDirArray.sort((a, b) => (a.x > b.x ? 1 : -1));
+			// Set an angle for each linkDir so that they can be sorted so they do not
+			// overlap when being drawn to or from the node. The angle is from the
+			// center of the node we are handling to their projected end point.
+			linksDirArray.forEach((ld) => {
+				ld.angle = CanvasUtils.calculateAngle(startCenter.x, startCenter.y, ld.x, ld.y);
+
+				// Make sure the angles for links on the EAST side of the node are
+				// increasing in the clockwise direction by decrementing the angles from
+				// 270 to 360 by 360 degrees. (This is because calculateAngle returns
+				// positive angles from the 3 o'clock position in clockwise direction.)
+				if (dir === EAST && ld.angle >= 270) {
+					ld.angle -= 360;
+				}
+
+				// For self-referencing links we overwrite the angle to ensure that
+				// the outward direction (EAST) is always drawn at the top of any
+				// EAST links and the inward direction (NORTH) is always drawn to
+				// the right of any NORTH links.
+				if (ld.startNode && ld.endNode && ld.startNode === ld.endNode) {
+					if (dir === EAST) {
+						ld.angle = -90;
+					} else if (dir === NORTH) {
+						ld.angle = 360;
+					}
+				}
+			});
+
+			// Sort the linksDirArray by the angle that each link forms with the
+			// center of the start node.
+			if (dir === NORTH || dir === EAST) {
+				linksDirArray = linksDirArray.sort((a, b) => (a.angle > b.angle ? 1 : -1));
 			} else {
-				linksDirArray = linksDirArray.sort((a, b) => (a.y > b.y ? 1 : -1));
+				linksDirArray = linksDirArray.sort((a, b) => (a.angle < b.angle ? 1 : -1));
 			}
 		}
 		return linksDirArray;
 	}
 
-	// Returns a 'groups' object where each field is index by a node ID and
-	// contains an array of linkInfo objects that go to/from the node.
+	// Returns a 'groups' object where each field is indexed by a node ID and
+	// contains an array of linkInfo objects that go to/from the node. Note:
+	// endNode is the target node for link that point away from the node we
+	// are handling and is the source node for links the point to the node
+	// we are handling.
 	getLinkInfoGroups(linksDirArray) {
 		const groups = {};
 		linksDirArray.forEach((li) => {

@@ -16,11 +16,13 @@
 
 import React from "react";
 import SpinnerControl from "../../../src/common-properties/controls/numberfield";
-import { mount } from "../../_utils_/mount-utils.js";
+import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
+import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
-import propertyUtils from "../../_utils_/property-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import spinnerParamDef from "../../test_resources/paramDefs/spinner_paramDef.json";
+import { fireEvent, waitFor } from "@testing-library/react";
 
 
 const controller = new Controller();
@@ -78,15 +80,27 @@ const control3 = {
 	"control": "spinner",
 	"required": true
 };
-propertyUtils.setControls(controller, [control, control2, control3]);
+propertyUtilsRTL.setControls(controller, [control, control2, control3]);
 const propertyId = { "name": "spinner_int" };
 const propertyId2 = { "name": "spinner_dbl" };
 const propertyId3 = { "name": "spinner_default" };
 
+const mockSpinner = jest.fn();
+jest.mock("../../../src/common-properties/controls/numberfield",
+	() => (props) => mockSpinner(props)
+);
+
+mockSpinner.mockImplementation((props) => {
+	const SpinnerComp = jest.requireActual(
+		"../../../src/common-properties/controls/numberfield",
+	).default;
+	return <SpinnerComp {...props} />;
+});
+
 describe("spinner-control renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = mount(
+		render(
 			<SpinnerControl
 				store={controller.getStore()}
 				control={control}
@@ -94,13 +108,16 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("controller")).to.equal(controller);
-		expect(wrapper.prop("propertyId")).to.equal(propertyId);
+		expectJest(mockSpinner).toHaveBeenCalledWith({
+			"store": controller.getStore(),
+			"controller": controller,
+			"control": control,
+			"propertyId": propertyId,
+		});
 	});
 
 	it("spinner-control should have steppers", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<SpinnerControl
 				store={controller.getStore()}
 				control={control}
@@ -108,12 +125,12 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		expect(wrapper.find(".cds--number--nosteppers")).to.have.length(0);
-		expect(wrapper.find(".cds--number__controls")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".cds--number--nosteppers")).to.have.length(0);
+		expect(wrapper.container.querySelectorAll(".cds--number__controls")).to.have.length(1);
 	});
 
 	it("should set correct state value when integer increment in `SpinnerControl`", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<SpinnerControl
 				store={controller.getStore()}
 				control={control}
@@ -121,19 +138,20 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find("input[type='number']");
+		const { container } = wrapper;
+		const input = container.querySelectorAll("input[type='number']");
 		expect(input).to.have.length(1);
-		input.simulate("change", { target: { value: "44" } });
+		fireEvent.change(input[0], { target: { value: "44" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal(44);
 
-		const inputIncrement = wrapper.find("button").at(1);
-		expect(inputIncrement).to.have.length(1);
-		inputIncrement.simulate("click");
+		const inputIncrement = container.querySelectorAll("button")[1];
+		expect(inputIncrement).to.exist;
+		fireEvent.click(inputIncrement);
 		expect(controller.getPropertyValue(propertyId)).to.equal(45);
 	});
 
 	it("should set correct state value when integer decrement in `SpinnerControl`", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<SpinnerControl
 				store={controller.getStore()}
 				control={control}
@@ -141,18 +159,19 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find("input[type='number']");
-		input.simulate("change", { target: { value: "44" } });
+		const { container } = wrapper;
+		const input = container.querySelector("input[type='number']");
+		fireEvent.change(input, { target: { value: "44" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal(44);
 
-		const inputDecrement = wrapper.find("button").at(0);
-		expect(inputDecrement).to.have.length(1);
-		inputDecrement.simulate("click");
+		const inputDecrement = container.querySelectorAll("button")[0];
+		expect(inputDecrement).to.exist;
+		fireEvent.click(inputDecrement);
 		expect(controller.getPropertyValue(propertyId)).to.equal(43);
 	});
 
 	it("should set correct state value when double increment in `SpinnerControl`", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<SpinnerControl
 				store={controller.getStore()}
 				control={control2}
@@ -160,18 +179,19 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId2}
 			/>
 		);
-		const input = wrapper.find("input[type='number']");
-		input.simulate("change", { target: { value: "44.3" } });
+		const { container } = wrapper;
+		const input = container.querySelector("input[type='number']");
+		fireEvent.change(input, { target: { value: "44.3" } });
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.3);
 
-		const inputIncrement = wrapper.find("button").at(1);
-		expect(inputIncrement).to.have.length(1);
-		inputIncrement.simulate("click");
+		const inputIncrement = container.querySelectorAll("button")[1];
+		expect(inputIncrement).to.exist;
+		fireEvent.click(inputIncrement);
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.4);
 	});
 
 	it("should set correct state value when double decrement in `SpinnerControl`", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<SpinnerControl
 				store={controller.getStore()}
 				control={control2}
@@ -179,19 +199,20 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId2}
 			/>
 		);
-		const input = wrapper.find("input[type='number']");
-		input.simulate("change", { target: { value: "44.5" } });
+		const { container } = wrapper;
+		const input = container.querySelector("input[type='number']");
+		fireEvent.change(input, { target: { value: "44.5" } });
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.5);
 
-		const inputDecrement = wrapper.find("button").at(0);
-		expect(inputDecrement).to.have.length(1);
-		inputDecrement.simulate("click");
+		const inputDecrement = container.querySelectorAll("button")[0];
+		expect(inputDecrement).to.exist;
+		fireEvent.click(inputDecrement);
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.4);
 	});
 
 	it("should set correct state value when complex double increment in `SpinnerControl`", () => {
 		control2.increment = 0.0022;
-		const wrapper = mount(
+		const wrapper = render(
 			<SpinnerControl
 				store={controller.getStore()}
 				control={control2}
@@ -199,19 +220,20 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId2}
 			/>
 		);
-		const input = wrapper.find("input[type='number']");
-		input.simulate("change", { target: { value: "44.6666" } });
+		const { container } = wrapper;
+		const input = container.querySelector("input[type='number']");
+		fireEvent.change(input, { target: { value: "44.6666" } });
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.6666);
 
-		const inputIncrement = wrapper.find("button").at(1);
-		expect(inputIncrement).to.have.length(1);
-		inputIncrement.simulate("click");
+		const inputIncrement = container.querySelectorAll("button")[1];
+		expect(inputIncrement).to.exist;
+		fireEvent.click(inputIncrement);
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.6688);
 	});
 
 	it("should set correct state value when complex double decrement in `SpinnerControl`", () => {
 		control2.increment = 0.0022;
-		const wrapper = mount(
+		const wrapper = render(
 			<SpinnerControl
 				store={controller.getStore()}
 				control={control2}
@@ -219,22 +241,24 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId2}
 			/>
 		);
-		const input = wrapper.find("input[type='number']");
-		input.simulate("change", { target: { value: "44.6666" } });
+		const { container } = wrapper;
+		const input = container.querySelector("input[type='number']");
+		fireEvent.change(input, { target: { value: "44.6666" } });
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.6666);
 
-		const inputDecrement = wrapper.find("button").at(0);
-		expect(inputDecrement).to.have.length(1);
-		inputDecrement.simulate("click");
-		inputDecrement.simulate("click");
-		inputDecrement.simulate("click");
-		inputDecrement.simulate("click");
-		inputDecrement.simulate("click");
+		const inputDecrement = container.querySelectorAll("button")[0];
+		expect(inputDecrement).to.exist;
+		fireEvent.click(inputDecrement);
+		fireEvent.click(inputDecrement);
+		fireEvent.click(inputDecrement);
+		fireEvent.click(inputDecrement);
+		fireEvent.click(inputDecrement);
+
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.6556);
 	});
 
 	it("should set correct state value for default spinner with default increment in `SpinnerControl`", () => {
-		const wrapper = mount(
+		const wrapper = render(
 			<SpinnerControl
 				store={controller.getStore()}
 				control={control3}
@@ -242,52 +266,60 @@ describe("spinner-control renders correctly", () => {
 				propertyId={propertyId3}
 			/>
 		);
-		const input = wrapper.find("input[type='number']");
-		input.simulate("change", { target: { value: "45" } });
+		const { container } = wrapper;
+		const input = container.querySelector("input[type='number']");
+		fireEvent.change(input, { target: { value: "45" } });
 		expect(controller.getPropertyValue(propertyId3)).to.equal(45);
 
-		const inputIncrement = wrapper.find("button").at(1);
-		expect(inputIncrement).to.have.length(1);
-		inputIncrement.simulate("click");
+		const inputIncrement = container.querySelectorAll("button")[1];
+		expect(inputIncrement).to.exist;
+		fireEvent.click(inputIncrement);
 		expect(controller.getPropertyValue(propertyId3)).to.equal(46);
 	});
 
 });
 
 describe("spinnerControl paramDef render correctly", () => {
-	const renderedObject = propertyUtils.flyoutEditorForm(spinnerParamDef);
-	const wrapper = renderedObject.wrapper;
-	const spinnerController = renderedObject.controller;
+	let wrapper;
+	let spinnerController;
+	beforeEach(() => {
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(spinnerParamDef);
+		wrapper = renderedObject.wrapper;
+		spinnerController = renderedObject.controller;
+	});
 
-	it("should have displayed correct text in spinnerControl elements", () => {
-		let labels = wrapper.find("label.properties-control-label");
-		expect(labels.at(0).text()).to.equal("Default");
-		expect(labels.at(1).text()).to.equal("Integer");
-		expect(labels.at(2).text()).to.equal("Double");
-		expect(labels.at(3).text()).to.equal("Undefined");
-		expect(labels.at(4).text()).to.equal("Null");
-		expect(labels.at(5).text()).to.equal("Placeholder text");
-		expect(labels.at(6).text()).to.equal("Random");
-		expect(labels.at(7).text()).to.equal("Error");
-		expect(labels.at(8).text()).to.equal("Warning");
-		expect(labels.at(9).text()).to.equal("Spinner Disabled");
-		expect(labels.at(10)).to.have.length(0); // "Spinner Hidden"
+	it("should have displayed correct text in spinnerControl elements", async() => {
+		const { container } = wrapper;
+		let labels = container.querySelectorAll(".properties-control-label");
+		expect(labels[0].textContent).to.equal("Default");
+		expect(labels[1].textContent).to.equal("Integer");
+		expect(labels[2].textContent).to.equal("Double");
+		expect(labels[3].textContent).to.equal("Undefined");
+		expect(labels[4].textContent).to.equal("Null");
+		expect(labels[5].textContent).to.equal("Placeholder text");
+		expect(labels[6].textContent).to.equal("Random");
+		expect(labels[7].textContent).to.equal("Error");
+		expect(labels[8].textContent).to.equal("Warning");
+		expect(labels[9].textContent).to.equal("Spinner Disabled");
+		expect(labels[10]).to.not.exist; // "Spinner Hidden"
 
 		spinnerController.updatePropertyValue({ name: "hide" }, false);
-		wrapper.update();
-		labels = wrapper.find("label.properties-control-label");
-		expect(labels.at(10).text()).to.equal("Spinner Hidden");
+
+		await waitFor(() => {
+			labels = container.querySelectorAll("label.properties-control-label");
+			expect(labels[10].textContent).to.equal("Spinner Hidden");
+		});
 	});
 });
 
 describe("spinner classnames appear correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(spinnerParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(spinnerParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	it("spinner should have custom classname defined", () => {
-		expect(wrapper.find(".spinner-control-class")).to.have.length(1);
+		expect(wrapper.container.querySelectorAll(".spinner-control-class")).to.have.length(1);
 	});
 });

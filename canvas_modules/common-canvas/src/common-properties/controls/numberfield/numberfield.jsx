@@ -164,6 +164,7 @@ class NumberfieldControl extends React.Component {
 					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
+					disableWheel
 				/>
 				{numberGenerator}
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />

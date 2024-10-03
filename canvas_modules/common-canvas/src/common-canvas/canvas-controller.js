@@ -59,6 +59,8 @@ import { LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE,
 	SNAP_TO_GRID_NONE, SUPER_NODE, WYSIWYG
 } from "./constants/canvas-constants";
 
+import { cloneDeep } from "lodash";
+
 // Global instance ID counter
 var commonCanvasControllerInstanceId = 0;
 
@@ -2065,8 +2067,8 @@ export default class CanvasController {
 		}
 	}
 
-	openTextToolbar(xPos, yPos, contentType, actionHandler, blurHandler) {
-		this.objectModel.setTextToolbarDef({ isOpen: true, pos_x: xPos, pos_y: yPos, contentType, actionHandler, blurHandler });
+	openTextToolbar(xPos, yPos, formats, contentType, actionHandler, blurHandler) {
+		this.objectModel.setTextToolbarDef({ isOpen: true, pos_x: xPos, pos_y: yPos, formats, contentType, actionHandler, blurHandler });
 	}
 
 	closeTextToolbar() {
@@ -2075,6 +2077,10 @@ export default class CanvasController {
 
 	moveTextToolbar(xPos, yPos) {
 		this.objectModel.setTextToolbarDef({ pos_x: xPos, pos_y: yPos });
+	}
+
+	updateTextToolbarFormats(formats) {
+		this.objectModel.setTextToolbarDef({ formats: cloneDeep(formats) }); // Clone to force mapToState refresh.
 	}
 
 	// Processes the drop of an 'external' object, either from the desktop or
@@ -2400,15 +2406,15 @@ export default class CanvasController {
 			this.objectModel.setZoom(data.zoom, data.pipelineId);
 			break;
 		}
-		case "paletteToggle": {
+		case "togglePalette": {
 			this.togglePalette();
 			break;
 		}
-		case "paletteOpen": {
+		case "openPalette": {
 			this.openPalette();
 			break;
 		}
-		case "paletteClose": {
+		case "closePalette": {
 			this.closePalette();
 			break;
 		}

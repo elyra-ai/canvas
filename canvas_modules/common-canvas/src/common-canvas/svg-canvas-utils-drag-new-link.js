@@ -495,6 +495,9 @@ export default class SVGCanvasUtilsDragNewLink {
 	// Draws a 'snap-back' link with a rubber-band effect that
 	// animates the cancellation of a new link's creation.
 	stopDrawingNewLinkForPorts(drawingNewLinkData) {
+		if (drawingNewLinkData.linkArray?.length === 0) {
+			return;
+		}
 		let saveX1 = drawingNewLinkData.linkArray[0].x1;
 		let saveY1 = drawingNewLinkData.linkArray[0].y1;
 		let saveX2 = drawingNewLinkData.linkArray[0].x2;

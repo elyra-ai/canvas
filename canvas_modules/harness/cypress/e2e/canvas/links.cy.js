@@ -214,11 +214,12 @@ describe("Test basic link construction", function() {
 			"M 367 167.5 L 397 167.5 L 397 118.5 L 267 118.5 L 267 167.5 L 297 167.5"
 		);
 
-		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkMethod": "Ports" });
+		cy.setCanvasConfig({ "selectedLinkType": "Straight", "selectedLinkMethod": "Ports",
+			"selectedStraightLinksAsFreeform": false });
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Execution node", "outPort", "Execution node", "inPort",
-			"M 374 176 L 404 101.5 332  101.5 332 131.5"
+			"M 367 167 L 397 118 L 267 118.5 L 267 167.5 L 297 167.5"
 		);
 
 		// Test the 4 Freeform combinations
@@ -226,7 +227,7 @@ describe("Test basic link construction", function() {
 		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkMethod": "Freeform" });
 		cy.verifyLinkPath(
 			"Execution node", "outPort", "Execution node", "inPort",
-			"M 374 176 L 404 101.5 332  101.5 332 131.5"
+			"M 367 167.5 L 397 118.5 L 267 118.5 L 267 167.5 L 297 167.5"
 		);
 
 		cy.setCanvasConfig({ "selectedLinkType": "Elbow", "selectedLinkMethod": "Freeform" });
@@ -248,7 +249,7 @@ describe("Test basic link construction", function() {
 		cy.wait(10);
 		cy.verifyLinkPath(
 			"Execution node", "outPort", "Execution node", "inPort",
-			"M 374 176 L 404 101.5 332  101.5 332 131.5"
+			"M 374 176 L 404 176 404 101.5 332  101.5 332 131.5"
 		);
 	});
 });
