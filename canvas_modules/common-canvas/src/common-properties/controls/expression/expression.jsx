@@ -265,7 +265,6 @@ class ExpressionControl extends React.Component {
 
 	// Event handlers for CM6
 	events() {
-		console.log("events");
 		const that = this;
 		const eventHandlers = EditorView.domEventHandlers({
 			blur(evt, view) {
