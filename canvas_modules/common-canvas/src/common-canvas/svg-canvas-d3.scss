@@ -123,17 +123,12 @@ $link-highlight-color: $support-info;
 	overflow: hidden;
 }
 
-.d3-foreign-object-text-entry-wysiwyg:focus {
+// Declare our own focus highlighting for text entry.
+@mixin d3-text-entry-focus-mixin {
+	// Supress the default focus highlighting with non-carbon color and round corners.
 	outline: none;
-}
-
-.d3-foreign-object-text-entry-wysiwyg:focus-within {
-	outline: none;
+	// Add our own focus highlighting with our own color and square corners
 	box-shadow: 0 0 0 $spacing-01 $focus;
-}
-
-.d3-foreign-object-comment-text-entry:focus-within {
-	@include d3-text-entry-focus-mixin;
 }
 
 .d3-foreign-object-text-entry:focus,
