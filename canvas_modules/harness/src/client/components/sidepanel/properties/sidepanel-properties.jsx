@@ -70,6 +70,7 @@ export default class SidePanelProperties extends React.Component {
 			"propertiesContainerType": this.props.propertiesConfig.propertiesContainerType,
 			"categoryView": this.props.propertiesConfig.categoryView,
 			"propertiesSchemaValidation": this.props.propertiesConfig.propertiesSchemaValidation,
+			"iconSwitch": this.props.propertiesConfig.iconSwitch,
 			"applyPropertiesWithoutEdit": this.props.propertiesConfig.applyPropertiesWithoutEdit,
 			"applyOnBlur": this.props.propertiesConfig.applyOnBlur,
 			"convertValueDataTypes": this.props.propertiesConfig.convertValueDataTypes,
@@ -367,6 +368,7 @@ SidePanelProperties.propTypes = {
 		disableWideFlyoutPrimaryButtonForPanelId: PropTypes.string,
 		disableWideFlyoutPrimaryButton: PropTypes.func,
 		setWideFlyoutPrimaryButtonDisabled: PropTypes.func, // action
-		convertValueDataTypes: PropTypes.bool
+		convertValueDataTypes: PropTypes.bool,
+		iconSwitch: PropTypes.bool
 	})
 };
