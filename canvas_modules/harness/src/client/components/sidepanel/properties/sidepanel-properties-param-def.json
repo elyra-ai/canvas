@@ -16,6 +16,7 @@
 		"showRequiredIndicator": true,
 		"showAlertsTab": true,
 		"enableResize": true,
+		"iconSwitch": false,
 		"initialEditorSize": "small",
 		"conditionHiddenPropertyHandling": "null",
 		"conditionDisabledPropertyHandling": "null",
@@ -122,6 +123,11 @@
 		{
 			"id": "enableResize",
 			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "iconSwitch",
+			"default": false,
 			"type": "boolean"
 		},
 		{
@@ -371,6 +377,16 @@
 				},
 				"description": {
 					"default": "Adds a button that allows the right side flyout to expand/collapse between two sizes"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "iconSwitch",
+				"label": {
+					"default": "iconSwitch"
+				},
+				"description": {
+					"default": "Allows for icon to be displayed or hidden"
 				},
 				"control": "toggle"
 			},
@@ -700,6 +716,7 @@
 					"showRequiredIndicator",
 					"showAlertsTab",
 					"enableResize",
+					"iconSwitch",
 					"conditionHiddenPropertyHandling",
 					"conditionDisabledPropertyHandling",
 					"returnValueFiltering",
