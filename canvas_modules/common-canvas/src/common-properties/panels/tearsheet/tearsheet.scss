@@ -19,7 +19,7 @@ $properties-buttons-height: $spacing-10;
 .properties-tearsheet-panel.properties-tearsheet-stacked.cds--modal {
 	.cds--modal-container {
 		max-height: calc(100% - 104px);
-		width: calc(100% - 96px);
+		width: calc(100% - $spacing-12);
 	}
 }
 
