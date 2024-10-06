@@ -42,7 +42,7 @@
 			width: inherit; // Override carbon default width: auto
 			background-color: transparent; // Override carbon default background-color: #f4f4f4;
 			padding: 0 1.25rem 0 0;
-			box-shadow: 0 2px 0 0 $button-primary;
+			box-shadow: 0 $spacing-01 0 0 $button-primary;
 			&:focus {
 				outline: unset;
 			}
@@ -50,12 +50,12 @@
 		}
 		&.error {
 			.cds--select-input {
-				box-shadow: 0 2px 0 0 $support-error;
+				box-shadow: 0 $spacing-01 0 0 $support-error;
 			}
 		}
 		&.warning {
 			.cds--select-input {
-				box-shadow: 0 2px 0 0 $support-warning;
+				box-shadow: 0 $spacing-01 0 0 $support-warning;
 			}
 		}
 	}
