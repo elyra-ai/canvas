@@ -178,7 +178,7 @@ export default class ConfigUtils {
 	// decide which require a full refresh of the canvas and only compare those
 	// fields rather than omitting certain fields.
 	static omitFields(config) {
-		return omit(config, ["enableEditingActions", "enableDropZoneOnExternalDrag", "enableStateTag"]);
+		return omit(config, ["enableEditingActions", "enableDropZoneOnExternalDrag", "enableStateTag", "enablePaletteHeader"]);
 	}
 
 	// Returns true if the contents of enablePositionNode1 and enablePositionNode2 are
