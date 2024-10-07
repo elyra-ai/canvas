@@ -19,6 +19,7 @@ import { isEmpty } from "lodash";
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import { COMMENT_LINK, NODE_LINK } from "./constants/canvas-constants";
+import SvgCanvasAccessibility from "./svg-canvas-utils-accessibility.js";
 
 
 export default class SVGCanvasPipeline {
@@ -52,7 +53,89 @@ export default class SVGCanvasPipeline {
 		// preProcessPipeline uses the mapped objects so this needs to be done
 		// after they have been created.
 		this.pipeline = this.preProcessPipeline(this.pipeline);
+
+		// Create an object to help us with handling accessibility, in
+		// particular, handling keyboard navigation within the flow. Make
+		// sure to do this after the mappedXXX arrays have been created.
+		this.accessibility = null;
+
 		this.logger.logEndTimer("initialize");
+	}
+
+	// Returns the accessibility object. This saves the accessibility object
+	// from being generated until one of the keyboard navigation calls (below)
+	// are made. Those calls will only be made when the config field
+	// enableKeyboardNavigaiton is true.
+	getAccessibility() {
+		if (this.accessibility) {
+			return this.accessibility;
+		}
+		this.accessibility = new SvgCanvasAccessibility(this);
+		return this.accessibility;
+	}
+
+	getAllLinksForNode(node) {
+		return this.getAccessibility().getAllLinksForNode(node);
+	}
+
+	getNextLinksFromNode(node) {
+		return this.getAccessibility().getNextLinksFromNode(node);
+	}
+
+	getPreviousLinksToNode(node) {
+		return this.getAccessibility().getPreviousLinksToNode(node);
+	}
+
+	getPreviousNodeFromDataLink(link) {
+		return this.getAccessibility().getPreviousNodeFromDataLink(link);
+	}
+
+	getPreviousNodeFromAssocLink(link) {
+		return this.getAccessibility().getPreviousNodeFromAssocLink(link);
+	}
+
+	getPreviousObjectFromCommentLink(link) {
+		return this.getAccessibility().getPreviousObjectFromCommentLink(link);
+	}
+
+	getNextLinksFromComment(comment) {
+		return this.getAccessibility().getNextLinksFromComment(comment);
+	}
+
+	getNextNodeFromDataLink(link) {
+		return this.getAccessibility().getNextNodeFromDataLink(link);
+	}
+
+	getNextNodeFromAssocLink(link) {
+		return this.getAccessibility().getNextNodeFromAssocLink(link);
+	}
+
+	getNextObjectFromCommentLink(link) {
+		return this.getAccessibility().getNextObjectFromCommentLink(link);
+	}
+
+	getNextSiblingLink(link) {
+		return this.getAccessibility().getNextSiblingLink(link);
+	}
+
+	getPreviousSiblingLink(link) {
+		return this.getAccessibility().getPreviousSiblingLink(link);
+	}
+
+	getNextTabGroupStartObject() {
+		return this.getAccessibility().getNextTabGroupStartObject();
+	}
+
+	getPreviousTabGroupStartObject() {
+		return this.getAccessibility().getPreviousTabGroupStartObject();
+	}
+
+	resetTabbedStatus() {
+		this.getAccessibility().resetTabbedStatus();
+	}
+
+	setTabGroupIndexForObj(d) {
+		this.getAccessibility().setTabGroupIndexForObj(d);
 	}
 
 	getCanvasDimensions(gap) {
@@ -78,7 +161,7 @@ export default class SVGCanvasPipeline {
 
 	// Returns nodes from the active pipeline. If nodeIds is
 	// provided as an array the nodes correspondong to those IDs
-	// are returned otherwise all nodes are retunred.
+	// are returned otherwise all nodes are returned.
 	getNodes(nodeIds) {
 		if (!nodeIds) {
 			return this.pipeline.nodes;
