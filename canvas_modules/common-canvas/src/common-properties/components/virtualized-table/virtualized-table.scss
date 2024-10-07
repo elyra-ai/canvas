@@ -202,10 +202,10 @@
 			padding-left: 3px;
 		}
 		.properties-vt-row-selected {
-			border-left: 4px solid $button-primary;
+			border-left: $spacing-02 solid $button-primary;
 			padding-left: 0;
 			&:not(.properties-vt-row-disabled):hover {
-				border-left: 4px solid $button-primary;
+				border-left: $spacing-02 solid $button-primary;
 			}
 		}
 	}
