@@ -23,8 +23,8 @@
 		pointer-events: none;
 	}
 	.properties-summary-link-icon {
-		width: 16px;
-		height: 16px;
+		width: $spacing-05;
+		height: $spacing-05;
 	}
 }
 .properties-summary-link-container {
@@ -58,7 +58,7 @@
 
 .properties-summary-row {
 	display: flex;
-	padding: 2px 0;
+	padding: $spacing-01 0;
 	span {
 		cursor: text;
 		user-select: text;

@@ -83,7 +83,7 @@ $panel-border-color: $border-subtle-01;
 .bottom-panel-drag {
 	border-top: $panel-border-color;
 	cursor: row-resize;
-	flex: 0 0 2px;
+	flex: 0 0 $spacing-01;
 	border-top-width: 1px;
 	background: $layer-01;
 	transition: all 0.2s ease-in;
@@ -124,7 +124,7 @@ $panel-border-color: $border-subtle-01;
 	.toolbar-overflow-item {
 		button:focus {
 			border-color: transparent;
-			box-shadow: inset 2px 2px $focus, inset -6px -2px $focus;
+			box-shadow: inset $spacing-01 $spacing-01 $focus, inset -6px -2px $focus;
 		}
 	}
 }
@@ -143,7 +143,7 @@ $panel-border-color: $border-subtle-01;
 	// cursor is immediately moved away from the toolbar, after it opens. That's because,
 	// when the toolbar opens, the border will be underneath the mouse cursor and so the
 	// mouseLeave event is fired when the cursor is moved away.
-	border-bottom: 4px solid transparent;
+	border-bottom: $spacing-02 solid transparent;
 
 	.toolbar-div {
 		// Position the div 'relative' to text-toolbar so we can animate its
@@ -263,7 +263,7 @@ $panel-border-color: $border-subtle-01;
 			margin-right: 7px;
 		}
 		& span {
-			padding-bottom: 2px;
+			padding-bottom: $spacing-01;
 		}
 	}
 }
@@ -292,7 +292,7 @@ $panel-border-color: $border-subtle-01;
 	bottom: 30px;
 	border-color: $border-strong-01;
 	border-style: dashed;
-	border-width: 2px;
+	border-width: $spacing-01;
 }
 
 .toolbar-item.notificationCounterIcon {
@@ -312,13 +312,15 @@ $panel-border-color: $border-subtle-01;
 
 .state-tag {
 	@include type-style("productive-heading-01");
+	display: flex;
+	align-items: center;
 	color: $text-inverse;
 	background-color: $background-inverse;
 	width: fit-content;
-	height: 40px;
+	height: $spacing-08;
 	position: absolute; /* Positioned relative to the common-canvas-drop-div */
 	left: 50%;
-	top: 16px;
+	top: $spacing-05;
 	transform: translate(-50%, 0%);
 	border-radius: 20px;
 	padding: 9px 0;
@@ -326,12 +328,10 @@ $panel-border-color: $border-subtle-01;
 
 	svg {
 		color: $text-inverse;
-		position: relative;
-		top: 3px;
 		margin-left: 14px;
 	}
 
 	span {
-		margin: 0 16px 0 10px;
+		margin: 0 $spacing-05 0 10px;
 	}
 }

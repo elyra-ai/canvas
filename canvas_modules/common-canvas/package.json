@@ -147,9 +147,9 @@
   },
   "overrides": {
     "@wojtekmaj/enzyme-adapter-react-17": {
-       "react": "^18",
-       "react-dom": "^18"
-     },
+      "react": "^18",
+      "react-dom": "^18"
+    },
     "enzyme": {
       "cheerio": "1.0.0-rc.12"
     }
