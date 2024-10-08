@@ -2406,15 +2406,15 @@ export default class CanvasController {
 			this.objectModel.setZoom(data.zoom, data.pipelineId);
 			break;
 		}
-		case "paletteToggle": {
+		case "togglePalette": {
 			this.togglePalette();
 			break;
 		}
-		case "paletteOpen": {
+		case "openPalette": {
 			this.openPalette();
 			break;
 		}
-		case "paletteClose": {
+		case "closePalette": {
 			this.closePalette();
 			break;
 		}

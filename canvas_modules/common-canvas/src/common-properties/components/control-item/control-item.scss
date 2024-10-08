@@ -58,8 +58,8 @@
 .properties-label-container, .properties-summary-link-container, .properties-checkbox-tooltip-container, .properties-radioset-panel {
 	.tooltip-container {
 		display: flex;
-		width: 16px;
-		height: 16px;
+		width: $spacing-05;
+		height: $spacing-05;
 		margin-left: $spacing-03;
 		cursor: pointer;
 	}

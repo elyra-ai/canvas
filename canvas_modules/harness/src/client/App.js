@@ -27,6 +27,7 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
+import { Password } from "@carbon/icons-react";
 
 import { jsPDF } from "jspdf";
 import * as htmlToImage from "html-to-image";
@@ -87,9 +88,9 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
-import { Add, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
+import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
-	StopFilledAlt, Subtract, TextScale, TouchInteraction } from "@carbon/react/icons";
+	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification, Save } from "@carbon/react/icons";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
 
@@ -126,6 +127,7 @@ import {
 	TOOLBAR_TYPE_DEFAULT,
 	TOOLBAR_TYPE_SUB_AREAS,
 	TOOLBAR_TYPE_SINGLE_BAR,
+	TOOLBAR_TYPE_CUSTOMIZE_AUTO,
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
@@ -213,6 +215,7 @@ class App extends React.Component {
 			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedExampleApp: EXAMPLE_APP_NONE,
 			selectedPaletteLayout: PALETTE_LAYOUT_FLYOUT,
+			selectedPaletteHeader: false,
 			selectedStateTag: STATE_TAG_NONE,
 			selectedTipConfig: {
 				"palette": {
@@ -281,6 +284,7 @@ class App extends React.Component {
 			showRequiredIndicator: true,
 			showAlertsTab: true,
 			enableResize: true,
+			iconSwitch: false,
 			initialEditorSize: "small",
 			conditionHiddenPropertyHandling: "null",
 			conditionDisabledPropertyHandling: "null",
@@ -311,7 +315,6 @@ class App extends React.Component {
 				label: "Notifications",
 				notificationHeader: "Notification Center",
 				notificationSubtitle: "subtitle",
-				toolbarIcon: null,
 				enable: true,
 				emptyMessage: "You don't have any notifications right now.",
 				clearAllMessage: "Clear all",
@@ -325,7 +328,6 @@ class App extends React.Component {
 				label: "Notifications",
 				notificationHeader: "Notification Center Canvas 2",
 				notificationSubtitle: "subtitle",
-				toolbarIcon: null,
 				enable: true,
 				emptyMessage: "You don't have any notifications right now.",
 				clearAllMessage: "Clear all",
@@ -422,6 +424,7 @@ class App extends React.Component {
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.buttonHandler = this.buttonHandler.bind(this);
 		this.buttonIconHandler = this.buttonIconHandler.bind(this);
+		this.propertyIconHandler = this.propertyIconHandler.bind(this);
 		this.validationHandler = this.validationHandler.bind(this);
 		this.titleChangeHandler = this.titleChangeHandler.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
@@ -463,6 +466,16 @@ class App extends React.Component {
 		document.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect;
 		this.locale = "en";
 		this.initLocale();
+
+		// Sample palette header object for display below the Search bar and above
+		// the scrollable area for categories and nodes.
+		this.paletteHeader = (
+			<div style={{ borderBottom: "1px solid lightgray", height: "fit-content", padding: "12px 50px 12px" }} >
+				<Button kind="tertiary" onClick={() => window.alert("Test button clikced!")}>
+					Test Button
+				</Button>
+			</div>
+		);
 
 		// Create the empty canvas div so we don't create a new object on each render
 		// which would cause a refresh.
@@ -1391,6 +1404,15 @@ class App extends React.Component {
 		}
 	}
 
+	propertyIconHandler(data, callbackIcon) {
+		const { iconSwitch } = this.state;
+		if (iconSwitch === true && data.propertyId.name === "oneofselect" && data.enumValue === "orange") {
+			callbackIcon(<Password />);
+		} else {
+			callbackIcon(null);
+		}
+	}
+
 	validationHandler(controller, propertyId, value, appData, callback) {
 		const response = {
 			type: "error",
@@ -1961,7 +1983,8 @@ class App extends React.Component {
 			buttonIconHandler: this.buttonIconHandler,
 			titleChangeHandler: this.titleChangeHandler,
 			propertiesActionLabelHandler: this.propertiesActionLabelHandler,
-			tooltipLinkHandler: this.tooltipLinkHandler
+			tooltipLinkHandler: this.tooltipLinkHandler,
+			propertyIconHandler: this.propertyIconHandler
 		};
 		if (this.state.propertiesValidationHandler) {
 			callbacks.validationHandler = this.validationHandler;
@@ -2047,7 +2070,8 @@ class App extends React.Component {
 			returnValueFiltering: returnValueFilters,
 			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
 			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
-			locale: this.locale
+			locale: this.locale,
+			iconSwitch: this.state.iconSwitch
 		};
 	}
 
@@ -2079,6 +2103,7 @@ class App extends React.Component {
 			enableWYSIWYGComments: this.state.selectedWYSIWYGComments,
 			enableContextToolbar: this.state.selectedContextToolbar,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
+			enablePaletteHeader: this.state.selectedPaletteHeader ? this.paletteHeader : null,
 			enableStateTag: this.state.selectedStateTag,
 			enableToolbarLayout: this.state.selectedToolbarLayout,
 			enableResizableNodes: this.state.selectedResizableNodes,
@@ -2156,6 +2181,22 @@ class App extends React.Component {
 				{ action: "decrease", label: "Decrease", enable: true, iconEnabled: (<Subtract size={32} />) }
 			];
 
+			const saveReloadTooltip =
+					(<div>
+						<br />
+						<p style={ { fontSize: "12px" } } ><strong>jjennings</strong> saved the flow at 8:18AM.</p>
+						<br />
+						<ul>
+							<li><p style={ { fontSize: "12px" } }><strong>Reload</strong> to view changes. Caution: you will lose your changes.</p></li>
+							<li><p style={ { fontSize: "12px" } } ><strong>Save as</strong> to save your changes as a new flow</p></li>
+						</ul>
+						<br />
+						<div style={ { display: "flex", justifyContent: "space-between" } }>
+							<Button kind="secondary" size="sm" style={ { width: "30px", height: "10px", color: "lightblue" } }>Save</Button>
+							<Button kind="danger" size="sm" style={ { width: "30px", height: "10px" } }>Reload</Button>
+						</div>
+					</div>);
+
 			toolbarConfig = {
 				leftBar: [
 					{ action: "palette", label: "Palette", enable: true },
@@ -2181,7 +2222,8 @@ class App extends React.Component {
 					{ divider: true },
 					{ action: "color-subpanel", iconEnabled: (<ColorPalette size={32} />), label: "Color picker", enable: true,
 						subPanel: ColorPicker, subPanelData: { clickActionHandler: (color) => window.alert("Color selected = " + color) } },
-					{ divider: true }
+					{ divider: true },
+					{ action: "save", iconEnabled: (<Save size={32} />), enable: true, tooltip: saveReloadTooltip }
 				],
 				rightBar: [
 					{ divider: true },
@@ -2216,6 +2258,30 @@ class App extends React.Component {
 				{ divider: true },
 				{ action: "mouse", iconEnabled: (<SelectWindow size={32} />), label: "Mouse", enable: true, isSelected: this.state.selectedInteractionType === "Mouse" },
 				{ action: "trackpad", iconEnabled: (<TouchInteraction size={32} />), label: "Trackpad", enable: true, isSelected: this.state.selectedInteractionType === "Trackpad" },
+				{ divider: true }
+			];
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOMIZE_AUTO) {
+			toolbarConfig = [
+				{ action: "cut", label: "Cut" },
+				{ action: "copy", label: "Copy" },
+				{ action: "paste", label: "Paste" },
+				{ divider: true },
+				{ action: "undo", label: "Undo" },
+				{ action: "redo", label: "Redo" },
+				{ divider: true },
+				{ action: "togglePalette",
+					label: this.canvasController.isPaletteOpen() ? "Close Palette" : "Open Palette",
+					iconEnabled: this.canvasController.isPaletteOpen() ? (<SubtractAlt />) : (<AddAlt />),
+					incLabelWithIcon: "after"
+				},
+				{ divider: true },
+				{ action: "toggleNotificationPanel", iconEnabled: (<Notification />) },
+				{ divider: true },
+				{ action: "deleteSelectedObjects", label: "Delete" },
+				{ divider: true },
+				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
 				{ divider: true }
 			];
 
@@ -2762,6 +2828,7 @@ class App extends React.Component {
 			categoryView: this.state.categoryView,
 			applyOnBlur: this.state.applyOnBlur,
 			trimSpaces: this.state.trimSpaces,
+			iconSwitch: this.state.iconSwitch,
 			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			expressionBuilder: this.state.expressionBuilder,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,

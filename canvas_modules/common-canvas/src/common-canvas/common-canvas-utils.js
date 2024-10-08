@@ -364,6 +364,23 @@ export default class CanvasUtils {
 		return { x: startPointX, y: startPointY, originX, originY, dir };
 	}
 
+	// Assisted by WCA@IBM
+	// Latest GenAI contribution: ibm/granite-20b-code-instruct-v2
+	// Returns the angle between two points where the angle
+	// returned is always positive. The angle starts at the 3 o'clock
+	// position which is 0 degrees and increases in a clock-wise
+	// direction.
+	static calculateAngle(x1, y1, x2, y2) {
+		const dx = x2 - x1;
+		const dy = y2 - y1;
+		const angle = Math.atan2(dy, dx);
+		let angleInDegrees = angle * (180 / Math.PI);
+		if (angleInDegrees < 0) {
+			angleInDegrees += 360;
+		}
+		return angleInDegrees;
+	}
+
 	// Returns a direction NORTH, SOUTH, EAST or WEST which is the direction
 	// from the origin position within the rectangle described by x, y, w and h
 	// to the end position described by endX and endY.
@@ -1353,6 +1370,100 @@ export default class CanvasUtils {
 
 		const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
 		return (luma < 108);
+	}
+
+	// Applies the outlineStyle format to the D3 comment selection passed in,
+	// if one exists, in the formats array passed in.
+	static applyOutlineStyle(commentSel, formats) {
+		if (formats?.length > 0) {
+			formats.forEach((f) => {
+				if (f.type === "outlineStyle") { // Only apply outline style to outer <div>
+					const { field, value } = CanvasUtils.convertFormat(f);
+					commentSel.style(field, value);
+				}
+			});
+		}
+	}
+
+	// Applies all formats from the formats array, that are not outlineStyle, to the
+	// D3 comment selection passed in.
+	static applyNonOutlineStyle(commentSel, formats) {
+		if (formats?.length > 0) {
+			formats.forEach((f) => {
+				if (f.type !== "outlineStyle") { // Only apply outline style to outer <div>
+					const { field, value } = CanvasUtils.convertFormat(f);
+					commentSel.style(field, value);
+				}
+			});
+		}
+	}
+
+	// Returns an object contaiing the start and end positions
+	// of any current selection in the domNode passed in. The
+	// DOM node is expected to contain text which is stored in a
+	// set of child nodes that are text objects.
+	static getSelectionPositions(domNode) {
+		const sel = window.getSelection();
+		let anchorPos;
+		let focusPos;
+		let runningLen = 0;
+		domNode.childNodes.forEach((cn) => {
+			if (cn.nodeValue) {
+				const textLen = cn.nodeValue.length;
+				if (cn === sel.anchorNode) {
+					anchorPos = runningLen + sel.anchorOffset;
+				}
+				if (cn === sel.focusNode) {
+					focusPos = runningLen + sel.focusOffset;
+				}
+				runningLen += textLen;
+			}
+		});
+		return { start: Math.min(anchorPos, focusPos), end: Math.max(anchorPos, focusPos) };
+	}
+
+	// Selects the entire contents of the DOM node passed in.
+	static selectNodeContents(domNode) {
+		var range = document.createRange();
+		range.selectNodeContents(domNode);
+
+		var sel = window.getSelection();
+		sel.removeAllRanges();
+		sel.addRange(range);
+	}
+
+	// Selects the range of characters in the text DOM node passed in
+	// between the start and end positions passed in. The DOM node is
+	// expected to contain text which is stored in a set of child nodes
+	// that are text objects. selection is an optional object containing
+	// the current selection which is provided by the Cypress test cases.
+	static selectNodeRange(domNode, start, end, selection) {
+		const range = document.createRange();
+
+		let startTextNode;
+		let endTextNode;
+		let startTextPos;
+		let endTextPos;
+		let runningLen = 0;
+		domNode.childNodes.forEach((cn) => {
+			const textLen = cn.nodeValue.length;
+			runningLen += textLen;
+			if (start <= runningLen && !startTextNode) {
+				startTextNode = cn;
+				startTextPos = textLen - (runningLen - start);
+			}
+			if (end <= runningLen && !endTextNode) {
+				endTextNode = cn;
+				endTextPos = textLen - (runningLen - end);
+			}
+		});
+
+		range.setStart(startTextNode, startTextPos);
+		range.setEnd(endTextNode, endTextPos);
+
+		const sel = selection ? selection : window.getSelection();
+		sel.removeAllRanges();
+		sel.addRange(range);
 	}
 
 	// Returns an object containing a CSS field and value that
