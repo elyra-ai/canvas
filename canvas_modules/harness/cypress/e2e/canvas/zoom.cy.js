@@ -99,7 +99,7 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a n
 		cy.verifyCanvasTransform(undefined);
 		// Zooming the canvas.
 		cy.clickToolbarZoomOut();
-		cy.verifyCanvasTransform("translate(45.81818181818181,32.22727272727275) scale(0.9090909090909091)");
+		cy.verifyCanvasTransform("translate(46.058238636363626,32.22727272727275) scale(0.9090909090909091)");
 		// Test get Zoom to reveal & ZoomTo
 		cy.selectEntryFromDropdown("Histogram");
 		cy.setXPercentOffset(70);

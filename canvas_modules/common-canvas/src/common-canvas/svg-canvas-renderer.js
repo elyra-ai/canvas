@@ -1598,6 +1598,7 @@ export default class SVGCanvasRenderer {
 			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 			.attr("class", (d) => this.getNodeGroupClass(d))
 			.attr("style", (d) => this.getNodeGrpStyle(d))
+			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 			.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps, data));
 	}
 
@@ -1606,7 +1607,6 @@ export default class SVGCanvasRenderer {
 
 		const newNodeGroups = enter
 			.append("g")
-			.attr("tabindex", -1)
 			.attr("data-id", (d) => this.getId("node_grp", d.id))
 			.call(this.attachNodeGroupListeners.bind(this));
 
@@ -3729,6 +3729,7 @@ export default class SVGCanvasRenderer {
 				(enter) => this.createComments(enter)
 			)
 			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
+			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 			.attr("class", (c) => this.getCommentGroupClass(c))
 			.call((joinedCommentGrps) => this.updateComments(joinedCommentGrps));
 	}
@@ -3738,7 +3739,6 @@ export default class SVGCanvasRenderer {
 
 		const newCommentGroups = enter
 			.append("g")
-			.attr("tabindex", -1)
 			.attr("data-id", (c) => this.getId("comment_grp", c.id))
 			.call(this.attachCommentGroupListeners.bind(this));
 
@@ -4152,6 +4152,7 @@ export default class SVGCanvasRenderer {
 				(enter) => this.createLinks(enter)
 			)
 			.attr("class", (d) => this.getLinkGroupClass(d))
+			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 			.attr("style", (d) => this.getLinkGrpStyle(d))
 			.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? true : null))
 			.call((joinedLinkGrps) => {
@@ -4165,7 +4166,6 @@ export default class SVGCanvasRenderer {
 		// Add groups for links
 		const newLinkGrps = enter
 			.append("g")
-			.attr("tabindex", -1)
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.call(this.attachLinkGroupListeners.bind(this));
 
