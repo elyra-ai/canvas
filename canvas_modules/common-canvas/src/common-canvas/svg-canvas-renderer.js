@@ -48,6 +48,7 @@ import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
+import KeyboardUtils from "./keyboard-utils.js";
 import SvgCanvasDisplay from "./svg-canvas-utils-display.js";
 import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import SvgCanvasComments from "./svg-canvas-utils-comments.js";
@@ -1597,6 +1598,7 @@ export default class SVGCanvasRenderer {
 			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 			.attr("class", (d) => this.getNodeGroupClass(d))
 			.attr("style", (d) => this.getNodeGrpStyle(d))
+			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 			.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps, data));
 	}
 
@@ -1986,6 +1988,31 @@ export default class SVGCanvasRenderer {
 	// Attaches the appropriate listeners to the node groups.
 	attachNodeGroupListeners(nodeGrps) {
 		nodeGrps
+			.on("keydown", (d3Event, d) => {
+				if (this.config.enableKeyboardNavigation) {
+					if (KeyboardUtils.nextObjectInGroup(d3Event)) {
+						const linkInfos = this.activePipeline.getNextLinksFromNode(d);
+						if (linkInfos.length > 0) {
+							const linkInfosAll = this.activePipeline.getAllLinksForNode(d);
+							linkInfosAll.forEach((li) => (li.link.navObject = d));
+							this.moveFocusTo({ obj: linkInfos[0].link, type: "link" }, d3Event);
+						}
+
+					} else if (KeyboardUtils.previousObjectInGroup(d3Event)) {
+						const linkInfos = this.activePipeline.getPreviousLinksToNode(d);
+						if (linkInfos.length > 0) {
+							const linkInfosAll = this.activePipeline.getAllLinksForNode(d);
+							linkInfosAll.forEach((li) => (li.link.navObject = d));
+							this.moveFocusTo({ obj: linkInfos[0].link, type: "link" }, d3Event);
+						}
+
+					} else if (KeyboardUtils.selectObject(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObjectD3Event(d3Event, d); // This method will check if ctrl/cmnd is pressed
+
+					}
+				}
+			})
 			.on("mouseenter", (d3Event, d) => {
 				if (this.isDragging()) {
 					return;
@@ -2038,6 +2065,9 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (!this.config.enableDragWithoutSelect) {
+					if (this.config.enableKeyboardNavigation) {
+						this.activePipeline.setTabGroupIndexForObj(d);
+					}
 					this.selectObjectD3Event(d3Event, d, "node");
 				}
 				this.logger.logEndTimer("Node Group - mouse down");
@@ -2327,7 +2357,7 @@ export default class SVGCanvasRenderer {
 			d,
 			d3Event.type,
 			d3Event.shiftKey,
-			CanvasUtils.isCmndCtrlPressed(d3Event));
+			KeyboardUtils.isCmndCtrlPressed(d3Event));
 		// If the selection has changed we need to recreate any currently displayed
 		// context toolbar because the context actions may have changed based on
 		// the new selection.
@@ -2341,7 +2371,7 @@ export default class SVGCanvasRenderer {
 			d,
 			d3Event.type,
 			d3Event.sourceEvent.shiftKey,
-			CanvasUtils.isCmndCtrlPressed(d3Event.sourceEvent));
+			KeyboardUtils.isCmndCtrlPressed(d3Event.sourceEvent));
 	}
 
 	// Performs required action for when either a comment, node or link is selected.
@@ -3699,6 +3729,7 @@ export default class SVGCanvasRenderer {
 				(enter) => this.createComments(enter)
 			)
 			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
+			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 			.attr("class", (c) => this.getCommentGroupClass(c))
 			.call((joinedCommentGrps) => this.updateComments(joinedCommentGrps));
 	}
@@ -3736,6 +3767,18 @@ export default class SVGCanvasRenderer {
 			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
 			.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea))
 			.attr("class", "d3-comment-sizing");
+
+		// Comment Focus Outline
+		joinedCommentGrps
+			.selectChildren(".d3-focus-path")
+			.data((d) => ([d]), (d) => d.id)
+			.join(
+				(enter) => null // Focus outline is created when focus is moved to the comment (in moveFocusTo)
+			)
+			.attr("x", -this.canvasLayout.commentSizingArea)
+			.attr("y", -this.canvasLayout.commentSizingArea)
+			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
+			.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
 
 		// Comment Selection Highlighting Outline
 		joinedCommentGrps
@@ -3816,6 +3859,24 @@ export default class SVGCanvasRenderer {
 	// Attaches the appropriate listeners to the comment groups.
 	attachCommentGroupListeners(commentGrps) {
 		commentGrps
+			.on("keydown", (d3Event, d) => {
+				if (this.config.enableKeyboardNavigation) {
+					if (this.svgCanvasTextArea.isEditingText()) {
+						return;
+					}
+					if (KeyboardUtils.nextObjectInGroup(d3Event)) {
+						const linkInfos = this.activePipeline.getNextLinksFromComment(d);
+						if (linkInfos.length > 0) {
+							linkInfos.forEach((li) => (li.link.navObject = d));
+							this.moveFocusTo({ obj: linkInfos[0].link, type: "link" }, d3Event);
+						}
+
+					} else if (KeyboardUtils.selectObject(d3Event)) {
+						this.selectObjectD3Event(d3Event, d); // This method will check if ctrl/cmnd is pressed
+
+					}
+				}
+			})
 			.on("mouseenter", (d3Event, d) => {
 				if (this.isDragging()) {
 					return;
@@ -3849,6 +3910,9 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (!this.config.enableDragWithoutSelect) {
+					if (this.config.enableKeyboardNavigation) {
+						this.activePipeline.setTabGroupIndexForObj(d);
+					}
 					this.selectObjectD3Event(d3Event, d, "comment");
 				}
 				this.logger.logEndTimer("Comment Group - mouse down");
@@ -4088,6 +4152,7 @@ export default class SVGCanvasRenderer {
 				(enter) => this.createLinks(enter)
 			)
 			.attr("class", (d) => this.getLinkGroupClass(d))
+			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 			.attr("style", (d) => this.getLinkGrpStyle(d))
 			.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? true : null))
 			.call((joinedLinkGrps) => {
@@ -4099,7 +4164,8 @@ export default class SVGCanvasRenderer {
 	createLinks(enter) {
 		this.logger.logStartTimer("createLinks");
 		// Add groups for links
-		const newLinkGrps = enter.append("g")
+		const newLinkGrps = enter
+			.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.call(this.attachLinkGroupListeners.bind(this));
 
@@ -4206,12 +4272,72 @@ export default class SVGCanvasRenderer {
 
 	attachLinkGroupListeners(linkGrps) {
 		linkGrps
+			.on("keydown", (d3Event, d) => {
+				if (this.config.enableKeyboardNavigation) {
+					if (KeyboardUtils.nextObjectInGroup(d3Event)) {
+						if (d.type === NODE_LINK) {
+							const node = this.activePipeline.getNextNodeFromDataLink(d);
+							if (node) {
+								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
+							}
+
+						} else if (d.type === ASSOCIATION_LINK) {
+							const node = this.activePipeline.getNextNodeFromAssocLink(d);
+							if (node) {
+								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
+							}
+
+						} else if (d.type === COMMENT_LINK) {
+							const obj = this.activePipeline.getNextObjectFromCommentLink(d);
+							if (obj) {
+								const type = CanvasUtils.isNode(obj) ? "node" : "comment";
+								this.moveFocusTo({ obj, type }, d3Event);
+							}
+						}
+
+					} else if (KeyboardUtils.previousObjectInGroup(d3Event)) {
+						if (d.type === NODE_LINK) {
+							const node = this.activePipeline.getPreviousNodeFromDataLink(d);
+							if (node) {
+								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
+							}
+
+						} else if (d.type === ASSOCIATION_LINK) {
+							const node = this.activePipeline.getPreviousNodeFromAssocLink(d);
+							if (node) {
+								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
+							}
+
+						} else if (d.type === COMMENT_LINK) {
+							const obj = this.activePipeline.getPreviousObjectFromCommentLink(d);
+							if (obj) {
+								const type = CanvasUtils.isNode(obj) ? "node" : "comment";
+								this.moveFocusTo({ obj, type }, d3Event);
+							}
+						}
+
+					} else if (KeyboardUtils.selectObject(d3Event)) {
+						this.selectObjectD3Event(d3Event, d); // This method will check if ctrl/cmnd is pressed
+
+					} else if (KeyboardUtils.nextSiblingLink(d3Event)) {
+						const link = this.activePipeline.getNextSiblingLink(d);
+						this.moveFocusTo({ obj: link, type: "link" }, d3Event);
+
+					} else if (KeyboardUtils.previousSiblingLink(d3Event)) {
+						const link = this.activePipeline.getPreviousSiblingLink(d);
+						this.moveFocusTo({ obj: link, type: "link" }, d3Event);
+					}
+				}
+			})
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.svgCanvasTextArea.isEditingText()) {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+					if (this.config.enableKeyboardNavigation) {
+						this.activePipeline.setTabGroupIndexForObj(d);
+					}
 					this.selectObjectD3Event(d3Event, d, "link");
 				}
 				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
@@ -5436,5 +5562,65 @@ export default class SVGCanvasRenderer {
 			str += " None";
 		}
 		return str;
+	}
+
+	focusNextTabGroup(evt) {
+		const nextObj = this.activePipeline.getNextTabGroupStartObject();
+		if (nextObj) {
+			this.moveFocusTo(nextObj, evt);
+			return true;
+		}
+		return false;
+	}
+
+	focusPreviousTabGroup(evt) {
+		const previousObj = this.activePipeline.getPreviousTabGroupStartObject();
+		if (previousObj) {
+			this.moveFocusTo(previousObj, evt);
+			return true;
+		}
+		return false;
+	}
+
+	focusSetOutsideCanvas() {
+		this.activePipeline.resetTabbedStatus();
+	}
+
+	moveFocusTo(target, evt) {
+		this.canvasGrp.selectAll(".d3-focus-path").remove();
+
+		let objSel;
+		if (target.type === "node") {
+			objSel = this.getNodeGroupSelectionById(target.obj.id);
+
+			objSel.insert("path", ":first-child")
+				.attr("class", "d3-focus-path")
+				.attr("d", (d) => this.getNodeShapePathSizing(d));
+
+
+		} else if (target.type === "comment") {
+			objSel = this.getCommentGroupSelectionById(target.obj.id);
+
+			objSel.insert("rect", ":first-child")
+				.attr("class", "d3-focus-path")
+				.attr("x", -this.canvasLayout.commentSizingArea)
+				.attr("y", -this.canvasLayout.commentSizingArea)
+				.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
+				.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
+
+		} else if (target.type === "link") {
+			objSel = this.getLinkGroupSelectionById(target.obj.id);
+
+			// TODO - Think of a way to show focus on links other than line thckness
+		}
+		const zoom = this.canvasController.getZoomToReveal([target.obj.id]);
+		if (zoom) {
+			this.zoomTo(zoom);
+		}
+		objSel.node().focus();
+		if (evt) {
+			evt.stopPropagation();
+			evt.preventDefault();
+		}
 	}
 }

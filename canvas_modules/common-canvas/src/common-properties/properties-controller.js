@@ -43,7 +43,8 @@ export default class PropertiesController {
 			buttonHandler: null,
 			buttonIconHandler: null,
 			titleChangeHandler: null,
-			tooltipLinkHandler: null
+			tooltipLinkHandler: null,
+			propertyIconHandler: null
 		};
 		this.propertiesConfig = {};
 		this.visibleDefinitions = {};

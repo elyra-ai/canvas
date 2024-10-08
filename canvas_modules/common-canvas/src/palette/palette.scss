@@ -17,6 +17,7 @@
 $palette-border-width: 1px;
 $palette-border-color: $layer-accent-01;
 $palette-search-container-height: 41px;
+$palette-dialog-list-item-height: 46px;
 
 //--------------------------------------------------------
 // Classes used by Flyout palette
@@ -116,7 +117,7 @@ $palette-search-container-height: 41px;
 
 		&:focus {
 			border-color: $focus;
-			box-shadow: inset 0 0 0 2px $focus;
+			box-shadow: inset 0 0 0 $spacing-01 $focus;
 		}
 
 		.palette-list-item-category-label {
@@ -161,7 +162,7 @@ $palette-search-container-height: 41px;
 		.palette-list-item-icon-warning {
 			transform: scale(1.5);
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			line-height: 46px;  /* Must be same as containing div height */
+			line-height: $palette-dialog-list-item-height;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
 		}
@@ -214,11 +215,6 @@ $palette-search-container-height: 41px;
 
 		.cds--accordion__heading {
 			padding: 0;
-			.cds--accordion__title {
-				margin: 0;
-				padding: 0 0 0 11px;
-				height: 45px;
-			}
 		}
 
 		.cds--accordion__wrapper {
@@ -257,7 +253,7 @@ $palette-search-container-height: 41px;
 
 .palette-flyout-category-item-loading {
 	display: flex;
-	margin-left: 16px;
+	margin-left: $spacing-05;
 	width: 100%;
 	height: 100%;
 	justify-content: center;
@@ -268,7 +264,7 @@ $palette-search-container-height: 41px;
 	width: 20px;  /* Not specifying height preserves the image's aspect ratio. */
 	margin-left: 5px;
 	fill: $icon-primary;
-	padding-top: 4px;
+	padding-top: $spacing-02;
 }
 
 .palette-flyout-text-container {
@@ -283,7 +279,7 @@ $palette-search-container-height: 41px;
 	width: 165px;
 	overflow-wrap: break-word;
 	line-height: 1.2;
-	padding-left: 16px;
+	padding-left: $spacing-05;
 	align-items: center;
 	height: 100%;
 	max-height: 59px;
@@ -327,8 +323,8 @@ $palette-search-container-height: 41px;
 		input {
 			background: $field-01;
 			height: 100%;
-			padding-right: 3rem;
-			padding-left: 52px;
+			padding-right: $spacing-09;
+			padding-left: 53px;
 		}
 
 		// Position the x icon button to the right (when it appears after the user
@@ -338,8 +334,8 @@ $palette-search-container-height: 41px;
 		// Getting rid of ::before allows the right side of the highlight rectangle
 		// on hover to appear.
 		button {
-			margin-right: 8px;
-			margin-top: 4px;
+			margin-right: $spacing-03;
+			margin-top: $spacing-02;
 			border-bottom-width: 0;
 
 			&.cds--search-close::before {
@@ -400,7 +396,7 @@ $palette-search-container-height: 41px;
 
 		.palette-list-item-icon {
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			line-height: 46px;  /* Must be same as containing div height */
+			line-height: $palette-dialog-list-item-height;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
 			margin-right: 10px;
@@ -416,13 +412,13 @@ $palette-search-container-height: 41px;
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			margin-left: 10px;
-			line-height: 16px;
+			line-height: $spacing-05;
 		}
 
 		.palette-list-item-icon-warning {
 			transform: scale(1.5);
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			line-height: 46px;  /* Must be same as containing div height */
+			line-height: $palette-dialog-list-item-height;  /* Must be same as containing div height */
 			color: $text-secondary;
 			margin-left: 0;
 			margin-right: 10px;
@@ -472,7 +468,7 @@ $palette-search-container-height: 41px;
 	border-style: solid;
 	width: 130px;
 	min-width: 130px;
-	padding-left: 8px;
+	padding-left: $spacing-03;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	cursor: pointer;
@@ -501,7 +497,7 @@ $palette-search-container-height: 41px;
 }
 
 .palette-dialog-grid-node-inner {
-	padding-top: 16px;
+	padding-top: $spacing-05;
 }
 
 .palette-dialog-grid-node-icon svg {
@@ -509,8 +505,8 @@ $palette-search-container-height: 41px;
 }
 
 .palette-dialog-grid-node-icon .node-icon {
-	width: 64px;
-	height: 64px;
+	width: $spacing-10;
+	height: $spacing-10;
 }
 
 .palette-dialog-grid-node-icon-warning {
