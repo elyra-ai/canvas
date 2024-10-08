@@ -44,17 +44,17 @@ $textinput-bottom-padding: 5px;
 		}
 		&.error {
 			input:not([disabled]) {
-				box-shadow: 0 2px 0 0 $support-error;
+				box-shadow: 0 $spacing-01 0 0 $support-error;
 			}
 		}
 		&.warning {
 			input:not([disabled]) {
-				box-shadow: 0 2px 0 0 $support-warning;
+				box-shadow: 0 $spacing-01 0 0 $support-warning;
 			}
 		}
 	}
 	input:disabled:hover {
-		box-shadow: 0 2px 0 0 $text-secondary;
+		box-shadow: 0 $spacing-01 0 0 $text-secondary;
 	}
 
 	// Readonly control for error handling in table cells

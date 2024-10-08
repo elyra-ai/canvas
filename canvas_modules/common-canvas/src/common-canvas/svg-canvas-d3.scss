@@ -45,7 +45,7 @@ $node-warning-color: $support-warning; // Warning yellow
 $node-label-color: $text-primary;
 $node-label-font-size: 12px;
 $node-label-font-weight: 600;
-$node-label-display-border: 2px;
+$node-label-display-border: $spacing-01;
 $node-label-entry-border: 6px;
 $node-label-edit-icon-hover-color: $layer-accent-01;
 
@@ -85,8 +85,8 @@ $comment-text-color: $text-primary;
 $comment-text-font-size: 12px;
 $comment-text-font-weight: 500;
 $comment-text-line-height: 1.2;
-$comment-text-display-border: 8px;
-$comment-text-entry-border: $comment-text-display-border - 2px; // Remove 2px to allow for focus border
+$comment-text-display-border: $spacing-03;
+$comment-text-entry-border: $comment-text-display-border - $spacing-01; // Remove 2px to allow for focus border
 
 // Link colors
 $comment-link-color: $border-strong-01;
@@ -128,7 +128,7 @@ $link-highlight-color: $support-info;
 	// Supress the default focus highlighting with non-carbon color and round corners.
 	outline: none;
 	// Add our own focus highlighting with our own color and square corners
-	box-shadow: 0 0 0 2px $focus;
+	box-shadow: 0 0 0 $spacing-01 $focus;
 }
 
 .d3-foreign-object-text-entry:focus,
@@ -292,7 +292,7 @@ $link-highlight-color: $support-info;
 .d3-node-group.d3-branch-highlight {
 	.d3-node-body-outline {
 		stroke: $layer-selected-inverse;
-		stroke-width: 2px;
+		stroke-width: $spacing-01;
 		fill: $highlight;
 	}
 
@@ -304,7 +304,7 @@ $link-highlight-color: $support-info;
 .d3-node-group.d3-branch-highlight:hover {
 	.d3-node-body-outline {
 		stroke: $layer-selected-inverse;
-		stroke-width: 2px;
+		stroke-width: $spacing-01;
 		fill: $button-primary-hover;
 	}
 }
@@ -758,7 +758,7 @@ g.bkg-col-cyan-50 {
 		max-width: 100%;
 	}
 	blockquote {
-		padding: 0 12px;
+		padding: 0 $spacing-04;
 		border-left: 3px solid $layer-accent-01;
 		line-height: 8px;
 	}
@@ -767,7 +767,7 @@ g.bkg-col-cyan-50 {
 		font-weight: $comment-text-font-weight;
 		line-height: $comment-text-line-height;
 		background-color: $layer-accent-01;
-		border-radius: 4px;
+		border-radius: $spacing-02;
 		white-space: pre-wrap;
 	}
 	pre {
@@ -775,9 +775,9 @@ g.bkg-col-cyan-50 {
 		font-weight: $comment-text-font-weight;
 		line-height: $comment-text-line-height;
 		background-color: $layer-02;
-		padding: 4px;
+		padding: $spacing-02;
 		border: 1px solid $layer-accent-01;
-		border-radius: 4px;
+		border-radius: $spacing-02;
 		white-space: pre-wrap;
 		code {
 			background-color: $layer-02;
@@ -801,18 +801,18 @@ g.bkg-col-cyan-50 {
 			background-color: $layer-accent-01;
 			text-align: left;
 			tr th {
-				padding: 8px;
-				border-bottom: 2px solid $layer-accent-01;
+				padding: $spacing-03;
+				border-bottom: $spacing-01 solid $layer-accent-01;
 			}
 		}
 		tbody {
 			@include type-style("body-short-01");
 			font-size: 12px;
 			tr {
-				border-bottom: 2px solid $layer-accent-01;
+				border-bottom: $spacing-01 solid $layer-accent-01;
 				background-color: $layer-02;
 				td {
-					padding: 8px;
+					padding: $spacing-03;
 				}
 			}
 		}

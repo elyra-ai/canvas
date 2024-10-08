@@ -15,8 +15,8 @@
  */
 
 $notification-panel-header-height: 33px;
-$notification-message-height: 48px;
-$notification-left-border-color-width: 4px;
+$notification-message-height: $spacing-09;
+$notification-left-border-color-width: $spacing-02;
 $notification-panel-button-container-height: 49px;
 
 .notification-panel {
@@ -44,7 +44,7 @@ $notification-panel-button-container-height: 49px;
 
 	&:focus {
 		border-color: $focus;
-		box-shadow: inset 0 0 0 2px $focus;
+		box-shadow: inset 0 0 0 $spacing-01 $focus;
 	}
 
 	.notification-panel-header {
@@ -63,8 +63,8 @@ $notification-panel-button-container-height: 49px;
 
 .notification-panel-close-button {
 	position: absolute;
-	top: 12px;
-	right: 12px;
+	top: $spacing-04;
+	right: $spacing-04;
 }
 
 .notification-panel-button-container {
@@ -100,7 +100,7 @@ $notification-panel-button-container-height: 49px;
 
 		&:focus {
 			border-color: $focus;
-			box-shadow: inset 0 0 0 2px $focus;
+			box-shadow: inset 0 0 0 $spacing-01 $focus;
 		}
 
 		.notification-panel-empty-message {
@@ -130,7 +130,7 @@ $notification-panel-button-container-height: 49px;
 
 		&:focus {
 			border-color: $focus;
-			box-shadow: inset 0 0 0 2px $focus;
+			box-shadow: inset 0 0 0 $spacing-01 $focus;
 		}
 
 		&:hover {

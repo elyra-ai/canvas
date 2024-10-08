@@ -32,7 +32,7 @@
 			outline-offset: unset;
 		}
 		input[type="number"]:not([disabled]) {
-			border: 2px solid $support-error;
+			border: $spacing-01 solid $support-error;
 		}
 	}
 	&.warning {
@@ -41,7 +41,7 @@
 			outline-offset: unset;
 		}
 		input[type="number"]:not([disabled]) {
-			border: 2px solid $support-warning;
+			border: $spacing-01 solid $support-warning;
 		}
 	}
 	
