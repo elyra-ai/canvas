@@ -150,7 +150,7 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a l
 		cy.setXPercentOffset(70);
 		cy.setYPercentOffset(60);
 		cy.submitAPI();
-		cy.verifyCanvasTransform("translate(498.3272727272727,290.85454545454536) scale(0.9090909090909091)");
+		cy.verifyCanvasTransform("translate(498.32727272727266,290.85454545454536) scale(0.9090909090909091)");
 	});
 });
 
