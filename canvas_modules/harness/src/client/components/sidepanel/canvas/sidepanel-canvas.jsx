@@ -736,6 +736,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableKeyboardNavigation = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedKeyboardNavigation" // Set ID to corresponding field in App.js state
+				labelText="Enable Keyboard Navigation"
+				toggled={this.props.getStateValue("selectedKeyboardNavigation")}
+				onToggle={(val) => this.setStateValue(val, "selectedKeyboardNavigation")}
+			/>
+		</div>);
+
 		var enableBrowserEditMenu = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedBrowserEditMenu" // Set ID to corresponding field in App.js state
@@ -1770,6 +1779,8 @@ export default class SidePanelForms extends React.Component {
 					{enableCanvasUnderlay}
 					{divider}
 					<div className="harness-side-panel-header">Operational</div>
+					{divider}
+					{enableKeyboardNavigation}
 					{divider}
 					{enableImageDisplay}
 					{divider}
