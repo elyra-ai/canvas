@@ -64,7 +64,4 @@ export default class KeyboardUtils {
 		}
 		return evnt.ctrlKey;
 	}
-
-
-
 }
