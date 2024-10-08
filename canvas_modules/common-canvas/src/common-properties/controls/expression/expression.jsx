@@ -103,7 +103,6 @@ class ExpressionControl extends React.Component {
 			this.editor.focus();
 		}
 		if (!isEqual(prevProps.value, this.props.value)) {
-			this.editor.focus();
 			const selection = this.editor.state.selection.main;
 			this.editor.dispatch({
 				changes: {
