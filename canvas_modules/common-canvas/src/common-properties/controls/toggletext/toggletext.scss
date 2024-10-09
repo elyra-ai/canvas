@@ -21,12 +21,12 @@
 	}
 	&.error {
 		button {
-			border-bottom: 2px solid $support-error;
+			border-bottom: $spacing-01 solid $support-error;
 		}
 	}
 	&.warning {
 		button {
-			border-bottom: 2px solid $support-warning;
+			border-bottom: $spacing-01 solid $support-warning;
 		}
 	}
 }

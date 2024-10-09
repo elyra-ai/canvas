@@ -25,7 +25,7 @@ class ToolbarDividerItem extends React.Component {
 		// some content so it is displayed inline with the other elements of the
 		// toolbar. With no content it is displayed above (!) the other elements.
 		return (
-			<div className={dividerClassName} tabIndex={-1} aria-hidden >&nbsp;</div>
+			<div className={dividerClassName} aria-hidden >&nbsp;</div>
 		);
 	}
 }
