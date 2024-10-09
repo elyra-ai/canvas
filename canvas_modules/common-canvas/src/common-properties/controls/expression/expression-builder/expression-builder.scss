@@ -47,7 +47,12 @@ $operator-margin: 50%;
 	margin-bottom: 0;
 
 	.elyra-CodeMirror {
+		resize: vertical;
+    	overflow: auto !important;
 		.cm-editor {
+			min-height: inherit;
+			resize: vertical;
+			overflow: auto !important;
 			background: $field-01;
 		}
 	}

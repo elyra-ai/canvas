@@ -18,13 +18,8 @@
 @import "./expression-toggle/expression-toggle";
 
 .elyra-CodeMirror {
-	resize: vertical;
-    overflow: auto !important;
 	.cm-editor {
-		resize: vertical;
-		overflow: auto !important;
 		height: inherit;
-		min-height: inherit;
 		width: 100%;
 		background: $field-02;
 		color: $text-primary;
