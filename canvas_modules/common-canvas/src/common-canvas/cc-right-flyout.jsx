@@ -24,6 +24,7 @@ const MAX_WIDTH_EXTEND_PERCENT = 0.7; // Should cover atmost 70% of available wi
 class CommonCanvasRightFlyout extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.logger = new Logger("CC-RightFlyout");
 
 		this.onMouseDown = this.onMouseDown.bind(this);
@@ -51,6 +52,7 @@ class CommonCanvasRightFlyout extends React.Component {
 		if (e.clientX) {
 			const newWidth = this.startWidth + (this.posX - e.clientX);
 			this.commonCanvasRightFlyout.style.width = `${this.limitWidth(newWidth)}px`;
+			this.props.canvasController.setRightPanelWidth(newWidth);
 		}
 	}
 
@@ -70,7 +72,6 @@ class CommonCanvasRightFlyout extends React.Component {
 
 	render() {
 		this.logger.log("render");
-
 		let rightFlyout = <div />; // For no content, return empty <div> so grid siziing for parent <div> work correctly.
 
 		if (this.props.content && this.props.isOpen) {
@@ -78,7 +79,7 @@ class CommonCanvasRightFlyout extends React.Component {
 				? "right-flyout-panel under-toolbar"
 				: "right-flyout-panel";
 			rightFlyout = (
-				<div className="right-flyout-container" ref={ (ref) => (this.commonCanvasRightFlyout = ref) }>
+				<div className="right-flyout-container" ref={ (ref) => (this.commonCanvasRightFlyout = ref) } >
 					<div className="right-flyout-resize-handle" onMouseDown={this.onMouseDown} />
 					<div className={rfClass}>
 						{this.props.content}
@@ -99,13 +100,15 @@ CommonCanvasRightFlyout.propTypes = {
 	// Provided by Redux
 	isOpen: PropTypes.bool,
 	content: PropTypes.object,
-	enableRightFlyoutUnderToolbar: PropTypes.bool
+	enableRightFlyoutUnderToolbar: PropTypes.bool,
+	panelWidth: PropTypes.number
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	isOpen: state.rightflyout.isOpen,
 	content: state.rightflyout.content,
-	enableRightFlyoutUnderToolbar: state.canvasconfig.enableRightFlyoutUnderToolbar
+	enableRightFlyoutUnderToolbar: state.canvasconfig.enableRightFlyoutUnderToolbar,
+	panelWidth: state.rightflyout.panelWidth
 });
 
 export default connect(mapStateToProps)(CommonCanvasRightFlyout);

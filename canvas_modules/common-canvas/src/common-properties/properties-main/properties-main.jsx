@@ -428,7 +428,7 @@ class PropertiesMain extends React.Component {
 	}
 
 	updateRightFlyoutWidth(size) {
-		const element = document.querySelector(".right-flyout-panel");
+		const element = document.querySelector(".right-flyout-container");
 		if (element) {
 			element.style.width = `${this.flyoutWidth[size]}px`;
 		}

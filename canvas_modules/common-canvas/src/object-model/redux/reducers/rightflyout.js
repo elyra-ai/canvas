@@ -25,6 +25,16 @@ export default (state = {}, action) => {
 		return state;
 	}
 
+	case "SET_RIGHT_FLYOUT_WIDTH": {
+		if (action.data.config.panelWidth) {
+			return {
+				...state,
+				panelWidth: action.data.config.panelWidth
+			};
+		}
+		return state;
+	}
+
 	default:
 		return state;
 	}
