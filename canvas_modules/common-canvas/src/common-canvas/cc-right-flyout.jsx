@@ -78,13 +78,11 @@ class CommonCanvasRightFlyout extends React.Component {
 				? "right-flyout-panel under-toolbar"
 				: "right-flyout-panel";
 			rightFlyout = (
-				<div className={rfClass} ref={ (ref) => (this.commonCanvasRightFlyout = ref) }>
-					<div
-						kind="ghost"
-						className="right-flyout-resize-handle"
-						onMouseDown={this.onMouseDown}
-					/>
-					{this.props.content}
+				<div className="right-flyout-container" ref={ (ref) => (this.commonCanvasRightFlyout = ref) }>
+					<div className="right-flyout-resize-handle" onMouseDown={this.onMouseDown} />
+					<div className={rfClass}>
+						{this.props.content}
+					</div>
 				</div>
 			);
 		}

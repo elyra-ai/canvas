@@ -44,6 +44,14 @@ $panel-border-color: $border-subtle-01;
 	position: relative; // This allows the State Tag to have positio: absolute
 }
 
+.right-flyout-container {
+	display: flex;
+	border-left: $panel-border-width solid $panel-border-color;
+	:hover {
+		border-left: 0px;
+	}
+}
+
 .left-flyout-panel,
 .right-flyout-panel {
 	// This combination of height and min-height enable scrolling in the child panel,
@@ -51,23 +59,22 @@ $panel-border-color: $border-subtle-01;
 	// so the contents of the panel can adjust themselves to the height accordingly.
 	height: 0;
 	min-height: 100%;
+	min-width: 100%;
 
 	user-select: none; /* Prevent elements from being selectable */
 	background-color: $layer-01;
 }
 
 .right-flyout-resize-handle {
-	width: 2px;
 	cursor: ew-resize;
+	flex: 0 0 $spacing-01;
+	background: red;
+	border: $panel-border-color;
+	border-width: 1px;
 	background: $layer-01;
-	position: absolute;
-	left: -1;
-	top: 0;
-	bottom: 0;
-	z-index: 10;
 	transition: all 0.2s ease-in;
 	&:hover {
-		background: $border-interactive;
+		background: $button-tertiary;
 	}
 }
 
