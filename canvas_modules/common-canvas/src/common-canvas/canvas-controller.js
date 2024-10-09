@@ -1618,6 +1618,10 @@ export default class CanvasController {
 		this.objectModel.setBottomPanelHeight(ht);
 	}
 
+	setRightPanelWidth(wdth) {
+		this.objectModel.setRightPanelWidth(wdth);
+	}
+
 	isTopPanelOpen() {
 		return this.getObjectModel().isTopPanelOpen();
 	}

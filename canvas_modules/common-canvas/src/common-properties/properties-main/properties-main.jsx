@@ -37,7 +37,7 @@ import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
 
 import { injectIntl } from "react-intl";
-import styles from "./properties-main-widths.scss";
+import styles from "./properties-main-widths.module.scss";
 
 const FLYOUT_WIDTH_SMALL = parseInt(styles.flyoutWidthSmall, 10);
 const FLYOUT_WIDTH_MEDIUM = parseInt(styles.flyoutWidthMedium, 10);
@@ -88,6 +88,12 @@ class PropertiesMain extends React.Component {
 			showPropertiesButtons: true,
 			editorSize: editorSize
 		};
+		this.flyoutWidth = {
+			small: FLYOUT_WIDTH_SMALL,
+			medium: FLYOUT_WIDTH_MEDIUM,
+			large: FLYOUT_WIDTH_LARGE,
+			max: FLYOUT_WIDTH_MAX
+		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 		this.updateEditorSize = this.updateEditorSize.bind(this);
@@ -96,6 +102,7 @@ class PropertiesMain extends React.Component {
 		this._getResizeButton = this._getResizeButton.bind(this);
 		this._isResizeButtonRequired = this._isResizeButtonRequired.bind(this);
 		this.onBlur = this.onBlur.bind(this);
+		this.updateRightFlyoutWidth = this.updateRightFlyoutWidth.bind(this);
 	}
 
 	componentDidMount() {
@@ -420,11 +427,19 @@ class PropertiesMain extends React.Component {
 		this.setState({ showPropertiesButtons: state });
 	}
 
+	updateRightFlyoutWidth(size) {
+		const element = document.querySelector(".right-flyout-container");
+		if (element) {
+			element.style.width = `${this.flyoutWidth[size]}px`;
+		}
+	}
+
 	updateEditorSize(newEditorSize) {
 		this.setState({
 			editorSize: newEditorSize
 		});
 		this.propertiesController.setEditorSize(newEditorSize);
+		this.updateRightFlyoutWidth(newEditorSize);
 	}
 
 	resize() {
@@ -493,6 +508,7 @@ class PropertiesMain extends React.Component {
 					showPropertiesButtons={this.state.showPropertiesButtons}
 					disableSaveOnRequiredErrors={this.props.propertiesConfig.disableSaveOnRequiredErrors}
 				/>);
+
 				if (this._isResizeButtonRequired()) {
 					const resizeIcon = this._getResizeButton();
 					// Resize button label can be "Expand" or "Contract"
