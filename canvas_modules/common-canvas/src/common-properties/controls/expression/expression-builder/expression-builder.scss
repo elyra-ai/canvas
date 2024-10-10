@@ -52,8 +52,6 @@ $operator-margin: 50%;
 		overflow: auto;
 		.cm-editor {
 			min-height: inherit; /* Inherit min-height to restrict resize below certain width  */
-			resize: vertical; /* Allow codemirror texteditor to resize on drag */
-			overflow: auto;
 			background: $field-01;
 		}
 	}
