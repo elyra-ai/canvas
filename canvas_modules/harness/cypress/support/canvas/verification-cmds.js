@@ -889,6 +889,12 @@ Cypress.Commands.add("verifyLeftFlyoutPanelWidth", (width) => {
 	});
 });
 
+Cypress.Commands.add("verifyLeftFlyoutPanelHeight", (height) => {
+	cy.get(".left-flyout-panel").should((element) => {
+		compareCloseTo(element[0].offsetHeight, height);
+	});
+});
+
 Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {

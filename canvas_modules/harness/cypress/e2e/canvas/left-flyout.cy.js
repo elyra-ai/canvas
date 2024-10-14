@@ -5,7 +5,14 @@ describe("Test for verifying the Left Flyout panel functionality and layout in t
 		cy.setCanvasConfig({ "selectedShowLeftFlyout": true });
 	});
 
-	it("Test ensuring Left Flyout panel is open", function() {
+	it("Test ensuring the Left Flyout panel has the correct default size", function() {
 		cy.verifyLeftFlyoutPanelWidth(300);
+        cy.verifyLeftFlyoutPanelHeight(750);
+	});
+
+    it("Test ensuring the Left Flyout panel has the correct size when positioned under the Canvas toolbar", function() {
+        cy.setCanvasConfig({ "selectedLeftFlyoutUnderToolbar": true });
+		cy.verifyLeftFlyoutPanelWidth(300);
+        cy.verifyLeftFlyoutPanelHeight(709);
 	});
 });
