@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-//import propertyUtils from "./../../_utils_/property-utils";
 import { cleanup, waitFor } from "@testing-library/react";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
-import '@testing-library/jest-dom';
+import "@testing-library/jest-dom";
 import { expect } from "chai";
 
 describe("control panel renders correctly", () => {
@@ -33,12 +32,12 @@ describe("control panel renders correctly", () => {
 	});
 
 	it("should have displayed the 1 control panel", () => {
-		const{container} = wrapper;
+		const { container } = wrapper;
 		const controlPanel = container.querySelector("div[data-id='properties-selectcolumn-values']");
 		// should render 1 control panel
-		const controlPanels = controlPanel.querySelectorAll('div.properties-control-panel');
+		const controlPanels = controlPanel.querySelectorAll("div.properties-control-panel");
 		expect(controlPanels).to.not.be.null;
-		
+
 	});
 });
 
@@ -49,7 +48,7 @@ describe("control panel visible and enabled conditions work correctly", () => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(panelConditionsParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
-		
+
 	});
 
 	afterEach(() => {
@@ -57,25 +56,23 @@ describe("control panel visible and enabled conditions work correctly", () => {
 	});
 
 	it("control panel and controls should be disabled", async() => {
-		const {container} = wrapper;
-		let controlPanel = container.querySelector("div[data-id='properties-selectcolumn-values']");
+		const { container } = wrapper;
+		const controlPanel = container.querySelector("div[data-id='properties-selectcolumn-values']");
 		expect(controlPanel.classList.contains("disabled")).to.equal(false);
 		// check initial state of enabled
 		controller.updatePropertyValue({ name: "disableColumnSelectionPanel" }, true);
-		await waitFor(()=>{
+		await waitFor(() => {
 			const updatedControlPanel = container.querySelector("div[data-id='properties-selectcolumn-values']");
-			expect(updatedControlPanel.hasAttribute('disabled')).to.equal(true);
+			expect(updatedControlPanel.hasAttribute("disabled")).to.equal(true);
 		});
-		
-
 	});
 
 	it("control panel and controls should be hidden", async() => {
-		const {container} = wrapper;
+		const { container } = wrapper;
 		let controlPanel = container.querySelector("div[data-id='properties-column-selection-panel']");
 		expect(controlPanel.classList.contains("hide")).to.equal(false);
 		controller.updatePropertyValue({ name: "hideColumnSelectionPanel" }, true);
-		await waitFor(()=>{
+		await waitFor(() => {
 			controlPanel = container.querySelector("div[data-id='properties-column-selection-panel']");
 			expect(controlPanel.classList.contains("hide")).to.equal(true);
 		});
@@ -94,7 +91,7 @@ describe("control panel classNames applied correctly", () => {
 	});
 
 	it("control panels should have custom classname defined", () => {
-		const {container} = wrapper;
+		const { container } = wrapper;
 		// nested panel: controls
 		expect(container.querySelectorAll(".textpanels-group-controls-class")).to.have.length(1);
 		// deeply nested panel: controls
