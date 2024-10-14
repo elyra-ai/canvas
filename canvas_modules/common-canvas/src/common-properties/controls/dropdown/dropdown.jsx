@@ -185,7 +185,7 @@ class DropDown extends React.Component {
 	}
 
 	handleComboOnChange(evt) {
-		let value = evt.selectedItem && evt.selectedItem.value ? evt.selectedItem.value : "";
+		let value = evt.selectedItem && evt.selectedItem.value ? evt.selectedItem.value : evt.selectedItem;
 		if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
 			value = PropertyUtils.fieldStringToValue(value, this.props.control, this.props.controller);
 		}
