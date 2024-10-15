@@ -118,12 +118,6 @@ $link-highlight-color: $support-info;
 	overflow: visible;
 }
 
-.d3-foreign-object-comment-text {
-	// Don't handle events - let objects inside foreign object handle them.
-	pointer-events: none;
-	overflow: hidden;
-}
-
 // Declare our own focus highlighting for text entry.
 @mixin d3-text-entry-focus-mixin {
 	// Supress the default focus highlighting with non-carbon color and round corners.
@@ -923,7 +917,6 @@ g.bkg-col-cyan-50 {
 	word-break: break-word;
 }
 
-/* Style for comment text entry when shown in an HTML textarea control. */
 .d3-comment-text-scroll,
 .d3-comment-text-entry-scroll {
 	pointer-events: unset;
@@ -934,29 +927,10 @@ g.bkg-col-cyan-50 {
 	border-style: solid;
 	height: 100%;
 	width: 100%;
+	scrollbar-color: $layer-active-02 $layer-02;
 }
 
-.d3-comment-text-outer {
-	display: table;
-	pointer-events: none;
-	overflow: hidden;
-	width: 100%;
-	height: 100%;
-}
-
-.d3-comment-text {
-	@include d3-comment-mixin;
-	background-color: $comment-fill-color;
-	padding: $comment-text-display-border;
-	user-select: none;
-	overflow: hidden;
-	display: table-cell;
-
-	&.markdown {
-		@include d3-comment-markdown;
-	}
-}
-
+.d3-comment-text-outer,
 .d3-comment-text-entry-outer {
 	display: table;
 	pointer-events: none;
@@ -966,15 +940,28 @@ g.bkg-col-cyan-50 {
 	outline: none;
 }
 
+.d3-comment-text,
 .d3-comment-text-entry {
 	@include d3-comment-mixin;
 	padding: $comment-text-display-border;
 	border-width: $comment-border-width;
-	background-color: $field-01;
+	background-color: $comment-fill-color;
 	outline: none;
 	user-select: none;
 	overflow: hidden;
 	display: table-cell;
+
+	// Only applicable to d3-comment-text
+	&.markdown {
+		@include d3-comment-markdown;
+	}
+}
+
+.d3-comment-text {
+	cursor: default;
+}
+
+.d3-comment-text-entry {
 	cursor: text;
 }
 
