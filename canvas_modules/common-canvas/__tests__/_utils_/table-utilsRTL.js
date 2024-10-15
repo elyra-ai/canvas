@@ -97,7 +97,7 @@ function getTableHeaderRows(container) {
 }
 
 function getTableRows(container) {
-	const rows = within(container).getAllByRole("row");
+	const rows = within(container).getAllByRole("row", { hidden: "true" });
 	const res = [];
 	for (let i = 0; i < rows.length; i++) {
 		if (rows[i].outerHTML.includes("properties-data-row")) {
