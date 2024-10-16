@@ -14,29 +14,42 @@
  * limitations under the License.
  */
 
-import propertyUtils from "./../../_utils_/property-utils";
+//import propertyUtils from "./../../_utils_/property-utils";
+import React from "react";
+import { cleanup,screen,waitFor } from "@testing-library/react";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL"
 import panelParamDef from "./../../test_resources/paramDefs/panel_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
-
 import { expect } from "chai";
 
 describe("column panel renders correctly", () => {
 	var wrapper;
+	
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(panelParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(panelParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		
+		cleanup();
 	});
 
 	it("should have displayed the column panel with 2 sub panels", () => {
-		const columnPanel = wrapper.find("div[data-id='properties-panel-columns']");
+	/*	const columnPanel = wrapper.find("div[data-id='properties-panel-columns']");
 		// should render 2 control panels
 		expect(columnPanel.find("div.properties-control-panel")).to.have.length(2);
 		// each column adds a new `auto` to grid
 		expect(columnPanel.get(0).props.style).to.have.property("gridTemplateColumns", "1fr 1fr");
+	});*/
+	const {container}=wrapper;
+	const columnPanel = container.querySelector("div[data-id='properties-panel-columns']");
+	expect(columnPanel).to.exist;
+	// should render 2 control panels
+	const controlPanels = columnPanel.querySelectorAll("div.properties-control-panel");
+	expect(controlPanels.length).to.equal(2);
+	// each column adds a new `auto` to grid
+	expect(columnPanel.style.gridTemplateColumns).to.equal("1fr 1fr");
 	});
 });
 
@@ -44,48 +57,74 @@ describe("column panel visible and enabled conditions work correctly", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(panelConditionsParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
-	it("column panel and controls should be disabled", () => {
-		let columnPanel = wrapper.find("div[data-id='properties-column-panels-cond']");
+	it("column panel and controls should be disabled", async() => {
+		/*let columnPanel = wrapper.find("div[data-id='properties-column-panels-cond']");
 		expect(columnPanel.prop("disabled")).to.equal(false);
 		// check initial state of enabled
 		controller.updatePropertyValue({ name: "colDisable" }, true);
 		wrapper.update();
 		columnPanel = wrapper.find("div[data-id='properties-column-panels-cond']");
-		expect(columnPanel.prop("disabled")).to.equal(true);
+		expect(columnPanel.prop("disabled")).to.equal(true);*/
+		const {container} = wrapper;
+        let columnPanel = container.querySelector("div[data-id='properties-column-panels-cond']");
+		expect(columnPanel.hasAttribute("disabled")).to.equal(false);
+		// check initial state of enabled
+        controller.updatePropertyValue({ name: "colDisable" }, true);
+		await waitFor(()=>{
+			columnPanel = container.querySelector("div[data-id='properties-column-panels-cond']");
+			expect(columnPanel.hasAttribute("disabled")).to.equal(true);
+		})
+		
+		//expect(columnPanel.classList.contains("disabled")).to.equal(true);
 	});
 
-	it("column panel and controls should be hidden", () => {
-		let columnPanel = wrapper.find("div[data-id='properties-column-panels-cond']");
+	it("column panel and controls should be hidden",async () => {
+	 /*	let columnPanel = wrapper.find("div[data-id='properties-column-panels-cond']");
 		expect(columnPanel.hasClass("hide")).to.equal(false);
 		controller.updatePropertyValue({ name: "colHide" }, true);
 		wrapper.update();
 		columnPanel = wrapper.find("div[data-id='properties-column-panels-cond']");
-		expect(columnPanel.hasClass("hide")).to.equal(true);
+		expect(columnPanel.hasClass("hide")).to.equal(true);*/
+		const {container} = wrapper;
+		let columnPanel = container.querySelector("div[data-id='properties-column-panels-cond']");
+		expect(columnPanel).to.exist;
+		expect(columnPanel.classList.contains("hide")).to.equal(false);
+		controller.updatePropertyValue({ name: "colHide" }, true);
+        await waitFor(()=>{
+			columnPanel = container.querySelector("div[data-id='properties-column-panels-cond']");
+			expect(columnPanel.classList.contains("hide")).to.equal(true);
+		})
+		
+
 	});
 });
 
 describe("column panel classNames applied correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(panelConditionsParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("column panel should have custom classname defined", () => {
-		const columnPanelWrapper = wrapper.find("div[data-id='properties-column-panels']");
+	/*	const columnPanelWrapper = wrapper.find("div[data-id='properties-column-panels']");
 		expect(columnPanelWrapper.find(".column-panels-cond-group-columnpanel-class")).to.have.length(1);
+		*/
+		const {container} = wrapper;
+		const columnPanelWrapper = container.querySelector("div[data-id='properties-column-panels']");
+		expect(columnPanelWrapper.querySelectorAll(".column-panels-cond-group-columnpanel-class")).to.have.length(1);
 	});
 });
