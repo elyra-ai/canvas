@@ -124,7 +124,8 @@ export default class Icon extends React.Component {
 			icon = this.getCanvasIcon(this.props.type);
 			if (typeof icon !== "undefined") {
 				const className = classNames("canvas-icon", iconClassName, this.props.className);
-				icon = <SVG src={icon} className={className} disabled={this.props.disabled} />;
+				// Added title to provide an accessible name
+				icon = <SVG src={icon} className={className} disabled={this.props.disabled} title={iconClassName.split("-")} />;
 			} else {
 				icon = <div />;
 			}
