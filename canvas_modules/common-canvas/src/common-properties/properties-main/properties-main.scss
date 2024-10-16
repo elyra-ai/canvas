@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-@import "./properties-main-widths.scss";
+@import "./properties-main-widths.module.scss";
 $properties-modal-buttons-height: $spacing-10;
 $properties-resize-button-size: $spacing-06;
 
 .properties-right-flyout {
 	// Set the font explicitly to 14px to shrink them across the entire properties editor
 	font-size: 14px;
-	width: 0;
+	min-width: 100%;
 	height: 100%;
 	overflow: hidden;
-	border-left: 1px solid $layer-accent-01;
 	outline: none;
 	display: flex;
 	flex-direction: column;
+	position: relative;
 	transition: motion(entrance, expressive) $duration-moderate-01;
 
 	&.properties-small {

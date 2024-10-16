@@ -1298,6 +1298,10 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "SET_BOTTOM_PANEL_CONFIG", data: { config: { panelHeight: ht } } });
 	}
 
+	setRightPanelWidth(wdth) {
+		this.store.dispatch({ type: "SET_RIGHT_FLYOUT_WIDTH", data: { config: { panelWidth: wdth } } });
+	}
+
 	// ---------------------------------------------------------------------------
 	// Top panel methods
 	// ---------------------------------------------------------------------------
