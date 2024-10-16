@@ -43,6 +43,7 @@ class CommonProperties extends React.Component {
 	}
 
 	componentDidCatch(error, info) {
+		console.error(error);
 		this.setState({
 			hasError: true,
 			error: error,
