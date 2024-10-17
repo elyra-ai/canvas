@@ -248,16 +248,6 @@ export default class CanvasUtils {
 		return decs;
 	}
 
-	// Returns true if either the Command Key on Mac or Control key on Windows
-	// is pressed. evnt can be either a regular event object OR the
-	// d3event object provided by d3.
-	static isCmndCtrlPressed(evnt) {
-		if (this.isMacintosh()) {
-			return evnt.metaKey;
-		}
-		return evnt.ctrlKey;
-	}
-
 	// Returns whether user platform is Mac.
 	static isMacintosh() {
 		return navigator.platform.indexOf("Mac") > -1;
@@ -1372,12 +1362,13 @@ export default class CanvasUtils {
 		return (luma < 108);
 	}
 
-	// Applies the outlineStyle format to the D3 comment selection passed in,
-	// if one exists, in the formats array passed in.
+	// Applies the outlineStyle format or border-xxx CSS styles to the D3 comment
+	// selection passed in, if one exists, in the formats array passed in.
 	static applyOutlineStyle(commentSel, formats) {
 		if (formats?.length > 0) {
 			formats.forEach((f) => {
-				if (f.type === "outlineStyle") { // Only apply outline style to outer <div>
+				if (f.type === "outlineStyle" ||
+					f.type.startsWith("border")) { // Only apply outline and border style to outer <div>
 					const { field, value } = CanvasUtils.convertFormat(f);
 					commentSel.style(field, value);
 				}
@@ -1385,12 +1376,13 @@ export default class CanvasUtils {
 		}
 	}
 
-	// Applies all formats from the formats array, that are not outlineStyle, to the
-	// D3 comment selection passed in.
+	// Applies all formats from the formats array, that are not outlineStyle or
+	// border-xxx CSS styles, to the D3 comment selection passed in.
 	static applyNonOutlineStyle(commentSel, formats) {
 		if (formats?.length > 0) {
 			formats.forEach((f) => {
-				if (f.type !== "outlineStyle") { // Only apply outline style to outer <div>
+				if (f.type !== "outlineStyle" &&
+					!f.type.startsWith("border")) { // Only apply outline and border style to outer <div>
 					const { field, value } = CanvasUtils.convertFormat(f);
 					commentSel.style(field, value);
 				}

@@ -562,7 +562,8 @@ export default class SVGCanvasUtilsZoom {
 	// zoomAction and zoomEnd. It does not perform a zoom if newZoomTransform
 	// is the same as the current zoom transform.
 	zoomCanvasInvokeZoomBehavior(newZoomTransform, animateTime) {
-		if (isFinite(newZoomTransform.x) &&
+		if (newZoomTransform &&
+				isFinite(newZoomTransform.x) &&
 				isFinite(newZoomTransform.y) &&
 				isFinite(newZoomTransform.k) &&
 				this.zoomHasChanged(newZoomTransform)) {

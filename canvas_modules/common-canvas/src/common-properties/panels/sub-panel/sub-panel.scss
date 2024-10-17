@@ -16,9 +16,9 @@
 
 button.properties-subpanel-button {
 	padding: 0; // override carbon
-	min-height: 2rem; // override carbon
-	height: 2rem;
-	width: 2rem;
+	min-height: $spacing-07; // override carbon
+	height: $spacing-07;
+	width: $spacing-07;
 	display: flex;
 	align-items: center;
 }
