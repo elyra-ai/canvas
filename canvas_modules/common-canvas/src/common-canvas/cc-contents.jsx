@@ -27,6 +27,7 @@ import CommonCanvasContextToolbar from "./cc-context-toolbar.jsx";
 import CommonCanvasTextToolbar from "./cc-text-toolbar.jsx";
 import CommonCanvasStateTag from "./cc-state-tag.jsx";
 import CanvasUtils from "./common-canvas-utils.js";
+import KeyboardUtils from "./keyboard-utils.js";
 import { Button } from "@carbon/react";
 import { FlowData, ArrowLeft } from "@carbon/react/icons";
 import { DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
@@ -34,6 +35,7 @@ import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
 
 const BACKSPACE_KEY = 8;
+const TAB_KEY = 9;
 const DELETE_KEY = 46;
 const SPACE_KEY = 32;
 const A_KEY = 65;
@@ -96,6 +98,11 @@ class CanvasContents extends React.Component {
 		this.onKeyUp = this.onKeyUp.bind(this);
 		this.onMouseMove = this.onMouseMove.bind(this);
 		this.onClickReturnToPrevious = this.onClickReturnToPrevious.bind(this);
+		this.onFocus = this.onFocus.bind(this);
+		this.onBlur = this.onBlur.bind(this);
+
+		// Keeps state about tabbing.
+		this.tabBeingProcessed = false;
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
@@ -159,24 +166,27 @@ class CanvasContents extends React.Component {
 	}
 
 	onCut(evt) {
-		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId &&
-				this.props.canvasConfig.enableEditingActions) {
+		if (this.isFocusOnCanvas(evt) &&
+				this.props.canvasConfig.enableEditingActions &&
+				!this.svgCanvasD3.isEditingText()) {
 			evt.preventDefault();
 			this.props.canvasController.cutToClipboard();
 		}
 	}
 
 	onCopy(evt) {
-		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId &&
-				this.props.canvasConfig.enableEditingActions) {
+		if (this.isFocusOnCanvas(evt) &&
+				this.props.canvasConfig.enableEditingActions &&
+				!this.svgCanvasD3.isEditingText()) {
 			evt.preventDefault();
 			this.props.canvasController.copyToClipboard();
 		}
 	}
 
 	onPaste(evt) {
-		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId &&
-				this.props.canvasConfig.enableEditingActions) {
+		if (this.isFocusOnCanvas(evt) &&
+				this.props.canvasConfig.enableEditingActions &&
+				!this.svgCanvasD3.isEditingText()) {
 			evt.preventDefault();
 			this.props.canvasController.pasteFromClipboard();
 		}
@@ -204,29 +214,29 @@ class CanvasContents extends React.Component {
 				CanvasUtils.stopPropagationAndPreventDefault(evt); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
 				this.props.canvasController.keyboardActionHandler("deleteSelectedObjects");
 
-			} else if (CanvasUtils.isCmndCtrlPressed(evt) &&
+			} else if (KeyboardUtils.isCmndCtrlPressed(evt) &&
 					!evt.shiftKey && evt.keyCode === Z_KEY && actions.undo) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
 				if (this.props.canvasController.canUndo()) {
 					this.props.canvasController.keyboardActionHandler("undo");
 				}
 
-			} else if (CanvasUtils.isCmndCtrlPressed(evt) &&
+			} else if (KeyboardUtils.isCmndCtrlPressed(evt) &&
 					((evt.shiftKey && evt.keyCode === Z_KEY) || evt.keyCode === Y_KEY && actions.redo)) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
 				if (this.props.canvasController.canRedo()) {
 					this.props.canvasController.keyboardActionHandler("redo");
 				}
 
-			} else if (CanvasUtils.isCmndCtrlPressed(evt) && evt.keyCode === C_KEY && actions.copyToClipboard) {
+			} else if (KeyboardUtils.isCmndCtrlPressed(evt) && evt.keyCode === C_KEY && actions.copyToClipboard) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
 				this.props.canvasController.keyboardActionHandler("copy");
 
-			} else if (CanvasUtils.isCmndCtrlPressed(evt) && evt.keyCode === X_KEY && actions.cutToClipboard) {
+			} else if (KeyboardUtils.isCmndCtrlPressed(evt) && evt.keyCode === X_KEY && actions.cutToClipboard) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
 				this.props.canvasController.keyboardActionHandler("cut");
 
-			} else if (CanvasUtils.isCmndCtrlPressed(evt) && evt.keyCode === V_KEY && actions.pasteFromClipboard) {
+			} else if (KeyboardUtils.isCmndCtrlPressed(evt) && evt.keyCode === V_KEY && actions.pasteFromClipboard) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
 				if (this.mousePos) {
 					const mousePos = this.svgCanvasD3.convertPageCoordsToSnappedCanvasCoords(this.mousePos);
@@ -236,9 +246,9 @@ class CanvasContents extends React.Component {
 				}
 			}
 		}
-		// These last three keyboard actions do not alter the canvas objects so we
+		// These keyboard actions do not alter the canvas objects so we
 		// do not need to check this.config.enableEditingActions before calling them.
-		if (CanvasUtils.isCmndCtrlPressed(evt) && evt.keyCode === A_KEY && actions.selectAll) {
+		if (KeyboardUtils.isCmndCtrlPressed(evt) && evt.keyCode === A_KEY && actions.selectAll) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 			this.props.canvasController.keyboardActionHandler("selectAll");
 
@@ -248,14 +258,46 @@ class CanvasContents extends React.Component {
 				this.svgCanvasD3.setSpaceKeyPressed(true);
 			}
 
-		} else if (CanvasUtils.isCmndCtrlPressed(evt) && evt.shiftKey && evt.altKey && evt.keyCode === P_KEY) {
+		} else if (KeyboardUtils.isCmndCtrlPressed(evt) && evt.shiftKey && evt.altKey && evt.keyCode === P_KEY) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 			Logger.switchLoggingState(); // Switch the logging on and off
+
+		} else if (evt.keyCode === TAB_KEY && this.props.canvasConfig.enableKeyboardNavigation) {
+			if (evt.shiftKey) {
+				this.tabKeyShiftPressedOnDiv(evt);
+			} else {
+				this.tabKeyPressedOnDiv(evt);
+			}
 		}
 	}
 
 	onKeyUp() {
 		this.svgCanvasD3.setSpaceKeyPressed(false);
+	}
+
+	onFocus(evt) {
+		// This is a bit hacky but the only way I could get shift-tabbing to work
+		// when the shift tab needs to move focus out of the canvas. The problem is
+		// that, when shift-tab is presseed, when focus is on the first canvas object,
+		// a spurious onFocus event is recieved with relatedTarget.tagName set to
+		// "g" (I don't know why this occurs because a similar event is not received
+		// when tabbing forwards through the objects).
+		if (this.tabBeingProcessed === false &&
+				evt.relatedTarget?.tagName === "g" &&
+				document.getElementById(this.svgCanvasDivId)) {
+			document.getElementById(this.svgCanvasDivId).blur();
+		}
+	}
+
+	onBlur(evt) {
+		// Notify the canvas that the focus has left when we get onBlur. We need
+		// to ignore onBlur events that come to us when tab key presses are
+		// being processed, because setting focus on canvas objects causes an
+		// onFocus followed by an onBlur event on the div.
+		if (this.tabBeingProcessed === false &&
+				!(evt.relatedTarget?.tagName === "g")) {
+			this.svgCanvasD3.focusSetOutsideCanvas();
+		}
 	}
 
 	// Records in mousePos the mouse pointer position when the pointer is inside
@@ -415,6 +457,15 @@ class CanvasContents extends React.Component {
 	}
 
 	getSVGCanvasDiv() {
+		if (this.props.canvasConfig.enableKeyboardNavigation) {
+			// Set tabindex to 0 so the focus can go to the <div>
+			return (
+				<div tabIndex="0" className="d3-svg-canvas-div keyboard-navigation" id={this.svgCanvasDivId}
+					onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
+				/>
+			);
+		}
+
 		// Set tabindex to -1 so the focus (see componentDidMount above) can go to
 		// the div (which allows keyboard events to go there) and using -1 means
 		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
@@ -435,6 +486,16 @@ class CanvasContents extends React.Component {
 	isDataTypeBeingDraggedFile(event) {
 		if (event.dataTransfer && Array.isArray(event.dataTransfer.types)) {
 			return event.dataTransfer.types.includes("Files");
+		}
+		return false;
+	}
+
+	// Returns true if the focus is either on an element in the canvas or on the
+	// canvas <div> itself.
+	isFocusOnCanvas(evt) {
+		if (evt.currentTarget?.activeElement) {
+			return evt.currentTarget.activeElement.closest(this.svgCanvasDivSelector) ||
+				evt.currentTarget.activeElement.id === this.svgCanvasDivId;
 		}
 		return false;
 	}
@@ -553,6 +614,35 @@ class CanvasContents extends React.Component {
 		event.preventDefault();
 	}
 
+	// Handles tab key presses on our div. It also keeps track of whether
+	// a tab key press is being handled using a flag.
+	tabKeyPressedOnDiv(evt) {
+		this.tabBeingProcessed = true;
+
+		const success = this.svgCanvasD3.focusNextTabGroup(evt);
+		if (success) {
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+		} else {
+			this.focusOnCanvas();
+		}
+		this.tabBeingProcessed = false;
+	}
+
+	// Handles tab+shift key presses on our div. It alos keeps track of whether
+	// a tab key press is being handled using a flag.
+	tabKeyShiftPressedOnDiv(evt) {
+		this.tabBeingProcessed = true;
+
+		const success = this.svgCanvasD3.focusPreviousTabGroup(evt);
+		if (success) {
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+		} else {
+			this.focusOnCanvas();
+		}
+		this.tabBeingProcessed = false;
+	}
+
+	// Sets the focus on our canvas <div> so keyboard events will go to it.
 	focusOnCanvas() {
 		if (document.getElementById(this.svgCanvasDivId)) {
 			document.getElementById(this.svgCanvasDivId).focus(); // Set focus on div so keybord events go there.

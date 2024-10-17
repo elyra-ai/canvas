@@ -44,18 +44,18 @@
 		}
 		&.error {
 			input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
-				box-shadow: 0 2px 0 0 $support-error;
+				box-shadow: 0 $spacing-01 0 0 $support-error;
 			}
 		}
 		&.warning {
 			input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
-				box-shadow: 0 2px 0 0 $support-warning;
+				box-shadow: 0 $spacing-01 0 0 $support-warning;
 			}
 		}
 		input[type="number"] { //override styling from carbon
 			background-color: unset;
 			padding: 0;
-			height: 1.5rem;
+			height: $spacing-06;
 		}
 		.cds--number input[type="number"] {
 			min-width: 0;

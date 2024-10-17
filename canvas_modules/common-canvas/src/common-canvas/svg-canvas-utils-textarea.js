@@ -23,6 +23,7 @@ import { cloneDeep, isMatch, unescape as unescapeText } from "lodash";
 
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
+import KeyboardUtils from "./keyboard-utils.js";
 import SvgCanvasMarkdown from "./svg-canvas-utils-markdown.js";
 import {
 	MARKDOWN, WYSIWYG
@@ -183,7 +184,7 @@ export default class SvgCanvasTextArea {
 	// Applies a markdown action to the comment text being edited using
 	// the same commands as the toolbar.
 	getMarkdownAction(d3Event) {
-		if (CanvasUtils.isCmndCtrlPressed(d3Event)) {
+		if (KeyboardUtils.isCmndCtrlPressed(d3Event)) {
 			switch (d3Event.keyCode) {
 			case B_KEY: return "bold";
 			case I_KEY: return "italics";
@@ -692,7 +693,7 @@ export default class SvgCanvasTextArea {
 			d3Event.keyCode === RIGHT_ARROW_KEY ||
 			d3Event.keyCode === UP_ARROW_KEY ||
 			d3Event.keyCode === DOWN_ARROW_KEY ||
-			(d3Event.keyCode === A_KEY && CanvasUtils.isCmndCtrlPressed(d3Event));
+			(d3Event.keyCode === A_KEY && KeyboardUtils.isCmndCtrlPressed(d3Event));
 	}
 
 	// Displays a <div> to allow text entry and editing of (regular or WYSIWYG)
@@ -726,6 +727,12 @@ export default class SvgCanvasTextArea {
 		this.foreignObjectComment
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 			.attr("class", "d3-comment-text-entry-scroll")
+			.on("mousedown", (d3Event) => {
+				// This is triggered when the user 'mousedown's on the scrollbar. In this
+				// case, prevent propogation otherwise it causes a 'blur' event and ends
+				// the edit mode.
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+			})
 			.each((d, i, commentTexts) => {
 				const commentElement = d3.select(commentTexts[i]);
 				CanvasUtils.applyOutlineStyle(commentElement, d.formats); // Only apply outlineStyle format here
@@ -827,6 +834,9 @@ export default class SvgCanvasTextArea {
 				if (data.keyboardInputCallback) {
 					data.keyboardInputCallback(d3Event);
 				}
+				// Prevent events propagating to the link which might alter
+				// the focus to the link.
+				d3Event.stopPropagation();
 			})
 			.on("keyup", (d3Event) => {
 				data.autoSizeCallback(d3Event.target, data);
