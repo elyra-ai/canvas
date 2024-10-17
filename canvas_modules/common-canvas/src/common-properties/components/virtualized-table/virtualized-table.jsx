@@ -16,8 +16,8 @@
 
 import { Column, Table, AutoSizer } from "react-virtualized";
 import Draggable from "react-draggable";
-import { Checkbox, Loading } from "@carbon/react";
-import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
+import { Checkbox, Loading, Button } from "@carbon/react";
+import { ArrowUp, ArrowDown, ArrowsVertical, Information, TrashCan } from "@carbon/react/icons";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import TruncatedContentTooltip from "./../truncated-content-tooltip";
 import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";
@@ -376,6 +376,7 @@ class VirtualizedTable extends React.Component {
 	// Responsible for rendering a table row given an array of columns.
 	rowRenderer(scrollKey, { className, columns, index, key, rowData, style }) {
 		let selectOption = "";
+		let trashOption = "";
 		let selectedRow = false;
 		const rowDisabled = typeof rowData.disabled === "boolean" ? rowData.disabled : false;
 
@@ -414,6 +415,17 @@ class VirtualizedTable extends React.Component {
 						readOnly={this.props.readOnly}
 					/>
 				</div>);
+			} else {
+				trashOption = (
+					<Button
+						kind="ghost"
+						size="sm"
+						hasIconOnly
+						iconDescription="delete"
+						onClick={this.props.deleteRow}
+						renderIcon={TrashCan}
+					/>
+				);
 			}
 		}
 
@@ -453,6 +465,7 @@ class VirtualizedTable extends React.Component {
 			>
 				{selectOption}
 				{columns}
+				{trashOption}
 			</div>
 		</div>);
 	}
@@ -543,6 +556,7 @@ VirtualizedTable.propTypes = {
 		PropTypes.number.isRequired
 	]),
 	onRowDoubleClick: PropTypes.func,
+	deleteRow: PropTypes.func,
 	rowsSelected: PropTypes.array, // Required if selectable is true
 	checkedAll: PropTypes.bool, // Required if selectable is true
 	setRowsSelected: PropTypes.func, // Required if selectable is true
