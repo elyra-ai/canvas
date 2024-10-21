@@ -52,8 +52,8 @@
 			flex-shrink: 0; // prevent icon from shrinking if text too long
 
 			svg {
-				width: 16px;
-				height: 16px;
+				width: $spacing-05;
+				height: $spacing-05;
 			}
 		}
 	}

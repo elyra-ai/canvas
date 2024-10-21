@@ -15,6 +15,8 @@
  */
 /* eslint max-len: "off" */
 
+import CanvasUtils from "../../../../common-canvas/src/common-canvas/common-canvas-utils.js";
+
 Cypress.Commands.add("getCommentWithText", (commentText) =>
 	cy.get(getCommentGrpSelector())
 		.then((grpArray) => findGrpForText(grpArray, commentText)));
@@ -133,7 +135,7 @@ Cypress.Commands.add("isCommentSelected", (commentText) => {
 Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText, saveComment = true) => {
 	cy.getCommentWithText(originalCommentText).as("comment");
 	cy.get("@comment").dblclick({ force: true });
-	cy.get("@comment").get("textarea")
+	cy.get("@comment").get(".d3-comment-text-entry")
 		.as("textarea");
 	cy.get("@textarea").clear();
 	cy.get("@textarea").type(newCommentText);
@@ -147,7 +149,7 @@ Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText, 
 Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newCommentText) => {
 	cy.getCommentWithTextInSubFlow(originalCommentText).as("comment");
 	cy.get("@comment").dblclick();
-	cy.get("@comment").get("textarea")
+	cy.get("@comment").get(".d3-comment-text-entry")
 		.as("textarea");
 	cy.get("@textarea").clear();
 	cy.get("@textarea").type(newCommentText);
@@ -159,7 +161,7 @@ Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newComm
 Cypress.Commands.add("editTextInCommentInSubFlowNested", (originalCommentText, newCommentText) => {
 	cy.getCommentWithTextInSubFlowNested(originalCommentText).as("comment");
 	cy.get("@comment").dblclick();
-	cy.get("@comment").get("textarea")
+	cy.get("@comment").get(".d3-comment-text-entry")
 		.as("textarea");
 	cy.get("@textarea").clear();
 	cy.get("@textarea").type(newCommentText);
@@ -171,7 +173,7 @@ Cypress.Commands.add("editTextInCommentInSubFlowNested", (originalCommentText, n
 Cypress.Commands.add("editTextInCommentInSupernode", (originalCommentText, newCommentText, supernodeName) => {
 	cy.getCommentWithTextInSupernode(originalCommentText, supernodeName).as("comment");
 	cy.get("@comment").dblclick();
-	cy.get("@comment").get("textarea")
+	cy.get("@comment").get(".d3-comment-text-entry")
 		.as("textarea");
 	cy.get("@textarea").clear();
 	cy.get("@textarea").type(newCommentText);
@@ -189,12 +191,12 @@ Cypress.Commands.add("addCommentToPosition", (commentText, canvasX, canvasY) => 
 Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
-			const srcSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > foreignobject > div";
+			const srcSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] .d3-comment-text";
 			cy.getCanvasTranslateCoords()
 				.then((transform) => {
 					cy.window().then((win) => {
 						cy.get(srcSelector)
-							.trigger("mousedown", "topLeft", { which: 1, view: win });
+							.trigger("mousedown", "topLeft", { which: 1, view: win, force: true });
 						cy.get("#canvas-div-0")
 							.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win });
 						cy.get("#canvas-div-0")
@@ -208,7 +210,7 @@ Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
 	// Click the comment at topLeft corner to display the guide
 	// srcSelector is the selector of guide
 	cy.getCommentWithText(commentText).then((comment) => {
-		const sel = "[data-id='" + comment[0].getAttribute("data-id") + "'] > foreignobject > div";
+		const sel = "[data-id='" + comment[0].getAttribute("data-id") + "'] > foreignobject > div > div > div";
 		cy.get(sel).click();
 
 		cy.document().then((doc) => {
@@ -239,7 +241,7 @@ Cypress.Commands.add("dragAndDrop", (srcSelector, srcXPos, srcYPos, trgSelector,
 Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
-			const srcBodySelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-rect";
+			const srcBodySelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-foreign-object-comment-text";
 			const srcSizingSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-sizing";
 
 			cy.resizeObjectToDimensions(srcBodySelector, srcSizingSelector, corner, newWidth, newHeight);
@@ -249,7 +251,7 @@ Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight)
 Cypress.Commands.add("resizeCommentOneDirection", (commentText, corner, newValue) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
-			const srcBodySelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-rect";
+			const srcBodySelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-foreign-object-comment-text";
 			const srcSizingSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-sizing";
 
 			cy.getObjectDimensions(srcBodySelector).then((commentDimensions) => {
@@ -329,13 +331,16 @@ Cypress.Commands.add("selectAllCommentsUsingCtrlOrCmdKey", () => {
 });
 
 Cypress.Commands.add("selectTextInComment", (textToSelect, commentText) => {
-	cy.getCommentWithText(commentText)
-		.get("textarea")
-		.then((tas) => {
-			const start = commentText.indexOf(textToSelect);
-			const end = start + textToSelect.length;
-			tas[0].setSelectionRange(start, end);
-		});
+	cy.document().then((doc) => {
+		cy.getCommentWithText(commentText)
+			.get(".d3-comment-text-entry")
+			.then((tas) => {
+				const start = commentText.indexOf(textToSelect);
+				const end = start + textToSelect.length;
+				// tas[0].setSelectionRange(start, end);
+				CanvasUtils.selectNodeRange(tas[0], start, end, doc.getSelection());
+			});
+	});
 });
 
 Cypress.Commands.add("hoverOverComment", (commentText) => {

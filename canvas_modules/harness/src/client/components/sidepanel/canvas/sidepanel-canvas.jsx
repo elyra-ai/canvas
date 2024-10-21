@@ -52,6 +52,7 @@ import {
 	TIP_STATE_TAG,
 	TOOLBAR_TYPE_DEFAULT,
 	TOOLBAR_TYPE_SUB_AREAS,
+	TOOLBAR_TYPE_CUSTOMIZE_AUTO,
 	TOOLBAR_TYPE_SINGLE_BAR,
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
@@ -102,8 +103,6 @@ import {
 	TOOLBAR_LAYOUT_NONE,
 	TOOLBAR_LAYOUT_TOP
 } from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
-
-import { Notification } from "@carbon/react/icons";
 
 import FormsService from "../../../services/FormsService";
 
@@ -719,12 +718,30 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enablePaletteHeader = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedPaletteHeader" // Set ID to corresponding field in App.js state
+				labelText="Enable Palette Header"
+				toggled={this.props.getStateValue("selectedPaletteHeader")}
+				onToggle={(val) => this.setStateValue(val, "selectedPaletteHeader")}
+			/>
+		</div>);
+
 		var enableAutoLinkOnlyFromSelNodes = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedAutoLinkOnlyFromSelNodes" // Set ID to corresponding field in App.js state
 				labelText="Enable Auto Link Only From Selected Nodes"
 				toggled={this.props.getStateValue("selectedAutoLinkOnlyFromSelNodes")}
 				onToggle={(val) => this.setStateValue(val, "selectedAutoLinkOnlyFromSelNodes")}
+			/>
+		</div>);
+
+		var enableKeyboardNavigation = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedKeyboardNavigation" // Set ID to corresponding field in App.js state
+				labelText="Enable Keyboard Navigation"
+				toggled={this.props.getStateValue("selectedKeyboardNavigation")}
+				onToggle={(val) => this.setStateValue(val, "selectedKeyboardNavigation")}
 			/>
 		</div>);
 
@@ -1403,6 +1420,10 @@ export default class SidePanelForms extends React.Component {
 						labelText={TOOLBAR_TYPE_SUB_AREAS}
 					/>
 					<RadioButton
+						value={TOOLBAR_TYPE_CUSTOMIZE_AUTO}
+						labelText={TOOLBAR_TYPE_CUSTOMIZE_AUTO}
+					/>
+					<RadioButton
 						value={TOOLBAR_TYPE_SINGLE_BAR}
 						labelText={TOOLBAR_TYPE_SINGLE_BAR}
 					/>
@@ -1567,15 +1588,6 @@ export default class SidePanelForms extends React.Component {
 				toggled={this.props.getStateValue("notificationConfig").secondaryButtonDisabled}
 				onToggle={(val) => this.notificationConfigToggle("notificationConfig", "secondaryButtonDisabled", val)}
 			/>
-			<Toggle
-				id="toolbarIcon" // Set ID to corresponding field in App.js state
-				labelText="Set toolbar icon to Bell icon"
-				toggled={this.props.getStateValue("notificationConfig").toolbarIcon}
-				onToggle={(val) => (val
-					? this.notificationConfigToggle("notificationConfig", "toolbarIcon", (<Notification size={"32"} />))
-					: this.notificationConfigToggle("notificationConfig", "toolbarIcon", null))
-				}
-			/>
 		</div>);
 
 		var configureNotificationCenter2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-configure-notification-center2">
@@ -1649,6 +1661,8 @@ export default class SidePanelForms extends React.Component {
 					{paletteInput}
 					{divider}
 					{paletteLayout}
+					{divider}
+					{enablePaletteHeader}
 					{divider}
 					{enableAutoLinkOnlyFromSelNodes}
 					{divider}
@@ -1765,6 +1779,8 @@ export default class SidePanelForms extends React.Component {
 					{enableCanvasUnderlay}
 					{divider}
 					<div className="harness-side-panel-header">Operational</div>
+					{divider}
+					{enableKeyboardNavigation}
 					{divider}
 					{enableImageDisplay}
 					{divider}

@@ -54,6 +54,7 @@
   "expression.values.empty.table.label": "Nenhum valor localizado",
   "expression.functions.table.label": "Tabela de funções",
   "expression.fields.dropdown": "Fields",
+  "expression.functions.dropdown": "Funções Gerais",
   "expression.add.column": "Incluir",
   "expression.fields.title": "Fields",
   "expression.values.title": "Valores",
