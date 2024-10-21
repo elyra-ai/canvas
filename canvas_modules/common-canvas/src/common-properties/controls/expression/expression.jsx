@@ -102,8 +102,16 @@ class ExpressionControl extends React.Component {
 			});
 			this.editor.focus();
 		}
-		if (!isEqual(this.getCodemirrorState()?.doc.toString(), this.props.value)) {
-			this.editor.dispatch({ changes: { from: 0, to: this.getCodemirrorState()?.doc?.length, insert: this.props.value } });
+		if (!isEqual(prevProps.value, this.props.value)) {
+			const selection = this.editor.state.selection.main;
+			this.editor.dispatch({
+				changes: {
+					from: 0,
+					to: this.getCodemirrorState()?.doc?.length,
+					insert: this.props.value },
+				selection: {
+					anchor: selection.anchor,
+					head: selection.head } });
 		}
 	}
 
@@ -424,7 +432,7 @@ class ExpressionControl extends React.Component {
 					<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
 						className={className}
 					>
-						<div className={codemirrorClassName} ref={this.editorRef} style={{ height: this.state.expressionEditorHeight }} />
+						<div className={codemirrorClassName} ref={this.editorRef} style={{ height: this.state.expressionEditorHeight, minHeight: minLineHeight }} />
 						<ValidationMessage state={this.props.state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 					</div>
 				</div>

@@ -47,7 +47,11 @@ $operator-margin: 50%;
 	margin-bottom: 0;
 
 	.elyra-CodeMirror {
+		/* Allow codemirror container to resize on drag */
+		resize: vertical;
+		overflow: auto;
 		.cm-editor {
+			min-height: inherit; /* Inherit min-height to restrict resize below certain width  */
 			background: $field-01;
 		}
 	}

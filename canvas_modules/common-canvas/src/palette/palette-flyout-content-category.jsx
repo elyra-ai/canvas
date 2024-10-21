@@ -170,7 +170,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 			} else if (this.props.category.image.endsWith(".svg")) {
 				itemImage = (
 					<div>
-						<SVG src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" />
+						<SVG src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" aria-hidden="true" />
 					</div>
 				);
 			} else {
