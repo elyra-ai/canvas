@@ -196,7 +196,7 @@ Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) =>
 				.then((transform) => {
 					cy.window().then((win) => {
 						cy.get(srcSelector)
-							.trigger("mousedown", "topLeft", { which: 1, view: win });
+							.trigger("mousedown", "topLeft", { which: 1, view: win, force: true });
 						cy.get("#canvas-div-0")
 							.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win });
 						cy.get("#canvas-div-0")
