@@ -275,7 +275,7 @@ class ToolbarButtonItem extends React.Component {
 			}
 			const path = this.props.size === "sm" ? "M 29 29 L 29 23 23 29 Z" : "M 37 37 L 37 30 30 37 Z";
 			return (
-				<svg className="toolbar-tick-svg">
+				<svg className="toolbar-tick-svg" aria-hidden="true">
 					<path d={path} className="toolbar-tick-mark" />
 				</svg>
 			);
