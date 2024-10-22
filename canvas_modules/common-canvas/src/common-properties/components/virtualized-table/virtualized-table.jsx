@@ -420,8 +420,8 @@ class VirtualizedTable extends React.Component {
 					<Button
 						kind="ghost"
 						size="sm"
+						type="delete"
 						hasIconOnly
-						iconDescription="delete"
 						onClick={this.props.deleteRow}
 						renderIcon={TrashCan}
 					/>
