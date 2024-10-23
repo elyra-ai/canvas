@@ -2225,7 +2225,7 @@ class App extends React.Component {
 					{ action: "color-subpanel", iconEnabled: (<ColorPalette size={32} />), label: "Color picker", enable: true,
 						subPanel: ColorPicker, subPanelData: { clickActionHandler: (color) => window.alert("Color selected = " + color) } },
 					{ divider: true },
-					{ action: "save", iconEnabled: (<Save size={32} />), enable: true, tooltip: saveReloadTooltip }
+					{ action: "save", iconEnabled: (<Save size={32} />), label: "Save", enable: true, tooltip: saveReloadTooltip }
 				],
 				rightBar: [
 					{ divider: true },
