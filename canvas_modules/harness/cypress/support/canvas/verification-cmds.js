@@ -492,6 +492,56 @@ Cypress.Commands.add("verifyDetachedLinkPathToTarget", (trgNodeName, trgPortId, 
 		});
 });
 
+Cypress.Commands.add("verifyWysiwygCommentStyles", (expectedStyles) => {
+	cy.get(".d3-comment-text")
+		.should("exist")
+		.then(($el) => {
+			if (expectedStyles.fontFamily) {
+				cy.wrap($el)
+					.should("have.css", "font-family")
+					.and("include", expectedStyles.fontFamily);
+			}
+
+			if (expectedStyles.fontSize) {
+				cy.wrap($el).should("have.css", "font-size", expectedStyles.fontSize);
+			}
+
+			if (expectedStyles.fontWeight) {
+				cy.wrap($el).should("have.css", "font-weight", expectedStyles.fontWeight);
+			}
+
+			if (expectedStyles.fontStyle) {
+				cy.wrap($el).should("have.css", "font-style", expectedStyles.fontStyle);
+			}
+
+			if (expectedStyles.textDecoration) {
+				cy.wrap($el)
+					.should("have.css", "text-decoration")
+					.and("include", expectedStyles.textDecoration);
+			}
+
+			if (expectedStyles.color) {
+				cy.wrap($el).should("have.css", "color", expectedStyles.color);
+			}
+
+			if (expectedStyles.textAlign) {
+				cy.wrap($el).should("have.css", "text-align", expectedStyles.textAlign);
+			}
+
+			if (expectedStyles.verticalAlign) {
+				cy.wrap($el).should("have.css", "vertical-align", expectedStyles.verticalAlign);
+			}
+
+			if (expectedStyles.backgroundColor) {
+				cy.wrap($el).should("have.css", "background-color", expectedStyles.backgroundColor);
+			}
+
+			if (expectedStyles.outline) {
+				cy.wrap($el).should("have.css", "display", expectedStyles.outline);
+			}
+		});
+});
+
 Cypress.Commands.add("verifyLinkIsSelected", (linkId) => {
 	cy.getLinkUsingLinkId(linkId)
 		.then((linkGrp) => expect(linkGrp[0].getAttribute("data-selected")).to.equal("true"));

@@ -17,9 +17,22 @@
 Cypress.Commands.add("clickTextToolbarOption", (action, menuAction) => {
 	cy.getTextToolbarAction(action).click();
 
-	// The header action causes a menu to appear so we handle that usng menuAction.
-	if (action === "headerStyle") {
+	// The actions below cause a menu to appear so we handle that usng menuAction.
+	switch (action) {
+	case "headerStyle":
+	case "submenu-font":
+	case "submenu-text-size":
+	case "submenu-align-horiz":
+	case "submenu-align-vert":
+	case "sub-menu-outline":
 		cy.getOptionFromTextToolbarOverflow(menuAction).click({ force: true });
+		break;
+	case "submenu-text-color":
+	case "submenu-background-color":
+		cy.getOptionFromTextToolbarColorPalette(menuAction).click({ force: true });
+		break;
+	default:
+		return;
 	}
 });
 
@@ -38,7 +51,24 @@ Cypress.Commands.add("getOptionFromTextToolbarOverflow", (optionName) => {
 		.find("button")
 		.then((options) => {
 			for (let idx = 0; idx < options.length; idx++) {
-				if (options[idx].outerText === optionName) {
+				const optionText = options[idx].outerText;
+				if (optionText === optionName) {
+					return options[idx];
+				}
+			}
+			return null;
+		});
+});
+
+Cypress.Commands.add("getOptionFromTextToolbarColorPalette", (optionName) => {
+	cy.getTextToolbar()
+		.find(".toolbar-popover-list")
+		.find(".color-picker")
+		.find("div")
+		.then((options) => {
+			for (let idx = 0; idx < options.length; idx++) {
+				const dataColor = options[idx].getAttribute("data-color");
+				if (dataColor === optionName) {
 					return options[idx];
 				}
 			}
