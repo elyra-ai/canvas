@@ -50,7 +50,7 @@ class PaletteFlyoutContentSearch extends React.Component {
 
 		return (
 			// palette-flyout-search id added for hopscotch tours
-			<div className="palette-flyout-search-container" id="palette-flyout-search-container">
+			<div className="palette-flyout-search-container" id="palette-flyout-search">
 				<Search
 					className="palette-flyout-search"
 					placeholder={placeHolder}
