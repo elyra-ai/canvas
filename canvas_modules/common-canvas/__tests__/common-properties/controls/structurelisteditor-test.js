@@ -498,7 +498,7 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(tableUtilsRTL.getTableRows(container)).to.have.length(2);
 
 		// select the first row in the table
-		tableUtilsRTL.clickTableRows(container, [0]);
+		tableUtilsRTL.selectCheckboxes(container, [0]);
 
 		// ensure table toolbar has Delete button and select it
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
@@ -525,7 +525,7 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(tableData).to.have.length(3);
 
 		// set the error in the last row
-		const checkboxCell = summaryPanel.querySelectorAll("input[type='checkbox']")[3];
+		const checkboxCell = summaryPanel.querySelectorAll("input[type='checkbox']")[7];
 		checkboxCell.setAttribute("checked", false);
 		fireEvent.click(checkboxCell);
 
@@ -544,10 +544,10 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(errorMessage).to.eql(actual);
 
 		// remove the first row and ensure the error message is associated with the correct row.
-		tableUtilsRTL.clickTableRows(summaryPanel, [0]);
+		tableUtilsRTL.selectCheckboxes(container, [0]);
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
-		let deleteButton = tableToolbar.querySelector("button.properties-action-delete");
-		fireEvent.click(deleteButton);
+		let deleteButton = tableToolbar.querySelectorAll("button.properties-action-delete");
+		fireEvent.click(deleteButton[0]);
 
 		const messages = renderedController.getAllErrorMessages();
 		const rowErrorMsg = { "1": { "3": { propertyId: {
@@ -561,9 +561,9 @@ describe("StructureListEditor render from paramdef", () => {
 		summaryPanel = container.querySelector("div.properties-wf-content.show");
 		tableData = tableUtilsRTL.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(2);
-		tableUtilsRTL.clickTableRows(summaryPanel, [1]);
-		deleteButton = container.querySelector("div.properties-table-toolbar").querySelector("button.properties-action-delete");
-		fireEvent.click(deleteButton);
+		tableUtilsRTL.selectCheckboxes(container, [1]);
+		deleteButton = container.querySelectorAll("button.properties-action-delete");
+		fireEvent.click(deleteButton[0]);
 		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
 		expect(actual).to.equal(null);
 	});
@@ -630,7 +630,7 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(errorMessage).to.eql(actual);
 
 		// select the first row and move it to the bottom and make sure the error messages stay aligned.
-		tableUtilsRTL.clickTableRows(summaryPanel, [0]);
+		tableUtilsRTL.selectCheckboxes(summaryPanel, [0]);
 		summaryPanel = container.querySelector("div.properties-wf-content.show");
 		const moveRowBottom = container.querySelector("div.properties-table-toolbar").querySelector("button.table-row-move-bottom-button");
 		fireEvent.click(moveRowBottom);
@@ -656,7 +656,7 @@ describe("StructureListEditor render from paramdef", () => {
 		// select the second from the last row and move it to the top and make sure the error messages stay aligned.
 		tableData = tableUtilsRTL.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(5);
-		tableUtilsRTL.clickTableRows(summaryPanel, [3]);
+		tableUtilsRTL.selectCheckboxes(summaryPanel, [3]);
 		summaryPanel = container.querySelector("div.properties-wf-content.show");
 		const moveRowTop = container.querySelector("div.properties-table-toolbar").querySelector("button.table-row-move-top-button");
 		fireEvent.click(moveRowTop);
@@ -777,6 +777,49 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(tableWrapper.querySelector("div.properties-empty-table span").textContent).to.be.equal("To begin, click \"Add value\"");
 		expect(tableWrapper.querySelectorAll("button.properties-empty-table-button")).to.have.length(1);
 		expect(tableWrapper.querySelector("button.properties-empty-table-button").textContent).to.be.equal("Add value");
+	});
+});
+
+describe("StructureListEditor single select table renders and functions correctly", () => {
+	let wrapper;
+
+	beforeEach(() => {
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structureListEditorParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	// Removed table toolbar from single select tables.
+	it("Should not render table toolbar", () => {
+		const { container } = wrapper;
+		propertyUtilsRTL.openSummaryPanel(wrapper, "inlineEditingTableWarning-summary-panel");
+		tableUtilsRTL.clickTableRows(container, [0]);
+		const tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
+		expect(tableToolbar).to.have.length(0);
+	});
+
+	// Testing delete icons for single select table
+	it("should delete rows correctly", async() => {
+		const { container } = wrapper;
+		const summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "inlineEditingTableWarning-summary-panel");
+
+		// Adding a row
+		const addColumnButton = summaryPanel.querySelectorAll("button.properties-add-fields-button");
+		expect(addColumnButton).to.have.length(1);
+		fireEvent.click(addColumnButton[0]);
+
+		expect(tableUtilsRTL.getTableRows(container)).to.have.length(2);
+
+		// Testing delete row icon
+		const deleteButtons = container.querySelectorAll("button[type='delete']");
+		expect(deleteButtons).to.have.length(2);
+		tableUtilsRTL.clickTableRows(container, [0]); // need to click on the table that we want to delete
+		fireEvent.click(deleteButtons[0]);
+
+		expect(tableUtilsRTL.getTableRows(container)).to.have.length(1);
 	});
 });
 

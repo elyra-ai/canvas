@@ -429,7 +429,9 @@ export default class AbstractTable extends React.Component {
 	}
 
 	makeTableToolbar(selectedRows) {
-		if ((this.props.addRemoveRows || this.props.control?.moveableRows || this.isSelectSummaryEdit(selectedRows)) && selectedRows?.length > 0) {
+		if ((this.props.addRemoveRows || this.props.control?.moveableRows || this.isSelectSummaryEdit(selectedRows)) &&
+		selectedRows?.length > 0 &&
+		this.props.control.rowSelection !== ROW_SELECTION.SINGLE) {
 			const multiSelectEditRowPropertyId = {
 				name: this.selectSummaryPropertyName,
 				row: 0
@@ -653,6 +655,7 @@ export default class AbstractTable extends React.Component {
 				rows={this.props.control.rows}
 				tableLabel={tableLabel}
 				updateRowSelections={rowClickCallback}
+				deleteRow={this.removeSelected}
 				selectedRows= {this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
 				light={this.isLightTheme()}

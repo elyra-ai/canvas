@@ -525,7 +525,9 @@ class FlexibleTable extends React.Component {
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass;
 		// We don't show TableToolbar for Fieldpicker, applying appropriate header styles for fieldpicker table
 		const ftHeaderClassname = classNames("properties-ft-table-header",
-			{ "no-rows-selected": this.props.selectedRows?.length === 0, "fieldpicker-table": this.props.scrollKey === "field-picker" });
+			{ "no-rows-selected": this.props.selectedRows?.length === 0,
+				"fieldpicker-table": this.props.scrollKey === "field-picker",
+				"single-table": this.props.rowSelection === ROW_SELECTION.SINGLE });
 		// When topRightPanel has Add button, it has this.props.topRightPanel.props.className = "properties-at-buttons-container"
 		const topRightPanelHasTableToolbar = (typeof this.props.topRightPanel !== "undefined" && this.props.topRightPanel !== null &&
 			typeof this.props.topRightPanel.props.className === "undefined");
@@ -578,6 +580,7 @@ class FlexibleTable extends React.Component {
 									rowSelection={this.props.rowSelection}
 									disableHeader={!this.props.showHeader}
 									onRowDoubleClick={this.props.onRowDoubleClick}
+									deleteRow={this.props.deleteRow}
 									rowsSelected={this.props.selectedRows}
 									checkedAll={this.state.checkedAllRows}
 									setRowsSelected={this.handleCheckedRow}
@@ -635,6 +638,7 @@ FlexibleTable.propTypes = {
 	messageInfo: PropTypes.object,
 	updateRowSelections: PropTypes.func,
 	onRowDoubleClick: PropTypes.func,
+	deleteRow: PropTypes.func,
 	selectedRows: PropTypes.array,
 	rowSelection: PropTypes.string,
 	summaryTable: PropTypes.bool,
