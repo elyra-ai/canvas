@@ -33,7 +33,7 @@ sleep 30
 echo "Cypress version"
 npx cypress --version
 echo "Starting cypress electron tests"
-npx cypress run --headed --browser electron
+npx cypress run --headless --browser electron
 
 echo "cd $WORKING_DIR"
 cd $WORKING_DIR
