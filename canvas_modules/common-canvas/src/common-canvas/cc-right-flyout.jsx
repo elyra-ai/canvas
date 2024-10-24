@@ -19,15 +19,58 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
 
+const MIN_WIDTH = 300;
+const MAX_WIDTH_EXTEND_PERCENT = 0.7; // Should cover atmost 70% of available width
 class CommonCanvasRightFlyout extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.logger = new Logger("CC-RightFlyout");
+
+		this.onMouseDown = this.onMouseDown.bind(this);
+		this.onMouseMoveX = this.onMouseMoveX.bind(this);
+		this.onMouseUp = this.onMouseUp.bind(this);
+	}
+
+	onMouseDown(e) {
+		if (e.button === 0) {
+			document.addEventListener("mousemove", this.onMouseMoveX, true);
+			document.addEventListener("mouseup", this.onMouseUp, true);
+			this.posX = e.clientX;
+			this.startWidth = this.commonCanvasRightFlyout.offsetWidth;
+
+			e.preventDefault();
+		}
+	}
+
+	onMouseUp() {
+		document.removeEventListener("mousemove", this.onMouseMoveX, true);
+		document.removeEventListener("mouseup", this.onMouseUp, true);
+	}
+
+	onMouseMoveX(e) {
+		if (e.clientX) {
+			const newWidth = this.startWidth + (this.posX - e.clientX);
+			this.commonCanvasRightFlyout.style.width = `${this.limitWidth(newWidth)}px`;
+		}
+	}
+
+	limitWidth(wth) {
+		const canvasContainer = document.getElementById(this.props.containingDivId);
+		let width = wth;
+
+		if (canvasContainer) {
+			// Max Width should be 70% of the total available width (canvas + rightflyout)
+			const totalAvialableWidth = canvasContainer.getBoundingClientRect().width + this.commonCanvasRightFlyout.offsetWidth;
+			const maxWidth = MAX_WIDTH_EXTEND_PERCENT * totalAvialableWidth;
+			width = Math.min(Math.max(width, MIN_WIDTH), maxWidth);
+		}
+
+		return width;
 	}
 
 	render() {
 		this.logger.log("render");
-
 		let rightFlyout = <div />; // For no content, return empty <div> so grid siziing for parent <div> work correctly.
 
 		if (this.props.content && this.props.isOpen) {
@@ -35,8 +78,11 @@ class CommonCanvasRightFlyout extends React.Component {
 				? "right-flyout-panel under-toolbar"
 				: "right-flyout-panel";
 			rightFlyout = (
-				<div className={rfClass}>
-					{this.props.content}
+				<div className="right-flyout-container" ref={ (ref) => (this.commonCanvasRightFlyout = ref) } >
+					<div className="right-flyout-resize-handle" onMouseDown={this.onMouseDown} />
+					<div className={rfClass}>
+						{this.props.content}
+					</div>
 				</div>
 			);
 		}
@@ -46,6 +92,8 @@ class CommonCanvasRightFlyout extends React.Component {
 }
 
 CommonCanvasRightFlyout.propTypes = {
+	// Provided by Common Canvas
+	containingDivId: PropTypes.string,
 	// Provided by Redux
 	isOpen: PropTypes.bool,
 	content: PropTypes.object,

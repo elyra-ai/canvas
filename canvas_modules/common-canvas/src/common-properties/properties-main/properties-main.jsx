@@ -37,7 +37,7 @@ import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
 
 import { injectIntl } from "react-intl";
-import styles from "./properties-main-widths.scss";
+import styles from "./properties-main-widths.module.scss";
 
 const FLYOUT_WIDTH_SMALL = parseInt(styles.flyoutWidthSmall, 10);
 const FLYOUT_WIDTH_MEDIUM = parseInt(styles.flyoutWidthMedium, 10);
@@ -53,6 +53,12 @@ class PropertiesMain extends React.Component {
 		if (this.props.propertiesInfo.initialEditorSize) {
 			this.propertiesController.setEditorSize(this.props.propertiesInfo.initialEditorSize);
 		}
+		this.flyoutWidth = {
+			small: FLYOUT_WIDTH_SMALL,
+			medium: FLYOUT_WIDTH_MEDIUM,
+			large: FLYOUT_WIDTH_LARGE,
+			max: FLYOUT_WIDTH_MAX
+		};
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
 		this.propertiesController.setLight(props.light);
@@ -96,6 +102,7 @@ class PropertiesMain extends React.Component {
 		this._getResizeButton = this._getResizeButton.bind(this);
 		this._isResizeButtonRequired = this._isResizeButtonRequired.bind(this);
 		this.onBlur = this.onBlur.bind(this);
+		this.updateRightFlyoutWidth = this.updateRightFlyoutWidth.bind(this);
 	}
 
 	componentDidMount() {
@@ -420,11 +427,19 @@ class PropertiesMain extends React.Component {
 		this.setState({ showPropertiesButtons: state });
 	}
 
+	updateRightFlyoutWidth(size) {
+		const element = document.querySelector(".right-flyout-container");
+		if (element) {
+			element.style.width = `${this.flyoutWidth[size]}px`;
+		}
+	}
+
 	updateEditorSize(newEditorSize) {
 		this.setState({
 			editorSize: newEditorSize
 		});
 		this.propertiesController.setEditorSize(newEditorSize);
+		this.updateRightFlyoutWidth(newEditorSize);
 	}
 
 	resize() {
@@ -591,19 +606,21 @@ class PropertiesMain extends React.Component {
 				propertiesSizeClassname);
 			return (
 				<Provider store={this.propertiesController.getStore()}>
-					<aside
-						aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
-						role="complementary"
-						ref={ (ref) => (this.commonProperties = ref) }
-						className={className}
-						onBlur={this.onBlur}
-						style={overrideStyle}
-					>
-						{propertiesTitle}
-						{propertiesDialog}
-						{buttonsContainer}
-					</aside>
-					{resizeBtn}
+					<div className="properties-right-flyout-wrapper">
+						<aside
+							aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
+							role="complementary"
+							ref={ (ref) => (this.commonProperties = ref) }
+							className={className}
+							onBlur={this.onBlur}
+							style={overrideStyle}
+						>
+							{propertiesTitle}
+							{propertiesDialog}
+							{buttonsContainer}
+						</aside>
+						{resizeBtn}
+					</div>
 				</Provider>
 			);
 		}
