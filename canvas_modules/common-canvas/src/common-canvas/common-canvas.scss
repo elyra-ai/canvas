@@ -47,9 +47,8 @@ $panel-border-color: $border-subtle-01;
 .right-flyout-container {
 	display: flex;
 	border-left: $panel-border-width solid $panel-border-color;
-	:hover {
-		border-left: 0px;
-	}
+	min-height: fit-content;
+  	min-width: fit-content;
 }
 
 .left-flyout-panel,
@@ -59,7 +58,9 @@ $panel-border-color: $border-subtle-01;
 	// so the contents of the panel can adjust themselves to the height accordingly.
 	height: 0;
 	min-height: 100%;
-	min-width: 100%;
+	min-width: fit-content;
+	display: flex;
+	flex: 1;
 
 	user-select: none; /* Prevent elements from being selectable */
 	background-color: $layer-01;

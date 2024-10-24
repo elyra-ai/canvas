@@ -53,6 +53,12 @@ class PropertiesMain extends React.Component {
 		if (this.props.propertiesInfo.initialEditorSize) {
 			this.propertiesController.setEditorSize(this.props.propertiesInfo.initialEditorSize);
 		}
+		this.flyoutWidth = {
+			small: FLYOUT_WIDTH_SMALL,
+			medium: FLYOUT_WIDTH_MEDIUM,
+			large: FLYOUT_WIDTH_LARGE,
+			max: FLYOUT_WIDTH_MAX
+		};
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
 		this.propertiesController.setLight(props.light);
@@ -87,12 +93,6 @@ class PropertiesMain extends React.Component {
 		this.state = {
 			showPropertiesButtons: true,
 			editorSize: editorSize
-		};
-		this.flyoutWidth = {
-			small: FLYOUT_WIDTH_SMALL,
-			medium: FLYOUT_WIDTH_MEDIUM,
-			large: FLYOUT_WIDTH_LARGE,
-			max: FLYOUT_WIDTH_MAX
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
@@ -427,19 +427,19 @@ class PropertiesMain extends React.Component {
 		this.setState({ showPropertiesButtons: state });
 	}
 
-	updateRightFlyoutWidth(size) {
-		const element = document.querySelector(".right-flyout-container");
-		if (element) {
-			element.style.width = `${this.flyoutWidth[size]}px`;
-		}
-	}
-
 	updateEditorSize(newEditorSize) {
 		this.setState({
 			editorSize: newEditorSize
 		});
 		this.propertiesController.setEditorSize(newEditorSize);
 		this.updateRightFlyoutWidth(newEditorSize);
+	}
+
+	updateRightFlyoutWidth(size) {
+		const element = document.querySelector(".right-flyout-container");
+		if (element) {
+			element.style.width = `${this.flyoutWidth[size]}px`;
+		}
 	}
 
 	resize() {
@@ -605,21 +605,24 @@ class PropertiesMain extends React.Component {
 					"properties-light-disabled": !this.props.light
 				},
 				propertiesSizeClassname);
+			this.updateRightFlyoutWidth(this.state.editorSize);
 			return (
 				<Provider store={this.propertiesController.getStore()}>
-					<aside
-						aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
-						role="complementary"
-						ref={ (ref) => (this.commonProperties = ref) }
-						className={className}
-						onBlur={this.onBlur}
-						style={overrideStyle}
-					>
-						{propertiesTitle}
-						{propertiesDialog}
-						{buttonsContainer}
-					</aside>
-					{resizeBtn}
+					<div className="properties-wrapper">
+						<aside
+							aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
+							role="complementary"
+							ref={ (ref) => (this.commonProperties = ref) }
+							className={className}
+							onBlur={this.onBlur}
+							style={overrideStyle}
+						>
+							{propertiesTitle}
+							{propertiesDialog}
+							{buttonsContainer}
+						</aside>
+						{resizeBtn}
+					</div>
 				</Provider>
 			);
 		}
