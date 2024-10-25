@@ -174,7 +174,7 @@ class TitleEditor extends Component {
 				</div>)
 				: null;
 			const icon = this.props.icon && typeof this.props.icon === "string"
-				? <Isvg className="properties-title-heading-icon" src={this.props.icon} />
+				? <Isvg className="properties-title-heading-icon" src={this.props.icon} aria-hidden="true" />
 				: null;
 			if (label || icon) {
 				heading = (<div className="properties-title-heading">
