@@ -138,7 +138,7 @@ class CommonCanvasPanels extends React.Component {
 				containingDivId={this.props.containingDivId}
 			/>
 		);
-		const rightFlyout = (<CommonCanvasRightFlyout containingDivId={this.props.containingDivId} canvasController={this.props.canvasController}/>);
+		const rightFlyout = (<CommonCanvasRightFlyout containingDivId={this.props.containingDivId} canvasController={this.props.canvasController} />);
 		const leftFlyoutIsOpen = this.isLeftPanelOpen();
 		const leftFlyout = leftFlyoutIsOpen ? this.generateLeftFlyout() : null;
 
