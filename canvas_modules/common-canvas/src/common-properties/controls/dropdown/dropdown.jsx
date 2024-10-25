@@ -185,7 +185,7 @@ class DropDown extends React.Component {
 	}
 
 	handleComboOnChange(evt) {
-		let value = evt.selectedItem && evt.selectedItem.value ? evt.selectedItem.value : "";
+		let value = evt.selectedItem && evt.selectedItem.value ? evt.selectedItem.value : evt.selectedItem;
 		if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
 			value = PropertyUtils.fieldStringToValue(value, this.props.control, this.props.controller);
 		}
@@ -290,6 +290,7 @@ class DropDown extends React.Component {
 					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
 					type="default"
 					items={dropDown.options}
+					itemToString={(item) => (item ? item.label : "")}
 					itemToElement={this.renderItem}
 					renderSelectedItem={this.renderItem}
 					onChange={this.handleChange}
