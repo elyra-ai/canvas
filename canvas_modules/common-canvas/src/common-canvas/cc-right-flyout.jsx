@@ -24,6 +24,9 @@ const MAX_WIDTH_EXTEND_PERCENT = 0.7; // Should cover atmost 70% of available wi
 class CommonCanvasRightFlyout extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			width: MIN_WIDTH
+		};
 
 		this.logger = new Logger("CC-RightFlyout");
 
@@ -51,7 +54,7 @@ class CommonCanvasRightFlyout extends React.Component {
 	onMouseMoveX(e) {
 		if (e.clientX) {
 			const newWidth = this.startWidth + (this.posX - e.clientX);
-			this.commonCanvasRightFlyout.style.width = `${this.limitWidth(newWidth)}px`;
+			this.setState({ width: `${this.limitWidth(newWidth)}px` });
 		}
 	}
 
@@ -78,7 +81,7 @@ class CommonCanvasRightFlyout extends React.Component {
 				? "right-flyout-panel under-toolbar"
 				: "right-flyout-panel";
 			rightFlyout = (
-				<div className="right-flyout-container" ref={ (ref) => (this.commonCanvasRightFlyout = ref) } >
+				<div className="right-flyout-container" ref={ (ref) => (this.commonCanvasRightFlyout = ref) } style={{ width: this.state.width }} >
 					<div className="right-flyout-resize-handle" onMouseDown={this.onMouseDown} />
 					<div className={rfClass}>
 						{this.props.content}
