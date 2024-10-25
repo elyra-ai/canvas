@@ -428,7 +428,7 @@ class PropertiesMain extends React.Component {
 	}
 
 	updateRightFlyoutWidth(size) {
-		const element = document.querySelector(".right-flyout-container");
+		const element = document.querySelector(".common-canvas .right-flyout-container");
 		if (element) {
 			element.style.width = `${this.flyoutWidth[size]}px`;
 		}
@@ -604,9 +604,11 @@ class PropertiesMain extends React.Component {
 					"properties-light-disabled": !this.props.light
 				},
 				propertiesSizeClassname);
+
+			this.updateRightFlyoutWidth(this.state.editorSize);
 			return (
 				<Provider store={this.propertiesController.getStore()}>
-					<div className="properties-right-flyout-wrapper">
+					<div className="properties-right-flyout-container">
 						<aside
 							aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
 							role="complementary"
