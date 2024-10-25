@@ -535,11 +535,12 @@ Cypress.Commands.add("verifyWysiwygCommentStyles", (expectedStyles) => {
 			if (expectedStyles.backgroundColor) {
 				cy.wrap($el).should("have.css", "background-color", expectedStyles.backgroundColor);
 			}
-
-			if (expectedStyles.outline) {
-				cy.wrap($el).should("have.css", "display", expectedStyles.outline);
-			}
 		});
+	if (expectedStyles.outline) {
+		cy.get(".d3-comment-text-scroll")
+			.should("exist")
+			.and("have.css", "border-style", expectedStyles.outline);
+	}
 });
 
 Cypress.Commands.add("verifyLinkIsSelected", (linkId) => {

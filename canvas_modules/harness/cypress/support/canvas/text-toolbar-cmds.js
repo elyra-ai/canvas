@@ -17,7 +17,7 @@
 Cypress.Commands.add("clickTextToolbarOption", (action, menuAction) => {
 	cy.getTextToolbarAction(action).click();
 
-	// The actions below cause a menu to appear so we handle that usng menuAction.
+	// The actions below cause a menu to appear so we handle that using menuAction.
 	switch (action) {
 	case "headerStyle":
 	case "submenu-font":

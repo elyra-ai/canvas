@@ -71,6 +71,6 @@ describe("Test for verifying WYSIWYG comments functionality in the application",
 	it("Test to verify functionality of outline option in WYSIWYG toolbar", function() {
 		cy.clickTextToolbarOption("sub-menu-outline", "Solid outline");
 		cy.clickCanvasAt(5, 5);
-		cy.verifyWysiwygCommentStyles({ outline: "table-cell" });
+		cy.verifyWysiwygCommentStyles({ outline: "solid" });
 	});
 });
