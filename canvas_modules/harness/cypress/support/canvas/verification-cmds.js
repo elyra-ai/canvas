@@ -1332,6 +1332,7 @@ Cypress.Commands.add("verifyNotificationIconType", (type) => {
 });
 
 Cypress.Commands.add("verifyCanvasTransform", (movString) => {
+	// Verify the argument passed is a string
 	if (movString === String) {
 		cy.get("#canvas-div-0 .d3-canvas-group", { timeout: 10000 })
 			.should("exist")
@@ -1340,12 +1341,12 @@ Cypress.Commands.add("verifyCanvasTransform", (movString) => {
 				const expectedValues = parseTransformString(movString);
 				const actualValues = parseTransformString(actualTransformString);
 
+				// Compare each part of the transform with compareRange
 				compareCloseTo(actualValues.translateX, expectedValues.translateX);
 				compareCloseTo(actualValues.translateY, expectedValues.translateY);
 				compareCloseTo(actualValues.scale, expectedValues.scale);
 			});
 	}
-	// .should("eq",movString)
 });
 
 Cypress.Commands.add("verifyNotificationCounter", (count) => {
@@ -1459,7 +1460,7 @@ function parseTransformString(transformString) {
 	const translateMatch = transformString.match(/translate\(([^,]+),([^)]+)\)/);
 	const scaleMatch = transformString.match(/scale\(([^)]+)\)/);
 	if (!translateMatch || !scaleMatch) {
-		throw new Error("invalid string format for transforming");
+		throw new Error("invalid string format");
 	}
 	return {
 		translateX: parseFloat(translateMatch[1]),
@@ -1469,8 +1470,9 @@ function parseTransformString(transformString) {
 }
 
 function compareCloseTo(value, compareValue) {
-	const tolerance = Cypress.env("compareRange") || 0.1;
-	expect(Number(value)).to.be.closeTo(Number(compareValue), tolerance); // Cypress.env("compareRange"));
+	// Adjust the range of sttring
+	const CompareRange = Cypress.env("compareRange") || 0.1;
+	expect(Number(value)).to.be.closeTo(Number(compareValue), CompareRange);
 }
 
 function getNodeGroupSelector(node) {

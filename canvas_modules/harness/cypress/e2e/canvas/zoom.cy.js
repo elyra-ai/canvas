@@ -101,7 +101,6 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a n
 		cy.verifyCanvasTransform(undefined);
 		// Zooming the canvas.
 		cy.clickToolbarZoomOut();
-		// TODO -- write function to test these +/- 2 px.
 		cy.verifyCanvasTransform("translate(45.81818181818181,32.22727272727275) scale(0.9090909090909091)");
 		// Test get Zoom to reveal & ZoomTo
 		cy.selectEntryFromDropdown("Histogram");
@@ -150,7 +149,6 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a l
 		cy.verifyCanvasTransform(undefined);
 		// Zooming the canvas.
 		cy.clickToolbarZoomOut();
-		// TODO -- write function to test these +/- 2 px.
 		cy.verifyCanvasTransform("translate(45.81818181818181,32.22727272727275) scale(0.9090909090909091)");
 		// Test get Zoom to reveal & ZoomTo
 		cy.selectEntryFromDropdown("Binding (entry) node-Execution node");
@@ -158,7 +156,6 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a l
 		cy.setYPercentOffset(60);
 		cy.submitAPI();
 		cy.wait(500);
-		// TODO -- write function to test these +/- 2 px.
 		cy.verifyCanvasTransform("translate(498.32727272727266,290.85454545454536) scale(0.9090909090909091)");
 	});
 });
