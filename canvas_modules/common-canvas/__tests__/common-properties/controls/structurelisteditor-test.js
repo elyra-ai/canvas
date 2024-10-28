@@ -793,6 +793,7 @@ describe("StructureListEditor single select table renders and functions correctl
 	});
 
 	// Removed table toolbar from single select tables.
+
 	it("Should not render table toolbar", () => {
 		const { container } = wrapper;
 		propertyUtilsRTL.openSummaryPanel(wrapper, "inlineEditingTableWarning-summary-panel");
