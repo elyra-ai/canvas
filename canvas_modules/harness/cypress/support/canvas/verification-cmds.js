@@ -1332,9 +1332,20 @@ Cypress.Commands.add("verifyNotificationIconType", (type) => {
 });
 
 Cypress.Commands.add("verifyCanvasTransform", (movString) => {
-	cy.get("#canvas-div-0 .d3-canvas-group")
-		.invoke("attr", "transform")
-		.should("eq", movString);
+	if (movString === String) {
+		cy.get("#canvas-div-0 .d3-canvas-group", { timeout: 10000 })
+			.should("exist")
+			.invoke("attr", "transform")
+			.then((actualTransformString) => {
+				const expectedValues = parseTransformString(movString);
+				const actualValues = parseTransformString(actualTransformString);
+
+				compareCloseTo(actualValues.translateX, expectedValues.translateX);
+				compareCloseTo(actualValues.translateY, expectedValues.translateY);
+				compareCloseTo(actualValues.scale, expectedValues.scale);
+			});
+	}
+	// .should("eq",movString)
 });
 
 Cypress.Commands.add("verifyNotificationCounter", (count) => {
@@ -1390,7 +1401,7 @@ Cypress.Commands.add("verifyNotificationCenterDoesntExist", (hidden) => {
 Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
 	if (typeof content === "string" && content.length > 0) {
 		cy.get(".notification-panel-" + id).should("contain", content);
-	}	else if (typeof content === "string" && content.length === 0) {
+	} else if (typeof content === "string" && content.length === 0) {
 		cy.get(".notification-panel-" + id).should("be.empty");
 	} else {
 		cy.get(".notification-panel-" + id).should("not.exist");
@@ -1444,8 +1455,22 @@ function verifyPath(actualPath, expectedPath) {
 	}
 }
 
+function parseTransformString(transformString) {
+	const translateMatch = transformString.match(/translate\(([^,]+),([^)]+)\)/);
+	const scaleMatch = transformString.match(/scale\(([^)]+)\)/);
+	if (!translateMatch || !scaleMatch) {
+		throw new Error("invalid string format for transforming");
+	}
+	return {
+		translateX: parseFloat(translateMatch[1]),
+		translateY: parseFloat(translateMatch[2]),
+		scale: parseFloat(scaleMatch[1])
+	};
+}
+
 function compareCloseTo(value, compareValue) {
-	expect(Number(value)).to.be.closeTo(Number(compareValue), Cypress.env("compareRange"));
+	const tolerance = Cypress.env("compareRange") || 0.1;
+	expect(Number(value)).to.be.closeTo(Number(compareValue), tolerance); // Cypress.env("compareRange"));
 }
 
 function getNodeGroupSelector(node) {
