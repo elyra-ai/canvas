@@ -523,9 +523,7 @@ class FlexibleTable extends React.Component {
 
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass;
-		// We don't show TableToolbar for Fieldpicker, applying appropriate header styles for fieldpicker table
-		const ftHeaderClassname = classNames("properties-ft-table-header",
-			{ "no-rows-selected": this.props.selectedRows?.length === 0, "fieldpicker-table": this.props.scrollKey === "field-picker" });
+		const ftHeaderClassname = "properties-ft-table-header";
 		// When topRightPanel has Add button, it has this.props.topRightPanel.props.className = "properties-at-buttons-container"
 		const topRightPanelHasTableToolbar = (typeof this.props.topRightPanel !== "undefined" && this.props.topRightPanel !== null &&
 			typeof this.props.topRightPanel.props.className === "undefined");
