@@ -493,7 +493,7 @@ Cypress.Commands.add("verifyDetachedLinkPathToTarget", (trgNodeName, trgPortId, 
 });
 
 Cypress.Commands.add("verifyWysiwygCommentStyles", ({ styleName, styleValue }) => {
-	if (styleName !== "outline") {
+	if (styleName !== "border-width") {
 		cy.get(".d3-comment-text")
 			.should("exist")
 			.and("have.css", styleName)
