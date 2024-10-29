@@ -8,11 +8,11 @@ describe("Test for verifying WYSIWYG comments functionality in the application",
 		cy.editTextInComment("", "First Comment", false);
 	});
 
-	// it("Test to verify functionality of font option in WYSIWYG toolbar", function() {
-	// 	cy.clickTextToolbarOption("submenu-font", "IBM Plex Mono");
-	// 	cy.clickCanvasAt(5, 5);
-	// 	cy.verifyWysiwygCommentStyles({ styleName: "fontFamily", styleValue: "IBM Plex Mono" });
-	// });
+	it("Test to verify functionality of font option in WYSIWYG toolbar", function() {
+		cy.clickTextToolbarOption("submenu-font", "IBM Plex Mono");
+		cy.clickCanvasAt(5, 5);
+		cy.verifyWysiwygCommentStyles({ styleName: "fontFamily", styleValue: "IBM Plex Mono" });
+	});
 
 	it("Test to verify functionality of text size option in WYSIWYG toolbar", function() {
 		cy.clickTextToolbarOption("submenu-text-size", "18");
