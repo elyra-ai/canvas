@@ -1362,12 +1362,13 @@ export default class CanvasUtils {
 		return (luma < 108);
 	}
 
-	// Applies the outlineStyle format to the D3 comment selection passed in,
-	// if one exists, in the formats array passed in.
+	// Applies the outlineStyle format or border-xxx CSS styles to the D3 comment
+	// selection passed in, if one exists, in the formats array passed in.
 	static applyOutlineStyle(commentSel, formats) {
 		if (formats?.length > 0) {
 			formats.forEach((f) => {
-				if (f.type === "outlineStyle") { // Only apply outline style to outer <div>
+				if (f.type === "outlineStyle" ||
+					f.type.startsWith("border")) { // Only apply outline and border style to outer <div>
 					const { field, value } = CanvasUtils.convertFormat(f);
 					commentSel.style(field, value);
 				}
@@ -1375,12 +1376,13 @@ export default class CanvasUtils {
 		}
 	}
 
-	// Applies all formats from the formats array, that are not outlineStyle, to the
-	// D3 comment selection passed in.
+	// Applies all formats from the formats array, that are not outlineStyle or
+	// border-xxx CSS styles, to the D3 comment selection passed in.
 	static applyNonOutlineStyle(commentSel, formats) {
 		if (formats?.length > 0) {
 			formats.forEach((f) => {
-				if (f.type !== "outlineStyle") { // Only apply outline style to outer <div>
+				if (f.type !== "outlineStyle" &&
+					!f.type.startsWith("border")) { // Only apply outline and border style to outer <div>
 					const { field, value } = CanvasUtils.convertFormat(f);
 					commentSel.style(field, value);
 				}
@@ -1502,9 +1504,9 @@ export default class CanvasUtils {
 			switch (format.value) {
 			default:
 			case "outline-solid":
-				return { field: "border-width", value: "1px" };
+				return { field: "border-style", value: "solid" };
 			case "outline-none":
-				return { field: "border-width", value: "0" };
+				return { field: "border-style", value: "none" };
 			}
 		}
 

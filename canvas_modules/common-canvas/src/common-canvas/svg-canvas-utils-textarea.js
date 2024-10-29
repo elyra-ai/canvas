@@ -727,6 +727,12 @@ export default class SvgCanvasTextArea {
 		this.foreignObjectComment
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 			.attr("class", "d3-comment-text-entry-scroll")
+			.on("mousedown", (d3Event) => {
+				// This is triggered when the user 'mousedown's on the scrollbar. In this
+				// case, prevent propogation otherwise it causes a 'blur' event and ends
+				// the edit mode.
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+			})
 			.each((d, i, commentTexts) => {
 				const commentElement = d3.select(commentTexts[i]);
 				CanvasUtils.applyOutlineStyle(commentElement, d.formats); // Only apply outlineStyle format here

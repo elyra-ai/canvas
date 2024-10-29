@@ -284,7 +284,7 @@ class PaletteContentListItem extends React.Component {
 				icon = image;
 			} else if (typeof image === "string") {
 				icon = image.endsWith(".svg")
-					? <SVG src={image} className="palette-list-item-icon" draggable="false" />
+					? <SVG src={image} className="palette-list-item-icon" draggable="false" aria-hidden="true" />
 					: <img src={image} className="palette-list-item-icon" draggable="false" alt={""} />;
 			}
 		}
