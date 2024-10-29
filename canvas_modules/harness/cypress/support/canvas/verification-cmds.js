@@ -493,15 +493,15 @@ Cypress.Commands.add("verifyDetachedLinkPathToTarget", (trgNodeName, trgPortId, 
 });
 
 Cypress.Commands.add("verifyWysiwygCommentStyles", ({ styleName, styleValue }) => {
-	if (styleName !== "border-width") {
+	if (styleName === "border-width") {
+		cy.get(".d3-comment-text-scroll")
+			.should("exist")
+			.and("have.css", "border-width", styleValue);
+	} else {
 		cy.get(".d3-comment-text")
 			.should("exist")
 			.and("have.css", styleName)
 			.and("include", styleValue);
-	} else {
-		cy.get(".d3-comment-text-scroll")
-			.should("exist")
-			.and("have.css", "border-style", styleValue);
 	}
 });
 
