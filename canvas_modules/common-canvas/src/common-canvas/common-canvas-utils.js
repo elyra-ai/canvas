@@ -1504,9 +1504,9 @@ export default class CanvasUtils {
 			switch (format.value) {
 			default:
 			case "outline-solid":
-				return { field: "border-width", value: "1px" };
+				return { field: "border-style", value: "solid" };
 			case "outline-none":
-				return { field: "border-width", value: "0" };
+				return { field: "border-style", value: "none" };
 			}
 		}
 

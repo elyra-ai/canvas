@@ -100,7 +100,6 @@ class ExpressionControl extends React.Component {
 			this.props.selectionRange.forEach((selected) => {
 				this.editor.dispatch({ selection: selected });
 			});
-			this.editor.focus();
 		}
 		if (!isEqual(prevProps.value, this.props.value)) {
 			const selection = this.editor.state.selection.main;
