@@ -888,11 +888,35 @@ Cypress.Commands.add("verifyTopPanelWidth", (width) => {
 	});
 });
 
-Cypress.Commands.add("verifyLeftPanelWidth", (width) => {
+Cypress.Commands.add("verifyPalettePanelWidth", (width) => {
 	cy.get(".palette-flyout-div").should((element) => {
 		// Use compareCloseTo here because top-panel width is slighyly different
 		// on the build machine to its width when running tests on a local machine.
 		compareCloseTo(element[0].offsetWidth, width);
+	});
+});
+
+Cypress.Commands.add("verifyLeftFlyoutPanelWidth", (width) => {
+	cy.get(".left-flyout-panel").should((element) => {
+		compareCloseTo(element[0].offsetWidth, width);
+	});
+});
+
+Cypress.Commands.add("verifyLeftFlyoutPanelHeight", (height) => {
+	cy.get(".left-flyout-panel").should((element) => {
+		compareCloseTo(element[0].offsetHeight, height);
+	});
+});
+
+Cypress.Commands.add("verifyRightFlyoutPanelWidth", (width) => {
+	cy.get(".right-flyout-panel").should((element) => {
+		compareCloseTo(element[0].offsetWidth, width);
+	});
+});
+
+Cypress.Commands.add("verifyRightFlyoutPanelHeight", (height) => {
+	cy.get(".right-flyout-panel").should((element) => {
+		compareCloseTo(element[0].offsetHeight, height);
 	});
 });
 

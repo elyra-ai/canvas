@@ -319,7 +319,7 @@ describe("Test customized palette and notification panel buttons", function() {
 
 		// Click the customized palette button and make sure it opens the palette
 		cy.clickToolbarPaletteOpen();
-		cy.verifyLeftPanelWidth(256);
+		cy.verifyPalettePanelWidth(256);
 
 		// Click the customized notification panel button and make sure it opens the notification panel
 		cy.clickToolbarNotifications();
