@@ -524,7 +524,7 @@ class FlexibleTable extends React.Component {
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass;
 		const ftHeaderClassname = classNames("properties-ft-table-header",
-			{ "single-table": this.props.rowSelection === ROW_SELECTION.SINGLE });
+			{ "single-row-selection-table": this.props.rowSelection === ROW_SELECTION.SINGLE });
 		// When topRightPanel has Add button, it has this.props.topRightPanel.props.className = "properties-at-buttons-container"
 		const topRightPanelHasTableToolbar = (typeof this.props.topRightPanel !== "undefined" && this.props.topRightPanel !== null &&
 			typeof this.props.topRightPanel.props.className === "undefined");

@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-// describe("Test if tips show up for the summary table values", function() {
-// 	beforeEach(() => {
-// 		cy.visit("/");
-// 		cy.toggleCommonPropertiesSidePanel();
-// 		cy.selectPropertiesContainerType("Flyout");
-// 		cy.toggleCommonPropertiesSidePanel();
-// 		cy.openPropertyDefinition("summaryPanel_paramDef.json");
-// 	});
+describe("Test if tips show up for the summary table values", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.toggleCommonPropertiesSidePanel();
+		cy.selectPropertiesContainerType("Flyout");
+		cy.toggleCommonPropertiesSidePanel();
+		cy.openPropertyDefinition("summaryPanel_paramDef.json");
+	});
 
-// 	it("Test if tips show up for the summary table values", function() {
-// 		cy.hoverOverTextInSummaryPanel("people in generation X ", "Values");
-// 		cy.getSummaryFromName("Values")
-// 			.then((summary) => {
-// 				cy.verifyTip(summary, "visible", "people in generation X ", "bottom");
-// 			});
-// 		cy.moveMouseToCoordinates(300, 100);
-// 		// cy.verifyTipWithTextInSummaryPanel("people in generation X ", "Values", "hidden");
-// 	});
-// });
+	it("Test if tips show up for the summary table values", function() {
+		cy.hoverOverTextInSummaryPanel("people in generation X ", "Values");
+		cy.getSummaryFromName("Values")
+			.then((summary) => {
+				cy.verifyTip(summary, "visible", "people in generation X ", "bottom");
+			});
+		cy.moveMouseToCoordinates(300, 100);
+		cy.verifyTipWithTextInSummaryPanel("people in generation X ", "Values", "hidden");
+	});
+});
 
 describe("Test if tips show up for summary validation icon when there is an error or warning", function() {
 	beforeEach(() => {
@@ -65,54 +65,54 @@ describe("Test if tips show up for summary validation icon when there is an erro
 	});
 });
 
-// describe("Test if tips show up for textfields in tables when there is overflow", function() {
-// 	beforeEach(() => {
-// 		cy.visit("/");
-// 		cy.toggleCommonPropertiesSidePanel();
-// 		cy.selectPropertiesContainerType("Flyout");
-// 		cy.toggleCommonPropertiesSidePanel();
-// 		cy.openPropertyDefinition("textfield_paramDef.json");
-// 	});
+describe("Test if tips show up for textfields in tables when there is overflow", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.toggleCommonPropertiesSidePanel();
+		cy.selectPropertiesContainerType("Flyout");
+		cy.toggleCommonPropertiesSidePanel();
+		cy.openPropertyDefinition("textfield_paramDef.json");
+	});
 
-// 	it("Test if tips show up for the textfields with ellipsis", function() {
-// 		cy.toggleCategory("Table");
-// 		cy.openSubPanel("Edit textfield table");
-// 		cy.hoverOverControl("string_table_0_1");
-// 		cy.verifyTip(null, "hidden", "Turing");
-// 		cy.verifyTip(null, "hidden", "Hopper123456");
-// 		cy.hoverOverControl("string_table_0_0");
-// 		cy.verifyTip(null, "visible", "Hopper123456");
-// 		cy.saveWideFlyout("Edit textfield table");
-// 	});
-// });
+	it("Test if tips show up for the textfields with ellipsis", function() {
+		cy.toggleCategory("Table");
+		cy.openSubPanel("Edit textfield table");
+		cy.hoverOverControl("string_table_0_1");
+		cy.verifyTip(null, "hidden", "Turing");
+		cy.verifyTip(null, "hidden", "Hopper123456");
+		cy.hoverOverControl("string_table_0_0");
+		cy.verifyTip(null, "visible", "Hopper123456");
+		cy.saveWideFlyout("Edit textfield table");
+	});
+});
 
-// describe("Test if tips show up in table headers correctly", function() {
-// 	beforeEach(() => {
-// 		cy.visit("/");
-// 		cy.toggleCommonPropertiesSidePanel();
-// 		cy.selectPropertiesContainerType("Flyout");
-// 		cy.toggleCommonPropertiesSidePanel();
-// 		cy.openPropertyDefinition("Conditions_paramDef.json");
-// 	});
+describe("Test if tips show up in table headers correctly", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.toggleCommonPropertiesSidePanel();
+		cy.selectPropertiesContainerType("Flyout");
+		cy.toggleCommonPropertiesSidePanel();
+		cy.openPropertyDefinition("Conditions_paramDef.json");
+	});
 
-// 	it("Test if tips show when simple header has ellipsis", function() {
-// 		cy.toggleCategory("Table");
-// 		cy.openSubPanel("Configure Rename fields");
-// 		cy.get(".properties-wf-children div[data-id='properties-vt-header-field']")
-// 			.trigger("mouseover");
-// 		cy.verifyTip(null, "hidden", "Input name");
-// 		cy.get(".properties-wf-children div[data-id='properties-vt-header-new_name']")
-// 			.trigger("mouseover");
-// 		cy.verifyTip(null, "visible", "Output name");
-// 		cy.saveWideFlyout("Configure Rename fields");
-// 	});
+	it("Test if tips show when simple header has ellipsis", function() {
+		cy.toggleCategory("Table");
+		cy.openSubPanel("Configure Rename fields");
+		cy.get(".properties-wf-children div[data-id='properties-vt-header-field']")
+			.trigger("mouseover");
+		cy.verifyTip(null, "hidden", "Input name");
+		cy.get(".properties-wf-children div[data-id='properties-vt-header-new_name']")
+			.trigger("mouseover");
+		cy.verifyTip(null, "visible", "Output name");
+		cy.saveWideFlyout("Configure Rename fields");
+	});
 
-// 	it("Test if tips show when checkbox in header has ellipsis", function() {
-// 		cy.toggleCategory("More Tables");
-// 		cy.openSubPanel("Configure Dummy Types");
-// 		cy.get(".properties-wf-children div[data-id='properties-vt-header-override']")
-// 			.trigger("mouseover");
-// 		cy.verifyTip(null, "visible", "Override");
-// 		cy.saveWideFlyout("Configure Dummy Types");
-// 	});
-// });
+	it("Test if tips show when checkbox in header has ellipsis", function() {
+		cy.toggleCategory("More Tables");
+		cy.openSubPanel("Configure Dummy Types");
+		cy.get(".properties-wf-children div[data-id='properties-vt-header-override']")
+			.trigger("mouseover");
+		cy.verifyTip(null, "visible", "Override");
+		cy.saveWideFlyout("Configure Dummy Types");
+	});
+});

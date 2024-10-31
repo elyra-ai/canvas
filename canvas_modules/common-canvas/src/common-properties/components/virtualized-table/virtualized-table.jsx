@@ -376,7 +376,7 @@ class VirtualizedTable extends React.Component {
 	// Responsible for rendering a table row given an array of columns.
 	rowRenderer(scrollKey, { className, columns, index, key, rowData, style }) {
 		let selectOption = "";
-		let trashOption = "";
+		let deleteOption = "";
 		let selectedRow = false;
 		const rowDisabled = typeof rowData.disabled === "boolean" ? rowData.disabled : false;
 
@@ -416,7 +416,7 @@ class VirtualizedTable extends React.Component {
 					/>
 				</div>);
 			} else {
-				trashOption = (
+				deleteOption = (
 					<Button
 						kind="ghost"
 						size="sm"
@@ -466,7 +466,7 @@ class VirtualizedTable extends React.Component {
 			>
 				{selectOption}
 				{columns}
-				{trashOption}
+				{deleteOption}
 			</div>
 		</div>);
 	}
