@@ -24,9 +24,9 @@
 	background-clip: padding-box;
 	border: 0;
 	outline: none;
-	-moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-	-webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-	box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: $spacing-01 $spacing-01 $spacing-01 rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: $spacing-01 $spacing-01 $spacing-01 rgba(0, 0, 0, 0.2);
+	box-shadow: $spacing-01 $spacing-01 $spacing-01 rgba(0, 0, 0, 0.2);
 	position: absolute;
 
 	// For cascaded sub-menu
@@ -73,7 +73,7 @@
 	& svg {
 		color: $text-primary;
 		position: absolute;
-		right: 12px;
+		right: $spacing-04;
 	}
 }
 

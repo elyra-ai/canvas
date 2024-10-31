@@ -95,7 +95,7 @@ class EditorForm extends React.Component {
 			const activeTabId = this.props.activeTab;
 			const activeTabElement = document.getElementsByClassName(`${activeTabId}`);
 			if (activeTabId && activeTabElement.length > 0) {
-				activeTabElement[0].scrollIntoView({ behavior: "smooth" });
+				activeTabElement[0].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
 			}
 			this.scrollToAlert = false;
 		}

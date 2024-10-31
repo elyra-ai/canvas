@@ -718,12 +718,30 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enablePaletteHeader = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedPaletteHeader" // Set ID to corresponding field in App.js state
+				labelText="Enable Palette Header"
+				toggled={this.props.getStateValue("selectedPaletteHeader")}
+				onToggle={(val) => this.setStateValue(val, "selectedPaletteHeader")}
+			/>
+		</div>);
+
 		var enableAutoLinkOnlyFromSelNodes = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedAutoLinkOnlyFromSelNodes" // Set ID to corresponding field in App.js state
 				labelText="Enable Auto Link Only From Selected Nodes"
 				toggled={this.props.getStateValue("selectedAutoLinkOnlyFromSelNodes")}
 				onToggle={(val) => this.setStateValue(val, "selectedAutoLinkOnlyFromSelNodes")}
+			/>
+		</div>);
+
+		var enableKeyboardNavigation = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedKeyboardNavigation" // Set ID to corresponding field in App.js state
+				labelText="Enable Keyboard Navigation"
+				toggled={this.props.getStateValue("selectedKeyboardNavigation")}
+				onToggle={(val) => this.setStateValue(val, "selectedKeyboardNavigation")}
 			/>
 		</div>);
 
@@ -1644,6 +1662,8 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{paletteLayout}
 					{divider}
+					{enablePaletteHeader}
+					{divider}
 					{enableAutoLinkOnlyFromSelNodes}
 					{divider}
 					<div className="harness-side-panel-header">Nodes</div>
@@ -1759,6 +1779,8 @@ export default class SidePanelForms extends React.Component {
 					{enableCanvasUnderlay}
 					{divider}
 					<div className="harness-side-panel-header">Operational</div>
+					{divider}
+					{enableKeyboardNavigation}
 					{divider}
 					{enableImageDisplay}
 					{divider}

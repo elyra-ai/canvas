@@ -66,7 +66,8 @@ class PropertiesMain extends React.Component {
 			buttonIconHandler: props.callbacks.buttonIconHandler,
 			validationHandler: props.callbacks.validationHandler,
 			titleChangeHandler: props.callbacks.titleChangeHandler,
-			tooltipLinkHandler: props.callbacks.tooltipLinkHandler
+			tooltipLinkHandler: props.callbacks.tooltipLinkHandler,
+			propertyIconHandler: props.callbacks.propertyIconHandler,
 		});
 		this.setForm(props.propertiesInfo, false);
 		this.previousErrorMessages = {};
@@ -570,18 +571,24 @@ class PropertiesMain extends React.Component {
 					{editorForm}
 				</PropertiesModal>);
 			}
+
+			let propertiesSizeClassname = `properties-${this.state.editorSize}`;
+
+			const overrideSize = this._getOverrideSize();
+			let overrideStyle = null;
+			if (overrideSize !== null) {
+				// Add custom classname when custom editor size is set
+				propertiesSizeClassname = "properties-custom-size";
+				overrideStyle = { width: overrideSize + "px" };
+			}
+
 			const className = classNames("properties-wrapper",
 				{
 					"properties-right-flyout": this.props.propertiesConfig.rightFlyout,
 					"properties-light-enabled": this.props.light,
 					"properties-light-disabled": !this.props.light
 				},
-				`properties-${this.state.editorSize}`);
-			const overrideSize = this._getOverrideSize();
-			let overrideStyle = null;
-			if (overrideSize !== null) {
-				overrideStyle = { width: overrideSize + "px" };
-			}
+				propertiesSizeClassname);
 			return (
 				<Provider store={this.propertiesController.getStore()}>
 					<aside
@@ -644,7 +651,8 @@ PropertiesMain.propTypes = {
 		validationHandler: PropTypes.func,
 		titleChangeHandler: PropTypes.func,
 		propertiesActionLabelHandler: PropTypes.func,
-		tooltipLinkHandler: PropTypes.func
+		tooltipLinkHandler: PropTypes.func,
+		propertyIconHandler: PropTypes.func,
 	}),
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls

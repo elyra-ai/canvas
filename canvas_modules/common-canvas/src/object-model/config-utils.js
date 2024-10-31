@@ -69,6 +69,7 @@ export default class ConfigUtils {
 			enableDragWithoutSelect: false,
 			enableInternalObjectModel: true,
 			enablePaletteLayout: PALETTE_LAYOUT_FLYOUT,
+			enablePaletteHeader: null,
 			enableToolbarLayout: "Top",
 			enableImageDisplay: "SVGInline",
 			enableResizableNodes: false,
@@ -88,6 +89,7 @@ export default class ConfigUtils {
 			enableBrowserEditMenu: true,
 			enableMarkdownInComments: false,
 			enableWYSIWYGComments: false,
+			enableKeyboardNavigation: false,
 			enableAutoLinkOnlyFromSelNodes: false,
 			enableContextToolbar: false,
 			enableSaveZoom: "None",
@@ -99,6 +101,7 @@ export default class ConfigUtils {
 			enableSingleOutputPortDisplay: false,
 			enableNarrowPalette: true,
 			schemaValidation: false,
+			enableFocusOnMount: true,
 			enableBoundingRectangles: false, // Not documented
 			enableCanvasUnderlay: "None", // Not documented
 			enableParentClass: "", // Not documented
@@ -176,7 +179,13 @@ export default class ConfigUtils {
 	// decide which require a full refresh of the canvas and only compare those
 	// fields rather than omitting certain fields.
 	static omitFields(config) {
-		return omit(config, ["enableEditingActions", "enableDropZoneOnExternalDrag", "enableStateTag"]);
+		return omit(config, [
+			"enableEditingActions",
+			"enableDropZoneOnExternalDrag",
+			"enableStateTag",
+			"enablePaletteHeader",
+			"enableKeyboardNavigation"
+		]);
 	}
 
 	// Returns true if the contents of enablePositionNode1 and enablePositionNode2 are

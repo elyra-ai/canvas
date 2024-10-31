@@ -275,7 +275,7 @@ class ToolbarButtonItem extends React.Component {
 			}
 			const path = this.props.size === "sm" ? "M 29 29 L 29 23 23 29 Z" : "M 37 37 L 37 30 30 37 Z";
 			return (
-				<svg className="toolbar-tick-svg">
+				<svg className="toolbar-tick-svg" aria-hidden="true">
 					<path d={path} className="toolbar-tick-mark" />
 				</svg>
 			);
@@ -316,7 +316,7 @@ class ToolbarButtonItem extends React.Component {
 			const direction = this.props.tooltipDirection ? this.props.tooltipDirection : "bottom";
 
 			return (
-				<Tooltip id={tooltipId} tip={tip} disable={!enableTooltip} className="icon-tooltip" direction={direction}>
+				<Tooltip id={tooltipId} tip={tip} disable={!enableTooltip} className="icon-tooltip" direction={direction} hoverable>
 					{content}
 				</Tooltip>
 			);

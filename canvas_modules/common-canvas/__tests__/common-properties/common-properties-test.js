@@ -25,19 +25,21 @@ import { expect } from "chai";
 import sinon from "sinon";
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 import expressionTestResource from "../test_resources/json/expression-one-category.json";
-
 import numberfieldResource from "../test_resources/paramDefs/numberfield_paramDef.json";
 import textfieldResource from "../test_resources/paramDefs/textfield_paramDef.json";
 import textAreaResource from "../test_resources/paramDefs/textarea_paramDef.json";
 import emptyParamDef from "../test_resources/paramDefs/empty_paramDef.json";
+import oneofselectParamDef from "../test_resources/paramDefs/oneofselect_paramDef.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
 import structureEditorParamDef from "../test_resources/paramDefs/structureeditor_paramDef.json";
 import { IntlProvider } from "react-intl";
+import { AiGenerate, Password } from "@carbon/icons-react";
 
 import { CARBON_MODAL_SIZE_XSMALL, CARBON_MODAL_SIZE_SMALL, CARBON_MODAL_SIZE_LARGE } from "./../../src/common-properties/constants/constants";
 
 const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
+const propertyIconHandler = sinon.spy();
 
 const locale = "en";
 const localMessages = {
@@ -127,7 +129,8 @@ propertiesInfo.messages = [
 
 const callbacks = {
 	applyPropertyChanges: applyPropertyChanges,
-	closePropertiesDialog: closePropertiesDialog
+	closePropertiesDialog: closePropertiesDialog,
+	propertyIconHandler: propertyIconHandler
 };
 
 describe("CommonProperties renders correctly", () => {
@@ -289,6 +292,63 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(updatedResizeBtn.props()).to.have.property("aria-label", "Contract");
 	});
 
+	it("When iconSwitch=false no icon should be rendered in oneofselect dropdown menu", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef); // default is iconSwitch=false
+		wrapper = renderedObject.wrapper;
+		const customIcon = wrapper.find("svg.custom-icon");
+		expect(customIcon.exists()).to.be.false;
+	});
+
+	it("When iconSwitch=true icon should be rendered in oneofselect dropdown menu", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef, { iconSwitch: true },
+			{
+				propertyIconHandler: (data, callbackIcon) => {
+					callbackIcon(<Password className="custom-icon" />);
+				}
+			});
+		wrapper = renderedObject.wrapper;
+		wrapper.update();
+		const customIcon = wrapper.find("svg.custom-icon");
+		expect(customIcon.exists()).to.be.true;
+	});
+
+	it("Should render the correct icon for a specific propertyId", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef, { iconSwitch: true }, {
+			propertyIconHandler: (data, callbackIcon) => {
+				if (data.propertyId.name === "oneofselect") {
+					callbackIcon(<Password className="custom-icon-1" />);
+				} else if (data.propertyId === "") {
+					callbackIcon(<AiGenerate className="custom-icon-2" />);
+				}
+			}
+		});
+		wrapper = renderedObject.wrapper;
+		wrapper.update();
+		const customIcon1 = wrapper.find("svg.custom-icon-1");
+		expect(customIcon1.exists()).to.be.true;
+		const customIcon2 = wrapper.find("svg.custom-icon-2");
+		expect(customIcon2.exists()).to.be.false;
+	});
+
+	it("Should render the correct icon for a specific enum value", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef, { iconSwitch: true }, {
+			propertyIconHandler: (data, callbackIcon) => {
+				if (data.enumValue === "blue") {
+					callbackIcon(<Password className="custom-icon-1" />);
+				} else if (data.propertyId === "") {
+					callbackIcon(<AiGenerate className="custom-icon-2" />);
+				}
+			}
+		});
+		wrapper = renderedObject.wrapper;
+		wrapper.update();
+		const customIcon1 = wrapper.find("svg.custom-icon-1");
+		expect(customIcon1.exists()).to.be.true;
+		const customIcon2 = wrapper.find("svg.custom-icon-2");
+		expect(customIcon2.exists()).to.be.false;
+	});
+
+
 	it("When enableResize=true resize button should be rendered", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { enableResize: true });
 		wrapper = renderedObject.wrapper;
@@ -338,17 +398,14 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(1);
-		expect(wrapper.find("aside.properties-small")).to.have.length(1);
-		expect(wrapper.find("aside.properties-medium")).to.have.length(0);
-		expect(wrapper.find("aside.properties-small").get(0).props.style).to.have.property("width", "400px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "400px");
 		resizeBtn.simulate("click");
-		expect(wrapper.find("aside.properties-small")).to.have.length(0);
-		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
-		expect(wrapper.find("aside.properties-medium").get(0).props.style).to.have.property("width", "800px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "800px");
 		resizeBtn.simulate("click");
-		expect(wrapper.find("aside.properties-small")).to.have.length(1);
-		expect(wrapper.find("aside.properties-medium")).to.have.length(0);
-		expect(wrapper.find("aside.properties-small").get(0).props.style).to.have.property("width", "400px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "400px");
 	});
 
 	it("When enableResize=true and editor_size=medium and pixel_width min and max are set resize button should be rendered", () => {
@@ -359,17 +416,14 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(1);
-		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
-		expect(wrapper.find("aside.properties-large")).to.have.length(0);
-		expect(wrapper.find("aside.properties-medium").get(0).props.style).to.have.property("width", "400px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "400px");
 		resizeBtn.simulate("click");
-		expect(wrapper.find("aside.properties-medium")).to.have.length(0);
-		expect(wrapper.find("aside.properties-large")).to.have.length(1);
-		expect(wrapper.find("aside.properties-large").get(0).props.style).to.have.property("width", "800px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "800px");
 		resizeBtn.simulate("click");
-		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
-		expect(wrapper.find("aside.properties-large")).to.have.length(0);
-		expect(wrapper.find("aside.properties-medium").get(0).props.style).to.have.property("width", "400px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "400px");
 	});
 
 	it("When enableResize=true and editor_size=large and pixel_width min and max are set resize button should be rendered", () => {
@@ -380,17 +434,14 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(1);
-		expect(wrapper.find("aside.properties-large")).to.have.length(1);
-		expect(wrapper.find("aside.properties-max")).to.have.length(0);
-		expect(wrapper.find("aside.properties-large").get(0).props.style).to.have.property("width", "400px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "400px");
 		resizeBtn.simulate("click");
-		expect(wrapper.find("aside.properties-large")).to.have.length(0);
-		expect(wrapper.find("aside.properties-max")).to.have.length(1);
-		expect(wrapper.find("aside.properties-max").get(0).props.style).to.have.property("width", "800px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "800px");
 		resizeBtn.simulate("click");
-		expect(wrapper.find("aside.properties-large")).to.have.length(1);
-		expect(wrapper.find("aside.properties-max")).to.have.length(0);
-		expect(wrapper.find("aside.properties-large").get(0).props.style).to.have.property("width", "400px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "400px");
 	});
 
 	it("When enableResize=true and editor_size=small and pixel_width min and max are the same the resize button should not be rendered", () => {
@@ -401,8 +452,8 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(0);
-		expect(wrapper.find("aside.properties-small")).to.have.length(1);
-		expect(wrapper.find("aside.properties-small").get(0).props.style).to.have.property("width", "800px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "800px");
 	});
 
 	it("When enableResize=true and editor_size=medium and pixel_width min and max are the same the resize button should not be rendered", () => {
@@ -413,8 +464,8 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(0);
-		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
-		expect(wrapper.find("aside.properties-medium").get(0).props.style).to.have.property("width", "800px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "800px");
 	});
 
 	it("When enableResize=true and editor_size=large and pixel_width min and max are the same the resize button should not be rendered", () => {
@@ -425,8 +476,8 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(0);
-		expect(wrapper.find("aside.properties-large")).to.have.length(1);
-		expect(wrapper.find("aside.properties-large").get(0).props.style).to.have.property("width", "800px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "800px");
 	});
 
 	it("When enableResize=true and editor_size=max and pixel_width is ommited the resize button should not be rendered", () => {
@@ -447,8 +498,8 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(0);
-		expect(wrapper.find("aside.properties-max")).to.have.length(1);
-		expect(wrapper.find("aside.properties-max").get(0).props.style).to.have.property("width", "1000px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "1000px");
 	});
 
 	it("When enableResize=true and editor_size is omitted and pixel_width min and max are the same the resize button should not be rendered", () => {
@@ -458,8 +509,8 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper = renderedObject.wrapper;
 		const resizeBtn = wrapper.find("button.properties-btn-resize");
 		expect(resizeBtn).to.have.length(0);
-		expect(wrapper.find("aside.properties-small")).to.have.length(1);
-		expect(wrapper.find("aside.properties-small").get(0).props.style).to.have.property("width", "800px");
+		expect(wrapper.find("aside.properties-custom-size")).to.have.length(1);
+		expect(wrapper.find("aside.properties-custom-size").get(0).props.style).to.have.property("width", "800px");
 	});
 
 	it("When no groups or parameters are defined the flyout should still render", () => {

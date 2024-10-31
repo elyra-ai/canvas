@@ -15,7 +15,7 @@
  */
 
 $properties-wf-title-height: 41px;
-$properties-modal-buttons-height: 64px;
+$properties-modal-buttons-height: $spacing-10;
 
 .properties-wf-overlay {
 	position: fixed;

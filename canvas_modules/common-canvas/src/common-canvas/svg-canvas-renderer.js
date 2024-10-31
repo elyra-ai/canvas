@@ -48,6 +48,7 @@ import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
+import KeyboardUtils from "./keyboard-utils.js";
 import SvgCanvasDisplay from "./svg-canvas-utils-display.js";
 import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import SvgCanvasComments from "./svg-canvas-utils-comments.js";
@@ -1597,6 +1598,7 @@ export default class SVGCanvasRenderer {
 			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 			.attr("class", (d) => this.getNodeGroupClass(d))
 			.attr("style", (d) => this.getNodeGrpStyle(d))
+			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 			.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps, data));
 	}
 
@@ -1986,6 +1988,31 @@ export default class SVGCanvasRenderer {
 	// Attaches the appropriate listeners to the node groups.
 	attachNodeGroupListeners(nodeGrps) {
 		nodeGrps
+			.on("keydown", (d3Event, d) => {
+				if (this.config.enableKeyboardNavigation) {
+					if (KeyboardUtils.nextObjectInGroup(d3Event)) {
+						const linkInfos = this.activePipeline.getNextLinksFromNode(d);
+						if (linkInfos.length > 0) {
+							const linkInfosAll = this.activePipeline.getAllLinksForNode(d);
+							linkInfosAll.forEach((li) => (li.link.navObject = d));
+							this.moveFocusTo({ obj: linkInfos[0].link, type: "link" }, d3Event);
+						}
+
+					} else if (KeyboardUtils.previousObjectInGroup(d3Event)) {
+						const linkInfos = this.activePipeline.getPreviousLinksToNode(d);
+						if (linkInfos.length > 0) {
+							const linkInfosAll = this.activePipeline.getAllLinksForNode(d);
+							linkInfosAll.forEach((li) => (li.link.navObject = d));
+							this.moveFocusTo({ obj: linkInfos[0].link, type: "link" }, d3Event);
+						}
+
+					} else if (KeyboardUtils.selectObject(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObjectD3Event(d3Event, d); // This method will check if ctrl/cmnd is pressed
+
+					}
+				}
+			})
 			.on("mouseenter", (d3Event, d) => {
 				if (this.isDragging()) {
 					return;
@@ -2038,6 +2065,9 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (!this.config.enableDragWithoutSelect) {
+					if (this.config.enableKeyboardNavigation) {
+						this.activePipeline.setTabGroupIndexForObj(d);
+					}
 					this.selectObjectD3Event(d3Event, d, "node");
 				}
 				this.logger.logEndTimer("Node Group - mouse down");
@@ -2327,7 +2357,7 @@ export default class SVGCanvasRenderer {
 			d,
 			d3Event.type,
 			d3Event.shiftKey,
-			CanvasUtils.isCmndCtrlPressed(d3Event));
+			KeyboardUtils.isCmndCtrlPressed(d3Event));
 		// If the selection has changed we need to recreate any currently displayed
 		// context toolbar because the context actions may have changed based on
 		// the new selection.
@@ -2341,7 +2371,7 @@ export default class SVGCanvasRenderer {
 			d,
 			d3Event.type,
 			d3Event.sourceEvent.shiftKey,
-			CanvasUtils.isCmndCtrlPressed(d3Event.sourceEvent));
+			KeyboardUtils.isCmndCtrlPressed(d3Event.sourceEvent));
 	}
 
 	// Performs required action for when either a comment, node or link is selected.
@@ -3699,6 +3729,7 @@ export default class SVGCanvasRenderer {
 				(enter) => this.createComments(enter)
 			)
 			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
+			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 			.attr("class", (c) => this.getCommentGroupClass(c))
 			.call((joinedCommentGrps) => this.updateComments(joinedCommentGrps));
 	}
@@ -3736,6 +3767,18 @@ export default class SVGCanvasRenderer {
 			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
 			.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea))
 			.attr("class", "d3-comment-sizing");
+
+		// Comment Focus Outline
+		joinedCommentGrps
+			.selectChildren(".d3-focus-path")
+			.data((d) => ([d]), (d) => d.id)
+			.join(
+				(enter) => null // Focus outline is created when focus is moved to the comment (in moveFocusTo)
+			)
+			.attr("x", -this.canvasLayout.commentSizingArea)
+			.attr("y", -this.canvasLayout.commentSizingArea)
+			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
+			.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
 
 		// Comment Selection Highlighting Outline
 		joinedCommentGrps
@@ -3816,6 +3859,24 @@ export default class SVGCanvasRenderer {
 	// Attaches the appropriate listeners to the comment groups.
 	attachCommentGroupListeners(commentGrps) {
 		commentGrps
+			.on("keydown", (d3Event, d) => {
+				if (this.config.enableKeyboardNavigation) {
+					if (this.svgCanvasTextArea.isEditingText()) {
+						return;
+					}
+					if (KeyboardUtils.nextObjectInGroup(d3Event)) {
+						const linkInfos = this.activePipeline.getNextLinksFromComment(d);
+						if (linkInfos.length > 0) {
+							linkInfos.forEach((li) => (li.link.navObject = d));
+							this.moveFocusTo({ obj: linkInfos[0].link, type: "link" }, d3Event);
+						}
+
+					} else if (KeyboardUtils.selectObject(d3Event)) {
+						this.selectObjectD3Event(d3Event, d); // This method will check if ctrl/cmnd is pressed
+
+					}
+				}
+			})
 			.on("mouseenter", (d3Event, d) => {
 				if (this.isDragging()) {
 					return;
@@ -3849,6 +3910,9 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (!this.config.enableDragWithoutSelect) {
+					if (this.config.enableKeyboardNavigation) {
+						this.activePipeline.setTabGroupIndexForObj(d);
+					}
 					this.selectObjectD3Event(d3Event, d, "comment");
 				}
 				this.logger.logEndTimer("Comment Group - mouse down");
@@ -4088,6 +4152,7 @@ export default class SVGCanvasRenderer {
 				(enter) => this.createLinks(enter)
 			)
 			.attr("class", (d) => this.getLinkGroupClass(d))
+			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 			.attr("style", (d) => this.getLinkGrpStyle(d))
 			.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? true : null))
 			.call((joinedLinkGrps) => {
@@ -4099,7 +4164,8 @@ export default class SVGCanvasRenderer {
 	createLinks(enter) {
 		this.logger.logStartTimer("createLinks");
 		// Add groups for links
-		const newLinkGrps = enter.append("g")
+		const newLinkGrps = enter
+			.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.call(this.attachLinkGroupListeners.bind(this));
 
@@ -4206,12 +4272,72 @@ export default class SVGCanvasRenderer {
 
 	attachLinkGroupListeners(linkGrps) {
 		linkGrps
+			.on("keydown", (d3Event, d) => {
+				if (this.config.enableKeyboardNavigation) {
+					if (KeyboardUtils.nextObjectInGroup(d3Event)) {
+						if (d.type === NODE_LINK) {
+							const node = this.activePipeline.getNextNodeFromDataLink(d);
+							if (node) {
+								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
+							}
+
+						} else if (d.type === ASSOCIATION_LINK) {
+							const node = this.activePipeline.getNextNodeFromAssocLink(d);
+							if (node) {
+								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
+							}
+
+						} else if (d.type === COMMENT_LINK) {
+							const obj = this.activePipeline.getNextObjectFromCommentLink(d);
+							if (obj) {
+								const type = CanvasUtils.isNode(obj) ? "node" : "comment";
+								this.moveFocusTo({ obj, type }, d3Event);
+							}
+						}
+
+					} else if (KeyboardUtils.previousObjectInGroup(d3Event)) {
+						if (d.type === NODE_LINK) {
+							const node = this.activePipeline.getPreviousNodeFromDataLink(d);
+							if (node) {
+								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
+							}
+
+						} else if (d.type === ASSOCIATION_LINK) {
+							const node = this.activePipeline.getPreviousNodeFromAssocLink(d);
+							if (node) {
+								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
+							}
+
+						} else if (d.type === COMMENT_LINK) {
+							const obj = this.activePipeline.getPreviousObjectFromCommentLink(d);
+							if (obj) {
+								const type = CanvasUtils.isNode(obj) ? "node" : "comment";
+								this.moveFocusTo({ obj, type }, d3Event);
+							}
+						}
+
+					} else if (KeyboardUtils.selectObject(d3Event)) {
+						this.selectObjectD3Event(d3Event, d); // This method will check if ctrl/cmnd is pressed
+
+					} else if (KeyboardUtils.nextSiblingLink(d3Event)) {
+						const link = this.activePipeline.getNextSiblingLink(d);
+						this.moveFocusTo({ obj: link, type: "link" }, d3Event);
+
+					} else if (KeyboardUtils.previousSiblingLink(d3Event)) {
+						const link = this.activePipeline.getPreviousSiblingLink(d);
+						this.moveFocusTo({ obj: link, type: "link" }, d3Event);
+					}
+				}
+			})
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.svgCanvasTextArea.isEditingText()) {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+					if (this.config.enableKeyboardNavigation) {
+						this.activePipeline.setTabGroupIndexForObj(d);
+					}
 					this.selectObjectD3Event(d3Event, d, "link");
 				}
 				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
@@ -5040,7 +5166,7 @@ export default class SVGCanvasRenderer {
 	// Updates the data links for all the nodes with two optional fields
 	// (called srcFreeformInfo and trgFreeformInfo) based on the location of the
 	// nodes the links go from and to. The info in these fields is used to
-	// calculate the starting and ending position of freeform line links.
+	// calculate the starting and ending position of freeform link lines.
 	// This ensures that input and output links that go in a certain direction
 	// (NORTH, SOUTH, EAST or WEST) are grouped together so they can be
 	// separated out when freeform lines are drawn between nodes.
@@ -5063,13 +5189,13 @@ export default class SVGCanvasRenderer {
 				// Self-referencing link
 				if (node.id === link.srcObj?.id &&
 						link.srcObj?.id === link.trgNode?.id) {
-					linksInfo[NORTH].push({ type: "in", endNode: link.srcObj, link });
-					linksInfo[EAST].push({ type: "out", endNode: link.trgNode, link });
+					linksInfo[NORTH].push({ type: "in", startNode: link.srcObj, endNode: link.trgNode, link });
+					linksInfo[EAST].push({ type: "out", startNode: link.srcObj, endNode: link.trgNode, link });
 
 				} else if (link.trgNode && link.trgNode.id === node.id) {
 					if (link.srcObj) {
-						const dir = this.getDirAdjusted(link.trgNode, link.srcObj);
-						linksInfo[dir].push({ type: "in", endNode: link.srcObj, link });
+						const dir = this.getDirToNode(link.trgNode, link.srcObj);
+						linksInfo[dir].push({ type: "in", startNode: link.trgNode, endNode: link.srcObj, link });
 
 					} else if (link.srcPos) {
 						const dir = this.getDirToEndPos(link.trgNode, link.srcPos.x_pos, link.srcPos.y_pos);
@@ -5078,8 +5204,8 @@ export default class SVGCanvasRenderer {
 
 				} else if (link.srcObj && link.srcObj.id === node.id) {
 					if (link.trgNode) {
-						const dir = this.getDirAdjusted(link.srcObj, link.trgNode);
-						linksInfo[dir].push({ type: "out", endNode: link.trgNode, link });
+						const dir = this.getDirToNode(link.srcObj, link.trgNode);
+						linksInfo[dir].push({ type: "out", startNode: link.srcObj, endNode: link.trgNode, link });
 
 					} else if (link.trgPos) {
 						const dir = this.getDirToEndPos(link.srcObj, link.trgPos.x_pos, link.trgPos.y_pos);
@@ -5089,40 +5215,20 @@ export default class SVGCanvasRenderer {
 			}
 		});
 
-		linksInfo.n = this.sortLinksInfo(linksInfo.n, NORTH);
-		linksInfo.s = this.sortLinksInfo(linksInfo.s, SOUTH);
-		linksInfo.e = this.sortLinksInfo(linksInfo.e, EAST);
-		linksInfo.w = this.sortLinksInfo(linksInfo.w, WEST);
+		const startCenter = {
+			x: node.x_pos + node.width / 2,
+			y: node.y_pos + node.height / 2
+		};
+
+		linksInfo.n = this.sortLinksInfo(linksInfo.n, NORTH, startCenter);
+		linksInfo.s = this.sortLinksInfo(linksInfo.s, SOUTH, startCenter);
+		linksInfo.e = this.sortLinksInfo(linksInfo.e, EAST, startCenter);
+		linksInfo.w = this.sortLinksInfo(linksInfo.w, WEST, startCenter);
 
 		this.updateLinksInfo(linksInfo.n, NORTH);
 		this.updateLinksInfo(linksInfo.s, SOUTH);
 		this.updateLinksInfo(linksInfo.e, EAST);
 		this.updateLinksInfo(linksInfo.w, WEST);
-	}
-
-	// Returns the direction of a link from the start node to the end node
-	// as either NORTH, SOUTH, EAST or WEST. Some direction combinations
-	// have to be overriden to prevent link lines overlapping.
-	getDirAdjusted(startNode, endNode) {
-		let dir = this.getDirToNode(startNode, endNode);
-
-		// When start -> end is SOUTH and end -> start is WEST the returned direction
-		// becomes EAST instead of SOUTH to prevent link lines overlapping.
-		if (dir === SOUTH) {
-			const dir2 = this.getDirToNode(endNode, startNode);
-			if (dir2 === WEST) {
-				dir = EAST;
-			}
-
-		// When start -> end is NORTH and end -> start is EAST the returned direction
-		// becomes WEST instead of NORTH to prevent link lines overlapping.
-		} else if (dir === NORTH) {
-			const dir2 = this.getDirToNode(endNode, startNode);
-			if (dir2 === EAST) {
-				dir = WEST;
-			}
-		}
-		return dir;
 	}
 
 	// Returns the direction (NORTH, SOUTH, EAST or WEST) from the start node
@@ -5148,10 +5254,13 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns the linksDirArray passed in with the linkInfo objects in the
-	// array ordered by the position of the end of each link line, depending on
-	// the direction (dir) of the lines. This is achieved by spliting the links
-	// into groups where links in the same group go to/from the same node.
-	sortLinksInfo(linksDirArrayIn, dir) {
+	// array ordered by the angle that each link makes with the center of the
+	// start node. When handling multiple links that go to the same node
+	// the links have to be grouped where links in the same group go to/from
+	// the same node. For groups, the x and y are *projected* corrdinates to
+	// allow us to calculate the angles and ordering etc. The actual x and y
+	// for the links is calculated in getAttachedLinkObj and getDetachedLinkObj.
+	sortLinksInfo(linksDirArrayIn, dir, startCenter) {
 		let linksDirArray = linksDirArrayIn;
 		if (linksDirArray.length > 1) {
 			const groups = this.getLinkInfoGroups(linksDirArray);
@@ -5168,23 +5277,72 @@ export default class SVGCanvasRenderer {
 						li.x = this.nodeUtils.getNodeCenterPosX(node);
 						li.y = node.y_pos + ((node.height / parts) * (i + 1));
 					}
+					// Special case where links that go SOUTH from the node and
+					// point to the WEST of the end node, get crossed over each other.
+					// In this case the x coordinates of the link items need to be
+					// reversed.
+					if (dir === SOUTH) {
+						const reverseDir = this.getDirToNode(li.endNode, li.startNode);
+						if (reverseDir === WEST) {
+							li.x = node.x_pos + ((node.width / parts) * (group.length - i));
+						}
+					}
+					// Special case where links that go NORTH from the node and
+					// point to the EAST of the end node, get crossed over each other.
+					// In this case the x coordinates of the link items need to be
+					// reversed.
+					if (dir === NORTH) {
+						const reverseDir = this.getDirToNode(li.endNode, li.startNode);
+						if (reverseDir === EAST) {
+							li.x = node.x_pos + ((node.width / parts) * (group.length - i));
+						}
+					}
 				});
 			});
 
-			// For NORTH and SOUTH links we sort linksDirArray by the x coordinate
-			// of the end of each link. For EAST and WEST we sort by the y
-			// coordinate.
-			if (dir === NORTH || dir === SOUTH) {
-				linksDirArray = linksDirArray.sort((a, b) => (a.x > b.x ? 1 : -1));
+			// Set an angle for each linkDir so that they can be sorted so they do not
+			// overlap when being drawn to or from the node. The angle is from the
+			// center of the node we are handling to their projected end point.
+			linksDirArray.forEach((ld) => {
+				ld.angle = CanvasUtils.calculateAngle(startCenter.x, startCenter.y, ld.x, ld.y);
+
+				// Make sure the angles for links on the EAST side of the node are
+				// increasing in the clockwise direction by decrementing the angles from
+				// 270 to 360 by 360 degrees. (This is because calculateAngle returns
+				// positive angles from the 3 o'clock position in clockwise direction.)
+				if (dir === EAST && ld.angle >= 270) {
+					ld.angle -= 360;
+				}
+
+				// For self-referencing links we overwrite the angle to ensure that
+				// the outward direction (EAST) is always drawn at the top of any
+				// EAST links and the inward direction (NORTH) is always drawn to
+				// the right of any NORTH links.
+				if (ld.startNode && ld.endNode && ld.startNode === ld.endNode) {
+					if (dir === EAST) {
+						ld.angle = -90;
+					} else if (dir === NORTH) {
+						ld.angle = 360;
+					}
+				}
+			});
+
+			// Sort the linksDirArray by the angle that each link forms with the
+			// center of the start node.
+			if (dir === NORTH || dir === EAST) {
+				linksDirArray = linksDirArray.sort((a, b) => (a.angle > b.angle ? 1 : -1));
 			} else {
-				linksDirArray = linksDirArray.sort((a, b) => (a.y > b.y ? 1 : -1));
+				linksDirArray = linksDirArray.sort((a, b) => (a.angle < b.angle ? 1 : -1));
 			}
 		}
 		return linksDirArray;
 	}
 
-	// Returns a 'groups' object where each field is index by a node ID and
-	// contains an array of linkInfo objects that go to/from the node.
+	// Returns a 'groups' object where each field is indexed by a node ID and
+	// contains an array of linkInfo objects that go to/from the node. Note:
+	// endNode is the target node for link that point away from the node we
+	// are handling and is the source node for links the point to the node
+	// we are handling.
 	getLinkInfoGroups(linksDirArray) {
 		const groups = {};
 		linksDirArray.forEach((li) => {
@@ -5404,5 +5562,65 @@ export default class SVGCanvasRenderer {
 			str += " None";
 		}
 		return str;
+	}
+
+	focusNextTabGroup(evt) {
+		const nextObj = this.activePipeline.getNextTabGroupStartObject();
+		if (nextObj) {
+			this.moveFocusTo(nextObj, evt);
+			return true;
+		}
+		return false;
+	}
+
+	focusPreviousTabGroup(evt) {
+		const previousObj = this.activePipeline.getPreviousTabGroupStartObject();
+		if (previousObj) {
+			this.moveFocusTo(previousObj, evt);
+			return true;
+		}
+		return false;
+	}
+
+	focusSetOutsideCanvas() {
+		this.activePipeline.resetTabbedStatus();
+	}
+
+	moveFocusTo(target, evt) {
+		this.canvasGrp.selectAll(".d3-focus-path").remove();
+
+		let objSel;
+		if (target.type === "node") {
+			objSel = this.getNodeGroupSelectionById(target.obj.id);
+
+			objSel.insert("path", ":first-child")
+				.attr("class", "d3-focus-path")
+				.attr("d", (d) => this.getNodeShapePathSizing(d));
+
+
+		} else if (target.type === "comment") {
+			objSel = this.getCommentGroupSelectionById(target.obj.id);
+
+			objSel.insert("rect", ":first-child")
+				.attr("class", "d3-focus-path")
+				.attr("x", -this.canvasLayout.commentSizingArea)
+				.attr("y", -this.canvasLayout.commentSizingArea)
+				.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
+				.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
+
+		} else if (target.type === "link") {
+			objSel = this.getLinkGroupSelectionById(target.obj.id);
+
+			// TODO - Think of a way to show focus on links other than line thckness
+		}
+		const zoom = this.canvasController.getZoomToReveal([target.obj.id]);
+		if (zoom) {
+			this.zoomTo(zoom);
+		}
+		objSel.node().focus();
+		if (evt) {
+			evt.stopPropagation();
+			evt.preventDefault();
+		}
 	}
 }

@@ -248,16 +248,6 @@ export default class CanvasUtils {
 		return decs;
 	}
 
-	// Returns true if either the Command Key on Mac or Control key on Windows
-	// is pressed. evnt can be either a regular event object OR the
-	// d3event object provided by d3.
-	static isCmndCtrlPressed(evnt) {
-		if (this.isMacintosh()) {
-			return evnt.metaKey;
-		}
-		return evnt.ctrlKey;
-	}
-
 	// Returns whether user platform is Mac.
 	static isMacintosh() {
 		return navigator.platform.indexOf("Mac") > -1;
@@ -362,6 +352,23 @@ export default class CanvasUtils {
 		}
 
 		return { x: startPointX, y: startPointY, originX, originY, dir };
+	}
+
+	// Assisted by WCA@IBM
+	// Latest GenAI contribution: ibm/granite-20b-code-instruct-v2
+	// Returns the angle between two points where the angle
+	// returned is always positive. The angle starts at the 3 o'clock
+	// position which is 0 degrees and increases in a clock-wise
+	// direction.
+	static calculateAngle(x1, y1, x2, y2) {
+		const dx = x2 - x1;
+		const dy = y2 - y1;
+		const angle = Math.atan2(dy, dx);
+		let angleInDegrees = angle * (180 / Math.PI);
+		if (angleInDegrees < 0) {
+			angleInDegrees += 360;
+		}
+		return angleInDegrees;
 	}
 
 	// Returns a direction NORTH, SOUTH, EAST or WEST which is the direction
@@ -1355,12 +1362,13 @@ export default class CanvasUtils {
 		return (luma < 108);
 	}
 
-	// Applies the outlineStyle format to the D3 comment selection passed in,
-	// if one exists, in the formats array passed in.
+	// Applies the outlineStyle format or border-xxx CSS styles to the D3 comment
+	// selection passed in, if one exists, in the formats array passed in.
 	static applyOutlineStyle(commentSel, formats) {
 		if (formats?.length > 0) {
 			formats.forEach((f) => {
-				if (f.type === "outlineStyle") { // Only apply outline style to outer <div>
+				if (f.type === "outlineStyle" ||
+					f.type.startsWith("border")) { // Only apply outline and border style to outer <div>
 					const { field, value } = CanvasUtils.convertFormat(f);
 					commentSel.style(field, value);
 				}
@@ -1368,12 +1376,13 @@ export default class CanvasUtils {
 		}
 	}
 
-	// Applies all formats from the formats array, that are not outlineStyle, to the
-	// D3 comment selection passed in.
+	// Applies all formats from the formats array, that are not outlineStyle or
+	// border-xxx CSS styles, to the D3 comment selection passed in.
 	static applyNonOutlineStyle(commentSel, formats) {
 		if (formats?.length > 0) {
 			formats.forEach((f) => {
-				if (f.type !== "outlineStyle") { // Only apply outline style to outer <div>
+				if (f.type !== "outlineStyle" &&
+					!f.type.startsWith("border")) { // Only apply outline and border style to outer <div>
 					const { field, value } = CanvasUtils.convertFormat(f);
 					commentSel.style(field, value);
 				}
@@ -1495,9 +1504,9 @@ export default class CanvasUtils {
 			switch (format.value) {
 			default:
 			case "outline-solid":
-				return { field: "border-width", value: "1px" };
+				return { field: "border-style", value: "solid" };
 			case "outline-none":
-				return { field: "border-width", value: "0" };
+				return { field: "border-style", value: "none" };
 			}
 		}
 
