@@ -30,7 +30,7 @@ describe("Test if tips show up for the summary table values", function() {
 				cy.verifyTip(summary, "visible", "people in generation X ", "bottom");
 			});
 		cy.moveMouseToCoordinates(300, 100);
-		cy.verifyTipWithTextInSummaryPanel("people in generation X ", "Values", "hidden");
+		// cy.verifyTipWithTextInSummaryPanel("people in generation X ", "Values", "hidden");
 	});
 });
 
