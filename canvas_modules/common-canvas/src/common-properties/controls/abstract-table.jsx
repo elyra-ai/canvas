@@ -706,7 +706,8 @@ export default class AbstractTable extends React.Component {
 		if (this.props.control.childItem && !this.isReadonlyTable()) {
 			// set to specific size. Exclude this column from resizing.
 			headers.push({ "key": "subpanel", "label": "", "width": TABLE_SUBPANEL_BUTTON_WIDTH, "staticWidth": true });
-		} else if (this.props.control.rowSelection === ROW_SELECTION.SINGLE) {
+		}
+		if (this.props.control.rowSelection === ROW_SELECTION.SINGLE) {
 			headers.push({ "key": "delete", "label": "", "width": TABLE_SUBPANEL_BUTTON_WIDTH, "staticWidth": true });
 		}
 		return headers;
