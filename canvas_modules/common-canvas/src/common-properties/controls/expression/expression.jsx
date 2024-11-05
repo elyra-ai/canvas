@@ -100,7 +100,6 @@ class ExpressionControl extends React.Component {
 			this.props.selectionRange.forEach((selected) => {
 				this.editor.dispatch({ selection: selected });
 			});
-			this.editor.focus();
 		}
 		if (!isEqual(prevProps.value, this.props.value)) {
 			const selection = this.editor.state.selection.main;
@@ -327,14 +326,13 @@ class ExpressionControl extends React.Component {
 		}
 
 		const reactIntl = this.props.controller.getReactIntl();
-		const Calculator24 = React.forwardRef((props, ref) => <Calculator ref={ref} size={24} {...props} />);
 
 		const button = this._showBuilderButton() ? (
 			<Button kind="ghost" size="sm"
 				className="properties-expression-button"
 				disabled={this.props.state === STATES.DISABLED || this.props.readOnly}
 				onClick={this.showExpressionBuilder}
-				renderIcon={Calculator24}
+				renderIcon={Calculator}
 				iconDescription={formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_ICON_DESCRIPTION)}
 				tooltipPosition="right"
 				hasIconOnly

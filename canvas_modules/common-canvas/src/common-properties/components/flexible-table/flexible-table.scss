@@ -33,7 +33,7 @@ $row-left-padding: $spacing-02;
 	}
 }
 
-.properties-ft-table-header.no-rows-selected, .properties-ft-table-header.fieldpicker-table { // header shows search bar and add button
+.properties-ft-table-header:not(:has(.properties-table-toolbar)) { // header shows search bar and add button
 	display: flex;
 	justify-content: flex-end;
 	height: $spacing-07;
