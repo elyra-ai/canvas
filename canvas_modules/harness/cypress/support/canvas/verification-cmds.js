@@ -1470,9 +1470,7 @@ function parseTransformString(transformString) {
 }
 
 function compareCloseTo(value, compareValue) {
-	// Adjust the range of sttring
-	const CompareRange = Cypress.env("compareRange") || 0.1;
-	expect(Number(value)).to.be.closeTo(Number(compareValue), CompareRange);
+	expect(Number(value)).to.be.closeTo(Number(compareValue), Cypress.env("compareRange"));
 }
 
 function getNodeGroupSelector(node) {
