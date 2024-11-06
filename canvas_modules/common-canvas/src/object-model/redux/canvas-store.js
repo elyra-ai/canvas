@@ -75,7 +75,7 @@ export default class CanavasStore {
 			texttoolbar: { isOpen: false },
 			contextmenu: { isOpen: false, menuDef: [], source: {} },
 			leftflyout: {},
-			rightflyout: { panelWidth: 320 },
+			rightflyout: { panelWidth: 300 },
 			bottompanel: { panelHeight: 393 },
 			toppanel: { }
 		};

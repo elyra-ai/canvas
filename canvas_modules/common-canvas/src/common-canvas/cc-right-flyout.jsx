@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
 
 const MAX_WIDTH_EXTEND_PERCENT = 0.7; // Should cover atmost 70% of available width
-const MIN_WIDTH = 320;
+const MIN_WIDTH = 300;
 class CommonCanvasRightFlyout extends React.Component {
 	constructor(props) {
 		super(props);
