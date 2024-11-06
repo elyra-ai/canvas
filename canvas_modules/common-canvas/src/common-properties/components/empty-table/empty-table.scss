@@ -15,7 +15,7 @@
  */
 
 .properties-empty-table {
-	@include carbon--type-style("helper-text-01");
+	@include type-style("helper-text-01");
 	&[disabled] {
 		opacity: 0.5;
 		pointer-events: none;
