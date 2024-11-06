@@ -1282,6 +1282,10 @@ export default class ObjectModel {
 		return this.store.isRightFlyoutOpen();
 	}
 
+	setRightPanelWidth(wdth) {
+		this.store.dispatch({ type: "SET_RIGHT_FLYOUT_CONFIG", data: { config: { panelWidth: wdth } } });
+	}
+
 	// ---------------------------------------------------------------------------
 	// Bottom panel methods
 	// ---------------------------------------------------------------------------
@@ -1296,10 +1300,6 @@ export default class ObjectModel {
 
 	setBottomPanelHeight(ht) {
 		this.store.dispatch({ type: "SET_BOTTOM_PANEL_CONFIG", data: { config: { panelHeight: ht } } });
-	}
-
-	setRightPanelWidth(wdth) {
-		this.store.dispatch({ type: "SET_RIGHT_FLYOUT_CONFIG", data: { config: { panelWidth: wdth } } });
 	}
 
 	// ---------------------------------------------------------------------------

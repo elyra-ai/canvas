@@ -605,7 +605,6 @@ class PropertiesMain extends React.Component {
 				},
 				propertiesSizeClassname);
 
-			this.updateRightFlyoutWidth(this.state.editorSize);
 			return (
 				<Provider store={this.propertiesController.getStore()}>
 					<div className="properties-right-flyout-container">

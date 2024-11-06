@@ -19,17 +19,17 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
 
-const MIN_WIDTH = 300;
 const MAX_WIDTH_EXTEND_PERCENT = 0.7; // Should cover atmost 70% of available width
+const MIN_WIDTH = 320;
 class CommonCanvasRightFlyout extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.logger = new Logger("CC-RightFlyout");
 
+		this.onMouseUp = this.onMouseUp.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
 		this.onMouseMoveX = this.onMouseMoveX.bind(this);
-		this.onMouseUp = this.onMouseUp.bind(this);
 	}
 
 	onMouseDown(e) {
@@ -37,8 +37,8 @@ class CommonCanvasRightFlyout extends React.Component {
 			document.addEventListener("mousemove", this.onMouseMoveX, true);
 			document.addEventListener("mouseup", this.onMouseUp, true);
 			this.posX = e.clientX;
-			this.startWidth = this.commonCanvasRightFlyout.offsetWidth;
-
+			// Prevent panel contents being dragged in the test harness (which can
+			// happen even though draggable is false for the contents!)
 			e.preventDefault();
 		}
 	}
@@ -50,8 +50,10 @@ class CommonCanvasRightFlyout extends React.Component {
 
 	onMouseMoveX(e) {
 		if (e.clientX) {
-			const newWidth = this.startWidth + (this.posX - e.clientX);
-			this.props.canvasController.setRightPanelWidth(this.limitWidth(newWidth));
+			const diff = e.clientX - this.posX;
+			const wth = this.props.panelWidth - diff;
+			this.props.canvasController.setRightPanelWidth(this.limitWidth(wth));
+			this.posX = e.clientX;
 		}
 	}
 
@@ -63,8 +65,8 @@ class CommonCanvasRightFlyout extends React.Component {
 
 		if (canvasContainer) {
 			// Max Width should be 70% of the total available width (canvas + rightflyout)
-			const totalAvialableWidth = canvasContainer.getBoundingClientRect().width + this.commonCanvasRightFlyout?.offsetWidth;
-			const maxWidth = MAX_WIDTH_EXTEND_PERCENT * totalAvialableWidth;
+			const canvasWidth = canvasContainer.getBoundingClientRect().width;
+			const maxWidth = (canvasWidth + this.props.panelWidth) * MAX_WIDTH_EXTEND_PERCENT;
 			width = Math.min(Math.max(width, MIN_WIDTH), maxWidth);
 		}
 
@@ -73,6 +75,7 @@ class CommonCanvasRightFlyout extends React.Component {
 
 	render() {
 		this.logger.log("render");
+
 		let rightFlyout = <div />; // For no content, return empty <div> so grid siziing for parent <div> work correctly.
 
 		if (this.props.content && this.props.isOpen) {
@@ -81,7 +84,7 @@ class CommonCanvasRightFlyout extends React.Component {
 				? "right-flyout-panel under-toolbar"
 				: "right-flyout-panel";
 			rightFlyout = (
-				<div className="right-flyout-container" ref={ (ref) => (this.commonCanvasRightFlyout = ref) } style={{ width: widthPx }} >
+				<div className="right-flyout-container" style={{ width: widthPx }} >
 					<div className="right-flyout-drag" onMouseDown={this.onMouseDown} />
 					<div className={rfClass}>
 						{this.props.content}
