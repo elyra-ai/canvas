@@ -33,7 +33,7 @@ import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@elyra/pipe
 import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from "./schemas-utils/upgrade-palette.js";
 
 
-import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
+import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
 	CLONE_COMMENT, CLONE_COMMENT_LINK, CLONE_NODE, CLONE_NODE_LINK, CLONE_PIPELINE, SUPER_NODE,
 	HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM, HIGHLIGHT_DOWNSTREAM,
 	SAVE_ZOOM_LOCAL_STORAGE, SAVE_ZOOM_PIPELINE_FLOW
@@ -1479,17 +1479,18 @@ export default class ObjectModel {
 	}
 
 	// Simulates the selection of an object (identified by objId) in the
-	// pipeline identified by pipelineId with the augmentation keys pressed
-	// as indicated by isShiftKeyPressed and isCmndCtrlPressed.
-	selectObject(objId, isShiftKeyPressed, isCmndCtrlPressed, pipelineId) {
+	// pipeline identified by pipelineId with the range and augment
+	// parameters that indicate whether the user has requested a range
+	// (shift key pressed) or an augmented selected (meta key pressed).
+	selectObject(objId, range, augment, pipelineId) {
 		if (!this.isSelected(objId, pipelineId)) {
-			if (isShiftKeyPressed) {
+			if (range) {
 				this.selectSubGraph(objId, pipelineId);
 			} else {
-				this.toggleSelection(objId, isCmndCtrlPressed, pipelineId);
+				this.toggleSelection(objId, augment, pipelineId);
 			}
-		} else if (isCmndCtrlPressed) {
-			this.toggleSelection(objId, isCmndCtrlPressed, pipelineId);
+		} else if (augment) {
+			this.toggleSelection(objId, augment, pipelineId);
 		}
 	}
 
@@ -1545,6 +1546,11 @@ export default class ObjectModel {
 			}
 		}
 		this.setSelections(selected, apiPipeline.pipelineId);
+	}
+
+	deselectAll(pipelineId) {
+		const apiPipeline = this.getAPIPipeline(pipelineId);
+		this.setSelections([], apiPipeline.pipelineId);
 	}
 
 	findNodesInSubGraph(startNodeId, endNodeId, selection, pipelineId) {
@@ -1764,11 +1770,6 @@ export default class ObjectModel {
 			}
 		}
 		return maxMessageType;
-	}
-
-	// Returns true if the object passed in is a link.
-	isLink(obj) {
-		return obj.type === NODE_LINK || obj.type === COMMENT_LINK || obj.type === ASSOCIATION_LINK;
 	}
 
 	setZoom(zoom, pipelineId) {

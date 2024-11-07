@@ -72,13 +72,16 @@ class ColorPicker extends React.Component {
 			if (this.colorIndex > this.totalColors - 1) {
 				this.colorIndex = 0;
 			}
+			this.setFocus(this.colorIndex);
 
 		} else if (evt.keyCode === LEFT_ARROW_KEY) {
 			evt.stopPropagation();
 			this.colorIndex--;
 			if (this.colorIndex < 0) {
-				this.colorIndex = this.totalColors - 1;
+				this.props.closeSubPanel();
+				return;
 			}
+			this.setFocus(this.colorIndex);
 
 		} else if (evt.keyCode === UP_ARROW_KEY) {
 			evt.stopPropagation();
@@ -86,13 +89,15 @@ class ColorPicker extends React.Component {
 			if (this.colorIndex < 0) {
 				this.colorIndex += this.colorsPerRow;
 			}
+			this.setFocus(this.colorIndex);
 
 		} else if (evt.keyCode === DOWN_ARROW_KEY) {
 			evt.stopPropagation();
 			this.colorIndex += this.colorsPerRow;
-			if (this.colorIndex > 11) {
+			if (this.colorIndex > this.totalColors - 1) {
 				this.colorIndex -= this.colorsPerRow;
 			}
+			this.setFocus(this.colorIndex);
 
 		} else if (evt.keyCode === SPACE_KEY ||
 					evt.keyCode === RETURN_KEY) {
@@ -105,8 +110,6 @@ class ColorPicker extends React.Component {
 			evt.preventDefault();
 			return;
 		}
-
-		this.setFocus(this.colorIndex);
 	}
 
 	setFocus(index) {

@@ -34,6 +34,7 @@ export default class SVGCanvasUtilsAccessibility {
 
 	initialize() {
 		this.logger.logStartTimer("initialize");
+
 		// Create a tab objects array for accessibility. Tab objects are the
 		// set of objects that tab key will move the focus to on the canvas.
 		// They are either solitary comments OR detached links OR 'starting'
@@ -73,6 +74,9 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getEntryComments() {
+		if (this.ap.canvasInfo.hideComments) {
+			return [];
+		}
 		let solitaryComments = this.ap.pipeline.comments.filter((c) => !this.commentHasLinks(c));
 		solitaryComments = solitaryComments.map((sc) => ({ type: "comment", obj: sc }));
 		return solitaryComments;
@@ -343,7 +347,11 @@ export default class SVGCanvasUtilsAccessibility {
 		return this.getLinksFromComment(comment).length > 0;
 	}
 
-	resetTabbedStatus() {
+	setTabbedIn() {
+		this.isTabbedIn = true;
+	}
+
+	setTabbedOut() {
 		this.isTabbedIn = false;
 	}
 

@@ -81,7 +81,8 @@ class Toolbar extends React.Component {
 	// toolbar config is updated and the current focusAction item is removed.
 	componentDidUpdate() {
 		const index = this.getFocusableItemRefs().findIndex((item) => this.getRefAction(item) === this.state.focusAction);
-		if (index === -1) {
+		if (index === -1 || (!this.isFocusInToolbar && this.props.setInititalFocus)) {
+			this.isFocusInToolbar = true;
 			this.setFocusOnFirstItem();
 		}
 	}
@@ -122,7 +123,12 @@ class Toolbar extends React.Component {
 	// key is pressed.
 	onKeyDown(evt) {
 		if (evt.keyCode === ESC_KEY) {
-			this.setFocusOnItem(); // Reset focus on current focusAction.
+			if (this.props.closeToolbarOnEsc) {
+				this.props.closeToolbar();
+
+			} else {
+				this.setFocusOnItem(); // Reset focus on current focusAction.
+			}
 
 		} else if (evt.keyCode === LEFT_ARROW_KEY) {
 			this.setFocusOnPreviousItem();
@@ -266,13 +272,13 @@ class Toolbar extends React.Component {
 			return focusableItemRefs;
 		}
 
-		const topRowY = this.findToolbarTopYCoordinate();
+		const firstItemRect = this.leftItemRefs[0].current?.getBoundingRect();
 		let overflowItemRef = null;
 
 		for (let i = 0; i < this.leftItemRefs.length; i++) {
 			const itemRect = this.leftItemRefs[i].current?.getBoundingRect();
 
-			if (itemRect?.top === topRowY) {
+			if (itemRect?.top === firstItemRect?.top) {
 				if (this.leftItemRefs[i].current?.isEnabled()) {
 					focusableItemRefs.push(this.leftItemRefs[i]);
 				}
@@ -296,17 +302,17 @@ class Toolbar extends React.Component {
 	getRightBarFocusableItemRefs() {
 		const focusableItemRefs = [];
 
-		if (this.rightItemRefs === 0) {
+		if (this.rightItemRefs.length === 0) {
 			return focusableItemRefs;
 		}
 
-		const topRowY = this.findToolbarTopYCoordinate();
+		const firstItemRect = this.rightItemRefs[0].current?.getBoundingRect();
 
 		for (let i = 0; i < this.rightItemRefs.length; i++) {
 			if (this.rightItemRefs[i].current?.isEnabled()) {
 				const refRect = this.rightItemRefs[i].current?.getBoundingRect();
 
-				if (refRect.top === topRowY) {
+				if (refRect?.top === firstItemRect?.top) {
 					focusableItemRefs.push(this.rightItemRefs[i]);
 				}
 			}
@@ -362,25 +368,19 @@ class Toolbar extends React.Component {
 	// Returns a reference to the first item that is not on the
 	// top (visible) row of the toolbar.
 	findFirstRightItemRefNotOnTopRow() {
-		const topRowY = this.findToolbarTopYCoordinate();
-
 		let rightItemRef = null;
 
-		for (let i = 0; i < this.rightItemRefs.length; i++) {
-			const itemRect = this.rightItemRefs[i].current?.getBoundingRect();
-			if (itemRect.top !== topRowY && rightItemRef === null) {
-				rightItemRef = this.rightItemRefs[i];
+		if (this.rightItemRefs.length > 0) {
+			const firstItemRect = this.rightItemRefs[0].current?.getBoundingRect();
+
+			for (let i = 0; i < this.rightItemRefs.length; i++) {
+				const itemRect = this.rightItemRefs[i].current?.getBoundingRect();
+				if (itemRect?.top !== firstItemRect?.top && rightItemRef === null) {
+					rightItemRef = this.rightItemRefs[i];
+				}
 			}
 		}
 		return rightItemRef;
-	}
-
-	// Returns the Y coordinate of the top of the toolbar. This is
-	// used to detecg which toolbar items are on the top (visible)
-	// row and which are wrapped onto other rows.
-	findToolbarTopYCoordinate() {
-		const rect = this.toolbarRef.current?.getBoundingClientRect();
-		return rect?.top;
 	}
 
 	// Generates an array of toolbar items from the toolbarActions array passed in. When
@@ -550,6 +550,9 @@ Toolbar.propTypes = {
 	toolbarActionHandler: PropTypes.func,
 	tooltipDirection: PropTypes.string,
 	additionalText: PropTypes.object,
+	setInititalFocus: PropTypes.bool,
+	closeToolbarOnEsc: PropTypes.bool,
+	closeToolbar: PropTypes.func,
 	size: PropTypes.oneOf(["md", "sm"])
 };
 

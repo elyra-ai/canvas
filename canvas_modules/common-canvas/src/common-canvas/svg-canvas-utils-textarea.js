@@ -184,7 +184,7 @@ export default class SvgCanvasTextArea {
 	// Applies a markdown action to the comment text being edited using
 	// the same commands as the toolbar.
 	getMarkdownAction(d3Event) {
-		if (KeyboardUtils.isCmndCtrlPressed(d3Event)) {
+		if (KeyboardUtils.isMetaKey(d3Event)) {
 			switch (d3Event.keyCode) {
 			case B_KEY: return "bold";
 			case I_KEY: return "italics";
@@ -365,6 +365,12 @@ export default class SvgCanvasTextArea {
 		}
 		const commentEntry = this.foreignObjectComment.selectAll(".d3-comment-text-entry");
 		commentEntry.style(field, value);
+		const commentEntryElement = commentEntry.node();
+		commentEntryElement.focus();
+	}
+
+	focusOnTextEntryElement(evt) {
+		const commentEntry = this.foreignObjectComment.selectAll(".d3-comment-text-entry");
 		const commentEntryElement = commentEntry.node();
 		commentEntryElement.focus();
 	}
@@ -634,6 +640,7 @@ export default class SvgCanvasTextArea {
 		} else {
 			d3.select(data.parentDomObj).selectAll(".d3-comment-text")
 				.style("display", "table-cell");
+			this.canvasController.restoreFocus();
 		}
 	}
 
@@ -693,7 +700,7 @@ export default class SvgCanvasTextArea {
 			d3Event.keyCode === RIGHT_ARROW_KEY ||
 			d3Event.keyCode === UP_ARROW_KEY ||
 			d3Event.keyCode === DOWN_ARROW_KEY ||
-			(d3Event.keyCode === A_KEY && KeyboardUtils.isCmndCtrlPressed(d3Event));
+			(d3Event.keyCode === A_KEY && KeyboardUtils.isMetaKey(d3Event));
 	}
 
 	// Displays a <div> to allow text entry and editing of (regular or WYSIWYG)
@@ -805,7 +812,7 @@ export default class SvgCanvasTextArea {
 			.on("keydown", (d3Event) => {
 				// If user hits return/enter
 				if (d3Event.keyCode === RETURN_KEY) {
-					if (data.allowReturnKey === "save") {
+					if (data.allowReturnKey === "save" || d3Event.shiftKey) {
 						this.textContentSaved = true;
 						this.saveAndCloseTextArea(data, d3Event.target, d3Event);
 						return;
@@ -822,6 +829,7 @@ export default class SvgCanvasTextArea {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					this.textAreaEscKeyPressed = true;
 					this.closeTextArea(data);
+					this.canvasController.restoreFocus();
 				}
 				// Prevent user entering more than any allowed maximum for characters.
 				if (data.maxCharacters &&

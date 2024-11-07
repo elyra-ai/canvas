@@ -17,17 +17,96 @@
 import CanvasUtils from "./common-canvas-utils.js";
 
 const RETURN_KEY = "Enter"; // Return key on the Mac
-// const SPACE_KEY = 32;
+const SPACE_KEY = "Space";
 const LEFT_ARROW_KEY = "ArrowLeft";
-// const UP_ARROW_KEY = 38;
+const UP_ARROW_KEY = "ArrowUp";
 const RIGHT_ARROW_KEY = "ArrowRight";
-// const DOWN_ARROW_KEY = 40;
-// const L_KEY = 76;
+const DOWN_ARROW_KEY = "ArrowDown";
+const ESC_KEY = "Escape";
+const SLASH_KEY = "Slash";
+const EQUAL_KEY = "Equal";
+const MINUS_KEY = "Minus";
+const TAB_KEY = "Tab";
+const BACKSPACE_KEY = "Backspace";
+const DELETE_KEY = "Delete";
+const A_KEY = "KeyA";
+const C_KEY = "KeyC";
+const P_KEY = "KeyP";
+const V_KEY = "KeyV";
+const X_KEY = "KeyX";
+const Y_KEY = "KeyY";
+const Z_KEY = "KeyZ";
+const ZERO_KEY = "Digit0";
+
 const LEFT_SQUARE_BRACKET_KEY = "BracketLeft";
 const RIGHT_SQUARE_BRACKET_KEY = "BracketRight";
 
 
 export default class KeyboardUtils {
+
+	/* ----------------------------------------- */
+	/* Canvas navigation key functions           */
+	/* ----------------------------------------- */
+
+	static spaceKey(evt) {
+		return evt.code === SPACE_KEY;
+	}
+
+	static toggleLogging(evt) {
+		return this.isMetaKey(evt) && evt.shiftKey && evt.altKey && evt.code === P_KEY;
+	}
+
+	static selectAll(evt) {
+		return this.isMetaKey(evt) && !evt.shiftKey && evt.code === A_KEY;
+	}
+
+	static deselectAll(evt) {
+		return this.isMetaKey(evt) && evt.shiftKey && evt.code === A_KEY;
+	}
+
+	static delete(evt) {
+		return (evt.code === BACKSPACE_KEY || evt.code === DELETE_KEY);
+	}
+
+	static undo(evt) {
+		return this.isMetaKey(evt) && !evt.shiftKey && evt.code === Z_KEY;
+	}
+
+	static redo(evt) {
+		return this.isMetaKey(evt) && ((evt.shiftKey && evt.code === Z_KEY) || evt.code === Y_KEY);
+	}
+
+	static copyToClipboard(evt) {
+		return this.isMetaKey(evt) && evt.code === C_KEY;
+	}
+
+	static cutToClipboard(evt) {
+		return this.isMetaKey(evt) && evt.code === X_KEY;
+	}
+
+	static pasteFromClipboard(evt) {
+		return this.isMetaKey(evt) && evt.code === V_KEY;
+	}
+
+	static zoomIn(evt) {
+		return this.isMetaKey(evt) && evt.shiftKey && evt.code === EQUAL_KEY;
+	}
+
+	static zoomOut(evt) {
+		return this.isMetaKey(evt) && evt.shiftKey && evt.code === MINUS_KEY;
+	}
+
+	static zoomToFit(evt) {
+		return this.isMetaKey(evt) && evt.shiftKey && evt.code === ZERO_KEY;
+	}
+
+	static nextGroup(evt) {
+		return evt.code === TAB_KEY && !evt.shiftKey;
+	}
+
+	static previousGroup(evt) {
+		return evt.code === TAB_KEY && evt.shiftKey;
+	}
 
 	static nextObjectInGroup(d3Event) {
 		return d3Event.code === RIGHT_ARROW_KEY;
@@ -43,25 +122,69 @@ export default class KeyboardUtils {
 		return d3Event.code === RETURN_KEY;
 	}
 
-	// static selectExtraObject(d3Event) {
-	// 	return d3Event.code === RETURN_KEY && this.isCmndCtrlPressed(d3Event);
-	// }
-
 	static nextSiblingLink(d3Event) {
-		return d3Event.code === RIGHT_SQUARE_BRACKET_KEY;
+		return this.isMetaKey(d3Event) && d3Event.code === RIGHT_SQUARE_BRACKET_KEY;
 	}
 
 	static previousSiblingLink(d3Event) {
-		return d3Event.code === LEFT_SQUARE_BRACKET_KEY;
+		return this.isMetaKey(d3Event) && d3Event.code === LEFT_SQUARE_BRACKET_KEY;
 	}
 
-	// Returns true if either the Command Key on Mac or Control key on Windows
-	// is pressed. evnt can be either a regular event object OR the
+	// Shortcut to display either a context menu or context
+	// toolbar, depending on which is enabled, for the
+	// canvas or objects on the canvas.
+	// Note: We don't use a augmentation key (Cmnd or Ctrl or Shift)
+	// for this shortcut because displaying context options
+	// involves auto-select which uses augmentation keys for
+	// adding selections to the set of selections.
+	static displayContextOptions(evt) {
+		return this.isMetaKey(evt) && evt.code === SLASH_KEY;
+	}
+
+	/* ----------------------------------------- */
+	/* Context Menu key functions                */
+	/* ----------------------------------------- */
+
+	static nextContextMenuOption(evt) {
+		return evt.code === DOWN_ARROW_KEY;
+	}
+
+	static previousContextMenuOption(evt) {
+		return evt.code === UP_ARROW_KEY;
+	}
+
+	static openContextMenuSubMenu(evt) {
+		return evt.code === RIGHT_ARROW_KEY;
+	}
+
+	static closeContextMenuSubMenu(evt) {
+		return evt.code === LEFT_ARROW_KEY || evt.code === ESC_KEY;
+	}
+
+	static activateContextMenuOption(evt) {
+		return evt.code === RETURN_KEY || evt.code === SPACE_KEY;
+	}
+
+	static closeContextMenu(evt) {
+		return evt.code === ESC_KEY;
+	}
+
+	/* ----------------------------------------- */
+	/* Text Toolbar key functions                */
+	/* ----------------------------------------- */
+
+	static returnToTextEditing(evt) {
+		return evt.code === TAB_KEY && !evt.shiftKey;
+	}
+
+	// Returns true if either the 'Command Key' on Mac or
+	// 'Control Key' or 'Windows key' on Windows is pressed.
+	// evnt can be either a regular event object OR the
 	// d3event object provided by d3.
-	static isCmndCtrlPressed(evnt) {
+	static isMetaKey(evt) {
 		if (CanvasUtils.isMacintosh()) {
-			return evnt.metaKey;
+			return evt.metaKey;
 		}
-		return evnt.ctrlKey;
+		return evt.ctrlKey || evt.metaKey;
 	}
 }

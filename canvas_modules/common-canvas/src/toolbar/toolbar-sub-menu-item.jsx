@@ -23,6 +23,10 @@ import classNames from "classnames";
 import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
 import ToolbarSubPanel from "./toolbar-sub-panel.jsx";
 
+const ESC_KEY = 27;
+const LEFT_ARROW_KEY = 37;
+const RIGHT_ARROW_KEY = 39;
+
 class ToolbarSubMenuItem extends React.Component {
 	constructor(props) {
 		super(props);
@@ -36,6 +40,7 @@ class ToolbarSubMenuItem extends React.Component {
 		this.actionClickHandler = this.actionClickHandler.bind(this);
 		this.onMouseEnter = this.onMouseEnter.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 		this.openSubArea = this.openSubArea.bind(this);
 		this.closeSubArea = this.closeSubArea.bind(this);
 		this.clickOutside = this.clickOutside.bind(this);
@@ -56,6 +61,26 @@ class ToolbarSubMenuItem extends React.Component {
 	onMouseLeave(evt) {
 		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
 			this.closeSubArea();
+		}
+	}
+
+	// Handles keyboard input on a sub-menu item. The Up and Down arrow
+	// key presses are handled in toolbar-sub-menu.jsx.
+	onKeyDown(evt) {
+		if (evt.keyCode === ESC_KEY) {
+			this.props.closeParentSubArea();
+			evt.stopPropagation(); // Stop propagation in a case we are a cascade menu
+
+		} else if (evt.keyCode === LEFT_ARROW_KEY) {
+			if (this.props.isInCascadeMenu) {
+				this.props.closeParentSubArea();
+			}
+
+		} else if (evt.keyCode === RIGHT_ARROW_KEY) {
+			if (!this.props.isInCascadeMenu &&
+					(this.props.actionObj.subMenu || this.props.actionObj.subPanel)) {
+				this.openSubArea();
+			}
 		}
 	}
 

@@ -68,9 +68,10 @@ class ToolbarSubMenu extends React.Component {
 		}
 	}
 
+	// Handles keyboard input on a sub-menu. The Esc, Left arrow and Right arrow
+	// key presses are handled in toolbar-sub-menu-item.jsx.
 	onKeyDown(evt) {
 		if (evt.keyCode === ESC_KEY) {
-			this.props.closeSubArea();
 			evt.stopPropagation(); // Stop propagation in a case we are a cascade menu
 
 		} else if (evt.keyCode === UP_ARROW_KEY) {
