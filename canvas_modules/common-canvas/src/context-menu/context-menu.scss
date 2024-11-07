@@ -61,12 +61,18 @@
 	}
 
 	&:active,
-	&:focus,
 	&:hover {
 		background: $layer-hover-01;
 		text-decoration: none;
 		border: 0;
 		outline: none; /* Suppress Chrome's blue active border */
+	}
+
+	&:focus {
+		background: $layer-hover-01;
+		text-decoration: none;
+		border: 0;
+		outline: 2px solid $focus;
 	}
 
 	/* Style for the chevron '>' in menu item that opens a submenu. */

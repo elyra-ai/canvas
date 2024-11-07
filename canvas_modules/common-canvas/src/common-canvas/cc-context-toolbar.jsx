@@ -38,6 +38,7 @@ class CommonCanvasContextToolbar extends React.Component {
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.toolbarActionHandler = this.toolbarActionHandler.bind(this);
 		this.colorClicked = this.colorClicked.bind(this);
+		this.closeContextToolbar = this.closeContextToolbar.bind(this);
 	}
 
 	onMouseLeave(evt) {
@@ -151,9 +152,14 @@ class CommonCanvasContextToolbar extends React.Component {
 	}
 
 	toolbarActionHandler(action, editParam) {
-		this.props.canvasController.setMouseInContextToolbar(false);
-		this.props.canvasController.closeContextToolbar();
+		this.closeContextToolbar();
 		this.props.canvasController.contextMenuActionHandler(action, editParam);
+	}
+
+	closeContextToolbar() {
+		this.props.canvasController.setMouseInContextToolbar(false);
+		this.props.canvasController.setMouseInObject(null);
+		this.props.canvasController.closeContextToolbar();
 	}
 
 	colorClicked(color) {
@@ -243,6 +249,9 @@ class CommonCanvasContextToolbar extends React.Component {
 						containingDivId={this.props.containingDivId}
 						toolbarActionHandler={this.toolbarActionHandler}
 						tooltipDirection={"top"}
+						setInititalFocus
+						closeToolbarOnEsc
+						closeToolbar={this.closeContextToolbar}
 						size={"sm"}
 					/>
 				</div>

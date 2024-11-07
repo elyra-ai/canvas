@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { ChevronRight } from "@carbon/react/icons";
 import ColorPicker from "../color-picker";
+import KeyboardUtils from "../common-canvas/keyboard-utils";
 
 // context-menu sizing
 const CONTEXT_MENU_WIDTH = 160; // See context-menu.scss
@@ -33,21 +34,94 @@ class CommonContextMenu extends React.Component {
 		this.state = {
 			displaySubMenuAction: ""
 		};
+		this.menuRefs = [];
+		this.subMenuRefs = [];
+
+		this.focusIndex = null; // Set to null so we know when it is not initialized.
+		this.subMenuFocusIndex = 0;
+
+		this.onKeyDown = this.onKeyDown.bind(this);
 		this.itemSelected = this.itemSelected.bind(this);
 		this.colorClicked = this.colorClicked.bind(this);
+	}
+
+	componentDidMount() {
+		this.focusIndex = this.focusIndex === null ? 0 : this.focusIndex;
+		this.menuRefs[this.focusIndex].current.focus();
+	}
+
+	componentDidUpdate() {
+		if (this.state.displaySubMenuAction) {
+			this.subMenuFocusIndex = 0;
+			if (this.state.displaySubMenuAction !== "colorBackground") {
+				const subMenuRefs = this.subMenuRefs[this.state.displaySubMenuAction];
+				subMenuRefs[this.subMenuFocusIndex].current.focus();
+			}
+
+		} else {
+			this.focusIndex = this.focusIndex === null ? 0 : this.focusIndex;
+			this.menuRefs[this.focusIndex].current.focus();
+		}
 	}
 
 	onContextMenu(e) {
 		e.preventDefault();
 	}
 
-	itemSelected(data, selectedEvent) {
-		this.props.contextHandler(data);
-		// This stops the canvasClicked function from being fired which would
-		// clear any current selections.
-		if (selectedEvent) {
-			selectedEvent.stopPropagation();
+	onKeyDown(evt) {
+		// Don't let keyboard event go through to other objects.
+		evt.stopPropagation();
+		evt.preventDefault();
+
+		if (KeyboardUtils.nextContextMenuOption(evt)) {
+			if (this.state.displaySubMenuAction) {
+				const subMenuRefs = this.subMenuRefs[this.state.displaySubMenuAction];
+				this.subMenuFocusIndex = this.subMenuFocusIndex === subMenuRefs.length - 1 ? 0 : this.subMenuFocusIndex + 1;
+				subMenuRefs[this.subMenuFocusIndex].current.focus();
+
+			} else {
+				this.focusIndex = this.focusIndex === this.menuRefs.length - 1 ? 0 : this.focusIndex + 1;
+				this.menuRefs[this.focusIndex].current.focus();
+			}
+
+		} else if (KeyboardUtils.previousContextMenuOption(evt)) {
+			if (this.state.displaySubMenuAction) {
+				const subMenuRefs = this.subMenuRefs[this.state.displaySubMenuAction];
+				this.subMenuFocusIndex = this.subMenuFocusIndex === 0 ? subMenuRefs.length - 1 : this.subMenuFocusIndex - 1;
+				subMenuRefs[this.subMenuFocusIndex].current.focus();
+
+			} else {
+				this.focusIndex = this.focusIndex === 0 ? this.menuRefs.length - 1 : this.focusIndex - 1;
+				this.menuRefs[this.focusIndex].current.focus();
+			}
+
+		} else if (KeyboardUtils.openContextMenuSubMenu(evt)) {
+			const action = evt.target.dataset.action;
+			if (this.subMenuRefs[action]) {
+				this.subMenuOpen(action);
+			}
+
+		} else if (KeyboardUtils.closeContextMenuSubMenu(evt) &&
+					this.state.displaySubMenuAction) {
+			this.subMenuClose();
+
+		} else if (KeyboardUtils.closeContextMenu(evt) &&
+					!this.state.displaySubMenuAction) {
+			this.props.closeContextMenu();
+
+		} else if (KeyboardUtils.activateContextMenuOption(evt)) {
+			const action = evt.target.dataset.action;
+			if (this.subMenuRefs[action]) {
+				this.subMenuOpen(action);
+
+			} else {
+				this.itemSelected(action);
+			}
 		}
+	}
+
+	itemSelected(data) {
+		this.props.contextHandler(data);
 	}
 
 	colorClicked(color) {
@@ -121,6 +195,7 @@ class CommonContextMenu extends React.Component {
 	// Builds a new menu based on the menu defintion passed in.
 	buildMenu(menuDefinition, menuSize, menuPos, canvasRect) {
 		const menuItems = [];
+		const menuRefs = [];
 
 		let runningYPos = 0;
 		// Records if we have just displayed a divider. This is useful because we
@@ -134,7 +209,7 @@ class CommonContextMenu extends React.Component {
 
 			if (divider) {
 				if (!previousDivider) {
-					menuItems.push(<div key={i + 1} className={"context-menu-divider"} />);
+					menuItems.push(<div key={i} className={"context-menu-divider"} />);
 					runningYPos += CONTEXT_MENU_DIVIDER_HEIGHT;
 					previousDivider = true;
 				}
@@ -142,10 +217,12 @@ class CommonContextMenu extends React.Component {
 				previousDivider = false;
 				const disabled = false;
 				const subMenuSize = { width: CONTEXT_MENU_WIDTH, height: 50 };
-				const subMenuContent = this.buildColorPickerPanel();
+				const subMenuInfo = this.buildColorPickerPanel();
+				const subMenuContent = subMenuInfo.menuItems;
+				this.subMenuRefs[menuDefinition[i].action] = subMenuInfo.menuRefs;
 
 				const subMenu = this.buildSubMenu(
-					menuDefinition, i, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
+					menuDefinition, i, menuRefs, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
 				menuItems.push(subMenu);
 
 				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
@@ -154,10 +231,12 @@ class CommonContextMenu extends React.Component {
 				previousDivider = false;
 				const disabled = this.areAllSubmenuItemsDisabled(menuDefinition[i].menu);
 				const subMenuSize = this.calculateMenuSize(menuDefinition[i].menu);
-				const subMenuContent = this.buildMenu(menuDefinition[i].menu, menuSize, menuPos, canvasRect);
+				const subMenuInfo = this.buildMenu(menuDefinition[i].menu, menuSize, menuPos, canvasRect, 100);
+				const subMenuContent = subMenuInfo.menuItems;
+				this.subMenuRefs[menuDefinition[i].action] = subMenuInfo.menuRefs;
 
 				const subMenu = this.buildSubMenu(
-					menuDefinition, i, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
+					menuDefinition, i, menuRefs, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
 				menuItems.push(subMenu);
 
 				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
@@ -171,36 +250,65 @@ class CommonContextMenu extends React.Component {
 					? null
 					: this.itemSelected.bind(null, menuDefinition[i].action);
 
-				menuItems.push((
-					<div key={i + 1} className={className} onClick={onClickFunction} role="menuitem">
-						{menuDefinition[i].label}
-					</div>
-				));
+				let menuItem;
+
+				if (menuDefinition[i].enable === false) {
+					menuItem = (
+						<div key={i} className={className} onClick={onClickFunction} role="menuitem">
+							{menuDefinition[i].label}
+						</div>
+					);
+				} else {
+					const ref = React.createRef();
+					menuRefs.push(ref);
+
+					menuItem = (
+						<div key={i} ref={ref} tabIndex={-1} data-action={menuDefinition[i].action}
+							className={className} onClick={onClickFunction} onKeyDown={this.onKeyDown} role="menuitem"
+						>
+							{menuDefinition[i].label}
+						</div>
+					);
+				}
+				menuItems.push(menuItem);
 				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
 			}
 		}
-		return menuItems;
+		return { menuItems, menuRefs };
 	}
 
 	buildColorPickerPanel() {
 		const subPanelData = {
-			clickActionHandler: (c) => this.colorClicked(c)
+			clickActionHandler: (c) => this.colorClicked(c),
+			closeSubPanel: () => this.subMenuClose()
 		};
-		return (
-			<ColorPicker subPanelData={subPanelData} closeSubPanel={() => null} />
+		// Only create the color picker when we are actually displaying it in the sub-menu.
+		// That way the color picker will set focus on itself when it is opened.
+		const colorPicker = this.state.displaySubMenuAction === "colorBackground"
+			? <ColorPicker ref={ref} subPanelData={subPanelData} closeSubPanel={() => this.subMenuClose()} />
+			: null;
+
+		const ref = React.createRef();
+
+		const content = (
+			<div key={"color-picker"} ref={ref} tabIndex={-1}>
+				{colorPicker}
+			</div>
 		);
+
+		return { menuItems: [content], menuRefs: [ref] };
 	}
 
-	subMenuMouseEnter(action) {
+	subMenuOpen(action) {
 		this.setState({ displaySubMenuAction: action });
 	}
 
-	subMenuMouseLeave(action) {
+	subMenuClose(action) {
 		this.setState({ displaySubMenuAction: "" });
 	}
 
 	// Builds a sub-menu for the menuitem identified by the index into the menudefintion.
-	buildSubMenu(menuDefinition, index, subMenuContent, runningYPos, menuPos,
+	buildSubMenu(menuDefinition, index, menuRefs, subMenuContent, runningYPos, menuPos,
 		menuSize, subMenuSize, canvasRect, disabled) {
 		const rtl = this.buildRtlState(menuPos, menuSize, subMenuSize, canvasRect);
 		const subMenuPosStyle = this.buildSubMenuPosStyle(runningYPos, menuPos, subMenuSize, canvasRect, rtl);
@@ -211,13 +319,17 @@ class CommonContextMenu extends React.Component {
 		const menuItemClass = "context-menu-item " + (disabled ? " disabled" : "");
 		const subMenuClass = "context-menu-popover context-menu-submenu" +
 			(this.state.displaySubMenuAction === menuItem.action ? " context-menu--visible" : "");
-		const onMouseEnter = (disabled ? null : this.subMenuMouseEnter.bind(this, menuItem.action));
-		const onMouseLeave = (disabled ? null : this.subMenuMouseLeave.bind(this));
+		const onMouseEnter = (disabled ? null : this.subMenuOpen.bind(this, menuItem.action));
+		const onMouseLeave = (disabled ? null : this.subMenuClose.bind(this));
+
+		const ref = React.createRef();
+		menuRefs.push(ref);
 
 		return (
-			<div key={index + 1} className={menuItemClass} aria-haspopup role="menuitem"
+			<div key={index} ref={ref} className={menuItemClass} aria-haspopup tabIndex={-1} data-action={menuItem.action} role="menuitem"
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
+				onKeyDown={this.onKeyDown}
 			>
 				{menuItemContent}
 				<div style={subMenuPosStyle} className={subMenuClass}>
@@ -263,7 +375,7 @@ class CommonContextMenu extends React.Component {
 
 	// Returns the menu definition array passed in making sure any
 	// submenu items have an action. Note: some applications forget
-	// to do provide an action because for the submenu it is only
+	// to provide an action because, for the submenu, it is only
 	// used by the context menu code.
 	ensureAllSubMenuItemsHaveAction(menuDef) {
 		return menuDef.map((item, index) => {
@@ -283,12 +395,14 @@ class CommonContextMenu extends React.Component {
 			top: menuPos.y + "px"
 		};
 
+		this.menuRefs = [];
 		const menuDefinition = this.ensureAllSubMenuItemsHaveAction(this.props.menuDefinition);
-		const menuItems = this.buildMenu(menuDefinition, menuSize, menuPos, this.props.canvasRect);
+		const menuInfo = this.buildMenu(menuDefinition, menuSize, menuPos, this.props.canvasRect);
+		this.menuRefs = menuInfo.menuRefs;
 
 		return (
 			<div id="context-menu-popover" className="context-menu-popover" style={posStyle} onContextMenu={this.onContextMenu}>
-				{menuItems}
+				{menuInfo.menuItems}
 			</div>
 		);
 	}
@@ -296,6 +410,7 @@ class CommonContextMenu extends React.Component {
 
 CommonContextMenu.propTypes = {
 	contextHandler: PropTypes.func.isRequired,
+	closeContextMenu: PropTypes.func.isRequired,
 	menuDefinition: PropTypes.array.isRequired,
 	canvasRect: PropTypes.object.isRequired,
 	mousePos: PropTypes.object.isRequired

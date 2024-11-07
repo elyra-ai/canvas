@@ -111,6 +111,7 @@ export default class ContextMenuWrapper extends React.Component {
 				menuDefinition={this.props.contextMenuDef}
 				canvasRect={this.getCanvasRect()}
 				mousePos={this.props.contextMenuPos}
+				closeContextMenu={this.props.closeContextMenu}
 			/>
 		);
 	}

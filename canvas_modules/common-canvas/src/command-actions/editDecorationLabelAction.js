@@ -43,6 +43,7 @@ export default class EditDecorationLabelAction extends Action {
 		} else if (this.data.objType === DEC_NODE) {
 			this.apiPipeline.setNodeDecorations(this.data.objId, this.newDecorations);
 		}
+		this.focusObject = this.data.selectedObjects[0];
 	}
 
 	undo() {
@@ -51,6 +52,7 @@ export default class EditDecorationLabelAction extends Action {
 		} else if (this.data.objType === DEC_NODE) {
 			this.apiPipeline.setNodeDecorations(this.data.objId, this.previousDecorations);
 		}
+		this.focusObject = this.data.selectedObjects[0];
 	}
 
 	redo() {
@@ -62,5 +64,9 @@ export default class EditDecorationLabelAction extends Action {
 			return this.labelUtil.getActionLabel(this, "action.editLinkDecorationLabel");
 		}
 		return this.labelUtil.getActionLabel(this, "action.editNodeDecorationLabel");
+	}
+
+	getFocusObject() {
+		return this.focusObject;
 	}
 }

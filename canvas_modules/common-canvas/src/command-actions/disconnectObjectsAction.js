@@ -50,4 +50,8 @@ export default class DisconnectObjectsAction extends Action {
 	getLabel() {
 		return this.labelUtil.getActionLabel(this, "action.disconnectObjects");
 	}
+
+	getFocusObject() {
+		return this.data.selectedObjects[0];
+	}
 }

@@ -28,18 +28,24 @@ export default class EditCommentAction extends Action {
 	// Standard methods
 	do() {
 		this.apiPipeline.editComment(this.data);
+		this.focusObject = this.data;
 	}
 
 	undo() {
 		this.apiPipeline.editComment(this.previousComment);
+		this.focusObject = this.previousComment;
 	}
 
 	redo() {
-		this.apiPipeline.editComment(this.data);
+		this.do();
 	}
 
 	getLabel() {
 		return this.labelUtil.getActionLabel(this, "action.editComment");
+	}
+
+	getFocusObject() {
+		return this.focusObject;
 	}
 
 }
