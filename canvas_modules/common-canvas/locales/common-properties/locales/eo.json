@@ -112,5 +112,6 @@
   "label.indicator.optional": "[Esperanto~(optional)~~~~~~eo]",
   "slider.numberInput.label": "[Esperanto~Slider number input~~~~~eo]",
   "editorForm.tabList.label": "[Esperanto~Primary Tabs~~~~eo]",
-  "subTabs.tabList.label": "[Esperanto~Tab List~~~~eo]"
+  "subTabs.tabList.label": "[Esperanto~Tab List~~~~eo]",
+  "table.deleteiIcon.tooltip": "[Esperanto~Delete~~~~eo]"
 }

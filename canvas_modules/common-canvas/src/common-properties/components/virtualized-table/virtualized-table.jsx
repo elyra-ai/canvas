@@ -418,10 +418,11 @@ class VirtualizedTable extends React.Component {
 						readOnly={this.props.readOnly}
 					/>
 				</div>);
+			// Don't show delete icon for tables in expression builder
 			} else if (this.props.rowSelection === ROW_SELECTION.SINGLE && !(this.props.tableLabel === fieldsTableLabel ||
 				this.props.tableLabel === valuesTableLabel || this.props.tableLabel === functionsTableLabel
 			)) {
-				const toolTip = "Delete";
+				const toolTip = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_DELETEICON_TOOLTIP);
 				const tooltipId = "tooltip-delete-row";
 				deleteOption = (
 					<Tooltip
@@ -435,6 +436,7 @@ class VirtualizedTable extends React.Component {
 							size="sm"
 							type="delete"
 							className="delete-button"
+							iconDescription="Delete"
 							hasIconOnly
 							onClick={this.props.deleteRow}
 							renderIcon={TrashCan}
