@@ -20,9 +20,10 @@ import { Checkbox, Loading, Button } from "@carbon/react";
 import { ArrowUp, ArrowDown, ArrowsVertical, Information, TrashCan } from "@carbon/react/icons";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import TruncatedContentTooltip from "./../truncated-content-tooltip";
-import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";
+import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL, MESSAGE_KEYS } from "./../../constants/constants";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
+import { formatMessage } from "../../util/property-utils.js";
 
 import { isEmpty, differenceBy, mapValues } from "lodash";
 import classNames from "classnames";
@@ -379,7 +380,9 @@ class VirtualizedTable extends React.Component {
 		let deleteOption = "";
 		let selectedRow = false;
 		const rowDisabled = typeof rowData.disabled === "boolean" ? rowData.disabled : false;
-
+		const fieldsTableLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELDS_TABLE_LABEL);
+		const valuesTableLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_VALUES_TABLE_LABEL);
+		const functionsTableLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FUNCTIONS_TABLE_LABEL);
 		if (typeof this.props.rowHeight === "function" && this.props.rowHeight({ index }) === 0) {
 			return null;
 		}
@@ -415,17 +418,28 @@ class VirtualizedTable extends React.Component {
 						readOnly={this.props.readOnly}
 					/>
 				</div>);
-			} else {
+			} else if (this.props.rowSelection === ROW_SELECTION.SINGLE && !(this.props.tableLabel === fieldsTableLabel ||
+				this.props.tableLabel === valuesTableLabel || this.props.tableLabel === functionsTableLabel
+			)) {
+				const toolTip = "Delete";
+				const tooltipId = "tooltip-delete-row";
 				deleteOption = (
-					<Button
-						kind="ghost"
-						size="sm"
-						type="delete"
-						className="delete-button"
-						hasIconOnly
-						onClick={this.props.deleteRow}
-						renderIcon={TrashCan}
-					/>
+					<Tooltip
+						id={tooltipId}
+						tip={toolTip}
+						direction="left"
+						className="properties-tooltips icon-tooltip"
+					>
+						<Button
+							kind="ghost"
+							size="sm"
+							type="delete"
+							className="delete-button"
+							hasIconOnly
+							onClick={this.props.deleteRow}
+							renderIcon={TrashCan}
+						/>
+					</Tooltip>
 				);
 			}
 		}
