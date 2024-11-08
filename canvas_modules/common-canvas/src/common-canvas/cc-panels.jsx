@@ -294,6 +294,7 @@ const mapStateToProps = (state, ownProps) => ({
 	enableNarrowPalette: state.canvasconfig.enableNarrowPalette,
 	enableLeftFlyoutUnderToolbar: state.canvasconfig.enableLeftFlyoutUnderToolbar,
 	enableRightFlyoutUnderToolbar: state.canvasconfig.enableRightFlyoutUnderToolbar,
+	enableRightFlyoutDragToResize: state.canvasconfig.enableRightFlyoutDragToResize,
 	toolbarIsOpen: (state.canvasconfig.enableToolbarLayout !== PALETTE_LAYOUT_NONE),
 	paletteIsOpen: state.palette.isOpen,
 	topPanelIsOpen: state.toppanel.isOpen,

@@ -77,6 +77,11 @@ class CommonCanvasRightFlyout extends React.Component {
 		this.logger.log("render");
 
 		let rightFlyout = <div />; // For no content, return empty <div> so grid siziing for parent <div> work correctly.
+		let rightFlyoutDragDiv = null;
+
+		if (this.props.enableRightFlyoutDragToResize) {
+			rightFlyoutDragDiv = (<div className="right-flyout-drag" onMouseDown={this.onMouseDown} />);
+		}
 
 		if (this.props.content && this.props.isOpen) {
 			const widthPx = this.limitWidth(this.props.panelWidth) + "px";
@@ -85,7 +90,7 @@ class CommonCanvasRightFlyout extends React.Component {
 				: "right-flyout-panel";
 			rightFlyout = (
 				<div className="right-flyout-container" style={{ width: widthPx }} >
-					<div className="right-flyout-drag" onMouseDown={this.onMouseDown} />
+					{rightFlyoutDragDiv}
 					<div className={rfClass}>
 						{this.props.content}
 					</div>
@@ -106,6 +111,7 @@ CommonCanvasRightFlyout.propTypes = {
 	isOpen: PropTypes.bool,
 	content: PropTypes.object,
 	enableRightFlyoutUnderToolbar: PropTypes.bool,
+	enableRightFlyoutDragToResize: PropTypes.bool,
 	panelWidth: PropTypes.number
 };
 
@@ -113,6 +119,7 @@ const mapStateToProps = (state, ownProps) => ({
 	isOpen: state.rightflyout.isOpen,
 	content: state.rightflyout.content,
 	enableRightFlyoutUnderToolbar: state.canvasconfig.enableRightFlyoutUnderToolbar,
+	enableRightFlyoutDragToResize: state.canvasconfig.enableRightFlyoutDragToResize,
 	panelWidth: state.rightflyout.panelWidth
 });
 
