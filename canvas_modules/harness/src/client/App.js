@@ -2081,6 +2081,7 @@ class App extends React.Component {
 
 	getCanvasConfig() {
 		const canvasConfig = {
+			enableFocusOnMount: true,
 			enableInteractionType: this.state.selectedInteractionType,
 			enableSnapToGridType: this.state.selectedSnapToGridType,
 			enableSnapToGridX: this.state.enteredSnapToGridX,

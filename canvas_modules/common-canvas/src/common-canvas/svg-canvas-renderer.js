@@ -135,6 +135,10 @@ export default class SVGCanvasRenderer {
 		// option is switched on.
 		this.dragNewLinkOverNode = null;
 
+		// The current canvas object that has keyboard navigation focus, or
+		// null if the focus is elsewhere.
+		this.curentFocusObj = null;
+
 		this.initializeGhostDiv();
 
 		this.canvasSVG = this.createCanvasSVG();
@@ -2014,7 +2018,7 @@ export default class SVGCanvasRenderer {
 						if (linkInfos.length > 0) {
 							const linkInfosAll = this.activePipeline.getAllLinksForNode(d);
 							linkInfosAll.forEach((li) => (li.link.navObject = d));
-							this.moveFocusTo({ obj: linkInfos[0].link, type: "link" }, d3Event);
+							this.moveFocusTo(linkInfos[0].link, d3Event);
 						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
@@ -2023,7 +2027,7 @@ export default class SVGCanvasRenderer {
 						if (linkInfos.length > 0) {
 							const linkInfosAll = this.activePipeline.getAllLinksForNode(d);
 							linkInfosAll.forEach((li) => (li.link.navObject = d));
-							this.moveFocusTo({ obj: linkInfos[0].link, type: "link" }, d3Event);
+							this.moveFocusTo(linkInfos[0].link, d3Event);
 						}
 
 					} else if (KeyboardUtils.selectObject(d3Event)) {
@@ -2068,7 +2072,7 @@ export default class SVGCanvasRenderer {
 				this.setNodeStyles(d, "hover", nodeGrp);
 
 				if (this.config.enableContextToolbar) {
-					this.moveFocusTo({ obj: d, type: "node" }, d3Event);
+					this.moveFocusTo(d, d3Event);
 					this.addContextToolbar(d3Event, d, "node");
 				} else {
 					this.addDynamicNodeIcons(d3Event, d, nodeGrp);
@@ -2118,7 +2122,7 @@ export default class SVGCanvasRenderer {
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
 						this.activePipeline.setTabGroupIndexForObj(d);
-						this.moveFocusTo({ obj: d, type: "node" }, d3Event);
+						this.moveFocusTo(d, d3Event);
 					}
 					this.selectObjectD3Event(d3Event, d, "node");
 				}
@@ -2148,7 +2152,7 @@ export default class SVGCanvasRenderer {
 					if (this.config.enableDragWithoutSelect) {
 						this.selectObjectD3Event(d3Event, d, "node");
 					}
-					this.moveFocusTo({ obj: d, type: "node" }, d3Event);
+					this.moveFocusTo(d, d3Event);
 					this.openContextMenu(d3Event, "node", d);
 				}
 			});
@@ -2982,7 +2986,7 @@ export default class SVGCanvasRenderer {
 					const rect = ellipsisGrp.node().getBoundingClientRect();
 					const rect2 = this.canvasSVG.node().getBoundingClientRect();
 					const pos = { x: rect.left - rect2.left, y: rect.bottom - rect2.top };
-					this.moveFocusTo({ obj: d, type: "node" }, d3Event);
+					this.moveFocusTo(d, d3Event);
 					this.openContextMenu(d3Event, "node", d, null, pos);
 				}
 			});
@@ -3948,7 +3952,7 @@ export default class SVGCanvasRenderer {
 						const linkInfos = this.activePipeline.getNextLinksFromComment(d);
 						if (linkInfos.length > 0) {
 							linkInfos.forEach((li) => (li.link.navObject = d));
-							this.moveFocusTo({ obj: linkInfos[0].link, type: "link" }, d3Event);
+							this.moveFocusTo(linkInfos[0].link, d3Event);
 						}
 
 					} else if (KeyboardUtils.selectObject(d3Event)) {
@@ -3985,7 +3989,7 @@ export default class SVGCanvasRenderer {
 				}
 				if (this.config.enableContextToolbar) {
 					if (!this.svgCanvasTextArea.isEditingText()) {
-						this.moveFocusTo({ obj: d, type: "comment" }, d3Event);
+						this.moveFocusTo(d, d3Event);
 					}
 					this.addContextToolbar(d3Event, d, "comment");
 				}
@@ -4014,7 +4018,7 @@ export default class SVGCanvasRenderer {
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
 						this.activePipeline.setTabGroupIndexForObj(d);
-						this.moveFocusTo({ obj: d, type: "comment" }, d3Event);
+						this.moveFocusTo(d, d3Event);
 					}
 					this.selectObjectD3Event(d3Event, d, "comment");
 				}
@@ -4047,7 +4051,7 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, "comment");
 				}
-				this.moveFocusTo({ obj: d, type: "comment" }, d3Event);
+				this.moveFocusTo(d, d3Event);
 				this.openContextMenu(d3Event, "comment", d);
 			});
 	}
@@ -4381,55 +4385,41 @@ export default class SVGCanvasRenderer {
 					if (KeyboardUtils.nextObjectInGroup(d3Event)) {
 						if (d.type === NODE_LINK) {
 							const node = this.activePipeline.getNextNodeFromDataLink(d);
-							if (node) {
-								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
-							}
+							this.moveFocusTo(node, d3Event);
 							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 						} else if (d.type === ASSOCIATION_LINK) {
 							const node = this.activePipeline.getNextNodeFromAssocLink(d);
-							if (node) {
-								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
-							}
+							this.moveFocusTo(node, d3Event);
 							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 						} else if (d.type === COMMENT_LINK) {
 							const obj = this.activePipeline.getNextObjectFromCommentLink(d);
-							if (obj) {
-								const type = CanvasUtils.isNode(obj) ? "node" : "comment";
-								this.moveFocusTo({ obj, type }, d3Event);
-							}
+							this.moveFocusTo(obj, d3Event);
 							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						}
 
 					} else if (KeyboardUtils.previousObjectInGroup(d3Event)) {
 						if (d.type === NODE_LINK) {
 							const node = this.activePipeline.getPreviousNodeFromDataLink(d);
-							if (node) {
-								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
-							}
+							this.moveFocusTo(node, d3Event);
 
 						} else if (d.type === ASSOCIATION_LINK) {
 							const node = this.activePipeline.getPreviousNodeFromAssocLink(d);
-							if (node) {
-								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
-							}
+							this.moveFocusTo(node, d3Event);
 
 						} else if (d.type === COMMENT_LINK) {
 							const obj = this.activePipeline.getPreviousObjectFromCommentLink(d);
-							if (obj) {
-								const type = CanvasUtils.isNode(obj) ? "node" : "comment";
-								this.moveFocusTo({ obj, type }, d3Event);
-							}
+							this.moveFocusTo(obj, d3Event);
 						}
 
 					} else if (KeyboardUtils.nextSiblingLink(d3Event)) {
 						const link = this.activePipeline.getNextSiblingLink(d);
-						this.moveFocusTo({ obj: link, type: "link" }, d3Event);
+						this.moveFocusTo(link, d3Event);
 
 					} else if (KeyboardUtils.previousSiblingLink(d3Event)) {
 						const link = this.activePipeline.getPreviousSiblingLink(d);
-						this.moveFocusTo({ obj: link, type: "link" }, d3Event);
+						this.moveFocusTo(link, d3Event);
 
 					} else if (KeyboardUtils.selectObject(d3Event)) {
 						this.selectObjectD3Event(d3Event, d, "link");
@@ -4476,7 +4466,7 @@ export default class SVGCanvasRenderer {
 				this.setLinkLineStyles(targetObj, d, "hover");
 
 				if (this.config.enableContextToolbar) {
-					this.moveFocusTo({ obj: d, type: "link" }, d3Event);
+					this.moveFocusTo(d, d3Event);
 					this.addContextToolbar(d3Event, d, "link",
 						this.canvasLayout.linkContextToolbarPosX,
 						this.canvasLayout.linkContextToolbarPosY
@@ -4528,7 +4518,7 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 					if (this.config.enableKeyboardNavigation) {
 						this.activePipeline.setTabGroupIndexForObj(d);
-						this.moveFocusTo({ obj: d, type: "link" }, d3Event);
+						this.moveFocusTo(d, d3Event);
 					}
 					this.selectObjectD3Event(d3Event, d, "link");
 				}
@@ -4543,7 +4533,7 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 					this.selectObjectD3Event(d3Event, d, "link");
 				}
-				this.moveFocusTo({ obj: d, type: "link" }, d3Event);
+				this.moveFocusTo(d, d3Event);
 				this.openContextMenu(d3Event, "link", d);
 			});
 	}
@@ -5726,36 +5716,39 @@ export default class SVGCanvasRenderer {
 	restoreFocus(evt) {
 		// console.log("Restore focus");
 		this.activePipeline.setTabbedIn();
-
-		if (this.currentTarget) {
-			this.moveFocusTo(this.currentTarget, evt);
-		}
+		this.moveFocusTo(this.currentFocusObj, evt);
 	}
 
 	focusOnTextEntryElement(evt) {
 		this.svgCanvasTextArea.focusOnTextEntryElement(evt);
 	}
 
-	moveFocusTo(target, evt) {
+	moveFocusTo(focusObj, evt) {
 		if (!this.config.enableKeyboardNavigation) {
 			return;
 		}
 
-		this.currentTarget = target;
+		if (!focusObj) {
+			return;
+		}
+
+		const type = CanvasUtils.getObjectTypeName(focusObj);
+
+		this.currentFocusObj = focusObj;
 
 		this.canvasGrp.selectAll(".d3-focus-path").remove();
 
 		let objSel;
-		if (target.type === "node") {
-			objSel = this.getNodeGroupSelectionById(target.obj.id);
+		if (type === "node") {
+			objSel = this.getNodeGroupSelectionById(focusObj.id);
 
 			objSel.insert("path", ":first-child")
 				.attr("class", "d3-focus-path")
 				.attr("d", (d) => this.getNodeShapePathSizing(d));
 
 
-		} else if (target.type === "comment") {
-			objSel = this.getCommentGroupSelectionById(target.obj.id);
+		} else if (type === "comment") {
+			objSel = this.getCommentGroupSelectionById(focusObj.id);
 
 			objSel.insert("rect", ":first-child")
 				.attr("class", "d3-focus-path")
@@ -5764,13 +5757,13 @@ export default class SVGCanvasRenderer {
 				.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
 				.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
 
-		} else if (target.type === "link") {
-			objSel = this.getLinkGroupSelectionById(target.obj.id);
+		} else if (type === "link") {
+			objSel = this.getLinkGroupSelectionById(focusObj.id);
 
 			// TODO - Think of a way to show focus on links other than line thckness
 		}
-		if (target.obj) {
-			const zoom = this.canvasController.getZoomToReveal([target.obj.id]);
+		if (focusObj) {
+			const zoom = this.canvasController.getZoomToReveal([focusObj.id]);
 			if (zoom) {
 				this.zoomTo(zoom);
 			}
@@ -5790,8 +5783,8 @@ export default class SVGCanvasRenderer {
 			}
 
 		} else {
-			const id = target.obj ? target.obj.id : "Unknown";
-			this.logger.error(`Error applying focus to ${target.type} object with ID: ${id}`);
+			const id = focusObj ? focusObj.id : "Unknown";
+			this.logger.error(`Error applying focus to ${type} object with ID: ${id}`);
 		}
 	}
 }

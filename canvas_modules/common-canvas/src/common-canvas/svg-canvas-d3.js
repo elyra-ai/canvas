@@ -228,8 +228,8 @@ export default class SVGCanvasD3 {
 		this.renderer.setTabbedOut();
 	}
 
-	moveFocusTo(target) {
-		this.renderer.moveFocusTo(target);
+	moveFocusTo(focusObj) {
+		this.renderer.moveFocusTo(focusObj);
 	}
 
 	restoreFocus(evt) {
