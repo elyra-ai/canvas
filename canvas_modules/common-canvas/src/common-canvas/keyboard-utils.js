@@ -19,8 +19,8 @@ import CanvasUtils from "./common-canvas-utils.js";
 const RETURN_KEY = "Enter"; // Return key on the Mac
 const SPACE_KEY = "Space";
 const LEFT_ARROW_KEY = "ArrowLeft";
-const UP_ARROW_KEY = "ArrowUp";
 const RIGHT_ARROW_KEY = "ArrowRight";
+const UP_ARROW_KEY = "ArrowUp";
 const DOWN_ARROW_KEY = "ArrowDown";
 const ESC_KEY = "Escape";
 const SLASH_KEY = "Slash";
@@ -100,6 +100,22 @@ export default class KeyboardUtils {
 		return this.isMetaKey(evt) && evt.shiftKey && evt.code === ZERO_KEY;
 	}
 
+	static panLeft(evt) {
+		return this.isMetaKey(evt) && evt.shiftKey && evt.code === LEFT_ARROW_KEY;
+	}
+
+	static panRight(evt) {
+		return this.isMetaKey(evt) && evt.shiftKey && evt.code === RIGHT_ARROW_KEY;
+	}
+
+	static panUp(evt) {
+		return this.isMetaKey(evt) && evt.shiftKey && evt.code === UP_ARROW_KEY;
+	}
+
+	static panDown(evt) {
+		return this.isMetaKey(evt) && evt.shiftKey && evt.code === DOWN_ARROW_KEY;
+	}
+
 	static nextGroup(evt) {
 		return evt.code === TAB_KEY && !evt.shiftKey;
 	}
@@ -109,11 +125,11 @@ export default class KeyboardUtils {
 	}
 
 	static nextObjectInGroup(d3Event) {
-		return d3Event.code === RIGHT_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === RIGHT_ARROW_KEY;
 	}
 
 	static previousObjectInGroup(d3Event) {
-		return d3Event.code === LEFT_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === LEFT_ARROW_KEY;
 	}
 
 	// The calling code will differentiate between a single select

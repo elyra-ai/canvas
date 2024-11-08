@@ -367,7 +367,7 @@ export default class SVGCanvasUtilsAccessibility {
 			this.currentTabObjectIndex++;
 			if (this.currentTabObjectIndex < this.tabObjects.length) {
 				this.isTabbedIn = true;
-				return this.tabObjects[this.currentTabObjectIndex];
+				return this.tabObjects[this.currentTabObjectIndex].obj;
 			}
 		}
 		return null;
@@ -385,7 +385,7 @@ export default class SVGCanvasUtilsAccessibility {
 			this.currentTabObjectIndex--;
 			if (this.currentTabObjectIndex > -1) {
 				this.isTabbedIn = true;
-				return this.tabObjects[this.currentTabObjectIndex];
+				return this.tabObjects[this.currentTabObjectIndex].obj;
 			}
 		}
 		return null;

@@ -256,6 +256,22 @@ class CanvasContents extends React.Component {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 			this.svgCanvasD3.zoomOut();
 
+		} else if (KeyboardUtils.panLeft(evt) && this.props.canvasConfig.enableKeyboardNavigation) {
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+			this.svgCanvasD3.translateBy(-10, 0);
+
+		} else if (KeyboardUtils.panRight(evt) && this.props.canvasConfig.enableKeyboardNavigation) {
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+			this.svgCanvasD3.translateBy(10, 0);
+
+		} else if (KeyboardUtils.panUp(evt) && this.props.canvasConfig.enableKeyboardNavigation) {
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+			this.svgCanvasD3.translateBy(0, -10);
+
+		} else if (KeyboardUtils.panDown(evt) && this.props.canvasConfig.enableKeyboardNavigation) {
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+			this.svgCanvasD3.translateBy(0, 10);
+
 		} else if (KeyboardUtils.nextGroup(evt) && this.props.canvasConfig.enableKeyboardNavigation) {
 			this.moveFocusToNextGroup(evt);
 

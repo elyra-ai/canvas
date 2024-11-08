@@ -1899,10 +1899,7 @@ export default class CanvasController {
 
 	moveFocusTo(focusObject) {
 		if (this.canvasContents) {
-			this.getSVGCanvasD3().moveFocusTo({
-				type: CanvasUtils.getObjectTypeName(focusObject),
-				obj: focusObject
-			});
+			this.getSVGCanvasD3().moveFocusTo(focusObject);
 		}
 	}
 
