@@ -1369,21 +1369,24 @@ Cypress.Commands.add("verifyNotificationIconType", (type) => {
 });
 
 Cypress.Commands.add("verifyCanvasTransform", (movString) => {
-	// Verify the argument passed is a string
-	if (movString === String) {
-		cy.get("#canvas-div-0 .d3-canvas-group", { timeout: 10000 })
-			.should("exist")
-			.invoke("attr", "transform")
-			.then((actualTransformString) => {
+	cy.get("#canvas-div-0 .d3-canvas-group")
+		.invoke("attr", "transform")
+		.should((actualTransformString) => {
+			// Verify the movString passed is a string
+			if (typeof movString === "string") {
 				const expectedValues = parseTransformString(movString);
 				const actualValues = parseTransformString(actualTransformString);
-
 				// Compare each part of the transform with compareRange
 				compareCloseTo(actualValues.translateX, expectedValues.translateX);
 				compareCloseTo(actualValues.translateY, expectedValues.translateY);
 				compareCloseTo(actualValues.scale, expectedValues.scale);
-			});
-	}
+			} else if (typeof movString === "undefined") {
+				expect(actualTransformString).to.be.undefined;
+			} else {
+				throw new Error("Expected movString to be a string or undefined");
+			}
+		});
+
 });
 
 Cypress.Commands.add("verifyNotificationCounter", (count) => {

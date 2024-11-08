@@ -77,7 +77,6 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a n
 		cy.setXPercentOffset(25);
 		cy.setYPercentOffset(25);
 		cy.submitAPI();
-		cy.wait(500);
 		cy.verifyCanvasTransform("translate(-1529.2531391552911,-684.6045237056301) scale(1)");
 	});
 
@@ -93,7 +92,6 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a n
 		cy.setXPercentOffset(55);
 		cy.setYPercentOffset(55);
 		cy.submitAPI();
-		cy.wait(500);
 		cy.verifyCanvasTransform("translate(-1226.853139155291,-471.90452370563) scale(1)");
 	});
 
@@ -107,7 +105,6 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a n
 		cy.setXPercentOffset(70);
 		cy.setYPercentOffset(60);
 		cy.submitAPI();
-		cy.wait(500);
 		cy.verifyCanvasTransform("translate(-913.7210355957193,-358.1041124596638) scale(0.9090909090909091)");
 	});
 });
@@ -125,7 +122,6 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a l
 		cy.setXPercentOffset(25);
 		cy.setYPercentOffset(25);
 		cy.submitAPI();
-		cy.wait(500);
 		cy.verifyCanvasTransform("translate(-181.5,-15.25) scale(1)");
 	});
 
@@ -141,7 +137,6 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a l
 		cy.setXPercentOffset(55);
 		cy.setYPercentOffset(55);
 		cy.submitAPI();
-		cy.wait(500);
 		cy.verifyCanvasTransform("translate(-51.59999999999991,87.95000381469731) scale(1)");
 	});
 
@@ -155,7 +150,6 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a l
 		cy.setXPercentOffset(70);
 		cy.setYPercentOffset(60);
 		cy.submitAPI();
-		cy.wait(500);
 		cy.verifyCanvasTransform("translate(498.32727272727266,290.85454545454536) scale(0.9090909090909091)");
 	});
 });
