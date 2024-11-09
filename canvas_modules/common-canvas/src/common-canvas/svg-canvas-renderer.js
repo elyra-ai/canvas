@@ -320,8 +320,6 @@ export default class SVGCanvasRenderer {
 		// keyboard navigation is enabled, otherwise focus on the canvas.
 		if (this.config.enableKeyboardNavigation) {
 			this.restoreFocus();
-		} else {
-			this.canvasController.focusOnCanvas();
 		}
 
 		this.logger.logEndTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
@@ -2051,14 +2049,6 @@ export default class SVGCanvasRenderer {
 						}
 					}
 				}
-			})
-			.on("focus", (d3Event, d) => {
-				// console.log("On focus in node:" + d.id);
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-			})
-			.on("blur", (d3Event, d) => {
-				// console.log("On blur in node:" + d.id);
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 			})
 			.on("mouseenter", (d3Event, d) => {
 				// console.log("Mouseenter in node");
@@ -3974,12 +3964,6 @@ export default class SVGCanvasRenderer {
 					}
 				}
 			})
-			.on("focus", (d3Event) => {
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-			})
-			.on("blur", (d3Event) => {
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-			})
 			.on("mouseenter", (d3Event, d) => {
 				if (this.isDragging()) {
 					return;
@@ -4446,12 +4430,6 @@ export default class SVGCanvasRenderer {
 					}
 				}
 			})
-			.on("focus", (d3Event) => {
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-			})
-			.on("blur", (d3Event) => {
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-			})
 			.on("mouseenter", (d3Event, d) => {
 				if (this.isDragging()) {
 					return;
@@ -4770,12 +4748,6 @@ export default class SVGCanvasRenderer {
 				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 			this.raiseSelectedLinksToTop();
 		}
-	}
-
-	// Raises the node, specified by the node ID, above other nodes and objects.
-	// Called by external utils.
-	raiseNodeToTopById(nodeId) {
-		this.getNodeGroupSelectionById(nodeId).raise();
 	}
 
 	// Raises the node above other nodes and objects (on the mouse entering

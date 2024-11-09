@@ -46,14 +46,14 @@ Cypress.Commands.add("clickOptionFromContextSubmenu", (submenuName, optionName) 
 });
 
 Cypress.Commands.add("clickColorFromContextSubmenu", (submenuName, optionName) => {
-	cy.get(".context-menu-popover").find(".color-picker-item")
-		.then((options) => {
-			for (let idx = 0; idx < options.length; idx++) {
-				if (options[idx].className === "color-picker-item " + optionName) {
-					options[idx].click();
-				}
-			}
-		});
+	cy.get(".context-menu-popover")
+		.find(".context-menu-item:not(.contextmenu-divider)[data-action='colorBackground']")
+		.as("colorBackgroundOption");
+	cy.get("@colorBackgroundOption")
+		.click();
+	cy.get("@colorBackgroundOption")
+		.find(`.${optionName}`)
+		.click();
 });
 
 Cypress.Commands.add("simulateClickInBrowsersEditMenu", (type) => {
