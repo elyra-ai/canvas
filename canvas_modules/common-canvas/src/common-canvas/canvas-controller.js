@@ -1880,7 +1880,7 @@ export default class CanvasController {
 	}
 
 	restoreFocus() {
-		if (this.canvasContents) {
+		if (this.canvasContents && this.getCanvasConfig().enableKeyboardNavigation) {
 			this.getSVGCanvasD3().restoreFocus();
 		}
 	}
@@ -1892,13 +1892,13 @@ export default class CanvasController {
 	}
 
 	focusOnCanvas() {
-		if (this.canvasContents) {
+		if (this.canvasContents) { // Don't check enableKeyboardNavigation here as focusOnCanvas can be called when it is false.
 			this.canvasContents.focusOnCanvas();
 		}
 	}
 
 	moveFocusTo(focusObject) {
-		if (this.canvasContents) {
+		if (this.canvasContents && this.getCanvasConfig().enableKeyboardNavigation) {
 			this.getSVGCanvasD3().moveFocusTo(focusObject);
 		}
 	}
@@ -2755,15 +2755,20 @@ export default class CanvasController {
 		// Set the keyboard focus appropriately for each command that has
 		// a getFocusObject method. In other cases, the focus will remain
 		// in its current location.
-		if (command?.getFocusObject) {
-			const focusObject = command.getFocusObject();
+		if (this.getCanvasConfig().enableKeyboardNavigation) {
+			if (command?.getFocusObject && this.getCanvasConfig().enableKeyboardNavigation) {
+				const focusObject = command.getFocusObject();
 
-			if (focusObject === CANVAS_FOCUS) {
-				this.focusOnCanvas();
+				if (focusObject === CANVAS_FOCUS) {
+					this.focusOnCanvas();
 
-			} else if (this.canvasContents) {
-				this.moveFocusTo(focusObject);
+				} else if (this.canvasContents) {
+					this.moveFocusTo(focusObject);
+				}
 			}
+
+		} else {
+			this.focusOnCanvas();
 		}
 
 		return true;
