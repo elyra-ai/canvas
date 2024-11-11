@@ -65,6 +65,7 @@ describe("CommonCanvas renders correctly", () => {
 		const config = {};
 		const canvasParams = { showRightFlyout: false };
 		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
+		// When showRightFlyout is false then Right Flyout should not be visible
 		expect(wrapper.find(CommonCanvasRightFlyout)).to.have.length(0);
 		expect(canvasController.isRightFlyoutOpen() === false).to.be.true;
 	});
