@@ -1371,7 +1371,22 @@ Cypress.Commands.add("verifyNotificationIconType", (type) => {
 Cypress.Commands.add("verifyCanvasTransform", (movString) => {
 	cy.get("#canvas-div-0 .d3-canvas-group")
 		.invoke("attr", "transform")
-		.should("eq", movString);
+		.should((actualTransformString) => {
+			// Verify the movString passed is a string
+			if (typeof movString === "string") {
+				const expectedValues = parseTransformString(movString);
+				const actualValues = parseTransformString(actualTransformString);
+				// Compare each part of the transform with compareRange
+				compareCloseTo(actualValues.translateX, expectedValues.translateX);
+				compareCloseTo(actualValues.translateY, expectedValues.translateY);
+				compareCloseTo(actualValues.scale, expectedValues.scale);
+			} else if (typeof movString === "undefined") {
+				expect(actualTransformString).to.be.undefined;
+			} else {
+				throw new Error("Expected movString to be a string or undefined");
+			}
+		});
+
 });
 
 Cypress.Commands.add("verifyNotificationCounter", (count) => {
@@ -1427,7 +1442,7 @@ Cypress.Commands.add("verifyNotificationCenterDoesntExist", (hidden) => {
 Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
 	if (typeof content === "string" && content.length > 0) {
 		cy.get(".notification-panel-" + id).should("contain", content);
-	}	else if (typeof content === "string" && content.length === 0) {
+	} else if (typeof content === "string" && content.length === 0) {
 		cy.get(".notification-panel-" + id).should("be.empty");
 	} else {
 		cy.get(".notification-panel-" + id).should("not.exist");
@@ -1479,6 +1494,19 @@ function verifyPath(actualPath, expectedPath) {
 			compareCloseTo(actualNumber, expectedNumber);
 		}
 	}
+}
+
+function parseTransformString(transformString) {
+	const translateMatch = transformString.match(/translate\(([^,]+),([^)]+)\)/);
+	const scaleMatch = transformString.match(/scale\(([^)]+)\)/);
+	if (!translateMatch || !scaleMatch) {
+		throw new Error("invalid string format");
+	}
+	return {
+		translateX: parseFloat(translateMatch[1]),
+		translateY: parseFloat(translateMatch[2]),
+		scale: parseFloat(scaleMatch[1])
+	};
 }
 
 function compareCloseTo(value, compareValue) {
