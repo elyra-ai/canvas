@@ -30,6 +30,8 @@ class CommonCanvasRightFlyout extends React.Component {
 		this.onMouseUp = this.onMouseUp.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
 		this.onMouseMoveX = this.onMouseMoveX.bind(this);
+
+		this.getRightFlyoutResizeContent = this.getRightFlyoutResizeContent.bind(this);
 	}
 
 	onMouseDown(e) {
@@ -57,6 +59,17 @@ class CommonCanvasRightFlyout extends React.Component {
 		}
 	}
 
+	// Returns content to enable/disable resize based on feature flag.
+	getRightFlyoutResizeContent() {
+		let resizeContent = null;
+
+		if (this.props.enableRightFlyoutDragToResize) {
+			resizeContent = (<div className="right-flyout-drag" onMouseDown={this.onMouseDown} />);
+		}
+
+		return resizeContent;
+	}
+
 	// Returns a new width for right panel limited by the need to enforce
 	// a minimum and maximum width
 	limitWidth(wth) {
@@ -77,11 +90,7 @@ class CommonCanvasRightFlyout extends React.Component {
 		this.logger.log("render");
 
 		let rightFlyout = <div />; // For no content, return empty <div> so grid siziing for parent <div> work correctly.
-		let rightFlyoutDragDiv = null;
-
-		if (this.props.enableRightFlyoutDragToResize) {
-			rightFlyoutDragDiv = (<div className="right-flyout-drag" onMouseDown={this.onMouseDown} />);
-		}
+		const rightFlyoutDragContent = this.getRightFlyoutResizeContent();
 
 		if (this.props.content && this.props.isOpen) {
 			const widthPx = this.limitWidth(this.props.panelWidth) + "px";
@@ -90,7 +99,7 @@ class CommonCanvasRightFlyout extends React.Component {
 				: "right-flyout-panel";
 			rightFlyout = (
 				<div className="right-flyout-container" style={{ width: widthPx }} >
-					{rightFlyoutDragDiv}
+					{rightFlyoutDragContent}
 					<div className={rfClass}>
 						{this.props.content}
 					</div>
