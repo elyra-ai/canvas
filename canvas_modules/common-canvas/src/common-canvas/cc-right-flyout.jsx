@@ -19,7 +19,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
 
-const MAX_WIDTH_EXTEND_PERCENT = 0.7; // Should cover atmost 70% of available width
+const MAX_WIDTH_EXTEND_PERCENT = 0.7; // Should cover at most 70% of available width
 const MIN_WIDTH = 300;
 class CommonCanvasRightFlyout extends React.Component {
 	constructor(props) {
@@ -54,7 +54,7 @@ class CommonCanvasRightFlyout extends React.Component {
 		if (e.clientX) {
 			const diff = e.clientX - this.posX;
 			const wth = this.props.panelWidth - diff;
-			this.props.canvasController.setRightPanelWidth(this.limitWidth(wth));
+			this.props.canvasController.setRightFlyoutWidth(this.limitWidth(wth));
 			this.posX = e.clientX;
 		}
 	}
@@ -72,9 +72,9 @@ class CommonCanvasRightFlyout extends React.Component {
 
 	// Returns a new width for right panel limited by the need to enforce
 	// a minimum and maximum width
-	limitWidth(wth) {
+	limitWidth(wd) {
 		const canvasContainer = document.getElementById(this.props.containingDivId);
-		let width = wth;
+		let width = wd;
 
 		if (canvasContainer) {
 			// Max Width should be 70% of the total available width (canvas + rightflyout)

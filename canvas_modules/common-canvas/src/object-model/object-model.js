@@ -1282,8 +1282,8 @@ export default class ObjectModel {
 		return this.store.isRightFlyoutOpen();
 	}
 
-	setRightPanelWidth(wdth) {
-		this.store.dispatch({ type: "SET_RIGHT_FLYOUT_CONFIG", data: { config: { panelWidth: wdth } } });
+	setRightFlyoutWidth(wd) {
+		this.store.dispatch({ type: "SET_RIGHT_FLYOUT_CONFIG", data: { config: { panelWidth: wd } } });
 	}
 
 	// ---------------------------------------------------------------------------

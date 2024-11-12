@@ -134,6 +134,11 @@ class CommonCanvasPanels extends React.Component {
 		return null;
 	}
 
+	// Returns a JSX object for the contents of the right panel.
+	generateRightFlyout() {
+		return (<CommonCanvasRightFlyout containingDivId={this.props.containingDivId} canvasController={this.props.canvasController} />);
+	}
+
 	render() {
 		this.logger.log("render");
 
@@ -144,7 +149,7 @@ class CommonCanvasPanels extends React.Component {
 			/>
 		);
 		const rightFlyoutOpen = this.isRightPanelOpen();
-		const rightFlyout = rightFlyoutOpen ? (<CommonCanvasRightFlyout containingDivId={this.props.containingDivId} canvasController={this.props.canvasController} />) : null;
+		const rightFlyout = rightFlyoutOpen ? this.generateRightFlyout() : null;
 		const leftFlyoutIsOpen = this.isLeftPanelOpen();
 		const leftFlyout = leftFlyoutIsOpen ? this.generateLeftFlyout() : null;
 

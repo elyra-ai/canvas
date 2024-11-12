@@ -71,12 +71,11 @@ $panel-border-color: $border-subtle-01;
 
 .right-flyout-drag {
 	cursor: ew-resize;
-	flex: 0 0 0.5px;
+	flex: 0 0 $spacing-01;
 	border: $panel-border-color;
 	background: $layer-01;
 	transition: all 0.2s ease-in;
 	&:hover {
-		flex: 0 0 $spacing-01;
 		background: $button-tertiary;
 	}
 }
