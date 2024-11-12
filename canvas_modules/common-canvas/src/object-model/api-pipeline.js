@@ -428,10 +428,6 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "REPLACE_NODES", data: replacementNodes, pipelineId: this.pipelineId });
 	}
 
-	raiseNodeToTop(node) {
-		this.store.dispatch({ type: "RAISE_NODE_TO_TOP", data: { node }, pipelineId: this.pipelineId });
-	}
-
 	// Returns true if a new link needs to be created with the newly created
 	// auto node. A link is required when there IS a source node and the source
 	// and target nodes each have a single port and the cardinality is not

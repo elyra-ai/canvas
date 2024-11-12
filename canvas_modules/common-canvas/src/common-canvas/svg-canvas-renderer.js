@@ -2056,9 +2056,9 @@ export default class SVGCanvasRenderer {
 					return;
 				}
 
-				this.raiseNodeToTop(d);
-
 				const nodeGrp = d3.select(d3Event.currentTarget);
+				this.raiseNodeToTop(nodeGrp, d3Event);
+
 				this.setNodeStyles(d, "hover", nodeGrp);
 
 				if (this.config.enableContextToolbar) {
@@ -4760,14 +4760,15 @@ export default class SVGCanvasRenderer {
 	// * There are one or more selected links
 	// * We are editing text
 	// * The app has indicated links should be displayed over nodes
-	raiseNodeToTop(d) {
+	raiseNodeToTop(nodeGrp, evt) {
 		if (this.config.enableRaiseNodesToTopOnHover &&
 			!this.isDragging() &&
 			this.activePipeline.getSelectedLinksCount() === 0 &&
 			!this.isEditingText() &&
 			!this.config.enableLinksOverNodes
 		) {
-			this.canvasController.raiseNodeToTop(d, this.activePipeline.id);
+			nodeGrp.raise();
+			this.restoreFocus(evt);
 		}
 	}
 

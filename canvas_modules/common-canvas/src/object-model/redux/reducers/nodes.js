@@ -47,16 +47,6 @@ export default (state = [], action) => {
 			return node;
 		});
 
-	case "RAISE_NODE_TO_TOP": {
-		const node = state.find((n) => n.id === action.data.node.id);
-		if (node) {
-			const nodes = state.filter((n) => n.id !== action.data.node.id);
-			nodes.push(node);
-			return nodes;
-		}
-		return state;
-	}
-
 	case "MOVE_OBJECTS":
 		// action.data.nodes contains an array of node and comment Ids
 		if (action.data.nodes) {

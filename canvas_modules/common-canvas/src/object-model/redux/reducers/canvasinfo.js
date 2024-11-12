@@ -158,7 +158,6 @@ export default (state = {}, action) => {
 	case "ADD_NODE":
 	case "REPLACE_NODES":
 	case "REPLACE_NODE":
-	case "RAISE_NODE_TO_TOP":
 	case "SIZE_AND_POSITION_OBJECTS":
 	case "SET_NODE_PARAMETERS":
 	case "SET_NODE_UI_PARAMETERS":
