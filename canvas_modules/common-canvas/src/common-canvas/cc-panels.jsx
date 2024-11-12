@@ -97,7 +97,7 @@ class CommonCanvasPanels extends React.Component {
 	//   indicated by setting the config field enablePaletteLayout to
 	//   "None" and providing some JSX in the leftFlyoutContent field
 	//   of <CommonCanvas>.
-	isLeftPanelOpen() {
+	isLeftFlyoutOpen() {
 		if (this.props.enablePaletteLayout === PALETTE_LAYOUT_DIALOG) {
 			return false;
 		}
@@ -115,7 +115,7 @@ class CommonCanvasPanels extends React.Component {
 	}
 
 	// Returns true if the right flyout should be displayed.
-	isRightPanelOpen() {
+	isRightFlyoutOpen() {
 		return this.props.rightFlyoutIsOpen;
 	}
 
@@ -148,9 +148,9 @@ class CommonCanvasPanels extends React.Component {
 				containingDivId={this.props.containingDivId}
 			/>
 		);
-		const rightFlyoutOpen = this.isRightPanelOpen();
+		const rightFlyoutOpen = this.isRightFlyoutOpen();
 		const rightFlyout = rightFlyoutOpen ? this.generateRightFlyout() : null;
-		const leftFlyoutIsOpen = this.isLeftPanelOpen();
+		const leftFlyoutIsOpen = this.isLeftFlyoutOpen();
 		const leftFlyout = leftFlyoutIsOpen ? this.generateLeftFlyout() : null;
 
 		const topCenterBottom = this.generateTopCenterBottom();

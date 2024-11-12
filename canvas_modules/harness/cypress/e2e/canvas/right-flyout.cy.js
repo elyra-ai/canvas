@@ -30,14 +30,14 @@ describe("Test for verifying the Right Flyout panel functionality and layout in 
 		cy.verifyRightFlyoutPanelHeight(709);
 	});
 
-	it("Test ensuring Right Flyout panle drag is working correctly", function() {
-		cy.setCanvasConfig({ "selectedRightFlyoutResize": true });
+	it("Test ensuring Right Flyout panel drag is working correctly", function() {
+		cy.setCanvasConfig({ "selectedRightFlyoutDragToResize": true });
 		cy.moveRightFlyoutDivider(400);
 		cy.verifyRightFlyoutPanelWidth(626);
 	});
 
 	it("Test ensuring Right Flyout panel drag only extends to a maximum width leaving width for canvas", function() {
-		cy.setCanvasConfig({ "selectedRightFlyoutResize": true });
+		cy.setCanvasConfig({ "selectedRightFlyoutDragToResize": true });
 		cy.moveRightFlyoutDivider(100);
 		cy.verifyRightFlyoutPanelWidth(716);
 
@@ -49,10 +49,10 @@ describe("Test for verifying the Right Flyout panel functionality and layout in 
 	});
 
 	it("Test ensuring Right Flyout panel drag is correctly enabled and disabled", function() {
-		cy.setCanvasConfig({ "selectedRightFlyoutResize": false });
+		cy.setCanvasConfig({ "selectedRightFlyoutDragToResize": false });
 		cy.verifyIsRightFlyoutDragDisabled();
 
-		cy.setCanvasConfig({ "selectedRightFlyoutResize": true });
+		cy.setCanvasConfig({ "selectedRightFlyoutDragToResize": true });
 		cy.verifyIsRightFlyoutDragEnabled();
 	});
 });

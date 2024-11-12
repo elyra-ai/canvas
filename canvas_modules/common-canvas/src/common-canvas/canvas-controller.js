@@ -1618,8 +1618,16 @@ export default class CanvasController {
 		this.objectModel.setBottomPanelHeight(ht);
 	}
 
+	isLeftFlyoutOpen() {
+		return this.objectModel.isLeftFlyoutOpen();
+	}
+
 	setRightFlyoutWidth(wd) {
 		this.objectModel.setRightFlyoutWidth(wd);
+	}
+
+	isRightFlyoutOpen() {
+		return this.objectModel.isRightFlyoutOpen();
 	}
 
 	isTopPanelOpen() {
@@ -1674,14 +1682,6 @@ export default class CanvasController {
 
 	toggleNotificationPanel() {
 		this.objectModel.toggleNotificationPanel();
-	}
-
-	isLeftFlyoutOpen() {
-		return this.objectModel.isLeftFlyoutOpen();
-	}
-
-	isRightFlyoutOpen() {
-		return this.objectModel.isRightFlyoutOpen();
 	}
 
 	isDisplayingFullPageSubFlow() {
