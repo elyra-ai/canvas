@@ -1032,14 +1032,6 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).isSuperNodeExpandedInPlace(nodeId);
 	}
 
-	// Moves the node provided from its current position to the end of
-	// the nodes array. This has the effect of making the node display last,
-	// when the canvas refreshes, which raises it above any overlapping nodes.
-	raiseNodeToTop(node, pipelineId) {
-		return this.objectModel.getAPIPipeline(pipelineId).raiseNodeToTop(node);
-	}
-
-
 	// Sets the label, for the node identified, to edit mode, provided the node
 	// label is editable. This allows the user to edite the label text.
 	setNodeLabelEditingMode(nodeId, pipelineId) {
