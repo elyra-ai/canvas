@@ -36,12 +36,14 @@ Cypress.Commands.add("panCanvasToPosition", (canvasX, canvasY) => {
 	cy.window().then((win) => {
 		cy.getCanvasTranslateCoords()
 			.then((transform) => {
+				// Pressing space is needed for "Carbon" and "Trackpad" interaction types
+				// but does not do any harm if used with the "Mouse" interaction type.
 				cy.get("#canvas-div-0")
-					.trigger("keydown", { keyCode: 32, release: false });
+					.trigger("keydown", { code: "Space", keyCode: 32, release: false });
 				cy.get("#canvas-div-0")
-					.trigger("mousedown", "topLeft", { which: 1, view: win });
+					.trigger("mousedown", 1, 1, { which: 1, view: win }); // Start at position 1, 1 as using topLeft doesn't work
 				cy.get("#canvas-div-0")
-					.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win });
+					.trigger("mousemove", canvasX + transform.x + 1, canvasY + transform.y + 1, { view: win });
 				cy.get("#canvas-div-0")
 					.trigger("mouseup", { which: 1, view: win });
 			});
