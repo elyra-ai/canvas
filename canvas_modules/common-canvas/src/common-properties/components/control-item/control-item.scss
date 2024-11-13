@@ -49,7 +49,7 @@
 	}
 	&.table-control {
 		label, .properties-indicator {
-			@include type-style("productive-heading-01");
+			@include type-style("body-short-01");
 			color: $text-primary;
 		}
 	}
