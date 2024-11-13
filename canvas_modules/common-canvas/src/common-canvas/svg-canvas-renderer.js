@@ -2436,11 +2436,6 @@ export default class SVGCanvasRenderer {
 			objType,
 			range,
 			augment);
-
-		// If the selection has changed we need to recreate any currently displayed
-		// context toolbar because the context actions may have changed based on
-		// the new selection.
-		// this.recreateContextToolbar(d3Event, d, objType);
 	}
 
 	// Performs required action for when either a comment, node or link is selected.
@@ -4748,6 +4743,12 @@ export default class SVGCanvasRenderer {
 				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 			this.raiseSelectedLinksToTop();
 		}
+	}
+
+	// Raises the node, specified by the node ID, above other nodes and objects.
+	// Called by svg-canvas-utils-external.js for use by apps using React nodes.
+	raiseNodeToTopById(nodeId) {
+		this.getNodeGroupSelectionById(nodeId).raise();
 	}
 
 	// Raises the node above other nodes and objects (on the mouse entering
