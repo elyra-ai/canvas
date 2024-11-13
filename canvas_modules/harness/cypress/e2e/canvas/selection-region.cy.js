@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@ describe("Test using region select to select canvas objects", function() {
 
 	it("Test region selects a node when fully covered by the region", function() {
 		cy.verifyNumberOfSelectedObjects(0);
-		cy.selectWithRegion(80, 95, 200, 200);
+		cy.selectWithRegion(80, 96, 200, 200);
 		cy.verifyNodeIsSelected("Binding (entry) node");
 	});
 
 	it("Test region selects a node when partially covered by the region", function() {
 		cy.verifyNumberOfSelectedObjects(0);
-		cy.selectWithRegion(80, 95, 120, 120);
+		cy.selectWithRegion(80, 96, 120, 120);
 		cy.verifyNodeIsSelected("Binding (entry) node");
 	});
 
