@@ -413,7 +413,6 @@ class VirtualizedTable extends React.Component {
 						readOnly={this.props.readOnly}
 					/>
 				</div>);
-			// Don't show delete icon for tables in expression builder
 			}
 		}
 
@@ -543,7 +542,6 @@ VirtualizedTable.propTypes = {
 		PropTypes.number.isRequired
 	]),
 	onRowDoubleClick: PropTypes.func,
-	deleteRow: PropTypes.func,
 	rowsSelected: PropTypes.array, // Required if selectable is true
 	checkedAll: PropTypes.bool, // Required if selectable is true
 	setRowsSelected: PropTypes.func, // Required if selectable is true

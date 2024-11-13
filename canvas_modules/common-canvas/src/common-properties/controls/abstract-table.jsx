@@ -657,7 +657,6 @@ export default class AbstractTable extends React.Component {
 				rows={this.props.control.rows}
 				tableLabel={tableLabel}
 				updateRowSelections={rowClickCallback}
-				deleteRow={this.removeSelected}
 				selectedRows= {this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
 				light={this.isLightTheme()}

@@ -106,7 +106,6 @@ describe("summary panel renders error/warning status correctly", () => {
 		// ensure table toolbar has Delete button and click it
 		wideflyout = wrapper.find("div.properties-wf-content.show");
 		let tableWrapper = wideflyout.find("div[data-id='properties-expressionCellTable']");
-		// let tableToolbar = tableWrapper.find("div.properties-table-toolbar");
 		let deleteButtons = tableWrapper.find("button.delete-button");
 		expect(deleteButtons).to.have.length(2);
 		deleteButtons.at(0).simulate("click");
