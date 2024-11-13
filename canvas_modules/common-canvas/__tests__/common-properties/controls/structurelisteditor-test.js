@@ -814,7 +814,7 @@ describe("StructureListEditor single select table renders and functions correctl
 		expect(tableUtilsRTL.getTableRows(container)).to.have.length(2);
 
 		// Testing delete row icon
-		const deleteButtons = container.querySelectorAll("button[type='delete']");
+		const deleteButtons = container.querySelectorAll(".delete-button");
 		expect(deleteButtons).to.have.length(2);
 		tableUtilsRTL.clickTableRows(container, [0]); // need to click on the table that we want to delete
 		fireEvent.click(deleteButtons[0]);
