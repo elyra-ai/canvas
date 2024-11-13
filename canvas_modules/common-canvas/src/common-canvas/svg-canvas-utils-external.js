@@ -140,4 +140,8 @@ export default class SvgCanvasExternal {
 			this.ren.displayNodes();
 		}
 	}
+
+	raiseNodeToTopById(nodeId) {
+		this.ren.raiseNodeToTopById(nodeId);
+	}
 }

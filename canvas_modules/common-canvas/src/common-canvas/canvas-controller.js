@@ -1872,8 +1872,12 @@ export default class CanvasController {
 	}
 
 	restoreFocus() {
-		if (this.canvasContents && this.getCanvasConfig().enableKeyboardNavigation) {
-			this.getSVGCanvasD3().restoreFocus();
+		if (this.canvasContents) {
+			if (this.getCanvasConfig().enableKeyboardNavigation) {
+				this.getSVGCanvasD3().restoreFocus();
+			} else {
+				this.canvasContents.focusOnCanvas();
+			}
 		}
 	}
 
@@ -2649,7 +2653,6 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
-
 			case "expandSuperNodeInPlace": {
 				command = new ExpandSuperNodeInPlaceAction(data, this);
 				this.commandStack.do(command);
@@ -2759,8 +2762,16 @@ export default class CanvasController {
 				}
 			}
 
-		} else {
-			this.focusOnCanvas();
+		} else if (data.editType !== "setCommentEditingMode" &&
+					data.editType !== "setNodeLabelEditingMode" &&
+					data.editType !== "togglePalette" &&
+					data.editType !== "openPalette" &&
+					data.editType !== "closePalette" &&
+					data.editType !== "toggleNotificationPanel" &&
+					data.editType !== "openNotificationPanel" &&
+					data.editType !== "closeNotificationPanel" &&
+					data.editType !== "loadPipelineFlow") {
+			this.restoreFocus();
 		}
 
 		return true;
