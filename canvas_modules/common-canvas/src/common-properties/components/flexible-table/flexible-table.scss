@@ -39,6 +39,11 @@ $row-left-padding: $spacing-02;
 	height: $spacing-07;
 }
 
+.single-row-selection-table {
+	display: flex;
+	justify-content: right;
+}
+
 .properties-ft-container-panel {
 	height: calc(100% - #{$spacing-07}); // adjust height for table header
 }
