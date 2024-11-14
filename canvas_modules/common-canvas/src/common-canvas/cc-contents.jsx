@@ -733,7 +733,6 @@ CanvasContents.propTypes = {
 	// Provided by Redux
 	canvasConfig: PropTypes.object.isRequired,
 	canvasInfo: PropTypes.object,
-	bottomPanelIsOpen: PropTypes.bool,
 	selectionInfo: PropTypes.object,
 	breadcrumbs: PropTypes.array
 };
@@ -741,7 +740,6 @@ CanvasContents.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
 	canvasInfo: state.canvasinfo,
 	canvasConfig: state.canvasconfig,
-	bottomPanelIsOpen: state.bottompanel.isOpen,
 	selectionInfo: state.selectioninfo,
 	breadcrumbs: state.breadcrumbs
 });
