@@ -2312,7 +2312,7 @@ export default class CanvasController {
 			editType: action,
 			editSource: "keyboard",
 			pipelineId: this.objectModel.getSelectedPipelineId(),
-			mousePos: null });
+			mousePos: mousePos });
 	}
 
 	clickActionHandler(source) {
