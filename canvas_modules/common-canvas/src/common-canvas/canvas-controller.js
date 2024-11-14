@@ -1899,6 +1899,13 @@ export default class CanvasController {
 		}
 	}
 
+	getCurrentFocusObject() {
+		if (this.canvasContents) {
+			return this.canvasContents.getCurrentFocusObject();
+		}
+		return null;
+	}
+
 	// ---------------------------------------------------------------------------
 	// Utility/helper methods
 	// ---------------------------------------------------------------------------
@@ -2305,7 +2312,7 @@ export default class CanvasController {
 			editType: action,
 			editSource: "keyboard",
 			pipelineId: this.objectModel.getSelectedPipelineId(),
-			mousePos: mousePos });
+			mousePos: null });
 	}
 
 	clickActionHandler(source) {
@@ -2751,7 +2758,7 @@ export default class CanvasController {
 		// a getFocusObject method. In other cases, the focus will remain
 		// in its current location.
 		if (this.getCanvasConfig().enableKeyboardNavigation) {
-			if (command?.getFocusObject && this.getCanvasConfig().enableKeyboardNavigation) {
+			if (command?.getFocusObject) {
 				const focusObject = command.getFocusObject();
 
 				if (focusObject === CANVAS_FOCUS) {
@@ -2762,6 +2769,8 @@ export default class CanvasController {
 				}
 			}
 
+		// When keyboard navigation is NOT activated we restore focus (which will
+		// put focus on the canvas background) except in these cases.
 		} else if (data.editType !== "setCommentEditingMode" &&
 					data.editType !== "setNodeLabelEditingMode" &&
 					data.editType !== "togglePalette" &&

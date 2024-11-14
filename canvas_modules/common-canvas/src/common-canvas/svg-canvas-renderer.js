@@ -137,7 +137,7 @@ export default class SVGCanvasRenderer {
 
 		// The current canvas object that has keyboard navigation focus, or
 		// null if the focus is elsewhere.
-		this.curentFocusObj = null;
+		this.currentFocusObj = null;
 
 		this.initializeGhostDiv();
 
@@ -5695,6 +5695,10 @@ export default class SVGCanvasRenderer {
 
 	focusOnTextEntryElement(evt) {
 		this.svgCanvasTextArea.focusOnTextEntryElement(evt);
+	}
+
+	getCurrentFocusObject() {
+		return this.currentFocusObj;
 	}
 
 	moveFocusTo(focusObj, evt) {
