@@ -16,6 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import ReactResizeDetector from "react-resize-detector";
 import PropertiesModal from "./../components/properties-modal";
 import PropertiesEditor from "./../components/properties-editor";
 import TearSheet from "../panels/tearsheet";
@@ -53,12 +54,6 @@ class PropertiesMain extends React.Component {
 		if (this.props.propertiesInfo.initialEditorSize) {
 			this.propertiesController.setEditorSize(this.props.propertiesInfo.initialEditorSize);
 		}
-		this.flyoutWidth = {
-			small: FLYOUT_WIDTH_SMALL,
-			medium: FLYOUT_WIDTH_MEDIUM,
-			large: FLYOUT_WIDTH_LARGE,
-			max: FLYOUT_WIDTH_MAX
-		};
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
 		this.propertiesController.setLight(props.light);
@@ -77,6 +72,7 @@ class PropertiesMain extends React.Component {
 		});
 		this.setForm(props.propertiesInfo, false);
 		this.previousErrorMessages = {};
+		this.flyoutWidths = [FLYOUT_WIDTH_SMALL, FLYOUT_WIDTH_MEDIUM, FLYOUT_WIDTH_LARGE, FLYOUT_WIDTH_MAX];
 		// this has to be after setForm because setForm clears all error messages.
 		// Validate all validationDefinitions but show warning messages for "colDoesExists" condition only
 		this.propertiesController.validatePropertiesValues(false);
@@ -92,7 +88,8 @@ class PropertiesMain extends React.Component {
 		const editorSize = this.getEditorSize();
 		this.state = {
 			showPropertiesButtons: true,
-			editorSize: editorSize
+			editorSize: editorSize,
+			containerWidth: 0,
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
@@ -102,7 +99,6 @@ class PropertiesMain extends React.Component {
 		this._getResizeButton = this._getResizeButton.bind(this);
 		this._isResizeButtonRequired = this._isResizeButtonRequired.bind(this);
 		this.onBlur = this.onBlur.bind(this);
-		this.updateRightFlyoutWidth = this.updateRightFlyoutWidth.bind(this);
 	}
 
 	componentDidMount() {
@@ -427,19 +423,11 @@ class PropertiesMain extends React.Component {
 		this.setState({ showPropertiesButtons: state });
 	}
 
-	updateRightFlyoutWidth(size) {
-		const element = document.querySelector(".common-canvas .right-flyout-container");
-		if (element) {
-			element.style.width = `${this.flyoutWidth[size]}px`;
-		}
-	}
-
 	updateEditorSize(newEditorSize) {
 		this.setState({
 			editorSize: newEditorSize
 		});
 		this.propertiesController.setEditorSize(newEditorSize);
-		this.updateRightFlyoutWidth(newEditorSize);
 	}
 
 	resize() {
@@ -462,6 +450,10 @@ class PropertiesMain extends React.Component {
 				this.updateEditorSize(Size.LARGE);
 			}
 		}
+	}
+
+	detectResize(width) {
+		this.setState({ containerWidth: width });
 	}
 
 	render() {
@@ -508,7 +500,12 @@ class PropertiesMain extends React.Component {
 					showPropertiesButtons={this.state.showPropertiesButtons}
 					disableSaveOnRequiredErrors={this.props.propertiesConfig.disableSaveOnRequiredErrors}
 				/>);
-				if (this._isResizeButtonRequired()) {
+				// Show Resize Button only under below conditions
+				// 1. Flyout is not dragged to resize its width.
+				// 2. If Flyout is dragged back to its smallest width.
+				// If pixel_width is set include that to test if button should be shown.
+				const showResizeBtn = [...this.flyoutWidths, this._getOverrideSize()].includes(this.state.containerWidth);
+				if (this._isResizeButtonRequired() && showResizeBtn) {
 					const resizeIcon = this._getResizeButton();
 					// Resize button label can be "Expand" or "Contract"
 					const resizeBtnLabel = (resizeIcon.props && resizeIcon.props.className === "properties-resize-caret-left")
@@ -607,21 +604,29 @@ class PropertiesMain extends React.Component {
 
 			return (
 				<Provider store={this.propertiesController.getStore()}>
-					<div className="properties-right-flyout-container">
-						<aside
-							aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
-							role="complementary"
-							ref={ (ref) => (this.commonProperties = ref) }
-							className={className}
-							onBlur={this.onBlur}
-							style={overrideStyle}
-						>
-							{propertiesTitle}
-							{propertiesDialog}
-							{buttonsContainer}
-						</aside>
-						{resizeBtn}
-					</div>
+					<ReactResizeDetector
+						handleWidth
+						refreshMode="debounce"
+						refreshRate={500}
+						onResize={(width) => this.detectResize(width)}
+						targetRef={this.commonProperties}
+					>
+						<div className="properties-right-flyout-container">
+							<aside
+								aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
+								role="complementary"
+								ref={ (ref) => (this.commonProperties = ref) }
+								className={className}
+								onBlur={this.onBlur}
+								style={overrideStyle}
+							>
+								{propertiesTitle}
+								{propertiesDialog}
+								{buttonsContainer}
+							</aside>
+							{resizeBtn}
+						</div>
+					</ReactResizeDetector>
 				</Provider>
 			);
 		}
