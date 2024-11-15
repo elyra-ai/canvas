@@ -239,6 +239,22 @@ Cypress.Commands.add("clickButtonInTable", (buttonName, propertyId) => {
 		});
 });
 
+Cypress.Commands.add("clickButtonInSingleSelectTable", (buttonName, propertyId) => {
+	cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
+		.then((tableDiv) => {
+			cy.wrap(tableDiv).should("exist");
+			if (buttonName === "Add") {
+				cy.wrap(tableDiv)
+					.find(".properties-add-fields-button")
+					.click();
+			} else {
+				cy.wrap(tableDiv).find("button.delete-button")
+					.first()
+					.click();
+			}
+		});
+});
+
 // StructureListEditorControl commands
 Cypress.Commands.add("selectFieldInFieldPickerPanel", (fieldName, dataType, panelName) => {
 	// Following logic works based on assumption  - fieldName in each row is unique

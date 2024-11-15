@@ -378,7 +378,6 @@ class VirtualizedTable extends React.Component {
 		let selectOption = "";
 		let selectedRow = false;
 		const rowDisabled = typeof rowData.disabled === "boolean" ? rowData.disabled : false;
-
 		if (typeof this.props.rowHeight === "function" && this.props.rowHeight({ index }) === 0) {
 			return null;
 		}

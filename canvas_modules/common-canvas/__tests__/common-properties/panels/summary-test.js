@@ -106,19 +106,18 @@ describe("summary panel renders error/warning status correctly", () => {
 		// ensure table toolbar has Delete button and click it
 		wideflyout = wrapper.find("div.properties-wf-content.show");
 		let tableWrapper = wideflyout.find("div[data-id='properties-expressionCellTable']");
-		let tableToolbar = tableWrapper.find("div.properties-table-toolbar");
-		let deleteButton = tableToolbar.find("button.properties-action-delete");
-		expect(deleteButton).to.have.length(1);
-		deleteButton.simulate("click");
+		let deleteButtons = tableWrapper.find("button.delete-button");
+		expect(deleteButtons).to.have.length(2);
+		deleteButtons.at(0).simulate("click");
 
 		// remove second row
 		tableUtils.clickTableRows(wideflyout, [0]);
 		wideflyout = wrapper.find("div.properties-wf-content.show");
 		tableWrapper = wideflyout.find("div[data-id='properties-expressionCellTable']");
-		tableToolbar = tableWrapper.find("div.properties-table-toolbar");
-		deleteButton = tableToolbar.find("button.properties-action-delete");
-		expect(deleteButton).to.have.length(1);
-		deleteButton.simulate("click");
+		deleteButtons = tableWrapper.find("button.delete-button");
+		expect(deleteButtons).to.have.length(1);
+		deleteButtons.at(0).simulate("click");
+
 
 		// close fly-out
 		wideflyout.find("button.properties-apply-button").simulate("click");
@@ -162,18 +161,16 @@ describe("summary panel renders error/warning status correctly", () => {
 		wideflyout = wrapper.find("div.properties-wf-content.show");
 		// ensure table toolbar has Delete button and click it
 		let tableWrapper = wideflyout.find("div[data-id='properties-expressionCellTable']");
-		const tableToolbar = tableWrapper.find("div.properties-table-toolbar");
-		let deleteButton = tableToolbar.find("button.properties-action-delete");
-		expect(deleteButton).to.have.length(1);
-		deleteButton.simulate("click");
+		let deleteButtons = tableWrapper.find("button.delete-button");
+		deleteButtons.at(0).simulate("click");
 
 		// remove second row
 		tableUtils.clickTableRows(wideflyout, [0]);
 		wideflyout = wrapper.find("div.properties-wf-content.show");
 		tableWrapper = wideflyout.find("div[data-id='properties-expressionCellTable']");
-		deleteButton = tableWrapper.find("div.properties-table-toolbar").find("button.properties-action-delete");
-		expect(deleteButton).to.have.length(1);
-		deleteButton.simulate("click");
+		deleteButtons = tableWrapper.find("button.delete-button");
+		deleteButtons.at(0).simulate("click");
+
 
 		// check that all rows were removed
 		wideflyout = wrapper.find("div.properties-wf-content.show");
