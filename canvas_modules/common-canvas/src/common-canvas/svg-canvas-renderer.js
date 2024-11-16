@@ -770,6 +770,14 @@ export default class SVGCanvasRenderer {
 		return this.zoomUtils.transformPos({ x: x - Math.round(svgRect.left), y: y - Math.round(svgRect.top) });
 	}
 
+	// Convert coordinates from canvas to page coordinates (based
+	// on the page top left corner).
+	convertCanvasCoordsToPageCoords(x, y) {
+		const svgRect = this.canvasSVG.node().getBoundingClientRect();
+		const pos = this.zoomUtils.unTransformPos({ x, y });
+		return { x: pos.x + Math.round(svgRect.left), y: pos.y + Math.round(svgRect.top) };
+	}
+
 	// Creates the div which contains the ghost node for drag and
 	// drop actions from the palette. The way setDragImage is handled in
 	// browsers for HTML drag and drop is very odd since the image has to be
@@ -2028,6 +2036,26 @@ export default class SVGCanvasRenderer {
 							this.moveFocusTo(linkInfos[0].link, d3Event);
 						}
 
+					} else if (KeyboardUtils.moveObjectUp(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.moveObject(d, NORTH));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveObjectDown(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.moveObject(d, SOUTH));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveObjectRight(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.moveObject(d, EAST));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveObjectLeft(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.moveObject(d, WEST));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
 					} else if (KeyboardUtils.selectObject(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						this.selectObjectD3Event(d3Event, d, "node");
@@ -2038,7 +2066,7 @@ export default class SVGCanvasRenderer {
 						d3Event.stopPropagation();
 
 						if (!CanvasUtils.isSuperBindingNode(d)) {
-							this.selectObjectBasic(d3Event, d, "node");
+							this.selectObject(d3Event, d, "node");
 
 							if (this.config.enableContextToolbar) {
 								this.addContextToolbar(d3Event, d, "node");
@@ -2404,8 +2432,8 @@ export default class SVGCanvasRenderer {
 	// Adds the object passed in to the set of selected objects using
 	// the d3Event object passed in.
 	selectObjectD3Event(d3Event, d, objType) {
-		this.selectObjectBasic(
-			d3Event,
+		this.selectObject(
+			d3Event.type,
 			d,
 			objType,
 			d3Event.shiftKey,
@@ -2413,37 +2441,12 @@ export default class SVGCanvasRenderer {
 		);
 	}
 
-	// Adds the object passed in to the set of selected objects using
-	// the d3Event object's sourceEvent object.
-	selectObjectSourceEvent(d3Event, d) {
-		const objType = this.activePipeline.getObjectTypeName(d);
-
-		this.selectObject(
-			d,
-			d3Event.type,
-			objType,
-			d3Event.sourceEvent.shiftKey,
-			KeyboardUtils.isMetaKey(d3Event.sourceEvent));
-	}
-
-	// Adds the object passed in to the set of selected objects. range and
-	// augemnt indicate whether a 'range' of objects should be selected or
-	// whether the object should 'augment' the current set of selected objects.
-	selectObjectBasic(d3Event, d, objType, range = false, augment = false) {
-		this.selectObject(
-			d,
-			d3Event.type,
-			objType,
-			range,
-			augment);
-	}
-
 	// Performs required action for when either a comment, node or link is selected.
 	// This may mean: simply selecting the object; or adding the object to the
 	// currently selected set of objects; or even toggling the object's selection
 	// off. This method also sends a SINGLE_CLICK action to the
 	// clickActionHandler callback in the host application.
-	selectObject(d, d3EventType, objectType, range, augment) {
+	selectObject(d3EventType, d, objectType, range = false, augment = false) {
 		this.canvasController.selectObject(d.id, range, augment, this.activePipeline.id);
 
 		// Even though the single click message below should be emitted
@@ -3940,6 +3943,26 @@ export default class SVGCanvasRenderer {
 							this.moveFocusTo(linkInfos[0].link, d3Event);
 						}
 
+					} else if (KeyboardUtils.moveObjectUp(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.moveObject(d, NORTH));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveObjectDown(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.moveObject(d, SOUTH));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveObjectRight(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.moveObject(d, EAST));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveObjectLeft(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.moveObject(d, WEST));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
 					} else if (KeyboardUtils.selectObject(d3Event)) {
 						this.selectObjectD3Event(d3Event, d, "comment");
 
@@ -3948,7 +3971,7 @@ export default class SVGCanvasRenderer {
 						// canvas context menu/toolbar will be opened.
 						d3Event.stopPropagation();
 
-						this.selectObjectBasic(d3Event, d, "comment");
+						this.selectObject(d3Event, d, "comment");
 
 						if (this.config.enableContextToolbar) {
 							this.addContextToolbar(d3Event, d, "comment");
@@ -4400,6 +4423,10 @@ export default class SVGCanvasRenderer {
 						const link = this.activePipeline.getPreviousSiblingLink(d);
 						this.moveFocusTo(link, d3Event);
 
+					} else if (KeyboardUtils.moveObjectLeft(d3Event)) {
+						// Prevent Chrome returning to previous browser page!
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
 					} else if (KeyboardUtils.selectObject(d3Event)) {
 						this.selectObjectD3Event(d3Event, d, "link");
 
@@ -4409,7 +4436,7 @@ export default class SVGCanvasRenderer {
 						d3Event.stopPropagation();
 
 						if (this.config.enableLinkSelection !== "None") {
-							this.selectObjectBasic(d3Event, d, "link");
+							this.selectObject(d3Event, d, "link");
 						}
 
 						if (this.config.enableContextToolbar) {

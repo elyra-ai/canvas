@@ -21,8 +21,10 @@ import * as d3Selection from "d3-selection";
 const d3 = Object.assign({}, d3Drag, d3Selection);
 
 import Logger from "../logging/canvas-logger.js";
+import KeyboardUtils from "./keyboard-utils.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import { SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING, LINK_SELECTION_DETACHABLE }
+import { SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING, LINK_SELECTION_DETACHABLE,
+	NORTH, SOUTH, EAST, WEST }
 	from "./constants/canvas-constants.js";
 
 // This utility files provides a drag handler which manages drag operations to move
@@ -138,6 +140,74 @@ export default class SVGCanvasUtilsDragObjects {
 		d3.select(d3Event.currentTarget).style("cursor", "default");
 	}
 
+	// Moves the object passed in (an any other selected object) by the
+	// x and y amounts provided. This is called when the user moves an
+	// object using the keyboard.
+	moveObject(d, dir) {
+		let xInc = 0;
+		let yInc = 0;
+
+		({ xInc, yInc } = this.getMoveIncrements(dir));
+
+		if (this.endMove) {
+			clearTimeout(this.endMove);
+			this.endMove = null;
+		}
+
+		if (!this.isMoving()) {
+			this.startObjectsMoving(d);
+		}
+
+		const x = d.x_pos + (d.width / 2);
+		const y = d.y_pos + (d.height / 2);
+		const pagePos = this.ren.convertCanvasCoordsToPageCoords(x, y);
+
+		this.moveObjects(xInc, yInc, pagePos.x, pagePos.y);
+
+		this.endMove = setTimeout(() => {
+			this.endObjectsMoving(d, "click", false, false);
+		}, 500);
+	}
+
+	// Returns an object containing the x and y increments used to move an
+	// object in the direction provided taking into account whether snap
+	// to grid has been switched on or not.
+	getMoveIncrements(dir) {
+		// If no snap-to-grid we just increment by 10px.
+		let x = 10;
+		let y = 10;
+
+		if (this.ren.config.enableSnapToGridType === SNAP_TO_GRID_DURING ||
+			this.ren.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
+			x = this.ren.canvasLayout.snapToGridXPx;
+			y = this.ren.canvasLayout.snapToGridYPx;
+		}
+
+		let xInc = 0;
+		let yInc = 0;
+
+		switch (dir) {
+		case NORTH:
+			xInc = 0;
+			yInc = -y;
+			break;
+		case SOUTH:
+			xInc = 0;
+			yInc = y;
+			break;
+		case EAST:
+			xInc = x;
+			yInc = 0;
+			break;
+		default:
+		case WEST:
+			xInc = -x;
+			yInc = 0;
+			break;
+		}
+		return { xInc, yInc };
+	}
+
 	dragStartObject(d3Event, d) {
 		this.logger.logStartTimer("dragStartObject");
 
@@ -150,7 +220,7 @@ export default class SVGCanvasUtilsDragObjects {
 			this.initializeResizeVariables(d);
 
 		} else {
-			this.dragObjectsStart(d3Event, d);
+			this.startObjectsMoving(d);
 		}
 
 		this.logger.logEndTimer("dragStartObject", true);
@@ -165,7 +235,7 @@ export default class SVGCanvasUtilsDragObjects {
 			this.resizeNode(d3Event, d);
 
 		} else {
-			this.dragObjectsAction(d3Event);
+			this.moveObjects(d3Event.dx, d3Event.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
 		}
 
 		this.logger.logEndTimer("dragObject", true);
@@ -185,7 +255,7 @@ export default class SVGCanvasUtilsDragObjects {
 			this.nodeSizing = false;
 
 		} else {
-			this.dragObjectsEnd(d3Event, d);
+			this.endObjectsMoving(d, d3Event.type, d3Event.sourceEvent.shiftKey, KeyboardUtils.isMetaKey(d3Event.sourceEvent));
 		}
 
 		this.logger.logEndTimer("dragEndObject", true);
@@ -532,8 +602,10 @@ export default class SVGCanvasUtilsDragObjects {
 		return node.layout.defaultNodeWidth;
 	}
 
-	// Starts the dragging action for canvas objects (nodes and comments).
-	dragObjectsStart(d3Event, d) {
+	// Starts the moving action for canvas objects (nodes and comments).
+	// Can be called when the mouse is dragging the object OR when a
+	// keyboard event moves the object.
+	startObjectsMoving(d) {
 		// Ensure flags are false before staring a new drag.
 		this.existingNodeInsertableIntoLink = false;
 		this.existingNodeAttachableToDetachedLinks = false;
@@ -580,10 +652,16 @@ export default class SVGCanvasUtilsDragObjects {
 		}
 	}
 
-	// Performs the dragging action for canvas objects (nodes and comments).
-	dragObjectsAction(d3Event) {
-		this.draggingObjectData.dragOffsetX += d3Event.dx;
-		this.draggingObjectData.dragOffsetY += d3Event.dy;
+	// Performs the moving action for canvas objects (nodes and comments).
+	// This occurs either as the user is moving the mouse pointer OR each time the user
+	// presses a key on the keyboard, within the timeout value, to move the object.
+	// The dx and dy parameters are the amount to move the object in the x and y directions.
+	// The pagePosX and pagePosY parameters are the current page coordinates of either
+	// the mouse in the context of a drag operation OR the current page coordinates of the
+	// center of the object in the context of a keyboard operation.
+	moveObjects(dx, dy, pagePosX, pagePosY) {
+		this.draggingObjectData.dragOffsetX += dx;
+		this.draggingObjectData.dragOffsetY += dy;
 
 		// Limit the size a drag can be so, when the user is dragging objects in
 		// an in-place subflow they do not drag them too far.
@@ -591,8 +669,8 @@ export default class SVGCanvasUtilsDragObjects {
 		if (this.ren.dispUtils.isDisplayingSubFlowInPlace() &&
 				(this.draggingObjectData.dragOffsetX > 1000 || this.draggingObjectData.dragOffsetX < -1000 ||
 					this.draggingObjectData.dragOffsetY > 1000 || this.draggingObjectData.dragOffsetY < -1000)) {
-			this.draggingObjectData.dragOffsetX -= d3Event.dx;
-			this.draggingObjectData.dragOffsetY -= d3Event.dy;
+			this.draggingObjectData.dragOffsetX -= dx;
+			this.draggingObjectData.dragOffsetY -= dy;
 
 		} else {
 			let	increment = { x: 0, y: 0 };
@@ -607,8 +685,8 @@ export default class SVGCanvasUtilsDragObjects {
 
 			} else {
 				increment = {
-					x: d3Event.dx,
-					y: d3Event.dy
+					x: dx,
+					y: dy
 				};
 			}
 
@@ -644,7 +722,7 @@ export default class SVGCanvasUtilsDragObjects {
 		}
 
 		if (this.existingNodeInsertableIntoLink) {
-			const link = this.ren.getLinkAtMousePos(d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
+			const link = this.ren.getLinkAtMousePos(pagePosX, pagePosY);
 			// Set highlighting when there is no link because this will turn
 			// current highlighting off. And only switch on highlighting when we are
 			// over a fully attached link (not a detached link) and provided the
@@ -672,8 +750,12 @@ export default class SVGCanvasUtilsDragObjects {
 		}
 	}
 
-	// Ends the dragging action for canvas objects (nodes and comments).
-	dragObjectsEnd(d3Event, d) {
+	// Ends the moving action for canvas objects (nodes and comments).
+	// This happens either when the user releases the mouse button when
+	// dragging OR when the timeout value has expired when moving the
+	// object using the keyboard.
+	endObjectsMoving(d, eventType, range, augment) {
+
 		// Save a local reference to this.draggingObjectData so we can set it to null before
 		// calling the canvas-controller. This means the this.draggingObjectData object will
 		// be null when the canvas is refreshed.
@@ -694,7 +776,8 @@ export default class SVGCanvasUtilsDragObjects {
 		if (draggingObjectData.dragOffsetX === 0 &&
 				draggingObjectData.dragOffsetY === 0 &&
 				this.ren.config.enableDragWithoutSelect) {
-			this.ren.selectObjectSourceEvent(d3Event, d);
+			const objType = this.ren.activePipeline.getObjectTypeName(d);
+			this.ren.selectObject(eventType, d, objType, range, augment);
 
 		} else {
 			if (draggingObjectData.dragRunningX !== 0 ||

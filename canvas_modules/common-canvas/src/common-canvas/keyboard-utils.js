@@ -124,6 +124,10 @@ export default class KeyboardUtils {
 		return evt.code === TAB_KEY && evt.shiftKey;
 	}
 
+	/* ----------------------------------------- */
+	/* Canvas objects navigation key functions   */
+	/* ----------------------------------------- */
+
 	static nextObjectInGroup(d3Event) {
 		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === RIGHT_ARROW_KEY;
 	}
@@ -155,6 +159,22 @@ export default class KeyboardUtils {
 	// adding selections to the set of selections.
 	static displayContextOptions(evt) {
 		return this.isMetaKey(evt) && evt.code === SLASH_KEY;
+	}
+
+	static moveObjectLeft(d3Event) {
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === LEFT_ARROW_KEY;
+	}
+
+	static moveObjectRight(d3Event) {
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === RIGHT_ARROW_KEY;
+	}
+
+	static moveObjectUp(d3Event) {
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === UP_ARROW_KEY;
+	}
+
+	static moveObjectDown(d3Event) {
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === DOWN_ARROW_KEY;
 	}
 
 	/* ----------------------------------------- */
@@ -192,6 +212,11 @@ export default class KeyboardUtils {
 	static returnToTextEditing(evt) {
 		return evt.code === TAB_KEY && !evt.shiftKey;
 	}
+
+
+	/* ----------------------------------------- */
+	/* Utility functions                         */
+	/* ----------------------------------------- */
 
 	// Returns true if either the 'Command Key' on Mac or
 	// 'Control Key' or 'Windows key' on Windows is pressed.

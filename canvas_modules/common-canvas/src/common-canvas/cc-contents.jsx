@@ -130,6 +130,8 @@ class CanvasContents extends React.Component {
 			// setSelectionInfo, which will only update the selection highlighting.
 			} else if (prevProps.selectionInfo !== this.props.selectionInfo) {
 				this.svgCanvasD3.setSelectionInfo(this.props.selectionInfo);
+				// Run the afterUpdateCallbacks.
+				this.afterUpdate();
 			}
 		}
 
@@ -192,8 +194,8 @@ class CanvasContents extends React.Component {
 		if (this.props.canvasConfig.enableEditingActions) {
 			if (KeyboardUtils.delete(evt) && actions.delete) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
-				this.autoSelectIfNecessary();
-				this.props.canvasController.keyboardActionHandler("deleteSelectedObjects");
+				this.props.canvasController.autoSelectFocusObj(() =>
+					this.props.canvasController.keyboardActionHandler("deleteSelectedObjects"));
 
 			} else if (KeyboardUtils.undo(evt) && actions.undo) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
@@ -209,13 +211,13 @@ class CanvasContents extends React.Component {
 
 			} else if (KeyboardUtils.copyToClipboard(evt) && actions.copyToClipboard) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
-				this.autoSelectIfNecessary();
-				this.props.canvasController.keyboardActionHandler("copy");
+				this.props.canvasController.autoSelectFocusObj(() =>
+					this.props.canvasController.keyboardActionHandler("copy"));
 
 			} else if (KeyboardUtils.cutToClipboard(evt) && actions.cutToClipboard) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
-				this.autoSelectIfNecessary();
-				this.props.canvasController.keyboardActionHandler("cut");
+				this.props.canvasController.autoSelectFocusObj(() =>
+					this.props.canvasController.keyboardActionHandler("cut"));
 
 			} else if (KeyboardUtils.pasteFromClipboard(evt) && actions.pasteFromClipboard) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
@@ -459,6 +461,10 @@ class CanvasContents extends React.Component {
 		return dropZoneCanvas;
 	}
 
+	getSvgCanvasDivId() {
+		return this.svgCanvasDivId;
+	}
+
 	getSVGCanvasDiv() {
 		if (this.props.canvasConfig.enableKeyboardNavigation) {
 			// Set tabindex to 0 so the focus can go to the <div>
@@ -506,32 +512,6 @@ class CanvasContents extends React.Component {
 				evt.currentTarget.activeElement.id === this.svgCanvasDivId;
 		}
 		return false;
-	}
-
-	isFocusOnCanvas() {
-		return document.activeElement?.id === this.svgCanvasDivId;
-	}
-
-	isObjSelected(obj) {
-		return this.props.selectionInfo?.selections?.includes(obj.id);
-	}
-
-	noObjectSelected() {
-		return this.props.selectionInfo?.selections?.length === 0;
-	}
-
-	// Automatically selects the current focus object provided the focus
-	// is, NOT on the canvas and either, there are no objects currently
-	// selected OR the current focus object is NOT selected.
-	autoSelectIfNecessary() {
-		const focusObj = this.getCurrentFocusObject();
-		if (focusObj) {
-			if (!this.focusOnCanvas() &&
-				(this.noObjectSelected() || !this.isObjSelected(focusObj))) {
-				this.props.canvasController.selectObject(focusObj.id, false, false,
-					this.props.canvasController.getCurrentPipelineId());
-			}
-		}
 	}
 
 	afterUpdate() {

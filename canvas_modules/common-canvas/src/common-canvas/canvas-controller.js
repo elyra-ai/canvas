@@ -619,6 +619,11 @@ export default class CanvasController {
 		return this.getCanvasConfig().enableSnapToGridType !== SNAP_TO_GRID_NONE;
 	}
 
+	isSelected(objectId, pipelineId) {
+		return this.objectModel.isSelected(objectId, pipelineId);
+	}
+
+
 	selectObject(objId, range, augment, pipelineId) {
 		this.objectModel.selectObject(objId, range, augment, pipelineId);
 	}
@@ -1871,6 +1876,10 @@ export default class CanvasController {
 		return null;
 	}
 
+	// ---------------------------------------------------------------------------
+	// Focus management methods
+	// ---------------------------------------------------------------------------
+
 	restoreFocus() {
 		if (this.canvasContents) {
 			if (this.getCanvasConfig().enableKeyboardNavigation) {
@@ -1904,6 +1913,35 @@ export default class CanvasController {
 			return this.canvasContents.getCurrentFocusObject();
 		}
 		return null;
+	}
+
+	isFocusOnCanvas() {
+		if (this.canvasContents) {
+			return document.activeElement?.id === this.canvasContents.getSvgCanvasDivId();
+		}
+		return false;
+	}
+
+	// Checks to see if the current focus object is selected. If it is not selected
+	// this method auto-selects that object and ensures that the action function
+	// passed in (actionFn) is run immediately after the select has run. If the
+	// current focus object is already selected it just runs the action function.
+	autoSelectFocusObj(actionFn) {
+		const focusObj = this.getCurrentFocusObject();
+		if (focusObj) {
+			const pipelineId = this.getCurrentPipelineId();
+			if (!this.isFocusOnCanvas() && !this.isSelected(focusObj.id, pipelineId)) {
+				const fn = () => {
+					actionFn();
+					this.removeAfterUpdateCallback(fn);
+				};
+				this.addAfterUpdateCallback(fn);
+				this.selectObject(focusObj.id, false, false, pipelineId);
+				return;
+			}
+		}
+
+		actionFn();
 	}
 
 	// ---------------------------------------------------------------------------
