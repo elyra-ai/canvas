@@ -248,17 +248,6 @@ export default class CanvasUtils {
 		return decs;
 	}
 
-	// Returns true if either the 'Command Key' on Mac or
-	// 'Control Key' or 'Windows key' on Windows is pressed.
-	// evnt can be either a regular event object OR the
-	// d3event object provided by d3.
-	static isMetaKey(evt) {
-		if (CanvasUtils.isMacintosh()) {
-			return evt.metaKey;
-		}
-		return evt.ctrlKey || evt.metaKey;
-	}
-
 	// Returns whether user platform is Mac.
 	static isMacintosh() {
 		return navigator.platform.indexOf("Mac") > -1;
