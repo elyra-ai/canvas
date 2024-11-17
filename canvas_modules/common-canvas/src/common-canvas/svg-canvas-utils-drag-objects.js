@@ -379,7 +379,7 @@ export default class SVGCanvasUtilsDragObjects {
 				const objectsInfo = CanvasUtils.moveSurroundingObjects(
 					oldSupernode,
 					this.ren.activePipeline.getNodesAndComments(),
-					this.nodeSizingDirection,
+					dir,
 					resizeObj.width,
 					resizeObj.height,
 					true // Pass true to indicate that object positions should be updated.
@@ -388,7 +388,7 @@ export default class SVGCanvasUtilsDragObjects {
 				const linksInfo = CanvasUtils.moveSurroundingDetachedLinks(
 					oldSupernode,
 					this.ren.activePipeline.links,
-					this.nodeSizingDirection,
+					dir,
 					resizeObj.width,
 					resizeObj.height,
 					true // Pass true to indicate that link positions should be updated.
