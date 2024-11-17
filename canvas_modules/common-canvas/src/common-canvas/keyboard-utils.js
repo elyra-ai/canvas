@@ -177,6 +177,22 @@ export default class KeyboardUtils {
 		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === DOWN_ARROW_KEY;
 	}
 
+	static sizeObjectLeft(d3Event) {
+		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === LEFT_ARROW_KEY;
+	}
+
+	static sizeObjectRight(d3Event) {
+		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === RIGHT_ARROW_KEY;
+	}
+
+	static sizeObjectUp(d3Event) {
+		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === UP_ARROW_KEY;
+	}
+
+	static sizeObjectDown(d3Event) {
+		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === DOWN_ARROW_KEY;
+	}
+
 	/* ----------------------------------------- */
 	/* Context Menu key functions                */
 	/* ----------------------------------------- */

@@ -140,7 +140,7 @@ export default class SVGCanvasUtilsDragObjects {
 		d3.select(d3Event.currentTarget).style("cursor", "default");
 	}
 
-	// Moves the object passed in (an any other selected object) by the
+	// Moves the object passed in (and any other selected objects) by the
 	// x and y amounts provided. This is called when the user moves an
 	// object using the keyboard.
 	moveObject(d, dir) {
@@ -169,43 +169,57 @@ export default class SVGCanvasUtilsDragObjects {
 		}, 500);
 	}
 
-	// Returns an object containing the x and y increments used to move an
-	// object in the direction provided taking into account whether snap
-	// to grid has been switched on or not.
-	getMoveIncrements(dir) {
-		// If no snap-to-grid we just increment by 10px.
-		let x = 10;
-		let y = 10;
-
-		if (this.ren.config.enableSnapToGridType === SNAP_TO_GRID_DURING ||
-			this.ren.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
-			x = this.ren.canvasLayout.snapToGridXPx;
-			y = this.ren.canvasLayout.snapToGridYPx;
-		}
-
+	// Sizes the object passed in (either a node or comment) in the
+	// direction specified. This is called when the user sizes an object
+	//	using the keyboard.
+	sizeObject(d, direction) {
 		let xInc = 0;
 		let yInc = 0;
+		let dir = direction;
 
-		switch (dir) {
-		case NORTH:
-			xInc = 0;
-			yInc = -y;
-			break;
-		case SOUTH:
-			xInc = 0;
-			yInc = y;
-			break;
-		case EAST:
-			xInc = x;
-			yInc = 0;
-			break;
-		default:
-		case WEST:
-			xInc = -x;
-			yInc = 0;
-			break;
+		({ xInc, yInc } = this.getMoveIncrements(dir));
+
+		// When direction is NORTH this will cause the bottom border of
+		// the object to be decrease and when the direction is WEST
+		// the right brorder of the object will be decreased.
+		if (dir === NORTH) {
+			dir = SOUTH;
+		} else if (dir === WEST) {
+			dir = EAST;
 		}
-		return { xInc, yInc };
+
+		if (this.endSize) {
+			clearTimeout(this.endSize);
+			this.endSize = null;
+		}
+
+		if (!this.isSizing()) {
+			const objType = CanvasUtils.getObjectTypeName(d);
+			if (objType === "node") {
+				this.nodeSizing = true;
+			} else {
+				this.commentSizing = true;
+			}
+			this.initializeResizeVariables(d);
+		}
+
+		if (this.nodeSizing) {
+			this.resizeNode(xInc, yInc, d, dir);
+
+		} else if (this.commentSizing) {
+			this.resizeComment(xInc, yInc, d, dir);
+		}
+
+		this.endSize = setTimeout(() => {
+			if (this.nodeSizing) {
+				this.endNodeSizing(d);
+				this.nodeSizing = false;
+
+			} else if (this.commentSizing) {
+				this.endCommentSizing(d);
+				this.commentSizing = false;
+			}
+		}, 500);
 	}
 
 	dragStartObject(d3Event, d) {
@@ -229,10 +243,10 @@ export default class SVGCanvasUtilsDragObjects {
 	dragObject(d3Event, d) {
 		this.logger.logStartTimer("dragObject");
 		if (this.commentSizing) {
-			this.resizeComment(d3Event, d);
+			this.resizeComment(d3Event.dx, d3Event.dy, d, this.commentSizingDirection);
 
 		} else if (this.nodeSizing) {
-			this.resizeNode(d3Event, d);
+			this.resizeNode(d3Event.dx, d3Event.dy, d, this.nodeSizingDirection);
 
 		} else {
 			this.moveObjects(d3Event.dx, d3Event.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
@@ -352,13 +366,12 @@ export default class SVGCanvasUtilsDragObjects {
 	// array based on the position of the pointer during the resize action
 	// then redraws the nodes and links (the link positions may move based
 	// on the node size change).
-	resizeNode(d3Event, resizeObj) {
+	resizeNode(dx, dy, resizeObj, dir) {
 		const oldSupernode = Object.assign({}, resizeObj);
 		const minHeight = this.getMinHeight(resizeObj);
 		const minWidth = this.getMinWidth(resizeObj);
 
-		const delta = this.resizeObject(d3Event, resizeObj,
-			this.nodeSizingDirection, minWidth, minHeight);
+		const delta = this.resizeObject(dx, dy, resizeObj, dir, minWidth, minHeight);
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
 			if (CanvasUtils.isExpandedSupernode(resizeObj) &&
@@ -408,8 +421,8 @@ export default class SVGCanvasUtilsDragObjects {
 	// array based on the position of the pointer during the resize action
 	// then redraws the comment and links (the link positions may move based
 	// on the comment size change).
-	resizeComment(d3Event, resizeObj) {
-		this.resizeObject(d3Event, resizeObj, this.commentSizingDirection, 20, 20);
+	resizeComment(dx, dy, resizeObj, dir) {
+		this.resizeObject(dx, dy, resizeObj, dir, 20, 20);
 		this.ren.displaySingleComment(resizeObj);
 		this.ren.displayMovedLinks();
 		this.ren.displayCanvasAccoutrements();
@@ -417,25 +430,25 @@ export default class SVGCanvasUtilsDragObjects {
 
 	// Sets the size and position of the object in the canvasInfo
 	// array based on the position of the pointer during the resize action.
-	resizeObject(d3Event, canvasObj, direction, minWidth, minHeight) {
+	resizeObject(dx, dy, canvasObj, direction, minWidth, minHeight) {
 		let incrementX = 0;
 		let incrementY = 0;
 		let incrementWidth = 0;
 		let incrementHeight = 0;
 
 		if (direction.indexOf("e") > -1) {
-			incrementWidth += d3Event.dx;
+			incrementWidth += dx;
 		}
 		if (direction.indexOf("s") > -1) {
-			incrementHeight += d3Event.dy;
+			incrementHeight += dy;
 		}
 		if (direction.indexOf("n") > -1) {
-			incrementY += d3Event.dy;
-			incrementHeight -= d3Event.dy;
+			incrementY += dy;
+			incrementHeight -= dy;
 		}
 		if (direction.indexOf("w") > -1) {
-			incrementX += d3Event.dx;
-			incrementWidth -= d3Event.dx;
+			incrementX += dx;
+			incrementWidth -= dx;
 		}
 
 		let xPos = 0;
@@ -917,5 +930,44 @@ export default class SVGCanvasUtilsDragObjects {
 		resizeObj.width = CanvasUtils.snapToGrid(resizeObj.width, this.ren.canvasLayout.snapToGridXPx);
 		resizeObj.height = CanvasUtils.snapToGrid(resizeObj.height, this.ren.canvasLayout.snapToGridYPx);
 		return resizeObj;
+	}
+
+	// Returns an object containing the x and y increments used to move or size
+	// an object in the direction provided taking into account whether snap
+	// to grid has been switched on or not.
+	getMoveIncrements(dir) {
+		// If no snap-to-grid we just increment by 10px.
+		let x = 10;
+		let y = 10;
+
+		if (this.ren.config.enableSnapToGridType === SNAP_TO_GRID_DURING ||
+			this.ren.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
+			x = this.ren.canvasLayout.snapToGridXPx;
+			y = this.ren.canvasLayout.snapToGridYPx;
+		}
+
+		let xInc = 0;
+		let yInc = 0;
+
+		switch (dir) {
+		case NORTH:
+			xInc = 0;
+			yInc = -y;
+			break;
+		case SOUTH:
+			xInc = 0;
+			yInc = y;
+			break;
+		case EAST:
+			xInc = x;
+			yInc = 0;
+			break;
+		default:
+		case WEST:
+			xInc = -x;
+			yInc = 0;
+			break;
+		}
+		return { xInc, yInc };
 	}
 }

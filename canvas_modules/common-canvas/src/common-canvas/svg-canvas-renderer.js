@@ -2060,6 +2060,26 @@ export default class SVGCanvasRenderer {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						this.selectObjectD3Event(d3Event, d, "node");
 
+					} else if (KeyboardUtils.sizeObjectUp(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.sizeObject(d, NORTH));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectDown(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.sizeObject(d, SOUTH));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectRight(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.sizeObject(d, EAST));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectLeft(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.sizeObject(d, WEST));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
 					} else if (KeyboardUtils.displayContextOptions(d3Event)) {
 						// Don't let keypress go through to the Canvas otherwise the
 						// canvas contenxt menu/toolbar will be opened.
@@ -3961,6 +3981,26 @@ export default class SVGCanvasRenderer {
 					} else if (KeyboardUtils.moveObjectLeft(d3Event)) {
 						this.canvasController.autoSelectFocusObj(() =>
 							this.dragObjectUtils.moveObject(d, WEST));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectUp(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.sizeObject(d, NORTH));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectDown(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.sizeObject(d, SOUTH));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectRight(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.sizeObject(d, EAST));
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectLeft(d3Event)) {
+						this.canvasController.autoSelectFocusObj(() =>
+							this.dragObjectUtils.sizeObject(d, WEST));
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.selectObject(d3Event)) {
