@@ -605,7 +605,6 @@ class PropertiesMain extends React.Component {
 					"properties-light-disabled": !this.props.light
 				},
 				propertiesSizeClassname);
-
 			return (
 				<Provider store={this.propertiesController.getStore()}>
 					<ReactResizeDetector
