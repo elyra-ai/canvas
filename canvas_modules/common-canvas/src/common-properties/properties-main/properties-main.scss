@@ -18,6 +18,7 @@
 $properties-modal-buttons-height: $spacing-10;
 $properties-resize-button-size: $spacing-06;
 
+// Included to align resizeBtn to enable properties content to stretch on resize
 .properties-right-flyout-container {
 	display: flex;
 	flex: 1;
