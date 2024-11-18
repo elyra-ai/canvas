@@ -193,6 +193,14 @@ export default class KeyboardUtils {
 		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === DOWN_ARROW_KEY;
 	}
 
+	static scrollTextUp(d3Event) {
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.code === UP_ARROW_KEY;
+	}
+
+	static scrollTextDown(d3Event) {
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.code === DOWN_ARROW_KEY;
+	}
+
 	/* ----------------------------------------- */
 	/* Context Menu key functions                */
 	/* ----------------------------------------- */

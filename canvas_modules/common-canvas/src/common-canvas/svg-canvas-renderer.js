@@ -4003,6 +4003,14 @@ export default class SVGCanvasRenderer {
 							this.dragObjectUtils.sizeObject(d, WEST));
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
+					} else if (KeyboardUtils.scrollTextUp(d3Event)) {
+						this.scrollComment(d3Event, 10);
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.scrollTextDown(d3Event)) {
+						this.scrollComment(d3Event, -10);
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
 					} else if (KeyboardUtils.selectObject(d3Event)) {
 						this.selectObjectD3Event(d3Event, d, "comment");
 
@@ -4113,6 +4121,15 @@ export default class SVGCanvasRenderer {
 			return true;
 		}
 		return false;
+	}
+
+	// Scrolls the scrollable <div> in the comment in the d3Event.currentTarget field,
+	// by the amount (in pixels) passed in.
+	scrollComment(d3Event, yAmt) {
+		if (this.commentHasScrollableText(d3Event.currentTarget)) {
+			const scrollDiv = d3Event.currentTarget.getElementsByClassName("d3-comment-text-scroll");
+			scrollDiv[0].scrollBy(0, yAmt);
+		}
 	}
 
 	attachCommentSizingListeners(commentGrps) {
