@@ -38,7 +38,7 @@ import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
 
 import { injectIntl } from "react-intl";
-import styles from "./properties-main-widths.module.scss";
+import styles from "./properties-main-widths.scss";
 
 const FLYOUT_WIDTH_SMALL = parseInt(styles.flyoutWidthSmall, 10);
 const FLYOUT_WIDTH_MEDIUM = parseInt(styles.flyoutWidthMedium, 10);
@@ -72,7 +72,6 @@ class PropertiesMain extends React.Component {
 		});
 		this.setForm(props.propertiesInfo, false);
 		this.previousErrorMessages = {};
-		this.flyoutWidths = [FLYOUT_WIDTH_SMALL, FLYOUT_WIDTH_MEDIUM, FLYOUT_WIDTH_LARGE, FLYOUT_WIDTH_MAX];
 		// this has to be after setForm because setForm clears all error messages.
 		// Validate all validationDefinitions but show warning messages for "colDoesExists" condition only
 		this.propertiesController.validatePropertiesValues(false);
@@ -89,9 +88,8 @@ class PropertiesMain extends React.Component {
 		this.state = {
 			showPropertiesButtons: true,
 			editorSize: editorSize,
-			containerWidth: FLYOUT_WIDTH_SMALL,
-			prevEditorSize: null,
-			isFlyoutDraggedFlag: false
+			prevEditorSize: null, // Track change in editorSize to hide/unhide the resize button.
+			isFlyoutDraggedFlag: false // Flag to track flyout resize.
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
