@@ -26,18 +26,18 @@ $properties-resize-button-size: $spacing-06;
 
 .properties-right-flyout {
 	// Set the font explicitly to 14px to shrink them across the entire properties editor
-	display: flex;
-	min-width: 100%;
-	min-height: 100%;
-	flex: 1;
 	font-size: 14px;
+	// Stretch properties content horizontally when flyout resize is enabled
+	min-width: 100%;
+	// Stretch properties content vertically when flyout resize is enabled
+	min-height: 100%;
 	width: 0;
 	height: 100%;
 	overflow: hidden;
+	border-left: 1px solid $layer-accent-01;
 	outline: none;
 	display: flex;
 	flex-direction: column;
-	border-left: 1px solid $layer-accent-01;
 	transition: motion(entrance, expressive) $duration-moderate-01;
 
 	&.properties-small {
