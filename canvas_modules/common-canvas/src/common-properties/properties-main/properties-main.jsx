@@ -609,10 +609,10 @@ class PropertiesMain extends React.Component {
 				<Provider store={this.propertiesController.getStore()}>
 					<ReactResizeDetector
 						handleWidth
+						skipOnMount
 						refreshMode="debounce"
 						onResize={(width) => this.detectResize(width)}
 						targetRef={this.commonProperties}
-						skipOnMount
 					>
 						<div className="properties-right-flyout-container">
 							<aside
