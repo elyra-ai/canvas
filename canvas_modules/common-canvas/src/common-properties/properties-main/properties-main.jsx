@@ -89,7 +89,7 @@ class PropertiesMain extends React.Component {
 		this.state = {
 			showPropertiesButtons: true,
 			editorSize: editorSize,
-			containerWidth: 0,
+			containerWidth: FLYOUT_WIDTH_SMALL,
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
@@ -607,7 +607,6 @@ class PropertiesMain extends React.Component {
 					<ReactResizeDetector
 						handleWidth
 						refreshMode="debounce"
-						refreshRate={500}
 						onResize={(width) => this.detectResize(width)}
 						targetRef={this.commonProperties}
 					>
