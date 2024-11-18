@@ -90,6 +90,8 @@ class PropertiesMain extends React.Component {
 			showPropertiesButtons: true,
 			editorSize: editorSize,
 			containerWidth: FLYOUT_WIDTH_SMALL,
+			prevEditorSize: null,
+			isFlyoutDraggedFlag: false
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
@@ -452,8 +454,13 @@ class PropertiesMain extends React.Component {
 		}
 	}
 
-	detectResize(width) {
-		this.setState({ containerWidth: width });
+	detectResize() {
+		// If Flyout is resized using button then editorSize will change which
+		// would indicate it is not dragged so display resizeBtn in this case
+		this.setState((prevState) => ({
+			isFlyoutDraggedFlag: this.state.editorSize === this.state.prevEditorSize,
+			prevEditorSize: prevState.editorSize
+		}));
 	}
 
 	render() {
@@ -504,8 +511,7 @@ class PropertiesMain extends React.Component {
 				// 1. Flyout is not dragged to resize its width.
 				// 2. If Flyout is dragged back to its smallest width.
 				// If pixel_width is set include that to test if button should be shown.
-				const showResizeBtn = [...this.flyoutWidths, this._getOverrideSize()].includes(this.state.containerWidth);
-				if (this._isResizeButtonRequired() && showResizeBtn) {
+				if (this._isResizeButtonRequired() && !this.state.isFlyoutDraggedFlag) {
 					const resizeIcon = this._getResizeButton();
 					// Resize button label can be "Expand" or "Contract"
 					const resizeBtnLabel = (resizeIcon.props && resizeIcon.props.className === "properties-resize-caret-left")
@@ -609,6 +615,7 @@ class PropertiesMain extends React.Component {
 						refreshMode="debounce"
 						onResize={(width) => this.detectResize(width)}
 						targetRef={this.commonProperties}
+						skipOnMount
 					>
 						<div className="properties-right-flyout-container">
 							<aside
