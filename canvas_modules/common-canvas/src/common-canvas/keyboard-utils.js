@@ -237,6 +237,17 @@ export default class KeyboardUtils {
 		return evt.code === TAB_KEY && !evt.shiftKey;
 	}
 
+	/* ----------------------------------------- */
+	/* Palette key functions                */
+	/* ----------------------------------------- */
+
+	static createAutoNode(evt) {
+		return !evt.shiftKey && evt.code === SPACE_KEY;
+	}
+
+	static createAutoNodeNoLink(evt) {
+		return evt.shiftKey && evt.code === SPACE_KEY;
+	}
 
 	/* ----------------------------------------- */
 	/* Utility functions                         */

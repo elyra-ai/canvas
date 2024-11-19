@@ -317,7 +317,7 @@ export default class SVGCanvasRenderer {
 		this.displayCanvas();
 
 		// Restore the focus back to whatever object is currently in focus if
-		// keyboard navigation is enabled, otherwise focus on the canvas.
+		// keyboard navigation is enabled.
 		if (this.config.enableKeyboardNavigation) {
 			this.restoreFocus();
 		}

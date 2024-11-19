@@ -2182,14 +2182,16 @@ export default class CanvasController {
 		}
 	}
 
-	// Called when a node is double clicked in the palette and added to the canvas.
-	// The nodeTemplate is in the internal format.
-	createAutoNode(nodeTemplate) {
+	// Automatically adds a node (nodeTemplate) to the canvas. The nodeTemplate
+	// must be in the internal format. If addLink is true a link will be created
+	// between the new node and the node it is positioned next to.
+	createAutoNode(nodeTemplate, addLink = true) {
 		const selApiPipeline = this.objectModel.getSelectionAPIPipeline();
 		const apiPipeline = selApiPipeline ? selApiPipeline : this.objectModel.getAPIPipeline();
 		var data = {
 			editType: "createAutoNode",
 			editSource: "canvas",
+			addLink: addLink,
 			nodeTemplate: nodeTemplate,
 			pipelineId: apiPipeline.pipelineId
 		};

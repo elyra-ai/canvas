@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 import { get, has } from "lodash";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/palette/locales/en.json";
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
 import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM,
@@ -74,10 +75,12 @@ class PaletteContentListItem extends React.Component {
 		}
 	}
 
-	onKeyDown(e) {
-		// e.key === " " is needed to allow Cypress test in palette.js to run on the build machine!
-		if (e.key === " " || e.code === "Space" || e.keyCode === 32) {
-			this.onDoubleClick();
+	onKeyDown(evt) {
+		if (KeyboardUtils.createAutoNode(evt)) {
+			this.createAutoNode(true);
+
+		} else if (KeyboardUtils.createAutoNodeNoLink(evt)) {
+			this.createAutoNode(false); // false indicates no links are required
 		}
 	}
 
@@ -87,10 +90,7 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	onDoubleClick() {
-		if (this.props.canvasController.createAutoNode && !this.isItemDisabled()) {
-			const nodeTemplate = this.props.canvasController.convertNodeTemplate(this.props.nodeTypeInfo.nodeType);
-			this.props.canvasController.createAutoNode(nodeTemplate);
-		}
+		this.createAutoNode(true);
 	}
 
 	onMouseOver(ev) {
@@ -261,6 +261,17 @@ class PaletteContentListItem extends React.Component {
 	isItemDisabled() {
 		const disabled = this.props.nodeTypeInfo.nodeType?.app_data?.ui_data?.palette_disabled;
 		return !this.props.isEditingEnabled || disabled;
+	}
+
+	// Converts the palette node from its pipeline flow format to the internal API
+	// format and calls canvas controller to automatically add the node to the
+	// canvas. If addLink is true a link will be added between to the new node
+	// from the adjacent node.
+	createAutoNode(addLink) {
+		if (this.props.canvasController.createAutoNode && !this.isItemDisabled()) {
+			const nodeTemplate = this.props.canvasController.convertNodeTemplate(this.props.nodeTypeInfo.nodeType);
+			this.props.canvasController.createAutoNode(nodeTemplate, addLink);
+		}
 	}
 
 	render() {
