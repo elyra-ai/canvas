@@ -34,6 +34,11 @@ class CommonCanvasRightFlyout extends React.Component {
 		this.getRightFlyoutResizeContent = this.getRightFlyoutResizeContent.bind(this);
 	}
 
+	componentWillUnmount() {
+		// Reset the flyout width to adjust as per content width in next render
+		this.props.canvasController.setRightFlyoutWidth(0);
+	}
+
 	onMouseDown(e) {
 		if (e.button === 0) {
 			document.addEventListener("mousemove", this.onMouseMoveX, true);
