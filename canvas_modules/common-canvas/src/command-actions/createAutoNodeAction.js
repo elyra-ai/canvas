@@ -31,6 +31,8 @@ export default class CreateAutoNodeAction extends Action {
 		this.labelUtil = canvasController.labelUtil;
 		this.objectModel = canvasController.objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
+		// If addLink is missing we default it to be true.
+		this.data.addLink = typeof this.data.addLink === "undefined" ? true : this.data.addLink;
 
 		const autoLinkOnlyFromSelNodes = canvasController.getCanvasConfig().enableAutoLinkOnlyFromSelNodes;
 		this.srcNode = this.apiPipeline.getAutoSourceNode(autoLinkOnlyFromSelNodes);
