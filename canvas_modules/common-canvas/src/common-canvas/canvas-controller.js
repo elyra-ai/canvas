@@ -1926,7 +1926,9 @@ export default class CanvasController {
 	// this method auto-selects that object and ensures that the action function
 	// passed in (actionFn) is run immediately after the select has run. If the
 	// current focus object is already selected it just runs the action function.
-	autoSelectFocusObj(actionFn) {
+	// If augment is set to true the focus object will be added to the set of
+	// selected objects instead of replacing the current selections.
+	autoSelectFocusObj(actionFn, augment) {
 		const focusObj = this.getCurrentFocusObject();
 		if (focusObj) {
 			const pipelineId = this.getCurrentPipelineId();
@@ -1936,7 +1938,7 @@ export default class CanvasController {
 					this.removeAfterUpdateCallback(fn);
 				};
 				this.addAfterUpdateCallback(fn);
-				this.selectObject(focusObj.id, false, false, pipelineId);
+				this.selectObject(focusObj.id, false, augment, pipelineId);
 				return;
 			}
 		}

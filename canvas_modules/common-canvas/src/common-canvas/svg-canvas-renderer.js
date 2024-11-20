@@ -126,10 +126,6 @@ export default class SVGCanvasRenderer {
 		// entry in this array.
 		this.dragOverDetachedLinks = [];
 
-		// An object containing the x and y offset of the position of the mouse
-		// pointer from the top left corner of the node that is being dragged.
-		this.dragPointerOffsetInNode = null;
-
 		// The node over which the 'guide' object for a new link or a link handle
 		// is being dragged. Used when enableHighlightNodeOnNewLinkDrag config
 		// option is switched on.
@@ -2037,23 +2033,31 @@ export default class SVGCanvasRenderer {
 						}
 
 					} else if (KeyboardUtils.moveObjectUp(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.moveObject(d, NORTH));
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, NORTH));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.moveObjectDown(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.moveObject(d, SOUTH));
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, SOUTH));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.moveObjectRight(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.moveObject(d, EAST));
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, EAST));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.moveObjectLeft(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.moveObject(d, WEST));
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, WEST));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.selectObject(d3Event)) {
@@ -2061,23 +2065,38 @@ export default class SVGCanvasRenderer {
 						this.selectObjectD3Event(d3Event, d, "node");
 
 					} else if (KeyboardUtils.sizeObjectUp(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.sizeObject(d, NORTH));
+						if (this.config.enableResizableNodes && this.ren.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, NORTH));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.sizeObjectDown(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.sizeObject(d, SOUTH));
+						if (this.config.enableResizableNodes && this.ren.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, SOUTH));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.sizeObjectRight(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.sizeObject(d, EAST));
+						if (this.config.enableResizableNodes && this.ren.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, EAST));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.sizeObjectLeft(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.sizeObject(d, WEST));
+						if (this.config.enableResizableNodes && this.ren.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, WEST));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.createLink(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragNewLinkUtils.createNewLinkFromSelections(), true); // true indicates "augment" the selection
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.displayContextOptions(d3Event)) {
@@ -3964,43 +3983,59 @@ export default class SVGCanvasRenderer {
 						}
 
 					} else if (KeyboardUtils.moveObjectUp(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.moveObject(d, NORTH));
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, NORTH));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.moveObjectDown(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.moveObject(d, SOUTH));
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, SOUTH));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.moveObjectRight(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.moveObject(d, EAST));
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, EAST));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.moveObjectLeft(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.moveObject(d, WEST));
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, WEST));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.sizeObjectUp(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.sizeObject(d, NORTH));
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, NORTH));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.sizeObjectDown(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.sizeObject(d, SOUTH));
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, SOUTH));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.sizeObjectRight(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.sizeObject(d, EAST));
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, EAST));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.sizeObjectLeft(d3Event)) {
-						this.canvasController.autoSelectFocusObj(() =>
-							this.dragObjectUtils.sizeObject(d, WEST));
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, WEST));
+						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.scrollTextUp(d3Event)) {

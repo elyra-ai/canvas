@@ -23,6 +23,7 @@ const RIGHT_ARROW_KEY = "ArrowRight";
 const UP_ARROW_KEY = "ArrowUp";
 const DOWN_ARROW_KEY = "ArrowDown";
 const ESC_KEY = "Escape";
+const PERIOD_KEY = "Period";
 const SLASH_KEY = "Slash";
 const EQUAL_KEY = "Equal";
 const MINUS_KEY = "Minus";
@@ -199,6 +200,10 @@ export default class KeyboardUtils {
 
 	static scrollTextDown(d3Event) {
 		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.code === DOWN_ARROW_KEY;
+	}
+
+	static createLink(d3Event) {
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === PERIOD_KEY;
 	}
 
 	/* ----------------------------------------- */
