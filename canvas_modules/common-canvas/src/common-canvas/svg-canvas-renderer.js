@@ -2065,28 +2065,28 @@ export default class SVGCanvasRenderer {
 						this.selectObjectD3Event(d3Event, d, "node");
 
 					} else if (KeyboardUtils.sizeObjectUp(d3Event)) {
-						if (this.config.enableResizableNodes && this.ren.config.enableEditingActions) {
+						if (CanvasUtils.isNodeResizable(d, this.config)) {
 							this.canvasController.autoSelectFocusObj(() =>
 								this.dragObjectUtils.sizeObject(d, NORTH));
 						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.sizeObjectDown(d3Event)) {
-						if (this.config.enableResizableNodes && this.ren.config.enableEditingActions) {
+						if (CanvasUtils.isNodeResizable(d, this.config)) {
 							this.canvasController.autoSelectFocusObj(() =>
 								this.dragObjectUtils.sizeObject(d, SOUTH));
 						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.sizeObjectRight(d3Event)) {
-						if (this.config.enableResizableNodes && this.ren.config.enableEditingActions) {
+						if (CanvasUtils.isNodeResizable(d, this.config)) {
 							this.canvasController.autoSelectFocusObj(() =>
 								this.dragObjectUtils.sizeObject(d, EAST));
 						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.sizeObjectLeft(d3Event)) {
-						if (this.config.enableResizableNodes && this.ren.config.enableEditingActions) {
+						if (CanvasUtils.isNodeResizable(d, this.config)) {
 							this.canvasController.autoSelectFocusObj(() =>
 								this.dragObjectUtils.sizeObject(d, WEST));
 						}
@@ -4554,6 +4554,7 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 					this.raiseLinkToTop(targetObj);
+					this.restoreFocus(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, d, "hover");
 
@@ -4594,6 +4595,7 @@ export default class SVGCanvasRenderer {
 				// to avoid Decoration Textarea to be closed on mouseleave.
 				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes && !this.isEditingText()) {
 					this.lowerLinkToBottom(targetObj);
+					this.restoreFocus(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, link, "default");
 				this.canvasController.closeTip();
@@ -4607,11 +4609,11 @@ export default class SVGCanvasRenderer {
 				if (this.svgCanvasTextArea.isEditingText()) {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
+				if (this.config.enableKeyboardNavigation) {
+					this.activePipeline.setTabGroupIndexForObj(d);
+					this.moveFocusTo(d, d3Event);
+				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-					if (this.config.enableKeyboardNavigation) {
-						this.activePipeline.setTabGroupIndexForObj(d);
-						this.moveFocusTo(d, d3Event);
-					}
 					this.selectObjectD3Event(d3Event, d, "link");
 				}
 				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
