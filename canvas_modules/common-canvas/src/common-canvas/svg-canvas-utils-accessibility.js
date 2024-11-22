@@ -493,12 +493,6 @@ export default class SVGCanvasUtilsAccessibility {
 		const dataLinksTo = this.getLinksToNode(node, NODE_LINK);
 		dataLinksTo.forEach((link) => { linkInfos.push({ link: link, type: "node", obj: this.ap.getNode(link.trgNodeId) }); });
 
-		const assocLinksTo = this.getLinksToNode(node, ASSOCIATION_LINK);
-		assocLinksTo.forEach((link) => { linkInfos.push({ link: link, type: "node", obj: this.ap.getNode(node.id === link.srcNodeId ? link.trgNodeId : link.srcNodeId) }); });
-
-		const commentLinksTo = this.getLinksToNode(node, COMMENT_LINK);
-		commentLinksTo.forEach((link) => { linkInfos.push({ link: link, type: "comment", obj: this.ap.getComment(link.srcNodeId) }); });
-
 		return linkInfos;
 	}
 
@@ -519,7 +513,6 @@ export default class SVGCanvasUtilsAccessibility {
 		}
 		return link.trgNode;
 	}
-
 
 	// Returns an array of links that go to the node passed in, of the type
 	// specified.

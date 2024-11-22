@@ -124,7 +124,16 @@ export default class CanvasController {
 		// canvas controller is created.
 		this.instanceId = commonCanvasControllerInstanceId++;
 
+		// Global variable to track whether branch highlighting is displayed or not.
 		this.branchHighlighted = false;
+
+		// Stores the object that is currently focused. This can be a node, comment
+		// or link OR the string stored in the constant CANVAS_FOCUS. The focusObject
+		// is maintained even if the focus goes outside the canvas. This helps in the
+		// situation where focus goes to a context menu (outside the canvas) and then,
+		// when the menu is closed,  we want the focus to go back to the originally
+		// focused object.
+		this.focusObject = null;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -551,13 +560,13 @@ export default class CanvasController {
 		// Include links in selectAll unless LinkSelection is "None"
 		const includeLinks = this.getCanvasConfig().enableLinkSelection !== LINK_SELECTION_NONE;
 		this.objectModel.selectAll(includeLinks, pipelineId);
-		this.focusOnCanvas();
+		this.setFocusOnCanvas();
 	}
 
 	// De-selects all the objects on the canvas.
 	deselectAll(pipelineId) {
 		this.objectModel.deselectAll(pipelineId);
-		this.focusOnCanvas();
+		this.setFocusOnCanvas();
 	}
 
 	isPrimaryPipelineEmpty() {
@@ -1881,13 +1890,7 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 
 	restoreFocus() {
-		if (this.canvasContents) {
-			if (this.getCanvasConfig().enableKeyboardNavigation) {
-				this.getSVGCanvasD3().restoreFocus();
-			} else {
-				this.canvasContents.focusOnCanvas();
-			}
-		}
+		this.setFocusObject(this.focusObject); // This will force a refresh of the focus
 	}
 
 	focusOnTextEntryElement(evt) {
@@ -1896,28 +1899,30 @@ export default class CanvasController {
 		}
 	}
 
-	focusOnCanvas() {
-		if (this.canvasContents) { // Don't check enableKeyboardNavigation here as focusOnCanvas can be called when it is false.
-			this.canvasContents.focusOnCanvas();
-		}
+	setFocusOnCanvas() {
+		this.setFocusObject(CANVAS_FOCUS);
 	}
 
-	moveFocusTo(focusObject) {
-		if (this.canvasContents && this.getCanvasConfig().enableKeyboardNavigation) {
-			this.getSVGCanvasD3().moveFocusTo(focusObject);
-		}
+	getFocusObject() {
+		return this.focusObject;
 	}
 
-	getCurrentFocusObject() {
-		if (this.canvasContents) {
-			return this.canvasContents.getCurrentFocusObject();
+	setFocusObject(focusObj) {
+		this.focusObject = focusObj;
+
+		if (this.focusObject && this.canvasContents) {
+			if (this.focusObject === CANVAS_FOCUS) {
+				this.canvasContents.focusOnCanvas();
+
+			} else {
+				this.getSVGCanvasD3().moveFocusTo(focusObj);
+			}
 		}
-		return null;
 	}
 
 	isFocusOnCanvas() {
 		if (this.canvasContents) {
-			return document.activeElement?.id === this.canvasContents.getSvgCanvasDivId();
+			return this.canvasContents.isFocusOnCanvas();
 		}
 		return false;
 	}
@@ -1929,7 +1934,7 @@ export default class CanvasController {
 	// If augment is set to true the focus object will be added to the set of
 	// selected objects instead of replacing the current selections.
 	autoSelectFocusObj(actionFn, augment) {
-		const focusObj = this.getCurrentFocusObject();
+		const focusObj = this.getFocusObject();
 		if (focusObj) {
 			const pipelineId = this.getCurrentPipelineId();
 			if (!this.isFocusOnCanvas() && !this.isSelected(focusObj.id, pipelineId)) {
@@ -2804,10 +2809,10 @@ export default class CanvasController {
 				const focusObject = command.getFocusObject();
 
 				if (focusObject === CANVAS_FOCUS) {
-					this.focusOnCanvas();
+					this.setFocusOnCanvas();
 
 				} else if (this.canvasContents) {
-					this.moveFocusTo(focusObject);
+					this.setFocusObject(focusObject);
 				}
 			}
 

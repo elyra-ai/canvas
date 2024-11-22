@@ -232,14 +232,6 @@ export default class SVGCanvasD3 {
 		this.renderer.moveFocusTo(focusObj);
 	}
 
-	getCurrentFocusObject() {
-		return this.renderer.getCurrentFocusObject();
-	}
-
-	restoreFocus(evt) {
-		this.renderer.restoreFocus(evt);
-	}
-
 	focusOnTextEntryElement(evt) {
 		this.renderer.focusOnTextEntryElement(evt);
 	}

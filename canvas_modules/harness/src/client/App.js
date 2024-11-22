@@ -88,6 +88,7 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
+// Uncomment these and associated code to automatically display a flow and palette.
 // import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
 // import modelerPalette from "../../../harness/test_resources/palettes/modelerPalette.json";
 

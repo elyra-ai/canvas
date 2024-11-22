@@ -112,7 +112,7 @@ class CanvasContents extends React.Component {
 		}
 
 		if (this.props.canvasConfig.enableFocusOnMount) {
-			this.focusOnCanvas();
+			this.props.canvasController.setFocusOnCanvas();
 		}
 	}
 
@@ -321,7 +321,7 @@ class CanvasContents extends React.Component {
 	}
 
 	onMouseDown(e) {
-		this.focusOnCanvas();
+		this.props.canvasController.setFocusOnCanvas();
 	}
 
 	// Handles the click on the "Return to previous flow" button.
@@ -483,10 +483,6 @@ class CanvasContents extends React.Component {
 		return (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp} />);
 	}
 
-	getCurrentFocusObject() {
-		return this.svgCanvasD3?.getCurrentFocusObject();
-	}
-
 	setIsDropZoneDisplayed(isDropZoneDisplayed) {
 		if (isDropZoneDisplayed !== this.state.isDropZoneDisplayed) {
 			this.setState({ isDropZoneDisplayed: isDropZoneDisplayed });
@@ -514,6 +510,9 @@ class CanvasContents extends React.Component {
 		return false;
 	}
 
+	isFocusOnCanvas() {
+		return document.activeElement?.id === this.getSvgCanvasDivId();
+	}
 	afterUpdate() {
 		this.afterUpdateCallbacks.forEach((callback) => callback());
 	}
@@ -635,18 +634,18 @@ class CanvasContents extends React.Component {
 		if (success) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 		} else {
-			this.focusOnCanvas();
+			this.props.canvasController.setFocusOnCanvas();
 		}
 	}
 
-	// Handles tab+shift key presses on our div. It alos keeps track of whether
+	// Handles tab+shift key presses on our div. It also keeps track of whether
 	// a tab key press is being handled using a flag.
 	moveFocusToPreviousGroup(evt) {
 		const success = this.svgCanvasD3.focusPreviousTabGroup(evt);
 		if (success) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 		} else {
-			this.focusOnCanvas();
+			this.props.canvasController.setFocusOnCanvas();
 		}
 	}
 

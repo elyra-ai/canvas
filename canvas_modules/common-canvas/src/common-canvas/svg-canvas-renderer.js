@@ -42,7 +42,8 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	NORTH, SOUTH, EAST, WEST,
-	WYSIWYG }
+	WYSIWYG,
+	CANVAS_FOCUS }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
@@ -130,10 +131,6 @@ export default class SVGCanvasRenderer {
 		// is being dragged. Used when enableHighlightNodeOnNewLinkDrag config
 		// option is switched on.
 		this.dragNewLinkOverNode = null;
-
-		// The current canvas object that has keyboard navigation focus, or
-		// null if the focus is elsewhere.
-		this.currentFocusObj = null;
 
 		this.initializeGhostDiv();
 
@@ -1289,7 +1286,10 @@ export default class SVGCanvasRenderer {
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", "d3-svg-background")
 			.attr("pointer-events", "all")
-			.style("cursor", "default");
+			.style("cursor", "default")
+			.on("mousedown", () => {
+				this.canvasController.setFocusOnCanvas();
+			});
 
 		// Only attach the 'defs' to the top most SVG area when we are displaying
 		// either the primary pipeline full page or a sub-pipeline full page.
@@ -2020,7 +2020,7 @@ export default class SVGCanvasRenderer {
 						if (linkInfos.length > 0) {
 							const linkInfosAll = this.activePipeline.getAllLinksForNode(d);
 							linkInfosAll.forEach((li) => (li.link.navObject = d));
-							this.moveFocusTo(linkInfos[0].link, d3Event);
+							this.setFocusObject(linkInfos[0].link, d3Event);
 						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
@@ -2029,7 +2029,7 @@ export default class SVGCanvasRenderer {
 						if (linkInfos.length > 0) {
 							const linkInfosAll = this.activePipeline.getAllLinksForNode(d);
 							linkInfosAll.forEach((li) => (li.link.navObject = d));
-							this.moveFocusTo(linkInfos[0].link, d3Event);
+							this.setFocusObject(linkInfos[0].link, d3Event);
 						}
 
 					} else if (KeyboardUtils.moveObjectUp(d3Event)) {
@@ -2118,18 +2118,18 @@ export default class SVGCanvasRenderer {
 				}
 			})
 			.on("mouseenter", (d3Event, d) => {
-				// console.log("Mouseenter in node");
 				if (this.isDragging()) {
 					return;
 				}
 
 				const nodeGrp = d3.select(d3Event.currentTarget);
 				this.raiseNodeToTop(nodeGrp, d3Event);
+				this.restoreFocus(); // raiseNodeToTop will removing the visual focus so restore it.
 
 				this.setNodeStyles(d, "hover", nodeGrp);
 
 				if (this.config.enableContextToolbar) {
-					this.moveFocusTo(d, d3Event);
+					this.setFocusObject(d, d3Event);
 					this.addContextToolbar(d3Event, d, "node");
 				} else {
 					this.addDynamicNodeIcons(d3Event, d, nodeGrp);
@@ -2139,7 +2139,6 @@ export default class SVGCanvasRenderer {
 			// child elements of the node. Some child elements, like decorations, may have
 			// their own tooltips so this will redisplay the node tooltip on exiting the decoration.
 			.on("mouseover", (d3Event, d) => {
-				// console.log("Mouseover in node");
 				d3Event.stopPropagation(); // Stop propagation in case we are in a sub-flow
 				if (this.canOpenTip(TIP_TYPE_NODE)) {
 					const tipId = this.canvasController.getTipId(); // Id of current tip or null
@@ -2158,7 +2157,6 @@ export default class SVGCanvasRenderer {
 				}
 			})
 			.on("mouseleave", (d3Event, d) => {
-				// console.log("Mouseleave in node");
 				const nodeGrp = d3.select(d3Event.currentTarget);
 				this.setNodeStyles(d, "default", nodeGrp);
 				if (this.config.enableContextToolbar) {
@@ -2170,7 +2168,6 @@ export default class SVGCanvasRenderer {
 			})
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
-				// console.log("Mousedown in node");
 				this.logger.logStartTimer("Node Group - mouse down");
 				d3Event.stopPropagation();
 				if (this.svgCanvasTextArea.isEditingText()) {
@@ -2179,7 +2176,7 @@ export default class SVGCanvasRenderer {
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
 						this.activePipeline.setTabGroupIndexForObj(d);
-						this.moveFocusTo(d, d3Event);
+						this.setFocusObject(d, d3Event);
 					}
 					this.selectObjectD3Event(d3Event, d, "node");
 				}
@@ -2209,7 +2206,7 @@ export default class SVGCanvasRenderer {
 					if (this.config.enableDragWithoutSelect) {
 						this.selectObjectD3Event(d3Event, d, "node");
 					}
-					this.moveFocusTo(d, d3Event);
+					this.setFocusObject(d, d3Event);
 					this.openContextMenu(d3Event, "node", d);
 				}
 			});
@@ -3013,7 +3010,7 @@ export default class SVGCanvasRenderer {
 					const rect = ellipsisGrp.node().getBoundingClientRect();
 					const rect2 = this.canvasSVG.node().getBoundingClientRect();
 					const pos = { x: rect.left - rect2.left, y: rect.bottom - rect2.top };
-					this.moveFocusTo(d, d3Event);
+					this.setFocusObject(d, d3Event);
 					this.openContextMenu(d3Event, "node", d, null, pos);
 				}
 			});
@@ -3979,7 +3976,7 @@ export default class SVGCanvasRenderer {
 						const linkInfos = this.activePipeline.getNextLinksFromComment(d);
 						if (linkInfos.length > 0) {
 							linkInfos.forEach((li) => (li.link.navObject = d));
-							this.moveFocusTo(linkInfos[0].link, d3Event);
+							this.setFocusObject(linkInfos[0].link, d3Event);
 						}
 
 					} else if (KeyboardUtils.moveObjectUp(d3Event)) {
@@ -4074,7 +4071,7 @@ export default class SVGCanvasRenderer {
 				}
 				if (this.config.enableContextToolbar) {
 					if (!this.svgCanvasTextArea.isEditingText()) {
-						this.moveFocusTo(d, d3Event);
+						this.setFocusObject(d, d3Event);
 					}
 					this.addContextToolbar(d3Event, d, "comment");
 				}
@@ -4103,7 +4100,7 @@ export default class SVGCanvasRenderer {
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
 						this.activePipeline.setTabGroupIndexForObj(d);
-						this.moveFocusTo(d, d3Event);
+						this.setFocusObject(d, d3Event);
 					}
 					this.selectObjectD3Event(d3Event, d, "comment");
 				}
@@ -4136,7 +4133,7 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, "comment");
 				}
-				this.moveFocusTo(d, d3Event);
+				this.setFocusObject(d, d3Event);
 				this.openContextMenu(d3Event, "comment", d);
 			});
 	}
@@ -4479,41 +4476,41 @@ export default class SVGCanvasRenderer {
 					if (KeyboardUtils.nextObjectInGroup(d3Event)) {
 						if (d.type === NODE_LINK) {
 							const node = this.activePipeline.getNextNodeFromDataLink(d);
-							this.moveFocusTo(node, d3Event);
+							this.setFocusObject(node, d3Event);
 							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 						} else if (d.type === ASSOCIATION_LINK) {
 							const node = this.activePipeline.getNextNodeFromAssocLink(d);
-							this.moveFocusTo(node, d3Event);
+							this.setFocusObject(node, d3Event);
 							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 						} else if (d.type === COMMENT_LINK) {
 							const obj = this.activePipeline.getNextObjectFromCommentLink(d);
-							this.moveFocusTo(obj, d3Event);
+							this.setFocusObject(obj, d3Event);
 							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						}
 
 					} else if (KeyboardUtils.previousObjectInGroup(d3Event)) {
 						if (d.type === NODE_LINK) {
 							const node = this.activePipeline.getPreviousNodeFromDataLink(d);
-							this.moveFocusTo(node, d3Event);
+							this.setFocusObject(node, d3Event);
 
 						} else if (d.type === ASSOCIATION_LINK) {
 							const node = this.activePipeline.getPreviousNodeFromAssocLink(d);
-							this.moveFocusTo(node, d3Event);
+							this.setFocusObject(node, d3Event);
 
 						} else if (d.type === COMMENT_LINK) {
 							const obj = this.activePipeline.getPreviousObjectFromCommentLink(d);
-							this.moveFocusTo(obj, d3Event);
+							this.setFocusObject(obj, d3Event);
 						}
 
 					} else if (KeyboardUtils.nextSiblingLink(d3Event)) {
 						const link = this.activePipeline.getNextSiblingLink(d);
-						this.moveFocusTo(link, d3Event);
+						this.setFocusObject(link, d3Event);
 
 					} else if (KeyboardUtils.previousSiblingLink(d3Event)) {
 						const link = this.activePipeline.getPreviousSiblingLink(d);
-						this.moveFocusTo(link, d3Event);
+						this.setFocusObject(link, d3Event);
 
 					} else if (KeyboardUtils.moveObjectLeft(d3Event)) {
 						// Prevent Chrome returning to previous browser page!
@@ -4554,12 +4551,13 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 					this.raiseLinkToTop(targetObj);
-					this.restoreFocus(d3Event);
+					// this.canvasController.restoreFocus();
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, d, "hover");
 
 				if (this.config.enableContextToolbar) {
-					this.moveFocusTo(d, d3Event);
+					this.setFocusObject(d, d3Event);
 					this.addContextToolbar(d3Event, d, "link",
 						this.canvasLayout.linkContextToolbarPosX,
 						this.canvasLayout.linkContextToolbarPosY
@@ -4595,7 +4593,8 @@ export default class SVGCanvasRenderer {
 				// to avoid Decoration Textarea to be closed on mouseleave.
 				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes && !this.isEditingText()) {
 					this.lowerLinkToBottom(targetObj);
-					this.restoreFocus(d3Event);
+					// this.canvasController.restoreFocus();
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, link, "default");
 				this.canvasController.closeTip();
@@ -4611,7 +4610,7 @@ export default class SVGCanvasRenderer {
 				}
 				if (this.config.enableKeyboardNavigation) {
 					this.activePipeline.setTabGroupIndexForObj(d);
-					this.moveFocusTo(d, d3Event);
+					this.setFocusObject(d, d3Event);
 				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 					this.selectObjectD3Event(d3Event, d, "link");
@@ -4627,7 +4626,7 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 					this.selectObjectD3Event(d3Event, d, "link");
 				}
-				this.moveFocusTo(d, d3Event);
+				this.setFocusObject(d, d3Event);
 				this.openContextMenu(d3Event, "link", d);
 			});
 	}
@@ -4882,7 +4881,7 @@ export default class SVGCanvasRenderer {
 	// * There are one or more selected links
 	// * We are editing text
 	// * The app has indicated links should be displayed over nodes
-	raiseNodeToTop(nodeGrp, evt) {
+	raiseNodeToTop(nodeGrp, d3Event) {
 		if (this.config.enableRaiseNodesToTopOnHover &&
 			!this.isDragging() &&
 			this.activePipeline.getSelectedLinksCount() === 0 &&
@@ -4890,7 +4889,6 @@ export default class SVGCanvasRenderer {
 			!this.config.enableLinksOverNodes
 		) {
 			nodeGrp.raise();
-			this.restoreFocus(evt);
 		}
 	}
 
@@ -5785,7 +5783,7 @@ export default class SVGCanvasRenderer {
 	focusNextTabGroup(evt) {
 		const nextObj = this.activePipeline.getNextTabGroupStartObject();
 		if (nextObj) {
-			this.moveFocusTo(nextObj, evt);
+			this.setFocusObject(nextObj, evt);
 			return true;
 		}
 		return false;
@@ -5794,10 +5792,26 @@ export default class SVGCanvasRenderer {
 	focusPreviousTabGroup(evt) {
 		const previousObj = this.activePipeline.getPreviousTabGroupStartObject();
 		if (previousObj) {
-			this.moveFocusTo(previousObj, evt);
+			this.setFocusObject(previousObj, evt);
 			return true;
 		}
 		return false;
+	}
+
+	setFocusObject(focusObj, evt) {
+		if (!this.config.enableKeyboardNavigation) {
+			return;
+		}
+
+		CanvasUtils.stopPropagationAndPreventDefault(evt);
+
+		this.canvasController.setFocusObject(focusObj);
+	}
+
+	restoreFocus() {
+		if (!this.canvasController.isContextMenuDisplayed()) {
+			this.canvasController.restoreFocus();
+		}
 	}
 
 	setTabbedIn() {
@@ -5808,38 +5822,26 @@ export default class SVGCanvasRenderer {
 		this.activePipeline.setTabbedOut();
 	}
 
-	restoreFocus(evt) {
-		// console.log("Restore focus");
-		this.activePipeline.setTabbedIn();
-		this.moveFocusTo(this.currentFocusObj, evt);
-	}
-
 	focusOnTextEntryElement(evt) {
 		this.svgCanvasTextArea.focusOnTextEntryElement(evt);
 	}
 
-	getCurrentFocusObject() {
-		return this.currentFocusObj;
-	}
-
-	moveFocusTo(focusObj, evt) {
-		if (!this.config.enableKeyboardNavigation) {
+	// Moves the visual focus onto the object provided and
+	// uses zoom-to-reveal to bring the focused object into the
+	// viewport if it is not already.
+	// This is a utility method called from the canvas controller.
+	moveFocusTo(obj) {
+		if (!obj || obj === CANVAS_FOCUS) {
 			return;
 		}
 
-		if (!focusObj) {
-			return;
-		}
-
-		const type = CanvasUtils.getObjectTypeName(focusObj);
-
-		this.currentFocusObj = focusObj;
+		const type = CanvasUtils.getObjectTypeName(obj);
 
 		this.canvasGrp.selectAll(".d3-focus-path").remove();
 
 		let objSel;
 		if (type === "node") {
-			objSel = this.getNodeGroupSelectionById(focusObj.id);
+			objSel = this.getNodeGroupSelectionById(obj.id);
 
 			objSel.insert("path", ":first-child")
 				.attr("class", "d3-focus-path")
@@ -5847,7 +5849,7 @@ export default class SVGCanvasRenderer {
 
 
 		} else if (type === "comment") {
-			objSel = this.getCommentGroupSelectionById(focusObj.id);
+			objSel = this.getCommentGroupSelectionById(obj.id);
 
 			objSel.insert("rect", ":first-child")
 				.attr("class", "d3-focus-path")
@@ -5857,32 +5859,25 @@ export default class SVGCanvasRenderer {
 				.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
 
 		} else if (type === "link") {
-			objSel = this.getLinkGroupSelectionById(focusObj.id);
+			objSel = this.getLinkGroupSelectionById(obj.id);
 
 			// TODO - Think of a way to show focus on links other than line thckness
 		}
-		if (focusObj) {
-			const zoom = this.canvasController.getZoomToReveal([focusObj.id]);
+		if (obj) {
+			const zoom = this.canvasController.getZoomToReveal([obj.id]);
 			if (zoom) {
 				this.zoomTo(zoom);
 			}
 		}
 
-		if (evt) {
-			evt.stopPropagation();
-			evt.preventDefault();
-		}
-
 		if (objSel) {
 			const element = objSel.node();
 			if (element) {
-				// console.log("Focus on ..");
-				// console.log(element);
 				element.focus();
 			}
 
 		} else {
-			const id = focusObj ? focusObj.id : "Unknown";
+			const id = obj ? obj.id : "Unknown";
 			this.logger.error(`Error applying focus to ${type} object with ID: ${id}`);
 		}
 	}

@@ -36,7 +36,7 @@ export default class PasteAction extends Action {
 		this.areDetachableLinksInUse = canvasController.areDetachableLinksInUse();
 		this.isSnapToGridInUse = canvasController.isSnapToGridInUse();
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-		this.oldFocusObject = canvasController.getCurrentFocusObject();
+		this.oldFocusObject = canvasController.getFocusObject();
 
 		// Make sure objects to be pasted are in an appropriate position for them
 		// to appear within the viewport.

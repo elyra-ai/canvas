@@ -39,10 +39,6 @@ const Y_KEY = "KeyY";
 const Z_KEY = "KeyZ";
 const ZERO_KEY = "Digit0";
 
-const LEFT_SQUARE_BRACKET_KEY = "BracketLeft";
-const RIGHT_SQUARE_BRACKET_KEY = "BracketRight";
-
-
 export default class KeyboardUtils {
 
 	/* ----------------------------------------- */
@@ -144,11 +140,11 @@ export default class KeyboardUtils {
 	}
 
 	static nextSiblingLink(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.code === RIGHT_SQUARE_BRACKET_KEY;
+		return d3Event.code === DOWN_ARROW_KEY;
 	}
 
 	static previousSiblingLink(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.code === LEFT_SQUARE_BRACKET_KEY;
+		return d3Event.code === UP_ARROW_KEY;
 	}
 
 	// Shortcut to display either a context menu or context
@@ -195,11 +191,11 @@ export default class KeyboardUtils {
 	}
 
 	static scrollTextUp(d3Event) {
-		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.code === UP_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.code === DOWN_ARROW_KEY;
 	}
 
 	static scrollTextDown(d3Event) {
-		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.code === DOWN_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.code === UP_ARROW_KEY;
 	}
 
 	static createLink(d3Event) {
