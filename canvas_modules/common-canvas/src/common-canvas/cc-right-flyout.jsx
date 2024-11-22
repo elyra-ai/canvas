@@ -19,14 +19,17 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
 
-const MAX_WIDTH_EXTEND_PERCENT = 0.7; // Should cover at most 70% of available width
+// Should cover at most 70% of available width.
+const MAX_WIDTH_EXTEND_PERCENT = 0.7;
+// Should have a minimum width of 0 to hide flyout if there is no content.
 const MIN_WIDTH = 0;
+// If flyout content width is not set occupy entire width to strecth content.
 const DEFAULT_WIDTH = "100%";
 class CommonCanvasRightFlyout extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.minWidth = MIN_WIDTH;
+		// Intial width of the flyout when opened to track resize.
 		this.initialWidth = MIN_WIDTH;
 
 		this.logger = new Logger("CC-RightFlyout");
@@ -42,6 +45,7 @@ class CommonCanvasRightFlyout extends React.Component {
 	}
 
 	componentDidMount() {
+		// Since flyout content width can be dynamic set the initial width as per width of the content
 		const currentWidth = this.getCurrentWidth();
 		this.initialWidth = currentWidth;
 	}
@@ -52,6 +56,7 @@ class CommonCanvasRightFlyout extends React.Component {
 	}
 
 	onMouseDown(e) {
+		// Set width as soon as resize is detected to accurately move the flyout with the drag.
 		const currentWidth = this.getCurrentWidth();
 		this.props.canvasController.setRightFlyoutWidth(this.limitWidth(currentWidth));
 
@@ -74,10 +79,7 @@ class CommonCanvasRightFlyout extends React.Component {
 		if (e.clientX) {
 			const diff = e.clientX - this.posX;
 			const wth = this.props.panelWidth - diff;
-			const currentWidth = this.getCurrentWidth();
-			if (currentWidth >= this.initialWidth) {
-				this.props.canvasController.setRightFlyoutWidth(this.limitWidth(wth));
-			}
+			this.props.canvasController.setRightFlyoutWidth(this.limitWidth(wth));
 			this.posX = e.clientX;
 		}
 	}
@@ -93,8 +95,9 @@ class CommonCanvasRightFlyout extends React.Component {
 		return resizeContent;
 	}
 
+	// Returns present width of the flyout.
 	getCurrentWidth() {
-		let currentWidth = 0;
+		let currentWidth = MIN_WIDTH;
 		const el = this.rightFlyoutRef?.current;
 		if (el) {
 			currentWidth = el?.offsetWidth;
@@ -126,6 +129,7 @@ class CommonCanvasRightFlyout extends React.Component {
 
 		if (this.props.content && this.props.isOpen) {
 			let widthPx = this.limitWidth(this.props.panelWidth) + "px";
+			// Apply 100% width if content has no width to occupy flyout.
 			if (this.props.panelWidth === MIN_WIDTH) {
 				widthPx = DEFAULT_WIDTH;
 			}
