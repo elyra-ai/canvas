@@ -1288,7 +1288,9 @@ export default class SVGCanvasRenderer {
 			.attr("pointer-events", "all")
 			.style("cursor", "default")
 			.on("mousedown", () => {
-				this.canvasController.setFocusOnCanvas();
+				if (!this.svgCanvasTextArea.isEditingText()) {
+					this.canvasController.setFocusOnCanvas();
+				}
 			});
 
 		// Only attach the 'defs' to the top most SVG area when we are displaying

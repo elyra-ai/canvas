@@ -1935,7 +1935,7 @@ export default class CanvasController {
 	// selected objects instead of replacing the current selections.
 	autoSelectFocusObj(actionFn, augment) {
 		const focusObj = this.getFocusObject();
-		if (focusObj) {
+		if (focusObj && focusObj !== CANVAS_FOCUS) {
 			const pipelineId = this.getCurrentPipelineId();
 			if (!this.isFocusOnCanvas() && !this.isSelected(focusObj.id, pipelineId)) {
 				const fn = () => {
