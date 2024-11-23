@@ -1890,7 +1890,7 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 
 	restoreFocus() {
-		if (this.canvasContents && this.getSVGCanvasD3().isTabbedIn()) {
+		if (this.getSVGCanvasD3() && this.getSVGCanvasD3().isTabbedIn()) {
 			this.setFocusObject(this.focusObject); // This will force a refresh of the focus
 		}
 	}
