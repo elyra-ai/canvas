@@ -5824,6 +5824,10 @@ export default class SVGCanvasRenderer {
 		this.activePipeline.setTabbedOut();
 	}
 
+	isTabbedIn() {
+		return this.activePipeline.isTabbedIn();
+	}
+
 	focusOnTextEntryElement(evt) {
 		this.svgCanvasTextArea.focusOnTextEntryElement(evt);
 	}

@@ -138,6 +138,10 @@ export default class SVGCanvasPipeline {
 		this.getAccessibility().setTabbedOut();
 	}
 
+	isTabbedIn() {
+		return this.getAccessibility().isTabbedIn();
+	}
+
 	setTabGroupIndexForObj(d) {
 		this.getAccessibility().setTabGroupIndexForObj(d);
 	}

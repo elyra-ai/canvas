@@ -49,7 +49,7 @@ export default class SVGCanvasUtilsAccessibility {
 
 		// Keeps track of whether we have tabbed in or out of the canvas. It will
 		// be false when we have tabbed out.
-		this.isTabbedIn = false;
+		this.tabbedIn = false;
 
 		// Reset the currentTabObjectIndex variable based on the current selection
 		// (if there is one).
@@ -332,7 +332,7 @@ export default class SVGCanvasUtilsAccessibility {
 	// passed in is a part, to be the index position of that object.
 	setTabGroupIndexForObj(obj) {
 		this.currentTabObjectIndex = this.tabObjects.findIndex((tg) => tg.obj.grp === obj.grp);
-		this.isTabbedIn = true;
+		this.tabbedIn = true;
 	}
 
 	nodeHasInputLinks(node) {
@@ -348,15 +348,19 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	setTabbedIn() {
-		this.isTabbedIn = true;
+		this.tabbedIn = true;
 	}
 
 	setTabbedOut() {
-		this.isTabbedIn = false;
+		this.tabbedIn = false;
+	}
+
+	isTabbedIn() {
+		return this.tabbedIn;
 	}
 
 	getNextTabGroupStartObject() {
-		if (!this.isTabbedIn) {
+		if (!this.tabbedIn) {
 			this.currentTabObjectIndex = -1;
 
 		} else if (this.currentTabObjectIndex === this.tabObjects.length) {
@@ -366,7 +370,7 @@ export default class SVGCanvasUtilsAccessibility {
 		if (this.currentTabObjectIndex < this.tabObjects.length) {
 			this.currentTabObjectIndex++;
 			if (this.currentTabObjectIndex < this.tabObjects.length) {
-				this.isTabbedIn = true;
+				this.tabbedIn = true;
 				return this.tabObjects[this.currentTabObjectIndex].obj;
 			}
 		}
@@ -374,7 +378,7 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getPreviousTabGroupStartObject() {
-		if (!this.isTabbedIn) {
+		if (!this.tabbedIn) {
 			this.currentTabObjectIndex = this.tabObjects.length;
 
 		} else if (this.currentTabObjectIndex === -1) {
@@ -384,7 +388,7 @@ export default class SVGCanvasUtilsAccessibility {
 		if (this.currentTabObjectIndex > -1) {
 			this.currentTabObjectIndex--;
 			if (this.currentTabObjectIndex > -1) {
-				this.isTabbedIn = true;
+				this.tabbedIn = true;
 				return this.tabObjects[this.currentTabObjectIndex].obj;
 			}
 		}

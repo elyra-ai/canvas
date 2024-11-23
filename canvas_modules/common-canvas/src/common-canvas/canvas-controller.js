@@ -1890,7 +1890,9 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 
 	restoreFocus() {
-		this.setFocusObject(this.focusObject); // This will force a refresh of the focus
+		if (this.canvasContents && this.getSVGCanvasD3().isTabbedIn()) {
+			this.setFocusObject(this.focusObject); // This will force a refresh of the focus
+		}
 	}
 
 	focusOnTextEntryElement(evt) {

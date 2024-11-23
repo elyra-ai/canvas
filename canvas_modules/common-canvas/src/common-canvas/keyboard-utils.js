@@ -250,6 +250,14 @@ export default class KeyboardUtils {
 		return evt.shiftKey && evt.code === SPACE_KEY;
 	}
 
+	static nextNodeInCategory(evt) {
+		return evt.code === DOWN_ARROW_KEY;
+	}
+
+	static previousNodeInCategory(evt) {
+		return evt.code === UP_ARROW_KEY;
+	}
+
 	/* ----------------------------------------- */
 	/* Utility functions                         */
 	/* ----------------------------------------- */
