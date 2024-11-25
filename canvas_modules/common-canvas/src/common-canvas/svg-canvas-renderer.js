@@ -4553,7 +4553,6 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 					this.raiseLinkToTop(targetObj);
-					// this.canvasController.restoreFocus();
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, d, "hover");
@@ -4595,7 +4594,6 @@ export default class SVGCanvasRenderer {
 				// to avoid Decoration Textarea to be closed on mouseleave.
 				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes && !this.isEditingText()) {
 					this.lowerLinkToBottom(targetObj);
-					// this.canvasController.restoreFocus();
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, link, "default");

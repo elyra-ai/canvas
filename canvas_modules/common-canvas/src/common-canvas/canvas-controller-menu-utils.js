@@ -25,7 +25,7 @@ let cc = null;
 export default function getContextMenuDefiniton(source, canvasController) {
 	cc = canvasController;
 
-	const defMenu = createDefaultContextMenu(source, cc.getCanvasConfig().enableWYSIWYGComments);
+	const defMenu = createDefaultContextMenu(source, cc);
 	let menuDefinition;
 
 	if (typeof cc.handlers.contextMenuHandler === "function") {
@@ -122,7 +122,7 @@ const isEditingAction = (action) =>
 
 // Returns a default context menu definition for the source object and canvas
 // controller passed in.
-const createDefaultContextMenu = (source, enableWYSIWYGComments) => {
+const createDefaultContextMenu = (source, cc) => {
 	let menuDefinition = [];
 	const menuForNonSelectedObj = cc.isContextToolbarForNonSelectedObj(source);
 
@@ -130,11 +130,8 @@ const createDefaultContextMenu = (source, enableWYSIWYGComments) => {
 	if (source.type === "canvas") {
 
 		menuDefinition = menuDefinition.concat(
-			createCommentMenu(enableWYSIWYGComments),
-			[
-				{ action: "selectAll", label: getLabel("canvas.selectAll") },
-				{ divider: true }
-			]
+			createCommentMenu(cc),
+			createSelectAllMenu(cc)
 		);
 	}
 	// Rename node
@@ -299,8 +296,8 @@ const createDefaultContextMenu = (source, enableWYSIWYGComments) => {
 	return menuDefinition;
 };
 
-const createCommentMenu = (enableWYSIWYGComments) => {
-	if (enableWYSIWYGComments) {
+const createCommentMenu = (canvasController) => {
+	if (canvasController.getCanvasConfig().enableWYSIWYGComments) {
 		return [
 			{ action: "createComment", label: getLabel("canvas.addComment"), toolbarItem: true },
 			{ action: "createWYSIWYGComment", label: getLabel("canvas.addWysiwygComment"), toolbarItem: true }
@@ -308,6 +305,19 @@ const createCommentMenu = (enableWYSIWYGComments) => {
 	}
 	return { action: "createComment", label: getLabel("canvas.addComment"), toolbarItem: true };
 };
+
+const createSelectAllMenu = (canvasController) => {
+	if (canvasController.areAllObjectsSelected()) {
+		return [
+			{ action: "deselectAll", label: getLabel("canvas.deselectAll") },
+			{ divider: true }
+		];
+	}
+	return [
+		{ action: "selectAll", label: getLabel("canvas.selectAll") },
+		{ divider: true }
+	];
+}
 
 const createEditMenu = (source, includePaste) => {
 	const editSubMenu = [

@@ -1623,6 +1623,10 @@ export default class ObjectModel {
 		return connectedNodesIdsGroup.length === nodeIds.length;
 	}
 
+	areAllObjectsSelected(includeLinks) {
+		return this.store.areAllObjectsSelected(includeLinks);
+	}
+
 	// Returns true if all the selected objects are links.
 	areAllSelectedObjectsLinks() {
 		return this.store.areAllSelectedObjectsLinks();

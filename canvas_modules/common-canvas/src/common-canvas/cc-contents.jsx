@@ -235,7 +235,7 @@ class CanvasContents extends React.Component {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 			this.props.canvasController.keyboardActionHandler("selectAll");
 
-		} else if (KeyboardUtils.deselectAll(evt)) {
+		} else if (KeyboardUtils.deselectAll(evt) && actions.deselectAll) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 			this.props.canvasController.keyboardActionHandler("deselectAll");
 

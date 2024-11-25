@@ -148,6 +148,21 @@ export default class CanavasStore {
 		return false;
 	}
 
+	getCountNodes(pipelineId) {
+		const pipeline = this.getNonClonedPipeline(pipelineId);
+		return pipeline?.nodes?.length || 0;
+	}
+
+	getCountComments(pipelineId) {
+		const pipeline = this.getNonClonedPipeline(pipelineId);
+		return pipeline?.comments?.length || 0;
+	}
+
+	getCountLinks(pipelineId) {
+		const pipeline = this.getNonClonedPipeline(pipelineId);
+		return pipeline?.links?.length || 0;
+	}
+
 	// This is a service method for retrieving the internal pipeline. It does NOT
 	// clone the pipeline therefore it should NOT be called from outside this
 	// class because we don't want to surface the intenal data in redux to
@@ -305,6 +320,10 @@ export default class CanavasStore {
 		return this.getSelectionInfo().pipelineId;
 	}
 
+	getCountSelectedObjects() {
+		return this.store.getState().selectioninfo?.selections?.length || 0;
+	}
+
 	getSelectedObjectIds() {
 		const selectedObjIds = this.store.getState().selectioninfo.selections || [];
 		return this.cloneData(selectedObjIds);
@@ -320,6 +339,16 @@ export default class CanavasStore {
 
 	getSelectedLinks() {
 		return cloneDeep(this.getNonClonedSelectedObjs("links"));
+	}
+
+	areAllObjectsSelected(includeLinks) {
+		const pId = this.getSelectedPipelineId();
+		let countObjs = this.getCountNodes(pId) + this.getCountComments(pId);
+		if (includeLinks) {
+			countObjs += this.getCountLinks(pId);
+		}
+		const selObjs = this.getCountSelectedObjects();
+		return selObjs > 0 && countObjs === selObjs; // Only return true if at ast one object is selected.
 	}
 
 	// Returns true if all the selected objects are links. That is, if the

@@ -86,6 +86,7 @@ export default class CanvasController {
 				undo: true,
 				redo: true,
 				selectAll: true,
+				deselectAll: true,
 				copyToClipboard: true,
 				cutToClipboard: true,
 				pasteFromClipboard: true
@@ -615,6 +616,11 @@ export default class CanvasController {
 		return this.objectModel.areSelectedNodesContiguous();
 	}
 
+	areAllObjectsSelected() {
+		const includeLinks = this.areDetachableLinksInUse();
+		return this.objectModel.areAllObjectsSelected(includeLinks);
+	}
+
 	// Returns true if all the selected objects are links.
 	areAllSelectedObjectsLinks() {
 		return this.objectModel.areAllSelectedObjectsLinks();
@@ -631,7 +637,6 @@ export default class CanvasController {
 	isSelected(objectId, pipelineId) {
 		return this.objectModel.isSelected(objectId, pipelineId);
 	}
-
 
 	selectObject(objId, range, augment, pipelineId) {
 		this.objectModel.selectObject(objId, range, augment, pipelineId);
