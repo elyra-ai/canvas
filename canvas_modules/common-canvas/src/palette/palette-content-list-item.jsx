@@ -81,10 +81,10 @@ class PaletteContentListItem extends React.Component {
 		} else if (KeyboardUtils.createAutoNodeNoLink(evt)) {
 			this.createAutoNode(false); // false indicates no links are required
 
-		} else if (KeyboardUtils.nextNodeInCategory(evt)) {
+		} else if (KeyboardUtils.nextNodeInCategory(evt) && this.props.nextNodeInCategory) {
 			this.props.nextNodeInCategory(evt);
 
-		} else if (KeyboardUtils.previousNodeInCategory(evt)) {
+		} else if (KeyboardUtils.previousNodeInCategory(evt) && this.props.previousNodeInCategory) {
 			this.props.previousNodeInCategory(evt);
 		}
 	}
@@ -343,7 +343,7 @@ class PaletteContentListItem extends React.Component {
 			: null;
 
 		const nodeLabel = itemText
-			? <div className="palette-list-item-text-div" tabIndex="-1">{itemText}</div>
+			? <div className="palette-list-item-text-div">{itemText}</div>
 			: null;
 
 		this.itemRef = React.createRef();
@@ -352,7 +352,7 @@ class PaletteContentListItem extends React.Component {
 			<div
 				ref={this.itemRef}
 				data-id={this.props.nodeTypeInfo.nodeType.op}
-				tabIndex={-1}
+				tabIndex={this.props.tabIndex}
 				role={"button"}
 				aria-label={labelText}
 				draggable={draggable}
@@ -381,6 +381,7 @@ PaletteContentListItem.propTypes = {
 	nodeTypeInfo: PropTypes.object.isRequired,
 	isDisplaySearchResult: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	tabIndex: PropTypes.number.isRequired,
 	nextNodeInCategory: PropTypes.func,
 	previousNodeInCategory: PropTypes.func,
 	isEditingEnabled: PropTypes.bool.isRequired,

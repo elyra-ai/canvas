@@ -64,6 +64,7 @@ class PaletteContentList extends React.Component {
 			contentItems.push(
 				<div key={"item_empty"}>
 					<PaletteContentListItem
+						tabIndex={0}
 						nodeTypeInfo={{ nodeType: {}, category: this.props.category }}
 						isDisplaySearchResult={false}
 						canvasController={this.props.canvasController}
@@ -83,6 +84,7 @@ class PaletteContentList extends React.Component {
 					<PaletteContentListItem
 						ref={ref}
 						key={itemKey}
+						tabIndex={-1}
 						nodeTypeInfo={this.props.nodeTypeInfos[idx]}
 						isDisplaySearchResult={false}
 						canvasController={this.props.canvasController}
