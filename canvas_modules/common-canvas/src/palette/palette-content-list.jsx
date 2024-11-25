@@ -17,17 +17,47 @@
 import React from "react";
 import PropTypes from "prop-types";
 import PaletteContentListItem from "./palette-content-list-item.jsx";
+import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 
 class PaletteContentList extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {
-		};
+		this.currentFocusIndex = 0;
+		this.contentItemRefs = [];
+
+		this.nextNodeInCategory = this.nextNodeInCategory.bind(this);
+		this.previousNodeInCategory = this.previousNodeInCategory.bind(this);
+	}
+
+	// Sets focus on the fist ndoe in the list. This is called using a ref
+	// from the parent category.
+	setFirstNode() {
+		this.currentFocusIndex = 0;
+		this.contentItemRefs[this.currentFocusIndex].current.focus();
+	}
+
+	nextNodeInCategory(evt) {
+		this.currentFocusIndex++;
+		if (this.currentFocusIndex > this.contentItemRefs.length - 1) {
+			this.currentFocusIndex = 0;
+		}
+		this.contentItemRefs[this.currentFocusIndex].current.focus();
+		CanvasUtils.stopPropagationAndPreventDefault(evt);
+	}
+
+	previousNodeInCategory(evt) {
+		this.currentFocusIndex--;
+		if (this.currentFocusIndex < 0) {
+			this.currentFocusIndex = this.contentItemRefs.length - 1;
+		}
+		this.contentItemRefs[this.currentFocusIndex].current.focus();
+		CanvasUtils.stopPropagationAndPreventDefault(evt);
 	}
 
 	render() {
-		var contentItems = [];
+		const contentItems = [];
+		this.contentItemRefs = [];
 
 		if (this.props.category && this.props.category.node_types &&
 				this.props.category.node_types.length === 0 && this.props.category.empty_text) {
@@ -46,14 +76,20 @@ class PaletteContentList extends React.Component {
 			for (var idx = 0; idx < this.props.nodeTypeInfos.length; idx++) {
 				var itemKey = "item_" + idx;
 
+				const ref = React.createRef();
+				this.contentItemRefs.push(ref);
+
 				contentItems.push(
 					<PaletteContentListItem
+						ref={ref}
 						key={itemKey}
 						nodeTypeInfo={this.props.nodeTypeInfos[idx]}
 						isDisplaySearchResult={false}
 						canvasController={this.props.canvasController}
 						isPaletteWide={this.props.isPaletteWide}
 						isEditingEnabled={this.props.isEditingEnabled}
+						nextNodeInCategory={this.nextNodeInCategory}
+						previousNodeInCategory={this.previousNodeInCategory}
 					/>
 				);
 			}

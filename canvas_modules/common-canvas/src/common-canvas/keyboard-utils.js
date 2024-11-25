@@ -242,12 +242,12 @@ export default class KeyboardUtils {
 	/* Palette key functions                */
 	/* ----------------------------------------- */
 
-	static createAutoNode(evt) {
-		return !evt.shiftKey && evt.code === SPACE_KEY;
+	static openCategory(evt) {
+		return evt.code === RETURN_KEY || evt.code === SPACE_KEY;
 	}
 
-	static createAutoNodeNoLink(evt) {
-		return evt.shiftKey && evt.code === SPACE_KEY;
+	static fromCategoryToFirstNode(evt) {
+		return evt.code === DOWN_ARROW_KEY;
 	}
 
 	static nextNodeInCategory(evt) {
@@ -256,6 +256,14 @@ export default class KeyboardUtils {
 
 	static previousNodeInCategory(evt) {
 		return evt.code === UP_ARROW_KEY;
+	}
+
+	static createAutoNode(evt) {
+		return !evt.shiftKey && evt.code === SPACE_KEY;
+	}
+
+	static createAutoNodeNoLink(evt) {
+		return evt.shiftKey && evt.code === SPACE_KEY;
 	}
 
 	/* ----------------------------------------- */

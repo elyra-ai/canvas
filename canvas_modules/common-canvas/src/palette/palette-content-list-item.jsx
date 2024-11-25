@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { get, has } from "lodash";
-import { injectIntl } from "react-intl";
-import defaultMessages from "../../locales/palette/locales/en.json";
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
+import PaletteContentListItemBtn from "./palette-content-list-item-btn.jsx";
 import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
 import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM,
@@ -81,6 +80,12 @@ class PaletteContentListItem extends React.Component {
 
 		} else if (KeyboardUtils.createAutoNodeNoLink(evt)) {
 			this.createAutoNode(false); // false indicates no links are required
+
+		} else if (KeyboardUtils.nextNodeInCategory(evt)) {
+			this.props.nextNodeInCategory(evt);
+
+		} else if (KeyboardUtils.previousNodeInCategory(evt)) {
+			this.props.previousNodeInCategory(evt);
 		}
 	}
 
@@ -146,13 +151,14 @@ class PaletteContentListItem extends React.Component {
 		// 'Show less' button depending on whether the full description is shown or not.
 		if (isLongDescription) {
 			if (this.state.showFullDescription) {
-				const less =
-					this.props.intl.formatMessage({ id: "palette.flyout.search.less", defaultMessage: defaultMessages["palette.flyout.search.less"] });
-				elements.push(<div key="l_btn" className = "palette-list-item-desc-button" onClick={this.showShortDescription}>{less}</div>);
+				elements.push(
+					<PaletteContentListItemBtn id={"palette.flyout.search.less"} onClick={this.showShortDescription} />
+				);
+
 			} else {
-				const more =
-					this.props.intl.formatMessage({ id: "palette.flyout.search.more", defaultMessage: defaultMessages["palette.flyout.search.more"] });
-				elements.push(<div key="m_btn" className = "palette-list-item-desc-button" onClick={this.showFullDescription}>{more}</div>);
+				elements.push(
+					<PaletteContentListItemBtn id={"palette.flyout.search.more"} onClick={this.showFullDescription} />
+				);
 			}
 		}
 		return elements;
@@ -256,6 +262,10 @@ class PaletteContentListItem extends React.Component {
 		this.setState({ showFullDescription: false });
 	}
 
+	focus() {
+		this.itemRef.current.focus();
+	}
+
 	// Returns true if this item is disabled and should not be draggable or double-clicked
 	// from the palette.
 	isItemDisabled() {
@@ -336,10 +346,13 @@ class PaletteContentListItem extends React.Component {
 			? <div className="palette-list-item-text-div" tabIndex="-1">{itemText}</div>
 			: null;
 
+		this.itemRef = React.createRef();
+
 		return (
 			<div
+				ref={this.itemRef}
 				data-id={this.props.nodeTypeInfo.nodeType.op}
-				tabIndex={0}
+				tabIndex={-1}
 				role={"button"}
 				aria-label={labelText}
 				draggable={draggable}
@@ -353,7 +366,7 @@ class PaletteContentListItem extends React.Component {
 				onDoubleClick={this.props.isEditingEnabled ? this.onDoubleClick : null}
 			>
 				{categoryLabel}
-				<div className="palette-list-item-icon-and-text" tabIndex="-1">
+				<div className="palette-list-item-icon-and-text">
 					{icon}
 					{nodeLabel}
 					{ranking}
@@ -365,13 +378,14 @@ class PaletteContentListItem extends React.Component {
 }
 
 PaletteContentListItem.propTypes = {
-	intl: PropTypes.object.isRequired,
 	nodeTypeInfo: PropTypes.object.isRequired,
 	isDisplaySearchResult: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	nextNodeInCategory: PropTypes.func,
+	previousNodeInCategory: PropTypes.func,
 	isEditingEnabled: PropTypes.bool.isRequired,
 	isPaletteWide: PropTypes.bool,
 	isShowRanking: PropTypes.bool
 };
 
-export default injectIntl(PaletteContentListItem);
+export default PaletteContentListItem;
