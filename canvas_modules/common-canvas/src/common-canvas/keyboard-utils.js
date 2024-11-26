@@ -203,6 +203,50 @@ export default class KeyboardUtils {
 	}
 
 	/* ----------------------------------------- */
+	/* Color Picker                              */
+	/* ----------------------------------------- */
+
+	static nextColor(evt) {
+		return evt.code === RIGHT_ARROW_KEY;
+	}
+
+	static previousColor(evt) {
+		return evt.code === LEFT_ARROW_KEY;
+	}
+
+	static aboveColor(evt) {
+		return evt.code === UP_ARROW_KEY;
+	}
+
+	static belowColor(evt) {
+		return evt.code === DOWN_ARROW_KEY;
+	}
+
+	static selectColor(evt) {
+		return evt.code === RETURN_KEY || evt.code === SPACE_KEY;
+	}
+
+	static tabKey(evt) {
+		return evt.code === TAB_KEY;
+	}
+
+	/* ----------------------------------------- */
+	/* Notification panel key functions          */
+	/* ----------------------------------------- */
+
+	static activateButton(evt) {
+		return evt.code === RETURN_KEY || evt.code === SPACE_KEY;
+	}
+
+	static nextSection(evt) {
+		return !evt.shiftKey && evt.code === TAB_KEY;
+	}
+
+	static previousSection(evt) {
+		return evt.shiftKey && evt.code === TAB_KEY;
+	}
+
+	/* ----------------------------------------- */
 	/* Context Menu key functions                */
 	/* ----------------------------------------- */
 

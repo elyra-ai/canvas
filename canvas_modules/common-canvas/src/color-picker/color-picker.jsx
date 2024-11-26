@@ -16,18 +16,10 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import Logger from "../logging/canvas-logger.js";
 import colorSetArray from "./color-set.js";
-
 import { WYSIWYG } from "../common-canvas/constants/canvas-constants.js";
-
-const TAB_KEY = 9;
-const RETURN_KEY = 13;
-const SPACE_KEY = 32;
-const LEFT_ARROW_KEY = 37;
-const UP_ARROW_KEY = 38;
-const RIGHT_ARROW_KEY = 39;
-const DOWN_ARROW_KEY = 40;
 
 // These dimensions should match the values in color-picker.scss
 const COLOR_DIMENSION = 20;
@@ -66,7 +58,7 @@ class ColorPicker extends React.Component {
 	}
 
 	onKeyDown(evt) {
-		if (evt.keyCode === RIGHT_ARROW_KEY) {
+		if (KeyboardUtils.nextColor(evt)) {
 			evt.stopPropagation();
 			this.colorIndex++;
 			if (this.colorIndex > this.totalColors - 1) {
@@ -74,7 +66,7 @@ class ColorPicker extends React.Component {
 			}
 			this.setFocus(this.colorIndex);
 
-		} else if (evt.keyCode === LEFT_ARROW_KEY) {
+		} else if (KeyboardUtils.previousColor(evt)) {
 			evt.stopPropagation();
 			this.colorIndex--;
 			if (this.colorIndex < 0) {
@@ -83,7 +75,7 @@ class ColorPicker extends React.Component {
 			}
 			this.setFocus(this.colorIndex);
 
-		} else if (evt.keyCode === UP_ARROW_KEY) {
+		} else if (KeyboardUtils.aboveColor(evt)) {
 			evt.stopPropagation();
 			this.colorIndex -= this.colorsPerRow;
 			if (this.colorIndex < 0) {
@@ -91,7 +83,7 @@ class ColorPicker extends React.Component {
 			}
 			this.setFocus(this.colorIndex);
 
-		} else if (evt.keyCode === DOWN_ARROW_KEY) {
+		} else if (KeyboardUtils.belowColor(evt)) {
 			evt.stopPropagation();
 			this.colorIndex += this.colorsPerRow;
 			if (this.colorIndex > this.totalColors - 1) {
@@ -99,13 +91,12 @@ class ColorPicker extends React.Component {
 			}
 			this.setFocus(this.colorIndex);
 
-		} else if (evt.keyCode === SPACE_KEY ||
-					evt.keyCode === RETURN_KEY) {
+		} else if (KeyboardUtils.selectColor(evt)) {
 			evt.stopPropagation();
 			evt.preventDefault();
 			this.selectColor(evt);
 
-		} else if (evt.keyCode === TAB_KEY) {
+		} else if (KeyboardUtils.tabKey(evt)) {
 			evt.stopPropagation();
 			evt.preventDefault();
 			return;
