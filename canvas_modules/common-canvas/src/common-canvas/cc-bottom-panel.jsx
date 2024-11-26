@@ -19,7 +19,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Logger from "../logging/canvas-logger.js";
 
-const MARGIN_TOP = 100;
+// Increase top margin by 100px to disable scroll in other components.
+const MARGIN_TOP = 200;
 const MIN_HEIGHT = 75;
 
 class CanvasBottomPanel extends React.Component {
