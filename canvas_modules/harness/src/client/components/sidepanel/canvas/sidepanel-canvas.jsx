@@ -772,6 +772,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableRightFlyoutDragToResize = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedRightFlyoutDragToResize" // Set ID to corresponding field in App.js state
+				labelText="Enable Right Flyout Resize using Drag"
+				toggled={this.props.getStateValue("selectedRightFlyoutDragToResize")}
+				onToggle={(val) => this.setStateValue(val, "selectedRightFlyoutDragToResize")}
+			/>
+		</div>);
+
 		var enableDragWithoutSelect = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedDragWithoutSelect" // Set ID to corresponding field in App.js state
@@ -1741,6 +1750,8 @@ export default class SidePanelForms extends React.Component {
 					{enableShowRightFlyout}
 					{divider}
 					{enableRightFlyoutUnderToolbar}
+					{divider}
+					{enableRightFlyoutDragToResize}
 					{divider}
 					{enablePositionNodeOnRightFlyoutOpen}
 					{divider}

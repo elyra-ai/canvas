@@ -14,13 +14,24 @@
  * limitations under the License.
  */
 
-@import "./properties-main-widths.scss";
+@import "./properties-main-widths.module.scss";
 $properties-modal-buttons-height: $spacing-10;
 $properties-resize-button-size: $spacing-06;
+
+// Included to align resizeBtn to enable properties content to stretch on resize
+.properties-right-flyout-container {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+}
 
 .properties-right-flyout {
 	// Set the font explicitly to 14px to shrink them across the entire properties editor
 	font-size: 14px;
+	// Stretch properties content horizontally when flyout resize is enabled
+	min-width: 100%;
+	// Stretch properties content vertically when flyout resize is enabled
+	min-height: 100%;
 	width: 0;
 	height: 100%;
 	overflow: hidden;
