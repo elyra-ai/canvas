@@ -18,13 +18,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import ReactResizeDetector from "react-resize-detector";
 
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import ToolbarActionItem from "./toolbar-action-item.jsx";
 import ToolbarOverflowItem from "./toolbar-overflow-item.jsx";
 import ToolbarDividerItem from "./toolbar-divider-item.jsx";
-
-const ESC_KEY = 27;
-const LEFT_ARROW_KEY = 37;
-const RIGHT_ARROW_KEY = 39;
 
 class Toolbar extends React.Component {
 	constructor(props) {
@@ -122,7 +119,7 @@ class Toolbar extends React.Component {
 	// toolbar items. We set the focusAction appropriately based on which
 	// key is pressed.
 	onKeyDown(evt) {
-		if (evt.keyCode === ESC_KEY) {
+		if (KeyboardUtils.closeSubArea(evt)) {
 			if (this.props.closeToolbarOnEsc) {
 				this.props.closeToolbar();
 
@@ -130,10 +127,10 @@ class Toolbar extends React.Component {
 				this.setFocusOnItem(); // Reset focus on current focusAction.
 			}
 
-		} else if (evt.keyCode === LEFT_ARROW_KEY) {
+		} else if (KeyboardUtils.setFocusOnPreviousToolbarBtn(evt)) {
 			this.setFocusOnPreviousItem();
 
-		} else if (evt.keyCode === RIGHT_ARROW_KEY) {
+		} else if (KeyboardUtils.setFocusOnNextToolbarBtn(evt)) {
 			this.setFocusOnNextItem();
 		}
 	}

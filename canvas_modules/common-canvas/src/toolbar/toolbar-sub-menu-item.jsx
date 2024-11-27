@@ -18,14 +18,11 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import ToolbarButtonItem from "./toolbar-button-item.jsx";
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 
 import classNames from "classnames";
 import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
 import ToolbarSubPanel from "./toolbar-sub-panel.jsx";
-
-const ESC_KEY = 27;
-const LEFT_ARROW_KEY = 37;
-const RIGHT_ARROW_KEY = 39;
 
 class ToolbarSubMenuItem extends React.Component {
 	constructor(props) {
@@ -67,16 +64,16 @@ class ToolbarSubMenuItem extends React.Component {
 	// Handles keyboard input on a sub-menu item. The Up and Down arrow
 	// key presses are handled in toolbar-sub-menu.jsx.
 	onKeyDown(evt) {
-		if (evt.keyCode === ESC_KEY) {
+		if (KeyboardUtils.closeSubArea(evt)) {
 			this.props.closeParentSubArea();
 			evt.stopPropagation(); // Stop propagation in a case we are a cascade menu
 
-		} else if (evt.keyCode === LEFT_ARROW_KEY) {
+		} else if (KeyboardUtils.closeSubAreaToMenu(evt)) {
 			if (this.props.isInCascadeMenu) {
 				this.props.closeParentSubArea();
 			}
 
-		} else if (evt.keyCode === RIGHT_ARROW_KEY) {
+		} else if (KeyboardUtils.openSubAreaFromMenu(evt)) {
 			if (!this.props.isInCascadeMenu &&
 					(this.props.actionObj.subMenu || this.props.actionObj.subPanel)) {
 				this.openSubArea();

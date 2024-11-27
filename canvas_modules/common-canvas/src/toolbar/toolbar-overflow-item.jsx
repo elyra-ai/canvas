@@ -20,10 +20,8 @@ import PropTypes from "prop-types";
 import { v4 as uuid4 } from "uuid";
 import { Button } from "@carbon/react";
 import { OverflowMenuVertical } from "@carbon/react/icons";
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
-
-const ESC_KEY = 27;
-const DOWN_ARROW_KEY = 40;
 
 class ToolbarOverflowItem extends React.Component {
 	constructor(props) {
@@ -55,10 +53,10 @@ class ToolbarOverflowItem extends React.Component {
 	}
 
 	onKeyDown(evt) {
-		if (evt.keyCode === ESC_KEY) {
+		if (KeyboardUtils.closeSubArea(evt)) {
 			this.closeSubArea();
 
-		} else if (evt.keyCode === DOWN_ARROW_KEY) {
+		} else if (KeyboardUtils.openSubArea(evt)) {
 			this.openSubArea();
 		}
 		// Left and Right arrow clicks are caught in the

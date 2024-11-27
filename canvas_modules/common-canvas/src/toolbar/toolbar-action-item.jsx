@@ -18,13 +18,12 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import ToolbarButtonItem from "./toolbar-button-item.jsx";
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 
 import classNames from "classnames";
 import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
 import ToolbarSubPanel from "./toolbar-sub-panel.jsx";
 
-const ESC_KEY = 27;
-const DOWN_ARROW_KEY = 40;
 const TOOLBAR_ICON_WIDTH = 40;
 
 class ToolbarActionItem extends React.Component {
@@ -51,10 +50,10 @@ class ToolbarActionItem extends React.Component {
 	}
 
 	onKeyDown(evt) {
-		if (evt.keyCode === ESC_KEY) {
+		if (KeyboardUtils.closeSubArea(evt)) {
 			this.closeSubArea();
 
-		} else if (evt.keyCode === DOWN_ARROW_KEY) {
+		} else if (KeyboardUtils.openSubArea(evt)) {
 			if (this.hasSubArea()) {
 				this.openSubArea();
 			}

@@ -52,7 +52,7 @@ const ZERO_KEY = "Digit0";
 export default class KeyboardUtils {
 
 	/* ----------------------------------------- */
-	/* Canvas navigation key functions           */
+	/* Canvas navigation                         */
 	/* ----------------------------------------- */
 
 	static spaceKey(evt) {
@@ -132,7 +132,7 @@ export default class KeyboardUtils {
 	}
 
 	/* ----------------------------------------- */
-	/* Canvas objects navigation key functions   */
+	/* Canvas objects navigation                 */
 	/* ----------------------------------------- */
 
 	static nextObjectInGroup(d3Event) {
@@ -202,6 +202,18 @@ export default class KeyboardUtils {
 		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === DOWN_ARROW_KEY;
 	}
 
+	/* ----------------------------------------- */
+	/* Links                                     */
+	/* ----------------------------------------- */
+
+	static createLink(d3Event) {
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === PERIOD_KEY;
+	}
+
+	/* ----------------------------------------- */
+	/* Comment Text Display                      */
+	/* ----------------------------------------- */
+
 	static scrollTextUp(d3Event) {
 		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.code === DOWN_ARROW_KEY;
 	}
@@ -210,8 +222,12 @@ export default class KeyboardUtils {
 		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.code === UP_ARROW_KEY;
 	}
 
-	static createLink(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === PERIOD_KEY;
+	/* ----------------------------------------- */
+	/* Text Toolbar                              */
+	/* ----------------------------------------- */
+
+	static returnToTextEditing(evt) {
+		return evt.code === TAB_KEY && !evt.shiftKey;
 	}
 
 	/* ----------------------------------------- */
@@ -267,6 +283,43 @@ export default class KeyboardUtils {
 	static decHashesCommand(d3Event) {
 		return this.isMetaKey(d3Event) && d3Event.code === LAB_KEY;
 	}
+
+	/* ----------------------------------------- */
+	/* Toolbar                                   */
+	/* ----------------------------------------- */
+
+	static openSubArea(evt) {
+		return evt.code === DOWN_ARROW_KEY;
+	}
+
+	static closeSubArea(evt) {
+		return evt.code === ESC_KEY;
+	}
+
+	static openSubAreaFromMenu(evt) {
+		return evt.code === RIGHT_ARROW_KEY;
+	}
+
+	static closeSubAreaToMenu(evt) {
+		return evt.code === LEFT_ARROW_KEY;
+	}
+
+	static setFocusOnNextToolbarBtn(evt) {
+		return evt.code === RIGHT_ARROW_KEY;
+	}
+
+	static setFocusOnPreviousToolbarBtn(evt) {
+		return evt.code === LEFT_ARROW_KEY;
+	}
+
+	static setFocusOnNextMenuItem(evt) {
+		return evt.code === DOWN_ARROW_KEY;
+	}
+
+	static setFocusOnPreviousMenuItem(evt) {
+		return evt.code === UP_ARROW_KEY;
+	}
+
 
 	/* ----------------------------------------- */
 	/* Color Picker                              */
@@ -338,14 +391,6 @@ export default class KeyboardUtils {
 
 	static closeContextMenu(evt) {
 		return evt.code === ESC_KEY;
-	}
-
-	/* ----------------------------------------- */
-	/* Text Toolbar key functions                */
-	/* ----------------------------------------- */
-
-	static returnToTextEditing(evt) {
-		return evt.code === TAB_KEY && !evt.shiftKey;
 	}
 
 	/* ----------------------------------------- */
