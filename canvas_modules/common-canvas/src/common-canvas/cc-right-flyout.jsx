@@ -108,13 +108,13 @@ class CommonCanvasRightFlyout extends React.Component {
 	// Returns a new width for right panel limited by the need to enforce
 	// a minimum and maximum width
 	limitWidth(wd) {
-		const containingDiv = document.getElementById(this.props.containingDivId);
+		const canvasContainer = document.getElementById(this.props.containingDivId);
 		let width = wd;
 
-		if (containingDiv) {
+		if (canvasContainer) {
 			// Max Width should be 70% of the total available width (canvas + rightflyout)
-			const containingDivWth = containingDiv.getBoundingClientRect().width;
-			const maxWidth = (containingDivWth + this.props.panelWidth) * MAX_WIDTH_EXTEND_PERCENT;
+			const canvasWidth = canvasContainer.getBoundingClientRect().width;
+			const maxWidth = (canvasWidth + this.props.panelWidth) * MAX_WIDTH_EXTEND_PERCENT;
 			width = Math.min(Math.max(width, this.initialWidth), maxWidth);
 		}
 
