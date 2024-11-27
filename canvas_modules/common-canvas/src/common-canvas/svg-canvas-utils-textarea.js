@@ -30,23 +30,12 @@ import {
 } from "./constants/canvas-constants.js";
 
 const BACKSPACE_KEY = 8;
-const RETURN_KEY = 13;
-const ESC_KEY = 27;
 const LEFT_ARROW_KEY = 37;
 const UP_ARROW_KEY = 38;
 const RIGHT_ARROW_KEY = 39;
 const DOWN_ARROW_KEY = 40;
 const DELETE_KEY = 46;
 const A_KEY = 65;
-const B_KEY = 66;
-const E_KEY = 69;
-const I_KEY = 73;
-const K_KEY = 75;
-const X_KEY = 88;
-const LAB_KEY = 188; // Left angle bracket <
-const RAB_KEY = 190; // Right angle bracket >
-const SEVEN_KEY = 55;
-const EIGHT_KEY = 56;
 
 const SCROLL_PADDING_COMMENT = 2;
 const SCROLL_PADDING_LABEL = 12;
@@ -181,26 +170,32 @@ export default class SvgCanvasTextArea {
 		this.completeEditing(evt);
 	}
 
-	// Applies a markdown action to the comment text being edited using
-	// the same commands as the toolbar.
+	// Returns a markdown action to the comment text being edited, based
+	// on keyboard input. Returns the same commands as the toolbar buttons.
 	getMarkdownAction(d3Event) {
-		if (KeyboardUtils.isMetaKey(d3Event)) {
-			switch (d3Event.keyCode) {
-			case B_KEY: return "bold";
-			case I_KEY: return "italics";
-			case X_KEY: return d3Event.shiftKey ? "strikethrough" : null;
-			case SEVEN_KEY: return d3Event.shiftKey ? "numberedList" : null;
-			case EIGHT_KEY: return d3Event.shiftKey ? "bulletedList" : null;
-			case E_KEY: return "code";
-			case K_KEY: return "link";
-			case LAB_KEY: return "decreaseHashes";
-			case RAB_KEY: return d3Event.shiftKey ? "quote" : "increaseHashes";
-			default:
-			}
-		} else if (d3Event.keyCode === RETURN_KEY) {
+		if (KeyboardUtils.boldCommand(d3Event)) {
+			return "bold";
+		} else if (KeyboardUtils.italicsCommand(d3Event)) {
+			return "italics";
+		} else if (KeyboardUtils.strikethroughCommand(d3Event)) {
+			return "strikethrough";
+		} else if (KeyboardUtils.numberedListCommand(d3Event)) {
+			return "numberedList";
+		} else if (KeyboardUtils.bulletedListCommand(d3Event)) {
+			return "bulletedList";
+		} else if (KeyboardUtils.codeCommand(d3Event)) {
+			return "code";
+		} else if (KeyboardUtils.linkCommand(d3Event)) {
+			return "link";
+		} else if (KeyboardUtils.quoteCommand(d3Event)) {
+			return "quote";
+		} else if (KeyboardUtils.incHashesCommand(d3Event)) {
+			return "increaseHashes";
+		} else if (KeyboardUtils.decHashesCommand(d3Event)) {
+			return "decreaseHashes";
+		} else if (KeyboardUtils.returnCommand(d3Event)) {
 			return "return";
 		}
-
 		return null;
 	}
 
@@ -811,7 +806,7 @@ export default class SvgCanvasTextArea {
 		textEntrySel
 			.on("keydown", (d3Event) => {
 				// If user hits return/enter
-				if (d3Event.keyCode === RETURN_KEY) {
+				if (KeyboardUtils.returnCommand(d3Event)) {
 					if (data.allowReturnKey === "save" || d3Event.shiftKey) {
 						this.textContentSaved = true;
 						this.saveAndCloseTextArea(data, d3Event.target, d3Event);
@@ -825,7 +820,7 @@ export default class SvgCanvasTextArea {
 				}
 				// If user presses ESC key revert back to original text by just
 				// closing the text area.
-				if (d3Event.keyCode === ESC_KEY) {
+				if (KeyboardUtils.cancelTextEntry(d3Event)) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					this.textAreaEscKeyPressed = true;
 					this.closeTextArea(data);

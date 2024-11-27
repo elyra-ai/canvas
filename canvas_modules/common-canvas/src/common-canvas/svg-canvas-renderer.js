@@ -2064,7 +2064,15 @@ export default class SVGCanvasRenderer {
 
 					} else if (KeyboardUtils.selectObject(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.selectObjectD3Event(d3Event, d, "node");
+						this.selectObject(d3Event, d, "node", false, false);
+
+					} else if (KeyboardUtils.selectObjectAugment(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObject(d3Event, d, "node", false, true);
+
+					} else if (KeyboardUtils.selectObjectRange(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObject(d3Event, d, "node", true, false);
 
 					} else if (KeyboardUtils.sizeObjectUp(d3Event)) {
 						if (CanvasUtils.isNodeResizable(d, this.config)) {
@@ -4046,7 +4054,12 @@ export default class SVGCanvasRenderer {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.selectObject(d3Event)) {
-						this.selectObjectD3Event(d3Event, d, "comment");
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObject(d3Event, d, "comment", false, false);
+
+					} else if (KeyboardUtils.selectObjectAugment(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObject(d3Event, d, "comment", false, true);
 
 					} else if (KeyboardUtils.displayContextOptions(d3Event)) {
 						// Don't let keypress go through to the Canvas otherwise the
@@ -4519,7 +4532,13 @@ export default class SVGCanvasRenderer {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.selectObject(d3Event)) {
-						this.selectObjectD3Event(d3Event, d, "link");
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObject(d3Event, d, "link", false, false);
+
+					} else if (KeyboardUtils.selectObjectAugment(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObject(d3Event, d, "link", false, true);
+
 
 					} else if (KeyboardUtils.displayContextOptions(d3Event)) {
 						// Don't let keypress go through to the Canvas otherwise the

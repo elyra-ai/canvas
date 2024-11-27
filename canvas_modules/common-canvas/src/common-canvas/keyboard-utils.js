@@ -22,6 +22,8 @@ const LEFT_ARROW_KEY = "ArrowLeft";
 const RIGHT_ARROW_KEY = "ArrowRight";
 const UP_ARROW_KEY = "ArrowUp";
 const DOWN_ARROW_KEY = "ArrowDown";
+const LAB_KEY = "Comma"; // Left angle bracket
+const RAB_KEY = "Period"; // Right angle bracket
 const ESC_KEY = "Escape";
 const PERIOD_KEY = "Period";
 const SLASH_KEY = "Slash";
@@ -30,13 +32,21 @@ const MINUS_KEY = "Minus";
 const TAB_KEY = "Tab";
 const BACKSPACE_KEY = "Backspace";
 const DELETE_KEY = "Delete";
+
 const A_KEY = "KeyA";
+const B_KEY = "KeyB";
 const C_KEY = "KeyC";
+const E_KEY = "KeyE";
+const I_KEY = "KeyI";
+const K_KEY = "KeyK";
 const P_KEY = "KeyP";
 const V_KEY = "KeyV";
 const X_KEY = "KeyX";
 const Y_KEY = "KeyY";
 const Z_KEY = "KeyZ";
+
+const SEVEN_KEY = "Digit7";
+const EIGHT_KEY = "Digit8";
 const ZERO_KEY = "Digit0";
 
 export default class KeyboardUtils {
@@ -133,10 +143,16 @@ export default class KeyboardUtils {
 		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === LEFT_ARROW_KEY;
 	}
 
-	// The calling code will differentiate between a single select
-	// or an 'extra' select that adds to the set of selected objects.
 	static selectObject(d3Event) {
-		return d3Event.code === RETURN_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === RETURN_KEY;
+	}
+
+	static selectObjectAugment(d3Event) {
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === RETURN_KEY;
+	}
+
+	static selectObjectRange(d3Event) {
+		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === RETURN_KEY;
 	}
 
 	static nextSiblingLink(d3Event) {
@@ -150,10 +166,6 @@ export default class KeyboardUtils {
 	// Shortcut to display either a context menu or context
 	// toolbar, depending on which is enabled, for the
 	// canvas or objects on the canvas.
-	// Note: We don't use a augmentation key (Cmnd or Ctrl or Shift)
-	// for this shortcut because displaying context options
-	// involves auto-select which uses augmentation keys for
-	// adding selections to the set of selections.
 	static displayContextOptions(evt) {
 		return this.isMetaKey(evt) && evt.code === SLASH_KEY;
 	}
@@ -200,6 +212,60 @@ export default class KeyboardUtils {
 
 	static createLink(d3Event) {
 		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === PERIOD_KEY;
+	}
+
+	/* ----------------------------------------- */
+	/* Comment Text Entry                        */
+	/* ----------------------------------------- */
+
+	static cancelTextEntry(d3Event) {
+		return d3Event.code === ESC_KEY;
+	}
+
+	// During text entry this might either complete the text entry OR
+	// add a new line.
+	static returnCommand(d3Event) {
+		return d3Event.code === RETURN_KEY;
+	}
+
+	static boldCommand(d3Event) {
+		return this.isMetaKey(d3Event) && d3Event.code === B_KEY;
+	}
+
+	static italicsCommand(d3Event) {
+		return this.isMetaKey(d3Event) && d3Event.code === I_KEY;
+	}
+
+	static strikethroughCommand(d3Event) {
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === X_KEY;
+	}
+
+	static numberedListCommand(d3Event) {
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === SEVEN_KEY;
+	}
+
+	static bulletedListCommand(d3Event) {
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === EIGHT_KEY;
+	}
+
+	static codeCommand(d3Event) {
+		return this.isMetaKey(d3Event) && d3Event.code === E_KEY;
+	}
+
+	static linkCommand(d3Event) {
+		return this.isMetaKey(d3Event) && d3Event.code === K_KEY;
+	}
+
+	static quoteCommand(d3Event) {
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === RAB_KEY;
+	}
+
+	static incHashesCommand(d3Event) {
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === RAB_KEY;
+	}
+
+	static decHashesCommand(d3Event) {
+		return this.isMetaKey(d3Event) && d3Event.code === LAB_KEY;
 	}
 
 	/* ----------------------------------------- */
