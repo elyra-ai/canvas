@@ -202,17 +202,13 @@ export default class KeyboardUtils {
 		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === DOWN_ARROW_KEY;
 	}
 
-	/* ----------------------------------------- */
-	/* Links                                     */
-	/* ----------------------------------------- */
+	/* Link creation */
 
 	static createLink(d3Event) {
 		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === PERIOD_KEY;
 	}
 
-	/* ----------------------------------------- */
-	/* Comment Text Display                      */
-	/* ----------------------------------------- */
+	/* Comment display */
 
 	static scrollTextUp(d3Event) {
 		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.code === DOWN_ARROW_KEY;
@@ -223,14 +219,6 @@ export default class KeyboardUtils {
 	}
 
 	/* ----------------------------------------- */
-	/* Text Toolbar                              */
-	/* ----------------------------------------- */
-
-	static returnToTextEditing(evt) {
-		return evt.code === TAB_KEY && !evt.shiftKey;
-	}
-
-	/* ----------------------------------------- */
 	/* Comment Text Entry                        */
 	/* ----------------------------------------- */
 
@@ -238,11 +226,21 @@ export default class KeyboardUtils {
 		return d3Event.code === ESC_KEY;
 	}
 
+	static completeTextEntry(d3Event) {
+		return d3Event.shiftKey && d3Event.code === RETURN_KEY;
+	}
+
+	static returnToTextEditing(evt) {
+		return !evt.shiftKey && evt.code === TAB_KEY;
+	}
+
 	// During text entry this might either complete the text entry OR
 	// add a new line.
 	static returnCommand(d3Event) {
 		return d3Event.code === RETURN_KEY;
 	}
+
+	/* Markdown text entry shortcuts */
 
 	static boldCommand(d3Event) {
 		return this.isMetaKey(d3Event) && d3Event.code === B_KEY;
@@ -281,7 +279,7 @@ export default class KeyboardUtils {
 	}
 
 	static decHashesCommand(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.code === LAB_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === LAB_KEY;
 	}
 
 	/* ----------------------------------------- */
@@ -319,7 +317,6 @@ export default class KeyboardUtils {
 	static setFocusOnPreviousMenuItem(evt) {
 		return evt.code === UP_ARROW_KEY;
 	}
-
 
 	/* ----------------------------------------- */
 	/* Color Picker                              */

@@ -807,7 +807,7 @@ export default class SvgCanvasTextArea {
 			.on("keydown", (d3Event) => {
 				// If user hits return/enter
 				if (KeyboardUtils.returnCommand(d3Event)) {
-					if (data.allowReturnKey === "save" || d3Event.shiftKey) {
+					if (data.allowReturnKey === "save" || KeyboardUtils.completeTextEntry(d3Event)) {
 						this.textContentSaved = true;
 						this.saveAndCloseTextArea(data, d3Event.target, d3Event);
 						return;
