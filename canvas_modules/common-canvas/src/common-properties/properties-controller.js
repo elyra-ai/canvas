@@ -1116,16 +1116,14 @@ export default class PropertiesController {
 	getPropertyValue(inPropertyId, options, defaultValue) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
-		// Parsing propertyValue
 		let parsedValue;
 		if (Array.isArray(propertyValue)) {
-			// Use map to preserve sparse arrays and maintain structure
 			parsedValue = propertyValue.map((itm) => itm);
 		} else if (propertyValue && typeof propertyValue === "object") {
 			// Shallow copy for objects
 			parsedValue = { ...propertyValue };
 		} else {
-			parsedValue = typeof propertyValue !== "undefined" ? propertyValue : defaultValue;
+			parsedValue = propertyValue;
 		}
 		let filteredValue = defaultValue;
 
