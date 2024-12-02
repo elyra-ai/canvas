@@ -1099,6 +1099,7 @@ export default class PropertiesController {
 			if (typeof type !== "undefined") {
 				data.type = type;
 			}
+			console.log(data);
 			this.handlers.propertyListener(data);
 		}
 	}
@@ -1116,7 +1117,16 @@ export default class PropertiesController {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
 		// Parsing propertyValue
-		const parsedValue = propertyValue ? JSON.parse(JSON.stringify(propertyValue)) : propertyValue;
+		let parsedValue;
+		if (Array.isArray(propertyValue)) {
+			// Use map to preserve sparse arrays and maintain structure
+			parsedValue = propertyValue.map((itm) => itm);
+		} else if (propertyValue && typeof propertyValue === "object") {
+			// Shallow copy for objects
+			parsedValue = { ...propertyValue };
+		} else {
+			parsedValue = typeof propertyValue !== "undefined" ? propertyValue : defaultValue;
+		}
 		let filteredValue = defaultValue;
 
 		// don't return hidden/disabled values
