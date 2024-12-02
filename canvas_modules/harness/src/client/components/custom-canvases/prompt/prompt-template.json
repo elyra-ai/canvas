@@ -1,0 +1,30 @@
+{
+	"id": "1af18594-86db-4b21-8f40-16afad1ece0b",
+	"type": "execution_node",
+	"op": "prompt_node",
+	"app_data": {
+	  "ui_data": {
+		"label": "Prompt",
+		"image": "images/custom-canvases/flows/palette/icons/type.svg",
+		"x_pos": 50,
+		"y_pos": 170,
+		"description": "A dummy node added to the canvas to prompt for the next node. Displayed as a 'react node'."
+	  }
+	},
+	"inputs": [
+	  {
+		"id": "inPort",
+		"app_data": {
+		  "ui_data": {
+			"cardinality": {
+			  "min": 0,
+			  "max": 1
+			},
+			"label": "Input Port"
+		  }
+		},
+		"links": [
+		]
+	  }
+	]
+  }
