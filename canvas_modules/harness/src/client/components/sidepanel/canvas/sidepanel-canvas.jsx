@@ -404,8 +404,17 @@ export default class SidePanelForms extends React.Component {
 					small={"true"}
 					buttonLabel="Choose file"
 					accept={[".json"]}
-					onChange={this.onCanvasFileSelect}
+					onChange={(evt) => {
+						this.onCanvasFileSelect(evt);
+						// Time out for completing the action
+						setTimeout(() => {
+							if (this.isReadyToSubmitCanvasData) {
+								this.submitCanvas();
+							}
+						}, 0);
+					}}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitCanvasData ? "complete" : "uploading"}
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
@@ -426,8 +435,16 @@ export default class SidePanelForms extends React.Component {
 					small={"true"}
 					buttonLabel="Choose file"
 					accept={[".json"]}
-					onChange={this.onCanvasPaletteSelect}
+					onChange={(evt) => {
+						this.onCanvasPaletteSelect(evt);
+						setTimeout(() => {
+							if (this.isReadyToSubmitPaletteData) {
+								this.submitPalette();
+							}
+						}, 0);
+					}}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitPaletteData ? "complete" : "uploading"}
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
@@ -476,8 +493,16 @@ export default class SidePanelForms extends React.Component {
 					small={"true"}
 					buttonLabel="Chose file"
 					accept={[".json"]}
-					onChange={this.onCanvasFileSelect2}
+					onChange={(evt) => {
+						this.onCanvasFileSelect2(evt);
+						setTimeout(() => {
+							if (this.isReadyToSubmitCanvasData2) {
+								this.submitCanvas2();
+							}
+						}, 0);
+					}}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitCanvasData2 ? "complete" : "uploading"}
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
@@ -499,8 +524,16 @@ export default class SidePanelForms extends React.Component {
 					small={"true"}
 					buttonLabel="Chose file"
 					accept={[".json"]}
-					onChange={this.onCanvasPaletteSelect2}
+					onChange={(evt) => {
+						this.onCanvasPaletteSelect2(evt);
+						setTimeout(() => {
+							if (this.isReadyToSubmitPaletteData2) {
+								this.submitPalette2();
+							}
+						}, 0);
+					}}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitPaletteData2 ? "complete" : "uploading"}
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">

@@ -258,8 +258,16 @@ export default class SidePanelProperties extends React.Component {
 					small={"true"}
 					buttonLabel="Choose file"
 					accept={[".json"]}
-					onChange={this.onPropertiesSelect}
+					onChange={(evt) => {
+						this.onPropertiesSelect(evt);
+						setTimeout(() => {
+							if (this.isReadyToSubmitProperties) {
+								this.submitProperties();
+							}
+						}, 0);
+					}}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitProperties ? "complete" : "uploading"}
 				/>
 				{space}
 			</div>);
