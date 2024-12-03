@@ -1099,7 +1099,6 @@ export default class PropertiesController {
 			if (typeof type !== "undefined") {
 				data.type = type;
 			}
-			console.log(data);
 			this.handlers.propertyListener(data);
 		}
 	}
