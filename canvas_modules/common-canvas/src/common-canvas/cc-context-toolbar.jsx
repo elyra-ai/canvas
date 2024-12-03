@@ -21,6 +21,7 @@ import { findLastIndex } from "lodash";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import ColorPicker from "../color-picker";
+import { CAUSE_KEYBOARD } from "./constants/canvas-constants.js";
 
 const CM_TOOLBAR_GAP = 2;
 const CM_ICON_SIZE = 32;
@@ -159,7 +160,7 @@ class CommonCanvasContextToolbar extends React.Component {
 	closeContextToolbar() {
 		this.props.canvasController.setMouseInContextToolbar(false);
 		this.props.canvasController.setMouseInObject(null);
-		this.props.canvasController.closeContextToolbar();
+		this.props.canvasController.closeContextToolbar(CAUSE_KEYBOARD);
 	}
 
 	colorClicked(color) {

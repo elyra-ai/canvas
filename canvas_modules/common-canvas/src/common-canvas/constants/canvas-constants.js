@@ -175,7 +175,11 @@ export const SOUTH = "s";
 export const EAST = "e";
 export const WEST = "w";
 
+// Cuase or actions
+export const CAUSE_MOUSE = "M";
+export const CAUSE_KEYBOARD = "K";
 
+// Context Menu button value
 export const CONTEXT_MENU_BUTTON = 2;
 
 export const CANVAS_CARBON_ICONS = {

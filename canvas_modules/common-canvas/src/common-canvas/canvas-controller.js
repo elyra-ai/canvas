@@ -57,7 +57,7 @@ import getContextMenuDefiniton from "./canvas-controller-menu-utils.js";
 import { get, isEmpty } from "lodash";
 import { CANVAS_FOCUS,
 	LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE,
-	SNAP_TO_GRID_NONE, SUPER_NODE, WYSIWYG
+	SNAP_TO_GRID_NONE, SUPER_NODE, WYSIWYG, CAUSE_MOUSE, CAUSE_KEYBOARD
 } from "./constants/canvas-constants";
 
 import { cloneDeep } from "lodash";
@@ -1662,10 +1662,17 @@ export default class CanvasController {
 		return this.objectModel.getContextMenuSource();
 	}
 
-	closeContextToolbar() {
-		if (!this.mouseInContextToolbar && !this.mouseInObject) {
+	closeContextToolbar(cause = CAUSE_MOUSE) {
+		if (cause === CAUSE_KEYBOARD) {
 			this.objectModel.closeContextMenu();
-			this.restoreFocus();
+			if (this.getSVGCanvasD3()) {
+				this.getSVGCanvasD3().setTabbedIn();
+				this.restoreFocus();
+			}
+
+		} else if (!this.mouseInContextToolbar && !this.mouseInObject) {
+			this.objectModel.closeContextMenu();
+			this.setFocusOnCanvas();
 		}
 	}
 

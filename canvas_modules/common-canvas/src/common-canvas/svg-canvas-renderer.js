@@ -42,7 +42,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	NORTH, SOUTH, EAST, WEST,
-	WYSIWYG,
+	WYSIWYG, CAUSE_KEYBOARD, CAUSE_MOUSE,
 	CANVAS_FOCUS }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
@@ -2118,7 +2118,7 @@ export default class SVGCanvasRenderer {
 							this.selectObject(d3Event, d, "node");
 
 							if (this.config.enableContextToolbar) {
-								this.addContextToolbar(d3Event, d, "node");
+								this.addContextToolbar(d3Event, d, "node", CAUSE_KEYBOARD);
 							} else {
 								const pos = this.getObjectCenterPosition(d3Event.currentTarget);
 								this.openContextMenu(d3Event, "node", d, null, pos);
@@ -2139,8 +2139,7 @@ export default class SVGCanvasRenderer {
 				this.setNodeStyles(d, "hover", nodeGrp);
 
 				if (this.config.enableContextToolbar) {
-					this.setFocusObject(d, d3Event);
-					this.addContextToolbar(d3Event, d, "node");
+					this.addContextToolbar(d3Event, d, "node", CAUSE_MOUSE);
 				} else {
 					this.addDynamicNodeIcons(d3Event, d, nodeGrp);
 				}
@@ -2986,10 +2985,12 @@ export default class SVGCanvasRenderer {
 		return { x: d.x_pos + d.width, y: d.y_pos };
 	}
 
-	addContextToolbar(d3Event, d, objType, xPos, yPos) {
+	addContextToolbar(d3Event, d, objType, cause, xPos, yPos) {
 		if (!this.isSizing() && !this.isDragging() &&
 				!this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
-			this.canvasController.setMouseInObject(d.id);
+			if (cause === CAUSE_MOUSE) {
+				this.canvasController.setMouseInObject(d.id);
+			}
 			let pos = this.getDefaultContextToolbarPos(objType, d);
 			pos.x = xPos ? pos.x + xPos : pos.x;
 			pos.y = yPos ? pos.y + yPos : pos.y;
@@ -4069,7 +4070,7 @@ export default class SVGCanvasRenderer {
 						this.selectObject(d3Event, d, "comment");
 
 						if (this.config.enableContextToolbar) {
-							this.addContextToolbar(d3Event, d, "comment");
+							this.addContextToolbar(d3Event, d, "comment", CAUSE_KEYBOARD);
 						} else {
 							const pos = this.getObjectCenterPosition(d3Event.currentTarget);
 							this.openContextMenu(d3Event, "comment", d, null, pos);
@@ -4085,10 +4086,7 @@ export default class SVGCanvasRenderer {
 					this.createCommentPort(d3Event.currentTarget, d);
 				}
 				if (this.config.enableContextToolbar) {
-					if (!this.svgCanvasTextArea.isEditingText()) {
-						this.setFocusObject(d, d3Event);
-					}
-					this.addContextToolbar(d3Event, d, "comment");
+					this.addContextToolbar(d3Event, d, "comment", CAUSE_MOUSE);
 				}
 				if (this.commentHasScrollableText(d3Event.currentTarget)) {
 					this.removeCanvasZoomBehavior(); // Remove canvas zoom behavior to allow scrolling of comment
@@ -4550,7 +4548,7 @@ export default class SVGCanvasRenderer {
 						}
 
 						if (this.config.enableContextToolbar) {
-							this.addContextToolbar(d3Event, d, "link",
+							this.addContextToolbar(d3Event, d, "link", CAUSE_KEYBOARD,
 								this.canvasLayout.linkContextToolbarPosX,
 								this.canvasLayout.linkContextToolbarPosY
 							);
@@ -4577,8 +4575,7 @@ export default class SVGCanvasRenderer {
 				this.setLinkLineStyles(targetObj, d, "hover");
 
 				if (this.config.enableContextToolbar) {
-					this.setFocusObject(d, d3Event);
-					this.addContextToolbar(d3Event, d, "link",
+					this.addContextToolbar(d3Event, d, "link", CAUSE_MOUSE,
 						this.canvasLayout.linkContextToolbarPosX,
 						this.canvasLayout.linkContextToolbarPosY
 					);
