@@ -223,7 +223,8 @@ class PaletteFlyoutContentCategory extends React.Component {
 				this.setPaletteCategory(this.props.category.is_open);
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
 
-			} else if (KeyboardUtils.fromCategoryToFirstNode(evt)) {
+			} else if (this.props.category.is_open &&
+						KeyboardUtils.fromCategoryToFirstNode(evt)) {
 				this.pclRef.current.setFirstNode();
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
 			}

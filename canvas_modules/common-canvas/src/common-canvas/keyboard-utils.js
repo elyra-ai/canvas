@@ -411,11 +411,11 @@ export default class KeyboardUtils {
 	}
 
 	static createAutoNode(evt) {
-		return !evt.shiftKey && evt.code === SPACE_KEY;
+		return !evt.shiftKey && (evt.code === SPACE_KEY || evt.code === RETURN_KEY);
 	}
 
 	static createAutoNodeNoLink(evt) {
-		return evt.shiftKey && evt.code === SPACE_KEY;
+		return evt.shiftKey && (evt.code === SPACE_KEY || evt.code === RETURN_KEY);
 	}
 
 	/* ----------------------------------------- */
