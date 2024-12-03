@@ -1737,7 +1737,7 @@ export default class CanvasController {
 		this.editActionHandler(data);
 	}
 
-	// Returns the supernode speified in the bradcrumb provided.
+	// Returns the supernode speified in the breadcrumb provided.
 	getSupernodeFromBreadcrumb(breadcrumb) {
 		if (breadcrumb.supernodeParentPipelineId) {
 			const apiPipeline = this.objectModel.getAPIPipeline(breadcrumb.supernodeParentPipelineId);
