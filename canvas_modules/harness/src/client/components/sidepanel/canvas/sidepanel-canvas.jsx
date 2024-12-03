@@ -161,7 +161,7 @@ export default class SidePanelForms extends React.Component {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
-				this.setState({ canvasDiagram: evt.target.files[0] });
+				this.setState({ canvasDiagram: evt.target.files[0] }, () => this.submitCanvas());
 				this.props.log("Canvas diagram JSON file selected", filename);
 			}
 		}
@@ -174,7 +174,7 @@ export default class SidePanelForms extends React.Component {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
-				this.setState({ canvasDiagram2: evt.target.files[0] });
+				this.setState({ canvasDiagram2: evt.target.files[0] }, () => this.submitCanvas2());
 				this.props.log("Canvas diagram JSON file selected", filename);
 			}
 		}
@@ -187,7 +187,7 @@ export default class SidePanelForms extends React.Component {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
-				this.setState({ canvasPalette: evt.target.files[0] });
+				this.setState({ canvasPalette: evt.target.files[0] }, () => this.submitPalette());
 				this.props.log("Canvas palette JSON file selected", filename);
 			}
 		}
@@ -200,7 +200,7 @@ export default class SidePanelForms extends React.Component {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
-				this.setState({ canvasPalette2: evt.target.files[0] });
+				this.setState({ canvasPalette2: evt.target.files[0] }, () => this.submitPalette2());
 				this.props.log("Canvas palette JSON file selected", filename);
 			}
 		}
@@ -407,6 +407,7 @@ export default class SidePanelForms extends React.Component {
 					accept={[".json"]}
 					onChange={this.onCanvasFileSelect}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitCanvasData ? "complete" : "uploading"}
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
@@ -429,6 +430,7 @@ export default class SidePanelForms extends React.Component {
 					accept={[".json"]}
 					onChange={this.onCanvasPaletteSelect}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitPaletteData ? "complete" : "uploading"}
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
@@ -479,6 +481,7 @@ export default class SidePanelForms extends React.Component {
 					accept={[".json"]}
 					onChange={this.onCanvasFileSelect2}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitCanvasData2 ? "complete" : "uploading"}
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
@@ -502,6 +505,7 @@ export default class SidePanelForms extends React.Component {
 					accept={[".json"]}
 					onChange={this.onCanvasPaletteSelect2}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitPaletteData2 ? "complete" : "uploading"}
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">

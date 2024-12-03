@@ -140,7 +140,7 @@ export default class SidePanelProperties extends React.Component {
 			if (fileExt === "json") {
 				this.setState({
 					commonProperties: evt.target.files[0],
-				});
+				}, () => this.submitProperties());
 				this.props.log("Common Properties JSON file selected", filename);
 			}
 		}
@@ -260,6 +260,7 @@ export default class SidePanelProperties extends React.Component {
 					accept={[".json"]}
 					onChange={this.onPropertiesSelect}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitProperties ? "complete" : "uploading"}
 				/>
 				{space}
 			</div>);
