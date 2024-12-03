@@ -80,6 +80,7 @@ class CanvasContents extends React.Component {
 		this.onKeyUp = this.onKeyUp.bind(this);
 		this.onMouseMove = this.onMouseMove.bind(this);
 		this.onClickReturnToPrevious = this.onClickReturnToPrevious.bind(this);
+		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
 		this.onFocus = this.onFocus.bind(this);
 		this.onBlur = this.onBlur.bind(this);
@@ -320,6 +321,10 @@ class CanvasContents extends React.Component {
 		}
 	}
 
+	onMouseLeave(e) {
+		this.mousePos = null;
+	}
+
 	onMouseDown(e) {
 		this.props.canvasController.setFocusOnCanvas();
 	}
@@ -470,7 +475,8 @@ class CanvasContents extends React.Component {
 			// Set tabindex to 0 so the focus can go to the <div>
 			return (
 				<div tabIndex="0" className="d3-svg-canvas-div keyboard-navigation" id={this.svgCanvasDivId}
-					onMouseDown={this.onMouseDown} onFocus={this.onFocus} onBlur={this.onBlur}
+					onMouseDown={this.onMouseDown} onMouseLeave={this.onMouseLeave}
+					onFocus={this.onFocus} onBlur={this.onBlur}
 					onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 				/>
 			);
@@ -480,7 +486,11 @@ class CanvasContents extends React.Component {
 		// the div (which allows keyboard events to go there) and using -1 means
 		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
 		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
-		return (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp} />);
+		return (
+			<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId}
+				onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
+			/>
+		);
 	}
 
 	setIsDropZoneDisplayed(isDropZoneDisplayed) {

@@ -619,7 +619,7 @@ export default class SVGCanvasUtilsZoom {
 
 		if (nodes.length > 0 || comments.length > 0 || links.length > 0) {
 			const canvasDimensions = CanvasUtils.getCanvasDimensions(nodes, comments, links, 0, 0, true);
-			const canv = this.convertRectAdjustedForScaleWithPadding(canvasDimensions, 1, 10);
+			const canv = this.convertRectAdjustedForScaleWithPadding(canvasDimensions, 1, 30);
 			const xPosInt = parseInt(xPos, 10);
 			const yPosInt = typeof yPos === "undefined" ? xPosInt : parseInt(yPos, 10);
 
