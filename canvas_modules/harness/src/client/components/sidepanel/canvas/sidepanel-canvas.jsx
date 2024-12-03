@@ -160,7 +160,7 @@ export default class SidePanelForms extends React.Component {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
-				this.setState({ canvasDiagram: evt.target.files[0] });
+				this.setState({ canvasDiagram: evt.target.files[0] }, () => this.submitCanvas());
 				this.props.log("Canvas diagram JSON file selected", filename);
 			}
 		}
@@ -173,7 +173,7 @@ export default class SidePanelForms extends React.Component {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
-				this.setState({ canvasDiagram2: evt.target.files[0] });
+				this.setState({ canvasDiagram2: evt.target.files[0] }, () => this.submitCanvas2());
 				this.props.log("Canvas diagram JSON file selected", filename);
 			}
 		}
@@ -186,7 +186,7 @@ export default class SidePanelForms extends React.Component {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
-				this.setState({ canvasPalette: evt.target.files[0] });
+				this.setState({ canvasPalette: evt.target.files[0] }, () => this.submitPalette());
 				this.props.log("Canvas palette JSON file selected", filename);
 			}
 		}
@@ -199,7 +199,7 @@ export default class SidePanelForms extends React.Component {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
-				this.setState({ canvasPalette2: evt.target.files[0] });
+				this.setState({ canvasPalette2: evt.target.files[0] }, () => this.submitPalette2());
 				this.props.log("Canvas palette JSON file selected", filename);
 			}
 		}
@@ -404,15 +404,7 @@ export default class SidePanelForms extends React.Component {
 					small={"true"}
 					buttonLabel="Choose file"
 					accept={[".json"]}
-					onChange={(evt) => {
-						this.onCanvasFileSelect(evt);
-						// Time out for completing the action
-						setTimeout(() => {
-							if (this.isReadyToSubmitCanvasData) {
-								this.submitCanvas();
-							}
-						}, 0);
-					}}
+					onChange={this.onCanvasFileSelect}
 					iconDescription="Delete file"
 					filenameStatus={this.isReadyToSubmitCanvasData ? "complete" : "uploading"}
 				/>
@@ -435,14 +427,7 @@ export default class SidePanelForms extends React.Component {
 					small={"true"}
 					buttonLabel="Choose file"
 					accept={[".json"]}
-					onChange={(evt) => {
-						this.onCanvasPaletteSelect(evt);
-						setTimeout(() => {
-							if (this.isReadyToSubmitPaletteData) {
-								this.submitPalette();
-							}
-						}, 0);
-					}}
+					onChange={this.onCanvasPaletteSelect}
 					iconDescription="Delete file"
 					filenameStatus={this.isReadyToSubmitPaletteData ? "complete" : "uploading"}
 				/>
@@ -493,14 +478,7 @@ export default class SidePanelForms extends React.Component {
 					small={"true"}
 					buttonLabel="Chose file"
 					accept={[".json"]}
-					onChange={(evt) => {
-						this.onCanvasFileSelect2(evt);
-						setTimeout(() => {
-							if (this.isReadyToSubmitCanvasData2) {
-								this.submitCanvas2();
-							}
-						}, 0);
-					}}
+					onChange={this.onCanvasFileSelect2}
 					iconDescription="Delete file"
 					filenameStatus={this.isReadyToSubmitCanvasData2 ? "complete" : "uploading"}
 				/>
@@ -524,14 +502,7 @@ export default class SidePanelForms extends React.Component {
 					small={"true"}
 					buttonLabel="Chose file"
 					accept={[".json"]}
-					onChange={(evt) => {
-						this.onCanvasPaletteSelect2(evt);
-						setTimeout(() => {
-							if (this.isReadyToSubmitPaletteData2) {
-								this.submitPalette2();
-							}
-						}, 0);
-					}}
+					onChange={this.onCanvasPaletteSelect2}
 					iconDescription="Delete file"
 					filenameStatus={this.isReadyToSubmitPaletteData2 ? "complete" : "uploading"}
 				/>
