@@ -220,19 +220,8 @@ export default class SVGCanvasD3 {
 		return this.renderer.focusPreviousTabGroup(evt);
 	}
 
-	setTabbedIn() {
-		this.renderer.setTabbedIn();
-	}
-
-	setTabbedOut() {
-		this.renderer.setTabbedOut();
-	}
-
-	isTabbedIn() {
-		if (this.renderer) {
-			return this.renderer.isTabbedIn();
-		}
-		return false;
+	resetTabObjectIndex() {
+		this.renderer.resetTabObjectIndex();
 	}
 
 	moveFocusTo(focusObj) {

@@ -1665,10 +1665,7 @@ export default class CanvasController {
 	closeContextToolbar(cause = CAUSE_MOUSE) {
 		if (cause === CAUSE_KEYBOARD) {
 			this.objectModel.closeContextMenu();
-			if (this.getSVGCanvasD3()) {
-				this.getSVGCanvasD3().setTabbedIn();
-				this.restoreFocus();
-			}
+			this.restoreFocus();
 
 		} else if (!this.mouseInContextToolbar && !this.mouseInObject) {
 			this.objectModel.closeContextMenu();
@@ -1903,7 +1900,6 @@ export default class CanvasController {
 
 	restoreFocus() {
 		if (this.getSVGCanvasD3()) {
-			this.getSVGCanvasD3().setTabbedIn();
 			this.setFocusObject(this.focusObject); // This will force a refresh of the focus
 		}
 	}

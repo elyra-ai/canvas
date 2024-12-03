@@ -5830,20 +5830,12 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	setTabbedIn() {
-		this.activePipeline.setTabbedIn();
-	}
-
-	setTabbedOut() {
-		this.activePipeline.setTabbedOut();
-	}
-
-	isTabbedIn() {
-		return this.activePipeline.isTabbedIn();
-	}
-
 	focusOnTextEntryElement(evt) {
 		this.svgCanvasTextArea.focusOnTextEntryElement(evt);
+	}
+
+	resetTabObjectIndex() {
+		this.activePipeline.resetTabObjectIndex();
 	}
 
 	// Moves the visual focus onto the object provided and

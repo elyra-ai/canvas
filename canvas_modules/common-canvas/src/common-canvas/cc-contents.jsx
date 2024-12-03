@@ -82,7 +82,6 @@ class CanvasContents extends React.Component {
 		this.onClickReturnToPrevious = this.onClickReturnToPrevious.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
-		this.onFocus = this.onFocus.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
@@ -294,12 +293,14 @@ class CanvasContents extends React.Component {
 		this.svgCanvasD3.setSpaceKeyPressed(false);
 	}
 
-	onFocus(evt) {
-		this.svgCanvasD3.setTabbedIn();
-	}
-
+	// When focus leaves the canvas it may be going to an "internal" object
+	// such as a node or a comment or to an "external" object like the
+	// toolbar or palette. If it goes outside the canvas, we reset the
+	// tab object index so that tabbing will begin from the first tab object.
 	onBlur(evt) {
-		this.svgCanvasD3.setTabbedOut();
+		if (!this.isTargetInsideCanvas(evt.relatedTarget)) {
+			this.svgCanvasD3.resetTabObjectIndex();
+		}
 	}
 
 	// Records in mousePos the mouse pointer position when the pointer is inside
@@ -476,7 +477,7 @@ class CanvasContents extends React.Component {
 			return (
 				<div tabIndex="0" className="d3-svg-canvas-div keyboard-navigation" id={this.svgCanvasDivId}
 					onMouseDown={this.onMouseDown} onMouseLeave={this.onMouseLeave}
-					onFocus={this.onFocus} onBlur={this.onBlur}
+					onBlur={this.onBlur}
 					onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 				/>
 			);
@@ -497,6 +498,11 @@ class CanvasContents extends React.Component {
 		if (isDropZoneDisplayed !== this.state.isDropZoneDisplayed) {
 			this.setState({ isDropZoneDisplayed: isDropZoneDisplayed });
 		}
+	}
+
+	// Returns true if the target element passed in is outside the canvas div.
+	isTargetInsideCanvas(target) {
+		return target && target.closest(".common-canvas-drop-div");
 	}
 
 	isDropZoneDisplayed() {

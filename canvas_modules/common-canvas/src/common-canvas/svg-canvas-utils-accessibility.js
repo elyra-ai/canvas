@@ -47,15 +47,15 @@ export default class SVGCanvasUtilsAccessibility {
 		// Keeps track of which tab object is currently active during tabbing.
 		this.currentTabObjectIndex = -1;
 
-		// Keeps track of whether we have tabbed in or out of the canvas. It will
-		// be false when we have tabbed out.
-		this.tabbedIn = false;
-
 		// Reset the currentTabObjectIndex variable based on the current selection
 		// (if there is one).
 		this.resetTabGroupIndexBasedOnSelection();
 
 		this.logger.logEndTimer("initialize");
+	}
+
+	resetTabObjectIndex() {
+		this.currentTabObjectIndex = -1;
 	}
 
 	// Returns an array of tab groups for the active pipeline. Each element of
@@ -332,7 +332,6 @@ export default class SVGCanvasUtilsAccessibility {
 	// passed in is a part, to be the index position of that object.
 	setTabGroupIndexForObj(obj) {
 		this.currentTabObjectIndex = this.tabObjects.findIndex((tg) => tg.obj.grp === obj.grp);
-		this.tabbedIn = true;
 	}
 
 	nodeHasInputLinks(node) {
@@ -347,30 +346,14 @@ export default class SVGCanvasUtilsAccessibility {
 		return this.getLinksFromComment(comment).length > 0;
 	}
 
-	setTabbedIn() {
-		this.tabbedIn = true;
-	}
-
-	setTabbedOut() {
-		this.tabbedIn = false;
-	}
-
-	isTabbedIn() {
-		return this.tabbedIn;
-	}
-
 	getNextTabGroupStartObject() {
-		if (!this.tabbedIn) {
-			this.currentTabObjectIndex = -1;
-
-		} else if (this.currentTabObjectIndex === this.tabObjects.length) {
+		if (this.currentTabObjectIndex === this.tabObjects.length) {
 			this.currentTabObjectIndex = -1;
 		}
 
 		if (this.currentTabObjectIndex < this.tabObjects.length) {
 			this.currentTabObjectIndex++;
 			if (this.currentTabObjectIndex < this.tabObjects.length) {
-				this.tabbedIn = true;
 				return this.tabObjects[this.currentTabObjectIndex].obj;
 			}
 		}
@@ -378,17 +361,13 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getPreviousTabGroupStartObject() {
-		if (!this.tabbedIn) {
-			this.currentTabObjectIndex = this.tabObjects.length;
-
-		} else if (this.currentTabObjectIndex === -1) {
+		if (this.currentTabObjectIndex === -1) {
 			this.currentTabObjectIndex = this.tabObjects.length;
 		}
 
 		if (this.currentTabObjectIndex > -1) {
 			this.currentTabObjectIndex--;
 			if (this.currentTabObjectIndex > -1) {
-				this.tabbedIn = true;
 				return this.tabObjects[this.currentTabObjectIndex].obj;
 			}
 		}
