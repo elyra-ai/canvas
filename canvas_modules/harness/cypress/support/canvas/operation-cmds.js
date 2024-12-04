@@ -88,3 +88,14 @@ Cypress.Commands.add("moveBottomPanelDivider", (y) => {
 			.trigger("mouseup", 200, y, { view: win, force: true });
 	});
 });
+
+Cypress.Commands.add("moveRightFlyoutDivider", (x) => {
+	cy.window().then((win) => {
+		cy.get(".right-flyout-container .right-flyout-drag")
+			.trigger("mousedown", "center", { view: win, button: 0, force: true });
+		cy.get("#canvas-div-0")
+			.trigger("mousemove", x, 200, { viewe: win, force: true });
+		cy.get("#canvas-div-0")
+			.trigger("mouseup", x, 200, { view: win, force: true });
+	});
+});

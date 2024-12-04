@@ -29,6 +29,7 @@ import {
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_STAGES,
 	EXAMPLE_APP_STAGES_CARD_NODE,
+	EXAMPLE_APP_PROMPT,
 	EXAMPLE_APP_EXPLAIN,
 	EXAMPLE_APP_EXPLAIN2,
 	EXAMPLE_APP_STREAMS,
@@ -160,7 +161,7 @@ export default class SidePanelForms extends React.Component {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
-				this.setState({ canvasDiagram: evt.target.files[0] });
+				this.setState({ canvasDiagram: evt.target.files[0] }, () => this.submitCanvas());
 				this.props.log("Canvas diagram JSON file selected", filename);
 			}
 		}
@@ -173,7 +174,7 @@ export default class SidePanelForms extends React.Component {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
-				this.setState({ canvasDiagram2: evt.target.files[0] });
+				this.setState({ canvasDiagram2: evt.target.files[0] }, () => this.submitCanvas2());
 				this.props.log("Canvas diagram JSON file selected", filename);
 			}
 		}
@@ -186,7 +187,7 @@ export default class SidePanelForms extends React.Component {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
-				this.setState({ canvasPalette: evt.target.files[0] });
+				this.setState({ canvasPalette: evt.target.files[0] }, () => this.submitPalette());
 				this.props.log("Canvas palette JSON file selected", filename);
 			}
 		}
@@ -199,7 +200,7 @@ export default class SidePanelForms extends React.Component {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
-				this.setState({ canvasPalette2: evt.target.files[0] });
+				this.setState({ canvasPalette2: evt.target.files[0] }, () => this.submitPalette2());
 				this.props.log("Canvas palette JSON file selected", filename);
 			}
 		}
@@ -406,6 +407,7 @@ export default class SidePanelForms extends React.Component {
 					accept={[".json"]}
 					onChange={this.onCanvasFileSelect}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitCanvasData ? "complete" : "uploading"}
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
@@ -428,6 +430,7 @@ export default class SidePanelForms extends React.Component {
 					accept={[".json"]}
 					onChange={this.onCanvasPaletteSelect}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitPaletteData ? "complete" : "uploading"}
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
@@ -478,6 +481,7 @@ export default class SidePanelForms extends React.Component {
 					accept={[".json"]}
 					onChange={this.onCanvasFileSelect2}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitCanvasData2 ? "complete" : "uploading"}
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
@@ -501,6 +505,7 @@ export default class SidePanelForms extends React.Component {
 					accept={[".json"]}
 					onChange={this.onCanvasPaletteSelect2}
 					iconDescription="Delete file"
+					filenameStatus={this.isReadyToSubmitPaletteData2 ? "complete" : "uploading"}
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
@@ -769,6 +774,15 @@ export default class SidePanelForms extends React.Component {
 				labelText="Enable Right Flyout Under Toolbar"
 				toggled={this.props.getStateValue("selectedRightFlyoutUnderToolbar")}
 				onToggle={(val) => this.setStateValue(val, "selectedRightFlyoutUnderToolbar")}
+			/>
+		</div>);
+
+		var enableRightFlyoutDragToResize = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedRightFlyoutDragToResize" // Set ID to corresponding field in App.js state
+				labelText="Enable Right Flyout Resize using Drag"
+				toggled={this.props.getStateValue("selectedRightFlyoutDragToResize")}
+				onToggle={(val) => this.setStateValue(val, "selectedRightFlyoutDragToResize")}
 			/>
 		</div>);
 
@@ -1242,6 +1256,10 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={EXAMPLE_APP_STAGES_CARD_NODE}
 						labelText={EXAMPLE_APP_STAGES_CARD_NODE}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_PROMPT}
+						labelText={EXAMPLE_APP_PROMPT}
 					/>
 					<RadioButton
 						value={EXAMPLE_APP_READ_ONLY}
@@ -1741,6 +1759,8 @@ export default class SidePanelForms extends React.Component {
 					{enableShowRightFlyout}
 					{divider}
 					{enableRightFlyoutUnderToolbar}
+					{divider}
+					{enableRightFlyoutDragToResize}
 					{divider}
 					{enablePositionNodeOnRightFlyoutOpen}
 					{divider}

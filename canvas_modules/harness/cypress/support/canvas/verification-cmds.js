@@ -914,6 +914,16 @@ Cypress.Commands.add("verifyRightFlyoutPanelWidth", (width) => {
 	});
 });
 
+Cypress.Commands.add("verifyIsRightFlyoutDragDisabled", () => {
+	cy.get(".right-flyout-drag")
+		.should("not.exist");
+});
+
+Cypress.Commands.add("verifyIsRightFlyoutDragEnabled", () => {
+	cy.get(".right-flyout-drag")
+		.should("exist");
+});
+
 Cypress.Commands.add("verifyRightFlyoutPanelHeight", (height) => {
 	cy.get(".right-flyout-panel").should((element) => {
 		compareCloseTo(element[0].offsetHeight, height);

@@ -84,6 +84,7 @@ export default class ConfigUtils {
 			enableDropZoneOnExternalDrag: false,
 			enableLeftFlyoutUnderToolbar: false,
 			enableRightFlyoutUnderToolbar: false,
+			enableRightFlyoutDragToResize: false,
 			enablePanIntoViewOnOpen: false,
 			enableZoomIntoSubFlows: false,
 			enableBrowserEditMenu: true,

@@ -47,9 +47,9 @@ describe("Test if tips show up for summary validation icon when there is an erro
 		// Select an existing row in the table and delete it's value.
 		cy.openSubPanel("Configure Derive Node");
 		cy.selectRowInTable(1, "expressionCellTable");
-		cy.clickButtonInTable("Delete", "expressionCellTable");
+		cy.clickButtonInSingleSelectTable("Delete", "expressionCellTable");
 		cy.selectRowInTable(1, "expressionCellTable");
-		cy.clickButtonInTable("Delete", "expressionCellTable");
+		cy.clickButtonInSingleSelectTable("Delete", "expressionCellTable");
 
 		// Select all rows in a table and delete its value
 		cy.selectAllRowsInTable("structurelisteditorTableInput");

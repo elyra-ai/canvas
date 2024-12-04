@@ -46,6 +46,7 @@ import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
 import StagesCanvas from "./components/custom-canvases/stages/stages-canvas";
 import StagesCardNodeCanvas from "./components/custom-canvases/stages-card-node/stages-card-node-canvas";
+import PromptCanvas from "./components/custom-canvases/prompt/prompt-canvas";
 import LogicCanvas from "./components/custom-canvases/logic/logic-canvas";
 import ReadOnlyCanvas from "./components/custom-canvases/read-only/read-only-canvas";
 import ProgressCanvas from "./components/custom-canvases/progress/progress-canvas";
@@ -107,6 +108,7 @@ import {
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_STAGES,
 	EXAMPLE_APP_STAGES_CARD_NODE,
+	EXAMPLE_APP_PROMPT,
 	EXAMPLE_APP_EXPLAIN,
 	EXAMPLE_APP_EXPLAIN2,
 	EXAMPLE_APP_STREAMS,
@@ -239,6 +241,7 @@ class App extends React.Component {
 			selectedLeftFlyoutUnderToolbar: false,
 			selectedShowRightFlyout: false,
 			selectedRightFlyoutUnderToolbar: false,
+			selectedRightFlyoutDragToResize: false,
 			selectedPanIntoViewOnOpen: false,
 			selectedExtraCanvasDisplayed: false,
 			selectedSaveToPalette: false,
@@ -2131,6 +2134,7 @@ class App extends React.Component {
 			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
 			enableLeftFlyoutUnderToolbar: this.state.selectedLeftFlyoutUnderToolbar,
 			enableRightFlyoutUnderToolbar: this.state.selectedRightFlyoutUnderToolbar,
+			enableRightFlyoutDragToResize: this.state.selectedRightFlyoutDragToResize,
 			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
 			dropZoneCanvasContent: this.state.selectedDisplayCustomizedDropZoneContent ? this.dropZoneCanvasDiv : null,
 			emptyCanvasContent: this.state.selectedDisplayCustomizedEmptyCanvasContent ? this.emptyCanvasDiv : null,
@@ -2154,6 +2158,7 @@ class App extends React.Component {
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
+			enableRightFlyoutDragToResize: this.state.selectedRightFlyoutDragToResize,
 			selectedMoveNodesOnSupernodeResize: true,
 			tipConfig: this.state.selectedTipConfig,
 			schemaValidation: this.state.selectedSchemaValidation,
@@ -2788,6 +2793,13 @@ class App extends React.Component {
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_STAGES_CARD_NODE) {
 			firstCanvas = (
 				<StagesCardNodeCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_PROMPT) {
+			firstCanvas = (
+				<PromptCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>

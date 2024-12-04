@@ -16,6 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import ReactResizeDetector from "react-resize-detector";
 import PropertiesModal from "./../components/properties-modal";
 import PropertiesEditor from "./../components/properties-editor";
 import TearSheet from "../panels/tearsheet";
@@ -37,7 +38,7 @@ import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
 
 import { injectIntl } from "react-intl";
-import styles from "./properties-main-widths.scss";
+import styles from "./properties-main-widths.module.scss";
 
 const FLYOUT_WIDTH_SMALL = parseInt(styles.flyoutWidthSmall, 10);
 const FLYOUT_WIDTH_MEDIUM = parseInt(styles.flyoutWidthMedium, 10);
@@ -71,6 +72,7 @@ class PropertiesMain extends React.Component {
 		});
 		this.setForm(props.propertiesInfo, false);
 		this.previousErrorMessages = {};
+		this.flyoutWidths = [FLYOUT_WIDTH_SMALL, FLYOUT_WIDTH_MEDIUM, FLYOUT_WIDTH_LARGE, FLYOUT_WIDTH_MAX];
 		// this has to be after setForm because setForm clears all error messages.
 		// Validate all validationDefinitions but show warning messages for "colDoesExists" condition only
 		this.propertiesController.validatePropertiesValues(false);
@@ -86,7 +88,8 @@ class PropertiesMain extends React.Component {
 		const editorSize = this.getEditorSize();
 		this.state = {
 			showPropertiesButtons: true,
-			editorSize: editorSize
+			editorSize: editorSize,
+			containerWidth: FLYOUT_WIDTH_SMALL
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
@@ -449,6 +452,10 @@ class PropertiesMain extends React.Component {
 		}
 	}
 
+	detectResize(width) {
+		this.setState({ containerWidth: width });
+	}
+
 	render() {
 		const applyOnBlurEnabled = this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout;
 		let cancelHandler = this.cancelHandler.bind(this, CANCEL);
@@ -493,7 +500,13 @@ class PropertiesMain extends React.Component {
 					showPropertiesButtons={this.state.showPropertiesButtons}
 					disableSaveOnRequiredErrors={this.props.propertiesConfig.disableSaveOnRequiredErrors}
 				/>);
-				if (this._isResizeButtonRequired()) {
+				// Show Resize Button only under below conditions
+				// 1. Flyout is not dragged to resize its width.
+				// 2. If Flyout is dragged back to its smallest width.
+				// If pixel_width is set include that to test if button should be shown.
+				const widthArr = [...this.flyoutWidths, this._getOverrideSize()];
+				const allowedWidth = widthArr.includes(this.state.containerWidth);
+				if (this._isResizeButtonRequired() && allowedWidth) {
 					const resizeIcon = this._getResizeButton();
 					// Resize button label can be "Expand" or "Contract"
 					const resizeBtnLabel = (resizeIcon.props && resizeIcon.props.className === "properties-resize-caret-left")
@@ -591,19 +604,29 @@ class PropertiesMain extends React.Component {
 				propertiesSizeClassname);
 			return (
 				<Provider store={this.propertiesController.getStore()}>
-					<aside
-						aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
-						role="complementary"
-						ref={ (ref) => (this.commonProperties = ref) }
-						className={className}
-						onBlur={this.onBlur}
-						style={overrideStyle}
+					<ReactResizeDetector
+						handleWidth
+						refreshMode="debounce"
+						refreshRate={500}
+						onResize={(width) => this.detectResize(width)}
+						targetRef={this.commonProperties}
 					>
-						{propertiesTitle}
-						{propertiesDialog}
-						{buttonsContainer}
-					</aside>
-					{resizeBtn}
+						<div className="properties-right-flyout-container">
+							<aside
+								aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
+								role="complementary"
+								ref={ (ref) => (this.commonProperties = ref) }
+								className={className}
+								onBlur={this.onBlur}
+								style={overrideStyle}
+							>
+								{propertiesTitle}
+								{propertiesDialog}
+								{buttonsContainer}
+							</aside>
+							{resizeBtn}
+						</div>
+					</ReactResizeDetector>
 				</Provider>
 			);
 		}

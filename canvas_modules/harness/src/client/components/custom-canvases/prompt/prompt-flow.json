@@ -1,0 +1,74 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "prompt-pipeline-flow",
+  "primary_pipeline": "primary-prompt-pipeline",
+  "pipelines": [
+    {
+      "id": "primary-prompt-pipeline",
+      "nodes": [
+        {
+          "id": "1af18594-86db-4b21-8f40-16afad1ece0b",
+          "type": "execution_node",
+          "op": "type",
+          "app_data": {
+            "ui_data": {
+              "label": "Type",
+              "image": "images/custom-canvases/flows/palette/icons/type.svg",
+              "x_pos": 54,
+              "y_pos": 250,
+              "description": "Type node."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "0b123469-7d21-43a5-ae84-cbc999990033",
+              "x_pos": 54,
+              "y_pos": 43.2,
+              "width": 288,
+              "height": 158.4,
+              "class_name": "d3-comment-rect bkg-col-green-20",
+              "content": "### Prompt Canvas\n\nThis canvas provides a method to add new nodes to the flow with a prompt. To do this:\n1.  Hover over the Type node\n2. In the context toolbar, click  the \"Add node with prompt\" button\n3. Select a node type from the prompt. ",
+              "associated_id_refs": []
+            }
+          ]
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}

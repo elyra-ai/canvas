@@ -542,8 +542,8 @@ export default class PropertiesController {
 		} else if (subControl.valueDef.propType === "enum") {
 			val = subControl.values[0];
 		} else if (subControl.valueDef.propType === "integer" ||
-								subControl.valueDef.propType === "long" ||
-								subControl.valueDef.propType === "double") {
+			subControl.valueDef.propType === "long" ||
+			subControl.valueDef.propType === "double") {
 			val = 0;
 		} else if (subControl.valueDef.propType === "structure") {
 			val = {};
@@ -1115,6 +1115,15 @@ export default class PropertiesController {
 	getPropertyValue(inPropertyId, options, defaultValue) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
+		let parsedValue;
+		if (Array.isArray(propertyValue)) {
+			parsedValue = propertyValue.map((itm) => itm);
+		} else if (propertyValue && typeof propertyValue === "object") {
+			// Shallow copy for objects
+			parsedValue = { ...propertyValue };
+		} else {
+			parsedValue = propertyValue;
+		}
 		let filteredValue = defaultValue;
 
 		// don't return hidden/disabled values
@@ -1166,7 +1175,7 @@ export default class PropertiesController {
 		if (options && options.applyProperties === true) {
 			return this._convertObjectStructure(propertyId, propertyValue);
 		}
-		return propertyValue;
+		return parsedValue;
 	}
 
 	removePropertyValue(inPropertyId) {
@@ -1279,7 +1288,7 @@ export default class PropertiesController {
 							const control = this.getControl({ name: parameterRef });
 							if (PropertyUtils.isSubControlStructureObjectType(control)) {
 								conditionalDefaultValues[parameterRef] =
-								PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, conditionalDefaultValues[parameterRef]);
+									PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, conditionalDefaultValues[parameterRef]);
 							}
 							this.propertiesStore.updatePropertyValue({ name: parameterRef }, conditionalDefaultValues[parameterRef]);
 						}
@@ -2045,7 +2054,7 @@ export default class PropertiesController {
 			});
 			const isDifference = consecutiveAry.every((value) => value === 1);
 			if (isDifference && ((staticRows.includes(0) && !staticRows.includes(controlValue.length - 1)) ||
-			(!staticRows.includes(0) && staticRows.includes(controlValue.length - 1)))) {
+				(!staticRows.includes(0) && staticRows.includes(controlValue.length - 1)))) {
 				isValid = true;
 			} else {
 				isValid = false;

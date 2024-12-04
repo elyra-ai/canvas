@@ -18,9 +18,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button, Checkbox } from "@carbon/react";
+import { TrashCan } from "@carbon/react/icons";
 import FlexibleTable from "./../components/flexible-table";
 import TableButtons from "./../components/table-buttons";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
+import Tooltip from "../../tooltip/tooltip.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
 import classNames from "classnames";
@@ -429,7 +431,9 @@ export default class AbstractTable extends React.Component {
 	}
 
 	makeTableToolbar(selectedRows) {
-		if ((this.props.addRemoveRows || this.props.control?.moveableRows || this.isSelectSummaryEdit(selectedRows)) && selectedRows?.length > 0) {
+		if ((this.props.addRemoveRows || this.props.control?.moveableRows || this.isSelectSummaryEdit(selectedRows)) &&
+		selectedRows?.length > 0 &&
+		this.props.control.rowSelection !== ROW_SELECTION.SINGLE) {
 			const multiSelectEditRowPropertyId = {
 				name: this.selectSummaryPropertyName,
 				row: 0
@@ -704,6 +708,9 @@ export default class AbstractTable extends React.Component {
 			// set to specific size. Exclude this column from resizing.
 			headers.push({ "key": "subpanel", "label": "", "width": TABLE_SUBPANEL_BUTTON_WIDTH, "staticWidth": true });
 		}
+		if (this.props.control.rowSelection === ROW_SELECTION.SINGLE) {
+			headers.push({ "key": "deleteRow", "label": "", "width": TABLE_SUBPANEL_BUTTON_WIDTH, "staticWidth": true });
+		}
 		return headers;
 	}
 
@@ -732,6 +739,34 @@ export default class AbstractTable extends React.Component {
 				if (this.props.control.childItem && !selectSummaryRow && !this.isReadonlyTable()) {
 					const cell = this.buildChildItem(propertyName, rowIndex, tableState);
 					columns.push(cell);
+				}
+				if (this.props.control.rowSelection === ROW_SELECTION.SINGLE) {
+					const toolTip = PropertyUtils.formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_DELETEICON_TOOLTIP);
+					const tooltipId = "tooltip-delete-row";
+					const deleteOption = (
+						<Tooltip
+							id={tooltipId}
+							tip={toolTip}
+							direction="left"
+							className="properties-tooltips icon-tooltip"
+						>
+							<Button
+								kind="ghost"
+								size="sm"
+								className="delete-button"
+								hasIconOnly
+								onClick={this.removeSelected}
+								renderIcon={TrashCan}
+								iconDescription={toolTip}
+							/>
+						</Tooltip>
+					);
+					const deleteRow = {
+						column: "deleteRow",
+						width: TABLE_SUBPANEL_BUTTON_WIDTH,
+						content: deleteOption
+					};
+					columns.push(deleteRow);
 				}
 				rows.push({
 					columns: columns

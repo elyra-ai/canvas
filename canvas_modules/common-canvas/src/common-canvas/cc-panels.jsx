@@ -97,7 +97,7 @@ class CommonCanvasPanels extends React.Component {
 	//   indicated by setting the config field enablePaletteLayout to
 	//   "None" and providing some JSX in the leftFlyoutContent field
 	//   of <CommonCanvas>.
-	isLeftPanelOpen() {
+	isLeftFlyoutOpen() {
 		if (this.props.enablePaletteLayout === PALETTE_LAYOUT_DIALOG) {
 			return false;
 		}
@@ -112,6 +112,11 @@ class CommonCanvasPanels extends React.Component {
 			return true;
 		}
 		return false;
+	}
+
+	// Returns true if the right flyout should be displayed.
+	isRightFlyoutOpen() {
+		return this.props.rightFlyoutIsOpen;
 	}
 
 	// Returns a JSX object for the contents of the left panel. If the application
@@ -129,6 +134,11 @@ class CommonCanvasPanels extends React.Component {
 		return null;
 	}
 
+	// Returns a JSX object for the contents of the right panel.
+	generateRightFlyout() {
+		return (<CommonCanvasRightFlyout containingDivId={this.props.containingDivId} canvasController={this.props.canvasController} />);
+	}
+
 	render() {
 		this.logger.log("render");
 
@@ -138,8 +148,9 @@ class CommonCanvasPanels extends React.Component {
 				containingDivId={this.props.containingDivId}
 			/>
 		);
-		const rightFlyout = (<CommonCanvasRightFlyout />);
-		const leftFlyoutIsOpen = this.isLeftPanelOpen();
+		const rightFlyoutIsOpen = this.isRightFlyoutOpen();
+		const rightFlyout = rightFlyoutIsOpen ? this.generateRightFlyout() : null;
+		const leftFlyoutIsOpen = this.isLeftFlyoutOpen();
 		const leftFlyout = leftFlyoutIsOpen ? this.generateLeftFlyout() : null;
 
 		const topCenterBottom = this.generateTopCenterBottom();
@@ -288,6 +299,7 @@ const mapStateToProps = (state, ownProps) => ({
 	enableNarrowPalette: state.canvasconfig.enableNarrowPalette,
 	enableLeftFlyoutUnderToolbar: state.canvasconfig.enableLeftFlyoutUnderToolbar,
 	enableRightFlyoutUnderToolbar: state.canvasconfig.enableRightFlyoutUnderToolbar,
+	enableRightFlyoutDragToResize: state.canvasconfig.enableRightFlyoutDragToResize,
 	toolbarIsOpen: (state.canvasconfig.enableToolbarLayout !== PALETTE_LAYOUT_NONE),
 	paletteIsOpen: state.palette.isOpen,
 	topPanelIsOpen: state.toppanel.isOpen,

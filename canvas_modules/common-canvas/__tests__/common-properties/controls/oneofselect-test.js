@@ -318,8 +318,8 @@ describe("oneofselect paramDef works correctly", () => {
 
 		// combobox should have aria-label
 		const comboboxWrapper = container.querySelector("div[data-id='properties-ctrl-oneofselect_custom_value']");
-		const comboboxAriaLabel = comboboxWrapper.querySelector(".cds--list-box__menu").getAttribute("aria-label");
-		expect(comboboxAriaLabel).to.equal("oneofselect custom value allowed");
+		const comboboxAriaLabelledby = comboboxWrapper.querySelector(".cds--list-box__menu").getAttribute("aria-labelledby");
+		expect(comboboxWrapper.querySelector(`label[id='${comboboxAriaLabelledby}']`).textContent).to.equal("oneofselect custom value allowed(required)");
 	});
 });
 
