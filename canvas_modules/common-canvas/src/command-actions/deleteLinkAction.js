@@ -14,32 +14,38 @@
  * limitations under the License.
  */
 import Action from "../command-stack/action.js";
+import { CANVAS_FOCUS } from "../common-canvas/constants/canvas-constants.js";
 
 export default class DeleteLinkAction extends Action {
 	constructor(data, canvasController) {
 		super(data);
 		this.data = data;
-		this.linkInfo = [];
 		this.labelUtil = canvasController.labelUtil;
 		this.objectModel = canvasController.objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
+		this.link = this.apiPipeline.getLink(this.data.id);
 	}
 
 	// Standard methods
 	do() {
-		this.linkInfo = this.apiPipeline.getLink(this.data.id);
-		this.apiPipeline.deleteLink(this.data);
+		this.apiPipeline.deleteLink(this.link);
+		this.focusObject = CANVAS_FOCUS;
 	}
 
 	undo() {
-		this.apiPipeline.addLinks([this.linkInfo]);
+		this.apiPipeline.addLinks([this.link]);
+		this.focusObject = this.link;
 	}
 
 	redo() {
-		this.apiPipeline.deleteLink(this.data);
+		this.do();
 	}
 
 	getLabel() {
 		return this.labelUtil.getActionLabel(this, "action.deleteLink");
+	}
+
+	getFocusObject() {
+		return this.focusObject;
 	}
 }

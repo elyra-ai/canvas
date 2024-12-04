@@ -19,8 +19,11 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Logger from "../logging/canvas-logger.js";
 
-const MARGIN_TOP = 100;
+// Margin must be equal to or greater than the toolbar height
+// plus the minimum allowed height for the canvas which is 150px.
+const MARGIN_TOP = 200;
 const MIN_HEIGHT = 75;
+const TOP_PANEL_CLASSNAME = "top-panel";
 
 class CanvasBottomPanel extends React.Component {
 	constructor(props) {
@@ -61,13 +64,21 @@ class CanvasBottomPanel extends React.Component {
 	// Returns a new height for the bottom panel limited by the need to enforce
 	// a minimum and maximum height.
 	limitHeight(ht) {
-		const canvasContainer = document.getElementById(this.props.containingDivId);
+		const containingDiv = document.getElementById(this.props.containingDivId);
+		const topPanelDiv = document.getElementsByClassName(TOP_PANEL_CLASSNAME);
 		let height = ht;
+		let topPanelHeight = 0;
 
-		// canvasContainer may not be available in some test situations
-		if (canvasContainer) {
-			const canvasHeight = canvasContainer.getBoundingClientRect().height;
-			const maxHeight = canvasHeight - MARGIN_TOP;
+		// Consider top panel height while calculating maxHeight to disable scroll
+		// in right flyout.
+		if (topPanelDiv.length > 0) {
+			topPanelHeight = topPanelDiv[0].getBoundingClientRect().height;
+		}
+
+		// containingDiv may not be available in some test situations
+		if (containingDiv) {
+			const containingDivHt = containingDiv.getBoundingClientRect().height;
+			const maxHeight = containingDivHt - MARGIN_TOP - topPanelHeight;
 			height = Math.min(Math.max(height, MIN_HEIGHT), maxHeight);
 		}
 		return height;

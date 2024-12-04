@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,11 @@ export default (state = [], action) => {
 	case "SET_CANVAS_INFO": {
 		// In some instances, with an external object model, the same canvas may
 		// be set multiple times. Consequently, we only reset the breadcrumbs if
-		// we're given a completely new canvas or the current breadcrumb does not
-		// reference a pipeline Id in the incoming pipelineFlow, which might happen
-		// if the pipeline has been removed.
+		// we're given a completely new canvas OR the primary pipeline ID has changed
+		// OR the current breadcrumb does not reference a pipeline Id in the incoming
+		// pipelineFlow, which might happen if the pipeline has been removed.
 		if (action.canvasInfoIdChanged ||
+				action.primaryPipelineIdChanged ||
 				!isCurrentBreadcrumbInPipelineFlow(state, action.canvasInfo)) {
 			return [{ pipelineId: action.canvasInfo.primary_pipeline, pipelineFlowId: action.canvasInfo.id }];
 		}

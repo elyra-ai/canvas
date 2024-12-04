@@ -50,7 +50,8 @@
 	text-align: inherit;
 	white-space: nowrap;
 	background: 0 0;
-	border: 0;
+	border:  2px solid transparent;
+	outline: none; /* Suppress Chrome's blue active border */
 	display: flex;
 	align-items: center;
 	position: relative; // Needed to allow sub-menu, if there is one,  to be positioned correctly
@@ -61,12 +62,13 @@
 	}
 
 	&:active,
-	&:focus,
 	&:hover {
 		background: $layer-hover-01;
-		text-decoration: none;
-		border: 0;
-		outline: none; /* Suppress Chrome's blue active border */
+	}
+
+	&:focus {
+		background: $layer-hover-01;
+		border:  2px solid $focus;
 	}
 
 	/* Style for the chevron '>' in menu item that opens a submenu. */

@@ -18,6 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import ToolbarButtonItem from "./toolbar-button-item.jsx";
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 
 import classNames from "classnames";
 import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
@@ -36,6 +37,7 @@ class ToolbarSubMenuItem extends React.Component {
 		this.actionClickHandler = this.actionClickHandler.bind(this);
 		this.onMouseEnter = this.onMouseEnter.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 		this.openSubArea = this.openSubArea.bind(this);
 		this.closeSubArea = this.closeSubArea.bind(this);
 		this.clickOutside = this.clickOutside.bind(this);
@@ -56,6 +58,26 @@ class ToolbarSubMenuItem extends React.Component {
 	onMouseLeave(evt) {
 		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
 			this.closeSubArea();
+		}
+	}
+
+	// Handles keyboard input on a sub-menu item. The Up and Down arrow
+	// key presses are handled in toolbar-sub-menu.jsx.
+	onKeyDown(evt) {
+		if (KeyboardUtils.closeSubArea(evt)) {
+			this.props.closeParentSubArea();
+			evt.stopPropagation(); // Stop propagation in a case we are a cascade menu
+
+		} else if (KeyboardUtils.closeSubAreaToMenu(evt)) {
+			if (this.props.isInCascadeMenu) {
+				this.props.closeParentSubArea();
+			}
+
+		} else if (KeyboardUtils.openSubAreaFromMenu(evt)) {
+			if (!this.props.isInCascadeMenu &&
+					(this.props.actionObj.subMenu || this.props.actionObj.subPanel)) {
+				this.openSubArea();
+			}
 		}
 	}
 

@@ -119,13 +119,6 @@ $panel-border-color: $border-subtle-01;
 	border-bottom: $toolbar-divider-width solid $border-strong-01;
 }
 
-.text-toolbar {
-	.toolbar-div {
-		animation: raise-toolbar 0.3s linear;
-		border: 1px solid $border-strong-01;
-	}
-}
-
 // Below, we have to override the Carbon button's focus highlighting in the
 // context toolbar to get a complete border around the overflow icon. This is
 // necessary because the width allocated to the context toolbar is reduced by
@@ -168,15 +161,17 @@ $panel-border-color: $border-subtle-01;
 	}
 }
 
+// Text toolbar specific attributes.
 .text-toolbar  {
 	.toolbar-div {
 		animation: raise-toolbar 0.3s linear;
+		border: 1px solid $border-strong-01;
 	}
 }
 
-
-// Causes the text toolbar to animate upwards from the top of the comment
-// to its final position
+/* Causes the text toolbar to animate upwards from the top of the comment
+ * to its final position
+ */
 @keyframes raise-toolbar {
 	from {
 		height: 0;
@@ -192,7 +187,6 @@ $panel-border-color: $border-subtle-01;
  * bottom panel, left flyout and right flyout. Left flyout and right flyout
  * can appear under the toolbar or at the side of the toolbar.
  */
-
 .common-canvas-grid-vertical {
 	height: 100%;
 	width: 100%;

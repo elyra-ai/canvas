@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import Action from "../command-stack/action.js";
+import { CANVAS_FOCUS } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CreateCommentAction extends Action {
 	constructor(data, canvasController) {
@@ -34,17 +35,23 @@ export default class CreateCommentAction extends Action {
 	// Standard methods
 	do() {
 		this.apiPipeline.addComment(this.comment);
+		this.focusObject = this.comment;
 	}
 
 	undo() {
 		this.apiPipeline.deleteComment(this.comment.id);
+		this.focusObject = CANVAS_FOCUS;
 	}
 
 	redo() {
-		this.apiPipeline.addComment(this.comment);
+		this.do();
 	}
 
 	getLabel() {
 		return this.labelUtil.getActionLabel(this, "action.createComment");
+	}
+
+	getFocusObject() {
+		return this.focusObject;
 	}
 }

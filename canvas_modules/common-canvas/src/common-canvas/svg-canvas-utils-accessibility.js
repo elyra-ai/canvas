@@ -34,6 +34,7 @@ export default class SVGCanvasUtilsAccessibility {
 
 	initialize() {
 		this.logger.logStartTimer("initialize");
+
 		// Create a tab objects array for accessibility. Tab objects are the
 		// set of objects that tab key will move the focus to on the canvas.
 		// They are either solitary comments OR detached links OR 'starting'
@@ -46,15 +47,15 @@ export default class SVGCanvasUtilsAccessibility {
 		// Keeps track of which tab object is currently active during tabbing.
 		this.currentTabObjectIndex = -1;
 
-		// Keeps track of whether we have tabbed in or out of the canvas. It will
-		// be false when we have tabbed out.
-		this.isTabbedIn = false;
-
 		// Reset the currentTabObjectIndex variable based on the current selection
 		// (if there is one).
 		this.resetTabGroupIndexBasedOnSelection();
 
 		this.logger.logEndTimer("initialize");
+	}
+
+	resetTabObjectIndex() {
+		this.currentTabObjectIndex = -1;
 	}
 
 	// Returns an array of tab groups for the active pipeline. Each element of
@@ -73,6 +74,9 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getEntryComments() {
+		if (this.ap.canvasInfo.hideComments) {
+			return [];
+		}
 		let solitaryComments = this.ap.pipeline.comments.filter((c) => !this.commentHasLinks(c));
 		solitaryComments = solitaryComments.map((sc) => ({ type: "comment", obj: sc }));
 		return solitaryComments;
@@ -328,7 +332,6 @@ export default class SVGCanvasUtilsAccessibility {
 	// passed in is a part, to be the index position of that object.
 	setTabGroupIndexForObj(obj) {
 		this.currentTabObjectIndex = this.tabObjects.findIndex((tg) => tg.obj.grp === obj.grp);
-		this.isTabbedIn = true;
 	}
 
 	nodeHasInputLinks(node) {
@@ -343,41 +346,29 @@ export default class SVGCanvasUtilsAccessibility {
 		return this.getLinksFromComment(comment).length > 0;
 	}
 
-	resetTabbedStatus() {
-		this.isTabbedIn = false;
-	}
-
 	getNextTabGroupStartObject() {
-		if (!this.isTabbedIn) {
-			this.currentTabObjectIndex = -1;
-
-		} else if (this.currentTabObjectIndex === this.tabObjects.length) {
+		if (this.currentTabObjectIndex === this.tabObjects.length) {
 			this.currentTabObjectIndex = -1;
 		}
 
 		if (this.currentTabObjectIndex < this.tabObjects.length) {
 			this.currentTabObjectIndex++;
 			if (this.currentTabObjectIndex < this.tabObjects.length) {
-				this.isTabbedIn = true;
-				return this.tabObjects[this.currentTabObjectIndex];
+				return this.tabObjects[this.currentTabObjectIndex].obj;
 			}
 		}
 		return null;
 	}
 
 	getPreviousTabGroupStartObject() {
-		if (!this.isTabbedIn) {
-			this.currentTabObjectIndex = this.tabObjects.length;
-
-		} else if (this.currentTabObjectIndex === -1) {
+		if (this.currentTabObjectIndex === -1) {
 			this.currentTabObjectIndex = this.tabObjects.length;
 		}
 
 		if (this.currentTabObjectIndex > -1) {
 			this.currentTabObjectIndex--;
 			if (this.currentTabObjectIndex > -1) {
-				this.isTabbedIn = true;
-				return this.tabObjects[this.currentTabObjectIndex];
+				return this.tabObjects[this.currentTabObjectIndex].obj;
 			}
 		}
 		return null;
@@ -485,12 +476,6 @@ export default class SVGCanvasUtilsAccessibility {
 		const dataLinksTo = this.getLinksToNode(node, NODE_LINK);
 		dataLinksTo.forEach((link) => { linkInfos.push({ link: link, type: "node", obj: this.ap.getNode(link.trgNodeId) }); });
 
-		const assocLinksTo = this.getLinksToNode(node, ASSOCIATION_LINK);
-		assocLinksTo.forEach((link) => { linkInfos.push({ link: link, type: "node", obj: this.ap.getNode(node.id === link.srcNodeId ? link.trgNodeId : link.srcNodeId) }); });
-
-		const commentLinksTo = this.getLinksToNode(node, COMMENT_LINK);
-		commentLinksTo.forEach((link) => { linkInfos.push({ link: link, type: "comment", obj: this.ap.getComment(link.srcNodeId) }); });
-
 		return linkInfos;
 	}
 
@@ -511,7 +496,6 @@ export default class SVGCanvasUtilsAccessibility {
 		}
 		return link.trgNode;
 	}
-
 
 	// Returns an array of links that go to the node passed in, of the type
 	// specified.

@@ -46,6 +46,10 @@ export default class ColorSelectedObjectsAction extends Action {
 		return this.actionLabel;
 	}
 
+	getFocusObject() {
+		return this.data.selectedObjects[0];
+	}
+
 	createActionLabel() {
 		return this.labelUtil.getActionLabel(this, "action.colorComments", {
 			comments_count: this.data.selectedObjectIds.length

@@ -166,13 +166,20 @@ export const USE_DEFAULT_EXT_ICON = "useDefaultExtIcon";
 export const WYSIWYG = "WYSIWYG";
 export const MARKDOWN = "markdown";
 
+// Focus instruction.
+export const CANVAS_FOCUS = "CanvasFocus";
+
 // Directions
 export const NORTH = "n";
 export const SOUTH = "s";
 export const EAST = "e";
 export const WEST = "w";
 
+// Cuase or actions
+export const CAUSE_MOUSE = "M";
+export const CAUSE_KEYBOARD = "K";
 
+// Context Menu button value
 export const CONTEXT_MENU_BUTTON = 2;
 
 export const CANVAS_CARBON_ICONS = {

@@ -23,6 +23,7 @@
 /***************************************************************************/
 
 import Action from "../command-stack/action.js";
+import { CANVAS_FOCUS } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CreateAutoNodeAction extends Action {
 	constructor(data, canvasController) {
@@ -31,12 +32,14 @@ export default class CreateAutoNodeAction extends Action {
 		this.labelUtil = canvasController.labelUtil;
 		this.objectModel = canvasController.objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
+		// If addLink is missing we default it to be true.
+		this.data.addLink = typeof this.data.addLink === "undefined" ? true : this.data.addLink;
 
 		const autoLinkOnlyFromSelNodes = canvasController.getCanvasConfig().enableAutoLinkOnlyFromSelNodes;
 		this.srcNode = this.apiPipeline.getAutoSourceNode(autoLinkOnlyFromSelNodes);
 		this.newNode = this.apiPipeline.createAutoNode(data, this.srcNode);
 		this.newLink = null;
-		if (this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {
+		if (this.data.addLink && this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {
 			this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode);
 		}
 	}
@@ -60,10 +63,12 @@ export default class CreateAutoNodeAction extends Action {
 		}
 
 		this.objectModel.setSelections([this.newNode.id], this.data.pipelineId);
+		this.focusObject = this.newNode;
 	}
 
 	undo() {
 		this.apiPipeline.deleteNodes([this.newNode]);
+		this.focusObject = CANVAS_FOCUS;
 	}
 
 	redo() {
@@ -72,5 +77,9 @@ export default class CreateAutoNodeAction extends Action {
 
 	getLabel() {
 		return this.labelUtil.getActionLabel(this, "action.createNode", { node_label: this.newNode.label });
+	}
+
+	getFocusObject() {
+		return this.focusObject;
 	}
 }

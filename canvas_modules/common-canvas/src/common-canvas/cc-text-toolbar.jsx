@@ -22,6 +22,7 @@ import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
+import KeyboardUtils from "./keyboard-utils.js";
 import Logger from "../logging/canvas-logger.js";
 import ColorPicker from "../color-picker";
 import {
@@ -39,7 +40,17 @@ class CommonCanvasTextToolbar extends React.Component {
 		super(props);
 
 		this.getLabel = this.getLabel.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
+
 		this.logger = new Logger("CC-Text-Toolbar");
+	}
+
+	onKeyDown(evt) {
+		if (KeyboardUtils.returnToTextEditing(evt)) {
+			this.props.canvasController.focusOnTextEntryElement(evt);
+			evt.stopPropagation();
+			evt.preventDefault();
+		}
 	}
 
 	getLabel(labelId, substituteObj) {
@@ -267,7 +278,7 @@ class CommonCanvasTextToolbar extends React.Component {
 		return null;
 	}
 
-	getTextToolbar() {
+	getTextToolbarConfig() {
 		if (this.props.contentType === MARKDOWN) {
 			return this.getMarkdownToolbar();
 
@@ -286,10 +297,10 @@ class CommonCanvasTextToolbar extends React.Component {
 		if (this.props.isOpen) {
 			textToolbar = (
 				<div className={"text-toolbar floating-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }}
-					onBlur={this.props.blurHandler}
+					onBlur={this.props.blurHandler} onKeyDown={this.onKeyDown}
 				>
 					<Toolbar
-						config={this.getTextToolbar()}
+						config={this.getTextToolbarConfig()}
 						instanceId={this.props.canvasController.getInstanceId()}
 						containingDivId={this.props.containingDivId}
 						toolbarActionHandler={this.props.actionHandler}
