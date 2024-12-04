@@ -20,13 +20,16 @@ import { connect } from "react-redux";
 import Isvg from "react-inlinesvg";
 import { get } from "lodash";
 import classNames from "classnames";
-import { Help, Edit, Close } from "@carbon/react/icons";
+import { Edit, Close } from "@carbon/react/icons";
 import { TextInput, Button, Layer } from "@carbon/react";
 
 import { setTitle } from "./../../actions";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
 import ActionFactory from "../../actions/action-factory.js";
+import Tooltip from "../../../tooltip/tooltip.jsx";
+import Icon from "../../../icons/icon.jsx";
+import { CARBON_ICONS } from "./../../constants/constants";
 
 
 class TitleEditor extends Component {
@@ -66,6 +69,7 @@ class TitleEditor extends Component {
 				this.props.help.data,
 				this.props.controller.getAppData());
 		}
+		return { url: "https://www.google.com/", label: "Help" };
 	}
 	textInputOnFocus() {
 		this.setState({ focused: true });
@@ -136,19 +140,29 @@ class TitleEditor extends Component {
 				iconDescription={propertiesTitleEditButtonLabel}
 				hasIconOnly
 			/>);
-
+		const obj = {
+			"id": "link_for_number",
+			"data": {
+				"something": "option data"
+			},
+			"propertyId": {
+				"name": "number"
+			}
+		};
 		const helpButton = this.props.help
-			? (<Button
-				kind="ghost"
-				className="properties-title-editor-btn help"
-				data-id="help"
-				onClick={this.helpClickHandler}
-				tooltipPosition="bottom"
-				renderIcon={Help}
-				size="sm"
-				iconDescription={helpButtonLabel}
-				hasIconOnly
-			/>)
+			? (<span className="properties-heading-icon">
+				<Tooltip
+					className="properties-title-editor-btn help"
+					data-id="help"
+					tip={helpButtonLabel}
+					link={obj}
+					tooltipLinkHandler={this.helpClickHandler}
+					direction="bottom"
+					showToolTipOnClick
+				>
+					<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+				</Tooltip>
+			</span>)
 			: null;
 
 		const closeButton = this.props.closeHandler
