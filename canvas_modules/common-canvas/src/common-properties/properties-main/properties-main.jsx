@@ -38,7 +38,7 @@ import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
 
 import { injectIntl } from "react-intl";
-import styles from "./properties-main-widths.module.scss";
+import styles from "./properties-main-widths.scss";
 
 const FLYOUT_WIDTH_SMALL = parseInt(styles.flyoutWidthSmall, 10);
 const FLYOUT_WIDTH_MEDIUM = parseInt(styles.flyoutWidthMedium, 10);
@@ -72,7 +72,6 @@ class PropertiesMain extends React.Component {
 		});
 		this.setForm(props.propertiesInfo, false);
 		this.previousErrorMessages = {};
-		this.flyoutWidths = [FLYOUT_WIDTH_SMALL, FLYOUT_WIDTH_MEDIUM, FLYOUT_WIDTH_LARGE, FLYOUT_WIDTH_MAX];
 		// this has to be after setForm because setForm clears all error messages.
 		// Validate all validationDefinitions but show warning messages for "colDoesExists" condition only
 		this.propertiesController.validatePropertiesValues(false);
@@ -89,7 +88,7 @@ class PropertiesMain extends React.Component {
 		this.state = {
 			showPropertiesButtons: true,
 			editorSize: editorSize,
-			containerWidth: FLYOUT_WIDTH_SMALL
+			showResizeBtn: 1
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
@@ -431,6 +430,8 @@ class PropertiesMain extends React.Component {
 	}
 
 	resize() {
+		// Increment resize btn counter to show btn on click
+		this.setState((prevState) => ({ showResizeBtn: prevState.showResizeBtn + 1 }));
 		if (this.propertiesController.getForm().editorSize === Size.SMALL) {
 			if (this.state.editorSize === Size.SMALL) {
 				this.updateEditorSize(Size.MEDIUM);
@@ -452,8 +453,9 @@ class PropertiesMain extends React.Component {
 		}
 	}
 
-	detectResize(width) {
-		this.setState({ containerWidth: width });
+	detectResize() {
+		// Increment resize btn counter to hide btn on drag
+		this.setState((prevState) => ({ showResizeBtn: prevState.showResizeBtn - 1 }));
 	}
 
 	render() {
@@ -502,11 +504,8 @@ class PropertiesMain extends React.Component {
 				/>);
 				// Show Resize Button only under below conditions
 				// 1. Flyout is not dragged to resize its width.
-				// 2. If Flyout is dragged back to its smallest width.
-				// If pixel_width is set include that to test if button should be shown.
-				const widthArr = [...this.flyoutWidths, this._getOverrideSize()];
-				const allowedWidth = widthArr.includes(this.state.containerWidth);
-				if (this._isResizeButtonRequired() && allowedWidth) {
+				// 2. If pixel_width is set include that to test if button should be shown.
+				if (this._isResizeButtonRequired() && this.state.showResizeBtn > 0) {
 					const resizeIcon = this._getResizeButton();
 					// Resize button label can be "Expand" or "Contract"
 					const resizeBtnLabel = (resizeIcon.props && resizeIcon.props.className === "properties-resize-caret-left")
@@ -610,6 +609,7 @@ class PropertiesMain extends React.Component {
 						refreshRate={500}
 						onResize={(width) => this.detectResize(width)}
 						targetRef={this.commonProperties}
+						skipOnMount
 					>
 						<div className="properties-right-flyout-container">
 							<aside
