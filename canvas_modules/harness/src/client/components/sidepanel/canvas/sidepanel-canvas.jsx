@@ -1772,7 +1772,9 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableShowBottomPanel}
 					{divider}
-					<div className="harness-side-panel-header">Context Menu</div>
+					<div className="harness-side-panel-header">Context Menu/Toolbar</div>
+					{divider}
+					{enableContextToolbar}
 					{divider}
 					{enableSaveToPalette}
 					{divider}
@@ -1803,8 +1805,6 @@ export default class SidePanelForms extends React.Component {
 					{enableKeyboardNavigation}
 					{divider}
 					{enableImageDisplay}
-					{divider}
-					{enableContextToolbar}
 					{divider}
 					{enableEditingActions}
 					{divider}

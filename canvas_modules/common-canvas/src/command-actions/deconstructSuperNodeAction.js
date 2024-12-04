@@ -16,7 +16,7 @@
 
 import Action from "../command-stack/action.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
-import { NODE_LINK }
+import { CANVAS_FOCUS, NODE_LINK }
 	from "../common-canvas/constants/canvas-constants.js";
 
 export default class DeconstructSuperNodeAction extends Action {
@@ -276,10 +276,12 @@ export default class DeconstructSuperNodeAction extends Action {
 	// Standard methods
 	do() {
 		this.apiPipeline.deconstructSupernode(this.info);
+		this.focusObject = this.info?.nodesToAdd?.length > 0 ? this.info.nodesToAdd[0] : CANVAS_FOCUS;
 	}
 
 	undo() {
 		this.apiPipeline.reconstructSupernode(this.info);
+		this.focusObject = this.supernode;
 	}
 
 	redo() {
@@ -288,5 +290,9 @@ export default class DeconstructSuperNodeAction extends Action {
 
 	getLabel() {
 		return this.labelUtil.getActionLabel(this, "action.deconstructSuperNode", { node_label: this.supernode.label });
+	}
+
+	getFocusObject() {
+		return this.focusObject;
 	}
 }

@@ -22,12 +22,9 @@ import Icon from "./../icons/icon.jsx";
 import { Button } from "@carbon/react";
 import { Close } from "@carbon/react/icons";
 import Logger from "../logging/canvas-logger.js";
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import { DEFAULT_NOTIFICATION_HEADER } from "./../common-canvas/constants/canvas-constants.js";
 import defaultMessages from "../../locales/notification-panel/locales/en.json";
-
-const TAB_KEY = 9;
-const RETURN_KEY = 13;
-const SPACE_KEY = 32;
 
 class NotificationPanel extends React.Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -138,7 +135,7 @@ class NotificationPanel extends React.Component {
 	}
 
 	keyDownOnCloseButton(message, evt) {
-		if (evt.keyCode === SPACE_KEY || evt.keyCode === RETURN_KEY) {
+		if (KeyboardUtils.activateButton(evt)) {
 			this.deleteNotification(message.id);
 		}
 	}
@@ -157,14 +154,14 @@ class NotificationPanel extends React.Component {
 	}
 
 	keyDownOnPanel(evt) {
-		if (evt.keyCode === TAB_KEY && !evt.shiftKey) {
+		if (KeyboardUtils.nextSection(evt)) {
 			const lastElement = this.allRefs[this.allRefs.length - 1];
 			if (evt.target === lastElement) {
 				evt.stopPropagation();
 				evt.preventDefault();
 				this.allRefs[0].focus();
 			}
-		} else if (evt.keyCode === TAB_KEY && evt.shiftKey) {
+		} else if (KeyboardUtils.previousSection(evt)) {
 			const lastElement = this.allRefs[this.allRefs.length - 1];
 			if (evt.target === this.allRefs[0]) {
 				evt.stopPropagation();

@@ -22,7 +22,8 @@ export default class SetNodeLabelAction extends Action {
 		this.labelUtil = canvasController.labelUtil;
 		this.objectModel = canvasController.objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-		this.previousLabel = this.apiPipeline.getNode(data.nodeId).label;
+		this.node = this.apiPipeline.getNode(data.nodeId);
+		this.previousLabel = this.node.label;
 	}
 
 	// Standard methods
@@ -40,5 +41,9 @@ export default class SetNodeLabelAction extends Action {
 
 	getLabel() {
 		return this.labelUtil.getActionLabel(this, "action.setNodeLabel");
+	}
+
+	getFocusObject() {
+		return this.node;
 	}
 }

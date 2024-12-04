@@ -576,6 +576,7 @@ export default class CreateSuperNodeAction extends Action {
 			const pipelines = [this.subPipeline].concat(this.descPipelines);
 			this.objectModel.setParentUrl(pipelines, this.data.externalUrl);
 		}
+		this.focusObject = this.supernode;
 	}
 
 	undo() {
@@ -603,6 +604,8 @@ export default class CreateSuperNodeAction extends Action {
 		this.apiPipeline.addLinks(this.subflowInputLinks);
 		this.apiPipeline.addLinks(this.subflowOutputLinks);
 		this.apiPipeline.addLinks(this.linksToDelete);
+
+		this.focusObject = this.data.selectedObjects[0];
 	}
 
 	redo() {
@@ -612,4 +615,9 @@ export default class CreateSuperNodeAction extends Action {
 	getLabel() {
 		return this.labelUtil.getActionLabel(this, "action.createSuperNode", { node_label: this.supernode.label });
 	}
+
+	getFocusObject() {
+		return this.focusObject;
+	}
+
 }

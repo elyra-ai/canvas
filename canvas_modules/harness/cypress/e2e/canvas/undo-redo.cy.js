@@ -284,6 +284,10 @@ describe("Test select all canvas objects undo/redo operations", function() {
 		cy.verifyNumberOfPortDataLinks(5);
 		cy.verifyNumberOfCommentLinks(3);
 
+		// Deselect all objects
+		cy.rightClickToDisplayContextMenu(300, 10);
+		cy.clickOptionFromContextMenu("Deselect all");
+
 		// Select all nodes and comments using context menu and delete a node
 		cy.rightClickToDisplayContextMenu(300, 10);
 		cy.clickOptionFromContextMenu("Select all");

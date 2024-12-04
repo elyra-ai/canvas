@@ -101,10 +101,11 @@ $link-highlight-color: $support-info;
 	cursor: default;
 	height: 100%;
 	background-color: $canvas-background-color;
-	outline-color: transparent;
+	outline: none;
+	border: solid 1px transparent;
 
 	&:focus.keyboard-navigation {
-		outline-color: $focus;
+		border-color: $focus; // Outline doesn't work very well on this div (not sure why) so use border instead.
 	}
 }
 

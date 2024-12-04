@@ -130,8 +130,8 @@ export default class SVGCanvasPipeline {
 		return this.getAccessibility().getPreviousTabGroupStartObject();
 	}
 
-	resetTabbedStatus() {
-		this.getAccessibility().resetTabbedStatus();
+	resetTabObjectIndex() {
+		this.getAccessibility().resetTabObjectIndex();
 	}
 
 	setTabGroupIndexForObj(d) {
@@ -341,12 +341,27 @@ export default class SVGCanvasPipeline {
 		return objs;
 	}
 
-	// Returns an array of any currently selected nodes.
+	// Returns an array of any currently selected nodes in the same order
+	// the IDs appear in the selected objects IDs array.
 	getSelectedNodes() {
 		var objs = [];
-		this.nodes.forEach((node) => {
-			if (this.getSelectedObjectIds().includes(node.id)) {
+		this.getSelectedObjectIds().forEach((id) => {
+			const node = this.getNode(id);
+			if (node) {
 				objs.push(node);
+			}
+		});
+		return objs;
+	}
+
+	// Returns an array of any currently selected comments in the same order
+	// the IDs appear in the selected objects IDs array.
+	getSelectedComments() {
+		var objs = [];
+		this.getSelectedObjectIds().forEach((id) => {
+			const com = this.getComment(id);
+			if (com) {
+				objs.push(com);
 			}
 		});
 		return objs;

@@ -24,6 +24,7 @@
 
 import Action from "../command-stack/action.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
+import { CANVAS_FOCUS } from "../common-canvas/constants/canvas-constants.js";
 
 export default class PasteAction extends Action {
 	constructor(data, canvasController) {
@@ -35,6 +36,7 @@ export default class PasteAction extends Action {
 		this.areDetachableLinksInUse = canvasController.areDetachableLinksInUse();
 		this.isSnapToGridInUse = canvasController.isSnapToGridInUse();
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
+		this.oldFocusObject = canvasController.getFocusObject();
 
 		// Make sure objects to be pasted are in an appropriate position for them
 		// to appear within the viewport.
@@ -175,6 +177,20 @@ export default class PasteAction extends Action {
 			pipelinesToAdd: this.pipelines,
 			selections: this.selectionIds
 		});
+		this.focusObject = this.getDoFocusObject();
+	}
+
+	getDoFocusObject() {
+		if (this.clones?.clonedNodes?.length > 0) {
+			return this.clones.clonedNodes[0];
+		}
+		if (this.clones?.clonedComments?.length > 0) {
+			return this.clones.clonedComments[0];
+		}
+		if (this.clones?.clonedLinks?.length > 0) {
+			return this.clones.clonedLinks[0];
+		}
+		return null;
 	}
 
 	undo() {
@@ -195,6 +211,7 @@ export default class PasteAction extends Action {
 			pipelinesToDelete: pipelines,
 			extPipelineFlowsToDelete: oldExtPipelineFlows
 		});
+		this.focusObject = this.oldFocusObject || CANVAS_FOCUS;
 	}
 
 	redo() {
@@ -203,5 +220,9 @@ export default class PasteAction extends Action {
 
 	getLabel() {
 		return this.labelUtil.getActionLabel(this, "action.pasteObjects");
+	}
+
+	getFocusObject() {
+		return this.focusObject;
 	}
 }

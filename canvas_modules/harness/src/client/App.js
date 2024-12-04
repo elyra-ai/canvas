@@ -89,6 +89,10 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
+// Uncomment these and associated code to automatically display a flow and palette.
+// import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
+// import modelerPalette from "../../../harness/test_resources/palettes/modelerPalette.json";
+
 import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
 	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification, Save } from "@carbon/react/icons";
@@ -452,6 +456,8 @@ class App extends React.Component {
 
 		try {
 			this.canvasController = new CanvasController();
+			// this.canvasController.setPipelineFlow(allTypesCanvas);
+			// this.canvasController.setPipelineFlowPalette(modelerPalette);
 			this.canvasController2 = new CanvasController();
 			// this.canvasController.setLoggingState(true);
 		} catch (err) {
@@ -2081,6 +2087,7 @@ class App extends React.Component {
 
 	getCanvasConfig() {
 		const canvasConfig = {
+			enableFocusOnMount: true,
 			enableInteractionType: this.state.selectedInteractionType,
 			enableSnapToGridType: this.state.selectedSnapToGridType,
 			enableSnapToGridX: this.state.enteredSnapToGridX,

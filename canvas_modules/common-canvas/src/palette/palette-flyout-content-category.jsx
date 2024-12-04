@@ -16,11 +16,12 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { InlineLoading } from "@carbon/react";
+import { AccordionItem, InlineLoading } from "@carbon/react";
+import { get } from "lodash";
 import SVG from "react-inlinesvg";
 import { TIP_TYPE_PALETTE_CATEGORY } from "../common-canvas/constants/canvas-constants.js";
-import { get } from "lodash";
-import { AccordionItem } from "@carbon/react";
+import CanvasUtils from "../common-canvas/common-canvas-utils.js";
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import PaletteContentList from "./palette-content-list.jsx";
 
 
@@ -192,8 +193,10 @@ class PaletteFlyoutContentCategory extends React.Component {
 	getContent() {
 		if (this.props.category.is_open) {
 			const nodeTypeInfos = this.props.category.node_types.map((nt) => ({ nodeType: nt, category: this.props.category }));
+			this.pclRef = React.createRef();
 			return (
 				<PaletteContentList
+					ref={this.pclRef}
 					key={this.props.category.id + "-nodes"}
 					category={this.props.category}
 					nodeTypeInfos={nodeTypeInfos}
@@ -216,11 +219,14 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 	categoryKeyPressed(evt) {
 		if (evt.target.className === "cds--accordion__heading") {
-			if (evt.code === "Enter" || evt.code === "Space") {
-				evt.preventDefault();
-				evt.stopPropagation();
-
+			if (KeyboardUtils.openCategory(evt)) {
 				this.setPaletteCategory(this.props.category.is_open);
+				CanvasUtils.stopPropagationAndPreventDefault(evt);
+
+			} else if (this.props.category.is_open &&
+						KeyboardUtils.fromCategoryToFirstNode(evt)) {
+				this.pclRef.current.setFirstNode();
+				CanvasUtils.stopPropagationAndPreventDefault(evt);
 			}
 		}
 	}

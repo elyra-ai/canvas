@@ -24,6 +24,7 @@
 
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Action from "../command-stack/action.js";
+import { CANVAS_FOCUS } from "../common-canvas/constants/canvas-constants.js";
 
 export default class DeleteObjectsAction extends Action {
 	constructor(data, canvasController) {
@@ -158,6 +159,7 @@ export default class DeleteObjectsAction extends Action {
 			nodesToDelete: this.nodesToDelete,
 			commentsToDelete: this.commentsToDelete
 		});
+		this.focusObject = CANVAS_FOCUS;
 	}
 
 	undo() {
@@ -170,6 +172,8 @@ export default class DeleteObjectsAction extends Action {
 			nodesToAdd: this.nodesToDelete,
 			commentsToAdd: this.commentsToDelete
 		});
+
+		this.focusObject = this.data.selectedObjects[0];
 	}
 
 	redo() {
@@ -178,6 +182,10 @@ export default class DeleteObjectsAction extends Action {
 
 	getLabel() {
 		return this.actionLabel;
+	}
+
+	getFocusObject() {
+		return this.focusObject;
 	}
 
 	createActionLabel() {

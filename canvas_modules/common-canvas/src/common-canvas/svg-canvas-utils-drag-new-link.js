@@ -373,20 +373,23 @@ export default class SVGCanvasUtilsDragNewLink {
 		}
 		var trgNode = this.ren.getNodeAtMousePos(d3Event);
 		if (trgNode !== null) {
-			this.completeNewLinkOnNode(d3Event, trgNode, drawingNewLinkData);
+			this.createNewLinkFromDragData(d3Event, trgNode, drawingNewLinkData);
+
 		} else {
 			if (this.ren.config.enableLinkSelection === LINK_SELECTION_DETACHABLE &&
 					drawingNewLinkData.action === NODE_LINK &&
 					!this.ren.config.enableAssocLinkCreation) {
 				this.completeNewDetachedLink(d3Event, drawingNewLinkData);
+
 			} else {
 				this.stopDrawingNewLink(drawingNewLinkData);
 			}
 		}
 	}
 
-	// Handles the completion of a new link when the end is dropped on a node.
-	completeNewLinkOnNode(d3Event, trgNode, drawingNewLinkData) {
+	// Handles the creation of a link when the end of a new link
+	// being drawn from a source node is dropped on a target node.
+	createNewLinkFromDragData(d3Event, trgNode, drawingNewLinkData) {
 		// If we completed a connection remove the new line objects.
 		this.removeNewLink();
 
@@ -395,68 +398,110 @@ export default class SVGCanvasUtilsDragNewLink {
 			this.ren.setLinkOverNodeCancel();
 		}
 
+		// Create the link.
+		const type = drawingNewLinkData.action;
+		const srcObjId = drawingNewLinkData.srcObjId;
+
 		if (trgNode !== null) {
-			const type = drawingNewLinkData.action;
 			if (type === NODE_LINK) {
-				const srcNode = this.ren.activePipeline.getNode(drawingNewLinkData.srcObjId);
+				const srcNode = this.ren.activePipeline.getNode(srcObjId);
 				const srcPortId = drawingNewLinkData.srcPortId;
 				const trgPortId = this.ren.getInputNodePortId(d3Event, trgNode);
-
-				if (CanvasUtils.isDataConnectionAllowed(srcPortId, trgPortId, srcNode, trgNode,
-					this.ren.activePipeline.links, this.ren.config.enableSelfRefLinks)) {
-					this.ren.canvasController.editActionHandler({
-						editType: "linkNodes",
-						editSource: "canvas",
-						nodes: [{ "id": drawingNewLinkData.srcObjId, "portId": drawingNewLinkData.srcPortId }],
-						targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
-						type: type,
-						linkType: "data", // Added for historical purposes - for WML Canvas support
-						pipelineId: this.ren.activePipeline.id });
-
-				} else if (this.ren.config.enableLinkReplaceOnNewConnection &&
-							CanvasUtils.isDataLinkReplacementAllowed(srcPortId, trgPortId, srcNode, trgNode,
-								this.ren.activePipeline.links, this.ren.config.enableSelfRefLinks)) {
-					const linksToTrgPort = CanvasUtils.getDataLinksConnectedTo(trgPortId, trgNode, this.ren.activePipeline.links);
-					// We only replace a link to a maxed out cardinality port if there
-					// is only one link. i.e. the input port cardinality is 0:1
-					if (linksToTrgPort.length === 1) {
-						this.ren.canvasController.editActionHandler({
-							editType: "linkNodesAndReplace",
-							editSource: "canvas",
-							nodes: [{ "id": drawingNewLinkData.srcObjId, "portId": drawingNewLinkData.srcPortId }],
-							targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
-							type: type,
-							pipelineId: this.pipelineId,
-							replaceLink: linksToTrgPort[0]
-						});
-					}
-				}
+				this.createNewNodeLink(srcNode, srcPortId, trgNode, trgPortId);
 
 			} else if (type === ASSOCIATION_LINK) {
-				const srcNode = this.ren.activePipeline.getNode(drawingNewLinkData.srcObjId);
+				const srcObj = this.ren.activePipeline.getNode(srcObjId);
+				this.createNewAssocLink(srcObj, trgNode);
 
-				if (CanvasUtils.isAssocConnectionAllowed(srcNode, trgNode, this.ren.activePipeline.links)) {
-					this.ren.canvasController.editActionHandler({
-						editType: "linkNodes",
-						editSource: "canvas",
-						nodes: [{ "id": drawingNewLinkData.srcObjId }],
-						targetNodes: [{ "id": trgNode.id }],
-						type: type,
-						pipelineId: this.ren.activePipeline.id });
-				}
+			} else if (type === COMMENT_LINK) {
+				const srcObj = this.ren.activePipeline.getComment(srcObjId);
+				this.createNewCommentLink(srcObj, trgNode);
+			}
+		}
+	}
 
-			} else {
-				if (CanvasUtils.isCommentLinkConnectionAllowed(drawingNewLinkData.srcObjId, trgNode.id, this.ren.activePipeline.links)) {
-					this.ren.canvasController.editActionHandler({
-						editType: "linkComment",
-						editSource: "canvas",
-						nodes: [drawingNewLinkData.srcObjId],
-						targetNodes: [trgNode.id],
-						type: COMMENT_LINK,
-						linkType: "comment", // Added for historical purposes - for WML Canvas support
-						pipelineId: this.ren.activePipeline.id });
+	// Creates a link from the currently selected objects. This is called when
+	// the user presses a keyboard shortcut to create the link. For the link to be
+	// created, there must be exactly two selections and the first selection must
+	// be either a comment or a node and the second selection must be a node.
+	createNewLinkFromSelections() {
+		const selNodes = this.ren.activePipeline.getSelectedNodes();
+		const selComments = this.ren.activePipeline.getSelectedComments();
+
+		if (selNodes.length + selComments.length === 2) {
+			if (selNodes.length === 1 && selComments.length === 1) {
+				this.createNewCommentLink(selComments[0], selNodes[0]);
+
+			} else if (selNodes.length === 2) {
+				if (this.ren.config.enableAssocLinkCreation) {
+					this.createNewAssocLink(selNodes[0], selNodes[1]);
+
+				} else {
+					const srcPortId = CanvasUtils.getDefaultOutputPortId(selNodes[0]);
+					const trgPortId = CanvasUtils.getDefaultInputPortId(selNodes[1]);
+					this.createNewNodeLink(selNodes[0], srcPortId, selNodes[1], trgPortId);
+					// This selects just the target object which allows the user to
+					// more easily create a subsequent link to the next node.
+					this.ren.canvasController.setSelections([selNodes[1].id]);
 				}
 			}
+		}
+	}
+
+	createNewNodeLink(srcNode, srcPortId, trgNode, trgPortId) {
+		if (CanvasUtils.isDataConnectionAllowed(srcPortId, trgPortId, srcNode, trgNode,
+			this.ren.activePipeline.links, this.ren.config.enableSelfRefLinks)) {
+			this.ren.canvasController.editActionHandler({
+				editType: "linkNodes",
+				editSource: "canvas",
+				nodes: [{ "id": srcNode.id, "portId": srcPortId }],
+				targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
+				type: NODE_LINK,
+				linkType: "data", // Added for historical purposes - for WML Canvas support
+				pipelineId: this.ren.activePipeline.id });
+
+		} else if (this.ren.config.enableLinkReplaceOnNewConnection &&
+					CanvasUtils.isDataLinkReplacementAllowed(srcPortId, trgPortId, srcNode, trgNode,
+						this.ren.activePipeline.links, this.ren.config.enableSelfRefLinks)) {
+			const linksToTrgPort = CanvasUtils.getDataLinksConnectedTo(trgPortId, trgNode, this.ren.activePipeline.links);
+			// We only replace a link to a maxed out cardinality port if there
+			// is only one link. i.e. the input port cardinality is 0:1
+			if (linksToTrgPort.length === 1) {
+				this.ren.canvasController.editActionHandler({
+					editType: "linkNodesAndReplace",
+					editSource: "canvas",
+					nodes: [{ "id": srcNode.id, "portId": srcPortId }],
+					targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
+					type: NODE_LINK,
+					pipelineId: this.pipelineId,
+					replaceLink: linksToTrgPort[0]
+				});
+			}
+		}
+	}
+
+	createNewAssocLink(srcNode, trgNode) {
+		if (CanvasUtils.isAssocConnectionAllowed(srcNode, trgNode, this.ren.activePipeline.links)) {
+			this.ren.canvasController.editActionHandler({
+				editType: "linkNodes",
+				editSource: "canvas",
+				nodes: [{ "id": srcNode.id }],
+				targetNodes: [{ "id": trgNode.id }],
+				type: ASSOCIATION_LINK,
+				pipelineId: this.ren.activePipeline.id });
+		}
+	}
+
+	createNewCommentLink(srcObj, trgNode) {
+		if (CanvasUtils.isCommentLinkConnectionAllowed(srcObj.id, trgNode.id, this.ren.activePipeline.links)) {
+			this.ren.canvasController.editActionHandler({
+				editType: "linkComment",
+				editSource: "canvas",
+				nodes: [srcObj.id],
+				targetNodes: [trgNode.id],
+				type: COMMENT_LINK,
+				linkType: "comment", // Added for historical purposes - for WML Canvas support
+				pipelineId: this.ren.activePipeline.id });
 		}
 	}
 

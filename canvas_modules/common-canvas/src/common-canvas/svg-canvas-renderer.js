@@ -42,7 +42,8 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	NORTH, SOUTH, EAST, WEST,
-	WYSIWYG }
+	WYSIWYG, CAUSE_KEYBOARD, CAUSE_MOUSE,
+	CANVAS_FOCUS }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
@@ -125,10 +126,6 @@ export default class SVGCanvasRenderer {
 		// When dragging a node over detached links there may be more than one
 		// entry in this array.
 		this.dragOverDetachedLinks = [];
-
-		// An object containing the x and y offset of the position of the mouse
-		// pointer from the top left corner of the node that is being dragged.
-		this.dragPointerOffsetInNode = null;
 
 		// The node over which the 'guide' object for a new link or a link handle
 		// is being dragged. Used when enableHighlightNodeOnNewLinkDrag config
@@ -311,6 +308,12 @@ export default class SVGCanvasRenderer {
 		// this pipeline are rendered they will pass on the new canvasinfo to their
 		// associated renderer.
 		this.displayCanvas();
+
+		// Restore the focus back to whatever object is currently in focus if
+		// keyboard navigation is enabled.
+		if (this.config.enableKeyboardNavigation) {
+			this.restoreFocus();
+		}
 
 		this.logger.logEndTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
 	}
@@ -758,6 +761,14 @@ export default class SVGCanvasRenderer {
 	convertPageCoordsToCanvasCoords(x, y) {
 		const svgRect = this.canvasSVG.node().getBoundingClientRect();
 		return this.zoomUtils.transformPos({ x: x - Math.round(svgRect.left), y: y - Math.round(svgRect.top) });
+	}
+
+	// Convert coordinates from canvas to page coordinates (based
+	// on the page top left corner).
+	convertCanvasCoordsToPageCoords(x, y) {
+		const svgRect = this.canvasSVG.node().getBoundingClientRect();
+		const pos = this.zoomUtils.unTransformPos({ x, y });
+		return { x: pos.x + Math.round(svgRect.left), y: pos.y + Math.round(svgRect.top) };
 	}
 
 	// Creates the div which contains the ghost node for drag and
@@ -1275,7 +1286,12 @@ export default class SVGCanvasRenderer {
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", "d3-svg-background")
 			.attr("pointer-events", "all")
-			.style("cursor", "default");
+			.style("cursor", "default")
+			.on("mousedown", () => {
+				if (!this.svgCanvasTextArea.isEditingText()) {
+					this.canvasController.setFocusOnCanvas();
+				}
+			});
 
 		// Only attach the 'defs' to the top most SVG area when we are displaying
 		// either the primary pipeline full page or a sub-pipeline full page.
@@ -1619,6 +1635,17 @@ export default class SVGCanvasRenderer {
 		this.logger.logStartTimer("updateNodes");
 
 		const nonBindingNodeGrps = joinedNodeGrps.filter((node) => !CanvasUtils.isSuperBindingNode(node));
+
+		// Node Focus Outline
+		// This is created by the 'moveFocusTo' function when focus is moved to a
+		// node. The 'd3-focus-path' element only exists for one canvas object at a time.
+		nonBindingNodeGrps
+			.selectChildren(".d3-focus-path")
+			.data((d) => ([d]), (d) => d.id)
+			.join(
+				(enter) => null // Focus outline is created when focus is moved to the node (in moveFocusTo)
+			)
+			.attr("d", (d) => this.getNodeShapePathSizing(d));
 
 		// Node Sizing Area
 		nonBindingNodeGrps
@@ -1995,21 +2022,108 @@ export default class SVGCanvasRenderer {
 						if (linkInfos.length > 0) {
 							const linkInfosAll = this.activePipeline.getAllLinksForNode(d);
 							linkInfosAll.forEach((li) => (li.link.navObject = d));
-							this.moveFocusTo({ obj: linkInfos[0].link, type: "link" }, d3Event);
+							this.setFocusObject(linkInfos[0].link, d3Event);
 						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.previousObjectInGroup(d3Event)) {
 						const linkInfos = this.activePipeline.getPreviousLinksToNode(d);
 						if (linkInfos.length > 0) {
 							const linkInfosAll = this.activePipeline.getAllLinksForNode(d);
 							linkInfosAll.forEach((li) => (li.link.navObject = d));
-							this.moveFocusTo({ obj: linkInfos[0].link, type: "link" }, d3Event);
+							this.setFocusObject(linkInfos[0].link, d3Event);
 						}
+
+					} else if (KeyboardUtils.moveObjectUp(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, NORTH));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveObjectDown(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, SOUTH));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveObjectRight(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, EAST));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveObjectLeft(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, WEST));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.selectObject(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.selectObjectD3Event(d3Event, d); // This method will check if ctrl/cmnd is pressed
+						this.selectObject(d3Event, d, "node", false, false);
 
+					} else if (KeyboardUtils.selectObjectAugment(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObject(d3Event, d, "node", false, true);
+
+					} else if (KeyboardUtils.selectObjectRange(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObject(d3Event, d, "node", true, false);
+
+					} else if (KeyboardUtils.sizeObjectUp(d3Event)) {
+						if (CanvasUtils.isNodeResizable(d, this.config)) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, NORTH));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectDown(d3Event)) {
+						if (CanvasUtils.isNodeResizable(d, this.config)) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, SOUTH));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectRight(d3Event)) {
+						if (CanvasUtils.isNodeResizable(d, this.config)) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, EAST));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectLeft(d3Event)) {
+						if (CanvasUtils.isNodeResizable(d, this.config)) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, WEST));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.createLink(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragNewLinkUtils.createNewLinkFromSelections(), true); // true indicates "augment" the selection
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.displayContextOptions(d3Event)) {
+						// Don't let keypress go through to the Canvas otherwise the
+						// canvas contenxt menu/toolbar will be opened.
+						d3Event.stopPropagation();
+
+						if (!CanvasUtils.isSuperBindingNode(d)) {
+							this.selectObject(d3Event, d, "node");
+
+							if (this.config.enableContextToolbar) {
+								this.addContextToolbar(d3Event, d, "node", CAUSE_KEYBOARD);
+							} else {
+								const pos = this.getObjectCenterPosition(d3Event.currentTarget);
+								this.openContextMenu(d3Event, "node", d, null, pos);
+							}
+						}
 					}
 				}
 			})
@@ -2017,11 +2131,15 @@ export default class SVGCanvasRenderer {
 				if (this.isDragging()) {
 					return;
 				}
+
 				const nodeGrp = d3.select(d3Event.currentTarget);
-				this.raiseNodeToTop(nodeGrp);
+				this.raiseNodeToTop(nodeGrp, d3Event);
+				this.restoreFocus(); // raiseNodeToTop will removing the visual focus so restore it.
+
 				this.setNodeStyles(d, "hover", nodeGrp);
+
 				if (this.config.enableContextToolbar) {
-					this.addContextToolbar(d3Event, d, "node");
+					this.addContextToolbar(d3Event, d, "node", CAUSE_MOUSE);
 				} else {
 					this.addDynamicNodeIcons(d3Event, d, nodeGrp);
 				}
@@ -2067,15 +2185,11 @@ export default class SVGCanvasRenderer {
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
 						this.activePipeline.setTabGroupIndexForObj(d);
+						this.setFocusObject(d, d3Event);
 					}
 					this.selectObjectD3Event(d3Event, d, "node");
 				}
 				this.logger.logEndTimer("Node Group - mouse down");
-			})
-			.on("mousemove", (d3Event, d) => {
-				// this.logger.log("Node Group - mouse move");
-				// Don't stop propogation. Mouse move messages must be allowed to
-				// propagate to canvas zoom operation.
 			})
 			.on("click", (d3Event, d) => {
 				this.logger.log("Node Group - click");
@@ -2101,9 +2215,19 @@ export default class SVGCanvasRenderer {
 					if (this.config.enableDragWithoutSelect) {
 						this.selectObjectD3Event(d3Event, d, "node");
 					}
+					this.setFocusObject(d, d3Event);
 					this.openContextMenu(d3Event, "node", d);
 				}
 			});
+	}
+
+	getObjectCenterPosition(obj) {
+		const rect = obj.getBoundingClientRect();
+		const rect2 = this.canvasSVG.node().getBoundingClientRect();
+		return {
+			x: rect.left - rect2.left + (rect.width / 2),
+			y: rect.top - rect2.top + (rect.height / 2)
+		};
 	}
 
 	attachNodeSizingListeners(nodeGrps) {
@@ -2354,24 +2478,12 @@ export default class SVGCanvasRenderer {
 	// the d3Event object passed in.
 	selectObjectD3Event(d3Event, d, objType) {
 		this.selectObject(
-			d,
 			d3Event.type,
+			d,
+			objType,
 			d3Event.shiftKey,
-			KeyboardUtils.isCmndCtrlPressed(d3Event));
-		// If the selection has changed we need to recreate any currently displayed
-		// context toolbar because the context actions may have changed based on
-		// the new selection.
-		this.recreateContextToolbar(d3Event, d, objType);
-	}
-
-	// Adds the object passed in to the set of selected objects using
-	// the d3Event object's sourceEvent object.
-	selectObjectSourceEvent(d3Event, d) {
-		this.selectObject(
-			d,
-			d3Event.type,
-			d3Event.sourceEvent.shiftKey,
-			KeyboardUtils.isCmndCtrlPressed(d3Event.sourceEvent));
+			KeyboardUtils.isMetaKey(d3Event)
+		);
 	}
 
 	// Performs required action for when either a comment, node or link is selected.
@@ -2379,8 +2491,8 @@ export default class SVGCanvasRenderer {
 	// currently selected set of objects; or even toggling the object's selection
 	// off. This method also sends a SINGLE_CLICK action to the
 	// clickActionHandler callback in the host application.
-	selectObject(d, d3EventType, isShiftKeyPressed, isCmndCtrlPressed) {
-		this.canvasController.selectObject(d.id, isShiftKeyPressed, isCmndCtrlPressed, this.activePipeline.id);
+	selectObject(d3EventType, d, objectType, range = false, augment = false) {
+		this.canvasController.selectObject(d.id, range, augment, this.activePipeline.id);
 
 		// Even though the single click message below should be emitted
 		// from common canvas for comments, if we uncomment this line it prevents
@@ -2388,11 +2500,10 @@ export default class SVGCanvasRenderer {
 		// to be a timing issue since the same problem is not evident with the
 		// similar code for the node group object.
 		// TODO - Issue 2465 - Find out why this problem occurs.
-		const objectTypeName = this.activePipeline.getObjectTypeName(d);
-		if (objectTypeName === "node" || objectTypeName === "link") {
+		if (objectType === "node" || objectType === "link") {
 			this.canvasController.clickActionHandler({
 				clickType: d3EventType === "contextmenu" || this.ellipsisClicked ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
-				objectType: objectTypeName,
+				objectType: objectType,
 				id: d.id,
 				selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
 				pipelineId: this.activePipeline.id });
@@ -2874,10 +2985,12 @@ export default class SVGCanvasRenderer {
 		return { x: d.x_pos + d.width, y: d.y_pos };
 	}
 
-	addContextToolbar(d3Event, d, objType, xPos, yPos) {
+	addContextToolbar(d3Event, d, objType, cause, xPos, yPos) {
 		if (!this.isSizing() && !this.isDragging() &&
 				!this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
-			this.canvasController.setMouseInObject(d.id);
+			if (cause === CAUSE_MOUSE) {
+				this.canvasController.setMouseInObject(d.id);
+			}
 			let pos = this.getDefaultContextToolbarPos(objType, d);
 			pos.x = xPos ? pos.x + xPos : pos.x;
 			pos.y = yPos ? pos.y + yPos : pos.y;
@@ -2890,13 +3003,6 @@ export default class SVGCanvasRenderer {
 		this.canvasController.setMouseInObject(null);
 		if (this.canvasController.isContextMenuDisplayed()) {
 			setTimeout(() => this.canvasController.closeContextToolbar(), 200);
-		}
-	}
-
-	recreateContextToolbar(d3Event, d, objType) {
-		if (this.config.enableContextToolbar) {
-			this.removeContextToolbar();
-			this.addContextToolbar(d3Event, d, objType);
 		}
 	}
 
@@ -2915,6 +3021,7 @@ export default class SVGCanvasRenderer {
 					const rect = ellipsisGrp.node().getBoundingClientRect();
 					const rect2 = this.canvasSVG.node().getBoundingClientRect();
 					const pos = { x: rect.left - rect2.left, y: rect.bottom - rect2.top };
+					this.setFocusObject(d, d3Event);
 					this.openContextMenu(d3Event, "node", d, null, pos);
 				}
 			});
@@ -3080,8 +3187,17 @@ export default class SVGCanvasRenderer {
 
 	}
 
+	// Opens the canvas context menu or context toolbar, depending on which is enabled.
+	// This is called from svg-canvas-d3.js to enable a keyboard shortcut to open
+	// the context options in an appropriate position.
+	openCanvasContextOptions(evt) {
+		this.openContextMenu(evt, "canvas", null, null, { x: 50, y: 50 });
+	}
+
 	// Opens either the context menu or the context toolbar depending on which is
-	// currently enabled.
+	// currently enabled. The pos parameter is optional. It is provided when menu
+	// is opened from teh keyboard and it sets both the context menu position and
+	// the "mouse position", if one is needed, by the action selected in the menu.
 	openContextMenu(d3Event, type, d, port, pos) {
 		CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stop the browser context menu appearing
 		this.canvasController.contextMenuHandler({
@@ -3092,7 +3208,7 @@ export default class SVGCanvasRenderer {
 			cmPos: pos
 				? pos
 				: this.getMousePos(d3Event, this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area even in a subflow.
-			mousePos: this.getMousePosSnapToGrid(this.getTransformedMousePos(d3Event)),
+			mousePos: pos ? pos : this.getMousePosSnapToGrid(this.getTransformedMousePos(d3Event)),
 			selectedObjectIds: this.canvasController.getSelectedObjectIds(),
 			addBreadcrumbs: (d && d.type === SUPER_NODE) ? this.getSupernodeBreadcrumbs(d3Event.currentTarget) : null,
 			port: port,
@@ -3750,6 +3866,20 @@ export default class SVGCanvasRenderer {
 	updateComments(joinedCommentGrps) {
 		this.logger.logStartTimer("updateComments");
 
+		// Comment Focus Outline
+		// This is created by the 'moveFocusTo' function when focus is moved to a
+		// comment. The 'd3-focus-path' element only exists for one canvas object at a time.
+		joinedCommentGrps
+			.selectChildren(".d3-focus-path")
+			.data((d) => ([d]), (d) => d.id)
+			.join(
+				(enter) => null // Focus outline is created when focus is moved to the comment (in moveFocusTo)
+			)
+			.attr("x", -this.canvasLayout.commentSizingArea)
+			.attr("y", -this.canvasLayout.commentSizingArea)
+			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
+			.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
+
 		// Comment Sizing Area
 		joinedCommentGrps
 			.selectChildren(".d3-comment-sizing")
@@ -3767,18 +3897,6 @@ export default class SVGCanvasRenderer {
 			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
 			.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea))
 			.attr("class", "d3-comment-sizing");
-
-		// Comment Focus Outline
-		joinedCommentGrps
-			.selectChildren(".d3-focus-path")
-			.data((d) => ([d]), (d) => d.id)
-			.join(
-				(enter) => null // Focus outline is created when focus is moved to the comment (in moveFocusTo)
-			)
-			.attr("x", -this.canvasLayout.commentSizingArea)
-			.attr("y", -this.canvasLayout.commentSizingArea)
-			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
-			.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
 
 		// Comment Selection Highlighting Outline
 		joinedCommentGrps
@@ -3824,6 +3942,7 @@ export default class SVGCanvasRenderer {
 			.attr("height", (c) => c.height)
 
 			.select(".d3-comment-text-scroll")
+			.attr("tabindex", "-1") // Prevent tab taking focus to the scroll div
 			.each((d, i, commentTexts) => {
 				const commentElement = d3.select(commentTexts[i]);
 				CanvasUtils.applyOutlineStyle(commentElement, d.formats); // Only apply outlineStyle format here
@@ -3868,12 +3987,94 @@ export default class SVGCanvasRenderer {
 						const linkInfos = this.activePipeline.getNextLinksFromComment(d);
 						if (linkInfos.length > 0) {
 							linkInfos.forEach((li) => (li.link.navObject = d));
-							this.moveFocusTo({ obj: linkInfos[0].link, type: "link" }, d3Event);
+							this.setFocusObject(linkInfos[0].link, d3Event);
 						}
 
-					} else if (KeyboardUtils.selectObject(d3Event)) {
-						this.selectObjectD3Event(d3Event, d); // This method will check if ctrl/cmnd is pressed
+					} else if (KeyboardUtils.moveObjectUp(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, NORTH));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
+					} else if (KeyboardUtils.moveObjectDown(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, SOUTH));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveObjectRight(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, EAST));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveObjectLeft(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.moveObject(d, WEST));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectUp(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, NORTH));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectDown(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, SOUTH));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectRight(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, EAST));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.sizeObjectLeft(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.canvasController.autoSelectFocusObj(() =>
+								this.dragObjectUtils.sizeObject(d, WEST));
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.scrollTextUp(d3Event)) {
+						this.scrollComment(d3Event, 10);
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.scrollTextDown(d3Event)) {
+						this.scrollComment(d3Event, -10);
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.selectObject(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObject(d3Event, d, "comment", false, false);
+
+					} else if (KeyboardUtils.selectObjectAugment(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObject(d3Event, d, "comment", false, true);
+
+					} else if (KeyboardUtils.displayContextOptions(d3Event)) {
+						// Don't let keypress go through to the Canvas otherwise the
+						// canvas context menu/toolbar will be opened.
+						d3Event.stopPropagation();
+
+						this.selectObject(d3Event, d, "comment");
+
+						if (this.config.enableContextToolbar) {
+							this.addContextToolbar(d3Event, d, "comment", CAUSE_KEYBOARD);
+						} else {
+							const pos = this.getObjectCenterPosition(d3Event.currentTarget);
+							this.openContextMenu(d3Event, "comment", d, null, pos);
+						}
 					}
 				}
 			})
@@ -3885,7 +4086,7 @@ export default class SVGCanvasRenderer {
 					this.createCommentPort(d3Event.currentTarget, d);
 				}
 				if (this.config.enableContextToolbar) {
-					this.addContextToolbar(d3Event, d, "comment");
+					this.addContextToolbar(d3Event, d, "comment", CAUSE_MOUSE);
 				}
 				if (this.commentHasScrollableText(d3Event.currentTarget)) {
 					this.removeCanvasZoomBehavior(); // Remove canvas zoom behavior to allow scrolling of comment
@@ -3912,6 +4113,7 @@ export default class SVGCanvasRenderer {
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
 						this.activePipeline.setTabGroupIndexForObj(d);
+						this.setFocusObject(d, d3Event);
 					}
 					this.selectObjectD3Event(d3Event, d, "comment");
 				}
@@ -3944,6 +4146,7 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, "comment");
 				}
+				this.setFocusObject(d, d3Event);
 				this.openContextMenu(d3Event, "comment", d);
 			});
 	}
@@ -3963,6 +4166,15 @@ export default class SVGCanvasRenderer {
 			return true;
 		}
 		return false;
+	}
+
+	// Scrolls the scrollable <div> in the comment in the d3Event.currentTarget field,
+	// by the amount (in pixels) passed in.
+	scrollComment(d3Event, yAmt) {
+		if (this.commentHasScrollableText(d3Event.currentTarget)) {
+			const scrollDiv = d3Event.currentTarget.getElementsByClassName("d3-comment-text-scroll");
+			scrollDiv[0].scrollBy(0, yAmt);
+		}
 	}
 
 	attachCommentSizingListeners(commentGrps) {
@@ -4277,86 +4489,78 @@ export default class SVGCanvasRenderer {
 					if (KeyboardUtils.nextObjectInGroup(d3Event)) {
 						if (d.type === NODE_LINK) {
 							const node = this.activePipeline.getNextNodeFromDataLink(d);
-							if (node) {
-								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
-							}
+							this.setFocusObject(node, d3Event);
+							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 						} else if (d.type === ASSOCIATION_LINK) {
 							const node = this.activePipeline.getNextNodeFromAssocLink(d);
-							if (node) {
-								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
-							}
+							this.setFocusObject(node, d3Event);
+							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 						} else if (d.type === COMMENT_LINK) {
 							const obj = this.activePipeline.getNextObjectFromCommentLink(d);
-							if (obj) {
-								const type = CanvasUtils.isNode(obj) ? "node" : "comment";
-								this.moveFocusTo({ obj, type }, d3Event);
-							}
+							this.setFocusObject(obj, d3Event);
+							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						}
 
 					} else if (KeyboardUtils.previousObjectInGroup(d3Event)) {
 						if (d.type === NODE_LINK) {
 							const node = this.activePipeline.getPreviousNodeFromDataLink(d);
-							if (node) {
-								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
-							}
+							this.setFocusObject(node, d3Event);
 
 						} else if (d.type === ASSOCIATION_LINK) {
 							const node = this.activePipeline.getPreviousNodeFromAssocLink(d);
-							if (node) {
-								this.moveFocusTo({ obj: node, type: "node" }, d3Event);
-							}
+							this.setFocusObject(node, d3Event);
 
 						} else if (d.type === COMMENT_LINK) {
 							const obj = this.activePipeline.getPreviousObjectFromCommentLink(d);
-							if (obj) {
-								const type = CanvasUtils.isNode(obj) ? "node" : "comment";
-								this.moveFocusTo({ obj, type }, d3Event);
-							}
+							this.setFocusObject(obj, d3Event);
 						}
-
-					} else if (KeyboardUtils.selectObject(d3Event)) {
-						this.selectObjectD3Event(d3Event, d); // This method will check if ctrl/cmnd is pressed
 
 					} else if (KeyboardUtils.nextSiblingLink(d3Event)) {
 						const link = this.activePipeline.getNextSiblingLink(d);
-						this.moveFocusTo({ obj: link, type: "link" }, d3Event);
+						this.setFocusObject(link, d3Event);
 
 					} else if (KeyboardUtils.previousSiblingLink(d3Event)) {
 						const link = this.activePipeline.getPreviousSiblingLink(d);
-						this.moveFocusTo({ obj: link, type: "link" }, d3Event);
+						this.setFocusObject(link, d3Event);
+
+					} else if (KeyboardUtils.moveObjectLeft(d3Event)) {
+						// Prevent Chrome returning to previous browser page!
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.selectObject(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObject(d3Event, d, "link", false, false);
+
+					} else if (KeyboardUtils.selectObjectAugment(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.selectObject(d3Event, d, "link", false, true);
+
+
+					} else if (KeyboardUtils.displayContextOptions(d3Event)) {
+						// Don't let keypress go through to the Canvas otherwise the
+						// canvas contenxt menu/toolbar will be opened.
+						d3Event.stopPropagation();
+
+						if (this.config.enableLinkSelection !== "None") {
+							this.selectObject(d3Event, d, "link");
+						}
+
+						if (this.config.enableContextToolbar) {
+							this.addContextToolbar(d3Event, d, "link", CAUSE_KEYBOARD,
+								this.canvasLayout.linkContextToolbarPosX,
+								this.canvasLayout.linkContextToolbarPosY
+							);
+
+						} else {
+							const pos = this.getObjectCenterPosition(d3Event.currentTarget);
+							this.openContextMenu(d3Event, "link", d, null, pos);
+						}
 					}
 				}
 			})
-			.on("mousedown", (d3Event, d, index, links) => {
-				this.logger.log("Link Group - mouse down");
-				if (this.svgCanvasTextArea.isEditingText()) {
-					this.svgCanvasTextArea.completeEditing(d3Event);
-				}
-				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-					if (this.config.enableKeyboardNavigation) {
-						this.activePipeline.setTabGroupIndexForObj(d);
-					}
-					this.selectObjectD3Event(d3Event, d, "link");
-				}
-				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
-			})
-			.on("mouseup", () => {
-				this.logger.log("Link Group - mouse up");
-			})
-			.on("click", (d3Event, d) => {
-				this.logger.log("Link Group - click");
-				d3Event.stopPropagation();
-			})
-			.on("contextmenu", (d3Event, d) => {
-				this.logger.log("Link Group - context menu");
-				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-					this.selectObjectD3Event(d3Event, d, "link");
-				}
-				this.openContextMenu(d3Event, "link", d);
-			})
-			.on("mouseenter", (d3Event, link) => {
+			.on("mouseenter", (d3Event, d) => {
 				if (this.isDragging()) {
 					return;
 				}
@@ -4366,11 +4570,12 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 					this.raiseLinkToTop(targetObj);
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
-				this.setLinkLineStyles(targetObj, link, "hover");
+				this.setLinkLineStyles(targetObj, d, "hover");
 
 				if (this.config.enableContextToolbar) {
-					this.addContextToolbar(d3Event, link, "link",
+					this.addContextToolbar(d3Event, d, "link", CAUSE_MOUSE,
 						this.canvasLayout.linkContextToolbarPosX,
 						this.canvasLayout.linkContextToolbarPosY
 					);
@@ -4405,6 +4610,7 @@ export default class SVGCanvasRenderer {
 				// to avoid Decoration Textarea to be closed on mouseleave.
 				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes && !this.isEditingText()) {
 					this.lowerLinkToBottom(targetObj);
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, link, "default");
 				this.canvasController.closeTip();
@@ -4412,6 +4618,32 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableContextToolbar) {
 					this.removeContextToolbar();
 				}
+			})
+			.on("mousedown", (d3Event, d, index, links) => {
+				this.logger.log("Link Group - mouse down");
+				if (this.svgCanvasTextArea.isEditingText()) {
+					this.svgCanvasTextArea.completeEditing(d3Event);
+				}
+				if (this.config.enableKeyboardNavigation) {
+					this.activePipeline.setTabGroupIndexForObj(d);
+					this.setFocusObject(d, d3Event);
+				}
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+					this.selectObjectD3Event(d3Event, d, "link");
+				}
+				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
+			})
+			.on("click", (d3Event, d) => {
+				this.logger.log("Link Group - click");
+				d3Event.stopPropagation();
+			})
+			.on("contextmenu", (d3Event, d) => {
+				this.logger.log("Link Group - context menu");
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+					this.selectObjectD3Event(d3Event, d, "link");
+				}
+				this.setFocusObject(d, d3Event);
+				this.openContextMenu(d3Event, "link", d);
 			});
 	}
 
@@ -4650,7 +4882,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Raises the node, specified by the node ID, above other nodes and objects.
-	// Called by external utils.
+	// Called by svg-canvas-utils-external.js for use by apps using React nodes.
 	raiseNodeToTopById(nodeId) {
 		this.getNodeGroupSelectionById(nodeId).raise();
 	}
@@ -4665,7 +4897,7 @@ export default class SVGCanvasRenderer {
 	// * There are one or more selected links
 	// * We are editing text
 	// * The app has indicated links should be displayed over nodes
-	raiseNodeToTop(nodeGrp) {
+	raiseNodeToTop(nodeGrp, d3Event) {
 		if (this.config.enableRaiseNodesToTopOnHover &&
 			!this.isDragging() &&
 			this.activePipeline.getSelectedLinksCount() === 0 &&
@@ -5567,7 +5799,7 @@ export default class SVGCanvasRenderer {
 	focusNextTabGroup(evt) {
 		const nextObj = this.activePipeline.getNextTabGroupStartObject();
 		if (nextObj) {
-			this.moveFocusTo(nextObj, evt);
+			this.setFocusObject(nextObj, evt);
 			return true;
 		}
 		return false;
@@ -5576,30 +5808,60 @@ export default class SVGCanvasRenderer {
 	focusPreviousTabGroup(evt) {
 		const previousObj = this.activePipeline.getPreviousTabGroupStartObject();
 		if (previousObj) {
-			this.moveFocusTo(previousObj, evt);
+			this.setFocusObject(previousObj, evt);
 			return true;
 		}
 		return false;
 	}
 
-	focusSetOutsideCanvas() {
-		this.activePipeline.resetTabbedStatus();
+	setFocusObject(focusObj, evt) {
+		if (!this.config.enableKeyboardNavigation) {
+			return;
+		}
+
+		CanvasUtils.stopPropagationAndPreventDefault(evt);
+
+		this.canvasController.setFocusObject(focusObj);
 	}
 
-	moveFocusTo(target, evt) {
+	restoreFocus() {
+		if (!this.canvasController.isContextMenuDisplayed()) {
+			this.canvasController.restoreFocus();
+		}
+	}
+
+	focusOnTextEntryElement(evt) {
+		this.svgCanvasTextArea.focusOnTextEntryElement(evt);
+	}
+
+	resetTabObjectIndex() {
+		this.activePipeline.resetTabObjectIndex();
+	}
+
+	// Moves the visual focus onto the object provided and
+	// uses zoom-to-reveal to bring the focused object into the
+	// viewport if it is not already.
+	// This is a utility method called from the canvas controller.
+	moveFocusTo(obj) {
+		if (!obj || obj === CANVAS_FOCUS) {
+			return;
+		}
+
+		const type = CanvasUtils.getObjectTypeName(obj);
+
 		this.canvasGrp.selectAll(".d3-focus-path").remove();
 
 		let objSel;
-		if (target.type === "node") {
-			objSel = this.getNodeGroupSelectionById(target.obj.id);
+		if (type === "node") {
+			objSel = this.getNodeGroupSelectionById(obj.id);
 
 			objSel.insert("path", ":first-child")
 				.attr("class", "d3-focus-path")
 				.attr("d", (d) => this.getNodeShapePathSizing(d));
 
 
-		} else if (target.type === "comment") {
-			objSel = this.getCommentGroupSelectionById(target.obj.id);
+		} else if (type === "comment") {
+			objSel = this.getCommentGroupSelectionById(obj.id);
 
 			objSel.insert("rect", ":first-child")
 				.attr("class", "d3-focus-path")
@@ -5608,19 +5870,27 @@ export default class SVGCanvasRenderer {
 				.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
 				.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
 
-		} else if (target.type === "link") {
-			objSel = this.getLinkGroupSelectionById(target.obj.id);
+		} else if (type === "link") {
+			objSel = this.getLinkGroupSelectionById(obj.id);
 
 			// TODO - Think of a way to show focus on links other than line thckness
 		}
-		const zoom = this.canvasController.getZoomToReveal([target.obj.id]);
-		if (zoom) {
-			this.zoomTo(zoom);
+		if (obj) {
+			const zoom = this.canvasController.getZoomToReveal([obj.id]);
+			if (zoom) {
+				this.zoomTo(zoom);
+			}
 		}
-		objSel.node().focus();
-		if (evt) {
-			evt.stopPropagation();
-			evt.preventDefault();
+
+		if (objSel) {
+			const element = objSel.node();
+			if (element) {
+				element.focus();
+			}
+
+		} else {
+			const id = obj ? obj.id : "Unknown";
+			this.logger.error(`Error applying focus to ${type} object with ID: ${id}`);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import { get } from "lodash";
 import { LINK_SELECTION_NONE, SUPER_NODE, WYSIWYG } from "./constants/canvas-constants";
 
-// Global constant to handle the canvas controller.
+// Global temporary variable to handle the canvas controller.
 let cc = null;
 
 // Returns a context menu definition for the source object passed in which
@@ -25,7 +25,7 @@ let cc = null;
 export default function getContextMenuDefiniton(source, canvasController) {
 	cc = canvasController;
 
-	const defMenu = createDefaultContextMenu(source, cc.getCanvasConfig().enableWYSIWYGComments);
+	const defMenu = createDefaultContextMenu(source, cc);
 	let menuDefinition;
 
 	if (typeof cc.handlers.contextMenuHandler === "function") {
@@ -122,7 +122,7 @@ const isEditingAction = (action) =>
 
 // Returns a default context menu definition for the source object and canvas
 // controller passed in.
-const createDefaultContextMenu = (source, enableWYSIWYGComments) => {
+const createDefaultContextMenu = (source) => {
 	let menuDefinition = [];
 	const menuForNonSelectedObj = cc.isContextToolbarForNonSelectedObj(source);
 
@@ -130,11 +130,8 @@ const createDefaultContextMenu = (source, enableWYSIWYGComments) => {
 	if (source.type === "canvas") {
 
 		menuDefinition = menuDefinition.concat(
-			createCommentMenu(enableWYSIWYGComments),
-			[
-				{ action: "selectAll", label: getLabel("canvas.selectAll") },
-				{ divider: true }
-			]
+			createCommentMenu(),
+			createSelectAllMenu()
 		);
 	}
 	// Rename node
@@ -299,14 +296,29 @@ const createDefaultContextMenu = (source, enableWYSIWYGComments) => {
 	return menuDefinition;
 };
 
-const createCommentMenu = (enableWYSIWYGComments) => {
-	if (enableWYSIWYGComments) {
+const createCommentMenu = () => {
+	if (cc.getCanvasConfig().enableWYSIWYGComments) {
 		return [
 			{ action: "createComment", label: getLabel("canvas.addComment"), toolbarItem: true },
 			{ action: "createWYSIWYGComment", label: getLabel("canvas.addWysiwygComment"), toolbarItem: true }
 		];
 	}
 	return { action: "createComment", label: getLabel("canvas.addComment"), toolbarItem: true };
+};
+
+const createSelectAllMenu = () => {
+	if (cc.areAllObjectsSelected()) {
+		return [
+			{ action: "deselectAll", label: getLabel("canvas.deselectAll") },
+			{ divider: true }
+		];
+	} else if (!cc.isPrimaryPipelineEmpty()) {
+		return [
+			{ action: "selectAll", label: getLabel("canvas.selectAll") },
+			{ divider: true }
+		];
+	}
+	return [];
 };
 
 const createEditMenu = (source, includePaste) => {

@@ -18,11 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { adjustSubAreaPosition, generateSubAreaStyle } from "./toolbar-sub-utils.js";
-
-const ESC_KEY = 27;
-const LEFT_ARROW_KEY = 37;
-const RIGHT_ARROW_KEY = 39;
-
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 
 class ToolbarSubPanel extends React.Component {
 	constructor(props) {
@@ -43,11 +39,12 @@ class ToolbarSubPanel extends React.Component {
 	}
 
 	onKeyDown(evt) {
-		if (evt.keyCode === ESC_KEY) {
+		if (KeyboardUtils.closeSubArea(evt)) {
 			this.props.closeSubArea();
 			evt.stopPropagation();
 
-		} else if (evt.keyCode === LEFT_ARROW_KEY || evt.keyCode === RIGHT_ARROW_KEY) {
+		} else if (KeyboardUtils.openSubAreaFromMenu(evt) ||
+					KeyboardUtils.closeSubAreaToMenu(evt)) {
 			evt.stopPropagation();
 		}
 	}

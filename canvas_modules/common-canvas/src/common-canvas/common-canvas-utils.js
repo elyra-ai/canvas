@@ -1069,10 +1069,34 @@ export default class CanvasUtils {
 			pos.y_pos < area.y2 + pad;
 	}
 
+	// Returns a sting that describes the basic type of
+	// the object passed in.
+	static getObjectTypeName(obj) {
+		if (this.isNode(obj)) {
+			return "node";
+		} else if (this.isComment(obj)) {
+			return "comment";
+		} else if (this.isLink(obj)) {
+			return "link";
+		}
+		return "";
+	}
+
 	// Returns truthy if the object passed in is a node (and not a comment).
 	// Comments don't have a type property.
 	static isNode(obj) {
-		return obj.type;
+		return obj.type && !this.isLink(obj);
+	}
+
+	// Returns true if the object passed in is a link.
+	static isLink(obj) {
+		return obj.type && (obj.type === NODE_LINK || obj.type === COMMENT_LINK || obj.type === ASSOCIATION_LINK);
+	}
+
+	// Returns truthy if the object passed in is a comment.
+	// Comments don't have a type property.
+	static isComment(obj) {
+		return !obj.type;
 	}
 
 	static isSupernode(node) {

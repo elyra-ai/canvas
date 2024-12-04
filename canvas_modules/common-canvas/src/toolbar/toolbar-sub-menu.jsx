@@ -18,14 +18,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import ToolbarSubMenuItem from "./toolbar-sub-menu-item.jsx";
 import ToolbarDividerItem from "./toolbar-divider-item";
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 
 import { adjustSubAreaPosition, generateSubAreaStyle } from "./toolbar-sub-utils.js";
-
-const ESC_KEY = 27;
-const LEFT_ARROW_KEY = 37;
-const UP_ARROW_KEY = 38;
-const RIGHT_ARROW_KEY = 39;
-const DOWN_ARROW_KEY = 40;
 
 class ToolbarSubMenu extends React.Component {
 	constructor(props) {
@@ -68,23 +63,22 @@ class ToolbarSubMenu extends React.Component {
 		}
 	}
 
+	// Handles keyboard input on a sub-menu. The Esc, Left arrow and Right arrow
+	// key presses are handled in toolbar-sub-menu-item.jsx.
 	onKeyDown(evt) {
-		if (evt.keyCode === ESC_KEY) {
-			this.props.closeSubArea();
+		if (KeyboardUtils.closeSubArea(evt)) {
 			evt.stopPropagation(); // Stop propagation in a case we are a cascade menu
 
-		} else if (evt.keyCode === UP_ARROW_KEY) {
+		} else if (KeyboardUtils.setFocusOnPreviousMenuItem(evt)) {
 			this.setFocusOnPreviousItem();
 			evt.stopPropagation(); // Stop propagation in a case we are a cascade menu
 
-		} else if (evt.keyCode === DOWN_ARROW_KEY) {
+		} else if (KeyboardUtils.setFocusOnNextMenuItem(evt)) {
 			this.setFocusOnNextItem();
 			evt.stopPropagation(); // Stop propagation in a case we are a cascade menu
 
-		} else if (evt.keyCode === LEFT_ARROW_KEY) {
-			evt.stopPropagation(); // Stop propagation in a case we are a cascade menu
-
-		} else if (evt.keyCode === RIGHT_ARROW_KEY) {
+		} else if (KeyboardUtils.openSubAreaFromMenu(evt) ||
+					KeyboardUtils.closeSubAreaToMenu(evt)) {
 			evt.stopPropagation(); // Stop propagation in a case we are a cascade menu
 		}
 	}

@@ -220,11 +220,19 @@ export default class SVGCanvasD3 {
 		return this.renderer.focusPreviousTabGroup(evt);
 	}
 
-	focusSetOutsideCanvas() {
-		this.renderer.focusSetOutsideCanvas();
+	resetTabObjectIndex() {
+		this.renderer.resetTabObjectIndex();
 	}
 
-	moveFocusTo(target) {
-		this.renderer.moveFocusTo(target);
+	moveFocusTo(focusObj) {
+		this.renderer.moveFocusTo(focusObj);
+	}
+
+	focusOnTextEntryElement(evt) {
+		this.renderer.focusOnTextEntryElement(evt);
+	}
+
+	openCanvasContextOptions(evt) {
+		this.renderer.openCanvasContextOptions(evt);
 	}
 }

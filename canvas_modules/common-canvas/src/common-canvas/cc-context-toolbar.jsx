@@ -21,6 +21,7 @@ import { findLastIndex } from "lodash";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import ColorPicker from "../color-picker";
+import { CAUSE_KEYBOARD } from "./constants/canvas-constants.js";
 
 const CM_TOOLBAR_GAP = 2;
 const CM_ICON_SIZE = 32;
@@ -38,6 +39,7 @@ class CommonCanvasContextToolbar extends React.Component {
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.toolbarActionHandler = this.toolbarActionHandler.bind(this);
 		this.colorClicked = this.colorClicked.bind(this);
+		this.closeContextToolbar = this.closeContextToolbar.bind(this);
 	}
 
 	onMouseLeave(evt) {
@@ -151,9 +153,14 @@ class CommonCanvasContextToolbar extends React.Component {
 	}
 
 	toolbarActionHandler(action, editParam) {
-		this.props.canvasController.setMouseInContextToolbar(false);
-		this.props.canvasController.closeContextToolbar();
+		this.closeContextToolbar();
 		this.props.canvasController.contextMenuActionHandler(action, editParam);
+	}
+
+	closeContextToolbar() {
+		this.props.canvasController.setMouseInContextToolbar(false);
+		this.props.canvasController.setMouseInObject(null);
+		this.props.canvasController.closeContextToolbar(CAUSE_KEYBOARD);
 	}
 
 	colorClicked(color) {
@@ -243,6 +250,9 @@ class CommonCanvasContextToolbar extends React.Component {
 						containingDivId={this.props.containingDivId}
 						toolbarActionHandler={this.toolbarActionHandler}
 						tooltipDirection={"top"}
+						setInititalFocus
+						closeToolbarOnEsc
+						closeToolbar={this.closeContextToolbar}
 						size={"sm"}
 					/>
 				</div>

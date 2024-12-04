@@ -49,6 +49,7 @@ class PaletteFlyoutContentFilteredList extends React.Component {
 			contentItems.push(
 				<div key={itemKey}>
 					<PaletteContentListItem
+						tabIndex={0}
 						nodeTypeInfo={this.props.nodeTypeInfos[idx]}
 						isDisplaySearchResult
 						isShowRanking={this.props.isShowRanking}

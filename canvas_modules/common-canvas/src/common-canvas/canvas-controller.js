@@ -55,8 +55,9 @@ import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import getContextMenuDefiniton from "./canvas-controller-menu-utils.js";
 import { get, isEmpty } from "lodash";
-import { LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE,
-	SNAP_TO_GRID_NONE, SUPER_NODE, WYSIWYG
+import { CANVAS_FOCUS,
+	LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE,
+	SNAP_TO_GRID_NONE, SUPER_NODE, WYSIWYG, CAUSE_MOUSE, CAUSE_KEYBOARD
 } from "./constants/canvas-constants";
 
 import { cloneDeep } from "lodash";
@@ -85,6 +86,7 @@ export default class CanvasController {
 				undo: true,
 				redo: true,
 				selectAll: true,
+				deselectAll: true,
 				copyToClipboard: true,
 				cutToClipboard: true,
 				pasteFromClipboard: true
@@ -123,7 +125,16 @@ export default class CanvasController {
 		// canvas controller is created.
 		this.instanceId = commonCanvasControllerInstanceId++;
 
+		// Global variable to track whether branch highlighting is displayed or not.
 		this.branchHighlighted = false;
+
+		// Stores the object that is currently focused. This can be a node, comment
+		// or link OR the string stored in the constant CANVAS_FOCUS. The focusObject
+		// is maintained even if the focus goes outside the canvas. This helps in the
+		// situation where focus goes to a context menu (outside the canvas) and then,
+		// when the menu is closed,  we want the focus to go back to the originally
+		// focused object.
+		this.focusObject = null;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -550,6 +561,13 @@ export default class CanvasController {
 		// Include links in selectAll unless LinkSelection is "None"
 		const includeLinks = this.getCanvasConfig().enableLinkSelection !== LINK_SELECTION_NONE;
 		this.objectModel.selectAll(includeLinks, pipelineId);
+		this.setFocusOnCanvas();
+	}
+
+	// De-selects all the objects on the canvas.
+	deselectAll(pipelineId) {
+		this.objectModel.deselectAll(pipelineId);
+		this.setFocusOnCanvas();
 	}
 
 	isPrimaryPipelineEmpty() {
@@ -598,6 +616,11 @@ export default class CanvasController {
 		return this.objectModel.areSelectedNodesContiguous();
 	}
 
+	areAllObjectsSelected() {
+		const includeLinks = this.areDetachableLinksInUse();
+		return this.objectModel.areAllObjectsSelected(includeLinks);
+	}
+
 	// Returns true if all the selected objects are links.
 	areAllSelectedObjectsLinks() {
 		return this.objectModel.areAllSelectedObjectsLinks();
@@ -611,8 +634,12 @@ export default class CanvasController {
 		return this.getCanvasConfig().enableSnapToGridType !== SNAP_TO_GRID_NONE;
 	}
 
-	selectObject(objId, isShiftKeyPressed, isCmndCtrlPressed, pipelineId) {
-		this.objectModel.selectObject(objId, isShiftKeyPressed, isCmndCtrlPressed, pipelineId);
+	isSelected(objectId, pipelineId) {
+		return this.objectModel.isSelected(objectId, pipelineId);
+	}
+
+	selectObject(objId, range, augment, pipelineId) {
+		this.objectModel.selectObject(objId, range, augment, pipelineId);
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1606,10 +1633,6 @@ export default class CanvasController {
 		return this.getObjectModel().isPaletteOpen();
 	}
 
-	openContextMenu(menuDef, source) {
-		this.objectModel.openContextMenu(menuDef, source);
-	}
-
 	isBottomPanelOpen() {
 		return this.getObjectModel().isBottomPanelOpen();
 	}
@@ -1634,8 +1657,13 @@ export default class CanvasController {
 		return this.getObjectModel().isTopPanelOpen();
 	}
 
+	openContextMenu(menuDef, source) {
+		this.objectModel.openContextMenu(menuDef, source);
+	}
+
 	closeContextMenu() {
 		this.objectModel.closeContextMenu();
+		this.restoreFocus();
 	}
 
 	isContextMenuDisplayed() {
@@ -1646,9 +1674,14 @@ export default class CanvasController {
 		return this.objectModel.getContextMenuSource();
 	}
 
-	closeContextToolbar() {
-		if (!this.mouseInContextToolbar && !this.mouseInObject) {
+	closeContextToolbar(cause = CAUSE_MOUSE) {
+		if (cause === CAUSE_KEYBOARD) {
 			this.objectModel.closeContextMenu();
+			this.restoreFocus();
+
+		} else if (!this.mouseInContextToolbar && !this.mouseInObject) {
+			this.objectModel.closeContextMenu();
+			this.setFocusOnCanvas();
 		}
 	}
 
@@ -1863,6 +1896,74 @@ export default class CanvasController {
 			return this.getSVGCanvasD3().getCanvasDimensionsWithPadding();
 		}
 		return null;
+	}
+
+	// ---------------------------------------------------------------------------
+	// Focus management methods
+	// ---------------------------------------------------------------------------
+
+	restoreFocus() {
+		if (this.getSVGCanvasD3()) {
+			this.setFocusObject(this.focusObject); // This will force a refresh of the focus
+		}
+	}
+
+	focusOnTextEntryElement(evt) {
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().focusOnTextEntryElement(evt);
+		}
+	}
+
+	setFocusOnCanvas() {
+		this.setFocusObject(CANVAS_FOCUS);
+	}
+
+	getFocusObject() {
+		return this.focusObject;
+	}
+
+	setFocusObject(focusObj) {
+		this.focusObject = focusObj;
+
+		if (this.focusObject && this.canvasContents) {
+			if (this.focusObject === CANVAS_FOCUS) {
+				this.canvasContents.focusOnCanvas();
+
+			} else {
+				this.getSVGCanvasD3().moveFocusTo(focusObj);
+			}
+		}
+	}
+
+	isFocusOnCanvas() {
+		if (this.canvasContents) {
+			return this.canvasContents.isFocusOnCanvas();
+		}
+		return false;
+	}
+
+	// Checks to see if the current focus object is selected. If it is not selected
+	// this method auto-selects that object and ensures that the action function
+	// passed in (actionFn) is run immediately after the select has run. If the
+	// current focus object is already selected it just runs the action function.
+	// If augment is set to true the focus object will be added to the set of
+	// selected objects instead of replacing the current selections.
+	autoSelectFocusObj(actionFn, augment) {
+		const focusObj = this.getFocusObject();
+		if (focusObj && focusObj !== CANVAS_FOCUS) {
+			const pipelineId = this.getCurrentPipelineId();
+			if (!this.isFocusOnCanvas() && !this.isSelected(focusObj.id, pipelineId)) {
+				const fn = () => {
+					actionFn();
+					this.removeAfterUpdateCallback(fn);
+				};
+				this.addAfterUpdateCallback(fn);
+				this.selectObject(focusObj.id, false, augment, pipelineId);
+				return;
+			}
+		}
+
+		actionFn();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -2103,14 +2204,16 @@ export default class CanvasController {
 		}
 	}
 
-	// Called when a node is double clicked in the palette and added to the canvas.
-	// The nodeTemplate is in the internal format.
-	createAutoNode(nodeTemplate) {
+	// Automatically adds a node (nodeTemplate) to the canvas. The nodeTemplate
+	// must be in the internal format. If addLink is true a link will be created
+	// between the new node and the node it is positioned next to.
+	createAutoNode(nodeTemplate, addLink = true) {
 		const selApiPipeline = this.objectModel.getSelectionAPIPipeline();
 		const apiPipeline = selApiPipeline ? selApiPipeline : this.objectModel.getAPIPipeline();
 		var data = {
 			editType: "createAutoNode",
 			editSource: "canvas",
+			addLink: addLink,
 			nodeTemplate: nodeTemplate,
 			pipelineId: apiPipeline.pipelineId
 		};
@@ -2251,7 +2354,7 @@ export default class CanvasController {
 				this.isContextToolbarForNonSelectedObj(source)) {
 			this.setSelections([source.targetObject.id]);
 		}
-		this.canvasContents.focusOnCanvas(); // Set focus on canvas so keybord events go there.
+
 		const data = Object.assign({}, source, { "editType": action, "editParam": editParam, "editSource": "contextmenu" });
 		this.editActionHandler(data);
 	}
@@ -2372,6 +2475,10 @@ export default class CanvasController {
 		switch (data.editType) {
 		case "selectAll": {
 			this.selectAll(data.pipelineId);
+			break;
+		}
+		case "deselectAll": {
+			this.deselectAll(data.pipelineId);
 			break;
 		}
 		case "zoomIn": {
@@ -2615,7 +2722,6 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
-
 			case "expandSuperNodeInPlace": {
 				command = new ExpandSuperNodeInPlaceAction(data, this);
 				this.commandStack.do(command);
@@ -2709,6 +2815,35 @@ export default class CanvasController {
 		// pipeline visible they will be loaded one by one when this check is
 		// encountered.
 		this.ensureVisibleExpandedPipelinesAreLoaded();
+
+		// Set the keyboard focus appropriately for each command that has
+		// a getFocusObject method. In other cases, the focus will remain
+		// in its current location.
+		if (this.getCanvasConfig().enableKeyboardNavigation) {
+			if (command?.getFocusObject) {
+				const focusObject = command.getFocusObject();
+
+				if (focusObject === CANVAS_FOCUS) {
+					this.setFocusOnCanvas();
+
+				} else if (this.canvasContents) {
+					this.setFocusObject(focusObject);
+				}
+			}
+
+		// When keyboard navigation is NOT activated we restore focus (which will
+		// put focus on the canvas background) except in these cases.
+		} else if (data.editType !== "setCommentEditingMode" &&
+					data.editType !== "setNodeLabelEditingMode" &&
+					data.editType !== "togglePalette" &&
+					data.editType !== "openPalette" &&
+					data.editType !== "closePalette" &&
+					data.editType !== "toggleNotificationPanel" &&
+					data.editType !== "openNotificationPanel" &&
+					data.editType !== "closeNotificationPanel" &&
+					data.editType !== "loadPipelineFlow") {
+			this.restoreFocus();
+		}
 
 		return true;
 	}
