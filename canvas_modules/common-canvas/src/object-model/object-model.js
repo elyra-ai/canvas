@@ -433,7 +433,8 @@ export default class ObjectModel {
 		this.executeWithSelectionChange(this.store.dispatch, {
 			type: "SET_CANVAS_INFO",
 			canvasInfo: canvasInfo,
-			canvasInfoIdChanged: this.hasCanvasInfoIdChanged(canvasInfo)
+			canvasInfoIdChanged: this.hasCanvasInfoIdChanged(canvasInfo),
+			primaryPipelineIdChanged: this.hasPrimaryPipelineIdChanged(canvasInfo)
 		});
 	}
 
@@ -1045,6 +1046,10 @@ export default class ObjectModel {
 	// current canvasInfo ID.
 	hasCanvasInfoIdChanged(canvasInfo) {
 		return canvasInfo.id !== this.getCanvasInfo().id;
+	}
+
+	hasPrimaryPipelineIdChanged(canvasInfo) {
+		return canvasInfo.primary_pipeline !== this.getCanvasInfo().primary_pipeline;
 	}
 
 	setSubdueStyle(newStyle) {
