@@ -1630,6 +1630,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#enablekeyboardnavigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableKeyboardNavigation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enableinteractiontype" class="md-nav__link">
     <span class="md-ellipsis">
       enableInteractionType
@@ -3601,6 +3610,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#enablekeyboardnavigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableKeyboardNavigation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enableinteractiontype" class="md-nav__link">
     <span class="md-ellipsis">
       enableInteractionType
@@ -3963,6 +3981,8 @@ The tips displayed by the palette can be further refined. For example, this woul
 <h4 id="enablestatetag"><strong>enableStateTag</strong><a class="headerlink" href="#enablestatetag" title="Permanent link">&para;</a></h4>
 <p>This can be either &ldquo;None&rdquo;, &ldquo;Locked&rdquo; or &ldquo;ReadOnly&rdquo;. The default is &ldquo;None&rdquo;. When set to either &ldquo;Locked&rdquo; or &ldquo;ReadOnly&rdquo;, a &lsquo;state tag&rsquo; object will be shown permanently over the top of the canvas. The state tag will be positioned in the center and towards the top of the canvas. The state tag consists of a black background rectangle with rounded corners overlaid with an icon and a text label. A tooltip is displayed when the mouse pointer is hovered over the state tag. The icon, label and default tooltip will be set appropriately based on the value (&ldquo;Locked&rdquo; or &ldquo;ReadOnly&rdquo;) for this setting. The host application can override the tooltip by implementing the <a href="../03.03.06-tip-handler/">Tip Handler callback</a>.</p>
 <h2 id="canvas-operation">Canvas Operation<a class="headerlink" href="#canvas-operation" title="Permanent link">&para;</a></h2>
+<h4 id="enablekeyboardnavigation"><strong>enableKeyboardNavigation</strong><a class="headerlink" href="#enablekeyboardnavigation" title="Permanent link">&para;</a></h4>
+<p>This can be either true or false. The default is false. If set to true, the user can use the keyboard to move the keyboard focus around the Common Canvas interface and perform actions on the flow objects using <a href="../03.05-keyboard-support/">shortcut keys</a>.</p>
 <h4 id="enableinteractiontype"><strong>enableInteractionType</strong><a class="headerlink" href="#enableinteractiontype" title="Permanent link">&para;</a></h4>
 <p>This can be &ldquo;Mouse&rdquo;, &ldquo;Carbon&rdquo; or &ldquo;Trackpad&rdquo;. The default is &ldquo;Mouse&rdquo;.
 <strong><em>&ldquo;Trackpad&rdquo; has been deprecated and will be removed in the future.</em></strong></p>
@@ -4220,7 +4240,7 @@ will override the style from the common-canvas CSS
 <h4 id="enablerightflyoutdragtoresize"><strong>enableRightFlyoutDragToResize</strong><a class="headerlink" href="#enablerightflyoutdragtoresize" title="Permanent link">&para;</a></h4>
 <p>This is a boolean. The default is false. If set to true, the right flyout panel can be resized by dragging its left border. When hovering over the left border of the flyout, the cursor will change to indicate that resizing is possible. Users can drag the border to adjust the width of the flyout, allowing it to expand or collapse. This functionality offers more flexible layout options for the user. If set to false, the right-flyout panel, when open, will be displayed with a default width and cannot be resized by dragging its edge. The application can add its own sizing function if required.</p>
 <h4 id="enableleftflyoutundertoolbar"><strong>enableLeftFlyoutUnderToolbar</strong><a class="headerlink" href="#enableleftflyoutundertoolbar" title="Permanent link">&para;</a></h4>
-<p>This is a boolean. The default is false. If set to true the left flyout panel, when opened, will appear below the toolbar and will not cause the toolbar to compress. The default behavior is that the left flyout panel, when opened, will appear at the side of the toolbar and will compress the space available for the toolbar to be displayed. </p>
+<p>This is a boolean. The default is false. If set to true the left flyout panel, when opened, will appear below the toolbar and will not cause the toolbar to compress. The default behavior is that the left flyout panel, when opened, will appear at the side of the toolbar and will compress the space available for the toolbar to be displayed.</p>
 <h4 id="enableexternalpipelineflows"><strong>enableExternalPipelineFlows</strong><a class="headerlink" href="#enableexternalpipelineflows" title="Permanent link">&para;</a></h4>
 <p>This is a boolean. The default is false. If true, the context menu will include a <code>Create External Supernode</code> option when a set of objects are selected from which a supernode can be created.</p>
 <p>Waring: The host application must implement some of the common-canvas callbacks for external pipeline flow support to work correctly. See the section on <a href="../03.08-external-pipeline-flows/">External Pipeline Flow support</a> for more details.</p>
