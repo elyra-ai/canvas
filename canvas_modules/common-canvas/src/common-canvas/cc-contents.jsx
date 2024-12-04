@@ -500,7 +500,7 @@ class CanvasContents extends React.Component {
 		}
 	}
 
-	// Returns true if the target element passed in is outside the canvas div.
+	// Returns true if the target element passed in is inside the canvas div.
 	isTargetInsideCanvas(target) {
 		return target && target.closest(".common-canvas-drop-div");
 	}
