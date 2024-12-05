@@ -88,7 +88,7 @@ class PropertiesMain extends React.Component {
 		this.state = {
 			showPropertiesButtons: true,
 			editorSize: editorSize,
-			showResizeBtn: 1
+			showResizeBtn: true
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
@@ -98,6 +98,9 @@ class PropertiesMain extends React.Component {
 		this._getResizeButton = this._getResizeButton.bind(this);
 		this._isResizeButtonRequired = this._isResizeButtonRequired.bind(this);
 		this.onBlur = this.onBlur.bind(this);
+		this.detectResize = this.detectResize.bind(this);
+		// used to tracked when the resize button is clicked and ignore detectResize
+		this.resizeClicked = false;
 	}
 
 	componentDidMount() {
@@ -430,8 +433,7 @@ class PropertiesMain extends React.Component {
 	}
 
 	resize() {
-		// Increment resize btn counter to show btn on click
-		this.setState((prevState) => ({ showResizeBtn: prevState.showResizeBtn + 1 }));
+		this.resizeClicked = true;
 		if (this.propertiesController.getForm().editorSize === Size.SMALL) {
 			if (this.state.editorSize === Size.SMALL) {
 				this.updateEditorSize(Size.MEDIUM);
@@ -454,8 +456,11 @@ class PropertiesMain extends React.Component {
 	}
 
 	detectResize() {
-		// Increment resize btn counter to hide btn on drag
-		this.setState((prevState) => ({ showResizeBtn: prevState.showResizeBtn - 1 }));
+		// only hide resize button if resize wasn't from clicking resize button
+		if (!this.resizeClicked) {
+			this.setState({ showResizeBtn: false });
+		}
+		this.resizeClicked = false;
 	}
 
 	render() {
@@ -505,7 +510,7 @@ class PropertiesMain extends React.Component {
 				// Show Resize Button only under below conditions
 				// 1. Flyout is not dragged to resize its width.
 				// 2. If pixel_width is set include that to test if button should be shown.
-				if (this._isResizeButtonRequired() && this.state.showResizeBtn > 0) {
+				if (this._isResizeButtonRequired() && this.state.showResizeBtn) {
 					const resizeIcon = this._getResizeButton();
 					// Resize button label can be "Expand" or "Contract"
 					const resizeBtnLabel = (resizeIcon.props && resizeIcon.props.className === "properties-resize-caret-left")
@@ -607,7 +612,7 @@ class PropertiesMain extends React.Component {
 						handleWidth
 						refreshMode="debounce"
 						refreshRate={500}
-						onResize={(width) => this.detectResize(width)}
+						onResize={this.detectResize}
 						targetRef={this.commonProperties}
 						skipOnMount
 					>
