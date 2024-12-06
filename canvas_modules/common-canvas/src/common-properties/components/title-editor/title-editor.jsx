@@ -139,22 +139,13 @@ class TitleEditor extends Component {
 				iconDescription={propertiesTitleEditButtonLabel}
 				hasIconOnly
 			/>);
-		const obj = {
-			"id": "link_for_number",
-			"data": {
-				"something": "option data"
-			},
-			"propertyId": {
-				"name": "number"
-			}
-		};
 		const helpButton = this.props.help
 			? (<span className="properties-heading-icon">
 				<Tooltip
 					className="properties-title-editor-btn help"
 					data-id="help"
-					tip={helpButtonLabel}
-					link={obj}
+					tip={this.props.help?.data?.description?.label}
+					link={this.props.help?.data?.description?.link ? this.props.help?.data?.description?.link : null}
 					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
 					direction="bottom"
 					showToolTipOnClick

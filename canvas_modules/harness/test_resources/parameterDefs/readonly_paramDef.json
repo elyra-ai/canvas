@@ -426,7 +426,19 @@
     ],
     "help": {
       "data": {
-        "url": "randomUrl"
+        "url": "randomUrl",
+        "description": {
+          "label": "Readonly Description",
+          "link": {
+            "id": "link_for_heading",
+            "data": {
+              "something": "option data"
+            },
+            "propertyId": {
+              "name": "number"
+            }
+          }
+        }
       }
     }
   },
