@@ -90,7 +90,7 @@ class ControlItem extends React.Component {
 
 		const action = this.actionFactory.generateAction(0, this.props.control.action);
 
-		const className = classNames("properties-control-item", { "hide": hidden });
+		const className = classNames("properties-control-item", { "hide": hidden }, { "properties-ci-action-item": action });
 
 		/*
 		* <ControlItem /> should be called from every control.
@@ -111,10 +111,14 @@ class ControlItem extends React.Component {
 			<div data-id={"properties-ci-" + this.props.control.name}
 				className={className} disabled={disabled}
 			>
-				{label}
-				{description}
-				{this.props.controlObj}
-				{action}
+				<div className="properties-ci-content-container">
+					{label}
+					{description}
+					{this.props.controlObj}
+				</div>
+				<div className="properties-ci-action-container">
+					{action}
+				</div>
 			</div>
 		);
 	}
