@@ -69,6 +69,7 @@ $properties-resize-button-size: $spacing-06;
 	padding: $spacing-01;
 	justify-content: center;
 	align-items: center;
+	z-index: 1; // Make sure resize btn appears over bottom panel
 	&:hover {
 		background-color: $layer-accent-01;
 		visibility: visible;
