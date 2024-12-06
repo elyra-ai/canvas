@@ -69,7 +69,6 @@ class TitleEditor extends Component {
 				this.props.help.data,
 				this.props.controller.getAppData());
 		}
-		return { url: "https://www.google.com/", label: "Help" };
 	}
 	textInputOnFocus() {
 		this.setState({ focused: true });
@@ -156,11 +155,11 @@ class TitleEditor extends Component {
 					data-id="help"
 					tip={helpButtonLabel}
 					link={obj}
-					tooltipLinkHandler={this.helpClickHandler}
+					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
 					direction="bottom"
 					showToolTipOnClick
 				>
-					<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+					<Icon type={CARBON_ICONS.INFORMATION} className="properties-title-editor-btn help" />
 				</Tooltip>
 			</span>)
 			: null;
