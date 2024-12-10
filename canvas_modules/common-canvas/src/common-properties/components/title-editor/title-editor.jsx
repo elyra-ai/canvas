@@ -20,13 +20,16 @@ import { connect } from "react-redux";
 import Isvg from "react-inlinesvg";
 import { get } from "lodash";
 import classNames from "classnames";
-import { Help, Edit, Close } from "@carbon/react/icons";
+import { Edit, Close } from "@carbon/react/icons";
 import { TextInput, Button, Layer } from "@carbon/react";
 
 import { setTitle } from "./../../actions";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
 import ActionFactory from "../../actions/action-factory.js";
+import Tooltip from "../../../tooltip/tooltip.jsx";
+import Icon from "../../../icons/icon.jsx";
+import { CARBON_ICONS } from "./../../constants/constants";
 
 
 class TitleEditor extends Component {
@@ -136,19 +139,20 @@ class TitleEditor extends Component {
 				iconDescription={propertiesTitleEditButtonLabel}
 				hasIconOnly
 			/>);
-
 		const helpButton = this.props.help
-			? (<Button
-				kind="ghost"
-				className="properties-title-editor-btn help"
-				data-id="help"
-				onClick={this.helpClickHandler}
-				tooltipPosition="bottom"
-				renderIcon={Help}
-				size="sm"
-				iconDescription={helpButtonLabel}
-				hasIconOnly
-			/>)
+			? (<span className="properties-heading-icon">
+				<Tooltip
+					className="properties-title-editor-btn help"
+					data-id="help"
+					tip={this.props.description?.default}
+					link={this.props.help?.data?.description?.link ? this.props.help?.data?.description?.link : null}
+					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
+					direction="bottom"
+					showToolTipOnClick
+				>
+					<Icon type={CARBON_ICONS.INFORMATION} className="properties-title-editor-btn help" />
+				</Tooltip>
+			</span>)
 			: null;
 
 		const closeButton = this.props.closeHandler
@@ -241,6 +245,7 @@ TitleEditor.propTypes = {
 	showHeading: PropTypes.bool,
 	rightFlyoutTabsView: PropTypes.bool,
 	titleInfo: PropTypes.object,
+	description: PropTypes.object,
 	title: PropTypes.string, // set by redux
 	setTitle: PropTypes.func // set by redux
 };

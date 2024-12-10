@@ -424,6 +424,9 @@
         ]
       }
     ],
+    "description": {
+      "default": "Readonly Description"
+    },
     "help": {
       "data": {
         "url": "randomUrl"
