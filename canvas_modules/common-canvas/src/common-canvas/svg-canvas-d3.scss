@@ -551,6 +551,9 @@ $link-highlight-color: $support-info;
 	stroke: $node-port-output-stroke-color;
 	fill: $node-port-output-fill-color;
 	stroke-width: 1.25;
+	& foreignobject {
+		outline: none;
+	}
 }
 
 .d3-node-port-output[connected="yes"] {

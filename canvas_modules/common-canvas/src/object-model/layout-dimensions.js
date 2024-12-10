@@ -157,15 +157,21 @@ const portsHorizontalDefaultLayout = {
 		// Display input ports.
 		inputPortDisplay: true,
 
-		// Object for input port can be "circle" or "image".
-		inputPortObject: "circle",
-
-		// If input port object is "image" use this image.
-		inputPortImage: "",
-
-		// If input port dimensions for "image".
-		inputPortWidth: 12,
-		inputPortHeight: 12,
+		// An array of elements to control display of input ports. Each element
+		// can have a number of different structures like this:
+		// Either
+		// { type: "circle" }
+		// Or
+		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
+		// Or
+		// { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
+		//
+		// The order of the elements corresponds to the order of ports in the
+		// inputs array for the node. If there are more input ports than elements
+		// in the array, the last element will be used for all remaining ports.
+		inputPortObjects: [
+			{ type: "circle" }
+		],
 
 		// Indicates whether multiple input ports should be automatically
 		// positioned (true) or positioned based on the contents of
@@ -176,31 +182,47 @@ const portsHorizontalDefaultLayout = {
 		// this: { x_pos: 5, y_pos: 10, pos: "topLeft" }. x_pos and y_pos are
 		// offsets from the pos point on the node.
 		// The order of the elements corresponds to the order of ports in the
-		// inputs array for the node.
+		// inputs array for the node. If there are more input ports than elements
+		// in the array, the last element will be used for all remaining ports.
 		inputPortPositions: [
 			{ x_pos: 0, y_pos: 20, pos: "topLeft" }
 		],
 
-		// The 'guide' is the object drawn at the mouse position as a new line
-		// is being dragged outwards.
-		// Object for input port guide can be "circle" or "image".
-		inputPortGuideObject: "circle",
-
-		// If input port guide object is "image" use this image.
-		inputPortGuideImage: "",
+		// An array of elements to control display of input port guide objects.
+		// That is the object drawn at the end of a new link as it is being dragged.
+		// Each element can have a number of different structures like this:
+		// Either
+		// { type: "circle" }
+		// Or
+		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
+		// Or
+		// { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
+		//
+		// The order of the elements corresponds to the order of ports in the
+		// inputs array for the node. If there are more input ports than elements
+		// in the array, the last element will be used for all remaining ports.
+		inputPortGuideObjects: [
+			{ type: "circle" }
+		],
 
 		// Display output ports.
 		outputPortDisplay: true,
 
-		// Object for output port can be "circle" or "image".
-		outputPortObject: "circle",
-
-		// If output port object is "image" use this image.
-		outputPortImage: "",
-
-		// Output port dimensions for "image".
-		outputPortWidth: 12,
-		outputPortHeight: 12,
+		// An array of elements to control display of output ports. Each element
+		// can have a number of different structures like this:
+		// Either
+		// { type: "circle" }
+		// Or
+		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
+		// Or
+		// { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
+		//
+		// The order of the elements corresponds to the order of ports in the
+		// outputs array for the node. If there are more output ports than elements
+		// in the array, the last element will be used for all remaining ports.
+		outputPortObjects: [
+			{ type: "circle" }
+		],
 
 		// Indicates whether multiple output ports should be automatically
 		// positioned (true) or positioned based on the contents of
@@ -211,18 +233,28 @@ const portsHorizontalDefaultLayout = {
 		// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
 		// offsets from the pos point on the node.
 		// The order of the elements corresponds to the order of ports in the
-		// outputs array for the node.
+		// outputs array for the node. If there are more input ports than elements
+		// in the array, the last element will be used for all remaining ports.
 		outputPortPositions: [
 			{ x_pos: 0, y_pos: 20, pos: "topRight" }
 		],
 
-		// The 'guide' is the object drawn at the mouse position as a new line
-		// is being dragged outwards.
-		// Object for output port guide can be "circle" or "image".
-		outputPortGuideObject: "circle",
-
-		// If output port guide object is "image" use this image.
-		outputPortGuideImage: "",
+		// An array of elements to control display of input port guide objects.
+		// That is the object drawn at the end of a new link as it is being dragged.
+		// Each element can have a number of different structures like this:
+		// Either
+		// { type: "circle" }
+		// Or
+		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
+		// Or
+		// { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
+		//
+		// The order of the elements corresponds to the order of ports in the
+		// inputs array for the node. If there are more input ports than elements
+		// in the array, the last element will be used for all remaining ports.
+		outputPortGuideObjects: [
+			{ type: "circle" }
+		],
 
 		// Automatically increases the node size to accommodate its ports so both
 		// input and output ports can be shown within the dimensions of
@@ -243,7 +275,7 @@ const portsHorizontalDefaultLayout = {
 		// Spacing between the port arcs around the ports.
 		portArcSpacing: 3,
 
-		// Position of the context toolbar realtive to the node. Some adjustment
+		// Position of the context toolbar relative to the node. Some adjustment
 		// will be made to account for the width of the toolbar.
 		contextToolbarPosition: "topRight",
 
@@ -583,15 +615,21 @@ const portsVerticalDefaultLayout = {
 		// Display input ports.
 		inputPortDisplay: true,
 
-		// Object for input port can be "circle" or "image".
-		inputPortObject: "circle",
-
-		// If input port object is "image" use this image.
-		inputPortImage: "",
-
-		// If input port dimensions for "image".
-		inputPortWidth: 12,
-		inputPortHeight: 12,
+		// An array of elements to control display of input ports. Each element
+		// can have a number of different structures like this:
+		// Either
+		// { type: "circle" }
+		// Or
+		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
+		// Or
+		// { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
+		//
+		// The order of the elements corresponds to the order of ports in the
+		// inputs array for the node. If there are more input ports than elements
+		// in the array, the last element will be used for all remaining ports.
+		inputPortObjects: [
+			{ type: "circle" }
+		],
 
 		// Indicates whether multiple input ports should be automatically
 		// positioned (true) or positioned based on the contents of
@@ -602,31 +640,47 @@ const portsVerticalDefaultLayout = {
 		// this: { x_pos: 5, y_pos: 10, pos: "topLeft" }. x_pos and y_pos are
 		// offsets from the pos point on the node.
 		// The order of the elements corresponds to the order of ports in the
-		// inputs array for the node.
+		// inputs array for the node. If there are more input ports than elements
+		// in the array, the last element will be used for all remaining ports.
 		inputPortPositions: [
 			{ x_pos: 0, y_pos: 29, pos: "topLeft" }
 		],
 
-		// The 'guide' is the object drawn at the mouse position as a new line
-		// is being dragged outwards.
-		// Object for input port guide can be "circle" or "image".
-		inputPortGuideObject: "circle",
-
-		// If input port guide object is "image" use this image.
-		inputPortGuideImage: "",
+		// An array of elements to control display of input port guide objects.
+		// That is the object drawn at the end of a new link as it is being dragged.
+		// Each element can have a number of different structures like this:
+		// Either
+		// { type: "circle" }
+		// Or
+		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
+		// Or
+		// { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
+		//
+		// The order of the elements corresponds to the order of ports in the
+		// inputs array for the node. If there are more input ports than elements
+		// in the array, the last element will be used for all remaining ports.
+		inputPortGuideObjects: [
+			{ type: "circle" }
+		],
 
 		// Display output ports.
 		outputPortDisplay: true,
 
-		// Object for output port can be "circle" or "image".
-		outputPortObject: "circle",
-
-		// If output port object is "image" use this image.
-		outputPortImage: "",
-
-		// Output port dimensions for "image".
-		outputPortWidth: 12,
-		outputPortHeight: 12,
+		// An array of elements to control display of output ports. Each element
+		// can have a number of different structures like this:
+		// Either
+		// { type: "circle" }
+		// Or
+		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
+		// Or
+		// { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
+		//
+		// The order of the elements corresponds to the order of ports in the
+		// outputs array for the node. If there are more output ports than elements
+		// in the array, the last element will be used for all remaining ports.
+		outputPortObjects: [
+			{ type: "circle" }
+		],
 
 		// Indicates whether multiple output ports should be automatically
 		// positioned (true) or positioned based on the contents of
@@ -637,18 +691,28 @@ const portsVerticalDefaultLayout = {
 		// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
 		// offsets from the pos point on the node.
 		// The order of the elements corresponds to the order of ports in the
-		// outputs array for the node.
+		// outputs array for the node. If there are more input ports than elements
+		// in the array, the last element will be used for all remaining ports.
 		outputPortPositions: [
 			{ x_pos: 0, y_pos: 29, pos: "topRight" }
 		],
 
-		// The 'guide' is the object drawn at the mouse position as a new line
-		// is being dragged outwards.
-		// Object for output port guide can be "circle" or "image".
-		outputPortGuideObject: "circle",
-
-		// If output port guide object is "image" use this image.
-		outputPortGuideImage: "",
+		// An array of elements to control display of input port guide objects.
+		// That is the object drawn at the end of a new link as it is being dragged.
+		// Each element can have a number of different structures like this:
+		// Either
+		// { type: "circle" }
+		// Or
+		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
+		// Or
+		// { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
+		//
+		// The order of the elements corresponds to the order of ports in the
+		// inputs array for the node. If there are more input ports than elements
+		// in the array, the last element will be used for all remaining ports.
+		outputPortGuideObjects: [
+			{ type: "circle" }
+		],
 
 		// Automatically increases the node size to accommodate its ports so both
 		// input and output ports can be shown within the dimensions of
@@ -669,7 +733,7 @@ const portsVerticalDefaultLayout = {
 		// Spacing between the port arcs around the ports.
 		portArcSpacing: 0,
 
-		// Position of the context toolbar realtive to the node. Some adjustment
+		// Position of the context toolbar relative to the node. Some adjustment
 		// will be made to account for the width of the toolbar.
 		contextToolbarPosition: "topCenter",
 

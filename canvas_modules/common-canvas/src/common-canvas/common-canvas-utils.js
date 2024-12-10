@@ -855,12 +855,18 @@ export default class CanvasUtils {
 	// Returns true if the portId passed in specifies the first port in the
 	// port array.
 	static isFirstPort(portArray, portId) {
-		const index = portArray.findIndex((port) => port.id === portId);
+		const index = this.getPortIndex(portArray, portId);
 
 		if (index === 0) {
 			return true;
 		}
 		return false;
+	}
+
+	// Returns the index of the port ID passed in, in the
+	// port array passed in.
+	static getPortIndex(portArray, portId) {
+		return portArray.findIndex((port) => port.id === portId);
 	}
 
 	// Returns a source port Id if one exists in the link, otherwise defaults
@@ -1682,6 +1688,62 @@ export default class CanvasUtils {
 			delete newLayout.outputPortRightPosX;
 			delete newLayout.outputPortRightPosY;
 		}
+		return newLayout;
+	}
+
+	// Convert now deprecated layout fields to the port objects arrays.
+	// TODO - Remove this in a future major release.
+	static convertPortObjectInfo(layout) {
+		const newLayout = layout;
+
+		if (!layout) {
+			return newLayout;
+		}
+
+		// If custom fields exist for input object info, write the values into the
+		// inputPortObjects array.
+		if (newLayout.inputPortObject === "image") {
+			newLayout.inputPortObjects = [
+				{ type: "image",
+					src: newLayout.inputPortImage,
+					height: newLayout.inputPortHeight,
+					width: newLayout.inputPortWidth
+				}
+			];
+		}
+
+		if (newLayout.inputPortGuideObject === "image") {
+			newLayout.inputPortGuideObjects = [
+				{ type: "image",
+					src: newLayout.inputPortGuideImage,
+					height: newLayout.inputPortHeight,
+					width: newLayout.inputPortWidth
+				}
+			];
+		}
+
+		// If custom fields exist for output object info, write the values into the
+		// outputPortObjects array.
+		if (newLayout.outputPortObject === "image") {
+			newLayout.outputPortObjects = [
+				{ type: "image",
+					src: newLayout.outputPortImage,
+					height: newLayout.outputPortHeight,
+					width: newLayout.outputPortWidth
+				}
+			];
+		}
+
+		if (newLayout.outputPortGuideObject === "image") {
+			newLayout.outputPortGuideObjects = [
+				{ type: "image",
+					src: newLayout.outputPortGuideImage,
+					height: newLayout.outputPortHeight,
+					width: newLayout.outputPortWidth
+				}
+			];
+		}
+
 		return newLayout;
 	}
 }
