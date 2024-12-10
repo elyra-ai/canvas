@@ -101,6 +101,8 @@ class PropertiesMain extends React.Component {
 		this.detectResize = this.detectResize.bind(this);
 		// used to tracked when the resize button is clicked and ignore detectResize
 		this.resizeClicked = false;
+		// Track panel height to avoid resize calls whenever height changes
+		this.lastPanelHeight = 0;
 	}
 
 	componentDidMount() {
@@ -455,12 +457,15 @@ class PropertiesMain extends React.Component {
 		}
 	}
 
-	detectResize() {
-		// only hide resize button if resize wasn't from clicking resize button
-		if (!this.resizeClicked) {
-			this.setState({ showResizeBtn: false });
+	detectResize(width, height) {
+		if (height === this.lastPanelHeight) {
+			// only hide resize button if resize wasn't from clicking resize button
+			if (!this.resizeClicked) {
+				this.setState({ showResizeBtn: false });
+			}
+			this.resizeClicked = false;
 		}
-		this.resizeClicked = false;
+		this.lastPanelHeight = height;
 	}
 
 	render() {
