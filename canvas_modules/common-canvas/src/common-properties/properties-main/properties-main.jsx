@@ -457,7 +457,7 @@ class PropertiesMain extends React.Component {
 		}
 	}
 
-	detectResize(width, height) {
+	detectResize(_width, height) {
 		if (height === this.lastPanelHeight) {
 			// only hide resize button if resize wasn't from clicking resize button
 			if (!this.resizeClicked) {
