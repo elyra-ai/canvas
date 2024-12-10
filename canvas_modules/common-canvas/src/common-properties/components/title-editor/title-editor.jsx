@@ -144,7 +144,7 @@ class TitleEditor extends Component {
 				<Tooltip
 					className="properties-title-editor-btn help"
 					data-id="help"
-					tip={this.props.help?.data?.description?.label}
+					tip={this.props.description?.default}
 					link={this.props.help?.data?.description?.link ? this.props.help?.data?.description?.link : null}
 					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
 					direction="bottom"
@@ -245,6 +245,7 @@ TitleEditor.propTypes = {
 	showHeading: PropTypes.bool,
 	rightFlyoutTabsView: PropTypes.bool,
 	titleInfo: PropTypes.object,
+	description: PropTypes.object,
 	title: PropTypes.string, // set by redux
 	setTitle: PropTypes.func // set by redux
 };

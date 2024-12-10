@@ -424,21 +424,12 @@
         ]
       }
     ],
+    "description": {
+      "default": "Readonly Description"
+    },
     "help": {
       "data": {
-        "url": "randomUrl",
-        "description": {
-          "label": "Readonly Description",
-          "link": {
-            "id": "link_for_heading",
-            "data": {
-              "something": "option data"
-            },
-            "propertyId": {
-              "name": "number"
-            }
-          }
-        }
+        "url": "randomUrl"
       }
     }
   },
