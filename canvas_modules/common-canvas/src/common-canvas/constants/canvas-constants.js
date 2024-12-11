@@ -108,8 +108,12 @@ export const SUCCESS = "success";
 export const HORIZONTAL = "horizonal";
 export const VERTICAL = "vertical";
 
-export const PORT_OBJECT_IMAGE = "image";
 export const PORT_OBJECT_CIRCLE = "circle";
+export const PORT_OBJECT_IMAGE = "image";
+export const PORT_OBJECT_JSX = "jsx";
+
+export const FLOW_IN = "in";
+export const FLOW_OUT = "out";
 
 // Variations of association links - when enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE
 export const ASSOC_VAR_CURVE_RIGHT = "curveRight";

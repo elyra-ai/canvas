@@ -144,10 +144,12 @@ export default class CanvasController {
 	setCanvasConfig(config) {
 		this.logger.log("Setting Canvas Config");
 		if (config) {
-			// TODO - Remove these next three lines in next major release.
+			// TODO - Remove these next four lines in next major release.
 			const correctConfig = this.correctTypo(config);
 			correctConfig.enableNodeLayout =
 				CanvasUtils.convertPortPosInfo(correctConfig.enableNodeLayout);
+			correctConfig.enableNodeLayout =
+				CanvasUtils.convertPortObjectInfo(correctConfig.enableNodeLayout);
 			this.objectModel.openPaletteIfNecessary(config);
 			this.objectModel.setCanvasConfig(correctConfig);
 		}
