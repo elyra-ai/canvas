@@ -32,7 +32,7 @@ const markdownIt = require("markdown-it")({
 import { escape as escapeText, forOwn, get } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
-	LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
+	LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT, LINK_TYPE_CURVE,
 	LINK_DIR_LEFT_RIGHT, LINK_DIR_RIGHT_LEFT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
 	LINK_METHOD_FREEFORM, LINK_METHOD_PORTS,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
@@ -45,8 +45,8 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	NORTH, SOUTH, EAST, WEST,
 	WYSIWYG, CAUSE_KEYBOARD, CAUSE_MOUSE,
 	FLOW_IN, FLOW_OUT,
-	CANVAS_FOCUS }
-	from "./constants/canvas-constants";
+	CANVAS_FOCUS
+} from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
 import Logger from "../logging/canvas-logger.js";
@@ -3281,28 +3281,6 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-
-	getLinkImageTransform(d) {
-		let angle = 0;
-		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
-			const adjacent = d.x2 - (d.originX || d.x1);
-			const opposite = d.y2 - (d.originY || d.y1);
-			if (adjacent === 0 && opposite === 0) {
-				angle = 0;
-			} else {
-				angle = Math.atan(opposite / adjacent) * (180 / Math.PI);
-				angle = adjacent >= 0 ? angle : angle + 180;
-				if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-					angle -= 90;
-				} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-					angle += 90;
-				}
-			}
-			return `rotate(${angle},${d.x2},${d.y2})`;
-		}
-		return null;
-	}
-
 	// Returns a link, if one can be found, at the position indicated by x and y
 	// coordinates.
 	getLinkAtMousePos(x, y) {
@@ -5761,6 +5739,27 @@ export default class SVGCanvasRenderer {
 		// For other freeform link types we return an appropriate direction
 		// at right angles to the node.
 		return this.getAngleBasedForInputPorts(d.trgDir);
+	}
+
+	getLinkImageTransform(d) {
+		let angle = 0;
+
+		// For "Freeform" Straight and Curve links, we calculate the angle
+		// based on the rotation of the link line direction.
+		if (this.canvasLayout.linkMethod === LINK_METHOD_FREEFORM &&
+			(this.canvasLayout.linkType === LINK_TYPE_STRAIGHT ||
+				this.canvasLayout.linkType === LINK_TYPE_CURVE)) {
+			angle = CanvasUtils.calculateAngle((d.originX || d.x1), (d.originY || d.y1), d.x2, d.y2);
+
+		// For "Freeform" Elbow and Parallax links AND all links using the
+		// "Ports" method, we snap the link direction to the target
+		// direction stored in the link.
+		} else {
+			angle = this.getAngleBasedForInputPorts(d.trgDir);
+		}
+
+		return `rotate(${angle},${d.x2},${d.y2})`;
+
 	}
 
 	// Returns the angle for the output port of a source node when
