@@ -1,4 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-	<circle cx="10" cy="10" r="10" fill="#fff"/>
-		<path d="M10,2a8,8,0,1,1-8,8,8,8,0,0,1,8-8m0-2A10,10,0,1,0,20,10,10,10,0,0,0,10,0Z" fill="#0f62fe"/>
-		<polygon points="16 7.59    14.51 6   10 10.82   5.49 6     4 7.59    10 14   16 7.59" fill="#0f62fe"/></svg>
