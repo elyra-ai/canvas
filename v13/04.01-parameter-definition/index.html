@@ -1,0 +1,3059 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../04-common-properties/">
+      
+      
+        <link rel="next" href="../04.02-callbacks/">
+      
+      
+      <link rel="icon" href="../assets/FlowIcon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.48">
+    
+    
+      
+        <title>Parameter Definition - Elyra Canvas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/styles.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#parameter-definition" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Elyra Canvas" class="md-header__button md-logo" aria-label="Elyra Canvas" data-md-component="logo">
+      
+  <img src="../assets/FlowIcon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Elyra Canvas
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Parameter Definition
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/elyra-ai/canvas" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href=".." class="md-tabs__link">
+          
+  
+    
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01-canvas-components/" class="md-tabs__link">
+          
+  
+    
+  
+  Components
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../02-set-up/" class="md-tabs__link">
+          
+  
+    
+  
+  Initial Setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../03-common-canvas/" class="md-tabs__link">
+          
+  
+    
+  
+  Common Canvas
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../04-common-properties/" class="md-tabs__link">
+          
+  
+    
+  
+  Common Properties
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05-faq/" class="md-tabs__link">
+          
+  
+    
+  
+  FAQ
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../06-contributing/" class="md-tabs__link">
+          
+  
+    
+  
+  Contributing
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Elyra Canvas" class="md-nav__button md-logo" aria-label="Elyra Canvas" data-md-component="logo">
+      
+  <img src="../assets/FlowIcon.png" alt="logo">
+
+    </a>
+    Elyra Canvas
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/elyra-ai/canvas" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href=".." class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Components
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Components
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-canvas-components/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Components Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flow Editor
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flow Editor
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01-flow-editor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Editor Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01.01-nodes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nodes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01.02-links/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Links
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01.03-comments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01.04-decorations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decorations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.02-palette/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Palette
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.03-context-menu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.04-context-toolbar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Toolbar
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.05-toolbar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Toolbar
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.06-notification-panel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notification Panel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.07-state-tag/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    State Tag
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.08-tooltips/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tooltips
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.09-panels/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Panels
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.10-common-properties/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Common Properties
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Initial Setup
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Initial Setup
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-set-up/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Common Canvas
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Common Canvas
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-common-canvas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Config Objects
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Config Objects
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02-configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.01-canvas-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Canvas Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.02-toolbar-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Toolbar Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.03-notification-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notification Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.04-context-menu-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.05-keyboard-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keyboard Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Callbacks
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Callbacks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03-callbacks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Callbacks Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.01-context-menu-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.02-before-edit-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Before Edit Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.03-edit-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edit Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.04-layout-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Layout Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.05-decoration-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decoration Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.06-tip-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tip Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.07-id-generator-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ID Generator Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.08-selection-change-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Selection Change Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.09-click-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Click Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.10-action-label-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Action Label Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Canvas Controller
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            Canvas Controller
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04-canvas-controller/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.01-decorations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decorations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.02-api-object-structure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Object Structure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.03-creating-new-canvas-nodes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Creating New Canvas Nodes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.05-notification-messages/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notification Messages
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.06-styling-objects/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Styling Canvas Objects
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.05-keyboard-support/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keyboard Support
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.06.01-node-customization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Node Customization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.06.02-comment-customization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comment Customization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.06.03-link-customization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Link Customization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.07-external-objects/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Node Creation from External Object
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.08-external-pipeline-flows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    External Pipeline Flows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.09-read-only-or-locked-flows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Read Only or Locked Flows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.10-command-stack/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command Stack
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.11-internal-actions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Internal Actions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_14" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_14" id="__nav_4_14_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Deprecated
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_14">
+            <span class="md-nav__icon md-icon"></span>
+            Deprecated
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.30.01-context-menu-wrapper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Wrapper
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.30.02-flow-validation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flow Validation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Common Properties
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Common Properties
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-common-properties/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Parameter Definition
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Parameter Definition
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#title-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Title Definition
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current Parameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameter-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameter Definitions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-only-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      UI-only Parameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complex-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complex Types
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Complex Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-note-on-parameters-and-complex-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      A Note on Parameters and Complex Types:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-hints" class="md-nav__link">
+    <span class="md-ellipsis">
+      UI Hints
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conditions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-set-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Set Metadata
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.02-callbacks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Callbacks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.03-ui-hints/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UI Hints
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.04-controls/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controls
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.05-conditions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conditions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.06-custom-components/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Custom Components
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.07-properties-controller/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Properties Controller
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.08-properties-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Properties Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            FAQ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frequently asked questions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Contributing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Guidelines for Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06.01-style-guidelines/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Style Guidelines for Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06.02-testing-guidelines/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing Guidelines for Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#title-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Title Definition
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current Parameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameter-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameter Definitions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-only-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      UI-only Parameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complex-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complex Types
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Complex Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-note-on-parameters-and-complex-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      A Note on Parameters and Complex Types:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-hints" class="md-nav__link">
+    <span class="md-ellipsis">
+      UI Hints
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conditions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-set-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Set Metadata
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/elyra-ai/canvas/edit/main/docs/04.01-parameter-definition.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="parameter-definition">Parameter Definition<a class="headerlink" href="#parameter-definition" title="Permanent link">&para;</a></h1>
+<p>The parameter definition object provides input for controlling the common-properties dialog.  It consists of information that is available in the <code>operator</code> object combined with UI hints, information on data sets, and resources.</p>
+<p>The parameter definition has a defined schema and set of examples located here:
+<a href="https://github.com/elyra-ai/pipeline-schemas/tree/main/common-canvas/parameter-defs">schema and examples</a></p>
+<p>The parameter definition consists of the following sections:</p>
+<h2 id="title-definition">Title Definition<a class="headerlink" href="#title-definition" title="Permanent link">&para;</a></h2>
+<p>The title of the properties editor. If <code>editable</code> is set to true (default), the title can be edited. If set to false, the title will be readonly.</p>
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;titleDefinition&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;title&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Properties Title&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;editable&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<h2 id="current-parameters">Current Parameters<a class="headerlink" href="#current-parameters" title="Permanent link">&para;</a></h2>
+<p>A list of input parameters and initial values upon input.  The list is a set of key/value pairs with the key being the field name and the value is the initial value.</p>
+<p>Example
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;current_parameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;targetField&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="s2">&quot;inputFieldList&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="s2">&quot;elasticNetParam&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;fitIntercept&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;maxIter&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">75</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;regParam&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;standardization&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;threshold&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;tol&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0000010</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div></p>
+<h2 id="parameter-definitions">Parameter Definitions<a class="headerlink" href="#parameter-definitions" title="Permanent link">&para;</a></h2>
+<p>The list of parameters definitions for this property dialog.  The list contains the name of the parameter, the data type of the parameter, the role and the default value.  The information provided is as needed by the backend engine, i.e. the parameter name should be the name of the parameter that is expected for the backend engine.</p>
+<p>The list of parameter definitions has the following attributes:</p>
+<ul>
+<li><code>id</code> (<em>string</em>) <strong>Required</strong> Parameter identifier as consumed by the backend engine.</li>
+<li><code>default</code> (<em>any</em>) The default value of the parameter.</li>
+<li><code>enum</code> (<em>array[string]</em>) A restricted list of string values that are valid for the field.</li>
+<li><code>type</code> (<em>string</em>) Parameter type as consumed by the backend engine.</li>
+<li><code>role</code> (<em>string</em>) Parameter role, which is an optional specialization of the type.</li>
+<li><code>required</code> (<em>boolean</em>) Indication whether parameter is required or optional.</li>
+</ul>
+<p>Parameter types have one of a fixed set of basic types. These are:</p>
+<ul>
+<li><code>integer</code></li>
+<li><code>double</code></li>
+<li><code>string</code></li>
+<li><code>date</code></li>
+<li><code>time</code></li>
+<li><code>timestamp</code></li>
+<li><code>custom</code></li>
+</ul>
+<p>These can be used as maps or arrays e.g.:</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">array</span><span class="p">[&lt;</span><span class="nx">value</span><span class="o">-</span><span class="k">type</span><span class="p">&gt;]:</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">sequence</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="nx">list</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">values</span>
+</code></pre></div>
+
+<p>Parameter roles defined by the role attribute can be one of:</p>
+<ul>
+<li><code>expression</code>: an expression assumed to be in the expression language for the run time</li>
+<li><code>column</code>: value represents one or more columns from the data model visible to this operator</li>
+<li><code>new_column</code>: value represents the name of a new column to be added to the data model and must therefore not match an existing column and conform to existing syntactic restrictions.</li>
+</ul>
+<p>Example
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;parameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;targetField&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="s2">&quot;column&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;inputFieldList&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;array[string]&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="p">[],</span>
+<span class="w">      </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="s2">&quot;column&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;impurity&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;enum&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;gini&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;entropy&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;gini&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;elasticNetParam&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;double&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="mf">0.0</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div></p>
+<h2 id="ui-only-parameters">UI-only Parameters<a class="headerlink" href="#ui-only-parameters" title="Permanent link">&para;</a></h2>
+<p>A list of input parameters and initial values upon input.  This set of parameters are separated from the backend parameters (current parameters).  The idea is that these parameters are not passed into the backend engine by the common-properties consumer.</p>
+<p>Example
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;current_ui_parameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;databaseResource&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;tol&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0000010</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div></p>
+<p>UI-only parameters require information about the parameters same as the parameter definition information used for the backend parameters.  The UI-only parameter definition information is stored in the UI-hints section in the sub-section named <code>ui_parameters</code>.  A description of the UI hints specifications can be found on the <a href="../04.03-ui-hints/">UI Hints</a> page.</p>
+<p>UI-only properties are returned to the consuming application via a separate parameter on the applyPropertiesChanges callback.  See the <a href="../04.02-callbacks/">Callbacks</a> page.</p>
+<h2 id="complex-types">Complex Types<a class="headerlink" href="#complex-types" title="Permanent link">&para;</a></h2>
+<p>The complex types section is an array of</p>
+<p>The complex types have the following attributes:</p>
+<ul>
+<li><code>id</code> (<em>string</em>) <strong>Required</strong> Identifier of complex type, can be referenced in other places.</li>
+<li><code>type</code> (<em>string</em>) If <code>object</code> is specified, Common Properties will return the values as an array of objects consisting of key value pairs. This defaults to <code>array</code>.</li>
+<li><code>key_definition</code> (<em>object</em>) A parameter definition attribute on the key parameter field.</li>
+<li><code>parameters</code> (<em>object</em>) <strong>Required</strong> List of parameters fields.  Each parameter can be defined as a parameter definition attribute or a complex type attribute.</li>
+</ul>
+<p>Example of complex types
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;complex_types&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SortEntry&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;key_definition&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;field&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;column&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;parameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;sort_order&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;enum&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;Ascending&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Descending&quot;</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="s2">&quot;default&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Ascending&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+</code></pre></div></p>
+<h4 id="a-note-on-parameters-and-complex-types">A Note on Parameters and Complex Types:<a class="headerlink" href="#a-note-on-parameters-and-complex-types" title="Permanent link">&para;</a></h4>
+<p>Note that both parameter and complex type definitions are in the exact same format as defined in the operator schema. Therefore the contents of operator JSON files can be used for these two sections.</p>
+<h2 id="ui-hints">UI Hints<a class="headerlink" href="#ui-hints" title="Permanent link">&para;</a></h2>
+<p>A set of specifications for controlling the layout and flow of Common Properties.  A description of the UI hints specifications can be found on the <a href="../04.03-ui-hints/">UI Hints</a> page.</p>
+<h2 id="conditions">Conditions<a class="headerlink" href="#conditions" title="Permanent link">&para;</a></h2>
+<p>A set of specifications for controlling validation checking of parameters during the common-properties dialog. A description of the Conditions specifications can be found here on the <a href="../04.05-conditions/">Conditions</a> page.</p>
+<h2 id="data-set-metadata">Data Set Metadata<a class="headerlink" href="#data-set-metadata" title="Permanent link">&para;</a></h2>
+<p>The data set metadata is an array of datarecord-metadata objects as defined in the datarecord-metadata JSON schema. Each datarecord-metadata object contains and array of fields that provide column information on the input data set.  <a href="https://github.com/elyra-ai/pipeline-schemas/tree/main/common-pipeline/datarecord-metadata">schema and examples</a></p>
+<p>The fields have the following attributes:</p>
+<ul>
+<li><code>name</code> (<em>string</em>) <strong>Required</strong> Field name. Must be unique within the dataset.</li>
+<li><code>type</code> (<em>string</em>) <strong>Required</strong> Field type. Can be a primitive type (string, integer, double, date, time, timestamp), or a vector, map, or struct containing those types. Required.</li>
+<li><code>nullable</code> (<em>boolean</em>) Indicates whether or not one can place null values into the field.  Default: False.</li>
+<li><code>metadata</code> (<em>object</em>) A set of additional metadata attributes.</li>
+</ul>
+<p>The additional metadata attributes are as follows:</p>
+<ul>
+<li><code>description</code> (<em>string</em>) A description of the field.</li>
+<li><code>measure</code> (<em>string</em>) The field measurement type.  The value can be one of the following. <code>range, discrete, flag, set, ordered-set, typeless, collection, geospatial, default</code></li>
+<li><code>role</code> (<em>string</em>) Field role for modeling. The value can be one of the following.
+<code>input,
+target,
+both,
+none,
+partition,
+split,
+frequency,
+record-id</code></li>
+<li><code>max_string_length</code> (<em>number</em>) Maximum character length for string fields. Length is unlimited when not present.</li>
+<li><code>values</code> (<em>array[string]</em>) Array of unique categorical values for the column.</li>
+<li><code>ranges</code> (<em>object</em>) Minimum and maximum discovered values for scalar data.</li>
+</ul>
+<p>Example
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;dataset_metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Schema-1&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;fields&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Age&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;measure&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;range&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;input&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Sex&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;measure&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;discrete&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;input&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;BP&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;measure&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;discrete&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;input&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Schema-2&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;fields&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Birthdate&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;date&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Date of birth&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;measure&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;range&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;role&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;input&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div></p>
+<h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
+<p>This is a map of string resources.</p>
+<p>Example:
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;resources&quot;</span><span class="o">:</span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;org.apache.spark.ml.classification.DecisionTreeClassifier.label&quot;</span><span class="o">:</span><span class="s2">&quot;Random Forest Classifier&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;org.apache.spark.ml.classification.DecisionTreeClassifier.desc&quot;</span><span class="o">:</span><span class="s2">&quot;Fitted Random Forest Classification Model&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;inputFieldList.label&quot;</span><span class="o">:</span><span class="s2">&quot;Input columns&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;inputFieldList.desc&quot;</span><span class="o">:</span><span class="s2">&quot;Select one or more input columns&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;targetField.label&quot;</span><span class="o">:</span><span class="s2">&quot;Target column&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;targetField.desc&quot;</span><span class="o">:</span><span class="s2">&quot;Select a target column&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;max_depth_not_valid&quot;</span><span class="o">:</span><span class="s2">&quot;The max depth parameter must be greater than or equal to zero&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;max_iter_not_valid&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The max iterations parameter must be greater than or equal to zero&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;min_instances_per_node_not_valid&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The minimum instances per node value must be &gt;= 1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;subsampling_rate_not_valid&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;The subsampling rate value must be &gt; 0 and &lt;= 1&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../04-common-properties/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Getting started">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Getting started
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../04.02-callbacks/" class="md-footer__link md-footer__link--next" aria-label="Next: Callbacks">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Callbacks
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright  &copy; 2024 Elyra Authors, an open source project! Maintained by the Elyra Authors Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="http://github.com/elyra-ai/canvas" target="_blank" rel="noopener" title="Elyra Canvas on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.footer"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+        <script src="../js/links-in-new-tabs.js"></script>
+      
+    
+  </body>
+</html>

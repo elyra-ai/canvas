@@ -1,0 +1,3998 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../03.03.10-action-label-handler/">
+      
+      
+        <link rel="next" href="../03.04.01-decorations/">
+      
+      
+      <link rel="icon" href="../assets/FlowIcon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.48">
+    
+    
+      
+        <title>API - Elyra Canvas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/styles.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#canvas-controller-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Elyra Canvas" class="md-header__button md-logo" aria-label="Elyra Canvas" data-md-component="logo">
+      
+  <img src="../assets/FlowIcon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Elyra Canvas
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/elyra-ai/canvas" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href=".." class="md-tabs__link">
+          
+  
+    
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01-canvas-components/" class="md-tabs__link">
+          
+  
+    
+  
+  Components
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../02-set-up/" class="md-tabs__link">
+          
+  
+    
+  
+  Initial Setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../03-common-canvas/" class="md-tabs__link">
+          
+  
+    
+  
+  Common Canvas
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../04-common-properties/" class="md-tabs__link">
+          
+  
+    
+  
+  Common Properties
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05-faq/" class="md-tabs__link">
+          
+  
+    
+  
+  FAQ
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../06-contributing/" class="md-tabs__link">
+          
+  
+    
+  
+  Contributing
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Elyra Canvas" class="md-nav__button md-logo" aria-label="Elyra Canvas" data-md-component="logo">
+      
+  <img src="../assets/FlowIcon.png" alt="logo">
+
+    </a>
+    Elyra Canvas
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/elyra-ai/canvas" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href=".." class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Components
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Components
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-canvas-components/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Components Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flow Editor
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flow Editor
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01-flow-editor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Editor Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01.01-nodes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nodes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01.02-links/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Links
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01.03-comments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01.04-decorations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decorations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.02-palette/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Palette
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.03-context-menu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.04-context-toolbar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Toolbar
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.05-toolbar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Toolbar
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.06-notification-panel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notification Panel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.07-state-tag/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    State Tag
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.08-tooltips/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tooltips
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.09-panels/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Panels
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.10-common-properties/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Common Properties
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Initial Setup
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Initial Setup
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-set-up/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Common Canvas
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Common Canvas
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-common-canvas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Config Objects
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Config Objects
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02-configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.01-canvas-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Canvas Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.02-toolbar-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Toolbar Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.03-notification-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notification Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.04-context-menu-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.05-keyboard-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keyboard Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Callbacks
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Callbacks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03-callbacks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Callbacks Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.01-context-menu-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.02-before-edit-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Before Edit Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.03-edit-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edit Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.04-layout-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Layout Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.05-decoration-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decoration Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.06-tip-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tip Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.07-id-generator-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ID Generator Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.08-selection-change-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Selection Change Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.09-click-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Click Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.10-action-label-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Action Label Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Canvas Controller
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            Canvas Controller
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline-flow-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pipeline Flow methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pipeline methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#palette-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Palette methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#selections-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Selections methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notification-messages-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notification messages methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-and-comment-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node AND comment methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comment-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comment methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#link-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Link methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#breadcrumbs-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Breadcrumbs methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#branch-highlight-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Branch Highlight methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operational-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operational methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operational methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logging methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#palette-methods_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Palette methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-menu-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context menu methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notification-panel-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notification Panel methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#right-flyout-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Right Flyout methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-panel-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Top panel methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bottom-panel-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bottom panel methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canvaspipeline-navigation-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Canvas/pipeline navigation methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-stack-interaction-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command Stack interaction methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zoom-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zoom methods
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.01-decorations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decorations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.02-api-object-structure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Object Structure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.03-creating-new-canvas-nodes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Creating New Canvas Nodes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.05-notification-messages/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notification Messages
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.06-styling-objects/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Styling Canvas Objects
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.05-keyboard-support/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keyboard Support
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.06.01-node-customization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Node Customization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.06.02-comment-customization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comment Customization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.06.03-link-customization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Link Customization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.07-external-objects/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Node Creation from External Object
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.08-external-pipeline-flows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    External Pipeline Flows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.09-read-only-or-locked-flows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Read Only or Locked Flows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.10-command-stack/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command Stack
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.11-internal-actions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Internal Actions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_14" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_14" id="__nav_4_14_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Deprecated
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_14">
+            <span class="md-nav__icon md-icon"></span>
+            Deprecated
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.30.01-context-menu-wrapper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Wrapper
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.30.02-flow-validation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flow Validation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Common Properties
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Common Properties
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-common-properties/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.01-parameter-definition/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parameter Definition
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.02-callbacks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Callbacks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.03-ui-hints/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UI Hints
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.04-controls/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controls
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.05-conditions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conditions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.06-custom-components/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Custom Components
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.07-properties-controller/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Properties Controller
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.08-properties-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Properties Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            FAQ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frequently asked questions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Contributing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Guidelines for Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06.01-style-guidelines/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Style Guidelines for Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06.02-testing-guidelines/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing Guidelines for Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline-flow-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pipeline Flow methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pipeline methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#palette-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Palette methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#selections-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Selections methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notification-messages-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notification messages methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-and-comment-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node AND comment methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comment-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comment methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#link-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Link methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#breadcrumbs-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Breadcrumbs methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#branch-highlight-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Branch Highlight methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operational-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operational methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operational methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logging methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#palette-methods_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Palette methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-menu-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context menu methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notification-panel-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notification Panel methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#right-flyout-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Right Flyout methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-panel-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Top panel methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bottom-panel-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bottom panel methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canvaspipeline-navigation-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Canvas/pipeline navigation methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-stack-interaction-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command Stack interaction methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zoom-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zoom methods
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/elyra-ai/canvas/edit/main/docs/03.04-canvas-controller.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="canvas-controller-api">Canvas Controller API<a class="headerlink" href="#canvas-controller-api" title="Permanent link">&para;</a></h1>
+<p>Your application code can programmatically perform many of the actions that the user can do in the Common Canvas using the Canvas Controller API.
+Note: See this page for differences between <a href="../03.04.02-api-object-structure/">the structure of objects in the API and the schema.</a></p>
+<p>In most cases within the API, the pipelineId parameter is optional. If pipelineId is omitted, the method will default to the pipeline that is currently displayed in the main canvas viewport.</p>
+<p>Warning 1: Do not alter the IDs of objects that currently exist on the canvas. Changing object IDs can cause internal problems, in particular with the command stack.</p>
+<p>Warning 2: When using external pipeline flows, Pipeline IDs must be globally unique identifiers.</p>
+<p>The API provides the following:</p>
+<h2 id="pipeline-flow-methods">Pipeline Flow methods<a class="headerlink" href="#pipeline-flow-methods" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Loads the pipelineFlow document provided into Common Canvas and displays it.</span>
+<span class="c1">// The document must conform to the pipelineFlow schema as documented in the</span>
+<span class="c1">// elyra-ai pipeline-schemas repo. Documents conforming to older versions may be</span>
+<span class="c1">// provided but they will be upgraded to the most recent version.</span>
+<span class="nx">setPipelineFlow</span><span class="p">(</span><span class="nx">flow</span><span class="p">)</span>
+
+<span class="c1">// Clears the pipleine flow and displays an empty canvas.</span>
+<span class="nx">clearPipelineFlow</span><span class="p">()</span>
+
+<span class="c1">// Returns the current pipelineFlow document in the latest version of the</span>
+<span class="c1">// pipelineFlow schema as documented in the elyra-ai pipeline-schemas repo.</span>
+<span class="nx">getPipelineFlow</span><span class="p">()</span>
+
+<span class="c1">// Returns the current pipelineFlow document ID.</span>
+<span class="nx">getPipelineFlowId</span><span class="p">()</span>
+
+<span class="c1">// Returns the ID of the primary pipeline from the pipelineFlow.</span>
+<span class="nx">getPrimaryPipelineId</span><span class="p">()</span>
+
+<span class="c1">// Returns the external pipeline flow for the url passed in. The external</span>
+<span class="c1">// flow must have been loaded through some Common Canvas action for this</span>
+<span class="c1">// method to be able to return anything.</span>
+<span class="nx">getExternalPipelineFlow</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
+
+<span class="c1">// Returns the internal format of all canvas data stored in memory by</span>
+<span class="c1">// Common Canvas. Nodes, comments and links are returned in the internal</span>
+<span class="c1">// format.</span>
+<span class="nx">getCanvasInfo</span><span class="p">()</span>
+
+<span class="c1">// Returns the IDs of the ancestor pipleline of the pipeline ID passed in.</span>
+<span class="nx">getAncestorPipelineIds</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Removes all styles from nodes, comments and links. See the setObjectsStyle</span>
+<span class="c1">// and setLinkStyle methods for details on setting styles.</span>
+<span class="c1">// temporary - is a boolean that indicates whether temporary or permanent</span>
+<span class="c1">// styles should be removed.</span>
+<span class="nx">removeAllStyles</span><span class="p">(</span><span class="nx">temporary</span><span class="p">)</span>
+
+<span class="c1">// Specifies the new styles for objects that are not highlighted during</span>
+<span class="c1">// branch highlighting.</span>
+<span class="c1">// newStyle - is a style specification object.</span>
+<span class="nx">setSubdueStyle</span><span class="p">(</span><span class="nx">newStyle</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="pipeline-methods">Pipeline methods<a class="headerlink" href="#pipeline-methods" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns the pipeline object for the pipeline Id passed in.</span>
+<span class="nx">getPipeline</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Returns the ID of the pipeline object which is currently on display</span>
+<span class="c1">// in the canvas. Typically, this is the primary pipeline but will be</span>
+<span class="c1">// different if the user has navigated into one or more supernodes; in</span>
+<span class="c1">// which case it will be the ID of the pipeline at the level in the</span>
+<span class="c1">// supernode hierarchy that is currently on display.</span>
+<span class="nx">getCurrentPipelineId</span><span class="p">()</span>
+
+<span class="c1">// Returns truty if the pipeline is external (that is it is part of an</span>
+<span class="c1">// external pipeline flow). Otherwise, return falsy to indicate the pipeline</span>
+<span class="c1">// is local.</span>
+<span class="nx">isPipelineExternal</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Returns the flow validation messages for the pipeline ID passed in.</span>
+<span class="nx">getFlowMessages</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Returns a boolean to indicate whether there are any messages of</span>
+<span class="c1">// includeMsgsType in the pipeline identified by the pipeline ID passed in.</span>
+<span class="c1">// includeMsgsType - can be either &quot;error&quot; or &quot;warning&quot;</span>
+<span class="nx">isFlowValid</span><span class="p">(</span><span class="nx">includeMsgTypes</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Rearranges the nodes in the canvas in the direction specified for the</span>
+<span class="c1">// pipeline ID passed in.</span>
+<span class="c1">// layoutDirection - can be &quot;horizontal&quot; or &quot;vertical&quot;</span>
+<span class="nx">autoLayout</span><span class="p">(</span><span class="nx">layoutDirection</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="palette-methods">Palette methods<a class="headerlink" href="#palette-methods" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Loads the palette data as described in the palette schema in</span>
+<span class="c1">// elyra-ai pipeline-schemas repo. Any version can be loaded and it will be</span>
+<span class="c1">// upgraded to the latest version.</span>
+<span class="nx">setPipelineFlowPalette</span><span class="p">(</span><span class="nx">palette</span><span class="p">)</span>
+
+<span class="c1">// Clears the palette data from Common Canvas.</span>
+<span class="nx">clearPaletteData</span><span class="p">()</span>
+
+<span class="c1">// Sets the loading text of the category. If set to a non-empty string the</span>
+<span class="c1">// category will show an InlineLoading control in the palette category div</span>
+<span class="c1">// with this text as the label. If set to falsey the palette category</span>
+<span class="c1">// will display as normal.</span>
+<span class="nx">setCategoryLoadingText</span><span class="p">(</span><span class="nx">categoryId</span><span class="p">,</span><span class="w"> </span><span class="nx">loadingText</span><span class="p">)</span>
+
+<span class="c1">// Sets the empty text of the category. If set to a non-empty string and the</span>
+<span class="c1">// category does not have any nodes, the palette will show a warning icon with</span>
+<span class="c1">// this text as a message under the category title when the category is opened.</span>
+<span class="c1">// This message will not be displayed if the field is set to falsey or if</span>
+<span class="c1">// nodetypes are added to the category.</span>
+<span class="nx">setCategoryEmptyText</span><span class="p">(</span><span class="nx">categoryId</span><span class="p">,</span><span class="w"> </span><span class="nx">emptyText</span><span class="p">)</span>
+
+<span class="c1">// Adds a new node into the palette:</span>
+<span class="c1">// nodeTypeObj - must conform to the style of node used by the palette as</span>
+<span class="c1">// described in the palette schema. See objects in nodeTypes array in the</span>
+<span class="c1">// palette schema:</span>
+<span class="c1">//  https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/palette/palette-v3-schema.json</span>
+<span class="c1">// category - is the name of the palette category where the node will be</span>
+<span class="c1">// added. If the category doesn&#39;t exist it will be created.</span>
+<span class="c1">// categoryLabel - Is an optional param. If a new category is created it will</span>
+<span class="c1">// be displayed with this label.</span>
+<span class="c1">// categoryDescription - Is an optional param. If a new category is created</span>
+<span class="c1">// it will be displayed with this description.</span>
+<span class="c1">// categoryImage - Is an optional param. The image displayed for the category provided as a</span>
+<span class="c1">// reference to an image or the image itself.</span>
+<span class="nx">addNodeTypeToPalette</span><span class="p">(</span><span class="nx">nodeTypeObj</span><span class="p">,</span><span class="w"> </span><span class="nx">categoryId</span><span class="p">,</span><span class="w"> </span><span class="nx">categoryLabel</span><span class="p">,</span><span class="w"> </span><span class="nx">categoryDescription</span><span class="p">,</span><span class="w"> </span><span class="nx">categoryImage</span><span class="p">)</span>
+
+<span class="c1">// Adds an array of new node into the palette:</span>
+<span class="c1">// nodeTypeObjs - an array of nodetypes that must conform to the style of</span>
+<span class="c1">// nodes used by the palette as described in the palette schema. See objects</span>
+<span class="c1">// in nodeTypes array in the palette schema:</span>
+<span class="c1">//  https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/palette/palette-v3-schema.json</span>
+<span class="c1">// category - is the name of the palette category where the node will be</span>
+<span class="c1">// added. If the category doesn&#39;t exist it will be created.</span>
+<span class="c1">// categoryLabel - is an optional param. If a new category is created it will</span>
+<span class="c1">// be displayed with this label.</span>
+<span class="c1">// categoryImage - the image displayed for the category provided as a</span>
+<span class="c1">// reference to an image or the image itself.</span>
+<span class="c1">// categoryDescription - Is an optional param. If a new category is created</span>
+<span class="c1">// it will be displayed with this description.</span>
+<span class="c1">// categoryImage - Is an optional param. The image displayed for the category provided as a</span>
+<span class="c1">// reference to an image or the image itself.</span>
+<span class="nx">addNodeTypesToPalette</span><span class="p">(</span><span class="nx">nodeTypeObjs</span><span class="p">,</span><span class="w"> </span><span class="nx">categoryId</span><span class="p">,</span><span class="w"> </span><span class="nx">categoryLabel</span><span class="p">,</span><span class="w"> </span><span class="nx">categoryDescription</span><span class="p">,</span><span class="w"> </span><span class="nx">categoryImage</span><span class="p">)</span>
+
+<span class="c1">// Removes nodetypes from a palette category</span>
+<span class="c1">// selObjectIds - an array of object IDs to identify the nodetypes to be</span>
+<span class="c1">// removed</span>
+<span class="c1">// categoryId - the ID of the category from which the nodes will be removed</span>
+<span class="nx">removeNodesFromPalette</span><span class="p">(</span><span class="nx">selObjectIds</span><span class="p">,</span><span class="w"> </span><span class="nx">categoryId</span><span class="p">)</span>
+
+<span class="c1">// Returns the palette data document which will conform to the latest version</span>
+<span class="c1">// of the palette schema.</span>
+<span class="nx">getPaletteData</span><span class="p">()</span>
+
+<span class="c1">// Returns the palette node identified by the operator ID passed in.</span>
+<span class="nx">getPaletteNode</span><span class="p">(</span><span class="nx">operatorId</span><span class="p">)</span>
+
+<span class="c1">// Returns the palette node identified by the node ID passed in.</span>
+<span class="nx">getPaletteNodeById</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">)</span>
+
+<span class="c1">// Returns the category of the palette node identified by the operator passed in</span>
+<span class="nx">getCategoryForNode</span><span class="p">(</span><span class="nx">nodeOpIdRef</span><span class="p">)</span>
+
+<span class="c1">// Converts a node template from the format use in the palette (that conforms</span>
+<span class="c1">// to the schema) to the internal node format.</span>
+<span class="nx">convertNodeTemplate</span><span class="p">(</span><span class="nx">nodeTemplate</span><span class="p">)</span>
+
+<span class="c1">// Opens the palette category identified by the category ID passed in.</span>
+<span class="nx">openPaletteCategory</span><span class="p">(</span><span class="nx">categoryId</span><span class="p">)</span>
+
+<span class="c1">// Closes the palette category idetified by the category ID passed in.</span>
+<span class="nx">closePaletteCategory</span><span class="p">(</span><span class="nx">categoryId</span><span class="p">)</span>
+
+<span class="c1">// Opens all the palette categories.</span>
+<span class="nx">openAllPaletteCategories</span><span class="p">()</span>
+
+<span class="c1">// Closes all the palette categories.</span>
+<span class="nx">closeAllPaletteCategories</span><span class="p">()</span>
+
+<span class="c1">// Returns true or false to indicate whether a palette category is open or not.</span>
+<span class="nx">isPaletteCategoryOpen</span><span class="p">(</span><span class="nx">categoryId</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="selections-methods">Selections methods<a class="headerlink" href="#selections-methods" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Sets the currently selected objects replacing any current selections.</span>
+<span class="c1">// newSelection - An array of object IDs for nodes and/or comments</span>
+<span class="c1">// pipelineId - Optional. The ID of the pipeline where the objects exist.</span>
+<span class="c1">// Selected objects can only be in one pipeline. If this parameter is omitted</span>
+<span class="c1">// it is assumed the selections will be for objects in the &#39;top-level&#39; pipeline</span>
+<span class="c1">// being displayed.</span>
+<span class="nx">setSelections</span><span class="p">(</span><span class="nx">newSelection</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Clears all the current selections from the canvas.</span>
+<span class="nx">clearSelections</span><span class="p">()</span>
+
+<span class="c1">// Selects all the objects on the canvas.</span>
+<span class="nx">selectAll</span><span class="p">()</span>
+
+<span class="c1">// Returns an array of the IDs of the currently selected objects.</span>
+<span class="nx">getSelectedObjectIds</span><span class="p">()</span>
+
+<span class="c1">// Returns the currently selected Nodes.</span>
+<span class="nx">getSelectedNodes</span><span class="p">()</span>
+
+<span class="c1">// Returns the currently selected Comments.</span>
+<span class="nx">getSelectedComments</span><span class="p">()</span>
+
+<span class="c1">// Returns the ID of the pipeline in which the currently selected objects</span>
+<span class="c1">// exist. Only one pipeline may contain selected objects.</span>
+<span class="nx">getSelectedPipelineId</span><span class="p">()</span>
+
+<span class="c1">// Deletes all currently selected objects.</span>
+<span class="nx">deleteSelectedObjects</span><span class="p">()</span>
+
+<span class="c1">// Returns true if the currently selected objects are all linked together.</span>
+<span class="c1">// This is used when deciding to creating a supernode.</span>
+<span class="nx">areSelectedNodesContiguous</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="notification-messages-methods">Notification messages methods<a class="headerlink" href="#notification-messages-methods" title="Permanent link">&para;</a></h2>
+<p>The notification panel is displayed by the user by clicking the notifications icon in the toolbar. Your application can display whatever messages it wants in the notification panel. See the <a href="../03.04.05-notification-messages/">Notification Messages</a> paage for the structure of message objects. The contents of the notification panel can be managed using the methods below:
+<div class="highlight"><pre><span></span><code><span class="c1">// Overwrites the array of notification messages shown in the notification</span>
+<span class="c1">// panel.</span>
+<span class="c1">// newMessage - An array of messages (see getNotificationMessages)</span>
+<span class="nx">setNotificationMessages</span><span class="p">(</span><span class="nx">newMessages</span><span class="p">)</span>
+
+<span class="c1">// Deletes all notification messages shown in the notification panel.</span>
+<span class="nx">clearNotificationMessages</span><span class="p">()</span>
+
+<span class="c1">// Removes the notification messages from the given array of ids</span>
+<span class="nx">deleteNotificationMessages</span><span class="p">(</span><span class="nx">ids</span><span class="p">)</span>
+
+<span class="c1">// Returns the array of current notification messages. If the messageType is</span>
+<span class="c1">// provided only messages of that type will be returned. If messageType is</span>
+<span class="c1">// not provided, all messages will be returned. The format of a notification</span>
+<span class="c1">// message is an object with these fields:</span>
+<span class="c1">// {</span>
+<span class="c1">//   &quot;id&quot;: string (Required),</span>
+<span class="c1">//   &quot;type&quot; : enum, oneOf [&quot;info&quot;, &quot;success&quot;, &quot;warning&quot;, &quot;error&quot;] (Required),</span>
+<span class="c1">//   &quot;callback&quot;: function, the callback function when a message is clicked (Required),</span>
+<span class="c1">//   &quot;title&quot;: string (Optional),</span>
+<span class="c1">//   &quot;content&quot;: string, html, JSX Object (Optional),</span>
+<span class="c1">//   &quot;timestamp&quot;: string (Optional),</span>
+<span class="c1">//   &quot;closeMessage&quot;: string (Optional)</span>
+<span class="c1">// }</span>
+<span class="nx">getNotificationMessages</span><span class="p">(</span><span class="nx">messageType</span><span class="p">)</span>
+
+<span class="c1">// Returns the maximum notification message type present in the current set</span>
+<span class="c1">// of notification messages. For this: (&quot;error&quot; &gt; &quot;warning&quot; &gt; &quot;success&quot; &gt; &quot;info&quot;)</span>
+<span class="nx">getNotificationMessagesMaxType</span><span class="p">()</span>
+</code></pre></div></p>
+<h2 id="node-and-comment-methods">Node AND comment methods<a class="headerlink" href="#node-and-comment-methods" title="Permanent link">&para;</a></h2>
+<p>In Common Canvas nodes and comments are collectively known as objects. The following methods may be used to manage either collections of comments or nodes or a mixture of both.
+Note:</p>
+<ul>
+<li>See this sections if you are working with <a href="../03.04.06-styling-objects/">styles.</a></li>
+<li>See this section if you are working with <a href="../03.04.01-decorations/">decorations.</a></li>
+<li>See this section for differences between <a href="../03.04.02-api-object-structure/#api-differences-with-schema">the structure of objects in the API and the schema.</a>
+<div class="highlight"><pre><span></span><code><span class="c1">// Moves the objects identified in the data object which must be in the</span>
+<span class="c1">// pipeline identified by the pipeline ID.</span>
+<span class="c1">// data - A javascript object like this:</span>
+<span class="c1">// {</span>
+<span class="c1">//   nodes: []       // An array of node and comment IDs</span>
+<span class="c1">//   offsetX: number // Offset in pixels the objects will move in the X dir</span>
+<span class="c1">//   offsetY: number // Offset in pixels the objects will move in the Y dir</span>
+<span class="c1">// }</span>
+<span class="nx">moveObjects</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Deletes the objects specified in objectIds array.</span>
+<span class="c1">// objectIds - An array of node and comment IDs</span>
+<span class="nx">deleteObjects</span><span class="p">(</span><span class="nx">objectIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Removes the links to and from the objects specified in the objectIds array.</span>
+<span class="c1">// objectIds - An array of node and comment IDs</span>
+<span class="nx">disconnectObjects</span><span class="p">(</span><span class="nx">objectIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Deletes the object specified by the id in the pipleine specified by</span>
+<span class="c1">// pipeline ID.</span>
+<span class="c1">// @Deprecated Use deleteNode or deleteComment as appropriate instead.</span>
+<span class="nx">deleteObject</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the style of the objects specified by pipelineObjectIds to be</span>
+<span class="c1">// the newStyle which will be either temporary or permanent.</span>
+<span class="c1">// pipelineObjectIds: This identified the objects to be styles. It is a</span>
+<span class="c1">// javascript object like this:</span>
+<span class="c1">//   {</span>
+<span class="c1">//     &lt;pipelineID_1&gt;: [</span>
+<span class="c1">//       &lt;objectID_1_1&gt;,</span>
+<span class="c1">//       &lt;objectID_1_2&gt;</span>
+<span class="c1">//     ],</span>
+<span class="c1">//     &lt;pipelineID_2&gt;: [</span>
+<span class="c1">//         &lt;objectID_2_1&gt;,</span>
+<span class="c1">//         &lt;objectID_2_2&gt;</span>
+<span class="c1">//     ]</span>
+<span class="c1">//   }</span>
+<span class="c1">// newStyles - This is a style specification objects.</span>
+<span class="c1">// temporary - A boolean to indicate if the style is serialized when</span>
+<span class="c1">//             getPipelineFlow() method is called or not.</span>
+<span class="nx">setObjectsStyle</span><span class="p">(</span><span class="nx">pipelineObjectIds</span><span class="p">,</span><span class="w"> </span><span class="nx">newStyle</span><span class="p">,</span><span class="w"> </span><span class="nx">temporary</span><span class="p">)</span>
+
+<span class="c1">// Sets the styles of multiple objects at once.</span>
+<span class="c1">// pipelineObjStyles - Specified the objects and the styles each should be</span>
+<span class="c1">// set to. It is a javascript array like this:</span>
+<span class="c1">//   [</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, objId: &lt;objectId&gt;, style: &lt;style_spec&gt;},</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, objId: &lt;objectId&gt;, style: &lt;style_spec&gt;},</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, objId: &lt;objectId&gt;, style: &lt;style_spec&gt;}</span>
+<span class="c1">//   ]</span>
+<span class="c1">// temporary - A boolean to indicate if the styles are serialized when</span>
+<span class="c1">//             getPipelineFlow() method is called or not.</span>
+<span class="nx">setObjectsMultiStyle</span><span class="p">(</span><span class="nx">pipelineObjStyles</span><span class="p">,</span><span class="w"> </span><span class="nx">temporary</span><span class="p">)</span>
+</code></pre></div></li>
+</ul>
+<h2 id="node-methods">Node methods<a class="headerlink" href="#node-methods" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Retuns an array of nodes for the pipeline specified by the pipelineId.</span>
+<span class="nx">getNodes</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Returns a new node created from the data parameter in the pipeline</span>
+<span class="c1">// identified by the pipelineId.</span>
+<span class="c1">// The data parameter must contain:</span>
+<span class="c1">// nodeTemplate -  a node template from the palette. The nodeTemplate</span>
+<span class="c1">//                 can be retrieved from the palette using with Canvas</span>
+<span class="c1">//                 Controller methods: getPaletteNode or getPaletteNodeById.</span>
+<span class="c1">// offsetX - the x coordinate of the new node</span>
+<span class="c1">// offsetY - the y coordinate of the new node</span>
+<span class="nx">createNode</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Adds a new node into the pipeline specified by the pipelineId.</span>
+<span class="nx">addNode</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Creates a node using the data parameter provided in the pipeline specified</span>
+<span class="c1">// by pipelineId and adds the command to the command stack (so the user can</span>
+<span class="c1">// undo/redo the command). This will also cause the beforeEditActionHandler</span>
+<span class="c1">// and editActionHandler callbacks to be called.</span>
+<span class="c1">// The data parameter must contain:</span>
+<span class="c1">// nodeTemplate -  a node template from the palette. The nodeTemplate</span>
+<span class="c1">//                 can be retrieved from the palette using with Canvas</span>
+<span class="c1">//                 Controller methods: getPaletteNode or getPaletteNodeById.</span>
+<span class="c1">// offsetX - the x coordinate of the new node</span>
+<span class="c1">// offsetY - the y coordinate of the new node</span>
+<span class="c1">//</span>
+<span class="c1">// If pipelineId is omitted the node will be created in the current</span>
+<span class="c1">// &quot;top-level&quot; pipeline.</span>
+<span class="nx">createNodeCommand</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Deletes the node specified.</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">deleteNode</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the node properties</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// properties - An object containing properties to be overriden in the node</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">setNodeProperties</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">properties</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the node parameters</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// parameters - An array of parameters</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">setNodeParameters</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">parameters</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the node UI parameters</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// parameters - An array of UI parameters</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">setNodeUiParameters</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">uiParameters</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the node messages</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// messages - An array of messages</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">setNodeMessages</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">messages</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets a single message on a node</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// message - A message</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">setNodeMessage</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">message</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the lable for a node</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// ndeLabel - The label</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">setNodeLabel</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">newLabel</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the class name to newClassName of the nodes identified by nodeIds</span>
+<span class="c1">// array in the pipleine specified by pipeline ID. The class name will be</span>
+<span class="c1">// applied to the node body path.</span>
+<span class="nx">setNodesClassName</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">newClassName</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the decorations on a node. The decorations array passed in</span>
+<span class="c1">// will replace any decorations currently applied to the node.</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// newDecorations - An array of decoration objects.</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">setNodeDecorations</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">newDecorations</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the input ports on a node. The inputs array of ports provided will</span>
+<span class="c1">// replace any input ports for a node.</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// inputs - An array of input port objects.</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">setNodeInputPorts</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">inputs</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the output ports on a node. The outputs array of ports provided will</span>
+<span class="c1">// replace any output ports for a node.</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// outputs - An array of output port objects.</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">setNodeOutputPorts</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">outputs</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the decorations of multiple nodes at once. The decorations array</span>
+<span class="c1">// passed in will replace any decorations currently applied to the nodes.</span>
+<span class="c1">// pipelineNodeDecorations - Specifies the nodes and their decorations.</span>
+<span class="c1">// It is a JavaScript array like this:</span>
+<span class="c1">//   [</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, nodeId: &lt;nodeId&gt;, decorations: &lt;decoration_spec_array&gt;},</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, nodeId: &lt;nodeId&gt;, decorations: &lt;decoration_spec_array&gt;},</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, nodeId: &lt;nodeId&gt;, decorations: &lt;decoration_spec_array&gt;}</span>
+<span class="c1">//   ]</span>
+<span class="nx">setNodesMultiDecorations</span><span class="p">(</span><span class="nx">pipelineNodeDecorations</span><span class="p">)</span>
+
+<span class="c1">// Sets the input port label on a node</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// portId - The ID of the input port</span>
+<span class="c1">// newLabel - The label</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">setInputPortLabel</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">portId</span><span class="p">,</span><span class="w"> </span><span class="nx">newLabel</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the output port label on a node</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// portId - The ID of the output port</span>
+<span class="c1">// newLabel - The label</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">setOutputPortLabel</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">portId</span><span class="p">,</span><span class="w"> </span><span class="nx">newLabel</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets a node</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getNode</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets the UI parameters for a node</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getNodeUiParameters</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets the supernodes for a pipeline.</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getSupernodes</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Returns supernode ID that has a subflow_ref to the given pipelineId.</span>
+<span class="nx">getSupernodeObjReferencing</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets the messages for a node</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getNodeMessages</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets the array of input ports for the node or null if the node ID is</span>
+<span class="c1">// not recognized.</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getNodeInputPorts</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets the array of output ports for the node or null if the node ID is</span>
+<span class="c1">// not recognized.</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getNodeOutputPorts</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets a message for a specific control for a node</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// controlName - The control name</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getNodeMessage</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">controlName</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets an array of decorations for a node</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getNodeDecorations</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets the class name associated with the node specified by nodeId in the</span>
+<span class="c1">// pipeline specified by pipelineId.</span>
+<span class="nx">getNodeClassName</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets the style spcification for a node.</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// temporary - A boolean to indicate if the style is serialized when</span>
+<span class="c1">//             getPipelineFlow() method is called or not.</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getNodeStyle</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">temporary</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Returns an array of nodes that are for the branch(es) that the nodes,</span>
+<span class="c1">// identified by the node IDs passed in, are within.</span>
+<span class="c1">// nodeIds - An array of node Ids</span>
+<span class="c1">// pipelineId - The ID of the pipeline where the nodes exist</span>
+<span class="nx">getBranchNodes</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Returns an array of nodes that are upstream from the nodes</span>
+<span class="c1">// identified by the node IDs passed in.</span>
+<span class="c1">// nodeIds - An array of node Ids</span>
+<span class="c1">// pipelineId - The ID of the pipeline where the nodes exist</span>
+<span class="nx">getUpstreamNodes</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Returns an array of nodes that are downstream from the nodes</span>
+<span class="c1">// identified by the node IDs passed in.</span>
+<span class="c1">// nodeIds - An array of node Ids</span>
+<span class="c1">// pipelineId - The ID of the pipeline where the nodes exist</span>
+<span class="nx">getDownstreamNodes</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Returns a boolean to indicate whether the supernode is expanded in place.</span>
+<span class="c1">// nodeId - The ID of the node</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">isSuperNodeExpandedInPlace</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the label, for the node identified, to edit mode, provided the node</span>
+<span class="c1">// label is editable. This allows the user to edite the label text.</span>
+<span class="nx">setNodeLabelEditingMode</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the decoration label, for the decoration in the node identified, to edit</span>
+<span class="c1">// mode, provided the node label is editable. This allows the user to edit the</span>
+<span class="c1">// label text.</span>
+<span class="nx">setNodeDecorationLabelEditingMode</span><span class="p">(</span><span class="nx">decId</span><span class="p">,</span><span class="w"> </span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="comment-methods">Comment methods<a class="headerlink" href="#comment-methods" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns the comments from the pipeline.</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getComments</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Returns a comment from the pipeline.</span>
+<span class="c1">// comId - The ID of the comment</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getComment</span><span class="p">(</span><span class="nx">comId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Returns a position object which indicates the position of where a new</span>
+<span class="c1">// comment should be placed in a situation where the mouse position cannot be</span>
+<span class="c1">// used (e.g. the toolbar button was clicked).</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getNewCommentPosition</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Creates a comment for the pipeline.</span>
+<span class="c1">// source - Input data</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">createComment</span><span class="p">(</span><span class="nx">source</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Adds a comment to the pipeline.</span>
+<span class="c1">// data - the data describing the comment</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">addComment</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Edits a comment with the data.</span>
+<span class="c1">// data - the comment</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">editComment</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the properties in the comment identified by the commentId. The</span>
+<span class="c1">// commentProperties is an object containing one or more properties that will</span>
+<span class="c1">// replace the corresponding properties in the comment. For example: if</span>
+<span class="c1">// commentProperties is { x_pos: 50, y_pos: 70 } the comment</span>
+<span class="c1">// will be set to that position.</span>
+<span class="nx">setCommentProperties</span><span class="p">(</span><span class="nx">commentId</span><span class="p">,</span><span class="w"> </span><span class="nx">commentProperties</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the class name to newClassName of the comments identified by commentIds</span>
+<span class="c1">// array in the pipleine specified by pipeline ID. The class name will be</span>
+<span class="c1">// applied to the comment body path.</span>
+<span class="nx">setCommentsClassName</span><span class="p">(</span><span class="nx">commentIds</span><span class="p">,</span><span class="w"> </span><span class="nx">newClassName</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Deletes a comment</span>
+<span class="c1">// comId - The ID of the comment</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">deleteComment</span><span class="p">(</span><span class="nx">comId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets the class name associated with the comment specified by commentId in the</span>
+<span class="c1">// pipeline specified by pipelineId.</span>
+<span class="nx">getCommentClassName</span><span class="p">(</span><span class="nx">commentId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets the style spcification for a comment</span>
+<span class="c1">// commentId - The ID of the node</span>
+<span class="c1">// temporary - A boolean to indicate if the style is serialized when</span>
+<span class="c1">//             getPipelineFlow() method is called or not.</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getCommentStyle</span><span class="p">(</span><span class="nx">commentId</span><span class="p">,</span><span class="w"> </span><span class="nx">temporary</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Hides all comments on the canvas.</span>
+<span class="nx">hideComments</span><span class="p">()</span>
+
+<span class="c1">// Shows all comments on the canvas - if they were previously hiding.</span>
+<span class="nx">showComments</span><span class="p">()</span>
+
+<span class="c1">// Returns true if comments are currently hiding.</span>
+<span class="nx">isHidingComments</span><span class="p">()</span>
+
+<span class="c1">// Sets the comment identified, to edit mode so the user can</span>
+<span class="c1">// edit the comment.</span>
+<span class="nx">setCommentEditingMode</span><span class="p">(</span><span class="nx">commentId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="link-methods">Link methods<a class="headerlink" href="#link-methods" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Gets a link</span>
+<span class="c1">// linkId - The ID of the link</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getLink</span><span class="p">(</span><span class="nx">linkId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Returns an array of link objects for the pipelineId passed in.</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getLinks</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the properties in the link identified by the linkId. The</span>
+<span class="c1">// linkProperties is an object containing one or more properties that will</span>
+<span class="c1">// replace the corresponding properties in the link. For exam`ple: if</span>
+<span class="c1">// linkProperties is { trgNodeId: &quot;123&quot;, trgNodePortId: &quot;789&quot; } the target</span>
+<span class="c1">// node ID will be set to &quot;123&quot; and the target port ID set to &quot;789&quot;.</span>
+<span class="nx">setLinkProperties</span><span class="p">(</span><span class="nx">linkId</span><span class="p">,</span><span class="w"> </span><span class="nx">linkProperties</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the source properties in the data link identified by the linkId. The</span>
+<span class="c1">// srcNodeId and srcNodePortId will be set to the values provided. If</span>
+<span class="c1">// srcNodePortId is set to null the current srcNodePortId will be removed</span>
+<span class="c1">// from the link. Also, if the link has a srcPos property (because its</span>
+<span class="c1">// source end is detached) that will be removed.</span>
+<span class="nx">setNodeDataLinkSrcInfo</span><span class="p">(</span><span class="nx">linkId</span><span class="p">,</span><span class="w"> </span><span class="nx">srcNodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">srcNodePortId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the target properties in the data link identified by the linkId. The</span>
+<span class="c1">// trgNodeId and trgNodePortId will be set to the values provided. If</span>
+<span class="c1">// trgNodePortId is set to null the current trgNodePortId will be removed</span>
+<span class="c1">// from the link. Also, if the link has a trgPos property (because its</span>
+<span class="c1">// target end is detached) that will be removed.</span>
+<span class="nx">setNodeDataLinkTrgInfo</span><span class="p">(</span><span class="nx">linkId</span><span class="p">,</span><span class="w"> </span><span class="nx">trgNodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">trgNodePortId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets a node to node data link</span>
+<span class="c1">// srcNodeId - The ID of the source node</span>
+<span class="c1">// srcNodePortId - The ID of the source node port</span>
+<span class="c1">// trgNodeId - The ID of the target node</span>
+<span class="c1">// trgNodePortId - The ID of the target node port</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getNodeDataLinkFromInfo</span><span class="p">(</span><span class="nx">srcNodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">srcNodePortId</span><span class="p">,</span><span class="w"> </span><span class="nx">trgNodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">trgNodePortId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets a comment to node link</span>
+<span class="c1">// id1 - The ID of the comment</span>
+<span class="c1">// id2 - The ID of the node</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getCommentLinkFromInfo</span><span class="p">(</span><span class="nx">id1</span><span class="p">,</span><span class="w"> </span><span class="nx">id2</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Gets a node to node association link</span>
+<span class="c1">// id1 - The ID of one of the node</span>
+<span class="c1">// id2 - The ID of one of the node</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getNodeAssocLinkFromInfo</span><span class="p">(</span><span class="nx">id1</span><span class="p">,</span><span class="w"> </span><span class="nx">id2</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Adds links to a pipeline</span>
+<span class="c1">// linkList - An array of links</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">addLinks</span><span class="p">(</span><span class="nx">linkList</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Deletes a link</span>
+<span class="c1">// link - the link object to be deleted</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">deleteLink</span><span class="p">(</span><span class="nx">link</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Creates node to node links</span>
+<span class="c1">// data - Data describing the links</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">createNodeLinks</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Creates comment links</span>
+<span class="c1">// data - Data describing the links</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">createCommentLinks</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the class name to newClassName of the links identified by linkIds</span>
+<span class="c1">// array in the pipleine specified by pipeline ID. The class name will be</span>
+<span class="c1">// applied to the link line path.</span>
+<span class="nx">setLinksClassName</span><span class="p">(</span><span class="nx">linkIds</span><span class="p">,</span><span class="w"> </span><span class="nx">newClassName</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the style of the links specified by pipelineLinkIds to be</span>
+<span class="c1">// the newStyle which will be either temporary or permanent.</span>
+<span class="c1">// pipelineLinkIds - This identifies the objects to be styles. It is a</span>
+<span class="c1">// javascript object like this:</span>
+<span class="c1">//   {</span>
+<span class="c1">//     &lt;pipelineID_1&gt;: [</span>
+<span class="c1">//       &lt;linkID_1_1&gt;,</span>
+<span class="c1">//       &lt;linkID_1_2&gt;</span>
+<span class="c1">//     ],</span>
+<span class="c1">//     &lt;pipelineID_2&gt;: [</span>
+<span class="c1">//         &lt;linkID_2_1&gt;,</span>
+<span class="c1">//         &lt;linkID_2_2&gt;</span>
+<span class="c1">//     ]</span>
+<span class="c1">//   }</span>
+<span class="c1">// newStyle - This is a style specification objects.</span>
+<span class="c1">// temporary - A boolean to indicate if the style is serialized when</span>
+<span class="c1">//             getPipelineFlow() method is called or not.</span>
+<span class="nx">setLinksStyle</span><span class="p">(</span><span class="nx">pipelineLinkIds</span><span class="p">,</span><span class="w"> </span><span class="nx">newStyle</span><span class="p">,</span><span class="w"> </span><span class="nx">temporary</span><span class="p">)</span>
+
+<span class="c1">// Sets the styles of multiple links at once.</span>
+<span class="c1">// pipelineObjStyles - Specified the links and the styles each should be</span>
+<span class="c1">// set to. It is a javascript array like this:</span>
+<span class="c1">//   [</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, objId: &lt;linkId&gt;, style: &lt;style_spec&gt;},</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, objId: &lt;linkId&gt;, style: &lt;style_spec&gt;},</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, objId: &lt;linkId&gt;, style: &lt;style_spec&gt;}</span>
+<span class="c1">//   ]</span>
+<span class="c1">// temporary - A boolean to indicate if the styles are serialized when</span>
+<span class="c1">//             getPipelineFlow() method is called or not.</span>
+<span class="nx">setLinksMultiStyle</span><span class="p">(</span><span class="nx">pipelineObjStyles</span><span class="p">,</span><span class="w"> </span><span class="nx">temporary</span><span class="p">)</span>
+
+<span class="c1">// Gets the class name associated with the link specified by linkId in the</span>
+<span class="c1">// pipeline specified by pipelineId.</span>
+<span class="nx">getLinkClassName</span><span class="p">(</span><span class="nx">linkId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Returns the style specification for a link.</span>
+<span class="c1">// linkIds - An array of links</span>
+<span class="c1">// temporary - A boolean to indicate if the style is serialized when</span>
+<span class="c1">//             getPipelineFlow() method is called or not.</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getLinkStyle</span><span class="p">(</span><span class="nx">linkId</span><span class="p">,</span><span class="w"> </span><span class="nx">temporary</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the decorations on a link. The decorations array passed in</span>
+<span class="c1">// will replace any decorations currently applied to the link.</span>
+<span class="c1">// linkId - The ID of the link</span>
+<span class="c1">// newDecorations - An array of decoration objects.</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">setLinkDecorations</span><span class="p">(</span><span class="nx">linkId</span><span class="p">,</span><span class="w"> </span><span class="nx">newDecorations</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the decorations of multiple links at once. The decorations array</span>
+<span class="c1">// passed in will replace any decorations currently applied to the links.</span>
+<span class="c1">// pipelineLinkDecorations - Specifies the links and their decorations.</span>
+<span class="c1">// It is a javascript array like this:</span>
+<span class="c1">//   [</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, linkId: &lt;linkId&gt;, decorations: &lt;decoration_spec_array&gt;},</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, linkId: &lt;linkId&gt;, decorations: &lt;decoration_spec_array&gt;},</span>
+<span class="c1">//     { pipelineId: &lt;pipelineId&gt;, linkId: &lt;linkId&gt;, decorations: &lt;decoration_spec_array&gt;}</span>
+<span class="c1">//   ]</span>
+<span class="nx">setLinksMultiDecorations</span><span class="p">(</span><span class="nx">pipelineLinkDecorations</span><span class="p">)</span>
+
+<span class="c1">// Gets an array of decorations for a link</span>
+<span class="c1">// linkId - The ID of the link</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">getLinkDecorations</span><span class="p">(</span><span class="nx">linkId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the decoration label, for the decoration in the link identified, to edit</span>
+<span class="c1">// mode provided the link label is editable. This allows the user to edit the</span>
+<span class="c1">// label text.</span>
+<span class="nx">setLinkDecorationLabelEditingMode</span><span class="p">(</span><span class="nx">decId</span><span class="p">,</span><span class="w"> </span><span class="nx">linkId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="breadcrumbs-methods">Breadcrumbs methods<a class="headerlink" href="#breadcrumbs-methods" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns the current array of breadcrumbs. There will one breadcrumb object</span>
+<span class="c1">// for each level of supernode that the user has navigated into. This array</span>
+<span class="c1">// can be used to display breadcrumbs to the user to show where they are</span>
+<span class="c1">// within the navigation hierarchy within Common Canvas.</span>
+<span class="nx">getBreadcrumbs</span><span class="p">()</span>
+
+<span class="c1">// Returns the last breadcrumb which represents the level with supernode</span>
+<span class="c1">// hierarchy that the user has currently navigated to.</span>
+<span class="nx">getCurrentBreadcrumb</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="branch-highlight-methods">Branch Highlight methods<a class="headerlink" href="#branch-highlight-methods" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Highlights the branch(s) (both upstream and downstream) from the node</span>
+<span class="c1">// IDs passed in and returns the highlighted object Ids.</span>
+<span class="c1">// nodeIds - An array of node Ids</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">highlightBranch</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Highlights the upstream nodes from the node IDs passed in</span>
+<span class="c1">// and returns the returns the highlighted object Ids.</span>
+<span class="c1">// nodeIds - An array of node Ids</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">highlightUpstream</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Highlights the downstream nodes from the node IDs passed in</span>
+<span class="c1">// and returns highlighted object Ids.</span>
+<span class="c1">// nodeIds - An array of node Ids</span>
+<span class="c1">// pipelineId - The ID of the pipeline</span>
+<span class="nx">highlightDownstream</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="operational-methods">Operational methods<a class="headerlink" href="#operational-methods" title="Permanent link">&para;</a></h2>
+<p>These are general purpose methods for operation of the common-canvas components:</p>
+<h3 id="logging-methods">Logging methods<a class="headerlink" href="#logging-methods" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns a Boolean to indicate whether canvas logging is switched on or off.</span>
+<span class="nx">getLoggingState</span><span class="p">()</span>
+
+<span class="c1">// Sets canvas logging based on the Boolean passed in.</span>
+<span class="nx">setLoggingState</span><span class="p">(</span><span class="nx">state</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="palette-methods_1">Palette methods<a class="headerlink" href="#palette-methods_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Opens the palette</span>
+<span class="nx">openPalette</span><span class="p">()</span>
+
+<span class="c1">// Closes the palette</span>
+<span class="nx">closePalette</span><span class="p">()</span>
+
+<span class="c1">// Returns true if the palette is currently open</span>
+<span class="nx">isPaletteOpen</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="context-menu-methods">Context menu methods<a class="headerlink" href="#context-menu-methods" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Opens the context menu</span>
+<span class="nx">openContextMenu</span><span class="p">(</span><span class="nx">menuDef</span><span class="p">)</span>
+
+<span class="c1">// Closes the context menu</span>
+<span class="nx">closeContextMenu</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="notification-panel-methods">Notification Panel methods<a class="headerlink" href="#notification-panel-methods" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Opens the notification panel</span>
+<span class="nx">openNotificationPanel</span><span class="p">()</span>
+
+<span class="c1">// Closes the notification panel</span>
+<span class="nx">closeNotificationPanel</span><span class="p">()</span>
+
+<span class="c1">// Either opens or closes the notifictaion panel based on its current status</span>
+<span class="nx">toggleNotificationPanel</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="right-flyout-methods">Right Flyout methods<a class="headerlink" href="#right-flyout-methods" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns a boolean to indicate if the right flyout is open or not</span>
+<span class="nx">isRightFlyoutOpen</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="top-panel-methods">Top panel methods<a class="headerlink" href="#top-panel-methods" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns a boolean to indicate if the top pnel is open or not</span>
+<span class="nx">isTopPanelOpen</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="bottom-panel-methods">Bottom panel methods<a class="headerlink" href="#bottom-panel-methods" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns a boolean to indicate if the bottom panel is open or not</span>
+<span class="nx">isBottomPanelOpen</span><span class="p">()</span>
+
+<span class="c1">// Sets the height of the bottom panel in pixels. This can be called</span>
+<span class="c1">// immediately after the CanvasController has been created, if the bottom</span>
+<span class="c1">// panel should be displayed at a specific height when it first opens.</span>
+<span class="nx">setBottomPanelHeight</span><span class="p">(</span><span class="nx">height</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="canvaspipeline-navigation-methods">Canvas/pipeline navigation methods<a class="headerlink" href="#canvaspipeline-navigation-methods" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Displays a pipeline (identified by the pipelineId passed in). This must be</span>
+<span class="c1">// one of the pipelines referenced by the current set of breadcrumbs. It</span>
+<span class="c1">// cannot be used to open a new pipeline outside the current set of breadcruumbs.</span>
+<span class="nx">displaySubPipeline</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Displays a pipeline for a supernode (identifid by the supernodeId</span>
+<span class="c1">// parameter) in a parent pipeline (identifid by the pipelineId parameter).</span>
+<span class="c1">// This parent pipeline should be the last of the current set of breadcumbs.</span>
+<span class="c1">// That is, the pipeline currently shown &quot;full page&quot; in the canvas.</span>
+<span class="nx">displaySubPipelineForSupernode</span><span class="p">(</span><span class="nx">supernodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Displays full-page the previous pipeline from the one currently being displayed</span>
+<span class="nx">displayPreviousPipeline</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="command-stack-interaction-methods">Command Stack interaction methods<a class="headerlink" href="#command-stack-interaction-methods" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Adds the command object to the command stack which will cause the</span>
+<span class="c1">// do() method of the command to be called.</span>
+<span class="k">do</span><span class="p">(</span><span class="nx">command</span><span class="p">)</span>
+
+<span class="c1">// Calls the undo() method of the next available command on the command</span>
+<span class="c1">// stack that can be undone, if one is available.</span>
+<span class="nx">undo</span><span class="p">()</span>
+
+<span class="c1">// Undoes a number of commands on the command stack as indicated by the</span>
+<span class="c1">// &#39;count&#39; parameter. If &#39;count&#39; is bigger than the number of undoable commands</span>
+<span class="c1">// on the stack, all undoable commands currently on the command stack</span>
+<span class="c1">// will be undone. Uses the editActionHandler method which will cause</span>
+<span class="c1">// the app&#39;s editActionHandler to be called.</span>
+<span class="nx">undoMulti</span><span class="p">(</span><span class="nx">count</span><span class="p">)</span>
+
+<span class="c1">// Calls the redo() method of the next available command on the command</span>
+<span class="c1">// stack that can be redone, if one is available.</span>
+<span class="nx">redo</span><span class="p">()</span>
+
+<span class="c1">// Redoes a number of commands on the command stack as indicated by the</span>
+<span class="c1">// &#39;count&#39; parameter. If &#39;count&#39; is bigger than the number of redoable commands</span>
+<span class="c1">// on the stack, all redoable commands currently on the command stack</span>
+<span class="c1">// will be redone. Uses the editActionHandler method which will cause</span>
+<span class="c1">// the app&#39;s editActionHandler to be called.</span>
+<span class="nx">redoMulti</span><span class="p">(</span><span class="nx">count</span><span class="p">)</span>
+
+<span class="c1">// Returns true if there is a command on the command stack</span>
+<span class="c1">// available to be undone.</span>
+<span class="nx">canUndo</span><span class="p">()</span>
+
+<span class="c1">// Returns true if there is a command on the command stack</span>
+<span class="c1">// available to be redone.</span>
+<span class="nx">canRedo</span><span class="p">()</span>
+
+<span class="c1">// Returns a string which is the label that descibes the next undoable</span>
+<span class="c1">// command.</span>
+<span class="nx">getUndoLabel</span><span class="p">()</span>
+
+<span class="c1">// Returns a string which is the label that descibes the next redoable</span>
+<span class="c1">// command.</span>
+<span class="nx">getRedoLabel</span><span class="p">()</span>
+
+<span class="c1">// Returns an array of all undoable commands currently on the command stack.</span>
+<span class="nx">getAllUndoCommands</span><span class="p">()</span>
+
+<span class="c1">// Returns an array of all redoable commands currently on the command stack.</span>
+<span class="nx">getAllRedoCommands</span><span class="p">()</span>
+
+<span class="c1">// Clears the command stack of all currently stored commands.</span>
+<span class="nx">clearCommandStack</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="zoom-methods">Zoom methods<a class="headerlink" href="#zoom-methods" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Centers the canvas contents and zooms in</span>
+<span class="nx">zoomIn</span><span class="p">()</span>
+
+<span class="c1">// Centers the canvas contents and zooms out</span>
+<span class="nx">zoomOut</span><span class="p">()</span>
+
+<span class="c1">// Zooms the canvas contents to fit within the viewport</span>
+<span class="nx">zoomToFit</span><span class="p">()</span>
+
+<span class="c1">// Changes the zoom amounts for the canvas. This method does not alter the</span>
+<span class="c1">// pipelineFlow document. zoomObject is an object with three fields:</span>
+<span class="c1">// x: Is the horizontal translate amount which is a number indicating the</span>
+<span class="c1">//    pixel amount to move. Negative left and positive right</span>
+<span class="c1">// y: Is the vertical translate amount which is a number indicating the</span>
+<span class="c1">//    pixel amount to move. Negative up and positive down.</span>
+<span class="c1">// k: is the scale amount which is a number greater than 0 where 1 is the</span>
+<span class="c1">//    default scale size.</span>
+<span class="nx">zoomTo</span><span class="p">(</span><span class="nx">zoomObject</span><span class="p">)</span>
+
+<span class="c1">// Increments the translation of the canvas by the x and y increment</span>
+<span class="c1">// amounts. The optional animateTime parameter can be provided to animate the</span>
+<span class="c1">// movement of the canvas. It is a time for the animation in milliseconds.</span>
+<span class="c1">// If omitted the movement happens immediately.</span>
+<span class="nx">translateBy</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span><span class="w"> </span><span class="nx">y</span><span class="p">,</span><span class="w"> </span><span class="nx">animateTime</span><span class="p">)</span>
+
+<span class="c1">// Returns the current zoom object for the currently displayed canvas or null</span>
+<span class="c1">// if the canvas is not yet rendered for the first time.</span>
+<span class="nx">getZoom</span><span class="p">()</span>
+
+<span class="c1">// Returns a zoom object required to pan the objects (nodes and/or comments</span>
+<span class="c1">// and/or links) identified by the objectIds array to &#39;reveal&#39; the objects</span>
+<span class="c1">// in the viewport. Returns null if no nodes, comments or links can be found</span>
+<span class="c1">// using the IDs passed in. Note: node, comment and link IDs must be unique.</span>
+<span class="c1">// The zoom object returned can be provided to the CanvasController.zoomTo()</span>
+<span class="c1">// method to perform the zoom/pan action.</span>
+<span class="c1">// If the xPos and yPos parameters are provided it will return a zoom object</span>
+<span class="c1">// to pan the center of the objects specified, to a location where, xPos</span>
+<span class="c1">// is the percentage of the viewport width and yPos is the percentage of the</span>
+<span class="c1">// viewport height. So if you want the center of the objects specified to be</span>
+<span class="c1">// in the center of the viewport set xPos to 50 and yPos to 50.</span>
+<span class="c1">// If the xPos and yPos parameters are undefined (omitted) and all the</span>
+<span class="c1">// objects are currently fully within the canvas viewport, this method will</span>
+<span class="c1">// return null. This can be used to detect whether the objects are fully</span>
+<span class="c1">// visible or not.</span>
+<span class="c1">// If the xPos and yPos parameters are undefined and the objects are outside</span>
+<span class="c1">// the viewport, a zoom object will be returned that can be used to zoom them</span>
+<span class="c1">// so they appear at the nearest side of the viewport to where they are</span>
+<span class="c1">// currently positioned.</span>
+<span class="c1">// The zoom object returned has three fields:</span>
+<span class="c1">// x: Is the horizontal translate amount which is a number indicating the</span>
+<span class="c1">//    pixel amount to move. Negative left and positive right</span>
+<span class="c1">// y: Is the vertical translate amount which is a number indicating the</span>
+<span class="c1">//    pixel amount to move. Negative up and positive down.</span>
+<span class="c1">// k: is the scale amount which is a number greater than 0 where 1 is the</span>
+<span class="c1">//    default scale size.</span>
+<span class="c1">// Parameters:</span>
+<span class="c1">// objectIds - An array of nodes and/or comment IDs.</span>
+<span class="c1">// xPos - Optional. Can be set to percentage offset of the viewport width.</span>
+<span class="c1">// yPos - Optional. Can be set to percentage offset of the viewport height.</span>
+<span class="nx">getZoomToReveal</span><span class="p">(</span><span class="nx">objectIds</span><span class="p">,</span><span class="w"> </span><span class="nx">xPos</span><span class="p">,</span><span class="w"> </span><span class="nx">yPos</span><span class="p">)</span>
+
+<span class="c1">// Clears any saved zoom values stored in local storage. This means</span>
+<span class="c1">// newly opened flows will appear with the default zoom. This method</span>
+<span class="c1">// is only applicable when the `enableSaveZoom` config parameter is</span>
+<span class="c1">// set to &quot;LocalStorage&quot;.</span>
+<span class="nx">clearSavedZoomValues</span><span class="p">()</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../03.03.10-action-label-handler/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Action Label Handler">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Action Label Handler
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../03.04.01-decorations/" class="md-footer__link md-footer__link--next" aria-label="Next: Decorations">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Decorations
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright  &copy; 2024 Elyra Authors, an open source project! Maintained by the Elyra Authors Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="http://github.com/elyra-ai/canvas" target="_blank" rel="noopener" title="Elyra Canvas on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.footer"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+        <script src="../js/links-in-new-tabs.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,4377 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../03.02-configuration/">
+      
+      
+        <link rel="next" href="../03.02.02-toolbar-config/">
+      
+      
+      <link rel="icon" href="../assets/FlowIcon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.48">
+    
+    
+      
+        <title>Canvas Config - Elyra Canvas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/styles.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#canvas-config-object" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Elyra Canvas" class="md-header__button md-logo" aria-label="Elyra Canvas" data-md-component="logo">
+      
+  <img src="../assets/FlowIcon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Elyra Canvas
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Canvas Config
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/elyra-ai/canvas" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href=".." class="md-tabs__link">
+          
+  
+    
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01-canvas-components/" class="md-tabs__link">
+          
+  
+    
+  
+  Components
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../02-set-up/" class="md-tabs__link">
+          
+  
+    
+  
+  Initial Setup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../03-common-canvas/" class="md-tabs__link">
+          
+  
+    
+  
+  Common Canvas
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../04-common-properties/" class="md-tabs__link">
+          
+  
+    
+  
+  Common Properties
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../05-faq/" class="md-tabs__link">
+          
+  
+    
+  
+  FAQ
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../06-contributing/" class="md-tabs__link">
+          
+  
+    
+  
+  Contributing
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Elyra Canvas" class="md-nav__button md-logo" aria-label="Elyra Canvas" data-md-component="logo">
+      
+  <img src="../assets/FlowIcon.png" alt="logo">
+
+    </a>
+    Elyra Canvas
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/elyra-ai/canvas" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href=".." class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Components
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Components
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-canvas-components/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Components Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flow Editor
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flow Editor
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01-flow-editor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Editor Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01.01-nodes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nodes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01.02-links/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Links
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01.03-comments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.01.04-decorations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decorations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.02-palette/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Palette
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.03-context-menu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.04-context-toolbar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Toolbar
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.05-toolbar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Toolbar
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.06-notification-panel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notification Panel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.07-state-tag/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    State Tag
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.08-tooltips/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tooltips
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.09-panels/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Panels
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01.10-common-properties/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Common Properties
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Initial Setup
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Initial Setup
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-set-up/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Common Canvas
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Common Canvas
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-common-canvas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Config Objects
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Config Objects
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02-configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Canvas Config
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Canvas Config
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nodes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Nodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablenodeformattype" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableNodeFormatType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablenodelayout" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableNodeLayout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableresizablenodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableResizableNodes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableselfreflinks" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSelfRefLinks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablelinkdirection" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLinkDirection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableinsertnodedroppedonlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableInsertNodeDroppedOnLink
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablepositionnodeonrightflyoutopen" class="md-nav__link">
+    <span class="md-ellipsis">
+      enablePositionNodeOnRightFlyoutOpen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablehighlightnodeonnewlinkdrag" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableHighlightNodeOnNewLinkDrag
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablehighlightunavailablenodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableHighlightUnavailableNodes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableraisenodestotoponhover" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableRaiseNodesToTopOnHover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablemovenodesonsupernoderesize" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableMoveNodesOnSupernodeResize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enabledisplayfulllabelonhover" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableDisplayFullLabelOnHover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablesingleoutputportdisplay" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSingleOutputPortDisplay
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#links" class="md-nav__link">
+    <span class="md-ellipsis">
+      Links
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Links">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablelinktype" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLinkType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablelinkmethod" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLinkMethod
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablestraightlinksasfreeform" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableStraightLinksAsFreeform
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablelinkselection" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLinkSelection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablelinkreplaceonnewconnection" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLinkReplaceOnNewConnection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableassoclinkcreation" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableAssocLinkCreation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableassoclinktype" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableAssocLinkType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablelinksovernodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLinksOverNodes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comments
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablemarkdownincomments" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableMarkdownInComments
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#toolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Toolbar
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Toolbar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enabletoolbarlayout" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableToolbarLayout
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tips
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tips">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tipconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      tipConfig
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context-toolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context Toolbar
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context Toolbar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablecontexttoolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableContextToolbar
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#palette" class="md-nav__link">
+    <span class="md-ellipsis">
+      Palette
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Palette">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablepalettelayout" class="md-nav__link">
+    <span class="md-ellipsis">
+      enablePaletteLayout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableautolinkonlyfromselnodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableAutoLinkOnlyFromSelNodes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablepaletteheader" class="md-nav__link">
+    <span class="md-ellipsis">
+      enablePaletteHeader
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablenarrowpalette" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableNarrowPalette
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zoom-scale-and-pan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zoom (scale and pan)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Zoom (scale and pan)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablesavezoom" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSaveZoom
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablepanintoviewonopen" class="md-nav__link">
+    <span class="md-ellipsis">
+      enablePanIntoViewOnOpen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablezoomintosubflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableZoomIntoSubFlows
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canvas-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      Canvas Content
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Canvas Content">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emptycanvascontent" class="md-nav__link">
+    <span class="md-ellipsis">
+      emptyCanvasContent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dropzonecanvascontent" class="md-nav__link">
+    <span class="md-ellipsis">
+      dropZoneCanvasContent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enabledropzoneonexternaldrag" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableDropZoneOnExternalDrag
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablestatetag" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableStateTag
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canvas-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Canvas Operation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Canvas Operation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablekeyboardnavigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableKeyboardNavigation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableinteractiontype" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableInteractionType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableparentclass" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableParentClass
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enabledragwithoutselect" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableDragWithoutSelect
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableeditingactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableEditingActions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableimagedisplay" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableImageDisplay
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableinternalobjectmodel" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableInternalObjectModel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablerightflyoutundertoolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableRightFlyoutUnderToolbar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablerightflyoutdragtoresize" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableRightFlyoutDragToResize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableleftflyoutundertoolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLeftFlyoutUnderToolbar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableexternalpipelineflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableExternalPipelineFlows
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablesnaptogridtype" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSnapToGridType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablesnaptogridx" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSnapToGridX
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablesnaptogridy" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSnapToGridY
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableautolayoutverticalspacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableAutoLayoutVerticalSpacing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableautolayouthorizontalspacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableAutoLayoutHorizontalSpacing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablebrowsereditmenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableBrowserEditMenu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schemavalidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      schemaValidation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.02-toolbar-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Toolbar Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.03-notification-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notification Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.04-context-menu-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.02.05-keyboard-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keyboard Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Callbacks
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Callbacks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03-callbacks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Callbacks Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.01-context-menu-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.02-before-edit-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Before Edit Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.03-edit-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edit Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.04-layout-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Layout Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.05-decoration-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decoration Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.06-tip-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tip Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.07-id-generator-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ID Generator Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.08-selection-change-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Selection Change Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.09-click-action-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Click Action Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.03.10-action-label-handler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Action Label Handler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Canvas Controller
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            Canvas Controller
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04-canvas-controller/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.01-decorations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decorations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.02-api-object-structure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Object Structure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.03-creating-new-canvas-nodes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Creating New Canvas Nodes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.05-notification-messages/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Notification Messages
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.04.06-styling-objects/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Styling Canvas Objects
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.05-keyboard-support/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keyboard Support
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.06.01-node-customization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Node Customization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.06.02-comment-customization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comment Customization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.06.03-link-customization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Link Customization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.07-external-objects/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Node Creation from External Object
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.08-external-pipeline-flows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    External Pipeline Flows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.09-read-only-or-locked-flows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Read Only or Locked Flows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.10-command-stack/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command Stack
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.11-internal-actions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Internal Actions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_14" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_14" id="__nav_4_14_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Deprecated
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_14">
+            <span class="md-nav__icon md-icon"></span>
+            Deprecated
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.30.01-context-menu-wrapper/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Context Menu Wrapper
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03.30.02-flow-validation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flow Validation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Common Properties
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Common Properties
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-common-properties/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.01-parameter-definition/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parameter Definition
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.02-callbacks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Callbacks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.03-ui-hints/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UI Hints
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.04-controls/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controls
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.05-conditions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conditions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.06-custom-components/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Custom Components
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.07-properties-controller/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Properties Controller
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04.08-properties-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Properties Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            FAQ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frequently asked questions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Contributing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Guidelines for Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06.01-style-guidelines/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Style Guidelines for Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06.02-testing-guidelines/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing Guidelines for Development
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nodes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Nodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablenodeformattype" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableNodeFormatType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablenodelayout" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableNodeLayout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableresizablenodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableResizableNodes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableselfreflinks" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSelfRefLinks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablelinkdirection" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLinkDirection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableinsertnodedroppedonlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableInsertNodeDroppedOnLink
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablepositionnodeonrightflyoutopen" class="md-nav__link">
+    <span class="md-ellipsis">
+      enablePositionNodeOnRightFlyoutOpen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablehighlightnodeonnewlinkdrag" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableHighlightNodeOnNewLinkDrag
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablehighlightunavailablenodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableHighlightUnavailableNodes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableraisenodestotoponhover" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableRaiseNodesToTopOnHover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablemovenodesonsupernoderesize" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableMoveNodesOnSupernodeResize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enabledisplayfulllabelonhover" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableDisplayFullLabelOnHover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablesingleoutputportdisplay" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSingleOutputPortDisplay
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#links" class="md-nav__link">
+    <span class="md-ellipsis">
+      Links
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Links">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablelinktype" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLinkType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablelinkmethod" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLinkMethod
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablestraightlinksasfreeform" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableStraightLinksAsFreeform
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablelinkselection" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLinkSelection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablelinkreplaceonnewconnection" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLinkReplaceOnNewConnection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableassoclinkcreation" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableAssocLinkCreation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableassoclinktype" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableAssocLinkType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablelinksovernodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLinksOverNodes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comments
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablemarkdownincomments" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableMarkdownInComments
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#toolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Toolbar
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Toolbar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enabletoolbarlayout" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableToolbarLayout
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tips
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tips">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tipconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      tipConfig
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context-toolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context Toolbar
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context Toolbar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablecontexttoolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableContextToolbar
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#palette" class="md-nav__link">
+    <span class="md-ellipsis">
+      Palette
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Palette">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablepalettelayout" class="md-nav__link">
+    <span class="md-ellipsis">
+      enablePaletteLayout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableautolinkonlyfromselnodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableAutoLinkOnlyFromSelNodes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablepaletteheader" class="md-nav__link">
+    <span class="md-ellipsis">
+      enablePaletteHeader
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablenarrowpalette" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableNarrowPalette
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zoom-scale-and-pan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zoom (scale and pan)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Zoom (scale and pan)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablesavezoom" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSaveZoom
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablepanintoviewonopen" class="md-nav__link">
+    <span class="md-ellipsis">
+      enablePanIntoViewOnOpen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablezoomintosubflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableZoomIntoSubFlows
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canvas-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      Canvas Content
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Canvas Content">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emptycanvascontent" class="md-nav__link">
+    <span class="md-ellipsis">
+      emptyCanvasContent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dropzonecanvascontent" class="md-nav__link">
+    <span class="md-ellipsis">
+      dropZoneCanvasContent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enabledropzoneonexternaldrag" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableDropZoneOnExternalDrag
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablestatetag" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableStateTag
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canvas-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Canvas Operation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Canvas Operation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enablekeyboardnavigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableKeyboardNavigation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableinteractiontype" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableInteractionType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableparentclass" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableParentClass
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enabledragwithoutselect" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableDragWithoutSelect
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableeditingactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableEditingActions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableimagedisplay" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableImageDisplay
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableinternalobjectmodel" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableInternalObjectModel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablerightflyoutundertoolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableRightFlyoutUnderToolbar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablerightflyoutdragtoresize" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableRightFlyoutDragToResize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableleftflyoutundertoolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableLeftFlyoutUnderToolbar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableexternalpipelineflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableExternalPipelineFlows
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablesnaptogridtype" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSnapToGridType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablesnaptogridx" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSnapToGridX
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablesnaptogridy" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSnapToGridY
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableautolayoutverticalspacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableAutoLayoutVerticalSpacing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enableautolayouthorizontalspacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableAutoLayoutHorizontalSpacing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enablebrowsereditmenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableBrowserEditMenu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schemavalidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      schemaValidation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/elyra-ai/canvas/edit/main/docs/03.02.01-canvas-config.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="canvas-config-object">Canvas Config object<a class="headerlink" href="#canvas-config-object" title="Permanent link">&para;</a></h1>
+<p>The canvas config object is optional. If it is not provided, or any of the properties within it are not provided, Common Canvas will use reasonable defaults. Here&rsquo;s an example of a canvas config object:
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">commonCanvasConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">       </span><span class="s2">&quot;enableNodeFormatType&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Vertical&quot;</span><span class="p">,</span>
+<span class="w">       </span><span class="s2">&quot;enableLinkType&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Straight&quot;</span>
+<span class="w">       </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+</code></pre></div>
+and this is how it is specified to Common Canvas:
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<span class="w">            </span><span class="o">&lt;</span><span class="nx">CommonCanvas</span>
+<span class="w">                </span><span class="nx">canvasController</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">}</span>
+<span class="w">                </span><span class="nx">config</span><span class="o">=</span><span class="p">{</span><span class="nx">commonCanvasConfig</span><span class="p">}</span>
+<span class="w">            </span><span class="o">/&gt;</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div></p>
+<h2 id="nodes">Nodes<a class="headerlink" href="#nodes" title="Permanent link">&para;</a></h2>
+<h4 id="enablenodeformattype"><strong>enableNodeFormatType</strong><a class="headerlink" href="#enablenodeformattype" title="Permanent link">&para;</a></h4>
+<p>This can be &ldquo;Horizontal&rdquo; or &ldquo;Vertical&rdquo;. &ldquo;Horizontal&rdquo; is the default. &ldquo;Horizontal&rdquo; will display a node with an image and the label to the right of the image. &ldquo;Vertical&rdquo; will display the node with the label underneath the image. See the <a href="../03.06.01-node-customization/">node customization</a> section for details on what this will do.</p>
+<h4 id="enablenodelayout"><strong>enableNodeLayout</strong><a class="headerlink" href="#enablenodelayout" title="Permanent link">&para;</a></h4>
+<p>This is a simple Javascript object, the properties of which override the default node layout properties. For more details see the <a href="../03.06.01-node-customization/">node customization</a> section.</p>
+<h4 id="enableresizablenodes"><strong>enableResizableNodes</strong><a class="headerlink" href="#enableresizablenodes" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true, the user can resize nodes by dragging the edges of the node to increase or decrease the width and/or height of the node. When hovering the mouse cursor over the edge of the node the user will see a sizing cursor to indicate the resize function is available. This option works best when the node has a background rectangle that shows the extent of the sizing area.</p>
+<h4 id="enableselfreflinks"><strong>enableSelfRefLinks</strong><a class="headerlink" href="#enableselfreflinks" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true, the user is allowed to create a link that points to the node the link originated from: a loop-back link. This is created by the user by dragging from the output port on the node and dropping the new link onto the same node.</p>
+<h4 id="enablelinkdirection"><strong>enableLinkDirection</strong><a class="headerlink" href="#enablelinkdirection" title="Permanent link">&para;</a></h4>
+<p>This can be &ldquo;LeftRight&rdquo;, &ldquo;RightLeft&rdquo;, &ldquo;TopBottom&rdquo;, or &ldquo;BottomTop&rdquo;. &ldquo;LeftRight&rdquo; is the default. This alters the default location for input and output ports on the node, as follows:</p>
+<ul>
+<li>For &ldquo;LeftRight&rdquo; input ports will be on the left of the node and output ports will be on the right of the node</li>
+<li>For &ldquo;RightLeft&rdquo; input ports will be on the right of the node and output ports will be on the left of the node</li>
+<li>For &ldquo;TopBottom&rdquo; input ports will be on the top of the node and output ports will be on the bottom of the node</li>
+<li>For &ldquo;BottomTop&rdquo; input ports will be on the bottom of the node and output ports will be on the top of the node</li>
+</ul>
+<p>In addition to these positions, the port positions can be further customized using the <a href="../03.06.01-node-customization/#overriding-port-positions-and-link-directions">nodeLayout options</a>.</p>
+<h4 id="enableinsertnodedroppedonlink"><strong>enableInsertNodeDroppedOnLink</strong><a class="headerlink" href="#enableinsertnodedroppedonlink" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true, the user can drag nodes from the palette or from the canvas and drop them onto existing links in the flow. This causes the dropped node to be inserted between the two nodes joined by the link, meaning new links are created that join the new node to the previously joined nodes and the old link is removed. When the user performs the drop Common Canvas will call the editActionHandler with one of two possible commands:</p>
+<ul>
+<li>&ldquo;createNodeOnLink&rdquo; - when a node is being dragged from the palette leading to node creation &amp; insertion</li>
+<li>&ldquo;insertNodeIntoLink&rdquo; - when an existing node is dragged from the canvas leading to insertion of the existing node into the link</li>
+</ul>
+<h4 id="enablepositionnodeonrightflyoutopen"><strong>enablePositionNodeOnRightFlyoutOpen</strong><a class="headerlink" href="#enablepositionnodeonrightflyoutopen" title="Permanent link">&para;</a></h4>
+<p>This can be a boolean or an object. The default is false. If set to true, when the right-side flyout is open the currently selected node (assuming there is one) will be automatically positioned in the center of the viewport (canvas area). Instead of true this field can also be set to a simple JavaScript object like this <code>{ x: 30, y: 40 }</code> where x and y indicate the position where the node will be positioned as a percentage of the width and height of the viewport respectively.</p>
+<h4 id="enablehighlightnodeonnewlinkdrag"><strong>enableHighlightNodeOnNewLinkDrag</strong><a class="headerlink" href="#enablehighlightnodeonnewlinkdrag" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true Common Canvas will add the &ldquo;data-new-link-over&rdquo; attribute to the node&rsquo;s group <code>&lt;g&gt;</code> element, when the end of a new link is dragged to be close to and over a target node. This allows applications to alter the appearance of the target node as a new link is dragged towards it.</p>
+<h4 id="enablehighlightunavailablenodes"><strong>enableHighlightUnavailableNodes</strong><a class="headerlink" href="#enablehighlightunavailablenodes" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true, when the user begins to drag a new link line, Common Canvas will add a new class called <code>d3-node-unavailable</code> to all nodes which cannot accept the link as input. The class will be applied to each node&rsquo;s group <code>&lt;g&gt;</code> element in the DOM. This class can be used for styling the unavailable nodes as desired using CSS. The default styling will &lsquo;gray out&rsquo; the node label, node outline rectangle (if there is one) and the node icon (provided it is an SVG image). These styles can be overridden in the applications CSS if different styling is needed. This behavior also applies if the end of a partially or fully detached link is dragged.</p>
+<h4 id="enableraisenodestotoponhover"><strong>enableRaiseNodesToTopOnHover</strong><a class="headerlink" href="#enableraisenodestotoponhover" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is true. If set to false the nodes will be left in their original place in the DOM. If set to true, when the user moves the mouse cursor over a node, that node will be moved in the DOM so that the node appears on top of all other nodes. This is only really noticeable if nodes, or parts of nodes, overlap other nodes. It can be useful if your nodes have protruding ports or decorations and your users sometimes position nodes very close to one another. Note: the &lsquo;true&rsquo; setting can adversely affect the behavior of scroll areas in a node that are displayed using a React object (using the <code>nodeExternalObject</code> node layout option) because when the node is moved in the DOM the scroll area gets reset to its initial position. Set this to false if you are displaying nodes using React objects.</p>
+<h4 id="enablemovenodesonsupernoderesize"><strong>enableMoveNodesOnSupernodeResize</strong><a class="headerlink" href="#enablemovenodesonsupernoderesize" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is true. If true, nodes surrounding a supernode will be moved when the supernode is expanded or manually resized so that the supernode does not overlay them. When set to false, the nodes surrounding a supernode will stay in their current positions when the supernode is expanded or manually resized. This may result in the nodes being overlaid by the supernode.</p>
+<h4 id="enabledisplayfulllabelonhover"><strong>enableDisplayFullLabelOnHover</strong><a class="headerlink" href="#enabledisplayfulllabelonhover" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true, any abbreviated node label will be displayed in full when the pointer hovers over the label. If set to false, abbreviated node labels will remain the same when the pointer hovers over them.</p>
+<h4 id="enablesingleoutputportdisplay"><strong>enableSingleOutputPortDisplay</strong><a class="headerlink" href="#enablesingleoutputportdisplay" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true, only the last of the ports from the array of output ports will be displayed for each node. This config property is only applicable to applications with very specialized styling and handling of ports. If set to true with regular applications, it may result in a confusing display to the user. The single port is displayed at a position specified by outputPortRightPosX and outputPortRightPosY layout properties. For exmaple:
+<div class="highlight"><pre><span></span><code><span class="nx">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">enableSingleOutputPortDisplay</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">enableNodeLayout</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">outputPortRightPosX</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">outputPortRightPosY</span><span class="o">:</span><span class="w"> </span><span class="mf">20</span>
+<span class="p">};</span>
+</code></pre></div></p>
+<h2 id="links">Links<a class="headerlink" href="#links" title="Permanent link">&para;</a></h2>
+<h4 id="enablelinktype"><strong>enableLinkType</strong><a class="headerlink" href="#enablelinktype" title="Permanent link">&para;</a></h4>
+<p>This can be &ldquo;Curve&rdquo;, &ldquo;Elbow&rdquo;, &ldquo;Parallax&rdquo; or &ldquo;Straight&rdquo;. &ldquo;Curve&rdquo; is the default. This will set the link style used to connect nodes.</p>
+<h4 id="enablelinkmethod"><strong>enableLinkMethod</strong><a class="headerlink" href="#enablelinkmethod" title="Permanent link">&para;</a></h4>
+<p>This can be: &ldquo;Ports&rdquo; or &ldquo;Freeform&rdquo;. The default is &ldquo;Ports&rdquo;. When set to &ldquo;Ports&rdquo;, each link will be drawn from a specific output port on the source node to a specific input port on the target node. Note: With this option, links will be drawn to the port locations even if the port display has been switched off by the application. When set to &ldquo;Freeform&rdquo; links will be drawn from the source node to the taget node ignoring where ports have been positioned. Applications displaying freeform links usually choose not to display input and output ports.</p>
+<h4 id="enablestraightlinksasfreeform"><strong>enableStraightLinksAsFreeform</strong><a class="headerlink" href="#enablestraightlinksasfreeform" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is true. If set to true then, when <code>enableLinkType</code> is set to &ldquo;Straight&rdquo;, <code>enableLinkMethod</code> will always be treated as if it is set to &ldquo;Freeform&rdquo;. If it is set to false, Common Canvas will use whatever value is specified in <code>enableLinkMethod</code> when <code>enableLinkType</code> is set to &ldquo;Straight&rdquo;.</p>
+<p>This config field was introduced to enforce the earlier Elyra Canvas behavior, where &ldquo;Straight&rdquo; links are automatically displayed as &ldquo;Freeform&rdquo;.</p>
+<div class="admonition warning">
+<p class="admonition-title">enableStraightLinksAsFreeform - deprecated</p>
+<p>This field is deprecated and will be removed in the next major Elyra Canvas version so it is recommeneded that applications using &ldquo;Straight&rdquo; links explicitely set <code>enableLinkMethod</code> to &ldquo;Freeform&rdquo; now because that will be mandatory when migrating to the next verion.</p>
+</div>
+<h4 id="enablelinkselection"><strong>enableLinkSelection</strong><a class="headerlink" href="#enablelinkselection" title="Permanent link">&para;</a></h4>
+<p>This can be: &ldquo;None&rdquo;, &ldquo;LinkOnly&rdquo;, &ldquo;Handles&rdquo; or &ldquo;Detachable&rdquo;. The default is &ldquo;None&rdquo;. These have the following affect on the canvas:</p>
+<ul>
+<li>&ldquo;None&rdquo; - no selection of links is possible however user can right click on a link to get a context menu.</li>
+<li>&ldquo;LinkOnly&rdquo; - a link may be selected and added to the set of currently selected objects (nodes and/or comments).</li>
+<li>&ldquo;Handles&rdquo; - This includes the &ldquo;LinkOnly&rdquo; function. In addition, when a link is selected a handle (either a circle or an image) is displayed at the start and end of the link. The link handle can be dragged to a new node/port position to rewire the flow.</li>
+<li>
+<p>&ldquo;Detachable&rdquo; - This includes the &ldquo;LinkOnly&rdquo; and &ldquo;Handles&rdquo; function. In addition, this option enables detachable links for the canvas. This means a link can exist either:</p>
+<ul>
+<li>between a source node and an arbitrary point on the canvas (semi-detached) OR</li>
+<li>between an arbitrary point on the canvas and a target node (semi-detached) OR</li>
+<li>between two arbitrary points on the canvas (detached)</li>
+</ul>
+<p>Additionally, &ldquo;Detachable&rdquo; mode, allows:</p>
+<ul>
+<li>semi-detached or fully-detached links to be stored in and retrieved from the pipeline flow document.</li>
+<li>semi-detached or fully-detached links to be manipulated with link handles. The link handles can be used to drag the end of the link away from its connecting source or target nodes and onto the canvas. Or semi-detached or fully detached links can be reattached to nodes/ports.</li>
+<li>a new detached link to be created by drawing out a new link from a node and dropping it onto the canvas.</li>
+<li>palette and canvas nodes, when they are dragged, to be dropped onto the ends of detached links to automatically attach them to the node being dragged.</li>
+</ul>
+</li>
+</ul>
+<h4 id="enablelinkreplaceonnewconnection"><strong>enableLinkReplaceOnNewConnection</strong><a class="headerlink" href="#enablelinkreplaceonnewconnection" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true, the user can drag a new connection to a target node, and if the input port on the target node has a maximum cardinality of one AND there is currently a connection to that port, the existing connection will be removed and the new connection is created; essentially this gesture replaces the existing link with the new one. If set to false the new connection will not be completed and the existing link will remain in place.</p>
+<p>When set to true and a link is replaced, Common Canvas will call the <code>beforeEditActionHandler</code> the <code>editActionHandler</code> callback functions, if either are provided by the host application, with a <code>data</code> object parameter with the <code>editType</code> field set to <code>"linkNodesAndReplace"</code>.</p>
+<h4 id="enableassoclinkcreation"><strong>enableAssocLinkCreation</strong><a class="headerlink" href="#enableassoclinkcreation" title="Permanent link">&para;</a></h4>
+<p>This is a Boolean. The default is <code>false</code>. If set to <code>true</code> it changes the nature of links that are created between nodes as follows:</p>
+<ul>
+<li>The user is able to pull out a link from either port on the node and drag it to another node</li>
+<li>When a link is completed an <code>association</code> link is created rather than the regular data flow link that is created when this field is set to <code>true</code>. Association links describe an association between pairs of nodes and do not indicate any kind of data flow between those nodes.</li>
+</ul>
+<h4 id="enableassoclinktype"><strong>enableAssocLinkType</strong><a class="headerlink" href="#enableassoclinktype" title="Permanent link">&para;</a></h4>
+<p>This can be &ldquo;Straight&rdquo; or &ldquo;RightSideCurve&rdquo;. The default it &ldquo;Straight&rdquo;. This field changes the way association links are drawn on the canvas.</p>
+<h4 id="enablelinksovernodes"><strong>enableLinksOverNodes</strong><a class="headerlink" href="#enablelinksovernodes" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default value is <code>false</code>. If set to <code>true</code> links are placed above nodes in the canvas. Hover over nodes/links would still have links above nodes if <code>enableLinksOverNodes</code> is set to <code>true</code>. This is useful if the ports are positioned within the boundaries of the node and the link lines need to be displayed to those positions.</p>
+<h2 id="comments">Comments<a class="headerlink" href="#comments" title="Permanent link">&para;</a></h2>
+<h4 id="enablemarkdownincomments"><strong>enableMarkdownInComments</strong><a class="headerlink" href="#enablemarkdownincomments" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. When set to true the user may enter markdown syntax into comments on the canvas when in edit mode for the comment. When the editing ends, the comment is shown in presentation mode and the markdown syntax is converted to HTML which is displayed in the comment and is styled by CSS.</p>
+<h2 id="toolbar">Toolbar<a class="headerlink" href="#toolbar" title="Permanent link">&para;</a></h2>
+<h4 id="enabletoolbarlayout"><strong>enableToolbarLayout</strong><a class="headerlink" href="#enabletoolbarlayout" title="Permanent link">&para;</a></h4>
+<p>This can be: &ldquo;Top&rdquo; or &ldquo;None&rdquo;. The default is &ldquo;Top&rdquo;. &ldquo;Top&rdquo; displays a toolbar at the top of the canvas area. See the <a href="../03.02.02-toolbar-config/">Toolbar Config docs</a> for details on how to customize the toolbar. &ldquo;None&rdquo; stops the toolbar from appearing.</p>
+<h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
+<h4 id="tipconfig"><strong>tipConfig</strong><a class="headerlink" href="#tipconfig" title="Permanent link">&para;</a></h4>
+<p>This is a simple JavaScript object that configures whether tips for palette items, nodes, ports, links, decorations or the state tag are enabled (value set to true) or disabled (value set to false). By default, all tips are enabled. The following would switch off tips for ports and links.
+<div class="highlight"><pre><span></span><code><span class="w">       </span><span class="s2">&quot;tipConfig&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">           </span><span class="s2">&quot;palette&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">&quot;nodes&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">&quot;ports&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">&quot;links&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">&quot;decorations&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">&quot;stateTag&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">       </span><span class="p">}</span>
+</code></pre></div>
+The tips displayed by the palette can be further refined. For example, this would prevent tips for palette categories from being displayed, but would still display tips for node templates in the categories:
+<div class="highlight"><pre><span></span><code><span class="w">       </span><span class="s2">&quot;tipConfig&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">           </span><span class="s2">&quot;palette&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="s2">&quot;categories&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;nodeTemplates&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">           </span><span class="p">},</span>
+<span class="w">           </span><span class="s2">&quot;nodes&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">&quot;ports&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">&quot;links&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">&quot;decorations&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">           </span><span class="s2">&quot;stateTag&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">       </span><span class="p">}</span>
+</code></pre></div></p>
+<p>Note: The default content of tips can be overwritten by implementing the <a href="../03.03.06-tip-handler/">Tip Handler callback</a>.</p>
+<h2 id="context-toolbar">Context Toolbar<a class="headerlink" href="#context-toolbar" title="Permanent link">&para;</a></h2>
+<h4 id="enablecontexttoolbar"><strong>enableContextToolbar</strong><a class="headerlink" href="#enablecontexttoolbar" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. When set to true, Common Canvas will display a context toolbar instead of a context menu for performing actions on canvas objects. A context toolbar is a small toolbar that appears above nodes, links and comments as the mouse cursor is hovered over them. The toolbar shows icons for actions the user is most likely to want to perform on the object. An overflow icon is displayed which, when clicked, shows a menu of additional actions. A context toolbar for the canvas background can also be displayed by right-clicking on the background. Common Canvas will display default context toolbars for nodes, links comments and the canvas background however, the default actions can be customized by implementing the <a href="../03.03.01-context-menu-handler/">Context Menu Handler`</a> callback.</p>
+<h2 id="palette">Palette<a class="headerlink" href="#palette" title="Permanent link">&para;</a></h2>
+<h4 id="enablepalettelayout"><strong>enablePaletteLayout</strong><a class="headerlink" href="#enablepalettelayout" title="Permanent link">&para;</a></h4>
+<p>This can be: &ldquo;Modal&rdquo; or &ldquo;Flyout&rdquo; or &ldquo;None&rdquo;. The default is &ldquo;Flyout&rdquo;. &ldquo;Flyout&rdquo; displays a panel on the left side of the canvas containing the palette icons and &ldquo;Modal&rdquo; shows the palette icons in a dialog window. &ldquo;None&rdquo; stops the palette from appearing.</p>
+<h4 id="enableautolinkonlyfromselnodes"><strong>enableAutoLinkOnlyFromSelNodes</strong><a class="headerlink" href="#enableautolinkonlyfromselnodes" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. When set to true the auto-add function (where double clicking a node in the palette automatically adds it to the canvas) will only link up nodes when a node is already selected on the canvas and then, only if the selected node can be linked to the node that was double clicked. If false, the auto-add function will make a best guess at which node the double-clicked node should be added to.</p>
+<h4 id="enablepaletteheader"><strong>enablePaletteHeader</strong><a class="headerlink" href="#enablepaletteheader" title="Permanent link">&para;</a></h4>
+<p>This is a JSX object that will displayed in an open, wide palette. It is positioned below the Seach bar and above the categories and nodes. The default is null, which means nothing will be displayed. This option can be used by the application to add application specific function into the palette, for example, a button could be added.</p>
+<h4 id="enablenarrowpalette"><strong>enableNarrowPalette</strong><a class="headerlink" href="#enablenarrowpalette" title="Permanent link">&para;</a></h4>
+<p>This is a boolean.  true is the default.  If true when the palette is closed the narrow palette will be shown.  When false the palette completely closes.</p>
+<div class="admonition warning">
+<p class="admonition-title">paletteInitialState - deprecated</p>
+<p>Deprecated &ndash; This option is deprecated and will be removed soon.  Use <code>CanvasController.openPalette()</code> to display an opened palette at start-up. This <code>openPalette()</code> can be called immediately after creating the canvas controller.</p>
+<p>paletteInitialState is a boolean. false is the default. If set to true the palette will be opened when Common Canvas first appears to its full (non-narrow) state.</p>
+</div>
+<h2 id="zoom-scale-and-pan">Zoom (scale and pan)<a class="headerlink" href="#zoom-scale-and-pan" title="Permanent link">&para;</a></h2>
+<h4 id="enablesavezoom"><strong>enableSaveZoom</strong><a class="headerlink" href="#enablesavezoom" title="Permanent link">&para;</a></h4>
+<p>This can be: &ldquo;None&rdquo;, &ldquo;LocalStorage&rdquo; or &ldquo;Pipelineflow&rdquo;. The default is &ldquo;None&rdquo;.</p>
+<ul>
+<li>&ldquo;None&rdquo; - When the canvas is zoomed, the zoom (scale and x/y pan) are not saved anywhere so if the canvas is closed and reopened it reopens with the default zoom which is a scale of 1 and x/y pan values of 0.</li>
+<li>&ldquo;LocalStorage&rdquo; - The zoom for the canvas is stored in the browser&rsquo;s local storage and will be reapplied to the canvas each time that canvas is shown in that browser. This applies to sub-flows, when the user displays them full-screen, as well as the primary flow. Sub-flows and the primary flow each have their own zoom amounts stored in local storage. Note: Zoom amounts stored in local storage can be cleared from storage by calling the <code>canvasController.clearSavedZoomValues()</code> API method.</li>
+<li>&ldquo;Pipelineflow&rdquo; - The zoom is serialized into the pipeline flow document and when a pipeline flow document is provided to Common Canvas through the API the zoom will be applied to the canvas display. Zoom amounts can be stored for both primary and sub pipelines. (See the pipelineFlow schema specification).</li>
+</ul>
+<h4 id="enablepanintoviewonopen"><strong>enablePanIntoViewOnOpen</strong><a class="headerlink" href="#enablepanintoviewonopen" title="Permanent link">&para;</a></h4>
+<p>This can be either true or false. The default is false. If set to true, the canvas will be panned so as much of the canvas area (the area containing the nodes and comments) is visible in the viewport as possible. This will only happen when enableSaveZoom === &ldquo;None&rdquo; or if there is no saved zoom available either in local storage (when enableSaveZoom === &ldquo;LocalStorage&rdquo;) or in the pipelineFlow (when enableSaveZoom === &ldquo;Pipelineflow&rdquo;).</p>
+<h4 id="enablezoomintosubflows"><strong>enableZoomIntoSubFlows</strong><a class="headerlink" href="#enablezoomintosubflows" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. When set to true, Common Canvas will override the maximum zoom extent value which, by default is used for the entire canvas, to allow the user to zoom in on in-place sub-flows further than they can do on containing flows. This means the user can zoom in on multi-nested sub-flows so they are easier to view. To see this effect, the user must position the mouse pointer over the sub-flow before performing the zoom gesture.</p>
+<h2 id="canvas-content">Canvas Content<a class="headerlink" href="#canvas-content" title="Permanent link">&para;</a></h2>
+<h4 id="emptycanvascontent"><strong>emptyCanvasContent</strong><a class="headerlink" href="#emptycanvascontent" title="Permanent link">&para;</a></h4>
+<p>This is a JSX or HTML snippet that contains some text or any elements (such as an image) that you want to display when the canvas is empty, that is, when it doesn&rsquo;t have any nodes or comments. The default behavior if this config parameter is not provided is that Common Canvas will display an image and message saying: &ldquo;Your flow is empty!&rdquo;.</p>
+<h4 id="dropzonecanvascontent"><strong>dropZoneCanvasContent</strong><a class="headerlink" href="#dropzonecanvascontent" title="Permanent link">&para;</a></h4>
+<p>This is a JSX or HTML snippet that contains some text or any elements (such as an image) that you want to display when a data object is dragged from the desktop over the canvas. The default behavior if this config parameter is not provided is that Common Canvas will display an image and a  message saying: &ldquo;Drop to add to canvas and project&rdquo;. The content will not be displayed unless the <code>enableDropZoneOnExternalDrag</code> configuration parameter (see above) is set to true.</p>
+<h4 id="enabledropzoneonexternaldrag"><strong>enableDropZoneOnExternalDrag</strong><a class="headerlink" href="#enabledropzoneonexternaldrag" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true a graphic overlay will be displayed over the canvas when a data object icon is dragged from the desktop over the canvas. The default graphic overlay will be an image and a  message saying: &ldquo;Drop to add to canvas and project&rdquo; unless the <code>dropZoneCanvasContent</code> configuration parameter is provided.</p>
+<p>See the <a href="../03.07-external-objects/#dragging-object-from-the-desktop-or-another-application">Dragging an object from the desktop</a> section for details on how to handle the drop of an external object onto the canvas.</p>
+<h4 id="enablestatetag"><strong>enableStateTag</strong><a class="headerlink" href="#enablestatetag" title="Permanent link">&para;</a></h4>
+<p>This can be either &ldquo;None&rdquo;, &ldquo;Locked&rdquo; or &ldquo;ReadOnly&rdquo;. The default is &ldquo;None&rdquo;. When set to either &ldquo;Locked&rdquo; or &ldquo;ReadOnly&rdquo;, a &lsquo;state tag&rsquo; object will be shown permanently over the top of the canvas. The state tag will be positioned in the center and towards the top of the canvas. The state tag consists of a black background rectangle with rounded corners overlaid with an icon and a text label. A tooltip is displayed when the mouse pointer is hovered over the state tag. The icon, label and default tooltip will be set appropriately based on the value (&ldquo;Locked&rdquo; or &ldquo;ReadOnly&rdquo;) for this setting. The host application can override the tooltip by implementing the <a href="../03.03.06-tip-handler/">Tip Handler callback</a>.</p>
+<h2 id="canvas-operation">Canvas Operation<a class="headerlink" href="#canvas-operation" title="Permanent link">&para;</a></h2>
+<h4 id="enablekeyboardnavigation"><strong>enableKeyboardNavigation</strong><a class="headerlink" href="#enablekeyboardnavigation" title="Permanent link">&para;</a></h4>
+<p>This can be either true or false. The default is false. If set to true, the user can use the keyboard to move the keyboard focus around the Common Canvas interface and perform actions on the flow objects using <a href="../03.05-keyboard-support/">shortcut keys</a>.</p>
+<h4 id="enableinteractiontype"><strong>enableInteractionType</strong><a class="headerlink" href="#enableinteractiontype" title="Permanent link">&para;</a></h4>
+<p>This can be &ldquo;Mouse&rdquo;, &ldquo;Carbon&rdquo; or &ldquo;Trackpad&rdquo;. The default is &ldquo;Mouse&rdquo;.
+<strong><em>&ldquo;Trackpad&rdquo; has been deprecated and will be removed in the future.</em></strong></p>
+<ul>
+<li>
+<p>With this set to &ldquo;Mouse&rdquo; the following interaction is enabled:</p>
+<ul>
+<li>Zoom canvas = Rotate mouse wheel.
+(Can be simulated with a trackpad with two finger up and down scroll)</li>
+<li>Pan canvas = Left mouse key down on canvas background + drag.
+(Can be simulated with a trackpad with press down on trackpad and drag.)</li>
+<li>Region select on canvas = Shift key + left mouse key down on canvas background + drag.
+(Can be simulated with a trackpad with Shift + finger down on trackpad + drag across canvas background)</li>
+</ul>
+</li>
+<li>
+<p>With this set to &ldquo;Carbon&rdquo; the following interaction is enabled:</p>
+<ul>
+<li>Zoom canvas = Rotate mouse wheel.
+(Can be simulated with a trackpad with two finger up and down scroll)</li>
+<li>Pan canvas = Press and hold space bar then left mouse key down on canvas background + drag.
+(Can be simulated with a trackpad by press and hold space bar then press down on trackpad and drag.)</li>
+<li>Region select on canvas = Left mouse key down on canvas background + drag.
+(Can be simulated with a trackpad with press down on trackpad and drag.)</li>
+</ul>
+</li>
+<li>
+<p><strong>This setting is now deprecated</strong> With this set to &ldquo;Trackpad&rdquo; the following interactions are enabled:</p>
+<ul>
+<li>Zoom canvas = Two finger pinch or two finger spread gesture.
+(Can be simulated with a mouse as follows: Ctrl + rotate mouse wheel.)</li>
+<li>Pan canvas = Two finger horizontal or vertical scroll gesture.
+(Can be simulated with a mouse as follows: Vertical pan is rotate mouse wheel; Horizontal pan is Shift + rotate mouse wheel)</li>
+<li>Region select on canvas = Finger down + drag.
+(Can be simulated with a mouse as follows: Left button down + drag on canvas background)</li>
+</ul>
+</li>
+</ul>
+<h4 id="enableparentclass"><strong>enableParentClass</strong><a class="headerlink" href="#enableparentclass" title="Permanent link">&para;</a></h4>
+<p>This is a string which is a class name. The default is empty string. If a class name is provided it is applied to the top-most DOM element for Common Canvas. This can be used to make you CSS override rules more specific which means they will be used in preference to any default styles. For example, if you specify &ldquo;my-app-styles&rdquo; for this field then CSS like this:
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="p">.</span><span class="nc">my-app-styles</span><span class="w"> </span><span class="p">.</span><span class="nc">d3-node-body-outline</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">fill</span><span class="p">:</span><span class="w"> </span><span class="kc">orange</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+will override the style from the common-canvas CSS
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="p">.</span><span class="nc">d3-node-body-outline</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">fill</span><span class="p">:</span><span class="w"> </span><span class="kc">white</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div></p>
+<h4 id="enabledragwithoutselect"><strong>enableDragWithoutSelect</strong><a class="headerlink" href="#enabledragwithoutselect" title="Permanent link">&para;</a></h4>
+<p>This can be either true or false. The default is false. If set to true, the user can drag and drop a single node or a single comment without that gesture removing selection on any other nodes or comments. If the node being dragged was selected prior to the drag gesture then it and any other objects that are currently selected will be moved. With this parameter set to false (or missing) a drag and drop gesture will select the node or comment being dragged and will deselect any currently selected objects.</p>
+<h4 id="enableeditingactions"><strong>enableEditingActions</strong><a class="headerlink" href="#enableeditingactions" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is true. If set to false, various editing actions on the canvas will be prevented, as follows:</p>
+<ol>
+<li>
+<p>Nodes cannot be created on the canvas using any of the following:</p>
+<p>(a) dragging and dropping a node template from the palette onto the canvas or</p>
+<p>(b) dragging and dropping an object onto the canvas from outside the canvas area, such as a file being dragged from the computer desktop onto the canvas (see note below), or</p>
+<p>(c) double clicking a node in the palette to create a node</p>
+<p>Note: It is not possible for Common Canvas to prevent an object being dragged from the computer desktop to the canvas so it is recommended the drop zone (which provides visual feedback about the drop) should be switched off by setting the <a href="./#enabledropzoneonexternaldrag">enableDropZoneOnExternalDrag</a> config field to <code>false</code>.</p>
+</li>
+<li>
+<p>Nodes and comments cannot be dragged and moved.</p>
+</li>
+<li>The end points of Links, when <a href="./#enablelinkselection">enableLinkSelection</a> is set to <code>"Detachable"</code> or <code>"Handles"</code>, cannot be dragged and moved.</li>
+<li>Links from nodes and comments cannot be created by dragging from the port object on the source node or comment to the target node.</li>
+<li>Comments, node labels and text decorations cannot be edited, neither by clicking the edit icon (which does not appear) nor by double clicking the text.</li>
+<li>
+<p>Context menu options that alter the canvas objects will be removed from the context menu before it is displayed by Common Canvas. The options that will be removed are:</p>
+<table>
+<thead>
+<tr>
+<th>Option Text</th>
+<th>Action Identifier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New Comment</td>
+<td>createComment</td>
+</tr>
+<tr>
+<td>Disconnect</td>
+<td>disconnectNode</td>
+</tr>
+<tr>
+<td>Edit-&gt;Cut</td>
+<td>cut</td>
+</tr>
+<tr>
+<td>Edit-&gt;Copy</td>
+<td>copy</td>
+</tr>
+<tr>
+<td>Edit-Paste</td>
+<td>paste</td>
+</tr>
+<tr>
+<td>Undo</td>
+<td>undo</td>
+</tr>
+<tr>
+<td>Redo</td>
+<td>redo</td>
+</tr>
+<tr>
+<td>Delete</td>
+<td>deleteSelectedObjects</td>
+</tr>
+<tr>
+<td>Create supernode</td>
+<td>createSuperNode</td>
+</tr>
+<tr>
+<td>Create external supernode</td>
+<td>createSuperNodeExternal</td>
+</tr>
+<tr>
+<td>Deconstruct supernode</td>
+<td>deconstructSuperNode</td>
+</tr>
+<tr>
+<td>Collapse supernode</td>
+<td>collapseSuperNodeInPlace</td>
+</tr>
+<tr>
+<td>Expand supernode</td>
+<td>expandSuperNodeInPlace</td>
+</tr>
+<tr>
+<td>Convert external to local</td>
+<td>convertSuperNodeExternalToLocal</td>
+</tr>
+<tr>
+<td>Convert local to external</td>
+<td>convertSupernodeLocalToExternal</td>
+</tr>
+<tr>
+<td>Delete</td>
+<td>deleteLink</td>
+</tr>
+<tr>
+<td>Save to palette</td>
+<td>saveToPalette</td>
+</tr>
+</tbody>
+</table>
+<p>If your application adds its own editing actions to the context menu your code must remove them if they are not needed in some situations (e.g. you are displaying a read-only canvas).</p>
+</li>
+<li>
+<p>Any default toolbar actions (tools) that alter the canvas objects will be disabled regardless of their specified enablement status. These actions are:</p>
+<table>
+<thead>
+<tr>
+<th>Default Tooltip</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Undo</td>
+<td>undo</td>
+</tr>
+<tr>
+<td>Redo</td>
+<td>redo</td>
+</tr>
+<tr>
+<td>Cut</td>
+<td>cut</td>
+</tr>
+<tr>
+<td>Copy</td>
+<td>copy</td>
+</tr>
+<tr>
+<td>Paste</td>
+<td>paste</td>
+</tr>
+<tr>
+<td>Delete</td>
+<td>deleteSelectedObjects</td>
+</tr>
+<tr>
+<td>New comment</td>
+<td>createAutoComment</td>
+</tr>
+<tr>
+<td>Arrange Horizontally</td>
+<td>arrangeHorizontally</td>
+</tr>
+<tr>
+<td>Arrange Vertically</td>
+<td>arrangeVertically</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Keyboard shortcuts that alter the canvas will not work. These are:</p>
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>delete</td>
+<td>delete</td>
+</tr>
+<tr>
+<td>Ctrl/Cmd + x</td>
+<td>cut</td>
+</tr>
+<tr>
+<td>Ctrl/Cmd + c</td>
+<td>copy</td>
+</tr>
+<tr>
+<td>Ctrl/Cmd + v</td>
+<td>paste</td>
+</tr>
+<tr>
+<td>Ctrl/Cmd + z</td>
+<td>undo</td>
+</tr>
+<tr>
+<td>Ctrl/Cmd + Shift + z</td>
+<td>redo</td>
+</tr>
+<tr>
+<td>Ctrl/Cmd + y</td>
+<td>redo</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>The browser&rsquo;s Edit menu options (cut, copy, paste) will not work with the canvas objects regardless of the setting for <a href="./#enablebrowsereditmenu">enableBrowserEditMenu</a>.</p>
+</li>
+</ol>
+<h4 id="enableimagedisplay"><strong>enableImageDisplay</strong><a class="headerlink" href="#enableimagedisplay" title="Permanent link">&para;</a></h4>
+<p>This can be set to: &ldquo;SVGInline&rdquo;, &ldquo;LoadSVGToDefs&rdquo; or &ldquo;SVGAsImage&rdquo;. The default is &ldquo;SVGInline&rdquo;. This field controls the display of SVG image files (that is, files with a <code>.svg</code> extension) on the canvas, such as those displayed for node icons or decoration images. This option can be useful to improve performance when images are repeated a large number of times on the canvas and particularly when the browser cache is disabled. Note: this does not affect the display behavior of non-SVG files which are always displayed inside an <code>&lt;image&gt;</code> tag. The behavior for SVG image files is as follows:</p>
+<ul>
+<li>&ldquo;SVGInline&rdquo; - This is the default. With this setting, the image file is read in &ndash; from the server or cache (if available) &ndash; and the SVG tags within the file displayed in-line in the DOM. This means elements within the SVG can be customized using CSS on a node-by-node basis.</li>
+<li>&ldquo;LoadSVGToDefs&rdquo; - With this option, each unique SVG file is read from the server (or cache) and written into a <code>&lt;symbol&gt;</code> element within the <code>&lt;defs&gt;</code> element of the canvas SVG area. A <code>&lt;use&gt;</code> element is then written to the place in the DOM for each place where the image should be displayed. Using this option means the SVG file for each image is only read once which should improve performance if images are repeated a lot on the canvas. However, it does limit the customization possibilities for the images on a node-by-node basis. Customization colors can be passed into the images using CSS inheritance, or the <code>currentColor</code> keyword, provided there are no internal classes applied to the elements in the SVG.</li>
+<li>&ldquo;SVGAsImage&rdquo; - This option causes the SVG file to be displayed within an <code>&lt;image&gt;</code> element in the DOM. The file loading is handled internally by the browser. Again, with this option customization capabilities on a node-by-node basis are limited. Customization colors can be passed into the images using CSS inheritance, or the <code>currentColor</code> keyword, provided there are no internal classes applied to the elements in the SVG.</li>
+</ul>
+<h4 id="enableinternalobjectmodel"><strong>enableInternalObjectModel</strong><a class="headerlink" href="#enableinternalobjectmodel" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is <code>true</code>. It is recommended you leave this set to <code>true</code>. If you set this to <code>false</code> your code will be responsible for handling the object model, which is NOT recommended. When set to <code>false</code>, changes are not automatically saved into the common-canvas object model and are not reflected in the canvas display. Consequently, the application is expected to listen to events and update the common-canvas object model using the canvas-controller API if it want visual changes to the canvas.</p>
+<h4 id="enablerightflyoutundertoolbar"><strong>enableRightFlyoutUnderToolbar</strong><a class="headerlink" href="#enablerightflyoutundertoolbar" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true the right flyout panel, when opened, will appear below the toolbar and will not cause the toolbar to compress. The default behavior is that the right flyout panel, when opened, will appear at the side of the toolbar and will compress the space available for the toolbar to be displayed. Warning: the notifications panel which is tied to the notifications icon in the toolbar will appear over the top of the right-side flyout with this option set to true.</p>
+<h4 id="enablerightflyoutdragtoresize"><strong>enableRightFlyoutDragToResize</strong><a class="headerlink" href="#enablerightflyoutdragtoresize" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true, the right flyout panel can be resized by dragging its left border. When hovering over the left border of the flyout, the cursor will change to indicate that resizing is possible. Users can drag the border to adjust the width of the flyout, allowing it to expand or collapse. This functionality offers more flexible layout options for the user. If set to false, the right-flyout panel, when open, will be displayed with a default width and cannot be resized by dragging its edge. The application can add its own sizing function if required.</p>
+<h4 id="enableleftflyoutundertoolbar"><strong>enableLeftFlyoutUnderToolbar</strong><a class="headerlink" href="#enableleftflyoutundertoolbar" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true the left flyout panel, when opened, will appear below the toolbar and will not cause the toolbar to compress. The default behavior is that the left flyout panel, when opened, will appear at the side of the toolbar and will compress the space available for the toolbar to be displayed.</p>
+<h4 id="enableexternalpipelineflows"><strong>enableExternalPipelineFlows</strong><a class="headerlink" href="#enableexternalpipelineflows" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If true, the context menu will include a <code>Create External Supernode</code> option when a set of objects are selected from which a supernode can be created.</p>
+<p>Waring: The host application must implement some of the common-canvas callbacks for external pipeline flow support to work correctly. See the section on <a href="../03.08-external-pipeline-flows/">External Pipeline Flow support</a> for more details.</p>
+<h4 id="enablesnaptogridtype"><strong>enableSnapToGridType</strong><a class="headerlink" href="#enablesnaptogridtype" title="Permanent link">&para;</a></h4>
+<p>This can be: &ldquo;None&rdquo;, &ldquo;During&rdquo; or &ldquo;After&rdquo;. The default is &ldquo;None&rdquo;.</p>
+<ul>
+<li>&ldquo;None&rdquo; - there is no snap to grid and objects can be moved to any position on the canvas.</li>
+<li>&ldquo;During&rdquo; - when nodes or comments are moved or sized, the objects snap to an imaginary grid while the objects are being dragged or sized. This gives a somewhat jerky effect as the move or size is happening but has the advantage of telling the user exactly where the object will be when they release the mouse button to end the action.</li>
+<li>&ldquo;After&rdquo; - nodes or comments snap to a grid when the drag or size event ends. This gives a smooth dragging and sizing effect but the user does not see the final position until they release the mouse button at the end of the action. By default the canvas uses reasonable values for the grid increments.</li>
+</ul>
+<h4 id="enablesnaptogridx"><strong>enableSnapToGridX</strong><a class="headerlink" href="#enablesnaptogridx" title="Permanent link">&para;</a></h4>
+<p>This optional value overrides the default horizontal increment of the snap-to-grid grid. It can be either a numeric value which is a number of pixels or it can be a numeric value followed by a % sign (e.g. &ldquo;25%&rdquo;) which indicates the grid will be a percentage of the default node width. Its default is dependent on whatever is set for enableNodeFormatType. That is for &ldquo;Horizontal&rdquo; it will be &ldquo;20%&rdquo; and for &ldquo;Vertical&rdquo; it will be &ldquo;25%&rdquo;.</p>
+<h4 id="enablesnaptogridy"><strong>enableSnapToGridY</strong><a class="headerlink" href="#enablesnaptogridy" title="Permanent link">&para;</a></h4>
+<p>This optional value overrides the default vertical increment of the snap-to-grid grid. It can be either a numeric value which is a number of pixels or it can be a numeric value followed by a % sign (e.g. &ldquo;25%&rdquo;) which indicates the grid will be a percentage of the default node height. Its default is dependent on whatever is set for enableNodeFormatType. That is for &ldquo;Horizontal&rdquo; it will be &ldquo;33.33%&rdquo; and for &ldquo;Vertical&rdquo; it will be &ldquo;20%&rdquo;.</p>
+<h4 id="enableautolayoutverticalspacing"><strong>enableAutoLayoutVerticalSpacing</strong><a class="headerlink" href="#enableautolayoutverticalspacing" title="Permanent link">&para;</a></h4>
+<p>This is the spacing in pixels which is used to separate nodes vertically when either the vertical or horizontal auto layout action is used.</p>
+<h4 id="enableautolayouthorizontalspacing"><strong>enableAutoLayoutHorizontalSpacing</strong><a class="headerlink" href="#enableautolayouthorizontalspacing" title="Permanent link">&para;</a></h4>
+<p>This is the spacing in pixels which is used to separate nodes horizontally when either the vertical or horizontal auto layout action is used. For horizontal auto layout, Common Canvas may override this value if it decides that more space is needed to prevent connecting lines from doubling back on themselves.</p>
+<h4 id="enablebrowsereditmenu"><strong>enableBrowserEditMenu</strong><a class="headerlink" href="#enablebrowsereditmenu" title="Permanent link">&para;</a></h4>
+<p>This is a boolean.  true is the default.  If true, the Cut/Copy/Paste items in the Browser&rsquo;s <code>Edit</code> menu, including keyboard input for those actions, can be used for performing those actions on objects (e.g. Nodes) in the canvas. When false, those items in the Browser&rsquo;s edit menu, including keyboard input for those actions, will not work for objects in the canvas. This will not prevent those actions working in the canvas when, say, invoked with the toolbar or canvas context menus, but this property can be used if the keyboard input for those actions into the canvas is disabled for Common Canvas using the <a href="../03.02.05-keyboard-config/">Keyboard Config</a> object.</p>
+<h4 id="schemavalidation"><strong>schemaValidation</strong><a class="headerlink" href="#schemavalidation" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. false is the default. It tells Common Canvas whether you want pipleineFlow and palette objects to be validated against the schema files when they are submitted to the canvas controller, using the <code>setPipelineFlow(pFlow)</code> or <code>setPipelineFlowPalette(palette)</code> methods. If any validation errors are found messages are displayed in the browser console. It is recommended this option be set to true during development and testing but switched off in production since schema validation can be somewhat slow for large objects.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../03.02-configuration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Configuration Overview">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Configuration Overview
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../03.02.02-toolbar-config/" class="md-footer__link md-footer__link--next" aria-label="Next: Toolbar Config">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Toolbar Config
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright  &copy; 2024 Elyra Authors, an open source project! Maintained by the Elyra Authors Team
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="http://github.com/elyra-ai/canvas" target="_blank" rel="noopener" title="Elyra Canvas on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.footer"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+        <script src="../js/links-in-new-tabs.js"></script>
+      
+    
+  </body>
+</html>
