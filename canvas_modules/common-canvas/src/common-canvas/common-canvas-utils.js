@@ -23,8 +23,8 @@
 import { get, has, isNumber, set } from "lodash";
 import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST,
-	PORT_DISPLAY_IMAGE}
-	from "../common-canvas/constants/canvas-constants.js";
+	PORT_DISPLAY_IMAGE
+} from "../common-canvas/constants/canvas-constants.js";
 
 export default class CanvasUtils {
 
