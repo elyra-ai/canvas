@@ -24,7 +24,7 @@ import { cloneDeep } from "lodash";
 
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import { LINK_SELECTION_DETACHABLE, PORT_OBJECT_IMAGE }
+import { LINK_SELECTION_DETACHABLE, PORT_DISPLAY_IMAGE }
 	from "./constants/canvas-constants.js";
 
 const INPUT_TYPE = "input_type";
@@ -390,7 +390,7 @@ export default class SVGCanvasUtilsDragDetLink {
 		portObjs
 			.each((p, i, portGrps) => {
 				const portSel = d3.select(portGrps[i]);
-				if (portObjectType === PORT_OBJECT_IMAGE) {
+				if (portObjectType === PORT_DISPLAY_IMAGE) {
 					const xx = node.x_pos + Number(portSel.attr("x"));
 					const yy = node.y_pos + Number(portSel.attr("y"));
 					const wd = Number(portSel.attr("width"));
