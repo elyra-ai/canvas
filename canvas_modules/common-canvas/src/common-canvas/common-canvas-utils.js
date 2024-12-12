@@ -22,7 +22,8 @@
 
 import { get, has, isNumber, set } from "lodash";
 import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
-	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST }
+	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST,
+	PORT_DISPLAY_IMAGE}
 	from "../common-canvas/constants/canvas-constants.js";
 
 export default class CanvasUtils {
@@ -1693,7 +1694,7 @@ export default class CanvasUtils {
 
 	// Convert now deprecated layout fields to the port objects arrays.
 	// TODO - Remove this in a future major release.
-	static convertPortObjectInfo(layout) {
+	static convertPortDisplayInfo(layout) {
 		const newLayout = layout;
 
 		if (!layout) {
@@ -1701,10 +1702,10 @@ export default class CanvasUtils {
 		}
 
 		// If custom fields exist for input object info, write the values into the
-		// inputPortObjects array.
-		if (newLayout.inputPortObject === "image") {
-			newLayout.inputPortObjects = [
-				{ type: "image",
+		// inputPortDisplayObjects array.
+		if (newLayout.inputPortObject === PORT_DISPLAY_IMAGE) {
+			newLayout.inputPortDisplayObjects = [
+				{ type: PORT_DISPLAY_IMAGE,
 					src: newLayout.inputPortImage,
 					height: newLayout.inputPortHeight,
 					width: newLayout.inputPortWidth
@@ -1712,9 +1713,9 @@ export default class CanvasUtils {
 			];
 		}
 
-		if (newLayout.inputPortGuideObject === "image") {
+		if (newLayout.inputPortGuideObject === PORT_DISPLAY_IMAGE) {
 			newLayout.inputPortGuideObjects = [
-				{ type: "image",
+				{ type: PORT_DISPLAY_IMAGE,
 					src: newLayout.inputPortGuideImage,
 					height: newLayout.inputPortHeight,
 					width: newLayout.inputPortWidth
@@ -1723,10 +1724,10 @@ export default class CanvasUtils {
 		}
 
 		// If custom fields exist for output object info, write the values into the
-		// outputPortObjects array.
-		if (newLayout.outputPortObject === "image") {
-			newLayout.outputPortObjects = [
-				{ type: "image",
+		// outputPortDisplayObjects array.
+		if (newLayout.outputPortObject === PORT_DISPLAY_IMAGE) {
+			newLayout.outputPortDisplayObjects = [
+				{ type: PORT_DISPLAY_IMAGE,
 					src: newLayout.outputPortImage,
 					height: newLayout.outputPortHeight,
 					width: newLayout.outputPortWidth
@@ -1734,9 +1735,9 @@ export default class CanvasUtils {
 			];
 		}
 
-		if (newLayout.outputPortGuideObject === "image") {
+		if (newLayout.outputPortGuideObject === PORT_DISPLAY_IMAGE) {
 			newLayout.outputPortGuideObjects = [
-				{ type: "image",
+				{ type: PORT_DISPLAY_IMAGE,
 					src: newLayout.outputPortGuideImage,
 					height: newLayout.outputPortHeight,
 					width: newLayout.outputPortWidth

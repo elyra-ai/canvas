@@ -38,7 +38,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON,
-	PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE, PORT_OBJECT_JSX,
+	PORT_DISPLAY_CIRCLE, PORT_DISPLAY_IMAGE, PORT_DISPLAY_JSX,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
@@ -1896,19 +1896,19 @@ export default class SVGCanvasRenderer {
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, inputPorts) => {
-				const portInfo = this.getPortInfo(node.layout.inputPortObjects, i);
+				const portDisplayInfo = this.getPortDisplayInfo(node.layout.inputPortDisplayObjects, i);
 				const obj = d3.select(inputPorts[i]);
 				obj
-					.append(portInfo.tag)
+					.append(portDisplayInfo.tag)
 					.attr("class", "d3-node-port-input-main" +
-						(portInfo.tag === "foreignObject" ? " d3-foreign-object-port-jsx" : ""));
+						(portDisplayInfo.tag === "foreignObject" ? " d3-foreign-object-port-jsx" : ""));
 
 				// Show a port arrow inside the port circle if:
 				// We are not supporting association link creation,
 				// and we are drawing a circle and this is not a super binding node.
 				obj
 					.filter(() => (!this.config.enableAssocLinkCreation &&
-						portInfo.type === PORT_OBJECT_CIRCLE &&
+						portDisplayInfo.type === PORT_DISPLAY_CIRCLE &&
 						!CanvasUtils.isSuperBindingNode(node)))
 					.append("path")
 					.attr("class", "d3-node-port-input-arrow");
@@ -1924,9 +1924,9 @@ export default class SVGCanvasRenderer {
 			.each((port, i, inputPorts) => {
 				const obj = d3.select(inputPorts[i]);
 				const portIdx = CanvasUtils.getPortIndex(node.inputs, port.id);
-				const portInfo = this.getPortInfo(node.layout.inputPortObjects, portIdx);
+				const portDisplayInfo = this.getPortDisplayInfo(node.layout.inputPortDisplayObjects, portIdx);
 				const transform = this.getPortImageTransform(port, FLOW_IN);
-				this.updatePort(obj, portInfo, node, port.cx, port.cy, transform);
+				this.updatePort(obj, portDisplayInfo, node, port.cx, port.cy, transform);
 			});
 
 		joinedInputPortGrps.selectChildren(".d3-node-port-input-arrow")
@@ -1992,7 +1992,7 @@ export default class SVGCanvasRenderer {
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, outputPorts) => {
-				const portInfo = this.getPortInfo(node.layout.outputPortObjects, i);
+				const portInfo = this.getPortDisplayInfo(node.layout.outputPortDisplayObjects, i);
 				const obj = d3.select(outputPorts[i]);
 				obj
 					.append(portInfo.tag)
@@ -2010,7 +2010,7 @@ export default class SVGCanvasRenderer {
 			.each((port, i, outputPorts) => {
 				const obj = d3.select(outputPorts[i]);
 				const portIdx = CanvasUtils.getPortIndex(node.outputs, port.id);
-				const portInfo = this.getPortInfo(node.layout.outputPortObjects, portIdx);
+				const portInfo = this.getPortDisplayInfo(node.layout.outputPortDisplayObjects, portIdx);
 				const transform = this.getPortImageTransform(port, FLOW_OUT);
 				this.updatePort(obj, portInfo, node, port.cx, port.cy, transform);
 			});
@@ -2024,8 +2024,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	updatePort(obj, portInfo, node, cx, cy, transform) {
-		if (portInfo.type === PORT_OBJECT_JSX || portInfo.type === PORT_OBJECT_IMAGE) {
-			if (portInfo.type === PORT_OBJECT_JSX) {
+		if (portInfo.type === PORT_DISPLAY_JSX || portInfo.type === PORT_DISPLAY_IMAGE) {
+			if (portInfo.type === PORT_DISPLAY_JSX) {
 				obj
 					.each((portData, idx, exts) => this.externalUtils.addJsxExternalObject(portInfo.src, idx, exts));
 			} else {
@@ -2046,9 +2046,9 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	getPortInfo(portObjects, i) {
-		const idx = (i < portObjects.length) ? i : portObjects.length - 1;
-		const portObj = portObjects[idx];
+	getPortDisplayInfo(displayObjects, i) {
+		const idx = (i < displayObjects.length) ? i : displayObjects.length - 1;
+		const portObj = displayObjects[idx];
 		const ty = portObj.type;
 		const tg = ty === "jsx" ? "foreignObject" : ty; // Translate the tag to 'foreignObject' if type is 'jsx'.
 		return {
@@ -4229,7 +4229,7 @@ export default class SVGCanvasRenderer {
 		const commentGrp = d3.select(commentObj);
 
 		const commentPort = commentGrp
-			.append(PORT_OBJECT_CIRCLE)
+			.append(PORT_DISPLAY_CIRCLE)
 			.attr("cx", (com) => com.width / 2)
 			.attr("cy", (com) => com.height + this.canvasLayout.commentHighlightGap)
 			.attr("r", this.canvasLayout.commentPortRadius)
@@ -4701,7 +4701,7 @@ export default class SVGCanvasRenderer {
 			.datum((d) => this.activePipeline.getLink(d.id))
 			.each((datum, index, linkHandles) => {
 				const obj = d3.select(linkHandles[index]);
-				if (this.canvasLayout.linkStartHandleObject === PORT_OBJECT_IMAGE) {
+				if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_IMAGE) {
 					obj
 						.attr("xlink:href", this.canvasLayout.linkStartHandleImage)
 						.attr("x", (d) => d.x1 - (this.canvasLayout.linkStartHandleWidth / 2))
@@ -4709,7 +4709,7 @@ export default class SVGCanvasRenderer {
 						.attr("width", this.canvasLayout.linkStartHandleWidth)
 						.attr("height", this.canvasLayout.linkStartHandleHeight);
 
-				} else if (this.canvasLayout.linkStartHandleObject === PORT_OBJECT_CIRCLE) {
+				} else if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_CIRCLE) {
 					obj
 						.attr("r", this.canvasLayout.linkStartHandleRadius)
 						.attr("cx", (d) => d.x1)
@@ -4730,7 +4730,7 @@ export default class SVGCanvasRenderer {
 			.datum((d) => this.activePipeline.getLink(d.id))
 			.each((datum, index, linkHandles) => {
 				const obj = d3.select(linkHandles[index]);
-				if (this.canvasLayout.linkEndHandleObject === PORT_OBJECT_IMAGE) {
+				if (this.canvasLayout.linkEndHandleObject === PORT_DISPLAY_IMAGE) {
 					obj
 						.attr("xlink:href", this.canvasLayout.linkEndHandleImage)
 						.attr("x", (d) => d.x2 - (this.canvasLayout.linkEndHandleWidth / 2))
@@ -4739,7 +4739,7 @@ export default class SVGCanvasRenderer {
 						.attr("height", this.canvasLayout.linkEndHandleHeight)
 						.attr("transform", (d) => this.getLinkImageTransform(d));
 
-				} else if (this.canvasLayout.linkEndHandleObject === PORT_OBJECT_CIRCLE) {
+				} else if (this.canvasLayout.linkEndHandleObject === PORT_DISPLAY_CIRCLE) {
 					obj
 						.attr("r", this.canvasLayout.linkEndHandleRadius)
 						.attr("cx", (d) => d.x2)

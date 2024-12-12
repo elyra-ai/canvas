@@ -147,7 +147,7 @@ function setNodeLayoutAttributes(node, nodeLayout, layoutHandler) {
 			// TODO - This should be removed in a future major release.
 			// This method converts now deprecated port object variables from customLayout
 			// to the new port object info arrays for input and output ports.
-			customLayout = CanvasUtils.convertPortObjectInfo(customLayout);
+			customLayout = CanvasUtils.convertPortDisplayInfo(customLayout);
 
 			const decs = CanvasUtils.getCombinedDecorations(node.layout.decorations, customLayout.decorations);
 			node.layout = Object.assign({}, node.layout, customLayout, { decorations: decs });

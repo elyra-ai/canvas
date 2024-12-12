@@ -26,7 +26,7 @@ import {
 const portsHorizontalDefaultLayout = {
 	nodeLayout: {
 		// Default node sizes. These dimensions might be overridden for nodes that have
-		// more ports than will fit in the default size if inputPortAutoPosition is.
+		// more ports than will fit in the default size if inputPortAutoPosition is
 		// set to true and outputPortAutoPosition is set to true. (See below).
 		defaultNodeWidth: 160,
 		defaultNodeHeight: 40,
@@ -38,7 +38,7 @@ const portsHorizontalDefaultLayout = {
 		// Displays the node outline shape underneath the image and label.
 		nodeShapeDisplay: true,
 
-		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeOutlineDisplay is true.
+		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeShapeDisplay is true.
 		nodeShape: "port-arcs",
 
 		// An SVG path or a function that returns an SVG path. The paths define the node
@@ -169,7 +169,7 @@ const portsHorizontalDefaultLayout = {
 		// The order of the elements corresponds to the order of ports in the
 		// inputs array for the node. If there are more input ports than elements
 		// in the array, the last element will be used for all remaining ports.
-		inputPortObjects: [
+		inputPortDisplayObjects: [
 			{ type: "circle" }
 		],
 
@@ -220,7 +220,7 @@ const portsHorizontalDefaultLayout = {
 		// The order of the elements corresponds to the order of ports in the
 		// outputs array for the node. If there are more output ports than elements
 		// in the array, the last element will be used for all remaining ports.
-		outputPortObjects: [
+		outputPortDisplayObjects: [
 			{ type: "circle" }
 		],
 
@@ -239,7 +239,7 @@ const portsHorizontalDefaultLayout = {
 			{ x_pos: 0, y_pos: 20, pos: "topRight" }
 		],
 
-		// An array of elements to control display of input port guide objects.
+		// An array of elements to control display of output port guide objects.
 		// That is the object drawn at the end of a new link as it is being dragged.
 		// Each element can have a number of different structures like this:
 		// Either
@@ -484,7 +484,7 @@ const portsHorizontalDefaultLayout = {
 const portsVerticalDefaultLayout = {
 	nodeLayout: {
 		// Default node sizes. These dimensions might be overridden for nodes that have
-		// more ports than will fit in the default size if inputPortAutoPosition is.
+		// more ports than will fit in the default size if inputPortAutoPosition is
 		// set to true and outputPortAutoPosition is set to true. (See below).
 		defaultNodeWidth: 70,
 		defaultNodeHeight: 75,
@@ -496,7 +496,7 @@ const portsVerticalDefaultLayout = {
 		// Displays the node outline shape underneath the image and label.
 		nodeShapeDisplay: true,
 
-		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeOutlineDisplay is true.
+		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeShapeDisplay is true.
 		nodeShape: "rectangle",
 
 		// An SVG path or a function that returns an SVG path. The paths define the node
@@ -627,7 +627,7 @@ const portsVerticalDefaultLayout = {
 		// The order of the elements corresponds to the order of ports in the
 		// inputs array for the node. If there are more input ports than elements
 		// in the array, the last element will be used for all remaining ports.
-		inputPortObjects: [
+		inputPortDisplayObjects: [
 			{ type: "circle" }
 		],
 
@@ -678,7 +678,7 @@ const portsVerticalDefaultLayout = {
 		// The order of the elements corresponds to the order of ports in the
 		// outputs array for the node. If there are more output ports than elements
 		// in the array, the last element will be used for all remaining ports.
-		outputPortObjects: [
+		outputPortDisplayObjects: [
 			{ type: "circle" }
 		],
 
@@ -697,7 +697,7 @@ const portsVerticalDefaultLayout = {
 			{ x_pos: 0, y_pos: 29, pos: "topRight" }
 		],
 
-		// An array of elements to control display of input port guide objects.
+		// An array of elements to control display of output port guide objects.
 		// That is the object drawn at the end of a new link as it is being dragged.
 		// Each element can have a number of different structures like this:
 		// Either

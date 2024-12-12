@@ -108,9 +108,9 @@ export const SUCCESS = "success";
 export const HORIZONTAL = "horizonal";
 export const VERTICAL = "vertical";
 
-export const PORT_OBJECT_CIRCLE = "circle";
-export const PORT_OBJECT_IMAGE = "image";
-export const PORT_OBJECT_JSX = "jsx";
+export const PORT_DISPLAY_CIRCLE = "circle";
+export const PORT_DISPLAY_IMAGE = "image";
+export const PORT_DISPLAY_JSX = "jsx";
 
 export const FLOW_IN = "in";
 export const FLOW_OUT = "out";

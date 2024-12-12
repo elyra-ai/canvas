@@ -26,7 +26,7 @@ import CanvasUtils from "./common-canvas-utils.js";
 import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_CURVE, LINK_TYPE_STRAIGHT, LINK_SELECTION_DETACHABLE,
 	FLOW_IN, FLOW_OUT,
-	PORT_OBJECT_CIRCLE,
+	PORT_DISPLAY_CIRCLE,
 	LINK_METHOD_PORTS }
 	from "./constants/canvas-constants.js";
 
@@ -135,8 +135,8 @@ export default class SVGCanvasUtilsDragNewLink {
 				action: this.ren.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
 				startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
 				portFlow: FLOW_IN,
-				portInfo: this.ren.getPortInfo(srcNode.layout.inputPortObjects, portIndex),
-				guideInfo: this.ren.getPortInfo(srcNode.layout.inputPortGuideObjects, portIndex),
+				portDisplayInfo: this.ren.getPortDisplayInfo(srcNode.layout.inputPortDisplayObjects, portIndex),
+				portGuideInfo: this.ren.getPortDisplayInfo(srcNode.layout.inputPortGuideObjects, portIndex),
 				portRadius: this.ren.getPortRadius(srcNode),
 				minInitialLine: srcNode.layout.minInitialLine,
 				linkArray: []
@@ -155,8 +155,8 @@ export default class SVGCanvasUtilsDragNewLink {
 				action: this.ren.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
 				startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
 				portFlow: FLOW_OUT,
-				portInfo: this.ren.getPortInfo(srcNode.layout.outputPortObjects, portIndex),
-				guideInfo: this.ren.getPortInfo(srcNode.layout.outputPortGuideObjects, portIndex),
+				portDisplayInfo: this.ren.getPortDisplayInfo(srcNode.layout.outputPortDisplayObjects, portIndex),
+				portGuideInfo: this.ren.getPortDisplayInfo(srcNode.layout.outputPortGuideObjects, portIndex),
 				portRadius: this.ren.getPortRadius(srcNode),
 				minInitialLine: srcNode.layout.minInitialLine,
 				linkArray: []
@@ -299,7 +299,7 @@ export default class SVGCanvasUtilsDragNewLink {
 		// we draw a circle at the start of the link to cover over the actual
 		// link line that is drawn from the port's center.
 		if (this.ren.canvasLayout.linkMethod === LINK_METHOD_PORTS &&
-			this.drawingNewLinkData.portInfo.type === PORT_OBJECT_CIRCLE) {
+			this.drawingNewLinkData.portDisplayInfo.type === PORT_DISPLAY_CIRCLE) {
 			connectionStartSel
 				.data(this.drawingNewLinkData.linkArray)
 				.enter()
@@ -320,7 +320,7 @@ export default class SVGCanvasUtilsDragNewLink {
 		connectionGuideSel
 			.data(this.drawingNewLinkData.linkArray)
 			.enter()
-			.append(this.drawingNewLinkData.guideInfo.tag)
+			.append(this.drawingNewLinkData.portGuideInfo.tag)
 			.attr("class", "d3-new-connection-guide")
 			.attr("linkType", linkCategory)
 			.merge(connectionGuideSel)
@@ -328,7 +328,7 @@ export default class SVGCanvasUtilsDragNewLink {
 				const obj = d3.select(guideSel[i]);
 				const transform = this.ren.getLinkImageTransform(d);
 				this.ren.updatePort(obj,
-					this.drawingNewLinkData.guideInfo,
+					this.drawingNewLinkData.portGuideInfo,
 					this.drawingNewLinkData.srcObj,
 					d.x2,
 					d.y2,
@@ -581,8 +581,8 @@ export default class SVGCanvasUtilsDragNewLink {
 					// though some attributes will not be relevant. This is done
 					// because I could not get the .each() method to work here (which
 					// would be necessary to have an if statement based on guide object)
-					.attr("x", saveX1 - (saveNewLinkData.guideInfo?.wd / 2))
-					.attr("y", saveY1 - (saveNewLinkData.guideInfo?.ht / 2))
+					.attr("x", saveX1 - (saveNewLinkData.portGuideInfo?.wd / 2))
+					.attr("y", saveY1 - (saveNewLinkData.portGuideInfo?.ht / 2))
 					.attr("cx", saveX1)
 					.attr("cy", saveY1)
 					.attr("transform", null);

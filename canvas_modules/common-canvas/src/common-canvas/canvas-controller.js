@@ -149,7 +149,7 @@ export default class CanvasController {
 			correctConfig.enableNodeLayout =
 				CanvasUtils.convertPortPosInfo(correctConfig.enableNodeLayout);
 			correctConfig.enableNodeLayout =
-				CanvasUtils.convertPortObjectInfo(correctConfig.enableNodeLayout);
+				CanvasUtils.convertPortDisplayInfo(correctConfig.enableNodeLayout);
 			this.objectModel.openPaletteIfNecessary(config);
 			this.objectModel.setCanvasConfig(correctConfig);
 		}
