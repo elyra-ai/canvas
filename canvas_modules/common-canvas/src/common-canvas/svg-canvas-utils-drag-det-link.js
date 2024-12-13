@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,7 @@ import { cloneDeep } from "lodash";
 
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import { LINK_SELECTION_DETACHABLE, PORT_DISPLAY_IMAGE,
-	FLOW_IN, FLOW_OUT
-} from "./constants/canvas-constants.js";
+import { LINK_SELECTION_DETACHABLE } from "./constants/canvas-constants.js";
 
 
 // This utility files provides a drag handler which manages drag operations on
