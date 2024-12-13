@@ -24,11 +24,10 @@ import { cloneDeep } from "lodash";
 
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import { LINK_SELECTION_DETACHABLE, PORT_DISPLAY_IMAGE }
-	from "./constants/canvas-constants.js";
+import { LINK_SELECTION_DETACHABLE, PORT_DISPLAY_IMAGE,
+	FLOW_IN, FLOW_OUT
+} from "./constants/canvas-constants.js";
 
-const INPUT_TYPE = "input_type";
-const OUTPUT_TYPE = "output_type";
 
 // This utility files provides a drag handler which manages drag operations on
 // the start and end points of detached links.
@@ -303,9 +302,7 @@ export default class SVGCanvasUtilsDragDetLink {
 			if (srcNode) {
 				newLink.srcNodeId = srcNode.id;
 				newLink.srcObj = this.ren.activePipeline.getNode(srcNode.id);
-				newLink.srcNodePortId = nodeProximity
-					? this.getNodePortIdNearMousePos(d3Event, OUTPUT_TYPE, srcNode)
-					: this.ren.getOutputNodePortId(d3Event, srcNode);
+				newLink.srcNodePortId = this.ren.getOutputNodePortId(d3Event, srcNode);
 			}	else {
 				newLink.srcPos = this.draggingLinkData.link.srcPos;
 			}
@@ -323,9 +320,7 @@ export default class SVGCanvasUtilsDragDetLink {
 			if (trgNode) {
 				newLink.trgNodeId = trgNode.id;
 				newLink.trgNode = this.ren.activePipeline.getNode(trgNode.id);
-				newLink.trgNodePortId = nodeProximity
-					? this.getNodePortIdNearMousePos(d3Event, INPUT_TYPE, trgNode)
-					: this.ren.getInputNodePortId(d3Event, trgNode);
+				newLink.trgNodePortId = this.ren.getInputNodePortId(d3Event, trgNode);
 			}	else {
 				newLink.trgPos = this.draggingLinkData.link.trgPos;
 			}
@@ -339,107 +334,36 @@ export default class SVGCanvasUtilsDragDetLink {
 			return null;
 		}
 
-		if (this.canExecuteUpdateLinkCommand(newLink, oldLink)) {
+		if (this.canUpdateLink(newLink, oldLink)) {
 			return newLink;
 		}
 		return null;
 	}
 
-	// Returns the ID of the port, of the type specified, near to the
-	// mouse cursor position.
-	getNodePortIdNearMousePos(d3Event, portType, node) {
-		const pos = this.ren.getTransformedMousePos(d3Event);
-		let portId = null;
-		let defaultPortId = null;
-
-		if (node) {
-			if (portType === OUTPUT_TYPE) {
-				const portObjs = this.ren.getAllNodeGroupsSelection()
-					.selectChildren("." + this.ren.getNodeOutputPortClassName())
-					.selectChildren(".d3-node-port-output-main");
-
-				portId = this.searchForPortNearMouse(
-					node, pos, portObjs,
-					node.layout.outputPortObject,
-					node.width);
-				defaultPortId = CanvasUtils.getDefaultOutputPortId(node);
-
-			} else {
-				const portObjs = this.ren.getAllNodeGroupsSelection()
-					.selectChildren("." + this.ren.getNodeInputPortClassName())
-					.selectChildren(".d3-node-port-input-main");
-
-				portId = this.searchForPortNearMouse(
-					node, pos, portObjs,
-					node.layout.inputPortObject,
-					0);
-				defaultPortId = CanvasUtils.getDefaultInputPortId(node);
-			}
-		}
-
-		if (!portId) {
-			portId = defaultPortId;
-		}
-		return portId;
-	}
-
-	// Returns a port ID for the port identified by the position (pos) on the
-	// node (node) further specified by the other parameters.
-	searchForPortNearMouse(node, pos, portObjs, portObjectType, nodeWidthOffset) {
-		let portId = null;
-		portObjs
-			.each((p, i, portGrps) => {
-				const portSel = d3.select(portGrps[i]);
-				if (portObjectType === PORT_DISPLAY_IMAGE) {
-					const xx = node.x_pos + Number(portSel.attr("x"));
-					const yy = node.y_pos + Number(portSel.attr("y"));
-					const wd = Number(portSel.attr("width"));
-					const ht = Number(portSel.attr("height"));
-					if (pos.x >= xx &&
-							pos.x <= xx + nodeWidthOffset + wd &&
-							pos.y >= yy &&
-							pos.y <= yy + ht) {
-						portId = portGrps[i].getAttribute("data-port-id");
-					}
-				} else { // Port must be a circle
-					const cx = node.x_pos + Number(portSel.attr("cx"));
-					const cy = node.y_pos + Number(portSel.attr("cy"));
-					if (pos.x >= cx - node.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
-							pos.x <= cx + node.layout.portRadius &&
-							pos.y >= cy - node.layout.portRadius &&
-							pos.y <= cy + node.layout.portRadius) {
-						portId = portGrps[i].getAttribute("data-port-id");
-					}
-				}
-			});
-
-		return portId;
-	}
-
-	// Returns true if the update command for a dragged link can be executed.
-	// It might be prevented from executing if either the course
-	canExecuteUpdateLinkCommand(newLink, oldLink) {
+	// Returns true if the old link passed in can be updated with the attributes
+	// of the new link.
+	canUpdateLink(newLink, oldLink) {
 		const srcNode = this.ren.activePipeline.getNode(newLink.srcNodeId);
 		const trgNode = this.ren.activePipeline.getNode(newLink.trgNodeId);
 		const linkSrcChanged = this.hasLinkSrcChanged(newLink, oldLink);
 		const linkTrgChanged = this.hasLinkTrgChanged(newLink, oldLink);
 		const links = this.ren.activePipeline.links;
-		let executeCommand = true;
+		let allowed = true;
 
 		if (linkSrcChanged && srcNode &&
 				!CanvasUtils.isSrcConnectionAllowedWithDetachedLinks(newLink.srcNodePortId, srcNode, links)) {
-			executeCommand = false;
+			allowed = false;
 		}
 		if (linkTrgChanged && trgNode &&
 				!CanvasUtils.isTrgConnectionAllowedWithDetachedLinks(newLink.trgNodePortId, trgNode, links)) {
-			executeCommand = false;
+			allowed = false;
 		}
 		if (srcNode && trgNode &&
 				!CanvasUtils.isConnectionAllowedWithDetachedLinks(newLink.srcNodePortId, newLink.trgNodePortId,
 					srcNode, trgNode, links, this.ren.config.enableSelfRefLinks)) {
-			executeCommand = false;
+			allowed = false;
 		}
-		return executeCommand;
+		return allowed;
 	}
 
 	// Returns true if the source information has changed between

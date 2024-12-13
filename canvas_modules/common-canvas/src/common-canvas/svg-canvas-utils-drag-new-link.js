@@ -615,19 +615,19 @@ export default class SVGCanvasUtilsDragNewLink {
 	// close to the new link being dragged.
 	setNewLinkOverNode(d3Event) {
 		const nodeNearMouse = this.ren.getNodeNearMousePos(d3Event, this.ren.canvasLayout.nodeProximity);
-		const highlightState = nodeNearMouse && this.isNewLinkAllowedToNode(nodeNearMouse);
+		const highlightState = nodeNearMouse && this.isNewLinkAllowedToNode(d3Event, nodeNearMouse);
 		this.ren.setHighlightingOverNode(highlightState, nodeNearMouse);
 	}
 
 	// Returns true if a connection is allowed to the node passed in based on the
 	// this.drawingNewLinkData object which describes a new link being dragged.
-	isNewLinkAllowedToNode(node) {
+	isNewLinkAllowedToNode(d3Event, node) {
 		if (this.drawingNewLinkData) {
 			if (this.drawingNewLinkData.action === NODE_LINK) {
 				const srcNode = this.drawingNewLinkData.srcObj;
 				const trgNode = node;
 				const srcNodePortId = this.drawingNewLinkData.srcPort.id;
-				const trgNodePortId = CanvasUtils.getDefaultInputPortId(trgNode); // TODO - make specific to nodes.
+				const trgNodePortId = this.ren.getInputNodePortId(d3Event, trgNode);
 				return CanvasUtils.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode,
 					this.ren.activePipeline.links, this.ren.config.enableSelfRefLinks);
 
@@ -644,6 +644,4 @@ export default class SVGCanvasUtilsDragNewLink {
 		}
 		return false;
 	}
-
-
 }

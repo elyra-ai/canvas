@@ -3408,13 +3408,8 @@ export default class SVGCanvasRenderer {
 		const prox = nodeProximity || 0;
 		this.getAllNodeGroupsSelection()
 			.each((d) => {
-				let portRadius = d.layout.portRadius;
-				if (CanvasUtils.isSuperBindingNode(d)) {
-					portRadius = this.canvasLayout.supernodeBindingPortRadius / this.zoomUtils.getZoomScale();
-				}
-
-				if (pos.x >= d.x_pos - portRadius - prox && // Target port sticks out by its radius so need to allow for it.
-						pos.x <= d.x_pos + d.width + portRadius + prox &&
+				if (pos.x >= d.x_pos - prox &&
+						pos.x <= d.x_pos + d.width + prox &&
 						pos.y >= d.y_pos - prox &&
 						pos.y <= d.y_pos + d.height + prox) {
 					node = d;
