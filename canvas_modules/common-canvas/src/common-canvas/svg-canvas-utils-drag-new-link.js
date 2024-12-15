@@ -167,10 +167,6 @@ export default class SVGCanvasUtilsDragNewLink {
 		}
 	}
 
-	getPortIndex(portId, ports) {
-		return ports.findIndex((p) => p.id === portId);
-	}
-
 	drawNewLink(d3Event) {
 		if (this.ren.config.enableEditingActions === false || !this.drawingNewLinkData) {
 			return;
@@ -581,8 +577,8 @@ export default class SVGCanvasUtilsDragNewLink {
 					// though some attributes will not be relevant. This is done
 					// because I could not get the .each() method to work here (which
 					// would be necessary to have an if statement based on guide object)
-					.attr("x", saveX1 - (saveNewLinkData.portGuideInfo?.wd / 2))
-					.attr("y", saveY1 - (saveNewLinkData.portGuideInfo?.ht / 2))
+					.attr("x", saveX1 - (saveNewLinkData.portGuideInfo?.width / 2))
+					.attr("y", saveY1 - (saveNewLinkData.portGuideInfo?.height / 2))
 					.attr("cx", saveX1)
 					.attr("cy", saveY1)
 					.attr("transform", null);
@@ -603,7 +599,7 @@ export default class SVGCanvasUtilsDragNewLink {
 			.each((x, i, foreignObjects) =>
 				this.ren.externalUtils.removeExternalObject(x, i, foreignObjects));
 
-		// Remove all the constituent part of the new link.
+		// Remove all the constituent parts of the new link.
 		this.ren.nodesLinksGrp.selectAll(".d3-new-connection-line").remove();
 		this.ren.nodesLinksGrp.selectAll(".d3-new-connection-start").remove();
 		this.ren.nodesLinksGrp.selectAll(".d3-new-connection-guide").remove();

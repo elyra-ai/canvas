@@ -183,6 +183,11 @@ export const WEST = "w";
 export const CAUSE_MOUSE = "M";
 export const CAUSE_KEYBOARD = "K";
 
+// Defaults for port size incase width and height are not provided in
+// the inputPortDisplayObjects and outputPortDisplayObjects arrays.
+export const PORT_WIDTH_DEFAULT = 12;
+export const PORT_HEIGHT_DEFAULT = 12;
+
 // Context Menu button value
 export const CONTEXT_MENU_BUTTON = 2;
 

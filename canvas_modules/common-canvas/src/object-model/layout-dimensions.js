@@ -233,7 +233,7 @@ const portsHorizontalDefaultLayout = {
 		// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
 		// offsets from the pos point on the node.
 		// The order of the elements corresponds to the order of ports in the
-		// outputs array for the node. If there are more input ports than elements
+		// outputs array for the node. If there are more output ports than elements
 		// in the array, the last element will be used for all remaining ports.
 		outputPortPositions: [
 			{ x_pos: 0, y_pos: 20, pos: "topRight" }
@@ -250,7 +250,7 @@ const portsHorizontalDefaultLayout = {
 		// { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
 		//
 		// The order of the elements corresponds to the order of ports in the
-		// inputs array for the node. If there are more input ports than elements
+		// outputs array for the node. If there are more output ports than elements
 		// in the array, the last element will be used for all remaining ports.
 		outputPortGuideObjects: [
 			{ type: "circle" }
@@ -691,7 +691,7 @@ const portsVerticalDefaultLayout = {
 		// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
 		// offsets from the pos point on the node.
 		// The order of the elements corresponds to the order of ports in the
-		// outputs array for the node. If there are more input ports than elements
+		// outputs array for the node. If there are more output ports than elements
 		// in the array, the last element will be used for all remaining ports.
 		outputPortPositions: [
 			{ x_pos: 0, y_pos: 29, pos: "topRight" }
@@ -708,7 +708,7 @@ const portsVerticalDefaultLayout = {
 		// { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
 		//
 		// The order of the elements corresponds to the order of ports in the
-		// inputs array for the node. If there are more input ports than elements
+		// outputs array for the node. If there are more output ports than elements
 		// in the array, the last element will be used for all remaining ports.
 		outputPortGuideObjects: [
 			{ type: "circle" }

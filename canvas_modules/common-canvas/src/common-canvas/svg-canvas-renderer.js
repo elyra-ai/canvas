@@ -45,6 +45,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	NORTH, SOUTH, EAST, WEST,
 	WYSIWYG, CAUSE_KEYBOARD, CAUSE_MOUSE,
 	FLOW_IN, FLOW_OUT,
+	PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT,
 	CANVAS_FOCUS
 } from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
@@ -2032,10 +2033,10 @@ export default class SVGCanvasRenderer {
 				obj.attr("xlink:href", portInfo.src);
 			}
 			obj
-				.attr("x", cx - (portInfo.wd / 2))
-				.attr("y", cy - (portInfo.ht / 2))
-				.attr("width", portInfo.wd)
-				.attr("height", portInfo.ht)
+				.attr("x", cx - (portInfo.width / 2))
+				.attr("y", cy - (portInfo.height / 2))
+				.attr("width", portInfo.width)
+				.attr("height", portInfo.height)
 				.attr("transform", transform);
 
 		} else {
@@ -2049,15 +2050,11 @@ export default class SVGCanvasRenderer {
 	getPortDisplayInfo(displayObjects, i) {
 		const idx = (i < displayObjects.length) ? i : displayObjects.length - 1;
 		const portObj = displayObjects[idx];
-		const ty = portObj.type;
-		const tg = ty === "jsx" ? "foreignObject" : ty; // Translate the tag to 'foreignObject' if type is 'jsx'.
-		return {
-			type: ty,
-			tag: tg,
-			src: portObj.src,
-			ht: portObj.height,
-			wd: portObj.width
-		};
+		const obj = { ...portObj };
+		obj.tag = portObj.type === "jsx" ? "foreignObject" : portObj.type;
+		obj.width = obj.width || PORT_WIDTH_DEFAULT;
+		obj.width = obj.height || PORT_HEIGHT_DEFAULT;
+		return obj;
 	}
 
 	// Attaches the appropriate listeners to the node groups.

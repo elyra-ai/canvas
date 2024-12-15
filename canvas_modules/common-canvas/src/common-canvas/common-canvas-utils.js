@@ -23,7 +23,7 @@
 import { get, has, isNumber, set } from "lodash";
 import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST,
-	PORT_DISPLAY_IMAGE
+	PORT_DISPLAY_IMAGE, PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT,
 } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CanvasUtils {
@@ -1707,8 +1707,8 @@ export default class CanvasUtils {
 			newLayout.inputPortDisplayObjects = [
 				{ type: PORT_DISPLAY_IMAGE,
 					src: newLayout.inputPortImage,
-					height: newLayout.inputPortHeight,
-					width: newLayout.inputPortWidth
+					height: newLayout.inputPortHeight || PORT_HEIGHT_DEFAULT,
+					width: newLayout.inputPortWidth || PORT_WIDTH_DEFAULT
 				}
 			];
 		}
@@ -1717,8 +1717,8 @@ export default class CanvasUtils {
 			newLayout.inputPortGuideObjects = [
 				{ type: PORT_DISPLAY_IMAGE,
 					src: newLayout.inputPortGuideImage,
-					height: newLayout.inputPortHeight,
-					width: newLayout.inputPortWidth
+					height: newLayout.inputPortHeight || PORT_HEIGHT_DEFAULT,
+					width: newLayout.inputPortWidth || PORT_WIDTH_DEFAULT
 				}
 			];
 		}
@@ -1729,8 +1729,8 @@ export default class CanvasUtils {
 			newLayout.outputPortDisplayObjects = [
 				{ type: PORT_DISPLAY_IMAGE,
 					src: newLayout.outputPortImage,
-					height: newLayout.outputPortHeight,
-					width: newLayout.outputPortWidth
+					height: newLayout.outputPortHeight || PORT_HEIGHT_DEFAULT,
+					width: newLayout.outputPortWidth || PORT_WIDTH_DEFAULT,
 				}
 			];
 		}
@@ -1739,8 +1739,8 @@ export default class CanvasUtils {
 			newLayout.outputPortGuideObjects = [
 				{ type: PORT_DISPLAY_IMAGE,
 					src: newLayout.outputPortGuideImage,
-					height: newLayout.outputPortHeight,
-					width: newLayout.outputPortWidth
+					height: newLayout.outputPortHeight || PORT_HEIGHT_DEFAULT,
+					width: newLayout.outputPortWidth || PORT_WIDTH_DEFAULT
 				}
 			];
 		}
