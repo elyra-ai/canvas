@@ -65,7 +65,7 @@ $node-port-output-hover-fill: $background-inverse;
 $node-port-input-stroke-color: $background-inverse;
 $node-port-input-fill-color: $node-body-fill;
 
-$node-port-input-connected-stroke-color: $node-body-fill;
+$node-port-input-connected-stroke-color: $background-inverse;
 $node-port-input-connected-fill-color: $node-body-fill;
 
 $node-port-input-connected-super-binding-stroke-color: $background-inverse;
@@ -584,6 +584,14 @@ $link-highlight-color: $support-info;
 .d3-node-port-output-assoc:hover {
 	stroke: $node-port-output-hover-stroke;
 	fill: $node-port-output-hover-fill;
+}
+
+.d3-node-shape-port-arcs {
+	.d3-node-port-input[connected="yes"] {
+		stroke: transparent;
+		fill: $node-body-fill;
+		stroke-width: 1;
+	}
 }
 
 .d3-node-port-input[connected="yes"] {

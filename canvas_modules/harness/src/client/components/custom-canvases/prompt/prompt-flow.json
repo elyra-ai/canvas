@@ -37,14 +37,38 @@
           ],
           "outputs": [
             {
-              "id": "outPort",
+              "id": "outPort_1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
                     "min": 0,
                     "max": -1
                   },
-                  "label": "Output Port"
+                  "label": "Output Port 1"
+                }
+              }
+            },
+            {
+              "id": "outPort_2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 2"
+                }
+              }
+            },
+            {
+              "id": "outPort_3",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port 3"
                 }
               }
             }

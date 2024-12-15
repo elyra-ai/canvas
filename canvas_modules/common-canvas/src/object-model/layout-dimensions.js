@@ -160,7 +160,7 @@ const portsHorizontalDefaultLayout = {
 		// An array of elements to control display of input ports. Each element
 		// can have a number of different structures like this:
 		// Either
-		// { type: "circle" }
+		// { type: "circle" } // Can also be "circleWithArrow"
 		// Or
 		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
 		// Or
@@ -170,7 +170,7 @@ const portsHorizontalDefaultLayout = {
 		// inputs array for the node. If there are more input ports than elements
 		// in the array, the last element will be used for all remaining ports.
 		inputPortDisplayObjects: [
-			{ type: "circle" }
+			{ type: "circleWithArrow" }
 		],
 
 		// Indicates whether multiple input ports should be automatically
@@ -192,7 +192,7 @@ const portsHorizontalDefaultLayout = {
 		// That is the object drawn at the end of a new link as it is being dragged.
 		// Each element can have a number of different structures like this:
 		// Either
-		// { type: "circle" }
+		// { type: "circle" } // Can also be "circleWithArrow"
 		// Or
 		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
 		// Or
@@ -211,7 +211,7 @@ const portsHorizontalDefaultLayout = {
 		// An array of elements to control display of output ports. Each element
 		// can have a number of different structures like this:
 		// Either
-		// { type: "circle" }
+		// { type: "circle" } // Can also be "circleWithArrow"
 		// Or
 		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
 		// Or
@@ -243,7 +243,7 @@ const portsHorizontalDefaultLayout = {
 		// That is the object drawn at the end of a new link as it is being dragged.
 		// Each element can have a number of different structures like this:
 		// Either
-		// { type: "circle" }
+		// { type: "circle" } // Can also be "circleWithArrow"
 		// Or
 		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
 		// Or
@@ -618,7 +618,7 @@ const portsVerticalDefaultLayout = {
 		// An array of elements to control display of input ports. Each element
 		// can have a number of different structures like this:
 		// Either
-		// { type: "circle" }
+		// { type: "circle" } // Can also be "circleWithArrow"
 		// Or
 		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
 		// Or
@@ -628,7 +628,7 @@ const portsVerticalDefaultLayout = {
 		// inputs array for the node. If there are more input ports than elements
 		// in the array, the last element will be used for all remaining ports.
 		inputPortDisplayObjects: [
-			{ type: "circle" }
+			{ type: "circleWithArrow" }
 		],
 
 		// Indicates whether multiple input ports should be automatically
@@ -650,7 +650,7 @@ const portsVerticalDefaultLayout = {
 		// That is the object drawn at the end of a new link as it is being dragged.
 		// Each element can have a number of different structures like this:
 		// Either
-		// { type: "circle" }
+		// { type: "circle" } // Can also be "circleWithArrow"
 		// Or
 		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
 		// Or
@@ -669,7 +669,7 @@ const portsVerticalDefaultLayout = {
 		// An array of elements to control display of output ports. Each element
 		// can have a number of different structures like this:
 		// Either
-		// { type: "circle" }
+		// { type: "circle" } // Can also be "circleWithArrow"
 		// Or
 		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
 		// Or
@@ -701,7 +701,7 @@ const portsVerticalDefaultLayout = {
 		// That is the object drawn at the end of a new link as it is being dragged.
 		// Each element can have a number of different structures like this:
 		// Either
-		// { type: "circle" }
+		// { type: "circle" } // Can also be "circleWithArrow"
 		// Or
 		// { type: "image", src: "path/picture.svg", width: 10, height: 10 }
 		// Or

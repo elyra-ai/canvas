@@ -38,7 +38,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON,
-	PORT_DISPLAY_CIRCLE, PORT_DISPLAY_IMAGE, PORT_DISPLAY_JSX,
+	PORT_DISPLAY_CIRCLE, PORT_DISPLAY_CIRCLE_WITH_ARROW, PORT_DISPLAY_IMAGE, PORT_DISPLAY_JSX,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
@@ -1897,7 +1897,8 @@ export default class SVGCanvasRenderer {
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, inputPorts) => {
-				const portDisplayInfo = this.getPortDisplayInfo(node.layout.inputPortDisplayObjects, i);
+				const portIdx = CanvasUtils.getPortIndex(node.inputs, port.id);
+				const portDisplayInfo = this.getPortDisplayInfo(node.layout.inputPortDisplayObjects, portIdx);
 				const obj = d3.select(inputPorts[i]);
 				obj
 					.append(portDisplayInfo.tag)
@@ -1906,10 +1907,10 @@ export default class SVGCanvasRenderer {
 
 				// Show a port arrow inside the port circle if:
 				// We are not supporting association link creation,
-				// and we are drawing a circle and this is not a super binding node.
+				// and we are drawing a circleWithArrow and this is not a super binding node.
 				obj
 					.filter(() => (!this.config.enableAssocLinkCreation &&
-						portDisplayInfo.type === PORT_DISPLAY_CIRCLE &&
+						portDisplayInfo.type === PORT_DISPLAY_CIRCLE_WITH_ARROW &&
 						!CanvasUtils.isSuperBindingNode(node)))
 					.append("path")
 					.attr("class", "d3-node-port-input-arrow");
@@ -1934,9 +1935,13 @@ export default class SVGCanvasRenderer {
 			.datum((port) => node.inputs.find((i) => port.id === i.id))
 			.each((port, i, inputPorts) => {
 				const obj = d3.select(inputPorts[i]);
-				obj
-					.attr("d", this.getPortArrowPath(port))
-					.attr("transform", this.getInputPortArrowPathTransform(port));
+				const portIdx = CanvasUtils.getPortIndex(node.inputs, port.id);
+				const portDisplayInfo = this.getPortDisplayInfo(node.layout.inputPortDisplayObjects, portIdx);
+				if (portDisplayInfo.type === PORT_DISPLAY_CIRCLE_WITH_ARROW) {
+					obj
+						.attr("d", this.getPortArrowPath(port))
+						.attr("transform", this.getInputPortArrowPathTransform(port));
+				}
 			});
 
 		if (this.config.enableEditingActions) {
@@ -1993,12 +1998,24 @@ export default class SVGCanvasRenderer {
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, outputPorts) => {
-				const portInfo = this.getPortDisplayInfo(node.layout.outputPortDisplayObjects, i);
+				const portIdx = CanvasUtils.getPortIndex(node.outputs, port.id);
+				const portDisplayInfo = this.getPortDisplayInfo(node.layout.outputPortDisplayObjects, portIdx);
 				const obj = d3.select(outputPorts[i]);
 				obj
-					.append(portInfo.tag)
+					.append(portDisplayInfo.tag)
 					.attr("class", "d3-node-port-output-main" +
-						(portInfo.tag === "foreignObject" ? " d3-foreign-object-port-jsx" : ""));
+						(portDisplayInfo.tag === "foreignObject" ? " d3-foreign-object-port-jsx" : ""));
+
+				// Show a port arrow inside the port circle if:
+				// We are not supporting association link creation,
+				// and we are drawing a circleWithArrow and this is not a super binding node.
+				obj
+					.filter(() => (!this.config.enableAssocLinkCreation &&
+						portDisplayInfo.type === PORT_DISPLAY_CIRCLE_WITH_ARROW &&
+						!CanvasUtils.isSuperBindingNode(node)))
+					.append("path")
+					.attr("class", "d3-node-port-output-arrow");
+
 			})
 			.call(this.attachOutputPortListeners.bind(this), node);
 
@@ -2051,7 +2068,8 @@ export default class SVGCanvasRenderer {
 		const idx = (i < displayObjects.length) ? i : displayObjects.length - 1;
 		const portObj = displayObjects[idx];
 		const obj = { ...portObj };
-		obj.tag = portObj.type === "jsx" ? "foreignObject" : portObj.type;
+		obj.tag = obj.type === "jsx" ? "foreignObject" : obj.type;
+		obj.tag = obj.type === "circleWithArrow" ? "circle" : obj.tag;
 		obj.width = obj.width || PORT_WIDTH_DEFAULT;
 		obj.width = obj.height || PORT_HEIGHT_DEFAULT;
 		return obj;
@@ -4881,9 +4899,14 @@ export default class SVGCanvasRenderer {
 			? " d3-resized"
 			: "";
 
+		const shapeClass = d.layout.nodeShape === "port-arcs"
+			? " d3-node-shape-port-arcs"
+			: "";
+
 		const branchHighlightClass = d.branchHighlight ? " d3-branch-highlight" : "";
 
-		return "d3-node-group" + supernodeClass + resizeClass + draggableClass + branchHighlightClass + customClass;
+		return "d3-node-group" + supernodeClass + resizeClass + draggableClass +
+			branchHighlightClass + shapeClass + customClass;
 	}
 
 	// Pushes the links to be below nodes within the nodesLinksGrp group.

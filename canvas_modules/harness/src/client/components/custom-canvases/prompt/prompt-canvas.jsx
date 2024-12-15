@@ -42,8 +42,8 @@ export default class PromptCanvas extends React.Component {
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "prompt",
 			enableNodeFormatType: "Vertical",
-			enableLinkType: "Straight",
-			enableLinkMethod: "Freeform",
+			enableLinkType: "Curve",
+			enableLinkMethod: "Ports",
 			enableLinkDirection: "LeftRight",
 			enableSnapToGridType: "After",
 			enableLinkSelection: "None",
@@ -60,29 +60,33 @@ export default class PromptCanvas extends React.Component {
 				drawCommentLinkLineTo: "image_center",
 				defaultNodeWidth: 72,
 				defaultNodeHeight: 72,
-				selectionPath: "M 8 0 L 64 0 64 56 8 56 8 0",
 				imageWidth: 48,
 				imageHeight: 48,
 				imagePosX: 12,
 				imagePosY: 4,
-				labelEditable: true,
 				labelPosX: 36,
-				labelPosY: 56,
+				labelPosY: 54,
 				labelWidth: 120,
 				labelHeight: 18,
-				portRadius: 10,
-				inputPortDisplay: false,
-				outputPortRightPosX: 5,
-				outputPortRightPosY: 30,
-				outputPortObject: "image",
-				outputPortImage: "/images/custom-canvases/flows/decorations/dragStateArrow.svg",
-				outputPortWidth: 20,
-				outputPortHeight: 20,
-				outputPortGuideObject: "image",
-				outputPortGuideImage: "/images/custom-canvases/flows/decorations/dragStateArrow.svg"
+
+				inputPortDisplayObjects: [
+					{ type: "circleWithArrow" }
+				],
+
+				outputPortDisplayObjects: [
+					{ type: "image", src: "/images/custom-canvases/prompt/number_1.svg", width: 16, height: 16 },
+					{ type: "image", src: "/images/custom-canvases/prompt/number_2.svg", width: 16, height: 16 },
+					{ type: "image", src: "/images/custom-canvases/prompt/number_3.svg", width: 16, height: 16 }
+				],
+				outputPortGuideObjects: [
+					{ type: "image", src: "/images/custom-canvases/prompt/number_1.svg", width: 16, height: 16 },
+					{ type: "image", src: "/images/custom-canvases/prompt/number_2.svg", width: 16, height: 16 },
+					{ type: "image", src: "/images/custom-canvases/prompt/number_3.svg", width: 16, height: 16 }
+				],
 			},
 			enableCanvasLayout: {
-				dataLinkArrowHead: true,
+				// dataLinkArrowHead: "M -15 0 l 0 -5 10 5 -10 5 Z",
+				dataLinkArrowHead: false,
 				linkGap: 4,
 				displayLinkOnOverlap: false
 			}
