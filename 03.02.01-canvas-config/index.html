@@ -1579,6 +1579,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#enablefocusonmount" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableFocusOnMount
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#emptycanvascontent" class="md-nav__link">
     <span class="md-ellipsis">
       emptyCanvasContent
@@ -3559,6 +3568,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#enablefocusonmount" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableFocusOnMount
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#emptycanvascontent" class="md-nav__link">
     <span class="md-ellipsis">
       emptyCanvasContent
@@ -3971,6 +3989,8 @@ The tips displayed by the palette can be further refined. For example, this woul
 <h4 id="enablezoomintosubflows"><strong>enableZoomIntoSubFlows</strong><a class="headerlink" href="#enablezoomintosubflows" title="Permanent link">&para;</a></h4>
 <p>This is a boolean. The default is false. When set to true, Common Canvas will override the maximum zoom extent value which, by default is used for the entire canvas, to allow the user to zoom in on in-place sub-flows further than they can do on containing flows. This means the user can zoom in on multi-nested sub-flows so they are easier to view. To see this effect, the user must position the mouse pointer over the sub-flow before performing the zoom gesture.</p>
 <h2 id="canvas-content">Canvas Content<a class="headerlink" href="#canvas-content" title="Permanent link">&para;</a></h2>
+<h4 id="enablefocusonmount"><strong>enableFocusOnMount</strong><a class="headerlink" href="#enablefocusonmount" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is true. When set to true, the keyboard focus will automatically be set on the flow editor when Common Canvas first appears. This means, keyboard shortcut operations on the flow editor, and it contents, will be executed without the user having to click on the flow editor to get focus to be moved there. If set to false, Common Canvas makes no change to the focus so the application can set the focus wherever it wants.</p>
 <h4 id="emptycanvascontent"><strong>emptyCanvasContent</strong><a class="headerlink" href="#emptycanvascontent" title="Permanent link">&para;</a></h4>
 <p>This is a JSX or HTML snippet that contains some text or any elements (such as an image) that you want to display when the canvas is empty, that is, when it doesn&rsquo;t have any nodes or comments. The default behavior if this config parameter is not provided is that Common Canvas will display an image and message saying: &ldquo;Your flow is empty!&rdquo;.</p>
 <h4 id="dropzonecanvascontent"><strong>dropZoneCanvasContent</strong><a class="headerlink" href="#dropzonecanvascontent" title="Permanent link">&para;</a></h4>
