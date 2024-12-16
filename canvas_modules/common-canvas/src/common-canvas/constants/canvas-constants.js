@@ -108,8 +108,13 @@ export const SUCCESS = "success";
 export const HORIZONTAL = "horizonal";
 export const VERTICAL = "vertical";
 
-export const PORT_OBJECT_IMAGE = "image";
-export const PORT_OBJECT_CIRCLE = "circle";
+export const PORT_DISPLAY_CIRCLE = "circle";
+export const PORT_DISPLAY_CIRCLE_WITH_ARROW = "circleWithArrow";
+export const PORT_DISPLAY_IMAGE = "image";
+export const PORT_DISPLAY_JSX = "jsx";
+
+export const FLOW_IN = "in";
+export const FLOW_OUT = "out";
 
 // Variations of association links - when enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE
 export const ASSOC_VAR_CURVE_RIGHT = "curveRight";
@@ -178,6 +183,11 @@ export const WEST = "w";
 // Cuase or actions
 export const CAUSE_MOUSE = "M";
 export const CAUSE_KEYBOARD = "K";
+
+// Defaults for port size incase width and height are not provided in
+// the inputPortDisplayObjects and outputPortDisplayObjects arrays.
+export const PORT_WIDTH_DEFAULT = 12;
+export const PORT_HEIGHT_DEFAULT = 12;
 
 // Context Menu button value
 export const CONTEXT_MENU_BUTTON = 2;

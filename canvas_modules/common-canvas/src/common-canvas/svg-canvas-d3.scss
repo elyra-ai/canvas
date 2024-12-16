@@ -55,7 +55,7 @@ $node-port-output-stroke-color: $background-inverse;
 $node-port-output-fill-color: $node-body-fill;
 
 $node-port-output-connected-stroke-color: $background-inverse;
-$node-port-output-connected-fill-color: $background-inverse;
+$node-port-output-connected-fill-color: $node-body-fill;
 
 $node-port-output-hover-stroke: $background-inverse;
 $node-port-output-hover-fill: $background-inverse;
@@ -65,7 +65,7 @@ $node-port-output-hover-fill: $background-inverse;
 $node-port-input-stroke-color: $background-inverse;
 $node-port-input-fill-color: $node-body-fill;
 
-$node-port-input-connected-stroke-color: $node-body-fill;
+$node-port-input-connected-stroke-color: $background-inverse;
 $node-port-input-connected-fill-color: $node-body-fill;
 
 $node-port-input-connected-super-binding-stroke-color: $background-inverse;
@@ -545,18 +545,47 @@ $link-highlight-color: $support-info;
 	display: none;
 }
 
-/* Styles for ports */
+/* Styles for output ports */
 
 .d3-node-port-output {
 	stroke: $node-port-output-stroke-color;
-	fill: $node-port-output-fill-color;
+	fill: $node-body-fill;
 	stroke-width: 1.25;
+	& foreignobject {
+		outline: none;
+	}
+}
+
+.d3-node-shape-port-arcs {
+	.d3-node-port-output {
+		stroke: $background-inverse;
+		fill: $node-body-fill;
+		stroke-width: 1;
+	}
+
+	.d3-node-port-output[connected="yes"] {
+		stroke: $background-inverse;
+		fill: $background-inverse;
+		stroke-width: 1;
+	}
 }
 
 .d3-node-port-output[connected="yes"] {
 	stroke: $node-port-output-connected-stroke-color;
 	fill: $node-port-output-connected-fill-color;
-	stroke-width: 2;
+	stroke-width: 1;
+
+	.d3-node-port-output-arrow {
+		stroke: $background-inverse;
+		stroke-width: 1;
+		fill: transparent;
+		pointer-events: none;
+	}
+}
+
+.d3-node-port-output-arrow {
+	stroke: transparent;
+	fill: transparent;
 }
 
 .d3-node-port-output:hover {
@@ -564,23 +593,23 @@ $link-highlight-color: $support-info;
 	fill: $node-port-output-hover-fill;
 }
 
+/* Styles for input ports */
+
 .d3-node-port-input {
 	stroke: $node-port-input-stroke-color;
 	fill: $node-port-input-fill-color;
 	stroke-width: 1.25;
+	& foreignobject {
+		outline: none;
+	}
 }
 
-.d3-node-port-input-assoc,
-.d3-node-port-output-assoc {
-	stroke: $node-port-input-stroke-color;
-	fill: $node-port-input-fill-color;
-	stroke-width: 1.25;
-}
-
-.d3-node-port-input-assoc:hover,
-.d3-node-port-output-assoc:hover {
-	stroke: $node-port-output-hover-stroke;
-	fill: $node-port-output-hover-fill;
+.d3-node-shape-port-arcs {
+	.d3-node-port-input[connected="yes"] {
+		stroke: transparent;
+		fill: $node-body-fill;
+		stroke-width: 1;
+	}
 }
 
 .d3-node-port-input[connected="yes"] {
@@ -596,15 +625,30 @@ $link-highlight-color: $support-info;
 	}
 }
 
+.d3-node-port-input-arrow {
+	stroke: transparent;
+	fill: transparent;
+}
+
 .d3-node-port-input[connected="yes"][isSupernodeBinding="yes"] {
 	stroke: $node-port-input-connected-super-binding-stroke-color;
 	fill: $node-port-input-connected-super-binding-fill-color;
 	stroke-width: 1;
 }
 
-.d3-node-port-input-arrow {
-	stroke: transparent;
-	fill: transparent;
+/* Styles for ports when creating association links */
+
+.d3-node-port-input-assoc,
+.d3-node-port-output-assoc {
+	stroke: $node-port-input-stroke-color;
+	fill: $node-port-input-fill-color;
+	stroke-width: 1.25;
+}
+
+.d3-node-port-input-assoc:hover,
+.d3-node-port-output-assoc:hover {
+	stroke: $node-port-output-hover-stroke;
+	fill: $node-port-output-hover-fill;
 }
 
 /* New connection dynamic line styles. */
