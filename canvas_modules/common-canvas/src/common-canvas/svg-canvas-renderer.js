@@ -1575,10 +1575,11 @@ export default class SVGCanvasRenderer {
 				.each((d, i, nodeGrps) => {
 					if (d.isSupernodeInputBinding) {
 						this.updatePortRadiusAndPos(nodeGrps[i], d, "d3-node-port-output-main");
+						this.updateOutputPortArrowPath(nodeGrps[i], "d3-node-port-output-arrow");
 					}
 					if (d.isSupernodeOutputBinding) {
 						this.updatePortRadiusAndPos(nodeGrps[i], d, "d3-node-port-input-main");
-						this.updatePortArrowPath(nodeGrps[i], "d3-node-port-input-arrow");
+						this.updateInputPortArrowPath(nodeGrps[i], "d3-node-port-input-arrow");
 					}
 				});
 		}
@@ -1939,7 +1940,7 @@ export default class SVGCanvasRenderer {
 				const portDisplayInfo = this.getPortDisplayInfo(node.layout.inputPortDisplayObjects, portIdx);
 				if (portDisplayInfo.type === PORT_DISPLAY_CIRCLE_WITH_ARROW) {
 					obj
-						.attr("d", this.getPortArrowPath(port))
+						.attr("d", this.getPortArrowPath())
 						.attr("transform", this.getInputPortArrowPathTransform(port));
 				}
 			});
@@ -2031,6 +2032,19 @@ export default class SVGCanvasRenderer {
 				const portInfo = this.getPortDisplayInfo(node.layout.outputPortDisplayObjects, portIdx);
 				const transform = this.getPortImageTransform(port, FLOW_OUT);
 				this.updatePort(obj, portInfo, node, port.cx, port.cy, transform);
+			});
+
+		joinedOutputPortGrps.selectChildren(".d3-node-port-output-arrow")
+			.datum((port) => node.outputs.find((i) => port.id === i.id))
+			.each((port, i, outputPorts) => {
+				const obj = d3.select(outputPorts[i]);
+				const portIdx = CanvasUtils.getPortIndex(node.outputs, port.id);
+				const portDisplayInfo = this.getPortDisplayInfo(node.layout.outputPortDisplayObjects, portIdx);
+				if (portDisplayInfo.type === PORT_DISPLAY_CIRCLE_WITH_ARROW) {
+					obj
+						.attr("d", this.getPortArrowPath())
+						.attr("transform", this.getOutputPortArrowPathTransform(port));
+				}
 			});
 
 		if (this.config.enableEditingActions) {
@@ -3186,11 +3200,18 @@ export default class SVGCanvasRenderer {
 			.attr("cy", (port) => port.cy); // Port position may change for binding nodes with multiple-ports.
 	}
 
-	updatePortArrowPath(nodeObj, portArrowClassName) {
+	updateInputPortArrowPath(nodeObj, portArrowClassName) {
 		const nodeGrp = d3.select(nodeObj);
 		nodeGrp.selectAll("." + portArrowClassName)
-			.attr("d", (port) => this.getPortArrowPath(port))
+			.attr("d", this.getPortArrowPath())
 			.attr("transform", (port) => this.getInputPortArrowPathTransform(port));
+	}
+
+	updateOutputPortArrowPath(nodeObj, portArrowClassName) {
+		const nodeGrp = d3.select(nodeObj);
+		nodeGrp.selectAll("." + portArrowClassName)
+			.attr("d", this.getPortArrowPath())
+			.attr("transform", (port) => this.getOutputPortArrowPathTransform(port));
 	}
 
 	// Returns true if the port (from a node template) passed in has a max
@@ -5683,17 +5704,24 @@ export default class SVGCanvasRenderer {
 		return ASSOC_VAR_DOUBLE_BACK_RIGHT;
 	}
 
-	// Returns path for arrow head displayed within an input port circle. It is
+	// Returns path for arrow head displayed within an port circle. It is
 	// draw so the tip is 2px in front of the origin 0,0 so it appears nicely in
 	// the port circle.
-	getPortArrowPath(port) {
+	getPortArrowPath() {
 		return "M -2 3 L 2 0 -2 -3";
 	}
 
-	// Returns the transform to position and, if ncessecary, rotate the port
-	// circle arrow.
+	// Returns the transform to position and, if necessary, rotate the port
+	// circle arrow for input ports.
 	getInputPortArrowPathTransform(port) {
 		const angle = this.getAngleBasedForInputPorts(port.dir);
+		return `translate(${port.cx}, ${port.cy}) rotate(${angle})`;
+	}
+
+	// Returns the transform to position and, if necessary, rotate the port
+	// circle arrow for output ports.
+	getOutputPortArrowPathTransform(port) {
+		const angle = this.getAngleBasedForOutputPorts(port.dir);
 		return `translate(${port.cx}, ${port.cy}) rotate(${angle})`;
 	}
 

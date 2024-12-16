@@ -295,7 +295,7 @@ export default class SVGCanvasUtilsDragNewLink {
 		// we draw a circle at the start of the link to cover over the actual
 		// link line that is drawn from the port's center.
 		if (this.ren.canvasLayout.linkMethod === LINK_METHOD_PORTS &&
-			this.drawingNewLinkData.portDisplayInfo.type === PORT_DISPLAY_CIRCLE) {
+			this.drawingNewLinkData.portDisplayInfo.tag === PORT_DISPLAY_CIRCLE) {
 			connectionStartSel
 				.data(this.drawingNewLinkData.linkArray)
 				.enter()
