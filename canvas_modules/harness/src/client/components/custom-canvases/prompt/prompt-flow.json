@@ -83,7 +83,7 @@
               "x_pos": 36,
               "y_pos": 28.8,
               "width": 342,
-              "height": 216,
+              "height": 231,
               "class_name": "d3-comment-rect bkg-col-green-20",
               "content": "### Prompt Canvas\n\nThis canvas provides a method to add new nodes to the flow with a prompt. To do this either:\n1.  Click one of the ports of the Type node\n2. Select a node type from the prompt. \n\nor:\n1. Hover over the Type node \n2. Click the \"Add node with prompt\" button in the context toolbar",
               "associated_id_refs": []
