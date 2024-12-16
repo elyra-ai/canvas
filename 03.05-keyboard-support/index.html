@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/FlowIcon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.48">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
     
     
       
@@ -2732,9 +2732,11 @@
 <h1 id="keyboard-support">Keyboard support<a class="headerlink" href="#keyboard-support" title="Permanent link">&para;</a></h1>
 <p>Common Canvas supports a number of keyboard interactions as described below. Some keyboard shortcuts are only available if the config field <code>enableKeyboardNavigation</code> is set to <code>true</code> as indictaed above each table.</p>
 <p>When any of the shortcut keys are pressed, if the shortcut has an action (listed below), Common Canvas will follow the same procedure as if the action was initiated from a context menu or from the canvas toolbar or by direct manipulation on the canvas. That is, it will: call the <a href="../03.03.02-before-edit-action-handler/">beforeEditActionHandler</a> and the <a href="../03.03.03-edit-action-handler/">editActionHandler</a> callbacks, with the <code>data.editType</code> parameter set to the action name and the <code>data.editSource</code> parameter set to &ldquo;keyboard&rdquo;; it will then update the object model with the change and refresh the flow editor display.</p>
-<p>Note: In the tables below:
-* &ldquo;Meta&rdquo; means either the Command key (⌘) on the Mac or, on Windows, the Windows key (⊞) or Control key (Ctrl).
-* &ldquo;Alt&rdquo; means either the Option key (⌥) on the Mac or, on Windows, the Alternative key (Alt).</p>
+<p>Note: In the tables below:</p>
+<ul>
+<li>&ldquo;Meta&rdquo; means either the Command key (⌘) on the Mac or, on Windows, the Windows key (⊞) or Control key (Ctrl).</li>
+<li>&ldquo;Alt&rdquo; means either the Option key (⌥) on the Mac or, on Windows, the Alternative key (Alt).</li>
+</ul>
 <h2 id="flow-editor">Flow Editor<a class="headerlink" href="#flow-editor" title="Permanent link">&para;</a></h2>
 <h3 id="when-focus-is-in-the-flow-editor-either-on-the-background-or-on-a-flow-editor-object">When focus is in the flow editor, either on the background or on a flow editor object<a class="headerlink" href="#when-focus-is-in-the-flow-editor-either-on-the-background-or-on-a-flow-editor-object" title="Permanent link">&para;</a></h3>
 <p>The shortcuts in this table are always available. The application can disable these actions by providing the <a href="../03.02.05-keyboard-config/">keyboard config object</a> to the common-canvas React component.</p>
@@ -3343,7 +3345,7 @@
     <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.footer"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="../assets/javascripts/bundle.88dd0f4e.min.js"></script>
       
         <script src="../js/links-in-new-tabs.js"></script>
       

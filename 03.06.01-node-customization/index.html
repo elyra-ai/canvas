@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/FlowIcon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.48">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
     
     
       
@@ -2830,7 +2830,7 @@
 <details class="note">
 <summary>Default node layout fields for <code>Horizontal</code> node format</summary>
 <div class="highlight"><pre><span></span><code>// Default node sizes. These dimensions might be overridden for nodes that have
-// more ports than will fit in the default size if inputPortAutoPosition is.
+// more ports than will fit in the default size if inputPortAutoPosition is
 // set to true and outputPortAutoPosition is set to true. (See below).
 defaultNodeWidth: 160,
 defaultNodeHeight: 40,
@@ -2842,7 +2842,7 @@ className: &quot;&quot;,
 // Displays the node outline shape underneath the image and label.
 nodeShapeDisplay: true,
 
-// Default node shape. Can be &quot;rectangle&quot; or &quot;port-arcs&quot;. Used when nodeOutlineDisplay is true.
+// Default node shape. Can be &quot;rectangle&quot; or &quot;port-arcs&quot;. Used when nodeShapeDisplay is true.
 nodeShape: &quot;port-arcs&quot;,
 
 // An SVG path or a function that returns an SVG path. The paths define the node
@@ -2961,15 +2961,21 @@ minFinalLine: 30,
 // Display input ports.
 inputPortDisplay: true,
 
-// Object for input port can be &quot;circle&quot; or &quot;image&quot;.
-inputPortObject: &quot;circle&quot;,
-
-// If input port object is &quot;image&quot; use this image.
-inputPortImage: &quot;&quot;,
-
-// If input port dimensions for &quot;image&quot;.
-inputPortWidth: 12,
-inputPortHeight: 12,
+// An array of elements to control display of input ports. Each element
+// can have a number of different structures like this:
+// Either
+// { type: &quot;circle&quot; } // Can also be &quot;circleWithArrow&quot;
+// Or
+// { type: &quot;image&quot;, src: &quot;path/picture.svg&quot;, width: 10, height: 10 }
+// Or
+// { type: &quot;jsx&quot;, src: (&lt;FaceCool /&gt;), width: 16, height: 16 }
+//
+// The order of the elements corresponds to the order of ports in the
+// inputs array for the node. If there are more input ports than elements
+// in the array, the last element will be used for all remaining ports.
+inputPortDisplayObjects: [
+    { type: &quot;circleWithArrow&quot; }
+],
 
 // Indicates whether multiple input ports should be automatically
 // positioned (true) or positioned based on the contents of
@@ -2980,31 +2986,47 @@ inputPortAutoPosition: true,
 // this: { x_pos: 5, y_pos: 10, pos: &quot;topLeft&quot; }. x_pos and y_pos are
 // offsets from the pos point on the node.
 // The order of the elements corresponds to the order of ports in the
-// inputs array for the node.
+// inputs array for the node. If there are more input ports than elements
+// in the array, the last element will be used for all remaining ports.
 inputPortPositions: [
     { x_pos: 0, y_pos: 20, pos: &quot;topLeft&quot; }
 ],
 
-// The &#39;guide&#39; is the object drawn at the mouse position as a new line
-// is being dragged outwards.
-// Object for input port guide can be &quot;circle&quot; or &quot;image&quot;.
-inputPortGuideObject: &quot;circle&quot;,
-
-// If input port guide object is &quot;image&quot; use this image.
-inputPortGuideImage: &quot;&quot;,
+// An array of elements to control display of input port guide objects.
+// That is the object drawn at the end of a new link as it is being dragged.
+// Each element can have a number of different structures like this:
+// Either
+// { type: &quot;circle&quot; } // Can also be &quot;circleWithArrow&quot;
+// Or
+// { type: &quot;image&quot;, src: &quot;path/picture.svg&quot;, width: 10, height: 10 }
+// Or
+// { type: &quot;jsx&quot;, src: (&lt;FaceCool /&gt;), width: 16, height: 16 }
+//
+// The order of the elements corresponds to the order of ports in the
+// inputs array for the node. If there are more input ports than elements
+// in the array, the last element will be used for all remaining ports.
+inputPortGuideObjects: [
+    { type: &quot;circle&quot; }
+],
 
 // Display output ports.
 outputPortDisplay: true,
 
-// Object for output port can be &quot;circle&quot; or &quot;image&quot;.
-outputPortObject: &quot;circle&quot;,
-
-// If output port object is &quot;image&quot; use this image.
-outputPortImage: &quot;&quot;,
-
-// Output port dimensions for &quot;image&quot;.
-outputPortWidth: 12,
-outputPortHeight: 12,
+// An array of elements to control display of output ports. Each element
+// can have a number of different structures like this:
+// Either
+// { type: &quot;circle&quot; } // Can also be &quot;circleWithArrow&quot;
+// Or
+// { type: &quot;image&quot;, src: &quot;path/picture.svg&quot;, width: 10, height: 10 }
+// Or
+// { type: &quot;jsx&quot;, src: (&lt;FaceCool /&gt;), width: 16, height: 16 }
+//
+// The order of the elements corresponds to the order of ports in the
+// outputs array for the node. If there are more output ports than elements
+// in the array, the last element will be used for all remaining ports.
+outputPortDisplayObjects: [
+    { type: &quot;circle&quot; }
+],
 
 // Indicates whether multiple output ports should be automatically
 // positioned (true) or positioned based on the contents of
@@ -3015,18 +3037,28 @@ outputPortAutoPosition: true,
 // this: { x_pos: 5, y_pos: 10, pos: &quot;topRight&quot; }. x_pos and y_pos are
 // offsets from the pos point on the node.
 // The order of the elements corresponds to the order of ports in the
-// outputs array for the node.
+// outputs array for the node. If there are more output ports than elements
+// in the array, the last element will be used for all remaining ports.
 outputPortPositions: [
     { x_pos: 0, y_pos: 20, pos: &quot;topRight&quot; }
 ],
 
-// The &#39;guide&#39; is the object drawn at the mouse position as a new line
-// is being dragged outwards.
-// Object for output port guide can be &quot;circle&quot; or &quot;image&quot;.
-outputPortGuideObject: &quot;circle&quot;,
-
-// If output port guide object is &quot;image&quot; use this image.
-outputPortGuideImage: &quot;&quot;,
+// An array of elements to control display of output port guide objects.
+// That is the object drawn at the end of a new link as it is being dragged.
+// Each element can have a number of different structures like this:
+// Either
+// { type: &quot;circle&quot; } // Can also be &quot;circleWithArrow&quot;
+// Or
+// { type: &quot;image&quot;, src: &quot;path/picture.svg&quot;, width: 10, height: 10 }
+// Or
+// { type: &quot;jsx&quot;, src: (&lt;FaceCool /&gt;), width: 16, height: 16 }
+//
+// The order of the elements corresponds to the order of ports in the
+// outputs array for the node. If there are more output ports than elements
+// in the array, the last element will be used for all remaining ports.
+outputPortGuideObjects: [
+    { type: &quot;circle&quot; }
+],
 
 // Automatically increases the node size to accommodate its ports so both
 // input and output ports can be shown within the dimensions of
@@ -3047,7 +3079,7 @@ portArcRadius: 6,
 // Spacing between the port arcs around the ports.
 portArcSpacing: 3,
 
-// Position of the context toolbar realtive to the node. Some adjustment
+// Position of the context toolbar relative to the node. Some adjustment
 // will be made to account for the width of the toolbar.
 contextToolbarPosition: &quot;topRight&quot;,
 
@@ -3407,7 +3439,7 @@ Note: You can use the <a href="../03.02.01-canvas-config/#enableparentclass"><co
     <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.footer"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="../assets/javascripts/bundle.88dd0f4e.min.js"></script>
       
         <script src="../js/links-in-new-tabs.js"></script>
       
