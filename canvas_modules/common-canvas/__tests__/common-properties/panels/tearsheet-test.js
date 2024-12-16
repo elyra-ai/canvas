@@ -16,66 +16,77 @@
 
 // Test suite for generic tearsheet testing
 import React from "react";
-import propertyUtils from "./../../_utils_/property-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { expect } from "chai";
-import { mountWithIntl } from "../../_utils_/intl-utils";
+import { renderWithIntl } from "../../_utils_/intl-utils";
 import TearSheet from "./../../../src/common-properties/panels/tearsheet";
 import codeParamDef from "./../../test_resources/paramDefs/code_paramDef.json";
 import Sinon from "sinon";
+import { cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
 
 describe("tearsheet tests", () => {
-	let wrapper;
 	let controller;
+	let renderedObject;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(codeParamDef);
-		wrapper = renderedObject.wrapper;
+		renderedObject = propertyUtilsRTL.flyoutEditorForm(codeParamDef);
 		controller = renderedObject.controller;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 	it("should be have only one tearsheet rendered", () => {
-		expect(wrapper.find("div.properties-tearsheet-panel")).to.have.length(1);
+		expect(document.querySelectorAll("div.properties-tearsheet-panel")).to.have.length(1);
 	});
-	it("should be visible from the controller method", () => {
+	it("should be visible from the controller method", async() => {
 		controller.setActiveTearsheet("tearsheet1");
-		wrapper.update();
-		expect(wrapper.find("div.properties-tearsheet-panel.is-visible")).to.have.length(1);
+		await waitFor(() => {
+			const tearsheetpanel = document.querySelector("div.properties-tearsheet-panel.is-visible");
+			expect(tearsheetpanel).to.not.be.null;
+		});
 	});
-	it("should have title and description set", () => {
+	it("should have title and description set", async() => {
 		controller.setActiveTearsheet("tearsheet1");
-		wrapper.update();
-		expect(wrapper.find("div.properties-tearsheet-panel .properties-tearsheet-header h2").text()).to.equal("Python");
-		expect(wrapper.find("div.properties-tearsheet-panel .properties-tearsheet-header p").text()).to.equal("Your change is automatically saved.");
+		await waitFor(() => {
+			expect(document.querySelector("div.properties-tearsheet-panel .properties-tearsheet-header h2").textContent).to.equal("Python");
+			expect(document.querySelector("div.properties-tearsheet-panel .properties-tearsheet-header p").textContent).to.equal("Your change is automatically saved.");
+		});
 	});
-	it("should be hidden but not removed from DOM on the tearsheet close button", () => {
+	it("should be hidden but not removed from DOM on the tearsheet close button", async() => {
 		controller.setActiveTearsheet("tearsheet1");
-		wrapper.update();
-		wrapper.find("div.properties-tearsheet-panel button.cds--modal-close").simulate("click");
-		wrapper.update();
-		expect(wrapper.find("div.properties-tearsheet-panel.is-visible")).to.have.length(0);
-		expect(wrapper.find("div.properties-tearsheet-panel")).to.have.length(1);
-		expect(controller.getActiveTearsheet()).to.equal(null);
+		await waitFor(() => {
+			const buttonModalClose = document.querySelector("div.properties-tearsheet-panel");
+			expect(buttonModalClose).to.not.be.null;
+			expect(buttonModalClose.classList.contains("is-visible")).to.be.false;
+
+			const closeButton = document.querySelector("button.cds--modal-close");
+			expect(closeButton).to.not.be.null;
+			fireEvent.click(closeButton);
+			expect(document.querySelectorAll("div.properties-tearsheet-panel.is-visible")).to.have.length(0);
+			expect(document.querySelectorAll("div.properties-tearsheet-panel")).to.have.length(1);
+			expect(controller.getActiveTearsheet()).to.equal(null);
+		});
+
 	});
-	it("should show tearsheet content which is previously hidden", () => {
-		expect(wrapper.find("div.properties-tearsheet-panel")).to.have.length(1);
-		expect(wrapper.find("div.properties-tearsheet-panel.is-visible")).to.have.length(0);
-		expect(wrapper.find("div.properties-tearsheet-panel div[data-id='properties-ctrl-code_rows']")).to.have.length(0);
-		wrapper.update();
+	it("should show tearsheet content which is previously hidden", async() => {
+		expect(document.querySelectorAll("div.properties-tearsheet-panel")).to.have.length(1);
+		expect(document.querySelectorAll("div.properties-tearsheet-panel.is-visible")).to.have.length(0);
+		expect(document.querySelectorAll("div.properties-tearsheet-panel div[data-id='properties-ctrl-code_rows']")).to.have.length(0);
 		controller.updatePropertyValue({ name: "hide" }, false);
-		wrapper.update();
-		wrapper.find("div[data-id='properties-ctrl-code_rows'] button.maximize").simulate("click");
-		wrapper.update();
-		expect(wrapper.find("div.properties-tearsheet-panel.is-visible")).to.have.length(1);
-		expect(wrapper.find("div.properties-tearsheet-panel .properties-tearsheet-header h2").text()).to.equal("Python 2");
-		expect(wrapper.find("div.properties-tearsheet-panel div[data-id='properties-ctrl-code_rows']")).to.have.length(1);
+		await waitFor(() => {
+			const maximizeButton = document.querySelector("div[data-id='properties-ctrl-code_rows']");
+			const btnClick = maximizeButton.querySelector("button.maximize");
+			fireEvent.click(btnClick);
+			expect(document.querySelector("div.properties-tearsheet-panel.is-visible")).to.not.be.null;
+			expect(document.querySelector("div.properties-tearsheet-panel .properties-tearsheet-header h2").textContent).to.equal("Python 2");
+			expect(document.querySelector("div.properties-tearsheet-panel div[data-id='properties-ctrl-code_rows']")).to.not.be.null;
+		});
 	});
 });
 
 describe("Tearsheet renders correctly", () => {
 	it("should not display buttons in tearsheet if showPropertiesButtons is false", () => {
-		const wrapper = mountWithIntl(<TearSheet
+		const wrapper = renderWithIntl(<TearSheet
 			open
 			onCloseCallback={Sinon.spy()}
 			tearsheet={{
@@ -85,21 +96,21 @@ describe("Tearsheet renders correctly", () => {
 			showPropertiesButtons={false}
 			applyOnBlur
 		/>);
-		const tearsheet = wrapper.find("div.properties-tearsheet-panel");
-		expect(tearsheet).to.have.length(1);
-		expect(tearsheet.find("div.properties-tearsheet-header")).to.have.length(1);
-		expect(tearsheet.find("div.properties-tearsheet-header > h2").text()).to.equal("test title");
-		expect(tearsheet.find("div.properties-tearsheet-body")).to.have.length(1);
-		expect(tearsheet.find("div.properties-tearsheet-body").text()).to.equal("test content");
-		expect(tearsheet.find("div.properties-tearsheet-body.with-buttons")).to.have.length(0);
-		expect(tearsheet.find("div.properties-modal-buttons")).to.have.length(0);
+		const { container } = wrapper;
+		const tearsheet = container.getElementsByClassName("properties-tearsheet-panel");
+		expect(tearsheet).to.not.be.null;
+		const header = screen.getByText("test title", { selector: "h2" });
+		expect(header).to.exist;
+		expect(header.tagName).to.equal("H2");
 
-		// Verify close button is visible
-		expect(tearsheet.find("div.properties-tearsheet-header.hide-close-button")).to.have.length(0);
+		const body = screen.getByText("test content");
+		expect(body).to.exist;
+		expect(container.querySelectorAll("div.properties-tearsheet-body.with-buttons")).to.have.length(0);
+		expect(container.querySelectorAll("div.properties-modal-buttons")).to.have.length(0);
 	});
 
 	it("should display buttons in tearsheet if showPropertiesButtons is true and applyOnBlur is false", () => {
-		const wrapper = mountWithIntl(<TearSheet
+		const wrapper = renderWithIntl(<TearSheet
 			open
 			onCloseCallback={null}
 			tearsheet={{
@@ -112,12 +123,14 @@ describe("Tearsheet renders correctly", () => {
 			cancelHandler={Sinon.spy()}
 			showPropertiesButtons
 		/>);
-		const tearsheet = wrapper.find("div.properties-tearsheet-panel");
-		expect(tearsheet).to.have.length(1);
-		expect(tearsheet.find("div.properties-tearsheet-body.with-buttons")).to.have.length(1);
-		expect(tearsheet.find("div.properties-modal-buttons")).to.have.length(1);
+		const { container } = wrapper;
+		const tearsheet = container.querySelectorAll("properties-tearsheet-panel");
+		expect(tearsheet).to.not.be.null;
+		expect(container.querySelectorAll("div.properties-tearsheet-body.with-buttons")).to.not.be.null;
+		expect(container.querySelectorAll("div.properties-modal-buttons")).to.not.be.null;
+
 
 		// Verify close button is not visible
-		expect(tearsheet.find("div.properties-tearsheet-header.hide-close-button")).to.have.length(1);
+		expect(container.querySelectorAll("div.properties-tearsheet-header.hide-close-button")).to.not.be.null;
 	});
 });

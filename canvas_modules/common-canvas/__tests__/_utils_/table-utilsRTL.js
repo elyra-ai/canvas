@@ -97,7 +97,15 @@ function getTableHeaderRows(container) {
 }
 
 function getTableRows(container) {
-	const rows = within(container).getAllByRole("row");
+	if (!container) {
+		return [];
+	}
+	let rows;
+	try {
+		rows = within(container).getAllByRole("row");
+	} catch (error) {
+		rows = Array.from(container.querySelectorAll(".properties-data-row"));
+	}
 	const res = [];
 	for (let i = 0; i < rows.length; i++) {
 		if (rows[i].outerHTML.includes("properties-data-row")) {
