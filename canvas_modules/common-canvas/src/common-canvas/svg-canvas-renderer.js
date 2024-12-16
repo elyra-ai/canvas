@@ -32,19 +32,22 @@ const markdownIt = require("markdown-it")({
 import { escape as escapeText, forOwn, get } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
-	LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
+	LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT, LINK_TYPE_CURVE,
 	LINK_DIR_LEFT_RIGHT, LINK_DIR_RIGHT_LEFT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
 	LINK_METHOD_FREEFORM, LINK_METHOD_PORTS,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, EDIT_ICON,
-	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_IMAGE,
+	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON,
+	PORT_DISPLAY_CIRCLE, PORT_DISPLAY_CIRCLE_WITH_ARROW, PORT_DISPLAY_IMAGE, PORT_DISPLAY_JSX,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	NORTH, SOUTH, EAST, WEST,
 	WYSIWYG, CAUSE_KEYBOARD, CAUSE_MOUSE,
-	CANVAS_FOCUS }
-	from "./constants/canvas-constants";
+	FLOW_IN, FLOW_OUT,
+	PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT,
+	CANVAS_FOCUS
+} from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
 import Logger from "../logging/canvas-logger.js";
@@ -1572,10 +1575,11 @@ export default class SVGCanvasRenderer {
 				.each((d, i, nodeGrps) => {
 					if (d.isSupernodeInputBinding) {
 						this.updatePortRadiusAndPos(nodeGrps[i], d, "d3-node-port-output-main");
+						this.updateOutputPortArrowPath(nodeGrps[i], "d3-node-port-output-arrow");
 					}
 					if (d.isSupernodeOutputBinding) {
 						this.updatePortRadiusAndPos(nodeGrps[i], d, "d3-node-port-input-main");
-						this.updatePortArrowPath(nodeGrps[i], "d3-node-port-input-arrow");
+						this.updateInputPortArrowPath(nodeGrps[i], "d3-node-port-input-arrow");
 					}
 				});
 		}
@@ -1815,6 +1819,13 @@ export default class SVGCanvasRenderer {
 			.each((d, idx, exts) =>
 				this.externalUtils.removeExternalObject(d, idx, exts));
 
+		// Remove any JSX ports for nodes being removed to
+		// unmount their React objects.
+		removeSel
+			.selectChildren(".d3-foreign-object-port-jsx")
+			.each((d, idx, exts) =>
+				this.externalUtils.removeExternalObject(d, idx, exts));
+
 		// Remove any foreign objects for React nodes to
 		// unmount their React objects.
 		removeSel
@@ -1872,7 +1883,9 @@ export default class SVGCanvasRenderer {
 		nodeGrp.selectChildren(inSelector)
 			.data(inputs, (p) => p.id)
 			.join(
-				(enter) => this.createInputPorts(enter, node)
+				(enter) => this.createInputPorts(enter, node),
+				null,
+				(remove) => this.removePorts(remove)
 			)
 			.attr("connected", (port) => (port.isConnected ? "yes" : "no"))
 			.attr("class", (port) => this.getNodeInputPortClassName() + (port.class_name ? " " + port.class_name : ""))
@@ -1884,22 +1897,26 @@ export default class SVGCanvasRenderer {
 			.append("g")
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
+			.each((port, i, inputPorts) => {
+				const portIdx = CanvasUtils.getPortIndex(node.inputs, port.id);
+				const portDisplayInfo = this.getPortDisplayInfo(node.layout.inputPortDisplayObjects, portIdx);
+				const obj = d3.select(inputPorts[i]);
+				obj
+					.append(portDisplayInfo.tag)
+					.attr("class", "d3-node-port-input-main" +
+						(portDisplayInfo.tag === "foreignObject" ? " d3-foreign-object-port-jsx" : ""));
+
+				// Show a port arrow inside the port circle if:
+				// We are not supporting association link creation,
+				// and we are drawing a circleWithArrow and this is not a super binding node.
+				obj
+					.filter(() => (!this.config.enableAssocLinkCreation &&
+						portDisplayInfo.type === PORT_DISPLAY_CIRCLE_WITH_ARROW &&
+						!CanvasUtils.isSuperBindingNode(node)))
+					.append("path")
+					.attr("class", "d3-node-port-input-arrow");
+			})
 			.call(this.attachInputPortListeners.bind(this), node);
-
-		inputPortGroups
-			.append(node.layout.inputPortObject)
-			.attr("class", "d3-node-port-input-main");
-
-		// Don't show the port arrow when we are supporting association
-		// link creation
-		if (!this.config.enableAssocLinkCreation &&
-				node.layout.inputPortObject === "circle" &&
-				!CanvasUtils.isSuperBindingNode(node)) {
-			// Input port arrow in circle for nodes which are not supernode binding nodes.
-			inputPortGroups
-				.append("path")
-				.attr("class", "d3-node-port-input-arrow");
-		}
 
 		return inputPortGroups;
 	}
@@ -1909,28 +1926,21 @@ export default class SVGCanvasRenderer {
 			.datum((port) => node.inputs.find((i) => port.id === i.id))
 			.each((port, i, inputPorts) => {
 				const obj = d3.select(inputPorts[i]);
-				if (node.layout.inputPortObject === PORT_OBJECT_IMAGE) {
-					obj
-						.attr("xlink:href", node.layout.inputPortImage)
-						.attr("x", port.cx - (node.layout.inputPortWidth / 2))
-						.attr("y", port.cy - (node.layout.inputPortHeight / 2))
-						.attr("width", node.layout.inputPortWidth)
-						.attr("height", node.layout.inputPortHeight);
-				} else {
-					obj
-						.attr("r", this.getPortRadius(node))
-						.attr("cx", port.cx)
-						.attr("cy", port.cy);
-				}
+				const portIdx = CanvasUtils.getPortIndex(node.inputs, port.id);
+				const portDisplayInfo = this.getPortDisplayInfo(node.layout.inputPortDisplayObjects, portIdx);
+				const transform = this.getPortImageTransform(port, FLOW_IN);
+				this.updatePort(obj, portDisplayInfo, node, port.cx, port.cy, transform);
 			});
 
 		joinedInputPortGrps.selectChildren(".d3-node-port-input-arrow")
 			.datum((port) => node.inputs.find((i) => port.id === i.id))
 			.each((port, i, inputPorts) => {
 				const obj = d3.select(inputPorts[i]);
-				if (node.layout.inputPortObject !== PORT_OBJECT_IMAGE) {
+				const portIdx = CanvasUtils.getPortIndex(node.inputs, port.id);
+				const portDisplayInfo = this.getPortDisplayInfo(node.layout.inputPortDisplayObjects, portIdx);
+				if (portDisplayInfo.type === PORT_DISPLAY_CIRCLE_WITH_ARROW) {
 					obj
-						.attr("d", this.getPortArrowPath(port))
+						.attr("d", this.getPortArrowPath())
 						.attr("transform", this.getInputPortArrowPathTransform(port));
 				}
 			});
@@ -1941,6 +1951,18 @@ export default class SVGCanvasRenderer {
 		} else {
 			joinedInputPortGrps.on(".drag", null);
 		}
+	}
+
+	removePorts(removeSel) {
+		// Remove any JSX ports for nodes being removed to
+		// unmount their React objects.
+		removeSel
+			.selectChildren(".d3-foreign-object-port-jsx")
+			.each((d, idx, exts) =>
+				this.externalUtils.removeExternalObject(d, idx, exts));
+
+		// Remove all ports in the selection.
+		removeSel.remove();
 	}
 
 	displayOutputPorts(nodeGrp, node) {
@@ -1962,7 +1984,9 @@ export default class SVGCanvasRenderer {
 		nodeGrp.selectChildren(outSelector)
 			.data(outputs, (p) => p.id)
 			.join(
-				(enter) => this.createOutputPorts(enter, node)
+				(enter) => this.createOutputPorts(enter, node),
+				null,
+				(remove) => this.removePorts(remove)
 			)
 			.attr("connected", (port) => (port.isConnected ? "yes" : "no"))
 			.attr("class", (port) => this.getNodeOutputPortClassName() + (port.class_name ? " " + port.class_name : ""))
@@ -1974,11 +1998,27 @@ export default class SVGCanvasRenderer {
 			.append("g")
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
-			.call(this.attachOutputPortListeners.bind(this), node);
+			.each((port, i, outputPorts) => {
+				const portIdx = CanvasUtils.getPortIndex(node.outputs, port.id);
+				const portDisplayInfo = this.getPortDisplayInfo(node.layout.outputPortDisplayObjects, portIdx);
+				const obj = d3.select(outputPorts[i]);
+				obj
+					.append(portDisplayInfo.tag)
+					.attr("class", "d3-node-port-output-main" +
+						(portDisplayInfo.tag === "foreignObject" ? " d3-foreign-object-port-jsx" : ""));
 
-		outputPortGroups
-			.append(node.layout.outputPortObject)
-			.attr("class", "d3-node-port-output-main");
+				// Show a port arrow inside the port circle if:
+				// We are not supporting association link creation,
+				// and we are drawing a circleWithArrow and this is not a super binding node.
+				obj
+					.filter(() => (!this.config.enableAssocLinkCreation &&
+						portDisplayInfo.type === PORT_DISPLAY_CIRCLE_WITH_ARROW &&
+						!CanvasUtils.isSuperBindingNode(node)))
+					.append("path")
+					.attr("class", "d3-node-port-output-arrow");
+
+			})
+			.call(this.attachOutputPortListeners.bind(this), node);
 
 		return outputPortGroups;
 	}
@@ -1988,19 +2028,22 @@ export default class SVGCanvasRenderer {
 			.datum((port) => node.outputs.find((o) => port.id === o.id))
 			.each((port, i, outputPorts) => {
 				const obj = d3.select(outputPorts[i]);
-				if (node.layout.outputPortObject === PORT_OBJECT_IMAGE) {
+				const portIdx = CanvasUtils.getPortIndex(node.outputs, port.id);
+				const portInfo = this.getPortDisplayInfo(node.layout.outputPortDisplayObjects, portIdx);
+				const transform = this.getPortImageTransform(port, FLOW_OUT);
+				this.updatePort(obj, portInfo, node, port.cx, port.cy, transform);
+			});
+
+		joinedOutputPortGrps.selectChildren(".d3-node-port-output-arrow")
+			.datum((port) => node.outputs.find((i) => port.id === i.id))
+			.each((port, i, outputPorts) => {
+				const obj = d3.select(outputPorts[i]);
+				const portIdx = CanvasUtils.getPortIndex(node.outputs, port.id);
+				const portDisplayInfo = this.getPortDisplayInfo(node.layout.outputPortDisplayObjects, portIdx);
+				if (portDisplayInfo.type === PORT_DISPLAY_CIRCLE_WITH_ARROW) {
 					obj
-						.attr("xlink:href", node.layout.outputPortImage)
-						.attr("x", port.cx - (node.layout.outputPortWidth / 2))
-						.attr("y", port.cy - (node.layout.outputPortHeight / 2))
-						.attr("width", node.layout.outputPortWidth)
-						.attr("height", node.layout.outputPortHeight)
-						.attr("transform", this.getPortImageTransform(port));
-				} else {
-					obj
-						.attr("r", this.getPortRadius(node))
-						.attr("cx", port.cx)
-						.attr("cy", port.cy);
+						.attr("d", this.getPortArrowPath())
+						.attr("transform", this.getOutputPortArrowPathTransform(port));
 				}
 			});
 
@@ -2010,6 +2053,40 @@ export default class SVGCanvasRenderer {
 		} else {
 			joinedOutputPortGrps.on(".drag", null);
 		}
+	}
+
+	updatePort(obj, portInfo, node, cx, cy, transform) {
+		if (portInfo.type === PORT_DISPLAY_JSX || portInfo.type === PORT_DISPLAY_IMAGE) {
+			if (portInfo.type === PORT_DISPLAY_JSX) {
+				obj
+					.each((portData, idx, exts) => this.externalUtils.addJsxExternalObject(portInfo.src, idx, exts));
+			} else {
+				obj.attr("xlink:href", portInfo.src);
+			}
+			obj
+				.attr("x", cx - (portInfo.width / 2))
+				.attr("y", cy - (portInfo.height / 2))
+				.attr("width", portInfo.width)
+				.attr("height", portInfo.height)
+				.attr("transform", transform);
+
+		} else {
+			obj
+				.attr("r", this.getPortRadius(node))
+				.attr("cx", cx)
+				.attr("cy", cy);
+		}
+	}
+
+	getPortDisplayInfo(displayObjects, i) {
+		const idx = (i < displayObjects.length) ? i : displayObjects.length - 1;
+		const portObj = displayObjects[idx];
+		const obj = { ...portObj };
+		obj.tag = obj.type === "jsx" ? "foreignObject" : obj.type;
+		obj.tag = obj.type === "circleWithArrow" ? "circle" : obj.tag;
+		obj.width = obj.width || PORT_WIDTH_DEFAULT;
+		obj.width = obj.height || PORT_HEIGHT_DEFAULT;
+		return obj;
 	}
 
 	// Attaches the appropriate listeners to the node groups.
@@ -3123,11 +3200,18 @@ export default class SVGCanvasRenderer {
 			.attr("cy", (port) => port.cy); // Port position may change for binding nodes with multiple-ports.
 	}
 
-	updatePortArrowPath(nodeObj, portArrowClassName) {
+	updateInputPortArrowPath(nodeObj, portArrowClassName) {
 		const nodeGrp = d3.select(nodeObj);
 		nodeGrp.selectAll("." + portArrowClassName)
-			.attr("d", (port) => this.getPortArrowPath(port))
+			.attr("d", this.getPortArrowPath())
 			.attr("transform", (port) => this.getInputPortArrowPathTransform(port));
+	}
+
+	updateOutputPortArrowPath(nodeObj, portArrowClassName) {
+		const nodeGrp = d3.select(nodeObj);
+		nodeGrp.selectAll("." + portArrowClassName)
+			.attr("d", this.getPortArrowPath())
+			.attr("transform", (port) => this.getOutputPortArrowPathTransform(port));
 	}
 
 	// Returns true if the port (from a node template) passed in has a max
@@ -3231,28 +3315,6 @@ export default class SVGCanvasRenderer {
 		if (this.canvasController.decorationActionHandler) {
 			this.canvasController.decorationActionHandler(node, dec.id, this.activePipeline.id);
 		}
-	}
-
-
-	getLinkImageTransform(d) {
-		let angle = 0;
-		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
-			const adjacent = d.x2 - (d.originX || d.x1);
-			const opposite = d.y2 - (d.originY || d.y1);
-			if (adjacent === 0 && opposite === 0) {
-				angle = 0;
-			} else {
-				angle = Math.atan(opposite / adjacent) * (180 / Math.PI);
-				angle = adjacent >= 0 ? angle : angle + 180;
-				if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-					angle -= 90;
-				} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-					angle += 90;
-				}
-			}
-			return `rotate(${angle},${d.x2},${d.y2})`;
-		}
-		return null;
 	}
 
 	// Returns a link, if one can be found, at the position indicated by x and y
@@ -3382,13 +3444,8 @@ export default class SVGCanvasRenderer {
 		const prox = nodeProximity || 0;
 		this.getAllNodeGroupsSelection()
 			.each((d) => {
-				let portRadius = d.layout.portRadius;
-				if (CanvasUtils.isSuperBindingNode(d)) {
-					portRadius = this.canvasLayout.supernodeBindingPortRadius / this.zoomUtils.getZoomScale();
-				}
-
-				if (pos.x >= d.x_pos - portRadius - prox && // Target port sticks out by its radius so need to allow for it.
-						pos.x <= d.x_pos + d.width + portRadius + prox &&
+				if (pos.x >= d.x_pos - prox &&
+						pos.x <= d.x_pos + d.width + prox &&
 						pos.y >= d.y_pos - prox &&
 						pos.y <= d.y_pos + d.height + prox) {
 					node = d;
@@ -4203,7 +4260,7 @@ export default class SVGCanvasRenderer {
 		const commentGrp = d3.select(commentObj);
 
 		const commentPort = commentGrp
-			.append("circle")
+			.append(PORT_DISPLAY_CIRCLE)
 			.attr("cx", (com) => com.width / 2)
 			.attr("cy", (com) => com.height + this.canvasLayout.commentHighlightGap)
 			.attr("r", this.canvasLayout.commentPortRadius)
@@ -4675,7 +4732,7 @@ export default class SVGCanvasRenderer {
 			.datum((d) => this.activePipeline.getLink(d.id))
 			.each((datum, index, linkHandles) => {
 				const obj = d3.select(linkHandles[index]);
-				if (this.canvasLayout.linkStartHandleObject === "image") {
+				if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_IMAGE) {
 					obj
 						.attr("xlink:href", this.canvasLayout.linkStartHandleImage)
 						.attr("x", (d) => d.x1 - (this.canvasLayout.linkStartHandleWidth / 2))
@@ -4683,7 +4740,7 @@ export default class SVGCanvasRenderer {
 						.attr("width", this.canvasLayout.linkStartHandleWidth)
 						.attr("height", this.canvasLayout.linkStartHandleHeight);
 
-				} else if (this.canvasLayout.linkStartHandleObject === "circle") {
+				} else if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_CIRCLE) {
 					obj
 						.attr("r", this.canvasLayout.linkStartHandleRadius)
 						.attr("cx", (d) => d.x1)
@@ -4704,7 +4761,7 @@ export default class SVGCanvasRenderer {
 			.datum((d) => this.activePipeline.getLink(d.id))
 			.each((datum, index, linkHandles) => {
 				const obj = d3.select(linkHandles[index]);
-				if (this.canvasLayout.linkEndHandleObject === "image") {
+				if (this.canvasLayout.linkEndHandleObject === PORT_DISPLAY_IMAGE) {
 					obj
 						.attr("xlink:href", this.canvasLayout.linkEndHandleImage)
 						.attr("x", (d) => d.x2 - (this.canvasLayout.linkEndHandleWidth / 2))
@@ -4713,7 +4770,7 @@ export default class SVGCanvasRenderer {
 						.attr("height", this.canvasLayout.linkEndHandleHeight)
 						.attr("transform", (d) => this.getLinkImageTransform(d));
 
-				} else if (this.canvasLayout.linkEndHandleObject === "circle") {
+				} else if (this.canvasLayout.linkEndHandleObject === PORT_DISPLAY_CIRCLE) {
 					obj
 						.attr("r", this.canvasLayout.linkEndHandleRadius)
 						.attr("cx", (d) => d.x2)
@@ -4863,9 +4920,14 @@ export default class SVGCanvasRenderer {
 			? " d3-resized"
 			: "";
 
+		const shapeClass = d.layout.nodeShape === "port-arcs"
+			? " d3-node-shape-port-arcs"
+			: "";
+
 		const branchHighlightClass = d.branchHighlight ? " d3-branch-highlight" : "";
 
-		return "d3-node-group" + supernodeClass + resizeClass + draggableClass + branchHighlightClass + customClass;
+		return "d3-node-group" + supernodeClass + resizeClass + draggableClass +
+			branchHighlightClass + shapeClass + customClass;
 	}
 
 	// Pushes the links to be below nodes within the nodesLinksGrp group.
@@ -5421,27 +5483,27 @@ export default class SVGCanvasRenderer {
 				// Self-referencing link
 				if (node.id === link.srcObj?.id &&
 						link.srcObj?.id === link.trgNode?.id) {
-					linksInfo[NORTH].push({ type: "in", startNode: link.srcObj, endNode: link.trgNode, link });
-					linksInfo[EAST].push({ type: "out", startNode: link.srcObj, endNode: link.trgNode, link });
+					linksInfo[NORTH].push({ flow: FLOW_IN, startNode: link.srcObj, endNode: link.trgNode, link });
+					linksInfo[EAST].push({ flow: FLOW_OUT, startNode: link.srcObj, endNode: link.trgNode, link });
 
 				} else if (link.trgNode && link.trgNode.id === node.id) {
 					if (link.srcObj) {
 						const dir = this.getDirToNode(link.trgNode, link.srcObj);
-						linksInfo[dir].push({ type: "in", startNode: link.trgNode, endNode: link.srcObj, link });
+						linksInfo[dir].push({ flow: FLOW_IN, startNode: link.trgNode, endNode: link.srcObj, link });
 
 					} else if (link.srcPos) {
 						const dir = this.getDirToEndPos(link.trgNode, link.srcPos.x_pos, link.srcPos.y_pos);
-						linksInfo[dir].push({ type: "in", x: link.srcPos.x_pos, y: link.srcPos.y_pos, link });
+						linksInfo[dir].push({ flow: FLOW_IN, x: link.srcPos.x_pos, y: link.srcPos.y_pos, link });
 					}
 
 				} else if (link.srcObj && link.srcObj.id === node.id) {
 					if (link.trgNode) {
 						const dir = this.getDirToNode(link.srcObj, link.trgNode);
-						linksInfo[dir].push({ type: "out", startNode: link.srcObj, endNode: link.trgNode, link });
+						linksInfo[dir].push({ flow: FLOW_OUT, startNode: link.srcObj, endNode: link.trgNode, link });
 
 					} else if (link.trgPos) {
 						const dir = this.getDirToEndPos(link.srcObj, link.trgPos.x_pos, link.trgPos.y_pos);
-						linksInfo[dir].push({ type: "out", x: link.trgPos.x_pos, y: link.trgPos.y_pos, link });
+						linksInfo[dir].push({ flow: FLOW_OUT, x: link.trgPos.x_pos, y: link.trgPos.y_pos, link });
 					}
 				}
 			}
@@ -5595,7 +5657,7 @@ export default class SVGCanvasRenderer {
 	// drawing straight lines to/from nodes to spread out the lines.
 	updateLinksInfo(linksDirArray, dir) {
 		linksDirArray.forEach((li, i) => {
-			if (li.type === "out") {
+			if (li.flow === FLOW_OUT) {
 				li.link.srcFreeformInfo = {
 					dir: dir,
 					idx: i,
@@ -5614,11 +5676,11 @@ export default class SVGCanvasRenderer {
 	// Returns a variation of association link to draw when a new link is being
 	// drawn outwards from a port. startX is the beginning point of the line
 	// at the port. endX is the position where the mouse is currently positioned.
-	getNewLinkAssocVariation(startX, endX, portType) {
-		if (portType === "input" && startX > endX) {
+	getNewLinkAssocVariation(startX, endX, flow) {
+		if (flow === FLOW_IN && startX > endX) {
 			return ASSOC_VAR_CURVE_LEFT;
 
-		} else if (portType === "output" && startX < endX) {
+		} else if (flow === FLOW_OUT && startX < endX) {
 			return ASSOC_VAR_CURVE_RIGHT;
 		}
 		return ASSOC_VAR_DOUBLE_BACK_RIGHT;
@@ -5642,17 +5704,24 @@ export default class SVGCanvasRenderer {
 		return ASSOC_VAR_DOUBLE_BACK_RIGHT;
 	}
 
-	// Returns path for arrow head displayed within an input port circle. It is
+	// Returns path for arrow head displayed within an port circle. It is
 	// draw so the tip is 2px in front of the origin 0,0 so it appears nicely in
 	// the port circle.
-	getPortArrowPath(port) {
+	getPortArrowPath() {
 		return "M -2 3 L 2 0 -2 -3";
 	}
 
-	// Returns the transform to position and, if ncessecary, rotate the port
-	// circle arrow.
+	// Returns the transform to position and, if necessary, rotate the port
+	// circle arrow for input ports.
 	getInputPortArrowPathTransform(port) {
 		const angle = this.getAngleBasedForInputPorts(port.dir);
+		return `translate(${port.cx}, ${port.cy}) rotate(${angle})`;
+	}
+
+	// Returns the transform to position and, if necessary, rotate the port
+	// circle arrow for output ports.
+	getOutputPortArrowPathTransform(port) {
+		const angle = this.getAngleBasedForOutputPorts(port.dir);
 		return `translate(${port.cx}, ${port.cy}) rotate(${angle})`;
 	}
 
@@ -5693,10 +5762,12 @@ export default class SVGCanvasRenderer {
 		return `translate(${link.x2}, ${link.y2}) rotate(${angle})`;
 	}
 
-	// Returns a rotation transform for an image displayed for an
-	// output port.
-	getPortImageTransform(port) {
-		const angle = this.getAngleBasedForOutputPorts(port.dir);
+	// Returns a rotation transform for an image displayed for a
+	// port of the type defined by the flow parameter (in or out).
+	getPortImageTransform(port, flow) {
+		const angle = flow === FLOW_OUT
+			? this.getAngleBasedForOutputPorts(port.dir)
+			: this.getAngleBasedForInputPorts(port.dir);
 
 		return `rotate(${angle},${port.cx},${port.cy})`;
 	}
@@ -5711,6 +5782,27 @@ export default class SVGCanvasRenderer {
 		// For other freeform link types we return an appropriate direction
 		// at right angles to the node.
 		return this.getAngleBasedForInputPorts(d.trgDir);
+	}
+
+	getLinkImageTransform(d) {
+		let angle = 0;
+
+		// For "Freeform" Straight and Curve links, we calculate the angle
+		// based on the rotation of the link line direction.
+		if (this.canvasLayout.linkMethod === LINK_METHOD_FREEFORM &&
+			(this.canvasLayout.linkType === LINK_TYPE_STRAIGHT ||
+				this.canvasLayout.linkType === LINK_TYPE_CURVE)) {
+			angle = CanvasUtils.calculateAngle((d.originX || d.x1), (d.originY || d.y1), d.x2, d.y2);
+
+		// For "Freeform" Elbow and Parallax links AND all links using the
+		// "Ports" method, we snap the link direction to the target
+		// direction stored in the link.
+		} else {
+			angle = this.getAngleBasedForInputPorts(d.trgDir);
+		}
+
+		return `rotate(${angle},${d.x2},${d.y2})`;
+
 	}
 
 	// Returns the angle for the output port of a source node when
