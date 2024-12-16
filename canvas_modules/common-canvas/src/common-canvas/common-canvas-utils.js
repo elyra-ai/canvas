@@ -506,6 +506,13 @@ export default class CanvasUtils {
 		return null;
 	}
 
+	// Assisted by watsonx Code Assistant
+	// Returns true if point 1 is inside a circle of the specified radius whose
+	// center is point 2.
+	static isInside(point1, point2, radius) {
+		return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2)) < radius;
+	}
+
 	// Returns the distance from the start point to finsih point of the link line.
 	static getLinkDistance(link) {
 		const x = link.x2 - link.x1;

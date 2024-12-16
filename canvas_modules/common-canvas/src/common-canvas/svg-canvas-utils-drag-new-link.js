@@ -27,8 +27,9 @@ import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_CURVE, LINK_TYPE_STRAIGHT, LINK_SELECTION_DETACHABLE,
 	FLOW_IN, FLOW_OUT,
 	PORT_DISPLAY_CIRCLE,
-	LINK_METHOD_PORTS }
-	from "./constants/canvas-constants.js";
+	LINK_METHOD_PORTS,
+	SINGLE_CLICK
+} from "./constants/canvas-constants.js";
 
 // This utility files provides a drag handler which manages drag operations to
 // create new links either between nodes or from a comment to a node.
@@ -65,11 +66,11 @@ export default class SVGCanvasUtilsDragNewLink {
 	dragStartNewLink(d3Event, d) {
 		if (this.isEventForOutputPort(d3Event)) {
 			const node = this.getNodeForPort(d3Event);
-			this.startOutputPortNewLink(d, node);
+			this.startOutputPortNewLink(d3Event, d, node);
 
 		} else if (this.isEventForInputPort(d3Event)) {
 			const node = this.getNodeForPort(d3Event);
-			this.startInputPortNewLink(d, node);
+			this.startInputPortNewLink(d3Event, d, node);
 
 		} else if (this.ren.activePipeline.getObjectTypeName(d) === "comment") {
 			this.startCommentNewLink(d);
@@ -125,7 +126,7 @@ export default class SVGCanvasUtilsDragNewLink {
 
 	// Initialize this.drawingNewLinkData when dragging an input port. This gesture
 	// is only supported for association link creation.
-	startInputPortNewLink(port, node) {
+	startInputPortNewLink(d3Event, port, node) {
 		if (this.ren.config.enableAssocLinkCreation) {
 			const srcNode = this.ren.activePipeline.getNode(node.id);
 			const portIndex = CanvasUtils.getPortIndex(node.inputs, port.id);
@@ -133,6 +134,7 @@ export default class SVGCanvasUtilsDragNewLink {
 				srcObj: srcNode,
 				srcPort: port,
 				action: this.ren.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
+				mousePos: { x: d3Event.x, y: d3Event.y },
 				startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
 				portFlow: FLOW_IN,
 				portDisplayInfo: this.ren.getPortDisplayInfo(srcNode.layout.inputPortDisplayObjects, portIndex),
@@ -145,7 +147,7 @@ export default class SVGCanvasUtilsDragNewLink {
 	}
 
 	// Initialize this.drawingNewLinkData when dragging an output port.
-	startOutputPortNewLink(port, node) {
+	startOutputPortNewLink(d3Event, port, node) {
 		const srcNode = this.ren.activePipeline.getNode(node.id);
 		if (!CanvasUtils.isSrcCardinalityAtMax(port.id, srcNode, this.ren.activePipeline.links)) {
 			const portIndex = CanvasUtils.getPortIndex(node.outputs, port.id);
@@ -153,6 +155,7 @@ export default class SVGCanvasUtilsDragNewLink {
 				srcObj: srcNode,
 				srcPort: port,
 				action: this.ren.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
+				mousePos: { x: d3Event.x, y: d3Event.y },
 				startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
 				portFlow: FLOW_OUT,
 				portDisplayInfo: this.ren.getPortDisplayInfo(srcNode.layout.outputPortDisplayObjects, portIndex),
@@ -348,6 +351,21 @@ export default class SVGCanvasUtilsDragNewLink {
 		const drawingNewLinkData = this.drawingNewLinkData;
 		this.drawingNewLinkData = null;
 
+		// If the user has not dragged the mouse far enough to create a new link, we
+		// treat it as a click on the port.
+		if (this.isClicked(drawingNewLinkData.mousePos, d3Event)) {
+			this.removeNewLink();
+			this.ren.canvasController.clickActionHandler({
+				clickType: SINGLE_CLICK,
+				objectType: "port",
+				id: drawingNewLinkData.srcPort.id,
+				nodeId: drawingNewLinkData.srcObj.id,
+				selectedObjectIds: this.ren.activePipeline.getSelectedObjectIds(),
+				pipelineId: this.ren.activePipeline.id
+			});
+			return;
+		}
+
 		if (this.ren.config.enableHighlightUnavailableNodes) {
 			this.ren.unsetUnavailableNodesHighlighting();
 		}
@@ -365,6 +383,12 @@ export default class SVGCanvasUtilsDragNewLink {
 				this.stopDrawingNewLink(drawingNewLinkData);
 			}
 		}
+	}
+
+	// Returns true if the mouse position is inside a circle with a radius of
+	// 3px centred at the d3Event x and y.
+	isClicked(mousePos, d3Event) {
+		return CanvasUtils.isInside(mousePos, { x: d3Event.x, y: d3Event.y }, 3);
 	}
 
 	// Handles the creation of a link when the end of a new link
