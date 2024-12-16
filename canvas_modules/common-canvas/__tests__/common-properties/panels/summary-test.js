@@ -14,76 +14,76 @@
  * limitations under the License.
  */
 
-import propertyUtils from "./../../_utils_/property-utils";
-import tableUtils from "./../../_utils_/table-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
+import tableUtilsRTL from "../../_utils_/table-utilsRTL";
 import summarypanelParamDef from "./../../test_resources/paramDefs/summarypanel_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
 import { expect } from "chai";
+import { cleanup, waitFor, fireEvent } from "@testing-library/react";
 
 describe("summary renders correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(summarypanelParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(summarypanelParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should have displayed the initial values in the summary", () => {
-		const summaries = wrapper.find("div.properties-summary-values");
+		const { container } = wrapper;
+		const summaries = container.querySelectorAll("div.properties-summary-values");
 		expect(summaries).to.have.length(3); // all summary tables including table in wideflyout
-		const sortSummary = wrapper.find("div[data-id='properties-structuretableSortOrder-summary-panel']");
-		const sortSummaryRows = sortSummary.find("tr.properties-summary-row");
+		const sortSummary = container.querySelector("div[data-id='properties-structuretableSortOrder-summary-panel']");
+		const sortSummaryRows = sortSummary.querySelectorAll("tr.properties-summary-row");
 		expect(sortSummaryRows).to.have.length(1);
 
-		const sortRow1 = sortSummaryRows.at(0).find("td.properties-summary-row-data")
-			.at(0);
-
-		expect(sortRow1.find("span").at(0)
-			.text()
-			.trim()).to.equal("Cholesterol");
+		const sortRow1 = sortSummaryRows[0].querySelector("td.properties-summary-row-data");
+		const sortRow1Span = sortRow1.querySelector("span");
+		expect(sortRow1Span.textContent.trim()).to.equal("Cholesterol");
 		// validate tooltip content is correct
-		expect(sortRow1.find("div.properties-tooltips div")
-			.at(0)
-			.text()
-			.trim()).to.equal("Cholesterol");
+		const tooltip = sortRow1.querySelector("div.properties-truncated-tooltip");
+		expect(tooltip.textContent.trim()).to.equal("Cholesterol");
+
 	});
 	it("should open fieldpicker when type unknown", () => {
-		const sortSummary = wrapper.find("div[data-id='properties-structuretableSortOrder-summary-panel']");
-		const summaryButton = sortSummary.find("button.properties-summary-link-button");
-		summaryButton.simulate("click");
-		const fieldPickerWrapper = tableUtils.openFieldPicker(wrapper, "properties-structuretableSortOrder");
-		tableUtils.fieldPicker(fieldPickerWrapper, ["Age"], ["Age", "Sex", "BP", "Cholesterol", "Na", "K", "Drug"]);
+		const { container } = wrapper;
+		const sortSummary = container.querySelector("div[data-id='properties-structuretableSortOrder-summary-panel']");
+		const summaryButton = sortSummary.querySelector("button.properties-summary-link-button");
+		fireEvent.click(summaryButton);
+		const fieldPickerWrapper = tableUtilsRTL.openFieldPicker(container, "properties-structuretableSortOrder");
+		tableUtilsRTL.fieldPicker(fieldPickerWrapper, ["Age"], ["Age", "Sex", "BP", "Cholesterol", "Na", "K", "Drug"]);
 	});
 });
 
 describe("summary panel renders correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(summarypanelParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(summarypanelParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should have displayed placeholder in summary panel for more then 10 fields", () => {
-		const summaries = wrapper.find("div[data-id='properties-Derive-Node'] .properties-summary-values");
-		const summaryRows = summaries.at(1).find("tr.properties-summary-row"); // Table Input
+		const { container } = wrapper;
+		const summaries = container.querySelectorAll("div[data-id='properties-Derive-Node'] .properties-summary-values");
+		const summaryRows = summaries[1].querySelectorAll("tr.properties-summary-row"); // Table Input
 		expect(summaryRows).to.have.length(0);
 
-		const summaryPlaceholder = summaries.at(1).find("div.properties-summary-table span");
-		expect(summaryPlaceholder).to.have.length(1);
-		expect(summaryPlaceholder.text()).to.equal("More than ten fields...");
+		const summaryPlaceholder = summaries[1].querySelector("div.properties-summary-table span");
+		expect(summaryPlaceholder).to.exist;
+		expect(summaryPlaceholder.textContent).to.equal("More than ten fields...");
 	});
 	it("should have a summary panel in a summary panel", () => {
-		const wideflyout = propertyUtils.openSummaryPanel(wrapper, "structuretableSortOrder-summary-panel");
-		const summaryButton = wideflyout.find("button.properties-summary-link-button");
-		expect(summaryButton).to.have.length(1);
-		const summaryData = wideflyout.find("tr.properties-summary-row");
+		const wideflyout = propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableSortOrder-summary-panel");
+		const summaryButton = wideflyout.querySelectorAll("button.properties-summary-link-button");
+		expect(summaryButton).to.have.lengthOf(1);
+		const summaryData = wideflyout.querySelectorAll("tr.properties-summary-row");
 		expect(summaryData).to.have.length(1);
 	});
 });
@@ -91,150 +91,158 @@ describe("summary panel renders correctly", () => {
 describe("summary panel renders error/warning status correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(summarypanelParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(summarypanelParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should show warning message in summary when removing rows", () => {
-		let wideflyout = propertyUtils.openSummaryPanel(wrapper, "Derive-Node");
-		tableUtils.clickTableRows(wideflyout, [0]);
+		let wideflyout = propertyUtilsRTL.openSummaryPanel(wrapper, "Derive-Node");
+		tableUtilsRTL.clickTableRows(wideflyout, [0]);
 
 		// ensure table toolbar has Delete button and click it
-		wideflyout = wrapper.find("div.properties-wf-content.show");
-		let tableWrapper = wideflyout.find("div[data-id='properties-expressionCellTable']");
-		let deleteButtons = tableWrapper.find("button.delete-button");
+		const { container } = wrapper;
+		wideflyout = container.querySelector("div.properties-wf-content.show");
+		let tableWrapper = wideflyout.querySelector("div[data-id='properties-expressionCellTable']");
+		let deleteButtons = tableWrapper.querySelectorAll("button.delete-button");
 		expect(deleteButtons).to.have.length(2);
-		deleteButtons.at(0).simulate("click");
+		fireEvent.click(deleteButtons[0]);
 
 		// remove second row
-		tableUtils.clickTableRows(wideflyout, [0]);
-		wideflyout = wrapper.find("div.properties-wf-content.show");
-		tableWrapper = wideflyout.find("div[data-id='properties-expressionCellTable']");
-		deleteButtons = tableWrapper.find("button.delete-button");
+		tableUtilsRTL.clickTableRows(wideflyout, [0]);
+		wideflyout = container.querySelector("div.properties-wf-content.show");
+		tableWrapper = wideflyout.querySelector("div[data-id='properties-expressionCellTable']");
+		deleteButtons = tableWrapper.querySelectorAll("button.delete-button");
 		expect(deleteButtons).to.have.length(1);
-		deleteButtons.at(0).simulate("click");
-
+		fireEvent.click(deleteButtons[0]);
 
 		// close fly-out
-		wideflyout.find("button.properties-apply-button").simulate("click");
+		const propertyButton = wideflyout.querySelector("button.properties-apply-button");
+		fireEvent.click(propertyButton);
 
 		// check that Alerts tab is added
-		const alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		const alertButton = alertCategory.find("button.cds--accordion__heading");
-		expect(alertButton.text()).to.equal("Alerts (1)");
-		alertButton.simulate("click");
-		const alertList = alertCategory.find("div.properties-link-text-container.warning");
+		const alertCategory = container.querySelectorAll("div.properties-category-container")[0]; // alert category
+		const alertButton = alertCategory.querySelector("button.cds--accordion__heading");
+		expect(alertButton.textContent).to.equal("Alerts (1)");
+		fireEvent.click(alertButton);
+		const alertList = alertCategory.querySelectorAll("div.properties-link-text-container.warning");
 		expect(alertList).to.have.length(1);
-		const warningMsg = alertList.at(0).find("a.properties-link-text");
-		expect(warningMsg.text()).to.equal("Expression cell table cannot be empty");
+		const warningMsg = alertList[0].querySelector("a.properties-link-text");
+		expect(warningMsg.textContent).to.equal("Expression cell table cannot be empty");
 
 		// click on the link should open up structure list table category
-		warningMsg.simulate("click");
-		expect(wrapper.find("li.properties-category-content.show")).to.have.length(1);
+		fireEvent.click(warningMsg);
+		expect(container.querySelectorAll("li.properties-category-content.show")).to.have.length(1);
 
 		// check that warning icon is shown in summary
-		let tableCategory = wrapper.find("div[data-id='properties-Derive-Node']");
-		let summary = tableCategory.find("div.properties-summary-link-container");
-		expect(summary.find("svg.warning")).to.have.length(1);
+		let tableCategory = container.querySelector("div[data-id='properties-Derive-Node']");
+		let summary = tableCategory.querySelector("div.properties-summary-link-container");
+		expect(summary.querySelectorAll("svg.warning")).to.have.length(1);
 
 		// add row back in tables
-		tableCategory.find("button.properties-summary-link-button").simulate("click");
-		wideflyout = wrapper.find("div.properties-wf-content.show");
-		wideflyout.find("button.properties-empty-table-button").simulate("click");
+		const summaryLinkButton = tableCategory.querySelector("button.properties-summary-link-button");
+		fireEvent.click(summaryLinkButton);
+		wideflyout = container.querySelector("div.properties-wf-content.show");
+		const emptyTableButton = wideflyout.querySelector("button.properties-empty-table-button");
+		fireEvent.click(emptyTableButton);
 		// close fly-out
-		wideflyout.find("button.properties-apply-button").simulate("click");
-
+		const applyButton = wideflyout.querySelector("button.properties-apply-button");
+		fireEvent.click(applyButton);
 		// ensure warning message and alerts tab are gone
-		tableCategory = wrapper.find("div[data-id='properties-Derive-Node']");
-		summary = tableCategory.find("div.properties-summary-link-container");
-		expect(summary.find("svg.warning")).to.have.length(0);
+		tableCategory = container.querySelector("div[data-id='properties-Derive-Node']");
+		summary = tableCategory.querySelector("div.properties-summary-link-container");
+		expect(summary.querySelectorAll("svg.warning")).to.have.length(0);
 	});
 
-	it("should show error icon in summary when both error and warning messages exist", () => {
-		let wideflyout = propertyUtils.openSummaryPanel(wrapper, "Derive-Node");
-		tableUtils.clickTableRows(wideflyout, [0]);
+	it("should show error icon in summary when both error and warning messages exist", async() => {
+		let wideflyout = propertyUtilsRTL.openSummaryPanel(wrapper, "Derive-Node");
+		tableUtilsRTL.clickTableRows(wideflyout, [0]);
 
-		wideflyout = wrapper.find("div.properties-wf-content.show");
+		const { container } = wrapper;
+		wideflyout = container.querySelector("div.properties-wf-content.show");
 		// ensure table toolbar has Delete button and click it
-		let tableWrapper = wideflyout.find("div[data-id='properties-expressionCellTable']");
-		let deleteButtons = tableWrapper.find("button.delete-button");
-		deleteButtons.at(0).simulate("click");
+		let tableWrapper = wideflyout.querySelector("div[data-id='properties-expressionCellTable']");
+		let deleteButtons = tableWrapper.querySelectorAll("button.delete-button");
+		fireEvent.click(deleteButtons[0]);
 
 		// remove second row
-		tableUtils.clickTableRows(wideflyout, [0]);
-		wideflyout = wrapper.find("div.properties-wf-content.show");
-		tableWrapper = wideflyout.find("div[data-id='properties-expressionCellTable']");
-		deleteButtons = tableWrapper.find("button.delete-button");
-		deleteButtons.at(0).simulate("click");
-
+		tableUtilsRTL.clickTableRows(wideflyout, [0]);
+		wideflyout = container.querySelector("div.properties-wf-content.show");
+		tableWrapper = wideflyout.querySelector("div[data-id='properties-expressionCellTable']");
+		deleteButtons = tableWrapper.querySelectorAll("button.delete-button");
+		fireEvent.click(deleteButtons[0]);
 
 		// check that all rows were removed
-		wideflyout = wrapper.find("div.properties-wf-content.show");
-		expect(tableUtils.getTableRows(wideflyout.find("div[data-id='properties-expressionCellTable']"))).to.have.length(0);
+		wideflyout = container.querySelector("div.properties-wf-content.show");
+		expect(tableUtilsRTL.getTableRows(wideflyout.querySelector("div[data-id='properties-expressionCellTable']"))).to.have.length(0);
 
-		wideflyout = wrapper.find("div.properties-wf-content.show");
-		expect(tableUtils.getTableRows(wideflyout.find("div[data-id='properties-ft-structurelisteditorTableInput']"))).to.have.length(11);
+		wideflyout = container.querySelector("div.properties-wf-content.show");
+		expect(tableUtilsRTL.getTableRows(wideflyout.querySelector("div[data-id='properties-ft-structurelisteditorTableInput']"))).to.have.length(11);
+
 		// remove all rows from Table Input table
-		const tableInputBodyData = wideflyout.find("div[data-id='properties-ft-structurelisteditorTableInput']");
+		const tableInputBodyData = wideflyout.querySelector("div[data-id='properties-ft-structurelisteditorTableInput']");
 		summarypanelParamDef.current_parameters.structurelisteditorTableInput.forEach((value) => {
-			tableUtils.selectCheckboxes(tableInputBodyData, [0]);
-			const tableInputRemoveButton = wrapper.find("div[data-id='properties-ft-structurelisteditorTableInput']")
-				.find("div.properties-table-toolbar")
-				.find("button.properties-action-delete");
+			tableUtilsRTL.selectCheckboxes(tableInputBodyData, [0]);
+			const tableToolbar = wideflyout.querySelector("div.properties-table-toolbar");
+			const tableInputRemoveButton = tableToolbar.querySelectorAll("button.properties-action-delete");
 			expect(tableInputRemoveButton).to.have.length(1);
-
-			tableInputRemoveButton.simulate("click");
+			fireEvent.click(tableInputRemoveButton[0]);
 		});
 		// check that all rows were removed
-		wideflyout = wrapper.find("div.properties-wf-content.show");
-		expect(tableUtils.getTableRows(wideflyout.find("div[data-id='properties-ft-structurelisteditorTableInput']"))).to.have.length(0);
+		wideflyout = container.querySelector("div.properties-wf-content.show");
+		expect(tableUtilsRTL.getTableRows(wideflyout.querySelector("div[data-id='properties-ft-structurelisteditorTableInput']"))).to.have.length(0);
 
 		// close fly-out
-		wideflyout.find("button.properties-apply-button").simulate("click");
+		const PropApplyButton = wideflyout.querySelector("button.properties-apply-button");
+		fireEvent.click(PropApplyButton);
 
 		// check that Alerts tab is added and that is shows error message before warning message
-		let alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		expect(alertCategory.find("button.cds--accordion__heading").text()).to.equal("Alerts (2)");
-		let alertList = alertCategory.find("div.properties-link-text-container");
+		let alertCategory = container.querySelectorAll("div.properties-category-container")[0]; // alert category
+		expect(alertCategory.querySelector("button.cds--accordion__heading").textContent).to.equal("Alerts (2)");
+		let alertList = alertCategory.querySelectorAll("div.properties-link-text-container");
 		expect(alertList).to.have.length(2);
-		const errorWrapper = alertCategory.find("div.properties-link-text-container.error");
-		expect(errorWrapper).to.have.length(1);
-		expect(errorWrapper.find("a.properties-link-text").text()).to.equal("Structure list editor table cannot be empty");
-		let warningWrapper = alertCategory.find("div.properties-link-text-container.warning");
-		expect(warningWrapper).to.have.length(1);
-		expect(warningWrapper.find("a.properties-link-text").text()).to.equal("Expression cell table cannot be empty");
+		const errorWrapper = alertCategory.querySelector("div.properties-link-text-container.error");
+		expect(errorWrapper).to.not.be.null;
+		expect(errorWrapper.querySelector("a.properties-link-text").textContent).to.equal("Structure list editor table cannot be empty");
+		let warningWrapper = alertCategory.querySelector("div.properties-link-text-container.warning");
+		expect(warningWrapper).to.not.be.null;
+		expect(warningWrapper.querySelector("a.properties-link-text").textContent).to.equal("Expression cell table cannot be empty");
 		// check that summary icon is an error icon
-		let tableCategory = wrapper.find("div.properties-category-container").at(1); // Structure list table category
-		expect(tableCategory.find("button.cds--accordion__heading").text()).to.equal("Structure List Table (2)");
-		let summary = tableCategory.find("div.properties-summary-link-container");
-		expect(summary.find("svg.error")).to.have.length(1);
+		let tableCategory = container.querySelectorAll("div.properties-category-container")[1]; // Structure list table category
+		expect(tableCategory.querySelector("button.cds--accordion__heading").textContent).to.equal("Structure List Table (2)");
+		let summary = tableCategory.querySelector("div.properties-summary-link-container");
+		expect(summary.querySelectorAll("svg.error")).to.have.length(1);
 
 		// add row back into Table Input table
-		tableCategory.find("button.properties-summary-link-button").simulate("click");
-		wideflyout = wrapper.find("div.properties-wf-content.show");
+		const summaryLinkButton = tableCategory.querySelector("button.properties-summary-link-button");
+		fireEvent.click(summaryLinkButton);
+		wideflyout = container.querySelector("div.properties-wf-content.show");
 
-		wideflyout.find("button.properties-empty-table-button").at(1)
-			.simulate("click");
+		const emptyTabButton = wideflyout.querySelectorAll("button.properties-empty-table-button")[1];
+		fireEvent.click(emptyTabButton);
+
 		// close fly-out
-		wideflyout.find("button.properties-apply-button").simulate("click");
+		const propApplyButton = wideflyout.querySelector("button.properties-apply-button");
+		fireEvent.click(propApplyButton);
 
 		// check that Alerts tab is added and that is shows error message before warning message
-		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		expect(alertCategory.find("button.cds--accordion__heading").text()).to.equal("Alerts (1)");
-		alertList = alertCategory.find("div.properties-link-text-container");
+		alertCategory = container.querySelectorAll("div.properties-category-container")[0]; // alert category
+		expect(alertCategory.querySelector("button.cds--accordion__heading").textContent).to.equal("Alerts (1)");
+		alertList = alertCategory.querySelectorAll("div.properties-link-text-container");
 		expect(alertList).to.have.length(1);
-		warningWrapper = alertCategory.find("div.properties-link-text-container.warning");
-		expect(warningWrapper).to.have.length(1);
-		expect(warningWrapper.find("a.properties-link-text").text()).to.equal("Expression cell table cannot be empty");
+		warningWrapper = alertCategory.querySelector("div.properties-link-text-container.warning");
+		expect(warningWrapper).to.not.be.null;
+		expect(warningWrapper.querySelector("a.properties-link-text").textContent).to.equal("Expression cell table cannot be empty");
+
 		// check that summary icon is an error icon
-		tableCategory = wrapper.find("div.properties-category-container").at(1); // Structure list table category
-		expect(tableCategory.find("button.cds--accordion__heading").text()).to.equal("Structure List Table (1)");
-		summary = tableCategory.find("div.properties-summary-link-container");
-		expect(summary.find("svg.warning")).to.have.length(1);
+		tableCategory = container.querySelectorAll("div.properties-category-container")[1]; // Structure list table category
+		expect(tableCategory.querySelector("button.cds--accordion__heading").textContent).to.equal("Structure List Table (1)");
+		summary = tableCategory.querySelector("div.properties-summary-link-container");
+		expect(summary.querySelectorAll("svg.warning")).to.have.length(1);
+
 	});
 });
 
@@ -242,63 +250,71 @@ describe("summary panel visible and enabled conditions work correctly", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(panelConditionsParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
-	it("summary panel link should be disabled and table should be gone", () => {
-		let firstSummary = wrapper.find("div[data-id='properties-structuretable-summary-panel1']");
-		expect(firstSummary.props().disabled).to.be.false;
-		expect(firstSummary.find("div.properties-summary-values")).to.have.length(2);
+	it("summary panel link should be disabled and table should be gone", async() => {
+		const { container } = wrapper;
+		let firstSummary = container.querySelector("div[data-id='properties-structuretable-summary-panel1']");
+		expect(firstSummary.hasAttribute("disabled")).to.equal(false);
+		const summaryValue = firstSummary.querySelectorAll("div.properties-summary-values");
+		expect(summaryValue.length).to.equal(2);
 		expect(controller.getPanelState({ name: "structuretable-summary-panel1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "structuretable_summary1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "structuretable_summary2" })).to.equal("enabled");
 
 		controller.updatePropertyValue({ name: "enableSummary" }, false);
-		wrapper.update();
-		firstSummary = wrapper.find("div[data-id='properties-structuretable-summary-panel1']");
-		expect(firstSummary.props().disabled).to.be.true;
-		expect(controller.getPanelState({ name: "structuretable-summary-panel1" })).to.equal("disabled");
-		expect(controller.getControlState({ name: "structuretable_summary1" })).to.equal("disabled");
-		expect(controller.getControlState({ name: "structuretable_summary2" })).to.equal("disabled");
-		expect(firstSummary.find("div.properties-summary-values")).to.have.length(0);
+		await waitFor(() => {
+			firstSummary = container.querySelector("div[data-id='properties-structuretable-summary-panel1']");
+			expect(firstSummary.hasAttribute("disabled")).to.be.true;
+			expect(controller.getPanelState({ name: "structuretable-summary-panel1" })).to.equal("disabled");
+			expect(controller.getControlState({ name: "structuretable_summary1" })).to.equal("disabled");
+			expect(controller.getControlState({ name: "structuretable_summary2" })).to.equal("disabled");
+			const propSummaryValue = firstSummary.querySelectorAll("div.properties-summary-values");
+			expect(propSummaryValue.length).to.equal(0);
+		});
 	});
 
-	it("summary panel link should be hidden", () => {
-		let secondSummary = wrapper.find("div[data-id='properties-structuretable-summary-panel2']");
-		const link = secondSummary.find("button.properties-summary-link-button");
+	it("summary panel link should be hidden", async() => {
+		const { container } = wrapper;
+		let secondSummary = container.querySelector("div[data-id='properties-structuretable-summary-panel2']");
+		const link = secondSummary.querySelectorAll("button.properties-summary-link-button");
 		expect(link).to.have.length(1);
 		expect(controller.getPanelState({ name: "structuretable-summary-panel2" })).to.equal("visible");
-		expect(secondSummary.find("div.properties-summary-values")).to.have.length(1);
+		expect(secondSummary.querySelectorAll("div.properties-summary-values")).to.have.length(1);
 
 		controller.updatePropertyValue({ name: "hideSummary" }, true);
-		wrapper.update();
 
-		expect(controller.getPanelState({ name: "structuretable-summary-panel2" })).to.equal("hidden");
-		expect(controller.getControlState({ name: "structuretable_summary3" })).to.equal("hidden");
-		secondSummary = wrapper.find("div[data-id='properties-structuretable-summary-panel2']");
-		expect(secondSummary.find("div.properties-summary-values")).to.have.length(0);
+		await waitFor(() => {
+			expect(controller.getPanelState({ name: "structuretable-summary-panel2" })).to.equal("hidden");
+			expect(controller.getControlState({ name: "structuretable_summary3" })).to.equal("hidden");
+			secondSummary = container.querySelector("div[data-id='properties-structuretable-summary-panel2']");
+			expect(secondSummary.querySelectorAll("div.properties-summary-values")).to.have.length(0);
+		});
 	});
 });
 
 describe("summary panel classNames applied correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(panelConditionsParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("summary panel should have custom classname defined", () => {
-		const summaryContainer = wrapper.find("div[data-id='properties-summary_panel_category']");
-		expect(summaryContainer.find(".structuretable-summary-panel1-category-group-summarypanel-class")).to.have.length(1);
+		const { container } = wrapper;
+		const summaryContainer = container.querySelector("div[data-id='properties-summary_panel_category']");
+		expect(summaryContainer.querySelectorAll(".structuretable-summary-panel1-category-group-summarypanel-class")).to.have.lengthOf(1);
 	});
 });
+
