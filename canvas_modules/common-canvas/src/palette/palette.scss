@@ -57,11 +57,17 @@ $palette-dialog-list-item-height: 46px;
 	height: 100%;
 }
 
+// Overrides the grid-template-rows for when a palette header object is
+// included. (This fixes a problem specifically on Safari.)
+.palette-flyout-content.with-palette-header {
+	grid-template-rows: $palette-search-container-height auto 1fr;
+}
+
 .palette-flyout-content {
 	position: absolute; // Needed to allow the scroll of categories/nodes to work.
 	height: 100%;
 	display: grid;
-	grid-template-rows: $palette-search-container-height auto 1fr;
+	grid-template-rows: $palette-search-container-height 1fr;
 	// grid-template-columns is set based on narrow or open palette
 
 	.palette-scroll {
