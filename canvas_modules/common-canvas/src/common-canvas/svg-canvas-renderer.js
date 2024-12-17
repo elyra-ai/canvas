@@ -2293,7 +2293,9 @@ export default class SVGCanvasRenderer {
 						this.selectObjectD3Event(d3Event, d, "node");
 					}
 					this.setFocusObject(d, d3Event);
-					this.openContextMenu(d3Event, "node", d);
+					if (!this.config.enableContextToolbar) {
+						this.openContextMenu(d3Event, "node", d);
+					}
 				}
 			});
 	}
@@ -4198,13 +4200,16 @@ export default class SVGCanvasRenderer {
 			})
 			.on("contextmenu", (d3Event, d) => {
 				this.logger.log("Comment Group - context menu");
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				// With enableDragWithoutSelect set to true, the object for which the
 				// context menu is being requested needs to be implicitely selected.
 				if (this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, "comment");
 				}
 				this.setFocusObject(d, d3Event);
-				this.openContextMenu(d3Event, "comment", d);
+				if (!this.config.enableContextToolbar) {
+					this.openContextMenu(d3Event, "comment", d);
+				}
 			});
 	}
 
@@ -4696,11 +4701,14 @@ export default class SVGCanvasRenderer {
 			})
 			.on("contextmenu", (d3Event, d) => {
 				this.logger.log("Link Group - context menu");
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 					this.selectObjectD3Event(d3Event, d, "link");
 				}
 				this.setFocusObject(d, d3Event);
-				this.openContextMenu(d3Event, "link", d);
+				if (!this.config.enableContextToolbar) {
+					this.openContextMenu(d3Event, "link", d);
+				}
 			});
 	}
 
