@@ -17,7 +17,7 @@
               "label": "Type",
               "image": "images/custom-canvases/flows/palette/icons/type.svg",
               "x_pos": 54,
-              "y_pos": 250,
+              "y_pos": 331.2,
               "description": "Type node."
             }
           },
@@ -80,12 +80,12 @@
           "comments": [
             {
               "id": "0b123469-7d21-43a5-ae84-cbc999990033",
-              "x_pos": 54,
-              "y_pos": 43.2,
-              "width": 288,
-              "height": 158.4,
+              "x_pos": 36,
+              "y_pos": 28.8,
+              "width": 342,
+              "height": 231,
               "class_name": "d3-comment-rect bkg-col-green-20",
-              "content": "### Prompt Canvas\n\nThis canvas provides a method to add new nodes to the flow with a prompt. To do this:\n1.  Hover over the Type node\n2. In the context toolbar, click  the \"Add node with prompt\" button\n3. Select a node type from the prompt. ",
+              "content": "### Prompt Canvas\n\nThis canvas provides a method to add new nodes to the flow with a prompt. To do this either:\n1.  Click one of the ports of the Type node\n2. Select a node type from the prompt. \n\nor:\n1. Hover over the Type node \n2. Click the \"Add node with prompt\" button in the context toolbar",
               "associated_id_refs": []
             }
           ]

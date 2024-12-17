@@ -95,7 +95,10 @@ export default class PromptCanvas extends React.Component {
 	}
 
 	clickActionHandler(source) {
-		// this.addPromptNode();
+		if (source.objectType === "port" &&
+			source.clickType === "SINGLE_CLICK") {
+			this.addPromptNode(source.nodeId, source.id);
+		}
 	}
 
 	layoutHandler(node) {
@@ -115,7 +118,7 @@ export default class PromptCanvas extends React.Component {
 
 	editActionHandler(data) {
 		if (data.editType === "app_addPropmpt") {
-			this.addPromptNode(data.targetObject);
+			this.addPromptNode(data.targetObject.id);
 		}
 	}
 
@@ -135,10 +138,10 @@ export default class PromptCanvas extends React.Component {
 		return defaultMenu;
 	}
 
-	addNodeHandler(nodeTemplate) {
-		const promptNode = this.canvasController.getNode(this.promptNodeId);
-		this.canvasController.deleteNode(this.promptNodeId);
-		this.canvasController.deleteLink("link_to_prompt");
+	addNodeHandler(srcNodeId, srcPortId, nodeTemplate, promptNodeId) {
+		const promptNode = this.canvasController.getNode(promptNodeId);
+		this.canvasController.deleteNode(promptNodeId);
+		this.canvasController.deleteLink(this.genPromptLinkId(srcNodeId, srcPortId));
 
 		const newNode = this.canvasController.createNode({
 			nodeTemplate: nodeTemplate,
@@ -149,51 +152,56 @@ export default class PromptCanvas extends React.Component {
 
 		const linksToAdd = this.canvasController.createNodeLinks({
 			type: "nodeLink",
-			nodes: [{ id: this.sourceNodeId }],
+			nodes: [{ id: srcNodeId, portId: srcPortId }],
 			targetNodes: [{ id: newNode.id }]
 		});
 
 		this.canvasController.addLinks(linksToAdd);
-
 	}
 
-	addPromptNode(sourceNode) {
-		this.sourceNodeId = sourceNode.id;
+	addPromptNode(srcNodeId, srcPortId) {
+		const srcNode = this.canvasController.getNode(srcNodeId);
 
 		const template = Template;
 		template.app_data.prompt_data = {
-			addNodeCallback: this.addNodeHandler.bind(this)
+			addNodeCallback: this.addNodeHandler.bind(this, srcNodeId, srcPortId)
 		};
-		const newNode = this.canvasController.createNode({
+		const promptNode = this.canvasController.createNode({
 			nodeTemplate: template,
-			offsetX: sourceNode.x_pos + 200, // Position prompt 200px to right of source node
-			offsetY: sourceNode.y_pos
+			offsetX: srcNode.x_pos + 200, // Position prompt 200px to right of source node
+			offsetY: srcNode.y_pos
 		});
 
 		// Make sure prompt doesn't overlap other nodes.
-		this.adjustNodePosition(newNode, 100);
-
-		// Save the ID of the prompt node for removal, later
-		this.promptNodeId = newNode.id;
+		this.adjustNodePosition(promptNode);
 
 		// Add the prompt node to the canvas with a link
-		this.canvasController.addNode(newNode);
+		this.canvasController.addNode(promptNode);
 		const linksToAdd = this.canvasController.createNodeLinks({
-			id: "link_to_prompt",
+			id: this.genPromptLinkId(srcNodeId, srcPortId),
 			type: "nodeLink",
-			nodes: [{ id: sourceNode.id }],
-			targetNodes: [{ id: this.promptNodeId }]
+			nodes: [{ id: srcNodeId, portId: srcPortId }],
+			targetNodes: [{ id: promptNode.id }]
 		});
 
 		this.canvasController.addLinks(linksToAdd);
 	}
 
-	adjustNodePosition(node, yInc) {
+	genPromptLinkId(srcNodeId, srcPortId) {
+		return "link_to_prompt_" + srcNodeId + "_" + srcPortId;
+	}
+
+	adjustNodePosition(node) {
 		let overlapNode = true;
 		while (overlapNode) {
-			overlapNode = this.canvasController.getNodes().find((n) => n.x_pos === node.x_pos && n.y_pos === node.y_pos);
+			overlapNode = this.canvasController.getNodes().find((n) =>
+				node.x_pos >= n.x_pos &&
+				node.x_pos <= n.x_pos + n.height &&
+				node.y_pos >= n.y_pos &&
+				node.y_pos <= n.y_pos + n.width
+			);
 			if (overlapNode) {
-				node.y_pos += yInc;
+				node.y_pos += overlapNode.height + 20;
 			}
 		}
 	}
