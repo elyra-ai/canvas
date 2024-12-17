@@ -116,6 +116,10 @@ export const PORT_DISPLAY_JSX = "jsx";
 export const FLOW_IN = "in";
 export const FLOW_OUT = "out";
 
+export const SINGLE_CLICK = "SINGLE_CLICK";
+export const SINGLE_CLICK_CONTEXTMENU = "SINGLE_CLICK_CONTEXTMENU";
+export const DOUBLE_CLICK = "DOUBLE_CLICK";
+
 // Variations of association links - when enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE
 export const ASSOC_VAR_CURVE_RIGHT = "curveRight";
 export const ASSOC_VAR_CURVE_LEFT = "curveLeft";

@@ -46,6 +46,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	WYSIWYG, CAUSE_KEYBOARD, CAUSE_MOUSE,
 	FLOW_IN, FLOW_OUT,
 	PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT,
+	SINGLE_CLICK, SINGLE_CLICK_CONTEXTMENU, DOUBLE_CLICK,
 	CANVAS_FOCUS
 } from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
@@ -1347,7 +1348,7 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Canvas - click-zoom");
 
 				this.canvasController.clickActionHandler({
-					clickType: d3Event.type === "contextmenu" ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
+					clickType: d3Event.type === "contextmenu" ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK,
 					objectType: "canvas",
 					selectedObjectIds: this.activePipeline.getSelectedObjectIds()
 				});
@@ -1355,7 +1356,7 @@ export default class SVGCanvasRenderer {
 			.on("dblclick.zoom", () => {
 				this.logger.log("Zoom - double click");
 				this.canvasController.clickActionHandler({
-					clickType: "DOUBLE_CLICK",
+					clickType: DOUBLE_CLICK,
 					objectType: "canvas",
 					selectedObjectIds: this.activePipeline.getSelectedObjectIds() });
 			})
@@ -2276,7 +2277,7 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Node Group - double click");
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				this.canvasController.clickActionHandler({
-					clickType: "DOUBLE_CLICK",
+					clickType: DOUBLE_CLICK,
 					objectType: "node",
 					id: d.id,
 					selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
@@ -2579,7 +2580,7 @@ export default class SVGCanvasRenderer {
 		// TODO - Issue 2465 - Find out why this problem occurs.
 		if (objectType === "node" || objectType === "link") {
 			this.canvasController.clickActionHandler({
-				clickType: d3EventType === "contextmenu" || this.ellipsisClicked ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
+				clickType: d3EventType === "contextmenu" || this.ellipsisClicked ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK,
 				objectType: objectType,
 				id: d.id,
 				selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
@@ -4189,7 +4190,7 @@ export default class SVGCanvasRenderer {
 					this.displayCommentTextArea(d, d3Event.currentTarget);
 
 					this.canvasController.clickActionHandler({
-						clickType: "DOUBLE_CLICK",
+						clickType: DOUBLE_CLICK,
 						objectType: "comment",
 						id: d.id,
 						selectedObjectIds: this.activePipeline.getSelectedObjectIds(),

@@ -26,7 +26,8 @@ export default class PromptReactNode extends React.Component {
 	}
 
 	onClick(nodeTemplate, evt) {
-		this.props.nodeData.app_data.prompt_data.addNodeCallback(nodeTemplate);
+		this.props.nodeData.app_data.prompt_data
+			.addNodeCallback(nodeTemplate, this.props.nodeData.id);
 	}
 
 	onScroll(evt) {
@@ -46,7 +47,7 @@ export default class PromptReactNode extends React.Component {
 		}
 
 		return (
-			<div style={{ height: "100%", width: "100%", overflowY: "scroll", backgroundColor: "white" }}
+			<div style={{ height: "100%", width: "100%", overflowY: "scroll", padding: "5px", backgroundColor: "white" }}
 				onScroll={this.onScroll} onWheel={this.onScroll}
 			>
 				{ nodeDivs }
