@@ -506,7 +506,6 @@ export default class CanvasUtils {
 		return null;
 	}
 
-	// Assisted by watsonx Code Assistant
 	// Returns true if point 1 is inside a circle of the specified radius whose
 	// center is point 2.
 	static isInside(point1, point2, radius) {
