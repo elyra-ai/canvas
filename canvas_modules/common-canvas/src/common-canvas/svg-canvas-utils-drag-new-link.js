@@ -73,7 +73,7 @@ export default class SVGCanvasUtilsDragNewLink {
 			this.startInputPortNewLink(d3Event, d, node);
 
 		} else if (this.ren.activePipeline.getObjectTypeName(d) === "comment") {
-			this.startCommentNewLink(d);
+			this.startCommentNewLink(d3Event, d);
 		}
 	}
 
@@ -111,7 +111,7 @@ export default class SVGCanvasUtilsDragNewLink {
 	}
 
 	// Initialize this.drawingNewLinkData when dragging a comment port.
-	startCommentNewLink(comment) {
+	startCommentNewLink(d3Event, comment) {
 		const srcObj = this.ren.activePipeline.getComment(comment.id);
 		this.drawingNewLinkData = {
 			srcObj: srcObj,
@@ -120,6 +120,7 @@ export default class SVGCanvasUtilsDragNewLink {
 				x: comment.x_pos - this.ren.canvasLayout.commentHighlightGap,
 				y: comment.y_pos - this.ren.canvasLayout.commentHighlightGap
 			},
+			mousePos: { x: d3Event.x, y: d3Event.y },
 			linkArray: []
 		};
 	}
