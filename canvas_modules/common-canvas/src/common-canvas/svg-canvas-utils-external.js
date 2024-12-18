@@ -53,6 +53,10 @@ export default class SvgCanvasExternal {
 		this.renderExternalObject(dec.jsx, foreignObjects[i]);
 	}
 
+	addJsxExternalObject(jsx, i, foreignObjects) {
+		this.renderExternalObject(jsx, foreignObjects[i]);
+	}
+
 	renderExternalObject(jsx, container) {
 		// createRoot only available in React v18
 		if (this.isReact18OrHigher()) {

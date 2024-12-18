@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,22 +84,17 @@ export default class LogicCanvas extends React.Component {
 				labelSingleLine: true,
 				labelOutline: false,
 
-				inputPortTopPosX: 140,
-				inputPortTopPosY: -20,
-				inputPortWidth: 20,
-				inputPortHeight: 20,
-				inputPortObject: "image",
-				inputPortImage: "/images/custom-canvases/logic/decorations/dragStateArrowDown.svg",
+				inputPortDisplay: false,
 
 				outputPortBottomPosX: 140,
 				outputPortBottomPosY: 20,
 				outputPortWidth: 20,
 				outputPortHeight: 20,
 				outputPortObject: "image",
-				outputPortImage: "/images/custom-canvases/logic/decorations/dragStateArrowDown.svg",
+				outputPortImage: "/images/custom-canvases/logic/decorations/dragStateArrow.svg",
 
 				outputPortGuideObject: "image",
-				outputPortGuideImage: "/images/custom-canvases/logic/decorations/dragStateArrowDown.svg",
+				outputPortGuideImage: "/images/custom-canvases/logic/decorations/dragStateArrow.svg",
 				outputPortGuideImageRotate: true
 			},
 			enableCanvasLayout: {

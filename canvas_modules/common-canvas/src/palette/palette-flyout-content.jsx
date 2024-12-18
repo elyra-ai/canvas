@@ -145,8 +145,11 @@ class PaletteFlyoutContent extends React.Component {
 			? this.props.paletteHeader
 			: null;
 
+		let className = "palette-flyout-content";
+		className += paletteHeader ? " with-palette-header" : "";
+
 		return (
-			<div className="palette-flyout-content">
+			<div className={className}>
 				{contentSearch}
 				{paletteHeader}
 				{contentCategories}
