@@ -486,6 +486,7 @@ class PropertiesMain extends React.Component {
 				propertiesTitle = (<TitleEditor
 					labelEditable={formData.labelEditable}
 					help={formData.help}
+					description={formData.description}
 					controller={this.propertiesController}
 					helpClickHandler={this.props.callbacks.helpClickHandler}
 					closeHandler={applyOnBlurEnabled ? this.applyPropertiesEditing.bind(this, true) : null}
