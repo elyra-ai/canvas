@@ -62,8 +62,7 @@ export default class NetworkCanvas extends React.Component {
 				outputPortDisplay: true,
 
 				outputPortGuideObject: "image",
-				outputPortGuideImage: "/images/custom-canvases/flows/decorations/dragStateArrow.svg",
-				outputPortGuideImageRotate: true
+				outputPortGuideImage: "/images/custom-canvases/flows/decorations/dragStateArrow.svg"
 			},
 			enableCanvasLayout: {
 				dataLinkArrowHead: "M 0 0 L -5 -2 -5 2 Z"

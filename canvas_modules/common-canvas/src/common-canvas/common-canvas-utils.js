@@ -22,8 +22,9 @@
 
 import { get, has, isNumber, set } from "lodash";
 import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
-	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST }
-	from "../common-canvas/constants/canvas-constants.js";
+	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST,
+	PORT_DISPLAY_IMAGE, PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT,
+} from "../common-canvas/constants/canvas-constants.js";
 
 export default class CanvasUtils {
 
@@ -505,7 +506,13 @@ export default class CanvasUtils {
 		return null;
 	}
 
-	// Returns the distance from the start point to finsih point of the link line.
+	// Returns true if point 1 is inside a circle of the specified radius whose
+	// center is point 2.
+	static isInside(point1, point2, radius) {
+		return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2)) < radius;
+	}
+
+	// Returns the distance from the start point to finish point of the link line.
 	static getLinkDistance(link) {
 		const x = link.x2 - link.x1;
 		const y = link.y2 - link.y1;
@@ -855,12 +862,18 @@ export default class CanvasUtils {
 	// Returns true if the portId passed in specifies the first port in the
 	// port array.
 	static isFirstPort(portArray, portId) {
-		const index = portArray.findIndex((port) => port.id === portId);
+		const index = this.getPortIndex(portArray, portId);
 
 		if (index === 0) {
 			return true;
 		}
 		return false;
+	}
+
+	// Returns the index of the port ID passed in, in the
+	// port array passed in.
+	static getPortIndex(portArray, portId) {
+		return portArray.findIndex((port) => port.id === portId);
 	}
 
 	// Returns a source port Id if one exists in the link, otherwise defaults
@@ -1682,6 +1695,62 @@ export default class CanvasUtils {
 			delete newLayout.outputPortRightPosX;
 			delete newLayout.outputPortRightPosY;
 		}
+		return newLayout;
+	}
+
+	// Convert now deprecated layout fields to the port objects arrays.
+	// TODO - Remove this in a future major release.
+	static convertPortDisplayInfo(layout) {
+		const newLayout = layout;
+
+		if (!layout) {
+			return newLayout;
+		}
+
+		// If custom fields exist for input object info, write the values into the
+		// inputPortDisplayObjects array.
+		if (newLayout.inputPortObject === PORT_DISPLAY_IMAGE) {
+			newLayout.inputPortDisplayObjects = [
+				{ type: PORT_DISPLAY_IMAGE,
+					src: newLayout.inputPortImage,
+					height: newLayout.inputPortHeight || PORT_HEIGHT_DEFAULT,
+					width: newLayout.inputPortWidth || PORT_WIDTH_DEFAULT
+				}
+			];
+		}
+
+		if (newLayout.inputPortGuideObject === PORT_DISPLAY_IMAGE) {
+			newLayout.inputPortGuideObjects = [
+				{ type: PORT_DISPLAY_IMAGE,
+					src: newLayout.inputPortGuideImage,
+					height: newLayout.inputPortHeight || PORT_HEIGHT_DEFAULT,
+					width: newLayout.inputPortWidth || PORT_WIDTH_DEFAULT
+				}
+			];
+		}
+
+		// If custom fields exist for output object info, write the values into the
+		// outputPortDisplayObjects array.
+		if (newLayout.outputPortObject === PORT_DISPLAY_IMAGE) {
+			newLayout.outputPortDisplayObjects = [
+				{ type: PORT_DISPLAY_IMAGE,
+					src: newLayout.outputPortImage,
+					height: newLayout.outputPortHeight || PORT_HEIGHT_DEFAULT,
+					width: newLayout.outputPortWidth || PORT_WIDTH_DEFAULT,
+				}
+			];
+		}
+
+		if (newLayout.outputPortGuideObject === PORT_DISPLAY_IMAGE) {
+			newLayout.outputPortGuideObjects = [
+				{ type: PORT_DISPLAY_IMAGE,
+					src: newLayout.outputPortGuideImage,
+					height: newLayout.outputPortHeight || PORT_HEIGHT_DEFAULT,
+					width: newLayout.outputPortWidth || PORT_WIDTH_DEFAULT
+				}
+			];
+		}
+
 		return newLayout;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,11 @@ import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_CURVE, LINK_TYPE_STRAIGHT, LINK_SELECTION_DETACHABLE,
-	PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE }
-	from "./constants/canvas-constants.js";
+	FLOW_IN, FLOW_OUT,
+	PORT_DISPLAY_CIRCLE,
+	LINK_METHOD_PORTS,
+	SINGLE_CLICK
+} from "./constants/canvas-constants.js";
 
 // This utility files provides a drag handler which manages drag operations to
 // create new links either between nodes or from a comment to a node.
@@ -63,14 +66,14 @@ export default class SVGCanvasUtilsDragNewLink {
 	dragStartNewLink(d3Event, d) {
 		if (this.isEventForOutputPort(d3Event)) {
 			const node = this.getNodeForPort(d3Event);
-			this.startOutputPortNewLink(d, node);
+			this.startOutputPortNewLink(d3Event, d, node);
 
 		} else if (this.isEventForInputPort(d3Event)) {
 			const node = this.getNodeForPort(d3Event);
-			this.startInputPortNewLink(d, node);
+			this.startInputPortNewLink(d3Event, d, node);
 
 		} else if (this.ren.activePipeline.getObjectTypeName(d) === "comment") {
-			this.startCommentNewLink(d);
+			this.startCommentNewLink(d3Event, d);
 		}
 	}
 
@@ -108,62 +111,58 @@ export default class SVGCanvasUtilsDragNewLink {
 	}
 
 	// Initialize this.drawingNewLinkData when dragging a comment port.
-	startCommentNewLink(comment) {
+	startCommentNewLink(d3Event, comment) {
+		const srcObj = this.ren.activePipeline.getComment(comment.id);
 		this.drawingNewLinkData = {
-			srcObjId: comment.id,
+			srcObj: srcObj,
 			action: COMMENT_LINK,
 			startPos: {
 				x: comment.x_pos - this.ren.canvasLayout.commentHighlightGap,
 				y: comment.y_pos - this.ren.canvasLayout.commentHighlightGap
 			},
+			mousePos: { x: d3Event.x, y: d3Event.y },
 			linkArray: []
 		};
 	}
 
 	// Initialize this.drawingNewLinkData when dragging an input port. This gesture
 	// is only supported for association link creation.
-	startInputPortNewLink(port, node) {
+	startInputPortNewLink(d3Event, port, node) {
 		if (this.ren.config.enableAssocLinkCreation) {
 			const srcNode = this.ren.activePipeline.getNode(node.id);
+			const portIndex = CanvasUtils.getPortIndex(node.inputs, port.id);
 			this.drawingNewLinkData = {
-				srcObjId: node.id,
-				srcPortId: port.id,
+				srcObj: srcNode,
+				srcPort: port,
 				action: this.ren.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-				srcNode: srcNode,
+				mousePos: { x: d3Event.x, y: d3Event.y },
 				startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
-				portType: "input",
-				portObject: node.layout.inputPortObject,
-				portImage: node.layout.inputPortImage,
-				portWidth: node.layout.inputPortWidth,
-				portHeight: node.layout.inputPortHeight,
+				portFlow: FLOW_IN,
+				portDisplayInfo: this.ren.getPortDisplayInfo(srcNode.layout.inputPortDisplayObjects, portIndex),
+				portGuideInfo: this.ren.getPortDisplayInfo(srcNode.layout.inputPortGuideObjects, portIndex),
 				portRadius: this.ren.getPortRadius(srcNode),
 				minInitialLine: srcNode.layout.minInitialLine,
-				guideObject: node.layout.inputPortGuideObject,
-				guideImage: node.layout.inputPortGuideImage,
 				linkArray: []
 			};
 		}
 	}
 
 	// Initialize this.drawingNewLinkData when dragging an output port.
-	startOutputPortNewLink(port, node) {
+	startOutputPortNewLink(d3Event, port, node) {
 		const srcNode = this.ren.activePipeline.getNode(node.id);
 		if (!CanvasUtils.isSrcCardinalityAtMax(port.id, srcNode, this.ren.activePipeline.links)) {
+			const portIndex = CanvasUtils.getPortIndex(node.outputs, port.id);
 			this.drawingNewLinkData = {
-				srcObjId: node.id,
-				srcPortId: port.id,
+				srcObj: srcNode,
+				srcPort: port,
 				action: this.ren.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-				srcNode: srcNode,
+				mousePos: { x: d3Event.x, y: d3Event.y },
 				startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
-				portType: "output",
-				portObject: node.layout.outputPortObject,
-				portImage: node.layout.outputPortImage,
-				portWidth: node.layout.outputPortWidth,
-				portHeight: node.layout.outputPortHeight,
+				portFlow: FLOW_OUT,
+				portDisplayInfo: this.ren.getPortDisplayInfo(srcNode.layout.outputPortDisplayObjects, portIndex),
+				portGuideInfo: this.ren.getPortDisplayInfo(srcNode.layout.outputPortGuideObjects, portIndex),
 				portRadius: this.ren.getPortRadius(srcNode),
 				minInitialLine: srcNode.layout.minInitialLine,
-				guideObject: node.layout.outputPortGuideObject,
-				guideImage: node.layout.outputPortGuideImage,
 				linkArray: []
 			};
 			if (this.ren.config.enableHighlightUnavailableNodes) {
@@ -194,7 +193,7 @@ export default class SVGCanvasUtilsDragNewLink {
 	}
 
 	drawNewCommentLink(transPos) {
-		const srcComment = this.ren.activePipeline.getComment(this.drawingNewLinkData.srcObjId);
+		const srcComment = this.ren.activePipeline.getComment(this.drawingNewLinkData.srcObj.id);
 		const startPos = this.ren.linkUtils.getNewStraightCommentLinkStartPos(srcComment, transPos);
 		const linkType = COMMENT_LINK;
 
@@ -246,29 +245,17 @@ export default class SVGCanvasUtilsDragNewLink {
 	drawNewNodeLink(transPos) {
 		const linkCategory = this.ren.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK;
 
-		// Create a temporary link to represent the new link being created. If we are
-		// creating an association link from an input port we pass in the reverse values.
-		const inLink = (linkCategory === ASSOCIATION_LINK && this.drawingNewLinkData.portType === "input")
-			? {
-				type: linkCategory,
-				trgNode: this.drawingNewLinkData.srcNode,
-				trgNodeId: this.drawingNewLinkData.srcObjId,
-				trgNodePortId: this.drawingNewLinkData.srcPortId,
-				srcPos: {
-					x_pos: transPos.x,
-					y_pos: transPos.y
-				}
+		// Create a temporary link to represent the new link being created.
+		const inLink = {
+			type: linkCategory,
+			srcObj: this.drawingNewLinkData.srcObj,
+			srcNodeId: this.drawingNewLinkData.srcObj.id,
+			srcNodePortId: this.drawingNewLinkData.srcPort.id,
+			trgPos: {
+				x_pos: transPos.x,
+				y_pos: transPos.y
 			}
-			: {
-				type: linkCategory,
-				srcObj: this.drawingNewLinkData.srcNode,
-				srcNodeId: this.drawingNewLinkData.srcObjId,
-				srcNodePortId: this.drawingNewLinkData.srcPortId,
-				trgPos: {
-					x_pos: transPos.x,
-					y_pos: transPos.y
-				}
-			};
+		};
 
 		const link = this.ren.getDetachedLinkObj(inLink);
 		this.drawingNewLinkData.linkArray = this.ren.linkUtils.addConnectionPaths([link]);
@@ -278,7 +265,7 @@ export default class SVGCanvasUtilsDragNewLink {
 				this.ren.getNewLinkAssocVariation(
 					this.drawingNewLinkData.linkArray[0].x1,
 					this.drawingNewLinkData.linkArray[0].x2,
-					this.drawingNewLinkData.portType);
+					this.drawingNewLinkData.portFlow);
 		}
 
 		const pathInfo = this.ren.linkUtils.getConnectorPathInfo(
@@ -293,7 +280,7 @@ export default class SVGCanvasUtilsDragNewLink {
 		// to draw straight lines over the node.
 		if (linkCategory === NODE_LINK &&
 				this.ren.canvasLayout.linkType === LINK_TYPE_STRAIGHT &&
-				this.ren.nodeUtils.isPointInNodeBoundary(transPos, this.drawingNewLinkData.srcNode)) {
+				this.ren.nodeUtils.isPointInNodeBoundary(transPos, this.drawingNewLinkData.srcObj)) {
 			this.removeNewLinkLine();
 
 		} else {
@@ -308,47 +295,44 @@ export default class SVGCanvasUtilsDragNewLink {
 				.attr("transform", pathInfo.transform);
 		}
 
-		if (this.ren.canvasLayout.linkType !== LINK_TYPE_STRAIGHT) {
+		// If we are drawing a link from a port that is displayed as a circle,
+		// we draw a circle at the start of the link to cover over the actual
+		// link line that is drawn from the port's center.
+		if (this.ren.canvasLayout.linkMethod === LINK_METHOD_PORTS &&
+			this.drawingNewLinkData.portDisplayInfo.tag === PORT_DISPLAY_CIRCLE) {
 			connectionStartSel
 				.data(this.drawingNewLinkData.linkArray)
 				.enter()
-				.append(this.drawingNewLinkData.portObject)
+				.append("circle")
 				.attr("class", "d3-new-connection-start")
 				.attr("linkType", linkCategory)
 				.merge(connectionStartSel)
 				.each((d, i, startSel) => {
-					// No need to draw the starting object of the new line if it is an image.
-					if (this.drawingNewLinkData.portObject === PORT_OBJECT_CIRCLE) {
-						d3.select(startSel[i])
-							.attr("cx", d.x1)
-							.attr("cy", d.y1)
-							.attr("r", this.drawingNewLinkData.portRadius);
-					}
+					d3.select(startSel[i])
+						.attr("cx", d.x1)
+						.attr("cy", d.y1)
+						.attr("r", this.drawingNewLinkData.portRadius);
 				});
 		}
 
+		// Draw the guide object (either a circle, an image or JSX) which is
+		// at the end of the new link being dragged out from the source object.
 		connectionGuideSel
 			.data(this.drawingNewLinkData.linkArray)
 			.enter()
-			.append(this.drawingNewLinkData.guideObject)
+			.append(this.drawingNewLinkData.portGuideInfo.tag)
 			.attr("class", "d3-new-connection-guide")
 			.attr("linkType", linkCategory)
 			.merge(connectionGuideSel)
 			.each((d, i, guideSel) => {
-				if (this.drawingNewLinkData.guideObject === PORT_OBJECT_IMAGE) {
-					d3.select(guideSel[i])
-						.attr("xlink:href", this.drawingNewLinkData.guideImage)
-						.attr("x", d.x2 - (this.drawingNewLinkData.portWidth / 2))
-						.attr("y", d.y2 - (this.drawingNewLinkData.portHeight / 2))
-						.attr("width", this.drawingNewLinkData.portWidth)
-						.attr("height", this.drawingNewLinkData.portHeight)
-						.attr("transform", this.ren.getLinkImageTransform(d));
-				} else {
-					d3.select(guideSel[i])
-						.attr("cx", d.x2)
-						.attr("cy", d.y2)
-						.attr("r", this.drawingNewLinkData.portRadius);
-				}
+				const obj = d3.select(guideSel[i]);
+				const transform = this.ren.getLinkImageTransform(d);
+				this.ren.updatePort(obj,
+					this.drawingNewLinkData.portGuideInfo,
+					this.drawingNewLinkData.srcObj,
+					d.x2,
+					d.y2,
+					transform);
 			});
 	}
 
@@ -367,6 +351,21 @@ export default class SVGCanvasUtilsDragNewLink {
 		// be null when the canvas is refreshed.
 		const drawingNewLinkData = this.drawingNewLinkData;
 		this.drawingNewLinkData = null;
+
+		// If the user has not dragged the mouse far enough to create a new link, we
+		// treat it as a click on the port.
+		if (this.isClicked(drawingNewLinkData.mousePos, d3Event)) {
+			this.removeNewLink();
+			this.ren.canvasController.clickActionHandler({
+				clickType: SINGLE_CLICK,
+				objectType: "port",
+				id: drawingNewLinkData.srcPort.id,
+				nodeId: drawingNewLinkData.srcObj.id,
+				selectedObjectIds: this.ren.activePipeline.getSelectedObjectIds(),
+				pipelineId: this.ren.activePipeline.id
+			});
+			return;
+		}
 
 		if (this.ren.config.enableHighlightUnavailableNodes) {
 			this.ren.unsetUnavailableNodesHighlighting();
@@ -387,6 +386,12 @@ export default class SVGCanvasUtilsDragNewLink {
 		}
 	}
 
+	// Returns true if the mouse position is inside a circle with a radius of
+	// 3px centred at the d3Event x and y.
+	isClicked(mousePos, d3Event) {
+		return CanvasUtils.isInside(mousePos, { x: d3Event.x, y: d3Event.y }, 3);
+	}
+
 	// Handles the creation of a link when the end of a new link
 	// being drawn from a source node is dropped on a target node.
 	createNewLinkFromDragData(d3Event, trgNode, drawingNewLinkData) {
@@ -400,21 +405,20 @@ export default class SVGCanvasUtilsDragNewLink {
 
 		// Create the link.
 		const type = drawingNewLinkData.action;
-		const srcObjId = drawingNewLinkData.srcObjId;
 
 		if (trgNode !== null) {
 			if (type === NODE_LINK) {
-				const srcNode = this.ren.activePipeline.getNode(srcObjId);
-				const srcPortId = drawingNewLinkData.srcPortId;
+				const srcNode = drawingNewLinkData.srcObj;
+				const srcPortId = drawingNewLinkData.srcPort.id;
 				const trgPortId = this.ren.getInputNodePortId(d3Event, trgNode);
 				this.createNewNodeLink(srcNode, srcPortId, trgNode, trgPortId);
 
 			} else if (type === ASSOCIATION_LINK) {
-				const srcObj = this.ren.activePipeline.getNode(srcObjId);
+				const srcObj = drawingNewLinkData.srcObj;
 				this.createNewAssocLink(srcObj, trgNode);
 
 			} else if (type === COMMENT_LINK) {
-				const srcObj = this.ren.activePipeline.getComment(srcObjId);
+				const srcObj = drawingNewLinkData.srcObj;
 				this.createNewCommentLink(srcObj, trgNode);
 			}
 		}
@@ -521,8 +525,8 @@ export default class SVGCanvasUtilsDragNewLink {
 		this.ren.canvasController.editActionHandler({
 			editType: "createDetachedLink",
 			editSource: "canvas",
-			srcNodeId: drawingNewLinkData.srcObjId,
-			srcNodePortId: drawingNewLinkData.srcPortId,
+			srcNodeId: drawingNewLinkData.srcObj.id,
+			srcNodePortId: drawingNewLinkData.srcPort.id,
 			trgPos: endPoint,
 			type: NODE_LINK,
 			pipelineId: this.ren.activePipeline.id });
@@ -543,21 +547,10 @@ export default class SVGCanvasUtilsDragNewLink {
 		if (drawingNewLinkData.linkArray?.length === 0) {
 			return;
 		}
-		let saveX1 = drawingNewLinkData.linkArray[0].x1;
-		let saveY1 = drawingNewLinkData.linkArray[0].y1;
-		let saveX2 = drawingNewLinkData.linkArray[0].x2;
-		let saveY2 = drawingNewLinkData.linkArray[0].y2;
-
-		// If we were creating an association link from an input port of
-		// the node, we reverse the way the snap-back link is drawn by
-		// switching the coordinates.
-		if (drawingNewLinkData.action === ASSOCIATION_LINK &&
-			drawingNewLinkData.portType === "input") {
-			saveX1 = drawingNewLinkData.linkArray[0].x2;
-			saveY1 = drawingNewLinkData.linkArray[0].y2;
-			saveX2 = drawingNewLinkData.linkArray[0].x1;
-			saveY2 = drawingNewLinkData.linkArray[0].y1;
-		}
+		const saveX1 = drawingNewLinkData.linkArray[0].x1;
+		const saveY1 = drawingNewLinkData.linkArray[0].y1;
+		const saveX2 = drawingNewLinkData.linkArray[0].x2;
+		const saveY2 = drawingNewLinkData.linkArray[0].y2;
 
 		const saveNewLinkData = Object.assign({}, drawingNewLinkData);
 
@@ -609,8 +602,8 @@ export default class SVGCanvasUtilsDragNewLink {
 					// though some attributes will not be relevant. This is done
 					// because I could not get the .each() method to work here (which
 					// would be necessary to have an if statement based on guide object)
-					.attr("x", saveX1 - (saveNewLinkData.portWidth / 2))
-					.attr("y", saveY1 - (saveNewLinkData.portHeight / 2))
+					.attr("x", saveX1 - (saveNewLinkData.portGuideInfo?.width / 2))
+					.attr("y", saveY1 - (saveNewLinkData.portGuideInfo?.height / 2))
 					.attr("cx", saveX1)
 					.attr("cy", saveY1)
 					.attr("transform", null);
@@ -625,45 +618,51 @@ export default class SVGCanvasUtilsDragNewLink {
 	}
 
 	removeNewLink() {
+		// If a guide object is drawn using JSX in a foreignObject, we need to
+		// make sure it's internal React object is removed successfully.
+		this.ren.nodesLinksGrp.selectAll("foreignObject.d3-new-connection-guide")
+			.each((x, i, foreignObjects) =>
+				this.ren.externalUtils.removeExternalObject(x, i, foreignObjects));
+
+		// Remove all the constituent parts of the new link.
 		this.ren.nodesLinksGrp.selectAll(".d3-new-connection-line").remove();
 		this.ren.nodesLinksGrp.selectAll(".d3-new-connection-start").remove();
 		this.ren.nodesLinksGrp.selectAll(".d3-new-connection-guide").remove();
 		this.ren.nodesLinksGrp.selectAll(".d3-new-connection-arrow").remove();
+
 	}
 
 	// Switches on or off node highlighting depending on whether a node is
 	// close to the new link being dragged.
 	setNewLinkOverNode(d3Event) {
 		const nodeNearMouse = this.ren.getNodeNearMousePos(d3Event, this.ren.canvasLayout.nodeProximity);
-		const highlightState = nodeNearMouse && this.isNewLinkAllowedToNode(nodeNearMouse);
+		const highlightState = nodeNearMouse && this.isNewLinkAllowedToNode(d3Event, nodeNearMouse);
 		this.ren.setHighlightingOverNode(highlightState, nodeNearMouse);
 	}
 
 	// Returns true if a connection is allowed to the node passed in based on the
 	// this.drawingNewLinkData object which describes a new link being dragged.
-	isNewLinkAllowedToNode(node) {
+	isNewLinkAllowedToNode(d3Event, node) {
 		if (this.drawingNewLinkData) {
 			if (this.drawingNewLinkData.action === NODE_LINK) {
-				const srcNode = this.drawingNewLinkData.srcNode;
+				const srcNode = this.drawingNewLinkData.srcObj;
 				const trgNode = node;
-				const srcNodePortId = this.drawingNewLinkData.srcPortId;
-				const trgNodePortId = CanvasUtils.getDefaultInputPortId(trgNode); // TODO - make specific to nodes.
+				const srcNodePortId = this.drawingNewLinkData.srcPort.id;
+				const trgNodePortId = this.ren.getInputNodePortId(d3Event, trgNode);
 				return CanvasUtils.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode,
 					this.ren.activePipeline.links, this.ren.config.enableSelfRefLinks);
 
 			} else if (this.drawingNewLinkData.action === ASSOCIATION_LINK) {
-				const srcNode = this.drawingNewLinkData.srcNode;
+				const srcNode = this.drawingNewLinkData.srcObj;
 				const trgNode = node;
 				return CanvasUtils.isAssocConnectionAllowed(srcNode, trgNode, this.ren.activePipeline.links);
 
 			} else if (this.drawingNewLinkData.action === COMMENT_LINK) {
-				const srcObjId = this.drawingNewLinkData.srcObjId;
+				const srcObjId = this.drawingNewLinkData.srcObj.id;
 				const trgNodeId = node.id;
 				return CanvasUtils.isCommentLinkConnectionAllowed(srcObjId, trgNodeId, this.ren.activePipeline.links);
 			}
 		}
 		return false;
 	}
-
-
 }
