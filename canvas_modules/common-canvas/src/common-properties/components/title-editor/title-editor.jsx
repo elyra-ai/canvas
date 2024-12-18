@@ -145,7 +145,7 @@ class TitleEditor extends Component {
 					className="properties-title-editor-btn help"
 					data-id="help"
 					tip={this.props.description?.default}
-					link={this.props.help?.data?.description?.link ? this.props.help?.data?.description?.link : null}
+					link={this.props.description?.link ? this.props.description?.link : null}
 					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
 					direction="bottom"
 					showToolTipOnClick

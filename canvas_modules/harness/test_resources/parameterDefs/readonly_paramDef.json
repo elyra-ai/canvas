@@ -425,7 +425,13 @@
       }
     ],
     "description": {
-      "default": "Readonly Description"
+      "default": "Readonly description",
+      "link": {
+        "id": "link_for_action-buttons-panel",
+        "data": {
+          "something": "option data"
+        }
+      }
     },
     "help": {
       "data": {
