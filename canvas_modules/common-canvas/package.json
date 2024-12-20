@@ -14,6 +14,7 @@
   },
   "license": "Apache-2.0",
   "sideEffects": false,
+  "types": "./types/index.d.ts",
   "scripts": {
     "build": "npx stylelint '**/*.scss' && grunt && rollup -c",
     "test": "NODE_ENV=test jest",
