@@ -42,9 +42,9 @@
 	padding-bottom: $spacing-05; // Adds padding to the control
 	&.action {
 		display: flex;
-		justify-content: space-around;
 		> div:first-child {
 			width: 100%;
+			overflow-x: scroll;
 		}
 	}
 }
