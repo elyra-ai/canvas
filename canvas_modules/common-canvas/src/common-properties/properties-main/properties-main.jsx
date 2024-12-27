@@ -109,22 +109,6 @@ class PropertiesMain extends React.Component {
 		this.props.callbacks.setPropertiesHasMounted();
 	}
 
-	componentDidUpdate(prevProps) {
-		if (!isEqual(prevProps.callbacks, this.props.callbacks)) {
-			this.propertiesController.setHandlers({
-				controllerHandler: this.props.callbacks.controllerHandler,
-				propertyListener: this.props.callbacks.propertyListener,
-				actionHandler: this.props.callbacks.actionHandler,
-				buttonHandler: this.props.callbacks.buttonHandler,
-				buttonIconHandler: this.props.callbacks.buttonIconHandler,
-				validationHandler: this.props.callbacks.validationHandler,
-				titleChangeHandler: this.props.callbacks.titleChangeHandler,
-				tooltipLinkHandler: this.props.callbacks.tooltipLinkHandler,
-				propertyIconHandler: this.props.callbacks.propertyIconHandler,
-			});
-		}
-	}
-
 	UNSAFE_componentWillReceiveProps(newProps) { // eslint-disable-line camelcase, react/sort-comp
 		if (this.props.light !== newProps.light) { // set the new light prop in controller
 			this.propertiesController.setLight(newProps.light);
@@ -156,6 +140,22 @@ class PropertiesMain extends React.Component {
 
 		if (newProps.propertiesConfig && !isEqual(newProps.propertiesConfig, this.propertiesController.getPropertiesConfig())) {
 			this.propertiesController.setPropertiesConfig(newProps.propertiesConfig);
+		}
+	}
+
+	componentDidUpdate(prevProps) {
+		if (!isEqual(prevProps.callbacks, this.props.callbacks)) {
+			this.propertiesController.setHandlers({
+				controllerHandler: this.props.callbacks.controllerHandler,
+				propertyListener: this.props.callbacks.propertyListener,
+				actionHandler: this.props.callbacks.actionHandler,
+				buttonHandler: this.props.callbacks.buttonHandler,
+				buttonIconHandler: this.props.callbacks.buttonIconHandler,
+				validationHandler: this.props.callbacks.validationHandler,
+				titleChangeHandler: this.props.callbacks.titleChangeHandler,
+				tooltipLinkHandler: this.props.callbacks.tooltipLinkHandler,
+				propertyIconHandler: this.props.callbacks.propertyIconHandler,
+			});
 		}
 	}
 
