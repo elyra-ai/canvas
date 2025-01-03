@@ -39,6 +39,10 @@
 .properties-ci-action-item {
 	display: flex;
 	justify-content: space-between;
+
+	.properties-ci-content-container {
+		flex-grow: 1;
+	}
 }
 
 .properties-label-container {
