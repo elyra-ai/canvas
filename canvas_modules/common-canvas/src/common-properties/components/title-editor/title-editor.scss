@@ -152,3 +152,15 @@
 	justify-content: center;
 	padding: 0;
 }
+
+.properties-heading-icon {
+	position: absolute;
+	margin-top: $spacing-03;
+}
+
+.properties-title-editor {
+	.tooltip-container {
+		height: $spacing-05;
+		cursor: pointer;
+	}
+}
