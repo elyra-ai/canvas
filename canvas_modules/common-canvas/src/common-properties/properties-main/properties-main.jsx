@@ -59,17 +59,7 @@ class PropertiesMain extends React.Component {
 		this.propertiesController.setLight(props.light);
 		this.propertiesController.setAppData(props.propertiesInfo.appData);
 		this.propertiesController.setExpressionInfo(props.propertiesInfo.expressionInfo);
-		this.propertiesController.setHandlers({
-			controllerHandler: props.callbacks.controllerHandler,
-			propertyListener: props.callbacks.propertyListener,
-			actionHandler: props.callbacks.actionHandler,
-			buttonHandler: props.callbacks.buttonHandler,
-			buttonIconHandler: props.callbacks.buttonIconHandler,
-			validationHandler: props.callbacks.validationHandler,
-			titleChangeHandler: props.callbacks.titleChangeHandler,
-			tooltipLinkHandler: props.callbacks.tooltipLinkHandler,
-			propertyIconHandler: props.callbacks.propertyIconHandler,
-		});
+		this.setCallbacks();
 		this.setForm(props.propertiesInfo, false);
 		this.previousErrorMessages = {};
 		// this has to be after setForm because setForm clears all error messages.
@@ -145,17 +135,7 @@ class PropertiesMain extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		if (!isEqual(prevProps.callbacks, this.props.callbacks)) {
-			this.propertiesController.setHandlers({
-				controllerHandler: this.props.callbacks.controllerHandler,
-				propertyListener: this.props.callbacks.propertyListener,
-				actionHandler: this.props.callbacks.actionHandler,
-				buttonHandler: this.props.callbacks.buttonHandler,
-				buttonIconHandler: this.props.callbacks.buttonIconHandler,
-				validationHandler: this.props.callbacks.validationHandler,
-				titleChangeHandler: this.props.callbacks.titleChangeHandler,
-				tooltipLinkHandler: this.props.callbacks.tooltipLinkHandler,
-				propertyIconHandler: this.props.callbacks.propertyIconHandler,
-			});
+			this.setCallbacks();
 		}
 	}
 
@@ -167,6 +147,20 @@ class PropertiesMain extends React.Component {
 			!this.propertiesController.isSummaryPanelShowing() && !this.propertiesController.isSubPanelsShowing()) {
 			this.applyPropertiesEditing(false);
 		}
+	}
+
+	setCallbacks() {
+		this.propertiesController.setHandlers({
+			controllerHandler: this.props.callbacks.controllerHandler,
+			propertyListener: this.props.callbacks.propertyListener,
+			actionHandler: this.props.callbacks.actionHandler,
+			buttonHandler: this.props.callbacks.buttonHandler,
+			buttonIconHandler: this.props.callbacks.buttonIconHandler,
+			validationHandler: this.props.callbacks.validationHandler,
+			titleChangeHandler: this.props.callbacks.titleChangeHandler,
+			tooltipLinkHandler: this.props.callbacks.tooltipLinkHandler,
+			propertyIconHandler: this.props.callbacks.propertyIconHandler,
+		});
 	}
 
 	setForm(propertiesInfo, sameParameterDefRendered) {
