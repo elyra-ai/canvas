@@ -124,7 +124,7 @@ Pass the `<CommonProperties>` object into the `rightFlyoutContent` prop of Commo
 ```
 
 
-If the `CommonProperties` component has custom width constraints, and it is nested inside single or multiple layers of `<div>` elements, special consideration is needed for proper layout behavior.
+If the `CommonProperties` component is nested inside single or multiple layers of `<div>` elements, special consideration is needed for proper layout behavior.
 
 ```html
     const rightFlyoutContent = (
