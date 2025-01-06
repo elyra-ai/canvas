@@ -12,6 +12,7 @@
 		"trimSpaces": true,
 		"displayAdditionalComponents": false,
 		"heading": false,
+		"headingDesc": false,
 		"light": true,
 		"showRequiredIndicator": true,
 		"showAlertsTab": true,
@@ -102,6 +103,11 @@
 		},
 		{
 			"id": "heading",
+			"default": false,
+			"type": "boolean"
+		},
+		{
+			"id": "headingDesc",
 			"default": false,
 			"type": "boolean"
 		},
@@ -337,6 +343,16 @@
 				},
 				"description": {
 					"default": "Show panel heading (icon and label)"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "headingDesc",
+				"label": {
+					"default": "headingDesc"
+				},
+				"description": {
+					"default": "Show panel heading description"
 				},
 				"control": "toggle"
 			},
@@ -713,6 +729,7 @@
 					"disableSaveOnRequiredErrors",
 					"trimSpaces",
 					"heading",
+					"headingDesc",
 					"showRequiredIndicator",
 					"showAlertsTab",
 					"enableResize",

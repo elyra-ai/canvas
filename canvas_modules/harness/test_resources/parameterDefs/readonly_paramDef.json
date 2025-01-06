@@ -427,7 +427,7 @@
     "description": {
       "default": "Readonly description",
       "link": {
-        "id": "link_for_action-buttons-panel",
+        "id": "link_for_description",
         "data": {
           "something": "option data"
         }

@@ -20,13 +20,14 @@ import { connect } from "react-redux";
 import Isvg from "react-inlinesvg";
 import { get } from "lodash";
 import classNames from "classnames";
-import { Edit, Close } from "@carbon/react/icons";
+import { Help, Edit, Close } from "@carbon/react/icons";
 import { TextInput, Button, Layer } from "@carbon/react";
 
 import { setTitle } from "./../../actions";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
 import ActionFactory from "../../actions/action-factory.js";
+
 import Tooltip from "../../../tooltip/tooltip.jsx";
 import Icon from "../../../icons/icon.jsx";
 import { CARBON_ICONS } from "./../../constants/constants";
@@ -139,21 +140,71 @@ class TitleEditor extends Component {
 				iconDescription={propertiesTitleEditButtonLabel}
 				hasIconOnly
 			/>);
-		const helpButton = this.props.help
-			? (<span className="properties-heading-icon">
-				<Tooltip
-					className="properties-title-editor-btn help"
-					data-id="help"
-					tip={this.props.description?.default}
-					link={this.props.description?.link ? this.props.description?.link : null}
-					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
-					direction="bottom"
-					showToolTipOnClick
-				>
-					<Icon type={CARBON_ICONS.INFORMATION} className="properties-title-editor-btn help" />
-				</Tooltip>
-			</span>)
-			: null;
+		let tooltip = "";
+		if (this.props.description) {
+			tooltip = (
+				<span>{this.props.description.default}</span>
+			);
+		}
+		if (this.props.description?.link) {
+			this.props.description.link.propertyId = { name: "number" };
+		}
+		let helpButton = null;
+
+		// If headingDesc config is enabled show tooltip with link beside heading
+		const renderTooltip = () => {
+			if (this.props.showHeadingDesc && this.props.description) {
+				const { description, controller } = this.props;
+				const { link } = description;
+				const tooltipLinkHandler = controller.getHandlers().tooltipLinkHandler;
+
+				return (
+					<span className="properties-heading-icon">
+						<Tooltip
+							id={"properties-title-tooltip" + this.id}
+							tip={tooltip}
+							link={link || null}
+							tooltipLinkHandler={tooltipLinkHandler}
+							direction="bottom"
+							className="properties-title-tooltip"
+							showToolTipOnClick
+						>
+							<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+						</Tooltip>
+					</span>
+				);
+			}
+
+			return null;
+		};
+
+		const renderHelpButton = () => {
+			const { help } = this.props;
+
+			if (help) {
+				return (
+					<Button
+						kind="ghost"
+						className="properties-title-editor-btn help"
+						data-id="help"
+						onClick={this.helpClickHandler}
+						tooltipPosition="bottom"
+						renderIcon={Help}
+						size="sm"
+						iconDescription={helpButtonLabel}
+						hasIconOnly
+					/>
+				);
+			}
+
+			return null;
+		};
+
+		if (this.props.showHeadingDesc) {
+			helpButton = renderTooltip();
+		} else {
+			helpButton = renderHelpButton();
+		}
 
 		const closeButton = this.props.closeHandler
 			? (<div className="properties-close-button">
@@ -243,6 +294,7 @@ TitleEditor.propTypes = {
 	icon: PropTypes.string,
 	heading: PropTypes.string,
 	showHeading: PropTypes.bool,
+	showHeadingDesc: PropTypes.bool,
 	rightFlyoutTabsView: PropTypes.bool,
 	titleInfo: PropTypes.object,
 	description: PropTypes.object,

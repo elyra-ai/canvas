@@ -86,6 +86,10 @@
 			margin-left: $spacing-02; // spacing between heading label and help button
 		}
 	}
+	.properties-heading-icon {
+		position: relative;
+		margin: 0 0 0 $spacing-04;
+	}
 }
 .properties-title-editor-input {
 	width: calc(100% - #{$spacing-03}); // subtract 8px to align with Close icon when applyOnBlur is set
@@ -155,7 +159,7 @@
 
 .properties-heading-icon {
 	position: absolute;
-	margin-top: $spacing-03;
+	margin: $spacing-03 0 0 $spacing-03;
 }
 
 .properties-title-editor {
