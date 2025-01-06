@@ -2769,6 +2769,18 @@ See the Common Properties <a href="../04.01-parameter-definition/">Parameter Def
         <span class="na">showRightFlyout</span><span class="o">=</span><span class="s">{showRightFlyout}</span>
     <span class="p">/&gt;</span>
 </code></pre></div></p>
+<p>If the <code>CommonProperties</code> component is nested inside single or multiple layers of <code>&lt;div&gt;</code> elements, special consideration is needed for proper layout behavior.</p>
+<p>```html
+    const rightFlyoutContent = (
+      <div className="parent-div">
+        <CommonProperties
+          propertiesInfo={this.propertiesInfo}
+          propertiesConfig={{ containerType: "Custom", rightFlyout: true }}
+          callbacks={this.callbacks}
+        />
+    </div>
+)</p>
+<p><code>display: flex</code> should be added to <code>parent-div</code> to allow Common Properties content to occupy full width and height available in right flyout.</p>
 
 
 
