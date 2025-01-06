@@ -125,7 +125,7 @@ Pass the `<CommonProperties>` object into the `rightFlyoutContent` prop of Commo
 
 When the configuration option `enableRightFlyoutDragToResize` is enabled in the canvas settings, the right flyout can be resized by dragging.
 
-If the CommonProperties component has custom width constraints defined by `min` and `max` properties, and it is nested inside single or multiple layers of <div> elements, special consideration is needed for proper layout behavior.
+If the `CommonProperties` component has custom width constraints, and it is nested inside single or multiple layers of `<div>` elements, special consideration is needed for proper layout behavior.
 
 ```html
     const rightFlyoutContent = (
