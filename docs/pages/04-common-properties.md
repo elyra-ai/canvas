@@ -122,3 +122,22 @@ Pass the `<CommonProperties>` object into the `rightFlyoutContent` prop of Commo
         showRightFlyout={showRightFlyout}
     />
 ```
+
+When the configuration option `enableRightFlyoutDragToResize` is enabled in the canvas settings, the right flyout can be resized by dragging.
+
+If the CommonProperties component has custom width constraints defined by `min` and `max` properties, and it is nested inside single or multiple layers of <div> elements, special consideration is needed for proper layout behavior.
+
+```html
+    const rightFlyoutContent = (
+      <div className="parent-div">
+        <div>
+          <CommonProperties
+            propertiesInfo={this.propertiesInfo}
+            propertiesConfig={{ containerType: "Custom", rightFlyout: true }}
+            callbacks={this.callbacks}
+          />
+        </div>
+    </div>
+)
+
+`display: flex` should be added to `parent-div` to allow Common Properties content to occupy full width and height available in right flyout.
