@@ -59,17 +59,7 @@ class PropertiesMain extends React.Component {
 		this.propertiesController.setLight(props.light);
 		this.propertiesController.setAppData(props.propertiesInfo.appData);
 		this.propertiesController.setExpressionInfo(props.propertiesInfo.expressionInfo);
-		this.propertiesController.setHandlers({
-			controllerHandler: props.callbacks.controllerHandler,
-			propertyListener: props.callbacks.propertyListener,
-			actionHandler: props.callbacks.actionHandler,
-			buttonHandler: props.callbacks.buttonHandler,
-			buttonIconHandler: props.callbacks.buttonIconHandler,
-			validationHandler: props.callbacks.validationHandler,
-			titleChangeHandler: props.callbacks.titleChangeHandler,
-			tooltipLinkHandler: props.callbacks.tooltipLinkHandler,
-			propertyIconHandler: props.callbacks.propertyIconHandler,
-		});
+		this.setCallbacks();
 		this.setForm(props.propertiesInfo, false);
 		this.previousErrorMessages = {};
 		// this has to be after setForm because setForm clears all error messages.
@@ -101,6 +91,8 @@ class PropertiesMain extends React.Component {
 		this.detectResize = this.detectResize.bind(this);
 		// used to tracked when the resize button is clicked and ignore detectResize
 		this.resizeClicked = false;
+		// Track panel height to avoid resize calls whenever height changes
+		this.lastPanelHeight = 0;
 	}
 
 	componentDidMount() {
@@ -141,6 +133,12 @@ class PropertiesMain extends React.Component {
 		}
 	}
 
+	componentDidUpdate(prevProps) {
+		if (!isEqual(prevProps.callbacks, this.props.callbacks)) {
+			this.setCallbacks();
+		}
+	}
+
 	onBlur(e) {
 		// apply properties when focus leave common properties.
 		// subdialogs and summary panel causes focus to leave but shouldn't apply settings
@@ -149,6 +147,20 @@ class PropertiesMain extends React.Component {
 			!this.propertiesController.isSummaryPanelShowing() && !this.propertiesController.isSubPanelsShowing()) {
 			this.applyPropertiesEditing(false);
 		}
+	}
+
+	setCallbacks() {
+		this.propertiesController.setHandlers({
+			controllerHandler: this.props.callbacks.controllerHandler,
+			propertyListener: this.props.callbacks.propertyListener,
+			actionHandler: this.props.callbacks.actionHandler,
+			buttonHandler: this.props.callbacks.buttonHandler,
+			buttonIconHandler: this.props.callbacks.buttonIconHandler,
+			validationHandler: this.props.callbacks.validationHandler,
+			titleChangeHandler: this.props.callbacks.titleChangeHandler,
+			tooltipLinkHandler: this.props.callbacks.tooltipLinkHandler,
+			propertyIconHandler: this.props.callbacks.propertyIconHandler,
+		});
 	}
 
 	setForm(propertiesInfo, sameParameterDefRendered) {
@@ -455,12 +467,15 @@ class PropertiesMain extends React.Component {
 		}
 	}
 
-	detectResize() {
-		// only hide resize button if resize wasn't from clicking resize button
-		if (!this.resizeClicked) {
-			this.setState({ showResizeBtn: false });
+	detectResize(_width, height) {
+		if (height === this.lastPanelHeight) {
+			// only hide resize button if resize wasn't from clicking resize button
+			if (!this.resizeClicked) {
+				this.setState({ showResizeBtn: false });
+			}
+			this.resizeClicked = false;
 		}
-		this.resizeClicked = false;
+		this.lastPanelHeight = height;
 	}
 
 	render() {
