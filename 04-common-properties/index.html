@@ -2770,17 +2770,17 @@ See the Common Properties <a href="../04.01-parameter-definition/">Parameter Def
     <span class="p">/&gt;</span>
 </code></pre></div></p>
 <p>If the <code>CommonProperties</code> component is nested inside single or multiple layers of <code>&lt;div&gt;</code> elements, special consideration is needed for proper layout behavior.</p>
-<p>```html
-    const rightFlyoutContent = (
-      <div className="parent-div">
-        <CommonProperties
-          propertiesInfo={this.propertiesInfo}
-          propertiesConfig={{ containerType: "Custom", rightFlyout: true }}
-          callbacks={this.callbacks}
-        />
-    </div>
-)</p>
-<p><code>display: flex</code> should be added to <code>parent-div</code> to allow Common Properties content to occupy full width and height available in right flyout.</p>
+<p><div class="highlight"><pre><span></span><code>    const rightFlyoutContent = (
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="o">=</span><span class="s">&quot;parent-div&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">CommonProperties</span>
+          <span class="na">propertiesInfo</span><span class="o">=</span><span class="s">{this.propertiesInfo}</span>
+          <span class="na">propertiesConfig</span><span class="o">=</span><span class="s">{{</span> <span class="na">containerType:</span> <span class="err">&quot;</span><span class="na">Custom</span><span class="err">&quot;,</span> <span class="na">rightFlyout:</span> <span class="na">true</span> <span class="err">}}</span>
+          <span class="na">callbacks</span><span class="o">=</span><span class="s">{this.callbacks}</span>
+        <span class="p">/&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    );
+</code></pre></div>
+<code>display: flex</code> should be added to <code>parent-div</code> to allow Common Properties content to occupy full width and height available in right flyout.</p>
 
 
 
