@@ -138,7 +138,7 @@ class TitleEditor extends Component {
 			/>);
 
 		const renderTooltip = (isDescWithLink) => {
-			const description = this.props.description.default;
+			const { description } = this.props;
 			const tooltipButton = isDescWithLink ? (
 				<ToggletipActions>
 					<Button

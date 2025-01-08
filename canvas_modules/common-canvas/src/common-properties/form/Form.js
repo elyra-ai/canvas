@@ -21,7 +21,6 @@ import { UIItem } from "./UIItem";
 import { L10nProvider } from "../util/L10nProvider";
 import { translateMessages } from "./Conditions";
 import { Size } from "../constants/form-constants";
-import { ResourceDef } from "../util/L10nProvider";
 import { CONTAINER_TYPE } from "../constants/constants";
 
 export default class Form {
@@ -30,7 +29,7 @@ export default class Form {
 		this.label = label;
 		this.labelEditable = labelEditable;
 		this.help = help;
-		this.description = ResourceDef.make(description);
+		this.description = description;
 		this.editorSize = editorSize;
 		this.pixelWidth = pixelWidth;
 		this.uiItems = uiItems;
@@ -83,7 +82,7 @@ export default class Form {
 				propDef.label,
 				propDef.labelEditable,
 				propDef.help,
-				propDef.description,
+				l10nProvider.l10nResource(propDef.description),
 				propDef.editorSizeHint(editorSizeDefault),
 				propDef.pixelWidth,
 				[UIItem.makePrimaryTabs(tabs)],
