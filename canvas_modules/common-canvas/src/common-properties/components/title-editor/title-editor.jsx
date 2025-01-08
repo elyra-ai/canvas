@@ -137,24 +137,24 @@ class TitleEditor extends Component {
 				hasIconOnly
 			/>);
 
-		let helpButton = null;
-
-		// If headingDesc config is enabled show tooltip with link beside heading
 		const renderTooltip = (isDescWithLink) => {
 			const description = this.props.description.default;
-			const tooltipButton = isDescWithLink
-				? (<ToggletipActions>
+			const tooltipButton = isDescWithLink ? (
+				<ToggletipActions>
 					<Button
 						className="properties-title-editor-desc-btn desc-help"
 						onClick={this.helpClickHandler}
-						data-id="help"
+						data-id="desc-help"
 						size="sm"
-					>{helpButtonLabel}</Button>
-				</ToggletipActions>) : null;
+					>
+						{helpButtonLabel}
+					</Button>
+				</ToggletipActions>
+			) : null;
 
 			return (
-				<span className="properties-heading-icon">
-					<Toggletip align="bottom" autoAlign >
+				<span className="properties-title-desc-icon">
+					<Toggletip className="properties-title-desc-tooltip" align="bottom" autoAlign>
 						<ToggletipButton label="Additional information">
 							<Information />
 						</ToggletipButton>
@@ -170,31 +170,32 @@ class TitleEditor extends Component {
 		const renderHelpButton = () => {
 			const { help } = this.props;
 
-			if (help) {
-				return (
-					<Button
-						kind="ghost"
-						className="properties-title-editor-btn help"
-						data-id="help"
-						onClick={this.helpClickHandler}
-						tooltipPosition="bottom"
-						renderIcon={Help}
-						size="sm"
-						iconDescription={helpButtonLabel}
-						hasIconOnly
-					/>
-				);
-			}
-
-			return null;
+			return help ? (
+				<Button
+					kind="ghost"
+					className="properties-title-editor-btn help"
+					data-id="help"
+					onClick={this.helpClickHandler}
+					tooltipPosition="bottom"
+					renderIcon={Help}
+					size="sm"
+					iconDescription={helpButtonLabel}
+					hasIconOnly
+				/>
+			) : null;
 		};
 
-		if (this.props.showHeadingDesc && this.props.description) {
-			const isDescWithLink = this.props.help;
-			helpButton = renderTooltip(isDescWithLink);
-		} else {
-			helpButton = renderHelpButton();
-		}
+		const renderHelpOrTooltipButton = () => {
+			const { showHeadingDesc, description, help } = this.props;
+
+			if (showHeadingDesc && description) {
+				return renderTooltip(help);
+			}
+
+			return renderHelpButton();
+		};
+
+		const helpButton = renderHelpOrTooltipButton();
 
 		const closeButton = this.props.closeHandler
 			? (<div className="properties-close-button">

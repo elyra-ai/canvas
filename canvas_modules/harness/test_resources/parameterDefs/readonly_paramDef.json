@@ -424,6 +424,9 @@
         ]
       }
     ],
+    "description": {
+      "default": "Readonly description"
+    },
     "help": {
       "id": "link_for_description",
       "data": {

@@ -508,7 +508,7 @@ class PropertiesMain extends React.Component {
 					icon={formData.icon}
 					heading={formData.heading}
 					showHeading={this.props.propertiesConfig.heading}
-					showHeadingDesc={this.props.propertiesConfig.headingDesc}
+					showHeadingDesc={this.props.propertiesConfig.showHeadingDesc}
 					titleInfo={formData.title}
 					rightFlyoutTabsView={this.props.propertiesConfig.categoryView === CATEGORY_VIEW.TABS}
 				/>);
@@ -668,7 +668,7 @@ PropertiesMain.propTypes = {
 		conditionReturnValueHandling: PropTypes.string,
 		returnValueFiltering: PropTypes.array,
 		heading: PropTypes.bool,
-		headingDesc: PropTypes.bool,
+		showHeadingDesc: PropTypes.bool,
 		buttonLabels: PropTypes.shape({
 			primary: PropTypes.string,
 			secondary: PropTypes.string

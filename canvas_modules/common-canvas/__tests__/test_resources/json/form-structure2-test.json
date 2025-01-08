@@ -191,6 +191,7 @@
     "componentId": "sort",
     "label": "Form structure2 test",
     "labelEditable": false,
+    "description":{"resource_key":"sort.desc"},
     "editorSize": "large",
     "uiItems": [
       {

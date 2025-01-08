@@ -86,9 +86,9 @@
 			margin-left: $spacing-02; // spacing between heading label and help button
 		}
 	}
-	.properties-heading-icon {
+	.properties-title-desc-icon {
 		position: relative;
-		margin: 0 0 0 $spacing-04;
+		margin-left: $spacing-04; // spacing between desc tooltip and heading label
 	}
 }
 .properties-title-editor-input {
@@ -157,9 +157,9 @@
 	padding: 0;
 }
 
-.properties-heading-icon {
+.properties-title-desc-icon {
 	position: absolute;
-	margin: $spacing-03 0 0 $spacing-03;
+	margin: $spacing-03 0 0 $spacing-03; // spacing between desc tooltip and heading label
 }
 
 .properties-title-editor {

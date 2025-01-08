@@ -94,10 +94,11 @@ describe("Correct form should be created", () => {
 			}
 		};
 		let help;
+		let description;
 		let pixelWidth; // Pass in an undefined pixelWidth to simulate it missing from ParamDefs.
 		let conditions;
 		let resources;
-		const expectedForm = new Form("TestOp", "TestOp", true, help, "small", pixelWidth, [primaryTabs], buttons, data, conditions, resources, "./test.svg");
+		const expectedForm = new Form("TestOp", "TestOp", true, help, description, "small", pixelWidth, [primaryTabs], buttons, data, conditions, resources, "./test.svg");
 
 		const paramSpec = {
 			"current_parameters": {
