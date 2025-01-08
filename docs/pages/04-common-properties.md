@@ -134,7 +134,7 @@ If the `CommonProperties` component is nested inside single or multiple layers o
           propertiesConfig={{ containerType: "Custom", rightFlyout: true }}
           callbacks={this.callbacks}
         />
-    </div>
-)
-
+      </div>
+    );
+```
 `display: flex` should be added to `parent-div` to allow Common Properties content to occupy full width and height available in right flyout.
