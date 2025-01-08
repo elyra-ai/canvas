@@ -135,6 +135,7 @@ class ListControl extends AbstractTable {
 					setScrollToRow={this.setScrollToRow}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 					isReadonlyTable={false}
+					isSingleSelectTable={false}
 					smallFlyout={this.props.rightFlyout && this.props.controller.getEditorSize() === "small"}
 				/>
 			);
