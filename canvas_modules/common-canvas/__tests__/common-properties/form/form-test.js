@@ -142,9 +142,9 @@ describe("Correct form should be created", () => {
 
 	it("should create a form with a structure with moveable_rows and value_icons", () => {
 		const generatedForm = Form.makeForm(formStructuredTable2.paramDef);
-		console.info("Expected: " + JSON.stringify(formStructuredTable2.expectedResult));
-		console.info("Actual  : " + JSON.stringify(generatedForm));
-		console.info("\n\n");
+		// console.info("Expected: " + JSON.stringify(formStructuredTable2.expectedResult));
+		// console.info("Actual  : " + JSON.stringify(generatedForm));
+		// console.info("\n\n");
 		expect(isEqual(JSON.parse(JSON.stringify(formStructuredTable2.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
