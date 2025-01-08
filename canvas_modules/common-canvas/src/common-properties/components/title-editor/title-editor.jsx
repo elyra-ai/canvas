@@ -20,18 +20,14 @@ import { connect } from "react-redux";
 import Isvg from "react-inlinesvg";
 import { get } from "lodash";
 import classNames from "classnames";
-import { Help, Edit, Close } from "@carbon/react/icons";
+import { Help, Edit, Close, Information } from "@carbon/react/icons";
 import { TextInput, Button, Layer } from "@carbon/react";
+import { Toggletip, ToggletipButton, ToggletipContent, ToggletipActions } from "@carbon/react";
 
 import { setTitle } from "./../../actions";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
 import ActionFactory from "../../actions/action-factory.js";
-
-import Tooltip from "../../../tooltip/tooltip.jsx";
-import Icon from "../../../icons/icon.jsx";
-import { CARBON_ICONS } from "./../../constants/constants";
-
 
 class TitleEditor extends Component {
 	constructor(props) {
@@ -140,42 +136,35 @@ class TitleEditor extends Component {
 				iconDescription={propertiesTitleEditButtonLabel}
 				hasIconOnly
 			/>);
-		let tooltip = "";
-		if (this.props.description) {
-			tooltip = (
-				<span>{this.props.description.default}</span>
-			);
-		}
-		if (this.props.description?.link) {
-			this.props.description.link.propertyId = { name: "number" };
-		}
+
 		let helpButton = null;
 
 		// If headingDesc config is enabled show tooltip with link beside heading
-		const renderTooltip = () => {
-			if (this.props.showHeadingDesc && this.props.description) {
-				const { description, controller } = this.props;
-				const { link } = description;
-				const tooltipLinkHandler = controller.getHandlers().tooltipLinkHandler;
+		const renderTooltip = (isDescWithLink) => {
+			const description = this.props.description.default;
+			const tooltipButton = isDescWithLink
+				? (<ToggletipActions>
+					<Button
+						className="properties-title-editor-desc-btn desc-help"
+						onClick={this.helpClickHandler}
+						data-id="help"
+						size="sm"
+					>{helpButtonLabel}</Button>
+				</ToggletipActions>) : null;
 
-				return (
-					<span className="properties-heading-icon">
-						<Tooltip
-							id={"properties-title-tooltip" + this.id}
-							tip={tooltip}
-							link={link || null}
-							tooltipLinkHandler={tooltipLinkHandler}
-							direction="bottom"
-							className="properties-title-tooltip"
-							showToolTipOnClick
-						>
-							<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
-						</Tooltip>
-					</span>
-				);
-			}
-
-			return null;
+			return (
+				<span className="properties-heading-icon">
+					<Toggletip align="bottom" autoAlign >
+						<ToggletipButton label="Additional information">
+							<Information />
+						</ToggletipButton>
+						<ToggletipContent>
+							<p className="properties-title-editor-desc">{description}</p>
+							{tooltipButton}
+						</ToggletipContent>
+					</Toggletip>
+				</span>
+			);
 		};
 
 		const renderHelpButton = () => {
@@ -200,8 +189,9 @@ class TitleEditor extends Component {
 			return null;
 		};
 
-		if (this.props.showHeadingDesc) {
-			helpButton = renderTooltip();
+		if (this.props.showHeadingDesc && this.props.description) {
+			const isDescWithLink = this.props.help;
+			helpButton = renderTooltip(isDescWithLink);
 		} else {
 			helpButton = renderHelpButton();
 		}
@@ -250,7 +240,8 @@ class TitleEditor extends Component {
 				<div className={classNames(
 					"properties-title-editor-input",
 					{
-						"properties-title-editor-with-help": this.props.help && !this.headingEnabled && !titleValidationTypes.includes(get(this.state.titleValidation, "type")),
+						"properties-title-editor-with-help": (this.props.help || this.props.description) &&
+															!this.headingEnabled && !titleValidationTypes.includes(get(this.state.titleValidation, "type")),
 						"properties-title-editor-with-warning": titleWithWarning,
 						"properties-title-editor-with-error": titleWithErrror
 					}
