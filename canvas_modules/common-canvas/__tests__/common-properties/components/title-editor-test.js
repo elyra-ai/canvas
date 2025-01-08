@@ -39,7 +39,7 @@ controller.setAppData(appData);
 
 const helpClickHandler = sinon.spy();
 const help = { data: "test-data" };
-const description = { default: "test description" };
+const description = "test description";
 
 const titleChangeHandlerFunction = function(title, callbackFunction) {
 	// If Title is valid. No need to send anything in callbackFunction

@@ -139,6 +139,7 @@ class TitleEditor extends Component {
 
 		const renderTooltip = (isDescWithLink) => {
 			const { description } = this.props;
+			// If description is present and has a link, show help button
 			const tooltipButton = isDescWithLink ? (
 				<ToggletipActions>
 					<Button
@@ -188,10 +189,12 @@ class TitleEditor extends Component {
 		const renderHelpOrTooltipButton = () => {
 			const { showHeadingDesc, description, help } = this.props;
 
+			// If showHeadingDesc is true and description is present, show tooltip
 			if (showHeadingDesc && description) {
 				return renderTooltip(help);
 			}
 
+			// If description is not present, show help button
 			return renderHelpButton();
 		};
 
