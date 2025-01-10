@@ -498,12 +498,10 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(tableUtilsRTL.getTableRows(container)).to.have.length(2);
 
 		// select the first row in the table
-		tableUtilsRTL.selectCheckboxes(container, [0]);
+		tableUtilsRTL.clickTableRows(container, [0]);
 
-		// ensure table toolbar has Delete button and select it
-		const tableToolbar = container.querySelector("div.properties-table-toolbar");
-		const deleteButton = tableToolbar.querySelectorAll("button.properties-action-delete");
-		expect(deleteButton).to.have.length(1);
+		// ensure row has Delete button and select it
+		const deleteButton = summaryPanel.querySelectorAll("button.delete-button");
 		fireEvent.click(deleteButton[0]);
 
 		// verify row is deleted
@@ -525,7 +523,7 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(tableData).to.have.length(3);
 
 		// set the error in the last row
-		const checkboxCell = summaryPanel.querySelectorAll("input[type='checkbox']")[7];
+		const checkboxCell = summaryPanel.querySelectorAll("input[type='checkbox']")[3];
 		checkboxCell.setAttribute("checked", false);
 		fireEvent.click(checkboxCell);
 
@@ -544,9 +542,8 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(errorMessage).to.eql(actual);
 
 		// remove the first row and ensure the error message is associated with the correct row.
-		tableUtilsRTL.selectCheckboxes(container, [0]);
-		const tableToolbar = container.querySelector("div.properties-table-toolbar");
-		let deleteButton = tableToolbar.querySelectorAll("button.properties-action-delete");
+		tableUtilsRTL.clickTableRows(summaryPanel, [0]);
+		let deleteButton = summaryPanel.querySelectorAll("button.delete-button");
 		fireEvent.click(deleteButton[0]);
 
 		const messages = renderedController.getAllErrorMessages();
@@ -561,8 +558,8 @@ describe("StructureListEditor render from paramdef", () => {
 		summaryPanel = container.querySelector("div.properties-wf-content.show");
 		tableData = tableUtilsRTL.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(2);
-		tableUtilsRTL.selectCheckboxes(container, [1]);
-		deleteButton = container.querySelectorAll("button.properties-action-delete");
+		tableUtilsRTL.clickTableRows(summaryPanel, [1]);
+		deleteButton = summaryPanel.querySelectorAll("button.delete-button");
 		fireEvent.click(deleteButton[0]);
 		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
 		expect(actual).to.equal(null);
@@ -630,7 +627,7 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(errorMessage).to.eql(actual);
 
 		// select the first row and move it to the bottom and make sure the error messages stay aligned.
-		tableUtilsRTL.selectCheckboxes(summaryPanel, [0]);
+		tableUtilsRTL.clickTableRows(summaryPanel, [0]);
 		summaryPanel = container.querySelector("div.properties-wf-content.show");
 		const moveRowBottom = container.querySelector("div.properties-table-toolbar").querySelector("button.table-row-move-bottom-button");
 		fireEvent.click(moveRowBottom);
@@ -656,7 +653,7 @@ describe("StructureListEditor render from paramdef", () => {
 		// select the second from the last row and move it to the top and make sure the error messages stay aligned.
 		tableData = tableUtilsRTL.getTableRows(summaryPanel);
 		expect(tableData).to.have.length(5);
-		tableUtilsRTL.selectCheckboxes(summaryPanel, [3]);
+		tableUtilsRTL.clickTableRows(summaryPanel, [3]);
 		summaryPanel = container.querySelector("div.properties-wf-content.show");
 		const moveRowTop = container.querySelector("div.properties-table-toolbar").querySelector("button.table-row-move-top-button");
 		fireEvent.click(moveRowTop);

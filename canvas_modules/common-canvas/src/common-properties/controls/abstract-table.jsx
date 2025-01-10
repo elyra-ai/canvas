@@ -431,9 +431,12 @@ export default class AbstractTable extends React.Component {
 	}
 
 	makeTableToolbar(selectedRows) {
-		if ((this.props.addRemoveRows || this.props.control?.moveableRows || this.isSelectSummaryEdit(selectedRows)) &&
-		selectedRows?.length > 0 &&
-		this.props.control.rowSelection !== ROW_SELECTION.SINGLE) {
+		// For single select tables, table toolbar doesn't show delete icon because it is added at row level
+		const singleSelectTable = this.props.control.rowSelection === ROW_SELECTION.SINGLE;
+		if (
+			((this.props.addRemoveRows && !singleSelectTable) || this.props.control?.moveableRows || this.isSelectSummaryEdit(selectedRows)) &&
+			selectedRows?.length > 0
+		) {
 			const multiSelectEditRowPropertyId = {
 				name: this.selectSummaryPropertyName,
 				row: 0
@@ -458,6 +461,7 @@ export default class AbstractTable extends React.Component {
 						multiSelectEditSubPanel={multiSelectEditSubPanel}
 						multiSelectEditRowPropertyId={multiSelectEditRowPropertyId}
 						isReadonlyTable={this.isReadonlyTable()}
+						isSingleSelectTable={singleSelectTable}
 						smallFlyout={false}
 					/>
 				</>
