@@ -354,7 +354,7 @@ export default class SVGCanvasUtilsDragNewLink {
 
 		// If the user has not dragged the mouse far enough to create a new link, we
 		// treat it as a click on the port.
-		if (this.isClicked(drawingNewLinkData.mousePos, d3Event)) {
+		if (CanvasUtils.isTinyMovement(drawingNewLinkData.mousePos, { x: d3Event.x, y: d3Event.y })) {
 			this.removeNewLink();
 			this.ren.canvasController.clickActionHandler({
 				clickType: SINGLE_CLICK,
@@ -384,12 +384,6 @@ export default class SVGCanvasUtilsDragNewLink {
 				this.stopDrawingNewLink(drawingNewLinkData);
 			}
 		}
-	}
-
-	// Returns true if the mouse position is inside a circle with a radius of
-	// 3px centred at the d3Event x and y.
-	isClicked(mousePos, d3Event) {
-		return CanvasUtils.isInside(mousePos, { x: d3Event.x, y: d3Event.y }, 3);
 	}
 
 	// Handles the creation of a link when the end of a new link
