@@ -349,7 +349,7 @@
 			{
 				"parameter_ref": "showHeadingDesc",
 				"label": {
-					"default": "headingDesc"
+					"default": "showHeadingDesc"
 				},
 				"description": {
 					"default": "Show panel heading description"
