@@ -123,6 +123,7 @@ class SelectColumnsControl extends AbstractTable {
 					setScrollToRow={this.setScrollToRow}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 					isReadonlyTable={false}
+					isSingleSelectTable={false}
 					smallFlyout={false}
 				/>
 			);
