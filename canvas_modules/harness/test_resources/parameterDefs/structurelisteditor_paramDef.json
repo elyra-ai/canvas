@@ -1216,7 +1216,7 @@
       },
       {
         "complex_type_ref": "inlineEditingTableError",
-        "row_selection": "multiple-edit",
+        "row_selection": "single",
         "moveable_rows": true,
         "parameters": [
           {
