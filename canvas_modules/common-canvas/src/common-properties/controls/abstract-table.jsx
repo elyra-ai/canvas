@@ -744,7 +744,7 @@ export default class AbstractTable extends React.Component {
 					const cell = this.buildChildItem(propertyName, rowIndex, tableState);
 					columns.push(cell);
 				}
-				if (this.props.control.rowSelection === ROW_SELECTION.SINGLE) {
+				if (this.props.control.rowSelection === ROW_SELECTION.SINGLE && !this.isReadonlyTable()) {
 					const toolTip = PropertyUtils.formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_DELETEICON_TOOLTIP);
 					const tooltipId = "tooltip-delete-row";
 					const deleteOption = (

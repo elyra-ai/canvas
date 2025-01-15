@@ -506,10 +506,18 @@ export default class CanvasUtils {
 		return null;
 	}
 
-	// Returns true if point 1 is inside a circle of the specified radius whose
-	// center is point 2.
-	static isInside(point1, point2, radius) {
-		return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2)) < radius;
+	// Returns true if the distance between the two positions is smaller than
+	// 3px which is considered to be a tiny movement. This can be used to define
+	// whether a mouse pointer gesture is considered to be a click on an object or, if
+	// outside the 3px distance, a drag.
+	static isTinyMovement(startPos, endPos) {
+		return CanvasUtils.isInside(startPos, endPos, 3);
+	}
+
+	// Returns true if the distance from point 1 to point 2 is less than the
+	// distance passed in.
+	static isInside(point1, point2, distance) {
+		return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2)) < distance;
 	}
 
 	// Returns the distance from the start point to finish point of the link line.
