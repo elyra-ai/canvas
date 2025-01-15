@@ -24,11 +24,12 @@ import { Size } from "../constants/form-constants";
 import { CONTAINER_TYPE } from "../constants/constants";
 
 export default class Form {
-	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions, resources, icon, heading, title, titleUiItems) {
+	constructor(componentId, label, labelEditable, help, description, editorSize, pixelWidth, uiItems, buttons, data, conditions, resources, icon, heading, title, titleUiItems) {
 		this.componentId = componentId;
 		this.label = label;
 		this.labelEditable = labelEditable;
 		this.help = help;
+		this.description = description;
 		this.editorSize = editorSize;
 		this.pixelWidth = pixelWidth;
 		this.uiItems = uiItems;
@@ -81,6 +82,7 @@ export default class Form {
 				propDef.label,
 				propDef.labelEditable,
 				propDef.help,
+				l10nProvider.l10nResource(propDef.description),
 				propDef.editorSizeHint(editorSizeDefault),
 				propDef.pixelWidth,
 				[UIItem.makePrimaryTabs(tabs)],

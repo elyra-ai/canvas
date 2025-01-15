@@ -150,6 +150,7 @@
     "componentId": "org.apache.spark.ml.ibm.transformers.Distinct",
     "label": "Form placement test",
     "labelEditable": true,
+    "description": "Remove rows to leave only rows with distinct combinations of rows",
     "editorSize": "small",
     "uiItems": [
       {
