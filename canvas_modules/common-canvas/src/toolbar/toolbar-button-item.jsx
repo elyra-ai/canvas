@@ -27,7 +27,7 @@ import { StopFilledAlt, Play, Undo, Redo, Chat, ChatOff, Result,
 	Cut, Copy, Paste, Edit,	ColorPalette, Maximize, Minimize,
 	Launch, AddComment, TrashCan, ZoomIn, ZoomOut,
 	Checkmark, ChevronRight, ChevronDown, ChevronUp,
-	CenterToFit, OpenPanelFilledLeft, ArrangeVertical, ArrangeHorizontal, NotificationCounter } from "@carbon/react/icons";
+	CenterToFit, OpenPanelFilledLeft, ArrangeVertical, ArrangeHorizontal } from "@carbon/react/icons";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT,
