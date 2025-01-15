@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" aria-label="Notification Icon">
+	<path d="M27,12V27H5V5H20V3H5A2,2,0,0,0,3,5V27a2,2,0,0,0,2,2H27a2,2,0,0,0,2-2V12Z"/>
+	<circle class="dot" cx="26.5" cy="5.5" r="3.5"/></svg>

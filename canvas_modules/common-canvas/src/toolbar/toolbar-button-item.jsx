@@ -18,6 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import Tooltip from "../tooltip/tooltip.jsx";
+import ToggleNotificationPanel from "./../../assets/images/notification_counter_icon.svg";
 
 import { Button } from "@carbon/react";
 import SVG from "react-inlinesvg";
@@ -125,7 +126,7 @@ class ToolbarButtonItem extends React.Component {
 		case (TOOLBAR_ARRANGE_VERTICALLY):
 			return <ArrangeVertical disabled={disabled} />;
 		case (TOOLBAR_TOGGLE_NOTIFICATION_PANEL):
-			return <NotificationCounter disabled={disabled} />;
+			return <SVG src={ToggleNotificationPanel} disabled={disabled} />;
 
 		default:
 			return null;
