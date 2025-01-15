@@ -1562,27 +1562,49 @@ export default class ObjectModel {
 		this.setSelections([], apiPipeline.pipelineId);
 	}
 
-	findNodesInSubGraph(startNodeId, endNodeId, selection, pipelineId) {
+	// Returns a boolean where true indicates that a set of linked nodes can
+	// be found between the start node and end node and false indicates that
+	// the start and end nodes are not linked. The function also accepts and
+	// updates an array of currently selected node IDs.
+	findNodesInSubGraph(startNodeId, endNodeId, selectedNodeIds, pipelineId) {
 		const pipeline = this.getAPIPipeline(pipelineId);
 		let retval = false;
 
-		selection.push(startNodeId);
+		// If our start node is already selected, which might occur with a
+		// loop, we return false so we don't search any further.
+		if (selectedNodeIds.find((n) => n === startNodeId)) {
+			return false;
+		}
+
+		// Assume this start node for this search will result in a flow
+		// being found to the end node, so insert its ID into the array.
+		// This will be removed later if the end node is not found.
+		selectedNodeIds.push(startNodeId);
+
+		// If we found the end node we return true.
 		if (startNodeId === endNodeId) {
 			retval = true;
+
 		} else {
-			for (const link of pipeline.getLinks()) {
-				if (link.srcNodeId === startNodeId &&
-					link.srcNodeId !== link.trgNodeId) { // Ignore self-referencing links
-					const newRetval = this.findNodesInSubGraph(link.trgNodeId, endNodeId, selection, pipelineId);
-					if (newRetval !== true) {
-						selection.pop();
-					}
-					// This handles the case where there are multiple outward paths.
-					// Some of the outward paths could be true and some false. This
-					// will make sure that the node in the selection list of one of the
-					// paths contains the end nodeId.
+			// Get a set of appropriate exit links from the start node
+			const exitLinks = pipeline.getLinks()
+				.filter((l) => l.srcNodeId === startNodeId) // Only include links that exit from the start node
+				.filter((l) => l.srcNodeId !== l.trgNodeId); // Ignore self-referencing links
+
+			if (exitLinks.length > 0) {
+				for (const link of exitLinks) {
+					const newRetval = this.findNodesInSubGraph(link.trgNodeId, endNodeId, selectedNodeIds, pipelineId);
+
+					// Some of the exit links could be true and some false. We only
+					// need to remember if one was true.
 					retval = retval || newRetval;
 				}
+			}
+
+			// If the target node was not found along any of the links, we
+			// remove the current node that was added automatically above.
+			if (!retval) {
+				selectedNodeIds.pop();
 			}
 		}
 
