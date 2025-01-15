@@ -725,6 +725,13 @@ export default class SVGCanvasUtilsDragObjects {
 			}
 		}
 
+		// If enableDragWithoutSelect is enabled and the mouse pointer
+		// hasn't moved very much, we don't move the objects.
+		if (this.ren.config.enableDragWithoutSelect &&
+			CanvasUtils.isTinyMovement({ x: 0, y: 0 }, { x: this.draggingObjectData.dragOffsetX, y: this.draggingObjectData.dragOffsetY })) {
+			return;
+		}
+
 		this.ren.displayMovedComments();
 		this.ren.displayMovedNodes();
 		this.ren.displayMovedLinks();
@@ -784,11 +791,10 @@ export default class SVGCanvasUtilsDragObjects {
 		// Remove the 'd3-is-moving' class from the objects being dragged.
 		this.switchIsMovingClass(draggingObjectData.dragObjects, false);
 
-		// If the pointer hasn't moved and enableDragWithoutSelect is enabled we interpret
-		// that as a select on the object.
-		if (draggingObjectData.dragOffsetX === 0 &&
-				draggingObjectData.dragOffsetY === 0 &&
-				this.ren.config.enableDragWithoutSelect) {
+		// If enableDragWithoutSelect is enabled and the pointer hasn't moved
+		// very much, we interpret that as a select on the object.
+		if (this.ren.config.enableDragWithoutSelect &&
+				CanvasUtils.isTinyMovement({ x: 0, y: 0 }, { x: draggingObjectData.dragOffsetX, y: draggingObjectData.dragOffsetY })) {
 			const objType = this.ren.activePipeline.getObjectTypeName(d);
 			this.ren.selectObject(eventType, d, objType, range, augment);
 
