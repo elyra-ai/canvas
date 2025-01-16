@@ -18,8 +18,6 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import Tooltip from "../tooltip/tooltip.jsx";
-import ArrangeHorizontally from "./../../assets/images/arrange_horizontally.svg";
-import ArrangeVertically from "./../../assets/images/arrange_vertically.svg";
 import ToggleNotificationPanel from "./../../assets/images/notification_counter_icon.svg";
 
 import { Button } from "@carbon/react";
@@ -29,7 +27,7 @@ import { StopFilledAlt, Play, Undo, Redo, Chat, ChatOff, Result,
 	Cut, Copy, Paste, Edit,	ColorPalette, Maximize, Minimize,
 	Launch, AddComment, TrashCan, ZoomIn, ZoomOut,
 	Checkmark, ChevronRight, ChevronDown, ChevronUp,
-	CenterToFit, OpenPanelFilledLeft } from "@carbon/react/icons";
+	CenterToFit, OpenPanelFilledLeft, ArrangeVertical, ArrangeHorizontal } from "@carbon/react/icons";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT,
@@ -123,12 +121,10 @@ class ToolbarButtonItem extends React.Component {
 			return <OpenPanelFilledLeft disabled={disabled} />;
 		case (TOOLBAR_TOGGLE_PALETTE):
 			return <OpenPanelFilledLeft disabled={disabled} />;
-
-		// Non-carbon icons
 		case (TOOLBAR_ARRANGE_HORIZONALLY):
-			return <SVG src={ArrangeHorizontally} disabled={disabled} />;
+			return <ArrangeHorizontal disabled={disabled} />;
 		case (TOOLBAR_ARRANGE_VERTICALLY):
-			return <SVG src={ArrangeVertically} disabled={disabled} />;
+			return <ArrangeVertical disabled={disabled} />;
 		case (TOOLBAR_TOGGLE_NOTIFICATION_PANEL):
 			return <SVG src={ToggleNotificationPanel} disabled={disabled} />;
 
