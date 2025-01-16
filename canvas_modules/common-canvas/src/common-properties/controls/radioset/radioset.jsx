@@ -234,6 +234,8 @@ class RadiosetControl extends React.Component {
 					orientation={this.props.control.orientation}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
+					// Provide unique aria-label for each radio button group
+					aria-label={`Radio Button Group (${ControlUtils.getDataId(this.props.control, this.props.propertyId)})`}
 				>
 					{buttons}
 				</RadioButtonGroup>
