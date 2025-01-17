@@ -45,7 +45,6 @@
 		> div:first-child {
 			width: 100%;
 			min-width: 0; // Prevent overflow issues
-			flex: 1; // Allow the div to grow and shrink
 		}
 	}
 }
