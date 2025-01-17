@@ -479,6 +479,7 @@ class CanvasContents extends React.Component {
 					onMouseDown={this.onMouseDown} onMouseLeave={this.onMouseLeave}
 					onBlur={this.onBlur}
 					onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
+					role="application" aria-label="canvas-keyboard-navigation" // Resolve Accessibility Violation of role and label
 				/>
 			);
 		}

@@ -2206,7 +2206,7 @@ export default class SVGCanvasRenderer {
 				}
 			})
 			.on("mouseenter", (d3Event, d) => {
-				if (this.isDragging()) {
+				if (this.isDragging() || this.svgCanvasTextArea.isEditingText()) {
 					return;
 				}
 
@@ -2505,7 +2505,11 @@ export default class SVGCanvasRenderer {
 				that.mouseOverLabelEditIcon = false;
 				that.hideEditIcon(this);
 			})
+			.on("mousedown mouseup", function(d3Event) {
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+			})
 			.on("click", function(d3Event, d) {
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				displayTextArea(d3Event, d);
 				that.mouseOverLabelEditIcon = false;
 				that.hideEditIcon(this);
