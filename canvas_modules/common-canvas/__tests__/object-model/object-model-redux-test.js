@@ -1229,7 +1229,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.selectSubGraph("node4", "123");
 
-		const expectedSelections = ["node2", "node4", "node3"];
+		const expectedSelections = ["node2", "node3", "node4"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
@@ -1421,7 +1421,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.selectSubGraph("node13", "123");
 
-		const expectedSelections = ["node1", "node13", "node2", "node3", "node4", "node11", "node12",
+		const expectedSelections = ["node1", "node2", "node3", "node4", "node11", "node13", "node12",
 			"node5", "node6", "node7"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
@@ -1486,7 +1486,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.selectSubGraph("node12", "123");
 
-		const expectedSelections = ["node1", "node12", "node2", "node3", "node4",
+		const expectedSelections = ["node1", "node2", "node3", "node4", "node12",
 			"node5", "node6", "node7"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
@@ -1551,7 +1551,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.selectSubGraph("node11", "123");
 
-		const expectedSelections = ["node8", "node11", "node4", "node12"];
+		const expectedSelections = ["node8", "node4", "node11", "node12"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// console.info("Expected Selections = " + JSON.stringify(expectedSelections));
@@ -1615,7 +1615,7 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.selectSubGraph("node13", "123");
 
-		const expectedSelections = ["comment1", "node13", "node7", "node4", "node11", "node12"];
+		const expectedSelections = ["comment1", "node7", "node4", "node11", "node13", "node12"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// console.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
