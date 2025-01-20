@@ -21,7 +21,7 @@ import Isvg from "react-inlinesvg";
 import { get } from "lodash";
 import classNames from "classnames";
 import { Help, Edit, Close, Information } from "@carbon/react/icons";
-import { TextInput, Button, Layer } from "@carbon/react";
+import { TextInput, Button, Layer, Link } from "@carbon/react";
 import { Toggletip, ToggletipButton, ToggletipContent, ToggletipActions } from "@carbon/react";
 
 import { setTitle } from "./../../actions";
@@ -142,14 +142,13 @@ class TitleEditor extends Component {
 			// If description is present and has a link, show help button
 			const tooltipButton = isDescWithLink ? (
 				<ToggletipActions>
-					<Button
+					<Link
 						className="properties-title-editor-desc-btn desc-help"
 						onClick={this.helpClickHandler}
 						data-id="desc-help"
-						size="sm"
 					>
 						{helpButtonLabel}
-					</Button>
+					</Link>
 				</ToggletipActions>
 			) : null;
 
