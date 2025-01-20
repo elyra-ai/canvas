@@ -425,7 +425,7 @@
       }
     ],
     "description": {
-      "default": "Readonly description"
+      "default": "This section contains readonly fields and controls. The 'Conditions' panel includes parameters for handling errors, warnings, visibility, and disabling fields. Click on the provided link to test link redirection."
     },
     "help": {
       "id": "link_for_description",
