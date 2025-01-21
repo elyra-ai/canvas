@@ -880,7 +880,7 @@ export default class SvgCanvasTextArea {
 				this.logger.log("Text area - focus");
 				data.autoSizeCallback(d3Event.target, data);
 			})
-			.on("mousedown click dblclick contextmenu", (d3Event, d) => {
+			.on("mousedown mouseenter mouseleave click dblclick contextmenu", (d3Event, d) => {
 				d3Event.stopPropagation(); // Allow default behavior to show system contenxt menu
 			});
 	}
