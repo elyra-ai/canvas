@@ -1498,8 +1498,8 @@ export default class ObjectModel {
 			} else {
 				this.toggleSelection(objId, augment, pipelineId);
 			}
-		} else if (augment) {
-			this.toggleSelection(objId, augment, pipelineId);
+		} else if (augment || range) {
+			this.toggleSelection(objId, augment || range, pipelineId);
 		}
 	}
 
