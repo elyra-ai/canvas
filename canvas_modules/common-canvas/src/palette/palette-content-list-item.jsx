@@ -289,6 +289,7 @@ class PaletteContentListItem extends React.Component {
 		let labelText = get(this.props, "nodeTypeInfo.nodeType.app_data.ui_data.label", "");
 		let draggable = this.isItemDisabled() ? "false" : "true";
 		let icon = null;
+		const ariaDisabled = this.isItemDisabled();
 
 		if (has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.image")) {
 			let image = this.props.nodeTypeInfo.nodeType.app_data.ui_data.palette_image
@@ -355,6 +356,7 @@ class PaletteContentListItem extends React.Component {
 				tabIndex={this.props.tabIndex}
 				role={"button"}
 				aria-label={labelText}
+				aria-disabled={ariaDisabled}
 				draggable={draggable}
 				className={mainDivClass}
 				onMouseOver={this.onMouseOver}
