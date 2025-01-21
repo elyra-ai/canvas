@@ -128,6 +128,7 @@ export const MESSAGE_KEYS = {
 	TABLE_TOOLBAR_BUTTON_EDIT: "table.toolbar.button.edit",
 	TABLE_TOOLBAR_BUTTON_CANCEL: "table.toolbar.button.cancel",
 	TABLE_TOOLBAR_OVERFLOW_LABEL: "table.toolbar.overflow.label",
+	RADIO_BUTTON_GROUP_ARIA_LABEL: "radiobuttongroup.aria.label",
 	TABLE_DELETEICON_TOOLTIP: "table.deleteIcon.tooltip"
 
 };

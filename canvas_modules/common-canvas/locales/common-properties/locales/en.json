@@ -96,6 +96,7 @@
   "table.toolbar.button.edit": "Edit",
   "table.toolbar.button.cancel": "Cancel",
   "table.toolbar.overflow.label": "Table Toolbar Overflow",
+  "radiobuttongroup.aria.label": "Radio Button Group",
   "list.table.label": "Values",
   "dropdown.tooltip.openMenu": "Open menu",
   "dropdown.tooltip.closeMenu": "Close menu",
