@@ -1562,60 +1562,116 @@ export default class ObjectModel {
 		this.setSelections([], apiPipeline.pipelineId);
 	}
 
-	findNodesInSubGraph(startNodeId, endNodeId, selection, pipelineId) {
-		const pipeline = this.getAPIPipeline(pipelineId);
-		let retval = false;
-
-		selection.push(startNodeId);
-		if (startNodeId === endNodeId) {
-			retval = true;
-		} else {
-			for (const link of pipeline.getLinks()) {
-				if (link.srcNodeId === startNodeId &&
-					link.srcNodeId !== link.trgNodeId) { // Ignore self-referencing links
-					const newRetval = this.findNodesInSubGraph(link.trgNodeId, endNodeId, selection, pipelineId);
-					if (newRetval !== true) {
-						selection.pop();
-					}
-					// This handles the case where there are multiple outward paths.
-					// Some of the outward paths could be true and some false. This
-					// will make sure that the node in the selection list of one of the
-					// paths contains the end nodeId.
-					retval = retval || newRetval;
-				}
-			}
-		}
-
-		return retval;
+	// Selects a set of nodes which represet all connected nodes from the
+	// current set of selected nodes to the end node passed in. If no
+	// connecting nodes are found, the set of selected nodes remains the same.
+	selectSubGraph(endNodeId, pipelineId) {
+		const selectedObjectIds = this.getSubGraphNodes(endNodeId, pipelineId);
+		this.setSelections(selectedObjectIds, pipelineId);
 	}
 
-	selectSubGraph(endNodeId, pipelineId) {
-		const selection = [];
-		let selectedObjectIds = [endNodeId];
+	// Returns an array of node IDs that represent all connected nodes from the
+	// current set of selected nodes to the end node passed in.
+	getSubGraphNodes(endNodeId, pipelineId) {
+		const selectedObjectIds = this.getSelectedObjectIds();
 
 		if (pipelineId === this.getSelectedPipelineId()) {
-			const currentSelectedObjects = this.getSelectedObjectIds();
+			const pipeline = this.getAPIPipeline(pipelineId);
+			const links = pipeline.getLinks();
+			const allPaths = [];
 
-			// Get all the nodes in the path from a currently selected object to the end node
-			let foundPath = false;
-			for (const startNodeId of currentSelectedObjects) {
-				foundPath = foundPath || this.findNodesInSubGraph(startNodeId, endNodeId, selection, pipelineId);
-			}
-			if (!foundPath) {
-				// If no subgraph found which is also the case if current selection was empty, just select endNode
-				selection.push(endNodeId);
+			// Loop through all the currently selected nodes which will be
+			// our start nodes.
+			for (const startNodeId of selectedObjectIds) {
+				const paths = this.getGraphPaths(startNodeId, endNodeId, links);
+				allPaths.push(...paths);
 			}
 
-			// Do not put multiple copies of a nodeId in selected nodeId list.
-			selectedObjectIds = this.getSelectedObjectIds().slice();
-			for (const selected of selection) {
-				if (!this.isSelected(selected, pipelineId)) {
-					selectedObjectIds.push(selected);
+			// Add to the set of currently selected object IDs any nodes
+			// found that connect from them to the end node.
+			for (const path of allPaths) {
+				for (const nodeId of path) {
+					if (!selectedObjectIds.includes(nodeId)) {
+						selectedObjectIds.push(nodeId);
+					}
 				}
 			}
 		}
 
-		this.setSelections(selectedObjectIds, pipelineId);
+		// Make sure the end node is included in the list of selected nodes.
+		if (!selectedObjectIds.includes(endNodeId)) {
+			selectedObjectIds.push(endNodeId);
+		}
+
+		return selectedObjectIds;
+	}
+
+	// Returns an array of paths where each path is an array of nodes from
+	// the start node to the end node.
+	getGraphPaths(startNodeId, endNodeId, links) {
+		const visited = new Set();
+		const path = [];
+		const paths = [];
+
+		this.getGraphPathForNode(startNodeId, endNodeId, path, visited, paths, links);
+
+		return paths;
+	}
+
+	// Updates the paths array with any new path found where a path is an array
+	// of node IDs that connect the node passed in to the end node. To do this it uses
+	// the path and visited arrays as working arrays.
+	getGraphPathForNode(nodeId, endNodeId, path, visited, paths, links) {
+		if (nodeId === endNodeId) {
+			paths.push([...path, endNodeId]);
+			return;
+		}
+
+		if (visited.has(nodeId)) {
+			// If we've visited this node before, and the node ID is in one of the
+			// currently saved paths, we make the path to this node an additional
+			// path even though it doesn't end at the end node. All nodes in paths
+			//  will get consolidated by our caller so that is not a problem.
+			if (this.isInSavedPath(nodeId, paths)) {
+				paths.push([...path, endNodeId]);
+			}
+			return;
+		}
+
+		visited.add(nodeId);
+		path.push(nodeId);
+
+		const neighbors = this.getNeighbourNodeIDs(nodeId, links);
+
+		for (const neighbor of neighbors) {
+			this.getGraphPathForNode(neighbor, endNodeId, path, visited, paths, links);
+		}
+
+		path.pop();
+	}
+
+	// Returns true if the node ID passed in is in one of the
+	// paths stored in the paths array.
+	isInSavedPath(nodeId, paths) {
+		for (const path of paths) {
+			if (path.includes(nodeId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// Returns an array of neighbor nodes for the node identified
+	// by the ID passed in.
+	getNeighbourNodeIDs(nodeId, links) {
+		const neighbors = [];
+
+		links.forEach((l) => {
+			if (l.srcNodeId === nodeId && l.trgNodeId && l.type !== ASSOCIATION_LINK) {
+				neighbors.push(l.trgNodeId);
+			}
+		});
+		return neighbors;
 	}
 
 	// Return true is nodeIds are contiguous.
