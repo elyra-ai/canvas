@@ -30,14 +30,9 @@ class CanvasTopPanel extends React.Component {
 		this.logger.log("render");
 		let topPanel = null;
 
-		let className = "top-panel";
-		if (this.props.toolbarIsOpen) {
-			className += " common-canvas-toolbar-none";
-		}
-
 		if (this.props.topPanelIsOpen) {
 			topPanel = (
-				<div className={className} >
+				<div className={"top-panel"} >
 					{this.props.topPanelContent}
 				</div>
 			);
@@ -54,13 +49,11 @@ CanvasTopPanel.propTypes = {
 
 	// Provided by Redux
 	topPanelIsOpen: PropTypes.bool,
-	topPanelContent: PropTypes.object,
-	toolbarIsOpen: PropTypes.bool
+	topPanelContent: PropTypes.object
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	topPanelIsOpen: state.toppanel.isOpen,
-	topPanelContent: state.toppanel.content,
-	toolbarIsOpen: (state.canvasconfig.enableToolbarLayout === "None")
+	topPanelContent: state.toppanel.content
 });
 export default connect(mapStateToProps)(CanvasTopPanel);
