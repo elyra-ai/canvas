@@ -2634,7 +2634,8 @@
 <p><img src="../assets/cc-palette.gif" width="500" /></p>
 <p>The user can drag any of the palette nodes from the palette onto the canvas to create a new instance of a node on the canvas. The user can then join nodes together by creating link lines.</p>
 <p><img src="../assets/cc-flow-editor-create-node.gif" width="500" /></p>
-<p>Alternatively, the user can double click node templates to add, and automatically join, them to the current flow. When a palette node is double clicked, Common Canvas will look for the node at the end of the current flow of nodes and will add the node to the canvas to the right of the end node in the flow. Common Canvas will also automatically join the nodes together by creating a new link line.</p>
+<p>Alternatively, the user can double click (or single click if <a href="../03.02.01-canvas-config/#enablesingleclickaddfrompalette"><code>enableSingleClickAddFromPalette</code></a> is set to <code>true</code>) node templates to add, and automatically join, them to the current flow.</p>
+<p>When a palette node is added in this way, Common Canvas will look for the node at the end of the current flow of nodes and will add the node to the canvas to the right of the end node in the flow. Common Canvas will also automatically join the nodes together by creating a new link line. The <a href="../03.02.01-canvas-config/#enableautolinkonlyfromselnodes"><code>enableAutoLinkOnlyFromSelNodes</code></a> canvas configuartion field can be used to customize which node is chosen for automatic linking.</p>
 <p><img src="../assets/cc-palette-double-click.gif" width="500" /></p>
 <h2 id="populating-the-palette">Populating the palette<a class="headerlink" href="#populating-the-palette" title="Permanent link">&para;</a></h2>
 <p>The host application must tell Common Canvas what node templates and categories it wants the user to see in the palette. This is done by providing Common Canvas with a palette (JavaScript) object by calling the canvas-controller <code>setPipelineFlowPalette(palette)</code> method. The palette object is often read from a JSON document stored in the host application&rsquo;s repository or it can be automatically generated.</p>
@@ -2644,6 +2645,7 @@
 <ul>
 <li><a href="../03.02.01-canvas-config/#enablepalettelayout">enablePaletteLayout</a></li>
 <li><a href="../03.02.01-canvas-config/#enablenarrowpalette">enableNarrowPalette</a></li>
+<li><a href="../03.02.01-canvas-config/#enablesingleclickaddfrompalette">enableSingleClickAddFromPalette</a></li>
 <li><a href="../03.02.01-canvas-config/#enableautolinkonlyfromselnodes">enableAutoLinkOnlyFromSelNodes</a></li>
 <li><a href="../03.02.01-canvas-config/#enablepaletteheader">enablePaletteHeader</a></li>
 </ul>

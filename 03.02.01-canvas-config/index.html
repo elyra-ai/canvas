@@ -1495,6 +1495,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#enablesingleclickaddfrompalette" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSingleClickAddFromPalette
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enableautolinkonlyfromselnodes" class="md-nav__link">
     <span class="md-ellipsis">
       enableAutoLinkOnlyFromSelNodes
@@ -3484,6 +3493,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#enablesingleclickaddfrompalette" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSingleClickAddFromPalette
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enableautolinkonlyfromselnodes" class="md-nav__link">
     <span class="md-ellipsis">
       enableAutoLinkOnlyFromSelNodes
@@ -3965,6 +3983,8 @@ The tips displayed by the palette can be further refined. For example, this woul
 <h2 id="palette">Palette<a class="headerlink" href="#palette" title="Permanent link">&para;</a></h2>
 <h4 id="enablepalettelayout"><strong>enablePaletteLayout</strong><a class="headerlink" href="#enablepalettelayout" title="Permanent link">&para;</a></h4>
 <p>This can be: &ldquo;Modal&rdquo; or &ldquo;Flyout&rdquo; or &ldquo;None&rdquo;. The default is &ldquo;Flyout&rdquo;. &ldquo;Flyout&rdquo; displays a panel on the left side of the canvas containing the palette icons and &ldquo;Modal&rdquo; shows the palette icons in a dialog window. &ldquo;None&rdquo; stops the palette from appearing.</p>
+<h4 id="enablesingleclickaddfrompalette"><strong>enableSingleClickAddFromPalette</strong><a class="headerlink" href="#enablesingleclickaddfrompalette" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. When set to true, if the user clicks on a palette node in a category, the node will be automatically added to the canvas and, if possible, the node will be linked one of the nodes on the canvas. The node chosen can be controlled with the <code>enableAutoLinkOnlyFromSelNodes</code> configuraiton field. If <code>enableSingleClickAddFromPalette</code> is false, a single click on a node in the palette will not add it to the canvas.</p>
 <h4 id="enableautolinkonlyfromselnodes"><strong>enableAutoLinkOnlyFromSelNodes</strong><a class="headerlink" href="#enableautolinkonlyfromselnodes" title="Permanent link">&para;</a></h4>
 <p>This is a boolean. The default is false. When set to true the auto-add function (where double clicking a node in the palette automatically adds it to the canvas) will only link up nodes when a node is already selected on the canvas and then, only if the selected node can be linked to the node that was double clicked. If false, the auto-add function will make a best guess at which node the double-clicked node should be added to.</p>
 <h4 id="enablepaletteheader"><strong>enablePaletteHeader</strong><a class="headerlink" href="#enablepaletteheader" title="Permanent link">&para;</a></h4>
