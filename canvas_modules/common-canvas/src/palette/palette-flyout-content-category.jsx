@@ -201,6 +201,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 					category={this.props.category}
 					nodeTypeInfos={nodeTypeInfos}
 					canvasController={this.props.canvasController}
+					allowClickToAdd={this.props.allowClickToAdd}
 					isPaletteWide={this.props.isPaletteWide}
 					isEditingEnabled={this.props.isEditingEnabled}
 				/>
@@ -241,6 +242,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 PaletteFlyoutContentCategory.propTypes = {
 	category: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	allowClickToAdd: PropTypes.bool,
 	isPaletteWide: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
 };

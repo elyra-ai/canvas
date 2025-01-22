@@ -38,6 +38,7 @@ class Palette extends React.Component {
 				canvasController={this.props.canvasController}
 				paletteJSON={this.props.paletteJSON}
 				paletteHeader={this.props.paletteHeader}
+				allowClickToAdd={this.props.allowClickToAdd}
 				isEditingEnabled={this.props.isEditingEnabled}
 				isPaletteWide={this.props.isPaletteWide}
 			/>
@@ -52,6 +53,7 @@ Palette.propTypes = {
 	// Provided by redux
 	paletteJSON: PropTypes.object,
 	paletteHeader: PropTypes.object,
+	allowClickToAdd: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool,
 	isPaletteWide: PropTypes.bool
 };
@@ -60,6 +62,7 @@ const mapStateToProps = (state, ownProps) => ({
 	paletteJSON: state.palette.content,
 	isEditingEnabled: state.canvasconfig.enableEditingActions,
 	paletteHeader: state.canvasconfig.enablePaletteHeader,
+	allowClickToAdd: state.canvasconfig.enableSingleClickAddFromPalette,
 	isPaletteWide: state.canvasconfig.enablePaletteLayout === PALETTE_LAYOUT_NONE ||
 		(state.canvasconfig.enablePaletteLayout === PALETTE_LAYOUT_FLYOUT &&
 			state.palette.isOpen)
