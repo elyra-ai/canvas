@@ -741,6 +741,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableSingleClickAddFromPalette = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="enableSingleClickAddFromPalette" // Set ID to corresponding field in App.js state
+				labelText="Enable Single Click To Add Node From Palette"
+				toggled={this.props.getStateValue("selectedSingleClickAddFromPalette")}
+				onToggle={(val) => this.setStateValue(val, "selectedSingleClickAddFromPalette")}
+			/>
+		</div>);
+
 		var enableKeyboardNavigation = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedKeyboardNavigation" // Set ID to corresponding field in App.js state
@@ -1683,6 +1692,8 @@ export default class SidePanelForms extends React.Component {
 					{enablePaletteHeader}
 					{divider}
 					{enableAutoLinkOnlyFromSelNodes}
+					{divider}
+					{enableSingleClickAddFromPalette}
 					{divider}
 					<div className="harness-side-panel-header">Nodes</div>
 					{divider}

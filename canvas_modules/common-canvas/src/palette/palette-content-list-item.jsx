@@ -43,6 +43,7 @@ class PaletteContentListItem extends React.Component {
 
 		this.onDragStart = this.onDragStart.bind(this);
 		this.onDragEnd = this.onDragEnd.bind(this);
+		this.onClick = this.onClick.bind(this);
 		this.onDoubleClick = this.onDoubleClick.bind(this);
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
@@ -96,6 +97,12 @@ class PaletteContentListItem extends React.Component {
 
 	onDoubleClick() {
 		this.createAutoNode(true);
+	}
+
+	onClick() {
+		if (this.props.allowClickToAdd) {
+			this.createAutoNode(true);
+		}
 	}
 
 	onMouseOver(ev) {
@@ -365,6 +372,7 @@ class PaletteContentListItem extends React.Component {
 				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
 				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}
 				onDragEnd={this.props.isEditingEnabled ? this.onDragEnd : null}
+				onClick={this.props.isEditingEnabled ? this.onClick : null}
 				onDoubleClick={this.props.isEditingEnabled ? this.onDoubleClick : null}
 			>
 				{categoryLabel}
@@ -386,6 +394,7 @@ PaletteContentListItem.propTypes = {
 	tabIndex: PropTypes.number.isRequired,
 	nextNodeInCategory: PropTypes.func,
 	previousNodeInCategory: PropTypes.func,
+	allowClickToAdd: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
 	isPaletteWide: PropTypes.bool,
 	isShowRanking: PropTypes.bool
