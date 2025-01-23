@@ -457,7 +457,7 @@ export declare class CanvasController {
     categoryLabel?: string,
     categoryDescription?: string,
     categoryImage?: string
-  );
+  ): void;
   /**
    * Removes nodetypes from a palette category
    * @param selObjectIds - an array of object IDs to identify the nodetypes to be
@@ -756,12 +756,6 @@ export declare class CanvasController {
     pipelineId?: string
   ): void;
 
-  openPalette(): void;
-  setLinkDecorations(
-    id: string,
-    decorations: LinkDecoration[],
-    pipelineId: string
-  );
   /**
    * Deletes the node specified.
    * @param nodeId - The ID of the node
@@ -1080,7 +1074,7 @@ export declare class CanvasController {
    * used (e.g. the toolbar button was clicked).
    * pipelineId - The ID of the pipeline
    */
-  getNewCommentPosition(pipelineId): { x: number; y: number };
+  getNewCommentPosition(pipelineId: string): { x: number; y: number };
   /**
    * Creates a comment for the pipeline.
    * @param source - Input data
@@ -1911,23 +1905,23 @@ export interface CommonPropertiesConfig {
    * Default true to show (required) indicator. If set to false, show
    * (optional) indicator next to properties label.
    */
-  showRequiredIndicator: boolean;
+  showRequiredIndicator?: boolean;
   /**
    * Default true to show “Alerts” tab whenever there are error or warning
    * messages. If set to false, Alerts tab won’t be displayed.
    */
-  showAlertsTab: boolean;
+  showAlertsTab?: boolean;
   /**
    * Default []. When set this will filter out any values in the array in
    * the parameters returned when applyPropertyChanges is call. Only
    * primitive data types are currently supported.
    */
-  returnValueFiltering: unknown[] | string;
+  returnValueFiltering?: unknown[] | string;
   /**
    * View categories in right-flyout. Can be "accordions" or "tabs".
    * default: "accordions".
    */
-  categoryView: "accordions" | "tabs";
+  categoryView?: "accordions" | "tabs";
 }
 
 /**
@@ -2562,34 +2556,37 @@ export interface ToolbarConfig {
 export interface NotificationConfig {
   action: string;
   label: string;
-  enable: boolean;
-  notificationHeader: string;
-  notificationSubtitle: string;
+  enable?: boolean;
+  notificationHeader?: string;
+  notificationSubtitle?: string;
   emptyMessage: string;
-  clearAllMessage: string;
-  keepOpen: boolean;
-  clearAllCallback: () => void;
+  clearAllMessage?: string;
+  keepOpen?: boolean;
+  clearAllCallback?: () => void;
+  secondaryButtonLabel?: string;
+  secondaryButtonCallback?: () => void;
+  secondaryButtonDisabled?: boolean;
 }
 
 export interface CtxMenuConfig {
-  enableCreateSupernodeNonContiguous: boolean;
-  defaultMenuEntries: {
-    saveToPalette: boolean;
-    createSupernode: boolean;
-    displaySupernodeFullPage: boolean;
-    colorBackground: boolean;
+  enableCreateSupernodeNonContiguous?: boolean;
+  defaultMenuEntries?: {
+    saveToPalette?: boolean;
+    createSupernode?: boolean;
+    displaySupernodeFullPage?: boolean;
+    colorBackground?: boolean;
   };
 }
 
 export interface KeyboardConfig {
   actions: {
-    delete: boolean;
-    undo: boolean;
-    redo: boolean;
-    selectAll: boolean;
-    cutToClipboard: boolean;
-    copyToClipboard: boolean;
-    pasteFromClipboard: boolean;
+    delete?: boolean;
+    undo?: boolean;
+    redo?: boolean;
+    selectAll?: boolean;
+    cutToClipboard?: boolean;
+    copyToClipboard?: boolean;
+    pasteFromClipboard?: boolean;
   };
 }
 
@@ -2760,7 +2757,7 @@ export interface CommonCanvasProps {
   beforeEditActionHandler?: (
     data: EditActionData,
     command: EditActionCommand
-  ) => EditActionCommand | void;
+  ) => EditActionData | void;
   /**
    * https://elyra-ai.github.io/canvas/03.03.03-edit-action-handler/
    */
