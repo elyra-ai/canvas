@@ -37,6 +37,10 @@ class PaletteContentList extends React.Component {
 		this.contentItemRefs[this.currentFocusIndex].current.focus();
 	}
 
+	setFocusIndex(idx) {
+		this.currentFocusIndex = idx;
+	}
+
 	nextNodeInCategory(evt) {
 		this.currentFocusIndex++;
 		if (this.currentFocusIndex > this.contentItemRefs.length - 1) {
@@ -93,6 +97,7 @@ class PaletteContentList extends React.Component {
 						isEditingEnabled={this.props.isEditingEnabled}
 						nextNodeInCategory={this.nextNodeInCategory}
 						previousNodeInCategory={this.previousNodeInCategory}
+						setFocusIndex={this.setFocusIndex.bind(this, idx)}
 						allowClickToAdd={this.props.allowClickToAdd}
 					/>
 				);
