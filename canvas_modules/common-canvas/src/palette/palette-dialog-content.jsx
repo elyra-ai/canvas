@@ -87,6 +87,7 @@ class PaletteDialogContent extends React.Component {
 					nodeTypes={nodeTypes}
 					canvasController={this.props.canvasController}
 					isEditingEnabled={this.props.isEditingEnabled}
+					allowClickToAdd={this.props.allowClickToAdd}
 				/>)
 			: (
 				<PaletteContentList
@@ -95,6 +96,7 @@ class PaletteDialogContent extends React.Component {
 					canvasController={this.props.canvasController}
 					isPaletteWide
 					isEditingEnabled={this.props.isEditingEnabled}
+					allowClickToAdd={this.props.allowClickToAdd}
 				/>);
 		return (
 			<div className="palette-dialog-content" ref="palettecontent">
@@ -112,6 +114,7 @@ PaletteDialogContent.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
 	showGrid: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	allowClickToAdd: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired
 };
 

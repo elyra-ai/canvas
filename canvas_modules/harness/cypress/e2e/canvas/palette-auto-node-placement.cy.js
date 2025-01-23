@@ -172,6 +172,41 @@ describe("Test auto layout variations", function() {
 	});
 });
 
+describe("Test auto layout with enableSingleClickAddFromPalette", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasPalette("modelerPalette.json");
+	});
+
+	it("Test single click adds node to canvas when enableSingleClickAddFromPalette is true", function() {
+		cy.setCanvasConfig({
+			"selectedSingleClickAddFromPalette": true
+		});
+
+		cy.clickToolbarPaletteOpen();
+
+		cy.clickCategory("Import");
+		cy.clickNodeInCategory("Var. File", "Import");
+		cy.verifyNodeTransform("Var. File", 50, 50);
+		cy.verifyNumberOfNodes(1);
+		cy.verifyNumberOfPortDataLinks(0);
+	});
+
+	it("Test single click doesn't add node to canvas when enableSingleClickAddFromPalette is false", function() {
+		cy.setCanvasConfig({
+			"selectedSingleClickAddFromPalette": false
+		});
+
+		cy.clickToolbarPaletteOpen();
+
+		// Double click Var. File node on canvas
+		cy.clickCategory("Import");
+		cy.clickNodeInCategory("Var. File", "Import");
+		cy.verifyNumberOfNodes(0);
+		cy.verifyNumberOfPortDataLinks(0);
+	});
+});
+
 describe("Test that auto-nodes are added to an in-place expanded supernode", function() {
 	beforeEach(() => {
 		cy.visit("/");
