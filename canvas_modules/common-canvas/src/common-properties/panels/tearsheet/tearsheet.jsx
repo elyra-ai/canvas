@@ -22,7 +22,7 @@ import { formatMessage } from "./../../util/property-utils";
 import { ComposedModal, ModalHeader, ModalBody } from "@carbon/react";
 import { Portal } from "react-portal";
 import { MESSAGE_KEYS } from "./../../constants/constants";
-import PropertiesButtons from "../../components/properties-buttons";
+import MainEditorPropertiesButtons from "./../../components/main-editor-properties-buttons";
 
 class TearSheet extends Component {
 	render() {
@@ -34,12 +34,14 @@ class TearSheet extends Component {
 
 		const buttons = this.props.applyOnBlur
 			? null
-			: (<PropertiesButtons
+			: (<MainEditorPropertiesButtons
 				okHandler={this.props.okHandler}
 				cancelHandler={this.props.cancelHandler}
 				applyLabel={this.props.applyLabel}
 				rejectLabel={this.props.rejectLabel}
 				showPropertiesButtons={this.props.showPropertiesButtons}
+				controller={this.props.propertiesController}
+				disableSaveOnRequiredErrors={this.props.disableSaveOnRequiredErrors}
 			/>);
 
 		return (
@@ -93,7 +95,9 @@ TearSheet.propTypes = {
 	okHandler: PropTypes.func, // Required if showPropertiesButtons is true
 	cancelHandler: PropTypes.func, // Required if showPropertiesButtons is true
 	applyOnBlur: PropTypes.bool.isRequired,
-	intl: PropTypes.object.isRequired
+	intl: PropTypes.object.isRequired,
+	propertiesController: PropTypes.object.isRequired,
+	disableSaveOnRequiredErrors: PropTypes.bool.isRequired
 };
 
 TearSheet.defaultProps = {
