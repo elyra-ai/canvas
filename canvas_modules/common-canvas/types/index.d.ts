@@ -2478,6 +2478,7 @@ export interface CanvasConfig {
   enableHighlightUnavailableNodes?: boolean;
   enableHighlightNodeOnNewLinkDrag?: boolean;
   enableAutoLinkOnlyFromSelNodes?: boolean;
+  enableSingleClickAddFromPalette?: boolean;
   enableExternalPipelineFlows?: boolean;
   enableMoveNodesOnSupernodeResize?: boolean;
   enableDisplayFullLabelOnHover?: boolean;
