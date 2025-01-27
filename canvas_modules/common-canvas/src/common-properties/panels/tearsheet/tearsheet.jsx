@@ -40,7 +40,7 @@ class TearSheet extends Component {
 				applyLabel={this.props.applyLabel}
 				rejectLabel={this.props.rejectLabel}
 				showPropertiesButtons={this.props.showPropertiesButtons}
-				controller={this.props.propertiesController}
+				controller={this.props.controller}
 				disableSaveOnRequiredErrors={this.props.disableSaveOnRequiredErrors}
 			/>);
 
@@ -96,7 +96,7 @@ TearSheet.propTypes = {
 	cancelHandler: PropTypes.func, // Required if showPropertiesButtons is true
 	applyOnBlur: PropTypes.bool.isRequired,
 	intl: PropTypes.object.isRequired,
-	propertiesController: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
 	disableSaveOnRequiredErrors: PropTypes.bool.isRequired
 };
 

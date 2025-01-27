@@ -588,7 +588,7 @@ class PropertiesMain extends React.Component {
 					cancelHandler={cancelHandler}
 					showPropertiesButtons={this.state.showPropertiesButtons}
 					applyOnBlur={this.props.propertiesConfig.applyOnBlur}
-					propertiesController={this.propertiesController}
+					controller={this.propertiesController}
 					disableSaveOnRequiredErrors={this.props.propertiesConfig.disableSaveOnRequiredErrors}
 				/>);
 			} else { // Modal
