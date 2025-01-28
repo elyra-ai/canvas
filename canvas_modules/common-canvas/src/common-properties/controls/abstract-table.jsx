@@ -143,6 +143,11 @@ export default class AbstractTable extends React.Component {
 		return row;
 	}
 
+	// Returns the label for the overflow menu in the table toolbar
+	getTableToolbarOverflowLabel() {
+		return PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_OVERFLOW_LABEL);
+	}
+
 	setScrollToRow(row) {
 		this.scrollToRow = row;
 	}
@@ -534,6 +539,7 @@ export default class AbstractTable extends React.Component {
 					tableState={tableState}
 					customButtons={customButtons}
 					customButtonsState={this.props.tableButtons}
+					toolbarOverflowLabel={this.getTableToolbarOverflowLabel()}
 				/>
 			</div>);
 		}
@@ -744,7 +750,8 @@ export default class AbstractTable extends React.Component {
 					const cell = this.buildChildItem(propertyName, rowIndex, tableState);
 					columns.push(cell);
 				}
-				if (this.props.control.rowSelection === ROW_SELECTION.SINGLE && !this.isReadonlyTable()) {
+				// Do not show delete icon if add_remove_rows is false (default is true)
+				if (this.props.control.rowSelection === ROW_SELECTION.SINGLE && !this.isReadonlyTable() && this.props.addRemoveRows) {
 					const toolTip = PropertyUtils.formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_DELETEICON_TOOLTIP);
 					const tooltipId = "tooltip-delete-row";
 					const deleteOption = (
