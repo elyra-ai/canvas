@@ -42,7 +42,7 @@ class ControlItem extends React.Component {
 
 		let label;
 		let description;
-		if (this.props.control.label && this.props.control.labelVisible !== false) {
+		if (this.props.control.label) {
 			let tooltip;
 			if (this.props.control.description && !isEmpty(this.props.control.description.text)) {
 				if (this.props.control.description.placement === "on_panel") {
