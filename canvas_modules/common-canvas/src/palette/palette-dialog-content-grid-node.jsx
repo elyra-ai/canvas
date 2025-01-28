@@ -37,6 +37,7 @@ class PaletteDialogContentGridNode extends React.Component {
 
 		this.onDragStart = this.onDragStart.bind(this);
 		this.onDragEnd = this.onDragEnd.bind(this);
+		this.onClick = this.onClick.bind(this);
 		this.onDoubleClick = this.onDoubleClick.bind(this);
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
@@ -72,11 +73,14 @@ class PaletteDialogContentGridNode extends React.Component {
 		this.props.canvasController.nodeTemplateDragEnd();
 	}
 
-	onDoubleClick() {
-		if (this.props.canvasController.createAutoNode) {
-			const nodeTemplate = this.props.canvasController.convertNodeTemplate(this.props.nodeTemplate);
-			this.props.canvasController.createAutoNode(nodeTemplate);
+	onClick() {
+		if (this.props.allowClickToAdd) {
+			this.createAutoNode();
 		}
+	}
+
+	onDoubleClick() {
+		this.createAutoNode();
 	}
 
 	onMouseOver(ev) {
@@ -97,6 +101,13 @@ class PaletteDialogContentGridNode extends React.Component {
 
 	onMouseLeave() {
 		this.props.canvasController.closeTip();
+	}
+
+	createAutoNode() {
+		if (this.props.canvasController.createAutoNode) {
+			const nodeTemplate = this.props.canvasController.convertNodeTemplate(this.props.nodeTemplate);
+			this.props.canvasController.createAutoNode(nodeTemplate);
+		}
 	}
 
 	render() {
@@ -147,6 +158,7 @@ class PaletteDialogContentGridNode extends React.Component {
 				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
 				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}
 				onDragEnd={this.props.isEditingEnabled ? this.onDragEnd : null}
+				onClick={this.props.isEditingEnabled ? this.onClick : null}
 				onDoubleClick={this.props.isEditingEnabled ? this.onDoubleClick : null}
 				className="palette-dialog-grid-node-outer"
 			>
@@ -167,6 +179,7 @@ PaletteDialogContentGridNode.propTypes = {
 	category: PropTypes.object.isRequired,
 	nodeTemplate: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	allowClickToAdd: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired
 };
 

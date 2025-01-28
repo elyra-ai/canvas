@@ -43,6 +43,7 @@ class PaletteContentListItem extends React.Component {
 
 		this.onDragStart = this.onDragStart.bind(this);
 		this.onDragEnd = this.onDragEnd.bind(this);
+		this.onClick = this.onClick.bind(this);
 		this.onDoubleClick = this.onDoubleClick.bind(this);
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
@@ -54,12 +55,20 @@ class PaletteContentListItem extends React.Component {
 		// Make sure the tip doesn't appear when starting to drag a node.
 		this.props.canvasController.closeTip();
 
+		// Sets the focus index on the parent palette-content-list so
+		// future key presses that move focus will work correctly.
+		if (this.props.setFocusIndex) {
+			this.props.setFocusIndex();
+		}
+
 		// Prepare the ghost image on mouse down because asynchronous loading of
 		// SVG files will be too slow if this is done in onDragStart.
 		this.ghostData = this.props.canvasController.getGhostNode(this.props.nodeTypeInfo.nodeType);
 	}
 
 	onDragStart(ev) {
+		this.props.canvasController.closeTip();
+
 		// We cannot use the dataTransfer object for the nodeTemplate because
 		// the dataTransfer data is not available during dragOver events so we set
 		// the nodeTemplate into the canvas controller.
@@ -98,19 +107,15 @@ class PaletteContentListItem extends React.Component {
 		this.createAutoNode(true);
 	}
 
-	onMouseOver(ev) {
-		if (!this.props.isDisplaySearchResult && ev.buttons === 0) {
-			const nodeTemplate = this.props.nodeTypeInfo.category.empty_text
-				? { app_data: { ui_data: { label: this.props.nodeTypeInfo.category.empty_text } } }
-				: this.props.nodeTypeInfo.nodeType;
+	onClick() {
+		if (this.props.allowClickToAdd) {
+			this.createAutoNode(true);
+		}
+	}
 
-			this.props.canvasController.openTip({
-				id: "paletteTip_" + this.props.nodeTypeInfo.nodeType.op,
-				type: TIP_TYPE_PALETTE_ITEM,
-				targetObj: ev.currentTarget,
-				nodeTemplate: nodeTemplate,
-				category: this.props.nodeTypeInfo.category
-			});
+	onMouseOver(evt) {
+		if (!this.props.isDisplaySearchResult && evt.buttons === 0) {
+			this.displayTip();
 		}
 	}
 
@@ -262,8 +267,30 @@ class PaletteContentListItem extends React.Component {
 		this.setState({ showFullDescription: false });
 	}
 
+	// Sets the focus on this palette (node) item and displays
+	// a tooltip. This is called by the parent palette-content-list
+	// when the user moves focus to a new node using the keyboard, so
+	// we always show a tip for the keyboard user.
 	focus() {
 		this.itemRef.current.focus();
+		this.displayTip();
+	}
+
+	// Display a tip for this palette (node) item.
+	displayTip() {
+		this.props.canvasController.closeTip();
+
+		const nodeTemplate = this.props.nodeTypeInfo.category.empty_text
+			? { app_data: { ui_data: { label: this.props.nodeTypeInfo.category.empty_text } } }
+			: this.props.nodeTypeInfo.nodeType;
+
+		this.props.canvasController.openTip({
+			id: "paletteTip_" + this.props.nodeTypeInfo.nodeType.op,
+			type: TIP_TYPE_PALETTE_ITEM,
+			targetObj: this.itemRef.current,
+			nodeTemplate: nodeTemplate,
+			category: this.props.nodeTypeInfo.category
+		});
 	}
 
 	// Returns true if this item is disabled and should not be draggable or double-clicked
@@ -365,6 +392,7 @@ class PaletteContentListItem extends React.Component {
 				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
 				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}
 				onDragEnd={this.props.isEditingEnabled ? this.onDragEnd : null}
+				onClick={this.props.isEditingEnabled ? this.onClick : null}
 				onDoubleClick={this.props.isEditingEnabled ? this.onDoubleClick : null}
 			>
 				{categoryLabel}
@@ -386,6 +414,8 @@ PaletteContentListItem.propTypes = {
 	tabIndex: PropTypes.number.isRequired,
 	nextNodeInCategory: PropTypes.func,
 	previousNodeInCategory: PropTypes.func,
+	setFocusIndex: PropTypes.func,
+	allowClickToAdd: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
 	isPaletteWide: PropTypes.bool,
 	isShowRanking: PropTypes.bool

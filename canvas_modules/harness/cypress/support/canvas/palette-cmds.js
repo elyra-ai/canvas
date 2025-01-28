@@ -98,6 +98,10 @@ Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel, categoryLabel) => 
 	cy.findNodeInCategory(nodeLabel, categoryLabel).dblclick();
 });
 
+Cypress.Commands.add("clickNodeInCategory", (nodeLabel, categoryLabel) => {
+	cy.findNodeInCategory(nodeLabel, categoryLabel).click();
+});
+
 Cypress.Commands.add("hoverOverNodeInCategory", (nodeLabel, categoryLabel) => {
 	cy.findNodeInCategory(nodeLabel, categoryLabel).trigger("mouseover", { buttons: 0 });
 });

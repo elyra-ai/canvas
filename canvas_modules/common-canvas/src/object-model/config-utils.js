@@ -92,6 +92,7 @@ export default class ConfigUtils {
 			enableWYSIWYGComments: false,
 			enableKeyboardNavigation: false,
 			enableAutoLinkOnlyFromSelNodes: false,
+			enableSingleClickAddFromPalette: false,
 			enableContextToolbar: false,
 			enableSaveZoom: "None",
 			enableSnapToGridType: "None",
@@ -105,7 +106,7 @@ export default class ConfigUtils {
 			enableFocusOnMount: true,
 			enableBoundingRectangles: false, // Not documented
 			enableCanvasUnderlay: "None", // Not documented
-			enableParentClass: "", // Not documented
+			enableParentClass: "",
 			enablePositionNodeOnRightFlyoutOpen: false, // May also be an object: { x: 5, y: 5 }
 			emptyCanvasContent: null,
 			dropZoneCanvasContent: null,

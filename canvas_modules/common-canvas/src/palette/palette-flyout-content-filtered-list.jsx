@@ -56,6 +56,7 @@ class PaletteFlyoutContentFilteredList extends React.Component {
 						canvasController={this.props.canvasController}
 						isPaletteWide={this.props.isPaletteWide}
 						isEditingEnabled={this.props.isEditingEnabled}
+						allowClickToAdd={this.props.allowClickToAdd}
 					/>
 				</div>
 			);
@@ -87,6 +88,7 @@ PaletteFlyoutContentFilteredList.propTypes = {
 	intl: PropTypes.object.isRequired,
 	nodeTypeInfos: PropTypes.array.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	allowClickToAdd: PropTypes.bool,
 	isPaletteWide: PropTypes.bool.isRequired,
 	isEditingEnabled: PropTypes.bool.isRequired,
 	isNodeTypeInfosArrayTruncated: PropTypes.bool,
