@@ -23,6 +23,7 @@ import TearSheet from "./../../../src/common-properties/panels/tearsheet";
 import codeParamDef from "./../../test_resources/paramDefs/code_paramDef.json";
 import Sinon from "sinon";
 import { cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
+import { Provider } from "react-redux";
 
 describe("tearsheet tests", () => {
 	let controller;
@@ -85,6 +86,13 @@ describe("tearsheet tests", () => {
 });
 
 describe("Tearsheet renders correctly", () => {
+	let controller;
+	let renderedObject;
+	beforeEach(() => {
+		renderedObject = propertyUtilsRTL.flyoutEditorForm(codeParamDef);
+		controller = renderedObject.controller;
+	});
+
 	it("should not display buttons in tearsheet if showPropertiesButtons is false", () => {
 		const wrapper = renderWithIntl(<TearSheet
 			open
@@ -110,19 +118,24 @@ describe("Tearsheet renders correctly", () => {
 	});
 
 	it("should display buttons in tearsheet if showPropertiesButtons is true and applyOnBlur is false", () => {
-		const wrapper = renderWithIntl(<TearSheet
-			open
-			onCloseCallback={null}
-			tearsheet={{
-				title: "test title",
-				content: "test content"
-			}}
-			applyLabel="Save"
-			rejectLabel="Cancel"
-			okHandler={Sinon.spy()}
-			cancelHandler={Sinon.spy()}
-			showPropertiesButtons
-		/>);
+		const wrapper = renderWithIntl(
+			<Provider store={controller.getStore()}>
+				<TearSheet
+					open
+					onCloseCallback={null}
+					tearsheet={{
+						title: "test title",
+						content: "test content"
+					}}
+					applyLabel="Save"
+					rejectLabel="Cancel"
+					okHandler={Sinon.spy()}
+					cancelHandler={Sinon.spy()}
+					showPropertiesButtons
+					disableSaveOnRequiredErrors={false}
+					controller={controller}
+				/>
+			</Provider>);
 		const { container } = wrapper;
 		const tearsheet = container.querySelectorAll("properties-tearsheet-panel");
 		expect(tearsheet).to.not.be.null;
