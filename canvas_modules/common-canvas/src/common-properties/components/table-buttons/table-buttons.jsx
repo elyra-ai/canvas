@@ -113,6 +113,7 @@ class TableButtons extends React.Component {
 				instanceId={0}
 				size="sm"
 				toolbarActionHandler={this.customButtonOnClick}
+				additionalText={{ overflowMenuLabel: this.props.toolbarOverflowLabel }}
 			/>
 		</div>);
 	}
@@ -123,6 +124,7 @@ TableButtons.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	customButtons: PropTypes.array.isRequired,
 	tableState: PropTypes.string,
+	toolbarOverflowLabel: PropTypes.string,
 	customButtonsState: PropTypes.object // set in by redux
 };
 

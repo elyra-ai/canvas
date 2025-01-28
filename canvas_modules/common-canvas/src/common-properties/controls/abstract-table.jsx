@@ -143,6 +143,11 @@ export default class AbstractTable extends React.Component {
 		return row;
 	}
 
+	// Returns the label for the overflow menu in the table toolbar
+	getTableToolbarOverflowLabel() {
+		return PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TABLE_TOOLBAR_OVERFLOW_LABEL);
+	}
+
 	setScrollToRow(row) {
 		this.scrollToRow = row;
 	}
@@ -534,6 +539,7 @@ export default class AbstractTable extends React.Component {
 					tableState={tableState}
 					customButtons={customButtons}
 					customButtonsState={this.props.tableButtons}
+					toolbarOverflowLabel={this.getTableToolbarOverflowLabel()}
 				/>
 			</div>);
 		}
