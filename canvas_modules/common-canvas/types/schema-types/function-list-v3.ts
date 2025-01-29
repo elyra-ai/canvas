@@ -5,7 +5,7 @@
  * It has been modified by hand, so run a diff if you need to update it.
  */
 
-import { ResourceDefinition } from './uihints-v3.model';
+import { ResourceDefinition } from './uihints-v3';
 
 /**
  * Watson Data Platform Expression Builder Function List Schema for the Common Properties editor

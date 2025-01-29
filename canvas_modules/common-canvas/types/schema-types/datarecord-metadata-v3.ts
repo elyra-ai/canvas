@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { AppDataDef } from "./app-data-def";
+import { AppDataDef } from "./app-data-def-v3";
 
 /* eslint-disable */
 /**

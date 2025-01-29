@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { RecordSchema } from './datarecord-metadata-v3';
-import { PropertyDefinitionsSchema } from './parameter-defs-v3.model';
+import { RecordSchema } from './schema-types/datarecord-metadata-v3';
+import { PropertyDefinitionsSchema } from './schema-types/parameter-defs-v3';
 
 interface BaseProperty {
   /** parameter name defined in operator definition */

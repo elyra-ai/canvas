@@ -21,7 +21,7 @@
  * It has been modified by hand, so run a diff if you need to update it.
  */
 
-import { ParameterDefinition as OperatorParameterDefinition } from './operator-v3.model';
+import { ParameterDefinition as OperatorParameterDefinition } from './operator-v3';
 
 /**
  * External name of operator

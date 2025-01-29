@@ -21,12 +21,12 @@
  * It has been modified by hand, so run a diff if you need to update it.
  */
 
-import { ConditionsDefinition } from './conditions-v3.model';
+import { ConditionsDefinition } from './conditions-v3';
 import {
   ComplexTypeDefinition,
   ParameterDefinition,
-} from './operator-v3.model';
-import { WDPUIHintsSchema } from './uihints-v3.model';
+} from './operator-v3';
+import { WDPUIHintsSchema } from './uihints-v3';
 
 /**
  * Watson Data Platform Property Definition Schema for the Common Properties editor

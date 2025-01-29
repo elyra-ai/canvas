@@ -5,8 +5,8 @@
  * It has been modified by hand, so run a diff if you need to update it.
  */
 
-import { ExpressionBuilderFunctionListSchema } from "./function-list-v3.model";
-import { ResourceDefinition } from "./uihints-v3.model";
+import { ExpressionBuilderFunctionListSchema } from "./function-list-v3";
+import { ResourceDefinition } from "./uihints-v3";
 
 /**
  * Array of categories for the field dropdown menu
