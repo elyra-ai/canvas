@@ -31,22 +31,22 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
+		this.onFocus = this.onFocus.bind(this);
 		this.categoryClicked = this.categoryClicked.bind(this);
 		this.categoryKeyPressed = this.categoryKeyPressed.bind(this);
 		this.setPaletteCategory = this.setPaletteCategory.bind(this);
 	}
 
-	onMouseOver(ev) {
-		this.props.canvasController.openTip({
-			id: "paletteTip_" + this.props.category.id,
-			type: TIP_TYPE_PALETTE_CATEGORY,
-			targetObj: ev.currentTarget,
-			category: this.props.category
-		});
+	onMouseOver(evt) {
+		this.displayTip(evt);
 	}
 
 	onMouseLeave() {
 		this.props.canvasController.closeTip();
+	}
+
+	onFocus(evt) {
+		this.displayTip(evt);
 	}
 
 	getDisplayLabel() {
@@ -63,7 +63,6 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	getInlineLoadingRenderCategory() {
-
 		// TODO - This loading functionality should be replaced with a skeleton
 		// graphic to indicate the category is loading instead of using the
 		// InlineLoading component.
@@ -110,7 +109,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 		const content = this.getContent();
 		return (
 			<AccordionItem title={titleObj} open={this.props.category.is_open}
-				onKeyDown={this.categoryKeyPressed}
+				onKeyDown={this.categoryKeyPressed} onFocus={this.onFocus}
 			>
 				{content}
 			</AccordionItem>
@@ -121,8 +120,10 @@ class PaletteFlyoutContentCategory extends React.Component {
 	getTitleObj() {
 		const itemImage = this.getItemImage();
 		const itemText = this.getItemText();
+		this.catRef = React.createRef();
 		return (
 			<div className="palette-flyout-category"
+				ref={this.catRef}
 				data-id={get(this.props.category, "id", "")}
 				onClick={this.categoryClicked}
 				value={this.props.category.label}
@@ -201,12 +202,24 @@ class PaletteFlyoutContentCategory extends React.Component {
 					category={this.props.category}
 					nodeTypeInfos={nodeTypeInfos}
 					canvasController={this.props.canvasController}
+					allowClickToAdd={this.props.allowClickToAdd}
 					isPaletteWide={this.props.isPaletteWide}
 					isEditingEnabled={this.props.isEditingEnabled}
 				/>
 			);
 		}
 		return null;
+	}
+
+	displayTip() {
+		this.props.canvasController.closeTip();
+		this.props.canvasController.openTip({
+			id: "paletteTip_" + this.props.category.id,
+			type: TIP_TYPE_PALETTE_CATEGORY,
+			targetObj: this.catRef.current,
+			category: this.props.category
+		});
+
 	}
 
 	categoryClicked(evt) {
@@ -241,6 +254,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 PaletteFlyoutContentCategory.propTypes = {
 	category: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	allowClickToAdd: PropTypes.bool,
 	isPaletteWide: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
 };

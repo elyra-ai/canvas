@@ -77,6 +77,7 @@ class PaletteFlyoutContent extends React.Component {
 						key={category.id}
 						category={category}
 						canvasController={this.props.canvasController}
+						allowClickToAdd={this.props.allowClickToAdd}
 						isPaletteWide={this.props.isPaletteWide}
 						isEditingEnabled={this.props.isEditingEnabled}
 					/>
@@ -103,6 +104,7 @@ class PaletteFlyoutContent extends React.Component {
 				key={"filtered-nodes"}
 				nodeTypeInfos={filteredNodeTypeInfos}
 				canvasController={this.props.canvasController}
+				allowClickToAdd={this.props.allowClickToAdd}
 				isPaletteWide={this.props.isPaletteWide}
 				isEditingEnabled={this.props.isEditingEnabled}
 				// isShowRanking // Uncomment this to show ranking for debuggig ranking algorithm
@@ -162,6 +164,7 @@ PaletteFlyoutContent.propTypes = {
 	canvasController: PropTypes.object.isRequired,
 	paletteJSON: PropTypes.object.isRequired,
 	paletteHeader: PropTypes.object,
+	allowClickToAdd: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
 	isPaletteWide: PropTypes.bool
 };

@@ -37,6 +37,10 @@ class PaletteContentList extends React.Component {
 		this.contentItemRefs[this.currentFocusIndex].current.focus();
 	}
 
+	setFocusIndex(idx) {
+		this.currentFocusIndex = idx;
+	}
+
 	nextNodeInCategory(evt) {
 		this.currentFocusIndex++;
 		if (this.currentFocusIndex > this.contentItemRefs.length - 1) {
@@ -68,6 +72,7 @@ class PaletteContentList extends React.Component {
 						nodeTypeInfo={{ nodeType: {}, category: this.props.category }}
 						isDisplaySearchResult={false}
 						canvasController={this.props.canvasController}
+						allowClickToAdd={this.props.allowClickToAdd}
 						isPaletteWide={this.props.isPaletteWide}
 						isEditingEnabled={this.props.isEditingEnabled}
 					/>
@@ -92,6 +97,8 @@ class PaletteContentList extends React.Component {
 						isEditingEnabled={this.props.isEditingEnabled}
 						nextNodeInCategory={this.nextNodeInCategory}
 						previousNodeInCategory={this.previousNodeInCategory}
+						setFocusIndex={this.setFocusIndex.bind(this, idx)}
+						allowClickToAdd={this.props.allowClickToAdd}
 					/>
 				);
 			}
@@ -111,6 +118,7 @@ PaletteContentList.propTypes = {
 	canvasController: PropTypes.object.isRequired,
 	isPaletteWide: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
+	allowClickToAdd: PropTypes.bool
 };
 
 export default PaletteContentList;

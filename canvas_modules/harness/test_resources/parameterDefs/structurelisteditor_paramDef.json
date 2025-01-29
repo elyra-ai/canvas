@@ -107,6 +107,29 @@
         "strawberry"
       ]
     ],
+    "inlineEditingTableError3": [
+      [
+        1,
+        1.234,
+        "Age >= 55",
+        "dog",
+        "apple"
+      ],
+      [
+        3,
+        1.234,
+        "Age < 55",
+        "cat",
+        "orange"
+      ],
+      [
+        1,
+        3.5,
+        "Age >= 55",
+        "pig",
+        "strawberry"
+      ]
+    ],
     "onPanelNotVisibleTable": [
       [
         1,
@@ -246,6 +269,11 @@
     {
       "id": "inlineEditingTableError2",
       "type": "array[inlineEditingTableError2]",
+      "default": []
+    },
+    {
+      "id": "inlineEditingTableError3",
+      "type": "array[inlineEditingTableError3]",
       "default": []
     },
     {
@@ -467,6 +495,45 @@
     },
     {
       "id": "inlineEditingTableError2",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "integer",
+          "default": "1",
+          "role": "new_column"
+        },
+        {
+          "id": "doubleName",
+          "type": "double",
+          "default": "1.2",
+          "role": "new_column"
+        },
+        {
+          "id": "condition",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        },
+        {
+          "id": "dropdown",
+          "enum": [
+            "dog",
+            "cat",
+            "pig",
+            "horse"
+          ],
+          "default": "yellow"
+        },
+        {
+          "id": "textfield",
+          "type": "string",
+          "default": "",
+          "role": "new_column"
+        }
+      ]
+    },
+    {
+      "id": "inlineEditingTableError3",
       "parameters": [
         {
           "id": "valueName",
@@ -886,6 +953,18 @@
         }
       },
       {
+        "parameter_ref": "inlineEditingTableError3",
+        "label": {
+          "default": "Values"
+        },
+        "description": {
+          "default": "Complex table control list editor table input without delete button"
+        },
+        "text_before": {
+          "default": "To generated a error:  (integer Field = 2 OR double Field = 2.3) || condition field = help || animals field = horse || fruit field = pear"
+        }
+      },
+      {
         "parameter_ref": "onPanelNotVisibleTable",
         "label": {
           "default": "Values"
@@ -1216,7 +1295,7 @@
       },
       {
         "complex_type_ref": "inlineEditingTableError",
-        "row_selection": "multiple-edit",
+        "row_selection": "single",
         "moveable_rows": true,
         "parameters": [
           {
@@ -1276,6 +1355,76 @@
       {
         "complex_type_ref": "inlineEditingTableError2",
         "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Integer Field",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "doubleName",
+            "label": {
+              "default": "Double Field",
+              "resource_key": "expressionCellTable.doubleName.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.doubleName.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "condition",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "on_panel",
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          },
+          {
+            "parameter_ref": "dropdown",
+            "label": {
+              "resource_key": "dropdown.label"
+            },
+            "description": {
+              "resource_key": "dropdown.desc"
+            },
+            "width": 10,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "textfield",
+            "label": {
+              "resource_key": "textfield.label"
+            },
+            "description": {
+              "resource_key": "textfield.desc"
+            },
+            "width": 10,
+            "edit_style": "inline"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "inlineEditingTableError3",
+        "row_selection": "single",
+        "add_remove_rows": false,
         "parameters": [
           {
             "parameter_ref": "valueName",
@@ -2009,6 +2158,21 @@
                 ]
               }
             ]
+          },
+          {
+            "id": "inlineEditingTableError3-summary-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Configure Error 3 Inline Editing Table without delete row button"
+            },
+            "group_info": [
+              {
+                "id": "Inline editing2",
+                "parameter_refs": [
+                  "inlineEditingTableError3"
+                ]
+              }
+            ]
           }
         ]
       }
@@ -2238,6 +2402,112 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "inlineEditingTableError2[4]",
+            "op": "notEquals",
+            "value": "pear"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerror2test5",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError3",
+          "message": {
+            "default": "This is a table control level error."
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError3",
+            "op": "isEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerror2test1",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError3[0]",
+          "message": {
+            "resource_key": "invalid_subpanel_name",
+            "default": "fields are 2 or 2.3"
+          }
+        },
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "inlineEditingTableError3[0]",
+                "op": "notEquals",
+                "value": 2
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "inlineEditingTableError3[1]",
+                "op": "notEquals",
+                "value": 2.3
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerror2test2",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError3[2]",
+          "message": {
+            "default": "expression contains help"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError3[2]",
+            "op": "notContains",
+            "value": "help"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerror2test3",
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "inlineEditingTableError3[3]",
+          "message": {
+            "default": "animal equals horse"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError3[3]",
+            "op": "notEquals",
+            "value": "horse"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerror2test4",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError3[4]",
+          "message": {
+            "default": "fruit equals pear"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError3[4]",
             "op": "notEquals",
             "value": "pear"
           }

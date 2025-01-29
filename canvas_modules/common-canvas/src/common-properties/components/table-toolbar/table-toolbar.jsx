@@ -303,7 +303,7 @@ class TableToolbar extends React.Component {
 								: null
 						}
 						{
-							(this.props.addRemoveRows && !this.props.isReadonlyTable)
+							(this.props.addRemoveRows && !this.props.isReadonlyTable && !this.props.isSingleSelectTable)
 								? (<Button
 									size="sm"
 									renderIcon={TrashCan}
@@ -360,6 +360,7 @@ TableToolbar.propTypes = {
 	smallFlyout: PropTypes.bool, // list control in right flyout having editor size small
 	tableState: PropTypes.string,
 	isReadonlyTable: PropTypes.bool,
+	isSingleSelectTable: PropTypes.bool,
 	addRemoveRows: PropTypes.bool,
 	moveableRows: PropTypes.bool,
 	multiSelectEdit: PropTypes.bool,

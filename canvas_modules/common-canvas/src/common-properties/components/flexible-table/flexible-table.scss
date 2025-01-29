@@ -39,7 +39,7 @@ $row-left-padding: $spacing-02;
 	height: $spacing-07;
 }
 
-.single-row-selection-table {
+.single-row-selection-table:not(:has(.properties-table-toolbar)) {
 	display: flex;
 	justify-content: right;
 }

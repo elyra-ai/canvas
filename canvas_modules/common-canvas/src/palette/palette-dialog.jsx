@@ -36,6 +36,7 @@ class PaletteDialog extends React.Component {
 				canvasController={this.props.canvasController}
 				paletteJSON={this.props.paletteJSON}
 				containingDivId={this.props.containingDivId}
+				allowClickToAdd={this.props.allowClickToAdd}
 				isEditingEnabled={this.props.isEditingEnabled}
 			/>);
 	}
@@ -51,11 +52,13 @@ PaletteDialog.propTypes = {
 
 	// Provided by redux
 	paletteJSON: PropTypes.object,
+	allowClickToAdd: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	paletteJSON: state.palette.content,
+	allowClickToAdd: state.canvasconfig.enableSingleClickAddFromPalette,
 	isEditingEnabled: state.canvasconfig.enableEditingActions
 });
 

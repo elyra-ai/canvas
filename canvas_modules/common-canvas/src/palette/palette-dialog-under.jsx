@@ -542,6 +542,7 @@ class PaletteDialog extends React.Component {
 						showGrid={this.state.showGrid}
 						canvasController={this.props.canvasController}
 						isEditingEnabled={this.props.isEditingEnabled}
+						allowClickToAdd={this.props.allowClickToAdd}
 					/>
 				</div>
 			</nav>
@@ -557,6 +558,7 @@ PaletteDialog.propTypes = {
 	canvasController: PropTypes.object.isRequired,
 	containingDivId: PropTypes.string.isRequired,
 	paletteJSON: PropTypes.object,
+	allowClickToAdd: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool
 };
 
