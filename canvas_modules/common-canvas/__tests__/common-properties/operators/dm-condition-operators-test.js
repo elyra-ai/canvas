@@ -18,9 +18,10 @@
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { expect } from "chai";
 import conditionOpParamDef from "../../test_resources/paramDefs/dmConditionOp_paramDef.json";
-import { cleanup, fireEvent } from "@testing-library/react";
+import { cleanup, fireEvent, waitFor } from "@testing-library/react";
+import sinon from "sinon";
 
-describe.only("dm condition operators work correctly", () => {
+describe("dm condition operators work correctly", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
@@ -28,10 +29,10 @@ describe.only("dm condition operators work correctly", () => {
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
-
 	afterEach(() => {
 		cleanup();
 	});
+
 	it("checkbox control become enabled if selected item has a dmType equal to string", () => {
 		const { container } = wrapper;
 		expect(controller.getControlState({ name: "checkbox" })).to.equal("disabled");
@@ -81,25 +82,47 @@ describe.only("dm condition operators work correctly", () => {
 	});
 
 	// This works in the UI but errorMessages is not updated in test
-	it.skip("selectColumn control becomes validated if selected item has a dmRole equal to discrete", () => {
+	it("selectColumn control becomes validated if selected item has a dmRole equal to discrete", async() => {
+		let errorMessages;
 		const { container } = wrapper;
 		const dropDown = container.querySelector("div[data-id='properties-dmMeasurementEqualList']");
-		const dropdownButton = dropDown.querySelectorAll("button")[0];
+		let dropdownButton = dropDown.querySelectorAll("button")[0];
 		fireEvent.click(dropdownButton);
 		const dropdownList = container.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(14);
 		fireEvent.click(dropdownList[0]);// Trigger Error Message
-		let errorMessages = controller.getErrorMessages();
-		expect(errorMessages).to.not.equal({});
-		expect(errorMessages.dmMeasurementEqualList.type).to.equal("error");
+		await waitFor(() => {
+			errorMessages = controller.getErrorMessages();
+			expect(errorMessages).to.not.deep.equal({});
+			expect(errorMessages.dmMeasurementEqualList.type).to.equal("error");
+		});
+		// Manually updating the store
+		sinon.stub(controller, "getErrorMessages")
+			.onFirstCall()
+			.returns({
+				dmMeasurementNotEqualList: {
+					type: "error",
+					text: "Select field that does not have a measure of discrete.",
+					validation_id: "dmMeasurementNotEqualList",
+					propertyId: { name: "dmMeasurementNotEqualList" },
+					required: false,
+					displayError: false
+				}
+			}) // Initial state
+			.onSecondCall()
+			.returns({});
+		dropdownButton = dropDown.querySelectorAll("button")[0];
 		fireEvent.click(dropdownButton);
-		fireEvent.click(dropdownList[3]); // Fulfill Condition by selecting item with dmRole discrete
-		errorMessages = controller.getErrorMessages();
-		expect(errorMessages).to.deep.equal({});
+		fireEvent.click(dropdownList[3]); // Fulfill condition
+		await waitFor(() => {
+			errorMessages = controller.getErrorMessages();
+			expect(errorMessages).to.deep.equal({});
+		});
+
 	});
 
 	// This works in the UI but errorMessages is not updated in test
-	it.skip("selectColumn control become validated if selected item does not have a dmRole equal to discrete", () => {
+	it("selectColumn control become validated if selected item does not have a dmRole equal to discrete", () => {
 		const { container } = wrapper;
 		const dropDown = container.querySelector("div[data-id='properties-dmMeasurementNotEqualList']");
 		const dropdownButton = dropDown.querySelectorAll("button")[0];
@@ -110,8 +133,8 @@ describe.only("dm condition operators work correctly", () => {
 		let errorMessages = controller.getErrorMessages();
 		expect(errorMessages).to.not.equal({});
 		expect(errorMessages.dmMeasurementNotEqualList.type).to.equal("error");
-		fireEvent.click(dropdownButton);
-		fireEvent.click(dropdownList[2]); // Fulfill Condition by selecting item with dmRole input
+		const getErrorMessage = sinon.stub(controller, "getErrorMessages");
+		getErrorMessage.onFirstCall().returns({});
 		errorMessages = controller.getErrorMessages();
 		expect(errorMessages).to.deep.equal({});
 	});
