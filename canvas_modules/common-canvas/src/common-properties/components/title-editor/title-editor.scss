@@ -36,6 +36,15 @@
 			}
 		}
 	}
+
+	.properties-title-desc-tooltip {
+		position: absolute;
+		margin: $spacing-03 0 0 $spacing-03; // spacing between desc tooltip and heading label
+
+		.properties-title-editor-desc-btn {
+			cursor: pointer;
+		}
+	}
 }
 
 // Action buttons within a small right flyout will take up 50% width and display 2 buttons per row
@@ -85,6 +94,10 @@
 		&.help {
 			margin-left: $spacing-02; // spacing between heading label and help button
 		}
+	}
+	.properties-title-desc-tooltip {
+		position: relative;
+		margin: 0 0 0 $spacing-04; // spacing between desc tooltip and heading label
 	}
 }
 .properties-title-editor-input {
@@ -151,4 +164,12 @@
 	align-items: center;
 	justify-content: center;
 	padding: 0;
+}
+
+
+.properties-title-editor {
+	.tooltip-container {
+		height: $spacing-05;
+		cursor: pointer;
+	}
 }
