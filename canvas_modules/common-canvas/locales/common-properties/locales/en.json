@@ -34,6 +34,7 @@
   "alerts.tab.title": "Alerts",
   "title.editor.label": "edit title",
   "title.editor.helpButton.label": "Help",
+  "title.editor.descButton.label": "Heading additional information",
   "table.summary.error": "There are {errorMsgCount} error cells. ",
   "table.summary.warning": "There are {warningMsgCount} warning cells. ",
   "control.summary.error": "There are {errorMsgCount} parameters with errors. ",

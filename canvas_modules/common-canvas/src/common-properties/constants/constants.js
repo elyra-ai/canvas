@@ -48,6 +48,7 @@ export const MESSAGE_KEYS = {
 	ALERTS_TAB_TITLE: "alerts.tab.title",
 	TITLE_EDITOR_LABEL: "title.editor.label",
 	TITLE_EDITOR_HELPBUTTON_LABEL: "title.editor.helpButton.label",
+	TITLE_EDITOR_DESCBUTTON_LABEL: "title.editor.descButton.label",
 	TABLE_SUMMARY_ERROR: "table.summary.error",
 	TABLE_SUMMARY_WARNING: "table.summary.warning",
 	CONTROL_SUMMARY_ERROR: "control.summary.error",

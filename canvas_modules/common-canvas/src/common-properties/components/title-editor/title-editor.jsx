@@ -118,6 +118,7 @@ class TitleEditor extends Component {
 		}
 		const propertiesTitleEditButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_LABEL);
 		const helpButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_HELPBUTTON_LABEL);
+		const descButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_DESCBUTTON_LABEL);
 		const closeButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
 		const titleValidationTypes = [CONDITION_MESSAGE_TYPE.ERROR, CONDITION_MESSAGE_TYPE.WARNING];
 		const titleWithWarning = get(this.state.titleValidation, "type", null) === CONDITION_MESSAGE_TYPE.WARNING;
@@ -153,17 +154,15 @@ class TitleEditor extends Component {
 			) : null;
 
 			return (
-				<span className="properties-title-desc-icon">
-					<Toggletip className="properties-title-desc-tooltip" align="bottom" autoAlign>
-						<ToggletipButton label="Additional information">
-							<Information />
-						</ToggletipButton>
-						<ToggletipContent>
-							<p className="properties-title-editor-desc">{description}</p>
-							{tooltipButton}
-						</ToggletipContent>
-					</Toggletip>
-				</span>
+				<Toggletip className="properties-title-desc-tooltip" align="bottom" autoAlign>
+					<ToggletipButton label={descButtonLabel}>
+						<Information />
+					</ToggletipButton>
+					<ToggletipContent>
+						<p className="properties-title-editor-desc">{description}</p>
+						{tooltipButton}
+					</ToggletipContent>
+				</Toggletip>
 			);
 		};
 
