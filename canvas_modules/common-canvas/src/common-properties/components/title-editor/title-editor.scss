@@ -40,6 +40,10 @@
 	.properties-title-desc-tooltip {
 		position: absolute;
 		margin: $spacing-03 0 0 $spacing-03; // spacing between desc tooltip and heading label
+
+		.properties-title-editor-desc-btn {
+			cursor: pointer;
+		}
 	}
 }
 
