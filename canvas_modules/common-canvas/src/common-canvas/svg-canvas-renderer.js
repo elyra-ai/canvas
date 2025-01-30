@@ -2859,7 +2859,9 @@ export default class SVGCanvasRenderer {
 				} else {
 					imageSel.selectChild("svg").remove();
 					d3.svg(image, { cache: "force-cache" }).then((data) => {
-						imageSel.node().append(data.documentElement);
+						const svgElement = data.documentElement;
+						svgElement.setAttribute("aria-label", "Node Image");
+						imageSel.node().append(svgElement);
 					});
 				}
 			} else {
@@ -2938,22 +2940,26 @@ export default class SVGCanvasRenderer {
 	getImageElement(node) {
 		const nodeImage = this.getNodeImage(node);
 		const imageType = this.getImageType(nodeImage);
+		const nodeAriaLabel = node?.label;
 
 		if (imageType === "jsx") {
 			return d3.create("svg:foreignObject")
 				.attr("tabindex", -1)
 				.attr("class", "d3-foreign-object-node-image d3-node-image")
+				.attr("aria-label", nodeAriaLabel)
 				.node();
 
 		} else if (imageType === "svg") {
 			return d3.create("svg")
 				.attr("class", "d3-node-image")
+				.attr("aria-label", nodeAriaLabel)
 				.node();
 
 		}
 		// If imageType is "image" or null, we create an image element
 		return d3.create("svg:image")
 			.attr("class", "d3-node-image")
+			.attr("aria-label", nodeAriaLabel)
 			.node();
 	}
 
