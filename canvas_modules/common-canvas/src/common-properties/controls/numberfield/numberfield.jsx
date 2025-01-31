@@ -159,13 +159,13 @@ class NumberfieldControl extends React.Component {
 					value={controlValue}
 					placeholder={this.props.control.additionalText}
 					label={this.props.controlItem}
-					hideLabel={!this.props.control.labelVisible || this.props.tableControl}
+					hideLabel={this.props.tableControl}
 					allowEmpty
 					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					disableWheel
-					// aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
+					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 				/>
 				{numberGenerator}
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
