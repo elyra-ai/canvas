@@ -81,7 +81,9 @@ class ControlItem extends React.Component {
 				);
 			}
 			label = (
-				<div className={classNames("properties-label-container", { "table-control": this.props.tableControl === true })}>
+				<div className={classNames("properties-label-container", { "table-control": this.props.tableControl === true },
+					{ "properties-label-hidden": this.props.control.labelVisible === false })}
+				>
 					<label className="properties-control-label">{this.props.control.label.text}</label>
 					{indicator}
 					{tooltip}

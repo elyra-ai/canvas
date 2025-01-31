@@ -165,6 +165,7 @@ class NumberfieldControl extends React.Component {
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					disableWheel
+					// aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 				/>
 				{numberGenerator}
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />

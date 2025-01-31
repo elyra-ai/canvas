@@ -81,6 +81,7 @@ class TextareaControl extends React.Component {
 					hideLabel={!this.props.control.labelVisible || this.props.tableControl}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
+					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={""} messageInfo={errorMessage} />
 			</div>);
@@ -97,6 +98,7 @@ class TextareaControl extends React.Component {
 					hideLabel={!this.props.control.labelVisible || this.props.tableControl}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
+					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 				/>
 			);
 		}

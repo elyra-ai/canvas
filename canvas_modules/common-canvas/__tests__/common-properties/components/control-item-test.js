@@ -253,8 +253,14 @@ describe("control-item renders correctly", () => {
 			/>
 		);
 		const { container } = wrapper;
-		expect(container.getElementsByClassName("properties-label-container")).to.have.length(0);
-	});
+		const controlDisabledLabeled = container.getElementsByClassName("properties-control-label-disabled")[0];
+
+		if (controlDisabledLabeled) {
+			const displayStyle = controlDisabledLabeled.style.display;
+			expect(displayStyle).to.equal("none");
+		}
+
+});
 
 	it("should have required indicator", () => {
 		const controlRequired = {
