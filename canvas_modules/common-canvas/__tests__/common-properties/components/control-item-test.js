@@ -259,8 +259,7 @@ describe("control-item renders correctly", () => {
 			const displayStyle = controlDisabledLabeled.style.display;
 			expect(displayStyle).to.equal("none");
 		}
-
-});
+	});
 
 	it("should have required indicator", () => {
 		const controlRequired = {
