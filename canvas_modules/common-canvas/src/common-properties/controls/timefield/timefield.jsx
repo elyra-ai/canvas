@@ -80,7 +80,7 @@ class TimefieldControl extends React.Component {
 					onChange={this.handleChange.bind(this)}
 					value={this.value}
 					labelText={this.props.controlItem}
-					hideLabel={!this.props.control.labelVisible || this.props.tableControl}
+					hideLabel={this.props.tableControl}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 				/>
