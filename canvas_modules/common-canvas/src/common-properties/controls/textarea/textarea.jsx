@@ -78,7 +78,7 @@ class TextareaControl extends React.Component {
 					placeholder={this.props.control.additionalText}
 					value={value}
 					labelText={this.props.controlItem}
-					hideLabel={!this.props.control.labelVisible || this.props.tableControl}
+					hideLabel={this.props.tableControl}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
@@ -95,7 +95,7 @@ class TextareaControl extends React.Component {
 					onChange={this.handleChange.bind(this)}
 					value={value}
 					labelText={this.props.controlItem}
-					hideLabel={!this.props.control.labelVisible || this.props.tableControl}
+					hideLabel={this.props.tableControl}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
