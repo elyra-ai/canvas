@@ -63,8 +63,8 @@ MainEditorPropertiesButtons.defaultProps = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-	saveButtonEnabled: !ownProps.controller.getSaveButtonDisable(),
-	requiredErrorMessages: ownProps.controller.getRequiredErrorMessages()
+	saveButtonEnabled: !ownProps.controller?.getSaveButtonDisable(),
+	requiredErrorMessages: ownProps.controller?.getRequiredErrorMessages()
 });
 
 export default connect(mapStateToProps, null)(MainEditorPropertiesButtons);
