@@ -253,7 +253,7 @@ describe("control-item renders correctly", () => {
 			/>
 		);
 		const { container } = wrapper;
-		const controlDisabledLabeled = container.getElementsByClassName("properties-control-label-disabled")[0];
+		const controlDisabledLabeled = container.getElementsByClassName("properties-label-hidden")[0];
 
 		if (controlDisabledLabeled) {
 			const displayStyle = controlDisabledLabeled.style.display;

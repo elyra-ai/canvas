@@ -56,7 +56,7 @@ describe("uiItemParamDef render correctly when the control label is hidden", () 
 		const controllabels = wrapper.find("label.properties-control-label");
 		expect(controllabels).to.have.length(6);
 
-		const controlDisabledLabled = controllabels.find(".properties-control-label-disabled");
+		const controlDisabledLabled = controllabels.find(".properties-label-hidden");
 		controlDisabledLabled.forEach((label) => {
 			const displayStyle = label.getDOMNode().style.display;
 			expect(displayStyle).to.equal("none");

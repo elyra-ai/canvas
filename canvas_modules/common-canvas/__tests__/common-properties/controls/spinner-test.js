@@ -312,7 +312,7 @@ describe("spinnerControl paramDef render correctly", () => {
 		});
 
 		// Spinner Disabled and Spinner Hidden should not be displayed
-		const controlDisabledLabeled = container.querySelectorAll(".properties-control-label-disabled");
+		const controlDisabledLabeled = container.querySelectorAll(".properties-label-hidden");
 		controlDisabledLabeled.forEach((label) => {
 			const displayStyle = label.style.display;
 			expect(displayStyle).to.equal("none");
