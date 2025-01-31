@@ -297,7 +297,6 @@ class DropDown extends React.Component {
 					onChange={this.handleChange}
 					selectedItem={dropDown.selectedOption}
 					label={this.emptyLabel}
-					hideLabel={!this.props.control.labelVisible}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText={this.props.controlItem}
 					helperText={this.props.control.helperText}
