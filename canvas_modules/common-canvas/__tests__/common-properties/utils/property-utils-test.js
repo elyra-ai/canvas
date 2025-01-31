@@ -17,11 +17,12 @@
 import { expect } from "chai";
 import { propertyOf } from "lodash";
 import * as PropertyUtils from "./../../../src/common-properties/util/property-utils.js";
-import testUtils from "./../../_utils_/property-utils";
+import testUtils from "./../../_utils_/property-utilsRTL.js";
 import Controller from "./../../../src/common-properties/properties-controller";
-import propertyUtils from "./../../_utils_/property-utils";
+import propertyUtilsRTL from "./../../_utils_/property-utilsRTL.js";
 import structureTableParamDef from "./../../test_resources/paramDefs/structuretable_paramDef.json";
 import convertValuesDataTypesParamDef from "./../../test_resources/paramDefs/convertValueDataTypes_paramDef.json";
+import { cleanup } from "@testing-library/react";
 
 describe("dynamic text with expressions", () => {
 	const controller = new Controller();
@@ -102,16 +103,14 @@ describe("dynamic text with expressions", () => {
 });
 
 describe("getDMFieldIcon retrieves correct icon type for each measurement level ", () => {
-	var wrapper;
-	var controller;
+	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structureTableParamDef);
-		wrapper = renderedObject.wrapper;
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structureTableParamDef);
 		controller = renderedObject.controller;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("measure level of range should return measurement-scale icon", () => {
@@ -369,7 +368,7 @@ describe("convertValueDataTypestests", () => {
 	});
 
 	it("convertValueDataTypes correctly converts currentParameters data types when setting form", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(convertValuesDataTypesParamDef, { convertValueDataTypes: true });
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(convertValuesDataTypesParamDef, { convertValueDataTypes: true });
 		const controller2 = renderedObject.controller;
 
 		const expected = Object.assign({}, expectedValues);
