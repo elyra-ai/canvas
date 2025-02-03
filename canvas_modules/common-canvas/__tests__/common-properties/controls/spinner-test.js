@@ -300,22 +300,14 @@ describe("spinnerControl paramDef render correctly", () => {
 		expect(labels[6].textContent).to.equal("Random");
 		expect(labels[7].textContent).to.equal("Error");
 		expect(labels[8].textContent).to.equal("Warning");
-		expect(labels[9].textContent).to.equal("Disable 'Spinner Disabled'");
-		expect(labels[10].textContent).to.equal("Spinner Disabled");
-		expect(labels[11].textContent).to.equal("Hide 'Spinner Hidden'");
+		expect(labels[9].textContent).to.equal("Spinner Disabled");
+		expect(labels[10]).to.not.exist; // "Spinner Hidden"
 
 		spinnerController.updatePropertyValue({ name: "hide" }, false);
 
 		await waitFor(() => {
 			labels = container.querySelectorAll("label.properties-control-label");
-			expect(labels[12].textContent).to.equal("Spinner Hidden");
-		});
-
-		// Spinner Disabled and Spinner Hidden should not be displayed
-		const controlDisabledLabeled = container.querySelectorAll(".properties-label-hidden");
-		controlDisabledLabeled.forEach((label) => {
-			const displayStyle = label.style.display;
-			expect(displayStyle).to.equal("none");
+			expect(labels[10].textContent).to.equal("Spinner Hidden");
 		});
 	});
 });

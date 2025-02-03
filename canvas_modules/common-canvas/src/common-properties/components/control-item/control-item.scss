@@ -62,9 +62,10 @@
 			color: $text-primary;
 		}
 	}
-	&.properties-label-hidden {
-		display: none;
-	}
+}
+
+.properties-label-container-hidden {
+	display: none;
 }
 
 .properties-label-container, .properties-summary-link-container, .properties-checkbox-tooltip-container, .properties-radioset-panel {

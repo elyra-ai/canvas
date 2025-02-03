@@ -42,7 +42,7 @@ class ControlItem extends React.Component {
 
 		let label;
 		let description;
-		if (this.props.control.label) {
+		if (this.props.control.label && this.props.control.labelVisible !== false) {
 			let tooltip;
 			if (this.props.control.description && !isEmpty(this.props.control.description.text)) {
 				if (this.props.control.description.placement === "on_panel") {
@@ -81,12 +81,16 @@ class ControlItem extends React.Component {
 				);
 			}
 			label = (
-				<div className={classNames("properties-label-container", { "table-control": this.props.tableControl === true },
-					{ "properties-label-hidden": this.props.control.labelVisible === false })}
-				>
+				<div className={classNames("properties-label-container", { "table-control": this.props.tableControl === true })}>
 					<label className="properties-control-label">{this.props.control.label.text}</label>
 					{indicator}
 					{tooltip}
+				</div>);
+		} else {
+			// Provide a label for controls with hidden labels to support accessibility
+			label = (
+				<div className={classNames("properties-label-container-hidden")}>
+					<label className="properties-control-label-hidden">{this.props.control.label.text}</label>
 				</div>);
 		}
 
