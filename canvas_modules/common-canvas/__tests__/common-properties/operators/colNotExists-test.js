@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2017-2023 Elyra Authors
  *
@@ -18,7 +19,8 @@ import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import dataset from "../../test_resources/json/deriveDatasetMetadata.json";
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
-import propertyUtils from "../../_utils_/property-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
+import { cleanup } from "@testing-library/react";
 
 describe("validating colNotExists operator works correctly", () => {
 	const controller = new Controller();
@@ -41,16 +43,14 @@ describe("validating colNotExists operator works correctly", () => {
 });
 
 describe("validating colNotExists operator works correctly in a table", () => {
-	let wrapper;
 	let renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
-		wrapper = renderedObject.wrapper;
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structuretableParamDef);
 		renderedController = renderedObject.controller;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("colNotExists works correctly when in a table cell", () => {
@@ -76,3 +76,4 @@ describe("validating colNotExists operator works correctly in a table", () => {
 	});
 
 });
+
