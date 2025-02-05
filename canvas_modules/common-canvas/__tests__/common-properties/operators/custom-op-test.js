@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-
-import propertyUtils from "../../_utils_/property-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { expect } from "chai";
 import customControlParamDef from "../../test_resources/paramDefs/custom-ctrl-op_paramDef.json";
+import { cleanup } from "@testing-library/react";
 
 describe("validating custom operators work correctly", () => {
-	var wrapper;
-	var controller;
+	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(customControlParamDef);
-		wrapper = renderedObject.wrapper;
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(customControlParamDef);
 		controller = renderedObject.controller;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 	it("custom_op_num parameter should have error when greater than 100 using a custom op", () => {
 		const propertyId = { name: "custom_op_num" };
