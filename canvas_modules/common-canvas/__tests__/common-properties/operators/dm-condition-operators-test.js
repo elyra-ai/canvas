@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { expect } from "chai";
 import conditionOpParamDef from "../../test_resources/paramDefs/dmConditionOp_paramDef.json";
 import { cleanup, fireEvent } from "@testing-library/react";
 
-describe.only("dm condition operators work correctly", () => {
+describe("dm condition operators work correctly", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { expect } from "chai";
 import customControlParamDef from "../../test_resources/paramDefs/custom-ctrl-op_paramDef.json";

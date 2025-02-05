@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2017-2023 Elyra Authors
  *
@@ -76,4 +75,3 @@ describe("validating colNotExists operator works correctly in a table", () => {
 	});
 
 });
-
