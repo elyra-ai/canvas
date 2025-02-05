@@ -15,7 +15,10 @@
  */
 
 import React, { ComponentClass, FunctionComponent, ReactNode } from "react";
-import { DecorationDef, MessageDef, NodeInfoDef } from "./schema-types/pipeline-flow-ui-v3";
+import {
+  DecorationDef,
+  NodeInfoDef,
+} from "./schema-types/pipeline-flow-ui-v3";
 import {
   HttpsApiDataplatformIbmComSchemasCommonPipelinePipelineFlowPipelineFlowV3SchemaJson,
   NodeTypeDef,
@@ -2142,24 +2145,85 @@ export interface CanvasConfig {
   enableLeftFlyoutUnderToolbar?: boolean;
 }
 
+/**
+ * https://elyra-ai.github.io/canvas/03.02.02-toolbar-config/#toolbar-action-object-definition
+ */
 export interface ToolbarActionItem {
   action?: string;
-  label?: string;
+  label?: string | ReactNode;
   enable?: boolean;
-  iconEnabled?: string;
-  iconDisabled?: string;
-  incLabelWithIcon?: string;
-  kind?: string;
-  tooltip?: string;
+  iconEnabled?: string | ReactNode;
+  iconDisabled?: string | ReactNode;
+  incLabelWithIcon?: "no" | "before" | "after";
+  kind?: "default" | "primary" | "danger" | "secondary" | "tertiary" | "ghost";
+  tooltip?: string | ReactNode;
   isSelected?: boolean;
-  jsx?: ReactNode;
-  divider?: boolean;
+  className?: string;
+  textContent?: string;
 }
+
+/**
+ * https://elyra-ai.github.io/canvas/03.02.02-toolbar-config/#sub-area-properties
+ */
+export interface ToolbarSubMenuItem extends ToolbarActionItem {
+  subMenu: ToolbarActionItem[];
+  closeSubAreaOnClick?: boolean;
+}
+
+/**
+ * https://elyra-ai.github.io/canvas/03.02.02-toolbar-config/#sub-area-properties
+ */
+export interface ToolbarSubPanelItem extends ToolbarActionItem {
+  subPanel: React.FC | React.ComponentClass;
+  subPanelData?: unknown;
+  purpose?: "single" | "dual";
+  closeSubAreaOnClick?: boolean;
+}
+
+/**
+ * https://elyra-ai.github.io/canvas/03.02.02-toolbar-config/#toolbar-divider-object-definition
+ */
+export interface ToolbarDivider {
+  divider: true;
+}
+
+export interface ToolbarJsxItem {
+  action: string;
+  jsx: (tabIndex: number) => ReactNode;
+  tooltip?: string | ReactNode;
+}
+
+/**
+ * https://elyra-ai.github.io/canvas/03.02.02-toolbar-config/
+ */
 export interface ToolbarConfig {
-  leftBar: ToolbarActionItem[];
-  rightBar?: ToolbarActionItem[];
-  overrideAutoEnableDisable: boolean;
+  leftBar?: (
+    | ToolbarActionItem
+    | ToolbarSubPanelItem
+    | ToolbarSubMenuItem
+    | ToolbarDivider
+    | ToolbarJsxItem
+  )[];
+  rightBar?: (
+    | ToolbarActionItem
+    | ToolbarSubPanelItem
+    | ToolbarSubMenuItem
+    | ToolbarDivider
+    | ToolbarJsxItem
+  )[];
+  overrideAutoEnableDisable?: boolean;
 }
+
+/**
+ * @deprecated
+ */
+export type DeprecatedToolbarConfig = (
+  | ToolbarActionItem
+  | ToolbarSubPanelItem
+  | ToolbarSubMenuItem
+  | ToolbarDivider
+  | ToolbarJsxItem
+)[];
 
 export interface NotificationConfig {
   action: string;
@@ -2342,7 +2406,7 @@ export interface CommonCanvasProps {
   /**
    * https://elyra-ai.github.io/canvas/03.02.02-toolbar-config/
    */
-  toolbarConfig?: ToolbarConfig;
+  toolbarConfig?: ToolbarConfig | DeprecatedToolbarConfig;
   /**
    * https://elyra-ai.github.io/canvas/03.02.03-notification-config/
    */
