@@ -37,12 +37,12 @@ export default class CreateAutoNodeAction extends Action {
 
 		const autoLinkOnlyFromSelNodes = canvasController.getCanvasConfig().enableAutoLinkOnlyFromSelNodes;
 		const autoLinkToBindingNodes = canvasController.getCanvasConfig().enableAutoLinkToBindingNodes;
-		this.nodeToLinkWith = this.apiPipeline.getAutoLinkedNode(autoLinkOnlyFromSelNodes, autoLinkToBindingNodes);
-		const isnodeToLinkWithBinding = this.nodeToLinkWith ? this.apiPipeline.isExitBindingNode(this.nodeToLinkWith) : false;
-		this.newNode = this.apiPipeline.createAutoNode(data, this.nodeToLinkWith, autoLinkToBindingNodes);
+		this.nodeToLinkWith = this.apiPipeline.getNodeToLinkWith(autoLinkOnlyFromSelNodes, autoLinkToBindingNodes);
+		const isNodeToLinkWithBinding = this.nodeToLinkWith ? this.apiPipeline.isExitBindingNode(this.nodeToLinkWith) : false;
+		this.newNode = this.apiPipeline.createAutoNode(data, this.nodeToLinkWith, isNodeToLinkWithBinding);
 		this.newLink = null;
 		if (this.data.addLink) {
-			if (autoLinkToBindingNodes && isnodeToLinkWithBinding && this.apiPipeline.isLinkNeededWithAutoNode(this.nodeToLinkWith, this.newNode)) {
+			if (autoLinkToBindingNodes && isNodeToLinkWithBinding && this.apiPipeline.isLinkNeededWithAutoNode(this.nodeToLinkWith, this.newNode)) {
 				this.newLink = this.apiPipeline.createLink(this.nodeToLinkWith, this.newNode);
 			} else if (this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.nodeToLinkWith)) {
 				this.newLink = this.apiPipeline.createLink(this.newNode, this.nodeToLinkWith);

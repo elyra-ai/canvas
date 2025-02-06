@@ -202,6 +202,41 @@ describe("Test auto layout variations", function() {
 		cy.verifyNumberOfNodes(0);
 		cy.verifyNumberOfPortDataLinks(0);
 	});
+
+	it("Test node auto-added gets the correct getNodeToLinkWith with/without enableAutoLinkToBindingNodes", function() {
+		cy.openCanvasDefinition("allTypesCanvas.json");
+		cy.clickToolbarPaletteOpen();
+
+		cy.clickNode("Super node");
+		cy.clickToolbarDelete();
+
+		cy.verifyNumberOfNodes(4);
+		cy.verifyNumberOfPortDataLinks(1);
+
+		// Select Binding (exit) node
+		cy.clickNode("Binding (exit) node");
+
+		// Double click Table node on canvas
+		cy.clickCategory("Outputs");
+		cy.doubleClickNodeInCategory("Table", "Outputs");
+		cy.verifyNodeTransform("Table", 910, 231);
+		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfPortDataLinks(2);
+
+		cy.setCanvasConfig({
+			"selectedAutoLinkToBindingNodes": true
+		});
+
+		// Select Binding (exit) node again
+		cy.wait(10);
+		cy.clickNode("Binding (exit) node");
+
+		// Double click Table node on canvas
+		cy.doubleClickNodeInCategory("Data Audit", "Outputs");
+		cy.verifyNodeTransform("Data Audit", 492, 376);
+		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfPortDataLinks(3);
+	});
 });
 
 describe("Test auto layout with enableSingleClickAddFromPalette", function() {
