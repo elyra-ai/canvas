@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,18 +36,24 @@ export default class CreateAutoNodeAction extends Action {
 		this.data.addLink = typeof this.data.addLink === "undefined" ? true : this.data.addLink;
 
 		const autoLinkOnlyFromSelNodes = canvasController.getCanvasConfig().enableAutoLinkOnlyFromSelNodes;
-		this.srcNode = this.apiPipeline.getAutoSourceNode(autoLinkOnlyFromSelNodes);
-		this.newNode = this.apiPipeline.createAutoNode(data, this.srcNode);
+		const autoLinkToBindingNodes = canvasController.getCanvasConfig().enableAutoLinkToBindingNodes;
+		this.nodeToLinkWith = this.apiPipeline.getAutoLinkedNode(autoLinkOnlyFromSelNodes, autoLinkToBindingNodes);
+		const isnodeToLinkWithBinding = this.nodeToLinkWith ? this.apiPipeline.isExitBindingNode(this.nodeToLinkWith) : false;
+		this.newNode = this.apiPipeline.createAutoNode(data, this.nodeToLinkWith, autoLinkToBindingNodes);
 		this.newLink = null;
-		if (this.data.addLink && this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {
-			this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode);
+		if (this.data.addLink) {
+			if (autoLinkToBindingNodes && isnodeToLinkWithBinding && this.apiPipeline.isLinkNeededWithAutoNode(this.nodeToLinkWith, this.newNode)) {
+				this.newLink = this.apiPipeline.createLink(this.nodeToLinkWith, this.newNode);
+			} else if (this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.nodeToLinkWith)) {
+				this.newLink = this.apiPipeline.createLink(this.newNode, this.nodeToLinkWith);
+			}
 		}
 	}
 
 	// Return augmented command object which will be passed to the
 	// client app.
 	getData() {
-		this.data.sourceNode = this.srcNode;
+		this.data.nodeToLinkWith = this.nodeToLinkWith;
 		this.data.newNode = this.newNode;
 		this.data.newLink = this.newLink;
 		this.data.subPipeline = this.subPipelines;

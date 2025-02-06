@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -738,6 +738,15 @@ export default class SidePanelForms extends React.Component {
 				labelText="Enable Auto Link Only From Selected Nodes"
 				toggled={this.props.getStateValue("selectedAutoLinkOnlyFromSelNodes")}
 				onToggle={(val) => this.setStateValue(val, "selectedAutoLinkOnlyFromSelNodes")}
+			/>
+		</div>);
+
+		var enableAutoLinkToBindingNodes = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedAutoLinkToBindingNodes" // Set ID to corresponding field in App.js state
+				labelText="Enable Auto Link To Binding Nodes"
+				toggled={this.props.getStateValue("selectedAutoLinkToBindingNodes")}
+				onToggle={(val) => this.setStateValue(val, "selectedAutoLinkToBindingNodes")}
 			/>
 		</div>);
 
@@ -1692,6 +1701,8 @@ export default class SidePanelForms extends React.Component {
 					{enablePaletteHeader}
 					{divider}
 					{enableAutoLinkOnlyFromSelNodes}
+					{divider}
+					{enableAutoLinkToBindingNodes}
 					{divider}
 					{enableSingleClickAddFromPalette}
 					{divider}

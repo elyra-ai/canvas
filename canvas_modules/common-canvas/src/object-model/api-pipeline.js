@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -320,61 +320,72 @@ export default class APIPipeline {
 		return node;
 	}
 
-	// Returns a source node for auto completion or null if no source node can be
-	// detected. The source node is either:
+	// Returns a node for auto completion or null if no node can be
+	// detected. The node is either:
 	// 1. The selected node, if only *one* node is currently selected or
 	// 2. The most recently added node, provided it has one or more output ports or
 	// 3. The most-recent-but-one added node, provided it has one or more output ports
-	getAutoSourceNode(autoLinkOnlyFromSelNodes) {
-		var sourceNode = null;
+	//    or if autoLinkToBindingNodes is true, then it may be a binding node
+	getAutoLinkedNode(autoLinkOnlyFromSelNodes, autoLinkToBindingNodes) {
+		var autoLinkedNode = null;
 		var selectedNodes = this.objectModel.getSelectedNodes();
-
 		if (selectedNodes.length === 1 &&
-				this.isViableAutoSourceNode(selectedNodes[0])) {
-			sourceNode = selectedNodes[0];
+				this.isViableAutoLinkedNode(selectedNodes[0], autoLinkToBindingNodes)) {
+			autoLinkedNode = selectedNodes[0];
 
 		} else if (!autoLinkOnlyFromSelNodes) {
 			var nodesArray = this.getNodes();
 			if (nodesArray.length > 0) {
 				var lastNodeAdded = nodesArray[nodesArray.length - 1];
 				if (lastNodeAdded.outputs) {
-					sourceNode = lastNodeAdded;
+					autoLinkedNode = lastNodeAdded;
 				} else if (nodesArray.length > 1) {
 					var lastButOneNodeAdded = nodesArray[nodesArray.length - 2];
 					if (lastButOneNodeAdded.outputs) {
-						sourceNode = lastButOneNodeAdded;
+						autoLinkedNode = lastButOneNodeAdded;
 					}
 				}
 			}
 		}
-		return sourceNode;
+		return autoLinkedNode;
 	}
 
 	// Returns true if the node passed in is OK to be used as a source node
 	// for a node which is to be auto-added to the canvas.
-	isViableAutoSourceNode(node) {
-		return node.outputs &&
+	isViableAutoLinkedNode(node, autoLinkToBindingNodes) {
+		const viableNode = node.outputs &&
 			node.outputs.length > 0 &&
 			!CanvasUtils.isSrcCardinalityAtMax(node.outputs[0].id, node, this.getLinks());
+		if (autoLinkToBindingNodes) {
+			return viableNode || (node.inputs &&
+			node.inputs.length > 0 &&
+			!CanvasUtils.isSrcCardinalityAtMax(node.inputs[0].id, node, this.getLinks()));
+		}
+		return viableNode;
 	}
 
 	// Returns a newly created 'auto node' whose position is based on the
-	// source node (if one is provided) and the the other nodes on the canvas.
-	createAutoNode(data, sourceNode) {
+	// selected node (if one is provided) and the the other nodes on the canvas.
+	// If autoLinkToBindingNodes is true, then position the new node to the left of the selected node
+	createAutoNode(data, selectedNode, autoLinkToBindingNodes) {
 		const initialMarginX = this.objectModel.getCanvasLayout().autoLayoutInitialMarginX;
 		const initialMarginY = this.objectModel.getCanvasLayout().autoLayoutInitialMarginY;
 		const horizontalSpacing = this.objectModel.getCanvasLayout().autoLayoutHorizontalSpacing;
 		const verticalSpacing = this.objectModel.getCanvasLayout().autoLayoutVerticalSpacing;
+		const isSelectedNodeBinding = selectedNode ? this.isExitBindingNode(selectedNode) : false;
 
 		var x = 0;
 		var y = 0;
 
-		if (sourceNode === null) {
+		if (selectedNode === null) {
 			x = initialMarginX;
 			y = initialMarginY;
+		} else if (autoLinkToBindingNodes && isSelectedNodeBinding) {
+			x = selectedNode.x_pos - selectedNode.width - horizontalSpacing;
+			y = selectedNode.y_pos;
 		} else {
-			x = sourceNode.x_pos + sourceNode.width + horizontalSpacing;
-			y = sourceNode.y_pos;
+			x = selectedNode.x_pos + selectedNode.width + horizontalSpacing;
+			y = selectedNode.y_pos;
 		}
 
 		data.offsetX = x;
@@ -394,7 +405,11 @@ export default class APIPipeline {
 		while (newNodeOverLapping) {
 			newNodeOverLapping = this.isNodeOverlappingOthers(newNode);
 			if (newNodeOverLapping) {
-				newNode.y_pos += newNode.height + verticalSpacing;
+				if (autoLinkToBindingNodes && isSelectedNodeBinding) {
+					newNode.y_pos -= newNode.height - verticalSpacing;
+				} else {
+					newNode.y_pos += newNode.height + verticalSpacing;
+				}
 			}
 		}
 

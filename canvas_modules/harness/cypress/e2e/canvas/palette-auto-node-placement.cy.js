@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -159,6 +159,38 @@ describe("Test auto layout variations", function() {
 		cy.verifyNodeTransform("Table", 50, 205);
 		cy.verifyNumberOfNodes(2);
 		cy.verifyNumberOfPortDataLinks(0);
+
+		// Click undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfNodes(1);
+		cy.verifyNumberOfPortDataLinks(0);
+
+		// Click undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfNodes(0);
+		cy.verifyNumberOfPortDataLinks(0);
+	});
+
+	it("Test node auto-added after a binding node gets connected when enableAutoLinkToBindingNodes=true", function() {
+		cy.setCanvasConfig({
+			"selectedAutoLinkToBindingNodes": true
+		});
+
+		cy.clickToolbarPaletteOpen();
+
+		// Double click Object Store node on canvas
+		cy.clickCategory("Export");
+		cy.doubleClickNodeInCategory("Object Store", "Export");
+		cy.verifyNodeTransform("Object Store", 50, 50);
+		cy.verifyNumberOfNodes(1);
+		cy.verifyNumberOfPortDataLinks(0);
+
+		// Double click Table node on canvas
+		cy.clickCategory("Outputs");
+		cy.doubleClickNodeInCategory("Table", "Outputs");
+		cy.verifyNodeTransform("Table", -100, 50);
+		cy.verifyNumberOfNodes(2);
+		cy.verifyNumberOfPortDataLinks(1);
 
 		// Click undo
 		cy.clickToolbarUndo();
