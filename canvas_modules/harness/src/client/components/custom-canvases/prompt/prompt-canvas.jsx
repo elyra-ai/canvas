@@ -151,7 +151,6 @@ export default class PromptCanvas extends React.Component {
 		this.canvasController.addNode(newNode);
 
 		const linksToAdd = this.canvasController.createNodeLinks({
-			type: "nodeLink",
 			nodes: [{ id: srcNodeId, portId: srcPortId }],
 			targetNodes: [{ id: newNode.id }]
 		});
@@ -179,7 +178,6 @@ export default class PromptCanvas extends React.Component {
 		this.canvasController.addNode(promptNode);
 		const linksToAdd = this.canvasController.createNodeLinks({
 			id: this.genPromptLinkId(srcNodeId, srcPortId),
-			type: "nodeLink",
 			nodes: [{ id: srcNodeId, portId: srcPortId }],
 			targetNodes: [{ id: promptNode.id }]
 		});
