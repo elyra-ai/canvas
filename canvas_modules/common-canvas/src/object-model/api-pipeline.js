@@ -1261,10 +1261,10 @@ export default class APIPipeline {
 	// at the target end. The input data object may contain some or all of the
 	// link properties because they may be populatd by the host application
 	// in the beforeEditActionHandler.
-	createNodeLinkDetached(data) {
+	createNodeLinkDetached(data = {}) {
 		const link = {};
 		link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(data.srcNodeId) });
-		link.type = data.type;
+		link.type = NODE_LINK;
 		link.srcNodeId = data.srcNodeId;
 		link.srcNodePortId = data.srcNodePortId;
 		link.trgPos = { x_pos: data.trgPos.x, y_pos: data.trgPos.y };
@@ -1284,14 +1284,14 @@ export default class APIPipeline {
 		return link;
 	}
 
-	createCommentLinks(data) {
+	createCommentLinks(data = {}) {
 		const linkCommentList = [];
 		data.nodes.forEach((srcNodeId) => {
 			data.targetNodes.forEach((trgNodeId) => {
 				if (CanvasUtils.isCommentLinkConnectionAllowed(srcNodeId, trgNodeId, this.getLinks())) {
 					const info = {};
 					info.id = this.objectModel.getUniqueId(CREATE_COMMENT_LINK, { "comment": this.getComment(srcNodeId), "targetNode": this.getNode(trgNodeId) });
-					info.type = data.type;
+					info.type = COMMENT_LINK;
 					info.srcNodeId = srcNodeId;
 					info.trgNodeId = trgNodeId;
 					linkCommentList.push(info);
