@@ -69,20 +69,20 @@ class ControlItem extends React.Component {
 			let indicator;
 			if (this.showRequiredIndicator && this.props.control.required) {
 				indicator = (
-					<span className="properties-indicator">
+					<span className="properties-indicator" aria-disabled={disabled}>
 						{formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.LABEL_INDICATOR_REQUIRED)}
 					</span>
 				);
 			} else if (!this.showRequiredIndicator && !("required" in this.props.control)) {
 				indicator = (
-					<span className="properties-indicator">
+					<span className="properties-indicator" aria-disabled={disabled}>
 						{formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.LABEL_INDICATOR_OPTIONAL)}
 					</span>
 				);
 			}
 			label = (
 				<div className={classNames("properties-label-container", { "table-control": this.props.tableControl === true })}>
-					<label className="properties-control-label">{this.props.control.label.text}</label>
+					<label className="properties-control-label" aria-disabled={disabled}>{this.props.control.label.text}</label>
 					{indicator}
 					{tooltip}
 				</div>);
