@@ -213,7 +213,8 @@ class ExpressionControl extends React.Component {
 				language,
 				placeholder(this.props.control.additionalText),
 				this.handleUpdate(),
-				this.editable.of(EditorView.editable.of(!(this.props.state === STATES.DISABLED || this.props.readOnly)))
+				this.editable.of(EditorView.editable.of(!(this.props.state === STATES.DISABLED || this.props.readOnly))),
+				EditorView.contentAttributes.of({ "aria-label": this.props.control?.label?.text })
 			],
 			parent: this.editorRef.current
 		});
