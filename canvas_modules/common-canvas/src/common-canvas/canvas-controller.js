@@ -1113,10 +1113,10 @@ export default class CanvasController {
 	}
 
 	// Edits a comment with the data.
-	// commentProperties - comment properties to overwrite the comment
+	// properties - comment properties to overwrite the comment
 	// pipelineId - The ID of the pipeline
-	editComment(commentProperties, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).editComment(commentProperties);
+	editComment(properties, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).editComment(properties);
 	}
 
 	// Sets the properties in the comment identified by the commentId. The
