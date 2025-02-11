@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -311,11 +311,11 @@ export default class ObjectModel {
 		return outNodeType;
 	}
 
-	getCategoryForNode(nodeOpIdRef) {
+	getCategoryForNode(operatorId) {
 		let result = null;
 		this.getPaletteData().categories.forEach((category) => {
 			category.node_types.forEach((nodeType) => {
-				if (nodeType.op === nodeOpIdRef) {
+				if (nodeType.op === operatorId) {
 					result = category;
 				}
 			});

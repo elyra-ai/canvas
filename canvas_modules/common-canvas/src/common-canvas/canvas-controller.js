@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -504,8 +504,8 @@ export default class CanvasController {
 	}
 
 	// Returns the category of the palette node identified by the operator passed in
-	getCategoryForNode(nodeOpIdRef) {
-		return this.objectModel.getCategoryForNode(nodeOpIdRef);
+	getCategoryForNode(operatorId) {
+		return this.objectModel.getCategoryForNode(operatorId);
 	}
 
 	// Converts a node template from the format used in the palette (that conforms
@@ -549,8 +549,8 @@ export default class CanvasController {
 	// Selected objects can only be in one pipeline. If this parameter is omitted
 	// it is assumed the selections will be for objects in the 'top-level' pipeline
 	// being displayed.
-	setSelections(newSelection, pipelineId) {
-		this.objectModel.setSelections(newSelection, pipelineId);
+	setSelections(newSelections, pipelineId) {
+		this.objectModel.setSelections(newSelections, pipelineId);
 	}
 
 	// Clears all the current selections from the canvas.
@@ -1113,10 +1113,10 @@ export default class CanvasController {
 	}
 
 	// Edits a comment with the data.
-	// data - the comment
+	// properties - comment properties to overwrite the comment
 	// pipelineId - The ID of the pipeline
-	editComment(data, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).editComment(data);
+	editComment(properties, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).editComment(properties);
 	}
 
 	// Sets the properties in the comment identified by the commentId. The
@@ -1124,8 +1124,8 @@ export default class CanvasController {
 	// replace the corresponding properties in the comment. For example: if
 	// commentProperties is { x_pos: 50, y_pos: 70 } the comment
 	// will be set to that position.
-	setCommentProperties(commentId, commentProperties, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).setCommentProperties(commentId, commentProperties);
+	setCommentProperties(commentId, properties, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setCommentProperties(commentId, properties);
 	}
 
 	// Sets the class name to newClassName of the comments identified by commentIds
@@ -1136,10 +1136,10 @@ export default class CanvasController {
 	}
 
 	// Deletes a comment
-	// comId - The ID of the comment
+	// commentId - The ID of the comment
 	// pipelineId - The ID of the pipeline
-	deleteComment(comId, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).deleteComment(comId);
+	deleteComment(commentId, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).deleteComment(commentId);
 	}
 
 	// Adds cutom attributes to a comment
@@ -1223,8 +1223,8 @@ export default class CanvasController {
 	// replace the corresponding properties in the link. For exam`ple: if
 	// linkProperties is { trgNodeId: "123", trgNodePortId: "789" } the target
 	// node ID will be set to "123" and the target port ID set to "789".
-	setLinkProperties(linkId, linkProperties, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).setLinkProperties(linkId, linkProperties);
+	setLinkProperties(linkId, properties, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setLinkProperties(linkId, properties);
 	}
 
 	// Sets the source properties in the data link identified by the linkId. The
@@ -1259,16 +1259,16 @@ export default class CanvasController {
 	// id1 - The ID of the comment
 	// id2 - The ID of the node
 	// pipelineId - The ID of the pipeline
-	getCommentLinkFromInfo(id1, id2, pipelineId) {
-		return this.objectModel.getAPIPipeline(pipelineId).getCommentLinkFromInfo(id1, id2);
+	getCommentLinkFromInfo(commentId, nodeId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getCommentLinkFromInfo(commentId, nodeId);
 	}
 
 	// Gets a node to node association link
-	// id1 - The ID of one of the node
-	// id2 - The ID of one of the node
+	// nodeId1 - The ID of one of the nodes
+	// nodeId2 - The ID of one of the nodes
 	// pipelineId - The ID of the pipeline
-	getNodeAssocLinkFromInfo(id1, id2, pipelineId) {
-		return this.objectModel.getAPIPipeline(pipelineId).getNodeAssocLinkFromInfo(id1, id2);
+	getNodeAssocLinkFromInfo(nodeId1, nodeId2, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeAssocLinkFromInfo(nodeId1, nodeId2);
 	}
 
 	// Adds links to the current links array for a pipeline.
