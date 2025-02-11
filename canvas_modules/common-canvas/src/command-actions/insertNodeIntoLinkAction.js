@@ -58,8 +58,8 @@ export default class InsertNodeIntoLinkAction extends Action {
 		this.apiPipeline.deleteLink({ id: this.data.link.id });
 		this.apiPipeline.moveObjects({ nodes: [this.node.id], offsetX: this.data.offsetX, offsetY: this.data.offsetY });
 
-		this.firstLink = this.apiPipeline.createNodeLink(this.firstLinkSrcInfo, this.firstLinkTrgInfo, { type: "nodeLink" });
-		this.secondLink = this.apiPipeline.createNodeLink(this.secondLinkSrcInfo, this.secondLinkTrgInfo, { type: "nodeLink" });
+		this.firstLink = this.apiPipeline.createNodeLink(this.firstLinkSrcInfo, this.firstLinkTrgInfo);
+		this.secondLink = this.apiPipeline.createNodeLink(this.secondLinkSrcInfo, this.secondLinkTrgInfo);
 		this.apiPipeline.addLinks([this.firstLink, this.secondLink]);
 	}
 
