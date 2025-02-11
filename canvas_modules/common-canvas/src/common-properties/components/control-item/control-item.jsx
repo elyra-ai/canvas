@@ -90,7 +90,7 @@ class ControlItem extends React.Component {
 			// Provide a label for controls with hidden labels to support accessibility
 			label = (
 				<div className={classNames("properties-label-container-hidden")}>
-					<label className="properties-control-label-hidden">{this.props.control.label.text}</label>
+					<label className="properties-control-label-hidden">{this.props.control?.label?.text}</label>
 				</div>);
 		}
 
