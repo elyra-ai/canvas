@@ -117,6 +117,12 @@
     "react-dom": "^16.0.0 || ^17.0.0 || ^18.0.0",
     "react-intl": "^5.0.0 || ^6.0.0"
   },
+  "tsd": {
+    "compilerOptions": {
+      "resolveJsonModule": true,
+      "allowImportingTsExtensions": true
+    }
+  },
   "jest": {
     "testEnvironment": "jest-fixed-jsdom",
     "transformIgnorePatterns": [],

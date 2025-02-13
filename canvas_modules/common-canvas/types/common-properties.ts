@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,33 +15,26 @@
  */
 
 import React, { ReactNode } from "react";
-import { PropertyDefinitionsSchema } from "./schema-types/parameter-defs-v3";
+import { PropertyDefinitionsSchema } from "./common-properties-schema-types/parameter-defs-v3";
 import {
   CommonPropertiesController,
   PropertyId,
   PropertyMessageDef,
 } from "./common-properties-controller";
-import { MessageDef } from "./schema-types/pipeline-flow-ui-v3";
-import { ExpressionBuilderExpressionInfoSchema } from "./schema-types/expression-info-v3";
+import { ExpressionBuilderExpressionInfoSchema } from "./common-properties-schema-types/expression-info-v3";
 
 export * from "./common-properties-controller";
-export * from "./schema-types/conditions-v3";
-export * from "./schema-types/datarecord-metadata-v3";
-export * from "./schema-types/expression-info-v3";
-export * from "./schema-types/function-list-v3";
+export * from "./common-properties-schema-types/conditions-v3";
+export * from "./common-properties-schema-types/expression-info-v3";
+export * from "./common-properties-schema-types/function-list-v3";
 export {
   ParameterDefinition as OperatorParameterDefinition,
   WatsonDataPlatformOperatorSchema,
   PortDefinition,
   ParameterRefDefinition,
   ComplexTypeDefinition as OperatorComplexTypeDefinition,
-} from "./schema-types/operator-v3";
-export * from "./schema-types/parameter-defs-v3";
-export * from "./schema-types/parameters-v3";
-export * from "./schema-types/parametersets-v3";
-export * from "./schema-types/pipeline-connection-v3";
-export { MessageDef } from "./schema-types/pipeline-flow-ui-v3";
-export * from "./schema-types/uihints-v3";
+} from "./common-properties-schema-types/operator-v3";
+export * from "./common-properties-schema-types/uihints-v3";
 
 /**
  * https://elyra-ai.github.io/canvas/04.02-callbacks/#actionhandler
@@ -55,11 +48,18 @@ export type ActionHandler = (
 /**
  * https://elyra-ai.github.io/canvas/04.02-callbacks/#applypropertychangespropertyset-appdata-additionalinfo-undoinfo-uiproperties
  */
+export interface ErrorMessage {
+  "id_ref": string;
+  "text": string;
+  "type": string;
+  "validation_id": string;
+};
+
 export type ApplyPropertyChangesCallback = (
   propertySet: Record<string, unknown>,
   appData: Record<string, unknown> | undefined,
   additionalInfo: {
-    messages?: MessageDef[];
+    messages?: ErrorMessage[];
     title: string;
   },
   undoInfo: {

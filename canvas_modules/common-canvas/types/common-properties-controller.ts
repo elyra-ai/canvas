@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { RecordSchema } from './schema-types/datarecord-metadata-v3';
-import { PropertyDefinitionsSchema } from './schema-types/parameter-defs-v3';
+import { RecordSchema } from './common-canvas-schema-types/pipeline-flow-v3';
+import { PropertyDefinitionsSchema } from './common-properties-schema-types/parameter-defs-v3';
 
 interface BaseProperty {
   /** parameter name defined in operator definition */

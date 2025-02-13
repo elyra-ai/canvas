@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,43 +16,80 @@
 
 import React, { ComponentClass, FunctionComponent, ReactNode } from "react";
 import {
-  DecorationDef,
-  NodeInfoDef,
-} from "./schema-types/pipeline-flow-ui-v3";
-import {
-  HttpsApiDataplatformIbmComSchemasCommonPipelinePipelineFlowPipelineFlowV3SchemaJson,
+  HttpsApiDataplatformIbmComSchemasCommonPipelinePipelineFlowPipelineFlowV3SchemaJson as PipelineFlowDef,
+  PipelineDef,
   NodeTypeDef,
-} from "./schema-types/pipeline-flow-v3";
-import { HttpsApiDataplatformIbmComSchemasCommonCanvasPalettePaletteV3SchemaJson } from "./schema-types/palette-v3";
-
-export * from "./schema-types/palette-v3";
-export {
-  PipelineDef as UiPipelineDef,
-  HttpsApiDataplatformIbmComSchemasCommonPipelinePipelineFlowPipelineFlowUiV3SchemaJson,
-  PipelineOverviewDef,
-  CommentDef,
-  CommentLinkDef,
-  PortInfoDef,
-  NodeInfoDef,
-  AssociationDef,
-  DecorationDef,
   MessageDef,
-  NodeLinkInfoDef,
-  RuntimeInfoDef,
-} from "./schema-types/pipeline-flow-ui-v3";
-export * from "./schema-types/pipeline-flow-v3";
+  NodeDecorationDef,
+  LinkDecorationDef
+} from "./common-canvas-schema-types/pipeline-flow-v3";
+import {
+  HttpsApiDataplatformIbmComSchemasCommonCanvasCanvasInfoCanvasInfoV3SchemaJson as CanvasInfo,
+  CanvasPipeline,
+  CanvasNode,
+  CanvasSupernode,
+  CanvasComment,
+  CanvasLink,
+  CanvasPorts,
+  CanvasBoundPorts,
+} from "./common-canvas-schema-types/canvas-info-v3";
+import {
+  HttpsApiDataplatformIbmComSchemasCommonCanvasPalettePaletteV3SchemaJson as PipelineFlowPalette,
+  CategoryDef
+} from "./common-canvas-schema-types/palette-v3";
 
-export interface CanvasLink {
-  app_data: Record<string, unknown>;
-  class_name: string;
-  id: string;
-  srcNodeId: string;
-  srcNodePortId: string;
-  trgNodeId: string;
-  trgNodePortId: string;
-  type: string;
+
+export {
+  HttpsApiDataplatformIbmComSchemasCommonPipelinePipelineFlowPipelineFlowV3SchemaJson as PipelineFlowDef,
+  PipelineDef,
+  NodeTypeDef,
+  MessageDef,
+  NodeDecorationDef,
+  LinkDecorationDef
+} from "./common-canvas-schema-types/pipeline-flow-v3";
+export {
+  HttpsApiDataplatformIbmComSchemasCommonCanvasCanvasInfoCanvasInfoV3SchemaJson as CanvasInfo,
+  CanvasPipeline,
+  CanvasNode,
+  CanvasSupernode,
+  CanvasComment,
+  CanvasLink,
+  CanvasPorts,
+  CanvasBoundPorts
+} from "./common-canvas-schema-types/canvas-info-v3";
+export {
+  HttpsApiDataplatformIbmComSchemasCommonCanvasPalettePaletteV3SchemaJson as PipelineFlowPalette,
+  CategoryDef
+} from "./common-canvas-schema-types/palette-v3";
+
+// The 'setPipelineFlow' function has problems with some of the fields imported
+// from JSON. So this creates a PipelineFlow that allows validation.
+type RelaxedPipeline = Omit<PipelineDef, 'nodes'> & {
+  nodes: unknown[]
 }
 
+export type RelaxedPipelineFlow = Omit<PipelineFlowDef, 'version' | 'json_schema' |  'pipelines'> & {
+  version: string;
+  json_schema: string;
+  pipelines: RelaxedPipeline[]
+}
+
+// The 'setPipelineFlowPalette' function has problems with some of the fields imported
+// from JSON. So this creates a PipelineFlowPalette that allows validation.
+export type RelaxedPipelineFlowPalette = Omit<PipelineFlowPalette, 'version' | 'categories'> & {
+  version: string;
+  categories: unknown[];
+}
+
+// Create and export Decoration here because json2ts doesn't create this even
+// though the JSON schema uses the "oneOf" keyword. This seems to be because
+// the decoration definitions are in a child schema of pipeline-flow-v3-schema.json.
+export type Decoration = NodeDecorationDef | LinkDecorationDef;
+
+// These positions enumerations can be used to position elements relative to
+// a node or link. The values here should match those in the JSON schema files.
+// I could not find away to encode them in the JSON schema so they would get
+// generated as below.
 export type NodePosition =
   | "topLeft"
   | "middleLeft"
@@ -66,151 +103,43 @@ export type NodePosition =
 
 export type LinkPosition = "source" | "middle" | "target";
 
-interface ImageDecoration {
-  id: string;
-  image: string;
-  position: NodePosition | LinkPosition;
-  distance: number;
-  x_pos: number;
-  y_pos: number;
-  width: number;
-  height: number;
-  hotspot: boolean;
-  class_name: string;
-  outline: boolean;
-  tooltip: string;
-  temporary: boolean;
+
+export type ContextMenuEntry = ContextMenuDivider | ContextMenuItem;
+
+export interface ContextMenuDivider {
+  divider: true;
 }
 
-export type NodeImageDecoration = ImageDecoration &
-  DecorationDef & {
-    position: NodePosition;
-  };
-export interface LinkImageDecoration extends ImageDecoration {
-  position: LinkPosition;
-}
+/** Existing internal common canvas actions */
+type InternalAction =
+  | "selectAll"
+  | "cut"
+  | "copy"
+  | "paste"
+  | "undo"
+  | "redo"
+  | "createSupernode"
+  | "expandSupernode"
+  | "collapseSupernode"
+  | "deleteSelectedObjects"
+  | "createComment"
+  | "deleteLink"
+  | "disconnectNode"
+  | "highlightBranch"
+  | "highlightDownstream"
+  | "highlightUpstream"
+  | "unhighlight";
 
-interface LabelDecoration {
-  id: string;
-  label?: string;
-  label_editable?: boolean;
-  label_align?: "center" | "left";
-  label_single_line?: boolean;
-  label_max_characters?: number;
-  label_allow_return_key?: boolean;
-  position?: NodePosition | LinkPosition;
-  distance?: number;
-  x_pos?: number;
-  y_pos?: number;
-  width?: number;
-  height?: number;
-  hotspot?: boolean;
-  class_name?: string;
-  tooltip?: string;
-  temporary?: boolean;
-}
+export interface ContextMenuItem {
+  action: InternalAction | string | "colorBackground";
+  label: string;
+  icon?: string | ReactNode;
+  enable?: boolean;
+  submenu?: boolean;
+  menu: ContextMenuEntry[];
+  toolbarItem: boolean;
+};
 
-export type NodeLabelDecoration = LabelDecoration &
-  DecorationDef & {
-    position: NodePosition;
-  };
-
-export interface LinkLabelDecoration extends LabelDecoration {
-  position: LinkPosition;
-}
-
-interface ShapeDecoration {
-  id: string;
-  path?: string;
-  position?: NodePosition | LinkPosition;
-  distance?: number;
-  x_pos?: number;
-  y_pos?: number;
-  width?: number;
-  height?: number;
-  hotspot?: boolean;
-  class_name?: boolean;
-  tooltip?: string;
-  temporary?: boolean;
-}
-
-export type NodeShapeDecoration = ShapeDecoration &
-  DecorationDef & {
-    position: NodePosition;
-  };
-export interface LinkShapeDecoration extends ShapeDecoration {
-  position: LinkPosition;
-}
-
-interface JsxDecoration {
-  id: string;
-  jsx: ReactNode;
-  position: NodePosition | LinkPosition;
-  distance: number;
-  x_pos: number;
-  y_pos: number;
-  width: number;
-  height: number;
-  hotspot: boolean;
-  class_name: string;
-  tooltip: string;
-}
-
-export type NodeJsxDecoration = JsxDecoration &
-  DecorationDef & {
-    position: NodePosition;
-  };
-export interface LinkJsxDecoration extends JsxDecoration {
-  position: LinkPosition;
-}
-
-/** https://elyra-ai.github.io/canvas/03.04.01-decorations/ */
-export type Decoration =
-  | ImageDecoration
-  | LabelDecoration
-  | ShapeDecoration
-  | JsxDecoration;
-
-/** https://elyra-ai.github.io/canvas/03.04.01-decorations/ */
-export type LinkDecoration =
-  | LinkImageDecoration
-  | LinkLabelDecoration
-  | LinkShapeDecoration
-  | LinkJsxDecoration;
-
-/** https://elyra-ai.github.io/canvas/03.04.01-decorations/ */
-export type NodeDecoration =
-  | NodeImageDecoration
-  | NodeLabelDecoration
-  | NodeShapeDecoration
-  | NodeJsxDecoration;
-
-/**
- * A node as represented inside Elyra Canvas. The generic type is of app_data.
- * https://elyra-ai.github.io/canvas/03.04.02-api-object-structure/#api-differences-with-schema
- */
-export type CanvasNode<T = Record<string, unknown>> = NodeTypeDef &
-  NodeInfoDef &
-  Required<Pick<NodeInfoDef, "x_pos" | "y_pos">> & {
-    app_data: T;
-    height: number;
-    width: number;
-  };
-
-export interface CanvasComment {
-  class_name: string;
-  content: string;
-  height: number;
-  id: string;
-  width: number;
-  x_pos: number;
-  y_pos: number;
-}
-
-export type ContextMenuHandler = (
-  source: CtxMenuHandlerSource,
-  defaultMenu: CtxMenuHandlerMenuAction[]
-) => CtxMenuHandlerMenuAction[];
 
 export interface StyleSpec {
   body?: {
@@ -228,12 +157,21 @@ export interface StyleSpec {
   };
 }
 
+export interface AncestorPipeline {
+  pipelineId: string;
+  label?: string;
+  supernodeId?: string;
+  parentPipelineId?: string;
+ }
+
 export interface PipelineObjectStyle {
   style: StyleSpec;
   pipelineId: string;
   objId: string;
 }
 
+
+/** https://elyra-ai.github.io/canvas/03.04.05-notification-messages/ */
 export type NotificationMsgType =
   | "info"
   | "success"
@@ -243,7 +181,6 @@ export type NotificationMsgType =
   | undefined
   | null;
 
-/** https://elyra-ai.github.io/canvas/03.04.05-notification-messages/ */
 export interface NotificationMsg {
   id: string;
   type: NotificationMsgType;
@@ -255,7 +192,45 @@ export interface NotificationMsg {
 }
 
 /**
- * https://elyra-ai.github.io/canvas/03.04-canvas-controller/
+  * ## Zoom object for use with zoom methods
+  * https://elyra-ai.github.io/canvas/03.04-canvas-controller/#zoom-methods
+  */
+/*
+ * Zoom object:
+ * `x`: Is the horizontal translate amount which is a number indicating the
+ *    pixel amount to move. Negative left and positive right
+ *
+ * `y`: Is the vertical translate amount which is a number indicating the
+ *    pixel amount to move. Negative up and positive down.
+ *
+ * `k`: is the scale amount which is a number greater than 0 where 1 is the
+ *    default scale size.
+ */
+export interface ZoomObject {
+  x: number;
+  y: number;
+  k: number;
+}
+
+/**
+ * https://elyra-ai.github.io/canvas/03.04-canvas-controller/ *
+ * The application can programmatically perform most of the actions
+ * that the user can do in Common Canvas by calling the Canvas Controller API.
+ *
+ * Note: See this section for differences between the structure of objects
+ * in the API and the schema:
+ * https://elyra-ai.github.io/canvas/03.04.02-api-object-structure/
+ *
+ * In most cases within the API, the pipelineId parameter is optional.
+ * If pipelineId is omitted, the method will default to the pipeline that
+ * is currently displayed in the main canvas viewport.
+ *
+ * Warning 1: Do not alter the IDs of objects that currently exist on the
+ * canvas. Changing object IDs can cause internal problems, in particular
+ * with the command stack.
+ *
+ * Warning 2: When using external pipeline flows, Pipeline IDs must be
+ * globally unique identifiers.
  */
 export declare class CanvasController {
   /**
@@ -265,51 +240,61 @@ export declare class CanvasController {
    * provided, but they will be upgraded to the most recent version.
    */
   setPipelineFlow(
-    pipelineFlow: HttpsApiDataplatformIbmComSchemasCommonPipelinePipelineFlowPipelineFlowV3SchemaJson
+    pipelineFlow: PipelineFlowDef | RelaxedPipelineFlow,
   ): void;
+
   /**
    * Clears the pipeline flow and displays an empty canvas.
    */
   clearPipelineFlow(): void;
+
   /**
    * @return the current pipelineFlow document in the latest version of the
    * pipelineFlow schema as documented in the elyra-ai pipeline-schemas repo.
    */
-  getPipelineFlow(): HttpsApiDataplatformIbmComSchemasCommonPipelinePipelineFlowPipelineFlowV3SchemaJson;
+  getPipelineFlow(): PipelineFlowDef;
+
   /**
    * Returns the current pipelineFlow document ID.
    */
   getPipelineFlowId(): string;
+
   /**
    * Returns the ID of the primary pipeline from the pipelineFlow.
    */
   getPrimaryPipelineId(): string;
+
   /**
    * Returns the external pipeline flow for the url passed in. The external
    * flow must have been loaded through some common canvas action for this
    * method to be able to return anything.
    * @param url
    */
-  getExternalPipelineFlow(url: string): Record<string, unknown>;
+  getExternalPipelineFlow(url: string): Record<string, PipelineDef>;
+
   /**
    * Returns the internal format of all canvas data stored in memory by
    * common-canvas. Nodes, comments and links are returned in the internal
    * format.
    */
-  getCanvasInfo(): Record<string, unknown>;
+  getCanvasInfo(): CanvasInfo;
+
   /**
+   * Returns an array of ancestor pipelines from the primary pipeline to
+   * the pipeline indicated by the ID passed in.
    * @param pipelineId
    * @return the IDs of the ancestor pipeline of the pipeline ID passed in.
    */
-  getAncestorPipelineIds(pipelineId: string): Record<string, unknown>[];
+  getAncestorPipelineIds(pipelineId: string): AncestorPipeline[];
+
   /**
    * Removes all styles from nodes, comments and links. See the setObjectsStyle
    * and setLinkStyle methods for details on setting styles.
-   * temporary - is a boolean that indicates whether temporary or permanent
-   * styles should be removed.
-   * @param temporary - boolean
+   * @param temporary - boolean that indicates whether temporary or permanent
+   *                    styles should be removed.
    */
   removeAllStyles(temporary: boolean): void;
+
   /**
    * Specifies the new styles for objects that are not highlighted during
    * branch highlighting.
@@ -323,33 +308,45 @@ export declare class CanvasController {
    */
 
   /**
+   * Returns the canvas info pipeline object for the pipeline Id passed in.
+   * @param pipelineId
    * @return the pipeline object for the pipeline Id passed in.
    */
-  getPipeline(pipelineId: string): Record<string, unknown>;
+  getPipeline(pipelineId: string): CanvasPipeline;
+
   /**
    * Returns the ID of the pipeline object which is currently on display
    * in the canvas. Typically, this is the primary pipeline but will be
    * different if the user has navigated into one or more supernodes; in
    * which case it will be the ID of the pipeline at the level in the
    * supernode hierarchy that is currently on display.
+   * @return a pipeline ID for the currently displayed pipeline.
    */
   getCurrentPipelineId(): string;
+
   /**
    * Returns truthy if the pipeline is external (that is it is part of an
    * external pipeline flow). Otherwise, return falsy to indicate the pipeline
    * is local.
+   * @param pipelineId
+   * @return a boolean to indicate whether the pipeline is external ot local
    */
   isPipelineExternal(pipelineId: string): boolean;
+
   /**
    * Returns the flow validation messages for the pipeline ID passed in.
+   * @deprecated -  applications should validate their flows as appropriate.
    */
   getFlowMessages(pipelineId: string): Record<string, unknown>;
+
   /**
    * @return a boolean to indicate whether there are any messages of
    * includeMsgsType in the pipeline identified by the pipeline ID passed in.
    * @param includeMsgType - can be either "error" or "warning"
+   * @deprecated -  applications should validate their flows as appropriate.
    */
   isFlowValid(includeMsgType: "error" | "warning"): boolean;
+
   /**
    * Rearranges the nodes in the canvas in the direction specified for the
    * pipeline ID passed in.
@@ -366,14 +363,17 @@ export declare class CanvasController {
    * Loads the palette data as described in the palette schema in
    * elyra-ai pipeline-schemas repo. Any version can be loaded and it will be
    * upgraded to the latest version.
+   * @param A palette containing nodes in the pipeline flow format.
    */
   setPipelineFlowPalette(
-    palette: HttpsApiDataplatformIbmComSchemasCommonCanvasPalettePaletteV3SchemaJson
+    palette: RelaxedPipelineFlowPalette
   ): void;
+
   /**
    * Clears the palette data from common-canvas.
    */
   clearPaletteData(): void;
+
   /**
    * Sets the loading text of the category. If set to a non-empty string the
    * category will show an InlineLoading control in the palette category div
@@ -383,6 +383,7 @@ export declare class CanvasController {
    * @param loadingText
    */
   setCategoryLoadingText(categoryId: string, loadingText: string): void;
+
   /**
    * Sets the empty text of the category. If set to a non-empty string and the
    * category does not have any nodes, the palette will show a warning icon with
@@ -393,10 +394,11 @@ export declare class CanvasController {
    * @param emptyText
    */
   setCategoryEmptyText(categoryId: string, emptyText: string): void;
+
   /**
    * Adds a new node into the palette:
    * @param nodeTypeObj - must conform to the style of node used by the palette as
-   * described in the palette schema. See objects in nodeTypes array in the
+   * described in the pipeline flow . See objects in nodeTypes array in the
    * palette schema:
    *  https://github.com/elyra-ai/pipeline-schemas/blob/main/common-canvas/palette/palette-v3-schema.json
    * @param categoryId - is the name of the palette category where the node will be
@@ -409,73 +411,95 @@ export declare class CanvasController {
    * reference to an image or the image itself.
    */
   addNodeTypeToPalette(
-    nodeTypeObj: HttpsApiDataplatformIbmComSchemasCommonCanvasPalettePaletteV3SchemaJson,
+    nodeTypeObj: NodeTypeDef,
     categoryId: string,
     categoryLabel?: string,
     categoryDescription?: string,
     categoryImage?: string
   ): void;
+
   /**
    * Adds an array of new node into the palette:
-   * nodeTypeObjs - an array of nodetypes that must conform to the style of
+   * @param nodeTypeObjs - an array of nodetypes that must conform to the style of
    * nodes used by the palette as described in the palette schema. See objects
    * in nodeTypes array in the palette schema:
    *  https://github.com/elyra-ai/pipeline-schemas/blob/main/common-canvas/palette/palette-v3-schema.json
-   * category - is the name of the palette category where the node will be
+   * @param categoryId - is the ID of the palette category where the node will be
    * added. If the category doesn't exist it will be created.
-   * categoryLabel - is an optional param. If a new category is created it will
+   * @param categoryLabel - is an optional param. If a new category is created it will
    * be displayed with this label.
-   * categoryImage - the image displayed for the category provided as a
-   * reference to an image or the image itself.
-   * categoryDescription - Is an optional param. If a new category is created
+   * @param categoryDescription - Is an optional param. If a new category is created
    * it will be displayed with this description.
-   * categoryImage - Is an optional param. The image displayed for the category provided as a
+   * @param categoryImage - Is an optional param. The image displayed for the category provided as a
    * reference to an image or the image itself.
    */
   addNodeTypesToPalette(
-    nodeTypeObj: HttpsApiDataplatformIbmComSchemasCommonCanvasPalettePaletteV3SchemaJson[],
+    nodeTypeObjs: NodeTypeDef[],
     categoryId: string,
     categoryLabel?: string,
     categoryDescription?: string,
     categoryImage?: string
   ): void;
+
   /**
    * Removes nodetypes from a palette category
    * @param selObjectIds - an array of object IDs to identify the nodetypes to be
    * @param categoryId - the ID of teh category from which the nodes will be removed
    */
   removeNodesFromPalette(selObjectIds: string[], categoryId: string): void;
+
   /**
    * @return the palette data document which will conform to the latest version
    * of the palette schema.
    */
-  getPaletteData(): HttpsApiDataplatformIbmComSchemasCommonCanvasPalettePaletteV3SchemaJson;
+  getPaletteData(): PipelineFlowPalette;
+
   /**
+   * @param operatorId - ID of the operator for this node
    * @return the palette node identified by the operator ID passed in.
    */
   getPaletteNode(operatorId: string): NodeTypeDef;
+
   /**
+   * @param nodeId - ID of the node
    * @return the palette node identified by the node ID passed in.
    */
   getPaletteNodeById(nodeId: string): NodeTypeDef;
+
   /**
+   * Returns the cateory that the node identified by the operatorId is in.
+   * @param operatorId - ID of the operator for this node
    * @return the category of the palette node identified by the operator passed in
    */
-  getCategoryForNode(nodeOpIdRef: string): string;
+  getCategoryForNode(operatorId: string): CategoryDef;
+
   /**
    * Converts a node template from the format use in the palette (that conforms
-   * to the schema) to the internal node format.
+   * to the pipeline flow schema) to the internal node format.
+   * @param nodeTemplate - A node object conforming to the pipeline flow schema
+   * @return a node object conforming to the Canvas Info schema.
    */
-  convertNodeTemplate(nodeTemplate: NodeTypeDef): unknown;
-  /** Opens the palette category identified by the category ID passed in. */
+  convertNodeTemplate(nodeTemplate: NodeTypeDef): CanvasNode;
+
+  /** Opens the palette category identified by the category ID passed in.
+  * @param categoryId - ID of the category
+  */
   openPaletteCategory(categoryId: string): void;
-  /** Closes the palette category idetified by the category ID passed in. */
+
+  /** Closes the palette category idetified by the category ID passed in.
+   * @param categoryId - ID of the category
+   */
   closePaletteCategory(categoryId: string): void;
+
   /** Opens all the palette categories. */
   openAllPaletteCategories(): void;
+
   /** Closes all the palette categories. */
   closeAllPaletteCategories(): void;
-  /** Returns true or false to indicate whether a palette category is open or not. */
+
+  /** Returns true or false to indicate whether a palette category is open or not.
+   * @param categoryId - ID of the category
+   */
   isPaletteCategoryOpen(categoryId: string): boolean;
 
   /**
@@ -488,45 +512,56 @@ export declare class CanvasController {
    * Selected objects can only be in one pipeline. If this parameter is omitted
    * it is assumed the selections will be for objects in the 'top-level' pipeline
    * being displayed.
-   * @param newSelection - An array of object IDs for nodes and/or comments
+   * @param newSelections - An array of object IDs for nodes and/or comments
    * @param pipelineId - Optional. The ID of the pipeline where the objects exist.
    */
   setSelections(
-    newSelection: string[] | Record<string, unknown>[],
+    newSelections: string[],
     pipelineId?: string
   ): void;
   /**
    * Clears all the current selections from the canvas.
    */
   clearSelections(): void;
+
   /**
    * Selects all the objects on the canvas.
    */
   selectAll(): void;
+
   /**
    * @return an array of the IDs of the currently selected objects.
    */
   getSelectedObjectIds(): string[];
+
   /**
+   * Returns the selected nodes for the currently displayed pipeline.
    * @return the currently selected nodes.
    */
   getSelectedNodes(): CanvasNode[];
+
   /**
+   * Returns the selected comments for the currently displayed pipeline.
    * @return the currently selected comments.
    */
   getSelectedComments(): CanvasComment[];
+
   /**
-   * @return the ID of the pipeline in which the currently selected objects
+   * Returns the ID of the pipeline in which the currently selected objects
    * exist. Only one pipeline may contain selected objects.
+   * @return a pipeline ID
    */
   getSelectedPipelineId(): string;
+
   /**
    * Deletes all currently selected objects.
    */
   deleteSelectedObjects(): void;
+
   /**
+   * Returnd true if the currently selected objects are all linked together.
    * This is used when deciding to creating a supernode.
-   * @return true if the currently selected objects are all linked together.
+   * @return true if nodes are linked
    */
   areSelectedNodesContiguous(): boolean;
 
@@ -540,15 +575,19 @@ export declare class CanvasController {
    * @param newMessages - An array of messages (see `getNotificationMessages`)
    */
   setNotificationMessages(newMessages: NotificationMsg[]): void;
+
   /**
    * Deletes all notification messages shown in the notification panel.
    */
   clearNotificationMessages(): void;
+
   /**
-   * Removes the notification messages from array of IDs.
+   * Removes notification messages from the notification panel specified
+   * by the array of message IDs passed in.
    * @param ids - array of IDs
    */
   deleteNotificationMessages(ids: string[]): void;
+
   /**
    * Returns the array of current notification messages. If the messageType is
    * provided only messages of that type will be returned. If messageType is
@@ -563,8 +602,11 @@ export declare class CanvasController {
    *   "timestamp": string (Optional),
    *   "closeMessage": string (Optional)
    * }
+   * @param messageType - Optional. A type of notification message.
+   * @return An Array of notificaiton messages
    */
-  getNotificationMessages(messageType?: NotificationMsgType): NotificationMsg;
+  getNotificationMessages(messageType?: NotificationMsgType): NotificationMsg[];
+
   /**
    *
    * Returns the maximum notification message type present in the current set
@@ -581,43 +623,56 @@ export declare class CanvasController {
   /**
    * Moves the objects identified in the data object which must be in the
    * pipeline identified by the pipeline ID.
+   * @param data - An object containing the node IDs to move and the X Y offsets
+   * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+   *                     Defaults to currently displayed pipleine.
    */
   moveObjects(
     data: {
-      nodes: (string | CanvasNode | CanvasComment)[];
+      nodes: string[];
       offsetX: number;
       offsetY: number;
     },
-    pipelineId: string
+    pipelineId?: string
   ): void;
+
   /**
    * Deletes the objects specified in objectIds array.
    * @param objectIds - An array of node and comment IDs
-   * @param pipelineId
+   * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+   *                     Defaults to currently displayed pipleine.
    */
   deleteObjects(
-    objectIds: (string | CanvasNode | CanvasComment)[],
-    pipelineId: string
+    objectIds: string[],
+    pipelineId?: string
   ): void;
+
   /**
    * Removes the links to and from the objects specified in the objectIds array.
    * @param objectIds - An array of node and comment IDs
-   * @param pipelineId
+   * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+   *                     Defaults to currently displayed pipleine.
    */
   disconnectObjects(
     objectIds: (string | CanvasNode | CanvasComment)[],
-    pipelineId: string
+    pipelineId?: string
   ): void;
+
   /**
-   * Deletes the object specified by the id in the pipeline specified by
+   * Deletes the object specified by the ID in the pipeline specified by
    * pipeline ID.
-   * @deprecated Use deleteNode or deleteComment as appropriate instead.
+   * @param id - The ID of the object to be deleted.
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   deleteObject(id: string, pipelineId: string): void;
+
   /**
    * Sets the style of the objects specified by pipelineObjectIds to be
    * the newStyle which will be either temporary or permanent.
-   * pipelineObjectIds: This identified the objects to be styles. It is a
+   * @deprecated Use classes to style objects instaead of style specs.
+   *
+   * @param pipelineObjectIds: This identified the objects to be styles. It is a
    * javascript object like this:
    *
    * ```javascript
@@ -633,7 +688,6 @@ export declare class CanvasController {
    *   }
    * ```
    *
-   * @param pipelineObjectIds
    * @param newStyle - This is a style specification. See the wiki for details.
    * @param temporary - A boolean to indicate if the style is serialized when
    *             getPipelineFlow() method is called or not.
@@ -643,8 +697,11 @@ export declare class CanvasController {
     newStyle: StyleSpec,
     temporary: boolean
   ): void;
+
   /**
    * Sets the styles of multiple objects at once.
+   * @deprecated Use classes to style objects instaead of style specs.
+   *
    * @param pipelineObjStyles - Specified the objects and the styles each should be
    * set to. It is a javascript array like this:
    *
@@ -656,7 +713,7 @@ export declare class CanvasController {
    *   ]
    * ```
    * @param temporary - A boolean to indicate if the styles are serialized when
-   * getPipelineFlow() method is called or not.
+   *                    getPipelineFlow() method is called or not.
    */
   setObjectsMultiStyle(
     pipelineObjStyles: PipelineObjectStyle[],
@@ -670,9 +727,11 @@ export declare class CanvasController {
 
   /**
    * Returns an array of nodes for the pipeline specified by the pipelineId.
-   * @param pipelineId
+   * @param pipelineId - Optional. The ID of the pipeline.
+   *                     Defaults to currently displayed pipleine.
    */
   getNodes(pipelineId?: string): CanvasNode[];
+
   /**
    * Returns a new node created from the data parameter in the pipeline
    * identified by the pipelineId.
@@ -686,24 +745,26 @@ export declare class CanvasController {
    *
    * `offsetY` - the y coordinate of the new node
    *
-   * @param pipelineId
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
-  createNode(newNode: {
-    nodeTemplate:
-      | NodeTypeDef
-      | {
-          type: string;
-          op: string;
-        };
-    offsetX: number;
-    offsetY: number;
-  }): CanvasNode;
+  createNode(
+    data: {
+      nodeTemplate: NodeTypeDef;
+      offsetX: number;
+      offsetY: number;
+    },
+    pipelineId?: string
+  ): CanvasNode;
+
   /**
    * Adds a new node into the pipeline specified by the pipelineId.
-   * @param node
-   * @param pipelineId
+   * @param A node that complied withe canvas info format
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   addNode(node: CanvasNode, pipelineId?: string): void;
+
   /**
    * Creates a node using the data parameter provided in the pipeline specified
    * by pipelineId and adds the command to the command stack (so the user can
@@ -711,6 +772,7 @@ export declare class CanvasController {
    * and editActionHandler callbacks to be called.
    * If pipelineId is omitted the node will be created in the current
    * "top-level" pipeline.
+   * @deprectaed Use the editActionHandler call directly instead
    * @param data - An object containing
    *
    * `nodeTemplate` - a node template from the palette. The nodeTemplate
@@ -721,16 +783,12 @@ export declare class CanvasController {
    *
    * `offsetY` - the y coordinate of the new node
    *
-   * @param pipelineId
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   createNodeCommand(
     data: {
-      nodeTemplate:
-        | NodeTypeDef
-        | {
-            type: string;
-            op: string;
-          };
+      nodeTemplate: NodeTypeDef;
       offsetX: number;
       offsetY: number;
     },
@@ -740,126 +798,149 @@ export declare class CanvasController {
   /**
    * Deletes the node specified.
    * @param nodeId - The ID of the node
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   deleteNode(nodeId: string, pipelineId?: string): void;
+
   /**
    * Sets the node properties
    * @param nodeId - The ID of the node
-   * @param properties - An object containing properties to be overriden in the node
-   * @param pipelineId - The ID of the pipeline
+   * @param properties - An object containing properties to be over the node
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   setNodeProperties(
     nodeId: string,
-    properties: {
-      nodeTemplate:
-        | NodeTypeDef
-        | {
-            type: string;
-            op: string;
-          };
-      offsetX: number;
-      offsetY: number;
-    },
-    pipelineId: string
+    properties: Omit<Partial<CanvasNode>, "id">,
+    pipelineId?: string
   ): void;
   /**
    * Sets the node parameters
    * @param nodeId - The ID of the node
    * @param parameters - An array of parameters
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   setNodeParameters(
     nodeId: string,
     parameters: Record<string, unknown>[],
-    pipelineId: string
+    pipelineId?: string
   ): void;
+
   /**
    * Sets the node UI parameters
    * @param nodeId - The ID of the node
    * @param uiParameters - An array of UI parameters
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   setNodeUiParameters(
     nodeId: string,
     uiParameters: Record<string, unknown>[],
-    pipelineId: string
+    pipelineId?: string
   ): void;
+
   /**
    * Sets the node messages
    * @param nodeId - The ID of the node
    * @param messages - An array of messages
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   setNodeMessages(
     nodeId: string,
-    messages: Record<string, unknown>[],
-    pipelineId: string
+    messages: MessageDef[],
+    pipelineId?: string
   ): void;
+
   /**
    * Sets a single message on a node
    * @param nodeId - The ID of the node
    * @param message - A message
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
-  setNodeMessage(nodeId: string, message: string, pipelineId: string): void;
+  setNodeMessage(
+    nodeId: string,
+    message: MessageDef,
+    pipelineId?: string
+  ): void;
+
   /**
-   * Sets the lable for a node
+   * Sets the label for a node
    * @param nodeId - The ID of the node
-   * @param newLabel - The label
-   * @param pipelineId - The ID of the pipeline
+   * @param newLabel - The new label
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
-  setNodeLabel(nodeId: string, newLabel: string, pipelineId: string): void;
+  setNodeLabel(
+    nodeId: string,
+    newLabel: string,
+    pipelineId?: string
+  ): void;
+
   /**
    * Sets the class name to newClassName of the nodes identified by nodeIds
    * array in the pipeline specified by pipeline ID. The class name will be
-   * applied to the node body path.
+   * applied to the nodes' group (<g>) element in the DOM.
+   * @param nodeIds - An array of node IDs
+   * @param newClassName - New class string. Can be a space separated list of classes.
+   * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+   *                     Defaults to currently displayed pipleine.
    */
   setNodesClassName(
     nodeIds: string[],
     newClassName: string,
-    pipelineId: string
+    pipelineId?: string
   ): void;
+
   /**
    * Sets the decorations on a node. The decorations array passed in
    * will replace any decorations currently applied to the node.
    * @param nodeId - The ID of the node
-   * @param newDecorations - An array of decorations. See Wiki for details.
-   * @param pipelineId - The ID of the pipeline
+   * @param newDecorations - An array of decorations.
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   setNodeDecorations(
     nodeId: string,
     newDecorations: Decoration[],
-    pipelineId: string
+    pipelineId?: string
   ): void;
+
   /**
    * Sets the input ports on a node. The inputs array of ports provided will
    * replace any input ports for a node.
    * @param nodeId - The ID of the node
    * @param inputs - An array of input port objects.
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   setNodeInputPorts(
     nodeId: string,
-    inputs: Record<string, unknown>[],
-    pipelineId: string
+    inputs: CanvasPorts | CanvasBoundPorts,
+    pipelineId?: string
   ): void;
+
   /**
    * Sets the output ports on a node. The outputs array of ports provided will
    * replace any output ports for a node.
    * @param nodeId - The ID of the node
    * @param outputs - An array of output port objects.
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   setNodeOutputPorts(
     nodeId: string,
-    outputs: Record<string, unknown>[],
-    pipelineId: string
+    outputs: CanvasPorts | CanvasBoundPorts,
+    pipelineId?: string
   ): void;
+
   /**
    * Sets the decorations of multiple nodes at once. The decorations array
    * passed in will replace any decorations currently applied to the nodes.
-   * pipelineNodeDecorations - Specifies the nodes and their decorations.
+   * @param pipelineNodeDecorations - Specifies the nodes and their decorations.
    * It is a JavaScript array like this:
    *
    * ```javascript
@@ -877,160 +958,246 @@ export declare class CanvasController {
       decorations: Decoration[];
     }[]
   ): void;
+
   /**
    * Sets the input port label on a node
    * @param nodeId - The ID of the node
    * @param portId - The ID of the input port
    * @param newLabel - The label
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   setInputPortLabel(
     nodeId: string,
     portId: string,
     newLabel: string,
-    pipelineId: string
+    pipelineId?: string
   ): void;
+
   /**
    * Sets the output port label on a node
    * @param nodeId - The ID of the node
    * @param portId - The ID of the output port
    * @param newLabel - The label
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   setOutputPortLabel(
     nodeId: string,
     portId: string,
     newLabel: string,
-    pipelineId: string
+    pipelineId?: string
   ): void;
+
   /**
-   * Gets a node
+   * Gets a node that conforms to the CanvasNode format.
    * @param nodeId - The ID of the node
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
+   * @returns A node conforming to the canvas info format. null if not found.
    */
-  getNode(nodeId: string, pipelineId?: string): CanvasNode;
+  getNode(
+    nodeId: string,
+    pipelineId?: string
+  ): CanvasNode | null;
+
   /**
    * Gets the UI parameters for a node
    * @param nodeId - The ID of the node
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   getNodeUiParameters(
     nodeId: string,
-    pipelineId: string
+    pipelineId?: string
   ): Record<string, unknown>[];
+
   /**
    * Gets the supernodes for a pipeline.
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline.
+   *                     Defaults to currently displayed pipleine.
    */
-  getSupernodes(pipelineId: string): Record<string, unknown>[];
+  getSupernodes(
+    pipelineId: string
+  ): Record<string, unknown>[];
+
   /**
-   * @return supernode ID that has a subflow_ref to the given pipelineId.
+   * Returns the supernode that references the given pipelineId.
+   * @param pipelineId - The ID of a pipeline
+   * @return supernode that has a subflow_ref to the given pipelineId.
    */
-  getSupernodeObjReferencing(pipelineId: string): string;
+  getSupernodeObjReferencing(
+    pipelineId: string
+  ): CanvasSupernode;
+
   /**
    * Gets the messages for a node
    * @param nodeId - The ID of the node
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
+   * @return An array of messages from the node or null if node not found.
    */
   getNodeMessages(
     nodeId: string,
-    pipelineId: string
-  ): Record<string, unknown>[];
+    pipelineId?: string
+  ): MessageDef[] | null;
+
   /**
    * Gets the array of input ports for the node or null if the node ID is
    * not recognized.
    * @param nodeId - The ID of the node
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
+   * @return An array of canvas ports or canvas bound ports.
    */
   getNodeInputPorts(
     nodeId: string,
-    pipelineId: string
-  ): Record<string, unknown>[];
+    pipelineId?: string
+  ): CanvasPorts | CanvasBoundPorts | null;
+
   /**
    * Gets the array of output ports for the node or null if the node ID is
    * not recognized.
    * @param nodeId - The ID of the node
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
+   * @return An array of canvas ports or canvas bound ports.
    */
   getNodeOutputPorts(
     nodeId: string,
-    pipelineId: string
-  ): Record<string, unknown>[];
+    pipelineId?: string
+  ): CanvasPorts | CanvasBoundPorts | null;
+
   /**
    * Gets a message for a specific control for a node
    * @param nodeId - The ID of the node
    * @param controlName - The control name
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
+   * @return A message.
    */
   getNodeMessage(
     nodeId: string,
     controlName: string,
-    pipelineId: string
-  ): string;
+    pipelineId?: string
+  ): MessageDef | null;
+
   /**
    * Gets an array of decorations for a node
    * @param nodeId - The ID of the node
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
+   * @return An array of decorations.
    */
-  getNodeDecorations(nodeId: string, pipelineId: string): Decoration[];
+  getNodeDecorations(
+    nodeId: string,
+    pipelineId?: string
+  ): Decoration[] | null;
+
   /**
    * Gets the class name associated with the node specified by nodeId in the
    * pipeline specified by pipelineId.
+   * @param nodeId - The ID of the node
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
+   * @return A class name string. Can be a space separated list of classes.
    */
-  getNodeClassName(nodeId: string, pipelineId: string): string;
+  getNodeClassName(
+    nodeId: string,
+    pipelineId?: string
+  ): string;
+
   /**
    * Gets the style specification (see Wiki) for a node
    * @param nodeId - The ID of the node
    * @param temporary - A boolean to indicate if the style is serialized when
-   *             getPipelineFlow() method is called or not.
-   * @param pipelineId - The ID of the pipeline
+   *                    getPipelineFlow() method is called or not.
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
+   * @return A style specification.
    */
   getNodeStyle(
     nodeId: string,
     temporary: boolean,
-    pipelineId: string
+    pipelineId?: string
   ): StyleSpec;
+
   /**
    * Returns an array of nodes that are for the branch(es) that the nodes,
    * identified by the node IDs passed in, are within.
    * @param nodeIds - An array of node Ids
-   * @param pipelineId - The ID of the pipeline where the nodes exist
+   * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+   *                     Defaults to currently displayed pipleine.
+   * @return An array of CanvasNode objects
    */
-  getBranchNodes(nodeIds: string[], pipelineId: string): CanvasNode[];
+  getBranchNodes(
+    nodeIds: string[],
+    pipelineId?: string
+  ): CanvasNode[];
+
   /**
    * Returns an array of nodes that are upstream from the nodes
    * identified by the node IDs passed in.
    * @param nodeIds - An array of node Ids
-   * @param pipelineId - The ID of the pipeline where the nodes exist
-   */
-  getUpstreamNodes(nodeIds: string[], pipelineId: string): CanvasNode[];
+   * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+   *                     Defaults to currently displayed pipleine.
+   * @return An array of CanvasNode objects
+  */
+  getUpstreamNodes(
+    nodeIds: string[],
+    pipelineId?: string
+  ): CanvasNode[];
+
   /**
    * Returns an array of nodes that are downstream from the nodes
    * identified by the node IDs passed in.
    * @param nodeIds - An array of node Ids
-   * @param pipelineId - The ID of the pipeline where the nodes exist
-   */
-  getDownstreamNodes(nodeIds: string[], pipelineId: string): CanvasNode[];
+   * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+   *                     Defaults to currently displayed pipleine.
+   * @return An array of CanvasNode objects
+  */
+  getDownstreamNodes(
+    nodeIds: string[],
+    pipelineId?: string
+  ): CanvasNode[];
+
   /**
    * Returns a boolean to indicate whether the supernode is expanded in place.
    * @param nodeId - The ID of the node
-   * @param pipelineId - The ID of the pipeline
-   */
-  isSuperNodeExpandedInPlace(nodeId: string, pipelineId: string): boolean;
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
+   * @return A boolean to indicate whether the supernode is expanded in place.
+  */
+  isSuperNodeExpandedInPlace(
+    nodeId: string,
+    pipelineId?: string
+  ): boolean;
+
   /**
    * Sets the label, for the node identified, to edit mode, provided the node
    * label is editable. This allows the user to edite the label text.
+   * @param nodeId - The ID of the node
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
-  setNodeLabelEditingMode(nodeId: string, pipelineId: string): void;
+  setNodeLabelEditingMode(
+    nodeId: string,
+    pipelineId?: string
+  ): void;
+
   /**
    * Sets the decoration label, for the decoration in the node identified, to edit
    * mode, provided the node label is editable. This allows the user to edit the
    * label text.
+   * @param decId - The ID of the decoration.
+   * @param nodeId - The ID of the node.
+   * @param pipelineId - Optional. The ID of the pipeline of the node.
+   *                     Defaults to currently displayed pipleine.
    */
   setNodeDecorationLabelEditingMode(
     decId: string,
     nodeId: string,
-    pipelineId: string
+    pipelineId?: string
   ): void;
 
   /**
@@ -1040,100 +1207,185 @@ export declare class CanvasController {
 
   /**
    * Returns the comments from the pipeline.
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the comments.
+   *                     Defaults to currently displayed pipleine.
+   * @return An array of comments conforming to the canvas info format.
    */
-  getComments(pipelineId: string): CanvasComment[];
+  getComments(
+    pipelineId?: string
+  ): CanvasComment[];
+
   /**
    * Returns a comment from the pipeline.
    * @param comId - The ID of the comment
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the comment.
+   *                     Defaults to currently displayed pipleine.
+   * @return A comment conforming to the canvas info format. null if not found.
    */
-  getComment(comId: string, pipelineId: string): CanvasComment;
+  getComment(
+    comId: string,
+    pipelineId?: string
+  ): CanvasComment | null;
+
   /**
    * Returns a position object which indicates the position of where a new
    * comment should be placed in a situation where the mouse position cannot be
    * used (e.g. the toolbar button was clicked).
-   * pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the comment.
+   *                     Defaults to currently displayed pipleine.
+   * @return A comment position with canvas coordinates.
+
    */
-  getNewCommentPosition(pipelineId: string): { x: number; y: number };
+  getNewCommentPosition(
+    pipelineId?: string
+  ): { x: number; y: number };
+
   /**
    * Creates a comment for the pipeline.
-   * @param source - Input data
-   * @param pipelineId - The ID of the pipeline
+   * @param source - Source data for comment creation.
+   * @param pipelineId - Optional. The ID of the pipeline of the comment.
+   *                     Defaults to currently displayed pipleine.
+   * @return A comment conforming to the canvas info format.
    */
-  createComment(source: CanvasComment, pipelineId: string): void;
+  /* An interface for creating a comment. mousePos is the canvas coordinate
+    * position of the comment, selectedObjectIds is an array of objectsIDs. For
+    * each node identified by an ID in the array a link will be added from the
+    * comment to that node.
+    */
+  createComment(
+    source: {
+      mousePos: {
+        x: number;
+        y: number;
+      };
+      contentType?: null | "markdown" | "WYSIWYG";
+      formats?: {
+        field: string;
+        value?: string;
+      }[];
+      selectedObjectIds?: string[];
+    },
+    pipelineId?: string
+  ): CanvasComment;
+
   /**
    * Adds a comment to the pipeline.
-   * @param data - the data describing the comment
-   * @param pipelineId - The ID of the pipeline
+   * @param data - a comment conforming to the canvas info format
+   * @param pipelineId - Optional. The ID of the pipeline of the comment.
+   *                     Defaults to currently displayed pipleine.
    */
-  addComment(data: CanvasComment, pipelineId: string): void;
+  addComment(
+    data: CanvasComment,
+    pipelineId?: string
+  ): void;
+
   /**
    * Edits a comment with the data.
-   * @param data - the comment
-   * @param pipelineId - The ID of the pipeline
+   * @param commentProperties - properties to overwrite the comment
+   * @param pipelineId - Optional. The ID of the pipeline of the comment.
+   *                     Defaults to currently displayed pipleine.
    */
-  editComment(data: CanvasComment, pipelineId: string): void;
+  editComment(
+    properties: Omit<Partial<CanvasComment>, "id">,
+    pipelineId?: string
+  ): void;
+
   /**
    * Sets the properties in the comment identified by the commentId. The
    * commentProperties is an object containing one or more properties that will
    * replace the corresponding properties in the comment. For example: if
    * commentProperties is { x_pos: 50, y_pos: 70 } the comment
    * will be set to that position.
+   * @param commentId - the ID of teh comment to update
+   * @param properties - properties to overwrite the comment
+   * @param pipelineId - Optional. The ID of the pipeline of the comment.
+   *                     Defaults to currently displayed pipleine.
    */
   setCommentProperties(
     commentId: string,
-    commentProperties: Partial<CanvasComment>,
-    pipelineId: string
+    properties: Omit<Partial<CanvasComment>, "id">,
+    pipelineId?: string
   ): void;
+
   /**
    * Sets the class name to newClassName of the comments identified by commentIds
    * array in the pipeline specified by pipeline ID. The class name will be
-   * applied to the comment body path.
+   * applied to the comments' group (<g>) element in the DOM.
+   * @param commentIds - An array of comment IDs.
+   * @param newClassName - New class name. Can be a space separated list of classes.
+   * @param pipelineId - Optional. The ID of the pipeline of the comment.
+   *                     Defaults to currently displayed pipleine.
    */
   setCommentsClassName(
     commentIds: string[],
     newClassName: string,
-    pipelineId: string
+    pipelineId?: string
   ): void;
+
   /**
    * Deletes a comment
-   * @param comId - The ID of the comment
-   * @param pipelineId - The ID of the pipeline
+   * @param commentId - The ID of the comment
+   * @param pipelineId - Optional. The ID of the pipeline of the comment.
+   *                     Defaults to currently displayed pipleine.
    */
-  deleteComment(comId: string, pipelineId: string): void;
+  deleteComment(
+    commentId: string,
+    pipelineId?: string
+  ): void;
+
   /**
    * Gets the class name associated with the comment specified by commentId in the
    * pipeline specified by pipelineId.
+   * @param commentId - The ID of the comment
+   * @param pipelineId - Optional. The ID of the pipeline of the comment.
+   *                     Defaults to currently displayed pipleine.
+   * @return A class name string. Can be a space separated list of classes.
    */
-  getCommentClassName(commentId: string, pipelineId: string): void;
+  getCommentClassName(
+    commentId: string,
+    pipelineId?: string
+  ): void;
+
   /**
-   * Gets the style spcification (see Wiki) for a comment
-   * @param commentId - The ID of the node
+   * Gets the style spcification for a comment
+   * @param commentId - The ID of the comment
    * @param temporary - A boolean to indicate if the style is serialized when
-   *             getPipelineFlow() method is called or not.
-   * @param pipelineId - The ID of the pipeline
+   *                    getPipelineFlow() method is called or not.
+   * @param pipelineId - Optional. The ID of the pipeline of the comment.
+   *                     Defaults to currently displayed pipleine.
+   * @return A style specification.
    */
   getCommentStyle(
     commentId: string,
     temporary: boolean,
-    pipelineId: string
+    pipelineId?: string
   ): StyleSpec;
+
   /** Hides all comments on the canvas. */
   hideComments(): void;
+
   /**
    * Shows all comments on the canvas - if they were previously hiding.
    */
   showComments(): void;
+
   /**
    * Returns true if comments are currently hiding.
+   * @return Boolean. true indicates comments are hiding.
    */
   isHidingComments(): boolean;
+
   /**
    * Sets the comment identified, to edit mode so the user can
    * edit the comment.
+   * @param commentId - The ID of the comment
+   * @param pipelineId - Optional. The ID of the pipeline of the comment.
+   *                     Defaults to currently displayed pipleine.
    */
-  setCommentEditingMode(commentId: string, pipelineId: string): void;
+  setCommentEditingMode(
+    commentId: string,
+    pipelineId?: string
+  ): void;
 
   /**
    * Link methods
@@ -1143,138 +1395,220 @@ export declare class CanvasController {
   /**
    * Gets a link
    * @param linkId - The ID of the link
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
+   * @return A link object that conforms to the canvas info format.
    */
-  getLink(linkId: string, pipelineId: string): CanvasLink;
+  getLink(
+    linkId: string,
+    pipelineId?: string
+  ): CanvasLink;
+
   /**
-   * @return an array of link objects for the pipelineId passed in.
-   * @param pipelineId - The ID of the pipeline
+   * Gets an array of links
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
+   * @return An array a link objects that conform to the canvas info format.
    */
-  getLinks(pipelineId: string): CanvasLink[];
+  getLinks(
+    pipelineId?: string
+  ): CanvasLink[];
+
   /**
    * Sets the properties in the link identified by the linkId. The
    * linkProperties is an object containing one or more properties that will
-   * replace the corresponding properties in the link. For exam`ple: if
-   * linkProperties is { trgNodeId: "123", trgNodePortId: "789" } the target
-   * node ID will be set to "123" and the target port ID set to "789".
+   * replace the corresponding properties in the link.
+   * @param linkId - The ID of the link
+   * @param properties - The properties to set in the link.
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
    */
   setLinkProperties(
     linkId: string,
-    linkProperties: Partial<CanvasLink>,
-    pipelineId: string
+    properties: Omit<Partial<CanvasLink>, "id">,
+    pipelineId?: string
   ): void;
+
   /**
    * Sets the source properties in the data link identified by the linkId. The
    * srcNodeId and srcNodePortId will be set to the values provided. If
    * srcNodePortId is set to null the current srcNodePortId will be removed
    * from the link. Also, if the link has a srcPos property (because its
    * source end is detached) that will be removed.
+   * @param linkId - The ID of the link
+   * @param srcNodeId - The new source node ID.
+   * @param srcNodePortId - The new port ID for the source node.
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
    */
   setNodeDataLinkSrcInfo(
     linkId: string,
     srcNodeId: string,
     srcNodePortId: string,
-    pipelineId: string
+    pipelineId?: string
   ): void;
+
   /**
    * Sets the target properties in the data link identified by the linkId. The
    * trgNodeId and trgNodePortId will be set to the values provided. If
    * trgNodePortId is set to null the current trgNodePortId will be removed
    * from the link. Also, if the link has a trgPos property (because its
    * target end is detached) that will be removed.
+   * @param linkId - The ID of the link
+   * @param trgNodeId - The new target node ID.
+   * @param trgNodePortId - The new port ID for the target node.
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
    */
   setNodeDataLinkTrgInfo(
     linkId: string,
     trgNodeId: string,
     trgNodePortId: string,
-    pipelineId: string
+    pipelineId?: string
   ): void;
+
   /**
-   * Gets a node to node data link
+   * Returns a node to node data link
    * @param srcNodeId - The ID of the source node
    * @param srcNodePortId - The ID of the source node port
    * @param trgNodeId - The ID of the target node
    * @param trgNodePortId - The ID of the target node port
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
+   * @return A link object in the canvas info format. null if not found.
    */
   getNodeDataLinkFromInfo(
     srcNodeId: string,
     srcNodePortId: string,
     trgNodeId: string,
     trgNodePortId: string,
-    pipelineId: string
-  ): CanvasNode;
+    pipelineId?: string
+  ): CanvasLink | null;
+
   /**
-   * Gets a comment to node link
-   * @param id1 - The ID of the comment
-   * @param id2 - The ID of the node
-   * @param pipelineId - The ID of the pipeline
+   * Returns a comment to node link
+   * @param commentId - The ID of the comment
+   * @param nodeId - The ID of the node
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
+   * @return A link object in the canvas info format.
    */
   getCommentLinkFromInfo(
-    id1: string,
-    id2: string,
-    pipelineId: string
-  ): Record<string, unknown>;
+    commentId: string,
+    nodeId: string,
+    pipelineId?: string
+  ): CanvasLink;
+
   /**
    * Gets a node to node association link
-   * @param id1 - The ID of one of the node
-   * @param id2 - The ID of one of the node
-   * @param pipelineId - The ID of the pipeline
+   * @param nodeId1 - The ID of one of the associated nodes
+   * @param nodeId2 - The ID of the other associated nodes
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
+   * @return A link object in the canvas info format.
    */
-  getNodeAssocLinkFromInfo(id1: string, id2: string, pipelineId: string): void;
+  getNodeAssocLinkFromInfo(
+    nodeId1: string,
+    nodeId2: string,
+    pipelineId?: string
+  ): CanvasLink;
+
   /**
    * Adds links to a pipeline
    * @param linkList - An array of links
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
    */
-  addLinks(linkList: CanvasLink[], pipelineId?: string): void;
-  /**
-   * Deletes a link
-   * @param source - An array of links
-   * @param pipelineId - The ID of the pipeline
-   */
-  deleteLink(
-    link: string | CanvasLink | Record<string, unknown>,
+  addLinks(
+    linkList: CanvasLink[],
     pipelineId?: string
   ): void;
+
   /**
-   * Creates node to node links
-   * @param data - Data describing the links
-   * @param pipelineId - The ID of the pipeline
+   * Deletes a link
+   * @param source - The link to delete
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
+   */
+  deleteLink(
+    link: CanvasLink,
+    pipelineId?: string
+  ): void;
+
+  /**
+   * Creates node to node links of type "nodeLink". One link will be created
+   * between each node in the nodes array and each node in the targetNodes
+   * array. Link IDs will be automatically generated for the created links.
+   * Note: if an ID needs to be provided for the link this method can only
+   * be called for one link at a time.
+   * @param data - Object describing the links to create.
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
    */
   createNodeLinks(
     data: {
       id?: string;
-      type: string;
       nodes: {
         id?: string;
         portId?: string;
-        srcPos?: { x_pos: number; y_pos: number };
+        srcPos?: {
+          x_pos: number;
+          y_pos: number;
+        };
       }[];
       targetNodes: {
         id?: string;
         portId?: string;
-        trgPos?: { x_pos: number; y_pos: number };
-      }[];
+        trgPos?: {
+          x_pos: number;
+          y_pos: number;
+        };
+      }[],
+      class_name?: string;
+      linkName?: string;
     },
     pipelineId?: string
   ): CanvasLink[];
+
   /**
-   * Creates comment links
+   * Creates comment links of type "commentLink". One link will be created
+   * between each comment in the nodes array and each node in the targetNodes
+   * array. Link IDs will be automatically generated for the created links.
+   * Note: if an ID needs to be provided for the link this method can only
+   * be called for one link at a time.
    * @param data - Data describing the links
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
    */
-  createCommentLinks(data: Record<string, unknown>, pipelineId: string): void;
+  createCommentLinks(
+    data: {
+      id?: string;
+      nodes: {
+        id?: string;
+      }[];
+      targetNodes: {
+        id?: string;
+      }[],
+      class_name?: string;
+    },
+    pipelineId?: string
+  ): CanvasLink[];
+
   /**
    * Sets the class name to newClassName of the links identified by linkIds
    * array in the pipeline specified by pipeline ID. The class name will be
-   * applied to the link line path.
+   * applied to the links' group (<g>) element in the DOM.
+   * @param linkIds - An arry of link IDs
+   * @param newClassName - New class string. Can be a space separated list of classes.
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
    */
   setLinksClassName(
     linkIds: string[],
     newClassName: string,
-    pipelineId: string
+    pipelineId?: string
   ): void;
+
   /**
    * Sets the style of the links specified by pipelineLinkIds to be
    * the newStyle which will be either temporary or permanent.
@@ -1290,15 +1624,16 @@ export declare class CanvasController {
    *         <linkID_2_2>
    *     ]
    *   }
-   * @param newStyle - This is a style specification. See the wiki for details.
+   * @param newStyle - This is a style specification.
    * @param temporary - A boolean to indicate if the style is serialized when
-   *             getPipelineFlow() method is called or not.
+   *                    getPipelineFlow() method is called or not.
    */
   setLinksStyle(
     pipelineLinkIds: Record<string, string[]>,
     newStyle: StyleSpec,
     temporary: boolean
   ): void;
+
   /**
    * Sets the styles of multiple links at once.
    * @param pipelineObjStyles - Specified the links and the styles each should be
@@ -1315,36 +1650,49 @@ export declare class CanvasController {
     pipelineObjStyles: PipelineObjectStyle[],
     temporary: boolean
   ): void;
+
   /**
    * Gets the class name associated with the link specified by linkId in the
    * pipeline specified by pipelineId.
+   * @param linkIds - A link ID.
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
+   * @return A class name string. Can be a space separated list of classes.
    */
-  getLinkClassName(linkId: string, pipelineId: string): void;
+  getLinkClassName(
+    linkId: string,
+    pipelineId?: string
+  ): void;
+
   /**
    * Returns the style specification for a link.
-   * @param linkIds - An array of links
+   * @param linkId - A link ID.
    * @param temporary - A boolean to indicate if the style is serialized when
-   *             getPipelineFlow() method is called or not.
-   * @param pipelineId - The ID of the pipeline
-   * @return the style specification for a link.
+   *                    getPipelineFlow() method is called or not.
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
+   * @return The style specification for the link.
    */
   getLinkStyle(
     linkId: string,
     temporary: boolean,
-    pipelineId: string
+    pipelineId?: string
   ): StyleSpec;
+
   /**
    * Sets the decorations on a link. The decorations array passed in
    * will replace any decorations currently applied to the link.
    * @param linkId - The ID of the link
-   * @param newDecorations - An array of decorations. See Wiki for details.
-   * @param pipelineId - The ID of the pipeline
+   * @param newDecorations - An array of decorations.
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
    */
   setLinkDecorations(
     linkId: string,
     newDecorations: Decoration[],
-    pipelineId: string
+    pipelineId?: string
   ): void;
+
   /**
    * Sets the decorations of multiple links at once. The decorations array
    * passed in will replace any decorations currently applied to the links.
@@ -1366,21 +1714,32 @@ export declare class CanvasController {
       decorations: Decoration[];
     }[]
   ): void;
+
   /**
    * Gets an array of decorations for a link
    * @param linkId - The ID of the link
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
+   * @return An array of decorations
    */
-  getLinkDecorations(linkId: string, pipelineId: string): Decoration[];
+  getLinkDecorations(
+    linkId: string,
+    pipelineId?: string
+  ): Decoration[];
+
   /**
    * Sets the decoration label, for the decoration in the link identified, to edit
    * mode provided the link label is editable. This allows the user to edit the
    * label text.
+   * @param decId - The ID of the label decoration on the link.
+   * @param linkId - The ID of the link
+   * @param pipelineId - Optional. The ID of the pipeline of the link.
+   *                     Defaults to currently displayed pipleine.
    */
   setLinkDecorationLabelEditingMode(
     decId: string,
     linkId: string,
-    pipelineId: string
+    pipelineId?: string
   ): void;
 
   /**
@@ -1392,11 +1751,14 @@ export declare class CanvasController {
    * Returns the current array of breadcrumbs. There will one breadcrumb object
    * for each level of supernode that the user has navigated into. This array
    * can be used to display breadcrumbs to the user to show where they are
-   * within the navigation hierarchy within common canvas.
+   * within the navigation hierarchy within Common Canvas.
+   * @returns An array of breadcrumb objects
    */
   getBreadcrumbs(): { pipelineId?: string; pipelineFlowId?: string }[];
+
   /**
-   * @return the last breadcrumb which represents the level with supernode
+   * Returns the breadcrumb for teh currently displayed pipeline.
+   * @returns The last breadcrumb which represents the level with supernode
    * hierarchy that the user has currently navigated to.
    */
   getCurrentBreadcrumb(): { pipelineId?: string; pipelineFlowId?: string };
@@ -1410,21 +1772,34 @@ export declare class CanvasController {
    * Highlights the branch(s) (both upstream and downstream) from the node
    * IDs passed in and returns the highlighted object Ids.
    * @param nodeIds - An array of node Ids
-   * @param pipelineId - The ID of the pipeline
+   * @param pipelineId - The ID of the pipeline of the nodes.
    */
-  highlightBranch(nodeIds: string[], pipelineId: string): string[];
+  highlightBranch(
+    nodeIds: string[],
+    pipelineId: string
+  ): string[];
+
   /**
    * Highlights the upstream nodes from the node IDs passed in
    * and returns the highlighted object Ids.
+   * @param nodeIds - An array of node Ids
+   * @param pipelineId - The ID of the pipeline of the nodes.
    */
-  highlightUpstream(nodeIds: string[], pipelineId: string): string[];
+  highlightUpstream(
+    nodeIds: string[],
+    pipelineId: string
+  ): string[];
+
   /**
    * Highlights the downstream nodes from the node IDs passed in
    * and returns highlighted object Ids.
    * @param nodeIds - An array of node Ids
    * @param pipelineId - The ID of the pipeline
    */
-  highlightDownstream(nodeIds: string[], pipelineId: string): string[];
+  highlightDownstream(
+    nodeIds: string[],
+    pipelineId: string
+  ): string[];
 
   /**
    * ## Logging methods
@@ -1435,9 +1810,10 @@ export declare class CanvasController {
    * @return a Boolean to indicate whether canvas logging is switched on or off.
    */
   getLoggingState(): boolean;
+
   /**
    * Sets canvas logging based on the Boolean passed in.
-   * @param state
+   * @param state - true to switch on Common Canvas logging to the console.
    */
   setLoggingState(state: boolean): void;
 
@@ -1446,8 +1822,21 @@ export declare class CanvasController {
    * https://elyra-ai.github.io/canvas/03.04-canvas-controller/#palette-methods_1
    */
 
+  /**
+   * Opens the palette
+   */
   openPalette(): void;
+
+  /**
+   * Closes the palette
+   */
   closePalette(): void;
+
+  /**
+   * @returns a Boolean to indicate whether the palette is open or not. If the
+   * narrow palette feature is being used (enableNarrowPalette in config), true
+   * indicates that the wide palette is being displayed.
+   */
   isPaletteOpen(): boolean;
 
   /**
@@ -1456,10 +1845,21 @@ export declare class CanvasController {
    */
 
   /**
-   * Opens the context menu
-   * @param menuDef
+   * Opens the context menu or the context toolbar if config property
+   * enableContextToolbar is set to true.
+   * @param menuDef - the definition of the context menu or context toolbar
+   * @param source - additional information about the menu
    */
-  openContextMenu(menuDef: Record<string, unknown>): void;
+  openContextMenu(
+    menuDef: ContextMenuEntry[],
+    source?: {
+      cmPos?: {
+        x: number;
+        y: number;
+      }
+    }
+  ): void;
+
   /**
    * Closes the context menu
    */
@@ -1474,10 +1874,12 @@ export declare class CanvasController {
    * Opens the notification panel
    */
   openNotificationPanel(): void;
+
   /**
    * Closes the notification panel
    */
   closeNotificationPanel(): void;
+
   /**
    * Either opens or closes the notifictaion panel based on its current status
    */
@@ -1489,7 +1891,7 @@ export declare class CanvasController {
    */
 
   /**
-   * @return a boolean to indicate if the right flyout is open or not
+   * @returns a boolean to indicate if the right flyout is open or not
    */
   isRightFlyoutOpen(): boolean;
 
@@ -1499,7 +1901,7 @@ export declare class CanvasController {
    */
 
   /**
-   * @return a boolean to indicate if the top panel is open or not
+   * @returns a boolean to indicate if the top panel is open or not
    */
   isTopPanelOpen(): boolean;
 
@@ -1508,14 +1910,20 @@ export declare class CanvasController {
    * https://elyra-ai.github.io/canvas/03.04-canvas-controller/#bottom-panel-methods
    */
 
+  /**
+   * @returns a boolean to indicate if the bottom panel is open or not
+   */
   isBottomPanelOpen(): boolean;
+
   /**
    * Sets the height of the bottom panel in pixels. This can be called
    * immediately after the CanvasController has been created, if the bottom
    * panel should be displayed at a specific height when it first opens.
    * @param height - height in pixels
    */
-  setBottomPanelHeight(height: number): void;
+  setBottomPanelHeight(
+    height: number
+  ): void;
 
   /**
    * ## Canvas/pipeline navigation methods
@@ -1526,19 +1934,28 @@ export declare class CanvasController {
    * Displays a pipeline (identified by the pipelineId passed in). This must be
    * one of the pipelines referenced by the current set of breadcrumbs. It
    * cannot be used to open a new pipeline outside the current set of breadcruumbs.
-   * @param pipelineId
+   * @param pipelineId - The ID of the pipleine to display
    */
-  displaySubPipeline(pipelineId: string): void;
+  displaySubPipeline(
+    pipelineId: string
+  ): void;
+
   /**
    * Displays a pipeline for the supernode (identified by the supernodeId
    * parameter) in the pipeline (identified by the pipelineId parameter). For
    * correct breadcrumb generation this pipeline should be the one in the last
    * of the current set of breadcrumbs. That is, the pipeline currently shown
    * "full page" in the canvas.
+   * @param supernodeId - The ID of the supernode to display
+   * @param pipelineId - The ID of the pipleine to display
    */
-  displaySubPipelineForSupernode(supernodeId: string, pipelineId: string): void;
+  displaySubPipelineForSupernode(
+    supernodeId: string,
+    pipelineId: string
+  ): void;
+
   /**
-   * Displays full-page the previous pipeline from the one currently being displayed
+   * Displays full-page the previous pipeline from the one currently being displayed.
    */
   displayPreviousPipeline(): void;
 
@@ -1551,12 +1968,22 @@ export declare class CanvasController {
    * Adds the command object to the command stack which will cause the
    * do() method of the command to be called.
    */
-  do(command: unknown): void;
+  do(
+    command: {
+      do(): void;
+      undo(): void;
+      redo(): void;
+      getLabel(): string;
+      getFocusObject(): "CanvasFocus" | object;
+    }
+  ): void;
+
   /**
    * Calls the undo() method of the next available command on the command
    * stack that can be undone, if one is available.
    */
   undo(): void;
+
   /**
    * Undoes a number of commands on the command stack as indicated by the
    * 'count' parameter. If 'count' is bigger than the number of undoable commands
@@ -1565,44 +1992,66 @@ export declare class CanvasController {
    * the app's editActionHandler to be called.
    */
   undoMulti(count: number): void;
+
   /**
    * Calls the redo() method of the next available command on the command
    * stack that can be redone, if one is available.
    */
   redo(): void;
+
   /**
    * Redoes a number of commands on the command stack as indicated by the
    * 'count' parameter. If 'count' is bigger than the number of redoable commands
    * on the stack, all redoable commands currently on the command stack
    * will be redone. Uses the editActionHandler method which will cause
    * the app's editActionHandler to be called.
+   * @param count - The number of commands to redo
    */
   redoMulti(count: number): void;
+
   /**
    * Returns true if there is a command on the command stack
    * available to be undone.
+   * @returns A boolean that indicates if there is a command to undo.
    */
-  canUndo(): void;
+  canUndo(): boolean;
+
   /**
    * Returns true if there is a command on the command stack
    * available to be redone.
+   * @returns A boolean that ndicates if there is a command to redo.
    */
-  canRedo(): void;
+  canRedo(): boolean;
+
   /**
    * Returns a string which is the label that descibes the next undoable
    * command.
+   * @returns A label that descibes the next undoable command.
    */
-  getUndoLabel(): void;
+  getUndoLabel(): string;
+
   /**
    * Returns a string which is the label that descibes the next redoable
    * command.
+   * @returns A label that descibes the next redoable command.
    */
-  getRedoLabel(): void;
-  /** Returns an array of all undoable commands currently on the command stack. */
-  getAllUndoCommands(): void;
-  /** Returns an array of all redoable commands currently on the command stack. */
-  getAllRedoCommands(): void;
-  /** Clears the command stack of all currently stored commands. */
+  getRedoLabel(): string;
+
+  /**
+   * Returns an array of all undoable commands currently on the command stack.
+   * @returns A array of commands.
+   */
+  getAllUndoCommands(): object[];
+
+  /**
+   * Returns an array of all redoable commands currently on the command stack.
+   * @returns A array of commands.
+   */
+  getAllRedoCommands(): object[];
+
+  /**
+   * Clears the command stack of all currently stored commands.
+   */
   clearCommandStack(): void;
 
   /**
@@ -1614,41 +2063,47 @@ export declare class CanvasController {
    * Centers the canvas contents and zooms in
    */
   zoomIn(): void;
+
   /**
    * Centers the canvas contents and zooms out
    */
   zoomOut(): void;
+
   /**
    * Zooms the canvas contents to fit within the viewport
    */
   zoomToFit(): void;
+
   /**
    * Changes the zoom amounts for the canvas. This method does not alter the
    * pipelineFlow document. zoomObject is an object with three fields:
-   * @param zoomObject - accepts a config object where
-   *
-   * `x`: Is the horizontal translate amount which is a number indicating the
-   *    pixel amount to move. Negative left and positive right
-   *
-   * `y`: Is the vertical translate amount which is a number indicating the
-   *    pixel amount to move. Negative up and positive down.
-   *
-   * `k`: is the scale amount which is a number greater than 0 where 1 is the
-   *    default scale size.
+   * @param zoomObject - A zoom object
    */
-  zoomTo(zoomObject: { x: number; y: number; k: number }): void;
+  zoomTo(
+    zoomObject: ZoomObject
+  ): void;
+
   /**
    * Increments the translation of the canvas by the x and y increment
    * amounts. The optional animateTime parameter can be provided to animate the
    * movement of the canvas. It is a time for the animation in milliseconds.
    * If omitted the movement happens immediately.
+   * @param x - X coordinate amount.
+   * @param y - Y coordinate amount.
+   * @param animateTime - Amount if miniseconds for the trasition.
    */
-  translateBy(x: number, y: number, animateTime: number): void;
+  translateBy(
+    x: number,
+    y: number,
+    animateTime: number
+  ): void;
+
   /**
-   * @return the current zoom object for the currently displayed canvas or null
+   * @returns the current zoom object for the currently displayed canvas or null
    * if the canvas is not yet rendered for the first time.
    */
-  getZoom(): Record<string, unknown> | null;
+  getZoom(): ZoomObject | null;
+
   /**
    * Returns a zoom object required to pan the objects (nodes and/or comments)
    * identified by the objectIds array to 'reveal' the objects in the viewport.
@@ -1663,27 +2118,18 @@ export declare class CanvasController {
    * Otherwise it will return a zoom object which can be used to pan the
    * objects into the viewport so they appear at the nearest side of the
    * viewport to where they are currently positioned.
-   * The zoom object has three fields:
    *
-   * `x`: Is the horizontal translate amount which is a number indicating the
-   *    pixel amount to move. Negative left and positive right
-   *
-   * `y`: Is the vertical translate amount which is a number indicating the
-   *    pixel amount to move. Negative up and positive down.
-   *
-   * `k`: is the scale amount which is a number greater than 0 where 1 is the
-   *    default scale size.
-   *
-   * Parameters:
    * @param objectIds - An array of nodes and/or comment IDs.
    * @param xPos - Optional. Can be set to percentage offset of the viewport width.
    * @param yPos - Optional. Can be set to percentage offset of the viewport height.
+   * @returns a ZoomObject or null
    */
   getZoomToReveal(
     objectIds: string[],
     xPos?: number,
     yPos?: number
-  ): { x: number; y: number; k: number };
+  ): ZoomObject | null;
+
   /**
    * Clears any saved zoom values stored in local storage. This means
    * newly opened flows will appear with the default zoom. This method
@@ -1693,7 +2139,16 @@ export declare class CanvasController {
   clearSavedZoomValues(): void;
 }
 
-export type PortObject =
+/*
+ * Port object used to define display properties of an input or output port
+ * For example, either:
+ *    { type: "circle" } // Can also be "circleWithArrow"
+ * or
+ *    { type: "image", src: "path/picture.svg", width: 10, height: 10 }
+ * or
+ *    { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
+ */
+export type PortDisplay =
   | {
       type: "circle" | "circleWithArrow";
     }
@@ -1715,70 +2170,93 @@ export interface NodeLayout {
    */
   defaultNodeWidth: number;
   defaultNodeHeight: number;
+
   /**
    * A space separated list of classes that will be added to the group <g>
    * DOM element for the node.
    */
   className: string;
+
   /**
    * Displays the node outline shape underneath the image and label.
    */
   nodeShapeDisplay: boolean;
+
   /**
    * Displays the external object specified, as the body of the node
    */
   nodeExternalObject: FunctionComponent<any> | ComponentClass<any>;
+
   /**
    * Default node shape. Can be "rectangle" or "port-arcs"
    */
   nodeShape: "port-arcs" | "rectangle";
+
   /**
-   * SVG path strings to define the shape of your node and its
-   * selection highlighting. If set to null the paths will be set by default
-   * based on the nodeShape setting.
+   * SVG path strings to define the body shape of your node and its
+   * selection highlighting. If set to null the paths will be set by
+   * default based on the nodeShape setting. If a function is provided,
+   * it is called with the node as a parameter and must return the SVG
+   * path string for that node. This can be used for drawing a new path
+   * string when the node is resized.
    */
-  bodyPath: null | string;
-  selectionPath: null | string;
-  /** Display image */
+  bodyPath: null | string | ((node: CanvasNode) => string);
+  selectionPath: null | string | ((node: CanvasNode) => string);
+
+  /**
+   * Display image
+   */
   imageDisplay: boolean;
   imageWidth: number;
   imageHeight: number;
-  /** Image position */
+
+  /**
+   * Image position
+   */
   imagePosition: "topLeft";
   imagePosX: number;
   imagePosY: number;
+
   /** Display label */
   labelDisplay: boolean;
-  /** Label dimensions */
+
+  /**
+   * Label dimensions
+   */
   labelWidth: number;
   labelHeight: number;
-  /** Label position */
+
+  /**
+   * Label position
+   */
   labelPosition: "topLeft";
   labelPosX: number;
   labelPosY: number;
-  /** Label appearance */
+
+  /**
+   * Label appearance propeties
+   */
   labelEditable: false;
-  /** can be "left" or "center" */
   labelAlign: "left" | "center";
-  /** false allow multi-line labels */
-  labelSingleLine: boolean;
+  labelSingleLine: boolean;  /* false allow multi-line labels */
   labelOutline: boolean;
-  /** null allows unlimited characters */
-  labelMaxCharacters: boolean;
-  /** true allows line feed to be inserted into label */
-  labelAllowReturnKey: boolean;
+  labelMaxCharacters: boolean;  /* null allows unlimited characters */
+  labelAllowReturnKey: boolean;  /* true allows line feed to be inserted into label */
+
   /**
    * An array of decorations to be applied to the node. For details see:
    * https://elyra-ai.github.io/canvas/03.04.01-decorations/
    * These are added to the node at run time and will not be saved into
    * the pipeline flow.
    */
-  decorations: NodeDecoration[];
+  decorations: NodeDecorationDef[];
+
   /**
    * Positions and dimensions for 9 enumerated default decorator positions.
    * decoratorWidth and decoratorHeight are the dimensions of the outline
    * rectangle and decoratorPadding is the padding for the image within the
    * outline rectangle.
+   * @deprecated Specify position info in the decoration itself.
    */
   decoratorTopY: number;
   decoratorMiddleY: number;
@@ -1786,89 +2264,102 @@ export interface NodeLayout {
   decoratorLeftX: number;
   decoratorCenterX: number;
   decoratorRightX: number;
-  /** Width, height and padding for image decorators */
+
+  /**
+   * Default width, height and padding for image decorators
+   */
   decoratorWidth: number;
   decoratorHeight: number;
   decoratorPadding: number;
-  /** Width and height for label decorators */
+
+  /**
+   * Default width and height for label decorators
+   */
   decoratorLabelWidth: 80;
   decoratorLabelHeight: 15;
-  /** Display drop shadow under and round the nodes */
+
+  /**
+   * Display drop shadow under and round the nodes
+   */
   dropShadow: boolean;
-  /** The gap between a node and its selection highlight rectangle */
+
+  /**
+   * The gap between a node and its selection highlight rectangle
+   */
   nodeHighlightGap: number;
+
   /**
    * The size of the node sizing area that extends around the node, over
    * which the mouse pointer will change to the sizing arrows.
    */
   nodeSizingArea: number;
-  /** Error indicator dimensions */
+
+  /**
+   * Error indicator dimensions
+   */
   errorPosition: "topLeft";
   errorXPos: number;
   errorYPos: number;
   errorWidth: number;
   errorHeight: number;
+
   /**
    * When sizing a supernode this decides the size of the corner area for
    * diagonal sizing.
    */
   nodeCornerResizeArea: number;
+
   /**
    * What point to draw the data links from and to when enableLinkType is set
    * to "Straight". Possible values are "image_center" or "node_center".
    */
   drawNodeLinkLineFromTo: "node_center" | "image_center";
+
   /**
    * What point to draw the comment to node link line to. Possible values
    * are "image_center" or "node_center".
    */
   drawCommentLinkLineTo: "node_center" | "image_center";
+
   /**
    * This is the size of the horizontal line protruding from the
    * port on the source node when drawing an elbow or straight connection line.
    */
   minInitialLine: number;
+
   /**
    * For the elbow connection type with nodes with multiple output ports,
    * this is used to increment the minInitialLine so that connection lines
    * do not overlap each other when they turn up or down after the elbow.
    */
   minInitialLineIncrement: number;
+
   /**
    * This is the minimum size of the horizontal line entering the
    * target port on the target node when drawing an Elbow connection line.
    */
   minFinalLine: number;
+
   /**
    * Display input ports.
    */
   inputPortDisplay: boolean;
-  /**
-   * Object for input port can be "circle" or "image".
-   * @deprecated use inputPortDisplayObjects instead
+
+  /*
+   * An array of elements to control display of input ports.
+   * The order of the elements corresponds to the order of ports in the
+   * inputs array for the node. If there are more input ports than elements
+   * in the array, the last element will be used for all remaining ports.
    */
-  inputPortObject: "circle" | "image";
-  /**
-   * If input port object is "image" use this image.
-   * @deprecated use inputPortDisplayObjects instead
-   */
-  inputPortImage: string;
-  /**
-   * If input port dimensions for `inputPortObject: "image"`.
-   * @deprecated use inputPortDisplayObjects instead
-   */
-  inputPortWidth: number;
-  /**
-   * @deprecated use inputPortDisplayObjects instead
-   */
-  inputPortHeight: number;
-  inputPortDisplayObjects: PortObject[];
+  inputPortDisplayObjects: PortDisplay[];
+
   /**
    * Indicates whether multiple input ports should be automatically
    * positioned (true) or positioned based on the contents of
    * inputPortPositions array (false).
    */
   inputPortAutoPosition: boolean;
+
   /**
    * An array of input port positions. Each element is structured like
    * this: { x_pos: 5, y_pos: 10, pos: "topLeft" }. x_pos and y_pos are
@@ -1878,100 +2369,36 @@ export interface NodeLayout {
    * in the array, the last element will be used for all remaining ports.
    */
   inputPortPositions: { x_pos: number; y_pos: number; pos: NodePosition }[];
+
   /**
    * An array of elements to control display of input port guide objects.
    * That is the object drawn at the end of a new link as it is being dragged.
-   * Each element can have a number of different structures like this:
-   * Either
-   * { type: "circle" } // Can also be "circleWithArrow"
-   * Or
-   * { type: "image", src: "path/picture.svg", width: 10, height: 10 }
-   * Or
-   * { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
-   *
    * The order of the elements corresponds to the order of ports in the
    * inputs array for the node. If there are more input ports than elements
    * in the array, the last element will be used for all remaining ports.
    */
-  inputPortGuideObjects: PortObject[];
+  inputPortGuideObjects: PortDisplay[];
+
   /**
-   * Position of left single input port. Multiple input ports will be
-   * automatically positioned with the Y coordinate being overriden. These
-   * values are an offset from the top left corner of the node outline.
-   * Used when linkDirection is "LeftRight".
+   * Display output ports.
    */
-  inputPortLeftPosX: number;
-  inputPortLeftPosY: number;
-  /**
-   * Position of top single input port. Multiple input ports will be
-   * automatically positioned with the X coordinate being overriden. These
-   * values are an offset from the top left corner of the node outline.
-   * Used when linkDirection is "TopBottom".
-   */
-  inputPortTopPosX: number;
-  inputPortTopPosY: number;
-  /**
-   * Position of bottom single input port. Multiple input ports will be
-   * automatically positioned with the X coordinate being overriden. These
-   * values are an offset from the bottom left corner of the node outline.
-   * Used when linkDirection is "BottomTop".
-   */
-  inputPortBottomPosX: number;
-  inputPortBottomPosY: number;
-  /**
-   * The 'guide' is the object drawn at the mouse position as a new line
-   * is being dragged outwards.
-   * Object for input port guide can be "circle" or "image".
-   * @deprecated use inputPortGuideObjects instead
-   */
-  inputPortGuideObject: "circle" | "image";
-  /**
-   * If input port guide object is "image" use this image.
-   * @deprecated use inputPortGuideObjects instead
-   */
-  inputPortGuideImage: string;
-  /** Display output ports. */
   outputPortDisplay: boolean;
+
   /**
-   * Object for output port can be "circle" or "image".
-   * @deprecated use outputPortDisplayObjects instead
-   */
-  outputPortObject: "circle" | "image";
-  /**
-   * If output port object is "image" use this image.
-   * @deprecated use outputPortDisplayObjects instead
-   */
-  outputPortImage: string;
-  /**
-   * Output port dimensions for `outputPortImage: "image"`.
-   * @deprecated use outputPortDisplayObjects instead
-   */
-  outputPortWidth: number;
-  /**
-   * @deprecated use outputPortDisplayObjects instead
-   */
-  outputPortHeight: number;
-  /**
-   * An array of elements to control display of output ports. Each element
-   * can have a number of different structures like this:
-   * Either
-   * { type: "circle" } // Can also be "circleWithArrow"
-   * Or
-   * { type: "image", src: "path/picture.svg", width: 10, height: 10 }
-   * Or
-   * { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
-   *
+   * An array of elements to control display of output ports.
    * The order of the elements corresponds to the order of ports in the
    * outputs array for the node. If there are more output ports than elements
    * in the array, the last element will be used for all remaining ports.
    */
-  outputPortDisplayObjects: PortObject[];
+  outputPortDisplayObjects: PortDisplay[];
+
   /**
    * Indicates whether multiple output ports should be automatically
    * positioned (true) or positioned based on the contents of
    * outputPortPositions array (false).
    */
   outputPortAutoPosition: boolean;
+
   /**
    * An array of output port positions. Each element is structured like
    * this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
@@ -1981,84 +2408,54 @@ export interface NodeLayout {
    * in the array, the last element will be used for all remaining ports.
    */
   outputPortPositions: { x_pos: number; y_pos: number; pos: NodePosition }[];
+
   /**
    * An array of elements to control display of output port guide objects.
    * That is the object drawn at the end of a new link as it is being dragged.
-   * Each element can have a number of different structures like this:
-   * Either
-   * { type: "circle" } // Can also be "circleWithArrow"
-   * Or
-   * { type: "image", src: "path/picture.svg", width: 10, height: 10 }
-   * Or
-   * { type: "jsx", src: (<FaceCool />), width: 16, height: 16 }
-   *
    * The order of the elements corresponds to the order of ports in the
    * outputs array for the node. If there are more output ports than elements
    * in the array, the last element will be used for all remaining ports.
    */
-  outputPortGuideObjects: PortObject[];
-  /**
-   * Position of right single input port. Multiple input ports will be
-   * automatically positioned with the Y coordinate being overriden. These
-   * values are an offset from the top right corner of the node outline.
-   * Used when linkDirection is "LeftRight".
-   */
-  outputPortRightPosX: number;
-  outputPortRightPosY: number;
-  /**
-   * Position of top single input port. Multiple input ports will be
-   * automatically positioned with the X coordinate being overriden. These
-   * values are an offset from the top left corner of the node outline.
-   * Used when linkDirection is "BottomTop".
-   */
-  outputPortTopPosX: number;
-  outputPortTopPosY: number;
-  /**
-   * Position of bottom single input port. Multiple input ports will be
-   * automatically positioned with the X coordinate being overriden. These
-   * values are an offset from the bottom left corner of the node outline.
-   * Used when linkDirection is "TopBottom".
-   */
-  outputPortBottomPosX: number;
-  outputPortBottomPosY: number;
-  /**
-   * The 'guide' is the object drawn at the mouse position as a new line
-   * is being dragged outwards.
-   * Object for output port guide can be "circle" or "image".
-   * @deprecated use outputPortGuideObjects instead
-   */
-  outputPortGuideObject: "circle" | "image";
-  /**
-   * If output port guide object is "image" use this image.
-   * @deprecated use outputPortGuideObjects instead
-   */
-  outputPortGuideImage: string;
+  outputPortGuideObjects: PortDisplay[];
+
   /**
    * Automatically increases the node size to accommodate its ports so both
    * input and output ports can be shown within the dimensions of
    * the node.
    */
   autoSizeNode: boolean;
-  /** Radius of either the input or output ports when they are set to "circle" */
+
+  /**
+   * Radius of either the input or output ports when they are set to "circle"
+   */
   portRadius: number;
+
   /**
    * Size of an offset above and below the set of port arcs.
    */
   portArcOffset: number;
+
   /**
    * Radius of an imaginary circle around the port. This controls the
    * spacing of ports and the size of port arcs when nodeShape is set to
    * port-arcs.
    */
   portArcRadius: number;
-  /** Spacing between the port arcs around the ports. */
+
+  /**
+   * Spacing between the port arcs around the ports.
+   */
   portArcSpacing: number;
+
   /**
    * Position of the context toolbar relative to the node. Some adjustment
    * will be made to account for the width of the toolbar.
    */
   contextToolbarPosition: NodePosition;
-  /** Display of vertical ellipsis to show context menu */
+
+  /**
+   * Display of vertical ellipsis to show context menu
+   */
   ellipsisDisplay: boolean;
   ellipsisPosition: "topLeft";
   ellipsisWidth: number;
@@ -2075,7 +2472,7 @@ export interface CanvasConfig {
   enableInteractionType?: "Mouse" | "Carbon" | "Trackpad";
   enableNodeFormatType?: "Horizontal" | "Vertical";
   enableLinkType?: "Curve" | "Elbow" | "Straight" | "Parallax";
-  enableLinkDirection?: "LeftRight" | "TopBottom" | "BottomTop";
+  enableLinkDirection?: "LeftRight" | "RightLeft" |"TopBottom" | "BottomTop";
   enableLinkSelection?: "None" | "LinkOnly" | "Handles" | "Detachable";
   enableLinkReplaceOnNewConnection?: boolean;
   enableInternalObjectModel?: boolean;
@@ -2225,6 +2622,9 @@ export type DeprecatedToolbarConfig = (
   | ToolbarJsxItem
 )[];
 
+/**
+ * https://elyra-ai.github.io/canvas/03.02.03-notification-config/
+ */
 export interface NotificationConfig {
   action: string;
   label: string;
@@ -2281,35 +2681,6 @@ export type CtxMenuHandlerSource =
       mousePos: { x: string; y: string };
     };
 
-/** Existing internal common canvas actions */
-type InternalAction =
-  | "selectAll"
-  | "cut"
-  | "copy"
-  | "paste"
-  | "undo"
-  | "redo"
-  | "createSupernode"
-  | "expandSupernode"
-  | "collapseSupernode"
-  | "deleteSelectedObjects"
-  | "createComment"
-  | "deleteLink"
-  | "disconnectNode"
-  | "highlightBranch"
-  | "highlightDownstream"
-  | "highlightUpstream"
-  | "unhighlight";
-export interface CtxMenuHandlerMenuAction {
-  action?: InternalAction | string;
-  label?: string;
-  divider?: boolean;
-  submenu?: boolean;
-  enable?: boolean;
-  toolbarItem?: boolean;
-  icon?: string | ReactNode;
-}
-
 export interface EditActionData {
   editType:
     | "createComment"
@@ -2356,6 +2727,7 @@ export type GeneratorAction =
   | "clone_comment"
   | "clone_node_link"
   | "clone_comment_link";
+
 export interface GeneratorActionCreateNode {
   label: string;
   description: string;
@@ -2372,6 +2744,7 @@ export interface GeneratorActionCreateNode {
   }[];
   output_ports: [];
 }
+
 export type GeneratorData = GeneratorActionCreateNode | null;
 
 export interface SelectionChangeHandlerData {
@@ -2391,38 +2764,42 @@ export interface SelectionChangeHandlerData {
 export interface CommonCanvasProps {
   /**
    * https://elyra-ai.github.io/canvas/03.04-canvas-controller/
-   * Your application code can programmatically perform many of the actions that the user can do in the common canvas using the Canvas Controller API. Note: See this section for differences between the structure of objects in the API and the schema.
-   * In most cases within the API, the pipelineId parameter is optional. If pipelineId is omitted, the method will default to the pipeline that is currently displayed in the main canvas viewport.
-   *
-   * Warning 1: Do not alter the IDs of objects that currently exist on the canvas. Changing object IDs can cause internal problems, in particular with the command stack.
-   *
-   * Warning 2: When using external pipeline flows, Pipeline IDs must be globally unique identifiers.
    */
   canvasController: CanvasController;
+
   /**
    * https://elyra-ai.github.io/canvas/03.02.01-canvas-config/
    */
   config?: CanvasConfig;
+
   /**
    * https://elyra-ai.github.io/canvas/03.02.02-toolbar-config/
    */
   toolbarConfig?: ToolbarConfig | DeprecatedToolbarConfig;
+
   /**
    * https://elyra-ai.github.io/canvas/03.02.03-notification-config/
    */
   notificationConfig?: NotificationConfig;
+
   /**
    * https://elyra-ai.github.io/canvas/03.02.04-context-menu-config/
    */
   contextMenuConfig?: CtxMenuConfig;
+
   /**
    * https://elyra-ai.github.io/canvas/03.02.05-keyboard-config/
    */
   keyboardConfig?: KeyboardConfig;
+
   /**
    * https://elyra-ai.github.io/canvas/03.03.01-context-menu-handler/
    */
-  contextMenuHandler?: ContextMenuHandler;
+  contextMenuHandler?: (
+    source: CtxMenuHandlerSource,
+    defaultMenu: ContextMenuEntry[]
+  ) => ContextMenuEntry[];
+
   /**
    * https://elyra-ai.github.io/canvas/03.03.02-before-edit-action-handler/
    */
@@ -2430,6 +2807,7 @@ export interface CommonCanvasProps {
     data: EditActionData,
     command: EditActionCommand
   ) => EditActionData | void;
+
   /**
    * https://elyra-ai.github.io/canvas/03.03.03-edit-action-handler/
    */
@@ -2437,10 +2815,12 @@ export interface CommonCanvasProps {
     data: EditActionData,
     command: EditActionCommand
   ) => void;
+
   /**
    * https://elyra-ai.github.io/canvas/03.03.09-click-action-handler/
    */
   clickActionHandler?: (source: ClickActionSource) => void;
+
   /**
    * https://elyra-ai.github.io/canvas/03.03.05-decoration-action-handler/
    */
@@ -2449,10 +2829,12 @@ export interface CommonCanvasProps {
     id: string,
     pipelineId: string
   ) => void;
+
   /**
    * https://elyra-ai.github.io/canvas/03.03.04-layout-handler/
    */
   layoutHandler?: (data: CanvasNode) => Record<string, unknown>;
+
   /*
    * https://elyra-ai.github.io/canvas/03.03.06-tip-handler/
    */
@@ -2460,22 +2842,31 @@ export interface CommonCanvasProps {
     tipType: string,
     data: Record<string, unknown>
   ) => string | ReactNode | null;
+
   /**
    * https://elyra-ai.github.io/canvas/03.03.07-id-generator-handler/
    */
   idGeneratorHandler?: (action: GeneratorAction, data?: GeneratorData) => void;
+
   /**
    * https://elyra-ai.github.io/canvas/03.03.08-selection-change-handler/
    */
   selectionChangeHandler?: (data: SelectionChangeHandlerData) => void;
+
   /**
    * https://elyra-ai.github.io/canvas/03.03.10-action-label-handler/
    */
   actionLabelHandler?: (action: GeneratorAction) => string | null | void;
+
+  /**
+   * https://elyra-ai.github.io/canvas/01.09.10-panels/
+   */
   showRightFlyout?: boolean;
-  rightFlyoutContent?: ReactNode;
+  rightFlyoutContent?: ReactNode | FunctionComponent;
+  showTopPanel?: boolean;
+  topPanelContent?: ReactNode | FunctionComponent;
   showBottomPanel?: boolean;
-  bottomPanelContent?: ReactNode;
+  bottomPanelContent?: ReactNode | FunctionComponent;
 }
 
 export declare class CommonCanvas extends React.Component<CommonCanvasProps> {}
