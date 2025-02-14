@@ -1250,6 +1250,7 @@ export default class SVGCanvasRenderer {
 		const canvasSVG = parentObject
 			.append("svg")
 			.attr("class", "svg-area") // svg-area used in tests.
+			.attr("aria-label", "SVG area")
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("width", dims.width)
 			.attr("height", dims.height)
