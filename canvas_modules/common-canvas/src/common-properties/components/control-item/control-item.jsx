@@ -86,6 +86,12 @@ class ControlItem extends React.Component {
 					{indicator}
 					{tooltip}
 				</div>);
+		} else {
+			// Provide a label for controls with hidden labels to support accessibility
+			label = (
+				<div className={classNames("properties-label-container-hidden")}>
+					<label className="properties-control-label-hidden">{this.props.control?.label?.text}</label>
+				</div>);
 		}
 
 		const action = this.actionFactory.generateAction(0, this.props.control.action);
