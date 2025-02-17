@@ -493,7 +493,7 @@ class App extends React.Component {
 		// which would cause a refresh.
 		this.emptyCanvasDiv = (
 			<div>
-				<Isvg src={BlankCanvasImage} className="harness-empty-image" />
+				<Isvg src={BlankCanvasImage} aria-label="Harness empty image" className="harness-empty-image" />
 				<span className="harness-empty-text">
 					<FormattedMessage
 						id={"canvas.emptyText"}
