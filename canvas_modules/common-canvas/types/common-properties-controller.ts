@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { RecordSchema } from './common-canvas-schema-types/pipeline-flow-v3';
+import { RecordSchema } from  "@elyra/pipeline-schemas/types";
 import { PropertyDefinitionsSchema } from './common-properties-schema-types/parameter-defs-v3';
 
 interface BaseProperty {
