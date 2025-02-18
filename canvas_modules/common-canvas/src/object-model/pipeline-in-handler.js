@@ -244,6 +244,12 @@ export default class PipelineInHandler {
 				newComment.class_name = comment.class_name;
 			}
 
+			if (has(comment, "content_type")) {
+				newComment.contentType = comment.content_type;
+			}
+
+			// Some older pipeline flows may have this incorrect
+			// field name, so read that here so they will still work.
 			if (has(comment, "contentType")) {
 				newComment.contentType = comment.contentType;
 			}
