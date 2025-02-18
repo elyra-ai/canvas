@@ -25,6 +25,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 
 import oneofselectParamDef from "../../test_resources/paramDefs/oneofselect_paramDef.json";
 import { fireEvent, waitFor } from "@testing-library/react";
+import { cloneDeep } from "lodash";
 
 const mockOneofselectControl = jest.fn();
 jest.mock("../../../src/common-properties/controls/dropdown",
@@ -570,12 +571,13 @@ describe("oneofselect with custom value allowed works correctly", () => {
 		expect(dropdownList).to.be.length(2);
 	});
 
-
 	it("Validate oneofselect filters correctly using shouldFilterItem", () => {
+		const customControl = cloneDeep(control);
+		customControl.shouldFilterItem = true;
 		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
-				control={control}
+				control={customControl}
 				controller={controller}
 				propertyId={propertyId}
 			/>
