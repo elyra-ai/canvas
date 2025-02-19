@@ -571,7 +571,7 @@ export declare class CanvasController {
    * @param pipelineId - Optional. The ID of the pipeline of the nodes.
    *                     Defaults to the currently displayed pipeline.
    */
-  deselectAll(pipelineId): void;
+  deselectAll(pipelineId: string): void;
 
   /**
    * @returns an array of the IDs of the currently selected objects.
@@ -2548,7 +2548,7 @@ export interface CanvasConfig {
   enableLinkSelection?: "None" | "LinkOnly" | "Handles" | "Detachable";
   enableLinkReplaceOnNewConnection?: boolean;
   enableInternalObjectModel?: boolean;
-  enablePaletteLayout?: "Model" | "Flyout" | "None";
+  enablePaletteLayout?: "Dialog" | "Flyout" | "None";
   enableToolbarLayout?: "Top" | "None";
   enableResizableNodes?: boolean;
   enableInsertNodeDroppedOnLink?: boolean;

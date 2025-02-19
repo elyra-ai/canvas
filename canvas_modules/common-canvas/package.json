@@ -35,7 +35,7 @@
     "@codemirror/legacy-modes": "^6.3.3",
     "@codemirror/state": "^6.4.1",
     "@codemirror/view": "^6.28.6",
-    "@elyra/pipeline-schemas": "^3.0.68",
+    "@elyra/pipeline-schemas": "^3.0.95",
     "codemirror": "^6.0.1",
     "d3": "7.9.0",
     "dagre": "^0.8.5",
