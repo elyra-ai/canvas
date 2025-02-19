@@ -356,7 +356,7 @@ export default class PipelineOutHandler {
 				newCom.class_name = comment.class_name;
 			}
 			if (comment.contentType) {
-				newCom.contentType = comment.contentType;
+				newCom.content_type = comment.contentType;
 			}
 			if (comment.formats) {
 				newCom.formats = comment.formats;
