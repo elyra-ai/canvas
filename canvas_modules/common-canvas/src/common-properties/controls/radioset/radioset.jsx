@@ -19,11 +19,12 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { isEqual } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
+import * as PropertyUtils from "./../../util/property-utils";
 import * as ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
 import ValidationMessage from "./../../components/validation-message";
 import { RadioButton, RadioButtonGroup } from "@carbon/react";
 import classNames from "classnames";
-import { STATES, UPDATE_TYPE } from "./../../constants/constants.js";
+import { MESSAGE_KEYS, STATES, UPDATE_TYPE } from "./../../constants/constants.js";
 import { v4 as uuid4 } from "uuid";
 import { Information } from "@carbon/react/icons";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
@@ -224,6 +225,8 @@ class RadiosetControl extends React.Component {
 			);
 		}
 
+		const radioBtnGroupAriaLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.RADIO_BUTTON_GROUP_ARIA_LABEL);
+
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 				className={classNames("properties-radioset ", { "hide": this.props.state === STATES.HIDDEN })}
@@ -234,6 +237,8 @@ class RadiosetControl extends React.Component {
 					orientation={this.props.control.orientation}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
+					// Provide unique aria-label for each radio button group
+					aria-label={`${radioBtnGroupAriaLabel} (${ControlUtils.getDataId(this.props.control, this.props.propertyId)})`}
 				>
 					{buttons}
 				</RadioButtonGroup>

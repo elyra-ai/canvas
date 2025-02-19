@@ -48,6 +48,7 @@ export const MESSAGE_KEYS = {
 	ALERTS_TAB_TITLE: "alerts.tab.title",
 	TITLE_EDITOR_LABEL: "title.editor.label",
 	TITLE_EDITOR_HELPBUTTON_LABEL: "title.editor.helpButton.label",
+	TITLE_EDITOR_DESCBUTTON_LABEL: "title.editor.descButton.label",
 	TABLE_SUMMARY_ERROR: "table.summary.error",
 	TABLE_SUMMARY_WARNING: "table.summary.warning",
 	CONTROL_SUMMARY_ERROR: "control.summary.error",
@@ -127,6 +128,8 @@ export const MESSAGE_KEYS = {
 	TABLE_TOOLBAR_BUTTON_DELETE: "table.toolbar.button.delete",
 	TABLE_TOOLBAR_BUTTON_EDIT: "table.toolbar.button.edit",
 	TABLE_TOOLBAR_BUTTON_CANCEL: "table.toolbar.button.cancel",
+	TABLE_TOOLBAR_OVERFLOW_LABEL: "table.toolbar.overflow.label",
+	RADIO_BUTTON_GROUP_ARIA_LABEL: "radiobuttongroup.aria.label",
 	TABLE_DELETEICON_TOOLTIP: "table.deleteIcon.tooltip"
 
 };

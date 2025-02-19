@@ -501,12 +501,14 @@ class PropertiesMain extends React.Component {
 				propertiesTitle = (<TitleEditor
 					labelEditable={formData.labelEditable}
 					help={formData.help}
+					description={formData.description}
 					controller={this.propertiesController}
 					helpClickHandler={this.props.callbacks.helpClickHandler}
 					closeHandler={applyOnBlurEnabled ? this.applyPropertiesEditing.bind(this, true) : null}
 					icon={formData.icon}
 					heading={formData.heading}
 					showHeading={this.props.propertiesConfig.heading}
+					showHeadingDesc={this.props.propertiesConfig.showHeadingDesc}
 					titleInfo={formData.title}
 					rightFlyoutTabsView={this.props.propertiesConfig.categoryView === CATEGORY_VIEW.TABS}
 				/>);
@@ -588,6 +590,8 @@ class PropertiesMain extends React.Component {
 					cancelHandler={cancelHandler}
 					showPropertiesButtons={this.state.showPropertiesButtons}
 					applyOnBlur={this.props.propertiesConfig.applyOnBlur}
+					controller={this.propertiesController}
+					disableSaveOnRequiredErrors={this.props.propertiesConfig.disableSaveOnRequiredErrors}
 				/>);
 			} else { // Modal
 				propertiesDialog = (<PropertiesModal
@@ -666,6 +670,7 @@ PropertiesMain.propTypes = {
 		conditionReturnValueHandling: PropTypes.string,
 		returnValueFiltering: PropTypes.array,
 		heading: PropTypes.bool,
+		showHeadingDesc: PropTypes.bool,
 		buttonLabels: PropTypes.shape({
 			primary: PropTypes.string,
 			secondary: PropTypes.string

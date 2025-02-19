@@ -58,8 +58,8 @@ export default class CreateNodeOnLinkAction extends Action {
 		this.apiPipeline.addNode(this.newNode);
 		// The new node must be added to the canvas before trying to create the
 		// links because the link creation code requires linked nodes to exist.
-		this.firstLink = this.apiPipeline.createNodeLink(this.firstLinkSrcInfo, this.firstLinkTrgInfo, { type: "nodeLink" });
-		this.secondLink = this.apiPipeline.createNodeLink(this.secondLinkSrcInfo, this.secondLinkTrgInfo, { type: "nodeLink" });
+		this.firstLink = this.apiPipeline.createNodeLink(this.firstLinkSrcInfo, this.firstLinkTrgInfo);
+		this.secondLink = this.apiPipeline.createNodeLink(this.secondLinkSrcInfo, this.secondLinkTrgInfo);
 		this.apiPipeline.addLinks([this.firstLink, this.secondLink]);
 	}
 

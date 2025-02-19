@@ -288,6 +288,7 @@ class App extends React.Component {
 			trimSpaces: true,
 			displayAdditionalComponents: false,
 			heading: false,
+			showHeadingDesc: false,
 			light: true,
 			lightTheme: false,
 			showRequiredIndicator: true,
@@ -492,7 +493,7 @@ class App extends React.Component {
 		// which would cause a refresh.
 		this.emptyCanvasDiv = (
 			<div>
-				<Isvg src={BlankCanvasImage} className="harness-empty-image" />
+				<Isvg src={BlankCanvasImage} aria-label="Harness empty image" className="harness-empty-image" />
 				<span className="harness-empty-text">
 					<FormattedMessage
 						id={"canvas.emptyText"}
@@ -2073,6 +2074,7 @@ class App extends React.Component {
 			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			trimSpaces: this.state.trimSpaces,
 			heading: this.state.heading,
+			showHeadingDesc: this.state.showHeadingDesc,
 			showRequiredIndicator: this.state.showRequiredIndicator,
 			showAlertsTab: this.state.showAlertsTab,
 			enableResize: this.state.enableResize,
@@ -2513,6 +2515,7 @@ class App extends React.Component {
 			expressionBuilder: this.state.expressionBuilder,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
 			heading: this.state.heading,
+			showHeadingDesc: this.state.showHeadingDesc,
 			light: this.state.light,
 			showRequiredIndicator: this.state.showRequiredIndicator,
 			showAlertsTab: this.state.showAlertsTab,

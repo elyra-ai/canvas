@@ -39,6 +39,7 @@ controller.setAppData(appData);
 
 const helpClickHandler = sinon.spy();
 const help = { data: "test-data" };
+const description = "test description";
 
 const titleChangeHandlerFunction = function(title, callbackFunction) {
 	// If Title is valid. No need to send anything in callbackFunction
@@ -140,6 +141,52 @@ describe("title-editor renders correctly", () => {
 			/>
 		);
 		const { container } = wrapper;
+		const helpButton = container.querySelector(".properties-title-editor-btn[data-id='help']");
+		fireEvent.click(helpButton);
+	});
+	it("test description button callback", () => {
+		helpClickHandler.resetHistory();
+		const wrapper = renderWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+				help={help}
+				description={description}
+				showHeadingDesc
+			/>
+		);
+		const { container } = wrapper;
+		const helpButton = container.querySelector(".properties-title-editor-desc-btn[data-id='desc-help']");
+		fireEvent.click(helpButton);
+	});
+	it("test description should not be visible if description is not present", () => {
+		helpClickHandler.resetHistory();
+		const wrapper = renderWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+				help={help}
+				showHeadingDesc
+			/>
+		);
+		const { container } = wrapper;
+		expect(container.querySelector(".properties-title-desc-icon")).to.not.exist;
+	});
+	it("test description should not be visible if showHeadingDesc is not present", () => {
+		helpClickHandler.resetHistory();
+		const wrapper = renderWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+				help={help}
+				description={description}
+			/>
+		);
+		const { container } = wrapper;
+		expect(container.querySelector(".properties-title-desc-icon")).to.not.exist;
 		const helpButton = container.querySelector(".properties-title-editor-btn[data-id='help']");
 		fireEvent.click(helpButton);
 	});
