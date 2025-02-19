@@ -265,6 +265,7 @@ class DropDown extends React.Component {
 				</Select>
 			);
 		} else if (this.props.control.customValueAllowed) { // combobox dropdown not allowed in tables
+			const shouldFilterItem = this.props.control.shouldFilterItem === true ? { shouldFilterItem: this.filterItems } : {};
 			dropdownComponent = (
 				<ComboBox
 					{...validationProps}
@@ -279,7 +280,8 @@ class DropDown extends React.Component {
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText={this.props.controlItem}
 					helperText={this.props.control.helperText}
-					shouldFilterItem={this.filterItems}
+					allowCustomValue
+					{...shouldFilterItem}
 				/>
 			);
 		} else {

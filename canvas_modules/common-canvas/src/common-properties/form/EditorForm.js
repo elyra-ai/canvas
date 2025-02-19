@@ -664,6 +664,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.dmImage = parameter.dmImage;
 	settings.action = action;
 	settings.customValueAllowed = parameter.customValueAllowed;
+	settings.shouldFilterItem = parameter.shouldFilterItem;
 	settings.className = parameter.className;
 	settings.buttons = buttons;
 	settings.helperText = additionalHelperText;
