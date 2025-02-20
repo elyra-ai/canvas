@@ -189,6 +189,9 @@ export class Control {
 		if (settings.customValueAllowed) {
 			this.customValueAllowed = settings.customValueAllowed;
 		}
+		if (settings.shouldFilterItem) {
+			this.shouldFilterItem = settings.shouldFilterItem;
+		}
 		if (settings.className) {
 			this.className = settings.className;
 		}
