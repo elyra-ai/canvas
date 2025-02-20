@@ -179,7 +179,7 @@ $toolbar-divider-width: 1px;
 
 .toolbar-overflow-item {
 	background-color: $layer-01;
-	width: 30px; // Setting up the width as removing the inline-block from the child
+	width: 30px; // Set width instead of using inline-block to fix Safari display bug.
 	& button {
 		padding: 0;
 		height: $toolbar-button-height;
