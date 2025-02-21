@@ -1,23 +1,24 @@
 /*
-* Copyright 2023 Elyra Authors
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2023-2025 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 import React from "react";
 import PropTypes from "prop-types";
 
 import { get } from "lodash";
+import { TextInput } from "@carbon/react";
 import { ChevronUp, ChevronDown, Draggable, DragVertical } from "@carbon/react/icons";
 
 import LinkInputToOutputAction from "./linkInputToOutputAction.js";
@@ -40,6 +41,10 @@ class MappingContainerNode extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.state = {
+			editingIndex: -1
+		};
+
 		this.onScroll = this.onScroll.bind(this);
 		this.onMouseEnterOnContainer = this.onMouseEnterOnContainer.bind(this);
 		this.onMouseDownOnContainer = this.onMouseDownOnContainer.bind(this);
@@ -51,7 +56,6 @@ class MappingContainerNode extends React.Component {
 		this.adjustContainerPositions = this.adjustContainerPositions.bind(this);
 		this.onMouseDownOnFieldIcon = this.onMouseDownOnFieldIcon.bind(this);
 		this.onDragStartOnFieldIcon = this.onDragStartOnFieldIcon.bind(this);
-		this.onFieldMoveDragStart = this.onFieldMoveDragStart.bind(this);
 		this.onFieldDrop = this.onFieldDrop.bind(this);
 		this.onMouseDownOnContainerDataIcon = this.onMouseDownOnContainerDataIcon.bind(this);
 		this.onDragStartOnContainerDataIcon = this.onDragStartOnContainerDataIcon.bind(this);
@@ -59,6 +63,7 @@ class MappingContainerNode extends React.Component {
 		this.getFieldElementId = this.getFieldElementId.bind(this);
 		this.resizeNode = this.resizeNode.bind(this);
 		this.resizeNodeEnd = this.resizeNodeEnd.bind(this);
+		this.generateFields = this.generateFields.bind(this);
 	}
 
 	componentDidMount() {
@@ -160,11 +165,6 @@ class MappingContainerNode extends React.Component {
 		}
 	}
 
-	// Called when the field is moved up and down in an output link.
-	onFieldMoveDragStart(evt, col) {
-		//
-	}
-
 	onMouseDownOnFieldIcon(evt) {
 		window.console.log("onMouseDownOnFieldIcon");
 		evt.stopPropagation();
@@ -213,14 +213,15 @@ class MappingContainerNode extends React.Component {
 	}
 
 	onMouseEnterOnContainer() {
-		// console.log("onMouseEnterOnContainer");
-
 		this.props.canvasController.closeContextMenu();
 	}
 
-	// Stop propagation will prevent the node/container from being dragged to a
-	// new position.
 	onMouseDownOnContainer(evt) {
+		// Stop propagation will prevent the node/container from being dragged to a
+		// new position.
+		// TODO -- If keyboard navigation is needed for this app, this line will
+		// need to be remvoed. That means Common Canvas would have to provide a
+		// feature that allows the app to switch off drag for the nodes.
 		evt.stopPropagation();
 	}
 
@@ -353,6 +354,11 @@ class MappingContainerNode extends React.Component {
 		document.addEventListener("mouseup", this.resizeNodeEnd, true);
 	}
 
+	onMouseDownOnFieldRow(evt, index) {
+		evt.stopPropagation();
+		this.setEditingIndex(index);
+	}
+
 	setContainerPortPositions() {
 		const nodeDivRect = this.getNodeDivRect();
 		const headerDivRect = this.getHeaderDivRect();
@@ -385,6 +391,14 @@ class MappingContainerNode extends React.Component {
 			inputPositions,
 			outputPositions
 		});
+	}
+
+	setEditingIndex(index) {
+		const newIdx = this.state.editingIndex === index ? -1 : index;
+		if (newIdx === -1) {
+			this.textInputRef = null;
+		}
+		this.setState({ editingIndex: newIdx });
 	}
 
 	getStripPortId(id) {
@@ -687,16 +701,43 @@ class MappingContainerNode extends React.Component {
 				);
 			}
 
+			let nameField = field.label;
+
+			if (this.state.editingIndex === index) {
+				this.textInputRef = React.createRef();
+
+				nameField = (
+					<TextInput type="text"
+						id={"id_" + index}
+						key={"key_" + index}
+						ref={this.textInputRef}
+						value={field.label}
+						style={{ height: "18px", borderBottom: 0, paddingLeft: 0 }}
+						hideLabel
+						labelText={""}
+						readOnly={false}
+						onMouseDown={(evt) => evt.stopPropagation()}
+						onMouseUp={(evt) => evt.stopPropagation()}
+						onClick={(evt) => evt.stopPropagation()}
+						onBlur={this.setEditingIndex.bind(this, -1)}
+					/>);
+
+				// Give some time for the render to complete otherwise focus
+				// cannot be set.
+				setTimeout((evt) => {
+					this.textInputRef?.current?.focus();
+				}, 20);
+			}
+
 			return (
 				<div key={field.id}
 					id={this.getFieldElementId(field.id)}
 					className={className}
-					draggable
-					onDragStart={(evt) => this.onFieldMoveDragStart(evt, field)}
+					onMouseDown={(evt) => this.onMouseDownOnFieldRow(evt, index)}
 				>
 					{beforeLabel}
 					<div>{index + 1}</div>
-					<div>{field.label}</div>
+					{nameField}
 					{mapping}
 					<div>{field.type}</div>
 					<div>{" "}</div>
@@ -725,11 +766,14 @@ class MappingContainerNode extends React.Component {
 		const footer = this.isContainerResized() ? this.generateFooter() : null;
 
 		return (
+			// Prevent mousedown and keydown propagating to the Common Canvas
+			// node to stop any node actions that might result.
 			<div id={this.getNodeDivId()}
 				onMouseEnter={this.onMouseEnterOnContainer}
 				onMouseDown={this.onMouseDownOnContainer}
 				onDrop={this.onFieldDrop}
 				className="node-container"
+				onKeyDown={(evt) => evt.stopPropagation() }
 			>
 				{header}
 				{scrollDiv}
