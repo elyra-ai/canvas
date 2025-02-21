@@ -56,6 +56,7 @@ export default class ReactNodesMappingCanvas extends React.Component {
 			enableRaiseNodesToTopOnHover: false,
 			enableMarkdownInComments: true,
 			enableContextToolbar: true,
+			enableKeyboardNavigation: true,
 			tipConfig: {
 				palette: false,
 				nodes: false,
