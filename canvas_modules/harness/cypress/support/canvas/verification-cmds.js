@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1465,6 +1465,35 @@ Cypress.Commands.add("verifyNodeHasDataId", (nodeLabel, dataIdValue, categoryLab
 		.then((dataId) => {
 			expect(dataId).to.equal(dataIdValue);
 		});
+});
+
+// Verfiies the focus is on the object passed in
+Cypress.Commands.add("verifyFocusOnCanvas", () => {
+	cy.document().then((doc) => {
+		expect(doc.activeElement).to.have.class("d3-svg-canvas-div");
+	});
+});
+
+// Verfiies the focus is on the node passed in
+Cypress.Commands.add("verifyFocusOnNode", (nodeLabel) => {
+	cy.document().then((doc) => {
+		cy.getNodeWithLabel(nodeLabel)
+			.then((nodes) => {
+				const nodeId = nodes[0].getAttribute("data-id");
+				expect(doc.activeElement.getAttribute("data-id")).to.equal(nodeId);
+			});
+	});
+});
+
+// Verfiies the focus is on the comment passed in
+Cypress.Commands.add("verifyFocusOnComment", (commentText) => {
+	cy.document().then((doc) => {
+		cy.getCommentWithText(commentText)
+			.then((comments) => {
+				const comId = comments[0].getAttribute("data-id");
+				expect(doc.activeElement.getAttribute("data-id")).to.equal(comId);
+			});
+	});
 });
 
 // Compares two pixel value to see if they are within the compareRange value or not.

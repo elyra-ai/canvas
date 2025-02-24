@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,21 @@
  * limitations under the License.
  */
 
+import keys from "./key.js";
+
 Cypress.Commands.add("getNodeWithLabel", (nodeLabel) => {
 	cy.get(getNodeGrpSelector())
 		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));
+});
+
+Cypress.Commands.add("pressTabOnNode", (nodeLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.trigger("keydown", keys.tab);
+});
+
+Cypress.Commands.add("pressEnterOnNode", (nodeLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.trigger("keydown", keys.enter);
 });
 
 Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>

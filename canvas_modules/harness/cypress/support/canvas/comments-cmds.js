@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,16 @@
 /* eslint max-len: "off" */
 
 import CanvasUtils from "../../../../common-canvas/src/common-canvas/common-canvas-utils.js";
+import keys from "./key.js";
 
 Cypress.Commands.add("getCommentWithText", (commentText) =>
 	cy.get(getCommentGrpSelector())
 		.then((grpArray) => findGrpForText(grpArray, commentText)));
+
+Cypress.Commands.add("pressTabOnComment", (commentText) => {
+	cy.getCommentWithText(commentText)
+		.trigger("keydown", keys.tab);
+});
 
 Cypress.Commands.add("getCommentWithTextInSubFlow", (commentText) =>
 	cy.get(getCommentGrpSelectorInSubFlow())
