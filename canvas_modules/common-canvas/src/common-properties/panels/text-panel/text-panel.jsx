@@ -27,7 +27,7 @@ import Icon from "./../../../icons/icon.jsx";
 class TextPanel extends Component {
 	render() {
 		const className = this.props.panel.className ? this.props.panel.className : "";
-		const hidden = this.props.panelState === STATES.HIDDEN;
+		const hidden = this.props.panelState === STATES.HIDDEN || !this.props.shouldHideTextPanel;
 		const disabled = this.props.panelState === STATES.DISABLED;
 		let label = this.props.panel.label ? (<div className="panel-label">{this.props.panel.label}</div>) : null;
 		let description;
@@ -78,6 +78,7 @@ class TextPanel extends Component {
 TextPanel.propTypes = {
 	panel: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	shouldHideTextPanel: PropTypes.bool,
 	panelState: PropTypes.string // set by redux
 };
 

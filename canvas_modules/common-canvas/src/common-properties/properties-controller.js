@@ -2064,4 +2064,24 @@ export default class PropertiesController {
 		}
 		return isValid;
 	}
+
+	hideTextPanel(textPanel) {
+		const dependsOn = textPanel.dependsOn;
+		const controlStates = this.getControlStates();
+		let panelFlag = true;
+
+		if (dependsOn) {
+			if (this.panelTree[dependsOn]) {
+				const treeControls = this.panelTree[dependsOn].controls;
+				treeControls.forEach((control) => {
+					if (controlStates[control].value === "visible") {
+						panelFlag = false;
+					}
+				});
+			}
+		} else {
+			panelFlag = false;
+		}
+		return !panelFlag;
+	}
 }

@@ -231,7 +231,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				group.description ? group.description.placement : null,
 				group.description ? group.description.link : null);
 		}
-		return UIItem.makeTextPanel(groupName, groupLabel, groupDesc, groupClassName, nestedPanel);
+		return UIItem.makeTextPanel(groupName, groupLabel, groupDesc, groupClassName, nestedPanel, group.dependsOn);
 	}
 	case GroupType.TWISTY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
@@ -664,7 +664,6 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.dmImage = parameter.dmImage;
 	settings.action = action;
 	settings.customValueAllowed = parameter.customValueAllowed;
-	settings.shouldFilterItem = parameter.shouldFilterItem;
 	settings.className = parameter.className;
 	settings.buttons = buttons;
 	settings.helperText = additionalHelperText;

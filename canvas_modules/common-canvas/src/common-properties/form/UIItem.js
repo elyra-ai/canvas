@@ -103,7 +103,7 @@ export class UIItem {
 		});
 	}
 
-	static makeTextPanel(groupName, label, description, className, nestedPanel) {
+	static makeTextPanel(groupName, label, description, className, nestedPanel, dependsOn) {
 		return new UIItem({
 			itemType: ItemType.TEXT_PANEL,
 			panel: {
@@ -111,7 +111,8 @@ export class UIItem {
 				label: label,
 				description: description,
 				className: className,
-				nestedPanel: nestedPanel
+				nestedPanel: nestedPanel,
+				dependsOn: dependsOn
 			}
 		});
 	}
