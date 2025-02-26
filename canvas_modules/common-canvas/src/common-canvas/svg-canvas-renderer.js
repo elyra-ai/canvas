@@ -316,6 +316,7 @@ export default class SVGCanvasRenderer {
 		// Restore the focus back to whatever object is currently in focus if
 		// keyboard navigation is enabled.
 		if (this.config.enableKeyboardNavigation) {
+			this.logger.log("setCanvasInfoRenderer - restoring focus");
 			this.restoreFocus();
 		}
 
@@ -5961,6 +5962,14 @@ export default class SVGCanvasRenderer {
 	// viewport if it is not already.
 	// This is a utility method called from the canvas controller.
 	moveFocusTo(obj) {
+		let id = null;
+		if (obj === CANVAS_FOCUS) {
+			id = CANVAS_FOCUS;
+		} else {
+			id = obj ? obj.id : "undefined object";
+		}
+		this.logger.log("moveFocusTo object = " + id);
+
 		if (!obj || obj === CANVAS_FOCUS) {
 			return;
 		}
@@ -5997,13 +6006,17 @@ export default class SVGCanvasRenderer {
 		// If there is a non-null D3 selection object that is not empty,
 		// we can position the node in the viewport and then set focus on it.
 		if (objSel && !objSel.empty()) {
+			this.logger.log("moveFocusTo - object selection valid");
+
 			const zoom = this.canvasController.getZoomToReveal([obj.id]);
+			this.logger.log("moveFocusTo - zoom = " + JSON.stringify(zoom));
 			if (zoom) {
 				this.zoomTo(zoom);
 			}
 
 			const element = objSel.node();
 			if (element) {
+				this.logger.log("moveFocusTo - setting focus on object");
 				element.focus();
 			}
 

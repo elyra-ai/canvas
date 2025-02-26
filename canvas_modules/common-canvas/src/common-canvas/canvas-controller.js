@@ -1904,6 +1904,7 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 
 	restoreFocus() {
+		this.logger.log("restoreFocus");
 		if (this.getSVGCanvasD3()) {
 			this.setFocusObject(this.focusObject); // This will force a refresh of the focus
 		}
@@ -1916,6 +1917,7 @@ export default class CanvasController {
 	}
 
 	setFocusOnCanvas() {
+		this.logger.log("setFocusOnCanvas");
 		this.setFocusObject(CANVAS_FOCUS);
 	}
 
@@ -1924,10 +1926,12 @@ export default class CanvasController {
 	}
 
 	setFocusObject(focusObj) {
+		this.logger.log("setFocusObject");
 		this.focusObject = focusObj;
 
 		if (this.focusObject && this.canvasContents) {
 			if (this.focusObject === CANVAS_FOCUS) {
+				this.logger.log("setFocusObject - moving focus to canvas");
 				this.canvasContents.focusOnCanvas();
 
 			} else {
@@ -1935,6 +1939,7 @@ export default class CanvasController {
 				// refresh scenarios, so check its existance first.
 				/* eslint no-lonely-if: "off" */
 				if (this.getSVGCanvasD3()) {
+					this.logger.log("setFocusObject - moving focus to object");
 					this.getSVGCanvasD3().moveFocusTo(focusObj);
 				}
 			}

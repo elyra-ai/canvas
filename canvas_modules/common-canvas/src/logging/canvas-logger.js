@@ -132,4 +132,4 @@ export default class Logger {
 }
 
 // Static variable can be switched on and off by pressing Ctrl+Shift+Option+P
-Logger.active = false;
+Logger.active = true;
