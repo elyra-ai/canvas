@@ -1115,9 +1115,9 @@ export default class CanvasUtils {
 	}
 
 	// Returns truthy if the object passed in is a comment.
-	// Comments don't have a type property.
+	// Comments don't have a type property but do have content.
 	static isComment(obj) {
-		return !obj.type;
+		return !obj.type && obj.content;
 	}
 
 	static isSupernode(node) {

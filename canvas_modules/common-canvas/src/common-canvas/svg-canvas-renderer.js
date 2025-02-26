@@ -5969,8 +5969,8 @@ export default class SVGCanvasRenderer {
 
 		this.canvasGrp.selectAll(".d3-focus-path").remove();
 
-		let objSel;
-		if (type === "node") {
+		let objSel = null;
+		if (type === "node" && this.activePipeline.getNode(obj.id)) {
 			objSel = this.getNodeGroupSelectionById(obj.id);
 
 			objSel.insert("path", ":first-child")
@@ -5978,7 +5978,7 @@ export default class SVGCanvasRenderer {
 				.attr("d", (d) => this.getNodeShapePathSizing(d));
 
 
-		} else if (type === "comment") {
+		} else if (type === "comment" && this.activePipeline.getComment(obj.id)) {
 			objSel = this.getCommentGroupSelectionById(obj.id);
 
 			objSel.insert("rect", ":first-child")
@@ -5988,19 +5988,20 @@ export default class SVGCanvasRenderer {
 				.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
 				.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
 
-		} else if (type === "link") {
+		} else if (type === "link" && this.activePipeline.getLink(obj.id)) {
 			objSel = this.getLinkGroupSelectionById(obj.id);
 
 			// TODO - Think of a way to show focus on links other than line thckness
 		}
-		if (obj) {
+
+		// If there is a non-null D3 selection object that is not empty,
+		// we can position the node in the viewport and then set focus on it.
+		if (objSel && !objSel.empty()) {
 			const zoom = this.canvasController.getZoomToReveal([obj.id]);
 			if (zoom) {
 				this.zoomTo(zoom);
 			}
-		}
 
-		if (objSel) {
 			const element = objSel.node();
 			if (element) {
 				element.focus();
