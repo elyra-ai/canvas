@@ -420,7 +420,9 @@ class EditorForm extends React.Component {
 			return this.actionFactory.generateAction(key, uiItem.action);
 		case ("textPanel"):
 			if (uiItem.panel) {
-				return (<TextPanel key={"text-panel-" + key} panel={uiItem.panel} controller={this.props.controller} />);
+				return (<TextPanel key={"text-panel-" + key} panel={uiItem.panel} controller={this.props.controller}
+					shouldHideTextPanel={this.props.controller.hideTextPanel(uiItem.panel)}
+				/>);
 			}
 			return <div key={"unknown." + key}>Unknown: {uiItem.itemType}</div>;
 		default:
