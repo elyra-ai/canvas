@@ -4046,6 +4046,7 @@ export default class SVGCanvasRenderer {
 			joinedCommentGrps
 				.on(".drag", null);
 		}
+		this.logger.logEndTimer("updateComments");
 	}
 
 	// Attaches the appropriate listeners to the comment groups.
