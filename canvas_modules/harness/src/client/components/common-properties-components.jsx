@@ -59,6 +59,7 @@ import {
 	RADIOSET_VERTICAL_PROPS_INFO,
 	ONEOFSELECT_PROPS_INFO,
 	ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO,
+	ONEOFSELECT_CUSTOM_VALUE_ALLOW_FILTER_PROPS_INFO,
 	FORCED_RADIOSET_PROPS_INFO,
 	MULTISELECT_PROPS_INFO,
 	MULTISELECT_FILTERABLE_PROPS_INFO,
@@ -1385,6 +1386,27 @@ class CommonPropertiesComponents extends React.Component {
 							<pre className="harness-json-block">
 								{this.jsonReplacer(ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO.parameterDef, "custom",
 									["uihints", "parameter_info", "parameter_ref", "label", "description", "default", "custom_value_allowed"])}
+							</pre>
+						</div>
+					</div>
+					<p>When <span className="harness-highlight">should_filter_item</span> is specified in the uihints,
+						along with <span className="harness-highlight">custom_value_allowed</span>,
+						the dropdown list will be filtered based on the input value. This defaults to <span className="harness-highlight">false</span>.
+						This option is not available for dropdown controls within tables.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={ONEOFSELECT_CUSTOM_VALUE_ALLOW_FILTER_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(ONEOFSELECT_CUSTOM_VALUE_ALLOW_FILTER_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(ONEOFSELECT_CUSTOM_VALUE_ALLOW_FILTER_PROPS_INFO.parameterDef, "custom",
+									["uihints", "parameter_info", "parameter_ref", "label", "description", "default", "custom_value_allowed", "should_filter_item"])}
 							</pre>
 						</div>
 					</div>

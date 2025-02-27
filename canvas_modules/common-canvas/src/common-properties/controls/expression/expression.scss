@@ -50,7 +50,7 @@
 		}
 		.cm-activeLineGutter {
 			background-color: $text-placeholder;
-			color: $text-inverse;
+			color: $text-primary;
 		}
 		&.cm-focused .cm-selectionBackground, ::selection {
 			/* stylelint-disable-next-line declaration-no-important */
@@ -64,7 +64,7 @@
 		}
 	}
 
-	.cm-line .cm-keyword { color: $link-primary; }
+	.cm-line .cm-keyword { color: $link-secondary; }
 
 	.cm-line .cm-number { color: $text-secondary; }
 
@@ -79,7 +79,7 @@
 		color: $text-primary;
 	}
 
-	.cm-line .cm-string { color: $text-error; }
+	.cm-line .cm-string { color: $button-danger-active; }
 
 	.cm-line .cm-meta { color: $layer-01; }
 }

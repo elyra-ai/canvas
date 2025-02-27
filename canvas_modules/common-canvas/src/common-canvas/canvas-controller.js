@@ -1931,7 +1931,12 @@ export default class CanvasController {
 				this.canvasContents.focusOnCanvas();
 
 			} else {
-				this.getSVGCanvasD3().moveFocusTo(focusObj);
+				// The D3 rendering object may not exist for some sophisticated
+				// refresh scenarios, so check its existance first.
+				/* eslint no-lonely-if: "off" */
+				if (this.getSVGCanvasD3()) {
+					this.getSVGCanvasD3().moveFocusTo(focusObj);
+				}
 			}
 		}
 	}

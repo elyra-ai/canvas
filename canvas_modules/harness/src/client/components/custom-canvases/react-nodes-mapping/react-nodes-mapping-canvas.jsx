@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Elyra Authors
+ * Copyright 2023-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,7 @@ export default class ReactNodesMappingCanvas extends React.Component {
 			enableRaiseNodesToTopOnHover: false,
 			enableMarkdownInComments: true,
 			enableContextToolbar: true,
+			enableKeyboardNavigation: true,
 			tipConfig: {
 				palette: false,
 				nodes: false,
