@@ -167,6 +167,7 @@ class MultiSelectControl extends React.Component {
 					titleText={this.props.tableControl ? null : this.props.controlItem}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
+					aria-label={!this.props.control.labelVisible && this.props.control?.label?.text}
 				/>
 			);
 		} else {
@@ -183,6 +184,7 @@ class MultiSelectControl extends React.Component {
 					titleText={this.props.tableControl ? null : this.props.controlItem}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
+					aria-label={!this.props.control.labelVisible && this.props.control?.label?.text}
 				/>
 			);
 		}
