@@ -90,12 +90,21 @@ export default class SVGCanvasUtilsZoom {
 				.trackpad(this.ren.config.enableInteractionType === INTERACTION_TRACKPAD)
 				.preventBackGesture(true)
 				.wheelDelta((d3Event) => -d3Event.deltaY * (this.ren.config.enableInteractionType === INTERACTION_TRACKPAD ? 0.02 : 0.002))
-				.extent([[-500000, -50000], [50000, 50000]]) // Prevents spurious errors internal to D3 zoom.
+				.extent(this.extent)
 				.scaleExtent([this.minScaleExtent, this.maxScaleExtent])
 				.on("start", this.zoomStart.bind(this))
 				.on("zoom", this.zoomAction.bind(this))
 				.on("end", this.zoomEnd.bind(this));
 
+	}
+
+	// Returns the extent array of coordinates for the zoom behavior. Providing an
+	// extent seems to be necessary to prevent spurious errors occuring during
+	// asynchronous zooming and canvas refreshing operations even though this
+	// function returns what seems to be the default extent, see here:
+	// https://github.com/d3/d3-zoom/blob/c8df708b78b46553bc4a0fbf1baf4ffc10cef8bd/src/zoom.js#L17
+	extent() {
+		return [[0, 0], [this.width.baseVal.value, this.height.baseVal.value]];
 	}
 
 	// Saves the state when the user presses and holds the space bar. This
