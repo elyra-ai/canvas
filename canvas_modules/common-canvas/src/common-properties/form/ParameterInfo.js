@@ -168,6 +168,9 @@ export class ParameterDef {
 		if (toType(settings.customValueAllowed) === "boolean") {
 			this.customValueAllowed = settings.customValueAllowed;
 		}
+		if (toType(settings.shouldFilterItem) === "boolean") {
+			this.shouldFilterItem = settings.shouldFilterItem;
+		}
 		if (settings.className) {
 			this.className = settings.className;
 		}
@@ -390,6 +393,7 @@ export class ParameterDef {
 				"uionly": propertyOf(param)("uionly"),
 				"actionRef": propertyOf(uihint)("action_ref"),
 				"customValueAllowed": propertyOf(uihint)("custom_value_allowed"),
+				"shouldFilterItem": propertyOf(uihint)("should_filter_item"),
 				"className": propertyOf(uihint)("class_name"),
 				"helperText": propertyOf(uihint)("helper_text"),
 				"readOnly": propertyOf(uihint)("read_only")

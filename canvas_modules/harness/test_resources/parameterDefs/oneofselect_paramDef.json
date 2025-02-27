@@ -5,6 +5,7 @@
   "current_parameters": {
     "oneofselect": "blue",
     "oneofselect_custom_value": "custom",
+    "oneofselect_custom_value_no_filter": "custom no filter",
     "oneofselect_custom_value_null": null,
     "oneofselect_null": null,
     "oneofselect_empty_string": "",
@@ -49,6 +50,18 @@
     },
     {
       "id": "oneofselect_custom_value",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_custom_value_no_filter",
       "enum": [
         "red",
         "orange",
@@ -401,7 +414,19 @@
         "description": {
           "default": "oneofselect with option to enter a custom value"
         },
-        "custom_value_allowed": true
+        "custom_value_allowed": true,
+        "should_filter_item": true
+      },
+      {
+        "parameter_ref": "oneofselect_custom_value_no_filter",
+        "label": {
+          "default": "oneofselect custom value allowed, no filter"
+        },
+        "description": {
+          "default": "oneofselect with option to enter a custom value"
+        },
+        "custom_value_allowed": true,
+        "should_filter_item": false
       },
       {
         "parameter_ref": "oneofselect_custom_value_null",
@@ -706,6 +731,7 @@
         "parameter_refs": [
           "oneofselect",
           "oneofselect_custom_value",
+          "oneofselect_custom_value_no_filter",
           "oneofselect_custom_value_null",
           "oneofselect_custom_value_undefined",
           "oneofselect_null",
