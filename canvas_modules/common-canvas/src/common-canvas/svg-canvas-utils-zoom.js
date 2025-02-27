@@ -90,6 +90,7 @@ export default class SVGCanvasUtilsZoom {
 				.trackpad(this.ren.config.enableInteractionType === INTERACTION_TRACKPAD)
 				.preventBackGesture(true)
 				.wheelDelta((d3Event) => -d3Event.deltaY * (this.ren.config.enableInteractionType === INTERACTION_TRACKPAD ? 0.02 : 0.002))
+				.extent([[-500000, -50000], [50000, 50000]]) // Prevents spurious errors internal to D3 zoom.
 				.scaleExtent([this.minScaleExtent, this.maxScaleExtent])
 				.on("start", this.zoomStart.bind(this))
 				.on("zoom", this.zoomAction.bind(this))
