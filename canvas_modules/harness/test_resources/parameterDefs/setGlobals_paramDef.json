@@ -274,6 +274,7 @@
           {
             "id": "defaultOperationsText",
             "type": "textPanel",
+            "depends_on_ref": "defaultOperations",
             "label": {
               "resource_key": "defaultOperationsText.label"
             },
@@ -391,6 +392,76 @@
               }
             }
           ]
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "defaultMean"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "clear_first",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "defaultMin"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "clear_first",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "defaultMax"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "clear_first",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "defaultSDev"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "clear_first",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "defaultSum"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "clear_first",
+            "op": "equals",
+            "value": true
+          }
         }
       }
     }
