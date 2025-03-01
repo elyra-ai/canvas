@@ -116,7 +116,7 @@ expectType<void>(
 );
 
 expectType<void>(
-  canvasController.setNodeProperties("123", { id: "123", type: "execution_node", op: "xx", label: "Craig" })
+  canvasController.setNodeProperties("123", { label: "Craig", x_pos: 100, y_pos: 200 })
 );
 
 

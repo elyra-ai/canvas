@@ -33,7 +33,11 @@ import {
   CanvasInfo,
   CanvasPipeline,
   CanvasNode,
+  CanvasExecutionNode,
+  CanvasBindingEntryNode,
+  CanvasBindingExitNode,
   CanvasSupernode,
+  CanvasModelNode,
   CanvasPorts,
   CanvasBoundPorts,
   CanvasComment,
@@ -850,13 +854,20 @@ export declare class CanvasController {
   /**
    * Sets the node properties
    * @param nodeId - The ID of the node
-   * @param properties - An object containing properties to be over the node
+   * @param properties - A partial node object containing a sub-set of
+   *                     one or more properties, but not the 'id', to
+   *                     replace those in the node
    * @param pipelineId - Optional. The ID of the pipeline of the node.
    *                     Defaults to the currently displayed pipeline.
    */
   setNodeProperties(
     nodeId: string,
-    properties: Omit<Partial<CanvasNode>, "id">,
+    properties:
+      | Omit<Partial<CanvasExecutionNode>, "id">
+      | Omit<Partial<CanvasBindingEntryNode>, "id">
+      | Omit<Partial<CanvasBindingExitNode>, "id">
+      | Omit<Partial<CanvasSupernode>, "id">
+      | Omit<Partial<CanvasModelNode>, "id">,
     pipelineId?: string
   ): void;
   /**
