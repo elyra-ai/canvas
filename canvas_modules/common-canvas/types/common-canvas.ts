@@ -2587,7 +2587,7 @@ export interface CanvasConfig {
   dropZoneCanvasContent?: ReactNode;
   schemaValidation?: boolean;
   tipConfig?: {
-    palette?: boolean;
+    palette?: boolean | { categories: boolean, nodeTemplates: boolean};
     nodes?: boolean;
     ports?: boolean;
     links?: boolean;

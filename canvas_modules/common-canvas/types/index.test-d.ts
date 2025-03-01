@@ -125,7 +125,15 @@ expectType<CommonCanvas>(commonCanvasMinimal);
 
 const commonCanvasAll = new CommonCanvas({
   canvasController,
-  config: { enableLinkType: "Parallax" },
+  config: {
+    enableLinkType: "Parallax",
+    tipConfig: {
+      palette: {
+        categories: false,
+        nodeTemplates: true
+      }
+    }
+   },
   toolbarConfig: { leftBar: [], overrideAutoEnableDisable: true },
   notificationConfig: {
     action: "notification",
