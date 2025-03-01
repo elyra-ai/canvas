@@ -186,7 +186,8 @@ export default class ConfigUtils {
 			"enableDropZoneOnExternalDrag",
 			"enableStateTag",
 			"enablePaletteHeader",
-			"enableKeyboardNavigation"
+			"enableKeyboardNavigation",
+			"enableRightFlyoutDragToResize"
 		]);
 	}
 
