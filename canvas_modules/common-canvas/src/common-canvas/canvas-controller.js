@@ -1683,6 +1683,7 @@ export default class CanvasController {
 
 		} else if (!this.mouseInContextToolbar && !this.mouseInObject) {
 			this.objectModel.closeContextMenu();
+			this.restoreFocus();
 		}
 	}
 
