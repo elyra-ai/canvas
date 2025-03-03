@@ -65,6 +65,7 @@ class PasswordControl extends React.Component {
 					showPasswordLabel={showPasswordLabel}
 					hidePasswordLabel={hidePasswordLabel}
 					helperText={this.props.control.helperText}
+					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>);
