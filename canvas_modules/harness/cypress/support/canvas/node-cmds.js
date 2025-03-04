@@ -31,6 +31,16 @@ Cypress.Commands.add("pressEnterOnNode", (nodeLabel) => {
 		.trigger("keydown", keys.enter);
 });
 
+Cypress.Commands.add("pressCmndDownArrowOnNode", (nodeLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.trigger("keydown", keys.cmndDownArrow);
+});
+
+Cypress.Commands.add("pressShiftArrowOnNode", (nodeLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.trigger("keydown", keys.shiftDownArrow);
+});
+
 Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
 	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => {
@@ -169,12 +179,28 @@ Cypress.Commands.add("clickNode", (nodeName, posX, posY) => {
 	cy.getNodeWithLabel(nodeName).click(posX, posY);
 });
 
+Cypress.Commands.add("shiftClickNode", (nodeName) => {
+	cy.useShiftKey()
+		.then((shiftKey) => {
+			cy.get("body")
+				.type(shiftKey, { release: false });
+			cy.get("body")
+				.getNodeWithLabel(nodeName)
+				.click();
+
+			// Cancel the shift key press -- the documentation doesn't say
+			// this needs to be done but if it isn't the command key stays pressed down
+			// causing problems with subsequent selections.
+			cy.get("body")
+				.type(shiftKey, { release: true });
+		});
+});
 
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	cy.useCtrlOrCmdKey()
-		.then((selectedKey) => {
+		.then((cmndKey) => {
 			cy.get("body")
-				.type(selectedKey, { release: false });
+				.type(cmndKey, { release: false });
 			cy.get("body")
 				.getNodeWithLabel(nodeName)
 				.click();
@@ -183,7 +209,7 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 			// this needs to be done but if it isn't the command key stays pressed down
 			// causing problems with subsequent selections.
 			cy.get("body")
-				.type(selectedKey, { release: true });
+				.type(cmndKey, { release: true });
 		});
 });
 

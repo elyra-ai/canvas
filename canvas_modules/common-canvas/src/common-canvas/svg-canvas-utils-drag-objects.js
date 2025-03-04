@@ -24,7 +24,8 @@ import Logger from "../logging/canvas-logger.js";
 import KeyboardUtils from "./keyboard-utils.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import { SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING, LINK_SELECTION_DETACHABLE,
-	NORTH, SOUTH, EAST, WEST }
+	NORTH, SOUTH, EAST, WEST,
+	SINGLE_CLICK}
 	from "./constants/canvas-constants.js";
 
 // This utility files provides a drag handler which manages drag operations to move
@@ -165,7 +166,7 @@ export default class SVGCanvasUtilsDragObjects {
 		this.moveObjects(xInc, yInc, pagePos.x, pagePos.y);
 
 		this.endMove = setTimeout(() => {
-			this.endObjectsMoving(d, "click", false, false);
+			this.endObjectsMoving(d, false, false);
 		}, 500);
 	}
 
@@ -269,7 +270,7 @@ export default class SVGCanvasUtilsDragObjects {
 			this.nodeSizing = false;
 
 		} else {
-			this.endObjectsMoving(d, d3Event.type, d3Event.sourceEvent.shiftKey, KeyboardUtils.isMetaKey(d3Event.sourceEvent));
+			this.endObjectsMoving(d, d3Event.sourceEvent.shiftKey, KeyboardUtils.isMetaKey(d3Event.sourceEvent));
 		}
 
 		this.logger.logEndTimer("dragEndObject", true);
@@ -774,7 +775,7 @@ export default class SVGCanvasUtilsDragObjects {
 	// This happens either when the user releases the mouse button when
 	// dragging OR when the timeout value has expired when moving the
 	// object using the keyboard.
-	endObjectsMoving(d, eventType, range, augment) {
+	endObjectsMoving(d, range, augment) {
 
 		// Save a local reference to this.draggingObjectData so we can set it to null before
 		// calling the canvas-controller. This means the this.draggingObjectData object will
@@ -795,8 +796,7 @@ export default class SVGCanvasUtilsDragObjects {
 		// very much, we interpret that as a select on the object.
 		if (this.ren.config.enableDragWithoutSelect &&
 				CanvasUtils.isTinyMovement({ x: 0, y: 0 }, { x: draggingObjectData.dragOffsetX, y: draggingObjectData.dragOffsetY })) {
-			const objType = this.ren.activePipeline.getObjectTypeName(d);
-			this.ren.selectObject(eventType, d, objType, range, augment);
+			this.ren.selectObject(d, SINGLE_CLICK, range, augment);
 
 		} else {
 			if (draggingObjectData.dragRunningX !== 0 ||

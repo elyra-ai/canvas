@@ -18,9 +18,11 @@ describe("Test keyboard navigation", function() {
 	beforeEach(() => {
 		cy.viewport(1400, 650);
 		cy.visit("/");
-		cy.openCanvasPalette("modelerPalette.json");
+		cy.setCanvasConfig({
+			"selectedKeyboardNavigation": true,
+			"selectedResizableNodes": true
+		});
 		cy.openCanvasDefinition("allTypesCanvas.json");
-		cy.setCanvasConfig({ "selectedKeyboardNavigation": true });
 	});
 
 	it("Test tab through groups", function() {
@@ -44,8 +46,35 @@ describe("Test keyboard navigation", function() {
 		// Pressing enter on node should issue a double click which will open the right-flyout
 		cy.pressEnterOnNode("Binding (entry) node");
 		cy.verifyRightFlyoutPanelWidth(320);
-
-
 	});
 
+	it("Test a node can be moved with the keyboard.", function() {
+		// Put focus on node
+		cy.getNodeWithLabel("Binding (entry) node").click();
+
+		// Check original transform of node
+		cy.verifyNodeTransform("Binding (entry) node", 89, 100);
+
+		// Move node down with keyboard
+		cy.pressCmndDownArrowOnNode("Binding (entry) node");
+		cy.pressCmndDownArrowOnNode("Binding (entry) node");
+		cy.pressCmndDownArrowOnNode("Binding (entry) node");
+		cy.pressCmndDownArrowOnNode("Binding (entry) node");
+		cy.verifyNodeTransform("Binding (entry) node", 89, 140);
+	});
+
+	it("Test a node can be sized with the keyboard.", function() {
+		// Put focus on node
+		cy.getNodeWithLabel("Binding (entry) node").click();
+
+		// Check original size of node
+		cy.verifyNodeDimensions("Binding (entry) node", 70, 75);
+
+		// Size node downwards with keyboard
+		cy.pressShiftArrowOnNode("Binding (entry) node");
+		cy.pressShiftArrowOnNode("Binding (entry) node");
+		cy.pressShiftArrowOnNode("Binding (entry) node");
+		cy.pressShiftArrowOnNode("Binding (entry) node");
+		cy.verifyNodeDimensions("Binding (entry) node", 70, 115);
+	});
 });
