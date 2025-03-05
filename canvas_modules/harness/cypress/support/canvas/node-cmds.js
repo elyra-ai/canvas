@@ -186,6 +186,7 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 		.then((cmndKey) => {
 			cy.get("body")
 				.type(cmndKey, { release: false });
+			cy.wait(1000);
 			cy.get("body")
 				.getNodeWithLabel(nodeName)
 				.click();
