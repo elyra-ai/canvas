@@ -33,8 +33,8 @@ describe("Test node operations when enableDragWithoutSelect is true", function()
 		cy.verifyNodeIsSelected("Super node");
 		cy.verifyNumberOfSelectedObjects(1);
 
-		// cy.ctrlOrCmdClickNode("Binding (entry) node");
-		// cy.verifyNodeIsSelected("Super node");
+		cy.ctrlOrCmdClickNode("Binding (entry) node");
+		cy.verifyNodeIsSelected("Super node");
 		// cy.verifyNodeIsSelected("Binding (entry) node");
 		// cy.verifyNumberOfSelectedObjects(2);
 	});
