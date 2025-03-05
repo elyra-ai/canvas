@@ -463,7 +463,7 @@ Cypress.Commands.add("clickEllipsisIconOfSupernode", (supernodeName) => {
 	cy.getNodeWithLabel(supernodeName)
 		.find("> .d3-node-ellipsis-group")
 		.eq(0)
-		.click();
+		.click({ force: true });
 });
 
 Cypress.Commands.add("clickEllipsisIconOfSupernodeInSupernode", (supernodeName1, supernodeName2) => {
