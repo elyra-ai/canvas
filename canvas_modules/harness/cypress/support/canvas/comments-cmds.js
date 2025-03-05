@@ -91,9 +91,9 @@ Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 		// machine when enableDragWithoutSelect is set to true even though,
 		// for some reason, 'click()' works successfully on the local machine.
 		cy.get("@com")
-			.trigger("mousedown", 30, 30, { metaKey: true, which: 1, view: win });
+			.trigger("mousedown", "center", { metaKey: true, which: 1, view: win });
 		cy.get("@com")
-			.trigger("mouseup", 30, 30, { metaKey: true, which: 1, view: win });
+			.trigger("mouseup", "center", { metaKey: true, which: 1, view: win });
 	});
 });
 
@@ -105,9 +105,9 @@ Cypress.Commands.add("ctrlOrCmdClickCommentInSupernode", (commentText, supernode
 		// machine when enableDragWithoutSelect is set to true even though,
 		// for some reason, 'click()' works successfully on the local machine.
 		cy.get("@com")
-			.trigger("mousedown", 30, 30, { metaKey: true, which: 1, view: win });
+			.trigger("mousedown", "center", { metaKey: true, which: 1, view: win });
 		cy.get("@com")
-			.trigger("mouseup", 30, 30, { metaKey: true, which: 1, view: win });
+			.trigger("mouseup", "center", { metaKey: true, which: 1, view: win });
 	});
 });
 
