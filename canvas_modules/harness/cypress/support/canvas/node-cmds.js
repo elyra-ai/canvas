@@ -184,10 +184,9 @@ Cypress.Commands.add("shiftClickNode", (nodeName) => {
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	cy.useCtrlOrCmdKey()
 		.then((cmndKey) => {
-			cy.get("body").as("body");
-			cy.get("@body").type(cmndKey, { release: false });
-			cy.get("@body")
-				.getNodeWithLabel(nodeName)
+			cy.get("body")
+				.type(cmndKey, { release: false });
+			cy.getNodeWithLabel(nodeName)
 				.click();
 
 			// Cancel the command/ctrl key press -- the documentation doesn't say
