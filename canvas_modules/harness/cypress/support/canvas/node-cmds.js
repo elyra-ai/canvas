@@ -184,16 +184,21 @@ Cypress.Commands.add("shiftClickNode", (nodeName) => {
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	cy.useCtrlOrCmdKey()
 		.then((cmndKey) => {
-			cy.get("body")
-				.type(cmndKey, { release: false });
-			cy.getNodeWithLabel(nodeName)
-				.click();
+			cy.window().then((win) => {
+				cy.get("body")
+					.type(cmndKey, { release: false });
+				cy.getNodeWithLabel(nodeName).as("node");
+				cy.get("@node")
+					.trigger("mousedown", 30, 30, { metaKey: true, which: 1, view: win });
+				cy.get("@node")
+					.trigger("mouseup", 30, 30, { metaKey: true, which: 1, view: win });
 
-			// Cancel the command/ctrl key press -- the documentation doesn't say
-			// this needs to be done but if it isn't the command key stays pressed down
-			// causing problems with subsequent selections.
-			cy.get("body")
-				.type(cmndKey, { release: true });
+				// Cancel the command/ctrl key press -- the documentation doesn't say
+				// this needs to be done but if it isn't the command key stays pressed down
+				// causing problems with subsequent selections.
+				cy.get("body")
+					.type(cmndKey, { release: true });
+			});
 		});
 });
 
