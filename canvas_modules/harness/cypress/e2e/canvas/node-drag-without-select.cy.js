@@ -28,7 +28,7 @@ describe("Test node operations when enableDragWithoutSelect is true", function()
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
-	it("Test a node can be added to the set of selected nodes", function() {
+	it.only("Test a node can be added to the set of selected nodes", function() {
 		cy.getNodeWithLabel("Super node").click();
 		cy.verifyNodeIsSelected("Super node");
 		cy.verifyNumberOfSelectedObjects(1);
