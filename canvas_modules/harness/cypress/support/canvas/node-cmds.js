@@ -184,10 +184,9 @@ Cypress.Commands.add("shiftClickNode", (nodeName) => {
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	cy.useCtrlOrCmdKey()
 		.then((cmndKey) => {
-			cy.get("body")
-				.type(cmndKey, { release: false });
-			cy.wait(1000);
-			cy.get("body")
+			cy.get("body").as("body");
+			cy.get("@body").type(cmndKey, { release: false });
+			cy.get("@body")
 				.getNodeWithLabel(nodeName)
 				.click();
 
