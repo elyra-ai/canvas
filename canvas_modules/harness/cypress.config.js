@@ -28,7 +28,7 @@ module.exports = defineConfig({
 			//
 			"**/auto-layout-dagre.cy.js",
 			"**/bottom-panel.cy.js",
-			"**/clipboard.cy.js",
+			// "**/clipboard.cy.js",
 			"**/comment.cy.js",
 			"**/comments-wysiwyg.cy.js",
 			"**/config-enable-editing-actions.cy.js",

@@ -182,43 +182,31 @@ Cypress.Commands.add("shiftClickNode", (nodeName) => {
 });
 
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
-	cy.useCtrlOrCmdKey()
-		.then((cmndKey) => {
-			cy.window().then((win) => {
-				// cy.get("body")
-				// 	.type(cmndKey, { release: false });
-				cy.getNodeWithLabel(nodeName).as("node");
-				// We trigger mousedown and mouseup here instead of using 'click()'
-				// becasue this is needed to get this command to work on the build
-				// machine when enableDragWithoutSelect is set to true even though,
-				// for some reason, 'click()' works successfully on the local machine.
-				cy.get("@node")
-					.trigger("mousedown", 30, 30, { metaKey: true, which: 1, view: win });
-				cy.get("@node")
-					.trigger("mouseup", 30, 30, { metaKey: true, which: 1, view: win });
-
-				// Cancel the command/ctrl key press -- the documentation doesn't say
-				// this needs to be done but if it isn't the command key stays pressed down
-				// causing problems with subsequent selections.
-				// cy.get("body")
-				// 	.type(cmndKey, { release: true });
-			});
-		});
+	cy.window().then((win) => {
+		cy.getNodeWithLabel(nodeName).as("node");
+		// We trigger mousedown and mouseup here instead of using 'click()'
+		// becasue this is needed to get this command to work on the build
+		// machine when enableDragWithoutSelect is set to true even though,
+		// for some reason, 'click()' works successfully on the local machine.
+		cy.get("@node")
+			.trigger("mousedown", 30, 30, { metaKey: true, which: 1, view: win });
+		cy.get("@node")
+			.trigger("mouseup", 30, 30, { metaKey: true, which: 1, view: win });
+	});
 });
 
 Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) => {
-	cy.useCtrlOrCmdKey()
-		.then((selectedKey) => {
-			cy.get("body")
-				.type(selectedKey, { release: false });
-			cy.get("body")
-				.getNodeWithLabelInSupernode(nodeName, supernodeName)
-				.click();
-
-			// Cancel the command/ctrl key press
-			cy.get("body")
-				.type(selectedKey, { release: true });
-		});
+	cy.window().then((win) => {
+		cy.getNodeWithLabelInSupernode(nodeName, supernodeName).as("node");
+		// We trigger mousedown and mouseup here instead of using 'click()'
+		// becasue this is needed to get this command to work on the build
+		// machine when enableDragWithoutSelect is set to true even though,
+		// for some reason, 'click()' works successfully on the local machine.
+		cy.get("@node")
+			.trigger("mousedown", 30, 30, { metaKey: true, which: 1, view: win });
+		cy.get("@node")
+			.trigger("mouseup", 30, 30, { metaKey: true, which: 1, view: win });
+	});
 });
 
 // position parameter is optional
