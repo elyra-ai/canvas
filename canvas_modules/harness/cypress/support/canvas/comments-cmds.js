@@ -16,15 +16,14 @@
 /* eslint max-len: "off" */
 
 import CanvasUtils from "../../../../common-canvas/src/common-canvas/common-canvas-utils.js";
-import keys from "./key.js";
 
 Cypress.Commands.add("getCommentWithText", (commentText) =>
 	cy.get(getCommentGrpSelector())
 		.then((grpArray) => findGrpForText(grpArray, commentText)));
 
-Cypress.Commands.add("pressTabOnComment", (commentText) => {
+Cypress.Commands.add("pressOnComment", (commentText, keyObj) => {
 	cy.getCommentWithText(commentText)
-		.trigger("keydown", keys.tab);
+		.trigger("keydown", keyObj);
 });
 
 Cypress.Commands.add("getCommentWithTextInSubFlow", (commentText) =>

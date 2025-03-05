@@ -21,24 +21,9 @@ Cypress.Commands.add("getNodeWithLabel", (nodeLabel) => {
 		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));
 });
 
-Cypress.Commands.add("pressTabOnNode", (nodeLabel) => {
+Cypress.Commands.add("pressOnNode", (nodeLabel, keyObj) => {
 	cy.getNodeWithLabel(nodeLabel)
-		.trigger("keydown", keys.tab);
-});
-
-Cypress.Commands.add("pressEnterOnNode", (nodeLabel) => {
-	cy.getNodeWithLabel(nodeLabel)
-		.trigger("keydown", keys.enter);
-});
-
-Cypress.Commands.add("pressCmndDownArrowOnNode", (nodeLabel) => {
-	cy.getNodeWithLabel(nodeLabel)
-		.trigger("keydown", keys.cmndDownArrow);
-});
-
-Cypress.Commands.add("pressShiftArrowOnNode", (nodeLabel) => {
-	cy.getNodeWithLabel(nodeLabel)
-		.trigger("keydown", keys.shiftDownArrow);
+		.trigger("keydown", keyObj);
 });
 
 Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
