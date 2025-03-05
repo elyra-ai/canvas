@@ -86,15 +86,26 @@ function findGrpForText(grpArray, commentText) {
 Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 	// Get the os name to decide whether to click ctrl or cmd
 	cy.useCtrlOrCmdKey()
-		.then((selectedKey) => {
-			cy.get("body").type(selectedKey, { release: false });
-			cy.get("body").getCommentWithText(commentText)
-				.click();
-			// Cancel the command/ctrl key press -- the documentation doesn't say
-			// this needs to be done but if it isn't the command key stays pressed down
-			// causing problems with subsequent selections.
-			cy.get("body")
-				.type(selectedKey, { release: true });
+		.then((cmndKey) => {
+			cy.window().then((win) => {
+				cy.get("body")
+					.type(cmndKey, { release: false });
+				cy.getCommentWithText(commentText).as("com");
+				// We trigger mousedown and mouseup here instead of using 'click()'
+				// becasue this is needed to get this command to work on the build
+				// machine when enableDragWithoutSelect is set to true even though,
+				// for some reason, 'click()' works successfully on the local machine.
+				cy.get("@com")
+					.trigger("mousedown", 30, 30, { metaKey: true, which: 1, view: win });
+				cy.get("@com")
+					.trigger("mouseup", 30, 30, { metaKey: true, which: 1, view: win });
+
+				// Cancel the command/ctrl key press -- the documentation doesn't say
+				// this needs to be done but if it isn't the command key stays pressed down
+				// causing problems with subsequent selections.
+				cy.get("body")
+					.type(cmndKey, { release: true });
+			});
 		});
 });
 

@@ -21,16 +21,21 @@ module.exports = defineConfig({
 		},
 		baseUrl: "http://localhost:3001",
 		excludeSpecPattern: [
+			// This list can be used to disable test cases if necessary. This is
+			// useful when investigating problems that occur on the build machine
+			// but not on a local machine since it allows you to selectively
+			// disable some, or all, test cases for faster testing.
+			//
 			"**/auto-layout-dagre.cy.js",
 			"**/bottom-panel.cy.js",
-			// "**/clipboard.cy.js",
+			"**/clipboard.cy.js",
 			"**/comment.cy.js",
 			"**/comments-wysiwyg.cy.js",
 			"**/config-enable-editing-actions.cy.js",
 			"**/context-menu.cy.js",
 			"**/context-toolbar.cy.js",
 			"**/decorators.cy.js",
-			"**/drag.cy.js",
+			// "**/drag.cy.js",
 			"**/error-marker.cy.js",
 			"**/external-drag-drop.cy.js",
 			"**/extra-canvas.cy.js",
@@ -39,7 +44,6 @@ module.exports = defineConfig({
 			"**/link-replace.cy.js",
 			"**/links.cy.js",
 			"**/node-cardinalities.cy.js",
-			// "**/node-drag-without-select.cy.js",
 			"**/node-exit-binding-output.cy.js",
 			"**/node-insert-in-link.cy.js",
 			"**/node-labels.cy.js",
