@@ -21,14 +21,9 @@ Cypress.Commands.add("getNodeWithLabel", (nodeLabel) => {
 		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));
 });
 
-Cypress.Commands.add("pressTabOnNode", (nodeLabel) => {
+Cypress.Commands.add("pressOnNode", (nodeLabel, keyObj) => {
 	cy.getNodeWithLabel(nodeLabel)
-		.trigger("keydown", keys.tab);
-});
-
-Cypress.Commands.add("pressEnterOnNode", (nodeLabel) => {
-	cy.getNodeWithLabel(nodeLabel)
-		.trigger("keydown", keys.enter);
+		.trigger("keydown", keyObj);
 });
 
 Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
@@ -169,37 +164,49 @@ Cypress.Commands.add("clickNode", (nodeName, posX, posY) => {
 	cy.getNodeWithLabel(nodeName).click(posX, posY);
 });
 
-
-Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
-	cy.useCtrlOrCmdKey()
-		.then((selectedKey) => {
+Cypress.Commands.add("shiftClickNode", (nodeName) => {
+	cy.useShiftKey()
+		.then((shiftKey) => {
 			cy.get("body")
-				.type(selectedKey, { release: false });
+				.type(shiftKey, { release: false });
 			cy.get("body")
 				.getNodeWithLabel(nodeName)
 				.click();
 
-			// Cancel the command/ctrl key press -- the documentation doesn't say
+			// Cancel the shift key press -- the documentation doesn't say
 			// this needs to be done but if it isn't the command key stays pressed down
 			// causing problems with subsequent selections.
 			cy.get("body")
-				.type(selectedKey, { release: true });
+				.type(shiftKey, { release: true });
 		});
 });
 
-Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) => {
-	cy.useCtrlOrCmdKey()
-		.then((selectedKey) => {
-			cy.get("body")
-				.type(selectedKey, { release: false });
-			cy.get("body")
-				.getNodeWithLabelInSupernode(nodeName, supernodeName)
-				.click();
+Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
+	cy.window().then((win) => {
+		cy.getNodeWithLabel(nodeName).as("node");
+		// We trigger mousedown and mouseup here instead of using 'click()'
+		// becasue this is needed to get this command to work on the build
+		// machine when enableDragWithoutSelect is set to true even though,
+		// for some reason, 'click()' works successfully on the local machine.
+		cy.get("@node")
+			.trigger("mousedown", "center", { metaKey: true, which: 1, view: win });
+		cy.get("@node")
+			.trigger("mouseup", "center", { metaKey: true, which: 1, view: win });
+	});
+});
 
-			// Cancel the command/ctrl key press
-			cy.get("body")
-				.type(selectedKey, { release: true });
-		});
+Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) => {
+	cy.window().then((win) => {
+		cy.getNodeWithLabelInSupernode(nodeName, supernodeName).as("node");
+		// We trigger mousedown and mouseup here instead of using 'click()'
+		// becasue this is needed to get this command to work on the build
+		// machine when enableDragWithoutSelect is set to true even though,
+		// for some reason, 'click()' works successfully on the local machine.
+		cy.get("@node")
+			.trigger("mousedown", "center", { metaKey: true, which: 1, view: win });
+		cy.get("@node")
+			.trigger("mouseup", "center", { metaKey: true, which: 1, view: win });
+	});
 });
 
 // position parameter is optional
@@ -456,7 +463,7 @@ Cypress.Commands.add("clickEllipsisIconOfSupernode", (supernodeName) => {
 	cy.getNodeWithLabel(supernodeName)
 		.find("> .d3-node-ellipsis-group")
 		.eq(0)
-		.click();
+		.click({ force: true });
 });
 
 Cypress.Commands.add("clickEllipsisIconOfSupernodeInSupernode", (supernodeName1, supernodeName2) => {

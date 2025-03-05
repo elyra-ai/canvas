@@ -1324,6 +1324,9 @@ class App extends React.Component {
 		this.canvasController.log("Test Harness clickActionHandler");
 		this.canvasController.log("-------------------------------");
 
+		// Log in harness console for use by tests.
+		this.log("clickActionHandler", source);
+
 		// TODO - Logging causes the entire canvas to be refreshed. This can cause
 		// problems if the click action handler is called while common-canvas is
 		// in the middle of procssing an event. Preferably, common-canvas should be
