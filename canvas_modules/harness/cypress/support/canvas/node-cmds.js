@@ -185,8 +185,8 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	cy.useCtrlOrCmdKey()
 		.then((cmndKey) => {
 			cy.window().then((win) => {
-				cy.get("body")
-					.type(cmndKey, { release: false });
+				// cy.get("body")
+				// 	.type(cmndKey, { release: false });
 				cy.getNodeWithLabel(nodeName).as("node");
 				// We trigger mousedown and mouseup here instead of using 'click()'
 				// becasue this is needed to get this command to work on the build
@@ -200,8 +200,8 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 				// Cancel the command/ctrl key press -- the documentation doesn't say
 				// this needs to be done but if it isn't the command key stays pressed down
 				// causing problems with subsequent selections.
-				cy.get("body")
-					.type(cmndKey, { release: true });
+				// cy.get("body")
+				// 	.type(cmndKey, { release: true });
 			});
 		});
 });
