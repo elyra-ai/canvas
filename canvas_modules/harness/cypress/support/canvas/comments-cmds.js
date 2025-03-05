@@ -16,15 +16,14 @@
 /* eslint max-len: "off" */
 
 import CanvasUtils from "../../../../common-canvas/src/common-canvas/common-canvas-utils.js";
-import keys from "./key.js";
 
 Cypress.Commands.add("getCommentWithText", (commentText) =>
 	cy.get(getCommentGrpSelector())
 		.then((grpArray) => findGrpForText(grpArray, commentText)));
 
-Cypress.Commands.add("pressTabOnComment", (commentText) => {
+Cypress.Commands.add("pressOnComment", (commentText, keyObj) => {
 	cy.getCommentWithText(commentText)
-		.trigger("keydown", keys.tab);
+		.trigger("keydown", keyObj);
 });
 
 Cypress.Commands.add("getCommentWithTextInSubFlow", (commentText) =>
@@ -85,34 +84,31 @@ function findGrpForText(grpArray, commentText) {
 }
 
 Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
-	// Get the os name to decide whether to click ctrl or cmd
-	cy.useCtrlOrCmdKey()
-		.then((selectedKey) => {
-			cy.get("body").type(selectedKey, { release: false });
-			cy.get("body").getCommentWithText(commentText)
-				.click();
-			// Cancel the command/ctrl key press -- the documentation doesn't say
-			// this needs to be done but if it isn't the command key stays pressed down
-			// causing problems with subsequent selections.
-			cy.get("body")
-				.type(selectedKey, { release: true });
-		});
+	cy.window().then((win) => {
+		cy.getCommentWithText(commentText).as("com");
+		// We trigger mousedown and mouseup here instead of using 'click()'
+		// becasue this is needed to get this command to work on the build
+		// machine when enableDragWithoutSelect is set to true even though,
+		// for some reason, 'click()' works successfully on the local machine.
+		cy.get("@com")
+			.trigger("mousedown", "center", { metaKey: true, which: 1, view: win });
+		cy.get("@com")
+			.trigger("mouseup", "center", { metaKey: true, which: 1, view: win });
+	});
 });
 
 Cypress.Commands.add("ctrlOrCmdClickCommentInSupernode", (commentText, supernodeName) => {
-	// Get the os name to decide whether to click ctrl or cmd
-	cy.useCtrlOrCmdKey()
-		.then((selectedKey) => {
-			cy.get("body")
-				.type(selectedKey, { release: false });
-			cy.get("body")
-				.getCommentWithTextInSupernode(commentText, supernodeName)
-				.click();
-
-			// Cancel the command/ctrl key press
-			cy.get("body")
-				.type(selectedKey, { release: true });
-		});
+	cy.window().then((win) => {
+		cy.getCommentWithTextInSupernode(commentText, supernodeName).as("com");
+		// We trigger mousedown and mouseup here instead of using 'click()'
+		// becasue this is needed to get this command to work on the build
+		// machine when enableDragWithoutSelect is set to true even though,
+		// for some reason, 'click()' works successfully on the local machine.
+		cy.get("@com")
+			.trigger("mousedown", "center", { metaKey: true, which: 1, view: win });
+		cy.get("@com")
+			.trigger("mouseup", "center", { metaKey: true, which: 1, view: win });
+	});
 });
 
 Cypress.Commands.add("getNumberOfSelectedComments", () => {

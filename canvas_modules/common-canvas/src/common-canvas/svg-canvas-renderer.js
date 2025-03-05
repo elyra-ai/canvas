@@ -2143,16 +2143,16 @@ export default class SVGCanvasRenderer {
 
 					} else if (KeyboardUtils.selectObject(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						const type = this.canvasController.isSelected(d.id, this.activePipeline.id) ? DOUBLE_CLICK : SINGLE_CLICK;
-						this.selectObject(d, "node", type, false, false);
+						const clickType = this.canvasController.isSelected(d.id, this.activePipeline.id) ? DOUBLE_CLICK : SINGLE_CLICK;
+						this.selectObject(d, clickType);
 
 					} else if (KeyboardUtils.selectObjectAugment(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.selectObject(d, "node", SINGLE_CLICK, false, true);
+						this.selectObject(d, SINGLE_CLICK, false, true);
 
 					} else if (KeyboardUtils.selectObjectRange(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.selectObject(d, "node", SINGLE_CLICK, true, false);
+						this.selectObject(d, SINGLE_CLICK, true, false);
 
 					} else if (KeyboardUtils.sizeObjectUp(d3Event)) {
 						if (CanvasUtils.isNodeResizable(d, this.config)) {
@@ -2185,7 +2185,9 @@ export default class SVGCanvasRenderer {
 					} else if (KeyboardUtils.createLink(d3Event)) {
 						if (this.config.enableEditingActions) {
 							this.canvasController.autoSelectFocusObj(() =>
-								this.dragNewLinkUtils.createNewLinkFromSelections(), true); // true indicates "augment" the selection
+								this.dragNewLinkUtils.createNewLinkFromSelections(),
+							true, // true - "augment" the selection
+							true); // true - always do the autoselect (regardless of how enableDragWithSelect is set)
 						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
@@ -2195,7 +2197,7 @@ export default class SVGCanvasRenderer {
 						d3Event.stopPropagation();
 
 						if (!CanvasUtils.isSuperBindingNode(d)) {
-							this.selectObject(d, "node", SINGLE_CLICK_CONTEXTMENU);
+							this.selectObject(d, SINGLE_CLICK_CONTEXTMENU);
 
 							if (this.config.enableContextToolbar) {
 								this.addContextToolbar(d3Event, d, "node", CAUSE_KEYBOARD);
@@ -2267,8 +2269,8 @@ export default class SVGCanvasRenderer {
 						this.activePipeline.setTabGroupIndexForObj(d);
 						this.setFocusObject(d, d3Event);
 					}
-					const type = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
-					this.selectObjectD3Event(d3Event, d, "node", type);
+					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
+					this.selectObjectD3Event(d3Event, d, clickType);
 				}
 				this.logger.logEndTimer("Node Group - mouse down");
 			})
@@ -2294,7 +2296,7 @@ export default class SVGCanvasRenderer {
 					// With enableDragWithoutSelect set to true, the object for which the
 					// context menu is being requested needs to be implicitely selected.
 					if (this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d3Event, d, "node", SINGLE_CLICK_CONTEXTMENU);
+						this.selectObjectD3Event(d3Event, d, SINGLE_CLICK_CONTEXTMENU);
 					}
 					this.setFocusObject(d, d3Event);
 					if (!this.config.enableContextToolbar) {
@@ -2404,7 +2406,7 @@ export default class SVGCanvasRenderer {
 				// With enableDragWithoutSelect set to true, the object for which the
 				// context menu is being requested needs to be implicitely selected.
 				if (this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, node, "node", SINGLE_CLICK_CONTEXTMENU);
+					this.selectObjectD3Event(d3Event, node, SINGLE_CLICK_CONTEXTMENU);
 				}
 
 				this.openContextMenu(d3Event, "input_port", node, port);
@@ -2436,7 +2438,7 @@ export default class SVGCanvasRenderer {
 				// With enableDragWithoutSelect set to true, the object for which the
 				// context menu is being requested needs to be implicitely selected.
 				if (this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, node, "node", SINGLE_CLICK_CONTEXTMENU);
+					this.selectObjectD3Event(d3Event, node, SINGLE_CLICK_CONTEXTMENU);
 				}
 				this.openContextMenu(d3Event, "output_port", node, port);
 			});
@@ -2563,11 +2565,10 @@ export default class SVGCanvasRenderer {
 
 	// Adds the object passed in to the set of selected objects using
 	// the d3Event object passed in.
-	selectObjectD3Event(d3Event, d, objType, type) {
+	selectObjectD3Event(d3Event, d, clickType) {
 		this.selectObject(
 			d,
-			objType,
-			type,
+			clickType,
 			d3Event.shiftKey,
 			KeyboardUtils.isMetaKey(d3Event)
 		);
@@ -2576,25 +2577,11 @@ export default class SVGCanvasRenderer {
 	// Performs required action for when either a comment, node or link is selected.
 	// This may mean: simply selecting the object; or adding the object to the
 	// currently selected set of objects; or even toggling the object's selection
-	// off. This method also sends a SINGLE_CLICK action to the
-	// clickActionHandler callback in the host application.
-	selectObject(d, objectType, clickType, range = false, augment = false) {
-		this.canvasController.selectObject(d.id, range, augment, this.activePipeline.id);
-
-		// Even though the single click message below should be emitted
-		// from common canvas for comments, if we uncomment this line it prevents
-		// the double click event going to the comment group object. This seems
-		// to be a timing issue since the same problem is not evident with the
-		// similar code for the node group object.
-		// TODO - Issue 2465 - Find out why this problem occurs.
-		if (objectType === "node" || objectType === "link") {
-			this.canvasController.clickActionHandler({
-				clickType,
-				objectType,
-				id: d.id,
-				selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
-				pipelineId: this.activePipeline.id });
-		}
+	// off. This method also will result in call being made to the clickActionHandler
+	// callback in the host application.
+	selectObject(d, clickType, range = false, augment = false) {
+		this.canvasController.selectObjectWithClick(
+			d, clickType, this.activePipeline.id, range, augment);
 	}
 
 	// Displays a set of decorations on either a node or link object.
@@ -3106,7 +3093,7 @@ export default class SVGCanvasRenderer {
 			.on("mousedown", (d3Event) => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
-				this.selectObjectD3Event(d3Event, d, "node", SINGLE_CLICK_CONTEXTMENU);
+				this.selectObjectD3Event(d3Event, d, SINGLE_CLICK_CONTEXTMENU);
 
 				if (this.canvasController.isContextMenuDisplayed()) {
 					this.canvasController.closeContextMenu();
@@ -4130,19 +4117,19 @@ export default class SVGCanvasRenderer {
 
 					} else if (KeyboardUtils.selectObject(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						const type = this.canvasController.isSelected(d.id, this.activePipeline.id) ? DOUBLE_CLICK : SINGLE_CLICK;
-						this.selectObject(d, "comment", type, false, false);
+						const clickType = this.canvasController.isSelected(d.id, this.activePipeline.id) ? DOUBLE_CLICK : SINGLE_CLICK;
+						this.selectObject(d, clickType);
 
 					} else if (KeyboardUtils.selectObjectAugment(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.selectObject(d, "comment", SINGLE_CLICK, false, true);
+						this.selectObject(d, SINGLE_CLICK, false, true);
 
 					} else if (KeyboardUtils.displayContextOptions(d3Event)) {
 						// Don't let keypress go through to the Canvas otherwise the
 						// canvas context menu/toolbar will be opened.
 						d3Event.stopPropagation();
 
-						this.selectObject(d, "comment", SINGLE_CLICK_CONTEXTMENU);
+						this.selectObject(d, SINGLE_CLICK_CONTEXTMENU);
 
 						if (this.config.enableContextToolbar) {
 							this.addContextToolbar(d3Event, d, "comment", CAUSE_KEYBOARD);
@@ -4190,8 +4177,8 @@ export default class SVGCanvasRenderer {
 						this.activePipeline.setTabGroupIndexForObj(d);
 						this.setFocusObject(d, d3Event);
 					}
-					const type = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
-					this.selectObjectD3Event(d3Event, d, "comment", type);
+					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
+					this.selectObjectD3Event(d3Event, d, clickType);
 				}
 				this.logger.logEndTimer("Comment Group - mouse down");
 			})
@@ -4221,7 +4208,7 @@ export default class SVGCanvasRenderer {
 				// With enableDragWithoutSelect set to true, the object for which the
 				// context menu is being requested needs to be implicitely selected.
 				if (this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d, "comment", SINGLE_CLICK_CONTEXTMENU);
+					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK_CONTEXTMENU);
 				}
 				this.setFocusObject(d, d3Event);
 				if (!this.config.enableContextToolbar) {
@@ -4610,12 +4597,12 @@ export default class SVGCanvasRenderer {
 
 					} else if (KeyboardUtils.selectObject(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						const type = this.canvasController.isSelected(d.id, this.activePipeline.id) ? DOUBLE_CLICK : SINGLE_CLICK;
-						this.selectObject(d, "link", type, false, false);
+						const clickType = this.canvasController.isSelected(d.id, this.activePipeline.id) ? DOUBLE_CLICK : SINGLE_CLICK;
+						this.selectObject(d, clickType);
 
 					} else if (KeyboardUtils.selectObjectAugment(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.selectObject(d, "link", SINGLE_CLICK, false, true);
+						this.selectObject(d, SINGLE_CLICK, false, true);
 
 
 					} else if (KeyboardUtils.displayContextOptions(d3Event)) {
@@ -4624,7 +4611,7 @@ export default class SVGCanvasRenderer {
 						d3Event.stopPropagation();
 
 						if (this.config.enableLinkSelection !== "None") {
-							this.selectObject(d, "link", SINGLE_CLICK_CONTEXTMENU);
+							this.selectObject(d, SINGLE_CLICK_CONTEXTMENU);
 						}
 
 						if (this.config.enableContextToolbar) {
@@ -4709,8 +4696,8 @@ export default class SVGCanvasRenderer {
 					this.setFocusObject(d, d3Event);
 				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-					const type = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
-					this.selectObjectD3Event(d3Event, d, "link", type);
+					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
+					this.selectObjectD3Event(d3Event, d, clickType);
 				}
 				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
 			})
@@ -4722,7 +4709,7 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Link Group - context menu");
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-					this.selectObjectD3Event(d3Event, d, "link", SINGLE_CLICK_CONTEXTMENU);
+					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK_CONTEXTMENU);
 				}
 				this.setFocusObject(d, d3Event);
 				if (!this.config.enableContextToolbar) {
@@ -4821,7 +4808,7 @@ export default class SVGCanvasRenderer {
 			.on("mousedown", (d3Event, d) => {
 				this.logger.log("Link start handle - mouse down");
 				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d, "link", SINGLE_CLICK);
+					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK);
 				}
 				this.logger.log("Link end handle - finished mouse down");
 			});
@@ -4834,7 +4821,7 @@ export default class SVGCanvasRenderer {
 			.on("mousedown", (d3Event, d) => {
 				this.logger.log("Link end handle - mouse down");
 				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d, "link", SINGLE_CLICK);
+					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK);
 				}
 				this.logger.log("Link end handle - finished mouse down");
 			});
