@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-import keys from "./key.js";
-
 // Click the canvas at position {x,y}
 Cypress.Commands.add("clickCanvasAt", (x, y) => {
 	cy.get("#canvas-div-0").click(x, y);
 });
 
-
-Cypress.Commands.add("pressTabOnCanvas", () => {
-	cy.get("#canvas-div-0").trigger("keydown", keys.tab);
+Cypress.Commands.add("pressOnCanvas", (keyObj) => {
+	cy.get("#canvas-div-0").trigger("keydown", keyObj);
 });
-
 
 // Trigger mouse up and mouse down on the canvas at the position {x, y}.
 // This is sometimes needed in place of the clickCanvasAt method for test

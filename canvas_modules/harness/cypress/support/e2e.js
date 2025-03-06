@@ -17,6 +17,8 @@
 import "./properties/expression-editor-cmds";
 import "./properties/properties-cmds";
 import "./properties/properties-verification-cmds";
+
+import "./canvas/canvas-cmds";
 import "./canvas/comments-cmds";
 import "./canvas/context-menu-cmds";
 import "./canvas/context-toolbar-cmds";
@@ -24,13 +26,12 @@ import "./canvas/keyboard-cmds";
 import "./canvas/link-cmds";
 import "./canvas/node-cmds";
 import "./canvas/object-model-cmds";
+import "./canvas/palette-cmds";
 import "./canvas/test-harness-cmds";
 import "./canvas/toolbar-cmds";
 import "./canvas/text-toolbar-cmds";
 import "./canvas/utils-cmds";
 import "./canvas/verification-cmds";
-import "./canvas/operation-cmds";
-import "./canvas/palette-cmds";
 
 // turn off screenshots when running in headless mode.
 Cypress.Screenshot.defaults({

@@ -225,7 +225,11 @@ export default class SVGCanvasD3 {
 	}
 
 	moveFocusTo(focusObj) {
-		this.renderer.moveFocusTo(focusObj);
+		// The D3 rendering object may not exist for some sophisticated
+		// refresh scenarios, so check its existence first.
+		if (this.renderer) {
+			this.renderer.moveFocusTo(focusObj);
+		}
 	}
 
 	focusOnTextEntryElement(evt) {

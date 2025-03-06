@@ -56,6 +56,7 @@ import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObje
 import getContextMenuDefiniton from "./canvas-controller-menu-utils.js";
 import { get, isEmpty } from "lodash";
 import { CANVAS_FOCUS,
+	SINGLE_CLICK,
 	LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE,
 	SNAP_TO_GRID_NONE, SUPER_NODE, WYSIWYG, CAUSE_MOUSE, CAUSE_KEYBOARD
 } from "./constants/canvas-constants";
@@ -642,6 +643,26 @@ export default class CanvasController {
 
 	selectObject(objId, range, augment, pipelineId) {
 		this.objectModel.selectObject(objId, range, augment, pipelineId);
+	}
+
+	// Internal helper method.
+	// Performs required selection action for when either a comment, node or
+	// link is clicked (note: this may also apply when a keyboard shortcut
+	// simulates a click). This may mean: simply selecting the object; or adding
+	// the object to the currently selected set of objects; or even toggling
+	// the object's selection off, depending on the value for range or augment.
+	// This method also sends the appropriate clickType value to the
+	// clickActionHandler callback in the host application.
+	selectObjectWithClick(obj, clickType, pipelineId, range = false, augment = false) {
+		this.selectObject(obj.id, range, augment, pipelineId);
+
+		const objectType = CanvasUtils.getObjectTypeName(obj);
+		this.clickActionHandler({
+			clickType,
+			objectType,
+			id: obj.id,
+			selectedObjectIds: this.getSelectedObjectIds(),
+			pipelineId: pipelineId });
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1933,7 +1954,7 @@ export default class CanvasController {
 
 			} else {
 				// The D3 rendering object may not exist for some sophisticated
-				// refresh scenarios, so check its existance first.
+				// refresh scenarios, so check its existence first.
 				/* eslint no-lonely-if: "off" */
 				if (this.getSVGCanvasD3()) {
 					this.getSVGCanvasD3().moveFocusTo(focusObj);
@@ -1951,13 +1972,15 @@ export default class CanvasController {
 
 	// Checks to see if the current focus object is selected. If it is not selected
 	// this method auto-selects that object and ensures that the action function
-	// passed in (actionFn) is run immediately after the select has run. If the
-	// current focus object is already selected it just runs the action function.
+	// passed in (actionFn) is run immediately after the selection has run. If the
+	// current focus object is already selected and enableDragWithoutSelect is
+	// false or the 'always' parameter is true it just runs the action function.
 	// If augment is set to true the focus object will be added to the set of
 	// selected objects instead of replacing the current selections.
-	autoSelectFocusObj(actionFn, augment) {
+	autoSelectFocusObj(actionFn, augment, always) {
 		const focusObj = this.getFocusObject();
-		if (focusObj && focusObj !== CANVAS_FOCUS) {
+		if (focusObj && focusObj !== CANVAS_FOCUS &&
+				(always || !this.getCanvasConfig().enableDragWithoutSelect)) {
 			const pipelineId = this.getCurrentPipelineId();
 			if (!this.isFocusOnCanvas() && !this.isSelected(focusObj.id, pipelineId)) {
 				const fn = () => {
@@ -1965,7 +1988,7 @@ export default class CanvasController {
 					this.removeAfterUpdateCallback(fn);
 				};
 				this.addAfterUpdateCallback(fn);
-				this.selectObject(focusObj.id, false, augment, pipelineId);
+				this.selectObjectWithClick(focusObj, SINGLE_CLICK, pipelineId, false, augment);
 				return;
 			}
 		}
