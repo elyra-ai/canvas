@@ -115,7 +115,7 @@ describe("Test canvas controller methods", () => {
 
 		const canvasController = new CanvasController();
 		canvasController.setPipelineFlow(allTypesCanvas);
-		canvasController.deleteLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		canvasController.deleteLink(canvasController.getLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb"));
 		canvasController.setNodeDataLinkSrcInfo("a81684aa-9b09-4620-aa59-54035a5de913", "id8I6RH2V91XW", "outPort");
 
 		const pf = canvasController.getPipelineFlow();
