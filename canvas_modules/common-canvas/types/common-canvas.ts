@@ -2833,14 +2833,14 @@ export type GeneratorData = GeneratorActionCreateNode | null;
 export interface SelectionChangeHandlerData {
   selection: string[];
   selectedLinks: CanvasLink[];
-  selectedNodes: NodeTypeDef[];
-  selectedComments: CanvasLink[];
+  selectedNodes: CanvasNode[];
+  selectedComments: CanvasComment[];
   addedLinks: CanvasLink[];
-  addedNodes: NodeTypeDef[];
-  addedComments: unknown[];
+  addedNodes: CanvasNode[];
+  addedComments: CanvasComment[];
   deselectedLinks: CanvasLink[];
-  deselectedNodes: NodeTypeDef[];
-  deselectedComments: unknown[];
+  deselectedNodes: CanvasNode[];
+  deselectedComments: CanvasComment[];
   selectedPipelineId: string;
 }
 
