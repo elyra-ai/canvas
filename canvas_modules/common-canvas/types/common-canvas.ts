@@ -2676,7 +2676,7 @@ export interface CanvasConfig {
  * https://elyra-ai.github.io/canvas/03.02.02-toolbar-config/#toolbar-action-object-definition
  */
 export interface ToolbarActionItem {
-  action?: InternalAction | string;
+  action?:  string | InternalAction;
   label?: string | ReactNode;
   enable?: boolean;
   iconEnabled?: string | ReactNode;
