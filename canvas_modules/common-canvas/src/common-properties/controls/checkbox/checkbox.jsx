@@ -80,6 +80,7 @@ class CheckboxControl extends React.Component {
 						hideLabel={this.props.tableControl}
 						helperText={this.props.control.helperText}
 						readOnly={this.props.readOnly}
+						aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 					/>
 					{tooltipIcon}
 				</div>

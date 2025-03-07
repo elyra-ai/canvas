@@ -128,6 +128,7 @@ class CheckboxsetControl extends React.Component {
 					legendText={this.props.controlItem}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
+					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 				>
 					<div className={classNames("properties-checkboxset-container", this.props.messageInfo ? this.props.messageInfo.type : null)}>
 						{checkboxes}

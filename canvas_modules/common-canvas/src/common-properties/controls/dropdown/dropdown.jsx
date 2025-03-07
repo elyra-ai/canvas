@@ -260,6 +260,7 @@ class DropDown extends React.Component {
 					value={selection}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
+					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 				>
 					{ options }
 				</Select>
@@ -302,6 +303,7 @@ class DropDown extends React.Component {
 					titleText={this.props.controlItem}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
+					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 				/>
 			);
 		}
