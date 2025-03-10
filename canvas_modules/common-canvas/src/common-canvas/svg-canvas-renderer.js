@@ -4635,7 +4635,8 @@ export default class SVGCanvasRenderer {
 				const targetObj = d3Event.currentTarget;
 
 				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE ||
+						this.config.enableRaiseLinksToTopOnHover) {
 					this.raiseLinkToTop(targetObj);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}

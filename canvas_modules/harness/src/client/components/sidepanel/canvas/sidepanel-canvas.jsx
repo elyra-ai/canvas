@@ -822,6 +822,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableRaiseLinksToTopOnHover = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedRaiseLinksToTopOnHover" // Set ID to corresponding field in App.js state
+				labelText="Enable Raise Links To Top On Hover"
+				toggled={this.props.getStateValue("selectedRaiseLinksToTopOnHover")}
+				onToggle={(val) => this.setStateValue(val, "selectedRaiseLinksToTopOnHover")}
+			/>
+		</div>);
+
 		var enableAssocLinkCreation = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedAssocLinkCreation" // Set ID to corresponding field in App.js state
@@ -1730,6 +1739,8 @@ export default class SidePanelForms extends React.Component {
 					{enableStraightLinksAsFreeform}
 					{divider}
 					{enableLinkReplaceOnNewConnection}
+					{divider}
+					{enableRaiseLinksToTopOnHover}
 					{divider}
 					{enableAssocLinkCreation}
 					{divider}
