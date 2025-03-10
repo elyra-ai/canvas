@@ -1374,6 +1374,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#enableraiselinkstotoponhover" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableRaiseLinksToTopOnHover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enableassoclinkcreation" class="md-nav__link">
     <span class="md-ellipsis">
       enableAssocLinkCreation
@@ -3423,6 +3432,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#enableraiselinkstotoponhover" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableRaiseLinksToTopOnHover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enableassoclinkcreation" class="md-nav__link">
     <span class="md-ellipsis">
       enableAssocLinkCreation
@@ -3986,7 +4004,7 @@ and this is how it is specified to Common Canvas:
 <p>This config field was introduced to enforce the earlier Elyra Canvas behavior, where &ldquo;Straight&rdquo; links are automatically displayed as &ldquo;Freeform&rdquo;.</p>
 <div class="admonition warning">
 <p class="admonition-title">enableStraightLinksAsFreeform - deprecated</p>
-<p>This field is deprecated and will be removed in the next major Elyra Canvas version so it is recommeneded that applications using &ldquo;Straight&rdquo; links explicitely set <code>enableLinkMethod</code> to &ldquo;Freeform&rdquo; now because that will be mandatory when migrating to the next verion.</p>
+<p>This field is deprecated and will be removed in the next major Elyra Canvas version so it is recommeneded that applications using &ldquo;Straight&rdquo; links explicitely set <code>enableLinkMethod</code> to &ldquo;Freeform&rdquo; now because that will be mandatory when migrating to the next version.</p>
 </div>
 <h4 id="enablelinkselection"><strong>enableLinkSelection</strong><a class="headerlink" href="#enablelinkselection" title="Permanent link">&para;</a></h4>
 <p>This can be: &ldquo;None&rdquo;, &ldquo;LinkOnly&rdquo;, &ldquo;Handles&rdquo; or &ldquo;Detachable&rdquo;. The default is &ldquo;None&rdquo;. These have the following affect on the canvas:</p>
@@ -4013,6 +4031,8 @@ and this is how it is specified to Common Canvas:
 <h4 id="enablelinkreplaceonnewconnection"><strong>enableLinkReplaceOnNewConnection</strong><a class="headerlink" href="#enablelinkreplaceonnewconnection" title="Permanent link">&para;</a></h4>
 <p>This is a boolean. The default is false. If set to true, the user can drag a new connection to a target node, and if the input port on the target node has a maximum cardinality of one AND there is currently a connection to that port, the existing connection will be removed and the new connection is created; essentially this gesture replaces the existing link with the new one. If set to false the new connection will not be completed and the existing link will remain in place.</p>
 <p>When set to true and a link is replaced, Common Canvas will call the <code>beforeEditActionHandler</code> the <code>editActionHandler</code> callback functions, if either are provided by the host application, with a <code>data</code> object parameter with the <code>editType</code> field set to <code>"linkNodesAndReplace"</code>.</p>
+<h4 id="enableraiselinkstotoponhover"><strong>enableRaiseLinksToTopOnHover</strong><a class="headerlink" href="#enableraiselinkstotoponhover" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to false the links will be left in their original place in the DOM. If set to true, when the user moves the mouse cursor over a link, that link will be moved in the DOM so that the link appears on top of all nodes, links and comments. Raising links to the top is the standard behavior when <code>enableLinkSelection</code> is set to &ldquo;Handles&rdquo; or &ldquo;Detachable&rdquo; so for those settings this option is automatically set to <code>true</code>.</p>
 <h4 id="enableassoclinkcreation"><strong>enableAssocLinkCreation</strong><a class="headerlink" href="#enableassoclinkcreation" title="Permanent link">&para;</a></h4>
 <p>This is a Boolean. The default is <code>false</code>. If set to <code>true</code> it changes the nature of links that are created between nodes as follows:</p>
 <ul>
