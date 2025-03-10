@@ -402,7 +402,7 @@ export default class SvgCanvasTextArea {
 				} else if (this.foreignObjectComment) {
 					this.foreignObjectComment.style("height", this.textAreaHeight + "px");
 				}
-				this.activePipeline.getComment(data.id).height = this.textAreaHeight;
+				this.activePipeline.getComment(data.id).height = data.height;
 				this.displayCommentsCallback();
 				this.displayLinksCallback();
 			}
