@@ -337,7 +337,7 @@ class CanvasContents extends React.Component {
 		// Some apps want to stop the user accidentally clicking 'Return to previous flow'
 		// twice when the page take a moment to clear. So apply an appropriate class/style.
 		document.getElementsByClassName("return-to-previous")[0].classList?.add("clicked");
-		// this.props.canvasController.displayPreviousPipeline();
+		this.props.canvasController.displayPreviousPipeline();
 	}
 
 	setCanvasInfo() {
