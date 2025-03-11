@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,11 @@ describe("Test whether actions can be performed depending on enableEditingAction
 		cy.verifyOptionInContextMenu("Select all");
 		cy.verifyOptionNotInContextMenu("New comment");
 
+		// If a node is selected the context menu should have a 'Deselect all'.
+		cy.getNodeWithLabel("Execution node").click();
+		cy.rightClickToDisplayContextMenu(800, 25);
+		cy.verifyOptionInContextMenu("Deselect all");
+
 		// Display context menu for node. 'CMI: Open' should be in the menu but
 		// 'Disconnect' and 'Delete' should not since they will alter the canvas.
 		cy.getNodeWithLabel("Execution node").rightclick();
@@ -44,7 +49,6 @@ describe("Test whether actions can be performed depending on enableEditingAction
 
 		// Close the context menu.
 		cy.clickCanvasAt(1, 1);
-
 
 		// ---------------------------------------------------------------------- //
 		// Keyboard.

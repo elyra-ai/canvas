@@ -41,7 +41,7 @@ describe("Test of context menu", function() {
 
 		// Test the context menu is pushed upwards when user clicks near bottom of the page
 		cy.rightClickToDisplayContextMenu(1000, 500);
-		cy.verifyContextMenuPosition("1000px", "340px");
+		cy.verifyContextMenuPosition("1000px", "311px");
 
 		// Test the context menu is pushed to the left correctly even when the palette is open
 		cy.clickCanvasAt(1, 1);
