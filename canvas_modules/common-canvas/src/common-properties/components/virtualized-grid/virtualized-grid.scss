@@ -1,0 +1,278 @@
+/*
+ * Copyright 2025 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.properties-tanstack-grid.properties-vt {
+	position: relative;
+	overflow: auto;
+	width: 100%;
+	height: 100%;
+
+	table.properties-autosized-vt {
+		display: grid;
+		empty-cells: show;
+
+		thead.properties-grid-header {
+			display: grid;
+			position: sticky;
+			top: 0;
+			z-index: 1;
+			height: $spacing-07;
+
+			tr[data-role="properties-header-row"] {
+				background-color: $layer-accent-01;
+				display: flex;
+				width: 100%;
+
+				th.properties-autosized-vt-header {
+					@include type-style("productive-heading-01");
+					display: flex;
+					align-items: center;
+					justify-items: center;
+
+					&.properties-vt-column {
+						padding: 0 1rem;
+
+
+						.properties-vt-label-tip-icon {
+							width: 100%;
+
+							.properties-vt-info-icon-tip {
+								height: $spacing-05;
+								margin-left: $spacing-03;
+
+								.properties-vt-info-icon {
+									&:hover {
+										cursor: pointer;
+									}
+								}
+							}
+						}
+					}
+
+					&.sticky-column {
+						position: sticky;
+						left: 0;
+						z-index: 1;
+					}
+
+					.resizable-header {
+						padding: 0 $spacing-05;
+						width: 100%;
+						user-select: none;
+						text-align: left;
+					}
+				}
+			}
+		}
+		// // Table rows container
+		// > div[role="rowgroup"] {
+		// 	&:focus {
+		// 		outline-style: none;
+		// 	}
+		// }
+
+		// .properties-vt-row-disabled {
+		// 	opacity: 0.5;
+		// 	&:hover {
+		// 		border-bottom: 1px solid $layer-accent-01;
+		// 	}
+		// }
+	}
+
+	.properties-vt-header-checkbox {
+		height: $spacing-07;
+		display: flex;
+		align-items: center;
+		margin-left: $spacing-05;
+		margin-right: $spacing-02;
+	}
+
+	
+
+	div[data-role="properties-data-row"] {
+		background-color: $layer-02;
+	}
+
+	.properties-autosized-vt-header {
+		// Override text-transform: uppercase from .ReactVirtualized__Table__headerRow
+		text-transform: none;
+		margin-left: 0;
+		.properties-vt-column .cds--checkbox-wrapper {
+			margin-top: 0;
+			margin-bottom: 0;
+			.cds--checkbox-label {
+				width: 100%;
+
+				span {
+					@include type-style("productive-heading-01");
+					color: $text-primary;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+					width: 100%;
+					line-height: unset;
+				}
+			}
+		}
+	}
+
+	.properties-vt-column-with-resize, .properties-vt-column-without-resize {
+		display: inline-flex;
+		width: 100%;
+	}
+
+	.properties-vt-column-with-resize {
+		.properties-vt-header-resize {
+			flex: 0 0 $spacing-02;
+			z-index: 2;
+			cursor: col-resize;
+		}
+		.properties-vt-header-resize:hover {
+			background-color: $button-secondary-active;
+		}
+
+		.properties-vt-header-resize-active {
+			z-index: 3;
+		}
+		&:hover {
+			background-color: $layer-active-01;
+			.properties-vt-header-resize {
+				background-color: $button-secondary-active;
+			}
+		}
+	}
+
+
+	.properties-vt-row-checkbox {
+		margin-left: $spacing-05;
+		margin-right: $spacing-02;
+	}
+
+	.properties-vt-double-click:first-of-type {
+		.properties-vt-row-class {
+			border-top: 1px solid transparent;
+			&.properties-vt-row-selected {
+				border-top: 1px solid $layer-accent-hover-01;
+			}
+		}
+	}
+
+	.properties-vt-row-class {
+		line-height: 20px;
+		border-bottom: 1px solid $layer-accent-01;
+
+		&:hover:not(.properties-vt-row-non-interactive):not(.properties-vt-row-selected) {
+			// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
+			background-color: $layer-hover-01;
+		}
+
+		.properties-table-cell-control {
+			// Required for numberfields within react-virtualized table cell
+			.properties-numberfield {
+				input {
+					margin-bottom: 5px;
+				}
+			}
+
+			// Required for textarea to be visible in a table cell
+			.properties-textarea textarea {
+				resize: none;
+				height: 42px;
+				min-width: 100%;
+			}
+		}
+
+		// Required to position the warning/error icons correctly within react-virtualized table cell
+		.ReactVirtualized__Table__headerColumn {
+			margin-right: 0;
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			height: 100%;
+		}
+
+		.ReactVirtualized__Table__rowColumn {
+			margin-right: 0; // Align cell text with header label
+			margin-left: 0;
+		}
+
+		.ReactVirtualized__Table__sortableHeaderColumn {
+			.properties-vt-label-tip-icon {
+				padding-right: $spacing-03; // spacing between column label and sort icon
+			}
+			&:hover {
+				background-color: $layer-active-01;
+			}
+		}
+
+		.ReactVirtualized__Table__headerTruncatedText {
+			flex: auto;
+		}
+	}
+
+	.properties-vt-row-selected {
+		background-color: $layer-selected-01;
+		border-bottom: 1px solid $layer-accent-hover-01;
+		&:hover {
+			background-color: $layer-accent-hover-01;
+		}
+	}
+
+	.properties-vt-single-selection {
+		// Table header
+		div[data-role="properties-header-row"] {
+			padding-left: 3px;
+		}
+
+		// Table rows
+		.properties-vt-row-class {
+			padding-left: 3px;
+		}
+		.properties-vt-row-selected {
+			border-left: $spacing-02 solid $button-primary;
+			padding-left: 0;
+			&:not(.properties-vt-row-disabled):hover {
+				border-left: $spacing-02 solid $button-primary;
+			}
+		}
+	}
+
+	.properties-vt-small-loading svg {
+		stroke: $button-primary; // Override carbon's small Loading color.
+	}
+
+	// Required for Autosizer in VirtualizedTable to set a height and width
+	.properties-vt-autosizer {
+		height: 100%;
+		width: 100%;
+	}
+
+	.properties-light-disabled {
+		div[data-role="properties-data-row"] {
+			background-color: $layer-01;
+		}
+		.cds--select--inline .cds--select-input[disabled] {
+			background-color: $background;
+		}
+	}
+
+	.properties-ft-column-sort-icon {
+		flex: 0 0 $spacing-05;
+		align-self: center;
+		height: $spacing-05;
+		margin-right: $spacing-03; // spacing between sort icon and end of column
+	}
+}
