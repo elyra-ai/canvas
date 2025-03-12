@@ -17,7 +17,7 @@
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table"; // getSortedRowModel
 import { defaultRangeExtractor, useVirtualizer } from "@tanstack/react-virtual";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import { v4 as uuid4 } from "uuid";
@@ -38,6 +38,10 @@ const DEFAULT_COLUMN_WIDTH = 120;
 const DEFAULT_ROW_HEIGHT = 32; // $spacing-07
 
 const VirtualizedGrid = (props) => {
+	const [isOverSelectOption, setIsOverSelectOptionState] = useState(false);
+	const [mouseEventCalled, setMouseEventCalledState] = useState(false);
+	const [keyBoardEventCalled, setKeyBoardEventCalledState] = useState(false);
+	const [lastChecked, setLastCheckedState] = useState(isEmpty(props.rowsSelected) ? null : props.rowsSelected.slice(-1).pop());
 	const uuid = uuid4();
 
 	const parentRef = useRef(null);
@@ -45,12 +49,7 @@ const VirtualizedGrid = (props) => {
 		count: props.rowCount,
 		getScrollElement: () => parentRef.current,
 		estimateSize: () => DEFAULT_ROW_HEIGHT,
-		overscan: 5,
-		rangeExtractor: React.useCallback((range) => { // Always return the header row
-			const next = [...defaultRangeExtractor(range)];
-			const nextOrder = next.sort((a, b) => a - b);
-			return nextOrder[0] !== 0 ? [0, ...nextOrder] : nextOrder;
-		}, [0])
+		overscan: 5
 	});
 
 	const columnVirtualizer = useVirtualizer({
@@ -58,12 +57,7 @@ const VirtualizedGrid = (props) => {
 		getScrollElement: () => parentRef.current,
 		estimateSize: (colIdx) => DEFAULT_COLUMN_WIDTH, // props.columns[colIdx].width ||
 		horizontal: true,
-		overscan: 3,
-		rangeExtractor: React.useCallback((range) => { // Always return the first column
-			const next = [...defaultRangeExtractor(range)];
-			const nextOrder = next.sort((a, b) => a - b);
-			return nextOrder[0] !== 0 ? [0, ...nextOrder] : nextOrder;
-		}, [0])
+		overscan: 3
 	});
 
 	const columns = React.useMemo(() => {
@@ -139,6 +133,66 @@ const VirtualizedGrid = (props) => {
 		return checkbox;
 	};
 
+	const renderDataRowCheckbox = (rowIndex, rowData) => {
+		if (props.summaryTable) {
+			return <div className="properties-vt-row-checkbox" />;
+		}
+
+		let selectOption = "";
+		if (props.selectable && props.rowSelection !== ROW_SELECTION.SINGLE) {
+			const rowSelected = props.sortDirection ? isRowSelected(rowData.index) : isRowSelected(rowData.originalRowIndex); // use current row index when Sorted
+			const rowDisabled = typeof rowData.disabled === "boolean" ? rowData.disabled : false;
+			const translatedRowCheckboxLabel = props.intl.formatMessage(
+				{ id: "virtualizedTable.row.checkbox.label", defaultMessage: defaultMessages["virtualizedTable.row.checkbox.label"] },
+				{ row_index: rowIndex + 1, table_label: (props.tableLabel ? props.tableLabel : "") }
+			);
+
+			selectOption = (<div className="properties-vt-row-checkbox"
+				role="gridcell"
+				onMouseEnter={(evt) => overSelectOption(evt)}
+				onMouseLeave={(evt) => overSelectOption(evt)}
+				onFocus={(evt) => overSelectOption(evt)}
+				onBlur={(evt) => overSelectOption(evt)}
+				onKeyDown={(evt) => {
+					if (evt.code === "Space" || evt.code === "Enter") {
+						onRowClick(evt, rowIndex, rowData);
+					}
+				}}
+			>
+				<Checkbox
+					id={`properties-vt-row-cb-${uuid}-${props.scrollKey}-${rowIndex}`}
+					key={`properties-vt-row-cb-${props.scrollKey}-${rowIndex}`}
+					labelText={translatedRowCheckboxLabel}
+					hideLabel
+					checked={rowSelected}
+					disabled={rowDisabled}
+					readOnly={props.readOnly}
+				/>
+			</div>);
+		}
+		return selectOption;
+	};
+
+	const overSelectOption = (evt) => {
+		// Incase of readonly table disable all events
+		if (!props.readOnly) {
+			// Differentiate between mouse and keyboard event
+			if (evt.type === "mouseenter" && !keyBoardEventCalled) {
+				setMouseEventCalledState(true);
+				setIsOverSelectOptionState(true);
+			} else if (evt.type === "mouseleave" && mouseEventCalled) {
+				setMouseEventCalledState(false);
+				setIsOverSelectOptionState(false);
+			} else if (evt.type === "focus" && !mouseEventCalled) {
+				setKeyBoardEventCalledState(true);
+				setIsOverSelectOptionState(!isOverSelectOption); // TODO test
+			} else if (evt.type === "blur" && keyBoardEventCalled) {
+				setKeyBoardEventCalledState(false);
+				setIsOverSelectOptionState(!isOverSelectOption); // TODO test
+			}
+		}
+	};
+
 	const tableHeader = (groups) => (<thead className="properties-grid-header">
 		{groups.map((headerGroup) => {
 			const columnItems = columnVirtualizer.getVirtualItems();
@@ -203,16 +257,16 @@ const VirtualizedGrid = (props) => {
 			: [0, 0];
 		const excess = after + props.excessWidth;
 
-		return (<tbody key="canvas-grid-body-key" className="canvas-grid-body" style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
+		return (<tbody key="properties-grid-body-key" className="properties-grid-body" style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
 			{rowItems.map((virtualRow) => {
 				const row = tableRows[virtualRow.index];
-				let rowData = null;
+				const originalRowIndex = props.getOriginalRowIndex(row.original, virtualRow.index);
 
 				const visibleCells = row.getVisibleCells();
-				rowData = columnItems.map((virtualColumn) => {
+				const rowData = columnItems.map((virtualColumn) => {
 					const cell = visibleCells[virtualColumn.index];
-					return (<td key={`canvas-grid-row-${virtualRow.index}-${virtualColumn.index}`}
-						className={classNames("canvas-grid-body-row-cell", { "sticky-column": virtualColumn.index === 0 })}
+					return (<td key={`properties-grid-row-${virtualRow.index}-${virtualColumn.index}`}
+						className={classNames("properties-grid-body-row-cell")}
 						style={{
 							minHeight: DEFAULT_ROW_HEIGHT,
 							width: Math.max(colSizes[virtualColumn.index], props.columns[virtualColumn.index].width)
@@ -221,14 +275,23 @@ const VirtualizedGrid = (props) => {
 						{cell.getValue()}
 					</td>);
 				});
+				rowData.originalRowIndex = originalRowIndex;
 
-				return (<tr key={`canvas-grid-body-row-${virtualRow.index}}`}
-					className="canvas-grid-body-row"
+				return (<tr key={`properties-grid-body-row-${virtualRow.index}}`}
+					className={classNames("properties-grid-body-row properties-vt-double-click",
+						// { "properties-vt-row-selected": selectedRow },
+						// { "properties-vt-row-disabled": rowDisabled },
+						{ "properties-vt-row-non-interactive": !props.selectable } // ReadonlyTable with single row selection is non-interactive.
+					)}
+					data-role="properties-data-row"
 					style={{ transform: `translateY(${virtualRow.start}px)` }}
+					onMouseDown={(evt) => onRowClick(evt, virtualRow.index, rowData)}
+					onDoubleClick={(evt) => onRowDoubleClick(evt, rowData.rowKey, virtualRow.index)}
 				>
-					<td key={`canvas-grid-body-row-${virtualRow.index}-fake-col-start`} className="canvas-grid-fake-col" style={{ width: `${before}px` }} />
+					<td key={`properties-grid-body-row-${virtualRow.index}-fake-col-start`} className="properties-grid-fake-col" style={{ width: `${before}px` }} />
+					{renderDataRowCheckbox(virtualRow.index, rowData)}
 					{rowData}
-					<td key={`canvas-grid-body-row-${virtualRow.index}-fake-col-end`} className="canvas-grid-fake-col" style={{ width: `${excess}px` }} />
+					<td key={`properties-grid-body-row-${virtualRow.index}-fake-col-end`} className="properties-grid-fake-col" style={{ width: `${excess}px` }} />
 				</tr>);
 			})}
 		</tbody>);
@@ -260,39 +323,39 @@ const VirtualizedGrid = (props) => {
 	// 	</div>);
 	// };
 
-	// const onRowClick = (evt, rowIndex, rowData) => {
-	// 	if (evt.target.className === "cds--select-option") {
-	// 		evt.stopPropagation(); // stop propagation when selecting dropdown select options within table rows
-	// 	} else {
-	// 		// Set selections
-	// 		const selected = !isRowSelected(rowData.originalRowIndex);
-	// 		if (typeof props.setRowsSelected === "function") {
-	// 			props.setRowsSelected({
-	// 				"index": rowIndex,
-	// 				"originalRowIndex": rowData.originalRowIndex,
-	// 				"selected": selected,
-	// 				"isOverSelectOption": isOverSelectOption,
-	// 				"selectMultipleRows": evt.shiftKey ? evt.shiftKey : false,
-	// 				"lastCheckedRow": lastChecked === null ? 0 : lastChecked }, evt);
+	const onRowClick = (evt, rowIndex, rowData) => {
+		if (evt.target.className === "cds--select-option") {
+			evt.stopPropagation(); // stop propagation when selecting dropdown select options within table rows
+		} else { // TODO
+			// Set selections
+			const selected = !isRowSelected(rowData.originalRowIndex);
+			if (typeof props.setRowsSelected === "function") {
+				props.setRowsSelected({
+					"index": rowIndex,
+					"originalRowIndex": rowData.originalRowIndex,
+					"selected": selected,
+					"isOverSelectOption": isOverSelectOption,
+					"selectMultipleRows": evt.shiftKey ? evt.shiftKey : false,
+					"lastCheckedRow": lastChecked === null ? 0 : lastChecked }, evt);
 
-	// 			// Track lastChecked row for shift key selection
-	// 			lastChecked = rowData.index;
-	// 		}
-	// 	}
-	// };
+				// Track lastChecked row for shift key selection
+				setLastCheckedState(rowData.index);
+			}
+		}
+	};
 
-	// const onRowDoubleClick = (evt, rowKey, index) => {
-	// 	if (props.onRowDoubleClick) {
-	// 		props.onRowDoubleClick(evt, rowKey, index);
-	// 	}
-	// };
+	const onRowDoubleClick = (evt, rowKey, index) => {
+		if (props.onRowDoubleClick) {
+			props.onRowDoubleClick(evt, rowKey, index);
+		}
+	};
 
-	// const isRowSelected = (index) => {
-	// 	if (props.rowsSelected) {
-	// 		return props.rowsSelected.indexOf(index) > -1;
-	// 	}
-	// 	return false;
-	// };
+	const isRowSelected = (index) => {
+		if (props.rowsSelected) {
+			return props.rowsSelected.indexOf(index) > -1;
+		}
+		return false;
+	};
 
 	// const isLastColumn = (dataKey) => {
 	// 	const columnIndex = getColumnIndex(props.columns, dataKey);
@@ -333,6 +396,7 @@ VirtualizedGrid.propTypes = {
 		PropTypes.number.isRequired
 	]),
 	onRowDoubleClick: PropTypes.func,
+	getOriginalRowIndex: PropTypes.func,
 	rowsSelected: PropTypes.array, // Required if selectable is true
 	checkedAll: PropTypes.bool, // Required if selectable is true
 	setRowsSelected: PropTypes.func, // Required if selectable is true

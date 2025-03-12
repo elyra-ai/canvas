@@ -21,6 +21,7 @@
 	height: 100%;
 
 	table.properties-autosized-vt {
+		@include type-style("productive-heading-01");
 		display: grid;
 		empty-cells: show;
 
@@ -35,6 +36,14 @@
 				background-color: $layer-accent-01;
 				display: flex;
 				width: 100%;
+
+				.properties-vt-header-checkbox {
+					height: $spacing-07;
+					display: flex;
+					align-items: center;
+					margin-left: $spacing-05;
+					margin-right: $spacing-02;
+				}
 
 				th.properties-autosized-vt-header {
 					@include type-style("productive-heading-01");
@@ -90,42 +99,73 @@
 		// 		border-bottom: 1px solid $layer-accent-01;
 		// 	}
 		// }
-	}
 
-	.properties-vt-header-checkbox {
-		height: $spacing-07;
-		display: flex;
-		align-items: center;
-		margin-left: $spacing-05;
-		margin-right: $spacing-02;
-	}
+		tbody.properties-grid-body {
+			display: grid;
+			position: relative;
 
-	
-
-	div[data-role="properties-data-row"] {
-		background-color: $layer-02;
-	}
-
-	.properties-autosized-vt-header {
-		// Override text-transform: uppercase from .ReactVirtualized__Table__headerRow
-		text-transform: none;
-		margin-left: 0;
-		.properties-vt-column .cds--checkbox-wrapper {
-			margin-top: 0;
-			margin-bottom: 0;
-			.cds--checkbox-label {
+			tr.properties-grid-body-row {
+				@include type-style("body-short-01");
+				background-color: $layer-02;
+				display: flex;
+				position: absolute;
+				height: $spacing-07;
 				width: 100%;
 
-				span {
-					@include type-style("productive-heading-01");
-					color: $text-primary;
-					text-overflow: ellipsis;
-					white-space: nowrap;
-					overflow: hidden;
-					width: 100%;
-					line-height: unset;
+				&:hover:not(.properties-vt-row-non-interactive):not(.properties-vt-row-selected) {
+					// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
+					background-color: $layer-hover-01;
+				}
+
+				&.properties-vt-double-click {
+
+				}
+
+				.properties-vt-row-checkbox {
+					margin-left: $spacing-05;
+					margin-right: $spacing-02;
+					align-content: center;
+				}
+
+				.properties-grid-body-row-cell, .properties-grid-fake-col {
+					display: flex;
+					border-top: 1px solid $layer-accent-01;
+					align-items: center;
+
+					// This class is set by other controls using FlexibleTable
+					// All cell stylings are be done in their respective controls
+					.properties-table-cell-control {
+						width: 100%;
+					}
+
+					// TODO sticky checkboxes?
+					// &.sticky-column {
+					// 	position: sticky;
+					// 	left: 0;
+					// 	z-index: 1;
+					// }
+
+					// .table-column-cells {
+					// 	padding: 0 $spacing-05;
+					// 	user-select: none;
+					// 	width: 100%;
+					// 	line-height: $spacing-07;
+					// 	height: $spacing-07; // Required for displaying empty/missing values
+
+					// 	// Display cell text in tooltip if it does not fit within the space available
+					// 	.tooltip-trigger {
+					// 		white-space: nowrap;
+					// 		overflow: hidden;
+					// 		text-overflow: ellipsis;
+					// 	}
+
+					// 	&.selected {
+					// 		background: $link-inverse;
+					// 	}
+					// }
 				}
 			}
+
 		}
 	}
 
@@ -156,10 +196,7 @@
 	}
 
 
-	.properties-vt-row-checkbox {
-		margin-left: $spacing-05;
-		margin-right: $spacing-02;
-	}
+
 
 	.properties-vt-double-click:first-of-type {
 		.properties-vt-row-class {

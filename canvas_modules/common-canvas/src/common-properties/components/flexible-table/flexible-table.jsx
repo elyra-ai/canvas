@@ -89,14 +89,18 @@ class FlexibleTable extends React.Component {
 				this.updateHeaderHeight(entry.contentRect);
 			}
 		});
-		this.headerObserver.observe(this.flexibleTableHeader.current);
+		if (this.flexibleTableHeader.current) {
+			this.headerObserver.observe(this.flexibleTableHeader.current);
+		}
 
 		this.resizeObserver = new ResizeObserver((entries) => {
 			for (const entry of entries) {
 				this._updateTableWidth(entry.contentRect);
 			}
 		});
-		this.resizeObserver.observe(this.tableRef.current);
+		if (this.tableRef.current) {
+			this.resizeObserver.observe(this.tableRef.current);
+		}
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -127,8 +131,8 @@ class FlexibleTable extends React.Component {
 
 	componentWillUnmount() {
 		// window.removeEventListener("resize", this._adjustTableHeight);
-		this.headerObserver.disconnect();
-		this.resizeObserver.disconnect();
+		this.headerObserver?.disconnect();
+		this.resizeObserver?.disconnect();
 	}
 
 	onSort({ sortBy }) {
@@ -282,7 +286,10 @@ class FlexibleTable extends React.Component {
 
 	updateExcessWidth() {
 		if (this.state.tableWidth < this.state.availableWidth) {
-			const excessWidth = this.state.availableWidth - this.state.tableWidth;
+			let excessWidth = this.state.availableWidth - this.state.tableWidth;
+			if (typeof this.props.updateRowSelections !== "undefined") {
+				excessWidth -= 40; // Adjust for checkboxes
+			}
 			this.setState({ excessWidth: excessWidth });
 		}
 	}
@@ -618,6 +625,7 @@ class FlexibleTable extends React.Component {
 									rowSelection={this.props.rowSelection}
 									disableHeader={!this.props.showHeader}
 									onRowDoubleClick={this.props.onRowDoubleClick}
+									getOriginalRowIndex={this.getOriginalRowIndex}
 									rowsSelected={this.props.selectedRows}
 									checkedAll={this.state.checkedAllRows}
 									setRowsSelected={this.handleCheckedRow}
