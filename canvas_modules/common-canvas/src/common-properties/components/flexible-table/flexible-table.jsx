@@ -623,7 +623,7 @@ class FlexibleTable extends React.Component {
 									summaryTable={this.props.summaryTable}
 									selectable={typeof this.props.updateRowSelections !== "undefined"}
 									rowSelection={this.props.rowSelection}
-									disableHeader={!this.props.showHeader}
+									showHeader={this.props.showHeader}
 									onRowDoubleClick={this.props.onRowDoubleClick}
 									getOriginalRowIndex={this.getOriginalRowIndex}
 									rowsSelected={this.props.selectedRows}

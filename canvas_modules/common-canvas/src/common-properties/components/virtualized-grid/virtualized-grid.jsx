@@ -119,7 +119,7 @@ const VirtualizedGrid = (props) => {
 			{ header_checkbox_label: headerCheckboxLabel }
 		);
 		const checkbox = props.selectable && props.rowSelection !== ROW_SELECTION.SINGLE
-			? (<div role="checkbox" aria-checked={props.checkedAll} className="properties-vt-header-checkbox">
+			? (<th role="checkbox" aria-checked={props.checkedAll} className="properties-vt-header-checkbox">
 				<Checkbox
 					id={`properties-vt-hd-cb-${uuid}-${props.scrollKey}`}
 					onChange={setAllRowsSelected}
@@ -128,7 +128,7 @@ const VirtualizedGrid = (props) => {
 					hideLabel
 					readOnly={props.readOnly}
 				/>
-			</div>)
+			</th>)
 			: "";
 		return checkbox;
 	};
@@ -147,7 +147,7 @@ const VirtualizedGrid = (props) => {
 				{ row_index: rowIndex + 1, table_label: (props.tableLabel ? props.tableLabel : "") }
 			);
 
-			selectOption = (<div className="properties-vt-row-checkbox"
+			selectOption = (<td className="properties-vt-row-checkbox"
 				role="gridcell"
 				onMouseEnter={(evt) => overSelectOption(evt)}
 				onMouseLeave={(evt) => overSelectOption(evt)}
@@ -168,7 +168,7 @@ const VirtualizedGrid = (props) => {
 					disabled={rowDisabled}
 					readOnly={props.readOnly}
 				/>
-			</div>);
+			</td>);
 		}
 		return selectOption;
 	};
@@ -369,7 +369,7 @@ const VirtualizedGrid = (props) => {
 
 	return (<div ref={parentRef} className="properties-tanstack-grid properties-vt" tabIndex={0}>
 		<table className="properties-autosized-vt">
-			{tableHeader(table.getHeaderGroups())}
+			{props.showHeader ? tableHeader(table.getHeaderGroups()) : null}
 			{tableBody(table.getRowModel().rows)}
 		</table>
 	</div>);
@@ -387,7 +387,7 @@ VirtualizedGrid.propTypes = {
 	selectable: PropTypes.bool,
 	summaryTable: PropTypes.bool,
 	rowSelection: PropTypes.string,
-	disableHeader: PropTypes.bool,
+	showHeader: PropTypes.bool,
 	columns: PropTypes.array.isRequired,
 	rowCount: PropTypes.number.isRequired,
 	rowGetter: PropTypes.func.isRequired,

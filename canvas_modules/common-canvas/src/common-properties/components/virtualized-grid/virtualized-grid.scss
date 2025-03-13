@@ -30,12 +30,12 @@
 			position: sticky;
 			top: 0;
 			z-index: 1;
-			height: $spacing-07;
 
 			tr[data-role="properties-header-row"] {
 				background-color: $layer-accent-01;
 				display: flex;
 				width: 100%;
+				height: $spacing-07;
 
 				.properties-vt-header-checkbox {
 					height: $spacing-07;
@@ -111,6 +111,7 @@
 				position: absolute;
 				height: $spacing-07;
 				width: 100%;
+				border-top: 1px solid $layer-accent-01;
 
 				&:hover:not(.properties-vt-row-non-interactive):not(.properties-vt-row-selected) {
 					// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
@@ -129,7 +130,6 @@
 
 				.properties-grid-body-row-cell, .properties-grid-fake-col {
 					display: flex;
-					border-top: 1px solid $layer-accent-01;
 					align-items: center;
 
 					// This class is set by other controls using FlexibleTable
