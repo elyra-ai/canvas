@@ -207,15 +207,16 @@ const VirtualizedGrid = (props) => {
 				<th key="properties-grid-fake-col-row-0-start" className="properties-autosized-vt-header properties-grid-fake-col" style={{ width: `${before}px` }} />
 				{renderHeaderCheckbox()}
 				{columnItems.map((virtualColumn) => {
-					const header = headerGroup.headers[virtualColumn.index];
-					const headerLabel = props.columns[virtualColumn.index].label;
+					const virtualHeader = headerGroup.headers[virtualColumn.index];
+					const header = props.columns[virtualColumn.index];
+					const headerLabel = header.label;
 					const headerDisplayLabel = typeof headerLabel === "string" ? (<span>{headerLabel}</span>) : headerLabel;
-					const infoIcon = isEmpty(props.columns[virtualColumn.index].description)
+					const infoIcon = isEmpty(header.description)
 						? null
 						: (<div className="properties-vt-info-icon-tip">
 							<Tooltip
 								id="properties-tooltip-info"
-								tip={props.columns[virtualColumn.index].description}
+								tip={header.description}
 								direction="bottom"
 								className="properties-tooltips"
 								showToolTipOnClick
@@ -223,23 +224,28 @@ const VirtualizedGrid = (props) => {
 								<Information className="properties-vt-info-icon" />
 							</Tooltip>
 						</div>);
-					const headerTooltip = (<div className="properties-vt-label-tip-icon">
+					const headerContentTooltip = (<div className="properties-vt-label-tip-icon">
 						<TruncatedContentTooltip
-							tooltipText={props.columns[virtualColumn.index].headerLabel}
+							tooltipText={header.headerLabel}
 							content={headerDisplayLabel}
-							disabled={props.columns[virtualColumn.index].disabled}
+							disabled={header.disabled}
 						/>
 						{infoIcon}
 					</div>);
-					return (<th key={`properties-grid-${header.id}`}
-						className="properties-autosized-vt-header sticky-row properties-vt-column properties-tooltips-container"
-						style={{ width: Math.max(colSizes[virtualColumn.index], props.columns[virtualColumn.index].width) }}
+					const resizeHandle = header.resizable
+						? (<div className={classNames("properties-vt-header-resize", { "resizing": virtualHeader.column.getIsResizing() })}
+							onMouseDown={virtualHeader.getResizeHandler()}
+							onTouchStart={virtualHeader.getResizeHandler()}
+						/>)
+						: null;
+					return (<th key={`properties-grid-${virtualHeader.id}`}
+						className={classNames("properties-autosized-vt-header sticky-row properties-vt-column properties-tooltips-container",
+							{ "properties-vt-column-with-resize": header.resizable }
+						)}
+						style={{ width: Math.max(colSizes[virtualColumn.index], header.width) }}
 					>
-						{headerTooltip}
-						<div className={classNames("properties-grid-header-resizer", { "resizing": header.column.getIsResizing() })}
-							onMouseDown={header.getResizeHandler()}
-							onTouchStart={header.getResizeHandler()}
-						/>
+						{headerContentTooltip}
+						{resizeHandle}
 					</th>);
 				})}
 				<th key="properties-grid-fake-col-row-0-end" className="properties-autosized-vt-header properties-grid-fake-col" style={{ width: `${excess}px` }} />
@@ -356,12 +362,6 @@ const VirtualizedGrid = (props) => {
 		}
 		return false;
 	};
-
-	// const isLastColumn = (dataKey) => {
-	// 	const columnIndex = getColumnIndex(props.columns, dataKey);
-	// 	const isLastColumn = (columnIndex === (props.columns.length - 1));
-	// 	return isLastColumn;
-	// };
 
 	const setAllRowsSelected = (evt, { checked, id }) => {
 		props.setAllRowsSelected(checked);
