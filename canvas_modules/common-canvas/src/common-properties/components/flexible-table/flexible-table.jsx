@@ -288,8 +288,8 @@ class FlexibleTable extends React.Component {
 		}
 
 		if (sumColumnWidth < compare) {
-			const firstColWith = parseInt(widths[0], 10);
-			widths[0] = firstColWith + compare - sumColumnWidth + "px";
+			const firstColWidth = parseInt(widths[0], 10);
+			widths[0] = firstColWidth + compare - sumColumnWidth + "px";
 		}
 
 		this.setState({ columnWidths: widths, tableWidth: sumColumnWidth });

@@ -55,20 +55,20 @@
 					&.properties-vt-column {
 						padding: 0 1rem;
 
-						.properties-vt-label-tip-icon {
-							width: 100%;
+						// .properties-vt-label-tip-icon {
+						// 	width: 100%;
 
-							.properties-vt-info-icon-tip {
-								height: $spacing-05;
-								margin: 0 $spacing-03;
+						// 	.properties-vt-info-icon-tip {
+						// 		height: $spacing-05;
+						// 		margin: 0 $spacing-03;
 
-								.properties-vt-info-icon {
-									&:hover {
-										cursor: pointer;
-									}
-								}
-							}
-						}
+						// 		.properties-vt-info-icon {
+						// 			&:hover {
+						// 				cursor: pointer;
+						// 			}
+						// 		}
+						// 	}
+						// }
 					}
 
 					.properties-vt-header-resize {
@@ -80,12 +80,29 @@
 
 					.properties-ft-column-sort-icon {
 						flex: 0 0 $spacing-05;
-						align-self: center;
 						height: $spacing-05;
-						margin-right: $spacing-03; // spacing between sort icon and end of column
+						// margin-right: $spacing-03; // spacing between sort icon and end of column
+						// margin-left: $spacing-03; // spacing between column label and sort icon
 
 						&.default {
 							fill: $layer-accent-01;
+						}
+					}
+
+					.properties-vt-label-tip-icon {
+						display: flex;
+						align-items: center;
+						width: 100%;
+
+						.properties-vt-info-icon-tip {
+							height: $spacing-05;
+							margin-left: $spacing-03;
+
+							.properties-vt-info-icon {
+								&:hover {
+									cursor: pointer;
+								}
+							}
 						}
 					}
 
@@ -105,19 +122,6 @@
 				}
 			}
 		}
-		// // Table rows container
-		// > div[role="rowgroup"] {
-		// 	&:focus {
-		// 		outline-style: none;
-		// 	}
-		// }
-
-		// .properties-vt-row-disabled {
-		// 	opacity: 0.5;
-		// 	&:hover {
-		// 		border-bottom: 1px solid $layer-accent-01;
-		// 	}
-		// }
 
 		tbody.properties-grid-body {
 			display: grid;
@@ -130,15 +134,11 @@
 				position: absolute;
 				height: $spacing-07;
 				width: 100%;
-				border-top: 1px solid $layer-accent-01;
+				border-bottom: 1px solid $layer-accent-01;
 
-				&:hover:not(.properties-vt-row-non-interactive):not(.properties-vt-row-selected) {
+				&:hover:not(.properties-vt-row-non-interactive) {
 					// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
 					background-color: $layer-hover-01;
-				}
-
-				&.properties-vt-double-click {
-
 				}
 
 				.properties-vt-row-checkbox {
@@ -157,28 +157,25 @@
 					.properties-table-cell-control {
 						width: 100%;
 					}
-
-					// .table-column-cells {
-					// 	padding: 0 $spacing-05;
-					// 	user-select: none;
-					// 	width: 100%;
-					// 	line-height: $spacing-07;
-					// 	height: $spacing-07; // Required for displaying empty/missing values
-
-					// 	// Display cell text in tooltip if it does not fit within the space available
-					// 	.tooltip-trigger {
-					// 		white-space: nowrap;
-					// 		overflow: hidden;
-					// 		text-overflow: ellipsis;
-					// 	}
-
-					// 	&.selected {
-					// 		background: $link-inverse;
-					// 	}
-					// }
 				}
 			}
+		}
 
+		&.properties-vt-single-selection {
+			tr {
+				border-left: $spacing-02 solid transparent;
+			}
+			tr.properties-grid-body-row.properties-vt-row-selected {
+				background-color: $layer-selected-01;
+				border-left: $spacing-02 solid $button-primary;
+				// TODO test
+				&:not(.properties-vt-row-disabled):hover {
+					border-left: $spacing-02 solid $button-primary;
+				}
+				&:hover:not(.properties-vt-row-non-interactive) {
+					background-color: $layer-accent-hover-01;
+				}
+			}
 		}
 
 		&.properties-light-disabled {
@@ -191,6 +188,20 @@
 				}
 			}
 		}
+
+		// // Table rows container
+		// > div[role="rowgroup"] {
+		// 	&:focus {
+		// 		outline-style: none;
+		// 	}
+		// }
+
+		// .properties-vt-row-disabled {
+		// 	opacity: 0.5;
+		// 	&:hover {
+		// 		border-bottom: 1px solid $layer-accent-01;
+		// 	}
+		// }
 	}
 
 	
@@ -206,15 +217,6 @@
 	// 		}
 	// 	}
 	// }
-
-	// .properties-vt-row-class {
-	// 	line-height: 20px;
-	// 	border-bottom: 1px solid $layer-accent-01;
-
-	// 	&:hover:not(.properties-vt-row-non-interactive):not(.properties-vt-row-selected) {
-	// 		// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
-	// 		background-color: $layer-hover-01;
-	// 	}
 
 	// 	.properties-table-cell-control {
 	// 		// Required for numberfields within react-virtualized table cell
@@ -273,19 +275,6 @@
 	// 	div[data-role="properties-header-row"] {
 	// 		padding-left: 3px;
 	// 	}
-
-	// 	// Table rows
-	// 	.properties-vt-row-class {
-	// 		padding-left: 3px;
-	// 	}
-	// 	.properties-vt-row-selected {
-	// 		border-left: $spacing-02 solid $button-primary;
-	// 		padding-left: 0;
-	// 		&:not(.properties-vt-row-disabled):hover {
-	// 			border-left: $spacing-02 solid $button-primary;
-	// 		}
-	// 	}
-	// }
 
 	// .properties-vt-small-loading svg {
 	// 	stroke: $button-primary; // Override carbon's small Loading color.

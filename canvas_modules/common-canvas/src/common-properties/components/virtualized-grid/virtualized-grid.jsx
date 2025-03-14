@@ -64,7 +64,7 @@ const VirtualizedGrid = (props) => {
 		const colDefs = [];
 		props.columns.forEach((col, colIdx) => {
 			const columnDef = {
-				accessorFn: (row) => row.columns?.[colIdx].content,
+				accessorFn: (row) => row.columns?.[colIdx]?.content,
 				header: col.label,
 				size: col.width,
 				id: col.key,
@@ -132,7 +132,7 @@ const VirtualizedGrid = (props) => {
 			{ header_checkbox_label: headerCheckboxLabel }
 		);
 		const checkbox = props.selectable && props.rowSelection !== ROW_SELECTION.SINGLE
-			? (<th role="checkbox" aria-checked={props.checkedAll} className="properties-vt-header-checkbox">
+			? (<th role="checkbox" aria-checked={props.checkedAll} className="properties-vt-column properties-vt-header-checkbox">
 				<Checkbox
 					id={`properties-vt-hd-cb-${uuid}-${props.scrollKey}`}
 					onChange={setAllRowsSelected}
@@ -308,11 +308,13 @@ const VirtualizedGrid = (props) => {
 					</td>);
 				});
 				rowData.originalRowIndex = originalRowIndex;
+				const rowSelected = isRowSelected(rowData.originalRowIndex);
+				const rowDisabled = typeof rowData.disabled === "boolean" ? rowData.disabled : false;
 
 				return (<tr key={`properties-grid-body-row-${virtualRow.index}}`}
-					className={classNames("properties-grid-body-row properties-vt-double-click",
-						// { "properties-vt-row-selected": selectedRow },
-						// { "properties-vt-row-disabled": rowDisabled },
+					className={classNames("properties-grid-body-row properties-vt-row-class properties-vt-double-click",
+						{ "properties-vt-row-selected": rowSelected }, // TODO
+						{ "properties-vt-row-disabled": rowDisabled }, // TODO
 						{ "properties-vt-row-non-interactive": !props.selectable } // ReadonlyTable with single row selection is non-interactive.
 					)}
 					data-role="properties-data-row"
@@ -329,36 +331,10 @@ const VirtualizedGrid = (props) => {
 		</tbody>);
 	};
 
-	// const getCell = (row, cellType, rowIndex, columnIndex, cellValue, columnType) => {
-	// 	const key = row.id;
-	// 	if (columnIndex === 0) {
-	// 		return (
-	// 			<div key={`cell-index-${key}-${cellValue}`}
-	// 				className="cellIndex"
-	// 			>{cellValue}</div>
-	// 		);
-	// 	}
-	// 	const className = classNames({ "resizable-header": cellType === "header" },
-	// 		{ "table-column-cells": cellType === "body" }
-	// 	);
-
-	// 	return (<div className={className} key={key} >
-	// 		<Tooltip
-	// 			id={`${rowIndex}-${columnIndex}-cell-Tooltip`}
-	// 			className="infinite-table-cell-Tooltip-container"
-	// 			tip={`${cellValue}`} // needs to be a string
-	// 			direction="bottom"
-	// 			showTooltipIfTruncated
-	// 		>
-	// 			{`${cellValue}`}
-	// 		</Tooltip>
-	// 	</div>);
-	// };
-
 	const onRowClick = (evt, rowIndex, rowData) => {
 		if (evt.target.className === "cds--select-option") {
 			evt.stopPropagation(); // stop propagation when selecting dropdown select options within table rows
-		} else { // TODO
+		} else {
 			// Set selections
 			const selected = !isRowSelected(rowData.originalRowIndex);
 			if (typeof props.setRowsSelected === "function") {
