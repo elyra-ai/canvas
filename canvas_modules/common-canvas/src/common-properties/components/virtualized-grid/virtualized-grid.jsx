@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table"; // getSortedRowModel
-import { defaultRangeExtractor, useVirtualizer } from "@tanstack/react-virtual";
+import { getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"; // getSortedRowModel
+import { useVirtualizer } from "@tanstack/react-virtual";
 
 import React, { useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import { v4 as uuid4 } from "uuid";
-import { isEmpty, differenceBy, mapValues } from "lodash";
-import { Checkbox, Loading } from "@carbon/react";
+import { isEmpty, includes } from "lodash";
+import { Checkbox } from "@carbon/react";
 import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
 
-import Tooltip from "../../../Tooltip/Tooltip.jsx";
-import TruncatedContentTooltip from "../truncated-content-Tooltip/index.js";
-import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "../../constants/constants.js";
+import Tooltip from "../../../tooltip/tooltip.jsx";
+import TruncatedContentTooltip from "../truncated-content-tooltip";
+import { ROW_SELECTION } from "../../constants/constants.js";
 
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
@@ -62,13 +62,21 @@ const VirtualizedGrid = (props) => {
 
 	const columns = React.useMemo(() => {
 		const colDefs = [];
-		props.columns.forEach((col, colIdx) => colDefs.push({
-			accessorFn: (row) => row.columns?.[colIdx].content,
-			header: col.label,
-			size: col.width,
-			id: col.key,
-			enableResizing: col.resizable
-		}));
+		props.columns.forEach((col, colIdx) => {
+			const columnDef = {
+				accessorFn: (row) => row.columns?.[colIdx].content,
+				header: col.label,
+				size: col.width,
+				id: col.key,
+				enableResizing: col.resizable
+			};
+			if (props.onSort && includes(props.sortColumns, col.key)) {
+				columnDef.sortingFn = "customSort";
+			} else {
+				columnDef.enableSorting = false;
+			}
+			colDefs.push(columnDef);
+		});
 		return colDefs;
 	}, props.columns);
 
@@ -79,7 +87,12 @@ const VirtualizedGrid = (props) => {
 			size: DEFAULT_COLUMN_WIDTH
 		},
 		columnResizeMode: "onChange",
-		getCoreRowModel: getCoreRowModel()
+		getCoreRowModel: getCoreRowModel(),
+		getSortedRowModel: getSortedRowModel(),
+		enableSortingRemoval: false, // disable the ability to remove sorting on columns (always none -> asc -> desc -> asc)
+		sortingFns: {
+			customSort: props.onSort
+		}
 	});
 
 	// Calculate column sizes when changed from resizing
@@ -140,7 +153,7 @@ const VirtualizedGrid = (props) => {
 
 		let selectOption = "";
 		if (props.selectable && props.rowSelection !== ROW_SELECTION.SINGLE) {
-			const rowSelected = props.sortDirection ? isRowSelected(rowData.index) : isRowSelected(rowData.originalRowIndex); // use current row index when Sorted
+			const rowSelected = isRowSelected(rowData.originalRowIndex); // use current row index when Sorted
 			const rowDisabled = typeof rowData.disabled === "boolean" ? rowData.disabled : false;
 			const translatedRowCheckboxLabel = props.intl.formatMessage(
 				{ id: "virtualizedTable.row.checkbox.label", defaultMessage: defaultMessages["virtualizedTable.row.checkbox.label"] },
@@ -232,6 +245,16 @@ const VirtualizedGrid = (props) => {
 						/>
 						{infoIcon}
 					</div>);
+					let sortIcon = null;
+					if (!includes(props.sortColumns, header.key)) {
+						sortIcon = null;
+					} else if (virtualHeader.column.getIsSorted() === "asc") {
+						sortIcon = <ArrowUp className="properties-ft-column-sort-icon asc" />;
+					} else if (virtualHeader.column.getIsSorted() === "desc") {
+						sortIcon = <ArrowDown className="properties-ft-column-sort-icon desc" />;
+					} else { // false
+						sortIcon = <ArrowsVertical className="properties-ft-column-sort-icon default" />;
+					}
 					const resizeHandle = header.resizable
 						? (<div className={classNames("properties-vt-header-resize", { "resizing": virtualHeader.column.getIsResizing() })}
 							onMouseDown={virtualHeader.getResizeHandler()}
@@ -240,11 +263,14 @@ const VirtualizedGrid = (props) => {
 						: null;
 					return (<th key={`properties-grid-${virtualHeader.id}`}
 						className={classNames("properties-autosized-vt-header sticky-row properties-vt-column properties-tooltips-container",
-							{ "properties-vt-column-with-resize": header.resizable }
+							{ "properties-vt-column-with-resize": header.resizable },
+							{ "properties-vt-column-sortable": includes(props.sortColumns, header.key) }
 						)}
 						style={{ width: Math.max(colSizes[virtualColumn.index], header.width) }}
+						onClick={virtualHeader.column.getToggleSortingHandler()}
 					>
 						{headerContentTooltip}
+						{sortIcon}
 						{resizeHandle}
 					</th>);
 				})}
@@ -368,7 +394,10 @@ const VirtualizedGrid = (props) => {
 	};
 
 	return (<div ref={parentRef} className="properties-tanstack-grid properties-vt" tabIndex={0}>
-		<table className="properties-autosized-vt">
+		<table className={classNames("properties-autosized-vt",
+			{ "properties-vt-single-selection": props.rowSelection && props.rowSelection === ROW_SELECTION.SINGLE },
+			{ "properties-light-disabled": !props.light })}
+		>
 			{props.showHeader ? tableHeader(table.getHeaderGroups()) : null}
 			{tableBody(table.getRowModel().rows)}
 		</table>
@@ -404,9 +433,7 @@ VirtualizedGrid.propTypes = {
 	scrollToIndex: PropTypes.number,
 	scrollToAlignment: PropTypes.string,
 	onSort: PropTypes.func,
-	sortBy: PropTypes.string,
-	sortColumns: PropTypes.object,
-	sortDirection: PropTypes.string,
+	sortColumns: PropTypes.array,
 	onHeaderClick: PropTypes.func,
 	scrollKey: PropTypes.string,
 	tableState: PropTypes.string,

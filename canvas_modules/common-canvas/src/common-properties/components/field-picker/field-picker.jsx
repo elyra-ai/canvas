@@ -66,7 +66,7 @@ export default class FieldPicker extends React.Component {
 		this.handleCancel = this.handleCancel.bind(this);
 		this.handleReset = this.handleReset.bind(this);
 		this.getNewSelections = this.getNewSelections.bind(this);
-		this.onSort = this.onSort.bind(this);
+		this.onSortVT = this.onSortVT.bind(this);
 		this.onFilter = this.onFilter.bind(this);
 		this.updateFieldSelections = this.updateFieldSelections.bind(this);
 		this.filterList = this.getAvailableFilters();
@@ -80,7 +80,7 @@ export default class FieldPicker extends React.Component {
 	* Reorder the current list of fields displayed according to the sort column
 	* @param spec object with a column and direction to sort
 	*/
-	onSort(spec) {
+	onSortVT(spec) {
 		let fields = Array.from(this.state.fields);
 		fields = sortBy(fields, function(field) {
 			switch (spec.column) {
@@ -175,13 +175,14 @@ export default class FieldPicker extends React.Component {
 			columns.push({
 				column: "fieldName",
 				content: fieldContent,
-				fieldName: field.origName
+				fieldName: field.origName,
+				value: field.origName
 			});
 			if (this.multiSchema) {
 				const schemaContent = (<div className="properties-fp-schema">
 					{field.schema}
 				</div>);
-				columns.push({ column: "schemaName", content: schemaContent });
+				columns.push({ column: "schemaName", content: schemaContent, value: field.schema });
 			}
 			columns.push({
 				column: "dataType",
@@ -414,7 +415,7 @@ export default class FieldPicker extends React.Component {
 				onFilter={this.onFilter}
 				columns={headers}
 				data={tableData}
-				onSort={this.onSort}
+				onSortVT={this.onSortVT}
 				filterKeyword={this.state.filterText}
 				scrollKey="field-picker"
 				noAutoSize

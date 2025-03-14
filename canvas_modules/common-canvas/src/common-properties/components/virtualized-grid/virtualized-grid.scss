@@ -60,7 +60,7 @@
 
 							.properties-vt-info-icon-tip {
 								height: $spacing-05;
-								margin-left: $spacing-03;
+								margin: 0 $spacing-03;
 
 								.properties-vt-info-icon {
 									&:hover {
@@ -78,13 +78,27 @@
 						width: 3px;
 					}
 
-					// TODO same background color when sort allowed
-					&.properties-vt-column-with-resize {
+					.properties-ft-column-sort-icon {
+						flex: 0 0 $spacing-05;
+						align-self: center;
+						height: $spacing-05;
+						margin-right: $spacing-03; // spacing between sort icon and end of column
+
+						&.default {
+							fill: $layer-accent-01;
+						}
+					}
+
+					&.properties-vt-column-with-resize,
+					&.properties-vt-column-sortable {
 						&:hover {
 							background-color: $layer-active-01;
 							.properties-vt-header-resize {
 								background-color: $button-secondary-active;
 								cursor: col-resize;
+							}
+							.properties-ft-column-sort-icon {
+								fill: $icon-primary;
 							}
 						}
 					}
@@ -165,6 +179,17 @@
 				}
 			}
 
+		}
+
+		&.properties-light-disabled {
+			tbody.properties-grid-body {
+				tr[data-role="properties-data-row"] {
+					background-color: $layer-01;
+				}
+				.cds--select--inline .cds--select-input[disabled] {
+					background-color: $background;
+				}
+			}
 		}
 	}
 
@@ -270,15 +295,6 @@
 	// .properties-vt-autosizer {
 	// 	height: 100%;
 	// 	width: 100%;
-	// }
-
-	// .properties-light-disabled {
-	// 	div[data-role="properties-data-row"] {
-	// 		background-color: $layer-01;
-	// 	}
-	// 	.cds--select--inline .cds--select-input[disabled] {
-	// 		background-color: $background;
-	// 	}
 	// }
 
 	// .properties-ft-column-sort-icon {

@@ -57,7 +57,7 @@ export default class AbstractTable extends React.Component {
 		this.handleRowClick = this.handleRowClick.bind(this);
 		this.createTable = this.createTable.bind(this);
 		this.onFilter = this.onFilter.bind(this);
-		this.onSort = this.onSort.bind(this);
+		this.onSortVT = this.onSortVT.bind(this);
 		this.setScrollToRow = this.setScrollToRow.bind(this);
 		this.includeInFilter = this.includeInFilter.bind(this);
 		this.makeAddButtonPanel = this.makeAddButtonPanel.bind(this);
@@ -100,7 +100,7 @@ export default class AbstractTable extends React.Component {
 		this.setState({ filterText: filterString });
 	}
 
-	onSort(spec) {
+	onSortVT(spec) {
 		let controlValue = this.props.value;
 		let col = -1;
 		for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
@@ -659,7 +659,7 @@ export default class AbstractTable extends React.Component {
 				showHeader={showHeader}
 				scrollToRow={rowToScrollTo}
 				onFilter={this.onFilter}
-				onSort={this.onSort}
+				onSortVT={this.onSortVT}
 				topRightPanel={topRightPanel}
 				scrollKey={this.props.control.name}
 				tableState={tableState}

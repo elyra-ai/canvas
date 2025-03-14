@@ -65,6 +65,7 @@ class FlexibleTable extends React.Component {
 
 		this.calculateColumnWidths = this.calculateColumnWidths.bind(this);
 		this.handleFilterChange = this.handleFilterChange.bind(this);
+		this.onSortVT = this.onSortVT.bind(this);
 		this.onSort = this.onSort.bind(this);
 		this.sortHeaderClick = this.sortHeaderClick.bind(this);
 		this._updateTableWidth = this._updateTableWidth.bind(this);
@@ -135,7 +136,7 @@ class FlexibleTable extends React.Component {
 		this.resizeObserver?.disconnect();
 	}
 
-	onSort({ sortBy }) {
+	onSortVT({ sortBy }) {
 		if (this.props.onSort) {
 			const sortDirection = (this.state.columnSortDir[sortBy] === SORT_DIRECTION.ASC) ? SORT_DIRECTION.DESC : SORT_DIRECTION.ASC;
 			const spec = {
@@ -144,6 +145,22 @@ class FlexibleTable extends React.Component {
 			};
 			this.props.onSort(spec);
 		}
+	}
+
+	onSort(rowA, rowB, field) {
+		if (this.props.onSort) {
+			return this.props.onSort(rowA, rowB, field);
+		}
+
+		// Do basic sorting
+		const rowAValue = rowA.original.columns.find((column) => column.column === field)?.value;
+		const rowBValue = rowB.original.columns.find((column) => column.column === field)?.value;
+		if (rowAValue > rowBValue) {
+			return 1;
+		} else if (rowAValue < rowBValue) {
+			return -1;
+		}
+		return 0; // equal
 	}
 
 	/**
@@ -633,7 +650,7 @@ class FlexibleTable extends React.Component {
 									scrollKey={this.props.scrollKey}
 									onSort={this.onSort}
 									sortBy={this.state.currentSortColumn}
-									sortColumns={this.state.columnSortDir}
+									sortColumns={this.props.sortable}
 									sortDirection={this.state.columnSortDir[this.state.currentSortColumn]}
 									tableState={this.props.tableState}
 									light={this.props.light}
@@ -675,7 +692,7 @@ class FlexibleTable extends React.Component {
 								setRowsSelected={this.handleCheckedRow}
 								setAllRowsSelected={this.handleCheckedAllRows}
 								scrollKey={this.props.scrollKey}
-								onSort={this.onSort}
+								onSort={this.onSortVT}
 								sortBy={this.state.currentSortColumn}
 								sortColumns={this.state.columnSortDir}
 								sortDirection={this.state.columnSortDir[this.state.currentSortColumn]}
@@ -715,6 +732,7 @@ FlexibleTable.propTypes = {
 	filterKeyword: PropTypes.string,
 	hideFilterInput: PropTypes.func,
 	scrollToRow: PropTypes.number,
+	onSortVT: PropTypes.func,
 	onSort: PropTypes.func,
 	onFilter: PropTypes.func,
 	showHeader: PropTypes.bool,
