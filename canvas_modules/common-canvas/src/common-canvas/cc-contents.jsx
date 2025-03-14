@@ -298,7 +298,7 @@ class CanvasContents extends React.Component {
 	// toolbar or palette. If it goes outside the canvas, we reset the
 	// tab object index so that tabbing will begin from the first tab object
 	// and set the current canvas focus object to null to prevent any
-	// restoreFocus calls from set focus back into the canvas.
+	// restoreFocus calls setting focus back into the canvas.
 	onBlur(evt) {
 		if (!this.isTargetInsideCanvas(evt.relatedTarget)) {
 			this.svgCanvasD3.resetTabObjectIndex();
