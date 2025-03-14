@@ -34,8 +34,10 @@ class NumberfieldControl extends React.Component {
 		this.state = {
 			invalidNumber: false
 		};
+		this.numberInput = React.createRef();
 		this.onDirection = this.onDirection.bind(this);
 		this.generateNumber = this.generateNumber.bind(this);
+		this.onKeyUp = this.onKeyUp.bind(this);
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 		this.reactIntl = props.controller.getReactIntl();
 	}
@@ -60,6 +62,19 @@ class NumberfieldControl extends React.Component {
 		}
 	}
 
+	onKeyUp(evt) {
+		// When user enters any non numeric characters in an empty numberfied control, show invalid number error
+		if (
+			evt.target.validity && evt.target.validity.badInput ||
+			(!isFinite(this.numberInput.current.value))
+		) {
+			this.showInvalidNumberError();
+			return;
+		}
+		// Number is valid, clear invalid number error if it exists
+		this.clearInvalidNumberError();
+	}
+
 	handleChange(evt, { value, direction }) {
 		// When stepper buttons are clicked, evt.type = click
 		// When user changes the value manually without clicking stepper buttons, evt.type = change
@@ -76,20 +91,36 @@ class NumberfieldControl extends React.Component {
 			// It is difficult to differentiate between empty value and invalid input because both return "".
 			// It's not possible to add a seaparte condition for invalid input because we never get the actual invalid number entered by the user.
 			// So, setting error message for invalid input here instead of using conditions.
-			if (this.props.controller.getErrorMessage(this.props.propertyId) === null) {
-				const errorMessage = {
-					type: "error",
-					text: formatMessage(this.reactIntl, MESSAGE_KEYS.INVALID_NUMBER_ERROR),
-					propertyId: this.props.propertyId,
-					validation_id: "invalid_number"
-				};
-				this.props.controller.updateErrorMessage(this.props.propertyId, errorMessage);
-			}
-			this.setState({ invalidNumber: true });
+			this.showInvalidNumberError();
 			// Return without updating property value
 			return;
 		}
 		// Number is valid, clear invalid number error if it exists
+		this.clearInvalidNumberError();
+
+		const actualValue = value;
+		if (typeof actualValue === "undefined" || actualValue === null || actualValue === "") {
+			this.props.controller.updatePropertyValue(this.props.propertyId, null);
+		} else {
+			this.props.controller.updatePropertyValue(this.props.propertyId, Number(actualValue));
+		}
+		// TODO need to check for integer in validations
+	}
+
+	showInvalidNumberError() {
+		if (this.props.controller.getErrorMessage(this.props.propertyId) === null) {
+			const errorMessage = {
+				type: "error",
+				text: formatMessage(this.reactIntl, MESSAGE_KEYS.INVALID_NUMBER_ERROR),
+				propertyId: this.props.propertyId,
+				validation_id: "invalid_number"
+			};
+			this.props.controller.updateErrorMessage(this.props.propertyId, errorMessage);
+		}
+		this.setState({ invalidNumber: true });
+	}
+
+	clearInvalidNumberError() {
 		if (this.state.invalidNumber) {
 			this.setState({ invalidNumber: false });
 		}
@@ -99,14 +130,6 @@ class NumberfieldControl extends React.Component {
 		if (invalidNumberError) {
 			this.props.controller.updateErrorMessage(this.props.propertyId, null);
 		}
-
-		const actualValue = value;
-		if (typeof actualValue === "undefined" || actualValue === null || actualValue === "") {
-			this.props.controller.updatePropertyValue(this.props.propertyId, null);
-		} else {
-			this.props.controller.updatePropertyValue(this.props.propertyId, Number(actualValue));
-		}
-		// TODO need to check for integer in validations
 	}
 
 	generateNumber() {
@@ -151,9 +174,10 @@ class NumberfieldControl extends React.Component {
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<NumberInput
 					{...validationProps}
-					ref= { (ref) => (this.numberInput = ref)}
+					ref={this.numberInput}
 					id={this.id}
 					onChange={this.handleChange.bind(this)}
+					onKeyUp={this.onKeyUp}
 					disabled={disabled}
 					step={this.props.control.increment}
 					value={controlValue}
