@@ -24,6 +24,7 @@ import { get, has, isNumber, set } from "lodash";
 import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST,
 	PORT_DISPLAY_IMAGE, PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT,
+	CANVAS_FOCUS
 } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CanvasUtils {
@@ -1103,10 +1104,9 @@ export default class CanvasUtils {
 		return "";
 	}
 
-	// Returns truthy if the object passed in is a node (and not a comment).
-	// Comments don't have a type property.
+	// Returns true if the object passed in is a node.
 	static isNode(obj) {
-		return obj.type && !this.isLink(obj);
+		return !this.isLink(obj) && !this.isComment(obj);
 	}
 
 	// Returns true if the object passed in is a link.
@@ -1114,10 +1114,11 @@ export default class CanvasUtils {
 		return obj.type && (obj.type === NODE_LINK || obj.type === COMMENT_LINK || obj.type === ASSOCIATION_LINK);
 	}
 
-	// Returns truthy if the object passed in is a comment.
-	// Comments don't have a type property but do have content.
+	// Returns true if the object passed in is a comment.
+	// Comments don't have a type property but do have content
+	// which might be an empty string, so check it is defined.
 	static isComment(obj) {
-		return !obj.type && obj.content;
+		return !obj.type && typeof obj.content !== "undefined";
 	}
 
 	static isSupernode(node) {
@@ -1760,5 +1761,16 @@ export default class CanvasUtils {
 		}
 
 		return newLayout;
+	}
+
+	// Returns a text string to represent the focus object passed in.
+	static getFocusName(focusObject) {
+		if (focusObject) {
+			if (focusObject === CANVAS_FOCUS) {
+				return CANVAS_FOCUS;
+			}
+			return this.getObjectTypeName(focusObject) + " ID = " + focusObject.id;
+		}
+		return "Undefined Object";
 	}
 }

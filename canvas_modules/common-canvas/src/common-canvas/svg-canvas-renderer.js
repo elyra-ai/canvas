@@ -316,6 +316,7 @@ export default class SVGCanvasRenderer {
 		// Restore the focus back to whatever object is currently in focus if
 		// keyboard navigation is enabled.
 		if (this.config.enableKeyboardNavigation) {
+			this.logger.log("setCanvasInfoRenderer - Restoring focus");
 			this.restoreFocus();
 		}
 
@@ -5950,6 +5951,8 @@ export default class SVGCanvasRenderer {
 	// viewport if it is not already.
 	// This is a utility method called from the canvas controller.
 	moveFocusTo(obj) {
+		this.logger.log("moveFocusTo - " + CanvasUtils.getFocusName(obj));
+
 		if (!obj || obj === CANVAS_FOCUS) {
 			return;
 		}
@@ -5959,28 +5962,45 @@ export default class SVGCanvasRenderer {
 		this.canvasGrp.selectAll(".d3-focus-path").remove();
 
 		let objSel = null;
-		if (type === "node" && this.activePipeline.getNode(obj.id)) {
-			objSel = this.getNodeGroupSelectionById(obj.id);
+		if (type === "node") {
+			if (this.activePipeline.getNode(obj.id)) {
+				objSel = this.getNodeGroupSelectionById(obj.id);
 
-			objSel.insert("path", ":first-child")
-				.attr("class", "d3-focus-path")
-				.attr("d", (d) => this.getNodeShapePathSizing(d));
+				objSel.insert("path", ":first-child")
+					.attr("class", "d3-focus-path")
+					.attr("d", (d) => this.getNodeShapePathSizing(d));
+			} else {
+				// This may happen when objects are being created.
+				this.logger.log("Node with ID " + obj.id + " not found in activePipeline");
+				return;
+			}
 
+		} else if (type === "comment") {
+			if (this.activePipeline.getComment(obj.id)) {
+				objSel = this.getCommentGroupSelectionById(obj.id);
 
-		} else if (type === "comment" && this.activePipeline.getComment(obj.id)) {
-			objSel = this.getCommentGroupSelectionById(obj.id);
+				objSel.insert("rect", ":first-child")
+					.attr("class", "d3-focus-path")
+					.attr("x", -this.canvasLayout.commentSizingArea)
+					.attr("y", -this.canvasLayout.commentSizingArea)
+					.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
+					.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
+			} else {
+				// This may happen when objects are being created.
+				this.logger.log("Comment with ID " + obj.id + " not found in activePipeline");
+				return;
+			}
 
-			objSel.insert("rect", ":first-child")
-				.attr("class", "d3-focus-path")
-				.attr("x", -this.canvasLayout.commentSizingArea)
-				.attr("y", -this.canvasLayout.commentSizingArea)
-				.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
-				.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
+		} else if (type === "link") {
+			if (this.activePipeline.getLink(obj.id)) {
+				objSel = this.getLinkGroupSelectionById(obj.id);
 
-		} else if (type === "link" && this.activePipeline.getLink(obj.id)) {
-			objSel = this.getLinkGroupSelectionById(obj.id);
-
-			// TODO - Think of a way to show focus on links other than line thckness
+				// TODO - Think of a way to show focus on links other than line thckness
+			} else {
+				// This may happen when objects are being created.
+				this.logger.log("Link with ID " + obj.id + " not found in activePipeline");
+				return;
+			}
 		}
 
 		// If there is a non-null D3 selection object that is not empty,
@@ -5993,6 +6013,7 @@ export default class SVGCanvasRenderer {
 
 			const element = objSel.node();
 			if (element) {
+				this.logger.log("moveFocusTo - set focus on element");
 				element.focus();
 			}
 
