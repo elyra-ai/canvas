@@ -2812,8 +2812,8 @@ export type CtxMenuHandlerSource =
     };
  
 export type EditActionTargetObject = CanvasNode | (CanvasNodeLink & {
-  srcObj?: unknown;
-  trgNode?: unknown;
+  srcObj?: Record<string, unknown>;
+  trgNode?: Record<string, unknown>;
 });   
 export interface EditActionNode {
   id?: string;
