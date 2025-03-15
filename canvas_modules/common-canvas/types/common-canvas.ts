@@ -2810,24 +2810,29 @@ export type CtxMenuHandlerSource =
       selectedObjectIds: string[];
       mousePos: { x: string; y: string };
     };
-
+ 
+export type EditActionTargetObject = CanvasNode | (CanvasNodeLink & {
+  srcObj?: unknown;
+  trgNode?: unknown;
+});   
+export interface EditActionNode {
+  id?: string;
+  portId?: string;
+}    
 export interface EditActionData {
-  editType:
-    | "createComment"
-    | "createNode"
-    | "moveObjects"
-    | "linkNodes"
-    | "linkComment"
-    | "resizeObjects"
-    | "editComment"
-    | "expandSuperNodeInPlace"
-    | "displaySubPipeline"
-    | "displayPreviousPipeline"
-    | string;
+  editType: "createComment" | "createNode" | "moveObjects" | "linkNodes" | "deleteSelectedObjects" | "deleteLink" | "createAutoNode" | "setNodeLabelEditingMode" | "setZoom" | "linkComment" | "resizeObjects" | "editComment" | "expandSuperNodeInPlace" | "displaySubPipeline" | "displayPreviousPipeline" | string;
   editSource: "contextmenu" | "toolbar" | "keyboard" | "canvas" | "api" | "controller";
   selectedObjects: Record<string, unknown>[];
-  /** @deprecated */
   selectedObjectIds: string[];
+  type?: "nodeLink" | "node" | string;
+  linkIds?: string[];
+  linkType?: string;
+  nodes?: EditActionNode[];
+  targetNodes?: EditActionNode[];
+  newNode?: CanvasNode;
+  targetObject?: EditActionTargetObject;
+  newLink?: CanvasNodeLink;
+  sourceNode?: CanvasNode;
   [key: string]: unknown;
 }
 
