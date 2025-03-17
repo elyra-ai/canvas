@@ -17,7 +17,7 @@
 import { getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"; // getSortedRowModel
 import { useVirtualizer } from "@tanstack/react-virtual";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import { v4 as uuid4 } from "uuid";
@@ -92,7 +92,8 @@ const VirtualizedGrid = (props) => {
 		enableSortingRemoval: false, // disable the ability to remove sorting on columns (always none -> asc -> desc -> asc)
 		sortingFns: {
 			customSort: props.onSort
-		}
+		},
+		// getRowId: (row) => row.id
 	});
 
 	// Calculate column sizes when changed from resizing
@@ -110,6 +111,17 @@ const VirtualizedGrid = (props) => {
 		});
 		return colSizeDefs;
 	}, [table.getState().columnSizingInfo, props.excessWidth]);
+
+	useEffect(() => {
+		if (props.scrollToIndex && props.scrollToIndex !== -1) {
+			console.log("!!! scrollToIndex", props.scrollToIndex);
+			console.log("!!! sorted", table.getSortedRowModel().rows);
+			const row = document.querySelectorAll(`tr[data-id=${props.scrollKey}-${props.scrollToIndex}]`);
+			if (row?.[0]) {
+				row?.[0].scrollIntoView();
+			}
+		}
+	}, [props.scrollToIndex]);
 
 	const checkboxLabelColumnIndex = React.useMemo(() => {
 		if (typeof props.columns === "undefined" || props.columns.length === 0) {
@@ -217,7 +229,7 @@ const VirtualizedGrid = (props) => {
 			const excess = after + props.excessWidth;
 
 			return (<tr className="properties-vt-row-class" key="canvas-grid-header-row-0" data-role="properties-header-row">
-				<th key="properties-grid-fake-col-row-0-start" className="properties-autosized-vt-header properties-grid-fake-col" style={{ width: `${before}px` }} />
+				<th key="properties-grid-fake-col-row-0-start" className="properties-grid-fake-col" style={{ width: `${before}px` }} />
 				{renderHeaderCheckbox()}
 				{columnItems.map((virtualColumn) => {
 					const virtualHeader = headerGroup.headers[virtualColumn.index];
@@ -274,7 +286,7 @@ const VirtualizedGrid = (props) => {
 						{resizeHandle}
 					</th>);
 				})}
-				<th key="properties-grid-fake-col-row-0-end" className="properties-autosized-vt-header properties-grid-fake-col" style={{ width: `${excess}px` }} />
+				<th key="properties-grid-fake-col-row-0-end" className="properties-grid-fake-col" style={{ width: `${excess}px` }} />
 			</tr>);
 		})}
 	</thead>);
@@ -311,7 +323,7 @@ const VirtualizedGrid = (props) => {
 				const rowSelected = isRowSelected(rowData.originalRowIndex);
 				const rowDisabled = typeof rowData.disabled === "boolean" ? rowData.disabled : false;
 
-				return (<tr key={`properties-grid-body-row-${virtualRow.index}}`}
+				return (<tr key={`properties-grid-body-row-${virtualRow.index}}`} data-id={`${props.scrollKey}-${originalRowIndex}`}
 					className={classNames("properties-grid-body-row properties-vt-row-class properties-vt-double-click",
 						{ "properties-vt-row-selected": rowSelected }, // TODO
 						{ "properties-vt-row-disabled": rowDisabled }, // TODO
@@ -407,7 +419,6 @@ VirtualizedGrid.propTypes = {
 	setRowsSelected: PropTypes.func, // Required if selectable is true
 	setAllRowsSelected: PropTypes.func, // Required if selectable is true
 	scrollToIndex: PropTypes.number,
-	scrollToAlignment: PropTypes.string,
 	onSort: PropTypes.func,
 	sortColumns: PropTypes.array,
 	onHeaderClick: PropTypes.func,

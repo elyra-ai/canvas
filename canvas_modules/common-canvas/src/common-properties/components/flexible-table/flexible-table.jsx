@@ -655,7 +655,7 @@ class FlexibleTable extends React.Component {
 									tableState={this.props.tableState}
 									light={this.props.light}
 									readOnly={this.props.readOnly}
-									{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex, scrollToAlignment: "center" })}
+									{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex })}
 								/>
 							</div>
 						</div>
