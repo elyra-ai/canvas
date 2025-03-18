@@ -19,3 +19,14 @@
 		display: none;
 	}
 }
+
+// Required for textarea to be visible in a table cell
+.properties-table-cell-control {
+	.properties-textarea textarea {
+		resize: none;
+		height: $spacing-07;
+		min-height: $spacing-07;
+		min-width: 100%;
+		border-bottom: 1px solid $layer-accent-01;
+	}
+}
