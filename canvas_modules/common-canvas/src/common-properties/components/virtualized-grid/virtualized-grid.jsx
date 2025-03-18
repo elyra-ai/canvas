@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"; // getSortedRowModel
+import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 import React, { useRef, useState, useEffect } from "react";
@@ -50,7 +50,7 @@ const VirtualizedGrid = (props) => {
 		count: props.rowCount,
 		getScrollElement: () => parentRef.current,
 		estimateSize: () => DEFAULT_ROW_HEIGHT,
-		overscan: 5
+		overscan: 1
 	});
 
 	const columnVirtualizer = useVirtualizer({
@@ -115,12 +115,45 @@ const VirtualizedGrid = (props) => {
 	}, [table.getState().sorting]);
 
 	useEffect(() => {
-		if (props.scrollToIndex && props.scrollToIndex !== -1) {
-			console.log("!!! scrollToIndex", props.scrollToIndex);
-			console.log("!!! sorted", table.getCoreRowModel().rows);
-			const row = document.querySelectorAll(`tr[data-id=${props.scrollKey}-${props.scrollToIndex}]`);
-			if (row?.[0]) {
-				row?.[0].scrollIntoView();
+		if (typeof props.scrollToIndex !== "undefined") {
+			let repeatScroll;
+			let virtualRows = rowVirtualizer.getVirtualItems().map((vrow) => vrow.index);
+			const maxRetryCount = Math.ceil((props.scrollToIndex + 1) / rowVirtualizer.getVirtualItems().length) + 1;
+
+			const keepScrolling = (direction) => {
+				let retryCount = maxRetryCount;
+				const rowVisible = document.querySelectorAll(`tr[data-id=${props.scrollKey}-${props.scrollToIndex}]`);
+				virtualRows = rowVirtualizer.getVirtualItems().map((vrow) => vrow.index);
+				if (rowVisible?.[0]) {
+					rowVisible?.[0].scrollIntoView({ "behavior": "instant", "block": direction === "down" ? "start" : "end" });
+					retryCount = 0;
+				} else {
+					const scrollRowIdx = direction === "down" ? virtualRows.length - 1 : virtualRows[0];
+					const scrollBlock = direction === "down" ? "start" : "end";
+					const scrollToRow = document.querySelectorAll(`tr[data-id=${props.scrollKey}-${scrollRowIdx}]`);
+					if (scrollToRow?.[0]) {
+						scrollToRow?.[0].scrollIntoView({ "behavior": "instant", "block": scrollBlock });
+					}
+					retryCount--;
+				}
+
+				if (retryCount === 0) {
+					clearInterval(repeatScroll);
+				}
+			};
+
+			if (!includes(virtualRows, props.scrollToIndex)) {
+				// Keep scrolling until the row is in view
+				if (props.scrollToIndex > virtualRows[virtualRows.length - 1]) { // scroll down the table
+					repeatScroll = setInterval(() => keepScrolling("down"), 1);
+				} else { // scroll up the table
+					repeatScroll = setInterval(() => keepScrolling("up"), 1);
+				}
+			} else {
+				const row = document.querySelectorAll(`tr[data-id=${props.scrollKey}-${props.scrollToIndex}]`);
+				if (row?.[0]) {
+					row?.[0].scrollIntoView({ "behavior": "instant", "block": "center" });
+				}
 			}
 		}
 	}, [props.scrollToIndex]);
