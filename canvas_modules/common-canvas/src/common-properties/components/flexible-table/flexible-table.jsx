@@ -612,7 +612,7 @@ class FlexibleTable extends React.Component {
 			tableHeight = this.state.dynamicHeight;
 		}
 
-		if (this.props.useTanstack) {
+		if (this.props.enableTanstackTable) {
 			return (
 				<div data-id={"properties-ft-" + this.props.scrollKey} className={ftClassname} ref={ (ref) => (this.flexibleTable = ref) }>
 					{ftHeader}
@@ -710,7 +710,7 @@ FlexibleTable.defaultProps = {
 	light: true,
 	emptyTablePlaceholder: "",
 	selectedRows: [], // Required for consumers using FlexibleTable directly,
-	useTanstack: true // Feature flag TODO set to false before merging
+	enableTanstackTable: false // Feature flag
 };
 
 FlexibleTable.propTypes = {
@@ -745,7 +745,7 @@ FlexibleTable.propTypes = {
 	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired,
 	readOnly: PropTypes.bool,
-	useTanstack: PropTypes.bool
+	enableTanstackTable: PropTypes.bool
 };
 
 export default injectIntl(FlexibleTable);

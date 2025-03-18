@@ -165,6 +165,7 @@ class ListControl extends AbstractTable {
 
 		const table =	(
 			<FlexibleTable
+				enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable === true}
 				columns={headers}
 				data={rows}
 				scrollToRow={rowToScrollTo}

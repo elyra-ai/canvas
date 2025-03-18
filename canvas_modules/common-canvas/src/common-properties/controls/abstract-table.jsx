@@ -652,6 +652,7 @@ export default class AbstractTable extends React.Component {
 
 		const table =	(
 			<FlexibleTable
+				enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable === true}
 				sortable={sortFields}
 				filterable={filterFields}
 				columns={headers}
