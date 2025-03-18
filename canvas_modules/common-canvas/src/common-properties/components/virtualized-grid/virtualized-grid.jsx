@@ -50,7 +50,7 @@ const VirtualizedGrid = (props) => {
 		count: props.rowCount,
 		getScrollElement: () => parentRef.current,
 		estimateSize: () => DEFAULT_ROW_HEIGHT,
-		overscan: 1
+		overscan: 3
 	});
 
 	const columnVirtualizer = useVirtualizer({
@@ -75,7 +75,7 @@ const VirtualizedGrid = (props) => {
 			colDefs.push(columnDef);
 		});
 		return colDefs;
-	}, props.columns);
+	}, [props.columns]);
 
 	const table = useReactTable({
 		data: props.data,
@@ -179,7 +179,7 @@ const VirtualizedGrid = (props) => {
 			{ header_checkbox_label: headerCheckboxLabel }
 		);
 		const checkbox = props.selectable && props.rowSelection !== ROW_SELECTION.SINGLE
-			? (<th role="checkbox" aria-checked={props.checkedAll} className="properties-vt-column properties-vt-header-checkbox">
+			? (<th className="properties-vt-column properties-vt-header-checkbox">
 				<Checkbox
 					id={`properties-vt-hd-cb-${uuid}-${props.scrollKey}`}
 					onChange={setAllRowsSelected}
@@ -208,7 +208,6 @@ const VirtualizedGrid = (props) => {
 			);
 
 			selectOption = (<td className="properties-vt-row-checkbox"
-				role="gridcell"
 				onMouseEnter={(evt) => overSelectOption(evt)}
 				onMouseLeave={(evt) => overSelectOption(evt)}
 				onFocus={(evt) => overSelectOption(evt)}
