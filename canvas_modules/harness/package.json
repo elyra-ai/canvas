@@ -23,7 +23,7 @@
     "html-to-image": "1.11.11",
     "isomorphic-fetch": "3.0.0",
     "js-file-download": "0.4.12",
-    "jspdf": "2.5.1",
+    "jspdf": "3.0.1",
     "lodash": "4.17.21",
     "log4js": "6.9.1",
     "nconf": "0.12.1"
