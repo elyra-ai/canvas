@@ -66,7 +66,7 @@ export default class FieldPicker extends React.Component {
 		this.handleCancel = this.handleCancel.bind(this);
 		this.handleReset = this.handleReset.bind(this);
 		this.getNewSelections = this.getNewSelections.bind(this);
-		this.onSortVT = this.onSortVT.bind(this);
+		this.onSort = this.onSort.bind(this);
 		this.onFilter = this.onFilter.bind(this);
 		this.updateFieldSelections = this.updateFieldSelections.bind(this);
 		this.filterList = this.getAvailableFilters();
@@ -80,7 +80,7 @@ export default class FieldPicker extends React.Component {
 	* Reorder the current list of fields displayed according to the sort column
 	* @param spec object with a column and direction to sort
 	*/
-	onSortVT(spec) {
+	onSort(spec) {
 		let fields = Array.from(this.state.fields);
 		fields = sortBy(fields, function(field) {
 			switch (spec.column) {
@@ -415,7 +415,7 @@ export default class FieldPicker extends React.Component {
 				onFilter={this.onFilter}
 				columns={headers}
 				data={tableData}
-				onSortVT={this.onSortVT}
+				onSort={this.onSort}
 				filterKeyword={this.state.filterText}
 				scrollKey="field-picker"
 				noAutoSize

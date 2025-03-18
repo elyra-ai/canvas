@@ -147,20 +147,15 @@ class FlexibleTable extends React.Component {
 		}
 	}
 
-	onSort(rowA, rowB, field) {
+	onSort(column, descending) {
 		if (this.props.onSort) {
-			return this.props.onSort(rowA, rowB, field);
+			const sortDirection = descending === true ? SORT_DIRECTION.DESC : SORT_DIRECTION.ASC;
+			const spec = {
+				column: column,
+				direction: sortDirection
+			};
+			this.props.onSort(spec);
 		}
-
-		// Do basic sorting
-		const rowAValue = rowA.original.columns.find((column) => column.column === field)?.value;
-		const rowBValue = rowB.original.columns.find((column) => column.column === field)?.value;
-		if (rowAValue > rowBValue) {
-			return 1;
-		} else if (rowAValue < rowBValue) {
-			return -1;
-		}
-		return 0; // equal
 	}
 
 	/**
@@ -732,7 +727,6 @@ FlexibleTable.propTypes = {
 	filterKeyword: PropTypes.string,
 	hideFilterInput: PropTypes.func,
 	scrollToRow: PropTypes.number,
-	onSortVT: PropTypes.func,
 	onSort: PropTypes.func,
 	onFilter: PropTypes.func,
 	showHeader: PropTypes.bool,

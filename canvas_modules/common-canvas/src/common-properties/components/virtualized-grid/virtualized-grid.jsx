@@ -38,6 +38,7 @@ const DEFAULT_COLUMN_WIDTH = 120;
 const DEFAULT_ROW_HEIGHT = 32; // $spacing-07
 
 const VirtualizedGrid = (props) => {
+	const [sorting, setSorting] = useState([]);
 	const [isOverSelectOption, setIsOverSelectOptionState] = useState(false);
 	const [mouseEventCalled, setMouseEventCalledState] = useState(false);
 	const [keyBoardEventCalled, setKeyBoardEventCalledState] = useState(false);
@@ -68,13 +69,9 @@ const VirtualizedGrid = (props) => {
 				header: col.label,
 				size: col.width,
 				id: col.key,
-				enableResizing: col.resizable
+				enableResizing: col.resizable,
+				enableSorting: props.onSort && includes(props.sortColumns, col.key)
 			};
-			if (props.onSort && includes(props.sortColumns, col.key)) {
-				columnDef.sortingFn = "customSort";
-			} else {
-				columnDef.enableSorting = false;
-			}
 			colDefs.push(columnDef);
 		});
 		return colDefs;
@@ -86,14 +83,13 @@ const VirtualizedGrid = (props) => {
 		defaultColumn: {
 			size: DEFAULT_COLUMN_WIDTH
 		},
+		state: {
+			sorting,
+		},
+		onSortingChange: setSorting,
 		columnResizeMode: "onChange",
 		getCoreRowModel: getCoreRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		enableSortingRemoval: false, // disable the ability to remove sorting on columns (always none -> asc -> desc -> asc)
-		sortingFns: {
-			customSort: props.onSort
-		},
-		// getRowId: (row) => row.id
+		enableSortingRemoval: false // disable the ability to remove sorting on columns (always none -> asc -> desc -> asc)
 	});
 
 	// Calculate column sizes when changed from resizing
@@ -113,9 +109,15 @@ const VirtualizedGrid = (props) => {
 	}, [table.getState().columnSizingInfo, props.excessWidth]);
 
 	useEffect(() => {
+		if (props.onSort && table.getState().sorting.length > 0) {
+			props.onSort(table.getState().sorting[0].id, table.getState().sorting[0].desc);
+		}
+	}, [table.getState().sorting]);
+
+	useEffect(() => {
 		if (props.scrollToIndex && props.scrollToIndex !== -1) {
 			console.log("!!! scrollToIndex", props.scrollToIndex);
-			console.log("!!! sorted", table.getSortedRowModel().rows);
+			console.log("!!! sorted", table.getCoreRowModel().rows);
 			const row = document.querySelectorAll(`tr[data-id=${props.scrollKey}-${props.scrollToIndex}]`);
 			if (row?.[0]) {
 				row?.[0].scrollIntoView();
