@@ -72,6 +72,10 @@
 						}
 					}
 
+					&.properties-vt-column-sortable {
+						padding-right: $spacing-06;
+					}
+
 					.properties-vt-header-resize {
 						position: absolute;
 						right: 0;
@@ -82,8 +86,7 @@
 					.properties-ft-column-sort-icon {
 						flex: 0 0 $spacing-05;
 						height: $spacing-05;
-						// margin-right: $spacing-03; // spacing between sort icon and end of column
-						// margin-left: $spacing-03; // spacing between column label and sort icon
+						margin-left: $spacing-02;
 
 						&.default {
 							fill: $layer-accent-01;
@@ -169,7 +172,7 @@
 			tr.properties-grid-body-row.properties-vt-row-selected {
 				background-color: $layer-selected-01;
 				border-left: $spacing-02 solid $button-primary;
-				// TODO test
+
 				&:not(.properties-vt-row-disabled):hover {
 					border-left: $spacing-02 solid $button-primary;
 				}

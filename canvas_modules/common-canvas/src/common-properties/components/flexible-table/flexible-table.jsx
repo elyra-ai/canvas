@@ -29,6 +29,8 @@ import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
 import { REM_ROW_HEIGHT, REM_HEADER_HEIGHT, ONE_REM_HEIGHT, SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
+const COLUMN_PADDING_BUFFER = 12;
+
 class FlexibleTable extends React.Component {
 
 	constructor(props) {
@@ -217,7 +219,7 @@ class FlexibleTable extends React.Component {
 	calculateColumnWidths() {
 		const columns = this.props.columns;
 
-		let tableWidth = this.state.availableWidth - 12; // subtract 12 for the left padding scss $spacing-04
+		let tableWidth = this.state.availableWidth - COLUMN_PADDING_BUFFER; // subtract for the left padding scss $spacing-04
 		if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 			tableWidth -= 40;
 		}
@@ -293,7 +295,7 @@ class FlexibleTable extends React.Component {
 
 	updateExcessWidth() {
 		if (this.state.tableWidth < this.state.availableWidth) {
-			let excessWidth = this.state.availableWidth - this.state.tableWidth;
+			let excessWidth = this.state.availableWidth - this.state.tableWidth - COLUMN_PADDING_BUFFER;
 			if (typeof this.props.updateRowSelections !== "undefined") {
 				excessWidth -= 40; // Adjust for checkboxes
 			}

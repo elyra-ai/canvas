@@ -244,10 +244,10 @@ const VirtualizedGrid = (props) => {
 				setIsOverSelectOptionState(false);
 			} else if (evt.type === "focus" && !mouseEventCalled) {
 				setKeyBoardEventCalledState(true);
-				setIsOverSelectOptionState(!isOverSelectOption); // TODO test
+				setIsOverSelectOptionState(!isOverSelectOption);
 			} else if (evt.type === "blur" && keyBoardEventCalled) {
 				setKeyBoardEventCalledState(false);
-				setIsOverSelectOptionState(!isOverSelectOption); // TODO test
+				setIsOverSelectOptionState(!isOverSelectOption);
 			}
 		}
 	};
@@ -359,8 +359,8 @@ const VirtualizedGrid = (props) => {
 
 				return (<tr key={`properties-grid-body-row-${virtualRow.index}}`} data-id={`${props.scrollKey}-${originalRowIndex}`}
 					className={classNames("properties-grid-body-row properties-vt-row-class properties-vt-double-click",
-						{ "properties-vt-row-selected": rowSelected }, // TODO
-						{ "properties-vt-row-disabled": rowDisabled }, // TODO
+						{ "properties-vt-row-selected": rowSelected },
+						{ "properties-vt-row-disabled": rowDisabled },
 						{ "properties-vt-row-non-interactive": !props.selectable } // ReadonlyTable with single row selection is non-interactive.
 					)}
 					data-role="properties-data-row"
