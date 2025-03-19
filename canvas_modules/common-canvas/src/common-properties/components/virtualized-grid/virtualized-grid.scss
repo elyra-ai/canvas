@@ -53,22 +53,23 @@
 					position: relative;
 
 					&.properties-vt-column {
-						padding: 0 1rem;
+						padding: 0 $spacing-05;
 
-						// .properties-vt-label-tip-icon {
-						// 	width: 100%;
+						.cds--checkbox-wrapper {
+							margin-bottom: 0;
+							.cds--checkbox-label {
+								width: 100%;
 
-						// 	.properties-vt-info-icon-tip {
-						// 		height: $spacing-05;
-						// 		margin: 0 $spacing-03;
-
-						// 		.properties-vt-info-icon {
-						// 			&:hover {
-						// 				cursor: pointer;
-						// 			}
-						// 		}
-						// 	}
-						// }
+								span {
+									@include type-style("productive-heading-01");
+									color: $text-primary;
+									text-overflow: ellipsis;
+									white-space: nowrap;
+									overflow: hidden;
+									width: 100%;
+								}
+							}
+						}
 					}
 
 					.properties-vt-header-resize {
@@ -188,108 +189,5 @@
 				}
 			}
 		}
-
-		// // Table rows container
-		// > div[role="rowgroup"] {
-		// 	&:focus {
-		// 		outline-style: none;
-		// 	}
-		// }
-
-		// .properties-vt-row-disabled {
-		// 	opacity: 0.5;
-		// 	&:hover {
-		// 		border-bottom: 1px solid $layer-accent-01;
-		// 	}
-		// }
 	}
-
-	
-
-
-
-
-	// .properties-vt-double-click:first-of-type {
-	// 	.properties-vt-row-class {
-	// 		border-top: 1px solid transparent;
-	// 		&.properties-vt-row-selected {
-	// 			border-top: 1px solid $layer-accent-hover-01;
-	// 		}
-	// 	}
-	// }
-
-	// 	.properties-table-cell-control {
-	// 		// Required for numberfields within react-virtualized table cell
-	// 		.properties-numberfield {
-	// 			input {
-	// 				margin-bottom: 5px;
-	// 			}
-	// 		}
-
-	// 		// Required for textarea to be visible in a table cell
-	// 		.properties-textarea textarea {
-	// 			resize: none;
-	// 			height: 42px;
-	// 			min-width: 100%;
-	// 		}
-	// 	}
-
-	// 	// Required to position the warning/error icons correctly within react-virtualized table cell
-	// 	.ReactVirtualized__Table__headerColumn {
-	// 		margin-right: 0;
-	// 		display: flex;
-	// 		flex-direction: row;
-	// 		justify-content: center;
-	// 		height: 100%;
-	// 	}
-
-	// 	.ReactVirtualized__Table__rowColumn {
-	// 		margin-right: 0; // Align cell text with header label
-	// 		margin-left: 0;
-	// 	}
-
-	// 	.ReactVirtualized__Table__sortableHeaderColumn {
-	// 		.properties-vt-label-tip-icon {
-	// 			padding-right: $spacing-03; // spacing between column label and sort icon
-	// 		}
-	// 		&:hover {
-	// 			background-color: $layer-active-01;
-	// 		}
-	// 	}
-
-	// 	.ReactVirtualized__Table__headerTruncatedText {
-	// 		flex: auto;
-	// 	}
-	// }
-
-	// .properties-vt-row-selected {
-	// 	background-color: $layer-selected-01;
-	// 	border-bottom: 1px solid $layer-accent-hover-01;
-	// 	&:hover {
-	// 		background-color: $layer-accent-hover-01;
-	// 	}
-	// }
-
-	// .properties-vt-single-selection {
-	// 	// Table header
-	// 	div[data-role="properties-header-row"] {
-	// 		padding-left: 3px;
-	// 	}
-
-	// .properties-vt-small-loading svg {
-	// 	stroke: $button-primary; // Override carbon's small Loading color.
-	// }
-
-	// // Required for Autosizer in VirtualizedTable to set a height and width
-	// .properties-vt-autosizer {
-	// 	height: 100%;
-	// 	width: 100%;
-	// }
-
-	// .properties-ft-column-sort-icon {
-	// 	flex: 0 0 $spacing-05;
-	// 	align-self: center;
-	// 	height: $spacing-05;
-	// 	margin-right: $spacing-03; // spacing between sort icon and end of column
-	// }
 }

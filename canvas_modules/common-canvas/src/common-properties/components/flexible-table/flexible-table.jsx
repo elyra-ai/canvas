@@ -82,8 +82,6 @@ class FlexibleTable extends React.Component {
 		this._updateTableWidth(this.tableRef.current.getBoundingClientRect());
 		this.calculateColumnWidths();
 		this._adjustTableHeight();
-		// window.addEventListener("resize", this._adjustTableHeight);
-		// this.tableNode = ReactDOM.findDOMNode(this.refs.table);
 
 		this.headerObserver = new ResizeObserver((entries) => {
 			for (const entry of entries) {
@@ -126,12 +124,9 @@ class FlexibleTable extends React.Component {
 		if (this.props.selectedRows && !isEmpty(this.props.data)) {
 			this.setCheckedAll(this.props.selectedRows);
 		}
-
-		// this.tableNode = ReactDOM.findDOMNode(this.refs.table);
 	}
 
 	componentWillUnmount() {
-		// window.removeEventListener("resize", this._adjustTableHeight);
 		this.headerObserver?.disconnect();
 		this.resizeObserver?.disconnect();
 	}
@@ -222,7 +217,7 @@ class FlexibleTable extends React.Component {
 	calculateColumnWidths() {
 		const columns = this.props.columns;
 
-		let tableWidth = this.state.availableWidth; // - 12; // subtract 12 for the left padding scss $spacing-04
+		let tableWidth = this.state.availableWidth - 12; // subtract 12 for the left padding scss $spacing-04
 		if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 			tableWidth -= 40;
 		}
