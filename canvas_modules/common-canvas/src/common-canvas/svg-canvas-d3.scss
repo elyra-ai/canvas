@@ -158,20 +158,19 @@ $link-highlight-color: $support-info;
 
 .d3-grid-dot {
 	r: 1;
-	fill: $border-subtle-02;
-	stroke: $border-subtle-02;
-	stroke-width: 0;
+	fill: $border-strong-01;
+	stroke: none;
 }
 
 .d3-grid-boxes {
 	fill: none;
-	stroke: $border-subtle-02;
+	stroke: $border-strong-01;
 	stroke-width: 0.5px;
 }
 
 .d3-grid-lines {
 	fill: none;
-	stroke: $border-subtle-02;
+	stroke: $border-strong-01;
 	stroke-width: 1px;
 }
 
