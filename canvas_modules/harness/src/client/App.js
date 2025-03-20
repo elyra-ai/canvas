@@ -539,10 +539,11 @@ class App extends React.Component {
 			});
 	}
 
-	// Sets the state to the config passed in. This is called by the Cypress
+	// Sets the state to the config passed in by adding whatever is
+	// passed in to the current state. This is called by the Cypress
 	// testcases to set the test harness state in one go.
 	setCanvasConfig(config) {
-		this.setState(config);
+		this.setState({ ...this.state, ...config });
 	}
 
 	setCanvasDropdownFile(selectedCanvasDropdownFile) {
@@ -2158,6 +2159,7 @@ class App extends React.Component {
 			enableSingleOutputPortDisplay: this.state.selectedSingleOutputPortDisplay,
 			enableNodeLayout: this.state.selectedNodeLayout,
 			enableCanvasLayout: {
+				...this.state.selectedCanvasLayout,
 				displayGrid: this.state.selectedDisplayGridType,
 				displayGridMajorX: this.state.enteredMajorGridX,
 				displayGridMajorY: this.state.enteredMajorGridY,
