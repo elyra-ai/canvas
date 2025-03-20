@@ -1476,13 +1476,13 @@ export default class SVGCanvasRenderer {
 		feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 	}
 
-	// 	 <pattern id="smallGrid" width="8" height="8" patternUnits="userSpaceOnUse">
-	// 	    <path d="M 8 0 L 0 0 0 8" fill="none" stroke="gray" stroke-width="0.5"/>
-	//   </pattern>
-	//   <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
-	// 	    <rect width="80" height="80" fill="url(#smallGrid)"/>
-	// 	    <path d="M 80 0 L 0 0 0 80" fill="none" stroke="gray" stroke-width="1"/>
-	//   </pattern>
+	// Adds a patterns to the <defs> element which can be used to draw
+	// different background grids on the canvas based on the settings
+	// in canvasLayout. This can be:
+	// Dots  -- which needs a single pattern
+	// Boxes -- which needs a single pattern
+	// DotsAndLines -- which needs two patterns
+	// BoxesAndLines -- which needs two patterns
 	createGrid(defs, canvasLayout) {
 		const gridMajorPx = canvasLayout.displayGridMajorPx;
 		const gridMajorPy = canvasLayout.displayGridMajorPy;
@@ -1539,18 +1539,21 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	// Returns a grid ID for the display grid requested. The instanceId
+	// is included in the returned ID to ensure that each instance of
+	// the canvas has its own grid pattern.
 	getGridId() {
 		if (this.canvasLayout.displayGrid === DISPLAY_GRID_DOTS) {
-			return "d3-grid-dots-pattern_" + this.instanceId;
+			return "d3_grid_dots_pattern_" + this.instanceId;
 
 		} else if (this.canvasLayout.displayGrid === DISPLAY_GRID_BOXES) {
-			return "d3-grid-boxes-pattern_" + this.instanceId;
+			return "d3_grid_boxes_pattern_" + this.instanceId;
 
 		} else if (this.canvasLayout.displayGrid === DISPLAY_GRID_DOTS_AND_LINES) {
-			return "d3-grid-dots-lines-pattern_" + this.instanceId;
+			return "d3_grid_dots_lines-pattern_" + this.instanceId;
 
 		} else if (this.canvasLayout.displayGrid === DISPLAY_GRID_BOXES_AND_LINES) {
-			return "d3-grid-boxes-lines-pattern_" + this.instanceId;
+			return "d3_grid_boxes_lines_pattern_" + this.instanceId;
 		}
 		return null;
 	}
