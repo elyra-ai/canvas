@@ -1307,18 +1307,14 @@ export default class SVGCanvasRenderer {
 	// 3. To display a background grid underneath the canvas objects which will zoom
 	//    and pan with the canvas objects.
 	createCanvasBackground(canvasGrp) {
-		const rect = this.canvasDiv.node().getBoundingClientRect();
-		const topLeft = this.zoomUtils.transformPos({ x: rect.left, y: rect.top });
-		const bottomRight = this.zoomUtils.transformPos({ x: rect.right, y: rect.bottom });
-		const width = bottomRight.x - topLeft.x;
-		const height = bottomRight.y - topLeft.y;
+		const dims = this.getTransformedViewportDimensions();
 
 		const canvasBackground = canvasGrp
 			.append("rect")
-			.attr("x", topLeft.x - 15000)
-			.attr("y", topLeft.y - 15000)
-			.attr("width", width + 30000)
-			.attr("height", height + 30000)
+			.attr("x", dims.x - 15000)
+			.attr("y", dims.y - 15000)
+			.attr("width", dims.width + 30000)
+			.attr("height", dims.height + 30000)
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("pointer-events", "all")
 			.style("cursor", "default")
