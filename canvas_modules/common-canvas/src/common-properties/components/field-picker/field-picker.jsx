@@ -410,7 +410,7 @@ export default class FieldPicker extends React.Component {
 
 		return (
 			<FlexibleTable className="properties-fp-table"
-				enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable === true}
+				enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
 				sortable={["fieldName", "schemaName", "dataType"]}
 				filterable={["fieldName"]}
 				onFilter={this.onFilter}

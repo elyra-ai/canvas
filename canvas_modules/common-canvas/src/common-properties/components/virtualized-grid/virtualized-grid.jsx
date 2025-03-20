@@ -22,7 +22,7 @@ import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import { v4 as uuid4 } from "uuid";
 import { isEmpty, includes } from "lodash";
-import { Checkbox } from "@carbon/react";
+import { Checkbox, Button } from "@carbon/react";
 import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
 
 import Tooltip from "../../../tooltip/tooltip.jsx";
@@ -86,6 +86,7 @@ const VirtualizedGrid = (props) => {
 		state: {
 			sorting,
 		},
+		sortDescFirst: false,
 		onSortingChange: setSorting,
 		columnResizeMode: "onChange",
 		getCoreRowModel: getCoreRowModel(),
@@ -283,7 +284,8 @@ const VirtualizedGrid = (props) => {
 								<Information className="properties-vt-info-icon" />
 							</Tooltip>
 						</div>);
-					const headerContentTooltip = (<div className="properties-vt-label-tip-icon">
+					const sortable = includes(props.sortColumns, header.key);
+					const headerContentTooltip = (<div className={classNames("properties-vt-label-tip-icon", { "header-disabled": !sortable })}>
 						<TruncatedContentTooltip
 							tooltipText={header.headerLabel}
 							content={headerDisplayLabel}
@@ -292,7 +294,7 @@ const VirtualizedGrid = (props) => {
 						{infoIcon}
 					</div>);
 					let sortIcon = null;
-					if (!includes(props.sortColumns, header.key)) {
+					if (!sortable) {
 						sortIcon = null;
 					} else if (virtualHeader.column.getIsSorted() === "asc") {
 						sortIcon = <ArrowUp className="properties-ft-column-sort-icon asc" />;
@@ -301,22 +303,35 @@ const VirtualizedGrid = (props) => {
 					} else { // false
 						sortIcon = <ArrowsVertical className="properties-ft-column-sort-icon default" />;
 					}
+
+					let headerDisplay = headerContentTooltip;
+					if (sortable) {
+						headerDisplay = (<button className={classNames("properties-vt-header-btn cds--table-sort", { "header-disabled": !sortable })} disabled={!sortable}>
+							{headerContentTooltip}
+							{sortIcon}
+						</button>);
+					}
+
 					const resizeHandle = header.resizable
 						? (<div className={classNames("properties-vt-header-resize", { "resizing": virtualHeader.column.getIsResizing() })}
 							onMouseDown={virtualHeader.getResizeHandler()}
 							onTouchStart={virtualHeader.getResizeHandler()}
+							role="button" tabIndex="0"
+							aria-label="Resize column"
 						/>)
 						: null;
 					return (<th key={`properties-grid-${virtualHeader.id}`}
 						className={classNames("properties-autosized-vt-header sticky-row properties-vt-column properties-tooltips-container",
 							{ "properties-vt-column-with-resize": header.resizable },
-							{ "properties-vt-column-sortable": includes(props.sortColumns, header.key) }
+							{ "properties-vt-column-sortable": sortable },
+							{ "sort-column-active": sortable && (virtualHeader.column.getIsSorted() === "asc" || virtualHeader.column.getIsSorted() === "desc") }
 						)}
 						style={{ width: Math.max(colSizes[virtualColumn.index], header.width) }}
 						onClick={virtualHeader.column.getToggleSortingHandler()}
+						aria-label={headerLabel}
+						data-id={`properties-vt-header-${header.key}`}
 					>
-						{headerContentTooltip}
-						{sortIcon}
+						{headerDisplay}
 						{resizeHandle}
 					</th>);
 				})}
@@ -393,7 +408,7 @@ const VirtualizedGrid = (props) => {
 					"lastCheckedRow": lastChecked === null ? 0 : lastChecked }, evt);
 
 				// Track lastChecked row for shift key selection
-				setLastCheckedState(rowData.index);
+				setLastCheckedState(rowData.originalRowIndex);
 			}
 		}
 	};
@@ -419,6 +434,7 @@ const VirtualizedGrid = (props) => {
 		<table className={classNames("properties-autosized-vt",
 			{ "properties-vt-single-selection": props.rowSelection && props.rowSelection === ROW_SELECTION.SINGLE },
 			{ "properties-light-disabled": !props.light })}
+			aria-label={props.tableLabel ? props.tableLabel : ""}
 		>
 			{props.showHeader ? tableHeader(table.getHeaderGroups()) : null}
 			{tableBody(table.getRowModel().rows)}

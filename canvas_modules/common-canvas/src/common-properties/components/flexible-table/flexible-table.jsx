@@ -223,6 +223,7 @@ class FlexibleTable extends React.Component {
 		if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 			tableWidth -= 40;
 		}
+		const compare = tableWidth + (COLUMN_PADDING_BUFFER / 2); // Save initial width for comparison later
 		let remainingColumns = columns.length; // keep track of how many columns to calculate width for
 		let maxWeight = 0;
 
@@ -274,16 +275,10 @@ class FlexibleTable extends React.Component {
 		}
 
 		// if any columns had decimals floored, allocate additional space to the first column
-		let compare = this.state.availableWidth;
-		if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
-			compare -= 40;
-		}
-
 		if (sumColumnWidth < compare) {
 			const firstColWidth = parseInt(widths[0], 10);
 			widths[0] = firstColWidth + compare - sumColumnWidth + "px";
 		}
-
 		this.setState({ columnWidths: widths, tableWidth: sumColumnWidth });
 	}
 
@@ -299,7 +294,7 @@ class FlexibleTable extends React.Component {
 			if (typeof this.props.updateRowSelections !== "undefined") {
 				excessWidth -= 40; // Adjust for checkboxes
 			}
-			this.setState({ excessWidth: excessWidth });
+			this.setState({ excessWidth: excessWidth > 0 ? excessWidth : 0 });
 		}
 	}
 

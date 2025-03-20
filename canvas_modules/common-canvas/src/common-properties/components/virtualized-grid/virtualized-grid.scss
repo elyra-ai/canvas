@@ -53,8 +53,6 @@
 					position: relative;
 
 					&.properties-vt-column {
-						padding: 0 $spacing-05;
-
 						.cds--checkbox-wrapper {
 							margin-bottom: 0;
 							.cds--checkbox-label {
@@ -72,8 +70,20 @@
 						}
 					}
 
-					&.properties-vt-column-sortable {
+					.properties-vt-header-btn {
+						width: 100%;
 						padding-right: $spacing-06;
+
+						&.header-disabled {
+							padding-right: $spacing-05;
+							:hover {
+								cursor: default;
+							}
+						}
+					}
+
+					.header-disabled {
+						padding: 0 $spacing-05;
 					}
 
 					.properties-vt-header-resize {
