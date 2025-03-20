@@ -102,7 +102,12 @@ import {
 	PALETTE_LAYOUT_DIALOG,
 	PALETTE_LAYOUT_NONE,
 	TOOLBAR_LAYOUT_NONE,
-	TOOLBAR_LAYOUT_TOP
+	TOOLBAR_LAYOUT_TOP,
+	DISPLAY_GRID_NONE,
+	DISPLAY_GRID_DOTS,
+	DISPLAY_GRID_BOXES,
+	DISPLAY_GRID_DOTS_AND_LINES,
+	DISPLAY_GRID_BOXES_AND_LINES
 } from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
 
 import FormsService from "../../../services/FormsService";
@@ -629,7 +634,7 @@ export default class SidePanelForms extends React.Component {
 				</FormGroup>
 			</div>
 			<div className="harness-sidepanel-headers">
-				Enter a pixel size or percentage of node width/height ("25%").
+				Enter a pixel size or percentage of default node width/height ("25%").
 			</div>
 			<div className="harness-snap-to-grid">
 				<TextInput
@@ -646,6 +651,81 @@ export default class SidePanelForms extends React.Component {
 					placeholder="Y Size"
 					onChange={this.enteredStateValue}
 					value={this.props.getStateValue("enteredSnapToGridY")}
+				/>
+			</div>
+		</div>);
+
+		var displayGrid = (<div className="harness-sidepanel-children" id="harness-sidepanel-display-grid-type">
+			<div>
+				<FormGroup
+					legendText="Display Grid"
+				>
+					<RadioButtonGroup
+						className="harness-sidepanel-radio-group"
+						name="selectedDisplayGridType" // Set name to corresponding field name in App.js
+						onChange={this.setStateValue}
+						defaultSelected={this.props.getStateValue("selectedDisplayGridType")}
+						orientation="vertical"
+					>
+						<RadioButton
+							value={DISPLAY_GRID_NONE}
+							labelText={DISPLAY_GRID_NONE}
+						/>
+						<RadioButton
+							value={DISPLAY_GRID_DOTS}
+							labelText={DISPLAY_GRID_DOTS}
+						/>
+						<RadioButton
+							value={DISPLAY_GRID_BOXES}
+							labelText={DISPLAY_GRID_BOXES}
+						/>
+						<RadioButton
+							value={DISPLAY_GRID_DOTS_AND_LINES}
+							labelText={DISPLAY_GRID_DOTS_AND_LINES}
+						/>
+						<RadioButton
+							value={DISPLAY_GRID_BOXES_AND_LINES}
+							labelText={DISPLAY_GRID_BOXES_AND_LINES}
+						/>
+					</RadioButtonGroup>
+				</FormGroup>
+			</div>
+			<div className="harness-sidepanel-headers">
+				Enter a pixel size or percentage of default node width/height ("25%").
+			</div>
+			<div className="harness-snap-to-grid">
+				<TextInput
+					style={entrySize}
+					id="enteredMajorGridX" // Set ID to corresponding field in App.js state
+					labelText="Major Grid X Size"
+					placeholder="X Size"
+					onChange={this.enteredStateValue}
+					value={this.props.getStateValue("enteredMajorGridX")}
+				/>
+				<TextInput style={entrySize}
+					id="enteredMajorGridY" // Set ID to corresponding field in App.js state
+					labelText="Major Grid Y Size"
+					placeholder="Y Size"
+					onChange={this.enteredStateValue}
+					value={this.props.getStateValue("enteredMajorGridY")}
+				/>
+			</div>
+			<div style={{ height: "10px" }} />
+			<div className="harness-snap-to-grid">
+				<TextInput
+					style={entrySize}
+					id="enteredMinorGridX" // Set ID to corresponding field in App.js state
+					labelText="Minor Grid X Size"
+					placeholder="X Size"
+					onChange={this.enteredStateValue}
+					value={this.props.getStateValue("enteredMinorGridX")}
+				/>
+				<TextInput style={entrySize}
+					id="enteredMinorGridY" // Set ID to corresponding field in App.js state
+					labelText="Minor Grid Y Size"
+					placeholder="Y Size"
+					onChange={this.enteredStateValue}
+					value={this.props.getStateValue("enteredMinorGridY")}
 				/>
 			</div>
 		</div>);
@@ -1809,6 +1889,8 @@ export default class SidePanelForms extends React.Component {
 					{interactionType}
 					{divider}
 					{snapToGrid}
+					{divider}
+					{displayGrid}
 					{divider}
 					{stateTag}
 					{divider}

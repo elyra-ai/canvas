@@ -47,6 +47,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	FLOW_IN, FLOW_OUT,
 	PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT,
 	SINGLE_CLICK, SINGLE_CLICK_CONTEXTMENU, DOUBLE_CLICK,
+	DISPLAY_GRID_DOTS, DISPLAY_GRID_DOTS_AND_LINES, DISPLAY_GRID_BOXES, DISPLAY_GRID_BOXES_AND_LINES,
 	CANVAS_FOCUS
 } from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
@@ -139,10 +140,15 @@ export default class SVGCanvasRenderer {
 		this.initializeGhostDiv();
 
 		this.canvasSVG = this.createCanvasSVG();
-		this.canvasDefs = this.canvasSVG.selectChildren("defs");
+
+		// Add a <defs> element to the canvas SVG.
+		this.canvasDefs = this.createDefs(this.canvasSVG, this.canvasLayout);
 
 		// Group to contain all canvas objects
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG, "d3-canvas-group");
+
+		// Adds a background rectangle to the canvas group
+		this.canvasBackground = this.createCanvasBackground(this.canvasGrp);
 
 		// Put underlay rectangle under comments, nodes and links
 		this.canvasUnderlay = this.createCanvasUnderlay(this.canvasGrp, "d3-canvas-underlay");
@@ -1272,25 +1278,42 @@ export default class SVGCanvasRenderer {
 				}
 			});
 
-		// This rectangle is added for two reasons:
-		// 1. On Safari, wheel events will not go to the SVG unless there is an
-		//    SVG object under the mouse pointer. Therefore we open this rectangle
-		//    to fill the SVG area to catch those events in Safari. See this stack
-		//    overflow issue for details:
-		//    https://stackoverflow.com/questions/40887193/d3-js-zoom-is-not-working-with-mousewheel-in-safari
-		// 2. If we're displaying a sub-flow inside a supernode (on any browser)
-		//    we need a background rectangle to display the same color as
-		//    the background of the main canvas.
-		// So this rectangle is not needed on Chrome and Firefox with full page
-		// display but we open it anyway, for consistency.
-		canvasSVG
+		return canvasSVG;
+	}
+
+	// Creates a <defs> element that is attached to the top most SVG area when
+	// we are displaying either the primary pipeline full page or a sub-pipeline
+	// full page. This only needs to be done once for the whole page.
+	createDefs(canvasSVG, canvasLayout) {
+		if (this.dispUtils.isDisplayingFullPage()) {
+			var defs = canvasSVG.append("defs");
+			this.createDropShadow(defs);
+			this.createGrid(defs, canvasLayout);
+
+			return canvasSVG.selectChildren("defs");
+		}
+		return null;
+	}
+
+	// Adds a background rectangle to the canvas group. This is added for three reasons:
+	// 1. On Safari, wheel events will not go to the SVG unless there is an
+	//    SVG object under the mouse pointer. Therefore we open this rectangle
+	//    to fill the SVG area to catch those events in Safari. See this stack
+	//    overflow issue for details:
+	//    https://stackoverflow.com/questions/40887193/d3-js-zoom-is-not-working-with-mousewheel-in-safari
+	// 2. If we're displaying a sub-flow inside a supernode (on any browser)
+	//    we need a background rectangle to display the same color as
+	//    the background of the main canvas.
+	// 3. To display a background grid underneath the canvas objects which will zoom
+	//    and pan with the canvas objects.
+	createCanvasBackground(canvasGrp) {
+		const canvasBackground = canvasGrp
 			.append("rect")
-			.attr("x", 0)
-			.attr("y", 0)
-			.attr("width", dims.width)
-			.attr("height", dims.height)
+			.attr("x", -10000)
+			.attr("y", -10000)
+			.attr("width", 20000)
+			.attr("height", 20000)
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", "d3-svg-background")
 			.attr("pointer-events", "all")
 			.style("cursor", "default")
 			.on("mousedown", () => {
@@ -1299,16 +1322,15 @@ export default class SVGCanvasRenderer {
 				}
 			});
 
-		// Only attach the 'defs' to the top most SVG area when we are displaying
-		// either the primary pipeline full page or a sub-pipeline full page.
-		if (this.dispUtils.isDisplayingFullPage()) {
-			// Add defs element to allow a filter for the drop shadow
-			// This only needs to be done once for the whole page.
-			var defs = canvasSVG.append("defs");
-			this.createDropShadow(defs);
+		// Set the appropriate grid ID for the canvas background.
+		const gridId = this.getGridId();
+		if (gridId) {
+			canvasBackground.attr("fill", `url(#${gridId})`);
+		} else {
+			canvasBackground.attr("class", "d3-svg-background");
 		}
 
-		return canvasSVG;
+		return canvasBackground;
 	}
 
 	// Sets the canvas zoom and mouse behaviors on the canvas SVG area. This is
@@ -1446,6 +1468,115 @@ export default class SVGCanvasRenderer {
 		var feMerge = dropShadowFilter.append("feMerge");
 		feMerge.append("feMergeNode");
 		feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+	}
+
+	// 	 <pattern id="smallGrid" width="8" height="8" patternUnits="userSpaceOnUse">
+	// 	    <path d="M 8 0 L 0 0 0 8" fill="none" stroke="gray" stroke-width="0.5"/>
+	//   </pattern>
+	//   <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+	// 	    <rect width="80" height="80" fill="url(#smallGrid)"/>
+	// 	    <path d="M 80 0 L 0 0 0 80" fill="none" stroke="gray" stroke-width="1"/>
+	//   </pattern>
+	createGrid(defs, canvasLayout) {
+		const gridMajorPx = canvasLayout.displayGridMajorPx;
+		const gridMajorPy = canvasLayout.displayGridMajorPy;
+		const gridMinorPx = canvasLayout.displayGridMinorPx;
+		const gridMinorPy = canvasLayout.displayGridMinorPy;
+
+		const gridId = this.getGridId();
+
+		if (canvasLayout.displayGrid === DISPLAY_GRID_DOTS) {
+			this.addDotsPattern(defs, gridId, gridMinorPx, gridMinorPy);
+
+		} else if (canvasLayout.displayGrid === DISPLAY_GRID_BOXES) {
+			this.addBoxesPattern(defs, gridId, gridMinorPx, gridMinorPy);
+
+		} else if (canvasLayout.displayGrid === DISPLAY_GRID_BOXES_AND_LINES) {
+			this.addBoxesPattern(defs, "smallGrid", gridMinorPx, gridMinorPy);
+
+			const gridPattern = defs.append("pattern")
+				.attr("id", gridId)
+				.attr("width", gridMajorPx)
+				.attr("height", gridMajorPy)
+				.attr("x", 0)
+				.attr("y", 0)
+				.attr("patternUnits", "userSpaceOnUse");
+			gridPattern.append("rect")
+				.attr("width", gridMajorPx)
+				.attr("height", gridMajorPy)
+				.attr("stroke", "none")
+				.attr("fill", "url(#smallGrid)");
+			gridPattern.append("path")
+				.attr("d", `M ${gridMajorPx} 0 L 0 0 0 ${gridMajorPy}`)
+				.attr("class", "d3-grid-lines");
+
+		} else if (canvasLayout.displayGrid === DISPLAY_GRID_DOTS_AND_LINES) {
+			this.addDotsPattern(defs, "smallGrid", gridMinorPx, gridMinorPy);
+
+			const gridPattern = defs.append("pattern")
+				.attr("id", gridId)
+				.attr("width", gridMajorPx)
+				.attr("height", gridMajorPy)
+				.attr("x", 0)
+				.attr("y", 0)
+				.attr("patternUnits", "userSpaceOnUse");
+			gridPattern.append("rect")
+				.attr("width", gridMajorPx - gridMinorPx)
+				.attr("height", gridMajorPy - gridMinorPy)
+				.attr("x", gridMinorPx * 0.5)
+				.attr("y", gridMinorPy * 0.5)
+				.attr("stroke", "none")
+				.attr("fill", "url(#smallGrid)");
+			gridPattern.append("path")
+				.attr("d", `M ${gridMajorPx} 0 L 0 0 0 ${gridMajorPy}`)
+				.attr("class", "d3-grid-lines");
+		}
+	}
+
+	getGridId() {
+		if (this.canvasLayout.displayGrid === DISPLAY_GRID_DOTS) {
+			return "d3-grid-dots-pattern_" + this.instanceId;
+
+		} else if (this.canvasLayout.displayGrid === DISPLAY_GRID_BOXES) {
+			return "d3-grid-boxes-pattern_" + this.instanceId;
+
+		} else if (this.canvasLayout.displayGrid === DISPLAY_GRID_DOTS_AND_LINES) {
+			return "d3-grid-dots-lines-pattern_" + this.instanceId;
+
+		} else if (this.canvasLayout.displayGrid === DISPLAY_GRID_BOXES_AND_LINES) {
+			return "d3-grid-boxes-lines-pattern_" + this.instanceId;
+		}
+		return null;
+	}
+
+	addDotsPattern(defs, id, gridMinorPx, gridMinorPy) {
+		const smallGridPattern = defs.append("pattern")
+			.attr("id", id)
+			.attr("width", gridMinorPx)
+			.attr("height", gridMinorPy)
+			.attr("x", gridMinorPx * 0.5)
+			.attr("y", gridMinorPy * 0.5)
+			.attr("patternUnits", "userSpaceOnUse");
+
+		smallGridPattern.append("circle")
+			.attr("cx", gridMinorPx * 0.5)
+			.attr("cy", gridMinorPy * 0.5)
+			.attr("class", "d3-grid-dot");
+
+		return smallGridPattern;
+	}
+
+	addBoxesPattern(defs, id, gridMinorPx, gridMinorPy) {
+		const smallGridPattern = defs.append("pattern")
+			.attr("id", id)
+			.attr("width", gridMinorPx)
+			.attr("height", gridMinorPy)
+			.attr("x", 0)
+			.attr("y", 0)
+			.attr("patternUnits", "userSpaceOnUse");
+		smallGridPattern.append("path")
+			.attr("d", `M ${gridMinorPx} 0 L 0 0 0 ${gridMinorPy}`)
+			.attr("class", "d3-grid-boxes");
 	}
 
 	setCommentEditingMode(commentId, pipelineId) {
