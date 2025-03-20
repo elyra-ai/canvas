@@ -1476,7 +1476,7 @@ export default class SVGCanvasRenderer {
 		feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 	}
 
-	// Adds a patterns to the <defs> element which can be used to draw
+	// Adds <pattern>s to the <defs> element which can be used to draw
 	// different background grids on the canvas based on the settings
 	// in canvasLayout. This can be:
 	// Dots  -- which needs a single pattern
