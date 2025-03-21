@@ -47,6 +47,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	FLOW_IN, FLOW_OUT,
 	PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT,
 	SINGLE_CLICK, SINGLE_CLICK_CONTEXTMENU, DOUBLE_CLICK,
+	DISPLAY_GRID_DOTS, DISPLAY_GRID_DOTS_AND_LINES, DISPLAY_GRID_BOXES, DISPLAY_GRID_BOXES_AND_LINES,
 	CANVAS_FOCUS
 } from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
@@ -136,24 +137,31 @@ export default class SVGCanvasRenderer {
 		// option is switched on.
 		this.dragNewLinkOverNode = null;
 
+		// Initialize a <div> to create ghost objects to appear under the canvas SVG.
 		this.initializeGhostDiv();
 
+		// Create the main SVG area to display all canvas contents.
 		this.canvasSVG = this.createCanvasSVG();
-		this.canvasDefs = this.canvasSVG.selectChildren("defs");
 
-		// Group to contain all canvas objects
+		// Add a <defs> element to the canvas SVG.
+		this.canvasDefs = this.createDefs(this.canvasSVG, this.canvasLayout);
+
+		// Add a background rectangle to the canvas SVG
+		this.canvasBackground = this.createCanvasBackground(this.canvasSVG);
+
+		// Add group to contain all canvas objects
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG, "d3-canvas-group");
 
-		// Put underlay rectangle under comments, nodes and links
+		// Add an underlay rectangle to the canvas group to appear under comments, nodes and links
 		this.canvasUnderlay = this.createCanvasUnderlay(this.canvasGrp, "d3-canvas-underlay");
 
-		// Group to always position comments under nodes and links
+		// Add group to always position comments under nodes and links
 		this.commentsGrp = this.createCanvasGroup(this.canvasGrp, "d3-comments-group");
 
-		// Group to position nodes and links over comments
+		// Add group to position nodes and links over comments
 		this.nodesLinksGrp = this.createCanvasGroup(this.canvasGrp, "d3-nodes-links-group");
 
-		// Group to optionally add bounding rectangles over all objects
+		// Add group to optionally add bounding rectangles over all objects
 		this.boundingRectsGrp = this.createBoundingRectanglesGrp(this.canvasGrp, "d3-bounding-rect-group");
 
 		this.resetCanvasSVGBehaviors();
@@ -316,6 +324,7 @@ export default class SVGCanvasRenderer {
 		// Restore the focus back to whatever object is currently in focus if
 		// keyboard navigation is enabled.
 		if (this.config.enableKeyboardNavigation) {
+			this.logger.log("setCanvasInfoRenderer - Restoring focus");
 			this.restoreFocus();
 		}
 
@@ -377,6 +386,8 @@ export default class SVGCanvasRenderer {
 			this.displayBoundingRectangles();
 		}
 
+		this.setCanvasBackgroundSize();
+
 		if (this.config.enablePositionNodeOnRightFlyoutOpen &&
 				this.canvasController.isRightFlyoutOpen()) {
 			const posInfo = (typeof this.config.enablePositionNodeOnRightFlyoutOpen === "boolean")
@@ -423,6 +434,8 @@ export default class SVGCanvasRenderer {
 				this.dispUtils.isDisplayingPrimaryFlowFullPage()) {
 			this.setCanvasUnderlaySize();
 		}
+
+		this.setCanvasBackgroundSize();
 
 		// The supernode will not have any calculated port positions when the
 		// subflow is being displayed full screen, so calculate them first.
@@ -1229,23 +1242,23 @@ export default class SVGCanvasRenderer {
 	createCanvasSVG() {
 		this.logger.log("Create Canvas SVG.");
 
-		// For full screen display of primary or sub flows we use the canvasDiv as
-		// the parent for the svg object and set width and height to fill the
-		// containing Div.
-		let parentObject = this.canvasDiv;
-		let dims = {
-			width: "100%",
-			height: "100%",
-			x: 0,
-			y: 0
-		};
+		// The dimensions for the <svg> element is dependent on if it is
+		// displayed for full-page display or in an expanded in-place supernode.
+		const dims = this.dispUtils.isDisplayingSubFlowInPlace()
+			? this.getParentSupernodeSVGDimensions()
+			: {
+				width: "100%",
+				height: "100%",
+				x: 0,
+				y: 0
+			};
 
-		// When rendering supernode contents we use the parent supernode as the
-		// parent for the svg object.
-		if (this.dispUtils.isDisplayingSubFlowInPlace()) {
-			parentObject = this.supernodeInfo.d3Selection;
-			dims = this.getParentSupernodeSVGDimensions();
-		}
+		// For full screen display of primary or sub flows we use the canvasDiv as
+		// the parent for the <svg> element. When rendering supernode contents we
+		// use the parent supernode as the parent.
+		const parentObject = this.dispUtils.isDisplayingSubFlowInPlace()
+			? this.supernodeInfo.d3Selection
+			: this.canvasDiv;
 
 		const canvasSVG = parentObject
 			.append("svg")
@@ -1271,25 +1284,44 @@ export default class SVGCanvasRenderer {
 				}
 			});
 
-		// This rectangle is added for two reasons:
-		// 1. On Safari, wheel events will not go to the SVG unless there is an
-		//    SVG object under the mouse pointer. Therefore we open this rectangle
-		//    to fill the SVG area to catch those events in Safari. See this stack
-		//    overflow issue for details:
-		//    https://stackoverflow.com/questions/40887193/d3-js-zoom-is-not-working-with-mousewheel-in-safari
-		// 2. If we're displaying a sub-flow inside a supernode (on any browser)
-		//    we need a background rectangle to display the same color as
-		//    the background of the main canvas.
-		// So this rectangle is not needed on Chrome and Firefox with full page
-		// display but we open it anyway, for consistency.
-		canvasSVG
+		return canvasSVG;
+	}
+
+	// Creates a <defs> element that is attached to the top most SVG area when
+	// we are displaying either the primary pipeline full page or a sub-pipeline
+	// full page. This only needs to be done once for the whole page.
+	createDefs(canvasSVG, canvasLayout) {
+		if (this.dispUtils.isDisplayingFullPage()) {
+			var defs = canvasSVG.append("defs");
+			this.createDropShadow(defs);
+			this.createGrid(defs, canvasLayout);
+
+			return canvasSVG.selectChildren("defs");
+		}
+		return null;
+	}
+
+	// Adds a background rectangle to the canvas group. This is added for three reasons:
+	// 1. On Safari, wheel events will not go to the SVG unless there is an
+	//    SVG object under the mouse pointer. Therefore we open this rectangle
+	//    to fill the SVG area to catch those events in Safari. See this stack
+	//    overflow issue for details:
+	//    https://stackoverflow.com/questions/40887193/d3-js-zoom-is-not-working-with-mousewheel-in-safari
+	// 2. If we're displaying a sub-flow inside a supernode (on any browser)
+	//    we need a background rectangle to display the same color as
+	//    the background of the main canvas.
+	// 3. To display a background grid underneath the canvas objects which will zoom
+	//    and pan with the canvas objects.
+	createCanvasBackground(canvasSVG) {
+		const dims = this.zoomUtils.getTransformedViewportDimensions();
+
+		const canvasBackground = canvasSVG
 			.append("rect")
 			.attr("x", 0)
 			.attr("y", 0)
 			.attr("width", dims.width)
 			.attr("height", dims.height)
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", "d3-svg-background")
 			.attr("pointer-events", "all")
 			.style("cursor", "default")
 			.on("mousedown", () => {
@@ -1298,16 +1330,15 @@ export default class SVGCanvasRenderer {
 				}
 			});
 
-		// Only attach the 'defs' to the top most SVG area when we are displaying
-		// either the primary pipeline full page or a sub-pipeline full page.
-		if (this.dispUtils.isDisplayingFullPage()) {
-			// Add defs element to allow a filter for the drop shadow
-			// This only needs to be done once for the whole page.
-			var defs = canvasSVG.append("defs");
-			this.createDropShadow(defs);
+		// Set the appropriate grid ID for the canvas background.
+		const gridId = this.getGridId();
+		if (gridId) {
+			canvasBackground.attr("fill", `url(#${gridId})`);
+		} else {
+			canvasBackground.attr("class", "d3-svg-background");
 		}
 
-		return canvasSVG;
+		return canvasBackground;
 	}
 
 	// Sets the canvas zoom and mouse behaviors on the canvas SVG area. This is
@@ -1413,6 +1444,16 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	setCanvasBackgroundSize() {
+		const dims = this.zoomUtils.getTransformedViewportDimensions();
+
+		this.canvasBackground
+			.attr("x", dims.x)
+			.attr("y", dims.y)
+			.attr("width", dims.width)
+			.attr("height", dims.height);
+	}
+
 	createDropShadow(defs) {
 		var dropShadowFilter = defs.append("filter")
 			.attr("id", this.getId("node_drop_shadow"))
@@ -1445,6 +1486,120 @@ export default class SVGCanvasRenderer {
 		var feMerge = dropShadowFilter.append("feMerge");
 		feMerge.append("feMergeNode");
 		feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+	}
+
+	// Adds <pattern>s to the <defs> element which can be used to draw
+	// different background grids on the canvas based on the settings
+	// in canvasLayout. This can be:
+	// Dots  -- which needs a single pattern
+	// Boxes -- which needs a single pattern
+	// DotsAndLines -- which needs two patterns
+	// BoxesAndLines -- which needs two patterns
+	createGrid(defs, canvasLayout) {
+		const gridMajorPx = canvasLayout.displayGridMajorPx;
+		const gridMajorPy = canvasLayout.displayGridMajorPy;
+		const gridMinorPx = canvasLayout.displayGridMinorPx;
+		const gridMinorPy = canvasLayout.displayGridMinorPy;
+
+		const gridId = this.getGridId();
+
+		if (canvasLayout.displayGrid === DISPLAY_GRID_DOTS) {
+			this.addDotsPattern(defs, gridId, gridMinorPx, gridMinorPy);
+
+		} else if (canvasLayout.displayGrid === DISPLAY_GRID_BOXES) {
+			this.addBoxesPattern(defs, gridId, gridMinorPx, gridMinorPy);
+
+		} else if (canvasLayout.displayGrid === DISPLAY_GRID_BOXES_AND_LINES) {
+			this.addBoxesPattern(defs, "smallGrid", gridMinorPx, gridMinorPy);
+
+			const gridPattern = defs.append("pattern")
+				.attr("id", gridId)
+				.attr("width", gridMajorPx)
+				.attr("height", gridMajorPy)
+				.attr("x", 0)
+				.attr("y", 0)
+				.attr("patternUnits", "userSpaceOnUse");
+			gridPattern.append("rect")
+				.attr("width", gridMajorPx)
+				.attr("height", gridMajorPy)
+				.attr("stroke", "none")
+				.attr("fill", "url(#smallGrid)");
+			gridPattern.append("path")
+				.attr("d", `M ${gridMajorPx} 0 L 0 0 0 ${gridMajorPy}`)
+				.attr("class", "d3-grid-lines");
+
+		} else if (canvasLayout.displayGrid === DISPLAY_GRID_DOTS_AND_LINES) {
+			this.addDotsPattern(defs, "smallGrid", gridMinorPx, gridMinorPy);
+
+			const gridPattern = defs.append("pattern")
+				.attr("id", gridId)
+				.attr("width", gridMajorPx)
+				.attr("height", gridMajorPy)
+				.attr("x", 0)
+				.attr("y", 0)
+				.attr("patternUnits", "userSpaceOnUse");
+			gridPattern.append("rect")
+				.attr("width", gridMajorPx - gridMinorPx)
+				.attr("height", gridMajorPy - gridMinorPy)
+				.attr("x", gridMinorPx * 0.5)
+				.attr("y", gridMinorPy * 0.5)
+				.attr("stroke", "none")
+				.attr("fill", "url(#smallGrid)");
+			gridPattern.append("path")
+				.attr("d", `M ${gridMajorPx} 0 L 0 0 0 ${gridMajorPy}`)
+				.attr("class", "d3-grid-lines");
+		}
+	}
+
+	// Returns a grid ID for the display grid requested. The instanceId
+	// is included in the returned ID to ensure that each instance of
+	// the canvas has its own grid pattern.
+	getGridId() {
+		if (this.canvasLayout.displayGrid === DISPLAY_GRID_DOTS) {
+			return "d3_grid_dots_pattern_" + this.instanceId;
+
+		} else if (this.canvasLayout.displayGrid === DISPLAY_GRID_BOXES) {
+			return "d3_grid_boxes_pattern_" + this.instanceId;
+
+		} else if (this.canvasLayout.displayGrid === DISPLAY_GRID_DOTS_AND_LINES) {
+			return "d3_grid_dots_lines-pattern_" + this.instanceId;
+
+		} else if (this.canvasLayout.displayGrid === DISPLAY_GRID_BOXES_AND_LINES) {
+			return "d3_grid_boxes_lines_pattern_" + this.instanceId;
+		}
+		return null;
+	}
+
+	// Adds a pattern of dots to the <defs> element.
+	addDotsPattern(defs, id, gridMinorPx, gridMinorPy) {
+		const smallGridPattern = defs.append("pattern")
+			.attr("id", id)
+			.attr("width", gridMinorPx)
+			.attr("height", gridMinorPy)
+			.attr("x", gridMinorPx * 0.5)
+			.attr("y", gridMinorPy * 0.5)
+			.attr("patternUnits", "userSpaceOnUse");
+
+		smallGridPattern.append("circle")
+			.attr("cx", gridMinorPx * 0.5)
+			.attr("cy", gridMinorPy * 0.5)
+			.attr("class", "d3-grid-dot");
+
+		return smallGridPattern;
+	}
+
+	// Adds a pattern of boxes to the <defs> element.
+	addBoxesPattern(defs, id, gridMinorPx, gridMinorPy) {
+		const smallGridPattern = defs.append("pattern")
+			.attr("id", id)
+			.attr("width", gridMinorPx)
+			.attr("height", gridMinorPy)
+			.attr("x", 0)
+			.attr("y", 0)
+			.attr("patternUnits", "userSpaceOnUse");
+		smallGridPattern.append("path")
+			.attr("d", `M ${gridMinorPx} 0 L 0 0 0 ${gridMinorPy}`)
+			.attr("class", "d3-grid-boxes");
 	}
 
 	setCommentEditingMode(commentId, pipelineId) {
@@ -4635,7 +4790,8 @@ export default class SVGCanvasRenderer {
 				const targetObj = d3Event.currentTarget;
 
 				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE ||
+						this.config.enableRaiseLinksToTopOnHover) {
 					this.raiseLinkToTop(targetObj);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
@@ -5949,6 +6105,8 @@ export default class SVGCanvasRenderer {
 	// viewport if it is not already.
 	// This is a utility method called from the canvas controller.
 	moveFocusTo(obj) {
+		this.logger.log("moveFocusTo - " + CanvasUtils.getFocusName(obj));
+
 		if (!obj || obj === CANVAS_FOCUS) {
 			return;
 		}
@@ -5958,28 +6116,45 @@ export default class SVGCanvasRenderer {
 		this.canvasGrp.selectAll(".d3-focus-path").remove();
 
 		let objSel = null;
-		if (type === "node" && this.activePipeline.getNode(obj.id)) {
-			objSel = this.getNodeGroupSelectionById(obj.id);
+		if (type === "node") {
+			if (this.activePipeline.getNode(obj.id)) {
+				objSel = this.getNodeGroupSelectionById(obj.id);
 
-			objSel.insert("path", ":first-child")
-				.attr("class", "d3-focus-path")
-				.attr("d", (d) => this.getNodeShapePathSizing(d));
+				objSel.insert("path", ":first-child")
+					.attr("class", "d3-focus-path")
+					.attr("d", (d) => this.getNodeShapePathSizing(d));
+			} else {
+				// This may happen when objects are being created.
+				this.logger.log("Node with ID " + obj.id + " not found in activePipeline");
+				return;
+			}
 
+		} else if (type === "comment") {
+			if (this.activePipeline.getComment(obj.id)) {
+				objSel = this.getCommentGroupSelectionById(obj.id);
 
-		} else if (type === "comment" && this.activePipeline.getComment(obj.id)) {
-			objSel = this.getCommentGroupSelectionById(obj.id);
+				objSel.insert("rect", ":first-child")
+					.attr("class", "d3-focus-path")
+					.attr("x", -this.canvasLayout.commentSizingArea)
+					.attr("y", -this.canvasLayout.commentSizingArea)
+					.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
+					.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
+			} else {
+				// This may happen when objects are being created.
+				this.logger.log("Comment with ID " + obj.id + " not found in activePipeline");
+				return;
+			}
 
-			objSel.insert("rect", ":first-child")
-				.attr("class", "d3-focus-path")
-				.attr("x", -this.canvasLayout.commentSizingArea)
-				.attr("y", -this.canvasLayout.commentSizingArea)
-				.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
-				.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea));
+		} else if (type === "link") {
+			if (this.activePipeline.getLink(obj.id)) {
+				objSel = this.getLinkGroupSelectionById(obj.id);
 
-		} else if (type === "link" && this.activePipeline.getLink(obj.id)) {
-			objSel = this.getLinkGroupSelectionById(obj.id);
-
-			// TODO - Think of a way to show focus on links other than line thckness
+				// TODO - Think of a way to show focus on links other than line thckness
+			} else {
+				// This may happen when objects are being created.
+				this.logger.log("Link with ID " + obj.id + " not found in activePipeline");
+				return;
+			}
 		}
 
 		// If there is a non-null D3 selection object that is not empty,
@@ -5992,6 +6167,7 @@ export default class SVGCanvasRenderer {
 
 			const element = objSel.node();
 			if (element) {
+				this.logger.log("moveFocusTo - set focus on element");
 				element.focus();
 			}
 

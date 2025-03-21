@@ -1926,6 +1926,8 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 
 	restoreFocus() {
+		this.logger.log("restoreFocus - " + CanvasUtils.getFocusName(this.focusObject));
+
 		if (this.getSVGCanvasD3()) {
 			this.setFocusObject(this.focusObject); // This will force a refresh of the focus
 		}
@@ -1946,6 +1948,8 @@ export default class CanvasController {
 	}
 
 	setFocusObject(focusObj) {
+		this.logger.log("setFocusObject focusObject = " + CanvasUtils.getFocusName(focusObj));
+
 		this.focusObject = focusObj;
 
 		if (this.focusObject && this.canvasContents) {
@@ -2850,8 +2854,11 @@ export default class CanvasController {
 		// a getFocusObject method. In other cases, the focus will remain
 		// in its current location.
 		if (this.getCanvasConfig().enableKeyboardNavigation) {
-			if (command?.getFocusObject) {
+			if (data.editSource !== "toolbar" &&
+				command?.getFocusObject) {
 				const focusObject = command.getFocusObject();
+
+				this.logger.log("Focus object from " + data.editType + " command = " + CanvasUtils.getFocusName(focusObject));
 
 				if (focusObject === CANVAS_FOCUS) {
 					this.setFocusOnCanvas();

@@ -666,6 +666,12 @@ export default class SvgCanvasTextArea {
 
 	// Closes the text area and resets the flags.
 	closeTextArea(data) {
+		if (this.textAreaEscKeyPressed) {
+			// Reset the comment height in the pipeline to its original value when the ESC key is pressed.
+			this.activePipeline.getComment(data.id).height = data.height;
+			this.displayCommentsCallback();
+			this.displayLinksCallback();
+		}
 		if (data.closeTextAreaCallback) {
 			data.closeTextAreaCallback(data.id);
 		}

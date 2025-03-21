@@ -146,6 +146,7 @@ import {
 	NODE_FORMAT_VERTICAL,
 	INTERACTION_MOUSE,
 	SNAP_TO_GRID_NONE,
+	DISPLAY_GRID_NONE,
 	SAVE_ZOOM_NONE,
 	STATE_TAG_NONE,
 	LINK_TYPE_CURVE,
@@ -202,6 +203,11 @@ class App extends React.Component {
 			selectedSnapToGridType: SNAP_TO_GRID_NONE,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
+			selectedDisplayGridType: DISPLAY_GRID_NONE,
+			enteredMajorGridX: "",
+			enteredMajorGridY: "",
+			enteredMinorGridX: "",
+			enteredMinorGridY: "",
 			selectedInteractionType: INTERACTION_MOUSE,
 			selectedNodeFormatType: NODE_FORMAT_VERTICAL,
 			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
@@ -215,6 +221,7 @@ class App extends React.Component {
 			selectedLinkDirection: LINK_DIR_LEFT_RIGHT,
 			selectedLinkSelection: LINK_SELECTION_NONE,
 			selectedLinkReplaceOnNewConnection: false,
+			selectedRaiseLinksToTopOnHover: false,
 			selectedStraightLinksAsFreeform: true,
 			selectedKeyboardNavigation: false,
 			selectedSelfRefLinks: false,
@@ -533,7 +540,8 @@ class App extends React.Component {
 			});
 	}
 
-	// Sets the state to the config passed in. This is called by the Cypress
+	// Sets the state to the config passed in by adding whatever is
+	// passed in to the current state. This is called by the Cypress
 	// testcases to set the test harness state in one go.
 	setCanvasConfig(config) {
 		this.setState(config);
@@ -2115,6 +2123,7 @@ class App extends React.Component {
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableLinkSelection: this.state.selectedLinkSelection,
 			enableLinkReplaceOnNewConnection: this.state.selectedLinkReplaceOnNewConnection,
+			enableRaiseLinksToTopOnHover: this.state.selectedRaiseLinksToTopOnHover,
 			enableStraightLinksAsFreeform: this.state.selectedStraightLinksAsFreeform,
 			enableSelfRefLinks: this.state.selectedSelfRefLinks,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
@@ -2151,7 +2160,14 @@ class App extends React.Component {
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
 			enableSingleOutputPortDisplay: this.state.selectedSingleOutputPortDisplay,
 			enableNodeLayout: this.state.selectedNodeLayout,
-			enableCanvasLayout: this.state.selectedCanvasLayout,
+			enableCanvasLayout: {
+				...this.state.selectedCanvasLayout,
+				displayGrid: this.state.selectedDisplayGridType,
+				displayGridMajorX: this.state.enteredMajorGridX,
+				displayGridMajorY: this.state.enteredMajorGridY,
+				displayGridMinorX: this.state.enteredMinorGridX,
+				displayGridMinorY: this.state.enteredMinorGridY
+			},
 			enableLinksOverNodes: this.state.selectedLinksOverNodes
 		};
 

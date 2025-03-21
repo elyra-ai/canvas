@@ -27,7 +27,7 @@ export * from "./common-properties-controller";
 export * from "./common-properties-schema-types/conditions-v3";
 export * from "./common-properties-schema-types/expression-info-v3";
 export * from "./common-properties-schema-types/function-list-v3";
-export {
+export type {
   ParameterDefinition as OperatorParameterDefinition,
   WatsonDataPlatformOperatorSchema,
   PortDefinition,

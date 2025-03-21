@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,8 @@ import { SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING, LINK_SELECTION_DETACHABLE,
 	from "./constants/canvas-constants.js";
 
 // This utility files provides a drag handler which manages drag operations to move
-// and resize nodes and comments.
+// and resize nodes and comments. Also, it provides utility functions to handle
+// those same operations performed by the keyboard user.
 
 export default class SVGCanvasUtilsDragObjects {
 	constructor(renderer) {
@@ -60,14 +61,14 @@ export default class SVGCanvasUtilsDragObjects {
 		this.notSnappedWidth = 0;
 		this.notSnappedHeight = 0;
 
-		// Object to store variables for drag behavior or nodes and comments.
-		this.draggingObjectData = null;
+		// Object to store variables for move behavior or nodes and comments.
+		this.movingObjectData = null;
 
-		// Flag to indicate if the current drag operation is for a node that can
+		// Flag to indicate if the current move operation is for a node that can
 		// be inserted into a link. Such a node would need input and output ports.
 		this.existingNodeInsertableIntoLink = false;
 
-		// Flag to indicate if the current drag operation is for a node that can
+		// Flag to indicate if the current move operation is for a node that can
 		// be attached to a detached link.
 		this.existingNodeAttachableToDetachedLinks = false;
 
@@ -90,7 +91,7 @@ export default class SVGCanvasUtilsDragObjects {
 
 	// Returns truthy if a moving operation is currently underway.
 	isMoving() {
-		return this.draggingObjectData;
+		return this.movingObjectData;
 	}
 
 	mouseEnterNodeSizingArea(d3Event, d) {
@@ -620,48 +621,48 @@ export default class SVGCanvasUtilsDragObjects {
 	// Can be called when the mouse is dragging the object OR when a
 	// keyboard event moves the object.
 	startObjectsMoving(d) {
-		// Ensure flags are false before staring a new drag.
+		// Ensure flags are false before staring a new move operation.
 		this.existingNodeInsertableIntoLink = false;
 		this.existingNodeAttachableToDetachedLinks = false;
 
-		this.draggingObjectData = {
-			dragOffsetX: 0,
-			dragOffsetY: 0,
-			dragRunningX: 0,
-			dragRunningY: 0,
-			dragObjects: this.getDragObjects(d)
+		this.movingObjectData = {
+			offsetX: 0,
+			offsetY: 0,
+			runningX: 0,
+			runningY: 0,
+			objects: this.getMoveObjects(d)
 		};
 
-		if (this.draggingObjectData.dragObjects?.length > 0) {
-			this.draggingObjectData.dragStartX = this.draggingObjectData.dragObjects[0].x_pos;
-			this.draggingObjectData.dragStartY = this.draggingObjectData.dragObjects[0].y_pos;
+		if (this.movingObjectData.objects?.length > 0) {
+			this.movingObjectData.startX = this.movingObjectData.objects[0].x_pos;
+			this.movingObjectData.startY = this.movingObjectData.objects[0].y_pos;
 
-			// Apply the 'd3-is-moving' class to the objects being dragged.
-			this.switchIsMovingClass(this.draggingObjectData.dragObjects, true);
+			// Apply the 'd3-is-moving' class to the objects being moved.
+			this.switchIsMovingClass(this.movingObjectData.objects, true);
 		}
 
-		// If we are dragging an 'insertable' node, set it to be translucent so
-		// that, when it is dragged over a link line, the highlightd line can be seen OK.
+		// If we are moving an 'insertable' node, set it to be translucent so
+		// that, when it is moved over a link line, the highlighted line can be seen OK.
 		if (this.isExistingNodeInsertableIntoLink()) {
 			// Only style the node to be translucent if this action isn't cancelled
 			// by the user releasing the mouse button within 200 ms of pressing it.
 			// This stops the node flashing when the user is only selecting it.
 			this.startNodeInsertingInLink = setTimeout(() => {
 				this.existingNodeInsertableIntoLink = true;
-				this.setNodeTranslucentState(this.draggingObjectData.dragObjects[0].id, true);
+				this.setNodeTranslucentState(this.movingObjectData.objects[0].id, true);
 				this.ren.setDataLinkSelectionAreaWider(true);
 			}, 200);
 		}
 
-		// If we are dragging an 'attachable' node, set it to be translucent so
-		// that, when it is dragged over link lines, the highlightd lines can be seen OK.
+		// If we are moving an 'attachable' node, set it to be translucent so
+		// that, when it is moved over link lines, the highlighted lines can be seen OK.
 		if (this.isExistingNodeAttachableToDetachedLinks()) {
 			// Only style the node to be translucent if this action isn't cancelled
 			// by the user releasing the mouse button within 200 ms of pressing it.
 			// This stops the node from being made translucent when the user is only selecting it.
 			this.startNodeAttachingToDetachedLinks = setTimeout(() => {
 				this.existingNodeAttachableToDetachedLinks = true;
-				this.setNodeTranslucentState(this.draggingObjectData.dragObjects[0].id, true);
+				this.setNodeTranslucentState(this.movingObjectData.objects[0].id, true);
 			}, 200);
 		}
 	}
@@ -674,27 +675,27 @@ export default class SVGCanvasUtilsDragObjects {
 	// the mouse in the context of a drag operation OR the current page coordinates of the
 	// center of the object in the context of a keyboard operation.
 	moveObjects(dx, dy, pagePosX, pagePosY) {
-		this.draggingObjectData.dragOffsetX += dx;
-		this.draggingObjectData.dragOffsetY += dy;
+		this.movingObjectData.offsetX += dx;
+		this.movingObjectData.offsetY += dy;
 
-		// Limit the size a drag can be so, when the user is dragging objects in
-		// an in-place subflow they do not drag them too far.
-		// this.logger.log("Drag offset X = " + this.dragOffsetX + " y = " + this.draggingObjectData.dragOffsetY);
+		// Limit the size a move (typically a drag) can be so, when the user
+		// is dragging objects in an in-place subflow they do not drag them too far.
+		// this.logger.log("Move offset x = " + this.movingObjectData.offsetX + " y = " + this.movingObjectData.offsetY);
 		if (this.ren.dispUtils.isDisplayingSubFlowInPlace() &&
-				(this.draggingObjectData.dragOffsetX > 1000 || this.draggingObjectData.dragOffsetX < -1000 ||
-					this.draggingObjectData.dragOffsetY > 1000 || this.draggingObjectData.dragOffsetY < -1000)) {
-			this.draggingObjectData.dragOffsetX -= dx;
-			this.draggingObjectData.dragOffsetY -= dy;
+				(this.movingObjectData.offsetX > 1000 || this.movingObjectData.offsetX < -1000 ||
+					this.movingObjectData.offsetY > 1000 || this.movingObjectData.offsetY < -1000)) {
+			this.movingObjectData.offsetX -= dx;
+			this.movingObjectData.offsetY -= dy;
 
 		} else {
 			let	increment = { x: 0, y: 0 };
 
 			if (this.ren.config.enableSnapToGridType === SNAP_TO_GRID_DURING) {
-				const stgPos = this.snapToGridDraggedNode(this.draggingObjectData);
+				const stgPos = this.snapToGridMovedNode(this.movingObjectData);
 
 				increment = {
-					x: stgPos.x - this.draggingObjectData.dragObjects[0].x_pos,
-					y: stgPos.y - this.draggingObjectData.dragObjects[0].y_pos
+					x: stgPos.x - this.movingObjectData.objects[0].x_pos,
+					y: stgPos.y - this.movingObjectData.objects[0].y_pos
 				};
 
 			} else {
@@ -704,10 +705,10 @@ export default class SVGCanvasUtilsDragObjects {
 				};
 			}
 
-			this.draggingObjectData.dragRunningX += increment.x;
-			this.draggingObjectData.dragRunningY += increment.y;
+			this.movingObjectData.runningX += increment.x;
+			this.movingObjectData.runningY += increment.y;
 
-			this.draggingObjectData.dragObjects.forEach((d) => {
+			this.movingObjectData.objects.forEach((d) => {
 				d.x_pos += increment.x;
 				d.y_pos += increment.y;
 			});
@@ -729,7 +730,7 @@ export default class SVGCanvasUtilsDragObjects {
 		// If enableDragWithoutSelect is enabled and the mouse pointer
 		// hasn't moved very much, we don't move the objects.
 		if (this.ren.config.enableDragWithoutSelect &&
-			CanvasUtils.isTinyMovement({ x: 0, y: 0 }, { x: this.draggingObjectData.dragOffsetX, y: this.draggingObjectData.dragOffsetY })) {
+			CanvasUtils.isTinyMovement({ x: 0, y: 0 }, { x: this.movingObjectData.offsetX, y: this.movingObjectData.offsetY })) {
 			return;
 		}
 
@@ -747,19 +748,18 @@ export default class SVGCanvasUtilsDragObjects {
 			// Set highlighting when there is no link because this will turn
 			// current highlighting off. And only switch on highlighting when we are
 			// over a fully attached link (not a detached link) and provided the
-			// link is not to/from the node being dragged (which is possible in
+			// link is not to/from the node being moved (which is possible in
 			// some odd situations).
 			if (!link ||
 					(this.ren.isLinkFullyAttached(link) &&
-						this.draggingObjectData.dragObjects[0].id !== link.srcNodeId &&
-						this.draggingObjectData.dragObjects[0].id !== link.trgNodeId)) {
+						this.movingObjectData.objects[0].id !== link.srcNodeId &&
+						this.movingObjectData.objects[0].id !== link.trgNodeId)) {
 				this.ren.setInsertNodeIntoLinkHighlighting(link);
 			}
 		}
 
 		if (this.existingNodeAttachableToDetachedLinks) {
-			// const mousePos = this.ren.getTransformedMousePos(d3Event);
-			const node = this.draggingObjectData.dragObjects[0];
+			const node = this.movingObjectData.objects[0];
 			const ghostArea = {
 				x1: node.x_pos,
 				y1: node.y_pos,
@@ -777,11 +777,11 @@ export default class SVGCanvasUtilsDragObjects {
 	// object using the keyboard.
 	endObjectsMoving(d, range, augment) {
 
-		// Save a local reference to this.draggingObjectData so we can set it to null before
-		// calling the canvas-controller. This means the this.draggingObjectData object will
+		// Save a local reference to this.movingObjectData so we can set it to null before
+		// calling the canvas-controller. This means the this.movingObjectData object will
 		// be null when the canvas is refreshed.
-		const draggingObjectData = this.draggingObjectData;
-		this.draggingObjectData = null;
+		const movingObjectData = this.movingObjectData;
+		this.movingObjectData = null;
 
 		// Cancels the styling of insertable/attachable nodes if the user releases
 		// the mouse button with 200 milliseconds of pressing it on the node. This
@@ -789,27 +789,27 @@ export default class SVGCanvasUtilsDragObjects {
 		clearTimeout(this.startNodeInsertingInLink);
 		clearTimeout(this.startNodeAttachingToDetachedLinks);
 
-		// Remove the 'd3-is-moving' class from the objects being dragged.
-		this.switchIsMovingClass(draggingObjectData.dragObjects, false);
+		// Remove the 'd3-is-moving' class from the objects being moved.
+		this.switchIsMovingClass(movingObjectData.objects, false);
 
 		// If enableDragWithoutSelect is enabled and the pointer hasn't moved
 		// very much, we interpret that as a select on the object.
 		if (this.ren.config.enableDragWithoutSelect &&
-				CanvasUtils.isTinyMovement({ x: 0, y: 0 }, { x: draggingObjectData.dragOffsetX, y: draggingObjectData.dragOffsetY })) {
+				CanvasUtils.isTinyMovement({ x: 0, y: 0 }, { x: movingObjectData.offsetX, y: movingObjectData.offsetY })) {
 			this.ren.selectObject(d, SINGLE_CLICK, range, augment);
 
 		} else {
-			if (draggingObjectData.dragRunningX !== 0 ||
-				draggingObjectData.dragRunningY !== 0) {
-				let dragFinalOffset = null;
+			if (movingObjectData.runningX !== 0 ||
+				movingObjectData.runningY !== 0) {
+				let finalOffset = null;
 				if (this.ren.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
-					const stgPos = this.snapToGridDraggedNode(draggingObjectData);
-					dragFinalOffset = {
-						x: stgPos.x - draggingObjectData.dragStartX,
-						y: stgPos.y - draggingObjectData.dragStartY
+					const stgPos = this.snapToGridMovedNode(movingObjectData);
+					finalOffset = {
+						x: stgPos.x - movingObjectData.startX,
+						y: stgPos.y - movingObjectData.startY
 					};
 				} else {
-					dragFinalOffset = { x: draggingObjectData.dragRunningX, y: draggingObjectData.dragRunningY };
+					finalOffset = { x: movingObjectData.runningX, y: movingObjectData.runningY };
 				}
 
 				if (this.existingNodeInsertableIntoLink &&
@@ -817,10 +817,10 @@ export default class SVGCanvasUtilsDragObjects {
 					this.ren.canvasController.editActionHandler({
 						editType: "insertNodeIntoLink",
 						editSource: "canvas",
-						node: draggingObjectData.dragObjects[0],
+						node: movingObjectData.objects[0],
 						link: this.ren.dragOverLink,
-						offsetX: dragFinalOffset.x,
-						offsetY: dragFinalOffset.y,
+						offsetX: finalOffset.x,
+						offsetY: finalOffset.y,
 						pipelineId: this.ren.activePipeline.id });
 
 				} else if (this.existingNodeAttachableToDetachedLinks &&
@@ -828,37 +828,37 @@ export default class SVGCanvasUtilsDragObjects {
 					this.ren.canvasController.editActionHandler({
 						editType: "attachNodeToLinks",
 						editSource: "canvas",
-						node: draggingObjectData.dragObjects[0],
+						node: movingObjectData.objects[0],
 						detachedLinks: this.ren.dragOverDetachedLinks,
-						offsetX: dragFinalOffset.x,
-						offsetY: dragFinalOffset.y,
+						offsetX: finalOffset.x,
+						offsetY: finalOffset.y,
 						pipelineId: this.ren.activePipeline.id });
 
 				} else {
 					this.ren.canvasController.editActionHandler({
 						editType: "moveObjects",
 						editSource: "canvas",
-						nodes: draggingObjectData.dragObjects.map((o) => o.id),
+						nodes: movingObjectData.objects.map((o) => o.id),
 						links: this.ren.activePipeline.getSelectedDetachedLinks(),
-						offsetX: dragFinalOffset.x,
-						offsetY: dragFinalOffset.y,
+						offsetX: finalOffset.x,
+						offsetY: finalOffset.y,
 						pipelineId: this.ren.activePipeline.id });
 				}
 			}
 		}
 
-		// Switch off any drag highlighting
+		// Switch off any move highlighting
 		this.ren.setDataLinkSelectionAreaWider(false);
-		this.unsetNodeTranslucentState(draggingObjectData.dragObjects);
+		this.unsetNodeTranslucentState(movingObjectData.objects);
 		this.ren.unsetInsertNodeIntoLinkHighlighting();
 		this.ren.unsetDetachedLinkHighlighting();
 	}
 
-	// Returns an array of objects to drag. If enableDragWithoutSelect is true,
-	// and the object on which this drag start has initiated is not in the
-	// set of selected objects, then just that object is to be dragged. Otherwise,
-	// the selected objects are the objects to be dragged.
-	getDragObjects(d) {
+	// Returns an array of objects to move which is typically the selected set of
+	// nodes and comments. However, if enableDragWithoutSelect is true, and the
+	// object being moved is not one of the selected objects, then just that
+	// object is to be moved.
+	getMoveObjects(d) {
 		const selectedObjects = this.ren.activePipeline.getSelectedNodesAndComments();
 
 		if (this.ren.config.enableDragWithoutSelect &&
@@ -869,10 +869,10 @@ export default class SVGCanvasUtilsDragObjects {
 		return selectedObjects;
 	}
 
-	// Switches the 'd3-is-moving' class on and off for the objects currently
-	// being dragged, based on the state passed in.
-	switchIsMovingClass(dragObjects, state) {
-		dragObjects.forEach((obj) => {
+	// Switches the 'd3-is-moving' class on and off for the objects passed
+	// in, based on the state passed in.
+	switchIsMovingClass(objs, state) {
+		objs.forEach((obj) => {
 			if (CanvasUtils.isNode(obj)) {
 				this.ren.getNodeGroupSelectionById(obj.id).classed("d3-is-moving", state);
 			} else {
@@ -881,50 +881,51 @@ export default class SVGCanvasUtilsDragObjects {
 		});
 	}
 
-	// Returns true if the current drag objects array has a single node which
+	// Returns true if the current move objects array has a single node which
 	// is 'insertable' into a data link between nodes on the canvas.  Returns
-	// false otherwise, including if a single comment is being dragged.
+	// false otherwise, including if a single comment is being moved.
 	isExistingNodeInsertableIntoLink() {
 		return (this.ren.config.enableInsertNodeDroppedOnLink &&
-			this.draggingObjectData.dragObjects.length === 1 &&
-			CanvasUtils.isNode(this.draggingObjectData.dragObjects[0]) &&
-			CanvasUtils.hasInputAndOutputPorts(this.draggingObjectData.dragObjects[0]) &&
-			!CanvasUtils.isNodeDefaultPortsCardinalityAtMax(this.draggingObjectData.dragObjects[0], this.ren.activePipeline.links));
+			this.movingObjectData.objects.length === 1 &&
+			CanvasUtils.isNode(this.movingObjectData.objects[0]) &&
+			CanvasUtils.hasInputAndOutputPorts(this.movingObjectData.objects[0]) &&
+			!CanvasUtils.isNodeDefaultPortsCardinalityAtMax(this.movingObjectData.objects[0], this.ren.activePipeline.links));
 	}
 
-	// Returns true if the current drag objects array has a single node which
+	// Returns true if the current move objects array has a single node which
 	// is 'attachable' to any detached link on the canvas. Returns false otherwise,
-	// including if a single comment is being dragged.
+	// including if a single comment is being moved.
 	isExistingNodeAttachableToDetachedLinks() {
 		return (this.ren.config.enableLinkSelection === LINK_SELECTION_DETACHABLE &&
-			this.draggingObjectData.dragObjects.length === 1 &&
-			CanvasUtils.isNode(this.draggingObjectData.dragObjects[0]));
+			this.movingObjectData.objects.length === 1 &&
+			CanvasUtils.isNode(this.movingObjectData.objects[0]));
 	}
 
 	// Switches on or off the translucent state of the node identified by the
-	// node ID passed in. This is used when an 'insertable' node is dragged on
+	// node ID passed in. This is used when an 'insertable' node is moved on
 	// the canvas. It makes is easier for the user to see the highlighted link
-	// when the node is dragged over it.
+	// when the node is moved over it.
 	setNodeTranslucentState(nodeId, state) {
 		this.ren.getNodeGroupSelectionById(nodeId).classed("d3-node-group-translucent", state);
 	}
 
-	// Switched off the translucent state of the objects being dragged (if
+	// Switched off the translucent state of the objects being moved (if
 	// there are any).
-	unsetNodeTranslucentState(dragObjects) {
-		if (dragObjects?.length > 0) {
-			this.setNodeTranslucentState(dragObjects[0].id, false);
+	unsetNodeTranslucentState(objs) {
+		if (objs?.length > 0) {
+			this.setNodeTranslucentState(objs[0].id, false);
 		}
 	}
 
 	// Returns the snap-to-grid position of the object positioned at
-	// this.draggingObjectData.dragStartX and this.draggingObjectData.dragStartY after applying the current offset of
-	// this.draggingObjectData.dragOffsetX and this.draggingObjectData.dragOffsetY.
-	snapToGridDraggedNode(draggingObjectData) {
-		const objPosX = draggingObjectData.dragStartX + draggingObjectData.dragOffsetX;
-		const objPosY = draggingObjectData.dragStartY + draggingObjectData.dragOffsetY;
+	// this.movingObjectData.startX and this.movingObjectData.startY
+	// after applying the current offset of this.movingObjectData.offsetX
+	// and this.movingObjectData.offsetY.
+	snapToGridMovedNode(movingObjectData) {
+		const x = movingObjectData.startX + movingObjectData.offsetX;
+		const y = movingObjectData.startY + movingObjectData.offsetY;
 
-		return this.ren.snapToGridPosition({ x: objPosX, y: objPosY });
+		return this.ren.snapToGridPosition({ x, y });
 	}
 
 	// Returns the object passed in with its position and size snapped to

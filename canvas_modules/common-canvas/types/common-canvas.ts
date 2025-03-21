@@ -47,7 +47,7 @@ import {
   CanvasAssociationLink
 } from "@elyra/pipeline-schemas/types";
 
-export {
+export type {
   // Pipeline flow
   PipelineFlowDef,
   PipelineFlowUiDef,

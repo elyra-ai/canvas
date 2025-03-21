@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -307,18 +307,20 @@ const createCommentMenu = () => {
 };
 
 const createSelectAllMenu = () => {
-	if (cc.areAllObjectsSelected()) {
-		return [
-			{ action: "deselectAll", label: getLabel("canvas.deselectAll") },
-			{ divider: true }
-		];
-	} else if (!cc.isPrimaryPipelineEmpty()) {
-		return [
+	const menu = [];
+	if (!cc.isPrimaryPipelineEmpty() && !cc.areAllObjectsSelected()) {
+		menu.push(
 			{ action: "selectAll", label: getLabel("canvas.selectAll") },
 			{ divider: true }
-		];
+		);
 	}
-	return [];
+	if (cc.getSelectedObjectIds().length > 0) {
+		menu.push(
+			{ action: "deselectAll", label: getLabel("canvas.deselectAll") },
+			{ divider: true }
+		);
+	}
+	return menu;
 };
 
 const createEditMenu = (source, includePaste) => {

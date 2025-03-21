@@ -434,6 +434,7 @@ export default class SVGCanvasUtilsZoom {
 		}
 
 		this.ren.canvasGrp.attr("transform", this.zoomTransform);
+		this.ren.canvasBackground.attr("transform", this.zoomTransform);
 
 		this.ren.displayCanvasAccoutrements();
 	}
