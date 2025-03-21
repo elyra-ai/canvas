@@ -22,7 +22,7 @@ import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import { v4 as uuid4 } from "uuid";
 import { isEmpty, includes } from "lodash";
-import { Checkbox, Button } from "@carbon/react";
+import { Checkbox } from "@carbon/react";
 import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
 
 import Tooltip from "../../../tooltip/tooltip.jsx";
@@ -431,10 +431,9 @@ const VirtualizedGrid = (props) => {
 	};
 
 	return (<div ref={parentRef} className="properties-tanstack-grid properties-vt" tabIndex={0}>
-		<table className={classNames("properties-autosized-vt",
+		<table aria-label={props.tableLabel ? props.tableLabel : ""} className={classNames("properties-autosized-vt",
 			{ "properties-vt-single-selection": props.rowSelection && props.rowSelection === ROW_SELECTION.SINGLE },
 			{ "properties-light-disabled": !props.light })}
-			aria-label={props.tableLabel ? props.tableLabel : ""}
 		>
 			{props.showHeader ? tableHeader(table.getHeaderGroups()) : null}
 			{tableBody(table.getRowModel().rows)}
