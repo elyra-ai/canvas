@@ -274,7 +274,7 @@ const VirtualizedGrid = (props) => {
 					const infoIcon = isEmpty(header.description)
 						? null
 						: (<div className="properties-vt-info-icon-tip">
-							<Toggletip align="bottom" onClick={(evt) => evt.stopPropagation()}>
+							<Toggletip autoAlign align="bottom" onClick={(evt) => evt.stopPropagation()}>
 								<ToggletipButton><Information className="properties-vt-info-icon" /></ToggletipButton>
 								<ToggletipContent className="properties-grid-th-toggletip">{header.description}</ToggletipContent>
 							</Toggletip>
