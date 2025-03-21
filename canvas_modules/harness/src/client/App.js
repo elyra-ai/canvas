@@ -543,7 +543,7 @@ class App extends React.Component {
 	// passed in to the current state. This is called by the Cypress
 	// testcases to set the test harness state in one go.
 	setCanvasConfig(config) {
-		this.setState({ ...this.state, ...config });
+		this.setState(config);
 	}
 
 	setCanvasDropdownFile(selectedCanvasDropdownFile) {

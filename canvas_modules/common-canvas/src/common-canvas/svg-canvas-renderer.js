@@ -1554,6 +1554,7 @@ export default class SVGCanvasRenderer {
 		return null;
 	}
 
+	// Adds a pattern of dots to the <defs> element.
 	addDotsPattern(defs, id, gridMinorPx, gridMinorPy) {
 		const smallGridPattern = defs.append("pattern")
 			.attr("id", id)
@@ -1571,6 +1572,7 @@ export default class SVGCanvasRenderer {
 		return smallGridPattern;
 	}
 
+	// Adds a pattern of boxes to the <defs> element.
 	addBoxesPattern(defs, id, gridMinorPx, gridMinorPy) {
 		const smallGridPattern = defs.append("pattern")
 			.attr("id", id)
