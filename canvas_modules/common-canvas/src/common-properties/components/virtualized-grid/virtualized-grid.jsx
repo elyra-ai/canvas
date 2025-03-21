@@ -22,10 +22,10 @@ import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import { v4 as uuid4 } from "uuid";
 import { isEmpty, includes } from "lodash";
-import { Checkbox } from "@carbon/react";
+import { Checkbox, Toggletip, ToggletipButton, ToggletipContent, Tooltip } from "@carbon/react";
 import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
 
-import Tooltip from "../../../tooltip/tooltip.jsx";
+// import Tooltip from "../../../tooltip/tooltip.jsx";
 import TruncatedContentTooltip from "../truncated-content-tooltip";
 import { ROW_SELECTION } from "../../constants/constants.js";
 
@@ -274,15 +274,10 @@ const VirtualizedGrid = (props) => {
 					const infoIcon = isEmpty(header.description)
 						? null
 						: (<div className="properties-vt-info-icon-tip">
-							<Tooltip
-								id="properties-tooltip-info"
-								tip={header.description}
-								direction="bottom"
-								className="properties-tooltips"
-								showToolTipOnClick
-							>
-								<Information className="properties-vt-info-icon" />
-							</Tooltip>
+							<Toggletip align="bottom" onClick={(evt) => evt.stopPropagation()}>
+								<ToggletipButton><Information className="properties-vt-info-icon" /></ToggletipButton>
+								<ToggletipContent className="properties-grid-th-toggletip">{header.description}</ToggletipContent>
+							</Toggletip>
 						</div>);
 					const sortable = includes(props.sortColumns, header.key);
 					const headerContentTooltip = (<div className={classNames("properties-vt-label-tip-icon", { "header-disabled": !sortable })}>
