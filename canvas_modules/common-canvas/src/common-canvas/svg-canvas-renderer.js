@@ -137,29 +137,31 @@ export default class SVGCanvasRenderer {
 		// option is switched on.
 		this.dragNewLinkOverNode = null;
 
+		// Initialize a <div> to create ghost objects to appear under the canvas SVG.
 		this.initializeGhostDiv();
 
+		// Create the main SVG area to display all canvas contents.
 		this.canvasSVG = this.createCanvasSVG();
 
 		// Add a <defs> element to the canvas SVG.
 		this.canvasDefs = this.createDefs(this.canvasSVG, this.canvasLayout);
 
-		// Group to contain all canvas objects
+		// Add a background rectangle to the canvas SVG
+		this.canvasBackground = this.createCanvasBackground(this.canvasSVG);
+
+		// Add group to contain all canvas objects
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG, "d3-canvas-group");
 
-		// Adds a background rectangle to the canvas group
-		this.canvasBackground = this.createCanvasBackground(this.canvasGrp);
-
-		// Put underlay rectangle under comments, nodes and links
+		// Add an underlay rectangle to the canvas group to appear under comments, nodes and links
 		this.canvasUnderlay = this.createCanvasUnderlay(this.canvasGrp, "d3-canvas-underlay");
 
-		// Group to always position comments under nodes and links
+		// Add group to always position comments under nodes and links
 		this.commentsGrp = this.createCanvasGroup(this.canvasGrp, "d3-comments-group");
 
-		// Group to position nodes and links over comments
+		// Add group to position nodes and links over comments
 		this.nodesLinksGrp = this.createCanvasGroup(this.canvasGrp, "d3-nodes-links-group");
 
-		// Group to optionally add bounding rectangles over all objects
+		// Add group to optionally add bounding rectangles over all objects
 		this.boundingRectsGrp = this.createBoundingRectanglesGrp(this.canvasGrp, "d3-bounding-rect-group");
 
 		this.resetCanvasSVGBehaviors();
@@ -384,6 +386,8 @@ export default class SVGCanvasRenderer {
 			this.displayBoundingRectangles();
 		}
 
+		this.setCanvasBackgroundSize();
+
 		if (this.config.enablePositionNodeOnRightFlyoutOpen &&
 				this.canvasController.isRightFlyoutOpen()) {
 			const posInfo = (typeof this.config.enablePositionNodeOnRightFlyoutOpen === "boolean")
@@ -430,6 +434,8 @@ export default class SVGCanvasRenderer {
 				this.dispUtils.isDisplayingPrimaryFlowFullPage()) {
 			this.setCanvasUnderlaySize();
 		}
+
+		this.setCanvasBackgroundSize();
 
 		// The supernode will not have any calculated port positions when the
 		// subflow is being displayed full screen, so calculate them first.
@@ -1236,23 +1242,23 @@ export default class SVGCanvasRenderer {
 	createCanvasSVG() {
 		this.logger.log("Create Canvas SVG.");
 
-		// For full screen display of primary or sub flows we use the canvasDiv as
-		// the parent for the svg object and set width and height to fill the
-		// containing Div.
-		let parentObject = this.canvasDiv;
-		let dims = {
-			width: "100%",
-			height: "100%",
-			x: 0,
-			y: 0
-		};
+		// The dimensions for the <svg> element is dependent on if it is
+		// displayed for full-page display or in an expanded in-place supernode.
+		const dims = this.dispUtils.isDisplayingSubFlowInPlace()
+			? this.getParentSupernodeSVGDimensions()
+			: {
+				width: "100%",
+				height: "100%",
+				x: 0,
+				y: 0
+			};
 
-		// When rendering supernode contents we use the parent supernode as the
-		// parent for the svg object.
-		if (this.dispUtils.isDisplayingSubFlowInPlace()) {
-			parentObject = this.supernodeInfo.d3Selection;
-			dims = this.getParentSupernodeSVGDimensions();
-		}
+		// For full screen display of primary or sub flows we use the canvasDiv as
+		// the parent for the <svg> element. When rendering supernode contents we
+		// use the parent supernode as the parent.
+		const parentObject = this.dispUtils.isDisplayingSubFlowInPlace()
+			? this.supernodeInfo.d3Selection
+			: this.canvasDiv;
 
 		const canvasSVG = parentObject
 			.append("svg")
@@ -1306,15 +1312,15 @@ export default class SVGCanvasRenderer {
 	//    the background of the main canvas.
 	// 3. To display a background grid underneath the canvas objects which will zoom
 	//    and pan with the canvas objects.
-	createCanvasBackground(canvasGrp) {
-		const dims = this.getTransformedViewportDimensions();
+	createCanvasBackground(canvasSVG) {
+		const dims = this.zoomUtils.getTransformedViewportDimensions();
 
-		const canvasBackground = canvasGrp
+		const canvasBackground = canvasSVG
 			.append("rect")
-			.attr("x", dims.x - 15000)
-			.attr("y", dims.y - 15000)
-			.attr("width", dims.width + 30000)
-			.attr("height", dims.height + 30000)
+			.attr("x", 0)
+			.attr("y", 0)
+			.attr("width", dims.width)
+			.attr("height", dims.height)
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("pointer-events", "all")
 			.style("cursor", "default")
@@ -1436,6 +1442,16 @@ export default class SVGCanvasRenderer {
 				.attr("width", canv.width + 100)
 				.attr("height", canv.height + 100);
 		}
+	}
+
+	setCanvasBackgroundSize() {
+		const dims = this.zoomUtils.getTransformedViewportDimensions();
+
+		this.canvasBackground
+			.attr("x", dims.x)
+			.attr("y", dims.y)
+			.attr("width", dims.width)
+			.attr("height", dims.height);
 	}
 
 	createDropShadow(defs) {

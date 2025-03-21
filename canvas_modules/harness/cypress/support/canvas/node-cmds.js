@@ -161,7 +161,7 @@ function findGrpForLabel(grpArray, nodeLabel) {
 
 // posX and posY parameters are optional
 Cypress.Commands.add("clickNode", (nodeName, posX, posY) => {
-	cy.getNodeWithLabel(nodeName).click(posX, posY);
+	cy.getNodeWithLabel(nodeName).click(posX, posY, { force: true });
 });
 
 Cypress.Commands.add("shiftClickNode", (nodeName) => {
@@ -400,7 +400,7 @@ Cypress.Commands.add("deleteNodeUsingKeyboard", (nodeName) => {
 			cy.getNodeWithLabel(nodeName)
 				.as("nodeLabel");
 			cy.get("@nodeLabel")
-				.click();
+				.click({ force: true });
 			cy.get("@nodeLabel")
 				.type(deleteKey);
 		});
