@@ -22,10 +22,9 @@ import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import { v4 as uuid4 } from "uuid";
 import { isEmpty, includes } from "lodash";
-import { Checkbox, Toggletip, ToggletipButton, ToggletipContent, Tooltip } from "@carbon/react";
+import { Checkbox, Toggletip, ToggletipButton, ToggletipContent } from "@carbon/react";
 import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
 
-// import Tooltip from "../../../tooltip/tooltip.jsx";
 import TruncatedContentTooltip from "../truncated-content-tooltip";
 import { ROW_SELECTION } from "../../constants/constants.js";
 
