@@ -146,9 +146,9 @@ const VirtualizedGrid = (props) => {
 			if (!includes(virtualRows, props.scrollToIndex)) {
 				// Keep scrolling until the row is in view
 				if (props.scrollToIndex > virtualRows[virtualRows.length - 1]) { // scroll down the table
-					repeatScroll = setInterval(() => keepScrolling("down"), 1);
+					repeatScroll = setInterval(() => keepScrolling("down"), 100);
 				} else { // scroll up the table
-					repeatScroll = setInterval(() => keepScrolling("up"), 1);
+					repeatScroll = setInterval(() => keepScrolling("up"), 100);
 				}
 			} else {
 				const row = document.querySelectorAll(`tr[data-id=${props.scrollKey}-${props.scrollToIndex}]`);
@@ -365,7 +365,8 @@ const VirtualizedGrid = (props) => {
 				});
 				rowData.originalRowIndex = originalRowIndex;
 				const rowSelected = isRowSelected(rowData.originalRowIndex);
-				const rowDisabled = typeof rowData.disabled === "boolean" ? rowData.disabled : false;
+				const rowDisabled = typeof row.original.disabled === "boolean" ? row.original.disabled : false;
+				rowData.disabled = rowDisabled;
 
 				return (<tr key={`properties-grid-body-row-${virtualRow.index}}`} data-id={`${props.scrollKey}-${originalRowIndex}`}
 					className={classNames("properties-grid-body-row properties-vt-row-class properties-vt-double-click",
