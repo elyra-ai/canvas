@@ -49,7 +49,7 @@
 		display: none;
 	}
 	&.inTable {
-		margin-top: 0;
+		margin-top: $spacing-01;
 		position: absolute;
 		top: 0;
 		.icon svg {
