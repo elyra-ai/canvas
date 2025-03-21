@@ -146,8 +146,32 @@ $link-highlight-color: $support-info;
 
 /* Background rectangle for sub-flow display inside supernodes */
 
+// This fill is applied to the background rectangle when no display grid
+// is present. It may be overidden by the code when a background grid
+// is being displayed.
 .d3-svg-background {
 	fill: $canvas-background-color;
+}
+
+/* Display grid styles. */
+/* Note: The background color for grid patterns is provided by class d3-svg-canvas-div. */
+
+.d3-grid-dot {
+	r: 1;
+	fill: $border-strong-01;
+	stroke: none;
+}
+
+.d3-grid-boxes {
+	fill: none;
+	stroke: $border-strong-01;
+	stroke-width: 0.5px;
+}
+
+.d3-grid-lines {
+	fill: none;
+	stroke: $border-strong-01;
+	stroke-width: 1px;
 }
 
 .d3-canvas-underlay {

@@ -23,7 +23,7 @@ import {
 	NODE_FORMAT_VERTICAL
 } from "../common-canvas/constants/canvas-constants";
 
-const portsHorizontalDefaultLayout = {
+const horizontalDefaultLayout = {
 	nodeLayout: {
 		// Default node sizes. These dimensions might be overridden for nodes that have
 		// more ports than will fit in the default size if inputPortAutoPosition is
@@ -456,9 +456,26 @@ const portsHorizontalDefaultLayout = {
 		// Snap to grid type.
 		snapToGridType: "None",
 
-		// Sizes of snap to grid as a percentage of default node height and width
+		// Sizes of snap to grid as a percentage of default node height and width.
+		// These can also specified as a number which is a size in pixels.
 		snapToGridX: "20%",
 		snapToGridY: "33.33%",
+
+		// Display a grid under the canvas objects. This can be "None", "Dots",
+		// "DotsAndLines", "Boxes", "BoxesAndLines".
+		displayGrid: "None",
+
+		// Sizes of the displayed grid as a percentage of default node height and width.
+		// These can also specified as a number which is a size in pixels.
+		// The major grid dimensions are used to draw lines when 'displayGrid' is set to
+		// either "DotsAndLines" or "BoxesAndLines". The minor grid dimensions are used to
+		// draw a grid of dots or boxes. For correct alignment, the major grid dimensions
+		// should be an exact multiple of the minor grid sizes.
+		displayGridMajorX: "100%",
+		displayGridMajorY: "100%",
+
+		displayGridMinorX: "20%",
+		displayGridMinorY: "33.33%",
 
 		// Indicates the proximity to a node, when dragging a new connection,
 		// to switch the data-new-link-over attribute to "yes".
@@ -481,7 +498,7 @@ const portsHorizontalDefaultLayout = {
 	}
 };
 
-const portsVerticalDefaultLayout = {
+const verticalDefaultLayout = {
 	nodeLayout: {
 		// Default node sizes. These dimensions might be overridden for nodes that have
 		// more ports than will fit in the default size if inputPortAutoPosition is
@@ -915,9 +932,26 @@ const portsVerticalDefaultLayout = {
 		// Snap to grid type.
 		snapToGridType: "None",
 
-		// Sizes of snap to grid as a percentage of default node height and width
+		// Sizes of snap to grid as a percentage of default node height and width.
+		// These can also specified as a number which is a size in pixels.
 		snapToGridX: "25%",
 		snapToGridY: "20%",
+
+		// Display a grid under the canvas objects. This can be "None", "Dots",
+		// "DotsAndLines", "Boxes", "BoxesAndLines".
+		displayGrid: "None",
+
+		// Sizes of the displayed grid as a percentage of default node height and width.
+		// These can also specified as a number which is a size in pixels.
+		// The major grid dimensions are used to draw lines when 'displayGrid' is set to
+		// either "DotsAndLines" or "BoxesAndLines". The minor grid dimensions are used to
+		// draw a grid of dots or boxes. For correct alignment, the major grid dimensions
+		// should be an exact multiple of the minor grid sizes.
+		displayGridMajorX: "100%",
+		displayGridMajorY: "100%",
+
+		displayGridMinorX: "25%",
+		displayGridMinorY: "20%",
 
 		// Indicates the proximity to a node, when dragging a new connection,
 		// to switch the data-new-link-over attribute to "yes".
@@ -951,6 +985,7 @@ export default class LayoutDimensions {
 			newLayout = this.overrideCanvasLayout(newLayout, config, overlayLayout);
 			newLayout = this.overrideLinkType(newLayout, config);
 			newLayout = this.overrideSnapToGrid(newLayout, config);
+			newLayout = this.overrideDisplayGrid(newLayout, config);
 			newLayout = this.overrideAutoLayout(newLayout, config);
 			newLayout = this.overrideArrowHead(newLayout, config);
 		}
@@ -958,13 +993,10 @@ export default class LayoutDimensions {
 	}
 
 	static getDefaultLayout(config) {
-		let defaultLayout;
-		if (config && config.enableNodeFormatType === NODE_FORMAT_VERTICAL) {
-			defaultLayout = portsVerticalDefaultLayout;
+		const defaultLayout = config && config.enableNodeFormatType === NODE_FORMAT_VERTICAL
+			? verticalDefaultLayout
+			: horizontalDefaultLayout;
 
-		} else {
-			defaultLayout = portsHorizontalDefaultLayout;
-		}
 		return cloneDeep(defaultLayout);
 	}
 
@@ -1011,8 +1043,33 @@ export default class LayoutDimensions {
 		layout.canvasLayout.snapToGridY = config.enableSnapToGridY || layout.canvasLayout.snapToGridY || "20%";
 
 		// Set the snap-to-grid sizes in pixels.
-		layout.canvasLayout.snapToGridXPx = this.getSnapToGridSize(layout.canvasLayout.snapToGridX, layout.nodeLayout.defaultNodeWidth);
-		layout.canvasLayout.snapToGridYPx = this.getSnapToGridSize(layout.canvasLayout.snapToGridY, layout.nodeLayout.defaultNodeHeight);
+		layout.canvasLayout.snapToGridXPx = this.getGridSize(layout.canvasLayout.snapToGridX, layout.nodeLayout.defaultNodeWidth);
+		layout.canvasLayout.snapToGridYPx = this.getGridSize(layout.canvasLayout.snapToGridY, layout.nodeLayout.defaultNodeHeight);
+
+		return layout;
+	}
+
+	// Calculates the displayed grid values in pixels from the dimensions provided
+	// in the layout object for the major and minor grid values.
+	static overrideDisplayGrid(layout, config) {
+		const defaultCanvasLayout = config && config.enableNodeFormatType === NODE_FORMAT_VERTICAL
+			? verticalDefaultLayout.canvasLayout
+			: horizontalDefaultLayout.canvasLayout;
+
+		const defaultMajorX = defaultCanvasLayout.displayGridMajorX;
+		const defaultMajorY = defaultCanvasLayout.displayGridMajorY;
+		const defaultMinorX = defaultCanvasLayout.displayGridMinorX;
+		const defaultMinorY = defaultCanvasLayout.displayGridMinorY;
+
+		layout.canvasLayout.displayGridMajorX = layout.canvasLayout.displayGridMajorX || defaultMajorX;
+		layout.canvasLayout.displayGridMajorY = layout.canvasLayout.displayGridMajorY || defaultMajorY;
+		layout.canvasLayout.displayGridMinorX = layout.canvasLayout.displayGridMinorX || defaultMinorX;
+		layout.canvasLayout.displayGridMinorY = layout.canvasLayout.displayGridMinorY || defaultMinorY;
+
+		layout.canvasLayout.displayGridMajorPx = this.getGridSize(layout.canvasLayout.displayGridMajorX, layout.nodeLayout.defaultNodeWidth);
+		layout.canvasLayout.displayGridMajorPy = this.getGridSize(layout.canvasLayout.displayGridMajorY, layout.nodeLayout.defaultNodeHeight);
+		layout.canvasLayout.displayGridMinorPx = this.getGridSize(layout.canvasLayout.displayGridMinorX, layout.nodeLayout.defaultNodeWidth);
+		layout.canvasLayout.displayGridMinorPy = this.getGridSize(layout.canvasLayout.displayGridMinorY, layout.nodeLayout.defaultNodeHeight);
 
 		return layout;
 	}
@@ -1036,15 +1093,15 @@ export default class LayoutDimensions {
 		return spacing;
 	}
 
-	// Returns a snap-to-grid size in pixels based on the snapToGridSizeStr
+	// Returns a grid size in pixels based on the gridSizeStr passed in
 	// which can be either a numeric value (which is taken as the nuber of pixels)
 	// or a numeric value with a % sign at the end which is taken as the percentage
 	// of the defaultNodeSize passed in.
-	static getSnapToGridSize(snapToGridSizeStr, defaultNodeSize) {
-		if (snapToGridSizeStr.endsWith("%")) {
-			return (Number.parseInt(snapToGridSizeStr, 10) / 100) * defaultNodeSize;
+	static getGridSize(gridSizeStr, defaultNodeSize) {
+		if (gridSizeStr.endsWith("%")) {
+			return (Number.parseFloat(gridSizeStr) / 100) * defaultNodeSize;
 		}
-		return Number.parseInt(snapToGridSizeStr, 10);
+		return Number.parseFloat(gridSizeStr);
 	}
 
 	// Overrides the port positioning fields in the layout based on the type of node

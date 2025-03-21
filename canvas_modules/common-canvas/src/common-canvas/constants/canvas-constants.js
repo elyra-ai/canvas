@@ -67,6 +67,13 @@ export const SNAP_TO_GRID_NONE = "None";
 export const SNAP_TO_GRID_AFTER = "After";
 export const SNAP_TO_GRID_DURING = "During";
 
+// Values for display grid settings in canvasLayout
+export const DISPLAY_GRID_NONE = "None";
+export const DISPLAY_GRID_DOTS = "Dots";
+export const DISPLAY_GRID_BOXES = "Boxes";
+export const DISPLAY_GRID_DOTS_AND_LINES = "DotsAndLines";
+export const DISPLAY_GRID_BOXES_AND_LINES = "BoxesAndLines";
+
 // Values for enablePaletteLayout config parameter
 export const PALETTE_LAYOUT_NONE = "None";
 export const PALETTE_LAYOUT_FLYOUT = "Flyout";
