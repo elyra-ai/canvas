@@ -102,7 +102,8 @@ export default class SidePanelProperties extends React.Component {
 			"staticRowsPropertyId": this.props.propertiesConfig.staticRowsPropertyId,
 			"staticRowsIndexes": this.props.propertiesConfig.staticRowsIndexes,
 			"disableWideFlyoutPrimaryButtonForPanelId": this.props.propertiesConfig.disableWideFlyoutPrimaryButtonForPanelId,
-			"wideFlyoutPrimaryButtonDisabled": this.props.propertiesConfig.wideFlyoutPrimaryButtonDisabled
+			"wideFlyoutPrimaryButtonDisabled": this.props.propertiesConfig.wideFlyoutPrimaryButtonDisabled,
+			"enableTanstackTable": this.props.propertiesConfig.enableTanstackTable
 		};
 
 		this.commonPropertiesConfig = {
@@ -372,6 +373,7 @@ SidePanelProperties.propTypes = {
 		disableWideFlyoutPrimaryButton: PropTypes.func,
 		setWideFlyoutPrimaryButtonDisabled: PropTypes.func, // action
 		convertValueDataTypes: PropTypes.bool,
-		iconSwitch: PropTypes.bool
+		iconSwitch: PropTypes.bool,
+		enableTanstackTable: PropTypes.bool
 	})
 };
