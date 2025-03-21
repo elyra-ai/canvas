@@ -180,7 +180,7 @@ export default class FieldPicker extends React.Component {
 			});
 			if (this.multiSchema) {
 				const schemaContent = (<div className="properties-fp-schema">
-					{field.schema}
+					<span>{field.schema}</span>
 				</div>);
 				columns.push({ column: "schemaName", content: schemaContent, value: field.schema });
 			}
