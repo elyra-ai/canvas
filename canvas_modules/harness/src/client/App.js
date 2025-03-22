@@ -2159,12 +2159,12 @@ class App extends React.Component {
 			enableSingleOutputPortDisplay: this.state.selectedSingleOutputPortDisplay,
 			enableNodeLayout: this.state.selectedNodeLayout,
 			enableCanvasLayout: {
-				...this.state.selectedCanvasLayout,
 				displayGrid: this.state.selectedDisplayGridType,
 				displayGridMajorX: this.state.enteredMajorGridX,
 				displayGridMajorY: this.state.enteredMajorGridY,
 				displayGridMinorX: this.state.enteredMinorGridX,
-				displayGridMinorY: this.state.enteredMinorGridY
+				displayGridMinorY: this.state.enteredMinorGridY,
+				...this.state.selectedCanvasLayout
 			},
 			enableLinksOverNodes: this.state.selectedLinksOverNodes
 		};
