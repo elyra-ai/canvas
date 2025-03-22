@@ -1333,6 +1333,7 @@ export default class SVGCanvasRenderer {
 		// Set the appropriate grid ID for the canvas background.
 		const gridId = this.getGridId();
 		if (gridId) {
+			canvasBackground.attr("class", "d3-svg-background-grid");
 			canvasBackground.attr("fill", `url(#${gridId})`);
 		} else {
 			canvasBackground.attr("class", "d3-svg-background");
@@ -1503,13 +1504,13 @@ export default class SVGCanvasRenderer {
 
 		const gridId = this.getGridId();
 
-		if (canvasLayout.displayGrid === DISPLAY_GRID_DOTS) {
+		if (canvasLayout.displayGridType === DISPLAY_GRID_DOTS) {
 			this.addDotsPattern(defs, gridId, gridMinorPx, gridMinorPy);
 
-		} else if (canvasLayout.displayGrid === DISPLAY_GRID_BOXES) {
+		} else if (canvasLayout.displayGridType === DISPLAY_GRID_BOXES) {
 			this.addBoxesPattern(defs, gridId, gridMinorPx, gridMinorPy);
 
-		} else if (canvasLayout.displayGrid === DISPLAY_GRID_BOXES_AND_LINES) {
+		} else if (canvasLayout.displayGridType === DISPLAY_GRID_BOXES_AND_LINES) {
 			this.addBoxesPattern(defs, "smallGrid", gridMinorPx, gridMinorPy);
 
 			const gridPattern = defs.append("pattern")
@@ -1528,7 +1529,7 @@ export default class SVGCanvasRenderer {
 				.attr("d", `M ${gridMajorPx} 0 L 0 0 0 ${gridMajorPy}`)
 				.attr("class", "d3-grid-lines");
 
-		} else if (canvasLayout.displayGrid === DISPLAY_GRID_DOTS_AND_LINES) {
+		} else if (canvasLayout.displayGridType === DISPLAY_GRID_DOTS_AND_LINES) {
 			this.addDotsPattern(defs, "smallGrid", gridMinorPx, gridMinorPy);
 
 			const gridPattern = defs.append("pattern")
@@ -1555,16 +1556,16 @@ export default class SVGCanvasRenderer {
 	// is included in the returned ID to ensure that each instance of
 	// the canvas has its own grid pattern.
 	getGridId() {
-		if (this.canvasLayout.displayGrid === DISPLAY_GRID_DOTS) {
+		if (this.canvasLayout.displayGridType === DISPLAY_GRID_DOTS) {
 			return "d3_grid_dots_pattern_" + this.instanceId;
 
-		} else if (this.canvasLayout.displayGrid === DISPLAY_GRID_BOXES) {
+		} else if (this.canvasLayout.displayGridType === DISPLAY_GRID_BOXES) {
 			return "d3_grid_boxes_pattern_" + this.instanceId;
 
-		} else if (this.canvasLayout.displayGrid === DISPLAY_GRID_DOTS_AND_LINES) {
-			return "d3_grid_dots_lines-pattern_" + this.instanceId;
+		} else if (this.canvasLayout.displayGridType === DISPLAY_GRID_DOTS_AND_LINES) {
+			return "d3_grid_dots_lines_pattern_" + this.instanceId;
 
-		} else if (this.canvasLayout.displayGrid === DISPLAY_GRID_BOXES_AND_LINES) {
+		} else if (this.canvasLayout.displayGridType === DISPLAY_GRID_BOXES_AND_LINES) {
 			return "d3_grid_boxes_lines_pattern_" + this.instanceId;
 		}
 		return null;

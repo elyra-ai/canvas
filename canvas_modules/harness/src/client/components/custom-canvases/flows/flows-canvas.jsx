@@ -91,7 +91,8 @@ export default class FlowsCanvas extends React.Component {
 			enableCanvasLayout: {
 				dataLinkArrowHead: true,
 				linkGap: 4,
-				displayLinkOnOverlap: false
+				displayLinkOnOverlap: false,
+				displayGridType: "DotsAndLines"
 			}
 		});
 		return config;

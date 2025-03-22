@@ -80,6 +80,15 @@ Cypress.Commands.add("getCanvasTranslateCoords", () => {
 		});
 });
 
+
+Cypress.Commands.add("getCanvasBackgroundTranslateCoords", () => {
+	cy.get(`div#canvas-div-${document.instanceId} > div > .svg-area > .d3-svg-background-grid`)
+		.then((background) => {
+			const transform = background[0].getAttribute("transform");
+			return extractTransformValues(transform);
+		});
+});
+
 export function extractTransformValues(transform) {
 	if (transform) {
 		const coordArray = transform.substring(10, transform.indexOf(")")).split(",");
