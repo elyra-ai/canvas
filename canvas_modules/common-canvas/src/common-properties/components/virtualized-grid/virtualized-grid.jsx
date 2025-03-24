@@ -64,7 +64,7 @@ const VirtualizedGrid = (props) => {
 		const colDefs = [];
 		props.columns.forEach((col, colIdx) => {
 			const columnDef = {
-				accessorFn: (row) => row.columns?.[colIdx]?.content,
+				accessorFn: (row) => row.columns.find((column) => column.column === col.key)?.content,
 				header: col.label,
 				size: col.width,
 				id: col.key,
@@ -244,10 +244,10 @@ const VirtualizedGrid = (props) => {
 				setIsOverSelectOptionState(false);
 			} else if (evt.type === "focus" && !mouseEventCalled) {
 				setKeyBoardEventCalledState(true);
-				setIsOverSelectOptionState(!isOverSelectOption);
+				setIsOverSelectOptionState(true);
 			} else if (evt.type === "blur" && keyBoardEventCalled) {
 				setKeyBoardEventCalledState(false);
-				setIsOverSelectOptionState(!isOverSelectOption);
+				setIsOverSelectOptionState(false);
 			}
 		}
 	};
