@@ -106,7 +106,7 @@ const VirtualizedGrid = (props) => {
 			}
 		});
 		return colSizeDefs;
-	}, [table.getState().columnSizingInfo, props.excessWidth]);
+	}, [table.getState().columnSizingInfo, columns, props.excessWidth]);
 
 	useEffect(() => {
 		if (props.onSort && table.getState().sorting.length > 0) {

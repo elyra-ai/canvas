@@ -81,7 +81,7 @@ class FlexibleTable extends React.Component {
 	}
 
 	componentDidMount() {
-		this._updateTableWidth(this.tableRef.current.getBoundingClientRect());
+		this._updateTableWidth(this.tableRef.current.getBoundingClientRect(), this.tableRef.current);
 		this.calculateColumnWidths();
 		this._adjustTableHeight();
 
@@ -96,7 +96,7 @@ class FlexibleTable extends React.Component {
 
 		this.resizeObserver = new ResizeObserver((entries) => {
 			for (const entry of entries) {
-				this._updateTableWidth(entry.contentRect);
+				this._updateTableWidth(entry.contentRect, entry.target);
 			}
 		});
 		if (this.tableRef.current) {
@@ -298,10 +298,11 @@ class FlexibleTable extends React.Component {
 		}
 	}
 
-	_updateTableWidth(contentRect) {
-		if (this.state.availableWidth !== Math.floor(contentRect.width - 2)) {
+	_updateTableWidth(contentRect, target) {
+		const tableWidth = Math.floor(target?.childNodes?.[0].childNodes?.[0].clientWidth) || contentRect.width;
+		if (this.state.availableWidth !== Math.floor(tableWidth - 2)) {
 			this.setState({
-				availableWidth: Math.floor(contentRect.width - 2) // subtract 2 px for the borders
+				availableWidth: Math.floor(tableWidth - 2) // subtract 2 px for the borders
 			}, () => this.updateExcessWidth());
 		}
 	}
