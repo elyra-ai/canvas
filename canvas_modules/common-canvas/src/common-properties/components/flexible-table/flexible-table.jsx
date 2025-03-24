@@ -478,7 +478,7 @@ class FlexibleTable extends React.Component {
 				searchLabel = columnDef.label;
 			}
 			const width = Math.abs(parseInt(this.state.columnWidths?.[j], 10));
-			let headerLabel; // TODO what is this?
+			let headerLabel;
 			if (typeof (columnDef.label) === "object") {
 				headerLabel = columnDef.label.props.labelText;
 			} else if (typeof (columnDef.label) === "string") {
@@ -702,7 +702,7 @@ FlexibleTable.defaultProps = {
 	showHeader: true,
 	light: true,
 	emptyTablePlaceholder: "",
-	selectedRows: [], // Required for consumers using FlexibleTable directly,
+	selectedRows: [], // Required for consumers using FlexibleTable directly
 	enableTanstackTable: false // Feature flag
 };
 

@@ -55,7 +55,7 @@ const VirtualizedGrid = (props) => {
 	const columnVirtualizer = useVirtualizer({
 		count: props.columns.length,
 		getScrollElement: () => parentRef.current,
-		estimateSize: (colIdx) => DEFAULT_COLUMN_WIDTH, // props.columns[colIdx].width ||
+		estimateSize: (colIdx) => props.columns[colIdx].width || DEFAULT_COLUMN_WIDTH,
 		horizontal: true,
 		overscan: 3
 	});

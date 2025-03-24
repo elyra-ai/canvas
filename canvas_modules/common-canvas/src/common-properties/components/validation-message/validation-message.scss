@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,6 +55,15 @@
 		.icon svg {
 			height: $spacing-03;
 			width: $spacing-03;
+		}
+	}
+}
+
+// TODO remove this when removing react-virtualized
+.properties-vt.deprecated {
+	.properties-validation-message {
+		&.inTable {
+			margin-top: 0;
 		}
 	}
 }
