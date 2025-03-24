@@ -80,6 +80,15 @@ Cypress.Commands.add("verifyZoomTransform", (x, y, k) => {
 		});
 });
 
+Cypress.Commands.add("verifyBackgroundZoomTransform", (x, y, k) => {
+	cy.getCanvasBackgroundTranslateCoords()
+		.then((transform) => {
+			cy.verifyValueInCompareRange(Math.round(transform.x), x);
+			cy.verifyValueInCompareRange(Math.round(transform.y), y);
+			cy.verifyValueInCompareRange(Math.round(transform.k * 100), k * 100);
+		});
+});
+
 Cypress.Commands.add("verifyCreateAutoCommentCommand", (x, y) => {
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc);
@@ -1406,6 +1415,14 @@ Cypress.Commands.add("verifyCanvasTransform", (movString) => {
 			}
 		});
 
+});
+
+Cypress.Commands.add("verifyCanvasBackgroundFill", (fill) => {
+	cy.get("#canvas-div-0 .d3-svg-background-grid")
+		.invoke("attr", "fill")
+		.should((actualFill) => {
+			expect(actualFill).to.equal(fill);
+		});
 });
 
 Cypress.Commands.add("verifyNotificationCounter", (count) => {
