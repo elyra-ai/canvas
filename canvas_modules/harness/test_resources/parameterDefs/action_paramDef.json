@@ -19,7 +19,7 @@
     "disable_button_text": "this should be disabled when button is clicked",
     "oneofselect": "blue",
     "oneofselect-custom-action-left": "blue",
-	  "oneofselect-custom-action-right": "red",
+    "oneofselect-custom-action-right": "red",
     "oneofselect_null": null,
     "oneofselect_empty_string": "",
     "oneofselect_custom_value": "custom",

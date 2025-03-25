@@ -1442,7 +1442,7 @@ export default class PropertiesController {
 	* @param tableInfo
 	*/
 	getCustomAction(propertyId, action) {
-		if (action.customActionId) {
+		if (action.customActionId && Array.isArray(this.customActions)) {
 			for (const customAction of this.customActions) {
 				if (customAction.id() === action.customActionId) {
 					try {
