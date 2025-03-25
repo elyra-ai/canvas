@@ -157,7 +157,7 @@ $link-highlight-color: $support-info;
 /* Note: The background color for grid patterns is provided by class d3-svg-canvas-div. */
 
 .d3-grid-dot {
-	r: 1;
+	r: 1px;
 	fill: $border-strong-01;
 	stroke: none;
 }

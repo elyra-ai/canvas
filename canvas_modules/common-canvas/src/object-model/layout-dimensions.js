@@ -463,11 +463,11 @@ const horizontalDefaultLayout = {
 
 		// Display a grid under the canvas objects. This can be "None", "Dots",
 		// "DotsAndLines", "Boxes", "BoxesAndLines".
-		displayGrid: "None",
+		displayGridType: "None",
 
 		// Sizes of the displayed grid as a percentage of default node height and width.
 		// These can also specified as a number which is a size in pixels.
-		// The major grid dimensions are used to draw lines when 'displayGrid' is set to
+		// The major grid dimensions are used to draw lines when 'displayGridType' is set to
 		// either "DotsAndLines" or "BoxesAndLines". The minor grid dimensions are used to
 		// draw a grid of dots or boxes. For correct alignment, the major grid dimensions
 		// should be an exact multiple of the minor grid sizes.
@@ -939,11 +939,11 @@ const verticalDefaultLayout = {
 
 		// Display a grid under the canvas objects. This can be "None", "Dots",
 		// "DotsAndLines", "Boxes", "BoxesAndLines".
-		displayGrid: "None",
+		displayGridType: "None",
 
 		// Sizes of the displayed grid as a percentage of default node height and width.
 		// These can also specified as a number which is a size in pixels.
-		// The major grid dimensions are used to draw lines when 'displayGrid' is set to
+		// The major grid dimensions are used to draw lines when 'displayGridType' is set to
 		// either "DotsAndLines" or "BoxesAndLines". The minor grid dimensions are used to
 		// draw a grid of dots or boxes. For correct alignment, the major grid dimensions
 		// should be an exact multiple of the minor grid sizes.
