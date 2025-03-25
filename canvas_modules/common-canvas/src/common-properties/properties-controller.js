@@ -60,6 +60,7 @@ export default class PropertiesController {
 		this.controls = {};
 		this.actions = {};
 		this.customControls = [];
+		this.customActions = [];
 		this.summaryPanelControls = {};
 		this.controllerHandlerCalled = false;
 		this.commandStack = new CommandStack();
@@ -1424,6 +1425,36 @@ export default class PropertiesController {
 	*/
 	getAction(actionId) {
 		return this.actions[actionId.name];
+	}
+
+	/**
+	* Sets the custom actions available to common-properties
+	* @param customActions
+	*/
+	setCustomActions(customActions) {
+		this.customActions = customActions;
+	}
+
+	/**
+	* Returns a rendered custom action
+	* @param propertyId
+	* @param control
+	* @param tableInfo
+	*/
+	getCustomAction(propertyId, action) {
+		if (action.customActionId) {
+			for (const customAction of this.customActions) {
+				if (customAction.id() === action.customActionId) {
+					try {
+						return new customAction(propertyId, this, action.data).renderAction();
+					} catch (error) {
+						logger.warn("Error thrown creating custom action: " + error);
+						return "";
+					}
+				}
+			}
+		}
+		return "Custom action not found: " + action.customActionId;
 	}
 
 	/**

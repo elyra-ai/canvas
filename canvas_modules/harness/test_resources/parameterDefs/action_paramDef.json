@@ -18,6 +18,8 @@
     "disable_image_text": "this should be disabled when button is clicked",
     "disable_button_text": "this should be disabled when button is clicked",
     "oneofselect": "blue",
+    "oneofselect-custom-action-left": "blue",
+	  "oneofselect-custom-action-right": "red",
     "oneofselect_null": null,
     "oneofselect_empty_string": "",
     "oneofselect_custom_value": "custom",
@@ -75,6 +77,30 @@
     },
     {
       "id": "oneofselect",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id":"oneofselect-custom-action-left",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect-custom-action-right",
       "enum": [
         "red",
         "orange",
@@ -282,6 +308,26 @@
         },
         "class_name": "oneofselect-control-class",
         "action_ref": "moon"
+      },
+      {
+        "parameter_ref":"oneofselect-custom-action-left",
+        "label": {
+          "default": "Control with custom action left"
+        },
+        "description": {
+          "default": "oneofselect control with custom action on the left"
+        },
+        "action_ref": "custom_action_left"
+      },
+      {
+        "parameter_ref": "oneofselect-custom-action-right",
+        "label": {
+          "default": "Control with custom action right"
+        },
+        "description": {
+          "default": "oneofselect control with custom action on the right"
+        },
+        "action_ref": "custom_action_right"
       },
       {
         "parameter_ref": "oneofselect_null",
@@ -725,6 +771,36 @@
         },
         "control": "button",
         "data": {}
+      },
+      {
+        "id": "custom_action_left",
+        "label": {
+          "default": "Custom action label"
+        },
+        "description": {
+          "default": "Custom action description"
+        },
+        "control": "custom",
+        "data": {
+          "parameter_ref":"oneofselect-custom-action-left"
+        },
+        "custom_action_id": "harness-custom-overflow-action",
+        "class_name": "custom-action-left"
+      },
+      {
+        "id": "custom_action_right",
+        "label": {
+          "default": "Custom action label"
+        },
+        "description": {
+          "default": "Custom action description"
+        },
+        "control": "custom",
+        "data": {
+          "parameter_ref": "oneofselect-custom-action-right"
+        },
+        "custom_action_id": "harness-custom-overflow-action",
+        "class_name": "custom-action-right"
       }
     ],
     "group_info": [
@@ -811,6 +887,20 @@
             "type": "controls",
             "parameter_refs": [
               "oneofselect_null"
+            ]
+          },
+          {
+            "id": "oneofselect-control-left",
+            "type": "controls",
+            "parameter_refs": [
+             "oneofselect-custom-action-left"
+            ]
+          },
+          {
+            "id": "oneofselect-control-right",
+            "type": "controls",
+            "parameter_refs": [
+              "oneofselect-custom-action-right"
             ]
           },
           {
