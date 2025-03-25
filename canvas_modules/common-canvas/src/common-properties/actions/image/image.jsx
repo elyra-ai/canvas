@@ -17,6 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { Button } from "@carbon/react";
 import { STATES } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
@@ -56,7 +57,7 @@ class ImageAction extends React.Component {
 
 		const image = (
 			<div data-id={this.props.action.name}>
-				<button
+				<Button
 					className="properties-action-image-button"
 					aria-describedby={"tooltip-action-" + this.props.action.name}
 					onClick={this.applyAction}
@@ -66,7 +67,7 @@ class ImageAction extends React.Component {
 						{...height}
 						{...width}
 					/>
-				</button>
+				</Button>
 			</div>
 		);
 
