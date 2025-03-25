@@ -376,7 +376,7 @@ const VirtualizedGrid = (props) => {
 					data-role="properties-data-row"
 					style={{ transform: `translateY(${virtualRow.start}px)` }}
 					onMouseDown={(evt) => onRowClick(evt, virtualRow.index, rowData)}
-					onDoubleClick={(evt) => onRowDoubleClick(evt, rowData.rowKey, virtualRow.index)}
+					onDoubleClick={(evt) => onRowDoubleClick(evt, row.original.rowKey, virtualRow.index)}
 				>
 					<td key={`properties-grid-body-row-${virtualRow.index}-fake-col-start`} className="properties-grid-fake-col" style={{ width: `${before}px` }} />
 					{renderDataRowCheckbox(virtualRow.index, rowData)}
