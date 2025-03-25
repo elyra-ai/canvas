@@ -56,12 +56,17 @@ class ImageAction extends React.Component {
 
 		const image = (
 			<div data-id={this.props.action.name}>
-				<img
-					src={this.props.action.image.url}
+				<button
+					className="properties-action-image-button"
+					aria-describedby={"tooltip-action-" + this.props.action.name}
 					onClick={this.applyAction}
-					{...height}
-					{...width}
-				/>
+				>
+					<img
+						src={this.props.action.image.url}
+						{...height}
+						{...width}
+					/>
+				</button>
 			</div>
 		);
 
