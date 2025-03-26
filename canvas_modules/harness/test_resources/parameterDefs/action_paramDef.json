@@ -20,6 +20,7 @@
     "oneofselect": "blue",
     "oneofselect-custom-action-left": "blue",
     "oneofselect-custom-action-right": "red",
+    "readonly_text": "I will change when you select any item from overflow menu in the custom action above.",
     "oneofselect_null": null,
     "oneofselect_empty_string": "",
     "oneofselect_custom_value": "custom",
@@ -110,6 +111,10 @@
         "purple"
       ],
       "required": true
+    },
+    {
+      "id": "readonly_text",
+      "type": "string"
     },
     {
       "id": "oneofselect_null",
@@ -328,6 +333,16 @@
           "default": "oneofselect control with custom action on the right"
         },
         "action_ref": "custom_action_right"
+      },
+      {
+        "parameter_ref": "readonly_text",
+        "label": {
+          "default": "Selected overflow menu item"
+        },
+        "description": {
+          "default": "readonly field whose value changes using custom action"
+        },
+        "control": "readonly"
       },
       {
         "parameter_ref": "oneofselect_null",
@@ -901,6 +916,13 @@
             "type": "controls",
             "parameter_refs": [
               "oneofselect-custom-action-right"
+            ]
+          },
+          {
+            "id": "readonly-control",
+            "type": "controls",
+            "parameter_refs": [
+              "readonly_text"
             ]
           },
           {

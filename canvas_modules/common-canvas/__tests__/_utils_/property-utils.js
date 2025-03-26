@@ -23,6 +23,7 @@ import cloneDeep from "lodash/cloneDeep";
 import CustomTableControl from "./custom-controls/CustomTableControl";
 import CustomToggleControl from "./custom-controls/CustomToggleControl";
 import CustomOpMax from "./custom-condition-ops/customMax";
+import CustomOverflowAction from "./custom-actions/CustomOverflowAction";
 import sinon from "sinon";
 
 var renderedController;
@@ -67,6 +68,7 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 				callbacks={callbacks}
 				customControls={[CustomTableControl, CustomToggleControl]}
 				customConditionOps={[CustomOpMax]}
+				customActions={[CustomOverflowAction]}
 			/>
 		</div>
 	);
