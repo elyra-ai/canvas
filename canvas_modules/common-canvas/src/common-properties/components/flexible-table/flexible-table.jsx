@@ -223,7 +223,7 @@ class FlexibleTable extends React.Component {
 		if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 			tableWidth -= 40;
 		}
-		const compare = tableWidth + (COLUMN_PADDING_BUFFER / 2); // Save initial width for comparison later
+		const compare = tableWidth + (COLUMN_PADDING_BUFFER * 0.75); // Save initial width for comparison later
 		let remainingColumns = columns.length; // keep track of how many columns to calculate width for
 		let maxWeight = 0;
 
