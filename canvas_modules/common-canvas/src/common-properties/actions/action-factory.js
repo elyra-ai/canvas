@@ -20,6 +20,7 @@ import ButtonAction from "./button";
 import ImageAction from "./image";
 import { ActionType } from "./../constants/form-constants";
 import classNames from "classnames";
+import { getDataId } from "./../util/control-utils";
 
 
 export default class ActionFactory {
@@ -52,9 +53,9 @@ export default class ActionFactory {
 				return (
 					<div
 						className={classNames("properties-custom-action", action.className)}
-						key={propertyId}
+						data-id={getDataId(propertyId)}
 					>
-						{this.controller.getCustomAction(propertyId, action)}
+						{this.controller.getCustomAction(action)}
 					</div>
 				);
 			}

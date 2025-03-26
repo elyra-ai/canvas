@@ -1437,11 +1437,10 @@ export default class PropertiesController {
 
 	/**
 	* Returns a rendered custom action
-	* @param propertyId
-	* @param control
-	* @param tableInfo
+	* @param action
 	*/
-	getCustomAction(propertyId, action) {
+	getCustomAction(action) {
+		const propertyId = this.convertPropertyId(action.name);
 		if (action.customActionId && Array.isArray(this.customActions)) {
 			for (const customAction of this.customActions) {
 				if (customAction.id() === action.customActionId) {
