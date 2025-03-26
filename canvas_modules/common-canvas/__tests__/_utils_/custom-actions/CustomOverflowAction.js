@@ -35,7 +35,8 @@ class CustomOverflowAction {
 	renderAction() {
 		return (
 			<OverflowMenu
-				flipped
+				data-floating-menu-container
+				flipped={this.data?.parameter_ref === "oneofselect-custom-action-right"}
 				aria-label="Overflow menu"
 				size="sm"
 				className="harness-custom-action"

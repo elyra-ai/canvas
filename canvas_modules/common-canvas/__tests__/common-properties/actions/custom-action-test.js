@@ -17,7 +17,7 @@
 import { expect } from "chai";
 import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import { fireEvent, screen } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 
 describe("custom action renders correctly", () => {
 	let wrapper;
@@ -56,25 +56,32 @@ describe("custom action renders correctly", () => {
 		expect(customActionRight).to.have.length(1);
 		// Readonly text shows default text
 		const readonlyTextPropertyId = { name: "readonly_text" };
-		const readonlyText = container.querySelector("div[data-id='properties-ctrl-readonly_text']").querySelector(".properties-field-type");
+		let readonlyText = container.querySelector("div[data-id='properties-ctrl-readonly_text']").querySelector(".properties-field-type");
 		expect(readonlyText.textContent).to.equal(ACTION_PARAMDEF.current_parameters.readonly_text);
 		expect(controller.getPropertyValue(readonlyTextPropertyId)).to.equal(ACTION_PARAMDEF.current_parameters.readonly_text);
 
 		// Select 1st item from overflow menu of custom action left
 		let overflowMenuButton = customActionLeft[0].querySelector("button.harness-custom-action");
 		fireEvent.click(overflowMenuButton);
+		let dropdownList = container.querySelectorAll("li.cds--overflow-menu-options__option button");
+		expect(dropdownList).to.be.length(2);
+		fireEvent.click(dropdownList[0]);
 
-		let dropdownMenuItem = screen.getByText("Menu item 1");
-		let dropdownMenuButton = dropdownMenuItem.parentElement;
-		fireEvent.click(dropdownMenuButton);
+		// then check for the text update
+		readonlyText = container.querySelector("div[data-id='properties-ctrl-readonly_text']").querySelector(".properties-field-type");
+		expect(readonlyText.textContent).to.equal("Menu item 1");
 		expect(controller.getPropertyValue(readonlyTextPropertyId)).to.equal("Menu item 1");
 
 		// Select 2nd item from overflow menu of custom action right
 		overflowMenuButton = customActionRight[0].querySelector("button.harness-custom-action");
 		fireEvent.click(overflowMenuButton);
-		dropdownMenuItem = screen.getByText("Menu item 2");
-		dropdownMenuButton = dropdownMenuItem.parentElement;
-		fireEvent.click(dropdownMenuButton);
+		dropdownList = container.querySelectorAll("li.cds--overflow-menu-options__option button");
+		expect(dropdownList).to.be.length(2);
+		fireEvent.click(dropdownList[1]);
+
+		// then check for the text update
+		readonlyText = container.querySelector("div[data-id='properties-ctrl-readonly_text']").querySelector(".properties-field-type");
+		expect(readonlyText.textContent).to.equal("Menu item 2");
 		expect(controller.getPropertyValue(readonlyTextPropertyId)).to.equal("Menu item 2");
 	});
 });
