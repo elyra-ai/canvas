@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-// import React from "react";
 import { expect } from "chai";
-// import sinon from "sinon";
-// import Controller from "../../../src/common-properties/properties-controller";
 import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import { prettyDOM } from "@testing-library/dom";
-import { fireEvent, within, waitFor } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 
 describe("custom action renders correctly", () => {
 	let wrapper;
-	// let controller;
+	let controller;
 	beforeEach(() => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(ACTION_PARAMDEF);
 		wrapper = renderedObject.wrapper;
-		// controller = renderedObject.controller;
+		controller = renderedObject.controller;
 	});
 
 	afterEach(() => {
@@ -52,24 +48,34 @@ describe("custom action renders correctly", () => {
 		expect(readonlyText.textContent).to.equal(ACTION_PARAMDEF.current_parameters.readonly_text);
 	});
 
-	it.only("updating custom actions should work correctly", async() => {
+	it("updating custom actions should work correctly", () => {
 		const { container } = wrapper;
 		const customActionLeft = container.querySelectorAll("div.custom-action-left");
 		expect(customActionLeft).to.have.length(1);
+		const customActionRight = container.querySelectorAll("div.custom-action-right");
+		expect(customActionRight).to.have.length(1);
 		// Readonly text shows default text
+		const readonlyTextPropertyId = { name: "readonly_text" };
 		const readonlyText = container.querySelector("div[data-id='properties-ctrl-readonly_text']").querySelector(".properties-field-type");
 		expect(readonlyText.textContent).to.equal(ACTION_PARAMDEF.current_parameters.readonly_text);
+		expect(controller.getPropertyValue(readonlyTextPropertyId)).to.equal(ACTION_PARAMDEF.current_parameters.readonly_text);
 
-		// Select 1st item from overflow menu
-		const overflowMenuButton = within(customActionLeft[0]).getByRole("button");
+		// Select 1st item from overflow menu of custom action left
+		let overflowMenuButton = customActionLeft[0].querySelector("button.harness-custom-action");
 		fireEvent.click(overflowMenuButton);
 
-		await waitFor(() => {
-			// const firstMenuItem = container.querySelectorAll("button.overflow-menu-item");
-			const firstMenuItem = container.querySelector("ul.cds--overflow-menu-options");
-			console.log(prettyDOM(firstMenuItem));
-		});
-		
+		let dropdownMenuItem = screen.getByText("Menu item 1");
+		let dropdownMenuButton = dropdownMenuItem.parentElement;
+		fireEvent.click(dropdownMenuButton);
+		expect(controller.getPropertyValue(readonlyTextPropertyId)).to.equal("Menu item 1");
+
+		// Select 2nd item from overflow menu of custom action right
+		overflowMenuButton = customActionRight[0].querySelector("button.harness-custom-action");
+		fireEvent.click(overflowMenuButton);
+		dropdownMenuItem = screen.getByText("Menu item 2");
+		dropdownMenuButton = dropdownMenuItem.parentElement;
+		fireEvent.click(dropdownMenuButton);
+		expect(controller.getPropertyValue(readonlyTextPropertyId)).to.equal("Menu item 2");
 	});
 });
 

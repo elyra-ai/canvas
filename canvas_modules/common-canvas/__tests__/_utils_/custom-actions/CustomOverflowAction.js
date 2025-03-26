@@ -40,7 +40,7 @@ class CustomOverflowAction {
 				size="sm"
 				className="harness-custom-action"
 			>
-				<OverflowMenuItem className="overflow-menu-item"  itemText="Menu item 1" onClick={() => this.changeReadonlyText("Menu item 1")} />
+				<OverflowMenuItem className="overflow-menu-item" itemText="Menu item 1" onClick={() => this.changeReadonlyText("Menu item 1")} />
 				<OverflowMenuItem className="overflow-menu-item" itemText="Menu item 2" onClick={() => this.changeReadonlyText("Menu item 2")} />
 			</OverflowMenu>
 		);
