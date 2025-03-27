@@ -105,6 +105,12 @@ const ControlType = {
 	HIDDEN: "hidden"
 };
 
+const ActionType = {
+	BUTTON: "button",
+	IMAGE: "image",
+	CUSTOM: "custom"
+};
+
 const ParamRole = {
 	TEXT: "text",
 	ENUM: "enum",
@@ -154,4 +160,4 @@ function hasValue(Enum, value) {
 	return false;
 }
 
-export { GroupType, PanelType, Type, ParamRole, ControlType, hasValue, EditStyle, Size, ItemType, Separator, ORIENTATIONS };
+export { GroupType, PanelType, Type, ParamRole, ControlType, ActionType, hasValue, EditStyle, Size, ItemType, Separator, ORIENTATIONS };

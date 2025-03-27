@@ -18,6 +18,9 @@ import React from "react";
 
 import ButtonAction from "./button";
 import ImageAction from "./image";
+import { ActionType } from "./../constants/form-constants";
+import classNames from "classnames";
+import { getDataId } from "./../util/control-utils";
 
 
 export default class ActionFactory {
@@ -29,7 +32,7 @@ export default class ActionFactory {
 
 	generateAction(key, action) {
 		if (action) {
-			if (action.actionType === "button") {
+			if (action.actionType === ActionType.BUTTON) {
 				return (
 					<ButtonAction
 						key={"action." + key}
@@ -37,13 +40,23 @@ export default class ActionFactory {
 						controller={this.controller}
 					/>
 				);
-			} else if (action.actionType === "image") {
+			} else if (action.actionType === ActionType.IMAGE) {
 				return (
 					<ImageAction
 						key={"action." + key}
 						action={action}
 						controller={this.controller}
 					/>
+				);
+			} else if (action.actionType === ActionType.CUSTOM) {
+				const propertyId = this.controller.convertPropertyId(action.name);
+				return (
+					<div
+						className={classNames("properties-custom-action", action.className)}
+						data-id={getDataId(propertyId)}
+					>
+						{this.controller.getCustomAction(action)}
+					</div>
 				);
 			}
 		}
