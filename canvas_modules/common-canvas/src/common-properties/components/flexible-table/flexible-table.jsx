@@ -30,6 +30,7 @@ import { REM_ROW_HEIGHT, REM_HEADER_HEIGHT, ONE_REM_HEIGHT, SORT_DIRECTION, STAT
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
 const COLUMN_PADDING_BUFFER = 12;
+const DEFAULT_COL_MIN_WIDTH = 40; // Carbon table standard to display minimum 1 character
 
 class FlexibleTable extends React.Component {
 
@@ -239,7 +240,9 @@ class FlexibleTable extends React.Component {
 			}
 		}
 		const widths = [];
-		const defaultWidth = Math.floor(tableWidth / remainingColumns); // use default width for columns without a weight
+		const defaultWidth = tableWidth > (DEFAULT_COL_MIN_WIDTH * remainingColumns)
+			? Math.floor(tableWidth / remainingColumns) // use default width for columns without a weight
+			: DEFAULT_COL_MIN_WIDTH; // If no more space to have the column visible, set the min width and let the table scroll
 		const weightedWidths = [];
 		let sumWeightedWidths = 0;
 
@@ -289,12 +292,14 @@ class FlexibleTable extends React.Component {
 	}
 
 	updateExcessWidth() {
-		if (this.state.tableWidth < this.state.availableWidth) {
+		if (this.state.tableWidth > 0 && this.state.tableWidth < this.state.availableWidth) {
 			let excessWidth = this.state.availableWidth - this.state.tableWidth - COLUMN_PADDING_BUFFER;
 			if (typeof this.props.updateRowSelections !== "undefined") {
 				excessWidth -= 40; // Adjust for checkboxes
 			}
 			this.setState({ excessWidth: excessWidth > 0 ? excessWidth : 0 });
+		} else if (this.state.excessWidth !== 0) {
+			this.setState({ excessWidth: 0 });
 		}
 	}
 

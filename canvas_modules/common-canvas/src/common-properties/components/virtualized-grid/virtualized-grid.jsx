@@ -256,9 +256,8 @@ const VirtualizedGrid = (props) => {
 		{groups.map((headerGroup) => {
 			const columnItems = columnVirtualizer.getVirtualItems();
 			const [before, after] = columnItems.length > 1
-				? [columnItems[1].index === 0
-					? columnItems[0].end
-					: columnItems[1].start - columnItems[0].end, columnVirtualizer.getTotalSize() - columnItems[columnItems.length - 1].end]
+				? [columnItems[0].start,
+					columnVirtualizer.getTotalSize() - columnItems[columnItems.length - 1].end]
 				: [0, 0];
 			const excess = after + props.excessWidth;
 
@@ -338,9 +337,8 @@ const VirtualizedGrid = (props) => {
 		const rowItems = rowVirtualizer.getVirtualItems();
 		const columnItems = columnVirtualizer.getVirtualItems();
 		const [before, after] = columnItems.length > 1
-			? [columnItems[1].index === 0
-				? columnItems[0].end
-				: columnItems[1].start - columnItems[0].end, columnVirtualizer.getTotalSize() - columnItems[columnItems.length - 1].end]
+			? [columnItems[0].start,
+				columnVirtualizer.getTotalSize() - columnItems[columnItems.length - 1].end]
 			: [0, 0];
 		const excess = after + props.excessWidth;
 
