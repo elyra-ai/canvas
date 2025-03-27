@@ -2386,6 +2386,48 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#custom-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-action-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom action interface
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-react-components_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom React components
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#custom-condition-operators" class="md-nav__link">
     <span class="md-ellipsis">
       Custom Condition Operators
@@ -2405,7 +2447,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#examples_2" class="md-nav__link">
+  <a href="#examples_3" class="md-nav__link">
     <span class="md-ellipsis">
       Examples
     </span>
@@ -2781,6 +2823,48 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#custom-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-action-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom action interface
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-react-components_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom React components
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#custom-condition-operators" class="md-nav__link">
     <span class="md-ellipsis">
       Custom Condition Operators
@@ -2800,7 +2884,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#examples_2" class="md-nav__link">
+  <a href="#examples_3" class="md-nav__link">
     <span class="md-ellipsis">
       Examples
     </span>
@@ -2947,6 +3031,48 @@ Here is an example of a textfield listening to three state changes:
 </code></pre></div></p>
 <h3 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h3>
 <p><a href="https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/src/client/components/custom-controls">https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/src/client/components/custom-controls</a></p>
+<h2 id="custom-actions">Custom Actions<a class="headerlink" href="#custom-actions" title="Permanent link">&para;</a></h2>
+<p>Custom actions allow applications to create their own actions that can live in the same dialogs as common-property panels and controls.</p>
+<h3 id="custom-action-interface">Custom action interface<a class="headerlink" href="#custom-action-interface" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns the &#39;custom_action_id&#39; for the action defined in uihints</span>
+<span class="k">static</span><span class="w"> </span><span class="nx">id</span><span class="p">()</span>
+
+<span class="kr">constructor</span><span class="p">(</span><span class="nx">propertyId</span><span class="p">,</span><span class="w"> </span><span class="nx">controller</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">)</span>
+
+<span class="c1">// Returns the content users want to display</span>
+<span class="nx">renderAction</span><span class="p">()</span>
+</code></pre></div>
+<ul>
+<li><strong>propertyId</strong> - See <a href="../04.07-properties-controller/#common-properties-controller-api">propertyId</a> for definition.</li>
+<li><strong>controller</strong> - See <a href="../04.07-properties-controller/">here</a> for API information.</li>
+<li><strong>data</strong> - Returns values stored in <code>data</code> attribute of an action in uihints.</li>
+<li><strong>renderAction()</strong> - Called on all Redux store changes:<ul>
+<li>property value changes (<a href="../04.07-properties-controller/#property-methods">property APIs</a>)</li>
+<li>state changes (<a href="../04.07-properties-controller/#state-methods-disableenabled-hiddenvisible">state APIs</a>)</li>
+<li>schema changes (<a href="../04.07-properties-controller/#datasetmetadata-methods">schema APIs</a>)</li>
+<li>row selection changes (<a href="../04.07-properties-controller/#row-selection-methods">selection APIs</a>)</li>
+<li>messages changes (<a href="../04.07-properties-controller/#message-methods">message APIs</a>)</li>
+</ul>
+</li>
+</ul>
+<h3 id="custom-react-components_2">Custom React components<a class="headerlink" href="#custom-react-components_2" title="Permanent link">&para;</a></h3>
+<p>Example
+<div class="highlight"><pre><span></span><code><span class="nx">renderAction</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">OverflowMenu</span>
+<span class="w">            </span><span class="nx">flipped</span>
+<span class="w">            </span><span class="nx">aria</span><span class="o">-</span><span class="nx">label</span><span class="o">=</span><span class="s2">&quot;Overflow menu&quot;</span>
+<span class="w">            </span><span class="nx">size</span><span class="o">=</span><span class="s2">&quot;sm&quot;</span>
+<span class="w">            </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;harness-custom-action&quot;</span>
+<span class="w">        </span><span class="o">&gt;</span>
+<span class="w">            </span><span class="o">&lt;</span><span class="nx">OverflowMenuItem</span><span class="w"> </span><span class="nx">itemText</span><span class="o">=</span><span class="s2">&quot;Menu item 1&quot;</span><span class="w"> </span><span class="o">/&gt;</span>
+<span class="w">            </span><span class="o">&lt;</span><span class="nx">OverflowMenuItem</span><span class="w"> </span><span class="nx">itemText</span><span class="o">=</span><span class="s2">&quot;Menu item 2&quot;</span><span class="w"> </span><span class="o">/&gt;</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="err">/OverflowMenu&gt;</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h3 id="examples_2">Examples<a class="headerlink" href="#examples_2" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/src/client/components/custom-actions">https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/src/client/components/custom-actions</a></p>
 <h2 id="custom-condition-operators">Custom Condition Operators<a class="headerlink" href="#custom-condition-operators" title="Permanent link">&para;</a></h2>
 <p>Custom condition operators allow users to create their own operators that can then be used for enablement, visibility, validation, and enum filtering.  The condition operators should always return a <code>boolean</code> value.</p>
 <h3 id="custom-operator-interface">Custom operator interface<a class="headerlink" href="#custom-operator-interface" title="Permanent link">&para;</a></h3>
@@ -2999,7 +3125,7 @@ Here is an example of a textfield listening to three state changes:
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></p>
-<h3 id="examples_2">Examples<a class="headerlink" href="#examples_2" title="Permanent link">&para;</a></h3>
+<h3 id="examples_3">Examples<a class="headerlink" href="#examples_3" title="Permanent link">&para;</a></h3>
 <p><a href="https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/src/client/custom/condition-ops">https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/src/client/custom/condition-ops</a>
 <a href="https://github.com/elyra-ai/canvas/tree/master/canvas_modules/common-canvas/src/common-properties/ui-conditions/condition-ops">https://github.com/elyra-ai/canvas/tree/master/canvas_modules/common-canvas/src/common-properties/ui-conditions/condition-ops</a></p>
 

@@ -3083,7 +3083,7 @@
 <li>See <a href="./#resource-definition">Resource Definition</a></li>
 </ul>
 </li>
-<li><code>control</code> (<em>string</em>) <strong>Required</strong> The type of action.  Currently <code>button</code> and <code>image</code> are supported.</li>
+<li><code>control</code> (<em>string</em>) <strong>Required</strong> The type of action.  Currently <code>button</code>, <code>image</code>, and <code>custom</code> are supported.</li>
 <li><code>class_name</code> (<em>string</em>) Optional classname for this action</li>
 <li><code>image</code> (<em>object</em>) Properties associate with an <code>image</code> action.<ul>
 <li><code>url</code> (<em>string</em>) Location of the image to display.</li>
@@ -3101,6 +3101,7 @@
 <li><code>size</code> (<em>string</em>) Button size. Values are sm, md, lg, xl. Default is <code>sm</code>.</li>
 </ul>
 </li>
+<li><code>custom_action_id</code> (<em>string</em>) Id that is used to determine which custom action to use when <code>control=custom</code></li>
 <li><code>data</code> (<em>any</em>) Returned back in action callback.</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
