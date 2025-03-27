@@ -122,9 +122,7 @@ class ControlItem extends React.Component {
 					{description}
 					{this.props.controlObj}
 				</div>
-				<div className="properties-ci-action-container">
-					{action}
-				</div>
+				{action}
 			</div>
 		);
 	}
