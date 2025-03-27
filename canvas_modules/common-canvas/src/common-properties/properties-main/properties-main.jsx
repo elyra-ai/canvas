@@ -55,6 +55,7 @@ class PropertiesMain extends React.Component {
 			this.propertiesController.setEditorSize(this.props.propertiesInfo.initialEditorSize);
 		}
 		this.propertiesController.setCustomControls(props.customControls);
+		this.propertiesController.setCustomActions(props.customActions);
 		this.propertiesController.setConditionOps(props.customConditionOps);
 		this.propertiesController.setLight(props.light);
 		this.propertiesController.setAppData(props.propertiesInfo.appData);
@@ -119,6 +120,7 @@ class PropertiesMain extends React.Component {
 				}
 				this.propertiesController.setAppData(newProps.propertiesInfo.appData);
 				this.propertiesController.setCustomControls(newProps.customControls);
+				this.propertiesController.setCustomActions(newProps.customActions);
 				this.propertiesController.setConditionOps(newProps.customConditionOps);
 				this.previousErrorMessages = {};
 				if (newProps.propertiesInfo.messages) {
@@ -705,6 +707,7 @@ PropertiesMain.propTypes = {
 	}),
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls
+	customActions: PropTypes.array, // array of custom actions
 	customConditionOps: PropTypes.array, // array of custom condition ops
 	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired

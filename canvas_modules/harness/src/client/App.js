@@ -78,6 +78,7 @@ import FixedEffectsPanel from "./components/custom-panels/FixedEffectsPanel";
 import RandomEffectsPanel from "./components/custom-panels/RandomEffectsPanel";
 import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
 import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel";
+import CustomOverflowAction from "./components/custom-actions/CustomOverflowAction.js";
 
 import * as CustomOpMax from "./custom/condition-ops/customMax";
 import * as CustomNonEmptyListLessThan from "./custom/condition-ops/customNonEmptyListLessThan";
@@ -2028,6 +2029,7 @@ class App extends React.Component {
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl, CustomFlexibleTableControl, CustomEmmeansDroplist]}
 				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck, CustomOpFilterKeys, CustomOpFilterDuplicates, CustomRequiredColumn]}
+				customActions={[CustomOverflowAction]}
 				light={this.state.light}
 			/>);
 
@@ -2062,6 +2064,7 @@ class App extends React.Component {
 				callbacks={callbacks2}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
 				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
+				customActions={[CustomOverflowAction]}
 				light={this.state.light}
 			/>);
 

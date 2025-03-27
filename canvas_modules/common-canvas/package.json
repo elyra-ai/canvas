@@ -35,7 +35,7 @@
     "@codemirror/legacy-modes": "^6.3.3",
     "@codemirror/state": "^6.4.1",
     "@codemirror/view": "^6.28.6",
-    "@elyra/pipeline-schemas": "^3.0.95",
+    "@elyra/pipeline-schemas": "^3.0.96",
     "@tanstack/react-table": "8.20.6",
     "@tanstack/react-virtual": "3.11.1",
     "codemirror": "^6.0.1",

@@ -464,10 +464,11 @@ describe("Title editor actions", () => {
 		const { container } = renderedObject.wrapper;
 		const actions = container.querySelector(".properties-title-editor-actions");
 		const buttons = within(actions).getAllByRole("button");
-		expect(buttons.length).to.equal(2);
+		expect(buttons.length).to.equal(3);
 
 		expect(buttons[0].textContent).to.equal("Increment");
 		expect(buttons[1].textContent).to.equal("Run");
+		expect(buttons[2].textContent).to.equal("Decrement");
 
 		fireEvent.click(buttons[0]);
 
