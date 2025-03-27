@@ -18,7 +18,7 @@
 import { ResourceDef } from "../util/L10nProvider";
 
 export class Action {
-	constructor(actionName, label, description, control, data, image, button, className) {
+	constructor(actionName, label, description, control, data, image, button, className, customActionId) {
 		this.name = actionName;
 		this.label = label;
 		this.description = description;
@@ -27,6 +27,7 @@ export class Action {
 		this.image = image;
 		this.button = button;
 		this.className = className;
+		this.customActionId = customActionId;
 	}
 }
 
@@ -42,6 +43,7 @@ class ActionDef {
 			actionDef.image = action.image;
 			actionDef.button = action.button;
 			actionDef.className = action.class_name;
+			actionDef.customActionId = action.custom_action_id;
 			return actionDef;
 		}
 		return null;
