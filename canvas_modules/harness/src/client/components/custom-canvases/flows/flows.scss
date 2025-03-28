@@ -19,11 +19,6 @@
 .flows {
 
 	.d3-node-group {
-		.d3-node-body-outline {
-			fill: transparent;
-			stroke: transparent;
-		}
-
 		.d3-node-selection-highlight[data-selected="yes"] {
 			stroke: $gray-50;
 			stroke-dasharray: 5, 5;
@@ -65,6 +60,13 @@
 				fill: transparent;
 				stroke-width: 0;
 			}
+		}
+
+		// Override lineclamp to make the ... appear on the third
+		// line of the label if it is truncated.
+		.d3-label-multi-line {
+			line-clamp: 3;
+			-webkit-line-clamp: 3;
 		}
 
 		/* Hover over d3-node-group */
