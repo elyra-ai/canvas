@@ -72,6 +72,7 @@ import CustomDatasetsPanel from "./components/custom-panels/CustomDatasetsPanel"
 import EMMeansPanel from "./components/custom-panels/EMMeansPanel";
 import CustomToggleControl from "./components/custom-controls/CustomToggleControl";
 import CustomTableControl from "./components/custom-controls/CustomTableControl";
+import CustomFlexibleTableControl from "./components/custom-controls/CustomFlexibleTableControl";
 import CustomEmmeansDroplist from "./components/custom-controls/CustomEmmeansDroplist";
 import FixedEffectsPanel from "./components/custom-panels/FixedEffectsPanel";
 import RandomEffectsPanel from "./components/custom-panels/RandomEffectsPanel";
@@ -303,6 +304,7 @@ class App extends React.Component {
 			showAlertsTab: true,
 			enableResize: true,
 			iconSwitch: false,
+			enableTanstackTable: false,
 			initialEditorSize: "small",
 			conditionHiddenPropertyHandling: "null",
 			conditionDisabledPropertyHandling: "null",
@@ -2025,7 +2027,7 @@ class App extends React.Component {
 					CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel, FixedEffectsPanel,
 					RandomEffectsPanel, CustomSubjectsPanel]}
 				callbacks={callbacks}
-				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
+				customControls={[CustomToggleControl, CustomTableControl, CustomFlexibleTableControl, CustomEmmeansDroplist]}
 				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck, CustomOpFilterKeys, CustomOpFilterDuplicates, CustomRequiredColumn]}
 				customActions={[CustomOverflowAction]}
 				light={this.state.light}
@@ -2098,7 +2100,8 @@ class App extends React.Component {
 			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
 			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
 			locale: this.locale,
-			iconSwitch: this.state.iconSwitch
+			iconSwitch: this.state.iconSwitch,
+			enableTanstackTable: this.state.enableTanstackTable
 		};
 	}
 
@@ -2533,6 +2536,7 @@ class App extends React.Component {
 			applyOnBlur: this.state.applyOnBlur,
 			trimSpaces: this.state.trimSpaces,
 			iconSwitch: this.state.iconSwitch,
+			enableTanstackTable: this.state.enableTanstackTable,
 			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			expressionBuilder: this.state.expressionBuilder,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,

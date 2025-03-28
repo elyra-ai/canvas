@@ -36,7 +36,8 @@
 		"staticRowsIndexes": "",
 		"setActiveTab": "",
 		"disableWideFlyoutPrimaryButtonForPanelId": "{ \"name\": \"panelId\"}",
-		"wideFlyoutPrimaryButtonDisabled": false
+		"wideFlyoutPrimaryButtonDisabled": false,
+		"enableTanstackTable": false
 	},
 	"parameters": [
 		{
@@ -133,6 +134,11 @@
 		},
 		{
 			"id": "iconSwitch",
+			"default": false,
+			"type": "boolean"
+		},
+		{
+			"id": "enableTanstackTable",
 			"default": false,
 			"type": "boolean"
 		},
@@ -403,6 +409,16 @@
 				},
 				"description": {
 					"default": "Allows for icon to be displayed or hidden"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "enableTanstackTable",
+				"label": {
+					"default": "enableTanstackTable"
+				},
+				"description": {
+					"default": "Feature flag: replace react-virtualized tables with tanstack tables"
 				},
 				"control": "toggle"
 			},
@@ -734,6 +750,7 @@
 					"showAlertsTab",
 					"enableResize",
 					"iconSwitch",
+					"enableTanstackTable",
 					"conditionHiddenPropertyHandling",
 					"conditionDisabledPropertyHandling",
 					"returnValueFiltering",

@@ -175,13 +175,14 @@ export default class FieldPicker extends React.Component {
 			columns.push({
 				column: "fieldName",
 				content: fieldContent,
-				fieldName: field.origName
+				fieldName: field.origName,
+				value: field.origName
 			});
 			if (this.multiSchema) {
 				const schemaContent = (<div className="properties-fp-schema">
-					{field.schema}
+					<span>{field.schema}</span>
 				</div>);
-				columns.push({ column: "schemaName", content: schemaContent });
+				columns.push({ column: "schemaName", content: schemaContent, value: field.schema });
 			}
 			columns.push({
 				column: "dataType",
@@ -409,6 +410,7 @@ export default class FieldPicker extends React.Component {
 
 		return (
 			<FlexibleTable className="properties-fp-table"
+				enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
 				sortable={["fieldName", "schemaName", "dataType"]}
 				filterable={["fieldName"]}
 				onFilter={this.onFilter}

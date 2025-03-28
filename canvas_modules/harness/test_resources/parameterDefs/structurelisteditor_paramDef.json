@@ -995,7 +995,7 @@
           "default": "Resizable columns"
         },
         "description": {
-          "default": "integer Field and Animals columns are resizable. Columns are not resizable by default. Host application specifies resizable columns in parameter definition. When a column is resized, width of ALL the columns to the right of resized column is adjusted. Resizing is stopped when all columns reach minimum width of 56px. Every column grows/shrinks directly proportional to column width.",
+          "default": "integer Field and Animals columns are resizable. Columns are not resizable by default. Host application specifies resizable columns in parameter definition. When a column is resized, the columns to the right of resized column will be pushed out and the table will become scrollable. Resizing is stopped when all columns reach minimum width of 56px.",
           "placement": "on_panel"
         }
       },
