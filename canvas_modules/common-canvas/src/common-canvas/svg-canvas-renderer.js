@@ -1810,13 +1810,15 @@ export default class SVGCanvasRenderer {
 			.attr("d", (d) => this.getNodeShapePathSizing(d));
 
 		// Node Sizing Area
+		// This is inserted as first child because, on supernode expansion, this may be
+		// opened after other objects like the body and label etc.
 		nonBindingNodeGrps
 			.selectChildren(".d3-node-sizing")
 			.data((d) => (CanvasUtils.isNodeResizable(d, this.config) ? [d] : []), (d) => d.id)
 			.join(
 				(enter) =>
 					enter
-						.append("path")
+						.insert("path", ":first-child")
 						.attr("class", "d3-node-sizing")
 						.call(this.attachNodeSizingListeners.bind(this))
 			)
@@ -3654,19 +3656,22 @@ export default class SVGCanvasRenderer {
 	// Returns a path that will draw the shape for the rectangle node
 	// display. This is drawn as a path rather than an SVG rectangle to make the
 	// calling code more generic.
-	getRectangleNodeShapePath(data, highlightGap) {
-		const gap = highlightGap ? highlightGap : 0;
-		const x = 0 - gap;
-		const y = 0 - gap;
-		const width = data.width + gap;
-		const height = data.height + gap;
+	getRectangleNodeShapePath(data, highlightGap = 0) {
+		const gaps = typeof highlightGap === "object"
+			? highlightGap
+			: {
+				leftGap: highlightGap,
+				rightGap: highlightGap,
+				topGap: highlightGap,
+				bottomGap: highlightGap
+			};
 
-		let path = "M " + x + " " + y + " L " + width + " " + y;
-		path += " L " + width + " " + height;
-		path += " L " + x + " " + height;
-		path += " Z"; // Draw a straight line back to origin.
+		const l = 0 - gaps.leftGap;
+		const t = 0 - gaps.topGap;
+		const r = data.width + gaps.rightGap;
+		const b = data.height + gaps.bottomGap;
 
-		return path;
+		return "M " + l + " " + t + " L " + r + " " + t + " " + r + " " + b + " " + l + " " + b + " Z";
 	}
 
 	// Returns a path that will draw the outline shape for the 'port-arcs' display
@@ -6101,6 +6106,47 @@ export default class SVGCanvasRenderer {
 		this.activePipeline.resetTabObjectIndex();
 	}
 
+	// Returns an object containing 4 "gaps" that can be used to draw a focus
+	// outline around the node and corresponding node selection passed in.
+	// This method calculates the gaps by calculating the amount the node
+	// label protrudes outside of the node boundary. This is necessary
+	// becuase, unfortunately, JavaScript's getClientBoundingRect method
+	// does not take into account the variable size of the <span> inside
+	// the <div> of the <foreignobject> used to display the label.
+	getNodeFocusIncrements(node, objSel) {
+		const labelDivElement = objSel
+			.select(".d3-node-label")
+			.node();
+
+		const labelDivRect = this.zoomUtils.getTransformedElementRect(labelDivElement);
+
+		const labelSpanElement = objSel
+			.select(".d3-node-label")
+			.select("span")
+			.node();
+
+		const labelSpanRect = this.zoomUtils.getTransformedElementRect(labelSpanElement);
+
+		const labelInc = 4;
+		const labelRectRight = Math.min(labelSpanRect.right, labelDivRect.right);
+		const labelRectBottom = Math.min(labelSpanRect.bottom, labelDivRect.bottom);
+
+		// Calculate the gap which is the label overlap from the node boundary.
+		let leftGap = node.x_pos - labelSpanRect.x;
+		let rightGap = labelRectRight - (node.x_pos + node.width);
+		let topGap = node.y_pos - labelSpanRect.y;
+		let bottomGap = labelRectBottom - (node.y_pos + node.height);
+
+		// Ensure the gaps include a small increment for spacing and are at
+		// least as big as the nodeSizingArea.
+		leftGap = Math.max(node.layout.nodeSizingArea, leftGap + labelInc);
+		rightGap = Math.max(node.layout.nodeSizingArea, rightGap + labelInc);
+		topGap = Math.max(node.layout.nodeSizingArea, topGap + labelInc);
+		bottomGap = Math.max(node.layout.nodeSizingArea, bottomGap + labelInc);
+
+		return { leftGap, rightGap, topGap, bottomGap };
+	}
+
 	// Moves the visual focus onto the object provided and
 	// uses zoom-to-reveal to bring the focused object into the
 	// viewport if it is not already.
@@ -6123,7 +6169,8 @@ export default class SVGCanvasRenderer {
 
 				objSel.insert("path", ":first-child")
 					.attr("class", "d3-focus-path")
-					.attr("d", (d) => this.getNodeShapePathSizing(d));
+					.attr("d", (d) =>
+						this.getRectangleNodeShapePath(d, this.getNodeFocusIncrements(d, objSel)));
 			} else {
 				// This may happen when objects are being created.
 				this.logger.log("Node with ID " + obj.id + " not found in activePipeline");
