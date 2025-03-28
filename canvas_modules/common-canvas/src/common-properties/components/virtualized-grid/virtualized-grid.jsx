@@ -125,14 +125,12 @@ const VirtualizedGrid = (props) => {
 
 			const keepScrolling = () => {
 				virtualRows = rowVirtualizer.getVirtualItems().map((vrow) => vrow.index);
-				isVisible = includes(virtualRows, props.scrollToIndex)
+				isVisible = includes(virtualRows, props.scrollToIndex);
 
 				if (!isVisible) {
 					rowVirtualizer.scrollToIndex(props.scrollToIndex, { align: "start" });
 					retryCount--;
-				}
-
-				if (isVisible || retryCount === 0) {
+				} else if (isVisible || retryCount === 0) {
 					clearInterval(repeatScroll);
 				}
 			};
