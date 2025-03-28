@@ -118,42 +118,29 @@ const VirtualizedGrid = (props) => {
 		if (typeof props.scrollToIndex !== "undefined") {
 			let repeatScroll;
 			let virtualRows = rowVirtualizer.getVirtualItems().map((vrow) => vrow.index);
-			const maxRetryCount = Math.ceil((props.scrollToIndex + 1) / rowVirtualizer.getVirtualItems().length) + 1;
+			let isVisible = includes(virtualRows, props.scrollToIndex);
 
-			const keepScrolling = (direction) => {
-				let retryCount = maxRetryCount;
-				const rowVisible = document.querySelectorAll(`tr[data-id=${props.scrollKey}-${props.scrollToIndex}]`);
+			const maxRetryCount = Math.ceil((props.scrollToIndex + 1) / rowVirtualizer.getVirtualItems().length);
+			let retryCount = maxRetryCount;
+
+			const keepScrolling = () => {
 				virtualRows = rowVirtualizer.getVirtualItems().map((vrow) => vrow.index);
-				if (rowVisible?.[0]) {
-					rowVisible?.[0].scrollIntoView({ "behavior": "instant", "block": direction === "down" ? "start" : "end" });
-					retryCount = 0;
-				} else {
-					const scrollRowIdx = direction === "down" ? virtualRows.length - 1 : virtualRows[0];
-					const scrollBlock = direction === "down" ? "start" : "end";
-					const scrollToRow = document.querySelectorAll(`tr[data-id=${props.scrollKey}-${scrollRowIdx}]`);
-					if (scrollToRow?.[0]) {
-						scrollToRow?.[0].scrollIntoView({ "behavior": "instant", "block": scrollBlock });
-					}
+				isVisible = includes(virtualRows, props.scrollToIndex)
+
+				if (!isVisible) {
+					rowVirtualizer.scrollToIndex(props.scrollToIndex, { align: "start" });
 					retryCount--;
 				}
 
-				if (retryCount === 0) {
+				if (isVisible || retryCount === 0) {
 					clearInterval(repeatScroll);
 				}
 			};
 
-			if (!includes(virtualRows, props.scrollToIndex)) {
-				// Keep scrolling until the row is in view
-				if (props.scrollToIndex > virtualRows[virtualRows.length - 1]) { // scroll down the table
-					repeatScroll = setInterval(() => keepScrolling("down"), 100);
-				} else { // scroll up the table
-					repeatScroll = setInterval(() => keepScrolling("up"), 100);
-				}
+			if (!isVisible) { // Keep scrolling until the row is in view
+				repeatScroll = setInterval(() => keepScrolling(), 100);
 			} else {
-				const row = document.querySelectorAll(`tr[data-id=${props.scrollKey}-${props.scrollToIndex}]`);
-				if (row?.[0]) {
-					row?.[0].scrollIntoView({ "behavior": "instant", "block": "center" });
-				}
+				rowVirtualizer.scrollToIndex(props.scrollToIndex, { align: "center" });
 			}
 		}
 	}, [props.scrollToIndex]);
