@@ -174,6 +174,7 @@ class CustomFlexibleTableCtrl extends React.Component {
 		return (
 			<div className="harness-custom-flexible-table">
 				<FlexibleTable
+					enableTanstackTable
 					columns={this.headers}
 					data={this.rows}
 				/>
