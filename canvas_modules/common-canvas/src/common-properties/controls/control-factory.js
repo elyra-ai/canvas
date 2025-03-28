@@ -53,7 +53,7 @@ import Slider from "./slider";
 
 import ControlItem from "./../components/control-item";
 import ActionFactory from "./../actions/action-factory.js";
-import { has, get } from "lodash";
+import { has, get, isUndefined } from "lodash";
 
 /*
 * <ControlItem /> should be called from every control.
@@ -369,11 +369,12 @@ export default class ControlFactory {
 				return createdControl;
 			}
 			const className = control.className ? control.className : "";
+			// Add "action" class for "image" and "custom" actions
 			return (
 				<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name}
 					className={classNames(
 						"properties-ctrl-wrapper",
-						{ "hide": hidden, "action": has(control, "action.image.placement") },
+						{ "hide": hidden, "action": has(control, "action.image.placement") || !isUndefined(control?.action?.customActionId) },
 						className
 					)}
 				>

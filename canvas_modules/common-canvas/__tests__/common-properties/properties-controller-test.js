@@ -1882,6 +1882,8 @@ describe("Properties Controller getRequiredDefinitionIds", () => {
 		expect(requiredIds).to.eql([
 			"required_oneofselect_201.88122102593735",
 			"required_oneofselect_null_895.9146331341876",
+			"required_oneofselect-custom-action-left_532.2753043513899",
+			"required_oneofselect-custom-action-right_48.32999660431113",
 			"required_oneofselect_empty_string_963.6717964456162",
 			"required_oneofselect_custom_value_667.4461132689746",
 			"required_radioString_834.4741085201264",

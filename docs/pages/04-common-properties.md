@@ -85,7 +85,8 @@ See the [Localization](02-set-up.md/#localization) section of the Initial Setup 
 - callbacks object - See the [Callbacks](04.02-callbacks.md) page
 - propertiesConfig `object` - See the [Properties Config](04.08-properties-config.md) page
 - customPanels `array`: An array of custom panels. See [Custom Panels](04.06-custom-components.md#custom-panels) section of the Common Properties Custom Components page.
-- customControls `array`: An array of custom controls. See [Custom Controls](04.06-custom-components.md#custom-controls) section of the Common Properties Custom Components page..
+- customControls `array`: An array of custom controls. See [Custom Controls](04.06-custom-components.md#custom-controls) section of the Common Properties Custom Components page.
+- customActions `array`: An array of custom actions. See [Custom Actions](04.06-custom-components.md#custom-actions) section of the Common Properties Custom Components page.
 - customConditionOps `array`: An array of custom condition operators.  See [Custom Condition Operators](04.06-custom-components.md#custom-condition-operators) section of the Custom Components page.
 - light `boolean`: Carbon controls in Common Properties will use light mode. When the `light` option is disabled, the background color will be the same as the Carbon theme background. When the `light` option is enabled, the background color is set to $ui-01. Defaults to `true`
 

@@ -73,6 +73,7 @@ class CommonProperties extends React.Component {
 				customPanels={this.props.customPanels}
 				callbacks= {this.props.callbacks}
 				customControls={this.props.customControls}
+				customActions={this.props.customActions}
 				customConditionOps={this.props.customConditionOps}
 				light={this.props.light}
 			/>);
@@ -272,6 +273,7 @@ CommonProperties.propTypes = {
 	}),
 	customPanels: PropTypes.array,
 	customControls: PropTypes.array,
+	customActions: PropTypes.array,
 	customConditionOps: PropTypes.array,
 	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired
