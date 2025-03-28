@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Checkbox, TextInput } from "@carbon/react";
 
-import { FlexibleTable } from "@elyra/canvas/src/common-properties";
+import { FlexibleTable } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 const NUM_ROWS = 100;
 
