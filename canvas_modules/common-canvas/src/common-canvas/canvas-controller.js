@@ -2433,7 +2433,7 @@ export default class CanvasController {
 	editActionHandler(cmndData) {
 		this.logger.log("editActionHandler - " + cmndData.editType);
 		this.logger.log(cmndData);
-		let data = this.removeNullProperties(cmndData);
+		let data = CanvasUtils.removeNullProperties(cmndData);
 		data.selectedObjectIds = this.getSelectedObjectIds();
 		data.selectedObjects = this.getSelectedObjects();
 
