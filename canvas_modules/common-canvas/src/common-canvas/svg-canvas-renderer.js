@@ -1810,15 +1810,13 @@ export default class SVGCanvasRenderer {
 			.attr("d", (d) => this.getNodeShapePathSizing(d));
 
 		// Node Sizing Area
-		// This is inserted as first child because, on supernode expansion, this may be
-		// opened after other objects like the body and label etc.
 		nonBindingNodeGrps
 			.selectChildren(".d3-node-sizing")
 			.data((d) => (CanvasUtils.isNodeResizable(d, this.config) ? [d] : []), (d) => d.id)
 			.join(
 				(enter) =>
 					enter
-						.insert("path", ":first-child")
+						.append("path")
 						.attr("class", "d3-node-sizing")
 						.call(this.attachNodeSizingListeners.bind(this))
 			)
