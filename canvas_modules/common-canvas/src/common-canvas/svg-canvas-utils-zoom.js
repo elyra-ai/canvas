@@ -185,24 +185,68 @@ export default class SVGCanvasUtilsZoom {
 		this.ren.resetCanvasSVGBehaviors();
 	}
 
-	// Transforms the x and y fields passed in by the current zoom
-	// transformation amounts to convert a coordinate position in screen pixels
-	// to a canvas coordinate position.
+	// Transforms the x and y fields of the pos object passed in, which
+	// should be in screen pixels measured from the top left of the SVG
+	// area, to canvas coordinates.
 	transformPos(pos) {
 		return {
-			x: (pos.x - this.zoomTransform.x) / this.zoomTransform.k,
-			y: (pos.y - this.zoomTransform.y) / this.zoomTransform.k
+			x: this.transformPosX(pos.x),
+			y: this.transformPosY(pos.y)
 		};
 	}
 
-	// Transforms the x and y fields passed in by the current zoom
-	// transformation amounts to convert a canvas coordinate position
-	// to a coordinate position in screen pixels.
+	// Transforms a screen pixel X value, measured from the top left of
+	// the SVG area, to canvas coordinate.
+	transformPosX(posX) {
+		return (posX - this.zoomTransform.x) / this.zoomTransform.k;
+	}
+
+	// Transforms a screen pixel Y value, measured from the top left of
+	// the SVG area, to canvas coordinate.
+	transformPosY(posY) {
+		return (posY - this.zoomTransform.y) / this.zoomTransform.k;
+	}
+
+	// Transforms the x and y fields passed in which should be in
+	// canvas coordinates to a position measured in screen pixels
+	// from the top left of the SVG area.
 	unTransformPos(pos) {
 		return {
 			x: (pos.x * this.zoomTransform.k) + this.zoomTransform.x,
 			y: (pos.y * this.zoomTransform.k) + this.zoomTransform.y
 		};
+	}
+
+	// Returns a 'rect' object for the DOM element passed in. The dimensions
+	// and positions returned are in canvas coordinates. That is, transformed
+	// by the current zoomTransform from page coordinates to canvas coordinates.
+	getTransformedElementRect(element) {
+		const vpRect = this.ren.canvasSVG.node().getBoundingClientRect();
+		const elRect = element.getBoundingClientRect();
+
+		// Remove any offset caused by where the viewport is on the page.
+		const rect = {
+			x: elRect.x - vpRect.x,
+			y: elRect.y - vpRect.y,
+			left: elRect.left - vpRect.x,
+			right: elRect.right - vpRect.x,
+			top: elRect.top - vpRect.y,
+			bottom: elRect.bottom - vpRect.y,
+			width: elRect.width,
+			height: elRect.height
+		};
+
+		// Transform the positions and dimensions to canvas coordinates.
+		rect.x = this.transformPosX(rect.x);
+		rect.y = this.transformPosY(rect.y);
+		rect.left = this.transformPosX(rect.left);
+		rect.right = this.transformPosX(rect.right);
+		rect.top = this.transformPosY(rect.top);
+		rect.bottom = this.transformPosY(rect.bottom);
+		rect.width /= this.zoomTransform.k;
+		rect.height /= this.zoomTransform.k;
+
+		return rect;
 	}
 
 	// Transforms the x, y, height and width fields of the object passed in by the
