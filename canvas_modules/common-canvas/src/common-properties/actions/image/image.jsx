@@ -19,7 +19,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "@carbon/react";
 import { STATES } from "./../../constants/constants.js";
-import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
 
 class ImageAction extends React.Component {
@@ -28,6 +27,9 @@ class ImageAction extends React.Component {
 		this.state = {
 		};
 		this.applyAction = this.applyAction.bind(this);
+		this.renderIcon = this.renderIcon.bind(this);
+		this.height = "";
+		this.width = "";
 	}
 
 	applyAction() {
@@ -41,63 +43,52 @@ class ImageAction extends React.Component {
 		}
 	}
 
+	renderIcon() {
+		const icon = (<img
+			src={this.props.action.image.url}
+			aria-label={this.props.action.name}
+			height={this.height}
+			width={this.width}
+		/>);
+		return icon;
+	}
+
 	render() {
-		let height = {};
-		let width = {};
-		if (this.props.action.image.size) {
-			height = this.props.action.image.size.height ? { "height": this.props.action.image.size.height } : {};
-			width = this.props.action.image.size.width ? { "width": this.props.action.image.size.width } : {};
-		}
 
 		const disabled = this.props.state === STATES.DISABLED;
 		const customClassName = this.props.action.className ? this.props.action.className : "";
 		const className = classNames("properties-action-image", { "left": this.props.action.image.placement === "left" },
 			{ "right": this.props.action.image.placement === "right" }, { "hide": this.props.state === STATES.HIDDEN },
 			{ "disabled": disabled }, customClassName);
+		if (this.props.action.image.size) {
+			this.height = this.props.action.image.size.height + "px";
+			this.width = this.props.action.image.size.width + "px";
+		}
 
 		const image = (
-			<div data-id={this.props.action.name}>
+			<div
+				style={{
+					width: this.width,
+					height: this.height
+				}}
+			>
 				<Button
+					// Use description to hide carbon tooltip
+					hasIconOnly={Boolean(this.props.action.description?.text)}
+					renderIcon={this.renderIcon}
 					className="properties-action-image-button"
-					aria-describedby={"tooltip-action-" + this.props.action.name}
 					onClick={this.applyAction}
-				>
-					<img
-						src={this.props.action.image.url}
-						{...height}
-						{...width}
-					/>
-				</Button>
+					kind="ghost"
+					iconDescription={this.props.action?.description?.text}
+					autoAlign
+				/>
 			</div>
 		);
 
-		let display = image;
-		if (this.props.action.description) {
-			const tooltipId = "tooltip-action-" + this.props.action.name;
-			const tooltip = (
-				<div className="properties-tooltips">
-					{this.props.action.description.text}
-				</div>
-			);
-			const directions = ["left", "right", "top", "bottom"];
-			const tooltipDirection = this.props.action.image.tooltip_direction && directions.includes(this.props.action.image.tooltip_direction.toLowerCase())
-				? this.props.action.image.tooltip_direction.toLowerCase()
-				: "bottom";
-
-			display = (<Tooltip
-				id={tooltipId}
-				tip={tooltip}
-				direction={tooltipDirection}
-				className="properties-tooltips"
-				disable={disabled}
-			>
-				{image}
-			</Tooltip>);
-		}
 
 		return (
 			<div className={className}>
-				{display}
+				{image}
 			</div>
 		);
 	}
