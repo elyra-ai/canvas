@@ -2377,6 +2377,11 @@ export default class CanvasController {
 		}
 	}
 
+	textActionHandler(action, editSource, source) {
+		const data = Object.assign({}, source, { "editType": action, editSource });
+		this.editActionHandler(data);
+	}
+
 	contextMenuActionHandler(action, editParam) {
 		const source = this.getContextMenuSource();
 
