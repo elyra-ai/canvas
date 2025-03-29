@@ -1773,4 +1773,15 @@ export default class CanvasUtils {
 		}
 		return "Undefined Object";
 	}
+
+	// Returns the object passed in with all of the null or
+	// undfined properties removed.
+	static removeNullProperties(obj) {
+		for (const key in obj) {
+			if (obj[key] === null || typeof obj[key] === "undefined") {
+				delete obj[key];
+			}
+		}
+		return obj;
+	}
 }
