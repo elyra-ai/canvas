@@ -125,7 +125,7 @@ class ToolbarSubMenuItem extends React.Component {
 				this.props.closeParentSubArea(true); // true = close only if closeSubAreaOnClick is checked
 				this.props.setToolbarFocusAction(); // Resets the toolbar focus action
 			}
-			this.props.toolbarActionHandler(this.props.actionObj.action);
+			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
 		}
 	}
 

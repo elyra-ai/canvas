@@ -2377,7 +2377,7 @@ export default class CanvasController {
 		}
 	}
 
-	contextMenuActionHandler(action, editParam) {
+	contextMenuActionHandler(action, evt, editParam) {
 		const source = this.getContextMenuSource();
 
 		this.logger.log("contextMenuActionHandler - action: " + action);

@@ -140,7 +140,7 @@ class ToolbarActionItem extends React.Component {
 
 		} else {
 			this.closeSubArea();
-			this.props.toolbarActionHandler(this.props.actionObj.action);
+			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
 			this.props.setToolbarFocusAction(this.props.actionObj.action);
 		}
 	}
