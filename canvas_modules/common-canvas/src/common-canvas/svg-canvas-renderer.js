@@ -3453,7 +3453,7 @@ export default class SVGCanvasRenderer {
 			cmPos: pos
 				? pos
 				: this.getMousePos(d3Event, this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area even in a subflow.
-			mousePos: pos ? pos : this.getMousePosSnapToGrid(this.getTransformedMousePos(d3Event)),
+			mousePos: this.getMousePosSnapToGrid(this.getTransformedMousePos(d3Event)),
 			selectedObjectIds: this.canvasController.getSelectedObjectIds(),
 			addBreadcrumbs: (d && d.type === SUPER_NODE) ? this.getSupernodeBreadcrumbs(d3Event.currentTarget) : null,
 			port: port,
