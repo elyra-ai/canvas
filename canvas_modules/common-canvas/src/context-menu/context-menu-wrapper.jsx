@@ -100,8 +100,8 @@ export default class ContextMenuWrapper extends React.Component {
 		return state;
 	}
 
-	contextMenuClicked(action, param) {
-		this.props.contextMenuActionHandler(action, param);
+	contextMenuClicked(action, evt, param) {
+		this.props.contextMenuActionHandler(action, evt, param);
 	}
 
 	render() {
