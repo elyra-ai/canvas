@@ -70,6 +70,7 @@ return (
       propertiesConfig={this.propertiesConfig}              // Optional
       customPanels={[CustomSliderPanel, CustomTogglePanel]} // Optional
       customControls={[CustomSliderControl]}                // Optional
+      customActions={[CustomOverflowAction]}                // Optional
       customConditionOps={[CustomConditionOps]}             // Optional
       light                                                 // Optional
     />
