@@ -2393,7 +2393,7 @@ export default class CanvasController {
 		this.editActionHandler(data);
 	}
 
-  textActionHandler(action, editSource, source) {
+	textActionHandler(action, editSource, source) {
 		const data = Object.assign({}, source, { "editType": action, editSource });
 		this.editActionHandler(data);
 	}
