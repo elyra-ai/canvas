@@ -2519,7 +2519,8 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Node Label - double click");
 				if (d.layout.labelEditable && this.config.enableEditingActions) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.displayNodeLabelTextArea(d, d3Event.currentTarget.parentNode);
+					this.canvasController.textActionHandler("setNodeLabelEditingMode", "textdoubleclick",
+						{ id: d.id, pipelineId: this.activePipeline.id });
 				}
 			});
 	}
@@ -2636,7 +2637,8 @@ export default class SVGCanvasRenderer {
 			this.zoomUtils.getZoomScale(), this.config.enableDisplayFullLabelOnHover);
 
 		this.displayEditIcon(spanObj, nodeGrpSel, transform,
-			(d3Event, d) => this.displayNodeLabelTextArea(d, d3Event.currentTarget.parentNode));
+			(d3Event, d) => this.canvasController.textActionHandler("setNodeLabelEditingMode", "editicon",
+				{ id: d.id, pipelineId: this.activePipeline.id }));
 	}
 
 	// Displays the edit icon for an editable decoration label.
@@ -4353,7 +4355,8 @@ export default class SVGCanvasRenderer {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					this.deleteCommentPort(d3Event.currentTarget);
-					this.displayCommentTextArea(d, d3Event.currentTarget);
+					this.canvasController.textActionHandler("setCommentEditingMode", "textdoubleclick",
+						{ id: d.id, pipelineId: this.activePipeline.id });
 
 					this.canvasController.clickActionHandler({
 						clickType: DOUBLE_CLICK,
