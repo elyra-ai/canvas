@@ -226,8 +226,8 @@ export default class SvgCanvasTextArea {
 	// actions to the <div>. Actions can have an 'extra' parameter which
 	// contains additional info. For example, "background-color" action
 	// will have an extra paremeter containing the color as a hex value.
-	wysiwygActionHandler(action, evt, extra) {
-		this.logger.log("wysiwygActionHandler - action = " + action + " extra = " + extra);
+	wysiwygActionHandler(action, evt, editParam) {
+		this.logger.log("wysiwygActionHandler - action = " + action + " editParam = " + editParam);
 
 		if (!this.editingTextData.newFormats) {
 			this.editingTextData.newFormats = [];
@@ -243,11 +243,11 @@ export default class SvgCanvasTextArea {
 			this.addAdditionalFormat("textDecoration", action);
 
 		} else if (action === "text-color") {
-			this.addReplaceFormat("textColor", extra);
+			this.addReplaceFormat("textColor", editParam);
 
 		} else if (action === "background-color") {
-			this.addReplaceFormat("backgroundColor", extra);
-			this.setTextColorAppropriately(extra);
+			this.addReplaceFormat("backgroundColor", editParam);
+			this.setTextColorAppropriately(editParam);
 
 		} else if (action.startsWith("text-size")) {
 			this.addReplaceFormat("textSize", action);

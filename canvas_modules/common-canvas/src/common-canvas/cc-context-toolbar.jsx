@@ -152,9 +152,9 @@ class CommonCanvasContextToolbar extends React.Component {
 		return outItems;
 	}
 
-	toolbarActionHandler(action, editParam) {
+	toolbarActionHandler(action, evt, editParam) {
 		this.closeContextToolbar();
-		this.props.canvasController.contextMenuActionHandler(action, editParam);
+		this.props.canvasController.contextMenuActionHandler(action, evt, editParam);
 	}
 
 	closeContextToolbar() {
