@@ -124,7 +124,7 @@ class CommonContextMenu extends React.Component {
 		this.props.contextHandler(data);
 	}
 
-	colorClicked(evt, color) {
+	colorClicked(color, evt) {
 		this.props.contextHandler("colorSelectedObjects", evt, { color });
 	}
 
@@ -279,7 +279,7 @@ class CommonContextMenu extends React.Component {
 
 	buildColorPickerPanel() {
 		const subPanelData = {
-			clickActionHandler: (c, evt) => this.colorClicked(evt, c),
+			clickActionHandler: (c, evt) => this.colorClicked(c, evt),
 			closeSubPanel: () => this.subMenuClose()
 		};
 		// Only create the color picker when we are actually displaying it in the sub-menu.
