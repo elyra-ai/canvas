@@ -4355,7 +4355,6 @@ export default class SVGCanvasRenderer {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					this.deleteCommentPort(d3Event.currentTarget);
-					// this.displayCommentTextArea(d, d3Event.currentTarget);
 					this.canvasController.textActionHandler("setCommentEditingMode", "textdoubleclick",
 						{ id: d.id, pipelineId: this.activePipeline.id });
 
