@@ -2393,6 +2393,11 @@ export default class CanvasController {
 		this.editActionHandler(data);
 	}
 
+  textActionHandler(action, editSource, source) {
+		const data = Object.assign({}, source, { "editType": action, editSource });
+		this.editActionHandler(data);
+	}
+
 	toolbarActionHandler(action) {
 		this.logger.log("toolbarActionHandler - action: " + action);
 		this.editActionHandler({
@@ -2433,7 +2438,7 @@ export default class CanvasController {
 	editActionHandler(cmndData) {
 		this.logger.log("editActionHandler - " + cmndData.editType);
 		this.logger.log(cmndData);
-		let data = cmndData;
+		let data = CanvasUtils.removeNullProperties(cmndData);
 		data.selectedObjectIds = this.getSelectedObjectIds();
 		data.selectedObjects = this.getSelectedObjects();
 

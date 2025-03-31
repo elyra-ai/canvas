@@ -2519,7 +2519,8 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Node Label - double click");
 				if (d.layout.labelEditable && this.config.enableEditingActions) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.displayNodeLabelTextArea(d, d3Event.currentTarget.parentNode);
+					this.canvasController.textActionHandler("setNodeLabelEditingMode", "textdoubleclick",
+						{ id: d.id, pipelineId: this.activePipeline.id });
 				}
 			});
 	}
@@ -2636,7 +2637,8 @@ export default class SVGCanvasRenderer {
 			this.zoomUtils.getZoomScale(), this.config.enableDisplayFullLabelOnHover);
 
 		this.displayEditIcon(spanObj, nodeGrpSel, transform,
-			(d3Event, d) => this.displayNodeLabelTextArea(d, d3Event.currentTarget.parentNode));
+			(d3Event, d) => this.canvasController.textActionHandler("setNodeLabelEditingMode", "editicon",
+				{ id: d.id, pipelineId: this.activePipeline.id }));
 	}
 
 	// Displays the edit icon for an editable decoration label.
@@ -3453,7 +3455,7 @@ export default class SVGCanvasRenderer {
 			cmPos: pos
 				? pos
 				: this.getMousePos(d3Event, this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area even in a subflow.
-			mousePos: pos ? pos : this.getMousePosSnapToGrid(this.getTransformedMousePos(d3Event)),
+			mousePos: this.getMousePosSnapToGrid(this.getTransformedMousePos(d3Event)),
 			selectedObjectIds: this.canvasController.getSelectedObjectIds(),
 			addBreadcrumbs: (d && d.type === SUPER_NODE) ? this.getSupernodeBreadcrumbs(d3Event.currentTarget) : null,
 			port: port,
@@ -4353,7 +4355,8 @@ export default class SVGCanvasRenderer {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					this.deleteCommentPort(d3Event.currentTarget);
-					this.displayCommentTextArea(d, d3Event.currentTarget);
+					this.canvasController.textActionHandler("setCommentEditingMode", "textdoubleclick",
+						{ id: d.id, pipelineId: this.activePipeline.id });
 
 					this.canvasController.clickActionHandler({
 						clickType: DOUBLE_CLICK,
