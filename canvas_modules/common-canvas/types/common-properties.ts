@@ -280,6 +280,27 @@ export interface CustomControlClass {
   id(): string;
 }
 
+/**
+ * https://elyra-ai.github.io/canvas/04.06-custom-components/#custom-actions
+ */
+export interface CustomAction {
+  renderAction(): ReactNode;
+}
+
+/**
+ * This is a class that constructs a {@link CustomAction}
+ * https://elyra-ai.github.io/canvas/04.06-custom-components/#custom-actions
+ */
+export interface CustomActionClass {
+  new (
+    propertyId: PropertyId,
+    controller: CommonPropertiesController,
+    /** Returns values stored in data attribute */
+    data: Record<string, unknown>
+  ): CustomAction;
+  id(): string;
+}
+
 export interface CommonPropertiesProps {
   propertiesInfo: {
     parameterDef: PropertyDefinitionsSchema;
@@ -403,6 +424,7 @@ export interface CommonPropertiesProps {
   propertiesConfig?: CommonPropertiesConfig;
   customPanels?: unknown[];
   customControls?: CustomControlClass[];
+  customActions?: CustomActionClass[];
   customConditionOps?: unknown[];
   light?: boolean;
 }
