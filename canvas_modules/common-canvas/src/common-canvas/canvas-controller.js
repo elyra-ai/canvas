@@ -2403,7 +2403,8 @@ export default class CanvasController {
 		this.editActionHandler({
 			editType: action,
 			editSource: "toolbar",
-			pipelineId: this.objectModel.getCurrentPipelineId() });
+			pipelineId: this.objectModel.getSelectedPipelineId() || this.objectModel.getCurrentPipelineId()
+		});
 	}
 
 	keyboardActionHandler(action, mousePos) {
@@ -2412,8 +2413,9 @@ export default class CanvasController {
 		this.editActionHandler({
 			editType: action,
 			editSource: "keyboard",
-			pipelineId: this.objectModel.getCurrentPipelineId(),
-			mousePos: mousePos });
+			pipelineId: this.objectModel.getSelectedPipelineId() || this.objectModel.getCurrentPipelineId(),
+			mousePos: mousePos
+		});
 	}
 
 	clickActionHandler(source) {
