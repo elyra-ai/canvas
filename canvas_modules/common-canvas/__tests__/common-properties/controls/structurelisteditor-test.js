@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -273,6 +273,15 @@ mockStructureListEditor.mockImplementation((props) => {
 		"../../../src/common-properties/controls/structurelisteditor",
 	).default;
 	return <StructureListEditorComp {...props} />;
+});
+
+beforeAll(() => {
+	// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
+	Element.prototype.getBoundingClientRect = jest.fn()
+		.mockReturnValue({
+			height: 1000, // This is used to measure the panel height
+			width: 1000
+		});
 });
 
 /***********************/
@@ -1006,7 +1015,7 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 
 		summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
 		table = summaryPanel.querySelector("div[data-id='properties-ft-nestedStructureeditorTable']");
-		const tableRows = table.querySelectorAll("div[data-role='properties-data-row']");
+		const tableRows = table.querySelectorAll("tr[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(2);
 		const secondRow = tableRows[1];
 
@@ -1084,15 +1093,15 @@ describe("structurelisteditor columns resize correctly", () => {
 		const tableWrapper = container.querySelectorAll("div[data-id='properties-ci-structurelisteditorResizableColumns']");
 		expect(tableWrapper).to.have.length(1);
 
-		const headerRow = tableWrapper[0].querySelectorAll("div[data-role='properties-header-row']");
+		const headerRow = tableWrapper[0].querySelectorAll("tr[data-role='properties-header-row']");
 		expect(headerRow).to.have.length(1);
 		// Verify 2 columns in header are resizable
 		expect(headerRow[0].querySelectorAll(".properties-vt-header-resize")).to.have.length(2);
 		// Verify "integer Field" column can be resized
-		const integerFieldColumn = tableWrapper[0].querySelector("div[aria-label='integer Field']");
+		const integerFieldColumn = tableWrapper[0].querySelector("th[aria-label='integer Field']");
 		expect(integerFieldColumn.querySelectorAll(".properties-vt-header-resize")).to.have.length(1);
 		// Verify "Animals" column can be resized
-		const animalsColumn = tableWrapper[0].querySelector("div[aria-label='Animals']");
+		const animalsColumn = tableWrapper[0].querySelector("th[aria-label='Animals']");
 		expect(animalsColumn.querySelectorAll(".properties-vt-header-resize")).to.have.length(1);
 	});
 });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,15 @@ mockStructureEditor.mockImplementation((props) => {
 		"../../../src/common-properties/controls/structureeditor",
 	).default;
 	return <StructureEditorComp {...props} />;
+});
+
+beforeAll(() => {
+	// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
+	Element.prototype.getBoundingClientRect = jest.fn()
+		.mockReturnValue({
+			height: 1000, // This is used to measure the panel height
+			width: 1000
+		});
 });
 
 describe("structureeditor control renders correctly", () => {
@@ -443,7 +452,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 
 		// Verify there are three rows
 		structure = container.querySelector("div[data-id='properties-ci-nestedStructureeditorTable']");
-		const tableRows = structure.querySelectorAll("div[data-role='properties-data-row']");
+		const tableRows = structure.querySelectorAll("tr[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(3);
 		const thirdRow = tableRows[2];
 
@@ -513,7 +522,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 
 		// Verify there are two rows
 		structure = container.querySelector("div[data-id='properties-ci-nestedStructuretable']");
-		const tableRows = structure.querySelectorAll("div[data-role='properties-data-row']");
+		const tableRows = structure.querySelectorAll("tr[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(2);
 		const firstRow = tableRows[0];
 

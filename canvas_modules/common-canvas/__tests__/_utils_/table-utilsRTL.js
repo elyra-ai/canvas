@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,18 +93,21 @@ function verifyFieldPickerRow(row, field, schema) {
 }
 
 function getTableHeaderRows(container) {
-	return container.querySelectorAll("div[data-role='properties-header-row']");
+	if (!container) {
+		return [];
+	}
+	return Array.from(container.querySelectorAll("tr[data-role='properties-header-row']"));
 }
 
 function getTableRows(container) {
 	if (!container) {
 		return [];
 	}
-	let rows;
+	let rows = [];
 	try {
 		rows = within(container).getAllByRole("row");
 	} catch (error) {
-		rows = Array.from(container.querySelectorAll(".properties-data-row"));
+		rows = Array.from(container.querySelectorAll("tr[data-role='properties-data-row']"));
 	}
 	const res = [];
 	for (let i = 0; i < rows.length; i++) {
@@ -141,7 +144,7 @@ function dblClickTableRows(container, rows) {
 * @param col - index of column to sort
 */
 function clickHeaderColumnSort(container, col) {
-	const sortable = container.querySelectorAll(".ReactVirtualized__Table__sortableHeaderColumn");
+	const sortable = container.querySelectorAll(".properties-vt-column-sortable");
 	fireEvent.click(sortable[col]);
 }
 

@@ -708,7 +708,7 @@ FlexibleTable.defaultProps = {
 	light: true,
 	emptyTablePlaceholder: "",
 	selectedRows: [], // Required for consumers using FlexibleTable directly
-	enableTanstackTable: false // Feature flag
+	enableTanstackTable: true // Feature flag
 };
 
 FlexibleTable.propTypes = {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -127,6 +127,14 @@ mockFlexibleTable.mockImplementation((props) => {
 });
 
 describe("FlexibleTable renders correctly", () => {
+	beforeEach(() => {
+		// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
+		Element.prototype.getBoundingClientRect = jest.fn()
+			.mockReturnValue({
+				height: 1000, // This is used to measure the panel height
+				width: 1000
+			});
+	});
 
 	it("props should have been defined", () => {
 		renderWithIntl(
@@ -186,7 +194,7 @@ describe("FlexibleTable renders correctly", () => {
 				sortable={sortFields}
 				filterable={filterFields}
 				columns={headers}
-				data={rows}s
+				data={rows}
 				scrollToRow={scrollToRow}
 				alignTop={alignTop}
 				onFilter={onFilter}
@@ -235,14 +243,10 @@ describe("FlexibleTable renders correctly", () => {
 		// the verification is that the onSort function gets invoked with proper column name
 
 		// verify that the first sort column is not active and the second sort column is active
-		const sortCol = container.querySelectorAll(".ReactVirtualized__Table__sortableHeaderColumn");
-		input = [];
-		for (let i = 0; i < sortCol.length; i++) {
-			input.push(sortCol[i].querySelector(".properties-vt-column"));
-		}
-		expect(input).to.have.length(2);
-		expect(input[0].className.includes("sort-column-active")).to.be.false;
-		expect(input[1].className.includes("sort-column-active")).to.be.true;
+		const sortCol = container.querySelectorAll(".properties-vt-column-sortable");
+		expect(sortCol).to.have.length(2);
+		expect(sortCol[0].className.includes("sort-column-active")).to.be.false;
+		expect(sortCol[1].className.includes("sort-column-active")).to.be.true;
 	});
 
 	it("should handle row click in `FlexibleTable`", () => {

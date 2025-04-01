@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -180,8 +180,16 @@ mockFieldPicker.mockImplementation((props) => {
 	return <FieldPickerComp {...props} />;
 });
 
-describe("field-picker-control renders correctly", () => {
+beforeAll(() => {
+	// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
+	Element.prototype.getBoundingClientRect = jest.fn()
+		.mockReturnValue({
+			height: 1000, // This is used to measure the panel height
+			width: 1000
+		});
+});
 
+describe("field-picker-control renders correctly", () => {
 	it("props should have been defined", () => {
 		renderWithIntl(
 			<FieldPicker
@@ -393,13 +401,14 @@ describe("field-picker-control renders correctly", () => {
 			/>
 		);
 		const { container } = wrapper;
-		const fieldPickerTable = container.querySelector(".properties-vt-autosizer").querySelector(".ReactVirtualized__Table");
+		const fieldPickerTable = container.querySelector(".properties-autosized-vt");
 		expect(fieldPickerTable.getAttribute("aria-label")).to.equal("Field Picker Test");
 	});
 });
 
 describe("field-picker-control with multi input schemas renders correctly", () => {
 	let wrapper;
+
 	beforeEach(() => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(fieldPickerParamDef);
 		wrapper = renderedObject.wrapper;
@@ -604,13 +613,13 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(selected).to.have.length(29);
 	});
 
-	it("should be able to sort by schema name", () => {
+	it("should be able to sort by schema name", async() => {
 		const { container } = wrapper;
 		const fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
-		const sortable = fieldpicker.querySelectorAll(".ReactVirtualized__Table__sortableHeaderColumn");
+		const sortable = fieldpicker.querySelectorAll(".properties-vt-column-sortable");
 		expect(sortable).to.have.length(3);
 
-		tableUtilsRTL.clickHeaderColumnSort(fieldpicker, 1);
+		await tableUtilsRTL.clickHeaderColumnSort(fieldpicker, 1);
 		const tableRows = tableUtilsRTL.getTableRows(fieldpicker);
 		expect(tableRows.length).to.equal(29);
 
@@ -641,7 +650,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 	it("should be able to sort by data type", () => {
 		const { container } = wrapper;
 		const fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
-		const sortable = fieldpicker.querySelectorAll(".ReactVirtualized__Table__sortableHeaderColumn");
+		const sortable = fieldpicker.querySelectorAll(".properties-vt-column-sortable");
 		expect(sortable).to.have.length(3);
 
 		tableUtilsRTL.clickHeaderColumnSort(fieldpicker, 2);
@@ -873,7 +882,7 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		const tableHeaderRows = tableUtilsRTL.getTableHeaderRows(fieldpicker);
 		const headerCheckboxLabel = tableHeaderRows[0].querySelector(".properties-vt-header-checkbox").textContent;
 		const secondColumnLabel = tableHeaderRows[0]
-			.querySelector("div[role='columnheader']")
+			.querySelectorAll(".properties-vt-column")[1] // Get second column
 			.textContent;
 		expect(headerCheckboxLabel).to.equal(`Select all ${secondColumnLabel}`);
 	});

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,15 @@ mockSomeOfSelect.mockImplementation((props) => {
 		"../../../src/common-properties/controls/someofselect",
 	).default;
 	return <SomeOfSelectComp {...props} />;
+});
+
+beforeAll(() => {
+	// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
+	Element.prototype.getBoundingClientRect = jest.fn()
+		.mockReturnValue({
+			height: 1000, // This is used to measure the panel height
+			width: 1000
+		});
 });
 
 describe("SomeOfSelectControl renders correctly", () => {
@@ -255,7 +264,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const someofselectWrapper = wrapper.container.querySelector(".properties-vt-autosizer").querySelector(".ReactVirtualized__Table");
+		const someofselectWrapper = wrapper.container.querySelector(".properties-autosized-vt");
 		expect(someofselectWrapper.getAttribute("aria-label")).to.equal(control.label.text);
 	});
 });

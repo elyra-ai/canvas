@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,6 +91,15 @@ mockSelectColumns.mockImplementation((props) => {
 		"../../../src/common-properties/controls/selectcolumns",
 	).default;
 	return <SelectColumnsComp {...props} />;
+});
+
+beforeAll(() => {
+	// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
+	Element.prototype.getBoundingClientRect = jest.fn()
+		.mockReturnValue({
+			height: 1000, // This is used to measure the panel height
+			width: 1000
+		});
 });
 
 describe("selectcolumns renders correctly", () => {
@@ -214,7 +223,7 @@ describe("selectcolumns renders correctly", () => {
 			</Provider>
 		);
 		const { container } = wrapper;
-		const selectColumnsTable = container.querySelector(".properties-vt-autosizer").querySelector(".ReactVirtualized__Table");
+		const selectColumnsTable = container.querySelector(".properties-autosized-vt");
 		expect(selectColumnsTable.getAttribute("aria-label")).to.equal(control.label.text);
 	});
 
@@ -232,7 +241,6 @@ describe("selectcolumns renders correctly", () => {
 		expect(emptyFields.querySelector("button.properties-empty-table-button").textContent).to.be.equal("Add columns");
 	});
 });
-
 
 describe("selectcolumns control filters values correctly", () => {
 	let wrapper;
@@ -543,7 +551,7 @@ describe("selectcolumns control functions correctly in a table", () => {
 		tableUtilsRTL.fieldPicker(fieldPicker, ["age", "Na"]);
 
 		let selectColumnsTable = container.querySelectorAll("div.properties-column-select-table");
-		expect(selectColumnsTable[7].querySelectorAll("div.properties-vt-row-selected").length).to.equal(2);
+		expect(selectColumnsTable[7].querySelectorAll("tr.properties-vt-row-selected").length).to.equal(2);
 
 		// Since 2 rows are selected, table toolbar shows up
 		// Clear row selection to show "Add columns" button
@@ -556,7 +564,7 @@ describe("selectcolumns control functions correctly in a table", () => {
 		tableUtilsRTL.fieldPicker(fieldPicker, ["age", "Na", "drug"]);
 
 		selectColumnsTable = container.querySelectorAll("div.properties-column-select-table");
-		expect(selectColumnsTable[7].querySelectorAll("div.properties-vt-row-selected").length).to.equal(1); // make sure only 1 checkbox is checked now
+		expect(selectColumnsTable[7].querySelectorAll("tr.properties-vt-row-selected").length).to.equal(1); // make sure only 1 checkbox is checked now
 
 	});
 
@@ -603,7 +611,7 @@ describe("All checkboxes in selectcolumns must have labels", () => {
 		const tableHeaderRows = tableUtilsRTL.getTableHeaderRows(fields1Panel);
 		const headerCheckboxLabel = tableHeaderRows[0].querySelector(".properties-vt-header-checkbox").textContent;
 		const secondColumnLabel = tableHeaderRows[0]
-			.querySelectorAll("div[role='columnheader']")[0]
+			.querySelectorAll("th.properties-vt-column")[1]
 			.textContent;
 		expect(headerCheckboxLabel).to.equal(`Select all ${secondColumnLabel}`);
 	});

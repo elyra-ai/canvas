@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ import { CommonProperties } from "../../src/common-properties";
 import PropertiesDialog from "../../src/common-properties/components/properties-modal";
 import PropertiesEditing from "../../src/common-properties/components/properties-editor";
 import propertyUtils from "../_utils_/property-utils";
-import tableUtils from "../_utils_/table-utils";
+import propertyUtilsRTL from "../_utils_/property-utilsRTL.js";
+import tableUtils from "../_utils_/table-utilsRTL.js";
 import { mount } from "../_utils_/mount-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -36,6 +37,7 @@ import { IntlProvider } from "react-intl";
 import { AiGenerate, Password } from "@carbon/icons-react";
 
 import { CARBON_MODAL_SIZE_XSMALL, CARBON_MODAL_SIZE_SMALL, CARBON_MODAL_SIZE_LARGE } from "./../../src/common-properties/constants/constants";
+import { fireEvent } from "@testing-library/react";
 
 const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
@@ -171,6 +173,16 @@ describe("CommonProperties renders correctly", () => {
 
 describe("CommonProperties works correctly in flyout", () => {
 	let wrapper;
+
+	beforeEach(() => {
+		// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
+		Element.prototype.getBoundingClientRect = jest.fn()
+			.mockReturnValue({
+				height: 1000, // This is used to measure the panel height
+				width: 1000
+			});
+	});
+
 	afterEach(() => {
 		wrapper.unmount();
 	});
@@ -187,62 +199,62 @@ describe("CommonProperties works correctly in flyout", () => {
 	});
 
 	it("When applyOnBlur=true applyPropertyChanges should be called only if values have changed", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef); // default is applyOnBlur=true
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(propertiesInfo.parameterDef); // default is applyOnBlur=true
 		wrapper = renderedObject.wrapper;
+		const container = wrapper.container;
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
-		const commonProperties = wrapper.find("aside.properties-right-flyout");
-		commonProperties.simulate("blur");
+		const commonProperties = container.querySelector("aside.properties-right-flyout");
+		fireEvent.blur(commonProperties);
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		// make some changes
 		tableUtils.selectCheckboxes(commonProperties, [0]);
 
 		// ensure table toolbar has delete and click it
-		let tableToolbar = wrapper.find("div.properties-table-toolbar");
-		let deleteButton = tableToolbar.find("button.properties-action-delete");
-		expect(deleteButton).to.have.length(1);
-		deleteButton.simulate("click");
+		let tableToolbar = container.querySelector("div.properties-table-toolbar");
+		let deleteButton = tableToolbar.querySelector("button.properties-action-delete");
+		fireEvent.click(deleteButton);
 
 		// save again: should save changes
-		commonProperties.simulate("blur");
+		fireEvent.blur(commonProperties);
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 
 		// force blur should not save because no additional changes happened
-		commonProperties.simulate("blur");
+		fireEvent.blur(commonProperties);
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 
 		// make more changes
 		tableUtils.selectCheckboxes(commonProperties, [0]);
-		tableToolbar = wrapper.find("div.properties-table-toolbar");
-		deleteButton = tableToolbar.find("button.properties-action-delete");
-		deleteButton.simulate("click");
+		tableToolbar = container.querySelector("div.properties-table-toolbar");
+		deleteButton = tableToolbar.querySelector("button.properties-action-delete");
+		fireEvent.click(deleteButton);
 
 		// save again, should trigger a save
-		commonProperties.simulate("blur");
+		fireEvent.blur(commonProperties);
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 2);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 	});
 
 	it("When applyOnBlur=false applyPropertyChanges should not be called", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { applyOnBlur: false });
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(propertiesInfo.parameterDef, { applyOnBlur: false });
 		wrapper = renderedObject.wrapper;
+		const container = wrapper.container;
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		// make some changes
-		tableUtils.selectCheckboxes(wrapper, [0]);
+		tableUtils.selectCheckboxes(container, [0]);
 
 		// ensure table toolbar has delete and click it
-		const tableToolbar = wrapper.find("div.properties-table-toolbar");
-		const deleteButton = tableToolbar.find("button.properties-action-delete");
-		expect(deleteButton).to.have.length(1);
-		deleteButton.simulate("click");
+		const tableToolbar = container.querySelector("div.properties-table-toolbar");
+		const deleteButton = tableToolbar.querySelector("button.properties-action-delete");
+		fireEvent.click(deleteButton);
 
 		// save again: should save changes
-		wrapper.find("aside.properties-right-flyout")
-			.simulate("blur");
+		const commonProperties = container.querySelector("aside.properties-right-flyout");
+		fireEvent.blur(commonProperties);
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 	});

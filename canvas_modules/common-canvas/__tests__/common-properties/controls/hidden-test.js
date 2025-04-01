@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,15 @@ import { expect } from "chai";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import hiddenParamDef from "../../test_resources/paramDefs/hidden_paramDef.json";
 import { fireEvent } from "@testing-library/react";
+
+beforeAll(() => {
+	// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
+	Element.prototype.getBoundingClientRect = jest.fn()
+		.mockReturnValue({
+			height: 1000, // This is used to measure the panel height
+			width: 1000
+		});
+});
 
 describe("hidden control works correctly", () => {
 	let wrapper;
@@ -58,7 +67,7 @@ describe("hidden control works correctly", () => {
 		// validate only 1 cell value is visible
 		expect(container.querySelectorAll("div.properties-table-cell-control")).to.have.length(1);
 		// validate only 1 header for textfield
-		expect(container.querySelectorAll("div.properties-vt-column")).to.have.length(1);
+		expect(container.querySelectorAll("th.properties-vt-column")).to.have.length(2); // checkbox and 'textfield' columns
 		fireEvent.click(container.querySelector("button.properties-add-fields-button"));
 		fireEvent.change(container.querySelector("div[data-id='properties-hidden_table_1_1'] input"), { target: { value: "My new value" } });
 		expect(controller.getPropertyValue(hiddenPropertyId)).to.eql([["Hopper", "Turing"], [, "My new value"]]);
