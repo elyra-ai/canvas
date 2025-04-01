@@ -640,7 +640,7 @@ export interface ActionDefinition {
   /**
    * The action type to be displayed
    */
-  control?: 'button' | 'image';
+  control?: 'button' | 'image' | 'custom';
   /**
    * Optional class name to set for this action
    */
@@ -699,6 +699,10 @@ export interface ActionDefinition {
     tooltip_direction?: 'right' | 'left' | 'top' | 'bottom';
     [k: string]: unknown;
   };
+  /**
+   * Used to determine which custom action to use when control=custom.
+   */
+  custom_action_id?: string;
   /**
    * Data returned when action called
    */

@@ -186,6 +186,16 @@ class MyCustomControl {
   }
 }
 
+class MyCustomAction {
+  static id() {
+    return "custom-action-1";
+  }
+
+  renderAction() {
+    return "react node";
+  }
+}
+
 let commonPropertiesController: CommonPropertiesController =
   {} as CommonPropertiesController;
 
@@ -197,6 +207,7 @@ const commonProperties = new CommonProperties({
     },
   },
   customControls: [MyCustomControl],
+  customActions: [MyCustomAction],
   propertiesConfig: { applyOnBlur: true },
 });
 
