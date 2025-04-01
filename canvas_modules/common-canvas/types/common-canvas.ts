@@ -2900,9 +2900,9 @@ export interface EditActionCreateAutoComment extends EditActionData {
   mousePos: { x: CanvasCoord; y: CanvasCoord };
 
   // These properties also included when action performed using context menu.
-  cmPos: { x: ViewportCoord; y: ViewportCoord };
-  type: "canvas";
-  zoom: ScaleAmount;
+  cmPos?: { x: ViewportCoord; y: ViewportCoord };
+  type?: "canvas";
+  zoom?: ScaleAmount;
 }
 
 export interface EditActionCreateWYSIWYGComment extends EditActionData {
@@ -2913,9 +2913,9 @@ export interface EditActionCreateWYSIWYGComment extends EditActionData {
   mousePos: { x: CanvasCoord; y: CanvasCoord };
 
   // These properties also included when action performed using context menu.
-  cmPos: { x: ViewportCoord; y: ViewportCoord };
-  type: "canvas";
-  zoom: ScaleAmount;
+  cmPos?: { x: ViewportCoord; y: ViewportCoord };
+  type?: "canvas";
+  zoom?: ScaleAmount;
 }
 
 export interface EditActionCreateAutoWYSIWYGComment extends EditActionData {
@@ -2926,9 +2926,9 @@ export interface EditActionCreateAutoWYSIWYGComment extends EditActionData {
   mousePos: { x: CanvasCoord; y: CanvasCoord };
 
   // These properties also included when action performed using context menu.
-  cmPos: { x: ViewportCoord; y: ViewportCoord };
-  type: "canvas";
-  zoom: ScaleAmount;
+  cmPos?: { x: ViewportCoord; y: ViewportCoord };
+  type?: "canvas";
+  zoom?: ScaleAmount;
 }
 
 export interface EditActionCreateNode extends EditActionData {
