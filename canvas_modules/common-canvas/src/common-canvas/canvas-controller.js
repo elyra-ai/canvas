@@ -2621,12 +2621,14 @@ export default class CanvasController {
 				break;
 			}
 			case "createComment": {
+				data.pos = data.mousePos;
 				command = new CreateCommentAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "createWYSIWYGComment": {
+				data.pos = data.mousePos;
 				data.contentType = WYSIWYG;
 				data.formats = [];
 				command = new CreateCommentAction(data, this);
@@ -2635,14 +2637,14 @@ export default class CanvasController {
 				break;
 			}
 			case "createAutoComment": {
-				data.mousePos = this.getNewCommentPosition(data.pipelineId);
+				data.pos = this.getNewCommentPosition(data.pipelineId);
 				command = new CreateCommentAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "createAutoWYSIWYGComment": {
-				data.mousePos = this.getNewCommentPosition(data.pipelineId);
+				data.pos = this.getNewCommentPosition(data.pipelineId);
 				data.contentType = WYSIWYG;
 				data.formats = [];
 				command = new CreateCommentAction(data, this);
