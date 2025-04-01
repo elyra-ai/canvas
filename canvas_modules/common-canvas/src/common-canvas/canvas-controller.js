@@ -363,7 +363,7 @@ export default class CanvasController {
 	// which case it will be the ID of the pipeline at the level in the
 	// supernode hierarchy that is currently on display.
 	getCurrentPipelineId() {
-		return this.objectModel.getCurrentBreadcrumb().pipelineId;
+		return this.objectModel.getCurrentPipelineId();
 	}
 
 	// Returns truty if the pipeline is external (that is it is part of an
@@ -1033,7 +1033,7 @@ export default class CanvasController {
 	// nodeIds - An array of node Ids
 	// pipelineId - The ID of the pipeline where the nodes exist
 	getBranchNodes(nodeIds, pipelineId) {
-		const pId = pipelineId ? pipelineId : this.objectModel.getCurrentPipelineId();
+		const pId = pipelineId ? pipelineId : this.getCurrentPipelineId();
 		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_BRANCH);
 	}
 
@@ -1042,7 +1042,7 @@ export default class CanvasController {
 	// nodeIds - An array of node Ids
 	// pipelineId - The ID of the pipeline where the nodes exist
 	getUpstreamNodes(nodeIds, pipelineId) {
-		const pId = pipelineId ? pipelineId : this.objectModel.getCurrentPipelineId();
+		const pId = pipelineId ? pipelineId : this.getCurrentPipelineId();
 		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_UPSTREAM);
 	}
 
@@ -1051,7 +1051,7 @@ export default class CanvasController {
 	// nodeIds - An array of node Ids
 	// pipelineId - The ID of the pipeline where the nodes exist
 	getDownstreamNodes(nodeIds, pipelineId) {
-		const pId = pipelineId ? pipelineId : this.objectModel.getCurrentPipelineId();
+		const pId = pipelineId ? pipelineId : this.getCurrentPipelineId();
 		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_DOWNSTREAM);
 	}
 
@@ -2403,7 +2403,7 @@ export default class CanvasController {
 		this.editActionHandler({
 			editType: action,
 			editSource: "toolbar",
-			pipelineId: this.objectModel.getSelectedPipelineId() || this.objectModel.getCurrentPipelineId()
+			pipelineId: this.objectModel.getSelectedPipelineId()
 		});
 	}
 
@@ -2413,7 +2413,7 @@ export default class CanvasController {
 		this.editActionHandler({
 			editType: action,
 			editSource: "keyboard",
-			pipelineId: this.objectModel.getSelectedPipelineId() || this.objectModel.getCurrentPipelineId(),
+			pipelineId: this.objectModel.getSelectedPipelineId(),
 			mousePos: mousePos
 		});
 	}
@@ -2443,6 +2443,7 @@ export default class CanvasController {
 		let data = CanvasUtils.removeNullProperties(cmndData);
 		data.selectedObjectIds = this.getSelectedObjectIds();
 		data.selectedObjects = this.getSelectedObjects();
+		data.pipelineId = data.pipelineId || this.getCurrentPipelineId();
 
 		// Generate a dummy external URL when an external sub-flow is being
 		// created.
