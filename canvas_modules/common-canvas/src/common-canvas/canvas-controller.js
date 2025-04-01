@@ -2377,12 +2377,7 @@ export default class CanvasController {
 		}
 	}
 
-	textActionHandler(action, editSource, source) {
-		const data = Object.assign({}, source, { "editType": action, editSource });
-		this.editActionHandler(data);
-	}
-
-	contextMenuActionHandler(action, editParam) {
+	contextMenuActionHandler(action, evt, editParam) {
 		const source = this.getContextMenuSource();
 
 		this.logger.log("contextMenuActionHandler - action: " + action);
@@ -2398,12 +2393,18 @@ export default class CanvasController {
 		this.editActionHandler(data);
 	}
 
+	textActionHandler(action, editSource, source) {
+		const data = Object.assign({}, source, { "editType": action, editSource });
+		this.editActionHandler(data);
+	}
+
 	toolbarActionHandler(action) {
 		this.logger.log("toolbarActionHandler - action: " + action);
 		this.editActionHandler({
 			editType: action,
 			editSource: "toolbar",
-			pipelineId: this.objectModel.getSelectedPipelineId() });
+			pipelineId: this.objectModel.getSelectedPipelineId() || this.objectModel.getCurrentPipelineId()
+		});
 	}
 
 	keyboardActionHandler(action, mousePos) {
@@ -2412,8 +2413,9 @@ export default class CanvasController {
 		this.editActionHandler({
 			editType: action,
 			editSource: "keyboard",
-			pipelineId: this.objectModel.getSelectedPipelineId(),
-			mousePos: mousePos });
+			pipelineId: this.objectModel.getSelectedPipelineId() || this.objectModel.getCurrentPipelineId(),
+			mousePos: mousePos
+		});
 	}
 
 	clickActionHandler(source) {
@@ -2620,12 +2622,14 @@ export default class CanvasController {
 			case "createComment": {
 				command = new CreateCommentAction(data, this);
 				this.commandStack.do(command);
+				data = command.getData();
 				break;
 			}
 			case "createWYSIWYGComment": {
 				data.contentType = WYSIWYG;
 				data.formats = [];
 				command = new CreateCommentAction(data, this);
+				data = command.getData();
 				this.commandStack.do(command);
 				break;
 			}

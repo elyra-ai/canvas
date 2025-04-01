@@ -28,7 +28,7 @@ export default class CreateCommentAction extends Action {
 	}
 
 	getData() {
-		this.data.commentId = this.comment.id;
+		this.data.comment = this.comment;
 		return this.data;
 	}
 
