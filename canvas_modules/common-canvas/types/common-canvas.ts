@@ -2813,11 +2813,12 @@ export type CtxMenuHandlerSource =
       mousePos: { x: string; y: string };
     };
 
-export type NodeId = string;
-export type CommentId = string;
-export type LinkId = string;
-export type NodeOrCommentId = NodeId | CommentId;
-export type ObjectId = NodeId | CommentId | LinkId;
+export type CanvasNodeId = string;
+export type CanvasCommentId = string;
+export type CanvasLinkId = string;
+export type CanvasPortId = string;
+export type CanvasNodeOrCommentId = CanvasNodeId | CanvasCommentId;
+export type ObjectId = CanvasNodeId | CanvasCommentId | CanvasLinkId;
 export type ViewportCoord = number;
 export type CanvasCoord = number;
 export type ScaleAmount = number;
@@ -2845,7 +2846,7 @@ export interface ResizeCommentData {
 }
 
 export interface MoveNodeData {
-  id: NodeId;
+  id: CanvasNodeId;
   height: number;
   width: number;
   x_pos: CanvasCoord;
@@ -2853,7 +2854,7 @@ export interface MoveNodeData {
 }
 
 export interface MoveCommentData {
-  id: CommentId;
+  id: CanvasCommentId;
   height: number;
   width: number;
   x_pos: CanvasCoord;
@@ -2867,7 +2868,7 @@ export type ResizeNodeOrCommentData =
   | MoveCommentData;
 
 export interface MoveLinkData {
-  id: LinkId;
+  id: CanvasLinkId;
   srcPos?: { x_pos: CanvasCoord, y_pos: CanvasCoord };
   trgPos?: { x_pos: CanvasCoord, y_pos: CanvasCoord };
 }
@@ -2883,19 +2884,57 @@ export interface Breadcrumb {
 export interface EditActionCreateComment extends EditActionData {
   editType: "createComment"
   editSource: "contextmenu";
+  comment?: CanvasComment;
+  pipelineId?: string;
+  mousePos: { x: CanvasCoord; y: CanvasCoord };
+  cmPos: { x: ViewportCoord; y: ViewportCoord };
+  type: "canvas";
+  zoom: ScaleAmount; // Scale amount from zoom object.
+}
+
+export interface EditActionCreateAutoComment extends EditActionData {
+  editType: "createAutoComment"
+  editSource: "contextmenu" | "toolbar";
+  comment?: CanvasComment;
+  pipelineId: string;
+  mousePos: { x: CanvasCoord; y: CanvasCoord };
 
   // These properties also included when action performed using context menu.
-  type: "canvas";
-  pipelineId: string;
   cmPos: { x: ViewportCoord; y: ViewportCoord };
+  type: "canvas";
+  zoom: ScaleAmount;
+}
+
+export interface EditActionCreateWYSIWYGComment extends EditActionData {
+  editType: "createWYSIWYGComment"
+  editSource: "contextmenu" | "toolbar";
+  comment?: CanvasComment;
+  pipelineId: string;
   mousePos: { x: CanvasCoord; y: CanvasCoord };
-  zoom: ScaleAmount; // Scale amount from zoom object.
+
+  // These properties also included when action performed using context menu.
+  cmPos: { x: ViewportCoord; y: ViewportCoord };
+  type: "canvas";
+  zoom: ScaleAmount;
+}
+
+export interface EditActionCreateAutoWYSIWYGComment extends EditActionData {
+  editType: "createAutoWYSIWYGComment"
+  editSource: "contextmenu" | "toolbar";
+  comment?: CanvasComment;
+  pipelineId: string;
+  mousePos: { x: CanvasCoord; y: CanvasCoord };
+
+  // These properties also included when action performed using context menu.
+  cmPos: { x: ViewportCoord; y: ViewportCoord };
+  type: "canvas";
+  zoom: ScaleAmount;
 }
 
 export interface EditActionCreateNode extends EditActionData {
   editType: "createNode";
   editSource: "canvas";
-  newNode: null | CanvasNode;
+  newNode?: CanvasNode;
   nodeTemplate: CanvasNode
   offsetX: number,
   offsetY: number,
@@ -2906,8 +2945,8 @@ export interface EditActionCreateAutoNode extends EditActionData {
   editType: "createAutoNode";
   editSource: "canvas";
   addLink: boolean; // Whether to link to a source node or not.
-  newLink: CanvasLink;
-  newNode: CanvasNode;
+  newLink?: CanvasLink;
+  newNode?: CanvasNode;
   nodeTemplate: CanvasNode;
   offsetX: number;
   offsetY: number;
@@ -2918,8 +2957,8 @@ export interface EditActionCreateAutoNode extends EditActionData {
 export interface EditActionMoveObjects extends EditActionData {
   editType: "moveObjects";
   editSource: "canvas";
-  links: CanvasLink[];
-  nodes: CanvasNode[];
+  links?: CanvasLink[];
+  nodes?: CanvasNode[];
   offsetX: number;
   offsetY: number;
   pipelineId: string;
@@ -2928,22 +2967,22 @@ export interface EditActionMoveObjects extends EditActionData {
 export interface EditActionLinkNodes extends EditActionData {
   editType: "linkNodes";
   editSource: "canvas";
-  linkIds: string[];
+  linkIds?: string[];
   linkType: "data";
   pipelineId: string;
-  nodes: { id: string, portId?: string }[];
-  targetNodes: { id: string, portId?: string }[];
+  nodes: { id: CanvasNodeId, portId?: CanvasPortId }[];
+  targetNodes: { id: CanvasNodeId, portId?: CanvasPortId }[];
   type: "nodeLink" | "associationLink";
 }
 
 export interface EditActionLinkComment extends EditActionData {
   editType: "linkComment";
   editSource: "canvas";
-  linkIds: string[];
+  linkIds?: CanvasLinkId[];
   linkType: "comment";
   pipelineId: string;
-  nodes: string[]; // An array of comment IDs
-  targetNodes: string[]; // An array of node IDs
+  nodes: CanvasCommentId[];
+  targetNodes: CanvasNodeId[];
   type: "commentLink";
 }
 
@@ -2953,12 +2992,12 @@ export interface EditActionDeleteSelectedObjects extends EditActionData {
   pipelineId: string;
 
   // These properties also included when action performed using context menu.
-  type: "node" | "comment" | "link";
-  targetObject: CanvasNode | CanvasComment | CanvasLink;
-  id: "canvas" | string; // ID of object action was performd on. For historical puposes, we pass id even though that is the ID of targetObject.
-  cmPos: { x: ViewportCoord; y: ViewportCoord };
-  mousePos: { x: CanvasCoord; y: CanvasCoord };
-  zoom: ScaleAmount; // Scale amount from zoom object.
+  type?: "node" | "comment" | "link";
+  targetObject?: CanvasNode | CanvasComment | CanvasLink;
+  id?: "canvas" | string; // ID of object action was performd on. For historical puposes, we pass id even though that is the ID of targetObject.
+  cmPos?: { x: ViewportCoord; y: ViewportCoord };
+  mousePos?: { x: CanvasCoord; y: CanvasCoord };
+  zoom?: ScaleAmount; // Scale amount from zoom object.
 }
 
 export interface EditActionDeleteLink extends EditActionData {
@@ -2966,41 +3005,41 @@ export interface EditActionDeleteLink extends EditActionData {
   editSource: "contextmenu";
 
   // These properties also included when action performed using context menu.
-  type: "link";
-  targetObject: CanvasNode | CanvasComment | CanvasLink;
-  id: string; // ID of object action was performd on. For historical puposes, we pass id even though that is the ID of targetObject.
-  cmPos: { x: ViewportCoord; y: ViewportCoord };
-  mousePos: { x: CanvasCoord; y: CanvasCoord };
-  pipelineId: string;
-  zoom: ScaleAmount; // Scale amount from zoom object.
+  type?: "link";
+  targetObject?: CanvasNode | CanvasComment | CanvasLink;
+  id?: CanvasLinkId; // ID of object action was performd on. For historical puposes, we pass id even though that is the ID of targetObject.
+  cmPos?: { x: ViewportCoord; y: ViewportCoord };
+  mousePos?: { x: CanvasCoord; y: CanvasCoord };
+  pipelineId?: string;
+  zoom?: ScaleAmount; // Scale amount from zoom object.
 }
 
 export interface EditActionSetNodeLabelEditingMode extends EditActionData {
   editType: "setNodeLabelEditingMode";
   editSource: "contextmenu" | "editicon" | "textdoubleclick";
-  id: string; // ID of object action was performd on.
+  id: CanvasNodeId; // ID of object action was performd on.
   pipelineId: string;
 
   // These properties also included when action performed using context menu.
-  cmPos: { x: ViewportCoord; y: ViewportCoord };
-  mousePos: { x: CanvasCoord; y: CanvasCoord };
-  targetObject: CanvasNode;
-  type: "node";
-  zoom: ScaleAmount; // Scale amount from zoom object.
+  cmPos?: { x: ViewportCoord; y: ViewportCoord };
+  mousePos?: { x: CanvasCoord; y: CanvasCoord };
+  targetObject?: CanvasNode;
+  type?: "node";
+  zoom?: ScaleAmount; // Scale amount from zoom object.
 }
 
 export interface EditActionSetCommentEditingMode extends EditActionData {
   editType: "setCommentEditingMode";
   editSource: "contextmenu" | "textdoubleclick";
-  id: string; // ID of object action was performd on.
+  id: CanvasCommentId; // ID of object action was performd on.
   pipelineId: string;
 
   // These properties also included when action performed using context menu.
-  cmPos: { x: ViewportCoord; y: ViewportCoord };
-  mousePos: { x: CanvasCoord; y: CanvasCoord };
-  targetObject: CanvasComment;
-  type: "node";
-  zoom: ScaleAmount; // Scale amount from zoom object.
+  cmPos?: { x: ViewportCoord; y: ViewportCoord };
+  mousePos?: { x: CanvasCoord; y: CanvasCoord };
+  targetObject?: CanvasComment;
+  type?: "node";
+  zoom?: ScaleAmount; // Scale amount from zoom object.
 }
 
 export interface EditActionSetZoom extends EditActionData {
@@ -3014,14 +3053,14 @@ export interface EditActionResizeObjects extends EditActionData {
   editType: "resizeObjects";
   editSource: "canvas";
   pipelineId: string;
-  detachedLinksInfo: Record<LinkId, MoveLinkData[]>;
-  objectsInfo: Record<NodeOrCommentId, ResizeNodeOrCommentData[]>;
+  detachedLinksInfo: Record<CanvasLinkId, MoveLinkData[]>;
+  objectsInfo: Record<CanvasNodeOrCommentId, ResizeNodeOrCommentData[]>;
 }
 
 export interface EditActionEditComment extends EditActionData {
   editType: "editComment";
   editSource: "canvas";
-  id: CommentId;
+  id: CanvasCommentId;
   pipelineId: string;
   content: string;
   contentType: "WYSIWYG" | undefined;
@@ -3035,63 +3074,63 @@ export interface EditActionEditComment extends EditActionData {
 export interface EditActionExpandSupernodeInPlace extends EditActionData {
   editType: "expandSuperNodeInPlace";
   editSource: "contextmenu";
-  id: NodeId;
+  id: CanvasNodeId;
   pipelineId: string;
 
   // These properties also included when action performed using context menu.
-  addBreadcrumbs: Breadcrumb[];
-  cmPos: { x: ViewportCoord; y: ViewportCoord };
-  externalPipelineFlowLoad: boolean;
-  mousePos: { x: CanvasCoord, y: CanvasCoord };
-  targetObject: CanvasNode;
-  type: "node";
-  zoom: ScaleAmount;
+  addBreadcrumbs?: Breadcrumb[];
+  cmPos?: { x: ViewportCoord; y: ViewportCoord };
+  externalPipelineFlowLoad?: boolean;
+  mousePos?: { x: CanvasCoord, y: CanvasCoord };
+  targetObject?: CanvasNode;
+  type?: "node";
+  zoom?: ScaleAmount;
 }
 
 export interface EditActionCollapseSupernodeInPlace extends EditActionData {
   editType: "collapseSuperNodeInPlace";
   editSource: "contextmenu";
-  id: NodeId;
+  id: CanvasNodeId;
   pipelineId: string;
 
   // These properties also included when action performed using context menu.
-  addBreadcrumbs: Breadcrumb[];
-  cmPos: { x: ViewportCoord; y: ViewportCoord };
-  mousePos: { x: CanvasCoord, y: CanvasCoord };
-  targetObject: CanvasNode;
-  type: "node";
-  zoom: ScaleAmount;
+  addBreadcrumbs?: Breadcrumb[];
+  cmPos?: { x: ViewportCoord; y: ViewportCoord };
+  mousePos?: { x: CanvasCoord, y: CanvasCoord };
+  targetObject?: CanvasNode;
+  type?: "node";
+  zoom?: ScaleAmount;
 }
 
 export interface EditActionCollapseSupernodeInPlace extends EditActionData {
   editType: "collapseSuperNodeInPlace";
   editSource: "contextmenu";
-  id: NodeId;
+  id: CanvasNodeId;
   pipelineId: string;
 
   // These properties also included when action performed using context menu.
-  addBreadcrumbs: Breadcrumb[];
-  cmPos: { x: ViewportCoord; y: ViewportCoord };
-  mousePos: { x: CanvasCoord, y: CanvasCoord };
-  targetObject: CanvasNode;
-  type: "node";
-  zoom: ScaleAmount;
+  addBreadcrumbs?: Breadcrumb[];
+  cmPos?: { x: ViewportCoord; y: ViewportCoord };
+  mousePos?: { x: CanvasCoord, y: CanvasCoord };
+  targetObject?: CanvasNode;
+  type?: "node";
+  zoom?: ScaleAmount;
 }
 
 export interface EditActionDisplaySubPipeline extends EditActionData {
   editType: "displaySubPipeline";
   editSource: "contextmenu";
-  id: NodeId;
+  id: CanvasNodeId;
   pipelineId: string;
 
   // These properties also included when action performed using context menu.
-  addBreadcrumbs: Breadcrumb[];
-  externalPipelineFlowLoad: boolean;
-  cmPos: { x: ViewportCoord; y: ViewportCoord };
-  mousePos: { x: CanvasCoord, y: CanvasCoord };
-  targetObject: CanvasNode;
-  type: "node";
-  zoom: ScaleAmount;
+  addBreadcrumbs?: Breadcrumb[];
+  externalPipelineFlowLoad?: boolean;
+  cmPos?: { x: ViewportCoord; y: ViewportCoord };
+  mousePos?: { x: CanvasCoord, y: CanvasCoord };
+  targetObject?: CanvasNode;
+  type?: "node";
+  zoom?: ScaleAmount;
 }
 
 export interface EditActionDisplayPreviousPipeline extends EditActionData {
@@ -3106,10 +3145,10 @@ export interface EditActionUndo extends EditActionData {
   pipelineId: string;
 
   // These properties also included when action performed using context menu.
-  cmPos: { x: ViewportCoord; y: ViewportCoord };
-  mousePos: { x: CanvasCoord, y: CanvasCoord };
-  type: "canvas";
-  zoom: ScaleAmount;
+  cmPos?: { x: ViewportCoord; y: ViewportCoord };
+  mousePos?: { x: CanvasCoord, y: CanvasCoord };
+  type?: "canvas";
+  zoom?: ScaleAmount;
 }
 
 export interface EditActionRedo extends EditActionData {
@@ -3118,10 +3157,10 @@ export interface EditActionRedo extends EditActionData {
   pipelineId: string;
 
   // These properties also included when action performed using context menu.
-  cmPos: { x: ViewportCoord; y: ViewportCoord };
-  mousePos: { x: CanvasCoord, y: CanvasCoord };
-  type: "canvas";
-  zoom: ScaleAmount;
+  cmPos?: { x: ViewportCoord; y: ViewportCoord };
+  mousePos?: { x: CanvasCoord, y: CanvasCoord };
+  type?: "canvas";
+  zoom?: ScaleAmount;
 }
 
 export interface EditActionData {
@@ -3130,7 +3169,6 @@ export interface EditActionData {
   selectedObjects: (CanvasNode | CanvasComment | CanvasLink)[];
   [key: string]: unknown;
 }
-
 
 // This is provided whewn an undo or redo action is performed.
 // It contains the actual action object that performs the action.
