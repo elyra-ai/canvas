@@ -1,0 +1,218 @@
+/*
+ * Copyright 2025 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.properties-tanstack-grid.properties-vt {
+	position: relative;
+	overflow: auto;
+	width: 100%;
+	height: calc(100% + 2px); // Include top and bottom border
+
+	table.properties-autosized-vt {
+		display: grid;
+		empty-cells: show;
+
+		thead.properties-grid-header {
+			display: grid;
+			position: sticky;
+			top: 0;
+			z-index: 1;
+
+			tr[data-role="properties-header-row"] {
+				background-color: $layer-accent-01;
+				display: flex;
+				width: 100%;
+				height: $spacing-07;
+
+				.properties-vt-header-checkbox {
+					height: $spacing-07;
+					display: flex;
+					align-items: center;
+					margin-left: $spacing-05;
+					margin-right: $spacing-02;
+				}
+
+				th.properties-autosized-vt-header {
+					@include type-style("productive-heading-01");
+					letter-spacing: normal; // Override Carbon for tooltip calculations
+					display: flex;
+					align-items: center;
+					justify-items: center;
+					position: relative;
+
+					&.properties-vt-column {
+						.cds--checkbox-wrapper {
+							margin-bottom: 0;
+							.cds--checkbox-label {
+								width: 100%;
+
+								span {
+									color: $text-primary;
+									text-overflow: ellipsis;
+									white-space: nowrap;
+									overflow: hidden;
+									width: 100%;
+								}
+							}
+						}
+					}
+
+					.properties-vt-header-btn {
+						width: 100%;
+						padding-right: $spacing-06;
+
+						&.header-disabled {
+							padding-right: $spacing-05;
+							:hover {
+								cursor: default;
+							}
+						}
+					}
+
+					.header-disabled {
+						padding: 0 $spacing-05;
+					}
+
+					.properties-vt-header-resize {
+						position: absolute;
+						right: 0;
+						height: 100%;
+						width: 3px;
+					}
+
+					.properties-ft-column-sort-icon {
+						flex: 0 0 $spacing-05;
+						height: $spacing-05;
+						margin-left: $spacing-02;
+
+						&.default {
+							fill: $layer-accent-01;
+						}
+					}
+
+					.properties-vt-label-tip-icon {
+						display: flex;
+						align-items: center;
+						width: 100%;
+
+						.properties-vt-info-icon-tip {
+							height: $spacing-05;
+							margin-left: $spacing-03;
+
+							.properties-vt-info-icon {
+								&:hover {
+									cursor: pointer;
+								}
+							}
+							.properties-grid-th-toggletip .cds--toggletip-content {
+								font-size: 12px;
+								font-weight: 400;
+								line-height: 1.2;
+							}
+						}
+					}
+
+					&.properties-vt-column-with-resize,
+					&.properties-vt-column-sortable {
+						&:hover {
+							background-color: $layer-active-01;
+							.properties-vt-header-resize {
+								background-color: $button-secondary-active;
+								cursor: col-resize;
+							}
+							.properties-ft-column-sort-icon {
+								fill: $icon-primary;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		tbody.properties-grid-body {
+			display: grid;
+			position: relative;
+
+			tr.properties-grid-body-row {
+				@include type-style("body-short-01");
+				letter-spacing: normal; // Override Carbon for tooltip calculations
+				background-color: $layer-02;
+				display: flex;
+				position: absolute;
+				height: $spacing-07;
+				width: 100%;
+				border-bottom: 1px solid $layer-accent-01;
+
+				&:hover:not(.properties-vt-row-non-interactive) {
+					// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
+					background-color: $layer-hover-01;
+				}
+
+				.properties-vt-row-checkbox {
+					margin-left: $spacing-05;
+					margin-right: $spacing-02;
+					align-content: center;
+				}
+
+				.properties-grid-body-row-cell, .properties-grid-fake-col {
+					display: flex;
+					align-items: center;
+					overflow: hidden; // hide select dropdown warning/errors underline
+
+					// This class is set by other controls using FlexibleTable
+					// All cell stylings are be done in their respective controls
+					.properties-table-cell-control {
+						width: 100%;
+					}
+				}
+
+				&.properties-vt-row-disabled {
+					opacity: 0.5;
+					&:hover {
+						border-bottom: 1px solid $layer-accent-01;
+					}
+				}
+			}
+		}
+
+		&.properties-vt-single-selection {
+			tr {
+				border-left: $spacing-02 solid transparent;
+			}
+			tr.properties-grid-body-row.properties-vt-row-selected {
+				background-color: $layer-selected-01;
+				border-left: $spacing-02 solid $button-primary;
+
+				&:not(.properties-vt-row-disabled):hover {
+					border-left: $spacing-02 solid $button-primary;
+				}
+				&:hover:not(.properties-vt-row-non-interactive) {
+					background-color: $layer-accent-hover-01;
+				}
+			}
+		}
+
+		&.properties-light-disabled {
+			tbody.properties-grid-body {
+				tr[data-role="properties-data-row"] {
+					background-color: $layer-01;
+				}
+				.cds--select--inline .cds--select-input[disabled] {
+					background-color: $background;
+				}
+			}
+		}
+	}
+}
