@@ -116,27 +116,26 @@ const VirtualizedGrid = (props) => {
 
 	useEffect(() => {
 		if (typeof props.scrollToIndex !== "undefined") {
-			let repeatScroll;
 			let virtualRows = rowVirtualizer.getVirtualItems().map((vrow) => vrow.index);
 			let isVisible = includes(virtualRows, props.scrollToIndex);
 
-			const maxRetryCount = Math.ceil((props.scrollToIndex + 1) / rowVirtualizer.getVirtualItems().length);
-			let retryCount = maxRetryCount;
-
+			// https://github.com/TanStack/virtual/issues/216
 			const keepScrolling = () => {
-				virtualRows = rowVirtualizer.getVirtualItems().map((vrow) => vrow.index);
-				isVisible = includes(virtualRows, props.scrollToIndex);
+				rowVirtualizer.scrollToIndex(props.scrollToIndex, { align: "start" });
+				requestAnimationFrame(() => {
+					requestAnimationFrame(() => {
+						virtualRows = rowVirtualizer.getVirtualItems().map((vrow) => vrow.index);
+						isVisible = includes(virtualRows, props.scrollToIndex);
 
-				if (!isVisible) {
-					rowVirtualizer.scrollToIndex(props.scrollToIndex, { align: "start" });
-					retryCount--;
-				} else if (isVisible || retryCount === 0) {
-					clearInterval(repeatScroll);
-				}
+						if (!isVisible) {
+							keepScrolling();
+						}
+					});
+				});
 			};
 
 			if (!isVisible) { // Keep scrolling until the row is in view
-				repeatScroll = setInterval(() => keepScrolling(), 100);
+				keepScrolling();
 			} else {
 				rowVirtualizer.scrollToIndex(props.scrollToIndex, { align: "center" });
 			}

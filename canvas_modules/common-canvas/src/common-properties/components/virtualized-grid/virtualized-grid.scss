@@ -21,7 +21,6 @@
 	height: calc(100% + 2px); // Include top and bottom border
 
 	table.properties-autosized-vt {
-		@include type-style("productive-heading-01");
 		display: grid;
 		empty-cells: show;
 
@@ -47,6 +46,7 @@
 
 				th.properties-autosized-vt-header {
 					@include type-style("productive-heading-01");
+					letter-spacing: normal; // Override Carbon for tooltip calculations
 					display: flex;
 					align-items: center;
 					justify-items: center;
@@ -59,7 +59,6 @@
 								width: 100%;
 
 								span {
-									@include type-style("productive-heading-01");
 									color: $text-primary;
 									text-overflow: ellipsis;
 									white-space: nowrap;
@@ -148,6 +147,7 @@
 
 			tr.properties-grid-body-row {
 				@include type-style("body-short-01");
+				letter-spacing: normal; // Override Carbon for tooltip calculations
 				background-color: $layer-02;
 				display: flex;
 				position: absolute;
