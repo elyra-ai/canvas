@@ -2403,7 +2403,8 @@ export default class CanvasController {
 		this.editActionHandler({
 			editType: action,
 			editSource: "toolbar",
-			pipelineId: this.objectModel.getSelectedPipelineId() });
+			pipelineId: this.objectModel.getSelectedPipelineId() || this.objectModel.getCurrentPipelineId()
+		});
 	}
 
 	keyboardActionHandler(action, mousePos) {
@@ -2412,8 +2413,9 @@ export default class CanvasController {
 		this.editActionHandler({
 			editType: action,
 			editSource: "keyboard",
-			pipelineId: this.objectModel.getSelectedPipelineId(),
-			mousePos: mousePos });
+			pipelineId: this.objectModel.getSelectedPipelineId() || this.objectModel.getCurrentPipelineId(),
+			mousePos: mousePos
+		});
 	}
 
 	clickActionHandler(source) {
@@ -2620,12 +2622,14 @@ export default class CanvasController {
 			case "createComment": {
 				command = new CreateCommentAction(data, this);
 				this.commandStack.do(command);
+				data = command.getData();
 				break;
 			}
 			case "createWYSIWYGComment": {
 				data.contentType = WYSIWYG;
 				data.formats = [];
 				command = new CreateCommentAction(data, this);
+				data = command.getData();
 				this.commandStack.do(command);
 				break;
 			}
