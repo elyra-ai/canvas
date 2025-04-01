@@ -20,9 +20,10 @@ import Controller from "../../../src/common-properties/properties-controller";
 import { expect } from "chai";
 import sinon from "sinon";
 import { Provider } from "react-redux";
-import { mountWithIntl } from "../../_utils_/intl-utils";
-import propertyUtils from "../../_utils_/property-utils";
+import { renderWithIntl } from "../../_utils_/intl-utils";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import textfieldParamDef from "../../test_resources/paramDefs/textfield_paramDef.json";
+import { cleanup, fireEvent } from "@testing-library/react";
 
 const controller = new Controller();
 controller.setTitle("test title");
@@ -41,8 +42,15 @@ const applyLabel = "test apply";
 const rejectLabel = "test reject";
 
 describe("main-editor-properties-buttons renders correctly", () => {
+	beforeEach(() => {
+		controller.setSaveButtonDisable(false);
+		controller.setErrorMessages({});
+	});
+	afterEach(() => {
+		cleanup();
+	});
 	it("test main-editor-properties-buttons renders and function correctly", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<MainEditorPropertiesButtons
 					controller={controller}
@@ -54,20 +62,22 @@ describe("main-editor-properties-buttons renders correctly", () => {
 					disableSaveOnRequiredErrors
 				/>
 			</Provider>);
-		const buttons = wrapper.find("button");
+
+		const { container } = wrapper;
+		const buttons = container.querySelectorAll("button");
 		expect(buttons).to.have.length(2);
 
-		expect(buttons.at(0).text()).to.equal(rejectLabel);
-		expect(buttons.at(1).text()).to.equal(applyLabel);
+		expect(buttons[0].textContent).to.equal(rejectLabel);
+		expect(buttons[1].textContent).to.equal(applyLabel);
 
-		buttons.at(0).simulate("click");
+		fireEvent.click(buttons[0]);
 		expect(cancelHandler).to.have.property("callCount", 1);
-		buttons.at(1).simulate("click");
+		fireEvent.click(buttons[1]);
 		expect(okHandler).to.have.property("callCount", 1);
 	});
 
 	it("test main-editor-properties-buttons save button when disableSaveOnRequiredErrors is false", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<MainEditorPropertiesButtons
 					controller={controller}
@@ -79,26 +89,51 @@ describe("main-editor-properties-buttons renders correctly", () => {
 					disableSaveOnRequiredErrors={false}
 				/>
 			</Provider>);
-		const mainButtons = wrapper.find("MainEditorPropertiesButtons");
+		const { container } = wrapper;
+		const buttons = container.querySelectorAll("button");
+		expect(buttons).to.have.length(2);
+		const applyButton = buttons[1];
 
 		// Save button should be enabled by default
-		const buttons = wrapper.find("button");
-		expect(buttons).to.have.length(2);
-		expect(mainButtons.instance().shouldEnabledSaveButton()).to.be.true;
+		expect(applyButton.hasAttribute("disabled")).to.equal(false);
 
 		// Controller sets save button to disabled
 		controller.setSaveButtonDisable(true);
 		expect(controller.getSaveButtonDisable()).to.be.true;
-		expect(mainButtons.instance().shouldEnabledSaveButton()).to.be.false;
+		renderWithIntl(
+			<Provider store={controller.getStore()}>
+				<MainEditorPropertiesButtons
+					controller={controller}
+					okHandler={okHandler}
+					cancelHandler={cancelHandler}
+					applyLabel={applyLabel}
+					rejectLabel={rejectLabel}
+					showPropertiesButtons
+					disableSaveOnRequiredErrors={false}
+				/>
+			</Provider>);
+		expect(applyButton.hasAttribute("disabled")).to.equal(true);
 
 		// Controller sets save button to enabled
 		controller.setSaveButtonDisable(false);
 		expect(controller.getSaveButtonDisable()).to.be.false;
-		expect(mainButtons.instance().shouldEnabledSaveButton()).to.be.true;
+		renderWithIntl(
+			<Provider store={controller.getStore()}>
+				<MainEditorPropertiesButtons
+					controller={controller}
+					okHandler={okHandler}
+					cancelHandler={cancelHandler}
+					applyLabel={applyLabel}
+					rejectLabel={rejectLabel}
+					showPropertiesButtons
+					disableSaveOnRequiredErrors={false}
+				/>
+			</Provider>);
+		expect(applyButton.hasAttribute("disabled")).to.equal(false);
 	});
 
 	it("test main-editor-properties-buttons save button when disableSaveOnRequiredErrors is true", () => {
-		const wrapper = mountWithIntl(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<MainEditorPropertiesButtons
 					controller={controller}
@@ -110,14 +145,13 @@ describe("main-editor-properties-buttons renders correctly", () => {
 					disableSaveOnRequiredErrors
 				/>
 			</Provider>);
-		const mainButtons = wrapper.find("MainEditorPropertiesButtons");
-
-		const buttons = wrapper.find("button");
+		const { container } = wrapper;
+		const buttons = container.querySelectorAll("button");
 		expect(buttons).to.have.length(2);
+		const applyButton = buttons[1];
 
 		// If there are no error messages and disableSaveOnRequiredErrors is true, button should be enabled
-		controller.setErrorMessages({});
-		expect(mainButtons.instance().shouldEnabledSaveButton()).to.be.true;
+		expect(applyButton.hasAttribute("disabled")).to.equal(false);
 
 		// If there are required error messages and disableSaveOnRequiredErrors is true, button should be disabled
 		controller.setErrorMessages({
@@ -128,7 +162,19 @@ describe("main-editor-properties-buttons renders correctly", () => {
 				required: true
 			}
 		});
-		expect(mainButtons.instance().shouldEnabledSaveButton()).to.be.false;
+		renderWithIntl(
+			<Provider store={controller.getStore()}>
+				<MainEditorPropertiesButtons
+					controller={controller}
+					okHandler={okHandler}
+					cancelHandler={cancelHandler}
+					applyLabel={applyLabel}
+					rejectLabel={rejectLabel}
+					showPropertiesButtons
+					disableSaveOnRequiredErrors
+				/>
+			</Provider>);
+		expect(applyButton.hasAttribute("disabled")).to.equal(true);
 
 		// If there are no required error messages and disableSaveOnRequiredErrors is true, button should be enabled
 		controller.setErrorMessages({
@@ -139,12 +185,25 @@ describe("main-editor-properties-buttons renders correctly", () => {
 				required: false
 			}
 		});
-		expect(mainButtons.instance().shouldEnabledSaveButton()).to.be.true;
+		renderWithIntl(
+			<Provider store={controller.getStore()}>
+				<MainEditorPropertiesButtons
+					controller={controller}
+					okHandler={okHandler}
+					cancelHandler={cancelHandler}
+					applyLabel={applyLabel}
+					rejectLabel={rejectLabel}
+					showPropertiesButtons
+					disableSaveOnRequiredErrors
+				/>
+			</Provider>);
+		expect(applyButton.hasAttribute("disabled")).to.equal(false);
+
 	});
 
 	it("main-editor-properties-buttons should be disabled if required fields are not filled", () => {
 		// disableSaveOnRequiredErrors should be enabled only if 'applyOnBlur' is set to false
-		const renderedObject = propertyUtils.flyoutEditorForm(textfieldParamDef, { applyOnBlur: false, disableSaveOnRequiredErrors: true });
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(textfieldParamDef, { applyOnBlur: false, disableSaveOnRequiredErrors: true });
 		const wrapper = renderedObject.wrapper;
 		const rcontroller = renderedObject.controller;
 
@@ -164,17 +223,18 @@ describe("main-editor-properties-buttons renders correctly", () => {
 		expect(actualErrors).to.eql(expectedErrors);
 
 		// Save button should be disabled by default because there are required fields not filled
-		let applyButton = wrapper.find("button.properties-apply-button");
-		expect(applyButton.prop("disabled")).to.be.true;
+		const { container } = wrapper;
+		let applyButton = container.querySelector("button.properties-apply-button");
+		expect(applyButton).to.have.property("disabled").to.equal(true);
 
 		// Enter value for required control
-		const textWrapper = wrapper.find("div[data-id='properties-string_empty']");
-		const input = textWrapper.find("input");
-		input.simulate("change", { target: { value: "not empty" } });
+		const textWrapper = container.querySelector("div[data-id='properties-string_empty']");
+		const input = textWrapper.querySelector("input");
+		fireEvent.change(input, { target: { value: "not empty" } });
 
 		// Save nutton should not be disabled anymore
-		applyButton = wrapper.find("button.properties-apply-button");
-		expect(applyButton.prop("disabled")).to.be.false;
+		applyButton = container.querySelector("button.properties-apply-button");
+		expect(applyButton).to.have.property("disabled").to.equal(false);
 		expect(rcontroller.getAllErrorMessages()).to.eql({});
 	});
 });
