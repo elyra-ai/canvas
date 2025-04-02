@@ -2315,11 +2315,6 @@ export interface NodeLayout {
   nodeShapeDisplay: boolean;
 
   /**
-   * Displays the external object specified, as the body of the node
-   */
-  nodeExternalObject: FunctionComponent<any> | ComponentClass<any>;
-
-  /**
    * Default node shape. Can be "rectangle" or "port-arcs"
    */
   nodeShape: "port-arcs" | "rectangle";
@@ -2334,6 +2329,11 @@ export interface NodeLayout {
    */
   bodyPath: null | string | ((node: CanvasNode) => string);
   selectionPath: null | string | ((node: CanvasNode) => string);
+
+  /**
+   * Displays the external object specified, as the body of the node
+   */
+  nodeExternalObject: FunctionComponent<any> | ComponentClass<any>;
 
   /**
    * Display image
@@ -2368,7 +2368,7 @@ export interface NodeLayout {
   /**
    * Label appearance propeties
    */
-  labelEditable: false;
+  labelEditable: boolean;
   labelAlign: "left" | "center";
   labelSingleLine: boolean;  /* false allow multi-line labels */
   labelOutline: boolean;
@@ -2436,8 +2436,8 @@ export interface NodeLayout {
   errorHeight: number;
 
   /**
-   * When sizing a supernode this decides the size of the corner area for
-   * diagonal sizing.
+   * When sizing a node or supernode this decides the size of the corner
+   * area for diagonal sizing.
    */
   nodeCornerResizeArea: number;
 
