@@ -31,8 +31,7 @@
 		opacity: 0.5;
 	}
 	.properties-action-image-button {
-		height: min-content;
-		width: min-content;
+		width: 100%;
 		background: none;
 		border: none;
 		padding: 0;
@@ -46,5 +45,14 @@
 
 	.properties-action-image-button:hover {
 		opacity: 0.8;
+	}
+
+	// Override Carbon to Allow Button to resize as per image height
+	.properties-action-image-button.cds--btn--icon-only {
+		block-size: none;
+	}
+	
+	.properties-action-image-button.cds--btn {
+		min-block-size: 0;
 	}
 }
