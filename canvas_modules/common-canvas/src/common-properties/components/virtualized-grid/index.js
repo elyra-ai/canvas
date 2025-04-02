@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,5 @@
  * limitations under the License.
  */
 
-.properties-textarea {
-	&.hide {
-		display: none;
-	}
-}
-
-// Required for textarea to be visible in a table cell
-.properties-table-cell-control {
-	.properties-textarea textarea {
-		resize: none;
-		height: $spacing-07;
-		min-height: $spacing-07;
-		min-width: 100%;
-		border-bottom: 1px solid $layer-accent-01;
-	}
-}
+import VirtualizedGrid from "./virtualized-grid.jsx";
+export default VirtualizedGrid;
