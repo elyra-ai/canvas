@@ -94,8 +94,8 @@ Cypress.Commands.add("verifyCreateAutoCommentCommand", (x, y) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc);
 		expect("createAutoComment").to.equal(lastEventLog.data.editType);
 		expect("toolbar").to.equal(lastEventLog.data.editSource);
-		expect(x).to.equal(lastEventLog.data.mousePos.x);
-		expect(y).to.equal(lastEventLog.data.mousePos.y);
+		expect(x).to.equal(lastEventLog.data.pos.x);
+		expect(y).to.equal(lastEventLog.data.pos.y);
 	});
 });
 
