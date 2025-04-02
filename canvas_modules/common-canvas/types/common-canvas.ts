@@ -2889,39 +2889,38 @@ export interface ContextMenuCommonEditActionProperties {
   type: string;
 }
 
-export interface ResizeNodeData {
+/** MoveSizeData contains the x_pos and y_pos for sizing operations
+ * because object positions are based on the top-left corner of the object,
+ * so any sizing event to the top or left of the object will change the
+ * position as well as the size.
+ */
+export interface MoveSizeData {
+  width: number;
   height: number;
+  x_pos: CanvasCoordVal;
+  y_pos: CanvasCoordVal;
+}
+
+export type ResizeNodeData = {
   isResized: boolean;
   resizeHeight: number;
   resizeWidth: number;
-  width: number;
-  x_pos: CanvasCoordVal;
-  y_pos: CanvasCoordVal;
-}
+} & MoveSizeData;
 
-export interface ResizeCommentData {
-  height: number;
-  width: number;
-  x_pos: CanvasCoordVal;
-  y_pos: CanvasCoordVal;
-}
+export type ResizeCommentData = MoveSizeData;
 
-export interface MoveNodeData {
+export type MoveNodeData = {
   id: CanvasNodeId;
-  height: number;
-  width: number;
-  x_pos: CanvasCoordVal;
-  y_pos: CanvasCoordVal;
-}
+} & MoveSizeData;
 
-export interface MoveCommentData {
+export type MoveCommentData = {
   id: CanvasCommentId;
-  height: number;
-  width: number;
-  x_pos: CanvasCoordVal;
-  y_pos: CanvasCoordVal;
-}
+} & MoveSizeData;
 
+/** ResizeNodeOrCommentData can inlclude move data as well as
+ * resize data because some resize operations (such as sizing a
+ * in-place supernode can result in surrounding nodes being moved.
+ */
 export type ResizeNodeOrCommentData =
   | ResizeNodeData
   | ResizeCommentData
