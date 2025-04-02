@@ -87,13 +87,6 @@ describe("add rows in tables with correct default values", () => {
 	let wrapper;
 	let renderedController;
 	beforeEach(() => {
-		// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
-		Element.prototype.getBoundingClientRect = jest.fn()
-			.mockReturnValue({
-				height: 1000, // This is used to measure the panel height
-				width: 1000
-			});
-
 		const renderedObject = propertyUtils.flyoutEditorForm(defaultsParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;

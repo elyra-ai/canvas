@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,13 +25,6 @@ describe("validateInput validates input and updates controller correctly", () =>
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
-		Element.prototype.getBoundingClientRect = jest.fn()
-			.mockReturnValue({
-				height: 1000, // This is used to measure the panel height
-				width: 1000
-			});
-
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(readOnlyParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;

@@ -127,15 +127,6 @@ mockFlexibleTable.mockImplementation((props) => {
 });
 
 describe("FlexibleTable renders correctly", () => {
-	beforeEach(() => {
-		// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
-		Element.prototype.getBoundingClientRect = jest.fn()
-			.mockReturnValue({
-				height: 1000, // This is used to measure the panel height
-				width: 1000
-			});
-	});
-
 	it("props should have been defined", () => {
 		renderWithIntl(
 			<FlexibleTable

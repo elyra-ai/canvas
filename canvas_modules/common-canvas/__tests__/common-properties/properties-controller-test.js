@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1981,12 +1981,6 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 		}
 	};
 	beforeEach(() => {
-		// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
-		Element.prototype.getBoundingClientRect = jest.fn()
-			.mockReturnValue({
-				height: 1000, // This is used to measure the panel height
-				width: 1000
-			});
 		reset();
 	});
 	it("should return correct required error messages", () => {
@@ -2188,12 +2182,6 @@ describe("Properties Controller hideEditButton", () => {
 
 describe("Properties Controller staticRows", () => {
 	beforeEach(() => {
-		// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
-		Element.prototype.getBoundingClientRect = jest.fn()
-			.mockReturnValue({
-				height: 1000, // This is used to measure the panel height
-				width: 1000
-			});
 		reset();
 	});
 	it("should update static Rows Indexes for the start rows if valid", () => {

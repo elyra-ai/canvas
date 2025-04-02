@@ -186,15 +186,6 @@ mockExpressionBuilder.mockImplementation((props) => {
 	return <ExpressionBuilderComp {...props} />;
 });
 
-beforeAll(() => {
-	// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
-	Element.prototype.getBoundingClientRect = jest.fn()
-		.mockReturnValue({
-			height: 1000, // This is used to measure the panel height
-			width: 1000
-		});
-});
-
 describe("expression-control renders correctly", () => {
 	it("props should have been defined", () => {
 		renderWithIntl(
