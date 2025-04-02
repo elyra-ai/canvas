@@ -28,8 +28,13 @@ class ImageAction extends React.Component {
 		};
 		this.applyAction = this.applyAction.bind(this);
 		this.renderIcon = this.renderIcon.bind(this);
-		this.height = "";
-		this.width = "";
+
+		this.imageDimensions = this.props.action?.image?.size
+			? {
+				height: `${this.props.action.image.size.height}px`,
+				width: `${this.props.action.image.size.width}px`
+			}
+			: {};
 	}
 
 	applyAction() {
@@ -47,8 +52,7 @@ class ImageAction extends React.Component {
 		const icon = (<img
 			src={this.props.action.image.url}
 			aria-label={this.props.action.name}
-			height={this.height}
-			width={this.width}
+			{...this.imageDimensions}
 		/>);
 		return icon;
 	}
@@ -60,29 +64,20 @@ class ImageAction extends React.Component {
 		const className = classNames("properties-action-image", { "left": this.props.action.image.placement === "left" },
 			{ "right": this.props.action.image.placement === "right" }, { "hide": this.props.state === STATES.HIDDEN },
 			{ "disabled": disabled }, customClassName);
-		if (this.props.action.image.size) {
-			this.height = this.props.action.image.size.height + "px";
-			this.width = this.props.action.image.size.width + "px";
-		}
 
 		const image = (
-			<div
-				style={{
-					width: this.width,
-					height: this.height
-				}}
-			>
-				<Button
-					// Use description to hide carbon tooltip
-					hasIconOnly={Boolean(this.props.action.description?.text)}
-					renderIcon={this.renderIcon}
-					className="properties-action-image-button"
-					onClick={this.applyAction}
-					kind="ghost"
-					iconDescription={this.props.action?.description?.text}
-					autoAlign
-				/>
-			</div>
+			<Button
+				// Ensures the button is treated as icon-only when a description is present,
+				// preventing an empty tooltip from appearing.
+				hasIconOnly={Boolean(this.props.action.description?.text)}
+				renderIcon={this.renderIcon}
+				className="properties-action-image-button"
+				onClick={this.applyAction}
+				kind="ghost"
+				iconDescription={this.props.action?.description?.text} // Text to appear in Tooltip
+				autoAlign
+				style={this.imageDimensions}
+			/>
 		);
 
 
