@@ -363,7 +363,7 @@ export default class CanvasController {
 	// which case it will be the ID of the pipeline at the level in the
 	// supernode hierarchy that is currently on display.
 	getCurrentPipelineId() {
-		return this.objectModel.getCurrentBreadcrumb().pipelineId;
+		return this.objectModel.getCurrentPipelineId();
 	}
 
 	// Returns truty if the pipeline is external (that is it is part of an
@@ -1033,7 +1033,7 @@ export default class CanvasController {
 	// nodeIds - An array of node Ids
 	// pipelineId - The ID of the pipeline where the nodes exist
 	getBranchNodes(nodeIds, pipelineId) {
-		const pId = pipelineId ? pipelineId : this.objectModel.getCurrentPipelineId();
+		const pId = pipelineId ? pipelineId : this.getCurrentPipelineId();
 		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_BRANCH);
 	}
 
@@ -1042,7 +1042,7 @@ export default class CanvasController {
 	// nodeIds - An array of node Ids
 	// pipelineId - The ID of the pipeline where the nodes exist
 	getUpstreamNodes(nodeIds, pipelineId) {
-		const pId = pipelineId ? pipelineId : this.objectModel.getCurrentPipelineId();
+		const pId = pipelineId ? pipelineId : this.getCurrentPipelineId();
 		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_UPSTREAM);
 	}
 
@@ -1051,7 +1051,7 @@ export default class CanvasController {
 	// nodeIds - An array of node Ids
 	// pipelineId - The ID of the pipeline where the nodes exist
 	getDownstreamNodes(nodeIds, pipelineId) {
-		const pId = pipelineId ? pipelineId : this.objectModel.getCurrentPipelineId();
+		const pId = pipelineId ? pipelineId : this.getCurrentPipelineId();
 		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_DOWNSTREAM);
 	}
 
@@ -2403,7 +2403,8 @@ export default class CanvasController {
 		this.editActionHandler({
 			editType: action,
 			editSource: "toolbar",
-			pipelineId: this.objectModel.getSelectedPipelineId() });
+			pipelineId: this.objectModel.getSelectedPipelineId()
+		});
 	}
 
 	keyboardActionHandler(action, mousePos) {
@@ -2413,7 +2414,8 @@ export default class CanvasController {
 			editType: action,
 			editSource: "keyboard",
 			pipelineId: this.objectModel.getSelectedPipelineId(),
-			mousePos: mousePos });
+			mousePos: mousePos
+		});
 	}
 
 	clickActionHandler(source) {
@@ -2441,6 +2443,7 @@ export default class CanvasController {
 		let data = CanvasUtils.removeNullProperties(cmndData);
 		data.selectedObjectIds = this.getSelectedObjectIds();
 		data.selectedObjects = this.getSelectedObjects();
+		data.pipelineId = data.pipelineId || this.getCurrentPipelineId();
 
 		// Generate a dummy external URL when an external sub-flow is being
 		// created.
@@ -2618,26 +2621,30 @@ export default class CanvasController {
 				break;
 			}
 			case "createComment": {
+				data.pos = data.mousePos;
 				command = new CreateCommentAction(data, this);
 				this.commandStack.do(command);
+				data = command.getData();
 				break;
 			}
 			case "createWYSIWYGComment": {
+				data.pos = data.mousePos;
 				data.contentType = WYSIWYG;
 				data.formats = [];
 				command = new CreateCommentAction(data, this);
+				data = command.getData();
 				this.commandStack.do(command);
 				break;
 			}
 			case "createAutoComment": {
-				data.mousePos = this.getNewCommentPosition(data.pipelineId);
+				data.pos = this.getNewCommentPosition(data.pipelineId);
 				command = new CreateCommentAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "createAutoWYSIWYGComment": {
-				data.mousePos = this.getNewCommentPosition(data.pipelineId);
+				data.pos = this.getNewCommentPosition(data.pipelineId);
 				data.contentType = WYSIWYG;
 				data.formats = [];
 				command = new CreateCommentAction(data, this);

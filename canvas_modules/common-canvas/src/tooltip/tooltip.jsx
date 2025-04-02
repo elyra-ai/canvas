@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,7 +141,16 @@ class ToolTip extends React.Component {
 	// (scrollWidth) value is equal to the minimum width the element would require
 	//  in order to fit all the content in the viewport without using a horizontal scrollbar
 	canDisplayFullText(elem) {
-		const triggerElem = this.props.truncatedRef ? this.props.truncatedRef : elem;
+		let triggerElem = elem;
+		if (this.props.truncatedRef) {
+			if (this.props.truncatedRef.current) {
+				// Textfield controls within a table will not get rendered until after the table is rendered.
+				// The ref passed in initially will be undefined so do not access current until it is available.
+				triggerElem = this.props.truncatedRef.current;
+			} else {
+				triggerElem = this.props.truncatedRef;
+			}
+		}
 		if (triggerElem) {
 			const fullWidth = triggerElem.firstChild && triggerElem.firstChild.scrollWidth && triggerElem.firstChild.scrollWidth !== 0 ? triggerElem.firstChild.scrollWidth
 				: triggerElem.scrollWidth;

@@ -254,7 +254,8 @@ CommonProperties.propTypes = {
 		convertValueDataTypes: PropTypes.bool,
 		showRequiredIndicator: PropTypes.bool,
 		showAlertsTab: PropTypes.bool,
-		locale: PropTypes.string
+		locale: PropTypes.string,
+		enableTanstackTable: PropTypes.bool
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
@@ -296,7 +297,8 @@ CommonProperties.defaultProps = {
 		convertValueDataTypes: false,
 		showRequiredIndicator: true,
 		showAlertsTab: true,
-		locale: DEFAULT_LOCALE
+		locale: DEFAULT_LOCALE,
+		enableTanstackTable: false
 	},
 	callbacks: {
 	},

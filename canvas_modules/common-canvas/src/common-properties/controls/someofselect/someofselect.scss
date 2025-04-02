@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,6 @@
 	.properties-ft-container-absolute-noheader tr {
 		border-bottom: 0;
 	}
-	.properties-ft-container-absolute-noheader tr:not(.disabled):hover  {
-		border: 1px solid $button-primary;
-	}
 	&.hide {
 		display: none;
 	}
@@ -34,7 +31,11 @@
 			border: 1px solid $support-warning;
 		}
 	}
-	.properties-vt-row-checkbox {
+	.properties-vt-row-checkbox { // TODO remove this when removing react-virtualized
 		margin-right: $spacing-05;
+	}
+
+	tbody.properties-grid-body td.properties-grid-body-row-cell {
+		margin-left: $spacing-04;
 	}
 }

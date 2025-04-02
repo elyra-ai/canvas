@@ -460,7 +460,7 @@ class VirtualizedTable extends React.Component {
 		const defaultTestHeight = 2000; // 2000 is set to accommodate test data "category-selection-data" with all categories expanded
 
 		return (
-			<div className="properties-vt">
+			<div className="properties-vt deprecated">
 				<div className={classNames("properties-vt-autosizer",
 					{ "properties-vt-single-selection": this.props.rowSelection && this.props.rowSelection === ROW_SELECTION.SINGLE,
 						"properties-light-disabled": !this.props.light })}

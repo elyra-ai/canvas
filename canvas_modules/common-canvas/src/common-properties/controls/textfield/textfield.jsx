@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,8 @@ class TextfieldControl extends React.Component {
 			}
 			this.defaultValue = this.props.control.valueDef.defaultValue;
 		}
+
+		this.textInputRef = React.createRef();
 	}
 
 	handleChange(evt) {
@@ -108,32 +110,31 @@ class TextfieldControl extends React.Component {
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
-					ref={(ref) => (this.textInputRef = ref)}
+					ref={this.textInputRef}
 					readOnly={this.props.readOnly}
 				/>
 			);
+
+			if (this.props.tableControl) {
+				const tooltipProps = {
+					truncatedRef: this.textInputRef
+				};
+				let disabled = true;
+				if (value && this.props.state !== STATES.DISABLED) {
+					disabled = false;
+				}
+				textInput = (<TruncatedContentTooltip
+					{...tooltipProps}
+					content={textInput}
+					tooltipText={value}
+					disabled={disabled}
+				/>);
+			}
 		}
 
-		let display = textInput;
-		if (this.props.tableControl) {
-			const tooltipProps = {};
-			if (this.textInputRef) {
-				tooltipProps.truncatedRef = this.textInputRef;
-			}
-			let disabled = true;
-			if (value && this.props.state !== STATES.DISABLED) {
-				disabled = false;
-			}
-			display = (<TruncatedContentTooltip
-				{...tooltipProps}
-				content={textInput}
-				tooltipText={value}
-				disabled={disabled}
-			/>);
-		}
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				{display}
+				{textInput}
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);

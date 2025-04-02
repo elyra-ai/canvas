@@ -712,7 +712,7 @@ describe("ObjectModel API handle model OK", () => {
 		});
 
 		const commentData = {
-			"mousePos": {
+			"pos": {
 				"x": 100,
 				"y": 100
 			},
@@ -779,7 +779,7 @@ describe("ObjectModel API handle model OK", () => {
 
 		// add a comment
 		const commentData = {
-			"mousePos": {
+			"pos": {
 				"x": 100,
 				"y": 100
 			},
