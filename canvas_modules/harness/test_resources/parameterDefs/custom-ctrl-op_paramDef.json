@@ -22,7 +22,8 @@
         ]
       ]
     ],
-    "custom_op_num": 0
+    "custom_op_num": 0,
+    "custom_flexible_table": []
   },
   "parameters": [
     {
@@ -53,6 +54,10 @@
       "id": "keyProperties",
       "type": "array[keySubProperties]",
       "default": []
+    },
+    {
+      "id": "custom_flexible_table",
+      "type": "custom"
     }
   ],
   "complex_types": [
@@ -182,6 +187,18 @@
           "default": "Key"
         },
         "resource_key": "keyPropertiesRKey"
+      },
+      {
+        "parameter_ref": "custom_flexible_table",
+        "description": {
+          "default": "Using FlexibleTable directly instead of defining a complex type parameter. This is an example of row and column virtualization.",
+          "placement": "on_panel"
+        },
+        "label": {
+          "default": "Flexible Table"
+        },
+        "control": "custom",
+        "custom_control_id": "harness-custom-flexible-table-control"
       }
     ],
     "complex_type_info": [
@@ -298,6 +315,16 @@
           "custom_op_num",
           "checkbox",
           "keyProperties"
+        ]
+      },
+      {
+        "id": "custom-flexible-table",
+        "label": {
+          "default": "Custom Flexible Table"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "custom_flexible_table"
         ]
       }
     ]

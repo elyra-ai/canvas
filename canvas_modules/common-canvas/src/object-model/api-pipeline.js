@@ -1052,8 +1052,8 @@ export default class APIPipeline {
 			content: "",
 			height: 42,
 			width: 175,
-			x_pos: source.mousePos.x,
-			y_pos: source.mousePos.y,
+			x_pos: source.pos.x,
+			y_pos: source.pos.y,
 			linkIds: [],
 			selectedObjectIds: []
 		};

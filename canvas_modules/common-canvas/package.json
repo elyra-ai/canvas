@@ -36,6 +36,8 @@
     "@codemirror/state": "^6.4.1",
     "@codemirror/view": "^6.28.6",
     "@elyra/pipeline-schemas": "^3.0.96",
+    "@tanstack/react-table": "^8.21.2",
+    "@tanstack/react-virtual": "^3.13.6",
     "codemirror": "^6.0.1",
     "d3": "7.9.0",
     "dagre": "^0.8.5",

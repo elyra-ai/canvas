@@ -424,7 +424,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				{
 					key: "addColumn",
 					label: formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN),
-					width: "50px",
+					width: "60px",
 					staticWidth: true
 				},
 				{
@@ -437,7 +437,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				{
 					key: "addColumn",
 					label: formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN),
-					width: "50px",
+					width: "60px",
 					staticWidth: true
 				},
 				{
@@ -501,6 +501,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				{fieldCategory}
 				<div className="properties-field-table-container expression-builder-table" >
 					<FlexibleTable
+						enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
 						columns={fieldHeaders}
 						data={tableData}
 						sortable={sortable}
@@ -519,6 +520,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				</div>
 				<div className="properties-value-table-container expression-builder-table" >
 					<FlexibleTable
+						enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
 						columns={valueHeader}
 						data={valuesTableData}
 						sortable={["values"]}
@@ -669,7 +671,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		const addNewColumn = formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_ADD_COLUMN);
 
-		headers.push({ key: "addColumn", label: addNewColumn, width: "50px", staticWidth: true });
+		headers.push({ key: "addColumn", label: addNewColumn, width: "60px", staticWidth: true });
 		headers.push({ key: "function", label: functionColumn, width: 50, resizable: true });
 		headers.push({ key: "return", label: returnColumn, width: 30 });
 		const table = this._buildFunctionTable(this.state.functionCategory);
@@ -689,6 +691,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				<div className="properties-functions-table-container expression-builder-table">
 					<div className="properties-functions-table" >
 						<FlexibleTable
+							enableTanstackTable={this.props.controller.getPropertiesConfig().enableTanstackTable}
 							columns={headers}
 							data={data}
 							sortable={["function", "return"]}
