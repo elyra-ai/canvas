@@ -77,6 +77,7 @@ class ImageAction extends React.Component {
 				iconDescription={this.props.action?.description?.text} // Text to appear in Tooltip
 				autoAlign
 				style={this.imageDimensions}
+				disabled={disabled}
 			/>
 		);
 
