@@ -566,7 +566,7 @@ export interface CanvasConfig {
    */
   paletteInitialState?: boolean;
   enableKeyboardNavigation?: boolean;
-  enableParentClass?: string;
+  enableParentClass?: ClassName;
   enableImageDisplay?: "SVGInline" | "LoadSVGToDefs" | "SVGAsImage";
   enableLeftFlyoutUnderToolbar?: boolean;
 }
