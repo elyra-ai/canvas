@@ -163,10 +163,11 @@ export type PipelineFlowId = string;
  */
 export type ViewportCoordVal = number;
 
-/** A distance measured within the viewport coordinate system used for
- * offsets, movement amounts or widths and heights.
+/** A percentage distance of either the viewport's width or height
+ * measured from the viewport's origin which is the top-left corner
+ * of the flow editor panel.
  */
-export type ViewportDistance = number;
+export type ViewportPercent = number;
 
 /** A value that specifies a distance, in either the X or Y direction, to
  * identify the relative position of an object within the canvas coordinate
@@ -433,6 +434,8 @@ export declare class CanvasController {
      * and setLinkStyle methods for details on setting styles.
      * @param temporary - boolean that indicates whether temporary or permanent
      *                    styles should be removed.
+     * @deprecated - its is recommended to use a class applied to the node,
+     * link or comment along with associated CSS instead of using styles.
      */
     removeAllStyles(temporary: boolean): void;
 
@@ -440,6 +443,8 @@ export declare class CanvasController {
      * Specifies the new styles for objects that are not highlighted during
      * branch highlighting.
      * @param newStyle - is a style specification object
+     * @deprecated - its is recommended to use a class applied to the node,
+     * link or comment along with associated CSS instead of using styles.
      */
     setSubdueStyle(newStyle: StyleSpec): void;
 
@@ -825,7 +830,8 @@ export declare class CanvasController {
     /**
      * Sets the style of the objects specified by pipelineObjectIds to be
      * the newStyle which will be either temporary or permanent.
-     * @deprecated Use classes to style objects instead of style specs.
+     * @deprecated - its is recommended to use a class applied to the node,
+     * link or comment along with associated CSS instead of using styles.
      *
      * @param pipelineObjectIds: This identified the objects to be styles. It is a
      * javascript object like this:
@@ -855,7 +861,8 @@ export declare class CanvasController {
 
     /**
      * Sets the styles of multiple objects at once.
-     * @deprecated Use classes to style objects instead of style specs.
+     * @deprecated - its is recommended to use a class applied to the node,
+     * link or comment along with associated CSS instead of using styles.
      *
      * @param pipelineObjStyles - Specified the objects and the styles each should be
      * set to. It is a javascript array like this:
@@ -1277,6 +1284,8 @@ export declare class CanvasController {
      * @param pipelineId - Optional. The ID of the pipeline of the node.
      *                     Defaults to the currently displayed pipeline.
      * @returns A style specification.
+     * @deprecated - its is recommended to use a class applied to the node
+     * along with associated CSS instead of using styles.
      */
     getNodeStyle(
       nodeId: CanvasNodeId,
@@ -1512,6 +1521,8 @@ export declare class CanvasController {
      * @param pipelineId - Optional. The ID of the pipeline of the comment.
      *                     Defaults to the currently displayed pipeline.
      * @returns A style specification.
+     * @deprecated - its is recommended to use a class applied to the comment
+     * along with associated CSS instead of using styles.
      */
     getCommentStyle(
       commentId: CanvasCommentId,
@@ -1803,6 +1814,8 @@ export declare class CanvasController {
      * @param newStyle - This is a style specification.
      * @param temporary - A boolean to indicate if the style is serialized when
      *                    getPipelineFlow() method is called or not.
+     * @deprecated - its is recommended to use a class applied to the link
+     * along with associated CSS instead of using styles.
      */
     setLinksStyle(
       pipelineLinkIds: Record<PipelineId, CanvasLinkId[]>,
@@ -1821,6 +1834,8 @@ export declare class CanvasController {
      *   ]
      * @param temporary - A boolean to indicate if the styles are serialized when
      *             getPipelineFlow() method is called or not.
+     * @deprecated - its is recommended to use a class applied to the links
+     * along with associated CSS instead of using styles.
      */
     setLinksMultiStyle(
       pipelineObjStyles: PipelineObjectStyle[],
@@ -1848,6 +1863,8 @@ export declare class CanvasController {
      * @param pipelineId - Optional. The ID of the pipeline of the link.
      *                     Defaults to the currently displayed pipeline.
      * @returns The style specification for the link.
+     * @deprecated - its is recommended to use a class applied to the link
+     * along with associated CSS instead of using styles.
      */
     getLinkStyle(
       linkId: CanvasLinkId,
@@ -2254,7 +2271,7 @@ export declare class CanvasController {
 
     /**
      * Changes the zoom amounts for the canvas. This method does not alter the
-     * pipelineFlow document. zoomObject is an object with three fields:
+     * pipelineFlow document.
      * @param zoomObject - A zoom object
      */
     zoomTo(
@@ -2304,8 +2321,8 @@ export declare class CanvasController {
      */
     getZoomToReveal(
       objectIds: CanvasNodeOrCommentId[],
-      xPos?: ViewportDistance,
-      yPos?: ViewportDistance
+      xPos?: ViewportPercent,
+      yPos?: ViewportPercent
     ): ZoomObjectDef | null;
 
     /**

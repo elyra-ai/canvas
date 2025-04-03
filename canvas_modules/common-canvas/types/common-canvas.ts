@@ -123,7 +123,7 @@ export {
   CanvasObjectId,
   PipelineFlowId,
   ViewportCoordVal,
-  ViewportDistance,
+  ViewportPercent,
   CanvasCoordVal,
   CanvasDistance,
   ScaleVal,
