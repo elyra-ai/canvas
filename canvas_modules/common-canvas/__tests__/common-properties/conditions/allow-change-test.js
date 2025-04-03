@@ -20,6 +20,7 @@ import { expect } from "chai";
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 import { fireEvent } from "@testing-library/react";
 
+
 describe("Condition allow_change test cases", () => {
 	let wrapper;
 	let controller;
