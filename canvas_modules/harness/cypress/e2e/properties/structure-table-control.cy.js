@@ -48,6 +48,6 @@ describe("Test the feature to have tables use the available vertical space", fun
 
 	it("Test the feature to have tables use the available vertical space", function() {
 		cy.openSubPanel("MSE Structure Table");
-		cy.verifyHeightOfTable("ST_mse_table", "475.1350402832031px");
+		cy.verifyHeightOfTable("ST_mse_table", "539px");
 	});
 });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -197,7 +197,7 @@ Cypress.Commands.add("getSummaryFromName", (summaryName) => {
 Cypress.Commands.add("selectRowInTable", (rowNumber, propertyId) => {
 	//  Select the row 1 in the table "expressionCellTable"
 	cy.get(`div[data-id='properties-${propertyId}']`)
-		.find("div[data-role='properties-data-row']")
+		.find("tr[data-role='properties-data-row']")
 		.eq(rowNumber - 1)
 		.click();
 });
@@ -262,9 +262,9 @@ Cypress.Commands.add("selectFieldInFieldPickerPanel", (fieldName, dataType, pane
 	/* eslint cypress/unsafe-to-chain-command: "off" */
 	let rowNumber;
 	cy.getWideFlyoutPanel(panelName)
-		.find("div[data-role='properties-data-row']")
+		.find("tr[data-role='properties-data-row']")
 		.each(($el, index) => {
-			if ($el[0].childNodes[1].textContent === fieldName) {
+			if ($el[0].childNodes[2].textContent === fieldName) {
 				rowNumber = index;
 				return false;
 			}

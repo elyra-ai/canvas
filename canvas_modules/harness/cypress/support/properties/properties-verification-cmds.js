@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -220,7 +220,7 @@ Cypress.Commands.add("verifyIconInSubPanel", (iconName) => {
 
 Cypress.Commands.add("verifyRowInSelectColumnsTable", (propertyId, fieldName, rowNumber) => {
 	cy.get(`div[data-id='properties-ft-${propertyId}']`)
-		.find("div[data-role='properties-data-row']")
+		.find("tr[data-role='properties-data-row']")
 		.eq(rowNumber - 1)
 		.find(".properties-readonly")
 		.should("have.text", fieldName);
@@ -232,7 +232,7 @@ Cypress.Commands.add("verifyFieldIsSelectedInFieldPickerPanel", (fieldName, data
 	/* eslint cypress/unsafe-to-chain-command: "off" */
 	let rowNumber;
 	cy.getWideFlyoutPanel(panelName)
-		.find("div[data-role='properties-data-row']")
+		.find("tr[data-role='properties-data-row']")
 		.each(($el, index) => {
 			if ($el[0].childNodes[1].textContent === fieldName) {
 				rowNumber = index;
@@ -270,7 +270,6 @@ Cypress.Commands.add("verifyFieldsInTable", (propertyId, fields, rowNumber, colu
 Cypress.Commands.add("verifyHeightOfTable", (propertyId, height) => {
 	cy.get(`div[data-id='properties-ft-${propertyId}']`)
 		.find(".properties-ft-container-wrapper")
-		.find("div[role='rowgroup']")
 		.invoke("css", "height")
 		.then((cssValue) => {
 			cy.verifyPixelValueInCompareRange(height, cssValue);
