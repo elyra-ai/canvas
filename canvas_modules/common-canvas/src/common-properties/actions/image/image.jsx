@@ -67,9 +67,7 @@ class ImageAction extends React.Component {
 
 		const image = (
 			<Button
-				// Ensures the button is treated as icon-only when a description is present,
-				// preventing an empty tooltip from appearing.
-				hasIconOnly={Boolean(this.props.action.description?.text)}
+				data-id={this.props.action.name}
 				renderIcon={this.renderIcon}
 				className="properties-action-image-button"
 				onClick={this.applyAction}
@@ -78,6 +76,9 @@ class ImageAction extends React.Component {
 				autoAlign
 				style={this.imageDimensions}
 				disabled={disabled}
+				// Ensures the button is treated as icon-only when a description is present,
+				// preventing an empty tooltip from appearing.
+				hasIconOnly={Boolean(this.props.action.description?.text)}
 			/>
 		);
 
