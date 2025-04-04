@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,10 +98,10 @@ describe("Test if tips show up in table headers correctly", function() {
 	it("Test if tips show when simple header has ellipsis", function() {
 		cy.toggleCategory("Table");
 		cy.openSubPanel("Configure Rename fields");
-		cy.get(".properties-wf-children div[data-id='properties-vt-header-field']")
+		cy.get(".properties-wf-children th[data-id='properties-vt-header-field']")
 			.trigger("mouseover");
 		cy.verifyTip(null, "hidden", "Input name");
-		cy.get(".properties-wf-children div[data-id='properties-vt-header-new_name']")
+		cy.get(".properties-wf-children th[data-id='properties-vt-header-new_name']")
 			.trigger("mouseover");
 		cy.verifyTip(null, "visible", "Output name");
 		cy.saveWideFlyout("Configure Rename fields");
@@ -110,7 +110,7 @@ describe("Test if tips show up in table headers correctly", function() {
 	it("Test if tips show when checkbox in header has ellipsis", function() {
 		cy.toggleCategory("More Tables");
 		cy.openSubPanel("Configure Dummy Types");
-		cy.get(".properties-wf-children div[data-id='properties-vt-header-override']")
+		cy.get(".properties-wf-children th[data-id='properties-vt-header-override']")
 			.trigger("mouseover");
 		cy.verifyTip(null, "visible", "Override");
 		cy.saveWideFlyout("Configure Dummy Types");

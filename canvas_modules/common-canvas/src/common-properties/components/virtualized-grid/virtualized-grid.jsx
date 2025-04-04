@@ -20,7 +20,6 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
-import { v4 as uuid4 } from "uuid";
 import { isEmpty, includes } from "lodash";
 import { Checkbox, Toggletip, ToggletipButton, ToggletipContent } from "@carbon/react";
 import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
@@ -42,7 +41,6 @@ const VirtualizedGrid = (props) => {
 	const [mouseEventCalled, setMouseEventCalledState] = useState(false);
 	const [keyBoardEventCalled, setKeyBoardEventCalledState] = useState(false);
 	const [lastChecked, setLastCheckedState] = useState(isEmpty(props.rowsSelected) ? null : props.rowsSelected.slice(-1).pop());
-	const uuid = uuid4();
 
 	const parentRef = useRef(null);
 	const rowVirtualizer = useVirtualizer({
@@ -165,7 +163,7 @@ const VirtualizedGrid = (props) => {
 		const checkbox = props.selectable && props.rowSelection !== ROW_SELECTION.SINGLE
 			? (<th className="properties-vt-column properties-vt-header-checkbox">
 				<Checkbox
-					id={`properties-vt-hd-cb-${uuid}-${props.scrollKey}`}
+					id={`properties-vt-hd-cb-${props.scrollKey}`}
 					onChange={setAllRowsSelected}
 					checked={props.checkedAll}
 					labelText={translatedHeaderCheckboxLabel}
@@ -203,7 +201,7 @@ const VirtualizedGrid = (props) => {
 				}}
 			>
 				<Checkbox
-					id={`properties-vt-row-cb-${uuid}-${props.scrollKey}-${rowIndex}`}
+					id={`properties-vt-row-cb-${props.scrollKey}-${rowIndex}`}
 					key={`properties-vt-row-cb-${props.scrollKey}-${rowIndex}`}
 					labelText={translatedRowCheckboxLabel}
 					hideLabel

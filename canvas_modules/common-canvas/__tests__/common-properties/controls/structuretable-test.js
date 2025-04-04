@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -423,17 +423,18 @@ describe("structuretable control renders correctly", () => {
 		expect(header).to.have.length(1);
 
 		const columns = header[0].querySelectorAll(".properties-vt-column");
-		expect(columns).to.have.length(7);
+		expect(columns).to.have.length(8);
 
-		expect(columns[0].querySelectorAll(".tooltip-container")).to.have.length(1);
+		expect(columns[0].querySelectorAll("input")).to.have.length(1); // checkbox
 		expect(columns[1].querySelectorAll(".tooltip-container")).to.have.length(1);
-		expect(columns[2].querySelectorAll(".tooltip-container")).to.have.length(2);
-		expect(columns[2].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
+		expect(columns[2].querySelectorAll(".tooltip-container")).to.have.length(1);
 		expect(columns[3].querySelectorAll(".tooltip-container")).to.have.length(1);
-		expect(columns[4].querySelectorAll(".tooltip-container")).to.have.length(2);
-		expect(columns[4].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
-		expect(columns[5].querySelectorAll(".tooltip-container")).to.have.length(2);
+		expect(columns[3].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
+		expect(columns[4].querySelectorAll(".tooltip-container")).to.have.length(1);
+		expect(columns[5].querySelectorAll(".tooltip-container")).to.have.length(1);
 		expect(columns[5].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
+		expect(columns[6].querySelectorAll(".tooltip-container")).to.have.length(1);
+		expect(columns[6].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
 	});
 
 	it("should select add columns button and field picker should display", () => {
@@ -661,7 +662,7 @@ describe("structuretable control with readonly numbered column renders correctly
 			</Provider>
 		);
 		const tableHeader = tableUtilsRTL.getTableHeaderRows(wrapper.container);
-		const fieldHeaderColumn = tableHeader[0].querySelector("div[aria-label='Field']");
+		const fieldHeaderColumn = tableHeader[0].querySelector("th[aria-label='Field']");
 		// click on the column header to trigger the onClick sort
 		fireEvent.click(fieldHeaderColumn);
 		var tableRows = controller.getPropertyValue(propertyIdReadonlyControl);
@@ -877,8 +878,8 @@ describe("structuretable multiselect edit works", () => {
 });
 
 describe("structuretable multiselect edit works incrementally", () => {
-	const HEADER_CHECKBOX_SELECT_ALL = "div[data-role='properties-header-row'] div.properties-vt-header-checkbox input[type='checkbox']";
-	const SELECT_ALL_ROWS = "div[data-role='properties-data-row'] div.properties-vt-row-checkbox input[type='checkbox']";
+	const HEADER_CHECKBOX_SELECT_ALL = "th.properties-vt-header-checkbox input[type='checkbox']";
+	const SELECT_ALL_ROWS = "tr[data-role='properties-data-row'] td.properties-vt-row-checkbox input[type='checkbox']";
 	let wrapper;
 	let renderedController;
 	beforeEach(() => {
@@ -886,8 +887,8 @@ describe("structuretable multiselect edit works incrementally", () => {
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});
-	// HEADER_CHECKBOX_SELECT_ALL can't be found
-	it.skip("structuretable multiselect edit works incrementally", () => {
+
+	it("structuretable multiselect edit works incrementally", () => {
 		const { container } = wrapper;
 		// Open mse Summary Panel in structuretableParamDef
 		propertyUtilsRTL.openSummaryPanel(wrapper, "ST_mse_table_II-summary-panel");
@@ -905,7 +906,6 @@ describe("structuretable multiselect edit works incrementally", () => {
 		fireEvent.click(editButton);
 
 		// A new panel opens which shows editable columns
-		let wideFlyoutPanel = container.querySelector(".properties-wf-children");
 		let dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-dummy_entry_sport_name']").querySelector(".properties-dropdown");
 		let dropdownButton = dropdownWrapper.querySelector("button");
 		fireEvent.click(dropdownButton);
@@ -915,7 +915,7 @@ describe("structuretable multiselect edit works incrementally", () => {
 		expect(dropdownList[3].textContent).to.equal("Baseball");
 		fireEvent.click(dropdownList[3]);
 
-		// Save wide flyout
+		// Save wide flyout, this will close both subpanel and wide flout
 		fireEvent.click(container.querySelector(".properties-modal-buttons").querySelectorAll("button.properties-apply-button")[0]);
 
 		// verify selected rows have "Baseball" selected in Sports column
@@ -927,10 +927,13 @@ describe("structuretable multiselect edit works incrementally", () => {
 			expect(rowValues[row][2]).to.not.equal("Baseball");
 		}
 
-		// Select all rows using header shortcut
-		fireEvent.click(container.querySelector(HEADER_CHECKBOX_SELECT_ALL));
+		// Open mse Summary Panel in structuretableParamDef again since it was closed
+		propertyUtilsRTL.openSummaryPanel(wrapper, "ST_mse_table_II-summary-panel");
 
+		// Select all rows using header shortcut
 		const headerCheckbox = container.querySelector(HEADER_CHECKBOX_SELECT_ALL);
+		fireEvent.click(headerCheckbox);
+
 		expect(headerCheckbox.checked).to.be.true;
 		for (const row of [0, 1, 2, 3]) {
 			const rowCheckbox = container.querySelectorAll(SELECT_ALL_ROWS)[row];
@@ -942,8 +945,7 @@ describe("structuretable multiselect edit works incrementally", () => {
 		editButton = tableToolbar.querySelector("button.properties-action-multi-select-edit");
 		fireEvent.click(editButton);
 
-		wideFlyoutPanel = container.querySelector(".properties-wf-children");
-		dropdownWrapper = wideFlyoutPanel.querySelector("div[data-id='properties-ctrl-dummy_entry_sport_name']").querySelector(".properties-dropdown");
+		dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-dummy_entry_sport_name']").querySelector(".properties-dropdown");
 		dropdownButton = dropdownWrapper.querySelector("button");
 		fireEvent.click(dropdownButton);
 		dropdownList = container.querySelectorAll("li.cds--list-box__menu-item");
@@ -975,7 +977,7 @@ describe("structuretable control displays with checkbox header", () => {
 	});
 
 	it("should display header with checkbox", () => {
-		const tableCheckboxHeader = wrapper.container.querySelectorAll("div[data-id='properties-vt-header-exclude'] input"); // find the table header
+		const tableCheckboxHeader = wrapper.container.querySelectorAll("th[data-id='properties-vt-header-exclude'] input"); // find the table header
 		expect(tableCheckboxHeader).to.have.length(1);
 		expect(tableCheckboxHeader[0].type).to.equal("checkbox");
 	});
@@ -989,7 +991,7 @@ describe("structuretable control displays with checkbox header", () => {
 		expect(columnValues[2][2]).to.be.equal(false);
 
 		// set the column header checkbox to true
-		tableUtilsRTL.selectHeaderColumnCheckbox(wrapper.container, 2, true);
+		tableUtilsRTL.selectHeaderColumnCheckbox(wrapper.container, 3, true); // Exclude col
 		columnValues = renderedController.getPropertyValue(colPropertyId);
 		expect(columnValues[0][2]).to.be.equal(true);
 		expect(columnValues[1][2]).to.be.equal(true);
@@ -1004,7 +1006,7 @@ describe("structuretable control displays with checkbox header", () => {
 		expect(columnValues[1][2]).to.be.equal(true);
 		expect(columnValues[2][2]).to.be.equal(false);
 		// set the column header checkbox to false
-		tableUtilsRTL.selectHeaderColumnCheckbox(wrapper.container, 2, false);
+		tableUtilsRTL.selectHeaderColumnCheckbox(wrapper.container, 3, false); // Exclude col
 		// validate all rows checkboxes are false
 		columnValues = renderedController.getPropertyValue(colPropertyId);
 		expect(columnValues[0][2]).to.be.equal(false);
@@ -1027,7 +1029,7 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 	});
 
 	it("should display header with checkbox", () => {
-		const tableCheckboxHeader = wrapper.container.querySelectorAll("div[data-id='properties-vt-header-mean'] input"); // find the table header checkbox
+		const tableCheckboxHeader = wrapper.container.querySelectorAll("th[data-id='properties-vt-header-mean'] input"); // find the table header checkbox
 		expect(tableCheckboxHeader).to.have.length(1);
 		expect(tableCheckboxHeader[0].type).to.equal("checkbox");
 	});
@@ -1041,7 +1043,7 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		expect(columnValues[1][1]).to.be.equal(false);
 		expect(columnValues[2][1]).to.be.equal(false);
 		// set the column header checkbox to true
-		tableUtilsRTL.selectHeaderColumnCheckbox(wrapper.container, 1, true);
+		tableUtilsRTL.selectHeaderColumnCheckbox(wrapper.container, 2, true); // Sum
 		// validate all rows checkboxes are true
 		columnValues = renderedController.getPropertyValue(colPropertyId);
 		// the header should not have changed the state of the disabled checkbox
@@ -1059,7 +1061,7 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		expect(columnValues[1][5]).to.be.equal(false);
 		expect(columnValues[2][5]).to.be.equal(true);
 		// set the column header checkbox to false-
-		const tableCheckboxHeader = wrapper.container.querySelector("div[data-id='properties-vt-header-sdev'] input"); // find the table header checkbox
+		const tableCheckboxHeader = wrapper.container.querySelector("th[data-id='properties-vt-header-sdev'] input"); // find the table header checkbox
 		tableCheckboxHeader.setAttribute("checked", false);
 		fireEvent.click(tableCheckboxHeader);
 		// validate that the header has set all checkboxes to false
@@ -1080,11 +1082,11 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		expect(columnValues[2][1]).to.be.equal(false);
 
 		const tableCheckboxHeader = tableUtilsRTL.getTableHeaderRows(container)[0]
-			.querySelectorAll(".properties-vt-column")[1]
+			.querySelectorAll(".properties-vt-column")[2] // Sum
 			.querySelector("input");
 		expect(tableCheckboxHeader.checked).to.be.equal(false);
 		// set the column header checkbox to true
-		tableUtilsRTL.selectHeaderColumnCheckbox(container, 1, false);
+		tableUtilsRTL.selectHeaderColumnCheckbox(container, 2, false);
 		const colCheckbox1 = container.querySelector("div[data-id='properties-globals_0_1']").querySelector("input[type='checkbox']");
 		colCheckbox1.setAttribute("checked", true);
 		fireEvent.click(colCheckbox1);
@@ -1138,7 +1140,7 @@ describe("structuretable columns sort correctly", () => {
 	});
 	it("should sort column alphabetically ascending and descending", async() => {
 		// click on the column header to trigger the onClick sort
-		const sortableCol = tableHeader[0].querySelectorAll("div[role='columnheader']")[0];
+		const sortableCol = tableHeader[0].querySelectorAll(".properties-vt-column-sortable")[0];
 		fireEvent.click(sortableCol);
 		tableRows = controller.getPropertyValue(propertyId);
 		expect(tableRows[0][0]).to.equal("Age");
@@ -1162,15 +1164,15 @@ describe("structuretable columns resize correctly", () => {
 		const tableWrapper = wrapper.container.querySelectorAll("div[data-id='properties-ci-structuretableResizableColumns']");
 		expect(tableWrapper).to.have.length(1);
 
-		const headerRow = tableWrapper[0].querySelectorAll("div[data-role='properties-header-row']");
+		const headerRow = tableWrapper[0].querySelectorAll("tr[data-role='properties-header-row']");
 		expect(headerRow).to.have.length(1);
 		// Verify 2 columns in header are resizable
 		expect(headerRow[0].querySelectorAll(".properties-vt-header-resize")).to.have.length(2);
 		// Verify "Name" column can be resized
-		const nameColumn = tableWrapper[0].querySelector("div[aria-label='Name']");
+		const nameColumn = tableWrapper[0].querySelector("th[aria-label='Name']");
 		expect(nameColumn.querySelectorAll(".properties-vt-header-resize")).to.have.length(1);
 		// Verify "Type" column can be resized
-		const typeColumn = tableWrapper[0].querySelector("div[aria-label='Type']");
+		const typeColumn = tableWrapper[0].querySelector("th[aria-label='Type']");
 		expect(typeColumn.querySelectorAll(".properties-vt-header-resize")).to.have.length(1);
 	});
 });
@@ -1616,8 +1618,7 @@ describe("structuretable control with nested structure tables", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 	});
 
-	// Cannot locate onPanelTable
-	it.skip("should render a nested structureeditor control, edit onPanel", () => {
+	it("should render a nested structureeditor control, edit onPanel", () => {
 		const { container } = wrapper;
 		let tableData = renderedController.getPropertyValue(propertyIdNestedStructureeditor);
 		const expectedOriginal = structuretableParamDef.current_parameters.nestedStructureeditor;
@@ -1646,14 +1647,15 @@ describe("structuretable control with nested structure tables", () => {
 		// select the second row for onPanel editing
 		summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
 		let table = summaryPanel.querySelector("div[data-id='properties-ci-nestedStructureeditor']");
-		const tableRows = table.querySelectorAll("div[data-role='properties-data-row']");
+		const tableRows = table.querySelectorAll("tr[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(2);
-		// const secondRow = tableRows[1];
-		tableUtilsRTL.selectCheckboxes(table, [1]); // Select second row for onPanel edit
+
+		const secondRowCheckbox = tableRows[1].querySelectorAll(".properties-vt-row-checkbox input")[0];
+		expect(secondRowCheckbox.checked).to.equal(true); // Selected as row gets added
 
 		// Modify some values of the nested structure
 		table = summaryPanel.querySelector("div[data-id='properties-ci-nestedStructureeditor']");
-		const onPanelTable = table.querySelector("div[data-id='properties-ci-userHealthTable']");
+		const onPanelTable = table.querySelectorAll("div[data-id='properties-ci-userHealthTable']")[0];
 
 		const nameInput = onPanelTable.querySelector("div[data-id='properties-ctrl-userName']");
 		fireEvent.change(nameInput.querySelector("input"), { target: { value: "new name" } });

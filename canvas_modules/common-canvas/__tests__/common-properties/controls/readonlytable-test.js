@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -191,8 +191,7 @@ describe("readonlytable control renders correctly", () => {
 		const tables = propertyUtilsRTL.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
 		const table = tables
 			.querySelector("div[data-id='properties-ft-readonlyStructurelistTableControl']")
-			.querySelector(".properties-vt-autosizer")
-			.querySelector(".ReactVirtualized__Table");
+			.querySelector(".properties-autosized-vt");
 		expect(table.getAttribute("aria-label")).to.equal("ReadonlyTable - structurelisteditor");
 	});
 
@@ -200,8 +199,7 @@ describe("readonlytable control renders correctly", () => {
 		const tables = propertyUtilsRTL.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
 		const table = tables
 			.querySelector("div[data-id='properties-ft-readonlyStructurelistTableControl']")
-			.querySelector(".properties-vt-autosizer")
-			.querySelector(".ReactVirtualized__Table");
+			.querySelector(".properties-autosized-vt");
 		const rows = table.querySelectorAll("div[data-role='properties-data-row']");
 		rows.forEach((row) => {
 			expect(row.className.includes("properties-vt-row-non-interactive")).to.equal(true);
