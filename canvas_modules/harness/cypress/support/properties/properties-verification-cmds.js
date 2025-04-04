@@ -234,7 +234,7 @@ Cypress.Commands.add("verifyFieldIsSelectedInFieldPickerPanel", (fieldName, data
 	cy.getWideFlyoutPanel(panelName)
 		.find("tr[data-role='properties-data-row']")
 		.each(($el, index) => {
-			if ($el[0].childNodes[1].textContent === fieldName) {
+			if ($el[0].childNodes[2].textContent === fieldName) {
 				rowNumber = index;
 				return false;
 			}

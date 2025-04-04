@@ -286,6 +286,8 @@ Cypress.Commands.add("selectFieldInFieldPickerPanel", (fieldName, dataType, pane
 					cy.wrap(row)
 						.find(".properties-vt-row-checkbox")
 						.find("label")
+						.trigger("mouseover")
+						.wait(100) // Hover and wait before clicking checkbox, fixes weird behavior in test
 						.click({ force: true });
 				});
 		});
