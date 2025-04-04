@@ -96,8 +96,8 @@ describe("action-image renders correctly", () => {
 		);
 		const { container } = wrapper;
 		const image = container.querySelectorAll("img");
-		expect(image[0].height).to.equal(20);
-		expect(image[0].width).to.equal(25);
+		expect(image[0].getAttribute("height")).to.equal("20px");
+		expect(image[0].getAttribute("width")).to.equal("25px");
 		expect(container.querySelectorAll(".right")).to.have.length(1);
 	});
 	it("should fire action when image clicked", (done) => {
@@ -157,9 +157,9 @@ describe("action-image renders correctly", () => {
 			</Provider>
 		);
 		const tooltip = wrapper.getAllByText("Click to rotate through moon phases.");
-		const tooltipWrapper = tooltip[0].parentElement;
+		const tooltipWrapper = tooltip[0];
 		expect(tooltip).to.have.length(1);
-		expect(tooltipWrapper.className).to.equal("tooltipContainer");
+		expect(tooltipWrapper.className).to.equal("cds--popover-content cds--tooltip-content");
 		expect(tooltip[0].textContent).to.equal("Click to rotate through moon phases.");
 	});
 });
