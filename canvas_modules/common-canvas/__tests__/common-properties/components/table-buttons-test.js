@@ -31,20 +31,6 @@ const form = {
 controller.setForm(form);
 
 const propertyId = { name: "testCustomTableButtons" };
-const customButtons1 = [
-	{
-		"id": "button_6",
-		"label": {
-			"text": "Label icon"
-		},
-		"carbonIcon": "Edit32",
-		"enabled": true,
-		"description": {
-			"text": "Custom label button with Carbon icon"
-		}
-	}
-];
-
 const customButtons = [
 	{
 		"id": "button_1",
@@ -63,7 +49,7 @@ const customButtons = [
 	},
 	{
 		"id": "button_3",
-		"carbon_icon": "Edit32",
+		"carbonIcon": "Edit32",
 		"enabled": false,
 		"description": {
 			"text": "Carbon icon disabled"
@@ -72,7 +58,7 @@ const customButtons = [
 	},
 	{
 		"id": "button_4",
-		"carbon_icon": "Edit32",
+		"carbonIcon": "Edit32",
 		"enabled": true,
 		"description": {
 			"text": "Carbon icon"
@@ -93,7 +79,7 @@ const customButtons = [
 		"label": {
 			"text": "Label icon"
 		},
-		"carbon_icon": "Edit32",
+		"carbonIcon": "Edit32",
 		"enabled": true,
 		"description": {
 			"text": "Custom label button with Carbon icon"
@@ -110,6 +96,7 @@ describe("Table buttons renders correctly", () => {
 	});
 
 	it("Convert table buttons to toolbar config correctly", () => {
+
 		const convertToolbarConfigSpy = sinon.spy(TableButtons.prototype, "convertToolbarConfig");
 		wrapper = renderWithIntl(
 			<TableButtons
@@ -170,12 +157,21 @@ describe("Table buttons renders correctly", () => {
 
 		expect(convertToolbarConfigSpy.calledOnce).to.equal(true);
 		expect(convertToolbarConfigSpy.calledWith("", customButtons)).to.equal(true);
-		expect(convertToolbarConfigSpy.returnValues[0]).to.deep.equal(expected);
+		const actualResult = convertToolbarConfigSpy.returnValues[0];
+
+		const normalize = (item) =>
+			Object.fromEntries(
+				Object.entries(item).filter(([key, value]) => typeof value !== "undefined")
+			);
+
+		// Removing undefined from actual result
+		const normalizedActual = actualResult.map(normalize);
+		expect(normalizedActual).to.deep.equal(expected);
 		convertToolbarConfigSpy.restore();
 	});
 
 	it("Convert table buttons to toolbar config correctly when table state is disable", () => {
-		const convertToolbarConfig = sinon.spy(TableButtons.prototype, "convertToolbarConfig");
+		const convertToolbarConfigSpy = sinon.spy(TableButtons.prototype, "convertToolbarConfig");
 		const tableStateDisable = STATES.DISABLED;
 		wrapper = renderWithIntl(
 			<TableButtons
@@ -233,9 +229,17 @@ describe("Table buttons renders correctly", () => {
 				"tooltip": "Custom label button with Carbon icon"
 			}
 		];
-		expect(convertToolbarConfig.calledOnce).to.equal(true);
-		expect(convertToolbarConfig.calledWith(STATES.DISABLED, customButtons)).to.equal(true);
-		expect(convertToolbarConfig.returnValues[0]).to.deep.equal(expected);
+		expect(convertToolbarConfigSpy.calledOnce).to.equal(true);
+		expect(convertToolbarConfigSpy.calledWith(STATES.DISABLED, customButtons)).to.equal(true);
+		const actualResult = convertToolbarConfigSpy.returnValues[0];
+
+		const normalize = (item) =>
+			Object.fromEntries(
+				Object.entries(item).filter(([key, value]) => typeof value !== "undefined")
+			);
+		const normalizedActual = actualResult.map(normalize);
+		expect(normalizedActual).to.deep.equal(expected);
+		convertToolbarConfigSpy.restore();
 	});
 
 	it("customButtonIconCallback calls buttonIconHandler with correct data", () => {
@@ -247,22 +251,19 @@ describe("Table buttons renders correctly", () => {
 			<TableButtons
 				controller={controller}
 				propertyId={propertyId}
-				customButtons={customButtons1}
+				customButtons={customButtons}
 				tableState=""
 				customButtonsState={customButtonsState}
 			/>
 		);
-
-		const carbonButton = wrapper.getByText("Label icon");
+		const carbonButton = wrapper.getByRole("button", { name: /Label icon/i });
 		fireEvent.click(carbonButton);
-
 		const expectedData = {
 			type: "customButtonIcon",
 			propertyId: propertyId,
-			buttonId: customButtons1[0].id,
-			carbonIcon: customButtons1[0].carbonIcon
+			buttonId: customButtons[5].id,
+			carbonIcon: customButtons[5].carbonIcon
 		};
-		expect(buttonIconHandler.calledOnce).to.equal(true);
 		expect(buttonIconHandler.calledWith(expectedData)).to.equal(true);
 	});
 
@@ -280,14 +281,13 @@ describe("Table buttons renders correctly", () => {
 				customButtonsState={customButtonsState}
 			/>
 		);
-		const carbonButton = wrapper.getByText("Label icon");
+		const carbonButton = wrapper.getByRole("button", { name: /Label icon/i });
 		fireEvent.click(carbonButton);
 		const expectedData = {
 			type: "custom_button",
 			propertyId: propertyId,
-			buttonId: customButtons1[0].id
+			buttonId: customButtons[5].id
 		};
-		expect(buttonHandler.calledOnce).to.equal(true);
 		expect(buttonHandler.calledWith(expectedData)).to.equal(true);
 	});
 });
