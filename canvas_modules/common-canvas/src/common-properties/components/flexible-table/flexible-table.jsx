@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint complexity: ["error", 25] */
+/* eslint complexity: ["error", 26] */
 /* eslint max-depth: ["error", 6] */
 
 import React from "react";
@@ -21,12 +21,16 @@ import { injectIntl } from "react-intl";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { Search, Layer } from "@carbon/react";
-import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
-import { REM_ROW_HEIGHT, REM_HEADER_HEIGHT, ONE_REM_HEIGHT, SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
-import ReactResizeDetector from "react-resize-detector";
 import classNames from "classnames";
 import { has, isEmpty } from "lodash";
+
+import VirtualizedGrid from "./../virtualized-grid/virtualized-grid.jsx";
+import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
+import { REM_ROW_HEIGHT, REM_HEADER_HEIGHT, ONE_REM_HEIGHT, SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
+
+const COLUMN_PADDING_BUFFER = 12;
+const DEFAULT_COL_MIN_WIDTH = 40; // Carbon table standard to display minimum 1 character
 
 class FlexibleTable extends React.Component {
 
@@ -44,8 +48,11 @@ class FlexibleTable extends React.Component {
 			checkedAllRows: false,
 			columnSortDir: sortDirs,
 			currentSortColumn: "",
-			tableWidth: 0,
+			excessWidth: 0,
+			availableWidth: 0, // Space available to render the table
+			tableWidth: 0, // The width of the entire table, sum total of each column's width
 			tableHeight: 0,
+			headerHeight: 0,
 			rows: typeof props.rows !== "undefined" ? props.rows : 5.5,
 			dynamicHeight: null
 		};
@@ -54,26 +61,48 @@ class FlexibleTable extends React.Component {
 		this.rowGetter = this.rowGetter.bind(this);
 
 		this.tableRef = React.createRef();
+		this.flexibleTableHeader = React.createRef();
 
 		this.getOriginalRowIndex = this.getOriginalRowIndex.bind(this);
 		this.getLastChildPropertyIdRow = this.getLastChildPropertyIdRow.bind(this);
 
 		this.calculateColumnWidths = this.calculateColumnWidths.bind(this);
 		this.handleFilterChange = this.handleFilterChange.bind(this);
+		this.onSortVT = this.onSortVT.bind(this);
 		this.onSort = this.onSort.bind(this);
 		this.sortHeaderClick = this.sortHeaderClick.bind(this);
 		this._updateTableWidth = this._updateTableWidth.bind(this);
 		this._updateRows = this._updateRows.bind(this);
 		this._adjustTableHeight = this._adjustTableHeight.bind(this);
+		this.updateHeaderHeight = this.updateHeaderHeight.bind(this);
+		this.updateExcessWidth = this.updateExcessWidth.bind(this);
 		this.handleCheckedRow = this.handleCheckedRow.bind(this);
 		this.handleCheckedAllRows = this.handleCheckedAllRows.bind(this);
 		this.handleCheckedMultipleRows = this.handleCheckedMultipleRows.bind(this);
 	}
 
 	componentDidMount() {
+		this._updateTableWidth(this.tableRef.current.getBoundingClientRect(), this.tableRef.current);
+		this.calculateColumnWidths();
 		this._adjustTableHeight();
-		window.addEventListener("resize", this._adjustTableHeight);
-		this.tableNode = ReactDOM.findDOMNode(this.refs.table);
+
+		this.headerObserver = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				this.updateHeaderHeight(entry.contentRect);
+			}
+		});
+		if (this.flexibleTableHeader.current) {
+			this.headerObserver.observe(this.flexibleTableHeader.current);
+		}
+
+		this.resizeObserver = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				this._updateTableWidth(entry.contentRect, entry.target);
+			}
+		});
+		if (this.tableRef.current) {
+			this.resizeObserver.observe(this.tableRef.current);
+		}
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -82,27 +111,45 @@ class FlexibleTable extends React.Component {
 		}
 
 		if (prevProps.columns !== this.props.columns ||
-			prevProps.noAutoSize !== this.props.noAutoSize) {
+			prevProps.noAutoSize !== this.props.noAutoSize ||
+			prevState.availableWidth !== this.state.availableWidth
+		) {
 			this._adjustTableHeight();
+			this.calculateColumnWidths();
+		}
+
+		if (prevState.tableWidth !== this.state.tableWidth ||
+			prevState.availableWidth !== this.state.availableWidth) {
+			this.updateExcessWidth();
 		}
 
 		// Calculate if checkedAllRows is true
 		if (this.props.selectedRows && !isEmpty(this.props.data)) {
 			this.setCheckedAll(this.props.selectedRows);
 		}
-
-		this.tableNode = ReactDOM.findDOMNode(this.refs.table);
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener("resize", this._adjustTableHeight);
+		this.headerObserver?.disconnect();
+		this.resizeObserver?.disconnect();
 	}
 
-	onSort({ sortBy }) {
+	onSortVT({ sortBy }) {
 		if (this.props.onSort) {
 			const sortDirection = (this.state.columnSortDir[sortBy] === SORT_DIRECTION.ASC) ? SORT_DIRECTION.DESC : SORT_DIRECTION.ASC;
 			const spec = {
 				column: sortBy,
+				direction: sortDirection
+			};
+			this.props.onSort(spec);
+		}
+	}
+
+	onSort(column, descending) {
+		if (this.props.onSort) {
+			const sortDirection = descending === true ? SORT_DIRECTION.DESC : SORT_DIRECTION.ASC;
+			const spec = {
+				column: column,
 				direction: sortDirection
 			};
 			this.props.onSort(spec);
@@ -169,14 +216,15 @@ class FlexibleTable extends React.Component {
 	*   if width is provided, divide the column 'weighted' width with the max width from columns
 	*     return the scaled factor
 	*     multiply each column 'weighted' width with the scaled factor to get the actual width in pixels
-	* @param columns column definitions
-	* @param parentTableWidth
 	*/
-	calculateColumnWidths(columns, parentTableWidth) {
-		let tableWidth = parentTableWidth - 12; // subtract 12 for the left padding scss $spacing-04
+	calculateColumnWidths() {
+		const columns = this.props.columns;
+
+		let tableWidth = this.state.availableWidth - COLUMN_PADDING_BUFFER; // subtract for the left padding scss $spacing-04
 		if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 			tableWidth -= 40;
 		}
+		const compare = tableWidth + (COLUMN_PADDING_BUFFER * 0.75); // Save initial width for comparison later
 		let remainingColumns = columns.length; // keep track of how many columns to calculate width for
 		let maxWeight = 0;
 
@@ -192,7 +240,9 @@ class FlexibleTable extends React.Component {
 			}
 		}
 		const widths = [];
-		const defaultWidth = Math.floor(tableWidth / remainingColumns); // use default width for columns without a weight
+		const defaultWidth = tableWidth > (DEFAULT_COL_MIN_WIDTH * remainingColumns)
+			? Math.floor(tableWidth / remainingColumns) // use default width for columns without a weight
+			: DEFAULT_COL_MIN_WIDTH; // If no more space to have the column visible, set the min width and let the table scroll
 		const weightedWidths = [];
 		let sumWeightedWidths = 0;
 
@@ -228,24 +278,37 @@ class FlexibleTable extends React.Component {
 		}
 
 		// if any columns had decimals floored, allocate additional space to the first column
-		let compare = parentTableWidth;
-		if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
-			compare -= 40;
-		}
-
 		if (sumColumnWidth < compare) {
-			const firstColWith = parseInt(widths[0], 10);
-			widths[0] = firstColWith + compare - sumColumnWidth + "px";
+			const firstColWidth = parseInt(widths[0], 10);
+			widths[0] = firstColWidth + compare - sumColumnWidth + "px";
 		}
-
-		return widths;
+		this.setState({ columnWidths: widths, tableWidth: sumColumnWidth });
 	}
 
-	_updateTableWidth(width, height) {
-		if (this.state.tableWidth !== Math.floor(width - 2)) {
+	updateHeaderHeight(contentRect) {
+		if (this.state.headerHeight !== contentRect.height) {
+			this.setState({ headerHeight: contentRect.height });
+		}
+	}
+
+	updateExcessWidth() {
+		if (this.state.tableWidth > 0 && this.state.tableWidth < this.state.availableWidth) {
+			let excessWidth = this.state.availableWidth - this.state.tableWidth - COLUMN_PADDING_BUFFER;
+			if (typeof this.props.updateRowSelections !== "undefined") {
+				excessWidth -= 40; // Adjust for checkboxes
+			}
+			this.setState({ excessWidth: excessWidth > 0 ? excessWidth : 0 });
+		} else if (this.state.excessWidth !== 0) {
+			this.setState({ excessWidth: 0 });
+		}
+	}
+
+	_updateTableWidth(contentRect, target) {
+		const tableWidth = Math.floor(target?.childNodes?.[0].childNodes?.[0].clientWidth) || contentRect.width;
+		if (this.state.availableWidth !== Math.floor(tableWidth - 2)) {
 			this.setState({
-				tableWidth: Math.floor(width - 2) // subtract 2 px for the borders
-			});
+				availableWidth: Math.floor(tableWidth - 2) // subtract 2 px for the borders
+			}, () => this.updateExcessWidth());
 		}
 	}
 
@@ -273,9 +336,6 @@ class FlexibleTable extends React.Component {
 		} else if (this.state.rows === -1) {
 			if (this.flexibleTable) {
 				const labelAndDescriptionHeight = 50; // possible dynamically set this in the future
-				const ftHeaderHeight = (this.flexibleTableHeader && typeof this.flexibleTableHeader !== "undefined")
-					? ReactDOM.findDOMNode(this.flexibleTableHeader).getBoundingClientRect().height
-					: 0;
 				const flyoutHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-wf-children");
 				const tearsheetHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-primary-tab-panel");
 				if (flyoutHeight === 0 && tearsheetHeight === 0) {
@@ -283,8 +343,8 @@ class FlexibleTable extends React.Component {
 					dynamicH = -1;
 				} else {
 					const totalHeight = flyoutHeight !== 0 ? flyoutHeight : tearsheetHeight;
-					newHeight = `calc(${totalHeight - ftHeaderHeight - labelAndDescriptionHeight}px - ${(3.5 * ONE_REM_HEIGHT)}px)`; // 3.5rem to adjust padding
-					dynamicH = (totalHeight - ftHeaderHeight - labelAndDescriptionHeight) - (3.5 * 16);
+					newHeight = `calc(${totalHeight - this.state.headerHeight - labelAndDescriptionHeight}px - ${(3.5 * ONE_REM_HEIGHT)}px)`; // 3.5rem to adjust padding
+					dynamicH = (totalHeight - this.state.headerHeight - labelAndDescriptionHeight) - (3.5 * 16);
 				}
 			}
 		}
@@ -413,9 +473,8 @@ class FlexibleTable extends React.Component {
 	*     "staticWidth": optional boolean - This is a special property added only for SPSS modeler which directly calls FlexibleTable. This property is NOT a part of uiHints.
 	*   }
 	* ]
-	* @param columnWidths
 	*/
-	generateTableHeaderRow(columnWidths) {
+	generateTableHeaderRow() {
 		const headers = [];
 		let searchLabel = "";
 		for (var j = 0; j < this.props.columns.length; j++) {
@@ -423,7 +482,7 @@ class FlexibleTable extends React.Component {
 			if (typeof this.props.filterable !== "undefined" && this.props.filterable[0] === columnDef.key) {
 				searchLabel = columnDef.label;
 			}
-			const width = Math.abs(parseInt(columnWidths[j], 10));
+			const width = Math.abs(parseInt(this.state.columnWidths?.[j], 10));
 			let headerLabel;
 			if (typeof (columnDef.label) === "object") {
 				headerLabel = columnDef.label.props.labelText;
@@ -476,10 +535,7 @@ class FlexibleTable extends React.Component {
 	}
 
 	render() {
-		const tableWidth = this.state.tableWidth;
-		const columnWidths = this.calculateColumnWidths(this.props.columns, tableWidth);
-		const headerInfo = this.generateTableHeaderRow(columnWidths);
-
+		const headerInfo = this.generateTableHeaderRow();
 		const headers = headerInfo.headers;
 		const searchLabel = headerInfo.searchLabel;
 		const disabled = this.props.tableState === STATES.DISABLED;
@@ -530,7 +586,7 @@ class FlexibleTable extends React.Component {
 			typeof this.props.topRightPanel.props.className === "undefined");
 		// Table toolbar replaces ftHeader when 1+ rows are selected
 		const ftHeader = ((searchBar || this.props.topRightPanel))
-			? (<div className={ftHeaderClassname} ref={ (ref) => (this.flexibleTableHeader = ref) }>
+			? (<div className={ftHeaderClassname} ref={this.flexibleTableHeader}>
 				{ topRightPanelHasTableToolbar ? null : searchBar}
 				{this.props.topRightPanel}
 			</div>)
@@ -554,19 +610,21 @@ class FlexibleTable extends React.Component {
 			tableHeight = this.state.dynamicHeight;
 		}
 
-		return (
-			<div data-id={"properties-ft-" + this.props.scrollKey} className={ftClassname} ref={ (ref) => (this.flexibleTable = ref) }>
-				{ftHeader}
-				<div className="properties-ft-container-panel">
-					<ReactResizeDetector handleWidth onResize={this._updateTableWidth} targetRef={this.tableRef}>
+		if (this.props.enableTanstackTable) {
+			return (
+				<div data-id={"properties-ft-" + this.props.scrollKey} className={ftClassname} ref={ (ref) => (this.flexibleTable = ref) }>
+					{ftHeader}
+					<div className="properties-ft-container-panel">
 						<div className={classNames("properties-ft-container-wrapper", this.props.messageInfo ? this.props.messageInfo.type : "")}
 							style={ heightStyle }
 							ref={this.tableRef}
 						>
 							<div className={messageClass}>
-								<VirtualizedTable
+								<VirtualizedGrid
+									data={this.props.data}
 									tableLabel={this.props.tableLabel}
 									tableHeight={tableHeight}
+									excessWidth={this.state.excessWidth}
 									columns={headers}
 									onHeaderClick={this.sortHeaderClick}
 									rowCount={this.props.data.length}
@@ -575,8 +633,9 @@ class FlexibleTable extends React.Component {
 									summaryTable={this.props.summaryTable}
 									selectable={typeof this.props.updateRowSelections !== "undefined"}
 									rowSelection={this.props.rowSelection}
-									disableHeader={!this.props.showHeader}
+									showHeader={this.props.showHeader}
 									onRowDoubleClick={this.props.onRowDoubleClick}
+									getOriginalRowIndex={this.getOriginalRowIndex}
 									rowsSelected={this.props.selectedRows}
 									checkedAll={this.state.checkedAllRows}
 									setRowsSelected={this.handleCheckedRow}
@@ -584,16 +643,59 @@ class FlexibleTable extends React.Component {
 									scrollKey={this.props.scrollKey}
 									onSort={this.onSort}
 									sortBy={this.state.currentSortColumn}
-									sortColumns={this.state.columnSortDir}
+									sortColumns={this.props.sortable}
 									sortDirection={this.state.columnSortDir[this.state.currentSortColumn]}
 									tableState={this.props.tableState}
 									light={this.props.light}
 									readOnly={this.props.readOnly}
-									{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex, scrollToAlignment: "center" })}
+									{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex })}
 								/>
 							</div>
 						</div>
-					</ReactResizeDetector>
+					</div>
+					{emptyTableContent}
+				</div>
+			);
+		}
+
+		return (
+			<div data-id={"properties-ft-" + this.props.scrollKey} className={ftClassname} ref={ (ref) => (this.flexibleTable = ref) }>
+				{ftHeader}
+				<div className="properties-ft-container-panel">
+					<div className={classNames("properties-ft-container-wrapper", this.props.messageInfo ? this.props.messageInfo.type : "")}
+						style={ heightStyle }
+						ref={this.tableRef}
+					>
+						<div className={messageClass}>
+							<VirtualizedTable
+								tableLabel={this.props.tableLabel}
+								tableHeight={tableHeight}
+								columns={headers}
+								onHeaderClick={this.sortHeaderClick}
+								rowCount={this.props.data.length}
+								rowHeight={this.rowHeight}
+								rowGetter={this.rowGetter}
+								summaryTable={this.props.summaryTable}
+								selectable={typeof this.props.updateRowSelections !== "undefined"}
+								rowSelection={this.props.rowSelection}
+								disableHeader={!this.props.showHeader}
+								onRowDoubleClick={this.props.onRowDoubleClick}
+								rowsSelected={this.props.selectedRows}
+								checkedAll={this.state.checkedAllRows}
+								setRowsSelected={this.handleCheckedRow}
+								setAllRowsSelected={this.handleCheckedAllRows}
+								scrollKey={this.props.scrollKey}
+								onSort={this.onSortVT}
+								sortBy={this.state.currentSortColumn}
+								sortColumns={this.state.columnSortDir}
+								sortDirection={this.state.columnSortDir[this.state.currentSortColumn]}
+								tableState={this.props.tableState}
+								light={this.props.light}
+								readOnly={this.props.readOnly}
+								{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex, scrollToAlignment: "center" })}
+							/>
+						</div>
+					</div>
 				</div>
 				{emptyTableContent}
 			</div>
@@ -605,7 +707,8 @@ FlexibleTable.defaultProps = {
 	showHeader: true,
 	light: true,
 	emptyTablePlaceholder: "",
-	selectedRows: [] // Required for consumers using FlexibleTable directly
+	selectedRows: [], // Required for consumers using FlexibleTable directly
+	enableTanstackTable: false // Feature flag
 };
 
 FlexibleTable.propTypes = {
@@ -639,7 +742,8 @@ FlexibleTable.propTypes = {
 	summaryTable: PropTypes.bool,
 	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired,
-	readOnly: PropTypes.bool
+	readOnly: PropTypes.bool,
+	enableTanstackTable: PropTypes.bool
 };
 
 export default injectIntl(FlexibleTable);
