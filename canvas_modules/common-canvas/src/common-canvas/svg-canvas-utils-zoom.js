@@ -222,6 +222,9 @@ export default class SVGCanvasUtilsZoom {
 	// by the current zoomTransform from page coordinates to canvas coordinates.
 	getTransformedElementRect(element) {
 		const vpRect = this.ren.canvasSVG.node().getBoundingClientRect();
+		if (!element) {
+			return null;
+		}
 		const elRect = element.getBoundingClientRect();
 
 		// Remove any offset caused by where the viewport is on the page.
