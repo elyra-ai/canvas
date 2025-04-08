@@ -43,6 +43,7 @@ export default class FlowsCanvas extends React.Component {
 			enableLinkType: "Straight",
 			enableLinkMethod: "Freeform",
 			enableLinkDirection: "LeftRight",
+			enableSplitLinkDroppedOnNode: true,
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",
 			enableLinkSelection: "None",
@@ -93,8 +94,8 @@ export default class FlowsCanvas extends React.Component {
 			enableCanvasLayout: {
 				dataLinkArrowHead: true,
 				linkGap: 4,
-				displayLinkOnOverlap: false,
-				displayGridType: "DotsAndLines"
+				displayGridType: "Dots",
+				displayLinkOnOverlap: false
 			}
 		});
 		return config;

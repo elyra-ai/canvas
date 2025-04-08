@@ -27,6 +27,16 @@
 			pointer-events: none;
 		}
 
+		&[data-new-link-over="yes"] {
+			.d3-node-selection-highlight {
+				stroke: $button-primary;
+				stroke-dasharray: 4;
+				stroke-width: 2;
+				fill: $layer-01;
+				pointer-events: none;
+			}
+		}
+
 		.d3-node-port-output {
 			opacity: 0;
 			transform: translateX(-8px);
