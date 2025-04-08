@@ -38,6 +38,7 @@ import {
   ViewportCoordVal,
   CanvasCoordVal,
   CanvasDistance,
+  NodePercentDistance,
   ScaleVal,
   ZoomTransform,
   ClassName,
@@ -494,6 +495,29 @@ export interface NodeLayout {
   ellipsisHoverAreaPadding: CanvasDistance;
 }
 
+
+/**
+ * https://elyra-ai.github.io/canvas/03.06.01-node-customization/#default-values-for-node-layout-properties
+ */
+export interface CanvasLayout {
+  /** Displays a grid under the canvas objects.
+   */
+  displayGridType: "None" | "Dots" | "Boxes" | "DotsAndLines" | "BoxesAndLines";
+
+  /** Sizes of the displayed grid as a percentage of default node height and width.
+   * These can also specified as a number which is a size in pixels.
+   * The major grid dimensions are used to draw lines when 'displayGridType' is set to
+   * either "DotsAndLines" or "BoxesAndLines". The minor grid dimensions are used to
+   * draw a grid of dots or boxes. For correct alignment, the major grid dimensions
+   * should be an exact multiple of the minor grid sizes.
+   */
+  displayGridMajorX: NodePercentDistance | CanvasDistance;
+  displayGridMajorY: NodePercentDistance | CanvasDistance;
+
+  displayGridMinorX: NodePercentDistance | CanvasDistance;
+  displayGridMinorY: NodePercentDistance | CanvasDistance;
+}
+
 /**
  * https://elyra-ai.github.io/canvas/03.02.01-canvas-config/
  */
@@ -525,12 +549,13 @@ export interface CanvasConfig {
   enableStateTag?: "None" | "ReadOnly" | "Locked";
   enableDropZoneOnExternalDrag?: boolean;
   enableNodeLayout?: Partial<NodeLayout>;
+  enableCanvasLayout?: Partial<CanvasLayout>;
   enableSaveZoom?: "LocalStorage" | "None" | "PipelineFlow";
   enablePanIntoViewOnOpen?: boolean;
   enableZoomIntoSubFlows?: boolean;
   enableSnapToGridType?: "During" | "None" | "After";
-  enableSnapToGridX?: string;
-  enableSnapToGridY?: string;
+  enableSnapToGridX?: NodePercentDistance | CanvasDistance;
+  enableSnapToGridY?: NodePercentDistance | CanvasDistance;
   enableAutoLayoutVerticalSpacing?: string;
   enableAutoLayoutHorizontalSpacing?: string;
   enableAssocLinkCreation?: boolean;
