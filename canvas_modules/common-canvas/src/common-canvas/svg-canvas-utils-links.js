@@ -27,8 +27,6 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 
 const CLOCKWISE = false;
 const ANTI_CLOCKWISE = true;
-const ONE_EIGHTY_DEGREES_IN_RADIANS = Math.PI;
-
 
 export default class SvgCanvasLinks {
 	constructor(config, canvasLayout, nodeUtils, commentUtils) {
