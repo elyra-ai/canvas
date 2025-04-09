@@ -497,7 +497,7 @@ export interface NodeLayout {
 
 
 /**
- * https://elyra-ai.github.io/canvas/03.06.01-node-customization/#default-values-for-node-layout-properties
+ * https://elyra-ai.github.io/canvas/03.06.04-canvas-customization/#
  */
 export interface CanvasLayout {
   /** Displays a grid under the canvas objects.
