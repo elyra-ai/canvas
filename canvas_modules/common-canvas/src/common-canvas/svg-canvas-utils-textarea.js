@@ -836,8 +836,9 @@ export default class SvgCanvasTextArea {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					}
 				}
-				// If user presses ESC key revert back to original text by just
-				// closing the text area.
+				// If user presses ESC key revert back to original text by
+				// closing the text entry area and reseting the undelying
+				// text display area height.
 				if (KeyboardUtils.cancelTextEntry(d3Event)) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					this.textAreaEscKeyPressed = true;
