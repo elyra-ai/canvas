@@ -902,6 +902,16 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableSplitLinkDroppedOnNode = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedSplitLinkDroppedOnNode" // Set ID to corresponding field in App.js state
+				labelText="Enable Split Link Dropped On Node"
+				toggled={this.props.getStateValue("selectedSplitLinkDroppedOnNode")}
+				onToggle={(val) => this.setStateValue(val, "selectedSplitLinkDroppedOnNode")}
+			/>
+		</div>);
+
+
 		var enableRaiseLinksToTopOnHover = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedRaiseLinksToTopOnHover" // Set ID to corresponding field in App.js state
@@ -1819,6 +1829,8 @@ export default class SidePanelForms extends React.Component {
 					{enableStraightLinksAsFreeform}
 					{divider}
 					{enableLinkReplaceOnNewConnection}
+					{divider}
+					{enableSplitLinkDroppedOnNode}
 					{divider}
 					{enableRaiseLinksToTopOnHover}
 					{divider}

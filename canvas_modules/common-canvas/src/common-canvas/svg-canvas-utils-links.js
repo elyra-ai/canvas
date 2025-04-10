@@ -27,8 +27,6 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 
 const CLOCKWISE = false;
 const ANTI_CLOCKWISE = true;
-const ONE_EIGHTY_DEGREES_IN_RADIANS = Math.PI;
-
 
 export default class SvgCanvasLinks {
 	constructor(config, canvasLayout, nodeUtils, commentUtils) {
@@ -708,6 +706,11 @@ export default class SvgCanvasLinks {
 			return this.selfRefLinkPath(link, minInitialLine);
 		}
 
+		// If the link has a centerDragPos, the link line will be in two parts.
+		if (link.centerDragPos && link.centerDragPos !== "revertLink") {
+			return this.getStraightPathForCenterDrag(link);
+		}
+
 		const path = "M " + link.x1 + " " + link.y1 + " L " + link.x2 + " " + link.y2;
 		const xDiff = link.x2 - link.x1;
 		const yDiff = link.y2 - link.y1;
@@ -715,11 +718,21 @@ export default class SvgCanvasLinks {
 			x: link.x1 + (xDiff / 2),
 			y: link.y1 + (yDiff / 2)
 		};
-		let angle = Math.atan(yDiff / xDiff); // Atan(Opposite / Adjacent) = Angle in Radians
 
-		if (xDiff < 0) {
-			angle = ONE_EIGHTY_DEGREES_IN_RADIANS + angle;
-		}
+		const angle = CanvasUtils.calculateAngle(link.x1, link.y1, link.x2, link.y2);
+
+		return { path, centerPoint, angle };
+	}
+
+	// Returns a pathInfo object for a straight link line that is being dragged (from
+	// near its center) towards a node to create two links into and out of the node.
+	// The link path is therefore split into two parts.
+	getStraightPathForCenterDrag(link) {
+		const path = "M " + link.x1 + " " + link.y1 + " L " + link.centerDragPos.x + " " +
+				link.centerDragPos.y + " " + link.x2 + " " + link.y2;
+
+		const centerPoint = { x: link.centerDragPos.x, y: link.centerDragPos.y };
+		const angle = CanvasUtils.calculateAngle(link.centerDragPos.x, link.centerDragPos.y, link.x2, link.y2);
 
 		return { path, centerPoint, angle };
 	}

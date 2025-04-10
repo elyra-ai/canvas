@@ -112,6 +112,19 @@ Cypress.Commands.add("clickDecoratorHotspotOnLink", (decoratorId, linkName) => {
 		.click();
 });
 
+Cypress.Commands.add("dragLinkCenterToPosition", (linkName, xPos, yPos) => {
+	cy.window().then((win) => {
+		cy.getLinkWithLabel(linkName).children()
+			.eq(1)
+			.as("firstLink");
+		cy.get("@firstLink")
+			.trigger("mousedown", { view: win, force: true });
+		cy.get(".d3-svg-canvas-div > .svg-area").as("canvasDiv");
+		cy.get("@canvasDiv").trigger("mousemove", xPos, yPos);
+		cy.get("@canvasDiv").trigger("mouseup", xPos, yPos, { view: win });
+	});
+});
+
 Cypress.Commands.add("moveLinkHandleToPos", (linkId, element, xPos, yPos) => {
 	cy.window().then((win) => {
 		cy.get(getLinkSelector(linkId, element))
