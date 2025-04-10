@@ -270,14 +270,6 @@ $panel-border-color: $border-subtle-01;
 			padding-bottom: $spacing-01;
 		}
 	}
-
-	&.clicked {
-		pointer-events: none;
-		& button {
-			color: $text-disabled;
-			border-color: $border-disabled;
-		}
-	}
 }
 
 /* Styles for drop zone canvas objects */
