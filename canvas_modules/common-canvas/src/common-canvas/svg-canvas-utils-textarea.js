@@ -664,14 +664,26 @@ export default class SvgCanvasTextArea {
 			isMatch(f1Obj, f2Obj) && isMatch(f1Obj, f1Obj));
 	}
 
-	// Closes the text area and resets the flags.
-	closeTextArea(data) {
-		if (this.textAreaEscKeyPressed) {
-			// Reset the comment height in the pipeline to its original value when the ESC key is pressed.
+	// Resets the height of the text display area to its original height.
+	// When the user enters multiple lines of text into a comment, the
+	// underlying display area for the comment grows because the selection
+	// highlighting (based on the display area) around the comment needs to
+	// also increase in height. If the user then presses ESC, to cancel their
+	// text entry, we need to reset the height of the text display area
+	// to its original height. This is only necessary to do for comments and
+	// not for node labels or decoaration labels, because only comments show
+	// selection highlighting.
+	resetHeightOfTextDisplay(data) {
+		const com = this.activePipeline.getComment(data.id);
+		if (com) {
 			this.activePipeline.getComment(data.id).height = data.height;
 			this.displayCommentsCallback();
 			this.displayLinksCallback();
 		}
+	}
+
+	// Closes the text area and resets the flags.
+	closeTextArea(data) {
 		if (data.closeTextAreaCallback) {
 			data.closeTextAreaCallback(data.id);
 		}
@@ -719,8 +731,8 @@ export default class SvgCanvasTextArea {
 		// to transparent, the underlying display comment would be visible and
 		// differences between it and the comment entry control would show as a
 		// ugly display.
-		// This change will be reserved when the canvas refreshes when text
-		// editing is complete or when editing ends with nothing saved.
+		// This change will be reversed when the canvas refreshes, when text
+		// editing is complete or, when editing ends with nothing saved.
 		d3.select(data.parentDomObj).selectAll(".d3-foreign-object-comment-text")
 			.style("display", "none");
 
@@ -830,6 +842,7 @@ export default class SvgCanvasTextArea {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					this.textAreaEscKeyPressed = true;
 					this.closeTextArea(data);
+					this.resetHeightOfTextDisplay(data);
 					this.canvasController.restoreFocus();
 				}
 				// Prevent user entering more than any allowed maximum for characters.
