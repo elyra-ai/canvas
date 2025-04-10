@@ -118,7 +118,6 @@ class CanvasContents extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		this.logger.log("componentDidUpdate");
-		this.setReturnToPreviousBtnClass("not_clicked");
 
 		if (this.svgCanvasD3 && !this.isDropZoneDisplayed()) {
 			if (prevProps.canvasInfo !== this.props.canvasInfo ||
@@ -336,7 +335,6 @@ class CanvasContents extends React.Component {
 	onClickReturnToPrevious(evt) {
 		evt.stopPropagation();
 		evt.preventDefault();
-		this.setReturnToPreviousBtnClass("clicked");
 		this.props.canvasController.displayPreviousPipeline();
 	}
 
@@ -496,21 +494,6 @@ class CanvasContents extends React.Component {
 				onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 			/>
 		);
-	}
-
-	// Some apps that manage supernodes themselves want to stop the user accidentally
-	// clicking 'Return to previous flow' twice when the parent flow takes a moment
-	// to be retrieved. So apply an appropriate class/style when the button is clicked
-	// and remove it when we refresh.
-	setReturnToPreviousBtnClass(state) {
-		const btn = document.getElementsByClassName("return-to-previous")[0];
-		if (btn) {
-			if (state === "clicked") {
-				btn.classList?.add("clicked");
-			} else {
-				btn.classList?.remove("clicked");
-			}
-		}
 	}
 
 	setIsDropZoneDisplayed(isDropZoneDisplayed) {
