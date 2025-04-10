@@ -676,7 +676,7 @@ export default class SvgCanvasTextArea {
 	resetHeightOfTextDisplay(data) {
 		const com = this.activePipeline.getComment(data.id);
 		if (com) {
-			this.activePipeline.getComment(data.id).height = data.height;
+			com.height = data.height;
 			this.displayCommentsCallback();
 			this.displayLinksCallback();
 		}
