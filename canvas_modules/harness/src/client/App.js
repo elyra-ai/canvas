@@ -304,7 +304,7 @@ class App extends React.Component {
 			showAlertsTab: true,
 			enableResize: true,
 			iconSwitch: false,
-			enableTanstackTable: false,
+			enableTanstackTable: true,
 			initialEditorSize: "small",
 			conditionHiddenPropertyHandling: "null",
 			conditionDisabledPropertyHandling: "null",

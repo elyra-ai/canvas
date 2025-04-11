@@ -59,3 +59,12 @@ function mockConsole(consoleMethod) {
 		}
 	};
 }
+
+beforeEach(() => {
+	// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
+	Element.prototype.getBoundingClientRect = jest.fn()
+		.mockReturnValue({
+			height: 1000,
+			width: 1000
+		});
+});

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -308,12 +308,12 @@ describe("expression-builder renders correctly", () => {
 		);
 		const { container } = wrapper;
 		// ensure fields table has aria-label
-		const fieldsTable = container.querySelector("div.properties-field-table-container").querySelectorAll(".ReactVirtualized__Table");
+		const fieldsTable = container.querySelector("div.properties-field-table-container").querySelectorAll(".properties-autosized-vt");
 		expect(fieldsTable).to.have.length(1);
 		expect(fieldsTable[0].getAttribute("aria-label")).to.equal("Fields table");
 
 		// ensure values table has aria-label
-		const valuesTable = container.querySelector("div.properties-value-table-container").querySelectorAll(".ReactVirtualized__Table");
+		const valuesTable = container.querySelector("div.properties-value-table-container").querySelectorAll(".properties-autosized-vt");
 		expect(valuesTable).to.have.length(1);
 		expect(valuesTable[0].getAttribute("aria-label")).to.equal("Values table");
 	});
@@ -332,7 +332,7 @@ describe("expression-builder renders correctly", () => {
 		fireEvent.click(container.querySelector("button.expresson-builder-function-tab"));
 
 		// ensure functions table has aria-label
-		const functionsTable = container.querySelector("div.properties-functions-table-container").querySelectorAll(".ReactVirtualized__Table");
+		const functionsTable = container.querySelector("div.properties-functions-table-container").querySelectorAll(".properties-autosized-vt");
 		expect(functionsTable).to.have.length(1);
 		expect(functionsTable[0].getAttribute("aria-label")).to.equal("Functions table");
 	});
@@ -460,7 +460,7 @@ describe("expression-builder renders correctly", () => {
 		fireEvent.click(container.querySelector("button.expresson-builder-function-tab"));
 
 		// Verify Return column in "General Functions" table
-		let functionsTable = container.querySelector("div.properties-functions-table").querySelectorAll(".ReactVirtualized__Table");
+		let functionsTable = container.querySelector("div.properties-functions-table").querySelectorAll(".properties-autosized-vt");
 		expect(functionsTable).to.have.length(1);
 		let rows = tableUtilsRTL.getTableRows(functionsTable[0]);
 		expect(rows).to.have.length(4);
@@ -468,7 +468,7 @@ describe("expression-builder renders correctly", () => {
 			const functionInfo = ExpressionInfo.actual.functionCategories["General Functions"].functionList[idx];
 			// Verify values in "Return" column match with "return_type_label". Default to "return_type".
 			const expectedReturnType = functionInfo.locReturnType ? functionInfo.locReturnType : functionInfo.return_type;
-			const actualReturnType = row.querySelectorAll(".ReactVirtualized__Table__rowColumn")[2].textContent; // consider Add column
+			const actualReturnType = row.querySelectorAll(".properties-grid-body-row-cell")[2].textContent; // consider Add column
 			expect(expectedReturnType).to.eql(actualReturnType);
 		});
 
@@ -480,14 +480,14 @@ describe("expression-builder renders correctly", () => {
 		expect(container.querySelector("div.properties-expression-function-select span").textContent).to.equal("Information");
 
 		// Verify Return column in "Information" table
-		functionsTable = container.querySelector("div.properties-functions-table").querySelector(".ReactVirtualized__Table");
+		functionsTable = container.querySelector("div.properties-functions-table").querySelector(".properties-autosized-vt");
 		rows = tableUtilsRTL.getTableRows(functionsTable);
 		expect(rows).to.have.length(3);
 		rows.forEach((row, idx) => {
 			const functionInfo = ExpressionInfo.actual.functionCategories.Information.functionList[idx];
 			// Verify values in "Return" column match with "return_type_label". Default to "return_type".
 			const expectedReturnType = functionInfo.locReturnType ? functionInfo.locReturnType : functionInfo.return_type;
-			const actualReturnType = row.querySelectorAll(".ReactVirtualized__Table__rowColumn")[2].textContent;
+			const actualReturnType = row.querySelectorAll(".properties-grid-body-row-cell")[2].textContent;
 			expect(expectedReturnType).to.eql(actualReturnType);
 		});
 	});
@@ -990,7 +990,7 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		expect(rows).to.have.length(4);
 		expect(rows[1].textContent).to.equal("Sexstring");
 
-		const sortHeaders = fieldTable.querySelectorAll(".ReactVirtualized__Table__sortableHeaderColumn");
+		const sortHeaders = fieldTable.querySelectorAll(".properties-vt-column-sortable");
 		expect(sortHeaders).to.have.length(2);
 
 		tableUtilsRTL.clickHeaderColumnSort(fieldTable, 0);
@@ -1013,7 +1013,7 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		const { container } = wrapper;
 		const valueTable = container.querySelector("div.properties-value-table-container");
 		const rows = tableUtilsRTL.getTableRows(valueTable);
-		const sortHeaders = valueTable.querySelectorAll(".ReactVirtualized__Table__sortableHeaderColumn");
+		const sortHeaders = valueTable.querySelectorAll(".properties-vt-column-sortable");
 		expect(rows).to.have.length(2);
 		expect(rows[0].textContent).to.equal("Min: 21");
 		expect(sortHeaders).to.have.length(1);
@@ -1039,7 +1039,7 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		fireEvent.click(container.querySelector("button.expresson-builder-function-tab"));
 		const functionTable = container.querySelector("div.properties-functions-table");
 		const rows = tableUtilsRTL.getTableRows(functionTable);
-		const sortHeaders = functionTable.querySelectorAll(".ReactVirtualized__Table__sortableHeaderColumn");
+		const sortHeaders = functionTable.querySelectorAll(".properties-vt-column-sortable");
 		expect(rows).to.have.length(4);
 		expect(rows[0].textContent).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
 		expect(sortHeaders).to.have.length(2);
