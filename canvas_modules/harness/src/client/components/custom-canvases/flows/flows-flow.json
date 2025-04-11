@@ -16,8 +16,8 @@
             "ui_data": {
               "label": "Charts",
               "image": "images/custom-canvases/flows/palette/icons/dvcharts.svg",
-              "x_pos": 658,
-              "y_pos": 129.6,
+              "x_pos": 720,
+              "y_pos": 72,
               "description": "Launch the chart builder and create chart definitions to save with your flow."
             }
           },
@@ -35,6 +35,7 @@
               },
               "links": [
                 {
+                  "id": "66664e25-1b7b-46b1-b995-bf0e53be6383",
                   "node_id_ref": "1af18594-86db-4b21-8f40-16afad1ece0b",
                   "port_id_ref": "outPort"
                 }
@@ -64,8 +65,8 @@
             "ui_data": {
               "label": "Sim Gen",
               "image": "images/custom-canvases/flows/palette/icons/simgen.svg",
-              "x_pos": 64,
-              "y_pos": 172.79999999999998,
+              "x_pos": 72,
+              "y_pos": 144,
               "description": "Generate simulated data automatically or with user-specified statistical distributions."
             }
           },
@@ -92,8 +93,8 @@
             "ui_data": {
               "label": "Auto Cluster",
               "image": "images/custom-canvases/flows/palette/icons/autocluster.svg",
-              "x_pos": 658,
-              "y_pos": 216.00000000000003,
+              "x_pos": 720,
+              "y_pos": 216,
               "description": "Estimates and compares clustering models that identify groups of records with similar characteristics.",
               "associations": [
                 {
@@ -117,6 +118,7 @@
               },
               "links": [
                 {
+                  "id": "b507ff46-ece1-4750-975d-edbbdee69e93",
                   "node_id_ref": "1af18594-86db-4b21-8f40-16afad1ece0b",
                   "port_id_ref": "outPort"
                 }
@@ -132,8 +134,8 @@
             "ui_data": {
               "label": "Auto Cluster",
               "image": "images/custom-canvases/flows/palette/icons/applyautocluster.svg",
-              "x_pos": 658,
-              "y_pos": 331.20000000000005,
+              "x_pos": 720,
+              "y_pos": 360,
               "description": "Estimates and compares clustering models that identify groups of records with similar characteristics."
             }
           },
@@ -160,8 +162,8 @@
             "ui_data": {
               "label": "Type",
               "image": "images/custom-canvases/flows/palette/icons/type.svg",
-              "x_pos": 406,
-              "y_pos": 172.79999999999998,
+              "x_pos": 504,
+              "y_pos": 144,
               "description": "Specify field metadata and properties that are invaluable to modeling."
             }
           },
@@ -179,6 +181,7 @@
               },
               "links": [
                 {
+                  "id": "90b96dd7-a201-40b1-bff0-0cd952c38d9f",
                   "node_id_ref": "00035b26-230a-4d60-ab69-631877207b23",
                   "port_id_ref": "3ee97ab2-bdc0-4151-abd6-7dcd907432c0_outPort"
                 }
@@ -210,9 +213,12 @@
             "ui_data": {
               "label": "Supernode",
               "image": "images/custom-canvases/flows/palette/icons/supernode.svg",
-              "x_pos": 244,
-              "y_pos": 172.79999999999998,
+              "x_pos": 288,
+              "y_pos": 144,
               "description": "This supernode was created by common-canvas.",
+              "is_expanded": false,
+              "expanded_width": 300,
+              "expanded_height": 200,
               "decorations": [
                 {
                   "position": "topLeft",
@@ -241,6 +247,7 @@
               },
               "links": [
                 {
+                  "id": "c2a18f42-3bd0-4450-bdd3-ccce5357f422",
                   "node_id_ref": "bf082e34-bf1c-4927-9f87-89d2d9033b55",
                   "port_id_ref": "outPort"
                 }
@@ -269,10 +276,10 @@
           "comments": [
             {
               "id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
-              "x_pos": 118,
-              "y_pos": 14.4,
-              "width": 175,
-              "height": 52,
+              "x_pos": 108,
+              "y_pos": 43.2,
+              "width": 198,
+              "height": 57.6,
               "class_name": "d3-comment-rect",
               "content": "This canvas shows a flow of data processing nodes.",
               "associated_id_refs": []
@@ -322,6 +329,7 @@
               },
               "links": [
                 {
+                  "id": "925f1439-3ba6-4232-9c9c-f830fa56bb2e",
                   "node_id_ref": "04a6ca7a-d6ef-4bc6-b64c-5a7c7b5caa5c",
                   "port_id_ref": "outPort"
                 }
@@ -380,6 +388,7 @@
               },
               "links": [
                 {
+                  "id": "7ed626f8-3e33-40e0-a03c-e6199521d61c",
                   "node_id_ref": "1b4c8250-fc73-4357-a84c-bed175ab1cf1",
                   "port_id_ref": "outPort"
                 }
@@ -428,6 +437,7 @@
               },
               "links": [
                 {
+                  "id": "9d3b9209-4e42-4a4e-a661-4fee97b74b7c",
                   "node_id_ref": "aa0f90c5-441d-4bf1-ab35-5cadb7c32510",
                   "port_id_ref": "output_1b4c8250-fc73-4357-a84c-bed175ab1cf1_inPort"
                 }
@@ -500,6 +510,7 @@
               },
               "links": [
                 {
+                  "id": "e3c01b77-d61d-4e87-a61e-107b21da78ac",
                   "node_id_ref": "3ee97ab2-bdc0-4151-abd6-7dcd907432c0",
                   "port_id_ref": "outPort"
                 }
@@ -521,6 +532,7 @@
               "content": "A connected comment",
               "associated_id_refs": [
                 {
+                  "id": "2110d85b-b0df-4769-b8ff-16fb51db9ee2",
                   "node_ref": "1b4c8250-fc73-4357-a84c-bed175ab1cf1"
                 }
               ]

@@ -65,8 +65,10 @@
 		// Override lineclamp to make the ... appear on the third
 		// line of the label if it is truncated.
 		.d3-label-multi-line {
-			line-clamp: 3;
-			-webkit-line-clamp: 3;
+			span {
+				line-clamp: 3;
+				-webkit-line-clamp: 3;
+			}
 		}
 
 		/* Hover over d3-node-group */
