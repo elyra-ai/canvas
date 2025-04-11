@@ -111,6 +111,7 @@ nav:
     - Node Customization: 03.06.01-node-customization.md
     - Comment Customization: 03.06.02-comment-customization.md
     - Link Customization: 03.06.03-link-customization.md
+    - Canvas Customization: 03.06.04-canvas-customization.md
     - Node Creation from External Object: 03.07-external-objects.md
     - External Pipeline Flows: 03.08-external-pipeline-flows.md
     - Read Only or Locked Flows: 03.09-read-only-or-locked-flows.md
