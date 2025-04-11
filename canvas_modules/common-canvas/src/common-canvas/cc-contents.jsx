@@ -62,7 +62,7 @@ class CanvasContents extends React.Component {
 
 		// Keeps track of mouse position to enable us to paste at mouse position
 		// using keyboard.
-		this.mousePos = { x: 0, y: 0 };
+		this.mousePos = null;
 
 		this.drop = this.drop.bind(this);
 		this.focusOnCanvas = this.focusOnCanvas.bind(this);
@@ -118,6 +118,7 @@ class CanvasContents extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		this.logger.log("componentDidUpdate");
+
 		if (this.svgCanvasD3 && !this.isDropZoneDisplayed()) {
 			if (prevProps.canvasInfo !== this.props.canvasInfo ||
 					prevProps.canvasConfig !== this.props.canvasConfig ||
@@ -310,12 +311,9 @@ class CanvasContents extends React.Component {
 	// the boundaries of the canvas or sets the mousePos to null. This position
 	// info can be used with keyboard operations.
 	onMouseMove(e) {
-		if (e.target &&
-			e.target.className &&
-			(
-				e.target.className.baseVal === "svg-area" ||
-				e.target.className.baseVal === "d3-svg-background"
-			)) {
+		if (e?.target?.className?.baseVal === "svg-area" ||
+				e?.target?.className?.baseVal === "d3-svg-background" ||
+				e?.target?.className?.baseVal === "d3-svg-background-grid") {
 			this.mousePos = {
 				x: e.clientX,
 				y: e.clientY
@@ -337,9 +335,6 @@ class CanvasContents extends React.Component {
 	onClickReturnToPrevious(evt) {
 		evt.stopPropagation();
 		evt.preventDefault();
-		// Some apps want to stop the user accidentally clicking 'Return to previous flow'
-		// twice when the page take a moment to clear. So apply an appropriate class/style.
-		document.getElementsByClassName("return-to-previous")[0].classList?.add("clicked");
 		this.props.canvasController.displayPreviousPipeline();
 	}
 

@@ -127,6 +127,19 @@ describe("Test clipboard with no link selection enabled", function() {
 		cy.verifyNodeTransform("Na_to_K", 218, 219);
 	});
 
+	it("Test pasting some nodes and a comment using keyboard with background grid", function() {
+		cy.setCanvasConfig({ selectedCanvasLayout: { displayGridType: "Dots" } });
+
+		// Copy the node into the clipboard
+		cy.clickNode("DRUG1n");
+		cy.shortcutKeysCopy();
+
+		// Paste the node in default {x,y} positions
+		cy.moveMouseToCoordinates(50, 100);
+		cy.shortcutKeysPaste();
+		cy.verifyNodeTransform("DRUG1n", 96, 219);
+	});
+
 	it("Test cut & paste in default positions when using keyboard in zoomOut", function() {
 		// cy.clickToolbarZoomIn();
 		cy.clickToolbarZoomOut();

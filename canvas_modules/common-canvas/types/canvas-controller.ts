@@ -183,6 +183,11 @@ export type CanvasCoordVal = number;
  */
 export type CanvasDistance = number;
 
+/** A distance expressed as a percentage of a node's width or height,
+ * with a % sign as the ending character. For example, "25%"
+ */
+export type NodePercentDistance = string;
+
 /** The scale amount for zooming. This 1 for no zoom, > 1 for zoom in
  * and < 1 for zoom out.
  */

@@ -6117,35 +6117,41 @@ export default class SVGCanvasRenderer {
 	// does not take into account the variable size of the <span> inside
 	// the <div> of the <foreignobject> used to display the label.
 	getNodeFocusIncrements(node, objSel) {
+		let leftGap = 0;
+		let rightGap = 0;
+		let topGap = 0;
+		let bottomGap = 0;
+
 		const labelDivElement = objSel
 			.select(".d3-node-label")
 			.node();
-
-		const labelDivRect = this.zoomUtils.getTransformedElementRect(labelDivElement);
 
 		const labelSpanElement = objSel
 			.select(".d3-node-label")
 			.select("span")
 			.node();
 
-		const labelSpanRect = this.zoomUtils.getTransformedElementRect(labelSpanElement);
+		if (labelDivElement && labelSpanElement) {
+			const labelDivRect = this.zoomUtils.getTransformedElementRect(labelDivElement);
+			const labelSpanRect = this.zoomUtils.getTransformedElementRect(labelSpanElement);
 
-		const labelInc = 4;
-		const labelRectRight = Math.min(labelSpanRect.right, labelDivRect.right);
-		const labelRectBottom = Math.min(labelSpanRect.bottom, labelDivRect.bottom);
+			const labelInc = 4;
+			const labelRectRight = Math.min(labelSpanRect.right, labelDivRect.right);
+			const labelRectBottom = Math.min(labelSpanRect.bottom, labelDivRect.bottom);
 
-		// Calculate the gap which is the label overlap from the node boundary.
-		let leftGap = node.x_pos - labelSpanRect.x;
-		let rightGap = labelRectRight - (node.x_pos + node.width);
-		let topGap = node.y_pos - labelSpanRect.y;
-		let bottomGap = labelRectBottom - (node.y_pos + node.height);
+			// Calculate the gap which is the label overlap from the node boundary.
+			leftGap = node.x_pos - labelSpanRect.x;
+			rightGap = labelRectRight - (node.x_pos + node.width);
+			topGap = node.y_pos - labelSpanRect.y;
+			bottomGap = labelRectBottom - (node.y_pos + node.height);
 
-		// Ensure the gaps include a small increment for spacing and are at
-		// least as big as the nodeSizingArea.
-		leftGap = Math.max(node.layout.nodeSizingArea, leftGap + labelInc);
-		rightGap = Math.max(node.layout.nodeSizingArea, rightGap + labelInc);
-		topGap = Math.max(node.layout.nodeSizingArea, topGap + labelInc);
-		bottomGap = Math.max(node.layout.nodeSizingArea, bottomGap + labelInc);
+			// Ensure the gaps include a small increment for spacing and are at
+			// least as big as the nodeSizingArea.
+			leftGap = Math.max(node.layout.nodeSizingArea, leftGap + labelInc);
+			rightGap = Math.max(node.layout.nodeSizingArea, rightGap + labelInc);
+			topGap = Math.max(node.layout.nodeSizingArea, topGap + labelInc);
+			bottomGap = Math.max(node.layout.nodeSizingArea, bottomGap + labelInc);
+		}
 
 		return { leftGap, rightGap, topGap, bottomGap };
 	}
