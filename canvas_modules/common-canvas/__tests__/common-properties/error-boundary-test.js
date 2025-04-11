@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
-import { mount } from "../_utils_/mount-utils.js";
 import { IntlProvider } from "react-intl";
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 
 import { expect } from "chai";
 import sinon from "sinon";
+import { render } from "@testing-library/react";
 
 const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
@@ -46,8 +46,8 @@ describe("The error boundary class should catch errors and display a fallback UI
 			closePropertiesDialog: closePropertiesDialog,
 			propertyListener: throwAnError
 		};
-		const	wrapper = mount(
-			<IntlProvider key="IntlProvider2" locale={ locale }>
+		const wrapper = render(
+			<IntlProvider key="IntlProvider2" locale={locale}>
 				<CommonProperties
 					propertiesInfo={propertiesInfo}
 					callbacks={callbacks}
@@ -55,8 +55,9 @@ describe("The error boundary class should catch errors and display a fallback UI
 				/>
 			</IntlProvider>
 		);
-		expect(wrapper.find("div.properties-flyout-error-container")).to.have.length(1);
-		expect(wrapper.find("button.properties-apply-button.cds--btn.cds--btn--primary")).to.have.length(1);
-		expect(wrapper.find("button.properties-apply-button.cds--btn.cds--btn--secondary")).to.have.length(0);
+		const { container } = wrapper;
+		expect(container.querySelectorAll("div.properties-flyout-error-container")).to.have.length(1);
+		expect(container.querySelectorAll("button.properties-apply-button.cds--btn.cds--btn--primary")).to.have.length(1);
+		expect(container.querySelectorAll("button.properties-apply-button.cds--btn.cds--btn--secondary")).to.have.length(0);
 	});
 });
