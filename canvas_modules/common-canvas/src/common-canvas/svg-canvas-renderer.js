@@ -2829,6 +2829,7 @@ export default class SVGCanvasRenderer {
 				.attr("y", this.decUtils.getDecPadding(dec, d, objType))
 				.attr("width", this.decUtils.getDecWidth(dec, d, objType) - (2 * this.decUtils.getDecPadding(dec, d, objType)))
 				.attr("height", this.decUtils.getDecHeight(dec, d, objType) - (2 * this.decUtils.getDecPadding(dec, d, objType)))
+				.attr("aria-label", "Image decoration")
 				.each(() => this.setDecImageContent(imageSel, dec.image));
 		} else {
 			imageSel.remove();
@@ -2874,6 +2875,7 @@ export default class SVGCanvasRenderer {
 					.attr("tabindex", -1)
 					.attr("x", 0)
 					.attr("y", 0)
+					.attr("aria-label", "JSX decoration")
 					.call(this.attachDecLabelListeners.bind(this, d, objType));
 			}
 			extSel
