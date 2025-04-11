@@ -17,8 +17,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { Button } from "@carbon/react";
 import { STATES } from "./../../constants/constants.js";
-import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
 
 class ImageAction extends React.Component {
@@ -27,6 +27,14 @@ class ImageAction extends React.Component {
 		this.state = {
 		};
 		this.applyAction = this.applyAction.bind(this);
+		this.renderIcon = this.renderIcon.bind(this);
+
+		this.imageDimensions = this.props.action?.image?.size
+			? {
+				height: `${this.props.action.image.size.height}px`,
+				width: `${this.props.action.image.size.width}px`
+			}
+			: {};
 	}
 
 	applyAction() {
@@ -40,13 +48,16 @@ class ImageAction extends React.Component {
 		}
 	}
 
+	renderIcon() {
+		const icon = (<img
+			src={this.props.action.image.url}
+			aria-label={this.props.action.name}
+			{...this.imageDimensions}
+		/>);
+		return icon;
+	}
+
 	render() {
-		let height = {};
-		let width = {};
-		if (this.props.action.image.size) {
-			height = this.props.action.image.size.height ? { "height": this.props.action.image.size.height } : {};
-			width = this.props.action.image.size.width ? { "width": this.props.action.image.size.width } : {};
-		}
 
 		const disabled = this.props.state === STATES.DISABLED;
 		const customClassName = this.props.action.className ? this.props.action.className : "";
@@ -55,43 +66,26 @@ class ImageAction extends React.Component {
 			{ "disabled": disabled }, customClassName);
 
 		const image = (
-			<div data-id={this.props.action.name}>
-				<img
-					src={this.props.action.image.url}
-					onClick={this.applyAction}
-					{...height}
-					{...width}
-				/>
-			</div>
+			<Button
+				data-id={this.props.action.name}
+				renderIcon={this.renderIcon}
+				className="properties-action-image-button"
+				onClick={this.applyAction}
+				kind="ghost"
+				iconDescription={this.props.action?.description?.text} // Text to appear in Tooltip
+				autoAlign
+				style={this.imageDimensions}
+				disabled={disabled}
+				// Ensures the button is treated as icon-only when a description is present,
+				// preventing an empty tooltip from appearing.
+				hasIconOnly={Boolean(this.props.action.description?.text)}
+			/>
 		);
 
-		let display = image;
-		if (this.props.action.description) {
-			const tooltipId = "tooltip-action-" + this.props.action.name;
-			const tooltip = (
-				<div className="properties-tooltips">
-					{this.props.action.description.text}
-				</div>
-			);
-			const directions = ["left", "right", "top", "bottom"];
-			const tooltipDirection = this.props.action.image.tooltip_direction && directions.includes(this.props.action.image.tooltip_direction.toLowerCase())
-				? this.props.action.image.tooltip_direction.toLowerCase()
-				: "bottom";
-
-			display = (<Tooltip
-				id={tooltipId}
-				tip={tooltip}
-				direction={tooltipDirection}
-				className="properties-tooltips"
-				disable={disabled}
-			>
-				{image}
-			</Tooltip>);
-		}
 
 		return (
 			<div className={className}>
-				{display}
+				{image}
 			</div>
 		);
 	}

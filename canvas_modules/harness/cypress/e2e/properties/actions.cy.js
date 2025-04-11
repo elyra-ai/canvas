@@ -30,6 +30,7 @@ describe("Test of action image tooltip direction", function() {
 		cy.verifyTip(null, "visible",
 			"This is a long tooltip for action image. Adding this line makes it a multi-line tooltip.", "left");
 		cy.hoverOverControl("weather-action-panel");
+		cy.closeActionImageTooltip("fall");
 
 		// Test: action image tooltip direction right
 		// ------------------------------------------
@@ -38,6 +39,7 @@ describe("Test of action image tooltip direction", function() {
 		cy.hoverOverActionImage("spring");
 		cy.verifyTip(null, "visible", "Spring", "right");
 		cy.hoverOverControl("weather-action-panel");
+		cy.closeActionImageTooltip("spring");
 
 
 		// Test: action image tooltip direction top
@@ -47,6 +49,7 @@ describe("Test of action image tooltip direction", function() {
 		cy.hoverOverActionImage("summer");
 		cy.verifyTip(null, "visible", "Summer", "top");
 		cy.hoverOverControl("weather-action-panel");
+		cy.closeActionImageTooltip("summer");
 
 		// Test: action image tooltip direction bottom
 		// -------------------------------------------
@@ -55,6 +58,7 @@ describe("Test of action image tooltip direction", function() {
 		cy.hoverOverActionImage("winter");
 		cy.verifyTip(null, "visible", "Winter", "bottom");
 		cy.hoverOverControl("weather-action-panel");
+		cy.closeActionImageTooltip("winter");
 
 		// Test: "When tooltip_direction is not specified, default direction is bottom
 		// ---------------------------------------------------------------------------
@@ -65,9 +69,11 @@ describe("Test of action image tooltip direction", function() {
 		// For "image_cond_hide" image, tooltip_direction is not specified
 		cy.hoverOverActionImage("image_cond_hide");
 		cy.verifyTip(null, "visible", "Test visible image conditions.", "bottom");
+		cy.closeActionImageTooltip("image_cond_hide");
 
 		// For "image_cond_disable" image, tooltip_direction is not specified
 		cy.hoverOverActionImage("image_cond_disable");
 		cy.verifyTip(null, "visible", "Test enable image conditions.", "bottom");
+		cy.closeActionImageTooltip("image_cond_disable");
 	});
 });

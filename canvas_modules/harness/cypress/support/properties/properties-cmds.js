@@ -301,8 +301,15 @@ Cypress.Commands.add("clickOnFieldPickerButton", (buttonType) => {
 // Action commands
 Cypress.Commands.add("hoverOverActionImage", (actionName) => {
 	cy.get(".properties-action-image")
-		.find(`div[data-id='${actionName}']`)
+		.find(`button[data-id='${actionName}']`)
 		.trigger("mouseover");
+});
+
+// To close the tooltip
+Cypress.Commands.add("closeActionImageTooltip", (actionName) => {
+	cy.get(".properties-action-image")
+		.find(`button[data-id='${actionName}']`)
+		.trigger("mouseout");
 });
 
 Cypress.Commands.add("hoverOverControl", (propertyId) => {
