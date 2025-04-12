@@ -103,8 +103,8 @@ const isEditingAction = (action) =>
 	action === "disconnectNode" ||
 	action === "setCommentEditingMode" ||
 	action === "setNodeLabelEditingMode" ||
-	action === "setNodeLabelDecorationEditingMode" ||
-	action === "setLinkLabelDecorationEditingMode" ||
+	action === "setNodeDecorationLabelEditingMode" ||
+	action === "setLinkDecorationLabelEditingMode" ||
 	action === "cut" ||
 	action === "copy" ||
 	action === "paste" ||
