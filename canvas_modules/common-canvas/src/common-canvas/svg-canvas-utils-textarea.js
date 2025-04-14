@@ -568,7 +568,7 @@ export default class SvgCanvasTextArea {
 
 	// Displays a <textarea> to allow text entry and editing for: node labels; or
 	// text decorations on either a node or link.
-	// Evetually it is possible that we could remove the <textarea> approach
+	// Eventually, it is possible that we could remove the <textarea> approach
 	// and just use the <div> approach used in displayEditableComment.
 	displayEditableLabel(data) {
 		this.textAreaHeight = data.height; // Save for comparison during auto-resize
@@ -639,7 +639,7 @@ export default class SvgCanvasTextArea {
 		}
 	}
 
-	// Returns true if the two foramts arrays passed in are the same.
+	// Returns true if the two formats arrays passed in are the same.
 	areFormatsTheSame(f1, f2) {
 		if (!f1 && !f2) {
 			return true;
