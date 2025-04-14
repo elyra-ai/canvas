@@ -63,6 +63,7 @@ import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
 import SvgCanvasExternal from "./svg-canvas-utils-external.js";
 import SvgCanvasTextArea from "./svg-canvas-utils-textarea.js";
 import SvgCanvasDragObject from "./svg-canvas-utils-drag-objects.js";
+import SvgCanvasDragLink from "./svg-canvas-utils-drag-link.js";
 import SvgCanvasDragNewLink from "./svg-canvas-utils-drag-new-link.js";
 import SvgCanvasDragDetLink from "./svg-canvas-utils-drag-det-link.js";
 import SvgCanvasZoom from "./svg-canvas-utils-zoom.js";
@@ -99,6 +100,7 @@ export default class SVGCanvasRenderer {
 		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils, this.commentUtils);
 		this.decUtils = new SvgCanvasDecs(this.canvasLayout);
 		this.dragObjectUtils = new SvgCanvasDragObject(this);
+		this.dragLinkUtils = new SvgCanvasDragLink(this);
 		this.dragNewLinkUtils = new SvgCanvasDragNewLink(this);
 		this.dragDetLinkUtils = new SvgCanvasDragDetLink(this);
 		this.zoomUtils = new SvgCanvasZoom(this);
@@ -653,7 +655,10 @@ export default class SVGCanvasRenderer {
 
 	// Returns true when we are dragging objects. Called by svg-canvas-d3.
 	isDragging() {
-		return this.dragObjectUtils.isMoving() || this.dragNewLinkUtils.isDragging() || this.dragDetLinkUtils.isDragging();
+		return this.dragObjectUtils.isMoving() ||
+			this.dragNewLinkUtils.isDragging() ||
+			this.dragDetLinkUtils.isDragging() ||
+			this.dragLinkUtils.isDragging();
 	}
 
 	// Returns true whenever a node or comment is being resized.
@@ -2628,6 +2633,7 @@ export default class SVGCanvasRenderer {
 		this.getAllNodeGroupsSelection().classed("d3-node-unavailable", false);
 	}
 
+	// Displays the edit icon for an editable node label.
 	displayNodeLabelEditIcon(spanObj, node) {
 		const labelObj = spanObj.parentElement;
 		const foreignObj = labelObj.parentElement;
@@ -2650,9 +2656,17 @@ export default class SVGCanvasRenderer {
 		const decGrpSel = d3.select(decObj);
 		const transform = this.decUtils.getDecLabelEditIconTranslate(
 			dec, obj, objType, spanObj, this.zoomUtils.getZoomScale());
+		const editType = this.getDecorationLabelEditType(objType);
 
 		this.displayEditIcon(spanObj, decGrpSel, transform,
-			(d3Event, d) => this.displayDecLabelTextArea(dec, obj, objType, d3Event.currentTarget.parentNode));
+			(d3Event, d) => this.canvasController.textActionHandler(editType, "editicon",
+				{ id: obj.id, decId: dec.id, objType, pipelineId: this.activePipeline.id }));
+	}
+
+	// Returns the appropriate editType string (for changing to edit mode)
+	// for the objType passed in.
+	getDecorationLabelEditType(objType) {
+		return objType === DEC_NODE ? "setNodeDecorationLabelEditingMode" : "setLinkDecorationLabelEditingMode";
 	}
 
 	// Displays the edit icon (which can be clicked to start editing) next
@@ -2896,7 +2910,9 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Decoration Label - double click");
 				if (dec.label_editable && this.config.enableEditingActions) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.displayDecLabelTextArea(dec, obj, objType, d3Event.currentTarget.parentNode);
+					const editType = this.getDecorationLabelEditType(objType);
+					this.canvasController.textActionHandler(editType, "textdoubleclick",
+						{ id: obj.id, decId: dec.id, pipelineId: this.activePipeline.id });
 				}
 			});
 	}
@@ -4707,6 +4723,21 @@ export default class SVGCanvasRenderer {
 			});
 		}
 
+		// Add or remove drag behavior as appropriate - for now we only support this for
+		// freeform, straight links
+		if (this.config.enableEditingActions &&
+				this.config.enableSplitLinkDroppedOnNode &&
+				this.config.enableLinkMethod === LINK_METHOD_FREEFORM &&
+				this.config.enableLinkType === LINK_TYPE_STRAIGHT
+		) {
+			const handler = this.dragLinkUtils.getDragLinkHandler();
+			joinedLinkGrps
+				.call(handler);
+		} else {
+			joinedLinkGrps
+				.on(".drag", null);
+		}
+
 		if (!this.isMoving() && !this.isSizing() && !this.config.enableLinksOverNodes) {
 			this.setDisplayOrder(joinedLinkGrps);
 		}
@@ -4804,6 +4835,7 @@ export default class SVGCanvasRenderer {
 						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE ||
 						this.config.enableRaiseLinksToTopOnHover) {
 					this.raiseLinkToTop(targetObj);
+					this.setLinkHandlesHoverClass(targetObj, true);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, d, "hover");
@@ -4844,6 +4876,7 @@ export default class SVGCanvasRenderer {
 				// to avoid Decoration Textarea to be closed on mouseleave.
 				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes && !this.isEditingText()) {
 					this.lowerLinkToBottom(targetObj);
+					this.setLinkHandlesHoverClass(targetObj, false);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, link, "default");
@@ -5160,18 +5193,24 @@ export default class SVGCanvasRenderer {
 			.raise();
 	}
 
+	raiseLinkToTopById(linkId) {
+		this.getLinkGroupSelectionById(linkId).raise();
+	}
+
 	raiseLinkToTop(obj) {
-		// Add handles-detachable-hover class to avoid firefox hover issue
 		d3.select(obj)
-			.raise()
-			.classed("handles-detachable-hover", true);
+			.raise();
 	}
 
 	lowerLinkToBottom(obj) {
-		// Remove handles-detachable-hover class to avoid firefox hover issue
 		d3.select(obj)
-			.lower()
-			.classed("handles-detachable-hover", false);
+			.lower();
+	}
+
+	setLinkHandlesHoverClass(obj, state) {
+		// Add or remove handles-detachable-hover class to avoid firefox hover issue
+		d3.select(obj)
+			.classed("handles-detachable-hover", state);
 	}
 
 	// Returns true if the link passed in has one or more decorations.
@@ -5278,13 +5317,15 @@ export default class SVGCanvasRenderer {
 					: null;
 			const coords = this.linkUtils.getLinkCoords(link, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation);
 
-			// Set additional calculated fields on link object.
+			// If start and end coords are updated, the link will need to be redrawn.
 			link.coordsUpdated =
 				link.x1 !== coords.x1 ||
 				link.y1 !== coords.y1 ||
 				link.x2 !== coords.x2 ||
-				link.y2 !== coords.y2;
+				link.y2 !== coords.y2 ||
+				link.centerDragPos; // If link has centerDragPos, ensure this link is refreshed.
 
+			// Set additional calculated fields on link object.
 			link.assocLinkVariation = assocLinkVariation;
 			link.x1 = coords.x1;
 			link.y1 = coords.y1;
@@ -5957,7 +5998,10 @@ export default class SVGCanvasRenderer {
 	getAngleBasedForFreeformLink(d) {
 		const selfRefLink = d.srcNodeId && d.trgNodeId && d.srcNodeId === d.trgNodeId;
 		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT && !selfRefLink) {
-			return Math.atan2((d.y2 - d.y1), (d.x2 - d.x1)) * (180 / Math.PI);
+			if (d.centerDragPos && d.centerDragPos !== "revertLink") {
+				return CanvasUtils.calculateAngle(d.centerDragPos.x, d.centerDragPos.y, d.x2, d.y2);
+			}
+			return CanvasUtils.calculateAngle(d.x1, d.y1, d.x2, d.y2);
 		}
 
 		// For other freeform link types we return an appropriate direction
