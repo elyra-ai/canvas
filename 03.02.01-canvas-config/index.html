@@ -1424,6 +1424,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#enablesplitlinkdroppedonnode" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSplitLinkDroppedOnNode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enableraiselinkstotoponhover" class="md-nav__link">
     <span class="md-ellipsis">
       enableRaiseLinksToTopOnHover
@@ -3562,6 +3571,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#enablesplitlinkdroppedonnode" class="md-nav__link">
+    <span class="md-ellipsis">
+      enableSplitLinkDroppedOnNode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enableraiselinkstotoponhover" class="md-nav__link">
     <span class="md-ellipsis">
       enableRaiseLinksToTopOnHover
@@ -4098,11 +4116,12 @@ and this is how it is specified to Common Canvas:
 </ul>
 <p>In addition to these positions, the port positions can be further customized using the <a href="../03.06.01-node-customization/#overriding-port-positions-and-link-directions">nodeLayout options</a>.</p>
 <h4 id="enableinsertnodedroppedonlink"><strong>enableInsertNodeDroppedOnLink</strong><a class="headerlink" href="#enableinsertnodedroppedonlink" title="Permanent link">&para;</a></h4>
-<p>This is a boolean. The default is false. If set to true, the user can drag nodes from the palette or from the canvas and drop them onto existing links in the flow. This causes the dropped node to be inserted between the two nodes joined by the link, meaning new links are created that join the new node to the previously joined nodes and the old link is removed. When the user performs the drop Common Canvas will call the editActionHandler with one of two possible commands:</p>
+<p>This is a boolean. The default is false. If set to true, the user can drag nodes from the palette or from the canvas and drop them onto existing links in the flow. This causes the dropped node to be inserted between the two nodes joined by the link, meaning new links are created that join the new node to the previously joined nodes and the old link is removed. When the user performs the drop, Common Canvas will call the <a href="/03.03.03-edit-action-handler/">editActionHandler</a> with one of two possible commands:</p>
 <ul>
 <li>&ldquo;createNodeOnLink&rdquo; - when a node is being dragged from the palette leading to node creation &amp; insertion</li>
 <li>&ldquo;insertNodeIntoLink&rdquo; - when an existing node is dragged from the canvas leading to insertion of the existing node into the link</li>
 </ul>
+<p>The gesture of dragging a node and dropping it on a link is semantically the same as <a href="./#enablesplitlinkdroppedonnode">dragging a link to a node</a>.</p>
 <h4 id="enablepositionnodeonrightflyoutopen"><strong>enablePositionNodeOnRightFlyoutOpen</strong><a class="headerlink" href="#enablepositionnodeonrightflyoutopen" title="Permanent link">&para;</a></h4>
 <p>This can be a boolean or an object. The default is false. If set to true, when the right-side flyout is open the currently selected node (assuming there is one) will be automatically positioned in the center of the viewport (canvas area). Instead of true this field can also be set to a simple JavaScript object like this <code>{ x: 30, y: 40 }</code> where x and y indicate the position where the node will be positioned as a percentage of the width and height of the viewport respectively.</p>
 <h4 id="enablehighlightnodeonnewlinkdrag"><strong>enableHighlightNodeOnNewLinkDrag</strong><a class="headerlink" href="#enablehighlightnodeonnewlinkdrag" title="Permanent link">&para;</a></h4>
@@ -4161,6 +4180,9 @@ and this is how it is specified to Common Canvas:
 <h4 id="enablelinkreplaceonnewconnection"><strong>enableLinkReplaceOnNewConnection</strong><a class="headerlink" href="#enablelinkreplaceonnewconnection" title="Permanent link">&para;</a></h4>
 <p>This is a boolean. The default is false. If set to true, the user can drag a new connection to a target node, and if the input port on the target node has a maximum cardinality of one AND there is currently a connection to that port, the existing connection will be removed and the new connection is created; essentially this gesture replaces the existing link with the new one. If set to false the new connection will not be completed and the existing link will remain in place.</p>
 <p>When set to true and a link is replaced, Common Canvas will call the <code>beforeEditActionHandler</code> the <code>editActionHandler</code> callback functions, if either are provided by the host application, with a <code>data</code> object parameter with the <code>editType</code> field set to <code>"linkNodesAndReplace"</code>.</p>
+<h4 id="enablesplitlinkdroppedonnode"><strong>enableSplitLinkDroppedOnNode</strong><a class="headerlink" href="#enablesplitlinkdroppedonnode" title="Permanent link">&para;</a></h4>
+<p>This is a boolean. The default is false. If set to true, the user can drag a link (from somewhere in the body of the link) and drop it onto a node. This causes the dropped node to be inserted between the two nodes joined by the link, meaning new links are created that join the new node to the previously joined nodes and the old link is removed. When the user performs the drop, Common Canvas will call the <a href="/03.03.03-edit-action-handler/">editActionHandler</a> with the &ldquo;insertNodeIntoLink&rdquo; edit type.</p>
+<p>The gesture of dragging a link and dropping it on a node is semantically the same as <a href="./#enableinsertnodedroppedonlink">dragging an existing node to a link</a>.</p>
 <h4 id="enableraiselinkstotoponhover"><strong>enableRaiseLinksToTopOnHover</strong><a class="headerlink" href="#enableraiselinkstotoponhover" title="Permanent link">&para;</a></h4>
 <p>This is a boolean. The default is false. If set to false the links will be left in their original place in the DOM. If set to true, when the user moves the mouse cursor over a link, that link will be moved in the DOM so that the link appears on top of all nodes, links and comments. Raising links to the top is the standard behavior when <code>enableLinkSelection</code> is set to &ldquo;Handles&rdquo; or &ldquo;Detachable&rdquo; so for those settings this option is automatically set to <code>true</code>.</p>
 <h4 id="enableassoclinkcreation"><strong>enableAssocLinkCreation</strong><a class="headerlink" href="#enableassoclinkcreation" title="Permanent link">&para;</a></h4>
