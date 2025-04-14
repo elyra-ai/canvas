@@ -4710,8 +4710,13 @@ export default class SVGCanvasRenderer {
 			});
 		}
 
-		// Add or remove drag behavior as appropriate
-		if (this.config.enableEditingActions && this.config.enableSplitLinkDroppedOnNode) {
+		// Add or remove drag behavior as appropriate - for now we only support this for
+		// freeform, straight links
+		if (this.config.enableEditingActions &&
+				this.config.enableSplitLinkDroppedOnNode &&
+				this.config.enableLinkMethod === LINK_METHOD_FREEFORM &&
+				this.config.enableLinkType === LINK_TYPE_STRAIGHT
+		) {
 			const handler = this.dragLinkUtils.getDragLinkHandler();
 			joinedLinkGrps
 				.call(handler);

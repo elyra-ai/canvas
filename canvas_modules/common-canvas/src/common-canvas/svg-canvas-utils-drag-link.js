@@ -71,7 +71,14 @@ export default class SVGCanvasUtilsDragLink {
 
 		const nodeNearMouse = this.ren.getNodeNearMousePos(d3Event, this.ren.canvasLayout.nodeProximity);
 
-		this.targetNode = CanvasUtils.isNodeAttachableToInOutLinks(nodeNearMouse, this.ren.activePipeline.links)
+		const links = this.ren.activePipeline.links;
+		const srcNode = this.dragLink.srcObj;
+		const trgNode = this.dragLink.trgNode;
+
+		this.targetNode = nodeNearMouse &&
+			CanvasUtils.isNodeAttachableToDefaultPorts(nodeNearMouse, links) &&
+			!CanvasUtils.linkAlreadyExists(srcNode.outputs[0].id, nodeNearMouse.inputs[0].id, srcNode, nodeNearMouse, links) &&
+			!CanvasUtils.linkAlreadyExists(nodeNearMouse.outputs[0].id, trgNode.inputs[0].id, nodeNearMouse, trgNode, links)
 			? nodeNearMouse
 			: null;
 
@@ -95,6 +102,8 @@ export default class SVGCanvasUtilsDragLink {
 				editType: "insertNodeIntoLink",
 				editSource: "canvas",
 				node: this.targetNode,
+				srcPort: this.targetNode.outputs[0],
+				trgPort: this.targetNode.inputs[0],
 				link: this.dragLink,
 				offsetX: 0,
 				offsetY: 0,

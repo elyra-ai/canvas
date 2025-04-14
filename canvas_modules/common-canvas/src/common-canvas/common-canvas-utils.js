@@ -618,9 +618,10 @@ export default class CanvasUtils {
 		return node.outputs && node.outputs.length > 0;
 	}
 
-	// Returns true if the node has at least one available input port
-	// at least one available output port.
-	static isNodeAttachableToInOutLinks(node, links) {
+	// Returns true if the node's default (first) input port
+	// is available AND the node's default (first) output port
+	// is available.
+	static isNodeAttachableToDefaultPorts(node, links) {
 		return node &&
 			CanvasUtils.hasInputAndOutputPorts(node) &&
 			!CanvasUtils.isNodeDefaultPortsCardinalityAtMax(node, links);
