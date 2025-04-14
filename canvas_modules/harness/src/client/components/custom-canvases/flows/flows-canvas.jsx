@@ -52,6 +52,7 @@ export default class FlowsCanvas extends React.Component {
 			enableContextToolbar: true,
 			enableHighlightNodeOnNewLinkDrag: true,
 			enableRightFlyoutUnderToolbar: true,
+			enableKeyboardNavigation: true,
 			tipConfig: {
 				palette: true,
 				nodes: true,
@@ -94,7 +95,7 @@ export default class FlowsCanvas extends React.Component {
 				dataLinkArrowHead: true,
 				linkGap: 4,
 				displayLinkOnOverlap: false,
-				displayGridType: "DotsAndLines"
+				displayGridType: "BoxesAndLines"
 			}
 		});
 		return config;
