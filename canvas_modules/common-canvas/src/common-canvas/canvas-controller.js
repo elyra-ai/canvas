@@ -2555,6 +2555,14 @@ export default class CanvasController {
 			this.setNodeLabelEditingMode(data.id, data.pipelineId);
 			break;
 		}
+		case "setNodeDecorationLabelEditingMode": {
+			this.setNodeDecorationLabelEditingMode(data.decId, data.id, data.pipelineId);
+			break;
+		}
+		case "setLinkDecorationLabelEditingMode": {
+			this.setLinkDecorationLabelEditingMode(data.decId, data.id, data.pipelineId);
+			break;
+		}
 		case "setZoom": {
 			this.objectModel.setZoom(data.zoom, data.pipelineId);
 			break;
@@ -2884,6 +2892,8 @@ export default class CanvasController {
 		// put focus on the canvas background) except in these cases.
 		} else if (data.editType !== "setCommentEditingMode" &&
 					data.editType !== "setNodeLabelEditingMode" &&
+					data.editType !== "setNodeDecorationLabelEditingMode" &&
+					data.editType !== "setLinkDecorationLabelEditingMode" &&
 					data.editType !== "togglePalette" &&
 					data.editType !== "openPalette" &&
 					data.editType !== "closePalette" &&

@@ -101,8 +101,10 @@ const isEditingAction = (action) =>
 	action === "createWYSIWYGComment" ||
 	action === "colorBackground" ||
 	action === "disconnectNode" ||
-	action === "setNodeLabelEditingMode" ||
 	action === "setCommentEditingMode" ||
+	action === "setNodeLabelEditingMode" ||
+	action === "setNodeDecorationLabelEditingMode" ||
+	action === "setLinkDecorationLabelEditingMode" ||
 	action === "cut" ||
 	action === "copy" ||
 	action === "paste" ||

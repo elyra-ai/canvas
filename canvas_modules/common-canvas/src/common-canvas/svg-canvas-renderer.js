@@ -2628,6 +2628,7 @@ export default class SVGCanvasRenderer {
 		this.getAllNodeGroupsSelection().classed("d3-node-unavailable", false);
 	}
 
+	// Displays the edit icon for an editable node label.
 	displayNodeLabelEditIcon(spanObj, node) {
 		const labelObj = spanObj.parentElement;
 		const foreignObj = labelObj.parentElement;
@@ -2650,9 +2651,17 @@ export default class SVGCanvasRenderer {
 		const decGrpSel = d3.select(decObj);
 		const transform = this.decUtils.getDecLabelEditIconTranslate(
 			dec, obj, objType, spanObj, this.zoomUtils.getZoomScale());
+		const editType = this.getDecorationLabelEditType(objType);
 
 		this.displayEditIcon(spanObj, decGrpSel, transform,
-			(d3Event, d) => this.displayDecLabelTextArea(dec, obj, objType, d3Event.currentTarget.parentNode));
+			(d3Event, d) => this.canvasController.textActionHandler(editType, "editicon",
+				{ id: obj.id, decId: dec.id, objType, pipelineId: this.activePipeline.id }));
+	}
+
+	// Returns the appropriate editType string (for changing to edit mode)
+	// for the objType passed in.
+	getDecorationLabelEditType(objType) {
+		return objType === DEC_NODE ? "setNodeDecorationLabelEditingMode" : "setLinkDecorationLabelEditingMode";
 	}
 
 	// Displays the edit icon (which can be clicked to start editing) next
@@ -2896,7 +2905,9 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Decoration Label - double click");
 				if (dec.label_editable && this.config.enableEditingActions) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.displayDecLabelTextArea(dec, obj, objType, d3Event.currentTarget.parentNode);
+					const editType = this.getDecorationLabelEditType(objType);
+					this.canvasController.textActionHandler(editType, "textdoubleclick",
+						{ id: obj.id, decId: dec.id, pipelineId: this.activePipeline.id });
 				}
 			});
 	}
