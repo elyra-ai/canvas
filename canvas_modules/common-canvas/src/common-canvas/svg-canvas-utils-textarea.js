@@ -899,10 +899,10 @@ export default class SvgCanvasTextArea {
 			.on("focus", (d3Event, d) => {
 				this.logger.log("Text area - focus");
 				data.autoSizeCallback(d3Event.target, data);
-				// Focus only happens when the text area is being displayed. We re-initialize
-				// data.height here to the new textAreaHeight set in autoSizeCallback. This
-				// prevents any initial height change causing an edit action to be generated
-				// if the  text area is immediately closed without the user altering it.
+				// Focus only happens when the text area is being displayed. So here, we
+				// re-initialize data.height to any new textAreaHeight set in autoSizeCallback.
+				// This prevents an initial height change causing an edit action to be generated
+				// if the text area is immediately closed without the user altering it.
 				data.height = this.textAreaHeight;
 			})
 			.on("mousedown mouseenter mouseleave click dblclick contextmenu", (d3Event, d) => {
