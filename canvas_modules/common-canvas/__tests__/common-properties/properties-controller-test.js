@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 import deepFreeze from "deep-freeze";
 import { merge } from "lodash";
-import propertyUtils from "../_utils_/property-utils";
+import propertyUtilsRTL from "../_utils_/property-utilsRTL";
 import Controller from "../../src/common-properties/properties-controller";
 import Form from "../../src/common-properties/form/Form";
 import conditionForm from "../test_resources/json/conditions-summary-form.json";
@@ -34,12 +34,12 @@ import oneofselectParamDef from "../test_resources/paramDefs/oneofselect_paramDe
 import structuretablePropertyValues from "../test_resources/json/structuretable_propertyValues.json";
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
 import readonlyTableParamDef from "../test_resources/paramDefs/readonlyTable_paramDef.json";
-
-import testUtils from "../_utils_/property-utils";
+import testUtils from "../_utils_/property-utilsRTL";
 
 import EqualsOverride from "../_utils_/custom-condition-ops/equals-override";
 import CustomInvalidOp from "../_utils_/custom-condition-ops/customInvalid";
 import CustomMax from "../_utils_/custom-condition-ops/customMax";
+import { fireEvent } from "@testing-library/react";
 
 const propValues = {
 	param_int: 5,
@@ -1334,7 +1334,7 @@ describe("Properties Controller handlers", () => {
 		})).to.be.true;
 	});
 	it("should callback after all properties are loaded", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldParamDef, null, { propertyListener: propertyListener });
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(numberfieldParamDef, null, { propertyListener: propertyListener });
 		expect(propertyListener.calledWith({ action: "PROPERTIES_LOADED" })).to.be.true;
 
 		// Verify values and messages are set after PROPERTIES_LOADED
@@ -2086,7 +2086,7 @@ describe("Properties Controller addRemoveRows", () => {
 		});
 	});
 
-	it("structure should not show buttoms if addRemoveRows is set to false", () => {
+	it("structure should not show buttons if addRemoveRows is set to false", () => {
 		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
 		controller = renderedObject.controller;
 		const wrapper = renderedObject.wrapper;
@@ -2094,18 +2094,18 @@ describe("Properties Controller addRemoveRows", () => {
 
 		// Verify buttons are visible when editor opens
 		let summaryPanel = testUtils.openSummaryPanel(wrapper, "structurelisteditorTableInput-summary-panel");
-		expect(summaryPanel.find(".properties-at-buttons-container")).to.have.length(1);
+		expect(summaryPanel.querySelectorAll(".properties-at-buttons-container")).to.have.length(1);
 
 		// Set the addRemoveRows to false for this control
 		controller.setAddRemoveRows(propertyId, false);
 		summaryPanel = testUtils.openSummaryPanel(wrapper, "structurelisteditorTableInput-summary-panel");
-		expect(summaryPanel.find(".properties-at-buttons-container")).to.have.length(0);
+		expect(summaryPanel.querySelectorAll(".properties-at-buttons-container")).to.have.length(0);
 		expect(controller.getAddRemoveRows(propertyId)).to.be.false;
 
 		// Set the addRemoveRows to true for this control
 		controller.setAddRemoveRows(propertyId, true);
 		summaryPanel = testUtils.openSummaryPanel(wrapper, "structurelisteditorTableInput-summary-panel");
-		expect(summaryPanel.find(".properties-at-buttons-container")).to.have.length(1);
+		expect(summaryPanel.querySelectorAll(".properties-at-buttons-container")).to.have.length(1);
 		expect(controller.getAddRemoveRows(propertyId)).to.be.true;
 	});
 
@@ -2117,24 +2117,25 @@ describe("Properties Controller addRemoveRows", () => {
 
 		// Verify buttons are visible when editor opens
 		let summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
-		const parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructurelisteditor']");
-		parentTable.find("button.properties-subpanel-button").at(0)
-			.simulate("click");
-		let nestedTable = wrapper.find("div[data-id='properties-nested_structure']");
-		expect(nestedTable.find(".properties-at-buttons-container")).to.have.length(1);
+		const parentTable = summaryPanel.querySelector("div[data-id='properties-ft-nestedStructurelisteditor']");
+		const buttonSubPanel = parentTable.querySelectorAll("button.properties-subpanel-button")[0];
+		fireEvent.click(buttonSubPanel);
+		const { container } = wrapper;
+		let nestedTable = container.querySelector("div[data-id='properties-nested_structure']");
+		expect(nestedTable.querySelectorAll(".properties-at-buttons-container")).to.have.length(1);
 
 		// Set the addRemoveRows to false for this control
 		controller.setAddRemoveRows(propertyId, false);
 		summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
-		nestedTable = wrapper.find("div[data-id='properties-nested_structure']");
-		expect(nestedTable.find(".properties-at-buttons-container")).to.have.length(0);
+		nestedTable = container.querySelector("div[data-id='properties-nested_structure']");
+		expect(nestedTable.querySelectorAll(".properties-at-buttons-container")).to.have.length(0);
 		expect(controller.getAddRemoveRows(propertyId)).to.be.false;
 
 		// Set the addRemoveRows to true for this control
 		controller.setAddRemoveRows(propertyId, true);
 		summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
-		nestedTable = wrapper.find("div[data-id='properties-nested_structure']");
-		expect(nestedTable.find(".properties-at-buttons-container")).to.have.length(1);
+		nestedTable = container.querySelector("div[data-id='properties-nested_structure']");
+		expect(nestedTable.querySelectorAll(".properties-at-buttons-container")).to.have.length(1);
 		expect(controller.getAddRemoveRows(propertyId)).to.be.true;
 	});
 
@@ -2273,17 +2274,16 @@ describe("Properties Controller custom table buttons", () => {
 
 		// Verify buttons are visible when editor opens
 		let summaryPanel = testUtils.openSummaryPanel(wrapper, "structuretableCustomIconButtons-summary-panel");
-		let firstTable = summaryPanel.find("div[data-id='properties-structuretableCustomIconButtons']");
-		let customButtonToolbar = firstTable.find(".properties-custom-table-buttons");
-		expect(customButtonToolbar).to.have.length(1);
-		expect(customButtonToolbar.find(".toolbar-item.default")).to.have.length(4);
-		let customButtons = customButtonToolbar.find(".toolbar-item.default button");
+		let firstTable = summaryPanel.querySelector("div[data-id='properties-structuretableCustomIconButtons']");
+		let customButtonToolbar = firstTable.querySelector(".properties-custom-table-buttons");
+		expect(customButtonToolbar).to.exist;
+		expect(customButtonToolbar.querySelectorAll(".toolbar-item.default")).to.have.length(4);
+		let customButtons = customButtonToolbar.querySelectorAll(".toolbar-item.default button");
 		expect(customButtons).to.have.length(4);
-
-		expect(customButtons.at(0).prop("disabled")).to.equal(true);
-		expect(customButtons.at(1).prop("disabled")).to.equal(false);
-		expect(customButtons.at(2).prop("disabled")).to.equal(true);
-		expect(customButtons.at(3).prop("disabled")).to.equal(false);
+		expect(customButtons[0]).to.have.property("disabled", true);
+		expect(customButtons[1]).to.have.property("disabled", false);
+		expect(customButtons[2]).to.have.property("disabled", true);
+		expect(customButtons[3]).to.have.property("disabled", false);
 
 		expect(controller.getTableButtonEnabled(propertyId, "icon_button_3")).to.equal(false);
 		expect(controller.getTableButtonEnabled(propertyId, "icon_button_4")).to.equal(true);
@@ -2292,13 +2292,13 @@ describe("Properties Controller custom table buttons", () => {
 		controller.setTableButtonEnabled(propertyId, "icon_button_4", false); // disable button
 
 		summaryPanel = testUtils.openSummaryPanel(wrapper, "structuretableCustomIconButtons-summary-panel");
-		firstTable = summaryPanel.find("div[data-id='properties-structuretableCustomIconButtons']");
-		customButtonToolbar = firstTable.find(".properties-custom-table-buttons");
-		customButtons = customButtonToolbar.find(".toolbar-item.default button");
-		expect(customButtons.at(0).prop("disabled")).to.equal(true);
-		expect(customButtons.at(1).prop("disabled")).to.equal(false);
-		expect(customButtons.at(2).prop("disabled")).to.equal(false);
-		expect(customButtons.at(3).prop("disabled")).to.equal(true);
+		firstTable = summaryPanel.querySelector("div[data-id='properties-structuretableCustomIconButtons']");
+		customButtonToolbar = firstTable.querySelector(".properties-custom-table-buttons");
+		customButtons = customButtonToolbar.querySelectorAll(".toolbar-item.default button");
+		expect(customButtons[0]).to.have.property("disabled", true);
+		expect(customButtons[1]).to.have.property("disabled", false);
+		expect(customButtons[2]).to.have.property("disabled", false);
+		expect(customButtons[3]).to.have.property("disabled", true);
 
 		expect(controller.getTableButtonEnabled(propertyId, "icon_button_3")).to.equal(true);
 		expect(controller.getTableButtonEnabled(propertyId, "icon_button_4")).to.equal(false);
@@ -2320,20 +2320,21 @@ describe("Properties Controller custom table buttons", () => {
 		const propertyId = { "name": "nestedStructureCustomButtons", "row": 0, "col": 2 };
 
 		let summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
-		let parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructureCustomButtons']");
-		parentTable.find("button.properties-subpanel-button").at(0)
-			.simulate("click");
-		let nestedTable = wrapper.find("div[data-id='properties-nestedStructureCustomButtons_table']");
-		let customButtonToolbar = nestedTable.find(".properties-custom-table-buttons");
-		expect(customButtonToolbar).to.have.length(1);
-		expect(customButtonToolbar.find(".toolbar-item.default")).to.have.length(4);
-		let customButtons = customButtonToolbar.find(".toolbar-item.default button");
+		let parentTable = summaryPanel.querySelector("div[data-id='properties-ft-nestedStructureCustomButtons']");
+		let buttonSubPanel = parentTable.querySelectorAll("button.properties-subpanel-button")[0];
+		fireEvent.click(buttonSubPanel);
+		const { container } = wrapper;
+		let nestedTable = container.querySelector("div[data-id='properties-nestedStructureCustomButtons_table']");
+		let customButtonToolbar = nestedTable.querySelector(".properties-custom-table-buttons");
+		expect(customButtonToolbar).to.exist;
+		expect(customButtonToolbar.querySelectorAll(".toolbar-item.default")).to.have.length(4);
+		let customButtons = customButtonToolbar.querySelectorAll(".toolbar-item.default button");
 		expect(customButtons).to.have.length(4);
 
-		expect(customButtons.at(0).prop("disabled")).to.equal(true);
-		expect(customButtons.at(1).prop("disabled")).to.equal(false);
-		expect(customButtons.at(2).prop("disabled")).to.equal(true);
-		expect(customButtons.at(3).prop("disabled")).to.equal(false);
+		expect(customButtons[0]).to.have.property("disabled", true);
+		expect(customButtons[1]).to.have.property("disabled", false);
+		expect(customButtons[2]).to.have.property("disabled", true);
+		expect(customButtons[3]).to.have.property("disabled", false);
 
 		controller.setTableButtonEnabled(propertyId, "nested_button_3", true); // enable button
 		controller.setTableButtonEnabled(propertyId, "nested_button_4", false); // disable button
@@ -2341,19 +2342,19 @@ describe("Properties Controller custom table buttons", () => {
 		const expected = { "nested_button_1": false, "nested_button_2": true, "nested_button_3": true, "nested_button_4": false };
 		expect(controller.getTableButtons(propertyId)).to.eql(expected);
 
-		// // Verify buttons are visible when editor opens
+		// Verify buttons are visible when editor opens
 		summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
-		parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructureCustomButtons']");
-		parentTable.find("button.properties-subpanel-button").at(0)
-			.simulate("click");
-		nestedTable = wrapper.find("div[data-id='properties-nestedStructureCustomButtons_table']");
-		customButtonToolbar = nestedTable.find(".properties-custom-table-buttons");
-		customButtons = customButtonToolbar.find(".toolbar-item.default button");
+		parentTable = summaryPanel.querySelector("div[data-id='properties-ft-nestedStructureCustomButtons']");
+		buttonSubPanel = parentTable.querySelectorAll("button.properties-subpanel-button")[0];
+		fireEvent.click(buttonSubPanel);
+		nestedTable = container.querySelector("div[data-id='properties-nestedStructureCustomButtons_table']");
+		customButtonToolbar = nestedTable.querySelector(".properties-custom-table-buttons");
+		customButtons = customButtonToolbar.querySelectorAll(".toolbar-item.default button");
 
-		expect(customButtons.at(0).prop("disabled")).to.equal(true);
-		expect(customButtons.at(1).prop("disabled")).to.equal(false);
-		expect(customButtons.at(2).prop("disabled")).to.equal(false);
-		expect(customButtons.at(3).prop("disabled")).to.equal(true);
+		expect(customButtons[0]).to.have.property("disabled", true);
+		expect(customButtons[1]).to.have.property("disabled", false);
+		expect(customButtons[2]).to.have.property("disabled", false);
+		expect(customButtons[3]).to.have.property("disabled", true);
 	});
 });
 
@@ -2370,33 +2371,22 @@ describe("Properties Controller setWideFlyoutPrimaryButtonDisabled", () => {
 
 		// Verify OK button is enabled by default
 		let summaryPanel = testUtils.openSummaryPanel(wrapper, id);
-		let wideFlyoutPrimaryButton = summaryPanel
-			.find(".properties-wf-content")
-			.find(".properties-modal-buttons")
-			.find("button[data-id='properties-apply-button']");
-		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", false);
-		expect(wideFlyoutPrimaryButton.prop("className").includes("cds--btn--disabled")).to.equal(false);
+		let wideFlyoutPrimaryButton = summaryPanel.querySelector("button[data-id='properties-apply-button']");
+		expect(wideFlyoutPrimaryButton).to.have.property("disabled", false);
 
 		// Disable OK button for this summary panel using controller method
 		controller.setWideFlyoutPrimaryButtonDisabled(summaryPanelId, true);
 		summaryPanel = testUtils.openSummaryPanel(wrapper, id);
-		wideFlyoutPrimaryButton = summaryPanel
-			.find(".properties-wf-content")
-			.find(".properties-modal-buttons")
-			.find("button[data-id='properties-apply-button']");
-		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", true);
-		expect(wideFlyoutPrimaryButton.prop("className").includes("cds--btn--disabled")).to.equal(true);
-		expect(controller.getWideFlyoutPrimaryButtonDisabled(summaryPanelId)).to.be.true;
+		wideFlyoutPrimaryButton = summaryPanel.querySelector("button[data-id='properties-apply-button']");
+		expect(wideFlyoutPrimaryButton).to.have.property("disabled", true);
+		expect(wideFlyoutPrimaryButton.classList.contains("cds--btn--disabled")).to.equal(true);
 
 		// Enable OK button for this summary panel using controller method
 		controller.setWideFlyoutPrimaryButtonDisabled(summaryPanelId, false);
 		summaryPanel = testUtils.openSummaryPanel(wrapper, id);
-		wideFlyoutPrimaryButton = summaryPanel
-			.find(".properties-wf-content")
-			.find(".properties-modal-buttons")
-			.find("button[data-id='properties-apply-button']");
-		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", false);
-		expect(wideFlyoutPrimaryButton.prop("className").includes("cds--btn--disabled")).to.equal(false);
+		wideFlyoutPrimaryButton = summaryPanel.querySelector(".properties-wf-content .properties-modal-buttons button[data-id='properties-apply-button']");
+		expect(wideFlyoutPrimaryButton).to.have.property("disabled", false);
+		expect(wideFlyoutPrimaryButton.classList.contains("cds--btn--disabled")).to.equal(false);
 		expect(controller.getWideFlyoutPrimaryButtonDisabled(summaryPanelId)).to.be.false;
 	});
 });
@@ -2411,8 +2401,10 @@ describe("Properties Controller getTopLevelActiveGroupId", () => {
 		expect(topLevelActiveGroupId).to.equal("checkboxset-values");
 
 		// Select Conditions accordion
-		const conditionsCategory = wrapper.find("div.properties-category-container").at(1);
-		conditionsCategory.find("button.cds--accordion__heading").simulate("click");
+		const { container } = wrapper;
+		const conditionsCategory = container.querySelectorAll("div.properties-category-container")[1];
+		const accordionHeadingButton = conditionsCategory.querySelector("button.cds--accordion__heading");
+		fireEvent.click(accordionHeadingButton);
 		topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
 		expect(topLevelActiveGroupId).to.equal("checkboxset-conditions");
 
@@ -2431,8 +2423,10 @@ describe("Properties Controller setTopLevelActiveGroup", () => {
 		expect(topLevelActiveGroupId).to.equal("Primary3");
 
 		// Select Condition in accordion
-		const conditionsCategory = wrapper.find("div.properties-category-container").at(2);
-		conditionsCategory.find("button.cds--accordion__heading").simulate("click");
+		const { container } = wrapper;
+		const conditionsCategory = container.querySelectorAll("div.properties-category-container")[2];
+		const accordionHeadingButton = conditionsCategory.querySelector("button.cds--accordion__heading");
+		fireEvent.click(accordionHeadingButton);
 		topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
 		expect(topLevelActiveGroupId).to.equal("Primary2");
 	});
