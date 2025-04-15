@@ -2534,6 +2534,7 @@ export default class SVGCanvasRenderer {
 		nodeLabelSpans
 			.on("mouseenter", (d3Event, d) => {
 				if (d.layout.labelEditable && this.config.enableEditingActions) {
+					clearTimeout(this.hideEditIconPending);
 					this.displayNodeLabelEditIcon(d3Event.currentTarget, d);
 				}
 			})
@@ -2678,6 +2679,7 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-label-edit-icon-group")
 			.attr("transform", transform)
 			.on("mouseenter", function(d3Event, d) {
+				clearTimeout(this.hideEditIconPending);
 				that.mouseOverLabelEditIcon = true;
 			})
 			.on("mouseleave", function(d3Event, d) {
