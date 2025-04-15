@@ -59,6 +59,8 @@ export type InternalAction =
   | "commentsShow"
   | "setCommentEditingMode"
   | "setNodeLabelEditingMode"
+  | "setNodeDecorationLabelEditingMode"
+  | "setLinkDecorationLabelEditingMode"
   | "setZoom"
   | "togglePalette"
   | "openPalette"
