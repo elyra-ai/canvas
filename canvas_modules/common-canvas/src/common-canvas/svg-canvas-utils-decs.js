@@ -82,7 +82,8 @@ export default class SvgCanvasDecs {
 		//  distance field is only applicable with straight lines.
 		// 'angle' may be 0 so use has to check that it is not undefined.
 		if (dec.distance && has(link, "pathInfo.angle")) {
-			x += Math.cos(link.pathInfo.angle) * dec.distance;
+			const angleInRadians = link.pathInfo.angle * (Math.PI / 180);
+			x += Math.cos(angleInRadians) * dec.distance;
 		}
 
 		// Subtract half the width for center aligned labels.
@@ -128,7 +129,8 @@ export default class SvgCanvasDecs {
 		// distance field is only applicable with straight lines.
 		// 'angle' may be 0 so use has to check that it is not undefined.
 		if (dec.distance && has(link, "pathInfo.angle")) {
-			y += Math.sin(link.pathInfo.angle) * dec.distance;
+			const angleInRadians = link.pathInfo.angle * (Math.PI / 180);
+			y += Math.sin(angleInRadians) * dec.distance;
 		}
 
 		return y;

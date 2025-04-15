@@ -35,9 +35,17 @@ export default class InsertNodeIntoLinkAction extends Action {
 			id: this.node.id
 		};
 
+		if (this.data.trgPort) {
+			this.firstLinkTrgInfo.portId = this.data.trgPort.id;
+		}
+
 		this.secondLinkSrcInfo = {
 			id: this.node.id
 		};
+
+		if (this.data.srcPort) {
+			this.secondLinkSrcInfo.portId = this.data.srcPort.id;
+		}
 
 		this.secondLinkTrgInfo = {
 			id: data.link.trgNodeId,

@@ -99,11 +99,11 @@ export default class SVGCanvasD3 {
 	}
 
 	isEditingText() {
-		return this.renderer.isEditingText();
+		return this.renderer ? this.renderer.isEditingText() : false;
 	}
 
 	isDragging() {
-		return this.renderer.isDragging();
+		return this.renderer ? this.renderer.isDragging() : false;
 	}
 
 	convertPageCoordsToSnappedCanvasCoords(pos) {

@@ -568,7 +568,7 @@ export default class SvgCanvasTextArea {
 
 	// Displays a <textarea> to allow text entry and editing for: node labels; or
 	// text decorations on either a node or link.
-	// Evetually it is possible that we could remove the <textarea> approach
+	// Eventually, it is possible that we could remove the <textarea> approach
 	// and just use the <div> approach used in displayEditableComment.
 	displayEditableLabel(data) {
 		this.textAreaHeight = data.height; // Save for comparison during auto-resize
@@ -639,7 +639,7 @@ export default class SvgCanvasTextArea {
 		}
 	}
 
-	// Returns true if the two foramts arrays passed in are the same.
+	// Returns true if the two formats arrays passed in are the same.
 	areFormatsTheSame(f1, f2) {
 		if (!f1 && !f2) {
 			return true;
@@ -899,6 +899,11 @@ export default class SvgCanvasTextArea {
 			.on("focus", (d3Event, d) => {
 				this.logger.log("Text area - focus");
 				data.autoSizeCallback(d3Event.target, data);
+				// Focus only happens when the text area is being displayed. So here, we
+				// re-initialize data.height to any new textAreaHeight set in autoSizeCallback.
+				// This prevents an initial height change causing an edit action to be generated
+				// if the text area is immediately closed without the user altering it.
+				data.height = this.textAreaHeight;
 			})
 			.on("mousedown mouseenter mouseleave click dblclick contextmenu", (d3Event, d) => {
 				d3Event.stopPropagation(); // Allow default behavior to show system contenxt menu

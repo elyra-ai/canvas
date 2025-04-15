@@ -618,6 +618,15 @@ export default class CanvasUtils {
 		return node.outputs && node.outputs.length > 0;
 	}
 
+	// Returns true if the node's default (first) input port
+	// is available AND the node's default (first) output port
+	// is available.
+	static isNodeAttachableToDefaultPorts(node, links) {
+		return node &&
+			CanvasUtils.hasInputAndOutputPorts(node) &&
+			!CanvasUtils.isNodeDefaultPortsCardinalityAtMax(node, links);
+	}
+
 	// Returns true if an existing link to the target node and port can be
 	// replaced with a new link from the srcNode to the trgNode and trgPortId.
 	static isDataLinkReplacementAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, selfRefLinkAllowed) {
@@ -1106,19 +1115,19 @@ export default class CanvasUtils {
 
 	// Returns true if the object passed in is a node.
 	static isNode(obj) {
-		return !this.isLink(obj) && !this.isComment(obj);
+		return obj && !this.isLink(obj) && !this.isComment(obj);
 	}
 
 	// Returns true if the object passed in is a link.
 	static isLink(obj) {
-		return obj.type && (obj.type === NODE_LINK || obj.type === COMMENT_LINK || obj.type === ASSOCIATION_LINK);
+		return obj && (obj.type === NODE_LINK || obj.type === COMMENT_LINK || obj.type === ASSOCIATION_LINK);
 	}
 
 	// Returns true if the object passed in is a comment.
 	// Comments don't have a type property but do have content
 	// which might be an empty string, so check it is defined.
 	static isComment(obj) {
-		return !obj.type && typeof obj.content !== "undefined";
+		return obj && !obj.type && typeof obj.content !== "undefined";
 	}
 
 	static isSupernode(node) {
