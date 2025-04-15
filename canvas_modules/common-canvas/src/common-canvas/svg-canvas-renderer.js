@@ -2684,8 +2684,11 @@ export default class SVGCanvasRenderer {
 				that.mouseOverLabelEditIcon = false;
 				that.hideEditIcon(this);
 			})
-			.on("mousedown mouseup", function(d3Event) {
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+			.on("mousedown", function() {
+				// Don't stop propagation here because mousedown needs to go through
+				// to the parent object to perform selection of that obejct before the
+				// "click" event is caught by the code below. This will also cause a blur
+				// on any currently open text entry area and complete any text entry.
 			})
 			.on("click", function(d3Event, d) {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
@@ -2853,7 +2856,7 @@ export default class SVGCanvasRenderer {
 	updateDecLabels(dec, decSel, objType, d) {
 		let labelSel = decSel.selectChild(".d3-foreign-object-dec-label");
 
-		if (dec.label) {
+		if (typeof dec.label !== "undefined") {
 			if (labelSel.empty()) {
 				labelSel = decSel
 					.append("foreignObject")
@@ -2889,8 +2892,7 @@ export default class SVGCanvasRenderer {
 					.attr("tabindex", -1)
 					.attr("x", 0)
 					.attr("y", 0)
-					.attr("aria-label", "JSX decoration")
-					.call(this.attachDecLabelListeners.bind(this, d, objType));
+					.attr("aria-label", "JSX decoration");
 			}
 			extSel
 				.attr("width", this.decUtils.getDecWidth(dec, d, objType))
