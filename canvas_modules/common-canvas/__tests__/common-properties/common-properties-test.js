@@ -258,7 +258,7 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		// make some changes
-		tableUtils.selectCheckboxes(container, [0]);
+		tableUtilsRTL.selectCheckboxes(container, [0]);
 
 		// ensure table toolbar has delete and click it
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
