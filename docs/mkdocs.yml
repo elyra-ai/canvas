@@ -117,6 +117,7 @@ nav:
     - Read Only or Locked Flows: 03.09-read-only-or-locked-flows.md
     - Command Stack: 03.10-command-stack.md
     - Internal Actions: 03.11-internal-actions.md
+    - Node Properties Management: 03.12-node-properties-management.md
     - Deprecated:
       - Context Menu Wrapper: 03.30.01-context-menu-wrapper.md
       - Flow Validation: 03.30.02-flow-validation.md
