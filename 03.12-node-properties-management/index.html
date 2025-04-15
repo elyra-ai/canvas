@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../03.03.06-tip-handler/">
+        <link rel="prev" href="../03.11-internal-actions/">
       
       
-        <link rel="next" href="../03.03.08-selection-change-handler/">
+        <link rel="next" href="../03.30.01-context-menu-wrapper/">
       
       
       <link rel="icon" href="../assets/FlowIcon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>ID Generator Handler - Elyra Canvas</title>
+        <title>Node Properties Management - Elyra Canvas</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#id-generator-handler" class="md-skip">
+        <a href="#node-properties-management" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ID Generator Handler
+              Node Properties Management
             
           </span>
         </div>
@@ -1040,6 +1040,8 @@
       
         
       
+        
+      
     
     
     
@@ -1305,10 +1307,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -1341,11 +1341,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
         
           
           <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
@@ -1361,7 +1361,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
             Callbacks
@@ -1533,32 +1533,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    ID Generator Handler
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../03.03.07-id-generator-handler/" class="md-nav__link">
         
   
   
@@ -1569,35 +1547,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#idgeneratorhandler" class="md-nav__link">
-    <span class="md-ellipsis">
-      idGeneratorHandler
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2115,6 +2064,116 @@
                 
   
   
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Node Properties Management
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Node Properties Management
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-enable-a-way-to-show-the-properties-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to enable a way to show the properties panel
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-put-together-the-ui-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to put together the UI components
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-display-the-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where to display the properties
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-store-properties-associated-with-nodes-in-the-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where to store properties associated with nodes in the flow
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
   
   
     
@@ -2135,10 +2194,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_15" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_16" >
         
           
-          <label class="md-nav__link" for="__nav_4_15" id="__nav_4_15_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_16" id="__nav_4_16_label" tabindex="0">
             
   
   
@@ -2151,8 +2210,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_15_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_15">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_16">
             <span class="md-nav__icon md-icon"></span>
             Deprecated
           </label>
@@ -2721,9 +2780,45 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#idgeneratorhandler" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
-      idGeneratorHandler
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-enable-a-way-to-show-the-properties-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to enable a way to show the properties panel
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-put-together-the-ui-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to put together the UI components
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-display-the-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where to display the properties
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-store-properties-associated-with-nodes-in-the-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where to store properties associated with nodes in the flow
     </span>
   </a>
   
@@ -2745,7 +2840,7 @@
 
 
   
-    <a href="https://github.com/elyra-ai/canvas/edit/main/docs/03.03.07-id-generator-handler.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/elyra-ai/canvas/edit/main/docs/03.12-node-properties-management.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2753,204 +2848,42 @@
   
 
 
-<h1 id="id-generator-handler">ID Generator Handler<a class="headerlink" href="#id-generator-handler" title="Permanent link">&para;</a></h1>
-<p>This is an optional callback. It is called when new objects are created in the canvas and allows the application to provide its own method to generate a unique id for the object.</p>
-<h2 id="idgeneratorhandler">idGeneratorHandler<a class="headerlink" href="#idgeneratorhandler" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">idGeneratorHandler</span><span class="p">(</span><span class="nx">action</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">)</span>
-</code></pre></div>
- If no idGeneratorHandler is set or the method returns null, an appropriate UUID is generated by Common Canvas for each object. The callback is called with a two parameters:
- * An enumerated string to describe the action being performed (create_node, create_comment, create_node_link, create_comment_link, clone_node, clone_comment, clone_node_link or clone_comment_link) and
- * A JavaScript object with additional data to describe the object</p>
-<p>The callback should return a string containing the application&rsquo;s unique ID for the object.
-Here are more details about the different action and their parameters.</p>
+<h1 id="node-properties-management">Node properties management<a class="headerlink" href="#node-properties-management" title="Permanent link">&para;</a></h1>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<p>Most applications enable their users to view and, if authorized, edit properties of the nodes in a flow.  Typically, applications do this by displaying a properties panel linked to the node type. Since different applications have different preferences for managing properties, it is left to the application to manage the relationship between the nodes in the flow and properties display and editing.</p>
+<p>If node properties display and editing is required, there are a number of decisions the application development team need to make:</p>
 <ul>
-<li>Create node:<ul>
-<li>action: create_node</li>
-<li>data:</li>
+<li>How to enable a way for the user to display the properties panel</li>
+<li>How to put together the UI components (checkbox, radio button, list, table, etc) needed to allow the user to view and edit the properties</li>
+<li>Where to display the properties</li>
+<li>Where to store properties associated with nodes in the flow</li>
 </ul>
-</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="nx">nodeType</span><span class="o">:</span>
-<span class="p">{</span>
-<span class="w">   </span><span class="s2">&quot;label&quot;</span><span class="o">:</span><span class="s2">&quot;C50&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="s2">&quot;C50 Model&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;operator_id_ref&quot;</span><span class="o">:</span><span class="s2">&quot;com.ibm.commonicons.models.c50&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;model_node&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;image&quot;</span><span class="o">:</span><span class="s2">&quot;/images/common_node_icons/models/model_c50.svg&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;input_ports&quot;</span><span class="o">:</span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">         </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;inPort&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="s2">&quot;label&quot;</span><span class="o">:</span><span class="s2">&quot;Input Port&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="s2">&quot;cardinality&quot;</span><span class="o">:</span><span class="p">{</span>
-<span class="w">            </span><span class="s2">&quot;min&quot;</span><span class="o">:</span><span class="mf">0</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;max&quot;</span><span class="o">:</span><span class="mf">1</span>
-<span class="w">         </span><span class="p">}</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">   </span><span class="p">],</span>
-<span class="w">   </span><span class="s2">&quot;output_ports&quot;</span><span class="o">:</span><span class="p">[</span>
-
-<span class="w">   </span><span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div>
+<h3 id="how-to-enable-a-way-to-show-the-properties-panel">How to enable a way to show the properties panel<a class="headerlink" href="#how-to-enable-a-way-to-show-the-properties-panel" title="Permanent link">&para;</a></h3>
+<p>This can be enabled in different ways depending on the application design:</p>
 <ul>
-<li>
-<p>Create comment:</p>
+<li>A properties panel could be opened when the user double-clicks on a node. In this case, the Common Canvas <a href="../03.03.09-click-action-handler/">clickActionHandler callback</a> function will be called.</li>
+<li>Properties could be displayed based on a single click on the node. A single click would also cause the <a href="../03.03.09-click-action-handler/">clickActionHandler callback</a> function to be called.</li>
+<li>The application design might specify that an “Edit Properties” option should be displayed in the <a href="../01.03-context-menu/">context menu</a> or <a href="../01.04-context-toolbar/">context toolbar</a> for the node. To do this, Common Canvas allows the application to customize the default context menu for nodes using the <a href="../03.03.01-context-menu-handler/">contextMenuHandler callback</a> function. When the user clicks the option in the menu the <a href="../03.03.03-edit-action-handler/">editActionHandler callback</a> function is called</li>
+<li>Some combination of the above</li>
+</ul>
+<h3 id="how-to-put-together-the-ui-components">How to put together the UI components<a class="headerlink" href="#how-to-put-together-the-ui-components" title="Permanent link">&para;</a></h3>
+<p>This can be done in a couple of ways:</p>
 <ul>
-<li>action: create_comment</li>
-<li>data: n/a</li>
+<li>Write your own React object using components from IBM&rsquo;s <a href="https://carbondesignsystem.com/all-about-carbon/what-is-carbon/">Carbon library</a> to present the properties to the user for editing</li>
+<li>Use the <a href="../04-common-properties/">Common Properties</a> components of Elyra Canvas. The application provides a JSON document to <code>&lt;CommonProperties&gt;</code> that describes how the properties should be presented. Common Properties will then construct the appropriate Carbon components, and associated code, to present the properties to the user.</li>
 </ul>
-</li>
-<li>
-<p>Create node link:</p>
+<h3 id="where-to-display-the-properties">Where to display the properties<a class="headerlink" href="#where-to-display-the-properties" title="Permanent link">&para;</a></h3>
+<p>The properties UI can be displayed to the user in a number of ways:</p>
 <ul>
-<li>action: create_node_link</li>
-<li>data:</li>
+<li>Typically applications show the properties in a right-side flyout. Common Canvas provides a <a href="../03-common-canvas/#right-flyout-panel-parameters">right-side flyout panel</a> which, by default, is empty. The application can display the properties for the node in the right flyout by specifying a JSX expression to the <code>rightFlyoutContent</code> prop of Common Canvas. The JSX expression could specify a <code>&lt;CommonProperties&gt;</code> react object.  The application can also show and hide the flyout by setting the <code>showRightFlyout</code> boolean prop of Common Canvas.</li>
+<li>The application can display its own dialog over the top of the canvas to show the properties.</li>
 </ul>
-</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="nx">sourceNode</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;6a547456-f1ea-48a6-9721-45d6ae70dd6b&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;label&quot;</span><span class="o">:</span><span class="s2">&quot;Aggregate&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;execution_node&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;operator_id_ref&quot;</span><span class="o">:</span><span class="s2">&quot;com.ibm.commonicons.operations.aggregate&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;image&quot;</span><span class="o">:</span><span class="s2">&quot;/images/common_node_icons/operations/operation_aggregate.svg&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;class_name&quot;</span><span class="o">:</span><span class="s2">&quot;d3-node-body&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;input_ports&quot;</span><span class="o">:</span><span class="p">[...],</span>
-<span class="w">   </span><span class="s2">&quot;output_ports&quot;</span><span class="o">:</span><span class="p">[...],</span>
-<span class="w">   </span><span class="s2">&quot;x_pos&quot;</span><span class="o">:</span><span class="mf">55</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;y_pos&quot;</span><span class="o">:</span><span class="mf">97.5</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;inputPortsHeight&quot;</span><span class="o">:</span><span class="mf">20</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;outputPortsHeight&quot;</span><span class="o">:</span><span class="mf">20</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;height&quot;</span><span class="o">:</span><span class="mf">75</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;width&quot;</span><span class="o">:</span><span class="mf">70</span>
-<span class="p">},</span>
-<span class="nx">targetNode</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;71c96629-be46-418b-be63-0a02ef2fe2e0&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;label&quot;</span><span class="o">:</span><span class="s2">&quot;Append&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;execution_node&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;operator_id_ref&quot;</span><span class="o">:</span><span class="s2">&quot;com.ibm.commonicons.operations.append&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;image&quot;</span><span class="o">:</span><span class="s2">&quot;/images/common_node_icons/operations/operation_append.svg&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;class_name&quot;</span><span class="o">:</span><span class="s2">&quot;d3-node-body&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;input_ports&quot;</span><span class="o">:</span><span class="p">[...],</span>
-<span class="w">   </span><span class="s2">&quot;output_ports&quot;</span><span class="o">:</span><span class="p">[...],</span>
-<span class="w">   </span><span class="s2">&quot;x_pos&quot;</span><span class="o">:</span><span class="mf">264</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;y_pos&quot;</span><span class="o">:</span><span class="mf">83.5</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;inputPortsHeight&quot;</span><span class="o">:</span><span class="mf">20</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;outputPortsHeight&quot;</span><span class="o">:</span><span class="mf">20</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;height&quot;</span><span class="o">:</span><span class="mf">75</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;width&quot;</span><span class="o">:</span><span class="mf">70</span>
-<span class="p">}</span>
-</code></pre></div>
+<h3 id="where-to-store-properties-associated-with-nodes-in-the-flow">Where to store properties associated with nodes in the flow<a class="headerlink" href="#where-to-store-properties-associated-with-nodes-in-the-flow" title="Permanent link">&para;</a></h3>
+<p>The application can store properties data anywhere, depending on its architecture. Options include:</p>
 <ul>
-<li>Create comment link:<ul>
-<li>action: create_comment_link</li>
-<li>data:</li>
+<li>Incorporating the data into the pipeline flow JSON object/document for simultaneous saving.</li>
+<li>Storing data in the application&rsquo;s own repository, allowing for separate management of properties and flow data.</li>
 </ul>
-</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="nx">comment</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;8c81aac7-ebe5-4f96-9d63-eabc22b09635&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;class_name&quot;</span><span class="o">:</span><span class="s2">&quot;d3-comment-rect&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;content&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;height&quot;</span><span class="o">:</span><span class="mf">42</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;width&quot;</span><span class="o">:</span><span class="mf">175</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;x_pos&quot;</span><span class="o">:</span><span class="mf">50</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;y_pos&quot;</span><span class="o">:</span><span class="mf">50</span>
-<span class="p">},</span>
-<span class="nx">targetNode</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;71c96629-be46-418b-be63-0a02ef2fe2e0&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;label&quot;</span><span class="o">:</span><span class="s2">&quot;Append&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;execution_node&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;operator_id_ref&quot;</span><span class="o">:</span><span class="s2">&quot;com.ibm.commonicons.operations.append&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;image&quot;</span><span class="o">:</span><span class="s2">&quot;/images/common_node_icons/operations/operation_append.svg&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;class_name&quot;</span><span class="o">:</span><span class="s2">&quot;d3-node-body&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;input_ports&quot;</span><span class="o">:</span><span class="p">[...],</span>
-<span class="w">   </span><span class="s2">&quot;output_ports&quot;</span><span class="o">:</span><span class="p">[...],</span>
-<span class="w">   </span><span class="s2">&quot;x_pos&quot;</span><span class="o">:</span><span class="mf">264</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;y_pos&quot;</span><span class="o">:</span><span class="mf">83.5</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;inputPortsHeight&quot;</span><span class="o">:</span><span class="mf">20</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;outputPortsHeight&quot;</span><span class="o">:</span><span class="mf">20</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;height&quot;</span><span class="o">:</span><span class="mf">75</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;width&quot;</span><span class="o">:</span><span class="mf">70</span>
-<span class="p">}</span>
-</code></pre></div>
-<ul>
-<li>Clone node: triggered when copying &amp; pasting a node<ul>
-<li>action: clone_node</li>
-<li>data:</li>
-</ul>
-</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="nx">node</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;56d30c83-3a08-4147-933e-b01d3c348ac1&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;label&quot;</span><span class="o">:</span><span class="s2">&quot;Append&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;execution_node&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;operator_id_ref&quot;</span><span class="o">:</span><span class="s2">&quot;com.ibm.commonicons.operations.append&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;image&quot;</span><span class="o">:</span><span class="s2">&quot;/images/common_node_icons/operations/operation_append.svg&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;class_name&quot;</span><span class="o">:</span><span class="s2">&quot;d3-node-body&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;input_ports&quot;</span><span class="o">:</span><span class="p">[...],</span>
-<span class="w">   </span><span class="s2">&quot;output_ports&quot;</span><span class="o">:</span><span class="p">[...],</span>
-<span class="w">   </span><span class="s2">&quot;x_pos&quot;</span><span class="o">:</span><span class="mf">265</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;y_pos&quot;</span><span class="o">:</span><span class="mf">177.5</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;inputPortsHeight&quot;</span><span class="o">:</span><span class="mf">20</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;outputPortsHeight&quot;</span><span class="o">:</span><span class="mf">20</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;height&quot;</span><span class="o">:</span><span class="mf">75</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;width&quot;</span><span class="o">:</span><span class="mf">70</span>
-<span class="p">}</span>
-</code></pre></div>
-<ul>
-<li>Clone comment: triggered when copying &amp; pasting a comment<ul>
-<li>action: clone_comment</li>
-<li>data:</li>
-</ul>
-</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="nx">comment</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;8c81aac7-ebe5-4f96-9d63-eabc22b09635&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;class_name&quot;</span><span class="o">:</span><span class="s2">&quot;d3-comment-rect&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;content&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;height&quot;</span><span class="o">:</span><span class="mf">42</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;width&quot;</span><span class="o">:</span><span class="mf">175</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;x_pos&quot;</span><span class="o">:</span><span class="mf">50</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;y_pos&quot;</span><span class="o">:</span><span class="mf">50</span>
-<span class="p">}</span>
-</code></pre></div>
-<ul>
-<li>Clone node link: triggered when copying &amp; pasting two connected nodes<ul>
-<li>action: clone_node_link</li>
-<li>data:</li>
-</ul>
-</li>
-</ul>
-<p><div class="highlight"><pre><span></span><code><span class="nx">link</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;12c4308e-f572-402a-8dd3-604d438539d4&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;class_name&quot;</span><span class="o">:</span><span class="s2">&quot;d3-data-link&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;srcNodeId&quot;</span><span class="o">:</span><span class="s2">&quot;2b1af6c2-f98b-4728-97b3-416d40224bce&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;trgNodeId&quot;</span><span class="o">:</span><span class="s2">&quot;b43fffe6-dc01-4d30-8b6d-abd977850a2e&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;nodeLink&quot;</span>
-<span class="p">},</span>
-<span class="nx">sourceNodeId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;56d30c83-3a08-4147-933e-b01d3c348ac1&quot;</span><span class="p">,</span>
-<span class="nx">targetNodeId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;815271f0-f4da-4793-ab8f-c4c32d3dd7e0&quot;</span>
-</code></pre></div>
-Note that the link to be cloned has references to the original source and target nodes, while the sourceNodeId and targetNodeId are the new node ids for the copied nodes. The new nodes are not part of the model yet.</p>
-<ul>
-<li>clone comment link: triggered when copying&amp;pasting a comment and a node that are connected<ul>
-<li>action: clone_comment_link</li>
-<li>data:</li>
-</ul>
-</li>
-</ul>
-<p><div class="highlight"><pre><span></span><code><span class="nx">link</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;12c4308e-f572-402a-8dd3-604d438539d4&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;class_name&quot;</span><span class="o">:</span><span class="s2">&quot;d3-comment-link&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;srcNodeId&quot;</span><span class="o">:</span><span class="s2">&quot;2b1af6c2-f98b-4728-97b3-416d40224bce&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;trgNodeId&quot;</span><span class="o">:</span><span class="s2">&quot;b43fffe6-dc01-4d30-8b6d-abd977850a2e&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;commentLink&quot;</span>
-<span class="p">},</span>
-<span class="nx">sourceNodeId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;56d30c83-3a08-4147-933e-b01d3c348ac1&quot;</span><span class="p">,</span>
-<span class="nx">targetNodeId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;815271f0-f4da-4793-ab8f-c4c32d3dd7e0&quot;</span>
-</code></pre></div>
-Note that the link to be cloned has references to the original comment and target node, while the sourceNodeId and targetNodeId are the new ids for the copied comment and node. The new node and comment are not part of the model yet.</p>
 
 
 
@@ -2980,7 +2913,7 @@ Note that the link to be cloned has references to the original comment and targe
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../03.03.06-tip-handler/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tip Handler">
+          <a href="../03.11-internal-actions/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Internal Actions">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2990,20 +2923,20 @@ Note that the link to be cloned has references to the original comment and targe
                 Previous
               </span>
               <div class="md-ellipsis">
-                Tip Handler
+                Internal Actions
               </div>
             </div>
           </a>
         
         
           
-          <a href="../03.03.08-selection-change-handler/" class="md-footer__link md-footer__link--next" aria-label="Next: Selection Change Handler">
+          <a href="../03.30.01-context-menu-wrapper/" class="md-footer__link md-footer__link--next" aria-label="Next: Context Menu Wrapper">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Selection Change Handler
+                Context Menu Wrapper
               </div>
             </div>
             <div class="md-footer__button md-icon">
