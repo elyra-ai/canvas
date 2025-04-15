@@ -1928,7 +1928,7 @@ export default class CanvasController {
 	restoreFocus() {
 		this.logger.log("restoreFocus - " + CanvasUtils.getFocusName(this.focusObject));
 
-		if (this.getSVGCanvasD3()) {
+		if (this.getSVGCanvasD3() && !this.getSVGCanvasD3().isEditingText()) {
 			this.setFocusObject(this.focusObject); // This will force a refresh of the focus
 		}
 	}
