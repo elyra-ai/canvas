@@ -253,6 +253,10 @@ export interface CommonPropertiesConfig {
    * default: "accordions".
    */
   categoryView?: "accordions" | "tabs";
+  /**
+   * Default true to use tanstack tables in place of react-virtualized tables.
+   */
+  enableTanstackTable?: boolean;
 }
 
 /**
