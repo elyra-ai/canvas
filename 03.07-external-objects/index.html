@@ -1042,6 +1042,8 @@
       
         
       
+        
+      
     
     
     
@@ -1860,6 +1862,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../03.06.00-palette-customization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Palette Customization
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../03.06.01-node-customization/" class="md-nav__link">
         
   
@@ -2163,10 +2188,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_16" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_17" >
         
           
-          <label class="md-nav__link" for="__nav_4_16" id="__nav_4_16_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_17" id="__nav_4_17_label" tabindex="0">
             
   
   
@@ -2179,8 +2204,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_16_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_16">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_17_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_17">
             <span class="md-nav__icon md-icon"></span>
             Deprecated
           </label>
@@ -2791,7 +2816,7 @@
   <h1>Node Creation from External Object</h1>
 
 <h2 id="dragging-object-from-within-the-browser">Dragging object from within the browser<a class="headerlink" href="#dragging-object-from-within-the-browser" title="Permanent link">&para;</a></h2>
-<p>Common Canvas supports the ability for an object from the your browser page to be dragged onto the canvas to initiate the creation of a node on the canvas. To do this you need to set the object you want to drag into the canvas to be draggable:</p>
+<p>Common Canvas can be extended to allow an object from the browser page to be dragged onto the canvas to initiate the creation of a node on the canvas. To do this the application should set the object that is to be dragged onto the canvas to be draggable:</p>
 <p><div class="highlight"><pre><span></span><code>    <span class="p">&lt;</span><span class="nt">div</span>
       <span class="na">draggable</span><span class="o">=</span><span class="s">&quot;true&quot;</span>
       <span class="na">onDragStart</span><span class="o">=</span><span class="s">{this.onDragStart}</span>
@@ -2819,12 +2844,12 @@ where</p>
 <ul>
 <li>operation - is always set to &ldquo;addToCanvas&rdquo;</li>
 <li>data - is the object that will be passed to the editActionHandler callback</li>
-<li>editType - this is the type of editing operation. You can set it to anything except any of the reserved settings which are: &lsquo;createNode&rsquo;, &lsquo;createNodeOnLink&rsquo;, &lsquo;createAutoNode&rsquo; and &lsquo;createFromExternalObject&rsquo;.</li>
-<li>fields - an optional number of fields can be provided that describe the object you are dragging onto the canvas. For example, if it is a data object the fields might describe the data source details.</li>
+<li>editType - this is the type of editing operation. This can be set to anything except any of the reserved settings which are: &lsquo;createNode&rsquo;, &lsquo;createNodeOnLink&rsquo;, &lsquo;createAutoNode&rsquo; and &lsquo;createFromExternalObject&rsquo;.</li>
+<li>fields - an optional number of fields can be provided that describe the object being dragged onto the canvas. For example, if it is a data object the fields might describe the data source details.</li>
 </ul>
-<p>After the object has been dropped on the canvas your editActionHandler() callback method will be called with a parameter data object that contains the fields you specified in <code>data</code> in the drag data along with three additional fields, called pipelineId, offsetX and offsetY, containing the x,y co-ordinates of where the drop occurred. In your editActionHandler() method you can use the CanvasController API to add a node to the pipeline flow and get Common Canvas to display it.</p>
+<p>After the object has been dropped on the canvas, the editActionHandler() callback method will be called with a parameter which is an object that contains the fields specified in <code>data</code> in the drag data, along with three additional fields, called pipelineId, offsetX and offsetY, containing the x, y co-ordinates of where the drop occurred. Inside the editActionHandler() method the application can use the CanvasController API to <a href="../03.04.03-creating-new-canvas-nodes/">create a node and add it to the pipeline flow</a> and get Common Canvas to display it.</p>
 <h2 id="dragging-object-from-the-desktop-or-another-application">Dragging object from the desktop or another application<a class="headerlink" href="#dragging-object-from-the-desktop-or-another-application" title="Permanent link">&para;</a></h2>
-<p>If an object from the desktop or another application is dropped on the canvas your editActionHandler(data) method will be called with the <code>data</code> parameter set to an object like this:
+<p>If an object from the desktop or another application is dropped on the canvas the editActionHandler(data) callback method will be called with the <code>data</code> parameter set to an object like this:
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="p">{</span>
 <span class="w">       </span><span class="nx">dataTransfer</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">The</span><span class="w"> </span><span class="nx">event</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">drag</span><span class="w"> </span><span class="nx">operation</span><span class="o">&gt;</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">editType</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;createFromExternalObject&quot;</span><span class="p">,</span>
@@ -2834,15 +2859,15 @@ where</p>
 <span class="w">       </span><span class="nx">pipelineId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1234-5678&quot;</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
-Your code can examine the <code>dataTransfer</code> object to see what object was dragged onto the canvas and then take appropriate action.</p>
-<p>If you want a new node to appear on the canvas as a result of the object being dropped your code will need to create that node at the point where the drop occurred, using the Canvas Controller API. Here is some sample code that will</p>
+The application can examine the <code>dataTransfer</code> object to see what object was dragged onto the canvas and then take appropriate action.</p>
+<p>If the applicaiton decides a new node should appear on the canvas as a result of the object being dropped it will need to create that node at the point where the drop occurred, using the Canvas Controller API. Here is some sample code that will</p>
 <ul>
 <li>create a new node template based on the &ldquo;variablefile&rdquo; node in the palette data</li>
 <li>set the label of the node to be created to the name of the file being dropped</li>
 <li>create a new node on the canvas at the offsetX, offsetY position</li>
 <li>the command will be added to the command-stack so the user can click undo to undo the addition of the node</li>
 </ul>
-<p><code>data</code> is the parameter passed into your <code>editActionHandler</code> method.
+<p><code>data</code> is the parameter passed into the <code>editActionHandler</code> callback method.
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">editType</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;createFromExternalObject&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">nodeTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">getPaletteNode</span><span class="p">(</span><span class="s2">&quot;variablefile&quot;</span><span class="p">);</span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">nodeTemplate</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -2858,7 +2883,8 @@ Your code can examine the <code>dataTransfer</code> object to see what object wa
 <span class="w">            </span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">editActionHandler</span><span class="p">(</span><span class="nx">action</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div></p>
-<p>Tip: You can optionally instruct Common Canvas to display a graphic over the canvas as the external object is being dragged over it. To do this you need to specify the <a href="../03.02.01-canvas-config/#enabledropzoneonexternaldrag"><code>enableDropZoneOnExternalDrag</code></a> configuration parameter.</p>
+<p>Tip: The application can optionally instruct Common Canvas to display a graphic over the canvas as the external object is being dragged over it. To do this, specify the <a href="../03.02.01-canvas-config/#enabledropzoneonexternaldrag"><code>enableDropZoneOnExternalDrag</code></a> configuration parameter.</p>
+<p>Additionally, the application can specify what is displayed when the external object is being dragged over it, by specifying the <a href="../03.02.01-canvas-config/#dropzonecanvascontent"><code>dropZoneCanvasContent</code></a> config property.</p>
 
 
 
