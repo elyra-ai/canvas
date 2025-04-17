@@ -1925,6 +1925,8 @@ export default class CanvasController {
 	// Focus management methods
 	// ---------------------------------------------------------------------------
 
+	// Restores the focus highlighting to the last focused object before focus
+	// was removed from the flow editor.
 	restoreFocus() {
 		this.logger.log("restoreFocus - " + CanvasUtils.getFocusName(this.focusObject));
 
@@ -1939,14 +1941,18 @@ export default class CanvasController {
 		}
 	}
 
+	// Sets focus on the flow editor canvas background.
 	setFocusOnCanvas() {
 		this.setFocusObject(CANVAS_FOCUS);
 	}
 
+	// Returns the currently focused object or the string "CanvasFocus".
 	getFocusObject() {
 		return this.focusObject;
 	}
 
+	// Sets the focus highlighting to parameter passed in which can be
+	// either a canvas object or the string "CanvasFocus".
 	setFocusObject(focusObj) {
 		this.logger.log("setFocusObject focusObject = " + CanvasUtils.getFocusName(focusObj));
 
@@ -1967,6 +1973,7 @@ export default class CanvasController {
 		}
 	}
 
+	// Returns true of the focus in currently on the flow editor canvas background.
 	isFocusOnCanvas() {
 		if (this.canvasContents) {
 			return this.canvasContents.isFocusOnCanvas();
