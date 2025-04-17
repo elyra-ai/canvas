@@ -122,7 +122,7 @@ export type InternalAction =
  */
 export type PipelineId = string;
 
-/** A canvas object  which can be a node, link of comment.
+/** A canvas object  which can be a node, link or comment.
  */
 export type CanvasObject =  CanvasNode | CanvasLink | CanvasComment;
 
