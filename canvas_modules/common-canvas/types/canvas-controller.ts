@@ -122,6 +122,10 @@ export type InternalAction =
  */
 export type PipelineId = string;
 
+/** A canvas object  which can be a node, link or comment.
+ */
+export type CanvasObject =  CanvasNode | CanvasLink | CanvasComment;
+
 /** A unique identified for a canvas node.
  * Should be unique within the set of nodes, comments and links
  * for the pipeline.
@@ -2339,4 +2343,33 @@ export declare class CanvasController {
      * set to "LocalStorage".
      */
     clearSavedZoomValues(): void;
+
+    /**
+     * ## Focus management methods
+     */
+
+    /** Restores the focus highlighting to the last focused object before focus
+     *  was removed from the flow editor.
+     */
+    restoreFocus(): void;
+
+    /** Sets focus on the flow editor canvas background.
+     */
+    setFocusOnCanvas(): void;
+
+    /** Returns the currently focused object or the string "CanvasFocus".
+     */
+    getFocusObject(): "CanvasFocus" | CanvasObject;
+
+    /** Sets the focus highlighting to parameter passed in which can be
+     * either a canvas object or the string "CanvasFocus".
+     */
+    setFocusObject(
+      focusObj: "CanvasFocus" | CanvasObject
+    ): void;
+
+    /** Returns true of the focus in currently on the flow editor canvas
+     * background.
+     */
+    isFocusOnCanvas(): boolean;
   }

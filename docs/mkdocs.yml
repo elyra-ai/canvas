@@ -108,6 +108,7 @@ nav:
       - Notification Messages: 03.04.05-notification-messages.md
       - Styling Canvas Objects: 03.04.06-styling-objects.md
     - Keyboard Support: 03.05-keyboard-support.md
+    - Palette Customization: 03.06.00-palette-customization.md
     - Node Customization: 03.06.01-node-customization.md
     - Comment Customization: 03.06.02-comment-customization.md
     - Link Customization: 03.06.03-link-customization.md
