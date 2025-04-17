@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -639,7 +639,7 @@ describe("All checkboxes in list must have labels", () => {
 		const listOfStrings = container.querySelector("div[data-id='properties-ctrl-list_string']");
 		const headerCheckboxLabel = listOfStrings.querySelector(".properties-vt-header-checkbox").textContent;
 		const secondColumnLabel = listOfStrings
-			.querySelector("div[role='columnheader']")
+			.querySelectorAll("th.properties-vt-column")[1]
 			.textContent;
 		expect(headerCheckboxLabel).to.equal(`Select all ${secondColumnLabel}`);
 	});

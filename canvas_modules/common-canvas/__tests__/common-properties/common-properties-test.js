@@ -213,9 +213,10 @@ describe("CommonProperties works correctly in flyout", () => {
 	it("When applyOnBlur=true applyPropertyChanges should be called only if values have changed", () => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(propertiesInfo.parameterDef); // default is applyOnBlur=true
 		wrapper = renderedObject.wrapper;
+		const { container } = wrapper;
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
-		const { container } = wrapper;
+
 		const commonProperties = container.querySelector("aside.properties-right-flyout");
 		fireEvent.blur(commonProperties);
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
@@ -225,9 +226,8 @@ describe("CommonProperties works correctly in flyout", () => {
 
 		// ensure table toolbar has delete and click it
 		let tableToolbar = container.querySelector("div.properties-table-toolbar");
-		let deleteButton = tableToolbar.querySelectorAll("button.properties-action-delete");
-		expect(deleteButton).to.have.length(1);
-		fireEvent.click(deleteButton[0]);
+		let deleteButton = tableToolbar.querySelector("button.properties-action-delete");
+		fireEvent.click(deleteButton);
 
 		// save again: should save changes
 		fireEvent.blur(commonProperties);
@@ -254,21 +254,20 @@ describe("CommonProperties works correctly in flyout", () => {
 	it("When applyOnBlur=false applyPropertyChanges should not be called", () => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(propertiesInfo.parameterDef, { applyOnBlur: false });
 		wrapper = renderedObject.wrapper;
+		const container = wrapper.container;
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		// make some changes
-		const { container } = wrapper;
 		tableUtilsRTL.selectCheckboxes(container, [0]);
 
 		// ensure table toolbar has delete and click it
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
-		const deleteButton = tableToolbar.querySelectorAll("button.properties-action-delete");
-		expect(deleteButton).to.have.length(1);
-		fireEvent.click(deleteButton[0]);
+		const deleteButton = tableToolbar.querySelector("button.properties-action-delete");
+		fireEvent.click(deleteButton);
 
 		// save again: should save changes
-		const rightFlyoutButton = container.querySelector("aside.properties-right-flyout");
-		fireEvent.blur(rightFlyoutButton);
+		const commonProperties = container.querySelector("aside.properties-right-flyout");
+		fireEvent.blur(commonProperties);
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 	});

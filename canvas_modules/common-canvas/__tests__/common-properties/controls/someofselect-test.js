@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -255,7 +255,7 @@ describe("SomeOfSelectControl renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const someofselectWrapper = wrapper.container.querySelector(".properties-vt-autosizer").querySelector(".ReactVirtualized__Table");
+		const someofselectWrapper = wrapper.container.querySelector(".properties-autosized-vt");
 		expect(someofselectWrapper.getAttribute("aria-label")).to.equal(control.label.text);
 	});
 });

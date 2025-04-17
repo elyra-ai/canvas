@@ -23,75 +23,65 @@ import { expect } from "chai";
 // base test cases
 describe("default values renders correctly", () => {
 	let wrapper;
-	// var renderedController;
+	let container;
 	beforeEach(() => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(defaultsParamDef);
 		wrapper = renderedObject.wrapper;
-		// renderedController = renderedObject.controller;
+		container = wrapper.container;
 	});
 	afterEach(() => {
 		cleanup();
 	});
 
 	it("should render number field with default value", () => {
-		const { container } = wrapper;
 		const defaultField = container.querySelector("div[data-id='properties-default_num'] input");
-		expect(defaultField).to.exist;
-		expect(Number(defaultField.getAttribute("value"))).to.equal(25);
+		expect(defaultField.type).to.equal("number");
+		expect(defaultField.value).to.equal("25");
 	});
 	it("should render 0 number field with no default value", () => {
-		const { container } = wrapper;
 		const defaultField = container.querySelector("div[data-id='properties-noDefault_num'] input");
-		expect(defaultField).to.exist;
-		expect(Number(defaultField.getAttribute("value"))).to.equal(0);
+		expect(defaultField.type).to.equal("number");
+		expect(defaultField.value).to.equal("0");
 	});
 	it("should render string field with default value", () => {
-		const { container } = wrapper;
 		const defaultField = container.querySelector("div[data-id='properties-default_text'] input");
-		expect(defaultField).to.exist;
-		expect(defaultField.getAttribute("value")).to.equal("This is a default text");
+		expect(defaultField.type).to.equal("text");
+		expect(defaultField.value).to.equal("This is a default text");
 	});
 	it("should render an empty string field with no default value", () => {
-		const { container } = wrapper;
 		const defaultField = container.querySelector("div[data-id='properties-noDefault_text'] input");
-		expect(defaultField).to.exist;
-		expect(defaultField.getAttribute("value")).to.equal("");
+		expect(defaultField.type).to.equal("text");
+		expect(defaultField.value).to.equal("");
 	});
 	it("should render array field with default value", () => {
-		const { container } = wrapper;
 		const defaultField = container.querySelector("div[data-id='properties-default_array'] textarea");
-		expect(defaultField).to.exist;
+		expect(defaultField.rows).to.equal(4);
 		expect(defaultField.textContent).to.equal("a\nb");
 	});
 	it("should render an empty array field with no default value", () => {
-		const { container } = wrapper;
 		const defaultField = container.querySelector("div[data-id='properties-noDefault_array'] textarea");
-		expect(defaultField).to.exist;
+		expect(defaultField.rows).to.equal(4);
 		expect(defaultField.textContent).to.equal("");
 	});
 	it("should render field with default value", () => {
-		const { container } = wrapper;
 		const defaultField = container.querySelector("div[data-id='properties-default_undefined'] input");
-		expect(defaultField).to.exist;
-		expect(defaultField.getAttribute("value")).to.equal("This is an undefined parameter");
+		expect(defaultField.type).to.equal("text");
+		expect(defaultField.value).to.equal("This is an undefined parameter");
 	});
 	it("should render string field with a parameter_ref default value", () => {
-		const { container } = wrapper;
 		const defaultField = container.querySelector("div[data-id='properties-default_parameterRef'] input");
-		expect(defaultField).to.exist;
-		expect(defaultField.getAttribute("value")).to.equal("this is the control value");
+		expect(defaultField.type).to.equal("text");
+		expect(defaultField.value).to.equal("this is the control value");
 	});
 	it("should render an empty string field with no parameter_ref default value", () => {
-		const { container } = wrapper;
 		const defaultField = container.querySelector("div[data-id='properties-noDefault_parameterRef'] input");
-		expect(defaultField).to.exist;
-		expect(defaultField.getAttribute("value")).to.equal("");
+		expect(defaultField.type).to.equal("text");
+		expect(defaultField.value).to.equal("");
 	});
 });
 
 // tables test cases
 describe("add rows in tables with correct default values", () => {
-
 	let wrapper;
 	let renderedController;
 	beforeEach(() => {
@@ -117,21 +107,24 @@ describe("add rows in tables with correct default values", () => {
 		const wideflyout = propertyUtilsRTL.openSummaryPanel(wrapper, "structureListEditorDefault-summary-panel");
 		let tableRows = tableUtilsRTL.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(1);
-		expect(wideflyout.querySelector("div[data-id='properties-structureListEditorDefault_0_2'] button").textContent).to.equal("Ascending");
+		const row1Button = tableRows[0].querySelector("div[data-id='properties-structureListEditorDefault_0_2'] button");
+		expect(row1Button.textContent).to.equal("Ascending");
 
 		// add a row
-		const addButton = wideflyout.querySelectorAll("button.properties-add-fields-button");
-		fireEvent.click(addButton[0]);
+		const addButton = wideflyout.querySelector("button.properties-add-fields-button");
+		fireEvent.click(addButton);
 		tableRows = tableUtilsRTL.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(2);
-		expect(wideflyout.querySelector("div[data-id='properties-structureListEditorDefault_1_2'] button").textContent).to.equal("Ascending");
+		const row2Button = tableRows[1].querySelector("div[data-id='properties-structureListEditorDefault_1_2'] button");
+		expect(row2Button.textContent).to.equal("Ascending");
 
 		// change the parameter_ref control value and then add a new row.
 		renderedController.updatePropertyValue({ name: "sLE_DefaultSortOrder" }, "Descending");
-		fireEvent.click(addButton[0]);
+		fireEvent.click(addButton);
 		tableRows = tableUtilsRTL.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(3);
-		expect(wideflyout.querySelector("div[data-id='properties-structureListEditorDefault_2_2'] button").textContent).to.equal("Descending");
+		const row3Button = tableRows[2].querySelector("div[data-id='properties-structureListEditorDefault_2_2'] button");
+		expect(row3Button.textContent).to.equal("Descending");
 	});
 
 	it("should render column structure table with new rows with correct default values", () => {
@@ -140,8 +133,7 @@ describe("add rows in tables with correct default values", () => {
 		expect(tableRows).to.have.length(0);
 
 		// add a row
-		const { container } = wrapper;
-		let fieldPickerWrapper = tableUtilsRTL.openFieldPickerForEmptyTable(container, "properties-structureTableDefault-default");
+		let fieldPickerWrapper = tableUtilsRTL.openFieldPickerForEmptyTable(wrapper.container, "properties-structureTableDefault-default");
 		tableUtilsRTL.fieldPicker(fieldPickerWrapper, ["Age"]);
 		tableRows = tableUtilsRTL.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(1);
@@ -150,13 +142,13 @@ describe("add rows in tables with correct default values", () => {
 
 		// added row is selected by default which shows table toolbar
 		// Cancel row selections from table toolbar, so that "Add columns" button shows up in the header
-		const tableToolbar = container.querySelector("div.properties-table-toolbar");
+		const tableToolbar = wrapper.container.querySelector("div.properties-table-toolbar");
 		const cancelButton = tableToolbar.querySelector("button.properties-action-cancel");
 		fireEvent.click(cancelButton);
 
 		// change the parameter_ref control value and then add a new row.
 		renderedController.updatePropertyValue({ name: "CST_DefaultSortOrder" }, "Descending");
-		fieldPickerWrapper = tableUtilsRTL.openFieldPicker(container, "properties-structureTableDefault-default");
+		fieldPickerWrapper = tableUtilsRTL.openFieldPicker(wrapper.container, "properties-structureTableDefault-default");
 		tableUtilsRTL.fieldPicker(fieldPickerWrapper, ["Sex"]);
 		tableRows = tableUtilsRTL.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(2);
@@ -170,11 +162,9 @@ describe("add rows in tables with correct default values", () => {
 		expect(tableRows).to.have.length(2);
 
 		// add a row
-		const { container } = wrapper;
-		const fieldPickerWrapper = tableUtilsRTL.openFieldPicker(container, "properties-columnStructureTableDefaultRow");
+		const fieldPickerWrapper = tableUtilsRTL.openFieldPicker(wrapper.container, "properties-columnStructureTableDefaultRow");
 		tableUtilsRTL.fieldPicker(fieldPickerWrapper, ["Sex"]);
 		tableRows = tableUtilsRTL.getTableRows(wideflyout);
-
 		expect(tableRows).to.have.length(3);
 
 		const expectedRows = [
@@ -184,9 +174,9 @@ describe("add rows in tables with correct default values", () => {
 		];
 
 		for (let idx = 0; idx < tableRows.length; idx++) {
-			const tableCell = tableRows[idx].querySelectorAll(".properties-field-type");
-			expect(tableCell[0].textContent).to.equal(expectedRows[idx][0]);
-			expect(tableCell[1].textContent).to.equal(expectedRows[idx][1]);
+			const tableCells = tableRows[idx].querySelectorAll(".properties-field-type");
+			expect(tableCells[0].textContent).to.equal(expectedRows[idx][0]);
+			expect(tableCells[1].textContent).to.equal(expectedRows[idx][1]);
 		}
 	});
 });
