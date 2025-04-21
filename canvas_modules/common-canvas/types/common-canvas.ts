@@ -213,9 +213,9 @@ export interface NodeLayout {
   nodeShapeDisplay: boolean;
 
   /**
-   * Default node shape. Can be "rectangle" or "port-arcs"
+   * Default node shape. Only used if nodeShapeDisplay is set to true.
    */
-  nodeShape: "port-arcs" | "rectangle";
+  nodeShape: "port-arcs" | "rectangle" | "rectangle-rounded-corners";
 
   /**
    * SVG path strings to define the body shape of your node and its
