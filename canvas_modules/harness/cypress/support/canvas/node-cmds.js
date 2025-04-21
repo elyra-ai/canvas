@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import keys from "./key.js";
-
 Cypress.Commands.add("getNodeWithLabel", (nodeLabel) => {
 	cy.get(getNodeGrpSelector())
 		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));

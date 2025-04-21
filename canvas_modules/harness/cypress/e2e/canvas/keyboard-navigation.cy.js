@@ -63,6 +63,11 @@ describe("Test keyboard navigation", function() {
 		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
 		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
 		cy.verifyNodeTransform("Binding (entry) node", 89, 140);
+
+		// Wait for the save of the movement to be completed
+		// before checking the focus is still on the node.
+		cy.wait(200);
+		cy.verifyFocusOnNode("Binding (entry) node");
 	});
 
 	it("Test a node can be sized with the keyboard.", function() {
@@ -78,6 +83,11 @@ describe("Test keyboard navigation", function() {
 		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
 		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
 		cy.verifyNodeDimensions("Binding (entry) node", 70, 115);
+
+		// Wait for the save of the sizing to be completed
+		// before checking the focus is still on the node.
+		cy.wait(200);
+		cy.verifyFocusOnNode("Binding (entry) node");
 	});
 
 	it("Test simulating various clicks on a node with keyboard results in appropriate 'click types'.", function() {
