@@ -301,7 +301,7 @@ class CanvasContents extends React.Component {
 	// and set the current canvas focus object to null to prevent any
 	// restoreFocus calls setting focus back into the canvas.
 	onBlur(evt) {
-		if (!this.isTargetInsideCanvas(evt.relatedTarget)) {
+		if (evt.relatedTarget && !this.isTargetInsideCanvas(evt.relatedTarget)) {
 			this.svgCanvasD3.resetTabObjectIndex();
 			this.props.canvasController.setFocusObject(null);
 		}
