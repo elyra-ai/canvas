@@ -77,7 +77,8 @@ nav:
     - Common Properties: 01.10-common-properties.md
 
   - Initial Setup:
-    - 02-set-up.md
+    - Installation: 02-set-up.md
+    - Localization: 02.01-localization.md
 
   - Common Canvas:
     - Getting Started: 03-common-canvas.md

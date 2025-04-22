@@ -6,6 +6,14 @@
 
     Elyra Canvas is a repo inside the [Elyra AI Toolkit](https://github.com/elyra-ai). The Elyra repo in the toolkit is dependent on Elyra Canvas but Elyra Canvas is not dependent on it or any repo in the toolkit other than the [Elyra Pipeline Schemas](https://github.com/elyra-ai/pipeline-schemas) repo.
 
+## Elyra Canvas
+
+### Questions about build
+
+??? question "Can I override text displayed by Common Canvas or Common Properties?"
+
+    Text labels and messages displayed by Elyra Canvas components can be customized. See the [Customizing text displayed by Elyra Canvas components](02.01-localization.md/#customizing-text-displayed-by-elyra-canvas-components) section of the Localization page for details.
+
 ## Common Canvas
 
 ### Questions about Nodes

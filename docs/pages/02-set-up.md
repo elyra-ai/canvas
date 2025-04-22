@@ -4,8 +4,6 @@
 
 You'll need to build your application with Elyra Canvas.
 
-* Elyra Canvas requires react, react-dom, react-intl, and react-redux libraries to be installed. See peerDependencies in [package.json](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/common-canvas/package.json) for versions requirements.
-
 Use the command:
 ```sh
 npm install @elyra/canvas --save-dev
@@ -19,52 +17,14 @@ where x.x.x is the latest build and then run:
 ```sh
 npm install
 ```
+## Peer dependencies
+
+Make sure the peer dependency libraries, specified in the [package.json](https://github.com/elyra-ai/canvas/blob/bd10c6b79e60e11954b03d50fcb7ed6de58f0629/canvas_modules/common-canvas/package.json#L117), file are installed as part of the application. The application can use whichever versions of the peer dependencies it wants from those specified.
+
 
 ## Localization
 
-If you want to see text displayed by Elyra Canvas components in different languages you must wrapper `<CommonCanvas>` and `<CommonProperties>`in an `<IntlProvider>` object.
-
-The sample code below shows how `<IntlProvider>` should be imported and initialized. Your code can set `this.locale` to indicate which language should override the default which, in this sample code, is set to English `en`. The default locale will be used if `this.locale` is set to a language which is not currently supported.
-
-If you want to provide translations for your own application's text you can import your own bundles and load them into the `this.messages` object along with the common-canvas and common-properties text. If you do this you will have to move `<IntlProvider/>` so that it wrappers your React objects as well as `<CommonCanvas/>` and/or `<CommonProperties>`.
-
-```js
-import { IntlProvider } from "react-intl";
-
-import CommandActionsBundles from "@elyra/canvas/locales/command-actions/locales";
-import CommonCanvasBundles from "@elyra/canvas/locales/common-canvas/locales";
-import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales";
-import PaletteBundles from "@elyra/canvas/locales/palette/locales";
-import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
-
-class App extends React.Component {
-
-constructor() {
-    this.locale = "en";
-    // Create messages object once (here in constructor) - do not create messages
-    // in the render method, otherwise unnecessary renders inside
-    // common-canvas/common-properties will be performed.
-    this.messages = this._getMessages(
-        this.locale,
-        [CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles,
-         PaletteBundles, ToolbarBundles]
-    );
-}
-
-_getMessages(locale, bundles) {
-  const messages = {};
-  for (const bundle of bundles) {
-    Object.assign(messages, bundle[locale]);
-  }
-  return messages;
-}
-
-render() {
-  <IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
-    {Add your <CommonCanvas/> or <CommonProperties/> element here.}
-  </IntlProvider>
-}
-```
+Elyra Canvas text is translated into multple languages. See the [Localization](02.01-localization.md) page for details on how to include that text in the application. In addition, the [text can be customized](02.01-localization.md/#customizing-text-displayed-by-elyra-canvas-componenets) by the application.
 
 ## Overriding Styles and Color Themes
 
