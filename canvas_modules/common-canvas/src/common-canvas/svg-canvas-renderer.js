@@ -45,6 +45,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	NORTH, SOUTH, EAST, WEST,
 	WYSIWYG, CAUSE_KEYBOARD, CAUSE_MOUSE,
 	FLOW_IN, FLOW_OUT,
+	SHAPE_PORT_ARCS, SHAPE_RECTANGLE_ROUNDED_CORNERS,
 	PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT,
 	SINGLE_CLICK, SINGLE_CLICK_CONTEXTMENU, DOUBLE_CLICK,
 	DISPLAY_GRID_DOTS, DISPLAY_GRID_DOTS_AND_LINES, DISPLAY_GRID_BOXES, DISPLAY_GRID_BOXES_AND_LINES,
@@ -3646,7 +3647,7 @@ export default class SVGCanvasRenderer {
 		return this.getRectangleNodeShapePath(data, data.layout.nodeSizingArea);
 	}
 
-	// Returns a path string that will draw the selection outline shape of the node.
+	// Returns an SVG path string that will draw the selection outline shape of the node.
 	getNodeSelectionOutline(data) {
 		if (data.layout.selectionPath && !CanvasUtils.isExpanded(data)) {
 			if (typeof data.layout.selectionPath === "function") {
@@ -3654,14 +3655,17 @@ export default class SVGCanvasRenderer {
 			}
 			return data.layout.selectionPath;
 
-		} else if (data.layout.nodeShape === "port-arcs") {
+		} else if (data.layout.nodeShape === SHAPE_PORT_ARCS) {
 			return this.getPortArcsNodeShapePath(data); // Port-arc outline does not have a highlight gap
 
+		} else if (data.layout.nodeShape === SHAPE_RECTANGLE_ROUNDED_CORNERS) {
+			return this.getRectRoundCornersShapePath(data, data.layout.nodeHighlightGap);
 		}
+
 		return this.getRectangleNodeShapePath(data, data.layout.nodeHighlightGap);
 	}
 
-	// Returns a path string that will draw the body shape of the node.
+	// Returns an SVG path string that will draw the body shape of the node.
 	getNodeShapePath(data) {
 		if (data.layout.bodyPath && !CanvasUtils.isExpanded(data)) {
 			if (typeof data.layout.bodyPath === "function") {
@@ -3670,14 +3674,17 @@ export default class SVGCanvasRenderer {
 
 			return data.layout.bodyPath;
 
-		} else if (data.layout.nodeShape === "port-arcs") {
+		} else if (data.layout.nodeShape === SHAPE_PORT_ARCS) {
 			return this.getPortArcsNodeShapePath(data);
 
+		} else if (data.layout.nodeShape === SHAPE_RECTANGLE_ROUNDED_CORNERS) {
+			return this.getRectRoundCornersShapePath(data);
 		}
+
 		return this.getRectangleNodeShapePath(data);
 	}
 
-	// Returns a path that will draw the shape for the rectangle node
+	// Returns an SVG path that will draw the shape for a rectangle node
 	// display. This is drawn as a path rather than an SVG rectangle to make the
 	// calling code more generic.
 	getRectangleNodeShapePath(data, highlightGap = 0) {
@@ -3698,8 +3705,32 @@ export default class SVGCanvasRenderer {
 		return "M " + l + " " + t + " L " + r + " " + t + " " + r + " " + b + " " + l + " " + b + " Z";
 	}
 
-	// Returns a path that will draw the outline shape for the 'port-arcs' display
-	// which shows arcs around each of the node circles.
+	// Returns an SVG path that will draw a shape for a
+	// rectangle-with-rounded-corners node shape display.
+	getRectRoundCornersShapePath(data, highlightGap = 0) {
+		const c = 10; // Corner size
+		const l = 0 - highlightGap;
+		const t = 0 - highlightGap;
+		const r = data.width + highlightGap;
+		const b = data.height + highlightGap;
+		const lc = l + c;
+		const rc = r - c;
+		const tc = t + c;
+		const bc = b - c;
+
+		return "M " + lc + " " + t + " L " + rc + " " + t + " " +
+			"Q " + r + " " + t + " " + r + " " + tc + " " +
+			"L " + r + " " + bc + " " +
+			"Q " + r + " " + b + " " + rc + " " + b + " " +
+			"L " + lc + " " + b + " " +
+			"Q " + l + " " + b + " " + l + " " + bc + " " +
+			"L " + l + " " + tc + " " +
+			"Q " + l + " " + t + " " + lc + " " + t +
+			" Z";
+	}
+
+	// Returns an SVG path that will draw the outline shape for the 'port-arcs'
+	// display which shows arcs around each of the node circles.
 	getPortArcsNodeShapePath(data) {
 		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
 			return this.getPortArcsNodeShapePathVertical(data, data.inputs, data.inputPortsWidth, data.outputs, data.outputPortsWidth);
@@ -3712,8 +3743,9 @@ export default class SVGCanvasRenderer {
 		return this.getPortArcsNodeShapePathHoriz(data, data.inputs, data.inputPortsHeight, data.outputs, data.outputPortsHeight);
 	}
 
-	// Returns a path that will draw the outline shape for the 'port-arcs' display
-	// which shows arcs around each of the node circles for the horizontal (LeftRight and RightLeft) directions.
+	// Returns an SVG path that will draw the outline shape for the 'port-arcs'
+	//  display which shows arcs around each of the node circles for the horizontal
+	// (LeftRight and RightLeft) directions.
 	getPortArcsNodeShapePathHoriz(data, leftPorts, leftPortsHeight, rightPorts, rightPortsHeight) {
 		let path = "M 0 0 L " + data.width + " 0 "; // Draw line across the top of the node
 
@@ -3772,8 +3804,9 @@ export default class SVGCanvasRenderer {
 		return path;
 	}
 
-	// Returns a path that will draw the outline shape for the 'port-arcs' display
-	// which shows arcs around each of the node circles for vertical (TopBottom and BottomTop) directions.
+	// Returns an SVG path that will draw the outline shape for the 'port-arcs'
+	// display which shows arcs around each of the node circles for vertical
+	// (TopBottom and BottomTop) directions.
 	getPortArcsNodeShapePathVertical(data, topPorts, topPortsWidth, bottomPorts, bottomPortsWidth) {
 		let path = "M 0 0 L 0 " + data.height; // Draw line down the left of the node
 
@@ -5138,14 +5171,23 @@ export default class SVGCanvasRenderer {
 			? " d3-resized"
 			: "";
 
-		const shapeClass = d.layout.nodeShape === "port-arcs"
-			? " d3-node-shape-port-arcs"
-			: "";
+		const shapeClass = this.getNodeShapeClass(d.layout.nodeShape);
 
 		const branchHighlightClass = d.branchHighlight ? " d3-branch-highlight" : "";
 
 		return "d3-node-group" + supernodeClass + resizeClass + draggableClass +
 			branchHighlightClass + shapeClass + customClass;
+	}
+
+	// Returns a class name to indicate the type of node shape being displayed.
+	getNodeShapeClass(shape) {
+		if (shape === SHAPE_PORT_ARCS) {
+			return " d3-node-shape-port-arcs";
+
+		} else if (shape === SHAPE_RECTANGLE_ROUNDED_CORNERS) {
+			return " d3-node-shape-rectangle-rounded-corners";
+		}
+		return " d3-node-shape-rectangle";
 	}
 
 	// Pushes the links to be below nodes within the nodesLinksGrp group.

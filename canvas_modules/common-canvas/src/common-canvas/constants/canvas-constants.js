@@ -106,6 +106,11 @@ export const IMAGE_DISPLAY_SVG_INLINE = "SVGInline";
 export const IMAGE_DISPLAY_LOAD_SVG_TO_DEFS = "LoadSVGToDefs";
 export const IMAGE_DISPLAY_SVG_AS_IMAGE = "SVGAsImage";
 
+// Settings for nodeShape in nodeFormat properties
+export const SHAPE_RECTANGLE = "rectangle";
+export const SHAPE_RECTANGLE_ROUNDED_CORNERS = "rectangle-rounded-corners";
+export const SHAPE_PORT_ARCS = "port-arcs";
+
 
 export const ERROR = "error";
 export const WARNING = "warning";

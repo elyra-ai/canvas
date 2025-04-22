@@ -38,7 +38,8 @@ const horizontalDefaultLayout = {
 		// Displays the node outline shape underneath the image and label.
 		nodeShapeDisplay: true,
 
-		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeShapeDisplay is true.
+		// Default node shape. Can be "rectangle", "port-arcs" or
+		// "rectangle-rounded-corners". Used when nodeShapeDisplay is true.
 		nodeShape: "port-arcs",
 
 		// An SVG path or a function that returns an SVG path. The paths define the node
@@ -513,7 +514,8 @@ const verticalDefaultLayout = {
 		// Displays the node outline shape underneath the image and label.
 		nodeShapeDisplay: true,
 
-		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeShapeDisplay is true.
+		// Default node shape. Can be "rectangle", "port-arcs" or
+		// "rectangle-rounded-corners". Used when nodeShapeDisplay is true.
 		nodeShape: "rectangle",
 
 		// An SVG path or a function that returns an SVG path. The paths define the node
