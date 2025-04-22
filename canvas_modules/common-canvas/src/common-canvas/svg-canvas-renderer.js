@@ -3647,7 +3647,7 @@ export default class SVGCanvasRenderer {
 		return this.getRectangleNodeShapePath(data, data.layout.nodeSizingArea);
 	}
 
-	// Returns a path string that will draw the selection outline shape of the node.
+	// Returns an SVG path string that will draw the selection outline shape of the node.
 	getNodeSelectionOutline(data) {
 		if (data.layout.selectionPath && !CanvasUtils.isExpanded(data)) {
 			if (typeof data.layout.selectionPath === "function") {
@@ -3665,7 +3665,7 @@ export default class SVGCanvasRenderer {
 		return this.getRectangleNodeShapePath(data, data.layout.nodeHighlightGap);
 	}
 
-	// Returns a path string that will draw the body shape of the node.
+	// Returns an SVG path string that will draw the body shape of the node.
 	getNodeShapePath(data) {
 		if (data.layout.bodyPath && !CanvasUtils.isExpanded(data)) {
 			if (typeof data.layout.bodyPath === "function") {
@@ -3684,7 +3684,7 @@ export default class SVGCanvasRenderer {
 		return this.getRectangleNodeShapePath(data);
 	}
 
-	// Returns a path that will draw the shape for the rectangle node
+	// Returns an SVG path that will draw the shape for a rectangle node
 	// display. This is drawn as a path rather than an SVG rectangle to make the
 	// calling code more generic.
 	getRectangleNodeShapePath(data, highlightGap = 0) {
@@ -3705,8 +3705,8 @@ export default class SVGCanvasRenderer {
 		return "M " + l + " " + t + " L " + r + " " + t + " " + r + " " + b + " " + l + " " + b + " Z";
 	}
 
-	// Returns a path that will draw the shape for the rectangle with
-	// rounded corners node shape display.
+	// Returns an SVG path that will draw a shape for a
+	// rectangle-with-rounded-corners node shape display.
 	getRectRoundCornersShapePath(data, highlightGap = 0) {
 		const c = 10; // Corner size
 		const l = 0 - highlightGap;
@@ -3729,8 +3729,8 @@ export default class SVGCanvasRenderer {
 			" Z";
 	}
 
-	// Returns a path that will draw the outline shape for the 'port-arcs' display
-	// which shows arcs around each of the node circles.
+	// Returns an SVG path that will draw the outline shape for the 'port-arcs'
+	// display which shows arcs around each of the node circles.
 	getPortArcsNodeShapePath(data) {
 		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
 			return this.getPortArcsNodeShapePathVertical(data, data.inputs, data.inputPortsWidth, data.outputs, data.outputPortsWidth);
@@ -3743,8 +3743,9 @@ export default class SVGCanvasRenderer {
 		return this.getPortArcsNodeShapePathHoriz(data, data.inputs, data.inputPortsHeight, data.outputs, data.outputPortsHeight);
 	}
 
-	// Returns a path that will draw the outline shape for the 'port-arcs' display
-	// which shows arcs around each of the node circles for the horizontal (LeftRight and RightLeft) directions.
+	// Returns an SVG path that will draw the outline shape for the 'port-arcs'
+	//  display which shows arcs around each of the node circles for the horizontal
+	// (LeftRight and RightLeft) directions.
 	getPortArcsNodeShapePathHoriz(data, leftPorts, leftPortsHeight, rightPorts, rightPortsHeight) {
 		let path = "M 0 0 L " + data.width + " 0 "; // Draw line across the top of the node
 
@@ -3803,8 +3804,9 @@ export default class SVGCanvasRenderer {
 		return path;
 	}
 
-	// Returns a path that will draw the outline shape for the 'port-arcs' display
-	// which shows arcs around each of the node circles for vertical (TopBottom and BottomTop) directions.
+	// Returns an SVG path that will draw the outline shape for the 'port-arcs'
+	// display which shows arcs around each of the node circles for vertical
+	// (TopBottom and BottomTop) directions.
 	getPortArcsNodeShapePathVertical(data, topPorts, topPortsWidth, bottomPorts, bottomPortsWidth) {
 		let path = "M 0 0 L 0 " + data.height; // Draw line down the left of the node
 
