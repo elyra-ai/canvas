@@ -243,7 +243,7 @@ export interface NodeLayout {
   /**
    * Image position
    */
-  imagePosition: "topLeft";
+  imagePosition: NodePosition;
   imagePosX: CanvasDistance;
   imagePosY: CanvasDistance;
 
@@ -259,7 +259,7 @@ export interface NodeLayout {
   /**
    * Label position
    */
-  labelPosition: "topLeft";
+  labelPosition: NodePosition;
   labelPosX: CanvasDistance;
   labelPosY: CanvasDistance;
 
@@ -327,7 +327,7 @@ export interface NodeLayout {
   /**
    * Error indicator dimensions
    */
-  errorPosition: "topLeft";
+  errorPosition: NodePosition;
   errorXPos: CanvasDistance;
   errorYPos: CanvasDistance;
   errorWidth: CanvasDistance;
@@ -487,7 +487,7 @@ export interface NodeLayout {
    * Display of vertical ellipsis to show context menu
    */
   ellipsisDisplay: boolean;
-  ellipsisPosition: "topLeft";
+  ellipsisPosition: NodePosition;
   ellipsisWidth: CanvasDistance;
   ellipsisHeight: CanvasDistance;
   ellipsisPosX: CanvasDistance;
