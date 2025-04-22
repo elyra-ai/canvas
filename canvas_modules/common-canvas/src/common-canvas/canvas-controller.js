@@ -2512,10 +2512,11 @@ export default class CanvasController {
 	editAction(cmndData) {
 		let data = cmndData;
 
-		// Only execute the delete if there are some selections to delete.
+		// Only execute the delete or cut if there are some selections.
 		// This prevents an 'empty' command being added to the command stack when
-		// 'delete' is pressed on the keyboard.
-		if (data.editType === "deleteSelectedObjects" &&
+		// 'delete' or 'cut' is pressed on the keyboard.
+		if ((data.editType === "deleteSelectedObjects" ||
+				data.editType === "cut") &&
 				data.selectedObjectIds.length === 0) {
 			return false;
 		}
