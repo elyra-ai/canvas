@@ -113,6 +113,8 @@ export type {
   CanvasAssociationLink
 } from  "@elyra/pipeline-schemas/types";
 
+export { CanvasController } from "./canvas-controller";
+
 export type {
   InternalAction,
   PipelineId,
@@ -149,7 +151,6 @@ export type {
   ContextMenuDivider,
   ContextMenuItem,
   CommentFormat,
-  CanvasController,
 } from "./canvas-controller";
 
 // These positions enumerations can be used to position elements relative to
