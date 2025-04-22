@@ -113,7 +113,7 @@ export type {
   CanvasAssociationLink
 } from  "@elyra/pipeline-schemas/types";
 
-export {
+export type {
   InternalAction,
   PipelineId,
   CanvasNodeId,
