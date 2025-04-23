@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Copyright 2017-2023 Elyra Authors
+# Copyright 2017-2025 Elyra Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ if [[ "${DISABLE_JEST_TESTS}" == "true" ]]; then
 else
   echo "Run jest tests"
   npm run test-coverage
+  npm run test:typescript
 fi
 
 echo "cd $WORKING_DIR"
