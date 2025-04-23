@@ -22,8 +22,9 @@ const d3 = Object.assign({}, d3Selection, d3Zoom);
 
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import { INTERACTION_CARBON, INTERACTION_MOUSE, INTERACTION_TRACKPAD }
-	from "./constants/canvas-constants.js";
+import { INTERACTION_CARBON, INTERACTION_MOUSE, INTERACTION_TRACKPAD,
+	LINK_SELECTION_NONE
+} from "./constants/canvas-constants.js";
 
 // This utility file provides a d3-zoom handler which manages zoom operations
 // on the canvas as well as various utility functions to handle zoom behavior.
@@ -419,6 +420,12 @@ export default class SVGCanvasUtilsZoom {
 		this.removeRegionSelector();
 		const { x, y, width, height } = this.getRegionDimensions(d3Event);
 
+		// Highlight objects within the region, as it is being drawn, to show
+		// the user which objects will be selected. Highlighting is done by setting
+		// the selection info in the (temporary) activePipeline object.
+		const selections = this.getObjectsInRegion({ x, y, width, height });
+		this.ren.setSelectionInfo({ selections, pipelineId: this.ren.activePipeline.id });
+
 		this.ren.canvasGrp
 			.append("rect")
 			.attr("width", width)
@@ -438,13 +445,25 @@ export default class SVGCanvasUtilsZoom {
 		d3Event.transform.x = this.regionStartTransformX;
 		d3Event.transform.y = this.regionStartTransformY;
 
-		this.ren.selectObjsInRegion(
-			this.getRegionDimensions(d3Event));
+		// Get the objects in the region and set them as 'selected' in the
+		// object model by calling the canvas controller.
+		const region = this.getRegionDimensions(d3Event);
+		const selections = this.getObjectsInRegion(region);
+		this.ren.canvasController.setSelections(selections, this.ren.activePipeline.id);
 	}
 
 	// Removes the region selection graphic rectangle.
 	removeRegionSelector() {
 		this.ren.canvasGrp.selectAll(".d3-region-selector").remove();
+	}
+
+	// Returns any objects in the region provided where region is { x, y, width, height }
+	getObjectsInRegion(region) {
+		return CanvasUtils.getObjectsInRegion(region, this.ren.activePipeline,
+			this.ren.config.enableLinkSelection !== LINK_SELECTION_NONE,
+			this.ren.config.enableLinkType,
+			this.ren.config.enableLinkMethod,
+			this.ren.config.enableAssocLinkType);
 	}
 
 	// Returns the x, y, width and height of the selection region
