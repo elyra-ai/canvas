@@ -459,10 +459,12 @@ export default class SVGCanvasUtilsZoom {
 
 	// Returns any objects in the region provided where region is { x, y, width, height }
 	getObjectsInRegion(region) {
-		return CanvasUtils.getObjectsInRegion(region, this.ren.activePipeline,
+		return CanvasUtils.getObjectsInRegion(
+			region,
+			this.ren.activePipeline,
 			this.ren.config.enableLinkSelection !== LINK_SELECTION_NONE,
-			this.ren.config.enableLinkType,
-			this.ren.config.enableLinkMethod,
+			this.ren.canvasLayout.linkType,
+			this.ren.canvasLayout.linkMethod,
 			this.ren.config.enableAssocLinkType);
 	}
 
