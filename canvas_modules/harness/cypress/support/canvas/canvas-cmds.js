@@ -44,8 +44,9 @@ Cypress.Commands.add("panCanvasToPosition", (canvasX, canvasY) => {
 				// but does not do any harm if used with the "Mouse" interaction type.
 				cy.get("#canvas-div-0")
 					.trigger("keydown", { code: "Space", keyCode: 32, release: false });
+				// Start at position 1, 1 as using topLeft doesn't work
 				cy.get("#canvas-div-0")
-					.trigger("mousedown", 1, 1, { which: 1, view: win }); // Start at position 1, 1 as using topLeft doesn't work
+					.trigger("mousedown", 1, 1, { which: 1, view: win });
 				cy.get("#canvas-div-0")
 					.trigger("mousemove", canvasX + transform.x + 1, canvasY + transform.y + 1, { view: win });
 				cy.get("#canvas-div-0")

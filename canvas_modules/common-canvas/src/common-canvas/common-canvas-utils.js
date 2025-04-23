@@ -24,7 +24,8 @@ import { get, has, isNumber, set } from "lodash";
 import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST,
 	PORT_DISPLAY_IMAGE, PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT,
-	CANVAS_FOCUS
+	CANVAS_FOCUS,
+	LINK_METHOD_FREEFORM
 } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CanvasUtils {
@@ -1035,10 +1036,10 @@ export default class CanvasUtils {
 		});
 	}
 
-	// Returns an array of selected object IDs for nodes, comments and links
+	// Returns an array of object IDs for nodes, comments and links
 	// that are within the region (inReg) provided. Links are only included if
 	// includeLinks is truthy.
-	static selectInRegion(inReg, pipeline, includeLinks, linkType, enableAssocLinkType) {
+	static getObjectsInRegion(inReg, pipeline, includeLinks, linkType, linkMethod, enableAssocLinkType) {
 		const region = {
 			x1: inReg.x,
 			y1: inReg.y,
@@ -1068,7 +1069,7 @@ export default class CanvasUtils {
 			for (const link of pipeline.links) {
 				// For straight links we check to see if the link line intersects (or
 				// is fully inside) the selection region.
-				if ((link.type === NODE_LINK && linkType === LINK_TYPE_STRAIGHT) ||
+				if ((link.type === NODE_LINK && linkType === LINK_TYPE_STRAIGHT && linkMethod === LINK_METHOD_FREEFORM) ||
 						link.type === COMMENT_LINK ||
 						(link.type === ASSOCIATION_LINK && enableAssocLinkType === ASSOC_STRAIGHT)) {
 					if (this.lineIntersectRectangle(link.x1, link.y1, link.x2, link.y2, region.x1, region.y1, region.x2, region.y2)) {

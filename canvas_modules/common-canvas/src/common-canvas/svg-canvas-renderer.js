@@ -630,16 +630,6 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	// Selects any objects in the region provided where region is { x, y, width, height }
-	selectObjsInRegion(region) {
-		const selections =
-			CanvasUtils.selectInRegion(region, this.activePipeline,
-				this.config.enableLinkSelection !== LINK_SELECTION_NONE,
-				this.config.enableLinkType,
-				this.config.enableAssocLinkType);
-		this.canvasController.setSelections(selections, this.activePipeline.id);
-	}
-
 	// Returns true when we are editing text. Called by svg-canvas-d3.
 	isEditingText() {
 		if (this.svgCanvasTextArea.isEditingText()) {
