@@ -12,7 +12,7 @@
         <link rel="prev" href="../01.10-common-properties/">
       
       
-        <link rel="next" href="../03-common-canvas/">
+        <link rel="next" href="../02.01-localization/">
       
       
       <link rel="icon" href="../assets/FlowIcon.png">
@@ -937,6 +937,8 @@
       
         
       
+        
+      
     
     
     
@@ -1040,6 +1042,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#peer-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Peer dependencies
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#localization" class="md-nav__link">
     <span class="md-ellipsis">
       Localization
@@ -1103,6 +1114,29 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02.01-localization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Localization
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -2838,6 +2872,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#peer-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Peer dependencies
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#localization" class="md-nav__link">
     <span class="md-ellipsis">
       Localization
@@ -2924,9 +2967,6 @@
 <h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
 <h2 id="npm-install">NPM Install<a class="headerlink" href="#npm-install" title="Permanent link">&para;</a></h2>
 <p>You&rsquo;ll need to build your application with Elyra Canvas.</p>
-<ul>
-<li>Elyra Canvas requires react, react-dom, react-intl, and react-redux libraries to be installed. See peerDependencies in <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/common-canvas/package.json">package.json</a> for versions requirements.</li>
-</ul>
 <p>Use the command:
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>@elyra/canvas<span class="w"> </span>--save-dev
 </code></pre></div>
@@ -2936,46 +2976,10 @@ or add this to your package.json file:</p>
 where x.x.x is the latest build and then run:
 <div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install
 </code></pre></div></p>
+<h2 id="peer-dependencies">Peer dependencies<a class="headerlink" href="#peer-dependencies" title="Permanent link">&para;</a></h2>
+<p>Make sure the peer dependency libraries, specified in the <a href="https://github.com/elyra-ai/canvas/blob/bd10c6b79e60e11954b03d50fcb7ed6de58f0629/canvas_modules/common-canvas/package.json#L117">package.json</a>, file are installed as part of the application. The application can use whichever versions of the peer dependencies it wants from those specified.</p>
 <h2 id="localization">Localization<a class="headerlink" href="#localization" title="Permanent link">&para;</a></h2>
-<p>If you want to see text displayed by Elyra Canvas components in different languages you must wrapper <code>&lt;CommonCanvas&gt;</code> and <code>&lt;CommonProperties&gt;</code>in an <code>&lt;IntlProvider&gt;</code> object.</p>
-<p>The sample code below shows how <code>&lt;IntlProvider&gt;</code> should be imported and initialized. Your code can set <code>this.locale</code> to indicate which language should override the default which, in this sample code, is set to English <code>en</code>. The default locale will be used if <code>this.locale</code> is set to a language which is not currently supported.</p>
-<p>If you want to provide translations for your own application&rsquo;s text you can import your own bundles and load them into the <code>this.messages</code> object along with the common-canvas and common-properties text. If you do this you will have to move <code>&lt;IntlProvider/&gt;</code> so that it wrappers your React objects as well as <code>&lt;CommonCanvas/&gt;</code> and/or <code>&lt;CommonProperties&gt;</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">IntlProvider</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;react-intl&quot;</span><span class="p">;</span>
-
-<span class="k">import</span><span class="w"> </span><span class="nx">CommandActionsBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas/locales/command-actions/locales&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="nx">CommonCanvasBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas/locales/common-canvas/locales&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="nx">CommonPropsBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas/locales/common-properties/locales&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="nx">PaletteBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas/locales/palette/locales&quot;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="nx">ToolbarBundles</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas/locales/toolbar/locales&quot;</span><span class="p">;</span>
-
-<span class="kd">class</span><span class="w"> </span><span class="nx">App</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="w"> </span><span class="p">{</span>
-
-<span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">locale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;en&quot;</span><span class="p">;</span>
-<span class="w">    </span><span class="c1">// Create messages object once (here in constructor) - do not create messages</span>
-<span class="w">    </span><span class="c1">// in the render method, otherwise unnecessary renders inside</span>
-<span class="w">    </span><span class="c1">// common-canvas/common-properties will be performed.</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">messages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_getMessages</span><span class="p">(</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">locale</span><span class="p">,</span>
-<span class="w">        </span><span class="p">[</span><span class="nx">CommandActionsBundles</span><span class="p">,</span><span class="w"> </span><span class="nx">CommonCanvasBundles</span><span class="p">,</span><span class="w"> </span><span class="nx">CommonPropsBundles</span><span class="p">,</span>
-<span class="w">         </span><span class="nx">PaletteBundles</span><span class="p">,</span><span class="w"> </span><span class="nx">ToolbarBundles</span><span class="p">]</span>
-<span class="w">    </span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="nx">_getMessages</span><span class="p">(</span><span class="nx">locale</span><span class="p">,</span><span class="w"> </span><span class="nx">bundles</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">messages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
-<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">bundle</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">bundles</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="nx">messages</span><span class="p">,</span><span class="w"> </span><span class="nx">bundle</span><span class="p">[</span><span class="nx">locale</span><span class="p">]);</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">messages</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="nx">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="o">&lt;</span><span class="nx">IntlProvider</span><span class="w"> </span><span class="nx">locale</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">locale</span><span class="p">}</span><span class="w"> </span><span class="nx">defaultLocale</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="w"> </span><span class="nx">messages</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">messages</span><span class="p">}</span><span class="o">&gt;</span>
-<span class="w">    </span><span class="p">{</span><span class="nx">Add</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">CommonCanvas</span><span class="o">/&gt;</span><span class="w"> </span><span class="nx">or</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">CommonProperties</span><span class="o">/&gt;</span><span class="w"> </span><span class="nx">element</span><span class="w"> </span><span class="nx">here</span><span class="p">.}</span>
-<span class="w">  </span><span class="o">&lt;</span><span class="err">/IntlProvider&gt;</span>
-<span class="p">}</span>
-</code></pre></div>
+<p>Elyra Canvas text is translated into multple languages. See the <a href="../02.01-localization/">Localization</a> page for details on how to include that text in the application. In addition, the <a href="../02.01-localization/#customizing-text-displayed-by-elyra-canvas-componenets">text can be customized</a> by the application.</p>
 <h2 id="overriding-styles-and-color-themes">Overriding Styles and Color Themes<a class="headerlink" href="#overriding-styles-and-color-themes" title="Permanent link">&para;</a></h2>
 <p>When building your application you will need to load fonts and override styles:</p>
 <h3 id="css-styling-for-quick-start">CSS styling for quick start<a class="headerlink" href="#css-styling-for-quick-start" title="Permanent link">&para;</a></h3>
@@ -3073,13 +3077,13 @@ var buildTasks = [&quot;copy:fonts&quot;];
         
         
           
-          <a href="../03-common-canvas/" class="md-footer__link md-footer__link--next" aria-label="Next: Getting Started">
+          <a href="../02.01-localization/" class="md-footer__link md-footer__link--next" aria-label="Next: Localization">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Getting Started
+                Localization
               </div>
             </div>
             <div class="md-footer__button md-icon">
