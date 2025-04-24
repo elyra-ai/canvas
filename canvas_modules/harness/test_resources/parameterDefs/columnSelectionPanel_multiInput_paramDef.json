@@ -7,6 +7,7 @@
     "field2_panel": { "link_ref": "0", "field_name": "BP" },
     "selectcolumn": {},
     "selectcolumns": [],
+    "selectcolumns_disabled": [],
     "selectcolumns2": [
       { "link_ref": "0", "field_name": "Age" },
       { "link_ref": "0", "field_name": "Drug" },
@@ -36,6 +37,12 @@
     },
     {
       "id": "selectcolumns",
+      "type": "array[object]",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "selectcolumns_disabled",
       "type": "array[object]",
       "role": "column",
       "required": true
@@ -109,6 +116,15 @@
         }
       },
       {
+        "parameter_ref": "selectcolumns_disabled",
+        "label": {
+          "default": "Select Fields disabled"
+        },
+        "description": {
+          "default": "selectcolumns control where values are shared with selectColumns 'Select Field' disabled"
+        }
+      },
+      {
         "parameter_ref": "selectcolumns2",
         "label": {
           "default": "Select Columns1"
@@ -166,7 +182,8 @@
             "type": "columnSelection",
             "parameter_refs": [
               "selectcolumn",
-              "selectcolumns"
+              "selectcolumns",
+              "selectcolumns_disabled"
             ]
           },
           {
@@ -194,6 +211,20 @@
       }
     ]
   },
+  "conditions": [
+    {
+      "enabled": {
+        "parameter_refs": ["selectcolumns_disabled"],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "selectcolumns_disabled",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }    
+  ],
   "dataset_metadata": [
     {
       "fields": [
