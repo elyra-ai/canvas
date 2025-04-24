@@ -4861,7 +4861,12 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE ||
 						this.config.enableRaiseLinksToTopOnHover) {
-					this.raiseLinkToTop(targetObj);
+
+					// Only raise link if we're NOT editing text because raising a link
+					// will cause a 'blur' in the text edit area which will end editing.
+					if (!this.isEditingText()) {
+						this.raiseLinkToTop(targetObj);
+					}
 					this.setLinkHandlesHoverClass(targetObj, true);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
@@ -4898,12 +4903,14 @@ export default class SVGCanvasRenderer {
 			})
 			.on("mouseleave", (d3Event, link) => {
 				const targetObj = d3Event.currentTarget;
+				this.setLinkHandlesHoverClass(targetObj, false);
 
-				// isEditingText is used to check whether Label Decoration is in Edit Mode
-				// to avoid Decoration Textarea to be closed on mouseleave.
-				if (!targetObj.getAttribute("data-selected") && !this.config.enableLinksOverNodes && !this.isEditingText()) {
+				// Lower link if:
+				// 1. we're NOT editing text because lowering a link will cause a
+				//   'blur' in the text edit area which will end editing.
+				// 2. enableLinksOverNodes is false - i.e. lowering is allowed.
+				if (!this.config.enableLinksOverNodes && !this.isEditingText()) {
 					this.lowerLinkToBottom(targetObj);
-					this.setLinkHandlesHoverClass(targetObj, false);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, link, "default");
