@@ -82,6 +82,16 @@ class ExpressionControl extends React.Component {
 
 	componentDidMount() {
 		this.createCodeMirrorEditor();
+
+		/*
+		 * Remove aria-label from codemirror placeholder to resolve below accessibility violation
+		 * The ARIA attributes "aria-label" are not valid for the element <span> with implicit ARIA
+		 * role "generic"
+		*/
+		const placeholderElement = document.querySelector(".properties-expression-editor-wrapper .cm-placeholder");
+		if (placeholderElement) {
+			placeholderElement.removeAttribute("aria-label");
+		}
 	}
 
 	// this is needed to ensure expression builder selection works.
@@ -431,7 +441,12 @@ class ExpressionControl extends React.Component {
 					<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
 						className={className}
 					>
-						<div className={codemirrorClassName} ref={this.editorRef} style={{ height: this.state.expressionEditorHeight, minHeight: minLineHeight }} />
+						<div
+							className={codemirrorClassName}
+							ref={this.editorRef}
+							style={{ height: this.state.expressionEditorHeight, minHeight: minLineHeight }}
+							aria-disabled={this.props.state === STATES.DISABLED || !this.props.readOnly}
+						/>
 						<ValidationMessage state={this.props.state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 					</div>
 				</div>
