@@ -49,7 +49,7 @@ export default class EmptyTable extends React.Component {
 		const emptyTableText = this.getEmptyTableText();
 		const emptyTableContent = (
 			<div className="properties-empty-table" disabled={this.props.disabled}>
-				<span >{emptyTableText}</span>
+				<span aria-disabled={this.props.disabled}>{emptyTableText}</span>
 				<br />
 				<Button
 					className="properties-empty-table-button"
