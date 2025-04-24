@@ -405,7 +405,7 @@ const VirtualizedGrid = (props) => {
 		props.setAllRowsSelected(checked);
 	};
 
-	return (<div ref={parentRef} className="properties-tanstack-grid properties-vt" tabIndex={0}>
+	return (<div ref={parentRef} className="properties-tanstack-grid properties-vt">
 		<table aria-label={props.tableLabel ? props.tableLabel : ""} className={classNames("properties-autosized-vt",
 			{ "properties-vt-single-selection": props.rowSelection && props.rowSelection === ROW_SELECTION.SINGLE },
 			{ "properties-light-disabled": !props.light })}

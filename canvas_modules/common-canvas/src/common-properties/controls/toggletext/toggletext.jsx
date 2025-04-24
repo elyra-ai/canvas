@@ -90,7 +90,6 @@ class ToggletextControl extends React.Component {
 
 		return (
 			<div
-				aria-label={(this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : ""}
 				className={className}
 				disabled={this.props.state === STATES.DISABLED}
 				data-id={ControlUtils.getDataId(this.props.propertyId)}
