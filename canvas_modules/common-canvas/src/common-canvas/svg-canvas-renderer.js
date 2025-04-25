@@ -2717,6 +2717,7 @@ export default class SVGCanvasRenderer {
 			.html(EDIT_ICON)
 			.attr("width", 16)
 			.attr("height", 16)
+			.attr("aria-label", "Node edit label icon")
 			.attr("x", EDIT_ICON_X_OFFSET + EDIT_ICON_POS_X)
 			.attr("y", EDIT_ICON_Y_OFFSET + EDIT_ICON_POS_Y);
 	}
