@@ -88,10 +88,12 @@ class ExpressionControl extends React.Component {
 		 * The ARIA attributes "aria-label" are not valid for the element <span> with implicit ARIA
 		 * role "generic"
 		*/
-		const placeholderElement = document.querySelector(".properties-expression-editor-wrapper .cm-placeholder");
-		if (placeholderElement) {
-			placeholderElement.removeAttribute("aria-label");
-		}
+		const placeholderElements = document.querySelectorAll(".properties-expression-editor-wrapper .cm-placeholder");
+		placeholderElements.forEach((placeholderElement) => {
+			if (placeholderElement) {
+				placeholderElement.removeAttribute("aria-label");
+			}
+		});
 	}
 
 	// this is needed to ensure expression builder selection works.
