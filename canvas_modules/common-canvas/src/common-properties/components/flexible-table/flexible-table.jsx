@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint complexity: ["error", 26] */
+/* eslint complexity: ["error", 27] */
 /* eslint max-depth: ["error", 6] */
 
 import React from "react";
@@ -304,7 +304,7 @@ class FlexibleTable extends React.Component {
 	}
 
 	_updateTableWidth(contentRect, target) {
-		const tableWidth = Math.floor(target?.childNodes?.[0].childNodes?.[0].clientWidth) || contentRect.width;
+		const tableWidth = Math.floor(target?.childNodes?.[0].childNodes?.[0]?.clientWidth) || contentRect.width;
 		if (this.state.availableWidth !== Math.floor(tableWidth - 2)) {
 			this.setState({
 				availableWidth: Math.floor(tableWidth - 2) // subtract 2 px for the borders
@@ -535,6 +535,20 @@ class FlexibleTable extends React.Component {
 	}
 
 	render() {
+		const emptyTableContent = isEmpty(this.props.data)
+			? (
+				<div className="properties-ft-empty-table">
+					{this.props.emptyTablePlaceholder}
+				</div>
+			)
+			: null;
+		if (this.props.columns.length === 0) {
+			return (<div ref={this.tableRef}>
+				<div className="properties-ft-empty-table-header" />
+				{emptyTableContent}
+			</div>);
+		}
+
 		const headerInfo = this.generateTableHeaderRow();
 		const headers = headerInfo.headers;
 		const searchLabel = headerInfo.searchLabel;
@@ -590,14 +604,6 @@ class FlexibleTable extends React.Component {
 				{ topRightPanelHasTableToolbar ? null : searchBar}
 				{this.props.topRightPanel}
 			</div>)
-			: null;
-
-		const emptyTableContent = isEmpty(this.props.data)
-			? (
-				<div className="properties-ft-empty-table">
-					{this.props.emptyTablePlaceholder}
-				</div>
-			)
 			: null;
 
 		const ftClassname = classNames("properties-ft-control-container", { "properties-light-disabled": !this.props.light });
