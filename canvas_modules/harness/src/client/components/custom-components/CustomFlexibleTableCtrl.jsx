@@ -171,7 +171,7 @@ class CustomFlexibleTableCtrl extends React.Component {
 	}
 
 	render() {
-		return (
+		return (<>
 			<div className="harness-custom-flexible-table">
 				<FlexibleTable
 					enableTanstackTable
@@ -179,7 +179,15 @@ class CustomFlexibleTableCtrl extends React.Component {
 					data={this.rows}
 				/>
 			</div>
-		);
+			<div className="harness-custom-spacer" />
+			<div className="harness-custom-empty-flexible-table">
+				<FlexibleTable
+					columns={[]}
+					data={[]}
+					emptyTablePlaceholder="Empty table display text"
+				/>
+			</div>
+		</>);
 	}
 }
 
