@@ -108,7 +108,7 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 				selectionPath: "M -4 -4 h 36 v 36 h -36 Z",
 				nodeExternalObject: ShapeNodeWrapper,
 				defaultNodeWidth: 28,
-				defaultNodeHeight: 70,
+				defaultNodeHeight: 60,
 				className: "shape-node",
 				contextToolbarPosition: "topCenter",
 				inputPortDisplay: false,

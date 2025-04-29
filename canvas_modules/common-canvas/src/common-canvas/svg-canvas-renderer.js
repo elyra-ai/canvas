@@ -6225,7 +6225,6 @@ export default class SVGCanvasRenderer {
 			const labelDivRect = this.zoomUtils.getTransformedElementRect(labelDivElement);
 			const labelSpanRect = this.zoomUtils.getTransformedElementRect(labelSpanElement);
 
-			const labelInc = 4;
 			const labelRectRight = Math.min(labelSpanRect.right, labelDivRect.right);
 			const labelRectBottom = Math.min(labelSpanRect.bottom, labelDivRect.bottom);
 
@@ -6234,14 +6233,15 @@ export default class SVGCanvasRenderer {
 			rightGap = labelRectRight - (node.x_pos + node.width);
 			topGap = node.y_pos - labelSpanRect.y;
 			bottomGap = labelRectBottom - (node.y_pos + node.height);
-
-			// Ensure the gaps include a small increment for spacing and are at
-			// least as big as the nodeSizingArea.
-			leftGap = Math.max(node.layout.nodeSizingArea, leftGap + labelInc);
-			rightGap = Math.max(node.layout.nodeSizingArea, rightGap + labelInc);
-			topGap = Math.max(node.layout.nodeSizingArea, topGap + labelInc);
-			bottomGap = Math.max(node.layout.nodeSizingArea, bottomGap + labelInc);
 		}
+
+		// Ensure the gaps include a small increment for spacing and are at
+		// least as big as the nodeSizingArea.
+		const focusInc = 4;
+		leftGap = Math.max(node.layout.nodeSizingArea, leftGap + focusInc);
+		rightGap = Math.max(node.layout.nodeSizingArea, rightGap + focusInc);
+		topGap = Math.max(node.layout.nodeSizingArea, topGap + focusInc);
+		bottomGap = Math.max(node.layout.nodeSizingArea, bottomGap + focusInc);
 
 		return { leftGap, rightGap, topGap, bottomGap };
 	}
