@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-import { CommonCanvas, CanvasController, CommonProperties, CommandStack, Action, FlowValidation, ColorPicker, Palette } from "@elyra/canvas";
-
-export { CommonCanvas, CanvasController, CommonProperties, CommandStack, Action, FlowValidation, ColorPicker, Palette };
+import CommandStack from "./command-stack";
+import Action from "./action";
+export { CommandStack, Action };
