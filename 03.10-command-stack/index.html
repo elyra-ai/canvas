@@ -2881,14 +2881,18 @@
 <span class="w">   </span><span class="nx">undo</span><span class="p">()</span>
 <span class="w">   </span><span class="nx">redo</span><span class="p">()</span>
 <span class="w">   </span><span class="nx">getLabel</span><span class="p">()</span>
+<span class="w">   </span><span class="nx">getFocusObject</span><span class="p">()</span>
 </code></pre></div>
 <p>constructor() - Initial setup</p>
 <p>do() - Performs all actions necessary to execute the command</p>
 <p>undo() - Performs all actions necessary to reverse the actions performed in do()</p>
 <p>redo() - Performs all actions necessary to re-execute the command. For some commands this is the same as do() but for others it is different.</p>
 <p>getLabel() - Returns a label that descibes the action.</p>
+<p>getFocusObject() - Returns a canvas object (node, link or comment) or the string &ldquo;CanvasFocus&rdquo; to indicate where keyboard focus should be set when the command completes.</p>
 <p>Here is some sample code that shows how a &lsquo;create node&rsquo; command might be written:</p>
-<p><div class="highlight"><pre><span></span><code><span class="w">   </span><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">CreateNodeAction</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Action</span><span class="w"> </span><span class="p">{</span>
+<p><div class="highlight"><pre><span></span><code><span class="w">   </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Action</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas&quot;</span><span class="p">;</span>
+
+<span class="w">   </span><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">CreateNodeAction</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Action</span><span class="w"> </span><span class="p">{</span>
 
 <span class="w">        </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">canvasController</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">super</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
@@ -2898,18 +2902,24 @@
 
 <span class="w">         </span><span class="k">do</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">newNode</span><span class="p">);</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="nx">focusObject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">newNode</span><span class="p">;</span>
 <span class="w">         </span><span class="p">}</span>
 
 <span class="w">         </span><span class="nx">undo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">deleteNode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">newNode</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="nx">focusObject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CanvasFocus&quot;</span><span class="p">;</span>
 <span class="w">         </span><span class="p">}</span>
 
 <span class="w">         </span><span class="nx">redo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">newNode</span><span class="p">);</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="k">do</span><span class="p">();</span>
 <span class="w">         </span><span class="p">}</span>
 
 <span class="w">         </span><span class="nx">getLabel</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;Add 1 node&quot;</span>
+<span class="w">         </span><span class="p">}</span>
+
+<span class="w">         </span><span class="nx">getFocusObject</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">focusObject</span><span class="p">;</span>
 <span class="w">         </span><span class="p">}</span>
 <span class="w">   </span><span class="p">}</span>
 </code></pre></div>
