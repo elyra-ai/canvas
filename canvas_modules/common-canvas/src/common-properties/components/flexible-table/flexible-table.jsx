@@ -575,6 +575,7 @@ class FlexibleTable extends React.Component {
 							disabled={disabled}
 							size="sm"
 							labelText={searchBarLabel}
+							aria-labelledby={`${this.props.tableLabel}-search-label`}
 						/>
 					</Layer>
 				</div>
