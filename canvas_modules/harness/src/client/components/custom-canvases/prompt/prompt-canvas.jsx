@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Elyra Authors
+ * Copyright 2024-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import Flow from "./prompt-flow.json";
 import Palette from "./prompt-palette.json";
 import Template from "./prompt-template.json";
 import PromptReactNode from "./prompt-react.jsx";
+import AddNodeAndLinkAction from "./addNodeAndLinkAction.js";
 
 export default class PromptCanvas extends React.Component {
 	constructor(props) {
@@ -47,6 +48,7 @@ export default class PromptCanvas extends React.Component {
 			enableLinkDirection: "LeftRight",
 			enableSnapToGridType: "After",
 			enableLinkSelection: "None",
+			enableKeyboardNavigation: true,
 			enableMarkdownInComments: true,
 			enableContextToolbar: true,
 			tipConfig: {
@@ -139,24 +141,22 @@ export default class PromptCanvas extends React.Component {
 	}
 
 	addNodeHandler(srcNodeId, srcPortId, nodeTemplate, promptNodeId) {
+		// Get and remove the prompt node
 		const promptNode = this.canvasController.getNode(promptNodeId);
 		this.canvasController.deleteNode(promptNodeId);
 		this.canvasController.deleteLink(this.genPromptLinkId(srcNodeId, srcPortId));
 
-		const newNode = this.canvasController.createNode({
-			nodeTemplate: nodeTemplate,
-			offsetX: promptNode.x_pos,
-			offsetY: promptNode.y_pos
-		});
-		this.canvasController.addNode(newNode);
+		// Create and execute a new command to add the node and link
+		const data = {
+			nodeTemplate,
+			x_pos: promptNode.x_pos,
+			y_pos: promptNode.y_pos,
+			srcNodeId,
+			srcPortId
+		};
 
-		const linksToAdd = this.canvasController.createNodeLinks({
-			type: "nodeLink",
-			nodes: [{ id: srcNodeId, portId: srcPortId }],
-			targetNodes: [{ id: newNode.id }]
-		});
-
-		this.canvasController.addLinks(linksToAdd);
+		const cmnd = new AddNodeAndLinkAction(data, this.canvasController);
+		this.canvasController.do(cmnd);
 	}
 
 	addPromptNode(srcNodeId, srcPortId) {
