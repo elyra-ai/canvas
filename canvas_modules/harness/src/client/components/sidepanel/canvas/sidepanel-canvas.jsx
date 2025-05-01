@@ -776,6 +776,16 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableMarkdownHTML = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedMarkdownHTML" // Set ID to corresponding field in App.js state
+				labelText="Enable HTML In Markdown Text"
+				toggled={this.props.getStateValue("selectedMarkdownHTML")}
+				onToggle={(val) => this.setStateValue(val, "selectedMarkdownHTML")}
+			/>
+		</div>);
+
+
 		var enableWYSIWYGComments = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedWYSIWYGComments" // Set ID to corresponding field in App.js state
@@ -1843,6 +1853,8 @@ export default class SidePanelForms extends React.Component {
 					<div className="harness-side-panel-header">Comments</div>
 					{divider}
 					{enableMarkdownInComments}
+					{divider}
+					{enableMarkdownHTML}
 					{divider}
 					{enableWYSIWYGComments}
 					{divider}
