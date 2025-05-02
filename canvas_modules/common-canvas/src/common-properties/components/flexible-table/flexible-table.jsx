@@ -564,9 +564,10 @@ class FlexibleTable extends React.Component {
 				{ id: "table.search.label", defaultMessage: defaultMessages["table.search.label"] },
 				{ table_name: this.props.tableLabel }
 			);
+			const ariaLabeledBy = `${this.props.tableLabel}-search-label`;
 
 			searchBar = (
-				<div className={classNames("properties-ft-search-container", { "disabled": disabled })}>
+				<div id={ariaLabeledBy} className={classNames("properties-ft-search-container", { "disabled": disabled })}>
 					<Layer level={this.props.light ? 1 : 0}>
 						<Search
 							className="properties-ft-search-text"
@@ -575,7 +576,7 @@ class FlexibleTable extends React.Component {
 							disabled={disabled}
 							size="sm"
 							labelText={searchBarLabel}
-							aria-labelledby={`${this.props.tableLabel}-search-label`}
+							aria-labelledby={ariaLabeledBy}
 						/>
 					</Layer>
 				</div>
