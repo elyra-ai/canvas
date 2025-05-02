@@ -66,13 +66,13 @@ class Toolbar extends React.Component {
 		this.generateToolbarItems = this.generateToolbarItems.bind(this);
 		this.setFocusAction = this.setFocusAction.bind(this);
 		this.setFocusOnItem = this.setFocusOnItem.bind(this);
-		this.setTabindexOnDisabledToolbar = this.setTabindexOnDisabledToolbar.bind(this);
+		this.setTabIndexOnDisabledToolbar = this.setTabIndexOnDisabledToolbar.bind(this);
 		this.closeAnyOpenSubArea = this.closeAnyOpenSubArea.bind(this);
 	}
 
 	componentDidMount() {
 		if (this.getFocusableItemRefs().length === 0 && this.state.focusAction !== "disabled") {
-			this.setTabindexOnDisabledToolbar();
+			this.setTabIndexOnDisabledToolbar();
 		}
 	}
 
@@ -87,7 +87,7 @@ class Toolbar extends React.Component {
 		const focusableItems = this.getFocusableItemRefs();
 		const index = focusableItems.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
 		if (focusableItems.length === 0 && this.state.focusAction !== "disabled") {
-			this.setTabindexOnDisabledToolbar();
+			this.setTabIndexOnDisabledToolbar();
 		} else if (index === -1 || (!this.isFocusInToolbar && this.props.setInititalFocus)) {
 			this.isFocusInToolbar = true;
 			this.setFocusOnFirstItem();
@@ -199,7 +199,7 @@ class Toolbar extends React.Component {
 	}
 
 	// All items are disabled in the toolbar
-	setTabindexOnDisabledToolbar() {
+	setTabIndexOnDisabledToolbar() {
 		this.isFocusInToolbar = false;
 		this.setFocusAction("disabled");
 	}
