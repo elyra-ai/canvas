@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,13 +113,17 @@ describe("Table buttons renders correctly", () => {
 				"action": "button_1",
 				"enable": false,
 				"iconEnabled": "/images/up-triangle.svg",
-				"tooltip": "Custom svg icon path. Disabled"
+				"tooltip": "Custom svg icon path. Disabled",
+				"incLabelWithIcon": null,
+				"label": "Custom svg icon path. Disabled"
 			},
 			{
 				"action": "button_2",
 				"enable": true,
 				"iconEnabled": "/images/up-triangle.svg",
-				"tooltip": "Custom svg icon path."
+				"tooltip": "Custom svg icon path.",
+				"incLabelWithIcon": null,
+				"label": "Custom svg icon path."
 			},
 			{
 				"divider": true
@@ -127,12 +131,16 @@ describe("Table buttons renders correctly", () => {
 			{
 				"action": "button_3",
 				"enable": false,
-				"tooltip": "Carbon icon disabled"
+				"tooltip": "Carbon icon disabled",
+				"incLabelWithIcon": null,
+				"label": "Carbon icon disabled"
 			},
 			{
 				"action": "button_4",
 				"enable": true,
-				"tooltip": "Carbon icon"
+				"tooltip": "Carbon icon",
+				"incLabelWithIcon": null,
+				"label": "Carbon icon"
 			},
 			{
 				"divider": true
@@ -188,13 +196,17 @@ describe("Table buttons renders correctly", () => {
 				"action": "button_1",
 				"enable": false,
 				"iconEnabled": "/images/up-triangle.svg",
-				"tooltip": "Custom svg icon path. Disabled"
+				"tooltip": "Custom svg icon path. Disabled",
+				"incLabelWithIcon": null,
+				"label": "Custom svg icon path. Disabled"
 			},
 			{
 				"action": "button_2",
 				"enable": false,
 				"iconEnabled": "/images/up-triangle.svg",
-				"tooltip": "Custom svg icon path."
+				"tooltip": "Custom svg icon path.",
+				"incLabelWithIcon": null,
+				"label": "Custom svg icon path."
 			},
 			{
 				"divider": true
@@ -202,12 +214,16 @@ describe("Table buttons renders correctly", () => {
 			{
 				"action": "button_3",
 				"enable": false,
-				"tooltip": "Carbon icon disabled"
+				"tooltip": "Carbon icon disabled",
+				"incLabelWithIcon": null,
+				"label": "Carbon icon disabled"
 			},
 			{
 				"action": "button_4",
 				"enable": false,
-				"tooltip": "Carbon icon"
+				"tooltip": "Carbon icon",
+				"incLabelWithIcon": null,
+				"label": "Carbon icon"
 			},
 			{
 				"divider": true

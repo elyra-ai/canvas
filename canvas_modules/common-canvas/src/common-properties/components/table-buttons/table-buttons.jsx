@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,6 +86,9 @@ class TableButtons extends React.Component {
 				buttonDef.label = buttonConfig.label.text;
 				buttonDef.incLabelWithIcon = "before";
 				buttonDef.kind = "ghost";
+			} else {
+				buttonDef.label = buttonConfig.description?.text;
+				buttonDef.incLabelWithIcon = null; // Display aria-label for this icon only button
 			}
 
 			if (buttonConfig.description) {
