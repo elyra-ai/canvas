@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -159,10 +159,11 @@ class ToolbarButtonItem extends React.Component {
 			const iconEnabled = actionObj.iconEnabled;
 			const iconDisabled = actionObj.iconDisabled || actionObj.iconEnabled;
 			const customIcon = actionObj.enable ? iconEnabled : iconDisabled;
+			const ariaLabel = actionObj.incLabelWithIcon ? null : actionObj.label;
 			const id = "toolbar-icon-" + this.props.instanceId + " -" + actionObj.action;
 
 			if (typeof customIcon === "string") {
-				icon = (<SVG id={id} src={customIcon} disabled={!actionObj.enable} />);
+				icon = (<SVG id={id} src={customIcon} disabled={!actionObj.enable} aria-label={ariaLabel} />);
 			} else {
 				icon = customIcon;
 			}

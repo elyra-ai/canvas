@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,14 @@ class Toolbar extends React.Component {
 		this.generateToolbarItems = this.generateToolbarItems.bind(this);
 		this.setFocusAction = this.setFocusAction.bind(this);
 		this.setFocusOnItem = this.setFocusOnItem.bind(this);
+		this.setTabIndexOnDisabledToolbar = this.setTabIndexOnDisabledToolbar.bind(this);
 		this.closeAnyOpenSubArea = this.closeAnyOpenSubArea.bind(this);
+	}
+
+	componentDidMount() {
+		if (this.getFocusableItemRefs().length === 0 && this.state.focusAction !== "disabled") {
+			this.setTabIndexOnDisabledToolbar();
+		}
 	}
 
 	// If, after updating, we are left in a situation where this.state.focusAction
@@ -77,8 +84,11 @@ class Toolbar extends React.Component {
 	// the delete item (which has focus) will become disabled. It may also happen if the
 	// toolbar config is updated and the current focusAction item is removed.
 	componentDidUpdate() {
-		const index = this.getFocusableItemRefs().findIndex((item) => this.getRefAction(item) === this.state.focusAction);
-		if (index === -1 || (!this.isFocusInToolbar && this.props.setInititalFocus)) {
+		const focusableItems = this.getFocusableItemRefs();
+		const index = focusableItems.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
+		if (focusableItems.length === 0 && this.state.focusAction !== "disabled") {
+			this.setTabIndexOnDisabledToolbar();
+		} else if (index === -1 || (!this.isFocusInToolbar && this.props.setInititalFocus)) {
 			this.isFocusInToolbar = true;
 			this.setFocusOnFirstItem();
 		}
@@ -186,6 +196,12 @@ class Toolbar extends React.Component {
 			subAreaOpenRef = this.overflowItemRefs.find((ref) => ref.current?.isSubAreaDisplayed());
 		}
 		return subAreaOpenRef;
+	}
+
+	// All items are disabled in the toolbar
+	setTabIndexOnDisabledToolbar() {
+		this.isFocusInToolbar = false;
+		this.setFocusAction("disabled");
 	}
 
 	// Either sets the focus on the item for the action passed in or, if

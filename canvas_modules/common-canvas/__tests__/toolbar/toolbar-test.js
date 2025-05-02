@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,6 +101,9 @@ describe("Toolbar renders correctly", () => {
 		const toolbarActionHandler = sinon.spy();
 		const { container } = createToolbar(toolbarConfig, toolbarActionHandler);
 
+		const toolbar = container.querySelector(".toolbar-div");
+		expect(toolbar.getAttribute("tabindex")).to.equal("0");
+
 		const el = container.querySelector(".zoomToFit-action button");
 		fireEvent.click(el);
 		expect(toolbarActionHandler.calledOnce).to.be.false;
@@ -186,6 +189,23 @@ describe("Toolbar renders correctly", () => {
 		defaultButtons.forEach((button) => {
 			expect(button.classList.contains(".cds--btn--icon-only")).to.be.false;
 		});
+	});
+
+	it("should set 'tabindex=-1' if all items are disabled in the toolbar", () => {
+		const toolbarConfig = {
+			rightBar: [
+				{ action: "zoomIn", label: "Cut", enable: false },
+				{ action: "zoomOut", label: "Copy", enable: false },
+				{ action: "zoomToFit", label: "Zoom To Fit", enable: false },
+				{ divider: true },
+				{ action: "notifications", label: "Notficiations", enable: false }
+			]
+		};
+		const toolbarActionHandler = sinon.spy();
+		const { container } = createToolbar(toolbarConfig, toolbarActionHandler);
+
+		const toolbar = container.querySelector(".toolbar-div");
+		expect(toolbar.getAttribute("tabindex")).to.equal("-1");
 	});
 });
 
