@@ -167,6 +167,9 @@ class RadiosetControl extends React.Component {
 	render() {
 		const disabled = this.props.state === STATES.DISABLED;
 		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		if (!this.props.control.values && this.props.control.controlType === "radioset") {
 			this.props.control.values = [true, false];
 			this.props.control.valueLabels = ["true", "false"];
@@ -229,10 +232,10 @@ class RadiosetControl extends React.Component {
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
-				className={classNames("properties-radioset ", { "hide": this.props.state === STATES.HIDDEN })}
+				className={classNames("properties-radioset ", { "hide": hidden })}
 			>
 				<RadioButtonGroup className={classNames("properties-radio-button-group", this.props.messageInfo ? this.props.messageInfo.type : null)}
-					disabled={this.props.state === STATES.DISABLED}
+					disabled={disabled}
 					name="radio-button-group"
 					orientation={this.props.control.orientation}
 					helperText={this.props.control.helperText}

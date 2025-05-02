@@ -167,7 +167,7 @@ describe("Toggletext renders correctly", () => {
 		expect(toggleWrapper.outerHTML.includes("disabled")).to.equal(true);
 	});
 
-	it("toggletext renders when hidden", () => {
+	it("toggletext does not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		wrapper = render(
 			<Toggletext
@@ -178,7 +178,7 @@ describe("Toggletext renders correctly", () => {
 			/>
 		);
 		const toggleWrapper = wrapper.container.querySelector("div[data-id='properties-toggle']");
-		expect(toggleWrapper.className.includes("hide")).to.equal(true);
+		expect(toggleWrapper).to.be.null;
 	});
 
 	it("toggletext renders messages correctly", () => {

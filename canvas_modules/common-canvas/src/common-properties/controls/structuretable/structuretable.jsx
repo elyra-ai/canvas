@@ -157,6 +157,10 @@ class StructureTableControl extends AbstractTable {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		const tableButtonConfig = {
 			fieldPickerCloseFunction: this.onFieldPickerClose
 		};

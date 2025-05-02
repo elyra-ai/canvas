@@ -166,7 +166,7 @@ describe("Passwordfield renders correctly", () => {
 		const passwordWrapper = wrapper.container.querySelector("div[data-id='properties-test-password']");
 		expect(passwordWrapper.querySelector("input").disabled).to.equal(true);
 	});
-	it("Passwordfield renders when hidden", () => {
+	it("Passwordfield does not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<Passwordfield
@@ -177,7 +177,7 @@ describe("Passwordfield renders correctly", () => {
 			/>
 		);
 		const passwordWrapper = wrapper.container.querySelector("div[data-id='properties-test-password']");
-		expect(passwordWrapper.className.includes("hide")).to.equal(true);
+		expect(passwordWrapper).to.be.null;
 	});
 	it("Passwordfield renders messages correctly", () => {
 		controller.updateErrorMessage(propertyId, {

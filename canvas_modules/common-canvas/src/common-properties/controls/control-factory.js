@@ -120,11 +120,6 @@ export default class ControlFactory {
 	* @param tableInfo
 	*/
 	createControlItem(control, propertyId, tableInfo, readOnly = false) {
-		const hidden = this.controller.getControlState(propertyId) === STATES.HIDDEN;
-		if (hidden) {
-			return null; // Do not render hidden controls
-		}
-
 		const controlObj = this.createControl(control, propertyId, tableInfo, readOnly);
 		const className = control.className ? control.className : "";
 
@@ -135,6 +130,10 @@ export default class ControlFactory {
 		*/
 		if (accessibleControls.includes(control.controlType)) {
 			return controlObj;
+		}
+		const hidden = this.controller.getControlState(propertyId) === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
 		}
 		// When control-item displays other controls, add padding on control-item
 		return (

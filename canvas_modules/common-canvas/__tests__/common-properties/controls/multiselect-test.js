@@ -183,7 +183,7 @@ describe("multiselect renders correctly", () => {
 		expect(multiselectWrapper.querySelector("button").disabled).to.equal(true);
 	});
 
-	it("multiselect renders when hidden", () => {
+	it("multiselect does not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<MultiSelectControl
@@ -195,7 +195,7 @@ describe("multiselect renders correctly", () => {
 		);
 		const { container } = wrapper;
 		const multiselectWrapper = container.querySelector("div[data-id='properties-test-multiselect']");
-		expect(multiselectWrapper.className.includes("hide")).to.equal(true);
+		expect(multiselectWrapper).to.be.null;
 	});
 
 	it("Validate multiselect filtered correctly", () => {

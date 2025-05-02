@@ -37,6 +37,10 @@ class ToggleControl extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		const overrideLabelKeyOn = `${this.props.control.name}.toggle.on.label`;
 		const overrideLabelKeyOff = `${this.props.control.name}.toggle.off.label`;
 
@@ -57,7 +61,7 @@ class ToggleControl extends React.Component {
 			aria-labelledby={`${this.props.propertyId?.name}-toggle-label`}
 			readOnly={this.props.readOnly}
 		/>);
-		const className = classNames("properties-toggle", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
+		const className = classNames("properties-toggle", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				{

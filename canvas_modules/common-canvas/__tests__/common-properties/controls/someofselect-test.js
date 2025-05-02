@@ -212,20 +212,6 @@ describe("SomeOfSelectControl renders correctly", () => {
 			expect(checkbox.disabled).to.equal(true);
 		});
 	});
-	it("SomeOfSelectControlrenders when hidden", () => {
-		controller.updateControlState(propertyId, "hidden");
-		const wrapper = renderWithIntl(
-			<Provider store={controller.getStore()}>
-				<SomeOfSelectControl
-					control={control}
-					controller={controller}
-					propertyId={propertyId}
-				/>
-			</Provider>
-		);
-		const someofselectWrapper = wrapper.container.querySelector("div[data-id='properties-test-someofselect']");
-		expect(someofselectWrapper.className.includes("hide")).to.equal(true);
-	});
 	it("checkbox renders messages correctly", () => {
 		controller.updateErrorMessage(propertyId, {
 			validation_id: propertyId.name,
@@ -257,6 +243,20 @@ describe("SomeOfSelectControl renders correctly", () => {
 		);
 		const someofselectWrapper = wrapper.container.querySelector(".properties-autosized-vt");
 		expect(someofselectWrapper.getAttribute("aria-label")).to.equal(control.label.text);
+	});
+	it("SomeOfSelectControl does not render when hidden", () => {
+		controller.updateControlState(propertyId, "hidden");
+		const wrapper = renderWithIntl(
+			<Provider store={controller.getStore()}>
+				<SomeOfSelectControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const someofselectWrapper = wrapper.container.querySelector("div[data-id='properties-test-someofselect']");
+		expect(someofselectWrapper).to.be.null;
 	});
 });
 

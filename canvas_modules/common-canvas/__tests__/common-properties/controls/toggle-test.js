@@ -96,7 +96,7 @@ describe("toggle renders correctly", () => {
 		});
 	});
 
-	it("toggle renders when hidden", () => {
+	it("toggle does not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<Toggle
@@ -108,7 +108,7 @@ describe("toggle renders correctly", () => {
 		);
 		const { container } = wrapper;
 		const toggleWrapper = container.querySelector("div[data-id='properties-toggle']");
-		expect(toggleWrapper.className.includes("hide")).to.equal(true);
+		expect(toggleWrapper).to.be.null;
 	});
 
 	it("toggle renders when readonly", () => {

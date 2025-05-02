@@ -109,6 +109,10 @@ class DatepickerRangeControl extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		const datepickerRangeStartLabel = `${this.props.control.name}.range.start.label`;
 		const datepickerRangeStartDesc = `${this.props.control.name}.range.start.desc`;
 		const datepickerRangeStartHelper = `${this.props.control.name}.range.start.helper`;
@@ -129,7 +133,7 @@ class DatepickerRangeControl extends React.Component {
 		startLabel = this.createInfoDesc(startLabel, startDesc, "start");
 		endLabel = this.createInfoDesc(endLabel, endDesc, "end");
 
-		const className = classNames("properties-datepicker-range", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
+		const className = classNames("properties-datepicker-range", "properties-input-control", { "hide": hidden },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 

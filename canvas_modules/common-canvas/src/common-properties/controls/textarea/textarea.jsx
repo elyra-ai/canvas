@@ -50,6 +50,10 @@ class TextareaControl extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		let value = this.props.value ? this.props.value : "";
 		const joined = ControlUtils.joinNewlines(value, newLine);
 		value = joined.value;
@@ -125,7 +129,7 @@ class TextareaControl extends React.Component {
 				{textArea}
 			</Tooltip>);
 		}
-		const className = classNames("properties-textarea", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
+		const className = classNames("properties-textarea", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				{display}

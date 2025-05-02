@@ -166,7 +166,7 @@ describe("checkbox control tests", () => {
 		const checkboxWrapper = container.querySelector("div[data-id='properties-test-checkbox']");
 		expect(checkboxWrapper.querySelector("input").disabled).to.equal(true);
 	});
-	it("checkbox renders when hidden", () => {
+	it("checkbox does not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<Checkbox
@@ -178,7 +178,7 @@ describe("checkbox control tests", () => {
 		);
 		const { container } = wrapper;
 		const checkboxWrapper = container.querySelector("div[data-id='properties-test-checkbox'] > div");
-		expect(checkboxWrapper.className.includes("hide")).to.equal(true);
+		expect(checkboxWrapper).to.be.null;
 	});
 	it("checkbox renders correctly in a table", () => {
 		const controlWithLabel = {

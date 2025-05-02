@@ -61,6 +61,10 @@ class ReadonlyControl extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		let controlValue = this.props.value;
 
 		// Use label for controlValue if possible
@@ -135,7 +139,7 @@ class ReadonlyControl extends React.Component {
 		}
 		return (
 			<div
-				className={classNames("properties-readonly", { "hide": this.props.state === STATES.HIDDEN })}
+				className={classNames("properties-readonly", { "hide": hidden })}
 				data-id={ControlUtils.getDataId(this.props.propertyId)}
 			>
 				{this.props.tableControl ? null : this.props.controlItem}

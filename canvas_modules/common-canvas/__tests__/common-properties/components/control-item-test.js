@@ -279,7 +279,7 @@ describe("control-item renders correctly", () => {
 		expect(container.querySelector("div.properties-label-container").textContent).to.equal("Control Label(required)");
 	});
 
-	it("should be hidden", () => {
+	it("control-item does not render when hidden", () => {
 		const propertyIdHidden = {
 			name: "test-control-hidden"
 		};
@@ -295,8 +295,8 @@ describe("control-item renders correctly", () => {
 			/>
 		);
 		const { container } = wrapper;
-		const controlItem = container.getElementsByClassName("properties-control-item hide");
-		expect(controlItem).to.have.length(1);
+		const controlItem = container.querySelector("properties-control-item");
+		expect(controlItem).to.be.null;
 	});
 
 	it("should be disabled", () => {

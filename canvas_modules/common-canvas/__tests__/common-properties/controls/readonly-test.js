@@ -152,7 +152,7 @@ describe("textfield-control renders correctly", () => {
 		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
 		expect(readonlyWrapper.querySelector("span").outerHTML.includes("disabled")).to.equal(true);
 	});
-	it("readonly renders when hidden", () => {
+	it("readonly does not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<Readonly
@@ -163,7 +163,7 @@ describe("textfield-control renders correctly", () => {
 			/>
 		);
 		const readonlyWrapper = wrapper.container.querySelector("div[data-id='properties-test-readonly']");
-		expect(readonlyWrapper.className.includes("hide")).to.equal(true);
+		expect(readonlyWrapper).to.be.null;
 	});
 	it("readonly renders messages correctly", () => {
 		controller.updateErrorMessage(propertyId, {
