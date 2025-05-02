@@ -2130,9 +2130,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#building-a-command-optional" class="md-nav__link">
+  <a href="#building-an-application-specific-command-optional" class="md-nav__link">
     <span class="md-ellipsis">
-      Building a command (optional)
+      Building an application specific command (optional)
     </span>
   </a>
   
@@ -2821,9 +2821,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#building-a-command-optional" class="md-nav__link">
+  <a href="#building-an-application-specific-command-optional" class="md-nav__link">
     <span class="md-ellipsis">
-      Building a command (optional)
+      Building an application specific command (optional)
     </span>
   </a>
   
@@ -2863,18 +2863,21 @@
 
 
 <h1 id="the-command-stack">The Command Stack<a class="headerlink" href="#the-command-stack" title="Permanent link">&para;</a></h1>
-<p>The Command Stack is built into Common Canvas and automatically provides functionality to support do/undo/redo of commands performed in the <a href="../01.01-flow-editor/">flow editor</a>. In addition, if needed, applications can add their own commands to the command stack.</p>
-<p>The Command Stack maintains an internal stack of commands with a cursor that moves up and down when commands are undone or redone. Commands are JavaScript classes that implement a simple interface.</p>
-<p>The canvas controller automatically creates an instance of the command stack. Common Canvas provides command objects for each of the <a href="../03.11-internal-actions/">commands that are performed by the user</a>, such as: create node, delete comment, link nodes together, etc. which it adds to the command stack.</p>
-<p>To allow the user to activate the undo and redo actions, Common Canvas provides:
-* undo/redo buttons on the default toolbar and
-* undo/redo options in its default context menu for the flow editor background,
-* keyboard shortcuts: ctrl+z (undo) and ctrl+shift+z (redo) when keyboard focus is on the canvas.</p>
-<p>If the applicaiton specifies its own canvas toolbar or its own context menu/toolbar for the flow editor canvas and it must include defintions for the <code>undo</code> and <code>redo</code> <a href="../03.11-internal-actions/">internal actions</a>.</p>
+<p>The Command Stack is built into Common Canvas and the application does not need to configure or customize it unless specialized behavior is required.</p>
+<p>The Command Stack maintains an internal stack of commands with a cursor that moves up and down when commands are done, undone or redone. Commands are JavaScript classes that implement a simple interface.</p>
+<p>Common Canvas provides one command for each action that can be perfomed in the <a href="../01.01-flow-editor/">flow editor</a>. The application can optionally add its own commands to the command stack.</p>
+<p>The canvas controller automatically creates an instance of the command stack. When actions, such as <code>Create Node</code>or <code>Delete Link</code>, are performed by the user in the Flow Editor, Common Canvas creates an instance of an <a href="../03.11-internal-actions/">internal command action</a>, adds it to the command stack and executes the command.</p>
+<p>To allow the user to activate the undo and redo actions, Common Canvas provides:</p>
+<ul>
+<li>undo/redo buttons on the default toolbar,</li>
+<li>undo/redo options in its default context menu for the flow editor canvas,</li>
+<li>keyboard shortcuts: ctrl+z (undo) and ctrl+shift+z (redo) when keyboard focus is on the canvas.</li>
+</ul>
 <h2 id="api-control-of-the-command-stack-optional">API control of the command stack (optional)<a class="headerlink" href="#api-control-of-the-command-stack-optional" title="Permanent link">&para;</a></h2>
-<p>You can implement your own undo and redo UI, if required, using the canvas controller API.</p>
+<p>If the application specifies its own canvas toolbar, or its own context menu/toolbar for the flow editor canvas, it can include defintions for the <code>undo</code> and <code>redo</code> actions if needed.</p>
+<p>Alternatively, the application can provide its own undo and redo UI, if required, which calls the canvas controller API.</p>
 <p>The canvas controller has a <a href="../03.04-canvas-controller/#command-stack-interaction-methods">number of methods</a> that allows the application to interact with the command stack if necessary.</p>
-<h2 id="building-a-command-optional">Building a command (optional)<a class="headerlink" href="#building-a-command-optional" title="Permanent link">&para;</a></h2>
+<h2 id="building-an-application-specific-command-optional">Building an application specific command (optional)<a class="headerlink" href="#building-an-application-specific-command-optional" title="Permanent link">&para;</a></h2>
 <p>Each command that is added to the command stack is a JavaScript class that needs to implement these methods:</p>
 <div class="highlight"><pre><span></span><code><span class="w">   </span><span class="kr">constructor</span><span class="p">()</span>
 <span class="w">   </span><span class="k">do</span><span class="p">()</span>
@@ -2892,7 +2895,7 @@
 <p>Here is some sample code that shows how a &lsquo;create node&rsquo; command might be written:</p>
 <p><div class="highlight"><pre><span></span><code><span class="w">   </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Action</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas&quot;</span><span class="p">;</span>
 
-<span class="w">   </span><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">CreateNodeAction</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Action</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">MyCreateNodeAction</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Action</span><span class="w"> </span><span class="p">{</span>
 
 <span class="w">        </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">canvasController</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">super</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
@@ -2925,8 +2928,8 @@
 </code></pre></div>
    Note that the command has to keep a reference to the new node to allow the node to be added back
    to the canvas in redo() even though it was deleted in undo().</p>
-<p>Here is an example showing how to create a command action and push it on the stack using the canvas-conttoller:</p>
-<div class="highlight"><pre><span></span><code><span class="w">   </span><span class="kd">const</span><span class="w"> </span><span class="nx">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">CreateNodeAction</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">);</span>
+<p>Here is an example showing how the command action would be created and pushed onto the stack using the canvas-contoller:</p>
+<div class="highlight"><pre><span></span><code><span class="w">   </span><span class="kd">const</span><span class="w"> </span><span class="nx">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">MyCreateNodeAction</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">);</span>
 <span class="w">   </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">.</span><span class="k">do</span><span class="p">(</span><span class="nx">command</span><span class="p">);</span>
 </code></pre></div>
 <h2 id="exported-common-canvas-action-classes">Exported common-canvas action classes<a class="headerlink" href="#exported-common-canvas-action-classes" title="Permanent link">&para;</a></h2>
