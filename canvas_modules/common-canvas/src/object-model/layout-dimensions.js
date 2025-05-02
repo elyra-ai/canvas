@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ const horizontalDefaultLayout = {
 		// shape and its selection highlighting respectively. If set to null, the paths
 		// will be set by default based on the nodeShape setting.
 		// If these fields are set to functions they will be called in real-time as the node
-		// is being sized (provided enableResizableNodes config field is set to true).
+		// is being sized (provided the node is resizable).
 		bodyPath: null,
 		selectionPath: null,
 
@@ -117,6 +117,9 @@ const horizontalDefaultLayout = {
 
 		// The gap between a node and its selection highlight rectangle
 		nodeHighlightGap: 1,
+
+		// Allows the user to resize the node.
+		nodeResizable: false,
 
 		// The size of the node sizing area that extends around the node, over
 		// which the mouse pointer will change to the sizing arrows.
@@ -522,7 +525,7 @@ const verticalDefaultLayout = {
 		// shape and its selection highlighting respectively. If set to null, the paths
 		// will be set by default based on the nodeShape setting.
 		// If these fields are set to functions they will be called in real-time as the node
-		// is being sized (provided enableResizableNodes config field is set to true).
+		// is being sized (provided the node is resizable).
 		bodyPath: null,
 		selectionPath: null,
 
@@ -593,6 +596,9 @@ const verticalDefaultLayout = {
 
 		// The gap between a node and its selection highlight rectangle
 		nodeHighlightGap: 4,
+
+		// Allows the user to resize the node.
+		nodeResizable: false,
 
 		// The size of the node sizing area that extends around the node, over
 		// which the mouse pointer will change to the sizing arrows.
@@ -983,6 +989,7 @@ export default class LayoutDimensions {
 
 		if (config) {
 			newLayout = this.overridePortPositions(newLayout, config); // Must do this before overrideNodeLayout
+			newLayout = this.overrideNodeResizable(newLayout, config);
 			newLayout = this.overrideNodeLayout(newLayout, overlayLayout); // Must do this before overrideSnapToGrid
 			newLayout = this.overrideCanvasLayout(newLayout, config, overlayLayout);
 			newLayout = this.overrideLinkType(newLayout, config);
@@ -1000,6 +1007,11 @@ export default class LayoutDimensions {
 			: horizontalDefaultLayout;
 
 		return cloneDeep(defaultLayout);
+	}
+
+	static overrideNodeResizable(layout, config) {
+		layout.nodeLayout.nodeResizable = config.enableResizableNodes;
+		return layout;
 	}
 
 	static overrideNodeLayout(layout, overlayLayout) {

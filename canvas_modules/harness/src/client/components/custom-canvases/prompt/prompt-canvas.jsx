@@ -108,6 +108,7 @@ export default class PromptCanvas extends React.Component {
 			return {
 				defaultNodeHeight: 220,
 				defaultNodeWidth: 150,
+				nodeResizable: true,
 				nodeExternalObject: PromptReactNode,
 				imageDisplay: false,
 				labelDisplay: false,

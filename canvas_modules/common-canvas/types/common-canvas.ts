@@ -320,6 +320,11 @@ export interface NodeLayout {
   nodeHighlightGap: CanvasDistance;
 
   /**
+   * Indicates if the node can be resized by the user.
+   */
+  nodeResizable: boolean;
+
+  /**
    * The size of the node sizing area that extends around the node, over
    * which the mouse pointer will change to the sizing arrows.
    */
