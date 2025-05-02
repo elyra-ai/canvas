@@ -651,7 +651,7 @@ class FlexibleTable extends React.Component {
 									sortBy={this.state.currentSortColumn}
 									sortColumns={this.props.sortable}
 									sortDirection={this.state.columnSortDir[this.state.currentSortColumn]}
-									tableState={this.props.tableState}
+									tableDisabled={disabled}
 									light={this.props.light}
 									readOnly={this.props.readOnly}
 									{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex })}

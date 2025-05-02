@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,13 +46,13 @@ class ToggletextControl extends React.Component {
 
 	}
 
-	renderIcon() {
+	renderIcon(label) {
 		let icon = null;
 		if (typeof this.iconsMap[this.props.value] !== "undefined") {
 			const imgSource = this.iconsMap[this.props.value];
 			if (typeof imgSource === "string" && imgSource.slice(imgSource.length - 4) === ".svg") {
 				// svg image
-				icon = <Isvg className="cds--btn__icon" src={imgSource} />;
+				icon = <Isvg className="cds--btn__icon" src={imgSource} aria-label={label} />;
 			} else {
 				icon = (<img
 					className="cds--btn__icon"
@@ -77,7 +77,7 @@ class ToggletextControl extends React.Component {
 					kind={buttonType}
 					size="sm"
 					onClick={this.onClick.bind(this)}
-					renderIcon={this.renderIcon.bind(this)}
+					renderIcon={this.renderIcon.bind(this, rendered)}
 					iconDescription={formatMessage(this.reactIntl, MESSAGE_KEYS.TOGGLETEXT_ICON_DESCRIPTION, { toggletext_label: this.props.value })}
 					disabled={this.props.state === STATES.DISABLED}
 				>

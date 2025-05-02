@@ -216,3 +216,9 @@
 		}
 	}
 }
+
+.properties-tanstack-grid.properties-vt.disabled {
+	.properties-field-type-icon svg {
+		fill: $icon-disabled;
+	}
+}
