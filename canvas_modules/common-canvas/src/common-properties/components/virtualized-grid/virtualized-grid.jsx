@@ -424,7 +424,6 @@ VirtualizedGrid.defaultProps = {
 VirtualizedGrid.propTypes = {
 	data: PropTypes.array.isRequired,
 	tableLabel: PropTypes.string,
-	tableHeight: PropTypes.number.isRequired,
 	excessWidth: PropTypes.number.isRequired,
 	selectable: PropTypes.bool,
 	summaryTable: PropTypes.bool,
