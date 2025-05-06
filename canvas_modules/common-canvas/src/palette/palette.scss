@@ -159,7 +159,7 @@ $palette-dialog-list-item-height: 46px;
 			width: calc(100% - 68px);
 			line-height: 1;
 			& mark {
-				color: $interactive;
+				color: $button-primary-active;
 				background-color: $highlight;
 				font-weight: 500;
 			}
@@ -180,7 +180,7 @@ $palette-dialog-list-item-height: 46px;
 			width: 100%; // Needed when the description is only one line long
 
 			& mark {
-				color: $interactive;
+				color: $button-primary-active;
 				background-color: $highlight;
 				font-weight: 500;
 			}

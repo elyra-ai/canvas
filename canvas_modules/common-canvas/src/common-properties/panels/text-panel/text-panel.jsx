@@ -56,7 +56,7 @@ class TextPanel extends Component {
 					</div>
 				);
 			} else {
-				description = <div className="panel-description">{dynamicDescriptionText}</div>;
+				description = <div className="panel-description" aria-disabled={disabled}>{dynamicDescriptionText}</div>;
 			}
 		}
 		return (

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import { CommonCanvas, CanvasController } from "./common-canvas/index";
 import { CommonProperties, PropertiesController, FieldPicker, FlexibleTable, clem, getPythonHints } from "./common-properties/index";
-import CommandStack from "./command-stack/command-stack";
+import { CommandStack, Action } from "./command-stack/index";
 import * as FlowValidation from "./flow-validation/validate-flow";
 import ContextMenuWrapper from "./context-menu/context-menu-wrapper";
 import ToolTip from "./tooltip/tooltip";
@@ -32,5 +32,5 @@ import PasteAction from "../src/command-actions/pasteAction";
 
 
 export { CommonCanvas, CanvasController, CommonProperties, PropertiesController, FieldPicker, FlexibleTable, clem, getPythonHints,
-	CommandStack, FlowValidation, ContextMenuWrapper, ToolTip, ColorPicker, Palette,
+	CommandStack, Action, FlowValidation, ContextMenuWrapper, ToolTip, ColorPicker, Palette,
 	CreateAutoNodeAction, CreateNodeAction, CreateNodeLinkAction, DeleteObjectsAction, DisconnectObjectsAction, PasteAction };

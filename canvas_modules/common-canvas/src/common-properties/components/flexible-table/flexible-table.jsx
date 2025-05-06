@@ -608,6 +608,7 @@ class FlexibleTable extends React.Component {
 
 		const ftClassname = classNames("properties-ft-control-container", { "properties-light-disabled": !this.props.light });
 
+		// This section can be removed when we remove react-virtualized
 		let tableHeight = 0;
 		if (this.state.rows !== -1 && this.state.tableHeight) {
 			const remHeight = parseInt(this.state.tableHeight, 10);
@@ -629,7 +630,6 @@ class FlexibleTable extends React.Component {
 								<VirtualizedGrid
 									data={this.props.data}
 									tableLabel={this.props.tableLabel}
-									tableHeight={tableHeight}
 									excessWidth={this.state.excessWidth}
 									columns={headers}
 									onHeaderClick={this.sortHeaderClick}
@@ -651,7 +651,7 @@ class FlexibleTable extends React.Component {
 									sortBy={this.state.currentSortColumn}
 									sortColumns={this.props.sortable}
 									sortDirection={this.state.columnSortDir[this.state.currentSortColumn]}
-									tableState={this.props.tableState}
+									tableDisabled={disabled}
 									light={this.props.light}
 									readOnly={this.props.readOnly}
 									{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex })}

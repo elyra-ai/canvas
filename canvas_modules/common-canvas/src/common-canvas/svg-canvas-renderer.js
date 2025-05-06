@@ -22,12 +22,7 @@
 import * as d3Selection from "d3-selection";
 import * as d3Fetch from "d3-fetch";
 const d3 = Object.assign({}, d3Selection, d3Fetch);
-
-const markdownIt = require("markdown-it")({
-	html: true, // Allow HTML to be executed in comments.
-	linkify: false, // Don't convert strings, in URL format, to be links.
-	typographer: true
-});
+import markdownIt from "markdown-it";
 
 import { escape as escapeText, forOwn, get } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
@@ -4229,7 +4224,7 @@ export default class SVGCanvasRenderer {
 
 			.html((d) =>
 				(d.contentType !== WYSIWYG && this.config.enableMarkdownInComments
-					? markdownIt.render(d.content)
+					? this.getCommentAsMarkdownHTML(d.content)
 					: escapeText(d.content))
 			);
 
@@ -4243,6 +4238,19 @@ export default class SVGCanvasRenderer {
 				.on(".drag", null);
 		}
 		this.logger.logEndTimer("updateComments");
+	}
+
+	// Returns the comment content passed in as HTML. We dynamically
+	// create this.markdownIt because changing
+	// this.config.enableMarkdownHTML during runtime can cause errors.
+	getCommentAsMarkdownHTML(content) {
+		if (!this.markdownIt) {
+			this.markdownIt = markdownIt({
+				html: this.config.enableMarkdownHTML
+			});
+		}
+
+		return this.markdownIt.render(content);
 	}
 
 	// Attaches the appropriate listeners to the comment groups.
@@ -6225,7 +6233,6 @@ export default class SVGCanvasRenderer {
 			const labelDivRect = this.zoomUtils.getTransformedElementRect(labelDivElement);
 			const labelSpanRect = this.zoomUtils.getTransformedElementRect(labelSpanElement);
 
-			const labelInc = 4;
 			const labelRectRight = Math.min(labelSpanRect.right, labelDivRect.right);
 			const labelRectBottom = Math.min(labelSpanRect.bottom, labelDivRect.bottom);
 
@@ -6234,14 +6241,15 @@ export default class SVGCanvasRenderer {
 			rightGap = labelRectRight - (node.x_pos + node.width);
 			topGap = node.y_pos - labelSpanRect.y;
 			bottomGap = labelRectBottom - (node.y_pos + node.height);
-
-			// Ensure the gaps include a small increment for spacing and are at
-			// least as big as the nodeSizingArea.
-			leftGap = Math.max(node.layout.nodeSizingArea, leftGap + labelInc);
-			rightGap = Math.max(node.layout.nodeSizingArea, rightGap + labelInc);
-			topGap = Math.max(node.layout.nodeSizingArea, topGap + labelInc);
-			bottomGap = Math.max(node.layout.nodeSizingArea, bottomGap + labelInc);
 		}
+
+		// Ensure the gaps include a small increment for spacing and are at
+		// least as big as the nodeSizingArea.
+		const focusInc = 4;
+		leftGap = Math.max(node.layout.nodeSizingArea, leftGap + focusInc);
+		rightGap = Math.max(node.layout.nodeSizingArea, rightGap + focusInc);
+		topGap = Math.max(node.layout.nodeSizingArea, topGap + focusInc);
+		bottomGap = Math.max(node.layout.nodeSizingArea, bottomGap + focusInc);
 
 		return { leftGap, rightGap, topGap, bottomGap };
 	}

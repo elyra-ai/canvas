@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -546,12 +546,12 @@ export default class CanvasUtils {
 		return (1 - t) * (1 - t) * (1 - t) * p0 + 3 * (1 - t) * (1 - t) * t * p1 + 3 * (1 - t) * t * t * p2 + t * t * t * p3;
 	}
 
-	// Returns true if the node passed in should be resizeable. All nodes are resizabele
-	// except binding nodes in a sub-flow when enableResizableNodes is switched on.
+	// Returns true if the node passed in should be resizeable. Nodes are resizabele
+	// except binding nodes in a sub-flow, if their nodeResizable layout value is true.
 	static isNodeResizable(node, config) {
 		if (!config.enableEditingActions ||
 				this.isSuperBindingNode(node) ||
-				(!config.enableResizableNodes && !this.isExpandedSupernode(node))) {
+				(!node.layout.nodeResizable && !this.isExpandedSupernode(node))) {
 			return false;
 		}
 		return true;

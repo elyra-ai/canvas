@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Elyra Authors
+ * Copyright 2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-.properties-st.disabled {
-	pointer-events: none;
-}
+import CommandStack from "./command-stack";
+import Action from "./action";
+export { CommandStack, Action };

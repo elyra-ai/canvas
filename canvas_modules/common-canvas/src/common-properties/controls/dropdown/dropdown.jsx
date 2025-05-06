@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -260,6 +260,7 @@ class DropDown extends React.Component {
 					value={selection}
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
+					size="sm"
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 				>
 					{ options }

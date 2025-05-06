@@ -169,6 +169,7 @@ const VirtualizedGrid = (props) => {
 					labelText={translatedHeaderCheckboxLabel}
 					hideLabel
 					readOnly={props.readOnly}
+					disabled={props.tableDisabled}
 				/>
 			</th>)
 			: "";
@@ -206,7 +207,7 @@ const VirtualizedGrid = (props) => {
 					labelText={translatedRowCheckboxLabel}
 					hideLabel
 					checked={rowSelected}
-					disabled={rowDisabled}
+					disabled={rowDisabled || props.tableDisabled}
 					readOnly={props.readOnly}
 				/>
 			</td>);
@@ -405,7 +406,7 @@ const VirtualizedGrid = (props) => {
 		props.setAllRowsSelected(checked);
 	};
 
-	return (<div ref={parentRef} className="properties-tanstack-grid properties-vt">
+	return (<div ref={parentRef} className={classNames("properties-tanstack-grid properties-vt", { disabled: props.tableDisabled })}>
 		<table aria-label={props.tableLabel ? props.tableLabel : ""} className={classNames("properties-autosized-vt",
 			{ "properties-vt-single-selection": props.rowSelection && props.rowSelection === ROW_SELECTION.SINGLE },
 			{ "properties-light-disabled": !props.light })}
@@ -423,7 +424,6 @@ VirtualizedGrid.defaultProps = {
 VirtualizedGrid.propTypes = {
 	data: PropTypes.array.isRequired,
 	tableLabel: PropTypes.string,
-	tableHeight: PropTypes.number.isRequired,
 	excessWidth: PropTypes.number.isRequired,
 	selectable: PropTypes.bool,
 	summaryTable: PropTypes.bool,
@@ -447,7 +447,7 @@ VirtualizedGrid.propTypes = {
 	sortColumns: PropTypes.array,
 	onHeaderClick: PropTypes.func,
 	scrollKey: PropTypes.string,
-	tableState: PropTypes.string,
+	tableDisabled: PropTypes.bool,
 	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired,
 	readOnly: PropTypes.bool

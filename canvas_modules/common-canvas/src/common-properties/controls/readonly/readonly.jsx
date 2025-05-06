@@ -104,7 +104,11 @@ class ReadonlyControl extends React.Component {
 			const endDate = this.props.value && this.props.value[1] ? getFormattedDate(this.props.value[1], this.props.control.dateFormat) : "";
 			controlValue = [startDate, endDate].toString();
 		}
-		const readOnly = <span className="properties-field-type" disabled={this.props.state === STATES.DISABLED}>{controlValue}</span>;
+		const readOnly = (<span
+			className="properties-field-type"
+			disabled={this.props.state === STATES.DISABLED}
+			aria-disabled={this.props.state === STATES.DISABLED}
+		>{controlValue}</span>);
 		let display = readOnly;
 		if (this.props.tableControl) {
 			let disabled = true;
