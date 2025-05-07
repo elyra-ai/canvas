@@ -382,7 +382,6 @@ class PaletteContentListItem extends React.Component {
 				data-id={this.props.nodeTypeInfo.nodeType.op}
 				tabIndex={this.props.tabIndex}
 				role={"button"}
-				aria-label={labelText}
 				aria-disabled={ariaDisabled}
 				draggable={draggable}
 				className={mainDivClass}

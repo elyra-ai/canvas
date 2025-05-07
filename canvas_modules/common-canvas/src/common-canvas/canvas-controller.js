@@ -564,13 +564,11 @@ export default class CanvasController {
 		// Include links in selectAll unless LinkSelection is "None"
 		const includeLinks = this.getCanvasConfig().enableLinkSelection !== LINK_SELECTION_NONE;
 		this.objectModel.selectAll(includeLinks, pipelineId);
-		this.setFocusOnCanvas();
 	}
 
 	// De-selects all the objects on the canvas.
 	deselectAll(pipelineId) {
 		this.objectModel.deselectAll(pipelineId);
-		this.setFocusOnCanvas();
 	}
 
 	isPrimaryPipelineEmpty() {
