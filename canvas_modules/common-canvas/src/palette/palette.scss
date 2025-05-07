@@ -198,6 +198,8 @@ $palette-dialog-list-item-height: 46px;
 			padding-left: 0px;
 			border-bottom: $palette-border-width solid $palette-border-color;
 			padding-right: 6px;
+			width: 100%;
+			overflow-x: hidden; // Prevent horizontal scrollbar
 			.palette-list-item-icon-and-text {
 				min-height: 30px;
 				padding-left: 10px;
