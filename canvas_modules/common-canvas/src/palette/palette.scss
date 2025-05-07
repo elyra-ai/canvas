@@ -192,14 +192,15 @@ $palette-dialog-list-item-height: 46px;
 
 		&.search-result {
 			min-height: 46px;
+			// Prevent horizontal scrollbar when 'Show scroll bars' is set to 'Always' on MacOS
+			overflow-x: hidden;
+			width: 100%;
 			height: fit-content;
 			padding-bottom: $spacing-05;
 			padding-top: 0px;
 			padding-left: 0px;
 			border-bottom: $palette-border-width solid $palette-border-color;
 			padding-right: 6px;
-			width: 100%;
-			overflow-x: hidden; // Prevent horizontal scrollbar
 			.palette-list-item-icon-and-text {
 				min-height: 30px;
 				padding-left: 10px;
