@@ -485,7 +485,8 @@ export declare class CanvasController {
      * Returns truthy if the pipeline is external (that is it is part of an
      * external pipeline flow). Otherwise, return falsy to indicate the pipeline
      * is local.
-     * @param pipelineId
+     * @param pipelineId - Optional. The ID of the pipeline.
+     *                     Defaults to the currently displayed pipeline.
      * @returns a boolean to indicate whether the pipeline is external ot local
      */
     isPipelineExternal(pipelineId?: PipelineId): boolean;
@@ -697,7 +698,7 @@ export declare class CanvasController {
 
     /**
      * De-selects all the objects in a pipeline.
-     * @param pipelineId - The ID of the pipeline of the nodes.
+     * @param pipelineId - Optional. The ID of the pipeline of the nodes.
      *                     Defaults to the currently displayed pipeline.
      */
     deselectAll(pipelineId?: PipelineId): void;
