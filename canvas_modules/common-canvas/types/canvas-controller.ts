@@ -488,7 +488,7 @@ export declare class CanvasController {
      * @param pipelineId
      * @returns a boolean to indicate whether the pipeline is external ot local
      */
-    isPipelineExternal(pipelineId: PipelineId): boolean;
+    isPipelineExternal(pipelineId?: PipelineId): boolean;
 
     /**
      * Returns the messages for all the nodes in the pipeline ID passed in.
@@ -496,7 +496,7 @@ export declare class CanvasController {
      *                     Defaults to the currently displayed pipeline.
      * @returns An array of messages.
      */
-    getFlowMessages(pipelineId: PipelineId): MessageDef[];
+    getFlowMessages(pipelineId?: PipelineId): MessageDef[];
 
     /**
      * Indicates whether the nodes have a message or not.
@@ -507,7 +507,7 @@ export declare class CanvasController {
      *          includeMsgsType for the nodes in the pipeline identified
      *          by the pipeline ID passed in.
      */
-    isFlowValid(includeMsgType: "error" | "warning", pipelineId: PipelineId): boolean;
+    isFlowValid(includeMsgType: "error" | "warning", pipelineId?: PipelineId): boolean;
 
     /**
      * Rearranges the nodes in the canvas in the direction specified for the
@@ -516,7 +516,7 @@ export declare class CanvasController {
      * @param pipelineId - Optional. The ID of the pipeline.
      *                     Defaults to the currently displayed pipeline.
      */
-    autoLayout(layoutDirection: "horizontal" | "vertical", pipelineId: PipelineId): void;
+    autoLayout(layoutDirection: "horizontal" | "vertical", pipelineId?: PipelineId): void;
 
     /**
      * ## Palette methods
@@ -689,16 +689,18 @@ export declare class CanvasController {
     clearSelections(): void;
 
     /**
-     * Selects all the objects on the canvas.
+     * Selects all the objects in a pipeline.
+     * @param pipelineId - The ID of the pipeline of the nodes.
+     *                     Defaults to the currently displayed pipeline.
      */
-    selectAll(): void;
+    selectAll(pipelineId?: PipelineId): void;
 
     /**
      * De-selects all the objects in a pipeline.
-     * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+     * @param pipelineId - The ID of the pipeline of the nodes.
      *                     Defaults to the currently displayed pipeline.
      */
-    deselectAll(pipelineId: PipelineId): void;
+    deselectAll(pipelineId?: PipelineId): void;
 
     /**
      * @returns an array of the IDs of the currently selected objects.
@@ -836,7 +838,7 @@ export declare class CanvasController {
      * @param pipelineId - Optional. The ID of the pipeline of the node.
      *                     Defaults to the currently displayed pipeline.
      */
-    deleteObject(id: CanvasNodeOrCommentId, pipelineId: PipelineId): void;
+    deleteObject(id: CanvasNodeOrCommentId, pipelineId?: PipelineId): void;
 
     /**
      * Sets the style of the objects specified by pipelineObjectIds to be
@@ -1198,16 +1200,17 @@ export declare class CanvasController {
      *                     Defaults to the currently displayed pipeline.
      */
     getSupernodes(
-      pipelineId: PipelineId
+      pipelineId?: PipelineId
     ): CanvasSupernode[];
 
     /**
      * Returns the supernode that references the given pipelineId.
-     * @param pipelineId - The ID of a pipeline
+     * @param pipelineId - Optional. The ID of the pipeline.
+     *                     Defaults to the currently displayed pipeline.
      * @returns supernode that has a subflow_ref to the given pipelineId.
      */
     getSupernodeObjReferencing(
-      pipelineId: PipelineId
+      pipelineId?: PipelineId
     ): CanvasSupernode;
 
     /**
