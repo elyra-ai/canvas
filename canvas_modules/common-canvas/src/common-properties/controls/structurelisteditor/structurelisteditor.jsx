@@ -41,6 +41,10 @@ class StructurelisteditorControl extends AbstractTable {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		const tableButtonConfig = {
 			addButtonLabel: formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_LABEL),

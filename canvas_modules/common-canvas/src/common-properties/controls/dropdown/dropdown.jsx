@@ -222,6 +222,10 @@ class DropDown extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		let dropDown;
 		if (this.props.control.controlType === ControlType.SELECTSCHEMA) {
 			dropDown = this.genSchemaSelectOptions(this.props.value);
@@ -311,7 +315,7 @@ class DropDown extends React.Component {
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)}
-				className={classNames("properties-dropdown", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}
+				className={classNames("properties-dropdown", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null)}
 			>
 				{dropdownComponent}
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} tableOnly />

@@ -38,10 +38,14 @@ class CheckboxControl extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		const label = this.props.control.label ? this.props.control.label.text : "";
 		const tooltipId = "tooltip-" + this.props.control.name;
 		let tooltip = "";
-		if (this.props.control.description && !(this.props.state === STATES.DISABLED || this.props.state === STATES.HIDDEN) && !this.props.tableControl) {
+		if (this.props.control.description && !(this.props.state === STATES.DISABLED || hidden) && !this.props.tableControl) {
 			tooltip = (
 				<span >{this.props.control.description.text}</span>
 			);
@@ -70,7 +74,7 @@ class CheckboxControl extends React.Component {
 		);
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<div className={classNames("properties-checkbox", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}>
+				<div className={classNames("properties-checkbox", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null)}>
 					<Checkbox
 						disabled={this.props.state === STATES.DISABLED}
 						id={this.id}

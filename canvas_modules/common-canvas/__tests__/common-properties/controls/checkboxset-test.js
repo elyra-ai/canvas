@@ -320,7 +320,7 @@ describe("checkboxset control tests", () => {
 			expect(checkbox.disabled).to.equal(true);
 		});
 	});
-	it("checkboxset renders when hidden", () => {
+	it("checkboxset does not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<Provider store={controller.getStore()}>
@@ -333,7 +333,7 @@ describe("checkboxset control tests", () => {
 		);
 		const { container } = wrapper;
 		const checkboxWrapper = container.querySelector("div[data-id='properties-test-checkboxset']");
-		expect(checkboxWrapper.className.includes("hide")).to.equal(true);
+		expect(checkboxWrapper).to.be.null;
 	});
 	it("checkboxset renders messages correctly", () => {
 		controller.updateErrorMessage(propertyId, {

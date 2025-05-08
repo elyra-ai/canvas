@@ -68,7 +68,11 @@ class DatefieldControl extends React.Component {
 	}
 
 	render() {
-		const className = classNames("properties-datefield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
+		const className = classNames("properties-datefield", "properties-input-control", { "hide": hidden },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
