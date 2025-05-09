@@ -85,6 +85,10 @@ class SomeofselectControl extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		let controlValue = this.props.value;
 		if (typeof controlValue === "undefined" || controlValue === null) {
 			controlValue = [];
@@ -95,7 +99,7 @@ class SomeofselectControl extends React.Component {
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
-				className={classNames("properties-someofselect ", { "hide": this.props.state === STATES.HIDDEN },
+				className={classNames("properties-someofselect ", { "hide": hidden },
 					this.props.messageInfo ? this.props.messageInfo.type : null)}
 			>
 				{this.props.controlItem}

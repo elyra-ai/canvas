@@ -40,6 +40,10 @@ class SliderControl extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		const minLabel = this.props.controller.getResource(`${this.props.control.name}.min.label`, null);
 		const maxLabel = this.props.controller.getResource(`${this.props.control.name}.max.label`, null);
 		const minValue = this.props.control.minValue ? this.props.control.minValue : 0;
@@ -47,7 +51,7 @@ class SliderControl extends React.Component {
 		const step = this.props.control.increment ? this.props.control.increment : 1;
 
 		return (
-			<div className={classNames("properties-slider ", { "hide": this.props.state === STATES.HIDDEN },
+			<div className={classNames("properties-slider ", { "hide": hidden },
 				this.props.messageInfo ? this.props.messageInfo.type : null)} data-id={ControlUtils.getDataId(this.props.propertyId)}
 			>
 				<Slider

@@ -64,6 +64,10 @@ class TextfieldControl extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		let value = this.props.value ? this.props.value : "";
 		let truncated = false;
 		if (this.isList) {
@@ -74,7 +78,7 @@ class TextfieldControl extends React.Component {
 			value = ControlUtils.truncateDisplayValue(value);
 			truncated = value.length !== 0 && value.length !== this.props.value.length;
 		}
-		const className = classNames("properties-textfield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
+		const className = classNames("properties-textfield", "properties-input-control", { "hide": hidden },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
 
 		let textInput = null;

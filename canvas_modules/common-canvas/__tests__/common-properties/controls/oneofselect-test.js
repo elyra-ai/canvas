@@ -187,7 +187,7 @@ describe("oneofselect renders correctly", () => {
 		const dropdownWrapper = wrapper.container.querySelector("div[data-id='properties-test-oneofselect']");
 		expect(dropdownWrapper.querySelector("button").disabled).to.equal(true);
 	});
-	it("dropdown renders when hidden", () => {
+	it("dropdown doesn not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<OneofselectControl
@@ -198,7 +198,7 @@ describe("oneofselect renders correctly", () => {
 			/>
 		);
 		const dropdownWrapper = wrapper.container.querySelector("div[data-id='properties-test-oneofselect']");
-		expect(dropdownWrapper.className.includes("hide")).to.equal(true);
+		expect(dropdownWrapper).to.be.null;
 	});
 	it("Validate oneofselect filtered correctly", () => {
 		controller.setControlStates({ "test-oneofselect": { "enumFilter": ["order", "gtt"] } });

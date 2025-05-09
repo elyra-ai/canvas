@@ -38,6 +38,9 @@ class ControlItem extends React.Component {
 			return null;
 		}
 		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		const disabled = this.props.state === STATES.DISABLED;
 
 		let label;

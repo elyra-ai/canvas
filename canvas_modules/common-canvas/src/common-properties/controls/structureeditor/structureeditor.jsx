@@ -140,11 +140,15 @@ class StructureEditorControl extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		const controls = this._makeControlTable(this._makeControls());
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
-				className={classNames("properties-structureeditor ", { "hide": this.props.state === STATES.HIDDEN },
+				className={classNames("properties-structureeditor ", { "hide": hidden },
 					this.props.messageInfo ? this.props.messageInfo.type : null)}
 			>
 				{controls}

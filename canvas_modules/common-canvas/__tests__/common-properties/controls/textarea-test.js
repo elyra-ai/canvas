@@ -267,7 +267,7 @@ describe("textarea control renders correctly", () => {
 		expect(textWrapper.querySelector("textarea").disabled).to.equal(true);
 	});
 
-	it("textarea renders when hidden", () => {
+	it("textarea doesn not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<TextArea
@@ -278,7 +278,7 @@ describe("textarea control renders correctly", () => {
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
-		expect(textWrapper.className.includes("hide")).to.equal(true);
+		expect(textWrapper).to.be.null;
 	});
 
 	it("textarea renders messages correctly", () => {

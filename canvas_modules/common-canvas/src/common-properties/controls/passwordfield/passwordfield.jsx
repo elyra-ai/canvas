@@ -37,6 +37,10 @@ class PasswordControl extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		const overrideShowPasswordLabel = `${this.props.control.name}.passwordShow.tooltip`;
 		const overrideHidePasswordLabel = `${this.props.control.name}.passwordHide.tooltip`;
 
@@ -46,7 +50,7 @@ class PasswordControl extends React.Component {
 		const showPasswordLabel = this.props.controller.getResource(overrideShowPasswordLabel, defaultShowPasswordLabel);
 		const hidePasswordLabel = this.props.controller.getResource(overrideHidePasswordLabel, defaultHidePasswordLabel);
 		const value = this.props.value ? this.props.value : "";
-		const className = classNames("properties-pwdfield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
+		const className = classNames("properties-pwdfield", "properties-input-control", { "hide": hidden },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (

@@ -45,6 +45,10 @@ class ReadonlyTableControl extends AbstractTable {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		const overrideLabelKey = `${this.props.control.name}.edit.button.label`;
 		const defaultEditLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.READONLYTABLE_EDIT_BUTTON_LABEL);
 		const buttonLabel = this.props.controller.getResource(overrideLabelKey, defaultEditLabel);
