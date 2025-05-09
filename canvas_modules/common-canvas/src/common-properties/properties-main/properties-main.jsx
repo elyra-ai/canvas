@@ -162,6 +162,7 @@ class PropertiesMain extends React.Component {
 			titleChangeHandler: this.props.callbacks.titleChangeHandler,
 			tooltipLinkHandler: this.props.callbacks.tooltipLinkHandler,
 			propertyIconHandler: this.props.callbacks.propertyIconHandler,
+			filterItemsHandler: this.props.callbacks.filterItemsHandler
 		});
 	}
 
@@ -704,6 +705,7 @@ PropertiesMain.propTypes = {
 		propertiesActionLabelHandler: PropTypes.func,
 		tooltipLinkHandler: PropTypes.func,
 		propertyIconHandler: PropTypes.func,
+		filterItemsHandler: PropTypes.func
 	}),
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls

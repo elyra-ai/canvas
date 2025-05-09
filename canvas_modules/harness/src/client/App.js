@@ -1441,6 +1441,13 @@ class App extends React.Component {
 		}
 	}
 
+	filterItemsHandler(data, list) {
+		if (data.propertyId.name === "oneofselect_custom_value") {
+			return list?.item?.label?.toLowerCase().startsWith(list?.inputValue?.toLowerCase());
+		}
+		return list;
+	}
+
 	validationHandler(controller, propertyId, value, appData, callback) {
 		const response = {
 			type: "error",
@@ -2012,7 +2019,8 @@ class App extends React.Component {
 			titleChangeHandler: this.titleChangeHandler,
 			propertiesActionLabelHandler: this.propertiesActionLabelHandler,
 			tooltipLinkHandler: this.tooltipLinkHandler,
-			propertyIconHandler: this.propertyIconHandler
+			propertyIconHandler: this.propertyIconHandler,
+			filterItemsHandler: this.filterItemsHandler
 		};
 		if (this.state.propertiesValidationHandler) {
 			callbacks.validationHandler = this.validationHandler;

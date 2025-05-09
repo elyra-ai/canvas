@@ -56,6 +56,7 @@ class DropDown extends React.Component {
 		this.updateValueFromFilterEnum = this.updateValueFromFilterEnum.bind(this);
 		this.getItemIcon = this.getItemIcon.bind(this);
 		this.renderItem = this.renderItem.bind(this);
+		this.filterItems = this.filterItems.bind(this);
 	}
 
 	componentDidMount() {
@@ -209,6 +210,13 @@ class DropDown extends React.Component {
 
 	// Filter Oneofselect items as per entered input.
 	filterItems(list) {
+		const filterItemsHandler = this.props.controller.getHandlers().filterItemsHandler;
+		if (filterItemsHandler) {
+			return filterItemsHandler({
+				type: "customFilterItems",
+				propertyId: this.props.propertyId
+			}, list);
+		}
 		return list?.item?.label?.toLowerCase().includes(list?.inputValue?.toLowerCase());
 	}
 
