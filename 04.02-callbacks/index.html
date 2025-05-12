@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/FlowIcon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.13">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.2afb09e1.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -2512,6 +2512,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#filteritemshandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      filterItemsHandler()
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3000,6 +3009,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#filteritemshandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      filterItemsHandler()
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3037,7 +3055,8 @@
       helpClickHandler: this.helpClickHandler,
       titleChangeHandler: this.titleChangeHandler,
       propertiesActionLabelHandler: this.propertiesActionLabelHandler,
-      tooltipLinkHandler: this.tooltipLinkHandler
+      tooltipLinkHandler: this.tooltipLinkHandler,
+      filterItemsHandler: this.filterItemsHandler
   };
 </code></pre></div>
 <h3 id="applypropertychangespropertyset-appdata-additionalinfo-undoinfo-uiproperties">applyPropertyChanges(propertySet, appData, additionalInfo, undoInfo, uiProperties)<a class="headerlink" href="#applypropertychangespropertyset-appdata-additionalinfo-undoinfo-uiproperties" title="Permanent link">&para;</a></h3>
@@ -3185,6 +3204,12 @@ This callback must return an object having url and label.</p>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://www.google.com/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;More info&quot;</span><span class="w"> </span><span class="p">};</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="filteritemshandler">filterItemsHandler()<a class="headerlink" href="#filteritemshandler" title="Permanent link">&para;</a></h3>
+<p>Optional callback used for filtering a dropdown list when <code>shouldFilterItem</code> is true. This function takes in the current input and an item and passes back whether or not the item should be filtered.</p>
+<div class="highlight"><pre><span></span><code><span class="nx">filterItemsHandler</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">list</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">list</span><span class="o">?</span><span class="p">.</span><span class="nx">item</span><span class="o">?</span><span class="p">.</span><span class="nx">label</span><span class="o">?</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">().</span><span class="nx">startsWith</span><span class="p">(</span><span class="nx">list</span><span class="o">?</span><span class="p">.</span><span class="nx">inputValue</span><span class="o">?</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div>
 
 
 
@@ -3289,10 +3314,10 @@ This callback must return an object having url and label.</p>
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.footer"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.footer"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
         <script src="../js/links-in-new-tabs.js"></script>
       
