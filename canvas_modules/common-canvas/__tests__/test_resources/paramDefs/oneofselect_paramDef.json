@@ -412,7 +412,7 @@
           "default": "oneofselect custom value allowed"
         },
         "description": {
-          "default": "oneofselect with option to enter a custom value"
+          "default": "oneofselect with option to enter a custom value, and with a custom filter callback function applied"
         },
         "custom_value_allowed": true,
         "should_filter_item": true
