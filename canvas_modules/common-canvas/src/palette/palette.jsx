@@ -28,6 +28,26 @@ class Palette extends React.Component {
 	constructor(props) {
 		super(props);
 		this.logger = new Logger("Palette");
+
+		this.createAutoNode = this.createAutoNode.bind(this);
+	}
+
+	// Process the createAutoNode action performed on a palette node. This
+	// might be called if:
+	// * the node is double-clicked
+	// * the node is single-clicked with the allowClickToAdd property set to true
+	// * the user performs a keyboard shortcut to activate the node
+	// If the caller provided us with a createAutoNode function we call it but
+	// otherwise we call the canvasController's createAutoNode function.
+	createAutoNode(nodeType, addLink) {
+		const nodeTemplate = this.props.canvasController.convertNodeTemplate(nodeType);
+
+		if (this.props.createAutoNode) {
+			this.props.createAutoNode(nodeTemplate, addLink);
+
+		} else if (this.props.canvasController.createAutoNode) {
+			this.props.canvasController.createAutoNode(nodeTemplate, addLink);
+		}
 	}
 
 	render() {
@@ -41,6 +61,7 @@ class Palette extends React.Component {
 				allowClickToAdd={this.props.allowClickToAdd}
 				isEditingEnabled={this.props.isEditingEnabled}
 				isPaletteWide={this.props.isPaletteWide}
+				createAutoNode={this.createAutoNode}
 			/>
 		);
 	}
@@ -49,6 +70,7 @@ class Palette extends React.Component {
 Palette.propTypes = {
 	// Provided by common-canvas
 	canvasController: PropTypes.object.isRequired,
+	createAutoNode: PropTypes.func, // Optional callback - called when palette node is clicked
 
 	// Provided by redux
 	paletteJSON: PropTypes.object,

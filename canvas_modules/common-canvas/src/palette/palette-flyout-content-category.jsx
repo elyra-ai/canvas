@@ -205,6 +205,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 					allowClickToAdd={this.props.allowClickToAdd}
 					isPaletteWide={this.props.isPaletteWide}
 					isEditingEnabled={this.props.isEditingEnabled}
+					createAutoNode={this.props.createAutoNode}
 				/>
 			);
 		}
@@ -257,6 +258,7 @@ PaletteFlyoutContentCategory.propTypes = {
 	allowClickToAdd: PropTypes.bool,
 	isPaletteWide: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
+	createAutoNode: PropTypes.func
 };
 
 export default PaletteFlyoutContentCategory;

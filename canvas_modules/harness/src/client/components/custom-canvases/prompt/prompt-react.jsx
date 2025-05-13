@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Elyra Authors
+ * Copyright 2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,41 +16,34 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import PromptPalette from "./prompt-palette.json";
+import { IntlProvider } from "react-intl";
+import PromptSubPalette from "./prompt-sub-palette.jsx";
 
 export default class PromptReactNode extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.onScroll = this.onScroll.bind(this);
+		this.createAutoNode = this.createAutoNode.bind(this);
 	}
 
-	onClick(nodeTemplate, evt) {
+	createAutoNode(nodeTemplate) {
 		this.props.nodeData.app_data.prompt_data
 			.addNodeCallback(nodeTemplate, this.props.nodeData.id);
 	}
 
-	onScroll(evt) {
-		evt.stopPropagation();
-
-	}
-
 	render() {
-		const nodeDivs = [];
-		for (let i = 0; i < PromptPalette.categories[1].node_types.length; i++) {
-			const nodeTemplate = PromptPalette.categories[1].node_types[i];
-			nodeDivs.push(
-				<div key={i} style={{ height: "30px" }} onClick={this.onClick.bind(this, nodeTemplate)}>
-					{ nodeTemplate.app_data.ui_data.label }
-				</div>
-			);
-		}
+		const palette = this.props.canvasController.getPaletteData();
+
+		// Remove the inputs category from the palette data.
+		palette.categories.shift();
+
+		const intl = this.props.canvasController.getIntl();
 
 		return (
-			<div style={{ height: "100%", width: "100%", overflowY: "scroll", padding: "5px", backgroundColor: "white" }}
-				onScroll={this.onScroll} onWheel={this.onScroll}
-			>
-				{ nodeDivs }
+			<div style={{ height: "100%", width: "100%", backgroundColor: "white" }}>
+				<IntlProvider locale={intl.locale} defaultLocale="en" messages={intl.messages}>
+					<PromptSubPalette palette={palette} createAutoNode={this.createAutoNode} />
+				</IntlProvider>
 			</div>
 		);
 	}

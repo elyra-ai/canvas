@@ -80,6 +80,7 @@ class PaletteFlyoutContent extends React.Component {
 						allowClickToAdd={this.props.allowClickToAdd}
 						isPaletteWide={this.props.isPaletteWide}
 						isEditingEnabled={this.props.isEditingEnabled}
+						createAutoNode={this.props.createAutoNode}
 					/>
 				</div>
 			);
@@ -109,6 +110,7 @@ class PaletteFlyoutContent extends React.Component {
 				isEditingEnabled={this.props.isEditingEnabled}
 				// isShowRanking // Uncomment this to show ranking for debuggig ranking algorithm
 				isNodeTypeInfosArrayTruncated={isNodeTypeInfosArrayTruncated}
+				createAutoNode={this.props.createAutoNode}
 			/>);
 
 		return [content];
@@ -166,7 +168,8 @@ PaletteFlyoutContent.propTypes = {
 	paletteHeader: PropTypes.object,
 	allowClickToAdd: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
-	isPaletteWide: PropTypes.bool
+	isPaletteWide: PropTypes.bool,
+	createAutoNode: PropTypes.func
 };
 
 export default PaletteFlyoutContent;
