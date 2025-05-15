@@ -48,6 +48,7 @@ class PaletteFlyout extends React.Component {
 						allowClickToAdd={this.props.allowClickToAdd}
 						isEditingEnabled={this.props.isEditingEnabled}
 						isPaletteWide={this.props.isPaletteWide}
+						createAutoNode={this.props.createAutoNode}
 					/>
 				</div>
 			</nav>
@@ -62,7 +63,8 @@ PaletteFlyout.propTypes = {
 	paletteHeader: PropTypes.object,
 	allowClickToAdd: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
-	isPaletteWide: PropTypes.bool
+	isPaletteWide: PropTypes.bool,
+	createAutoNode: PropTypes.func
 };
 
 export default injectIntl(PaletteFlyout);

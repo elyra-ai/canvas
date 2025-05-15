@@ -99,6 +99,7 @@ class PaletteContentList extends React.Component {
 						previousNodeInCategory={this.previousNodeInCategory}
 						setFocusIndex={this.setFocusIndex.bind(this, idx)}
 						allowClickToAdd={this.props.allowClickToAdd}
+						createAutoNode={this.props.createAutoNode}
 					/>
 				);
 			}
@@ -118,7 +119,8 @@ PaletteContentList.propTypes = {
 	canvasController: PropTypes.object.isRequired,
 	isPaletteWide: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
-	allowClickToAdd: PropTypes.bool
+	allowClickToAdd: PropTypes.bool,
+	createAutoNode: PropTypes.func
 };
 
 export default PaletteContentList;

@@ -305,9 +305,8 @@ class PaletteContentListItem extends React.Component {
 	// canvas. If addLink is true a link will be added between to the new node
 	// from the adjacent node.
 	createAutoNode(addLink) {
-		if (this.props.canvasController.createAutoNode && !this.isItemDisabled()) {
-			const nodeTemplate = this.props.canvasController.convertNodeTemplate(this.props.nodeTypeInfo.nodeType);
-			this.props.canvasController.createAutoNode(nodeTemplate, addLink);
+		if (this.props.createAutoNode && !this.isItemDisabled()) {
+			this.props.createAutoNode(this.props.nodeTypeInfo.nodeType, addLink);
 		}
 	}
 
@@ -417,7 +416,8 @@ PaletteContentListItem.propTypes = {
 	allowClickToAdd: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
 	isPaletteWide: PropTypes.bool,
-	isShowRanking: PropTypes.bool
+	isShowRanking: PropTypes.bool,
+	createAutoNode: PropTypes.func
 };
 
 export default PaletteContentListItem;

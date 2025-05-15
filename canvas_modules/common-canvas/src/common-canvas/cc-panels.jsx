@@ -119,11 +119,11 @@ class CommonCanvasPanels extends React.Component {
 		return this.props.rightFlyoutIsOpen;
 	}
 
-	// Returns a JSX object for the contents of the left panel. If the application
-	// sets enablePaletteLayout to None this indicates the app wamts its own content
-	// to go into the left panel provided by leftFlyoutContent provided to <CommonCanvas>
-	// otherwise if enablePaletteLayout is "Flyout" the app wants Common Canvas to
-	// provide the regular <Palette>.
+	// Returns a JSX expression for the contents of the left panel. If the application
+	// sets enablePaletteLayout to "None", this indicates the app wants its own content
+	// to go into the left panel. This content is provided in the Common Canvas
+	// leftFlyoutContent prop. Otherwise, if enablePaletteLayout is "Flyout", the
+	// app wants Common Canvas to display the regular Palette in the left flyout.
 	generateLeftFlyout() {
 		if (this.props.enablePaletteLayout === PALETTE_LAYOUT_NONE && this.props.leftFlyoutIsOpen) {
 			return (<CommonCanvasLeftFlyout />);
