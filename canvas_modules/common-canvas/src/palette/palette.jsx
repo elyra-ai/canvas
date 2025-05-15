@@ -70,7 +70,7 @@ class Palette extends React.Component {
 Palette.propTypes = {
 	// Provided by common-canvas
 	canvasController: PropTypes.object.isRequired,
-	createAutoNode: PropTypes.func, // Optional callback - called when palette node is clicked
+	createAutoNode: PropTypes.func, // Optional callback
 
 	// Provided by redux
 	paletteJSON: PropTypes.object,

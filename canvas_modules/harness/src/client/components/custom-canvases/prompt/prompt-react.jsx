@@ -26,17 +26,26 @@ export default class PromptReactNode extends React.Component {
 		this.createAutoNode = this.createAutoNode.bind(this);
 	}
 
-	createAutoNode(nodeTemplate) {
-		this.props.nodeData.app_data.prompt_data
-			.addNodeCallback(nodeTemplate, this.props.nodeData.id);
-	}
-
-	render() {
+	// Returns the palette object to be used. This is constructed from the
+	// palette in the application's canvas controller with the first
+	// category reoved since the first category has binding entry nodes.
+	getPalette() {
 		const palette = this.props.canvasController.getPaletteData();
 
 		// Remove the inputs category from the palette data.
 		palette.categories.shift();
 
+		return palette;
+	}
+
+	createAutoNode(nodeTemplate) {
+		this.props.nodeData.app_data.prompt_data
+			.addNodeCallback(nodeTemplate, this.props.nodeData.id);
+	}
+
+
+	render() {
+		const palette = this.getPalette();
 		const intl = this.props.canvasController.getIntl();
 
 		return (
