@@ -58,6 +58,7 @@
 		}
 		.cm-tooltip-autocomplete {
 			z-index: 1110;
+			background: $field-02; // Background color of the autocompletion menu to support dark mode
 			ul {
 				white-space: normal; // Wraps the long autocompletion text on multiple lines
 			}
