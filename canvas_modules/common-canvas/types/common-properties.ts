@@ -15,26 +15,53 @@
  */
 
 import React, { ReactNode } from "react";
-import { PropertyDefinitionsSchema } from "./common-properties-schema-types/parameter-defs-v3";
+import { ParameterDefinitions, ExpressionInfo } from "@elyra/pipeline-schemas/types";
 import {
   CommonPropertiesController,
   PropertyId,
   PropertyMessageDef,
 } from "./common-properties-controller";
-import { ExpressionBuilderExpressionInfoSchema } from "./common-properties-schema-types/expression-info-v3";
 
 export * from "./common-properties-controller";
-export * from "./common-properties-schema-types/conditions-v3";
-export * from "./common-properties-schema-types/expression-info-v3";
-export * from "./common-properties-schema-types/function-list-v3";
-export type {
-  ParameterDefinition as OperatorParameterDefinition,
-  WatsonDataPlatformOperatorSchema,
-  PortDefinition,
+export {
+  ParameterDefinitions,
+  ConditionsDefinition,
+  MessageDefinition,
+  EvaluateDefinition,
+  ValidationDefinition,
+  FailMessageDefinition,
+  AndDefinition,
+  OrDefinition,
+  ConditionDefinition,
+  FilterConditionDefinition,
+  EnabledDefinition,
+  VisibleDefinition,
+  FilterDefinition,
+  EnumFilterDefinition,
+  AllowChangeDefinition,
+  DefaultValueDefinition,
+  OperatorParameterDefinition,
   ParameterRefDefinition,
-  ComplexTypeDefinition as OperatorComplexTypeDefinition,
-} from "./common-properties-schema-types/operator-v3";
-export * from "./common-properties-schema-types/uihints-v3";
+  OperatorComplexTypeDefinition,
+  UIHints,
+  GroupDefinition,
+  ParameterDefinition,
+  ComplexTypeDefinition,
+  ActionDefinition,
+  ResourceDefinition,
+  ExpressionInfo,
+  FunctionList,
+  FunctionCategoriesDef,
+  FunctionDef,
+  FunctionParameterDef,
+  FieldCategoriesItemDef,
+  ColumnHeaderLabel,
+  AdditionalInfoHeaderLabel,
+  FieldTableInfoItemDef,
+  FieldValueGroupsItemDef,
+  ValueDef,
+  AdditionalInfoItem
+} from "@elyra/pipeline-schemas/types";
 
 /**
  * https://elyra-ai.github.io/canvas/04.02-callbacks/#actionhandler
@@ -307,11 +334,11 @@ export interface CustomActionClass {
 
 export interface CommonPropertiesProps {
   propertiesInfo: {
-    parameterDef: PropertyDefinitionsSchema;
+    parameterDef: ParameterDefinitions;
     appData?: Record<string, unknown>;
     additionalComponents?: Record<string, ReactNode>;
     messages?: PropertyMessageDef[];
-    expressionInfo?: ExpressionBuilderExpressionInfoSchema;
+    expressionInfo?: ExpressionInfo;
     initialEditorSize?: "small" | "medium" | "large" | null;
     schemaValidation?: boolean;
     id?: string;
