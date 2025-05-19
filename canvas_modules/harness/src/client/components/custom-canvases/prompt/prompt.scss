@@ -35,22 +35,6 @@
 		stroke-width: 1;
 	}
 
-	/* For association link */
-	.d3-object-link  .d3-link-line {
-		stroke: $border-strong-01;
-		stroke-width: 2;
-		fill: none;
-		stroke-dasharray: 5.5;
-	}
-
-	.d3-comment-link  .d3-link-line {
-		stroke: $border-strong-01;
-		stroke-width: 1;
-		fill: none;
-		stroke-dasharray: 10.5;
-	}
-
-
 	.d3-link-group:hover .d3-link-line,
 	.d3-link-group:hover .d3-link-line-arrow-head {
 		stroke: $button-primary;
@@ -75,25 +59,17 @@
 	.prompt-react {
 		height: 100%;
 		width: 100%;
-		background-color: white;
+		background-color: $layer-01;
 
 		.prompt-react-header {
 			display: flex;
 			justify-content: space-between;
-			border-bottom: 2px solid #A4A4A4;
+			border-bottom: 1px solid $layer-active-02;
 
 			.prompt-react-header-title {
-				padding: 10px;
+				padding: 12px;
 				font-weight: 600;
 				font-size: 1rem;
-			}
-
-			.prompt-react-header-close {
-				padding: 10px;
-
-				&:hover {
-					background-color: lightgray;
-				}
 			}
 		}
 	}

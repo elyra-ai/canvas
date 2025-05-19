@@ -17,6 +17,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { IntlProvider } from "react-intl";
+import { Button } from "@carbon/react";
+import { Close } from "@carbon/react/icons";
 import PromptSubPalette from "./prompt-sub-palette.jsx";
 
 export default class PromptReactNode extends React.Component {
@@ -41,11 +43,12 @@ export default class PromptReactNode extends React.Component {
 
 	createAutoNode(nodeTemplate) {
 		this.props.nodeData.app_data.prompt_data
-			.addNodeCallback(nodeTemplate, this.props.nodeData.id);
+			.addNodeHandler(nodeTemplate, this.props.nodeData.id);
 	}
 
 	closePromptPanel() {
-		this.props.canvasController.removePromptNode(this.props.nodeData.id);
+		this.props.nodeData.app_data.prompt_data
+			.removePromptNode(this.props.nodeData.id);
 	}
 
 	render() {
@@ -56,7 +59,16 @@ export default class PromptReactNode extends React.Component {
 			<div className={"prompt-react"}>
 				<div className={"prompt-react-header"}>
 					<span className={"prompt-react-header-title"}>Node Suggestion</span>
-					<div className={"prompt-react-header-close"} onClick={this.closePromptPanel}>X</div>
+					<Button
+						size="sm"
+						kind="ghost"
+						renderIcon={Close}
+						hasIconOnly
+						iconDescription={"Close prompt"}
+						onClick={this.closePromptPanel}
+						tooltipAlignment="end"
+						tooltipPosition="bottom"
+					/>
 				</div>
 
 				<IntlProvider locale={intl.locale} defaultLocale="en" messages={intl.messages}>

@@ -91,7 +91,6 @@ export default class PromptCanvas extends React.Component {
 				],
 			},
 			enableCanvasLayout: {
-				// dataLinkArrowHead: "M -15 0 l 0 -5 10 5 -10 5 Z",
 				dataLinkArrowHead: false,
 				linkGap: 4,
 				displayLinkOnOverlap: false
@@ -109,7 +108,6 @@ export default class PromptCanvas extends React.Component {
 
 	layoutHandler(node) {
 		if (node.op === "prompt_node") {
-			this.canvasController.removePromptNode = this.removePromptNode;
 			return {
 				defaultNodeHeight: 240,
 				defaultNodeWidth: 255,
@@ -147,8 +145,11 @@ export default class PromptCanvas extends React.Component {
 	}
 
 	addNodeHandler(srcNodeId, srcPortId, nodeTemplate, promptNodeId) {
+		// Get the prompt node from the controller because it might have been moved.
+		const promptNode = this.canvasController.getNode(promptNodeId);
+
 		// Remove the prompt and its link
-		const promptNode = this.removePromptNode(promptNodeId);
+		this.removePromptNode(promptNodeId);
 
 		// Create and execute a new command to add the node and link
 		const data = {
@@ -170,7 +171,8 @@ export default class PromptCanvas extends React.Component {
 
 		const template = Template;
 		template.app_data.prompt_data = {
-			addNodeCallback: this.addNodeHandler.bind(this, srcNodeId, srcPortId)
+			addNodeHandler: this.addNodeHandler.bind(this, srcNodeId, srcPortId), // Other parameters passed from prompt-react.jsx
+			removePromptNode: this.removePromptNode
 		};
 		const promptNode = this.canvasController.createNode({
 			nodeTemplate: template,
@@ -192,9 +194,12 @@ export default class PromptCanvas extends React.Component {
 		});
 
 		this.canvasController.addLinks(linksToAdd);
+
+		// There might be more than one prompt node so keep a record
+		// of them and their links.
 		this.promptObjects.push(
 			{
-				node: promptNode,
+				nodeId: promptNode.id,
 				linkId: linkId
 			}
 		);
@@ -204,10 +209,8 @@ export default class PromptCanvas extends React.Component {
 	removePromptNode(promptNodeId) {
 		this.canvasController.deleteNode(promptNodeId);
 
-		const promptObj = this.promptObjects.find((po) => po.node.id === promptNodeId);
+		const promptObj = this.promptObjects.find((po) => po.nodeId === promptNodeId);
 		this.canvasController.deleteLink(promptObj.linkId);
-
-		return promptObj.node;
 	}
 
 	genPromptLinkId(srcNodeId, srcPortId, nodeId) {
