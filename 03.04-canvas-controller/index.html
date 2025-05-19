@@ -3610,9 +3610,18 @@ Note:</p>
 <span class="c1">// pipelineId - The ID of the pipeline</span>
 <span class="nx">setNodeLabel</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">newLabel</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
-<span class="c1">// Sets the class name to newClassName of the nodes identified by nodeIds</span>
-<span class="c1">// array in the pipleine specified by pipeline ID. The class name will be</span>
-<span class="c1">// applied to the node body path.</span>
+<span class="cm">/**</span>
+<span class="cm"> * Sets the class name to newClassName of the nodes identified by nodeIds</span>
+<span class="cm"> * array in the pipeline specified by pipeline ID. The class name will be</span>
+<span class="cm"> * applied to the nodes&#39; group (&lt;g&gt;) element in the DOM. To remove any</span>
+<span class="cm"> * previously added classes an empty string can be specified.</span>
+<span class="cm"> * @param nodeIds - An array of node IDs</span>
+<span class="cm"> * @param newClassName - New class string. Can be a space separated list</span>
+<span class="cm"> *                       of classes or an empty string to remove</span>
+<span class="cm"> *                       previously added classes.</span>
+<span class="cm"> * @param pipelineId - Optional. The ID of the pipeline of the nodes.</span>
+<span class="cm"> *                     Defaults to the currently displayed pipeline.</span>
+<span class="cm">*/</span>
 <span class="nx">setNodesClassName</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">newClassName</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
 <span class="c1">// Sets the decorations on a node. The decorations array passed in</span>
@@ -3787,9 +3796,18 @@ Note:</p>
 <span class="c1">// will be set to that position.</span>
 <span class="nx">setCommentProperties</span><span class="p">(</span><span class="nx">commentId</span><span class="p">,</span><span class="w"> </span><span class="nx">commentProperties</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
-<span class="c1">// Sets the class name to newClassName of the comments identified by commentIds</span>
-<span class="c1">// array in the pipleine specified by pipeline ID. The class name will be</span>
-<span class="c1">// applied to the comment body path.</span>
+<span class="cm">/**</span>
+<span class="cm"> * Sets the class name to newClassName of the comments identified by commentIds</span>
+<span class="cm"> * array in the pipeline specified by pipeline ID. The class name will be</span>
+<span class="cm"> * applied to the comments&#39; group (&lt;g&gt;) element in the DOM. To remove any</span>
+<span class="cm"> * previously added classes an empty string can be specified.</span>
+<span class="cm"> * @param commentIds - An array of comment IDs.</span>
+<span class="cm"> * @param newClassName - New class string. Can be a space separated list</span>
+<span class="cm"> *                       of classes or an empty string to remove</span>
+<span class="cm"> *                       previously added classes.</span>
+<span class="cm"> * @param pipelineId - Optional. The ID of the pipeline of the comment.</span>
+<span class="cm"> *                     Defaults to the currently displayed pipeline.</span>
+<span class="cm"> */</span>
 <span class="nx">setCommentsClassName</span><span class="p">(</span><span class="nx">commentIds</span><span class="p">,</span><span class="w"> </span><span class="nx">newClassName</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
 <span class="c1">// Deletes a comment</span>
@@ -3892,9 +3910,18 @@ Note:</p>
 <span class="c1">// pipelineId - The ID of the pipeline</span>
 <span class="nx">createCommentLinks</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
-<span class="c1">// Sets the class name to newClassName of the links identified by linkIds</span>
-<span class="c1">// array in the pipleine specified by pipeline ID. The class name will be</span>
-<span class="c1">// applied to the link line path.</span>
+<span class="cm">/**</span>
+<span class="cm"> * Sets the class name to newClassName of the links identified by linkIds</span>
+<span class="cm"> * array in the pipeline specified by pipeline ID. The class name will be</span>
+<span class="cm"> * applied to the links&#39; group (&lt;g&gt;) element in the DOM. To remove any</span>
+<span class="cm"> * previously added classes an empty string can be specified.</span>
+<span class="cm"> * @param linkIds - An arry of link IDs</span>
+<span class="cm"> * @param newClassName - New class string. Can be a space separated list</span>
+<span class="cm"> *                       of classes or an empty string to remove</span>
+<span class="cm"> *                       previously added classes.</span>
+<span class="cm"> * @param pipelineId - Optional. The ID of the pipeline of the link.</span>
+<span class="cm"> *                     Defaults to the currently displayed pipeline.</span>
+<span class="cm"> */</span>
 <span class="nx">setLinksClassName</span><span class="p">(</span><span class="nx">linkIds</span><span class="p">,</span><span class="w"> </span><span class="nx">newClassName</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
 <span class="c1">// Sets the style of the links specified by pipelineLinkIds to be</span>
