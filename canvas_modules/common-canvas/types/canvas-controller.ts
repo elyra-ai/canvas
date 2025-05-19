@@ -1075,9 +1075,12 @@ export declare class CanvasController {
     /**
      * Sets the class name to newClassName of the nodes identified by nodeIds
      * array in the pipeline specified by pipeline ID. The class name will be
-     * applied to the nodes' group (<g>) element in the DOM.
+     * applied to the nodes' group (<g>) element in the DOM. To remove any
+     * previously added classes an empty string can be specified.
      * @param nodeIds - An array of node IDs
-     * @param newClassName - New class string. Can be a space separated list of classes.
+     * @param newClassName - New class string. Can be a space separated list
+     *                       of classes or an empty string to remove
+     *                       previously added classes.
      * @param pipelineId - Optional. The ID of the pipeline of the nodes.
      *                     Defaults to the currently displayed pipeline.
      */
@@ -1501,9 +1504,12 @@ export declare class CanvasController {
     /**
      * Sets the class name to newClassName of the comments identified by commentIds
      * array in the pipeline specified by pipeline ID. The class name will be
-     * applied to the comments' group (<g>) element in the DOM.
+     * applied to the comments' group (<g>) element in the DOM. To remove any
+     * previously added classes an empty string can be specified.
      * @param commentIds - An array of comment IDs.
-     * @param newClassName - New class name. Can be a space separated list of classes.
+     * @param newClassName - New class string. Can be a space separated list
+     *                       of classes or an empty string to remove
+     *                       previously added classes.
      * @param pipelineId - Optional. The ID of the pipeline of the comment.
      *                     Defaults to the currently displayed pipeline.
      */
@@ -1818,9 +1824,12 @@ export declare class CanvasController {
     /**
      * Sets the class name to newClassName of the links identified by linkIds
      * array in the pipeline specified by pipeline ID. The class name will be
-     * applied to the links' group (<g>) element in the DOM.
+     * applied to the links' group (<g>) element in the DOM. To remove any
+     * previously added classes an empty string can be specified.
      * @param linkIds - An arry of link IDs
-     * @param newClassName - New class string. Can be a space separated list of classes.
+     * @param newClassName - New class string. Can be a space separated list
+     *                       of classes or an empty string to remove
+     *                       previously added classes.
      * @param pipelineId - Optional. The ID of the pipeline of the link.
      *                     Defaults to the currently displayed pipeline.
      */
