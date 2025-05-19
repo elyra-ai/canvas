@@ -71,4 +71,30 @@
 		fill: transparent;
 		pointer-events: none;
 	}
+
+	.prompt-react {
+		height: 100%;
+		width: 100%;
+		background-color: white;
+
+		.prompt-react-header {
+			display: flex;
+			justify-content: space-between;
+			border-bottom: 2px solid #A4A4A4;
+
+			.prompt-react-header-title {
+				padding: 10px;
+				font-weight: 600;
+				font-size: 1rem;
+			}
+
+			.prompt-react-header-close {
+				padding: 10px;
+
+				&:hover {
+					background-color: lightgray;
+				}
+			}
+		}
+	}
 }

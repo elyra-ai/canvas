@@ -24,6 +24,7 @@ export default class PromptReactNode extends React.Component {
 		super(props);
 
 		this.createAutoNode = this.createAutoNode.bind(this);
+		this.closePromptPanel = this.closePromptPanel.bind(this);
 	}
 
 	// Returns the palette object to be used. This is constructed from the
@@ -43,13 +44,21 @@ export default class PromptReactNode extends React.Component {
 			.addNodeCallback(nodeTemplate, this.props.nodeData.id);
 	}
 
+	closePromptPanel() {
+		this.props.canvasController.removePromptNode(this.props.nodeData.id);
+	}
 
 	render() {
 		const palette = this.getPalette();
 		const intl = this.props.canvasController.getIntl();
 
 		return (
-			<div style={{ height: "100%", width: "100%", backgroundColor: "white" }}>
+			<div className={"prompt-react"}>
+				<div className={"prompt-react-header"}>
+					<span className={"prompt-react-header-title"}>Node Suggestion</span>
+					<div className={"prompt-react-header-close"} onClick={this.closePromptPanel}>X</div>
+				</div>
+
 				<IntlProvider locale={intl.locale} defaultLocale="en" messages={intl.messages}>
 					<PromptSubPalette palette={palette} createAutoNode={this.createAutoNode} />
 				</IntlProvider>

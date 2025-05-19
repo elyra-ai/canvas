@@ -33,10 +33,14 @@ export default class PromptCanvas extends React.Component {
 		this.canvasController.setPipelineFlow(Flow);
 		this.canvasController.setPipelineFlowPalette(Palette);
 
+		this.promptObjects = [];
+
 		this.getConfig = this.getConfig.bind(this);
 		this.addNodeHandler = this.addNodeHandler.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
+		this.layoutHandler = this.layoutHandler.bind(this);
+		this.removePromptNode = this.removePromptNode.bind(this);
 	}
 
 	getConfig() {
@@ -105,8 +109,9 @@ export default class PromptCanvas extends React.Component {
 
 	layoutHandler(node) {
 		if (node.op === "prompt_node") {
+			this.canvasController.removePromptNode = this.removePromptNode;
 			return {
-				defaultNodeHeight: 220,
+				defaultNodeHeight: 240,
 				defaultNodeWidth: 255,
 				nodeResizable: true,
 				nodeExternalObject: PromptReactNode,
@@ -142,10 +147,8 @@ export default class PromptCanvas extends React.Component {
 	}
 
 	addNodeHandler(srcNodeId, srcPortId, nodeTemplate, promptNodeId) {
-		// Get and remove the prompt node
-		const promptNode = this.canvasController.getNode(promptNodeId);
-		this.canvasController.deleteNode(promptNodeId);
-		this.canvasController.deleteLink(this.genPromptLinkId(srcNodeId, srcPortId));
+		// Remove the prompt and its link
+		const promptNode = this.removePromptNode(promptNodeId);
 
 		// Create and execute a new command to add the node and link
 		const data = {
@@ -160,6 +163,8 @@ export default class PromptCanvas extends React.Component {
 		this.canvasController.do(cmnd);
 	}
 
+	// Add a Prompt node to the flow editor with a link to it from
+	// the source node.
 	addPromptNode(srcNodeId, srcPortId) {
 		const srcNode = this.canvasController.getNode(srcNodeId);
 
@@ -178,18 +183,35 @@ export default class PromptCanvas extends React.Component {
 
 		// Add the prompt node to the canvas with a link
 		this.canvasController.addNode(promptNode);
+		const linkId = this.genPromptLinkId(srcNodeId, srcPortId, promptNode.id);
 		const linksToAdd = this.canvasController.createNodeLinks({
-			id: this.genPromptLinkId(srcNodeId, srcPortId),
+			id: linkId,
 			type: "nodeLink",
 			nodes: [{ id: srcNodeId, portId: srcPortId }],
 			targetNodes: [{ id: promptNode.id }]
 		});
 
 		this.canvasController.addLinks(linksToAdd);
+		this.promptObjects.push(
+			{
+				node: promptNode,
+				linkId: linkId
+			}
+		);
 	}
 
-	genPromptLinkId(srcNodeId, srcPortId) {
-		return "link_to_prompt_" + srcNodeId + "_" + srcPortId;
+	// Gets and removes the prompt node and its link
+	removePromptNode(promptNodeId) {
+		this.canvasController.deleteNode(promptNodeId);
+
+		const promptObj = this.promptObjects.find((po) => po.node.id === promptNodeId);
+		this.canvasController.deleteLink(promptObj.linkId);
+
+		return promptObj.node;
+	}
+
+	genPromptLinkId(srcNodeId, srcPortId, nodeId) {
+		return "link_to_prompt_" + srcNodeId + "_" + srcPortId + "_" + nodeId;
 	}
 
 	adjustNodePosition(node) {
@@ -197,9 +219,9 @@ export default class PromptCanvas extends React.Component {
 		while (overlapNode) {
 			overlapNode = this.canvasController.getNodes().find((n) =>
 				node.x_pos >= n.x_pos &&
-				node.x_pos <= n.x_pos + n.height &&
+				node.x_pos <= n.x_pos + n.width &&
 				node.y_pos >= n.y_pos &&
-				node.y_pos <= n.y_pos + n.width
+				node.y_pos <= n.y_pos + n.height
 			);
 			if (overlapNode) {
 				node.y_pos += overlapNode.height + 20;
