@@ -160,7 +160,7 @@ export type CanvasObjectId = CanvasNodeId | CanvasCommentId | CanvasLinkId;
 /** A globally unique identifer for a pipeleine flow artifact. */
 export type PipelineFlowId = string;
 
-/** A collection of IDs of node and link, potentially across
+/** A collection of IDs of nodes and links, potentially across
  *   multiple pipelines, that are connected together.
  */
 export interface ConnectedObjects {
