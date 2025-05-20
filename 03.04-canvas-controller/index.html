@@ -3726,23 +3726,35 @@ Note:</p>
 <span class="c1">// pipelineId - The ID of the pipeline</span>
 <span class="nx">getNodeStyle</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">temporary</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
-<span class="c1">// Returns an array of nodes that are for the branch(es) that the nodes,</span>
-<span class="c1">// identified by the node IDs passed in, are within.</span>
-<span class="c1">// nodeIds - An array of node Ids</span>
-<span class="c1">// pipelineId - The ID of the pipeline where the nodes exist</span>
-<span class="nx">getBranchNodes</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+<span class="cm">/**</span>
+<span class="cm"> * Returns an array of nodes that are for the branch(es) that the nodes,</span>
+<span class="cm"> * identified by the node IDs passed in, are within.</span>
+<span class="cm"> * @param nodeIds - An array of node Ids</span>
+<span class="cm"> * @param pipelineId - Optional. The ID of the pipeline of the nodes.</span>
+<span class="cm"> *                     Defaults to the currently displayed pipeline.</span>
+<span class="cm"> * @returns A object containing connected nodes and links</span>
+<span class="cm"> */</span>
+<span class="nx">getBranchNodes</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">);</span>
 
-<span class="c1">// Returns an array of nodes that are upstream from the nodes</span>
-<span class="c1">// identified by the node IDs passed in.</span>
-<span class="c1">// nodeIds - An array of node Ids</span>
-<span class="c1">// pipelineId - The ID of the pipeline where the nodes exist</span>
-<span class="nx">getUpstreamNodes</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+<span class="cm">/**</span>
+<span class="cm"> * Returns an array of nodes that are upstream from the nodes</span>
+<span class="cm"> * identified by the node IDs passed in.</span>
+<span class="cm"> * @param nodeIds - An array of node Ids</span>
+<span class="cm"> * @param pipelineId - Optional. The ID of the pipeline of the nodes.</span>
+<span class="cm"> *                     Defaults to the currently displayed pipeline.</span>
+<span class="cm"> * @returns A object containing connected nodes and links</span>
+<span class="cm"> */</span>
+<span class="nx">getUpstreamNodes</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">);</span>
 
-<span class="c1">// Returns an array of nodes that are downstream from the nodes</span>
-<span class="c1">// identified by the node IDs passed in.</span>
-<span class="c1">// nodeIds - An array of node Ids</span>
-<span class="c1">// pipelineId - The ID of the pipeline where the nodes exist</span>
-<span class="nx">getDownstreamNodes</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+<span class="cm">/**</span>
+<span class="cm"> * Returns an array of nodes that are downstream from the nodes</span>
+<span class="cm"> * identified by the node IDs passed in.</span>
+<span class="cm"> * @param nodeIds - An array of node Ids</span>
+<span class="cm"> * @param pipelineId - Optional. The ID of the pipeline of the nodes.</span>
+<span class="cm"> *                     Defaults to the currently displayed pipeline.</span>
+<span class="cm"> * @returns A object containing connected nodes and links</span>
+<span class="cm"> */</span>
+<span class="nx">getDownstreamNodes</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">);</span>
 
 <span class="c1">// Returns a boolean to indicate whether the supernode is expanded in place.</span>
 <span class="c1">// nodeId - The ID of the node</span>
@@ -4006,23 +4018,35 @@ Note:</p>
 <span class="nx">getCurrentBreadcrumb</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="branch-highlight-methods">Branch Highlight methods<a class="headerlink" href="#branch-highlight-methods" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1">// Highlights the branch(s) (both upstream and downstream) from the node</span>
-<span class="c1">// IDs passed in and returns the highlighted object Ids.</span>
-<span class="c1">// nodeIds - An array of node Ids</span>
-<span class="c1">// pipelineId - The ID of the pipeline</span>
-<span class="nx">highlightBranch</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * Highlights the branch(s) (both upstream and downstream) from the node</span>
+<span class="cm"> * IDs passed in and returns the highlighted object Ids.</span>
+<span class="cm"> * @param nodeIds - An array of node Ids</span>
+<span class="cm"> * @param pipelineId - Optional. The ID of the pipeline of the nodes.</span>
+<span class="cm"> *                     Defaults to the currently displayed pipeline.</span>
+<span class="cm"> * @returns A object containing connected nodes and links</span>
+<span class="cm"> */</span>
+<span class="nx">highlightBranch</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">);</span>
 
-<span class="c1">// Highlights the upstream nodes from the node IDs passed in</span>
-<span class="c1">// and returns the returns the highlighted object Ids.</span>
-<span class="c1">// nodeIds - An array of node Ids</span>
-<span class="c1">// pipelineId - The ID of the pipeline</span>
-<span class="nx">highlightUpstream</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+<span class="cm">/**</span>
+<span class="cm"> * Highlights the upstream nodes from the node IDs passed in</span>
+<span class="cm"> * and returns the highlighted object Ids.</span>
+<span class="cm"> * @param nodeIds - An array of node Ids</span>
+<span class="cm"> * @param pipelineId - Optional. The ID of the pipeline of the nodes.</span>
+<span class="cm"> *                     Defaults to the currently displayed pipeline.</span>
+<span class="cm"> * @returns A object containing connected nodes and links</span>
+<span class="cm"> */</span>
+<span class="nx">highlightUpstream</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">);</span>
 
-<span class="c1">// Highlights the downstream nodes from the node IDs passed in</span>
-<span class="c1">// and returns highlighted object Ids.</span>
-<span class="c1">// nodeIds - An array of node Ids</span>
-<span class="c1">// pipelineId - The ID of the pipeline</span>
-<span class="nx">highlightDownstream</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+<span class="cm">/**</span>
+<span class="cm"> * Highlights the downstream nodes from the node IDs passed in</span>
+<span class="cm"> * and returns highlighted object Ids.</span>
+<span class="cm"> * @param nodeIds - An array of node Ids</span>
+<span class="cm"> * @param pipelineId - Optional. The ID of the pipeline of the nodes.</span>
+<span class="cm"> *                     Defaults to the currently displayed pipeline.</span>
+<span class="cm"> * @returns A object containing connected nodes and links</span>
+<span class="cm"> */</span>
+<span class="nx">highlightDownstream</span><span class="p">(</span><span class="nx">nodeIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">);</span>
 </code></pre></div>
 <h2 id="operational-methods">Operational methods<a class="headerlink" href="#operational-methods" title="Permanent link">&para;</a></h2>
 <p>These are general purpose methods for operation of the common-canvas components:</p>
