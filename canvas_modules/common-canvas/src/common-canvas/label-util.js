@@ -28,6 +28,10 @@ export default class LabelUtil {
 		this.intl = intl;
 	}
 
+	getIntl() {
+		return this.intl;
+	}
+
 	setActionLabelHandler(handler) {
 		this.actionLabelHandler = handler;
 	}

@@ -361,6 +361,14 @@ export interface CommentFormat {
   value?: string;
 }
 
+/** A breadcrumb representing a pipeline which may be placed in an array
+ * of breadcrumbs that represent the navigated set of pipelines.
+ */
+export interface Breadcrumb {
+   pipelineId?: PipelineId;
+   pipelineFlowId?: PipelineFlowId
+}
+
 /**
  * https://elyra-ai.github.io/canvas/03.04-canvas-controller/ *
  * The application can programmatically perform most of the actions
@@ -485,10 +493,11 @@ export declare class CanvasController {
      * Returns truthy if the pipeline is external (that is it is part of an
      * external pipeline flow). Otherwise, return falsy to indicate the pipeline
      * is local.
-     * @param pipelineId
+     * @param pipelineId - Optional. The ID of the pipeline.
+     *                     Defaults to the currently displayed pipeline.
      * @returns a boolean to indicate whether the pipeline is external ot local
      */
-    isPipelineExternal(pipelineId: PipelineId): boolean;
+    isPipelineExternal(pipelineId?: PipelineId): boolean;
 
     /**
      * Returns the messages for all the nodes in the pipeline ID passed in.
@@ -496,7 +505,7 @@ export declare class CanvasController {
      *                     Defaults to the currently displayed pipeline.
      * @returns An array of messages.
      */
-    getFlowMessages(pipelineId: PipelineId): MessageDef[];
+    getFlowMessages(pipelineId?: PipelineId): MessageDef[];
 
     /**
      * Indicates whether the nodes have a message or not.
@@ -507,7 +516,7 @@ export declare class CanvasController {
      *          includeMsgsType for the nodes in the pipeline identified
      *          by the pipeline ID passed in.
      */
-    isFlowValid(includeMsgType: "error" | "warning", pipelineId: PipelineId): boolean;
+    isFlowValid(includeMsgType: "error" | "warning", pipelineId?: PipelineId): boolean;
 
     /**
      * Rearranges the nodes in the canvas in the direction specified for the
@@ -516,7 +525,7 @@ export declare class CanvasController {
      * @param pipelineId - Optional. The ID of the pipeline.
      *                     Defaults to the currently displayed pipeline.
      */
-    autoLayout(layoutDirection: "horizontal" | "vertical", pipelineId: PipelineId): void;
+    autoLayout(layoutDirection: "horizontal" | "vertical", pipelineId?: PipelineId): void;
 
     /**
      * ## Palette methods
@@ -608,7 +617,7 @@ export declare class CanvasController {
     /**
      * Removes nodetypes from a palette category
      * @param selObjectIds - an array of object IDs to identify the nodetypes to be
-     * @param categoryId - the ID of teh category from which the nodes will be removed
+     * @param categoryId - the ID of the category from which the nodes will be removed
      */
     removeNodesFromPalette(selObjectIds: CanvasNodeId[], categoryId: CategoryId): void;
 
@@ -678,6 +687,7 @@ export declare class CanvasController {
      * being displayed.
      * @param newSelections - An array of object IDs for nodes, links and/or comments.
      * @param pipelineId - Optional. The ID of the pipeline where the objects exist.
+     *                     Defaults to the currently displayed pipeline.
      */
     setSelections(
       newSelections: CanvasObjectId[],
@@ -689,16 +699,18 @@ export declare class CanvasController {
     clearSelections(): void;
 
     /**
-     * Selects all the objects on the canvas.
+     * Selects all the objects in a pipeline.
+     * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+     *                     Defaults to the currently displayed pipeline.
      */
-    selectAll(): void;
+    selectAll(pipelineId?: PipelineId): void;
 
     /**
      * De-selects all the objects in a pipeline.
      * @param pipelineId - Optional. The ID of the pipeline of the nodes.
      *                     Defaults to the currently displayed pipeline.
      */
-    deselectAll(pipelineId: PipelineId): void;
+    deselectAll(pipelineId?: PipelineId): void;
 
     /**
      * @returns an array of the IDs of the currently selected objects.
@@ -836,7 +848,7 @@ export declare class CanvasController {
      * @param pipelineId - Optional. The ID of the pipeline of the node.
      *                     Defaults to the currently displayed pipeline.
      */
-    deleteObject(id: CanvasNodeOrCommentId, pipelineId: PipelineId): void;
+    deleteObject(id: CanvasNodeOrCommentId, pipelineId?: PipelineId): void;
 
     /**
      * Sets the style of the objects specified by pipelineObjectIds to be
@@ -1063,9 +1075,12 @@ export declare class CanvasController {
     /**
      * Sets the class name to newClassName of the nodes identified by nodeIds
      * array in the pipeline specified by pipeline ID. The class name will be
-     * applied to the nodes' group (<g>) element in the DOM.
+     * applied to the nodes' group (<g>) element in the DOM. To remove any
+     * previously added classes an empty string can be specified.
      * @param nodeIds - An array of node IDs
-     * @param newClassName - New class string. Can be a space separated list of classes.
+     * @param newClassName - New class string. Can be a space separated list
+     *                       of classes or an empty string to remove
+     *                       previously added classes.
      * @param pipelineId - Optional. The ID of the pipeline of the nodes.
      *                     Defaults to the currently displayed pipeline.
      */
@@ -1198,16 +1213,17 @@ export declare class CanvasController {
      *                     Defaults to the currently displayed pipeline.
      */
     getSupernodes(
-      pipelineId: PipelineId
+      pipelineId?: PipelineId
     ): CanvasSupernode[];
 
     /**
      * Returns the supernode that references the given pipelineId.
-     * @param pipelineId - The ID of a pipeline
+     * @param pipelineId - Optional. The ID of the pipeline.
+     *                     Defaults to the currently displayed pipeline.
      * @returns supernode that has a subflow_ref to the given pipelineId.
      */
     getSupernodeObjReferencing(
-      pipelineId: PipelineId
+      pipelineId?: PipelineId
     ): CanvasSupernode;
 
     /**
@@ -1474,7 +1490,7 @@ export declare class CanvasController {
      * replace the corresponding properties in the comment. For example: if
      * commentProperties is { x_pos: 50, y_pos: 70 } the comment
      * will be set to that position.
-     * @param commentId - the ID of teh comment to update
+     * @param commentId - the ID of the comment to update
      * @param properties - properties to overwrite the comment
      * @param pipelineId - Optional. The ID of the pipeline of the comment.
      *                     Defaults to the currently displayed pipeline.
@@ -1488,9 +1504,12 @@ export declare class CanvasController {
     /**
      * Sets the class name to newClassName of the comments identified by commentIds
      * array in the pipeline specified by pipeline ID. The class name will be
-     * applied to the comments' group (<g>) element in the DOM.
+     * applied to the comments' group (<g>) element in the DOM. To remove any
+     * previously added classes an empty string can be specified.
      * @param commentIds - An array of comment IDs.
-     * @param newClassName - New class name. Can be a space separated list of classes.
+     * @param newClassName - New class string. Can be a space separated list
+     *                       of classes or an empty string to remove
+     *                       previously added classes.
      * @param pipelineId - Optional. The ID of the pipeline of the comment.
      *                     Defaults to the currently displayed pipeline.
      */
@@ -1751,6 +1770,16 @@ export declare class CanvasController {
       pipelineId?: PipelineId
     ): CanvasNodeLink[];
 
+    /**
+     * Creates node to node links of type "associationLink". One link will be created
+     * between each node in the nodes array and each node in the targetNodes
+     * array. Link IDs will be automatically generated for the created links.
+     * Note: if an ID needs to be provided for the link this method can only
+     * be called for one link at a time.
+     * @param data - Object describing the links to create.
+     * @param pipelineId - Optional. The ID of the pipeline of the link.
+     *                     Defaults to the currently displayed pipeline.
+     */
     createNodeLinks(
       data: {
         id?: CanvasLinkId;
@@ -1795,9 +1824,12 @@ export declare class CanvasController {
     /**
      * Sets the class name to newClassName of the links identified by linkIds
      * array in the pipeline specified by pipeline ID. The class name will be
-     * applied to the links' group (<g>) element in the DOM.
+     * applied to the links' group (<g>) element in the DOM. To remove any
+     * previously added classes an empty string can be specified.
      * @param linkIds - An arry of link IDs
-     * @param newClassName - New class string. Can be a space separated list of classes.
+     * @param newClassName - New class string. Can be a space separated list
+     *                       of classes or an empty string to remove
+     *                       previously added classes.
      * @param pipelineId - Optional. The ID of the pipeline of the link.
      *                     Defaults to the currently displayed pipeline.
      */
@@ -1958,14 +1990,14 @@ export declare class CanvasController {
      * within the navigation hierarchy within Common Canvas.
      * @returns An array of breadcrumb objects
      */
-    getBreadcrumbs(): { pipelineId?: PipelineId; pipelineFlowId?: PipelineFlowId }[];
+    getBreadcrumbs(): Breadcrumb[];
 
     /**
-     * Returns the breadcrumb for teh currently displayed pipeline.
+     * Returns the breadcrumb for the currently displayed pipeline.
      * @returns The last breadcrumb which represents the level with supernode
      * hierarchy that the user has currently navigated to.
      */
-    getCurrentBreadcrumb(): { pipelineId?: PipelineId; pipelineFlowId?: PipelineFlowId };
+    getCurrentBreadcrumb(): Breadcrumb;
 
     /**
      * ## Branch highlight methods

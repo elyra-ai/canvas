@@ -270,7 +270,8 @@ CommonProperties.propTypes = {
 		titleChangeHandler: PropTypes.func,
 		propertiesActionLabelHandler: PropTypes.func,
 		tooltipLinkHandler: PropTypes.func,
-		propertyIconHandler: PropTypes.func
+		propertyIconHandler: PropTypes.func,
+		filterItemsHandler: PropTypes.func
 	}),
 	customPanels: PropTypes.array,
 	customControls: PropTypes.array,

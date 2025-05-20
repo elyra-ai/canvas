@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -187,7 +187,7 @@ describe("oneofselect renders correctly", () => {
 		const dropdownWrapper = wrapper.container.querySelector("div[data-id='properties-test-oneofselect']");
 		expect(dropdownWrapper.querySelector("button").disabled).to.equal(true);
 	});
-	it("dropdown renders when hidden", () => {
+	it("dropdown doesn not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<OneofselectControl
@@ -198,7 +198,7 @@ describe("oneofselect renders correctly", () => {
 			/>
 		);
 		const dropdownWrapper = wrapper.container.querySelector("div[data-id='properties-test-oneofselect']");
-		expect(dropdownWrapper.className.includes("hide")).to.equal(true);
+		expect(dropdownWrapper).to.be.null;
 	});
 	it("Validate oneofselect filtered correctly", () => {
 		controller.setControlStates({ "test-oneofselect": { "enumFilter": ["order", "gtt"] } });
@@ -588,6 +588,34 @@ describe("oneofselect with custom value allowed works correctly", () => {
 		fireEvent.change(dropdownInput, { target: { value: "one" } });
 		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
 		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
+		expect(dropdownList).to.be.length(1);
+	});
+
+	it("Validate oneofselect filters correctly using custom callback filterItemsHandler", () => {
+		const customControl = cloneDeep(control);
+		customControl.shouldFilterItem = true;
+		const spyFilterItemsHandler = (data, list) => list?.item?.label?.toLowerCase().startsWith(list?.inputValue?.toLowerCase());
+		controller.setHandlers({ filterItemsHandler: spyFilterItemsHandler });
+		const wrapper = render(
+			<OneofselectControl
+				store={controller.getStore()}
+				control={customControl}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		const dropdownInput = dropdownWrapper.querySelector("input");
+
+		fireEvent.change(dropdownInput, { target: { value: "e" } });
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		let dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
+		expect(dropdownList).to.be.length(0);
+
+		fireEvent.change(dropdownInput, { target: { value: "o" } });
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
 	});
 });

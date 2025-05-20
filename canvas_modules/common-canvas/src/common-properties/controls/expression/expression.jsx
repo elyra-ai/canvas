@@ -332,6 +332,10 @@ class ExpressionControl extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		let messageInfo = this.props.messageInfo;
 		const messageType = (messageInfo) ? messageInfo.type : CONDITION_MESSAGE_TYPE.INFO;
 		if (messageType === CONDITION_MESSAGE_TYPE.SUCCESS) {

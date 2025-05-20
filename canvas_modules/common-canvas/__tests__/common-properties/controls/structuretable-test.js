@@ -582,9 +582,9 @@ describe("condition renders correctly with structure table control", () => {
 		// open the summary panel
 		propertyUtilsRTL.openSummaryPanel(wrapper, "dummy_types-summary-panel");
 
-		// verify the table is HIDDEN
-		const cellControlDiv = wrapper.container.querySelector("div[data-id='properties-dummy_types_0_4']").querySelector(".properties-checkbox");
-		expect(cellControlDiv.className.includes("hide")).to.be.true;
+		// verify the HIDDEN table cell doesn't render
+		const cellControlDiv = wrapper.container.querySelector("div[data-id='properties-dummy_types_0_4']");
+		expect(cellControlDiv).to.be.null;
 		expect(renderedController.getControlState({ name: "dummy_types", row: 0, col: 4 })).to.equal("hidden");
 	});
 	it("should disable a table cell", () => {

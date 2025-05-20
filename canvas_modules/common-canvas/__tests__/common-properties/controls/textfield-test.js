@@ -292,7 +292,7 @@ describe("textfield renders correctly", () => {
 		expect(textWrapper.querySelector("input").disabled).to.equal(true);
 	});
 
-	it("textfield renders when hidden", () => {
+	it("textfield does not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<Textfield
@@ -303,7 +303,7 @@ describe("textfield renders correctly", () => {
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-text']");
-		expect(textWrapper.className.includes("hide")).to.equal(true);
+		expect(textWrapper).to.be.null;
 	});
 
 	it("textfield renders messages correctly", () => {

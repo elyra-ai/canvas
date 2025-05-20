@@ -54,7 +54,9 @@ class PropertiesMain extends React.Component {
 		if (this.props.propertiesInfo.initialEditorSize) {
 			this.propertiesController.setEditorSize(this.props.propertiesInfo.initialEditorSize);
 		}
-		this.propertiesController.setCustomControls(props.customControls);
+		if (typeof props.customControls !== "undefined") {
+			this.propertiesController.setCustomControls(props.customControls);
+		}
 		this.propertiesController.setCustomActions(props.customActions);
 		this.propertiesController.setConditionOps(props.customConditionOps);
 		this.propertiesController.setLight(props.light);
@@ -119,7 +121,9 @@ class PropertiesMain extends React.Component {
 					this.currentParameters = this.propertiesController.getPropertyValues();
 				}
 				this.propertiesController.setAppData(newProps.propertiesInfo.appData);
-				this.propertiesController.setCustomControls(newProps.customControls);
+				if (typeof newProps.customControls !== "undefined") {
+					this.propertiesController.setCustomControls(newProps.customControls);
+				}
 				this.propertiesController.setCustomActions(newProps.customActions);
 				this.propertiesController.setConditionOps(newProps.customConditionOps);
 				this.previousErrorMessages = {};
@@ -162,6 +166,7 @@ class PropertiesMain extends React.Component {
 			titleChangeHandler: this.props.callbacks.titleChangeHandler,
 			tooltipLinkHandler: this.props.callbacks.tooltipLinkHandler,
 			propertyIconHandler: this.props.callbacks.propertyIconHandler,
+			filterItemsHandler: this.props.callbacks.filterItemsHandler
 		});
 	}
 
@@ -704,6 +709,7 @@ PropertiesMain.propTypes = {
 		propertiesActionLabelHandler: PropTypes.func,
 		tooltipLinkHandler: PropTypes.func,
 		propertyIconHandler: PropTypes.func,
+		filterItemsHandler: PropTypes.func
 	}),
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls

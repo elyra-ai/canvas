@@ -78,8 +78,10 @@ class CheckboxsetControl extends React.Component {
 	}
 
 	render() {
-
 		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		let controlValue = this.props.value;
 		if (typeof controlValue === "undefined" || controlValue === null) {
 			controlValue = [];
@@ -123,7 +125,7 @@ class CheckboxsetControl extends React.Component {
 			</div>);
 		}
 		return (
-			<div className={classNames("properties-checkboxset", { "hide": this.props.state === STATES.HIDDEN })} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+			<div className={classNames("properties-checkboxset", { "hide": hidden })} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<CheckboxGroup
 					legendText={this.props.controlItem}
 					helperText={this.props.control.helperText}

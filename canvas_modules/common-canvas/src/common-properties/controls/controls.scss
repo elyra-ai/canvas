@@ -47,4 +47,7 @@
 			min-width: 0; // Prevent overflow issues
 		}
 	}
+	&.hide {
+		display: none;
+	}
 }

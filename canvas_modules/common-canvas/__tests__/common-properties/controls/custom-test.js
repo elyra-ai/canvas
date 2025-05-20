@@ -19,6 +19,11 @@ import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import customControlParamDef from "../../test_resources/paramDefs/custom-ctrl-op_paramDef.json";
 import { expect } from "chai";
 import { fireEvent } from "@testing-library/react";
+import { render } from "../../_utils_/mount-utils.js";
+import { IntlProvider } from "react-intl";
+import React from "react";
+import { CommonProperties } from "../../../src/common-properties";
+import sinon from "sinon";
 
 describe("custom control renders correctly", () => {
 	let wrapper;
@@ -100,6 +105,34 @@ describe("custom control renders correctly", () => {
 		dropdownWrapper = container.querySelector("div[data-id='properties-colors']");
 		dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(2); // should have 2 items. Custom toggle control updates the values
+	});
+
+	it("When customControls is not defined, proper error message should be displayed", () => {
+		const propertiesInfo = {
+			parameterDef: customControlParamDef
+		};
+		const applyPropertyChanges = sinon.spy();
+		const closePropertiesDialog = sinon.spy();
+		const propertyIconHandler = sinon.spy();
+		const callbacks = {
+			applyPropertyChanges: applyPropertyChanges,
+			closePropertiesDialog: closePropertiesDialog,
+			propertyIconHandler: propertyIconHandler
+		};
+
+		// Common-properties is called without customControls
+		wrapper = render(
+			<IntlProvider key="IntlProvider2" locale="en">
+				<CommonProperties
+					propertiesInfo={propertiesInfo}
+					callbacks={callbacks}
+				/>
+			</IntlProvider>
+		);
+		const { container } = wrapper;
+		const customToggleControl = container.querySelector("div[data-id='properties-ctrl-custom_toggle']").querySelector(".properties-custom-ctrl");
+		// Verify the error message
+		expect(customToggleControl.textContent).to.equal("Custom control not found: harness-custom-toggle-control");
 	});
 });
 

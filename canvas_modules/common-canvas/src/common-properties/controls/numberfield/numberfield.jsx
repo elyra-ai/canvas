@@ -141,13 +141,16 @@ class NumberfieldControl extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		let controlValue = ""; // Default to empty string to avoid '0' appearing when value is 'null'
 		if (this.props.value !== null && typeof this.props.value !== "undefined") {
 			controlValue = this.props.value;
 		}
 
 		const disabled = this.props.state === STATES.DISABLED;
-		const hidden = this.props.state === STATES.HIDDEN;
 		let numberGenerator;
 		if (has(this.props.control, "label.numberGenerator")) {
 			numberGenerator = (<Button

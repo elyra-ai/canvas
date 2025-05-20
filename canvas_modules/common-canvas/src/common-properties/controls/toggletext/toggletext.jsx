@@ -65,6 +65,10 @@ class ToggletextControl extends React.Component {
 	}
 
 	render() {
+		const hidden = this.props.state === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
 		let rendered = this.valuesMap[this.props.value];
 		if (typeof rendered === "undefined") {
 			rendered = this.props.value;
@@ -86,7 +90,7 @@ class ToggletextControl extends React.Component {
 			);
 		}
 
-		const className = classNames("properties-toggletext", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
+		const className = classNames("properties-toggletext", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null);
 
 		return (
 			<div

@@ -129,7 +129,7 @@ describe("numberfield-control renders correctly", () => {
 		expect(textWrapper.querySelector("input").disabled).to.equal(true);
 	});
 
-	it("numberfield renders when hidden", () => {
+	it("numberfield does not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<NumberfieldControl
@@ -140,7 +140,7 @@ describe("numberfield-control renders correctly", () => {
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-number']");
-		expect(textWrapper.className.includes("hide")).to.equal(true);
+		expect(textWrapper).to.be.null;
 	});
 
 	it("numberfield renders messages correctly", () => {
