@@ -313,7 +313,7 @@ class ToolbarButtonItem extends React.Component {
 			const direction = this.props.tooltipDirection ? this.props.tooltipDirection : "bottom";
 
 			return (
-				<Tooltip id={tooltipId} tip={tip} disable={!enableTooltip} className="icon-tooltip" direction={direction} hoverable={this.props.actionObj.hoverable}>
+				<Tooltip id={tooltipId} tip={tip} disable={!enableTooltip} className="icon-tooltip" direction={direction} hoverable>
 					{content}
 				</Tooltip>
 			);
@@ -380,8 +380,7 @@ ToolbarButtonItem.propTypes = {
 			PropTypes.string,
 			PropTypes.object,
 			PropTypes.func
-		]),
-		hoverable: PropTypes.bool,
+		])
 	}),
 	actionName: PropTypes.string.isRequired,
 	tooltipDirection: PropTypes.oneOf(["top", "bottom"]),
