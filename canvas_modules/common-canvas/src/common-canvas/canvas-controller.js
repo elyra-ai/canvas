@@ -176,6 +176,10 @@ export default class CanvasController {
 		this.labelUtil.setIntl(intl);
 	}
 
+	getIntl() {
+		return this.labelUtil.getIntl();
+	}
+
 	setToolbarConfig(config) {
 		this.logger.log("Setting Toolbar Config");
 		this.objectModel.setToolbarConfig(config);
