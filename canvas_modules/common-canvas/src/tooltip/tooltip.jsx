@@ -32,6 +32,7 @@ class ToolTip extends React.Component {
 		this.uuid = uuid4();
 		this.pendingTooltip = null;
 		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
+		this.stopEventPropagation = this.stopEventPropagation.bind(this);
 		this.tabKeyPressed = false;
 		// Tooltip should not close if link inside tooltip is clicked.
 		this.linkClicked = false;
@@ -133,6 +134,10 @@ class ToolTip extends React.Component {
 			// show tooltip if not disabled and showToolTipIfTruncated is true and string is truncated
 			(!this.props.disable && this.props.showToolTipIfTruncated && !canDisplayFullText));
 		return showToolTip;
+	}
+
+	stopEventPropagation(evt) {
+		evt.stopPropagation();
 	}
 
 	// Return true if the string can be displayed in the available space
@@ -515,6 +520,9 @@ class ToolTip extends React.Component {
 							this.inTooltip = false;
 							this.setTooltipVisible(false);
 						}}
+						// Stop event propagation to prevent tooltip from performing toolbar button click
+						onClick={this.stopEventPropagation}
+						onMouseDown={this.stopEventPropagation}
 					>
 						<svg className="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
