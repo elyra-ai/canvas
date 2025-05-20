@@ -15,7 +15,7 @@
  */
 
 import { RecordSchema } from  "@elyra/pipeline-schemas/types";
-import { PropertyDefinitionsSchema } from './common-properties-schema-types/parameter-defs-v3';
+import { ParameterDefinitions } from "@elyra/pipeline-schemas/types";
 
 interface BaseProperty {
   /** parameter name defined in operator definition */
@@ -218,7 +218,7 @@ export interface CommonPropertiesController {
    * Note - These values won't be displayed on the UI. Host applications can call getPropertyValues() to retrieve the values.
    * @paramDef - Follows the format of https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/parameter-defs/parameter-defs-v3-schema.json
    */
-  setParamDef(paramDef: PropertyDefinitionsSchema): void;
+  setParamDef(paramDef: ParameterDefinitions): void;
 
   /**
    * Returns the id of top-level active tab or accordion

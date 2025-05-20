@@ -176,6 +176,10 @@ export default class CanvasController {
 		this.labelUtil.setIntl(intl);
 	}
 
+	getIntl() {
+		return this.labelUtil.getIntl();
+	}
+
 	setToolbarConfig(config) {
 		this.logger.log("Setting Toolbar Config");
 		this.objectModel.setToolbarConfig(config);
@@ -883,9 +887,18 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeLabel(nodeId, newLabel);
 	}
 
-	// Sets the class name to newClassName of the nodes identified by nodeIds
-	// array in the pipleine specified by pipeline ID. The class name will be
-	// applied to the node body path.
+	/**
+	 * Sets the class name to newClassName of the nodes identified by nodeIds
+	 * array in the pipeline specified by pipeline ID. The class name will be
+	 * applied to the nodes' group (<g>) element in the DOM. To remove any
+	 * previously added classes an empty string can be specified.
+	 * @param nodeIds - An array of node IDs
+	 * @param newClassName - New class string. Can be a space separated list
+	 *                       of classes or an empty string to remove
+	 *                       previously added classes.
+	 * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+	 *                     Defaults to the currently displayed pipeline.
+	*/
 	setNodesClassName(nodeIds, newClassName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setObjectsClassName(nodeIds, newClassName);
 	}
@@ -1147,9 +1160,18 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setCommentProperties(commentId, properties);
 	}
 
-	// Sets the class name to newClassName of the comments identified by commentIds
-	// array in the pipleine specified by pipeline ID. The class name will be
-	// applied to the comment body path.
+	/**
+	 * Sets the class name to newClassName of the comments identified by commentIds
+	 * array in the pipeline specified by pipeline ID. The class name will be
+	 * applied to the comments' group (<g>) element in the DOM. To remove any
+	 * previously added classes an empty string can be specified.
+	 * @param commentIds - An array of comment IDs.
+	 * @param newClassName - New class string. Can be a space separated list
+	 *                       of classes or an empty string to remove
+	 *                       previously added classes.
+	 * @param pipelineId - Optional. The ID of the pipeline of the comment.
+	 *                     Defaults to the currently displayed pipeline.
+	 */
 	setCommentsClassName(commentIds, newClassName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setObjectsClassName(commentIds, newClassName);
 	}
@@ -1325,9 +1347,18 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).createCommentLinks(data);
 	}
 
-	// Sets the class name to newClassName of the links identified by linkIds
-	// array in the pipleine specified by pipeline ID. The class name will be
-	// applied to the link line path.
+	/**
+	 * Sets the class name to newClassName of the links identified by linkIds
+	 * array in the pipeline specified by pipeline ID. The class name will be
+	 * applied to the links' group (<g>) element in the DOM. To remove any
+	 * previously added classes an empty string can be specified.
+	 * @param linkIds - An arry of link IDs
+	 * @param newClassName - New class string. Can be a space separated list
+	 *                       of classes or an empty string to remove
+	 *                       previously added classes.
+	 * @param pipelineId - Optional. The ID of the pipeline of the link.
+	 *                     Defaults to the currently displayed pipeline.
+	 */
 	setLinksClassName(linkIds, newClassName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setLinksClassName(linkIds, newClassName);
 	}
