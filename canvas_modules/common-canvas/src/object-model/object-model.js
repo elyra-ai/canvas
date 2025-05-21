@@ -35,7 +35,7 @@ import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from ".
 
 import { ASSOCIATION_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
 	CLONE_COMMENT, CLONE_COMMENT_LINK, CLONE_NODE, CLONE_NODE_LINK, CLONE_PIPELINE, SUPER_NODE,
-	HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM, HIGHLIGHT_DOWNSTREAM,
+	CONNECTED_BRANCH, CONNECTED_UPSTREAM, CONNECTED_DOWNSTREAM,
 	SAVE_ZOOM_LOCAL_STORAGE, SAVE_ZOOM_PIPELINE_FLOW
 } from "../common-canvas/constants/canvas-constants.js";
 
@@ -1933,37 +1933,37 @@ export default class ObjectModel {
 	}
 
 	// ---------------------------------------------------------------------------
-	// Highlighting methods
+	// Connected objects methods
 	// ---------------------------------------------------------------------------
 
-	// Returns an object containing nodes and links to be highlighted based on the
+	// Returns an object containing nodes and links that are connected based on the
 	// array of nodeIds passed in (which corresponds to the set of selected
 	// nodes on the canvas when this method is called through a context menu
 	// highlight option).
 	// The nodes and links info returned are in the form of associative arrays
 	// indexed by pipeline ID.
-	getHighlightObjectIds(pipelineId, nodeIds, operator) {
-		const highlightNodeIds = {};
-		const highlightLinkIds = {};
+	getConnectedObjects(pipelineId, nodeIds, operator) {
+		const connectedNodeIds = {};
+		const connectedLinkIds = {};
 
-		highlightNodeIds[pipelineId] = [];
-		highlightLinkIds[pipelineId] = [];
+		connectedNodeIds[pipelineId] = [];
+		connectedLinkIds[pipelineId] = [];
 
 		nodeIds.forEach((nodeId) => {
 			// Automatically include the selected node
-			highlightNodeIds[pipelineId].push(nodeId);
+			connectedNodeIds[pipelineId].push(nodeId);
 
 			switch (operator) {
-			case HIGHLIGHT_BRANCH:
-				this.getUpstreamObjIdsFrom(nodeId, pipelineId, highlightNodeIds, highlightLinkIds);
-				this.getDownstreamObjIdsFrom(nodeId, pipelineId, highlightNodeIds, highlightLinkIds);
+			case CONNECTED_BRANCH:
+				this.getUpstreamObjIdsFrom(nodeId, pipelineId, connectedNodeIds, connectedLinkIds);
+				this.getDownstreamObjIdsFrom(nodeId, pipelineId, connectedNodeIds, connectedLinkIds);
 				break;
-			case HIGHLIGHT_UPSTREAM: {
-				this.getUpstreamObjIdsFrom(nodeId, pipelineId, highlightNodeIds, highlightLinkIds);
+			case CONNECTED_UPSTREAM: {
+				this.getUpstreamObjIdsFrom(nodeId, pipelineId, connectedNodeIds, connectedLinkIds);
 				break;
 			}
-			case HIGHLIGHT_DOWNSTREAM:
-				this.getDownstreamObjIdsFrom(nodeId, pipelineId, highlightNodeIds, highlightLinkIds);
+			case CONNECTED_DOWNSTREAM:
+				this.getDownstreamObjIdsFrom(nodeId, pipelineId, connectedNodeIds, connectedLinkIds);
 				break;
 			default:
 			}
@@ -1971,42 +1971,42 @@ export default class ObjectModel {
 			// Finally, if the selected node is a supernode, make sure to include all
 			// the nodes and links within it.
 			if (this.getAPIPipeline(pipelineId).isSupernode(nodeId)) {
-				this.getSupernodeNodeIds(nodeId, pipelineId, highlightNodeIds, highlightLinkIds);
+				this.getSupernodeNodeIds(nodeId, pipelineId, connectedNodeIds, connectedLinkIds);
 			}
 		});
 
 		return {
-			nodes: highlightNodeIds,
-			links: highlightLinkIds
+			nodes: connectedNodeIds,
+			links: connectedLinkIds
 		};
 	}
 
 	// If nodeId and pipelineId specify a supernode, this method populates the
-	// highlightNodeIds and highlightLinkIds arrays with all the nodes and links
+	// connectedNodeIds and connectedLinkIds arrays with all the nodes and links
 	// that are in the supernode and any of its descendant supernodes.
-	getSupernodeNodeIds(nodeId, pipelineId, highlightNodeIds, highlightLinkIds) {
+	getSupernodeNodeIds(nodeId, pipelineId, connectedNodeIds, connectedLinkIds) {
 		const node = this.getAPIPipeline(pipelineId).getNode(nodeId);
 		if (node.type === SUPER_NODE) {
 			const snPipelineId = CanvasUtils.getSupernodePipelineId(node);
 
-			highlightNodeIds[snPipelineId] = highlightNodeIds[snPipelineId] || [];
-			highlightLinkIds[snPipelineId] = highlightLinkIds[snPipelineId] || [];
+			connectedNodeIds[snPipelineId] = connectedNodeIds[snPipelineId] || [];
+			connectedLinkIds[snPipelineId] = connectedLinkIds[snPipelineId] || [];
 
 			const nodeIds = this.getAPIPipeline(snPipelineId).getNodeIds();
 			const linkIds = this.getAPIPipeline(snPipelineId).getLinkIds();
 
-			highlightNodeIds[snPipelineId] = union(highlightNodeIds[snPipelineId], nodeIds);
-			highlightLinkIds[snPipelineId] = union(highlightLinkIds[snPipelineId], linkIds);
+			connectedNodeIds[snPipelineId] = union(connectedNodeIds[snPipelineId], nodeIds);
+			connectedLinkIds[snPipelineId] = union(connectedLinkIds[snPipelineId], linkIds);
 
 			nodeIds.forEach((nId) => {
-				this.getSupernodeNodeIds(nId, snPipelineId, highlightNodeIds, highlightLinkIds);
+				this.getSupernodeNodeIds(nId, snPipelineId, connectedNodeIds, connectedLinkIds);
 			});
 		}
 	}
 
-	getUpstreamObjIdsFrom(nodeId, pipelineId, highlightNodeIds, highlightLinkIds) {
-		highlightNodeIds[pipelineId] = highlightNodeIds[pipelineId] || [];
-		highlightLinkIds[pipelineId] = highlightLinkIds[pipelineId] || [];
+	getUpstreamObjIdsFrom(nodeId, pipelineId, connectedNodeIds, connectedLinkIds) {
+		connectedNodeIds[pipelineId] = connectedNodeIds[pipelineId] || [];
+		connectedLinkIds[pipelineId] = connectedLinkIds[pipelineId] || [];
 
 		const currentPipeline = this.getAPIPipeline(pipelineId);
 		const node = currentPipeline.getNode(nodeId);
@@ -2018,11 +2018,11 @@ export default class ObjectModel {
 			nodeLinks.forEach((link) => {
 				// Prevent endless looping with circular graphs by detecting if we
 				// have encountered this link before.
-				if (!highlightLinkIds[pipelineId].includes(link.id)) {
+				if (!connectedLinkIds[pipelineId].includes(link.id)) {
 					const srcNode = currentPipeline.getNode(link.srcNodeId);
 
-					highlightLinkIds[pipelineId] = union(highlightLinkIds[pipelineId], [link.id]);
-					highlightNodeIds[pipelineId] = union(highlightNodeIds[pipelineId], [link.srcNodeId]);
+					connectedLinkIds[pipelineId] = union(connectedLinkIds[pipelineId], [link.id]);
+					connectedNodeIds[pipelineId] = union(connectedNodeIds[pipelineId], [link.srcNodeId]);
 
 					const srcNodeOutputPort = this.getSupernodeOutputPortForLink(srcNode, link);
 					if (srcNodeOutputPort) {
@@ -2030,14 +2030,14 @@ export default class ObjectModel {
 						const bindingNode = this.getAPIPipeline(snPipelineId).getNode(srcNodeOutputPort.subflow_node_ref);
 
 						if (bindingNode) {
-							highlightLinkIds[snPipelineId] = highlightLinkIds[snPipelineId] || [];
-							highlightNodeIds[snPipelineId] = highlightNodeIds[snPipelineId] || [];
-							highlightNodeIds[snPipelineId] = union(highlightNodeIds[snPipelineId], [bindingNode.id]);
+							connectedLinkIds[snPipelineId] = connectedLinkIds[snPipelineId] || [];
+							connectedNodeIds[snPipelineId] = connectedNodeIds[snPipelineId] || [];
+							connectedNodeIds[snPipelineId] = union(connectedNodeIds[snPipelineId], [bindingNode.id]);
 
-							this.getUpstreamObjIdsFrom(bindingNode.id, snPipelineId, highlightNodeIds, highlightLinkIds);
+							this.getUpstreamObjIdsFrom(bindingNode.id, snPipelineId, connectedNodeIds, connectedLinkIds);
 						}
 					} else {
-						this.getUpstreamObjIdsFrom(link.srcNodeId, pipelineId, highlightNodeIds, highlightLinkIds);
+						this.getUpstreamObjIdsFrom(link.srcNodeId, pipelineId, connectedNodeIds, connectedLinkIds);
 					}
 				}
 			});
@@ -2053,11 +2053,11 @@ export default class ObjectModel {
 					const supernodeLinks = parentPipeline.getAttachedLinksContainingTargetId(supernode.id);
 					supernodeLinks.forEach((supernodeLink) => {
 						if (supernodeLink.trgNodePortId === inputPort.id) {
-							highlightNodeIds[parentPipelineId] = highlightNodeIds[parentPipelineId] || [];
-							highlightLinkIds[parentPipelineId] = highlightLinkIds[parentPipelineId] || [];
+							connectedNodeIds[parentPipelineId] = connectedNodeIds[parentPipelineId] || [];
+							connectedLinkIds[parentPipelineId] = connectedLinkIds[parentPipelineId] || [];
 
-							highlightNodeIds[parentPipelineId] = union(highlightNodeIds[parentPipelineId], [supernodeLink.srcNodeId]);
-							highlightLinkIds[parentPipelineId] = union(highlightLinkIds[parentPipelineId], [supernodeLink.id]);
+							connectedNodeIds[parentPipelineId] = union(connectedNodeIds[parentPipelineId], [supernodeLink.srcNodeId]);
+							connectedLinkIds[parentPipelineId] = union(connectedLinkIds[parentPipelineId], [supernodeLink.id]);
 
 							// If srcNodeId is supernode, need to find the corresponding exit binding node.
 							if (parentPipeline.isSupernode(supernodeLink.srcNodeId)) {
@@ -2065,10 +2065,10 @@ export default class ObjectModel {
 								const upstreamSupernodeOutputPort = this.getSupernodeOutputPortForLink(upstreamSupernode, supernodeLink);
 								if (upstreamSupernodeOutputPort) {
 									const bindingNodeId = upstreamSupernodeOutputPort.subflow_node_ref;
-									this.getUpstreamObjIdsFrom(bindingNodeId, CanvasUtils.getSupernodePipelineId(upstreamSupernode), highlightNodeIds, highlightLinkIds);
+									this.getUpstreamObjIdsFrom(bindingNodeId, CanvasUtils.getSupernodePipelineId(upstreamSupernode), connectedNodeIds, connectedLinkIds);
 								}
 							} else {
-								this.getUpstreamObjIdsFrom(supernodeLink.srcNodeId, parentPipelineId, highlightNodeIds, highlightLinkIds);
+								this.getUpstreamObjIdsFrom(supernodeLink.srcNodeId, parentPipelineId, connectedNodeIds, connectedLinkIds);
 							}
 						}
 					});
@@ -2077,9 +2077,9 @@ export default class ObjectModel {
 		}
 	}
 
-	getDownstreamObjIdsFrom(nodeId, pipelineId, highlightNodeIds, highlightLinkIds) {
-		highlightNodeIds[pipelineId] = highlightNodeIds[pipelineId] || [];
-		highlightLinkIds[pipelineId] = highlightLinkIds[pipelineId] || [];
+	getDownstreamObjIdsFrom(nodeId, pipelineId, connectedNodeIds, connectedLinkIds) {
+		connectedNodeIds[pipelineId] = connectedNodeIds[pipelineId] || [];
+		connectedLinkIds[pipelineId] = connectedLinkIds[pipelineId] || [];
 
 		const currentPipeline = this.getAPIPipeline(pipelineId);
 		const node = currentPipeline.getNode(nodeId);
@@ -2091,11 +2091,11 @@ export default class ObjectModel {
 			nodeLinks.forEach((link) => {
 				// Prevent endless looping with circular graphs by detecting if we
 				// have encountered this link before.
-				if (!highlightLinkIds[pipelineId].includes(link.id)) {
+				if (!connectedLinkIds[pipelineId].includes(link.id)) {
 					const trgNode = currentPipeline.getNode(link.trgNodeId);
 
-					highlightLinkIds[pipelineId] = union(highlightLinkIds[pipelineId], [link.id]);
-					highlightNodeIds[pipelineId] = union(highlightNodeIds[pipelineId], [link.trgNodeId]);
+					connectedLinkIds[pipelineId] = union(connectedLinkIds[pipelineId], [link.id]);
+					connectedNodeIds[pipelineId] = union(connectedNodeIds[pipelineId], [link.trgNodeId]);
 
 					const trgNodeInputPort = this.getSupernodeInputPortForLink(trgNode, link);
 					if (trgNodeInputPort) {
@@ -2103,14 +2103,14 @@ export default class ObjectModel {
 						const bindingNode = this.getAPIPipeline(snPipelineId).getNode(trgNodeInputPort.subflow_node_ref);
 
 						if (bindingNode) {
-							highlightLinkIds[snPipelineId] = highlightLinkIds[snPipelineId] || [];
-							highlightNodeIds[snPipelineId] = highlightNodeIds[snPipelineId] || [];
-							highlightNodeIds[snPipelineId] = union(highlightNodeIds[snPipelineId], [bindingNode.id]);
+							connectedLinkIds[snPipelineId] = connectedLinkIds[snPipelineId] || [];
+							connectedNodeIds[snPipelineId] = connectedNodeIds[snPipelineId] || [];
+							connectedNodeIds[snPipelineId] = union(connectedNodeIds[snPipelineId], [bindingNode.id]);
 
-							this.getDownstreamObjIdsFrom(bindingNode.id, snPipelineId, highlightNodeIds, highlightLinkIds);
+							this.getDownstreamObjIdsFrom(bindingNode.id, snPipelineId, connectedNodeIds, connectedLinkIds);
 						}
 					} else {
-						this.getDownstreamObjIdsFrom(link.trgNodeId, pipelineId, highlightNodeIds, highlightLinkIds);
+						this.getDownstreamObjIdsFrom(link.trgNodeId, pipelineId, connectedNodeIds, connectedLinkIds);
 					}
 				}
 			});
@@ -2126,11 +2126,11 @@ export default class ObjectModel {
 						const supernodeLinks = parentPipeline.getAttachedLinksContainingSourceId(supernode.id);
 						supernodeLinks.forEach((supernodeLink) => {
 							if (supernodeLink.srcNodePortId === outputPort.id) {
-								highlightNodeIds[parentPipelineId] = highlightNodeIds[parentPipelineId] || [];
-								highlightLinkIds[parentPipelineId] = highlightLinkIds[parentPipelineId] || [];
+								connectedNodeIds[parentPipelineId] = connectedNodeIds[parentPipelineId] || [];
+								connectedLinkIds[parentPipelineId] = connectedLinkIds[parentPipelineId] || [];
 
-								highlightNodeIds[parentPipelineId] = union(highlightNodeIds[parentPipelineId], [supernodeLink.trgNodeId]);
-								highlightLinkIds[parentPipelineId] = union(highlightLinkIds[parentPipelineId], [supernodeLink.id]);
+								connectedNodeIds[parentPipelineId] = union(connectedNodeIds[parentPipelineId], [supernodeLink.trgNodeId]);
+								connectedLinkIds[parentPipelineId] = union(connectedLinkIds[parentPipelineId], [supernodeLink.id]);
 
 								// If trgNodeId is supernode, need to find the corresponding entry binding node.
 								if (parentPipeline.isSupernode(supernodeLink.trgNodeId)) {
@@ -2138,10 +2138,10 @@ export default class ObjectModel {
 									const downstreamSupernodeInputPort = this.getSupernodeInputPortForLink(downstreamSupernode, supernodeLink);
 									if (downstreamSupernodeInputPort) {
 										const bindingNodeId = downstreamSupernodeInputPort.subflow_node_ref;
-										this.getDownstreamObjIdsFrom(bindingNodeId, CanvasUtils.getSupernodePipelineId(downstreamSupernode), highlightNodeIds, highlightLinkIds);
+										this.getDownstreamObjIdsFrom(bindingNodeId, CanvasUtils.getSupernodePipelineId(downstreamSupernode), connectedNodeIds, connectedLinkIds);
 									}
 								} else {
-									this.getDownstreamObjIdsFrom(supernodeLink.trgNodeId, parentPipelineId, highlightNodeIds, highlightLinkIds);
+									this.getDownstreamObjIdsFrom(supernodeLink.trgNodeId, parentPipelineId, connectedNodeIds, connectedLinkIds);
 								}
 							}
 						});
