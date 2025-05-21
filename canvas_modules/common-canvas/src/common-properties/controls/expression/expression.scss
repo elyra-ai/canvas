@@ -87,7 +87,7 @@
 
 .elyra-CodeMirror.disabled {
 	.cm-editor {
-		opacity: 0.5;
+		pointer-events: none;
 	}
 }
 
@@ -105,9 +105,6 @@
 
 .properties-expression-editor {
 	border: 1px solid $layer-accent-01;
-	&.disabled {
-		opacity: 0.5;
-	}
 	&.error, &.warning {
 		border: 0;
 	}
