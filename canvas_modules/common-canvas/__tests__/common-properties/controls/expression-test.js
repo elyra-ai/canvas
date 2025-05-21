@@ -491,8 +491,9 @@ describe("expression-builder renders correctly", () => {
 			expect(expectedReturnType).to.eql(actualReturnType);
 		});
 	});
-	// TODO cannot find valuesTable
-	it.skip("expression builder displays table header descriptions in info icon", async() => {
+
+	// TODO Works in UI, not updating in test Values table field header returns "Value" instead of "CustomValue".
+	it.skip("expression builder displays table header descriptions in info icon", () => {
 		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(ExpressionParamdef, propertiesConfig, callbacks, propertiesInfo);
 		const wrapper = renderedObject.wrapper;
@@ -501,26 +502,32 @@ describe("expression-builder renders correctly", () => {
 		const expression = container.querySelector("div[data-id='properties-ctrl-expression']");
 		const expressionEditorBtn = expression.querySelector("button.properties-expression-button");
 		fireEvent.click(expressionEditorBtn);
+		const valuesTable = document.querySelector("div.properties-value-table-container");
+		expect(valuesTable).to.not.be.null;
 
-		const valuesTable = container.querySelectorAll("div.properties-value-table-container");
-		expect(valuesTable).to.have.length(1);
+		const dropDown = document.querySelector("div.properties-expression-field-select .cds--list-box__field");
+		fireEvent.click(dropDown);
+		const dropDownList = document.querySelectorAll("ul.cds--list-box__menu .cds--list-box__menu-item");
+		fireEvent.click(dropDownList[0]);
 
 		// Verify custom header label
 		const header = valuesTable.querySelector("div[data-role='properties-header-row']");
 		const headerLabel = header.querySelectorAll(".properties-vt-label-tip-icon");
 		expect(headerLabel).to.have.length(2); // include Add column
-		expect(header.textContent).to.equal("Add" +	harnessMessages[MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN]);
+
+		// Returns "Value" Instead of "CustomValue" - Working as expected in UI
+		expect(header.textContent).to.equal("Add" + harnessMessages[MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN]);
 
 		// Verify info icon
 		const headerInfoIcon = header.querySelectorAll(".properties-vt-info-icon-tip");
 		expect(headerInfoIcon).to.have.length(1);
 		const tooltipTrigger = headerInfoIcon[0].querySelector(".tooltip-trigger");
 		const tooltipId = tooltipTrigger.getAttribute("aria-labelledby");
-		let infoTip = container.querySelector(`div[data-id='${tooltipId}']`);
-		expect(infoTip.getAttribute("aria-hidden")).to.equal(true);
+		let infoTip = document.querySelector(`div[data-id='${tooltipId}']`);
+		expect(infoTip.getAttribute("aria-hidden")).to.equal("true");
 		fireEvent.click(tooltipTrigger);
-		infoTip = container.querySelector(`div[data-id='${tooltipId}']`);
-		expect(infoTip.getAttribute("aria-hidden")).to.equal(false);
+		infoTip = document.querySelector(`div[data-id='${tooltipId}']`);
+		expect(infoTip.getAttribute("aria-hidden")).to.equal("false");
 	});
 });
 
@@ -1280,10 +1287,9 @@ describe("expression toggle in tearsheet", () => {
 });
 
 describe("expression select field function tests", () => {
-	let wrapper;
 	beforeEach(() => {
 		reset();
-		wrapper = renderWithIntl(
+		renderWithIntl(
 			<ExpressionSelectFieldFunctions
 				controller={controller}
 				language={control.language}
@@ -1292,18 +1298,17 @@ describe("expression select field function tests", () => {
 			/>
 		);
 	});
-	// React Testing Library doesn't support instance.
-	it.skip("should return true if field name includes special characters", () => {
-		const instance = wrapper.find("ExpressionSelectFieldOrFunction").instance();
-		expect(instance.shouldQuoteField("field")).to.equal(false);
-		expect(instance.shouldQuoteField("FieldName")).to.equal(false);
+	it("should return true if field name includes special characters", () => {
+		const shouldQuoteFieldSpy = sinon.spy(ExpressionSelectFieldFunctions.prototype, "shouldQuoteField");
+		expect(shouldQuoteFieldSpy("field")).to.equal(false);
+		expect(shouldQuoteFieldSpy("FieldName")).to.equal(false);
 
-		expect(instance.shouldQuoteField("field space")).to.equal(true);
-		expect(instance.shouldQuoteField("field0")).to.equal(true);
-		expect(instance.shouldQuoteField("9field")).to.equal(true);
-		expect(instance.shouldQuoteField("field5number")).to.equal(true);
-		expect(instance.shouldQuoteField("field-dash")).to.equal(true);
-		expect(instance.shouldQuoteField("$field$")).to.equal(true);
-		expect(instance.shouldQuoteField("field_underscore")).to.equal(true);
+		expect(shouldQuoteFieldSpy("field space")).to.equal(true);
+		expect(shouldQuoteFieldSpy("field0")).to.equal(true);
+		expect(shouldQuoteFieldSpy("9field")).to.equal(true);
+		expect(shouldQuoteFieldSpy("field5number")).to.equal(true);
+		expect(shouldQuoteFieldSpy("field-dash")).to.equal(true);
+		expect(shouldQuoteFieldSpy("$field$")).to.equal(true);
+		expect(shouldQuoteFieldSpy("field_underscore")).to.equal(true);
 	});
 });
