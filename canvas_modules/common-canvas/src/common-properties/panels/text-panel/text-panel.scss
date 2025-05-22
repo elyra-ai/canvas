@@ -29,7 +29,6 @@
 		margin-bottom: $spacing-03;
 	}
 	&[disabled] {
-		opacity: 0.5;
 		pointer-events: none;
 	}
 	&.hide {
