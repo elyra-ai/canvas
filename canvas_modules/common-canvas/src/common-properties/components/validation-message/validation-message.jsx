@@ -28,6 +28,16 @@ export default class ValidationMessage extends React.Component {
 		if (!this.props.messageInfo || (this.props.tableOnly && !this.props.inTable)) {
 			return null;
 		}
+
+		// Check if this is a nested control, and if the messageInfo applies to that specific cell
+		if (this.props.inTable && this.props.messageInfo.propertyId?.propertyId) {
+			const currentCellRow = this.props.propertyId?.propertyId?.row;
+			const errorCellRow = this.props.messageInfo[currentCellRow];
+			if (!errorCellRow) {
+				return null;
+			}
+		}
+
 		const msgText = this.props.inTable ? null : <span>{this.props.messageInfo.text}</span>;
 		const icon = (<div className="icon">
 			{<Icon type={this.props.messageInfo.type} />}
@@ -57,8 +67,10 @@ export default class ValidationMessage extends React.Component {
 ValidationMessage.propTypes = {
 	messageInfo: PropTypes.shape({
 		text: PropTypes.string,
-		type: PropTypes.string
+		type: PropTypes.string,
+		propertyId: PropTypes.object
 	}),
+	propertyId: PropTypes.object,
 	state: PropTypes.string,
 	inTable: PropTypes.bool,
 	tableOnly: PropTypes.bool

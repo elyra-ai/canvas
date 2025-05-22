@@ -97,7 +97,7 @@ class TextfieldControl extends React.Component {
 					tableControl={this.props.tableControl}
 				/>
 				{/* // TODO this could conflict with the below ValidationMessage. */}
-				<ValidationMessage inTable={this.props.tableControl} state={""} messageInfo={errorMessage} />
+				<ValidationMessage inTable={this.props.tableControl} state={""} messageInfo={errorMessage} propertyId={this.props.propertyId} />
 			</div>);
 		} else {
 			const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
@@ -139,7 +139,7 @@ class TextfieldControl extends React.Component {
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				{textInput}
-				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} propertyId={this.props.propertyId} />
 			</div>
 		);
 	}

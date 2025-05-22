@@ -553,6 +553,9 @@ function getParamRefPropertyId(paramRef, controlPropertyId) {
 	}
 	if (controlPropertyId) {
 		baseParam.row = controlPropertyId.row;
+		if (controlPropertyId.propertyId) {
+			baseParam.propertyId = controlPropertyId.propertyId;
+		}
 	}
 	return baseParam;
 }
@@ -710,20 +713,23 @@ function _validateInput(propertyId, controller, control, showErrors) {
 					errorSet = false;
 				}
 				// Before setting an error message for table cell, clear the error message for table (if any)
+				// only if there are no nested propertyId
 				if (typeof msgPropertyId.row !== "undefined" || typeof msgPropertyId.col !== "undefined") {
 					const tablePropertyId = controller.convertPropertyId(msgPropertyId.name);
 					const tableErrorMessage = controller.getErrorMessage(tablePropertyId);
-					if (tableErrorMessage !== null) {
+					if (tableErrorMessage !== null && !msgPropertyId.propertyId) {
 						controller.updateErrorMessage(tablePropertyId, null);
 					}
+					// TODO need to clear subcell?
 				}
 
 				if (isError && !errorSet) {
+					// Need to also pass in propertyId that contains the subId? Or modify msgPropertyId
 					controller.updateErrorMessage(msgPropertyId, errorMessage);
 					if (isError) {
 						errorSet = true;
 					}
-				} else if ((!isError && !errorSet) || (!isError && errorSet)) {
+				} else if (!isError) {
 					const msg = controller.getErrorMessage(msgPropertyId, false, false, false);
 					if (!isEmpty(msg) && (msg.validation_id === errorMessage.validation_id)) {
 						controller.updateErrorMessage(msgPropertyId, DEFAULT_VALIDATION_MESSAGE);
