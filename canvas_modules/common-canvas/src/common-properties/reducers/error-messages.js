@@ -43,11 +43,15 @@ function messages(state = {}, action) {
 			const strRow = propertyId.row.toString();
 			if (typeof newState[propertyId.name][strRow] === "undefined") {
 				newState[propertyId.name][strRow] = {};
+			} else if (typeof newState[propertyId.name][strRow].displayError !== "undefined") {
+				delete newState[propertyId.name][strRow].displayError;
 			}
 			if (typeof propertyId.col !== "undefined") {
 				const strCol = propertyId.col.toString();
 				if (typeof newState[propertyId.name][strRow][strCol] === "undefined") {
 					newState[propertyId.name][strRow][strCol] = {};
+				} else if (typeof newState[propertyId.name][strRow][strCol].displayError !== "undefined") {
+					delete newState[propertyId.name][strRow][strCol].displayError;
 				}
 				newState[propertyId.name][strRow][strCol] = Object.assign({}, newState[propertyId.name][strRow][strCol], action.message.value);
 
@@ -62,20 +66,16 @@ function messages(state = {}, action) {
 		} else {
 			newState[propertyId.name] = Object.assign({}, action.message.value);
 		}
-		console.log("!!! newState set", newState);
 		return Object.assign({}, state, newState);
 	}
 	case CLEAR_ERROR_MESSAGE: {
 		const newState = state;
 		const propertyId = action.message.propertyId;
-		console.log("!!! cleared error", action);
 		if (newState[propertyId.name]) {
 			if (typeof propertyId.row !== "undefined") {
 				if (typeof propertyId.col !== "undefined") {
 					if (typeof propertyId.propertyId !== "undefined" && typeof propertyId.propertyId.row !== "undefined") { // clear subcell
 						clearNestedPropertyMessage(propertyId.propertyId, newState[propertyId.name][propertyId.row][propertyId.col]);
-						// TODO: If all nested properties cleared, remove the col error
-						console.log("!!! nested", newState[propertyId.name][propertyId.row][propertyId.col]);
 						clearColumnMessage(propertyId.col, newState[propertyId.name][propertyId.row]);
 					} else {
 						delete newState[propertyId.name][propertyId.row][propertyId.col];
@@ -95,7 +95,6 @@ function messages(state = {}, action) {
 				}
 			}
 		}
-		console.log("!!! cleared", newState);
 		return Object.assign({}, state, newState);
 	}
 	case SET_ERROR_MESSAGES: {
@@ -116,9 +115,15 @@ function updateNestedPropertyValue(propertyId, newState, value) {
 			if (typeof propertyId.propertyId !== "undefined") {
 				updateNestedPropertyValue(propertyId.propertyId, newState[strRow][strCol], Object.assign({}, value));
 			} else {
+				if (typeof newState[strRow][strCol].displayError !== "undefined") {
+					delete newState[strRow][strCol].displayError;
+				}
 				newState[strRow][strCol] = Object.assign({}, newState[strRow][strCol], value);
 			}
 		} else {
+			if (typeof newState[strRow].displayError !== "undefined") {
+				delete newState[strRow].displayError;
+			}
 			newState[strRow] = Object.assign({}, newState[strRow], value);
 		}
 	}

@@ -1517,7 +1517,6 @@ export default class PropertiesController {
 		if (filteredPipeline || filterHiddenDisable) {
 			messages = this._filterMessages(messages, filteredPipeline, filterHiddenDisable, filterSuccess);
 		}
-		console.log("!!! return", messages);
 		return messages;
 	}
 

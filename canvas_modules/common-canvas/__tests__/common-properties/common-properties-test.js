@@ -49,42 +49,42 @@ const localMessages = {
 };
 
 const validationErrorMessages = {
-	// "number_undefined": {
-	// 	"type": "error",
-	// 	"text": "You must enter a value for Undefined.",
-	// 	"validation_id": "required_number_undefined_272.9520234285945",
-	// 	"propertyId": {
-	// 		"name": "number_undefined"
-	// 	},
-	// 	"required": true
-	// },
-	// "number_null": {
-	// 	"type": "error",
-	// 	"text": "You must enter a value for Null.",
-	// 	"validation_id": "required_number_null_401.11526920064296",
-	// 	"propertyId": {
-	// 		"name": "number_null"
-	// 	},
-	// 	"required": true
-	// },
-	// "number_error": {
-	// 	"type": "error",
-	// 	"text": "Needs to be greaterThan 0",
-	// 	"validation_id": "number_error",
-	// 	"propertyId": {
-	// 		"name": "number_error"
-	// 	},
-	// 	"required": false
-	// },
-	// "number_warning": {
-	// 	"type": "warning",
-	// 	"text": "Needs to be greaterThan 1",
-	// 	"validation_id": "number_warning",
-	// 	"propertyId": {
-	// 		"name": "number_warning"
-	// 	},
-	// 	"required": false
-	// },
+	"number_undefined": {
+		"type": "error",
+		"text": "You must enter a value for Undefined.",
+		"validation_id": "required_number_undefined_272.9520234285945",
+		"propertyId": {
+			"name": "number_undefined"
+		},
+		"required": true
+	},
+	"number_null": {
+		"type": "error",
+		"text": "You must enter a value for Null.",
+		"validation_id": "required_number_null_401.11526920064296",
+		"propertyId": {
+			"name": "number_null"
+		},
+		"required": true
+	},
+	"number_error": {
+		"type": "error",
+		"text": "Needs to be greaterThan 0",
+		"validation_id": "number_error",
+		"propertyId": {
+			"name": "number_error"
+		},
+		"required": false
+	},
+	"number_warning": {
+		"type": "warning",
+		"text": "Needs to be greaterThan 1",
+		"validation_id": "number_warning",
+		"propertyId": {
+			"name": "number_warning"
+		},
+		"required": false
+	},
 	"number_table": {
 		"0": {
 			"0": {
@@ -822,20 +822,17 @@ describe("CommonProperties validates on close in flyout", () => {
 	});
 
 
-	it.only("Validate input when applyOnBlur=false the `Save` button pressed", async() => {
+	it("Validate input when applyOnBlur=false the `Save` button pressed", async() => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(numberfieldResource, { applyOnBlur: false });
 		wrapper = renderedObject.wrapper;
 		const controller = renderedObject.controller;
 		// should not have any messages to start
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
-		console.log("!!! test first one");
 		// click save and expect validation error messsages
 		const { container } = wrapper;
 		const button = container.querySelectorAll("button[data-id='properties-apply-button']")[0];
 		await waitFor(() => fireEvent.click(button));
-		console.log("!!! test before", controller.getErrorMessages(false, false, false, false));
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErrorMessages));
-		console.log("!!! test after");
 	});
 
 	it("Do not validate input when applyOnBlur=false the `Cancel` button pressed", () => {
