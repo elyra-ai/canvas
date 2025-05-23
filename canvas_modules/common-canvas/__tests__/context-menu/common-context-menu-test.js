@@ -403,6 +403,7 @@ function createCommonCanvas(config, canvasController, canvasParams, contextMenuC
 		tipHandler,
 		canvasParameters.showBottomPanel,
 		canvasParameters.showRightFlyout,
+		canvasParameters.rightFlyoutContent,
 		toolbarConfig,
 		notificationConfig,
 		contextMenuConfig,

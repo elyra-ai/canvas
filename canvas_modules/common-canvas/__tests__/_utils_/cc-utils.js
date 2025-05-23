@@ -50,7 +50,7 @@ export function createCommonCanvas(config, canvasController, canvasParams, toolb
 	const tipHandler = sinon.spy();
 	const contextMenuConfig = null;
 	const canvasParameters = canvasParams || {};
-	const wrapper = createIntlCommonCanvas(
+	const wrapper = createIntlCommonCanvasRTL(
 		config,
 		contextMenuHandler,
 		beforeEditActionHandler,
@@ -61,6 +61,7 @@ export function createCommonCanvas(config, canvasController, canvasParams, toolb
 		tipHandler,
 		canvasParameters.showBottomPanel,
 		canvasParameters.showRightFlyout,
+		canvasParameters.rightFlyoutContent,
 		toolbarConfig,
 		notificationConfig,
 		contextMenuConfig,
@@ -70,45 +71,45 @@ export function createCommonCanvas(config, canvasController, canvasParams, toolb
 	return wrapper;
 }
 
-export function createIntlCommonCanvas(
-	config,
-	contextMenuHandler,
-	beforeEditActionHandler,
-	editActionHandler,
-	clickActionHandler,
-	decorationActionHandler,
-	selectionChangeHandler,
-	tipHandler,
-	showBottomPanel,
-	showRightFlyout,
-	toolbarConfig,
-	notificationConfig,
-	contextMenuConfig,
-	canvasController) {
+// export function createIntlCommonCanvas(
+// 	config,
+// 	contextMenuHandler,
+// 	beforeEditActionHandler,
+// 	editActionHandler,
+// 	clickActionHandler,
+// 	decorationActionHandler,
+// 	selectionChangeHandler,
+// 	tipHandler,
+// 	showBottomPanel,
+// 	showRightFlyout,
+// 	toolbarConfig,
+// 	notificationConfig,
+// 	contextMenuConfig,
+// 	canvasController) {
 
 
-	const wrapper = mount(
-		<IntlProvider key="IntlProvider1" locale={ locale } messages={messages}>
-			<CommonCanvas
-				config={config}
-				contextMenuHandler={contextMenuHandler}
-				beforeEditActionHandler={beforeEditActionHandler}
-				editActionHandler={editActionHandler}
-				clickActionHandler={clickActionHandler}
-				decorationActionHandler={decorationActionHandler}
-				selectionChangeHandler={selectionChangeHandler}
-				tipHandler={tipHandler}
-				toolbarConfig={toolbarConfig}
-				notificationConfig={notificationConfig}
-				contextMenuConfig={contextMenuConfig}
-				showRightFlyout={showRightFlyout}
-				showBottomPanel={showBottomPanel}
-				canvasController={canvasController}
-			/>
-		</IntlProvider>
-	);
-	return wrapper;
-}
+// 	const wrapper = mount(
+// 		<IntlProvider key="IntlProvider1" locale={ locale } messages={messages}>
+// 			<CommonCanvas
+// 				config={config}
+// 				contextMenuHandler={contextMenuHandler}
+// 				beforeEditActionHandler={beforeEditActionHandler}
+// 				editActionHandler={editActionHandler}
+// 				clickActionHandler={clickActionHandler}
+// 				decorationActionHandler={decorationActionHandler}
+// 				selectionChangeHandler={selectionChangeHandler}
+// 				tipHandler={tipHandler}
+// 				toolbarConfig={toolbarConfig}
+// 				notificationConfig={notificationConfig}
+// 				contextMenuConfig={contextMenuConfig}
+// 				showRightFlyout={showRightFlyout}
+// 				showBottomPanel={showBottomPanel}
+// 				canvasController={canvasController}
+// 			/>
+// 		</IntlProvider>
+// 	);
+// 	return wrapper;
+// }
 
 export function createIntlCommonCanvasRTL(
 	config,
@@ -121,6 +122,7 @@ export function createIntlCommonCanvasRTL(
 	tipHandler,
 	showBottomPanel,
 	showRightFlyout,
+	rightFlyoutContent,
 	toolbarConfig,
 	notificationConfig,
 	contextMenuConfig,
@@ -142,6 +144,7 @@ export function createIntlCommonCanvasRTL(
 				notificationConfig={notificationConfig}
 				contextMenuConfig={contextMenuConfig}
 				showRightFlyout={showRightFlyout}
+				rightFlyoutContent={rightFlyoutContent}
 				showBottomPanel={showBottomPanel}
 				canvasController={canvasController}
 			/>
