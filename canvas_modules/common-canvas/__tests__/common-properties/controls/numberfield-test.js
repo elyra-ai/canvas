@@ -260,14 +260,13 @@ describe("numberfield control works correctly", () => {
 		fireEvent.change(doubleNumber, { target: { value: "0.3" } });
 		expect(controller.getPropertyValue(numPropertyId)).to.equal(0.3);
 	});
-	// input has unexpected behavior
-	it.skip("should not allow a bad value to be set in a field", async() => {
+	it("should not allow a bad value to be set in a field", async() => {
 		const numPropertyId = { name: "number_int" };
 		const integerNumber = wrapper.container.querySelector("div[data-id='properties-number_int'] input");
 		fireEvent.change(integerNumber, { target: { value: "" } });
 		integerNumber.setAttribute("badInput", true);
 		await waitFor(() => {
-			expect(controller.getPropertyValue(numPropertyId)).to.equal(10);
+			expect(controller.getPropertyValue(numPropertyId)).to.equal(null);
 		});
 	});
 	it("should render the correct default value ", () => {
@@ -324,7 +323,8 @@ describe("numberfield control works correctly", () => {
 			expect(numberfieldInTableCell.querySelectorAll(".cds--number__controls")).to.have.length(0);
 		});
 	});
-	// input has unexpected behavior
+	// Skipping this test due to limitations with testing invalid input on Carbon's <input type="number">
+	// React Testing Library and jsdom do not allow setting truly invalid number strings (e.g., "44e+-")
 	it.skip("should display error when invalid number is entered", async() => {
 		const numPropertyId = { name: "number_int" };
 		expect(controller.getPropertyValue(numPropertyId)).to.equal(10);
