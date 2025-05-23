@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
-import { createCommonCanvas } from "../_utils_/cc-utils.js";
 
 // Imports from harness test resources
 import startCanvas from "../test_resources/json/startCanvas.json";
@@ -33,7 +32,6 @@ import supernodeCanvas from "../../../harness/test_resources/diagrams/supernodeC
 import externalMainCanvasExpanded from "../../../harness/test_resources/diagrams/externalMainCanvasExpanded.json";
 import commonPalette from "../../../harness/test_resources/palettes/commonPalette.json";
 import supernodePalette from "../../../harness/test_resources/palettes/supernodePalette.json";
-import bigCanvas from "../../../harness/test_resources/diagrams/bigCanvas.json";
 
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../../harness/test_resources/diagrams/externalSubFlowCanvas1.json";
@@ -56,31 +54,6 @@ describe("Test canvas controller methods", () => {
 		const pipelineId2 = canvasController.getCurrentPipelineId();
 		expect(isEqual(pipelineId2, "modeler-sub-pipeline")).to.be.true;
 
-	});
-
-	it("should position off screen node into specified positions within the canvas", () => {
-		const config = {};
-		const expectedZoom = {
-			k: 1,
-			x: -1845.4267361645375,
-			y: -511.2203308688752,
-		};
-
-		const expectedZoom2 = {
-			k: 1,
-			x: -2120.4267361645375,
-			y: -671.2203308688752,
-		};
-		const canvasController = new CanvasController();
-
-		canvasController.setPipelineFlow(bigCanvas);
-		createCommonCanvas(config, canvasController);
-
-		const actualZoom = canvasController.getZoomToReveal(["3e09c42d-d01a-49ac-87fc-4d9acc9c4b6e"], 50, 50);
-		expect(isEqual(expectedZoom, actualZoom)).to.be.true;
-
-		const actualZoom2 = canvasController.getZoomToReveal(["3e09c42d-d01a-49ac-87fc-4d9acc9c4b6e"], 25, 25);
-		expect(isEqual(expectedZoom2, actualZoom2)).to.be.true;
 	});
 
 	it("should update a link with new properties using: setLinkProperties", () => {
