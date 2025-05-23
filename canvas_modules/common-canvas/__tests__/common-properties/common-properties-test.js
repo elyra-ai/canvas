@@ -35,7 +35,7 @@ import { IntlProvider } from "react-intl";
 import { AiGenerate, Password } from "@carbon/icons-react";
 
 import { CARBON_MODAL_SIZE_XSMALL, CARBON_MODAL_SIZE_SMALL, CARBON_MODAL_SIZE_LARGE } from "./../../src/common-properties/constants/constants";
-import { cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, screen } from "@testing-library/react";
 
 const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
@@ -822,7 +822,7 @@ describe("CommonProperties validates on close in flyout", () => {
 	});
 
 
-	it("Validate input when applyOnBlur=false the `Save` button pressed", async() => {
+	it("Validate input when applyOnBlur=false the `Save` button pressed", () => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(numberfieldResource, { applyOnBlur: false });
 		wrapper = renderedObject.wrapper;
 		const controller = renderedObject.controller;
@@ -831,7 +831,7 @@ describe("CommonProperties validates on close in flyout", () => {
 		// click save and expect validation error messsages
 		const { container } = wrapper;
 		const button = container.querySelectorAll("button[data-id='properties-apply-button']")[0];
-		await waitFor(() => fireEvent.click(button));
+		fireEvent.click(button);
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErrorMessages));
 	});
 

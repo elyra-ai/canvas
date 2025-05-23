@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -720,11 +720,9 @@ function _validateInput(propertyId, controller, control, showErrors) {
 					if (tableErrorMessage !== null && !msgPropertyId.propertyId) {
 						controller.updateErrorMessage(tablePropertyId, null);
 					}
-					// TODO need to clear subcell?
 				}
 
 				if (isError && !errorSet) {
-					// Need to also pass in propertyId that contains the subId? Or modify msgPropertyId
 					controller.updateErrorMessage(msgPropertyId, errorMessage);
 					if (isError) {
 						errorSet = true;

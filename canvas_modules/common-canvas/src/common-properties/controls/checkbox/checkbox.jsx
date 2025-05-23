@@ -88,7 +88,11 @@ class CheckboxControl extends React.Component {
 					/>
 					{tooltipIcon}
 				</div>
-				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)} />
+				<ValidationMessage inTable={this.props.tableControl}
+					state={this.props.state}
+					messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)}
+					propertyId={this.props.propertyId}
+				/>
 			</div>
 		);
 	}

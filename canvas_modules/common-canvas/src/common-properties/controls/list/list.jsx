@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -191,7 +191,7 @@ class ListControl extends AbstractTable {
 			<div className={tableClassName}>
 				{table}
 			</div>
-			<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
+			<ValidationMessage state={this.props.state} inTable={this.props.tableControl} messageInfo={this.props.messageInfo} propertyId={this.props.propertyId} />
 		</div>);
 
 		return (
@@ -219,6 +219,7 @@ ListControl.propTypes = {
 	controller: PropTypes.object.isRequired,
 	controlItem: PropTypes.element,
 	rightFlyout: PropTypes.bool,
+	tableControl: PropTypes.bool,
 	selectedRows: PropTypes.array, // set by redux
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux

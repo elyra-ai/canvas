@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,13 +115,17 @@ function updateNestedPropertyValue(propertyId, newState, value) {
 			if (typeof propertyId.propertyId !== "undefined") {
 				updateNestedPropertyValue(propertyId.propertyId, newState[strRow][strCol], Object.assign({}, value));
 			} else {
-				if (typeof newState[strRow][strCol].displayError !== "undefined") {
+				if (typeof newState[strRow][strCol] === "undefined") {
+					newState[strRow][strCol] = {};
+				} else if (typeof newState[strRow][strCol].displayError !== "undefined") {
 					delete newState[strRow][strCol].displayError;
 				}
 				newState[strRow][strCol] = Object.assign({}, newState[strRow][strCol], value);
 			}
 		} else {
-			if (typeof newState[strRow].displayError !== "undefined") {
+			if (typeof newState[strRow] === "undefined") {
+				newState[strRow] = {};
+			} else if (typeof newState[strRow].displayError !== "undefined") {
 				delete newState[strRow].displayError;
 			}
 			newState[strRow] = Object.assign({}, newState[strRow], value);
