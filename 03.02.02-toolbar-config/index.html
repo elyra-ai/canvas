@@ -2917,7 +2917,7 @@
 <p><img src="../assets/cc-toolbar.png" width="500" /></p>
 <p>If the toolbar config is provided, it configures which action buttons and dividers are shown in the toolbar. A toolbar will be displayed for Common Canvas if the canvas configuration field <a href="../03.02.01-canvas-config/#enabletoolbarlayout"><code>enableToolbarLayout</code></a> is set to &ldquo;Top&rdquo; (which is the default).</p>
 <p>The toolbar config object specifies actions for the left and right side of the toolbar. The application can also optionally tell the toolbar not to handle the enable/disable state for the standard toolbar buttons using <code>overrideAutoEnableDisable</code>.</p>
-<p>When the user clicks one of the action buttons the action will be performed either by Common Canvas or by the application, if it is an applicaiton specific action. In both cases, Common Canvas will call the <a href="../03.03.02-before-edit-action-handler/">beforeEditActionHandler</a> and <a href="../03.03.03-edit-action-handler/">editActionHandler</a> callbacks.</p>
+<p>When the user clicks one of the action buttons the action will be performed either by Common Canvas or by the application, if it is an application specific action. In both cases, Common Canvas will call the <a href="../03.03.02-before-edit-action-handler/">beforeEditActionHandler</a> and <a href="../03.03.03-edit-action-handler/">editActionHandler</a> callbacks.</p>
 <p>The toolbar supports a number of <a href="../03.05-keyboard-support/#when-focus-is-on-the-toolbar">keyboard shortcuts</a> for accessibility</p>
 <p>The <code>leftBar</code> and <code>rightBar</code> fields contain an array of action objects: one element for each toolbar item. Here is an example, toolbar configuration object:</p>
 <p><div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Bookmark</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@carbon/react/icons&quot;</span><span class="p">;</span>
@@ -3026,7 +3026,10 @@ Where:</p>
 <p><img src="../assets/cc-toolbar-action-kinds.png" width="350" /></p>
 </li>
 <li>
-<p><strong>tooltip</strong> - A string or JSX object. The tooltip that will be displayed for the action. If this is not provided the label will be displayed as the tooltip instead.</p>
+<p><strong>tooltip</strong> - A string or JSX object. The tooltip that will be displayed for the action on hover. If this is not provided the label will be displayed as the tooltip instead.</p>
+<p><img src="../assets/cc-toolbar-action-tooltip.png" width="100" /></p>
+<p>JSX in the tooltip field can be used to display buttons that offer extended functions to the user. The action button can still be clicked by the user to perform the default action (in this case Save):</p>
+<p><img src="../assets/cc-toolbar-action-tooltip-buttons.png" width="180" /></p>
 </li>
 <li>
 <p><strong>isSelected</strong> - A boolean. When set to true the toolbar button displays a selection highlight. This is displayed as either a blue bar along the bottom border of buttons in the toolbar</p>
@@ -3035,7 +3038,7 @@ Where:</p>
 <p>or a checkmark for items that appear in sub-menus.</p>
 <p><img src="../assets/cc-toolbar-action-selected-menu.png" width="180" /></p>
 <p>When applied This is useful for implementing a button that switches on and off a mode, as opposed to a regular button which does not have any state.</p>
-<p>This property can also be used to indicate a current state between a number of mutually exclusive settings. In this case, one button would be added to the toolbar for each setting and then the <code>isSelected</code> property would be set to true for the setting that is currently active. Then, when the user clicks a different option in the set, the application code would set <code>isSelected</code> to true for that button and set it to false for the previously selected button. (This would give behavior like a radio button set.)</p>
+<p>This field can also be used to indicate a current state between a number of mutually exclusive settings. In this case, one button would be added to the toolbar for each setting and then the <code>isSelected</code> field would be set to true for the setting that is currently active. Then, when the user clicks a different option in the set, the application code would set <code>isSelected</code> to true for that button and set it to false for the previously selected button. (This would give behavior like a radio button set.)</p>
 </li>
 <li>
 <p><strong>className</strong> - This a string that will be appended to the <code>class</code> field for the top-level <code>&lt;div&gt;</code> that surrounds the action button. This can be used to set application-specific CSS for the button.</p>

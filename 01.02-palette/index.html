@@ -777,45 +777,36 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#populating-the-palette" class="md-nav__link">
+  <a href="#palette-display-options" class="md-nav__link">
     <span class="md-ellipsis">
-      Populating the palette
+      Palette display options
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#palette-configuration" class="md-nav__link">
+  <a href="#palette-icon" class="md-nav__link">
     <span class="md-ellipsis">
-      Palette configuration
+      Palette Icon
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#palette-operation" class="md-nav__link">
+  <a href="#palette-search" class="md-nav__link">
     <span class="md-ellipsis">
-      Palette operation
+      Palette Search
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#search" class="md-nav__link">
+  <a href="#palette-header" class="md-nav__link">
     <span class="md-ellipsis">
-      Search
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recommendation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Recommendation
+      Palette Header
     </span>
   </a>
   
@@ -2842,45 +2833,36 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#populating-the-palette" class="md-nav__link">
+  <a href="#palette-display-options" class="md-nav__link">
     <span class="md-ellipsis">
-      Populating the palette
+      Palette display options
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#palette-configuration" class="md-nav__link">
+  <a href="#palette-icon" class="md-nav__link">
     <span class="md-ellipsis">
-      Palette configuration
+      Palette Icon
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#palette-operation" class="md-nav__link">
+  <a href="#palette-search" class="md-nav__link">
     <span class="md-ellipsis">
-      Palette operation
+      Palette Search
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#search" class="md-nav__link">
+  <a href="#palette-header" class="md-nav__link">
     <span class="md-ellipsis">
-      Search
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recommendation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Recommendation
+      Palette Header
     </span>
   </a>
   
@@ -2913,43 +2895,42 @@
   <h1>Palette</h1>
 
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
-<p>Common Canvas can display a palette which appears in the left flyout panel. The palette can display a set of palette nodes (sometimes called node templates) split into different categories.</p>
-<p><img src="../assets/cc-palette.gif" width="500" /></p>
+<p>In Common Canvas, flows can be created by the user dragging (or double-clicking) nodes out of the palette into the flow editor where they can be linked up to other nodes.</p>
+<p>Consequently, one of the main features of Common Canvas is that the palette nodes can be specified by the application, allowing users to build flows from a palette of nodes appropriate for the application&rsquo;s problem domain.</p>
+<p>Common Canvas can display a palette which, by default, appears in the left flyout panel. The palette can display a set of palette nodes (sometimes called node templates) split into different categories which are displayed in an Accordion component. Tooltips are displayed when the mouse cursor is hovered over each category and node.</p>
+<p><img src="../assets/cc-palette.gif" width="400" /></p>
 <p>The user can drag any of the palette nodes from the palette onto the canvas to create a new instance of a node on the canvas. The user can then join nodes together by creating link lines.</p>
 <p><img src="../assets/cc-flow-editor-create-node.gif" width="500" /></p>
 <p>Alternatively, the user can double click (or single click if <a href="../03.02.01-canvas-config/#enablesingleclickaddfrompalette"><code>enableSingleClickAddFromPalette</code></a> is set to <code>true</code>) node templates to add, and automatically join, them to the current flow.</p>
 <p>When a palette node is added in this way, Common Canvas will look for the node at the end of the current flow of nodes and will add the node to the canvas to the right of the end node in the flow. Common Canvas will also automatically join the nodes together by creating a new link line. The <a href="../03.02.01-canvas-config/#enableautolinkonlyfromselnodes"><code>enableAutoLinkOnlyFromSelNodes</code></a> canvas configuartion field can be used to customize which node is chosen for automatic linking.</p>
 <p><img src="../assets/cc-palette-double-click.gif" width="500" /></p>
-<h2 id="populating-the-palette">Populating the palette<a class="headerlink" href="#populating-the-palette" title="Permanent link">&para;</a></h2>
-<p>The host application must tell Common Canvas what node templates and categories it wants the user to see in the palette. This is done by providing Common Canvas with a palette (JavaScript) object by calling the canvas-controller <code>setPipelineFlowPalette(palette)</code> method. The palette object is often read from a JSON document stored in the host application&rsquo;s repository or it can be automatically generated.</p>
-<p>The palette object should conform to the <a href="https://github.com/elyra-ai/pipeline-schemas/blob/412d70176953ed9ac2e6a03f7135b09b7565fc5d/common-canvas/palette/palette-v3-schema.json">palette schema</a>. The host application can ensure that palette conforms to the schema by switching on <a href="../03.02.01-canvas-config/#schemavalidation">schema validation</a> in the canvas configuration.</p>
-<h2 id="palette-configuration">Palette configuration<a class="headerlink" href="#palette-configuration" title="Permanent link">&para;</a></h2>
-<p>There are a number of configuration options that control the palette that are specified in the canvas config object:</p>
-<ul>
-<li><a href="../03.02.01-canvas-config/#enablepalettelayout">enablePaletteLayout</a></li>
-<li><a href="../03.02.01-canvas-config/#enablenarrowpalette">enableNarrowPalette</a></li>
-<li><a href="../03.02.01-canvas-config/#enablesingleclickaddfrompalette">enableSingleClickAddFromPalette</a></li>
-<li><a href="../03.02.01-canvas-config/#enableautolinkonlyfromselnodes">enableAutoLinkOnlyFromSelNodes</a></li>
-<li><a href="../03.02.01-canvas-config/#enablepaletteheader">enablePaletteHeader</a></li>
-</ul>
-<h2 id="palette-operation">Palette operation<a class="headerlink" href="#palette-operation" title="Permanent link">&para;</a></h2>
-<p>The palette contents can be manipulated calling these canvas-controller <a href="../03.04-canvas-controller/#palette-methods">palette methods</a></p>
-<p>The palette can be opened and closed using these canvas-controller <a href="../03.04-canvas-controller/#palette-methods_1">operational methods</a></p>
-<h2 id="search">Search<a class="headerlink" href="#search" title="Permanent link">&para;</a></h2>
-<p>The user can enter a search string into the Search field at the top of the palette. The behavior is as follows:</p>
-<ol>
-<li>When the search field is empty, the palette shows categories which can be expanded to show the node templates within the expanded category.</li>
-<li>As the user enters characters into the search field, Common Canvas immediately searches through the node template labels, node template descriptions and category labels for the characters entered and finds a subset of the node templates that match the search string. Common Canvas then replaces the category-based view of the palette with a list of node templates that match the search criteria. In this view the node templates also include the node description under the node label.</li>
-<li>The search is case insensitive.</li>
-<li>The search text is highlighted wherever it appears in the labels, descriptions or category labels.</li>
-<li>Common Canvas uses a ranking algorithm to order the display of node templates so those most relevant to the search text are positioned at the top of the list. The ranking algorithm puts more weight on those node templates where the search text appears in the label than if the text appears in the description or the category label.</li>
-<li>If the user enters words into the search field (separated by spaces), Common Canvas searches for each word separately. Therefore, if say the user entered &ldquo;data import&rdquo; into the search field, Common Canvas would find a node with &ldquo;<code>Import</code> <code>Data</code>&rdquo; as the label or even a node with a description that said &ldquo;This node does lots of things and also <code>data</code> can be <code>import</code>ed.&rdquo;</li>
-<li>Nodes that have text which have hits on multiple words are ranked more highly than node templates whose text only contains one search word.</li>
-<li>Common Canvas uses a debounce function so that, if the user types the search string very quickly, Common Canvas does not perform multiple searches for each key press but only runs a full search when rapid typing has ended.</li>
-</ol>
-<h2 id="recommendation">Recommendation<a class="headerlink" href="#recommendation" title="Permanent link">&para;</a></h2>
-<p>According to the schema, node template descriptions are not mandatory in the palette object. However, it is recommended you provide descriptions for each of your node templates. The reason for this is that, the search function searches through node template descriptions, as well as node template labels and category labels. This means you can write your node template descriptions to contain appropriate keywords that a user might search for when looking for a node.</p>
-<p>For example, if there is a node template called ‘Import Data’ and that node could import comma-separated files you could add ‘comma-separated’ and ‘csv’ into your description for that node template. If the user entered <code>comma</code> in the search field the ‘Import Data’ node template would be shown in the search results even though <code>comma</code> does not appear in the node template label.</p>
+<h2 id="palette-display-options">Palette display options<a class="headerlink" href="#palette-display-options" title="Permanent link">&para;</a></h2>
+<p>The palette can be open or closed. When open it is shown in a wide left-flyout so the node and category labels are visible:</p>
+<p><img src="../assets/cc-palette-open.png" width="200" /></p>
+<p>When closed, the application can configure the palette to be either narrow or not displayed at all.</p>
+<table>
+<thead>
+<tr>
+<th>Narrow</th>
+<th>None</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="../assets/cc-palette-closed-narrow.png" width="120" /></td>
+<td><img src="../assets/cc-palette-closed-none.png" width="125" /></td>
+</tr>
+</tbody>
+</table>
+<h2 id="palette-icon">Palette Icon<a class="headerlink" href="#palette-icon" title="Permanent link">&para;</a></h2>
+<p>When a palette is specified by the application, Common Canvas automatically adds a toggle-palette action button to the toolbar. The button can be used to open and close the palette:</p>
+<p><img src="../assets/cc-palette-icon.gif" width="320" /></p>
+<h2 id="palette-search">Palette Search<a class="headerlink" href="#palette-search" title="Permanent link">&para;</a></h2>
+<p>The user can enter one or more search strings into the palette&rsquo;s Search field. Common Canvas will search the labels, descriptions and categories of the nodes in the palette, and present the set of nodes that were found. The nodes are ranked in order of importance based on how often the search strings appear in the node&rsquo;s text:</p>
+<p><img src="../assets/cc-palette-search.gif" width="400" /></p>
+<h2 id="palette-header">Palette Header<a class="headerlink" href="#palette-header" title="Permanent link">&para;</a></h2>
+<p>Additional content can be added by the application at the top of the palette between the Search area and the categories. In the example below, a button has been added which, when clicked, causes the application to display its own data asset browser.</p>
+<p><img src="../assets/cc-palette-header.png" width="220" /></p>
 
 
 

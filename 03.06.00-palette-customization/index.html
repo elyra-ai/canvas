@@ -1937,18 +1937,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#palette-configuration" class="md-nav__link">
+  <a href="#populating-the-palette" class="md-nav__link">
     <span class="md-ellipsis">
-      Palette Configuration
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#palette-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Palette methods
+      Populating the palette
     </span>
   </a>
   
@@ -1964,9 +1955,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#palette-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Palette configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#palette-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Palette methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#example" class="md-nav__link">
     <span class="md-ellipsis">
       Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#search" class="md-nav__link">
+    <span class="md-ellipsis">
+      Search
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendation
     </span>
   </a>
   
@@ -2821,18 +2848,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#palette-configuration" class="md-nav__link">
+  <a href="#populating-the-palette" class="md-nav__link">
     <span class="md-ellipsis">
-      Palette Configuration
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#palette-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Palette methods
+      Populating the palette
     </span>
   </a>
   
@@ -2848,9 +2866,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#palette-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Palette configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#palette-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Palette methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#example" class="md-nav__link">
     <span class="md-ellipsis">
       Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#search" class="md-nav__link">
+    <span class="md-ellipsis">
+      Search
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendation
     </span>
   </a>
   
@@ -2881,20 +2935,44 @@
 
 
 <h1 id="palette-customization">Palette Customization<a class="headerlink" href="#palette-customization" title="Permanent link">&para;</a></h1>
-<p>In Common Canvas, flows can be created by the user dragging (or double-clicking) nodes out of the palette into the flow editor where they can be linked up to other nodes.</p>
-<p>Consequently, one of the main features of Common Canvas is that the palette nodes can be specified by the application, allowing users to build flows from a palette of nodes appropriate for the applicaiton&rsquo;s problem domain. Examining sample applicaitons in the test harness will show that the different applications have their own palettes which are different from each other.</p>
-<p>The palette definition is provided to Common Canvas as a JavaScript object consisting of an array of category objects with each category containing an array of node templates (noede_types).</p>
-<p>The palette object can be specified to the Common Canvas by the application calling the</p>
+<p>The  <a href="../01.02-palette/">Palette&rsquo;s</a> appearance and behaviour can be customized using configuration options and various canvas controller methods.</p>
+<h3 id="populating-the-palette">Populating the palette<a class="headerlink" href="#populating-the-palette" title="Permanent link">&para;</a></h3>
+<p>The palette definition is a JavaScript object consisting of an array of category objects with each category containing an array of node templates (node_types).</p>
+<p>This object can be specified to Common Canvas by calling the canvas-controller method:</p>
 <div class="highlight"><pre><span></span><code>   canvasController.setPipelineFlowPalette(palette);
 </code></pre></div>
-<h3 id="palette-configuration">Palette Configuration<a class="headerlink" href="#palette-configuration" title="Permanent link">&para;</a></h3>
-<p>The Canvas Config has a number of <a href="../03.02.01-canvas-config/#palette">config options</a> that can be specified.</p>
-<h3 id="palette-methods">Palette methods<a class="headerlink" href="#palette-methods" title="Permanent link">&para;</a></h3>
-<p>The Canvas Controller provides numerous <a href="../03.04-canvas-controller/#palette-methods">customization methods</a> that can be used to customize the palette contents. An some <a href="../03.04-canvas-controller/#palette-methods_1">operational methods</a> that can be used to open close and query the state of the palette.</p>
+<p>The palette object is often read from a JSON document stored in the host application&rsquo;s repository or it can be automatically generated.</p>
 <h3 id="json-schema">JSON Schema<a class="headerlink" href="#json-schema" title="Permanent link">&para;</a></h3>
-<p>The structure of the palette object is specified in the palette JSON schema which is here -&gt; <a href="https://github.com/elyra-ai/pipeline-schemas/blob/main/common-canvas/palette/palette-v3-schema.json">https://github.com/elyra-ai/pipeline-schemas/blob/main/common-canvas/palette/palette-v3-schema.json</a></p>
+<p>The palette object must conform to the <a href="https://github.com/elyra-ai/pipeline-schemas/blob/412d70176953ed9ac2e6a03f7135b09b7565fc5d/common-canvas/palette/palette-v3-schema.json">palette schema</a>.</p>
+<p>The host application can ensure that the palette conforms to the schema by switching <a href="../03.02.01-canvas-config/#schemavalidation">schema validation</a> to <code>true</code> in the canvas configuration. If the palette is not valid, errors will be displayed in the debugger console.</p>
+<h3 id="palette-configuration">Palette configuration<a class="headerlink" href="#palette-configuration" title="Permanent link">&para;</a></h3>
+<p>The following <a href="../03.02.01-canvas-config/#palette">canvas config options</a> can be specified to control aspects of the palette:</p>
+<ul>
+<li><a href="../03.02.01-canvas-config/#enablepalettelayout">enablePaletteLayout</a> - show or hide the palette</li>
+<li><a href="../03.02.01-canvas-config/#enablenarrowpalette">enableNarrowPalette</a> - display a narrow palette or nothing when the paletete is closed</li>
+<li><a href="../03.02.01-canvas-config/#enablesingleclickaddfrompalette">enableSingleClickAddFromPalette</a> - allow a single-click on a palette node to automatically add it to the canvas</li>
+<li><a href="../03.02.01-canvas-config/#enableautolinkonlyfromselnodes">enableAutoLinkOnlyFromSelNodes</a> - controls the nodes to which automatically-added nodes are linked.</li>
+<li><a href="../03.02.01-canvas-config/#enablepaletteheader">enablePaletteHeader</a> - allows the application to add additional content to the palette</li>
+</ul>
+<h3 id="palette-methods">Palette methods<a class="headerlink" href="#palette-methods" title="Permanent link">&para;</a></h3>
+<p>The Canvas Controller provides numerous <a href="../03.04-canvas-controller/#palette-methods">customization methods</a> that can be used to customize the palette contents. There are also some <a href="../03.04-canvas-controller/#palette-methods_1">operational methods</a> that can be used to open, close and query the state of the palette.</p>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
-<p>The “Flows” sample app in the test harness as its own palette. The files for that sample app here: <a href="https://github.com/elyra-ai/canvas/tree/main/canvas_modules/harness/src/client/components/custom-canvases/flows">https://github.com/elyra-ai/canvas/tree/main/canvas_modules/harness/src/client/components/custom-canvases/flows</a>   This folder contains all the files that make up the Flows sample app. The flows-palette.json file in the folder can be studied to see how it results in the palette displayed.</p>
+<p>The “Flows” sample app in the test harness as its own palette. The files for that sample app here: <a href="https://github.com/elyra-ai/canvas/tree/main/canvas_modules/harness/src/client/components/custom-canvases/flows">https://github.com/elyra-ai/canvas/tree/main/canvas_modules/harness/src/client/components/custom-canvases/flows</a> This folder contains all the files that make up the Flows sample app. The flows-palette.json file in the folder can be studied to see how it results in the palette displayed.</p>
+<h2 id="search">Search<a class="headerlink" href="#search" title="Permanent link">&para;</a></h2>
+<p>The user can enter a search string into the Search field at the top of the palette. The behavior is as follows:</p>
+<ol>
+<li>When the search field is empty, the palette shows categories which can be expanded to show the node templates within the expanded category.</li>
+<li>As the user enters characters into the search field, Common Canvas immediately searches through the node template labels, node template descriptions and category labels for the characters entered and finds a subset of the node templates that match the search string. Common Canvas then replaces the category-based view of the palette with a list of node templates that match the search criteria. In this view the node templates also include the node description under the node label.</li>
+<li>The search is case insensitive.</li>
+<li>The search text is highlighted wherever it appears in the labels, descriptions or category labels.</li>
+<li>Common Canvas uses a ranking algorithm to order the display of node templates so those most relevant to the search text are positioned at the top of the list. The ranking algorithm puts more weight on those node templates where the search text appears in the label than if the text appears in the description or the category label.</li>
+<li>If the user enters words into the search field (separated by spaces), Common Canvas searches for each word separately. Therefore, if say the user entered &ldquo;data import&rdquo; into the search field, Common Canvas would find a node with &ldquo;<code>Import</code> <code>Data</code>&rdquo; as the label or even a node with a description that said &ldquo;This node does lots of things and also <code>data</code> can be <code>import</code>ed.&rdquo;</li>
+<li>Nodes that have text which have hits on multiple words are ranked more highly than node templates whose text only contains one search word.</li>
+<li>Common Canvas uses a debounce function so that, if the user types the search string very quickly, Common Canvas does not perform multiple searches for each key press but only runs a full search when rapid typing has ended.</li>
+</ol>
+<h2 id="recommendation">Recommendation<a class="headerlink" href="#recommendation" title="Permanent link">&para;</a></h2>
+<p>According to the schema, node template descriptions are not mandatory in the palette object. However, it is recommended you provide descriptions for each of your node templates. The reason for this is that, the search function searches through node template descriptions, as well as node template labels and category labels. This means you can write your node template descriptions to contain appropriate keywords that a user might search for when looking for a node.</p>
+<p>For example, if there is a node template called ‘Import Data’ and that node could import comma-separated files you could add ‘comma-separated’ and ‘csv’ into your description for that node template. If the user entered <code>comma</code> in the search field the ‘Import Data’ node template would be shown in the search results even though <code>comma</code> does not appear in the node template label.</p>
 
 
 
