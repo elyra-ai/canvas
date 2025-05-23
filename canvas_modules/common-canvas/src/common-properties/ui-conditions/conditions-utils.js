@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -553,6 +553,9 @@ function getParamRefPropertyId(paramRef, controlPropertyId) {
 	}
 	if (controlPropertyId) {
 		baseParam.row = controlPropertyId.row;
+		if (controlPropertyId.propertyId) {
+			baseParam.propertyId = controlPropertyId.propertyId;
+		}
 	}
 	return baseParam;
 }
@@ -710,10 +713,11 @@ function _validateInput(propertyId, controller, control, showErrors) {
 					errorSet = false;
 				}
 				// Before setting an error message for table cell, clear the error message for table (if any)
+				// only if there are no nested propertyId
 				if (typeof msgPropertyId.row !== "undefined" || typeof msgPropertyId.col !== "undefined") {
 					const tablePropertyId = controller.convertPropertyId(msgPropertyId.name);
 					const tableErrorMessage = controller.getErrorMessage(tablePropertyId);
-					if (tableErrorMessage !== null) {
+					if (tableErrorMessage !== null && !msgPropertyId.propertyId) {
 						controller.updateErrorMessage(tablePropertyId, null);
 					}
 				}
@@ -723,7 +727,7 @@ function _validateInput(propertyId, controller, control, showErrors) {
 					if (isError) {
 						errorSet = true;
 					}
-				} else if ((!isError && !errorSet) || (!isError && errorSet)) {
+				} else if (!isError) {
 					const msg = controller.getErrorMessage(msgPropertyId, false, false, false);
 					if (!isEmpty(msg) && (msg.validation_id === errorMessage.validation_id)) {
 						controller.updateErrorMessage(msgPropertyId, DEFAULT_VALIDATION_MESSAGE);

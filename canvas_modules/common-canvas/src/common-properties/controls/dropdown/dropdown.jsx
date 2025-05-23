@@ -326,7 +326,7 @@ class DropDown extends React.Component {
 				className={classNames("properties-dropdown", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null)}
 			>
 				{dropdownComponent}
-				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} tableOnly />
+				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} tableOnly propertyId={this.props.propertyId} />
 			</div>
 		);
 	}

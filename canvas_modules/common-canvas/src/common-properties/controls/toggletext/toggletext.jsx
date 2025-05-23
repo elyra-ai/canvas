@@ -100,7 +100,7 @@ class ToggletextControl extends React.Component {
 			>
 				{this.props.tableControl ? null : this.props.controlItem}
 				{button}
-				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} propertyId={this.props.propertyId} />
 			</div>
 		);
 	}
