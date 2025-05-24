@@ -73,10 +73,10 @@ class CommonCanvasTextToolbar extends React.Component {
 		const boldLabel = this.getJsxLabel("texttoolbar.boldAction", "b");
 		const italicsLabel = this.getJsxLabel("texttoolbar.italicsAction", "i");
 		const strikethroughLabel = this.getJsxLabel("texttoolbar.strikethroughAction", "shift + x");
-		const headerLabel = this.getJsxLabel("texttoolbar.headerAction", ">", "<");
+		const headerLabel = this.getJsxLabel("texttoolbar.headerAction", "->", "<-");
 		const codeLabel = this.getJsxLabel("texttoolbar.codeAction", "e");
 		const linkLabel = this.getJsxLabel("texttoolbar.linkAction", "k");
-		const quoteLabel = this.getJsxLabel("texttoolbar.quoteAction", "shift + >");
+		const quoteLabel = this.getJsxLabel("texttoolbar.quoteAction", "shift + I");
 		const numberedListLabel = this.getJsxLabel("texttoolbar.numberedListAction", "shift + 7");
 		const bulletedListLabel = this.getJsxLabel("texttoolbar.bulletedListAction", "shift + 8");
 
