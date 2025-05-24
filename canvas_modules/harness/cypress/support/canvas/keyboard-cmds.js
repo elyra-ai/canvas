@@ -106,7 +106,7 @@ Cypress.Commands.add("shortcutKeysMarkdown", (action) => {
 			break;
 		}
 		case "quote": {
-			cy.get("body").type(cmndCtrlKey + "{shift}{>}");
+			cy.get("body").type(cmndCtrlKey + "{shift}{i}");
 			break;
 		}
 		case "link": {

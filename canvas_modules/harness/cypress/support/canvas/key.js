@@ -16,15 +16,18 @@
 
 
 const keys = [];
-keys.tab = { code: "Tab", keyCode: 9, release: true };
-keys.enter = { code: "Enter", keyCode: 13, release: true };
-keys.cmndSlash = { code: "Slash", keyCode: 191, metaKey: true, release: true };
-keys.cmndDownArrow = { code: "ArrowDown", keyCode: 40, metaKey: true, release: true };
-keys.shiftDownArrow = { code: "ArrowDown", keyCode: 40, shiftKey: true, release: true };
-keys.cmndShiftDownArrow = { code: "ArrowDown", keyCode: 40, metaKey: true, shiftKey: true, release: true };
-keys.cmndShiftRightArrow = { code: "ArrowRight", keyCode: 42, metaKey: true, shiftKey: true, release: true };
-keys.cmndShiftMinus = { code: "Minus", keyCode: 189, metaKey: true, shiftKey: true, release: true };
-keys.cmndShiftEqual = { code: "Equal", keyCode: 187, metaKey: true, shiftKey: true, release: true };
-keys.cmndShiftZero = { code: "Digit0", keyCode: 48, metaKey: true, shiftKey: true, release: true };
+keys.tab = { key: "Tab", release: true };
+keys.objectSelect = { key: "Enter", release: true };
+
+keys.contextMenu = { key: ",", metaKey: true, release: true };
+keys.moveObjectDown = { key: "ArrowDown", metaKey: true, release: true };
+keys.shiftDownArrow = { key: "ArrowDown", shiftKey: true, release: true };
+
+keys.panDown = { key: "ArrowDown", metaKey: true, shiftKey: true, release: true };
+keys.panRight = { key: "ArrowRight", metaKey: true, shiftKey: true, release: true };
+
+keys.zoomIn = { key: "8", metaKey: true, shiftKey: true, release: true };
+keys.zoomOut = { key: "9", metaKey: true, shiftKey: true, release: true };
+keys.zoomToFit = { key: "0", metaKey: true, shiftKey: true, release: true };
 
 export default keys;
