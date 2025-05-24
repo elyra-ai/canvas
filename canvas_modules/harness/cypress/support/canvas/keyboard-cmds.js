@@ -82,11 +82,11 @@ Cypress.Commands.add("shortcutKeysMarkdown", (action) => {
 	cy.useCtrlOrCmdKey().then((cmndCtrlKey) => {
 		switch (action) {
 		case "increaseHashes": {
-			cy.get("body").type(cmndCtrlKey + "{>}");
+			cy.get("body").type(cmndCtrlKey + "{rightArrow}");
 			break;
 		}
 		case "decreaseHashes": {
-			cy.get("body").type(cmndCtrlKey + "{<}");
+			cy.get("body").type(cmndCtrlKey + "{leftArrow}");
 			break;
 		}
 		case "bold": {
@@ -106,7 +106,7 @@ Cypress.Commands.add("shortcutKeysMarkdown", (action) => {
 			break;
 		}
 		case "quote": {
-			cy.get("body").type(cmndCtrlKey + "{shift}{>}");
+			cy.get("body").type(cmndCtrlKey + "{shift}{i}");
 			break;
 		}
 		case "link": {
