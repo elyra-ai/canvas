@@ -16,8 +16,11 @@
 
 
 const keys = [];
+keys.space = { key: "Space", release: false };
 keys.tab = { key: "Tab", release: true };
 keys.objectSelect = { key: "Enter", release: true };
+keys.selectAll = { key: "a", metaKey: true, release: true };
+keys.delete = { key: "Delete", metaKey: false, release: true };
 
 keys.contextMenu = { key: ",", metaKey: true, release: true };
 keys.moveObjectDown = { key: "ArrowDown", metaKey: true, release: true };
@@ -29,6 +32,13 @@ keys.panRight = { key: "ArrowRight", metaKey: true, shiftKey: true, release: tru
 keys.zoomIn = { key: "8", metaKey: true, shiftKey: true, release: true };
 keys.zoomOut = { key: "9", metaKey: true, shiftKey: true, release: true };
 keys.zoomToFit = { key: "0", metaKey: true, shiftKey: true, release: true };
+
+keys.cut = { key: "x", metaKey: true, shiftKey: false, release: true };
+keys.copy = { key: "c", metaKey: true, shiftKey: false, release: true };
+keys.paste = { key: "v", metaKey: true, shiftKey: false, release: true };
+
+keys.undo = { key: "z", metaKey: true, shiftKey: false, release: true };
+keys.redo = { key: "z", metaKey: true, shiftKey: true, release: true };
 
 keys.addNodeFromPalette = { key: "Space", metaKey: false, shiftKey: false, release: true };
 

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import key from "../../support/canvas/key.js";
+
 // Click the canvas at position {x,y}
 Cypress.Commands.add("clickCanvasAt", (x, y) => {
 	cy.get("#canvas-div-0").click(x, y);
@@ -43,7 +45,7 @@ Cypress.Commands.add("panCanvasToPosition", (canvasX, canvasY) => {
 				// Pressing space is needed for "Carbon" and "Trackpad" interaction types
 				// but does not do any harm if used with the "Mouse" interaction type.
 				cy.get("#canvas-div-0")
-					.trigger("keydown", { key: "Space", release: false });
+					.trigger("keydown", key.space);
 				// Start at position 1, 1 as using topLeft doesn't work
 				cy.get("#canvas-div-0")
 					.trigger("mousedown", 1, 1, { which: 1, view: win });
