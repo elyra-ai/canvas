@@ -78,10 +78,10 @@ describe("Test keyboard navigation", function() {
 		cy.verifyNodeDimensions("Binding (entry) node", 70, 75);
 
 		// Size node downwards with keyboard
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
 		cy.verifyNodeDimensions("Binding (entry) node", 70, 115);
 
 		// Wait for the save of the sizing to be completed

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import key from "../../support/canvas/key.js";
+
 describe("Test adding nodes into empty canvas", function() {
 	beforeEach(() => {
 		cy.visit("/");
@@ -299,13 +301,13 @@ describe("Test nodes & categories accessibility within palette", function() {
 
 		// Focus on nodes inside the open category and press space bar
 		cy.tabToNodeInCategory("Var. File", "Import");
-		cy.pressSpaceOnNodeInCategory("Var. File", "Import");
+		cy.pressOnNodeInCategory("Var. File", "Import", key.addNodeFromPalette);
 
 		cy.tabToNodeInCategory("Database", "Import");
-		cy.pressSpaceOnNodeInCategory("Database", "Import");
+		cy.pressOnNodeInCategory("Database", "Import", key.addNodeFromPalette);
 
 		cy.tabToNodeInCategory("Object Store", "Import");
-		cy.pressSpaceOnNodeInCategory("Object Store", "Import");
+		cy.pressOnNodeInCategory("Object Store", "Import", key.addNodeFromPalette);
 
 		// Verify the nodes are on the canvas
 		cy.verifyNodeExists("Var. File");

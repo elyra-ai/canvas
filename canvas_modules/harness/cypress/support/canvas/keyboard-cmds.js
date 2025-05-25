@@ -53,7 +53,7 @@ Cypress.Commands.add("shortcutKeysDelete", () => {
 Cypress.Commands.add("shortcutKeysSelectAllCanvasObjects", () => {
 	cy.get("#canvas-div-0").click(1, 1); // Put foucs on the SVG area, ready for key press
 	// Press Ctrl/Cmnd+A to Select all objects in canvas
-	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{A}", { release: true }));
+	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{a}", { release: true }));
 });
 
 Cypress.Commands.add("useCtrlOrCmdKey", () => {

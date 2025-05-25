@@ -21,7 +21,7 @@ keys.objectSelect = { key: "Enter", release: true };
 
 keys.contextMenu = { key: ",", metaKey: true, release: true };
 keys.moveObjectDown = { key: "ArrowDown", metaKey: true, release: true };
-keys.shiftDownArrow = { key: "ArrowDown", shiftKey: true, release: true };
+keys.sizeObjectDown = { key: "ArrowDown", shiftKey: true, release: true };
 
 keys.panDown = { key: "ArrowDown", metaKey: true, shiftKey: true, release: true };
 keys.panRight = { key: "ArrowRight", metaKey: true, shiftKey: true, release: true };
@@ -29,5 +29,8 @@ keys.panRight = { key: "ArrowRight", metaKey: true, shiftKey: true, release: tru
 keys.zoomIn = { key: "8", metaKey: true, shiftKey: true, release: true };
 keys.zoomOut = { key: "9", metaKey: true, shiftKey: true, release: true };
 keys.zoomToFit = { key: "0", metaKey: true, shiftKey: true, release: true };
+
+keys.addNodeFromPalette = { key: "Space", metaKey: false, shiftKey: false, release: true };
+
 
 export default keys;
