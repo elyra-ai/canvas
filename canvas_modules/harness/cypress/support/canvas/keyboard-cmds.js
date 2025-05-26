@@ -17,15 +17,15 @@
 import key from "../../support/canvas/key.js";
 
 Cypress.Commands.add("shortcutKeysCut", () => {
-	cy.get("#canvas-div-0 > .svg-area").trigger("keydown", key.cut);
+	cy.get("#d3-svg-canvas-div-0 > .svg-area").trigger("keydown", key.cut);
 });
 
 Cypress.Commands.add("shortcutKeysCopy", () => {
-	cy.get("#canvas-div-0 > .svg-area").trigger("keydown", key.copy);
+	cy.get("#d3-svg-canvas-div-0 > .svg-area").trigger("keydown", key.copy);
 });
 
 Cypress.Commands.add("shortcutKeysPaste", () => {
-	cy.get("#canvas-div-0 > .svg-area").trigger("keydown", key.paste);
+	cy.get("#d3-svg-canvas-div-0 > .svg-area").trigger("keydown", key.paste);
 });
 
 Cypress.Commands.add("shortcutKeysUndo", () => {
