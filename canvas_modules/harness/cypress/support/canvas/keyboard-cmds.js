@@ -17,34 +17,34 @@
 import key from "../../support/canvas/key.js";
 
 Cypress.Commands.add("shortcutKeysCut", () => {
-	cy.get(".svg-area").trigger("keydown", key.cut);
+	cy.get("#canvas-div-0 > .svg-area").trigger("keydown", key.cut);
 });
 
 Cypress.Commands.add("shortcutKeysCopy", () => {
-	cy.get(".svg-area").trigger("keydown", key.copy);
+	cy.get("#canvas-div-0 > .svg-area").trigger("keydown", key.copy);
 });
 
 Cypress.Commands.add("shortcutKeysPaste", () => {
-	cy.get(".svg-area").trigger("keydown", key.paste);
+	cy.get("#canvas-div-0 > .svg-area").trigger("keydown", key.paste);
 });
 
 Cypress.Commands.add("shortcutKeysUndo", () => {
-	cy.get("#canvas-div-0").click(1, 1); // Put foucs on the SVG area, ready for key press
-	cy.get(".svg-area").trigger("keydown", key.undo);
+	cy.get("#d3-svg-canvas-div-0 > .svg-area").click(1, 1); // Put foucs on the SVG area, ready for key press
+	cy.get("#d3-svg-canvas-div-0 > .svg-area").trigger("keydown", key.undo);
 });
 
 Cypress.Commands.add("shortcutKeysRedo", () => {
-	cy.get("#canvas-div-0").click(1, 1); // Put foucs on the SVG area, ready for key press
-	cy.get(".svg-area").trigger("keydown", key.redo);
+	cy.get("#d3-svg-canvas-div-0 > .svg-area").click(1, 1); // Put foucs on the SVG area, ready for key press
+	cy.get("#d3-svg-canvas-div-0 > .svg-area").trigger("keydown", key.redo);
 });
 
 Cypress.Commands.add("shortcutKeysDelete", () => {
-	cy.get(".svg-area").trigger("keydown", key.delete);
+	cy.get("#d3-svg-canvas-div-0 > .svg-area").trigger("keydown", key.delete);
 });
 
 Cypress.Commands.add("shortcutKeysSelectAllCanvasObjects", () => {
-	cy.get("#canvas-div-0").click(1, 1); // Put foucs on the SVG area, ready for key press
-	cy.get(".svg-area").trigger("keydown", key.selectAll);
+	cy.get("#d3-svg-canvas-div-0 > .svg-area").click(1, 1); // Put foucs on the SVG area, ready for key press
+	cy.get("#d3-svg-canvas-div-0 > .svg-area").trigger("keydown", key.selectAll);
 });
 
 Cypress.Commands.add("useCtrlOrCmdKey", () => {
