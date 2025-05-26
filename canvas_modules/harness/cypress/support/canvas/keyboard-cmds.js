@@ -14,46 +14,37 @@
  * limitations under the License.
  */
 
+import key from "../../support/canvas/key.js";
+
 Cypress.Commands.add("shortcutKeysCut", () => {
-	// Press Ctrl/Cmnd+x to Cut
-	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{x}", { release: false }));
+	cy.get(".svg-area").trigger("keydown", key.cut);
 });
 
 Cypress.Commands.add("shortcutKeysCopy", () => {
-	// Press Ctrl/Cmnd+c to Copy
-	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{c}", { release: false }));
+	cy.get(".svg-area").trigger("keydown", key.copy);
 });
 
 Cypress.Commands.add("shortcutKeysPaste", () => {
-	// Press Ctrl/Cmnd+v to Paste
-	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{v}", { release: false }));
+	cy.get(".svg-area").trigger("keydown", key.paste);
 });
 
 Cypress.Commands.add("shortcutKeysUndo", () => {
 	cy.get("#canvas-div-0").click(1, 1); // Put foucs on the SVG area, ready for key press
-	// Press Ctrl/Cmnd+z to Undo
-	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{z}", { release: true }));
+	cy.get(".svg-area").trigger("keydown", key.undo);
 });
 
 Cypress.Commands.add("shortcutKeysRedo", () => {
 	cy.get("#canvas-div-0").click(1, 1); // Put foucs on the SVG area, ready for key press
-	// Press Ctrl/Cmnd+Shift+z to Redo
-	cy.useCtrlOrCmdKey().then((selectedKey) => {
-		cy.useShiftKey().then((shiftKey) => {
-			cy.get("body").type(selectedKey + shiftKey + "{z}", { release: true });
-		});
-	});
+	cy.get(".svg-area").trigger("keydown", key.redo);
 });
 
 Cypress.Commands.add("shortcutKeysDelete", () => {
-	// Delete all selected objects via the Delete key
-	cy.useDeleteKey().then((deleteKey) => cy.get("body").type(deleteKey));
+	cy.get(".svg-area").trigger("keydown", key.delete);
 });
 
 Cypress.Commands.add("shortcutKeysSelectAllCanvasObjects", () => {
 	cy.get("#canvas-div-0").click(1, 1); // Put foucs on the SVG area, ready for key press
-	// Press Ctrl/Cmnd+A to Select all objects in canvas
-	cy.useCtrlOrCmdKey().then((selectedKey) => cy.get("body").type(selectedKey + "{a}", { release: true }));
+	cy.get(".svg-area").trigger("keydown", key.selectAll);
 });
 
 Cypress.Commands.add("useCtrlOrCmdKey", () => {
