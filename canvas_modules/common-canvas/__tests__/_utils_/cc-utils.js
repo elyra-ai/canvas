@@ -173,7 +173,7 @@ export function createIntlCommonCanvasToolbar(data, canvasController) {
 		canvasController.closeNotificationPanel();
 	}
 
-	const wrapper = mount(
+	const wrapper = render(
 		<Provider store={canvasController.getStore()}>
 			<IntlProvider key="IntlProvider1" locale={ locale } messages={messages}>
 				<CommonCanvasToolbar canvasController={canvasController} />
