@@ -201,6 +201,13 @@ function validateInput(inPropertyId, controller, showErrors = true) {
 				propertyId.col = 0;
 				_validateInput(propertyId, controller, control, showErrors);
 			}
+		} else if (typeof propertyId.row !== "undefined" && control.controlType === "selectcolumns") { // validate each row in the array within a table.
+			for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+				const newNestedPropertyId = {};
+				newNestedPropertyId.row = rowIndex;
+				propertyId.propertyId = newNestedPropertyId;
+				_validateInput(propertyId, controller, control, showErrors);
+			}
 		}
 
 	} else {

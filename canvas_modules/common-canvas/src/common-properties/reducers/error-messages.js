@@ -110,6 +110,12 @@ function updateNestedPropertyValue(propertyId, newState, value) {
 	if (typeof propertyId.row !== "undefined") {
 		const strRow = propertyId.row.toString();
 
+		if (typeof newState[strRow] === "undefined") {
+			newState[strRow] = {};
+		} else if (typeof newState[strRow].displayError !== "undefined") {
+			delete newState[strRow].displayError;
+		}
+
 		if (typeof propertyId.col !== "undefined") {
 			const strCol = propertyId.col.toString();
 			if (typeof propertyId.propertyId !== "undefined") {
@@ -123,11 +129,6 @@ function updateNestedPropertyValue(propertyId, newState, value) {
 				newState[strRow][strCol] = Object.assign({}, newState[strRow][strCol], value);
 			}
 		} else {
-			if (typeof newState[strRow] === "undefined") {
-				newState[strRow] = {};
-			} else if (typeof newState[strRow].displayError !== "undefined") {
-				delete newState[strRow].displayError;
-			}
 			newState[strRow] = Object.assign({}, newState[strRow], value);
 		}
 	}

@@ -37,6 +37,12 @@ export default class ValidationMessage extends React.Component {
 			if (!errorCellRow) {
 				return null;
 			}
+		} else if (typeof this.props.propertyId.index !== "undefined" && this.props.messageInfo.propertyId?.propertyId) { // selectColumns
+			const currentCellRow = this.props.propertyId.index;
+			const errorCellRow = this.props.messageInfo[currentCellRow];
+			if (!errorCellRow) {
+				return null;
+			}
 		}
 
 		const msgText = this.props.inTable ? null : <span>{this.props.messageInfo.text}</span>;
