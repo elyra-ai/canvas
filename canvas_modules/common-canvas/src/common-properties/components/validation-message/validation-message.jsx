@@ -30,14 +30,13 @@ export default class ValidationMessage extends React.Component {
 		}
 
 		// Check if this is a nested control, and if the messageInfo applies to that specific cell
-		// TODO make recursive
 		if (this.props.propertyId?.propertyId && this.props.messageInfo.propertyId?.propertyId) {
 			const currentCellRow = this.props.propertyId?.propertyId?.row;
 			const errorCellRow = this.props.messageInfo[currentCellRow];
 			if (!errorCellRow) {
 				return null;
 			}
-		} else if (typeof this.props.propertyId.index !== "undefined" && this.props.messageInfo.propertyId?.propertyId) { // selectColumns
+		} else if (typeof this.props.propertyId?.index !== "undefined" && this.props.messageInfo.propertyId?.propertyId) { // selectColumns
 			const currentCellRow = this.props.propertyId.index;
 			const errorCellRow = this.props.messageInfo[currentCellRow];
 			if (!errorCellRow) {
