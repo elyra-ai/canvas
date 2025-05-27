@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { STATES } from "./../../constants/constants.js";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import classNames from "classnames";
 
 export default class ValidationMessage extends React.Component {
@@ -30,19 +31,8 @@ export default class ValidationMessage extends React.Component {
 		}
 
 		// Check if this is a nested control, and if the messageInfo applies to that specific cell
-		if (this.props.propertyId?.propertyId && this.props.messageInfo.propertyId?.propertyId) {
-			const currentCellRow = this.props.propertyId?.propertyId?.row;
-			const currentCellCol = this.props.propertyId?.propertyId?.col;
-			const errorCellRow = this.props.messageInfo[currentCellRow];
-			if (!errorCellRow || (typeof currentCellCol !== "undefined" && !errorCellRow[currentCellCol])) {
-				return null;
-			}
-		} else if (typeof this.props.propertyId?.index !== "undefined" && this.props.messageInfo.propertyId?.propertyId) { // selectColumns
-			const currentCellRow = this.props.propertyId.index;
-			const errorCellRow = this.props.messageInfo[currentCellRow];
-			if (!errorCellRow) {
-				return null;
-			}
+		if (!doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo)) {
+			return null;
 		}
 
 		const msgText = this.props.inTable ? null : <span>{this.props.messageInfo.text}</span>;

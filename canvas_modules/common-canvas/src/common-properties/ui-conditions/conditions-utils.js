@@ -556,7 +556,15 @@ function getParamRefPropertyId(paramRef, controlPropertyId) {
 	const offset = paramRef.indexOf("[");
 	if (offset > -1) {
 		baseParam.name = paramRef.substring(0, offset);
-		baseParam.col = parseInt(paramRef.substring(offset + 1, paramRef.indexOf("]")), 10);
+		const colOffset = paramRef.substring(offset + 1);
+		baseParam.col = parseInt(colOffset.substring(0, paramRef.indexOf("]")), 10);
+
+		const nestedOffset = colOffset.indexOf("[");
+		if (nestedOffset > -1) {
+			const nestedColOffset = colOffset.substring(nestedOffset + 1);
+			const nestedCol = parseInt(nestedColOffset.substring(0, paramRef.indexOf("]")), 10);
+			baseParam.propertyId = { col: nestedCol };
+		}
 	}
 	if (controlPropertyId) {
 		baseParam.row = controlPropertyId.row;

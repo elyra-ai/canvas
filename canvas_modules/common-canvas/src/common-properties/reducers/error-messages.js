@@ -15,7 +15,7 @@
  */
 
 import { UPDATE_ERROR_MESSAGE, SET_ERROR_MESSAGES, CLEAR_ERROR_MESSAGE } from "../actions";
-import { isEmpty } from "lodash";
+import { isEmpty, difference } from "lodash";
 /* eslint max-depth: ["error", 6] */
 
 const DEFAULT_ERROR_MESSAGE_KEYS = [
@@ -149,8 +149,8 @@ function clearNestedPropertyMessage(propertyId, newState) {
 }
 
 function clearCellMessage(col, newState) {
-	if (Object.keys(newState[col]).length < DEFAULT_ERROR_MESSAGE_KEYS.length ||
-	(Object.keys(newState[col]).length === DEFAULT_ERROR_MESSAGE_KEYS.length && typeof newState[col].displayError !== "undefined")) {
+	// Check that no cells have error before deleting
+	if (difference(Object.keys(newState[col]), DEFAULT_ERROR_MESSAGE_KEYS).length === 0) {
 		delete newState[col];
 	}
 }
