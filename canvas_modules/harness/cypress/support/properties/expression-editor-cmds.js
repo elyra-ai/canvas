@@ -21,20 +21,17 @@ Cypress.Commands.add("enterTextInExpressionEditor", (text, propertyId) => {
 		clipboardData
 	});
 
-	cy.useCtrlOrCmdKey()
-		.then((selectedKey) => {
-			cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
-				.find(".properties-expression-editor")
-				.find(".cm-editor")
-				.find(".cm-content")
-				.as("editorContent");
-			cy.get("@editorContent")
-				.type(selectedKey + "{a}{del}"); // Select all and delete existing text in expression editor
-			cy.get(".cm-editor [role='textbox']") // Paste text in place of typing https://stackoverflow.com/questions/55362875/how-to-type-using-cypress-type-inside-the-codemirror-editor
-				.trigger("paste", pasteEvent);
-			cy.get("@editorContent")
-				.type("{ctrl} "); // Type ctrl + space to display hints
-		});
+	cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
+		.find(".properties-expression-editor")
+		.find(".cm-editor")
+		.find(".cm-content")
+		.as("editorContent");
+	cy.get("@editorContent")
+		.type("{meta}{a}{del}"); // Select all and delete existing text in expression editor
+	cy.get(".cm-editor [role='textbox']") // Paste text in place of typing https://stackoverflow.com/questions/55362875/how-to-type-using-cypress-type-inside-the-codemirror-editor
+		.trigger("paste", pasteEvent);
+	cy.get("@editorContent")
+		.type("{ctrl} "); // Type ctrl + space to display hints
 });
 
 Cypress.Commands.add("selectFirstAutoCompleteForText", (text, propertyId) => {

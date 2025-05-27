@@ -62,6 +62,41 @@ Cypress.Commands.add("moveMouseToCoordinates", (x, y) => {
 	cy.get(".d3-svg-canvas-div").trigger("mousemove", x, y);
 });
 
+Cypress.Commands.add("getSVGArea", () => {
+	cy.get("#d3-svg-canvas-div-0 > .svg-area");
+});
+
+Cypress.Commands.add("shortcutKeysCut", () => {
+	cy.getSVGArea().trigger("keydown", key.cut);
+});
+
+Cypress.Commands.add("shortcutKeysCopy", () => {
+	cy.getSVGArea().trigger("keydown", key.copy);
+});
+
+Cypress.Commands.add("shortcutKeysPaste", () => {
+	cy.getSVGArea().trigger("keydown", key.paste);
+});
+
+Cypress.Commands.add("shortcutKeysUndo", () => {
+	cy.getSVGArea().click(1, 1); // Put foucs on the SVG area, ready for key press
+	cy.getSVGArea().trigger("keydown", key.undo);
+});
+
+Cypress.Commands.add("shortcutKeysRedo", () => {
+	cy.getSVGArea().click(1, 1); // Put foucs on the SVG area, ready for key press
+	cy.getSVGArea().trigger("keydown", key.redo);
+});
+
+Cypress.Commands.add("shortcutKeysDelete", () => {
+	cy.getSVGArea().trigger("keydown", key.delete);
+});
+
+Cypress.Commands.add("shortcutKeysSelectAllCanvasObjects", () => {
+	cy.getSVGArea().click(1, 1); // Put foucs on the SVG area, ready for key press
+	cy.getSVGArea().trigger("keydown", key.selectAll);
+});
+
 // Move the mouse to the {x,y} position in the palette
 Cypress.Commands.add("moveMouseToPaletteArea", (x, y) => {
 	cy.get(".palette-flyout-div").trigger("mousemove", x, y);

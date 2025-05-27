@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import key from "../../support/canvas/key.js";
 
 describe("Test creating comments", function() {
 	beforeEach(() => {
@@ -497,7 +499,7 @@ function addMarkdownWithKeyboard(d) {
 	cy.editTextInComment("", d.initialText, false);
 
 	cy.selectTextInComment(d.textToHighlight, d.initialText);
-	cy.shortcutKeysMarkdown(d.action);
+	cy.shortcutKeysMarkdown(d.initialText, key[d.action]);
 
 	cy.clickCanvasAt(5, 5);
 	cy.verifyCommentContainsHTML(d.markdownText, d.html);

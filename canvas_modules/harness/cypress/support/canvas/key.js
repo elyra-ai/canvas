@@ -42,5 +42,17 @@ keys.redo = { key: "z", metaKey: true, shiftKey: true, release: true };
 
 keys.addNodeFromPalette = { key: "Space", metaKey: false, shiftKey: false, release: true };
 
+// Shortcuts used for regular/markdown comments
+
+keys.increaseHashes = { key: "ArrowRight", metaKey: true, shiftKey: false, release: true };
+keys.decreaseHashes = { key: "ArrowLeft", metaKey: true, shiftKey: false, release: true };
+keys.bold = { key: "b", metaKey: true, shiftKey: false, release: true };
+keys.italics = { key: "i", metaKey: true, shiftKey: false, release: true };
+keys.strikethrough = { key: "x", metaKey: true, shiftKey: true, release: true };
+keys.code = { key: "e", metaKey: true, shiftKey: false, release: true };
+keys.quote = { key: "i", metaKey: true, shiftKey: true, release: true };
+keys.link = { key: "k", metaKey: true, shiftKey: false, release: true };
+keys.numberedList = { key: "7", metaKey: true, shiftKey: true, release: true };
+keys.bulletedList = { key: "8", metaKey: true, shiftKey: true, release: true };
 
 export default keys;
