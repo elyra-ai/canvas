@@ -28,7 +28,6 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import { MESSAGE_KEYS } from "../../../src/common-properties/constants/constants";
 import * as messages from "./../../../locales/common-properties/locales/en.json";
-import * as harnessMessages from "./../,,/../../../../harness/src/intl/locales/en.json";
 
 import { renderWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
@@ -492,8 +491,7 @@ describe("expression-builder renders correctly", () => {
 		});
 	});
 
-	// TODO Works in UI, not updating in test Values table field header returns "Value" instead of "CustomValue".
-	it.skip("expression builder displays table header descriptions in info icon", () => {
+	it("expression builder displays table header descriptions in info icon", () => {
 		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(ExpressionParamdef, propertiesConfig, callbacks, propertiesInfo);
 		const wrapper = renderedObject.wrapper;
@@ -510,15 +508,8 @@ describe("expression-builder renders correctly", () => {
 		const dropDownList = document.querySelectorAll("ul.cds--list-box__menu .cds--list-box__menu-item");
 		fireEvent.click(dropDownList[0]);
 
-		// Verify custom header label
-		const header = valuesTable.querySelector("div[data-role='properties-header-row']");
-		const headerLabel = header.querySelectorAll(".properties-vt-label-tip-icon");
-		expect(headerLabel).to.have.length(2); // include Add column
-
-		// Returns "Value" Instead of "CustomValue" - Working as expected in UI
-		expect(header.textContent).to.equal("Add" + harnessMessages[MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN]);
-
 		// Verify info icon
+		const header = valuesTable.querySelector("div[data-role='properties-header-row']");
 		const headerInfoIcon = header.querySelectorAll(".properties-vt-info-icon-tip");
 		expect(headerInfoIcon).to.have.length(1);
 		const tooltipTrigger = headerInfoIcon[0].querySelector(".tooltip-trigger");

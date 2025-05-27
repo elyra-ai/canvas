@@ -98,7 +98,7 @@ describe("Test of expression editor control in a structure cell", function() {
 });
 
 describe("Test of expression builder", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openPropertyDefinition("expressionControl_paramDef.json");
 	});
@@ -129,6 +129,18 @@ describe("Test of expression builder", function() {
 		// Clicking validate returns error -> success -> error ...
 		cy.clickValidateLinkInSubPanel();
 		cy.verifyIconInSubPanel("canvas-state-icon-success");
+	});
+	it("expression builder should displays table header labels", function() {
+		// Click to open expression builder
+		cy.clickExpressionBuilderButton("defaultExpr");
+
+		// Check the value table container is visible
+		cy.get("div.properties-value-table-container").should("have.length", 1);
+
+		// Check custom header label
+		cy.get(".properties-vt-label-tip-icon").should("have.length", 5);
+		cy.contains("Add").should("exist");
+		cy.contains("Custom Value").should("exist"); // Check for Custom Value header label
 	});
 });
 
