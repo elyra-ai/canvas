@@ -76,7 +76,7 @@ function messages(state = {}, action) {
 				if (typeof propertyId.col !== "undefined") {
 					if (typeof propertyId.propertyId !== "undefined" && typeof propertyId.propertyId.row !== "undefined") { // clear subcell
 						clearNestedPropertyMessage(propertyId.propertyId, newState[propertyId.name][propertyId.row][propertyId.col]);
-						clearColumnMessage(propertyId.col, newState[propertyId.name][propertyId.row]);
+						clearCellMessage(propertyId.col, newState[propertyId.name][propertyId.row]);
 					} else {
 						delete newState[propertyId.name][propertyId.row][propertyId.col];
 					}
@@ -138,16 +138,17 @@ function clearNestedPropertyMessage(propertyId, newState) {
 	if (typeof propertyId.col !== "undefined") {
 		if (typeof propertyId.propertyId !== "undefined" && typeof propertyId.propertyId.row !== "undefined") { // clear subcell
 			clearNestedPropertyMessage(propertyId.propertyId, newState[propertyId.row][propertyId.col]);
-			clearColumnMessage(propertyId.col, newState[propertyId.row]);
+			clearCellMessage(propertyId.col, newState[propertyId.row]);
 		} else {
 			delete newState[propertyId.row][propertyId.col];
+			clearCellMessage(propertyId.row, newState);
 		}
 	} else {
 		delete newState[propertyId.row];
 	}
 }
 
-function clearColumnMessage(col, newState) {
+function clearCellMessage(col, newState) {
 	if (Object.keys(newState[col]).length < DEFAULT_ERROR_MESSAGE_KEYS.length ||
 	(Object.keys(newState[col]).length === DEFAULT_ERROR_MESSAGE_KEYS.length && typeof newState[col].displayError !== "undefined")) {
 		delete newState[col];

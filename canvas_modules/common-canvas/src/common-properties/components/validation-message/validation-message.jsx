@@ -32,8 +32,9 @@ export default class ValidationMessage extends React.Component {
 		// Check if this is a nested control, and if the messageInfo applies to that specific cell
 		if (this.props.propertyId?.propertyId && this.props.messageInfo.propertyId?.propertyId) {
 			const currentCellRow = this.props.propertyId?.propertyId?.row;
+			const currentCellCol = this.props.propertyId?.propertyId?.col;
 			const errorCellRow = this.props.messageInfo[currentCellRow];
-			if (!errorCellRow) {
+			if (!errorCellRow || (typeof currentCellCol !== "undefined" && !errorCellRow[currentCellCol])) {
 				return null;
 			}
 		} else if (typeof this.props.propertyId?.index !== "undefined" && this.props.messageInfo.propertyId?.propertyId) { // selectColumns
