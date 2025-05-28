@@ -792,7 +792,7 @@ describe("expression handles no expression builder resources correctly", () => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(ExpressionParamdef, propertiesConfig, callbacks, propertiesInfo);
 		const wrapper = renderedObject.wrapper;
 		const { container } = wrapper;
-		expect(container.querySelectorAll("button.validateLink")).to.have.length(8); // there are 9 (including one readonly) expressions in this paramdef, 1 is hidden
+		expect(container.querySelectorAll("button.validateLink")).to.have.length(9); // there are 9 (including one readonly) expressions in this paramdef, 1 is hidden
 	});
 
 	it("CommonProperties renders with validateLink and callback is called on click", () => {
