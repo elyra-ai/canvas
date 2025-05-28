@@ -108,14 +108,15 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a n
 		cy.verifyCanvasTransform("translate(-913.7210355957193,-358.1041124596638) scale(0.9090909090909091)");
 	});
 
-	it("Should position off screen node into specified positions within the canvas", function() {
-		// Test Zoom to reveal
+	it("Should position off screen node into specified positions 50,50 within the canvas", function() {
 		cy.selectEntryFromDropdown("Distribution");
 		cy.setXPercentOffset(50);
 		cy.setYPercentOffset(50);
 		cy.submitAPI();
 		cy.verifyCanvasTransform("translate(-1847.4242243740646,-495.2194467959429) scale(1)");
+	});
 
+	it("Should position off screen node into specified positions 25,25 within the canvas", function() {
 		cy.selectEntryFromDropdown("Distribution");
 		cy.setXPercentOffset(25);
 		cy.setYPercentOffset(25);
