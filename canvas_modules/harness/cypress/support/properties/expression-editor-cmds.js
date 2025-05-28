@@ -14,6 +14,16 @@
  * limitations under the License.
  */
 
+Cypress.Commands.add("useCtrlOrCmdKey", () => {
+	// Ctrl or Cmd keys are used to select multiple elements
+	// Get the os name to decide whether to click ctrl or cmd
+	// Cypress.platform returns the underlying OS name
+	// For MacOS, Cypress.platform returns "darwin". For windows, Cypress.platform returns "win32"
+	// For MacOS, return "{meta}" (which is "command" key) and for windows, return "{ctrl}" (which is "ctrl" key)
+	const selectedKey = Cypress.platform === "darwin" ? "{meta}" : "{ctrl}";
+	return selectedKey;
+});
+
 Cypress.Commands.add("enterTextInExpressionEditor", (text, propertyId) => {
 	const clipboardData = new DataTransfer();
 	clipboardData.setData("text/plain", text);
@@ -21,17 +31,20 @@ Cypress.Commands.add("enterTextInExpressionEditor", (text, propertyId) => {
 		clipboardData
 	});
 
-	cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
-		.find(".properties-expression-editor")
-		.find(".cm-editor")
-		.find(".cm-content")
-		.as("editorContent");
-	cy.get("@editorContent")
-		.type("{meta}{a}{del}"); // Select all and delete existing text in expression editor
-	cy.get(".cm-editor [role='textbox']") // Paste text in place of typing https://stackoverflow.com/questions/55362875/how-to-type-using-cypress-type-inside-the-codemirror-editor
-		.trigger("paste", pasteEvent);
-	cy.get("@editorContent")
-		.type("{ctrl} "); // Type ctrl + space to display hints
+	cy.useCtrlOrCmdKey()
+		.then((selectedKey) => {
+			cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
+				.find(".properties-expression-editor")
+				.find(".cm-editor")
+				.find(".cm-content")
+				.as("editorContent");
+			cy.get("@editorContent")
+				.type(selectedKey + "{a}{del}"); // Select all and delete existing text in expression editor
+			cy.get(".cm-editor [role='textbox']") // Paste text in place of typing https://stackoverflow.com/questions/55362875/how-to-type-using-cypress-type-inside-the-codemirror-editor
+				.trigger("paste", pasteEvent);
+			cy.get("@editorContent")
+				.type("{ctrl} "); // Type ctrl + space to display hints
+		});
 });
 
 Cypress.Commands.add("selectFirstAutoCompleteForText", (text, propertyId) => {
