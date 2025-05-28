@@ -398,7 +398,7 @@ class VirtualizedTable extends React.Component {
 					onFocus={(evt) => this.overSelectOption(evt)}
 					onBlur={(evt) => this.overSelectOption(evt)}
 					onKeyDown={(evt) => {
-						if (evt.key === "Space" || evt.key === "Enter") {
+						if (evt.code === "Space" || evt.code === "Enter") {
 							this.onRowClick(evt, rowData, index);
 						}
 					}}

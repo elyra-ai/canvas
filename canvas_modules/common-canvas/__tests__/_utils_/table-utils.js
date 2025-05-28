@@ -154,7 +154,7 @@ function selectCheckboxesUsingKeyboard(wrapper, rows) {
 	const checkboxes = getTableRows(wrapper).find(".properties-vt-row-checkbox");
 	for (const row of rows) {
 		checkboxes.at(row).simulate("focus");
-		checkboxes.at(row).simulate("keyDown", { key: "Enter" });
+		checkboxes.at(row).simulate("keyDown", { code: "Enter" });
 		checkboxes.at(row).simulate("blur");
 	}
 }

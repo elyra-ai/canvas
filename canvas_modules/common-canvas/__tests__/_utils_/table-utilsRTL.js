@@ -170,7 +170,7 @@ function selectCheckboxesUsingKeyboard(container, rows) {
 	for (const row of rows) {
 		const checkbox = checkboxes[row].querySelector(".properties-vt-row-checkbox");
 		fireEvent.focus(checkbox);
-		fireEvent.keyDown(checkbox, { key: "Enter" });
+		fireEvent.keyDown(checkbox, { code: "Enter" });
 		fireEvent.blur(checkbox);
 	}
 }
