@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Toggle } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
@@ -61,7 +62,8 @@ class ToggleControl extends React.Component {
 			aria-labelledby={`${this.props.propertyId?.name}-toggle-label`}
 			readOnly={this.props.readOnly}
 		/>);
-		const className = classNames("properties-toggle", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null);
+		const className = classNames("properties-toggle", { "hide": hidden },
+			this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				{

@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import { isEmpty } from "lodash";
 import { Checkbox } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
@@ -74,7 +75,9 @@ class CheckboxControl extends React.Component {
 		);
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<div className={classNames("properties-checkbox", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null)}>
+				<div className={classNames("properties-checkbox", { "hide": hidden },
+					this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null)}
+				>
 					<Checkbox
 						disabled={this.props.state === STATES.DISABLED}
 						id={this.id}

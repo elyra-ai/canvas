@@ -21,6 +21,7 @@ import { SelectItem, Select, Dropdown, ComboBox } from "@carbon/react";
 import { isEqual, isEmpty } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import classNames from "classnames";
 import * as PropertyUtils from "./../../util/property-utils.js";
 import { ControlType } from "./../../constants/form-constants";
@@ -323,7 +324,8 @@ class DropDown extends React.Component {
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)}
-				className={classNames("properties-dropdown", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null)}
+				className={classNames("properties-dropdown", { "hide": hidden },
+					this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null)}
 			>
 				{dropdownComponent}
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} tableOnly propertyId={this.props.propertyId} />

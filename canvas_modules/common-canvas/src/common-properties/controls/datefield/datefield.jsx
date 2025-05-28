@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { TextInput } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import * as ControlUtils from "./../../util/control-utils";
 import { parse, format, isValid } from "date-fns";
 import { DEFAULT_DATE_FORMAT, STATES } from "./../../constants/constants.js";
@@ -73,7 +74,7 @@ class DatefieldControl extends React.Component {
 			return null; // Do not render hidden controls
 		}
 		const className = classNames("properties-datefield", "properties-input-control", { "hide": hidden },
-			this.props.messageInfo ? this.props.messageInfo.type : null);
+			this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>

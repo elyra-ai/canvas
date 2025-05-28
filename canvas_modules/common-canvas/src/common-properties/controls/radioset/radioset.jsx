@@ -22,6 +22,7 @@ import * as ControlUtils from "./../../util/control-utils";
 import * as PropertyUtils from "./../../util/property-utils";
 import * as ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
 import ValidationMessage from "./../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import { RadioButton, RadioButtonGroup } from "@carbon/react";
 import classNames from "classnames";
 import { MESSAGE_KEYS, STATES, UPDATE_TYPE } from "./../../constants/constants.js";
@@ -234,7 +235,9 @@ class RadiosetControl extends React.Component {
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 				className={classNames("properties-radioset ", { "hide": hidden })}
 			>
-				<RadioButtonGroup className={classNames("properties-radio-button-group", this.props.messageInfo ? this.props.messageInfo.type : null)}
+				<RadioButtonGroup
+					className={classNames("properties-radio-button-group",
+						this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null)}
 					disabled={disabled}
 					name="radio-button-group"
 					orientation={this.props.control.orientation}

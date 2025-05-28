@@ -24,6 +24,7 @@ import { v4 as uuid4 } from "uuid";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import Icon from "./../../../icons/icon.jsx";
 import ValidationMessage from "../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import * as ControlUtils from "../../util/control-utils";
 import { getFormattedDate, getISODate } from "../../util/date-utils";
 import { STATES, DATEPICKER_TYPE, MESSAGE_KEYS, CARBON_ICONS } from "../../constants/constants.js";
@@ -134,7 +135,7 @@ class DatepickerRangeControl extends React.Component {
 		endLabel = this.createInfoDesc(endLabel, endDesc, "end");
 
 		const className = classNames("properties-datepicker-range", "properties-input-control", { "hide": hidden },
-			this.props.messageInfo ? this.props.messageInfo.type : null);
+			this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 
 		return (

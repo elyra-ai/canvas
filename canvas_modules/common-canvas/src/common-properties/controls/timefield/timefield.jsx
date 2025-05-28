@@ -22,6 +22,7 @@ import { parse, format, isValid } from "date-fns";
 import classNames from "classnames";
 
 import ValidationMessage from "./../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import * as ControlUtils from "./../../util/control-utils";
 import { DEFAULT_TIME_FORMAT, STATES } from "./../../constants/constants";
 
@@ -71,7 +72,7 @@ class TimefieldControl extends React.Component {
 			return null; // Do not render hidden controls
 		}
 		const className = classNames("properties-timefield", "properties-input-control", { "hide": hidden },
-			this.props.messageInfo ? this.props.messageInfo.type : null);
+			this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>

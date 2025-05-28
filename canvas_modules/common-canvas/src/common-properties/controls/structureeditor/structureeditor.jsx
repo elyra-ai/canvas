@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import ControlFactory from "../control-factory";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import classNames from "classnames";
 import { STATES } from "./../../constants/constants.js";
 import { cloneDeep } from "lodash";
@@ -149,7 +150,7 @@ class StructureEditorControl extends React.Component {
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 				className={classNames("properties-structureeditor ", { "hide": hidden },
-					this.props.messageInfo ? this.props.messageInfo.type : null)}
+					this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null)}
 			>
 				{controls}
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={false} propertyId={this.props.propertyId} />

@@ -21,6 +21,7 @@ import { Checkbox, CheckboxGroup } from "@carbon/react";
 import * as ControlUtils from "./../../util/control-utils";
 import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import { v4 as uuid4 } from "uuid";
 import { intersection, isEqual } from "lodash";
 import { Information } from "@carbon/react/icons";
@@ -132,7 +133,9 @@ class CheckboxsetControl extends React.Component {
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 				>
-					<div className={classNames("properties-checkboxset-container", this.props.messageInfo ? this.props.messageInfo.type : null)}>
+					<div className={classNames("properties-checkboxset-container",
+						this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null)}
+					>
 						{checkboxes}
 					</div>
 				</CheckboxGroup>

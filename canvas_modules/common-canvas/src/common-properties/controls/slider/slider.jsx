@@ -23,6 +23,7 @@ import { v4 as uuid4 } from "uuid";
 
 import * as ControlUtils from "../../util/control-utils";
 import ValidationMessage from "../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import { STATES, MESSAGE_KEYS } from "../../constants/constants";
 import { formatMessage } from "./../../util/property-utils";
 
@@ -51,8 +52,8 @@ class SliderControl extends React.Component {
 		const step = this.props.control.increment ? this.props.control.increment : 1;
 
 		return (
-			<div className={classNames("properties-slider ", { "hide": hidden },
-				this.props.messageInfo ? this.props.messageInfo.type : null)} data-id={ControlUtils.getDataId(this.props.propertyId)}
+			<div data-id={ControlUtils.getDataId(this.props.propertyId)} className={classNames("properties-slider ", { "hide": hidden },
+				this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null)}
 			>
 				<Slider
 					value={this.props.value !== null && typeof this.props.value !== "undefined" ? this.props.value : minValue}

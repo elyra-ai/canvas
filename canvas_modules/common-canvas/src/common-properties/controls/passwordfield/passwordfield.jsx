@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { PasswordInput } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
@@ -51,7 +52,7 @@ class PasswordControl extends React.Component {
 		const hidePasswordLabel = this.props.controller.getResource(overrideHidePasswordLabel, defaultHidePasswordLabel);
 		const value = this.props.value ? this.props.value : "";
 		const className = classNames("properties-pwdfield", "properties-input-control", { "hide": hidden },
-			this.props.messageInfo ? this.props.messageInfo.type : null);
+			this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
