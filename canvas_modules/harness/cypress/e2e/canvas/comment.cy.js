@@ -334,7 +334,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some quote text!",
 			textToHighlight: "quote",
 			action: "quote",
-			markdownText: "> Some quote text!\n\n",
+			markdownText: "> Some quote text!",
 			html: "<blockquote>\n<p>Some quote text!</p>\n</blockquote>\n"
 		});
 	});
@@ -344,7 +344,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some numbered list text!",
 			textToHighlight: "numbered list",
 			action: "numberedList",
-			markdownText: "1. Some numbered list text!\n\n",
+			markdownText: "1. Some numbered list text!",
 			html: "<ol>\n<li>Some numbered list text!</li>\n</ol>\n"
 		});
 	});
@@ -354,7 +354,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some bulleted list text!",
 			textToHighlight: "bulleted list",
 			action: "bulletedList",
-			markdownText: "* Some bulleted list text!\n\n",
+			markdownText: "* Some bulleted list text!",
 			html: "<ul>\n<li>Some bulleted list text!</li>\n</ul>\n"
 		});
 	});
@@ -441,7 +441,7 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 			initialText: "Some quote text!",
 			textToHighlight: "quote",
 			action: "quote",
-			markdownText: "> Some quote text!\n\n",
+			markdownText: "> Some quote text!",
 			html: "<blockquote>\n<p>Some quote text!</p>\n</blockquote>\n"
 		});
 	});
@@ -451,7 +451,7 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 			initialText: "Some numbered list text!",
 			textToHighlight: "numbered list",
 			action: "numberedList",
-			markdownText: "1. Some numbered list text!\n\n",
+			markdownText: "1. Some numbered list text!",
 			html: "<ol>\n<li>Some numbered list text!</li>\n</ol>\n"
 		});
 	});
@@ -461,7 +461,7 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 			initialText: "Some bulleted list text!",
 			textToHighlight: "bulleted list",
 			action: "bulletedList",
-			markdownText: "* Some bulleted list text!\n\n",
+			markdownText: "* Some bulleted list text!",
 			html: "<ul>\n<li>Some bulleted list text!</li>\n</ul>\n"
 		});
 	});
