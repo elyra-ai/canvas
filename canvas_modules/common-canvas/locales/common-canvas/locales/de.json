@@ -11,6 +11,7 @@
   "canvas.addComment": "Neuer Kommentar",
   "canvas.addWysiwygComment": "Neuer WYSIWYG-Kommentar",
   "canvas.selectAll": "Alles auswählen",
+  "canvas.deselectAll": "Alle abwählen",
   "canvas.undo": "Rückgängig",
   "canvas.redo": "Wiederholen",
   "canvas.undoCommand": "Rückgängig machen: {undo_command}",
