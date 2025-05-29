@@ -18,7 +18,7 @@
 import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import deepFreeze from "deep-freeze";
-import { createIntlCommonCanvas } from "../_utils_/cc-utils.js";
+import { createIntlCommonCanvasRTL } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 
@@ -1996,7 +1996,7 @@ function createCommonCanvas(config, canvasController, canvasParams) {
 	const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 	const contextMenuConfig = null;
 	const canvasParameters = canvasParams || {};
-	const wrapper = createIntlCommonCanvas(
+	const wrapper = createIntlCommonCanvasRTL(
 		config,
 		contextMenuHandler,
 		beforeEditActionHandler,
@@ -2007,6 +2007,7 @@ function createCommonCanvas(config, canvasController, canvasParams) {
 		tipHandler,
 		canvasParameters.showBottomPanel,
 		canvasParameters.showRightFlyout,
+		canvasParameters.rightFlyoutContent,
 		toolbarConfig,
 		notificationConfig,
 		contextMenuConfig,
