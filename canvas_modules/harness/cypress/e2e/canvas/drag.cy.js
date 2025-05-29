@@ -220,10 +220,10 @@ describe("Test to see if selection works with enableDragWithoutSelect set to tru
 		cy.verifyNumberOfSelectedObjects(1);
 
 		// Move node down with keyboard
-		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
+		cy.pressOnNode("Binding (entry) node", key.moveObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.moveObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.moveObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.moveObjectDown);
 		cy.verifyNodeTransform("Binding (entry) node", 89, 140);
 
 		// Make sure only the Super node is selected after the operation
@@ -238,10 +238,10 @@ describe("Test to see if selection works with enableDragWithoutSelect set to tru
 		cy.verifyNumberOfSelectedObjects(1);
 
 		// Size node downwards with keyboard
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
 		cy.verifyNodeDimensions("Binding (entry) node", 70, 115);
 
 		// Make sure only the Super node is selected after the operation
