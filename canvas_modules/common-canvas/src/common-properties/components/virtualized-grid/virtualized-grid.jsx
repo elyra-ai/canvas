@@ -196,7 +196,7 @@ const VirtualizedGrid = (props) => {
 				onFocus={(evt) => overSelectOption(evt)}
 				onBlur={(evt) => overSelectOption(evt)}
 				onKeyDown={(evt) => {
-					if (evt.code === "Space" || evt.code === "Enter") {
+					if (evt.key === "Space" || evt.key === "Enter") {
 						onRowClick(evt, rowIndex, rowData);
 					}
 				}}
