@@ -33,7 +33,8 @@
   "summary.longTable.placeholder": "Más de diez campos...",
   "alerts.tab.title": "Alertas",
   "title.editor.label": "editar título",
-  "title.editor.helpButton.label": "help",
+  "title.editor.helpButton.label": "Ayuda",
+  "title.editor.descButton.label": "Encabezado de información adicional",
   "table.summary.error": "Hay {errorMsgCount} celdas con errores. ",
   "table.summary.warning": "Hay {warningMsgCount} celdas con avisos. ",
   "control.summary.error": "Hay {errorMsgCount} parámetros con errores. ",
@@ -95,6 +96,8 @@
   "table.toolbar.button.delete": "Suprimir",
   "table.toolbar.button.edit": "Editar",
   "table.toolbar.button.cancel": "Cancelar",
+  "table.toolbar.overflow.label": "Desbordamiento de la barra de herramientas de la tabla",
+  "radiobuttongroup.aria.label": "Grupo de botones de\nselección",
   "list.table.label": "Valores",
   "dropdown.tooltip.openMenu": "Abrir menú",
   "dropdown.tooltip.closeMenu": "Cerrar menú",
@@ -114,5 +117,6 @@
   "label.indicator.optional": "(opcional)",
   "slider.numberInput.label": "Entrada de número de control deslizante",
   "editorForm.tabList.label": "Separadores principales",
-  "subTabs.tabList.label": "Lista de pestañas"
+  "subTabs.tabList.label": "Lista de pestañas",
+  "table.deleteIcon.tooltip": "Suprimir"
 }

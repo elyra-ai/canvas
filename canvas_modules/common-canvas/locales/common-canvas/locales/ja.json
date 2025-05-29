@@ -11,6 +11,7 @@
   "canvas.addComment": "新規コメント",
   "canvas.addWysiwygComment": "新しい WYSIWYG コメント",
   "canvas.selectAll": "すべて選択",
+  "canvas.deselectAll": "すべて選択解除",
   "canvas.undo": "元に戻す",
   "canvas.redo": "やり直し",
   "canvas.undoCommand": "元に戻す: {undo_command}",
