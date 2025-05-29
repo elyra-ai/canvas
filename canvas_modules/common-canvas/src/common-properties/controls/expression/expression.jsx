@@ -89,6 +89,9 @@ class ExpressionControl extends React.Component {
 		// When code is edited in expression builder, reflect changes in expression flyout
 		// Toggle editable mode in Codemirror editor
 		if (!isEqual(prevProps.state, this.props.state)) {
+			if (prevProps.state === STATES.HIDDEN) {
+				this.createCodeMirrorEditor();
+			}
 			this.setCodeMirrorEditable(!(this.props.state === STATES.DISABLED) || !this.props.readOnly);
 		}
 		if (
