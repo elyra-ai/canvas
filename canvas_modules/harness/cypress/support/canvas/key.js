@@ -16,15 +16,43 @@
 
 
 const keys = [];
-keys.tab = { code: "Tab", keyCode: 9, release: true };
-keys.enter = { code: "Enter", keyCode: 13, release: true };
-keys.cmndSlash = { code: "Slash", keyCode: 191, metaKey: true, release: true };
-keys.cmndDownArrow = { code: "ArrowDown", keyCode: 40, metaKey: true, release: true };
-keys.shiftDownArrow = { code: "ArrowDown", keyCode: 40, shiftKey: true, release: true };
-keys.cmndShiftDownArrow = { code: "ArrowDown", keyCode: 40, metaKey: true, shiftKey: true, release: true };
-keys.cmndShiftRightArrow = { code: "ArrowRight", keyCode: 42, metaKey: true, shiftKey: true, release: true };
-keys.cmndShiftMinus = { code: "Minus", keyCode: 189, metaKey: true, shiftKey: true, release: true };
-keys.cmndShiftEqual = { code: "Equal", keyCode: 187, metaKey: true, shiftKey: true, release: true };
-keys.cmndShiftZero = { code: "Digit0", keyCode: 48, metaKey: true, shiftKey: true, release: true };
+keys.space = { key: "Space", release: false };
+keys.tab = { key: "Tab", release: true };
+keys.objectSelect = { key: "Enter", release: true };
+keys.selectAll = { key: "a", metaKey: true, release: true };
+keys.delete = { key: "Delete", metaKey: false, release: true };
+
+keys.contextMenu = { key: ",", metaKey: true, release: true };
+keys.moveObjectDown = { key: "ArrowDown", metaKey: true, release: true };
+keys.sizeObjectDown = { key: "ArrowDown", shiftKey: true, release: true };
+
+keys.panDown = { key: "ArrowDown", metaKey: true, shiftKey: true, release: true };
+keys.panRight = { key: "ArrowRight", metaKey: true, shiftKey: true, release: true };
+
+keys.zoomIn = { key: "8", metaKey: true, shiftKey: true, release: true };
+keys.zoomOut = { key: "9", metaKey: true, shiftKey: true, release: true };
+keys.zoomToFit = { key: "0", metaKey: true, shiftKey: true, release: true };
+
+keys.cut = { key: "x", metaKey: true, shiftKey: false, release: true };
+keys.copy = { key: "c", metaKey: true, shiftKey: false, release: true };
+keys.paste = { key: "v", metaKey: true, shiftKey: false, release: true };
+
+keys.undo = { key: "z", metaKey: true, shiftKey: false, release: true };
+keys.redo = { key: "z", metaKey: true, shiftKey: true, release: true };
+
+keys.addNodeFromPalette = { key: "Space", metaKey: false, shiftKey: false, release: true };
+
+// Shortcuts used for regular/markdown comments
+
+keys.increaseHashes = { key: "ArrowRight", metaKey: true, shiftKey: false, release: true };
+keys.decreaseHashes = { key: "ArrowLeft", metaKey: true, shiftKey: false, release: true };
+keys.bold = { key: "b", metaKey: true, shiftKey: false, release: true };
+keys.italics = { key: "i", metaKey: true, shiftKey: false, release: true };
+keys.strikethrough = { key: "x", metaKey: true, shiftKey: true, release: true };
+keys.code = { key: "e", metaKey: true, shiftKey: false, release: true };
+keys.quote = { key: "i", metaKey: true, shiftKey: true, release: true };
+keys.link = { key: "k", metaKey: true, shiftKey: false, release: true };
+keys.numberedList = { key: "7", metaKey: true, shiftKey: true, release: true };
+keys.bulletedList = { key: "8", metaKey: true, shiftKey: true, release: true };
 
 export default keys;

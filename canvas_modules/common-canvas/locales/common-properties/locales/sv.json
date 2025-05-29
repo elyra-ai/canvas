@@ -33,7 +33,8 @@
   "summary.longTable.placeholder": "Mer än tio fält...",
   "alerts.tab.title": "Varningar",
   "title.editor.label": "ändra rubrik",
-  "title.editor.helpButton.label": "hjälp",
+  "title.editor.helpButton.label": "Hjälp",
+  "title.editor.descButton.label": "Rubrik för ytterligare information",
   "table.summary.error": "Det finns {errorMsgCount} felceller. ",
   "table.summary.warning": "Det finns {warningMsgCount} varningsceller. ",
   "control.summary.error": "Det finns {errorMsgCount} parametrar med fel. ",
@@ -95,6 +96,8 @@
   "table.toolbar.button.delete": "Ta bort",
   "table.toolbar.button.edit": "Redigera",
   "table.toolbar.button.cancel": "Avbryt",
+  "table.toolbar.overflow.label": "Tabellverktygsfältets överflöd",
+  "radiobuttongroup.aria.label": "Grupp med alternativknappar",
   "list.table.label": "Värden",
   "dropdown.tooltip.openMenu": "Öppna meny",
   "dropdown.tooltip.closeMenu": "Stäng meny",
@@ -114,5 +117,6 @@
   "label.indicator.optional": "(valfritt)",
   "slider.numberInput.label": "Indata för antalet skjutreglage",
   "editorForm.tabList.label": "Huvudflikar",
-  "subTabs.tabList.label": "Fliklista"
+  "subTabs.tabList.label": "Fliklista",
+  "table.deleteIcon.tooltip": "Ta bort"
 }

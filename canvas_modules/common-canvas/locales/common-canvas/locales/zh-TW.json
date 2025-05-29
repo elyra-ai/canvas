@@ -11,6 +11,7 @@
   "canvas.addComment": "新建註解",
   "canvas.addWysiwygComment": "新的 WYSIWYG 註解",
   "canvas.selectAll": "全選",
+  "canvas.deselectAll": "取消全選",
   "canvas.undo": "復原",
   "canvas.redo": "重做",
   "canvas.undoCommand": "復原：{undo_command}",

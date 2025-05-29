@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import key from "../../support/canvas/key.js";
+
 Cypress.Commands.add("getNodeWithLabel", (nodeLabel) => {
 	cy.get(getNodeGrpSelector())
 		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));
@@ -163,20 +165,17 @@ Cypress.Commands.add("clickNode", (nodeName, posX, posY) => {
 });
 
 Cypress.Commands.add("shiftClickNode", (nodeName) => {
-	cy.useShiftKey()
-		.then((shiftKey) => {
-			cy.get("body")
-				.type(shiftKey, { release: false });
-			cy.get("body")
-				.getNodeWithLabel(nodeName)
-				.click();
+	cy.get("body")
+		.type("{shift}", { release: false });
+	cy.get("body")
+		.getNodeWithLabel(nodeName)
+		.click();
 
-			// Cancel the shift key press -- the documentation doesn't say
-			// this needs to be done but if it isn't the command key stays pressed down
-			// causing problems with subsequent selections.
-			cy.get("body")
-				.type(shiftKey, { release: true });
-		});
+	// Cancel the shift key press -- the documentation doesn't say
+	// this needs to be done but if it isn't the command key stays pressed down
+	// causing problems with subsequent selections.
+	cy.get("body")
+		.type("{shift}", { release: true });
 });
 
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
@@ -392,16 +391,12 @@ Cypress.Commands.add("deleteNodeUsingContextMenu", (nodeLabel) => {
 });
 
 Cypress.Commands.add("deleteNodeUsingKeyboard", (nodeName) => {
-	// Delete node by pressing 'Delete' key on keyboard
-	cy.useDeleteKey()
-		.then((deleteKey) => {
-			cy.getNodeWithLabel(nodeName)
-				.as("nodeLabel");
-			cy.get("@nodeLabel")
-				.click({ force: true });
-			cy.get("@nodeLabel")
-				.type(deleteKey);
-		});
+	cy.getNodeWithLabel(nodeName)
+		.as("nodeLabel");
+	cy.get("@nodeLabel")
+		.click({ force: true });
+	cy.get("@nodeLabel")
+		.trigger("keydown", key.delete);
 });
 
 Cypress.Commands.add("deleteNodeUsingToolbar", (nodeName) => {
@@ -412,15 +407,12 @@ Cypress.Commands.add("deleteNodeUsingToolbar", (nodeName) => {
 
 Cypress.Commands.add("deleteNodeInSupernodeUsingKeyboard", (nodeName, supernodeName) => {
 	// Delete node in supernode by pressing 'Delete' key on keyboard
-	cy.useDeleteKey()
-		.then((deleteKey) => {
-			cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
-				.as("nodeLabel");
-			cy.get("@nodeLabel")
-				.click();
-			cy.get("@nodeLabel")
-				.type(deleteKey);
-		});
+	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
+		.as("nodeLabel");
+	cy.get("@nodeLabel")
+		.click();
+	cy.get("@nodeLabel")
+		.trigger("keydown", key.delete);
 });
 
 Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
@@ -438,22 +430,10 @@ Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
 Cypress.Commands.add("selectAllNodesUsingCtrlOrCmdKey", () => {
 	cy.get("#canvas-div-0").find(".d3-canvas-group .d3-node-image")
 		.then((nodes) => {
-			cy.useCtrlOrCmdKey()
-				.then((selectedKey) => {
-					// Press and hold the ctrl/cmd key
-					cy.get("body")
-						.type(selectedKey, { release: false });
-
-					// Click all the nodes
-					nodes.each((idx, node) => {
-						cy.wrap(node)
-							.click();
-					});
-
-					// Cancel the ctrl/cmd key press
-					cy.get("body")
-						.type(selectedKey, { release: true });
-				});
+			nodes.each((idx, node) => {
+				cy.wrap(node)
+					.click({ metaKey: true });
+			});
 		});
 });
 
@@ -511,19 +491,11 @@ Cypress.Commands.add("rightClickExpandedCanvasBackgroundOfSupernode", (supernode
 });
 
 Cypress.Commands.add("ctrlOrCmdClickExpandedCanvasBackgroundOfSupernode", (supernodeName) => {
-	// Get the os name to decide whether to click ctrl or cmd
-	cy.useCtrlOrCmdKey().then((selectedKey) => {
-		cy.get("body")
-			.type(selectedKey, { release: false });
-		cy.get("body")
-			.getNodeWithLabel(supernodeName)
-			.find(".svg-area")
-			.eq(0)
-			.click();
-		// Cancel the command/ctrl key press
-		cy.get("body")
-			.type(selectedKey, { release: true });
-	});
+	cy.get("body")
+		.getNodeWithLabel(supernodeName)
+		.find(".svg-area")
+		.eq(0)
+		.click({ metaKey: true });
 });
 
 Cypress.Commands.add("resizeNode", (nodeLabel, corner, newWidth, newHeight) => {

@@ -34,6 +34,7 @@
   "alerts.tab.title": "警示",
   "title.editor.label": "編輯標題",
   "title.editor.helpButton.label": "說明",
+  "title.editor.descButton.label": "標題附加資訊",
   "table.summary.error": "有 {errorMsgCount} 個錯誤資料格。 ",
   "table.summary.warning": "有 {warningMsgCount} 個警告資料格。 ",
   "control.summary.error": "有 {errorMsgCount} 個參數有錯誤。 ",
@@ -95,6 +96,8 @@
   "table.toolbar.button.delete": "刪除",
   "table.toolbar.button.edit": "編輯",
   "table.toolbar.button.cancel": "取消",
+  "table.toolbar.overflow.label": "表格工具列溢出",
+  "radiobuttongroup.aria.label": "圓鈕群組",
   "list.table.label": "值",
   "dropdown.tooltip.openMenu": "開啟功能表",
   "dropdown.tooltip.closeMenu": "關閉功能表",
@@ -114,5 +117,6 @@
   "label.indicator.optional": "（選用）",
   "slider.numberInput.label": "滑塊號碼輸入",
   "editorForm.tabList.label": "主要標籤",
-  "subTabs.tabList.label": "標籤清單"
+  "subTabs.tabList.label": "標籤清單",
+  "table.deleteIcon.tooltip": "刪除"
 }
