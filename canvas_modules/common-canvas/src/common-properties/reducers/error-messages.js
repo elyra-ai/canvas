@@ -40,29 +40,8 @@ function messages(state = {}, action) {
 			newState[propertyId.name] = {};
 		}
 		if (typeof propertyId.row !== "undefined") {
-			const strRow = propertyId.row.toString();
-			if (typeof newState[propertyId.name][strRow] === "undefined") {
-				newState[propertyId.name][strRow] = {};
-			} else if (typeof newState[propertyId.name][strRow].displayError !== "undefined") {
-				delete newState[propertyId.name][strRow].displayError;
-			}
-			if (typeof propertyId.col !== "undefined") {
-				const strCol = propertyId.col.toString();
-				if (typeof newState[propertyId.name][strRow][strCol] === "undefined") {
-					newState[propertyId.name][strRow][strCol] = {};
-				} else if (typeof newState[propertyId.name][strRow][strCol].displayError !== "undefined") {
-					delete newState[propertyId.name][strRow][strCol].displayError;
-				}
-				newState[propertyId.name][strRow][strCol] = Object.assign({}, newState[propertyId.name][strRow][strCol], action.message.value);
-
-				if (typeof propertyId.propertyId !== "undefined") {
-					updateNestedPropertyValue(propertyId.propertyId, newState[propertyId.name][strRow][strCol], action.message.value);
-				}
-			} else if (typeof propertyId.propertyId !== "undefined") { // nested structureeditor
-				updateNestedPropertyValue(propertyId.propertyId, newState[propertyId.name][strRow], action.message.value);
-			} else {
-				newState[propertyId.name][strRow] = Object.assign({}, action.message.value);
-			}
+			const newNameState = newState[propertyId.name];
+			updateNestedPropertyValue(propertyId, newNameState, action.message.value);
 		} else {
 			newState[propertyId.name] = Object.assign({}, action.message.value);
 		}
@@ -119,16 +98,17 @@ function updateNestedPropertyValue(propertyId, newState, value) {
 
 		if (typeof propertyId.col !== "undefined") {
 			const strCol = propertyId.col.toString();
+			if (typeof newState[strRow][strCol] === "undefined") {
+				newState[strRow][strCol] = {};
+			} else if (typeof newState[strRow][strCol].displayError !== "undefined") {
+				delete newState[strRow][strCol].displayError;
+			}
+			newState[strRow][strCol] = Object.assign({}, newState[strRow][strCol], value);
 			if (typeof propertyId.propertyId !== "undefined") {
 				updateNestedPropertyValue(propertyId.propertyId, newState[strRow][strCol], Object.assign({}, value));
-			} else {
-				if (typeof newState[strRow][strCol] === "undefined") {
-					newState[strRow][strCol] = {};
-				} else if (typeof newState[strRow][strCol].displayError !== "undefined") {
-					delete newState[strRow][strCol].displayError;
-				}
-				newState[strRow][strCol] = Object.assign({}, newState[strRow][strCol], value);
 			}
+		} else if (typeof propertyId.propertyId !== "undefined") { // nested structureeditor
+			updateNestedPropertyValue(propertyId.propertyId, newState[strRow], value);
 		} else {
 			newState[strRow] = Object.assign({}, newState[strRow], value);
 		}
