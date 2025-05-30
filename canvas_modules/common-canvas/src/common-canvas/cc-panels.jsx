@@ -242,10 +242,10 @@ class CommonCanvasPanels extends React.Component {
 					<div className="common-canvas-grid-vertical"
 						style={{ gridTemplateRows: templateRows }}
 					>
+						{canvasToolbar}
 						<div id={this.containingDivId}>
-							{canvasToolbar}
+							{topCenterBottom}
 						</div>
-						{topCenterBottom}
 					</div>
 				);
 				panels = (
