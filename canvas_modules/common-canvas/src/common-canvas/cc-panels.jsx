@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,8 @@ class CommonCanvasPanels extends React.Component {
 	constructor(props) {
 		super(props);
 		this.logger = new Logger("CC-Panels");
+
+		this.containingDivId = "common-canvas-items-container-" + props.canvasController.getInstanceId();
 	}
 
 	// Prevent the default behavior (which is to show a plus-sign pointer) as
@@ -74,8 +76,8 @@ class CommonCanvasPanels extends React.Component {
 	// on top of each other.
 	generateTopCenterBottom() {
 		const canvasContents = (<CanvasContents canvasController={this.props.canvasController} />);
-		const bottomPanel = (<CanvasBottomPanel canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />);
-		const topPanel = (<CanvasTopPanel canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />);
+		const bottomPanel = (<CanvasBottomPanel canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
+		const topPanel = (<CanvasTopPanel canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
 
 		let templateRows = this.props.topPanelIsOpen ? "auto 1fr" : "1fr";
 		templateRows += this.props.bottomPanelIsOpen ? " auto" : "";
@@ -136,7 +138,7 @@ class CommonCanvasPanels extends React.Component {
 
 	// Returns a JSX object for the contents of the right panel.
 	generateRightFlyout() {
-		return (<CommonCanvasRightFlyout containingDivId={this.props.containingDivId} canvasController={this.props.canvasController} />);
+		return (<CommonCanvasRightFlyout containingDivId={this.containingDivId} canvasController={this.props.canvasController} />);
 	}
 
 	render() {
@@ -145,7 +147,7 @@ class CommonCanvasPanels extends React.Component {
 		const tip = (<CommonCanvasTooltip canvasController={this.props.canvasController} />);
 		const canvasToolbar = (
 			<CommonCanvasToolbar canvasController={this.props.canvasController}
-				containingDivId={this.props.containingDivId}
+				containingDivId={this.containingDivId}
 			/>
 		);
 		const rightFlyoutIsOpen = this.isRightFlyoutOpen();
@@ -166,7 +168,7 @@ class CommonCanvasPanels extends React.Component {
 				const templateRows = this.props.toolbarIsOpen ? "auto 1fr" : "1fr";
 
 				const lowerPanels = (
-					<div id={this.props.containingDivId} className="common-canvas-grid-horizontal"
+					<div id={this.containingDivId} className="common-canvas-grid-horizontal"
 						style={{ gridTemplateColumns: templateCols }}
 					>
 						{leftFlyout}
@@ -188,7 +190,7 @@ class CommonCanvasPanels extends React.Component {
 				const leftSideItems = (
 					<div className="common-canvas-grid-vertical" style={{ gridTemplateRows: templateRows }}>
 						{canvasToolbar}
-						<div id={this.props.containingDivId} className="common-canvas-grid-horizontal"
+						<div id={this.containingDivId} className="common-canvas-grid-horizontal"
 							style={{ gridTemplateColumns: templateCols }}
 						>
 							{leftFlyout}
@@ -212,7 +214,7 @@ class CommonCanvasPanels extends React.Component {
 				const rightSideItems = (
 					<div className="common-canvas-grid-vertical" style={{ gridTemplateRows: templateRows }}>
 						{canvasToolbar}
-						<div id={this.props.containingDivId} className="common-canvas-grid-horizontal"
+						<div id={this.containingDivId} className="common-canvas-grid-horizontal"
 							style={{ gridTemplateColumns: templateCols }}
 						>
 							{topCenterBottom}
@@ -240,7 +242,7 @@ class CommonCanvasPanels extends React.Component {
 					<div className="common-canvas-grid-vertical"
 						style={{ gridTemplateRows: templateRows }}
 					>
-						<div id={this.props.containingDivId}>
+						<div id={this.containingDivId}>
 							{canvasToolbar}
 						</div>
 						{topCenterBottom}
@@ -259,7 +261,7 @@ class CommonCanvasPanels extends React.Component {
 		}
 
 		const dialogPalette = this.props.enablePaletteLayout === PALETTE_LAYOUT_DIALOG && this.props.paletteIsOpen
-			? (<PaletteDialog canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />)
+			? (<PaletteDialog canvasController={this.props.canvasController} containingDivId={this.containingDivId} />)
 			: null;
 
 		const divClassName = this.generateClass();
@@ -277,7 +279,6 @@ class CommonCanvasPanels extends React.Component {
 CommonCanvasPanels.propTypes = {
 	// Provided by CommonCanvas
 	canvasController: PropTypes.object.isRequired,
-	containingDivId: PropTypes.string.isRequired,
 
 	// Provided by Redux
 	enableParentClass: PropTypes.string,
