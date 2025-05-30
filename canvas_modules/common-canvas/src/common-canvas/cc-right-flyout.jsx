@@ -114,7 +114,10 @@ class CommonCanvasRightFlyout extends React.Component {
 		if (canvasContainer) {
 			// Max Width should be 70% of the total available width (canvas + rightflyout)
 			const canvasWidth = canvasContainer.getBoundingClientRect().width;
-			const maxWidth = (canvasWidth + this.props.panelWidth) * MAX_WIDTH_EXTEND_PERCENT;
+			let maxWidth = (canvasWidth + this.props.panelWidth) * MAX_WIDTH_EXTEND_PERCENT;
+			if (this.props.enableRightFlyoutUnderToolbar) {
+				maxWidth = canvasWidth * MAX_WIDTH_EXTEND_PERCENT;
+			}
 			width = Math.min(Math.max(width, this.initialWidth), maxWidth);
 		}
 
