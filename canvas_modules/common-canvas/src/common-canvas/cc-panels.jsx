@@ -237,10 +237,12 @@ class CommonCanvasPanels extends React.Component {
 				templateCols += this.props.rightFlyoutIsOpen ? " auto" : "";
 
 				const centerItems = (
-					<div id={this.props.containingDivId} className="common-canvas-grid-vertical"
+					<div className="common-canvas-grid-vertical"
 						style={{ gridTemplateRows: templateRows }}
 					>
-						{canvasToolbar}
+						<div id={this.props.containingDivId}>
+							{canvasToolbar}
+						</div>
 						{topCenterBottom}
 					</div>
 				);
