@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -199,6 +199,13 @@ function validateInput(inPropertyId, controller, showErrors = true) {
 			for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				propertyId.row = rowIndex;
 				propertyId.col = 0;
+				_validateInput(propertyId, controller, control, showErrors);
+			}
+		} else if (typeof propertyId.row !== "undefined" && control.controlType === "selectcolumns") { // validate each row in the array within a table.
+			for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+				const newNestedPropertyId = {};
+				newNestedPropertyId.row = rowIndex;
+				propertyId.propertyId = newNestedPropertyId;
 				_validateInput(propertyId, controller, control, showErrors);
 			}
 		}
@@ -549,10 +556,21 @@ function getParamRefPropertyId(paramRef, controlPropertyId) {
 	const offset = paramRef.indexOf("[");
 	if (offset > -1) {
 		baseParam.name = paramRef.substring(0, offset);
-		baseParam.col = parseInt(paramRef.substring(offset + 1, paramRef.indexOf("]")), 10);
+		const colOffset = paramRef.substring(offset + 1);
+		baseParam.col = parseInt(colOffset.substring(0, paramRef.indexOf("]")), 10);
+
+		const nestedOffset = colOffset.indexOf("[");
+		if (nestedOffset > -1) {
+			const nestedColOffset = colOffset.substring(nestedOffset + 1);
+			const nestedCol = parseInt(nestedColOffset.substring(0, paramRef.indexOf("]")), 10);
+			baseParam.propertyId = { col: nestedCol };
+		}
 	}
 	if (controlPropertyId) {
 		baseParam.row = controlPropertyId.row;
+		if (controlPropertyId.propertyId) {
+			baseParam.propertyId = controlPropertyId.propertyId;
+		}
 	}
 	return baseParam;
 }
@@ -710,10 +728,11 @@ function _validateInput(propertyId, controller, control, showErrors) {
 					errorSet = false;
 				}
 				// Before setting an error message for table cell, clear the error message for table (if any)
+				// only if there are no nested propertyId
 				if (typeof msgPropertyId.row !== "undefined" || typeof msgPropertyId.col !== "undefined") {
 					const tablePropertyId = controller.convertPropertyId(msgPropertyId.name);
 					const tableErrorMessage = controller.getErrorMessage(tablePropertyId);
-					if (tableErrorMessage !== null) {
+					if (tableErrorMessage !== null && !msgPropertyId.propertyId) {
 						controller.updateErrorMessage(tablePropertyId, null);
 					}
 				}
@@ -723,7 +742,7 @@ function _validateInput(propertyId, controller, control, showErrors) {
 					if (isError) {
 						errorSet = true;
 					}
-				} else if ((!isError && !errorSet) || (!isError && errorSet)) {
+				} else if (!isError) {
 					const msg = controller.getErrorMessage(msgPropertyId, false, false, false);
 					if (!isEmpty(msg) && (msg.validation_id === errorMessage.validation_id)) {
 						controller.updateErrorMessage(msgPropertyId, DEFAULT_VALIDATION_MESSAGE);

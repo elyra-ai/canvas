@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { STATES } from "./../../constants/constants.js";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import classNames from "classnames";
 
 export default class ValidationMessage extends React.Component {
@@ -28,6 +29,12 @@ export default class ValidationMessage extends React.Component {
 		if (!this.props.messageInfo || (this.props.tableOnly && !this.props.inTable)) {
 			return null;
 		}
+
+		// Check if this is a nested control, and if the messageInfo applies to that specific cell
+		if (!doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo)) {
+			return null;
+		}
+
 		const msgText = this.props.inTable ? null : <span>{this.props.messageInfo.text}</span>;
 		const icon = (<div className="icon">
 			{<Icon type={this.props.messageInfo.type} />}
@@ -57,8 +64,10 @@ export default class ValidationMessage extends React.Component {
 ValidationMessage.propTypes = {
 	messageInfo: PropTypes.shape({
 		text: PropTypes.string,
-		type: PropTypes.string
+		type: PropTypes.string,
+		propertyId: PropTypes.object
 	}),
+	propertyId: PropTypes.object,
 	state: PropTypes.string,
 	inTable: PropTypes.bool,
 	tableOnly: PropTypes.bool

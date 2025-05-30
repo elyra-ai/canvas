@@ -1,0 +1,430 @@
+{
+  "titleDefinition": {
+    "title": "Nested cells"
+  },
+  "current_parameters": {
+    "nested_table": [
+      [
+        ["list1", "list2"],
+        ["Age", "Na"],
+        ["orange", "green"],
+        [["Sex", "red"], ["BP", "blue"]],
+        [["Hello", 1], ["world", 2]]
+      ]
+    ]
+  },
+  "parameters": [
+    {
+      "id": "nested_table",
+      "type": "array[table_controls]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "table_controls",
+      "parameters": [
+        {
+          "id": "list",
+          "type": "array[string]"
+
+        },
+        {
+          "id": "select_columns",
+          "type": "array[string]",
+          "role": "column"
+        },
+        {
+          "id": "someofselect",
+          "type": "array[string]",
+          "enum": [
+            "red",
+            "orange",
+            "yellow",
+            "green",
+            "blue",
+            "purple"
+          ]
+        },
+        {
+          "id": "structuretable",
+          "type": "map[string, nestedStructureTable]",
+          "role": "column"
+        },
+        {
+          "id": "structurelisteditor",
+          "type": "array[nestedStructureListEditor]"
+        }
+      ]
+    },
+    {
+			"id": "nestedStructureTable",
+			"parameters": [
+				{
+          "id": "field",
+          "type": "string",
+          "role": "column"
+				},
+				{
+					"id": "oneofselect",
+					"enum": [
+            "red",
+            "orange",
+            "yellow",
+            "green",
+            "blue",
+            "purple"
+          ]
+				}
+			]
+		},
+    {
+      "id": "nestedStructureListEditor",
+      "parameters": [
+        {
+          "id": "textfield",
+          "type": "string"
+        },
+        {
+          "id": "numberfield",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "nested cells test",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Nested cells test"
+    },
+    "editor_size": "large",
+    "parameter_info": [
+      {
+        "parameter_ref": "nested_table",
+        "label": {
+          "default": "Table within table"
+        },
+        "description": {
+          "default": "This example displays conditions within a nested table.",
+          "placement": "on_panel"
+        },
+				"required": true
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "table_controls",
+        "parameters": [
+          {
+            "parameter_ref": "list",
+            "width": 10,
+            "label": {
+              "default": "list"
+            },
+            "description": {
+              "default": "Enter 'error' in a cell to display an error",
+              "placement": "on_panel"
+            },
+            "edit_style": "on_panel",
+            "control": "list",
+            "required": true
+          },
+          {
+            "parameter_ref": "select_columns",
+            "width": 10,
+            "label": {
+              "default": "selectColumns"
+            },
+            "description": {
+              "default": "Select the column 'K' to display an error",
+              "placement": "on_panel"
+            },
+            "edit_style": "subpanel",
+            "required": true
+          },
+          {
+            "parameter_ref": "someofselect",
+            "width": 10,
+            "label": {
+              "default": "someofselect"
+            },
+            "description": {
+              "default": "Select 'orange' below to display an error. It is preselected initially and error will not be shown until the control is modified",
+              "placement": "on_panel"
+            },
+            "edit_style": "subpanel",
+            "required": true
+          },
+          {
+            "parameter_ref": "structuretable",
+            "width": 10,
+            "label": {
+              "default": "structuretable"
+            },
+            "description": {
+              "default": "Select 'green' in the second column to display an error",
+              "placement": "on_panel"
+            },
+            "edit_style": "on_panel",
+            "required": true
+          },
+          {
+            "parameter_ref": "structurelisteditor",
+            "width": 10,
+            "label": {
+              "default": "structurelisteditor"
+            },
+            "description": {
+              "default": "Enter 'error' in a cell in the first column, or enter a number less than 1 in the second column to display an error. Clearing a cell error will update the table error to show the remaining error present in the table",
+              "placement": "on_panel"
+            },
+            "edit_style": "subpanel",
+            "required": true
+          }
+        ]
+      },
+      {
+				"complex_type_ref": "nestedStructureTable",
+				"moveable_rows": true,
+				"parameters": [
+					{
+						"parameter_ref": "field",
+						"label": {
+							"default": "field"
+						},
+            "required": true
+					},
+					{
+						"parameter_ref": "oneofselect",
+						"label": {
+							"default": "oneofselect"
+						},
+            "required": true
+					}
+				]
+			},
+      {
+				"complex_type_ref": "nestedStructureListEditor",
+				"moveable_rows": true,
+				"parameters": [
+					{
+						"parameter_ref": "textfield",
+						"label": {
+							"default": "textfield"
+						},
+						"control": "textfield",
+            "required": true
+					},
+					{
+						"parameter_ref": "numberfield",
+						"label": {
+							"default": "numberfield"
+						},
+						"control": "numberfield",
+            "required": true
+					}
+				]
+			}
+    ],
+    "group_info": [
+      {
+        "id": "numberfield-table-panels",
+        "label": {
+          "default": "Table"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "nested_table"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "nested_table[0]",
+          "message": {
+            "default": "Cannot be 'error'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "nested_table[0]",
+            "op": "notEquals",
+            "value": "error"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "nested_table[1]",
+          "message": {
+            "default": "Cannot contain 'K'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "nested_table[1]",
+            "op": "notContains",
+            "value": "K"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "nested_table[2]",
+          "message": {
+            "default": "Cannot select 'orange'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "nested_table[2]",
+            "op": "notContains",
+            "value": "orange"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "nested_table[3]",
+          "message": {
+            "default": "Cannot select 'green'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "nested_table[3][1]",
+            "op": "notEquals",
+            "value": "green"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "nested_table[4][0]",
+          "message": {
+            "default": "Cannot be 'error'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "nested_table[4][0]",
+            "op": "notEquals",
+            "value": "error"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "nested_table[4][1]",
+          "message": {
+            "default": "Must be greater than 0"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "nested_table[4][1]",
+            "op": "greaterThan",
+            "value": "0"
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": [
+		{
+			"fields": [
+				{
+					"name": "Age",
+					"type": "integer",
+					"metadata": {
+						"description": "",
+						"measure": "range",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Sex",
+					"type": "string",
+					"metadata": {
+						"description": "",
+						"measure": "ordered_set",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "BP",
+					"type": "string",
+					"metadata": {
+						"description": "",
+						"measure": "discrete",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Cholesterol",
+					"type": "string",
+					"metadata": {
+						"description": "",
+						"measure": "set",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Na",
+					"type": "double",
+					"metadata": {
+						"description": "",
+						"measure": "flag",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "K",
+					"type": "double",
+					"metadata": {
+						"description": "",
+						"measure": "collection",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Drug",
+					"type": "string",
+					"metadata": {
+						"description": "",
+						"measure": "geospatial",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Ag",
+					"type": "integer",
+					"metadata": {
+						"description": "",
+						"measure": "",
+						"modeling_role": "input"
+					}
+				}
+			]
+		}
+	]
+}
