@@ -542,4 +542,156 @@ describe("nested conditions display the error in the correct cell and table", ()
 		expect(validationErrors.length).to.equal(2); // First one is in cell, the other is on table
 		expect(validationErrors[1].querySelector("span").textContent).to.equal("Cannot be 'error'");
 	});
+
+	it("default required conditions work correctly for a nested structurelisteditor control", () => {
+		const container = wrapper.container;
+		const mainTable = container.querySelector("div[data-id='properties-ci-nested_table']");
+		const editButton = mainTable.querySelectorAll("button.properties-subpanel-button")[0];
+		fireEvent.click(editButton); // Click subpanel edit button on first row
+
+		// verify subpanel shows structurelisteditor control
+		const subPanel = container.querySelectorAll(".properties-editstyle-sub-panel");
+		expect(subPanel).to.have.length(1);
+
+		const structurelisteditorControl = subPanel[0].querySelectorAll("div[data-id='properties-ft-structurelisteditor']");
+		expect(structurelisteditorControl.length).to.equal(1);
+
+		const textInputs = structurelisteditorControl[0].querySelectorAll("input[type='text']");
+		expect(textInputs.length).to.equal(2);
+		const numberInputs = structurelisteditorControl[0].querySelectorAll("input[type='number']");
+		expect(numberInputs.length).to.equal(2);
+
+		const expectedOneError = {
+			"nested_table": {
+				"0": {
+					"4": {
+						"1": {
+							"0": {
+								"propertyId": {
+									"col": 4,
+									"name": "nested_table",
+									"propertyId": {
+										"col": 0,
+										"name": "structurelisteditor",
+										"row": 1
+									},
+									"row": 0
+								},
+								"required": true,
+								"text": "You must enter a value for textfield.",
+								"type": "error",
+								"validation_id": "required_nested_table[4][0]_186.07303925125697"
+							}
+						},
+						"propertyId": {
+							"col": 4,
+							"name": "nested_table",
+							"propertyId": {
+								"col": 0,
+								"name": "structurelisteditor",
+								"row": 1
+							},
+							"row": 0
+						},
+						"required": true,
+						"text": "You must enter a value for textfield.",
+						"type": "error",
+						"validation_id": "required_nested_table[4][0]_186.07303925125697"
+					}
+				}
+			}
+		};
+
+		// Modify row 1 textinput to show error
+		fireEvent.change(textInputs[1], { target: { value: "" } });
+		expect(controller.getErrorMessages()).to.eql(expectedOneError);
+
+		// Verify main parent table also display the error in cell
+		let errors = mainTable.querySelectorAll(".properties-validation-message.error.inTable");
+		expect(errors.length).to.equal(1);
+
+		// Verify structurelistedior also display the error in bottom of table
+		let validationErrors = subPanel[0].querySelectorAll(".properties-validation-message.error");
+		expect(validationErrors.length).to.equal(2); // First one is in cell, the other is on table
+		expect(validationErrors[1].querySelector("span").textContent).to.equal("You must enter a value for textfield.");
+
+		const expectedTwoErrors = {
+			"nested_table": {
+				"0": {
+					"4": {
+						"0": {
+							"1": {
+								"propertyId": {
+									"col": 4,
+									"name": "nested_table",
+									"propertyId": {
+										"col": 1,
+										"name": "structurelisteditor",
+										"row": 0
+									},
+									"row": 0
+								},
+								"required": true,
+								"text": "You must enter a value for numberfield.",
+								"type": "error",
+								"validation_id": "required_nested_table[4][1]_344.3166233602058"
+							}
+						},
+						"1": {
+							"0": {
+								"propertyId": {
+									"col": 4,
+									"name": "nested_table",
+									"propertyId": {
+										"col": 0,
+										"name": "structurelisteditor",
+										"row": 1
+									},
+									"row": 0
+								},
+								"required": true,
+								"text": "You must enter a value for textfield.",
+								"type": "error",
+								"validation_id": "required_nested_table[4][0]_186.07303925125697"
+							}
+						},
+						"propertyId": {
+							"col": 4,
+							"name": "nested_table",
+							"propertyId": {
+								"col": 1,
+								"name": "structurelisteditor",
+								"row": 0
+							},
+							"row": 0
+						},
+						"required": true,
+						"text": "You must enter a value for numberfield.",
+						"type": "error",
+						"validation_id": "required_nested_table[4][1]_344.3166233602058"
+					}
+				}
+			}
+		};
+
+		// Modify row 1 numberinput to show error
+		fireEvent.change(numberInputs[0], { target: { value: null } });
+		expect(controller.getErrorMessages()).to.eql(expectedTwoErrors);
+
+		// Verify main table also display the error in cell
+		errors = mainTable.querySelectorAll(".properties-validation-message.error.inTable");
+		expect(errors.length).to.equal(1);
+
+		// Verify structurelisteditor table error gets updated
+		validationErrors = subPanel[0].querySelectorAll(".properties-validation-message.error");
+		expect(validationErrors.length).to.equal(3); // Two errors in the cell, the other is on table
+		expect(validationErrors[2].querySelector("span").textContent).to.equal("You must enter a value for numberfield.");
+
+		// Remove error from numberinput, table error should be set back to first error
+		fireEvent.change(numberInputs[0], { target: { value: 1 } });
+		expect(controller.getErrorMessages()).to.eql(expectedOneError);
+		validationErrors = subPanel[0].querySelectorAll(".properties-validation-message.error");
+		expect(validationErrors.length).to.equal(2); // First one is in cell, the other is on table
+		expect(validationErrors[1].querySelector("span").textContent).to.equal("You must enter a value for textfield.");
+	});
 });

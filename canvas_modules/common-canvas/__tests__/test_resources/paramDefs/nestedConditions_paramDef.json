@@ -25,8 +25,8 @@
       "parameters": [
         {
           "id": "list",
-          "type": "array[string]"
-
+          "type": "array[string]",
+          "required": true
         },
         {
           "id": "select_columns",
@@ -82,11 +82,13 @@
       "parameters": [
         {
           "id": "textfield",
-          "type": "string"
+          "type": "string",
+          "required": true
         },
         {
           "id": "numberfield",
-          "type": "integer"
+          "type": "integer",
+          "required": true
         }
       ]
     }
@@ -107,8 +109,7 @@
         "description": {
           "default": "This example displays conditions within a nested table.",
           "placement": "on_panel"
-        },
-				"required": true
+        }
       }
     ],
     "complex_type_info": [
@@ -126,8 +127,7 @@
               "placement": "on_panel"
             },
             "edit_style": "on_panel",
-            "control": "list",
-            "required": true
+            "control": "list"
           },
           {
             "parameter_ref": "select_columns",
@@ -139,8 +139,7 @@
               "default": "Select the column 'K' to display an error",
               "placement": "on_panel"
             },
-            "edit_style": "subpanel",
-            "required": true
+            "edit_style": "subpanel"
           },
           {
             "parameter_ref": "someofselect",
@@ -152,8 +151,7 @@
               "default": "Select 'orange' below to display an error. It is preselected initially and error will not be shown until the control is modified",
               "placement": "on_panel"
             },
-            "edit_style": "subpanel",
-            "required": true
+            "edit_style": "subpanel"
           },
           {
             "parameter_ref": "structuretable",
@@ -165,8 +163,7 @@
               "default": "Select 'green' in the second column to display an error",
               "placement": "on_panel"
             },
-            "edit_style": "on_panel",
-            "required": true
+            "edit_style": "on_panel"
           },
           {
             "parameter_ref": "structurelisteditor",
@@ -178,8 +175,7 @@
               "default": "Enter 'error' in a cell in the first column, or enter a number less than 1 in the second column to display an error. Clearing a cell error will update the table error to show the remaining error present in the table",
               "placement": "on_panel"
             },
-            "edit_style": "subpanel",
-            "required": true
+            "edit_style": "subpanel"
           }
         ]
       },
@@ -191,15 +187,13 @@
 						"parameter_ref": "field",
 						"label": {
 							"default": "field"
-						},
-            "required": true
+						}
 					},
 					{
 						"parameter_ref": "oneofselect",
 						"label": {
 							"default": "oneofselect"
-						},
-            "required": true
+						}
 					}
 				]
 			},
@@ -212,16 +206,14 @@
 						"label": {
 							"default": "textfield"
 						},
-						"control": "textfield",
-            "required": true
+						"control": "textfield"
 					},
 					{
 						"parameter_ref": "numberfield",
 						"label": {
 							"default": "numberfield"
 						},
-						"control": "numberfield",
-            "required": true
+						"control": "numberfield"
 					}
 				]
 			}
