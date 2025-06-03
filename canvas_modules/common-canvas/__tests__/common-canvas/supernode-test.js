@@ -405,7 +405,8 @@ describe("Expand and Collapse Supernode Action", () => {
 		expect(canvasController.getNode(superNodeId).is_expanded).to.be.false;
 	});
 
-	it("Should set the is_expanded attribute correctly with undo and redo", async() => {
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
+	it("Should set the is_expanded attribute correctly with undo and redo", () => {
 		setTimeout(() => {
 			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 			canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
@@ -437,6 +438,7 @@ describe("Expand and Collapse Supernode Action", () => {
 		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.is_expanded).to.be.false;
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should move the surrounding nodes when supernode is expanded", () => {
 		setTimeout(() => {
 			canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
@@ -560,6 +562,7 @@ describe("Expand and Collapse Supernode Action", () => {
 	});
 
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should move the surrounding nodes south when supernode is expanded and overlaps nodes", () => {
 		setTimeout(() => {
 			canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
@@ -664,6 +667,7 @@ describe("Expand and Collapse Supernode Action", () => {
 		}, 500);
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should move the surrounding nodes east when supernode is expanded and overlaps nodes", () => {
 		setTimeout(() => {
 			canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
@@ -771,6 +775,7 @@ describe("Expand and Collapse Supernode Action", () => {
 		}, 500);
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should move the surrounding nodes southeast when supernode is expanded and overlaps nodes", () => {
 		setTimeout(() => {
 			canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
@@ -878,6 +883,7 @@ describe("Expand and Collapse Supernode Action", () => {
 		}, 500);
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should not move the surrounding nodes when enableMoveNodesOnSupernodeResize is false", () => {
 		setTimeout(() => {
 			canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: false });
@@ -1152,6 +1158,7 @@ describe("Ensure no cross pipeline selection", () => {
 	});
 
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should cancel parent flow selection when sub-flow selection is made", () => {
 		setTimeout(() => {
 			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
@@ -1176,6 +1183,7 @@ describe("Ensure no cross pipeline selection", () => {
 		}, 500);
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should cancel sub-flow selection when parent flow selection is made", () => {
 		setTimeout(() => {
 			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
@@ -1938,6 +1946,7 @@ describe("Copy and Paste Supernode", () => {
 		expect(isEqual(JSON.stringify(pipelineFlowBefore2), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Select in sub-flow should cancel selection in parent flow", () => {
 		setTimeout(() => {
 			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
@@ -1962,6 +1971,7 @@ describe("Copy and Paste Supernode", () => {
 		}, 500);
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Select in parent flow should cancel selection in sub-flow", () => {
 		setTimeout(() => {
 			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
