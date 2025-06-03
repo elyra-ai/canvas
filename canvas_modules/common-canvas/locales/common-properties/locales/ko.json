@@ -33,7 +33,8 @@
   "summary.longTable.placeholder": "10개가 넘는 필드...",
   "alerts.tab.title": "경보",
   "title.editor.label": "제목 편집",
-  "title.editor.helpButton.label": "help",
+  "title.editor.helpButton.label": "도움말",
+  "title.editor.descButton.label": "추가 정보로 이동",
   "table.summary.error": "{errorMsgCount} 오류 셀이 있습니다. ",
   "table.summary.warning": "{warningMsgCount} 경고 셀이 있습니다. ",
   "control.summary.error": "오류가 있는 {errorMsgCount} 매개변수가 있습니다. ",
@@ -95,6 +96,8 @@
   "table.toolbar.button.delete": "삭제",
   "table.toolbar.button.edit": "편집",
   "table.toolbar.button.cancel": "취소",
+  "table.toolbar.overflow.label": "표 도구 모음 오버플로",
+  "radiobuttongroup.aria.label": "단일 선택 단추 그룹",
   "list.table.label": "값",
   "dropdown.tooltip.openMenu": "메뉴 열기",
   "dropdown.tooltip.closeMenu": "닫기 메뉴",
@@ -114,5 +117,6 @@
   "label.indicator.optional": "(선택사항)",
   "slider.numberInput.label": "슬라이더 번호 입력",
   "editorForm.tabList.label": "기본 탭",
-  "subTabs.tabList.label": "탭 목록"
+  "subTabs.tabList.label": "탭 목록",
+  "table.deleteIcon.tooltip": "삭제"
 }

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import key from "../../support/canvas/key.js";
+
 // Click the canvas at position {x,y}
 Cypress.Commands.add("clickCanvasAt", (x, y) => {
 	cy.get("#canvas-div-0").click(x, y);
@@ -43,7 +45,7 @@ Cypress.Commands.add("panCanvasToPosition", (canvasX, canvasY) => {
 				// Pressing space is needed for "Carbon" and "Trackpad" interaction types
 				// but does not do any harm if used with the "Mouse" interaction type.
 				cy.get("#canvas-div-0")
-					.trigger("keydown", { code: "Space", keyCode: 32, release: false });
+					.trigger("keydown", key.space);
 				// Start at position 1, 1 as using topLeft doesn't work
 				cy.get("#canvas-div-0")
 					.trigger("mousedown", 1, 1, { which: 1, view: win });
@@ -58,6 +60,41 @@ Cypress.Commands.add("panCanvasToPosition", (canvasX, canvasY) => {
 // Move the mouse to the {x,y} position
 Cypress.Commands.add("moveMouseToCoordinates", (x, y) => {
 	cy.get(".d3-svg-canvas-div").trigger("mousemove", x, y);
+});
+
+Cypress.Commands.add("getSVGArea", () => {
+	cy.get("#d3-svg-canvas-div-0 > .svg-area");
+});
+
+Cypress.Commands.add("shortcutKeysCut", () => {
+	cy.getSVGArea().trigger("keydown", key.cut);
+});
+
+Cypress.Commands.add("shortcutKeysCopy", () => {
+	cy.getSVGArea().trigger("keydown", key.copy);
+});
+
+Cypress.Commands.add("shortcutKeysPaste", () => {
+	cy.getSVGArea().trigger("keydown", key.paste);
+});
+
+Cypress.Commands.add("shortcutKeysUndo", () => {
+	cy.getSVGArea().click(1, 1); // Put foucs on the SVG area, ready for key press
+	cy.getSVGArea().trigger("keydown", key.undo);
+});
+
+Cypress.Commands.add("shortcutKeysRedo", () => {
+	cy.getSVGArea().click(1, 1); // Put foucs on the SVG area, ready for key press
+	cy.getSVGArea().trigger("keydown", key.redo);
+});
+
+Cypress.Commands.add("shortcutKeysDelete", () => {
+	cy.getSVGArea().trigger("keydown", key.delete);
+});
+
+Cypress.Commands.add("shortcutKeysSelectAllCanvasObjects", () => {
+	cy.getSVGArea().click(1, 1); // Put foucs on the SVG area, ready for key press
+	cy.getSVGArea().trigger("keydown", key.selectAll);
 });
 
 // Move the mouse to the {x,y} position in the palette

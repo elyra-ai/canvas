@@ -11,6 +11,7 @@
   "canvas.addComment": "Nuevo comentario",
   "canvas.addWysiwygComment": "Nuevo comentario WYSIWYG",
   "canvas.selectAll": "Seleccionar todo",
+  "canvas.deselectAll": "Deseleccionar todo",
   "canvas.undo": "Deshacer",
   "canvas.redo": "Rehacer",
   "canvas.undoCommand": "Deshacer: {undo_command}",

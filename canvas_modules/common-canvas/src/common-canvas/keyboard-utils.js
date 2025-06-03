@@ -22,32 +22,32 @@ const LEFT_ARROW_KEY = "ArrowLeft";
 const RIGHT_ARROW_KEY = "ArrowRight";
 const UP_ARROW_KEY = "ArrowUp";
 const DOWN_ARROW_KEY = "ArrowDown";
-const LAB_KEY = "Comma"; // Left angle bracket
-const RAB_KEY = "Period"; // Right angle bracket
 const ESC_KEY = "Escape";
-const PERIOD_KEY = "Period";
-const SLASH_KEY = "Slash";
-const EQUAL_KEY = "Equal";
-const MINUS_KEY = "Minus";
+const COMMA_KEY = ",";
 const TAB_KEY = "Tab";
 const BACKSPACE_KEY = "Backspace";
 const DELETE_KEY = "Delete";
 
-const A_KEY = "KeyA";
-const B_KEY = "KeyB";
-const C_KEY = "KeyC";
-const E_KEY = "KeyE";
-const I_KEY = "KeyI";
-const K_KEY = "KeyK";
-const P_KEY = "KeyP";
-const V_KEY = "KeyV";
-const X_KEY = "KeyX";
-const Y_KEY = "KeyY";
-const Z_KEY = "KeyZ";
+const A_KEY = "a";
+const B_KEY = "b";
+const C_KEY = "c";
+const E_KEY = "e";
+const I_KEY = "i";
+const K_KEY = "k";
+const L_KEY = "l";
+const P_KEY = "p";
+const V_KEY = "v";
+const X_KEY = "x";
+const Y_KEY = "y";
+const Z_KEY = "z";
 
-const SEVEN_KEY = "Digit7";
-const EIGHT_KEY = "Digit8";
-const ZERO_KEY = "Digit0";
+const F10_KEY = "F10";
+
+const SEVEN_KEY = "7";
+const EIGHT_KEY = "8";
+const NINE_KEY = "9";
+const ZERO_KEY = "0";
+
 
 export default class KeyboardUtils {
 
@@ -56,79 +56,79 @@ export default class KeyboardUtils {
 	/* ----------------------------------------- */
 
 	static spaceKey(evt) {
-		return evt.code === SPACE_KEY;
+		return evt.key === SPACE_KEY;
 	}
 
 	static toggleLogging(evt) {
-		return this.isMetaKey(evt) && evt.shiftKey && evt.altKey && evt.code === P_KEY;
+		return this.isMetaKey(evt) && evt.shiftKey && evt.altKey && evt.key === P_KEY;
 	}
 
 	static selectAll(evt) {
-		return this.isMetaKey(evt) && !evt.shiftKey && evt.code === A_KEY;
+		return this.isMetaKey(evt) && !evt.shiftKey && evt.key === A_KEY;
 	}
 
 	static deselectAll(evt) {
-		return this.isMetaKey(evt) && evt.shiftKey && evt.code === A_KEY;
+		return this.isMetaKey(evt) && evt.shiftKey && evt.key === A_KEY;
 	}
 
 	static delete(evt) {
-		return (evt.code === BACKSPACE_KEY || evt.code === DELETE_KEY);
+		return (evt.key === BACKSPACE_KEY || evt.key === DELETE_KEY);
 	}
 
 	static undo(evt) {
-		return this.isMetaKey(evt) && !evt.shiftKey && evt.code === Z_KEY;
+		return this.isMetaKey(evt) && !evt.shiftKey && evt.key === Z_KEY;
 	}
 
 	static redo(evt) {
-		return this.isMetaKey(evt) && ((evt.shiftKey && evt.code === Z_KEY) || evt.code === Y_KEY);
+		return this.isMetaKey(evt) && ((evt.shiftKey && evt.key === Z_KEY) || evt.key === Y_KEY);
 	}
 
 	static copyToClipboard(evt) {
-		return this.isMetaKey(evt) && evt.code === C_KEY;
+		return this.isMetaKey(evt) && evt.key === C_KEY;
 	}
 
 	static cutToClipboard(evt) {
-		return this.isMetaKey(evt) && evt.code === X_KEY;
+		return this.isMetaKey(evt) && evt.key === X_KEY;
 	}
 
 	static pasteFromClipboard(evt) {
-		return this.isMetaKey(evt) && evt.code === V_KEY;
+		return this.isMetaKey(evt) && evt.key === V_KEY;
 	}
 
 	static zoomIn(evt) {
-		return this.isMetaKey(evt) && evt.shiftKey && evt.code === EQUAL_KEY;
+		return this.isMetaKey(evt) && evt.shiftKey && evt.key === EIGHT_KEY;
 	}
 
 	static zoomOut(evt) {
-		return this.isMetaKey(evt) && evt.shiftKey && evt.code === MINUS_KEY;
+		return this.isMetaKey(evt) && evt.shiftKey && evt.key === NINE_KEY;
 	}
 
 	static zoomToFit(evt) {
-		return this.isMetaKey(evt) && evt.shiftKey && evt.code === ZERO_KEY;
+		return this.isMetaKey(evt) && evt.shiftKey && evt.key === ZERO_KEY;
 	}
 
 	static panLeft(evt) {
-		return this.isMetaKey(evt) && evt.shiftKey && evt.code === LEFT_ARROW_KEY;
+		return this.isMetaKey(evt) && evt.shiftKey && evt.key === LEFT_ARROW_KEY;
 	}
 
 	static panRight(evt) {
-		return this.isMetaKey(evt) && evt.shiftKey && evt.code === RIGHT_ARROW_KEY;
+		return this.isMetaKey(evt) && evt.shiftKey && evt.key === RIGHT_ARROW_KEY;
 	}
 
 	static panUp(evt) {
-		return this.isMetaKey(evt) && evt.shiftKey && evt.code === UP_ARROW_KEY;
+		return this.isMetaKey(evt) && evt.shiftKey && evt.key === UP_ARROW_KEY;
 	}
 
 	static panDown(evt) {
-		return this.isMetaKey(evt) && evt.shiftKey && evt.code === DOWN_ARROW_KEY;
+		return this.isMetaKey(evt) && evt.shiftKey && evt.key === DOWN_ARROW_KEY;
 	}
 
 	static nextGroup(evt) {
-		return evt.code === TAB_KEY && !evt.shiftKey;
+		return !evt.shiftKey && evt.key === TAB_KEY;
 	}
 
 	static previousGroup(evt) {
-		return evt.code === TAB_KEY && evt.shiftKey;
+		return evt.shiftKey && evt.key === TAB_KEY;
 	}
 
 	/* ----------------------------------------- */
@@ -136,86 +136,87 @@ export default class KeyboardUtils {
 	/* ----------------------------------------- */
 
 	static nextObjectInGroup(d3Event) {
-		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === RIGHT_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === RIGHT_ARROW_KEY;
 	}
 
 	static previousObjectInGroup(d3Event) {
-		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === LEFT_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === LEFT_ARROW_KEY;
 	}
 
 	static selectObject(d3Event) {
-		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === RETURN_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === RETURN_KEY;
 	}
 
 	static selectObjectAugment(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === RETURN_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === RETURN_KEY;
 	}
 
 	static selectObjectRange(d3Event) {
-		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === RETURN_KEY;
+		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === RETURN_KEY;
 	}
 
 	static nextSiblingLink(d3Event) {
-		return d3Event.code === DOWN_ARROW_KEY;
+		return d3Event.key === DOWN_ARROW_KEY;
 	}
 
 	static previousSiblingLink(d3Event) {
-		return d3Event.code === UP_ARROW_KEY;
+		return d3Event.key === UP_ARROW_KEY;
 	}
 
 	// Shortcut to display either a context menu or context
 	// toolbar, depending on which is enabled, for the
 	// canvas or objects on the canvas.
 	static displayContextOptions(evt) {
-		return this.isMetaKey(evt) && evt.code === SLASH_KEY;
+		return (this.isMetaKey(evt) && evt.key === COMMA_KEY) ||
+			(evt.shiftKey && evt.key === F10_KEY);
 	}
 
 	static moveObjectLeft(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === LEFT_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === LEFT_ARROW_KEY;
 	}
 
 	static moveObjectRight(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === RIGHT_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === RIGHT_ARROW_KEY;
 	}
 
 	static moveObjectUp(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === UP_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === UP_ARROW_KEY;
 	}
 
 	static moveObjectDown(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === DOWN_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === DOWN_ARROW_KEY;
 	}
 
 	static sizeObjectLeft(d3Event) {
-		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === LEFT_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === LEFT_ARROW_KEY;
 	}
 
 	static sizeObjectRight(d3Event) {
-		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === RIGHT_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === RIGHT_ARROW_KEY;
 	}
 
 	static sizeObjectUp(d3Event) {
-		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === UP_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === UP_ARROW_KEY;
 	}
 
 	static sizeObjectDown(d3Event) {
-		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === DOWN_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === DOWN_ARROW_KEY;
 	}
 
 	/* Link creation */
 
 	static createLink(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === PERIOD_KEY;
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === L_KEY;
 	}
 
 	/* Comment display */
 
 	static scrollTextUp(d3Event) {
-		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.code === DOWN_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.key === DOWN_ARROW_KEY;
 	}
 
 	static scrollTextDown(d3Event) {
-		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.code === UP_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.key === UP_ARROW_KEY;
 	}
 
 	/* ----------------------------------------- */
@@ -223,63 +224,63 @@ export default class KeyboardUtils {
 	/* ----------------------------------------- */
 
 	static cancelTextEntry(d3Event) {
-		return d3Event.code === ESC_KEY;
+		return d3Event.key === ESC_KEY;
 	}
 
 	static completeTextEntry(d3Event) {
-		return d3Event.shiftKey && d3Event.code === RETURN_KEY;
+		return d3Event.shiftKey && d3Event.key === RETURN_KEY;
 	}
 
 	static returnToTextEditing(evt) {
-		return !evt.shiftKey && evt.code === TAB_KEY;
+		return !evt.shiftKey && evt.key === TAB_KEY;
 	}
 
 	// During text entry this might either complete the text entry OR
 	// add a new line.
 	static returnCommand(d3Event) {
-		return d3Event.code === RETURN_KEY;
+		return d3Event.key === RETURN_KEY;
 	}
 
 	/* Markdown text entry shortcuts */
 
 	static boldCommand(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.code === B_KEY;
+		return this.isMetaKey(d3Event) && d3Event.key === B_KEY;
 	}
 
 	static italicsCommand(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.code === I_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === I_KEY;
 	}
 
 	static strikethroughCommand(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === X_KEY;
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === X_KEY;
 	}
 
 	static numberedListCommand(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === SEVEN_KEY;
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === SEVEN_KEY;
 	}
 
 	static bulletedListCommand(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === EIGHT_KEY;
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === EIGHT_KEY;
 	}
 
 	static codeCommand(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.code === E_KEY;
+		return this.isMetaKey(d3Event) && d3Event.key === E_KEY;
 	}
 
 	static linkCommand(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.code === K_KEY;
+		return this.isMetaKey(d3Event) && d3Event.key === K_KEY;
 	}
 
 	static quoteCommand(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.code === RAB_KEY;
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === I_KEY;
 	}
 
 	static incHashesCommand(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === RAB_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === RIGHT_ARROW_KEY;
 	}
 
 	static decHashesCommand(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.code === LAB_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === LEFT_ARROW_KEY;
 	}
 
 	/* ----------------------------------------- */
@@ -287,35 +288,35 @@ export default class KeyboardUtils {
 	/* ----------------------------------------- */
 
 	static openSubArea(evt) {
-		return evt.code === DOWN_ARROW_KEY;
+		return evt.key === DOWN_ARROW_KEY;
 	}
 
 	static closeSubArea(evt) {
-		return evt.code === ESC_KEY;
+		return evt.key === ESC_KEY;
 	}
 
 	static openSubAreaFromMenu(evt) {
-		return evt.code === RIGHT_ARROW_KEY;
+		return evt.key === RIGHT_ARROW_KEY;
 	}
 
 	static closeSubAreaToMenu(evt) {
-		return evt.code === LEFT_ARROW_KEY;
+		return evt.key === LEFT_ARROW_KEY;
 	}
 
 	static setFocusOnNextToolbarBtn(evt) {
-		return evt.code === RIGHT_ARROW_KEY;
+		return evt.key === RIGHT_ARROW_KEY;
 	}
 
 	static setFocusOnPreviousToolbarBtn(evt) {
-		return evt.code === LEFT_ARROW_KEY;
+		return evt.key === LEFT_ARROW_KEY;
 	}
 
 	static setFocusOnNextMenuItem(evt) {
-		return evt.code === DOWN_ARROW_KEY;
+		return evt.key === DOWN_ARROW_KEY;
 	}
 
 	static setFocusOnPreviousMenuItem(evt) {
-		return evt.code === UP_ARROW_KEY;
+		return evt.key === UP_ARROW_KEY;
 	}
 
 	/* ----------------------------------------- */
@@ -323,27 +324,27 @@ export default class KeyboardUtils {
 	/* ----------------------------------------- */
 
 	static nextColor(evt) {
-		return evt.code === RIGHT_ARROW_KEY;
+		return evt.key === RIGHT_ARROW_KEY;
 	}
 
 	static previousColor(evt) {
-		return evt.code === LEFT_ARROW_KEY;
+		return evt.key === LEFT_ARROW_KEY;
 	}
 
 	static aboveColor(evt) {
-		return evt.code === UP_ARROW_KEY;
+		return evt.key === UP_ARROW_KEY;
 	}
 
 	static belowColor(evt) {
-		return evt.code === DOWN_ARROW_KEY;
+		return evt.key === DOWN_ARROW_KEY;
 	}
 
 	static selectColor(evt) {
-		return evt.code === RETURN_KEY || evt.code === SPACE_KEY;
+		return evt.key === RETURN_KEY || evt.key === SPACE_KEY;
 	}
 
 	static tabKey(evt) {
-		return evt.code === TAB_KEY;
+		return evt.key === TAB_KEY;
 	}
 
 	/* ----------------------------------------- */
@@ -351,15 +352,15 @@ export default class KeyboardUtils {
 	/* ----------------------------------------- */
 
 	static activateButton(evt) {
-		return evt.code === RETURN_KEY || evt.code === SPACE_KEY;
+		return evt.key === RETURN_KEY || evt.key === SPACE_KEY;
 	}
 
 	static nextSection(evt) {
-		return !evt.shiftKey && evt.code === TAB_KEY;
+		return !evt.shiftKey && evt.key === TAB_KEY;
 	}
 
 	static previousSection(evt) {
-		return evt.shiftKey && evt.code === TAB_KEY;
+		return evt.shiftKey && evt.key === TAB_KEY;
 	}
 
 	/* ----------------------------------------- */
@@ -367,55 +368,55 @@ export default class KeyboardUtils {
 	/* ----------------------------------------- */
 
 	static nextContextMenuOption(evt) {
-		return evt.code === DOWN_ARROW_KEY;
+		return evt.key === DOWN_ARROW_KEY;
 	}
 
 	static previousContextMenuOption(evt) {
-		return evt.code === UP_ARROW_KEY;
+		return evt.key === UP_ARROW_KEY;
 	}
 
 	static openContextMenuSubMenu(evt) {
-		return evt.code === RIGHT_ARROW_KEY;
+		return evt.key === RIGHT_ARROW_KEY;
 	}
 
 	static closeContextMenuSubMenu(evt) {
-		return evt.code === LEFT_ARROW_KEY || evt.code === ESC_KEY;
+		return evt.key === LEFT_ARROW_KEY || evt.key === ESC_KEY;
 	}
 
 	static activateContextMenuOption(evt) {
-		return evt.code === RETURN_KEY || evt.code === SPACE_KEY;
+		return evt.key === RETURN_KEY || evt.key === SPACE_KEY;
 	}
 
 	static closeContextMenu(evt) {
-		return evt.code === ESC_KEY;
+		return evt.key === ESC_KEY;
 	}
 
 	/* ----------------------------------------- */
-	/* Palette key functions                */
+	/* Palette key functions                     */
 	/* ----------------------------------------- */
 
 	static openCategory(evt) {
-		return evt.code === RETURN_KEY || evt.code === SPACE_KEY;
+		return evt.key === RETURN_KEY || evt.key === SPACE_KEY;
 	}
 
 	static fromCategoryToFirstNode(evt) {
-		return evt.code === DOWN_ARROW_KEY;
+		return evt.key === DOWN_ARROW_KEY;
 	}
 
 	static nextNodeInCategory(evt) {
-		return evt.code === DOWN_ARROW_KEY;
+		return evt.key === DOWN_ARROW_KEY;
 	}
 
 	static previousNodeInCategory(evt) {
-		return evt.code === UP_ARROW_KEY;
+		return evt.key === UP_ARROW_KEY;
 	}
 
 	static createAutoNode(evt) {
-		return !evt.shiftKey && (evt.code === SPACE_KEY || evt.code === RETURN_KEY);
+		return !evt.shiftKey && (evt.key === SPACE_KEY || evt.key === RETURN_KEY);
 	}
 
 	static createAutoNodeNoLink(evt) {
-		return evt.shiftKey && (evt.code === SPACE_KEY || evt.code === RETURN_KEY);
+		return evt.shiftKey && (evt.key === SPACE_KEY || evt.key === RETURN_KEY);
 	}
 
 	/* ----------------------------------------- */

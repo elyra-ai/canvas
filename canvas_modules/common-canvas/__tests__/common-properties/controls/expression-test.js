@@ -522,6 +522,26 @@ describe("expression-builder renders correctly", () => {
 		infoTip = container.querySelector(`div[data-id='${tooltipId}']`);
 		expect(infoTip.getAttribute("aria-hidden")).to.equal(false);
 	});
+	it("Hidden expression control should be editable after it becomes visible", async() => {
+		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(ExpressionParamdef, propertiesConfig, callbacks, propertiesInfo);
+		const wrapper = renderedObject.wrapper;
+		const { container } = wrapper;
+
+		// Hidden expression control doesn't have codemirror editor
+		let expression = container.querySelector("div[data-id='properties-ctrl-hiddenExpr']");
+		expect(expression.querySelectorAll("div.elyra-CodeMirror")).to.have.length(0);
+
+		// Make expression control visible
+		const checkbox = container.querySelector("div[data-id='properties-ctrl-visibleExpression']").querySelector("input");
+		expect(checkbox.checked).to.equal(false);
+		checkbox.setAttribute("checked", true);
+		fireEvent.click(checkbox);
+
+		// Verify expression control has codemirror editor
+		expression = container.querySelector("div[data-id='properties-ctrl-hiddenExpr']");
+		expect(expression.querySelectorAll("div.elyra-CodeMirror")).to.have.length(1);
+	});
 });
 
 describe("expression-builder select from tables correctly", () => {

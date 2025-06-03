@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import key from "../../support/canvas/key.js";
 
 describe("Test creating comments", function() {
 	beforeEach(() => {
@@ -332,7 +334,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some quote text!",
 			textToHighlight: "quote",
 			action: "quote",
-			markdownText: "> Some quote text!\n\n",
+			markdownText: "> Some quote text!",
 			html: "<blockquote>\n<p>Some quote text!</p>\n</blockquote>\n"
 		});
 	});
@@ -342,7 +344,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some numbered list text!",
 			textToHighlight: "numbered list",
 			action: "numberedList",
-			markdownText: "1. Some numbered list text!\n\n",
+			markdownText: "1. Some numbered list text!",
 			html: "<ol>\n<li>Some numbered list text!</li>\n</ol>\n"
 		});
 	});
@@ -352,7 +354,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 			initialText: "Some bulleted list text!",
 			textToHighlight: "bulleted list",
 			action: "bulletedList",
-			markdownText: "* Some bulleted list text!\n\n",
+			markdownText: "* Some bulleted list text!",
 			html: "<ul>\n<li>Some bulleted list text!</li>\n</ul>\n"
 		});
 	});
@@ -439,7 +441,7 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 			initialText: "Some quote text!",
 			textToHighlight: "quote",
 			action: "quote",
-			markdownText: "> Some quote text!\n\n",
+			markdownText: "> Some quote text!",
 			html: "<blockquote>\n<p>Some quote text!</p>\n</blockquote>\n"
 		});
 	});
@@ -449,7 +451,7 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 			initialText: "Some numbered list text!",
 			textToHighlight: "numbered list",
 			action: "numberedList",
-			markdownText: "1. Some numbered list text!\n\n",
+			markdownText: "1. Some numbered list text!",
 			html: "<ol>\n<li>Some numbered list text!</li>\n</ol>\n"
 		});
 	});
@@ -459,7 +461,7 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 			initialText: "Some bulleted list text!",
 			textToHighlight: "bulleted list",
 			action: "bulletedList",
-			markdownText: "* Some bulleted list text!\n\n",
+			markdownText: "* Some bulleted list text!",
 			html: "<ul>\n<li>Some bulleted list text!</li>\n</ul>\n"
 		});
 	});
@@ -497,7 +499,7 @@ function addMarkdownWithKeyboard(d) {
 	cy.editTextInComment("", d.initialText, false);
 
 	cy.selectTextInComment(d.textToHighlight, d.initialText);
-	cy.shortcutKeysMarkdown(d.action);
+	cy.shortcutKeysMarkdown(d.initialText, key[d.action]);
 
 	cy.clickCanvasAt(5, 5);
 	cy.verifyCommentContainsHTML(d.markdownText, d.html);

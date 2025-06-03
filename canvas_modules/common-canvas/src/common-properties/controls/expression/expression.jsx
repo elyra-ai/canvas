@@ -89,6 +89,9 @@ class ExpressionControl extends React.Component {
 		// When code is edited in expression builder, reflect changes in expression flyout
 		// Toggle editable mode in Codemirror editor
 		if (!isEqual(prevProps.state, this.props.state)) {
+			if (prevProps.state === STATES.HIDDEN) {
+				this.createCodeMirrorEditor();
+			}
 			this.setCodeMirrorEditable(!(this.props.state === STATES.DISABLED) || !this.props.readOnly);
 		}
 		if (
@@ -435,7 +438,12 @@ class ExpressionControl extends React.Component {
 					<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
 						className={className}
 					>
-						<div className={codemirrorClassName} ref={this.editorRef} style={{ height: this.state.expressionEditorHeight, minHeight: minLineHeight }} />
+						<div
+							className={codemirrorClassName}
+							ref={this.editorRef}
+							style={{ height: this.state.expressionEditorHeight, minHeight: minLineHeight }}
+							aria-disabled={this.props.state === STATES.DISABLED || !this.props.readOnly}
+						/>
 						<ValidationMessage state={this.props.state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 					</div>
 				</div>
