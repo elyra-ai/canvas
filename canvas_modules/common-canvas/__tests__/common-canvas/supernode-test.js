@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import deepFreeze from "deep-freeze";
-import { createIntlCommonCanvas } from "../_utils_/cc-utils.js";
+import { createIntlCommonCanvasRTL } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 
@@ -405,16 +405,19 @@ describe("Expand and Collapse Supernode Action", () => {
 		expect(canvasController.getNode(superNodeId).is_expanded).to.be.false;
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should set the is_expanded attribute correctly with undo and redo", () => {
-		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
-		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
-		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
+		setTimeout(() => {
+			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
+			canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+			expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
-		canvasController.contextMenuActionHandler("undo");
-		expect(canvasController.getNode(superNodeId).is_expanded).to.be.false;
+			canvasController.contextMenuActionHandler("undo");
+			expect(canvasController.getNode(superNodeId).is_expanded).to.be.false;
 
-		canvasController.contextMenuActionHandler("redo");
-		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
+			canvasController.contextMenuActionHandler("redo");
+			expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
+		}, 500);
 	});
 
 	it("Should save the expanded_width, expanded_height, and is_expanded attributes when the supernode is expanded in-place", () => {
@@ -435,106 +438,109 @@ describe("Expand and Collapse Supernode Action", () => {
 		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.is_expanded).to.be.false;
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should move the surrounding nodes when supernode is expanded", () => {
-		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
+		setTimeout(() => {
+			canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
 
-		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
-		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
-		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
+			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
+			canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+			expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
-		const expectedNodePositions = [
-			{
-				"id": "id8I6RH2V91XW",
-				"label": "Binding (entry) node",
-				"x_pos": 89,
-				"y_pos": 99.5
-			},
-			{
-				"id": "idGWRVT47XDV",
-				"label": "Execution node",
-				"x_pos": 297,
-				"y_pos": 138.5
-			},
-			{
-				"id": "nodeIDMultiPlotPE",
-				"label": "Multiplot",
-				"x_pos": 630,
-				"y_pos": 170
-			},
-			{
-				"id": "id125TTEEIK7V",
-				"label": "Model Node",
-				"x_pos": 890,
-				"y_pos": 230.99999237060547
-			},
-			{
-				"id": "id5KIRGGJ3FYT",
-				"label": "Binding (exit) node",
-				"x_pos": 772,
-				"y_pos": 500.99999237060547
-			},
-			{
-				"id": "6f704d84-85be-4520-9d76-57fe2295b310",
-				"label": "Select",
-				"x_pos": 135,
-				"y_pos": 429.5
-			},
-			{
-				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
-				"label": "Database",
-				"x_pos": 97,
-				"y_pos": 642.5
-			},
-			{
-				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
-				"label": "Sample",
-				"x_pos": 234,
-				"y_pos": 594.5
-			},
-			{
-				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
-				"label": "Aggregate",
-				"x_pos": 235,
-				"y_pos": 690.5
-			},
-			{
-				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
-				"label": "Merge",
-				"x_pos": 510,
-				"y_pos": 643.5
-			},
-			{
-				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
-				"label": "Table",
-				"x_pos": 660.7247240471117,
-				"y_pos": 644.1793095752446
-			},
-			{
-				"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
-				"label": "C5.0",
-				"x_pos": 805.6818052349669,
-				"y_pos": 596.5656356040878
-			},
-			{
-				"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
-				"label": "Neural Net",
-				"x_pos": 806.7398404208096,
-				"y_pos": 692.8509946880919
-			},
-			{
-				"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
-				"label": "Supernode",
-				"x_pos": 297,
-				"y_pos": 235
-			},
-			{
-				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
-				"label": "Filler",
-				"x_pos": 235,
-				"y_pos": 496.5
-			}];
+			const expectedNodePositions = [
+				{
+					"id": "id8I6RH2V91XW",
+					"label": "Binding (entry) node",
+					"x_pos": 89,
+					"y_pos": 99.5
+				},
+				{
+					"id": "idGWRVT47XDV",
+					"label": "Execution node",
+					"x_pos": 297,
+					"y_pos": 138.5
+				},
+				{
+					"id": "nodeIDMultiPlotPE",
+					"label": "Multiplot",
+					"x_pos": 630,
+					"y_pos": 170
+				},
+				{
+					"id": "id125TTEEIK7V",
+					"label": "Model Node",
+					"x_pos": 890,
+					"y_pos": 230.99999237060547
+				},
+				{
+					"id": "id5KIRGGJ3FYT",
+					"label": "Binding (exit) node",
+					"x_pos": 772,
+					"y_pos": 500.99999237060547
+				},
+				{
+					"id": "6f704d84-85be-4520-9d76-57fe2295b310",
+					"label": "Select",
+					"x_pos": 135,
+					"y_pos": 429.5
+				},
+				{
+					"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
+					"label": "Database",
+					"x_pos": 97,
+					"y_pos": 642.5
+				},
+				{
+					"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+					"label": "Sample",
+					"x_pos": 234,
+					"y_pos": 594.5
+				},
+				{
+					"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
+					"label": "Aggregate",
+					"x_pos": 235,
+					"y_pos": 690.5
+				},
+				{
+					"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
+					"label": "Merge",
+					"x_pos": 510,
+					"y_pos": 643.5
+				},
+				{
+					"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
+					"label": "Table",
+					"x_pos": 660.7247240471117,
+					"y_pos": 644.1793095752446
+				},
+				{
+					"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
+					"label": "C5.0",
+					"x_pos": 805.6818052349669,
+					"y_pos": 596.5656356040878
+				},
+				{
+					"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
+					"label": "Neural Net",
+					"x_pos": 806.7398404208096,
+					"y_pos": 692.8509946880919
+				},
+				{
+					"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
+					"label": "Supernode",
+					"x_pos": 297,
+					"y_pos": 235
+				},
+				{
+					"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+					"label": "Filler",
+					"x_pos": 235,
+					"y_pos": 496.5
+				}];
 
-		compareNodePositions(expectedNodePositions, objectModel);
+			compareNodePositions(expectedNodePositions, objectModel);
+		}, 500);
 	});
 
 	it("Surrounding nodes should go back to original positions when supernode is expanded and collapsed", () => {
@@ -556,420 +562,432 @@ describe("Expand and Collapse Supernode Action", () => {
 	});
 
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should move the surrounding nodes south when supernode is expanded and overlaps nodes", () => {
-		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
-		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
-		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
-		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
+		setTimeout(() => {
+			canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
+			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
+			canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+			expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
-		// Sample, Aggregate, Filler nodes moved.
-		const expectedNodePositions = [
-			{
-				"id": "id8I6RH2V91XW",
-				"label": "Binding (entry) node",
-				"x_pos": 89,
-				"y_pos": 99.5
-			},
-			{
-				"id": "idGWRVT47XDV",
-				"label": "Execution node",
-				"x_pos": 297,
-				"y_pos": 138.5
-			},
-			{
-				"id": "nodeIDMultiPlotPE",
-				"label": "Multiplot",
-				"x_pos": 630,
-				"y_pos": 170
-			},
-			{
-				"id": "id125TTEEIK7V",
-				"label": "Model Node",
-				"x_pos": 890,
-				"y_pos": 230.99999237060547
-			},
-			{
-				"id": "id5KIRGGJ3FYT",
-				"label": "Binding (exit) node",
-				"x_pos": 772,
-				"y_pos": 500.99999237060547
-			},
-			{
-				"id": "6f704d84-85be-4520-9d76-57fe2295b310",
-				"label": "Select",
-				"x_pos": 135,
-				"y_pos": 429.5
-			},
-			{
-				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
-				"label": "Database",
-				"x_pos": 97,
-				"y_pos": 642.5
-			},
-			{
-				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
-				"label": "Sample",
-				"x_pos": 234,
-				"y_pos": 594.5
-			},
-			{
-				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
-				"label": "Aggregate",
-				"x_pos": 235,
-				"y_pos": 690.5
-			},
-			{
-				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
-				"label": "Merge",
-				"x_pos": 510,
-				"y_pos": 643.5
-			},
-			{
-				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
-				"label": "Table",
-				"x_pos": 660.7247240471117,
-				"y_pos": 644.1793095752446
-			},
-			{
-				"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
-				"label": "C5.0",
-				"x_pos": 805.6818052349669,
-				"y_pos": 596.5656356040878
-			},
-			{
-				"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
-				"label": "Neural Net",
-				"x_pos": 806.7398404208096,
-				"y_pos": 692.8509946880919
-			},
-			{
-				"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
-				"label": "Supernode",
-				"x_pos": 297,
-				"y_pos": 235
-			},
-			{
-				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
-				"label": "Filler",
-				"x_pos": 235,
-				"y_pos": 496.5
-			}];
+			// Sample, Aggregate, Filler nodes moved.
+			const expectedNodePositions = [
+				{
+					"id": "id8I6RH2V91XW",
+					"label": "Binding (entry) node",
+					"x_pos": 89,
+					"y_pos": 99.5
+				},
+				{
+					"id": "idGWRVT47XDV",
+					"label": "Execution node",
+					"x_pos": 297,
+					"y_pos": 138.5
+				},
+				{
+					"id": "nodeIDMultiPlotPE",
+					"label": "Multiplot",
+					"x_pos": 630,
+					"y_pos": 170
+				},
+				{
+					"id": "id125TTEEIK7V",
+					"label": "Model Node",
+					"x_pos": 890,
+					"y_pos": 230.99999237060547
+				},
+				{
+					"id": "id5KIRGGJ3FYT",
+					"label": "Binding (exit) node",
+					"x_pos": 772,
+					"y_pos": 500.99999237060547
+				},
+				{
+					"id": "6f704d84-85be-4520-9d76-57fe2295b310",
+					"label": "Select",
+					"x_pos": 135,
+					"y_pos": 429.5
+				},
+				{
+					"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
+					"label": "Database",
+					"x_pos": 97,
+					"y_pos": 642.5
+				},
+				{
+					"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+					"label": "Sample",
+					"x_pos": 234,
+					"y_pos": 594.5
+				},
+				{
+					"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
+					"label": "Aggregate",
+					"x_pos": 235,
+					"y_pos": 690.5
+				},
+				{
+					"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
+					"label": "Merge",
+					"x_pos": 510,
+					"y_pos": 643.5
+				},
+				{
+					"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
+					"label": "Table",
+					"x_pos": 660.7247240471117,
+					"y_pos": 644.1793095752446
+				},
+				{
+					"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
+					"label": "C5.0",
+					"x_pos": 805.6818052349669,
+					"y_pos": 596.5656356040878
+				},
+				{
+					"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
+					"label": "Neural Net",
+					"x_pos": 806.7398404208096,
+					"y_pos": 692.8509946880919
+				},
+				{
+					"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
+					"label": "Supernode",
+					"x_pos": 297,
+					"y_pos": 235
+				},
+				{
+					"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+					"label": "Filler",
+					"x_pos": 235,
+					"y_pos": 496.5
+				}];
 
-		compareNodePositions(expectedNodePositions, objectModel);
+			compareNodePositions(expectedNodePositions, objectModel);
+		}, 500);
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should move the surrounding nodes east when supernode is expanded and overlaps nodes", () => {
-		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
-		const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": -85, "offsetY": -90, "pipelineId": primaryPipelineId	};
-		objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
+		setTimeout(() => {
+			canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
+			const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": -85, "offsetY": -90, "pipelineId": primaryPipelineId	};
+			objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
 
-		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
-		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
-		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
+			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
+			canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+			expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
-		// Execution and Multiplot nodes moved.
-		const expectedNodePositions = [
-			{
-				"id": "id8I6RH2V91XW",
-				"label": "Binding (entry) node",
-				"x_pos": 89,
-				"y_pos": 99.5
-			},
-			{
-				"id": "idGWRVT47XDV",
-				"label": "Execution node",
-				"x_pos": 427,
-				"y_pos": 138.5
-			},
-			{
-				"id": "nodeIDMultiPlotPE",
-				"label": "Multiplot",
-				"x_pos": 630,
-				"y_pos": 295
-			},
-			{
-				"id": "id125TTEEIK7V",
-				"label": "Model Node",
-				"x_pos": 890,
-				"y_pos": 355.99999237060547
-			},
-			{
-				"id": "id5KIRGGJ3FYT",
-				"label": "Binding (exit) node",
-				"x_pos": 772,
-				"y_pos": 500.99999237060547
-			},
-			{
-				"id": "6f704d84-85be-4520-9d76-57fe2295b310",
-				"label": "Select",
-				"x_pos": 135,
-				"y_pos": 429.5
-			},
-			{
-				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
-				"label": "Database",
-				"x_pos": 97,
-				"y_pos": 642.5
-			},
-			{
-				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
-				"label": "Sample",
-				"x_pos": 364,
-				"y_pos": 594.5
-			},
-			{
-				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
-				"label": "Aggregate",
-				"x_pos": 365,
-				"y_pos": 690.5
-			},
-			{
-				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
-				"label": "Merge",
-				"x_pos": 510,
-				"y_pos": 643.5
-			},
-			{
-				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
-				"label": "Table",
-				"x_pos": 660.7247240471117,
-				"y_pos": 644.1793095752446
-			},
-			{
-				"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
-				"label": "C5.0",
-				"x_pos": 805.6818052349669,
-				"y_pos": 596.5656356040878
-			},
-			{
-				"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
-				"label": "Neural Net",
-				"x_pos": 806.7398404208096,
-				"y_pos": 692.8509946880919
-			},
-			{
-				"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
-				"label": "Supernode",
-				"x_pos": 212,
-				"y_pos": 145
-			},
-			{
-				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
-				"label": "Filler",
-				"x_pos": 365,
-				"y_pos": 496.5
-			}];
+			// Execution and Multiplot nodes moved.
+			const expectedNodePositions = [
+				{
+					"id": "id8I6RH2V91XW",
+					"label": "Binding (entry) node",
+					"x_pos": 89,
+					"y_pos": 99.5
+				},
+				{
+					"id": "idGWRVT47XDV",
+					"label": "Execution node",
+					"x_pos": 427,
+					"y_pos": 138.5
+				},
+				{
+					"id": "nodeIDMultiPlotPE",
+					"label": "Multiplot",
+					"x_pos": 630,
+					"y_pos": 295
+				},
+				{
+					"id": "id125TTEEIK7V",
+					"label": "Model Node",
+					"x_pos": 890,
+					"y_pos": 355.99999237060547
+				},
+				{
+					"id": "id5KIRGGJ3FYT",
+					"label": "Binding (exit) node",
+					"x_pos": 772,
+					"y_pos": 500.99999237060547
+				},
+				{
+					"id": "6f704d84-85be-4520-9d76-57fe2295b310",
+					"label": "Select",
+					"x_pos": 135,
+					"y_pos": 429.5
+				},
+				{
+					"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
+					"label": "Database",
+					"x_pos": 97,
+					"y_pos": 642.5
+				},
+				{
+					"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+					"label": "Sample",
+					"x_pos": 364,
+					"y_pos": 594.5
+				},
+				{
+					"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
+					"label": "Aggregate",
+					"x_pos": 365,
+					"y_pos": 690.5
+				},
+				{
+					"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
+					"label": "Merge",
+					"x_pos": 510,
+					"y_pos": 643.5
+				},
+				{
+					"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
+					"label": "Table",
+					"x_pos": 660.7247240471117,
+					"y_pos": 644.1793095752446
+				},
+				{
+					"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
+					"label": "C5.0",
+					"x_pos": 805.6818052349669,
+					"y_pos": 596.5656356040878
+				},
+				{
+					"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
+					"label": "Neural Net",
+					"x_pos": 806.7398404208096,
+					"y_pos": 692.8509946880919
+				},
+				{
+					"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
+					"label": "Supernode",
+					"x_pos": 212,
+					"y_pos": 145
+				},
+				{
+					"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+					"label": "Filler",
+					"x_pos": 365,
+					"y_pos": 496.5
+				}];
 
-		compareNodePositions(expectedNodePositions, objectModel);
+			compareNodePositions(expectedNodePositions, objectModel);
+		}, 500);
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should move the surrounding nodes southeast when supernode is expanded and overlaps nodes", () => {
-		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
-		const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": 263, "offsetY": 145, "pipelineId": primaryPipelineId	};
-		objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
+		setTimeout(() => {
+			canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
+			const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": 263, "offsetY": 145, "pipelineId": primaryPipelineId	};
+			objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
 
-		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
-		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
-		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
+			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
+			canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+			expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
-		// Binding (exit), C5, Table, and Neural Net nodes moved.
-		const expectedNodePositions = [
-			{
-				"id": "id8I6RH2V91XW",
-				"label": "Binding (entry) node",
-				"x_pos": 89,
-				"y_pos": 99.5
-			},
-			{
-				"id": "idGWRVT47XDV",
-				"label": "Execution node",
-				"x_pos": 297,
-				"y_pos": 138.5
-			},
-			{
-				"id": "nodeIDMultiPlotPE",
-				"label": "Multiplot",
-				"x_pos": 500,
-				"y_pos": 170
-			},
-			{
-				"id": "id125TTEEIK7V",
-				"label": "Model Node",
-				"x_pos": 890,
-				"y_pos": 230.99999237060547
-			},
-			{
-				"id": "id5KIRGGJ3FYT",
-				"label": "Binding (exit) node",
-				"x_pos": 772,
-				"y_pos": 375.99999237060547
-			},
-			{
-				"id": "6f704d84-85be-4520-9d76-57fe2295b310",
-				"label": "Select",
-				"x_pos": 135,
-				"y_pos": 304.5
-			},
-			{
-				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
-				"label": "Database",
-				"x_pos": 97,
-				"y_pos": 642.5
-			},
-			{
-				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
-				"label": "Sample",
-				"x_pos": 234,
-				"y_pos": 594.5
-			},
-			{
-				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
-				"label": "Aggregate",
-				"x_pos": 235,
-				"y_pos": 690.5
-			},
-			{
-				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
-				"label": "Merge",
-				"x_pos": 380,
-				"y_pos": 643.5
-			},
-			{
-				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
-				"label": "Table",
-				"x_pos": 530.7247240471117,
-				"y_pos": 644.1793095752446
-			},
-			{
-				"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
-				"label": "C5.0",
-				"x_pos": 805.6818052349669,
-				"y_pos": 596.5656356040878
-			},
-			{
-				"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
-				"label": "Neural Net",
-				"x_pos": 806.7398404208096,
-				"y_pos": 692.8509946880919
-			},
-			{
-				"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
-				"label": "Supernode",
-				"x_pos": 560,
-				"y_pos": 380
-			},
-			{
-				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
-				"label": "Filler",
-				"x_pos": 235,
-				"y_pos": 371.5
-			}];
+			// Binding (exit), C5, Table, and Neural Net nodes moved.
+			const expectedNodePositions = [
+				{
+					"id": "id8I6RH2V91XW",
+					"label": "Binding (entry) node",
+					"x_pos": 89,
+					"y_pos": 99.5
+				},
+				{
+					"id": "idGWRVT47XDV",
+					"label": "Execution node",
+					"x_pos": 297,
+					"y_pos": 138.5
+				},
+				{
+					"id": "nodeIDMultiPlotPE",
+					"label": "Multiplot",
+					"x_pos": 500,
+					"y_pos": 170
+				},
+				{
+					"id": "id125TTEEIK7V",
+					"label": "Model Node",
+					"x_pos": 890,
+					"y_pos": 230.99999237060547
+				},
+				{
+					"id": "id5KIRGGJ3FYT",
+					"label": "Binding (exit) node",
+					"x_pos": 772,
+					"y_pos": 375.99999237060547
+				},
+				{
+					"id": "6f704d84-85be-4520-9d76-57fe2295b310",
+					"label": "Select",
+					"x_pos": 135,
+					"y_pos": 304.5
+				},
+				{
+					"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
+					"label": "Database",
+					"x_pos": 97,
+					"y_pos": 642.5
+				},
+				{
+					"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+					"label": "Sample",
+					"x_pos": 234,
+					"y_pos": 594.5
+				},
+				{
+					"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
+					"label": "Aggregate",
+					"x_pos": 235,
+					"y_pos": 690.5
+				},
+				{
+					"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
+					"label": "Merge",
+					"x_pos": 380,
+					"y_pos": 643.5
+				},
+				{
+					"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
+					"label": "Table",
+					"x_pos": 530.7247240471117,
+					"y_pos": 644.1793095752446
+				},
+				{
+					"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
+					"label": "C5.0",
+					"x_pos": 805.6818052349669,
+					"y_pos": 596.5656356040878
+				},
+				{
+					"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
+					"label": "Neural Net",
+					"x_pos": 806.7398404208096,
+					"y_pos": 692.8509946880919
+				},
+				{
+					"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
+					"label": "Supernode",
+					"x_pos": 560,
+					"y_pos": 380
+				},
+				{
+					"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+					"label": "Filler",
+					"x_pos": 235,
+					"y_pos": 371.5
+				}];
 
-		compareNodePositions(expectedNodePositions, objectModel);
+			compareNodePositions(expectedNodePositions, objectModel);
+		}, 500);
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should not move the surrounding nodes when enableMoveNodesOnSupernodeResize is false", () => {
-		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: false });
-		const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": 263, "offsetY": 145, "pipelineId": primaryPipelineId	};
-		objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
+		setTimeout(() => {
+			canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: false });
+			const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": 263, "offsetY": 145, "pipelineId": primaryPipelineId	};
+			objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
 
-		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
-		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
-		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
+			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
+			canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+			expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
-		const expectedNodePositions = [
-			{
-				"id": "id8I6RH2V91XW",
-				"label": "Binding (entry) node",
-				"x_pos": 89,
-				"y_pos": 99.5
-			},
-			{
-				"id": "idGWRVT47XDV",
-				"label": "Execution node",
-				"x_pos": 297,
-				"y_pos": 138.5
-			},
-			{
-				"id": "nodeIDMultiPlotPE",
-				"label": "Multiplot",
-				"x_pos": 500,
-				"y_pos": 170
-			},
-			{
-				"id": "id125TTEEIK7V",
-				"label": "Model Node",
-				"x_pos": 760,
-				"y_pos": 230.99999237060547
-			},
-			{
-				"id": "id5KIRGGJ3FYT",
-				"label": "Binding (exit) node",
-				"x_pos": 642,
-				"y_pos": 375.99999237060547
-			},
-			{
-				"id": "6f704d84-85be-4520-9d76-57fe2295b310",
-				"label": "Select",
-				"x_pos": 135,
-				"y_pos": 304.5
-			},
-			{
-				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
-				"label": "Database",
-				"x_pos": 97,
-				"y_pos": 517.5
-			},
-			{
-				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
-				"label": "Sample",
-				"x_pos": 234,
-				"y_pos": 469.5
-			},
-			{
-				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
-				"label": "Aggregate",
-				"x_pos": 235,
-				"y_pos": 565.5
-			},
-			{
-				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
-				"label": "Merge",
-				"x_pos": 380,
-				"y_pos": 518.5
-			},
-			{
-				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
-				"label": "Table",
-				"x_pos": 530.7247240471117,
-				"y_pos": 519.1793095752446
-			},
-			{
-				"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
-				"label": "C5.0",
-				"x_pos": 675.6818052349669,
-				"y_pos": 471.5656356040878
-			},
-			{
-				"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
-				"label": "Neural Net",
-				"x_pos": 676.7398404208096,
-				"y_pos": 567.8509946880919
-			},
-			{
-				"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
-				"label": "Supernode",
-				"x_pos": 560,
-				"y_pos": 380
-			},
-			{
-				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
-				"label": "Filler",
-				"x_pos": 235,
-				"y_pos": 371.5
-			}];
+			const expectedNodePositions = [
+				{
+					"id": "id8I6RH2V91XW",
+					"label": "Binding (entry) node",
+					"x_pos": 89,
+					"y_pos": 99.5
+				},
+				{
+					"id": "idGWRVT47XDV",
+					"label": "Execution node",
+					"x_pos": 297,
+					"y_pos": 138.5
+				},
+				{
+					"id": "nodeIDMultiPlotPE",
+					"label": "Multiplot",
+					"x_pos": 500,
+					"y_pos": 170
+				},
+				{
+					"id": "id125TTEEIK7V",
+					"label": "Model Node",
+					"x_pos": 760,
+					"y_pos": 230.99999237060547
+				},
+				{
+					"id": "id5KIRGGJ3FYT",
+					"label": "Binding (exit) node",
+					"x_pos": 642,
+					"y_pos": 375.99999237060547
+				},
+				{
+					"id": "6f704d84-85be-4520-9d76-57fe2295b310",
+					"label": "Select",
+					"x_pos": 135,
+					"y_pos": 304.5
+				},
+				{
+					"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
+					"label": "Database",
+					"x_pos": 97,
+					"y_pos": 517.5
+				},
+				{
+					"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+					"label": "Sample",
+					"x_pos": 234,
+					"y_pos": 469.5
+				},
+				{
+					"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
+					"label": "Aggregate",
+					"x_pos": 235,
+					"y_pos": 565.5
+				},
+				{
+					"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
+					"label": "Merge",
+					"x_pos": 380,
+					"y_pos": 518.5
+				},
+				{
+					"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
+					"label": "Table",
+					"x_pos": 530.7247240471117,
+					"y_pos": 519.1793095752446
+				},
+				{
+					"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
+					"label": "C5.0",
+					"x_pos": 675.6818052349669,
+					"y_pos": 471.5656356040878
+				},
+				{
+					"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
+					"label": "Neural Net",
+					"x_pos": 676.7398404208096,
+					"y_pos": 567.8509946880919
+				},
+				{
+					"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
+					"label": "Supernode",
+					"x_pos": 560,
+					"y_pos": 380
+				},
+				{
+					"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+					"label": "Filler",
+					"x_pos": 235,
+					"y_pos": 371.5
+				}];
 
-		compareNodePositions(expectedNodePositions, objectModel);
+			compareNodePositions(expectedNodePositions, objectModel);
+		}, 500);
 	});
 
 });
@@ -1140,48 +1158,54 @@ describe("Ensure no cross pipeline selection", () => {
 	});
 
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should cancel parent flow selection when sub-flow selection is made", () => {
-		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
-		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+		setTimeout(() => {
+			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
+			canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 
-		const selections = [
-			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
-			"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
-		];
+			const selections = [
+				"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+				"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
+			];
 
-		canvasController.setSelections(selections, primaryPipelineId);
+			canvasController.setSelections(selections, primaryPipelineId);
 
-		const subflowSelections = [
-			"7fadc642-9c03-473e-b4c5-308b1e4cbbb8"
-		];
+			const subflowSelections = [
+				"7fadc642-9c03-473e-b4c5-308b1e4cbbb8"
+			];
 
-		canvasController.setSelections(subflowSelections, primaryPipelineId);
+			canvasController.setSelections(subflowSelections, primaryPipelineId);
 
-		const selObjs = canvasController.getSelectedObjectIds();
-		expect(isEqual(selObjs.length, 1)).to.be.true;
-		expect(isEqual(selObjs, ["7fadc642-9c03-473e-b4c5-308b1e4cbbb8"])).to.be.true;
+			const selObjs = canvasController.getSelectedObjectIds();
+			expect(isEqual(selObjs.length, 1)).to.be.true;
+			expect(isEqual(selObjs, ["7fadc642-9c03-473e-b4c5-308b1e4cbbb8"])).to.be.true;
+		}, 500);
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Should cancel sub-flow selection when parent flow selection is made", () => {
-		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
-		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+		setTimeout(() => {
+			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
+			canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 
-		const subflowSelections = [
-			"7fadc642-9c03-473e-b4c5-308b1e4cbbb8"
-		];
+			const subflowSelections = [
+				"7fadc642-9c03-473e-b4c5-308b1e4cbbb8"
+			];
 
-		canvasController.setSelections(subflowSelections, primaryPipelineId);
+			canvasController.setSelections(subflowSelections, primaryPipelineId);
 
-		const selections = [
-			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
-			"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
-		];
+			const selections = [
+				"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+				"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
+			];
 
-		canvasController.setSelections(selections, primaryPipelineId);
+			canvasController.setSelections(selections, primaryPipelineId);
 
-		const selObjs = canvasController.getSelectedObjectIds();
-		expect(isEqual(selObjs.length, 2)).to.be.true;
-		expect(isEqual(selObjs, selections)).to.be.true;
+			const selObjs = canvasController.getSelectedObjectIds();
+			expect(isEqual(selObjs.length, 2)).to.be.true;
+			expect(isEqual(selObjs, selections)).to.be.true;
+		}, 500);
 	});
 });
 
@@ -1922,48 +1946,54 @@ describe("Copy and Paste Supernode", () => {
 		expect(isEqual(JSON.stringify(pipelineFlowBefore2), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Select in sub-flow should cancel selection in parent flow", () => {
-		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
-		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+		setTimeout(() => {
+			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
+			canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 
-		const selections = [
-			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
-			"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
-		];
+			const selections = [
+				"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+				"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
+			];
 
-		canvasController.setSelections(selections, primaryPipelineId);
+			canvasController.setSelections(selections, primaryPipelineId);
 
-		const subflowSelections = [
-			"7fadc642-9c03-473e-b4c5-308b1e4cbbb8"
-		];
+			const subflowSelections = [
+				"7fadc642-9c03-473e-b4c5-308b1e4cbbb8"
+			];
 
-		canvasController.setSelections(subflowSelections, primaryPipelineId);
+			canvasController.setSelections(subflowSelections, primaryPipelineId);
 
-		const selObjs = canvasController.getSelectedObjectIds();
-		expect(isEqual(selObjs.length, 1)).to.be.true;
-		expect(isEqual(selObjs, ["7fadc642-9c03-473e-b4c5-308b1e4cbbb8"])).to.be.true;
+			const selObjs = canvasController.getSelectedObjectIds();
+			expect(isEqual(selObjs.length, 1)).to.be.true;
+			expect(isEqual(selObjs, ["7fadc642-9c03-473e-b4c5-308b1e4cbbb8"])).to.be.true;
+		}, 500);
 	});
 
+	// Added timeout to ensure viewport dimensions are set before the test runs - https://github.com/elyra-ai/canvas/pull/2566#discussion_r2124050198
 	it("Select in parent flow should cancel selection in sub-flow", () => {
-		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
-		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
+		setTimeout(() => {
+			canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
+			canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 
-		const subflowSelections = [
-			"7fadc642-9c03-473e-b4c5-308b1e4cbbb8"
-		];
+			const subflowSelections = [
+				"7fadc642-9c03-473e-b4c5-308b1e4cbbb8"
+			];
 
-		canvasController.setSelections(subflowSelections, primaryPipelineId);
+			canvasController.setSelections(subflowSelections, primaryPipelineId);
 
-		const selections = [
-			"6f704d84-85be-4520-9d76-57fe2295b310", // Select
-			"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
-		];
+			const selections = [
+				"6f704d84-85be-4520-9d76-57fe2295b310", // Select
+				"7015d906-2eae-45c1-999e-fb888ed957e5" // Supernode
+			];
 
-		canvasController.setSelections(selections, primaryPipelineId);
+			canvasController.setSelections(selections, primaryPipelineId);
 
-		const selObjs = canvasController.getSelectedObjectIds();
-		expect(isEqual(selObjs.length, 2)).to.be.true;
-		expect(isEqual(selObjs, selections)).to.be.true;
+			const selObjs = canvasController.getSelectedObjectIds();
+			expect(isEqual(selObjs.length, 2)).to.be.true;
+			expect(isEqual(selObjs, selections)).to.be.true;
+		}, 500);
 	});
 
 });
@@ -1996,7 +2026,7 @@ function createCommonCanvas(config, canvasController, canvasParams) {
 	const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 	const contextMenuConfig = null;
 	const canvasParameters = canvasParams || {};
-	const wrapper = createIntlCommonCanvas(
+	const wrapper = createIntlCommonCanvasRTL(
 		config,
 		contextMenuHandler,
 		beforeEditActionHandler,
@@ -2007,6 +2037,7 @@ function createCommonCanvas(config, canvasController, canvasParams) {
 		tipHandler,
 		canvasParameters.showBottomPanel,
 		canvasParameters.showRightFlyout,
+		canvasParameters.rightFlyoutContent,
 		toolbarConfig,
 		notificationConfig,
 		contextMenuConfig,

@@ -16,7 +16,7 @@
 
 import React from "react";
 
-import { Type, ControlType } from "./../constants/form-constants";
+import { Type, ControlType, EditStyle } from "./../constants/form-constants";
 import { STATES, CONTAINER_TYPE } from "./../constants/constants";
 import classNames from "classnames";
 import { PropertyDef } from "./../form/PropertyDef";
@@ -159,7 +159,8 @@ export default class ControlFactory {
 		}
 		// setup common properties used by all controls
 		const controlKey = ControlUtils.getDataId(propertyId);
-		const hidden = this.controller.getControlState(propertyId) === STATES.HIDDEN;
+		// Don't add "hide" class for subpanel properties because "hide" class isn't removed after a property becomes visible in the already opened subpanel
+		const hidden = this.controller.getControlState(propertyId) === STATES.HIDDEN && control.editStyle !== EditStyle.SUBPANEL;
 		const action = this.actionFactory.generateAction(0, control.action);
 		const props = {};
 		props.key = controlKey;
