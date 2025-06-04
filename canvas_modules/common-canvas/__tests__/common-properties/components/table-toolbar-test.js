@@ -25,7 +25,7 @@ import { STATES } from "../../../src/common-properties/constants/constants";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "../../_utils_/table-utilsRTL";
 import structureListEditorParamDef from "../../test_resources/paramDefs/structurelisteditor_paramDef.json";
-import { fireEvent, within } from "@testing-library/react";
+import { fireEvent, within, cleanup } from "@testing-library/react";
 
 const removeSelectedRows = sinon.spy();
 const setScrollToRow = sinon.spy();
@@ -897,7 +897,7 @@ describe("TableToolbar multi select edit button works correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should edit multiple rows using the Edit button in table toolbar", () => {

@@ -20,7 +20,7 @@ import numberfieldParamDef from "../../test_resources/paramDefs/numberfield_para
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 import actionParamDef from "../../test_resources/paramDefs/action_paramDef.json";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 describe("condition messages should add alerts tab", () => {
 	let wrapper;
@@ -29,7 +29,7 @@ describe("condition messages should add alerts tab", () => {
 		wrapper = renderedObject.wrapper;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("control should have error message from null input and generator should trigger validation", () => {
@@ -146,7 +146,7 @@ describe("condition messages should add alerts tab for tables", () => {
 		wrapper = renderedObject.wrapper;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("alerts should show messages for invalid fields on initial load", () => {

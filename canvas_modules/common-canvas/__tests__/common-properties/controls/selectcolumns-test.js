@@ -28,7 +28,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import selectcolumnsParamDef from "../../test_resources/paramDefs/selectcolumns_paramDef.json";
 import selectcolumnsMultiInputParamDef from "../../test_resources/paramDefs/selectcolumns_multiInput_paramDef.json";
 import rowDisplayParamDef from "../../test_resources/paramDefs/displayRows_paramDef.json";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -241,7 +241,7 @@ describe("selectcolumns control filters values correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should filter type value from selectcolumn control", () => {
@@ -266,7 +266,7 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should prefix the correct schema for fields selected", () => {
@@ -422,7 +422,7 @@ describe("selectcolumns control displays the proper number of rows", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should display 3 rows", () => {
@@ -494,7 +494,7 @@ describe("selectcolumns control functions correctly in a table", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should not display invalid fields warnings for selectColumns control in a table", () => {
@@ -569,7 +569,7 @@ describe("measurement & type icons should be rendered correctly in selectcolumns
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("measurement icons should render in selectcolumns control if dm_image is measurement", () => {
@@ -622,16 +622,14 @@ describe("All checkboxes in selectcolumns must have labels", () => {
 });
 
 describe("selectcolumns control shows warnings on initial load when invalid value is selected", () => {
-	let wrapper;
 	let scController;
 	beforeEach(() => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(selectcolumnsParamDef);
-		wrapper = renderedObject.wrapper;
 		scController = renderedObject.controller;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should display invalid fields warnings for selectColumns control", () => {

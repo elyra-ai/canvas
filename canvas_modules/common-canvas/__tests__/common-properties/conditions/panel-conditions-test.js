@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 import propertyUtilsRTL from "./../../_utils_/property-utilsRTL";
 import React from "react";
 import CommonProperties from "./../../../src/common-properties/common-properties.jsx";
@@ -31,7 +31,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("top level panel should disable all child panels and controls", () => {
@@ -1000,7 +1000,7 @@ describe("complex nested panels visible and enabled conditions work correctly", 
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("Init properties at disable hide and disable different levels of panels", () => {
@@ -1142,7 +1142,7 @@ describe("Primary panel conditions work correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("Primary panel can be hidden", () => {
