@@ -22,7 +22,7 @@ import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 import numberfieldParamDef from "../../test_resources/paramDefs/numberfield_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 
 const mockNumberfieldControl = jest.fn();
 jest.mock("../../../src/common-properties/controls/numberfield",
@@ -260,16 +260,6 @@ describe("numberfield control works correctly", () => {
 		fireEvent.change(doubleNumber, { target: { value: "0.3" } });
 		expect(controller.getPropertyValue(numPropertyId)).to.equal(0.3);
 	});
-	// input has unexpected behavior
-	it.skip("should not allow a bad value to be set in a field", async() => {
-		const numPropertyId = { name: "number_int" };
-		const integerNumber = wrapper.container.querySelector("div[data-id='properties-number_int'] input");
-		fireEvent.change(integerNumber, { target: { value: "" } });
-		integerNumber.setAttribute("badInput", true);
-		await waitFor(() => {
-			expect(controller.getPropertyValue(numPropertyId)).to.equal(10);
-		});
-	});
 	it("should render the correct default value ", () => {
 		const numPropertyId = { name: "number_default" };
 		expect(controller.getPropertyValue(numPropertyId)).to.equal(3);
@@ -322,22 +312,6 @@ describe("numberfield control works correctly", () => {
 		numberfieldInTable.forEach((numberfieldInTableCell) => {
 			expect(numberfieldInTableCell.querySelectorAll(".cds--number--nosteppers")).to.have.length(1);
 			expect(numberfieldInTableCell.querySelectorAll(".cds--number__controls")).to.have.length(0);
-		});
-	});
-	// input has unexpected behavior
-	it.skip("should display error when invalid number is entered", async() => {
-		const numPropertyId = { name: "number_int" };
-		expect(controller.getPropertyValue(numPropertyId)).to.equal(10);
-		const integerNumber = wrapper.container.querySelector("div[data-id='properties-number_int'] input");
-		fireEvent.change(integerNumber, { target: { value: "44e+-" } });
-		// Verify error is displayed
-		await waitFor(() => {
-			const intergerWrapper = wrapper.container.querySelector("div[data-id='properties-number_int']");
-			const messageWrapper = intergerWrapper.querySelectorAll("div.cds--form-requirement");
-			expect(messageWrapper).to.have.length(1);
-			expect(messageWrapper[0].textContent).to.eql("Number is not valid.");
-			// Verify property value is NOT updated to invalid number
-			expect(controller.getPropertyValue(numPropertyId)).to.equal(10);
 		});
 	});
 });
