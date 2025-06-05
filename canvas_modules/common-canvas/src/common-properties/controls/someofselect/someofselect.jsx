@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import FlexibleTable from "../../components/flexible-table";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import classNames from "classnames";
 import { isEqual, intersection } from "lodash";
 
@@ -100,7 +101,7 @@ class SomeofselectControl extends React.Component {
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 				className={classNames("properties-someofselect ", { "hide": hidden },
-					this.props.messageInfo ? this.props.messageInfo.type : null)}
+					this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null)}
 			>
 				{this.props.controlItem}
 				<FlexibleTable
@@ -118,7 +119,7 @@ class SomeofselectControl extends React.Component {
 					emptyTablePlaceholder={this.props.control.additionalText}
 					readOnly={this.props.readOnly}
 				/>
-				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
+				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} propertyId={this.props.propertyId} />
 			</div>
 
 		);

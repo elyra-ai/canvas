@@ -315,7 +315,9 @@ export default class PropertiesController {
 			// with the the name and col set from the definition ref.
 			const baseId = conditionsUtil.getParamRefPropertyId(conditionKey);
 			// baseId.col and propertyId.col can be undefined
-			if (baseId.name === propertyId.name && baseId.col === propertyId.col) {
+			if (baseId.name === propertyId.name && baseId.col === propertyId.col &&
+				(!baseId.propertyId || (baseId.propertyId && baseId.propertyId.col === propertyId.propertyId?.col))
+			) {
 				retCond = retCond.concat(conditionDefinitions[conditionKey]);
 			}
 		}
