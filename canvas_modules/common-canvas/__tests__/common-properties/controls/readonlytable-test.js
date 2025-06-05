@@ -25,7 +25,7 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import readonlyTableParamDef from "../../test_resources/paramDefs/readonlyTable_paramDef.json";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -163,7 +163,7 @@ describe("readonlytable control renders correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should render a `readonlytable` control with edit button", () => {
@@ -221,7 +221,7 @@ describe("readonlytable control conditions", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("a hidden `readonlyTable` control should not be shown", () => {

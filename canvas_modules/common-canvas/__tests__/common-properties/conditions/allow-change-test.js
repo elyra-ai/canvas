@@ -18,7 +18,7 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import { expect } from "chai";
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 
 describe("Condition allow_change test cases", () => {
@@ -30,7 +30,7 @@ describe("Condition allow_change test cases", () => {
 		controller = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 
