@@ -29,7 +29,7 @@ import structuretableParamDef from "../../test_resources/paramDefs/structuretabl
 import structuretableMultiInputParamDef from "../../test_resources/paramDefs/structuretable_multiInput_paramDef.json";
 import filterColumnParamDef from "../../test_resources/paramDefs/Filter_paramDef.json";
 import setGlobalsParamDef from "../../test_resources/paramDefs/setGlobals_paramDef.json";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -517,7 +517,7 @@ describe("condition renders correctly with structure table control", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 	it("should render empty table content", () => {
 		const conditionsPropertyId = { name: "structuretableReadonlyColumnStartValue" };
@@ -694,7 +694,7 @@ describe("structuretable control with multi input schemas renders correctly", ()
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should prefix the correct schema for fields selected", () => {
@@ -738,7 +738,7 @@ describe("structuretable control displays with no header and no button", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should display header", () => {
@@ -801,7 +801,7 @@ describe("structuretable multiselect edit works", () => {
 		renderedController = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 	it("mse table should render", () => {
 		const { container } = wrapper;
@@ -973,7 +973,7 @@ describe("structuretable control displays with checkbox header", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should display header with checkbox", () => {
@@ -1025,7 +1025,7 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should display header with checkbox", () => {
@@ -1185,7 +1185,7 @@ describe("measurement icons should be rendered correctly in structuretable", () 
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 	it("measurement icons should render for table where dm_image is set to measure ", () => {
 		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableSortableColumns-summary-panel");
@@ -1213,7 +1213,7 @@ describe("structuretable with long text input values should render as readonly",
 		table = propertyUtilsRTL.openSummaryPanel(wrapper, "error_handling_summary");
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 	it("table should show disabled control and error icon for truncated value", () => {
 		expect(table.querySelectorAll(".properties-textinput-readonly")).to.have.length(1);
@@ -1246,7 +1246,7 @@ describe("structuretable control with nested structure tables", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should render a nested structurelisteditor control that returns nested objects, edit subPanel", () => {
@@ -1690,7 +1690,7 @@ describe("structuretable classnames appear correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("structuretable should have custom classname defined", () => {

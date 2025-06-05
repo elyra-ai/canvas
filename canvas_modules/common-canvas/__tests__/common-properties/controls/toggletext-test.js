@@ -22,7 +22,7 @@ import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL.js";
 import toggletextParamDef from "../../test_resources/paramDefs/toggletext_paramDef.json";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -86,7 +86,7 @@ describe("Toggletext renders correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("Toggletext props should have been defined", () => {
@@ -210,7 +210,7 @@ describe("toggletext classnames appear correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("toggletext should have custom classname defined", () => {

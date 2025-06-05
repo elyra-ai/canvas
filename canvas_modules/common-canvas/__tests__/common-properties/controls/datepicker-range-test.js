@@ -22,7 +22,7 @@ import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 import datepickerRangeParamDef from "../../test_resources/paramDefs/datepickerRange_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 const mockDatepicker = jest.fn();
 jest.mock("../../../src/common-properties/controls/datepicker-range",
@@ -184,7 +184,7 @@ describe("error messages renders correctly for datepickerRange controls", () => 
 		controller = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should show error message when empty string is entered in a required field", async() => {

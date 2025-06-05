@@ -18,7 +18,7 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import customControlParamDef from "../../test_resources/paramDefs/custom-ctrl-op_paramDef.json";
 import { expect } from "chai";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 import { render } from "../../_utils_/mount-utils.js";
 import { IntlProvider } from "react-intl";
 import React from "react";
@@ -35,7 +35,7 @@ describe("custom control renders correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should show the correct custom controls", () => {

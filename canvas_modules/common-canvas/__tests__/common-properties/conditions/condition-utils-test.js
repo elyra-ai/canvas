@@ -18,7 +18,7 @@ import { expect } from "chai";
 import { validateInput } from "./../../../src/common-properties/ui-conditions/conditions-utils.js";
 import propertyUtilsRTL from "./../../_utils_/property-utilsRTL";
 import readOnlyParamDef from "./../../test_resources/paramDefs/readonly_paramDef.json";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 
 describe("validateInput validates input and updates controller correctly", () => {
@@ -32,7 +32,7 @@ describe("validateInput validates input and updates controller correctly", () =>
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("validateInput will update controller error messages when multiple error messages are present in a validation set", () => {

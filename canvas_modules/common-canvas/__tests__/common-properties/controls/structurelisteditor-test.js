@@ -26,7 +26,7 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 
 import structureListEditorParamDef from "../../test_resources/paramDefs/structurelisteditor_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -438,7 +438,7 @@ describe("StructureListEditor render from paramdef", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("hide not visible column but display on-panel container", () => {
@@ -838,7 +838,7 @@ describe("StructureListEditor single select table renders and functions correctl
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	// Removed table toolbar from single select tables.
@@ -883,7 +883,7 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should render a `structurelisteditor` control inside a structurelisteditor", () => {
