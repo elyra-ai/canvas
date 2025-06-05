@@ -52,6 +52,7 @@ class TearSheet extends Component {
 					size="lg"
 					aria-label={formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: title })}
 					preventCloseOnClickOutside
+					onClose={this.props.cancelHandler} // for case where user closes the modal by pressing ESC
 				>
 					{title === null
 						? null
