@@ -230,6 +230,7 @@ describe("nested conditions display the error in the correct cell and table", ()
 									"row": 0
 								},
 								"required": false,
+								"tableText": "There are 2 error cells. ",
 								"text": "Cannot select 'green'",
 								"type": "error",
 								"validation_id": "nested_table"
@@ -257,6 +258,10 @@ describe("nested conditions display the error in the correct cell and table", ()
 		// Modify second dropdown to show another error
 		fireEvent.change(dropdowns[1], { target: { value: "green" } });
 		expect(controller.getErrorMessages()).to.eql(expectedTwoErrors);
+
+		const validationErrors = structureTableControl[0].querySelectorAll(".properties-validation-message.error");
+		expect(validationErrors.length).to.equal(3); // First two are in cells, last one is on table
+		expect(validationErrors[2].querySelector("span").textContent).to.equal("There are 2 error cells. ");
 
 		// Verify main table also display the error in cell
 		let errorCells = mainTable.querySelectorAll(".properties-validation-message.error.inTable");
@@ -498,6 +503,7 @@ describe("nested conditions display the error in the correct cell and table", ()
 									"row": 0
 								},
 								"required": false,
+								"tableText": "There are 2 error cells. ",
 								"text": "Must be greater than 0",
 								"type": "error",
 								"validation_id": "nested_table"
@@ -533,7 +539,7 @@ describe("nested conditions display the error in the correct cell and table", ()
 		// Verify structurelisteditor table error gets updated
 		validationErrors = subPanel[0].querySelectorAll(".properties-validation-message.error");
 		expect(validationErrors.length).to.equal(3); // Two errors in the cell, the other is on table
-		expect(validationErrors[2].querySelector("span").textContent).to.equal("Must be greater than 0");
+		expect(validationErrors[2].querySelector("span").textContent).to.equal("There are 2 error cells. ");
 
 		// Remove error from numberinput, table error should be set back to first error
 		fireEvent.change(numberInputs[0], { target: { value: 1 } });
@@ -650,6 +656,7 @@ describe("nested conditions display the error in the correct cell and table", ()
 									"row": 0
 								},
 								"required": true,
+								"tableText": "There are 2 error cells. ",
 								"text": "You must enter a value for textfield.",
 								"type": "error",
 								"validation_id": "required_nested_table[4][0]_186.07303925125697"
@@ -685,7 +692,7 @@ describe("nested conditions display the error in the correct cell and table", ()
 		// Verify structurelisteditor table error gets updated
 		validationErrors = subPanel[0].querySelectorAll(".properties-validation-message.error");
 		expect(validationErrors.length).to.equal(3); // Two errors in the cell, the other is on table
-		expect(validationErrors[2].querySelector("span").textContent).to.equal("You must enter a value for numberfield.");
+		expect(validationErrors[2].querySelector("span").textContent).to.equal("There are 2 error cells. ");
 
 		// Remove error from numberinput, table error should be set back to first error
 		fireEvent.change(numberInputs[0], { target: { value: 1 } });

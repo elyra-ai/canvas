@@ -15,17 +15,9 @@
  */
 
 import { UPDATE_ERROR_MESSAGE, SET_ERROR_MESSAGES, CLEAR_ERROR_MESSAGE } from "../actions";
+import { DEFAULT_ERROR_MESSAGE_KEYS } from "../constants/constants";
 import { isEmpty, difference } from "lodash";
 /* eslint max-depth: ["error", 6] */
-
-const DEFAULT_ERROR_MESSAGE_KEYS = [
-	"propertyId",
-	"required",
-	"text",
-	"type",
-	"validation_id",
-	"displayError"
-];
 
 /*
 * Stores the state information for all controls.  States are stored as objects with keys being name, row, col.
@@ -70,6 +62,7 @@ function messages(state = {}, action) {
 				delete newState[propertyId.name].required;
 				delete newState[propertyId.name].propertyId;
 				delete newState[propertyId.name].displayError;
+				delete newState[propertyId.name].tableText;
 				if (isEmpty(newState[propertyId.name])) {
 					delete newState[propertyId.name];
 				}
@@ -95,6 +88,7 @@ function updateNestedPropertyValue(propertyId, newState, value) {
 		} else if (typeof newState[strRow].displayError !== "undefined") {
 			delete newState[strRow].displayError;
 		}
+		delete newState[strRow].tableText;
 
 		if (typeof propertyId.col !== "undefined") {
 			const strCol = propertyId.col.toString();
@@ -103,6 +97,7 @@ function updateNestedPropertyValue(propertyId, newState, value) {
 			} else if (typeof newState[strRow][strCol].displayError !== "undefined") {
 				delete newState[strRow][strCol].displayError;
 			}
+			delete newState[strRow][strCol].tableText;
 			newState[strRow][strCol] = Object.assign({}, newState[strRow][strCol], value);
 			if (typeof propertyId.propertyId !== "undefined") {
 				updateNestedPropertyValue(propertyId.propertyId, newState[strRow][strCol], Object.assign({}, value));
@@ -127,6 +122,7 @@ function clearNestedPropertyMessage(propertyId, newState) {
 		}
 	} else {
 		delete newState[propertyId.row];
+		delete newState.tableText;
 	}
 }
 
@@ -135,21 +131,26 @@ function clearCellMessage(col, newState) {
 	const cellErrors = difference(Object.keys(newState[col]), DEFAULT_ERROR_MESSAGE_KEYS);
 	if (cellErrors.length === 0) {
 		delete newState[col];
+		delete newState.tableText;
 	}
 }
 
 // Once an error is cleared from the nested cell, and there is still another error present,
 // ensure that the parent error reflects the error still present, instead of the error that was removed
 function updateParentErrorMessage(errIdx, delIdx, newState) {
+	// delete newState.tableText;
 	const errorState = newState[delIdx];
 	const cellErrors = difference(Object.keys(errorState[errIdx]), DEFAULT_ERROR_MESSAGE_KEYS);
 	if (typeof errorState[errIdx].type !== "undefined") {
 		const remainingCellErrorIdx = cellErrors[0]; // Set the parent error to the first cell
 		const cellError = difference(Object.keys(errorState[errIdx][remainingCellErrorIdx]), DEFAULT_ERROR_MESSAGE_KEYS);
 		if (cellError.length === 0) {
-			errorState[errIdx] = Object.assign({}, errorState[errIdx], cellError);
+			const remainingError = errorState[errIdx][remainingCellErrorIdx];
+			delete remainingError.tableText;
+			errorState[errIdx] = Object.assign({}, errorState[errIdx], remainingError);
 		} else { // go deeper to find the nested error
 			const remainingError = errorState[errIdx][remainingCellErrorIdx][cellError[0]];
+			delete remainingError.tableText;
 			errorState[errIdx] = Object.assign({}, errorState[errIdx], remainingError);
 		}
 	}
