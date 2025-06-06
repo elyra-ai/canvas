@@ -17,7 +17,7 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import React from "react";
 import CommonProperties from "./../../../src/common-properties/common-properties.jsx";
 import { expect } from "chai";
-import { fireEvent, within } from "@testing-library/react";
+import { fireEvent, within, cleanup } from "@testing-library/react";
 import TAB_PARAM_DEF from "../../test_resources/paramDefs/tab_paramDef.json";
 import PARAMS_ONLY_DEF from "../../test_resources/paramDefs/paramsOnly_paramDef.json";
 import CODE_PARAM_DEF from "../../test_resources/paramDefs/code_paramDef.json";
@@ -31,7 +31,7 @@ describe("tabs and subtabs should be rendered correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("validate subtabs work correctly", () => {
@@ -72,16 +72,14 @@ describe("tabs and subtabs should be rendered correctly", () => {
 });
 
 describe("Tearsheet group type", () => {
-	let wrapper;
 	let controller;
 	beforeEach(() => {
 		const flyout = propertyUtilsRTL.flyoutEditorForm(CODE_PARAM_DEF);
-		wrapper = flyout.wrapper;
 		controller = flyout.controller;
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 	it("validate tearsheet activates in memory", () => {
 		controller.setActiveTearsheet("tearsheet1");
@@ -99,7 +97,7 @@ describe("controls should be rendered correctly when no uihints are provided", (
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("validate controls show up correctly", () => {
@@ -143,7 +141,7 @@ describe("Right flyout category views", () => {
 	let wrapper;
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("For custom container in right flyout, when categoryView=tabs categories should be displayed as tabs", () => {

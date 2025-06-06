@@ -25,7 +25,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import CommonProperties from "./../../../src/common-properties/common-properties.jsx";
 import datefieldParamDef from "../../test_resources/paramDefs/datefield_paramDef.json";
 import DateField from "../../../src/common-properties/controls/datefield";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 const DATEFIELD_PARAM_DEF = require("../../test_resources/paramDefs/datefield_paramDef.json");
 
@@ -251,7 +251,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		controller = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should show error message when date with invalid format is entered", () => {
