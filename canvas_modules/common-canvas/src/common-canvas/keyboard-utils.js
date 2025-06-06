@@ -17,16 +17,17 @@
 import CanvasUtils from "./common-canvas-utils.js";
 
 const RETURN_KEY = "Enter"; // Return key on the Mac
-const SPACE_KEY = "Space";
 const LEFT_ARROW_KEY = "ArrowLeft";
 const RIGHT_ARROW_KEY = "ArrowRight";
 const UP_ARROW_KEY = "ArrowUp";
 const DOWN_ARROW_KEY = "ArrowDown";
 const ESC_KEY = "Escape";
-const COMMA_KEY = ",";
 const TAB_KEY = "Tab";
 const BACKSPACE_KEY = "Backspace";
 const DELETE_KEY = "Delete";
+
+const SPACE_KEY = " ";
+const COMMA_KEY = ",";
 
 const A_KEY = "a";
 const B_KEY = "b";
