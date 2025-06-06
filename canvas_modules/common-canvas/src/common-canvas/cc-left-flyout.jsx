@@ -35,7 +35,7 @@ class CommonCanvasLeftFlyout extends React.Component {
 				? "left-flyout-panel under-toolbar"
 				: "left-flyout-panel";
 			leftFlyout = (
-				<div className={lfClass}>
+				<div className={lfClass} id={`${this.props.containingDivId}-left-flyout-panel`}>
 					{this.props.content}
 				</div>
 			);
@@ -46,6 +46,7 @@ class CommonCanvasLeftFlyout extends React.Component {
 }
 
 CommonCanvasLeftFlyout.propTypes = {
+	containingDivId: PropTypes.string,
 	// Provided by Redux
 	isOpen: PropTypes.bool,
 	content: PropTypes.object,

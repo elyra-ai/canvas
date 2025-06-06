@@ -55,6 +55,7 @@ class Palette extends React.Component {
 
 		return (
 			<PaletteFlyout
+				id={`${this.props.containingDivId}-left-flyout-panel`}
 				canvasController={this.props.canvasController}
 				paletteJSON={this.props.paletteJSON}
 				paletteHeader={this.props.paletteHeader}
@@ -71,6 +72,7 @@ Palette.propTypes = {
 	// Provided by common-canvas
 	canvasController: PropTypes.object.isRequired,
 	createAutoNode: PropTypes.func, // Optional callback
+	containingDivId: PropTypes.string,
 
 	// Provided by redux
 	paletteJSON: PropTypes.object,

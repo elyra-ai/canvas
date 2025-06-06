@@ -108,14 +108,22 @@ class CommonCanvasRightFlyout extends React.Component {
 	// Returns a new width for right panel limited by the need to enforce
 	// a minimum and maximum width
 	limitWidth(wd) {
-		const canvasContainer = document.getElementById(this.props.containingDivId);
+		const containingDiv = document.getElementById(this.props.containingDivId);
 		let width = wd;
 
-		if (canvasContainer) {
-			// Max Width should be 70% of the total available width (canvas + rightflyout)
-			const canvasWidth = canvasContainer.getBoundingClientRect().width;
+		if (containingDiv) {
+			const canvasWidth = containingDiv.getBoundingClientRect().width;
 			let maxWidth = (canvasWidth + this.props.panelWidth) * MAX_WIDTH_EXTEND_PERCENT;
-			if (this.props.enableRightFlyoutUnderToolbar) {
+			// Max Width should be 70% of the total available width (canvas + rightflyout)
+			if (this.props.enableLeftFlyoutUnderToolbar) {
+				const leftFlyout = document.querySelector(`#${this.props.containingDivId}-left-flyout-panel`);
+				const leftFlyoutWidth = leftFlyout ? leftFlyout.getBoundingClientRect().width : 0;
+				if (this.props.enableRightFlyoutUnderToolbar) {
+					maxWidth = (canvasWidth - leftFlyoutWidth) * MAX_WIDTH_EXTEND_PERCENT;
+				} else {
+					maxWidth = (canvasWidth - leftFlyoutWidth + this.props.panelWidth) * MAX_WIDTH_EXTEND_PERCENT;
+				}
+			} else if (this.props.enableRightFlyoutUnderToolbar) {
 				maxWidth = canvasWidth * MAX_WIDTH_EXTEND_PERCENT;
 			}
 			width = Math.min(Math.max(width, this.initialWidth), maxWidth);
@@ -161,6 +169,7 @@ CommonCanvasRightFlyout.propTypes = {
 	// Provided by Redux
 	isOpen: PropTypes.bool,
 	content: PropTypes.object,
+	enableLeftFlyoutUnderToolbar: PropTypes.bool,
 	enableRightFlyoutUnderToolbar: PropTypes.bool,
 	enableRightFlyoutDragToResize: PropTypes.bool,
 	panelWidth: PropTypes.number
@@ -169,6 +178,7 @@ CommonCanvasRightFlyout.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
 	isOpen: state.rightflyout.isOpen,
 	content: state.rightflyout.content,
+	enableLeftFlyoutUnderToolbar: state.canvasconfig.enableLeftFlyoutUnderToolbar,
 	enableRightFlyoutUnderToolbar: state.canvasconfig.enableRightFlyoutUnderToolbar,
 	enableRightFlyoutDragToResize: state.canvasconfig.enableRightFlyoutDragToResize,
 	panelWidth: state.rightflyout.panelWidth

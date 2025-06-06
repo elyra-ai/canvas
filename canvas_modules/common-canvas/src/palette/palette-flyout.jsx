@@ -42,6 +42,7 @@ class PaletteFlyout extends React.Component {
 			>
 				<div className={className}>
 					<PaletteFlyoutContent
+						id={this.props.id}
 						canvasController={this.props.canvasController}
 						paletteJSON={this.props.paletteJSON}
 						paletteHeader={this.props.paletteHeader}
@@ -57,6 +58,7 @@ class PaletteFlyout extends React.Component {
 }
 
 PaletteFlyout.propTypes = {
+	id: PropTypes.string,
 	intl: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	paletteJSON: PropTypes.object.isRequired,
