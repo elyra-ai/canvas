@@ -153,7 +153,7 @@ class PaletteFlyoutContent extends React.Component {
 		className += paletteHeader ? " with-palette-header" : "";
 
 		return (
-			<div className={className}>
+			<div className={className} id={this.props.id}>
 				{contentSearch}
 				{paletteHeader}
 				{contentCategories}
@@ -163,6 +163,7 @@ class PaletteFlyoutContent extends React.Component {
 }
 
 PaletteFlyoutContent.propTypes = {
+	id: PropTypes.string,
 	canvasController: PropTypes.object.isRequired,
 	paletteJSON: PropTypes.object.isRequired,
 	paletteHeader: PropTypes.object,
