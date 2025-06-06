@@ -83,7 +83,7 @@ class CommonCanvasPanels extends React.Component {
 		templateRows += this.props.bottomPanelIsOpen ? " auto" : "";
 
 		return (
-			<div id={`${this.props.containingDivId}-top-center-bottom`} className="common-canvas-grid-vertical" style={{ gridTemplateRows: templateRows }}>
+			<div className="common-canvas-grid-vertical" style={{ gridTemplateRows: templateRows }}>
 				{topPanel}
 				{canvasContents}
 				{bottomPanel}
@@ -128,10 +128,10 @@ class CommonCanvasPanels extends React.Component {
 	// app wants Common Canvas to display the regular Palette in the left flyout.
 	generateLeftFlyout() {
 		if (this.props.enablePaletteLayout === PALETTE_LAYOUT_NONE && this.props.leftFlyoutIsOpen) {
-			return (<CommonCanvasLeftFlyout containingDivId={this.props.containingDivId} />);
+			return (<CommonCanvasLeftFlyout containingDivId={this.containingDivId} />);
 
 		} else if (this.props.enablePaletteLayout === PALETTE_LAYOUT_FLYOUT) {
-			return (<Palette canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />);
+			return (<Palette canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
 		}
 		return null;
 	}
