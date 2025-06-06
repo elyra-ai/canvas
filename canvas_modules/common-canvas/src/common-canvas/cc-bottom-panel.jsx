@@ -19,9 +19,9 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Logger from "../logging/canvas-logger.js";
 
-// Margin must be equal to or greater than the toolbar height
-// plus the minimum allowed height for the canvas which is 150px.
-const MARGIN_TOP = 200;
+// Margin must be equal to or greater the minimum allowed
+// height for the canvas which is 150px.
+const MARGIN_TOP = 160;
 const MIN_HEIGHT = 75;
 const TOP_PANEL_CLASSNAME = "top-panel";
 

@@ -334,6 +334,10 @@
       "id": "nestedStructureeditorTable",
       "type": "array[userInfoTable]",
       "default": []
+    },
+    {
+      "id": "subpanelEditingTable",
+      "type": "map[string, subpanelEdit]"
     }
   ],
   "complex_types": [
@@ -863,7 +867,35 @@
           "default": []
         }
       ]
-    }
+    },
+    {
+			"id": "subpanelEdit",
+			"parameters": [
+				{
+					"id": "fieldType",
+					"type": "string",
+					"enum": [
+						"STRING",
+						"INTEGER",
+						"LONG",
+						"FLOAT",
+						"DOUBLE",
+						"DATE",
+						"DECIMAL"
+					]
+				},
+				{
+					"id": "fieldPrecision",
+					"type": "number",
+					"default": 10
+				},
+				{
+					"id": "fieldScale",
+					"type": "number",
+					"default": 2
+				}
+			]
+		}
   ],
   "uihints": {
     "id": "StructureListEditor.test",
@@ -1045,7 +1077,17 @@
         "description": {
           "default": "Example of a nested structureeditor inside a structurelisteditor"
         }
-      }
+      },
+      {
+				"parameter_ref": "subpanelEditingTable",
+				"label": {
+					"default": "Test visible cell condition in subpanel"
+				},
+				"description": {
+					"default": "Set Field Type: DECIMAL to see Precision and Scale fields",
+					"placement": "on_panel"
+				}
+			}
     ],
     "complex_type_info": [
       {
@@ -1961,7 +2003,37 @@
             }
           }
         ]
-      }
+      },
+      {
+				"complex_type_ref": "subpanelEdit",
+				"label": {
+					"default": "Test visible cell condition in subpanel"
+				},
+				"parameters": [
+					{
+						"parameter_ref": "fieldType",
+						"label": {
+							"default": "Field Type"
+						},
+						"edit_style": "subpanel",
+						"width": 20
+					},
+					{
+						"parameter_ref": "fieldPrecision",
+						"edit_style": "subpanel",
+						"label": {
+							"default": "Precision"
+						}
+					},
+					{
+						"parameter_ref": "fieldScale",
+						"edit_style": "subpanel",
+						"label": {
+							"default": "Scale"
+						}
+					}
+				]
+			}
     ],
     "group_info": [
       {
@@ -2170,6 +2242,21 @@
                 "id": "Inline editing2",
                 "parameter_refs": [
                   "inlineEditingTableError3"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "subpanelEditingTable-summary-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Test visible cell condition in subpanel"
+            },
+            "group_info": [
+              {
+                "id": "subpanel-editing",
+                "parameter_refs": [
+                  "subpanelEditingTable"
                 ]
               }
             ]
@@ -2538,7 +2625,22 @@
           ]
         }
       }
-    }
+    },
+    {
+			"visible": {
+				"parameter_refs": [
+					"subpanelEditingTable[2]",
+					"subpanelEditingTable[1]"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "subpanelEditingTable[0]",
+						"op": "equals",
+						"value": "DECIMAL"
+					}
+				}
+			}
+		}
   ],
   "dataset_metadata": [
     {

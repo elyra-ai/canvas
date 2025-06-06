@@ -11,6 +11,7 @@
   "canvas.addComment": "새로운 주석",
   "canvas.addWysiwygComment": "새 WYSIWYG 주석",
   "canvas.selectAll": "모두 선택",
+  "canvas.deselectAll": "모두 선택 취소",
   "canvas.undo": "실행 취소",
   "canvas.redo": "다시 실행",
   "canvas.undoCommand": "실행 취소: {undo_command}",

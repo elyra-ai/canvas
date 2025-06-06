@@ -24,7 +24,7 @@ import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import oneofselectParamDef from "../../test_resources/paramDefs/oneofselect_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 import { cloneDeep } from "lodash";
 
 const mockOneofselectControl = jest.fn();
@@ -265,7 +265,7 @@ describe("oneofselect paramDef works correctly", () => {
 		renderedController = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("oneofselect allows enum label different from enum value", () => {
@@ -333,7 +333,7 @@ describe("oneofselect filters work correctly", () => {
 		renderedController = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("Validate oneofselect should have options filtered by enum_filter", () => {

@@ -16,6 +16,7 @@
 import propertyUtilsRTL from "./../../_utils_/property-utilsRTL";
 import defaultsParamDef from "./../../test_resources/paramDefs/defaults_paramDef.json";
 import { expect } from "chai";
+import { cleanup } from "@testing-library/react";
 
 describe("Condition default_value test cases", () => {
 	let wrapper;
@@ -26,7 +27,7 @@ describe("Condition default_value test cases", () => {
 		controller = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("If default value is defined in current_parameters, use default value from current_parameters", () => {

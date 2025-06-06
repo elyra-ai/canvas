@@ -26,7 +26,7 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 
 import structureListEditorParamDef from "../../test_resources/paramDefs/structurelisteditor_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -438,7 +438,7 @@ describe("StructureListEditor render from paramdef", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("hide not visible column but display on-panel container", () => {
@@ -775,6 +775,58 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(tableWrapper.querySelectorAll("button.properties-empty-table-button")).to.have.length(1);
 		expect(tableWrapper.querySelector("button.properties-empty-table-button").textContent).to.be.equal("Add value");
 	});
+	it("Test visible cell condition in subpanel", () => {
+		const { container } = wrapper;
+		const summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "subpanelEditingTable-summary-panel");
+		// Click on "Add value" button
+		const addValueBtn = container.querySelector("button.properties-empty-table-button");
+		fireEvent.click(addValueBtn);
+		const tableWrapper = container.querySelectorAll("div[data-id='properties-ft-subpanelEditingTable']");
+		expect(tableWrapper).to.have.length(1);
+
+		const tableRows = tableUtilsRTL.getTableRows(summaryPanel);
+		expect(tableRows.length).to.equal(1);
+		// Click edit row button in table
+		tableRows.forEach((row) => {
+			const editRowButton = row.querySelector("button.properties-subpanel-button");
+			fireEvent.click(editRowButton);
+		});
+
+		// Verify Pecision and Scale properties are NOT rendered
+		let precision = container.querySelector("div[data-id='properties-ctrl-fieldPrecision']").querySelector("input");
+		expect(precision).to.not.exist;
+		let scale = container.querySelector("div[data-id='properties-ctrl-fieldScale']").querySelector("input");
+		expect(scale).to.not.exist;
+
+		// Select Field type: DECIMAL
+		let dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-fieldType']");
+		let dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton);
+		dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-fieldType']");
+		let dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
+		expect(dropdownList).to.be.length(7);
+		fireEvent.click(dropdownList[6]);
+
+		// Verify Pecision and Scale properties are rendered
+		precision = container.querySelector("div[data-id='properties-ctrl-fieldPrecision']").querySelector("input");
+		expect(precision).to.exist;
+		scale = container.querySelector("div[data-id='properties-ctrl-fieldScale']").querySelector("input");
+		expect(scale).to.exist;
+
+		// Select Field type: STRING
+		dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-fieldType']");
+		dropdownButton = dropdownWrapper.querySelector("button");
+		fireEvent.click(dropdownButton);
+		dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-fieldType']");
+		dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
+		fireEvent.click(dropdownList[0]);
+
+		// Verify Pecision and Scale properties are NOT rendered
+		precision = container.querySelector("div[data-id='properties-ctrl-fieldPrecision']").querySelector("input");
+		expect(precision).to.not.exist;
+		scale = container.querySelector("div[data-id='properties-ctrl-fieldScale']").querySelector("input");
+		expect(scale).to.not.exist;
+	});
 });
 
 describe("StructureListEditor single select table renders and functions correctly", () => {
@@ -786,7 +838,7 @@ describe("StructureListEditor single select table renders and functions correctl
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	// Removed table toolbar from single select tables.
@@ -831,7 +883,7 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should render a `structurelisteditor` control inside a structurelisteditor", () => {
