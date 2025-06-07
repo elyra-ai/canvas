@@ -110,6 +110,8 @@ $panel-border-color: $border-subtle-01;
 	width: 100%;
 	user-select: none;
 	height: 100%;
+	// This is needed to prevent scrollbar for long text in the bottom panel
+	word-break: break-all;
 }
 
 .top-panel {
