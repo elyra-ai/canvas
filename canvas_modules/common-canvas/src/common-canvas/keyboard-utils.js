@@ -25,9 +25,10 @@ const ESC_KEY = "Escape";
 const TAB_KEY = "Tab";
 const BACKSPACE_KEY = "Backspace";
 const DELETE_KEY = "Delete";
+const SPACE_KEY = "Space";
 
-const SPACE_KEY = " ";
-const COMMA_KEY = ",";
+const SPACE_CHAR_KEY = " ";
+const COMMA_CHAR_KEY = ",";
 
 const A_KEY = "a";
 const B_KEY = "b";
@@ -57,7 +58,7 @@ export default class KeyboardUtils {
 	/* ----------------------------------------- */
 
 	static spaceKey(evt) {
-		return evt.key === SPACE_KEY;
+		return this.isSpaceKey(evt);
 	}
 
 	static toggleLogging(evt) {
@@ -168,7 +169,7 @@ export default class KeyboardUtils {
 	// toolbar, depending on which is enabled, for the
 	// canvas or objects on the canvas.
 	static displayContextOptions(evt) {
-		return (this.isMetaKey(evt) && evt.key === COMMA_KEY) ||
+		return (this.isMetaKey(evt) && evt.key === COMMA_CHAR_KEY) ||
 			(evt.shiftKey && evt.key === F10_KEY);
 	}
 
@@ -341,7 +342,7 @@ export default class KeyboardUtils {
 	}
 
 	static selectColor(evt) {
-		return evt.key === RETURN_KEY || evt.key === SPACE_KEY;
+		return evt.key === RETURN_KEY || this.isSpaceKey(evt);
 	}
 
 	static tabKey(evt) {
@@ -353,7 +354,7 @@ export default class KeyboardUtils {
 	/* ----------------------------------------- */
 
 	static activateButton(evt) {
-		return evt.key === RETURN_KEY || evt.key === SPACE_KEY;
+		return evt.key === RETURN_KEY || this.isSpaceKey(evt);
 	}
 
 	static nextSection(evt) {
@@ -385,7 +386,7 @@ export default class KeyboardUtils {
 	}
 
 	static activateContextMenuOption(evt) {
-		return evt.key === RETURN_KEY || evt.key === SPACE_KEY;
+		return evt.key === RETURN_KEY || this.isSpaceKey(evt);
 	}
 
 	static closeContextMenu(evt) {
@@ -397,7 +398,7 @@ export default class KeyboardUtils {
 	/* ----------------------------------------- */
 
 	static openCategory(evt) {
-		return evt.key === RETURN_KEY || evt.key === SPACE_KEY;
+		return evt.key === RETURN_KEY || this.isSpaceKey(evt);
 	}
 
 	static fromCategoryToFirstNode(evt) {
@@ -413,16 +414,21 @@ export default class KeyboardUtils {
 	}
 
 	static createAutoNode(evt) {
-		return !evt.shiftKey && (evt.key === SPACE_KEY || evt.key === RETURN_KEY);
+		return !evt.shiftKey && (this.isSpaceKey(evt) || evt.key === RETURN_KEY);
 	}
 
 	static createAutoNodeNoLink(evt) {
-		return evt.shiftKey && (evt.key === SPACE_KEY || evt.key === RETURN_KEY);
+		return evt.shiftKey && (this.isSpaceKey(evt) || evt.key === RETURN_KEY);
 	}
 
 	/* ----------------------------------------- */
 	/* Utility functions                         */
 	/* ----------------------------------------- */
+
+	// key property can sometimes be set to "Space" (SPACE_KEY) in tests.
+	static isSpaceKey(evt) {
+		return evt.key === SPACE_CHAR_KEY || evt.key === SPACE_KEY;
+	}
 
 	// Returns true if either the 'Command Key' on Mac or
 	// 'Control Key' or 'Windows key' on Windows is pressed.
