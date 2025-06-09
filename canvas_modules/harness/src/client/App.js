@@ -27,7 +27,7 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
-import { Password } from "@carbon/icons-react";
+import { Password, Code } from "@carbon/icons-react";
 
 import { jsPDF } from "jspdf";
 import * as htmlToImage from "html-to-image";
@@ -444,6 +444,7 @@ class App extends React.Component {
 		this.setPropertiesConfigOption = this.setPropertiesConfigOption.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
+		this.codeHeaderHandler = this.codeHeaderHandler.bind(this);
 		this.buttonHandler = this.buttonHandler.bind(this);
 		this.buttonIconHandler = this.buttonIconHandler.bind(this);
 		this.propertyIconHandler = this.propertyIconHandler.bind(this);
@@ -1409,6 +1410,21 @@ class App extends React.Component {
 		}
 	}
 
+	codeHeaderHandler(propertyId) {
+		if (propertyId.name === "code_rows") {
+			return (
+				<Button
+					kind="ghost"
+					renderIcon={Code}
+					size="sm"
+				>
+					Test
+				</Button>
+			);
+		}
+		return null;
+	}
+
 	buttonHandler(data) {
 		this.log("buttonHandler()", data);
 
@@ -2014,6 +2030,7 @@ class App extends React.Component {
 			applyPropertyChanges: this.applyPropertyChanges,
 			closePropertiesDialog: this.closePropertiesEditorDialog,
 			helpClickHandler: this.helpClickHandler,
+			codeHeaderHandler: this.codeHeaderHandler,
 			buttonHandler: this.buttonHandler,
 			buttonIconHandler: this.buttonIconHandler,
 			titleChangeHandler: this.titleChangeHandler,
