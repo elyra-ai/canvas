@@ -1411,7 +1411,7 @@ class App extends React.Component {
 	}
 
 	codeHeaderHandler(propertyId) {
-		if (propertyId.name === "code_rows") {
+		if (propertyId.name === "code") {
 			return (
 				<Button
 					kind="ghost"
