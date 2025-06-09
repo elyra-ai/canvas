@@ -81,7 +81,7 @@ class CommonCanvasContextToolbar extends React.Component {
 
 	getSubPanelInfo(menuItem) {
 		if (menuItem.action === "colorBackground") {
-			return { subPanel: ColorPicker, subPanelData: { clickActionHandler: (color) => this.colorClicked(color) } };
+			return { subPanel: ColorPicker, subPanelData: { clickActionHandler: (color, evt) => this.colorClicked(color, evt) } };
 		}
 		return {};
 	}
@@ -163,8 +163,8 @@ class CommonCanvasContextToolbar extends React.Component {
 		this.props.canvasController.closeContextToolbar(CAUSE_KEYBOARD);
 	}
 
-	colorClicked(color) {
-		this.toolbarActionHandler("colorSelectedObjects", { color });
+	colorClicked(color, evt) {
+		this.toolbarActionHandler("colorSelectedObjects", evt, { color });
 	}
 
 	shouldCenterJustifyToolbar() {
