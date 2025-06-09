@@ -256,6 +256,8 @@ class PaletteContentListItem extends React.Component {
 
 		mainDivClass += (paletteClass ? " " + paletteClass : "");
 
+		mainDivClass += !this.props.isPaletteWide ? " palette-narrow" : "";
+
 		return mainDivClass;
 	}
 
@@ -337,10 +339,17 @@ class PaletteContentListItem extends React.Component {
 			}
 		}
 
-		if (labelText && (this.props.isPaletteWide || !icon)) {
-			itemText = this.props.isDisplaySearchResult
-				? this.getHighlightedLabel(labelText)
-				: (<span>{labelText}</span>);
+		if (labelText) {
+			if (this.props.isPaletteWide || !icon) {
+				itemText = this.props.isDisplaySearchResult
+					? this.getHighlightedLabel(labelText)
+					: (<span>{labelText}</span>);
+
+			// For the narrow palette, we 'display' a label with zero font-size
+			// so the screen reader will read the label but it will not be visible.
+			} else if (!this.props.isPaletteWide) {
+				itemText = (<span>{labelText}</span>);
+			}
 		}
 
 		const ranking = this.props.isShowRanking && this.props.isDisplaySearchResult && has(this.props.nodeTypeInfo, "occurrenceInfo.ranking")
@@ -364,8 +373,8 @@ class PaletteContentListItem extends React.Component {
 			? (<div className={"palette-list-item-category-label"}>{this.getHighlightedCategoryLabel()}</div>)
 			: null;
 
-		const description = this.props.isDisplaySearchResult && has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.description") &&
-												this.props.nodeTypeInfo.nodeType.app_data.ui_data.description
+		const description = this.props.isDisplaySearchResult &&
+				this.props?.nodeTypeInfo?.nodeType?.app_data?.ui_data?.description
 			? (<div className={"palette-list-item-description"}>{this.getHighlightedDesc()}</div>)
 			: null;
 

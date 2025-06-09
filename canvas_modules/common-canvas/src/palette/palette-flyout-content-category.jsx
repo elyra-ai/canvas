@@ -49,19 +49,6 @@ class PaletteFlyoutContentCategory extends React.Component {
 		this.displayTip(evt);
 	}
 
-	getDisplayLabel() {
-		if (this.props.isPaletteWide === true) {
-			return this.props.category.label;
-
-		// With narrow palette, if there's no image just display first 3 letters
-		} else if (!this.props.category.image &&
-								this.props.category.label &&
-								this.props.category.label.length > 0) {
-			return this.props.category.label.substr(0, 3);
-		}
-		return null;
-	}
-
 	getInlineLoadingRenderCategory() {
 		// TODO - This loading functionality should be replaced with a skeleton
 		// graphic to indicate the category is loading instead of using the
@@ -137,25 +124,34 @@ class PaletteFlyoutContentCategory extends React.Component {
 		);
 	}
 
-	// Returns the text for the category
+	// Returns a <span> for displaying the category label.
 	getItemText() {
 		let itemText = null;
-		const label = this.getDisplayLabel();
+
 		if (this.props.isPaletteWide) {
 			const className = this.props.category.image ? "palette-flyout-category-text" : "palette-flyout-category-text-no-image";
 			itemText = (
 				<span className={className}>
-					{label}
+					{this.props.category.label}
 				</span>
 			);
 
 		// With narrow palette, if there's no image just display first 3 letters
 		} else if (!this.props.category.image &&
-								this.props.category.label &&
-								this.props.category.label.length > 0) {
+					this.props.category.label &&
+					this.props.category.label.length > 0) {
 			itemText = (
 				<span className="palette-flyout-category-text-abbr">
-					{label}
+					{this.props.category.label.substr(0, 3)}
+				</span>
+			);
+
+		// For a narrow palette we 'display' a label with zero font size
+		// so the screen reader will read it out but it won't be visible.
+		} else {
+			itemText = (
+				<span className="palette-flyout-category-text-zero-size" >
+					{this.props.category.label}
 				</span>
 			);
 		}
