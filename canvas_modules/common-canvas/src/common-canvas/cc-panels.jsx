@@ -128,10 +128,10 @@ class CommonCanvasPanels extends React.Component {
 	// app wants Common Canvas to display the regular Palette in the left flyout.
 	generateLeftFlyout() {
 		if (this.props.enablePaletteLayout === PALETTE_LAYOUT_NONE && this.props.leftFlyoutIsOpen) {
-			return (<CommonCanvasLeftFlyout />);
+			return (<CommonCanvasLeftFlyout containingDivId={this.containingDivId} />);
 
 		} else if (this.props.enablePaletteLayout === PALETTE_LAYOUT_FLYOUT) {
-			return (<Palette canvasController={this.props.canvasController} />);
+			return (<Palette canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
 		}
 		return null;
 	}
