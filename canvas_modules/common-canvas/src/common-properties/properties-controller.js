@@ -40,7 +40,7 @@ export default class PropertiesController {
 			propertyListener: null,
 			controllerHandler: null,
 			actionHandler: null,
-			codeHeaderHandler: null,
+			customHeaderHandler: null,
 			buttonHandler: null,
 			buttonIconHandler: null,
 			titleChangeHandler: null,

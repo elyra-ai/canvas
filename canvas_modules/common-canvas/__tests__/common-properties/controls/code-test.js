@@ -58,7 +58,7 @@ const control = {
 	enableMaximize: true
 };
 
-const codeHeaderHandlerFunction = function(propId) {
+const customHeaderHandlerFunction = function(propId) {
 	if (propId.name === "code") {
 		return (
 			<Button
@@ -73,7 +73,7 @@ const codeHeaderHandlerFunction = function(propId) {
 	}
 	return null;
 };
-const codeHeaderHandler = sinon.spy(codeHeaderHandlerFunction);
+const customHeaderHandler = sinon.spy(customHeaderHandlerFunction);
 
 describe("code control tests", () => {
 	it("Code control doesn't render with validateLink", () => {
@@ -84,7 +84,7 @@ describe("code control tests", () => {
 		const { container } = wrapper;
 		expect(container.querySelectorAll("button.validateLink")).to.have.length(0); // no validation links should be shown for code controls
 	});
-	it("If codeHeaderHandler callback is NOT defined, code control does not have header", () => {
+	it("If customHeaderHandler callback is NOT defined, code control does not have header", () => {
 		controller.setHandlers({});
 		const wrapper = renderWithIntl(
 			<Expression
@@ -99,9 +99,9 @@ describe("code control tests", () => {
 		const codeHeader = container.querySelectorAll(".properties-code-header");
 		expect(codeHeader).to.have.length(0);
 	});
-	it("If codeHeaderHandler callback is defined, code control has a header", () => {
+	it("If customHeaderHandler callback is defined, code control has a header", () => {
 		controller.setHandlers({
-			codeHeaderHandler: codeHeaderHandler
+			customHeaderHandler: customHeaderHandler
 		});
 		const wrapper = renderWithIntl(
 			<Expression
@@ -116,11 +116,11 @@ describe("code control tests", () => {
 		const codeHeader = container.querySelectorAll(".properties-code-header");
 		expect(codeHeader).to.have.length(1);
 
-		// Verify content returned from codeHeaderHandler callback is rendered in UI
+		// Verify content returned from customHeaderHandler callback is rendered in UI
 		const testButton = wrapper.getByRole("button", { name: /Test/i });
 		expect(testButton).to.exist;
 
-		// Verify the content returned from codeHeaderHandler callback is in the codeHeader
+		// Verify the content returned from customHeaderHandler callback is in the codeHeader
 		expect(container.querySelector(".properties-code-header").querySelector("button.button-returned-from-callback")).to.exist;
 	});
 });

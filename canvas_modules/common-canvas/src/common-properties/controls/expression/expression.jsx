@@ -323,10 +323,10 @@ class ExpressionControl extends React.Component {
 	}
 
 	_getCodeHeader() {
-		const codeHeaderHandler = this.props.controller.getHandlers().codeHeaderHandler;
+		const customHeaderHandler = this.props.controller.getHandlers().customHeaderHandler;
 		let header = null;
-		if (codeHeaderHandler && typeof codeHeaderHandler(this.props.propertyId) !== "undefined") {
-			header = codeHeaderHandler(this.props.propertyId);
+		if (customHeaderHandler && typeof customHeaderHandler(this.props.propertyId) !== "undefined") {
+			header = customHeaderHandler(this.props.propertyId);
 		}
 		return header;
 	}

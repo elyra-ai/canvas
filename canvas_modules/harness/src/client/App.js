@@ -444,7 +444,7 @@ class App extends React.Component {
 		this.setPropertiesConfigOption = this.setPropertiesConfigOption.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
-		this.codeHeaderHandler = this.codeHeaderHandler.bind(this);
+		this.customHeaderHandler = this.customHeaderHandler.bind(this);
 		this.buttonHandler = this.buttonHandler.bind(this);
 		this.buttonIconHandler = this.buttonIconHandler.bind(this);
 		this.propertyIconHandler = this.propertyIconHandler.bind(this);
@@ -1410,7 +1410,7 @@ class App extends React.Component {
 		}
 	}
 
-	codeHeaderHandler(propertyId) {
+	customHeaderHandler(propertyId) {
 		if (propertyId.name === "code") {
 			return (
 				<Button
@@ -2030,7 +2030,7 @@ class App extends React.Component {
 			applyPropertyChanges: this.applyPropertyChanges,
 			closePropertiesDialog: this.closePropertiesEditorDialog,
 			helpClickHandler: this.helpClickHandler,
-			codeHeaderHandler: this.codeHeaderHandler,
+			customHeaderHandler: this.customHeaderHandler,
 			buttonHandler: this.buttonHandler,
 			buttonIconHandler: this.buttonIconHandler,
 			titleChangeHandler: this.titleChangeHandler,

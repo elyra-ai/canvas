@@ -264,7 +264,7 @@ CommonProperties.propTypes = {
 		closePropertiesDialog: PropTypes.func,
 		applyPropertyChanges: PropTypes.func,
 		helpClickHandler: PropTypes.func,
-		codeHeaderHandler: PropTypes.func,
+		customHeaderHandler: PropTypes.func,
 		buttonHandler: PropTypes.func,
 		buttonIconHandler: PropTypes.func,
 		validationHandler: PropTypes.func,
