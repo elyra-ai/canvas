@@ -133,7 +133,7 @@ Cypress.Commands.add("moveBottomPanelDivider", (y) => {
 
 Cypress.Commands.add("moveRightFlyoutDivider", (x) => {
 	cy.window().then((win) => {
-		cy.get(".right-flyout-container .right-flyout-drag")
+		cy.get(".right-flyout .right-flyout-drag")
 			.trigger("mousedown", "center", { view: win, button: 0, force: true });
 		cy.get("#canvas-div-0")
 			.trigger("mousemove", x, 200, { viewe: win, force: true });

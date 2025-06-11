@@ -64,7 +64,7 @@ describe("CommonCanvas renders correctly", () => {
 		const canvasParams = { showRightFlyout: false };
 		const { container } = createCommonCanvas(config, canvasController, canvasParams);
 		// When showRightFlyout is false then Right Flyout should not be visible
-		expect(container.querySelectorAll(".right-flyout-container")).to.have.length(0);
+		expect(container.querySelectorAll(".right-flyout")).to.have.length(0);
 		expect(canvasController.isRightFlyoutOpen() === false).to.be.true;
 	});
 
@@ -78,7 +78,7 @@ describe("CommonCanvas renders correctly", () => {
 		const canvasParams = { showRightFlyout: true, rightFlyoutContent: rightFlyoutContent };
 		const { container } = createCommonCanvas(config, canvasController, canvasParams);
 		await waitFor(() => {
-			expect(container.querySelectorAll(".right-flyout-container")).to.have.length(1);
+			expect(container.querySelectorAll(".right-flyout")).to.have.length(1);
 		});
 		expect(canvasController.isRightFlyoutOpen() === true).to.be.true;
 	});
