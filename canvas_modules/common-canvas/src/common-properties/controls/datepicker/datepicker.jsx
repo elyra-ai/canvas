@@ -82,6 +82,7 @@ class DatepickerControl extends React.Component {
 					onChange={this.handleChange.bind(this)}
 					locale={this.locale}
 					readOnly={this.props.readOnly}
+					value={this.state.value}
 				>
 					<DatePickerInput
 						{...validationProps}
@@ -92,7 +93,6 @@ class DatepickerControl extends React.Component {
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputChange.bind(this)}
-						value={this.state.value}
 						helperText={(!this.props.tableControl && helperText) || this.props.control.helperText}
 					/>
 				</DatePicker>
