@@ -93,6 +93,7 @@ class DatepickerControl extends React.Component {
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputChange.bind(this)}
+						value={this.state.value}
 						helperText={(!this.props.tableControl && helperText) || this.props.control.helperText}
 					/>
 				</DatePicker>
