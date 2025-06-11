@@ -82,8 +82,7 @@ class DatepickerControl extends React.Component {
 					onChange={this.handleChange.bind(this)}
 					locale={this.locale}
 					readOnly={this.props.readOnly}
-					// Check build
-					// value={this.state.value}
+					value={this.state.value}
 				>
 					<DatePickerInput
 						{...validationProps}
