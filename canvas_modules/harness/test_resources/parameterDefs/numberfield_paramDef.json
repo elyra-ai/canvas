@@ -180,7 +180,7 @@
         "description": {
           "default": "Readonly numberfield with parameter value set to '10'"
         },
-        "class_name": "numberfield-control-class",
+        "class_name": "numberfield-readonly-control-class",
         "helper_text": {
           "default": "Readonly numberfield with parameter value set to '10'"
         },
