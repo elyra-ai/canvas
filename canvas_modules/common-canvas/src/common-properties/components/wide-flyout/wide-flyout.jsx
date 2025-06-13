@@ -30,17 +30,18 @@ export default class WideFlyout extends Component {
 			}
 		};
 		this.updateDimensions = this.updateDimensions.bind(this);
+		this.handleTabKey = this.handleTabKey.bind(this);
 	}
 
 	componentDidMount() {
 		this.updateDimensions();
 		window.addEventListener("resize", this.updateDimensions);
+		document.addEventListener("keydown", this.handleTabKey);
 	}
-
 	componentWillUnmount() {
 		window.removeEventListener("resize", this.updateDimensions);
+		document.removeEventListener("keydown", this.handleTabKey);
 	}
-
 	updateDimensions() {
 		if (this.wideFlyout) {
 			// used to find correct parent
@@ -66,6 +67,36 @@ export default class WideFlyout extends Component {
 		}
 		return null;
 	}
+	handleTabKey(e) {
+		if (e.key !== "Tab") {
+			return;
+		}
+		const modal = document.querySelector(".properties-wf-content.show");
+		if (!modal) {
+			return;
+		}
+		// Always fetch focusables for latest DOM state.
+		this.focusables = Array.from(
+			modal.querySelectorAll(
+				"button, a[href], input, select, textarea, [tabindex]:not([tabindex='-1'])"
+			)
+		).filter((el) => el.offsetParent !== null && !el.disabled);
+		if (this.focusables.length === 0) {
+			return;
+		}
+		const first = this.focusables[0];
+		const last = this.focusables[this.focusables.length - 1];
+		const active = document.activeElement;
+		const isInsideModal = this.focusables.includes(active);
+
+		// If focus is outside modal, then bring into modal.
+		if (!isInsideModal) {
+			e.preventDefault();
+			// If key is 'shift+tab' then focus should be on the last else first.
+			(e.shiftKey ? last : first).focus();
+			return;
+		}
+	}
 
 	render() {
 		const overlay = (<div className={classNames("properties-wf-overlay", { "show": this.props.show })} />);
@@ -90,7 +121,11 @@ export default class WideFlyout extends Component {
 			<div className="properties-wf-modal" ref={ (ref) => (this.wideFlyout = ref) }>
 				<Portal node={this.commonPropertiesParent}>
 					{ overlay }
-					<div className={classNames("properties-wf-content", { "show": this.props.show, "properties-light-disabled": !this.props.light })} style={this.state.style}>
+					<div
+						role="dialog"
+						className={classNames("properties-wf-content", { "show": this.props.show, "properties-light-disabled": !this.props.light })}
+						style={this.state.style}
+					>
 						{title}
 						{children}
 						{buttons}
