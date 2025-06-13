@@ -67,6 +67,8 @@ export default class WideFlyout extends Component {
 		}
 		return null;
 	}
+
+	// Handles focus trap inside the modal when using Tab or Shift+tab key.
 	handleTabKey(e) {
 		if (e.key !== "Tab") {
 			return;
