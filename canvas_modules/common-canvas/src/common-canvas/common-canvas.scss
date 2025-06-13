@@ -122,6 +122,12 @@ $panel-border-color: $border-subtle-01;
 	word-break: break-all; // Prevents scrollbar appearing at bottom of canvas
 }
 
+.center-panel {
+	display: grid;
+	grid-template-rows: 1fr;
+	grid-template-columns: 1fr;
+}
+
 .top-panel {
 	display: flex;
 	flex-direction: column;
