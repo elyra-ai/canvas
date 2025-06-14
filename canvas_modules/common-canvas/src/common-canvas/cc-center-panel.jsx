@@ -46,7 +46,6 @@ class CanvasCenterPanel extends React.Component {
 CanvasCenterPanel.propTypes = {
 	// Provided by CommonCanvas
 	canvasController: PropTypes.object,
-	innerRef: PropTypes.object,
 	content: PropTypes.node
 };
 
