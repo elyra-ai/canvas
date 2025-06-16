@@ -115,7 +115,7 @@
 			"app_data": {
 			  "ui_data": {
 				"label": "Machine Learning",
-				"description": "Node using the 'MachineLearning' Carbon icon",
+				"description": "Node using the 'MachineLearningModel' Carbon icon",
 				"image": "",
 				"x_pos": 0,
 				"y_pos": 0
