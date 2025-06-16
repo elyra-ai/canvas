@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-tanstack-grid.properties-vt {
 	position: relative;
 	overflow: auto;
@@ -31,21 +33,21 @@
 			z-index: 1;
 
 			tr[data-role="properties-header-row"] {
-				background-color: $layer-accent-01;
+				background-color: carbon.$layer-accent-01;
 				display: flex;
 				width: 100%;
-				height: $spacing-07;
+				height: carbon.$spacing-07;
 
 				.properties-vt-header-checkbox {
-					height: $spacing-07;
+					height: carbon.$spacing-07;
 					display: flex;
 					align-items: center;
-					margin-left: $spacing-05;
-					margin-right: $spacing-02;
+					margin-left: carbon.$spacing-05;
+					margin-right: carbon.$spacing-02;
 				}
 
 				th.properties-autosized-vt-header {
-					@include type-style("productive-heading-01");
+					@include carbon.type-style("productive-heading-01");
 					letter-spacing: normal; // Override Carbon for tooltip calculations
 					display: flex;
 					align-items: center;
@@ -59,7 +61,7 @@
 								width: 100%;
 
 								span {
-									color: $text-primary;
+									color: carbon.$text-primary;
 									text-overflow: ellipsis;
 									white-space: nowrap;
 									overflow: hidden;
@@ -71,10 +73,10 @@
 
 					.properties-vt-header-btn {
 						width: 100%;
-						padding-right: $spacing-06;
+						padding-right: carbon.$spacing-06;
 
 						&.header-disabled {
-							padding-right: $spacing-05;
+							padding-right: carbon.$spacing-05;
 							:hover {
 								cursor: default;
 							}
@@ -82,7 +84,7 @@
 					}
 
 					.header-disabled {
-						padding: 0 $spacing-05;
+						padding: 0 carbon.$spacing-05;
 					}
 
 					.properties-vt-header-resize {
@@ -93,12 +95,12 @@
 					}
 
 					.properties-ft-column-sort-icon {
-						flex: 0 0 $spacing-05;
-						height: $spacing-05;
-						margin-left: $spacing-02;
+						flex: 0 0 carbon.$spacing-05;
+						height: carbon.$spacing-05;
+						margin-left: carbon.$spacing-02;
 
 						&.default {
-							fill: $layer-accent-01;
+							fill: carbon.$layer-accent-01;
 						}
 					}
 
@@ -108,8 +110,8 @@
 						width: 100%;
 
 						.properties-vt-info-icon-tip {
-							height: $spacing-05;
-							margin-left: $spacing-03;
+							height: carbon.$spacing-05;
+							margin-left: carbon.$spacing-03;
 
 							.properties-vt-info-icon {
 								&:hover {
@@ -127,13 +129,13 @@
 					&.properties-vt-column-with-resize,
 					&.properties-vt-column-sortable {
 						&:hover {
-							background-color: $layer-active-01;
+							background-color: carbon.$layer-active-01;
 							.properties-vt-header-resize {
-								background-color: $button-secondary-active;
+								background-color: carbon.$button-secondary-active;
 								cursor: col-resize;
 							}
 							.properties-ft-column-sort-icon {
-								fill: $icon-primary;
+								fill: carbon.$icon-primary;
 							}
 						}
 					}
@@ -146,23 +148,23 @@
 			position: relative;
 
 			tr.properties-grid-body-row {
-				@include type-style("body-short-01");
+				@include carbon.type-style("body-short-01");
 				letter-spacing: normal; // Override Carbon for tooltip calculations
-				background-color: $layer-02;
+				background-color: carbon.$layer-02;
 				display: flex;
 				position: absolute;
-				height: $spacing-07;
+				height: carbon.$spacing-07;
 				width: 100%;
-				border-bottom: 1px solid $layer-accent-01;
+				border-bottom: 1px solid carbon.$layer-accent-01;
 
 				&:hover:not(.properties-vt-row-non-interactive) {
 					// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
-					background-color: $layer-hover-01;
+					background-color: carbon.$layer-hover-01;
 				}
 
 				.properties-vt-row-checkbox {
-					margin-left: $spacing-05;
-					margin-right: $spacing-02;
+					margin-left: carbon.$spacing-05;
+					margin-right: carbon.$spacing-02;
 					align-content: center;
 				}
 
@@ -180,7 +182,7 @@
 
 				&.properties-vt-row-disabled {
 					&:hover {
-						border-bottom: 1px solid $layer-accent-01;
+						border-bottom: 1px solid carbon.$layer-accent-01;
 					}
 				}
 			}
@@ -188,17 +190,17 @@
 
 		&.properties-vt-single-selection {
 			tr {
-				border-left: $spacing-02 solid transparent;
+				border-left: carbon.$spacing-02 solid transparent;
 			}
 			tr.properties-grid-body-row.properties-vt-row-selected {
-				background-color: $layer-selected-01;
-				border-left: $spacing-02 solid $button-primary;
+				background-color: carbon.$layer-selected-01;
+				border-left: carbon.$spacing-02 solid carbon.$button-primary;
 
 				&:not(.properties-vt-row-disabled):hover {
-					border-left: $spacing-02 solid $button-primary;
+					border-left: carbon.$spacing-02 solid carbon.$button-primary;
 				}
 				&:hover:not(.properties-vt-row-non-interactive) {
-					background-color: $layer-accent-hover-01;
+					background-color: carbon.$layer-accent-hover-01;
 				}
 			}
 		}
@@ -206,10 +208,10 @@
 		&.properties-light-disabled {
 			tbody.properties-grid-body {
 				tr[data-role="properties-data-row"] {
-					background-color: $layer-01;
+					background-color: carbon.$layer-01;
 				}
 				.cds--select--inline .cds--select-input[disabled] {
-					background-color: $background;
+					background-color: carbon.$background;
 				}
 			}
 		}
@@ -218,6 +220,6 @@
 
 .properties-tanstack-grid.properties-vt.disabled {
 	.properties-field-type-icon svg {
-		fill: $icon-disabled;
+		fill: carbon.$icon-disabled;
 	}
 }

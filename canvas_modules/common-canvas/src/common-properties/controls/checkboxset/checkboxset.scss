@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-checkboxset {
 	&.hide {
 		display: none;
 	}
 	.cds--form-item.cds--checkbox-wrapper:first-of-type { //override carbon checkbox styling
 		margin-block-start: 0.1875rem;
-		margin-block-end: $spacing-03;
+		margin-block-end: carbon.$spacing-03;
 		flex: 0 1 auto; // Do not allow value to take up entire width
 	}
 	.properties-checkboxset-container {
@@ -29,14 +31,14 @@
 			align-items: center;
 
 			.tooltip-container {
-				margin-bottom: $spacing-02;
+				margin-bottom: carbon.$spacing-02;
 			}
 		}
 		&.error:not([disabled]) {
-			padding-bottom: $spacing-02;
+			padding-bottom: carbon.$spacing-02;
 		}
 		&.warning:not([disabled]) {
-			padding-bottom: $spacing-02;
+			padding-bottom: carbon.$spacing-02;
 		}
 	}
 }
