@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-twisty-panel {
 	&.hide {
 		display: none;
@@ -24,7 +26,7 @@
 	}
 	.cds--accordion__item--active .cds--accordion__content {
 		// 24px padding between accordion title and content (issue #3106)
-		padding: $spacing-06 $spacing-05 $spacing-05;
+		padding: carbon.$spacing-06 carbon.$spacing-05 carbon.$spacing-05;
 	}
 	.cds--accordion__wrapper {
 		padding: 0;
@@ -32,5 +34,5 @@
 }
 
 .properties-twisty-panel + .properties-control-panel {
-	padding-top: $spacing-05; // padding between the two classes
+	padding-top: carbon.$spacing-05; // padding between the two classes
 }

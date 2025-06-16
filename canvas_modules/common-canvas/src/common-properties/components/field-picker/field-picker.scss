@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-wf-content .properties-fp-table .properties-ft-container-wrapper {
 	height: 100%;
 }
 
 .properties-fp-field, .properties-fp-data, .properties-fp-schema {
 	height: 100%;
-	padding-left: $spacing-05;
+	padding-left: carbon.$spacing-05;
 	display: flex;
 	align-items: center;
 	overflow: auto;
@@ -35,10 +37,10 @@
 .properties-fp-field-type-icon, .properties-fp-data-type-icon {
 	display: flex;
 	align-items: center;
-	margin-right: $spacing-03;
+	margin-right: carbon.$spacing-03;
 	> svg {
-		width: $spacing-05;
-		height: $spacing-05;
+		width: carbon.$spacing-05;
+		height: carbon.$spacing-05;
 	}
 }
 
@@ -48,26 +50,26 @@
 
 	.properties-fp-filter-list-title.properties-fp-filter-list-li {
 		width: auto;
-		margin-left: $spacing-05;
+		margin-left: carbon.$spacing-05;
 	}
 
 	.properties-fp-filter-list-li {
 		float: left;
-		padding: $spacing-01;
+		padding: carbon.$spacing-01;
 
 		button {
-			min-height: $spacing-05;
+			min-height: carbon.$spacing-05;
 			padding: 0;
 			border: 0;
 		}
 
 		svg {
-			height: $spacing-05;
-			width: $spacing-05;
-			margin: $spacing-01;
+			height: carbon.$spacing-05;
+			width: carbon.$spacing-05;
+			margin: carbon.$spacing-01;
 
 			&[disabled] {
-				fill: $button-disabled;
+				fill: carbon.$button-disabled;
 			}
 		}
 	}
@@ -84,7 +86,7 @@
 		justify-content: space-between;
 		.properties-fp-reset-button-container {
 			span {
-				margin-right: $spacing-02;
+				margin-right: carbon.$spacing-02;
 			}
 		}
 	}
@@ -98,8 +100,8 @@
 // This is for field-picker in properties-modal, containerType="Modal"
 .properties-modal {
 	.properties-fp-table {
-		padding-bottom: $spacing-06;
-		margin-bottom: $spacing-10; // Accommodate footer buttons
+		padding-bottom: carbon.$spacing-06;
+		margin-bottom: carbon.$spacing-10; // Accommodate footer buttons
 
 		.properties-fp-top-row {
 			justify-content: flex-end;
@@ -110,8 +112,8 @@
 // This is for field-picker in tearsheet, containerType="Tearsheet"
 .properties-tearsheet-panel.cds--modal {
 	.properties-fp-table {
-		border-top: 1px solid $layer-accent-01;
-		padding: $spacing-05;
+		border-top: 1px solid carbon.$layer-accent-01;
+		padding: carbon.$spacing-05;
 
 		.properties-fp-top-row {
 			justify-content: flex-end;

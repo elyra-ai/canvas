@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-@import "./actions/actions";
-@import "./components/components";
-@import "./controls/controls";
-@import "./panels/panels";
-@import "./properties-main/properties-main";
+@use "../carbon.scss";
+
+@forward "./actions/actions";
+@forward "./components/components";
+@forward "./controls/controls";
+@forward "./panels/panels";
+@forward "./properties-main/properties-main";
 
 .properties-error-heading .properties-validation-message {
-	padding: $spacing-08 10px 0;
+	padding: carbon.$spacing-08 10px 0;
 	align-items: left;
 	-webkit-box-align: left;
 	display: flex;
@@ -38,8 +40,8 @@
 }
 
 .properties-error-content {
-	@include type-style("label-02");
-	padding: 0 $spacing-06;
+	@include carbon.type-style("label-02");
+	padding: 0 carbon.$spacing-06;
 }
 
 .properties-modal-container {

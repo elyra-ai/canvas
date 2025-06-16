@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-@import "./carbon.scss";
-@import "./common-properties/index.scss";
-@import "./notification-panel/notification-panel.scss";
-@import "./icons/icon.scss";
-@import "./toolbar/toolbar.scss";
-@import "./tooltip/tooltip.scss";
-@import "./context-menu/context-menu.scss";
-@import "./palette/palette.scss";
-@import "./common-canvas/common-canvas.scss";
+@forward "./carbon.scss";
+@forward "./common-properties/index.scss";
+@forward "./notification-panel/notification-panel.scss";
+@forward "./icons/icon.scss";
+@forward "./toolbar/toolbar.scss";
+@forward "./tooltip/tooltip.scss";
+@forward "./context-menu/context-menu.scss";
+@forward "./palette/palette.scss";
+@forward "./common-canvas/common-canvas.scss";
 @import "./common-canvas/svg-canvas-d3.scss";
 @import "./color-picker/color-picker.scss";

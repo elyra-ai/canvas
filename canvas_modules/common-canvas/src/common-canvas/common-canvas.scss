@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-$toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
+@use "../carbon.scss";
+@use "../toolbar/toolbar.scss";
+
+$toolbar-button-height-with-border: 41px; // Allow one extra pixel for the toolbar border
 $panel-border-width: 1px;
-$panel-border-color: $border-subtle-01;
+$panel-border-color: carbon.$border-subtle-01;
 
 /* Default layout for common-canvas components where the canvas appears below
  * the toolbar and right-side flyout appears to the right of the toolbar and
@@ -65,7 +68,7 @@ $panel-border-color: $border-subtle-01;
 	// so the contents of the panel can adjust themselves to the height accordingly.
 	height: 0;
 	min-height: 100%;
-	background-color: $layer-01;
+	background-color: carbon.$layer-01;
 	word-break: break-word;
 }
 
@@ -83,12 +86,12 @@ $panel-border-color: $border-subtle-01;
 	width: 2px;
 	border-left: $panel-border-color;
 	cursor: col-resize;
-	flex: 0 0 $spacing-01;
+	flex: 0 0 carbon.$spacing-01;
 	border-left-width: 1px;
-	background: $layer-01;
+	background: carbon.$layer-01;
 	transition: all 0.2s ease-in;
 	&:hover {
-		background: $button-tertiary;
+		background: carbon.$button-tertiary;
 	}
 }
 
@@ -104,18 +107,18 @@ $panel-border-color: $border-subtle-01;
 .bottom-panel-drag {
 	border-top: $panel-border-color;
 	cursor: row-resize;
-	flex: 0 0 $spacing-01;
+	flex: 0 0 carbon.$spacing-01;
 	border-top-width: 1px;
-	background: $layer-01;
+	background: carbon.$layer-01;
 	transition: all 0.2s ease-in;
 	&:hover {
-		background: $button-tertiary;
+		background: carbon.$button-tertiary;
 	}
 }
 
 .bottom-panel-contents,
 .top-panel-contents {
-	background-color: $layer-01;
+	background-color: carbon.$layer-01;
 	width: 100%;
 	user-select: none;
 	height: 100%;
@@ -135,7 +138,7 @@ $panel-border-color: $border-subtle-01;
 }
 
 .common-canvas-toolbar {
-	border-bottom: $toolbar-divider-width solid $border-strong-01;
+	border-bottom: toolbar.$toolbar-divider-width solid carbon.$border-strong-01;
 }
 
 // Below, we have to override the Carbon button's focus highlighting in the
@@ -146,7 +149,7 @@ $panel-border-color: $border-subtle-01;
 	.toolbar-overflow-item {
 		button:focus {
 			border-color: transparent;
-			box-shadow: inset $spacing-01 $spacing-01 $focus, inset -6px -2px $focus;
+			box-shadow: inset carbon.$spacing-01 carbon.$spacing-01 carbon.$focus, inset -6px -2px carbon.$focus;
 		}
 	}
 }
@@ -165,7 +168,7 @@ $panel-border-color: $border-subtle-01;
 	// cursor is immediately moved away from the toolbar, after it opens. That's because,
 	// when the toolbar opens, the border will be underneath the mouse cursor and so the
 	// mouseLeave event is fired when the cursor is moved away.
-	border-bottom: $spacing-02 solid transparent;
+	border-bottom: carbon.$spacing-02 solid transparent;
 
 	.toolbar-div {
 		// Position the div 'relative' to text-toolbar so we can animate its
@@ -184,7 +187,7 @@ $panel-border-color: $border-subtle-01;
 .text-toolbar  {
 	.toolbar-div {
 		animation: raise-toolbar 0.3s linear;
-		border: 1px solid $border-strong-01;
+		border: 1px solid carbon.$border-strong-01;
 	}
 }
 
@@ -194,10 +197,10 @@ $panel-border-color: $border-subtle-01;
 @keyframes raise-toolbar {
 	from {
 		height: 0;
-		top: $toolbar-button-height;
+		top: $toolbar-button-height-with-border;
 	}
 	to {
-		height: $toolbar-button-height;
+		height: $toolbar-button-height-with-border;
 		top: 0;
 	}
 }
@@ -235,7 +238,7 @@ $panel-border-color: $border-subtle-01;
 }
 
 .empty-canvas-image {
-	color: $text-placeholder; // Picked up by fill attribute in the icon.
+	color: carbon.$text-placeholder; // Picked up by fill attribute in the icon.
 	opacity: 0.75;
 	display: block;
 	text-align: center;
@@ -246,17 +249,17 @@ $panel-border-color: $border-subtle-01;
 }
 
 .empty-canvas-text1 {
-	@include type-style("productive-heading-03");
-	padding-top: $spacing-02;
-	color: $text-secondary;
+	@include carbon.type-style("productive-heading-03");
+	padding-top: carbon.$spacing-02;
+	color: carbon.$text-secondary;
 	display: block;
 	text-align: center;
 }
 
 .empty-canvas-text2 {
-	@include type-style("body-short-02");
-	padding-top: $spacing-03;
-	color: $text-secondary;
+	@include carbon.type-style("body-short-02");
+	padding-top: carbon.$spacing-03;
+	color: carbon.$text-secondary;
 	display: block;
 	text-align: center;
 }
@@ -267,15 +270,15 @@ $panel-border-color: $border-subtle-01;
 	position: absolute;
 	left: 15px;
 	top: 15px;
-	background-color: $background;
+	background-color: carbon.$background;
 	& button {
-		background-color: $background;
+		background-color: carbon.$background;
 		padding-right: 20px;
 	}
 	& button:hover,
 	& button:focus {
-		background-color: $layer-accent-01;
-		color: $button-primary;
+		background-color: carbon.$layer-accent-01;
+		color: carbon.$button-primary;
 	}
 	& .return-to-previous-content {
 		display: flex;
@@ -286,7 +289,7 @@ $panel-border-color: $border-subtle-01;
 			margin-right: 7px;
 		}
 		& span {
-			padding-bottom: $spacing-01;
+			padding-bottom: carbon.$spacing-01;
 		}
 	}
 }
@@ -303,7 +306,7 @@ $panel-border-color: $border-subtle-01;
 	cursor: default;
 	transform: translate(-50%, -50%);
 	pointer-events: all;
-	background-color: $background;
+	background-color: carbon.$background;
 	opacity: 0.75;
 }
 
@@ -313,48 +316,48 @@ $panel-border-color: $border-subtle-01;
 	left: 30px;
 	right: 30px;
 	bottom: 30px;
-	border-color: $border-strong-01;
+	border-color: carbon.$border-strong-01;
 	border-style: dashed;
-	border-width: $spacing-01;
+	border-width: carbon.$spacing-01;
 }
 
 .toolbar-item.notificationCounterIcon {
 	&.error .toolbar-icon .dot {
-		fill: $support-error;
+		fill: carbon.$support-error;
 	}
 	&.warning .toolbar-icon .dot {
-		fill: $support-warning;
+		fill: carbon.$support-warning;
 	}
 	&.success .toolbar-icon .dot {
-		fill: $support-success;
+		fill: carbon.$support-success;
 	}
 	&.info .toolbar-icon .dot {
-		fill: $support-info;
+		fill: carbon.$support-info;
 	}
 }
 
 .state-tag {
-	@include type-style("productive-heading-01");
+	@include carbon.type-style("productive-heading-01");
 	display: flex;
 	align-items: center;
-	color: $text-inverse;
-	background-color: $background-inverse;
+	color: carbon.$text-inverse;
+	background-color: carbon.$background-inverse;
 	width: fit-content;
-	height: $spacing-08;
+	height: carbon.$spacing-08;
 	position: absolute; /* Positioned relative to the common-canvas-drop-div */
 	left: 50%;
-	top: $spacing-05;
+	top: carbon.$spacing-05;
 	transform: translate(-50%, 0%);
 	border-radius: 20px;
 	padding: 9px 0;
 	user-select: none; /* Prevent elements from being selectable */
 
 	svg {
-		color: $text-inverse;
+		color: carbon.$text-inverse;
 		margin-left: 14px;
 	}
 
 	span {
-		margin: 0 $spacing-05 0 10px;
+		margin: 0 carbon.$spacing-05 0 10px;
 	}
 }

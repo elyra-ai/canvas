@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 $properties-wf-title-height: 41px;
-$properties-modal-buttons-height: $spacing-10;
+$properties-modal-buttons-height: carbon.$spacing-10;
 
 .properties-wf-overlay {
 	position: fixed;
@@ -24,7 +26,7 @@ $properties-modal-buttons-height: $spacing-10;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: $overlay;
+	background-color: carbon.$overlay;
 	z-index: 1000;
 	cursor: default;
 	&.show {
@@ -38,7 +40,7 @@ $properties-modal-buttons-height: $spacing-10;
 	width: 675px;
 	margin-right: -675px;
 	z-index: 1001;
-	background-color: $layer-01;
+	background-color: carbon.$layer-01;
 	right: 0;
 	transition: margin-right 0.1s;
 	&.show {
@@ -46,20 +48,20 @@ $properties-modal-buttons-height: $spacing-10;
 		transition: margin-right 0.3s;
 	}
 	.properties-wf-title {
-		@include type-style("productive-heading-01");
-		padding-left: $spacing-06;
+		@include carbon.type-style("productive-heading-01");
+		padding-left: carbon.$spacing-06;
 		display: flex;
 		align-items: center;
 		height: $properties-wf-title-height;
-		border-bottom: 1px solid $layer-accent-01;
+		border-bottom: 1px solid carbon.$layer-accent-01;
 	}
 	.properties-wf-children {
-		padding: $spacing-05;
+		padding: carbon.$spacing-05;
 		overflow-y: auto;
 		height: calc(100% - #{$properties-wf-title-height} - #{$properties-modal-buttons-height});
 	}
 }
 
 .properties-light-disabled {
-	background-color: $background;
+	background-color: carbon.$background;
 }

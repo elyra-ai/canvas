@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+@use "../../../carbon.scss";
 
 .properties-vt.deprecated {
 	width: 100%;
@@ -29,25 +31,25 @@
 		.properties-vt-row-disabled {
 			opacity: 0.5;
 			&:hover {
-				border-bottom: 1px solid $layer-accent-01;
+				border-bottom: 1px solid carbon.$layer-accent-01;
 			}
 		}
 	}
 
 	.properties-vt-header-checkbox {
-		height: $spacing-07;
+		height: carbon.$spacing-07;
 		display: flex;
 		align-items: center;
-		margin-left: $spacing-05;
-		margin-right: $spacing-02;
+		margin-left: carbon.$spacing-05;
+		margin-right: carbon.$spacing-02;
 	}
 
 	div[data-role="properties-header-row"] {
-		background-color: $layer-accent-01;
+		background-color: carbon.$layer-accent-01;
 	}
 
 	div[data-role="properties-data-row"] {
-		background-color: $layer-02;
+		background-color: carbon.$layer-02;
 	}
 
 	.properties-autosized-vt-header {
@@ -61,8 +63,8 @@
 				width: 100%;
 
 				span {
-					@include type-style("productive-heading-01");
-					color: $text-primary;
+					@include carbon.type-style("productive-heading-01");
+					color: carbon.$text-primary;
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;
@@ -80,21 +82,21 @@
 
 	.properties-vt-column-with-resize {
 		.properties-vt-header-resize {
-			flex: 0 0 $spacing-02;
+			flex: 0 0 carbon.$spacing-02;
 			z-index: 2;
 			cursor: col-resize;
 		}
 		.properties-vt-header-resize:hover {
-			background-color: $button-secondary-active;
+			background-color: carbon.$button-secondary-active;
 		}
 
 		.properties-vt-header-resize-active {
 			z-index: 3;
 		}
 		&:hover {
-			background-color: $layer-active-01;
+			background-color: carbon.$layer-active-01;
 			.properties-vt-header-resize {
-				background-color: $button-secondary-active;
+				background-color: carbon.$button-secondary-active;
 			}
 		}
 	}
@@ -105,8 +107,8 @@
 		align-items: center;
 
 		.properties-vt-info-icon-tip {
-			height: $spacing-05;
-			margin-left: $spacing-03;
+			height: carbon.$spacing-05;
+			margin-left: carbon.$spacing-03;
 
 			.properties-vt-info-icon {
 				&:hover {
@@ -117,26 +119,26 @@
 	}
 
 	.properties-vt-row-checkbox {
-		margin-left: $spacing-05;
-		margin-right: $spacing-02;
+		margin-left: carbon.$spacing-05;
+		margin-right: carbon.$spacing-02;
 	}
 
 	.properties-vt-double-click:first-of-type {
 		.properties-vt-row-class {
 			border-top: 1px solid transparent;
 			&.properties-vt-row-selected {
-				border-top: 1px solid $layer-accent-hover-01;
+				border-top: 1px solid carbon.$layer-accent-hover-01;
 			}
 		}
 	}
 
 	.properties-vt-row-class {
 		line-height: 20px;
-		border-bottom: 1px solid $layer-accent-01;
+		border-bottom: 1px solid carbon.$layer-accent-01;
 
 		&:hover:not(.properties-vt-row-non-interactive):not(.properties-vt-row-selected) {
 			// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
-			background-color: $layer-hover-01;
+			background-color: carbon.$layer-hover-01;
 		}
 
 		.properties-table-cell-control {
@@ -171,10 +173,10 @@
 
 		.ReactVirtualized__Table__sortableHeaderColumn {
 			.properties-vt-label-tip-icon {
-				padding-right: $spacing-03; // spacing between column label and sort icon
+				padding-right: carbon.$spacing-03; // spacing between column label and sort icon
 			}
 			&:hover {
-				background-color: $layer-active-01;
+				background-color: carbon.$layer-active-01;
 			}
 		}
 
@@ -184,10 +186,10 @@
 	}
 
 	.properties-vt-row-selected {
-		background-color: $layer-selected-01;
-		border-bottom: 1px solid $layer-accent-hover-01;
+		background-color: carbon.$layer-selected-01;
+		border-bottom: 1px solid carbon.$layer-accent-hover-01;
 		&:hover {
-			background-color: $layer-accent-hover-01;
+			background-color: carbon.$layer-accent-hover-01;
 		}
 	}
 
@@ -202,16 +204,16 @@
 			padding-left: 3px;
 		}
 		.properties-vt-row-selected {
-			border-left: $spacing-02 solid $button-primary;
+			border-left: carbon.$spacing-02 solid carbon.$button-primary;
 			padding-left: 0;
 			&:not(.properties-vt-row-disabled):hover {
-				border-left: $spacing-02 solid $button-primary;
+				border-left: carbon.$spacing-02 solid carbon.$button-primary;
 			}
 		}
 	}
 
 	.properties-vt-small-loading svg {
-		stroke: $button-primary; // Override carbon's small Loading color.
+		stroke: carbon.$button-primary; // Override carbon's small Loading color.
 	}
 
 	// Required for Autosizer in VirtualizedTable to set a height and width
@@ -222,17 +224,17 @@
 
 	.properties-light-disabled {
 		div[data-role="properties-data-row"] {
-			background-color: $layer-01;
+			background-color: carbon.$layer-01;
 		}
 		.cds--select--inline .cds--select-input[disabled] {
-			background-color: $background;
+			background-color: carbon.$background;
 		}
 	}
 
 	.properties-ft-column-sort-icon {
-		flex: 0 0 $spacing-05;
+		flex: 0 0 carbon.$spacing-05;
 		align-self: center;
-		height: $spacing-05;
-		margin-right: $spacing-03; // spacing between sort icon and end of column
+		height: carbon.$spacing-05;
+		margin-right: carbon.$spacing-03; // spacing between sort icon and end of column
 	}
 }

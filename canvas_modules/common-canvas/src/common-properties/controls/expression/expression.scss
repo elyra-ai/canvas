@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-@import "./expression-builder/expression-builder";
-@import "./expression-toggle/expression-toggle";
+@use "../../../carbon.scss";
+@forward "./expression-builder/expression-builder";
+@forward "./expression-toggle/expression-toggle";
 
 .elyra-CodeMirror {
 	.cm-editor {
 		height: inherit;
 		width: 100%;
-		background: $field-02;
-		color: $text-primary;
+		background: carbon.$field-02;
+		color: carbon.$text-primary;
 
 		.cm-gutters {
 			border-right: none;
@@ -31,58 +32,58 @@
 
 		.cm-content {
 			.cm-line {
-				padding-left: $spacing-03;
-				@include type-style("code-02");
+				padding-left: carbon.$spacing-03;
+				@include carbon.type-style("code-02");
 			}
 			.cm-placeholder {
-				@include type-style("code-02");
+				@include carbon.type-style("code-02");
 			}
 			.cm-cursor {
-				border-left: 1px solid $text-primary;
+				border-left: 1px solid carbon.$text-primary;
 			}
 			.cm-lineNumbers .cm-gutterElement {
-				@include type-style("body-short-01");
+				@include carbon.type-style("body-short-01");
 			}
 		}
 
 		.cm-activeLine {
-			background-color: $background-selected; // works for both dark n light
+			background-color: carbon.$background-selected; // works for both dark n light
 		}
 		.cm-activeLineGutter {
-			background-color: $text-placeholder;
-			color: $text-primary;
+			background-color: carbon.$text-placeholder;
+			color: carbon.$text-primary;
 		}
 		&.cm-focused .cm-selectionBackground, ::selection {
 			/* stylelint-disable-next-line declaration-no-important */
-			background: $support-info-inverse !important; // add !important to override the selected text style
+			background: carbon.$support-info-inverse !important; // add !important to override the selected text style
 		}
 		.cm-tooltip-autocomplete {
 			z-index: 1110;
-			background: $field-02; // Background color of the autocompletion menu to support dark mode
+			background: carbon.$field-02; // Background color of the autocompletion menu to support dark mode
 			ul {
 				white-space: normal; // Wraps the long autocompletion text on multiple lines
 			}
 		}
 	}
 
-	.cm-line .cm-keyword { color: $link-secondary; }
+	.cm-line .cm-keyword { color: carbon.$link-secondary; }
 
-	.cm-line .cm-number { color: $text-secondary; }
+	.cm-line .cm-number { color: carbon.$text-secondary; }
 
-	.cm-line .cm-def { color: $support-error; }
+	.cm-line .cm-def { color: carbon.$support-error; }
 
-	.cm-line .cm-comment { color: $green-70; }
+	.cm-line .cm-comment { color: carbon.$green-70; }
 
 	.cm-line .cm-variable,
 	.cm-line .cm-punctuation,
 	.cm-line .cm-property,
 	.cm-line .cm-operator {
-		color: $text-primary;
+		color: carbon.$text-primary;
 	}
 
-	.cm-line .cm-string { color: $button-danger-active; }
+	.cm-line .cm-string { color: carbon.$button-danger-active; }
 
-	.cm-line .cm-meta { color: $layer-01; }
+	.cm-line .cm-meta { color: carbon.$layer-01; }
 }
 
 .elyra-CodeMirror.disabled {
@@ -93,18 +94,18 @@
 
 .elyra-CodeMirror.warning {
 	.cm-editor {
-		border: $spacing-01 solid $support-warning;
+		border: carbon.$spacing-01 solid carbon.$support-warning;
 	}
 }
 
 .elyra-CodeMirror.error {
 	.cm-editor {
-		border: $spacing-01 solid $support-error;
+		border: carbon.$spacing-01 solid carbon.$support-error;
 	}
 }
 
 .properties-expression-editor {
-	border: 1px solid $layer-accent-01;
+	border: 1px solid carbon.$layer-accent-01;
 	&.error, &.warning {
 		border: 0;
 	}
@@ -112,7 +113,7 @@
 
 .properties-light-disabled {
 	.elyra-CodeMirror .cm-editor {
-		background: $field-01;
+		background: carbon.$field-01;
 	}
 }
 
@@ -124,24 +125,24 @@
 		display: flex;
 		flex-direction: row-reverse;
 		.icon {
-			margin: $spacing-01;
+			margin: carbon.$spacing-01;
 			svg {
 				height: 10px;
 				width: 10px;
 			}
 		}
 		.validateLink {
-			min-height: $spacing-07;
-			padding: $spacing-02;
+			min-height: carbon.$spacing-07;
+			padding: carbon.$spacing-02;
 		}
 	}
 }
 
 .properties-expression-header {
 	position: relative;
-	height: $spacing-07;
+	height: carbon.$spacing-07;
 	.properties-expression-title {
-		@include type-style("label-01");
+		@include carbon.type-style("label-01");
 		position: absolute;
 		bottom: 5px;
 		left: 0;
@@ -154,7 +155,7 @@
 }
 
 .properties-expression-button {
-	padding: $spacing-02;
+	padding: carbon.$spacing-02;
 	svg {
 		height: 20px;
 		width: 20px;

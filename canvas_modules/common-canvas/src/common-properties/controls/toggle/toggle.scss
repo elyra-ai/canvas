@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-toggle {
 	.properties-label-container {
 		padding-bottom: 0;
 	}
 }
 .properties-toggle-label {
-	margin-bottom: $spacing-05;
+	margin-bottom: carbon.$spacing-05;
 }

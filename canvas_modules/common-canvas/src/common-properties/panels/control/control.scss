@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-control-panel {
 	display: block;
 	&:last-child {
-		padding-bottom: $spacing-03; // (8px + 16px from properties-ctrl-wrapper + 16px outer padding)
+		padding-bottom: carbon.$spacing-03; // (8px + 16px from properties-ctrl-wrapper + 16px outer padding)
 	}
 	&.hide {
 		display: none;
@@ -35,16 +37,16 @@
 
 .properties-control-panel + .properties-control-panel:not(:empty) {
 	// Total 40px spacing between two properties-control-panel classes
-	padding-top: $spacing-06;  // (24px + 16px from properties-ctrl-wrapper)
+	padding-top: carbon.$spacing-06;  // (24px + 16px from properties-ctrl-wrapper)
 }
 
 .properties-control-nested-panel {
-	padding: 0 0 0 $spacing-05; // Ensure nested panels have a padding
-	border-left: 1px solid $border-strong-01;
+	padding: 0 0 0 carbon.$spacing-05; // Ensure nested panels have a padding
+	border-left: 1px solid carbon.$border-strong-01;
 }
 
 .properties-control-nested-panel .properties-control-nested-panel {
-	border-left: 1px solid $layer-accent-01;
+	border-left: 1px solid carbon.$layer-accent-01;
 }
 
 // Set the height of the very first panel to be full width inside a tearsheet

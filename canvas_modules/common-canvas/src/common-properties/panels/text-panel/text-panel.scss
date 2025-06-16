@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-text-panel {
 	.panel-label {
-		@include type-style("productive-heading-01");
-		color: $text-primary;
-		padding-bottom: $spacing-03;
+		@include carbon.type-style("productive-heading-01");
+		color: carbon.$text-primary;
+		padding-bottom: carbon.$spacing-03;
 	}
 	.panel-description {
-		@include type-style("body-short-01");
-		color: $text-primary;
-		padding-bottom: $spacing-05;
+		@include carbon.type-style("body-short-01");
+		color: carbon.$text-primary;
+		padding-bottom: carbon.$spacing-05;
 	}
 	.tooltip-container {
-		margin-bottom: $spacing-03;
+		margin-bottom: carbon.$spacing-03;
 	}
 	&[disabled] {
 		pointer-events: none;

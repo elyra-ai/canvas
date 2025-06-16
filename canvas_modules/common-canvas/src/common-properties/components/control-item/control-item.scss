@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-control-item {
 	&.hide {
 		display: none;
@@ -47,18 +49,18 @@
 .properties-label-container {
 	display: flex;
 	align-items: center;
-	padding-bottom: $spacing-03;
+	padding-bottom: carbon.$spacing-03;
 	label, .properties-indicator {
-		@include type-style("label-01");
-		color: $text-secondary;
+		@include carbon.type-style("label-01");
+		color: carbon.$text-secondary;
 	}
 	.properties-indicator {
-		padding-left: $spacing-02;
+		padding-left: carbon.$spacing-02;
 	}
 	&.table-control {
 		label, .properties-indicator {
-			@include type-style("body-short-01");
-			color: $text-primary;
+			@include carbon.type-style("body-short-01");
+			color: carbon.$text-primary;
 		}
 	}
 }
@@ -70,17 +72,17 @@
 .properties-label-container, .properties-summary-link-container, .properties-checkbox-tooltip-container, .properties-radioset-panel {
 	.tooltip-container {
 		display: flex;
-		width: $spacing-05;
-		height: $spacing-05;
-		margin-left: $spacing-03;
+		width: carbon.$spacing-05;
+		height: carbon.$spacing-05;
+		margin-left: carbon.$spacing-03;
 		cursor: pointer;
 	}
 }
 
 .properties-control-description {
-	@include type-style("helper-text-01");
-	color: $text-secondary;
-	padding-bottom: $spacing-03;
+	@include carbon.type-style("helper-text-01");
+	color: carbon.$text-secondary;
+	padding-bottom: carbon.$spacing-03;
 	white-space: pre-wrap; // Add a line break for \n
 }
 

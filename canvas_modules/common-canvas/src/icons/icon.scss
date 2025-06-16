@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,42 +14,44 @@
  * limitations under the License.
  */
 
+@use "../carbon.scss";
+
 .canvas-icon .stroke, .canvas-icon.stroke {
-	stroke: $icon-primary;
+	stroke: carbon.$icon-primary;
 }
 
 .canvas-icon .fill, .canvas-icon.fill {
-	fill: $icon-primary;
+	fill: carbon.$icon-primary;
 }
 
 .canvas-icon[disabled] {
-	fill: $button-disabled;
+	fill: carbon.$button-disabled;
 }
 
 svg.properties-icon, svg.canvas-icon {
-	fill: $icon-primary;
+	fill: carbon.$icon-primary;
 }
 
 svg.canvas-state-icon-error {
-	fill: $support-error;
+	fill: carbon.$support-error;
 }
 
 svg.canvas-state-icon-success {
-	fill: $support-success;
+	fill: carbon.$support-success;
 }
 
 svg.canvas-state-icon-warning {
-	fill: $support-warning;
+	fill: carbon.$support-warning;
 	[data-icon-path="inner-path"] { // exclamation mark
-		fill: $layer-selected-inverse;
+		fill: carbon.$layer-selected-inverse;
 		opacity: 1;
 	}
 }
 
 svg.canvas-state-icon-info {
-	fill: $support-info;
+	fill: carbon.$support-info;
 }
 
 svg.canvas-state-icon-information-hollow {
-	fill: $icon-secondary;
+	fill: carbon.$icon-secondary;
 }

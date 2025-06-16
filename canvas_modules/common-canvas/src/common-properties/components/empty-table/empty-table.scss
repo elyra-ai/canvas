@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-empty-table {
-	@include type-style("helper-text-01");
+	@include carbon.type-style("helper-text-01");
 	&[disabled] {
 		opacity: 0.5;
 		pointer-events: none;
 	}
 	.properties-empty-table-button {
-		margin: $spacing-05 0;
+		margin: carbon.$spacing-05 0;
 	}
 }

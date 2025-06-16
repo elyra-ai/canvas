@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-someofselect {
 	.properties-ft-container-absolute-noheader tr {
 		border-bottom: 0;
@@ -23,19 +25,19 @@
 	}
 	&.error {
 		.properties-ft-container-absolute-noheader {
-			border: 1px solid $support-error;
+			border: 1px solid carbon.$support-error;
 		}
 	}
 	&.warning {
 		.properties-ft-container-absolute-noheader {
-			border: 1px solid $support-warning;
+			border: 1px solid carbon.$support-warning;
 		}
 	}
 	.properties-vt-row-checkbox { // TODO remove this when removing react-virtualized
-		margin-right: $spacing-05;
+		margin-right: carbon.$spacing-05;
 	}
 
 	tbody.properties-grid-body td.properties-grid-body-row-cell {
-		margin-left: $spacing-04;
+		margin-left: carbon.$spacing-04;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 button.properties-subpanel-button {
 	padding: 0; // override carbon
-	min-height: $spacing-07; // override carbon
-	height: $spacing-07;
-	width: $spacing-07;
+	min-height: carbon.$spacing-07; // override carbon
+	height: carbon.$spacing-07;
+	width: carbon.$spacing-07;
 	display: flex;
 	align-items: center;
 }
 
 .properties-subpanel-modal-in-tearsheet {
 	.properties-light-disabled {
-		background-color: $layer-01;
+		background-color: carbon.$layer-01;
 	}
 
 	.properties-modal-children {
-		padding: 0 $spacing-05;
+		padding: 0 carbon.$spacing-05;
 	}
 }

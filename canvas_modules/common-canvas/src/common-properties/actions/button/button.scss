@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-action-button  {
 	display: inline-block;
 	&.hide {
@@ -23,5 +25,5 @@
 
 // TODO: Remove first part after all controls are accessible - CSS for inaccessible controls
 .properties-control-item > .properties-action-button, .properties-ctrl-wrapper > .properties-action-button {
-	padding-top: $spacing-05;
+	padding-top: carbon.$spacing-05;
 }
