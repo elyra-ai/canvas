@@ -197,6 +197,11 @@ $harness-navbar-icon-width: 48px;
 	}
 	&.vertical {
 		width: 300px;
+		// These 3 settings allow the content to stretch to fill the
+		// width of a flyout, when it is sized by dragging.
+		flex: 1;
+		flex-direction: column;
+		display: flex;
 	}
 }
 
