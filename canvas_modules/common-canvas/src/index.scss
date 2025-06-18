@@ -23,5 +23,5 @@
 @forward "./context-menu/context-menu.scss";
 @forward "./palette/palette.scss";
 @forward "./common-canvas/common-canvas.scss";
-@import "./common-canvas/svg-canvas-d3.scss";
-@import "./color-picker/color-picker.scss";
+@forward "./common-canvas/svg-canvas-d3.scss";
+@forward "./color-picker/color-picker.scss";
