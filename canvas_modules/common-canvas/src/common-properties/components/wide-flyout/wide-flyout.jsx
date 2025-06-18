@@ -38,15 +38,19 @@ export default class WideFlyout extends Component {
 		this.updateDimensions();
 		window.addEventListener("resize", this.updateDimensions);
 		// Require slight delay to ensure modal and focusable elemnts are mounted properly.
-		setTimeout(() => {
-			document.addEventListener("keydown", this.handleTabKey);
-			this.focusOnFirstFocusable(); // Set initial focus inside the modal.
-		}, 0);
+		document.addEventListener("keydown", this.handleTabKey);
+		this.focusOnFirstFocusable(); // Set initial focus inside the modal.
 	}
 	componentDidUpdate(prevProps) {
 		// If modal is still open, and new item added.
-		if (this.modalRef.current && prevProps.show) {
+		const modal = this.modalRef.current;
+		if (!prevProps.show && this.props.show && modal) {
 			// If focus is outside modal, move it to first focusable
+			this.focusOnFirstFocusable();
+			return;
+		}
+		// Restore focus if lost due to modal content changes like typing or adding new fields
+		if (this.props.show && modal && document.activeElement === document.body) {
 			this.focusOnFirstFocusable();
 		}
 	}
@@ -72,7 +76,6 @@ export default class WideFlyout extends Component {
 			focusables[0].focus();
 		}
 	}
-
 	updateDimensions() {
 		if (this.wideFlyout) {
 			// used to find correct parent
