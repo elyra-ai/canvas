@@ -278,7 +278,7 @@ class DropDown extends React.Component {
 					{ options }
 				</Select>
 			);
-		} else if (this.props.control.customValueAllowed) { // combobox dropdown not allowed in tables
+		} else if (this.props.control.customValueAllowed || this.props.control.shouldFilterItem) { // combobox dropdown not allowed in tables
 			const shouldFilterItem = this.props.control.shouldFilterItem === true ? { shouldFilterItem: this.filterItems } : {};
 			dropdownComponent = (
 				<ComboBox
@@ -286,15 +286,15 @@ class DropDown extends React.Component {
 					aria-label={this.props.control.label ? this.props.control.label.text : ""}
 					id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
 					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
-					placeholder={dropDown.selectedOption.label}
-					selectedItem={dropDown.selectedOption.label}
+					placeholder={dropDown.selectedOption?.label}
+					selectedItem={dropDown.selectedOption?.label}
 					items={dropDown.options}
 					onChange={this.handleComboOnChange}
 					onInputChange={this.handleOnInputChange}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText={this.props.controlItem}
 					helperText={this.props.control.helperText}
-					allowCustomValue
+					allowCustomValue={this.props.control.customValueAllowed}
 					{...shouldFilterItem}
 				/>
 			);
