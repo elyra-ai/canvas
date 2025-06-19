@@ -108,15 +108,11 @@ class CommonCanvasRightFlyout extends React.Component {
 	// Returns a new width for right panel limited by the need to enforce
 	// a minimum and maximum width
 	limitWidth(wd) {
-		const canvasContainer = document.getElementById(this.props.containingDivId);
-		let width = wd;
+		const centerPanelWidth = this.props.getCenterPanelWidth();
 
-		if (canvasContainer) {
-			// Max Width should be 70% of the total available width (canvas + rightflyout)
-			const canvasWidth = canvasContainer.getBoundingClientRect().width;
-			const maxWidth = (canvasWidth + this.props.panelWidth) * MAX_WIDTH_EXTEND_PERCENT;
-			width = Math.min(Math.max(width, this.initialWidth), maxWidth);
-		}
+		// Max Width should be 70% of the total available width (center panel + rightflyout)
+		const maxWidth = (centerPanelWidth + this.props.panelWidth) * MAX_WIDTH_EXTEND_PERCENT;
+		const width = Math.min(Math.max(wd, this.initialWidth), maxWidth);
 
 		return width;
 	}
@@ -136,8 +132,9 @@ class CommonCanvasRightFlyout extends React.Component {
 			const rfClass = this.props.enableRightFlyoutUnderToolbar
 				? "right-flyout-panel under-toolbar"
 				: "right-flyout-panel";
+
 			rightFlyout = (
-				<div className="right-flyout-container" style={{ width: widthPx }} >
+				<div className="right-flyout" style={{ width: widthPx }} >
 					{rightFlyoutDragContent}
 					<div className={rfClass} ref={this.rightFlyoutRef}>
 						{this.props.content}
@@ -153,7 +150,7 @@ class CommonCanvasRightFlyout extends React.Component {
 CommonCanvasRightFlyout.propTypes = {
 	// Provided by Common Canvas
 	canvasController: PropTypes.object,
-	containingDivId: PropTypes.string,
+	getCenterPanelWidth: PropTypes.func,
 
 	// Provided by Redux
 	isOpen: PropTypes.bool,

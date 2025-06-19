@@ -34,9 +34,12 @@ class CommonCanvasLeftFlyout extends React.Component {
 			const lfClass = this.props.enableLeftFlyoutUnderToolbar
 				? "left-flyout-panel under-toolbar"
 				: "left-flyout-panel";
+
 			leftFlyout = (
-				<div className={lfClass}>
-					{this.props.content}
+				<div className={"left-flyout"}>
+					<div className={lfClass}>
+						{this.props.content}
+					</div>
 				</div>
 			);
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Elyra Authors
+ * Copyright 2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,46 +16,38 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import Logger from "../logging/canvas-logger.js";
 
-class CanvasTopPanel extends React.Component {
+class CanvasCenterPanel extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.logger = new Logger("CC-Top-Panel");
+		this.divRef = React.createRef();
+
+		this.logger = new Logger("CC-Center-Panel");
+	}
+
+	// Called by cc-panels.jsx through using a ref
+	getBoundingRect() {
+		return this.divRef?.current?.getBoundingClientRect();
 	}
 
 	render() {
 		this.logger.log("render");
-		let topPanel = null;
 
-		if (this.props.topPanelIsOpen) {
-			topPanel = (
-				<div className={"top-panel"} >
-					<div className={"top-panel-contents"}>
-						{this.props.topPanelContent}
-					</div>
-				</div>
-			);
-		}
-
-		return topPanel;
+		return (
+			<div className={"center-panel"} ref={this.divRef}>
+				{this.props.content}
+			</div>
+		);
 	}
 }
 
-CanvasTopPanel.propTypes = {
+CanvasCenterPanel.propTypes = {
 	// Provided by CommonCanvas
 	canvasController: PropTypes.object,
-	containingDivId: PropTypes.string,
-
-	// Provided by Redux
-	topPanelIsOpen: PropTypes.bool,
-	topPanelContent: PropTypes.object
+	content: PropTypes.node
 };
 
-const mapStateToProps = (state, ownProps) => ({
-	topPanelIsOpen: state.toppanel.isOpen,
-	topPanelContent: state.toppanel.content
-});
-export default connect(mapStateToProps)(CanvasTopPanel);
+
+export default CanvasCenterPanel;
