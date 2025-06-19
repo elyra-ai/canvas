@@ -2521,6 +2521,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#customheaderhandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      customHeaderHandler()
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3018,6 +3027,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#customheaderhandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      customHeaderHandler()
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3056,7 +3074,8 @@
       titleChangeHandler: this.titleChangeHandler,
       propertiesActionLabelHandler: this.propertiesActionLabelHandler,
       tooltipLinkHandler: this.tooltipLinkHandler,
-      filterItemsHandler: this.filterItemsHandler
+      filterItemsHandler: this.filterItemsHandler,
+      customHeaderHandler: this.customHeaderHandler
   };
 </code></pre></div>
 <h3 id="applypropertychangespropertyset-appdata-additionalinfo-undoinfo-uiproperties">applyPropertyChanges(propertySet, appData, additionalInfo, undoInfo, uiProperties)<a class="headerlink" href="#applypropertychangespropertyset-appdata-additionalinfo-undoinfo-uiproperties" title="Permanent link">&para;</a></h3>
@@ -3210,6 +3229,12 @@ This callback must return an object having url and label.</p>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">list</span><span class="o">?</span><span class="p">.</span><span class="nx">item</span><span class="o">?</span><span class="p">.</span><span class="nx">label</span><span class="o">?</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">().</span><span class="nx">startsWith</span><span class="p">(</span><span class="nx">list</span><span class="o">?</span><span class="p">.</span><span class="nx">inputValue</span><span class="o">?</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">());</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="customheaderhandler">customHeaderHandler()<a class="headerlink" href="#customheaderhandler" title="Permanent link">&para;</a></h3>
+<p>Called while rendering <code>code</code> control. Whatever is returned from this callback is displayed as it is in the code control&rsquo;s header.
+<div class="highlight"><pre><span></span><code><span class="nx">customHeaderHandler</span><span class="p">(</span><span class="nx">propertyId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="p">}</span>
+</code></pre></div></p>
 
 
 
