@@ -23,7 +23,7 @@ import { renderWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import fieldPickerParamDef from "./../../test_resources/paramDefs/fieldpicker_paramDef.json";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -407,7 +407,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should display the correct schema for each field", () => {
@@ -732,7 +732,7 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should show warning from invalid field names in the selectcolumns control", () => {
@@ -908,7 +908,7 @@ describe("field-picker control multiple rows selection", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should select/deselect multiple rows in fieldPicker table using shift key", () => {

@@ -22,7 +22,7 @@ import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 import numberfieldParamDef from "../../test_resources/paramDefs/numberfield_paramDef.json";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 const mockNumberfieldControl = jest.fn();
 jest.mock("../../../src/common-properties/controls/numberfield",
@@ -208,7 +208,7 @@ describe("numberfield control works correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should render an integer number correctly", () => {

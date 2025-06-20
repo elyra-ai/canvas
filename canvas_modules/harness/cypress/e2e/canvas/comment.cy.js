@@ -185,9 +185,29 @@ describe("Test coloring comments", function() {
 
 		cy.getCommentWithText("Hello Canvas!")
 			.rightclick();
-		cy.clickColorFromContextSubmenu("Color background", "teal-50");
+		cy.clickOptionFromContextMenu("Color background");
+		cy.clickColorFromContextSubmenu("teal-50");
 		cy.wait(10);
 		cy.verifyCommentColor("Hello Canvas!", "teal-50");
+	});
+
+	it("Create a comment and color it using context toolbar", function() {
+		cy.setCanvasConfig({ "selectedContextToolbar": true });
+
+		// Create a comment and add some text
+		cy.rightClickToDisplayContextMenu(400, 100);
+		cy.clickContextToolbarButton("createComment");
+		cy.editTextInComment("", "Hello Canvas!");
+
+		// Open color picker
+		cy.hoverOverComment("Hello Canvas!");
+		cy.clickContextToolbarOverflowButton();
+		cy.clickOptionFromContextToolbarOverflow("Color background");
+
+		// Pick a color
+		cy.clickColorFromContextSubmenu("green-20");
+		cy.wait(10);
+		cy.verifyCommentColor("Hello Canvas!", "green-20");
 	});
 
 	it("Color multiple colored comments and undo", function() {
@@ -200,7 +220,8 @@ describe("Test coloring comments", function() {
 		cy.ctrlOrCmdClickComment("Orange 40");
 
 		cy.getCommentWithText("Orange 40").rightclick();
-		cy.clickColorFromContextSubmenu("Color background", "cyan-20");
+		cy.clickOptionFromContextMenu("Color background");
+		cy.clickColorFromContextSubmenu("cyan-20");
 
 		cy.wait(10);
 		cy.verifyCommentColor("Default", "cyan-20");
