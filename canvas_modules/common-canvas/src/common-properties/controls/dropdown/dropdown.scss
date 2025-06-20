@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+@use "../../../carbon.scss";
 
 .properties-dropdown {
 	.cds--list-box__label {
@@ -42,7 +44,7 @@
 			width: inherit; // Override carbon default width: auto
 			background-color: transparent; // Override carbon default background-color: #f4f4f4;
 			padding: 0 1.25rem 0 0;
-			box-shadow: 0 $spacing-01 0 0 $button-primary;
+			box-shadow: 0 carbon.$spacing-01 0 0 carbon.$button-primary;
 			&:focus {
 				outline: unset;
 			}
@@ -50,12 +52,12 @@
 		}
 		&.error {
 			.cds--select-input {
-				box-shadow: 0 $spacing-01 0 0 $support-error;
+				box-shadow: 0 carbon.$spacing-01 0 0 carbon.$support-error;
 			}
 		}
 		&.warning {
 			.cds--select-input {
-				box-shadow: 0 $spacing-01 0 0 $support-warning;
+				box-shadow: 0 carbon.$spacing-01 0 0 carbon.$support-warning;
 			}
 		}
 	}

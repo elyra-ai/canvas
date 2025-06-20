@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 
 /* These are used in custom common-properties */
+@use "../../assets/styles/carbon.scss";
 
 .harness-custom-control-custom-map-summary {
 	span {
@@ -34,10 +35,10 @@
 	.icon {
 		padding-right: 3px;
 		.warning {
-			fill: $support-warning;
+			fill: carbon.$support-warning;
 		}
 		.error {
-			fill: $support-error;
+			fill: carbon.$support-error;
 		}
 	}
 }
@@ -51,7 +52,7 @@
 	th {
 		font-weight: 600;
 		text-align: left;
-		border-bottom: 2px solid $layer-accent-01;
+		border-bottom: 2px solid carbon.$layer-accent-01;
 		padding: 10px 0 5px;
 	}
 	td {
@@ -67,7 +68,7 @@
 	.properties-tanstack-grid.properties-vt table.properties-autosized-vt {
 		tbody.properties-grid-body tr[data-role="properties-data-row"] {
 			.properties-grid-body-row-cell {
-				padding-left: $spacing-05;
+				padding-left: carbon.$spacing-05;
 				span {
 					overflow: hidden;
 					white-space: nowrap;

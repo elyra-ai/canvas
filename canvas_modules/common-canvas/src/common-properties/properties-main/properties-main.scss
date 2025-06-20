@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-@import "./properties-main-widths.scss";
-$properties-modal-buttons-height: $spacing-10;
-$properties-resize-button-size: $spacing-06;
+@use "../../carbon.scss";
+@use "./properties-main-widths.scss" as propertiesMainWidths;
+@use "../components/components";
+
+$properties-resize-button-size: carbon.$spacing-06;
 
 // Included to align resizeBtn to enable properties content to stretch on resize
 .properties-right-flyout-container {
@@ -35,28 +37,28 @@ $properties-resize-button-size: $spacing-06;
 	width: 0;
 	height: 100%;
 	overflow: hidden;
-	border-left: 1px solid $layer-accent-01;
+	border-left: 1px solid carbon.$layer-accent-01;
 	outline: none;
 	display: flex;
 	flex-direction: column;
-	transition: motion(entrance, expressive) $duration-moderate-01;
+	transition: motion(entrance, expressive) carbon.$duration-moderate-01;
 
 	&.properties-small {
-		width: $common-properties-small-flyout-width;
+		width: propertiesMainWidths.$common-properties-small-flyout-width;
 	}
 	&.properties-medium {
-		width: $common-properties-medium-flyout-width;
+		width: propertiesMainWidths.$common-properties-medium-flyout-width;
 	}
 	&.properties-large {
-		width: $common-properties-large-flyout-width;
+		width: propertiesMainWidths.$common-properties-large-flyout-width;
 	}
 	&.properties-max {
-		width: $common-properties-max-flyout-width;
+		width: propertiesMainWidths.$common-properties-max-flyout-width;
 	}
 }
 
 .properties-btn-resize {
-	transition: visibility $duration-moderate-01, opacity $duration-moderate-01;
+	transition: visibility carbon.$duration-moderate-01, opacity carbon.$duration-moderate-01;
 	opacity: 0;
 	visibility: hidden;
 	position: relative;
@@ -64,21 +66,21 @@ $properties-resize-button-size: $spacing-06;
 	bottom: 50%;
 	min-height: $properties-resize-button-size;
 	min-width: $properties-resize-button-size;
-	background-color: $layer-01;
-	border: 1px $border-strong-01 solid;
-	padding: $spacing-01;
+	background-color: carbon.$layer-01;
+	border: 1px carbon.$border-strong-01 solid;
+	padding: carbon.$spacing-01;
 	justify-content: center;
 	align-items: center;
 	z-index: 1; // Make sure resize btn appears over bottom panel
 	&:hover {
-		background-color: $layer-accent-01;
+		background-color: carbon.$layer-accent-01;
 		visibility: visible;
 		opacity: 1;
 	}
 	svg {
-		fill: $icon-primary;
-		width: $spacing-05;
-		height: $spacing-05;
+		fill: carbon.$icon-primary;
+		width: carbon.$spacing-05;
+		height: carbon.$spacing-05;
 	}
 }
 
@@ -91,14 +93,14 @@ $properties-resize-button-size: $spacing-06;
 }
 
 .properties-right-flyout > .properties-custom-container {
-	height: calc(100% - 65px - #{$properties-modal-buttons-height}); // Properties title - 65px
+	height: calc(100% - 65px - #{components.$properties-modal-buttons-height}); // Properties title - 65px
 	overflow-y: auto;
 	transform: translateZ(0); // https://github.com/elyra-ai/canvas/issues/160
 	&.properties-custom-container-with-heading {
-		height: calc(100% - 89px - #{$properties-modal-buttons-height}); // Properties title - 89px
+		height: calc(100% - 89px - #{components.$properties-modal-buttons-height}); // Properties title - 89px
 	}
 	&.properties-custom-container-applyOnBlur {
-		height: calc(100% - #{$spacing-12}); // Properties title - 97px
+		height: calc(100% - #{carbon.$spacing-12}); // Properties title - 97px
 	}
 	&.properties-custom-container-applyOnBlur-with-heading {
 		height: calc(100% - 89px); // Properties title - 89px
@@ -106,9 +108,9 @@ $properties-resize-button-size: $spacing-06;
 }
 
 .properties-light-enabled {
-	background-color: $layer-01; // Override theme background-color when light option is true
+	background-color: carbon.$layer-01; // Override theme background-color when light option is true
 }
 
 .properties-light-disabled {
-	background-color: $background;
+	background-color: carbon.$background;
 }

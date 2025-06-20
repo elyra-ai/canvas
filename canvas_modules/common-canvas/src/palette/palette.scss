@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+@use "../carbon.scss";
+
 $palette-border-width: 1px;
-$palette-border-color: $layer-accent-01;
+$palette-border-color: carbon.$layer-accent-01;
 $palette-search-container-height: 41px;
 $palette-dialog-list-item-height: 46px;
 
@@ -28,7 +30,7 @@ $palette-dialog-list-item-height: 46px;
 	position: relative;
 	height: 100%;
 	padding-bottom: 5px;
-	background-color: $layer-01;
+	background-color: carbon.$layer-01;
 	-webkit-transition: 0.2s;
 	transition: 0.2s;
 	cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
@@ -79,27 +81,27 @@ $palette-dialog-list-item-height: 46px;
 	}
 
 	.palette-no-results-title {
-		@include type-style("body-short-01");
+		@include carbon.type-style("body-short-01");
 		width: 100%;
 		padding: 20px 20px 0;
 		text-align: center;
 	}
 
 	.palette-no-results-desc {
-		@include type-style("caption-01");
+		@include carbon.type-style("caption-01");
 		width: 100%;
 		padding: 0 20px;
 		text-align: center;
 	}
 
 	.palette-flyout-restrict-item {
-		@include type-style("helper-text-01");
+		@include carbon.type-style("helper-text-01");
 		width: 100%;
-		padding: $spacing-08 20px;
+		padding: carbon.$spacing-08 20px;
 	}
 
 	.palette-list-item-desc-button {
-		color: $link-primary;
+		color: carbon.$link-primary;
 		cursor: pointer;
 		padding: 5px 0 0;
 	}
@@ -118,22 +120,22 @@ $palette-dialog-list-item-height: 46px;
 		outline: none; // Turn outline off and use carbon style for focus below.
 
 		&:hover {
-			background-color: $layer-accent-01;
+			background-color: carbon.$layer-accent-01;
 		}
 
 		&:focus {
-			border-color: $focus;
-			box-shadow: inset 0 0 0 $spacing-01 $focus;
+			border-color: carbon.$focus;
+			box-shadow: inset 0 0 0 carbon.$spacing-01 carbon.$focus;
 		}
 
 		.palette-list-item-category-label {
-			@include type-style("caption-01");
+			@include carbon.type-style("caption-01");
 			width: 100%;
-			padding: $spacing-05 10px 0 58px;
+			padding: carbon.$spacing-05 10px 0 58px;
 
 			& mark {
-				color: $interactive;
-				background-color: $highlight;
+				color: carbon.$interactive;
+				background-color: carbon.$highlight;
 				font-weight: 500;
 			}
 		}
@@ -149,18 +151,18 @@ $palette-dialog-list-item-height: 46px;
 
 		.palette-list-item-icon {
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			color: $text-secondary;
+			color: carbon.$text-secondary;
 		}
 
 		.palette-list-item-text-div {
-			@include type-style("productive-heading-01");
+			@include carbon.type-style("productive-heading-01");
 			font-weight: 400;
 			padding: 0 10px;
 			width: calc(100% - 68px);
 			line-height: 1;
 			& mark {
-				color: $button-primary-active;
-				background-color: $highlight;
+				color: carbon.$button-primary-active;
+				background-color: carbon.$highlight;
 				font-weight: 500;
 			}
 		}
@@ -169,25 +171,25 @@ $palette-dialog-list-item-height: 46px;
 			transform: scale(1.5);
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
 			line-height: $palette-dialog-list-item-height;  /* Must be same as containing div height */
-			color: $text-secondary;
+			color: carbon.$text-secondary;
 			margin-left: 0;
 		}
 
 		.palette-list-item-description {
-			@include type-style("caption-01");
+			@include carbon.type-style("caption-01");
 			padding: 0 10px 0 58px;
 			word-break: break-word;
 			width: 100%; // Needed when the description is only one line long
 
 			& mark {
-				color: $button-primary-active;
-				background-color: $highlight;
+				color: carbon.$button-primary-active;
+				background-color: carbon.$highlight;
 				font-weight: 500;
 			}
 		}
 
 		& .highlight {
-			background-color: $button-primary;
+			background-color: carbon.$button-primary;
 		}
 
 		&.search-result {
@@ -196,7 +198,7 @@ $palette-dialog-list-item-height: 46px;
 			overflow-x: hidden;
 			width: 100%;
 			height: fit-content;
-			padding-bottom: $spacing-05;
+			padding-bottom: carbon.$spacing-05;
 			padding-top: 0px;
 			padding-left: 0px;
 			border-bottom: $palette-border-width solid $palette-border-color;
@@ -225,7 +227,7 @@ $palette-dialog-list-item-height: 46px;
 	.cds--accordion__item {
 		border-top: 0;
 		&:last-child {
-			border-block-end: 1px solid $border-subtle-01;
+			border-block-end: 1px solid carbon.$border-subtle-01;
 		}
 
 		.cds--accordion__heading {
@@ -268,7 +270,7 @@ $palette-dialog-list-item-height: 46px;
 
 .palette-flyout-category-item-loading {
 	display: flex;
-	margin-left: $spacing-05;
+	margin-left: carbon.$spacing-05;
 	width: 100%;
 	height: 100%;
 	justify-content: center;
@@ -278,8 +280,8 @@ $palette-dialog-list-item-height: 46px;
 .palette-flyout-category-item-icon {
 	width: 20px;  /* Not specifying height preserves the image's aspect ratio. */
 	margin-left: 5px;
-	fill: $icon-primary;
-	padding-top: $spacing-02;
+	fill: carbon.$icon-primary;
+	padding-top: carbon.$spacing-02;
 }
 
 .palette-flyout-text-container {
@@ -294,7 +296,7 @@ $palette-dialog-list-item-height: 46px;
 	width: 165px;
 	overflow-wrap: break-word;
 	line-height: 1.2;
-	padding-left: $spacing-05;
+	padding-left: carbon.$spacing-05;
 	align-items: center;
 	height: 100%;
 	max-height: 59px;
@@ -334,15 +336,15 @@ $palette-dialog-list-item-height: 46px;
 		}
 
 		svg {
-			fill: $icon-primary;
+			fill: carbon.$icon-primary;
 		}
 
 		// Position the search text to be directly over the category text in the
 		// palette as, required from DUX review.
 		input {
-			background: $field-01;
+			background: carbon.$field-01;
 			height: 100%;
-			padding-right: $spacing-09;
+			padding-right: carbon.$spacing-09;
 			padding-left: 53px;
 		}
 
@@ -353,8 +355,8 @@ $palette-dialog-list-item-height: 46px;
 		// Getting rid of ::before allows the right side of the highlight rectangle
 		// on hover to appear.
 		button {
-			margin-right: $spacing-03;
-			margin-top: $spacing-02;
+			margin-right: carbon.$spacing-03;
+			margin-top: carbon.$spacing-02;
 			border-bottom-width: 0;
 
 			&.cds--search-close::before {
@@ -402,7 +404,7 @@ $palette-dialog-list-item-height: 46px;
 		padding-left: 19px;
 
 		&:hover {
-			background-color: $layer-accent-01;
+			background-color: carbon.$layer-accent-01;
 		}
 
 		.palette-list-item-icon-and-text {
@@ -416,7 +418,7 @@ $palette-dialog-list-item-height: 46px;
 		.palette-list-item-icon {
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
 			line-height: $palette-dialog-list-item-height;  /* Must be same as containing div height */
-			color: $text-secondary;
+			color: carbon.$text-secondary;
 			margin-left: 0;
 			margin-right: 10px;
 		}
@@ -431,14 +433,14 @@ $palette-dialog-list-item-height: 46px;
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			margin-left: 10px;
-			line-height: $spacing-05;
+			line-height: carbon.$spacing-05;
 		}
 
 		.palette-list-item-icon-warning {
 			transform: scale(1.5);
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
 			line-height: $palette-dialog-list-item-height;  /* Must be same as containing div height */
-			color: $text-secondary;
+			color: carbon.$text-secondary;
 			margin-left: 0;
 			margin-right: 10px;
 		}
@@ -447,20 +449,20 @@ $palette-dialog-list-item-height: 46px;
 
 .palette-dialog-topbar {
 	height: 41px;
-	background-color: $layer-accent-01;
+	background-color: carbon.$layer-accent-01;
 	border-bottom: $palette-border-width solid $palette-border-color;
 }
 
 .palette-dialog-content {
 	height: 404px;  /* palette-div height - topbar height - 6 pixels (for hover zone to aid drag sizing)*/
 	display: flex;
-	background-color: $layer-01;
+	background-color: carbon.$layer-01;
 	border-bottom: $palette-border-width solid $palette-border-color;
 	border-right: $palette-border-width solid $palette-border-color;
 }
 
 .palette-dialog-categories {
-	background-color: $layer-01;
+	background-color: carbon.$layer-01;
 	width: 130px;
 	min-width: 130px; /* Set a min-width to ensure space for the scroll bar when it is displayed */
 	border-right: $palette-border-width solid $palette-border-color;
@@ -482,12 +484,12 @@ $palette-dialog-list-item-height: 46px;
 
 .palette-dialog-category-selected {
 	font-weight: 600;
-	border-color: $button-secondary;
+	border-color: carbon.$button-secondary;
 	border-width: 0 0 0 $palette-border-width;
 	border-style: solid;
 	width: 130px;
 	min-width: 130px;
-	padding-left: $spacing-03;
+	padding-left: carbon.$spacing-03;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	cursor: pointer;
@@ -511,12 +513,12 @@ $palette-dialog-list-item-height: 46px;
 }
 
 .palette-dialog-grid-node-outer:hover {
-	border-color: $button-secondary;
-	color: $button-secondary;
+	border-color: carbon.$button-secondary;
+	color: carbon.$button-secondary;
 }
 
 .palette-dialog-grid-node-inner {
-	padding-top: $spacing-05;
+	padding-top: carbon.$spacing-05;
 }
 
 .palette-dialog-grid-node-icon svg {
@@ -524,8 +526,8 @@ $palette-dialog-list-item-height: 46px;
 }
 
 .palette-dialog-grid-node-icon .node-icon {
-	width: $spacing-10;
-	height: $spacing-10;
+	width: carbon.$spacing-10;
+	height: carbon.$spacing-10;
 }
 
 .palette-dialog-grid-node-icon-warning {
