@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,17 @@
  */
 
 /* These styles are used in the explainCanvas.json. */
+@use "../../../../../assets/styles/carbon.scss";
 
 .explain2 {
 	.d3-node-body-outline {
 		stroke: transparent;
-		fill: $layer-01;
+		fill: carbon.$layer-01;
 		stroke-width: 2;
 	}
 
 	.d3-node-selection-highlight[data-selected="yes"] {
-		stroke: $support-info-inverse;
+		stroke: carbon.$support-info-inverse;
 	}
 
 	.d3-node-label {
@@ -34,12 +35,12 @@
 	}
 
 	.d3-data-link {
-		stroke: $border-strong-01;
+		stroke: carbon.$border-strong-01;
 		stroke-width: 1px;
 	}
 
 	.d3-data-link-arrow-head {
-		stroke: $border-strong-01;
+		stroke: carbon.$border-strong-01;
 	}
 
 	.dec-percentage-label {
@@ -57,24 +58,24 @@
 
 	.dec-sql-cost-label {
 		font-size: 14px;
-		color: $text-helper;
+		color: carbon.$text-helper;
 		font-weight: 600;
 		text-align: left;
 	}
 
 	.dec-right-bar {
-		fill: $layer-accent-01;
-		stroke: $layer-accent-01;
+		fill: carbon.$layer-accent-01;
+		stroke: carbon.$layer-accent-01;
 	}
 
 	.dec-percentage-bar-red {
-		fill: $support-error;
-		stroke: $support-error;
+		fill: carbon.$support-error;
+		stroke: carbon.$support-error;
 	}
 
 	.dec-percentage-bar-gray {
-		fill: $text-helper;
-		stroke: $text-helper;
+		fill: carbon.$text-helper;
+		stroke: carbon.$text-helper;
 	}
 }
 

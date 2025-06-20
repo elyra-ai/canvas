@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@
  */
 
 /* Override styles for flows.json canvas */
+@use "../../../../../assets/styles/carbon.scss";
 
 .flows {
 
 	.d3-node-group {
 		.d3-node-selection-highlight[data-selected="yes"] {
-			stroke: $gray-50;
+			stroke: carbon.$gray-50;
 			stroke-dasharray: 5, 5;
 			stroke-width: 1;
 			fill: transparent;
@@ -29,10 +30,10 @@
 
 		&[data-new-link-over="yes"] {
 			.d3-node-selection-highlight {
-				stroke: $button-primary;
+				stroke: carbon.$button-primary;
 				stroke-dasharray: 4;
 				stroke-width: 2;
-				fill: $layer-01;
+				fill: carbon.$layer-01;
 				pointer-events: none;
 			}
 		}
@@ -46,12 +47,12 @@
 
 		.d3-node-ellipsis-group {
 			.d3-node-ellipsis {
-				fill: $icon-primary;
+				fill: carbon.$icon-primary;
 			}
 
 			&:hover {
 				.d3-node-ellipsis-background {
-					fill: $layer-accent-01;
+					fill: carbon.$layer-accent-01;
 				}
 			}
 		}
@@ -96,13 +97,13 @@
 			.d3-node-dec-group {
 				.d3-node-dec-image[data-id*="supernode-zoom"] {
 					display: block;
-					fill: $icon-primary;
+					fill: carbon.$icon-primary;
 					stroke-width: 0;
 				}
 
 				&:hover {
 					.d3-node-dec-outline {
-						fill: $layer-accent-01;
+						fill: carbon.$layer-accent-01;
 						stroke-width: 0;
 					}
 				}
@@ -113,20 +114,20 @@
 	.d3-data-link .d3-link-line,
 	.d3-data-link .d3-link-line-arrow-head {
 		fill: none;
-		stroke: $layer-selected-inverse;
+		stroke: carbon.$layer-selected-inverse;
 		stroke-width: 1;
 	}
 
 	/* For association link */
 	.d3-object-link  .d3-link-line {
-		stroke: $border-strong-01;
+		stroke: carbon.$border-strong-01;
 		stroke-width: 2;
 		fill: none;
 		stroke-dasharray: 5.5;
 	}
 
 	.d3-comment-link  .d3-link-line {
-		stroke: $border-strong-01;
+		stroke: carbon.$border-strong-01;
 		stroke-width: 1;
 		fill: none;
 		stroke-dasharray: 10.5;
@@ -135,19 +136,19 @@
 
 	.d3-link-group:hover .d3-link-line,
 	.d3-link-group:hover .d3-link-line-arrow-head {
-		stroke: $button-primary;
+		stroke: carbon.$button-primary;
 		stroke-width: 2;
 	}
 
 	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: $button-primary;
+		stroke: carbon.$button-primary;
 		stroke-width: 2;
 		stroke-dasharray: 1 0;
 		fill: none;
 	}
 
 	.d3-comment-selection-highlight[data-selected="yes"] {
-		stroke: $gray-50;
+		stroke: carbon.$gray-50;
 		stroke-dasharray: 5, 5;
 		stroke-width: 1;
 		fill: transparent;
@@ -157,15 +158,15 @@
 	/* Decoration Styles */
 
 	.node-cache-empty {
-		fill: $layer-01;
+		fill: carbon.$layer-01;
 	}
 
 	.node-cache-full {
-		fill: $layer-01;
+		fill: carbon.$layer-01;
 	}
 
 	.node-sql-pushback {
-		fill: $layer-01;
+		fill: carbon.$layer-01;
 	}
 
 	/* Override styles in common canvas to fade out nodes and comments
@@ -198,19 +199,19 @@
 	}
 
 	.canvas-ui-empty-text-placeholder {
-		@include type-style("productive-heading-03");
-		color: $text-primary;
+		@include carbon.type-style("productive-heading-03");
+		color: carbon.$text-primary;
 	}
 
 	.canvas-ui-empty-subtext-placeholder {
-		@include type-style("body-long-02");
-		color: $text-secondary;
+		@include carbon.type-style("body-long-02");
+		color: carbon.$text-secondary;
 		margin-top: 8px;
 	}
 
 	.canvas-ui-empty-node-text {
-		@include type-style("productive-heading-02");
-		color: $text-secondary;
+		@include carbon.type-style("productive-heading-02");
+		color: carbon.$text-secondary;
 	}
 
 }
