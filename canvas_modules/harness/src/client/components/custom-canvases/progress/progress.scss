@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use "../../../../../assets/styles/carbon.scss";
+
 // Some useful variations on Carbon colors
 $blue: #8EB5FF;
 $light-blue: #E9F1FF;
@@ -25,7 +27,7 @@ $node-body-stroke: $blue;
 $node-body-fill: $light-blue;
 
 $node-port-output-stroke-color: $blue;
-$node-port-output-fill-color: $background;
+$node-port-output-fill-color: carbon.$background;
 
 $node-port-output-connected-stroke-color: $blue;
 $node-port-output-connected-fill-color: $light-blue;
@@ -34,7 +36,7 @@ $node-port-output-hover-stroke: $dark-blue;
 $node-port-output-hover-fill: $dark-blue;
 
 $node-port-input-stroke-color: $blue;
-$node-port-input-fill-color: $background;
+$node-port-input-fill-color: carbon.$background;
 
 $node-port-input-connected-stroke-color: $blue;
 $node-port-input-connected-fill-color: $light-blue;
@@ -67,7 +69,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 	}
 
 	.d3-node-selection-highlight[data-selected="yes"] {
-		stroke: $link-inverse;
+		stroke: carbon.$link-inverse;
 		stroke-dasharray: 5, 5;
 		stroke-width: 2;
 		fill: transparent;
@@ -76,9 +78,9 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 
 	.d3-node-group.d3-node-unavailable .d3-node-body-outline,
 	.d3-node-group.d3-node-unavailable .d3-node-label {
-		stroke: $button-disabled;
-		fill: $layer-selected-disabled;
-		color: $button-disabled;
+		stroke: carbon.$button-disabled;
+		fill: carbon.$layer-selected-disabled;
+		color: carbon.$button-disabled;
 	}
 
 	.d3-node-label {
@@ -155,7 +157,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 	}
 
 	.d3-comment-selection-highlight[data-selected="yes"] {
-		stroke: $link-inverse;
+		stroke: carbon.$link-inverse;
 		stroke-dasharray: 5 5;
 		stroke-width: 2;
 		fill: transparent;

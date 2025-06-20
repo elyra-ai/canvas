@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 Elyra Authors
+ * Copyright 2023-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 
 /* Override styles for react-nodes sample application. */
-
-@import "@carbon/charts-react/styles.min.css";
+@use "../../../../../assets/styles/carbon.scss";
+@use "@carbon/charts/scss/index.scss";
 
 .react-nodes-carbon {
 
@@ -50,7 +50,7 @@
 		}
 
 		.d3-node-selection-highlight[data-selected="yes"] {
-			stroke: $layer-selected-inverse;
+			stroke: carbon.$layer-selected-inverse;
 			stroke-dasharray: 4, 4;
 			stroke-width: 1;
 			fill: transparent;
@@ -82,7 +82,7 @@
 
 		.d3-node-ellipsis-group {
 			.d3-node-ellipsis {
-				fill: $icon-primary;
+				fill: carbon.$icon-primary;
 			}
 
 			.d3-node-ellipsis-background {
@@ -91,13 +91,13 @@
 
 			&:hover {
 				.d3-node-ellipsis-background {
-					fill: $layer-accent-01;
+					fill: carbon.$layer-accent-01;
 				}
 			}
 		}
 
 		.cds--cc--card-node__column{
-			color: $text-primary;
+			color: carbon.$text-primary;
 		}
 
 		// Set the outline/background for decorations. This will only affect the
@@ -131,13 +131,13 @@
 			.d3-node-dec-group {
 				.d3-node-dec-image[data-id*="supernode-zoom"] {
 					display: block;
-					fill: $icon-primary;
+					fill: carbon.$icon-primary;
 					stroke-width: 0;
 				}
 
 				&:hover {
 					.d3-node-dec-outline {
-						fill: $layer-accent-01;
+						fill: carbon.$layer-accent-01;
 						stroke-width: 0;
 					}
 				}
@@ -158,7 +158,7 @@
 	.d3-link-group.d3-data-link {
 		.d3-link-line,
 		.d3-link-line-arrow-head {
-			stroke: $layer-selected-inverse;
+			stroke: carbon.$layer-selected-inverse;
 			stroke-width: 1px;
 		}
 

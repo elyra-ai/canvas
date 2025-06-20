@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@
  */
 
 /* Override styles for flows.json canvas */
+@use "../../../../../assets/styles/carbon.scss";
 
 .prompt {
 
 	.d3-node-group {
 		.d3-node-selection-highlight[data-selected="yes"] {
-			stroke: $gray-50;
+			stroke: carbon.$gray-50;
 			stroke-dasharray: 5, 5;
 			stroke-width: 1;
 			fill: transparent;
@@ -31,25 +32,25 @@
 	.d3-data-link .d3-link-line,
 	.d3-data-link .d3-link-line-arrow-head {
 		fill: none;
-		stroke: $layer-selected-inverse;
+		stroke: carbon.$layer-selected-inverse;
 		stroke-width: 1;
 	}
 
 	.d3-link-group:hover .d3-link-line,
 	.d3-link-group:hover .d3-link-line-arrow-head {
-		stroke: $button-primary;
+		stroke: carbon.$button-primary;
 		stroke-width: 2;
 	}
 
 	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: $button-primary;
+		stroke: carbon.$button-primary;
 		stroke-width: 2;
 		stroke-dasharray: 1 0;
 		fill: none;
 	}
 
 	.d3-comment-selection-highlight[data-selected="yes"] {
-		stroke: $gray-50;
+		stroke: carbon.$gray-50;
 		stroke-dasharray: 5, 5;
 		stroke-width: 1;
 		fill: transparent;
@@ -59,12 +60,12 @@
 	.prompt-react {
 		height: 100%;
 		width: 100%;
-		background-color: $layer-01;
+		background-color: carbon.$layer-01;
 
 		.prompt-react-header {
 			display: flex;
 			justify-content: space-between;
-			border-bottom: 1px solid $layer-active-02;
+			border-bottom: 1px solid carbon.$layer-active-02;
 
 			.prompt-react-header-title {
 				padding: 12px;

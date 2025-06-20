@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 
 /* Override styles for flows.json canvas */
+@use "../../../../../assets/styles/carbon.scss";
 
 .logic-canvas {
 
@@ -25,7 +26,7 @@
 
 		// Style the node selection highlighting
 		.d3-node-selection-highlight[data-selected="yes"] {
-			stroke: $gray-50;
+			stroke: carbon.$gray-50;
 			stroke-dasharray: 5, 5;
 			stroke-width: 1;
 			fill: transparent;
@@ -35,12 +36,12 @@
 		// Style node ellipsis icon.
 		.d3-node-ellipsis-group {
 			.d3-node-ellipsis {
-				fill: $icon-primary;
+				fill: carbon.$icon-primary;
 			}
 
 			&:hover {
 				.d3-node-ellipsis-background {
-					fill: $layer-accent-01;
+					fill: carbon.$layer-accent-01;
 				}
 			}
 		}
@@ -87,7 +88,7 @@
 
 	// Style new connection link line
 	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: $button-primary;
+		stroke: carbon.$button-primary;
 		stroke-width: 2;
 		stroke-dasharray: 1 0;
 		fill: none;
@@ -99,7 +100,7 @@
 
 	// Style comment highlight to be like node selection highlight
 	.d3-comment-selection-highlight[data-selected="yes"] {
-		stroke: $gray-50;
+		stroke: carbon.$gray-50;
 		stroke-dasharray: 5, 5;
 		stroke-width: 1;
 		fill: transparent;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+@use "../../assets/styles/carbon.scss";
+@use "../../assets/styles/commonVars.scss";
+
 $harness-navbar-title-width: 120px;
 $harness-navbar-icon-width: 48px;
 
@@ -24,17 +27,17 @@ $harness-navbar-icon-width: 48px;
 
 .harness-canvas-container,
 .harness-canvas-container.double {
-	height: calc(100% - $harness-header-height);
+	height: calc(100% - commonVars.$harness-header-height);
 	width: 100%;
-	transition: width $harness-sidepanel-transition-time;
+	transition: width commonVars.$harness-sidepanel-transition-time;
 
 	&.side-panel-open {
-		width: calc(100% - $harness-sidepanel-width);
+		width: calc(100% - commonVars.$harness-sidepanel-width);
 	}
 }
 
 .harness-canvas-container.console-panel-open {
-	height: calc(100% - $harness-header-height - $harness-console-height);
+	height: calc(100% - commonVars.$harness-header-height - commonVars.$harness-console-height);
 }
 
 .harness-canvas-single {
@@ -42,7 +45,7 @@ $harness-navbar-icon-width: 48px;
 }
 
 .harness-title {
-	color: $text-primary;
+	color: carbon.$text-primary;
 	min-width: $harness-navbar-title-width;
 	display: block;
 	font-size: 14px;
@@ -52,7 +55,7 @@ $harness-navbar-icon-width: 48px;
 }
 
 .harness-version {
-	color: $text-primary;
+	color: carbon.$text-primary;
 	display: block;
 	font-size: 8px;
 	text-align: right;
@@ -68,12 +71,12 @@ $harness-navbar-icon-width: 48px;
 	width: 174px;
 	height: 121px;
 	opacity: 0.5;
-	fill: $text-secondary;
+	fill: carbon.$text-secondary;
 }
 
 .harness-empty-link {
 	display: block;
-	color: $text-secondary;
+	color: carbon.$text-secondary;
 	font-size: 20px;
 	text-align: center;
 	text-decoration: underline;
@@ -84,7 +87,7 @@ $harness-navbar-icon-width: 48px;
 
 .harness-empty-text {
 	display: block;
-	color: $text-secondary;
+	color: carbon.$text-secondary;
 	font-size: 20px;
 	text-align: center;
 	user-select: none;
@@ -103,8 +106,8 @@ $harness-navbar-icon-width: 48px;
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-	background-color: $layer-01;
-	border-bottom: 2px solid $layer-accent-01;
+	background-color: carbon.$layer-01;
+	border-bottom: 2px solid carbon.$layer-accent-01;
 }
 
 .harness-navbar-li {
@@ -118,16 +121,16 @@ $harness-navbar-icon-width: 48px;
 		text-align: center;
 		padding: 14px;
 		width: 18px;
-		fill: $icon-primary;
+		fill: carbon.$icon-primary;
 		box-sizing: content-box;
 		cursor: pointer;
 
 		&:hover {
-			background-color: $layer-accent-01;
+			background-color: carbon.$layer-accent-01;
 		}
 
 		& svg {
-			color: $icon_primary;
+			color: carbon.$icon_primary;
 		}
 	}
 
@@ -141,7 +144,7 @@ $harness-navbar-icon-width: 48px;
 }
 
 .harness-nav-divider {
-	border-left: 1px solid $layer-accent-01;
+	border-left: 1px solid carbon.$layer-accent-01;
 }
 
 /* Navbar Breadcrumbs */
@@ -164,17 +167,17 @@ $harness-navbar-icon-width: 48px;
 		background-color: transparent;
 		padding: 0 5px;
 		font-size: 12px;
-		color: $text-primary;
+		color: carbon.$text-primary;
 
 		&:hover {
-			color: $link-primary;
+			color: carbon.$link-primary;
 			text-decoration-line: underline;
 		}
 		&.last-item {
 			cursor: default;
 			height: 10px;
 			&:hover {
-				color: $text-primary;
+				color: carbon.$text-primary;
 				text-decoration-line: none;
 			}
 		}
@@ -186,9 +189,9 @@ $harness-navbar-icon-width: 48px;
 }
 
 .harness-panel-temp-content {
-	background-color: $layer-01;
+	background-color: carbon.$layer-01;
 	padding: 30px;
-	color: $text-secondary;
+	color: carbon.$text-secondary;
 	font-size: 20px;
 	pointer-events: none;
 	user-select: none;
@@ -216,18 +219,18 @@ $harness-navbar-icon-width: 48px;
 		height: 20px;
 		margin: 5px 0 0 5px;
 		cursor: pointer;
-		&.yellow-20 { background-color: $yellow-20; }
-		&.green-20 { background-color: $green-20; }
-		&.teal-20 { background-color: $teal-20; }
-		&.cyan-20 { background-color: $cyan-20; }
-		&.red-50 { background-color: $red-50; }
-		&.orange-40 { background-color: $orange-40; }
-		&.green-50 { background-color: $green-50; }
-		&.teal-50 { background-color: $teal-50; }
-		&.cyan-50 { background-color: $cyan-50; }
+		&.yellow-20 { background-color: carbon.$yellow-20; }
+		&.green-20 { background-color: carbon.$green-20; }
+		&.teal-20 { background-color: carbon.$teal-20; }
+		&.cyan-20 { background-color: carbon.$cyan-20; }
+		&.red-50 { background-color: carbon.$red-50; }
+		&.orange-40 { background-color: carbon.$orange-40; }
+		&.green-50 { background-color: carbon.$green-50; }
+		&.teal-50 { background-color: carbon.$teal-50; }
+		&.cyan-50 { background-color: carbon.$cyan-50; }
 	}
 }
 
 .harness-custom-spacer {
-	height: $spacing-07;
+	height: carbon.$spacing-07;
 }

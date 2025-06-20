@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 
 /* Override styles for flows.json canvas */
+@use "../../../../../assets/styles/carbon.scss";
 
 .all-ports-canvas {
 
@@ -24,7 +25,7 @@
 	.d3-node-group {
 
 		.d3-node-port-input {
-			stroke: $background-inverse;
+			stroke: carbon.$background-inverse;
 		}
 
 		.d3-node-selection-highlight[data-selected="yes"],
@@ -40,7 +41,7 @@
 
 	// Style new connection link line
 	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: $button-primary;
+		stroke: carbon.$button-primary;
 		stroke-width: 2;
 		stroke-dasharray: 1 0;
 		fill: none;

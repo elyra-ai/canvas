@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-/* These are used in custom common-properties */
-@use "../../assets/styles/carbon.scss";
-
-.custom-action-right {
-	align-self: flex-end;
-	padding: 0 0 0 carbon.$spacing-03;
-}
-
-.custom-action-left {
-	align-self: flex-end;
-	order: -1;
-	padding: 0 carbon.$spacing-03 0 0;
-}
+// Common variables for App.scss and sidepanel.scss
+$harness-header-height: 50px;
+$harness-sidepanel-width: 320px;
+$harness-sidepanel-transition-time: 0.3s;
+$harness-console-height: 200px;
