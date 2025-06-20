@@ -193,18 +193,24 @@ class DropDown extends React.Component {
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 
-	// evt is null when onBlur, empty string when clicking the 'x' to clear input
-	handleOnInputChange(evt) {
+
+	handleOnInputChange(evt, options) {
 		const currentValue = this.props.controller.getPropertyValue(this.props.propertyId);
 
 		// Don't update property value during initial render
 		if ((typeof currentValue === "undefined" || currentValue === null) && evt === "") {
 			return;
 		}
-
-		if (evt !== null && evt !== currentValue) {
-			const value = evt;
-			this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		const value = evt;
+		if (this.props.control.customValueAllowed) {
+			if (evt !== null && evt !== currentValue) {
+				this.props.controller.updatePropertyValue(this.props.propertyId, value);
+			}
+		} else { // check and update only if input is present in options when customValueAllowed=false
+			const isValidInput = options.some((opt) => opt.label === evt);
+			if (isValidInput && evt !== null && evt !== currentValue) {
+				this.props.controller.updatePropertyValue(this.props.propertyId, value);
+			}
 		}
 	}
 
@@ -278,7 +284,7 @@ class DropDown extends React.Component {
 					{ options }
 				</Select>
 			);
-		} else if (this.props.control.customValueAllowed) { // combobox dropdown not allowed in tables
+		} else if (this.props.control.customValueAllowed || this.props.control.shouldFilterItem) { // combobox dropdown not allowed in tables
 			const shouldFilterItem = this.props.control.shouldFilterItem === true ? { shouldFilterItem: this.filterItems } : {};
 			dropdownComponent = (
 				<ComboBox
@@ -286,15 +292,15 @@ class DropDown extends React.Component {
 					aria-label={this.props.control.label ? this.props.control.label.text : ""}
 					id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
 					disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
-					placeholder={dropDown.selectedOption.label}
-					selectedItem={dropDown.selectedOption.label}
+					placeholder={dropDown.selectedOption?.label}
+					selectedItem={dropDown.selectedOption?.label}
 					items={dropDown.options}
 					onChange={this.handleComboOnChange}
-					onInputChange={this.handleOnInputChange}
+					onInputChange={(evt) => this.handleOnInputChange(evt, dropDown.options)}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 					titleText={this.props.controlItem}
 					helperText={this.props.control.helperText}
-					allowCustomValue
+					allowCustomValue={this.props.control.customValueAllowed}
 					{...shouldFilterItem}
 				/>
 			);
