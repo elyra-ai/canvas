@@ -620,7 +620,8 @@ describe("StructureListEditor render from paramdef", () => {
 			"required": false,
 			"validation_id": "tableerrortest3",
 			"type": "error",
-			"text": "There are 2 error cells. ",
+			"tableText": "There are 2 error cells. ",
+			"text": "checkbox cannot be off"
 		};
 
 		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
