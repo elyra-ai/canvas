@@ -24,23 +24,58 @@ import { Portal } from "react-portal";
 export default class WideFlyout extends Component {
 	constructor(props) {
 		super(props);
+		this.modalRef = React.createRef();
 		this.state = {
 			style: {
 				height: 0
 			}
 		};
 		this.updateDimensions = this.updateDimensions.bind(this);
+		this.handleTabKey = this.handleTabKey.bind(this);
 	}
 
 	componentDidMount() {
 		this.updateDimensions();
 		window.addEventListener("resize", this.updateDimensions);
+		// Require slight delay to ensure modal and focusable elemnts are mounted properly.
+		document.addEventListener("keydown", this.handleTabKey);
+		this.focusOnFirstFocusable(); // Set initial focus inside the modal.
 	}
-
+	componentDidUpdate(prevProps) {
+		// If modal is still open, and new item added.
+		const modal = this.modalRef.current;
+		if (!prevProps.show && this.props.show && modal) {
+			// If focus is outside modal, move it to first focusable
+			this.focusOnFirstFocusable();
+			return;
+		}
+		// Restore focus if lost due to modal content changes like typing or adding new fields
+		if (this.props.show && modal && document.activeElement === document.body) {
+			this.focusOnFirstFocusable();
+		}
+	}
 	componentWillUnmount() {
 		window.removeEventListener("resize", this.updateDimensions);
+		document.removeEventListener("keydown", this.handleTabKey);
 	}
-
+	// Returns an array of focusable elements inside the modal.
+	getFocusables() {
+		const modal = this.modalRef.current;
+		if (!modal) {
+			return [];
+		}
+		return Array.from(
+			modal.querySelectorAll(
+				"button, a[href], input, select, textarea, [tabindex]:not([tabindex='-1'])"
+			)).filter((el) => el.offsetParent !== null && !el.disabled); // Filter out hidden/disabled elements.
+	}
+	// Focus on the first focusable element once modal opens.
+	focusOnFirstFocusable() {
+		const focusables = this.getFocusables();
+		if (focusables.length > 0) {
+			focusables[0].focus();
+		}
+	}
 	updateDimensions() {
 		if (this.wideFlyout) {
 			// used to find correct parent
@@ -67,6 +102,34 @@ export default class WideFlyout extends Component {
 		return null;
 	}
 
+	// Handles focus trap inside the modal when using Tab or Shift+tab key.
+	handleTabKey(e) {
+		if (e.key !== "Tab") {
+			return;
+		}
+		const modal = this.modalRef.current;
+		if (!modal || !modal.contains(document.activeElement)) {
+			return;
+		}
+		const focusables = this.getFocusables();
+		if (focusables.length === 0) {
+			return;
+		}
+		const first = focusables[0];
+		const last = focusables[focusables.length - 1];
+		const active = document.activeElement;
+		// If key is 'shift+tab' then focus should be on the last else first.
+		if (e.shiftKey) {
+			if (active === first) {
+				e.preventDefault();
+				last.focus();
+			}
+		} else if (active === last) {
+			e.preventDefault();
+			first.focus();
+		}
+	}
+
 	render() {
 		const overlay = (<div className={classNames("properties-wf-overlay", { "show": this.props.show })} />);
 		let title;
@@ -87,10 +150,15 @@ export default class WideFlyout extends Component {
 			children = (<div className="properties-wf-children"> {this.props.children} </div>);
 		}
 		return (
-			<div className="properties-wf-modal" ref={ (ref) => (this.wideFlyout = ref) }>
+			<div className="properties-wf-modal" ref={(ref) => (this.wideFlyout = ref)}>
 				<Portal node={this.commonPropertiesParent}>
-					{ overlay }
-					<div className={classNames("properties-wf-content", { "show": this.props.show, "properties-light-disabled": !this.props.light })} style={this.state.style}>
+					{overlay}
+					<div
+						ref={this.modalRef}
+						role="dialog"
+						className={classNames("properties-wf-content", { "show": this.props.show, "properties-light-disabled": !this.props.light })}
+						style={this.state.style}
+					>
 						{title}
 						{children}
 						{buttons}
