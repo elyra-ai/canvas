@@ -94,7 +94,7 @@ TearSheet.propTypes = {
 	applyLabel: PropTypes.string, // Required if showPropertiesButtons is true
 	rejectLabel: PropTypes.string, // Required if showPropertiesButtons is true
 	okHandler: PropTypes.func, // Required if showPropertiesButtons is true
-	cancelHandler: PropTypes.func, // Required if showPropertiesButtons is true
+	cancelHandler: PropTypes.func.isRequired,
 	applyOnBlur: PropTypes.bool.isRequired,
 	intl: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
