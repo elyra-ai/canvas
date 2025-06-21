@@ -253,6 +253,7 @@ class App extends React.Component {
 			selectedShowRightFlyout: false,
 			selectedRightFlyoutUnderToolbar: false,
 			selectedRightFlyoutDragToResize: false,
+			selectedBottomPanelScrollable: false,
 			selectedPanIntoViewOnOpen: false,
 			selectedExtraCanvasDisplayed: false,
 			selectedSaveToPalette: false,
@@ -2186,6 +2187,7 @@ class App extends React.Component {
 			enableLeftFlyoutUnderToolbar: this.state.selectedLeftFlyoutUnderToolbar,
 			enableRightFlyoutUnderToolbar: this.state.selectedRightFlyoutUnderToolbar,
 			enableRightFlyoutDragToResize: this.state.selectedRightFlyoutDragToResize,
+			enableBottomPanelScrollable: this.state.selectedBottomPanelScrollable,
 			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
 			dropZoneCanvasContent: this.state.selectedDisplayCustomizedDropZoneContent ? this.dropZoneCanvasDiv : null,
 			emptyCanvasContent: this.state.selectedDisplayCustomizedEmptyCanvasContent ? this.emptyCanvasDiv : null,
@@ -2518,17 +2520,71 @@ class App extends React.Component {
 		return toolbarConfig;
 	}
 
-	getTempContent(vertical) {
+	// Returns temperoray content to be displayed in panels and flyouts.
+	getTempContent(vertical, extra) {
 		const text1 = "Common Canvas panel.";
 		const text2 = "Some temporary content for common canvas panel. This panel can display content from the host application.";
 		const className = "harness-panel-temp-content" + (vertical ? " vertical" : "");
+		const table = extra ? this.getTempTableContent() : null;
 		return (
 			<div className={className}>
-				<div className="title">{text1}</div>
-				<div className="text">{text2}</div>
+				<div>
+					<div className="title">{text1}</div>
+					<div className="text">{text2}</div>
+					<br />
+					{table}
+				</div>
 			</div>
 		);
 	}
+
+	// Returns a table of dummy data for display in panels and flyouts.
+	getTempTableContent() {
+		const rows = [];
+		rows.push(
+			<tr>
+				<td>Aaaaaaaaaaax</td>
+				<td>Bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb</td>
+				<td>Ccccccccccccccccccccc</td>
+				<td>Dddddddddddddddddddddddddddd</td>
+			</tr>
+		);
+		for (let i = 2; i < 35; i++) {
+			rows.push(
+				<tr>
+					<td>Rows {i}</td>
+					<td>Bbbb</td>
+					<td>Cccc</td>
+					<td>Dddd</td>
+				</tr>
+			);
+		}
+		rows.push(
+			<tr>
+				<td>A - Last Row</td>
+				<td>B - Last Row</td>
+				<td>C - Last Row</td>
+				<td>D - Last Row</td>
+			</tr>
+		);
+
+		return (
+			<table>
+				<thead>
+					<tr>
+						<th>Col 1</th>
+						<th>Col 2</th>
+						<th>Col 3</th>
+						<th>Col 4</th>
+					</tr>
+				</thead>
+				<tbody>
+					{rows}
+				</tbody>
+			</table>
+		);
+	}
+
 
 	getSidePanel() {
 		const sidePanelCanvasConfig = {
@@ -2787,7 +2843,7 @@ class App extends React.Component {
 				</div>);
 		}
 
-		const bottomPanelContent = this.getTempContent();
+		const bottomPanelContent = this.getTempContent(false, true);
 		const topPanelContent = this.getTempContent();
 
 		const rightFlyoutContent = rightFlyoutContentProperties

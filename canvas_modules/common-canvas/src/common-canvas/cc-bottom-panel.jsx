@@ -90,11 +90,13 @@ class CanvasBottomPanel extends React.Component {
 
 		if (this.props.bottomPanelIsOpen) {
 			const heightPx = this.limitHeight(this.props.panelHeight) + "px";
+			const className = "bottom-panel-contents" + (this.props.isScrollable ? " panel-contents-scrollable" : "");
+
 
 			bottomPanel = (
 				<div className="bottom-panel" style={{ height: heightPx }} >
 					<div className="bottom-panel-drag" onMouseDown={this.onMouseDown} />
-					<div className="bottom-panel-contents">
+					<div className={className}>
 						{this.props.bottomPanelContent}
 					</div>
 				</div>
@@ -113,12 +115,14 @@ CanvasBottomPanel.propTypes = {
 	// Provided by Redux
 	bottomPanelIsOpen: PropTypes.bool,
 	bottomPanelContent: PropTypes.object,
+	isScrollable: PropTypes.bool,
 	panelHeight: PropTypes.number
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	bottomPanelIsOpen: state.bottompanel.isOpen,
 	bottomPanelContent: state.bottompanel.content,
+	isScrollable: state.canvasconfig.enableBottomPanelScrollable,
 	panelHeight: state.bottompanel.panelHeight
 });
 export default connect(mapStateToProps)(CanvasBottomPanel);
