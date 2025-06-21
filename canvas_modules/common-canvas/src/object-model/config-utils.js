@@ -86,6 +86,7 @@ export default class ConfigUtils {
 			enableDropZoneOnExternalDrag: false,
 			enableLeftFlyoutUnderToolbar: false,
 			enableRightFlyoutUnderToolbar: false,
+			enableBottomPanelScrollable: false,
 			enableRightFlyoutDragToResize: false,
 			enablePanIntoViewOnOpen: false,
 			enableZoomIntoSubFlows: false,

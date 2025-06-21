@@ -66,7 +66,6 @@ $panel-border-color: $border-subtle-01;
 	height: 0;
 	min-height: 100%;
 	background-color: $layer-01;
-	word-break: break-word;
 }
 
 // Allow content in child to expand on drag using flex
@@ -99,6 +98,7 @@ $panel-border-color: $border-subtle-01;
 	// Make sure the bottom panel appear above the empty canvas content
 	// (when displayed) in the flow editor div.
 	z-index: 1;
+	overflow: hidden;
 }
 
 .bottom-panel-drag {
@@ -116,10 +116,15 @@ $panel-border-color: $border-subtle-01;
 .bottom-panel-contents,
 .top-panel-contents {
 	background-color: $layer-01;
-	width: 100%;
 	user-select: none;
 	height: 100%;
-	word-break: break-word; // Prevents scrollbar appearing at bottom of canvas
+}
+
+.panel-contents-scrollable {
+	min-width: 100%;
+	width: 0;
+	overflow: auto;
+
 }
 
 .center-panel {
