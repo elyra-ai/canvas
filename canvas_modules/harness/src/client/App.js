@@ -253,6 +253,7 @@ class App extends React.Component {
 			selectedShowRightFlyout: false,
 			selectedRightFlyoutUnderToolbar: false,
 			selectedRightFlyoutDragToResize: false,
+			selectedRightFlyoutScrollable: false,
 			selectedBottomPanelScrollable: false,
 			selectedPanIntoViewOnOpen: false,
 			selectedExtraCanvasDisplayed: false,
@@ -2187,6 +2188,7 @@ class App extends React.Component {
 			enableLeftFlyoutUnderToolbar: this.state.selectedLeftFlyoutUnderToolbar,
 			enableRightFlyoutUnderToolbar: this.state.selectedRightFlyoutUnderToolbar,
 			enableRightFlyoutDragToResize: this.state.selectedRightFlyoutDragToResize,
+			enableRightFlyoutScrollable: this.state.selectedRightFlyoutScrollable,
 			enableBottomPanelScrollable: this.state.selectedBottomPanelScrollable,
 			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
 			dropZoneCanvasContent: this.state.selectedDisplayCustomizedDropZoneContent ? this.dropZoneCanvasDiv : null,
@@ -2549,7 +2551,7 @@ class App extends React.Component {
 				<td>Dddddddddddddddddddddddddddd</td>
 			</tr>
 		);
-		for (let i = 2; i < 35; i++) {
+		for (let i = 2; i < 40; i++) {
 			rows.push(
 				<tr>
 					<td>Rows {i}</td>
@@ -2848,7 +2850,7 @@ class App extends React.Component {
 
 		const rightFlyoutContent = rightFlyoutContentProperties
 			? rightFlyoutContentProperties
-			: this.getTempContent(true);
+			: this.getTempContent(true, true);
 
 		const leftFlyoutContent = this.getTempContent(true);
 

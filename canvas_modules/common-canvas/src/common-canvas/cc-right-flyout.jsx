@@ -121,22 +121,22 @@ class CommonCanvasRightFlyout extends React.Component {
 		this.logger.log("render");
 
 		let rightFlyout = <div />; // For no content, return empty <div> so grid siziing for parent <div> work correctly.
-		const rightFlyoutDragContent = this.getRightFlyoutResizeContent();
 
 		if (this.props.content && this.props.isOpen) {
+			const rightFlyoutDragContent = this.getRightFlyoutResizeContent();
+
 			let widthPx = this.limitWidth(this.props.panelWidth) + "px";
 			// Apply 100% width if content has no width to occupy flyout.
 			if (this.props.panelWidth === MIN_WIDTH) {
 				widthPx = DEFAULT_WIDTH;
 			}
-			const rfClass = this.props.enableRightFlyoutUnderToolbar
-				? "right-flyout-panel under-toolbar"
-				: "right-flyout-panel";
+			let contentsClassName = "right-flyout-panel" + (this.props.enableRightFlyoutUnderToolbar ? " under-toolbar" : "");
+			contentsClassName += (this.props.enableRightFlyoutScrollable ? " panel-contents-scrollable" : "");
 
 			rightFlyout = (
 				<div className="right-flyout" style={{ width: widthPx }} >
 					{rightFlyoutDragContent}
-					<div className={rfClass} ref={this.rightFlyoutRef}>
+					<div className={contentsClassName} ref={this.rightFlyoutRef}>
 						{this.props.content}
 					</div>
 				</div>
@@ -157,6 +157,7 @@ CommonCanvasRightFlyout.propTypes = {
 	content: PropTypes.object,
 	enableRightFlyoutUnderToolbar: PropTypes.bool,
 	enableRightFlyoutDragToResize: PropTypes.bool,
+	enableRightFlyoutScrollable: PropTypes.bool,
 	panelWidth: PropTypes.number
 };
 
@@ -165,6 +166,7 @@ const mapStateToProps = (state, ownProps) => ({
 	content: state.rightflyout.content,
 	enableRightFlyoutUnderToolbar: state.canvasconfig.enableRightFlyoutUnderToolbar,
 	enableRightFlyoutDragToResize: state.canvasconfig.enableRightFlyoutDragToResize,
+	enableRightFlyoutScrollable: state.canvasconfig.enableRightFlyoutScrollable,
 	panelWidth: state.rightflyout.panelWidth
 });
 

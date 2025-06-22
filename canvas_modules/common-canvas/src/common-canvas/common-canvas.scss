@@ -66,6 +66,7 @@ $panel-border-color: $border-subtle-01;
 	height: 0;
 	min-height: 100%;
 	background-color: $layer-01;
+	overflow: hidden;
 }
 
 // Allow content in child to expand on drag using flex
@@ -118,10 +119,10 @@ $panel-border-color: $border-subtle-01;
 	background-color: $layer-01;
 	user-select: none;
 	height: 100%;
+	min-width: 100%;
 }
 
 .panel-contents-scrollable {
-	min-width: 100%;
 	width: 0;
 	overflow: auto;
 

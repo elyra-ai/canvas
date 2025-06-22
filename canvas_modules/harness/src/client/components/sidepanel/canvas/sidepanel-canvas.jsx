@@ -876,6 +876,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableRightFlyoutScrollable = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedRightFlyoutScrollable" // Set ID to corresponding field in App.js state
+				labelText="Enable Right Flyout Scrollable"
+				toggled={this.props.getStateValue("selectedRightFlyoutScrollable")}
+				onToggle={(val) => this.setStateValue(val, "selectedRightFlyoutScrollable")}
+			/>
+		</div>);
+
 		var enableBottomPanelScrollable = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedBottomPanelScrollable" // Set ID to corresponding field in App.js state
@@ -1896,6 +1905,8 @@ export default class SidePanelForms extends React.Component {
 					{enableRightFlyoutUnderToolbar}
 					{divider}
 					{enableRightFlyoutDragToResize}
+					{divider}
+					{enableRightFlyoutScrollable}
 					{divider}
 					{enablePositionNodeOnRightFlyoutOpen}
 					{divider}
