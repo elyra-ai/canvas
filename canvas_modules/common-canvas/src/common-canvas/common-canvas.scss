@@ -88,7 +88,8 @@ $panel-border-color: carbon.$border-subtle-01;
 	border-left-width: 1px;
 	background: carbon.$layer-01;
 	transition: all 0.2s ease-in;
-	&:hover {
+	&:hover,
+	&.is-being-dragged {
 		background: carbon.$button-tertiary;
 	}
 }
@@ -109,7 +110,8 @@ $panel-border-color: carbon.$border-subtle-01;
 	border-top-width: 1px;
 	background: carbon.$layer-01;
 	transition: all 0.2s ease-in;
-	&:hover {
+	&:hover,
+	&.is-being-dragged {
 		background: carbon.$button-tertiary;
 	}
 }

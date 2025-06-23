@@ -35,6 +35,7 @@ class CommonCanvasRightFlyout extends React.Component {
 		this.logger = new Logger("CC-RightFlyout");
 
 		this.rightFlyoutRef = React.createRef();
+		this.state = { isBeingDragging: false };
 
 		this.onMouseUp = this.onMouseUp.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
@@ -61,6 +62,7 @@ class CommonCanvasRightFlyout extends React.Component {
 		this.props.canvasController.setRightFlyoutWidth(this.limitWidth(currentWidth));
 
 		if (e.button === 0) {
+			this.setState({ isBeingDragging: true });
 			document.addEventListener("mousemove", this.onMouseMoveX, true);
 			document.addEventListener("mouseup", this.onMouseUp, true);
 			this.posX = e.clientX;
@@ -71,6 +73,7 @@ class CommonCanvasRightFlyout extends React.Component {
 	}
 
 	onMouseUp() {
+		this.setState({ isBeingDragging: false });
 		document.removeEventListener("mousemove", this.onMouseMoveX, true);
 		document.removeEventListener("mouseup", this.onMouseUp, true);
 	}
@@ -89,7 +92,9 @@ class CommonCanvasRightFlyout extends React.Component {
 		let resizeContent = null;
 
 		if (this.props.enableRightFlyoutDragToResize) {
-			resizeContent = (<div className="right-flyout-drag" onMouseDown={this.onMouseDown} />);
+			const className = "right-flyout-drag" + (this.state.isBeingDragging ? " is-being-dragged" : "");
+
+			resizeContent = (<div className={className} onMouseDown={this.onMouseDown} />);
 		}
 
 		return resizeContent;
