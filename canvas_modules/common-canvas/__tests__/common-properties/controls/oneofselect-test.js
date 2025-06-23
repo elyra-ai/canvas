@@ -712,15 +712,15 @@ describe("oneofselect with filter true and custom value not allowed works correc
 		fireEvent.change(dropdownInput, { target: { value: "custom" } });
 		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
 		dropdownInput = dropdownWrapper.querySelector("input");
-		expect(controller.getPropertyValue(propertyId)).to.equal("custom");
-		expect(dropdownInput.value).to.equal("custom");
+		// should not update propertyValue as it is not a valid dropdown option
+		expect(controller.getPropertyValue(propertyId)).to.not.equal("custom");
 		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
 		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(0);
 		// Simulate blur (click outside)
 		fireEvent.blur(dropdownInput);
 		expect(dropdownInput.value).to.equal(""); // Input should be cleared
-		expect(controller.getPropertyValue(propertyId)).to.equal(""); // Value should be reset
+		expect(controller.getPropertyValue(propertyId)).to.be.undefined; // Value should be reset
 	});
 
 	it("Validate oneofselect filters by default without custom filterHandler callback", () => {
