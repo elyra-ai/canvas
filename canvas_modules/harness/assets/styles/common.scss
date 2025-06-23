@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@use "@carbon/react" as * with (
-	$font-path: "/fonts"
+@use "@carbon/react" with (
+	$font-path: "/fonts",
+	$use-per-family-plex: true
 );
-
-$font-prefix: "/fonts";
-@import "node_modules/@ibm/plex/scss/ibm-plex.scss";
