@@ -57,10 +57,6 @@ class CommonCanvasRightFlyout extends React.Component {
 	}
 
 	onMouseDown(e) {
-		// Set width as soon as resize is detected to accurately move the flyout with the drag.
-		const currentWidth = this.getCurrentWidth();
-		this.props.canvasController.setRightFlyoutWidth(this.limitWidth(currentWidth));
-
 		if (e.button === 0) {
 			this.setState({ isBeingDragging: true });
 			document.addEventListener("mousemove", this.onMouseMoveX, true);
