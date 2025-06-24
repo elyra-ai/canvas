@@ -52,6 +52,7 @@ class TearSheet extends Component {
 					size="lg"
 					aria-label={formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: title })}
 					preventCloseOnClickOutside
+					onClose={this.props.cancelHandler} // for case where user closes the modal by pressing ESC
 				>
 					{title === null
 						? null
@@ -93,7 +94,7 @@ TearSheet.propTypes = {
 	applyLabel: PropTypes.string, // Required if showPropertiesButtons is true
 	rejectLabel: PropTypes.string, // Required if showPropertiesButtons is true
 	okHandler: PropTypes.func, // Required if showPropertiesButtons is true
-	cancelHandler: PropTypes.func, // Required if showPropertiesButtons is true
+	cancelHandler: PropTypes.func.isRequired,
 	applyOnBlur: PropTypes.bool.isRequired,
 	intl: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
