@@ -6,6 +6,7 @@
     "oneofselect": "blue",
     "oneofselect_custom_value": "custom",
     "oneofselect_custom_value_no_filter": "custom no filter",
+    "oneofselect_searchable_no_custom_value": "",
     "oneofselect_custom_value_null": null,
     "oneofselect_null": null,
     "oneofselect_empty_string": "",
@@ -66,6 +67,18 @@
         "red",
         "orange",
         "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_searchable_no_custom_value",
+      "enum": [
+        "black",
+        "gray",
+        "white",
         "green",
         "blue",
         "purple"
@@ -418,6 +431,17 @@
         "should_filter_item": true
       },
       {
+        "parameter_ref": "oneofselect_searchable_no_custom_value",
+        "label": {
+          "default": "oneofselect search filter allowed, custom value not allowed"
+        },
+        "description": {
+          "default": "oneofselect search filter allowed, custom value not allowed"
+        },
+        "custom_value_allowed": false,
+        "should_filter_item": true
+      },
+      {
         "parameter_ref": "oneofselect_custom_value_no_filter",
         "label": {
           "default": "oneofselect custom value allowed, no filter"
@@ -732,6 +756,7 @@
           "oneofselect",
           "oneofselect_custom_value",
           "oneofselect_custom_value_no_filter",
+          "oneofselect_searchable_no_custom_value",
           "oneofselect_custom_value_null",
           "oneofselect_custom_value_undefined",
           "oneofselect_null",

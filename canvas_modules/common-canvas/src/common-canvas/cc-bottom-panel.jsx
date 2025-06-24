@@ -30,6 +30,7 @@ class CanvasBottomPanel extends React.Component {
 		super(props);
 
 		this.logger = new Logger("CC-Bottom-Panel");
+		this.state = { isBeingDragging: false };
 
 		this.onMouseUp = this.onMouseUp.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
@@ -38,6 +39,7 @@ class CanvasBottomPanel extends React.Component {
 
 	onMouseDown(e) {
 		if (e.button === 0) {
+			this.setState({ isBeingDragging: true });
 			document.addEventListener("mousemove", this.onMouseMoveY, true);
 			document.addEventListener("mouseup", this.onMouseUp, true);
 			this.posY = e.clientY;
@@ -48,6 +50,7 @@ class CanvasBottomPanel extends React.Component {
 	}
 
 	onMouseUp(e) {
+		this.setState({ isBeingDragging: false });
 		document.removeEventListener("mousemove", this.onMouseMoveY, true);
 		document.removeEventListener("mouseup", this.onMouseUp, true);
 	}
@@ -91,9 +94,11 @@ class CanvasBottomPanel extends React.Component {
 		if (this.props.bottomPanelIsOpen) {
 			const heightPx = this.limitHeight(this.props.panelHeight) + "px";
 
+			const className = "bottom-panel-drag" + (this.state.isBeingDragging ? " is-being-dragged" : "");
+
 			bottomPanel = (
 				<div className="bottom-panel" style={{ height: heightPx }} >
-					<div className="bottom-panel-drag" onMouseDown={this.onMouseDown} />
+					<div className={className} onMouseDown={this.onMouseDown} />
 					<div className="bottom-panel-contents">
 						{this.props.bottomPanelContent}
 					</div>

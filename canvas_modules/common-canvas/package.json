@@ -22,7 +22,9 @@
     "test": "npm run test:jest && npm run test:typescript",
     "test-coverage": "NODE_ENV=test jest --coverage",
     "bundle-report": "BUNDLE_REPORT=true rollup -c",
-    "debug": "NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand"
+    "debug": "NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand",
+    "postinstall": "ibmtelemetry --config=telemetry.yml",
+    "telemetry:config": "npx -y @ibm/telemetry-js-config-generator generate --id 7c48e0fd-ff23-40cf-bf4e-90ec23924b03 --endpoint https://www-api.ibm.com/ibm-telemetry/v1/metrics --files ./src/**/*.js ./src/**/*.jsx"
   },
   "dependencies": {
     "@babel/runtime": "^7.16.3",
@@ -36,6 +38,7 @@
     "@codemirror/state": "^6.4.1",
     "@codemirror/view": "^6.36.7",
     "@elyra/pipeline-schemas": "^3.0.97",
+    "@ibm/telemetry-js": "^1.9.1",
     "@tanstack/react-table": "^8.21.2",
     "@tanstack/react-virtual": "^3.13.8",
     "codemirror": "^6.0.1",
@@ -64,7 +67,7 @@
     "@babel/plugin-transform-runtime": "7.24.7",
     "@babel/preset-env": "7.25.3",
     "@babel/preset-react": "7.24.7",
-    "@carbon/react": "1.71.0",
+    "@carbon/react": "1.84.0",
     "@rollup/plugin-babel": "5.3.0",
     "@rollup/plugin-commonjs": "21.0.1",
     "@rollup/plugin-json": "4.1.0",
@@ -116,7 +119,8 @@
     "@carbon/react": "^1.51.0",
     "react": "^16.0.0 || ^17.0.0 || ^18.0.0",
     "react-dom": "^16.0.0 || ^17.0.0 || ^18.0.0",
-    "react-intl": "^5.0.0 || ^6.0.0"
+    "react-intl": "^5.0.0 || ^6.0.0",
+    "react-is": "^16.13.1 || ^17.0.2 || ^18.3.1"
   },
   "tsd": {
     "compilerOptions": {
