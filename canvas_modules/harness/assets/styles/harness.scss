@@ -28,11 +28,6 @@
 @forward "../../src/styles/custom-actions.scss";
 @forward "../../src/styles/glmm.scss";
 
-// Switch the theme's below to change light <-> dark theme for harness
-// Modify common-canvas/src/themes/light.scss to switch common-canvas.
-$theme: themes.$g10; // The light (gray 10) theme
-// $theme: themes.$g90; // The dark theme
-
 :root {
 	@include carbon.theme(themes.$g10);
 }
