@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Logger from "../logging/canvas-logger.js";
 
-// Margin must be equal to or greater the minimum allowed
-// height for the canvas which is 150px.
-const MARGIN_TOP = 160;
-const MIN_HEIGHT = 75;
-const TOP_PANEL_CLASSNAME = "top-panel";
+// Should cover at most 80% of available height.
+const MAX_HEIGHT_EXTEND_PERCENT = 0.8;
 
 class CanvasBottomPanel extends React.Component {
 	constructor(props) {
@@ -32,9 +29,16 @@ class CanvasBottomPanel extends React.Component {
 		this.logger = new Logger("CC-Bottom-Panel");
 		this.state = { isBeingDragging: false };
 
+		this.minHeight = 0;
+
 		this.onMouseUp = this.onMouseUp.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
 		this.onMouseMoveY = this.onMouseMoveY.bind(this);
+	}
+
+	componentDidMount() {
+		// Minimum height is fixed for bottom panel.
+		this.minHeight = 75;
 	}
 
 	onMouseDown(e) {
@@ -64,26 +68,13 @@ class CanvasBottomPanel extends React.Component {
 		}
 	}
 
-	// Returns a new height for the bottom panel limited by the need to enforce
-	// a minimum and maximum height.
 	limitHeight(ht) {
-		const containingDiv = document.getElementById(this.props.containingDivId);
-		const topPanelDiv = document.getElementsByClassName(TOP_PANEL_CLASSNAME);
-		let height = ht;
-		let topPanelHeight = 0;
+		const centerPanelHeight = this.props.getCenterPanelHeight();
 
-		// Consider top panel height while calculating maxHeight to disable scroll
-		// in right flyout.
-		if (topPanelDiv.length > 0) {
-			topPanelHeight = topPanelDiv[0].getBoundingClientRect().height;
-		}
+		// Max Height should be a percentage of the total available height (center panel + bottom panel)
+		const maxHeight = (centerPanelHeight + this.props.panelHeight) * MAX_HEIGHT_EXTEND_PERCENT;
+		const height = Math.min(Math.max(ht, this.minHeight), maxHeight);
 
-		// containingDiv may not be available in some test situations
-		if (containingDiv) {
-			const containingDivHt = containingDiv.getBoundingClientRect().height;
-			const maxHeight = containingDivHt - MARGIN_TOP - topPanelHeight;
-			height = Math.min(Math.max(height, MIN_HEIGHT), maxHeight);
-		}
 		return height;
 	}
 
@@ -113,7 +104,7 @@ class CanvasBottomPanel extends React.Component {
 CanvasBottomPanel.propTypes = {
 	// Provided by CommonCanvas
 	canvasController: PropTypes.object,
-	containingDivId: PropTypes.string,
+	getCenterPanelHeight: PropTypes.func,
 
 	// Provided by Redux
 	bottomPanelIsOpen: PropTypes.bool,

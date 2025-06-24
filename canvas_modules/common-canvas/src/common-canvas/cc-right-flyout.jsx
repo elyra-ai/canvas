@@ -94,7 +94,7 @@ class CommonCanvasRightFlyout extends React.Component {
 	limitWidth(wd) {
 		const centerPanelWidth = this.props.getCenterPanelWidth();
 
-		// Max Width should be 70% of the total available width (center panel + rightflyout)
+		// Max Width should be a percentage of the total available width (center panel + rightflyout)
 		const maxWidth = (centerPanelWidth + this.props.panelWidth) * MAX_WIDTH_EXTEND_PERCENT;
 		const width = Math.min(Math.max(wd, this.minWidth), maxWidth);
 

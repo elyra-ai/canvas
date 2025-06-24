@@ -44,6 +44,7 @@ class CommonCanvasPanels extends React.Component {
 		this.centerPanelRef = React.createRef();
 
 		this.getCenterPanelWidth = this.getCenterPanelWidth.bind(this);
+		this.getCenterPanelHeight = this.getCenterPanelHeight.bind(this);
 	}
 
 	// Prevent the default behavior (which is to show a plus-sign pointer) as
@@ -65,6 +66,12 @@ class CommonCanvasPanels extends React.Component {
 	getCenterPanelWidth() {
 		const rect = this.centerPanelRef?.current?.getBoundingRect();
 		return rect ? rect.width : 0;
+	}
+
+	// Returns the center panel height. Called by the panel flyout objects.
+	getCenterPanelHeight() {
+		const rect = this.centerPanelRef?.current?.getBoundingRect();
+		return rect ? rect.height : 0;
 	}
 
 	generateClass() {
@@ -90,7 +97,7 @@ class CommonCanvasPanels extends React.Component {
 
 		const topPanel = (<CanvasTopPanel canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
 		const centerPanel = (<CanvasCenterPanel ref={this.centerPanelRef} content={centerContents} />);
-		const bottomPanel = (<CanvasBottomPanel canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
+		const bottomPanel = (<CanvasBottomPanel canvasController={this.props.canvasController} getCenterPanelHeight={this.getCenterPanelHeight} />);
 
 		let templateRows = this.props.topPanelIsOpen ? "auto 1fr" : "1fr";
 		templateRows += this.props.bottomPanelIsOpen ? " auto" : "";
