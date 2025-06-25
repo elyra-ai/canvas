@@ -164,7 +164,7 @@ export default class SVGCanvasUtilsDragObjects {
 		const y = d.y_pos + (d.height / 2);
 		const pagePos = this.ren.convertCanvasCoordsToPageCoords(x, y);
 
-		this.moveObjects(xInc, yInc, pagePos.x, pagePos.y);
+		this.moveObjects(xInc, yInc, pagePos.x, pagePos.y, d);
 
 		this.endMove = setTimeout(() => {
 			this.endObjectsMoving(d, false, false);
@@ -251,7 +251,7 @@ export default class SVGCanvasUtilsDragObjects {
 			this.resizeNode(d3Event.dx, d3Event.dy, d, this.nodeSizingDirection);
 
 		} else {
-			this.moveObjects(d3Event.dx, d3Event.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
+			this.moveObjects(d3Event.dx, d3Event.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY, d);
 		}
 
 		this.logger.logEndTimer("dragObject", true);
@@ -667,14 +667,41 @@ export default class SVGCanvasUtilsDragObjects {
 		}
 	}
 
+	// Adjusts the delta movement amounts passed in, based on the nodeMovable layout
+	// property for the node. A value of false will not allow the object to move
+	// while "X" or "Y' will only allow movement in that direction.
+	adjustDelta(deltaX, deltaY, d) {
+		const nodeMovable = d.layout?.nodeMovable;
+
+		if (!nodeMovable) {
+			return { dx: 0, dy: 0 };
+
+		} else if (nodeMovable === "X") {
+			return { dx: deltaX, dy: 0 };
+
+		} else if (nodeMovable === "Y") {
+			return { dx: 0, dy: deltaY };
+		}
+		return { dx: deltaX, dy: deltaY };
+	}
+
 	// Performs the moving action for canvas objects (nodes and comments).
 	// This occurs either as the user is moving the mouse pointer OR each time the user
 	// presses a key on the keyboard, within the timeout value, to move the object.
-	// The dx and dy parameters are the amount to move the object in the x and y directions.
+	// The deltaX and deltaY parameters are the amount to move the object in the x and y directions.
 	// The pagePosX and pagePosY parameters are the current page coordinates of either
 	// the mouse in the context of a drag operation OR the current page coordinates of the
 	// center of the object in the context of a keyboard operation.
-	moveObjects(dx, dy, pagePosX, pagePosY) {
+	moveObjects(deltaX, deltaY, pagePosX, pagePosY, d) {
+		let dx = deltaX;
+		let dy = deltaY;
+
+		({ dx, dy } = this.adjustDelta(deltaX, deltaY, d));
+
+		if (dx === 0 && dy === 0) {
+			return;
+		}
+
 		this.movingObjectData.offsetX += dx;
 		this.movingObjectData.offsetY += dy;
 
