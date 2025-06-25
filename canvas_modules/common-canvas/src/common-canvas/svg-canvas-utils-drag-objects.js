@@ -686,7 +686,7 @@ export default class SVGCanvasUtilsDragObjects {
 	// The pagePosX and pagePosY parameters are the current page coordinates of either
 	// the mouse in the context of a drag operation OR the current page coordinates of the
 	// center of the object in the context of a keyboard operation.
-	moveObjects(dx, dy, pagePosX, pagePosY, obj) {
+	moveObjects(dx, dy, pagePosX, pagePosY) {
 		this.movingObjectData.offsetX += dx;
 		this.movingObjectData.offsetY += dy;
 
