@@ -71,7 +71,9 @@ class CommonCanvasPanels extends React.Component {
 	// Returns the center panel height. Called by the panel flyout objects.
 	getCenterPanelHeight() {
 		const rect = this.centerPanelRef?.current?.getBoundingRect();
-		return rect ? rect.height : 0;
+
+		// Assume the center panel <div> is a reasonable height if it has not yet fully rendered.
+		return rect ? rect.height : 1000;
 	}
 
 	generateClass() {

@@ -31,6 +31,8 @@ class CanvasBottomPanel extends React.Component {
 
 		this.minHeight = 0;
 
+		this.bottomPanelRef = React.createRef();
+
 		this.onMouseUp = this.onMouseUp.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
 		this.onMouseMoveY = this.onMouseMoveY.bind(this);
@@ -70,9 +72,11 @@ class CanvasBottomPanel extends React.Component {
 
 	limitHeight(ht) {
 		const centerPanelHeight = this.props.getCenterPanelHeight();
+		// Assume the bottom panel is zero height if it has not yet fully rendered.
+		const bottomPanelHeight = this.bottomPanelRef?.current ? this.bottomPanelRef.current.getBoundingClientRect().height : 0;
 
 		// Max Height should be a percentage of the total available height (center panel + bottom panel)
-		const maxHeight = (centerPanelHeight + this.props.panelHeight) * MAX_HEIGHT_EXTEND_PERCENT;
+		const maxHeight = (centerPanelHeight + bottomPanelHeight) * MAX_HEIGHT_EXTEND_PERCENT;
 		const height = Math.min(Math.max(ht, this.minHeight), maxHeight);
 
 		return height;
@@ -88,7 +92,7 @@ class CanvasBottomPanel extends React.Component {
 			const className = "bottom-panel-drag" + (this.state.isBeingDragging ? " is-being-dragged" : "");
 
 			bottomPanel = (
-				<div className="bottom-panel" style={{ height: heightPx }} >
+				<div ref={this.bottomPanelRef} className="bottom-panel" style={{ height: heightPx }} >
 					<div className={className} onMouseDown={this.onMouseDown} />
 					<div className="bottom-panel-contents">
 						{this.props.bottomPanelContent}
