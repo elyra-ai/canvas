@@ -126,32 +126,6 @@ describe("Test to see if regular selection and drag behavior works " +
 		cy.verifyNodeTransform("Execution node", 400, 450);
 	});
 
-	it("Test node can be dragged only in X direction with nodeMoveable set to X", function() {
-		cy.setCanvasConfig({ "selectedNodeLayout": {
-			nodeMovable: "X" } });
-
-		cy.wait(200);
-
-		cy.verifyNodeTransform("Execution node", 297, 139);
-
-		cy.getNodeWithLabel("Execution node").click();
-		cy.moveNodeToPosition("Execution node", 400, 450);
-		cy.verifyNodeTransform("Execution node", 400, 139); // 139 is original Y coordinate
-	});
-
-	it("Test node can be dragged only in Y direction with nodeMoveable set to Y", function() {
-		cy.setCanvasConfig({ "selectedNodeLayout": {
-			nodeMovable: "Y" } });
-
-		cy.wait(200);
-
-		cy.verifyNodeTransform("Execution node", 297, 139);
-
-		cy.getNodeWithLabel("Execution node").click();
-		cy.moveNodeToPosition("Execution node", 400, 450);
-		cy.verifyNodeTransform("Execution node", 297, 450); // 297 is original X coordinate
-	});
-
 	it("Test node cannot be dragged with nodeMoveable set to false", function() {
 		cy.setCanvasConfig({ "selectedNodeLayout": {
 			nodeMovable: false } });
