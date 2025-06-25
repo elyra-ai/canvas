@@ -151,6 +151,14 @@ export default class SVGCanvasUtilsDragObjects {
 
 		({ xInc, yInc } = this.getMoveIncrements(dir));
 
+		const move = this.adjustMoveDelta(xInc, yInc, d);
+		xInc = move.dx;
+		yInc = move.dy;
+
+		if (xInc === 0 && yInc === 0) {
+			return;
+		}
+
 		if (this.endMove) {
 			clearTimeout(this.endMove);
 			this.endMove = null;
@@ -164,7 +172,7 @@ export default class SVGCanvasUtilsDragObjects {
 		const y = d.y_pos + (d.height / 2);
 		const pagePos = this.ren.convertCanvasCoordsToPageCoords(x, y);
 
-		this.moveObjects(xInc, yInc, pagePos.x, pagePos.y, d);
+		this.moveObjects(xInc, yInc, pagePos.x, pagePos.y);
 
 		this.endMove = setTimeout(() => {
 			this.endObjectsMoving(d, false, false);
@@ -251,7 +259,11 @@ export default class SVGCanvasUtilsDragObjects {
 			this.resizeNode(d3Event.dx, d3Event.dy, d, this.nodeSizingDirection);
 
 		} else {
-			this.moveObjects(d3Event.dx, d3Event.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY, d);
+			const move = this.adjustMoveDelta(d3Event.dx, d3Event.dy, d);
+
+			if (move.dx !== 0 || move.dy !== 0) {
+				this.moveObjects(move.dx, move.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
+			}
 		}
 
 		this.logger.logEndTimer("dragObject", true);
@@ -667,43 +679,14 @@ export default class SVGCanvasUtilsDragObjects {
 		}
 	}
 
-	// Adjusts the delta movement amounts passed in, based on the nodeMovable layout
-	// property for the node. A value of false will not allow the object to move
-	// while "X" or "Y' will only allow movement in that direction.
-	adjustDelta(deltaX, deltaY, obj) {
-		if (CanvasUtils.isNode(obj)) {
-			const nodeMovable = obj.layout?.nodeMovable;
-
-			if (!nodeMovable) {
-				return { dx: 0, dy: 0 };
-
-			} else if (nodeMovable === "X") {
-				return { dx: deltaX, dy: 0 };
-
-			} else if (nodeMovable === "Y") {
-				return { dx: 0, dy: deltaY };
-			}
-		}
-		return { dx: deltaX, dy: deltaY };
-	}
-
 	// Performs the moving action for canvas objects (nodes and comments).
 	// This occurs either as the user is moving the mouse pointer OR each time the user
 	// presses a key on the keyboard, within the timeout value, to move the object.
-	// The deltaX and deltaY parameters are the amount to move the object in the x and y directions.
+	// The dx and dy parameters are the amount to move the object in the x and y directions.
 	// The pagePosX and pagePosY parameters are the current page coordinates of either
 	// the mouse in the context of a drag operation OR the current page coordinates of the
 	// center of the object in the context of a keyboard operation.
-	moveObjects(deltaX, deltaY, pagePosX, pagePosY, obj) {
-		let dx = deltaX;
-		let dy = deltaY;
-
-		({ dx, dy } = this.adjustDelta(deltaX, deltaY, obj));
-
-		if (dx === 0 && dy === 0) {
-			return;
-		}
-
+	moveObjects(dx, dy, pagePosX, pagePosY, obj) {
 		this.movingObjectData.offsetX += dx;
 		this.movingObjectData.offsetY += dy;
 
@@ -908,6 +891,26 @@ export default class SVGCanvasUtilsDragObjects {
 				this.ren.getCommentGroupSelectionById(obj.id).classed("d3-is-monving", state);
 			}
 		});
+	}
+
+	// Adjusts the delta movement amounts passed in, based on the nodeMovable layout
+	// property for the node. A value of false will not allow the object to move
+	// while "X" or "Y' will only allow movement in that direction.
+	adjustMoveDelta(dx, dy, obj) {
+		if (CanvasUtils.isNode(obj)) {
+			const nodeMovable = obj.layout?.nodeMovable;
+
+			if (!nodeMovable) {
+				return { dx: 0, dy: 0 };
+
+			} else if (nodeMovable === "X") {
+				return { dx, dy: 0 };
+
+			} else if (nodeMovable === "Y") {
+				return { dx: 0, dy };
+			}
+		}
+		return { dx, dy };
 	}
 
 	// Returns true if the current move objects array has a single node which
