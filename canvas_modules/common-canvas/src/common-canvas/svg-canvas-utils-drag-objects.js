@@ -670,17 +670,19 @@ export default class SVGCanvasUtilsDragObjects {
 	// Adjusts the delta movement amounts passed in, based on the nodeMovable layout
 	// property for the node. A value of false will not allow the object to move
 	// while "X" or "Y' will only allow movement in that direction.
-	adjustDelta(deltaX, deltaY, d) {
-		const nodeMovable = d.layout?.nodeMovable;
+	adjustDelta(deltaX, deltaY, obj) {
+		if (CanvasUtils.isNode(obj)) {
+			const nodeMovable = obj.layout?.nodeMovable;
 
-		if (!nodeMovable) {
-			return { dx: 0, dy: 0 };
+			if (!nodeMovable) {
+				return { dx: 0, dy: 0 };
 
-		} else if (nodeMovable === "X") {
-			return { dx: deltaX, dy: 0 };
+			} else if (nodeMovable === "X") {
+				return { dx: deltaX, dy: 0 };
 
-		} else if (nodeMovable === "Y") {
-			return { dx: 0, dy: deltaY };
+			} else if (nodeMovable === "Y") {
+				return { dx: 0, dy: deltaY };
+			}
 		}
 		return { dx: deltaX, dy: deltaY };
 	}
@@ -692,11 +694,11 @@ export default class SVGCanvasUtilsDragObjects {
 	// The pagePosX and pagePosY parameters are the current page coordinates of either
 	// the mouse in the context of a drag operation OR the current page coordinates of the
 	// center of the object in the context of a keyboard operation.
-	moveObjects(deltaX, deltaY, pagePosX, pagePosY, d) {
+	moveObjects(deltaX, deltaY, pagePosX, pagePosY, obj) {
 		let dx = deltaX;
 		let dy = deltaY;
 
-		({ dx, dy } = this.adjustDelta(deltaX, deltaY, d));
+		({ dx, dy } = this.adjustDelta(deltaX, deltaY, obj));
 
 		if (dx === 0 && dy === 0) {
 			return;
