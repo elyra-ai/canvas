@@ -62,7 +62,7 @@ module.exports = function(grunt) {
 					style: "compressed",
 				},
 				files: {
-					"dist/styles/common-canvas.min.css": "src/themes/light.scss"
+					"dist/styles/common-canvas.min.css": "src/index.scss"
 				}
 			}
 		},
