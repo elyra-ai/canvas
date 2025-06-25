@@ -1461,7 +1461,7 @@ class App extends React.Component {
 		if (data.propertyId.name === "oneofselect_custom_value") {
 			return list?.item?.label?.toLowerCase().startsWith(list?.inputValue?.toLowerCase());
 		}
-		return list;
+		return list?.item?.label?.toLowerCase().includes(list?.inputValue?.toLowerCase()); // default- filter if label includes input
 	}
 
 	validationHandler(controller, propertyId, value, appData, callback) {
