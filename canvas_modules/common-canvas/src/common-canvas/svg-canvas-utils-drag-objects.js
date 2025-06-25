@@ -151,11 +151,7 @@ export default class SVGCanvasUtilsDragObjects {
 
 		({ xInc, yInc } = this.getMoveIncrements(dir));
 
-		const move = this.adjustMoveDelta(xInc, yInc, d);
-		xInc = move.dx;
-		yInc = move.dy;
-
-		if (xInc === 0 && yInc === 0) {
+		if (!this.isObjectMovable(d)) {
 			return;
 		}
 
@@ -259,10 +255,8 @@ export default class SVGCanvasUtilsDragObjects {
 			this.resizeNode(d3Event.dx, d3Event.dy, d, this.nodeSizingDirection);
 
 		} else {
-			const move = this.adjustMoveDelta(d3Event.dx, d3Event.dy, d);
-
-			if (move.dx !== 0 || move.dy !== 0) {
-				this.moveObjects(move.dx, move.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
+			if (this.isObjectMovable(d)) {
+				this.moveObjects(d3Event.dx, d3Event.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
 			}
 		}
 
@@ -642,7 +636,7 @@ export default class SVGCanvasUtilsDragObjects {
 			offsetY: 0,
 			runningX: 0,
 			runningY: 0,
-			objects: this.getMoveObjects(d)
+			objects: this.getMoveObjects(d).filter((obj) => this.isObjectMovable(obj))
 		};
 
 		if (this.movingObjectData.objects?.length > 0) {
@@ -893,24 +887,10 @@ export default class SVGCanvasUtilsDragObjects {
 		});
 	}
 
-	// Adjusts the delta movement amounts passed in, based on the nodeMovable layout
-	// property for the node. A value of false will not allow the object to move
-	// while "X" or "Y' will only allow movement in that direction.
-	adjustMoveDelta(dx, dy, obj) {
-		if (CanvasUtils.isNode(obj)) {
-			const nodeMovable = obj.layout?.nodeMovable;
-
-			if (!nodeMovable) {
-				return { dx: 0, dy: 0 };
-
-			} else if (nodeMovable === "X") {
-				return { dx, dy: 0 };
-
-			} else if (nodeMovable === "Y") {
-				return { dx: 0, dy };
-			}
-		}
-		return { dx, dy };
+	// Returns true if the object passed in is movable or false if not.
+	isObjectMovable(obj) {
+		return CanvasUtils.isComment(obj) ||
+			CanvasUtils.isNode(obj) && obj.layout?.nodeMovable;
 	}
 
 	// Returns true if the current move objects array has a single node which
