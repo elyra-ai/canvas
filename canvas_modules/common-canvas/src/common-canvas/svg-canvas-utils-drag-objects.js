@@ -146,14 +146,14 @@ export default class SVGCanvasUtilsDragObjects {
 	// x and y amounts provided. This is called when the user moves an
 	// object using the keyboard.
 	moveObject(d, dir) {
+		if (!this.isObjectMovable(d)) {
+			return;
+		}
+
 		let xInc = 0;
 		let yInc = 0;
 
 		({ xInc, yInc } = this.getMoveIncrements(dir));
-
-		if (!this.isObjectMovable(d)) {
-			return;
-		}
 
 		if (this.endMove) {
 			clearTimeout(this.endMove);
@@ -240,7 +240,9 @@ export default class SVGCanvasUtilsDragObjects {
 			this.initializeResizeVariables(d);
 
 		} else {
-			this.startObjectsMoving(d);
+			if (this.isObjectMovable(d)) {
+				this.startObjectsMoving(d);
+			}
 		}
 
 		this.logger.logEndTimer("dragStartObject", true);
@@ -277,7 +279,9 @@ export default class SVGCanvasUtilsDragObjects {
 			this.nodeSizing = false;
 
 		} else {
-			this.endObjectsMoving(d, d3Event.sourceEvent.shiftKey, KeyboardUtils.isMetaKey(d3Event.sourceEvent));
+			if (this.isObjectMovable(d)) {
+				this.endObjectsMoving(d, d3Event.sourceEvent.shiftKey, KeyboardUtils.isMetaKey(d3Event.sourceEvent));
+			}
 		}
 
 		this.logger.logEndTimer("dragEndObject", true);
