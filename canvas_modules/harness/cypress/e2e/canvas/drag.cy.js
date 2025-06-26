@@ -117,6 +117,30 @@ describe("Test to see if regular selection and drag behavior works " +
 		cy.clickToolbarUndo();
 	});
 
+	it("Test node can be dragged with nodeMoveable set to true", function() {
+		cy.setCanvasConfig({ "selectedNodeLayout": {
+			nodeMovable: true } });
+
+		cy.getNodeWithLabel("Execution node").click();
+		cy.moveNodeToPosition("Execution node", 400, 450);
+		cy.verifyNodeTransform("Execution node", 400, 450);
+	});
+
+	it("Test node cannot be dragged with nodeMoveable set to false", function() {
+		cy.setCanvasConfig({ "selectedNodeLayout": {
+			nodeMovable: false } });
+
+		cy.wait(200);
+
+		cy.verifyNodeTransform("Execution node", 297, 139);
+
+		cy.getNodeWithLabel("Execution node").click();
+		cy.moveNodeToPosition("Execution node", 400, 450);
+
+		// 297 is original X coordinate and 139 is original Y coordinate
+		cy.verifyNodeTransform("Execution node", 297, 139);
+	});
+
 	it("Test node cannot be dragged when enableEditingActions is false", function() {
 
 		cy.setCanvasConfig({ "selectedEditingActions": false, "selectedInteractionType": "Carbon" });
