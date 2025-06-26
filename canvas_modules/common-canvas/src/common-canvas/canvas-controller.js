@@ -2008,8 +2008,12 @@ export default class CanvasController {
 
 	// Sets the focus highlighting to parameter passed in which can be
 	// either a canvas object or the string "CanvasFocus".
-	setFocusObject(focusObj) {
+	setFocusObject(focusObj, evt) {
 		this.logger.log("setFocusObject focusObject = " + CanvasUtils.getFocusName(focusObj));
+
+		if (!focusObj) {
+			return;
+		}
 
 		this.focusObject = focusObj;
 
@@ -2022,7 +2026,7 @@ export default class CanvasController {
 				// refresh scenarios, so check its existence first.
 				/* eslint no-lonely-if: "off" */
 				if (this.getSVGCanvasD3()) {
-					this.getSVGCanvasD3().moveFocusTo(focusObj);
+					this.getSVGCanvasD3().moveFocusTo(focusObj, evt);
 				}
 			}
 		}
