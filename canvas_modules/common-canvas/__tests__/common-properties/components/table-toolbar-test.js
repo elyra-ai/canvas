@@ -33,6 +33,7 @@ const handleRowClick = sinon.spy();
 
 const controller = new Controller();
 const propertyId = { name: "test-tabletoolbar" };
+propertyUtilsRTL.setControls(controller, [propertyId]);
 const multiSelectEditRowPropertyId = { name: `table-multi-select-edit-property-${propertyId.name}` };
 
 const controlValue = [
