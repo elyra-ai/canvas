@@ -23,7 +23,7 @@ import {
 } from "./common-properties-controller";
 
 export * from "./common-properties-controller";
-export {
+export type {
   ParameterDefinitions,
   ConditionsDefinition,
   MessageDefinition,
