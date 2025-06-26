@@ -14,47 +14,49 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-validation-message {
-	margin-top: $spacing-02;
+	margin-top: carbon.$spacing-02;
 	display: flex;
 	.icon {
-		margin: 0 $spacing-01;
+		margin: 0 carbon.$spacing-01;
 		.properties-validation-icon-warning {
-			fill: $support-warning;
+			fill: carbon.$support-warning;
 			[data-icon-path="inner-path"] { // exclamation mark
-				fill: $layer-selected-inverse;
+				fill: carbon.$layer-selected-inverse;
 				opacity: 1;
 			}
 		}
 		.properties-validation-icon-error {
-			fill: $support-error;
+			fill: carbon.$support-error;
 		}
 		.properties-validation-icon-info {
-			fill: $support-info;
+			fill: carbon.$support-info;
 		}
 		.properties-validation-icon-success {
-			fill: $support-success;
+			fill: carbon.$support-success;
 		}
 	}
 	span {
-		@include type-style("caption-01");
-		color: $text-primary;
+		@include carbon.type-style("caption-01");
+		color: carbon.$text-primary;
 	}
 	&.error {
 		span {
-			color: $text-error;
+			color: carbon.$text-error;
 		}
 	}
 	&.hide {
 		display: none;
 	}
 	&.inTable {
-		margin-top: $spacing-01;
+		margin-top: carbon.$spacing-01;
 		position: absolute;
 		top: 0;
 		.icon svg {
-			height: $spacing-03;
-			width: $spacing-03;
+			height: carbon.$spacing-03;
+			width: carbon.$spacing-03;
 		}
 	}
 }

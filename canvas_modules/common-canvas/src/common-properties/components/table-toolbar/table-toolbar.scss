@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Elyra Authors
+ * Copyright 2024-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,31 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-table-toolbar {
-	background-color: $interactive;
-	height: $spacing-07;
+	background-color: carbon.$interactive;
+	height: carbon.$spacing-07;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 
 	.properties-batch-summary {
-		@include type-style("label-02");
-		padding: 0 $spacing-05;
-		color: $text-on-color;
+		@include carbon.type-style("label-02");
+		padding: 0 carbon.$spacing-05;
+		color: carbon.$text-on-color;
 	}
 
 	.properties-action-list {
 		display: flex;
 		align-items: center;
 		.properties-action-cancel {
-			width: $spacing-05;
+			width: carbon.$spacing-05;
 		}
 		.properties-action-cancel::before { // Vertical line before cancel button
 			position: absolute;
-			background-color: $text-on-color;
-			block-size: $spacing-05;
+			background-color: carbon.$text-on-color;
+			block-size: carbon.$spacing-05;
 			content: "";
 			inline-size: 0.0625rem;
 			inset-inline-start: 0;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
  
+@use "../../../carbon.scss";
+
 .properties-slider {
 	.cds--slider-container { 
 		min-width: 100%;
@@ -32,7 +34,7 @@
 			outline-offset: unset;
 		}
 		input[type="number"]:not([disabled]) {
-			border: $spacing-01 solid $support-error;
+			border: carbon.$spacing-01 solid carbon.$support-error;
 		}
 	}
 	&.warning {
@@ -41,7 +43,7 @@
 			outline-offset: unset;
 		}
 		input[type="number"]:not([disabled]) {
-			border: $spacing-01 solid $support-warning;
+			border: carbon.$spacing-01 solid carbon.$support-warning;
 		}
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,8 @@
  * limitations under the License.
  */
 
-@use "@carbon/react/scss/themes" as *;
-@use "../carbon.scss" as *;
-
-// Switch the themes below to get light or dark.
-$theme: $g10; // The light (gray 10) theme
-// $theme: $g90; // The dark theme
-
-:root {
-	@include theme();
-}
-
-@import "../index.scss";
+// Common variables for App.scss and sidepanel.scss
+$harness-header-height: 50px;
+$harness-sidepanel-width: 320px;
+$harness-sidepanel-transition-time: 0.3s;
+$harness-console-height: 200px;

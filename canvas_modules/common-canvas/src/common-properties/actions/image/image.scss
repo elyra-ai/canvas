@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-action-image  {
 	// 8px spacing between action image and the control beside image.
-	padding: 0 0 0 $spacing-03;
+	padding: 0 0 0 carbon.$spacing-03;
 	cursor: pointer;
 	align-self: flex-end;
 	&.left {
 		order: -1;
-		padding: 0 $spacing-03 0 0;
+		padding: 0 carbon.$spacing-03 0 0;
 	}
 	&.hide {
 		display: none;
