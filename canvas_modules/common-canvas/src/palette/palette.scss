@@ -207,6 +207,12 @@ $palette-dialog-list-item-height: 46px;
 			}
 		}
 	}
+
+	.palette-list-item.palette-narrow {
+		.palette-list-item-text-div {
+			font-size: 0;
+		}
+	}
 }
 
 .palette-flyout-categories {
@@ -297,6 +303,10 @@ $palette-dialog-list-item-height: 46px;
 .palette-flyout-category-text-abbr {
 	line-height: 1.2;
 	margin-left: 0;
+}
+
+.palette-flyout-category-text-zero-size {
+	font-size: 0;
 }
 
 .palette-flyout-category-text-no-image {

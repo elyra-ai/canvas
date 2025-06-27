@@ -17,7 +17,7 @@
 import { expect } from "chai";
 import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import { fireEvent } from "@testing-library/react";
+import { cleanup, fireEvent } from "@testing-library/react";
 
 describe("custom action renders correctly", () => {
 	let wrapper;
@@ -29,7 +29,7 @@ describe("custom action renders correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should show the correct custom actions", () => {

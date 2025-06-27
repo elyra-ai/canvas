@@ -18,19 +18,18 @@ import { expect } from "chai";
 import { validateInput } from "./../../../src/common-properties/ui-conditions/ui-conditions.js";
 import propertyUtilsRTL from "./../../_utils_/property-utilsRTL";
 import structureeditorParamDef from "../../test_resources/paramDefs/structureeditor_paramDef.json";
+import { cleanup } from "@testing-library/react";
 
 describe("validateInput returns the correct boolean for the given condition", () => {
-	let wrapper;
 	let controller;
 	beforeEach(() => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structureeditorParamDef);
-		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 		controller.setErrorMessages({});
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("validateInput returns correct boolean when non-complex-type parameter condition is initated from a complex-type", () => {

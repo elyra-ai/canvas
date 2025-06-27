@@ -57,6 +57,7 @@ class PaletteFlyoutContentFilteredList extends React.Component {
 						isPaletteWide={this.props.isPaletteWide}
 						isEditingEnabled={this.props.isEditingEnabled}
 						allowClickToAdd={this.props.allowClickToAdd}
+						createAutoNode={this.props.createAutoNode}
 					/>
 				</div>
 			);
@@ -92,7 +93,8 @@ PaletteFlyoutContentFilteredList.propTypes = {
 	isPaletteWide: PropTypes.bool.isRequired,
 	isEditingEnabled: PropTypes.bool.isRequired,
 	isNodeTypeInfosArrayTruncated: PropTypes.bool,
-	isShowRanking: PropTypes.bool
+	isShowRanking: PropTypes.bool,
+	createAutoNode: PropTypes.func
 };
 
 export default injectIntl(PaletteFlyoutContentFilteredList);

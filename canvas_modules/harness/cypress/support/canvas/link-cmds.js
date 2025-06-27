@@ -419,17 +419,8 @@ Cypress.Commands.add("clickLink", (linkId) => {
 });
 
 Cypress.Commands.add("ctrlOrCmdClickLink", (linkId) => {
-	// Get the os name to decide whether to click ctrl or cmd
-	cy.useCtrlOrCmdKey().then((selectedKey) => {
-		cy.get("body").type(selectedKey, { release: false });
-		cy.get("body").getLinkUsingLinkId(linkId)
-			.click();
-		// Cancel the command/ctrl key press -- the documentation doesn't say
-		// this needs to be done but if it isn't the command key stays pressed down
-		// causing problems with subsequent selections.
-		cy.get("body")
-			.type(selectedKey, { release: true });
-	});
+	cy.get("body").getLinkUsingLinkId(linkId)
+		.click({ metaKey: true });
 });
 
 Cypress.Commands.add("getNumberOfSelectedLinks", () => {

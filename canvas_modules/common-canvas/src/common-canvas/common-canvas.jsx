@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ class CommonCanvas extends React.Component {
 		this.logger.log("constructor");
 
 		this.initializeController = this.initializeController.bind(this);
-		this.containingDivId = "common-canvas-items-container-" + props.canvasController.getInstanceId();
 
 		props.canvasController.setIntl(props.intl);
 		this.initializeController(props);
@@ -77,7 +76,7 @@ class CommonCanvas extends React.Component {
 
 		return (
 			<Provider store={this.props.canvasController.getStore()}>
-				<CommonCanvasPanels canvasController={this.props.canvasController} containingDivId={this.containingDivId} />
+				<CommonCanvasPanels canvasController={this.props.canvasController} />
 			</Provider>
 		);
 	}

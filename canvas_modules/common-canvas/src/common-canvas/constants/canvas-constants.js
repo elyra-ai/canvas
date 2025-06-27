@@ -169,9 +169,9 @@ export const CLONE_COMMENT_LINK = "clone_comment_link";
 export const CREATE_PIPELINE = "create_pipeline";
 export const CLONE_PIPELINE = "clone_pipeline";
 
-export const HIGHLIGHT_BRANCH = "branch";
-export const HIGHLIGHT_UPSTREAM = "upstream";
-export const HIGHLIGHT_DOWNSTREAM = "downstream";
+export const CONNECTED_BRANCH = "branch";
+export const CONNECTED_UPSTREAM = "upstream";
+export const CONNECTED_DOWNSTREAM = "downstream";
 
 export const BINDING = "binding";
 export const SUPER_NODE = "super_node";

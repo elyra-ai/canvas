@@ -25,7 +25,7 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import StructureEditorControl from "../../../src/common-properties/controls/structureeditor";
 import structureeditorParamDef from "../../test_resources/paramDefs/structureeditor_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 
 const emptyValueIndicator = "...";
@@ -260,7 +260,7 @@ describe("structureeditor control renders correctly with paramDef", () => {
 		controller = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("structureeditor control will lay out controls in the proper order", () => {
@@ -398,7 +398,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 		controller = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("structureeditor control can be nested in a structureeditor", () => {

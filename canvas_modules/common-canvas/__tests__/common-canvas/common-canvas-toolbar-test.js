@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,9 @@
  */
 
 import CanvasController from "../../src/common-canvas/canvas-controller";
-import CommonCanvasToolbar from "../../src/common-canvas/cc-toolbar.jsx";
-import Toolbar from "../../src/toolbar/toolbar.jsx";
 import { createIntlCommonCanvasToolbar } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
+import { cleanup } from "@testing-library/react";
 
 const canvasController = new CanvasController();
 
@@ -31,10 +30,8 @@ const notificationConfig = {
 
 
 describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => {
-	let wrapper;
-
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 
@@ -42,66 +39,66 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 	// a right bar with zoom in, zoom out, zoom to fit and notification icons.
 	it("should render <CommonCanvasToolbar/> with an empty config object", () => {
 		const toolbarConfig = {};
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+		const { container } = createIntlCommonCanvasToolbar({ toolbarConfig,
 			isPaletteEnabled: true, isPaletteOpen: true,
 			notificationConfig, isNotificationOpen: true }, canvasController);
 
-		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
-		expect(wrapper.find(Toolbar)).to.have.length(1);
-		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
-		expect(wrapper.find(".toolbar-right-bar")).to.have.length(1);
+		expect(container.querySelectorAll("div.common-canvas-toolbar")).to.have.length(1);
+		expect(container.querySelectorAll("div.toolbar-div")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-left-bar")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-right-bar")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item")).to.have.length(5);
-		expect(wrapper.find(".toolbar-divider")).to.have.length(2);
+		expect(container.querySelectorAll(".toolbar-item")).to.have.length(5);
+		expect(container.querySelectorAll(".toolbar-divider")).to.have.length(2);
 
-		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.zoomIn-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.zoomOut-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.zoomToFit-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.closePalette-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.zoomIn-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.zoomOut-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.zoomToFit-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
 	});
 
 	// With empty left bar array and undefined right bar it should create a left
 	// bar with a palette icon and a right bar with zoom in, zoom out, zoom to fit and notification icons.
 	it("should render <CommonCanvasToolbar/> with an empty leftBar and an undefined rightBar in config object", () => {
 		const toolbarConfig = { leftBar: [] };
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+		const { container } = createIntlCommonCanvasToolbar({ toolbarConfig,
 			isPaletteEnabled: true, isPaletteOpen: true,
 			notificationConfig, isNotificationOpen: true }, canvasController);
 
-		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
-		expect(wrapper.find(Toolbar)).to.have.length(1);
-		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
-		expect(wrapper.find(".toolbar-right-bar")).to.have.length(1);
+		expect(container.querySelectorAll("div.common-canvas-toolbar")).to.have.length(1);
+		expect(container.querySelectorAll("div.toolbar-div")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-left-bar")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-right-bar")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item")).to.have.length(5);
-		expect(wrapper.find(".toolbar-divider")).to.have.length(2);
+		expect(container.querySelectorAll(".toolbar-item")).to.have.length(5);
+		expect(container.querySelectorAll(".toolbar-divider")).to.have.length(2);
 
-		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.zoomIn-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.zoomOut-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.zoomToFit-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.closePalette-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.zoomIn-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.zoomOut-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.zoomToFit-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
 	});
 
 	// With empty left bar and empty right bar in the config it should create a
 	// left bar with a palette icon and a right bar with just a notification icon.
 	it("should render <CommonCanvasToolbar/> with an empty leftBar and rightBar in config object", () => {
 		const toolbarConfig = { leftBar: [], rightBar: [] };
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+		const { container } = createIntlCommonCanvasToolbar({ toolbarConfig,
 			isPaletteEnabled: true, isPaletteOpen: true,
 			notificationConfig, isNotificationOpen: true }, canvasController);
 
-		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
-		expect(wrapper.find(Toolbar)).to.have.length(1);
-		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
-		expect(wrapper.find(".toolbar-right-bar")).to.have.length(1);
+		expect(container.querySelectorAll("div.common-canvas-toolbar")).to.have.length(1);
+		expect(container.querySelectorAll("div.toolbar-div")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-left-bar")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-right-bar")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item")).to.have.length(2);
-		expect(wrapper.find(".toolbar-divider")).to.have.length(2);
+		expect(container.querySelectorAll(".toolbar-item")).to.have.length(2);
+		expect(container.querySelectorAll(".toolbar-divider")).to.have.length(2);
 
-		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.closePalette-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
 	});
 
 	// With items in left bar and an undefined right bar in the config it should create a
@@ -116,29 +113,29 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 			{ action: "copy", label: "Copy", enable: true },
 			{ action: "paste", label: "Paste", enable: true }
 		] };
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+		const { container } = createIntlCommonCanvasToolbar({ toolbarConfig,
 			isPaletteEnabled: true, isPaletteOpen: true,
 			notificationConfig, isNotificationOpen: true }, canvasController);
 
-		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
-		expect(wrapper.find(Toolbar)).to.have.length(1);
-		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
-		expect(wrapper.find(".toolbar-right-bar")).to.have.length(1);
+		expect(container.querySelectorAll("div.common-canvas-toolbar")).to.have.length(1);
+		expect(container.querySelectorAll("div.toolbar-div")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-left-bar")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-right-bar")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item")).to.have.length(10);
-		expect(wrapper.find(".toolbar-divider")).to.have.length(3);
+		expect(container.querySelectorAll(".toolbar-item")).to.have.length(10);
+		expect(container.querySelectorAll(".toolbar-divider")).to.have.length(3);
 
-		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.undo-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.redo-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.cut-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.copy-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.paste-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.closePalette-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.undo-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.redo-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.cut-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.copy-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.paste-action")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item.zoomIn-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.zoomOut-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.zoomToFit-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.zoomIn-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.zoomOut-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.zoomToFit-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
 	});
 
 	// With items in the left bar and the right bar in the config it should create a
@@ -156,26 +153,26 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 				{ action: "paste", label: "Paste", enable: true }
 			]
 		};
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+		const { container } = createIntlCommonCanvasToolbar({ toolbarConfig,
 			isPaletteEnabled: true, isPaletteOpen: true,
 			notificationConfig, isNotificationOpen: true }, canvasController);
 
-		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
-		expect(wrapper.find(Toolbar)).to.have.length(1);
-		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
-		expect(wrapper.find(".toolbar-right-bar")).to.have.length(1);
+		expect(container.querySelectorAll("div.common-canvas-toolbar")).to.have.length(1);
+		expect(container.querySelectorAll("div.toolbar-div")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-left-bar")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-right-bar")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item")).to.have.length(7);
-		expect(wrapper.find(".toolbar-divider")).to.have.length(3);
+		expect(container.querySelectorAll(".toolbar-item")).to.have.length(7);
+		expect(container.querySelectorAll(".toolbar-divider")).to.have.length(3);
 
-		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.undo-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.redo-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.closePalette-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.undo-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.redo-action")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item.cut-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.copy-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.paste-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.cut-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.copy-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.paste-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
 	});
 
 	// With items in the left bar and the right bar in the config and palette not
@@ -195,26 +192,26 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 			]
 		};
 		// false indicate palette not enabled
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+		const { container } = createIntlCommonCanvasToolbar({ toolbarConfig,
 			isPaletteEnabled: false, isPaletteOpen: true,
 			notificationConfig, isNotificationOpen: true }, canvasController);
 
-		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
-		expect(wrapper.find(Toolbar)).to.have.length(1);
-		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
-		expect(wrapper.find(".toolbar-right-bar")).to.have.length(1);
+		expect(container.querySelectorAll("div.common-canvas-toolbar")).to.have.length(1);
+		expect(container.querySelectorAll("div.toolbar-div")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-left-bar")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-right-bar")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item")).to.have.length(6);
-		expect(wrapper.find(".toolbar-divider")).to.have.length(2);
+		expect(container.querySelectorAll(".toolbar-item")).to.have.length(6);
+		expect(container.querySelectorAll(".toolbar-divider")).to.have.length(2);
 
-		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(0);
-		expect(wrapper.find(".toolbar-item.undo-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.redo-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.closePalette-action")).to.have.length(0);
+		expect(container.querySelectorAll(".toolbar-item.undo-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.redo-action")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item.cut-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.copy-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.paste-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.cut-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.copy-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.paste-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
 	});
 
 	// With items in the left bar and the right bar in the config and notification not
@@ -234,28 +231,28 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 			]
 		};
 
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig: toolbarConfig,
+		const { container } = createIntlCommonCanvasToolbar({ toolbarConfig: toolbarConfig,
 			isPaletteEnabled: true, isPaletteOpen: true,
 			notificationConfig: null, isNotificationOpen: true }, canvasController);
 
-		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
-		expect(wrapper.find(Toolbar)).to.have.length(1);
-		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
-		expect(wrapper.find(".toolbar-right-bar")).to.have.length(1);
+		expect(container.querySelectorAll("div.common-canvas-toolbar")).to.have.length(1);
+		expect(container.querySelectorAll("div.toolbar-div")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-left-bar")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-right-bar")).to.have.length(1);
 
 		// Should have 6 items (5 in config and also a palette item)
-		expect(wrapper.find(".toolbar-item")).to.have.length(6);
-		expect(wrapper.find(".toolbar-divider")).to.have.length(2);
+		expect(container.querySelectorAll(".toolbar-item")).to.have.length(6);
+		expect(container.querySelectorAll(".toolbar-divider")).to.have.length(2);
 
-		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.undo-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.redo-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.closePalette-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.undo-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.redo-action")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item.cut-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.copy-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.paste-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.cut-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.copy-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.paste-action")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item.toggleNotificationPanel-action")).to.have.length(0);
+		expect(container.querySelectorAll(".toolbar-item.toggleNotificationPanel-action")).to.have.length(0);
 	});
 
 
@@ -278,31 +275,31 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 			]
 		};
 
-		wrapper = createIntlCommonCanvasToolbar({
+		const { container } = createIntlCommonCanvasToolbar({
 			toolbarConfig: toolbarConfig, isPaletteEnabled: true, isPaletteOpen: true,
 			notificationConfig: null, isNotificationOpen: true }, canvasController);
 
-		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
-		expect(wrapper.find(Toolbar)).to.have.length(1);
-		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
-		expect(wrapper.find(".toolbar-right-bar")).to.have.length(1);
+		expect(container.querySelectorAll("div.common-canvas-toolbar")).to.have.length(1);
+		expect(container.querySelectorAll("div.toolbar-div")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-left-bar")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-right-bar")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item")).to.have.length(6);
-		expect(wrapper.find(".toolbar-divider")).to.have.length(2);
+		expect(container.querySelectorAll(".toolbar-item")).to.have.length(6);
+		expect(container.querySelectorAll(".toolbar-divider")).to.have.length(2);
 
 		// Should NOT have a "palette" action.
-		expect(wrapper.find(".toolbar-item.palette-action")).to.have.length(0);
+		expect(container.querySelectorAll(".toolbar-item.palette-action")).to.have.length(0);
 
 		// Should have a "togglePalette" action.
-		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.undo-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.redo-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.closePalette-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.undo-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.redo-action")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item.cut-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.copy-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.paste-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.cut-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.copy-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.paste-action")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item.toggleNotificationPanel-action")).to.have.length(0);
+		expect(container.querySelectorAll(".toolbar-item.toggleNotificationPanel-action")).to.have.length(0);
 	});
 
 	// When notification panel is open, toolbar button should have class toolbar-item-selected
@@ -321,11 +318,11 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 			]
 		};
 		// isNotificationOpen is set to true
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+		const { container } = createIntlCommonCanvasToolbar({ toolbarConfig,
 			isPaletteEnabled: true, isPaletteOpen: true,
 			notificationConfig, isNotificationOpen: true }, canvasController);
 
-		expect(wrapper.find(".notification-panel")).to.have.length(1);
+		expect(container.querySelectorAll(".notification-panel")).to.have.length(1);
 	});
 
 	// When notification panel is closed, toolbar button should NOT have class toolbar-item-selected
@@ -343,39 +340,40 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 			]
 		};
 		// isNotificationOpen is set to false
-		wrapper = createIntlCommonCanvasToolbar({
+		const { container } = createIntlCommonCanvasToolbar({
 			toolbarConfig: toolbarConfig, isPaletteEnabled: true, isPaletteOpen: true,
 			notificationConfig: notificationConfig, isNotificationOpen: false }, canvasController);
-		expect(wrapper.find(".toggleNotificationPanel-action.toolbar-item-selected")).to.have.length(0);
+		expect(container.querySelectorAll(".toggleNotificationPanel-action.toolbar-item-selected")).to.have.length(0);
 	});
 
 });
 
 describe("Common Canvas Toolbar renders correctly with config as ARRAY", () => {
-	let wrapper;
-
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	// With an array passed as a toolbar config (instead of an object) which is
 	// the old config style it creates a toolbar successfully.
 	it("should render <CommonCanvasToolbar/> with an empty config ARRAY (not object)", () => {
 		const toolbarConfig = [];
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig, isPaletteEnabled: true, isPaletteOpen: true, notificationConfig, isNotificationOpen: true }, canvasController);
-		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
-		expect(wrapper.find(Toolbar)).to.have.length(1);
-		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
-		expect(wrapper.find(".toolbar-right-bar")).to.have.length(1);
+		const { container } = createIntlCommonCanvasToolbar(
+			{ toolbarConfig, isPaletteEnabled: true, isPaletteOpen: true, notificationConfig, isNotificationOpen: true },
+			canvasController
+		);
+		expect(container.querySelectorAll("div.common-canvas-toolbar")).to.have.length(1);
+		expect(container.querySelectorAll("div.toolbar-div")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-left-bar")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-right-bar")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item")).to.have.length(5);
-		expect(wrapper.find(".toolbar-divider")).to.have.length(2);
+		expect(container.querySelectorAll(".toolbar-item")).to.have.length(5);
+		expect(container.querySelectorAll(".toolbar-divider")).to.have.length(2);
 
-		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.zoomIn-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.zoomOut-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.zoomToFit-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.closePalette-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.zoomIn-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.zoomOut-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.zoomToFit-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.toggleNotificationPanel-action")).to.have.length(1);
 	});
 
 	// With an array passed as a toolbar config (instead of an object) which is
@@ -383,14 +381,17 @@ describe("Common Canvas Toolbar renders correctly with config as ARRAY", () => {
 	// with the new "togglePalette" action.
 	it("should convert an existing palette item into a toggle palette action.", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig, isPaletteEnabled: true, isPaletteOpen: true, notificationConfig, isNotificationOpen: true }, canvasController);
+		const { container } = createIntlCommonCanvasToolbar(
+			{ toolbarConfig, isPaletteEnabled: true, isPaletteOpen: true, notificationConfig, isNotificationOpen: true },
+			canvasController
+		);
 
-		expect(wrapper.find(".toolbar-item")).to.have.length(5);
+		expect(container.querySelectorAll(".toolbar-item")).to.have.length(5);
 
 		// Should NOT have a "palette" action.
-		expect(wrapper.find(".toolbar-item.palette-action")).to.have.length(0);
+		expect(container.querySelectorAll(".toolbar-item.palette-action")).to.have.length(0);
 
 		// Should have a "togglePalette" action.
-		expect(wrapper.find(".toolbar-item.closePalette-action")).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.closePalette-action")).to.have.length(1);
 	});
 });

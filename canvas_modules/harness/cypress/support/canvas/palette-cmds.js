@@ -167,7 +167,7 @@ Cypress.Commands.add("tabToNodeInCategory", (nodeLabel, categoryLabel) => {
 		.focus();
 });
 
-Cypress.Commands.add("pressSpaceOnNodeInCategory", (nodeLabel, categoryLabel) => {
+Cypress.Commands.add("pressOnNodeInCategory", (nodeLabel, categoryLabel, keyObj) => {
 	cy.findNodeInCategory(nodeLabel, categoryLabel)
-		.type(" ", { force: true });
+		.trigger("keydown", keyObj);
 });

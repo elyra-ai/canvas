@@ -11,6 +11,7 @@
   "canvas.addComment": "Ny kommentar",
   "canvas.addWysiwygComment": "Ny WYSIWYG-kommentar",
   "canvas.selectAll": "Markera allt",
+  "canvas.deselectAll": "Avmarkera allt",
   "canvas.undo": "Ångra",
   "canvas.redo": "Gör om",
   "canvas.undoCommand": "Ångra: {undo_command}",

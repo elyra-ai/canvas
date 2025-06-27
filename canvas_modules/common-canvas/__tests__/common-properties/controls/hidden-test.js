@@ -19,7 +19,7 @@
 import { expect } from "chai";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import hiddenParamDef from "../../test_resources/paramDefs/hidden_paramDef.json";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 describe("hidden control works correctly", () => {
 	let wrapper;
@@ -31,7 +31,7 @@ describe("hidden control works correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("validate hidden control isn't shown", () => {

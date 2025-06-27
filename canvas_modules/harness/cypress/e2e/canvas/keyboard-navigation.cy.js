@@ -40,13 +40,13 @@ describe("Test keyboard navigation", function() {
 			"types and three link types: node links, association links and comments links.", key.tab);
 
 		cy.verifyFocusOnNode("Binding (entry) node");
-		cy.pressOnNode("Binding (entry) node", key.enter);
 
 		// Pressing enter on node should select it
+		cy.pressOnNode("Binding (entry) node", key.objectSelect);
 		cy.verifyNodeIsSelected("Binding (entry) node");
 
 		// Pressing enter on node should issue a double click which will open the right-flyout
-		cy.pressOnNode("Binding (entry) node", key.enter);
+		cy.pressOnNode("Binding (entry) node", key.objectSelect);
 		cy.verifyRightFlyoutPanelWidth(320);
 	});
 
@@ -58,10 +58,10 @@ describe("Test keyboard navigation", function() {
 		cy.verifyNodeTransform("Binding (entry) node", 89, 100);
 
 		// Move node down with keyboard
-		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
+		cy.pressOnNode("Binding (entry) node", key.moveObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.moveObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.moveObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.moveObjectDown);
 		cy.verifyNodeTransform("Binding (entry) node", 89, 140);
 
 		// Wait for the save of the movement to be completed
@@ -78,10 +78,10 @@ describe("Test keyboard navigation", function() {
 		cy.verifyNodeDimensions("Binding (entry) node", 70, 75);
 
 		// Size node downwards with keyboard
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
 		cy.verifyNodeDimensions("Binding (entry) node", 70, 115);
 
 		// Wait for the save of the sizing to be completed
@@ -98,19 +98,19 @@ describe("Test keyboard navigation", function() {
 			"types and three link types: node links, association links and comments links.", key.tab);
 
 		// Simuate a click on node with the keyboard
-		cy.pressOnNode("Binding (entry) node", key.enter);
+		cy.pressOnNode("Binding (entry) node", key.objectSelect);
 
 		// Verify it simulated a SINGLE_CLICK
 		cy.verifyClickActionInConsole("clickType", "SINGLE_CLICK");
 
 		// Simuate another click on the currently selected node with the keyboard
-		cy.pressOnNode("Binding (entry) node", key.enter);
+		cy.pressOnNode("Binding (entry) node", key.objectSelect);
 
 		// Verify it simulated a DOUBLE_CLICK
 		cy.verifyClickActionInConsole("clickType", "DOUBLE_CLICK");
 
 		// Simulate a right click on node with the keyboard
-		cy.pressOnNode("Binding (entry) node", key.cmndSlash);
+		cy.pressOnNode("Binding (entry) node", key.contextMenu);
 
 		// Verify it simulated a SINGLE_CLICK_CONTEXTMENU
 		cy.verifyClickActionInConsole("clickType", "SINGLE_CLICK_CONTEXTMENU");
@@ -123,17 +123,17 @@ describe("Test keyboard navigation", function() {
 		cy.verifyZoomTransform(0, 0, 1);
 
 		// Simulate panning the canvas to the right.
-		cy.pressOnCanvas(key.cmndShiftRightArrow);
-		cy.pressOnCanvas(key.cmndShiftRightArrow);
+		cy.pressOnCanvas(key.panRight);
+		cy.pressOnCanvas(key.panRight);
 
 		// Verify the new zoom amount
 		cy.verifyZoomTransform(20, 0, 1);
 
 		// Simulate panning the canvas down.
-		cy.pressOnCanvas(key.cmndShiftDownArrow);
-		cy.pressOnCanvas(key.cmndShiftDownArrow);
-		cy.pressOnCanvas(key.cmndShiftDownArrow);
-		cy.pressOnCanvas(key.cmndShiftDownArrow);
+		cy.pressOnCanvas(key.panDown);
+		cy.pressOnCanvas(key.panDown);
+		cy.pressOnCanvas(key.panDown);
+		cy.pressOnCanvas(key.panDown);
 
 		// Verify the new zoom amount
 		cy.verifyZoomTransform(20, 40, 1);
@@ -146,22 +146,22 @@ describe("Test keyboard navigation", function() {
 		cy.verifyZoomTransform(0, 0, 1);
 
 		// Simulate zooming the canvas out.
-		cy.pressOnCanvas(key.cmndShiftMinus);
-		cy.pressOnCanvas(key.cmndShiftMinus);
+		cy.pressOnCanvas(key.zoomOut);
+		cy.pressOnCanvas(key.zoomOut);
 
 		// Verify the new zoom amount
 		cy.verifyZoomTransform(115, 48, 0.83);
 
-		// Simulate zooming the canvas out.
-		cy.pressOnCanvas(key.cmndShiftEqual);
-		cy.pressOnCanvas(key.cmndShiftEqual);
-		cy.pressOnCanvas(key.cmndShiftEqual);
+		// Simulate zooming the canvas in.
+		cy.pressOnCanvas(key.zoomIn);
+		cy.pressOnCanvas(key.zoomIn);
+		cy.pressOnCanvas(key.zoomIn);
 
 		// Verify the new zoom amount
 		cy.verifyZoomTransform(-66, -28, 1.1);
 
 		// Simulate a zoom to fit
-		cy.pressOnCanvas(key.cmndShiftZero);
+		cy.pressOnCanvas(key.zoomToFit);
 
 		// Verify the new zoom amount
 		cy.verifyZoomTransform(238, 43, 1);

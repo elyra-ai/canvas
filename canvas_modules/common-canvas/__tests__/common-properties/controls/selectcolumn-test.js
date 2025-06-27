@@ -24,7 +24,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import selectcolumnParamDef from "../../test_resources/paramDefs/selectcolumn_paramDef.json";
 import selectcolumnMultiInputParamDef from "../../test_resources/paramDefs/selectcolumn_multiInput_paramDef.json";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 const emptyValueIndicator = "...";
 
@@ -262,7 +262,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 		controller = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("selectcolumn control will have updated options by the controller", () => {
@@ -291,7 +291,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 		const field2OptionsExpectedOptions = ["...", "BP", "Na", "drug", "age2", "BP2", "Na2", "drug2", "age3", "BP3", "Na3", "drug3", "age4", "BP4", "Na4", "drug4"];
 
 		expect(options).to.eql(field2OptionsExpectedOptions);
-		wrapper.unmount();
+		cleanup();
 		const rendered = propertyUtilsRTL.flyoutEditorForm(selectcolumnParamDef);
 		wrapper = rendered.wrapper;
 		container = wrapper.container;
@@ -507,7 +507,7 @@ describe("selectcolumn works correctly with multi input schemas", () => {
 		controller = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should show correct values from selectcolumn control", () => {
@@ -620,7 +620,7 @@ describe("Empty list selectcolumn control with default and custom placeholder te
 		wrapper = renderedObject.wrapper;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 	it("should have default placeholder text when fields is empty", () => {
 		// No resource_key added for field_empty_list property

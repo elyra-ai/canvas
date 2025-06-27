@@ -670,10 +670,10 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.helperText = additionalHelperText;
 	settings.readOnly = parameter.readOnly;
 	settings.light = _isControlLight(additionalInfo.light, additionalInfo.containerType, parameter.isSubPanelEdit());
+	settings.editStyle = parameter.editStyle;
 	if (isSubControl) {
 		settings.visible = parameter.visible;
 		settings.width = parameter.columns(8);
-		settings.editStyle = parameter.editStyle;
 		settings.isKeyField = parameter.isKey;
 		settings.dmDefault = parameter.dmDefault;
 	}

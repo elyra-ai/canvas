@@ -24,7 +24,7 @@ import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import multiselectParamDef from "../../test_resources/paramDefs/multiselect_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 const mockMultiselect = jest.fn();
 jest.mock("../../../src/common-properties/controls/multiselect",
@@ -285,7 +285,7 @@ describe("multiselect paramDef works correctly", () => {
 		renderedController = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("multiselect placeholder custom label rendered correctly", () => {
@@ -431,7 +431,7 @@ describe("multiselect filters work correctly", () => {
 		renderedController = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("Validate multiselect should have options filtered by enum_filter", async() => {

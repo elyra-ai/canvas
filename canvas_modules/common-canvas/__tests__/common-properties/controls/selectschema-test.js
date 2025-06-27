@@ -22,7 +22,7 @@ import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import selectschemaParamDef from "../../test_resources/paramDefs/selectschema_paramDef.json";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 
 const controller = new Controller();
@@ -118,7 +118,7 @@ describe("selectschema works correctly in common-properties", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 	it("Validate selectschema rendered correctly", () => {
 		const { container } = wrapper;

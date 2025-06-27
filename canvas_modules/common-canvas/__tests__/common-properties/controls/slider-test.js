@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,13 @@
  */
 
 import React from "react";
-import {
-	mount
-} from "../../_utils_/mount-utils.js";
-import propertyUtils from "../../_utils_/property-utils";
+import { render } from "../../_utils_/mount-utils.js";
+import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import Controller from "./../../../src/common-properties/properties-controller";
 import { Provider } from "react-redux";
 import { expect } from "chai";
+import { cleanup, fireEvent } from "@testing-library/react";
 import sinon from "sinon";
-import { Slider } from "@carbon/react";
 import SliderControl from "./../../../src/common-properties/controls/slider";
 import sliderParamDef from "../../test_resources/paramDefs/slider_paramDef.json";
 
@@ -44,7 +42,7 @@ describe("SliderControl renders correctly", () => {
 		light: true
 	};
 
-	propertyUtils.setControls(controller, [control]);
+	propertyUtilsRTL.setControls(controller, [control]);
 
 	beforeEach(() => {
 		controller.setErrorMessages({});
@@ -53,7 +51,7 @@ describe("SliderControl renders correctly", () => {
 
 
 	it("renders a Slider component", () => {
-		const wrapper = mount(
+		const { container } = render(
 			<Provider store = {
 				controller.getStore()
 			}
@@ -65,11 +63,11 @@ describe("SliderControl renders correctly", () => {
 				/>
 			</Provider>
 		);
-		expect(wrapper.find(Slider)).to.have.length(1);
+		expect(container.querySelectorAll(".properties-slider")).to.have.length(1);
 	});
 
-	it("handles formatLabel function correctly", () => {
-		const wrapper = mount(
+	it("renders slider label correctly", () => {
+		const { container } = render(
 			<Provider store = {
 				controller.getStore()
 			}
@@ -81,50 +79,13 @@ describe("SliderControl renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const sliderProps = wrapper.find(Slider).props();
-
-		const formatLabel = sliderProps.formatLabel;
-		expect(formatLabel(1)).to.equal(1);
-		expect(formatLabel(10)).to.equal(10);
-		expect(formatLabel(5)).to.equal(5);
-	});
-
-
-	it("renders ValidationMessage component", () => {
-		const wrapper = mount(
-			<Provider store = {
-				controller.getStore()
-			}
-			>
-				<SliderControl control = {control}
-					propertyId = {propertyId}
-					controller = {controller}
-					controlItem = "Slider Label"
-				/>
-			</Provider>
-		);
-		expect(wrapper.find("ValidationMessage")).to.have.length(1);
-	});
-
-	it("renders ValidationMessage component", () => {
-		const wrapper = mount(
-			<Provider store = {
-				controller.getStore()
-			}
-			>
-				<SliderControl control = {control}
-					propertyId = {propertyId}
-					controller = {controller}
-					controlItem = "Slider Label"
-				/>
-			</Provider>
-		);
-		expect(wrapper.find("ValidationMessage")).to.have.length(1);
+		const label = container.querySelector("label");
+		expect(label.textContent).to.equal("Slider Label");
 	});
 
 	it("renders Slider with readonly control", () => {
 		control.readOnly = true;
-		const wrapper = mount(
+		const { container } = render(
 			<Provider store = {
 				controller.getStore()
 			}
@@ -137,11 +98,11 @@ describe("SliderControl renders correctly", () => {
 				/>
 			</Provider>
 		);
-		expect(wrapper.find("Slider").prop("readOnly")).to.equal(control.readOnly);
+		expect(container.querySelectorAll("div.cds--slider--readonly")).to.have.length(1);
 	});
 
 	it("handles change event correctly", () => {
-		const wrapper = mount(
+		const { container } = render(
 			<Provider store = {
 				controller.getStore()
 			}
@@ -153,11 +114,12 @@ describe("SliderControl renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const sliderProps = wrapper.find(Slider).props();
-		const handleChangeSpy = sinon.spy(controller, "updatePropertyValue");
 
 		// Simulate a change event on the Slider
-		sliderProps.onChange({ value: 7 });
+		const sliderTextInput = container.querySelector(".cds--slider-text-input-wrapper").querySelector("input");
+		fireEvent.change(sliderTextInput, { target: { value: 7 } });
+
+		const handleChangeSpy = sinon.spy(controller, "updatePropertyValue");
 
 		// Ensure that handleChange method is called with the correct arguments
 		expect(handleChangeSpy.calledOnceWithExactly(propertyId, 7)).to.be.false;
@@ -166,7 +128,7 @@ describe("SliderControl renders correctly", () => {
 		handleChangeSpy.restore();
 	});
 
-	it("handles formatLabel function correctly without minValue and maxValue", () => {
+	it("When minValue and maxValue are not provided, verify default min and max values are set", () => {
 		const controlWithLabels = {
 			name: "test-slider",
 			minValue: null,
@@ -175,7 +137,7 @@ describe("SliderControl renders correctly", () => {
 			light: true
 		};
 
-		const wrapper2 = mount(
+		const { container } = render(
 			<Provider store = {
 				controller.getStore()
 			}
@@ -188,16 +150,15 @@ describe("SliderControl renders correctly", () => {
 			</Provider>
 		);
 
-		wrapper2.setProps({
-			control: controlWithLabels,
-		});
+		const sliderRange = container.querySelectorAll("span.cds--slider__range-label");
+		const minRange = Number(sliderRange[0].textContent);
+		expect(minRange).to.equal(0);
 
-		const sliderProps = wrapper2.find(Slider).props();
-
-		expect(sliderProps.formatLabel(10)).to.equal(10);
+		const maxRange = Number(sliderRange[1].textContent);
+		expect(maxRange).to.equal(10);
 	});
 
-	it("handles formatLabel function correctly with minValue and maxValue", () => {
+	it("shows minValue and maxValue correctly", () => {
 		const controlWithLabels = {
 			name: "test-slider",
 			minValue: 1,
@@ -206,7 +167,7 @@ describe("SliderControl renders correctly", () => {
 			light: true
 		};
 
-		const wrapper2 = mount(
+		const { container } = render(
 			<Provider store = {
 				controller.getStore()
 			}
@@ -219,46 +180,50 @@ describe("SliderControl renders correctly", () => {
 			</Provider>
 		);
 
-		wrapper2.setProps({
-			control: controlWithLabels,
-		});
+		const sliderRange = container.querySelectorAll("span.cds--slider__range-label");
+		const minRange = Number(sliderRange[0].textContent);
+		expect(minRange).to.equal(controlWithLabels.minValue);
 
-		const sliderProps = wrapper2.find(Slider).props();
-
-		expect(sliderProps.formatLabel(1)).to.equal(1);
-
-		expect(sliderProps.formatLabel(10)).to.equal(10);
-	});
-
-	it("renders ValidationMessage component", () => {
-		const wrapper = mount(
-			<Provider store = {
-				controller.getStore()
-			}
-			>
-				<SliderControl control = {control}
-					propertyId = {propertyId}
-					controller = {controller}
-					controlItem = "Slider Label"
-				/>
-			</Provider>
-		);
-		expect(wrapper.find("ValidationMessage")).to.have.length(1);
+		const maxRange = Number(sliderRange[1].textContent);
+		expect(maxRange).to.equal(controlWithLabels.maxValue);
 	});
 });
 
 describe("error messages renders correctly for slider controls", () => {
 	let wrapper;
+	let container;
 
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(sliderParamDef);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(sliderParamDef);
 		wrapper = renderedObject.wrapper;
+		container = wrapper.container;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("slider component should have correct classnames", () => {
-		expect(wrapper.find("div.properties-slider")).to.have.length(8);
+		expect(container.querySelectorAll("div.properties-slider")).to.have.length(8);
+	});
+
+	it("shows error message for slider component", () => {
+		const slider = container.querySelector("div[data-id='properties-ctrl-slider_error']");
+
+		// Verify min and max range
+		const sliderRange = slider.querySelectorAll("span.cds--slider__range-label");
+		const minRange = Number(sliderRange[0].textContent);
+		expect(minRange).to.equal(10);
+
+		const maxRange = Number(sliderRange[1].textContent);
+		expect(maxRange).to.equal(100);
+
+		// Set the value of slider more than max range
+		const sliderTextInput = slider.querySelector(".cds--slider-text-input-wrapper").querySelector("input");
+		fireEvent.change(sliderTextInput, { target: { value: 117 } });
+
+		// Verify error is shown
+		const errorDiv = slider.querySelector("div.properties-validation-message");
+		expect(errorDiv).to.exist;
+		expect(errorDiv.textContent).to.equal("Needs to be less than 100");
 	});
 });

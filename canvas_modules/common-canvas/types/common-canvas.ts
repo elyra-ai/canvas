@@ -325,6 +325,11 @@ export interface NodeLayout {
   nodeResizable: boolean;
 
   /**
+   * Indicates if the node can be moved by the user.
+   */
+  nodeMovable: boolean;
+
+  /**
    * The size of the node sizing area that extends around the node, over
    * which the mouse pointer will change to the sizing arrows.
    */

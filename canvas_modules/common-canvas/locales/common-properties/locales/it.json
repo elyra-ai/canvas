@@ -33,7 +33,8 @@
   "summary.longTable.placeholder": "Più di dieci campi...",
   "alerts.tab.title": "Avvisi",
   "title.editor.label": "modifica titolo",
-  "title.editor.helpButton.label": "Guida in linea",
+  "title.editor.helpButton.label": "Guida",
+  "title.editor.descButton.label": "Intestazione informazioni aggiuntive",
   "table.summary.error": "Sono presenti {errorMsgCount} celle con errori. ",
   "table.summary.warning": "Sono presenti {warningMsgCount} celle con avvertenze. ",
   "control.summary.error": "Sono presenti {errorMsgCount} parametri con errori. ",
@@ -95,6 +96,8 @@
   "table.toolbar.button.delete": "Canc",
   "table.toolbar.button.edit": "Modifica",
   "table.toolbar.button.cancel": "Annulla",
+  "table.toolbar.overflow.label": "Tabella barra degli strumenti overflow",
+  "radiobuttongroup.aria.label": "Gruppo di pulsanti di opzione",
   "list.table.label": "Valori",
   "dropdown.tooltip.openMenu": "Apri menu",
   "dropdown.tooltip.closeMenu": "Chiudi menu",
@@ -114,5 +117,6 @@
   "label.indicator.optional": "(facoltativo).",
   "slider.numberInput.label": "Input numero dispositivo di scorrimento",
   "editorForm.tabList.label": "Schede principali",
-  "subTabs.tabList.label": "Elenco schede"
+  "subTabs.tabList.label": "Elenco schede",
+  "table.deleteIcon.tooltip": "Elimina"
 }

@@ -190,13 +190,17 @@ $harness-navbar-icon-width: 48px;
 	padding: 30px;
 	color: $text-secondary;
 	font-size: 20px;
-	pointer-events: none;
 	user-select: none;
 	& .text {
 		font-size: 16px;
 	}
 	&.vertical {
 		width: 300px;
+		// These 3 settings allow the content to stretch to fill the
+		// width of a flyout, when it is sized by dragging.
+		flex: 1;
+		flex-direction: column;
+		display: flex;
 	}
 }
 

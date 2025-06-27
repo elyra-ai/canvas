@@ -16,7 +16,7 @@
 
 import isEqual from "lodash/isEqual";
 import { expect } from "chai";
-import { HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM, HIGHLIGHT_DOWNSTREAM } from "../../src/common-canvas/constants/canvas-constants.js";
+import { CONNECTED_BRANCH, CONNECTED_UPSTREAM, CONNECTED_DOWNSTREAM } from "../../src/common-canvas/constants/canvas-constants.js";
 
 import ObjectModel from "../../src/object-model/object-model.js";
 import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
@@ -172,14 +172,14 @@ describe("Highlight branch", () => {
 	});
 
 	it("should get highlight branch object ids correctly in primary flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(primaryPipelineId, [histogram], HIGHLIGHT_BRANCH);
+		const branchObjects = objectModel.getConnectedObjects(primaryPipelineId, [histogram], CONNECTED_BRANCH);
 		const expected = { primaryPipelineId: [histogram, objStore, neuralNet] };
 		expect(isEqual(JSON.stringify(expected.primaryPipelineId), JSON.stringify(branchObjects.nodes[primaryPipelineId]))).to.be.true;
 		expect(branchObjects.links[primaryPipelineId]).to.have.length(2);
 	});
 
 	it("should get highlight branch object ids with multiple nodes correctly in primary flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(primaryPipelineId, [histogram, executionNode], HIGHLIGHT_BRANCH);
+		const branchObjects = objectModel.getConnectedObjects(primaryPipelineId, [histogram, executionNode], CONNECTED_BRANCH);
 		const expected = {
 			primaryPipelineId: [histogram, objStore, neuralNet, executionNode, supernode1, supernode2, model, bindingExit],
 			supernode1PipelineId: [exitBinding1x1, select, bindingNode],
@@ -201,7 +201,7 @@ describe("Highlight branch", () => {
 	});
 
 	it("should get highlight branch object ids correctly in subflow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(supernode2B1PipelineId, [userInput], HIGHLIGHT_BRANCH);
+		const branchObjects = objectModel.getConnectedObjects(supernode2B1PipelineId, [userInput], CONNECTED_BRANCH);
 		const expected = { supernode2B1PipelineId: [userInput, analysis, featureSelection] };
 
 		expect(isEqual(JSON.stringify(expected.supernode2B1PipelineId), JSON.stringify(branchObjects.nodes[supernode2B1PipelineId]))).to.be.true;
@@ -209,14 +209,14 @@ describe("Highlight branch", () => {
 	});
 
 	it("should get highlight branch object ids from single node", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(primaryPipelineId, [dataAudit], HIGHLIGHT_BRANCH);
+		const branchObjects = objectModel.getConnectedObjects(primaryPipelineId, [dataAudit], CONNECTED_BRANCH);
 		const expected = { primaryPipelineId: [dataAudit] };
 		expect(isEqual(JSON.stringify(expected.primaryPipelineId), JSON.stringify(branchObjects.nodes[primaryPipelineId]))).to.be.true;
 		expect(branchObjects.links[primaryPipelineId]).to.have.length(0);
 	});
 
 	it("should get highlight branch object ids from supernode node including its subflow objects", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(primaryPipelineId, [supernode2], HIGHLIGHT_BRANCH);
+		const branchObjects = objectModel.getConnectedObjects(primaryPipelineId, [supernode2], CONNECTED_BRANCH);
 		const expected = {
 			primaryPipelineId: [supernode2, executionNode, supernode1, model, bindingExit],
 			supernode2PipelineId: [supernode2A, entryBinding2x1, entryBinding2x2, entryBinding2x3, exitBinding2x1, supernode2B],
@@ -244,7 +244,7 @@ describe("Highlight upstream", () => {
 	});
 
 	it("should get highlight upstream object ids correctly in primary flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(primaryPipelineId, [c50node], HIGHLIGHT_UPSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(primaryPipelineId, [c50node], CONNECTED_UPSTREAM);
 		const expected = {
 			primaryPipelineId: [c50node, supernode3, database, objStore],
 			supernode3PipelineId: [exitBinding3x1, supernode3A, filter, entryBinding3x1, sample, entryBinding3x2, aggregate, entryBinding3x3],
@@ -260,7 +260,7 @@ describe("Highlight upstream", () => {
 	});
 
 	it("should get highlight upstream object ids correctly from subflow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(supernode3BPipelineId, [model3B], HIGHLIGHT_UPSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(supernode3BPipelineId, [model3B], CONNECTED_UPSTREAM);
 		const expected = {
 			supernode3BPipelineId: [model3B, entryBinding3Bx1],
 			supernode3PipelineId: [aggregate, entryBinding3x3],
@@ -275,7 +275,7 @@ describe("Highlight upstream", () => {
 	});
 
 	it("should get highlight upstream object ids correctly from supernode within subflow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(supernode2PipelineId, [supernode2A], HIGHLIGHT_UPSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(supernode2PipelineId, [supernode2A], CONNECTED_UPSTREAM);
 		const expected = {
 			supernode2PipelineId: [supernode2A, entryBinding2x2, entryBinding2x3],
 			primaryPipelineId: [supernode1],
@@ -290,14 +290,14 @@ describe("Highlight upstream", () => {
 	});
 
 	it("should get highlight upstream object ids from single node", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(primaryPipelineId, [dataAudit], HIGHLIGHT_UPSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(primaryPipelineId, [dataAudit], CONNECTED_UPSTREAM);
 		const expected = { primaryPipelineId: [dataAudit] };
 		expect(isEqual(JSON.stringify(expected.primaryPipelineId), JSON.stringify(branchObjects.nodes[primaryPipelineId]))).to.be.true;
 		expect(branchObjects.links[primaryPipelineId]).to.have.length(0);
 	});
 
 	it("should get highlight upstream object ids from supernode node", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(primaryPipelineId, [supernode1], HIGHLIGHT_UPSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(primaryPipelineId, [supernode1], CONNECTED_UPSTREAM);
 		const expected = {
 			primaryPipelineId: [supernode1],
 			supernode1PipelineId: [bindingNode, select, exitBinding1x1]
@@ -315,7 +315,7 @@ describe("Highlight downstream", () => {
 	});
 
 	it("should get highlight downstream object ids correctly in primary flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(primaryPipelineId, [database], HIGHLIGHT_DOWNSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(primaryPipelineId, [database], CONNECTED_DOWNSTREAM);
 		const expected = {
 			primaryPipelineId: [database, supernode3, c50node, neuralNet],
 			supernode3PipelineId: [entryBinding3x1, filter, supernode3A, exitBinding3x1, entryBinding3x2, sample],
@@ -330,7 +330,7 @@ describe("Highlight downstream", () => {
 	});
 
 	it("should get highlight downstream object ids correctly from subflow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(supernode1PipelineId, [select], HIGHLIGHT_DOWNSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(supernode1PipelineId, [select], CONNECTED_DOWNSTREAM);
 		const expected = {
 			supernode1PipelineId: [select, exitBinding1x1],
 			primaryPipelineId: [executionNode, supernode2, model, bindingExit],
@@ -354,7 +354,7 @@ describe("Highlight downstream", () => {
 	});
 
 	it("should get highlight downstream object ids correctly through port", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(primaryPipelineId, [executionNode], HIGHLIGHT_DOWNSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(primaryPipelineId, [executionNode], CONNECTED_DOWNSTREAM);
 		const expected = {
 			primaryPipelineId: [executionNode, supernode2, model, bindingExit],
 			supernode2PipelineId: [entryBinding2x1, supernode2B, exitBinding2x1],
@@ -373,7 +373,7 @@ describe("Highlight downstream", () => {
 	});
 
 	it("should get highlight downstream object ids from single node", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(primaryPipelineId, [dataAudit], HIGHLIGHT_DOWNSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(primaryPipelineId, [dataAudit], CONNECTED_DOWNSTREAM);
 		const expected = { primaryPipelineId: [dataAudit] };
 		expect(isEqual(JSON.stringify(expected.primaryPipelineId), JSON.stringify(branchObjects.nodes[primaryPipelineId]))).to.be.true;
 		expect(branchObjects.links[primaryPipelineId]).to.have.length(0);
@@ -389,21 +389,21 @@ describe("Test with pipelineFlow with missing sub-pipeline binding nodes", () =>
 	});
 
 	it("should get highlight branch object ids correctly in primary flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(atPrimaryPipelineId, [atExecNode], HIGHLIGHT_BRANCH);
+		const branchObjects = objectModel.getConnectedObjects(atPrimaryPipelineId, [atExecNode], CONNECTED_BRANCH);
 		const expected = { atPrimaryPipelineId: [atExecNode, atBindingEntryNode, atSuperNode] };
 		expect(isEqual(JSON.stringify(expected.atPrimaryPipelineId), JSON.stringify(branchObjects.nodes[atPrimaryPipelineId]))).to.be.true;
 		expect(branchObjects.links[atPrimaryPipelineId]).to.have.length(2);
 	});
 
 	it("should get upstream object ids correctly in primary flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(atPrimaryPipelineId, [atModelNode], HIGHLIGHT_UPSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(atPrimaryPipelineId, [atModelNode], CONNECTED_UPSTREAM);
 		const expected = { atPrimaryPipelineId: [atModelNode, atSuperNode] };
 		expect(isEqual(JSON.stringify(expected.atPrimaryPipelineId), JSON.stringify(branchObjects.nodes[atPrimaryPipelineId]))).to.be.true;
 		expect(branchObjects.links[atPrimaryPipelineId]).to.have.length(1);
 	});
 
 	it("should get downstream object ids correctly in primary flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(atPrimaryPipelineId, [atBindingEntryNode], HIGHLIGHT_DOWNSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(atPrimaryPipelineId, [atBindingEntryNode], CONNECTED_DOWNSTREAM);
 		const expected = { atPrimaryPipelineId: [atBindingEntryNode, atExecNode, atSuperNode] };
 		expect(isEqual(JSON.stringify(expected.atPrimaryPipelineId), JSON.stringify(branchObjects.nodes[atPrimaryPipelineId]))).to.be.true;
 		expect(branchObjects.links[atPrimaryPipelineId]).to.have.length(2);
@@ -416,7 +416,7 @@ describe("Test with circular flows with supernode with contiguous nodes", () => 
 	});
 
 	it("should get highlight downstream successfully with a circular flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(circ1PrimaryPipelineId, [circ1Multiplot], HIGHLIGHT_DOWNSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(circ1PrimaryPipelineId, [circ1Multiplot], CONNECTED_DOWNSTREAM);
 		const expected = { circ1PrimaryPipelineId: [circ1Multiplot, circ1ModelNode, circ1BindingExit] };
 
 		expect(isEqual(JSON.stringify(expected.circ1PrimaryPipelineId), JSON.stringify(branchObjects.nodes[circ1PrimaryPipelineId]))).to.be.true;
@@ -424,7 +424,7 @@ describe("Test with circular flows with supernode with contiguous nodes", () => 
 	});
 
 	it("should get highlight upstream from a node within a supernode with a circular flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(circ1P3PipelineId, [circ1P3Distribution], HIGHLIGHT_UPSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(circ1P3PipelineId, [circ1P3Distribution], CONNECTED_UPSTREAM);
 		const expected = {};
 		expected[circ1P3PipelineId] = [circ1P3Distribution, circ1P3Partition, circ1P3Binding1, circ1P3Execution, circ1P3Binding2];
 		expected[circ1P2PipelineId] = [circ1P2Execution, circ1P2Binding, circ1P2Balance, circ1P2Binding2];
@@ -437,7 +437,7 @@ describe("Test with circular flows with supernode with contiguous nodes", () => 
 	});
 
 	it("should get highlight info downstream from a node within a supernode with a circular flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(circ1P2PipelineId, [circ1P2Execution], HIGHLIGHT_DOWNSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(circ1P2PipelineId, [circ1P2Execution], CONNECTED_DOWNSTREAM);
 		const expected = {};
 		expected[circ1P2PipelineId] = [circ1P2Execution, circ1P2Supernode, circ1P2BindingOut];
 		expected[circ1P3PipelineId] = [circ1P3Binding1, circ1P3Partition, circ1P3Distribution, circ1P3BindingOut];
@@ -450,7 +450,7 @@ describe("Test with circular flows with supernode with contiguous nodes", () => 
 	});
 
 	it("should get highlight info for a branch from a node with a circular flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(circ1PrimaryPipelineId, [circ1Execution], HIGHLIGHT_BRANCH);
+		const branchObjects = objectModel.getConnectedObjects(circ1PrimaryPipelineId, [circ1Execution], CONNECTED_BRANCH);
 		const expected = {};
 		expected[circ1PrimaryPipelineId] = [circ1Execution, circ1Select, circ1Multiplot, circ1ModelNode, circ1BindingExit];
 
@@ -465,7 +465,7 @@ describe("Test with circular flows with supernode with non-contiguous nodes", ()
 	});
 
 	it("should get highlight upstream successfully from Table node in primary flow with a circular flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(circ2PrimaryPipelineId, [circ2P1Table], HIGHLIGHT_UPSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(circ2PrimaryPipelineId, [circ2P1Table], CONNECTED_UPSTREAM);
 		const expected = {};
 		expected[circ2PrimaryPipelineId] = [circ2P1Table, circ2P1DefineTypes, circ2P1Supernode, circ2P1Execution1];
 		expected[circ2P2Pipeline] = [circ2P2Binding4, circ2P2Filler, circ2P2Binding1, circ2P2Binding5, circ2P2Binding6, circ2P2Sample, circ2P2Binding2];
@@ -476,7 +476,7 @@ describe("Test with circular flows with supernode with non-contiguous nodes", ()
 	});
 
 	it("should get highlight downstream successfully from Filler node in sub-flow with a circular flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(circ2P2Pipeline, [circ2P2Filler], HIGHLIGHT_DOWNSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(circ2P2Pipeline, [circ2P2Filler], CONNECTED_DOWNSTREAM);
 		const expected = {};
 		expected[circ2P2Pipeline] = [
 			circ2P2Filler, circ2P2Binding4, circ2P2Binding1,
@@ -492,7 +492,7 @@ describe("Test with circular flows with supernode with non-contiguous nodes", ()
 	});
 
 	it("should get highlight upstream from Aggregate node in sub-flow successfully with a circular flow", () => {
-		const branchObjects = objectModel.getHighlightObjectIds(circ2P2Pipeline, [circ2P2Aggregate], HIGHLIGHT_UPSTREAM);
+		const branchObjects = objectModel.getConnectedObjects(circ2P2Pipeline, [circ2P2Aggregate], CONNECTED_UPSTREAM);
 		const expected = {};
 		expected[circ2P2Pipeline] = [
 			circ2P2Aggregate, circ2P2Binding3, circ2P2Binding4,

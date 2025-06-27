@@ -33,7 +33,9 @@ class CanvasTopPanel extends React.Component {
 		if (this.props.topPanelIsOpen) {
 			topPanel = (
 				<div className={"top-panel"} >
-					{this.props.topPanelContent}
+					<div className={"top-panel-contents"}>
+						{this.props.topPanelContent}
+					</div>
 				</div>
 			);
 		}

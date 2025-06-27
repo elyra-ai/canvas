@@ -25,7 +25,7 @@ import { format } from "date-fns";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import TIMEFIELD_PARAM_DEF from "../../test_resources/paramDefs/timefield_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 const controlItem = <span>"Label"</span>;
 
@@ -227,7 +227,7 @@ describe("error messages renders correctly for timefield controls", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should show error message when time with invalid format is entered", () => {

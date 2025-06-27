@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,79 +15,81 @@
  */
 
 import CanvasController from "../../src/common-canvas/canvas-controller";
-import CommonCanvasTextToolbar from "../../src/common-canvas/cc-text-toolbar.jsx";
-import Toolbar from "../../src/toolbar/toolbar.jsx";
 import { MARKDOWN } from "../../src/common-canvas/constants/canvas-constants.js";
 import { createIntlCommonCanvasTextToolbar } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
+import { cleanup, waitFor } from "@testing-library/react";
 
 const canvasController = new CanvasController();
 
 describe("Common Canvas Text Toolbar renders correctly", () => {
-	let wrapper;
-
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should NOT render <Toolbar> inside <CommonCanvasTextToolbar/> when closed", () => {
-		wrapper = createIntlCommonCanvasTextToolbar({}, canvasController);
+		const { container } = createIntlCommonCanvasTextToolbar({}, canvasController);
 
-		expect(wrapper.find(CommonCanvasTextToolbar)).to.have.length(1);
-		expect(wrapper.find(Toolbar)).to.have.length(0);
+		expect(container.querySelectorAll("div.text-toolbar")).to.have.length(0);
+		expect(container.querySelectorAll("div.toolbar-div")).to.have.length(0);
 	});
 
-	it("should render <Toolbar> inside <CommonCanvasTextToolbar/> when open", () => {
-		wrapper = createIntlCommonCanvasTextToolbar({}, canvasController);
+	it("should render <Toolbar> inside <CommonCanvasTextToolbar/> when open", async() => {
+		const { container } = createIntlCommonCanvasTextToolbar({}, canvasController);
 		canvasController.openTextToolbar(100, 200, [], MARKDOWN, () => { /**/ });
-		wrapper.update();
 
-		expect(wrapper.find(CommonCanvasTextToolbar)).to.have.length(1);
-		expect(wrapper.find(Toolbar)).to.have.length(1);
-		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
-		expect(wrapper.find(".toolbar-right-bar")).to.have.length(1);
+		await waitFor(() => {
+			expect(container.querySelectorAll("div.text-toolbar")).to.have.length(1);
+			expect(container.querySelectorAll("div.toolbar-div")).to.have.length(1);
+			expect(container.querySelectorAll(".toolbar-left-bar")).to.have.length(1);
+			expect(container.querySelectorAll(".toolbar-right-bar")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-item")).to.have.length(9);
-		expect(wrapper.find(".toolbar-divider")).to.have.length(5);
+			expect(container.querySelectorAll(".toolbar-item")).to.have.length(9);
+			expect(container.querySelectorAll(".toolbar-divider")).to.have.length(5);
 
-		expect(wrapper.find(".toolbar-item.headerStyle-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.bold-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.italics-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.strikethrough-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.code-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.link-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.quote-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.numberedList-action")).to.have.length(1);
-		expect(wrapper.find(".toolbar-item.bulletedList-action")).to.have.length(1);
+			expect(container.querySelectorAll(".toolbar-item.headerStyle-action")).to.have.length(1);
+			expect(container.querySelectorAll(".toolbar-item.bold-action")).to.have.length(1);
+			expect(container.querySelectorAll(".toolbar-item.italics-action")).to.have.length(1);
+			expect(container.querySelectorAll(".toolbar-item.strikethrough-action")).to.have.length(1);
+			expect(container.querySelectorAll(".toolbar-item.code-action")).to.have.length(1);
+			expect(container.querySelectorAll(".toolbar-item.link-action")).to.have.length(1);
+			expect(container.querySelectorAll(".toolbar-item.quote-action")).to.have.length(1);
+			expect(container.querySelectorAll(".toolbar-item.numberedList-action")).to.have.length(1);
+			expect(container.querySelectorAll(".toolbar-item.bulletedList-action")).to.have.length(1);
+		});
 	});
 
-	it("should render text toolbar in new position when moved", () => {
-		wrapper = createIntlCommonCanvasTextToolbar({}, canvasController);
+	it("should render text toolbar in new position when moved", async() => {
+		const { container } = createIntlCommonCanvasTextToolbar({}, canvasController);
 		canvasController.openTextToolbar(100, 200, [], () => { /**/ });
-		wrapper.update();
 
-		expect(wrapper.find(".text-toolbar").get(0).props.style.left).to.equal(100);
-		expect(wrapper.find(".text-toolbar").get(0).props.style.top).to.equal(200);
+		await waitFor(() => {
+			expect(container.querySelectorAll(".text-toolbar")[0].style.left).to.equal("100px");
+			expect(container.querySelectorAll(".text-toolbar")[0].style.top).to.equal("200px");
+		});
 
 		canvasController.moveTextToolbar(150, 250);
-		wrapper.update();
 
-		expect(wrapper.find(".text-toolbar").get(0).props.style.left).to.equal(150);
-		expect(wrapper.find(".text-toolbar").get(0).props.style.top).to.equal(250);
+		await waitFor(() => {
+			expect(container.querySelectorAll(".text-toolbar")[0].style.left).to.equal("150px");
+			expect(container.querySelectorAll(".text-toolbar")[0].style.top).to.equal("250px");
+		});
 	});
 
-	it("should NOT render <Toolbar/> after it is closed", () => {
-		wrapper = createIntlCommonCanvasTextToolbar({}, canvasController);
+	it("should NOT render <Toolbar/> after it is closed", async() => {
+		const { container } = createIntlCommonCanvasTextToolbar({}, canvasController);
 		canvasController.openTextToolbar(100, 200, [], () => { /**/ });
-		wrapper.update();
 
-		expect(wrapper.find(CommonCanvasTextToolbar)).to.have.length(1);
-		expect(wrapper.find(Toolbar)).to.have.length(1);
+		await waitFor(() => {
+			expect(container.querySelectorAll("div.text-toolbar")).to.have.length(1);
+			expect(container.querySelectorAll("div.toolbar-div")).to.have.length(1);
+		});
 
 		canvasController.closeTextToolbar();
-		wrapper.update();
 
-		expect(wrapper.find(CommonCanvasTextToolbar)).to.have.length(1);
-		expect(wrapper.find(Toolbar)).to.have.length(0);
+		await waitFor(() => {
+			expect(container.querySelectorAll("div.text-toolbar")).to.have.length(0);
+			expect(container.querySelectorAll("div.toolbar-div")).to.have.length(0);
+		});
 	});
 });

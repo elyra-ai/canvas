@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,9 @@ import CanvasContents from "./cc-contents.jsx";
 import CommonCanvasToolbar from "./cc-toolbar.jsx";
 import CommonCanvasLeftFlyout from "./cc-left-flyout.jsx";
 import CommonCanvasRightFlyout from "./cc-right-flyout.jsx";
-import CanvasBottomPanel from "./cc-bottom-panel.jsx";
 import CanvasTopPanel from "./cc-top-panel.jsx";
+import CanvasCenterPanel from "./cc-center-panel.jsx";
+import CanvasBottomPanel from "./cc-bottom-panel.jsx";
 import Logger from "../logging/canvas-logger.js";
 import { PALETTE_LAYOUT_FLYOUT, PALETTE_LAYOUT_DIALOG, PALETTE_LAYOUT_NONE }
 	from "../common-canvas/constants/canvas-constants";
@@ -37,6 +38,13 @@ class CommonCanvasPanels extends React.Component {
 	constructor(props) {
 		super(props);
 		this.logger = new Logger("CC-Panels");
+
+		this.containingDivId = "common-canvas-items-container-" + props.canvasController.getInstanceId();
+
+		this.centerPanelRef = React.createRef();
+
+		this.getCenterPanelWidth = this.getCenterPanelWidth.bind(this);
+		this.getCenterPanelHeight = this.getCenterPanelHeight.bind(this);
 	}
 
 	// Prevent the default behavior (which is to show a plus-sign pointer) as
@@ -52,6 +60,20 @@ class CommonCanvasPanels extends React.Component {
 	// canvas area itself to allow external objects to be dropped on it.
 	onDrop(evt) {
 		evt.preventDefault();
+	}
+
+	// Returns the center panel width. Called by the panel flyout objects.
+	getCenterPanelWidth() {
+		const rect = this.centerPanelRef?.current?.getBoundingRect();
+		return rect ? rect.width : 0;
+	}
+
+	// Returns the center panel height. Called by the panel flyout objects.
+	getCenterPanelHeight() {
+		const rect = this.centerPanelRef?.current?.getBoundingRect();
+
+		// Assume the center panel <div> is a reasonable height if it has not yet fully rendered.
+		return rect ? rect.height : 1000;
 	}
 
 	generateClass() {
@@ -73,9 +95,11 @@ class CommonCanvasPanels extends React.Component {
 	// Returns a JSX <div> for the top, canvas contents and bottom panels that are always
 	// on top of each other.
 	generateTopCenterBottom() {
-		const canvasContents = (<CanvasContents canvasController={this.props.canvasController} />);
-		const bottomPanel = (<CanvasBottomPanel canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />);
-		const topPanel = (<CanvasTopPanel canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />);
+		const centerContents = (<CanvasContents canvasController={this.props.canvasController} />);
+
+		const topPanel = (<CanvasTopPanel canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
+		const centerPanel = (<CanvasCenterPanel ref={this.centerPanelRef} content={centerContents} />);
+		const bottomPanel = (<CanvasBottomPanel canvasController={this.props.canvasController} getCenterPanelHeight={this.getCenterPanelHeight} />);
 
 		let templateRows = this.props.topPanelIsOpen ? "auto 1fr" : "1fr";
 		templateRows += this.props.bottomPanelIsOpen ? " auto" : "";
@@ -83,7 +107,7 @@ class CommonCanvasPanels extends React.Component {
 		return (
 			<div className="common-canvas-grid-vertical" style={{ gridTemplateRows: templateRows }}>
 				{topPanel}
-				{canvasContents}
+				{centerPanel}
 				{bottomPanel}
 			</div>
 		);
@@ -119,11 +143,11 @@ class CommonCanvasPanels extends React.Component {
 		return this.props.rightFlyoutIsOpen;
 	}
 
-	// Returns a JSX object for the contents of the left panel. If the application
-	// sets enablePaletteLayout to None this indicates the app wamts its own content
-	// to go into the left panel provided by leftFlyoutContent provided to <CommonCanvas>
-	// otherwise if enablePaletteLayout is "Flyout" the app wants Common Canvas to
-	// provide the regular <Palette>.
+	// Returns a JSX expression for the contents of the left panel. If the application
+	// sets enablePaletteLayout to "None", this indicates the app wants its own content
+	// to go into the left panel. This content is provided in the Common Canvas
+	// leftFlyoutContent prop. Otherwise, if enablePaletteLayout is "Flyout", the
+	// app wants Common Canvas to display the regular Palette in the left flyout.
 	generateLeftFlyout() {
 		if (this.props.enablePaletteLayout === PALETTE_LAYOUT_NONE && this.props.leftFlyoutIsOpen) {
 			return (<CommonCanvasLeftFlyout />);
@@ -136,7 +160,12 @@ class CommonCanvasPanels extends React.Component {
 
 	// Returns a JSX object for the contents of the right panel.
 	generateRightFlyout() {
-		return (<CommonCanvasRightFlyout containingDivId={this.props.containingDivId} canvasController={this.props.canvasController} />);
+		return (
+			<CommonCanvasRightFlyout
+				getCenterPanelWidth={this.getCenterPanelWidth}
+				canvasController={this.props.canvasController}
+			/>
+		);
 	}
 
 	render() {
@@ -145,7 +174,7 @@ class CommonCanvasPanels extends React.Component {
 		const tip = (<CommonCanvasTooltip canvasController={this.props.canvasController} />);
 		const canvasToolbar = (
 			<CommonCanvasToolbar canvasController={this.props.canvasController}
-				containingDivId={this.props.containingDivId}
+				containingDivId={this.containingDivId}
 			/>
 		);
 		const rightFlyoutIsOpen = this.isRightFlyoutOpen();
@@ -166,7 +195,7 @@ class CommonCanvasPanels extends React.Component {
 				const templateRows = this.props.toolbarIsOpen ? "auto 1fr" : "1fr";
 
 				const lowerPanels = (
-					<div id={this.props.containingDivId} className="common-canvas-grid-horizontal"
+					<div id={this.containingDivId} className="common-canvas-grid-horizontal"
 						style={{ gridTemplateColumns: templateCols }}
 					>
 						{leftFlyout}
@@ -188,7 +217,7 @@ class CommonCanvasPanels extends React.Component {
 				const leftSideItems = (
 					<div className="common-canvas-grid-vertical" style={{ gridTemplateRows: templateRows }}>
 						{canvasToolbar}
-						<div id={this.props.containingDivId} className="common-canvas-grid-horizontal"
+						<div id={this.containingDivId} className="common-canvas-grid-horizontal"
 							style={{ gridTemplateColumns: templateCols }}
 						>
 							{leftFlyout}
@@ -212,7 +241,7 @@ class CommonCanvasPanels extends React.Component {
 				const rightSideItems = (
 					<div className="common-canvas-grid-vertical" style={{ gridTemplateRows: templateRows }}>
 						{canvasToolbar}
-						<div id={this.props.containingDivId} className="common-canvas-grid-horizontal"
+						<div id={this.containingDivId} className="common-canvas-grid-horizontal"
 							style={{ gridTemplateColumns: templateCols }}
 						>
 							{topCenterBottom}
@@ -237,11 +266,13 @@ class CommonCanvasPanels extends React.Component {
 				templateCols += this.props.rightFlyoutIsOpen ? " auto" : "";
 
 				const centerItems = (
-					<div id={this.props.containingDivId} className="common-canvas-grid-vertical"
+					<div className="common-canvas-grid-vertical"
 						style={{ gridTemplateRows: templateRows }}
 					>
 						{canvasToolbar}
-						{topCenterBottom}
+						<div id={this.containingDivId}>
+							{topCenterBottom}
+						</div>
 					</div>
 				);
 				panels = (
@@ -257,7 +288,7 @@ class CommonCanvasPanels extends React.Component {
 		}
 
 		const dialogPalette = this.props.enablePaletteLayout === PALETTE_LAYOUT_DIALOG && this.props.paletteIsOpen
-			? (<PaletteDialog canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />)
+			? (<PaletteDialog canvasController={this.props.canvasController} containingDivId={this.containingDivId} />)
 			: null;
 
 		const divClassName = this.generateClass();
@@ -275,7 +306,6 @@ class CommonCanvasPanels extends React.Component {
 CommonCanvasPanels.propTypes = {
 	// Provided by CommonCanvas
 	canvasController: PropTypes.object.isRequired,
-	containingDivId: PropTypes.string.isRequired,
 
 	// Provided by Redux
 	enableParentClass: PropTypes.string,

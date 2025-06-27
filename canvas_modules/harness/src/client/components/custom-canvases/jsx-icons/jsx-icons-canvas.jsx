@@ -21,7 +21,7 @@ import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disabl
 
 import { ChartColumn, CurrencyPound, Db2Database, DataTable, Debug, FaceCool,
 	Fish, Folder, FolderOpen, FolderMoveTo,
-	JoinInner, MachineLearning } from "@carbon/react/icons";
+	JoinInner, MachineLearningModel } from "@carbon/react/icons";
 
 import JsxIconsFlow from "./jsx-icons-flow.json";
 import JsxIconsPalette from "./jsx-icons-palette.json";
@@ -74,7 +74,7 @@ export default class JsxIconsCanvas extends React.Component {
 		case "Db2Database":
 			return (<Db2Database size={20} />);
 		case "MachineLearning":
-			return (<MachineLearning size={20} />);
+			return (<MachineLearningModel size={20} />);
 		case "CurrencyPound":
 			return (<CurrencyPound size={20} />);
 		case "JoinInner":

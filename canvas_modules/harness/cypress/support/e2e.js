@@ -22,7 +22,6 @@ import "./canvas/canvas-cmds";
 import "./canvas/comments-cmds";
 import "./canvas/context-menu-cmds";
 import "./canvas/context-toolbar-cmds";
-import "./canvas/keyboard-cmds";
 import "./canvas/link-cmds";
 import "./canvas/node-cmds";
 import "./canvas/object-model-cmds";

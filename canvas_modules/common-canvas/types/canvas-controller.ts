@@ -160,6 +160,14 @@ export type CanvasObjectId = CanvasNodeId | CanvasCommentId | CanvasLinkId;
 /** A globally unique identifer for a pipeleine flow artifact. */
 export type PipelineFlowId = string;
 
+/** A collection of IDs of nodes and links, potentially across
+ *   multiple pipelines, that are connected together.
+ */
+export interface ConnectedObjects {
+  nodes: {[key: PipelineId]: CanvasNodeId[]};
+  links: {[key: PipelineId]: CanvasLinkId[]};
+};
+
 /** A value that specifies a distance, in either the X or Y direction, to
  * identify the physical position of an object within the viewport coordinate
  * system. ViewportCoordVals are measured in screen pixels from the origin,
@@ -1326,12 +1334,12 @@ export declare class CanvasController {
      * @param nodeIds - An array of node Ids
      * @param pipelineId - Optional. The ID of the pipeline of the nodes.
      *                     Defaults to the currently displayed pipeline.
-     * @returns An array of CanvasNode objects
+     * @returns A object containing connected nodes and links
      */
     getBranchNodes(
       nodeIds: CanvasNodeId[],
       pipelineId?: PipelineId
-    ): CanvasNode[];
+    ): ConnectedObjects;
 
     /**
      * Returns an array of nodes that are upstream from the nodes
@@ -1339,12 +1347,12 @@ export declare class CanvasController {
      * @param nodeIds - An array of node Ids
      * @param pipelineId - Optional. The ID of the pipeline of the nodes.
      *                     Defaults to the currently displayed pipeline.
-     * @returns An array of CanvasNode objects
-    */
+     * @returns A object containing connected nodes and links
+     */
     getUpstreamNodes(
       nodeIds: CanvasNodeId[],
       pipelineId?: PipelineId
-    ): CanvasNode[];
+    ): ConnectedObjects;
 
     /**
      * Returns an array of nodes that are downstream from the nodes
@@ -1352,12 +1360,12 @@ export declare class CanvasController {
      * @param nodeIds - An array of node Ids
      * @param pipelineId - Optional. The ID of the pipeline of the nodes.
      *                     Defaults to the currently displayed pipeline.
-     * @returns An array of CanvasNode objects
-    */
+     * @returns A object containing connected nodes and links
+     */
     getDownstreamNodes(
       nodeIds: CanvasNodeId[],
       pipelineId?: PipelineId
-    ): CanvasNode[];
+    ): ConnectedObjects;
 
     /**
      * Returns a boolean to indicate whether the supernode is expanded in place.
@@ -2008,35 +2016,40 @@ export declare class CanvasController {
      * Highlights the branch(s) (both upstream and downstream) from the node
      * IDs passed in and returns the highlighted object Ids.
      * @param nodeIds - An array of node Ids
-     * @param pipelineId - The ID of the pipeline of the nodes.
+     * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+     *                     Defaults to the currently displayed pipeline.
+     * @returns A object containing connected nodes and links
      */
     highlightBranch(
       nodeIds: CanvasNodeId[],
-      pipelineId: PipelineId
-    ): { nodes: CanvasNodeId[], links: CanvasLinkId[] }[];
+      pipelineId?: PipelineId
+    ): ConnectedObjects;
 
     /**
      * Highlights the upstream nodes from the node IDs passed in
      * and returns the highlighted object Ids.
      * @param nodeIds - An array of node Ids
-     * @param pipelineId - The ID of the pipeline of the nodes.
+     * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+     *                     Defaults to the currently displayed pipeline.
+     * @returns A object containing connected nodes and links
      */
     highlightUpstream(
       nodeIds: CanvasNodeId[],
-      pipelineId: PipelineId
-    ): { nodes: CanvasNodeId[], links: CanvasLinkId[] }[];
-
+      pipelineId?: PipelineId
+    ): ConnectedObjects;
 
     /**
      * Highlights the downstream nodes from the node IDs passed in
      * and returns highlighted object Ids.
      * @param nodeIds - An array of node Ids
-     * @param pipelineId - The ID of the pipeline
+     * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+     *                     Defaults to the currently displayed pipeline.
+     * @returns A object containing connected nodes and links
      */
     highlightDownstream(
       nodeIds: CanvasNodeId[],
-      pipelineId: PipelineId
-    ): { nodes: CanvasNodeId[], links: CanvasLinkId[] }[];
+      pipelineId?: PipelineId
+    ): ConnectedObjects;
 
 
     /**

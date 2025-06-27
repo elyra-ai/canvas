@@ -176,6 +176,10 @@ export default class CanvasController {
 		this.labelUtil.setIntl(intl);
 	}
 
+	getIntl() {
+		return this.labelUtil.getIntl();
+	}
+
 	setToolbarConfig(config) {
 		this.logger.log("Setting Toolbar Config");
 		this.objectModel.setToolbarConfig(config);
@@ -1035,31 +1039,43 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeStyle(nodeId, temporary);
 	}
 
-	// Returns an array of nodes that are for the branch(es) that the nodes,
-	// identified by the node IDs passed in, are within.
-	// nodeIds - An array of node Ids
-	// pipelineId - The ID of the pipeline where the nodes exist
+	/**
+	 * Returns an array of nodes that are for the branch(es) that the nodes,
+	 * identified by the node IDs passed in, are within.
+	 * @param nodeIds - An array of node Ids
+	 * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+	 *                     Defaults to the currently displayed pipeline.
+	 * @returns A object containing connected nodes and links
+	 */
 	getBranchNodes(nodeIds, pipelineId) {
 		const pId = pipelineId ? pipelineId : this.getCurrentPipelineId();
-		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_BRANCH);
+		return this.objectModel.getConnectedObjects(pId, nodeIds, constants.CONNECTED_BRANCH);
 	}
 
-	// Returns an array of nodes that are upstream from the nodes
-	// identified by the node IDs passed in.
-	// nodeIds - An array of node Ids
-	// pipelineId - The ID of the pipeline where the nodes exist
+	/**
+	 * Returns an array of nodes that are upstream from the nodes
+	 * identified by the node IDs passed in.
+	 * @param nodeIds - An array of node Ids
+	 * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+	 *                     Defaults to the currently displayed pipeline.
+	 * @returns A object containing connected nodes and links
+	 */
 	getUpstreamNodes(nodeIds, pipelineId) {
 		const pId = pipelineId ? pipelineId : this.getCurrentPipelineId();
-		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_UPSTREAM);
+		return this.objectModel.getConnectedObjects(pId, nodeIds, constants.CONNECTED_UPSTREAM);
 	}
 
-	// Returns an array of nodes that are downstream from the nodes
-	// identified by the node IDs passed in.
-	// nodeIds - An array of node Ids
-	// pipelineId - The ID of the pipeline where the nodes exist
+	/**
+	 * Returns an array of nodes that are downstream from the nodes
+	 * identified by the node IDs passed in.
+	 * @param nodeIds - An array of node Ids
+	 * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+	 *                     Defaults to the currently displayed pipeline.
+	 * @returns A object containing connected nodes and links
+	 */
 	getDownstreamNodes(nodeIds, pipelineId) {
 		const pId = pipelineId ? pipelineId : this.getCurrentPipelineId();
-		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_DOWNSTREAM);
+		return this.objectModel.getConnectedObjects(pId, nodeIds, constants.CONNECTED_DOWNSTREAM);
 	}
 
 	// Adds a custom attribute to the nodes.
@@ -1602,30 +1618,44 @@ export default class CanvasController {
 		this.branchHighlighted = true;
 	}
 
-	// Highlights the branch(s) (both upstream and downstream) from the node
-	// IDs passed in.
-	// nodeIds - An array of node Ids
-	// pipelineId - The ID of the pipeline
+	/**
+	 * Highlights the branch(s) (both upstream and downstream) from the node
+	 * IDs passed in and returns the highlighted object Ids.
+	 * @param nodeIds - An array of node Ids
+	 * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+	 *                     Defaults to the currently displayed pipeline.
+	 * @returns A object containing connected nodes and links
+	 */
 	highlightBranch(nodeIds, pipelineId) {
-		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_BRANCH);
+		const highlightObjectIds = this.getBranchNodes(nodeIds, pipelineId);
 		this.setBranchHighlight(highlightObjectIds);
 		return highlightObjectIds;
 	}
 
-	// Highlights the upstream nodes from the node IDs passed in.
-	// nodeIds - An array of node Ids
-	// pipelineId - The ID of the pipeline
+	/**
+	 * Highlights the upstream nodes from the node IDs passed in
+	 * and returns the highlighted object Ids.
+	 * @param nodeIds - An array of node Ids
+	 * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+	 *                     Defaults to the currently displayed pipeline.
+	 * @returns A object containing connected nodes and links
+	 */
 	highlightUpstream(nodeIds, pipelineId) {
-		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_UPSTREAM);
+		const highlightObjectIds = this.getUpstreamNodes(nodeIds, pipelineId);
 		this.setBranchHighlight(highlightObjectIds);
 		return highlightObjectIds;
 	}
 
-	// Highlights the downstream nodes from the node IDs passed in.
-	// nodeIds - An array of node Ids
-	// pipelineId - The ID of the pipeline
+	/**
+	 * Highlights the downstream nodes from the node IDs passed in
+	 * and returns highlighted object Ids.
+	 * @param nodeIds - An array of node Ids
+	 * @param pipelineId - Optional. The ID of the pipeline of the nodes.
+	 *                     Defaults to the currently displayed pipeline.
+	 * @returns A object containing connected nodes and links
+	 */
 	highlightDownstream(nodeIds, pipelineId) {
-		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_DOWNSTREAM);
+		const highlightObjectIds = this.getDownstreamNodes(nodeIds, pipelineId);
 		this.setBranchHighlight(highlightObjectIds);
 		return highlightObjectIds;
 	}
@@ -1978,7 +2008,7 @@ export default class CanvasController {
 
 	// Sets the focus highlighting to parameter passed in which can be
 	// either a canvas object or the string "CanvasFocus".
-	setFocusObject(focusObj) {
+	setFocusObject(focusObj, evt) {
 		this.logger.log("setFocusObject focusObject = " + CanvasUtils.getFocusName(focusObj));
 
 		this.focusObject = focusObj;
@@ -1992,7 +2022,7 @@ export default class CanvasController {
 				// refresh scenarios, so check its existence first.
 				/* eslint no-lonely-if: "off" */
 				if (this.getSVGCanvasD3()) {
-					this.getSVGCanvasD3().moveFocusTo(focusObj);
+					this.getSVGCanvasD3().moveFocusTo(focusObj, evt);
 				}
 			}
 		}

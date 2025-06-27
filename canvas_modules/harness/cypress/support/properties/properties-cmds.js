@@ -60,11 +60,8 @@ Cypress.Commands.add("setTextFieldValue", (propertyId, labelText) => {
 });
 
 Cypress.Commands.add("backspaceTextFieldValue", (propertyId) => {
-	cy.useBackspaceKey()
-		.then((backspaceKey) => {
-			cy.get("div[data-id='properties-" + propertyId + "']").find("input")
-				.type(backspaceKey);
-		});
+	cy.get("div[data-id='properties-" + propertyId + "']").find("input")
+		.type("{backspace}");
 });
 
 Cypress.Commands.add("getWideFlyoutPanel", (panelName) => {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 import propertyUtilsRTL from "./../../_utils_/property-utilsRTL";
 import React from "react";
 import CommonProperties from "./../../../src/common-properties/common-properties.jsx";
@@ -31,7 +31,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("top level panel should disable all child panels and controls", () => {
@@ -797,16 +797,15 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "level3control" })).to.equal("enabled");
 	});
 
-	// Skipping because "ensure mid level is enabled after enabling mid level" - this step isn't enabling mid level
-	it.skip("hide disable and hide different levels of panels", () => {
+	it("hide disable and hide different levels of panels", () => {
 		const { container } = wrapper;
 		const category = container.querySelector("div[data-id='properties-panels-in-panels']");
 		const checkboxes = category.querySelectorAll("input[type='checkbox']");
 		expect(checkboxes).to.have.length(6);
 
 		const lvl1HiddenCheckbox = category.querySelector("div[data-id='properties-hidePanelLevel1'] input");
-		const lvl2DisabledCheckbox = category.querySelector("div[data-id='properties-disablePanelLevel2'] input");
-		const lvl3HiddenCheckbox = category.querySelector("div[data-id='properties-hidePanelLevel3'] input");
+		let lvl2DisabledCheckbox = category.querySelector("div[data-id='properties-disablePanelLevel2'] input");
+		let lvl3HiddenCheckbox = category.querySelector("div[data-id='properties-hidePanelLevel3'] input");
 
 		// hide level3
 		lvl3HiddenCheckbox.setAttribute("checked", true);
@@ -931,6 +930,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 
 		// ensure mid level is enabled after enabling mid level
 		lvl2DisabledCheckbox.setAttribute("checked", false);
+		lvl2DisabledCheckbox = category.querySelector("div[data-id='properties-disablePanelLevel2'] input");
 		fireEvent.click(lvl2DisabledCheckbox);
 		expect(controller.getControlState({ name: "disablePanelLevel1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel1" })).to.equal("enabled");
@@ -961,6 +961,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 
 		// ensure all are visible after enabling lower level
 		lvl3HiddenCheckbox.setAttribute("checked", false);
+		lvl3HiddenCheckbox = category.querySelector("div[data-id='properties-hidePanelLevel3'] input");
 		fireEvent.click(lvl3HiddenCheckbox);
 		expect(controller.getControlState({ name: "disablePanelLevel1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel1" })).to.equal("enabled");
@@ -1000,7 +1001,7 @@ describe("complex nested panels visible and enabled conditions work correctly", 
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("Init properties at disable hide and disable different levels of panels", () => {
@@ -1142,7 +1143,7 @@ describe("Primary panel conditions work correctly", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("Primary panel can be hidden", () => {

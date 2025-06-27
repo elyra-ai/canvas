@@ -24,7 +24,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import SomeOfSelectParamDef from "../../test_resources/paramDefs/someofselect_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 const mockSomeOfSelect = jest.fn();
 jest.mock("../../../src/common-properties/controls/someofselect",
@@ -268,7 +268,7 @@ describe("someofselect works correctly in common-properties", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("Validate someofselect_disabled should have options filtered by enum_filter", () => {
@@ -301,7 +301,7 @@ describe("someofselect filtered enum works correctly", () => {
 		renderedController = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("Validate someofselect should have options filtered by enum_filter", () => {
@@ -386,7 +386,7 @@ describe("someofselect control multiple rows selection", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should select/deselect multiple rows in someofselect using shift key", async() => {

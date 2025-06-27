@@ -36,14 +36,14 @@ describe("Test clipboard with no link selection enabled", function() {
 
 		cy.moveMouseToCoordinates(500, 400);
 		cy.shortcutKeysPaste();
-		cy.verifyNodeTransform("Na_to_K", 618, 519);
+		cy.verifyNodeTransform("Na_to_K", 500, 400);
 
 		cy.clickNode("C5.0");
 		cy.shortcutKeysCut();
 
 		cy.moveMouseToCoordinates(300, 400);
 		cy.shortcutKeysPaste();
-		cy.verifyNodeTransform("C5.0", 411, 400);
+		cy.verifyNodeTransform("C5.0", 300, 400);
 	});
 
 	it("Test cut & paste in default {x,y} positions when mousing outside the canvas using keyboard cmd+v", function() {

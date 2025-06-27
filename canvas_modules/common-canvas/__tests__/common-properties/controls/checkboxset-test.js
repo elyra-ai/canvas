@@ -25,7 +25,7 @@ import { render } from "../../_utils_/mount-utils.js";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import checkboxSetParamDef from "../../test_resources/paramDefs/checkboxset_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 
 const controller = new Controller();
@@ -366,7 +366,7 @@ describe("checkboxset works as expected in table control", () => {
 		renderedController = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("checkboxset works as expected in table control onpanel", () => {
@@ -449,7 +449,7 @@ describe("checkboxset enum_filter works correctly", () => {
 		renderedController = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("Validate checkboxset should have options filtered by enum_filter", async() => {

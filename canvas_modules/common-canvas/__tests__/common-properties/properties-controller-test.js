@@ -1193,7 +1193,7 @@ describe("Properties Controller handlers", () => {
 			"structuretable_filter": []
 		};
 		controller.setPropertyValues(values);
-		expect(propertyListener).to.have.property("callCount", 4);
+		expect(propertyListener).to.have.property("callCount", 5);
 		const actual = controller.getPropertyValues();
 		expect(actual).to.eql(values);
 	});
@@ -1324,7 +1324,7 @@ describe("Properties Controller handlers", () => {
 		const propertyId = { name: "structurelisteditorObjectType" };
 		const initialValue = controller.getPropertyValue(propertyId);
 		controller.updatePropertyValue(propertyId, internalValue, true, type);
-		expect(propertyListener).to.have.property("callCount", 4);
+		expect(propertyListener).to.have.property("callCount", 5);
 		expect(propertyListener.calledWith({
 			action: "UPDATE_PROPERTY",
 			property: propertyId,

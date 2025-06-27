@@ -20,14 +20,14 @@ import { renderWithIntl } from "../../_utils_/intl-utils";
 import { Provider } from "react-redux";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
-import { setControls } from "../../_utils_/property-utils";
+import { setControls } from "../../_utils_/property-utilsRTL";
 import { getTableRows, selectCheckboxes, selectCheckboxesUsingKeyboard, validateSelectedRowNumRows } from "./../../_utils_/table-utilsRTL";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { TRUNCATE_LIMIT } from "./../../../src/common-properties/constants/constants.js";
 
 import listParamDef from "../../test_resources/paramDefs/list_paramDef.json";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
 
 const controlString = {
 	"name": "test-list-string",
@@ -425,7 +425,7 @@ describe("list renders correctly as a nested control", () => {
 	});
 
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("should render a `list` control inside a structurelisteditor starting with index 0", () => {

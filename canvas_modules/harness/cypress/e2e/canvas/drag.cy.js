@@ -117,6 +117,30 @@ describe("Test to see if regular selection and drag behavior works " +
 		cy.clickToolbarUndo();
 	});
 
+	it("Test node can be dragged with nodeMoveable set to true", function() {
+		cy.setCanvasConfig({ "selectedNodeLayout": {
+			nodeMovable: true } });
+
+		cy.getNodeWithLabel("Execution node").click();
+		cy.moveNodeToPosition("Execution node", 400, 450);
+		cy.verifyNodeTransform("Execution node", 400, 450);
+	});
+
+	it("Test node cannot be dragged with nodeMoveable set to false", function() {
+		cy.setCanvasConfig({ "selectedNodeLayout": {
+			nodeMovable: false } });
+
+		cy.wait(200);
+
+		cy.verifyNodeTransform("Execution node", 297, 139);
+
+		cy.getNodeWithLabel("Execution node").click();
+		cy.moveNodeToPosition("Execution node", 400, 450);
+
+		// 297 is original X coordinate and 139 is original Y coordinate
+		cy.verifyNodeTransform("Execution node", 297, 139);
+	});
+
 	it("Test node cannot be dragged when enableEditingActions is false", function() {
 
 		cy.setCanvasConfig({ "selectedEditingActions": false, "selectedInteractionType": "Carbon" });
@@ -220,10 +244,10 @@ describe("Test to see if selection works with enableDragWithoutSelect set to tru
 		cy.verifyNumberOfSelectedObjects(1);
 
 		// Move node down with keyboard
-		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.cmndDownArrow);
+		cy.pressOnNode("Binding (entry) node", key.moveObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.moveObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.moveObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.moveObjectDown);
 		cy.verifyNodeTransform("Binding (entry) node", 89, 140);
 
 		// Make sure only the Super node is selected after the operation
@@ -238,10 +262,10 @@ describe("Test to see if selection works with enableDragWithoutSelect set to tru
 		cy.verifyNumberOfSelectedObjects(1);
 
 		// Size node downwards with keyboard
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
-		cy.pressOnNode("Binding (entry) node", key.shiftDownArrow);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
+		cy.pressOnNode("Binding (entry) node", key.sizeObjectDown);
 		cy.verifyNodeDimensions("Binding (entry) node", 70, 115);
 
 		// Make sure only the Super node is selected after the operation

@@ -211,7 +211,13 @@ export default class SvgCanvasTextArea {
 
 		const pos = CanvasUtils.getSelectionPositions(textDiv);
 
-		const text = textDiv.innerText;
+		let text = textDiv.innerText;
+
+		// Using innerText adds a newline char to end of the text even
+		// though one doesn't exist - so remove it.
+		if (text.endsWith("\n")) {
+			text = text.slice(0, text.length - 1);
+		}
 
 		if (text) { // In Firefox, text can sometimes be null when adding newlines.
 			const mdObj = SvgCanvasMarkdown.processMarkdownAction(action, text, pos.start, pos.end);

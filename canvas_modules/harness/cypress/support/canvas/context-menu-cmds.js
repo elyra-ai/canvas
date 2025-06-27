@@ -45,15 +45,10 @@ Cypress.Commands.add("clickOptionFromContextSubmenu", (submenuName, optionName) 
 		});
 });
 
-Cypress.Commands.add("clickColorFromContextSubmenu", (submenuName, optionName) => {
-	cy.get(".context-menu-popover")
-		.find(".context-menu-item:not(.contextmenu-divider)[data-action='colorBackground']")
-		.as("colorBackgroundOption");
-	cy.get("@colorBackgroundOption")
-		.click();
-	cy.get("@colorBackgroundOption")
+Cypress.Commands.add("clickColorFromContextSubmenu", (optionName) => {
+	cy.get(".color-picker")
 		.find(`.${optionName}`)
-		.click();
+		.click({ force: true });
 });
 
 Cypress.Commands.add("simulateClickInBrowsersEditMenu", (type) => {

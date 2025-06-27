@@ -29,8 +29,7 @@ $panel-border-color: $border-subtle-01;
 	cursor: default;
 	display: flex;
 	position: relative;
-	overflow-x: auto;
-	overflow-y: hidden;
+	overflow: hidden;
 	// Set the font explicitly to 14px to shrink them across the entire canvas
 	font-size: 14px;
 }
@@ -44,9 +43,16 @@ $panel-border-color: $border-subtle-01;
 	position: relative; // This allows the State Tag to have positio: absolute
 }
 
-.right-flyout-container {
+.right-flyout {
 	display: flex;
 	border-left: $panel-border-width solid $panel-border-color;
+	min-height: fit-content;
+	min-width: fit-content;
+}
+
+.left-flyout {
+	display: flex;
+	border-right: $panel-border-width solid $panel-border-color;
 	min-height: fit-content;
 	min-width: fit-content;
 }
@@ -58,6 +64,7 @@ $panel-border-color: $border-subtle-01;
 	// so the contents of the panel can adjust themselves to the height accordingly.
 	height: 0;
 	min-height: 100%;
+	background-color: $layer-01;
 }
 
 // Allow content in child to expand on drag using flex
@@ -66,7 +73,6 @@ $panel-border-color: $border-subtle-01;
 	display: flex;
 	flex: 1;
 	user-select: none; /* Prevent elements from being selectable */
-	background-color: $layer-01;
 }
 
 .right-flyout-drag {
@@ -79,7 +85,8 @@ $panel-border-color: $border-subtle-01;
 	border-left-width: 1px;
 	background: $layer-01;
 	transition: all 0.2s ease-in;
-	&:hover {
+	&:hover,
+	&.is-being-dragged {
 		background: $button-tertiary;
 	}
 }
@@ -100,16 +107,26 @@ $panel-border-color: $border-subtle-01;
 	border-top-width: 1px;
 	background: $layer-01;
 	transition: all 0.2s ease-in;
-	&:hover {
+	&:hover,
+	&.is-being-dragged {
 		background: $button-tertiary;
 	}
 }
 
-.bottom-panel-contents {
+.bottom-panel-contents,
+.top-panel-contents {
 	background-color: $layer-01;
-	width: 100%;
 	user-select: none;
 	height: 100%;
+	// This width and min-width helps control flyout widths.
+	width: 0;
+	min-width: 100%
+}
+
+.center-panel {
+	display: grid;
+	grid-template-rows: 1fr;
+	grid-template-columns: 1fr;
 }
 
 .top-panel {
@@ -193,6 +210,7 @@ $panel-border-color: $border-subtle-01;
 .common-canvas-grid-vertical {
 	height: 100%;
 	width: 100%;
+	overflow: hidden;
 	display: grid;
 	/* grid-template-rows is set dynamically in cc-panels.jsx */
 	grid-template-columns: 1fr;
@@ -201,6 +219,7 @@ $panel-border-color: $border-subtle-01;
 .common-canvas-grid-horizontal {
 	height: 100%;
 	width: 100%;
+	overflow: hidden;
 	display: grid;
 	grid-template-rows: 1fr;
 	/* grid-template-columns is set dynamically in cc-panels.jsx */

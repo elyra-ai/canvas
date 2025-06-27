@@ -24,7 +24,7 @@ import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import oneofselectParamDef from "../../test_resources/paramDefs/oneofselect_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 import { cloneDeep } from "lodash";
 
 const mockOneofselectControl = jest.fn();
@@ -265,7 +265,7 @@ describe("oneofselect paramDef works correctly", () => {
 		renderedController = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("oneofselect allows enum label different from enum value", () => {
@@ -333,7 +333,7 @@ describe("oneofselect filters work correctly", () => {
 		renderedController = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("Validate oneofselect should have options filtered by enum_filter", () => {
@@ -617,6 +617,135 @@ describe("oneofselect with custom value allowed works correctly", () => {
 		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
 		dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
+	});
+});
+
+describe("oneofselect with filter true and custom value not allowed works correctly", () => {
+	const propertyName = "oneofselect-custom";
+	const propertyId = { name: propertyName };
+
+	const controller = new Controller();
+	const control = {
+		"name": propertyName,
+		"label": {
+			"text": "oneofselect"
+		},
+		"description": {
+			"text": "oneofselect description"
+		},
+		"customValueAllowed": false,
+		"shouldFilterItem": true,
+		"valueDef": {
+			"propType": "string",
+			"isList": false,
+			"isMap": false
+		},
+		"values": [
+			"black",
+			"gray",
+			"white",
+			"green",
+			"blue",
+			"purple"
+		],
+		"valueLabels": [
+			"black",
+			"gray",
+			"white",
+			"green",
+			"blue",
+			"purple"
+		]
+	};
+	propertyUtilsRTL.setControls(controller, [control]);
+	afterEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+	});
+	it("should render a combobox dropdown when filter is true, and custom_value is false", () => {
+		const wrapper = render(
+			<OneofselectControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const { container } = wrapper;
+		expectJest(mockOneofselectControl).toHaveBeenCalledWith({
+			"store": controller.getStore(),
+			"controller": controller,
+			"control": control,
+			"propertyId": propertyId,
+		});
+		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		const dropdownInput = dropdownWrapper.querySelectorAll("input");
+		expect(dropdownInput).to.have.length(1);
+		expect(dropdownInput.textContent).to.be.undefined;
+
+		// Verify dropdown items
+		const dropdownMenu = dropdownWrapper.querySelector(".cds--list-box__menu-icon");
+		fireEvent.click(dropdownMenu);
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		expect(dropdownWrapper.querySelectorAll(".cds--list-box__menu-item")).to.have.length(6);
+	});
+
+	it("should accept the input value only for filtering", () => {
+		const wrapper = render(
+			<OneofselectControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const { container } = wrapper;
+		expectJest(mockOneofselectControl).toHaveBeenCalledWith({
+			"store": controller.getStore(),
+			"controller": controller,
+			"control": control,
+			"propertyId": propertyId,
+		});
+		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		let dropdownInput = dropdownWrapper.querySelector("input");
+
+		fireEvent.change(dropdownInput, { target: { value: "custom" } });
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		dropdownInput = dropdownWrapper.querySelector("input");
+		// should not update propertyValue as it is not a valid dropdown option
+		expect(controller.getPropertyValue(propertyId)).to.not.equal("custom");
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
+		expect(dropdownList).to.be.length(0);
+		// Simulate blur (click outside)
+		fireEvent.blur(dropdownInput);
+		expect(dropdownInput.value).to.equal(""); // Input should be cleared
+		expect(controller.getPropertyValue(propertyId)).to.be.undefined; // Value should be reset
+	});
+
+	it("Validate oneofselect filters by default without custom filterHandler callback", () => {
+		const customControl = cloneDeep(control);
+		const wrapper = render(
+			<OneofselectControl
+				store={controller.getStore()}
+				control={customControl}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const { container } = wrapper;
+		let dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		const dropdownInput = dropdownWrapper.querySelector("input");
+
+		fireEvent.change(dropdownInput, { target: { value: "p" } });
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		let dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
+		expect(dropdownList).to.be.length(1);
+
+		fireEvent.change(dropdownInput, { target: { value: "q" } });
+		dropdownWrapper = container.querySelector("div[data-id='properties-oneofselect-custom']");
+		dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
+		expect(dropdownList).to.be.length(0);
 	});
 });
 

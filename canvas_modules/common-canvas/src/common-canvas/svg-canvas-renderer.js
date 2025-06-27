@@ -6190,7 +6190,7 @@ export default class SVGCanvasRenderer {
 
 		CanvasUtils.stopPropagationAndPreventDefault(evt);
 
-		this.canvasController.setFocusObject(focusObj);
+		this.canvasController.setFocusObject(focusObj, evt);
 	}
 
 	restoreFocus() {
@@ -6258,7 +6258,7 @@ export default class SVGCanvasRenderer {
 	// uses zoom-to-reveal to bring the focused object into the
 	// viewport if it is not already.
 	// This is a utility method called from the canvas controller.
-	moveFocusTo(obj) {
+	moveFocusTo(obj, evt) {
 		this.logger.log("moveFocusTo - " + CanvasUtils.getFocusName(obj));
 
 		if (!obj || obj === CANVAS_FOCUS) {
@@ -6315,9 +6315,15 @@ export default class SVGCanvasRenderer {
 		// If there is a non-null D3 selection object that is not empty,
 		// we can position the node in the viewport and then set focus on it.
 		if (objSel && !objSel.empty()) {
-			const zoom = this.canvasController.getZoomToReveal([obj.id]);
-			if (zoom) {
-				this.zoomTo(zoom);
+			// If the focus was initiated by a Keyboard event we zoom to reveal, so the object
+			// appears in the viewport. If the event was a MouseEvent we don't zoom to reveal
+			// because it interferes with double-click events (also it's not necessary becasue
+			// the object will be at least partially visible in the view port for it to be clicked).
+			if (evt instanceof KeyboardEvent) {
+				const zoom = this.canvasController.getZoomToReveal([obj.id]);
+				if (zoom) {
+					this.zoomTo(zoom);
+				}
 			}
 
 			const element = objSel.node();

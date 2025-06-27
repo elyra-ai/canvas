@@ -408,7 +408,7 @@ export default class SvgCanvasUtilsComments {
 				newText += newLine;
 
 				if (i === lines.length - 1) {
-					if (text[end] !== "\n" || text[end + 1] !== "\n") {
+					if (!newText.endsWith("\n") && endText && !endText.startsWith("\n\n")) {
 						newText += "\n";
 					}
 				} else {

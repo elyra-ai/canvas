@@ -18,7 +18,7 @@ import { expect } from "chai";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import radioParamDef from "../../test_resources/paramDefs/radio_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 describe("radio renders and works correctly with different enum types", () => {
 
@@ -30,7 +30,7 @@ describe("radio renders and works correctly with different enum types", () => {
 		renderedController = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("radioset tooltip with string enum Gini & Entropy are displayed ", async() => {
@@ -273,7 +273,7 @@ describe("radio filtered enum works correctly", () => {
 		renderedController = renderedObject.controller;
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("Validate radioFilter should have options filtered by enum_filter", () => {
@@ -335,7 +335,7 @@ describe("radioset works in table correctly", () => {
 		tableDiv = wrapper.container.querySelector(".properties-vt");
 	});
 	afterEach(() => {
-		wrapper.unmount();
+		cleanup();
 	});
 
 	it("Validation enum in table cell default to select control instead of radioset", () => {

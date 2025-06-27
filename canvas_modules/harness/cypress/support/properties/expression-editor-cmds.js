@@ -14,6 +14,16 @@
  * limitations under the License.
  */
 
+Cypress.Commands.add("useCtrlOrCmdKey", () => {
+	// Ctrl or Cmd keys are used to select multiple elements
+	// Get the os name to decide whether to click ctrl or cmd
+	// Cypress.platform returns the underlying OS name
+	// For MacOS, Cypress.platform returns "darwin". For windows, Cypress.platform returns "win32"
+	// For MacOS, return "{meta}" (which is "command" key) and for windows, return "{ctrl}" (which is "ctrl" key)
+	const selectedKey = Cypress.platform === "darwin" ? "{meta}" : "{ctrl}";
+	return selectedKey;
+});
+
 Cypress.Commands.add("enterTextInExpressionEditor", (text, propertyId) => {
 	const clipboardData = new DataTransfer();
 	clipboardData.setData("text/plain", text);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,6 +106,22 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a n
 		cy.setYPercentOffset(60);
 		cy.submitAPI();
 		cy.verifyCanvasTransform("translate(-913.7210355957193,-358.1041124596638) scale(0.9090909090909091)");
+	});
+
+	it("Should position off screen node into specified positions 50,50 within the canvas", function() {
+		cy.selectEntryFromDropdown("Distribution");
+		cy.setXPercentOffset(50);
+		cy.setYPercentOffset(50);
+		cy.submitAPI();
+		cy.verifyCanvasTransform("translate(-1847.4242243740646,-495.2194467959429) scale(1)");
+	});
+
+	it("Should position off screen node into specified positions 25,25 within the canvas", function() {
+		cy.selectEntryFromDropdown("Distribution");
+		cy.setXPercentOffset(25);
+		cy.setYPercentOffset(25);
+		cy.submitAPI();
+		cy.verifyCanvasTransform("translate(-2098.9267361645375,-671.9703308688752) scale(1)");
 	});
 });
 

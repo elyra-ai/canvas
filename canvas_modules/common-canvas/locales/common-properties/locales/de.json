@@ -34,6 +34,7 @@
   "alerts.tab.title": "Alerts",
   "title.editor.label": "Titel bearbeiten",
   "title.editor.helpButton.label": "Hilfe",
+  "title.editor.descButton.label": "Überschrift: Zusätzliche Informationen",
   "table.summary.error": "Es gibt {errorMsgCount} Fehlerzellen. ",
   "table.summary.warning": "Es gibt {warningMsgCount} Warnungszellen. ",
   "control.summary.error": "Es gibt {errorMsgCount} Parameter mit Fehlern. ",
@@ -95,6 +96,8 @@
   "table.toolbar.button.delete": "Löschen",
   "table.toolbar.button.edit": "Bearbeiten",
   "table.toolbar.button.cancel": "Abbrechen",
+  "table.toolbar.overflow.label": "Überlauf der Tabellen-Symbolleiste",
+  "radiobuttongroup.aria.label": "Optionsfeldgruppe",
   "list.table.label": "Werte",
   "dropdown.tooltip.openMenu": "Menü öffnen",
   "dropdown.tooltip.closeMenu": "Menü schließen",
@@ -114,5 +117,6 @@
   "label.indicator.optional": "(optional)",
   "slider.numberInput.label": "Eingabe einer Zahl für Schieberegler",
   "editorForm.tabList.label": "Primäre Registerkarten",
-  "subTabs.tabList.label": "Registerkartenliste"
+  "subTabs.tabList.label": "Registerkartenliste",
+  "table.deleteIcon.tooltip": "Löschen"
 }

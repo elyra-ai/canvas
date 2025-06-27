@@ -34,6 +34,7 @@
   "alerts.tab.title": "警报",
   "title.editor.label": "编辑标题",
   "title.editor.helpButton.label": "帮助",
+  "title.editor.descButton.label": "标题 附加信息",
   "table.summary.error": "存在 {errorMsgCount} 个错误单元格。 ",
   "table.summary.warning": "存在 {warningMsgCount} 个警告单元格。 ",
   "control.summary.error": "存在 {errorMsgCount} 个带有错误的参数。 ",
@@ -95,6 +96,8 @@
   "table.toolbar.button.delete": "删除",
   "table.toolbar.button.edit": "编辑",
   "table.toolbar.button.cancel": "取消",
+  "table.toolbar.overflow.label": "表格工具栏溢出",
+  "radiobuttongroup.aria.label": "单选按钮组",
   "list.table.label": "值",
   "dropdown.tooltip.openMenu": "打开菜单",
   "dropdown.tooltip.closeMenu": "关闭菜单",
@@ -114,5 +117,6 @@
   "label.indicator.optional": "（可选）",
   "slider.numberInput.label": "滑块编号输入",
   "editorForm.tabList.label": "主选项卡",
-  "subTabs.tabList.label": "选项卡列表"
+  "subTabs.tabList.label": "选项卡列表",
+  "table.deleteIcon.tooltip": "删除"
 }

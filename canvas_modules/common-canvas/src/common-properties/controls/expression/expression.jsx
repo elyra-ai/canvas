@@ -27,10 +27,10 @@ import ValidationMessage from "./../../components/validation-message";
 import TearSheet from "../../panels/tearsheet/index.js";
 import { formatMessage } from "./../../util/property-utils";
 import ExpressionBuilder from "./expression-builder/expression-builder";
-import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE } from "./../../constants/constants";
+import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE, STATES } from "./../../constants/constants";
+import { ControlType } from "./../../constants/form-constants";
 import { Calculator } from "@carbon/react/icons";
 import * as ControlUtils from "./../../util/control-utils";
-import { STATES } from "./../../constants/constants";
 import { get } from "lodash";
 import ExpressionToggle from "./expression-toggle/expression-toggle";
 
@@ -89,6 +89,9 @@ class ExpressionControl extends React.Component {
 		// When code is edited in expression builder, reflect changes in expression flyout
 		// Toggle editable mode in Codemirror editor
 		if (!isEqual(prevProps.state, this.props.state)) {
+			if (prevProps.state === STATES.HIDDEN) {
+				this.createCodeMirrorEditor();
+			}
 			this.setCodeMirrorEditable(!(this.props.state === STATES.DISABLED) || !this.props.readOnly);
 		}
 		if (
@@ -319,6 +322,15 @@ class ExpressionControl extends React.Component {
 		return this.props.builder && this.props.rightFlyout && this.expressionInfo.functionCategories && Object.keys(this.expressionInfo.functionCategories).length > 0;
 	}
 
+	_getCodeHeader() {
+		const customHeaderHandler = this.props.controller.getHandlers().customHeaderHandler;
+		let header = null;
+		if (customHeaderHandler && typeof customHeaderHandler(this.props.propertyId) !== "undefined") {
+			header = customHeaderHandler(this.props.propertyId);
+		}
+		return header;
+	}
+
 	render() {
 		const hidden = this.props.state === STATES.HIDDEN;
 		if (hidden) {
@@ -343,6 +355,8 @@ class ExpressionControl extends React.Component {
 				hasIconOnly
 			/>)
 			: null;
+
+		const codeHeaderContent = this._getCodeHeader();
 
 		let validateIcon = null;
 		if (this.state.validateIcon) {
@@ -404,7 +418,13 @@ class ExpressionControl extends React.Component {
 			{validateLink}
 		</div>);
 
-		let header = expressionLink;
+		const codeHeader = this._getCodeHeader() !== null
+			? (<div className="properties-code-header">
+				{codeHeaderContent}
+			</div>)
+			: null;
+
+		let header = (this.props.control.controlType === ControlType.CODE) ? codeHeader : expressionLink;
 
 		if (this.props.expressionLabel) {
 			header = (<div className="properties-expression-header">
@@ -435,7 +455,12 @@ class ExpressionControl extends React.Component {
 					<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
 						className={className}
 					>
-						<div className={codemirrorClassName} ref={this.editorRef} style={{ height: this.state.expressionEditorHeight, minHeight: minLineHeight }} />
+						<div
+							className={codemirrorClassName}
+							ref={this.editorRef}
+							style={{ height: this.state.expressionEditorHeight, minHeight: minLineHeight }}
+							aria-disabled={this.props.state === STATES.DISABLED || !this.props.readOnly}
+						/>
 						<ValidationMessage state={this.props.state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 					</div>
 				</div>

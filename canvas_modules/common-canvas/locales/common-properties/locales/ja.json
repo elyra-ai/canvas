@@ -34,6 +34,7 @@
   "alerts.tab.title": "アラート",
   "title.editor.label": "タイトルの編集",
   "title.editor.helpButton.label": "ヘルプ",
+  "title.editor.descButton.label": "見出し 追加情報",
   "table.summary.error": "{errorMsgCount} 個のエラー・セルがあります。 ",
   "table.summary.warning": "{warningMsgCount} 個の警告セルがあります。 ",
   "control.summary.error": "エラーが発生した {errorMsgCount} 個のパラメーターがあります。 ",
@@ -95,6 +96,8 @@
   "table.toolbar.button.delete": "削除",
   "table.toolbar.button.edit": "編集",
   "table.toolbar.button.cancel": "キャンセル",
+  "table.toolbar.overflow.label": "表ツールバーのオーバーフロー",
+  "radiobuttongroup.aria.label": "ラジオ・ボタン・グループ",
   "list.table.label": "値",
   "dropdown.tooltip.openMenu": "メニューを開く",
   "dropdown.tooltip.closeMenu": "メニューを閉じる",
@@ -114,5 +117,6 @@
   "label.indicator.optional": "(オプション)",
   "slider.numberInput.label": "スライダー番号の入力",
   "editorForm.tabList.label": "プライマリー・タブ",
-  "subTabs.tabList.label": "タブ・リスト"
+  "subTabs.tabList.label": "タブ・リスト",
+  "table.deleteIcon.tooltip": "削除"
 }

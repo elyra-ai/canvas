@@ -327,7 +327,8 @@
                                         "isMap": false,
                                         "defaultValue": ""
                                       },
-                                      "role": "new_column"
+                                      "role": "new_column",
+                                      "editStyle": "subpanel"
                                     }
                                   }
                                 ],

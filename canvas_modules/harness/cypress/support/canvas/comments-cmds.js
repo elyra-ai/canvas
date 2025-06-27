@@ -16,6 +16,7 @@
 /* eslint max-len: "off" */
 
 import CanvasUtils from "../../../../common-canvas/src/common-canvas/common-canvas-utils.js";
+import key from "../../support/canvas/key.js";
 
 Cypress.Commands.add("getCommentWithText", (commentText) =>
 	cy.get(getCommentGrpSelector())
@@ -133,6 +134,17 @@ Cypress.Commands.add("isCommentSelected", (commentText) => {
 			return false;
 		});
 });
+
+Cypress.Commands.add("shortcutKeysMarkdown", (originalCommentText, keyObj) => {
+	cy.getCommentWithText(originalCommentText).as("comment");
+	cy.get("@comment").get(".d3-comment-text-entry")
+		.as("textarea");
+	cy.get("@textarea")
+		.trigger("keydown", keyObj);
+	cy.get("@textarea")
+		.trigger("keyup", keyObj);
+});
+
 
 Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText, saveComment = true) => {
 	cy.getCommentWithText(originalCommentText).as("comment");
@@ -296,12 +308,9 @@ Cypress.Commands.add("deleteCommentUsingContextMenu", (commentText) => {
 
 Cypress.Commands.add("deleteCommentUsingKeyboard", (commentText) => {
 	// Delete comment by pressing 'Delete' key on keyboard
-	cy.useDeleteKey()
-		.then((deleteKey) => {
-			cy.getCommentWithText(commentText).as("comment");
-			cy.get("@comment").click();
-			cy.get("@comment").type(deleteKey);
-		});
+	cy.getCommentWithText(commentText).as("comment");
+	cy.get("@comment").click();
+	cy.get("@comment").trigger("keydown", key.delete);
 });
 
 Cypress.Commands.add("deleteCommentUsingToolbar", (commentText) => {
@@ -313,22 +322,11 @@ Cypress.Commands.add("deleteCommentUsingToolbar", (commentText) => {
 Cypress.Commands.add("selectAllCommentsUsingCtrlOrCmdKey", () => {
 	cy.get("#canvas-div-0").find(".d3-comment-group")
 		.then((comments) => {
-			cy.useCtrlOrCmdKey()
-				.then((selectedKey) => {
-					// Press and hold the ctrl/cmd key
-					cy.get("body")
-						.type(selectedKey, { release: false });
-
-					// Click all the comments
-					comments.each((idx, node) => {
-						cy.wrap(node)
-							.click();
-					});
-
-					// Cancel the ctrl/cmd key press
-					cy.get("body")
-						.type(selectedKey, { release: true });
-				});
+			// Click all the comments
+			comments.each((idx, node) => {
+				cy.wrap(node)
+					.click({ metaKey: true });
+			});
 		});
 });
 
