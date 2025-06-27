@@ -31,6 +31,8 @@ class CommonCanvasRightFlyout extends React.Component {
 		this.rightFlyoutRef = React.createRef();
 		this.state = { isBeingDragging: false };
 
+		this.minWidth = 0;
+
 		this.onMouseUp = this.onMouseUp.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
 		this.onMouseMoveX = this.onMouseMoveX.bind(this);
@@ -42,6 +44,11 @@ class CommonCanvasRightFlyout extends React.Component {
 	componentDidMount() {
 		// Since flyout content width can be dynamic set the minimum width to width of the content
 		this.minWidth = this.getCurrentWidth();
+	}
+
+	componentWillUnmount() {
+		// Reset the flyout width so the content will control the width next time the flyout is mounted.
+		this.props.canvasController.setRightFlyoutWidth(0);
 	}
 
 	onMouseDown(e) {
@@ -65,8 +72,8 @@ class CommonCanvasRightFlyout extends React.Component {
 	onMouseMoveX(e) {
 		if (e.clientX) {
 			const diff = e.clientX - this.posX;
-			const wth = this.props.panelWidth - diff;
-			this.props.canvasController.setRightFlyoutWidth(this.limitWidth(wth));
+			const wd = this.props.panelWidth - diff;
+			this.props.canvasController.setRightFlyoutWidth(this.limitWidth(wd));
 			this.posX = e.clientX;
 		}
 	}
@@ -86,7 +93,7 @@ class CommonCanvasRightFlyout extends React.Component {
 
 	// Returns present width of the flyout.
 	getCurrentWidth() {
-		return this.rightFlyoutRef?.current?.offsetWidth ? this.rightFlyoutRef?.current.offsetWidth : 0;
+		return this.rightFlyoutRef?.current ? this.rightFlyoutRef?.current.getBoundingClientRect().width : 0;
 	}
 
 	// Returns a new width for right panel limited by the need to enforce
