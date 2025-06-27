@@ -211,6 +211,7 @@ class CommonCanvasPanels extends React.Component {
 				);
 
 			} else {
+				const templateColsMain = this.props.rightFlyoutIsOpen ? "1fr auto" : "1fr";
 				const templateRows = this.props.toolbarIsOpen ? "auto 1fr" : "1fr";
 				const templateCols = leftFlyoutIsOpen ? "auto 1fr" : "1fr";
 
@@ -226,15 +227,16 @@ class CommonCanvasPanels extends React.Component {
 					</div>
 				);
 				panels = (
-					<>
+					<div className="common-canvas-grid-horizontal" style={{ gridTemplateColumns: templateColsMain }}>
 						{leftSideItems}
 						{rightFlyout}
-					</>
+					</div>
 				);
 			}
 
 		} else {
 			if (this.props.enableRightFlyoutUnderToolbar) {
+				const templateColsMain = leftFlyoutIsOpen ? "auto 1fr" : "1fr";
 				const templateRows = this.props.toolbarIsOpen ? "auto 1fr" : "1fr";
 				const templateCols = this.props.rightFlyoutIsOpen ? "1fr auto" : "1fr";
 
@@ -250,10 +252,10 @@ class CommonCanvasPanels extends React.Component {
 					</div>
 				);
 				panels = (
-					<>
+					<div className="common-canvas-grid-horizontal" style={{ gridTemplateColumns: templateColsMain }}>
 						{leftFlyout}
 						{rightSideItems}
-					</>
+					</div>
 				);
 
 			} else {
