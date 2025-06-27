@@ -23,7 +23,6 @@
 /***************************************************************************/
 
 import Action from "../command-stack/action.js";
-import { CANVAS_FOCUS } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CreateAutoNodeAction extends Action {
 	constructor(data, canvasController) {
@@ -63,12 +62,10 @@ export default class CreateAutoNodeAction extends Action {
 		}
 
 		this.objectModel.setSelections([this.newNode.id], this.data.pipelineId);
-		this.focusObject = this.newNode;
 	}
 
 	undo() {
 		this.apiPipeline.deleteNodes([this.newNode]);
-		this.focusObject = CANVAS_FOCUS;
 	}
 
 	redo() {
@@ -77,9 +74,5 @@ export default class CreateAutoNodeAction extends Action {
 
 	getLabel() {
 		return this.labelUtil.getActionLabel(this, "action.createNode", { node_label: this.newNode.label });
-	}
-
-	getFocusObject() {
-		return this.focusObject;
 	}
 }
