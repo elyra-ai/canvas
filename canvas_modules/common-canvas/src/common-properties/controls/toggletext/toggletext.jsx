@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
@@ -90,7 +91,8 @@ class ToggletextControl extends React.Component {
 			);
 		}
 
-		const className = classNames("properties-toggletext", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null);
+		const className = classNames("properties-toggletext", { "hide": hidden },
+			this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null);
 
 		return (
 			<div
@@ -100,7 +102,7 @@ class ToggletextControl extends React.Component {
 			>
 				{this.props.tableControl ? null : this.props.controlItem}
 				{button}
-				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} propertyId={this.props.propertyId} />
 			</div>
 		);
 	}
