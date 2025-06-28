@@ -795,6 +795,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableMoveNodesInComment = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedMoveNodesInComment" // Set ID to corresponding field in App.js state
+				labelText="Enable Move Nodes In Comment"
+				toggled={this.props.getStateValue("selectedMoveNodesInComment")}
+				onToggle={(val) => this.setStateValue(val, "selectedMoveNodesInComment")}
+			/>
+		</div>);
+
 		var enableContextToolbar = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedContextToolbar" // Set ID to corresponding field in App.js state
@@ -1857,6 +1866,8 @@ export default class SidePanelForms extends React.Component {
 					{enableMarkdownHTML}
 					{divider}
 					{enableWYSIWYGComments}
+					{divider}
+					{enableMoveNodesInComment}
 					{divider}
 					<div className="harness-side-panel-header">Drag, Pan, Zoom and Select</div>
 					{divider}
