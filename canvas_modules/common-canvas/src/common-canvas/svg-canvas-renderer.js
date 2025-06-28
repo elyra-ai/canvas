@@ -4633,6 +4633,7 @@ export default class SVGCanvasRenderer {
 			this.displaySingleLink(l);
 		});
 
+
 		this.logger.logEndTimer("displayMovedLinks");
 	}
 
@@ -5322,6 +5323,14 @@ export default class SVGCanvasRenderer {
 			}
 			if (linkObj) {
 				linksArray.push(linkObj);
+
+			} else {
+				// If no linkObj, remove link if displayLinkOnOverlap is false because
+				// node may be being dragged over linked node.
+				if (!this.canvasLayout.displayLinkOnOverlap) {
+					const selection = this.getLinkGroupSelectionById(link.id);
+					selection.remove();
+				}
 			}
 		});
 
