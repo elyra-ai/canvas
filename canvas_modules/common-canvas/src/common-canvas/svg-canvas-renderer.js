@@ -4633,7 +4633,6 @@ export default class SVGCanvasRenderer {
 			this.displaySingleLink(l);
 		});
 
-
 		this.logger.logEndTimer("displayMovedLinks");
 	}
 
