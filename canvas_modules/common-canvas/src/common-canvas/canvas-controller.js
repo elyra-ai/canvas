@@ -2011,10 +2011,6 @@ export default class CanvasController {
 	setFocusObject(focusObj, evt) {
 		this.logger.log("setFocusObject focusObject = " + CanvasUtils.getFocusName(focusObj));
 
-		if (!focusObj) {
-			return;
-		}
-
 		this.focusObject = focusObj;
 
 		if (this.focusObject && this.canvasContents) {
