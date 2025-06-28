@@ -1373,14 +1373,14 @@ export default class CanvasUtils {
 
 	// Returns a concatenation of the two input arrays making sure there are no
 	// duplicates (based on ID) in the returned array.
-	static concatUniqueBasedOnId(newLinks, currentLinks) {
-		const outLinks = currentLinks;
-		newLinks.forEach((nl) => {
-			if (!currentLinks.some((cl) => cl.id === nl.id)) {
-				outLinks.push(nl);
+	static concatUniqueBasedOnId(newObjs, currentObjs) {
+		const outObjs = currentObjs;
+		newObjs.forEach((nl) => {
+			if (!currentObjs.some((cl) => cl.id === nl.id)) {
+				outObjs.push(nl);
 			}
 		});
-		return outLinks;
+		return outObjs;
 	}
 
 	// Returns the color class in the className parameter, if one is found,
