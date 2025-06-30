@@ -26,8 +26,9 @@ import CanvasContents from "./cc-contents.jsx";
 import CommonCanvasToolbar from "./cc-toolbar.jsx";
 import CommonCanvasLeftFlyout from "./cc-left-flyout.jsx";
 import CommonCanvasRightFlyout from "./cc-right-flyout.jsx";
-import CanvasBottomPanel from "./cc-bottom-panel.jsx";
 import CanvasTopPanel from "./cc-top-panel.jsx";
+import CanvasCenterPanel from "./cc-center-panel.jsx";
+import CanvasBottomPanel from "./cc-bottom-panel.jsx";
 import Logger from "../logging/canvas-logger.js";
 import { PALETTE_LAYOUT_FLYOUT, PALETTE_LAYOUT_DIALOG, PALETTE_LAYOUT_NONE }
 	from "../common-canvas/constants/canvas-constants";
@@ -39,6 +40,11 @@ class CommonCanvasPanels extends React.Component {
 		this.logger = new Logger("CC-Panels");
 
 		this.containingDivId = "common-canvas-items-container-" + props.canvasController.getInstanceId();
+
+		this.centerPanelRef = React.createRef();
+
+		this.getCenterPanelWidth = this.getCenterPanelWidth.bind(this);
+		this.getCenterPanelHeight = this.getCenterPanelHeight.bind(this);
 	}
 
 	// Prevent the default behavior (which is to show a plus-sign pointer) as
@@ -54,6 +60,20 @@ class CommonCanvasPanels extends React.Component {
 	// canvas area itself to allow external objects to be dropped on it.
 	onDrop(evt) {
 		evt.preventDefault();
+	}
+
+	// Returns the center panel width. Called by the panel flyout objects.
+	getCenterPanelWidth() {
+		const rect = this.centerPanelRef?.current?.getBoundingRect();
+		return rect ? rect.width : 0;
+	}
+
+	// Returns the center panel height. Called by the panel flyout objects.
+	getCenterPanelHeight() {
+		const rect = this.centerPanelRef?.current?.getBoundingRect();
+
+		// Assume the center panel <div> is a reasonable height if it has not yet fully rendered.
+		return rect ? rect.height : 1000;
 	}
 
 	generateClass() {
@@ -75,9 +95,11 @@ class CommonCanvasPanels extends React.Component {
 	// Returns a JSX <div> for the top, canvas contents and bottom panels that are always
 	// on top of each other.
 	generateTopCenterBottom() {
-		const canvasContents = (<CanvasContents canvasController={this.props.canvasController} />);
-		const bottomPanel = (<CanvasBottomPanel canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
+		const centerContents = (<CanvasContents canvasController={this.props.canvasController} />);
+
 		const topPanel = (<CanvasTopPanel canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
+		const centerPanel = (<CanvasCenterPanel ref={this.centerPanelRef} content={centerContents} />);
+		const bottomPanel = (<CanvasBottomPanel canvasController={this.props.canvasController} getCenterPanelHeight={this.getCenterPanelHeight} />);
 
 		let templateRows = this.props.topPanelIsOpen ? "auto 1fr" : "1fr";
 		templateRows += this.props.bottomPanelIsOpen ? " auto" : "";
@@ -85,7 +107,7 @@ class CommonCanvasPanels extends React.Component {
 		return (
 			<div className="common-canvas-grid-vertical" style={{ gridTemplateRows: templateRows }}>
 				{topPanel}
-				{canvasContents}
+				{centerPanel}
 				{bottomPanel}
 			</div>
 		);
@@ -138,7 +160,12 @@ class CommonCanvasPanels extends React.Component {
 
 	// Returns a JSX object for the contents of the right panel.
 	generateRightFlyout() {
-		return (<CommonCanvasRightFlyout containingDivId={this.containingDivId} canvasController={this.props.canvasController} />);
+		return (
+			<CommonCanvasRightFlyout
+				getCenterPanelWidth={this.getCenterPanelWidth}
+				canvasController={this.props.canvasController}
+			/>
+		);
 	}
 
 	render() {
@@ -184,6 +211,7 @@ class CommonCanvasPanels extends React.Component {
 				);
 
 			} else {
+				const templateColsMain = this.props.rightFlyoutIsOpen ? "1fr auto" : "1fr";
 				const templateRows = this.props.toolbarIsOpen ? "auto 1fr" : "1fr";
 				const templateCols = leftFlyoutIsOpen ? "auto 1fr" : "1fr";
 
@@ -199,15 +227,16 @@ class CommonCanvasPanels extends React.Component {
 					</div>
 				);
 				panels = (
-					<>
+					<div className="common-canvas-grid-horizontal" style={{ gridTemplateColumns: templateColsMain }}>
 						{leftSideItems}
 						{rightFlyout}
-					</>
+					</div>
 				);
 			}
 
 		} else {
 			if (this.props.enableRightFlyoutUnderToolbar) {
+				const templateColsMain = leftFlyoutIsOpen ? "auto 1fr" : "1fr";
 				const templateRows = this.props.toolbarIsOpen ? "auto 1fr" : "1fr";
 				const templateCols = this.props.rightFlyoutIsOpen ? "1fr auto" : "1fr";
 
@@ -223,10 +252,10 @@ class CommonCanvasPanels extends React.Component {
 					</div>
 				);
 				panels = (
-					<>
+					<div className="common-canvas-grid-horizontal" style={{ gridTemplateColumns: templateColsMain }}>
 						{leftFlyout}
 						{rightSideItems}
-					</>
+					</div>
 				);
 
 			} else {

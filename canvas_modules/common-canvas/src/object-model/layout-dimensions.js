@@ -121,6 +121,9 @@ const horizontalDefaultLayout = {
 		// Allows the user to resize the node.
 		nodeResizable: false,
 
+		// Allows the user to move the node. Can be: true or false.
+		nodeMovable: true,
+
 		// The size of the node sizing area that extends around the node, over
 		// which the mouse pointer will change to the sizing arrows.
 		nodeSizingArea: 10,
@@ -599,6 +602,9 @@ const verticalDefaultLayout = {
 
 		// Allows the user to resize the node.
 		nodeResizable: false,
+
+		// Allows the user to move the node. Can be: true or false.
+		nodeMovable: true,
 
 		// The size of the node sizing area that extends around the node, over
 		// which the mouse pointer will change to the sizing arrows.

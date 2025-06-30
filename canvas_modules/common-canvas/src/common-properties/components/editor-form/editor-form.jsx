@@ -531,6 +531,7 @@ class EditorForm extends React.Component {
 					<TearSheet
 						open={this.props.controller.getActiveTearsheet() !== null}
 						onCloseCallback={onCloseCallback}
+						cancelHandler={onCloseCallback}
 						key={panel.id}
 						tearsheet={this.visibleTearsheet}
 					/>
@@ -683,6 +684,7 @@ class EditorForm extends React.Component {
 				stackedTearsheet = (<TearSheet
 					open
 					stacked
+					cancelHandler={this.closeFieldPicker}
 					tearsheet={{
 						title: title,
 						content: this.fieldPicker()

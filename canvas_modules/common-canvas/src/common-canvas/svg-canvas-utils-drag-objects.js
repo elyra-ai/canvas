@@ -146,6 +146,10 @@ export default class SVGCanvasUtilsDragObjects {
 	// x and y amounts provided. This is called when the user moves an
 	// object using the keyboard.
 	moveObject(d, dir) {
+		if (!this.isObjectMovable(d)) {
+			return;
+		}
+
 		let xInc = 0;
 		let yInc = 0;
 
@@ -236,7 +240,9 @@ export default class SVGCanvasUtilsDragObjects {
 			this.initializeResizeVariables(d);
 
 		} else {
-			this.startObjectsMoving(d);
+			if (this.isObjectMovable(d)) {
+				this.startObjectsMoving(d);
+			}
 		}
 
 		this.logger.logEndTimer("dragStartObject", true);
@@ -251,7 +257,9 @@ export default class SVGCanvasUtilsDragObjects {
 			this.resizeNode(d3Event.dx, d3Event.dy, d, this.nodeSizingDirection);
 
 		} else {
-			this.moveObjects(d3Event.dx, d3Event.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
+			if (this.isObjectMovable(d)) {
+				this.moveObjects(d3Event.dx, d3Event.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
+			}
 		}
 
 		this.logger.logEndTimer("dragObject", true);
@@ -271,7 +279,9 @@ export default class SVGCanvasUtilsDragObjects {
 			this.nodeSizing = false;
 
 		} else {
-			this.endObjectsMoving(d, d3Event.sourceEvent.shiftKey, KeyboardUtils.isMetaKey(d3Event.sourceEvent));
+			if (this.isObjectMovable(d)) {
+				this.endObjectsMoving(d, d3Event.sourceEvent.shiftKey, KeyboardUtils.isMetaKey(d3Event.sourceEvent));
+			}
 		}
 
 		this.logger.logEndTimer("dragEndObject", true);
@@ -630,7 +640,7 @@ export default class SVGCanvasUtilsDragObjects {
 			offsetY: 0,
 			runningX: 0,
 			runningY: 0,
-			objects: this.getMoveObjects(d)
+			objects: this.getMoveObjects(d).filter((obj) => this.isObjectMovable(obj))
 		};
 
 		if (this.movingObjectData.objects?.length > 0) {
@@ -879,6 +889,12 @@ export default class SVGCanvasUtilsDragObjects {
 				this.ren.getCommentGroupSelectionById(obj.id).classed("d3-is-monving", state);
 			}
 		});
+	}
+
+	// Returns true if the object passed in is movable or false if not.
+	isObjectMovable(obj) {
+		return CanvasUtils.isComment(obj) ||
+			CanvasUtils.isNode(obj) && obj.layout?.nodeMovable;
 	}
 
 	// Returns true if the current move objects array has a single node which
