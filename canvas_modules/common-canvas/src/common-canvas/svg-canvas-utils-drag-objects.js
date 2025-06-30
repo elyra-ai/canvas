@@ -869,14 +869,32 @@ export default class SVGCanvasUtilsDragObjects {
 	// object being moved is not one of the selected objects, then just that
 	// object is to be moved.
 	getMoveObjects(d) {
-		const selectedObjects = this.ren.activePipeline.getSelectedNodesAndComments();
+		let moveObjects = this.ren.activePipeline.getSelectedNodesAndComments();
 
 		if (this.ren.config.enableDragWithoutSelect &&
-				selectedObjects.findIndex((o) => o.id === d.id) === -1) {
+				moveObjects.findIndex((o) => o.id === d.id) === -1) {
 			return [d];
 		}
 
-		return selectedObjects;
+		if (this.ren.config.enableMoveNodesInComment) {
+			if (CanvasUtils.isComment(d)) {
+				const objsInComment = this.objsInComment(d, this.ren.activePipeline.nodes.concat(this.ren.activePipeline.comments));
+				moveObjects = CanvasUtils.concatUniqueBasedOnId(objsInComment, moveObjects);
+			}
+		}
+
+		return moveObjects;
+	}
+
+	// Returns any object from the set of objects passed in that are
+	// fully inside the boundaries of the comment passed in.
+	objsInComment(com, objs) {
+		return objs.filter((n) =>
+			n.x_pos > com.x_pos &&
+			n.y_pos > com.y_pos &&
+			n.x_pos + n.width < com.x_pos + com.width &&
+			n.y_pos + n.height < com.y_pos + com.height
+		);
 	}
 
 	// Switches the 'd3-is-moving' class on and off for the objects passed
