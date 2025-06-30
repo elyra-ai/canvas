@@ -172,7 +172,7 @@ export class Control {
 		if (typeof settings.visible === "boolean") {
 			this.visible = settings.visible;
 		}
-		if (typeof settings.width === "number") {
+		if (typeof settings.width === "number" || (!isNaN(parseInt(settings.width, 10)) && settings.width?.endsWith("px"))) {
 			this.width = settings.width;
 		}
 		if (settings.editStyle) {
