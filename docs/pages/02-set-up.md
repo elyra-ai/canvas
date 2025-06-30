@@ -65,15 +65,13 @@ If you are using Common Properties then also include the react-virtualized style
   - react-virtualized/styles.css
 
 ### Loading Fonts
-To get correct and efficient display of fonts in Elyra Canvas, the build process for your application should copy the IBM Plex font files from `/node_modules/@ibm/plex`to a `./fonts` folder and the following should be added to the `.scss` file for your application:
+To get correct and efficient display of fonts in Elyra Canvas, the build process for your application should copy the IBM Plex font files from `/node_modules/@ibm`to a `./fonts` folder and the following should be added to the `.scss` file for your application:
 
 ```
-@use "@carbon/react" as * with (
-	$font-path: "/fonts"
+@use "@carbon/react" with (
+	$font-path: "/fonts/plex",
+	$use-per-family-plex: true
 );
-
-$font-prefix: './fonts';
-@import 'node_modules/@ibm/plex/scss/ibm-plex.scss';
 ```
 
 You can see an example of this in the [common.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) file for the Elyra Canvas Test Harness. The Test Harness is the equivalent of a host application.
