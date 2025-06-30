@@ -2327,7 +2327,7 @@ export declare class CanvasController {
 
     /**
      * Zooms the canvas contents to fit within the viewport
-     * @param animateTime - Amount if miniseconds for the trasition.
+     * @param animateTime - Amount of miniseconds for the transition.
      */
     zoomToFit(
       animateTime?: AnimationTime
@@ -2337,7 +2337,7 @@ export declare class CanvasController {
      * Changes the zoom amounts for the canvas. This method does not alter the
      * pipelineFlow document.
      * @param zoomObject - A zoom object
-     * @param animateTime - Amount if miniseconds for the trasition.
+     * @param animateTime - Amount of miniseconds for the transition.
      */
     zoomTo(
       zoomObject: ZoomObjectDef,
@@ -2351,7 +2351,7 @@ export declare class CanvasController {
      * If omitted the movement happens immediately.
      * @param x - X coordinate amount.
      * @param y - Y coordinate amount.
-     * @param animateTime - Amount if miniseconds for the trasition.
+     * @param animateTime - Amount of miniseconds for the transition.
      */
     translateBy(
       x: CanvasDistance,
