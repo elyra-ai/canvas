@@ -1876,9 +1876,9 @@ export default class CanvasController {
 		}
 	}
 
-	zoomToFit() {
+	zoomToFit(animateTime) {
 		if (this.canvasContents) {
-			this.getSVGCanvasD3().zoomToFit();
+			this.getSVGCanvasD3().zoomToFit(animateTime);
 		}
 	}
 

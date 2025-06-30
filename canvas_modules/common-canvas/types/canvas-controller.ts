@@ -211,6 +211,11 @@ export type ScaleVal = number;
  * canvas coordinates. */
 export type TranslateVal = number;
 
+/** A number in milliseconds that specifies how much time a zoom transition
+ * should take. If omitted the transition happens immediately.
+ */
+export type AnimationTime = number;
+
 /** ZoomTransform describes zoom attributes of scale and translate */
 export interface ZoomTransform {
   k: ScaleVal;
@@ -2322,16 +2327,21 @@ export declare class CanvasController {
 
     /**
      * Zooms the canvas contents to fit within the viewport
+     * @param animateTime - Amount if miniseconds for the trasition.
      */
-    zoomToFit(): void;
+    zoomToFit(
+      animateTime?: AnimationTime
+    ): void;
 
     /**
      * Changes the zoom amounts for the canvas. This method does not alter the
      * pipelineFlow document.
      * @param zoomObject - A zoom object
+     * @param animateTime - Amount if miniseconds for the trasition.
      */
     zoomTo(
-      zoomObject: ZoomObjectDef
+      zoomObject: ZoomObjectDef,
+      animateTime?: AnimationTime
     ): void;
 
     /**
@@ -2346,7 +2356,7 @@ export declare class CanvasController {
     translateBy(
       x: CanvasDistance,
       y: CanvasDistance,
-      animateTime: number
+      animateTime?: AnimationTime
     ): void;
 
     /**

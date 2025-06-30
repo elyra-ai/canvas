@@ -217,8 +217,8 @@ export default class SVGCanvasRenderer {
 		this.zoomUtils.zoomOut();
 	}
 
-	zoomToFit() {
-		this.zoomUtils.zoomToFit();
+	zoomToFit(animateTime) {
+		this.zoomUtils.zoomToFit(animateTime);
 	}
 
 	isZoomedToMax() {
