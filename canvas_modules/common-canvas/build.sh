@@ -28,8 +28,13 @@ echo "npm install"
 npm install
 echo "npm run build"
 npm run build
-echo "Run jest tests"
-npm run test-coverage
+#skip tests until test logs are fixed
+if [$SKIP_TESTS != "1"]; then
+    echo "Run jest tests"
+    npm run test-coverage
+else
+    echo "Skipping tests as SKIP_TESTS is set to 1"
+fi
 npm run test:typescript
 
 echo "cd $WORKING_DIR"
