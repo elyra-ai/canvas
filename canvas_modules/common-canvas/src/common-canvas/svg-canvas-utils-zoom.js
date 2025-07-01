@@ -657,9 +657,19 @@ export default class SVGCanvasUtilsZoom {
 			newZoomTransform.y !== this.zoomTransform.y;
 	}
 
-	// Zooms the canvas to fit in the current viewport.
+	// Zooms all the canvas objects to fit in the current viewport.
 	zoomToFit(animateTime) {
 		const canvasDimensions = this.getCanvasDimensionsWithPadding();
+		const zoom = this.zoomCanvasInvokeZoomBehavior(canvasDimensions);
+		if (zoom) {
+			this.zoomCanvasInvokeZoomBehavior(zoom, animateTime);
+		}
+	}
+
+	// Returns a zoom object that can be used to zoom canvas objects (nodes,
+	// comments and/or detached links), that occupy the canvasDimensions,
+	// to fit in the current viewport.
+	getZoomToFit(canvasDimensions) {
 		const viewPortDimensions = this.getViewportDimensions();
 
 		if (canvasDimensions) {
@@ -673,8 +683,9 @@ export default class SVGCanvasUtilsZoom {
 			x -= newScale * canvasDimensions.left;
 			y -= newScale * canvasDimensions.top;
 
-			this.zoomCanvasInvokeZoomBehavior({ x: x, y: y, k: newScale }, animateTime);
+			return { x: x, y: y, k: newScale };
 		}
+		return null;
 	}
 
 	// Returns a zoom object that will, if applied to the canvas, zoom the objects
@@ -689,10 +700,17 @@ export default class SVGCanvasUtilsZoom {
 		if (nodes.length > 0 || comments.length > 0 || links.length > 0) {
 			const canvasDimensions = CanvasUtils.getCanvasDimensions(nodes, comments, links, 0, 0, true);
 			const canv = this.convertRectAdjustedForScaleWithPadding(canvasDimensions, 1, 30);
-			const xPosInt = parseInt(xPos, 10);
-			const yPosInt = typeof yPos === "undefined" ? xPosInt : parseInt(yPos, 10);
 
 			if (canv) {
+				// If the bounding rectangle (canv) doesn't completely fit in the viewport
+				// we do a zoom to fit to bring the requested objects into view.
+				if (canv.width > transformedSVGRect.width || canv.height > transformedSVGRect.height) {
+					return this.getZoomToFit(canv);
+				}
+
+				const xPosInt = parseInt(xPos, 10);
+				const yPosInt = typeof yPos === "undefined" ? xPosInt : parseInt(yPos, 10);
+
 				let xOffset;
 				let yOffset;
 

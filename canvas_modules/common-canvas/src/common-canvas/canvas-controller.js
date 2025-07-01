@@ -1917,36 +1917,30 @@ export default class CanvasController {
 		return null;
 	}
 
-	// Returns a zoom object required to pan the objects (nodes and/or comments
-	// and/or links) identified by the objectIds array to 'reveal' the objects
-	// in the viewport. Returns null if no nodes, comments or links can be found
-	// using the IDs passed in. Note: node, comment and link IDs must be unique.
-	// The zoom object returned can be provided to the CanvasController.zoomTo()
-	// method to perform the zoom/pan action.
-	// If the xPos and yPos parameters are provided it will return a zoom object
-	// to pan the center of the objects specified, to a location where, xPos
-	// is the percentage of the viewport width and yPos is the percentage of the
-	// viewport height. So if you want the center of the objects specified to be
-	// in the center of the viewport set xPos to 50 and yPos to 50.
-	// If the xPos and yPos parameters are undefined (omitted) and all the
-	// objects are currently fully within the canvas viewport, this method will
-	// return null. This can be used to detect whether the objects are fully
-	// visible or not.
-	// If the xPos and yPos parameters are undefined and the objects are outside
-	// the viewport, a zoom object will be returned that can be used to zoom them
-	// so they appear at the nearest side of the viewport to where they are
-	// currently positioned.
-	// The zoom object returned has three fields:
-	// x: Is the horizontal translate amount which is a number indicating the
-	//    pixel amount to move. Negative left and positive right
-	// y: Is the vertical translate amount which is a number indicating the
-	//    pixel amount to move. Negative up and positive down.
-	// k: is the scale amount which is a number greater than 0 where 1 is the
-	//    default scale size.
-	// Parameters:
-	// objectIds - An array of nodes and/or comment IDs.
-	// xPos - Optional. Can be set to percentage offset of the viewport width.
-	// yPos - Optional. Can be set to percentage offset of the viewport height.
+	/**
+	 * Returns a zoom object required to pan the objects (nodes and/or comments)
+	 * identified by the objectIds array to 'reveal' the objects in the viewport.
+	 * The zoom object returned can be provided to the CanvasController.zoomTo()
+	 * method to perform the zoom/pan action.
+	 * If the xPos and yPos variables are provided it will return a zoom object
+	 * to pan the objects to a location specified by a percentage offset of the
+	 * viewport width and height respectively.
+	 * If the xPos and yPos parameters are undefined (omitted) and all the
+	 * objects are fully within the canvas viewport, it will return null.
+	 * This can be used to detect whether the objects are fully visible or not.
+	 * Otherwise it will return a zoom object which can be used to pan the
+	 * objects into the viewport so they appear at the nearest side of the
+	 * viewport to where they are currently positioned.
+	 * If the specified objects are so far apart that they cannot all fit into
+	 * the current viewport, at the current scale amount, a zoom object for a
+	 * zoom-to-fit operation will be returned regardless of the xPos and yPos
+	 * settings.
+	 *
+	 * @param objectIds - An array of nodes and/or comment IDs.
+	 * @param xPos - Optional. Can be set to percentage offset of the viewport width.
+	 * @param yPos - Optional. Can be set to percentage offset of the viewport height.
+	 * @returns a ZoomObject or null
+	 */
 	getZoomToReveal(objectIds, xPos, yPos) {
 		if (this.canvasContents) {
 			return this.getSVGCanvasD3().getZoomToReveal(objectIds, xPos, yPos);
