@@ -29,11 +29,11 @@ npm install
 echo "npm run build"
 npm run build
 #skip tests until test logs are fixed
-if [$SKIP_TESTS != "1"]; then
+if [ "$SKIP_TESTS" = "true" ]; then
+    echo "Skipping tests as SKIP_TESTS is set"
+else
     echo "Run jest tests"
     npm run test-coverage
-else
-    echo "Skipping tests as SKIP_TESTS is set to 1"
 fi
 npm run test:typescript
 
