@@ -93,6 +93,7 @@ export default class ConfigUtils {
 			enableMarkdownInComments: false,
 			enableMarkdownHTML: true,
 			enableWYSIWYGComments: false,
+			enableMoveNodesInComment: false,
 			enableKeyboardNavigation: false,
 			enableAutoLinkOnlyFromSelNodes: false,
 			enableSingleClickAddFromPalette: false,

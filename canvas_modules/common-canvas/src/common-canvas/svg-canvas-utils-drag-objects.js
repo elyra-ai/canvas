@@ -878,7 +878,7 @@ export default class SVGCanvasUtilsDragObjects {
 
 		if (this.ren.config.enableMoveNodesInComment) {
 			if (CanvasUtils.isComment(d)) {
-				const objsInComment = this.objsInComment(d, this.ren.activePipeline.nodes.concat(this.ren.activePipeline.comments));
+				const objsInComment = this.objsInComment(d, this.ren.activePipeline.nodes);
 				moveObjects = CanvasUtils.concatUniqueBasedOnId(objsInComment, moveObjects);
 			}
 		}
