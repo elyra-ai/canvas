@@ -660,7 +660,7 @@ export default class SVGCanvasUtilsZoom {
 	// Zooms all the canvas objects to fit in the current viewport.
 	zoomToFit(animateTime) {
 		const canvasDimensions = this.getCanvasDimensionsWithPadding();
-		const zoom = this.zoomCanvasInvokeZoomBehavior(canvasDimensions);
+		const zoom = this.getZoomToFit(canvasDimensions);
 		if (zoom) {
 			this.zoomCanvasInvokeZoomBehavior(zoom, animateTime);
 		}
