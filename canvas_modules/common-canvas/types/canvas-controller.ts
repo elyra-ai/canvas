@@ -2379,6 +2379,10 @@ export declare class CanvasController {
      * Otherwise it will return a zoom object which can be used to pan the
      * objects into the viewport so they appear at the nearest side of the
      * viewport to where they are currently positioned.
+     * If the specified objects are so far apart that they cannot all fit into
+     * the current viewport, at the current scale amount, a zoom object for a
+     * zoom-to-fit operation will be returned regardless of the xPos and yPos
+     * settings.
      *
      * @param objectIds - An array of nodes and/or comment IDs.
      * @param xPos - Optional. Can be set to percentage offset of the viewport width.

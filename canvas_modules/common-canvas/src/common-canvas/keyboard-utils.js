@@ -37,7 +37,6 @@ const E_KEY = "e";
 const I_KEY = "i";
 const K_KEY = "k";
 const L_KEY = "l";
-const P_KEY = "p";
 const V_KEY = "v";
 const X_KEY = "x";
 const Y_KEY = "y";
@@ -62,7 +61,9 @@ export default class KeyboardUtils {
 	}
 
 	static toggleLogging(evt) {
-		return this.isMetaKey(evt) && evt.shiftKey && evt.altKey && evt.key === P_KEY;
+		// Use code here instead of key because, using the alt key changes the
+		// character returned in code property from p to π.
+		return this.isMetaKey(evt) && evt.shiftKey && evt.altKey && evt.code === "KeyP";
 	}
 
 	static selectAll(evt) {
