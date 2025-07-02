@@ -28,7 +28,7 @@ echo "npm install"
 npm install
 echo "npm run build"
 npm run build
-#skip tests until test logs are fixed
+# Tests are skipped when deploying the test harness to the cloud.
 if [ "$SKIP_TESTS" = "true" ]; then
     echo "Skipping tests as SKIP_TESTS is set"
 else
