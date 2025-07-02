@@ -17,3 +17,9 @@
 	$font-path: "/fonts/plex",
 	$use-per-family-plex: true
 );
+
+@use "@ibm/plex-sans-condensed/scss" as PlexSansCondensed with (
+	$font-prefix: "/fonts/plex-sans-condensed"
+);
+
+@include PlexSansCondensed.default();
