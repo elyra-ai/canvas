@@ -23,6 +23,8 @@ import { MESSAGE_KEYS, STATES } from "../../constants/constants";
 import { formatMessage } from "../../util/property-utils";
 import SubPanelInvoker from "./../../panels/sub-panel/invoker";
 import { cloneDeep } from "lodash";
+import classNames from "classnames";
+
 
 class TableToolbar extends React.Component {
 	constructor(props) {
@@ -293,7 +295,7 @@ class TableToolbar extends React.Component {
 
 			return (
 				<div className="properties-table-toolbar" >
-					<div className="properties-batch-summary" >
+					<div className={classNames("properties-batch-summary", { "small-flyout": this.props.smallFlyout })} >
 						<span >{title}</span>
 					</div>
 					<div className="properties-action-list">

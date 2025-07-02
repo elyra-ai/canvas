@@ -25,6 +25,10 @@
 		@include type-style("label-02");
 		padding: 0 $spacing-05;
 		color: $text-on-color;
+		&.small-flyout{
+			padding: 0 $spacing-03;
+			min-width: 0;
+		}
 	}
 
 	.properties-action-list {
