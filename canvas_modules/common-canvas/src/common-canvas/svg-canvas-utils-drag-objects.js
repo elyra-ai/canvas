@@ -146,6 +146,10 @@ export default class SVGCanvasUtilsDragObjects {
 	// x and y amounts provided. This is called when the user moves an
 	// object using the keyboard.
 	moveObject(d, dir) {
+		if (!this.isObjectMovable(d)) {
+			return;
+		}
+
 		let xInc = 0;
 		let yInc = 0;
 
@@ -236,7 +240,9 @@ export default class SVGCanvasUtilsDragObjects {
 			this.initializeResizeVariables(d);
 
 		} else {
-			this.startObjectsMoving(d);
+			if (this.isObjectMovable(d)) {
+				this.startObjectsMoving(d);
+			}
 		}
 
 		this.logger.logEndTimer("dragStartObject", true);
@@ -251,7 +257,9 @@ export default class SVGCanvasUtilsDragObjects {
 			this.resizeNode(d3Event.dx, d3Event.dy, d, this.nodeSizingDirection);
 
 		} else {
-			this.moveObjects(d3Event.dx, d3Event.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
+			if (this.isObjectMovable(d)) {
+				this.moveObjects(d3Event.dx, d3Event.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
+			}
 		}
 
 		this.logger.logEndTimer("dragObject", true);
@@ -271,7 +279,9 @@ export default class SVGCanvasUtilsDragObjects {
 			this.nodeSizing = false;
 
 		} else {
-			this.endObjectsMoving(d, d3Event.sourceEvent.shiftKey, KeyboardUtils.isMetaKey(d3Event.sourceEvent));
+			if (this.isObjectMovable(d)) {
+				this.endObjectsMoving(d, d3Event.sourceEvent.shiftKey, KeyboardUtils.isMetaKey(d3Event.sourceEvent));
+			}
 		}
 
 		this.logger.logEndTimer("dragEndObject", true);
@@ -630,7 +640,7 @@ export default class SVGCanvasUtilsDragObjects {
 			offsetY: 0,
 			runningX: 0,
 			runningY: 0,
-			objects: this.getMoveObjects(d)
+			objects: this.getMoveObjects(d).filter((obj) => this.isObjectMovable(obj))
 		};
 
 		if (this.movingObjectData.objects?.length > 0) {
@@ -859,14 +869,32 @@ export default class SVGCanvasUtilsDragObjects {
 	// object being moved is not one of the selected objects, then just that
 	// object is to be moved.
 	getMoveObjects(d) {
-		const selectedObjects = this.ren.activePipeline.getSelectedNodesAndComments();
+		let moveObjects = this.ren.activePipeline.getSelectedNodesAndComments();
 
 		if (this.ren.config.enableDragWithoutSelect &&
-				selectedObjects.findIndex((o) => o.id === d.id) === -1) {
+				moveObjects.findIndex((o) => o.id === d.id) === -1) {
 			return [d];
 		}
 
-		return selectedObjects;
+		if (this.ren.config.enableMoveNodesInComment) {
+			if (CanvasUtils.isComment(d)) {
+				const objsInComment = this.objsInComment(d, this.ren.activePipeline.nodes);
+				moveObjects = CanvasUtils.concatUniqueBasedOnId(objsInComment, moveObjects);
+			}
+		}
+
+		return moveObjects;
+	}
+
+	// Returns any object from the set of objects passed in that are
+	// fully inside the boundaries of the comment passed in.
+	objsInComment(com, objs) {
+		return objs.filter((n) =>
+			n.x_pos > com.x_pos &&
+			n.y_pos > com.y_pos &&
+			n.x_pos + n.width < com.x_pos + com.width &&
+			n.y_pos + n.height < com.y_pos + com.height
+		);
 	}
 
 	// Switches the 'd3-is-moving' class on and off for the objects passed
@@ -879,6 +907,12 @@ export default class SVGCanvasUtilsDragObjects {
 				this.ren.getCommentGroupSelectionById(obj.id).classed("d3-is-monving", state);
 			}
 		});
+	}
+
+	// Returns true if the object passed in is movable or false if not.
+	isObjectMovable(obj) {
+		return CanvasUtils.isComment(obj) ||
+			CanvasUtils.isNode(obj) && obj.layout?.nodeMovable;
 	}
 
 	// Returns true if the current move objects array has a single node which

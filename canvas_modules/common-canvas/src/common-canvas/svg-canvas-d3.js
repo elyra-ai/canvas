@@ -146,8 +146,8 @@ export default class SVGCanvasD3 {
 		this.renderer.zoomOut();
 	}
 
-	zoomToFit() {
-		this.renderer.zoomToFit();
+	zoomToFit(animateTime) {
+		this.renderer.zoomToFit(animateTime);
 	}
 
 	isZoomedToMax() {
@@ -224,11 +224,11 @@ export default class SVGCanvasD3 {
 		this.renderer.resetTabObjectIndex();
 	}
 
-	moveFocusTo(focusObj) {
+	moveFocusTo(focusObj, evt) {
 		// The D3 rendering object may not exist for some sophisticated
 		// refresh scenarios, so check its existence first.
 		if (this.renderer) {
-			this.renderer.moveFocusTo(focusObj);
+			this.renderer.moveFocusTo(focusObj, evt);
 		}
 	}
 

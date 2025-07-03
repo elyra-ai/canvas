@@ -28,8 +28,13 @@ echo "npm install"
 npm install
 echo "npm run build"
 npm run build
-echo "Run jest tests"
-npm run test-coverage
+# Tests are skipped when deploying the test harness to the cloud.
+if [ "$SKIP_TESTS" = "true" ]; then
+    echo "Skipping tests as SKIP_TESTS is set"
+else
+    echo "Run jest tests"
+    npm run test-coverage
+fi
 npm run test:typescript
 
 echo "cd $WORKING_DIR"

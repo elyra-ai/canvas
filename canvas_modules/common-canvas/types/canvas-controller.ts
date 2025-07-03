@@ -211,6 +211,11 @@ export type ScaleVal = number;
  * canvas coordinates. */
 export type TranslateVal = number;
 
+/** A number in milliseconds that specifies how much time a zoom transition
+ * should take. If omitted the transition happens immediately.
+ */
+export type AnimationTime = number;
+
 /** ZoomTransform describes zoom attributes of scale and translate */
 export interface ZoomTransform {
   k: ScaleVal;
@@ -2322,16 +2327,21 @@ export declare class CanvasController {
 
     /**
      * Zooms the canvas contents to fit within the viewport
+     * @param animateTime - Amount of miniseconds for the transition.
      */
-    zoomToFit(): void;
+    zoomToFit(
+      animateTime?: AnimationTime
+    ): void;
 
     /**
      * Changes the zoom amounts for the canvas. This method does not alter the
      * pipelineFlow document.
      * @param zoomObject - A zoom object
+     * @param animateTime - Amount of miniseconds for the transition.
      */
     zoomTo(
-      zoomObject: ZoomObjectDef
+      zoomObject: ZoomObjectDef,
+      animateTime?: AnimationTime
     ): void;
 
     /**
@@ -2341,12 +2351,12 @@ export declare class CanvasController {
      * If omitted the movement happens immediately.
      * @param x - X coordinate amount.
      * @param y - Y coordinate amount.
-     * @param animateTime - Amount if miniseconds for the trasition.
+     * @param animateTime - Amount of miniseconds for the transition.
      */
     translateBy(
       x: CanvasDistance,
       y: CanvasDistance,
-      animateTime: number
+      animateTime?: AnimationTime
     ): void;
 
     /**
@@ -2369,6 +2379,10 @@ export declare class CanvasController {
      * Otherwise it will return a zoom object which can be used to pan the
      * objects into the viewport so they appear at the nearest side of the
      * viewport to where they are currently positioned.
+     * If the specified objects are so far apart that they cannot all fit into
+     * the current viewport, at the current scale amount, a zoom object for a
+     * zoom-to-fit operation will be returned regardless of the xPos and yPos
+     * settings.
      *
      * @param objectIds - An array of nodes and/or comment IDs.
      * @param xPos - Optional. Can be set to percentage offset of the viewport width.
