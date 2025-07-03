@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Elyra Authors
+ * Copyright 2023-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,40 +14,43 @@
  * limitations under the License.
  */
 
+@use "../../../../assets/styles/carbon.scss";
+@use "../../../../assets/styles/commonVars.scss";
+
 .harness-app-console {
-	@include type-style("code-01");
-	background-color: $layer-01;
-	border-top: 1px solid $layer-accent-01;
+	@include carbon.type-style("code-01");
+	background-color: carbon.$layer-01;
+	border-top: 1px solid carbon.$layer-accent-01;
 	overflow-y: auto;
-	padding: $spacing-04;
+	padding: carbon.$spacing-04;
 	word-wrap: break-word;
 	position: fixed;
 	bottom: 0;
-	height: $harness-console-height;
+	height: commonVars.$harness-console-height;
 	width: 100%;
 
 	&.side-panel-open {
-		width: calc(100% - $harness-sidepanel-width);
+		width: calc(100% - commonVars.$harness-sidepanel-width);
 	}
 
 	.harness-console-pretty-json {
-		margin: 0 $spacing-04 $spacing-04 0;
+		margin: 0 carbon.$spacing-04 carbon.$spacing-04 0;
 	}
 
 	.harness-console-entry {
 		&::before {
 			content: "-";
-			padding-right: $spacing-04;
+			padding-right: carbon.$spacing-04;
 		}
 
 		&:hover {
-			background-color: $layer-02;
+			background-color: carbon.$layer-02;
 			cursor: pointer;
 		}
 
 		&:hover::before {
 			content: "+";
-			padding-right: $spacing-04;
+			padding-right: carbon.$spacing-04;
 		}
 	}
 }

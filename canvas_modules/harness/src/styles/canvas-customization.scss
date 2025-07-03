@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 // This file contains styles used to customize the default styles for common
 // canvas.
+@use "../../assets/styles/carbon.scss";
 
 
 /* The test harness adds 'classic-vertical' as the 'enableParentClass'
@@ -24,12 +25,12 @@
 
 .classic-vertical {
 	.d3-node-port-output {
-		fill: $layer-01;
+		fill: carbon.$layer-01;
 		stroke-width: 1;
 
 		&:hover {
-			fill: $link-inverse;
-			stroke: $link-inverse;
+			fill: carbon.$link-inverse;
+			stroke: carbon.$link-inverse;
 		}
 	}
 
@@ -45,7 +46,7 @@
 	position: absolute;
 	top: 100px;
 	left: 90px;
-	color: $border-strong-01;
+	color: carbon.$border-strong-01;
 }
 
 /* This styles are used in the decoratorCanvas.json canvas file. */

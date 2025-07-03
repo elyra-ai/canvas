@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+@use "../../../../carbon.scss";
 
 /* These are used in custom expression builder */
 $field-function-width: 85%;
@@ -43,7 +45,7 @@ $operator-margin: 50%;
 }
 
 .properties-expression-builder {
-	padding: $spacing-06 $spacing-07;
+	padding: carbon.$spacing-06 carbon.$spacing-07;
 	margin-bottom: 0;
 
 	.elyra-CodeMirror {
@@ -52,17 +54,17 @@ $operator-margin: 50%;
 		overflow: auto;
 		.cm-editor {
 			min-height: inherit; /* Inherit min-height to restrict resize below certain width  */
-			background: $field-01;
+			background: carbon.$field-01;
 		}
 	}
 }
 
 .properties-expression-selection-container {
-	padding-top: $spacing-03;
+	padding-top: carbon.$spacing-03;
 }
 
 .properties-expression-selection-operator {
-	padding-bottom: $spacing-04;
+	padding-bottom: carbon.$spacing-04;
 }
 
 .properties-field-table-container {
@@ -78,8 +80,8 @@ $operator-margin: 50%;
 	}
 	.properties-vt-row-class {
 		&:focus {
-			color: $button-primary;
-			border: 1px solid $button-primary;
+			color: carbon.$button-primary;
+			border: 1px solid carbon.$button-primary;
 		}
 	}
 	
@@ -112,12 +114,12 @@ $operator-margin: 50%;
 
 .properties-function-help-text {
 	overflow-wrap: break-word;
-	padding-top: $spacing-03;
+	padding-top: carbon.$spacing-03;
 }
 
 .properties-operator-title {
-	padding-top: $spacing-05;
-	padding-bottom: $spacing-07;
+	padding-top: carbon.$spacing-05;
+	padding-bottom: carbon.$spacing-07;
 	width: 100%;
 	font-weight: bold;
 	text-align: center;
@@ -129,8 +131,8 @@ $operator-margin: 50%;
 
 	.properties-operator-tooltip-container {
 		width: $operator-width;
-		margin-right: $spacing-03;
-		margin-top: $spacing-03;
+		margin-right: carbon.$spacing-03;
+		margin-top: carbon.$spacing-03;
 	}
 
 	.properties-operator-button {
@@ -144,7 +146,7 @@ $operator-margin: 50%;
 }
 
 .properties-expression-selection-content-switcher {
-	padding-bottom: $spacing-08;
+	padding-bottom: carbon.$spacing-08;
 	div {
 		max-width: 30%;
 		float: right;
@@ -152,12 +154,12 @@ $operator-margin: 50%;
 }
 
 .properties-expression-field-select, .properties-expression-function-select {
-	padding-top: $spacing-03;
-	padding-bottom: $spacing-06;
+	padding-top: carbon.$spacing-03;
+	padding-bottom: carbon.$spacing-06;
 }
 .properties-expression-table-dropdown-header {
-	@include type-style("label-01");
-	padding-bottom: $spacing-02;
+	@include carbon.type-style("label-01");
+	padding-bottom: carbon.$spacing-02;
 }
 
 .properties-primaryTabs .cds--tabs-trigger {
@@ -166,6 +168,6 @@ $operator-margin: 50%;
 
 .expression-add-field-button {
 	svg.add-btn-svg {
-		fill: $button-primary;
+		fill: carbon.$button-primary;
 	}
 }

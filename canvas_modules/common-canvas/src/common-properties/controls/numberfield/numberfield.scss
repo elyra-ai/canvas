@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
 
 .properties-numberfield {
 	.properties-numberfield-layer {
 		inline-size: 100%;
 	}
 	.properties-number-generator {
-		margin-left: $spacing-05;
+		margin-left: carbon.$spacing-05;
 	}
 	&.numberfield-with-number-generator {
 		width: 100%;
@@ -29,7 +30,7 @@
 		&.error, &.warning {
 			align-items: flex-start;
 			.properties-number-generator {
-				margin-top: $spacing-05 + $spacing-03;  // 1rem label + 0.5 rem spacing below label
+				margin-top: carbon.$spacing-05 + carbon.$spacing-03;  // 1rem label + 0.5 rem spacing below label
 			}
 		}
 	}
@@ -44,18 +45,18 @@
 		}
 		&.error {
 			input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
-				box-shadow: 0 $spacing-01 0 0 $support-error;
+				box-shadow: 0 carbon.$spacing-01 0 0 carbon.$support-error;
 			}
 		}
 		&.warning {
 			input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
-				box-shadow: 0 $spacing-01 0 0 $support-warning;
+				box-shadow: 0 carbon.$spacing-01 0 0 carbon.$support-warning;
 			}
 		}
 		input[type="number"] { //override styling from carbon
 			background-color: unset;
 			padding: 0;
-			height: $spacing-06;
+			height: carbon.$spacing-06;
 		}
 		.cds--number input[type="number"] {
 			min-width: 0;
