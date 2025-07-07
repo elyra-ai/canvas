@@ -15,14 +15,15 @@
  */
 
 /* These are used in custom common-properties */
+@use "../../assets/styles/carbon.scss";
 
 .custom-action-right {
 	align-self: flex-end;
-	padding: 0 0 0 $spacing-03;
+	padding: 0 0 0 carbon.$spacing-03;
 }
 
 .custom-action-left {
 	align-self: flex-end;
 	order: -1;
-	padding: 0 $spacing-03 0 0;
+	padding: 0 carbon.$spacing-03 0 0;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-$toolbar-icon-label-margin: $spacing-03;
-$toolbar-icon-size: $spacing-05;
-$toolbar-button-height: $spacing-08;
-$toolbar-button-width: $spacing-08;
-$toolbar-button-sm-height: $spacing-07;
-$toolbar-button-sm-width: $spacing-07;
+@use "../carbon.scss";
+
+$toolbar-icon-label-margin: carbon.$spacing-03;
+$toolbar-icon-size: carbon.$spacing-05;
+$toolbar-button-height: carbon.$spacing-08;
+$toolbar-button-width: carbon.$spacing-08;
+$toolbar-button-sm-height: carbon.$spacing-07;
+$toolbar-button-sm-width: carbon.$spacing-07;
 $toolbar-divider-width: 1px;
 
 .toolbar-div {
 	height: $toolbar-button-height;
 	width: 100%;
-	background-color: $layer-01;
+	background-color: carbon.$layer-01;
 	box-sizing: content-box;
 	position: relative;
 	display: flex;
@@ -37,7 +39,7 @@ $toolbar-divider-width: 1px;
 
 	&:focus {
 		border-color: transparent;
-		box-shadow: inset 0 0 0 1px $focus;
+		box-shadow: inset 0 0 0 1px carbon.$focus;
 	}
 
 	/* Small size toolbar  */
@@ -61,7 +63,7 @@ $toolbar-divider-width: 1px;
 		.toolbar-item-content {
 			height: $toolbar-button-sm-height;
 			align-items: center;
-			min-width: $spacing-07;
+			min-width: carbon.$spacing-07;
 
 			&.is-in-menu {
 				padding-left: 10px;
@@ -73,15 +75,15 @@ $toolbar-divider-width: 1px;
 			}
 
 			& .overflow-item {
-				padding: 0 $spacing-03 0 0;
+				padding: 0 carbon.$spacing-03 0 0;
 			}
 
 			& .toolbar-right-chevron {
-				padding: $spacing-02 0 0;
+				padding: carbon.$spacing-02 0 0;
 			}
 
 			& .checkmark {
-				padding-top: $spacing-02;
+				padding-top: carbon.$spacing-02;
 			}
 		}
 
@@ -118,15 +120,15 @@ $toolbar-divider-width: 1px;
 }
 
 .toolbar-item {
-	background-color: $layer-01;
+	background-color: carbon.$layer-01;
 	display: inline-block;
 
 	&.toolbar-item-selected {
 		&.default,
 		&.ghost {
 			& > .toolbar-button-item > button {
-				background-color: $layer-accent-01;
-				border-bottom: $spacing-01 solid $button-primary;
+				background-color: carbon.$layer-accent-01;
+				border-bottom: carbon.$spacing-01 solid carbon.$button-primary;
 			}
 		}
 	}
@@ -140,32 +142,32 @@ $toolbar-divider-width: 1px;
 	&.default,
 	&.ghost {
 		& > .toolbar-button-item > button {
-			background-color: $layer-01;
+			background-color: carbon.$layer-01;
 
 			&:hover,
 			&:focus {
-				background-color: $skeleton-background;
+				background-color: carbon.$skeleton-background;
 			}
 
 			&:disabled:hover {
-				background-color: $layer-01;
+				background-color: carbon.$layer-01;
 			}
 		}
 	}
 
 	&.tertiary {
 		& > .toolbar-button-item > button {
-			color: $link-primary;
-			background-color: $layer-01;
+			color: carbon.$link-primary;
+			background-color: carbon.$layer-01;
 
 			&:hover {
-				background-color: $skeleton-background;
+				background-color: carbon.$skeleton-background;
 			}
 
 			&:disabled,
 			&:disabled:hover {
-				color: $button-disabled;
-				background-color: $layer-01;
+				color: carbon.$button-disabled;
+				background-color: carbon.$layer-01;
 			}
 		}
 	}
@@ -178,22 +180,22 @@ $toolbar-divider-width: 1px;
 
 
 .toolbar-overflow-item {
-	background-color: $layer-01;
+	background-color: carbon.$layer-01;
 	width: 30px; // Set width instead of using inline-block to fix Safari display bug.
 	& button {
 		padding: 0;
 		height: $toolbar-button-height;
 		min-height: 30px;
-		background-color: $layer-01;
-		border-right: $toolbar-divider-width solid $layer-accent-01;
+		background-color: carbon.$layer-01;
+		border-right: $toolbar-divider-width solid carbon.$layer-accent-01;
 	}
 
 	& button:hover {
-		background-color: $skeleton-background;
+		background-color: carbon.$skeleton-background;
 	}
 
 	& button:disabled:hover {
-		background-color: $layer-01;
+		background-color: carbon.$layer-01;
 	}
 }
 
@@ -203,8 +205,8 @@ $toolbar-divider-width: 1px;
 		width: 100%;
 		padding-top: 0;
 		padding-bottom: 0;
-		padding-left: $spacing-05;
-		padding-right: $spacing-05;
+		padding-left: carbon.$spacing-05;
+		padding-right: carbon.$spacing-05;
 		min-height: 20px;
 	}
 }
@@ -229,7 +231,7 @@ $toolbar-divider-width: 1px;
 		display: flex;
 
 		&.dual:hover {
-			background-color: $background-selected-hover;
+			background-color: carbon.$background-selected-hover;
 		}
 	}
 
@@ -242,12 +244,12 @@ $toolbar-divider-width: 1px;
 		padding: 11px 2px;
 
 		&:hover {
-			background-color: $background-selected-hover;
+			background-color: carbon.$background-selected-hover;
 		}
 	}
 
 	& .toolbar-right-chevron {
-		padding: 9px 0 $spacing-01;
+		padding: 9px 0 carbon.$spacing-01;
 		pointer-events: none;
 	}
 
@@ -259,32 +261,32 @@ $toolbar-divider-width: 1px;
 		justify-content: space-between;
 
 		& .content-main {
-			padding: $spacing-03 0 6px;
+			padding: carbon.$spacing-03 0 6px;
 		}
 	}
 
 	& .checkmark {
 		pointer-events: none;
-		padding-top: $spacing-03;
+		padding-top: carbon.$spacing-03;
 	}
 
 	&.default {
-		color: $icon-primary; // Used by label and pick up as currentColor in icons.
+		color: carbon.$icon-primary; // Used by label and pick up as currentColor in icons.
 	}
 
 	&.disabled.default {
-		color: $button-disabled;
-		fill: $button-disabled; // For custom svg images
+		color: carbon.$button-disabled;
+		fill: carbon.$button-disabled; // For custom svg images
 		& .toolbar-tick-mark {
-			fill: $button-disabled;
+			fill: carbon.$button-disabled;
 		}
 		& .toolbar-text-content {
-			stroke: $button-disabled;
+			stroke: carbon.$button-disabled;
 		}
 	}
 
 	.toolbar-icon {
-		height: $spacing-05;
+		height: carbon.$spacing-05;
 		& svg {
 			height: $toolbar-icon-size;
 			width: $toolbar-icon-size;
@@ -300,23 +302,23 @@ $toolbar-divider-width: 1px;
 		left: 13px;
 		font-size: 9px;
 		line-height: 9px;
-		color: $icon-primary;
+		color: carbon.$icon-primary;
 		text-align: center;
 	}
 
 	.toolbar-icon-label {
-		line-height: $spacing-05;
+		line-height: carbon.$spacing-05;
 
 		&.before {
-			padding-right: $spacing-03;
+			padding-right: carbon.$spacing-03;
 		}
 
 		&.after {
-			padding-left: $spacing-03;
+			padding-left: carbon.$spacing-03;
 		}
 
 		&.overflow {
-			padding-left: $spacing-03;
+			padding-left: carbon.$spacing-03;
 			word-break: break-word;
 			hyphens: auto;
 			text-wrap: nowrap;
@@ -333,7 +335,7 @@ $toolbar-divider-width: 1px;
 		pointer-events: none;
 
 		& .toolbar-tick-mark {
-			fill: $icon-primary;
+			fill: carbon.$icon-primary;
 		}
 	}
 }
@@ -344,7 +346,7 @@ $toolbar-divider-width: 1px;
 	align-items: center;
 	vertical-align: top;
 	position: relative;
-	background-color: $layer-01;
+	background-color: carbon.$layer-01;
 	padding: 0;
 }
 
@@ -359,8 +361,8 @@ $toolbar-divider-width: 1px;
 }
 
 .toolbar-divider {
-	border-right: $toolbar-divider-width solid $layer-accent-01;
-	background-color: $layer-01;
+	border-right: $toolbar-divider-width solid carbon.$layer-accent-01;
+	background-color: carbon.$layer-01;
 	display: inline-block;
 	height: $toolbar-button-height;
 	width: 0;
@@ -368,7 +370,7 @@ $toolbar-divider-width: 1px;
 
 .toolbar-divider-overflow {
 	height: 0;
-	border-bottom: $toolbar-divider-width solid $layer-accent-01;
+	border-bottom: $toolbar-divider-width solid carbon.$layer-accent-01;
 }
 
 .toolbar-popover-list {
@@ -377,8 +379,8 @@ $toolbar-divider-width: 1px;
 	position: absolute; // Actual position will be calculated in the code
 	list-style-type: none;
 	padding: 0;
-	border: $toolbar-divider-width solid $layer-accent-01;
-	background-color: $layer-01;
+	border: $toolbar-divider-width solid carbon.$layer-accent-01;
+	background-color: carbon.$layer-01;
 	opacity: 0;
 	animation: tovisible 0.25s ease-in-out forwards; // Use keyframe to animate panel visibility
 

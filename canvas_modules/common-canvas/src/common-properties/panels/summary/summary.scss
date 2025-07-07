@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-summary-panel.properties-summary-panel {
 	&.hide {
 		display: none;
@@ -23,8 +25,8 @@
 		pointer-events: none;
 	}
 	.properties-summary-link-icon {
-		width: $spacing-05;
-		height: $spacing-05;
+		width: carbon.$spacing-05;
+		height: carbon.$spacing-05;
 	}
 }
 .properties-summary-link-container {
@@ -33,17 +35,17 @@
 }
 
 .properties-summary-values {
-	border-top: 1px solid $layer-accent-01;
-	padding: $spacing-05 0;
+	border-top: 1px solid carbon.$layer-accent-01;
+	padding: carbon.$spacing-05 0;
 }
 
 .properties-summary-table {
-	@include type-style("body-short-01");
-	color: $text-primary;
+	@include carbon.type-style("body-short-01");
+	color: carbon.$text-primary;
 	max-height: 270px;
 	width: 100%;
 	display: flex;
-	margin: $spacing-03 0;
+	margin: carbon.$spacing-03 0;
 }
 
 .properties-summary-table > tbody {
@@ -51,14 +53,14 @@
 }
 
 .properties-summary-label {
-	@include type-style("productive-heading-01");
-	color: $text-primary;
-	margin-bottom: $spacing-05;
+	@include carbon.type-style("productive-heading-01");
+	color: carbon.$text-primary;
+	margin-bottom: carbon.$spacing-05;
 }
 
 .properties-summary-row {
 	display: flex;
-	padding: $spacing-01 0;
+	padding: carbon.$spacing-01 0;
 	span {
 		cursor: text;
 		user-select: text;

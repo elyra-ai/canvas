@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-@import "./control-item/control-item";
-@import "./title-editor/title-editor";
-@import "./field-picker/field-picker";
-@import "./properties-modal/properties-modal";
-@import "./wide-flyout/wide-flyout";
-@import "./validation-message/validation-message";
-@import "./properties-buttons/properties-buttons";
-@import "./editor-form/editor-form";
-@import "./flexible-table/flexible-table";
-@import "./truncated-content-tooltip/truncated-content-tooltip";
-@import "./virtualized-table/virtualized-table";
-@import "./virtualized-grid/virtualized-grid";
-@import "./empty-table/empty-table";
-@import "./table-buttons/table-buttons";
-@import "./table-toolbar/table-toolbar";
+@forward "./control-item/control-item";
+@forward "./title-editor/title-editor";
+@forward "./field-picker/field-picker";
+@forward "./properties-modal/properties-modal";
+@forward "./wide-flyout/wide-flyout";
+@forward "./validation-message/validation-message";
+@forward "./properties-buttons/properties-buttons";
+@forward "./editor-form/editor-form";
+@forward "./flexible-table/flexible-table";
+@forward "./truncated-content-tooltip/truncated-content-tooltip";
+@forward "./virtualized-table/virtualized-table";
+@forward "./virtualized-grid/virtualized-grid";
+@forward "./empty-table/empty-table";
+@forward "./table-buttons/table-buttons";
+@forward "./table-toolbar/table-toolbar";

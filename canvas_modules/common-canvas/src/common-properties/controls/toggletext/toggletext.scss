@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
 
 .properties-toggletext {
 	&.hide {
@@ -21,12 +22,12 @@
 	}
 	&.error {
 		button {
-			border-bottom: $spacing-01 solid $support-error;
+			border-bottom: carbon.$spacing-01 solid carbon.$support-error;
 		}
 	}
 	&.warning {
 		button {
-			border-bottom: $spacing-01 solid $support-warning;
+			border-bottom: carbon.$spacing-01 solid carbon.$support-warning;
 		}
 	}
 }
@@ -35,7 +36,7 @@
 .properties-table-cell-control {
 	.properties-toggletext {
 		button {
-			padding: 0 $spacing-02;
+			padding: 0 carbon.$spacing-02;
 			align-items: center;
 		}
 		.cds--btn--ghost:not([disabled]) svg {

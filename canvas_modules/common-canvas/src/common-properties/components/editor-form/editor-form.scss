@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-$primary-tab-height: $spacing-08;
+@use "../../../carbon.scss";
+
+$primary-tab-height: carbon.$spacing-08;
 
 // styling when there is only 1 tab
 .properties-single-category {
-	padding: $spacing-05;
+	padding: carbon.$spacing-05;
 }
 
 .properties-right-flyout {
@@ -34,7 +36,7 @@ $primary-tab-height: $spacing-08;
 		.properties-subtabs {
 			position: absolute;
 			height: $primary-tab-height;
-			border-bottom: 1px solid $layer-accent-01;
+			border-bottom: 1px solid carbon.$layer-accent-01;
 		}
 		.properties-subtab-panel {
 			height: calc(100% - #{$primary-tab-height});
@@ -55,7 +57,7 @@ $primary-tab-height: $spacing-08;
 
 .properties-categories {
 	.properties-category-content .cds--accordion__content {
-		padding: $spacing-05;
+		padding: carbon.$spacing-05;
 
 		/*  
 			Accordion Carbon Component currently doesn't support Accordions inside an Accordion
@@ -87,7 +89,7 @@ $primary-tab-height: $spacing-08;
 	// Remove Default borders for Accordions
 	.properties-category-content {
 		border-top: 0px;
-		border-bottom: 1px solid $layer-accent-01;
+		border-bottom: 1px solid carbon.$layer-accent-01;
 	}
 
 	// Remove default accordion padding
@@ -99,32 +101,32 @@ $primary-tab-height: $spacing-08;
 .properties-static-text-container {
 	display: flex;
 	align-items: center;
-	padding: $spacing-02 0;
+	padding: carbon.$spacing-02 0;
 	.properties-static-text {
-		@include type-style("body-short-01");
-		color: $text-primary;
+		@include carbon.type-style("body-short-01");
+		color: carbon.$text-primary;
 		&.info {
-			@include type-style("label-01");
-			color: $text-secondary;
+			@include carbon.type-style("label-01");
+			color: carbon.$text-secondary;
 		}
 	}
 	svg {
-		width: $spacing-05;
-		height: $spacing-05;
-		margin-right: $spacing-03;
+		width: carbon.$spacing-05;
+		height: carbon.$spacing-05;
+		margin-right: carbon.$spacing-03;
 	}
 }
 
 .properties-h-separator {
-	margin-top: $spacing-05;
-	margin-bottom: $spacing-05;
+	margin-top: carbon.$spacing-05;
+	margin-bottom: carbon.$spacing-05;
 }
 
 .properties-link-text-container {
 	display: flex;
 	align-items: center;
 	svg {
-		margin-right: $spacing-03;
+		margin-right: carbon.$spacing-03;
 	}
 	.properties-link-text {
 		cursor: pointer;
@@ -132,11 +134,11 @@ $primary-tab-height: $spacing-08;
 }
 
 .properties-light-enabled {
-	background-color: $layer-01; // Override theme background-color when light option is true
+	background-color: carbon.$layer-01; // Override theme background-color when light option is true
 }
 
 .properties-custom-panel + .properties-control-panel {
-	padding-top: $spacing-05; // padding between the two classes
+	padding-top: carbon.$spacing-05; // padding between the two classes
 }
 
 // Display in full height if inside a tearsheet
@@ -147,7 +149,7 @@ $primary-tab-height: $spacing-08;
 	.properties-primaryTabs {
 		position: absolute;
 		height: $primary-tab-height;
-		border-bottom: 1px solid $layer-accent-01;
+		border-bottom: 1px solid carbon.$layer-accent-01;
 	}
 
 	.properties-primary-tab-panel.tearsheet-container,

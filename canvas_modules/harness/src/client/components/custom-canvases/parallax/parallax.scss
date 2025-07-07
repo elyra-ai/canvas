@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Elyra Authors
+ * Copyright 2024-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use "../../../../../assets/styles/carbon.scss";
+
 .parallax-canvas {
 
 	// ----------------------------------------------------
@@ -26,7 +28,7 @@
 		}
 
 		.d3-node-port-input {
-			stroke: $background-inverse;
+			stroke: carbon.$background-inverse;
 		}
 
 		&.blue {

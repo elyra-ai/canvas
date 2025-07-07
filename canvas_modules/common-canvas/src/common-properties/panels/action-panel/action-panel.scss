@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-action-panel {
 	display: flex;
 	flex-wrap: wrap;
-	padding-bottom: $spacing-03;
+	padding-bottom: carbon.$spacing-03;
 	.properties-label-container {
 		width: 100%;
 	}
 	&:last-child {
-		padding-bottom: $spacing-06; // (24px + 16px outer padding)
+		padding-bottom: carbon.$spacing-06; // (24px + 16px outer padding)
 	}
 	&[disabled] {
 		opacity: 0.5;
@@ -34,5 +36,5 @@
 }
 
 .properties-action-panel + .properties-control-panel {
-	padding-top: $spacing-03; // 8px + 8px from properties-action-panel
+	padding-top: carbon.$spacing-03; // 8px + 8px from properties-action-panel
 }

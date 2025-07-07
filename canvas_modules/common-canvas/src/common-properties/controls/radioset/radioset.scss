@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+@use "../../../carbon.scss";
+
 .properties-radioset {
 	&.hide {
 		display: none;
 	}
 	.cds--form-item {
-		margin-bottom: $spacing-02;
+		margin-bottom: carbon.$spacing-02;
 	}
 }
 
@@ -31,7 +33,7 @@
 		flex-wrap: wrap;
 	}
 	.properties-radioset-panel {
-		margin-right: $spacing-04; // space between first label and next radiobtn
+		margin-right: carbon.$spacing-04; // space between first label and next radiobtn
 		.cds--radio-button-wrapper{
 			margin-right: 0; // We removed the space between radio & tooltip to position it correctly
 		}
@@ -53,9 +55,9 @@
 		}
 	}
 	&.error:not([disabled]) {
-		padding-bottom: $spacing-02;
+		padding-bottom: carbon.$spacing-02;
 	}
 	&.warning:not([disabled]) {
-		padding-bottom: $spacing-02;
+		padding-bottom: carbon.$spacing-02;
 	}
 }

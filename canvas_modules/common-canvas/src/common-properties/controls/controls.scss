@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,34 @@
  * limitations under the License.
  */
 
-@import "./readonly/readonly";
-@import "./selectcolumns/selectcolumns";
-@import "./checkbox/checkbox";
-@import "./toggle/toggle";
-@import "./checkboxset/checkboxset";
-@import "./dropdown/dropdown";
-@import "./expression/expression";
-@import "./radioset/radioset";
-@import "./textarea/textarea";
-@import "./someofselect/someofselect";
-@import "./toggletext/toggletext";
-@import "./textfield/textfield";
-@import "./abstract-table";
-@import "./numberfield/numberfield";
-@import "./structureeditor/structureeditor";
-@import "./multiselect/multiselect";
-@import "./datepicker-range/datepicker-range";
-@import "./datepicker/datepicker";
-@import "./slider/slider";
-@import "./list/list";
-@import "./readonlytable/readonlytable";
-@import "./structurelisteditor/structurelisteditor";
-@import "./structuretable/structuretable";
+@use "../../carbon.scss";
+
+@forward "./readonly/readonly";
+@forward "./selectcolumns/selectcolumns";
+@forward "./checkbox/checkbox";
+@forward "./toggle/toggle";
+@forward "./checkboxset/checkboxset";
+@forward "./dropdown/dropdown";
+@forward "./expression/expression";
+@forward "./radioset/radioset";
+@forward "./textarea/textarea";
+@forward "./someofselect/someofselect";
+@forward "./toggletext/toggletext";
+@forward "./textfield/textfield";
+@forward "./abstract-table";
+@forward "./numberfield/numberfield";
+@forward "./structureeditor/structureeditor";
+@forward "./multiselect/multiselect";
+@forward "./datepicker-range/datepicker-range";
+@forward "./datepicker/datepicker";
+@forward "./slider/slider";
+@forward "./list/list";
+@forward "./readonlytable/readonlytable";
+@forward "./structurelisteditor/structurelisteditor";
+@forward "./structuretable/structuretable";
 
 .properties-ctrl-wrapper {
-	padding-bottom: $spacing-05; // Adds padding to the control
+	padding-bottom: carbon.$spacing-05; // Adds padding to the control
 	&.action {
 		display: flex;
 		> div:first-child {

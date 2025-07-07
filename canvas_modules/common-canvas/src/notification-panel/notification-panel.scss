@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+@use "../carbon.scss";
+
 $notification-panel-header-height: 33px;
-$notification-message-height: $spacing-09;
-$notification-left-border-color-width: $spacing-02;
+$notification-message-height: carbon.$spacing-09;
+$notification-left-border-color-width: carbon.$spacing-02;
 $notification-panel-button-container-height: 49px;
 
 .notification-panel {
@@ -34,60 +36,60 @@ $notification-panel-button-container-height: 49px;
 	min-height: $notification-panel-header-height;
 	height: fit-content;
 	width: inherit;
-	background-color: $layer-01;
+	background-color: carbon.$layer-01;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	border-bottom: 0;
-	padding: $spacing-05;
+	padding: carbon.$spacing-05;
 	outline: none; // Turn outline off and use carbon style for focus below.
 
 	&:focus {
-		border-color: $focus;
-		box-shadow: inset 0 0 0 $spacing-01 $focus;
+		border-color: carbon.$focus;
+		box-shadow: inset 0 0 0 carbon.$spacing-01 carbon.$focus;
 	}
 
 	.notification-panel-header {
-		@include type-style("productive-heading-02");
+		@include carbon.type-style("productive-heading-02");
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	}
 
 	.notification-panel-subtitle {
-		@include type-style("helper-text-01");
-		color: $text-secondary;
-		padding-top: $spacing-02;
+		@include carbon.type-style("helper-text-01");
+		color: carbon.$text-secondary;
+		padding-top: carbon.$spacing-02;
 	}
 }
 
 .notification-panel-close-button {
 	position: absolute;
-	top: $spacing-04;
-	right: $spacing-04;
+	top: carbon.$spacing-04;
+	right: carbon.$spacing-04;
 }
 
 .notification-panel-button-container {
 	width: 100%;
 	height: $notification-panel-button-container-height;
-	background-color: $layer-01;
+	background-color: carbon.$layer-01;
 	display: flex;
 	justify-content: space-between;
 	border-top: 0;
-	padding: $spacing-03 0;
+	padding: carbon.$spacing-03 0;
 	font-weight: 400;
 }
 
 .notification-panel-messages {
 	overflow-y: auto;
 	line-height: normal;
-	background-color: $layer-01;
-	border-top: 1px solid $layer-accent-01;
-	border-bottom: 1px solid $layer-accent-01;
+	background-color: carbon.$layer-01;
+	border-top: 1px solid carbon.$layer-accent-01;
+	border-bottom: 1px solid carbon.$layer-accent-01;
 	max-height: 448px;
 
 	.notifications-button-container {
-		border-bottom: 1px solid $layer-accent-01;
+		border-bottom: 1px solid carbon.$layer-accent-01;
 		min-height: $notification-message-height;
 	}
 
@@ -99,12 +101,12 @@ $notification-panel-button-container-height: 49px;
 		outline: none; // Turn outline off and use carbon style for focus below.
 
 		&:focus {
-			border-color: $focus;
-			box-shadow: inset 0 0 0 $spacing-01 $focus;
+			border-color: carbon.$focus;
+			box-shadow: inset 0 0 0 carbon.$spacing-01 carbon.$focus;
 		}
 
 		.notification-panel-empty-message {
-			@include type-style("body-short-01");
+			@include carbon.type-style("body-short-01");
 			text-align: center;
 			padding-right: 30px;
 			padding-left: 30px;
@@ -116,43 +118,43 @@ $notification-panel-button-container-height: 49px;
 	}
 
 	.notifications {
-		padding: $spacing-05 $spacing-05 $spacing-05 calc(#{$spacing-05} - #{$notification-left-border-color-width});
+		padding: carbon.$spacing-05 carbon.$spacing-05 carbon.$spacing-05 calc(#{carbon.$spacing-05} - #{$notification-left-border-color-width});
 		display: inline-flex;
 		width: 100%;
 		min-height: $notification-message-height;
-		background-color: $layer-01;
+		background-color: carbon.$layer-01;
 		border-style: none;
-		border-left: $notification-left-border-color-width solid $layer-01;
+		border-left: $notification-left-border-color-width solid carbon.$layer-01;
 		cursor: default;
 		margin-top: 0; // Required for Safari
 		margin-bottom: 0; // Required for Safari
 		outline: none; // Turn outline off and use carbon style for focus below.
 
 		&:focus {
-			border-color: $focus;
-			box-shadow: inset 0 0 0 $spacing-01 $focus;
+			border-color: carbon.$focus;
+			box-shadow: inset 0 0 0 carbon.$spacing-01 carbon.$focus;
 		}
 
 		&:hover {
-			background-color: $layer-hover-01;
+			background-color: carbon.$layer-hover-01;
 		}
 
 		&:focus,
 		&:hover {
 			&.unspecified {
-				border-left: $notification-left-border-color-width solid $field-01;
+				border-left: $notification-left-border-color-width solid carbon.$field-01;
 			}
 			&.error {
-				border-left: $notification-left-border-color-width solid $support-error;
+				border-left: $notification-left-border-color-width solid carbon.$support-error;
 			}
 			&.warning {
-				border-left: $notification-left-border-color-width solid $support-warning;
+				border-left: $notification-left-border-color-width solid carbon.$support-warning;
 			}
 			&.success {
-				border-left: $notification-left-border-color-width solid $support-success;
+				border-left: $notification-left-border-color-width solid carbon.$support-success;
 			}
 			&.info {
-				border-left: $notification-left-border-color-width solid $support-info;
+				border-left: $notification-left-border-color-width solid carbon.$support-info;
 			}
 		}
 
@@ -165,12 +167,12 @@ $notification-panel-button-container-height: 49px;
 			justify-content: center;
 			height: 18px;
 			width: fit-content;
-			padding-right: $spacing-03;
+			padding-right: carbon.$spacing-03;
 
 			> svg {
 				display: flex;
 				justify-content: center;
-				width: $spacing-05;
+				width: carbon.$spacing-05;
 				height: 100%;
 			}
 		}
@@ -181,24 +183,24 @@ $notification-panel-button-container-height: 49px;
 			width: 266px;
 
 			.notification-message-title {
-				@include type-style("productive-heading-01");
-				color: $text-primary;
-				padding-bottom: $spacing-02;
+				@include carbon.type-style("productive-heading-01");
+				color: carbon.$text-primary;
+				padding-bottom: carbon.$spacing-02;
 			}
 
 			.notification-message-subtitle {
-				@include type-style("label-01");
-				color: $text-secondary;
+				@include carbon.type-style("label-01");
+				color: carbon.$text-secondary;
 				hr {
-					margin-bottom: $spacing-03;
+					margin-bottom: carbon.$spacing-03;
 					border-bottom: 0;
-					border-top: solid 1px $layer-accent-01;
+					border-top: solid 1px carbon.$layer-accent-01;
 				}
 			}
 
 			.notification-message-content {
-				@include type-style("label-01");
-				color: $text-secondary;
+				@include carbon.type-style("label-01");
+				color: carbon.$text-secondary;
 			}
 		}
 	}
@@ -210,7 +212,7 @@ $notification-panel-button-container-height: 49px;
 
 .notification-message-timestamp {
 	display: inline-flex;
-	color: $text-secondary;
+	color: carbon.$text-secondary;
 	svg {
 		width: 10px;
 		height: 10px;
