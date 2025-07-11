@@ -140,6 +140,11 @@
 						}
 					}
 				}
+
+				// Prevent header click while resizing column
+				th.properties-autosized-vt-header:has(div.resizing) {
+					pointer-events: none;
+				}
 			}
 		}
 
