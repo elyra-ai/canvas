@@ -6451,6 +6451,7 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	// Moves the focus to a new sub-object with a node or link.
 	moveFocusToSubObject(subObject, parentObj, d3Event) {
 		// If there's no sub-object, just return.
 		if (!subObject) {
