@@ -584,6 +584,18 @@ $link-highlight-color: carbon.$support-info;
 	& foreignobject {
 		outline: none;
 	}
+
+	 &:focus {
+		outline-width: 0;
+
+		.d3-focus-path {
+			display: unset;
+			fill: transparent;
+			stroke-width: 2;
+			stroke: carbon.$focus;
+			pointer-events: none;
+		}
+	}
 }
 
 .d3-node-shape-port-arcs {
@@ -631,6 +643,18 @@ $link-highlight-color: carbon.$support-info;
 	stroke-width: 1.25;
 	& foreignobject {
 		outline: none;
+	}
+
+	&:focus {
+		outline-width: 0;
+
+		.d3-focus-path {
+			display: unset;
+			fill: transparent;
+			stroke-width: 2;
+			stroke: carbon.$focus;
+			pointer-events: none;
+		}
 	}
 }
 

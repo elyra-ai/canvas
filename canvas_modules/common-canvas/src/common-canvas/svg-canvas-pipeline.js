@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -398,5 +398,32 @@ export default class SVGCanvasPipeline {
 
 	isSelected(objId) {
 		return this.getSelectedObjectIds().indexOf(objId) >= 0;
+	}
+
+	/* ------------------------------------------------------------------------------- */
+	/* Focus functions for sub-objects.                                                */
+	/* ------------------------------------------------------------------------------- */
+
+	// Returns the next sub-object from the set of focusable sub-objects.
+	getNextNodeSubObject(node) {
+		return this.getAccessibility().getNextNodeSubObject(node);
+	}
+
+	// Returns the previous sub-object from the set of focusable sub-objects.
+	getPreviousNodeSubObject(node) {
+		return this.getAccessibility().getPreviousNodeSubObject(node);
+	}
+
+	// Cancels the index for the current sub-object.
+	cancelFocusNodeSubObject() {
+		this.getAccessibility().cancelFocusNodeSubObject();
+	}
+
+	// Returns an arry of focuable sub-elements of a node. These are items within
+	// the node that the user might want to interact with using the keyboard such
+	// as: visible ports; label decorations or decorations which are hot spots;
+	// the node label.
+	getFocusableNodeSubObjects(node) {
+		return this.getAccessibility().getFocusableNodeSubObjects();
 	}
 }
