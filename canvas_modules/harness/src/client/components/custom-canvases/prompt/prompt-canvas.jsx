@@ -79,6 +79,8 @@ export default class PromptCanvas extends React.Component {
 					{ type: "circleWithArrow" }
 				],
 
+				outputPortFocusable: true,
+
 				outputPortDisplayObjects: [
 					{ type: "image", src: "/images/custom-canvases/prompt/number_1.svg", width: 16, height: 16 },
 					{ type: "image", src: "/images/custom-canvases/prompt/number_2.svg", width: 16, height: 16 },

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -684,6 +684,24 @@ export default class SVGCanvasRenderer {
 		return this.commentsGrp.selectChildren(selector);
 	}
 
+	getNodeLabelSelectionById(nodeId) {
+		const nodeSel = this.getNodeGroupSelectionById(nodeId);
+		const selector = this.getSelectorForNodeLabelId();
+		return nodeSel.selectAll(selector);
+	}
+
+	getNodeInputPortSelectionById(portId, nodeId) {
+		const nodeSel = this.getNodeGroupSelectionById(nodeId);
+		const selector = this.getSelectorForInputPortId(portId);
+		return nodeSel.selectAll(selector);
+	}
+
+	getNodeOutputPortSelectionById(portId, nodeId) {
+		const nodeSel = this.getNodeGroupSelectionById(nodeId);
+		const selector = this.getSelectorForOutputPortId(portId);
+		return nodeSel.selectAll(selector);
+	}
+
 	getNodeDecSelectionById(decId, nodeId) {
 		const nodeSel = this.getNodeGroupSelectionById(nodeId);
 		const selector = this.getSelectorForId("node_dec_group", decId);
@@ -694,6 +712,18 @@ export default class SVGCanvasRenderer {
 		const linkSel = this.getLinkGroupSelectionById(linkId);
 		const selector = this.getSelectorForId("link_dec_group", decId);
 		return linkSel.selectAll(selector);
+	}
+
+	getSelectorForNodeLabelId() {
+		return ".d3-foreign-object-node-label";
+	}
+
+	getSelectorForInputPortId(portId) {
+		return `[data-port-id='${portId}'].d3-node-port-input`;
+	}
+
+	getSelectorForOutputPortId(portId) {
+		return `[data-port-id='${portId}'].d3-node-port-output`;
 	}
 
 	// Returns a selector for the ID string like one of the following:
@@ -2046,6 +2076,7 @@ export default class SVGCanvasRenderer {
 	createInputPorts(enter, node) {
 		const inputPortGroups = enter
 			.append("g")
+			.attr("tabindex", -1)
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, inputPorts) => {
@@ -2147,6 +2178,7 @@ export default class SVGCanvasRenderer {
 	createOutputPorts(enter, node) {
 		const outputPortGroups = enter
 			.append("g")
+			.attr("tabindex", -1)
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, outputPorts) => {
@@ -2261,6 +2293,14 @@ export default class SVGCanvasRenderer {
 							linkInfosAll.forEach((li) => (li.link.navObject = d));
 							this.setFocusObject(linkInfos[0].link, d3Event);
 						}
+
+					} else if (KeyboardUtils.focusSubObject(d3Event)) {
+						const subObject = this.activePipeline.getNextNodeSubObject(d);
+						this.moveFocusToSubObject(subObject, d, d3Event);
+
+					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
+						this.activePipeline.cancelFocusNodeSubObject(d);
+						this.canvasController.restoreFocus();
 
 					} else if (KeyboardUtils.moveObjectUp(d3Event)) {
 						if (this.config.enableEditingActions) {
@@ -2534,6 +2574,39 @@ export default class SVGCanvasRenderer {
 
 	attachInputPortListeners(inputPorts, node) {
 		inputPorts
+			.on("keydown", (d3Event, port) => {
+				if (this.config.enableKeyboardNavigation) {
+					if (KeyboardUtils.nextSubObject(d3Event)) {
+						const subObject = this.activePipeline.getNextNodeSubObject(node);
+						d3Event.stopPropagation();
+						d3Event.preventDefault();
+						this.moveFocusToSubObject(subObject, node, d3Event);
+
+					} else if (KeyboardUtils.previousSubObject(d3Event)) {
+						const subObject = this.activePipeline.getPreviousNodeSubObject(node);
+						d3Event.stopPropagation();
+						d3Event.preventDefault();
+						this.moveFocusToSubObject(subObject, node, d3Event);
+
+					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
+						this.activePipeline.cancelFocusNodeSubObject(port);
+						this.canvasController.restoreFocus();
+
+					} else if (KeyboardUtils.clickPort(d3Event)) {
+						d3Event.stopPropagation();
+						d3Event.preventDefault();
+						this.canvasController.clickActionHandler({
+							clickType: SINGLE_CLICK,
+							objectType: "port",
+							id: port.id,
+							nodeId: node.id,
+							selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
+							pipelineId: this.activePipeline.id
+						});
+
+					}
+				}
+			})
 			.on("mouseenter", (d3Event, port) => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event); // stop event propagation, otherwise node tip is shown
 				if (this.canOpenTip(TIP_TYPE_PORT)) {
@@ -2566,6 +2639,38 @@ export default class SVGCanvasRenderer {
 
 	attachOutputPortListeners(outputPorts, node) {
 		outputPorts
+			.on("keydown", (d3Event, port) => {
+				if (this.config.enableKeyboardNavigation) {
+					if (KeyboardUtils.nextSubObject(d3Event)) {
+						const subObject = this.activePipeline.getNextNodeSubObject(node);
+						d3Event.stopPropagation();
+						d3Event.preventDefault();
+						this.moveFocusToSubObject(subObject, node, d3Event);
+
+					} else if (KeyboardUtils.previousSubObject(d3Event)) {
+						const subObject = this.activePipeline.getPreviousNodeSubObject(node);
+						d3Event.stopPropagation();
+						d3Event.preventDefault();
+						this.moveFocusToSubObject(subObject, node, d3Event);
+
+					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
+						this.activePipeline.cancelFocusNodeSubObject(port);
+						this.canvasController.restoreFocus();
+
+					} else if (KeyboardUtils.clickPort(d3Event)) {
+						d3Event.stopPropagation();
+						d3Event.preventDefault();
+						this.canvasController.clickActionHandler({
+							clickType: SINGLE_CLICK,
+							objectType: "port",
+							id: port.id,
+							nodeId: node.id,
+							selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
+							pipelineId: this.activePipeline.id
+						});
+					}
+				}
+			})
 			.on("mouseenter", (d3Event, port) => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event); // stop event propagation, otherwise node tip is shown
 				if (this.canOpenTip(TIP_TYPE_PORT)) {
@@ -6343,6 +6448,55 @@ export default class SVGCanvasRenderer {
 		} else {
 			const id = obj ? obj.id : "Unknown";
 			this.logger.error(`Error applying focus to ${type} object with ID: ${id}`);
+		}
+	}
+
+	// Moves the focus to a new sub-object with a node or link.
+	moveFocusToSubObject(subObject, parentObj, d3Event) {
+		// If there's no sub-object, just return.
+		if (!subObject) {
+			return;
+		}
+
+		// Remove the current focus highlighting.
+		this.canvasGrp.selectAll(".d3-focus-path").remove();
+
+		const type = CanvasUtils.getObjectTypeName(parentObj);
+		let objSel = null;
+
+		if (type === "node") {
+			if (subObject.type === "inputPort" || subObject.type === "outputPort") {
+				objSel = subObject.type === "inputPort"
+					? this.getNodeInputPortSelectionById(subObject.obj.id, parentObj.id)
+					: this.getNodeOutputPortSelectionById(subObject.obj.id, parentObj.id);
+
+				objSel.node().focus();
+
+				const bBox = objSel.node().getBBox();
+
+				const spacing = 2;
+
+				objSel.append("rect")
+					.attr("class", "d3-focus-path")
+					.attr("x", bBox.x - spacing)
+					.attr("y", bBox.y - spacing)
+					.attr("height", bBox.height + (2 * spacing))
+					.attr("width", bBox.width + (2 * spacing));
+
+			} else if (subObject.type === "reactObject") {
+				if (parentObj.focusFunction) {
+					parentObj.focusFunction(d3Event);
+				}
+				return;
+			}
+		}
+
+		if (objSel) {
+			const element = objSel.node();
+			if (element) {
+				this.logger.log("moveFocusTo - set focus on element");
+				element.focus();
+			}
 		}
 	}
 }

@@ -185,6 +185,10 @@ const horizontalDefaultLayout = {
 		// inputPortPositions array (false).
 		inputPortAutoPosition: true,
 
+		// Indicates whether the user can move focus to the input ports, using
+		// the keyboard, after first moving focus to the sub-objects of the node.
+		inputPortFocusable: false,
+
 		// An array of input port positions. Each element is structured like
 		// this: { x_pos: 5, y_pos: 10, pos: "topLeft" }. x_pos and y_pos are
 		// offsets from the pos point on the node.
@@ -235,6 +239,10 @@ const horizontalDefaultLayout = {
 		// positioned (true) or positioned based on the contents of
 		// outputPortPositions array (false).
 		outputPortAutoPosition: true,
+
+		// Indicates whether the user can move focus to the output ports, using
+		// the keyboard, after first moving focus to the sub-objects of the node.
+		outputPortFocusable: false,
 
 		// An array of output port positions. Each element is structured like
 		// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
@@ -667,6 +675,10 @@ const verticalDefaultLayout = {
 		// inputPortPositions array (false).
 		inputPortAutoPosition: true,
 
+		// Indicates whether the user can move focus to the input ports, using
+		// the keyboard, after first moving focus to the sub-objects of the node.
+		inputPortFocusable: false,
+
 		// An array of input port positions. Each element is structured like
 		// this: { x_pos: 5, y_pos: 10, pos: "topLeft" }. x_pos and y_pos are
 		// offsets from the pos point on the node.
@@ -717,6 +729,10 @@ const verticalDefaultLayout = {
 		// positioned (true) or positioned based on the contents of
 		// outputPortPositions array (false).
 		outputPortAutoPosition: true,
+
+		// Indicates whether the user can move focus to the output ports, using
+		// the keyboard, after first moving focus to the sub-objects of the node.
+		outputPortFocusable: false,
 
 		// An array of output port positions. Each element is structured like
 		// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are

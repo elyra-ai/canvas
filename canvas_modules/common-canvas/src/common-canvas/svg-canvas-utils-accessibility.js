@@ -47,6 +47,10 @@ export default class SVGCanvasUtilsAccessibility {
 		// Keeps track of which tab object is currently active during tabbing.
 		this.currentTabObjectIndex = -1;
 
+		// Keeps track of which sub-object with the currently focused node or link
+		// is being focused.
+		this.focusSubObjectIndex = -1;
+
 		// Reset the currentTabObjectIndex variable based on the current selection
 		// (if there is one).
 		this.resetTabGroupIndexBasedOnSelection();
@@ -512,4 +516,76 @@ export default class SVGCanvasUtilsAccessibility {
 	getLinksFromComment(comment) {
 		return this.ap.pipeline.links.filter((l) => l.srcNodeId === comment.id);
 	}
+
+	/* ------------------------------------------------------------------------------- */
+	/* Focus functions for sub-objects.                                                */
+	/* ------------------------------------------------------------------------------- */
+
+	// Returns the next sub-object from the set of focusable sub-objects.
+	getNextNodeSubObject(node) {
+		const subObjs = this.getFocusableNodeSubObjects(node);
+
+		this.focusSubObjectIndex++;
+
+		if (this.focusSubObjectIndex >= subObjs.length) {
+			this.focusSubObjectIndex = 0;
+		}
+
+		return subObjs[this.focusSubObjectIndex];
+	}
+
+	// Returns the previous sub-object from the set of focusable sub-objects.
+	getPreviousNodeSubObject(node) {
+		const subObjs = this.getFocusableNodeSubObjects(node);
+
+		this.focusSubObjectIndex--;
+
+		if (this.focusSubObjectIndex < 0) {
+			this.focusSubObjectIndex = subObjs.length - 1;
+		}
+
+		return subObjs[this.focusSubObjectIndex];
+	}
+
+	// Cancels the index for the current sub-object.
+	cancelFocusNodeSubObject() {
+		this.focusSubObjectIndex = -1;
+	}
+
+	// Returns an arry of focuable sub-elements of a node. These are items within
+	// the node that the user might want to interact with using the keyboard such
+	// as: visible ports; label decorations or decorations which are hot spots;
+	// the node label.
+	getFocusableNodeSubObjects(node) {
+		const focusableSubElements = [];
+
+		if (node.inputs && node.layout.inputPortDisplay && node.layout.inputPortFocusable) {
+			node.inputs.forEach((ip) => {
+				focusableSubElements.push({ type: "inputPort", obj: ip });
+			});
+		}
+
+		if (node.outputs && node.layout.outputPortDisplay && node.layout.outputPortFocusable) {
+			node.outputs.forEach((op) => {
+				focusableSubElements.push({ type: "outputPort", obj: op });
+			});
+		}
+
+		if (node.focusFunction) {
+			focusableSubElements.push({ type: "reactObject", obj: node });
+		}
+
+		// Uncomment this code when we want to support keyboard navigation to
+		// node or link decorations.
+		// if (node.decoration) {
+		//      node.decorations.forEach((dec) => {
+		//              if (dec.hotspot || dec.label_editable || dec.allow_focus) {
+		//                      focusableSubElements.push({ type: "decoration", obj: dec });
+		//              }
+		//      });
+		// }
+
+		return focusableSubElements;
+	}
+
 }
