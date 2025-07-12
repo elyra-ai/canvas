@@ -677,7 +677,7 @@ const verticalDefaultLayout = {
 
 		// Indicates whether the user can move focus to the input ports, using
 		// the keyboard, after first moving focus to the sub-objects of the node.
-		inputPortFocusable: true,
+		inputPortFocusable: false,
 
 		// An array of input port positions. Each element is structured like
 		// this: { x_pos: 5, y_pos: 10, pos: "topLeft" }. x_pos and y_pos are
@@ -732,7 +732,7 @@ const verticalDefaultLayout = {
 
 		// Indicates whether the user can move focus to the output ports, using
 		// the keyboard, after first moving focus to the sub-objects of the node.
-		outputPortFocusable: true,
+		outputPortFocusable: false,
 
 		// An array of output port positions. Each element is structured like
 		// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
