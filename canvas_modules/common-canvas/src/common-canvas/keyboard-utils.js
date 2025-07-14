@@ -44,7 +44,6 @@ const Z_KEY = "z";
 
 const F10_KEY = "F10";
 
-const ONE_KEY = "1";
 const SEVEN_KEY = "7";
 const EIGHT_KEY = "8";
 const NINE_KEY = "9";
@@ -168,7 +167,9 @@ export default class KeyboardUtils {
 	}
 
 	static focusSubObject(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.key === ONE_KEY;
+		d3Event.preventDefault();
+		d3Event.stopPropagation();
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.key === TAB_KEY;
 	}
 
 	static nextSubObject(d3Event) {
