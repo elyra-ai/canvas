@@ -46,7 +46,7 @@ More information about carbon components can be found here https://carbondesigns
 If you want to use the full power of scss styling with variable overrides etc then include these imports in your main SCSS file:
 ```
 @use "@carbon/react"; // Bring in all the styles for Carbon in your root/global stylesheet
-@import "@elyra/canvas/src/index.scss";
+@forward "@elyra/canvas/src/index.scss";
 ```
 
   - use `autoprefixer` when building
@@ -65,28 +65,50 @@ If you are using Common Properties then also include the react-virtualized style
   - react-virtualized/styles.css
 
 ### Loading Fonts
-To get correct and efficient display of fonts in Elyra Canvas, the build process for your application should copy the IBM Plex font files from `/node_modules/@ibm/plex`to a `./fonts` folder and the following should be added to the `.scss` file for your application:
+To get correct and efficient display of fonts in Elyra Canvas, the build process for your application should copy the IBM Plex font files from `/node_modules/@ibm`to a `./fonts` folder and the following should be added to the `.scss` file for your application:
 
 ```
-@use "@carbon/react" as * with (
-	$font-path: "/fonts"
+@use "@carbon/react" with (
+	$font-path: "/fonts/plex",
+	$use-per-family-plex: true
 );
 
-$font-prefix: './fonts';
-@import 'node_modules/@ibm/plex/scss/ibm-plex.scss';
+@use "@ibm/plex-sans-condensed/scss" as PlexSansCondensed with (
+	$font-prefix: "/fonts/plex-sans-condensed"
+);
+
+@use "@ibm/plex-sans/scss" as PlexSans with (
+	$font-prefix: "/fonts/plex-sans"
+);
+
+@use "@ibm/plex-serif/scss" as PlexSerif with (
+	$font-prefix: "/fonts/plex-serif"
+);
+
+@use "@ibm/plex-mono/scss" as PlexMono with (
+	$font-prefix: "/fonts/plex-mono"
+);
+
+@include PlexSansCondensed.all();
+
+@include PlexSans.all();
+
+@include PlexSerif.all();
+
+@include PlexMono.all();
 ```
 
 You can see an example of this in the [common.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) file for the Elyra Canvas Test Harness. The Test Harness is the equivalent of a host application.
 
-The [Gruntfile](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L64) that builds the Test Harness contains the following, that ensures the fonts are copied from `/node_modules/@ibm/plex` to the `<carbon fonts folder>`:
+The [Gruntfile](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L68) that builds the Test Harness contains the following, that ensures the fonts are copied from `/node_modules/@ibm` to the `<carbon fonts folder>`:
 ```
 copy: {
 	fonts: {
 		files: [{
 			expand: true,
 			flatten: false,
-			cwd: "./node_modules/@ibm/plex",
-			src: ["IBM-Plex*/**"],
+			cwd: "./node_modules/@ibm",
+			src: ["plex-*/fonts/**"],
 			dest: ".build/fonts"
 		}]
 	}

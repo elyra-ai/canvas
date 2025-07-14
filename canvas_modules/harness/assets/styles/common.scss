@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@use "@carbon/react" as * with (
-	$font-path: "/fonts"
+@use "@carbon/react" with (
+	$font-path: "/fonts/plex",
+	$use-per-family-plex: true
 );
 
-$font-prefix: "/fonts";
-@import "node_modules/@ibm/plex/scss/ibm-plex.scss";
+@use "@ibm/plex-sans-condensed/scss" as PlexSansCondensed with (
+	$font-prefix: "/fonts/plex-sans-condensed"
+);
+
+@use "@ibm/plex-sans/scss" as PlexSans with (
+	$font-prefix: "/fonts/plex-sans"
+);
+
+@use "@ibm/plex-serif/scss" as PlexSerif with (
+	$font-prefix: "/fonts/plex-serif"
+);
+
+@use "@ibm/plex-mono/scss" as PlexMono with (
+	$font-prefix: "/fonts/plex-mono"
+);
+
+@include PlexSansCondensed.all();
+
+@include PlexSans.all();
+
+@include PlexSerif.all();
+
+@include PlexMono.all();
