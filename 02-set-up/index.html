@@ -2994,7 +2994,7 @@ where x.x.x is the latest build and then run:
 <h3 id="scss-styling-recommended">SCSS styling (recommended)<a class="headerlink" href="#scss-styling-recommended" title="Permanent link">&para;</a></h3>
 <p>If you want to use the full power of scss styling with variable overrides etc then include these imports in your main SCSS file:
 <div class="highlight"><pre><span></span><code>@use &quot;@carbon/react&quot;; // Bring in all the styles for Carbon in your root/global stylesheet
-@import &quot;@elyra/canvas/src/index.scss&quot;;
+@forward &quot;@elyra/canvas/src/index.scss&quot;;
 </code></pre></div></p>
 <ul>
 <li>use <code>autoprefixer</code> when building</li>
@@ -3007,23 +3007,45 @@ where x.x.x is the latest build and then run:
 <p>If you are using Common Properties then also include the react-virtualized styles:
   - react-virtualized/styles.css</p>
 <h3 id="loading-fonts">Loading Fonts<a class="headerlink" href="#loading-fonts" title="Permanent link">&para;</a></h3>
-<p>To get correct and efficient display of fonts in Elyra Canvas, the build process for your application should copy the IBM Plex font files from <code>/node_modules/@ibm/plex</code>to a <code>./fonts</code> folder and the following should be added to the <code>.scss</code> file for your application:</p>
-<div class="highlight"><pre><span></span><code>@use &quot;@carbon/react&quot; as * with (
-    $font-path: &quot;/fonts&quot;
+<p>To get correct and efficient display of fonts in Elyra Canvas, the build process for your application should copy the IBM Plex font files from <code>/node_modules/@ibm</code>to a <code>./fonts</code> folder and the following should be added to the <code>.scss</code> file for your application:</p>
+<div class="highlight"><pre><span></span><code>@use &quot;@carbon/react&quot; with (
+    $font-path: &quot;/fonts/plex&quot;,
+    $use-per-family-plex: true
 );
 
-$font-prefix: &#39;./fonts&#39;;
-@import &#39;node_modules/@ibm/plex/scss/ibm-plex.scss&#39;;
+@use &quot;@ibm/plex-sans-condensed/scss&quot; as PlexSansCondensed with (
+    $font-prefix: &quot;/fonts/plex-sans-condensed&quot;
+);
+
+@use &quot;@ibm/plex-sans/scss&quot; as PlexSans with (
+    $font-prefix: &quot;/fonts/plex-sans&quot;
+);
+
+@use &quot;@ibm/plex-serif/scss&quot; as PlexSerif with (
+    $font-prefix: &quot;/fonts/plex-serif&quot;
+);
+
+@use &quot;@ibm/plex-mono/scss&quot; as PlexMono with (
+    $font-prefix: &quot;/fonts/plex-mono&quot;
+);
+
+@include PlexSansCondensed.all();
+
+@include PlexSans.all();
+
+@include PlexSerif.all();
+
+@include PlexMono.all();
 </code></pre></div>
 <p>You can see an example of this in the <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss">common.scss</a> file for the Elyra Canvas Test Harness. The Test Harness is the equivalent of a host application.</p>
-<p>The <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L64">Gruntfile</a> that builds the Test Harness contains the following, that ensures the fonts are copied from <code>/node_modules/@ibm/plex</code> to the <code>&lt;carbon fonts folder&gt;</code>:
+<p>The <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L68">Gruntfile</a> that builds the Test Harness contains the following, that ensures the fonts are copied from <code>/node_modules/@ibm</code> to the <code>&lt;carbon fonts folder&gt;</code>:
 <div class="highlight"><pre><span></span><code>copy: {
     fonts: {
         files: [{
             expand: true,
             flatten: false,
-            cwd: &quot;./node_modules/@ibm/plex&quot;,
-            src: [&quot;IBM-Plex*/**&quot;],
+            cwd: &quot;./node_modules/@ibm&quot;,
+            src: [&quot;plex-*/fonts/**&quot;],
             dest: &quot;.build/fonts&quot;
         }]
     }
