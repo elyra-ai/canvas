@@ -75,6 +75,11 @@
 		}
 	}
 
+	// Prevent header click while resizing column
+	.properties-autosized-vt-header:has(div.properties-vt-header-resize-active) {
+		pointer-events: none;
+	}
+
 	.properties-vt-column-with-resize, .properties-vt-column-without-resize {
 		display: inline-flex;
 		width: 100%;
