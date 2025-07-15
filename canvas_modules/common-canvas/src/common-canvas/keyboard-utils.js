@@ -167,8 +167,6 @@ export default class KeyboardUtils {
 	}
 
 	static focusSubObject(d3Event) {
-		d3Event.preventDefault();
-		d3Event.stopPropagation();
 		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.key === TAB_KEY;
 	}
 
