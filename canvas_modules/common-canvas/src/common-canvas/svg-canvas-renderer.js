@@ -6434,8 +6434,9 @@ export default class SVGCanvasRenderer {
 			// appears in the viewport. If the event was a MouseEvent we don't zoom to reveal
 			// because it interferes with double-click events (also it's not necessary becasue
 			// the object will be at least partially visible in the view port for it to be clicked).
-			if (evt instanceof KeyboardEvent) {
+			if (CanvasUtils.isKeyboardEvent(evt)) {
 				const zoom = this.canvasController.getZoomToReveal([obj.id]);
+
 				if (zoom) {
 					this.zoomTo(zoom);
 				}
