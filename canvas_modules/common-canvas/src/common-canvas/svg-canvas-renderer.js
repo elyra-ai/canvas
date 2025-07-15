@@ -2295,6 +2295,8 @@ export default class SVGCanvasRenderer {
 						}
 
 					} else if (KeyboardUtils.focusSubObject(d3Event)) {
+						d3Event.preventDefault();
+						d3Event.stopPropagation();
 						const subObject = this.activePipeline.getNextNodeSubObject(d);
 						this.moveFocusToSubObject(subObject, d, d3Event);
 
