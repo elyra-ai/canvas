@@ -21,12 +21,57 @@ import { Button } from "@carbon/react";
 import { Close } from "@carbon/react/icons";
 import PromptSubPalette from "./prompt-sub-palette.jsx";
 
+const TAB_KEY = "Tab";
+const ENTER_KEY = "Enter";
+const SPACE_KEY = " ";
+const ESCAPE_KEY = "Escape";
+
 export default class PromptReactNode extends React.Component {
 	constructor(props) {
 		super(props);
 
+		// Regirster our focus function for the node, so the caller can send focus to us.
+		if (this.props.nodeData) {
+			this.props.canvasController.setSubObjectFocusFunction(this.props.nodeData.id, this.focus.bind(this));
+		}
+
+		this.buttonRef = React.createRef();
+		this.subPaletteRef = React.createRef();
+
+		this.onKeyDownDiv = this.onKeyDownDiv.bind(this);
+		this.onKeyDownCloseButton = this.onKeyDownCloseButton.bind(this);
 		this.createAutoNode = this.createAutoNode.bind(this);
 		this.closePromptPanel = this.closePromptPanel.bind(this);
+		this.tabOutOfOfPalette = this.tabOutOfOfPalette.bind(this);
+	}
+
+	componentDidMount() {
+		this.makeUntabbable();
+	}
+
+	onKeyDownCloseButton(evt) {
+		if (!evt.shiftKey && evt.key === TAB_KEY) {
+			evt.stopPropagation();
+			evt.preventDefault();
+
+			if (this.subPaletteRef?.current) {
+				this.subPaletteRef?.current.focus();
+			}
+
+		} else if (evt.shiftKey && evt.key === TAB_KEY) {
+			evt.stopPropagation();
+			evt.preventDefault();
+			this.props.externalUtils.tabOut(evt, this.props.nodeData);
+
+		} else if (evt.key === SPACE_KEY || evt.key === ENTER_KEY) {
+			this.closePromptPanel();
+		}
+	}
+
+	onKeyDownDiv(evt) {
+		if (evt.key === ESCAPE_KEY) {
+			this.makeUntabbable();
+		}
 	}
 
 	// Returns the palette object to be used. This is constructed from the
@@ -48,7 +93,45 @@ export default class PromptReactNode extends React.Component {
 
 	closePromptPanel() {
 		this.props.nodeData.app_data.prompt_data
-			.removePromptNode(this.props.nodeData.id);
+			.closePromptNode(this.props.nodeData.id);
+	}
+
+	// This is called from Common Canvas to move focus into this object.
+	focus(evt) {
+		this.makeTabbable();
+		this.buttonRef.current.focus();
+	}
+
+	tabOutOfOfPalette(evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
+		this.props.externalUtils.tabOut(evt, this.props.nodeData);
+	}
+
+	makeUntabbable() {
+		const tabbableElements = document.querySelectorAll("foreignObject button");
+
+		for (const value of tabbableElements.values()) {
+			value.setAttribute("tabindex", -1);
+		}
+		const tabbableElements2 = document.querySelectorAll("foreignObject input");
+
+		for (const value of tabbableElements2.values()) {
+			value.setAttribute("tabindex", -1);
+		}
+	}
+
+	makeTabbable() {
+		const tabbableElements = document.querySelectorAll("foreignObject button");
+
+		for (const value of tabbableElements.values()) {
+			value.removeAttribute("tabindex");
+		}
+		const tabbableElements2 = document.querySelectorAll("foreignObject input");
+
+		for (const value of tabbableElements2.values()) {
+			value.removeAttribute("tabindex");
+		}
 	}
 
 	render() {
@@ -56,23 +139,32 @@ export default class PromptReactNode extends React.Component {
 		const intl = this.props.canvasController.getIntl();
 
 		return (
-			<div className={"prompt-react"}>
+			<div id= "12345" className={"prompt-react"} onKeyDown={this.onKeyDownDiv}>
 				<div className={"prompt-react-header"}>
 					<span className={"prompt-react-header-title"}>Node Suggestion</span>
-					<Button
-						size="sm"
-						kind="ghost"
-						renderIcon={Close}
-						hasIconOnly
-						iconDescription={"Close prompt"}
-						onClick={this.closePromptPanel}
-						tooltipAlignment="end"
-						tooltipPosition="bottom"
-					/>
+					<div className={"prompt-react-close-button"}>
+						<Button
+							ref={this.buttonRef}
+							size="sm"
+							kind="ghost"
+							renderIcon={Close}
+							hasIconOnly
+							iconDescription={"Close prompt"}
+							onClick={this.closePromptPanel}
+							onKeyDown={this.onKeyDownCloseButton}
+							tooltipAlignment="end"
+							tooltipPosition="bottom"
+						/>
+					</div>
 				</div>
 
 				<IntlProvider locale={intl.locale} defaultLocale="en" messages={intl.messages}>
-					<PromptSubPalette palette={palette} createAutoNode={this.createAutoNode} />
+					<PromptSubPalette
+						ref={this.subPaletteRef}
+						palette={palette}
+						createAutoNode={this.createAutoNode}
+						tabOutOfOfPalette={this.tabOutOfOfPalette}
+					/>
 				</IntlProvider>
 			</div>
 		);
