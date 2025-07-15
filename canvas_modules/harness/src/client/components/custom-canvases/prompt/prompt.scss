@@ -72,6 +72,16 @@
 				font-weight: 600;
 				font-size: 1rem;
 			}
+
+			.prompt-react-close-button {
+				padding-top: 4px;
+				padding-right: 4px;
+			}
 		}
+
+		.prompt-sub-palette {
+			height: calc(100% - 40px);
+		}
+
 	}
 }

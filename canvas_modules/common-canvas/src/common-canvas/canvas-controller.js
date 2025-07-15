@@ -1114,6 +1114,19 @@ export default class CanvasController {
 		}
 	}
 
+	/**
+	 * Sets the decoration label, for the decoration in the node identified, to edit
+	 * mode, provided the node label is editable. This allows the user to edit the
+	 * label text.
+	 * @param nodeId - The ID of the node.
+	 * @param focusFunction -
+	 * @param pipelineId - Optional. The ID of the pipeline of the node.
+	 *                     Defaults to the currently displayed pipeline.
+	 */
+	setSubObjectFocusFunction(nodeId, focusFunction, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setSubObjectFocusFunction(nodeId, focusFunction);
+	}
+
 	// ---------------------------------------------------------------------------
 	// Comments methods
 	// ---------------------------------------------------------------------------

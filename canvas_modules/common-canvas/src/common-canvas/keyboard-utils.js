@@ -423,15 +423,15 @@ export default class KeyboardUtils {
 	}
 
 	static fromCategoryToFirstNode(evt) {
-		return evt.key === DOWN_ARROW_KEY;
+		return !this.isMetaKey(evt) && !evt.shiftKey && evt.key === DOWN_ARROW_KEY;
 	}
 
 	static nextNodeInCategory(evt) {
-		return evt.key === DOWN_ARROW_KEY;
+		return !this.isMetaKey(evt) && !evt.shiftKey && evt.key === DOWN_ARROW_KEY;
 	}
 
 	static previousNodeInCategory(evt) {
-		return evt.key === UP_ARROW_KEY;
+		return !this.isMetaKey(evt) && !evt.shiftKey && evt.key === UP_ARROW_KEY;
 	}
 
 	static createAutoNode(evt) {
@@ -440,6 +440,14 @@ export default class KeyboardUtils {
 
 	static createAutoNodeNoLink(evt) {
 		return evt.shiftKey && (this.isSpaceKey(evt) || evt.key === RETURN_KEY);
+	}
+
+	static tabFocusOutOfPalette(evt) {
+		return !evt.shiftKey && evt.key === TAB_KEY;
+	}
+
+	static shiftTabFocusOutOfPalette(evt) {
+		return evt.shiftKey && evt.key === TAB_KEY;
 	}
 
 	/* ----------------------------------------- */

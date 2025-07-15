@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -174,6 +174,7 @@ export default (state = {}, action) => {
 	case "SET_OUTPUT_PORT_LABEL":
 	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":
 	case "SET_OUTPUT_PORT_SUBFLOW_NODE_REF":
+	case "SET_NODE_SUB_OBJECT_FOCUS_FN":
 	case "MOVE_OBJECTS":
 	case "DELETE_OBJECT":
 	case "ADD_LINK":

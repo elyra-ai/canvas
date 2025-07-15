@@ -174,6 +174,14 @@ export default (state = [], action) => {
 			return node;
 		});
 
+	case "SET_NODE_SUB_OBJECT_FOCUS_FN":
+		return state.map((node, index) => {
+			if (action.data.nodeId === node.id) {
+				return { ...node, focusFunction: action.data.focusFunction };
+			}
+			return node;
+		});
+
 	case "ADD_NODE_ATTR":
 		return state.map((node, index) => {
 			if (action.data.objIds.indexOf(node.id) > -1) {

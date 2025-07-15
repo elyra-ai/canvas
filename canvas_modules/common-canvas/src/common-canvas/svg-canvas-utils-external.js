@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 Elyra Authors
+ * Copyright 2023-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,5 +147,15 @@ export default class SvgCanvasExternal {
 
 	raiseNodeToTopById(nodeId) {
 		this.ren.raiseNodeToTopById(nodeId);
+	}
+
+	tabOut(evt, node) {
+		evt.stopPropagation();
+		evt.preventDefault();
+		const subObject = evt.shiftKey
+			? this.ren.activePipeline.getPreviousNodeSubObject(node)
+			: this.ren.activePipeline.getNextNodeSubObject(node);
+
+		this.ren.moveFocusToSubObject(subObject, node, evt);
 	}
 }

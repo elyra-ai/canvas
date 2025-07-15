@@ -2400,6 +2400,9 @@ export default class SVGCanvasRenderer {
 					}
 				}
 			})
+			.on("blur", (d3Event, d) => {
+				this.activePipeline.cancelFocusNodeSubObject(d);
+			})
 			.on("mouseenter", (d3Event, d) => {
 				if (this.isDragging() || this.svgCanvasTextArea.isEditingText()) {
 					return;
