@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "checkbox": true,
+    "checkbox_readonly": true,
     "checkbox_null": null,
     "checkbox_table": [
       [
@@ -16,11 +17,42 @@
     "checkbox_error": false,
     "checkbox_warning": false,
     "disable": true,
-    "hide": true
+    "hide": true,
+    "main-table": [
+      [
+        "node 1",
+        true,
+        "new node 1",
+        "visible"
+      ],
+      [
+        "node 2",
+        false,
+        "new node 2",
+        "disabled"
+      ],
+      [
+        "node 3",
+        false,
+        "new node 3",
+        "visible"
+      ],
+      [
+        "node 4",
+        false,
+        "new node 4",
+        "hidden"
+      ]
+    ],
+    "main-table-hide-column": false
   },
   "parameters": [
     {
       "id": "checkbox",
+      "type": "boolean"
+    },
+    {
+      "id": "checkbox_readonly",
       "type": "boolean"
     },
     {
@@ -70,6 +102,14 @@
       "type": "boolean",
       "required": true,
       "default": true
+    },
+    {
+      "id": "main-table",
+      "type": "array[main-table]"
+    },
+    {
+      "id": "main-table-hide-column",
+      "type": "boolean"
     }
   ],
   "complex_types": [
@@ -78,6 +118,10 @@
       "parameters": [
         {
           "id": "checkbox",
+          "type": "boolean"
+        },
+        {
+          "id": "checkbox_readonly",
           "type": "boolean"
         },
         {
@@ -91,6 +135,32 @@
         {
           "id": "checkbox_sub_panel",
           "type": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "main-table",
+      "parameters": [
+        {
+          "id": "main-table-node-labels",
+          "type": "string"
+        },
+        {
+          "id": "main-table-node-labels-select-option",
+          "type": "boolean"
+        },
+        {
+          "id": "main-table-node-labels-rename",
+          "type": "string"
+        },
+        {
+          "id": "main-table-node-labels-type",
+          "enum": [
+            "visible",
+            "hidden",
+            "disabled"
+          ],
+          "default": "visible"
         }
       ]
     }
@@ -119,6 +189,23 @@
         "class_name": "checkbox-control-class"
       },
       {
+        "parameter_ref": "checkbox_readonly",
+        "label": {
+          "default": "checkbox readonly"
+        },
+        "description": {
+          "default": "checkbox",
+          "link": {
+            "id": "link_for_checkbox",
+            "data": {
+              "something": "option data"
+            }
+          }
+        },
+        "class_name": "checkbox-readonly-control-class",
+        "read_only": true
+      },
+      {
         "parameter_ref": "checkbox_table",
         "label": {
           "default": "Checkbox in a table"
@@ -134,6 +221,9 @@
         "parameter_ref": "checkbox_default",
         "label": {
           "default": "checkbox default"
+        },
+        "helper_text": {
+          "default": "check/uncheck the checkbox"
         },
         "description": {
           "default": "checkbox with a default value of 'true'\nThis text should be on a new line.\nThis text should also be on a new line."
@@ -204,6 +294,19 @@
         "description": {
           "default": "checkbox that is hidden"
         }
+      },
+      {
+        "parameter_ref": "main-table",
+        "rows": 6
+      },
+      {
+        "parameter_ref": "main-table-hide-column",
+        "label": {
+          "default": "Toggle checkbox state column"
+        },
+        "description": {
+          "default": "This value determines the visibility of the checkbox state column, which in turns affect the state of the second column."
+        }
       }
     ],
     "complex_type_info": [
@@ -250,6 +353,50 @@
             "class_name": "table-subpanel-checkbox-control-class"
           }
         ]
+      },
+      {
+        "complex_type_ref": "main-table",
+        "row_selection": "multiple",
+        "moveable_rows": false,
+        "add_remove_rows": true,
+        "parameters": [
+          {
+            "parameter_ref": "main-table-node-labels",
+            "label": {
+              "default": "Node label"
+            },
+            "resizable": true,
+            "custom_control_id": "job-editor-custom-icon-label-control"
+          },
+          {
+            "parameter_ref": "main-table-node-labels-select-option",
+            "label": {
+              "default": "Checked"
+            },
+            "control": "checkbox",
+            "width": "45px",
+            "class_name": "main-table-node-labels-select-option"
+          },
+          {
+            "parameter_ref": "main-table-node-labels-rename",
+            "label": {
+              "default": "Rename node"
+            },
+            "resizable": true,
+            "custom_control_id": "job-editor-custom-branch-output-control"
+          },
+          {
+            "parameter_ref": "main-table-node-labels-type",
+            "label": {
+              "default": "Checkbox state"
+            },
+            "description": {
+              "default": "This value determines the state of the checkbox in the second column."
+            },
+            "resizable": true,
+            "control": "oneofselect"
+          }
+        ]
       }
     ],
     "group_info": [
@@ -261,6 +408,7 @@
         "type": "controls",
         "parameter_refs": [
           "checkbox",
+          "checkbox_readonly",
           "checkbox_default",
           "checkbox_undefined",
           "checkbox_null"
@@ -300,6 +448,22 @@
                 "parameter_refs": [
                   "checkbox_table",
                   "checkbox_table_cond"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "checkbox-table-row-conditions",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Test checkbox table row conditions"
+            },
+            "group_info": [
+              {
+                "id": "checkbox-table-row-conditions-summary-ctrls",
+                "parameter_refs": [
+                  "main-table",
+                  "main-table-hide-column"
                 ]
               }
             ]
@@ -429,6 +593,59 @@
             "parameter_ref": "disable",
             "op": "equals",
             "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "main-table[3]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "main-table-hide-column",
+            "op": "notEquals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "main-table[1]"
+        ],
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "main-table[3]",
+                "op": "equals",
+                "value": "visible"
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "main-table[3]",
+                "op": "equals",
+                "value": "disabled"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "main-table[1]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "main-table[3]",
+            "op": "notEquals",
+            "value": "disabled"
           }
         }
       }
