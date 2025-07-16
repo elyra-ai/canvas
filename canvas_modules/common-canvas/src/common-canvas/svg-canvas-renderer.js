@@ -2297,11 +2297,11 @@ export default class SVGCanvasRenderer {
 					} else if (KeyboardUtils.focusSubObject(d3Event)) {
 						d3Event.preventDefault();
 						d3Event.stopPropagation();
+						this.activePipeline.resetFocusNodeSubObjectIndex(d);
 						const subObject = this.activePipeline.getNextNodeSubObject(d);
 						this.moveFocusToSubObject(subObject, d, d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
-						this.activePipeline.cancelFocusNodeSubObject(d);
 						this.canvasController.restoreFocus();
 
 					} else if (KeyboardUtils.moveObjectUp(d3Event)) {
@@ -2399,9 +2399,6 @@ export default class SVGCanvasRenderer {
 						}
 					}
 				}
-			})
-			.on("blur", (d3Event, d) => {
-				this.activePipeline.cancelFocusNodeSubObject(d);
 			})
 			.on("mouseenter", (d3Event, d) => {
 				if (this.isDragging() || this.svgCanvasTextArea.isEditingText()) {
@@ -2582,19 +2579,22 @@ export default class SVGCanvasRenderer {
 			.on("keydown", (d3Event, port) => {
 				if (this.config.enableKeyboardNavigation) {
 					if (KeyboardUtils.nextSubObject(d3Event)) {
-						const subObject = this.activePipeline.getNextNodeSubObject(node);
+						// Get updated node from activePipeline that will contain focusFunction - if one exists
+						const n = this.activePipeline.getNode(node.id);
+						const subObject = this.activePipeline.getNextNodeSubObject(n);
 						d3Event.stopPropagation();
 						d3Event.preventDefault();
-						this.moveFocusToSubObject(subObject, node, d3Event);
+						this.moveFocusToSubObject(subObject, n, d3Event);
 
 					} else if (KeyboardUtils.previousSubObject(d3Event)) {
-						const subObject = this.activePipeline.getPreviousNodeSubObject(node);
+						// Get updated node from activePipeline that will contain focusFunction - if one exists
+						const n = this.activePipeline.getNode(node.id);
+						const subObject = this.activePipeline.getPreviousNodeSubObject(n);
 						d3Event.stopPropagation();
 						d3Event.preventDefault();
-						this.moveFocusToSubObject(subObject, node, d3Event);
+						this.moveFocusToSubObject(subObject, n, d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
-						this.activePipeline.cancelFocusNodeSubObject(port);
 						this.canvasController.restoreFocus();
 
 					} else if (KeyboardUtils.clickPort(d3Event)) {
@@ -2647,19 +2647,22 @@ export default class SVGCanvasRenderer {
 			.on("keydown", (d3Event, port) => {
 				if (this.config.enableKeyboardNavigation) {
 					if (KeyboardUtils.nextSubObject(d3Event)) {
-						const subObject = this.activePipeline.getNextNodeSubObject(node);
+						// Get updated node from activePipeline that will contain focusFunction - if one exists
+						const n = this.activePipeline.getNode(node.id);
+						const subObject = this.activePipeline.getNextNodeSubObject(n);
 						d3Event.stopPropagation();
 						d3Event.preventDefault();
-						this.moveFocusToSubObject(subObject, node, d3Event);
+						this.moveFocusToSubObject(subObject, n, d3Event);
 
 					} else if (KeyboardUtils.previousSubObject(d3Event)) {
-						const subObject = this.activePipeline.getPreviousNodeSubObject(node);
+						// Get updated node from activePipeline that will contain focusFunction - if one exists
+						const n = this.activePipeline.getNode(node.id);
+						const subObject = this.activePipeline.getPreviousNodeSubObject(n);
 						d3Event.stopPropagation();
 						d3Event.preventDefault();
-						this.moveFocusToSubObject(subObject, node, d3Event);
+						this.moveFocusToSubObject(subObject, n, d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
-						this.activePipeline.cancelFocusNodeSubObject(port);
 						this.canvasController.restoreFocus();
 
 					} else if (KeyboardUtils.clickPort(d3Event)) {
@@ -6470,7 +6473,13 @@ export default class SVGCanvasRenderer {
 		let objSel = null;
 
 		if (type === "node") {
-			if (subObject.type === "inputPort" || subObject.type === "outputPort") {
+			if (subObject.type === "reactObject") {
+				if (parentObj.focusFunction) {
+					parentObj.focusFunction(d3Event);
+				}
+				return;
+
+			} else if (subObject.type === "inputPort" || subObject.type === "outputPort") {
 				objSel = subObject.type === "inputPort"
 					? this.getNodeInputPortSelectionById(subObject.obj.id, parentObj.id)
 					: this.getNodeOutputPortSelectionById(subObject.obj.id, parentObj.id);
@@ -6487,12 +6496,6 @@ export default class SVGCanvasRenderer {
 					.attr("y", bBox.y - spacing)
 					.attr("height", bBox.height + (2 * spacing))
 					.attr("width", bBox.width + (2 * spacing));
-
-			} else if (subObject.type === "reactObject") {
-				if (parentObj.focusFunction) {
-					parentObj.focusFunction(d3Event);
-				}
-				return;
 			}
 		}
 
