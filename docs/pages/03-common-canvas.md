@@ -132,7 +132,7 @@ Some examples of pipeline flow JSON files can be found here: <br />
 https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resources/diagrams
 
 !!! info "Images"
-    If the palette file references any images using a path you need those image files at the appropriate location.
+    If the pipeline flow references any images using a path you need those image files at the appropriate location.
 
 
 ### Step 6 : Display the canvas

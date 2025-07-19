@@ -183,7 +183,7 @@ export default class KeyboardUtils {
 	}
 
 	static clickPort(d3Event) {
-		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === RETURN_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && (d3Event.key === RETURN_KEY || this.isSpaceKey(d3Event));
 	}
 
 	// Shortcut to display either a context menu or context
@@ -423,15 +423,15 @@ export default class KeyboardUtils {
 	}
 
 	static fromCategoryToFirstNode(evt) {
-		return evt.key === DOWN_ARROW_KEY;
+		return !this.isMetaKey(evt) && !evt.shiftKey && evt.key === DOWN_ARROW_KEY;
 	}
 
 	static nextNodeInCategory(evt) {
-		return evt.key === DOWN_ARROW_KEY;
+		return !this.isMetaKey(evt) && !evt.shiftKey && evt.key === DOWN_ARROW_KEY;
 	}
 
 	static previousNodeInCategory(evt) {
-		return evt.key === UP_ARROW_KEY;
+		return !this.isMetaKey(evt) && !evt.shiftKey && evt.key === UP_ARROW_KEY;
 	}
 
 	static createAutoNode(evt) {
@@ -440,6 +440,14 @@ export default class KeyboardUtils {
 
 	static createAutoNodeNoLink(evt) {
 		return evt.shiftKey && (this.isSpaceKey(evt) || evt.key === RETURN_KEY);
+	}
+
+	static tabFocusOutOfPalette(evt) {
+		return !evt.shiftKey && evt.key === TAB_KEY;
+	}
+
+	static shiftTabFocusOutOfPalette(evt) {
+		return evt.shiftKey && evt.key === TAB_KEY;
 	}
 
 	/* ----------------------------------------- */

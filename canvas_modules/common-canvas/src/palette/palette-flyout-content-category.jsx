@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import { TIP_TYPE_PALETTE_CATEGORY } from "../common-canvas/constants/canvas-con
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import PaletteContentList from "./palette-content-list.jsx";
-
 
 class PaletteFlyoutContentCategory extends React.Component {
 	constructor(props) {
@@ -237,6 +236,10 @@ class PaletteFlyoutContentCategory extends React.Component {
 						KeyboardUtils.fromCategoryToFirstNode(evt)) {
 				this.pclRef.current.setFirstNode();
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
+
+			} else if (KeyboardUtils.tabFocusOutOfPalette(evt) &&
+						this.props.tabOut) {
+				this.props.tabOut(evt);
 			}
 		}
 	}
@@ -254,7 +257,8 @@ PaletteFlyoutContentCategory.propTypes = {
 	allowClickToAdd: PropTypes.bool,
 	isPaletteWide: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
-	createAutoNode: PropTypes.func
+	createAutoNode: PropTypes.func,
+	tabOut: PropTypes.func
 };
 
 export default PaletteFlyoutContentCategory;

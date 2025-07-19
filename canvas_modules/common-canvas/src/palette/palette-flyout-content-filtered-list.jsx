@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
+import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import defaultMessages from "../../locales/palette/locales/en.json";
 import PaletteContentListItem from "./palette-content-list-item.jsx";
 
@@ -26,13 +27,21 @@ class PaletteFlyoutContentFilteredList extends React.Component {
 
 		this.state = {
 		};
+
+		this.onKeyDownResults = this.onKeyDownResults.bind(this);
+	}
+
+	onKeyDownResults(evt) {
+		if (KeyboardUtils.tabFocusOutOfPalette(evt)) {
+			this.props.tabOutOfOfPalette(evt);
+		}
 	}
 
 	getNoResultsDiv() {
 		const noResultsFound = this.props.intl.formatMessage({ id: "palette.flyout.search.noresults", defaultMessage: defaultMessages["palette.flyout.search.noresults"] });
 		const adjustSearch = this.props.intl.formatMessage({ id: "palette.flyout.search.adjustsearch", defaultMessage: defaultMessages["palette.flyout.search.adjustsearch"] });
 		return (
-			<div>
+			<div tabIndex={0} onKeyDown={this.onKeyDownResults}>
 				<div className="palette-no-results-title">{noResultsFound}</div>
 				<br />
 				<div className="palette-no-results-desc">{adjustSearch}</div>
@@ -45,6 +54,8 @@ class PaletteFlyoutContentFilteredList extends React.Component {
 
 		for (var idx = 0; idx < this.props.nodeTypeInfos.length; idx++) {
 			var itemKey = "item_" + idx;
+			const isLastEntry = idx === this.props.nodeTypeInfos.length - 1;
+			const isShowingAllResults = !this.props.isNodeTypeInfosArrayTruncated;
 
 			contentItems.push(
 				<div key={itemKey}>
@@ -58,6 +69,7 @@ class PaletteFlyoutContentFilteredList extends React.Component {
 						isEditingEnabled={this.props.isEditingEnabled}
 						allowClickToAdd={this.props.allowClickToAdd}
 						createAutoNode={this.props.createAutoNode}
+						tabOut={isLastEntry && isShowingAllResults ? this.props.tabOutOfOfPalette : null}
 					/>
 				</div>
 			);
@@ -65,9 +77,14 @@ class PaletteFlyoutContentFilteredList extends React.Component {
 
 		if (this.props.isNodeTypeInfosArrayTruncated) {
 			const resultsRestricted =
-				this.props.intl.formatMessage({ id: "palette.flyout.search.resultsrestricted", defaultMessage: defaultMessages["palette.flyout.search.resultsrestricted"] });
+				this.props.intl.formatMessage({
+					id: "palette.flyout.search.resultsrestricted",
+					defaultMessage: defaultMessages["palette.flyout.search.resultsrestricted"]
+				});
 			contentItems.push(
-				<div key="restrict-item" className="palette-flyout-restrict-item">{resultsRestricted}</div>
+				<div key="restrict-item" className="palette-flyout-restrict-item" tabIndex={0} onKeyDown={this.onKeyDownResults}>
+					{resultsRestricted}
+				</div>
 			);
 		}
 
@@ -94,7 +111,8 @@ PaletteFlyoutContentFilteredList.propTypes = {
 	isEditingEnabled: PropTypes.bool.isRequired,
 	isNodeTypeInfosArrayTruncated: PropTypes.bool,
 	isShowRanking: PropTypes.bool,
-	createAutoNode: PropTypes.func
+	createAutoNode: PropTypes.func,
+	tabOutOfOfPalette: PropTypes.func
 };
 
 export default injectIntl(PaletteFlyoutContentFilteredList);

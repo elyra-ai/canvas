@@ -120,6 +120,7 @@ nav:
     - Command Stack: 03.10-command-stack.md
     - Internal Actions: 03.11-internal-actions.md
     - Node Properties Management: 03.12-node-properties-management.md
+    - Accessibility: 03.13-accessibility.md
     - Deprecated:
       - Context Menu Wrapper: 03.30.01-context-menu-wrapper.md
       - Flow Validation: 03.30.02-flow-validation.md

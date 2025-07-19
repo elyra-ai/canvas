@@ -386,6 +386,11 @@ export interface NodeLayout {
    */
   inputPortDisplay: boolean;
 
+  /**
+   * Specifies whether the input ports are focusable or not.
+   */
+  inputPortFocusable: boolean;
+
   /*
    * An array of elements to control display of input ports.
    * The order of the elements corresponds to the order of ports in the
@@ -424,6 +429,11 @@ export interface NodeLayout {
    * Display output ports.
    */
   outputPortDisplay: boolean;
+
+  /**
+   * Specifies whether the output ports are focusable or not.
+   */
+  outputPortFocusable: boolean;
 
   /**
    * An array of elements to control display of output ports.

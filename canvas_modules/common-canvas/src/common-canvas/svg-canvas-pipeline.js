@@ -414,9 +414,9 @@ export default class SVGCanvasPipeline {
 		return this.getAccessibility().getPreviousNodeSubObject(node);
 	}
 
-	// Cancels the index for the current sub-object.
-	cancelFocusNodeSubObject() {
-		this.getAccessibility().cancelFocusNodeSubObject();
+	// Resets the index for the current sub-object.
+	resetFocusNodeSubObjectIndex() {
+		this.getAccessibility().resetFocusNodeSubObjectIndex();
 	}
 
 	// Returns an arry of focuable sub-elements of a node. These are items within

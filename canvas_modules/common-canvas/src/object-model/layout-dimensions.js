@@ -164,6 +164,9 @@ const horizontalDefaultLayout = {
 		// Display input ports.
 		inputPortDisplay: true,
 
+		// Specifies whether the input ports are focusable or not.
+		inputPortFocusable: false,
+
 		// An array of elements to control display of input ports. Each element
 		// can have a number of different structures like this:
 		// Either
@@ -184,10 +187,6 @@ const horizontalDefaultLayout = {
 		// positioned (true) or positioned based on the contents of
 		// inputPortPositions array (false).
 		inputPortAutoPosition: true,
-
-		// Indicates whether the user can move focus to the input ports, using
-		// the keyboard, after first moving focus to the sub-objects of the node.
-		inputPortFocusable: false,
 
 		// An array of input port positions. Each element is structured like
 		// this: { x_pos: 5, y_pos: 10, pos: "topLeft" }. x_pos and y_pos are
@@ -219,6 +218,9 @@ const horizontalDefaultLayout = {
 		// Display output ports.
 		outputPortDisplay: true,
 
+		// Specifies whether the output ports are focusable or not.
+		outputPortFocusable: false,
+
 		// An array of elements to control display of output ports. Each element
 		// can have a number of different structures like this:
 		// Either
@@ -239,10 +241,6 @@ const horizontalDefaultLayout = {
 		// positioned (true) or positioned based on the contents of
 		// outputPortPositions array (false).
 		outputPortAutoPosition: true,
-
-		// Indicates whether the user can move focus to the output ports, using
-		// the keyboard, after first moving focus to the sub-objects of the node.
-		outputPortFocusable: false,
 
 		// An array of output port positions. Each element is structured like
 		// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
@@ -654,6 +652,9 @@ const verticalDefaultLayout = {
 		// Display input ports.
 		inputPortDisplay: true,
 
+		// Specifies whether the input ports are focusable or not.
+		inputPortFocusable: false,
+
 		// An array of elements to control display of input ports. Each element
 		// can have a number of different structures like this:
 		// Either
@@ -674,10 +675,6 @@ const verticalDefaultLayout = {
 		// positioned (true) or positioned based on the contents of
 		// inputPortPositions array (false).
 		inputPortAutoPosition: true,
-
-		// Indicates whether the user can move focus to the input ports, using
-		// the keyboard, after first moving focus to the sub-objects of the node.
-		inputPortFocusable: false,
 
 		// An array of input port positions. Each element is structured like
 		// this: { x_pos: 5, y_pos: 10, pos: "topLeft" }. x_pos and y_pos are
@@ -709,6 +706,9 @@ const verticalDefaultLayout = {
 		// Display output ports.
 		outputPortDisplay: true,
 
+		// Specifies whether the output ports are focusable or not.
+		outputPortFocusable: false,
+
 		// An array of elements to control display of output ports. Each element
 		// can have a number of different structures like this:
 		// Either
@@ -729,10 +729,6 @@ const verticalDefaultLayout = {
 		// positioned (true) or positioned based on the contents of
 		// outputPortPositions array (false).
 		outputPortAutoPosition: true,
-
-		// Indicates whether the user can move focus to the output ports, using
-		// the keyboard, after first moving focus to the sub-objects of the node.
-		outputPortFocusable: false,
 
 		// An array of output port positions. Each element is structured like
 		// this: { x_pos: 5, y_pos: 10, pos: "topRight" }. x_pos and y_pos are
