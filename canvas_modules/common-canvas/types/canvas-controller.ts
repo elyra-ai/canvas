@@ -2435,15 +2435,36 @@ export declare class CanvasController {
      */
     getFocusObject(): "CanvasFocus" | CanvasObject;
 
-    /** Sets the focus highlighting to parameter passed in which can be
+    /** Sets the focus highlighting to the parameter passed in which can be
      * either a canvas object or the string "CanvasFocus".
+     * @param focusObj - The Canvas object or the string "CanvasFocus" where the focus should be set
+     * @param evt - The event object
      */
     setFocusObject(
-      focusObj: "CanvasFocus" | CanvasObject
+      focusObj: "CanvasFocus" | CanvasObject,
+      evt: Event
     ): void;
 
     /** Returns true of the focus in currently on the flow editor canvas
      * background.
      */
     isFocusOnCanvas(): boolean;
-  }
+
+    /** Sets focus on the next sub-object in the object provided.
+     * @param parentObj - The Canvas object where the sub-object exists.
+     * @param evt - The event object.
+     */
+    tabToNextSubObject(
+      parentObj: CanvasObject,
+      evt: Event
+    ): void;
+
+    /** Sets focus on the previous sub-object in the object provided.
+     * @param parentObj - The Canvas object where the sub-object exists.
+     * @param evt - The event object.
+     */
+    tabToPreviousSubObject(
+      parentObj: CanvasObject,
+      evt: Event
+    ): void;
+}

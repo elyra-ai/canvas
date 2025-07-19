@@ -148,14 +148,4 @@ export default class SvgCanvasExternal {
 	raiseNodeToTopById(nodeId) {
 		this.ren.raiseNodeToTopById(nodeId);
 	}
-
-	tabOut(evt, node) {
-		evt.stopPropagation();
-		evt.preventDefault();
-		const subObject = evt.shiftKey
-			? this.ren.activePipeline.getPreviousNodeSubObject(node)
-			: this.ren.activePipeline.getNextNodeSubObject(node);
-
-		this.ren.moveFocusToSubObject(subObject, node, evt);
-	}
 }

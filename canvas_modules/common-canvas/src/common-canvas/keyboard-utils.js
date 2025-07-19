@@ -183,7 +183,7 @@ export default class KeyboardUtils {
 	}
 
 	static clickPort(d3Event) {
-		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === RETURN_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && (d3Event.key === RETURN_KEY || this.isSpaceKey(d3Event));
 	}
 
 	// Shortcut to display either a context menu or context

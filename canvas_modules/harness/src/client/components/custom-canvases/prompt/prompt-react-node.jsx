@@ -30,14 +30,17 @@ export default class PromptReactNode extends React.Component {
 	constructor(props) {
 		super(props);
 
-		// Regirster our focus function for the node, so the caller can send focus to us.
+		// Register our focus function for the node, so the caller can send focus to us.
 		if (this.props.nodeData) {
 			this.props.canvasController.setSubObjectFocusFunction(this.props.nodeData.id, this.focus.bind(this));
 		}
 
+		this.divRef = React.createRef();
 		this.buttonRef = React.createRef();
 		this.subPaletteRef = React.createRef();
 
+		this.onBlurDiv = this.onBlurDiv.bind(this);
+		this.onFocusDiv = this.onFocusDiv.bind(this);
 		this.onKeyDownDiv = this.onKeyDownDiv.bind(this);
 		this.onKeyDownCloseButton = this.onKeyDownCloseButton.bind(this);
 		this.createAutoNode = this.createAutoNode.bind(this);
@@ -61,7 +64,7 @@ export default class PromptReactNode extends React.Component {
 		} else if (evt.shiftKey && evt.key === TAB_KEY) {
 			evt.stopPropagation();
 			evt.preventDefault();
-			this.props.externalUtils.tabOut(evt, this.props.nodeData);
+			this.props.canvasController.tabToPreviousSubObject(this.props.nodeData, evt);
 
 		} else if (evt.key === SPACE_KEY || evt.key === ENTER_KEY) {
 			this.closePromptPanel();
@@ -72,6 +75,17 @@ export default class PromptReactNode extends React.Component {
 		if (evt.key === ESCAPE_KEY) {
 			this.makeUntabbable();
 		}
+	}
+
+	onBlurDiv(evt) {
+		// If focus is leaving this prompt react object.
+		if (!this.divRef.current.contains(evt.relatedTarget)) {
+			this.makeUntabbable();
+		}
+	}
+
+	onFocusDiv(evt) {
+		this.makeTabbable();
 	}
 
 	// Returns the palette object to be used. This is constructed from the
@@ -99,38 +113,40 @@ export default class PromptReactNode extends React.Component {
 	// This is called from Common Canvas to move focus into this object.
 	focus(evt) {
 		this.makeTabbable();
-		this.buttonRef.current.focus();
+		if (evt.shiftKey && evt.key === TAB_KEY) {
+			// To do - make focus go to first tab in palette instead of to the button
+			this.buttonRef.current.focus();
+		} else {
+			this.buttonRef.current.focus();
+		}
 	}
 
 	tabOutOfOfPalette(evt) {
 		evt.stopPropagation();
 		evt.preventDefault();
-		this.props.externalUtils.tabOut(evt, this.props.nodeData);
+		this.props.canvasController.tabToNextSubObject(this.props.nodeData, evt);
 	}
 
+	// Sets a tabindex of -1 to objects that, by default, are given a tabindex of 0
+	// by the browser. This prevents tab key presses moving the focus to these objects.
 	makeUntabbable() {
-		const tabbableElements = document.querySelectorAll("foreignObject button");
-
-		for (const value of tabbableElements.values()) {
-			value.setAttribute("tabindex", -1);
-		}
-		const tabbableElements2 = document.querySelectorAll("foreignObject input");
-
-		for (const value of tabbableElements2.values()) {
-			value.setAttribute("tabindex", -1);
-		}
+		this.changeTabIndex(-1);
 	}
 
+	// Sets a tabindex of 0 on objects that may have had their tabindex set to -1 by
+	// the makeUntabbable() function. This sets the tabindex explicitely on these
+	// objects to be the same as the tabindex that would normally be set by the browser.
 	makeTabbable() {
-		const tabbableElements = document.querySelectorAll("foreignObject button");
+		this.changeTabIndex(0);
+	}
+
+	// Changes the tab index of those components that, by default, have a tabindex of 0
+	// to the index value passed in.
+	changeTabIndex(index) {
+		const tabbableElements = document.querySelectorAll("foreignObject button, foreignObject input");
 
 		for (const value of tabbableElements.values()) {
-			value.removeAttribute("tabindex");
-		}
-		const tabbableElements2 = document.querySelectorAll("foreignObject input");
-
-		for (const value of tabbableElements2.values()) {
-			value.removeAttribute("tabindex");
+			value.setAttribute("tabindex", index);
 		}
 	}
 
@@ -139,7 +155,7 @@ export default class PromptReactNode extends React.Component {
 		const intl = this.props.canvasController.getIntl();
 
 		return (
-			<div id= "12345" className={"prompt-react"} onKeyDown={this.onKeyDownDiv}>
+			<div ref={this.divRef} className={"prompt-react"} onKeyDown={this.onKeyDownDiv} onFocus={this.onFocusDiv} onBlur={this.onBlurDiv}>
 				<div className={"prompt-react-header"}>
 					<span className={"prompt-react-header-title"}>Node Suggestion</span>
 					<div className={"prompt-react-close-button"}>

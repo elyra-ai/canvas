@@ -1878,6 +1878,7 @@ export default class SVGCanvasRenderer {
 		// Optional foreign object to contain a React object
 		nonBindingNodeGrps
 			.selectChildren(".d3-foreign-object-external-node")
+			.attr("tabindex", -1)
 			.data((d) => (d.layout.nodeExternalObject ? [d] : []), (d) => d.id)
 			.join(
 				(enter) =>
@@ -6456,6 +6457,34 @@ export default class SVGCanvasRenderer {
 		} else {
 			const id = obj ? obj.id : "Unknown";
 			this.logger.error(`Error applying focus to ${type} object with ID: ${id}`);
+		}
+	}
+
+	// Moves the focus highlighting to the next appropriate sub-object within
+	// the parent object.
+	tabToNextSubObject(parentObj, evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
+
+		const type = CanvasUtils.getObjectTypeName(parentObj);
+
+		if (type === "node") {
+			const subObject = this.activePipeline.getNextNodeSubObject(parentObj);
+			this.moveFocusToSubObject(subObject, parentObj, evt);
+		}
+	}
+
+	// Moves the focus highlighting to the previous appropriate sub-object within
+	// the parent object.
+	tabToPreviousSubObject(parentObj, evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
+
+		const type = CanvasUtils.getObjectTypeName(parentObj);
+
+		if (type === "node") {
+			const subObject = this.activePipeline.getPreviousNodeSubObject(parentObj);
+			this.moveFocusToSubObject(subObject, parentObj, evt);
 		}
 	}
 
