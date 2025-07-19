@@ -264,6 +264,14 @@ export default class CanvasUtils {
 		evnt.preventDefault();
 	}
 
+	// Returns true if evt passed in is a KeyboardEvent. If evt originates from
+	// React it will be a SyntheticBaseEvent which will have a nativeEvent field.
+	static isKeyboardEvent(evt) {
+		return evt &&
+			(evt instanceof KeyboardEvent ||
+				(evt.nativeEvent && evt.nativeEvent instanceof KeyboardEvent));
+	}
+
 	// Returns a snap-to-grid value for the value passed in based on a grid
 	// size defined by the gridSize passed in.
 	static snapToGrid(value, gridSize) {

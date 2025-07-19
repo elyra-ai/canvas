@@ -75,3 +75,16 @@
 
 	In Elyra Canvas v13.0.0, there is now a feature that allows the user to enter HTML in to the markdown text. This allows fonts and many other customizations of the text — although the user does need to know what they are doing with HTML.
 
+
+!!! warning "Safari Bug Causing Multiline-text to Appear top left corner of the flow editor canvas"
+
+
+??? question "In Safari, on a Mac with scrollbar appearance set to \"Automatically based on mouse or trackpad\" or \"When scrolling\", why does the comment text appear in the top left corner of the canvas?"
+
+    Unfortunately this is a bug in Safari. It has been reported to Apple. The workaround is to set the "Show scroll bars" setting to "Always" in your Mac settings.
+	![Safari bug screenshot](assets/canvas-safari-scrollbar-bug.png)
+
+
+
+
+
