@@ -1412,9 +1412,10 @@ export declare class CanvasController {
     ): void;
 
     /**
-     * Sets the decoration label, for the decoration in the node identified, to edit
-     * mode, provided the node label is editable. This allows the user to edit the
-     * label text.
+     * Sets the focus function for the node identified by the node ID passed in.
+     * The focus function will be function on a React object which is used to
+     * display the contents of the node. The focus function will be called when the
+     * user presses shortcuts to move the focus highlighting to the node's sub-objects.
      * @param nodeId - The ID of the node.
      * @param focusFunction -
      * @param pipelineId - Optional. The ID of the pipeline of the node.
