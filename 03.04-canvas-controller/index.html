@@ -1069,6 +1069,8 @@
       
         
       
+        
+      
     
     
     
@@ -2396,6 +2398,29 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../03.13-accessibility/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accessibility
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     
     
       
@@ -2414,10 +2439,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_17" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_18" >
         
           
-          <label class="md-nav__link" for="__nav_4_17" id="__nav_4_17_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_18" id="__nav_4_18_label" tabindex="0">
             
   
   
@@ -2430,8 +2455,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_17_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_17">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_18_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_18">
             <span class="md-nav__icon md-icon"></span>
             Deprecated
           </label>
@@ -3769,6 +3794,12 @@ Note:</p>
 <span class="c1">// mode, provided the node label is editable. This allows the user to edit the</span>
 <span class="c1">// label text.</span>
 <span class="nx">setNodeDecorationLabelEditingMode</span><span class="p">(</span><span class="nx">decId</span><span class="p">,</span><span class="w"> </span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
+<span class="c1">// Sets the focus function for the node identified by the node ID passed in.</span>
+<span class="c1">// The focus function will be function on a React object which is used to</span>
+<span class="c1">// display the contents of the node. The focus function will be called when the</span>
+<span class="c1">// user presses shortcuts to move the focus highlighting to the node&#39;s sub-objects.</span>
+<span class="nx">setSubObjectFocusFunction</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">focusFunction</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="comment-methods">Comment methods<a class="headerlink" href="#comment-methods" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1">// Returns the comments from the pipeline.</span>
@@ -4244,10 +4275,16 @@ Note:</p>
 
 <span class="c1">// Sets the focus highlighting to parameter passed in which can be</span>
 <span class="c1">// either a canvas object or the string &quot;CanvasFocus&quot;.</span>
-<span class="nx">setFocusObject</span><span class="p">(</span><span class="nx">focusObj</span><span class="p">)</span>
+<span class="nx">setFocusObject</span><span class="p">(</span><span class="nx">focusObj</span><span class="p">,</span><span class="w"> </span><span class="nx">evt</span><span class="p">)</span>
 
 <span class="c1">// Returns true of the focus in currently on the flow editor canvas background.</span>
 <span class="nx">isFocusOnCanvas</span><span class="p">()</span>
+
+<span class="c1">// Sets focus on the next sub-object in the object provided.</span>
+<span class="nx">setFocusNextSubObject</span><span class="p">(</span><span class="nx">parentObj</span><span class="p">,</span><span class="w"> </span><span class="nx">evt</span><span class="p">)</span>
+
+<span class="c1">// Sets focus on the previous sub-object in the object provided.</span>
+<span class="nx">setFocusPreviousSubObject</span><span class="p">(</span><span class="nx">parentObj</span><span class="p">,</span><span class="w"> </span><span class="nx">evt</span><span class="p">)</span>
 </code></pre></div>
 
 

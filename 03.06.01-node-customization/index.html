@@ -1069,6 +1069,8 @@
       
         
       
+        
+      
     
     
     
@@ -2014,6 +2016,21 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node Ports
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Node Ports">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
   <a href="#overriding-port-positions-and-link-directions" class="md-nav__link">
     <span class="md-ellipsis">
@@ -2067,6 +2084,24 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node shape
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-with-react-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node with React object
+    </span>
+  </a>
   
 </li>
       
@@ -2325,6 +2360,29 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../03.13-accessibility/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accessibility
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     
     
       
@@ -2343,10 +2401,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_17" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_18" >
         
           
-          <label class="md-nav__link" for="__nav_4_17" id="__nav_4_17_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_18" id="__nav_4_18_label" tabindex="0">
             
   
   
@@ -2359,8 +2417,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_17_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_17">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_18_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_18">
             <span class="md-nav__icon md-icon"></span>
             Deprecated
           </label>
@@ -2983,6 +3041,21 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node Ports
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Node Ports">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
   <a href="#overriding-port-positions-and-link-directions" class="md-nav__link">
     <span class="md-ellipsis">
@@ -3036,6 +3109,24 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node shape
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-with-react-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node with React object
+    </span>
+  </a>
   
 </li>
       
@@ -3251,6 +3342,9 @@ minFinalLine: 30,
 // Display input ports.
 inputPortDisplay: true,
 
+// Specifies whether the input ports are focusable or not.
+inputPortFocusable: false,
+
 // An array of elements to control display of input ports. Each element
 // can have a number of different structures like this:
 // Either
@@ -3301,6 +3395,9 @@ inputPortGuideObjects: [
 
 // Display output ports.
 outputPortDisplay: true,
+
+// Specifies whether the output ports are focusable or not.
+outputPortFocusable: false,
 
 // An array of elements to control display of output ports. Each element
 // can have a number of different structures like this:
@@ -3389,14 +3486,15 @@ ellipsisHoverAreaPadding: 2
 <p>The default for most elements is <code>topLeft</code>. The position is useful when nodes are resizable because, as a node is resized, the element will remain tied to its position. So if, for example, an element is tied to <code>topRight</code> and the node is resized to be wider the element will move to remain at the same offset from the <code>topRight</code> position.</p>
 <p>The PosX and PosY properties for each element is an offset from the associated anchor position where PosX is the number of pixels <strong>to the right</strong> of the anchor position and PosY is a number of pixels <strong>down from</strong> the anchor position. Negative values can be provided to specify an offset <strong>to the left</strong> and <strong>up from</strong> the anchor position.</p>
 <p>For example, these settings:
-<div class="highlight"><pre><span></span><code>    {
-        imagePosition: &quot;middleCenter&quot;,
-        imagePosX: -10,
-        imagePosY: -10,
-        imageWidth: 20,
-        imageHeight: 20
-    }
-};
+<div class="highlight"><pre><span></span><code>    const config = {
+        enableNodeLayout: {
+            imagePosition: &quot;middleCenter&quot;,
+            imagePosX: -10,
+            imagePosY: -10,
+            imageWidth: 20,
+            imageHeight: 20
+        }
+    };
 </code></pre></div>
 would position the image 10 pixels left and 10 pixels above the very center of the node. Since the image is 20 x 20 pixels this would position the center of the image at the center of the node. If you have enabled re-sizeable nodes, this would keep the image centrally positioned while the node is being resized by the user. Like this:</p>
 <p><img src="../assets/cc-node-resize.gif" width="150" /></p>
@@ -3443,18 +3541,37 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 <p>The <code>layoutHandler</code> callback is called while the canvas is being displayed, therefore it must return very quickly each time it is called otherwise your canvas display speed will be slowed down.</p>
 </div>
 <p>Here is a simple example of a <code>layoutHandler</code> callback method which will override the width of the node based on the width of the main label for any node where the node&rsquo;s <code>op</code> field is set to <code>Sort</code>:
-<div class="highlight"><pre><span></span><code><span class="nx">layoutHandler</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">customNodeLayout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">op</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;Sort&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">labLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">label</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">label</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">labLen</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">9</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">30</span><span class="p">;</span><span class="w"> </span><span class="c1">// Allow 9 pixels for each character and a bit extra for padding</span>
-<span class="w">        </span><span class="nx">customNodeLayout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">defaultNodeWidth</span><span class="o">:</span><span class="w"> </span><span class="nx">width</span><span class="w"> </span><span class="c1">// Override default width with calculated width</span>
-<span class="w">        </span><span class="p">};</span>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">layoutHandler</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">customNodeLayout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">op</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;Sort&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">labLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">label</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">label</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">labLen</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">9</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">30</span><span class="p">;</span><span class="w"> </span><span class="c1">// Allow 9 pixels for each character plus some padding</span>
+<span class="w">            </span><span class="nx">customNodeLayout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nx">defaultNodeWidth</span><span class="o">:</span><span class="w"> </span><span class="nx">width</span><span class="w"> </span><span class="c1">// Override default width with calculated width</span>
+<span class="w">            </span><span class="p">};</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">customNodeLayout</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">customNodeLayout</span><span class="p">;</span>
 </code></pre></div></p>
+<h2 id="node-ports">Node Ports<a class="headerlink" href="#node-ports" title="Permanent link">&para;</a></h2>
+<p>A port is used to indicate the entry or exit point of a link into or out of a node.</p>
+<p>Internally, in the pipeline flow, a node can have zero or more input ports and/or zero or more output ports. Some applications choose to only allow single input and output ports for its nodes, while other applications have multiple input or output ports per node. As well as the number of ports per node, the application can choose how to display the ports in the flow editor. Those applications that have single ports per node often choose not to display the ports while the multiple-ports per node applications usually have to diplay the ports so there is a visual indication of where the links are attached.</p>
+<table>
+<thead>
+<tr>
+<th>Single-port nodes</th>
+<th>Multi-port nodes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="../assets/cc-node-ports-single.png" width="400" /></td>
+<td><img src="../assets/cc-node-ports-multi.png" width="450" /></td>
+</tr>
+</tbody>
+</table>
 <h3 id="overriding-port-positions-and-link-directions">Overriding port positions and link directions<a class="headerlink" href="#overriding-port-positions-and-link-directions" title="Permanent link">&para;</a></h3>
+<p>This section is only applicable to those applications wishing to display ports.</p>
 <p>The four options for <a href="../03.02.01-canvas-config/#enablelinkdirection">enableLinkDirection</a> in the canvas config are &ldquo;LeftRight&rdquo;, &ldquo;RightLeft&rdquo;, &ldquo;TopBottom&rdquo; and &ldquo;BottomTop&rdquo;. These will control the default position of the input and output ports at the boundaries of the nodes as follows:</p>
 <ul>
 <li>For &ldquo;LeftRight&rdquo; input ports will be on the left of the node and output ports will be on the right of the node</li>
@@ -3495,17 +3612,21 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 <p>For most flows, nodes are defined with an <a href="../01.01.01-nodes/#node-image">image (icon)</a> that conveys the purpose of the node. They are displayed for the nodes in the flow and the palette. The nodes image can be provided as a URL or JSX object. Images can also be customized using node layout fields.</p>
 <h3 id="node-image-layout-fields">Node image layout fields<a class="headerlink" href="#node-image-layout-fields" title="Permanent link">&para;</a></h3>
 <p>The following fields can be set in the node layout to customize images within a node:
-<div class="highlight"><pre><span></span><code>    // Display image
-    imageDisplay: true,
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">enableNodeLayout</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Display image</span>
+<span class="w">            </span><span class="nx">imageDisplay</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 
-    // Image dimensions
-    imageWidth: 26,
-    imageHeight: 26,
+<span class="w">            </span><span class="c1">// Image dimensions</span>
+<span class="w">            </span><span class="nx">imageWidth</span><span class="o">:</span><span class="w"> </span><span class="mf">26</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">imageHeight</span><span class="o">:</span><span class="w"> </span><span class="mf">26</span><span class="p">,</span>
 
-    // Image position
-    imagePosition: &quot;topLeft&quot;,
-    imagePosX: 6,
-    imagePosY: 7,
+<span class="w">            </span><span class="c1">// Image position</span>
+<span class="w">            </span><span class="nx">imagePosition</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;topLeft&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">imagePosX</span><span class="o">:</span><span class="w"> </span><span class="mf">6</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">imagePosY</span><span class="o">:</span><span class="w"> </span><span class="mf">7</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
 </code></pre></div></p>
 <h3 id="node-image-as-a-url">Node image as a URL<a class="headerlink" href="#node-image-as-a-url" title="Permanent link">&para;</a></h3>
 <p>Typically, the <a href="https://github.com/elyra-ai/pipeline-schemas/blob/90e436eda2c153c6026c0d649fc6adfece004951/common-pipeline/pipeline-flow/pipeline-flow-ui-v3-schema.json#L136">image field</a> of a node object in the pipeline flow (or palette) is a URL that references an image file on the server. This can be any type of image that can be displayed in an <code>&lt;image&gt;</code> tag however, if the file is recognized as an SVG file by having the <code>.svg</code> extension, the contents of the file will be loaded as inline SVG in the DOM. This allows more image customization using CSS.</p>
@@ -3535,6 +3656,54 @@ Alternatively, JSX images can be injected directly into the pipeline flow object
 <p>Also, when nodes are pasted into the canvas the application will need to ensure the image fields of those nodes are set appropriately.</p>
 <p>A new sample application called ‘JSX Icons’ has been added to the test harness to show Carbon icons being used as node images.</p>
 <p><img src="../assets/cc-node-image-jsx-app.png" width="700" /></p>
+<h2 id="node-shape">Node shape<a class="headerlink" href="#node-shape" title="Permanent link">&para;</a></h2>
+<p>A node can display a shape (typically a rectangle) that appears underneath the image and label. The shape can be customized using the following node layout properties:</p>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">enableNodeLayout</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Displays the node outline shape underneath the image and label.</span>
+<span class="w">            </span><span class="nx">nodeShapeDisplay</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+
+<span class="w">            </span><span class="c1">// Default node shape. Can be &quot;rectangle&quot;, &quot;port-arcs&quot; or</span>
+<span class="w">            </span><span class="c1">// &quot;rectangle-rounded-corners&quot;. Used when nodeShapeDisplay is true.</span>
+<span class="w">            </span><span class="nx">nodeShape</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;rectangle&quot;</span><span class="p">,</span>
+
+<span class="w">            </span><span class="c1">// An SVG path or a function that returns an SVG path. The paths define the node</span>
+<span class="w">            </span><span class="c1">// shape and its selection highlighting respectively. If set to null, the paths</span>
+<span class="w">            </span><span class="c1">// will be set by default based on the nodeShape setting.</span>
+<span class="w">            </span><span class="c1">// If these fields are set to functions they will be called in real-time as the node</span>
+<span class="w">            </span><span class="c1">// is being sized (provided the node is resizable).</span>
+<span class="w">            </span><span class="nx">bodyPath</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">selectionPath</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+</code></pre></div>
+<h2 id="node-with-react-object">Node with React object<a class="headerlink" href="#node-with-react-object" title="Permanent link">&para;</a></h2>
+<p>The application can specify a React object to be displayed for the contents of a node. Typically this would replace the label, image and background shape which can all be switched off using properties in the node layout properties. The application specifies the React object in the <code>nodeExternalObject</code> node layout property.</p>
+<p>In this example, <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/src/client/components/custom-canvases/react-nodes-carbon/wrapper-card-node.jsx">CardNodeWrapper</a> display a Card node from Carbon Charts (@carbon/charts-react) package:</p>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">import</span><span class="w"> </span><span class="nx">CardNodeWrapper</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./wrapper-card-node.jsx&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">enableNodeLayout</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Displays the external object specified, as the body of the node</span>
+<span class="w">            </span><span class="nx">nodeExternalObject</span><span class="o">:</span><span class="w"> </span><span class="nx">CardNodeWrapper</span><span class="p">,</span>
+
+<span class="w">            </span><span class="c1">// Displays the node outline shape underneath the image and label.</span>
+<span class="w">            </span><span class="nx">nodeShapeDisplay</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+
+<span class="w">            </span><span class="c1">// Display image</span>
+<span class="w">            </span><span class="nx">imageDisplay</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+
+<span class="w">            </span><span class="c1">// Display label</span>
+<span class="w">            </span><span class="nx">labelDisplay</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+</code></pre></div>
+<p>The React object can be built to accept three optional props as follows:
+<div class="highlight"><pre><span></span><code>nodeData - the node object from the internal data provided by the pipeline flow
+canvasController - the canvas controller
+externalUtils - an additional utilties file
+</code></pre></div></p>
 <h2 id="customizing-node-colors-and-styles-with-css">Customizing node colors and styles with CSS<a class="headerlink" href="#customizing-node-colors-and-styles-with-css" title="Permanent link">&para;</a></h2>
 <h3 id="node-dom-construction">Node DOM Construction<a class="headerlink" href="#node-dom-construction" title="Permanent link">&para;</a></h3>
 <p>Node elements are drawn as SVG elements in the SVG area provided by the <a href="../01.01-flow-editor/">Flow Editor</a> and are grouped together using a group <code>&lt;g&gt;</code> element.</p>
@@ -3548,11 +3717,11 @@ Alternatively, JSX images can be injected directly into the pipeline flow object
 </ul>
 </li>
 <li>By specifying a class name in the <code>className</code> field of the node layout properties in the canvas config. Like this
-<div class="highlight"><pre><span></span><code>const canvasConfig = {
-    enableNodeLayout: {
-        className: &quot;my-node-class&quot;
-    }
-};
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">canvasConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">enableNodeLayout</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">className</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my-node-class&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
 </code></pre></div></li>
 <li>By specifying a class name in the <code>className</code> field of the node layout properties returned from the <code>layoutHandler</code>.</li>
 </ol>
