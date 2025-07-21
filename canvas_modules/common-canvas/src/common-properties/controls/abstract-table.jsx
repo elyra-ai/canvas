@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ export default class AbstractTable extends React.Component {
 		this.buildChildItem = this.buildChildItem.bind(this);
 		this.buildMultiSelectEditChildItem = this.buildMultiSelectEditChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
-		this.checkedAll = this.checkedAll.bind(this);
+		this.areAllRowsChecked = this.areAllRowsChecked.bind(this);
 		this.isLightTheme = this.isLightTheme.bind(this);
 
 		if (props.selectedRows && props.selectedRows.length > 0) {
@@ -552,7 +552,9 @@ export default class AbstractTable extends React.Component {
 		}
 	}
 
-	checkedAllValue(colIndex, evt, { checked, id }) {
+	// Toggle the checked state checkboxes in the column,
+	// ensuring that only enabled and visible controls are updated
+	selectAllRows(colIndex, evt, { checked, id }) {
 		const controlValue = this.props.value;
 		if (Array.isArray(controlValue)) {
 			for (let i = 0; i < controlValue.length; i++) {
@@ -561,15 +563,16 @@ export default class AbstractTable extends React.Component {
 					row: i,
 					col: colIndex
 				};
-				if (this.props.controller.getControlState(propertyId) !== STATES.DISABLED) {
+				if (this.props.controller.getControlState(propertyId) !== STATES.DISABLED && this.props.controller.getControlState(propertyId) !== STATES.HIDDEN) {
 					this.props.controller.updatePropertyValue(propertyId, checked);
 				}
 			}
-			this.checkedAll[colIndex] = checked;
 		}
 	}
 
-	checkedAll(colIndex) {
+	// Returns true if all checkboxes in a given column are in the checked state,
+	// excluding any disabled or hidden checkboxes.
+	areAllRowsChecked(colIndex) {
 		const controlValue = this.props.value;
 		if (Array.isArray(controlValue)) {
 			if (controlValue.length === 0) {
@@ -581,10 +584,10 @@ export default class AbstractTable extends React.Component {
 					row: i,
 					col: colIndex
 				};
-				if (this.props.controller.getControlState(propertyId) !== STATES.DISABLED) {
-					if (!controlValue[i][colIndex]) {
-						return false;
-					}
+				if (this.props.controller.getControlState(propertyId) !== STATES.DISABLED &&
+					this.props.controller.getControlState(propertyId) !== STATES.HIDDEN &&
+					!controlValue[i][colIndex]) {
+					return false;
 				}
 			}
 		} else {
@@ -692,8 +695,8 @@ export default class AbstractTable extends React.Component {
 					<Checkbox
 						disabled={disabled}
 						id={`properties-at-header-cb-${this.uuid}-${this.props.control.name}=${j}`}
-						checked={this.checkedAll(j)}
-						onChange={this.checkedAllValue.bind(this, j)}
+						checked={this.areAllRowsChecked(j)}
+						onChange={this.selectAllRows.bind(this, j)}
 						labelText={columnDef.label.text}
 					/>) : columnDef.label.text;
 			if (columnDef.visible && columnDef.controlType !== ControlType.HIDDEN) {
