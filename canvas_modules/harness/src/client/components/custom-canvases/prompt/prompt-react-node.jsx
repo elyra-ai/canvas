@@ -64,7 +64,7 @@ export default class PromptReactNode extends React.Component {
 		} else if (evt.shiftKey && evt.key === TAB_KEY) {
 			evt.stopPropagation();
 			evt.preventDefault();
-			this.props.canvasController.tabToPreviousSubObject(this.props.nodeData, evt);
+			this.props.canvasController.setFocusPreviousSubObject(this.props.nodeData, evt);
 
 		} else if (evt.key === SPACE_KEY || evt.key === ENTER_KEY) {
 			this.closePromptPanel();
@@ -124,7 +124,7 @@ export default class PromptReactNode extends React.Component {
 	tabOutOfOfPalette(evt) {
 		evt.stopPropagation();
 		evt.preventDefault();
-		this.props.canvasController.tabToNextSubObject(this.props.nodeData, evt);
+		this.props.canvasController.setFocusNextSubObject(this.props.nodeData, evt);
 	}
 
 	// Sets a tabindex of -1 to objects that, by default, are given a tabindex of 0

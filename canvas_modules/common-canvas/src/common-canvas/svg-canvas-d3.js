@@ -236,12 +236,12 @@ export default class SVGCanvasD3 {
 		this.renderer.focusOnTextEntryElement(evt);
 	}
 
-	tabToNextSubObject(parentObj, evt) {
-		this.renderer.tabToNextSubObject(parentObj, evt);
+	setFocusNextSubObject(parentObj, evt) {
+		this.renderer.setFocusNextSubObject(parentObj, evt);
 	}
 
-	tabToPreviousSubObject(parentObj, evt) {
-		this.renderer.tabToPreviousSubObject(parentObj, evt);
+	setFocusPreviousSubObject(parentObj, evt) {
+		this.renderer.setFocusPreviousSubObject(parentObj, evt);
 	}
 
 	openCanvasContextOptions(evt) {

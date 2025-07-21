@@ -2076,9 +2076,9 @@ export default class CanvasController {
 	 * @param parentObj - The Canvas object where the sub-object exists.
 	 * @param evt - The event object.
 	 */
-	tabToNextSubObject(parentObj, evt) {
+	setFocusNextSubObject(parentObj, evt) {
 		if (this.canvasContents) {
-			this.getSVGCanvasD3().tabToNextSubObject(parentObj, evt);
+			this.getSVGCanvasD3().setFocusNextSubObject(parentObj, evt);
 		}
 	}
 
@@ -2086,9 +2086,9 @@ export default class CanvasController {
 	 * @param parentObj - The Canvas object where the sub-object exists.
 	 * @param evt - The event object.
 	 */
-	tabToPreviousSubObject(parentObj, evt) {
+	setFocusPreviousSubObject(parentObj, evt) {
 		if (this.canvasContents) {
-			this.getSVGCanvasD3().tabToPreviousSubObject(parentObj, evt);
+			this.getSVGCanvasD3().setFocusPreviousSubObject(parentObj, evt);
 		}
 	}
 

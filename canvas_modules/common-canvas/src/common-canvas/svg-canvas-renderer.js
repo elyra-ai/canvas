@@ -6462,7 +6462,7 @@ export default class SVGCanvasRenderer {
 
 	// Moves the focus highlighting to the next appropriate sub-object within
 	// the parent object.
-	tabToNextSubObject(parentObj, evt) {
+	setFocusNextSubObject(parentObj, evt) {
 		evt.stopPropagation();
 		evt.preventDefault();
 
@@ -6476,7 +6476,7 @@ export default class SVGCanvasRenderer {
 
 	// Moves the focus highlighting to the previous appropriate sub-object within
 	// the parent object.
-	tabToPreviousSubObject(parentObj, evt) {
+	setFocusPreviousSubObject(parentObj, evt) {
 		evt.stopPropagation();
 		evt.preventDefault();
 

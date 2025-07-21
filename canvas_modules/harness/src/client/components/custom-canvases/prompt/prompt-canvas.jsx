@@ -79,6 +79,7 @@ export default class PromptCanvas extends React.Component {
 					{ type: "circleWithArrow" }
 				],
 
+				inputPortFocusable: false,
 				outputPortFocusable: true,
 
 				outputPortDisplayObjects: [

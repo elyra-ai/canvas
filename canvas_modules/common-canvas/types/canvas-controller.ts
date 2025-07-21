@@ -2454,7 +2454,7 @@ export declare class CanvasController {
      * @param parentObj - The Canvas object where the sub-object exists.
      * @param evt - The event object.
      */
-    tabToNextSubObject(
+    setFocusNextSubObject(
       parentObj: CanvasObject,
       evt: Event
     ): void;
@@ -2463,7 +2463,7 @@ export declare class CanvasController {
      * @param parentObj - The Canvas object where the sub-object exists.
      * @param evt - The event object.
      */
-    tabToPreviousSubObject(
+    setFocusPreviousSubObject(
       parentObj: CanvasObject,
       evt: Event
     ): void;
