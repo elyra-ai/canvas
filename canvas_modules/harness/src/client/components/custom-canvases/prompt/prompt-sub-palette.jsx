@@ -30,6 +30,8 @@ export default class PromptSubPalette extends React.Component {
 
 		this.onScroll = this.onScroll.bind(this);
 
+		this.divRef = React.createRef();
+
 		// Create the palette's own canvas controller so it can contain
 		// a modified palette and have its own config separate from the
 		// Common Canvas controller.
@@ -59,13 +61,25 @@ export default class PromptSubPalette extends React.Component {
 		}
 	}
 
+	focus() {
+		if (this.divRef?.current) {
+			const searchInputs = this.divRef?.current.getElementsByClassName("cds--search-input");
+
+			if (searchInputs.length > 0) {
+				searchInputs[0].focus();
+			}
+		}
+	}
+
 	render() {
 		return (
-			<div style={{ height: "100%", width: "100%" }}
+			<div ref={this.divRef} className={"prompt-sub-palette"}
 				onScroll={this.onScroll} onWheel={this.onScroll} onKeyDown={this.onKeyDown} onMouseDown={this.onMouseDown}
 			>
 				<Provider store={this.canvasController.getStore()}>
-					<Palette canvasController={this.canvasController} createAutoNode={this.props.createAutoNode} />
+					<Palette canvasController={this.canvasController} createAutoNode={this.props.createAutoNode}
+						tabOutOfOfPalette={this.props.tabOutOfOfPalette}
+					/>
 				</Provider>
 			</div>
 		);
@@ -74,6 +88,7 @@ export default class PromptSubPalette extends React.Component {
 
 PromptSubPalette.propTypes = {
 	palette: PropTypes.object.isRequired,
-	createAutoNode: PropTypes.func.isRequired
+	createAutoNode: PropTypes.func.isRequired,
+	tabOutOfOfPalette: PropTypes.func
 };
 

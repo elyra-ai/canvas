@@ -547,8 +547,8 @@ export default class SVGCanvasUtilsAccessibility {
 		return subObjs[this.focusSubObjectIndex];
 	}
 
-	// Cancels the index for the current sub-object.
-	cancelFocusNodeSubObject() {
+	// Resets the index for the current sub-object.
+	resetFocusNodeSubObjectIndex() {
 		this.focusSubObjectIndex = -1;
 	}
 

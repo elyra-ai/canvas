@@ -236,6 +236,14 @@ export default class SVGCanvasD3 {
 		this.renderer.focusOnTextEntryElement(evt);
 	}
 
+	setFocusNextSubObject(parentObj, evt) {
+		this.renderer.setFocusNextSubObject(parentObj, evt);
+	}
+
+	setFocusPreviousSubObject(parentObj, evt) {
+		this.renderer.setFocusPreviousSubObject(parentObj, evt);
+	}
+
 	openCanvasContextOptions(evt) {
 		this.renderer.openCanvasContextOptions(evt);
 	}

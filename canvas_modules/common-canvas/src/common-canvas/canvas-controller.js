@@ -1114,6 +1114,20 @@ export default class CanvasController {
 		}
 	}
 
+	/**
+	 * Sets the focus function for the node identified by the node ID passed in.
+	 * The focus function will be function on a React object which is used to
+	 * display the contents of the node. The focus function will be called when the
+	 * user presses shortcuts to move the focus highlighting to the node's sub-objects.
+	 * @param nodeId - The ID of the node.
+	 * @param focusFunction -
+	 * @param pipelineId - Optional. The ID of the pipeline of the node.
+	 *                     Defaults to the currently displayed pipeline.
+	 */
+	setSubObjectFocusFunction(nodeId, focusFunction, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setSubObjectFocusFunction(nodeId, focusFunction);
+	}
+
 	// ---------------------------------------------------------------------------
 	// Comments methods
 	// ---------------------------------------------------------------------------
@@ -2000,8 +2014,11 @@ export default class CanvasController {
 		return this.focusObject;
 	}
 
-	// Sets the focus highlighting to parameter passed in which can be
-	// either a canvas object or the string "CanvasFocus".
+	/** Sets the focus highlighting to the parameter passed in which can be
+	 * either a canvas object or the string "CanvasFocus".
+	 * @param focusObj - The Canvas object or the string "CanvasFocus" where the focus should be set
+	 * @param evt - The event object
+	 */
 	setFocusObject(focusObj, evt) {
 		this.logger.log("setFocusObject focusObject = " + CanvasUtils.getFocusName(focusObj));
 
@@ -2054,6 +2071,26 @@ export default class CanvasController {
 		}
 
 		actionFn();
+	}
+
+	/** Sets focus on the next sub-object in the object provided.
+	 * @param parentObj - The Canvas object where the sub-object exists.
+	 * @param evt - The event object.
+	 */
+	setFocusNextSubObject(parentObj, evt) {
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().setFocusNextSubObject(parentObj, evt);
+		}
+	}
+
+	/** Sets focus on the previous sub-object in the object provided.
+	 * @param parentObj - The Canvas object where the sub-object exists.
+	 * @param evt - The event object.
+	 */
+	setFocusPreviousSubObject(parentObj, evt) {
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().setFocusPreviousSubObject(parentObj, evt);
+		}
 	}
 
 	// ---------------------------------------------------------------------------

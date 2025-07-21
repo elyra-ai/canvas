@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,6 +62,7 @@ class Palette extends React.Component {
 				isEditingEnabled={this.props.isEditingEnabled}
 				isPaletteWide={this.props.isPaletteWide}
 				createAutoNode={this.createAutoNode}
+				tabOutOfOfPalette={this.props.tabOutOfOfPalette}
 			/>
 		);
 	}
@@ -71,6 +72,7 @@ Palette.propTypes = {
 	// Provided by common-canvas
 	canvasController: PropTypes.object.isRequired,
 	createAutoNode: PropTypes.func, // Optional callback
+	tabOutOfOfPalette: PropTypes.func, // Optional callback
 
 	// Provided by redux
 	paletteJSON: PropTypes.object,

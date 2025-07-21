@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,6 +81,7 @@ class PaletteFlyoutContent extends React.Component {
 						isPaletteWide={this.props.isPaletteWide}
 						isEditingEnabled={this.props.isEditingEnabled}
 						createAutoNode={this.props.createAutoNode}
+						tabOut={idx === categories.length - 1 ? this.props.tabOutOfOfPalette : null}
 					/>
 				</div>
 			);
@@ -111,6 +112,7 @@ class PaletteFlyoutContent extends React.Component {
 				// isShowRanking // Uncomment this to show ranking for debuggig ranking algorithm
 				isNodeTypeInfosArrayTruncated={isNodeTypeInfosArrayTruncated}
 				createAutoNode={this.props.createAutoNode}
+				tabOutOfOfPalette={this.props.tabOutOfOfPalette}
 			/>);
 
 		return [content];
@@ -132,7 +134,7 @@ class PaletteFlyoutContent extends React.Component {
 			: this.getContentDivs(this.categories);
 
 		const contentCategories = (
-			<div className="palette-flyout-categories">
+			<div className="palette-flyout-categories" tabIndex={"-1"}>
 				{contentDivs}
 			</div>
 		);
@@ -169,7 +171,8 @@ PaletteFlyoutContent.propTypes = {
 	allowClickToAdd: PropTypes.bool,
 	isEditingEnabled: PropTypes.bool.isRequired,
 	isPaletteWide: PropTypes.bool,
-	createAutoNode: PropTypes.func
+	createAutoNode: PropTypes.func,
+	tabOutOfOfPalette: PropTypes.func
 };
 
 export default PaletteFlyoutContent;

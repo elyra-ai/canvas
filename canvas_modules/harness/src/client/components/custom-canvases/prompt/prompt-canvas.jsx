@@ -22,7 +22,7 @@ import { Menu } from "@carbon/react/icons";
 import Flow from "./prompt-flow.json";
 import Palette from "./prompt-palette.json";
 import Template from "./prompt-template.json";
-import PromptReactNode from "./prompt-react.jsx";
+import PromptReactNode from "./prompt-react-node.jsx";
 import AddNodeAndLinkAction from "./addNodeAndLinkAction.js";
 
 export default class PromptCanvas extends React.Component {
@@ -40,7 +40,7 @@ export default class PromptCanvas extends React.Component {
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.layoutHandler = this.layoutHandler.bind(this);
-		this.removePromptNode = this.removePromptNode.bind(this);
+		this.closePromptNode = this.closePromptNode.bind(this);
 	}
 
 	getConfig() {
@@ -79,6 +79,7 @@ export default class PromptCanvas extends React.Component {
 					{ type: "circleWithArrow" }
 				],
 
+				inputPortFocusable: false,
 				outputPortFocusable: true,
 
 				outputPortDisplayObjects: [
@@ -164,6 +165,10 @@ export default class PromptCanvas extends React.Component {
 
 		const cmnd = new AddNodeAndLinkAction(data, this.canvasController);
 		this.canvasController.do(cmnd);
+
+		setTimeout(() => {
+			this.canvasController.setFocusObject(cmnd.newNode);
+		}, 10);
 	}
 
 	// Add a Prompt node to the flow editor with a link to it from
@@ -174,7 +179,7 @@ export default class PromptCanvas extends React.Component {
 		const template = Template;
 		template.app_data.prompt_data = {
 			addNodeHandler: this.addNodeHandler.bind(this, srcNodeId, srcPortId), // Other parameters passed from prompt-react.jsx
-			removePromptNode: this.removePromptNode
+			closePromptNode: this.closePromptNode
 		};
 		const promptNode = this.canvasController.createNode({
 			nodeTemplate: template,
@@ -202,9 +207,24 @@ export default class PromptCanvas extends React.Component {
 		this.promptObjects.push(
 			{
 				nodeId: promptNode.id,
-				linkId: linkId
+				linkId: linkId,
+				srcNodeId: srcNodeId
 			}
 		);
+	}
+
+	// Called when the close button in the prompt node is clicked.
+	closePromptNode(promptNodeId) {
+		this.removePromptNode(promptNodeId);
+		this.moveFocusToSourceNode(promptNodeId);
+	}
+
+	moveFocusToSourceNode(promptNodeId) {
+		const promptObj = this.promptObjects.find((po) => po.nodeId === promptNodeId);
+
+		// Set the focus back on the source node.
+		const srcNode = this.canvasController.getNode(promptObj.srcNodeId);
+		this.canvasController.setFocusObject(srcNode);
 	}
 
 	// Gets and removes the prompt node and its link
