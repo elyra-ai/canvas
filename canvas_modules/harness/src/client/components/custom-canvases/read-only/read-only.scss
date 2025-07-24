@@ -33,9 +33,9 @@
 			.d3-link-dec-group .d3-link-dec-label,
 			.d3-link-dec-group .d3-link-dec-path.det-link-dot,
 			.d3-link-dec-group .d3-link-dec-image.det-tri svg {
-				color: carbon.$button-disabled;
-				fill: carbon.$button-disabled;
-				stroke: carbon.$button-disabled;
+				color: carbon.$layer-selected-disabled;
+				fill: carbon.$layer-selected-disabled;
+				stroke: carbon.$layer-selected-disabled;
 				stroke-width: 2;
 			}
 
@@ -48,9 +48,9 @@
 				.d3-link-dec-group .d3-link-dec-image.det-tri svg,
 				.d3-link-handle-start svg,
 				.d3-link-handle-end svg {
-					color: carbon.$button-disabled;
-					fill: carbon.$button-disabled;
-					stroke: carbon.$button-disabled;
+					color: carbon.$layer-selected-disabled;
+					fill: carbon.$layer-selected-disabled;
+					stroke: carbon.$layer-selected-disabled;
 					stroke-width: 4;
 				}
 			}
@@ -196,7 +196,7 @@
 
 	// Style new connection link line
 	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: carbon.$button-primary;
+		stroke: carbon.$interactive;
 		stroke-width: 2;
 		stroke-dasharray: 1 0;
 		fill: none;

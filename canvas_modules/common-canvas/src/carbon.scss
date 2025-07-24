@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Elyra Authors
+ * Copyright 2024-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,4 +20,3 @@
 @forward "@carbon/react/scss/theme";
 @forward "@carbon/react/scss/motion";
 @forward "@carbon/react/scss/components/button/tokens";
-@forward "@carbon/styles/scss/components/tag"; // Used to allow specific color tokens like $tag-color-blue
