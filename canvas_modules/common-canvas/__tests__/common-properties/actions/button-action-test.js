@@ -244,5 +244,8 @@ describe("actions using paramDef", () => {
 		// class_name not defined in uiHints action_info
 		const decrementButton = container.querySelector("div[data-id='decrement']");
 		expect(decrementButton.className).to.equal("properties-action-button");
+
+		const iconButton = container.querySelector("div[data-id='iconButton']");
+		expect(iconButton.className).to.equal("properties-action-button");
 	});
 });

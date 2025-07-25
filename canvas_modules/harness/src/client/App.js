@@ -1446,6 +1446,16 @@ class App extends React.Component {
 		// handle custom buttons icon
 		if (data.type === "customButtonIcon") {
 			callbackIcon(<Edit size={32} />);
+		} else if (data.type === "actionButtonIcon") { // handle icons for action button
+			console.log("data",data);
+			const iconName = data.data.data.icon;
+			const iconComponenet = require("@carbon/icons-react")[iconName];
+			if (iconComponenet) {
+				callbackIcon(iconComponenet);
+			} else {
+				console.warn("icon not found for:", data.data.data.icon);
+				callbackIcon(null);
+			}
 		}
 	}
 
@@ -1929,6 +1939,11 @@ class App extends React.Component {
 			const propertyId = { name: data.parameter_ref };
 			let value = propertiesController.getPropertyValue(propertyId);
 			propertiesController.updatePropertyValue(propertyId, value -= 1);
+		}
+		if (actionId === "iconButton") {
+			const propertyId = { name: data.parameter_ref };
+			const value = data.icon;
+			propertiesController.updatePropertyValue(propertyId, value);
 		}
 		if (actionId === "dm-update") {
 			const dm = propertiesController.getDatasetMetadata();
