@@ -75,6 +75,8 @@ class ButtonAction extends React.Component {
 		const disabled = this.props.state === STATES.DISABLED;
 		const actionButtonKind = this.getActionButtonKind();
 		const actionButtonSize = this.getActionButtonSize();
+		// Get the icon to be rendered from the call back
+		const icon = this.props.buttonIconHandler?.(this.props.action.name, this.props.action);
 		const button = (
 			<Button
 				type="button"
@@ -83,6 +85,7 @@ class ButtonAction extends React.Component {
 				onClick={this.applyAction}
 				disabled={disabled}
 				title={this.props.action.label.text}
+				renderIcon={icon || null}
 			>
 				{this.props.action.label.text}
 			</Button>
@@ -100,7 +103,7 @@ class ButtonAction extends React.Component {
 			display = (<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				direction="bottom"
+				direction={this.props.tooltipDirection || "bottom"}
 				className="properties-tooltips"
 				disable={disabled}
 			>
@@ -119,7 +122,9 @@ class ButtonAction extends React.Component {
 ButtonAction.propTypes = {
 	action: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	state: PropTypes.string, // pass in by redux
+	state: PropTypes.string, // pass in by redux,
+	buttonIconHandler: PropTypes.func,
+	tooltipDirection: PropTypes.oneOf(["top", "left", "right", "bottom"])
 };
 
 const mapStateToProps = (state, ownProps) => ({

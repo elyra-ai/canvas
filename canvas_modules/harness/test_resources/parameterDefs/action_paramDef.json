@@ -4,6 +4,7 @@
     "editable": false
   },
   "current_parameters": {
+    "icon_button":"Click the Icon button for the name of icon",
     "number": 0,
     "fields": [
       "age"
@@ -33,6 +34,10 @@
     {
       "id": "number",
       "type": "integer"
+    },
+    {
+      "id": "icon_button",
+      "type": "string"
     },
     {
       "id": "fields",
@@ -246,6 +251,17 @@
         },
         "control": "readonly",
         "action_ref": "moon"
+      },
+      {
+        "parameter_ref": "icon_button",
+        "label": {
+          "default": "Current icon Button"
+        },
+        "description": {
+          "default": "Try pressing the icon"
+        },
+        "control": "readonly",
+        "action_ref": "iconButton"
       },
       {
         "parameter_ref": "meteor_showers",
@@ -488,6 +504,25 @@
         "control": "button",
         "data": {
           "parameter_ref": "number"
+        }
+      },
+      {
+        "id": "iconButton",
+        "label": {
+          "resource_key": "Icon Button"
+        },
+        "description": {
+          "default": "Click to Launch the App in new tab."
+        },
+        "control": "button",
+        "button": {
+          "kind": "primary",
+          "size": "md"
+        },
+        "data": {
+          "parameter_ref": "icon_button",
+          "icon": "Launch",
+          "tooltipDirection": "left"
         }
       },
       {
@@ -884,6 +919,13 @@
             ]
           },
           {
+            "id": "icon-control",
+            "type": "controls",
+            "parameter_refs": [
+              "icon_button"
+            ]
+          },
+          {
             "id": "meteor-control",
             "type": "controls",
             "parameter_refs": [
@@ -1215,3 +1257,4 @@
     "weather.action.panel.desc": "Weather action panel description"
   }
 }
+
