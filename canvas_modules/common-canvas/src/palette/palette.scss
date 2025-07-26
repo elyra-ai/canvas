@@ -134,8 +134,8 @@ $palette-dialog-list-item-height: 46px;
 			padding: carbon.$spacing-05 10px 0 58px;
 
 			& mark {
-				color: carbon.$interactive;
-				background-color: carbon.$highlight;
+				color: carbon.$tag-color-blue;
+				background-color: carbon.$tag-background-blue;
 				font-weight: 500;
 			}
 		}
@@ -161,8 +161,8 @@ $palette-dialog-list-item-height: 46px;
 			width: calc(100% - 68px);
 			line-height: 1;
 			& mark {
-				color: carbon.$button-primary-active;
-				background-color: carbon.$highlight;
+				color: carbon.$tag-color-blue;
+				background-color: carbon.$tag-background-blue;
 				font-weight: 500;
 			}
 		}
@@ -182,8 +182,8 @@ $palette-dialog-list-item-height: 46px;
 			width: 100%; // Needed when the description is only one line long
 
 			& mark {
-				color: carbon.$button-primary-active;
-				background-color: carbon.$highlight;
+				color: carbon.$tag-color-blue;
+				background-color: carbon.$tag-background-blue;
 				font-weight: 500;
 			}
 		}

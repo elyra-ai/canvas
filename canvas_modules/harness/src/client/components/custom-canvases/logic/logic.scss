@@ -88,7 +88,7 @@
 
 	// Style new connection link line
 	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: carbon.$button-primary;
+		stroke: carbon.$interactive;
 		stroke-width: 2;
 		stroke-dasharray: 1 0;
 		fill: none;
