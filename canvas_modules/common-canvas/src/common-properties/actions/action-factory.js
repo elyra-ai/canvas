@@ -28,49 +28,17 @@ export default class ActionFactory {
 	constructor(controller) {
 		this.controller = controller;
 	}
-	// Retrieve icon for action button, with a new type "actionButtonIcon"
-	actionButtonIconCallback(buttonId, data) {
-		const buttonIconHandler = this.controller.getHandlers().buttonIconHandler;
-		const propertyId = { name: data.data.parameter_ref };
-		let icon;
-		if (buttonIconHandler) {
-			buttonIconHandler({
-				type: "actionButtonIcon",
-				propertyId: propertyId,
-				buttonId: buttonId,
-				data: data
-			}, (appIcon) => {
-				icon = appIcon;
-			}
-			);
-		}
-		return icon;
-
-	}
 	generateAction(key, action) {
 		if (action) {
 			if (action.actionType === ActionType.BUTTON) {
-				let actionButton;
-				if (action.name === "iconButton") {
-					actionButton = (
-						<ButtonAction
-							key={"action." + key}
-							action={action}
-							controller={this.controller}
-							buttonIconHandler={this.actionButtonIconCallback.bind(this)}
-							tooltipDirection={action.data.tooltipDirection}
-						/>
-					);
-				} else {
-					actionButton = (
-						<ButtonAction
-							key={"action." + key}
-							action={action}
-							controller={this.controller}
-						/>
-					);
-				}
-				return actionButton;
+				return (
+					<ButtonAction
+						key={"action." + key}
+						action={action}
+						controller={this.controller}
+					/>
+				);
+
 			} else if (action.actionType === ActionType.IMAGE) {
 				return (
 					<ImageAction

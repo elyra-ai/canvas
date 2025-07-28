@@ -27,10 +27,29 @@ class ButtonAction extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			icon: null
 		};
 		this.applyAction = this.applyAction.bind(this);
 	}
 
+	// Load icon via buttonIconHandler with a new type "actionButtonIcon" after mount
+	componentDidMount() {
+		const { controller, action } = this.props;
+		const buttonIconHandler = controller.getHandlers().buttonIconHandler;
+		if (buttonIconHandler && action) {
+			const propertyId = { name: action.data.parameter_ref };
+			buttonIconHandler({
+				type: "actionButtonIcon",
+				propertyId: propertyId,
+				buttonId: action.name,
+				data: action
+			}, (appIcon) => {
+				this.setState({ icon: appIcon });
+			}
+			);
+		}
+
+	}
 	getActionButtonKind() {
 		if (!has(this.props, "action.button.kind")) {
 			return CARBON_BUTTON_KIND.TERTIARY;
@@ -68,15 +87,15 @@ class ButtonAction extends React.Component {
 				this.props.controller.getAppData(), this.props.action.data);
 		}
 	}
-
 	render() {
 		const customClassName = this.props.action.className ? this.props.action.className : "";
 		const className = classNames("properties-action-button", { "hide": this.props.state === STATES.HIDDEN }, customClassName);
 		const disabled = this.props.state === STATES.DISABLED;
 		const actionButtonKind = this.getActionButtonKind();
 		const actionButtonSize = this.getActionButtonSize();
+
 		// Get the icon to be rendered from the call back
-		const icon = this.props.buttonIconHandler?.(this.props.action.name, this.props.action);
+		const { icon } = this.state;
 		const button = (
 			<Button
 				type="button"
@@ -86,6 +105,7 @@ class ButtonAction extends React.Component {
 				disabled={disabled}
 				title={this.props.action.label.text}
 				renderIcon={icon || null}
+				iconDescription={ icon ? (this.props.action?.description?.text || "Action Button icon") : null } // Text to appear in Tooltip
 			>
 				{this.props.action.label.text}
 			</Button>
@@ -103,7 +123,7 @@ class ButtonAction extends React.Component {
 			display = (<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				direction={this.props.tooltipDirection || "bottom"}
+				direction={this.props.action.data.tooltipDirection || "bottom"}
 				className="properties-tooltips"
 				disable={disabled}
 			>
@@ -122,9 +142,7 @@ class ButtonAction extends React.Component {
 ButtonAction.propTypes = {
 	action: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	state: PropTypes.string, // pass in by redux,
-	buttonIconHandler: PropTypes.func,
-	tooltipDirection: PropTypes.oneOf(["top", "left", "right", "bottom"])
+	state: PropTypes.string // pass in by redux,
 };
 
 const mapStateToProps = (state, ownProps) => ({

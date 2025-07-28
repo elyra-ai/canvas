@@ -423,7 +423,6 @@ export default class PropertiesController {
 			if (resolveParameterRefs) {
 				if (typeof controlValue !== "undefined" && controlValue !== null && typeof controlValue.parameterRef !== "undefined") {
 					controlValue = this.getPropertyValue({ name: controlValue.parameterRef });
-					console.log("control",controlValue);
 					this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
 				}
 			} else if (control.controlType === "structuretable" && control.addRemoveRows === false && control.includeAllFields === true) {

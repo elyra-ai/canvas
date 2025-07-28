@@ -97,7 +97,7 @@ import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
 import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
-	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification, Save } from "@carbon/react/icons";
+	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification, Save, Launch, Restart } from "@carbon/react/icons";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
 
@@ -1446,16 +1446,23 @@ class App extends React.Component {
 		// handle custom buttons icon
 		if (data.type === "customButtonIcon") {
 			callbackIcon(<Edit size={32} />);
-		} else if (data.type === "actionButtonIcon") { // handle icons for action button
-			console.log("data",data);
-			const iconName = data.data.data.icon;
-			const iconComponenet = require("@carbon/icons-react")[iconName];
-			if (iconComponenet) {
-				callbackIcon(iconComponenet);
-			} else {
-				console.warn("icon not found for:", data.data.data.icon);
-				callbackIcon(null);
+		} else if (data.type === "actionButtonIcon") { // handle icons for action button according to the actionId
+			let iconComponenet = null;
+			const actionId = data.buttonId;
+			switch (actionId) {
+			case "iconButton":
+				iconComponenet = Launch;
+				break;
+			case "increment1":
+				iconComponenet = Add;
+				break;
+			case "dm-update":
+				iconComponenet = Restart;
+				break;
+			default:
+				iconComponenet = null;
 			}
+			callbackIcon(iconComponenet);
 		}
 	}
 

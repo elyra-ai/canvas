@@ -187,12 +187,6 @@ class CommonPropertiesComponents extends React.Component {
 			let value = this.propertiesController.getPropertyValue(propertyId);
 			this.propertiesController.updatePropertyValue(propertyId, value -= 1);
 		}
-		if (actionId === "iconButton") {
-			const propertyId = { name: data.parameter_ref };
-			let value = this.propertiesController.getPropertyValue(propertyId);
-			value = data.icon;
-			this.propertiesController.updatePropertyValue(propertyId, value);
-		}
 		if (actionId === "moon") {
 			const propertyId = { name: data.parameter_ref };
 			let value = this.propertiesController.getPropertyValue(propertyId);
@@ -232,12 +226,6 @@ class CommonPropertiesComponents extends React.Component {
 			const propertyId = { name: data.parameter_ref };
 			let value = this.flyoutController.getPropertyValue(propertyId);
 			this.flyoutController.updatePropertyValue(propertyId, value -= 1);
-		}
-		if (actionId === "iconButton") {
-			const propertyId = { name: data.parameter_ref };
-			let value = this.propertiesController.getPropertyValue(propertyId);
-			value = data.icon;
-			this.propertiesController.updatePropertyValue(propertyId, value);
 		}
 		if (actionId === "moon") {
 			const propertyId = { name: data.parameter_ref };

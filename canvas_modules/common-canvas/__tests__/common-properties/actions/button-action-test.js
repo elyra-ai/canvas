@@ -19,17 +19,21 @@ import { Provider } from "react-redux";
 import ActionButton from "./../../../src/common-properties/actions/button";
 import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
-import { expect as expectJest } from "@jest/globals";
+import { afterEach, beforeEach, expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
 import Controller from "./../../../src/common-properties/properties-controller";
 import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import { fireEvent, within } from "@testing-library/react";
+import { cleanup, fireEvent, within } from "@testing-library/react";
+import { Launch } from "@carbon/react/icons";
 
 
 const actionHandler = sinon.spy();
+const buttonIconHandler = sinon.spy((data, callbackIcon) => {
+	callbackIcon(Launch);
+});
 const controller = new Controller();
-controller.setHandlers({ actionHandler: actionHandler });
+controller.setHandlers({ actionHandler: actionHandler, buttonIconHandler: buttonIconHandler });
 const appData = { nodeId: "1234" };
 controller.setAppData(appData);
 const actionStateId = { name: "increment" };
@@ -84,7 +88,6 @@ describe("action-button renders correctly", () => {
 			"controller": controller
 		});
 	});
-
 	it("should render a `ActionButton`", () => {
 		const wrapper = render(
 			<Provider store={controller.getStore()}>
@@ -211,12 +214,50 @@ describe("action-button renders correctly", () => {
 	});
 });
 
+describe("Action button should call buttonIconhandler if icon needs to render", () => {
+	beforeEach(() => {
+		buttonIconHandler.resetHistory();
+	});
+	afterEach(() => {
+		cleanup();
+	});
+	it("calls buttonIconHandler and renders the returned icon", () => {
+		const mockAction = {
+			id: "iconButton",
+			label: { default: "Click to Launch the App in new tab." },
+			data: {
+				parameter_ref: "icon_button",
+				icon: "Launch",
+				tooltipDirection: "right"
+			},
+		};
+		const wrapper = render(
+			<Provider store={controller.getStore()}>
+				<ActionButton
+					action={mockAction}
+					controller={controller}
+				/>
+			</Provider>
+		);
+		// Verify the buttonIconHandler called once
+		expect(buttonIconHandler.calledOnce).to.equal(true);
+		const { container } = wrapper;
+
+		// Verify icon is rendered or not
+		const renderedIcon = container.querySelector("svg");
+		expect(renderedIcon.classList.contains("cds--btn__icon")).to.equal(true);
+	});
+});
+
 describe("actions using paramDef", () => {
 	let wrapper;
 	let renderedObject;
 	beforeEach(() => {
 		renderedObject = propertyUtilsRTL.flyoutEditorForm(ACTION_PARAMDEF);
 		wrapper = renderedObject.wrapper;
+	});
+	afterEach(() => {
+		cleanup();
 	});
 
 	it("should fire action when button clicked", (done) => {
