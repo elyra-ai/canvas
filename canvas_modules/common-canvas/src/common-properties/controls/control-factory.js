@@ -61,31 +61,31 @@ import { has, get, isUndefined } from "lodash";
 */
 const accessibleControls = [
 	ControlType.CHECKBOXSET,
-	ControlType.HIDDEN,
+	ControlType.CODE,
 	ControlType.DATEFIELD,
 	ControlType.DATEPICKER,
 	ControlType.DATEPICKERRANGE,
+	ControlType.EXPRESSION,
+	ControlType.HIDDEN,
+	ControlType.LIST,
+	ControlType.MULTISELECT,
 	ControlType.NUMBERFIELD,
-	ControlType.SPINNER,
+	ControlType.ONEOFSELECT,
 	ControlType.PASSWORDFIELD,
+	ControlType.READONLY,
+	ControlType.READONLYTABLE,
+	ControlType.SELECTCOLUMN,
+	ControlType.SELECTCOLUMNS,
+	ControlType.SELECTSCHEMA,
+	ControlType.SLIDER,
+	ControlType.SOMEOFSELECT,
+	ControlType.SPINNER,
 	ControlType.TEXTAREA,
 	ControlType.TEXTFIELD,
 	ControlType.TIMEFIELD,
-	ControlType.TOGGLETEXT,
-	ControlType.LIST,
-	ControlType.TOGGLE,
-	ControlType.SOMEOFSELECT,
-	ControlType.SELECTCOLUMNS,
-	ControlType.READONLY,
-	ControlType.READONLYTABLE,
 	ControlType.TIMESTAMP,
-	ControlType.EXPRESSION,
-	ControlType.CODE,
-	ControlType.ONEOFSELECT,
-	ControlType.MULTISELECT,
-	ControlType.SELECTSCHEMA,
-	ControlType.SELECTCOLUMN,
-	ControlType.SLIDER
+	ControlType.TOGGLE,
+	ControlType.TOGGLETEXT
 ];
 
 const tableControls = [
@@ -131,14 +131,12 @@ export default class ControlFactory {
 		if (accessibleControls.includes(control.controlType)) {
 			return controlObj;
 		}
-		const hidden = this.controller.getControlState(propertyId) === STATES.HIDDEN;
-		if (hidden) {
-			return null; // Do not render hidden controls
-		}
 		// When control-item displays other controls, add padding on control-item
+		// Don't add "hide" class for subpanel properties because "hide" class isn't removed after a property becomes visible in the already opened subpanel
+		const hidden = this.controller.getControlState(propertyId) === STATES.HIDDEN && control.editStyle !== EditStyle.SUBPANEL;
 		return (
 			<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name}
-				className={classNames("properties-ctrl-wrapper", className)}
+				className={classNames("properties-ctrl-wrapper", { "hide": hidden }, className)}
 			>
 				<ControlItem
 					key={"ctrl-item-" + control.name}
