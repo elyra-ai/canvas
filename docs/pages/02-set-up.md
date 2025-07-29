@@ -48,11 +48,13 @@ If you just want to get up and running and don't want to customize styles in the
 
 ### Styling using SASS
 
-If you want to use the full power of SASS for styling to override default styling in Common Canvas or Common Properties then include these imports in your main SCSS file:
+If you want to use the full power of SASS for styling to override default styling in Common Canvas or Common Properties then you must include this `@forward`  in your SCSS:
 
 ```
-@use "@carbon/react"; // Bring in all the styles for Carbon in your root/global stylesheet
-@forward "@elyra/canvas/src/index.scss";
+@forward "@carbon/react" with (
+	$font-path: "/fonts/plex",
+	$use-per-family-plex: true
+);
 ```
 
 For an example of this, refer to the Elyra Canvas Test Harness files:
@@ -60,6 +62,7 @@ For an example of this, refer to the Elyra Canvas Test Harness files:
 * [harness.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/harness.scss) and
 * [carbon.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/carbon.scss)
 
+Additionally, to get the IBM Plex fonts to display correctly you must complete the steps in the [Loading Fonts](/02-set-up/#loading-fonts) section below.
 
 When building:
 
@@ -73,14 +76,8 @@ When building:
 - You can refer to the test harness [webpack.config.dev.js](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/webpack.config.dev.js) for an example.
 
 
-### 3rd party styling
-
-If you are using Common Properties then also include the react-virtualized styles:
-
-- react-virtualized/styles.css
-
 ### Loading Fonts
-To get the efficient display of fonts in Elyra Canvas, the application's build process should copy the IBM Plex font files from `/node_modules/@ibm`to a `./fonts` folder and the following should be added to the `.scss` file for the application:
+To get the correct display of fonts in Elyra Canvas, the application's build process should copy the IBM Plex font files from `/node_modules/@ibm`to a `./fonts` folder and the following should be added to the `SCSS` for the application:
 
 ```
 @use "@carbon/react" with (
@@ -131,6 +128,12 @@ copy: {
 ...
 var buildTasks = ["copy:fonts"];
 ```
+
+### 3rd party styling
+
+If you intend to configure Common Properties to use the, now superseded, React-virtualized tables by setting `enableTanstackTable` [configuration](/04.08-properties-config/#properties-config) property to `false` then you will need to also include the react-virtualized styles:
+
+- react-virtualized/styles.css
 
 
 

@@ -14,5 +14,9 @@
  * limitations under the License.
  */
 
-@forward "@carbon/react";
+@forward "@carbon/react" with (
+	$font-path: "/fonts/plex",
+	$use-per-family-plex: true
+);
+
 
