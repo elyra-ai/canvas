@@ -26,53 +26,60 @@ Make sure the peer dependency libraries, specified in the [package.json](https:/
 
 Elyra Canvas text is translated into multple languages. See the [Localization](02.01-localization.md) page for details on how to include that text in the application. In addition, the [text can be customized](02.01-localization.md/#customizing-text-displayed-by-elyra-canvas-componenets) by the application.
 
-## Overriding Styles and Color Themes
+## Styling
 
-When building your application you will need to load fonts and override styles:
+Elyra Canvas uses components, colors, styles and fonts from the [Carbon Design System](https://carbondesignsystem.com/).
 
-### CSS styling for quick start
+More development information about Carbon components can be found here: https://carbondesignsystem.com/developing/frameworks/react#getting-started
 
+When building an application there are two possible approaches to styling:
 
-If you just want to get up and running and don't care about scss then import these regular CSS files:
+* Quick Start using CSS or
+* Styling using SASS to allow the application to override colors, styles, etc.
+
+In the examples below, we refer to files in the Elyra Canvas Test Harness which behaves like as a sample application using Common Canvas and Common Properties.
+
+###  Quick Start using CSS
+
+If you just want to get up and running and don't want to customize styles in the interface, just import this regular CSS file:
 
   - @elyra/canvas/dist/styles/common-canvas.min.css
-    - version 8.x and older @elyra/canvas/dist/common-canvas.min.css
-
-More information about carbon components can be found here https://carbondesignsystem.com/developing/frameworks/react#getting-started
 
 
-### SCSS styling (recommended)
+### Styling using SASS
 
-If you want to use the full power of scss styling with variable overrides etc then include these imports in your main SCSS file:
-```
-@use "@carbon/react"; // Bring in all the styles for Carbon in your root/global stylesheet
-@forward "@elyra/canvas/src/index.scss";
-```
-
-  - use `autoprefixer` when building
-  - if using webpack under the `sass-loader` and make sure to include
-
-```js
-options: { includePaths: ["node_modules"] }
-```
-
-Again, you can refer to the test harness [harness.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/harness.scss) and [common.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) files for sample code.
-
-
-### 3rd party styling
-
-If you are using Common Properties then also include the react-virtualized styles:
-  - react-virtualized/styles.css
-
-### Loading Fonts
-To get correct and efficient display of fonts in Elyra Canvas, the build process for your application should copy the IBM Plex font files from `/node_modules/@ibm`to a `./fonts` folder and the following should be added to the `.scss` file for your application:
+If you want to use the full power of SASS for styling to override default styling in Common Canvas or Common Properties then you must include this `@forward`  in your SCSS:
 
 ```
-@use "@carbon/react" with (
+@forward "@carbon/react" with (
 	$font-path: "/fonts/plex",
 	$use-per-family-plex: true
 );
+```
 
+For an example of this, refer to the Elyra Canvas Test Harness files:
+
+* [harness.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/harness.scss) and
+* [carbon.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/carbon.scss)
+
+Additionally, to get the IBM Plex fonts to display correctly you must complete the steps in the [Loading Fonts](/02-set-up/#loading-fonts) section below.
+
+When building:
+
+- use `autoprefixer`
+- if using webpack, make sure to include the following under the `sass-loader`
+
+    ```js
+        options: { includePaths: ["node_modules"] }
+    ```
+
+- You can refer to the test harness [webpack.config.dev.js](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/webpack.config.dev.js) for an example.
+
+
+### Loading Fonts
+To get the correct display of fonts in Elyra Canvas, the application's build process should copy the IBM Plex font files from `/node_modules/@ibm`to a `./fonts` folder and the following should be added to the `SCSS` for the application:
+
+```
 @use "@ibm/plex-sans-condensed/scss" as PlexSansCondensed with (
 	$font-prefix: "/fonts/plex-sans-condensed"
 );
@@ -98,7 +105,7 @@ To get correct and efficient display of fonts in Elyra Canvas, the build process
 @include PlexMono.all();
 ```
 
-You can see an example of this in the [common.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) file for the Elyra Canvas Test Harness. The Test Harness is the equivalent of a host application.
+You can see an example of this in the [common.scss](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss) file for the Elyra Canvas Test Harness.
 
 The [Gruntfile](https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L68) that builds the Test Harness contains the following, that ensures the fonts are copied from `/node_modules/@ibm` to the `<carbon fonts folder>`:
 ```
@@ -117,8 +124,8 @@ copy: {
 var buildTasks = ["copy:fonts"];
 ```
 
+### 3rd party styling
 
+If you intend to configure Common Properties to use the, now superseded, React-virtualized tables by setting `enableTanstackTable` [configuration](/04.08-properties-config/#properties-config) property to `false` then you will need to also include the react-virtualized styles:
 
-
-
-
+- react-virtualized/styles.css

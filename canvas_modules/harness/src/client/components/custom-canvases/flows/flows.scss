@@ -30,7 +30,7 @@
 
 		&[data-new-link-over="yes"] {
 			.d3-node-selection-highlight {
-				stroke: carbon.$button-primary;
+				stroke: carbon.$interactive;
 				stroke-dasharray: 4;
 				stroke-width: 2;
 				fill: carbon.$layer-01;
@@ -136,12 +136,12 @@
 
 	.d3-link-group:hover .d3-link-line,
 	.d3-link-group:hover .d3-link-line-arrow-head {
-		stroke: carbon.$button-primary;
+		stroke: carbon.$interactive;
 		stroke-width: 2;
 	}
 
 	.d3-new-connection-line[linkType="nodeLink"] {
-		stroke: carbon.$button-primary;
+		stroke: carbon.$interactive;
 		stroke-width: 2;
 		stroke-dasharray: 1 0;
 		fill: none;
