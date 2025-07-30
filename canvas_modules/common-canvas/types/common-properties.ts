@@ -139,13 +139,20 @@ export type ButtonHandler = (
 /**
  * https://elyra-ai.github.io/canvas/04.02-callbacks/#buttoniconhandler
  */
+export interface CustomButtonIconData {
+  type: "customButtonIcon";
+  propertyId: PropertyId;
+  buttonId: string;
+  carbonIcon: string;
+}
+export interface ActionButtonIconData {
+  type: "actionButtonIcon";
+  propertyId: PropertyId;
+  buttonId: string;
+  data: Record<string, unknown>;
+}
 export type ButtonIconHandler = (
-  data: {
-    type: "customButtonIcon";
-    propertyId: PropertyId;
-    buttonId: string;
-    carbonIcon: string;
-  },
+  data: CustomButtonIconData | ActionButtonIconData,
   callbackIcon: (icon: ReactNode) => void
 ) => void;
 
