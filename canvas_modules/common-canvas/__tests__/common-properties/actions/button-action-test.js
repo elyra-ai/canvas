@@ -17,7 +17,6 @@
 import React from "react";
 import { Provider } from "react-redux";
 import ActionButton from "./../../../src/common-properties/actions/button";
-import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import { afterEach, beforeEach, expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
