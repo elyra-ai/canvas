@@ -22,34 +22,30 @@ import { STATES, CARBON_BUTTON_KIND, CARBON_BUTTON_SIZE } from "./../../constant
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
 import { has } from "lodash";
+import { injectIntl } from "react-intl";
+import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
 class ButtonAction extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			icon: null
-		};
-		this.applyAction = this.applyAction.bind(this);
-	}
-
-	// Load icon via buttonIconHandler with a new type "actionButtonIcon" after mount
-	componentDidMount() {
+		this.icon = null;
 		const { controller, action } = this.props;
 		const buttonIconHandler = controller.getHandlers().buttonIconHandler;
 		if (buttonIconHandler && action) {
-			const propertyId = { name: action.data.parameter_ref };
-			buttonIconHandler({
+			const iconData = {
 				type: "actionButtonIcon",
-				propertyId: propertyId,
 				buttonId: action.name,
 				data: action
-			}, (appIcon) => {
-				this.setState({ icon: appIcon });
+			};
+			buttonIconHandler(iconData, (appIcon) => {
+				this.icon = appIcon; // Load icon via buttonIconHandler with a new type "actionButtonIcon".
 			}
 			);
 		}
 
+		this.applyAction = this.applyAction.bind(this);
 	}
+
 	getActionButtonKind() {
 		if (!has(this.props, "action.button.kind")) {
 			return CARBON_BUTTON_KIND.TERTIARY;
@@ -93,9 +89,13 @@ class ButtonAction extends React.Component {
 		const disabled = this.props.state === STATES.DISABLED;
 		const actionButtonKind = this.getActionButtonKind();
 		const actionButtonSize = this.getActionButtonSize();
-
+		const iconDescription = this.icon
+			? (this.props.action?.description?.text ||
+				this.props.intl.formatMessage(
+					{ id: "action.button.icon", defaultMessage: defaultMessages["Action.button.icon"] }
+				))
+			: null;
 		// Get the icon to be rendered from the call back
-		const { icon } = this.state;
 		const button = (
 			<Button
 				type="button"
@@ -104,8 +104,8 @@ class ButtonAction extends React.Component {
 				onClick={this.applyAction}
 				disabled={disabled}
 				title={this.props.action.label.text}
-				renderIcon={icon || null}
-				iconDescription={ icon ? (this.props.action?.description?.text || "Action Button icon") : null } // Text to appear in Tooltip
+				renderIcon={this.icon}
+				iconDescription={iconDescription} // Text to appear in Tooltip
 			>
 				{this.props.action.label.text}
 			</Button>
@@ -142,11 +142,12 @@ class ButtonAction extends React.Component {
 ButtonAction.propTypes = {
 	action: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	state: PropTypes.string // pass in by redux,
+	state: PropTypes.string, // pass in by redux,
+	intl: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	state: ownProps.controller.getActionState(ownProps.controller.convertPropertyId(ownProps.action.name)),
 });
 
-export default connect(mapStateToProps, null)(ButtonAction);
+export default connect(mapStateToProps, null)(injectIntl(ButtonAction));
