@@ -35,7 +35,7 @@ class ButtonAction extends React.Component {
 			const iconData = {
 				type: "actionButtonIcon",
 				buttonId: action.name,
-				data: action
+				data: action.data
 			};
 			buttonIconHandler(iconData, (appIcon) => {
 				this.icon = appIcon; // Load icon via buttonIconHandler with a new type "actionButtonIcon".
@@ -89,13 +89,18 @@ class ButtonAction extends React.Component {
 		const disabled = this.props.state === STATES.DISABLED;
 		const actionButtonKind = this.getActionButtonKind();
 		const actionButtonSize = this.getActionButtonSize();
-		const iconDescription = this.icon
-			? (this.props.action?.description?.text ||
-				this.props.intl.formatMessage(
-					{ id: "action.button.icon", defaultMessage: defaultMessages["action.button.icon"] }
-				))
-			: null;
-		// Get the icon to be rendered from the call back
+		const iconDescription = this.props.action?.description?.text ||
+			this.props.intl.formatMessage({
+				id: "action.button.icon",
+				defaultMessage: defaultMessages["action.button.icon"]
+			});
+
+		// Add icon related props only when an icon is defined.
+		const iconProps = {};
+		if (this.icon) {
+			iconProps.renderIcon = this.icon;
+			iconProps.iconDescription = iconDescription; // This avoids React warning by ensuring "iconDescription" is provided with "renderIcon"
+		}
 		const button = (
 			<Button
 				type="button"
@@ -104,8 +109,7 @@ class ButtonAction extends React.Component {
 				onClick={this.applyAction}
 				disabled={disabled}
 				title={this.props.action.label.text}
-				renderIcon={this.icon}
-				iconDescription={iconDescription} // Text to appear in Tooltip
+				{...iconProps}
 			>
 				{this.props.action.label.text}
 			</Button>

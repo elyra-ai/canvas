@@ -18,7 +18,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import ActionButton from "./../../../src/common-properties/actions/button";
 import { expect } from "chai";
-import { afterEach, beforeEach, expect as expectJest } from "@jest/globals";
+import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
 import Controller from "./../../../src/common-properties/properties-controller";
 import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
