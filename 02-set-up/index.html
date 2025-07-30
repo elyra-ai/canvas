@@ -1060,37 +1060,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#overriding-styles-and-color-themes" class="md-nav__link">
+  <a href="#styling" class="md-nav__link">
     <span class="md-ellipsis">
-      Overriding Styles and Color Themes
+      Styling
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Overriding Styles and Color Themes">
+    <nav class="md-nav" aria-label="Styling">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#css-styling-for-quick-start" class="md-nav__link">
+  <a href="#quick-start-using-css" class="md-nav__link">
     <span class="md-ellipsis">
-      CSS styling for quick start
+      Quick Start using CSS
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#scss-styling-recommended" class="md-nav__link">
+  <a href="#styling-using-sass" class="md-nav__link">
     <span class="md-ellipsis">
-      SCSS styling (recommended)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3rd-party-styling" class="md-nav__link">
-    <span class="md-ellipsis">
-      3rd party styling
+      Styling using SASS
     </span>
   </a>
   
@@ -1100,6 +1091,15 @@
   <a href="#loading-fonts" class="md-nav__link">
     <span class="md-ellipsis">
       Loading Fonts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3rd-party-styling" class="md-nav__link">
+    <span class="md-ellipsis">
+      3rd party styling
     </span>
   </a>
   
@@ -2915,37 +2915,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#overriding-styles-and-color-themes" class="md-nav__link">
+  <a href="#styling" class="md-nav__link">
     <span class="md-ellipsis">
-      Overriding Styles and Color Themes
+      Styling
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Overriding Styles and Color Themes">
+    <nav class="md-nav" aria-label="Styling">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#css-styling-for-quick-start" class="md-nav__link">
+  <a href="#quick-start-using-css" class="md-nav__link">
     <span class="md-ellipsis">
-      CSS styling for quick start
+      Quick Start using CSS
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#scss-styling-recommended" class="md-nav__link">
+  <a href="#styling-using-sass" class="md-nav__link">
     <span class="md-ellipsis">
-      SCSS styling (recommended)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3rd-party-styling" class="md-nav__link">
-    <span class="md-ellipsis">
-      3rd party styling
+      Styling using SASS
     </span>
   </a>
   
@@ -2955,6 +2946,15 @@
   <a href="#loading-fonts" class="md-nav__link">
     <span class="md-ellipsis">
       Loading Fonts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3rd-party-styling" class="md-nav__link">
+    <span class="md-ellipsis">
+      3rd party styling
     </span>
   </a>
   
@@ -3005,40 +3005,48 @@ where x.x.x is the latest build and then run:
 <p>Make sure the peer dependency libraries, specified in the <a href="https://github.com/elyra-ai/canvas/blob/bd10c6b79e60e11954b03d50fcb7ed6de58f0629/canvas_modules/common-canvas/package.json#L117">package.json</a>, file are installed as part of the application. The application can use whichever versions of the peer dependencies it wants from those specified.</p>
 <h2 id="localization">Localization<a class="headerlink" href="#localization" title="Permanent link">&para;</a></h2>
 <p>Elyra Canvas text is translated into multple languages. See the <a href="../02.01-localization/">Localization</a> page for details on how to include that text in the application. In addition, the <a href="../02.01-localization/#customizing-text-displayed-by-elyra-canvas-componenets">text can be customized</a> by the application.</p>
-<h2 id="overriding-styles-and-color-themes">Overriding Styles and Color Themes<a class="headerlink" href="#overriding-styles-and-color-themes" title="Permanent link">&para;</a></h2>
-<p>When building your application you will need to load fonts and override styles:</p>
-<h3 id="css-styling-for-quick-start">CSS styling for quick start<a class="headerlink" href="#css-styling-for-quick-start" title="Permanent link">&para;</a></h3>
-<p>If you just want to get up and running and don&rsquo;t care about scss then import these regular CSS files:</p>
+<h2 id="styling">Styling<a class="headerlink" href="#styling" title="Permanent link">&para;</a></h2>
+<p>Elyra Canvas uses components, colors, styles and fonts from the <a href="https://carbondesignsystem.com/">Carbon Design System</a>.</p>
+<p>More development information about Carbon components can be found here: <a href="https://carbondesignsystem.com/developing/frameworks/react#getting-started">https://carbondesignsystem.com/developing/frameworks/react#getting-started</a></p>
+<p>When building an application there are two possible approaches to styling:</p>
 <ul>
-<li>@elyra/canvas/dist/styles/common-canvas.min.css<ul>
-<li>version 8.x and older @elyra/canvas/dist/common-canvas.min.css</li>
+<li>Quick Start using CSS or</li>
+<li>Styling using SASS to allow the application to override colors, styles, etc.</li>
 </ul>
-</li>
-</ul>
-<p>More information about carbon components can be found here <a href="https://carbondesignsystem.com/developing/frameworks/react#getting-started">https://carbondesignsystem.com/developing/frameworks/react#getting-started</a></p>
-<h3 id="scss-styling-recommended">SCSS styling (recommended)<a class="headerlink" href="#scss-styling-recommended" title="Permanent link">&para;</a></h3>
-<p>If you want to use the full power of scss styling with variable overrides etc then include these imports in your main SCSS file:
-<div class="highlight"><pre><span></span><code>@use &quot;@carbon/react&quot;; // Bring in all the styles for Carbon in your root/global stylesheet
-@forward &quot;@elyra/canvas/src/index.scss&quot;;
-</code></pre></div></p>
+<p>In the examples below, we refer to files in the Elyra Canvas Test Harness which behaves like as a sample application using Common Canvas and Common Properties.</p>
+<h3 id="quick-start-using-css">Quick Start using CSS<a class="headerlink" href="#quick-start-using-css" title="Permanent link">&para;</a></h3>
+<p>If you just want to get up and running and don&rsquo;t want to customize styles in the interface, just import this regular CSS file:</p>
 <ul>
-<li>use <code>autoprefixer</code> when building</li>
-<li>if using webpack under the <code>sass-loader</code> and make sure to include</li>
+<li>@elyra/canvas/dist/styles/common-canvas.min.css</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">includePaths</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node_modules&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
-</code></pre></div>
-<p>Again, you can refer to the test harness <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/harness.scss">harness.scss</a> and <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss">common.scss</a> files for sample code.</p>
-<h3 id="3rd-party-styling">3rd party styling<a class="headerlink" href="#3rd-party-styling" title="Permanent link">&para;</a></h3>
-<p>If you are using Common Properties then also include the react-virtualized styles:
-  - react-virtualized/styles.css</p>
-<h3 id="loading-fonts">Loading Fonts<a class="headerlink" href="#loading-fonts" title="Permanent link">&para;</a></h3>
-<p>To get correct and efficient display of fonts in Elyra Canvas, the build process for your application should copy the IBM Plex font files from <code>/node_modules/@ibm</code>to a <code>./fonts</code> folder and the following should be added to the <code>.scss</code> file for your application:</p>
-<div class="highlight"><pre><span></span><code>@use &quot;@carbon/react&quot; with (
+<h3 id="styling-using-sass">Styling using SASS<a class="headerlink" href="#styling-using-sass" title="Permanent link">&para;</a></h3>
+<p>If you want to use the full power of SASS for styling to override default styling in Common Canvas or Common Properties then you must include this <code>@forward</code>  in your SCSS:</p>
+<div class="highlight"><pre><span></span><code>@forward &quot;@carbon/react&quot; with (
     $font-path: &quot;/fonts/plex&quot;,
     $use-per-family-plex: true
 );
-
-@use &quot;@ibm/plex-sans-condensed/scss&quot; as PlexSansCondensed with (
+</code></pre></div>
+<p>For an example of this, refer to the Elyra Canvas Test Harness files:</p>
+<ul>
+<li><a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/harness.scss">harness.scss</a> and</li>
+<li><a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/carbon.scss">carbon.scss</a></li>
+</ul>
+<p>Additionally, to get the IBM Plex fonts to display correctly you must complete the steps in the <a href="/02-set-up/#loading-fonts">Loading Fonts</a> section below.</p>
+<p>When building:</p>
+<ul>
+<li>use <code>autoprefixer</code></li>
+<li>
+<p>if using webpack, make sure to include the following under the <code>sass-loader</code></p>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">includePaths</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node_modules&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+</li>
+<li>
+<p>You can refer to the test harness <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/webpack.config.dev.js">webpack.config.dev.js</a> for an example.</p>
+</li>
+</ul>
+<h3 id="loading-fonts">Loading Fonts<a class="headerlink" href="#loading-fonts" title="Permanent link">&para;</a></h3>
+<p>To get the correct display of fonts in Elyra Canvas, the application&rsquo;s build process should copy the IBM Plex font files from <code>/node_modules/@ibm</code>to a <code>./fonts</code> folder and the following should be added to the <code>SCSS</code> for the application:</p>
+<div class="highlight"><pre><span></span><code>@use &quot;@ibm/plex-sans-condensed/scss&quot; as PlexSansCondensed with (
     $font-prefix: &quot;/fonts/plex-sans-condensed&quot;
 );
 
@@ -3062,7 +3070,7 @@ where x.x.x is the latest build and then run:
 
 @include PlexMono.all();
 </code></pre></div>
-<p>You can see an example of this in the <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss">common.scss</a> file for the Elyra Canvas Test Harness. The Test Harness is the equivalent of a host application.</p>
+<p>You can see an example of this in the <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/assets/styles/common.scss">common.scss</a> file for the Elyra Canvas Test Harness.</p>
 <p>The <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/Gruntfile.js#L68">Gruntfile</a> that builds the Test Harness contains the following, that ensures the fonts are copied from <code>/node_modules/@ibm</code> to the <code>&lt;carbon fonts folder&gt;</code>:
 <div class="highlight"><pre><span></span><code>copy: {
     fonts: {
@@ -3078,6 +3086,11 @@ where x.x.x is the latest build and then run:
 ...
 var buildTasks = [&quot;copy:fonts&quot;];
 </code></pre></div></p>
+<h3 id="3rd-party-styling">3rd party styling<a class="headerlink" href="#3rd-party-styling" title="Permanent link">&para;</a></h3>
+<p>If you intend to configure Common Properties to use the, now superseded, React-virtualized tables by setting <code>enableTanstackTable</code> <a href="/04.08-properties-config/#properties-config">configuration</a> property to <code>false</code> then you will need to also include the react-virtualized styles:</p>
+<ul>
+<li>react-virtualized/styles.css</li>
+</ul>
 
 
 
