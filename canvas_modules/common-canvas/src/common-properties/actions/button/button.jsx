@@ -92,7 +92,7 @@ class ButtonAction extends React.Component {
 		const iconDescription = this.icon
 			? (this.props.action?.description?.text ||
 				this.props.intl.formatMessage(
-					{ id: "action.button.icon", defaultMessage: defaultMessages["Action.button.icon"] }
+					{ id: "action.button.icon", defaultMessage: defaultMessages["action.button.icon"] }
 				))
 			: null;
 		// Get the icon to be rendered from the call back
