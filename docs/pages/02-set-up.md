@@ -134,9 +134,3 @@ var buildTasks = ["copy:fonts"];
 If you intend to configure Common Properties to use the, now superseded, React-virtualized tables by setting `enableTanstackTable` [configuration](/04.08-properties-config/#properties-config) property to `false` then you will need to also include the react-virtualized styles:
 
 - react-virtualized/styles.css
-
-
-
-
-
-
