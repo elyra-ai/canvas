@@ -147,7 +147,6 @@ export interface CustomButtonIconData {
 }
 export interface ActionButtonIconData {
   type: "actionButtonIcon";
-  propertyId: PropertyId;
   buttonId: string;
   data: Record<string, unknown>;
 }
