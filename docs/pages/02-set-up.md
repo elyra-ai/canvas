@@ -80,11 +80,6 @@ When building:
 To get the correct display of fonts in Elyra Canvas, the application's build process should copy the IBM Plex font files from `/node_modules/@ibm`to a `./fonts` folder and the following should be added to the `SCSS` for the application:
 
 ```
-@use "@carbon/react" with (
-	$font-path: "/fonts/plex",
-	$use-per-family-plex: true
-);
-
 @use "@ibm/plex-sans-condensed/scss" as PlexSansCondensed with (
 	$font-prefix: "/fonts/plex-sans-condensed"
 );
