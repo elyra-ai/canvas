@@ -893,6 +893,10 @@
 					"id": "fieldScale",
 					"type": "number",
 					"default": 2
+				},
+				{
+					"id": "custom_toggle",
+					"type": "boolean"
 				}
 			]
 		}
@@ -1084,7 +1088,7 @@
 					"default": "Test visible cell condition in subpanel"
 				},
 				"description": {
-					"default": "Set Field Type: DECIMAL to see Precision and Scale fields",
+					"default": "Set Field Type: DECIMAL to see Precision, Scale, Custom Toggle fields",
 					"placement": "on_panel"
 				}
 			}
@@ -2031,6 +2035,16 @@
 						"label": {
 							"default": "Scale"
 						}
+					},
+					{
+						"parameter_ref": "custom_toggle",
+						"label": {
+							"default": "Custom Toggle"
+						},
+						"width": 20,
+						"edit_style": "subpanel",
+						"control": "custom",
+						"custom_control_id": "harness-custom-toggle-control"
 					}
 				]
 			}
@@ -2629,6 +2643,7 @@
     {
 			"visible": {
 				"parameter_refs": [
+					"subpanelEditingTable[3]",
 					"subpanelEditingTable[2]",
 					"subpanelEditingTable[1]"
 				],
