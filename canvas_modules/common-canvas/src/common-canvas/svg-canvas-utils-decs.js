@@ -16,7 +16,6 @@
 
 import { has } from "lodash";
 import { DEC_LINK, TEXT_AREA_BORDER_ADJUSTMENT } from "./constants/canvas-constants";
-import CanvasUtils from "./common-canvas-utils.js";
 
 export default class SvgCanvasDecs {
 	constructor(canvasLayout) {
