@@ -22,12 +22,27 @@ import { STATES, CARBON_BUTTON_KIND, CARBON_BUTTON_SIZE } from "./../../constant
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
 import { has } from "lodash";
+import { injectIntl } from "react-intl";
+import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
 class ButtonAction extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-		};
+		this.icon = null;
+		const { controller, action } = this.props;
+		const buttonIconHandler = controller.getHandlers().buttonIconHandler;
+		if (buttonIconHandler && action) {
+			const iconData = {
+				type: "actionButtonIcon",
+				buttonId: action.name,
+				data: action.data
+			};
+			buttonIconHandler(iconData, (appIcon) => {
+				this.icon = appIcon; // Load icon via buttonIconHandler with a new type "actionButtonIcon".
+			}
+			);
+		}
+
 		this.applyAction = this.applyAction.bind(this);
 	}
 
@@ -68,13 +83,24 @@ class ButtonAction extends React.Component {
 				this.props.controller.getAppData(), this.props.action.data);
 		}
 	}
-
 	render() {
 		const customClassName = this.props.action.className ? this.props.action.className : "";
 		const className = classNames("properties-action-button", { "hide": this.props.state === STATES.HIDDEN }, customClassName);
 		const disabled = this.props.state === STATES.DISABLED;
 		const actionButtonKind = this.getActionButtonKind();
 		const actionButtonSize = this.getActionButtonSize();
+		const iconDescription = this.props.action?.description?.text ||
+			this.props.intl.formatMessage({
+				id: "action.button.icon",
+				defaultMessage: defaultMessages["action.button.icon"]
+			});
+
+		// Add icon related props only when an icon is defined.
+		const iconProps = {};
+		if (this.icon) {
+			iconProps.renderIcon = this.icon;
+			iconProps.iconDescription = iconDescription; // This avoids React warning by ensuring "iconDescription" is provided with "renderIcon"
+		}
 		const button = (
 			<Button
 				type="button"
@@ -83,6 +109,7 @@ class ButtonAction extends React.Component {
 				onClick={this.applyAction}
 				disabled={disabled}
 				title={this.props.action.label.text}
+				{...iconProps}
 			>
 				{this.props.action.label.text}
 			</Button>
@@ -100,7 +127,7 @@ class ButtonAction extends React.Component {
 			display = (<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				direction="bottom"
+				direction={this.props.action.data.tooltipDirection || "bottom"}
 				className="properties-tooltips"
 				disable={disabled}
 			>
@@ -119,11 +146,12 @@ class ButtonAction extends React.Component {
 ButtonAction.propTypes = {
 	action: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	state: PropTypes.string, // pass in by redux
+	state: PropTypes.string, // pass in by redux,
+	intl: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	state: ownProps.controller.getActionState(ownProps.controller.convertPropertyId(ownProps.action.name)),
 });
 
-export default connect(mapStateToProps, null)(ButtonAction);
+export default connect(mapStateToProps, null)(injectIntl(ButtonAction));
