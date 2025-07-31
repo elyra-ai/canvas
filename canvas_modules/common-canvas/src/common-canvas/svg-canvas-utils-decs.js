@@ -16,6 +16,7 @@
 
 import { has } from "lodash";
 import { DEC_LINK, TEXT_AREA_BORDER_ADJUSTMENT } from "./constants/canvas-constants";
+import CanvasUtils from "./common-canvas-utils.js";
 
 export default class SvgCanvasDecs {
 	constructor(canvasLayout) {
@@ -43,7 +44,13 @@ export default class SvgCanvasDecs {
 	}
 
 	getDecTransform(dec, d, objType) {
-		return `translate(${this.getDecPosX(dec, d, objType)}, ${this.getDecPosY(dec, d, objType)})`;
+		// If the decoration should be rotated (supported for link decorations) get the
+		// angle to use from the link's pathInfo object.
+		const angle = dec.rotate && d.pathInfo?.angle
+			? d.pathInfo.angle
+			: 0;
+
+		return `translate(${this.getDecPosX(dec, d, objType)}, ${this.getDecPosY(dec, d, objType)}) rotate(${angle})`;
 	}
 
 	getDecPosX(dec, data, objType) {

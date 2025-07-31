@@ -48,6 +48,7 @@ import StagesCanvas from "./components/custom-canvases/stages/stages-canvas";
 import StagesCardNodeCanvas from "./components/custom-canvases/stages-card-node/stages-card-node-canvas";
 import PromptCanvas from "./components/custom-canvases/prompt/prompt-canvas";
 import LogicCanvas from "./components/custom-canvases/logic/logic-canvas";
+import LinkTypesCanvas from "./components/custom-canvases/link-types/link-types-canvas";
 import ReadOnlyCanvas from "./components/custom-canvases/read-only/read-only-canvas";
 import ProgressCanvas from "./components/custom-canvases/progress/progress-canvas";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
@@ -116,6 +117,7 @@ import {
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	EXAMPLE_APP_LOGIC,
+	EXAMPLE_APP_LINK_TYPES,
 	EXAMPLE_APP_READ_ONLY,
 	EXAMPLE_APP_PROGRESS,
 	EXAMPLE_APP_JSX_ICONS,
@@ -2869,6 +2871,13 @@ class App extends React.Component {
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_LOGIC) {
 			firstCanvas = (
 				<LogicCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_LINK_TYPES) {
+			firstCanvas = (
+				<LinkTypesCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
