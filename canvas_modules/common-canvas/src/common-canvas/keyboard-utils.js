@@ -44,6 +44,8 @@ const Z_KEY = "z";
 
 const F10_KEY = "F10";
 
+const ONE_KEY = "1";
+const TWO_KEY = "2";
 const SEVEN_KEY = "7";
 const EIGHT_KEY = "8";
 const NINE_KEY = "9";
@@ -299,11 +301,11 @@ export default class KeyboardUtils {
 	}
 
 	static incHashesCommand(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === RIGHT_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === ONE_KEY;
 	}
 
 	static decHashesCommand(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === LEFT_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === TWO_KEY;
 	}
 
 	/* ----------------------------------------- */

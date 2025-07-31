@@ -44,8 +44,8 @@ keys.addNodeFromPalette = { key: "Space", metaKey: false, shiftKey: false, relea
 
 // Shortcuts used for regular/markdown comments
 
-keys.increaseHashes = { key: "ArrowRight", metaKey: true, shiftKey: false, release: true };
-keys.decreaseHashes = { key: "ArrowLeft", metaKey: true, shiftKey: false, release: true };
+keys.increaseHashes = { key: "1", metaKey: true, shiftKey: false, release: true };
+keys.decreaseHashes = { key: "2", metaKey: true, shiftKey: false, release: true };
 keys.bold = { key: "b", metaKey: true, shiftKey: false, release: true };
 keys.italics = { key: "i", metaKey: true, shiftKey: false, release: true };
 keys.strikethrough = { key: "x", metaKey: true, shiftKey: true, release: true };
