@@ -2486,9 +2486,33 @@
         <li class="md-nav__item">
   <a href="#buttoniconhandler" class="md-nav__link">
     <span class="md-ellipsis">
-      buttonIconHandler()
+      buttonIconHandler
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="buttonIconHandler">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custombuttonicondata" class="md-nav__link">
+    <span class="md-ellipsis">
+      CustomButtonIconData
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actionbuttonicondata" class="md-nav__link">
+    <span class="md-ellipsis">
+      ActionButtonIconData
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2992,9 +3016,33 @@
         <li class="md-nav__item">
   <a href="#buttoniconhandler" class="md-nav__link">
     <span class="md-ellipsis">
-      buttonIconHandler()
+      buttonIconHandler
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="buttonIconHandler">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custombuttonicondata" class="md-nav__link">
+    <span class="md-ellipsis">
+      CustomButtonIconData
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actionbuttonicondata" class="md-nav__link">
+    <span class="md-ellipsis">
+      ActionButtonIconData
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3174,8 +3222,10 @@
 
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="buttoniconhandler">buttonIconHandler()<a class="headerlink" href="#buttoniconhandler" title="Permanent link">&para;</a></h3>
-<p>Called when there is a <code>buttons</code> uihints set in the <code>complex_type_info</code> section of the parameter definition. This buttonIconHandler expects a Carbon Icon jsx object as the return value from the callback. This is used to display the Carbon icon in the custom table button. The buttonIconHandler provides the following data:</p>
+<h3 id="buttoniconhandler">buttonIconHandler<a class="headerlink" href="#buttoniconhandler" title="Permanent link">&para;</a></h3>
+<p>This handler is used to display a JSX object in a carbon button using the <code>renderIcon</code> prop. It&rsquo;s called in custom table buttons and action buttons and expects a React object to be returned via the provided callbackIcon function or null/undefined if no icon is needed. The buttonIconHandler provides the following <code>type</code>:</p>
+<h4 id="custombuttonicondata">CustomButtonIconData<a class="headerlink" href="#custombuttonicondata" title="Permanent link">&para;</a></h4>
+<p>Called when there is a <code>buttons</code> uihints set in the <code>complex_type_info</code> section of the parameter definition.</p>
 <ul>
 <li>data: an object that consists of<ul>
 <li>type: <code>customButtonIcon</code></li>
@@ -3189,6 +3239,31 @@
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;customButtonIcon&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">carbonIcon</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;Edit32&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">callbackIcon</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Edit32</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="actionbuttonicondata">ActionButtonIconData<a class="headerlink" href="#actionbuttonicondata" title="Permanent link">&para;</a></h4>
+<p>used for action buttons to display specific carbon icons according to the <code>buttonId</code>.</p>
+<ul>
+<li>data: an object that consists of<ul>
+<li>type: <code>actionButtonIcon</code></li>
+<li>buttonId: of the action button (Action name).</li>
+<li>data: consist action data object.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nx">buttonIconHandler</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">callbackIcon</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;actionButtonIcon&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="nx">iconComponenet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">actionId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">buttonId</span><span class="p">;</span>
+<span class="w">            </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">actionId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;iconButton&quot;</span><span class="o">:</span>
+<span class="w">                </span><span class="nx">iconComponenet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Launch</span><span class="p">;</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="k">default</span><span class="o">:</span>
+<span class="w">                </span><span class="nx">iconComponenet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="nx">callbackIcon</span><span class="p">(</span><span class="nx">iconComponenet</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="propertyiconhandler">propertyIconHandler()<a class="headerlink" href="#propertyiconhandler" title="Permanent link">&para;</a></h3>
