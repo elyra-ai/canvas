@@ -97,7 +97,7 @@ import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
 import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
-	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification, Save } from "@carbon/react/icons";
+	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification, Save, Launch, Restart } from "@carbon/react/icons";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
 
@@ -1446,6 +1446,23 @@ class App extends React.Component {
 		// handle custom buttons icon
 		if (data.type === "customButtonIcon") {
 			callbackIcon(<Edit size={32} />);
+		} else if (data.type === "actionButtonIcon") { // handle icons for action button according to the actionId
+			let iconComponenet = null;
+			const actionId = data.buttonId;
+			switch (actionId) {
+			case "iconButton":
+				iconComponenet = Launch;
+				break;
+			case "increment1":
+				iconComponenet = Add;
+				break;
+			case "dm-update":
+				iconComponenet = Restart;
+				break;
+			default:
+				iconComponenet = null;
+			}
+			callbackIcon(iconComponenet);
 		}
 	}
 
@@ -1929,6 +1946,11 @@ class App extends React.Component {
 			const propertyId = { name: data.parameter_ref };
 			let value = propertiesController.getPropertyValue(propertyId);
 			propertiesController.updatePropertyValue(propertyId, value -= 1);
+		}
+		if (actionId === "iconButton") {
+			const propertyId = { name: data.parameter_ref };
+			const value = data.icon;
+			propertiesController.updatePropertyValue(propertyId, value);
 		}
 		if (actionId === "dm-update") {
 			const dm = propertiesController.getDatasetMetadata();

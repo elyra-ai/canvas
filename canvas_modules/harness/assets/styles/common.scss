@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@use "@carbon/react" with (
-	$font-path: "/fonts/plex",
-	$use-per-family-plex: true
-);
 
 @use "@ibm/plex-sans-condensed/scss" as PlexSansCondensed with (
 	$font-prefix: "/fonts/plex-sans-condensed"

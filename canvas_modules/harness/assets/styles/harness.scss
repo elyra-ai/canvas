@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-@use "@carbon/react/scss/themes";
+
 @use "./carbon.scss";
+@use "@carbon/react/scss/themes";
 
 @forward "../../src/client/components/console/console.scss";
 @forward "../../src/styles/custom-canvases.scss";

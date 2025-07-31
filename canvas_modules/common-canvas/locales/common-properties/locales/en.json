@@ -118,5 +118,6 @@
   "slider.numberInput.label": "Slider number input",
   "editorForm.tabList.label": "Primary Tabs",
   "subTabs.tabList.label": "Tab List",
-  "table.deleteIcon.tooltip": "Delete"
+  "table.deleteIcon.tooltip": "Delete",
+  "action.button.icon": "Action button icon"
 }
