@@ -28,8 +28,6 @@ export default class ActionFactory {
 	constructor(controller) {
 		this.controller = controller;
 	}
-
-
 	generateAction(key, action) {
 		if (action) {
 			if (action.actionType === ActionType.BUTTON) {
@@ -40,6 +38,7 @@ export default class ActionFactory {
 						controller={this.controller}
 					/>
 				);
+
 			} else if (action.actionType === ActionType.IMAGE) {
 				return (
 					<ImageAction

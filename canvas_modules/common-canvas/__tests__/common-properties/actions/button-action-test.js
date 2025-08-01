@@ -17,19 +17,23 @@
 import React from "react";
 import { Provider } from "react-redux";
 import ActionButton from "./../../../src/common-properties/actions/button";
-import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
 import Controller from "./../../../src/common-properties/properties-controller";
 import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
-import { fireEvent, within } from "@testing-library/react";
+import { cleanup, fireEvent, within } from "@testing-library/react";
+import { Launch } from "@carbon/react/icons";
+import { renderWithIntl } from "../../_utils_/intl-utils.js";
 
 
 const actionHandler = sinon.spy();
+const buttonIconHandler = sinon.spy((data, callbackIcon) => {
+	callbackIcon(Launch);
+});
 const controller = new Controller();
-controller.setHandlers({ actionHandler: actionHandler });
+controller.setHandlers({ actionHandler: actionHandler, buttonIconHandler: buttonIconHandler });
 const appData = { nodeId: "1234" };
 controller.setAppData(appData);
 const actionStateId = { name: "increment" };
@@ -68,7 +72,7 @@ mockActionButton.mockImplementation((props) => {
 describe("action-button renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = render(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<ActionButton
 					action={action}
@@ -84,9 +88,8 @@ describe("action-button renders correctly", () => {
 			"controller": controller
 		});
 	});
-
 	it("should render a `ActionButton`", () => {
-		const wrapper = render(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<ActionButton
 					action={action}
@@ -105,7 +108,7 @@ describe("action-button renders correctly", () => {
 			done();
 		}
 		controller.setHandlers({ actionHandler: callback });
-		const wrapper = render(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<ActionButton
 					action={action}
@@ -118,7 +121,7 @@ describe("action-button renders correctly", () => {
 	});
 	it("action button renders when disabled", () => {
 		controller.updateActionState(actionStateId, "disabled");
-		const wrapper = render(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<ActionButton
 					action={action}
@@ -133,7 +136,7 @@ describe("action-button renders correctly", () => {
 	});
 	it("action button renders when hidden", () => {
 		controller.updateActionState(actionStateId, "hidden");
-		const wrapper = render(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<ActionButton
 					action={action}
@@ -146,7 +149,7 @@ describe("action-button renders correctly", () => {
 		expect(buttonWrapper.className.includes("hide")).to.equal(true);
 	});
 	it("action button renders tooltip", () => {
-		const wrapper = render(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<ActionButton
 					action={action}
@@ -161,7 +164,7 @@ describe("action-button renders correctly", () => {
 		expect(parentTooltip.className).equal("tooltipContainer");
 	});
 	it("action button kind and size", () => {
-		const wrapper = render(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<ActionButton
 					action={action}
@@ -192,7 +195,7 @@ describe("action-button renders correctly", () => {
 				"parameter_ref": "number"
 			}
 		};
-		const wrapper = render(
+		const wrapper = renderWithIntl(
 			<Provider store={controller.getStore()}>
 				<ActionButton
 					action={actionWithoutButtonObject}
@@ -211,12 +214,50 @@ describe("action-button renders correctly", () => {
 	});
 });
 
+describe("Action button should call buttonIconhandler if icon needs to render", () => {
+	beforeEach(() => {
+		buttonIconHandler.resetHistory();
+	});
+	afterEach(() => {
+		cleanup();
+	});
+	it("calls buttonIconHandler and renders the returned icon", () => {
+		const mockAction = {
+			id: "iconButton",
+			label: { default: "Click to Launch the App in new tab." },
+			data: {
+				parameter_ref: "icon_button",
+				icon: "Launch",
+				tooltipDirection: "right"
+			},
+		};
+		const wrapper = renderWithIntl(
+			<Provider store={controller.getStore()}>
+				<ActionButton
+					action={mockAction}
+					controller={controller}
+				/>
+			</Provider>
+		);
+		// Verify the buttonIconHandler called once
+		expect(buttonIconHandler.calledOnce).to.equal(true);
+		const { container } = wrapper;
+
+		// Verify icon is rendered or not
+		const renderedIcon = container.querySelector("svg");
+		expect(renderedIcon.classList.contains("cds--btn__icon")).to.equal(true);
+	});
+});
+
 describe("actions using paramDef", () => {
 	let wrapper;
 	let renderedObject;
 	beforeEach(() => {
 		renderedObject = propertyUtilsRTL.flyoutEditorForm(ACTION_PARAMDEF);
 		wrapper = renderedObject.wrapper;
+	});
+	afterEach(() => {
+		cleanup();
 	});
 
 	it("should fire action when button clicked", (done) => {
@@ -244,5 +285,8 @@ describe("actions using paramDef", () => {
 		// class_name not defined in uiHints action_info
 		const decrementButton = container.querySelector("div[data-id='decrement']");
 		expect(decrementButton.className).to.equal("properties-action-button");
+
+		const iconButton = container.querySelector("div[data-id='iconButton']");
+		expect(iconButton.className).to.equal("properties-action-button");
 	});
 });

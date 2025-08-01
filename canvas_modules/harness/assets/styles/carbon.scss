@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Elyra Authors
+ * Copyright 2024-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-@forward "@carbon/react/scss/colors";
-@forward "@carbon/react/scss/type";
-@forward "@carbon/react/scss/spacing";
-@forward "@carbon/react/scss/theme";
-@forward "@carbon/react/scss/motion";
-@forward "@carbon/react/scss/components/button/tokens";
+@forward "@carbon/react" with (
+	$font-path: "/fonts/plex",
+	$use-per-family-plex: true
+);
+
+
