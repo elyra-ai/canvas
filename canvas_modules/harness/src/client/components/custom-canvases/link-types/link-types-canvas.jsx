@@ -58,6 +58,8 @@ export default class LinkTypesCanvas extends React.Component {
 	}
 
 	getConfig() {
+		const imgSrc = "/images/custom-canvases/logic/decorations/dragStateArrow.svg";
+
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "link-types-canvas",
 			enableNodeFormatType: "Vertical",
@@ -96,10 +98,10 @@ export default class LinkTypesCanvas extends React.Component {
 				// Output port properties
 				outputPortDisplay: true,
 				outputPortDisplayObjects: [
-					{ type: "image", width: 20, height: 20, src: "/images/custom-canvases/logic/decorations/dragStateArrow.svg" }
+					{ type: "image", width: 20, height: 20, src: imgSrc }
 				],
 				outputPortGuideObjects: [
-					{ type: "image", width: 20, height: 20, src: "/images/custom-canvases/logic/decorations/dragStateArrow.svg" }
+					{ type: "image", width: 20, height: 20, src: imgSrc }
 				],
 				outputPortGuideImageRotate: true
 			},

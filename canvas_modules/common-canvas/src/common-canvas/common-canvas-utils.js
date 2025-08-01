@@ -371,7 +371,10 @@ export default class CanvasUtils {
 
 	// Returns the angle of the end of a link based on the flow parameter
 	// which can be FLOW_OUT for the source end of the link and FLOW_IN for
-	// the target end of the link.
+	// the target end of the link. A "Freeform" link can have two angles
+	// (at start and end) if it is being split with enableSplitLinkDroppedOnNode
+	// set to true. Also "Ports" links can have different angles if the ports
+	// are arranged on different edges of the source and target nodes.
 	static getLinkEndAngle(link, flow, canvasLayout) {
 		let angle = 0;
 
@@ -395,7 +398,7 @@ export default class CanvasUtils {
 		const selfRefLink = d.srcNodeId && d.trgNodeId && d.srcNodeId === d.trgNodeId;
 
 		if (canvasLayout.linkType === LINK_TYPE_STRAIGHT && !selfRefLink) {
-			if (d.centerDragPos && d.centerDragPos !== "revertLink") {
+			if (d.centerDragPos && d.centerDragPos !== "revertLink") { // The link is being split with enableSplitLinkDroppedOnNode: true.
 				if (flow === FLOW_OUT) {
 					return this.calculateAngle(d.x1, d.y1, d.centerDragPos.x, d.centerDragPos.y);
 				}
