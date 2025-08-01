@@ -15,7 +15,12 @@
  */
 
 import { has } from "lodash";
-import { DEC_LINK, TEXT_AREA_BORDER_ADJUSTMENT } from "./constants/canvas-constants";
+import CanvasUtils from "./common-canvas-utils.js";
+import {
+	DEC_LINK, TEXT_AREA_BORDER_ADJUSTMENT,
+	FLOW_IN, FLOW_OUT,
+} from "./constants/canvas-constants";
+
 
 export default class SvgCanvasDecs {
 	constructor(canvasLayout) {
@@ -43,13 +48,22 @@ export default class SvgCanvasDecs {
 	}
 
 	getDecTransform(dec, d, objType) {
-		// If the decoration should be rotated (supported for link decorations) get the
-		// angle to use from the link's pathInfo object.
-		const angle = dec.rotate && d.pathInfo?.angle
-			? d.pathInfo.angle
-			: 0;
+		const rotate = this.getDecRotateTransform(dec, d, objType);
+		return `translate(${this.getDecPosX(dec, d, objType)}, ${this.getDecPosY(dec, d, objType)})` + rotate;
+	}
 
-		return `translate(${this.getDecPosX(dec, d, objType)}, ${this.getDecPosY(dec, d, objType)}) rotate(${angle})`;
+
+	// Returns a rotate transform for a decoration, if the decoration is applied to
+	// a link, and the link's rotate property is set to true, or empty sting otherwise.
+	getDecRotateTransform(dec, d, objType) {
+		if (objType === "link" && dec.rotate) {
+			const angle = (dec.position === "source")
+				? CanvasUtils.getLinkEndAngle(d, FLOW_OUT, this.canvasLayout)
+				: CanvasUtils.getLinkEndAngle(d, FLOW_IN, this.canvasLayout);
+
+			return ` rotate(${angle})`;
+		}
+		return "";
 	}
 
 	getDecPosX(dec, data, objType) {

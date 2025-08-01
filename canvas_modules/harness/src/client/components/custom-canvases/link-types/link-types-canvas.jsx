@@ -51,7 +51,7 @@ export default class LinkTypesCanvas extends React.Component {
 			temporary: true
 		};
 
-		// Add some decorations to the link in the flow
+		// Add the decorations to the links in the flow
 		this.setArrowsToLinks();
 
 		this.getConfig = this.getConfig.bind(this);
@@ -63,9 +63,10 @@ export default class LinkTypesCanvas extends React.Component {
 			enableNodeFormatType: "Vertical",
 			enableLinkType: "Straight",
 			enableLinkMethod: "Freeform",
-			enableLinkDirection: "LeftRight",
 			enableLinkSelection: "LinkOnly",
 			enableSnapToGridType: "After",
+			enableSelfRefLinks: true,
+			enableSplitLinkDroppedOnNode: true,
 			enableMarkdownInComments: true,
 			enableContextToolbar: true,
 			enableKeyboardNavigation: true,
@@ -94,9 +95,6 @@ export default class LinkTypesCanvas extends React.Component {
 
 				// Output port properties
 				outputPortDisplay: true,
-				outputPortPositions: [
-					{ x_pos: 0, y_pos: 0, pos: "middleRight" }
-				],
 				outputPortDisplayObjects: [
 					{ type: "image", width: 20, height: 20, src: "/images/custom-canvases/logic/decorations/dragStateArrow.svg" }
 				],
