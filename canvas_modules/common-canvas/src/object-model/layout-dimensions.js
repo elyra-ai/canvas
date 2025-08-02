@@ -382,9 +382,11 @@ const horizontalDefaultLayout = {
 		// get a default arrow head or to an SVG string for a custom arrow head.
 		commentLinkArrowHead: false,
 
-		// Display an arrow head on the data links. May be set to true to
-		// get a default arrow head or to an SVG string for a custom arrow head.
-		dataLinkArrowHead: false,
+		// Controls display of an arrow head on the data links. May be set to null to
+		// get default behavior which is that arrow heads are displayed on "Freeform"
+		// links and not dispayed on "Ports" links. Or, it can be set to a boolean, as
+		// appropriate, or to an SVG string to display a custom arrow head.
+		dataLinkArrowHead: null,
 
 		// Offset amounts for the link's context toolbar from its default
 		// position.
@@ -871,9 +873,11 @@ const verticalDefaultLayout = {
 		// get a default arrow head or to an SVG string for a custom arrow head.
 		commentLinkArrowHead: false,
 
-		// Display an arrow head on the data links. May be set to true to
-		// get a default arrow head or to an SVG string for a custom arrow head.
-		dataLinkArrowHead: false,
+		// Controls display of an arrow head on the data links. May be set to null to
+		// get default behavior which is that arrow heads are displayed on "Freeform"
+		// links and not dispayed on "Ports" links. Or, it can be set to a boolean, as
+		// appropriate, or to an SVG string to display a custom arrow head.
+		dataLinkArrowHead: null,
 
 		// Offset amounts for the link's context toolbar from its default
 		// position.
@@ -1167,14 +1171,18 @@ export default class LayoutDimensions {
 		return layout;
 	}
 
-	// Sets the default arrow head for node (data) links to true for freeform links.
-	// TODO -- the second part of this if should be removed when enableStraightLinksAsFreeform
-	// is removed in the next major release.
+	// Sets the default arrow head for node (data) links if dataLinkArrowHead is null
+	// otherwise it just uses the current dataLinkArrowHead setting.
 	static overrideArrowHead(layout, config) {
-		if ((config.enableLinkMethod === LINK_METHOD_FREEFORM ||
-				(config.enableStraightLinksAsFreeform && config.enableLinkType === LINK_TYPE_STRAIGHT)) &&
-				!layout.canvasLayout.dataLinkArrowHead) {
-			layout.canvasLayout.dataLinkArrowHead = true;
+		if (layout.canvasLayout.dataLinkArrowHead === null) {
+			// TODO -- the second part of this if should be removed when enableStraightLinksAsFreeform
+			// is removed in the next major release.
+			if ((config.enableLinkMethod === LINK_METHOD_FREEFORM ||
+					(config.enableStraightLinksAsFreeform && config.enableLinkType === LINK_TYPE_STRAIGHT))) {
+				layout.canvasLayout.dataLinkArrowHead = true;
+			} else {
+				layout.canvasLayout.dataLinkArrowHead = false;
+			}
 		}
 		return layout;
 	}

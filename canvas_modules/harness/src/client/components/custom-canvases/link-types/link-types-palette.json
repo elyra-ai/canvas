@@ -1,0 +1,99 @@
+{
+  "version": "3.0",
+  "categories": [
+    {
+      "label": "Nodes",
+      "description": "Some nodes.",
+      "image": "/images/palette-categories/operations_open.svg",
+      "id": "recordOp",
+      "node_types": [
+        {
+          "id": "",
+          "type": "execution_node",
+          "op": "source",
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 2
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Source",
+              "description": "A source node.",
+              "image": "images/custom-canvases/flows/palette/icons/select.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        },
+        {
+          "id": "",
+          "type": "execution_node",
+          "op": "target",
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Target",
+              "description": "A Target node.",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

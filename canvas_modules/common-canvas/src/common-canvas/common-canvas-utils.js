@@ -24,9 +24,13 @@ import { get, has, isNumber, set } from "lodash";
 import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST,
 	PORT_DISPLAY_IMAGE, PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT,
+	FLOW_IN, FLOW_OUT,
 	CANVAS_FOCUS,
 	LINK_METHOD_FREEFORM
 } from "../common-canvas/constants/canvas-constants.js";
+
+const NINETY_DEGREES = 90;
+const ONE_EIGHTY_DEGREES = 180;
 
 export default class CanvasUtils {
 
@@ -363,6 +367,89 @@ export default class CanvasUtils {
 		}
 
 		return { x: startPointX, y: startPointY, originX, originY, dir };
+	}
+
+	// Returns the angle of the end of a link based on the flow parameter
+	// which can be FLOW_OUT for the source end of the link and FLOW_IN for
+	// the target end of the link. A "Freeform" link can have two angles
+	// (at start and end) if it is being split with enableSplitLinkDroppedOnNode
+	// set to true. Also "Ports" links can have different angles if the ports
+	// are arranged on different edges of the source and target nodes.
+	static getLinkEndAngle(link, flow, canvasLayout) {
+		let angle = 0;
+
+		if (canvasLayout.linkMethod === LINK_METHOD_FREEFORM) {
+			angle = this.getAngleForFreeformLink(link, flow, canvasLayout);
+
+		} else if (flow === FLOW_OUT) {
+			angle = this.getAngleForOutputPorts(link.srcDir);
+
+		} else if (flow === FLOW_IN) {
+			angle = this.getAngleForInputPorts(link.trgDir);
+		}
+
+		return angle;
+	}
+
+	// Returns the angle for the end of a freeform link based on the flow parameter
+	// which can be FLOW_OUT for the source end of the link and FLOW_IN for
+	// the target end of the link.
+	static getAngleForFreeformLink(d, flow, canvasLayout) {
+		const selfRefLink = d.srcNodeId && d.trgNodeId && d.srcNodeId === d.trgNodeId;
+
+		if (canvasLayout.linkType === LINK_TYPE_STRAIGHT && !selfRefLink) {
+			if (d.centerDragPos && d.centerDragPos !== "revertLink") { // The link is being split with enableSplitLinkDroppedOnNode: true.
+				if (flow === FLOW_OUT) {
+					return this.calculateAngle(d.x1, d.y1, d.centerDragPos.x, d.centerDragPos.y);
+				}
+				return this.calculateAngle(d.centerDragPos.x, d.centerDragPos.y, d.x2, d.y2);
+			}
+			return this.calculateAngle(d.x1, d.y1, d.x2, d.y2);
+		}
+
+		// For other freeform link types we return an appropriate direction
+		// at right angles to the node.
+		if (flow === FLOW_OUT) {
+			return this.getAngleForOutputPorts(d.srcDir);
+		}
+
+		return this.getAngleForInputPorts(d.trgDir);
+	}
+
+	// Returns the angle for the output port of a source node when
+	// connections to ports are being made.
+	static getAngleForOutputPorts(dir) {
+		switch (dir) {
+		case NORTH: {
+			return -NINETY_DEGREES;
+		}
+		case SOUTH: {
+			return NINETY_DEGREES;
+		}
+		case WEST: {
+			return ONE_EIGHTY_DEGREES;
+		}
+		default:
+			return 0;
+		}
+	}
+
+	// Returns the angle for the input port of a target node when
+	// connections to ports are being made.
+	static getAngleForInputPorts(dir) {
+		switch (dir) {
+		case NORTH: {
+			return NINETY_DEGREES;
+		}
+		case SOUTH: {
+			return -NINETY_DEGREES;
+		}
+		case WEST: {
+			return 0;
+		}
+		default:
+			return ONE_EIGHTY_DEGREES;
+		}
 	}
 
 	// Assisted by WCA@IBM
