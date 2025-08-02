@@ -775,7 +775,7 @@ Cypress.Commands.add("verifyDecorationTransformOnNode", (nodeName, decoratorId, 
 			const decorator = decorators.filter((idx) =>
 				decorators[idx].getAttribute("data-id") === ("node_dec_group_0_" + decoratorId));
 			expect(decorator[0].getAttribute("data-id")).equal(`node_dec_group_0_${decoratorId}`);
-			expect(decorator[0].getAttribute("transform")).equal(`translate(${xPos}, ${yPos}) rotate(0)`);
+			expect(decorator[0].getAttribute("transform")).equal(`translate(${xPos}, ${yPos})`);
 			return decorator;
 		});
 });
@@ -787,7 +787,7 @@ Cypress.Commands.add("verifyDecorationTransformOnLink", (linkName, decoratorId, 
 			const decorator = decorators.filter((idx) =>
 				decorators[idx].getAttribute("data-id") === ("link_dec_group_0_" + decoratorId));
 			expect(decorator[0].getAttribute("data-id")).equal(`link_dec_group_0_${decoratorId}`);
-			expect(decorator[0].getAttribute("transform")).equal(`translate(${xPos}, ${yPos}) rotate(0)`);
+			expect(decorator[0].getAttribute("transform")).equal(`translate(${xPos}, ${yPos})`);
 			return decorator;
 		});
 });
