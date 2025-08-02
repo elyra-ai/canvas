@@ -2077,7 +2077,7 @@ export default class SVGCanvasRenderer {
 	createInputPorts(enter, node) {
 		const inputPortGroups = enter
 			.append("g")
-			.attr("tabindex", -1)
+			.attr("tabindex", () => (node.layout?.inputPortFocusable ? -1 : ""))
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, inputPorts) => {
@@ -2179,7 +2179,7 @@ export default class SVGCanvasRenderer {
 	createOutputPorts(enter, node) {
 		const outputPortGroups = enter
 			.append("g")
-			.attr("tabindex", -1)
+			.attr("tabindex", () => (node.layout?.outputPortFocusable ? -1 : ""))
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, outputPorts) => {
