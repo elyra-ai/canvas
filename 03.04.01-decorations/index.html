@@ -2894,9 +2894,10 @@
 <span class="w">       </span><span class="nx">width</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">number</span><span class="o">&gt;</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">height</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">number</span><span class="o">&gt;</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">hotspot</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="kr">boolean</span><span class="o">&gt;</span><span class="p">,</span>
-<span class="w">       </span><span class="nx">class_name</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">class_name</span><span class="o">&gt;</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">outline</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="kr">boolean</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">       </span><span class="nx">class_name</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">class_name</span><span class="o">&gt;</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">tooltip</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">       </span><span class="nx">rotate</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">temporary</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="kr">boolean</span><span class="o">&gt;</span>
 <span class="w">     </span><span class="p">}</span>
 </code></pre></div>
@@ -2918,6 +2919,7 @@ These properties are applicable to a label decoration:
 <span class="w">       </span><span class="nx">hotspot</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="kr">boolean</span><span class="o">&gt;</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">class_name</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">class_name</span><span class="o">&gt;</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">tooltip</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">       </span><span class="nx">rotate</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">temporary</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="kr">boolean</span><span class="o">&gt;</span>
 <span class="w">     </span><span class="p">}</span>
 </code></pre></div>
@@ -2934,6 +2936,7 @@ These properties are applicable to a shape decoration:
 <span class="w">       </span><span class="nx">hotspot</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="kr">boolean</span><span class="o">&gt;</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">class_name</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">class_name</span><span class="o">&gt;</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">tooltip</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">       </span><span class="nx">rotate</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">temporary</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="kr">boolean</span><span class="o">&gt;</span>
 <span class="w">     </span><span class="p">}</span>
 </code></pre></div>
@@ -2950,6 +2953,7 @@ These properties are applicable to a JSX decoration:
 <span class="w">       </span><span class="nx">hotspot</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="kr">boolean</span><span class="o">&gt;</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">class_name</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">class_name</span><span class="o">&gt;</span><span class="p">,</span>
 <span class="w">       </span><span class="nx">tooltip</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">       </span><span class="nx">rotate</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="w">     </span><span class="p">}</span>
 </code></pre></div></p>
 <p>where:</p>
@@ -3007,6 +3011,8 @@ If omitted it will default to &ldquo;topLeft&rdquo;.</p>
 <p>A Boolean. It defaults to true. When a decoration is specified with an image field the image is typically displayed with a outline rectangle around it and with an offset within the rectangle to improve presentation. If <code>outline</code> is set to <code>false</code> the outline rectangle is <strong>not</strong> displayed and the image is displayed without any offset from its specified <code>x_pos</code> and <code>y_pos</code>.</p>
 <h4 id="tooltip"><strong>tooltip</strong><a class="headerlink" href="#tooltip" title="Permanent link">&para;</a></h4>
 <p>A String. When specified, the string will be shown in a tooltip when the pointer is hovered over the decoration. No tip will be displayed if the <code>tooltip</code> property is omitted. Note: for decoration tooltips to be displayed on the canvas, the <code>decorations</code> property of the <code>tipConfig</code> object in the canvas config must be set to true (which is its default setting).</p>
+<h4 id="rotate"><strong>rotate</strong><a class="headerlink" href="#rotate" title="Permanent link">&para;</a></h4>
+<p>A Boolean. The default is false. Only applicable to decorations attached to a link. When set to true, the decoration will be rotated to the same angle as the link line depending on whether the decoration is positioned at the start (source) or end (target) of link.</p>
 <h4 id="temporary"><strong>temporary</strong><a class="headerlink" href="#temporary" title="Permanent link">&para;</a></h4>
 <p>A Boolean. It defaults to false. When set to true the decoration object will <em>not</em> be saved in the pipelineFlow document returned by the <code>CanvasController.getPipelineFlow()</code> method. Typically, this should be set to <code>true</code> when adding decorations programmatically to the nodes and links on the canvas.</p>
 <h3 id="notes">Notes:<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h3>
