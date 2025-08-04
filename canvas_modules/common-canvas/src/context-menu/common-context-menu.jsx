@@ -260,10 +260,11 @@ class CommonContextMenu extends React.Component {
 					);
 				} else {
 					const ref = React.createRef();
+					const menuItemTabIndex = i === 0 ? 0 : -1;
 					menuRefs.push(ref);
 
 					menuItem = (
-						<div key={i} ref={ref} tabIndex={-1} data-action={menuDefinition[i].action}
+						<div key={i} ref={ref} tabIndex={menuItemTabIndex} data-action={menuDefinition[i].action}
 							className={className} onClick={onClickFunction} onKeyDown={this.onKeyDown} role="menuitem"
 						>
 							{menuDefinition[i].label}
@@ -401,7 +402,7 @@ class CommonContextMenu extends React.Component {
 		this.menuRefs = menuInfo.menuRefs;
 
 		return (
-			<div id="context-menu-popover" className="context-menu-popover" style={posStyle} onContextMenu={this.onContextMenu}>
+			<div id="context-menu-popover" role="menu" className="context-menu-popover" style={posStyle} onContextMenu={this.onContextMenu}>
 				{menuInfo.menuItems}
 			</div>
 		);
