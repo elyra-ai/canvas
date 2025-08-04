@@ -65,9 +65,6 @@ import SvgCanvasDragDetLink from "./svg-canvas-utils-drag-det-link.js";
 import SvgCanvasZoom from "./svg-canvas-utils-zoom.js";
 import SVGCanvasPipeline from "./svg-canvas-pipeline";
 
-const NINETY_DEGREES = 90;
-const ONE_EIGHTY_DEGREES = 180;
-
 export default class SVGCanvasRenderer {
 	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config, supernodeInfo = {}) {
 		this.logger = new Logger(["SVGCanvasRenderer", "PipeId", pipelineId]);
@@ -2077,7 +2074,7 @@ export default class SVGCanvasRenderer {
 	createInputPorts(enter, node) {
 		const inputPortGroups = enter
 			.append("g")
-			.attr("tabindex", -1)
+			.attr("tabindex", () => (node.layout?.inputPortFocusable ? -1 : ""))
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, inputPorts) => {
@@ -2179,7 +2176,7 @@ export default class SVGCanvasRenderer {
 	createOutputPorts(enter, node) {
 		const outputPortGroups = enter
 			.append("g")
-			.attr("tabindex", -1)
+			.attr("tabindex", () => (node.layout?.outputPortFocusable ? -1 : ""))
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, outputPorts) => {
@@ -6110,14 +6107,14 @@ export default class SVGCanvasRenderer {
 	// Returns the transform to position and, if necessary, rotate the port
 	// circle arrow for input ports.
 	getInputPortArrowPathTransform(port) {
-		const angle = this.getAngleBasedForInputPorts(port.dir);
+		const angle = CanvasUtils.getAngleForInputPorts(port.dir);
 		return `translate(${port.cx}, ${port.cy}) rotate(${angle})`;
 	}
 
 	// Returns the transform to position and, if necessary, rotate the port
 	// circle arrow for output ports.
 	getOutputPortArrowPathTransform(port) {
-		const angle = this.getAngleBasedForOutputPorts(port.dir);
+		const angle = CanvasUtils.getAngleForOutputPorts(port.dir);
 		return `translate(${port.cx}, ${port.cy}) rotate(${angle})`;
 	}
 
@@ -6135,26 +6132,9 @@ export default class SVGCanvasRenderer {
 		return "M -6 6 L 0 0 -6 -6";
 	}
 
-	// Returns a transform for an arrow head at the end of a link line.
-	// If the linkType is Elbow, it makes sure the arrow head is either
-	// horizontal for left-right or vertical for top-bottom/bottom-top link
-	// directions, because the end of elbow lines are always at the same angle as
-	// the elbow lines. Otherwise it returns an angle so the arrow head is
-	// relevant to the slope of the straight link being drawn.
-	// TODO -- This doesn't handle "Curve" link types very well (in fact for
-	// curves it returns the same as for "Straight" links) because it is very
-	// difficult to write an algorithm that gives the correct angle for a
-	// "Curve" link to make it look presentable. I know, I tried!
+	// Returns a transform for an arrow head at the target end of a link line.
 	getArrowHeadTransform(link) {
-		let angle = 0;
-
-		if (this.canvasLayout.linkMethod === LINK_METHOD_FREEFORM) {
-			angle = this.getAngleBasedForFreeformLink(link);
-
-		} else {
-			angle = this.getAngleBasedForInputPorts(link.trgDir);
-		}
-
+		const angle = CanvasUtils.getLinkEndAngle(link, FLOW_IN, this.canvasLayout);
 		return `translate(${link.x2}, ${link.y2}) rotate(${angle})`;
 	}
 
@@ -6162,25 +6142,10 @@ export default class SVGCanvasRenderer {
 	// port of the type defined by the flow parameter (in or out).
 	getPortImageTransform(port, flow) {
 		const angle = flow === FLOW_OUT
-			? this.getAngleBasedForOutputPorts(port.dir)
-			: this.getAngleBasedForInputPorts(port.dir);
+			? CanvasUtils.getAngleForOutputPorts(port.dir)
+			: CanvasUtils.getAngleForInputPorts(port.dir);
 
 		return `rotate(${angle},${port.cx},${port.cy})`;
-	}
-
-	// Returns the angle for the arrow head for freeform links.
-	getAngleBasedForFreeformLink(d) {
-		const selfRefLink = d.srcNodeId && d.trgNodeId && d.srcNodeId === d.trgNodeId;
-		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT && !selfRefLink) {
-			if (d.centerDragPos && d.centerDragPos !== "revertLink") {
-				return CanvasUtils.calculateAngle(d.centerDragPos.x, d.centerDragPos.y, d.x2, d.y2);
-			}
-			return CanvasUtils.calculateAngle(d.x1, d.y1, d.x2, d.y2);
-		}
-
-		// For other freeform link types we return an appropriate direction
-		// at right angles to the node.
-		return this.getAngleBasedForInputPorts(d.trgDir);
 	}
 
 	getLinkImageTransform(d) {
@@ -6197,47 +6162,11 @@ export default class SVGCanvasRenderer {
 		// "Ports" method, we snap the link direction to the target
 		// direction stored in the link.
 		} else {
-			angle = this.getAngleBasedForInputPorts(d.trgDir);
+			angle = CanvasUtils.getAngleForInputPorts(d.trgDir);
 		}
 
 		return `rotate(${angle},${d.x2},${d.y2})`;
 
-	}
-
-	// Returns the angle for the output port of a source node when
-	// connections to ports are being made.
-	getAngleBasedForOutputPorts(dir) {
-		switch (dir) {
-		case NORTH: {
-			return -NINETY_DEGREES;
-		}
-		case SOUTH: {
-			return NINETY_DEGREES;
-		}
-		case WEST: {
-			return ONE_EIGHTY_DEGREES;
-		}
-		default:
-			return 0;
-		}
-	}
-
-	// Returns the angle for the input port of a target node when
-	// connections to ports are being made.
-	getAngleBasedForInputPorts(dir) {
-		switch (dir) {
-		case NORTH: {
-			return NINETY_DEGREES;
-		}
-		case SOUTH: {
-			return -NINETY_DEGREES;
-		}
-		case WEST: {
-			return 0;
-		}
-		default:
-			return ONE_EIGHTY_DEGREES;
-		}
 	}
 
 	canOpenTip(tipType) {

@@ -1,0 +1,610 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "3333-4444-5555-2b9573e5e159",
+  "primary_pipeline": "abcd-efgh-123",
+  "pipelines": [
+    {
+      "id": "abcd-efgh-123",
+      "nodes": [
+        {
+          "id": "2bd16021-ca72-4308-88ab-92a39e25ffc9",
+          "type": "execution_node",
+          "op": "source",
+          "app_data": {
+            "ui_data": {
+              "label": "Source",
+              "image": "images/custom-canvases/flows/palette/icons/select.svg",
+              "x_pos": 90,
+              "y_pos": 204,
+              "description": "A source node."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "3a83af98-2ab4-4397-8514-678ff637c5c2",
+          "type": "execution_node",
+          "op": "target",
+          "app_data": {
+            "ui_data": {
+              "label": "Target",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 330,
+              "y_pos": 264,
+              "description": "A Target node."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "d675c813-690d-46b1-83a2-d314aca57ab8",
+                  "node_id_ref": "2bd16021-ca72-4308-88ab-92a39e25ffc9",
+                  "port_id_ref": "outPort",
+                  "app_data": {
+                    "linkType": "targetArrow"
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "98c949c9-c428-4a0b-8b2d-69dae79cd6b1",
+          "type": "execution_node",
+          "op": "source",
+          "app_data": {
+            "ui_data": {
+              "label": "Source",
+              "image": "images/custom-canvases/flows/palette/icons/select.svg",
+              "x_pos": 90,
+              "y_pos": 324,
+              "description": "A source node."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "686125be-7afc-4d5e-8e78-3504d126fc6a",
+          "type": "execution_node",
+          "op": "target",
+          "app_data": {
+            "ui_data": {
+              "label": "Target",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 330,
+              "y_pos": 384,
+              "description": "A Target node."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "bb50ada2-06dd-4a17-be4e-75de6c9a8f75",
+                  "node_id_ref": "98c949c9-c428-4a0b-8b2d-69dae79cd6b1",
+                  "port_id_ref": "outPort",
+                  "app_data": {
+                    "linkType": "sourceArrow"
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "4ba8d0fd-71ad-4a8e-a573-7f65b12d30b6",
+          "type": "execution_node",
+          "op": "source",
+          "app_data": {
+            "ui_data": {
+              "label": "Source",
+              "image": "images/custom-canvases/flows/palette/icons/select.svg",
+              "x_pos": 90,
+              "y_pos": 444,
+              "description": "A source node."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "91ba1e53-9148-449e-ae4f-e3f7c14b767c",
+          "type": "execution_node",
+          "op": "target",
+          "app_data": {
+            "ui_data": {
+              "label": "Target",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 330,
+              "y_pos": 504,
+              "description": "A Target node."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "fe2126a2-5a27-40fc-90b5-4f897ef593f2",
+                  "node_id_ref": "4ba8d0fd-71ad-4a8e-a573-7f65b12d30b6",
+                  "port_id_ref": "outPort",
+                  "app_data": {
+                    "linkType": "bothArrow"
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "3658b346-7c6b-4d2f-b9db-dd608e79349f",
+          "type": "execution_node",
+          "op": "source",
+          "app_data": {
+            "ui_data": {
+              "label": "Source",
+              "image": "images/custom-canvases/flows/palette/icons/select.svg",
+              "x_pos": 90,
+              "y_pos": 564,
+              "description": "A source node."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "3ac10f42-4081-40b9-8fa0-a0510dd399cc",
+          "type": "execution_node",
+          "op": "target",
+          "app_data": {
+            "ui_data": {
+              "label": "Target",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 330,
+              "y_pos": 624,
+              "description": "A Target node."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "f3bc47af-95e5-4061-beca-b9badac95d38",
+                  "node_id_ref": "3658b346-7c6b-4d2f-b9db-dd608e79349f",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "fc259029-a9e1-4cfc-8ba6-2d5cdbbcdc07",
+          "type": "execution_node",
+          "op": "target",
+          "app_data": {
+            "ui_data": {
+              "label": "Target",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 495,
+              "y_pos": 264,
+              "description": "A Target node."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "6bc506af-6de5-441f-b724-715b7a1905dd",
+                  "node_id_ref": "fc259029-a9e1-4cfc-8ba6-2d5cdbbcdc07",
+                  "port_id_ref": "outPort",
+                  "app_data": {
+                    "linkType": "targetArrow"
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "23f39419-69a7-4f16-855e-6e06a94bfe35",
+          "type": "execution_node",
+          "op": "target",
+          "app_data": {
+            "ui_data": {
+              "label": "Target",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 495,
+              "y_pos": 384,
+              "description": "A Target node."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "a45440b6-de5b-405c-826d-29eaffcbcc55",
+                  "node_id_ref": "23f39419-69a7-4f16-855e-6e06a94bfe35",
+                  "port_id_ref": "outPort",
+                  "app_data": {
+                    "linkType": "sourceArrow"
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "6c356e78-868a-45d2-867d-263f2f4ede5e",
+          "type": "execution_node",
+          "op": "target",
+          "app_data": {
+            "ui_data": {
+              "label": "Target",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 495,
+              "y_pos": 504,
+              "description": "A Target node."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "4876807f-5dd0-4acb-9dca-b32f3bdb106f",
+                  "node_id_ref": "6c356e78-868a-45d2-867d-263f2f4ede5e",
+                  "port_id_ref": "outPort",
+                  "app_data": {
+                    "linkType": "bothArrow"
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "8a6bded3-8a4a-4f83-bd2d-6015828f6021",
+          "type": "execution_node",
+          "op": "target",
+          "app_data": {
+            "ui_data": {
+              "label": "Target",
+              "image": "images/custom-canvases/flows/palette/icons/autodataprep.svg",
+              "x_pos": 495,
+              "y_pos": 624,
+              "description": "A Target node."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "876c2b86-07b4-488a-a828-17893ce197fe",
+                  "node_id_ref": "8a6bded3-8a4a-4f83-bd2d-6015828f6021",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
+              "x_pos": 30,
+              "y_pos": 36,
+              "width": 330,
+              "height": 120,
+              "class_name": "d3-comment-rect bkg-col-cyan-20",
+              "content": "### Link Types Sample - Bi-directional\nThis sample shows how links can be customized using decorations to show **bi-directional** links, even though the source and target nodes stay the same. ",
+              "associated_id_refs": []
+            }
+          ]
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}

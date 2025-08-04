@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,12 @@
  */
 
 import { has } from "lodash";
-import { DEC_LINK, TEXT_AREA_BORDER_ADJUSTMENT } from "./constants/canvas-constants";
+import CanvasUtils from "./common-canvas-utils.js";
+import {
+	DEC_LINK, TEXT_AREA_BORDER_ADJUSTMENT,
+	FLOW_IN, FLOW_OUT,
+} from "./constants/canvas-constants";
+
 
 export default class SvgCanvasDecs {
 	constructor(canvasLayout) {
@@ -43,7 +48,22 @@ export default class SvgCanvasDecs {
 	}
 
 	getDecTransform(dec, d, objType) {
-		return `translate(${this.getDecPosX(dec, d, objType)}, ${this.getDecPosY(dec, d, objType)})`;
+		const rotate = this.getDecRotateTransform(dec, d, objType);
+		return `translate(${this.getDecPosX(dec, d, objType)}, ${this.getDecPosY(dec, d, objType)})` + rotate;
+	}
+
+
+	// Returns a rotate transform for a decoration, if the decoration is applied to
+	// a link, and the link's rotate property is set to true, or empty sting otherwise.
+	getDecRotateTransform(dec, d, objType) {
+		if (objType === "link" && dec.rotate) {
+			const angle = (dec.position === "source")
+				? CanvasUtils.getLinkEndAngle(d, FLOW_OUT, this.canvasLayout)
+				: CanvasUtils.getLinkEndAngle(d, FLOW_IN, this.canvasLayout);
+
+			return ` rotate(${angle})`;
+		}
+		return "";
 	}
 
 	getDecPosX(dec, data, objType) {
