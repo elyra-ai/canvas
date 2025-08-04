@@ -23,26 +23,52 @@
 	align-items: center;
 	justify-content: space-between;
 
+	.toolbar-div, .toolbar-jsx-item, .toolbar-overflow-item {
+		background-color: carbon.$interactive;
+		button {
+			&:enabled {
+				background-color: carbon.$interactive; // override bg set in canvas toolbar
+				&:hover {
+					background-color: carbon.$button-primary-hover;
+				}
+			}
+			svg {
+				fill: carbon.$text-on-color; // icons including 3 dots should be white 
+			}
+	
+		}
+	}
+	.toolbar-div.toolbar-size-small {
+		.toolbar-left-bar {
+			padding-right: carbon.$spacing-07;
+		}
+		.toolbar-popover-list {
+			.properties-batch-summary {
+				color: carbon.$text-primary; // inside overflow menu-black text
+			}
+			button { // inside overflow menu - ghost
+				background-color: transparent;
+				&:enabled {
+					color: carbon.$link-primary;
+					&:hover {
+						background-color: carbon.$layer-hover;
+					}
+				}
+			}
+		}
+		.toolbar-sub-menu-item {
+			height: carbon.$spacing-07;
+		}
+	}
+
 	.properties-batch-summary {
 		@include carbon.type-style("label-02");
-		padding: 0 carbon.$spacing-05;
+		padding-left: carbon.$spacing-05;
 		color: carbon.$text-on-color;
 		min-width: 0;
 	}
 
-	.properties-action-list {
-		display: flex;
-		align-items: center;
-		.properties-action-cancel {
-			width: carbon.$spacing-05;
-		}
-		.properties-action-cancel::before { // Vertical line before cancel button
-			position: absolute;
-			background-color: carbon.$text-on-color;
-			block-size: carbon.$spacing-05;
-			content: "";
-			inline-size: 0.0625rem;
-			inset-inline-start: 0;
-		}
+	.action-cancel {
+		width: carbon.$spacing-05;
 	}
 }
