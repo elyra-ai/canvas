@@ -35,6 +35,7 @@ import {
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	EXAMPLE_APP_LOGIC,
+	EXAMPLE_APP_LINK_TYPES,
 	EXAMPLE_APP_READ_ONLY,
 	EXAMPLE_APP_PROGRESS,
 	EXAMPLE_APP_JSX_ICONS,
@@ -1403,6 +1404,10 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={EXAMPLE_APP_LOGIC}
 						labelText={EXAMPLE_APP_LOGIC}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_LINK_TYPES}
+						labelText={EXAMPLE_APP_LINK_TYPES}
 					/>
 					<RadioButton
 						value={EXAMPLE_APP_EXPLAIN}
