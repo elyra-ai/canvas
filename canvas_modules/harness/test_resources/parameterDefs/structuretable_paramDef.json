@@ -2508,6 +2508,7 @@
 							"default": "Label btn"
 						},
 						"enabled": true,
+						"kind": "primary",
 						"description": {
 							"default": "Custom button label only."
 						}
