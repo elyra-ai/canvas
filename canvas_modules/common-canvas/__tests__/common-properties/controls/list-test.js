@@ -202,7 +202,7 @@ describe("list renders correctly for array[string]", () => {
 		selectCheckboxes(container, [2]);
 		// ensure Table toolbar has Delete button and select it
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
-		const deleteButton = tableToolbar.querySelectorAll("button.properties-action-delete");
+		const deleteButton = tableToolbar.querySelectorAll(".toolbar-item.delete-action button");
 		expect(deleteButton).to.have.length(1);
 		fireEvent.click(deleteButton[0]);
 
@@ -404,7 +404,7 @@ describe("list renders correctly for array[integer]", () => {
 		selectCheckboxes(container, [2]);
 		// ensure Table toolbar has Delete button and select it
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
-		const deleteButton = tableToolbar.querySelectorAll("button.properties-action-delete");
+		const deleteButton = tableToolbar.querySelectorAll(".toolbar-item.delete-action button");
 		expect(deleteButton).to.have.length(1);
 		fireEvent.click(deleteButton[0]);
 

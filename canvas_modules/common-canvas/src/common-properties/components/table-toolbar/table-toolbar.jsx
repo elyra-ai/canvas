@@ -112,8 +112,7 @@ class TableToolbar extends React.Component {
 		};
 		// For delete, edit, show its divider only if those icons are present
 		const toolbarConfig = [
-			...this.getTableRowMoveButtons(),
-			{ divider: true },
+			...(this.props.moveableRows ? [...this.getTableRowMoveButtons(), { divider: true }] : []),
 			...deleteBtn,
 			...(this.props.multiSelectEdit ? [editBtn, { divider: true }] : []),
 			cancelBtn

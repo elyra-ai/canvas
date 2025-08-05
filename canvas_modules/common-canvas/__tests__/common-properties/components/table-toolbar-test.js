@@ -225,7 +225,7 @@ describe("TableToolbar renderes correctly", () => {
 		expect(controller.getSelectedRows(propertyId)).to.eql(rowselections);
 
 		// Click on Cancel button in toolbar
-		const cancelButton = tableToolbar[0].querySelector("button.properties-action-cancel");
+		const cancelButton = tableToolbar[0].querySelector("button.action-cancel");
 		fireEvent.click(cancelButton);
 
 		// validate row selection is cleared
@@ -252,8 +252,7 @@ describe("TableToolbar renderes correctly", () => {
 		// validate the Delete buttons exists in the table toolbar
 		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const deleteButton = tableToolbar[0].getElementsByClassName("properties-action-delete");
-		expect(deleteButton).to.have.length(1);
+		expect(container.querySelectorAll(".toolbar-item.delete-action")).to.have.length(1);
 	});
 
 	it("should NOT show Delete button when addRemoveRows: false", () => {
@@ -277,8 +276,7 @@ describe("TableToolbar renderes correctly", () => {
 		// validate the Delete buttons exists in the table toolbar
 		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const deleteButton = tableToolbar[0].getElementsByClassName("properties-action-delete");
-		expect(deleteButton).to.have.length(0);
+		expect(container.querySelectorAll(".toolbar-item.delete-action")).to.have.length(0);
 	});
 
 	it("Delete button calls removeSelectedRows function from the props", () => {
@@ -305,9 +303,8 @@ describe("TableToolbar renderes correctly", () => {
 		expect(controller.getSelectedRows(propertyId)).to.eql(rowselections);
 
 		// Click on Delete button in toolbar
-		const deleteButton = tableToolbar[0].querySelector("button.properties-action-delete");
+		const deleteButton = container.querySelector(".toolbar-item.delete-action button");
 		fireEvent.click(deleteButton);
-
 		// Verify removeSelectedRows function is called
 		expect(removeSelectedRows.calledOnce).to.equal(true);
 	});
@@ -334,10 +331,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		// validate the row move buttons exist in the table toolbar
 		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button");
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button");
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button");
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button");
+		const moveTopButton = container.querySelectorAll(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelectorAll(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelectorAll(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelectorAll(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton).to.have.length(1);
 		expect(moveUpButton).to.have.length(1);
 		expect(moveDownButton).to.have.length(1);
@@ -365,10 +362,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		// validate the row move buttons don't exist in the table toolbar
 		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button");
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button");
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button");
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button");
+		const moveTopButton = tableToolbar[0].querySelectorAll(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = tableToolbar[0].querySelectorAll(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = tableToolbar[0].querySelectorAll(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = tableToolbar[0].querySelectorAll(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton).to.have.length(0);
 		expect(moveUpButton).to.have.length(0);
 		expect(moveDownButton).to.have.length(0);
@@ -395,10 +392,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		// validate the proper buttons are enabled/disabled
 		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button")[0];
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button")[0];
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button")[0];
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button")[0];
+		const moveTopButton = container.querySelector(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelector(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelector(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(true);
 		expect(moveUpButton.disabled).to.equal(true);
 		expect(moveDownButton.disabled).to.equal(false);
@@ -432,10 +429,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		// validate the proper buttons are enabled/disabled
 		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button")[0];
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button")[0];
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button")[0];
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button")[0];
+		const moveTopButton = container.querySelector(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelector(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelector(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(true);
 		expect(moveUpButton.disabled).to.equal(true);
 		expect(moveDownButton.disabled).to.equal(false);
@@ -471,10 +468,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		// validate the proper buttons are enabled/disabled
 		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button")[0];
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button")[0];
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button")[0];
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button")[0];
+		const moveTopButton = container.querySelector(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelector(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelector(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(false);
 		expect(moveUpButton.disabled).to.equal(false);
 		expect(moveDownButton.disabled).to.equal(true);
@@ -509,10 +506,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		// validate the proper buttons are enabled/disabled
 		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button")[0];
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button")[0];
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button")[0];
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button")[0];
+		const moveTopButton = container.querySelector(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelector(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelector(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(false);
 		expect(moveUpButton.disabled).to.equal(false);
 		expect(moveDownButton.disabled).to.equal(true);
@@ -547,10 +544,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		// validate the proper buttons are enabled/disabled
 		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button")[0];
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button")[0];
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button")[0];
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button")[0];
+		const moveTopButton = container.querySelector(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelector(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelector(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(false);
 		expect(moveUpButton.disabled).to.equal(false);
 		expect(moveDownButton.disabled).to.equal(false);
@@ -578,10 +575,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		// validate all move buttons are enabled
 		const tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		let moveTopButton = tableToolbar[0].querySelector("button.table-row-move-top-button");
-		let moveUpButton = tableToolbar[0].querySelector("button.table-row-move-up-button");
-		let moveDownButton = tableToolbar[0].querySelector("button.table-row-move-down-button");
-		let moveBottomButton = tableToolbar[0].querySelector("button.table-row-move-bottom-button");
+		let moveTopButton = container.querySelector(".toolbar-item.topMoveRow-action button");
+		let moveUpButton = container.querySelector(".toolbar-item.upMoveRow-action button");
+		let moveDownButton = container.querySelector(".toolbar-item.downMoveRow-action button");
+		let moveBottomButton = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(false);
 		expect(moveUpButton.disabled).to.equal(false);
 		expect(moveDownButton.disabled).to.equal(false);
@@ -607,10 +604,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 			moveableRows
 		/>);
 		const tableToolbarUpdated = container.querySelector("div.properties-table-toolbar");
-		moveTopButton = tableToolbarUpdated.querySelector("button.table-row-move-top-button");
-		moveUpButton = tableToolbarUpdated.querySelector("button.table-row-move-up-button");
-		moveDownButton = tableToolbarUpdated.querySelector("button.table-row-move-down-button");
-		moveBottomButton = tableToolbarUpdated.querySelector("button.table-row-move-bottom-button");
+		moveTopButton = tableToolbarUpdated.querySelector(".toolbar-item.topMoveRow-action button");
+		moveUpButton = tableToolbarUpdated.querySelector(".toolbar-item.upMoveRow-action button");
+		moveDownButton = tableToolbarUpdated.querySelector(".toolbar-item.downMoveRow-action button");
+		moveBottomButton = tableToolbarUpdated.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(true);
 		expect(moveUpButton.disabled).to.equal(true);
 		expect(moveDownButton.disabled).to.equal(true);
@@ -638,10 +635,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		const { container } = wrapper;
 		// validate the proper buttons are enabled/disabled
 		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button")[0];
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button")[0];
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button")[0];
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button")[0];
+		const moveTopButton = tableToolbar[0].querySelector(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = tableToolbar[0].querySelector(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = tableToolbar[0].querySelector(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = tableToolbar[0].querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(true);
 		expect(moveUpButton.disabled).to.equal(true);
 		expect(moveDownButton.disabled).to.equal(true);
@@ -671,11 +668,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		);
 		const { container } = wrapper;
 		// validate the proper buttons are enabled/disabled
-		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button")[0];
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button")[0];
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button")[0];
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button")[0];
+		const moveTopButton = container.querySelector(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelector(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelector(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(true);
 		expect(moveUpButton.disabled).to.equal(true);
 		expect(moveDownButton.disabled).to.equal(false);
@@ -701,11 +697,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		);
 		const { container } = wrapper;
 		// validate the proper buttons are enabled/disabled
-		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button")[0];
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button")[0];
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button")[0];
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button")[0];
+		const moveTopButton = container.querySelector(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelector(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelector(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(true);
 		expect(moveUpButton.disabled).to.equal(true);
 		expect(moveDownButton.disabled).to.equal(true);
@@ -735,11 +730,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		);
 		const { container } = wrapper;
 		// validate the proper buttons are enabled/disabled
-		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button")[0];
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button")[0];
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button")[0];
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button")[0];
+		const moveTopButton = container.querySelector(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelector(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelector(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(false);
 		expect(moveUpButton.disabled).to.equal(false);
 		expect(moveDownButton.disabled).to.equal(true);
@@ -769,11 +763,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		);
 		const { container } = wrapper;
 		// validate the proper buttons are enabled/disabled
-		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button")[0];
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button")[0];
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button")[0];
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button")[0];
+		const moveTopButton = container.querySelector(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelector(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelector(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(false);
 		expect(moveUpButton.disabled).to.equal(false);
 		expect(moveDownButton.disabled).to.equal(false);
@@ -803,11 +796,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		);
 		const { container } = wrapper;
 		// validate the proper buttons are enabled/disabled
-		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button")[0];
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button")[0];
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button")[0];
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button")[0];
+		const moveTopButton = container.querySelector(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelector(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelector(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(false);
 		expect(moveUpButton.disabled).to.equal(false);
 		expect(moveDownButton.disabled).to.equal(false);
@@ -833,11 +825,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		);
 		const { container } = wrapper;
 		// validate the proper buttons are enabled/disabled
-		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button")[0];
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button")[0];
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button")[0];
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button")[0];
+		const moveTopButton = container.querySelector(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelector(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelector(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(false);
 		expect(moveUpButton.disabled).to.equal(false);
 		expect(moveDownButton.disabled).to.equal(true);
@@ -870,11 +861,10 @@ describe("TableToolbar row move buttons work correctly", () => {
 		);
 		const { container } = wrapper;
 		// validate the proper buttons are enabled/disabled
-		const tableToolbar = container.getElementsByClassName("properties-table-toolbar");
-		const moveTopButton = tableToolbar[0].getElementsByClassName("table-row-move-top-button")[0];
-		const moveUpButton = tableToolbar[0].getElementsByClassName("table-row-move-up-button")[0];
-		const moveDownButton = tableToolbar[0].getElementsByClassName("table-row-move-down-button")[0];
-		const moveBottomButton = tableToolbar[0].getElementsByClassName("table-row-move-bottom-button")[0];
+		const moveTopButton = container.querySelector(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelector(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelector(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton.disabled).to.equal(true);
 		expect(moveUpButton.disabled).to.equal(true);
 		expect(moveDownButton.disabled).to.equal(false);

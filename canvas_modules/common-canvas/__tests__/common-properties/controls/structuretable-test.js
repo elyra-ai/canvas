@@ -402,12 +402,12 @@ describe("structuretable control renders correctly", () => {
 		expect(tableToolbar).to.have.length(1);
 
 		// table toolbar should have delete and row move buttons
-		const deleteButton = tableToolbar[0].querySelectorAll("button.properties-action-delete");
+		const deleteButton = container.querySelectorAll(".toolbar-item.delete-action button");
 		expect(deleteButton).to.have.length(1);
-		const moveTopButton = tableToolbar[0].querySelectorAll("button.table-row-move-top-button");
-		const moveUpButton = tableToolbar[0].querySelectorAll("button.table-row-move-up-button");
-		const moveDownButton = tableToolbar[0].querySelectorAll("button.table-row-move-down-button");
-		const moveBottomButton = tableToolbar[0].querySelectorAll("button.table-row-move-bottom-button");
+		const moveTopButton = container.querySelectorAll(".toolbar-item.topMoveRow-action button");
+		const moveUpButton = container.querySelectorAll(".toolbar-item.upMoveRow-action button");
+		const moveDownButton = container.querySelectorAll(".toolbar-item.downMoveRow-action button");
+		const moveBottomButton = container.querySelectorAll(".toolbar-item.bottomMoveRow-action button");
 		expect(moveTopButton).to.have.length(1);
 		expect(moveUpButton).to.have.length(1);
 		expect(moveDownButton).to.have.length(1);
@@ -455,7 +455,7 @@ describe("structuretable control renders correctly", () => {
 		let tableWrapper = container.querySelector("div[data-id='properties-keys']");
 		// Clear selected rows from table toolbar
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
-		const cancelButton = tableToolbar.querySelector("button.properties-action-cancel");
+		const cancelButton = tableToolbar.querySelector("button.action-cancel");
 		fireEvent.click(cancelButton);
 
 		// select the add column button
@@ -496,9 +496,9 @@ describe("structuretable control renders correctly", () => {
 		// ensure table toolbar has delete button select it
 		tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const deleteButton = tableToolbar[0].querySelectorAll("button.properties-action-delete");
-		expect(deleteButton).to.have.length(1);
-		fireEvent.click(deleteButton[0]); // remove a row
+		const deleteButton = container.querySelector(".toolbar-item.delete-action button");
+		expect(deleteButton).to.not.be.null;
+		fireEvent.click(deleteButton); // remove a row
 
 
 		// validate the first row is deleted

@@ -379,7 +379,7 @@ describe("StructureListEditorControl renders correctly", () => {
 		// ensure table toolbar has Delete button and select it
 		tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const deleteButton = tableToolbar[0].querySelector("button.properties-action-delete");
+		const deleteButton = container.querySelector(".toolbar-item.delete-action button");
 		fireEvent.click(deleteButton);
 
 		// validate the first row is deleted
@@ -629,7 +629,7 @@ describe("StructureListEditor render from paramdef", () => {
 		// select the first row and move it to the bottom and make sure the error messages stay aligned.
 		tableUtilsRTL.clickTableRows(summaryPanel, [0]);
 		summaryPanel = container.querySelector("div.properties-wf-content.show");
-		const moveRowBottom = container.querySelector("div.properties-table-toolbar").querySelector("button.table-row-move-bottom-button");
+		const moveRowBottom = container.querySelector(".toolbar-item.bottomMoveRow-action button");
 		fireEvent.click(moveRowBottom);
 		let messages = renderedController.getAllErrorMessages();
 		let rowErrorMsg = {
@@ -647,7 +647,7 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
 		// Clear row selection
-		const cancelButton = container.querySelector("div.properties-table-toolbar").querySelector("button.properties-action-cancel");
+		const cancelButton = container.querySelector("div.properties-table-toolbar").querySelector("button.action-cancel");
 		fireEvent.click(cancelButton);
 
 		// select the second from the last row and move it to the top and make sure the error messages stay aligned.
@@ -655,7 +655,7 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(tableData).to.have.length(5);
 		tableUtilsRTL.clickTableRows(summaryPanel, [3]);
 		summaryPanel = container.querySelector("div.properties-wf-content.show");
-		const moveRowTop = container.querySelector("div.properties-table-toolbar").querySelector("button.table-row-move-top-button");
+		const moveRowTop = container.querySelector(".toolbar-item.topMoveRow-action button");
 		fireEvent.click(moveRowTop);
 
 		messages = renderedController.getAllErrorMessages();
@@ -765,7 +765,7 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(selectedRows.length).to.equal(rows.length);
 
 		// Remove all rows
-		const deleteButton = container.querySelector("div.properties-table-toolbar").querySelector("button.properties-action-delete");
+		const deleteButton = container.querySelector(".toolbar-item.delete-action button");
 		fireEvent.click(deleteButton);
 		tableWrapper = container.querySelector("div[data-id='properties-ctrl-structurelisteditorTableInput']");
 
