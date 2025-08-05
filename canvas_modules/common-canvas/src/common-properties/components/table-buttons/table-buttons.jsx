@@ -91,6 +91,10 @@ class TableButtons extends React.Component {
 				buttonDef.incLabelWithIcon = null; // Display aria-label for this icon only button
 			}
 
+			if (buttonConfig.kind) {
+				buttonDef.kind = buttonConfig.kind;
+			}
+
 			if (buttonConfig.description) {
 				buttonDef.tooltip = buttonConfig.description.text;
 			}
