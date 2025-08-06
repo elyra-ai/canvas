@@ -818,7 +818,7 @@ function _makeButton(button, l10nProvider) {
 	if (button.description) {
 		buttonDescription = new Description(l10nProvider.l10nDesc(button, button.description));
 	}
-	return new Button(button.id, buttonLabel, buttonDescription, button.icon, button.carbonIcon, button.enabled, button.divider);
+	return new Button(button.id, buttonLabel, buttonDescription, button.icon, button.carbonIcon, button.enabled, button.kind, button.divider);
 }
 
 function _parameterValueLabels(parameter, l10nProvider) {
