@@ -80,6 +80,7 @@ class TableToolbar extends React.Component {
 		const applyLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL);
 		const rejectLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
 		const editBtn = {
+			action: "multiSelectEdit",
 			jsx: (
 				<SubPanelInvoker ref={(ref) => (this.subPanelInvoker = ref)}
 					rightFlyout={this.props.rightFlyout}
@@ -101,9 +102,9 @@ class TableToolbar extends React.Component {
 		};
 
 		const deleteBtn = (this.props.addRemoveRows && !this.props.isReadonlyTable && !this.props.isSingleSelectTable)
-			? [{ action: "delete", label: deleteLabel, iconEnabled: (<TrashCan />), enable: true, kind: "primary" },
-				{ divider: true }] : [];
+			? { action: "delete", label: deleteLabel, iconEnabled: (<TrashCan />), enable: true, kind: "primary" } : null;
 		const cancelBtn = {
+			action: "cancel",
 			jsx: (
 				<Button size="sm" className="action-cancel" onClick={this.handleCancel}>
 					{cancelLabel}
@@ -112,9 +113,9 @@ class TableToolbar extends React.Component {
 		};
 		// For delete, edit, show its divider only if those icons are present
 		const toolbarConfig = [
-			...(this.props.moveableRows ? [...this.getTableRowMoveButtons(), { divider: true }] : []),
-			...deleteBtn,
-			...(this.props.multiSelectEdit ? [editBtn, { divider: true }] : []),
+			...(this.props.moveableRows ? this.getTableRowMoveButtons() : []),
+			deleteBtn,
+			this.props.multiSelectEdit ? editBtn : null,
 			cancelBtn
 		];
 		return toolbarConfig;
@@ -177,6 +178,7 @@ class TableToolbar extends React.Component {
 			? `${this.props.selectedRows.length} ${singleRowSelectedLabel}`
 			: `${this.props.selectedRows.length} ${multiRowsSelectedLabel}`;
 		return [{
+			action: "summary",
 			jsx: (<div className="properties-batch-summary" >
 				<span >{title}</span>
 			</div>)
@@ -336,7 +338,7 @@ class TableToolbar extends React.Component {
 						instanceId={0}
 						size="sm"
 						toolbarActionHandler={this.toolbarActionHandler}
-						additionalText="overflowmenu"
+						additionalText={{ overflowMenuLabel: formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_OVERFLOW_LABEL) }}
 					/>
 				</div>
 			);

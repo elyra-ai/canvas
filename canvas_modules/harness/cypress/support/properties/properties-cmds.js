@@ -210,7 +210,7 @@ Cypress.Commands.add("selectAllRowsInTable", (propertyId) => {
 Cypress.Commands.add("cancelRowSelection", (propertyId) => {
 	cy.get(`div[data-id='properties-ft-${propertyId}']`)
 		.find(".properties-table-toolbar")
-		.find("button.properties-action-cancel")
+		.find("button.action-cancel")
 		.click();
 });
 
@@ -230,7 +230,7 @@ Cypress.Commands.add("clickButtonInTable", (buttonName, propertyId) => {
 			} else {
 				cy.wrap(tableDiv)
 					.find(".properties-table-toolbar")
-					.find("button.properties-action-delete")
+					.find(".toolbar-item.delete-action button")
 					.click();
 			}
 		});

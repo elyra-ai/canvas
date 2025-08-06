@@ -26,6 +26,7 @@
 	.toolbar-div, .toolbar-jsx-item, .toolbar-overflow-item {
 		background-color: carbon.$interactive;
 		button {
+			border: transparent; // border not needed for overflow and other buttons
 			&:enabled {
 				background-color: carbon.$interactive; // override bg set in canvas toolbar
 				&:hover {
@@ -59,6 +60,9 @@
 		.toolbar-sub-menu-item {
 			height: carbon.$spacing-07;
 		}
+		.toolbar-item-content .overflow-item {
+			padding-left: carbon.$spacing-02;
+		}
 	}
 
 	.properties-batch-summary {
@@ -70,5 +74,14 @@
 
 	.action-cancel {
 		width: carbon.$spacing-05;
+	}
+	.action-cancel::before {
+		// Vertical line before cancel button- Custom divider
+		position: absolute;
+		background-color: carbon.$text-on-color;
+		block-size: carbon.$spacing-05;
+		content: "";
+		inline-size: 0.0625rem;
+		inset-inline-start: 0;
 	}
 }
