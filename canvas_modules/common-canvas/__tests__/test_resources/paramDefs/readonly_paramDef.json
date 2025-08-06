@@ -18,7 +18,7 @@
         "Hopper",
         "Turing",
         "Shannon",
-        "Babbage"
+        "Babbage    with    space"
       ]
     ],
     "readonly_table_cond": [
@@ -50,7 +50,7 @@
     {
       "id": "readonly_default",
       "type": "string",
-      "default": "Shockley"
+      "default": "Shockley    and   space"
     },
     {
       "id": "readonly_undefined",
@@ -424,7 +424,11 @@
         ]
       }
     ],
+    "description": {
+      "default": "This section contains readonly fields and controls. The 'Conditions' panel includes parameters for handling errors, warnings, visibility, and disabling fields. Click on the provided link to test link redirection."
+    },
     "help": {
+      "id": "link_for_description",
       "data": {
         "url": "randomUrl"
       }

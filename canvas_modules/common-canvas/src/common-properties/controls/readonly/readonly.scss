@@ -27,7 +27,7 @@
 		text-overflow: clip;
 	}
 	span {
-		white-space: normal;
+		white-space: pre;
 		line-height: 1.5;
 		overflow-wrap: break-word;
 		user-select: text; // Readonly content is selectable
@@ -61,7 +61,7 @@
 	}
 	.tooltip-trigger {
 		span {
-			white-space: nowrap;
+			white-space: pre;
 			text-overflow: ellipsis;
 			overflow: hidden;
 		}
