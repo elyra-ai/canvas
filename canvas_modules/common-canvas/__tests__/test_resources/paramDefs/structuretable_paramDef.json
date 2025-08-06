@@ -22,7 +22,7 @@
 			[
 				1,
 				"BP",
-				"BP-1",
+				"BP-1      with    spaces",
 				"blood pressure plus additional characters to test display_chars and the default limit of the number of characters.",
 				"",
 				"1982-02-23"
@@ -2508,6 +2508,7 @@
 							"default": "Label btn"
 						},
 						"enabled": true,
+						"kind": "primary",
 						"description": {
 							"default": "Custom button label only."
 						}

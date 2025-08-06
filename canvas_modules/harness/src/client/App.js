@@ -1431,6 +1431,10 @@ class App extends React.Component {
 	buttonHandler(data) {
 		this.log("buttonHandler()", data);
 
+		if (data.propertyId.name === "job-editor-terminal-outputs-table") {
+			this.propertiesController.updatePropertyValue({ name: "job-editor-terminal-outputs-error" }, true, false);
+		}
+
 		// Trigger conditions to show an error
 		if (data.propertyId.name === "readonlyTableError") {
 			this.propertiesController.validateInput(data.propertyId);

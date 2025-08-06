@@ -18,7 +18,7 @@
         "Hopper",
         "Turing",
         "Shannon",
-        "Babbage"
+        "Babbage    with    space"
       ]
     ],
     "readonly_table_cond": [
@@ -50,7 +50,7 @@
     {
       "id": "readonly_default",
       "type": "string",
-      "default": "Shockley"
+      "default": "Shockley    and   space"
     },
     {
       "id": "readonly_undefined",
