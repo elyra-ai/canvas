@@ -34,12 +34,26 @@ import * as ControlUtils from "./../../util/control-utils";
 import { get } from "lodash";
 import ExpressionToggle from "./expression-toggle/expression-toggle";
 
-import { keymap, placeholder } from "@codemirror/view";
-import { defaultKeymap, indentWithTab, insertNewline } from "@codemirror/commands";
-import { basicSetup, EditorView } from "codemirror";
-import { Compartment } from "@codemirror/state";
+import {
+	keymap,
+	placeholder,
+	EditorView,
+	highlightSpecialChars,
+	drawSelection,
+	highlightActiveLine,
+	dropCursor,
+	rectangularSelection,
+	crosshairCursor,
+	lineNumbers,
+	highlightActiveLineGutter
+} from "@codemirror/view";
+import { defaultKeymap, indentWithTab, insertNewline, history, historyKeymap } from "@codemirror/commands"; // eslint-disable-line no-shadow
+import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
+import { autocompletion, completionKeymap, closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
+import { lintKeymap } from "@codemirror/lint";
+import { Compartment, EditorState } from "@codemirror/state";
 import { tags } from "@lezer/highlight";
-import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { HighlightStyle, syntaxHighlighting, indentOnInput, bracketMatching, foldGutter, foldKeymap } from "@codemirror/language";
 import { python } from "@codemirror/lang-python";
 import { sql } from "@codemirror/lang-sql";
 import { javascript } from "@codemirror/lang-javascript";
@@ -211,7 +225,31 @@ class ExpressionControl extends React.Component {
 				keymap.of([{ key: "Enter", run: insertNewline }, indentWithTab, defaultKeymap]), // This should be before basicSetup to insertNewLine on "Enter"
 				customCompletions,
 				syntaxHighlighting(myHighlightStyle),
-				basicSetup,
+				lineNumbers(), // basicSetup start
+				highlightActiveLineGutter(),
+				highlightSpecialChars(),
+				history(),
+				foldGutter(),
+				drawSelection(),
+				dropCursor(),
+				EditorState.allowMultipleSelections.of(true),
+				indentOnInput(),
+				bracketMatching(),
+				closeBrackets(),
+				autocompletion(),
+				rectangularSelection(),
+				crosshairCursor(),
+				highlightActiveLine(),
+				highlightSelectionMatches(),
+				keymap.of([
+					...closeBracketsKeymap,
+					...defaultKeymap,
+					...searchKeymap,
+					...historyKeymap,
+					...foldKeymap,
+					...completionKeymap,
+					...lintKeymap
+				]), // basicSetup end
 				this.events(),
 				language,
 				placeholder(this.props.control.additionalText),
