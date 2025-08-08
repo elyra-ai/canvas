@@ -173,7 +173,7 @@ describe("selectcolumns renders correctly", () => {
 		tableUtilsRTL.selectCheckboxes(container, [1]);
 		// ensure Table toolbar has delete button and select it
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
-		const deleteButton = tableToolbar.querySelectorAll("button.properties-action-delete");
+		const deleteButton = tableToolbar.querySelectorAll(".toolbar-item.delete-action button");
 		expect(deleteButton).to.have.length(1);
 		fireEvent.click(deleteButton[0]);
 		// validate the second row is deleted
@@ -547,7 +547,7 @@ describe("selectcolumns control functions correctly in a table", () => {
 		// Since 2 rows are selected, table toolbar shows up
 		// Clear row selection to show "Add columns" button
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
-		const cancelButton = tableToolbar.querySelectorAll("button.properties-action-cancel");
+		const cancelButton = tableToolbar.querySelectorAll("button.action-cancel");
 		expect(cancelButton).to.have.length(1);
 		fireEvent.click(cancelButton[0]);
 

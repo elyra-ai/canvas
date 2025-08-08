@@ -186,8 +186,7 @@ describe("summary panel renders error/warning status correctly", () => {
 		const tableInputBodyData = wideflyout.querySelector("div[data-id='properties-ft-structurelisteditorTableInput']");
 		summarypanelParamDef.current_parameters.structurelisteditorTableInput.forEach((value) => {
 			tableUtilsRTL.selectCheckboxes(tableInputBodyData, [0]);
-			const tableToolbar = wideflyout.querySelector("div.properties-table-toolbar");
-			const tableInputRemoveButton = tableToolbar.querySelectorAll("button.properties-action-delete");
+			const tableInputRemoveButton = container.querySelectorAll(".toolbar-item.delete-action button");
 			expect(tableInputRemoveButton).to.have.length(1);
 			fireEvent.click(tableInputRemoveButton[0]);
 		});

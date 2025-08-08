@@ -181,7 +181,7 @@ describe("condition messages should add alerts tab for tables", () => {
 		tableUtilsRTL.selectCheckboxes(tableData, [0, 1]);
 		// ensure table toolbar has delete button and select it
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
-		const deleteButton = tableToolbar.querySelectorAll("button.properties-action-delete");
+		const deleteButton = tableToolbar.querySelectorAll(".toolbar-item.delete-action button");
 		expect(deleteButton).to.have.length(1);
 		fireEvent.click(deleteButton[0]); // remove a row
 
