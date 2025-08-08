@@ -71,6 +71,9 @@
 		color: carbon.$text-on-color;
 		min-width: 0;
 	}
+	.properties-action-multi-select-edit{
+		padding-top: carbon.$spacing-03; // adjustment for the icon-only Edit btn
+	}
 
 	.action-cancel {
 		width: carbon.$spacing-05;
