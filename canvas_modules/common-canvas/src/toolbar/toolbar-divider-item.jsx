@@ -20,19 +20,14 @@ import PropTypes from "prop-types";
 class ToolbarDividerItem extends React.Component {
 	render() {
 		const dividerClassName = this.props.isInMenu ? "toolbar-divider-overflow" : "toolbar-divider";
-		let toolbarOverflowButton;
 
 		// Add a space as content. When using display: inline-block the div needs
 		// some content so it is displayed inline with the other elements of the
 		// toolbar. With no content it is displayed above (!) the other elements
-		if (!this.props.isInMenu) { // Ensure ellipsis appears for overflowing toolbar content when width is reduced.
-			toolbarOverflowButton = (<div className="toolbar-overflow-container">
-				<div className={dividerClassName} aria-hidden >&nbsp;</div>
-			</div>);
-		} else {
-			toolbarOverflowButton = <div className={dividerClassName} aria-hidden >&nbsp;</div>;
-		}
-		return toolbarOverflowButton;
+		// Ensure ellipsis appears for overflowing toolbar content when width is reduced.
+		return (
+			<div className={dividerClassName} aria-hidden >&nbsp;</div>
+		);
 	}
 }
 
