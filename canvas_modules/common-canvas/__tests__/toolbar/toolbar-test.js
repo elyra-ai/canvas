@@ -45,7 +45,7 @@ describe("Toolbar renders correctly", () => {
 		expect(container.getElementsByClassName("toolbar-left-bar")).to.have.length(1);
 		expect(container.getElementsByClassName("toolbar-item")).to.have.length(10);
 		expect(container.getElementsByClassName("toolbar-divider")).to.have.length(2);
-		expect(container.getElementsByClassName("toolbar-overflow-container")).to.have.length(10);
+		expect(container.getElementsByClassName("toolbar-overflow-container")).to.have.length(11);
 	});
 
 	it("should render a Toolbar with just a right bar defined", () => {
