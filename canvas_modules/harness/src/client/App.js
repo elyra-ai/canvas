@@ -1469,6 +1469,8 @@ class App extends React.Component {
 				iconComponenet = null;
 			}
 			callbackIcon(iconComponenet);
+		} else if (data.type === "customDataTypeIcon") { // custom icon from consumer app for custom data type
+			callbackIcon(<Help size={32} />);
 		}
 	}
 

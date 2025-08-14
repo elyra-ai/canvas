@@ -29,7 +29,7 @@ import { MESSAGE_KEYS, DATA_TYPE, SORT_DIRECTION, ROW_SELECTION } from "./../../
 import Icon from "./../../../icons/icon.jsx";
 import { Reset } from "@carbon/react/icons";
 
-import { has, isEmpty, sortBy, isEqual } from "lodash";
+import { isEmpty, sortBy, isEqual } from "lodash";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 
@@ -96,29 +96,14 @@ export default class FieldPicker extends React.Component {
 		this.setState({ fields: fields });
 	}
 
-	getAvailableFilters() {
+	getAvailableFilters() { // supports custom data type also
 		const filters = [];
-		for (const key in DATA_TYPE) {
-			if (has(DATA_TYPE, key)) {
-				const dataType = DATA_TYPE[key];
-				for (const field of this.props.fields) {
-					if (dataType === field.type) {
-						const filter = {
-							"type": field.type
-						};
-						let duplicate = false;
-						for (const filtered of filters) {
-							if (filtered.type === filter.type) {
-								duplicate = true;
-								break;
-							}
-						}
-						if (!duplicate) {
-							filters.push(filter);
-						}
-						break;
-					}
-				}
+		for (const field of this.props.fields) {
+			const filter = { "type": field.type };
+			// Check if the filter is a duplicate
+			const duplicate = filters.some((filtered) => filtered.type === filter.type);
+			if (!duplicate) {
+				filters.push(filter);
 			}
 		}
 		return filters;
@@ -188,7 +173,7 @@ export default class FieldPicker extends React.Component {
 				column: "dataType",
 				content: (<div className="properties-fp-data">
 					<div className={"properties-fp-data-type-icon"}>
-						<Icon type={field.type} />
+						{this.getIconForDataType(field.origName, field.type)}
 					</div>
 					<div className="properties-fp-field-type">{field.type}</div>
 				</div>),
@@ -235,6 +220,24 @@ export default class FieldPicker extends React.Component {
 			}
 		}
 		return deltas;
+	}
+	// Get icon based on the given datatype
+	// For Custom datatype - need callback to get the icon from the consuming app
+	getIconForDataType(buttonId, type) {
+		const buttonIconHandler = this.props.controller.getHandlers().buttonIconHandler;
+		let icon = null;
+		if (Object.values(DATA_TYPE).includes(type)) {
+			icon = <Icon type={type} />;
+		} else if (buttonIconHandler) {
+			buttonIconHandler({
+				type: "customDataTypeIcon",
+				buttonId: buttonId,
+				dataType: type
+			}, (appIcon) => {
+				icon = appIcon;
+			});
+		}
+		return icon;
 	}
 
 	handleSave() {
@@ -348,7 +351,9 @@ export default class FieldPicker extends React.Component {
 				}
 			}
 			const filterTooltipId = "tooltip-filters-" + ind;
-			const dataTypeLabel = PropertyUtils.formatMessage(that.props.controller.getReactIntl(), MESSAGE_KEYS[`FIELDPICKER_${filter.type.toUpperCase()}_LABEL`]);
+			const dataTypeLabel = Object.values(DATA_TYPE).includes(filter.type)
+				? PropertyUtils.formatMessage(that.props.controller.getReactIntl(), MESSAGE_KEYS[`FIELDPICKER_${filter.type.toUpperCase()}_LABEL`])
+				: filter.type; // label custom type as is
 			const tooltip = (
 				<div className="properties-tooltips">
 					{dataTypeLabel}
@@ -371,7 +376,9 @@ export default class FieldPicker extends React.Component {
 								aria-label={filterLabel + " " + filter.type}
 								kind="ghost"
 							>
-								<Icon type={filter.type} disabled={!enabled} />
+								{React.cloneElement(that.getIconForDataType(filter.origName, filter.type), {
+									disabled: !enabled
+								})}
 							</Button>
 						</Tooltip>
 					</div>
