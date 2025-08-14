@@ -476,14 +476,13 @@ class FlexibleTable extends React.Component {
 	*/
 	generateTableHeaderRow() {
 		const headers = [];
-		const DEFAULT_COLUMN_WIDTH = 120;
 		let searchLabel = "";
 		for (var j = 0; j < this.props.columns.length; j++) {
 			const columnDef = this.props.columns[j];
 			if (typeof this.props.filterable !== "undefined" && this.props.filterable[0] === columnDef.key) {
 				searchLabel = columnDef.label;
 			}
-			const width = Math.abs(parseInt(this.state.columnWidths?.[j] ?? DEFAULT_COLUMN_WIDTH, 10));
+			const width = Math.abs(parseInt(this.state.columnWidths?.[j] ?? DEFAULT_COL_MIN_WIDTH, 10));
 			let headerLabel;
 			if (typeof (columnDef.label) === "object") {
 				headerLabel = columnDef.label.props.labelText;
