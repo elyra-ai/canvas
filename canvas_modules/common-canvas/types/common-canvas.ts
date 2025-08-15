@@ -1277,6 +1277,8 @@ export interface CommonCanvasProps {
   /**
    * https://elyra-ai.github.io/canvas/01.09.10-panels/
    */
+  showLeftFlyout?: boolean;
+  leftFlyoutContent?: ReactNode | FunctionComponent;
   showRightFlyout?: boolean;
   rightFlyoutContent?: ReactNode | FunctionComponent;
   showTopPanel?: boolean;
@@ -1285,4 +1287,9 @@ export interface CommonCanvasProps {
   bottomPanelContent?: ReactNode | FunctionComponent;
 }
 
+export interface PaletteProps {
+  canvasController: CanvasController;
+}
+
 export declare class CommonCanvas extends React.Component<CommonCanvasProps> {}
+export declare class Palette extends React.Component<PaletteProps> {}
