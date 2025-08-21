@@ -359,6 +359,7 @@ export default class FieldPicker extends React.Component {
 					{dataTypeLabel}
 				</div>
 			);
+			const iconElement = that.getIconForDataType(filter.origName, filter.type);
 			const row = (
 				<li key={"filters" + ind} className="properties-fp-filter-list-li">
 					<div className="properties-tooltips-filter">
@@ -376,9 +377,7 @@ export default class FieldPicker extends React.Component {
 								aria-label={filterLabel + " " + filter.type}
 								kind="ghost"
 							>
-								{React.cloneElement(that.getIconForDataType(filter.origName, filter.type), {
-									disabled: !enabled
-								})}
+								{iconElement && React.cloneElement(iconElement, { disabled: !enabled })}
 							</Button>
 						</Tooltip>
 					</div>
