@@ -69,6 +69,7 @@ export default class FieldPicker extends React.Component {
 		this.onSort = this.onSort.bind(this);
 		this.onFilter = this.onFilter.bind(this);
 		this.updateFieldSelections = this.updateFieldSelections.bind(this);
+		this.getIconForDataType = this.getIconForDataType.bind(this);
 		this.filterList = this.getAvailableFilters();
 	}
 
