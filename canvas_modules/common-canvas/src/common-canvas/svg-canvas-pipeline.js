@@ -405,25 +405,25 @@ export default class SVGCanvasPipeline {
 	/* ------------------------------------------------------------------------------- */
 
 	// Returns the next sub-object from the set of focusable sub-objects.
-	getNextNodeSubObject(node) {
-		return this.getAccessibility().getNextNodeSubObject(node);
+	getNextSubObject(d) {
+		return this.getAccessibility().getNextSubObject(d);
 	}
 
 	// Returns the previous sub-object from the set of focusable sub-objects.
-	getPreviousNodeSubObject(node) {
-		return this.getAccessibility().getPreviousNodeSubObject(node);
+	getPreviousSubObject(d) {
+		return this.getAccessibility().getPreviousSubObject(d);
 	}
 
 	// Resets the index for the current sub-object.
-	resetFocusNodeSubObjectIndex() {
-		this.getAccessibility().resetFocusNodeSubObjectIndex();
+	resetFocusSubObjectIndex() {
+		this.getAccessibility().resetFocusSubObjectIndex();
 	}
 
-	// Returns an arry of focuable sub-elements of a node. These are items within
-	// the node that the user might want to interact with using the keyboard such
-	// as: visible ports; label decorations or decorations which are hot spots;
-	// the node label.
-	getFocusableNodeSubObjects(node) {
-		return this.getAccessibility().getFocusableNodeSubObjects();
+	// Returns an arry of focuable sub-elements of a node or link. If the object
+	// is a node they might be visible ports or focusable decorations. If the
+	// object is a link they might be focuable decoarations or start and end
+	// points of detached links.
+	getFocusableSubObjects(d) {
+		return this.getAccessibility().getFocusableSubObjects(d);
 	}
 }

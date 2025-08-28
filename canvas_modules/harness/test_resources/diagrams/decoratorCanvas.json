@@ -36,7 +36,8 @@
                       "id": "assocDec1",
                       "position": "source",
                       "x_pos": -10,
-                      "y_pos": -10
+                      "y_pos": -10,
+                      "focusable": true
                     },
                     {
                       "id": "assocDec2",
@@ -46,13 +47,15 @@
                       "height": 60,
                       "class_name": "zoom-in-decoration",
                       "image": "/images/decorators/zoom-in_32.svg",
-                      "hotspot": true
+                      "hotspot": true,
+                      "focusable": true
                     },
                     {
                       "id": "assocDec3",
                       "position": "target",
                       "x_pos": -10,
-                      "y_pos": -10
+                      "y_pos": -10,
+                      "focusable": true
                     },
                     {
                       "id": "assocDec4",
@@ -241,7 +244,8 @@
                         {
                           "id": "123",
                           "position": "source",
-                          "y_pos": -10
+                          "y_pos": -10,
+                          "focusable": true
                         },
                         {
                           "id": "456",
@@ -250,13 +254,15 @@
                           "y_pos": -10,
                           "class_name": "zoom-in-decoration",
                           "image": "/images/decorators/zoom-in_32.svg",
-                          "hotspot": true
+                          "hotspot": true,
+                          "focusable": true
                         },
                         {
                           "id": "789",
                           "position": "target",
                           "x_pos": -20,
-                          "y_pos": -10
+                          "y_pos": -10,
+                          "focusable": true
                         }
                       ]
                     }
@@ -444,13 +450,15 @@
                   "id": "2",
                   "position": "topCenter",
                   "x_pos": 0,
-                  "y_pos": 0
+                  "y_pos": 0,
+                  "focusable": true
                 },
                 {
                   "id": "3",
                   "position": "topRight",
                   "x_pos": 0,
-                  "y_pos": 0
+                  "y_pos": 0,
+                  "focusable": true
                 },
                 {
                   "id": "4",
@@ -468,7 +476,8 @@
                   "id": "6",
                   "position": "middleRight",
                   "x_pos": 0,
-                  "y_pos": 0
+                  "y_pos": 0,
+                  "focusable": true
                 },
                 {
                   "id": "7",
@@ -480,13 +489,15 @@
                   "id": "8",
                   "position": "bottomCenter",
                   "x_pos": 0,
-                  "y_pos": 0
+                  "y_pos": 0,
+                  "focusable": true
                 },
                 {
                   "id": "9",
                   "position": "bottomRight",
                   "x_pos": 0,
-                  "y_pos": 0
+                  "y_pos": 0,
+                  "focusable": true
                 }
               ]
             }
