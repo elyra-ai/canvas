@@ -552,10 +552,9 @@ export default class SVGCanvasUtilsAccessibility {
 		this.focusSubObjectIndex = -1;
 	}
 
-	// Returns an arry of focuable sub-elements of a node. These are items within
-	// the node that the user might want to interact with using the keyboard such
-	// as: visible ports; label decorations or decorations which are hot spots;
-	// the node label.
+	// Returns an arry of focuable sub-elements of a node or link. These are items within
+	// the node or link that the user might want to interact with using the keyboard such
+	// as: visible, focusable ports or focuable decorations
 	getFocusableSubObjects(d) {
 		const focusableSubElements = [];
 
@@ -580,20 +579,6 @@ export default class SVGCanvasUtilsAccessibility {
 		// Decorations apply for nodes AND links
 		if (d.decorations) {
 			d.decorations.forEach((dec) => {
-				if (dec.focusable) {
-					focusableSubElements.push({ type: "decoration", obj: dec });
-				}
-			});
-		}
-
-		return focusableSubElements;
-	}
-
-	getFocusableLinkSubObjects(link) {
-		const focusableSubElements = [];
-
-		if (link.decorations) {
-			link.decorations.forEach((dec) => {
 				if (dec.focusable) {
 					focusableSubElements.push({ type: "decoration", obj: dec });
 				}
