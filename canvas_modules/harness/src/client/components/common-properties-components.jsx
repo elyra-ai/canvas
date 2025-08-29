@@ -998,7 +998,7 @@ class CommonPropertiesComponents extends React.Component {
 					<p>An expression editing field is rendered for a parameter of <span className="harness-highlight">type</span> string
 						and <span className="harness-highlight">role</span> expression.
 						The expression field provides syntax highlighting and text auto completion based on language.
-						Languages supported are <span className="harness-highlight">Spark SQL</span> and
+						Languages supported are <span className="harness-highlight">Spark SQL</span>, <span className="harness-highlight">JSON</span> and
 					<span className="harness-highlight"> Modeler CLEM</span>. Press CTRL-SPACE to see the
 						text auto completion feature.</p>
 					<p>An expression builder is provided when the expression control is display in

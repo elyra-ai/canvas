@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "code": "Age >= 55",
+    "code_json": "{ \"key\": \"value\" }",
     "code_rows": "Age < 55",
     "string": "test",
     "string2": "test",
@@ -18,6 +19,10 @@
   "parameters": [
     {
       "id": "code",
+      "type": "string"
+    },
+    {
+      "id": "code_json",
       "type": "string"
     },
     {
@@ -122,6 +127,25 @@
         },
         "description": {
           "default": "Enter Python code"
+        },
+        "text_before": {
+          "default": "Press ctrl-space to autocomplete"
+        },
+        "control": "code",
+        "class_name": "code-control-class"
+      },
+      {
+        "parameter_ref": "code_json",
+        "language": "json",
+        "enable_maximize": true,
+        "data": {
+          "tearsheet_ref": "tearsheet1"
+        },
+        "label": {
+          "default": "Code"
+        },
+        "description": {
+          "default": "Enter JSON code"
         },
         "text_before": {
           "default": "Press ctrl-space to autocomplete"
@@ -268,6 +292,7 @@
         },
         "parameter_refs": [
           "code",
+          "code_json",
           "string",
           "string2",
           "date_mdy",
@@ -308,6 +333,7 @@
         },
         "parameter_refs": [
           "code",
+          "code_json",
           "hide",
           "code_rows"
         ]
