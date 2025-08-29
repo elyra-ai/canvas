@@ -522,8 +522,8 @@ export default class SVGCanvasUtilsAccessibility {
 	/* ------------------------------------------------------------------------------- */
 
 	// Returns the next sub-object from the set of focusable sub-objects.
-	getNextNodeSubObject(node) {
-		const subObjs = this.getFocusableNodeSubObjects(node);
+	getNextSubObject(d) {
+		const subObjs = this.getFocusableSubObjects(d);
 
 		this.focusSubObjectIndex++;
 
@@ -535,8 +535,8 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	// Returns the previous sub-object from the set of focusable sub-objects.
-	getPreviousNodeSubObject(node) {
-		const subObjs = this.getFocusableNodeSubObjects(node);
+	getPreviousSubObject(d) {
+		const subObjs = this.getFocusableSubObjects(d);
 
 		this.focusSubObjectIndex--;
 
@@ -548,44 +548,43 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	// Resets the index for the current sub-object.
-	resetFocusNodeSubObjectIndex() {
+	resetFocusSubObjectIndex() {
 		this.focusSubObjectIndex = -1;
 	}
 
-	// Returns an arry of focuable sub-elements of a node. These are items within
-	// the node that the user might want to interact with using the keyboard such
-	// as: visible ports; label decorations or decorations which are hot spots;
-	// the node label.
-	getFocusableNodeSubObjects(node) {
+	// Returns an arry of focuable sub-elements of a node or link. These are items within
+	// the node or link that the user might want to interact with using the keyboard such
+	// as: visible, focusable ports or focuable decorations
+	getFocusableSubObjects(d) {
 		const focusableSubElements = [];
 
-		if (node.inputs && node.layout.inputPortDisplay && node.layout.inputPortFocusable) {
-			node.inputs.forEach((ip) => {
-				focusableSubElements.push({ type: "inputPort", obj: ip });
+		if (CanvasUtils.getObjectTypeName(d) === "node") {
+			if (d.inputs && d.layout.inputPortDisplay && d.layout.inputPortFocusable) {
+				d.inputs.forEach((ip) => {
+					focusableSubElements.push({ type: "inputPort", obj: ip });
+				});
+			}
+
+			if (d.outputs && d.layout.outputPortDisplay && d.layout.outputPortFocusable) {
+				d.outputs.forEach((op) => {
+					focusableSubElements.push({ type: "outputPort", obj: op });
+				});
+			}
+
+			if (d.focusFunction) {
+				focusableSubElements.push({ type: "reactObject", obj: d });
+			}
+		}
+
+		// Decorations apply for nodes AND links
+		if (d.decorations) {
+			d.decorations.forEach((dec) => {
+				if (dec.focusable) {
+					focusableSubElements.push({ type: "decoration", obj: dec });
+				}
 			});
 		}
-
-		if (node.outputs && node.layout.outputPortDisplay && node.layout.outputPortFocusable) {
-			node.outputs.forEach((op) => {
-				focusableSubElements.push({ type: "outputPort", obj: op });
-			});
-		}
-
-		if (node.focusFunction) {
-			focusableSubElements.push({ type: "reactObject", obj: node });
-		}
-
-		// Uncomment this code when we want to support keyboard navigation to
-		// node or link decorations.
-		// if (node.decoration) {
-		//      node.decorations.forEach((dec) => {
-		//              if (dec.hotspot || dec.label_editable || dec.allow_focus) {
-		//                      focusableSubElements.push({ type: "decoration", obj: dec });
-		//              }
-		//      });
-		// }
 
 		return focusableSubElements;
 	}
-
 }
