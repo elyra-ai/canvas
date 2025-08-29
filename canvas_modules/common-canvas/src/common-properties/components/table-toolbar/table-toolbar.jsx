@@ -20,6 +20,8 @@ import { connect } from "react-redux";
 import { Button } from "@carbon/react";
 import { TrashCan, Edit, UpToTop, ChevronUp, ChevronDown, DownToBottom } from "@carbon/react/icons";
 import { MESSAGE_KEYS, STATES } from "../../constants/constants";
+import Toolbar from "../../../toolbar/toolbar";
+
 import { formatMessage } from "../../util/property-utils";
 import SubPanelInvoker from "./../../panels/sub-panel/invoker";
 import { cloneDeep } from "lodash";
@@ -38,6 +40,7 @@ class TableToolbar extends React.Component {
 		this.bottomMoveRow = this.bottomMoveRow.bind(this);
 		this.getLeastValue = this.getLeastValue.bind(this);
 		this.getMaxValue = this.getMaxValue.bind(this);
+		this.toolbarActionHandler = this.toolbarActionHandler.bind(this);
 	}
 
 	onSubPanelHidden(applyChanges) {
@@ -68,6 +71,56 @@ class TableToolbar extends React.Component {
 		}
 		return maxValue;
 	}
+
+
+	getRightToolbarConfig() {
+		const editLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_EDIT);
+		const deleteLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DELETE);
+		const cancelLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_CANCEL);
+		const applyLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL);
+		const rejectLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
+		const editBtn = {
+			action: "multiSelectEdit",
+			jsx: (
+				<SubPanelInvoker ref={(ref) => (this.subPanelInvoker = ref)}
+					rightFlyout={this.props.rightFlyout}
+					applyLabel={applyLabel}
+					rejectLabel={rejectLabel}
+					controller={this.props.controller}
+				>
+					<Button
+						className="properties-action-multi-select-edit"
+						size="sm"
+						renderIcon={Edit}
+						hasIconOnly
+						iconDescription={editLabel}
+						tooltipPosition="bottom"
+						onClick={this.showSubPanel}
+					/>
+				</SubPanelInvoker>
+			)
+		};
+
+		const deleteBtn = (this.props.addRemoveRows && !this.props.isReadonlyTable && !this.props.isSingleSelectTable)
+			? { action: "delete", label: deleteLabel, iconEnabled: (<TrashCan />), enable: true, kind: "primary" } : null;
+		const cancelBtn = {
+			action: "cancel",
+			jsx: (
+				<Button size="sm" className="action-cancel" onClick={this.handleCancel}>
+					{cancelLabel}
+				</Button>
+			)
+		};
+		// For delete, edit, show its divider only if those icons are present
+		const toolbarConfig = [
+			...(this.props.moveableRows ? this.getTableRowMoveButtons() : []),
+			deleteBtn,
+			this.props.multiSelectEdit ? editBtn : null,
+			cancelBtn
+		];
+		return toolbarConfig;
+	}
+
 
 	// enabled the move up and down arrows based on which row is selected
 	getTableRowMoveButtons() {
@@ -104,51 +157,48 @@ class TableToolbar extends React.Component {
 		const moveUpLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_UP);
 		const moveDownLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DOWN);
 		const moveBottomLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_BOTTOM);
+		const moveTopBtn = { action: "topMoveRow", label: moveTopLabel, iconEnabled: (<UpToTop />), enable: topEnabled, kind: "primary" };
+		const moveUpBtn = { action: "upMoveRow", label: moveUpLabel, iconEnabled: (<ChevronUp />), enable: topEnabled, kind: "primary" };
+		const moveDownBtn = { action: "downMoveRow", label: moveDownLabel, iconEnabled: (<ChevronDown />), enable: bottomEnabled, kind: "primary" };
+		const moveBottomBtn = { action: "bottomMoveRow", label: moveBottomLabel, iconEnabled: (<DownToBottom />), enable: bottomEnabled, kind: "primary" };
 
 		return (
-			<>
-				<Button
-					className="table-row-move-top-button"
-					onClick={this.topMoveRow}
-					disabled={!topEnabled}
-					renderIcon={UpToTop}
-					iconDescription={moveTopLabel}
-					tooltipPosition="bottom"
-					size="sm"
-					hasIconOnly
-				/>
-				<Button
-					className="table-row-move-up-button"
-					onClick={this.upMoveRow}
-					disabled={!topEnabled}
-					renderIcon={ChevronUp}
-					iconDescription={moveUpLabel}
-					tooltipPosition="bottom"
-					size="sm"
-					hasIconOnly
-				/>
-				<Button
-					className="table-row-move-down-button"
-					onClick={this.downMoveRow}
-					disabled={!bottomEnabled}
-					renderIcon={ChevronDown}
-					iconDescription={moveDownLabel}
-					tooltipPosition="bottom"
-					size="sm"
-					hasIconOnly
-				/>
-				<Button
-					className="table-row-move-bottom-button"
-					onClick={this.bottomMoveRow}
-					disabled={!bottomEnabled}
-					renderIcon={DownToBottom}
-					iconDescription={moveBottomLabel}
-					tooltipPosition="bottom"
-					size="sm"
-					hasIconOnly
-				/>
-			</>
+			[moveTopBtn, moveUpBtn, moveDownBtn, moveBottomBtn]
 		);
+	}
+
+	getLeftBarConfig() {
+		const singleRowSelectedLabel = (this.props.smallFlyout)
+			? formatMessage(this.reactIntl, MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL_SMALL_FLYOUT) // item
+			: formatMessage(this.reactIntl, MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL); // item selected
+		const multiRowsSelectedLabel = (this.props.smallFlyout)
+			? formatMessage(this.reactIntl, MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL_SMALL_FLYOUT) // items
+			: formatMessage(this.reactIntl, MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL); // items selected
+		const title = (this.props.selectedRows.length === 1)
+			? `${this.props.selectedRows.length} ${singleRowSelectedLabel}`
+			: `${this.props.selectedRows.length} ${multiRowsSelectedLabel}`;
+		return [{
+			action: "summary",
+			jsx: (<div className="properties-batch-summary" >
+				<span >{title}</span>
+			</div>)
+		}];
+	}
+
+	toolbarActionHandler(action) {
+		if (action === "topMoveRow") {
+			this.topMoveRow();
+		} else if (action === "upMoveRow") {
+			this.upMoveRow();
+		} else if (action === "downMoveRow") {
+			this.downMoveRow();
+		} else if (action === "bottomMoveRow") {
+			this.bottomMoveRow();
+		} else if (action === "cancel") {
+			this.handleCancel();
+		} else if (action === "delete") {
+			this.props.removeSelectedRows();
+		}
 	}
 
 	topMoveRow() {
@@ -276,71 +326,20 @@ class TableToolbar extends React.Component {
 
 	render() {
 		if ((this.props.addRemoveRows || this.props.moveableRows || this.props.multiSelectEdit) && this.props.selectedRows.length > 0) {
-			const singleRowSelectedLabel = (this.props.smallFlyout)
-				? formatMessage(this.reactIntl, MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL_SMALL_FLYOUT) // item
-				: formatMessage(this.reactIntl, MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL); // item selected
-			const multiRowsSelectedLabel = (this.props.smallFlyout)
-				? formatMessage(this.reactIntl, MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL_SMALL_FLYOUT) // items
-				: formatMessage(this.reactIntl, MESSAGE_KEYS.MULTI_SELECTED_ROW_LABEL); // items selected
-			const title = (this.props.selectedRows.length === 1)
-				? `${this.props.selectedRows.length} ${singleRowSelectedLabel}`
-				: `${this.props.selectedRows.length} ${multiRowsSelectedLabel}`;
-			const editLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_EDIT);
-			const deleteLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DELETE);
-			const cancelLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_CANCEL);
-			const applyLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL);
-			const rejectLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
+			const toolbarConfig = {
+				leftBar: this.getLeftBarConfig(),
+				rightBar: this.getRightToolbarConfig()
+			};
 
 			return (
 				<div className="properties-table-toolbar" >
-					<div className="properties-batch-summary" >
-						<span >{title}</span>
-					</div>
-					<div className="properties-action-list">
-						{
-							this.props.moveableRows
-								? (this.getTableRowMoveButtons())
-								: null
-						}
-						{
-							(this.props.addRemoveRows && !this.props.isReadonlyTable && !this.props.isSingleSelectTable)
-								? (<Button
-									size="sm"
-									renderIcon={TrashCan}
-									hasIconOnly
-									iconDescription={deleteLabel}
-									tooltipPosition="bottom"
-									onClick={this.props.removeSelectedRows}
-									className="properties-action-delete"
-								/>)
-								: null
-						}
-						{
-							this.props.multiSelectEdit
-								? (
-									<SubPanelInvoker ref={ (ref) => (this.subPanelInvoker = ref) }
-										rightFlyout={this.props.rightFlyout}
-										applyLabel={applyLabel}
-										rejectLabel={rejectLabel}
-										controller={this.props.controller}
-									>
-										<Button
-											className="properties-action-multi-select-edit"
-											size="sm"
-											renderIcon={Edit}
-											hasIconOnly
-											iconDescription={editLabel}
-											tooltipPosition="bottom"
-											onClick={this.showSubPanel}
-										/>
-									</SubPanelInvoker>
-								)
-								: null
-						}
-						<Button size="sm" className="properties-action-cancel" onClick={this.handleCancel}>
-							{cancelLabel}
-						</Button>
-					</div>
+					<Toolbar
+						config={toolbarConfig}
+						instanceId={0}
+						size="sm"
+						toolbarActionHandler={this.toolbarActionHandler}
+						additionalText={{ overflowMenuLabel: formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_OVERFLOW_LABEL) }}
+					/>
 				</div>
 			);
 		}

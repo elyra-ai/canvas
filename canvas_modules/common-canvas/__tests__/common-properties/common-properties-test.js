@@ -226,7 +226,7 @@ describe("CommonProperties works correctly in flyout", () => {
 
 		// ensure table toolbar has delete and click it
 		let tableToolbar = container.querySelector("div.properties-table-toolbar");
-		let deleteButton = tableToolbar.querySelector("button.properties-action-delete");
+		let deleteButton = tableToolbar.querySelector(".toolbar-item.delete-action button");
 		fireEvent.click(deleteButton);
 
 		// save again: should save changes
@@ -242,7 +242,7 @@ describe("CommonProperties works correctly in flyout", () => {
 		// make more changes
 		tableUtilsRTL.selectCheckboxes(commonProperties, [0]);
 		tableToolbar = container.querySelector("div.properties-table-toolbar");
-		deleteButton = tableToolbar.querySelectorAll("button.properties-action-delete");
+		deleteButton = tableToolbar.querySelectorAll(".toolbar-item.delete-action button");
 		fireEvent.click(deleteButton[0]);
 
 		// save again, should trigger a save
@@ -262,7 +262,7 @@ describe("CommonProperties works correctly in flyout", () => {
 
 		// ensure table toolbar has delete and click it
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
-		const deleteButton = tableToolbar.querySelector("button.properties-action-delete");
+		const deleteButton = tableToolbar.querySelector(".toolbar-item.delete-action button");
 		fireEvent.click(deleteButton);
 
 		// save again: should save changes

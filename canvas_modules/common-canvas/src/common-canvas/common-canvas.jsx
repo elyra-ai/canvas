@@ -108,7 +108,9 @@ CommonCanvas.propTypes = {
 	bottomPanelContent: PropTypes.object,
 	showBottomPanel: PropTypes.bool,
 	topPanelContent: PropTypes.object,
-	showTopPanel: PropTypes.bool
+	showTopPanel: PropTypes.bool,
+	showLeftFlyout: PropTypes.bool,
+	leftFlyoutContent: PropTypes.object
 };
 
 export default injectIntl(CommonCanvas);
