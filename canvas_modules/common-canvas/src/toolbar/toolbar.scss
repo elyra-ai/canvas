@@ -361,6 +361,7 @@ $toolbar-divider-width: 1px;
 }
 
 .toolbar-divider {
+	position: relative;
 	border-right: $toolbar-divider-width solid carbon.$layer-accent-01;
 	background-color: carbon.$layer-01;
 	display: inline-block;
