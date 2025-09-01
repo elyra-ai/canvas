@@ -58,30 +58,34 @@ $properties-resize-button-size: carbon.$spacing-06;
 }
 
 .properties-btn-resize {
-	transition: visibility carbon.$duration-moderate-01, opacity carbon.$duration-moderate-01 !important;
-	opacity: 0;
-	visibility: hidden;
-	position: relative;
-	right: calc(#{$properties-resize-button-size} / 2);
-	bottom: 50%;
-	min-height: $properties-resize-button-size !important;
-	min-width: $properties-resize-button-size !important;
-	background-color: carbon.$layer-01 !important;
-	border: 1px carbon.$border-strong-01 solid !important;
-	padding: carbon.$spacing-01 !important;
-	justify-content: center;
-	align-items: center;
-	z-index: 1; // Make sure resize btn appears over bottom panel
-	&:hover {
-		background-color: carbon.$layer-accent-01 !important;
-		visibility: visible;
-		opacity: 1;
-	}
-	svg {
-		fill: carbon.$icon-primary;
-		width: carbon.$spacing-05;
-		height: carbon.$spacing-05;
-	}
+	 &.cds--btn.cds--btn--ghost {
+        transition: visibility carbon.$duration-moderate-01, opacity carbon.$duration-moderate-01;
+        opacity: 0;
+        visibility: hidden;
+        position: relative;
+        right: calc(#{$properties-resize-button-size} / 2);
+        bottom: 50%;
+        min-height: $properties-resize-button-size;
+        min-width: $properties-resize-button-size;
+        background-color: carbon.$layer-01;
+        border: 1px carbon.$border-strong-01 solid;
+        padding: carbon.$spacing-01;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+        
+        &:hover {
+            background-color: carbon.$layer-accent-01;
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+    
+    svg {
+        fill: carbon.$icon-primary;
+        width: carbon.$spacing-05;
+        height: carbon.$spacing-05;
+    }
 }
 
 .common-canvas .right-flyout-panel {
