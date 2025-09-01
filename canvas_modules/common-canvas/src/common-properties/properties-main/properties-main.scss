@@ -81,11 +81,11 @@ $properties-resize-button-size: carbon.$spacing-06;
 		}
 	}
     
-    svg {
-        fill: carbon.$icon-primary;
-        width: carbon.$spacing-05;
-        height: carbon.$spacing-05;
-    }
+	svg {
+		fill: carbon.$icon-primary;
+		width: carbon.$spacing-05;
+		height: carbon.$spacing-05;
+	}
 }
 
 .common-canvas .right-flyout-panel {
