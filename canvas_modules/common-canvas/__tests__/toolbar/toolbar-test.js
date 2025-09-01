@@ -45,7 +45,7 @@ describe("Toolbar renders correctly", () => {
 		expect(container.getElementsByClassName("toolbar-left-bar")).to.have.length(1);
 		expect(container.getElementsByClassName("toolbar-item")).to.have.length(10);
 		expect(container.getElementsByClassName("toolbar-divider")).to.have.length(2);
-		expect(container.getElementsByClassName("toolbar-overflow-container")).to.have.length(11);
+		expect(container.getElementsByClassName("toolbar-overflow-container")).to.have.length(12);
 	});
 
 	it("should render a Toolbar with just a right bar defined", () => {
@@ -123,7 +123,7 @@ describe("Toolbar renders correctly", () => {
 		const overflowButtons = container.querySelectorAll(".toolbar-overflow-item button");
 		const defaultButtons = container.querySelectorAll(".toolbar-item.default button");
 
-		expect(overflowButtons).to.have.length(3);
+		expect(overflowButtons).to.have.length(4);
 		expect(defaultButtons).to.have.length(3);
 
 		// Verify if the buttons show up with medium size
@@ -149,7 +149,7 @@ describe("Toolbar renders correctly", () => {
 		const overflowButtons = container.querySelectorAll(".toolbar-overflow-item button");
 		const defaultButtons = container.querySelectorAll(".toolbar-item.default button");
 
-		expect(overflowButtons).to.have.length(3);
+		expect(overflowButtons).to.have.length(4);
 		expect(defaultButtons).to.have.length(3);
 
 		// Verify if the buttons show up with small size
