@@ -424,16 +424,30 @@ class Toolbar extends React.Component {
 			if (actionObj.divider) {
 				const isRightBar = refs === this.rightItemRefs;
 				if (!isRightBar) {
-					// No need to add overflow icon for the right toolbar divider.
-					jsx = (
-						<>
-							{this.generateOverflowItem(i, actionObj.action)}
+					const leftBar = Array.isArray(this.leftBar) ? this.leftBar : [];
+
+					// If last item in left bar is a divider then no need to show the overflow button.
+					const isLastleftbarItem = leftBar[leftBar.length - 1] === actionObj;
+					if (isLastleftbarItem) {
+						jsx = (
 							<ToolbarDividerItem
 								key={"toolbar-item-key-" + i}
 								isInMenu={false}
 							/>
-						</>
-					);
+						);
+					} else {
+						jsx = (
+							<>
+								{this.generateOverflowItem(i, actionObj.action)}
+								<ToolbarDividerItem
+									key={"toolbar-item-key-" + i}
+									isInMenu={false}
+								/>
+							</>
+						);
+					}
+					// No need to add overflow icon for the right toolbar divider.
+
 				} else {
 					// render only the divider no need to render the overflow icon.
 					jsx = (
