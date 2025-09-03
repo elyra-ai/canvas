@@ -24,6 +24,8 @@ import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import fieldPickerParamDef from "./../../test_resources/paramDefs/fieldpicker_paramDef.json";
 import { fireEvent, cleanup } from "@testing-library/react";
+import sinon from "sinon";
+import { SelectWindow } from "@carbon/react/icons";
 
 const controller = new Controller();
 
@@ -237,6 +239,71 @@ describe("field-picker-control renders correctly", () => {
 		expect(container.querySelectorAll("div.properties-tooltips-filter")).to.have.length(6); // list of filters
 		const selected = tableUtilsRTL.validateSelectedRowNum(container);
 		expect(selected).to.have.length(currentFields.length); // controlValues rendered correctly
+	});
+
+	it("getIconForDataType calls buttonIconHandler with dataType to fetch icon", () => {
+		const buttonIconHandler = sinon.stub().callsFake((data, callbackIcon) => {
+			callbackIcon(<SelectWindow />);
+		});
+		controller.setHandlers({ buttonIconHandler: buttonIconHandler });
+		const newMetadata = [
+			{
+				"name": "Age",
+				"type": "randomType",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				},
+				"origName": "Age",
+				"schema": "0"
+			},
+			{
+				"name": "Sex",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				},
+				"origName": "Sex",
+				"schema": "0"
+			},
+			{
+				"name": "BP",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				},
+				"origName": "BP",
+				"schema": "0"
+			}];
+		const currentFieldss = [
+			"Age",
+			"BP",
+			"Sex"
+		];
+		const wrapper = renderWithIntl(
+			<FieldPicker
+				key="field-picker-control"
+				closeFieldPicker={closeFieldPicker}
+				currentFields={currentFieldss}
+				fields={newMetadata}
+				controller={controller}
+				title="Field Picker Test"
+			/>
+		);
+		const { container } = wrapper;
+		const fieldPickerRows = tableUtilsRTL.getTableRows(container);
+		expect(fieldPickerRows).to.have.length(3);
+		const expectedData = {
+			type: "customDataTypeIcon",
+			buttonId: "Age",
+			dataType: "randomType"
+		};
+		expect(buttonIconHandler.calledWith(expectedData)).to.equal(true);
 	});
 
 	it("should add additional field to newControlValues in `FieldPicker`", () => {
