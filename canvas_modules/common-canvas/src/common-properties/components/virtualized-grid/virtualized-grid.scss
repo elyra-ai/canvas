@@ -61,6 +61,7 @@
 								width: 100%;
 
 								span {
+									@include carbon.type-style("productive-heading-01");
 									color: carbon.$text-primary;
 									text-overflow: ellipsis;
 									white-space: nowrap;
