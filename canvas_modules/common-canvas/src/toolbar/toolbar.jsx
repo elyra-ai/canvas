@@ -407,7 +407,7 @@ class Toolbar extends React.Component {
 		for (let i = 0; i < toolbarActions.length; i++) {
 			const actionObj = toolbarActions[i];
 			if (actionObj) {
-				if (!actionObj.divider && withOverflowItem) {
+				if (withOverflowItem && this.shouldAddOverflowItem(actionObj)) {
 					newItems.push(this.generateOverflowItem(i, actionObj.action));
 				}
 				newItems.push(this.generateToolbarItem(actionObj, i, refs));
@@ -416,47 +416,30 @@ class Toolbar extends React.Component {
 		return newItems;
 	}
 
+	// Returns true if an overflow item should be added when requested. We do not add an
+	// overflow item for dividers that are the last element in the left bar array because
+	// we don't want an overflow menu generated for a single divider.
+	shouldAddOverflowItem(actionObj) {
+		return !(actionObj.divider && this.isLastLeftbarItem(actionObj));
+	}
+
+	// Return true if the action object passed in is the last element in the left bar array.
+	isLastLeftbarItem(actionObj) {
+		return this.leftBar[this.leftBar.length - 1] === actionObj;
+	}
+
 	// Returns JSX for a toolbar item based on the actionObj passed in.
 	generateToolbarItem(actionObj, i, refs) {
 		let jsx = null;
 
 		if (actionObj) {
 			if (actionObj.divider) {
-				const isRightBar = refs === this.rightItemRefs;
-				if (!isRightBar) {
-					const leftBar = Array.isArray(this.leftBar) ? this.leftBar : [];
-
-					// If last item in left bar is a divider then no need to show the overflow button.
-					const isLastleftbarItem = leftBar[leftBar.length - 1] === actionObj;
-					if (isLastleftbarItem) {
-						jsx = (
-							<ToolbarDividerItem
-								key={"toolbar-item-key-" + i}
-								isInMenu={false}
-							/>
-						);
-					} else {
-						jsx = (
-							<>
-								{this.generateOverflowItem(i, actionObj.action)}
-								<ToolbarDividerItem
-									key={"toolbar-item-key-" + i}
-									isInMenu={false}
-								/>
-							</>
-						);
-					}
-					// No need to add overflow icon for the right toolbar divider.
-
-				} else {
-					// render only the divider no need to render the overflow icon.
-					jsx = (
-						<ToolbarDividerItem
-							key={"toolbar-item-key-" + i}
-							isInMenu={false}
-						/>
-					);
-				}
+				jsx = (
+					<ToolbarDividerItem
+						key={"toolbar-item-key-" + i}
+						isInMenu={false}
+					/>
+				);
 			} else {
 				const ref = React.createRef();
 				if (refs) {
