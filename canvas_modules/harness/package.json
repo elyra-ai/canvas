@@ -11,6 +11,7 @@
     "start-prod": "NODE_ENV=production node index.js",
     "build-prod": "npx stylelint 'src/**/*.scss' 'assets/**/*.scss' && NODE_ENV=production grunt --max-old-space-size=8192"
   },
+  "type": "module",
   "engines": {
     "node": "20.x"
   },

@@ -13,9 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-"use strict";
 
-module.exports = {
+// Rule overrides only for "development" mode
+// Disallow use of console
+const development = [
+	1,
+	{
+		"allow": ["warn", "error"]
+	}
+];
+
+const production = [
+	"error",
+	{
+		"allow": ["warn", "error"]
+	}
+];
+const noConsoleRule = process.env.NODE_ENV !== "production" ? development : production;
+
+export default {
 	"env": {
 		"es6": true,
 		"browser": false,
@@ -154,12 +170,7 @@ module.exports = {
 		"no-catch-shadow": "error",
 		"no-confusing-arrow": "error",
 		// Disallow use of console
-		"no-console": [
-			"error",
-			{
-				"allow": ["warn", "error"]
-			}
-		],
+		"no-console": noConsoleRule,
 		// Disallow continue (no-continue)
 		"no-continue": "off",
 		"no-div-regex": "error",
@@ -369,15 +380,3 @@ module.exports = {
 		]
 	}
 };
-
-// Rule overrides only for "development" mode
-
-if (process.env.NODE_ENV !== "production") {
-	// Disallow use of console
-	module.exports.rules["no-console"] = [
-		1,
-		{
-			"allow": ["warn", "error"]
-		}
-	];
-}

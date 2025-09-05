@@ -16,11 +16,11 @@
 
 
 const codeCoverageDir = "reports/coverage";
-const autoprefixer = require("autoprefixer");
+import autoprefixer from "autoprefixer";
 
-module.exports = function(grunt) {
+export default function(grunt) {
 	grunt.initConfig({
-		eslint: {
+		eså: {
 			node: {
 				src: ["Gruntfile.js", "__mocks__/**/*.js", "__tests__/**/*.js", "constants/**/*.js", "utils/**/*.js"]
 			},

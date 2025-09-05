@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-"use strict";
 // Modules
 
 const nconf = require("nconf");
@@ -26,11 +25,7 @@ const logger = log4js.getLogger("app-config");
 
 // Public Methods ------------------------------------------------------------->
 
-module.exports.init = _init;
-
-// Private Methods ------------------------------------------------------------>
-
-function _init() {
+export function init() {
 
 	logger.info("Initializing nconf...");
 

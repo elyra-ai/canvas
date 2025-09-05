@@ -13,33 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-"use strict";
 // Modules
-const log4js = require("log4js");
-const fs = require("fs");
-const path = require("path");
+import { HTTP_STATUS_NOT_FOUND, HTTP_STATUS_OK, TEST_RESOURCES_PROPERTIES_PATH } from "../lib/constants";
+import { readFile, readdir } from "fs";
+import { getLogger } from "log4js";
+import { join } from "path";
 
-const logger = log4js.getLogger("v1-get-properties-list-controller");
-const constants = require("../lib/constants");
+const logger = getLogger("v1-get-properties-list-controller");
 
-// var dirPath = "/Users/caritaou/ngp-git/wdp-abstract-canvas/canvas_modules/harness/test_resources/properties/";
-
-// Public Methods ------------------------------------------------------------->
-
-module.exports.get = _get;
+export const get = _get;
 
 function _get(req, res) {
 	logger.info("Retrieving list of files");
-	var dirPath = path.join(__dirname, constants.TEST_RESOURCES_PROPERTIES_PATH);
+	var dirPath = join(__dirname, TEST_RESOURCES_PROPERTIES_PATH);
 	if (req.query.file) { // retrieve file contents
 		var filename = req.query.file;
 		logger.info(`Retrieving ${dirPath}${filename}`);
-		fs.readFile(dirPath + filename, "utf-8", function(err, data) {
+		readFile(dirPath + filename, "utf-8", function(err, data) {
 			if (err) {
-				res.status(constants.HTTP_STATUS_NOT_FOUND);
+				res.status(HTTP_STATUS_NOT_FOUND);
 				res.json({ error: err });
 			}
-			res.status(constants.HTTP_STATUS_OK);
+			res.status(HTTP_STATUS_OK);
 			var content = {};
 			try {
 				content = JSON.parse(data);
@@ -49,12 +44,12 @@ function _get(req, res) {
 			res.json(content);
 		});
 	} else { // retrieve all
-		fs.readdir(dirPath, function(err, files) {
+		readdir(dirPath, function(err, files) {
 			if (err) {
-				res.status(constants.HTTP_STATUS_NOT_FOUND);
+				res.status(HTTP_STATUS_NOT_FOUND);
 				res.json({ error: err });
 			}
-			res.status(constants.HTTP_STATUS_OK);
+			res.status(HTTP_STATUS_OK);
 			res.json(files);
 		});
 	}

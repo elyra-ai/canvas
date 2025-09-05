@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-"use strict";
-
-module.exports = {
+export default {
 	extends: "eslint-config-canvas",
 	plugins: [
 		"import"
@@ -43,6 +41,6 @@ module.exports = {
 		jest: true
 	},
 	parserOptions: {
-		"sourceType": "script"
+		"sourceType": "module"
 	}
 };

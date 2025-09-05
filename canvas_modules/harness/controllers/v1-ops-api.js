@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-"use strict";
 // Modules
-const express = require("express");
-
-const getSyntaxCheckController = require("./v1-get-syntax-check-controller");
+import { Router } from "express";
+import { get } from "./v1-get-syntax-check-controller";
 
 // Globals
 
-const router = express.Router({
+const router = Router({
 	caseSensitive: true,
 	mergeParams: true
 });
 
 // Public Methods ------------------------------------------------------------->
 
-module.exports = router;
+export default router;
 
 // Private Methods ------------------------------------------------------------>
 
-router.get("/ops", getSyntaxCheckController.get);
+router.get("/ops", get);
