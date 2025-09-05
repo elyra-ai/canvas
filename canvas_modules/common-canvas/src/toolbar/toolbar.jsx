@@ -407,13 +407,25 @@ class Toolbar extends React.Component {
 		for (let i = 0; i < toolbarActions.length; i++) {
 			const actionObj = toolbarActions[i];
 			if (actionObj) {
-				if (!actionObj.divider && withOverflowItem) {
+				if (withOverflowItem && this.shouldAddOverflowItem(actionObj)) {
 					newItems.push(this.generateOverflowItem(i, actionObj.action));
 				}
 				newItems.push(this.generateToolbarItem(actionObj, i, refs));
 			}
 		}
 		return newItems;
+	}
+
+	// Returns true if an overflow item should be added when requested. We do not add an
+	// overflow item for dividers that are the last element in the left bar array because
+	// we don't want an overflow menu generated for a single divider.
+	shouldAddOverflowItem(actionObj) {
+		return !(actionObj.divider && this.isLastLeftbarItem(actionObj));
+	}
+
+	// Return true if the action object passed in is the last element in the left bar array.
+	isLastLeftbarItem(actionObj) {
+		return this.leftBar[this.leftBar.length - 1] === actionObj;
 	}
 
 	// Returns JSX for a toolbar item based on the actionObj passed in.

@@ -126,7 +126,7 @@ describe("Test for toolbar resize", function() {
 		cy.verifyNumberOfItemsInToolbar(12);
 
 		cy.viewport(620, 600);
-		cy.verifyNumberOfItemsInToolbar(12);
+		cy.verifyNumberOfItemsInToolbar(13);
 
 		cy.viewport(660, 600);
 	});
