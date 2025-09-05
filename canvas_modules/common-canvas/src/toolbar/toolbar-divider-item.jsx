@@ -24,7 +24,6 @@ class ToolbarDividerItem extends React.Component {
 		// Add a space as content. When using display: inline-block the div needs
 		// some content so it is displayed inline with the other elements of the
 		// toolbar. With no content it is displayed above (!) the other elements
-		// Ensure ellipsis appears for overflowing toolbar content when width is reduced.
 		return (
 			<div className={dividerClassName} aria-hidden >&nbsp;</div>
 		);
