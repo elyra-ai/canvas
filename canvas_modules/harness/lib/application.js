@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-"use strict";
 // ESLint Rule Overrides
 
 /* eslint no-process-exit: 0 */
@@ -37,7 +36,7 @@ const logger = log4js.getLogger("application");
 var formsAPI = require("../controllers/v1-forms-api.js");
 var opsAPI = require("../controllers/v1-ops-api.js");
 
-function _create(callback) {
+export function create(callback) {
 	var status = appConfig.init();
 	if (!status) {
 		callback(new Error("Failed to initialize application configuration."), null);
@@ -103,5 +102,3 @@ function _configureHmr(app) {
 	// load images and styles from asserts folder in development mode
 	app.use(express.static(path.join(__dirname, "../assets")));
 }
-
-module.exports.create = _create;

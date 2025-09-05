@@ -32,7 +32,7 @@ function controllerHandler(propertyController) {
 	renderedController = propertyController;
 }
 
-function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverrides, propertiesInfoOverrides) {
+export function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverrides, propertiesInfoOverrides) {
 	const applyPropertyChanges = sinon.spy();
 	const closePropertiesDialog = sinon.spy();
 	let callbacks = {
@@ -76,7 +76,7 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 	return { wrapper: wrapper, controller: renderedController, callbacks: callbacks };
 }
 
-function flyoutEditorFormRerender(paramDef, propertiesConfigOverrides, callbacksOverrides, propertiesInfoOverrides) {
+export function flyoutEditorFormRerender(paramDef, propertiesConfigOverrides, callbacksOverrides, propertiesInfoOverrides) {
 	const applyPropertyChanges = sinon.spy();
 	const closePropertiesDialog = sinon.spy();
 	let callbacks = {
@@ -111,7 +111,7 @@ function flyoutEditorFormRerender(paramDef, propertiesConfigOverrides, callbacks
 	return { propertiesInfo: propertiesInfo, propertiesConfig: propertiesConfig, callbacks: callbacks, customControls: customControls, customConditionOps: customConditionOps };
 }
 
-function setControls(controller, controls) {
+export function setControls(controller, controls) {
 	const parsedControls = [];
 	for (const control of controls) {
 		UiConditionsParser.parseControl(parsedControls, control);
@@ -119,7 +119,7 @@ function setControls(controller, controls) {
 	controller.saveControls(parsedControls);
 }
 
-function genLongString(length) {
+export function genLongString(length) {
 	let str = "";
 	while (length > str.length) {
 		str += Math.random().toString(36)
@@ -128,7 +128,7 @@ function genLongString(length) {
 	return str;
 }
 
-function openSummaryPanel(wrapper, panelId) {
+export function openSummaryPanel(wrapper, panelId) {
 	const { container } = wrapper;
 	const summaryPanel = container.querySelector(`div[data-id='properties-${panelId}']`);
 	expect(summaryPanel).to.exist;
@@ -137,7 +137,7 @@ function openSummaryPanel(wrapper, panelId) {
 }
 
 
-function getParameterFromParamDef(parameterId, paramDef) {
+export function getParameterFromParamDef(parameterId, paramDef) {
 	const parameters = paramDef.parameters;
 	let parameterFound = null;
 	parameters.forEach((parameter) => {
@@ -147,12 +147,3 @@ function getParameterFromParamDef(parameterId, paramDef) {
 	});
 	return parameterFound;
 }
-
-module.exports = {
-	flyoutEditorForm: flyoutEditorForm,
-	flyoutEditorFormRerender: flyoutEditorFormRerender,
-	setControls: setControls,
-	genLongString: genLongString,
-	openSummaryPanel: openSummaryPanel,
-	getParameterFromParamDef: getParameterFromParamDef
-};

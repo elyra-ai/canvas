@@ -18,7 +18,7 @@
 // does not comply with the Elyra canvas lint rules. Rather than changing all
 // the d3-zoom code to comply with those rules, this file overrules the Elyra
 // canvas lint rules so no lint errors occur for the d3-zoom code.
-module.exports = {
+export default {
 	extends: "eslint-config-canvas",
 	rules: {
 		// Allow snake_case, but only for object properties e.g. myObj.param_name

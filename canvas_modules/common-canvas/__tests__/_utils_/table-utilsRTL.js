@@ -17,7 +17,7 @@
 import { fireEvent, within } from "@testing-library/react";
 import { expect } from "chai";
 
-function openFieldPicker(container, dataIdName) {
+export function openFieldPicker(container, dataIdName) {
 	const tableWrapper = container.querySelector("div[data-id=\"" + dataIdName + "\"]");
 	const addFieldsButtons = tableWrapper.querySelector("button.properties-add-fields-button"); // field picker buttons
 	fireEvent.click(addFieldsButtons);
@@ -25,7 +25,7 @@ function openFieldPicker(container, dataIdName) {
 }
 
 // When table has 0 rows, click on Add columns button to open FieldPicker
-function openFieldPickerForEmptyTable(container, dataIdName) {
+export function openFieldPickerForEmptyTable(container, dataIdName) {
 	const tableWrapper = container.querySelector("div[data-id=\"" + dataIdName + "\"]");
 	const emptyTableButton = tableWrapper.querySelector("button.properties-empty-table-button");
 	fireEvent.click(emptyTableButton); // open field picker
@@ -34,7 +34,7 @@ function openFieldPickerForEmptyTable(container, dataIdName) {
 
 // expectedFields is optional
 // fieldsToSelect is an array of field names or objects with name and schema. ex: { "name": "age", "schema": "schema1" }
-function fieldPicker(fieldpickerContainer, fieldsToSelect, expectedFields) {
+export function fieldPicker(fieldpickerContainer, fieldsToSelect, expectedFields) {
 	const rows = getTableRows(fieldpickerContainer);
 	if (expectedFields) {
 		expect(rows).to.have.length(expectedFields.length);
@@ -87,19 +87,19 @@ function fieldPicker(fieldpickerContainer, fieldsToSelect, expectedFields) {
 	fireEvent.click(fieldpickerContainer.querySelector("button[data-id='properties-apply-button']")); // applies the field picker
 }
 
-function verifyFieldPickerRow(row, field, schema) {
+export function verifyFieldPickerRow(row, field, schema) {
 	expect(row.querySelector(".properties-fp-field-name").textContent).to.equal(field);
 	expect(row.querySelector(".properties-fp-schema").textContent).to.equal(schema);
 }
 
-function getTableHeaderRows(container) {
+export function getTableHeaderRows(container) {
 	if (!container) {
 		return [];
 	}
 	return Array.from(container.querySelectorAll("tr[data-role='properties-header-row']"));
 }
 
-function getTableRows(container) {
+export function getTableRows(container) {
 	if (!container) {
 		return [];
 	}
@@ -118,7 +118,7 @@ function getTableRows(container) {
 	return res;
 }
 
-function clickTableRows(container, rows) {
+export function clickTableRows(container, rows) {
 	const tableRows = getTableRows(container);
 	for (const row of rows) {
 		fireEvent.mouseEnter(tableRows[row]);
@@ -131,7 +131,7 @@ function clickTableRows(container, rows) {
 * @param wrapper
 * @param rows - array of row numbers to check
 */
-function dblClickTableRows(container, rows) {
+export function dblClickTableRows(container, rows) {
 	const tableRows = container.querySelectorAll(".properties-vt-double-click");
 	for (const row of rows) {
 		fireEvent.dblClick(tableRows[row]);
@@ -143,12 +143,12 @@ function dblClickTableRows(container, rows) {
 * @param wrapper
 * @param col - index of column to sort
 */
-function clickHeaderColumnSort(container, col) {
+export function clickHeaderColumnSort(container, col) {
 	const sortable = container.querySelectorAll(".properties-vt-column-sortable");
 	fireEvent.click(sortable[col]);
 }
 
-function selectCheckboxes(container, rows) {
+export function selectCheckboxes(container, rows) {
 	let checkboxes;
 	if (container.length > 0) {
 		checkboxes = container;
@@ -165,7 +165,7 @@ function selectCheckboxes(container, rows) {
 }
 
 // Select checkbox using space or enter keys
-function selectCheckboxesUsingKeyboard(container, rows) {
+export function selectCheckboxesUsingKeyboard(container, rows) {
 	const checkboxes = getTableRows(container);
 	for (const row of rows) {
 		const checkbox = checkboxes[row].querySelector(".properties-vt-row-checkbox");
@@ -175,7 +175,7 @@ function selectCheckboxesUsingKeyboard(container, rows) {
 	}
 }
 
-function selectCheckboxesRows(tableRows, rows) {
+export function selectCheckboxesRows(tableRows, rows) {
 	for (const row of rows) {
 		const checkbox = tableRows[row].querySelector(".properties-vt-row-checkbox");
 		fireEvent.mouseEnter(checkbox);
@@ -189,7 +189,7 @@ function selectCheckboxesRows(tableRows, rows) {
 * @param wrapper
 * @param rows - single row number.
 */
-function shiftSelectCheckbox(container, rowNumber) {
+export function shiftSelectCheckbox(container, rowNumber) {
 	const rows = getTableRows(container);
 	const checkboxes = [];
 	rows.forEach((row) => {
@@ -201,7 +201,7 @@ function shiftSelectCheckbox(container, rowNumber) {
 	fireEvent.mouseLeave(checkboxes[rowNumber - 1]);
 }
 
-function shiftSelectCheckboxRows(rows, rowNumber) {
+export function shiftSelectCheckboxRows(rows, rowNumber) {
 	const checkboxes = [];
 	for (const row of rows) {
 		checkboxes.push(row.querySelector(".properties-vt-row-checkbox"));
@@ -218,7 +218,7 @@ function shiftSelectCheckboxRows(rows, rowNumber) {
 * @param index - the column index that contains a checkbox to select
 * @param checked - true to select the checkbox, false to deselect checkbox
 */
-function selectHeaderColumnCheckbox(container, index, checked) {
+export function selectHeaderColumnCheckbox(container, index, checked) {
 	const columns = getTableHeaderRows(container)[0]
 		.querySelectorAll(".properties-vt-column");
 	const column = columns[index];
@@ -229,13 +229,13 @@ function selectHeaderColumnCheckbox(container, index, checked) {
 	}
 }
 
-function selectFieldPickerHeaderCheckbox(container) {
+export function selectFieldPickerHeaderCheckbox(container) {
 	const checkboxes = getTableHeaderRows(container);
 	const checkbox = checkboxes[0].querySelector(".properties-vt-header-checkbox").querySelector("input");
 	fireEvent.click(checkbox);
 }
 
-function validateSelectedRowNum(container) {
+export function validateSelectedRowNum(container) {
 	const res = [];
 	const rows = container.querySelectorAll("input[type='checkbox']");
 	for (const row of rows) {
@@ -246,7 +246,7 @@ function validateSelectedRowNum(container) {
 	return res;
 }
 
-function validateSelectedRowNumRows(rows) {
+export function validateSelectedRowNumRows(rows) {
 	const res = [];
 	for (const row of rows) {
 		const checkbox = row.querySelector("input[type='checkbox']");
@@ -257,7 +257,7 @@ function validateSelectedRowNumRows(rows) {
 	return res;
 }
 
-function validateSelectedCheckbox(checkboxes) {
+export function validateSelectedCheckbox(checkboxes) {
 	const res = [];
 	for (const checkbox of checkboxes) {
 		if (checkbox.checked === true) {
@@ -266,25 +266,3 @@ function validateSelectedCheckbox(checkboxes) {
 	}
 	return res;
 }
-
-module.exports = {
-	openFieldPicker: openFieldPicker,
-	openFieldPickerForEmptyTable: openFieldPickerForEmptyTable,
-	fieldPicker: fieldPicker,
-	verifyFieldPickerRow: verifyFieldPickerRow,
-	getTableHeaderRows: getTableHeaderRows,
-	getTableRows: getTableRows,
-	clickTableRows: clickTableRows,
-	dblClickTableRows: dblClickTableRows,
-	clickHeaderColumnSort: clickHeaderColumnSort,
-	selectCheckboxes: selectCheckboxes,
-	selectCheckboxesUsingKeyboard: selectCheckboxesUsingKeyboard,
-	selectCheckboxesRows: selectCheckboxesRows,
-	shiftSelectCheckbox: shiftSelectCheckbox,
-	shiftSelectCheckboxRows: shiftSelectCheckboxRows,
-	selectHeaderColumnCheckbox: selectHeaderColumnCheckbox,
-	selectFieldPickerHeaderCheckbox: selectFieldPickerHeaderCheckbox,
-	validateSelectedRowNum: validateSelectedRowNum,
-	validateSelectedRowNumRows: validateSelectedRowNumRows,
-	validateSelectedCheckbox: validateSelectedCheckbox,
-};

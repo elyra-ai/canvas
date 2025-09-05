@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-const { fireEvent } = require("@testing-library/react");
+import { fireEvent } from "@testing-library/react";
 
 // Retrieve the dropdown items from a non-filterable dropdown control
-function getDropdownItems(container, parameterId) {
+export function getDropdownItems(container, parameterId) {
 	let dropdownWrapper = container.querySelector(`div[data-id='properties-${parameterId}']`);
 	const dropdownButton = dropdownWrapper.querySelector("button");
 	fireEvent.click(dropdownButton);
@@ -25,7 +25,3 @@ function getDropdownItems(container, parameterId) {
 	const dropdownList = dropdownWrapper.querySelectorAll("li.cds--list-box__menu-item");
 	return dropdownList;
 }
-
-module.exports = {
-	getDropdownItems: getDropdownItems
-};

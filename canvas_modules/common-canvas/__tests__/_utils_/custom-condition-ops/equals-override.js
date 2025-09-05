@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-function op() {
+export function op() {
 	return "equals";
 }
 
-function evaluate() {
+export function evaluate() {
 	return "testing";
 }
-
-// Public Methods ------------------------------------------------------------->
-
-module.exports.op = op;
-module.exports.evaluate = evaluate;

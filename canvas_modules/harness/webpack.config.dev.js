@@ -118,7 +118,7 @@ const plugins = [
 
 // Exports ------------------------------------------------------------>
 
-module.exports = {
+export default {
 	mode: "development",
 	devtool: false,
 	entry: entry,

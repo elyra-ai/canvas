@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-module.exports = {
+export default {
     "env": {
         "es6": true,
         "browser": false,

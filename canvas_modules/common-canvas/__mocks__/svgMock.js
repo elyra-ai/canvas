@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-module.exports = "<svg />";
+export default "<svg />";

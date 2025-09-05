@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-"use strict";
 
 // Modules
 
@@ -27,14 +26,9 @@ const log4js = require("log4js");
 const RELOAD_INTERVAL = 300; // 5 mins
 const LAYOUT_PATTERN = "[%d] [%[%-5p%]] [%-16c] %m";
 
-// Public Methods ------------------------------------------------------------->
+// Public Methods ------------------------------------------------------------>
 
-module.exports.init = _init;
-module.exports.getRequestLogger = _getRequestLogger;
-
-// Private Methods ------------------------------------------------------------>
-
-function _init() {
+export function init() {
 	const appenders = {
 		appenders: {
 			out: {
@@ -52,7 +46,7 @@ function _init() {
 	});
 }
 
-function _getRequestLogger() {
+export function getRequestLogger() {
 	return log4js.connectLogger(log4js.getLogger("incoming-request"), {
 		format: "[:status] :method :url (:response-time ms)",
 		level: log4js.levels.TRACE

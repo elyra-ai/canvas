@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-"use strict";
 // Modules
-const log4js = require("log4js");
+import { HTTP_STATUS_NOT_FOUND, HTTP_STATUS_OK } from "../lib/constants";
+import { getLogger } from "log4js";
 
-const logger = log4js.getLogger("v1-get-syntax-check-controller");
-const constants = require("../lib/constants");
+const logger = getLogger("v1-get-syntax-check-controller");
 
-// Public Methods ------------------------------------------------------------->
-
-module.exports.get = _get;
+export const get = _get;
 
 function _get(req, res) {
 	logger.info("Syntax checker");
@@ -33,10 +30,10 @@ function _get(req, res) {
 		if (expression.indexOf("?") === -1) {
 			content = { type: "success", text: "Expression is valid" };
 		}
-		res.status(constants.HTTP_STATUS_OK);
+		res.status(HTTP_STATUS_OK);
 		res.json(content);
 	} else {
-		res.status(constants.HTTP_STATUS_NOT_FOUND);
+		res.status(HTTP_STATUS_NOT_FOUND);
 		res.json({ type: "error", text: "Expression not found in syntax checker." });
 	}
 }

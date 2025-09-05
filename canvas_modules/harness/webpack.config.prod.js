@@ -108,7 +108,7 @@ if (process.env.BUNDLE_REPORT) {
 // Exports ------------------------------------------------------------>
 
 
-module.exports = {
+export default {
 	mode: "production",
 	context: __dirname,
 	entry: entry,

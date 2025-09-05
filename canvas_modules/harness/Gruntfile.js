@@ -20,7 +20,7 @@
 
 var IS_PRODUCTION = process.env.NODE_ENV === "production";
 
-module.exports = function(grunt) {
+export default function(grunt) {
 	grunt.initConfig({
 		eslint: {
 			node: {

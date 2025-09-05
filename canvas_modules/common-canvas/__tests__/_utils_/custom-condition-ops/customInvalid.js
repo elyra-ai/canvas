@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 // This is an invalid formatted operation
-function op() {
+export function op() {
 	return "invalidOp";
 }
 
-function invalid(paramInfo, param2Info, value, controller) {
+export function invalid(paramInfo, param2Info, value, controller) {
 	return true;
 }
-
-// Public Methods ------------------------------------------------------------->
-
-module.exports.op = op;
-module.exports.invalid = invalid;
