@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@
 
 // Modules
 
-const path = require("path");
-const webpack = require("webpack");
-const babelOptions = require("./scripts/babel/babelOptions").babelOptions;
-const constants = require("./lib/constants");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+import path from "path";
+import webpack from "webpack";
+import { babelOptions } from "./scripts/babel/babelOptions";
+import { APP_PATH } from "./lib/constants";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import autoprefixer from "autoprefixer";
 
 // Globals
 
@@ -40,7 +41,7 @@ const entry = [
 
 const output = {
 	path: path.join(__dirname, ".build"),
-	publicPath: constants.APP_PATH,
+	publicPath: APP_PATH,
 	filename: "js/canvasharness.js",
 	chunkFilename: "js/canvasharness.chunk.[id].js",
 	sourceMapFilename: "[file].map",
@@ -74,7 +75,7 @@ const rules = [
 				options: {
 					postcssOptions: {
 						sourceMap: true,
-						plugins: [require("autoprefixer")]
+						plugins: [autoprefixer]
 					}
 				}
 			},

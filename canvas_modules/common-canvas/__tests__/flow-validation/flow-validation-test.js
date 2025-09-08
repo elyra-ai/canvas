@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,12 @@ const NodeIds = {
 	NOMSG2: "paramDefNodeNoMsgs2"
 };
 
-const FLOW_VALIDATION_DEFAULT_DEF = require("../test_resources/flow-validation/node_defaultData.json");
-const FLOW_VALIDATION_FORM_DEF = require("../test_resources/flow-validation/node_formData.json");
-const FLOW_VALIDATION_PARAM_DEF = require("../test_resources/flow-validation/node_paramDef.json");
-const FLOW_VALIDATION_TABLE_PARAM_DEF = require("../test_resources/flow-validation/node_table_paramDef.json");
-const FLOW_VALIDATION_RECORD_DEF = require("../test_resources/flow-validation/spark.AddColumn_paramDef.json");
-const FLOW_VALIDATION_MODEL_DEF = require("../test_resources/flow-validation/spark.GBTClassifier_paramDef.json");
+import FLOW_VALIDATION_DEFAULT_DEF from "../test_resources/flow-validation/node_defaultData.json";
+import FLOW_VALIDATION_FORM_DEF from "../test_resources/flow-validation/node_formData.json";
+import FLOW_VALIDATION_PARAM_DEF from "../test_resources/flow-validation/node_paramDef.json";
+import FLOW_VALIDATION_TABLE_PARAM_DEF from "../test_resources/flow-validation/node_table_paramDef.json";
+import FLOW_VALIDATION_RECORD_DEF from "../test_resources/flow-validation/spark.AddColumn_paramDef.json";
+import FLOW_VALIDATION_MODEL_DEF from "../test_resources/flow-validation/spark.GBTClassifier_paramDef.json";
 
 const expectedNode1Messages = [
 	{ "text": "The new column name cannot be empty", "type": "error", "validation_id": "colName1", "id_ref": "colName" },

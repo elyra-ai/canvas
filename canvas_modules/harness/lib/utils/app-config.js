@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 // Modules
 
-const nconf = require("nconf");
-const log4js = require("log4js");
+import nconf from "nconf";
+import log4js from "log4js";
 
 // Globals
 

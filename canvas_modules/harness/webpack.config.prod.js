@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,14 @@
 
 // Modules
 
-const path = require("path");
-const webpack = require("webpack");
-const babelOptions = require("./scripts/babel/babelOptions").babelOptions;
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const constants = require("./lib/constants");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+import path from "path";
+import webpack from "webpack";
+import { babelOptions } from "./scripts/babel/babelOptions";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import { APP_PATH } from "./lib/constants";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
+import autoprefixer from "autoprefixer";
 // Entry & Output files ------------------------------------------------------------>
 
 const entry = {
@@ -35,7 +36,7 @@ const entry = {
 
 const output = {
 	path: path.join(__dirname, ".build"),
-	publicPath: constants.APP_PATH,
+	publicPath: APP_PATH,
 	filename: "js/[name].[contenthash].js",
 	chunkFilename: "js/chunk.[name].[id].[contenthash].js"
 };
@@ -64,7 +65,7 @@ const rules = [
 			{ loader: "postcss-loader",
 				options: {
 					postcssOptions: {
-						plugins: [require("autoprefixer")]
+						plugins: [autoprefixer]
 					}
 				}
 			},

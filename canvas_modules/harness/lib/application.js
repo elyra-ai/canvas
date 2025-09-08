@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +17,31 @@
 // ESLint Rule Overrides
 
 /* eslint no-process-exit: 0 */
-const express = require("express");
-const session = require("express-session");
-const compression = require("compression");
-const path = require("path");
-const appConfig = require("./utils/app-config");
-const constants = require("./constants");
-const log4js = require("log4js");
-const bodyParser = require("body-parser");
-const log4jsUtil = require("./utils/log4js-util");
-log4jsUtil.init();
+import express from "express";
+import session from "express-session";
+import compression from "compression";
+import path from "path";
+import { init } from "./utils/app-config";
+import { APP_SESSION_KEY, API_PATH_V1, APP_PATH } from "./constants";
+import log4js from "log4js";
+import bodyParser from "body-parser";
+import { init as log4jsInit, getRequestLogger } from "./utils/log4js-util";
+import webpack from "webpack";
+import webpackConfig from "../webpack.config.dev";
+import webpackDevMiddleware from "webpack-dev-middleware";
+import WebpackHotMiddleware from "webpack-hot-middleware";
+log4jsInit();
 
 const isProduction = process.env.NODE_ENV === "production";
 
 const logger = log4js.getLogger("application");
 
 // Controllers
-var formsAPI = require("../controllers/v1-forms-api.js");
-var opsAPI = require("../controllers/v1-ops-api.js");
+import formsAPI from "../controllers/v1-forms-api.js";
+import opsAPI from "../controllers/v1-ops-api.js";
 
 export function create(callback) {
-	var status = appConfig.init();
+	var status = init();
 	if (!status) {
 		callback(new Error("Failed to initialize application configuration."), null);
 		return;
@@ -49,7 +53,7 @@ export function create(callback) {
 	app.use(compression());
 
 	app.use(session({
-		secret: constants.APP_SESSION_KEY,
+		secret: APP_SESSION_KEY,
 		resave: false,
 		saveUninitialized: false,
 		name: "testharness.sid"
@@ -63,18 +67,18 @@ export function create(callback) {
 
 	app.use(express.static(path.join(__dirname, "../.build")));
 
-	app.use(log4jsUtil.getRequestLogger());
+	app.use(getRequestLogger());
 
 	const routerOptions = {
 		caseSensitive: true,
 		mergeParams: true
 	};
 	const v1Router = express.Router(routerOptions);
-	app.use(constants.API_PATH_V1, v1Router);
+	app.use(API_PATH_V1, v1Router);
 
 	v1Router.use(bodyParser.json({ limit: "10mb" }));
-	v1Router.use(constants.APP_PATH, formsAPI);
-	v1Router.use(constants.APP_PATH, opsAPI);
+	v1Router.use(APP_PATH, formsAPI);
+	v1Router.use(APP_PATH, opsAPI);
 
 	callback(null, app);
 }
@@ -87,18 +91,16 @@ function _configureHmr(app) {
 		mergeParams: true
 	});
 
-	var webpack = require("webpack");
-	var webpackConfig = require("../webpack.config.dev");
-	var compiler = webpack(webpackConfig);
+	const compiler = webpack(webpackConfig);
 
 	// Note: publicPath should match the output directory as defined
 	// in the webpack config, but we are applying this middleware to
 	// a route mounted at constants.APP_PATH already
-	hmrRouter.use(require("webpack-dev-middleware")(compiler, {
+	hmrRouter.use(webpackDevMiddleware(compiler, {
 		publicPath: "/"
 	}));
-	hmrRouter.use(require("webpack-hot-middleware")(compiler));
-	app.use(constants.APP_PATH, hmrRouter);
+	hmrRouter.use(WebpackHotMiddleware(compiler));
+	app.use(APP_PATH, hmrRouter);
 	// load images and styles from asserts folder in development mode
 	app.use(express.static(path.join(__dirname, "../assets")));
 }

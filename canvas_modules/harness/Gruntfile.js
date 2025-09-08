@@ -16,7 +16,8 @@
 /* eslint global-require: 0 */
 /* eslint quote-props: 0 */
 
-"use strict";
+import webpackConfigProd from "./webpack.config.prod";
+import webpackConfigDev from "./webpack.config.dev";
 
 var IS_PRODUCTION = process.env.NODE_ENV === "production";
 
@@ -111,7 +112,7 @@ export default function(grunt) {
 			}
 		},
 		webpack: {
-			client: IS_PRODUCTION ? require("./webpack.config.prod") : require("./webpack.config.dev")
+			client: IS_PRODUCTION ? webpackConfigProd : webpackConfigDev
 		}
 	});
 
