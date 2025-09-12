@@ -18,6 +18,7 @@ import reactConfigs from "eslint-config-canvas/react";
 export default [
 	...reactConfigs,
 	{
+		files: ["**/*.js"], 
 		languageOptions: {
 			globals: {
 				browser: true
@@ -25,10 +26,10 @@ export default [
 		},
 		rules: {
 			// Disable strict warning on ES6 Components
-			"sort-imports": 0,
+			// "sort-imports": 0,
 			"react/jsx-indent-props": [2, "tab"],
-			"no-unused-expressions": "off",
-			"no-shadow": ["error", { "allow": ["expect"] }]
+			// "no-unused-expressions": "off",
+			// "no-shadow": ["error", { "allow": ["expect"] }]
 		}
 	}
 ];

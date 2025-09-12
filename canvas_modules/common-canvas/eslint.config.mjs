@@ -17,10 +17,12 @@
 import globals from "globals";
 import configs from "eslint-config-canvas";
 import importPlugin from "eslint-plugin-import";
+import reactConfigs from "eslint-config-canvas/react.js";
 
 export default [
 	importPlugin.flatConfigs.errors,
 	...configs,
+	...reactConfigs,
 	{
 		settings: {
 			"import/resolver": {
@@ -47,12 +49,7 @@ export default [
 			"**/*.mjs"
 		],
 		languageOptions: {
-			sourceType: "module",
-			// globals: { // TODO : Check if this is needed!
-			// 	process: "readonly",
-			// 	Buffer: "readonly",
-			// 	setTimeout: "readonly"
-			// }
+			sourceType: "module"
 		}
 	},
 	// commonjs files
@@ -69,10 +66,18 @@ export default [
 		files: [
 			"__tests__/**"
 		],
+		rules: {
+			// Disable strict warning on ES6 Components
+			"sort-imports": "off",
+			"no-unused-expressions": "off",
+			"no-shadow": ["error", { "allow": ["expect"] }],
+			"react/jsx-indent-props": [2, "tab"]
+    	},
 		languageOptions: {
 			globals: {
 				...globals.jest,
-				global: "readonly"
+				global: "readonly",
+				browser: true
 			}
 		}
 	}
