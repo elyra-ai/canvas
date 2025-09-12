@@ -16,18 +16,20 @@
 /* eslint global-require: 0 */
 /* eslint quote-props: 0 */
 
-import webpackConfigProd from "./webpack.config.prod";
-import webpackConfigDev from "./webpack.config.dev";
+const webpackConfigProd = require("./webpack.config.prod");
+const webpackConfigDev = require("./webpack.config.dev");
 
 var IS_PRODUCTION = process.env.NODE_ENV === "production";
 
-export default function(grunt) {
+module.exports = function(grunt) {
 	grunt.initConfig({
 		eslint: {
-			node: {
-				src: ["index.js", "Gruntfile.js", "controllers/**/*.js",
+			target: ["index.js", "Gruntfile.cjs", "controllers/**/*.js",
 					"models/**/*.js", "lib/**/*.js", "tests/**/*.js", "src/**/*.js", "src/**/*.jsx",
-					"features/**/*.js", "scripts/**/*.js"]
+					"features/**/*.js", "scripts/**/*.js"
+			],
+			options: {
+				overrideConfigFile: "eslint.config.mjs"
 			}
 		},
 		jsonlint: {

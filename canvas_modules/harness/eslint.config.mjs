@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,33 +14,55 @@
  * limitations under the License.
  */
 
-export default {
-	extends: "eslint-config-canvas",
-	plugins: [
-		"import"
-	],
-	settings: {
-		"import/resolver": {
-			"node": {
-				"extensions": [".js", ".jsx", ".json"]
+import configs from "eslint-config-canvas";
+import importPlugin from "eslint-plugin-import";
+import globals from "globals";
+
+export default [
+	importPlugin.flatConfigs.errors,
+	...configs,
+	{
+		settings: {
+			"import/resolver": {
+				"node": {
+					"extensions": [".js", ".jsx", ".json"]
+				}
+			}
+		},
+		rules: {
+			// Allow snake_case, but only for object properties e.g. myObj.param_name
+			"camelcase": [
+				"error",
+				{ "properties": "never" }
+			],
+			"import/no-unresolved": [2, { commonjs: true, amd: true }],
+			"max-len": [2, 180, 4],
+			"id-length": ["error", { "min": 1 }]
+		},
+		languageOptions: {
+			globals: {
+				...globals.jasmine,
+				...globals.jest
 			}
 		}
 	},
-	rules: {
-		// Allow snake_case, but only for object properties e.g. myObj.param_name
-		"camelcase": [
-			"error",
-			{ "properties": "never" }
+	// commonjs files
+	{
+		files: [
+			"**/*.cjs"
 		],
-		"import/no-unresolved": [2, { commonjs: true, amd: true }],
-		"max-len": [2, 180, 4],
-		"id-length": ["error", { "min": 1 }]
+		languageOptions: {
+			sourceType: "commonjs"
+		}
 	},
-	env: {
-		jasmine: true,
-		jest: true
-	},
-	parserOptions: {
-		"sourceType": "module"
+	// ESM files
+	{
+		files: [
+			"**/*.js",
+			"**/*.mjs"
+		],
+		languageOptions: {
+			sourceType: "module"
+		}
 	}
-};
+];

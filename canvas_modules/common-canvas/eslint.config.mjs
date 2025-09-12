@@ -13,32 +13,67 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-	extends: "eslint-config-canvas",
-	plugins: [
-		"import"
-	],
-	settings: {
-		"import/resolver": {
-			"node": {
-				"extensions": [".js", ".jsx", ".json"]
+
+import globals from "globals";
+import configs from "eslint-config-canvas";
+import importPlugin from "eslint-plugin-import";
+
+export default [
+	importPlugin.flatConfigs.errors,
+	...configs,
+	{
+		settings: {
+			"import/resolver": {
+				"node": {
+					"extensions": [".js", ".jsx", ".json"]
+				}
 			}
+		},
+		rules: {
+			// Allow snake_case, but only for object properties e.g. myObj.param_name
+			"camelcase": [
+				"error",
+				{ "properties": "never" }
+			],
+			"import/no-unresolved": [2, { commonjs: true, amd: true }],
+			"max-len": [2, 180, 4],
+			"id-length": ["error", { "min": 1 }]
 		}
 	},
-	rules: {
-		// Allow snake_case, but only for object properties e.g. myObj.param_name
-		"camelcase": [
-			"error",
-			{ "properties": "never" }
+	// ESM files
+	{
+		files: [
+			"**/*.js",
+			"**/*.mjs"
 		],
-		"import/no-unresolved": [2, { commonjs: true, amd: true }],
-		"max-len": [2, 180, 4],
-		"id-length": ["error", { "min": 1 }]
+		languageOptions: {
+			sourceType: "module",
+			// globals: { // TODO : Check if this is needed!
+			// 	process: "readonly",
+			// 	Buffer: "readonly",
+			// 	setTimeout: "readonly"
+			// }
+		}
 	},
-	env: {
-		jest: true
+	// commonjs files
+	{
+		files: [
+			"**/*.cjs"
+		],
+		languageOptions: {
+			sourceType: "commonjs"
+		}
 	},
-	parserOptions: {
-		"sourceType": "module"
+	// jest tests
+	{
+		files: [
+			"__tests__/**"
+		],
+		languageOptions: {
+			globals: {
+				...globals.jest,
+				global: "readonly"
+			}
+		}
 	}
-};
+];

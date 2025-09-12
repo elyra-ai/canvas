@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-	extends: [
-		"eslint-config-canvas/react"
-	].map(require.resolve),
-	env: {
-		"browser": true
-	},
-	rules: {
-		// Disable strict warning on ES6 Components
-		"sort-imports": 0,
-		"react/jsx-indent-props": [2, "tab"],
-		"no-unused-expressions": 0,
-		"no-shadow": ["error", { "allow": ["expect"] }]
+import reactConfigs from "eslint-config-canvas/react";
+
+export default [
+	...reactConfigs,
+	{
+		languageOptions: {
+			globals: {
+				browser: true
+			}
+		},
+		rules: {
+			// Disable strict warning on ES6 Components
+			"sort-imports": 0,
+			"react/jsx-indent-props": [2, "tab"],
+			"no-unused-expressions": "off",
+			"no-shadow": ["error", { "allow": ["expect"] }]
+		}
 	}
-};
+];
