@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
+import globals from "globals";
 import configs from "eslint-config-canvas";
 import importPlugin from "eslint-plugin-import";
-import globals from "globals";
+import reactConfigs from "eslint-config-canvas/react";
+import pluginCypress from "eslint-plugin-cypress";
 
 export default [
 	importPlugin.flatConfigs.errors,
 	...configs,
+	...reactConfigs,
 	{
 		settings: {
 			"import/resolver": {
@@ -61,6 +64,42 @@ export default [
 			"**/*.js",
 			"**/*.mjs"
 		],
+		languageOptions: {
+			sourceType: "module"
+		}
+	},
+	// src
+	{
+		// ...configs, // TODO: Do we need this??
+		// ...reactConfigs, // TODO: Do we need this??
+		files: ["src/**/*.js", "src/**/*.jsx"],
+		rules: {
+			// Disable strict warning on ES6 Components
+			"strict": 0,
+			"global-require": 0,
+			"sort-imports": 0,
+			"react/jsx-indent-props": [2, "tab"],
+			"max-len": [2, 180, 4],
+		},
+		languageOptions: {
+			sourceType: "module",
+			globals: {
+				...globals.browser,
+			}
+		}
+	},
+	// cypress
+	{
+		// ...configs, // TODO: Do we need this??
+		// ...reactConfigs, // TODO: Do we need this??
+		files: ["cypress/**/*.js"],
+		 plugins: {
+			cypress: pluginCypress.configs.recommended,
+		},
+		rules: {
+			"no-unused-expressions": "off",
+			"cypress/no-unnecessary-waiting": "off"
+		},
 		languageOptions: {
 			sourceType: "module"
 		}
