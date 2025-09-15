@@ -249,7 +249,7 @@ class TitleEditor extends Component {
 					}
 				)}
 				>
-					<Layer level={this.props.controller.getLight() ? 1 : 0} className="properties-title-editor-layer">
+					<Layer level={this.props.controller.getLight() ? 1 : 0} className="properties-title-editor-layer hover-edit-container">
 						<TextInput
 							id={this.id}
 							ref={this.textInputRef}
@@ -268,8 +268,8 @@ class TitleEditor extends Component {
 							warnText={get(this.state.titleValidation, "message")}
 							{... this.state.focused && { className: "properties-title-editor-focused" }}
 						/>
+						{titleValidationTypes.includes(get(this.state.titleValidation, "type")) ? null : propertiesTitleEdit}
 					</Layer>
-					{titleValidationTypes.includes(get(this.state.titleValidation, "type")) ? null : propertiesTitleEdit}
 				</div>
 				{!this.headingEnabled && !titleValidationTypes.includes(get(this.state.titleValidation, "type")) ? helpButton : null}
 				{this.createTitleActions()}

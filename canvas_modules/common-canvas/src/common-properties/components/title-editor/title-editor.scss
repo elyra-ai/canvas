@@ -175,3 +175,16 @@
 		cursor: pointer;
 	}
 }
+
+.hover-edit-container {
+	display: flex;
+	&:hover {
+		background-color: carbon.$layer-hover-01;
+	}
+	.properties-title-editor-btn {
+		opacity: 0;
+	}
+	&:hover .properties-title-editor-btn {
+		opacity: 1;
+	}
+}
