@@ -184,7 +184,7 @@ export default class KeyboardUtils {
 		return d3Event.key === ESC_KEY;
 	}
 
-	static clickPort(d3Event) {
+	static clickSubObject(d3Event) {
 		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && (d3Event.key === RETURN_KEY || this.isSpaceKey(d3Event));
 	}
 

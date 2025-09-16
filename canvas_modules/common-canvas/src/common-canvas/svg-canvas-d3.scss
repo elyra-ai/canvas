@@ -426,7 +426,20 @@ $link-highlight-color: carbon.$support-info;
 	}
 }
 
-/* Node decorations styles */
+/* Node and link decoration styles */
+
+g.d3-node-dec-group:focus,
+g.d3-link-dec-group:focus {
+	outline-width: 0;
+
+	.d3-focus-path {
+		display: unset;
+		fill: transparent;
+		stroke-width: 2;
+		stroke: carbon.$focus;
+		pointer-events: none;
+	}
+}
 
 .d3-node-dec-outline,
 .d3-link-dec-outline {

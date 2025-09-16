@@ -57,6 +57,8 @@ import { HighlightStyle, syntaxHighlighting, indentOnInput, bracketMatching, fol
 import { python } from "@codemirror/lang-python";
 import { sql } from "@codemirror/lang-sql";
 import { javascript } from "@codemirror/lang-javascript";
+import { json, jsonParseLinter } from "@codemirror/lang-json";
+import { linter } from "@codemirror/lint";
 
 import { getPythonHints } from "./languages/python-hint";
 import { rLanguage } from "./languages/r-hint";
@@ -196,6 +198,9 @@ class ExpressionControl extends React.Component {
 		case "javascript":
 			language = javascript();
 			break;
+		case "json":
+			language = json();
+			break;
 		default:
 			language = clem(); // custom language
 		}
@@ -219,6 +224,8 @@ class ExpressionControl extends React.Component {
 			{ tag: tags.meta, class: "cm-meta" }
 		]);
 
+		const linterExtension = linter(jsonParseLinter());
+
 		this.editor = new EditorView({
 			doc: this.props.value,
 			extensions: [
@@ -241,6 +248,7 @@ class ExpressionControl extends React.Component {
 				crosshairCursor(),
 				highlightActiveLine(),
 				highlightSelectionMatches(),
+				linterExtension,
 				keymap.of([
 					...closeBracketsKeymap,
 					...defaultKeymap,
