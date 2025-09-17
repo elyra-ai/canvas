@@ -61,5 +61,8 @@
 		.cds--number input[type="number"] {
 			min-width: 0;
 		}
+		input:disabled:hover {
+			box-shadow: unset; // removes underline when disabled
+		}
 	}
 }
