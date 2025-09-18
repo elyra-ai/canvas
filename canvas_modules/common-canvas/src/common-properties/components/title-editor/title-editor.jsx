@@ -249,7 +249,7 @@ class TitleEditor extends Component {
 					}
 				)}
 				>
-					<Layer level={this.props.controller.getLight() ? 1 : 0} className="properties-title-editor-layer hover-edit-container">
+					<Layer level={this.props.controller.getLight() ? 1 : 0} className="properties-title-editor-layer">
 						<TextInput
 							id={this.id}
 							ref={this.textInputRef}
