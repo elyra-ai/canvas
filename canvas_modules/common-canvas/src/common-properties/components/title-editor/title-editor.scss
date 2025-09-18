@@ -140,6 +140,13 @@
 	// Edit button should be inside the title input box
 	.properties-title-editor-btn {
 		right: carbon.$spacing-01;
+		display: none;
+	}
+	&:hover {
+		background-color: carbon.$field-hover-01;
+		.properties-title-editor-btn {
+			display:flex;
+		}
 	}
 }
 
@@ -176,15 +183,3 @@
 	}
 }
 
-.hover-edit-container {
-	display: flex;
-	&:hover {
-		background-color: carbon.$layer-hover-01;
-	}
-	.properties-title-editor-btn {
-		opacity: 0;
-	}
-	&:hover .properties-title-editor-btn {
-		opacity: 1;
-	}
-}
