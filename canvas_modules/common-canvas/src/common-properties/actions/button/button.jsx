@@ -38,7 +38,11 @@ class ButtonAction extends React.Component {
 				data: action.data
 			};
 			buttonIconHandler(iconData, (appIcon) => {
-				this.icon = appIcon; // Load icon via buttonIconHandler with a new type "actionButtonIcon".
+				if (React.isValidElement(appIcon)) {
+					this.icon = appIcon.type; // Extract component type from JSX element
+				} else {
+					this.icon = null;
+				}
 			}
 			);
 		}
