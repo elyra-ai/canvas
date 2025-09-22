@@ -41,7 +41,7 @@ class ButtonAction extends React.Component {
 				if (React.isValidElement(appIcon)) {
 					this.icon = appIcon.type; // Extract component type from JSX element
 				} else {
-					this.icon = null;
+					this.icon = appIcon;
 				}
 			}
 			);
