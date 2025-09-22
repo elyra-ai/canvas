@@ -18,6 +18,7 @@ import React from "react";
 
 import ButtonAction from "./button";
 import ImageAction from "./image";
+import SVGAction from "./svg";
 import { ActionType } from "./../constants/form-constants";
 import classNames from "classnames";
 import { getDataId } from "./../util/control-utils";
@@ -42,6 +43,14 @@ export default class ActionFactory {
 			} else if (action.actionType === ActionType.IMAGE) {
 				return (
 					<ImageAction
+						key={"action." + key}
+						action={action}
+						controller={this.controller}
+					/>
+				);
+			} else if (action.actionType === ActionType.SVG) {
+				return (
+					<SVGAction
 						key={"action." + key}
 						action={action}
 						controller={this.controller}

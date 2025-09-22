@@ -2030,6 +2030,21 @@ class App extends React.Component {
 			}
 			propertiesController.updatePropertyValue(propertyId, value);
 		}
+		if (actionId === "currency") {
+			const propertyId = { name: data.parameter_ref };
+			let value = propertiesController.getPropertyValue(propertyId);
+			switch (value) {
+			case "Dollar":
+				value = "Euro";
+				break;
+			case "Euro":
+				value = "Rupees";
+				break;
+			default:
+				value = "Dollar";
+			}
+			propertiesController.updatePropertyValue(propertyId, value);
+		}
 		if (actionId === "image_cond_disable" || actionId === "button_cond_disable") {
 			const propertyId = { name: data.parameter_ref };
 			let value = propertiesController.getPropertyValue(propertyId);

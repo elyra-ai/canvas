@@ -108,6 +108,7 @@ const ControlType = {
 const ActionType = {
 	BUTTON: "button",
 	IMAGE: "image",
+	SVG: "svg",
 	CUSTOM: "custom"
 };
 
