@@ -641,16 +641,16 @@
         "description": {
           "default": "This is a tooltip for action svg."
         },
-        "control": "svg",
+        "control": "image",
         "data": {
           "parameter_ref": "currency_svg"
         },
-        "svg": {
+        "image": {
           "url": "/images/currency.svg",
           "placement": "left",
           "size": {
-            "height": 5,
-            "width": 5
+            "height": 35,
+            "width": 35
           }
         }
       },
