@@ -116,14 +116,18 @@ class CommonCanvasRightFlyout extends React.Component {
 		if (this.props.content && this.props.isOpen) {
 			const rightFlyoutDragContent = this.getRightFlyoutResizeContent();
 
-			const widthPx = this.limitWidth(this.props.panelWidth) + "px";
+
+			const width = typeof this.props.panelWidth === "undefined" || this.props.panelWidth === null
+				? null
+				: this.limitWidth(this.props.panelWidth);
+			const widthPx = width + "px";
 
 			const rfClass = this.props.enableRightFlyoutUnderToolbar
 				? "right-flyout-panel under-toolbar"
 				: "right-flyout-panel";
 
 			rightFlyout = (
-				<div className="right-flyout" style={{ width: widthPx }} >
+				<div className="right-flyout" style={{ width: widthPx, minWidth: widthPx }} >
 					{rightFlyoutDragContent}
 					<div className={rfClass} ref={this.rightFlyoutRef}>
 						{this.props.content}
