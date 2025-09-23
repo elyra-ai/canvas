@@ -46,6 +46,7 @@ class ImageAction extends React.Component {
 			return (<SVG
 				src={filePath}
 				aria-label={this.props.action.name}
+				fill="currentColor"
 				{...this.imageDimensions}
 			/>);
 		}
