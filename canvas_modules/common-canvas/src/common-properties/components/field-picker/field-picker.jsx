@@ -352,9 +352,12 @@ export default class FieldPicker extends React.Component {
 				}
 			}
 			const filterTooltipId = "tooltip-filters-" + ind;
+			const customLabelKey = `fieldPicker.${filter.type}.label`; // custom label key from user
+			const customLabelfromKey = PropertyUtils.formatMessage(that.props.controller.getReactIntl(), customLabelKey);
+			const customTypeLabel = (customLabelfromKey !== customLabelKey ? customLabelfromKey : filter.type); // use key as it is if no label found from user
 			const dataTypeLabel = Object.values(DATA_TYPE).includes(filter.type)
 				? PropertyUtils.formatMessage(that.props.controller.getReactIntl(), MESSAGE_KEYS[`FIELDPICKER_${filter.type.toUpperCase()}_LABEL`])
-				: filter.type; // label custom type as is
+				: customTypeLabel; // user defined label
 			const tooltip = (
 				<div className="properties-tooltips">
 					{dataTypeLabel}
