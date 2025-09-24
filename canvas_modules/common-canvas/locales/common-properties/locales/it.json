@@ -118,5 +118,6 @@
   "slider.numberInput.label": "Input numero dispositivo di scorrimento",
   "editorForm.tabList.label": "Schede principali",
   "subTabs.tabList.label": "Elenco schede",
-  "table.deleteIcon.tooltip": "Elimina"
+  "table.deleteIcon.tooltip": "Elimina",
+  "action.button.icon": "Icona del pulsante di azione"
 }

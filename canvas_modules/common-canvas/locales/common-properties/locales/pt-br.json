@@ -118,5 +118,6 @@
   "slider.numberInput.label": "Entrada do número do controle deslizante",
   "editorForm.tabList.label": "Guias principais",
   "subTabs.tabList.label": "Lista de guias",
-  "table.deleteIcon.tooltip": "Excluir"
+  "table.deleteIcon.tooltip": "Excluir",
+  "action.button.icon": "Ícone do botão de ação"
 }
