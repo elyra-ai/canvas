@@ -1457,7 +1457,7 @@ class App extends React.Component {
 			const actionId = data.buttonId;
 			switch (actionId) {
 			case "iconButton":
-				iconComponenet = <Launch />;
+				iconComponenet = Launch;
 				break;
 			case "increment1":
 				iconComponenet = <Add />;
