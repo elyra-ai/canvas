@@ -88,7 +88,8 @@ Cypress.Commands.add("saveWideFlyout", (panelName) => {
 });
 
 Cypress.Commands.add("clickPropertiesFlyoutTitleEditIcon", () => {
-	cy.get(".right-flyout-panel button.properties-title-editor-btn.edit").click();
+	cy.get(".properties-title-editor").trigger("mouseover");
+	cy.get(".right-flyout-panel button.properties-title-editor-btn.edit").click({ force: true });
 });
 
 Cypress.Commands.add("enterNewPropertiesFlyoutTitle", (newTitle) => {
