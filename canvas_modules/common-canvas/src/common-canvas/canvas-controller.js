@@ -1741,6 +1741,10 @@ export default class CanvasController {
 		this.objectModel.setRightFlyoutWidth(wd);
 	}
 
+	setRightFlyoutMinWidth(wd) {
+		this.objectModel.setRightFlyoutMinWidth(wd);
+	}
+
 	isRightFlyoutOpen() {
 		return this.objectModel.isRightFlyoutOpen();
 	}

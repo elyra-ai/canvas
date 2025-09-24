@@ -43,12 +43,12 @@ class CommonCanvasRightFlyout extends React.Component {
 
 	componentDidMount() {
 		// Since flyout content width can be dynamic set the minimum width to width of the content
-		this.minWidth = this.getCurrentWidth();
-	}
-
-	componentWillUnmount() {
-		// Reset the flyout width so the content will control the width next time the flyout is mounted.
-		this.props.canvasController.setRightFlyoutWidth(0);
+		// unless a minimum width has been specified by the application. In which case, use it.
+		if (typeof this.props.panelMinWidth === "undefined" || this.props.panelMinWidth === null) {
+			this.minWidth = this.getCurrentWidth();
+		} else {
+			this.minWidth = this.props.panelMinWidth;
+		}
 	}
 
 	onMouseDown(e) {
@@ -116,14 +116,18 @@ class CommonCanvasRightFlyout extends React.Component {
 		if (this.props.content && this.props.isOpen) {
 			const rightFlyoutDragContent = this.getRightFlyoutResizeContent();
 
-			const widthPx = this.limitWidth(this.props.panelWidth) + "px";
+
+			const width = typeof this.props.panelWidth === "undefined" || this.props.panelWidth === null
+				? null
+				: this.limitWidth(this.props.panelWidth);
+			const widthPx = width + "px";
 
 			const rfClass = this.props.enableRightFlyoutUnderToolbar
 				? "right-flyout-panel under-toolbar"
 				: "right-flyout-panel";
 
 			rightFlyout = (
-				<div className="right-flyout" style={{ width: widthPx }} >
+				<div className="right-flyout" style={{ width: widthPx, minWidth: widthPx }} >
 					{rightFlyoutDragContent}
 					<div className={rfClass} ref={this.rightFlyoutRef}>
 						{this.props.content}
@@ -146,7 +150,8 @@ CommonCanvasRightFlyout.propTypes = {
 	content: PropTypes.object,
 	enableRightFlyoutUnderToolbar: PropTypes.bool,
 	enableRightFlyoutDragToResize: PropTypes.bool,
-	panelWidth: PropTypes.number
+	panelWidth: PropTypes.number,
+	panelMinWidth: PropTypes.number
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -154,7 +159,8 @@ const mapStateToProps = (state, ownProps) => ({
 	content: state.rightflyout.content,
 	enableRightFlyoutUnderToolbar: state.canvasconfig.enableRightFlyoutUnderToolbar,
 	enableRightFlyoutDragToResize: state.canvasconfig.enableRightFlyoutDragToResize,
-	panelWidth: state.rightflyout.panelWidth
+	panelWidth: state.rightflyout.panelWidth,
+	panelMinWidth: state.rightflyout.panelMinWidth
 });
 
 export default connect(mapStateToProps)(CommonCanvasRightFlyout);
