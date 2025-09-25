@@ -1460,10 +1460,10 @@ class App extends React.Component {
 				iconComponenet = Launch;
 				break;
 			case "increment1":
-				iconComponenet = Add;
+				iconComponenet = <Add />;
 				break;
 			case "dm-update":
-				iconComponenet = Restart;
+				iconComponenet = <Restart />;
 				break;
 			default:
 				iconComponenet = null;
