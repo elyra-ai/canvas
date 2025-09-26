@@ -18,6 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "@carbon/react";
+import SVG from "react-inlinesvg";
 import { STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
 
@@ -28,6 +29,7 @@ class ImageAction extends React.Component {
 		};
 		this.applyAction = this.applyAction.bind(this);
 		this.renderIcon = this.renderIcon.bind(this);
+		this.getIcon = this.getIcon.bind(this);
 
 		this.imageDimensions = this.props.action?.image?.size
 			? {
@@ -37,6 +39,22 @@ class ImageAction extends React.Component {
 			: {};
 	}
 
+	getIcon(filePath) {
+		const extension = filePath.split(".").pop()
+			.toLowerCase();
+		if (extension === "svg") {
+			return (<SVG
+				src={filePath}
+				aria-label={this.props.action.name}
+				{...this.imageDimensions}
+			/>);
+		}
+		return (<img
+			src={filePath}
+			aria-label={this.props.action.name}
+			{...this.imageDimensions}
+		/>);
+	}
 	applyAction() {
 		if (this.props.state !== STATES.DISABLED) { // this is needed to mimic disabled action button
 			// fire event and let the application determine how to handle the action
@@ -49,11 +67,7 @@ class ImageAction extends React.Component {
 	}
 
 	renderIcon() {
-		const icon = (<img
-			src={this.props.action.image.url}
-			aria-label={this.props.action.name}
-			{...this.imageDimensions}
-		/>);
+		const icon = this.getIcon(this.props.action.image.url);
 		return icon;
 	}
 
