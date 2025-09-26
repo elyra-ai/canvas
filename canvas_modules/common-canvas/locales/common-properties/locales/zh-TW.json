@@ -118,5 +118,6 @@
   "slider.numberInput.label": "滑塊號碼輸入",
   "editorForm.tabList.label": "主要標籤",
   "subTabs.tabList.label": "標籤清單",
-  "table.deleteIcon.tooltip": "刪除"
+  "table.deleteIcon.tooltip": "刪除",
+  "action.button.icon": "動作按鈕圖示"
 }

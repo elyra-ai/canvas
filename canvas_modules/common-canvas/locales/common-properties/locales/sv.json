@@ -118,5 +118,6 @@
   "slider.numberInput.label": "Indata för antalet skjutreglage",
   "editorForm.tabList.label": "Huvudflikar",
   "subTabs.tabList.label": "Fliklista",
-  "table.deleteIcon.tooltip": "Ta bort"
+  "table.deleteIcon.tooltip": "Ta bort",
+  "action.button.icon": "Ikon för åtgärdsknapp"
 }

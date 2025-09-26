@@ -118,5 +118,6 @@
   "slider.numberInput.label": "滑块编号输入",
   "editorForm.tabList.label": "主选项卡",
   "subTabs.tabList.label": "选项卡列表",
-  "table.deleteIcon.tooltip": "删除"
+  "table.deleteIcon.tooltip": "删除",
+  "action.button.icon": "操作按钮图标"
 }
