@@ -72,9 +72,7 @@ class CommonCanvasRightFlyout extends React.Component {
 			const panelWidth = this.isPanelWidthSpecified() ? this.props.panelWidth : this.getCurrentWidth();
 			const diff = e.clientX - this.posX;
 			const wd = panelWidth - diff;
-			const w = this.limitWidth(wd);
-			console.log(w);
-			this.props.canvasController.setRightFlyoutWidth(w);
+			this.props.canvasController.setRightFlyoutWidth(this.limitWidth(wd));
 			this.posX = e.clientX;
 		}
 	}
@@ -97,7 +95,8 @@ class CommonCanvasRightFlyout extends React.Component {
 		return this.rightFlyoutRef?.current ? this.rightFlyoutRef?.current.getBoundingClientRect().width : 0;
 	}
 
-	// Returns the minimum width for the flyout.
+	// Returns the minimum width for the flyout. This will be the minimum width specified by the
+	// application but if one is not specified the width that the flyout when it first opened.
 	getMinWidth() {
 		if (typeof this.props.panelMinWidth === "undefined" || this.props.panelMinWidth === null) {
 			// When this flyout is first rendered, getMinWidth() will be called before
