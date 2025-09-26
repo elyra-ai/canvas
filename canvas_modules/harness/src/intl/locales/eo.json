@@ -4,5 +4,6 @@
 	"canvas.emptyLink": "[Esperanto~Click here to take a tour~~~~~~eo]",
 	"expression.value.column": "[Esperanto~Custom Value~eo]",
 	"expression.value.column.description": "[Esperanto~Testing custom desc from app~~~~~~~~eo]",
-	"expression.field.column.description": "[Esperanto~Custom description~~~~eo]"
+	"expression.field.column.description": "[Esperanto~Custom description~~~~eo]",
+	"fieldPicker.vectorType.label": "[Esperanto~Custom Vector Label~~~~eo]"
 }

@@ -1469,6 +1469,20 @@ class App extends React.Component {
 				iconComponenet = null;
 			}
 			callbackIcon(iconComponenet);
+		} else if (data.type === "customDataTypeIcon") { // custom icon from consumer app for custom data type
+			let dataIcon = null;
+			const dataType = data.dataType;
+			switch (dataType) {
+			case "vectorType":
+				dataIcon = <SelectWindow />;
+				break;
+			case "customType":
+				dataIcon = <TextScale />;
+				break;
+			default:
+				dataIcon = <Help />;
+			}
+			callbackIcon(dataIcon);
 		}
 	}
 
