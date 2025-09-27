@@ -75,9 +75,9 @@ export default class CanavasStore {
 			texttoolbar: { isOpen: false },
 			contextmenu: { isOpen: false, menuDef: [], source: {} },
 			leftflyout: {},
-			rightflyout: { panelWidth: null },
+			rightflyout: {},
 			bottompanel: { panelHeight: 393 },
-			toppanel: { }
+			toppanel: {}
 		};
 
 		// This code removed because it was causing slowdown in the test harness with the
