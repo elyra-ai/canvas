@@ -118,5 +118,6 @@
   "slider.numberInput.label": "Eingabe einer Zahl für Schieberegler",
   "editorForm.tabList.label": "Primäre Registerkarten",
   "subTabs.tabList.label": "Registerkartenliste",
-  "table.deleteIcon.tooltip": "Löschen"
+  "table.deleteIcon.tooltip": "Löschen",
+  "action.button.icon": "Symbol der Aktionsschaltfläche"
 }

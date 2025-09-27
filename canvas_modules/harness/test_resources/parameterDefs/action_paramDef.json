@@ -11,6 +11,7 @@
     ],
     "weather": "Mild, rainy",
     "moon_phase": "Full",
+    "currency_svg": "Dollar",
     "meteor_showers": "Perseids",
     "hide_button": true,
     "disable_button": true,
@@ -51,6 +52,10 @@
     },
     {
       "id": "moon_phase",
+      "type": "string"
+    },
+    {
+      "id": "currency_svg",
       "type": "string"
     },
     {
@@ -251,6 +256,15 @@
         },
         "control": "readonly",
         "action_ref": "moon"
+      },
+      {
+        "parameter_ref": "currency_svg",
+        "label": {
+          "default": "Currency type"
+        },
+        "description": "Try pressing the currency image",
+        "control": "readonly",
+        "action_ref": "currency"
       },
       {
         "parameter_ref": "icon_button",
@@ -620,6 +634,27 @@
         }
       },
       {
+        "id": "currency",
+        "label": {
+          "resource_key": "currency"
+        },
+        "description": {
+          "default": "This is a tooltip for action svg."
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "currency_svg"
+        },
+        "image": {
+          "url": "/images/currency.svg",
+          "placement": "left",
+          "size": {
+            "height": 35,
+            "width": 35
+          }
+        }
+      },
+      {
         "id": "moon",
         "label": {
           "resource_key": "moon"
@@ -916,6 +951,13 @@
             "type": "controls",
             "parameter_refs": [
               "moon_phase"
+            ]
+          },
+          {
+            "id": "currency-svg",
+            "type": "controls",
+            "parameter_refs": [
+              "currency_svg"
             ]
           },
           {
@@ -1252,6 +1294,7 @@
     "fall": "Fall",
     "spring": "Spring",
     "moon": "Moon",
+    "currency": "Currency",
     "meteor": "Meteor",
     "weather.action.panel.label": "Weather action panel label",
     "weather.action.panel.desc": "Weather action panel description"

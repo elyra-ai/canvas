@@ -118,5 +118,6 @@
   "slider.numberInput.label": "Entrée de numéro de curseur",
   "editorForm.tabList.label": "Onglets principaux",
   "subTabs.tabList.label": "Liste d'onglets",
-  "table.deleteIcon.tooltip": "Supprimer"
+  "table.deleteIcon.tooltip": "Supprimer",
+  "action.button.icon": "Icône du bouton d'action"
 }
