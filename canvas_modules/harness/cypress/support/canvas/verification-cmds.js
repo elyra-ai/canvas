@@ -927,7 +927,7 @@ Cypress.Commands.add("verifyLeftFlyoutPanelHeight", (height) => {
 });
 
 Cypress.Commands.add("verifyRightFlyoutPanelWidth", (width) => {
-	cy.get(".right-flyout-panel").should((element) => {
+	cy.get(".right-flyout").should((element) => {
 		compareCloseTo(element[0].offsetWidth, width);
 	});
 });
