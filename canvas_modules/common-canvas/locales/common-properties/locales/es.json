@@ -118,5 +118,6 @@
   "slider.numberInput.label": "Entrada de número de control deslizante",
   "editorForm.tabList.label": "Separadores principales",
   "subTabs.tabList.label": "Lista de pestañas",
-  "table.deleteIcon.tooltip": "Suprimir"
+  "table.deleteIcon.tooltip": "Suprimir",
+  "action.button.icon": "Icono del botón de acción"
 }

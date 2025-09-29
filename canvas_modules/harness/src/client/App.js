@@ -1460,10 +1460,10 @@ class App extends React.Component {
 				iconComponenet = Launch;
 				break;
 			case "increment1":
-				iconComponenet = Add;
+				iconComponenet = <Add />;
 				break;
 			case "dm-update":
-				iconComponenet = Restart;
+				iconComponenet = <Restart />;
 				break;
 			default:
 				iconComponenet = null;
@@ -2041,6 +2041,21 @@ class App extends React.Component {
 
 			default:
 				value = "Perseids";
+			}
+			propertiesController.updatePropertyValue(propertyId, value);
+		}
+		if (actionId === "currency") {
+			const propertyId = { name: data.parameter_ref };
+			let value = propertiesController.getPropertyValue(propertyId);
+			switch (value) {
+			case "Dollar":
+				value = "Euro";
+				break;
+			case "Euro":
+				value = "Rupees";
+				break;
+			default:
+				value = "Dollar";
 			}
 			propertiesController.updatePropertyValue(propertyId, value);
 		}
