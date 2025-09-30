@@ -156,7 +156,7 @@ export default class SVGCanvasUtilsAccessibility {
 		});
 
 		// Only detached links will be left without a grp field because all
-		// connected comments will have been handled when the node groups were
+		// connected links will have been handled when the node groups were
 		// processed in the loop above -- so assign a new group number to each.
 		this.ap.pipeline.links.forEach((l) => {
 			if (typeof l.grp === "undefined") {
