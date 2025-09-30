@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import ReactResizeDetector from "react-resize-detector";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
@@ -114,6 +113,15 @@ class CanvasContents extends React.Component {
 		if (this.props.canvasConfig.enableFocusOnMount) {
 			this.props.canvasController.setFocusOnCanvas();
 		}
+
+		this.resizeObserver = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				this.refreshOnSizeChange(entry.contentRect);
+			}
+		});
+		if (this.contentsRef.current) {
+			this.resizeObserver.observe(this.contentsRef.current);
+		}
 	}
 
 	componentDidUpdate(prevProps) {
@@ -146,6 +154,7 @@ class CanvasContents extends React.Component {
 
 	componentWillUnmount() {
 		this.removeEventListeners();
+		this.resizeObserver?.disconnect();
 	}
 
 	onCut(evt) {
@@ -698,25 +707,23 @@ class CanvasContents extends React.Component {
 
 		return (
 			<main aria-label={this.getLabel("canvas.label")} role="main">
-				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange} targetRef={this.contentsRef}>
-					<div
-						id={this.mainCanvasDivId}
-						ref={this.contentsRef}
-						className="common-canvas-drop-div"
-						onDrop={this.drop}
-						onDragOver={this.dragOver}
-						onDragEnter={this.dragEnter}
-						onDragLeave={this.dragLeave}
-					>
-						{svgCanvasDiv}
-						{emptyCanvas}
-						{returnToPreviousBtn}
-						{stateTag}
-						{contextMenu}
-						{textToolbar}
-						{dropZoneCanvas}
-					</div>
-				</ReactResizeDetector>
+				<div
+					id={this.mainCanvasDivId}
+					ref={this.contentsRef}
+					className="common-canvas-drop-div"
+					onDrop={this.drop}
+					onDragOver={this.dragOver}
+					onDragEnter={this.dragEnter}
+					onDragLeave={this.dragLeave}
+				>
+					{svgCanvasDiv}
+					{emptyCanvas}
+					{returnToPreviousBtn}
+					{stateTag}
+					{contextMenu}
+					{textToolbar}
+					{dropZoneCanvas}
+				</div>
 			</main>
 		);
 	}
