@@ -35,7 +35,8 @@
 	}
 }
 
-.properties-control-panel + .properties-control-panel:not(:empty) {
+// Apply padding only when the properties-ctrl-wrapper is not hidden
+.properties-control-panel + .properties-control-panel > .properties-ctrl-wrapper:not(.hide) {
 	// Total 40px spacing between two properties-control-panel classes
 	padding-top: carbon.$spacing-06;  // (24px + 16px from properties-ctrl-wrapper)
 }
