@@ -5348,19 +5348,26 @@ export default class SVGCanvasRenderer {
 		return " d3-node-shape-rectangle";
 	}
 
-	// Pushes the links to be below nodes within the nodesLinksGrp group.
+	// Rearanges the display order of links so 'sub-objects', like decorations and
+	// link handles, are visible.
 	setDisplayOrder(linkGroup) {
-		// Force those links without decorations to be behind those with decorations
-		// in case the links overlap we don't want the decorations to be overwritten.
 		this.preserveFocus(() => {
+			// Force those links without decorations to be behind those with decorations
+			// so when the links overlap the decorations are not overwritten.
 			linkGroup.filter((lnk) => this.hasOneDecorationOrMore(lnk)).lower();
 			linkGroup.filter((lnk) => !this.hasOneDecorationOrMore(lnk)).lower();
-		});
 
-		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
-			this.raiseSelectedLinksToTop();
-		}
+			if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)
+			{
+				// Raises any selected links to the top of the display order. This is necessary
+				// when selection handles are being displayed on selected links because the
+				// handles may be in the same positions as port circles on the nodes.
+				this.nodesLinksGrp
+					.selectAll(".d3-link-group[data-selected]")
+					.raise();
+			}
+		});
 	}
 
 	// Raises the node, specified by the node ID, above other nodes and objects.
@@ -5392,17 +5399,6 @@ export default class SVGCanvasRenderer {
 				nodeGrp.raise()
 			);
 		}
-	}
-
-	// Moves any selected links to the top of the display order. This is necessary
-	// when selection handles are being displayed on selected links because the
-	// handles may be in the same positions as port circles on the nodes.
-	raiseSelectedLinksToTop() {
-		this.preserveFocus(() =>
-			this.nodesLinksGrp
-				.selectAll(".d3-link-group[data-selected]")
-				.raise()
-		);
 	}
 
 	raiseLinkToTopById(linkId) {
