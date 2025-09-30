@@ -82,6 +82,7 @@ class CanvasContents extends React.Component {
 		this.onClickReturnToPrevious = this.onClickReturnToPrevious.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
+		this.onFocus = this.onFocus.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
@@ -294,7 +295,22 @@ class CanvasContents extends React.Component {
 		this.svgCanvasD3.setSpaceKeyPressed(false);
 	}
 
-	// When focus leaves the canvas it may be going to an "internal" object
+	// When focus returns to the flow editor the internally stored focusObject
+	// may be null even though a document.activeElement is still set on the
+	// flow editor. So we set the focus object to be in sync with document.activeElement.
+	onFocus(evt) {
+		if (!this.props.canvasController.getFocusObject()) {
+			const activeObj = this.getActiveFocusedCanvasElement();
+			const object = activeObj ? activeObj.__data__ : null; // Extracts the node, comment or link from the DOM element.
+
+			if (object) {
+				this.svgCanvasD3.setTabGroupIndexForObj(object);
+				this.props.canvasController.setFocusObject(object);
+			}
+		}
+	}
+
+	// When focus leaves the flow editor it may be going to an "internal" object
 	// such as a node or a comment or to an "external" object like the
 	// toolbar or palette. If it goes outside the canvas, we reset the
 	// tab object index so that tabbing will begin from the first tab object
@@ -351,6 +367,26 @@ class CanvasContents extends React.Component {
 			canvasLayout,
 			this.props.canvasConfig
 		);
+	}
+
+	// Returns the currently focused canvas DOM element for a node, comment
+	// or link as descibed by the document.activeElement property. This will
+	// return a DOM element for node, comment or link even if a sub-object
+	// within one of thise objects has focus.
+	getActiveFocusedCanvasElement() {
+		let objElement = null;
+
+		if (document.activeElement) {
+			objElement = document.activeElement.closest(".d3-node-group");
+
+			if (!objElement) {
+				objElement = document.activeElement.closest(".d3-comment-group");
+			}
+			if (!objElement) {
+				objElement = document.activeElement.closest(".d3-link-group");
+			}
+		}
+		return objElement;
 	}
 
 	getLabel(labelId) {
@@ -478,7 +514,7 @@ class CanvasContents extends React.Component {
 			return (
 				<div tabIndex="0" className="d3-svg-canvas-div keyboard-navigation" id={this.svgCanvasDivId}
 					onMouseDown={this.onMouseDown} onMouseLeave={this.onMouseLeave}
-					onBlur={this.onBlur}
+					onFocus={this.onFocus} onBlur={this.onBlur}
 					onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 					role="application" aria-label="canvas-keyboard-navigation" // Resolve Accessibility Violation of role and label
 				/>

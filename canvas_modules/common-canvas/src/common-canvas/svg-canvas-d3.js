@@ -232,6 +232,10 @@ export default class SVGCanvasD3 {
 		}
 	}
 
+	setTabGroupIndexForObj(d) {
+		this.renderer.setTabGroupIndexForObj(d);
+	}
+
 	focusOnTextEntryElement(evt) {
 		this.renderer.focusOnTextEntryElement(evt);
 	}
