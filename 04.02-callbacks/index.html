@@ -2511,6 +2511,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#customdatatypeicondata" class="md-nav__link">
+    <span class="md-ellipsis">
+      CustomDataTypeIconData
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3041,6 +3050,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#customdatatypeicondata" class="md-nav__link">
+    <span class="md-ellipsis">
+      CustomDataTypeIconData
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3266,6 +3284,42 @@
 <span class="w">        </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<h4 id="customdatatypeicondata">CustomDataTypeIconData<a class="headerlink" href="#customdatatypeicondata" title="Permanent link">&para;</a></h4>
+<p>Called to fetch icon for the custom data types used in field picker component.</p>
+<ul>
+<li>data: an object that consists of<ul>
+<li>type: <code>customDataTypeIcon</code></li>
+<li>buttonId: of the corresponding field - the field name provided in uihints</li>
+<li>dataType: the type of the field specified in uihints. The corresponding icon is expected to be returned in the callback.</li>
+</ul>
+</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code><span class="nx">buttonIconHandler</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">callbackIcon</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;customDataTypeIcon&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="nx">dataIcon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">dataType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">dataType</span><span class="p">;</span>
+<span class="w">            </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">dataType</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;vectorType&quot;</span><span class="o">:</span>
+<span class="w">                </span><span class="nx">dataIcon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">SelectWindow</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;customType&quot;</span><span class="o">:</span>
+<span class="w">                </span><span class="nx">dataIcon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">TextScale</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="k">default</span><span class="o">:</span>
+<span class="w">                </span><span class="nx">dataIcon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">Help</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="nx">callbackIcon</span><span class="p">(</span><span class="nx">dataIcon</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+FieldPicker supports custom labels for custom data types. To define a custom label, use the following format in the locale: 
+  - fieldPicker.<code>&lt;type&gt;</code>.label </p>
+<p>If a custom label is defined using this key, it will be displayed in the UI. Else, the raw <code>&lt;type&gt;</code> value will be displayed.</p>
+<p>Example:
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;fieldPicker.customType.label&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Custom Label&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
 <h3 id="propertyiconhandler">propertyIconHandler()<a class="headerlink" href="#propertyiconhandler" title="Permanent link">&para;</a></h3>
 <p>Called when a user wants to pass in a specific object to a dropdown menu. The propertyIconHandler expects a jsx object as the return value from the callback. This is used to display the jsx object in the dropdown menu. The propertyIconHandler provides the following data:</p>
 <p>-data: an object that consists of
