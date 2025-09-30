@@ -5429,8 +5429,12 @@ export default class SVGCanvasRenderer {
 	// focus object and reinstating if after the fn has finished.
 	preserveFocus(fn) {
 		const focusObj = this.canvasController.getFocusObject();
+
 		fn();
-		this.canvasController.setFocusObject(focusObj);
+
+		if (this.config.enableKeyboardNavigation && !this.isEditingText()) {
+			this.canvasController.setFocusObject(focusObj);
+		}
 	}
 
 	setLinkHandlesHoverClass(obj, state) {
