@@ -3957,6 +3957,24 @@
 						"measure": "",
 						"modeling_role": "input"
 					}
+				},
+				{
+					"name": "Vector",
+					"type": "vectorType",
+					"metadata": {
+						"description": "",
+						"measure": "flag",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Custom",
+					"type": "customType",
+					"metadata": {
+						"description": "",
+						"measure": "flag",
+						"modeling_role": "input"
+					}
 				}
 			]
 		}

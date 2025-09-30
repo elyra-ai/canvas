@@ -150,8 +150,13 @@ export interface ActionButtonIconData {
   buttonId: string;
   data: Record<string, unknown>;
 }
+export interface CustomDataTypeIconData {
+  type: "customDataTypeIcon";
+  buttonId: string;
+  dataType: string;
+}
 export type ButtonIconHandler = (
-  data: CustomButtonIconData | ActionButtonIconData,
+  data: CustomButtonIconData | ActionButtonIconData | CustomDataTypeIconData,
   callbackIcon: (icon: ReactNode) => void
 ) => void;
 
