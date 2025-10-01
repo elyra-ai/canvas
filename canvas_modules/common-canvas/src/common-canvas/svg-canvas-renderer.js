@@ -4830,19 +4830,43 @@ export default class SVGCanvasRenderer {
 			.append("g")
 			.attr("class", "d3-link-decorations-group");
 
-		// Add a group to store link handles, if needed.
-		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
-			newLinkGrps
-				.append("g")
-				.attr("class", "d3-link-handles-group")
-				.each((d, i, linkGrps) => {
-					if (d.type === NODE_LINK) {
-						// Since there are always just two handles we create the here.
-						this.createNewHandles(d3.select(linkGrps[i]));
-					}
-				});
-		}
+		// // Add a group to store link handles, if needed.
+		// if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+		// 		this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+		// 	newLinkGrps
+		// 		.append("g")
+		// 		.attr("class", "d3-link-handles-group")
+		// 		.each((d, i, linkGrps) => {
+		// 			if (d.type === NODE_LINK) {
+		// 				// Since there are always just two handles we create the here.
+		// 				this.createNewHandles(d3.select(linkGrps[i]));
+		// 			}
+		// 		});
+		// }
+
+		// Add a group to store link start handle, if needed.
+		newLinkGrps
+			.filter((d) => (d.type === NODE_LINK && (
+				this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)))
+			.append("g")
+			// .attr("tabindex", () => (this.config.enableKeyboardNavigation ? -1 : null))
+			.attr("class", "d3-link-handle-start-group")
+			.call(this.attachLinkHandleListeners.bind(this, "start"))
+			.append(this.canvasLayout.linkStartHandleObject)
+			.attr("class", (d) => "d3-link-handle-start");
+
+		// Add a group to store link end handle, if needed.
+		newLinkGrps
+			.filter((d) => (d.type === NODE_LINK && (
+				this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)))
+			.append("g")
+			// .attr("tabindex", () => (this.config.enableKeyboardNavigation ? -1 : null))
+			.attr("class", "d3-link-handle-end-group")
+			.call(this.attachLinkHandleListeners.bind(this, "end"))
+			.append(this.canvasLayout.linkEndHandleObject)
+			.attr("class", (d) => "d3-link-handle-end");
 
 		this.logger.logEndTimer("createLinks");
 
@@ -4890,16 +4914,27 @@ export default class SVGCanvasRenderer {
 			}
 		});
 
-		// Add link line handles at start and end of line, if required
-		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
-			joinedLinkGrps.each((d, i, linkGrps) => {
-				if (d.type === NODE_LINK) {
-					// We only need to update handles since they were created in the create link step
-					this.updateHandles(d3.select(linkGrps[i]).selectAll(".d3-link-handles-group"), lineArray);
-				}
+		// // Add link line handles at start and end of line, if required
+		// if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+		// 		this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+		// 	joinedLinkGrps.each((d, i, linkGrps) => {
+		// 		if (d.type === NODE_LINK) {
+		// 			// We only need to update handles since they were created in the create link step
+		// 			this.updateHandles(d3.select(linkGrps[i]).selectAll(".d3-link-handles-group"), lineArray);
+		// 		}
+		// 	});
+		// }
+
+		// Update the link handles at start and end of link, if required
+		joinedLinkGrps
+			.filter((d) => d.type === NODE_LINK && (
+				this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE))
+			.each((d, i, linkGrps) => {
+				// We only need to update handles since they were created in the create link step
+				this.updateStartHandles(linkGrps[i]);
+				this.updateEndHandles(linkGrps[i]);
 			});
-		}
 
 		// Add or remove drag behavior as appropriate - for now we only support this for
 		// freeform, straight links
@@ -4923,6 +4958,7 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("updateLinks");
 	}
 
+	// Attaches listeners to the link groups.
 	attachLinkGroupListeners(linkGrps) {
 		linkGrps
 			.on("keydown", (d3Event, d) => {
@@ -5020,9 +5056,9 @@ export default class SVGCanvasRenderer {
 				const targetObj = d3Event.currentTarget;
 
 				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE ||
-						this.config.enableRaiseLinksToTopOnHover) {
-
+					this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE ||
+					this.config.enableRaiseLinksToTopOnHover)
+				{
 					// Only raise link if we're NOT editing text because raising a link
 					// will cause a 'blur' in the text edit area which will end editing.
 					if (!this.isEditingText()) {
@@ -5064,13 +5100,15 @@ export default class SVGCanvasRenderer {
 			})
 			.on("mouseleave", (d3Event, link) => {
 				const targetObj = d3Event.currentTarget;
-				this.setLinkHandlesHoverClass(targetObj, false);
+				if (this.canvasController.getFocusObject() !== link) {
+					this.setLinkHandlesHoverClass(targetObj, false);
+				}
 
 				// Lower link if:
 				// 1. we're NOT editing text because lowering a link will cause a
 				//   'blur' in the text edit area which will end editing.
 				// 2. enableLinksOverNodes is false - i.e. lowering is allowed.
-				if (!this.config.enableLinksOverNodes && !this.isEditingText()) {
+				if (!this.config.enableLinksOverNodes && !this.isEditingText() && this.canvasController.getFocusObject() !== link) {
 					this.lowerLinkToBottom(targetObj);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
@@ -5120,23 +5158,114 @@ export default class SVGCanvasRenderer {
 			CanvasUtils.getLinkDistance(link) < this.canvasLayout.linkDistanceForAltDecorations);
 	}
 
-	// Creates a new start handle and a new end handle for the link groups
-	// passed in.
-	createNewHandles(handlesGrp) {
-		handlesGrp
-			.append(this.canvasLayout.linkStartHandleObject)
-			.attr("class", (d) => "d3-link-handle-start")
-			.call(this.attachStartHandleListeners.bind(this));
+	// // Creates a new start handle and a new end handle for the link groups
+	// // passed in.
+	// createNewHandles(handlesGrp) {
+	// 	handlesGrp
+	// 		.append(this.canvasLayout.linkStartHandleObject)
+	// 		.attr("class", (d) => "d3-link-handle-start")
+	// 		.call(this.attachStartHandleListeners.bind(this));
+
+	// 	handlesGrp
+	// 		.append(this.canvasLayout.linkEndHandleObject)
+	// 		.attr("class", (d) => "d3-link-handle-end")
+	// 		.call(this.attachEndHandleListeners.bind(this));
+	// }
+
+	// // Updates the start and end link handles for the handle groups passed in.
+	// updateHandles(handlesGrp, lineArray) {
+	// 	const startHandle = handlesGrp
+	// 		.selectAll(".d3-link-handle-start")
+	// 		.datum((d) => this.activePipeline.getLink(d.id))
+	// 		.each((datum, index, linkHandles) => {
+	// 			const obj = d3.select(linkHandles[index]);
+	// 			if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_IMAGE) {
+	// 				obj
+	// 					.attr("xlink:href", this.canvasLayout.linkStartHandleImage)
+	// 					.attr("x", (d) => d.x1 - (this.canvasLayout.linkStartHandleWidth / 2))
+	// 					.attr("y", (d) => d.y1 - (this.canvasLayout.linkStartHandleHeight / 2))
+	// 					.attr("width", this.canvasLayout.linkStartHandleWidth)
+	// 					.attr("height", this.canvasLayout.linkStartHandleHeight);
+
+	// 			} else if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_CIRCLE) {
+	// 				obj
+	// 					.attr("r", this.canvasLayout.linkStartHandleRadius)
+	// 					.attr("cx", (d) => d.x1)
+	// 					.attr("cy", (d) => d.y1);
+	// 			}
+	// 		});
+
+	// 	// Add or remove drag behavior as appropriate
+	// 	if (this.config.enableEditingActions) {
+	// 		const handler = this.dragDetLinkUtils.getDragDetachedLinkHandler();
+	// 		startHandle.call(handler);
+	// 	} else {
+	// 		startHandle.on(".drag", null);
+	// 	}
+
+	// 	const endHandle = handlesGrp
+	// 		.selectAll(".d3-link-handle-end")
+	// 		.datum((d) => this.activePipeline.getLink(d.id))
+	// 		.each((datum, index, linkHandles) => {
+	// 			const obj = d3.select(linkHandles[index]);
+	// 			if (this.canvasLayout.linkEndHandleObject === PORT_DISPLAY_IMAGE) {
+	// 				obj
+	// 					.attr("xlink:href", this.canvasLayout.linkEndHandleImage)
+	// 					.attr("x", (d) => d.x2 - (this.canvasLayout.linkEndHandleWidth / 2))
+	// 					.attr("y", (d) => d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
+	// 					.attr("width", this.canvasLayout.linkEndHandleWidth)
+	// 					.attr("height", this.canvasLayout.linkEndHandleHeight)
+	// 					.attr("transform", (d) => this.getLinkImageTransform(d));
+
+	// 			} else if (this.canvasLayout.linkEndHandleObject === PORT_DISPLAY_CIRCLE) {
+	// 				obj
+	// 					.attr("r", this.canvasLayout.linkEndHandleRadius)
+	// 					.attr("cx", (d) => d.x2)
+	// 					.attr("cy", (d) => d.y2);
+	// 			}
+	// 		});
+
+	// 	// Add or remove drag behavior as appropriate
+	// 	if (this.config.enableEditingActions) {
+	// 		const handler = this.dragDetLinkUtils.getDragDetachedLinkHandler();
+	// 		endHandle.call(handler);
+	// 	} else {
+	// 		endHandle.on(".drag", null);
+	// 	}
+	// }
+
+	// // Attaches any required event listeners to the start handles of the links.
+	// attachStartHandleListeners(startHandles) {
+	// 	startHandles
+	// 		// Use mouse down instead of click because it gets called before drag start.
+	// 		.on("mousedown", (d3Event, d) => {
+	// 			this.logger.log("Link start handle - mouse down");
+	// 			if (!this.config.enableDragWithoutSelect) {
+	// 				this.selectObjectD3Event(d3Event, d, SINGLE_CLICK);
+	// 			}
+	// 			this.logger.log("Link end handle - finished mouse down");
+	// 		});
+	// }
+
+	// // Attaches any required event listeners to the end handles of the links.
+	// attachEndHandleListeners(endHandles) {
+	// 	endHandles
+	// 		// Use mouse down instead of click because it gets called before drag start.
+	// 		.on("mousedown", (d3Event, d) => {
+	// 			this.logger.log("Link end handle - mouse down");
+	// 			if (!this.config.enableDragWithoutSelect) {
+	// 				this.selectObjectD3Event(d3Event, d, SINGLE_CLICK);
+	// 			}
+	// 			this.logger.log("Link end handle - finished mouse down");
+	// 		});
+	// }
+
+	// Updates the start link handles for the link groups passed in.
+	updateStartHandles(linkGrp) {
+		const handlesGrp = d3.select(linkGrp)
+			.selectAll(".d3-link-handle-start-group");
 
 		handlesGrp
-			.append(this.canvasLayout.linkEndHandleObject)
-			.attr("class", (d) => "d3-link-handle-end")
-			.call(this.attachEndHandleListeners.bind(this));
-	}
-
-	// Updates the start and end link handles for the handle groups passed in.
-	updateHandles(handlesGrp, lineArray) {
-		const startHandle = handlesGrp
 			.selectAll(".d3-link-handle-start")
 			.datum((d) => this.activePipeline.getLink(d.id))
 			.each((datum, index, linkHandles) => {
@@ -5160,12 +5289,18 @@ export default class SVGCanvasRenderer {
 		// Add or remove drag behavior as appropriate
 		if (this.config.enableEditingActions) {
 			const handler = this.dragDetLinkUtils.getDragDetachedLinkHandler();
-			startHandle.call(handler);
+			handlesGrp.call(handler);
 		} else {
-			startHandle.on(".drag", null);
+			handlesGrp.on(".drag", null);
 		}
+	}
 
-		const endHandle = handlesGrp
+	// Updates the end link handles for the link groups passed in.
+	updateEndHandles(linkGrp) {
+		const handlesGrp = d3.select(linkGrp)
+			.selectAll(".d3-link-handle-end-group");
+
+		handlesGrp
 			.selectAll(".d3-link-handle-end")
 			.datum((d) => this.activePipeline.getLink(d.id))
 			.each((datum, index, linkHandles) => {
@@ -5176,8 +5311,7 @@ export default class SVGCanvasRenderer {
 						.attr("x", (d) => d.x2 - (this.canvasLayout.linkEndHandleWidth / 2))
 						.attr("y", (d) => d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
 						.attr("width", this.canvasLayout.linkEndHandleWidth)
-						.attr("height", this.canvasLayout.linkEndHandleHeight)
-						.attr("transform", (d) => this.getLinkImageTransform(d));
+						.attr("height", this.canvasLayout.linkEndHandleHeight);
 
 				} else if (this.canvasLayout.linkEndHandleObject === PORT_DISPLAY_CIRCLE) {
 					obj
@@ -5190,35 +5324,22 @@ export default class SVGCanvasRenderer {
 		// Add or remove drag behavior as appropriate
 		if (this.config.enableEditingActions) {
 			const handler = this.dragDetLinkUtils.getDragDetachedLinkHandler();
-			endHandle.call(handler);
+			handlesGrp.call(handler);
 		} else {
-			endHandle.on(".drag", null);
+			handlesGrp.on(".drag", null);
 		}
 	}
 
-	// Attaches any required event listeners to the start handles of the links.
-	attachStartHandleListeners(startHandles) {
-		startHandles
+	// Attaches any required event listeners to a handle of the link.
+	attachLinkHandleListeners(handleType, handles) {
+		handles
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
-				this.logger.log("Link start handle - mouse down");
+				this.logger.log("Link " + handleType + " handle - mouse down");
 				if (!this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK);
 				}
-				this.logger.log("Link end handle - finished mouse down");
-			});
-	}
-
-	// Attaches any required event listeners to the end handles of the links.
-	attachEndHandleListeners(endHandles) {
-		endHandles
-			// Use mouse down instead of click because it gets called before drag start.
-			.on("mousedown", (d3Event, d) => {
-				this.logger.log("Link end handle - mouse down");
-				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK);
-				}
-				this.logger.log("Link end handle - finished mouse down");
+				this.logger.log("Link " + handleType + " handle - finished mouse down");
 			});
 	}
 

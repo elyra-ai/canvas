@@ -1182,6 +1182,14 @@ g.bkg-col-cyan-50 {
 	}
 }
 
+// Styles for start and end handle groups
+.d3-link-handle-start-group,
+.d3-link-handle-end-group {
+	&:focus {
+		outline-width: 0;
+	}
+}
+
 // Styles for link handles at the start of a link line
 .d3-link-handle-start {
 	display: none;
