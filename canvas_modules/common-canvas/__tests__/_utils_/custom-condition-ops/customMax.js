@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-function op() {
+export function op() {
 	return "customMax";
 }
 
-function evaluate(paramInfo, param2Info, value, controller) {
+export function evaluate(paramInfo, param2Info, value, controller) {
 	const supportedControls = ["numberfield"];
 	if (supportedControls.indexOf(paramInfo.control.controlType) >= 0) {
 		return paramInfo.value < value;
 	}
 	return true;
 }
-
-// Public Methods ------------------------------------------------------------->
-
-module.exports.op = op;
-module.exports.evaluate = evaluate;

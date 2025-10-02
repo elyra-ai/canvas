@@ -17,7 +17,7 @@
 // This file allows jest tests to run. It should contain any exported variables
 // from *.scss files which are used in the code
 
-module.exports = {
+export default {
 	smallFlyoutWidth: "318px", // This variable is taken from global.scss
 	mediumFlyoutWidth: "625px" // This variable is taken from global.scss
 };
