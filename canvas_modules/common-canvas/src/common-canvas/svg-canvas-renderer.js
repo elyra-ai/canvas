@@ -2454,7 +2454,6 @@ export default class SVGCanvasRenderer {
 				}
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
-						this.activePipeline.setTabGroupIndexForObj(d);
 						this.setFocusObject(d, d3Event);
 					}
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
@@ -4533,7 +4532,6 @@ export default class SVGCanvasRenderer {
 				}
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
-						this.activePipeline.setTabGroupIndexForObj(d);
 						this.setFocusObject(d, d3Event);
 					}
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
@@ -5100,7 +5098,6 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (this.config.enableKeyboardNavigation) {
-					this.activePipeline.setTabGroupIndexForObj(d);
 					this.setFocusObject(d, d3Event);
 				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
@@ -6273,12 +6270,9 @@ export default class SVGCanvasRenderer {
 		return str;
 	}
 
-	setTabGroupIndexForObj(d) {
-		this.activePipeline.setTabGroupIndexForObj(d);
-	}
-
 	focusNextTabGroup(evt) {
-		const nextObj = this.activePipeline.getNextTabGroupStartObject();
+		const focusObj = this.canvasController.getFocusObject();
+		const nextObj = this.activePipeline.getNextTabGroupStartObject(focusObj);
 		if (nextObj) {
 			this.setFocusObject(nextObj, evt);
 			return true;
@@ -6287,7 +6281,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	focusPreviousTabGroup(evt) {
-		const previousObj = this.activePipeline.getPreviousTabGroupStartObject();
+		const focusObj = this.canvasController.getFocusObject();
+		const previousObj = this.activePipeline.getPreviousTabGroupStartObject(focusObj);
 		if (previousObj) {
 			this.setFocusObject(previousObj, evt);
 			return true;
@@ -6313,10 +6308,6 @@ export default class SVGCanvasRenderer {
 
 	focusOnTextEntryElement(evt) {
 		this.svgCanvasTextArea.focusOnTextEntryElement(evt);
-	}
-
-	resetTabObjectIndex() {
-		this.activePipeline.resetTabObjectIndex();
 	}
 
 	// Returns an object containing 4 "gaps" that can be used to draw a focus

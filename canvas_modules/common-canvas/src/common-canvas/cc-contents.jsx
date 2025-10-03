@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -304,7 +304,6 @@ class CanvasContents extends React.Component {
 			const object = activeObj ? activeObj.__data__ : null; // Extracts the node, comment or link from the DOM element.
 
 			if (object) {
-				this.svgCanvasD3.setTabGroupIndexForObj(object);
 				this.props.canvasController.setFocusObject(object);
 			}
 		}
@@ -318,7 +317,6 @@ class CanvasContents extends React.Component {
 	// restoreFocus calls setting focus back into the canvas.
 	onBlur(evt) {
 		if (!evt.relatedTarget || !this.isTargetInsideCanvas(evt.relatedTarget)) {
-			this.svgCanvasD3.resetTabObjectIndex();
 			this.props.canvasController.setFocusObject(null);
 		}
 	}
