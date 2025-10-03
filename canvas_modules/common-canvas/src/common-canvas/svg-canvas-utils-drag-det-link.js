@@ -107,7 +107,6 @@ export default class SVGCanvasUtilsDragDetLink {
 			}
 		}
 
-		this.dragLinkHandle(d3Event);
 		this.logger.logEndTimer("dragStartDetLinkHandle", true);
 	}
 
@@ -142,7 +141,7 @@ export default class SVGCanvasUtilsDragDetLink {
 			delete link.trgNode;
 		}
 
-		this.ren.displayLinks();
+		this.ren.displayMovedLinks();
 
 		// Switch on an attribute to indicate a new link is being dragged
 		// towards and over a target node.
