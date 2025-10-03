@@ -39,6 +39,8 @@ mockMultiselect.mockImplementation((props) => {
 	return <MultiselectComp {...props} />;
 });
 
+userEvent.setup({ delay: null });
+
 describe("multiselect renders correctly", () => {
 
 	const propertyName = "test-multiselect";
