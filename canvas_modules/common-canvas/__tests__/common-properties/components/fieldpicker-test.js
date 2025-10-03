@@ -537,7 +537,6 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(fieldSummary).to.have.length(1);
 		const summaryRows = summaryPanel.querySelectorAll("tr.properties-summary-row");
 		expect(summaryRows).to.have.length(8);
-		console.log(summaryRows);
 		const expectedSummaryRows = [
 			"BADVAR",
 			"0.BADVAR",
@@ -682,7 +681,6 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		await tableUtilsRTL.clickHeaderColumnSort(fieldpicker, 1);
 		const tableRows = tableUtilsRTL.getTableRows(fieldpicker);
 		expect(tableRows.length).to.equal(30);
-		console.log(tableRows);
 		const expectedOrder = [
 			"0", "0", "0", "0", "0", "0", "0",
 			"3", "3", "3", "3", "3", "3",

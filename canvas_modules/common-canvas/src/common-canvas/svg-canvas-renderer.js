@@ -2404,8 +2404,7 @@ export default class SVGCanvasRenderer {
 				}
 
 				const nodeGrp = d3.select(d3Event.currentTarget);
-				this.raiseNodeToTop(nodeGrp, d3Event);
-				this.restoreFocus(); // raiseNodeToTop will removing the visual focus so restore it.
+				this.raiseNodeToTop(nodeGrp);
 
 				this.setNodeStyles(d, "hover", nodeGrp);
 
@@ -5349,23 +5348,34 @@ export default class SVGCanvasRenderer {
 		return " d3-node-shape-rectangle";
 	}
 
-	// Pushes the links to be below nodes within the nodesLinksGrp group.
+	// Rearanges the display order of links so 'sub-objects', like decorations and
+	// link handles, are visible.
 	setDisplayOrder(linkGroup) {
-		// Force those links without decorations to be behind those with decorations
-		// in case the links overlap we don't want the decorations to be overwritten.
-		linkGroup.filter((lnk) => this.hasOneDecorationOrMore(lnk)).lower();
-		linkGroup.filter((lnk) => !this.hasOneDecorationOrMore(lnk)).lower();
+		this.preserveFocus(() => {
+			// Force those links without decorations to be behind those with decorations
+			// so when the links overlap the decorations are not overwritten.
+			linkGroup.filter((lnk) => this.hasOneDecorationOrMore(lnk)).lower();
+			linkGroup.filter((lnk) => !this.hasOneDecorationOrMore(lnk)).lower();
 
-		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
-			this.raiseSelectedLinksToTop();
-		}
+			if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)
+			{
+				// Raises any selected links to the top of the display order. This is necessary
+				// when selection handles are being displayed on selected links because the
+				// handles may be in the same positions as port circles on the nodes.
+				this.nodesLinksGrp
+					.selectAll(".d3-link-group[data-selected]")
+					.raise();
+			}
+		});
 	}
 
 	// Raises the node, specified by the node ID, above other nodes and objects.
 	// Called by svg-canvas-utils-external.js for use by apps using React nodes.
 	raiseNodeToTopById(nodeId) {
-		this.getNodeGroupSelectionById(nodeId).raise();
+		this.preserveFocus(() =>
+			this.getNodeGroupSelectionById(nodeId).raise()
+		);
 	}
 
 	// Raises the node above other nodes and objects (on the mouse entering
@@ -5378,38 +5388,49 @@ export default class SVGCanvasRenderer {
 	// * There are one or more selected links
 	// * We are editing text
 	// * The app has indicated links should be displayed over nodes
-	raiseNodeToTop(nodeGrp, d3Event) {
+	raiseNodeToTop(nodeGrp) {
 		if (this.config.enableRaiseNodesToTopOnHover &&
 			!this.isDragging() &&
 			this.activePipeline.getSelectedLinksCount() === 0 &&
 			!this.isEditingText() &&
 			!this.config.enableLinksOverNodes
 		) {
-			nodeGrp.raise();
+			this.preserveFocus(() =>
+				nodeGrp.raise()
+			);
 		}
 	}
 
-	// Moves any selected links to the top of the display order. This is necessary
-	// when selection handles are being displayed on selected links because the
-	// handles may be in the same positions as port circles on the nodes.
-	raiseSelectedLinksToTop() {
-		this.nodesLinksGrp
-			.selectAll(".d3-link-group[data-selected]")
-			.raise();
-	}
-
 	raiseLinkToTopById(linkId) {
-		this.getLinkGroupSelectionById(linkId).raise();
+		this.preserveFocus(() =>
+			this.getLinkGroupSelectionById(linkId).raise()
+		);
 	}
 
 	raiseLinkToTop(obj) {
-		d3.select(obj)
-			.raise();
+		this.preserveFocus(() =>
+			d3.select(obj)
+				.raise()
+		);
 	}
 
 	lowerLinkToBottom(obj) {
-		d3.select(obj)
-			.lower();
+		this.preserveFocus(() =>
+			d3.select(obj)
+				.lower()
+		);
+	}
+
+	// Preserves the focus while calling the fn function by saving the
+	// focus object and reinstating if after the fn has finished.
+	preserveFocus(fn) {
+		const focusObj = this.canvasController.getFocusObject();
+
+		fn();
+
+		if (this.config.enableKeyboardNavigation && !this.isEditingText()) {
+			this.canvasController.setFocusObject(focusObj);
+		}
 	}
 
 	setLinkHandlesHoverClass(obj, state) {
@@ -6256,6 +6277,10 @@ export default class SVGCanvasRenderer {
 			str += " None";
 		}
 		return str;
+	}
+
+	setTabGroupIndexForObj(d) {
+		this.activePipeline.setTabGroupIndexForObj(d);
 	}
 
 	focusNextTabGroup(evt) {
