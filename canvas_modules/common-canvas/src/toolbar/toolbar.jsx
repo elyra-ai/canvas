@@ -16,7 +16,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import ReactResizeDetector from "react-resize-detector";
 
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import ToolbarActionItem from "./toolbar-action-item.jsx";
@@ -74,6 +73,15 @@ class Toolbar extends React.Component {
 		if (this.getFocusableItemRefs().length === 0 && this.state.focusAction !== "disabled") {
 			this.setTabIndexOnDisabledToolbar();
 		}
+
+		this.resizeObserver = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				this.onToolbarResize(entry.contentRect);
+			}
+		});
+		if (this.toolbarRef.current) {
+			this.resizeObserver.observe(this.toolbarRef.current);
+		}
 	}
 
 	// If, after updating, we are left in a situation where this.state.focusAction
@@ -92,6 +100,10 @@ class Toolbar extends React.Component {
 			this.isFocusInToolbar = true;
 			this.setFocusOnFirstItem();
 		}
+	}
+
+	componentWillUnmount() {
+		this.resizeObserver?.disconnect();
 	}
 
 	// When the toolbar is initially focused, this.state.focusAction
@@ -551,18 +563,16 @@ class Toolbar extends React.Component {
 		const tabIndex = this.state.focusAction === "toolbar" ? 0 : -1;
 
 		const canvasToolbar = (
-			<ReactResizeDetector handleWidth onResize={this.onToolbarResize} targetRef={this.toolbarRef}>
-				<div ref={this.toolbarRef} className={toolbarSizeClass} instanceid={this.props.instanceId}
-					tabIndex={tabIndex} onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown}
-				>
-					<div className="toolbar-left-bar" onScroll={this.onScroll}>
-						{leftItems}
-					</div>
-					<div className="toolbar-right-bar">
-						{rightItems}
-					</div>
+			<div ref={this.toolbarRef} className={toolbarSizeClass} instanceid={this.props.instanceId}
+				tabIndex={tabIndex} onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown}
+			>
+				<div className="toolbar-left-bar" onScroll={this.onScroll}>
+					{leftItems}
 				</div>
-			</ReactResizeDetector>
+				<div className="toolbar-right-bar">
+					{rightItems}
+				</div>
+			</div>
 		);
 		return canvasToolbar;
 	}

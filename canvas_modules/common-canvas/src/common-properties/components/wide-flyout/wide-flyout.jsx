@@ -15,7 +15,6 @@
  */
 
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import PropertiesButtons from "./../properties-buttons";
 import classNames from "classnames";
@@ -90,7 +89,7 @@ export default class WideFlyout extends Component {
 				this.commonPropertiesParent = this.findPropertyWrapper(this.wideFlyout);
 			}
 			if (this.commonPropertiesParent) {
-				const commonProperties = ReactDOM.findDOMNode(this.commonPropertiesParent).getBoundingClientRect();
+				const commonProperties = this.commonPropertiesParent.getBoundingClientRect();
 				this.setState({
 					style: {
 						height: commonProperties.height + "px",
