@@ -298,7 +298,11 @@ class CanvasContents extends React.Component {
 	// may be null even though a document.activeElement is still set on the
 	// flow editor. So we set the focus object to be in sync with document.activeElement.
 	onFocus(evt) {
-		if (!this.props.canvasController.getFocusObject()) {
+		if (evt.target.classList.contains("d3-svg-canvas-div") &&
+				this.props.canvasController.getFocusObject() !== CANVAS_FOCUS) {
+			this.props.canvasController.setFocusObject(CANVAS_FOCUS);
+
+		} else if (!this.props.canvasController.getFocusObject()) {
 			const activeObj = this.getActiveFocusedCanvasElement();
 			const object = activeObj ? activeObj.__data__ : null; // Extracts the node, comment or link from the DOM element.
 
@@ -666,14 +670,9 @@ class CanvasContents extends React.Component {
 		event.preventDefault();
 	}
 
-	// Handles tab key presses on our div. It also keeps track of whether
-	// a tab key press is being handled using a flag.
+	// Handles tab key presses on our div.
 	moveFocusToNextGroup(evt) {
-		const focusObj = (evt.target.classList.contains("d3-svg-canvas-div"))
-			? CANVAS_FOCUS
-			: this.props.canvasController.getFocusObject();
-
-		const success = this.svgCanvasD3.focusNextTabGroup(evt, focusObj);
+		const success = this.svgCanvasD3.focusNextTabGroup(evt);
 		if (success) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 		} else {
@@ -681,21 +680,15 @@ class CanvasContents extends React.Component {
 		}
 	}
 
-	// Handles tab+shift key presses on our div. It also keeps track of whether
-	// a tab key press is being handled using a flag.
+	// Handles tab+shift key presses on our div.
 	moveFocusToPreviousGroup(evt) {
-		const focusObj = (evt.target.classList.contains("d3-svg-canvas-div"))
-			? CANVAS_FOCUS
-			: this.props.canvasController.getFocusObject();
-
-		const success = this.svgCanvasD3.focusPreviousTabGroup(evt, focusObj);
+		const success = this.svgCanvasD3.focusPreviousTabGroup(evt);
 		if (success) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 		} else {
 			this.props.canvasController.setFocusOnCanvas();
 		}
 	}
-
 
 	// Sets the focus on our canvas <div> so keyboard events will go to it.
 	focusOnCanvas() {
