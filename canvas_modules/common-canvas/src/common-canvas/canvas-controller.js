@@ -2973,16 +2973,18 @@ export default class CanvasController {
 		// in its current location.
 		if (this.getCanvasConfig().enableKeyboardNavigation) {
 			if (data.editSource !== "toolbar" &&
-				command?.getFocusObject) {
+				command?.getFocusObject) { // Only commands extended from Action will have a getFocusObject function.
 				const focusObject = command.getFocusObject();
 
 				this.logger.log("Focus object from " + data.editType + " command = " + CanvasUtils.getFocusName(focusObject));
 
-				if (focusObject === CANVAS_FOCUS) {
-					this.setFocusOnCanvas();
+				if (focusObject) {
+					if (focusObject === CANVAS_FOCUS) {
+						this.setFocusOnCanvas();
 
-				} else if (this.canvasContents) {
-					this.setFocusObject(focusObject);
+					} else if (this.canvasContents) {
+						this.setFocusObject(focusObject);
+					}
 				}
 			}
 

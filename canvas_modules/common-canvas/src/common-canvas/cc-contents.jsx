@@ -30,7 +30,7 @@ import CanvasUtils from "./common-canvas-utils.js";
 import KeyboardUtils from "./keyboard-utils.js";
 import { Button } from "@carbon/react";
 import { FlowData, ArrowLeft } from "@carbon/react/icons";
-import { DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
+import { CANVAS_FOCUS, DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
 
@@ -83,7 +83,6 @@ class CanvasContents extends React.Component {
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
 		this.onFocus = this.onFocus.bind(this);
-		this.onBlur = this.onBlur.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
@@ -309,18 +308,6 @@ class CanvasContents extends React.Component {
 		}
 	}
 
-	// When focus leaves the flow editor it may be going to an "internal" object
-	// such as a node or a comment or to an "external" object like the
-	// toolbar or palette. If it goes outside the canvas, we reset the
-	// tab object index so that tabbing will begin from the first tab object
-	// and set the current canvas focus object to null to prevent any
-	// restoreFocus calls setting focus back into the canvas.
-	onBlur(evt) {
-		if (!evt.relatedTarget || !this.isTargetInsideCanvas(evt.relatedTarget)) {
-			this.props.canvasController.setFocusObject(null);
-		}
-	}
-
 	// Records in mousePos the mouse pointer position when the pointer is inside
 	// the boundaries of the canvas or sets the mousePos to null. This position
 	// info can be used with keyboard operations.
@@ -512,7 +499,7 @@ class CanvasContents extends React.Component {
 			return (
 				<div tabIndex="0" className="d3-svg-canvas-div keyboard-navigation" id={this.svgCanvasDivId}
 					onMouseDown={this.onMouseDown} onMouseLeave={this.onMouseLeave}
-					onFocus={this.onFocus} onBlur={this.onBlur}
+					onFocus={this.onFocus}
 					onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 					role="application" aria-label="canvas-keyboard-navigation" // Resolve Accessibility Violation of role and label
 				/>
@@ -682,7 +669,11 @@ class CanvasContents extends React.Component {
 	// Handles tab key presses on our div. It also keeps track of whether
 	// a tab key press is being handled using a flag.
 	moveFocusToNextGroup(evt) {
-		const success = this.svgCanvasD3.focusNextTabGroup(evt);
+		const focusObj = (evt.target.classList.contains("d3-svg-canvas-div"))
+			? CANVAS_FOCUS
+			: this.props.canvasController.getFocusObject();
+
+		const success = this.svgCanvasD3.focusNextTabGroup(evt, focusObj);
 		if (success) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 		} else {
@@ -693,7 +684,11 @@ class CanvasContents extends React.Component {
 	// Handles tab+shift key presses on our div. It also keeps track of whether
 	// a tab key press is being handled using a flag.
 	moveFocusToPreviousGroup(evt) {
-		const success = this.svgCanvasD3.focusPreviousTabGroup(evt);
+		const focusObj = (evt.target.classList.contains("d3-svg-canvas-div"))
+			? CANVAS_FOCUS
+			: this.props.canvasController.getFocusObject();
+
+		const success = this.svgCanvasD3.focusPreviousTabGroup(evt, focusObj);
 		if (success) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 		} else {

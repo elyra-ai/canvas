@@ -212,12 +212,12 @@ export default class SVGCanvasD3 {
 		return this.renderer.isSpaceKeyPressed();
 	}
 
-	focusNextTabGroup(evt) {
-		return this.renderer.focusNextTabGroup(evt);
+	focusNextTabGroup(evt, focusObj) {
+		return this.renderer.focusNextTabGroup(evt, focusObj);
 	}
 
-	focusPreviousTabGroup(evt) {
-		return this.renderer.focusPreviousTabGroup(evt);
+	focusPreviousTabGroup(evt, focusObj) {
+		return this.renderer.focusPreviousTabGroup(evt, focusObj);
 	}
 
 	moveFocusTo(focusObj, evt) {

@@ -6270,8 +6270,7 @@ export default class SVGCanvasRenderer {
 		return str;
 	}
 
-	focusNextTabGroup(evt) {
-		const focusObj = this.canvasController.getFocusObject();
+	focusNextTabGroup(evt, focusObj) {
 		const nextObj = this.activePipeline.getNextTabGroupStartObject(focusObj);
 		if (nextObj) {
 			this.setFocusObject(nextObj, evt);
@@ -6280,8 +6279,7 @@ export default class SVGCanvasRenderer {
 		return false;
 	}
 
-	focusPreviousTabGroup(evt) {
-		const focusObj = this.canvasController.getFocusObject();
+	focusPreviousTabGroup(evt, focusObj) {
 		const previousObj = this.activePipeline.getPreviousTabGroupStartObject(focusObj);
 		if (previousObj) {
 			this.setFocusObject(previousObj, evt);

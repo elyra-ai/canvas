@@ -71,7 +71,7 @@ export default class SVGCanvasUtilsDragDetLink {
 
 		const handleSelection = d3.select(d3Event.sourceEvent.currentTarget);
 		const link = this.ren.activePipeline.getLink(d.id);
-		const oldLink = this.cloneLink(link);
+		const oldLink = cloneDeep(link);
 
 		const linkGrpSelector = this.ren.getLinkGroupSelectionById(d.id);
 
@@ -284,7 +284,7 @@ export default class SVGCanvasUtilsDragDetLink {
 	// this.draggingLinkData object. Returns null if a link cannot be created.
 	getNewLinkOnDrag(d3Event, nodeProximity) {
 		const oldLink = this.draggingLinkData.oldLink;
-		const newLink = this.cloneLink(oldLink);
+		const newLink = cloneDeep(oldLink);
 
 		if (this.draggingLinkData.endBeingDragged === "start") {
 			delete newLink.srcObj;
@@ -335,14 +335,6 @@ export default class SVGCanvasUtilsDragDetLink {
 			return newLink;
 		}
 		return null;
-	}
-
-	// Clones the link provided. It must remove the 'grp' property because this
-	// will be dynamically added when the accessibilty tab groups are regenerated.
-	cloneLink(oldLink) {
-		const newLink = cloneDeep(oldLink);
-		delete newLink.grp;
-		return newLink;
 	}
 
 	// Returns true if the old link passed in can be updated with the attributes
