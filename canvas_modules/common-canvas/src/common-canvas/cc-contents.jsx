@@ -82,8 +82,8 @@ class CanvasContents extends React.Component {
 		this.onClickReturnToPrevious = this.onClickReturnToPrevious.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
-		this.onBlur = this.onBlur.bind(this);
 		this.onFocus = this.onFocus.bind(this);
+		this.onBlur = this.onBlur.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
@@ -295,17 +295,6 @@ class CanvasContents extends React.Component {
 		this.svgCanvasD3.setSpaceKeyPressed(false);
 	}
 
-	// When focus leaves the flow editor it may be going to an "internal" object
-	// such as a node or a comment or to an "external" object like the
-	// toolbar or palette. If it goes outside the canvas, we set the current
-	// canvas focus object to null to prevent any restoreFocus calls setting
-	// focus back into the canvas.
-	onBlur(evt) {
-		if (!evt.relatedTarget || !this.isTargetInsideCanvas(evt.relatedTarget)) {
-			this.props.canvasController.setFocusObject(null);
-		}
-	}
-
 	// When focus returns to the flow editor (for example, after another desktop window
 	// has been surfaced) the internally stored focusObject may be null even though a
 	// document.activeElement is still set on the flow editor. So we set the focus
@@ -321,6 +310,17 @@ class CanvasContents extends React.Component {
 			if (activeObject) {
 				this.props.canvasController.setFocusObject(activeObject);
 			}
+		}
+	}
+
+	// When focus leaves the flow editor it may be going to an "internal" object
+	// such as a node or a comment or to an "external" object like the
+	// toolbar or palette. If it goes outside the canvas, we set the current
+	// canvas focus object to null to prevent any restoreFocus calls setting
+	// focus back into the canvas.
+	onBlur(evt) {
+		if (!evt.relatedTarget || !this.isTargetInsideCanvas(evt.relatedTarget)) {
+			this.props.canvasController.setFocusObject(null);
 		}
 	}
 
