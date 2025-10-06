@@ -82,6 +82,7 @@ class CanvasContents extends React.Component {
 		this.onClickReturnToPrevious = this.onClickReturnToPrevious.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
+		this.onBlur = this.onBlur.bind(this);
 		this.onFocus = this.onFocus.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
@@ -294,20 +295,31 @@ class CanvasContents extends React.Component {
 		this.svgCanvasD3.setSpaceKeyPressed(false);
 	}
 
-	// When focus returns to the flow editor the internally stored focusObject
-	// may be null even though a document.activeElement is still set on the
-	// flow editor. So we set the focus object to be in sync with document.activeElement.
+	// When focus leaves the flow editor it may be going to an "internal" object
+	// such as a node or a comment or to an "external" object like the
+	// toolbar or palette. If it goes outside the canvas, we set the current
+	// canvas focus object to null to prevent any restoreFocus calls setting
+	// focus back into the canvas.
+	onBlur(evt) {
+		if (!evt.relatedTarget || !this.isTargetInsideCanvas(evt.relatedTarget)) {
+			this.props.canvasController.setFocusObject(null);
+		}
+	}
+
+	// When focus returns to the flow editor (for example, after another desktop window
+	// has been surfaced) the internally stored focusObject may be null even though a
+	// document.activeElement is still set on the flow editor. So we set the focus
+	// object to be in sync with document.activeElement.
 	onFocus(evt) {
 		if (evt.target.classList.contains("d3-svg-canvas-div") &&
 				this.props.canvasController.getFocusObject() !== CANVAS_FOCUS) {
 			this.props.canvasController.setFocusObject(CANVAS_FOCUS);
 
 		} else if (!this.props.canvasController.getFocusObject()) {
-			const activeObj = this.getActiveFocusedCanvasElement();
-			const object = activeObj ? activeObj.__data__ : null; // Extracts the node, comment or link from the DOM element.
+			const activeObject = this.svgCanvasD3.getActiveCanvasObject();
 
-			if (object) {
-				this.props.canvasController.setFocusObject(object);
+			if (activeObject) {
+				this.props.canvasController.setFocusObject(activeObject);
 			}
 		}
 	}
@@ -356,26 +368,6 @@ class CanvasContents extends React.Component {
 			canvasLayout,
 			this.props.canvasConfig
 		);
-	}
-
-	// Returns the currently focused canvas DOM element for a node, comment
-	// or link as descibed by the document.activeElement property. This will
-	// return a DOM element for node, comment or link even if a sub-object
-	// within one of thise objects has focus.
-	getActiveFocusedCanvasElement() {
-		let objElement = null;
-
-		if (document.activeElement) {
-			objElement = document.activeElement.closest(".d3-node-group");
-
-			if (!objElement) {
-				objElement = document.activeElement.closest(".d3-comment-group");
-			}
-			if (!objElement) {
-				objElement = document.activeElement.closest(".d3-link-group");
-			}
-		}
-		return objElement;
 	}
 
 	getLabel(labelId) {
@@ -503,7 +495,7 @@ class CanvasContents extends React.Component {
 			return (
 				<div tabIndex="0" className="d3-svg-canvas-div keyboard-navigation" id={this.svgCanvasDivId}
 					onMouseDown={this.onMouseDown} onMouseLeave={this.onMouseLeave}
-					onFocus={this.onFocus}
+					onFocus={this.onFocus} onBlur={this.onBlur}
 					onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 					role="application" aria-label="canvas-keyboard-navigation" // Resolve Accessibility Violation of role and label
 				/>

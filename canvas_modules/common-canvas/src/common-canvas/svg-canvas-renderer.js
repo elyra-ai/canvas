@@ -5419,7 +5419,7 @@ export default class SVGCanvasRenderer {
 
 		fn();
 
-		if (this.config.enableKeyboardNavigation && !this.isEditingText()) {
+		if (this.config.enableKeyboardNavigation && !this.isEditingText() && !this.canvasController.isContextMenuDisplayed()) {
 			this.canvasController.setFocusObject(focusObj);
 		}
 	}
@@ -6290,6 +6290,36 @@ export default class SVGCanvasRenderer {
 			return true;
 		}
 		return false;
+	}
+
+	// Returns the canvas object (node, link or comment) for the currently
+	// focused (active) canvas DOM element.
+	getActiveCanvasObject() {
+		const el = this.getActiveCanvasElement();
+		if (el) {
+			return d3.select(el).datum();
+		}
+		return null;
+	}
+
+	// Returns the currently focused canvas DOM element for a node, comment
+	// or link as descibed by the document.activeElement property. This will
+	// return a DOM element for node, comment or link even if a sub-object
+	// within one of thise objects has focus.
+	getActiveCanvasElement() {
+		let objElement = null;
+
+		if (document.activeElement) {
+			objElement = document.activeElement.closest(".d3-node-group");
+
+			if (!objElement) {
+				objElement = document.activeElement.closest(".d3-comment-group");
+			}
+			if (!objElement) {
+				objElement = document.activeElement.closest(".d3-link-group");
+			}
+		}
+		return objElement;
 	}
 
 	setFocusObject(focusObj, evt) {

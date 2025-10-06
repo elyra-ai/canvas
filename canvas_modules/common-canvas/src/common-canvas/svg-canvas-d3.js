@@ -220,6 +220,10 @@ export default class SVGCanvasD3 {
 		return this.renderer.focusPreviousTabGroup(evt);
 	}
 
+	getActiveCanvasObject() {
+		return this.renderer.getActiveCanvasObject();
+	}
+
 	moveFocusTo(focusObj, evt) {
 		// The D3 rendering object may not exist for some sophisticated
 		// refresh scenarios, so check its existence first.

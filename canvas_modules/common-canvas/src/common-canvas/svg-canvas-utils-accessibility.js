@@ -325,7 +325,6 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getNextTabGroupStartObject(focusObj) {
-		console.log("getNextTabGroupStartObject ", focusObj);
 		if (this.tabObjects.length === 0) {
 			return null;
 		}
@@ -343,7 +342,6 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getPreviousTabGroupStartObject(focusObj) {
-		console.log("getPreviousTabGroupStartObject ", focusObj);
 		if (this.tabObjects.length === 0) {
 			return null;
 		}
