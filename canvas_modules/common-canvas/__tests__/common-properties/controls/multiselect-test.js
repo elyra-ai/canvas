@@ -39,7 +39,7 @@ mockMultiselect.mockImplementation((props) => {
 	return <MultiselectComp {...props} />;
 });
 
-const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+const user = userEvent.setup({ delay: null });
 
 describe("multiselect renders correctly", () => {
 
