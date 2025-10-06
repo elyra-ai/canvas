@@ -2454,7 +2454,6 @@ export default class SVGCanvasRenderer {
 				}
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
-						this.activePipeline.setTabGroupIndexForObj(d);
 						this.setFocusObject(d, d3Event);
 					}
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
@@ -4533,7 +4532,6 @@ export default class SVGCanvasRenderer {
 				}
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
-						this.activePipeline.setTabGroupIndexForObj(d);
 						this.setFocusObject(d, d3Event);
 					}
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
@@ -5100,7 +5098,6 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (this.config.enableKeyboardNavigation) {
-					this.activePipeline.setTabGroupIndexForObj(d);
 					this.setFocusObject(d, d3Event);
 				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
@@ -5422,7 +5419,7 @@ export default class SVGCanvasRenderer {
 
 		fn();
 
-		if (this.config.enableKeyboardNavigation && !this.isEditingText()) {
+		if (this.config.enableKeyboardNavigation && !this.isEditingText() && !this.canvasController.isContextMenuDisplayed()) {
 			this.canvasController.setFocusObject(focusObj);
 		}
 	}
@@ -6273,12 +6270,10 @@ export default class SVGCanvasRenderer {
 		return str;
 	}
 
-	setTabGroupIndexForObj(d) {
-		this.activePipeline.setTabGroupIndexForObj(d);
-	}
-
 	focusNextTabGroup(evt) {
-		const nextObj = this.activePipeline.getNextTabGroupStartObject();
+		const focusObj = this.canvasController.getFocusObject();
+		const nextObj = this.activePipeline.getNextTabGroupStartObject(focusObj);
+
 		if (nextObj) {
 			this.setFocusObject(nextObj, evt);
 			return true;
@@ -6287,12 +6282,44 @@ export default class SVGCanvasRenderer {
 	}
 
 	focusPreviousTabGroup(evt) {
-		const previousObj = this.activePipeline.getPreviousTabGroupStartObject();
+		const focusObj = this.canvasController.getFocusObject();
+		const previousObj = this.activePipeline.getPreviousTabGroupStartObject(focusObj);
+
 		if (previousObj) {
 			this.setFocusObject(previousObj, evt);
 			return true;
 		}
 		return false;
+	}
+
+	// Returns the canvas object (node, link or comment) for the currently
+	// focused (active) canvas DOM element.
+	getActiveCanvasObject() {
+		const el = this.getActiveCanvasElement();
+		if (el) {
+			return d3.select(el).datum();
+		}
+		return null;
+	}
+
+	// Returns the currently focused canvas DOM element for a node, comment
+	// or link as descibed by the document.activeElement property. This will
+	// return a DOM element for node, comment or link even if a sub-object
+	// within one of thise objects has focus.
+	getActiveCanvasElement() {
+		let objElement = null;
+
+		if (document.activeElement) {
+			objElement = document.activeElement.closest(".d3-node-group");
+
+			if (!objElement) {
+				objElement = document.activeElement.closest(".d3-comment-group");
+			}
+			if (!objElement) {
+				objElement = document.activeElement.closest(".d3-link-group");
+			}
+		}
+		return objElement;
 	}
 
 	setFocusObject(focusObj, evt) {
@@ -6313,10 +6340,6 @@ export default class SVGCanvasRenderer {
 
 	focusOnTextEntryElement(evt) {
 		this.svgCanvasTextArea.focusOnTextEntryElement(evt);
-	}
-
-	resetTabObjectIndex() {
-		this.activePipeline.resetTabObjectIndex();
 	}
 
 	// Returns an object containing 4 "gaps" that can be used to draw a focus

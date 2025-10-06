@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Elyra Authors
+ * Copyright 2024-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK } from "./constants/canvas-constants.js";
+import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, CANVAS_FOCUS } from "./constants/canvas-constants.js";
 
 
 export default class SVGCanvasUtilsAccessibility {
@@ -44,27 +44,18 @@ export default class SVGCanvasUtilsAccessibility {
 		// objects.
 		this.tabObjects = this.createTabObjectsArray();
 
-		// Keeps track of which tab object is currently active during tabbing.
-		this.currentTabObjectIndex = -1;
-
 		// Keeps track of which sub-object with the currently focused node or link
 		// is being focused.
 		this.focusSubObjectIndex = -1;
 
-		// Reset the currentTabObjectIndex variable based on the current selection
-		// (if there is one).
-		this.resetTabGroupIndexBasedOnSelection();
-
 		this.logger.logEndTimer("initialize");
-	}
-
-	resetTabObjectIndex() {
-		this.currentTabObjectIndex = -1;
 	}
 
 	// Returns an array of tab groups for the active pipeline. Each element of
 	// the array is the starting object (node, comment or link) for the group.
 	createTabObjectsArray() {
+		this.removeGrpProperties();
+
 		const objGroups = this.getObjectGroups();
 
 		const entryComments = this.getEntryComments();
@@ -77,6 +68,15 @@ export default class SVGCanvasUtilsAccessibility {
 		return tabGroups;
 	}
 
+	// Prepares the canvas objects for processing into tab groups by removing
+	// the 'grp' properties from each object. 'grp' is used to keep track of
+	// which tab group an object is allocted to.
+	removeGrpProperties() {
+		this.ap.pipeline.nodes.forEach((n) => delete n.grp);
+		this.ap.pipeline.links.forEach((l) => delete l.grp);
+		this.ap.pipeline.comments.forEach((c) => delete c.grp);
+	}
+
 	getEntryComments() {
 		if (this.ap.canvasInfo.hideComments) {
 			return [];
@@ -87,13 +87,13 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getEntryLinks() {
-		let entryLinks = this.ap.pipeline.links.filter((l) => l.srcPos);
+		let entryLinks = this.ap.pipeline.links.filter((l) => l.srcPos && l.trgPos);
 		entryLinks = entryLinks.map((el) => ({ type: "link", obj: el }));
 		return entryLinks;
 	}
 
 	getEntryNodes() {
-		let entryNodes = this.ap.pipeline.nodes.filter((n) => !this.nodeHasInputLinks(n));
+		let entryNodes = this.ap.pipeline.nodes.filter((n) => !this.nodeHasInputLinks(n) && !this.nodeHasAssocLinks(n));
 		entryNodes = entryNodes.map((en) => ({ type: "node", obj: en }));
 		return entryNodes;
 	}
@@ -307,37 +307,6 @@ export default class SVGCanvasUtilsAccessibility {
 		return this.ap.pipeline.links.filter((l) => l.type === COMMENT_LINK && l.trgNodeId === node.id);
 	}
 
-	// Resets the currentTabObjectIndex variable based on the current selection
-	// (if there is one).
-	resetTabGroupIndexBasedOnSelection() {
-		if (this.ap.selections.length > 0) {
-			const lastSelectedObjectId = this.ap.selections[this.ap.selections.length - 1];
-
-			const lastSelectedNode = this.ap.getNode(lastSelectedObjectId);
-			if (lastSelectedNode) {
-				this.setTabGroupIndexForObj(lastSelectedNode);
-				return;
-			}
-			const lastSelectedComment = this.ap.getComment(lastSelectedObjectId);
-			if (lastSelectedComment) {
-				this.setTabGroupIndexForObj(lastSelectedComment);
-				return;
-			}
-			const lastSelectedLink = this.ap.getLink(lastSelectedObjectId);
-			if (lastSelectedLink) {
-				this.setTabGroupIndexForObj(lastSelectedLink);
-				return;
-			}
-		}
-		return;
-	}
-
-	// Sets the current tab group index, for the tab group of which the object
-	// passed in is a part, to be the index position of that object.
-	setTabGroupIndexForObj(obj) {
-		this.currentTabObjectIndex = this.tabObjects.findIndex((tg) => tg.obj.grp === obj.grp);
-	}
-
 	nodeHasInputLinks(node) {
 		if (node.inputs && node.inputs.length > 0) {
 			const linksTo = this.getLinksToNode(node, NODE_LINK);
@@ -346,36 +315,53 @@ export default class SVGCanvasUtilsAccessibility {
 		return false;
 	}
 
+	nodeHasAssocLinks(node) {
+		const links = this.getAssocLinksForNode(node);
+		return (links.length > 0);
+	}
+
 	commentHasLinks(comment) {
 		return this.getLinksFromComment(comment).length > 0;
 	}
 
-	getNextTabGroupStartObject() {
-		if (this.currentTabObjectIndex === this.tabObjects.length) {
-			this.currentTabObjectIndex = -1;
+	getNextTabGroupStartObject(focusObj) {
+		if (this.tabObjects.length === 0) {
+			return null;
+		}
+		if (!focusObj || focusObj === CANVAS_FOCUS) {
+			return this.tabObjects[0].obj;
 		}
 
-		if (this.currentTabObjectIndex < this.tabObjects.length) {
-			this.currentTabObjectIndex++;
-			if (this.currentTabObjectIndex < this.tabObjects.length) {
-				return this.tabObjects[this.currentTabObjectIndex].obj;
-			}
+		const localObj = this.getLocalObject(focusObj);
+		const index = this.tabObjects.findIndex((tg) => tg.obj.grp === localObj?.grp);
+
+		if (index === this.tabObjects.length - 1) {
+			return null;
 		}
-		return null;
+		return this.tabObjects[index + 1].obj;
 	}
 
-	getPreviousTabGroupStartObject() {
-		if (this.currentTabObjectIndex === -1) {
-			this.currentTabObjectIndex = this.tabObjects.length;
+	getPreviousTabGroupStartObject(focusObj) {
+		if (this.tabObjects.length === 0) {
+			return null;
+		}
+		if (!focusObj || focusObj === CANVAS_FOCUS) {
+			return this.tabObjects[this.tabObjects.length - 1].obj;
 		}
 
-		if (this.currentTabObjectIndex > -1) {
-			this.currentTabObjectIndex--;
-			if (this.currentTabObjectIndex > -1) {
-				return this.tabObjects[this.currentTabObjectIndex].obj;
-			}
+		const localObj = this.getLocalObject(focusObj);
+		const index = this.tabObjects.findIndex((tg) => tg.obj.grp === localObj?.grp);
+
+		if (index === 0) {
+			return null;
 		}
-		return null;
+		return this.tabObjects[index - 1].obj;
+	}
+
+	getLocalObject(focusObj) {
+		return this.ap.pipeline.nodes.find((n) => n.id === focusObj.id) ||
+			this.ap.pipeline.links.find((l) => l.id === focusObj.id) ||
+			this.ap.pipeline.comments.find((c) => c.id === focusObj.id);
 	}
 
 	getAllLinksForNode(node) {
@@ -511,6 +497,10 @@ export default class SVGCanvasUtilsAccessibility {
 	// specified.
 	getLinksFromNode(node, type) {
 		return this.ap.pipeline.links.filter((l) => l.type === type && l.srcNodeId === node.id);
+	}
+
+	getAssocLinksForNode(node) {
+		return this.ap.pipeline.links.filter((l) => l.type === ASSOCIATION_LINK && (l.srcNodeId === node.id || l.trgNodeId === node.id));
 	}
 
 	getLinksFromComment(comment) {
