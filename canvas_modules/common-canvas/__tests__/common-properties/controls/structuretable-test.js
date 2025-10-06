@@ -766,7 +766,7 @@ describe("structuretable control displays with no header and no button", () => {
 		// Newly added fields should have the proper type
 		const tableId = { name: "structuretableReadonlyColumnDefaultIndex" };
 		const tableValue = renderedController.getPropertyValue(tableId);
-		expect(tableValue).to.have.length(8);
+		expect(tableValue).to.have.length(10);
 		const cell = tableValue[7][4];
 		expect(cell).to.equal("integer");
 	});
@@ -785,7 +785,7 @@ describe("structuretable control displays with no header and no button", () => {
 		// All fields should be present, plus the two bad fields in current_parameters
 		const tableId = { name: "structuretableNoButtons" };
 		const tableValue = renderedController.getPropertyValue(tableId);
-		expect(tableValue).to.have.length(10);
+		expect(tableValue).to.have.length(12);
 		expect(tableValue[1][0]).to.equal("Kathy");
 		expect(tableValue[1][1]).to.equal("Descending");
 		expect(tableValue[9][0]).to.equal("Ag");
@@ -821,7 +821,7 @@ describe("structuretable multiselect edit works", () => {
 
 		// Newly added fields should be selected.
 		const selectedRows = container.querySelectorAll(".properties-vt-row-selected");
-		expect(selectedRows).to.have.length(5);
+		expect(selectedRows).to.have.length(7);
 	});
 	it("mse table should allow multiple selections", () => {
 		const { container } = wrapper;
@@ -1195,7 +1195,7 @@ describe("measurement icons should be rendered correctly in structuretable", () 
 	it("measurement icons should render in fieldpicker for table where dm_image is set to measure", () => {
 		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableSortableColumns-summary-panel");
 		const fieldPicker = tableUtilsRTL.openFieldPicker(wrapper.container, "properties-ft-structuretableSortableColumns");
-		expect(fieldPicker.querySelectorAll("div.properties-fp-field-type-icon")).to.have.length(8);
+		expect(fieldPicker.querySelectorAll("div.properties-fp-field-type-icon")).to.have.length(10);
 	});
 	it("measurement icons should not render for table where dm_image value is set to invalid value", () => {
 		propertyUtilsRTL.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");

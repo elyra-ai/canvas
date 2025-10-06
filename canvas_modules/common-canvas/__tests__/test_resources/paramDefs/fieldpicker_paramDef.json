@@ -197,7 +197,16 @@
       "fields": [
         {
           "name": "Age - This is a long truncated label. You can see the entire label in a tooltip.",
-          "type": "integer",
+          "type": "customType",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Vector",
+          "type": "vectorType",
           "metadata": {
             "description": "",
             "measure": "range",

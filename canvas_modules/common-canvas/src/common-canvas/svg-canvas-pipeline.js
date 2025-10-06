@@ -122,20 +122,12 @@ export default class SVGCanvasPipeline {
 		return this.getAccessibility().getPreviousSiblingLink(link);
 	}
 
-	getNextTabGroupStartObject() {
-		return this.getAccessibility().getNextTabGroupStartObject();
+	getNextTabGroupStartObject(focusObj) {
+		return this.getAccessibility().getNextTabGroupStartObject(focusObj);
 	}
 
-	getPreviousTabGroupStartObject() {
-		return this.getAccessibility().getPreviousTabGroupStartObject();
-	}
-
-	resetTabObjectIndex() {
-		this.getAccessibility().resetTabObjectIndex();
-	}
-
-	setTabGroupIndexForObj(d) {
-		this.getAccessibility().setTabGroupIndexForObj(d);
+	getPreviousTabGroupStartObject(focusObj) {
+		return this.getAccessibility().getPreviousTabGroupStartObject(focusObj);
 	}
 
 	getCanvasDimensions(gap) {
