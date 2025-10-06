@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,10 +33,8 @@ describe("Test of custom panels", function() {
 		cy.openSubPanel("Configure Slider");
 		verifySliderDropDown(6);
 		// move slider to be above 60
-		cy.get(".harness-custom-control-slider .cds--slider__thumb")
-			.trigger("mousedown")
-			.trigger("mousemove", { clientX: 900 })
-			.trigger("mouseup");
+		cy.get(".harness-custom-control-slider .cds--slider__thumb").click({ multiple: true, force: true });
+		cy.get(".harness-custom-control-slider .cds--slider__thumb").type("{rightarrow}".repeat(52));
 		verifySliderDropDown(3);
 		cy.saveWideFlyout("Configure Slider");
 		cy.saveFlyout();
