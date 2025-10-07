@@ -1148,9 +1148,7 @@ g.bkg-col-cyan-50 {
 
 // When pointer hovers over the link this style will be applied.
 .d3-link-group:hover .d3-link-line,
-.d3-link-group:hover .d3-link-line-arrow-head,
-.d3-link-group.d3-link-hover .d3-link-line,
-.d3-link-group.d3-link-hover .d3-link-line-arrow-head {
+.d3-link-group:hover .d3-link-line-arrow-head {
 	stroke: $link-highlight-color;
 	stroke-width: 2;
 }
@@ -1199,8 +1197,7 @@ g.bkg-col-cyan-50 {
 }
 
 .d3-link-group:hover .d3-link-handle-start,
-.d3-link-group.d3-link-hover .d3-link-handle-start,
-.d3-link-group[data-selected] .d3-link-handle-start {
+.d3-link-group:focus  .d3-link-handle-start {
 	display: inherit;
 	stroke: $link-highlight-color;
 	fill: $data-link-color;
@@ -1216,8 +1213,7 @@ g.bkg-col-cyan-50 {
 }
 
 .d3-link-group:hover .d3-link-handle-end,
-.d3-link-group.d3-link-hover .d3-link-handle-end,
-.d3-link-group[data-selected] .d3-link-handle-end {
+ .d3-link-group:focus .d3-link-handle-end {
 	display: inherit;
 	stroke: $link-highlight-color;
 	fill: $data-link-color;

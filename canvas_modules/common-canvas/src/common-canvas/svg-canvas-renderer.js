@@ -5037,7 +5037,6 @@ export default class SVGCanvasRenderer {
 					if (!this.isEditingText()) {
 						this.raiseLinkToTop(targetObj);
 					}
-					this.setLinkHoverClass(targetObj, true);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, d, "hover");
@@ -5073,9 +5072,6 @@ export default class SVGCanvasRenderer {
 			})
 			.on("mouseleave", (d3Event, link) => {
 				const targetObj = d3Event.currentTarget;
-				if (this.canvasController.getFocusObject() !== link) {
-					this.setLinkHoverClass(targetObj, false);
-				}
 
 				// Lower link if:
 				// 1. we're NOT editing text because lowering a link will cause a
@@ -5422,13 +5418,6 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableKeyboardNavigation && !this.isEditingText() && !this.canvasController.isContextMenuDisplayed()) {
 			this.canvasController.setFocusObject(focusObj);
 		}
-	}
-
-	// Add or remove d3-link-hover class. This is used instead of replying on
-	// :hover to avoid a firefox hover issue.
-	setLinkHoverClass(obj, state) {
-		d3.select(obj)
-			.classed("d3-link-hover", state);
 	}
 
 	// Returns true if the link passed in has one or more decorations.
@@ -6439,6 +6428,8 @@ export default class SVGCanvasRenderer {
 		} else if (type === "link") {
 			if (this.activePipeline.getLink(obj.id)) {
 				objSel = this.getLinkGroupSelectionById(obj.id);
+
+				objSel.raise(); // Raise link to top before focusing it.
 
 				// TODO - Think of a way to show focus on links other than line thckness
 			} else {
