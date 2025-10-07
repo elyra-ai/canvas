@@ -5077,7 +5077,8 @@ export default class SVGCanvasRenderer {
 				// 1. we're NOT editing text because lowering a link will cause a
 				//   'blur' in the text edit area which will end editing.
 				// 2. enableLinksOverNodes is false - i.e. lowering is allowed.
-				if (!this.config.enableLinksOverNodes && !this.isEditingText()) {
+				// 3. Not dragging anything
+				if (!this.config.enableLinksOverNodes && !this.isEditingText() && !this.isDragging()) {
 					this.lowerLinkToBottom(targetObj);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
@@ -6431,7 +6432,7 @@ export default class SVGCanvasRenderer {
 
 				objSel.raise(); // Raise link to top before focusing it.
 
-				// TODO - Think of a way to show focus on links other than line thckness
+				// TODO - Think of a way to show focus on links other than line thickness
 			} else {
 				// This may happen when objects are being created.
 				this.logger.log("Link with ID " + obj.id + " not found in activePipeline");
