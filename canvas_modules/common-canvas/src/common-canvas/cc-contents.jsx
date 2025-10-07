@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import CanvasUtils from "./common-canvas-utils.js";
 import KeyboardUtils from "./keyboard-utils.js";
 import { Button } from "@carbon/react";
 import { FlowData, ArrowLeft } from "@carbon/react/icons";
-import { DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
+import { CANVAS_FOCUS, DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
 
@@ -295,30 +295,31 @@ class CanvasContents extends React.Component {
 		this.svgCanvasD3.setSpaceKeyPressed(false);
 	}
 
-	// When focus returns to the flow editor the internally stored focusObject
-	// may be null even though a document.activeElement is still set on the
-	// flow editor. So we set the focus object to be in sync with document.activeElement.
+	// When focus returns to the flow editor (for example, after another desktop window
+	// has been surfaced) the internally stored focusObject may be null even though a
+	// document.activeElement is still set on the flow editor. So we set the focus
+	// object to be in sync with document.activeElement.
 	onFocus(evt) {
-		if (!this.props.canvasController.getFocusObject()) {
-			const activeObj = this.getActiveFocusedCanvasElement();
-			const object = activeObj ? activeObj.__data__ : null; // Extracts the node, comment or link from the DOM element.
+		if (evt.target.classList.contains("d3-svg-canvas-div") &&
+				this.props.canvasController.getFocusObject() !== CANVAS_FOCUS) {
+			this.props.canvasController.setFocusObject(CANVAS_FOCUS);
 
-			if (object) {
-				this.svgCanvasD3.setTabGroupIndexForObj(object);
-				this.props.canvasController.setFocusObject(object);
+		} else if (!this.props.canvasController.getFocusObject()) {
+			const activeObject = this.svgCanvasD3.getActiveCanvasObject();
+
+			if (activeObject) {
+				this.props.canvasController.setFocusObject(activeObject);
 			}
 		}
 	}
 
 	// When focus leaves the flow editor it may be going to an "internal" object
 	// such as a node or a comment or to an "external" object like the
-	// toolbar or palette. If it goes outside the canvas, we reset the
-	// tab object index so that tabbing will begin from the first tab object
-	// and set the current canvas focus object to null to prevent any
-	// restoreFocus calls setting focus back into the canvas.
+	// toolbar or palette. If it goes outside the canvas, we set the current
+	// canvas focus object to null to prevent any restoreFocus calls setting
+	// focus back into the canvas.
 	onBlur(evt) {
 		if (!evt.relatedTarget || !this.isTargetInsideCanvas(evt.relatedTarget)) {
-			this.svgCanvasD3.resetTabObjectIndex();
 			this.props.canvasController.setFocusObject(null);
 		}
 	}
@@ -367,26 +368,6 @@ class CanvasContents extends React.Component {
 			canvasLayout,
 			this.props.canvasConfig
 		);
-	}
-
-	// Returns the currently focused canvas DOM element for a node, comment
-	// or link as descibed by the document.activeElement property. This will
-	// return a DOM element for node, comment or link even if a sub-object
-	// within one of thise objects has focus.
-	getActiveFocusedCanvasElement() {
-		let objElement = null;
-
-		if (document.activeElement) {
-			objElement = document.activeElement.closest(".d3-node-group");
-
-			if (!objElement) {
-				objElement = document.activeElement.closest(".d3-comment-group");
-			}
-			if (!objElement) {
-				objElement = document.activeElement.closest(".d3-link-group");
-			}
-		}
-		return objElement;
 	}
 
 	getLabel(labelId) {
@@ -681,8 +662,7 @@ class CanvasContents extends React.Component {
 		event.preventDefault();
 	}
 
-	// Handles tab key presses on our div. It also keeps track of whether
-	// a tab key press is being handled using a flag.
+	// Handles tab key presses on our div.
 	moveFocusToNextGroup(evt) {
 		const success = this.svgCanvasD3.focusNextTabGroup(evt);
 		if (success) {
@@ -692,8 +672,7 @@ class CanvasContents extends React.Component {
 		}
 	}
 
-	// Handles tab+shift key presses on our div. It also keeps track of whether
-	// a tab key press is being handled using a flag.
+	// Handles tab+shift key presses on our div.
 	moveFocusToPreviousGroup(evt) {
 		const success = this.svgCanvasD3.focusPreviousTabGroup(evt);
 		if (success) {
@@ -702,7 +681,6 @@ class CanvasContents extends React.Component {
 			this.props.canvasController.setFocusOnCanvas();
 		}
 	}
-
 
 	// Sets the focus on our canvas <div> so keyboard events will go to it.
 	focusOnCanvas() {
