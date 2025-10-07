@@ -5037,7 +5037,7 @@ export default class SVGCanvasRenderer {
 					if (!this.isEditingText()) {
 						this.raiseLinkToTop(targetObj);
 					}
-					this.setLinkHandlesHoverClass(targetObj, true);
+					this.setLinkHoverClass(targetObj, true);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, d, "hover");
@@ -5074,7 +5074,7 @@ export default class SVGCanvasRenderer {
 			.on("mouseleave", (d3Event, link) => {
 				const targetObj = d3Event.currentTarget;
 				if (this.canvasController.getFocusObject() !== link) {
-					this.setLinkHandlesHoverClass(targetObj, false);
+					this.setLinkHoverClass(targetObj, false);
 				}
 
 				// Lower link if:
@@ -5424,10 +5424,11 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	setLinkHandlesHoverClass(obj, state) {
-		// Add or remove handles-detachable-hover class to avoid firefox hover issue
+	// Add or remove d3-link-hover class. This is used instead of replying on
+	// :hover to avoid a firefox hover issue.
+	setLinkHoverClass(obj, state) {
 		d3.select(obj)
-			.classed("handles-detachable-hover", state);
+			.classed("d3-link-hover", state);
 	}
 
 	// Returns true if the link passed in has one or more decorations.
