@@ -28,10 +28,12 @@ export default class UpdateLinkAction extends Action {
 	// Standard methods
 	do() {
 		this.apiPipeline.updateLink(this.data.newLink);
+		this.focusObject = this.data.newLink;
 	}
 
 	undo() {
 		this.apiPipeline.updateLink(this.oldLink);
+		this.focusObject = this.oldLink;
 	}
 
 	redo() {
@@ -40,5 +42,9 @@ export default class UpdateLinkAction extends Action {
 
 	getLabel() {
 		return this.labelUtil.getActionLabel(this, "action.updateLink");
+	}
+
+	getFocusObject() {
+		return this.focusObject;
 	}
 }

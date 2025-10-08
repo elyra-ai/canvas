@@ -5037,7 +5037,6 @@ export default class SVGCanvasRenderer {
 					if (!this.isEditingText()) {
 						this.raiseLinkToTop(targetObj);
 					}
-					this.setLinkHandlesHoverClass(targetObj, true);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, d, "hover");
@@ -5073,15 +5072,13 @@ export default class SVGCanvasRenderer {
 			})
 			.on("mouseleave", (d3Event, link) => {
 				const targetObj = d3Event.currentTarget;
-				if (this.canvasController.getFocusObject() !== link) {
-					this.setLinkHandlesHoverClass(targetObj, false);
-				}
 
 				// Lower link if:
 				// 1. we're NOT editing text because lowering a link will cause a
 				//   'blur' in the text edit area which will end editing.
 				// 2. enableLinksOverNodes is false - i.e. lowering is allowed.
-				if (!this.config.enableLinksOverNodes && !this.isEditingText()) {
+				// 3. Not dragging anything
+				if (!this.config.enableLinksOverNodes && !this.isEditingText() && !this.isDragging()) {
 					this.lowerLinkToBottom(targetObj);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
@@ -5181,7 +5178,8 @@ export default class SVGCanvasRenderer {
 						.attr("x", (d) => d.x2 - (this.canvasLayout.linkEndHandleWidth / 2))
 						.attr("y", (d) => d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
 						.attr("width", this.canvasLayout.linkEndHandleWidth)
-						.attr("height", this.canvasLayout.linkEndHandleHeight);
+						.attr("height", this.canvasLayout.linkEndHandleHeight)
+						.attr("transform", (d) => this.getLinkImageTransform(d));
 
 				} else if (this.canvasLayout.linkEndHandleObject === PORT_DISPLAY_CIRCLE) {
 					obj
@@ -5422,12 +5420,6 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableKeyboardNavigation && !this.isEditingText() && !this.canvasController.isContextMenuDisplayed()) {
 			this.canvasController.setFocusObject(focusObj);
 		}
-	}
-
-	setLinkHandlesHoverClass(obj, state) {
-		// Add or remove handles-detachable-hover class to avoid firefox hover issue
-		d3.select(obj)
-			.classed("handles-detachable-hover", state);
 	}
 
 	// Returns true if the link passed in has one or more decorations.
@@ -6413,6 +6405,17 @@ export default class SVGCanvasRenderer {
 					.attr("class", "d3-focus-path")
 					.attr("d", (d) =>
 						this.getRectangleNodeShapePath(d, this.getNodeFocusIncrements(d, objSel)));
+
+				// If the top most object is a link: push it to the
+				// bottom of the display order, because it may have been
+				// raised to the top when it received focus.
+				if (!this.config.enableLinksOverNodes) {
+					const element = objSel.node();
+					const topElement = element.parentElement.lastChild;
+					if (topElement.classList.contains("d3-link-group")) {
+						d3.select(topElement).lower();
+					}
+				}
 			} else {
 				// This may happen when objects are being created.
 				this.logger.log("Node with ID " + obj.id + " not found in activePipeline");
@@ -6439,7 +6442,13 @@ export default class SVGCanvasRenderer {
 			if (this.activePipeline.getLink(obj.id)) {
 				objSel = this.getLinkGroupSelectionById(obj.id);
 
-				// TODO - Think of a way to show focus on links other than line thckness
+				// Raise link to top before focusing it, if it has handles
+				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+					this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+					objSel.raise();
+				}
+
+				// TODO - Think of a way to show focus on links other than line thickness
 			} else {
 				// This may happen when objects are being created.
 				this.logger.log("Link with ID " + obj.id + " not found in activePipeline");
