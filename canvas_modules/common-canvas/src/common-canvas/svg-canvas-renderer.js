@@ -6404,6 +6404,17 @@ export default class SVGCanvasRenderer {
 					.attr("class", "d3-focus-path")
 					.attr("d", (d) =>
 						this.getRectangleNodeShapePath(d, this.getNodeFocusIncrements(d, objSel)));
+
+				// If the top most object is a link: push it to the
+				// bottom of the display order, because it may have been
+				// raised to the top when it received focus.
+				if (!this.config.enableLinksOverNodes) {
+					const element = objSel.node();
+					const topElement = element.parentElement.lastChild;
+					if (topElement.classList.contains("d3-link-group")) {
+						d3.select(topElement).lower();
+					}
+				}
 			} else {
 				// This may happen when objects are being created.
 				this.logger.log("Node with ID " + obj.id + " not found in activePipeline");
