@@ -6441,7 +6441,11 @@ export default class SVGCanvasRenderer {
 			if (this.activePipeline.getLink(obj.id)) {
 				objSel = this.getLinkGroupSelectionById(obj.id);
 
-				objSel.raise(); // Raise link to top before focusing it.
+				// Raise link to top before focusing it, if it has handles
+				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+					this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+					objSel.raise();
+				}
 
 				// TODO - Think of a way to show focus on links other than line thickness
 			} else {
