@@ -5017,9 +5017,10 @@ export default class SVGCanvasRenderer {
 
 				const targetObj = d3Event.currentTarget;
 
-				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				if ((this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 					this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE ||
-					this.config.enableRaiseLinksToTopOnHover)
+					this.config.enableRaiseLinksToTopOnHover) &&
+					d.type === NODE_LINK)
 				{
 					// Only raise link if we're NOT editing text because raising a link
 					// will cause a 'blur' in the text edit area which will end editing.
@@ -5062,12 +5063,10 @@ export default class SVGCanvasRenderer {
 			.on("mouseleave", (d3Event, link) => {
 				const targetObj = d3Event.currentTarget;
 
-				// Lower link if:
-				// 1. we're NOT editing text because lowering a link will cause a
-				//   'blur' in the text edit area which will end editing.
-				// 2. enableLinksOverNodes is false - i.e. lowering is allowed.
-				// 3. Not dragging anything
-				if (!this.config.enableLinksOverNodes && !this.isEditingText() && !this.isDragging()) {
+				if (link.type === NODE_LINK &&
+						!this.config.enableLinksOverNodes &&
+						!this.isEditingText() &&
+						!this.isDragging()) {
 					this.lowerLinkToBottom(targetObj);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
