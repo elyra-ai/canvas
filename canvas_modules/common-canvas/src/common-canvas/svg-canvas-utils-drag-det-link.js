@@ -134,7 +134,7 @@ export default class SVGCanvasUtilsDragDetLink {
 		}
 	}
 
-	// Moves the currently focused handle of the link in the the
+	// Moves the currently focused handle of the link in the
 	// direction specified. This is called when the user moves a
 	// link handle using the keyboard.
 	moveLinkHandle(link, dir, d3Event) {
@@ -163,7 +163,7 @@ export default class SVGCanvasUtilsDragDetLink {
 		this.moveHandle(pos);
 
 		// When the handle is moved, redisplaying the link removes
-		// focus from the handle. So we resore it.
+		// focus from the handle. So we restore it.
 		this.ren.restoreFocusToSubObject();
 
 		this.endMove = setTimeout(() => {

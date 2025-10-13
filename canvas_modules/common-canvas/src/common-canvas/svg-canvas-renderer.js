@@ -2308,9 +2308,6 @@ export default class SVGCanvasRenderer {
 						this.clearSubObject();
 						this.setFocusNextSubObject(d, d3Event);
 
-						// const subObject = this.activePipeline.getNextSubObject(d, this.subObject);
-						// this.moveFocusToSubObject(subObject, d, d3Event);
-
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
 						this.canvasController.restoreFocus();
 
@@ -2591,18 +2588,10 @@ export default class SVGCanvasRenderer {
 						const n = this.activePipeline.getNode(node.id);
 						this.setFocusNextSubObject(n, d3Event);
 
-						// const subObject = this.activePipeline.getNextSubObject(n, this.subObject);
-						// CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						// this.moveFocusToSubObject(subObject, n, d3Event);
-
 					} else if (KeyboardUtils.previousSubObject(d3Event)) {
 						// Get updated node from activePipeline that will contain focusFunction - if one exists
 						const n = this.activePipeline.getNode(node.id);
 						this.setFocusPreviousSubObject(n, d3Event);
-
-						// const subObject = this.activePipeline.getPreviousSubObject(n, this.subObject);
-						// CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						// this.moveFocusToSubObject(subObject, n, d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
 						this.canvasController.restoreFocus();
@@ -2659,18 +2648,10 @@ export default class SVGCanvasRenderer {
 						const n = this.activePipeline.getNode(node.id);
 						this.setFocusNextSubObject(n, d3Event);
 
-						// const subObject = this.activePipeline.getNextSubObject(n, this.subObject);
-						// CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						// this.moveFocusToSubObject(subObject, n, d3Event);
-
 					} else if (KeyboardUtils.previousSubObject(d3Event)) {
 						// Get updated node from activePipeline that will contain focusFunction - if one exists
 						const n = this.activePipeline.getNode(node.id);
 						this.setFocusPreviousSubObject(n, d3Event);
-
-						// const subObject = this.activePipeline.getPreviousSubObject(n, this.subObject);
-						// CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						// this.moveFocusToSubObject(subObject, n, d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
 						this.canvasController.restoreFocus();
@@ -3057,18 +3038,11 @@ export default class SVGCanvasRenderer {
 							: this.activePipeline.getLink(d.id);
 						this.setFocusNextSubObject(parentObj, d3Event);
 
-						// const subObject = this.activePipeline.getNextSubObject(parentObj, this.subObject);
-						// CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						// this.moveFocusToSubObject(subObject, parentObj, d3Event);
-
 					} else if (KeyboardUtils.previousSubObject(d3Event)) {
 						// Get updated node from activePipeline that will contain focusFunction - if one exists
 						const parentObj = CanvasUtils.getObjectTypeName(d) === "node"
 							? this.activePipeline.getNode(d.id)
 							: this.activePipeline.getLink(d.id);
-						// const subObject = this.activePipeline.getPreviousSubObject(parentObj, this.subObject);
-						// CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						// this.moveFocusToSubObject(subObject, parentObj, d3Event);
 						this.setFocusPreviousSubObject(parentObj, d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
@@ -3548,10 +3522,6 @@ export default class SVGCanvasRenderer {
 		return (get(port, "app_data.ui_data.cardinality.max", 1) === 0);
 	}
 
-	// isMouseOverContextToolbar(d3Event) {
-	// 	return this.getElementWithClassAtMousePos(d3Event, "context-toolbar");
-	// }
-
 	removeDynamicNodeIcons(d3Event, d, nodeGrp) {
 		if (d.layout.ellipsisDisplay) {
 			nodeGrp.selectChildren(".d3-node-ellipsis-group").remove();
@@ -3676,44 +3646,12 @@ export default class SVGCanvasRenderer {
 		this.nodesLinksGrp.selectAll(".d3-data-link-selection-area").classed("d3-extra-width", state);
 	}
 
-	// // Returns a node, if one can be found, at the position indicated by
-	// // the clientX and clientY coordinates in the d3Event.
-	// getNodeAtMousePos(d3Event) {
-	// 	const nodeGrpElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-group");
-	// 	return this.getNodeForElement(nodeGrpElement);
-	// }
-
-	// // Returns a node, if one can be found, at the position indicated by
-	// // the clientX and clientY coordinates in the d3Event.
-	// getNodeAtMousePos(d3Event) {
-	// 	const pos = this.getMousePosFromEvent(d3Event);
-	// 	return this.getNodeAtPos(pos);
-	// }
-
 	// Returns a node, if one can be found, at the position { x, y } provided
 	// which is specified in page coordinates.
 	getNodeAtPos(pos) {
 		const nodeGrpElement = this.getElementWithClassAtPosition(pos.x, pos.y, "d3-node-group");
 		return this.getNodeForElement(nodeGrpElement);
 	}
-
-	// // Returns an input node port ID for either, the port that is under the mouse
-	// // position described by d3Event or, if the mouse is not over a port, the
-	// // ID of the default port for the node provided.
-	// getInputNodePortId(d3Event, trgNode) {
-	// 	let inputPortId = this.getInputNodePortIdAtMousePos(d3Event);
-	// 	if (!inputPortId) {
-	// 		inputPortId = CanvasUtils.getDefaultInputPortId(trgNode);
-	// 	}
-	// 	return inputPortId;
-	// }
-
-	// // Returns a node input port ID, if one can be found, at the position
-	// // indicated by the clientX and clientY coordinates in the d3Event.
-	// getInputNodePortIdAtMousePos(d3Event) {
-	// 	const portElement = this.getElementWithClassAtMousePos(d3Event, this.getNodeInputPortClassName());
-	// 	return this.getNodePortIdForElement(portElement);
-	// }
 
 	// Returns an input node port ID for either, the port that is under the
 	// position { x, y } or, if the position is not over a port, the
@@ -3723,17 +3661,6 @@ export default class SVGCanvasRenderer {
 		return this.getNodePortIdForElement(portElement) || CanvasUtils.getDefaultInputPortId(trgNode);
 	}
 
-	// // Returns an output node port ID for either, the port that is under the mouse
-	// // position described by d3Event or, if the mouse is not over a port, the
-	// // ID of the default port for the node provided.
-	// getOutputNodePortId(d3Event, srcNode) {
-	// 	let outputPortId = this.getOutputNodePortIdAtMousePos(d3Event);
-	// 	if (!outputPortId) {
-	// 		outputPortId = CanvasUtils.getDefaultOutputPortId(srcNode);
-	// 	}
-	// 	return outputPortId;
-	// }
-
 	// Returns an output node port ID for either, the port that is under the
 	// position { x, y } provided or, if the position is not over a port, the
 	// ID of the default output port for the node provided.
@@ -3741,13 +3668,6 @@ export default class SVGCanvasRenderer {
 		const portElement = this.getElementWithClassAtPosition(pos.x, pos.y, this.getNodeOutputPortClassName());
 		return this.getNodePortIdForElement(portElement) || CanvasUtils.getDefaultOutputPortId(srcNode);
 	}
-
-	// // Returns a node output port ID, if one can be found, at the position
-	// // indicated by the clientX and clientY coordinates in the d3Event.
-	// getOutputNodePortIdAtMousePos(d3Event) {
-	// 	const portElement = this.getElementWithClassAtMousePos(d3Event, this.getNodeOutputPortClassName());
-	// 	return this.getNodePortIdForElement(portElement);
-	// }
 
 	// Returns a pos object { x, y } for the mpuse position contained in the
 	// event object/
@@ -3757,18 +3677,6 @@ export default class SVGCanvasRenderer {
 			y: d3Event.clientY ? d3Event.clientY : d3Event.sourceEvent.clientY
 		};
 	}
-
-	// // Returns a DOM element which either has the classNames passed in or
-	// // has an ancestor with the className passed in, at the position
-	// // indicated by the clientX and clientY coordinates in the d3Event.
-	// // Note: It may not be the top-most element so we have to search through the
-	// // elements array for it.
-	// getElementWithClassAtMousePos(d3Event, className) {
-	// 	const posX = d3Event.clientX ? d3Event.clientX : d3Event.sourceEvent.clientX;
-	// 	const posY = d3Event.clientY ? d3Event.clientY : d3Event.sourceEvent.clientY;
-	// 	return this.getElementWithClassAtPosition(posX, posY, className);
-	// }
-
 
 	// Returns a DOM element which either has the classNames passed in or
 	// has an ancestor with the className passed in, at the position { x, y }
@@ -3806,25 +3714,6 @@ export default class SVGCanvasRenderer {
 		}
 		return null;
 	}
-
-	// // Returns the node that is near the current mouse position. If nodeProximity
-	// // is provided it will be used as additional space beyond the node boundary
-	// // to decide if the node is under the current mouse position.
-	// getNodeNearMousePos(d3Event, nodeProximity) {
-	// 	var pos = this.getTransformedMousePos(d3Event);
-	// 	var node = null;
-	// 	const prox = nodeProximity || 0;
-	// 	this.getAllNodeGroupsSelection()
-	// 		.each((d) => {
-	// 			if (pos.x >= d.x_pos - prox &&
-	// 					pos.x <= d.x_pos + d.width + prox &&
-	// 					pos.y >= d.y_pos - prox &&
-	// 					pos.y <= d.y_pos + d.height + prox) {
-	// 				node = d;
-	// 			}
-	// 		});
-	// 	return node;
-	// }
 
 	// Returns the node that is near the current mouse position. If nodeProximity
 	// is provided it will be used as additional space beyond the node boundary
@@ -5047,9 +4936,6 @@ export default class SVGCanvasRenderer {
 						this.clearSubObject();
 						this.setFocusNextSubObject(d, d3Event);
 
-						// const subObject = this.activePipeline.getNextSubObject(d, this.subObject);
-						// this.moveFocusToSubObject(subObject, d, d3Event);
-
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
 						this.canvasController.restoreFocus();
 
@@ -5563,7 +5449,6 @@ export default class SVGCanvasRenderer {
 
 		if (this.config.enableKeyboardNavigation && !this.isEditingText() && !this.canvasController.isContextMenuDisplayed()) {
 			if (this.subObject) {
-				// console.log("Restore sub-object focus = ", this.subObject);
 				this.restoreFocusToSubObject();
 
 			} else {
@@ -6475,21 +6360,18 @@ export default class SVGCanvasRenderer {
 	}
 
 	clearSubObject() {
-		// console.log("clear Sub object");
 		this.subObject = null;
 		this.subObjectParentObj = null;
 	}
 
+	// Restores the focus to the previous focused object or sub-object.
 	restoreFocus() {
 		if (!this.canvasController.isContextMenuDisplayed()) {
-			// console.log("Restore focus - subObject = ", this.subObject);
 
 			if (this.subObject) {
-				// console.log("Restore sub-object focus = ", this.subObject);
 				this.restoreFocusToSubObject();
 
 			} else if (this.canvasController.getFocusObject()) {
-				// console.log("Restore focus = ", this.canvasController.getFocusObject());
 				this.canvasController.restoreFocus();
 			}
 		}
@@ -6741,7 +6623,6 @@ export default class SVGCanvasRenderer {
 				if (d3Event) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
-				// console.log("Move sub-objct focus ", subObject.obj);
 				element.focus();
 			}
 		}
