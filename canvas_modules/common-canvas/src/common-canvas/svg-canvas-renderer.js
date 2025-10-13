@@ -5179,7 +5179,8 @@ export default class SVGCanvasRenderer {
 				.attr("x", d.x2 - (this.canvasLayout.linkEndHandleWidth / 2))
 				.attr("y", d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
 				.attr("width", this.canvasLayout.linkEndHandleWidth)
-				.attr("height", this.canvasLayout.linkEndHandleHeight);
+				.attr("height", this.canvasLayout.linkEndHandleHeight)
+				.attr("transform", this.getLinkImageTransform(d));
 
 		} else if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_CIRCLE) {
 			handle = enter
