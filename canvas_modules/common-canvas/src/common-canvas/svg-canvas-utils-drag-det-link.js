@@ -20,8 +20,6 @@ import * as d3Drag from "d3-drag";
 import * as d3Selection from "d3-selection";
 const d3 = Object.assign({}, d3Drag, d3Selection);
 
-import { cloneDeep } from "lodash";
-
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import { LINK_SELECTION_DETACHABLE, NORTH, SOUTH, EAST, WEST } from "./constants/canvas-constants.js";
@@ -97,7 +95,7 @@ export default class SVGCanvasUtilsDragDetLink {
 
 		const handleSelection = d3.select(currentTarget);
 		const link = this.ren.activePipeline.getLink(d.id);
-		const oldLink = cloneDeep(link);
+		const oldLink = { ...link };
 
 		const linkGrpSelector = this.ren.getLinkGroupSelectionById(d.id);
 
@@ -333,7 +331,7 @@ export default class SVGCanvasUtilsDragDetLink {
 	// The position (pos) passed in should be specified in page coordinates.
 	getNewLinkOnDrag(pos, nodeProximity) {
 		const oldLink = this.draggingLinkData.oldLink;
-		const newLink = cloneDeep(oldLink);
+		const newLink = { ...oldLink };
 
 		if (this.draggingLinkData.endBeingDragged === "start") {
 			delete newLink.srcObj;
