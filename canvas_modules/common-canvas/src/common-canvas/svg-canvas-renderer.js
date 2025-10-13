@@ -5234,9 +5234,15 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.log("Link " + handleType + " handle - mouse down");
+
 				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK);
+					if (this.config.enableKeyboardNavigation) {
+						this.setFocusObject(d, d3Event);
+					}
+					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
+					this.selectObjectD3Event(d3Event, d, clickType);
 				}
+
 				this.logger.log("Link " + handleType + " handle - finished mouse down");
 			});
 	}
@@ -6439,6 +6445,20 @@ export default class SVGCanvasRenderer {
 			return;
 		}
 
+		// If there is currently a focused link and it is the top most object,
+		// push it to the bottom of the display order, because it will have
+		// been raised to the top when it previously received focus.
+		if (!this.config.enableLinksOverNodes &&
+				(this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)) {
+			const focusSel = d3.selectAll(".d3-link-group:focus-within");
+			const focusElement = focusSel.node();
+			const topElement = focusElement?.parentElement?.lastChild;
+			if (topElement?.classList?.contains("d3-link-group")) {
+				d3.select(topElement).lower();
+			}
+		}
+
 		this.subObject = null;
 		this.subObjectParentObj = null;
 
@@ -6456,16 +6476,6 @@ export default class SVGCanvasRenderer {
 					.attr("d", (d) =>
 						this.getRectangleNodeShapePath(d, this.getNodeFocusIncrements(d, objSel)));
 
-				// If the top most object is a link: push it to the
-				// bottom of the display order, because it may have been
-				// raised to the top when it received focus.
-				if (!this.config.enableLinksOverNodes) {
-					const element = objSel.node();
-					const topElement = element.parentElement.lastChild;
-					if (topElement.classList.contains("d3-link-group")) {
-						d3.select(topElement).lower();
-					}
-				}
 			} else {
 				// This may happen when objects are being created.
 				this.logger.log("Node with ID " + obj.id + " not found in activePipeline");
@@ -6492,9 +6502,10 @@ export default class SVGCanvasRenderer {
 			if (this.activePipeline.getLink(obj.id)) {
 				objSel = this.getLinkGroupSelectionById(obj.id);
 
-				// Raise link to top before focusing it, if it has handles
-				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-					this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+				// Raise any node (data) link to top before focusing it, if it has handles
+				if (obj.type === NODE_LINK &&
+						(this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)) {
 					objSel.raise();
 				}
 

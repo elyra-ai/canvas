@@ -678,6 +678,7 @@ class CanvasContents extends React.Component {
 	focusOnCanvas() {
 		if (document.getElementById(this.svgCanvasDivId)) {
 			document.getElementById(this.svgCanvasDivId).focus();
+			this.svgCanvasD3.clearSubObject();
 		}
 	}
 
