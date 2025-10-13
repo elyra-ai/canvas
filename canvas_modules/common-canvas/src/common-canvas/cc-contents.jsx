@@ -87,7 +87,6 @@ class CanvasContents extends React.Component {
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
 		this.onFocus = this.onFocus.bind(this);
-		this.onBlur = this.onBlur.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
@@ -304,31 +303,42 @@ class CanvasContents extends React.Component {
 	// document.activeElement is still set on the flow editor. So we set the focus
 	// object to be in sync with document.activeElement.
 	onFocus(evt) {
+		// console.log("onFocus");
 		if (evt.target.classList.contains("d3-svg-canvas-div") &&
 				this.props.canvasController.getFocusObject() !== CANVAS_FOCUS) {
+			// console.log("onFocus -- set focus on canvas div");
 			this.props.canvasController.setFocusObject(CANVAS_FOCUS);
 
 		} else if (!this.props.canvasController.getFocusObject()) {
 			const activeObject = this.svgCanvasD3.getActiveCanvasObject();
 
 			if (activeObject) {
+				// console.log("onFocus -- set focus to ", activeObject);
 				this.props.canvasController.setFocusObject(activeObject);
 			}
 		}
 	}
 
-	// Nullifies the current focus object if the user is tabbing out of the
-	// flow editor, using the keyboard, or they have clicked outside its <div>.
-	// This check is necessary because sometimes the <div> receives a blur event
-	// under other circumstances, such as when a context menu is opened or a drag
-	// occurs, and we don't want to nullify the current focus object then because
-	// focus needs to return to that object when the menu closes or the drag ends.
-	onBlur() {
-		if (this.tabbingOut || this.mousePos === null) {
-			this.tabbingOut = false;
-			this.props.canvasController.setFocusObject(null);
-		}
-	}
+	// // Nullifies the current focus object if the user is tabbing out of the
+	// // flow editor, using the keyboard, or they have clicked outside its <div>.
+	// // This check is necessary because sometimes the <div> receives a blur event
+	// // under other circumstances, such as when a context menu is opened or a drag
+	// // occurs, and we don't want to nullify the current focus object then because
+	// // focus needs to return to that object when the menu closes or the drag ends.
+	// onBlur(evt) {
+	// 	console.log("On blur ", evt);
+
+	// 	// if (this.tabbingOut || this.mousePos === null) {
+	// 	// 	this.tabbingOut = false;
+	// 	// 	this.props.canvasController.setFocusObject(null);
+	// 	// }
+
+	// 	if (evt?.relatedTarget?.closest("d3-svg-canvas-div")) {
+	// 		console.log("onBlur - setting focus object to null");
+	// 		this.props.canvasController.setFocusObject(null);
+	// 	}
+
+	// }
 
 	// Records in mousePos the mouse pointer position when the pointer is inside
 	// the boundaries of the canvas or sets the mousePos to null. This position
@@ -499,7 +509,7 @@ class CanvasContents extends React.Component {
 			return (
 				<div tabIndex="0" className="d3-svg-canvas-div keyboard-navigation" id={this.svgCanvasDivId}
 					onMouseDown={this.onMouseDown} onMouseLeave={this.onMouseLeave}
-					onFocus={this.onFocus} onBlur={this.onBlur}
+					onFocus={this.onFocus}
 					onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 					role="application" aria-label="canvas-keyboard-navigation" // Resolve Accessibility Violation of role and label
 				/>

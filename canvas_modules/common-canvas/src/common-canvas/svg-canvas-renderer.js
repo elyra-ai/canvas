@@ -79,7 +79,7 @@ export default class SVGCanvasRenderer {
 		this.canvasLayout = canvasLayout;
 		this.config = config;
 		this.canvasController = canvasController;
-		this.activePipeline = new SVGCanvasPipeline(pipelineId, canvasInfo, selectionInfo);
+		this.activePipeline = new SVGCanvasPipeline(pipelineId, config, canvasInfo, selectionInfo);
 
 		// An array of renderers for the supernodes on the canvas.
 		this.superRenderers = [];
@@ -131,6 +131,12 @@ export default class SVGCanvasRenderer {
 		// is being dragged. Used when enableHighlightNodeOnNewLinkDrag config
 		// option is switched on.
 		this.dragNewLinkOverNode = null;
+
+		// These variables keep track of the currently focused sub-object (such
+		// as a port, decoration or detached link handle) and its parent (which
+		// could be a node or link).
+		this.subObject = null;
+		this.subObjectParentObj = null;
 
 		// Initialize a <div> to create ghost objects to appear under the canvas SVG.
 		this.initializeGhostDiv();
@@ -274,7 +280,7 @@ export default class SVGCanvasRenderer {
 		this.nodeLayout = nodeLayout;
 		this.canvasLayout = canvasLayout;
 
-		this.activePipeline.initialize(this.pipelineId, canvasInfo, selectionInfo);
+		this.activePipeline.initialize(this.pipelineId, config, canvasInfo, selectionInfo);
 
 		// Must recreate these utils objects because they use the config object
 		// which may have changed.
@@ -332,7 +338,7 @@ export default class SVGCanvasRenderer {
 	// whole canvas.
 	setSelectionInfo(selectionInfo) {
 		this.selectionInfo = selectionInfo;
-		this.activePipeline.initialize(this.pipelineId, this.canvasInfo, selectionInfo);
+		this.activePipeline.initialize(this.pipelineId, this.config, this.canvasInfo, selectionInfo);
 
 		this.displayCommentsSelectionStatus();
 		this.displayNodesSelectionStatus();
@@ -649,11 +655,6 @@ export default class SVGCanvasRenderer {
 		this.dragObjectUtils.isSizing();
 	}
 
-	// Returns true whenever a node or comment is being moved.
-	isMoving() {
-		this.dragObjectUtils.isMoving();
-	}
-
 	getAllNodeGroupsSelection() {
 		return this.nodesLinksGrp.selectChildren(".d3-node-group");
 	}
@@ -703,6 +704,16 @@ export default class SVGCanvasRenderer {
 		const nodeSel = this.getNodeGroupSelectionById(nodeId);
 		const selector = this.getSelectorForId("node_dec_group", decId);
 		return nodeSel.selectAll(selector);
+	}
+
+	getLinkStartHandleGrpSelectionById(linkId) {
+		const linkSel = this.getLinkGroupSelectionById(linkId);
+		return linkSel.selectAll(".d3-link-handle-start-group");
+	}
+
+	getLinkEndHandleGrpSelectionById(linkId) {
+		const linkSel = this.getLinkGroupSelectionById(linkId);
+		return linkSel.selectAll(".d3-link-handle-end-group");
 	}
 
 	getLinkDecSelectionById(decId, linkId) {
@@ -2294,9 +2305,11 @@ export default class SVGCanvasRenderer {
 
 					} else if (KeyboardUtils.focusSubObject(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.activePipeline.resetFocusSubObjectIndex();
-						const subObject = this.activePipeline.getNextSubObject(d);
-						this.moveFocusToSubObject(subObject, d, d3Event);
+						this.clearSubObject();
+						this.setFocusNextSubObject(d, d3Event);
+
+						// const subObject = this.activePipeline.getNextSubObject(d, this.subObject);
+						// this.moveFocusToSubObject(subObject, d, d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
 						this.canvasController.restoreFocus();
@@ -2576,16 +2589,20 @@ export default class SVGCanvasRenderer {
 					if (KeyboardUtils.nextSubObject(d3Event)) {
 						// Get updated node from activePipeline that will contain focusFunction - if one exists
 						const n = this.activePipeline.getNode(node.id);
-						const subObject = this.activePipeline.getNextSubObject(n);
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.moveFocusToSubObject(subObject, n, d3Event);
+						this.setFocusNextSubObject(n, d3Event);
+
+						// const subObject = this.activePipeline.getNextSubObject(n, this.subObject);
+						// CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						// this.moveFocusToSubObject(subObject, n, d3Event);
 
 					} else if (KeyboardUtils.previousSubObject(d3Event)) {
 						// Get updated node from activePipeline that will contain focusFunction - if one exists
 						const n = this.activePipeline.getNode(node.id);
-						const subObject = this.activePipeline.getPreviousSubObject(n);
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.moveFocusToSubObject(subObject, n, d3Event);
+						this.setFocusPreviousSubObject(n, d3Event);
+
+						// const subObject = this.activePipeline.getPreviousSubObject(n, this.subObject);
+						// CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						// this.moveFocusToSubObject(subObject, n, d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
 						this.canvasController.restoreFocus();
@@ -2640,16 +2657,20 @@ export default class SVGCanvasRenderer {
 					if (KeyboardUtils.nextSubObject(d3Event)) {
 						// Get updated node from activePipeline that will contain focusFunction - if one exists
 						const n = this.activePipeline.getNode(node.id);
-						const subObject = this.activePipeline.getNextSubObject(n);
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.moveFocusToSubObject(subObject, n, d3Event);
+						this.setFocusNextSubObject(n, d3Event);
+
+						// const subObject = this.activePipeline.getNextSubObject(n, this.subObject);
+						// CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						// this.moveFocusToSubObject(subObject, n, d3Event);
 
 					} else if (KeyboardUtils.previousSubObject(d3Event)) {
 						// Get updated node from activePipeline that will contain focusFunction - if one exists
 						const n = this.activePipeline.getNode(node.id);
-						const subObject = this.activePipeline.getPreviousSubObject(n);
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.moveFocusToSubObject(subObject, n, d3Event);
+						this.setFocusPreviousSubObject(n, d3Event);
+
+						// const subObject = this.activePipeline.getPreviousSubObject(n, this.subObject);
+						// CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						// this.moveFocusToSubObject(subObject, n, d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
 						this.canvasController.restoreFocus();
@@ -3034,18 +3055,21 @@ export default class SVGCanvasRenderer {
 						const parentObj = CanvasUtils.getObjectTypeName(d) === "node"
 							? this.activePipeline.getNode(d.id)
 							: this.activePipeline.getLink(d.id);
-						const subObject = this.activePipeline.getNextSubObject(parentObj);
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.moveFocusToSubObject(subObject, parentObj, d3Event);
+						this.setFocusNextSubObject(parentObj, d3Event);
+
+						// const subObject = this.activePipeline.getNextSubObject(parentObj, this.subObject);
+						// CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						// this.moveFocusToSubObject(subObject, parentObj, d3Event);
 
 					} else if (KeyboardUtils.previousSubObject(d3Event)) {
 						// Get updated node from activePipeline that will contain focusFunction - if one exists
 						const parentObj = CanvasUtils.getObjectTypeName(d) === "node"
 							? this.activePipeline.getNode(d.id)
 							: this.activePipeline.getLink(d.id);
-						const subObject = this.activePipeline.getPreviousSubObject(parentObj);
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.moveFocusToSubObject(subObject, parentObj, d3Event);
+						// const subObject = this.activePipeline.getPreviousSubObject(parentObj, this.subObject);
+						// CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						// this.moveFocusToSubObject(subObject, parentObj, d3Event);
+						this.setFocusPreviousSubObject(parentObj, d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
 						this.canvasController.restoreFocus();
@@ -3315,7 +3339,7 @@ export default class SVGCanvasRenderer {
 	doesExpandedSupernodeHaveStyledNodes(d) {
 		let expandedSupernodeHaveStyledNodes = false;
 		if (CanvasUtils.isExpandedSupernode(d) && d.subflow_ref && d.subflow_ref.pipeline_id_ref) {
-			const subflow = new SVGCanvasPipeline(d.subflow_ref.pipeline_id_ref, this.canvasInfo);
+			const subflow = new SVGCanvasPipeline(d.subflow_ref.pipeline_id_ref, this.config, this.canvasInfo);
 			const nodeGrp = subflow.nodes;
 			nodeGrp.forEach((node) => {
 				if (node.style || node.style_temp) {
@@ -3524,9 +3548,9 @@ export default class SVGCanvasRenderer {
 		return (get(port, "app_data.ui_data.cardinality.max", 1) === 0);
 	}
 
-	isMouseOverContextToolbar(d3Event) {
-		return this.getElementWithClassAtMousePos(d3Event, "context-toolbar");
-	}
+	// isMouseOverContextToolbar(d3Event) {
+	// 	return this.getElementWithClassAtMousePos(d3Event, "context-toolbar");
+	// }
 
 	removeDynamicNodeIcons(d3Event, d, nodeGrp) {
 		if (d.layout.ellipsisDisplay) {
@@ -3652,60 +3676,105 @@ export default class SVGCanvasRenderer {
 		this.nodesLinksGrp.selectAll(".d3-data-link-selection-area").classed("d3-extra-width", state);
 	}
 
-	// Returns a node, if one can be found, at the position indicated by
-	// the clientX and clientY coordinates in the d3Event.
-	getNodeAtMousePos(d3Event) {
-		const nodeGrpElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-group");
+	// // Returns a node, if one can be found, at the position indicated by
+	// // the clientX and clientY coordinates in the d3Event.
+	// getNodeAtMousePos(d3Event) {
+	// 	const nodeGrpElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-group");
+	// 	return this.getNodeForElement(nodeGrpElement);
+	// }
+
+	// // Returns a node, if one can be found, at the position indicated by
+	// // the clientX and clientY coordinates in the d3Event.
+	// getNodeAtMousePos(d3Event) {
+	// 	const pos = this.getMousePosFromEvent(d3Event);
+	// 	return this.getNodeAtPos(pos);
+	// }
+
+	// Returns a node, if one can be found, at the position { x, y } provided
+	// which is specified in page coordinates.
+	getNodeAtPos(pos) {
+		const nodeGrpElement = this.getElementWithClassAtPosition(pos.x, pos.y, "d3-node-group");
 		return this.getNodeForElement(nodeGrpElement);
 	}
 
-	// Returns an input node port ID for either, the port that is under the mouse
-	// position described by d3Event or, if the mouse is not over a port, the
-	// ID of the default port for the node provided.
-	getInputNodePortId(d3Event, trgNode) {
-		let inputPortId = this.getInputNodePortIdAtMousePos(d3Event);
-		if (!inputPortId) {
-			inputPortId = CanvasUtils.getDefaultInputPortId(trgNode);
-		}
-		return inputPortId;
+	// // Returns an input node port ID for either, the port that is under the mouse
+	// // position described by d3Event or, if the mouse is not over a port, the
+	// // ID of the default port for the node provided.
+	// getInputNodePortId(d3Event, trgNode) {
+	// 	let inputPortId = this.getInputNodePortIdAtMousePos(d3Event);
+	// 	if (!inputPortId) {
+	// 		inputPortId = CanvasUtils.getDefaultInputPortId(trgNode);
+	// 	}
+	// 	return inputPortId;
+	// }
+
+	// // Returns a node input port ID, if one can be found, at the position
+	// // indicated by the clientX and clientY coordinates in the d3Event.
+	// getInputNodePortIdAtMousePos(d3Event) {
+	// 	const portElement = this.getElementWithClassAtMousePos(d3Event, this.getNodeInputPortClassName());
+	// 	return this.getNodePortIdForElement(portElement);
+	// }
+
+	// Returns an input node port ID for either, the port that is under the
+	// position { x, y } or, if the position is not over a port, the
+	// ID of the default input port for the node provided.
+	getInputNodePortId(pos, trgNode) {
+		const portElement = this.getElementWithClassAtPosition(pos.x, pos.y, this.getNodeInputPortClassName());
+		return this.getNodePortIdForElement(portElement) || CanvasUtils.getDefaultInputPortId(trgNode);
 	}
 
-	// Returns a node input port ID, if one can be found, at the position
-	// indicated by the clientX and clientY coordinates in the d3Event.
-	getInputNodePortIdAtMousePos(d3Event) {
-		const portElement = this.getElementWithClassAtMousePos(d3Event, this.getNodeInputPortClassName());
-		return this.getNodePortIdForElement(portElement);
+	// // Returns an output node port ID for either, the port that is under the mouse
+	// // position described by d3Event or, if the mouse is not over a port, the
+	// // ID of the default port for the node provided.
+	// getOutputNodePortId(d3Event, srcNode) {
+	// 	let outputPortId = this.getOutputNodePortIdAtMousePos(d3Event);
+	// 	if (!outputPortId) {
+	// 		outputPortId = CanvasUtils.getDefaultOutputPortId(srcNode);
+	// 	}
+	// 	return outputPortId;
+	// }
+
+	// Returns an output node port ID for either, the port that is under the
+	// position { x, y } provided or, if the position is not over a port, the
+	// ID of the default output port for the node provided.
+	getOutputNodePortId(pos, srcNode) {
+		const portElement = this.getElementWithClassAtPosition(pos.x, pos.y, this.getNodeOutputPortClassName());
+		return this.getNodePortIdForElement(portElement) || CanvasUtils.getDefaultOutputPortId(srcNode);
 	}
 
-	// Returns an output node port ID for either, the port that is under the mouse
-	// position described by d3Event or, if the mouse is not over a port, the
-	// ID of the default port for the node provided.
-	getOutputNodePortId(d3Event, srcNode) {
-		let outputPortId = this.getOutputNodePortIdAtMousePos(d3Event);
-		if (!outputPortId) {
-			outputPortId = CanvasUtils.getDefaultOutputPortId(srcNode);
-		}
-		return outputPortId;
+	// // Returns a node output port ID, if one can be found, at the position
+	// // indicated by the clientX and clientY coordinates in the d3Event.
+	// getOutputNodePortIdAtMousePos(d3Event) {
+	// 	const portElement = this.getElementWithClassAtMousePos(d3Event, this.getNodeOutputPortClassName());
+	// 	return this.getNodePortIdForElement(portElement);
+	// }
+
+	// Returns a pos object { x, y } for the mpuse position contained in the
+	// event object/
+	getMousePosFromEvent(d3Event) {
+		return {
+			x: d3Event.clientX ? d3Event.clientX : d3Event.sourceEvent.clientX,
+			y: d3Event.clientY ? d3Event.clientY : d3Event.sourceEvent.clientY
+		};
 	}
 
-	// Returns a node output port ID, if one can be found, at the position
-	// indicated by the clientX and clientY coordinates in the d3Event.
-	getOutputNodePortIdAtMousePos(d3Event) {
-		const portElement = this.getElementWithClassAtMousePos(d3Event, this.getNodeOutputPortClassName());
-		return this.getNodePortIdForElement(portElement);
-	}
+	// // Returns a DOM element which either has the classNames passed in or
+	// // has an ancestor with the className passed in, at the position
+	// // indicated by the clientX and clientY coordinates in the d3Event.
+	// // Note: It may not be the top-most element so we have to search through the
+	// // elements array for it.
+	// getElementWithClassAtMousePos(d3Event, className) {
+	// 	const posX = d3Event.clientX ? d3Event.clientX : d3Event.sourceEvent.clientX;
+	// 	const posY = d3Event.clientY ? d3Event.clientY : d3Event.sourceEvent.clientY;
+	// 	return this.getElementWithClassAtPosition(posX, posY, className);
+	// }
+
 
 	// Returns a DOM element which either has the classNames passed in or
-	// has an ancestor with the className passed in, at the position
-	// indicated by the clientX and clientY coordinates in the d3Event.
+	// has an ancestor with the className passed in, at the position { x, y }
+	// passed in.
 	// Note: It may not be the top-most element so we have to search through the
 	// elements array for it.
-	getElementWithClassAtMousePos(d3Event, className) {
-		const posX = d3Event.clientX ? d3Event.clientX : d3Event.sourceEvent.clientX;
-		const posY = d3Event.clientY ? d3Event.clientY : d3Event.sourceEvent.clientY;
-		return this.getElementWithClassAtPosition(posX, posY, className);
-	}
-
 	getElementWithClassAtPosition(x, y, className) {
 		const elements = document.elementsFromPoint(x, y);
 		let foundElement = null;
@@ -3738,11 +3807,37 @@ export default class SVGCanvasRenderer {
 		return null;
 	}
 
+	// // Returns the node that is near the current mouse position. If nodeProximity
+	// // is provided it will be used as additional space beyond the node boundary
+	// // to decide if the node is under the current mouse position.
+	// getNodeNearMousePos(d3Event, nodeProximity) {
+	// 	var pos = this.getTransformedMousePos(d3Event);
+	// 	var node = null;
+	// 	const prox = nodeProximity || 0;
+	// 	this.getAllNodeGroupsSelection()
+	// 		.each((d) => {
+	// 			if (pos.x >= d.x_pos - prox &&
+	// 					pos.x <= d.x_pos + d.width + prox &&
+	// 					pos.y >= d.y_pos - prox &&
+	// 					pos.y <= d.y_pos + d.height + prox) {
+	// 				node = d;
+	// 			}
+	// 		});
+	// 	return node;
+	// }
+
 	// Returns the node that is near the current mouse position. If nodeProximity
 	// is provided it will be used as additional space beyond the node boundary
 	// to decide if the node is under the current mouse position.
 	getNodeNearMousePos(d3Event, nodeProximity) {
 		var pos = this.getTransformedMousePos(d3Event);
+		return this.getNodeNearPos(pos, nodeProximity);
+	}
+
+	// Returns the node that is near the position passed in. If nodeProximity
+	// is provided it will be used as additional space beyond the node boundary
+	// to decide if the node is under the current mouse position.
+	getNodeNearPos(pos, nodeProximity) {
 		var node = null;
 		const prox = nodeProximity || 0;
 		this.getAllNodeGroupsSelection()
@@ -4813,34 +4908,20 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-link-line-arrow-head");
 
 		// Add a group to store decorations. Adding this here ensures the decorations
-		// are always under the link handles whose group is added next.
+		// are always under the link handles whose groups are added next.
 		newLinkGrps
 			.append("g")
 			.attr("class", "d3-link-decorations-group");
 
 		// Add a group to store link start handle, if needed.
 		newLinkGrps
-			.filter((d) => (d.type === NODE_LINK && (
-				this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)))
 			.append("g")
-			// .attr("tabindex", () => (this.config.enableKeyboardNavigation ? -1 : null))
-			.attr("class", "d3-link-handle-start-group")
-			.call(this.attachLinkHandleListeners.bind(this, "start"))
-			.append(this.canvasLayout.linkStartHandleObject)
-			.attr("class", (d) => "d3-link-handle-start");
+			.attr("class", "d3-link-handle-start-group");
 
 		// Add a group to store link end handle, if needed.
 		newLinkGrps
-			.filter((d) => (d.type === NODE_LINK && (
-				this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)))
 			.append("g")
-			// .attr("tabindex", () => (this.config.enableKeyboardNavigation ? -1 : null))
-			.attr("class", "d3-link-handle-end-group")
-			.call(this.attachLinkHandleListeners.bind(this, "end"))
-			.append(this.canvasLayout.linkEndHandleObject)
-			.attr("class", (d) => "d3-link-handle-end");
+			.attr("class", "d3-link-handle-end-group");
 
 		this.logger.logEndTimer("createLinks");
 
@@ -4890,13 +4971,9 @@ export default class SVGCanvasRenderer {
 
 		// Update the link handles at start and end of link, if required
 		joinedLinkGrps
-			.filter((d) => d.type === NODE_LINK && (
-				this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE))
 			.each((d, i, linkGrps) => {
-				// We only need to update handles since they were created in the create link step
-				this.updateStartHandles(linkGrps[i]);
-				this.updateEndHandles(linkGrps[i]);
+				this.updateStartHandles(d, linkGrps[i]);
+				this.updateEndHandles(d, linkGrps[i]);
 			});
 
 		// Add or remove drag behavior as appropriate - for now we only support this for
@@ -4914,7 +4991,7 @@ export default class SVGCanvasRenderer {
 				.on(".drag", null);
 		}
 
-		if (!this.isMoving() && !this.isSizing() && !this.config.enableLinksOverNodes) {
+		if (!this.isDragging() && !this.isSizing() && !this.config.enableLinksOverNodes) {
 			this.setDisplayOrder(joinedLinkGrps);
 		}
 
@@ -4967,9 +5044,11 @@ export default class SVGCanvasRenderer {
 
 					} else if (KeyboardUtils.focusSubObject(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.activePipeline.resetFocusSubObjectIndex();
-						const subObject = this.activePipeline.getNextSubObject(d);
-						this.moveFocusToSubObject(subObject, d, d3Event);
+						this.clearSubObject();
+						this.setFocusNextSubObject(d, d3Event);
+
+						// const subObject = this.activePipeline.getNextSubObject(d, this.subObject);
+						// this.moveFocusToSubObject(subObject, d, d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
 						this.canvasController.restoreFocus();
@@ -4978,12 +5057,14 @@ export default class SVGCanvasRenderer {
 						// Prevent Chrome returning to previous browser page!
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
-					} else if (KeyboardUtils.selectObject(d3Event)) {
+					} else if (KeyboardUtils.selectObject(d3Event) &&
+								this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						const clickType = this.canvasController.isSelected(d.id, this.activePipeline.id) ? DOUBLE_CLICK : SINGLE_CLICK;
 						this.selectObject(d, clickType);
 
-					} else if (KeyboardUtils.selectObjectAugment(d3Event)) {
+					} else if (KeyboardUtils.selectObjectAugment(d3Event) &&
+								this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						this.selectObject(d, SINGLE_CLICK, false, true);
 
@@ -4993,7 +5074,7 @@ export default class SVGCanvasRenderer {
 						// canvas contenxt menu/toolbar will be opened.
 						d3Event.stopPropagation();
 
-						if (this.config.enableLinkSelection !== "None") {
+						if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 							this.selectObject(d, SINGLE_CLICK_CONTEXTMENU);
 						}
 
@@ -5116,30 +5197,27 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Updates the start link handles for the link groups passed in.
-	updateStartHandles(linkGrp) {
+	updateStartHandles(d, linkGrp) {
 		const handlesGrp = d3.select(linkGrp)
-			.selectAll(".d3-link-handle-start-group");
+			.selectAll(".d3-link-handle-start-group")
+			.attr("tabindex", () => (this.config.enableKeyboardNavigation &&
+				(this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) ? -1 : null))
+			.call(this.attachLinkHandleListeners.bind(this, "start"));
 
-		handlesGrp
-			.selectAll(".d3-link-handle-start")
-			.datum((d) => this.activePipeline.getLink(d.id))
-			.each((datum, index, linkHandles) => {
-				const obj = d3.select(linkHandles[index]);
-				if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_IMAGE) {
-					obj
-						.attr("xlink:href", this.canvasLayout.linkStartHandleImage)
-						.attr("x", (d) => d.x1 - (this.canvasLayout.linkStartHandleWidth / 2))
-						.attr("y", (d) => d.y1 - (this.canvasLayout.linkStartHandleHeight / 2))
-						.attr("width", this.canvasLayout.linkStartHandleWidth)
-						.attr("height", this.canvasLayout.linkStartHandleHeight);
+		const handles = d.type === NODE_LINK && (
+			this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+			this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)
+			? [{ id: this.canvasLayout.linkStartHandleObject }]
+			: [];
 
-				} else if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_CIRCLE) {
-					obj
-						.attr("r", this.canvasLayout.linkStartHandleRadius)
-						.attr("cx", (d) => d.x1)
-						.attr("cy", (d) => d.y1);
-				}
-			});
+		handlesGrp.selectChildren(".d3-link-handle-start")
+			.data(handles, (h) => h.id)
+			.join(
+				(enter) => this.createStartHandle(enter, d)
+			)
+			.datum(this.activePipeline.getLink(d.id))
+			.attr("class", "d3-link-handle-start");
 
 		// Add or remove drag behavior as appropriate
 		if (this.config.enableEditingActions) {
@@ -5150,32 +5228,51 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	// Creates the link handle for the start of the link.
+	createStartHandle(enter, d) {
+		let handle = null;
+		if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_IMAGE) {
+			handle = enter
+				.append("image")
+				.attr("xlink:href", this.canvasLayout.linkStartHandleImage)
+				.attr("x", d.x1 - (this.canvasLayout.linkStartHandleWidth / 2))
+				.attr("y", d.y1 - (this.canvasLayout.linkStartHandleHeight / 2))
+				.attr("width", this.canvasLayout.linkStartHandleWidth)
+				.attr("height", this.canvasLayout.linkStartHandleHeight);
+
+		} else if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_CIRCLE) {
+			handle = enter
+				.append("circle")
+				.attr("r", this.canvasLayout.linkStartHandleRadius)
+				.attr("cx", d.x1)
+				.attr("cy", d.y1);
+		}
+		return handle;
+	}
+
 	// Updates the end link handles for the link groups passed in.
-	updateEndHandles(linkGrp) {
+	updateEndHandles(d, linkGrp) {
 		const handlesGrp = d3.select(linkGrp)
-			.selectAll(".d3-link-handle-end-group");
+			.selectAll(".d3-link-handle-end-group")
+			.attr("tabindex", () => (this.config.enableKeyboardNavigation &&
+				(this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) ? -1 : null))
 
-		handlesGrp
-			.selectAll(".d3-link-handle-end")
-			.datum((d) => this.activePipeline.getLink(d.id))
-			.each((datum, index, linkHandles) => {
-				const obj = d3.select(linkHandles[index]);
-				if (this.canvasLayout.linkEndHandleObject === PORT_DISPLAY_IMAGE) {
-					obj
-						.attr("xlink:href", this.canvasLayout.linkEndHandleImage)
-						.attr("x", (d) => d.x2 - (this.canvasLayout.linkEndHandleWidth / 2))
-						.attr("y", (d) => d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
-						.attr("width", this.canvasLayout.linkEndHandleWidth)
-						.attr("height", this.canvasLayout.linkEndHandleHeight)
-						.attr("transform", (d) => this.getLinkImageTransform(d));
+			.call(this.attachLinkHandleListeners.bind(this, "end"));
 
-				} else if (this.canvasLayout.linkEndHandleObject === PORT_DISPLAY_CIRCLE) {
-					obj
-						.attr("r", this.canvasLayout.linkEndHandleRadius)
-						.attr("cx", (d) => d.x2)
-						.attr("cy", (d) => d.y2);
-				}
-			});
+		const handles = d.type === NODE_LINK && (
+			this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+			this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)
+			? [{ id: this.canvasLayout.linkEndHandleObject }]
+			: [];
+
+		handlesGrp.selectChildren(".d3-link-handle-end")
+			.data(handles, (h) => h.id)
+			.join(
+				(enter) => this.createEndHandle(enter, d)
+			)
+			.datum(this.activePipeline.getLink(d.id))
+			.attr("class", "d3-link-handle-end");
 
 		// Add or remove drag behavior as appropriate
 		if (this.config.enableEditingActions) {
@@ -5184,11 +5281,70 @@ export default class SVGCanvasRenderer {
 		} else {
 			handlesGrp.on(".drag", null);
 		}
+	}
+
+	// Creates the link handle for the end of the link.
+	createEndHandle(enter, d) {
+		let handle = null;
+		if (this.canvasLayout.linkEndHandleObject === PORT_DISPLAY_IMAGE) {
+			handle = enter
+				.append("image")
+				.attr("xlink:href", this.canvasLayout.linkEndHandleImage)
+				.attr("x", d.x2 - (this.canvasLayout.linkEndHandleWidth / 2))
+				.attr("y", d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
+				.attr("width", this.canvasLayout.linkEndHandleWidth)
+				.attr("height", this.canvasLayout.linkEndHandleHeight);
+
+		} else if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_CIRCLE) {
+			handle = enter
+				.append("circle")
+				.attr("r", this.canvasLayout.linkEndHandleRadius)
+				.attr("cx", d.x2)
+				.attr("cy", d.y2);
+		}
+		return handle;
 	}
 
 	// Attaches any required event listeners to a handle of the link.
 	attachLinkHandleListeners(handleType, handles) {
 		handles
+			.on("keydown", (d3Event, link) => {
+				if (this.config.enableKeyboardNavigation) {
+					if (KeyboardUtils.nextSubObject(d3Event)) {
+						this.setFocusNextSubObject(link, d3Event);
+
+					} else if (KeyboardUtils.previousSubObject(d3Event)) {
+						this.setFocusPreviousSubObject(link, d3Event);
+
+					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
+						this.canvasController.setFocusObject(link);
+
+					} else if (KeyboardUtils.moveLinkHandleUp(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.dragDetLinkUtils.moveLinkHandle(link, NORTH, d3Event);
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveLinkHandleDown(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.dragDetLinkUtils.moveLinkHandle(link, SOUTH, d3Event);
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveLinkHandleRight(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.dragDetLinkUtils.moveLinkHandle(link, EAST, d3Event);
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+					} else if (KeyboardUtils.moveLinkHandleLeft(d3Event)) {
+						if (this.config.enableEditingActions) {
+							this.dragDetLinkUtils.moveLinkHandle(link, WEST, d3Event);
+						}
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					}
+				}
+			})
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.log("Link " + handleType + " handle - mouse down");
@@ -5406,7 +5562,13 @@ export default class SVGCanvasRenderer {
 		fn();
 
 		if (this.config.enableKeyboardNavigation && !this.isEditingText() && !this.canvasController.isContextMenuDisplayed()) {
-			this.canvasController.setFocusObject(focusObj);
+			if (this.subObject) {
+				// console.log("Restore sub-object focus = ", this.subObject);
+				this.restoreFocusToSubObject();
+
+			} else {
+				this.canvasController.setFocusObject(focusObj);
+			}
 		}
 	}
 
@@ -6312,9 +6474,24 @@ export default class SVGCanvasRenderer {
 		this.canvasController.setFocusObject(focusObj, evt);
 	}
 
+	clearSubObject() {
+		// console.log("clear Sub object");
+		this.subObject = null;
+		this.subObjectParentObj = null;
+	}
+
 	restoreFocus() {
 		if (!this.canvasController.isContextMenuDisplayed()) {
-			this.canvasController.restoreFocus();
+			// console.log("Restore focus - subObject = ", this.subObject);
+
+			if (this.subObject) {
+				// console.log("Restore sub-object focus = ", this.subObject);
+				this.restoreFocusToSubObject();
+
+			} else if (this.canvasController.getFocusObject()) {
+				// console.log("Restore focus = ", this.canvasController.getFocusObject());
+				this.canvasController.restoreFocus();
+			}
 		}
 	}
 
@@ -6380,6 +6557,9 @@ export default class SVGCanvasRenderer {
 			return;
 		}
 
+		this.subObject = null;
+		this.subObjectParentObj = null;
+
 		const type = CanvasUtils.getObjectTypeName(obj);
 
 		this.canvasGrp.selectAll(".d3-focus-path").remove();
@@ -6387,6 +6567,10 @@ export default class SVGCanvasRenderer {
 		let objSel = null;
 		if (type === "node") {
 			if (this.activePipeline.getNode(obj.id)) {
+				if (this.subObject && this.subObjectParentObj.id === obj.id) {
+					this.restoreFocusToSubObject();
+				}
+
 				objSel = this.getNodeGroupSelectionById(obj.id);
 
 				objSel.insert("path", ":first-child")
@@ -6428,6 +6612,10 @@ export default class SVGCanvasRenderer {
 
 		} else if (type === "link") {
 			if (this.activePipeline.getLink(obj.id)) {
+				if (this.subObject && this.subObjectParentObj.id === obj.id) {
+					this.restoreFocusToSubObject();
+				}
+
 				objSel = this.getLinkGroupSelectionById(obj.id);
 
 				// Raise link to top before focusing it, if it has handles
@@ -6476,7 +6664,7 @@ export default class SVGCanvasRenderer {
 	setFocusNextSubObject(parentObj, evt) {
 		CanvasUtils.stopPropagationAndPreventDefault(evt);
 
-		const subObject = this.activePipeline.getNextSubObject(parentObj);
+		const subObject = this.activePipeline.getNextSubObject(parentObj, this.subObject);
 		this.moveFocusToSubObject(subObject, parentObj, evt);
 	}
 
@@ -6485,8 +6673,13 @@ export default class SVGCanvasRenderer {
 	setFocusPreviousSubObject(parentObj, evt) {
 		CanvasUtils.stopPropagationAndPreventDefault(evt);
 
-		const subObject = this.activePipeline.getPreviousSubObject(parentObj);
+		const subObject = this.activePipeline.getPreviousSubObject(parentObj, this.subObject);
 		this.moveFocusToSubObject(subObject, parentObj, evt);
+	}
+
+	// Restores the focus to the previously focused sub-object of a node or link.
+	restoreFocusToSubObject() {
+		this.moveFocusToSubObject(this.subObject, this.subObjectParentObj, null);
 	}
 
 	// Moves the focus to a new sub-object with a node or link.
@@ -6495,6 +6688,9 @@ export default class SVGCanvasRenderer {
 		if (!subObject) {
 			return;
 		}
+
+		this.subObject = subObject;
+		this.subObjectParentObj = parentObj;
 
 		// Remove the current focus highlighting.
 		this.canvasGrp.selectAll(".d3-focus-path").remove();
@@ -6505,7 +6701,7 @@ export default class SVGCanvasRenderer {
 		// pass focus control to the react object by calling the focus function that
 		// the react object should have registered previously with the canvas controller.
 		if (subObject.type === "reactObject") {
-			if (parentObj.focusFunction) {
+			if (parentObj.focusFunction && d3Event) {
 				parentObj.focusFunction(d3Event);
 			}
 			return;
@@ -6516,6 +6712,12 @@ export default class SVGCanvasRenderer {
 		} else if (subObject.type === "outputPort") {
 			objSel = this.getNodeOutputPortSelectionById(subObject.obj.id, parentObj.id);
 
+		} else if (subObject.type === "linkStart") {
+			objSel = this.getLinkStartHandleGrpSelectionById(subObject.obj.id);
+
+		} else if (subObject.type === "linkEnd") {
+			objSel = this.getLinkEndHandleGrpSelectionById(subObject.obj.id);
+
 		} else if (subObject.type === "decoration") {
 			objSel = CanvasUtils.getObjectTypeName(parentObj) === "node"
 				? this.getNodeDecSelectionById(subObject.obj.id, parentObj.id)
@@ -6523,11 +6725,23 @@ export default class SVGCanvasRenderer {
 		}
 
 		if (objSel) {
+			// If the parent object is a link, raise it to the top of the display
+			// because it may have been lowered during the setCanvasInfoRender
+			// call following a change to the flow.
+			if (CanvasUtils.getObjectTypeName(parentObj) === "link") {
+				this.getLinkGroupSelectionById(parentObj.id).raise();
+			}
+
+			// Get the DOM element for the selected sub-object.
 			const element = objSel.node();
 
 			if (element) {
 				this.logger.log("moveFocusTo - set focus on element");
 				this.drawFocusBox(objSel, element);
+				if (d3Event) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				}
+				// console.log("Move sub-objct focus ", subObject.obj);
 				element.focus();
 			}
 		}
