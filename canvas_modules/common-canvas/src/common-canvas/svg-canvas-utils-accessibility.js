@@ -46,10 +46,6 @@ export default class SVGCanvasUtilsAccessibility {
 		// objects.
 		this.tabObjects = this.createTabObjectsArray();
 
-		// Keeps track of which sub-object with the currently focused node or link
-		// is being focused.
-		this.focusSubObjectIndex = -1;
-
 		this.logger.logEndTimer("initialize");
 	}
 
