@@ -6449,10 +6449,6 @@ export default class SVGCanvasRenderer {
 		let objSel = null;
 		if (type === "node") {
 			if (this.activePipeline.getNode(obj.id)) {
-				if (this.subObject && this.subObjectParentObj.id === obj.id) {
-					this.restoreFocusToSubObject();
-				}
-
 				objSel = this.getNodeGroupSelectionById(obj.id);
 
 				objSel.insert("path", ":first-child")
@@ -6494,10 +6490,6 @@ export default class SVGCanvasRenderer {
 
 		} else if (type === "link") {
 			if (this.activePipeline.getLink(obj.id)) {
-				if (this.subObject && this.subObjectParentObj.id === obj.id) {
-					this.restoreFocusToSubObject();
-				}
-
 				objSel = this.getLinkGroupSelectionById(obj.id);
 
 				// Raise link to top before focusing it, if it has handles
