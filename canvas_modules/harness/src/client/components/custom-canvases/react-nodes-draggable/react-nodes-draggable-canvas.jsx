@@ -77,8 +77,13 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 				inputPortDisplay: false,
 				outputPortDisplay: false,
 
+				// Position of ports adjust the start and end of the
+				// elbow link lines (even though the ports are not displayed)
 				inputPortPositions: [
 					{ x_pos: -10, y_pos: 0, pos: "middleLeft" }
+				],
+				outputPortPositions: [
+					{ x_pos: 10, y_pos: 0, pos: "middleRight" }
 				],
 
 
