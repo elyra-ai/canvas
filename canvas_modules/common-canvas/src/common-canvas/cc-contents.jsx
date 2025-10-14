@@ -86,7 +86,6 @@ class CanvasContents extends React.Component {
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
 		this.onFocus = this.onFocus.bind(this);
-		this.onBlur = this.onBlur.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
@@ -326,19 +325,6 @@ class CanvasContents extends React.Component {
 		}
 	}
 
-	// Nullifies the current focus object if the user is tabbing out of the
-	// flow editor, using the keyboard, or they have clicked outside its <div>.
-	// This check is necessary because sometimes the <div> receives a blur event
-	// under other circumstances, such as when a context menu is opened or a drag
-	// occurs, and we don't want to nullify the current focus object then because
-	// focus needs to return to that object when the menu closes or the drag ends.
-	onBlur() {
-		if (this.tabbingOut || this.mousePos === null) {
-			this.tabbingOut = false;
-			this.props.canvasController.setFocusObject(null);
-		}
-	}
-
 	// Records in mousePos the mouse pointer position when the pointer is inside
 	// the boundaries of the canvas or sets the mousePos to null. This position
 	// info can be used with keyboard operations.
@@ -508,7 +494,7 @@ class CanvasContents extends React.Component {
 			return (
 				<div tabIndex="0" className="d3-svg-canvas-div keyboard-navigation" id={this.svgCanvasDivId}
 					onMouseDown={this.onMouseDown} onMouseLeave={this.onMouseLeave}
-					onFocus={this.onFocus} onBlur={this.onBlur}
+					onFocus={this.onFocus}
 					onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 					role="application" aria-label="canvas-keyboard-navigation" // Resolve Accessibility Violation of role and label
 				/>
@@ -701,6 +687,7 @@ class CanvasContents extends React.Component {
 	focusOnCanvas() {
 		if (document.getElementById(this.svgCanvasDivId)) {
 			document.getElementById(this.svgCanvasDivId).focus();
+			this.svgCanvasD3.clearSubObject();
 		}
 	}
 
