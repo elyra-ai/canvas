@@ -1191,6 +1191,14 @@ g.bkg-col-cyan-50 {
 .d3-link-handle-end-group {
 	&:focus {
 		outline-width: 0;
+
+		.d3-focus-path {
+			display: unset;
+			fill: transparent;
+			stroke: carbon.$focus;
+			stroke-width: 2;
+			pointer-events: none;
+		}
 	}
 }
 
@@ -1203,7 +1211,7 @@ g.bkg-col-cyan-50 {
 }
 
 .d3-link-group:hover .d3-link-handle-start,
-.d3-link-group:focus  .d3-link-handle-start,
+.d3-link-group:focus-within  .d3-link-handle-start,
 .d3-link-group[data-selected] .d3-link-handle-start {
 	display: inherit;
 	stroke: $link-highlight-color;
@@ -1220,7 +1228,7 @@ g.bkg-col-cyan-50 {
 }
 
 .d3-link-group:hover .d3-link-handle-end,
-.d3-link-group:focus .d3-link-handle-end,
+.d3-link-group:focus-within .d3-link-handle-end,
 .d3-link-group[data-selected] .d3-link-handle-end {
 	display: inherit;
 	stroke: $link-highlight-color;

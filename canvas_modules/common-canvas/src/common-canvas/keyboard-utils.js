@@ -228,6 +228,22 @@ export default class KeyboardUtils {
 		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === DOWN_ARROW_KEY;
 	}
 
+	static moveLinkHandleLeft(d3Event) {
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === LEFT_ARROW_KEY;
+	}
+
+	static moveLinkHandleRight(d3Event) {
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === RIGHT_ARROW_KEY;
+	}
+
+	static moveLinkHandleUp(d3Event) {
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === UP_ARROW_KEY;
+	}
+
+	static moveLinkHandleDown(d3Event) {
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === DOWN_ARROW_KEY;
+	}
+
 	/* Link creation */
 
 	static createLink(d3Event) {
