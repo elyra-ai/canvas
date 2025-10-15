@@ -16,9 +16,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-
-import PropertiesModal from "./../../components/properties-modal";
 import WideFlyout from "./../../components/wide-flyout";
+import ReactDOM from "react-dom";
+import { ComposedModal, ModalHeader, ModalBody, ModalFooter } from "@carbon/react";
 
 export default class SubPanelInvoker extends React.Component {
 	constructor(props) {
@@ -58,16 +58,28 @@ export default class SubPanelInvoker extends React.Component {
 		let propertiesDialog = [];
 		if (this.state.subPanelVisible && !this.props.rightFlyout) {
 			const className = this.props.controller.isTearsheetContainer() ? "properties-subpanel-modal-in-tearsheet" : "";
-			propertiesDialog = (<PropertiesModal
-				title={this.state.title}
-				okHandler={this.hideSubDialog.bind(this, true)}
-				cancelHandler={this.hideSubDialog.bind(this, false)}
-				applyLabel={this.props.applyLabel}
-				rejectLabel={this.props.rejectLabel}
-				classNames={className}
-			>
-				{this.state.panel}
-			</PropertiesModal>);
+			propertiesDialog = ReactDOM.createPortal(
+				<ComposedModal
+					open
+					size="sm"
+					onClose={() => this.hideSubDialog(false)}
+					preventCloseOnClickOutside
+				>
+					<ModalHeader title={this.state.title} />
+					<ModalBody className={className}>
+						<div className="properties-modal-children">
+							{this.state.panel}
+						</div>
+					</ModalBody>
+					<ModalFooter
+						primaryButtonText={this.props.applyLabel}
+						secondaryButtonText={this.props.rejectLabel}
+						onRequestSubmit={() => this.hideSubDialog(true)}
+						onRequestClose={() => this.hideSubDialog(false)}
+					/>
+				</ComposedModal>,
+				document.body
+			);
 		} else if (this.props.rightFlyout && this.state.subPanelVisible) {
 			propertiesDialog = (<WideFlyout
 				cancelHandler={this.hideSubDialog.bind(this, false)}
