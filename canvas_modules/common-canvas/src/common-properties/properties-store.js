@@ -15,7 +15,7 @@
  */
 
 import { createStore, combineReducers } from "redux";
-import { has, get, isEqual, cloneDeep } from "lodash";
+import { has, get, isEqual, cloneDeep, difference } from "lodash";
 import { setTearsheetState } from "./actions";
 import { setPropertyValues, updatePropertyValue, removePropertyValue } from "./actions";
 import { setControlStates, updateControlState } from "./actions";
@@ -42,7 +42,7 @@ import wideFlyoutPrimaryButtonDisableReducer from "./reducers/wide-flyout-primar
 import propertiesSettingsReducer from "./reducers/properties-settings";
 import tearsheetStatesReducer from "./reducers/tearsheet-states";
 import * as PropertyUtils from "./util/property-utils.js";
-import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS } from "./constants/constants.js";
+import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, DEFAULT_ERROR_MESSAGE_KEYS } from "./constants/constants.js";
 
 /* eslint max-depth: ["error", 6] */
 
@@ -275,9 +275,33 @@ export default class PropertiesStore {
 		if (typeof propertyId.row !== "undefined" && controlMsg) {
 			controlMsg = controlMsg[propertyId.row.toString()];
 			if (typeof propertyId.col !== "undefined" && controlMsg) {
-				return controlMsg[propertyId.col.toString()]; // return cell message
-			}
-			if (controlMsg && controlMsg.text) {
+				const cellMessage = controlMsg[propertyId.col.toString()]; // return cell message
+				const cellErrors = cellMessage ? difference(Object.keys(cellMessage), DEFAULT_ERROR_MESSAGE_KEYS) : [];
+				if (cellErrors.length > 0) {
+					delete cellMessage.tableText;
+					let tableReturnMessage = null;
+					let errorMsgCount = 0;
+					let warningMsgCount = 0;
+					cellErrors.forEach((cellError) => {
+						const countedCellMessages = this._countTableCellErrors(cellMessage[cellError]);
+						errorMsgCount += countedCellMessages.errorMsgCount;
+						warningMsgCount += countedCellMessages.warningMsgCount;
+						tableReturnMessage = countedCellMessages.returnMessage;
+					});
+					const tableErrorMsg = this._getTableReturnMessage(errorMsgCount, warningMsgCount, tableReturnMessage, intl);
+					// Only get the updated messages
+					const messages = {};
+					if (tableErrorMsg) {
+						messages.type = tableErrorMsg.type;
+						messages.text = tableErrorMsg.text;
+						if (tableErrorMsg.tableText) {
+							messages.tableText = tableErrorMsg.tableText;
+						}
+					}
+					return Object.assign({}, cellMessage, messages);
+				}
+				return cellMessage;
+			} else if (controlMsg && controlMsg.text) {
 				return controlMsg;
 			}
 		}
@@ -298,8 +322,7 @@ export default class PropertiesStore {
 		return controlMessage;
 	}
 
-	// get the table cell level error messages. if more than one cell is in error, return summary message;
-	_getTableCellErrors(controlMsg, intl) {
+	_countTableCellErrors(controlMsg) {
 		let returnMessage = null;
 		let errorMsgCount = 0;
 		let warningMsgCount = 0;
@@ -334,18 +357,29 @@ export default class PropertiesStore {
 				}
 			}
 		}
-		if ((errorMsgCount + warningMsgCount) !== 1 && returnMessage) {
+		return { errorMsgCount, warningMsgCount, returnMessage };
+	}
+
+	_getTableReturnMessage(errorMsgCount, warningMsgCount, returnMessage, intl) {
+		delete returnMessage?.tableText;
+		if ((errorMsgCount + warningMsgCount) > 1 && returnMessage) {
 			returnMessage.type = (errorMsgCount > 0) ? CONDITION_MESSAGE_TYPE.ERROR : CONDITION_MESSAGE_TYPE.WARNING;
-			returnMessage.text = (errorMsgCount > 0)
+			returnMessage.tableText = (errorMsgCount > 0)
 				? PropertyUtils.formatMessage(intl,
 					MESSAGE_KEYS.TABLE_SUMMARY_ERROR, { errorMsgCount: errorMsgCount })
 				: "";
-			returnMessage.text += (warningMsgCount > 0)
+			returnMessage.tableText += (warningMsgCount > 0)
 				? PropertyUtils.formatMessage(intl,
 					MESSAGE_KEYS.TABLE_SUMMARY_WARNING, { warningMsgCount: warningMsgCount })
 				: "";
 		}
 		return returnMessage;
+	}
+
+	// get the table cell level error messages. if more than one cell is in error, return summary message;
+	_getTableCellErrors(controlMsg, intl) {
+		const { errorMsgCount, warningMsgCount, returnMessage } = this._countTableCellErrors(controlMsg);
+		return this._getTableReturnMessage(errorMsgCount, warningMsgCount, returnMessage, intl);
 	}
 
 	getErrorMessages() {

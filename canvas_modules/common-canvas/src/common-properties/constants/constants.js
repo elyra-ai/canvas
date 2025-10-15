@@ -153,6 +153,16 @@ export const CONDITION_MESSAGE_TYPE = {
 	SUCCESS: "success"
 };
 
+export const DEFAULT_ERROR_MESSAGE_KEYS = [
+	"propertyId",
+	"required",
+	"text",
+	"type",
+	"validation_id",
+	"displayError",
+	"tableText"
+];
+
 export const SPINNER = "spinner";
 
 
