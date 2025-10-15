@@ -18,7 +18,6 @@
 
 import React from "react";
 import { injectIntl } from "react-intl";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { Search, Layer } from "@carbon/react";
 import classNames from "classnames";
@@ -355,7 +354,7 @@ class FlexibleTable extends React.Component {
 
 	findPropertyNodeHeight(node, className) {
 		if (node && node.parentNode && node.parentNode.className && node.parentNode.className.includes(className)) {
-			const foundNode = ReactDOM.findDOMNode(node.parentNode).getBoundingClientRect();
+			const foundNode = node.parentNode.getBoundingClientRect();
 			if (foundNode) {
 				return foundNode.height;
 			}

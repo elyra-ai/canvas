@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 
 import multiselectParamDef from "../../test_resources/paramDefs/multiselect_paramDef.json";
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 const mockMultiselect = jest.fn();
 jest.mock("../../../src/common-properties/controls/multiselect",
@@ -37,6 +38,8 @@ mockMultiselect.mockImplementation((props) => {
 	).default;
 	return <MultiselectComp {...props} />;
 });
+
+const user = userEvent.setup({ delay: null });
 
 describe("multiselect renders correctly", () => {
 
@@ -114,7 +117,7 @@ describe("multiselect renders correctly", () => {
 		expect(multiselectWrapper.querySelector("button > span").textContent).to.equal(emptyValueIndicator);
 	});
 
-	it("multiselect handles null correctly", () => {
+	it("multiselect handles null correctly", async() => {
 		controller.setPropertyValues(
 			{ propertyName: null }
 		);
@@ -136,12 +139,12 @@ describe("multiselect renders correctly", () => {
 		multiselectWrapper = container.querySelector("div[data-id='properties-test-multiselect']");
 		const multiselectList = multiselectWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(multiselectList).to.be.length(4);
-		fireEvent.click(multiselectList[0]);
+		await user.click(multiselectList[0]);
 		const expectedValue = [multiselectList[0].textContent];
 		expect(controller.getPropertyValue(propertyId)).to.eql(expectedValue);
 	});
 
-	it("multiselect handles undefined correctly", () => {
+	it("multiselect handles undefined correctly", async() => {
 		controller.setPropertyValues(
 			{ }
 		);
@@ -163,7 +166,7 @@ describe("multiselect renders correctly", () => {
 		multiselectWrapper = container.querySelector("div[data-id='properties-test-multiselect']");
 		const multiselectList = multiselectWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(multiselectList).to.be.length(4);
-		fireEvent.click(multiselectList[0]);
+		await user.click(multiselectList[0]);
 		const expectedValue = [multiselectList[0].textContent];
 		expect(controller.getPropertyValue(propertyId)).to.eql(expectedValue);
 	});
@@ -288,7 +291,7 @@ describe("multiselect paramDef works correctly", () => {
 		cleanup();
 	});
 
-	it("multiselect placeholder custom label rendered correctly", () => {
+	it("multiselect placeholder custom label rendered correctly", async() => {
 		const { container } = wrapper;
 		let multiselectWrapper = container.querySelector("div[data-id='properties-multiselect_custom_labels']");
 		const expectedEmptyLabel = multiselectParamDef.resources["multiselect_custom_labels.multiselect.dropdown.empty.label"];
@@ -301,7 +304,7 @@ describe("multiselect paramDef works correctly", () => {
 		multiselectWrapper = container.querySelector("div[data-id='properties-multiselect_custom_labels']");
 		const multiselectList = multiselectWrapper.querySelectorAll("li.cds--list-box__menu-item");
 		expect(multiselectList).to.have.length(6);
-		fireEvent.click(multiselectList[0]);
+		await user.click(multiselectList[0]);
 		const expectedValue = [multiselectList[0].textContent];
 		expect(renderedController.getPropertyValue(propertyId)).to.eql(expectedValue);
 
@@ -363,7 +366,7 @@ describe("multiselect paramDef works correctly", () => {
 		expect(JSON.stringify(renderedController.getPropertyValue(propertyId02))).to.equal(JSON.stringify(expectedSubPanelValue));
 	});
 
-	it("multiselect renders correctly in a table - onpanel", () => {
+	it("multiselect renders correctly in a table - onpanel", async() => {
 		const { container } = wrapper;
 		const propertyId11 = { name: "multiselect_table", row: 1, col: 1 };
 		propertyUtilsRTL.openSummaryPanel(wrapper, "multiselect-table-panel");
@@ -384,7 +387,7 @@ describe("multiselect paramDef works correctly", () => {
 		const multiselectList = table.querySelectorAll("li.cds--list-box__menu-item");
 		expect(multiselectList).to.have.length(4);
 
-		fireEvent.click(multiselectList[0]);
+		await user.click(multiselectList[0]);
 		const expectedValue = [multiselectList[0].textContent];
 		expect(renderedController.getPropertyValue(propertyId11)).to.eql(expectedValue);
 	});
