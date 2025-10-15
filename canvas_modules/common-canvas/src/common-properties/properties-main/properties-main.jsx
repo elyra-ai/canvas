@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import ReactResizeDetector from "react-resize-detector";
 import PropertiesModal from "./../components/properties-modal";
 import PropertiesEditor from "./../components/properties-editor";
 import TearSheet from "../panels/tearsheet";
@@ -29,7 +28,7 @@ import * as PropertyUtils from "./../util/property-utils";
 import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL, ACTIONS, CATEGORY_VIEW } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
 import { validateParameterDefAgainstSchema } from "../schema-validator/properties-schema-validator.js";
-import { has, isEqual, omit, pick, cloneDeep } from "lodash";
+import { has, isEqual, omit, pick, cloneDeep, debounce } from "lodash";
 import Icon from "./../../icons/icon.jsx";
 import { Button } from "@carbon/react";
 import { Provider } from "react-redux";
@@ -48,6 +47,7 @@ const FLYOUT_WIDTH_MAX = parseInt(styles.flyoutWidthMax, 10);
 class PropertiesMain extends React.Component {
 	constructor(props) {
 		super(props);
+		this.commonProperties = React.createRef();
 		this.propertiesController = new PropertiesController();
 		this.propertiesController.setPropertiesConfig(this.props.propertiesConfig);
 		// Persist editorSize when resize() is not called
@@ -92,6 +92,8 @@ class PropertiesMain extends React.Component {
 		this._isResizeButtonRequired = this._isResizeButtonRequired.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 		this.detectResize = this.detectResize.bind(this);
+		// Rate limit how often the panel rerenders on size change
+		this.detectResizeThrottled = debounce(this.detectResize, 500);
 		// used to tracked when the resize button is clicked and ignore detectResize
 		this.resizeClicked = false;
 		// Track panel height to avoid resize calls whenever height changes
@@ -99,6 +101,15 @@ class PropertiesMain extends React.Component {
 	}
 
 	componentDidMount() {
+		this.resizeObserver = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				this.detectResizeThrottled(entry.contentRect, entry.target);
+			}
+		});
+		if (this.commonProperties.current) {
+			this.resizeObserver.observe(this.commonProperties.current);
+		}
+
 		this.props.callbacks.setPropertiesHasMounted();
 	}
 
@@ -145,11 +156,15 @@ class PropertiesMain extends React.Component {
 		}
 	}
 
+	componentWillUnmount() {
+		this.resizeObserver?.disconnect();
+	}
+
 	onBlur(e) {
 		// apply properties when focus leave common properties.
 		// subdialogs and summary panel causes focus to leave but shouldn't apply settings
 		if (this.props.propertiesConfig.applyOnBlur &&
-			this.commonProperties && !this.commonProperties.contains(e.relatedTarget) &&
+			!this.commonProperties?.current?.contains(e.relatedTarget) &&
 			!this.propertiesController.isSummaryPanelShowing() && !this.propertiesController.isSubPanelsShowing()) {
 			this.applyPropertiesEditing(false);
 		}
@@ -475,15 +490,15 @@ class PropertiesMain extends React.Component {
 		}
 	}
 
-	detectResize(_width, height) {
-		if (height === this.lastPanelHeight) {
+	detectResize(contentRect, target) {
+		if (contentRect.height === this.lastPanelHeight) {
 			// only hide resize button if resize wasn't from clicking resize button
 			if (!this.resizeClicked) {
 				this.setState({ showResizeBtn: false });
 			}
 			this.resizeClicked = false;
 		}
-		this.lastPanelHeight = height;
+		this.lastPanelHeight = contentRect.height;
 	}
 
 	render() {
@@ -635,30 +650,21 @@ class PropertiesMain extends React.Component {
 				propertiesSizeClassname);
 			return (
 				<Provider store={this.propertiesController.getStore()}>
-					<ReactResizeDetector
-						handleWidth
-						refreshMode="debounce"
-						refreshRate={500}
-						onResize={this.detectResize}
-						targetRef={this.commonProperties}
-						skipOnMount
-					>
-						<div className="properties-right-flyout-container">
-							<aside
-								aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
-								role="complementary"
-								ref={ (ref) => (this.commonProperties = ref) }
-								className={className}
-								onBlur={this.onBlur}
-								style={overrideStyle}
-							>
-								{propertiesTitle}
-								{propertiesDialog}
-								{buttonsContainer}
-							</aside>
-							{resizeBtn}
-						</div>
-					</ReactResizeDetector>
+					<div className="properties-right-flyout-container">
+						<aside
+							aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
+							role="complementary"
+							ref={this.commonProperties}
+							className={className}
+							onBlur={this.onBlur}
+							style={overrideStyle}
+						>
+							{propertiesTitle}
+							{propertiesDialog}
+							{buttonsContainer}
+						</aside>
+						{resizeBtn}
+					</div>
 				</Provider>
 			);
 		}
