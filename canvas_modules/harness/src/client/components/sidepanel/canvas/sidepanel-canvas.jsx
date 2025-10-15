@@ -43,6 +43,7 @@ import {
 	EXAMPLE_APP_PARALLAX,
 	EXAMPLE_APP_NETWORK,
 	EXAMPLE_APP_WYSIWYG,
+	EXAMPLE_APP_REACT_NODES_DRAGGABLE,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	TIP_PALETTE_CATEGORIES,
@@ -1440,6 +1441,10 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={EXAMPLE_APP_WYSIWYG}
 						labelText={EXAMPLE_APP_WYSIWYG}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_REACT_NODES_DRAGGABLE}
+						labelText={EXAMPLE_APP_REACT_NODES_DRAGGABLE}
 					/>
 					<RadioButton
 						value={EXAMPLE_APP_REACT_NODES_CARBON}
