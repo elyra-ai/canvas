@@ -52,4 +52,7 @@
 	&.hide {
 		display: none;
 	}
-}
+	&:not(:has(:not(.cds--layer-two))) {
+		padding-bottom: 0; // Removes bottom padding when only the Carbon wrapper is present without actual control.
+	}
+	}
