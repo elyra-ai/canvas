@@ -223,6 +223,7 @@ class CommonContextMenu extends React.Component {
 			if (divider) {
 				if (!previousDivider) {
 					menuItem = <div key={i} className={"context-menu-divider"} />;
+					runningYPos += CONTEXT_MENU_DIVIDER_HEIGHT;
 					previousDivider = true;
 				}
 			} else {
@@ -230,7 +231,7 @@ class CommonContextMenu extends React.Component {
 
 				// Special case, when all menu items are disabled, it allows the topmost
 				// disabled item to receive focus, even though it is disabled, so the
-				// keyboard user can close it using ESC.
+				// keyboard user can close the menu using ESC.
 				if (i === 0 && allItemsDisabled) {
 					const ref = React.createRef();
 					menuRefs.push(ref);
@@ -282,9 +283,9 @@ class CommonContextMenu extends React.Component {
 						</div>
 					);
 				}
+				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
 			}
 			menuItems.push(menuItem);
-			runningYPos += CONTEXT_MENU_LINK_HEIGHT;
 		}
 		return { menuItems, menuRefs };
 	}
