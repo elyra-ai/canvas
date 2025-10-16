@@ -177,19 +177,29 @@ class CommonContextMenu extends React.Component {
 		return menuPos;
 	}
 
-	// Returns true of all the items in a sub-menu are disabled.
-	areAllSubmenuItemsDisabled(submenuItems) {
-		let itemCount = 0;
-		let disabledCount = 0;
-		submenuItems.forEach(function(submenuItem) {
-			if (!submenuItem.divider) {
-				itemCount++;
+	// Returns true if all the items in a menu (or sub-menu) are disabled.
+	areAllItemsDisabled(menuItems) {
+		let isEnabled = false;
+
+		for (let i = 0; i < menuItems.length; i++) {
+			if (!menuItems[i].divider) {
+				if (menuItems[i].submenu) {
+					if (!this.areAllItemsDisabled(menuItems[i].menu)) {
+						isEnabled = true;
+					}
+
+				} else if (this.isItemEnabled(menuItems[i])) {
+					isEnabled = true;
+				}
 			}
-			if (submenuItem.enable === false) {
-				disabledCount++;
-			}
-		});
-		return disabledCount === itemCount;
+		}
+		return !isEnabled;
+	}
+
+	// Returns true if the menu item passed is enabled. The absence of the
+	// 'enable' property default to true.
+	isItemEnabled(item) {
+		return (typeof item.enable === "undefined" || item.enable === true);
 	}
 
 	// Builds a new menu based on the menu defintion passed in.
@@ -198,82 +208,83 @@ class CommonContextMenu extends React.Component {
 		const menuRefs = [];
 
 		let runningYPos = 0;
+
 		// Records if we have just displayed a divider. This is useful because we
 		// only want to display one divider if there is a divider element
 		// immediately after another divider element in the menuDefintion array.
 		let previousDivider = false;
 
+		const allItemsDisabled = this.areAllItemsDisabled(menuDefinition);
+
 		for (let i = 0; i < menuDefinition.length; ++i) {
 			const divider = menuDefinition[i].divider;
-			const submenu = menuDefinition[i].submenu;
+			let menuItem;
 
 			if (divider) {
 				if (!previousDivider) {
-					menuItems.push(<div key={i} className={"context-menu-divider"} />);
-					runningYPos += CONTEXT_MENU_DIVIDER_HEIGHT;
+					menuItem = <div key={i} className={"context-menu-divider"} />;
 					previousDivider = true;
 				}
-			} else if (menuDefinition[i].action === "colorBackground") {
-				previousDivider = false;
-				const disabled = false;
-				const subMenuSize = { width: CONTEXT_MENU_WIDTH, height: 50 };
-				const subMenuInfo = this.buildColorPickerPanel();
-				const subMenuContent = subMenuInfo.menuItems;
-				this.subMenuRefs[menuDefinition[i].action] = subMenuInfo.menuRefs;
-
-				const subMenu = this.buildSubMenu(
-					menuDefinition, i, menuRefs, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
-				menuItems.push(subMenu);
-
-				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
-
-			} else if (submenu) {
-				previousDivider = false;
-				const disabled = this.areAllSubmenuItemsDisabled(menuDefinition[i].menu);
-				const subMenuSize = this.calculateMenuSize(menuDefinition[i].menu);
-				const subMenuInfo = this.buildMenu(menuDefinition[i].menu, menuSize, menuPos, canvasRect, 100);
-				const subMenuContent = subMenuInfo.menuItems;
-				this.subMenuRefs[menuDefinition[i].action] = subMenuInfo.menuRefs;
-
-				const subMenu = this.buildSubMenu(
-					menuDefinition, i, menuRefs, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
-				menuItems.push(subMenu);
-
-				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
-
 			} else {
 				previousDivider = false;
-				const className = "context-menu-item" +
-					(menuDefinition[i].enable === false ? " disabled" : "");
 
-				const onClickFunction = menuDefinition[i].enable === false
-					? null
-					: this.itemSelected.bind(null, menuDefinition[i].action);
-
-				let menuItem;
-
-				if (menuDefinition[i].enable === false) {
-					menuItem = (
-						<div key={i} className={className} onClick={onClickFunction} role="menuitem">
-							{menuDefinition[i].label}
-						</div>
-					);
-				} else {
+				// Special case, when all menu items are disabled, it allows the topmost
+				// disabled item to receive focus, even though it is disabled, so the
+				// keyboard user can close it using ESC.
+				if (i === 0 && allItemsDisabled) {
 					const ref = React.createRef();
-					const menuItemTabIndex = i === 0 ? 0 : -1;
 					menuRefs.push(ref);
 
 					menuItem = (
-						<div key={i} ref={ref} tabIndex={menuItemTabIndex} data-action={menuDefinition[i].action}
-							className={className} onClick={onClickFunction} onKeyDown={this.onKeyDown} role="menuitem"
+						<div key={i} ref={ref} tabIndex={0} className={"context-menu-item disabled"} onKeyDown={this.onKeyDown} role="menuitem">
+							{menuDefinition[i].label}
+						</div>
+					);
+
+				} else if (menuDefinition[i].action === "colorBackground") {
+					const disabled = !this.isItemEnabled(menuDefinition[i]);
+					const subMenuSize = { width: CONTEXT_MENU_WIDTH, height: 50 };
+					const subMenuInfo = this.buildColorPickerPanel();
+					const subMenuContent = subMenuInfo.menuItems;
+					this.subMenuRefs[menuDefinition[i].action] = subMenuInfo.menuRefs;
+
+					menuItem = this.buildSubMenu(
+						menuDefinition, i, menuRefs, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
+
+
+				} else if (menuDefinition[i].submenu) {
+					const disabled = this.areAllItemsDisabled(menuDefinition[i].menu);
+					const subMenuSize = this.calculateMenuSize(menuDefinition[i].menu);
+					const subMenuInfo = this.buildMenu(menuDefinition[i].menu, menuSize, menuPos, canvasRect, 100);
+					const subMenuContent = subMenuInfo.menuItems;
+					this.subMenuRefs[menuDefinition[i].action] = subMenuInfo.menuRefs;
+
+					menuItem = this.buildSubMenu(
+						menuDefinition, i, menuRefs, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
+
+				} else if (menuDefinition[i].enable === false) {
+					menuItem = (
+						<div key={i} className={"context-menu-item disabled"} role="menuitem">
+							{menuDefinition[i].label}
+						</div>
+					);
+
+				} else {
+					const onClickFunction = this.itemSelected.bind(null, menuDefinition[i].action);
+					const ref = React.createRef();
+					menuRefs.push(ref);
+
+					menuItem = (
+						<div key={i} ref={ref} tabIndex={-1} data-action={menuDefinition[i].action}
+							className={"context-menu-item"} onClick={onClickFunction} onKeyDown={this.onKeyDown} role="menuitem"
 						>
 							{menuDefinition[i].label}
 						</div>
 					);
 				}
-				menuItems.push(menuItem);
-				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
 			}
+			menuItems.push(menuItem);
+			runningYPos += CONTEXT_MENU_LINK_HEIGHT;
 		}
 		return { menuItems, menuRefs };
 	}
@@ -323,8 +334,10 @@ class CommonContextMenu extends React.Component {
 		const onMouseEnter = (disabled ? null : this.subMenuOpen.bind(this, menuItem.action));
 		const onMouseLeave = (disabled ? null : this.subMenuClose.bind(this));
 
-		const ref = React.createRef();
-		menuRefs.push(ref);
+		const ref = disabled ? null : React.createRef();
+		if (!disabled) {
+			menuRefs.push(ref);
+		}
 
 		return (
 			<div key={index} ref={ref} className={menuItemClass} aria-haspopup tabIndex={-1} data-action={menuItem.action} role="menuitem"
