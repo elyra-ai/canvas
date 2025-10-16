@@ -708,6 +708,8 @@ function _validateInput(propertyId, controller, control, showErrors) {
 				// if error message has not been set for this msgPropertyId/focus_parameter_ref, clear errorSet
 				if (!controller.getErrorMessage(msgPropertyId, true, true, false)) {
 					errorSet = false;
+				} else {
+					errorSet = true;
 				}
 				// Before setting an error message for table cell, clear the error message for table (if any)
 				if (typeof msgPropertyId.row !== "undefined" || typeof msgPropertyId.col !== "undefined") {
