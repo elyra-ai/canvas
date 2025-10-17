@@ -30,14 +30,24 @@ class PersonNode extends React.Component {
 	}
 
 	onDragStart(evt) {
-		// evt.dataTransfer.setData("text", this.props.nodeData.label);
+		const transferData = {
+			operation: "addToCanvas",
+			data: {
+				editType: "createExternalNode",
+				label: this.props.nodeData.label
+			}
+		};
+		evt.dataTransfer.setData("text", JSON.stringify(transferData));
+
+		// Store label in document object so it can be accessesd in
+		// onDragEnter because in onDragEnter the event object will
+		// not contain the transferData.
 		document.objBeingDragged = this.props.nodeData.label;
 	}
 
-
 	onDragEnter(evt) {
-		// const label = evt.dataTransfer.getData("text");
 		const label = document.objBeingDragged;
+
 		if (label !== this.props.nodeData.label) {
 			this.setState({ draggedOver: true });
 		}
@@ -48,9 +58,13 @@ class PersonNode extends React.Component {
 	}
 
 	onDrop(evt) {
+		evt.stopPropagation();
+
 		this.setState({ draggedOver: false });
+
 		// const label = evt.dataTransfer.getData("text");
 		const label = document.objBeingDragged;
+
 		if (label !== this.props.nodeData.label) {
 			window.alert(`${label} dropped on ${this.props.nodeData.label}`);
 		}
