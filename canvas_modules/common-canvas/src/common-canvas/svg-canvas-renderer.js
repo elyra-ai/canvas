@@ -1982,16 +1982,21 @@ export default class SVGCanvasRenderer {
 		});
 
 		// Add or remove drag behavior as appropriate
-		if (this.config.enableEditingActions) {
-			const handler = this.dragObjectUtils.getDragObjectHandler();
-			nonBindingNodeGrps
-				.call(handler);
-		} else {
-			nonBindingNodeGrps
-				.on(".drag", null);
-		}
+		const handler = this.dragObjectUtils.getDragObjectHandler();
+		nonBindingNodeGrps
+			.filter((d) => this.shouldAddDragHandlerToNode(d))
+			.call(handler);
+
+		nonBindingNodeGrps
+			.filter((d) => !this.shouldAddDragHandlerToNode(d))
+			.on(".drag", null);
 
 		this.logger.logEndTimer("updateNodes");
+	}
+
+	// Returns true if the drag handler should be added to a node.
+	shouldAddDragHandlerToNode(d) {
+		return CanvasUtils.isObjectMovable(d) && this.config.enableEditingActions;
 	}
 
 	removeNodes(removeSel) {

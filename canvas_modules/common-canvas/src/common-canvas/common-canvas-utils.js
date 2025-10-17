@@ -641,17 +641,6 @@ export default class CanvasUtils {
 		return (1 - t) * (1 - t) * (1 - t) * p0 + 3 * (1 - t) * (1 - t) * t * p1 + 3 * (1 - t) * t * t * p2 + t * t * t * p3;
 	}
 
-	// Returns true if the node passed in should be resizeable. Nodes are resizabele
-	// except binding nodes in a sub-flow, if their nodeResizable layout value is true.
-	static isNodeResizable(node, config) {
-		if (!config.enableEditingActions ||
-				this.isSuperBindingNode(node) ||
-				(!node.layout.nodeResizable && !this.isExpandedSupernode(node))) {
-			return false;
-		}
-		return true;
-	}
-
 	// Returns true if a link of type `type` can be created between the two
 	// node/port combinations provided given the set of current links provided.
 	static isConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links, type, selfRefLinkAllowed) {
@@ -1241,10 +1230,28 @@ export default class CanvasUtils {
 	static isCollapsedSupernode(node) {
 		return this.isSupernode(node) && !this.isExpanded(node);
 	}
+
 	// Returns true if the node passed in is a binding node in a subflow
 	// for a supernode.
 	static isSuperBindingNode(d) {
 		return d.isSupernodeInputBinding || d.isSupernodeOutputBinding;
+	}
+
+	// Returns true if the object passed in is movable or false if not.
+	static isObjectMovable(obj) {
+		return this.isComment(obj) ||
+			this.isNode(obj) && obj.layout?.nodeMovable;
+	}
+
+	// Returns true if the node passed in should be resizeable. Nodes are resizabele
+	// except binding nodes in a sub-flow, if their nodeResizable layout value is true.
+	static isNodeResizable(node, config) {
+		if (!config.enableEditingActions ||
+				this.isSuperBindingNode(node) ||
+				(!node.layout.nodeResizable && !this.isExpandedSupernode(node))) {
+			return false;
+		}
+		return true;
 	}
 
 	// Returns an object containing the dimensions of an imaginary rectangle

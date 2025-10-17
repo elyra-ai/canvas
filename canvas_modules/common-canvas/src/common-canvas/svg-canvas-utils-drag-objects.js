@@ -146,10 +146,6 @@ export default class SVGCanvasUtilsDragObjects {
 	// x and y amounts provided. This is called when the user moves an
 	// object using the keyboard.
 	moveObject(d, dir) {
-		if (!this.isObjectMovable(d)) {
-			return;
-		}
-
 		let xInc = 0;
 		let yInc = 0;
 
@@ -240,9 +236,7 @@ export default class SVGCanvasUtilsDragObjects {
 			this.initializeResizeVariables(d);
 
 		} else {
-			if (this.isObjectMovable(d)) {
-				this.startObjectsMoving(d);
-			}
+			this.startObjectsMoving(d);
 		}
 
 		this.logger.logEndTimer("dragStartObject", true);
@@ -257,9 +251,7 @@ export default class SVGCanvasUtilsDragObjects {
 			this.resizeNode(d3Event.dx, d3Event.dy, d, this.nodeSizingDirection);
 
 		} else {
-			if (this.isObjectMovable(d)) {
-				this.moveObjects(d3Event.dx, d3Event.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
-			}
+			this.moveObjects(d3Event.dx, d3Event.dy, d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
 		}
 
 		this.logger.logEndTimer("dragObject", true);
@@ -279,9 +271,7 @@ export default class SVGCanvasUtilsDragObjects {
 			this.nodeSizing = false;
 
 		} else {
-			if (this.isObjectMovable(d)) {
-				this.endObjectsMoving(d, d3Event.sourceEvent.shiftKey, KeyboardUtils.isMetaKey(d3Event.sourceEvent));
-			}
+			this.endObjectsMoving(d, d3Event.sourceEvent.shiftKey, KeyboardUtils.isMetaKey(d3Event.sourceEvent));
 		}
 
 		this.logger.logEndTimer("dragEndObject", true);
@@ -629,7 +619,8 @@ export default class SVGCanvasUtilsDragObjects {
 
 	// Starts the moving action for canvas objects (nodes and comments).
 	// Can be called when the mouse is dragging the object OR when a
-	// keyboard event moves the object.
+	// keyboard event moves the object. Only nodes that allowed to be
+	// moved will be moved.
 	startObjectsMoving(d) {
 		// Ensure flags are false before staring a new move operation.
 		this.existingNodeInsertableIntoLink = false;
@@ -640,7 +631,7 @@ export default class SVGCanvasUtilsDragObjects {
 			offsetY: 0,
 			runningX: 0,
 			runningY: 0,
-			objects: this.getMoveObjects(d).filter((obj) => this.isObjectMovable(obj))
+			objects: this.getMoveObjects(d).filter((obj) => CanvasUtils.isObjectMovable(obj))
 		};
 
 		if (this.movingObjectData.objects?.length > 0) {
@@ -907,12 +898,6 @@ export default class SVGCanvasUtilsDragObjects {
 				this.ren.getCommentGroupSelectionById(obj.id).classed("d3-is-monving", state);
 			}
 		});
-	}
-
-	// Returns true if the object passed in is movable or false if not.
-	isObjectMovable(obj) {
-		return CanvasUtils.isComment(obj) ||
-			CanvasUtils.isNode(obj) && obj.layout?.nodeMovable;
 	}
 
 	// Returns true if the current move objects array has a single node which
