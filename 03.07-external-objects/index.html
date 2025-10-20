@@ -2876,8 +2876,8 @@
     <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></div>
 and then specify the on drag behavior like this
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">onDragStart</span><span class="p">(</span><span class="nx">ev</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">       </span><span class="kd">const</span><span class="w"> </span><span class="nx">evData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">onDragStart</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">       </span><span class="kd">const</span><span class="w"> </span><span class="nx">transferData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">          </span><span class="nx">operation</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;addToCanvas&quot;</span><span class="p">,</span>
 <span class="w">          </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">             </span><span class="nx">editType</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;createExternalNode&quot;</span><span class="p">,</span>
@@ -2887,7 +2887,7 @@ and then specify the on drag behavior like this
 <span class="w">             </span><span class="p">....</span>
 <span class="w">          </span><span class="p">}</span>
 <span class="w">       </span><span class="p">};</span>
-<span class="w">       </span><span class="nx">ev</span><span class="p">.</span><span class="nx">dataTransfer</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">evData</span><span class="p">));</span>
+<span class="w">       </span><span class="nx">ev</span><span class="p">.</span><span class="nx">dataTransfer</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">transferData</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
 where</p>
