@@ -48,7 +48,6 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 			enableMarkdownInComments: true,
 			enableDropZoneOnExternalDrag: true,
 			enableContextToolbar: true,
-			enableEditingActions: false,
 			enablePaletteLayout: "None",
 			tipConfig: {
 				palette: true,
@@ -62,6 +61,7 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 				nodeShapeDisplay: false,
 				nodeShape: "rectangle",
 				nodeHighlightGap: 2,
+				nodeMovable: false,
 				nodeExternalObject: PersonNode,
 				defaultNodeWidth: 100,
 				defaultNodeHeight: 40,
@@ -96,7 +96,6 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 		return config;
 	}
 
-
 	getCanvasController() {
 		return this.canvasController;
 	}
@@ -126,6 +125,12 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 		);
 	}
 
+	editActionHandler(data) {
+		if (data.editType === "createExternalNode") {
+			window.alert(`${data.label} dropped on canvas background at ${data.offsetX}, ${data.offsetY}`);
+		}
+	}
+
 	contextMenuHandler() {
 		return [];
 	}
@@ -139,6 +144,7 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 			<CommonCanvas
 				canvasController={this.canvasController}
 				config={config}
+				editActionHandler={this.editActionHandler}
 				contextMenuHandler={this.contextMenuHandler}
 				showRightFlyout
 				rightFlyoutContent={rfContent}
