@@ -3878,6 +3878,11 @@ Note:</p>
 <span class="c1">// Returns true if comments are currently hiding.</span>
 <span class="nx">isHidingComments</span><span class="p">()</span>
 
+<span class="c1">// Sets text to be highlighted in the comments identified by the commentIds array passed in.</span>
+<span class="c1">// pipelineId is optional. If highlightText is null or undefined the highlighting text will</span>
+<span class="c1">// be removed from the comments.</span>
+<span class="nx">setCommentHighlightText</span><span class="p">(</span><span class="nx">commentIds</span><span class="p">,</span><span class="w"> </span><span class="nx">highlightText</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
+
 <span class="c1">// Sets the comment identified, to edit mode so the user can</span>
 <span class="c1">// edit the comment.</span>
 <span class="nx">setCommentEditingMode</span><span class="p">(</span><span class="nx">commentId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
