@@ -770,6 +770,12 @@ g.d3-link-dec-group:focus {
 /* Comment styles */
 
 .d3-comment-group {
+	& mark {
+		color: carbon.$tag-color-blue;
+		background-color: carbon.$tag-background-blue;
+		font-weight: 500;
+	}
+
 	&:hover {
 		.d3-comment-text-scroll {
 			border-color: $comment-outline-hover-color;

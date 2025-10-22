@@ -163,6 +163,21 @@ export default (state = [], action) => {
 			return comment;
 		});
 
+	case "SET_COMMENT_HIGHLIGHT_TEXT":
+		return state.map((comment) => {
+			const idx = action.data.commentIds.indexOf(comment.id);
+			if (idx > -1) {
+				const newComment = { ...comment };
+				if (action.data.highlightText) {
+					newComment.highlightText = action.data.highlightText;
+				} else {
+					delete newComment.highlightText;
+				}
+				return newComment;
+			}
+			return comment;
+		});
+
 	case "SET_OBJECTS_STYLE":
 		return state.map((comment) => {
 			if (action.data.objIds.indexOf(comment.id) > -1) {

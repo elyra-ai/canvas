@@ -350,3 +350,11 @@ Cypress.Commands.add("hoverOverComment", (commentText) => {
 		.trigger("mouseover");
 });
 
+Cypress.Commands.add("setCommentHighlightText", (commentText, highlightText) => {
+	cy.document().then((doc) => {
+		cy.getCommentWithText(commentText)
+			.then((comment) => {
+				doc.canvasController.setCommentHighlightText(comment[0].getAttribute("data-id"), highlightText);
+			});
+	});
+});

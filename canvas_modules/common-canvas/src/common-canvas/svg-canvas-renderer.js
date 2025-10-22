@@ -22,7 +22,6 @@
 import * as d3Selection from "d3-selection";
 import * as d3Fetch from "d3-fetch";
 const d3 = Object.assign({}, d3Selection, d3Fetch);
-import markdownIt from "markdown-it";
 
 import { escape as escapeText, forOwn, get } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
@@ -4337,11 +4336,7 @@ export default class SVGCanvasRenderer {
 
 			})
 
-			.html((d) =>
-				(d.contentType !== WYSIWYG && this.config.enableMarkdownInComments
-					? this.getCommentAsMarkdownHTML(d.content)
-					: escapeText(d.content))
-			);
+			.html((d) => this.commentUtils.getCommentHTMLStr(d));
 
 		// Add or remove drag object behavior for the comment groups.
 		if (this.config.enableEditingActions) {
@@ -4353,19 +4348,6 @@ export default class SVGCanvasRenderer {
 				.on(".drag", null);
 		}
 		this.logger.logEndTimer("updateComments");
-	}
-
-	// Returns the comment content passed in as HTML. We dynamically
-	// create this.markdownIt because changing
-	// this.config.enableMarkdownHTML during runtime can cause errors.
-	getCommentAsMarkdownHTML(content) {
-		if (!this.markdownIt) {
-			this.markdownIt = markdownIt({
-				html: this.config.enableMarkdownHTML
-			});
-		}
-
-		return this.markdownIt.render(content);
 	}
 
 	// Attaches the appropriate listeners to the comment groups.
