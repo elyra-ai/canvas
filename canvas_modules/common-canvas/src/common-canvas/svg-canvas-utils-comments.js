@@ -15,7 +15,6 @@
  */
 
 /* eslint brace-style: "off" */
-/* eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
 
 export default class SvgCanvasUtilsComments {
 	// Returns the absolute x coordinate of the center of the comment
@@ -32,39 +31,22 @@ export default class SvgCanvasUtilsComments {
 	// necessary <mark> tags for the text to be highlighted specified by the
 	// search string passed in.
 	insertCommentHighlight(htmlString, searchStr) {
-
-		console.log("insertCommentHighlight ");
-		console.log("htmlString ", htmlString);
-		console.log("searchStr ", searchStr);
-
 		// Parse the HTML string.
 		const parser = new DOMParser();
-		console.log("parser ", parser);
-
 		const doc = parser.parseFromString(htmlString, "text/html");
-		console.log("doc ", doc);
-
-
 		const bodies = doc.getElementsByTagName("body");
 		const body = bodies[0];
-
-		console.log("body ", body);
 
 		// Look for the search string in the text only (no HTML tags) version of
 		// the text.
 		const searchStart = body?.innerText?.indexOf(searchStr);
 
-		console.log("searchStart ", searchStart);
-
 		// If the search string was found, insert the <mark> tags
 		if (searchStart > -1) {
 			const elementInfos = [];
 			this.searchForElementInfos(body, searchStart, searchStart + searchStr.length, 0, elementInfos);
-			console.log("elementInfos ", elementInfos);
-
 			this.insertMarkElements(elementInfos);
 
-			console.log("body.outerHTML ", body.outerHTML);
 			return body.outerHTML;
 		}
 

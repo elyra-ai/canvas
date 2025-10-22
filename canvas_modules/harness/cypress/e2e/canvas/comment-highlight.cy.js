@@ -28,6 +28,9 @@ describe("Test clipboard with no link selection enabled", function() {
 			"Now is the winter of our discontent made glorious summer by this son of York.",
 			"made glorious summer");
 
+		// With Electron, on the build machine, we need a short wait for the highlight to be applied.
+		cy.wait(50);
+
 		cy.verifyCommentContainsHTML(
 			"Now is the winter of our discontent made glorious summer by this son of York.",
 			"Now is the winter of our discontent <mark>made glorious summer</mark> by this son of York.");
@@ -44,6 +47,9 @@ describe("Test clipboard with no link selection enabled", function() {
 		cy.setCommentHighlightText(
 			"Now is the **winter of our _discontent made_ glorious summer by** this son of York.",
 			"made glorious summer");
+
+		// With Electron, on the build machine, we need a short wait for the highlight to be applied.
+		cy.wait(50);
 
 		cy.verifyCommentContainsHTML(
 			"Now is the **winter of our _discontent made_ glorious summer by** this son of York.",
@@ -62,6 +68,9 @@ describe("Test clipboard with no link selection enabled", function() {
 			"Now is the **winter of our _discontent made_ glorious summer** by this son of York.",
 			"made glorious summer");
 
+		// With Electron, on the build machine, we need a short wait for the highlight to be applied.
+		cy.wait(50);
+
 		cy.verifyCommentContainsHTML(
 			"Now is the **winter of our _discontent made_ glorious summer** by this son of York.",
 			"<p>Now is the <strong>winter of our <em>discontent <mark>made</mark></em><mark> glorious " +
@@ -78,6 +87,9 @@ describe("Test clipboard with no link selection enabled", function() {
 		cy.setCommentHighlightText(
 			"Now is the **winter of our _discontent made_ glorious summer** by this son of York.",
 			"winter of our discontent");
+
+		// With Electron, on the build machine, we need a short wait for the highlight to be applied.
+		cy.wait(50);
 
 		cy.verifyCommentContainsHTML(
 			"Now is the **winter of our _discontent made_ glorious summer** by this son of York.",
@@ -96,6 +108,9 @@ describe("Test clipboard with no link selection enabled", function() {
 			"Now is the **winter of our _discontent made_ glorious summer** by this son of York.",
 			"discontent made");
 
+		// With Electron, on the build machine, we need a short wait for the highlight to be applied.
+		cy.wait(50);
+
 		cy.verifyCommentContainsHTML(
 			"Now is the **winter of our _discontent made_ glorious summer** by this son of York.",
 			"<p>Now is the <strong>winter of our <em><mark>discontent made</mark></em> glorious " +
@@ -112,6 +127,9 @@ describe("Test clipboard with no link selection enabled", function() {
 		cy.setCommentHighlightText(
 			"Now is the **winter of our _discontent made_ glorious summer** by this son of York.",
 			"content");
+
+		// With Electron, on the build machine, we need a short wait for the highlight to be applied.
+		cy.wait(50);
 
 		cy.verifyCommentContainsHTML(
 			"Now is the **winter of our _discontent made_ glorious summer** by this son of York.",
