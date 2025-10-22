@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/* eslint brace-style: "off" */
+
 import markdownIt from "markdown-it";
 import { escape as escapeText } from "lodash";
 import { WYSIWYG } from "./constants/canvas-constants";
