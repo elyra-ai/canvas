@@ -22,6 +22,7 @@
 import * as d3Selection from "d3-selection";
 import * as d3Fetch from "d3-fetch";
 const d3 = Object.assign({}, d3Selection, d3Fetch);
+import markdownIt from "markdown-it";
 
 import { escape as escapeText, forOwn, get } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
@@ -4336,7 +4337,7 @@ export default class SVGCanvasRenderer {
 
 			})
 
-			.html((d) => this.commentUtils.getCommentHTMLStr(d));
+			.html((d) => this.getCommentHTMLStr(d));
 
 		// Add or remove drag object behavior for the comment groups.
 		if (this.config.enableEditingActions) {
@@ -4348,6 +4349,32 @@ export default class SVGCanvasRenderer {
 				.on(".drag", null);
 		}
 		this.logger.logEndTimer("updateComments");
+	}
+
+	// Returns an HTML string for the comment passed in containing HTML tags for the any
+	// formatting required including <mark> tags around any text specified to be highlighted.
+	getCommentHTMLStr(d) {
+		const htmlString = (d.contentType !== WYSIWYG && this.config.enableMarkdownInComments
+			? this.getCommentAsMarkdownHTML(d.content)
+			: escapeText(d.content));
+
+		if (d.highlightText) {
+			return this.commentUtils.insertCommentHighlight(htmlString, d.highlightText);
+		}
+		return htmlString;
+	}
+
+	// Returns the comment content passed in as an HTML string. We dynamically
+	// create this.markdownIt because changing
+	// this.config.enableMarkdownHTML during runtime can cause errors.
+	getCommentAsMarkdownHTML(content) {
+		if (!this.markdownIt) {
+			this.markdownIt = markdownIt({
+				html: this.config.enableMarkdownHTML
+			});
+		}
+
+		return this.markdownIt.render(content);
 	}
 
 	// Attaches the appropriate listeners to the comment groups.

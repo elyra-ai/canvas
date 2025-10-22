@@ -16,10 +16,6 @@
 
 /* eslint brace-style: "off" */
 
-import markdownIt from "markdown-it";
-import { escape as escapeText } from "lodash";
-import { WYSIWYG } from "./constants/canvas-constants";
-
 export default class SvgCanvasUtilsComments {
 	// Returns the absolute x coordinate of the center of the comment
 	getCommentCenterPosX(com) {
@@ -29,32 +25,6 @@ export default class SvgCanvasUtilsComments {
 	// Returns the absolute y coordinate of the center of the comment
 	getCommentCenterPosY(com) {
 		return com.y_pos + (com.height / 2);
-	}
-
-	// Returns an HTML string for the comment passed in containing HTML tags for the any
-	// formatting required including <mark> tags around any text specified to be highlighted.
-	getCommentHTMLStr(d) {
-		const htmlString = (d.contentType !== WYSIWYG && this.config.enableMarkdownInComments
-			? this.getCommentAsMarkdownHTML(d.content)
-			: escapeText(d.content));
-
-		if (d.highlightText) {
-			return this.insertCommentHighlight(htmlString, d.highlightText);
-		}
-		return htmlString;
-	}
-
-	// Returns the comment content passed in as an HTML string. We dynamically
-	// create this.markdownIt because changing
-	// this.config.enableMarkdownHTML during runtime can cause errors.
-	getCommentAsMarkdownHTML(content) {
-		if (!this.markdownIt) {
-			this.markdownIt = markdownIt({
-				html: this.config.enableMarkdownHTML
-			});
-		}
-
-		return this.markdownIt.render(content);
 	}
 
 	// Converts the HTML string passed in to a new HTML string containing and
