@@ -4351,8 +4351,8 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("updateComments");
 	}
 
-	// Returns an HTML string for the comment passed in containing HTML tags for the any
-	// formatting required including <mark> tags around any text specified to be highlighted.
+	// Returns an HTML string for the comment passed in containing HTML tags for any
+	// formatting required, including <mark> tags around any text specified to be highlighted.
 	getCommentHTMLStr(d) {
 		const htmlString = (d.contentType !== WYSIWYG && this.config.enableMarkdownInComments
 			? this.getCommentAsMarkdownHTML(d.content)
