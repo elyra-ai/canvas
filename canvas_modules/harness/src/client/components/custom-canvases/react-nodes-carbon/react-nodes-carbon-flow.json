@@ -163,7 +163,7 @@
           "op": "card-node-regular",
           "app_data": {
             "ui_data": {
-              "label": "Regular Card Node",
+              "label": "Regular Card Node with a long label. Regular Card Node with a long label. Regular Card Node with a long label. Regular Card Node with a long label. Regular Card Node with a long label.",
               "image": "images/custom-canvases/flows/palette/icons/dataassetimport.svg",
               "x_pos": 440,
               "y_pos": 160,
