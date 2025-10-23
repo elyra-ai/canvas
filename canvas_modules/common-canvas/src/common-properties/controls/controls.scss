@@ -53,6 +53,6 @@
 		display: none;
 	}
 	&:has(.properties-control-layer:empty) {
-		padding-bottom: 0; // // Removes bottom padding when only the Carbon wrapper is present without actual control.
+		padding-bottom: 0; // Removes bottom padding when only the Carbon wrapper is present without actual control.
 	}
 }
