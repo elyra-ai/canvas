@@ -1048,6 +1048,21 @@ export interface EditActionDisplayPreviousPipeline extends BaseEditActionData {
   pipelineInfo: { pipelineFlowId: PipelineFlowId, pipelineId: PipelineId };
 }
 
+export interface EditActionPaste extends BaseEditActionData {
+  editType: "paste";
+  editSource: "toolbar" | "contextmenu" | "keyboard";
+  objects: {
+    nodes: CanvasNode[],
+    links: CanvasLink[],
+    comments: CanvasComment[]
+  }
+}
+
+export type EditActionPasteContextMenu =
+  EditActionUndo
+  & ContextMenuCommonEditActionProperties
+  & { type: "canvas" };
+
 export interface EditActionUndo extends BaseEditActionData {
   editType: "undo";
   editSource: "toolbar" | "contextmenu" | "keyboard";
@@ -1108,6 +1123,8 @@ export type EditActionData =
   | EditActionDisplaySubPipeline
   | EditActionDisplaySubPipelineContextMenu
   | EditActionDisplayPreviousPipeline
+  | EditActionPaste
+  | EditActionPasteContextMenu
   | EditActionUndo
   | EditActionUndoContextMenu
   | EditActionRedo
