@@ -25,20 +25,16 @@ import ShapeNodeWrapper from "./wrapper-shape-node.jsx";
 import ReactNodesFlow from "./react-nodes-carbon-flow.json";
 import ReactNodesPalette from "./react-nodes-carbon-palette.json";
 
+const ReactNodesCarbonCanvas = (props) => {
+	const canvasController = React.useMemo(() => {
+		const instance = new CanvasController();
+		instance.setPipelineFlow(ReactNodesFlow);
+		instance.setPipelineFlowPalette(ReactNodesPalette);
+		return instance;
+	}, []);
 
-export default class ReactNodesCarbonCanvas extends React.Component {
-	constructor(props) {
-		super(props);
-		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(ReactNodesFlow);
-		this.canvasController.setPipelineFlowPalette(ReactNodesPalette);
-
-		this.getConfig = this.getConfig.bind(this);
-		this.layoutHandler = this.layoutHandler.bind(this);
-	}
-
-	getConfig() {
-		const config = Object.assign({}, this.props.config, {
+	const getConfig = () => {
+		const config = Object.assign({}, props.config, {
 			enableParentClass: "react-nodes-carbon",
 			enableNodeFormatType: "Vertical",
 			enableLinkType: "Curve",
@@ -97,13 +93,9 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 			}
 		});
 		return config;
-	}
+	};
 
-	getCanvasController() {
-		return this.canvasController;
-	}
-
-	layoutHandler(node) {
+	const layoutHandler = (node) => {
 		if (node?.op && node.op.includes("shape-node")) {
 			const config = {
 				selectionPath: "M -4 -4 h 36 v 36 h -36 Z",
@@ -121,20 +113,19 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 			return config;
 		}
 		return null;
-	}
+	};
 
-	render() {
-		const config = this.getConfig();
-		return (
-			<CommonCanvas
-				canvasController={this.canvasController}
-				config={config}
-				layoutHandler={this.layoutHandler}
-			/>
-		);
-	}
-}
+	return (
+		<CommonCanvas
+			canvasController={canvasController}
+			config={getConfig()}
+			layoutHandler={layoutHandler}
+		/>
+	);
+};
 
 ReactNodesCarbonCanvas.propTypes = {
 	config: PropTypes.object
 };
+
+export default ReactNodesCarbonCanvas;
