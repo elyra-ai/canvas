@@ -456,14 +456,14 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getNextNodeFromAssocLink(link) {
-		if (link.srcNodeId === link.navObject.id) {
+		if (link.srcNodeId === link.navObject?.id) {
 			return link.trgNode;
 		}
 		return link.srcObj;
 	}
 
 	getNextObjectFromCommentLink(link) {
-		if (link.srcNodeId === link.navObject.id) {
+		if (link.srcNodeId === link.navObject?.id) {
 			return link.trgNode;
 		}
 		return link.srcObj;
