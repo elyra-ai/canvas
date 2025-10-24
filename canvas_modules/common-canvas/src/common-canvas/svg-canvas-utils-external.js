@@ -34,10 +34,11 @@ export default class SvgCanvasExternal {
 		return Number(React.version.split(".")[0]) >= 18;
 	}
 
-	addNodeExternalObject(node, i, foreignObjects) {
+	addNodeExternalObject(node, i, foreignObjects, pipeline) {
 		const jsx = (
 			<node.layout.nodeExternalObject
 				nodeData={node}
+				pipelineData={pipeline}
 				canvasController={this.ren.canvasController}
 				externalUtils={this}
 			/>

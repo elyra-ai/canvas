@@ -166,8 +166,8 @@
               "label": "Regular Card Node",
               "image": "images/custom-canvases/flows/palette/icons/dataassetimport.svg",
               "x_pos": 440,
-              "y_pos": 160,
-              "description": "Card node from Carbon Charts library."
+              "y_pos": 80,
+              "description": "Card node from Carbon Charts library that has a very long description that causes the node to automatically expand to be bigger than the default size."
             }
           },
           "inputs": [
@@ -475,8 +475,8 @@
               "id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
               "x_pos": 55,
               "y_pos": 20,
-              "width": 440,
-              "height": 120,
+              "width": 330,
+              "height": 140,
               "class_name": "bkg-col-green-20",
               "content": "## React Objects Canvas\n\nThis sample app shows the React objects, CardNode and ShapeNode, from the Carbon-Charts library being used to display the body of canvas nodes. The selection highlighting, ports, overflow icon and tip for the nodes are provided by common-canvas.",
               "associated_id_refs": []

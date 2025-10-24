@@ -1906,7 +1906,7 @@ export default class SVGCanvasRenderer {
 			.attr("x", 0)
 			.attr("y", 0)
 			.each((d, idx, exts) =>
-				this.externalUtils.addNodeExternalObject(d, idx, exts));
+				this.externalUtils.addNodeExternalObject(d, idx, exts, this.activePipeline.pipeline));
 
 		// Node Image
 		nonBindingNodeGrps
