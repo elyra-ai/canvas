@@ -161,11 +161,11 @@ export default class KeyboardUtils {
 	}
 
 	static nextSiblingLink(d3Event) {
-		return d3Event.key === DOWN_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === DOWN_ARROW_KEY;
 	}
 
 	static previousSiblingLink(d3Event) {
-		return d3Event.key === UP_ARROW_KEY;
+		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === UP_ARROW_KEY;
 	}
 
 	static focusSubObject(d3Event) {
