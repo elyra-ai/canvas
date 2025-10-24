@@ -1603,6 +1603,22 @@ export declare class CanvasController {
      */
     isHidingComments(): boolean;
 
+    /* Specifies the highlight text for a set of comments. Highlighting
+     * will be applied after all other formatting of the comment text has been
+     * completed by adding <mark> tags around the text to be highlighted.
+     * @param commentIds - An array of comment IDs.
+     * @param highlightText - The string to be highlighted in the
+     *                        comments specified. If set to null or is undefined
+     *                        the highlighting will be removed from the comments.
+     * @param pipelineId - Optional. The ID of the pipeline of the comments.
+     *                     Defaults to the currently displayed pipeline.
+     */
+    setCommentHighlightText(
+      commentIds: CanvasCommentId[],
+      highlightText: string,
+      pipelineId?: PipelineId
+    ) : void
+
     /**
      * Sets the comment identified, to edit mode so the user can
      * edit the comment.

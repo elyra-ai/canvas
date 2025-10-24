@@ -1166,6 +1166,10 @@ export default class APIPipeline {
 		return (comment ? comment.style : null);
 	}
 
+	setCommentHighlighText(commentIds, highlightText) {
+		this.store.dispatch({ type: "SET_COMMENT_HIGHLIGHT_TEXT", data: { commentIds, highlightText }, pipelineId: this.pipelineId });
+	}
+
 	// ---------------------------------------------------------------------------
 	// Link methods
 	// ---------------------------------------------------------------------------

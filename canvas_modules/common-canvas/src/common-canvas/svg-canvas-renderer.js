@@ -1982,16 +1982,21 @@ export default class SVGCanvasRenderer {
 		});
 
 		// Add or remove drag behavior as appropriate
-		if (this.config.enableEditingActions) {
-			const handler = this.dragObjectUtils.getDragObjectHandler();
-			nonBindingNodeGrps
-				.call(handler);
-		} else {
-			nonBindingNodeGrps
-				.on(".drag", null);
-		}
+		const handler = this.dragObjectUtils.getDragObjectHandler();
+		nonBindingNodeGrps
+			.filter((d) => this.shouldAddDragHandlerToNode(d))
+			.call(handler);
+
+		nonBindingNodeGrps
+			.filter((d) => !this.shouldAddDragHandlerToNode(d))
+			.on(".drag", null);
 
 		this.logger.logEndTimer("updateNodes");
+	}
+
+	// Returns true if the drag handler should be added to a node.
+	shouldAddDragHandlerToNode(d) {
+		return CanvasUtils.isObjectMovable(d) && this.config.enableEditingActions;
 	}
 
 	removeNodes(removeSel) {
@@ -4337,11 +4342,7 @@ export default class SVGCanvasRenderer {
 
 			})
 
-			.html((d) =>
-				(d.contentType !== WYSIWYG && this.config.enableMarkdownInComments
-					? this.getCommentAsMarkdownHTML(d.content)
-					: escapeText(d.content))
-			);
+			.html((d) => this.getCommentHTMLStr(d));
 
 		// Add or remove drag object behavior for the comment groups.
 		if (this.config.enableEditingActions) {
@@ -4355,7 +4356,20 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("updateComments");
 	}
 
-	// Returns the comment content passed in as HTML. We dynamically
+	// Returns an HTML string for the comment passed in containing HTML tags for any
+	// formatting required, including <mark> tags around any text specified to be highlighted.
+	getCommentHTMLStr(d) {
+		const htmlString = (d.contentType !== WYSIWYG && this.config.enableMarkdownInComments
+			? this.getCommentAsMarkdownHTML(d.content)
+			: escapeText(d.content));
+
+		if (d.highlightText) {
+			return this.commentUtils.insertCommentHighlight(htmlString, d.highlightText);
+		}
+		return htmlString;
+	}
+
+	// Returns the comment content passed in as an HTML string. We dynamically
 	// create this.markdownIt because changing
 	// this.config.enableMarkdownHTML during runtime can cause errors.
 	getCommentAsMarkdownHTML(content) {
