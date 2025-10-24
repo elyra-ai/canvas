@@ -25,6 +25,34 @@ import { CardNode, CardNodeColumn,
 } from "@carbon/charts-react";
 
 class CardNodeWrapper extends React.Component {
+
+	componentDidMount() {
+		this.setNodeSize();
+	}
+
+	componentDidUpdate() {
+		this.setNodeSize();
+	}
+
+	// Sets the node size (which will set the containing foreignObject size) based on display size
+	// of the Card Wrapper. A slight pause is required to allow the Card Wrapper contents to resolve
+	// to their ultimate display size.
+	setNodeSize() {
+		setTimeout(() => {
+			const node = this.props.canvasController.getNode(this.props.nodeData.id, this.props.pipelineData.id);
+
+			if (!node.isResized && this.divRef &&
+					(this.divRef.current.scrollHeight > this.divRef.current.clientHeight ||
+						this.divRef.current.scrollWidth > this.divRef.current.clientWidth)) {
+				node.isResized = true;
+				node.resizeHeight = this.divRef.current.scrollHeight + 10;
+				node.resizeWidth = this.divRef.current.scrollWidth;
+				this.props.canvasController.setNodeProperties(this.props.nodeData.id, node, this.props.pipelineData.id);
+			}
+		}, 100);
+	}
+
+
 	render() {
 		const styleImage = { height: "24px", width: "24px", y: 0 };
 
@@ -61,8 +89,10 @@ class CardNodeWrapper extends React.Component {
 		className += type === "card-node-with-outline" ? " card-node-outline-div" : "";
 		className += shape === "curved-corners" ? " card-node-curved-corners" : "";
 
+		this.divRef = React.createRef();
+
 		return (
-			<div className={className}>
+			<div className={className} ref={this.divRef}>
 				<CardNode color={color}>
 					<CardNodeColumn>
 						<SVG src={image} style={styleImage} />
@@ -78,7 +108,9 @@ class CardNodeWrapper extends React.Component {
 }
 
 CardNodeWrapper.propTypes = {
-	nodeData: PropTypes.object
+	nodeData: PropTypes.object,
+	pipelineData: PropTypes.object,
+	canvasController: PropTypes.object
 };
 
 export default CardNodeWrapper;
