@@ -92,6 +92,7 @@ class PropertiesMain extends React.Component {
 		this._isResizeButtonRequired = this._isResizeButtonRequired.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 		this.detectResize = this.detectResize.bind(this);
+		// Rate limit how often the panel rerenders on size change
 		this.detectResizeThrottled = debounce(this.detectResize, 500);
 		// used to tracked when the resize button is clicked and ignore detectResize
 		this.resizeClicked = false;

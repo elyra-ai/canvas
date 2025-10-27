@@ -96,6 +96,7 @@ export default class DetachedCanvas extends React.Component {
 			enableContextToolbar: true,
 			enableResizableNodes: true,
 			enableNarrowPalette: false,
+			enableKeyboardNavigation: true,
 			paletteInitialState: true,
 			tipConfig: {
 				palette: true,

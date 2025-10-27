@@ -63,6 +63,10 @@ class CanvasContents extends React.Component {
 		// using keyboard.
 		this.mousePos = null;
 
+		// Keeps track of whether the user is in the process of tabbing out from
+		// the <div> using the keyboard.
+		this.tabbingOut = false;
+
 		this.drop = this.drop.bind(this);
 		this.focusOnCanvas = this.focusOnCanvas.bind(this);
 		this.setIsDropZoneDisplayed = this.setIsDropZoneDisplayed.bind(this);
@@ -82,7 +86,6 @@ class CanvasContents extends React.Component {
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
 		this.onFocus = this.onFocus.bind(this);
-		this.onBlur = this.onBlur.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
@@ -322,24 +325,11 @@ class CanvasContents extends React.Component {
 		}
 	}
 
-	// When focus leaves the flow editor it may be going to an "internal" object
-	// such as a node or a comment or to an "external" object like the
-	// toolbar or palette. If it goes outside the canvas, we set the current
-	// canvas focus object to null to prevent any restoreFocus calls setting
-	// focus back into the canvas.
-	onBlur(evt) {
-		if (!evt.relatedTarget || !this.isTargetInsideCanvas(evt.relatedTarget)) {
-			this.props.canvasController.setFocusObject(null);
-		}
-	}
-
 	// Records in mousePos the mouse pointer position when the pointer is inside
 	// the boundaries of the canvas or sets the mousePos to null. This position
 	// info can be used with keyboard operations.
 	onMouseMove(e) {
-		if (e?.target?.className?.baseVal === "svg-area" ||
-				e?.target?.className?.baseVal === "d3-svg-background" ||
-				e?.target?.className?.baseVal === "d3-svg-background-grid") {
+		if (e?.target?.closest(".svg-area")) {
 			this.mousePos = {
 				x: e.clientX,
 				y: e.clientY
@@ -504,7 +494,7 @@ class CanvasContents extends React.Component {
 			return (
 				<div tabIndex="0" className="d3-svg-canvas-div keyboard-navigation" id={this.svgCanvasDivId}
 					onMouseDown={this.onMouseDown} onMouseLeave={this.onMouseLeave}
-					onFocus={this.onFocus} onBlur={this.onBlur}
+					onFocus={this.onFocus}
 					onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 					role="application" aria-label="canvas-keyboard-navigation" // Resolve Accessibility Violation of role and label
 				/>
@@ -677,6 +667,7 @@ class CanvasContents extends React.Component {
 		if (success) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 		} else {
+			this.tabbingOut = true;
 			this.props.canvasController.setFocusOnCanvas();
 		}
 	}
@@ -687,6 +678,7 @@ class CanvasContents extends React.Component {
 		if (success) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 		} else {
+			this.tabbingOut = true;
 			this.props.canvasController.setFocusOnCanvas();
 		}
 	}
@@ -695,6 +687,7 @@ class CanvasContents extends React.Component {
 	focusOnCanvas() {
 		if (document.getElementById(this.svgCanvasDivId)) {
 			document.getElementById(this.svgCanvasDivId).focus();
+			this.svgCanvasD3.clearSubObject();
 		}
 	}
 

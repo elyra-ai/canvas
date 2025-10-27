@@ -17,7 +17,9 @@
 
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, CANVAS_FOCUS } from "./constants/canvas-constants.js";
+import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, CANVAS_FOCUS,
+	LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE
+} from "./constants/canvas-constants.js";
 
 
 export default class SVGCanvasUtilsAccessibility {
@@ -43,10 +45,6 @@ export default class SVGCanvasUtilsAccessibility {
 		// may use the arrow keys to navigate through the group of connected
 		// objects.
 		this.tabObjects = this.createTabObjectsArray();
-
-		// Keeps track of which sub-object with the currently focused node or link
-		// is being focused.
-		this.focusSubObjectIndex = -1;
 
 		this.logger.logEndTimer("initialize");
 	}
@@ -410,6 +408,11 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getNextSiblingLink(link) {
+		// If link is fully detached, there are no sibling links.
+		if (link.srcPos && link.trgPos) {
+			return null;
+		}
+
 		const navObject = link.navObject ? link.navObject : link.srcObj;
 
 		const linkInfos = CanvasUtils.isNode(navObject)
@@ -427,6 +430,11 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getPreviousSiblingLink(link) {
+		// If link is fully detached, there are no sibling links.
+		if (link.srcPos && link.trgPos) {
+			return null;
+		}
+
 		const navObject = link.navObject ? link.navObject : link.srcObj;
 
 		const linkInfos = CanvasUtils.isNode(navObject)
@@ -448,14 +456,14 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getNextNodeFromAssocLink(link) {
-		if (link.srcNodeId === link.navObject.id) {
+		if (link.srcNodeId === link.navObject?.id) {
 			return link.trgNode;
 		}
 		return link.srcObj;
 	}
 
 	getNextObjectFromCommentLink(link) {
-		if (link.srcNodeId === link.navObject.id) {
+		if (link.srcNodeId === link.navObject?.id) {
 			return link.trgNode;
 		}
 		return link.srcObj;
@@ -511,35 +519,42 @@ export default class SVGCanvasUtilsAccessibility {
 	/* Focus functions for sub-objects.                                                */
 	/* ------------------------------------------------------------------------------- */
 
-	// Returns the next sub-object from the set of focusable sub-objects.
-	getNextSubObject(d) {
-		const subObjs = this.getFocusableSubObjects(d);
+	// Returns the next sub-object, after the subObject passed in, from
+	// the set of focusable sub-objects.
+	getNextSubObject(obj, subObject) {
+		const subObjs = this.getFocusableSubObjects(obj);
 
-		this.focusSubObjectIndex++;
-
-		if (this.focusSubObjectIndex >= subObjs.length) {
-			this.focusSubObjectIndex = 0;
+		if (!subObject) {
+			return subObjs[0];
 		}
 
-		return subObjs[this.focusSubObjectIndex];
-	}
+		let index = subObjs.findIndex((so) => so.type === subObject.type && so.obj.id === subObject.obj.id);
+		index++;
 
-	// Returns the previous sub-object from the set of focusable sub-objects.
-	getPreviousSubObject(d) {
-		const subObjs = this.getFocusableSubObjects(d);
-
-		this.focusSubObjectIndex--;
-
-		if (this.focusSubObjectIndex < 0) {
-			this.focusSubObjectIndex = subObjs.length - 1;
+		if (index > subObjs.length - 1) {
+			index = 0;
 		}
 
-		return subObjs[this.focusSubObjectIndex];
+		return subObjs[index];
 	}
 
-	// Resets the index for the current sub-object.
-	resetFocusSubObjectIndex() {
-		this.focusSubObjectIndex = -1;
+	// Returns the previous sub-object, before the subObject passed in, from
+	// the set of focusable sub-objects.
+	getPreviousSubObject(obj, subObject) {
+		const subObjs = this.getFocusableSubObjects(obj);
+
+		if (!subObject) {
+			return subObjs[subObjs.length - 1];
+		}
+
+		let index = subObjs.findIndex((so) => so.type === subObject.type && so.obj.id === subObject.obj.id);
+		index--;
+
+		if (index < 0) {
+			index = subObjs.length - 1;
+		}
+
+		return subObjs[index];
 	}
 
 	// Returns an arry of focuable sub-elements of a node or link. These are items within
@@ -547,8 +562,9 @@ export default class SVGCanvasUtilsAccessibility {
 	// as: visible, focusable ports or focuable decorations
 	getFocusableSubObjects(d) {
 		const focusableSubElements = [];
+		const objType = CanvasUtils.getObjectTypeName(d);
 
-		if (CanvasUtils.getObjectTypeName(d) === "node") {
+		if (objType === "node") {
 			if (d.inputs && d.layout.inputPortDisplay && d.layout.inputPortFocusable) {
 				d.inputs.forEach((ip) => {
 					focusableSubElements.push({ type: "inputPort", obj: ip });
@@ -566,6 +582,15 @@ export default class SVGCanvasUtilsAccessibility {
 			}
 		}
 
+		if (objType === "link" &&
+				d.type === NODE_LINK &&
+				(this.ap.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.ap.config.enableLinkSelection === LINK_SELECTION_DETACHABLE))
+		{
+			focusableSubElements.push({ type: "linkStart", obj: d });
+		}
+
+
 		// Decorations apply for nodes AND links
 		if (d.decorations) {
 			d.decorations.forEach((dec) => {
@@ -573,6 +598,14 @@ export default class SVGCanvasUtilsAccessibility {
 					focusableSubElements.push({ type: "decoration", obj: dec });
 				}
 			});
+		}
+
+		if (objType === "link" &&
+			d.type === NODE_LINK &&
+			(this.ap.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+			this.ap.config.enableLinkSelection === LINK_SELECTION_DETACHABLE))
+		{
+			focusableSubElements.push({ type: "linkEnd", obj: d });
 		}
 
 		return focusableSubElements;
