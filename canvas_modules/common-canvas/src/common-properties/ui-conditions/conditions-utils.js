@@ -668,6 +668,43 @@ function _validateInput(propertyId, controller, control, showErrors) {
 			for (const validation of validations) {
 				let errorMessage = DEFAULT_VALIDATION_MESSAGE;
 				output = UiConditions.validateInput(validation.definition, propertyId, controller);
+
+				// handle array output for per-row validation
+				if (Array.isArray(output)) {
+					for (let rowIndex = 0; rowIndex < output.length; rowIndex++) {
+						const rowResult = output[rowIndex];
+						const rowPropertyId = { ...propertyId, row: rowIndex };
+						console.log("row",rowPropertyId);
+
+						if (rowResult === true) {
+							const existingMsg = controller.getErrorMessage(rowPropertyId, false, false, false);
+							if (!isEmpty(existingMsg)) {
+								controller.updateErrorMessage(rowPropertyId, DEFAULT_VALIDATION_MESSAGE);
+							}
+						} else if (typeof rowResult === "object") {
+							const rowErrorMessage = {
+								type: rowResult.type,
+								text: rowResult.text,
+								validation_id: validation.definition.validation?.id || rowPropertyId.name,
+								propertyId: rowPropertyId,
+								required: requiredDefinitionsIds.includes(validation.definition.validation?.id),
+								displayError: showErrors || validation.alwaysShow
+							};
+
+							// Clear table-level error if needed
+							if (typeof rowPropertyId.row !== "undefined" || typeof rowPropertyId.col !== "undefined") {
+								const tablePropertyId = controller.convertPropertyId(rowPropertyId.name);
+								const tableErrorMessage = controller.getErrorMessage(tablePropertyId);
+								if (tableErrorMessage !== null) {
+									controller.updateErrorMessage(tablePropertyId, null);
+								}
+							}
+
+							controller.updateErrorMessage(rowPropertyId, rowErrorMessage);
+						}
+					}
+					continue;
+				}
 				let isError = false;
 				if (typeof output === "object") {
 					isError = true;
@@ -676,6 +713,7 @@ function _validateInput(propertyId, controller, control, showErrors) {
 						text: output.text
 					};
 				}
+
 				// msgPropertyId is where the message should be set
 				let msgPropertyId = cloneDeep(propertyId);
 				if (validation.definition.validation &&
@@ -708,8 +746,6 @@ function _validateInput(propertyId, controller, control, showErrors) {
 				// if error message has not been set for this msgPropertyId/focus_parameter_ref, clear errorSet
 				if (!controller.getErrorMessage(msgPropertyId, true, true, false)) {
 					errorSet = false;
-				} else {
-					errorSet = true;
 				}
 				// Before setting an error message for table cell, clear the error message for table (if any)
 				if (typeof msgPropertyId.row !== "undefined" || typeof msgPropertyId.col !== "undefined") {

@@ -61,19 +61,6 @@ class TextfieldControl extends React.Component {
 			value = null;
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
-
-		// Clear the error message if the string contains only ASCII characters
-		const isValid = this.isAsciiString(value);
-		if (isValid) {
-			this.props.controller.updateErrorMessage(this.props.propertyId, null);
-		}
-	}
-
-	isAsciiString(str) {
-		return (
-			typeof str === "string" &&
-			[...str].every((char) => char.charCodeAt(0) <= 127)
-		);
 	}
 
 	render() {
