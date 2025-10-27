@@ -674,8 +674,6 @@ function _validateInput(propertyId, controller, control, showErrors) {
 					for (let rowIndex = 0; rowIndex < output.length; rowIndex++) {
 						const rowResult = output[rowIndex];
 						const rowPropertyId = { ...propertyId, row: rowIndex };
-						console.log("row",rowPropertyId);
-
 						if (rowResult === true) {
 							const existingMsg = controller.getErrorMessage(rowPropertyId, false, false, false);
 							if (!isEmpty(existingMsg)) {
