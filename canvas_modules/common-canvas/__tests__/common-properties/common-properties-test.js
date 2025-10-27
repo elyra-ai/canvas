@@ -140,8 +140,7 @@ describe("CommonProperties renders correctly", () => {
 		return <CommonProperties {...props} />;
 	};
 
-	// disable until upgrade to React 19
-	it.skip("all required props should have been defined", () => {
+	it("all required props should have been defined", () => {
 		const propertiesConfig = { containerType: "Editing" };
 		render(
 			<IntlProvider key="IntlProvider2" locale={locale} messages={{}}>
