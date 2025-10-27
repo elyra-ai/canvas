@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import CommonPropertiesConditions from "./components/common-properties-condition
 import App from "./App";
 import AppSmall from "./app-small.js";
 import AppTiny from "./app-tiny.js";
-import { HashRouter, Route } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import { IntlProvider } from "react-intl";
 
 const container = document.getElementById("root");
@@ -30,13 +30,13 @@ const root = createRoot(container);
 root.render(
 	<HashRouter>
 		<IntlProvider locale="en">
-			<div>
-				<Route exact path="/" component={ App } />
-				<Route exact path="/app-small" component={ AppSmall } />
-				<Route exact path="/app-tiny" component={ AppTiny } />
-				<Route path="/properties" component={ CommonPropertiesComponents } />
-				<Route path="/conditions" component={ CommonPropertiesConditions } />
-			</div>
+			<Routes>
+				<Route exact path="/" element={<App />} />
+				<Route exact path="/app-small" element={<AppSmall />} />
+				<Route exact path="/app-tiny" element={<AppTiny />} />
+				<Route path="/properties" element={<CommonPropertiesComponents />} />
+				<Route path="/conditions" element={<CommonPropertiesConditions />} />
+			</Routes>
 		</IntlProvider>
 	</HashRouter>
 );
