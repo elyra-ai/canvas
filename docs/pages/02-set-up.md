@@ -37,13 +37,28 @@ When building an application there are two possible approaches to styling:
 * Quick Start using CSS or
 * Styling using SASS to allow the application to override colors, styles, etc.
 
-In the examples below, we refer to files in the Elyra Canvas Test Harness which behaves like as a sample application using Common Canvas and Common Properties.
+In the examples below, we refer to files in the Elyra Canvas Test Harness. The Harness behaves like as a sample application that uses Common Canvas and Common Properties.
 
 ###  Quick Start using CSS
 
-If you just want to get up and running and don't want to customize styles in the interface, just import this regular CSS file:
+If you just want to get up and running quickly without using SASS you can get the Carbon and Elyra Canvas styles by importing these CSS files:
 
-  - @elyra/canvas/dist/styles/common-canvas.min.css
+  ```
+	import "@carbon/styles/css/styles.min.css";
+	import "@elyra/canvas/dist/styles/common-canvas.min.css";
+  ```
+
+You can also specify which of the Carbon themes you want to use by wrapping your applications with a `<Theme>` tag.
+
+```
+	<Theme theme="g10">
+		<IntlProvider locale="en">
+			<CommonCanvas canvasController={canvasController} />
+		</IntlProvider>
+	</Theme>
+```
+
+ where "g10" can also be set to "g100", "g90" or "white" (the default).
 
 
 ### Styling using SASS
