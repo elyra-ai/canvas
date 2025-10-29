@@ -104,7 +104,7 @@ class CanvasContents extends React.Component {
 
 	componentDidMount() {
 		this.logger.log("componentDidMount");
-		// componentDidMount may be called twise in StrictMode so only
+		// componentDidMount may be called twice in StrictMode so only
 		// create the svgCanvasD3 when necessary.
 		if (!this.svgCanvasD3) {
 			this.svgCanvasD3 =
