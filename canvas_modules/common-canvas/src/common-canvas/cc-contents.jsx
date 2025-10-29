@@ -104,10 +104,14 @@ class CanvasContents extends React.Component {
 
 	componentDidMount() {
 		this.logger.log("componentDidMount");
-		this.svgCanvasD3 =
-			new SVGCanvasD3(this.props.canvasInfo.id,
-				this.svgCanvasDivSelector,
-				this.props.canvasController);
+		// componentDidMount may be called twise in StrictMode so only
+		// create the svgCanvasD3 when necessary.
+		if (!this.svgCanvasD3) {
+			this.svgCanvasD3 =
+				new SVGCanvasD3(this.props.canvasInfo.id,
+					this.svgCanvasDivSelector,
+					this.props.canvasController);
+		}
 		this.setCanvasInfo();
 
 		if (this.props.canvasConfig.enableBrowserEditMenu) {
