@@ -3135,6 +3135,9 @@ import AllTypesCanvas from &quot;../../test_resources/diagrams/allTypesCanvas.js
 import ModelerPalette from &quot;../../test_resources/palettes/modelerPalette.json&quot;;
 import { CommonCanvas, CanvasController } from &quot;@elyra/canvas&quot;;
 
+import &quot;@carbon/styles/css/styles.min.css&quot;;
+import &quot;@elyra/canvas/dist/styles/common-canvas.min.css&quot;;
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -3146,16 +3149,18 @@ class App extends React.Component {
 
     render() {
         return (
-            &lt;div id=&quot;harness-app-container&quot;&gt;
-                &lt;CommonCanvas
-                    canvasController={this.canvasController}
-                /&gt;
-            &lt;/div&gt;
+            &lt;Theme theme=&quot;g10&quot;&gt;
+                &lt;div  style={{ height: &quot;100vh&quot; }}&gt;
+                    &lt;IntlProvider locale=&quot;en&quot;&gt;
+                        &lt;CommonCanvas canvasController={this.canvasController} /&gt;
+                    &lt;/IntlProvider&gt;
+                &lt;/div&gt;
+            &lt;/Theme&gt;
         );
     }
 }
 </code></pre></div>
-<p>This code will display this:</p>
+<p>Provided you have images deployed correctly, this code will display this:</p>
 <p><img src="../assets/cc-app-tiny.png" width="800" /></p>
 <p>The <a href="https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny">&ldquo;Tiny App&rdquo;</a> is available as part of the test harness function. Click <a href="https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny">here</a> to see the app running. You can try: dragging a node, editing a comment (double click on it), drag a node from the palette, click a button on the toolbar, zoom in and out using the scroll gesture.</p>
 <p>Some sample code to look at:</p>

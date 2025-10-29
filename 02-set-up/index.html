@@ -3013,12 +3013,20 @@ where x.x.x is the latest build and then run:
 <li>Quick Start using CSS or</li>
 <li>Styling using SASS to allow the application to override colors, styles, etc.</li>
 </ul>
-<p>In the examples below, we refer to files in the Elyra Canvas Test Harness which behaves like as a sample application using Common Canvas and Common Properties.</p>
+<p>In the examples below, we refer to files in the Elyra Canvas Test Harness. The Harness behaves like as a sample application that uses Common Canvas and Common Properties.</p>
 <h3 id="quick-start-using-css">Quick Start using CSS<a class="headerlink" href="#quick-start-using-css" title="Permanent link">&para;</a></h3>
-<p>If you just want to get up and running and don&rsquo;t want to customize styles in the interface, just import this regular CSS file:</p>
-<ul>
-<li>@elyra/canvas/dist/styles/common-canvas.min.css</li>
-</ul>
+<p>If you just want to get up and running quickly without using SASS you can get the Carbon and Elyra Canvas styles by importing these CSS files:</p>
+<div class="highlight"><pre><span></span><code>  import &quot;@carbon/styles/css/styles.min.css&quot;;
+  import &quot;@elyra/canvas/dist/styles/common-canvas.min.css&quot;;
+</code></pre></div>
+<p>You can also specify which of the Carbon themes you want to use by wrapping the Elyra Canvas component with a <code>&lt;Theme&gt;</code> tag.</p>
+<div class="highlight"><pre><span></span><code>    &lt;Theme theme=&quot;g10&quot;&gt;
+        &lt;IntlProvider locale=&quot;en&quot;&gt;
+            &lt;CommonCanvas /&gt; or &lt;CommonProperties /&gt;
+        &lt;/IntlProvider&gt;
+    &lt;/Theme&gt;
+</code></pre></div>
+<p>where &ldquo;g10&rdquo; can also be set to &ldquo;g100&rdquo;, &ldquo;g90&rdquo; or &ldquo;white&rdquo; (the default).</p>
 <h3 id="styling-using-sass">Styling using SASS<a class="headerlink" href="#styling-using-sass" title="Permanent link">&para;</a></h3>
 <p>If you want to use the full power of SASS for styling to override default styling in Common Canvas or Common Properties then you must include this <code>@forward</code>  in your SCSS:</p>
 <div class="highlight"><pre><span></span><code>@forward &quot;@carbon/react&quot; with (
