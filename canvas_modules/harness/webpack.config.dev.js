@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,6 +55,11 @@ const rules = [
 		loader: "babel-loader",
 		exclude: /node_modules/,
 		options: babelOptions
+	},
+	{
+		test: /\.tsx?$/, // Matches .ts and .tsx files
+		use: "ts-loader",
+		exclude: /node_modules/,
 	},
 	{
 		test: /\.s*css$/,
@@ -134,7 +139,7 @@ module.exports = {
 			"react-intl": "node_modules/react-intl",
 			"common-canvas": "src/common-canvas-dev.js"
 		},
-		extensions: [".js", ".jsx", ".json"]
+		extensions: [".js", ".jsx", ".json", ".ts", ".tsx"]
 	},
 	output: output,
 	module: {

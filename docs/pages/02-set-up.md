@@ -51,6 +51,9 @@ If you just want to get up and running quickly without using SASS you can get th
 You can also specify which of the Carbon themes you want to use by wrapping the Elyra Canvas component with a `<Theme>` tag.
 
 ```
+	import { Theme } from '@carbon/react';
+	...
+	...
 	<Theme theme="g10">
 		<IntlProvider locale="en">
 			<CommonCanvas /> or <CommonProperties />
