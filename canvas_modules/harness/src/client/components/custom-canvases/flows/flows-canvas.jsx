@@ -23,21 +23,20 @@ import FlowsFlow from "./flows-flow.json";
 import FlowsPalette from "./flows-palette.json";
 import FlowsProperties from "./flows-properties";
 
-export default class FlowsCanvas extends React.Component {
-	constructor(props) {
-		super(props);
-		this.propertiesRef = React.createRef();
-		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(FlowsFlow);
-		this.canvasController.setPipelineFlowPalette(FlowsPalette);
 
-		this.getConfig = this.getConfig.bind(this);
-		this.decorationActionHandler = this.decorationActionHandler.bind(this);
-		this.clickActionHandler = this.clickActionHandler.bind(this);
-	}
+const FlowsCanvas = (props) => {
 
-	getConfig() {
-		const config = Object.assign({}, this.props.config, {
+	const propertiesRef = React.createRef();
+
+	const canvasController = React.useMemo(() => {
+		const instance = new CanvasController();
+		instance.setPipelineFlow(FlowsFlow);
+		instance.setPipelineFlowPalette(FlowsPalette);
+		return instance;
+	}, []);
+
+	const getConfig = () => {
+		const config = Object.assign({}, props.config, {
 			enableParentClass: "flows",
 			enableNodeFormatType: "Vertical",
 			enableLinkType: "Straight",
@@ -100,46 +99,34 @@ export default class FlowsCanvas extends React.Component {
 			}
 		});
 		return config;
-	}
+	};
 
-	decorationActionHandler(data) {
-		this.canvasController.displaySubPipelineForSupernode(
-			data.id,
-			this.canvasController.getCurrentPipelineId()
-		);
-	}
+	const decorationActionHandler = (data) => {
+		canvasController.displaySubPipelineForSupernode(data.id, canvasController.getCurrentPipelineId());
+	};
 
-	clickActionHandler(source) {
-		if (this.propertiesRef.current &&
-				source.objectType === "node" &&
-				source.clickType === "DOUBLE_CLICK") {
-			this.propertiesRef.current.editNodeHandler(source.id, source.pipelineId);
+	const clickActionHandler = (source) => {
+		if (propertiesRef.current &&
+			source.objectType === "node" &&
+			source.clickType === "DOUBLE_CLICK") {
+			propertiesRef.current.editNodeHandler(source.id, source.pipelineId);
 		}
-	}
+	};
 
-	render() {
-		const config = this.getConfig();
-
-		const rightFlyoutContent = (
-			<FlowsProperties
-				ref={this.propertiesRef}
-				canvasController={this.canvasController}
-			/>
-		);
-
-		return (
-			<CommonCanvas
-				canvasController={this.canvasController}
-				decorationActionHandler={this.decorationActionHandler}
-				config={config}
-				rightFlyoutContent={rightFlyoutContent}
-				clickActionHandler={this.clickActionHandler}
-				showRightFlyout
-			/>
-		);
-	}
-}
+	return (
+		<CommonCanvas
+			canvasController={canvasController}
+			decorationActionHandler={decorationActionHandler}
+			config={getConfig()}
+			rightFlyoutContent={<FlowsProperties ref={propertiesRef} canvasController={canvasController} />}
+			clickActionHandler={clickActionHandler}
+			showRightFlyout
+		/>
+	);
+};
 
 FlowsCanvas.propTypes = {
-	config: PropTypes.object
+	config: PropTypes.object,
 };
+
+export default FlowsCanvas;
