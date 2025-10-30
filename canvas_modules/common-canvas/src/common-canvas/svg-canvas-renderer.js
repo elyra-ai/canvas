@@ -68,7 +68,7 @@ import SVGCanvasPipeline from "./svg-canvas-pipeline";
 export default class SVGCanvasRenderer {
 	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config, supernodeInfo = {}) {
 		this.logger = new Logger(["SVGCanvasRenderer", "PipeId", pipelineId]);
-		this.logger.logStartTimer("constructor" + pipelineId.substring(0, 5));
+		this.logger.logStartTimer("constructor - " + pipelineId.substring(0, 5));
 		this.pipelineId = pipelineId;
 		this.supernodeInfo = supernodeInfo; // Contents will be 'empty object' in case of primary pipeline renderer
 		this.canvasDiv = canvasDiv;
@@ -188,7 +188,7 @@ export default class SVGCanvasRenderer {
 			this.supernodeInfo.d3Selection.selectAll(".d3-node-port-output").raise();
 		}
 
-		this.logger.logEndTimer("constructor" + pipelineId.substring(0, 5));
+		this.logger.logEndTimer("constructor - " + pipelineId.substring(0, 5));
 	}
 
 	// Sets the pressed state of the space bar. This is called
@@ -1886,7 +1886,6 @@ export default class SVGCanvasRenderer {
 		// Optional foreign object to contain a React object
 		nonBindingNodeGrps
 			.selectChildren(".d3-foreign-object-external-node")
-			.attr("tabindex", -1)
 			.data((d) => (d.layout.nodeExternalObject ? [d] : []), (d) => d.id)
 			.join(
 				(enter) =>
@@ -1901,6 +1900,7 @@ export default class SVGCanvasRenderer {
 				}
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
+			.attr("tabindex", -1)
 			.attr("width", (d) => d.width)
 			.attr("height", (d) => d.height)
 			.attr("x", 0)
@@ -2298,7 +2298,6 @@ export default class SVGCanvasRenderer {
 							linkInfosAll.forEach((li) => (li.link.navObject = d));
 							this.setFocusObject(linkInfos[0].link, d3Event);
 						}
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.previousObjectInGroup(d3Event)) {
 						const linkInfos = this.activePipeline.getPreviousLinksToNode(d);
@@ -2467,9 +2466,7 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (!this.config.enableDragWithoutSelect) {
-					if (this.config.enableKeyboardNavigation) {
-						this.setFocusObject(d, d3Event);
-					}
+					this.setFocusObject(d, d3Event);
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
 					this.selectObjectD3Event(d3Event, d, clickType);
 				}
@@ -4910,17 +4907,14 @@ export default class SVGCanvasRenderer {
 						if (d.type === NODE_LINK) {
 							const node = this.activePipeline.getNextNodeFromDataLink(d);
 							this.setFocusObject(node, d3Event);
-							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 						} else if (d.type === ASSOCIATION_LINK) {
 							const node = this.activePipeline.getNextNodeFromAssocLink(d);
 							this.setFocusObject(node, d3Event);
-							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 						} else if (d.type === COMMENT_LINK) {
 							const obj = this.activePipeline.getNextObjectFromCommentLink(d);
 							this.setFocusObject(obj, d3Event);
-							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						}
 
 					} else if (KeyboardUtils.previousObjectInGroup(d3Event)) {
@@ -6370,12 +6364,15 @@ export default class SVGCanvasRenderer {
 		return objElement;
 	}
 
+	// Sets the focus object passed in.
 	setFocusObject(focusObj, evt) {
 		if (!this.config.enableKeyboardNavigation) {
 			return;
 		}
 
-		CanvasUtils.stopPropagationAndPreventDefault(evt);
+		// We do not 'preventDefault' here because, with React nodes, the default
+		// action might initiate a drag event.
+		evt.stopPropagation();
 
 		this.canvasController.setFocusObject(focusObj, evt);
 	}
