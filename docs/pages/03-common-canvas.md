@@ -10,6 +10,9 @@ import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
 import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
 import { CommonCanvas, CanvasController } from "@elyra/canvas";
 
+import "@carbon/styles/css/styles.min.css";
+import "@elyra/canvas/dist/styles/common-canvas.min.css";
+
 class App extends React.Component {
 	constructor(props) {
 		super(props);
@@ -21,17 +24,19 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<div id="harness-app-container">
-				<CommonCanvas
-					canvasController={this.canvasController}
-				/>
-			</div>
+			<Theme theme="g10">
+				<div  style={{ height: "100vh" }}>
+					<IntlProvider locale="en">
+						<CommonCanvas canvasController={this.canvasController} />
+					</IntlProvider>
+				</div>
+			</Theme>
 		);
 	}
 }
 ```
 
-This code will display this:
+Provided you have images deployed correctly, this code will display this:
 
 <img src="../assets/cc-app-tiny.png" width="800" />
 
