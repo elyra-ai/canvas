@@ -34,19 +34,23 @@ export default class SvgCanvasUtilsComments {
 		// Parse the HTML string.
 		const parser = new DOMParser();
 		const doc = parser.parseFromString(htmlString, "text/html");
+
+		// Get the raw text from the body element.
 		const bodies = doc.getElementsByTagName("body");
 		const body = bodies[0];
+		const innerText = body?.innerText || "";
 
-		// Look for the search string in the text only (no HTML tags) version of
-		// the text.
-		const searchStart = body?.innerText?.indexOf(searchStr);
+		// Search for all matches of teh search string.
+		const regex = new RegExp(searchStr, "gi");
+		const matches = innerText.matchAll(regex);
 
-		// If the search string was found, insert the <mark> tags
-		if (searchStart > -1) {
-			const elementInfos = [];
-			this.searchForElementInfos(body, searchStart, searchStart + searchStr.length, 0, elementInfos);
-			this.insertMarkElements(elementInfos);
-
+		// If any matches of the search string were found, insert the <mark> tags
+		if (matches) {
+			for (const match of matches) {
+				const elementInfos = [];
+				this.searchForElementInfos(body, match.index, match.index + searchStr.length, 0, elementInfos);
+				this.insertMarkElements(elementInfos);
+			}
 			return body.outerHTML;
 		}
 
@@ -64,28 +68,22 @@ export default class SvgCanvasUtilsComments {
 		let textStart = runStart;
 		let textEnd = runStart;
 
-		for (let i = 0; i < element.childNodes.length; i++) {
-			const node = element.childNodes[i];
-
+		for (const node of element.childNodes) {
 			if (node.nodeType === Node.TEXT_NODE) {
 				const textLen = node?.textContent?.length;
 				textEnd = textStart + textLen;
 
-				if (!(textStart >= searchEnd || textEnd <= searchStart)) {
-					let splitStart = 0;
-					let splitEnd = textLen;
-					if (searchStart > textStart) {
-						splitStart = searchStart - textStart;
-					}
-					if (searchEnd < textEnd) {
-						splitEnd = searchEnd - textStart;
-					}
+				if (textStart < searchEnd && textEnd > searchStart) {
+					// Calc split positions **within** in the text node.
+					const splitStart = (searchStart > textStart) ? searchStart - textStart : 0;
+					const splitEnd = (searchEnd < textEnd) ? searchEnd - textStart : textLen;
 
 					elementInfos.push({ splitStart, splitEnd, node });
 				}
 
 			} else if (node.nodeType === Node.ELEMENT_NODE) {
 				textStart = this.searchForElementInfos(node, searchStart, searchEnd, textEnd, elementInfos);
+				textEnd = textStart;
 			}
 		}
 		return textEnd;
