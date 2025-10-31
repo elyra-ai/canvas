@@ -40,7 +40,7 @@ export default class SvgCanvasUtilsComments {
 		const body = bodies[0];
 		const innerText = body?.innerText || "";
 
-		// Search for all matches of teh search string.
+		// Search for all matches of the search string.
 		const regex = new RegExp(searchStr, "gi");
 		const matches = innerText.matchAll(regex);
 
