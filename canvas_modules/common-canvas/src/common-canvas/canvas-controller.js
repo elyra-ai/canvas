@@ -1260,8 +1260,9 @@ export default class CanvasController {
 		return this.objectModel.isHidingComments();
 	}
 
-	// Sets text to be highlighted in the comments identified by the commentIds array passed in.
-	// pipelineId is optional. If highlightText is null or undefined the highlighting text will
+	// Sets text to be highlighted in the comments identified by the commentIds array passed in
+	// or, if set to a falsy value, the highlight text will be applied to all comments. The
+	// pipelineId is optional. If highlightText is a falsy value, the highlighting will
 	// be removed from the comments.
 	setCommentHighlightText(commentIds, highlightText, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setCommentHighlighText(commentIds, highlightText);

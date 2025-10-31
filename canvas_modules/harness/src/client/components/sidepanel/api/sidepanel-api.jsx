@@ -15,7 +15,7 @@
  */
 
 /* eslint no-undef: "error" */
-/* eslint complexity: ["error", 22] */
+/* eslint complexity: ["error", 23] */
 
 import React from "react";
 import PropTypes from "prop-types";
@@ -34,7 +34,8 @@ import {
 	API_ZOOM_TO_REVEAL_LINK,
 	INPUT_PORT,
 	OUTPUT_PORT,
-	NOTIFICATION_MESSAGE_TYPE
+	NOTIFICATION_MESSAGE_TYPE,
+	API_SET_COMMENT_HIGHLIGHT_TEXT
 } from "../../../constants/harness-constants.js";
 
 const defaultNodeType = {
@@ -89,6 +90,7 @@ export default class SidePanelAPI extends React.Component {
 			notificationMessage: "",
 			notificationType: NOTIFICATION_MESSAGE_TYPE.INFO,
 			zoomObject: JSON.stringify({ x: 0, y: 0, k: 1 }),
+			commentHighlightText: "",
 			pipelineFlow: JSON.stringify(this.props.apiConfig.getPipelineFlow()),
 			paletteItem: JSON.stringify(defaultNodeType)
 		};
@@ -389,6 +391,8 @@ export default class SidePanelAPI extends React.Component {
 		case API_ZOOM_TO_REVEAL_NODE:
 		case API_ZOOM_TO_REVEAL_LINK:
 			return this.state.zoomObject && this.state.zoomObject.length > 0;
+		case API_SET_COMMENT_HIGHLIGHT_TEXT:
+			return true; // Allow submit, even when text is empty, to allow highlight to be removed.
 
 		default:
 			return false;
@@ -463,6 +467,10 @@ export default class SidePanelAPI extends React.Component {
 			this.props.apiConfig.zoomCanvasForLink(JSON.parse(this.state.zoomObject), this.state.linkId);
 			break;
 
+		case API_SET_COMMENT_HIGHLIGHT_TEXT:
+			this.props.apiConfig.setCommentHighlightText(this.state.commentHighlightText);
+			break;
+
 		default:
 		}
 	}
@@ -530,7 +538,8 @@ export default class SidePanelAPI extends React.Component {
 			API_SET_LINK_DECORATIONS,
 			API_ADD_NOTIFICATION_MESSAGE,
 			API_ZOOM_TO_REVEAL_NODE,
-			API_ZOOM_TO_REVEAL_LINK
+			API_ZOOM_TO_REVEAL_LINK,
+			API_SET_COMMENT_HIGHLIGHT_TEXT
 		]);
 		const operationSelection =
 			(<div className="harness-sidepanel-children" id="harness-sidepanel-api-list">
@@ -884,6 +893,26 @@ export default class SidePanelAPI extends React.Component {
 			</div>);
 		}
 
+		let commentHighlightText = null;
+		if (this.props.apiConfig.selectedOperation === API_SET_COMMENT_HIGHLIGHT_TEXT) {
+			commentHighlightText = (
+				<div className="harness-sidepanel-children"
+					id="harness-sidepanel-api-comment-highlight"
+				>
+					<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-comment-highlight-text">
+						<TextArea
+							id="harness-comment-highlight-text"
+							labelText="Comment Highlight Text"
+							rows={1}
+							placeholder="Enter text"
+							onChange={this.onFieldChange.bind(this, "commentHighlightText")}
+							value={this.state.commentHighlightText}
+						/>
+					</div>
+				</div>
+			);
+		}
+
 		return (
 			<div>
 				{space}
@@ -896,6 +925,7 @@ export default class SidePanelAPI extends React.Component {
 				{setLinkDecorationsSection}
 				{setNotificationMessages}
 				{zoomCanvas}
+				{commentHighlightText}
 				{space}
 				{submit}
 			</div>
@@ -916,6 +946,7 @@ SidePanelAPI.propTypes = {
 		setPortLabel: PropTypes.func,
 		setNodeDecorations: PropTypes.func,
 		setLinkDecorations: PropTypes.func,
+		setCommentHighlightText: PropTypes.func,
 		appendNotificationMessages: PropTypes.func,
 		clearNotificationMessages: PropTypes.func,
 		getZoomToReveal: PropTypes.func,

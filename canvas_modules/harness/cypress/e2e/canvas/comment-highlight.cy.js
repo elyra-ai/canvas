@@ -136,4 +136,42 @@ describe("Test clipboard with no link selection enabled", function() {
 			"<p>Now is the <strong>winter of our <em>dis<mark>content</mark> made</em> glorious " +
 			"summer</strong> by this son of York.</p>\n");
 	});
+
+	it("Test highlighting is case insensitive", function() {
+		cy.clickToolbarAddComment();
+		cy.editTextInComment("",
+			"Now is the winter of our discontent made glorious summer by this son of York.");
+
+		cy.setCommentHighlightText(
+			"Now is the winter of our discontent made glorious summer by this son of York.",
+			"CONTENT");
+
+		// With Electron, on the build machine, we need a short wait for the highlight to be applied.
+		cy.wait(50);
+
+		cy.verifyCommentContainsHTML(
+			"Now is the winter of our discontent made glorious summer by this son of York.",
+			"Now is the winter of our dis<mark>content</mark> made glorious " +
+			"summer by this son of York.");
+	});
+
+	it("Test multiple instance are highlighted", function() {
+		const doubleText =
+			"Now is the winter of our discontent made glorious summer by this son of York." +
+			"Now is the winter of our discontent made glorious summer by this son of York.";
+
+		cy.clickToolbarAddComment();
+		cy.editTextInComment("", doubleText);
+
+		cy.setCommentHighlightText(doubleText, "CONTENT");
+
+		// With Electron, on the build machine, we need a short wait for the highlight to be applied.
+		cy.wait(50);
+
+		cy.verifyCommentContainsHTML(doubleText,
+			"Now is the winter of our dis<mark>content</mark> made glorious summer by this son of York." +
+			"Now is the winter of our dis<mark>content</mark> made glorious summer by this son of York.",
+			"CONTENT");
+	});
+
 });

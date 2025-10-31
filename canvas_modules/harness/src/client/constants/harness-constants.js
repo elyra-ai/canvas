@@ -82,6 +82,7 @@ _defineConstant("API_SET_LINK_DECORATIONS", "Set Link Decorations");
 _defineConstant("API_ADD_NOTIFICATION_MESSAGE", "Add Notification Message");
 _defineConstant("API_ZOOM_TO_REVEAL_NODE", "Zoom To Reveal Node");
 _defineConstant("API_ZOOM_TO_REVEAL_LINK", "Zoom To Reveal Link");
+_defineConstant("API_SET_COMMENT_HIGHLIGHT_TEXT", "Set Comment Highlight Text");
 
 _defineConstant("INPUT_PORT", "inputPort");
 _defineConstant("OUTPUT_PORT", "outputPort");
