@@ -74,7 +74,7 @@ export default class SvgCanvasUtilsComments {
 				textEnd = textStart + textLen;
 
 				if (textStart < searchEnd && textEnd > searchStart) {
-					// Calc split positions **within** in the text node.
+					// Calculate split positions **within** the text node.
 					const splitStart = (searchStart > textStart) ? searchStart - textStart : 0;
 					const splitEnd = (searchEnd < textEnd) ? searchEnd - textStart : textLen;
 
