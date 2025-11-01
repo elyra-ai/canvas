@@ -36,13 +36,13 @@ The Elyra Canvas package delivers two decoupled React objects: Common Canvas and
 
 ### Try Elyra Canvas
 
-The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny) is a demonstration application that is produced with only a [few lines of code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js). You can use it to try these features of Elyra Canvas: 
+The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny-ts) is a demonstration application that is produced with only a [few lines of code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.tsx). You can use it to try these features of Elyra Canvas:
 - Dragging a node
 - Editing a comment (by double clicking on it)
 - Dragging a node from the palette
 - Clicking a button on the toolbar
 - Zooming in and out using the scroll gesture
-
+- Create a new node by dragging one from the palette
 
 ## Getting started
 

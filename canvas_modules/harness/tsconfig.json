@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "es5",
+    "jsx": "react-jsx", // If using React
+    "allowJs": true,
+    "sourceMap": true // For debugging
+  }
+}
