@@ -17,11 +17,11 @@ Elyra Canvas:
 * Provides a **comprehensive set of out-of-the-box UI components** needed to build
 an application such as: flow editor, palette, toolbar, context menu, tooltips, command stack,
 clipboard support, notifications area, side panels and more!
-* Is a UI-centric library and is therefore **back-end and run-time agnositc**, meaning the flow can
+* Is a UI-centric library and is therefore **back-end and run-time agnostic**, meaning the flow can
 display connected nodes representing any kind of operations.
 * Is fast to get running - and **easy to customize**  - with extensive customization capability.
 * Delivers a JSON powered **properties management** component to allow easy, no-code handling of
-mulltiple properties windows - for when you have a multitude of node types each with their own range of properties.
+multiple properties windows - for when you have a multitude of node types each with their own range of properties.
 * Conforms to the [**IBM Carbon**](https://carbondesignsystem.com/all-about-carbon/what-is-carbon/) visual design language - and therefore plugs in easily to any application wishing to follow the Carbon standards including dark mode and light mode themes.
 * Delivers built-in **accessibility** so there's no need to worry about keyboard navigation, accessible colors, screen reader integration, etc.
 * Is translated into **12 languages**.
@@ -30,7 +30,7 @@ mulltiple properties windows - for when you have a multitude of node types each 
 
 ## What's in this documentation
 
-The 'Home' and 'Components' tabs give a comprehensive overview of Elyra Canvas features so this is useful for any reader assessing the suitability of Elyra Canvas for their application.  Developers can then jump to the remaining tabs startiing with 'Initial Setup' to get common setup such as install done, and then moving on to either the 'Common Canvas' or 'Common Properties' tabs (or both) depending on which component is of interest.
+The 'Home' and 'Components' tabs give a comprehensive overview of Elyra Canvas features so this is useful for any reader assessing the suitability of Elyra Canvas for their application.  Developers can then jump to the remaining tabs starting with 'Initial Setup' to get common setup such as install done, and then moving on to either the 'Common Canvas' or 'Common Properties' tabs (or both) depending on which component is of interest.
 
 ## Try Elyra Canvas
 

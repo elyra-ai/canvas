@@ -49,7 +49,7 @@ The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengi
 
 Some sample code to look at:
 
-* This is the source code for [app-tiny.ts](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny-ts).
+* This is the source code for [app-tiny.ts](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.tsx)).
 
 * This app [app-small.js](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-small.js), is more sophisticated and shows many of the options available to a Common Canvas developer such as configurations and callback handlers.
 
