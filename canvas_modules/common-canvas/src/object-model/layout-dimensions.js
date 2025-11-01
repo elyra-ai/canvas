@@ -53,6 +53,10 @@ const horizontalDefaultLayout = {
 		// Displays the external object specified, as the body of the node
 		nodeExternalObject: false,
 
+		// When set to true and the focus is being set on the node, the event
+		// is allowed to perform the default action on the node.
+		onFocusAllowDefaultAction: false,
+
 		// Display image
 		imageDisplay: true,
 
@@ -542,6 +546,10 @@ const verticalDefaultLayout = {
 
 		// Displays the external object specified, as the body of the node
 		nodeExternalObject: false,
+
+		// When set to true and the focus is being set on the node, the event
+		// is allowed to perform the default action on the node.
+		onFocusAllowDefaultAction: false,
 
 		// Display image
 		imageDisplay: true,
