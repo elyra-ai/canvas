@@ -34,7 +34,7 @@ The 'Home' and 'Components' tabs give a comprehensive overview of Elyra Canvas f
 
 ## Try Elyra Canvas
 
-* The "Tiny App" which is embedded below, is a demonstration application which is produced with only a [few lines of code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.tsx). You can use it to experiment with the features of Elyra Canvas including:
+* The "Tiny App", embedded below, is a demonstration application which is produced with only a [few lines of code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.tsx). You can use it to experiment with the features of Elyra Canvas including:
 	* Dragging a node to a new position
 	* Editing a comment (by double clicking on it)
 	* Dragging a node from the palette
@@ -47,7 +47,8 @@ The 'Home' and 'Components' tabs give a comprehensive overview of Elyra Canvas f
      title="Common Canvas Demo"
      allow="encrypted-media;"
      sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-   ></iframe>
+></iframe>
+<em>An embedded Elyra Canvas application, built with minimal code.</em>
 
 ## Elyra Canvas Modules
 
