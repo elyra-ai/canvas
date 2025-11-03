@@ -2,50 +2,54 @@
 
 ## Hello Canvas!
 
-Common Canvas is a React component. The `<CommonCanvas>` component is displayed in a `<div>` provided by your application. Here's some sample code to show the [minimum code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js) needed to get a working canvas.
+Common Canvas is a React component. The `<CommonCanvas>` component is displayed in a `<div>` provided by your application. Here's some sample code to show the [minimum code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny-ts.js) needed to get a working canvas.
 
 ```
-import React from "react";
+import { IntlProvider } from "react-intl";
+import { CommonCanvas, CanvasController } from "@elyra/canvas";
+import { useMemo } from "react";
+import { Theme } from '@carbon/react';
+
 import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
 import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
-import { CommonCanvas, CanvasController } from "@elyra/canvas";
 
 import "@carbon/styles/css/styles.min.css";
 import "@elyra/canvas/dist/styles/common-canvas.min.css";
 
-class App extends React.Component {
-	constructor(props) {
-		super(props);
+const App = () => {
+	const canvasController = useMemo(() => {
+		const cc = new CanvasController();
+		cc.setPipelineFlow(AllTypesCanvas);
+		cc.setPipelineFlowPalette(ModelerPalette);
+		return cc;
+	}, []);
 
-		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(AllTypesCanvas);
-		this.canvasController.setPipelineFlowPalette(ModelerPalette);
-	}
+	return (
+		<Theme theme="g10">
+			<div style={{ height: "100vh" }}>
+				<IntlProvider locale="en">
+					<CommonCanvas
+						canvasController={canvasController}
+					/>
+				</IntlProvider>
+			</div>
+		</Theme>
+	);
+};
 
-	render() {
-		return (
-			<Theme theme="g10">
-				<div  style={{ height: "100vh" }}>
-					<IntlProvider locale="en">
-						<CommonCanvas canvasController={this.canvasController} />
-					</IntlProvider>
-				</div>
-			</Theme>
-		);
-	}
-}
+export default App;
 ```
 
-Provided you have images deployed correctly, this code will display this:
+Provided `allTypesCanvas.json` and `modelerPalette.json`resolve successfully, and the images they reference are deployed correctly, this code will display this:
 
 <img src="../assets/cc-app-tiny.png" width="800" />
 
 
-The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny) is available as part of the test harness function. Click [here](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny) to see the app running. You can try: dragging a node, editing a comment (double click on it), drag a node from the palette, click a button on the toolbar, zoom in and out using the scroll gesture.
+The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny-ts) is available as part of the test harness function. Click [here](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny-ts) to see the app running. You can try: dragging a node, editing a comment (double click on it), drag a node from the palette, click a button on the toolbar, zoom in and out using the scroll gesture.
 
 Some sample code to look at:
 
-* This is the source code for [app-tiny.js](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js).
+* This is the source code for [app-tiny.ts](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.tsx)).
 
 * This app [app-small.js](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-small.js), is more sophisticated and shows many of the options available to a Common Canvas developer such as configurations and callback handlers.
 
@@ -105,7 +109,7 @@ To control the canvas you'll need an instance of the canvas controller. Create a
 
 ### Step 4 : Set the palette data
 
-Next you'll need to populate the palette data.  This step is optional if you don't want to use the palette.
+Next you'll need to populate the palette data.  This step is optional. Skip it if you don't want to use the palette.
 
 The palette data will specify the nodes (split into categories) that will appear in the palette. This is done by calling the canvas controller with:
 
@@ -124,7 +128,7 @@ https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resou
 
 ### Step 5 : (Optional) Set the flow data
 
-This is an optional step. If you want a previously saved flow to be shown in the flow editor, so the user can start to edit it, you will need to call the canvas controller with:
+This is an optional step. If you skip this step, Common Canvas will show an empty flow editor which allows the user to create a new flow by dragging nodes from the palette. Alternatively, if you want a previously saved flow to be shown in the flow editor, so the user can start to edit it, you will need to call the canvas controller with:
 
 ```js
     this.canvasController.setPipelineFlow(pipelineFlow);
@@ -142,18 +146,16 @@ https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resou
 
 ### Step 6 : Display the canvas
 
-Inside your render code, add the following:
+Inside your object return the following JSX:
 
 ```js
-    return (
-        <div>
+        <div style={{ height: "100vh" }}>
             <IntlProvider>
                 <CommonCanvas canvasController={this.canvasController} />
             </IntlProvider>
         </div>
-    );
 ```
-The `<div>` should have the dimensions you want for your canvas to display in your page. For the `canvasController` prop, pass the instance of canvas controller created earlier. This is the only mandatory property. After providing this, and running your code, you will have a fully functioning canvas including: a palette; default toolbar; context menus; direct manipulation (move and resize) etc. To customize these behaviors and presentation continue with the sections below.
+The `<div>` should have the dimensions you want for your canvas to display in your page. For the `canvasController` prop, pass the instance of canvas controller created earlier. This is the only mandatory property. After providing this, and running your code, you will have a fully functioning canvas including: a palette; default toolbar; context menus; direct manipulation (move and resize) etc. To customize these behaviors and presentation continue with the sections below. If you want to display Common Cavnas using one of the four Carbon styling themes you can wrapper the JSX with a `<Theme theme="g10">` tag where "g10" can also be set to "g100", "g90" or "white" (the default).
 
 See the [Localization](02-set-up.md/#localization) section of the Initial Setup page to see how `<IntlProvider>` can be configured.
 
