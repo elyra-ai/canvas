@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/FlowIcon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
     
     
       
@@ -3020,7 +3020,10 @@ where x.x.x is the latest build and then run:
   import &quot;@elyra/canvas/dist/styles/common-canvas.min.css&quot;;
 </code></pre></div>
 <p>You can also specify which of the Carbon themes you want to use by wrapping the Elyra Canvas component with a <code>&lt;Theme&gt;</code> tag.</p>
-<div class="highlight"><pre><span></span><code>    &lt;Theme theme=&quot;g10&quot;&gt;
+<div class="highlight"><pre><span></span><code>    import { Theme } from &#39;@carbon/react&#39;;
+    ...
+    ...
+    &lt;Theme theme=&quot;g10&quot;&gt;
         &lt;IntlProvider locale=&quot;en&quot;&gt;
             &lt;CommonCanvas /&gt; or &lt;CommonProperties /&gt;
         &lt;/IntlProvider&gt;

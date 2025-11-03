@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/FlowIcon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
     
     
       
@@ -3129,44 +3129,48 @@
 
 <h1 id="getting-started-with-common-canvas">Getting started with Common Canvas<a class="headerlink" href="#getting-started-with-common-canvas" title="Permanent link">&para;</a></h1>
 <h2 id="hello-canvas">Hello Canvas!<a class="headerlink" href="#hello-canvas" title="Permanent link">&para;</a></h2>
-<p>Common Canvas is a React component. The <code>&lt;CommonCanvas&gt;</code> component is displayed in a <code>&lt;div&gt;</code> provided by your application. Here&rsquo;s some sample code to show the <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js">minimum code</a> needed to get a working canvas.</p>
-<div class="highlight"><pre><span></span><code>import React from &quot;react&quot;;
+<p>Common Canvas is a React component. The <code>&lt;CommonCanvas&gt;</code> component is displayed in a <code>&lt;div&gt;</code> provided by your application. Here&rsquo;s some sample code to show the <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny-ts.js">minimum code</a> needed to get a working canvas.</p>
+<div class="highlight"><pre><span></span><code>import { IntlProvider } from &quot;react-intl&quot;;
+import { CommonCanvas, CanvasController } from &quot;@elyra/canvas&quot;;
+import { useMemo } from &quot;react&quot;;
+import { Theme } from &#39;@carbon/react&#39;;
+
 import AllTypesCanvas from &quot;../../test_resources/diagrams/allTypesCanvas.json&quot;;
 import ModelerPalette from &quot;../../test_resources/palettes/modelerPalette.json&quot;;
-import { CommonCanvas, CanvasController } from &quot;@elyra/canvas&quot;;
 
 import &quot;@carbon/styles/css/styles.min.css&quot;;
 import &quot;@elyra/canvas/dist/styles/common-canvas.min.css&quot;;
 
-class App extends React.Component {
-    constructor(props) {
-        super(props);
+const App = () =&gt; {
+    const canvasController = useMemo(() =&gt; {
+        const cc = new CanvasController();
+        cc.setPipelineFlow(AllTypesCanvas);
+        cc.setPipelineFlowPalette(ModelerPalette);
+        return cc;
+    }, []);
 
-        this.canvasController = new CanvasController();
-        this.canvasController.setPipelineFlow(AllTypesCanvas);
-        this.canvasController.setPipelineFlowPalette(ModelerPalette);
-    }
+    return (
+        &lt;Theme theme=&quot;g10&quot;&gt;
+            &lt;div style={{ height: &quot;100vh&quot; }}&gt;
+                &lt;IntlProvider locale=&quot;en&quot;&gt;
+                    &lt;CommonCanvas
+                        canvasController={canvasController}
+                    /&gt;
+                &lt;/IntlProvider&gt;
+            &lt;/div&gt;
+        &lt;/Theme&gt;
+    );
+};
 
-    render() {
-        return (
-            &lt;Theme theme=&quot;g10&quot;&gt;
-                &lt;div  style={{ height: &quot;100vh&quot; }}&gt;
-                    &lt;IntlProvider locale=&quot;en&quot;&gt;
-                        &lt;CommonCanvas canvasController={this.canvasController} /&gt;
-                    &lt;/IntlProvider&gt;
-                &lt;/div&gt;
-            &lt;/Theme&gt;
-        );
-    }
-}
+export default App;
 </code></pre></div>
-<p>Provided you have images deployed correctly, this code will display this:</p>
+<p>Provided <code>allTypesCanvas.json</code> and <code>modelerPalette.json</code>resolve successfully, and the images they reference are deployed correctly, this code will display this:</p>
 <p><img src="../assets/cc-app-tiny.png" width="800" /></p>
-<p>The <a href="https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny">&ldquo;Tiny App&rdquo;</a> is available as part of the test harness function. Click <a href="https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny">here</a> to see the app running. You can try: dragging a node, editing a comment (double click on it), drag a node from the palette, click a button on the toolbar, zoom in and out using the scroll gesture.</p>
+<p>The <a href="https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny-ts">&ldquo;Tiny App&rdquo;</a> is available as part of the test harness function. Click <a href="https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny-ts">here</a> to see the app running. You can try: dragging a node, editing a comment (double click on it), drag a node from the palette, click a button on the toolbar, zoom in and out using the scroll gesture.</p>
 <p>Some sample code to look at:</p>
 <ul>
 <li>
-<p>This is the source code for <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.js">app-tiny.js</a>.</p>
+<p>This is the source code for <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.tsx">app-tiny.ts</a>).</p>
 </li>
 <li>
 <p>This app <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-small.js">app-small.js</a>, is more sophisticated and shows many of the options available to a Common Canvas developer such as configurations and callback handlers.</p>
@@ -3212,7 +3216,7 @@ class App extends React.Component {
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">CanvasController</span><span class="p">();</span>
 </code></pre></div></p>
 <h3 id="step-4-set-the-palette-data">Step 4 : Set the palette data<a class="headerlink" href="#step-4-set-the-palette-data" title="Permanent link">&para;</a></h3>
-<p>Next you&rsquo;ll need to populate the palette data.  This step is optional if you don&rsquo;t want to use the palette.</p>
+<p>Next you&rsquo;ll need to populate the palette data.  This step is optional. Skip it if you don&rsquo;t want to use the palette.</p>
 <p>The palette data will specify the nodes (split into categories) that will appear in the palette. This is done by calling the canvas controller with:</p>
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">setPipelineFlowPalette</span><span class="p">(</span><span class="nx">pipelineFlowPalette</span><span class="p">);</span>
 </code></pre></div>
@@ -3225,7 +3229,7 @@ class App extends React.Component {
 <p>If the palette file references any images using a path you need those image files at the appropriate location.</p>
 </div>
 <h3 id="step-5-optional-set-the-flow-data">Step 5 : (Optional) Set the flow data<a class="headerlink" href="#step-5-optional-set-the-flow-data" title="Permanent link">&para;</a></h3>
-<p>This is an optional step. If you want a previously saved flow to be shown in the flow editor, so the user can start to edit it, you will need to call the canvas controller with:</p>
+<p>This is an optional step. If you skip this step, Common Canvas will show an empty flow editor which allows the user to create a new flow by dragging nodes from the palette. Alternatively, if you want a previously saved flow to be shown in the flow editor, so the user can start to edit it, you will need to call the canvas controller with:</p>
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">setPipelineFlow</span><span class="p">(</span><span class="nx">pipelineFlow</span><span class="p">);</span>
 </code></pre></div>
 <p>The pipelineFlow object should conform to the JSON schema found here: <br />
@@ -3237,16 +3241,14 @@ class App extends React.Component {
 <p>If the pipeline flow references any images using a path you need those image files at the appropriate location.</p>
 </div>
 <h3 id="step-6-display-the-canvas">Step 6 : Display the canvas<a class="headerlink" href="#step-6-display-the-canvas" title="Permanent link">&para;</a></h3>
-<p>Inside your render code, add the following:</p>
-<p><div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
-<span class="w">        </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+<p>Inside your object return the following JSX:</p>
+<p><div class="highlight"><pre><span></span><code><span class="w">        </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">style</span><span class="o">=</span><span class="p">{{</span><span class="w"> </span><span class="nx">height</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;100vh&quot;</span><span class="w"> </span><span class="p">}}</span><span class="o">&gt;</span>
 <span class="w">            </span><span class="o">&lt;</span><span class="nx">IntlProvider</span><span class="o">&gt;</span>
 <span class="w">                </span><span class="o">&lt;</span><span class="nx">CommonCanvas</span><span class="w"> </span><span class="nx">canvasController</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span>
 <span class="w">            </span><span class="o">&lt;</span><span class="err">/IntlProvider&gt;</span>
 <span class="w">        </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
-<span class="w">    </span><span class="p">);</span>
 </code></pre></div>
-The <code>&lt;div&gt;</code> should have the dimensions you want for your canvas to display in your page. For the <code>canvasController</code> prop, pass the instance of canvas controller created earlier. This is the only mandatory property. After providing this, and running your code, you will have a fully functioning canvas including: a palette; default toolbar; context menus; direct manipulation (move and resize) etc. To customize these behaviors and presentation continue with the sections below.</p>
+The <code>&lt;div&gt;</code> should have the dimensions you want for your canvas to display in your page. For the <code>canvasController</code> prop, pass the instance of canvas controller created earlier. This is the only mandatory property. After providing this, and running your code, you will have a fully functioning canvas including: a palette; default toolbar; context menus; direct manipulation (move and resize) etc. To customize these behaviors and presentation continue with the sections below. If you want to display Common Cavnas using one of the four Carbon styling themes you can wrapper the JSX with a <code>&lt;Theme theme="g10"&gt;</code> tag where &ldquo;g10&rdquo; can also be set to &ldquo;g100&rdquo;, &ldquo;g90&rdquo; or &ldquo;white&rdquo; (the default).</p>
 <p>See the <a href="../02-set-up/#localization">Localization</a> section of the Initial Setup page to see how <code>&lt;IntlProvider&gt;</code> can be configured.</p>
 <h3 id="common-canvas-customization">Common Canvas customization<a class="headerlink" href="#common-canvas-customization" title="Permanent link">&para;</a></h3>
 <p>If you want to customize the behavior of Common Canvas you can specify any combination of the following optional settings:
