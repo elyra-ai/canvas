@@ -2466,7 +2466,7 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (!this.config.enableDragWithoutSelect) {
-					this.setFocusObject(d, d3Event);
+					this.setFocusObject(d, d3Event, d.layout.onFocusAllowDefaultAction);
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
 					this.selectObjectD3Event(d3Event, d, clickType);
 				}
@@ -5212,7 +5212,7 @@ export default class SVGCanvasRenderer {
 						this.setFocusPreviousSubObject(link, d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
-						this.canvasController.setFocusObject(link);
+						this.canvasController.restoreFocus();
 
 					} else if (KeyboardUtils.moveLinkHandleUp(d3Event)) {
 						if (this.config.enableEditingActions) {
@@ -6365,14 +6365,21 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Sets the focus object passed in.
-	setFocusObject(focusObj, evt) {
+	setFocusObject(focusObj, evt, allowDefaultAction = false) {
 		if (!this.config.enableKeyboardNavigation) {
 			return;
 		}
 
-		// We do not 'preventDefault' here because, with React nodes, the default
-		// action might initiate a drag event.
-		evt.stopPropagation();
+		// If allowDefaultAction is specified as true, we do not 'preventDefault'
+		// only stop propagation. Setting allowDefaultAction to true is useful for
+		// applications that provide a React object for the node body and they want
+		// the default action to go through to the React, perhaps to initiate a drag event.
+		if (allowDefaultAction) {
+			evt.stopPropagation();
+
+		} else {
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+		}
 
 		this.canvasController.setFocusObject(focusObj, evt);
 	}
