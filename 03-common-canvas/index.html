@@ -1238,9 +1238,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-6-display-the-canvas" class="md-nav__link">
+  <a href="#step-6-display-common-canvas" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 6 : Display the canvas
+      Step 6 : Display Common Canvas
     </span>
   </a>
   
@@ -3030,9 +3030,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-6-display-the-canvas" class="md-nav__link">
+  <a href="#step-6-display-common-canvas" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 6 : Display the canvas
+      Step 6 : Display Common Canvas
     </span>
   </a>
   
@@ -3141,7 +3141,7 @@ import ModelerPalette from &quot;../../test_resources/palettes/modelerPalette.js
 import &quot;@carbon/styles/css/styles.min.css&quot;;
 import &quot;@elyra/canvas/dist/styles/common-canvas.min.css&quot;;
 
-const App = () =&gt; {
+const TinyApp = () =&gt; {
     const canvasController = useMemo(() =&gt; {
         const cc = new CanvasController();
         cc.setPipelineFlow(AllTypesCanvas);
@@ -3162,18 +3162,28 @@ const App = () =&gt; {
     );
 };
 
-export default App;
+export default TinyApp;
 </code></pre></div>
-<p>Provided <code>allTypesCanvas.json</code> and <code>modelerPalette.json</code>resolve successfully, and the images they reference are deployed correctly, this code will display this:</p>
-<p><img src="../assets/cc-app-tiny.png" width="800" /></p>
-<p>The <a href="https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny-ts">&ldquo;Tiny App&rdquo;</a> is available as part of the test harness function. Click <a href="https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny-ts">here</a> to see the app running. You can try: dragging a node, editing a comment (double click on it), drag a node from the palette, click a button on the toolbar, zoom in and out using the scroll gesture.</p>
-<p>Some sample code to look at:</p>
+<p>Provided <code>allTypesCanvas.json</code> and <code>modelerPalette.json</code>resolve successfully, and the images they reference are deployed correctly, this code will display this. This is an embedded application so you can experiment with the Common Canvas features.</p>
+<iframe src="http://localhost:3001/#/app-tiny-ts"
+     style="width:100%; height: 500px; border:1px solid black; border-radius: 4px; overflow:hidden; "
+     title="Common Canvas Tiny App"
+></iframe>
+
+<p>In the embedded &ldquo;Tiny App&rdquo; above, you can try:</p>
+<ul>
+<li>Dragging a node to a new position</li>
+<li>Editing a comment (by double clicking on it)</li>
+<li>Dragging a node from the palette</li>
+<li>Clicking a button on the toolbar</li>
+<li>Displaying an object&rsquo;s context menu with right-click (or clicking the ellipsis button)</li>
+<li>Zooming in and out using the scroll gesture</li>
+<li>And much more &hellip;</li>
+</ul>
+<p>For further investigation, Some sample code to look at is:</p>
 <ul>
 <li>
-<p>This is the source code for <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.tsx">app-tiny.ts</a>).</p>
-</li>
-<li>
-<p>This app <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-small.js">app-small.js</a>, is more sophisticated and shows many of the options available to a Common Canvas developer such as configurations and callback handlers.</p>
+<p>The <a href="https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-small.js">Small App</a> application is a little more sophisticated than Tiny App and shows many of the options available to a Common Canvas developer such as configurations and callback handlers.</p>
 </li>
 <li>
 <p>You can also look at the <a href="https://github.com/elyra-ai/canvas/blob/49ed634e3353d8f5c58eb8409ed8e1009f19c87a/canvas_modules/harness/src/client/App.js">App.js</a> file in the test harness section of this repo to see examples of code that uses the common-canvas component.</p>
@@ -3181,7 +3191,7 @@ export default App;
 </ul>
 <h2 id="canvas-controller">Canvas Controller<a class="headerlink" href="#canvas-controller" title="Permanent link">&para;</a></h2>
 <p>The only mandatory prop for the <code>&lt;CommonCanvas&gt;</code> component is a regular JavaScript class called the <a href="../03.04-canvas-controller/">Canvas Controller</a>.</p>
-<p>The Canvas Controller handles calls from the host application and actions performed by the user. It then updates the internal object model which stores:</p>
+<p>The Canvas Controller handles calls from the application and actions performed by the user. It then updates the internal object model which stores:</p>
 <ol>
 <li>The data that describes the flow of nodes, links and comments (called a pipelineFlow);</li>
 <li>The data that describes the definition of the palette which contains node templates that can dragged to add nodes to the canvas;</li>
@@ -3197,7 +3207,7 @@ export default App;
 <li>Get the current pipelineFlow (after the user has edited it)</li>
 <li>Update and edit objects in the canvas (for example, add node, delete link etc.)</li>
 <li>Set the node definition data (for display of nodes in the palette)</li>
-<li>Operate other aspets of the UI like opening panels, zooming, etc, etc.</li>
+<li>Operate other aspects of the UI like opening panels, zooming, etc, etc.</li>
 </ol>
 <h2 id="getting-started">Getting started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <p>To use Common Canvas in your React application complete the following steps:</p>
@@ -3240,7 +3250,7 @@ export default App;
 <p class="admonition-title">Images</p>
 <p>If the pipeline flow references any images using a path you need those image files at the appropriate location.</p>
 </div>
-<h3 id="step-6-display-the-canvas">Step 6 : Display the canvas<a class="headerlink" href="#step-6-display-the-canvas" title="Permanent link">&para;</a></h3>
+<h3 id="step-6-display-common-canvas">Step 6 : Display Common Canvas<a class="headerlink" href="#step-6-display-common-canvas" title="Permanent link">&para;</a></h3>
 <p>Inside your object return the following JSX:</p>
 <p><div class="highlight"><pre><span></span><code><span class="w">        </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">style</span><span class="o">=</span><span class="p">{{</span><span class="w"> </span><span class="nx">height</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;100vh&quot;</span><span class="w"> </span><span class="p">}}</span><span class="o">&gt;</span>
 <span class="w">            </span><span class="o">&lt;</span><span class="nx">IntlProvider</span><span class="o">&gt;</span>
@@ -3248,7 +3258,7 @@ export default App;
 <span class="w">            </span><span class="o">&lt;</span><span class="err">/IntlProvider&gt;</span>
 <span class="w">        </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
 </code></pre></div>
-The <code>&lt;div&gt;</code> should have the dimensions you want for your canvas to display in your page. For the <code>canvasController</code> prop, pass the instance of canvas controller created earlier. This is the only mandatory property. After providing this, and running your code, you will have a fully functioning canvas including: a palette; default toolbar; context menus; direct manipulation (move and resize) etc. To customize these behaviors and presentation continue with the sections below. If you want to display Common Cavnas using one of the four Carbon styling themes you can wrapper the JSX with a <code>&lt;Theme theme="g10"&gt;</code> tag where &ldquo;g10&rdquo; can also be set to &ldquo;g100&rdquo;, &ldquo;g90&rdquo; or &ldquo;white&rdquo; (the default).</p>
+The <code>&lt;div&gt;</code> should have the dimensions you want for your canvas to display in your page. For the <code>canvasController</code> prop, pass the instance of canvas controller created earlier. This is the only mandatory property. After providing this, and running your code, you will have a fully functioning canvas including: a palette; default toolbar; context menus; direct manipulation (move and resize) etc. To customize these behaviors and presentation continue with the sections below. If you want to display Common Canvas using one of the four Carbon styling themes you can wrapper the JSX with a <code>&lt;Theme theme="g10"&gt;</code> tag where &ldquo;g10&rdquo; can also be set to &ldquo;g100&rdquo;, &ldquo;g90&rdquo; or &ldquo;white&rdquo; (the default).</p>
 <p>See the <a href="../02-set-up/#localization">Localization</a> section of the Initial Setup page to see how <code>&lt;IntlProvider&gt;</code> can be configured.</p>
 <h3 id="common-canvas-customization">Common Canvas customization<a class="headerlink" href="#common-canvas-customization" title="Permanent link">&para;</a></h3>
 <p>If you want to customize the behavior of Common Canvas you can specify any combination of the following optional settings:
