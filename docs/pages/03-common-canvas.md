@@ -16,7 +16,7 @@ import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
 import "@carbon/styles/css/styles.min.css";
 import "@elyra/canvas/dist/styles/common-canvas.min.css";
 
-const App = () => {
+const TinyApp = () => {
 	const canvasController = useMemo(() => {
 		const cc = new CanvasController();
 		cc.setPipelineFlow(AllTypesCanvas);
@@ -37,21 +37,31 @@ const App = () => {
 	);
 };
 
-export default App;
+export default TinyApp;
 ```
 
-Provided `allTypesCanvas.json` and `modelerPalette.json`resolve successfully, and the images they reference are deployed correctly, this code will display this:
+Provided `allTypesCanvas.json` and `modelerPalette.json`resolve successfully, and the images they reference are deployed correctly, this code will display this. This is an embedded application so you can experiment with the Common Canvas features.
 
-<img src="../assets/cc-app-tiny.png" width="800" />
+<iframe src="http://localhost:3001/#/app-tiny-ts"
+     style="width:100%; height: 500px; border:1px solid black; border-radius: 4px; overflow:hidden; "
+     title="Common Canvas Tiny App"
+></iframe>
 
 
-The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny-ts) is available as part of the test harness function. Click [here](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny-ts) to see the app running. You can try: dragging a node, editing a comment (double click on it), drag a node from the palette, click a button on the toolbar, zoom in and out using the scroll gesture.
+In the embedded "Tiny App" above, you can try:
 
-Some sample code to look at:
+* Dragging a node to a new position
+* Editing a comment (by double clicking on it)
+* Dragging a node from the palette
+* Clicking a button on the toolbar
+* Displaying an object's context menu with right-click (or clicking the ellipsis button)
+* Zooming in and out using the scroll gesture
+* And much more ...
 
-* This is the source code for [app-tiny.ts](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.tsx)).
 
-* This app [app-small.js](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-small.js), is more sophisticated and shows many of the options available to a Common Canvas developer such as configurations and callback handlers.
+For further investigation, Some sample code to look at is:
+
+* The [Small App](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-small.js) application is a little more sophisticated than Tiny App and shows many of the options available to a Common Canvas developer such as configurations and callback handlers.
 
 * You can also look at the [App.js](https://github.com/elyra-ai/canvas/blob/49ed634e3353d8f5c58eb8409ed8e1009f19c87a/canvas_modules/harness/src/client/App.js) file in the test harness section of this repo to see examples of code that uses the common-canvas component.
 
@@ -59,7 +69,7 @@ Some sample code to look at:
 
 The only mandatory prop for the `<CommonCanvas>` component is a regular JavaScript class called the [Canvas Controller](03.04-canvas-controller.md).
 
-The Canvas Controller handles calls from the host application and actions performed by the user. It then updates the internal object model which stores:
+The Canvas Controller handles calls from the application and actions performed by the user. It then updates the internal object model which stores:
 
 1. The data that describes the flow of nodes, links and comments (called a pipelineFlow);
 2. The data that describes the definition of the palette which contains node templates that can dragged to add nodes to the canvas;
@@ -75,7 +85,7 @@ The [Canvas Controller](03.04-canvas-controller.md) provides an API which allows
 2. Get the current pipelineFlow (after the user has edited it)
 3. Update and edit objects in the canvas (for example, add node, delete link etc.)
 4. Set the node definition data (for display of nodes in the palette)
-5. Operate other aspets of the UI like opening panels, zooming, etc, etc.
+5. Operate other aspects of the UI like opening panels, zooming, etc, etc.
 
 ## Getting started
 
@@ -144,7 +154,7 @@ https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness/test_resou
     If the pipeline flow references any images using a path you need those image files at the appropriate location.
 
 
-### Step 6 : Display the canvas
+### Step 6 : Display Common Canvas
 
 Inside your object return the following JSX:
 
@@ -155,7 +165,7 @@ Inside your object return the following JSX:
             </IntlProvider>
         </div>
 ```
-The `<div>` should have the dimensions you want for your canvas to display in your page. For the `canvasController` prop, pass the instance of canvas controller created earlier. This is the only mandatory property. After providing this, and running your code, you will have a fully functioning canvas including: a palette; default toolbar; context menus; direct manipulation (move and resize) etc. To customize these behaviors and presentation continue with the sections below. If you want to display Common Cavnas using one of the four Carbon styling themes you can wrapper the JSX with a `<Theme theme="g10">` tag where "g10" can also be set to "g100", "g90" or "white" (the default).
+The `<div>` should have the dimensions you want for your canvas to display in your page. For the `canvasController` prop, pass the instance of canvas controller created earlier. This is the only mandatory property. After providing this, and running your code, you will have a fully functioning canvas including: a palette; default toolbar; context menus; direct manipulation (move and resize) etc. To customize these behaviors and presentation continue with the sections below. If you want to display Common Canvas using one of the four Carbon styling themes you can wrapper the JSX with a `<Theme theme="g10">` tag where "g10" can also be set to "g100", "g90" or "white" (the default).
 
 See the [Localization](02-set-up.md/#localization) section of the Initial Setup page to see how `<IntlProvider>` can be configured.
 
