@@ -420,6 +420,7 @@ class App extends React.Component {
 		this.getZoomToReveal = this.getZoomToReveal.bind(this);
 		this.zoomCanvasForObj = this.zoomCanvasForObj.bind(this);
 		this.zoomCanvasForLink = this.zoomCanvasForLink.bind(this);
+		this.setCommentHighlightText = this.setCommentHighlightText.bind(this);
 		this.getPropertyDefName = this.getPropertyDefName.bind(this);
 
 		// common-canvas
@@ -1057,6 +1058,11 @@ class App extends React.Component {
 		this.canvasController.setLinksStyle(styleLink, styleSpec, true);
 		this.canvasController.zoomTo(zoomObject);
 		this.log("Zoomed canvas");
+	}
+
+	setCommentHighlightText(text) {
+		this.canvasController.setCommentHighlightText("", text);
+		this.log("Set Comment Highlight Text");
 	}
 
 	clearSavedZoomValues() {
@@ -2685,6 +2691,7 @@ class App extends React.Component {
 			getZoomToReveal: this.getZoomToReveal,
 			zoomCanvasForObj: this.zoomCanvasForObj,
 			zoomCanvasForLink: this.zoomCanvasForLink,
+			setCommentHighlightText: this.setCommentHighlightText,
 			appendNotificationMessages: this.appendNotificationMessages,
 			clearNotificationMessages: this.clearNotificationMessages,
 			selectedOperation: this.state.apiSelectedOperation
