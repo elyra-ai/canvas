@@ -34,7 +34,7 @@ The 'Home' and 'Components' tabs give a comprehensive overview of Elyra Canvas f
 
 ## Try Elyra Canvas
 
-The "Tiny App", embedded below, is a demonstration application which is produced with only a [few lines of code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.tsx). You can use it to experiment with the features of Elyra Canvas including:
+The ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny-ts), is a demonstration application which is produced with only a [few lines of code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.tsx). You can use it to experiment with the features of Elyra Canvas including:
 
 * Dragging a node to a new position
 * Editing a comment (by double clicking on it)
@@ -44,11 +44,6 @@ The "Tiny App", embedded below, is a demonstration application which is produced
 * Zooming in and out using the scroll gesture
 * And much more ...
 
-<iframe src="http://localhost:3001/#/app-tiny-ts"
-     style="width:100%; height: 500px; border:1px solid black; border-radius: 4px; overflow:hidden; "
-     title="Common Canvas Tiny App"
-></iframe>
-<em>An embedded Elyra Canvas application, built with minimal code.</em>
 
 ## Elyra Canvas Modules
 

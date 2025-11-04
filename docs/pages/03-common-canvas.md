@@ -2,7 +2,7 @@
 
 ## Hello Canvas!
 
-Common Canvas is a React component. The `<CommonCanvas>` component is displayed in a `<div>` provided by your application. Here's some sample code to show the [minimum code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny-ts.js) needed to get a working canvas.
+Common Canvas is a React component. The `<CommonCanvas>` component is displayed in a `<div>` provided by your application. Here's some sample code to show the [minimum code](https://github.com/elyra-ai/canvas/blob/master/canvas_modules/harness/src/client/app-tiny.tsx) needed to get a working canvas.
 
 ```
 import { IntlProvider } from "react-intl";
@@ -40,15 +40,9 @@ const TinyApp = () => {
 export default TinyApp;
 ```
 
-Provided `allTypesCanvas.json` and `modelerPalette.json`resolve successfully, and the images they reference are deployed correctly, this code will display this. This is an embedded application so you can experiment with the Common Canvas features.
+Provided `allTypesCanvas.json` and `modelerPalette.json`resolve successfully, and the images they reference are deployed correctly, this code will display a fully functional canvas application.
 
-<iframe src="http://localhost:3001/#/app-tiny-ts"
-     style="width:100%; height: 500px; border:1px solid black; border-radius: 4px; overflow:hidden; "
-     title="Common Canvas Tiny App"
-></iframe>
-
-
-In the embedded "Tiny App" above, you can try:
+In the ["Tiny App"](https://elyra-canvas-test-harness.u20youmx4sm.us-south.codeengine.appdomain.cloud/#/app-tiny-ts), you can try:
 
 * Dragging a node to a new position
 * Editing a comment (by double clicking on it)
