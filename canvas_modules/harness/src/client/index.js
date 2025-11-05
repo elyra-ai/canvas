@@ -22,6 +22,7 @@ import CommonPropertiesConditions from "./components/common-properties-condition
 import App from "./App";
 import AppSmall from "./app-small.js";
 import AppTiny from "./app-tiny.js";
+import AppTinyTS from "./app-tiny.tsx";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { IntlProvider } from "react-intl";
 
@@ -34,6 +35,7 @@ root.render(
 				<Route exact path="/" element={<App />} />
 				<Route exact path="/app-small" element={<AppSmall />} />
 				<Route exact path="/app-tiny" element={<AppTiny />} />
+                                <Route exact path="/app-tiny-ts" element={<AppTinyTS />} />
 				<Route path="/properties" element={<CommonPropertiesComponents />} />
 				<Route path="/conditions" element={<CommonPropertiesConditions />} />
 			</Routes>

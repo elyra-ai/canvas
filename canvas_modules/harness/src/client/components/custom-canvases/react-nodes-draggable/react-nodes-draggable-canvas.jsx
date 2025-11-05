@@ -49,6 +49,7 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 			enableDropZoneOnExternalDrag: true,
 			enableContextToolbar: true,
 			enablePaletteLayout: "None",
+			enableKeyboardNavigation: true,
 			tipConfig: {
 				palette: true,
 				nodes: false,
@@ -63,6 +64,7 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 				nodeHighlightGap: 2,
 				nodeMovable: false,
 				nodeExternalObject: PersonNode,
+				onFocusAllowDefaultAction: true,
 				defaultNodeWidth: 100,
 				defaultNodeHeight: 40,
 				contextToolbarPosition: "topRight",

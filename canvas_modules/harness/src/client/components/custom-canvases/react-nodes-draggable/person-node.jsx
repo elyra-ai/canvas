@@ -30,6 +30,9 @@ class PersonNode extends React.Component {
 	}
 
 	onDragStart(evt) {
+		// Create and set transfer data in the event object so, when objects
+		// being dragged are dropped on the canvas background, Common Canvas
+		// will read the transfer data in its 'onDrop' function.
 		const transferData = {
 			operation: "addToCanvas",
 			data: {
@@ -43,6 +46,11 @@ class PersonNode extends React.Component {
 		// onDragEnter because in onDragEnter the event object will
 		// not contain the transferData.
 		document.objBeingDragged = this.props.nodeData.label;
+
+		// The mouse down event will cause focus to be set on the
+		// person-node <div> so we need to restore focus back to the
+		// container node that we are part of.
+		this.props.canvasController?.restoreFocus();
 	}
 
 	onDragEnter(evt) {
@@ -62,6 +70,8 @@ class PersonNode extends React.Component {
 
 		this.setState({ draggedOver: false });
 
+		// We read the label from the document but we could, alternatively,
+		// read the label from the events transfer data using:
 		// const label = evt.dataTransfer.getData("text");
 		const label = document.objBeingDragged;
 
@@ -88,7 +98,8 @@ class PersonNode extends React.Component {
 }
 
 PersonNode.propTypes = {
-	nodeData: PropTypes.object
+	nodeData: PropTypes.object,
+	canvasController: PropTypes.object
 };
 
 export default PersonNode;
