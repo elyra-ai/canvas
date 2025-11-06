@@ -274,9 +274,9 @@
               "x_pos": 52,
               "y_pos": 59,
               "width": 495,
-              "height": 212,
+              "height": 222,
               "class_name": "bkg-col-teal-20",
-              "content": "Welcome to Elyra Canvas. \n\nThis sample application shows what is displayed with the minimal amount of code.\n\nHere, you can experiment with the Common Canvas functionality, such as: \n\n* drag and drop a node from the palette\n* connect nodes by dragging from a source node port to a target node\n* click an action in the toolbar\n* drag one of more nodes (when selected) to new positions in the flow editor\n* use the scroll and drag gestures on the flow editor background to pan and zoom\n* undo and redo actions\n* right-click an object, or the flow editor background, to display a context menu ",
+              "content": "Welcome to Elyra Canvas. \n\nThis sample application shows what can be displayed with the minimal amount of code.\n\nHere, you can experiment with the Common Canvas functionality, such as: \n\n* drag and drop a node from the palette\n* connect nodes by dragging from a source node port to a target node\n* click an action in the toolbar\n* drag one of more nodes (when selected) to new positions in the flow editor\n* use the scroll and drag gestures on the flow editor background to pan and zoom\n* undo and redo actions\n* right-click an object, or the flow editor background, to display a context menu ",
               "associated_id_refs": []
             }
           ]
