@@ -31,7 +31,7 @@ const SPACE_CHAR_KEY = " ";
 const COMMA_CHAR_KEY = ",";
 
 // WARNING when adding a new letter constant below: If the shortcut requires the Meta
-// key AND Shift key to be pressed, on Windows, if the uses presses 'Ctrl' as the Meta
+// key AND Shift key to be pressed, on Windows, if the user presses 'Ctrl' as the Meta
 // key, the Shift will cause an upper case letter to be returned. See code below where
 // toLowerCase() is called before comparison.
 const A_KEY = "a";
