@@ -14,7 +14,7 @@
           "op": "input-database-table",
           "app_data": {
             "ui_data": {
-              "label": "Read Table",
+              "label": "Table",
               "image": "/images/carbon/data-table.svg",
               "x_pos": 84,
               "y_pos": 345,

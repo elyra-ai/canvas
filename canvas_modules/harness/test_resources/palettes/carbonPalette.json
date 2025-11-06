@@ -57,7 +57,7 @@
               "parameters": {},
               "app_data": {
                 "ui_data": {
-                  "label": "Read Table",
+                  "label": "Table",
                   "description": "Reads data from a relational database table",
                   "image": "/images/carbon/data-table.svg",
                   "x_pos": 0,
@@ -605,7 +605,7 @@
               "parameters": {},
               "app_data": {
                 "ui_data": {
-                  "label": "Write Table",
+                  "label": "Table",
                   "description": "Writes data to a relational database table.",
                   "image": "/images/carbon/data-table.svg",
                   "x_pos": 0,
