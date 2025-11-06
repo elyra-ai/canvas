@@ -30,6 +30,7 @@ const AppTiny = () => {
     const cc = new CanvasController();
     cc.setPipelineFlowPalette(CarbonPalette);
     cc.setPipelineFlow(CarbonFlow);
+    cc.openPalette();
     return cc;
   }, []);
 
