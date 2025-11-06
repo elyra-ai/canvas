@@ -17,33 +17,32 @@
 import { IntlProvider } from "react-intl";
 import { CommonCanvas, CanvasController } from "@elyra/canvas";
 import { useMemo } from "react";
-import { Theme } from '@carbon/react';
+import { Theme } from "@carbon/react";
 
-import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
-import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
+import CarbonPalette from "../../test_resources/palettes/carbonPalette.json";
+import CarbonFlow from "../../test_resources/diagrams/carbonCanvas.json";
 
 import "@carbon/styles/css/styles.min.css";
 import "@elyra/canvas/dist/styles/common-canvas.min.css";
 
-const App = () => {
-	const canvasController = useMemo(() => {
-		const cc = new CanvasController();
-		cc.setPipelineFlow(AllTypesCanvas);
-		cc.setPipelineFlowPalette(ModelerPalette);
-		return cc;
-	}, []);
+const AppTiny = () => {
+  const canvasController = useMemo(() => {
+    const cc = new CanvasController();
+    cc.setPipelineFlowPalette(CarbonPalette);
+    cc.setPipelineFlow(CarbonFlow);
+    return cc;
+  }, []);
 
-	return (
-		<Theme theme="g10">
-			<div style={{ height: "100vh" }}>
-				<IntlProvider locale="en">
-					<CommonCanvas
-						canvasController={canvasController}
-					/>
-				</IntlProvider>
-			</div>
-		</Theme>
-	);
+  return (
+    <Theme theme="g10">
+      <div style={{ height: "100vh" }}>
+        <IntlProvider locale="en">
+          <CommonCanvas canvasController={canvasController} />
+        </IntlProvider>
+      </div>
+    </Theme>
+  );
 };
 
-export default App;
+export default AppTiny;
+
