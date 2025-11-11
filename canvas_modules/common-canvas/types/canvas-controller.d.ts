@@ -166,7 +166,7 @@ export type PipelineFlowId = string;
 export interface ConnectedObjects {
   nodes: {[key: PipelineId]: CanvasNodeId[]};
   links: {[key: PipelineId]: CanvasLinkId[]};
-};
+}
 
 /** A value that specifies a distance, in either the X or Y direction, to
  * identify the physical position of an object within the viewport coordinate
@@ -364,7 +364,7 @@ export interface ContextMenuItem {
 	submenu?: boolean;
 	menu?: ContextMenuEntry[];
 	toolbarItem?: boolean;
-  };
+  }
 
 /** A format defintion object used for applying inline styles to a
 /* canvas comment.
