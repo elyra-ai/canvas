@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export * from "./common-canvas.ts";
-export * from "./common-properties.ts";
+export * from "./common-canvas.js";
+export * from "./common-properties.js";
