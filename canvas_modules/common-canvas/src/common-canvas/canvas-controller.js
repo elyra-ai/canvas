@@ -1260,6 +1260,14 @@ export default class CanvasController {
 		return this.objectModel.isHidingComments();
 	}
 
+	// Sets text to be highlighted in the comments identified by the commentIds array passed in
+	// or, if set to a falsy value, the highlight text will be applied to all comments. The
+	// pipelineId is optional. If highlightText is a falsy value, the highlighting will
+	// be removed from the comments.
+	setCommentHighlightText(commentIds, highlightText, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setCommentHighlighText(commentIds, highlightText);
+	}
+
 	// Sets the comment identified, to edit mode so the user can
 	// edit the comment.
 	setCommentEditingMode(commentId, pipelineId) {
@@ -1739,6 +1747,10 @@ export default class CanvasController {
 
 	setRightFlyoutWidth(wd) {
 		this.objectModel.setRightFlyoutWidth(wd);
+	}
+
+	setRightFlyoutMinWidth(wd) {
+		this.objectModel.setRightFlyoutMinWidth(wd);
 	}
 
 	isRightFlyoutOpen() {
@@ -2969,16 +2981,18 @@ export default class CanvasController {
 		// in its current location.
 		if (this.getCanvasConfig().enableKeyboardNavigation) {
 			if (data.editSource !== "toolbar" &&
-				command?.getFocusObject) {
+				command?.getFocusObject) { // Only commands extended from Action will have a getFocusObject function.
 				const focusObject = command.getFocusObject();
 
 				this.logger.log("Focus object from " + data.editType + " command = " + CanvasUtils.getFocusName(focusObject));
 
-				if (focusObject === CANVAS_FOCUS) {
-					this.setFocusOnCanvas();
+				if (focusObject) {
+					if (focusObject === CANVAS_FOCUS) {
+						this.setFocusOnCanvas();
 
-				} else if (this.canvasContents) {
-					this.setFocusObject(focusObject);
+					} else if (this.canvasContents) {
+						this.setFocusObject(focusObject);
+					}
 				}
 			}
 

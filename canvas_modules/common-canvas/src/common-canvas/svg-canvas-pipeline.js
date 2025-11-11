@@ -23,17 +23,18 @@ import SvgCanvasAccessibility from "./svg-canvas-utils-accessibility.js";
 
 
 export default class SVGCanvasPipeline {
-	constructor(pipelineId, canvasInfo, selectionInfo) {
+	constructor(pipelineId, config, canvasInfo, selectionInfo) {
 		this.logger = new Logger("SVGCanvasActivePipeline");
 		this.logger.log("constructor - start");
 
-		this.initialize(pipelineId, canvasInfo, selectionInfo);
+		this.initialize(pipelineId, config, canvasInfo, selectionInfo);
 
 		this.logger.log("constructor - end");
 	}
 
-	initialize(pipelineId, canvasInfo, selectionInfo) {
+	initialize(pipelineId, config, canvasInfo, selectionInfo) {
 		this.logger.logStartTimer("initialize");
+		this.config = config;
 		this.canvasInfo = canvasInfo;
 		this.selections = selectionInfo.pipelineId === pipelineId ? selectionInfo.selections : [];
 		this.pipeline = this.getPipeline(pipelineId, canvasInfo);
@@ -122,20 +123,12 @@ export default class SVGCanvasPipeline {
 		return this.getAccessibility().getPreviousSiblingLink(link);
 	}
 
-	getNextTabGroupStartObject() {
-		return this.getAccessibility().getNextTabGroupStartObject();
+	getNextTabGroupStartObject(focusObj) {
+		return this.getAccessibility().getNextTabGroupStartObject(focusObj);
 	}
 
-	getPreviousTabGroupStartObject() {
-		return this.getAccessibility().getPreviousTabGroupStartObject();
-	}
-
-	resetTabObjectIndex() {
-		this.getAccessibility().resetTabObjectIndex();
-	}
-
-	setTabGroupIndexForObj(d) {
-		this.getAccessibility().setTabGroupIndexForObj(d);
+	getPreviousTabGroupStartObject(focusObj) {
+		return this.getAccessibility().getPreviousTabGroupStartObject(focusObj);
 	}
 
 	getCanvasDimensions(gap) {
@@ -404,19 +397,14 @@ export default class SVGCanvasPipeline {
 	/* Focus functions for sub-objects.                                                */
 	/* ------------------------------------------------------------------------------- */
 
-	// Returns the next sub-object from the set of focusable sub-objects.
-	getNextSubObject(d) {
-		return this.getAccessibility().getNextSubObject(d);
+	// Returns the next sub-object after subObject from the set of focusable sub-objects.
+	getNextSubObject(obj, subObject) {
+		return this.getAccessibility().getNextSubObject(obj, subObject);
 	}
 
-	// Returns the previous sub-object from the set of focusable sub-objects.
-	getPreviousSubObject(d) {
-		return this.getAccessibility().getPreviousSubObject(d);
-	}
-
-	// Resets the index for the current sub-object.
-	resetFocusSubObjectIndex() {
-		this.getAccessibility().resetFocusSubObjectIndex();
+	// Returns the previous sub-object before subOject from the set of focusable sub-objects.
+	getPreviousSubObject(obj, subObject) {
+		return this.getAccessibility().getPreviousSubObject(obj, subObject);
 	}
 
 	// Returns an arry of focuable sub-elements of a node or link. If the object

@@ -370,7 +370,8 @@ export default class SVGCanvasUtilsDragNewLink {
 		if (this.ren.config.enableHighlightUnavailableNodes) {
 			this.ren.unsetUnavailableNodesHighlighting();
 		}
-		var trgNode = this.ren.getNodeAtMousePos(d3Event);
+		const pos = this.ren.getMousePosFromEvent(d3Event);
+		const trgNode = this.ren.getNodeAtPos(pos);
 		if (trgNode !== null) {
 			this.createNewLinkFromDragData(d3Event, trgNode, drawingNewLinkData);
 
@@ -404,7 +405,8 @@ export default class SVGCanvasUtilsDragNewLink {
 			if (type === NODE_LINK) {
 				const srcNode = drawingNewLinkData.srcObj;
 				const srcPortId = drawingNewLinkData.srcPort.id;
-				const trgPortId = this.ren.getInputNodePortId(d3Event, trgNode);
+				const pos = this.ren.getMousePosFromEvent(d3Event);
+				const trgPortId = this.ren.getInputNodePortId(pos, trgNode);
 				this.createNewNodeLink(srcNode, srcPortId, trgNode, trgPortId);
 
 			} else if (type === ASSOCIATION_LINK) {
@@ -642,7 +644,8 @@ export default class SVGCanvasUtilsDragNewLink {
 				const srcNode = this.drawingNewLinkData.srcObj;
 				const trgNode = node;
 				const srcNodePortId = this.drawingNewLinkData.srcPort.id;
-				const trgNodePortId = this.ren.getInputNodePortId(d3Event, trgNode);
+				const pos = this.ren.getMousePosFromEvent(d3Event);
+				const trgNodePortId = this.ren.getInputNodePortId(pos, trgNode);
 				return CanvasUtils.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode,
 					this.ren.activePipeline.links, this.ren.config.enableSelfRefLinks);
 

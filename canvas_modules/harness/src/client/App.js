@@ -59,6 +59,7 @@ import AllPortsCanvas from "./components/custom-canvases/all-ports/all-ports-can
 import ParallaxCanvas from "./components/custom-canvases/parallax/parallax-canvas";
 import NetworkCanvas from "./components/custom-canvases/network/network-canvas";
 import WysiwygCommentsCanvas from "./components/custom-canvases/wysiwyg-comments/wysiwyg-comments-canvas";
+import ReactNodesDraggableCanvas from "./components/custom-canvases/react-nodes-draggable/react-nodes-draggable-canvas.jsx";
 import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon-canvas";
 import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping-canvas";
 
@@ -125,6 +126,7 @@ import {
 	EXAMPLE_APP_PARALLAX,
 	EXAMPLE_APP_NETWORK,
 	EXAMPLE_APP_WYSIWYG,
+	EXAMPLE_APP_REACT_NODES_DRAGGABLE,
 	EXAMPLE_APP_REACT_NODES_CARBON,
 	EXAMPLE_APP_REACT_NODES_MAPPING,
 	CUSTOM,
@@ -418,6 +420,7 @@ class App extends React.Component {
 		this.getZoomToReveal = this.getZoomToReveal.bind(this);
 		this.zoomCanvasForObj = this.zoomCanvasForObj.bind(this);
 		this.zoomCanvasForLink = this.zoomCanvasForLink.bind(this);
+		this.setCommentHighlightText = this.setCommentHighlightText.bind(this);
 		this.getPropertyDefName = this.getPropertyDefName.bind(this);
 
 		// common-canvas
@@ -1057,6 +1060,11 @@ class App extends React.Component {
 		this.log("Zoomed canvas");
 	}
 
+	setCommentHighlightText(text) {
+		this.canvasController.setCommentHighlightText("", text);
+		this.log("Set Comment Highlight Text");
+	}
+
 	clearSavedZoomValues() {
 		this.canvasController.clearSavedZoomValues();
 		this.canvasController2.clearSavedZoomValues();
@@ -1460,15 +1468,29 @@ class App extends React.Component {
 				iconComponenet = Launch;
 				break;
 			case "increment1":
-				iconComponenet = Add;
+				iconComponenet = <Add />;
 				break;
 			case "dm-update":
-				iconComponenet = Restart;
+				iconComponenet = <Restart />;
 				break;
 			default:
 				iconComponenet = null;
 			}
 			callbackIcon(iconComponenet);
+		} else if (data.type === "customDataTypeIcon") { // custom icon from consumer app for custom data type
+			let dataIcon = null;
+			const dataType = data.dataType;
+			switch (dataType) {
+			case "vectorType":
+				dataIcon = <SelectWindow />;
+				break;
+			case "customType":
+				dataIcon = <TextScale />;
+				break;
+			default:
+				dataIcon = <Help />;
+			}
+			callbackIcon(dataIcon);
 		}
 	}
 
@@ -2027,6 +2049,21 @@ class App extends React.Component {
 
 			default:
 				value = "Perseids";
+			}
+			propertiesController.updatePropertyValue(propertyId, value);
+		}
+		if (actionId === "currency") {
+			const propertyId = { name: data.parameter_ref };
+			let value = propertiesController.getPropertyValue(propertyId);
+			switch (value) {
+			case "Dollar":
+				value = "Euro";
+				break;
+			case "Euro":
+				value = "Rupees";
+				break;
+			default:
+				value = "Dollar";
 			}
 			propertiesController.updatePropertyValue(propertyId, value);
 		}
@@ -2654,6 +2691,7 @@ class App extends React.Component {
 			getZoomToReveal: this.getZoomToReveal,
 			zoomCanvasForObj: this.zoomCanvasForObj,
 			zoomCanvasForLink: this.zoomCanvasForLink,
+			setCommentHighlightText: this.setCommentHighlightText,
 			appendNotificationMessages: this.appendNotificationMessages,
 			clearNotificationMessages: this.clearNotificationMessages,
 			selectedOperation: this.state.apiSelectedOperation
@@ -2980,7 +3018,13 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
-
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES_DRAGGABLE) {
+			firstCanvas = (
+				<ReactNodesDraggableCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES_CARBON) {
 			firstCanvas = (
 				<ReactNodesCarbonCanvas

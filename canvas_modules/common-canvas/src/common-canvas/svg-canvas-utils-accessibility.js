@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Elyra Authors
+ * Copyright 2024-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@
 
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK } from "./constants/canvas-constants.js";
+import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, CANVAS_FOCUS,
+	LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE
+} from "./constants/canvas-constants.js";
 
 
 export default class SVGCanvasUtilsAccessibility {
@@ -44,27 +46,14 @@ export default class SVGCanvasUtilsAccessibility {
 		// objects.
 		this.tabObjects = this.createTabObjectsArray();
 
-		// Keeps track of which tab object is currently active during tabbing.
-		this.currentTabObjectIndex = -1;
-
-		// Keeps track of which sub-object with the currently focused node or link
-		// is being focused.
-		this.focusSubObjectIndex = -1;
-
-		// Reset the currentTabObjectIndex variable based on the current selection
-		// (if there is one).
-		this.resetTabGroupIndexBasedOnSelection();
-
 		this.logger.logEndTimer("initialize");
-	}
-
-	resetTabObjectIndex() {
-		this.currentTabObjectIndex = -1;
 	}
 
 	// Returns an array of tab groups for the active pipeline. Each element of
 	// the array is the starting object (node, comment or link) for the group.
 	createTabObjectsArray() {
+		this.removeGrpProperties();
+
 		const objGroups = this.getObjectGroups();
 
 		const entryComments = this.getEntryComments();
@@ -77,6 +66,15 @@ export default class SVGCanvasUtilsAccessibility {
 		return tabGroups;
 	}
 
+	// Prepares the canvas objects for processing into tab groups by removing
+	// the 'grp' properties from each object. 'grp' is used to keep track of
+	// which tab group an object is allocted to.
+	removeGrpProperties() {
+		this.ap.pipeline.nodes.forEach((n) => delete n.grp);
+		this.ap.pipeline.links.forEach((l) => delete l.grp);
+		this.ap.pipeline.comments.forEach((c) => delete c.grp);
+	}
+
 	getEntryComments() {
 		if (this.ap.canvasInfo.hideComments) {
 			return [];
@@ -87,13 +85,13 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getEntryLinks() {
-		let entryLinks = this.ap.pipeline.links.filter((l) => l.srcPos);
+		let entryLinks = this.ap.pipeline.links.filter((l) => l.srcPos && l.trgPos);
 		entryLinks = entryLinks.map((el) => ({ type: "link", obj: el }));
 		return entryLinks;
 	}
 
 	getEntryNodes() {
-		let entryNodes = this.ap.pipeline.nodes.filter((n) => !this.nodeHasInputLinks(n));
+		let entryNodes = this.ap.pipeline.nodes.filter((n) => !this.nodeHasInputLinks(n) && !this.nodeHasAssocLinks(n));
 		entryNodes = entryNodes.map((en) => ({ type: "node", obj: en }));
 		return entryNodes;
 	}
@@ -156,7 +154,7 @@ export default class SVGCanvasUtilsAccessibility {
 		});
 
 		// Only detached links will be left without a grp field because all
-		// connected comments will have been handled when the node groups were
+		// connected links will have been handled when the node groups were
 		// processed in the loop above -- so assign a new group number to each.
 		this.ap.pipeline.links.forEach((l) => {
 			if (typeof l.grp === "undefined") {
@@ -307,37 +305,6 @@ export default class SVGCanvasUtilsAccessibility {
 		return this.ap.pipeline.links.filter((l) => l.type === COMMENT_LINK && l.trgNodeId === node.id);
 	}
 
-	// Resets the currentTabObjectIndex variable based on the current selection
-	// (if there is one).
-	resetTabGroupIndexBasedOnSelection() {
-		if (this.ap.selections.length > 0) {
-			const lastSelectedObjectId = this.ap.selections[this.ap.selections.length - 1];
-
-			const lastSelectedNode = this.ap.getNode(lastSelectedObjectId);
-			if (lastSelectedNode) {
-				this.setTabGroupIndexForObj(lastSelectedNode);
-				return;
-			}
-			const lastSelectedComment = this.ap.getComment(lastSelectedObjectId);
-			if (lastSelectedComment) {
-				this.setTabGroupIndexForObj(lastSelectedComment);
-				return;
-			}
-			const lastSelectedLink = this.ap.getLink(lastSelectedObjectId);
-			if (lastSelectedLink) {
-				this.setTabGroupIndexForObj(lastSelectedLink);
-				return;
-			}
-		}
-		return;
-	}
-
-	// Sets the current tab group index, for the tab group of which the object
-	// passed in is a part, to be the index position of that object.
-	setTabGroupIndexForObj(obj) {
-		this.currentTabObjectIndex = this.tabObjects.findIndex((tg) => tg.obj.grp === obj.grp);
-	}
-
 	nodeHasInputLinks(node) {
 		if (node.inputs && node.inputs.length > 0) {
 			const linksTo = this.getLinksToNode(node, NODE_LINK);
@@ -346,36 +313,53 @@ export default class SVGCanvasUtilsAccessibility {
 		return false;
 	}
 
+	nodeHasAssocLinks(node) {
+		const links = this.getAssocLinksForNode(node);
+		return (links.length > 0);
+	}
+
 	commentHasLinks(comment) {
 		return this.getLinksFromComment(comment).length > 0;
 	}
 
-	getNextTabGroupStartObject() {
-		if (this.currentTabObjectIndex === this.tabObjects.length) {
-			this.currentTabObjectIndex = -1;
+	getNextTabGroupStartObject(focusObj) {
+		if (this.tabObjects.length === 0) {
+			return null;
+		}
+		if (!focusObj || focusObj === CANVAS_FOCUS) {
+			return this.tabObjects[0].obj;
 		}
 
-		if (this.currentTabObjectIndex < this.tabObjects.length) {
-			this.currentTabObjectIndex++;
-			if (this.currentTabObjectIndex < this.tabObjects.length) {
-				return this.tabObjects[this.currentTabObjectIndex].obj;
-			}
+		const localObj = this.getLocalObject(focusObj);
+		const index = this.tabObjects.findIndex((tg) => tg.obj.grp === localObj?.grp);
+
+		if (index === this.tabObjects.length - 1) {
+			return null;
 		}
-		return null;
+		return this.tabObjects[index + 1].obj;
 	}
 
-	getPreviousTabGroupStartObject() {
-		if (this.currentTabObjectIndex === -1) {
-			this.currentTabObjectIndex = this.tabObjects.length;
+	getPreviousTabGroupStartObject(focusObj) {
+		if (this.tabObjects.length === 0) {
+			return null;
+		}
+		if (!focusObj || focusObj === CANVAS_FOCUS) {
+			return this.tabObjects[this.tabObjects.length - 1].obj;
 		}
 
-		if (this.currentTabObjectIndex > -1) {
-			this.currentTabObjectIndex--;
-			if (this.currentTabObjectIndex > -1) {
-				return this.tabObjects[this.currentTabObjectIndex].obj;
-			}
+		const localObj = this.getLocalObject(focusObj);
+		const index = this.tabObjects.findIndex((tg) => tg.obj.grp === localObj?.grp);
+
+		if (index === 0) {
+			return null;
 		}
-		return null;
+		return this.tabObjects[index - 1].obj;
+	}
+
+	getLocalObject(focusObj) {
+		return this.ap.pipeline.nodes.find((n) => n.id === focusObj.id) ||
+			this.ap.pipeline.links.find((l) => l.id === focusObj.id) ||
+			this.ap.pipeline.comments.find((c) => c.id === focusObj.id);
 	}
 
 	getAllLinksForNode(node) {
@@ -424,6 +408,11 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getNextSiblingLink(link) {
+		// If link is fully detached, there are no sibling links.
+		if (link.srcPos && link.trgPos) {
+			return null;
+		}
+
 		const navObject = link.navObject ? link.navObject : link.srcObj;
 
 		const linkInfos = CanvasUtils.isNode(navObject)
@@ -441,6 +430,11 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getPreviousSiblingLink(link) {
+		// If link is fully detached, there are no sibling links.
+		if (link.srcPos && link.trgPos) {
+			return null;
+		}
+
 		const navObject = link.navObject ? link.navObject : link.srcObj;
 
 		const linkInfos = CanvasUtils.isNode(navObject)
@@ -462,14 +456,14 @@ export default class SVGCanvasUtilsAccessibility {
 	}
 
 	getNextNodeFromAssocLink(link) {
-		if (link.srcNodeId === link.navObject.id) {
+		if (link.srcNodeId === link.navObject?.id) {
 			return link.trgNode;
 		}
 		return link.srcObj;
 	}
 
 	getNextObjectFromCommentLink(link) {
-		if (link.srcNodeId === link.navObject.id) {
+		if (link.srcNodeId === link.navObject?.id) {
 			return link.trgNode;
 		}
 		return link.srcObj;
@@ -513,6 +507,10 @@ export default class SVGCanvasUtilsAccessibility {
 		return this.ap.pipeline.links.filter((l) => l.type === type && l.srcNodeId === node.id);
 	}
 
+	getAssocLinksForNode(node) {
+		return this.ap.pipeline.links.filter((l) => l.type === ASSOCIATION_LINK && (l.srcNodeId === node.id || l.trgNodeId === node.id));
+	}
+
 	getLinksFromComment(comment) {
 		return this.ap.pipeline.links.filter((l) => l.srcNodeId === comment.id);
 	}
@@ -521,35 +519,42 @@ export default class SVGCanvasUtilsAccessibility {
 	/* Focus functions for sub-objects.                                                */
 	/* ------------------------------------------------------------------------------- */
 
-	// Returns the next sub-object from the set of focusable sub-objects.
-	getNextSubObject(d) {
-		const subObjs = this.getFocusableSubObjects(d);
+	// Returns the next sub-object, after the subObject passed in, from
+	// the set of focusable sub-objects.
+	getNextSubObject(obj, subObject) {
+		const subObjs = this.getFocusableSubObjects(obj);
 
-		this.focusSubObjectIndex++;
-
-		if (this.focusSubObjectIndex >= subObjs.length) {
-			this.focusSubObjectIndex = 0;
+		if (!subObject) {
+			return subObjs[0];
 		}
 
-		return subObjs[this.focusSubObjectIndex];
-	}
+		let index = subObjs.findIndex((so) => so.type === subObject.type && so.obj.id === subObject.obj.id);
+		index++;
 
-	// Returns the previous sub-object from the set of focusable sub-objects.
-	getPreviousSubObject(d) {
-		const subObjs = this.getFocusableSubObjects(d);
-
-		this.focusSubObjectIndex--;
-
-		if (this.focusSubObjectIndex < 0) {
-			this.focusSubObjectIndex = subObjs.length - 1;
+		if (index > subObjs.length - 1) {
+			index = 0;
 		}
 
-		return subObjs[this.focusSubObjectIndex];
+		return subObjs[index];
 	}
 
-	// Resets the index for the current sub-object.
-	resetFocusSubObjectIndex() {
-		this.focusSubObjectIndex = -1;
+	// Returns the previous sub-object, before the subObject passed in, from
+	// the set of focusable sub-objects.
+	getPreviousSubObject(obj, subObject) {
+		const subObjs = this.getFocusableSubObjects(obj);
+
+		if (!subObject) {
+			return subObjs[subObjs.length - 1];
+		}
+
+		let index = subObjs.findIndex((so) => so.type === subObject.type && so.obj.id === subObject.obj.id);
+		index--;
+
+		if (index < 0) {
+			index = subObjs.length - 1;
+		}
+
+		return subObjs[index];
 	}
 
 	// Returns an arry of focuable sub-elements of a node or link. These are items within
@@ -557,8 +562,9 @@ export default class SVGCanvasUtilsAccessibility {
 	// as: visible, focusable ports or focuable decorations
 	getFocusableSubObjects(d) {
 		const focusableSubElements = [];
+		const objType = CanvasUtils.getObjectTypeName(d);
 
-		if (CanvasUtils.getObjectTypeName(d) === "node") {
+		if (objType === "node") {
 			if (d.inputs && d.layout.inputPortDisplay && d.layout.inputPortFocusable) {
 				d.inputs.forEach((ip) => {
 					focusableSubElements.push({ type: "inputPort", obj: ip });
@@ -576,6 +582,15 @@ export default class SVGCanvasUtilsAccessibility {
 			}
 		}
 
+		if (objType === "link" &&
+				d.type === NODE_LINK &&
+				(this.ap.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.ap.config.enableLinkSelection === LINK_SELECTION_DETACHABLE))
+		{
+			focusableSubElements.push({ type: "linkStart", obj: d });
+		}
+
+
 		// Decorations apply for nodes AND links
 		if (d.decorations) {
 			d.decorations.forEach((dec) => {
@@ -583,6 +598,14 @@ export default class SVGCanvasUtilsAccessibility {
 					focusableSubElements.push({ type: "decoration", obj: dec });
 				}
 			});
+		}
+
+		if (objType === "link" &&
+			d.type === NODE_LINK &&
+			(this.ap.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+			this.ap.config.enableLinkSelection === LINK_SELECTION_DETACHABLE))
+		{
+			focusableSubElements.push({ type: "linkEnd", obj: d });
 		}
 
 		return focusableSubElements;

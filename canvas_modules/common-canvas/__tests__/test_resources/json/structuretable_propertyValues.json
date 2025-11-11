@@ -68,6 +68,14 @@
 		[
 			"0.Ag",
 			"Ascending"
+		],
+		[
+			"0.Vector",
+			"Ascending"
+		],
+		[
+			"0.Custom",
+			"Ascending"
 		]
 	],
 	"structuretableNoButtonsEmptyTable": [],

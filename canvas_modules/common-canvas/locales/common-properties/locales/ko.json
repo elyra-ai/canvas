@@ -118,5 +118,6 @@
   "slider.numberInput.label": "슬라이더 번호 입력",
   "editorForm.tabList.label": "기본 탭",
   "subTabs.tabList.label": "탭 목록",
-  "table.deleteIcon.tooltip": "삭제"
+  "table.deleteIcon.tooltip": "삭제",
+  "action.button.icon": "작업 버튼 아이콘"
 }

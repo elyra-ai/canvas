@@ -58,6 +58,11 @@ const rules = [
 		options: babelOptions
 	},
 	{
+		test: /\.tsx?$/, // Matches .ts and .tsx files
+		use: "ts-loader",
+		exclude: /node_modules/,
+	},
+	{
 		test: /\.s*css$/,
 		use: [
 			{ loader: "style-loader",
@@ -135,7 +140,7 @@ export default {
 			"react-intl": "node_modules/react-intl",
 			"common-canvas": "src/common-canvas-dev.js"
 		},
-		extensions: [".js", ".jsx", ".json"]
+		extensions: [".js", ".jsx", ".json", ".ts", ".tsx"]
 	},
 	output: output,
 	module: {

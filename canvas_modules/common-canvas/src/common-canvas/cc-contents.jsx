@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import ReactResizeDetector from "react-resize-detector";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
@@ -30,7 +29,7 @@ import CanvasUtils from "./common-canvas-utils.js";
 import KeyboardUtils from "./keyboard-utils.js";
 import { Button } from "@carbon/react";
 import { FlowData, ArrowLeft } from "@carbon/react/icons";
-import { DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
+import { CANVAS_FOCUS, DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
 
@@ -64,6 +63,10 @@ class CanvasContents extends React.Component {
 		// using keyboard.
 		this.mousePos = null;
 
+		// Keeps track of whether the user is in the process of tabbing out from
+		// the <div> using the keyboard.
+		this.tabbingOut = false;
+
 		this.drop = this.drop.bind(this);
 		this.focusOnCanvas = this.focusOnCanvas.bind(this);
 		this.setIsDropZoneDisplayed = this.setIsDropZoneDisplayed.bind(this);
@@ -82,7 +85,7 @@ class CanvasContents extends React.Component {
 		this.onClickReturnToPrevious = this.onClickReturnToPrevious.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
-		this.onBlur = this.onBlur.bind(this);
+		this.onFocus = this.onFocus.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
@@ -101,10 +104,14 @@ class CanvasContents extends React.Component {
 
 	componentDidMount() {
 		this.logger.log("componentDidMount");
-		this.svgCanvasD3 =
-			new SVGCanvasD3(this.props.canvasInfo.id,
-				this.svgCanvasDivSelector,
-				this.props.canvasController);
+		// componentDidMount may be called twice in StrictMode so only
+		// create the svgCanvasD3 when necessary.
+		if (!this.svgCanvasD3) {
+			this.svgCanvasD3 =
+				new SVGCanvasD3(this.props.canvasInfo.id,
+					this.svgCanvasDivSelector,
+					this.props.canvasController);
+		}
 		this.setCanvasInfo();
 
 		if (this.props.canvasConfig.enableBrowserEditMenu) {
@@ -113,6 +120,15 @@ class CanvasContents extends React.Component {
 
 		if (this.props.canvasConfig.enableFocusOnMount) {
 			this.props.canvasController.setFocusOnCanvas();
+		}
+
+		this.resizeObserver = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				this.refreshOnSizeChange(entry.contentRect);
+			}
+		});
+		if (this.contentsRef.current) {
+			this.resizeObserver.observe(this.contentsRef.current);
 		}
 	}
 
@@ -146,6 +162,7 @@ class CanvasContents extends React.Component {
 
 	componentWillUnmount() {
 		this.removeEventListeners();
+		this.resizeObserver?.disconnect();
 	}
 
 	onCut(evt) {
@@ -294,16 +311,21 @@ class CanvasContents extends React.Component {
 		this.svgCanvasD3.setSpaceKeyPressed(false);
 	}
 
-	// When focus leaves the canvas it may be going to an "internal" object
-	// such as a node or a comment or to an "external" object like the
-	// toolbar or palette. If it goes outside the canvas, we reset the
-	// tab object index so that tabbing will begin from the first tab object
-	// and set the current canvas focus object to null to prevent any
-	// restoreFocus calls setting focus back into the canvas.
-	onBlur(evt) {
-		if (!evt.relatedTarget || !this.isTargetInsideCanvas(evt.relatedTarget)) {
-			this.svgCanvasD3.resetTabObjectIndex();
-			this.props.canvasController.setFocusObject(null);
+	// When focus returns to the flow editor (for example, after another desktop window
+	// has been surfaced) the internally stored focusObject may be null even though a
+	// document.activeElement is still set on the flow editor. So we set the focus
+	// object to be in sync with document.activeElement.
+	onFocus(evt) {
+		if (evt.target.classList.contains("d3-svg-canvas-div") &&
+				this.props.canvasController.getFocusObject() !== CANVAS_FOCUS) {
+			this.props.canvasController.setFocusObject(CANVAS_FOCUS);
+
+		} else if (!this.props.canvasController.getFocusObject()) {
+			const activeObject = this.svgCanvasD3.getActiveCanvasObject();
+
+			if (activeObject) {
+				this.props.canvasController.setFocusObject(activeObject);
+			}
 		}
 	}
 
@@ -311,9 +333,7 @@ class CanvasContents extends React.Component {
 	// the boundaries of the canvas or sets the mousePos to null. This position
 	// info can be used with keyboard operations.
 	onMouseMove(e) {
-		if (e?.target?.className?.baseVal === "svg-area" ||
-				e?.target?.className?.baseVal === "d3-svg-background" ||
-				e?.target?.className?.baseVal === "d3-svg-background-grid") {
+		if (e?.target?.closest(".svg-area")) {
 			this.mousePos = {
 				x: e.clientX,
 				y: e.clientY
@@ -478,7 +498,7 @@ class CanvasContents extends React.Component {
 			return (
 				<div tabIndex="0" className="d3-svg-canvas-div keyboard-navigation" id={this.svgCanvasDivId}
 					onMouseDown={this.onMouseDown} onMouseLeave={this.onMouseLeave}
-					onBlur={this.onBlur}
+					onFocus={this.onFocus}
 					onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 					role="application" aria-label="canvas-keyboard-navigation" // Resolve Accessibility Violation of role and label
 				/>
@@ -645,33 +665,33 @@ class CanvasContents extends React.Component {
 		event.preventDefault();
 	}
 
-	// Handles tab key presses on our div. It also keeps track of whether
-	// a tab key press is being handled using a flag.
+	// Handles tab key presses on our div.
 	moveFocusToNextGroup(evt) {
 		const success = this.svgCanvasD3.focusNextTabGroup(evt);
 		if (success) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 		} else {
+			this.tabbingOut = true;
 			this.props.canvasController.setFocusOnCanvas();
 		}
 	}
 
-	// Handles tab+shift key presses on our div. It also keeps track of whether
-	// a tab key press is being handled using a flag.
+	// Handles tab+shift key presses on our div.
 	moveFocusToPreviousGroup(evt) {
 		const success = this.svgCanvasD3.focusPreviousTabGroup(evt);
 		if (success) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 		} else {
+			this.tabbingOut = true;
 			this.props.canvasController.setFocusOnCanvas();
 		}
 	}
-
 
 	// Sets the focus on our canvas <div> so keyboard events will go to it.
 	focusOnCanvas() {
 		if (document.getElementById(this.svgCanvasDivId)) {
 			document.getElementById(this.svgCanvasDivId).focus();
+			this.svgCanvasD3.clearSubObject();
 		}
 	}
 
@@ -698,25 +718,23 @@ class CanvasContents extends React.Component {
 
 		return (
 			<main aria-label={this.getLabel("canvas.label")} role="main">
-				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange} targetRef={this.contentsRef}>
-					<div
-						id={this.mainCanvasDivId}
-						ref={this.contentsRef}
-						className="common-canvas-drop-div"
-						onDrop={this.drop}
-						onDragOver={this.dragOver}
-						onDragEnter={this.dragEnter}
-						onDragLeave={this.dragLeave}
-					>
-						{svgCanvasDiv}
-						{emptyCanvas}
-						{returnToPreviousBtn}
-						{stateTag}
-						{contextMenu}
-						{textToolbar}
-						{dropZoneCanvas}
-					</div>
-				</ReactResizeDetector>
+				<div
+					id={this.mainCanvasDivId}
+					ref={this.contentsRef}
+					className="common-canvas-drop-div"
+					onDrop={this.drop}
+					onDragOver={this.dragOver}
+					onDragEnter={this.dragEnter}
+					onDragLeave={this.dragLeave}
+				>
+					{svgCanvasDiv}
+					{emptyCanvas}
+					{returnToPreviousBtn}
+					{stateTag}
+					{contextMenu}
+					{textToolbar}
+					{dropZoneCanvas}
+				</div>
 			</main>
 		);
 	}

@@ -4,5 +4,6 @@
   "canvas.emptyLink": "Click here to take a tour",
   "expression.value.column": "Custom Value",
   "expression.value.column.description": "Testing custom desc from app",
-  "expression.field.column.description": "Custom description"
+  "expression.field.column.description": "Custom description",
+  "fieldPicker.vectorType.label": "Custom Vector Label"
 }
