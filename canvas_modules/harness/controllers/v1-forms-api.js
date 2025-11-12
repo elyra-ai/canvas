@@ -13,31 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-"use strict";
 // Modules
-const express = require("express");
+import { Router } from "express";
 
-const getDiagramsListController = require("./v1-get-diagrams-list-controller");
-const getPalettesListController = require("./v1-get-palettes-list-controller");
-const getPropertiesListController = require("./v1-get-properties-list-controller");
-const getFormsListController = require("./v1-get-forms-list-controller");
-const getParameterDefsListController = require("./v1-get-parameterdefs-list-controller");
+import { get } from "./v1-get-diagrams-list-controller";
+import { get as _get } from "./v1-get-forms-list-controller"; // eslint-disable-line sort-imports
+import { get as __get } from "./v1-get-palettes-list-controller"; // eslint-disable-line sort-imports
+import { get as ___get } from "./v1-get-parameterdefs-list-controller"; // eslint-disable-line sort-imports
+import { get as ____get } from "./v1-get-properties-list-controller"; // eslint-disable-line sort-imports
 
 // Globals
 
-const router = express.Router({
+const router = Router({
 	caseSensitive: true,
 	mergeParams: true
 });
 
 // Public Methods ------------------------------------------------------------->
 
-module.exports = router;
+export default router;
 
 // Private Methods ------------------------------------------------------------>
 
-router.get("/forms/diagrams", getDiagramsListController.get);
-router.get("/forms/palettes", getPalettesListController.get);
-router.get("/forms/properties", getPropertiesListController.get);
-router.get("/forms/forms", getFormsListController.get);
-router.get("/forms/parameterDefs", getParameterDefsListController.get);
+router.get("/forms/diagrams", get);
+router.get("/forms/palettes", __get);
+router.get("/forms/properties", ____get);
+router.get("/forms/forms", _get);
+router.get("/forms/parameterDefs", ___get);

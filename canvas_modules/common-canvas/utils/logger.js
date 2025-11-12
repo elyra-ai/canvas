@@ -60,7 +60,7 @@ function _getErrorMessage(prefix, errorObject, id) {
  *
  * @returns void
  */
-function _debug(id, errorObject) {
+export function debug(id, errorObject) {
 	console.log(_getErrorMessage("DEBUG", errorObject, id));
 }
 
@@ -72,7 +72,7 @@ function _debug(id, errorObject) {
  *
  * @returns void
  */
-function _info(id, errorObject) {
+export function info(id, errorObject) {
 	console.log(_getErrorMessage("INFO", errorObject, id));
 }
 
@@ -84,7 +84,7 @@ function _info(id, errorObject) {
  *
  * @returns void
  */
-function _warning(id, errorObject) {
+export function warning(id, errorObject) {
 	console.warn(_getErrorMessage("WARNING", errorObject, id));
 }
 
@@ -96,13 +96,6 @@ function _warning(id, errorObject) {
  *
  * @returns void
  */
-function _error(id, errorObject) {
+export function error(id, errorObject) {
 	console.error(_getErrorMessage("ERROR", errorObject, id));
 }
-
-// Public Methods ------------------------------------------------------------->
-
-module.exports.debug = _debug;
-module.exports.info = _info;
-module.exports.warn = _warning;
-module.exports.error = _error;
