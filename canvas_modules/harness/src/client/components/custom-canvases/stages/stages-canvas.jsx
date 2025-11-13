@@ -132,6 +132,7 @@ export default class StagesCanvas extends React.Component {
 			enableMarkdownInComments: true,
 			enableContextToolbar: true,
 			enableResizableNodes: true,
+			enableKeyboardNavigation: true,
 			enablePaletteHeader: this.paletteHeader,
 			tipConfig: {
 				palette: true,

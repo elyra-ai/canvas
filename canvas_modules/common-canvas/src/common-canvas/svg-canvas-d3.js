@@ -220,8 +220,8 @@ export default class SVGCanvasD3 {
 		return this.renderer.focusPreviousTabGroup(evt);
 	}
 
-	resetTabObjectIndex() {
-		this.renderer.resetTabObjectIndex();
+	getActiveCanvasObject() {
+		return this.renderer.getActiveCanvasObject();
 	}
 
 	moveFocusTo(focusObj, evt) {
@@ -234,6 +234,10 @@ export default class SVGCanvasD3 {
 
 	focusOnTextEntryElement(evt) {
 		this.renderer.focusOnTextEntryElement(evt);
+	}
+
+	clearSubObject() {
+		this.renderer?.clearSubObject();
 	}
 
 	setFocusNextSubObject(parentObj, evt) {

@@ -57,24 +57,33 @@ describe("CommonContextMenu renders correctly", () => {
 	it("all required props should have been defined", () => {
 
 		const _contextHandler = sinon.spy();
+		const _closeContextMenu = sinon.spy();
 		const _menuDefinition = getMenuDefinition();
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
-		renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
+		renderWithIntl(
+			<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition}
+				canvasRect={_canvasRect} mousePos={_mousePos} closeContextMenu={_closeContextMenu}
+			/>);
 		expectJest(mockContextMenu).toHaveBeenCalledWith({
 			"contextHandler": _contextHandler,
 			"menuDefinition": _menuDefinition,
 			"canvasRect": _canvasRect,
-			"mousePos": _mousePos
+			"mousePos": _mousePos,
+			"closeContextMenu": _closeContextMenu
 		});
 	});
 
 	it("should render two context menu items and one divider components", () => {
 		const _contextHandler = sinon.spy();
+		const _closeContextMenu = sinon.spy();
 		const _menuDefinition = getMenuDefinition();
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
-		const { container } = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
+		const { container } = renderWithIntl(
+			<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition}
+				canvasRect={_canvasRect} mousePos={_mousePos} closeContextMenu={_closeContextMenu}
+			/>);
 
 		expect(container.getElementsByClassName("context-menu-item")).to.have.length(2);
 		expect(container.getElementsByClassName("context-menu-divider")).to.have.length(1);
@@ -82,28 +91,53 @@ describe("CommonContextMenu renders correctly", () => {
 
 	it("simulates click events", () => {
 		const _contextHandler = sinon.spy();
+		const _closeContextMenu = sinon.spy();
 		const _menuDefinition = getMenuDefinition();
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
-		const wrapper = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
+		const wrapper = renderWithIntl(
+			<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition}
+				canvasRect={_canvasRect} mousePos={_mousePos} closeContextMenu={_closeContextMenu}
+			/>);
 		// To simulate click events, we want to click on the menu item, and one of the menu items has the text "Do something"
 		// so we use getByText to click the on that specific menu item
 		fireEvent.click(wrapper.getByText("Do something"));
 		expect(_contextHandler.calledOnce).to.equal(true);
 	});
 
+	it("should render two context menu items and one divider components even when all items are disabled", () => {
+		const _contextHandler = sinon.spy();
+		const _closeContextMenu = sinon.spy();
+		const _menuDefinition = getAllDisabledMenuDefinition();
+		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
+		const _mousePos = { x: 20, y: 20 };
+		const { container } = renderWithIntl(
+			<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition}
+				canvasRect={_canvasRect} mousePos={_mousePos} closeContextMenu={_closeContextMenu}
+			/>);
+
+		expect(container.getElementsByClassName("context-menu-item")).to.have.length(2);
+		expect(container.getElementsByClassName("context-menu-divider")).to.have.length(1);
+		expect(container.getElementsByClassName("context-menu-item")[0]).to.equal(document.activeElement);
+	});
+
 	it("correctly positions submenus that are near the right viewport edge", () => {
 		const _contextHandler = sinon.spy();
+		const _closeContextMenu = sinon.spy();
 		const _menuDefinition = getNestedMenuDefinition();
 		const _canvasRect = { width: 1000, height: 1000, left: 0, top: 0, right: 1000, bottom: 1000 };
 		const _mousePos = { x: 950, y: 100 };
-		const wrapper = renderWithIntl(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
+		const wrapper = renderWithIntl(
+			<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition}
+				canvasRect={_canvasRect} mousePos={_mousePos} closeContextMenu={_closeContextMenu}
+			/>);
 		const { container } = wrapper;
 		expectJest(mockContextMenu).toHaveBeenCalledWith({
 			"contextHandler": _contextHandler,
 			"menuDefinition": _menuDefinition,
 			"canvasRect": _canvasRect,
-			"mousePos": _mousePos
+			"mousePos": _mousePos,
+			"closeContextMenu": _closeContextMenu
 		});
 		const subMenuItem = container.getElementsByClassName("context-menu-submenu")[0];
 		const style = subMenuItem.style;
@@ -325,6 +359,23 @@ function getMenuDefinition() {
 		}
 	];
 }
+
+function getAllDisabledMenuDefinition() {
+	return [
+		{
+			action: "dosomething",
+			label: "Do something",
+			enable: false
+		}, {
+			divider: true
+		}, {
+			action: "dosomethingelse",
+			label: "Do something else",
+			enable: false
+		}
+	];
+}
+
 
 function getNestedMenuDefinition() {
 	const EDIT_SUB_MENU = [

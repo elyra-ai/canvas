@@ -31,7 +31,7 @@ class CommonCanvasRightFlyout extends React.Component {
 		this.rightFlyoutRef = React.createRef();
 		this.state = { isBeingDragging: false };
 
-		this.minWidth = 0;
+		this.initialMinWidth = null;
 
 		this.onMouseUp = this.onMouseUp.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
@@ -43,12 +43,10 @@ class CommonCanvasRightFlyout extends React.Component {
 
 	componentDidMount() {
 		// Since flyout content width can be dynamic set the minimum width to width of the content
-		this.minWidth = this.getCurrentWidth();
-	}
-
-	componentWillUnmount() {
-		// Reset the flyout width so the content will control the width next time the flyout is mounted.
-		this.props.canvasController.setRightFlyoutWidth(0);
+		// unless a minimum width has been specified by the application. In which case, use it.
+		if (typeof this.props.panelMinWidth === "undefined" || this.props.panelMinWidth === null) {
+			this.initialMinWidth = this.getCurrentWidth();
+		}
 	}
 
 	onMouseDown(e) {
@@ -71,8 +69,9 @@ class CommonCanvasRightFlyout extends React.Component {
 
 	onMouseMoveX(e) {
 		if (e.clientX) {
+			const panelWidth = this.isPanelWidthSpecified() ? this.props.panelWidth : this.getCurrentWidth();
 			const diff = e.clientX - this.posX;
-			const wd = this.props.panelWidth - diff;
+			const wd = panelWidth - diff;
 			this.props.canvasController.setRightFlyoutWidth(this.limitWidth(wd));
 			this.posX = e.clientX;
 		}
@@ -96,14 +95,35 @@ class CommonCanvasRightFlyout extends React.Component {
 		return this.rightFlyoutRef?.current ? this.rightFlyoutRef?.current.getBoundingClientRect().width : 0;
 	}
 
+	// Returns the minimum width for the flyout. This will be the minimum width specified by the
+	// application but if one is not specified the width that the flyout when it first opened.
+	getMinWidth() {
+		if (typeof this.props.panelMinWidth === "undefined" || this.props.panelMinWidth === null) {
+			// When this flyout is first rendered, getMinWidth() will be called before
+			//  initialMinWidth has been set. So return min width as zero.
+			if (this.initialMinWidth === null) {
+				return 0;
+			}
+			return this.initialMinWidth;
+		}
+		return this.props.panelMinWidth;
+	}
+
+	// Return true if a value is provided for this.props.panelWidth
+	isPanelWidthSpecified() {
+		return !(typeof this.props.panelWidth === "undefined" || this.props.panelWidth === null);
+	}
+
 	// Returns a new width for right panel limited by the need to enforce
 	// a minimum and maximum width
 	limitWidth(wd) {
 		const centerPanelWidth = this.props.getCenterPanelWidth();
+		const panelWidth = this.getCurrentWidth();
 
 		// Max Width should be a percentage of the total available width (center panel + rightflyout)
-		const maxWidth = (centerPanelWidth + this.props.panelWidth) * MAX_WIDTH_EXTEND_PERCENT;
-		const width = Math.min(Math.max(wd, this.minWidth), maxWidth);
+		const maxWidth = (centerPanelWidth + panelWidth) * MAX_WIDTH_EXTEND_PERCENT;
+		const minWidth = this.getMinWidth();
+		const width = Math.min(Math.max(wd, minWidth), maxWidth);
 
 		return width;
 	}
@@ -116,14 +136,14 @@ class CommonCanvasRightFlyout extends React.Component {
 		if (this.props.content && this.props.isOpen) {
 			const rightFlyoutDragContent = this.getRightFlyoutResizeContent();
 
-			const widthPx = this.limitWidth(this.props.panelWidth) + "px";
+			const width = this.isPanelWidthSpecified() ? this.limitWidth(this.props.panelWidth) + "px" : null;
 
 			const rfClass = this.props.enableRightFlyoutUnderToolbar
 				? "right-flyout-panel under-toolbar"
 				: "right-flyout-panel";
 
 			rightFlyout = (
-				<div className="right-flyout" style={{ width: widthPx }} >
+				<div className="right-flyout" style={{ width: width }} >
 					{rightFlyoutDragContent}
 					<div className={rfClass} ref={this.rightFlyoutRef}>
 						{this.props.content}
@@ -146,7 +166,8 @@ CommonCanvasRightFlyout.propTypes = {
 	content: PropTypes.object,
 	enableRightFlyoutUnderToolbar: PropTypes.bool,
 	enableRightFlyoutDragToResize: PropTypes.bool,
-	panelWidth: PropTypes.number
+	panelWidth: PropTypes.number,
+	panelMinWidth: PropTypes.number
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -154,7 +175,8 @@ const mapStateToProps = (state, ownProps) => ({
 	content: state.rightflyout.content,
 	enableRightFlyoutUnderToolbar: state.canvasconfig.enableRightFlyoutUnderToolbar,
 	enableRightFlyoutDragToResize: state.canvasconfig.enableRightFlyoutDragToResize,
-	panelWidth: state.rightflyout.panelWidth
+	panelWidth: state.rightflyout.panelWidth,
+	panelMinWidth: state.rightflyout.panelMinWidth
 });
 
 export default connect(mapStateToProps)(CommonCanvasRightFlyout);

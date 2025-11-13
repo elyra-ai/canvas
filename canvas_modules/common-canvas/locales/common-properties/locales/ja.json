@@ -118,5 +118,6 @@
   "slider.numberInput.label": "スライダー番号の入力",
   "editorForm.tabList.label": "プライマリー・タブ",
   "subTabs.tabList.label": "タブ・リスト",
-  "table.deleteIcon.tooltip": "削除"
+  "table.deleteIcon.tooltip": "削除",
+  "action.button.icon": "アクションボタンアイコン"
 }

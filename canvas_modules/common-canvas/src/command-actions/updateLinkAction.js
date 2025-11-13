@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,4 +41,6 @@ export default class UpdateLinkAction extends Action {
 	getLabel() {
 		return this.labelUtil.getActionLabel(this, "action.updateLink");
 	}
+
+	// No need to return focus object
 }

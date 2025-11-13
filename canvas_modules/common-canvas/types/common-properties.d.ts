@@ -80,7 +80,7 @@ export interface ErrorMessage {
   "text": string;
   "type": string;
   "validation_id": string;
-};
+}
 
 export type ApplyPropertyChangesCallback = (
   propertySet: Record<string, unknown>,
@@ -150,8 +150,13 @@ export interface ActionButtonIconData {
   buttonId: string;
   data: Record<string, unknown>;
 }
+export interface CustomDataTypeIconData {
+  type: "customDataTypeIcon";
+  buttonId: string;
+  dataType: string;
+}
 export type ButtonIconHandler = (
-  data: CustomButtonIconData | ActionButtonIconData,
+  data: CustomButtonIconData | ActionButtonIconData | CustomDataTypeIconData,
   callbackIcon: (icon: ReactNode) => void
 ) => void;
 

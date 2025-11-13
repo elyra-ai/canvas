@@ -48,6 +48,7 @@ _defineConstant("EXAMPLE_APP_ALL_PORTS", "All Ports");
 _defineConstant("EXAMPLE_APP_PARALLAX", "Parallax");
 _defineConstant("EXAMPLE_APP_NETWORK", "Network");
 _defineConstant("EXAMPLE_APP_WYSIWYG", "WYSIWYG Comments");
+_defineConstant("EXAMPLE_APP_REACT_NODES_DRAGGABLE", "React Nodes - Draggable");
 _defineConstant("EXAMPLE_APP_REACT_NODES_CARBON", "React Nodes - Carbon Charts");
 _defineConstant("EXAMPLE_APP_REACT_NODES_MAPPING", "React Nodes - Mapping");
 
@@ -81,6 +82,7 @@ _defineConstant("API_SET_LINK_DECORATIONS", "Set Link Decorations");
 _defineConstant("API_ADD_NOTIFICATION_MESSAGE", "Add Notification Message");
 _defineConstant("API_ZOOM_TO_REVEAL_NODE", "Zoom To Reveal Node");
 _defineConstant("API_ZOOM_TO_REVEAL_LINK", "Zoom To Reveal Link");
+_defineConstant("API_SET_COMMENT_HIGHLIGHT_TEXT", "Set Comment Highlight Text");
 
 _defineConstant("INPUT_PORT", "inputPort");
 _defineConstant("OUTPUT_PORT", "outputPort");
