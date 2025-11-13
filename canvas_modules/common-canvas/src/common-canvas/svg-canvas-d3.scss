@@ -770,6 +770,12 @@ g.d3-link-dec-group:focus {
 /* Comment styles */
 
 .d3-comment-group {
+	& mark {
+		color: carbon.$tag-color-blue;
+		background-color: carbon.$tag-background-blue;
+		font-weight: 500;
+	}
+
 	&:hover {
 		.d3-comment-text-scroll {
 			border-color: $comment-outline-hover-color;
@@ -1148,9 +1154,7 @@ g.bkg-col-cyan-50 {
 
 // When pointer hovers over the link this style will be applied.
 .d3-link-group:hover .d3-link-line,
-.d3-link-group:hover .d3-link-line-arrow-head,
-.d3-link-group.handles-detachable-hover .d3-link-line,
-.d3-link-group.handles-detachable-hover .d3-link-line-arrow-head {
+.d3-link-group:hover .d3-link-line-arrow-head {
 	stroke: $link-highlight-color;
 	stroke-width: 2;
 }
@@ -1177,8 +1181,14 @@ g.bkg-col-cyan-50 {
 	outline-width: 0;
 
 	& .d3-link-selection-area {
-		stroke-width: 6;
+		stroke-width: 5;
 		stroke: carbon.$focus;
+		fill: none;
+	}
+	& .d3-link-line-arrow-head {
+		stroke-width: 3;
+		stroke: carbon.$focus;
+		fill: none;
 	}
 }
 
@@ -1187,6 +1197,14 @@ g.bkg-col-cyan-50 {
 .d3-link-handle-end-group {
 	&:focus {
 		outline-width: 0;
+
+		.d3-focus-path {
+			display: unset;
+			fill: transparent;
+			stroke: carbon.$focus;
+			stroke-width: 2;
+			pointer-events: none;
+		}
 	}
 }
 
@@ -1199,7 +1217,7 @@ g.bkg-col-cyan-50 {
 }
 
 .d3-link-group:hover .d3-link-handle-start,
-.d3-link-group.handles-detachable-hover .d3-link-handle-start,
+.d3-link-group:focus-within  .d3-link-handle-start,
 .d3-link-group[data-selected] .d3-link-handle-start {
 	display: inherit;
 	stroke: $link-highlight-color;
@@ -1216,7 +1234,7 @@ g.bkg-col-cyan-50 {
 }
 
 .d3-link-group:hover .d3-link-handle-end,
-.d3-link-group.handles-detachable-hover .d3-link-handle-end,
+.d3-link-group:focus-within .d3-link-handle-end,
 .d3-link-group[data-selected] .d3-link-handle-end {
 	display: inherit;
 	stroke: $link-highlight-color;

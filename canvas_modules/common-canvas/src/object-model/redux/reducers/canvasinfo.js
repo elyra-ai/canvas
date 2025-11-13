@@ -175,6 +175,7 @@ export default (state = {}, action) => {
 	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":
 	case "SET_OUTPUT_PORT_SUBFLOW_NODE_REF":
 	case "SET_NODE_SUB_OBJECT_FOCUS_FN":
+	case "SET_COMMENT_HIGHLIGHT_TEXT":
 	case "MOVE_OBJECTS":
 	case "DELETE_OBJECT":
 	case "ADD_LINK":

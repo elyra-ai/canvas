@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,14 @@ import * as d3Drag from "d3-drag";
 import * as d3Selection from "d3-selection";
 const d3 = Object.assign({}, d3Drag, d3Selection);
 
-import { cloneDeep } from "lodash";
-
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import { LINK_SELECTION_DETACHABLE } from "./constants/canvas-constants.js";
+import { LINK_SELECTION_DETACHABLE, NORTH, SOUTH, EAST, WEST } from "./constants/canvas-constants.js";
 
 
 // This utility files provides a drag handler which manages drag operations on
-// the start and end points of detached links.
+// the start and end points of detached links.  Also, it provides utility functions
+// to handle those same operations performed by the keyboard user.
 
 export default class SVGCanvasUtilsDragDetLink {
 	constructor(renderer) {
@@ -66,12 +65,37 @@ export default class SVGCanvasUtilsDragDetLink {
 	// Begins the dragging of a link handle of a detachable link.
 	dragStartDetLinkHandle(d3Event, d) {
 		this.logger.logStartTimer("dragStartDetLinkHandle");
+		this.startHandleMoving(d, d3Event.sourceEvent.currentTarget);
+		this.logger.logEndTimer("dragStartDetLinkHandle", true);
+	}
 
+	// Display a link when its handle is being dragged.
+	dragMoveDetLinkHandle(d3Event) {
+		this.logger.logStartTimer("dragMoveDetLinkHandle");
+		const transPos = this.ren.getTransformedMousePos(d3Event);
+		this.moveHandle(transPos);
+		this.logger.logEndTimer("dragMoveDetLinkHandle", true);
+	}
+
+	// Completes the dragging of a link handle.
+	dragEndDetLinkHandle(d3Event) {
+		this.logger.logStartTimer("dragEndLinkHandle");
+
+		const pos = this.ren.getMousePosFromEvent(d3Event);
+
+		this.completeDraggedDetLink(pos);
+		this.logger.logEndTimer("dragEndLinkHandle", true);
+	}
+
+	// Starts the moving action for link handle.
+	// Can be called when the mouse is dragging the handle OR when a
+	// keyboard event moves the handle.
+	startHandleMoving(d, currentTarget) {
 		this.ren.closeContextMenuIfOpen();
 
-		const handleSelection = d3.select(d3Event.sourceEvent.currentTarget);
+		const handleSelection = d3.select(currentTarget);
 		const link = this.ren.activePipeline.getLink(d.id);
-		const oldLink = cloneDeep(link);
+		const oldLink = { ...link };
 
 		const linkGrpSelector = this.ren.getLinkGroupSelectionById(d.id);
 
@@ -106,36 +130,58 @@ export default class SVGCanvasUtilsDragDetLink {
 				);
 			}
 		}
-
-		this.logger.logEndTimer("dragStartDetLinkHandle", true);
 	}
 
-	// Display a link when its handle is being dragged.
-	dragMoveDetLinkHandle(d3Event) {
-		this.logger.logStartTimer("dragMoveDetLinkHandle");
-		this.dragLinkHandle(d3Event);
-		this.logger.logEndTimer("dragMoveDetLinkHandle", true);
+	// Moves the currently focused handle of the link in the
+	// direction specified. This is called when the user moves a
+	// link handle using the keyboard.
+	moveLinkHandle(link, dir, d3Event) {
+		let xInc = 0;
+		let yInc = 0;
+
+		({ xInc, yInc } = this.getMoveIncrements(dir));
+
+		if (this.endMove) {
+			clearTimeout(this.endMove);
+			this.endMove = null;
+		}
+
+		if (!this.isDragging()) {
+			this.startHandleMoving(link, d3Event.currentTarget);
+		}
+
+		let x = this.draggingLinkData.endBeingDragged === "start" ? this.draggingLinkData.link.x1 : this.draggingLinkData.link.x2;
+		let y = this.draggingLinkData.endBeingDragged === "start" ? this.draggingLinkData.link.y1 : this.draggingLinkData.link.y2;
+
+		x += xInc;
+		y += yInc;
+
+		const pos = { x, y };
+
+		this.moveHandle(pos);
+
+		// When the handle is moved, redisplaying the link removes
+		// focus from the handle. So we restore it.
+		this.ren.restoreFocusToSubObject();
+
+		this.endMove = setTimeout(() => {
+			const pos2 = this.ren.convertCanvasCoordsToPageCoords(pos.x, pos.y);
+
+			this.completeDraggedDetLink(pos2);
+		}, 500);
 	}
 
-	// Completes the dragging of a link handle.
-	dragEndDetLinkHandle(d3Event) {
-		this.logger.logStartTimer("dragEndLinkHandle");
-		this.completeDraggedDetLink(d3Event);
-		this.logger.logEndTimer("dragEndLinkHandle", true);
-	}
-
-	dragLinkHandle(d3Event) {
-		const transPos = this.ren.getTransformedMousePos(d3Event);
+	moveHandle(pos) {
 		const link = this.draggingLinkData.link;
 
 		if (this.draggingLinkData.endBeingDragged === "start") {
-			link.srcPos = { x_pos: transPos.x, y_pos: transPos.y };
+			link.srcPos = { x_pos: pos.x, y_pos: pos.y };
 			delete link.srcNodeId;
 			delete link.srcNodePortId;
 			delete link.srcObj;
 
 		} else {
-			link.trgPos = { x_pos: transPos.x, y_pos: transPos.y };
+			link.trgPos = { x_pos: pos.x, y_pos: pos.y };
 			delete link.trgNodeId;
 			delete link.trgNodePortId;
 			delete link.trgNode;
@@ -143,15 +189,15 @@ export default class SVGCanvasUtilsDragDetLink {
 
 		this.ren.displayMovedLinks();
 
-		// Switch on an attribute to indicate a new link is being dragged
+		// Switch on an attribute to indicate the link is being dragged
 		// towards and over a target node.
 		if (this.ren.config.enableHighlightNodeOnNewLinkDrag) {
-			this.setDetachedLinkOverNode(d3Event);
+			this.setDetachedLinkOverNode(pos);
 		}
 	}
 
-	completeDraggedDetLink(d3Event) {
-		const newLink = this.getNewLinkOnDrag(d3Event);
+	completeDraggedDetLink(pos) {
+		const newLink = this.getNewLinkOnDrag(pos);
 
 		// Save a local reference to this.draggingLinkData so we can set it to null before
 		// calling the canvas-controller. This means the this.draggingLinkData object will
@@ -173,7 +219,7 @@ export default class SVGCanvasUtilsDragDetLink {
 
 				// The call to editActionHandler might "fail" if the host app
 				// uses beforeEditActionHandler to cancel the edit action. In
-				//  this case, we snap the link back to its old position.
+				// this case, we snap the link back to its old position.
 				if (!success) {
 					this.snapBackOldLink(draggingLinkData.oldLink);
 				}
@@ -263,16 +309,16 @@ export default class SVGCanvasUtilsDragDetLink {
 	// passed in and keeps track of the currently highlighted node. This is
 	// called as a new link is being drawn towards a target node to highlight
 	// the target node.
-	setDetachedLinkOverNode(d3Event) {
-		const nodeNearMouse = this.ren.getNodeNearMousePos(d3Event, this.ren.canvasLayout.nodeProximity);
-		const highlight = nodeNearMouse && this.isDetLinkConnectionAllowedToNearbyNode(d3Event);
+	setDetachedLinkOverNode(pos) {
+		const nodeNearMouse = this.ren.getNodeNearPos(pos, this.ren.canvasLayout.nodeProximity);
+		const highlight = nodeNearMouse && this.isDetLinkConnectionAllowedToNearbyNode(pos);
 		this.ren.setHighlightingOverNode(highlight, nodeNearMouse);
 	}
 
 	// Returns true if a detached link being dragged can be attached to a node.
-	isDetLinkConnectionAllowedToNearbyNode(d3Event) {
+	isDetLinkConnectionAllowedToNearbyNode(pos) {
 		if (this.draggingLinkData) {
-			const newLink = this.getNewLinkOnDrag(d3Event, this.ren.canvasLayout.nodeProximity);
+			const newLink = this.getNewLinkOnDrag(pos, this.ren.canvasLayout.nodeProximity);
 			if (newLink) {
 				return true;
 			}
@@ -282,9 +328,10 @@ export default class SVGCanvasUtilsDragDetLink {
 
 	// Returns a new link if one can be created given the current data in the
 	// this.draggingLinkData object. Returns null if a link cannot be created.
-	getNewLinkOnDrag(d3Event, nodeProximity) {
+	// The position (pos) passed in should be specified in page coordinates.
+	getNewLinkOnDrag(pos, nodeProximity) {
 		const oldLink = this.draggingLinkData.oldLink;
-		const newLink = cloneDeep(oldLink);
+		const newLink = { ...oldLink };
 
 		if (this.draggingLinkData.endBeingDragged === "start") {
 			delete newLink.srcObj;
@@ -293,13 +340,13 @@ export default class SVGCanvasUtilsDragDetLink {
 			delete newLink.srcPos;
 
 			const srcNode = nodeProximity
-				? this.ren.getNodeNearMousePos(d3Event, nodeProximity)
-				: this.ren.getNodeAtMousePos(d3Event);
+				? this.ren.getNodeNearPos(pos, nodeProximity)
+				: this.ren.getNodeAtPos(pos);
 
 			if (srcNode) {
 				newLink.srcNodeId = srcNode.id;
 				newLink.srcObj = this.ren.activePipeline.getNode(srcNode.id);
-				newLink.srcNodePortId = this.ren.getOutputNodePortId(d3Event, srcNode);
+				newLink.srcNodePortId = this.ren.getOutputNodePortId(pos, srcNode);
 			}	else {
 				newLink.srcPos = this.draggingLinkData.link.srcPos;
 			}
@@ -311,13 +358,13 @@ export default class SVGCanvasUtilsDragDetLink {
 			delete newLink.trgPos;
 
 			const trgNode = nodeProximity
-				? this.ren.getNodeNearMousePos(d3Event, nodeProximity)
-				: this.ren.getNodeAtMousePos(d3Event);
+				? this.ren.getNodeNearPos(pos, nodeProximity)
+				: this.ren.getNodeAtPos(pos);
 
 			if (trgNode) {
 				newLink.trgNodeId = trgNode.id;
 				newLink.trgNode = this.ren.activePipeline.getNode(trgNode.id);
-				newLink.trgNodePortId = this.ren.getInputNodePortId(d3Event, trgNode);
+				newLink.trgNodePortId = this.ren.getInputNodePortId(pos, trgNode);
 			}	else {
 				newLink.trgPos = this.draggingLinkData.link.trgPos;
 			}
@@ -335,6 +382,32 @@ export default class SVGCanvasUtilsDragDetLink {
 			return newLink;
 		}
 		return null;
+	}
+
+	getMoveIncrements(dir) {
+		let xInc = 0;
+		let yInc = 0;
+
+		switch (dir) {
+		case NORTH:
+			xInc = 0;
+			yInc = -10;
+			break;
+		case SOUTH:
+			xInc = 0;
+			yInc = 10;
+			break;
+		case EAST:
+			xInc = 10;
+			yInc = 0;
+			break;
+		default:
+		case WEST:
+			xInc = -10;
+			yInc = 0;
+			break;
+		}
+		return { xInc, yInc };
 	}
 
 	// Returns true if the old link passed in can be updated with the attributes

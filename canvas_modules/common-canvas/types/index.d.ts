@@ -14,5 +14,8 @@
  * limitations under the License.
  */
 
-export * from "./common-canvas.ts";
-export * from "./common-properties.ts";
+// exports intentionally are from ".js" as TypeScript wants files references
+// to match post-compilation extensions after .ts is compiled to .js
+// https://www.typescriptlang.org/docs/handbook/modules/theory.html#the-role-of-declaration-files
+export * from "./common-canvas.js";
+export * from "./common-properties.js";

@@ -166,7 +166,7 @@ export type PipelineFlowId = string;
 export interface ConnectedObjects {
   nodes: {[key: PipelineId]: CanvasNodeId[]};
   links: {[key: PipelineId]: CanvasLinkId[]};
-};
+}
 
 /** A value that specifies a distance, in either the X or Y direction, to
  * identify the physical position of an object within the viewport coordinate
@@ -364,7 +364,7 @@ export interface ContextMenuItem {
 	submenu?: boolean;
 	menu?: ContextMenuEntry[];
 	toolbarItem?: boolean;
-  };
+  }
 
 /** A format defintion object used for applying inline styles to a
 /* canvas comment.
@@ -1602,6 +1602,23 @@ export declare class CanvasController {
      * @returns Boolean. true indicates comments are hiding.
      */
     isHidingComments(): boolean;
+
+    /* Specifies the highlight text for a set of comments. Highlighting
+     * will be applied after all other formatting of the comment text has been
+     * completed by adding <mark> tags around the text to be highlighted.
+     * @param commentIds - An array of comment IDs or, if set to a falsy value,
+     *                     the highlight text will be applied to all comments.
+     * @param highlightText - The string to be highlighted in the comments
+     *                        specified. If highlightText is a falsy value the
+     *                        highlighting will be removed from the comments.
+     * @param pipelineId - Optional. The ID of the pipeline of the comments.
+     *                     Defaults to the currently displayed pipeline.
+     */
+    setCommentHighlightText(
+      commentIds: CanvasCommentId[],
+      highlightText: string,
+      pipelineId?: PipelineId
+    ) : void
 
     /**
      * Sets the comment identified, to edit mode so the user can

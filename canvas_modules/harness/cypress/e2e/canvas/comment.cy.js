@@ -487,6 +487,7 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 		});
 	});
 });
+
 describe("Add HTML to Markdown Comments", function() {
 	beforeEach(() => {
 		cy.visit("/");
