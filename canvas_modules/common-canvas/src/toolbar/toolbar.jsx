@@ -541,7 +541,7 @@ class Toolbar extends React.Component {
 	}
 
 	closeOverflowMenuOnRef(ref) {
-		if (ref.current?.showExtendedMenu) {
+		if (ref.current?.isSubAreaDisplayed()) {
 			ref.current?.closeSubArea();
 		}
 	}
