@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,92 +14,92 @@
  * limitations under the License.
  */
 
-import React from "react";
+import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef } from "react";
 import PropTypes from "prop-types";
 
-import { v4 as uuid4 } from "uuid";
 import { Button } from "@carbon/react";
 import { OverflowMenuVertical } from "@carbon/react/icons";
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
 
-class ToolbarOverflowItem extends React.Component {
-	constructor(props) {
-		super(props);
+const ToolbarOverflowItem = forwardRef(({
+	index,
+	action,
+	label,
+	size,
+	subMenuActions,
+	setOverflowIndex,
+	toolbarActionHandler,
+	instanceId,
+	containingDivId,
+	toolbarFocusAction,
+	setToolbarFocusAction,
+	isFocusInToolbar,
+	closeAnyOpenSubArea
+}, ref) => {
 
-		this.state = {
-			showExtendedMenu: false
+	const [showExtendedMenu, setShowExtendedMenu] = useState(false);
+
+	const buttonRef = useRef(null);
+
+	// Manage button focus
+	useEffect(() => {
+		if (toolbarFocusAction === action && isFocusInToolbar && !showExtendedMenu) {
+			buttonRef.current.focus();
+		}
+	}, [toolbarFocusAction, isFocusInToolbar, showExtendedMenu]);
+
+
+	// Manage event listener for clicking outside the overflow menu.
+	useEffect(() => {
+		document.addEventListener("click", clickOutside, false);
+
+		return () => {
+			document.removeEventListener("click", clickOutside, false);
 		};
 
-		this.buttonRef = React.createRef();
+	}, [toolbarFocusAction, isFocusInToolbar, showExtendedMenu]);
 
-		this.uuid = uuid4();
-		this.toggleExtendedMenu = this.toggleExtendedMenu.bind(this);
-		this.clickOutside = this.clickOutside.bind(this);
-		this.closeSubArea = this.closeSubArea.bind(this);
-		this.onKeyDown = this.onKeyDown.bind(this);
-	}
 
-	componentDidUpdate() {
-		if (this.props.toolbarFocusAction === this.props.action && this.props.isFocusInToolbar && !this.state.showExtendedMenu) {
-			this.buttonRef.current.focus();
-		}
-	}
+	// Expose methods to toolbar.jsx
+	useImperativeHandle(ref, () => ({
+		getAction: () => action,
 
-	// We must remove the eventListener in case this class is unmounted due
-	// to the toolbar getting redrawn.
-	componentWillUnmount() {
-		document.removeEventListener("click", this.clickOutside, false);
-	}
+		isSubAreaDisplayed: () => showExtendedMenu,
 
-	onKeyDown(evt) {
+		closeSubArea: () => closeSubArea()
+	}));
+
+	function onKeyDown(evt) {
 		if (KeyboardUtils.closeSubArea(evt)) {
-			this.closeSubArea();
+			closeSubArea();
 
 		} else if (KeyboardUtils.openSubArea(evt)) {
-			this.openSubArea();
+			openSubArea();
 		}
 		// Left and Right arrow clicks are caught in the
 		// toolbar.jsx onKeyDown method.
 	}
 
-
-	// Called by toolbar.jsx
-	getAction() {
-		return this.props.action;
+	function closeSubArea() {
+		setOverflowIndex(null); // Clear the indexes
+		setShowExtendedMenu(false);
+		setToolbarFocusAction(action); // This will not set focus on this item
 	}
 
-	// Called by toolbar.jsx
-	isSubAreaDisplayed() {
-		return this.state.showExtendedMenu;
+	function openSubArea() {
+		closeAnyOpenSubArea();
+		setOverflowIndex(index);
+		setShowExtendedMenu(true);
+		setToolbarFocusAction(action);
 	}
 
-	// Called by toolbar.jsx and internally
-	closeSubArea() {
-		document.removeEventListener("click", this.clickOutside, false);
-		this.props.setOverflowIndex(null); // Clear the indexes
-		this.setState({ showExtendedMenu: false });
-		this.props.setToolbarFocusAction(this.props.action); // This will not set focus on this item
+	function genOverflowButtonClassName() {
+		return "toolbar-overflow-container " + genIndexClassName();
 	}
 
-	openSubArea() {
-		document.addEventListener("click", this.clickOutside, false);
-		this.props.closeAnyOpenSubArea();
-		this.props.setOverflowIndex(this.props.index);
-		this.setState({ showExtendedMenu: true });
-		this.props.setToolbarFocusAction(this.props.action);
-	}
-
-	genOverflowButtonClassName() {
-		return "toolbar-overflow-container " + this.genIndexClassName() + " " + this.genUuidClassName();
-	}
-
-	genIndexClassName() {
-		return "toolbar-index-" + this.props.index;
-	}
-
-	genUuidClassName() {
-		return "toolbar-uuid-" + this.uuid;
+	function genIndexClassName() {
+		return "toolbar-index-" + index;
 	}
 
 	// When the overflow item is clicked to open the overflow menu we must set the
@@ -107,76 +107,73 @@ class ToolbarOverflowItem extends React.Component {
 	// The overflow index values are used to split out the overflow menu action items
 	// from the left bar and right bar.
 	// When the overflow menu is closed we set the overflow index values to null.
-	toggleExtendedMenu() {
-		if (this.state.showExtendedMenu) {
-			this.closeSubArea();
+	function toggleExtendedMenu() {
+		if (showExtendedMenu) {
+			closeSubArea();
 
 		} else {
-			this.openSubArea();
+			openSubArea();
 		}
 	}
 
-	clickOutside(evt) {
-		if (this.state.showExtendedMenu) {
+	function clickOutside(evt) {
+		if (showExtendedMenu) {
 			// Selector for the overflow-container that contains the overflow icon
 			// and submenu (if submenu is open).
-			const selector = "." + this.genIndexClassName();
+			const selector = "." + genIndexClassName();
 			const isClickInOverflowContainer = evt.target.closest(selector);
 			if (!isClickInOverflowContainer) {
-				this.setState({ showExtendedMenu: false });
+				setShowExtendedMenu(false);
 			}
 		}
 	}
 
-	render() {
-		let overflowMenu = null;
-		if (this.state.showExtendedMenu) {
-			const actionItemRect = this.buttonRef.current.getBoundingClientRect();
-			overflowMenu = (
-				<ToolbarSubMenu
-					ref={this.subMenuRef}
-					subMenuActions={this.props.subMenuActions}
-					instanceId={this.props.instanceId}
-					toolbarActionHandler={this.props.toolbarActionHandler}
-					closeSubArea={this.closeSubArea}
-					setToolbarFocusAction={this.props.setToolbarFocusAction}
-					actionItemRect={actionItemRect}
-					expandDirection={"vertical"}
-					containingDivId={this.props.containingDivId}
-					parentSelector={".toolbar-overflow-container"}
-					isOverflowMenu
-					isCascadeMenu={false}
-					size={this.props.size}
-				/>
-			);
-		}
-
-		const tabIndex = this.props.toolbarFocusAction === this.props.action ? 0 : -1;
-
-		return (
-			<div className={this.genOverflowButtonClassName()} data-toolbar-action={this.props.action}>
-				<div className={"toolbar-overflow-item"}>
-					<Button
-						ref={this.buttonRef}
-						kind="ghost"
-						tabIndex={tabIndex}
-						onClick={this.toggleExtendedMenu}
-						onKeyDown={this.onKeyDown}
-						aria-label={this.props.label}
-						size={this.props.size}
-					>
-						<div className="toolbar-item-content default">
-							<div className="toolbar-icon overflow-item">
-								<OverflowMenuVertical />
-							</div>
-						</div>
-					</Button>
-				</div>
-				{overflowMenu}
-			</div>
+	let overflowMenu = null;
+	if (showExtendedMenu) {
+		const actionItemRect = buttonRef.current.getBoundingClientRect();
+		overflowMenu = (
+			<ToolbarSubMenu
+				subMenuActions={subMenuActions}
+				instanceId={instanceId}
+				toolbarActionHandler={toolbarActionHandler}
+				closeSubArea={closeSubArea}
+				setToolbarFocusAction={setToolbarFocusAction}
+				actionItemRect={actionItemRect}
+				expandDirection={"vertical"}
+				containingDivId={containingDivId}
+				parentSelector={".toolbar-overflow-container"}
+				isOverflowMenu
+				isCascadeMenu={false}
+				size={size}
+			/>
 		);
 	}
-}
+
+	const tabIndex = toolbarFocusAction === action ? 0 : -1;
+
+	return (
+		<div className={genOverflowButtonClassName()} data-toolbar-action={action}>
+			<div className={"toolbar-overflow-item"}>
+				<Button
+					ref={buttonRef}
+					kind="ghost"
+					tabIndex={tabIndex}
+					onClick={toggleExtendedMenu}
+					onKeyDown={onKeyDown}
+					aria-label={label}
+					size={size}
+				>
+					<div className="toolbar-item-content default">
+						<div className="toolbar-icon overflow-item">
+							<OverflowMenuVertical />
+						</div>
+					</div>
+				</Button>
+			</div>
+			{overflowMenu}
+		</div>
+	);
+});
 
 ToolbarOverflowItem.propTypes = {
 	index: PropTypes.number.isRequired,
