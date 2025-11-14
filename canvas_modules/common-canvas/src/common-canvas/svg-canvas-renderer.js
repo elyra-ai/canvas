@@ -2084,13 +2084,13 @@ export default class SVGCanvasRenderer {
 			)
 			.attr("connected", (port) => (port.isConnected ? "yes" : "no"))
 			.attr("class", (port) => this.getNodeInputPortClassName() + (port.class_name ? " " + port.class_name : ""))
+			.attr("tabindex", -1)
 			.call((joinedInputPortGrps) => this.updateInputPorts(joinedInputPortGrps, node));
 	}
 
 	createInputPorts(enter, node) {
 		const inputPortGroups = enter
 			.append("g")
-			.attr("tabindex", () => (node.layout?.inputPortFocusable ? -1 : ""))
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, inputPorts) => {
@@ -2186,13 +2186,13 @@ export default class SVGCanvasRenderer {
 			)
 			.attr("connected", (port) => (port.isConnected ? "yes" : "no"))
 			.attr("class", (port) => this.getNodeOutputPortClassName() + (port.class_name ? " " + port.class_name : ""))
+			.attr("tabindex", -1)
 			.call((joinedOutputPortGrps) => this.updateOutputPorts(joinedOutputPortGrps, node));
 	}
 
 	createOutputPorts(enter, node) {
 		const outputPortGroups = enter
 			.append("g")
-			.attr("tabindex", () => (node.layout?.outputPortFocusable ? -1 : ""))
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, outputPorts) => {
