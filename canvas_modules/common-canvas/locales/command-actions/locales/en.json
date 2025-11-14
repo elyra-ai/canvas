@@ -25,7 +25,7 @@
 	"action.deleteNodesCommentsLinks": "Delete {nodes_count, plural, one {# node} other {# nodes} }, {comments_count, plural, one {# comment} other {# comments} } and {links_count, plural, one {# link} other {# links} }",
 	"action.deleteNodesComments": "Delete {nodes_count, plural, one {# node} other {# nodes} } and {comments_count, plural, one {# comment} other {# comments} }",
 	"action.disconnectObjects": "Disconnect objects",
-	"action.displayPreviousPipeline": "Display previous pipline",
+	"action.displayPreviousPipeline": "Display previous pipeline",
 	"action.displaySubPipeline": "Display supernode full page",
 	"action.editComment": "Edit comment",
 	"action.editLinkDecorationLabel": "Edit link decoration label",

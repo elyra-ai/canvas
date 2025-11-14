@@ -63,7 +63,7 @@ describe("Test of action image tooltip direction", function() {
 		// Test: "When tooltip_direction is not specified, default direction is bottom
 		// ---------------------------------------------------------------------------
 
-		// Click "Conditions" catgeory
+		// Click "Conditions" category
 		cy.get(".right-flyout-panel .cds--accordion__heading").eq(2)
 			.click();
 		// For "image_cond_hide" image, tooltip_direction is not specified

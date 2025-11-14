@@ -96,7 +96,7 @@ class Toolbar extends React.Component {
 		const index = focusableItems.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
 		if (focusableItems.length === 0 && this.state.focusAction !== "disabled") {
 			this.setTabIndexOnDisabledToolbar();
-		} else if (index === -1 || (!this.isFocusInToolbar && this.props.setInititalFocus)) {
+		} else if (index === -1 || (!this.isFocusInToolbar && this.props.setInitialFocus)) {
 			this.isFocusInToolbar = true;
 			this.setFocusOnFirstItem();
 		}
@@ -585,7 +585,7 @@ Toolbar.propTypes = {
 	toolbarActionHandler: PropTypes.func,
 	tooltipDirection: PropTypes.string,
 	additionalText: PropTypes.object,
-	setInititalFocus: PropTypes.bool,
+	setInitialFocus: PropTypes.bool,
 	closeToolbarOnEsc: PropTypes.bool,
 	closeToolbar: PropTypes.func,
 	size: PropTypes.oneOf(["md", "sm"])

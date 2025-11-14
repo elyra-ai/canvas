@@ -58,7 +58,7 @@ class PaletteDialog extends React.Component {
 
 		// horizontalSizingAction and horizontalSizingHover can be set to left or right
 		this.horizontalSizingAction = "";
-		this.hoizontalSizingHover = "";
+		this.horizontalSizingHover = "";
 
 		// These variables store the palette dimensions
 		this.savedWidth = 0;
@@ -73,7 +73,7 @@ class PaletteDialog extends React.Component {
 
 		// Need to control resizing of palette with snap to grid.
 		this.adjustedWidth = 137; // default width - (default content node grid width)
-		this.adjustedHeight = 51; // default heigth - (default content node grid height) + padding to avoid scroll bar
+		this.adjustedHeight = 51; // default height - (default content node grid height) + padding to avoid scroll bar
 		this.adjustedScrollBarWidth = 15;
 
 		// Boolean to remember whether we are maximized or not. This gets set to
@@ -83,7 +83,7 @@ class PaletteDialog extends React.Component {
 		this.paletteNodes = [];
 
 		// Correction for palette cursor position
-		// Used in both hoverzone detection and mouseMove vertical resize at bottom of paletteDiv
+		// Used in both hover zone detection and mouseMove vertical resize at bottom of paletteDiv
 		this.hackPaletteOffset = 46;
 		this.hackPaletteTopOffset = this.hackPaletteOffset + 4;
 

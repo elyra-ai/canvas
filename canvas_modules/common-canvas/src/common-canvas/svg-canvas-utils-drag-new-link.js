@@ -100,7 +100,7 @@ export default class SVGCanvasUtilsDragNewLink {
 			this.targetContainsClass(d3Event, "d3-node-port-output-assoc");
 	}
 
-	// Returns true if the d3Event contains a current target with the spcified class name.
+	// Returns true if the d3Event contains a current target with the specified class name.
 	targetContainsClass(d3Event, className) {
 		return d3Event.sourceEvent?.currentTarget?.classList?.contains(className);
 	}

@@ -355,7 +355,7 @@ describe("Test overrideAutoEnableDisable toolbar config option", function() {
 		cy.clickOptionFromContextMenu("New comment");
 
 		// After adding a comment undo should still be disabled because
-		// the automatic enable/disabled code is overriden.
+		// the automatic enable/disabled code is overridden.
 		cy.verifyToolbarButtonEnabled("undo", false);
 	});
 });

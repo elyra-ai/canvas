@@ -59,8 +59,8 @@ export default class ContextMenuWrapper extends React.Component {
 	handleClickOutside(e) {
 		// On Safari, when a user is displaying the context menu with a ctrl-click
 		// (which is a supported context menu gesture on the Mac) a secondary click
-		// event is emmitted which is received here with the ctrlKey field enabled.
-		// So we ignore that event otherwse, if we continue, the context menu will
+		// event is emitted which is received here with the ctrlKey field enabled.
+		// So we ignore that event otherwise, if we continue, the context menu will
 		// be closed.
 		if (e.ctrlKey) {
 			e.stopPropagation();
@@ -79,7 +79,7 @@ export default class ContextMenuWrapper extends React.Component {
 		}
 	}
 
-	// Retruns true if the event occurred over the context menu.
+	// Returns true if the event occurred over the context menu.
 	isOverContextMenu(e) {
 		const domNode = document.getElementById("context-menu-popover");
 		return !domNode || domNode.contains(e.target);
@@ -87,7 +87,7 @@ export default class ContextMenuWrapper extends React.Component {
 
 	// Returns true if the event occurred over the ellipsis button. Typically
 	// there will be only one ellipsis button on the canvas, since they are only
-	// displayed on hover, but in some test cicumstances there might be more
+	// displayed on hover, but in some test circumstances there might be more
 	// than one.
 	isOverEllipsisButton(e) {
 		const ellipsisNodes = document.getElementsByClassName("d3-node-ellipsis-group");

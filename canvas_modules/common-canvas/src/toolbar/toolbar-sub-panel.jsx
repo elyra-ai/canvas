@@ -58,7 +58,7 @@ class ToolbarSubPanel extends React.Component {
 	}
 
 	closeSubPanel(evt) {
-		this.props.closeSubArea(); // Don't pass a paremeter otherwise it will check closeSubAreaOnClick.
+		this.props.closeSubArea(); // Don't pass a parameter otherwise it will check closeSubAreaOnClick.
 	}
 
 	render() {

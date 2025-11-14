@@ -849,9 +849,9 @@ export default class APIPipeline {
 		let movedNodesInfo = {};
 		let movedLinksInfo = {};
 		if (layoutDirection === VERTICAL) {
-			[movedNodesInfo, movedLinksInfo] = this.dagreAutolayout(DAGRE_VERTICAL, canvasInfoPipeline);
+			[movedNodesInfo, movedLinksInfo] = this.dagreAutoLayout(DAGRE_VERTICAL, canvasInfoPipeline);
 		} else {
-			[movedNodesInfo, movedLinksInfo] = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasInfoPipeline);
+			[movedNodesInfo, movedLinksInfo] = this.dagreAutoLayout(DAGRE_HORIZONTAL, canvasInfoPipeline);
 		}
 
 		this.sizeAndPositionObjects(movedNodesInfo, movedLinksInfo);
@@ -860,7 +860,7 @@ export default class APIPipeline {
 	// Returns two arrays containing info to indicate new auto-layout
 	// positions for nodes and, if present, fully-detached and semi-detached
 	// links. Uses the Dagre library to calculate the new positions.
-	dagreAutolayout(direction, canvasInfoPipeline) {
+	dagreAutoLayout(direction, canvasInfoPipeline) {
 		const canvasLayout = this.objectModel.getCanvasLayout();
 
 		var nodeLinks = canvasInfoPipeline.links.filter((link) => {
@@ -876,7 +876,7 @@ export default class APIPipeline {
 
 		// Create an array of edges, from the node links, to be passed to Dagre.
 		// At the same time, for any semi-detached or fully-detached links we
-		// create a temporary node so Dagre will also autlayout the ends of
+		// create a temporary node so Dagre will also auto layout the ends of
 		// detached links.
 		var edges = nodeLinks.map((link) => {
 			let srcNodeId = link.srcNodeId;
@@ -955,7 +955,7 @@ export default class APIPipeline {
 			lookup[outputGraph.nodes[i].v] = outputGraph.nodes[i];
 		}
 
-		// When calculaing the new x_pos and y_pos of the node use the width (and
+		// When calculating the new x_pos and y_pos of the node use the width (and
 		// height) specified in the output graph. This will be the 'newWidth' which
 		// includes the space for the connecting lines calculated earlier.
 		canvasInfoPipelineNodes.forEach((node) => {
@@ -997,7 +997,7 @@ export default class APIPipeline {
 				const linkId = node.v.split("temp-trg-node-")[1];
 
 				movedLinksInfo[linkId] = {
-					// If it is a fully detached link include srcPos cordinates.
+					// If it is a fully detached link include srcPos coordinates.
 					...movedLinksInfo[linkId],
 					trgPos: {
 						x_pos: node.value.x - (node.value.width / 2),
@@ -1265,9 +1265,9 @@ export default class APIPipeline {
 		return null;
 	}
 
-	// Creates a new link objct which is attached to a source node but detached
+	// Creates a new link object which is attached to a source node but detached
 	// at the target end. The input data object may contain some or all of the
-	// link properties because they may be populatd by the host application
+	// link properties because they may be populated by the host application
 	// in the beforeEditActionHandler.
 	createNodeLinkDetached(data = {}) {
 		const link = {};
@@ -1543,7 +1543,7 @@ export default class APIPipeline {
 	}
 
 	// Returns true if the comment with the commentId passed in
-	// is linked to nonselected nodes.
+	// is linked to non-selected nodes.
 	isCommentLinkedToNonSelectedNodes(commentId) {
 		const commentLinks = this.getLinksContainingId(commentId);
 		const selectedIds = this.objectModel.getSelectedObjectIds();

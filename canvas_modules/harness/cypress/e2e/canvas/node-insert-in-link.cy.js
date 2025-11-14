@@ -35,7 +35,7 @@ describe("Test dropping a node on a link with enableInsertNodeDroppedOnLink opti
 		cy.dragNodeToPosition("Select", 490, 240);
 
 		// There should now be one extra link because, on inserting the node, we
-		// rmoved the old link and added two new ones.
+		// removed the old link and added two new ones.
 		cy.verifyNumberOfPortDataLinks(5);
 
 		// Check the new links exist to and from the newly added Select node.
@@ -89,7 +89,7 @@ describe("Test dropping a node on a link with enableInsertNodeDroppedOnLink opti
 		// from within the canvas UI not palette
 		cy.verifyNumberOfPortDataLinks(4);
 		cy.dragNodeToPosition("Select", 490, 340);
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Select").click();
 		cy.moveNodeToPosition("Select", 490, 240);
@@ -105,7 +105,7 @@ describe("Test dropping a node on a link with enableInsertNodeDroppedOnLink opti
 		cy.clickCategory("Record Ops");
 		cy.dragNodeToPosition("Sort", 500, 600);
 
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Sort").click();
 		// Move the Select node from the canvas onto the link between the
@@ -113,7 +113,7 @@ describe("Test dropping a node on a link with enableInsertNodeDroppedOnLink opti
 		cy.moveNodeToPosition("Sort", 400, 200);
 
 		// There should now be one extra link because, on inserting the node, we
-		// rmoved the old link and added two new ones.
+		// removed the old link and added two new ones.
 		cy.verifyNumberOfPortDataLinks(5);
 
 		// Check the new links exist to and from the newly added Select node.
@@ -204,7 +204,7 @@ describe("Test dropping a node, with existing links, on the canvas onto a link w
 	});
 
 	it("Drag node with output link from stream on the canvas onto a link - should 'work'", function() {
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Sample").click();
 		// Move the Sample node from the canvas onto the link between the
