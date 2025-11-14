@@ -123,7 +123,7 @@ $link-highlight-color: carbon.$support-info;
 
 // Declare our own focus highlighting for text entry.
 @mixin d3-text-entry-focus-mixin {
-	// Supress the default focus highlighting with non-carbon color and round corners.
+	// Suppress the default focus highlighting with non-carbon color and round corners.
 	outline: none;
 	// Add our own focus highlighting with our own color and square corners
 	box-shadow: 0 0 0 carbon.$spacing-01 carbon.$focus;
@@ -149,7 +149,7 @@ $link-highlight-color: carbon.$support-info;
 /* Background rectangle for sub-flow display inside supernodes */
 
 // This fill is applied to the background rectangle when no display grid
-// is present. It may be overidden by the code when a background grid
+// is present. It may be overridden by the code when a background grid
 // is being displayed.
 .d3-svg-background {
 	fill: $canvas-background-color;
@@ -373,9 +373,9 @@ $link-highlight-color: carbon.$support-info;
 		word-wrap: normal;
 		word-break: break-word;
 
-		// These three properties force a ... to be displayd at the end of the
+		// These three properties force a ... to be displayed at the end of the
 		// second line if the text is greater than two lines. -webkit-line-clamp
-		// can be overriden by the application to support more than 2 lines.
+		// can be overridden by the application to support more than 2 lines.
 		display: -webkit-inline-box; // stylelint-disable-line value-no-vendor-prefix
 		line-clamp: 2;
 		-webkit-line-clamp: 2;
@@ -863,7 +863,7 @@ g.bkg-col-cyan-50 {
 }
 
 @mixin d3-comment-markdown {
-	// Styles need for HTML elemnets genereted from markdown.
+	// Styles need for HTML elements generated from markdown.
 	h1 {
 		font-size: 28px;
 		font-weight: 500;

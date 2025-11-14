@@ -200,7 +200,7 @@ class CanvasContents extends React.Component {
 		const actions = this.props.canvasController.getKeyboardConfig().actions;
 
 		// We don't handle key presses when:
-		// 1. We are editng text, because the text area needs to receive key
+		// 1. We are editing text, because the text area needs to receive key
 		//    presses for undo, redo, delete etc.
 		// 2. Dragging objects
 		if (this.svgCanvasD3.isEditingText() || this.svgCanvasD3.isDragging()) {

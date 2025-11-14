@@ -18,8 +18,8 @@
 export default class Logger {
 
 	// prefix can be either a string or an array of string. The prefix(s) are
-	// displayed at the beginning of any console messgae sepearated from the
-	// message (and from each orther) by a dash.
+	// displayed at the beginning of any console message separated from the
+	// message (and from each other) by a dash.
 	constructor(prefix) {
 		this.prefix = prefix;
 	}

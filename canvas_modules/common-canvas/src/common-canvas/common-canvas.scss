@@ -43,7 +43,7 @@ $panel-border-color: carbon.$border-subtle-01;
 	min-width: inherit;
 	cursor: default;
 	overflow: hidden;
-	position: relative; // This allows the State Tag to have positio: absolute
+	position: relative; // This allows the State Tag to have position: absolute
 }
 
 .right-flyout {
@@ -161,7 +161,7 @@ $panel-border-color: carbon.$border-subtle-01;
 	// For text toolbar - top and left will be calculated and set programmatically
 	// For context toolbar - top, left and width will be calculated and set programmatically.
 	// 'width' is set for the context toolbar because the overflow button must be forced to
-	// appear by setting the width approriately (see cc-context-toolbar.jsx).
+	// appear by setting the width appropriately (see cc-context-toolbar.jsx).
 	top: 0;
 	left: 0;
 	width: fit-content;

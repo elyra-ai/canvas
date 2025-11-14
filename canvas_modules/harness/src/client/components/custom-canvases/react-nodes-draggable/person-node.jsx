@@ -42,7 +42,7 @@ class PersonNode extends React.Component {
 		};
 		evt.dataTransfer.setData("text", JSON.stringify(transferData));
 
-		// Store label in document object so it can be accessesd in
+		// Store label in document object so it can be accessed in
 		// onDragEnter because in onDragEnter the event object will
 		// not contain the transferData.
 		document.objBeingDragged = this.props.nodeData.label;

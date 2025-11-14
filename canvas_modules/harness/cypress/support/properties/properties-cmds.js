@@ -179,16 +179,16 @@ Cypress.Commands.add("findValidationIconInSummaryPanel", (summaryPanelId) => {
 Cypress.Commands.add("getSummaryFromName", (summaryName) => {
 	cy.get(".properties-summary-values > .properties-summary-label")
 		.then((summaryLabels) => {
-			let sumaryLabel = null;
+			let summaryLabel = null;
 			for (let idx = 0; idx < summaryLabels.length; idx++) {
 				if (summaryLabels[idx].textContent === summaryName) {
-					sumaryLabel = summaryLabels[idx];
+					summaryLabel = summaryLabels[idx];
 					break;
 				}
 			}
 
 			// return .properties-summary-value having the given summaryName
-			return cy.wrap(sumaryLabel).parent();
+			return cy.wrap(summaryLabel).parent();
 		});
 });
 

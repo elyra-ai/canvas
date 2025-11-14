@@ -31,7 +31,7 @@ describe("Test link can be replaced when selectedLinkReplaceOnNewConnection is s
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Out 0:1", "outPort", "In 0:1", "inPort", 1);
 
-		// Make a connction to the same 0:1 port that the link previously created
+		// Make a connection to the same 0:1 port that the link previously created
 		// connects to. This link creation should work because selectedLinkReplaceOnNewConnection
 		// is switched on and the port on Out 0:1 is maxed out with 1 link.
 		cy.linkNodeOutputPortToNodeInputPort("Out 0:3", "outPort", "In 0:1", "inPort");
@@ -102,10 +102,10 @@ describe("Test replacing link after loading an old style canvas document when se
 		cy.clickCategory("Record Ops");
 		cy.dragNodeToPosition("Select", 380, 500);
 
-		// Chck there are five node to node data link
+		// Check there are five node to node data link
 		cy.verifyNumberOfPortDataLinks(5);
 
-		// Make a conneciton from the Select node to the Na_to_K node. This should
+		// Make a connection from the Select node to the Na_to_K node. This should
 		// replace the link from DRUG1n to Na_to_K.
 		cy.linkNodeOutputPortToNodeInputPort("Select", "outPort", "Na_to_K", "inPort");
 

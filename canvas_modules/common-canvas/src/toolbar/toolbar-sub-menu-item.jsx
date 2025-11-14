@@ -134,7 +134,7 @@ class ToolbarSubMenuItem extends React.Component {
 	}
 
 	// Returns a sub-area for a cascading menu item. The sub-area can be either a
-	// sub-panel which is a div contaiing whatever the caller passes in within the
+	// sub-panel which is a div containing whatever the caller passes in within the
 	// supPanel field  OR a sub-menu which is a list of options which is created
 	// from the array of items the caller passes in the subMenu field.
 	generateSubArea() {

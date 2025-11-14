@@ -56,7 +56,7 @@ describe("Test basic undo/redo operations", function() {
 		cy.clickNode("Select");
 		cy.clickToolbarAddComment();
 
-		// TODO - Fix when autoselect is available.
+		// TODO - Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getCommentWithText("").click("topLeft");
 
@@ -104,7 +104,7 @@ describe("Test basic undo/redo operations", function() {
 		// cy.verifyNumberOfPortDataLinks(0);
 
 		// Move node on canvas
-		// TODO - Fix when autoselect is available.
+		// TODO - Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Var. File").click();
 
@@ -123,7 +123,7 @@ describe("Test basic undo/redo operations", function() {
 		verifyRedoCommandExecuted("Var. File");
 
 		// Move comment on canvas
-		// TODO - Fix when autoselect is available.
+		// TODO - Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getCommentWithText("This comment box should be edited.").click();
 
@@ -564,9 +564,9 @@ describe("Test undo/redo property values and title in common-properties", functi
 		cy.clickPropertiesFlyoutTitleEditIcon();
 		cy.enterNewPropertiesFlyoutTitle("My C5.0 model");
 
-		// TDOD - this part of the test is supposed to test an error in the sampling ration field
+		// TODO - this part of the test is supposed to test an error in the sampling ration field
 		// However backspace no longer removes the default value from the field.
-		// Find a way to test an invlaid value in a field.
+		// Find a way to test an invalid value in a field.
 		// cy.backspaceTextFieldValue("samplingRatio");
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3759
 

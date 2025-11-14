@@ -34,8 +34,8 @@ export default class PipelineInHandler {
 	static convertPipelinesToCanvasInfoPipelines(pipelines, canvasLayout) {
 		let canvasInfoPipelines = [];
 		if (pipelines) {
-			canvasInfoPipelines = pipelines.map((pFlowPipline) =>
-				this.convertPipelineToCanvasInfoPipeline(pFlowPipline, canvasLayout)
+			canvasInfoPipelines = pipelines.map((pFlowPipeline) =>
+				this.convertPipelineToCanvasInfoPipeline(pFlowPipeline, canvasLayout)
 			);
 		}
 		return canvasInfoPipelines;

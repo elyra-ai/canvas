@@ -39,7 +39,7 @@ this.propertiesInfo = {
   appData: "{user-defined}",                // Optional - User data returned in applyPropertyChanges
   additionalComponents: "{components}",     // Optional - Additional component(s) to display
   messages: "[node_messages]",              // Optional - Node messages array
-  expressionInfo: this.expressionInfo,      // Optional - Information for expression builde
+  expressionInfo: this.expressionInfo,      // Optional - Information for expression build
   initialEditorSize: "{size}",              // Optional - This value will override the value of
                                             // editor_size in uiHints. This can have a value of
                                             // "small", "medium", "large", or null

@@ -201,12 +201,12 @@ export default class SidePanelProperties extends React.Component {
 		let key = 1;
 		const formOptions = [];
 		const paramDefOptions = [];
-		const choosefromlocation = [];
+		const chooseFromLocation = [];
 		options.push(<SelectItem key = "choose-an-option" text = "Choose an option..." value = "Choose an option..." />);
-		choosefromlocation.push(
+		chooseFromLocation.push(
 			<SelectItem key={"choose-from-location"} text = "Choose From Location" value = {CHOOSE_FROM_LOCATION} />);
 		options.push(
-			<SelectItemGroup key ={"choose-file-option"} label = {LOCAL_FILE_OPTION}>{choosefromlocation}
+			<SelectItemGroup key ={"choose-file-option"} label = {LOCAL_FILE_OPTION}>{chooseFromLocation}
 			</SelectItemGroup>);
 		for (const option of this.state.commonPropertiesParamDefsFiles) {
 			paramDefOptions.push(<SelectItem key={"param-def-option-" + key++} text={option} value={option} />);

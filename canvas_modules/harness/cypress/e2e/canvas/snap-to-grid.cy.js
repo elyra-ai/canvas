@@ -25,7 +25,7 @@ describe("Test dragged node snaps to grid", function() {
 		// First move a node by an odd amount with no snap-to-grid to make sure
 		// it moves appropriately.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "None" });
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Binding (entry) node").click();
 		cy.verifyNodeTransform("Binding (entry) node", 89, 99.5);
@@ -68,7 +68,7 @@ describe("Test dragged comment snaps to grid", function() {
 		// First move a comment by an odd amount with no snap-to-grid to make sure
 		// it moves appropriately.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "None" });
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getCommentWithText("The 4 different node types").click();
 		cy.verifyCommentTransform("The 4 different node types", 400, 50);
@@ -95,7 +95,7 @@ describe("Test dragged comment snaps to grid", function() {
 		// and verify the comment is at a different position.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "After" });
 		cy.wait(10);
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getCommentWithText("The 4 different node types").click();
 		cy.verifyCommentTransform("The 4 different node types", 402.5, 45);
@@ -117,7 +117,7 @@ describe("Test resized comment snaps to grid", function() {
 		// during snap to grid may also move the position of the comment.
 		cy.setCanvasConfig({ "selectedSnapToGridType": "During" });
 		cy.wait(10);
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getCommentWithText("The 4 different node types").click();
 		cy.moveCommentToPosition("The 4 different node types", 100, 300);

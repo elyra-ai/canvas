@@ -128,7 +128,7 @@ describe("Test whether actions can be performed depending on enableEditingAction
 });
 
 
-// This method tests varions functions to make sure they are possible either
+// This method tests various functions to make sure they are possible either
 // when enableEditingActions is set to 'true' or when enableEditingActions is
 // not set in which case it should default to 'true'.
 function testWithEditingActionsSet() {

@@ -65,7 +65,7 @@ function getOccurrences(nodeType, category, filterStrings) {
 	return null;
 }
 
-// Returns the occurences and hit counts info for the label of the category
+// Returns the occurrences and hit counts info for the label of the category
 // passed in based on the filterStrings.
 function getCategoryLabelInfo(category, filterStrings) {
 	const catLabel = has(category, "label") && category.label
@@ -75,7 +75,7 @@ function getCategoryLabelInfo(category, filterStrings) {
 	return { catLabelOccurrences: occurrences, catLabelHitCounts: hitCounts };
 }
 
-// Returns the occurences and hit counts info for the label of the node
+// Returns the occurrences and hit counts info for the label of the node
 // passed in based on the filterStrings.
 function getNodeLabelInfo(nodeType, filterStrings) {
 	const nodeLabel = has(nodeType, "app_data.ui_data.label") && nodeType.app_data.ui_data.label
@@ -85,7 +85,7 @@ function getNodeLabelInfo(nodeType, filterStrings) {
 	return { nodeLabelOccurrences: occurrences, nodeLabelHitCounts: hitCounts };
 }
 
-// Returns the occurences and hit counts info for the description of the node
+// Returns the occurrences and hit counts info for the description of the node
 // passed in based on the filterStrings.
 function getNodeDescInfo(nodeType, filterStrings) {
 	const desc = has(nodeType, "app_data.ui_data.description") && nodeType.app_data.ui_data.description
@@ -198,7 +198,7 @@ function joinOccurrences(occurrences, newOccurrences) {
 
 // Returns up to a maximum of 20 occurrences of the searchString in the mainString.
 // 20 is an arbitrary number chosen to improve search performance since it is
-// considerd unlikely a user will care about anythig more than 20 hits on a
+// considered unlikely a user will care about anything more than 20 hits on a
 // string (which would most likely be in a description string).
 function wordOccurrencesByString(mainString, searchString) {
 	const occurrences = [];
@@ -218,7 +218,7 @@ function wordOccurrencesByString(mainString, searchString) {
 }
 
 // If we need to support a locale specific search we can uncomment the code
-// below and use localeIndexOf inplace of <string>.indexOf() in the code above.
+// below and use localeIndexOf in-place of <string>.indexOf() in the code above.
 
 // function localeIndexOf(mainString, searchString, fromIndex) {
 // 	let index = -1;

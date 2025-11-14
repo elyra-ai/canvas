@@ -213,7 +213,7 @@ export default class ProgressCanvas extends React.Component {
 	}
 
 	stopProgress() {
-		// Stop the annimations
+		// Stop the animations
 		clearTimeout(this.part1);
 		clearTimeout(this.part2);
 		clearTimeout(this.part3);

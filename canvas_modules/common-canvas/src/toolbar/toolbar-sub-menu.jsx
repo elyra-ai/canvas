@@ -148,20 +148,20 @@ class ToolbarSubMenu extends React.Component {
 		return focusableActions;
 	}
 
-	getPreviousFocusAction(focuableActions) {
-		const index = focuableActions.findIndex((fa) => fa.action === this.state.focusAction);
+	getPreviousFocusAction(focusableActions) {
+		const index = focusableActions.findIndex((fa) => fa.action === this.state.focusAction);
 		if (index > 0) {
-			return focuableActions[index - 1];
+			return focusableActions[index - 1];
 		}
-		return focuableActions[focuableActions.length - 1];
+		return focusableActions[focusableActions.length - 1];
 	}
 
-	getNextFocusAction(focuableActions) {
-		const index = focuableActions.findIndex((fa) => fa.action === this.state.focusAction);
-		if (index < focuableActions.length - 1) {
-			return focuableActions[index + 1];
+	getNextFocusAction(focusableActions) {
+		const index = focusableActions.findIndex((fa) => fa.action === this.state.focusAction);
+		if (index < focusableActions.length - 1) {
+			return focusableActions[index + 1];
 		}
-		return focuableActions[0];
+		return focusableActions[0];
 	}
 
 	getFirstCheckedItem() {

@@ -23,7 +23,7 @@ import PaletteContentList from "./palette-content-list.jsx";
 class PaletteDialogContent extends React.Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
 		// We get the paletteJSON after the initial render so set the
-		// default selected category when it is recieved.
+		// default selected category when it is received.
 		if (nextProps.paletteJSON &&
 				nextProps.paletteJSON.categories &&
 				nextProps.paletteJSON.categories.length > 0 &&

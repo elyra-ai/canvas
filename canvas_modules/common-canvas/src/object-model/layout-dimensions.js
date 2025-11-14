@@ -388,7 +388,7 @@ const horizontalDefaultLayout = {
 
 		// Controls display of an arrow head on the data links. May be set to null to
 		// get default behavior which is that arrow heads are displayed on "Freeform"
-		// links and not dispayed on "Ports" links. Or, it can be set to a boolean, as
+		// links and not displayed on "Ports" links. Or, it can be set to a boolean, as
 		// appropriate, or to an SVG string to display a custom arrow head.
 		dataLinkArrowHead: null,
 
@@ -468,7 +468,7 @@ const horizontalDefaultLayout = {
 		alwaysDisplayBackToParentFlow: false,
 
 		// The amount of padding added around the canvas objects when doing a
-		// zoomToFit on the primary canvas. This may be overriden by common-canvas
+		// zoomToFit on the primary canvas. This may be overridden by common-canvas
 		// when displaying sub-flows.
 		zoomToFitPadding: 10,
 
@@ -513,7 +513,7 @@ const horizontalDefaultLayout = {
 		autoLayoutInitialMarginX: 50,
 		autoLayoutInitialMarginY: 50,
 		autoLayoutVerticalSpacing: 80,
-		autoLayoutHorizontalSpacing: 80 // For horizontal layout, this may be overriden by space for connections
+		autoLayoutHorizontalSpacing: 80 // For horizontal layout, this may be overridden by space for connections
 	}
 };
 
@@ -883,7 +883,7 @@ const verticalDefaultLayout = {
 
 		// Controls display of an arrow head on the data links. May be set to null to
 		// get default behavior which is that arrow heads are displayed on "Freeform"
-		// links and not dispayed on "Ports" links. Or, it can be set to a boolean, as
+		// links and not displayed on "Ports" links. Or, it can be set to a boolean, as
 		// appropriate, or to an SVG string to display a custom arrow head.
 		dataLinkArrowHead: null,
 
@@ -963,7 +963,7 @@ const verticalDefaultLayout = {
 		alwaysDisplayBackToParentFlow: false,
 
 		// The amount of padding added around the canvas objects when doing a
-		// zoomToFit on the primary canvas. This may be overriden by common-canvas
+		// zoomToFit on the primary canvas. This may be overridden by common-canvas
 		// when displaying sub-flows.
 		zoomToFitPadding: 10,
 
@@ -1008,7 +1008,7 @@ const verticalDefaultLayout = {
 		autoLayoutInitialMarginX: 50,
 		autoLayoutInitialMarginY: 50,
 		autoLayoutVerticalSpacing: 80,
-		autoLayoutHorizontalSpacing: 80 // For horizontal layout, this may be overriden by space for connections
+		autoLayoutHorizontalSpacing: 80 // For horizontal layout, this may be overridden by space for connections
 	}
 };
 
@@ -1052,7 +1052,7 @@ export default class LayoutDimensions {
 
 	static overrideCanvasLayout(layout, config, overlayLayout) {
 		// TODO - In a future major release the enableStraightLinksAsFreeform field should be
-		// removed and this ovverride code should be returned to its original behavior where
+		// removed and this override code should be returned to its original behavior where
 		// config.enableLinkMethod should directly override linkMethod in the canvasLayout.
 		const linkMethod = (config.enableLinkType === "Straight" && config.enableStraightLinksAsFreeform)
 			? LINK_METHOD_FREEFORM
@@ -1138,7 +1138,7 @@ export default class LayoutDimensions {
 	}
 
 	// Returns a grid size in pixels based on the gridSizeStr passed in
-	// which can be either a numeric value (which is taken as the nuber of pixels)
+	// which can be either a numeric value (which is taken as the number of pixels)
 	// or a numeric value with a % sign at the end which is taken as the percentage
 	// of the defaultNodeSize passed in.
 	static getGridSize(gridSizeStr, defaultNodeSize) {

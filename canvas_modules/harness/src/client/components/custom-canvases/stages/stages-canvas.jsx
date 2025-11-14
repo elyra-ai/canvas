@@ -325,7 +325,7 @@ export default class StagesCanvas extends React.Component {
 		} else if (this.state.leftFlyout === "search") {
 			leftFlyoutContent = (
 				<div style={{ width: "300px", padding: "20px" }}>
-					This panel could contain Search controls to provde a sophisticated search experience.
+					This panel could contain Search controls to provide a sophisticated search experience.
 				</div>
 			);
 		}

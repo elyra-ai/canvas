@@ -66,7 +66,7 @@ export default class SVGCanvasPipeline {
 	// Returns the accessibility object. This saves the accessibility object
 	// from being generated until one of the keyboard navigation calls (below)
 	// are made. Those calls will only be made when the config field
-	// enableKeyboardNavigaiton is true.
+	// enableKeyboardNavigation is true.
 	getAccessibility() {
 		if (this.accessibility) {
 			return this.accessibility;
@@ -153,7 +153,7 @@ export default class SVGCanvasPipeline {
 	}
 
 	// Returns nodes from the active pipeline. If nodeIds is
-	// provided as an array the nodes correspondong to those IDs
+	// provided as an array the nodes corresponding to those IDs
 	// are returned otherwise all nodes are returned.
 	getNodes(nodeIds) {
 		if (!nodeIds) {
@@ -407,9 +407,9 @@ export default class SVGCanvasPipeline {
 		return this.getAccessibility().getPreviousSubObject(obj, subObject);
 	}
 
-	// Returns an arry of focuable sub-elements of a node or link. If the object
+	// Returns an array of focusable sub-elements of a node or link. If the object
 	// is a node they might be visible ports or focusable decorations. If the
-	// object is a link they might be focuable decoarations or start and end
+	// object is a link they might be focusable decorations or start and end
 	// points of detached links.
 	getFocusableSubObjects(d) {
 		return this.getAccessibility().getFocusableSubObjects(d);

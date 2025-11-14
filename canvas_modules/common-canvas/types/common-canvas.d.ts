@@ -265,7 +265,7 @@ export interface NodeLayout {
   labelPosY: CanvasDistance;
 
   /**
-   * Label appearance propeties
+   * Label appearance properties
    */
   labelEditable: boolean;
   labelAlign: "left" | "center";
@@ -801,7 +801,7 @@ export type MoveCommentData = {
   id: CanvasCommentId;
 } & MoveSizeData;
 
-/** ResizeNodeOrCommentData can inlclude move data as well as
+/** ResizeNodeOrCommentData can include move data as well as
  * resize data because some resize operations (such as sizing a
  * in-place supernode can result in surrounding nodes being moved.
  */
@@ -1130,9 +1130,9 @@ export type EditActionData =
   | EditActionRedo
   | EditActionRedoContextMenu;
 
-/** EditActionCommand is provided whewn an undo or redo action is performed.
+/** EditActionCommand is provided when an undo or redo action is performed.
 * It contains the actual action object that performs the action.
-* TODO - specify EditActionCommand intefaces for each action type.
+* TODO - specify EditActionCommand interfaces for each action type.
 */
 export type EditActionCommand = unknown;
 

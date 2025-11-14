@@ -68,7 +68,7 @@ export default class Explain2Canvas extends React.Component {
 						"y_pos": 0,
 						"width": PERCENTAGE_BAR_WIDTH,
 						"height": DEFAULT_HEIGHT,
-						"ouline": true,
+						"outline": true,
 						"class_name": "dec-right-bar"
 					}
 				]
@@ -122,7 +122,7 @@ export default class Explain2Canvas extends React.Component {
 					"y_pos": DEFAULT_HEIGHT - percentageBarHt,
 					"width": PERCENTAGE_BAR_WIDTH,
 					"height": percentageBarHt,
-					"ouline": true,
+					"outline": true,
 					"class_name": percentageBarClassName
 				},
 				{

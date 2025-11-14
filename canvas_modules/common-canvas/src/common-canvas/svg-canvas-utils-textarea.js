@@ -165,7 +165,7 @@ export default class SvgCanvasTextArea {
 			return;
 		}
 
-		// If the blur event is ocurring for an object outside of the textarea and
+		// If the blur event is occurring for an object outside of the textarea and
 		// text toolbar we save the current text and close the textarea.
 		this.completeEditing(evt);
 	}
@@ -228,10 +228,10 @@ export default class SvgCanvasTextArea {
 		}
 	}
 
-	// Handles any actions requested on the comment text to appy WYSIWYG
+	// Handles any actions requested on the comment text to apply WYSIWYG
 	// actions to the <div>. Actions can have an 'extra' parameter which
 	// contains additional info. For example, "background-color" action
-	// will have an extra paremeter containing the color as a hex value.
+	// will have an extra parameter containing the color as a hex value.
 	wysiwygActionHandler(action, evt, editParam) {
 		this.logger.log("wysiwygActionHandler - action = " + action + " editParam = " + editParam);
 
@@ -597,7 +597,7 @@ export default class SvgCanvasTextArea {
 
 		textArea.node().focus();
 
-		// Set the cusrsor to the end of the text.
+		// Set the cursor to the end of the text.
 		textArea.node().setSelectionRange(data.text.length, data.text.length);
 	}
 
@@ -677,7 +677,7 @@ export default class SvgCanvasTextArea {
 	// also increase in height. If the user then presses ESC, to cancel their
 	// text entry, we need to reset the height of the text display area
 	// to its original height. This is only necessary to do for comments and
-	// not for node labels or decoaration labels, because only comments show
+	// not for node labels or decoration labels, because only comments show
 	// selection highlighting.
 	resetHeightOfTextDisplay(data) {
 		const com = this.activePipeline.getComment(data.id);
@@ -755,7 +755,7 @@ export default class SvgCanvasTextArea {
 			.attr("class", "d3-comment-text-entry-scroll")
 			.on("mousedown", (d3Event) => {
 				// This is triggered when the user 'mousedown's on the scrollbar. In this
-				// case, prevent propogation otherwise it causes a 'blur' event and ends
+				// case, prevent propagation otherwise it causes a 'blur' event and ends
 				// the edit mode.
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 			})
@@ -782,11 +782,11 @@ export default class SvgCanvasTextArea {
 			.node();
 
 		// We set the focus on the innermost <div> even though the focus
-		// highlighting is displayed for the forign object. This allows
+		// highlighting is displayed for the foreign object. This allows
 		// key strokes to go to the <div>.
 		textDiv.focus();
 
-		// Set the cusrsor to the end of the text.
+		// Set the cursor to the end of the text.
 		if (textDiv.childNodes.length > 0) {
 			this.setCursor(textDiv.childNodes[0], data.text?.length || 0);
 		}
@@ -843,7 +843,7 @@ export default class SvgCanvasTextArea {
 					}
 				}
 				// If user presses ESC key revert back to original text by
-				// closing the text entry area and reseting the undelying
+				// closing the text entry area and resetting the underlying
 				// text display area height.
 				if (KeyboardUtils.cancelTextEntry(d3Event)) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
@@ -912,7 +912,7 @@ export default class SvgCanvasTextArea {
 				data.height = this.textAreaHeight;
 			})
 			.on("mousedown mouseenter mouseleave click dblclick contextmenu", (d3Event, d) => {
-				d3Event.stopPropagation(); // Allow default behavior to show system contenxt menu
+				d3Event.stopPropagation(); // Allow default behavior to show system context menu
 			});
 	}
 }

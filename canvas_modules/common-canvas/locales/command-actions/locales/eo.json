@@ -25,7 +25,7 @@
 	"action.deleteNodesCommentsLinks": "[Esperanto~Delete {nodes_count, plural, one {# node} other {# nodes} }, {comments_count, plural, one {# comment} other {# comments} } and {links_count, plural, one {# link} other {# links} }~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~eo]",
 	"action.deleteNodesComments": "[Esperanto~Delete {nodes_count, plural, one {# node} other {# nodes} } and {comments_count, plural, one {# comment} other {# comments} }~~~~~~~~~~~~~~~~~~~~~~~eo]",
 	"action.disconnectObjects": "[Esperanto~Disconnect objects~~~~eo]",
-	"action.displayPreviousPipeline": "[Esperanto~Display previous pipline~~~~~eo]",
+	"action.displayPreviousPipeline": "[Esperanto~Display previous pipeline~~~~~eo]",
 	"action.displaySubPipeline": "[Esperanto~Display supernode full page~~~~~~~eo]",
 	"action.editComment": "[Esperanto~Edit comment~eo]",
 	"action.editLinkDecorationLabel": "[Esperanto~Edit link decoration label~~~~~~eo]",

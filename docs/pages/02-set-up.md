@@ -24,7 +24,7 @@ Make sure the peer dependency libraries, specified in the [package.json](https:/
 
 ## Localization
 
-Elyra Canvas text is translated into multple languages. See the [Localization](02.01-localization.md) page for details on how to include that text in the application. In addition, the [text can be customized](02.01-localization.md/#customizing-text-displayed-by-elyra-canvas-componenets) by the application.
+Elyra Canvas text is translated into multiple languages. See the [Localization](02.01-localization.md) page for details on how to include that text in the application. In addition, the [text can be customized](02.01-localization.md/#customizing-text-displayed-by-elyra-canvas-componenets) by the application.
 
 ## Styling
 
