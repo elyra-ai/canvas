@@ -96,7 +96,7 @@ class Toolbar extends React.Component {
 		const index = focusableItems.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
 		if (focusableItems.length === 0 && this.state.focusAction !== "disabled") {
 			this.setTabIndexOnDisabledToolbar();
-		} else if (index === -1 || (!this.isFocusInToolbar && this.props.setInititalFocus)) {
+		} else if (index === -1 || (!this.isFocusInToolbar && this.props.setInitialFocus)) {
 			this.isFocusInToolbar = true;
 			this.setFocusOnFirstItem();
 		}
@@ -172,12 +172,12 @@ class Toolbar extends React.Component {
 	onToolbarResize() {
 		const focusableItemRefs = this.getFocusableItemRefs();
 		// Note: isFocusActionFocusable needs to be calculated here before any
-		// update to the toolbar caused by the code in the subsequent if ststement.
+		// update to the toolbar caused by the code in the subsequent if statement.
 		const isFocusActionFocusable = this.isFocusActionFocusable(this.state.focusAction, focusableItemRefs);
 		const refWithOpenSubArea = this.getRefWithOpenSubArea();
 
 		if (refWithOpenSubArea) {
-			const action = refWithOpenSubArea.current?.getAction();
+			const action = this.getRefAction(refWithOpenSubArea);
 			const isFocusActionWithOpenSubAreaFocusable = this.isFocusActionFocusable(action, focusableItemRefs);
 
 			if (!isFocusActionWithOpenSubAreaFocusable) {
@@ -185,7 +185,7 @@ class Toolbar extends React.Component {
 
 			} else {
 				// This forces a refresh that will cause the position of any
-				// open sub-area to be recaulculated based on the new toolbar width.
+				// open sub-area to be recalculated based on the new toolbar width.
 				this.setFocusAction(this.state.focusAction);
 			}
 		}
@@ -311,7 +311,7 @@ class Toolbar extends React.Component {
 			} else if (!overflowItemRef) {
 				const leftRefAction = this.getRefAction(this.leftItemRefs[i]);
 				const overflowAction = this.getOverflowAction(leftRefAction);
-				overflowItemRef = this.overflowItemRefs.find((oRef) => oRef.current?.getAction() === overflowAction);
+				overflowItemRef = this.overflowItemRefs.find((oRef) => this.getRefAction(oRef) === overflowAction);
 				if (overflowItemRef) {
 					focusableItemRefs.push(overflowItemRef);
 				}
@@ -386,7 +386,7 @@ class Toolbar extends React.Component {
 	// items. (It may not be if it has been placed in the overflow menu).
 	isFocusActionFocusable(focusAction, focusableItemRefs) {
 		const indexFocusAction = focusableItemRefs.findIndex((ref) =>
-			ref.current?.props.actionObj?.action === focusAction);
+			this.getRefAction(ref) === focusAction);
 		return indexFocusAction > -1;
 	}
 
@@ -535,13 +535,13 @@ class Toolbar extends React.Component {
 		if (ref.current?.props.actionObj.setExtIsSubAreaDisplayed) {
 			ref.current?.props.actionObj.setExtIsSubAreaDisplayed(false);
 
-		} else if (ref.current?.state.subAreaDisplayed) {
+		} else if (ref.current?.isSubAreaDisplayed()) {
 			ref.current?.closeSubArea();
 		}
 	}
 
 	closeOverflowMenuOnRef(ref) {
-		if (ref.current?.state.showExtendedMenu) {
+		if (ref.current?.showExtendedMenu) {
 			ref.current?.closeSubArea();
 		}
 	}
@@ -585,7 +585,7 @@ Toolbar.propTypes = {
 	toolbarActionHandler: PropTypes.func,
 	tooltipDirection: PropTypes.string,
 	additionalText: PropTypes.object,
-	setInititalFocus: PropTypes.bool,
+	setInitialFocus: PropTypes.bool,
 	closeToolbarOnEsc: PropTypes.bool,
 	closeToolbar: PropTypes.func,
 	size: PropTypes.oneOf(["md", "sm"])
