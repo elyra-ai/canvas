@@ -4,5 +4,6 @@
   "canvas.emptyLink": "Klicka här om du vill ha en genomgång",
   "expression.value.column": "Anpassat värde",
   "expression.value.column.description": "Testar anpassad beskr. från app",
-  "expression.field.column.description": "Anpassad beskrivning"
+  "expression.field.column.description": "Anpassad beskrivning",
+  "fieldPicker.vectorType.label": "Anpassad vektoretikett"
 }
