@@ -4,5 +4,6 @@
   "canvas.emptyLink": "둘러보려면 여기를 클릭하십시오.",
   "expression.value.column": "사용자 정의 값",
   "expression.value.column.description": "앱에서 사용자 정의 설명 테스트",
-  "expression.field.column.description": "사용자 정의 설명"
+  "expression.field.column.description": "사용자 정의 설명",
+  "fieldPicker.vectorType.label": "사용자 지정 벡터 라벨"
 }
