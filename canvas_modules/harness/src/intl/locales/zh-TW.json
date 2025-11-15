@@ -4,5 +4,6 @@
   "canvas.emptyLink": "請按一下這裡以進行導覽",
   "expression.value.column": "自訂值",
   "expression.value.column.description": "從應用程式測試自訂說明",
-  "expression.field.column.description": "自訂說明"
+  "expression.field.column.description": "自訂說明",
+  "fieldPicker.vectorType.label": "自訂向量標籤"
 }

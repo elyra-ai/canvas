@@ -4,5 +4,6 @@
   "canvas.emptyLink": "Klicken Sie hier, um eine Tour zu machen",
   "expression.value.column": "Angepasster Wert",
   "expression.value.column.description": "Angepasste Beschreibung aus App wird getestet",
-  "expression.field.column.description": "Benutzerdefinierte Beschreibung"
+  "expression.field.column.description": "Benutzerdefinierte Beschreibung",
+  "fieldPicker.vectorType.label": "Benutzerdefiniertes Vektor-Etikett"
 }
