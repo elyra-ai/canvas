@@ -130,7 +130,7 @@ describe("Test for toolbar horizontal and vertical layout for a detached link", 
 		cy.openCanvasDefinition("detachedLinksCanvas.json");
 	});
 
-	it("Test horizontal and vertical autolayout of detached links", function() {
+	it("Test horizontal and vertical auto-layout of detached links", function() {
 		// Create a function to verify the initial layout.
 		const verifyInitialLayout = () => {
 			cy.verifyNumberOfLinks(13);
@@ -195,7 +195,7 @@ describe("Test for toolbar horizontal and vertical layout for a detached link", 
 		// Make sure the initial layout is correct.
 		verifyInitialLayout();
 
-		// Do vertical autolayout and verify layout
+		// Do vertical auto-layout and verify layout
 		cy.clickToolbarArrangeHorizontally();
 		cy.clickToolbarZoomToFit();
 		verifyHorizontalAutoLayout();
@@ -212,7 +212,7 @@ describe("Test for toolbar horizontal and vertical layout for a detached link", 
 		cy.clickToolbarUndo();
 		verifyInitialLayout();
 
-		// Do vertical autolayout and verify layout
+		// Do vertical auto-layout and verify layout
 		cy.clickToolbarArrangeVertically();
 		cy.clickToolbarZoomToFit();
 		verifyVerticalAutoLayout();
@@ -227,14 +227,14 @@ describe("Test for toolbar horizontal and vertical layout for a detached link", 
 	});
 });
 
-describe("Test the horizontal layout of a multiport node with many descendants", function() {
+describe("Test the horizontal layout of a multi-port node with many descendants", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("layoutMultiPortsCanvas.json");
 		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray" });
 	});
 
-	it("Test the horizontal layout of multiport node transforms having Vertical node format", function() {
+	it("Test the horizontal layout of multi-port node transforms having Vertical node format", function() {
 		cy.setCanvasConfig({ "selectedNodeFormatType": "Vertical" });
 		cy.clickToolbarArrangeHorizontally();
 		cy.clickToolbarZoomToFit();
@@ -255,7 +255,7 @@ describe("Test the horizontal layout of a multiport node with many descendants",
 		cy.verifyNodeTransform("Sample", 650, 205);
 	});
 
-	it("Test the horizontal layout of multiport node transforms having Horizontal node format", function() {
+	it("Test the horizontal layout of multi-port node transforms having Horizontal node format", function() {
 		cy.setCanvasConfig({ "selectedNodeFormatType": "Horizontal" });
 		cy.clickToolbarArrangeHorizontally();
 		cy.clickToolbarZoomToFit();

@@ -383,7 +383,7 @@ $toolbar-divider-width: 1px;
 	border: $toolbar-divider-width solid carbon.$layer-accent-01;
 	background-color: carbon.$layer-01;
 	opacity: 0;
-	animation: tovisible 0.25s ease-in-out forwards; // Use keyframe to animate panel visibility
+	animation: to-visible 0.25s ease-in-out forwards; // Use keyframe to animate panel visibility
 
 	&.submenu {
 		min-width: 150px;
@@ -395,7 +395,7 @@ $toolbar-divider-width: 1px;
 	}
 }
 
-@keyframes tovisible {
+@keyframes to-visible {
 	100% { opacity: 1; }
 }
 

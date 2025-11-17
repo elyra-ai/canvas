@@ -67,7 +67,7 @@ class App extends React.Component {
 	}
 
 	render() {
-		// Uncomment the code below to experiement with passing in a custom div
+		// Uncomment the code below to experiment with passing in a custom div
 		// to specify the 'empty canvas flow' content. Provide it in the
 		// emptyCanvasContent in the canvas config object below.
 		// const emptyCanvasDiv = (
@@ -80,7 +80,7 @@ class App extends React.Component {
 		// 		>Click here to take a tour</span>
 		// 	</div>);
 
-		// Uncomment the code below to experiement with passing in a custom div
+		// Uncomment the code below to experiment with passing in a custom div
 		// to specify the 'drop zone' content. Provide it in the dropZoneCanvasContent
 		// in the canvas config object below.
 		// const dropZoneCanvasDiv = (

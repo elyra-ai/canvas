@@ -195,7 +195,7 @@ class ToolTip extends React.Component {
 
 		if (this.props.mousePos) {
 			this.updateLocationBasedOnMousePos(tooltip, this.props.mousePos, direction);
-		} else { // tooltip relativ to element
+		} else { // tooltip relative to element
 			// tooltip - left correction
 			if (tooltipDirection === "top" || tooltipDirection === "bottom") {
 				let tooltipLeft = triggerLayout.left;

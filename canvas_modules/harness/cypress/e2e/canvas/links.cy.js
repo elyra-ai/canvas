@@ -173,7 +173,7 @@ describe("Test basic link construction", function() {
 		);
 	});
 
-	it("Test 8 cominations of creation and construction of self-referencing link", function() {
+	it("Test 8 combinations of creation and construction of self-referencing link", function() {
 
 		cy.setCanvasConfig({ "selectedLinkType": "Curve", "selectedLinkMethod": "Ports",
 			"selectedSelfRefLinks": true, "selectedLinkSelection": "LinkOnly" });
@@ -186,7 +186,7 @@ describe("Test basic link construction", function() {
 		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
 		cy.clickToolbarDelete();
 
-		// Create a self-refernceing link on the Execution node
+		// Create a self-referencing link on the Execution node
 		cy.linkNodeOutputPortToNodeInputPort(
 			"Execution node", "outPort", "Execution node", "inPort");
 
@@ -280,7 +280,7 @@ describe("Test elbow connections from multi-port source nodes", function() {
 			"M 108 483.5 L 128 483.5 Q 138 483.5 138 473.5 L 138 387 Q 138 377 148 377 L 319 377"
 		);
 
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Neural Net").click();
 		// Move node on canvas and verify updated link paths
@@ -302,7 +302,7 @@ describe("Test elbow connections from multi-port source nodes", function() {
 			"144 511.5 L 30 511.5 Q 20 511.5 20 521.25 L 20 547 Q 20 557 30 557 L 50 557"
 		);
 
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Select3").click();
 		cy.moveNodeToPosition("Select3", 150, 400);
@@ -342,7 +342,7 @@ describe("Test elbow connections from multi-port source nodes", function() {
 			"L 415 475 Q 405 475 405 485 L 405 535 Q 405 545 415 545 L 435 545"
 		);
 
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Select").click();
 		// Move the target node so one link line continues to go over the top of
@@ -359,7 +359,7 @@ describe("Test elbow connections from multi-port source nodes", function() {
 			"L 420 430 Q 410 430 410 440 L 410 469 Q 410 479 420 479 L 440 479"
 		);
 
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Select").click();
 		// Move the target node so both link lines go over the source node and
@@ -376,7 +376,7 @@ describe("Test elbow connections from multi-port source nodes", function() {
 			"L 420 485 Q 410 485 410 475 L 410 439 Q 410 429 420 429 L 440 429"
 		);
 
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Select").click();
 		// Move the target node so both link lines go under the source node and
@@ -423,12 +423,12 @@ describe("Test enableLinkSelection = 'LinkOnly' configuration option", function(
 		// Deselect one of the links with cmnd + click
 		cy.ctrlOrCmdClickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 
-		// Chck one is selected and the other is not
+		// Check one is selected and the other is not
 		cy.verifyLinkIsNotSelected("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 		cy.verifyLinkIsSelected("a81684aa-9b09-4620-aa59-54035a5de913");
 	});
 
-	it("Test clicking on an unselected link deselcts other selected links", function() {
+	it("Test clicking on an unselected link deselects other selected links", function() {
 		// Select two links
 		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
@@ -446,6 +446,7 @@ describe("Test enableLinkSelection = 'LinkOnly' configuration option", function(
 		// Select a data link
 		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 
+		// cSpell:disable
 		// Select an association link
 		cy.ctrlOrCmdClickLink("id5KIRGGJ3FYT.id125TTEEIK7V");
 
@@ -453,6 +454,7 @@ describe("Test enableLinkSelection = 'LinkOnly' configuration option", function(
 		cy.verifyLinkIsSelected("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 		// cy.verifyLinkIsSelected("a8747ee1-6afd-4157-b0fb-05e296ba91e3");
 		cy.verifyLinkIsSelected("id5KIRGGJ3FYT.id125TTEEIK7V");
+		// cSpell:enable
 	});
 
 
@@ -461,7 +463,7 @@ describe("Test enableLinkSelection = 'LinkOnly' configuration option", function(
 		cy.getNodeWithLabel("Binding (entry) node").click();
 		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
 
-		// Chck one is selected and the other two are not
+		// Check one is selected and the other two are not
 		cy.verifyNodeIsSelected("Binding (entry) node");
 		cy.verifyLinkIsSelected("a81684aa-9b09-4620-aa59-54035a5de913");
 	});
@@ -560,7 +562,7 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 
 		// Redo
 		cy.clickToolbarRedo();
-		// Check link to new port is retored.
+		// Check link to new port is restored.
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Execution node", undefined, "Super node", "input1SuperNodePE", 1);
 	});
@@ -849,7 +851,7 @@ describe("Test selectedLinkSelection = 'Detachable' configuration option", funct
 		cy.clickCategory("Record Ops");
 		cy.dragNodeToPosition("Sample", 500, 450);
 
-		// Verify the two detachd links got attached to the new node
+		// Verify the two detached links got attached to the new node
 		cy.verifyLinkBetweenNodes("Binding (entry) node", "Sample", 13);
 		cy.verifyLinkBetweenNodes("Sample", "Execution node", 13);
 	});
@@ -862,14 +864,14 @@ describe("Test selectedLinkSelection = 'Detachable' configuration option", funct
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Record Ops");
 		cy.dragNodeToPosition("Sample", 300, 450);
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Sample").click();
 
 		// Drag the node from the canvas to the detached links
 		cy.moveNodeToPosition("Sample", 200, 350);
 
-		// Verify the two detachd links got attached to the new node
+		// Verify the two detached links got attached to the new node
 		cy.verifyLinkBetweenNodes("Binding (entry) node", "Sample", 13);
 		cy.verifyLinkBetweenNodes("Sample", "Execution node", 13);
 	});

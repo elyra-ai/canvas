@@ -35,7 +35,7 @@ import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_COLOR_BACKGROUND,
 	TOOLBAR_DELETE_SELECTED_OBJECTS, TOOLBAR_DELETE_LINK,
 	TOOLBAR_ZOOM_IN, TOOLBAR_ZOOM_OUT, TOOLBAR_ZOOM_FIT,
-	TOOLBAR_ARRANGE_HORIZONALLY, TOOLBAR_ARRANGE_VERTICALLY,
+	TOOLBAR_ARRANGE_HORIZONTALLY, TOOLBAR_ARRANGE_VERTICALLY,
 	TOOLBAR_OPEN_PALETTE, TOOLBAR_CLOSE_PALETTE, TOOLBAR_TOGGLE_PALETTE, TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
 	TOOLBAR_SHOW_COMMENTS, TOOLBAR_HIDE_COMMENTS,
 	TOOLBAR_EXPAND_SUPERNODE_IN_PLACE, TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE,
@@ -121,7 +121,7 @@ class ToolbarButtonItem extends React.Component {
 			return <OpenPanelFilledLeft disabled={disabled} />;
 		case (TOOLBAR_TOGGLE_PALETTE):
 			return <OpenPanelFilledLeft disabled={disabled} />;
-		case (TOOLBAR_ARRANGE_HORIZONALLY):
+		case (TOOLBAR_ARRANGE_HORIZONTALLY):
 			return <ArrangeHorizontal disabled={disabled} />;
 		case (TOOLBAR_ARRANGE_VERTICALLY):
 			return <ArrangeVertical disabled={disabled} />;
@@ -263,12 +263,12 @@ class ToolbarButtonItem extends React.Component {
 			}
 			if (actionObj.incLabelWithIcon === "before" ||
 					actionObj.incLabelWithIcon === "after") {
-				const chev = this.props.subAreaDisplayed ? (<ChevronUp />) : (<ChevronDown />);
-				return (<div className={"toolbar-up-down-chevron"}>{chev}</div>);
+				const chevron = this.props.subAreaDisplayed ? (<ChevronUp />) : (<ChevronDown />);
+				return (<div className={"toolbar-up-down-chevron"}>{chevron}</div>);
 			}
 			if (actionObj.purpose === "dual") {
-				const chevMini = this.props.subAreaDisplayed ? (<ChevronUp size={12} />) : (<ChevronDown size={12} />);
-				return (<div className={"toolbar-up-down-chevron-mini"} onClick={this.miniChevronClicked.bind(this)}>{chevMini}</div>);
+				const chevronMini = this.props.subAreaDisplayed ? (<ChevronUp size={12} />) : (<ChevronDown size={12} />);
+				return (<div className={"toolbar-up-down-chevron-mini"} onClick={this.miniChevronClicked.bind(this)}>{chevronMini}</div>);
 			}
 			const path = this.props.size === "sm" ? "M 29 29 L 29 23 23 29 Z" : "M 37 37 L 37 30 30 37 Z";
 			return (

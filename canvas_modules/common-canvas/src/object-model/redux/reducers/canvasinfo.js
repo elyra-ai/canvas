@@ -401,7 +401,7 @@ export default (state = {}, action) => {
 		canvasInfoPipelines = canvasInfoPipelines
 			.map((pipeline) => {
 				if (pipeline.id === action.data.pipelineId) {
-					// Remove nodes, comments and links from main pipeline that were previosuly added
+					// Remove nodes, comments and links from main pipeline that were previously added
 					let newNodes = nodes(pipeline.nodes,
 						{ type: "DELETE_NODES", data: { nodesToDelete: action.data.nodesToAdd } });
 

@@ -44,7 +44,7 @@ coverage
 # Dependency directory
 node_modules
 
-# Build directoy
+# Build directory
 /dist
 
 # plugin-visualizer
