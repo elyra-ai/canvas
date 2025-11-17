@@ -57,7 +57,7 @@ describe("Test adding nodes into empty canvas", function() {
 		/* eslint cypress/no-unnecessary-waiting: "off" */
 		cy.wait(1000);
 
-		// Verify nodes exist in search results in corrct order
+		// Verify nodes exist in search results in correct order
 		cy.verifyNodeDoesExistInPaletteAtIndex("Var. File", 0);
 		cy.verifyNodeDoesExistInPaletteAtIndex("Database", 1);
 		cy.verifyNodeDoesExistInPaletteAtIndex("Data Audit", 2);

@@ -228,7 +228,7 @@
               "image": "/images/custom-canvases/stages/palette/PxRemDup.svg",
               "x_pos": 1062,
               "y_pos": 388.8,
-              "description": "Removes duplcate rows"
+              "description": "Removes duplicate rows"
             }
           },
           "inputs": [

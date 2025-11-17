@@ -76,7 +76,7 @@ export default class SVGCanvasUtilsZoom {
 		// Stores the current zoom transform amounts.
 		this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1);
 
-		// Flag to indicate when a zoom handled by zoomHandler is hapening.
+		// Flag to indicate when a zoom handled by zoomHandler is happening.
 		this.zooming = false;
 
 		// Flag to indicate when a zoom is invoked programmatically.
@@ -382,8 +382,8 @@ export default class SVGCanvasUtilsZoom {
 	}
 
 	// Returns true if the event indicates that a drag (rather than a region
-	// select) is in action. This means that, with the Carbon interation
-	// option the space bar is pressed or with legacy interation the
+	// select) is in action. This means that, with the Carbon iteration
+	// option the space bar is pressed or with legacy iteration the
 	// shift key is NOT pressed.
 	isDragActivated(d3Event) {
 		if (this.ren.config.enableInteractionType === INTERACTION_CARBON) {
@@ -549,7 +549,7 @@ export default class SVGCanvasUtilsZoom {
 	// by the amount since the previous d3Event event.
 	// We calculate increments because d3Event.transform is not based on
 	// the constrained zoom position (which is very annoying) so we keep track
-	// of the current constraind zoom amount in this.zoomTransform.
+	// of the current constrained zoom amount in this.zoomTransform.
 	getTransformIncrement(d3Event) {
 		const xInc = d3Event.transform.x - this.previousD3Event.x;
 		const yInc = d3Event.transform.y - this.previousD3Event.y;
@@ -559,7 +559,7 @@ export default class SVGCanvasUtilsZoom {
 		return newTransform;
 	}
 
-	// Returns a modifed transform object so that the canvas area (the area
+	// Returns a modified transform object so that the canvas area (the area
 	// containing nodes and comments) is constrained such that it never totally
 	// disappears from the view port.
 	zoomConstrainRegular(transform, viewPort, canvasDimensions) {
@@ -689,7 +689,7 @@ export default class SVGCanvasUtilsZoom {
 	}
 
 	// Returns a zoom object that will, if applied to the canvas, zoom the objects
-	// dentified in the objectIDs array so their center is at the xPos, yPos
+	// identified in the objectIDs array so their center is at the xPos, yPos
 	// position in the viewport.
 	getZoomToReveal(objectIDs, xPos, yPos) {
 		const transformedSVGRect = this.getTransformedViewportDimensions();

@@ -250,7 +250,7 @@ class CommonCanvasToolbar extends React.Component {
 					iconEnabled: lbAction.iconEnabled ? lbAction.iconEnabled : null, // null means Icon provided by the toolbar
 					incLabelWithIcon: lbAction.incLabelWithIcon ? lbAction.incLabelWithIcon : null,
 					tooltip: lbAction.tooltip ? lbAction.tooltip : null,
-					textContent: null // Assume text conents is not needed with customized action
+					textContent: null // Assume text contents is not needed with customized action
 				};
 
 			} else if (rbIdx > -1) {
@@ -260,7 +260,7 @@ class CommonCanvasToolbar extends React.Component {
 					iconEnabled: rbAction.iconEnabled ? rbAction.iconEnabled : null, // null means Icon provided by the toolbar
 					incLabelWithIcon: rbAction.incLabelWithIcon ? rbAction.incLabelWithIcon : null,
 					tooltip: rbAction.tooltip ? rbAction.tooltip : null,
-					textContent: null }; // Assume text conents is not needed with customized action
+					textContent: null }; // Assume text contents is not needed with customized action
 
 
 			} else {

@@ -29,9 +29,9 @@ const TOP_Y = 180;
 // The gap between the containers
 const CONTAINER_GAP = 48;
 
-// Defaut node height and width - must be the same as values in enableNodeLayout
-const DEFAUT_NODE_WIDTH = 400;
-const DEFAUT_NODE_HEIGHT = 30;
+// Default node height and width - must be the same as values in enableNodeLayout
+const DEFAULT_NODE_WIDTH = 400;
+const DEFAULT_NODE_HEIGHT = 30;
 
 // Amount in pixels to move the ports over the nodes
 const PORT_POS_INDENT = 8;
@@ -82,13 +82,13 @@ class MappingContainerNode extends React.Component {
 		let newNodesProps = null;
 
 		if (this.isContainerResized()) {
-			const xInc = DEFAUT_NODE_WIDTH - this.props.nodeData.width;
-			const yInc = DEFAUT_NODE_HEIGHT - this.props.nodeData.height;
+			const xInc = DEFAULT_NODE_WIDTH - this.props.nodeData.width;
+			const yInc = DEFAULT_NODE_HEIGHT - this.props.nodeData.height;
 			newNodesProps = this.adjustContainerPositions(xInc, yInc);
 
 		} else {
-			const xInc = this.savedResizeWidth - DEFAUT_NODE_WIDTH;
-			const yInc = this.savedResizeHeight - DEFAUT_NODE_HEIGHT;
+			const xInc = this.savedResizeWidth - DEFAULT_NODE_WIDTH;
+			const yInc = this.savedResizeHeight - DEFAULT_NODE_HEIGHT;
 			newNodesProps = this.adjustContainerPositions(xInc, yInc);
 		}
 
@@ -131,7 +131,7 @@ class MappingContainerNode extends React.Component {
 
 	onScroll(evt) {
 		window.console.log("onScroll");
-		// Must stop propogation of scroll gesture to the zoom behavior of
+		// Must stop propagation of scroll gesture to the zoom behavior of
 		// common-canvas otherwise scroll doesn't work.
 		evt.stopPropagation();
 
@@ -144,8 +144,8 @@ class MappingContainerNode extends React.Component {
 
 		// Create the image here in mouse down, before onDrag occurs to give
 		// a chance for it to be created.
-		this.dragImgage = document.createElement("img");
-		this.dragImgage.src = "/images/custom-canvases/react-nodes-mapping/stacked-move.svg";
+		this.dragImage = document.createElement("img");
+		this.dragImage.src = "/images/custom-canvases/react-nodes-mapping/stacked-move.svg";
 	}
 
 
@@ -161,7 +161,7 @@ class MappingContainerNode extends React.Component {
 		evt.dataTransfer.setData("text/plain", data);
 		// TODO Setting drag image this way only seems to work on Chrome - fix for FF and Safari.
 		if (navigator.userAgent.includes("Chrome")) {
-			evt.dataTransfer.setDragImage(this.dragImgage, 15, 15);
+			evt.dataTransfer.setDragImage(this.dragImage, 15, 15);
 		}
 	}
 
@@ -171,8 +171,8 @@ class MappingContainerNode extends React.Component {
 
 		// Create the image here in mouse down, before onDrag occurs to give
 		// a chance for it to be created.
-		this.dragImgage = document.createElement("img");
-		this.dragImgage.src = "/images/custom-canvases/react-nodes-mapping/link.svg";
+		this.dragImage = document.createElement("img");
+		this.dragImage.src = "/images/custom-canvases/react-nodes-mapping/link.svg";
 	}
 
 	onDragStartOnFieldIcon(evt, field) {
@@ -184,7 +184,7 @@ class MappingContainerNode extends React.Component {
 		evt.dataTransfer.setData("text/plain", data);
 		// TODO Setting drag image this way only seems to work on Chrome - fix for FF and Safari.
 		if (navigator.userAgent.includes("Chrome")) {
-			evt.dataTransfer.setDragImage(this.dragImgage, 15, 15);
+			evt.dataTransfer.setDragImage(this.dragImage, 15, 15);
 		}
 	}
 
@@ -220,7 +220,7 @@ class MappingContainerNode extends React.Component {
 		// Stop propagation will prevent the node/container from being dragged to a
 		// new position.
 		// TODO -- If keyboard navigation is needed for this app, this line will
-		// need to be remvoed. That means Common Canvas would have to provide a
+		// need to be removed. That means Common Canvas would have to provide a
 		// feature that allows the app to switch off drag for the nodes.
 		evt.stopPropagation();
 	}
@@ -298,7 +298,7 @@ class MappingContainerNode extends React.Component {
 	}
 
 	onSetNodePositions(ourPos) {
-		let yPos = TOP_Y; // Start postion
+		let yPos = TOP_Y; // Start position
 
 		const newNodesProps = [];
 		this.rightNodes.forEach((rn) => {
@@ -430,18 +430,18 @@ class MappingContainerNode extends React.Component {
 		const colElementId = this.getFieldElementId(portId);
 		const colElement = document.getElementById(colElementId);
 		const colElementRect = colElement.getBoundingClientRect();
-		let colElemetCenterY = colElementRect.top - nodeDivRect.top + (colElementRect.height / 2);
+		let colElementCenterY = colElementRect.top - nodeDivRect.top + (colElementRect.height / 2);
 		const headerBottom = scrollDivRect.top - nodeDivRect.top;
 		const footerTop = scrollDivRect.bottom - nodeDivRect.top;
 		const footerHeight = nodeDivRect.height - footerTop;
 
-		if (colElemetCenterY < headerBottom) {
-			colElemetCenterY = headerBottom / 2;
+		if (colElementCenterY < headerBottom) {
+			colElementCenterY = headerBottom / 2;
 
-		} else if (colElemetCenterY > footerTop) {
-			colElemetCenterY = footerTop + (footerHeight / 2);
+		} else if (colElementCenterY > footerTop) {
+			colElementCenterY = footerTop + (footerHeight / 2);
 		}
-		return colElemetCenterY;
+		return colElementCenterY;
 	}
 
 	getNodeDivId() {

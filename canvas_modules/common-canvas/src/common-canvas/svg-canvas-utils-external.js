@@ -66,7 +66,7 @@ export default class SvgCanvasExternal {
 			}
 			container.ccExtRoot.render(jsx);
 
-		// Prior to React v18 we use ReatDOM.render
+		// Prior to React v18 we use ReactDOM.render
 		} else {
 			ReactDOM.render(jsx, container);
 		}
@@ -87,7 +87,7 @@ export default class SvgCanvasExternal {
 				container.ccExtRoot = null;
 			});
 
-		// Prior to React v18 we use ReatDOM.unmountComponentAtNode
+		// Prior to React v18 we use ReactDOM.unmountComponentAtNode
 		} else {
 			ReactDOM.unmountComponentAtNode(foreignObjects[i]);
 		}

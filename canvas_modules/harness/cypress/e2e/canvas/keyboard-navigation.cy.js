@@ -97,13 +97,13 @@ describe("Test keyboard navigation", function() {
 		cy.pressOnComment("This canvas shows the 4 different node " +
 			"types and three link types: node links, association links and comments links.", key.tab);
 
-		// Simuate a click on node with the keyboard
+		// Simulate a click on node with the keyboard
 		cy.pressOnNode("Binding (entry) node", key.objectSelect);
 
 		// Verify it simulated a SINGLE_CLICK
 		cy.verifyClickActionInConsole("clickType", "SINGLE_CLICK");
 
-		// Simuate another click on the currently selected node with the keyboard
+		// Simulate another click on the currently selected node with the keyboard
 		cy.pressOnNode("Binding (entry) node", key.objectSelect);
 
 		// Verify it simulated a DOUBLE_CLICK

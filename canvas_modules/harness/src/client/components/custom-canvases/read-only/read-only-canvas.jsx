@@ -213,7 +213,7 @@ export default class ReadOnlyCanvas extends React.Component {
 	}
 
 	contextMenuHandler(source, defaultMenu) {
-		// Only add the 'Add Port' option if just one object is selctd AND
+		// Only add the 'Add Port' option if just one object is selected AND
 		// we are showing an editable canvas.
 		if (source.selectedObjectIds.length === 1 &&
 				(this.state.editState === STATE_TAG_NONE)) {

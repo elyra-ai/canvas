@@ -58,7 +58,7 @@
 		}
 
 		// Set the outline/background for decorations. This will only affect the
-		// zoom-in decorations on supernode since that is th eonly one with an
+		// zoom-in decorations on supernode since that is the only one with an
 		// outline.
 		.d3-node-dec-group {
 			.d3-node-dec-outline {
@@ -73,7 +73,7 @@
 			}
 		}
 
-		// Override lineclamp to make the ... appear on the third
+		// Override line-clamp to make the ... appear on the third
 		// line of the label if it is truncated.
 		.d3-label-multi-line {
 			span {

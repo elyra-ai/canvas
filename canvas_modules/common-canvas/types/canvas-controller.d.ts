@@ -118,7 +118,7 @@ export type InternalAction =
 
 /** A unique identifier for a pipeline. This should be unique within the
  * set of pipelines in the pipelineFlow/CanvasInfo and, if the application
- * is using external pipeleineFlows, it should be globally unique.
+ * is using external pipelineFlows, it should be globally unique.
  */
 export type PipelineId = string;
 
@@ -157,7 +157,7 @@ export type CanvasNodeOrCommentId = CanvasNodeId | CanvasCommentId;
 /** A canvas object identifier.  */
 export type CanvasObjectId = CanvasNodeId | CanvasCommentId | CanvasLinkId;
 
-/** A globally unique identifer for a pipeleine flow artifact. */
+/** A globally unique identifier for a pipeline flow artifact. */
 export type PipelineFlowId = string;
 
 /** A collection of IDs of nodes and links, potentially across
@@ -186,7 +186,7 @@ export type ViewportPercent = number;
 /** A value that specifies a distance, in either the X or Y direction, to
  * identify the relative position of an object within the canvas coordinate
  * system. When the canvas is zoomed its coordinate system is zoomed
- * and so the CanvasCordinate for objects on the canvas (nodes, links or
+ * and so the canvas coordinates for objects on the canvas (nodes, links or
  * comments) remains the same. However, the object's ViewportCoordinate
  * (its physical position on the screen) will change.
  */
@@ -262,7 +262,7 @@ export type RelaxedPipelineFlowPalette = Omit<PipelineFlowPalette, 'version' | '
   categories?: unknown[];
 }
 
-/** AncestorPipeline contains a set of properties to idetify each ancestor in a
+/** AncestorPipeline contains a set of properties to identify each ancestor in a
  * chain of supernodes and their sub-flows.
  */
 export interface AncestorPipeline {
@@ -293,7 +293,7 @@ export interface StyleSpec {
   };
 }
 
-/** PipelineObjectStyle ties a style spec to a specifc object in a pipeline.
+/** PipelineObjectStyle ties a style spec to a specific object in a pipeline.
  * @deprecated  - its is recommended to use a class applied to the node,
  * link or comment along with associated CSS instead of using styles.
  */
@@ -303,7 +303,7 @@ export interface PipelineObjectStyle {
 	objId: CanvasObjectId;
   }
 
-/** One of the different types of notificaiton message.
+/** One of the different types of notification message.
  * https://elyra-ai.github.io/canvas/03.04.05-notification-messages/ */
 export type NotificationMsgType =
   | "info"
@@ -314,10 +314,10 @@ export type NotificationMsgType =
   | undefined
   | null;
 
-/** A unique identifier for a notificaiton message. */
+/** A unique identifier for a notification message. */
 export type NotificationMsgId = string;
 
-/** NotificationMsg represents a message displayed in the notificaiton panel.
+/** NotificationMsg represents a message displayed in the notification panel.
  * https://elyra-ai.github.io/canvas/03.04.05-notification-messages/
  */
 export interface NotificationMsg {
@@ -345,12 +345,12 @@ export type DecorationId = string;
  */
 export type Decoration = NodeDecorationDef | LinkDecorationDef;
 
-/** An entry in the context menu represnting a option that can be clicked or
+/** An entry in the context menu representing a option that can be clicked or
  * a divider.
  */
 export type ContextMenuEntry = ContextMenuDivider | ContextMenuItem;
 
-/** A dividier to separate context menu options. */
+/** A divider to separate context menu options. */
 export interface ContextMenuDivider {
   divider: true;
 }
@@ -366,7 +366,7 @@ export interface ContextMenuItem {
 	toolbarItem?: boolean;
   }
 
-/** A format defintion object used for applying inline styles to a
+/** A format definition object used for applying inline styles to a
 /* canvas comment.
  */
 export interface CommentFormat {
@@ -563,7 +563,7 @@ export declare class CanvasController {
     /**
      * Sets the loading text of the category. If set to a non-empty string the
      * category will show an InlineLoading control in the palette category div
-     * with this text as the label. If set to falsey the palette category
+     * with this text as the label. If set to falsy the palette category
      * will display as normal.
      * @param categoryId
      * @param loadingText
@@ -574,7 +574,7 @@ export declare class CanvasController {
      * Sets the empty text of the category. If set to a non-empty string and the
      * category does not have any nodes, the palette will show a warning icon with
      * this text as a message under the category title when the category is opened.
-     * This message will not be displayed if the field is set to falsey or if
+     * This message will not be displayed if the field is set to falsy or if
      * nodetypes are added to the category.
      * @param categoryId
      * @param emptyText
@@ -653,7 +653,7 @@ export declare class CanvasController {
     getPaletteNodeById(nodeId: CanvasNodeId): NodeTypeDef;
 
     /**
-     * Returns the cateory that the node identified by the operatorId is in.
+     * Returns the category that the node identified by the operatorId is in.
      * @param operatorId - ID of the operator for this node
      * @returns the category of the palette node identified by the operator passed in
      */
@@ -672,7 +672,7 @@ export declare class CanvasController {
     */
     openPaletteCategory(categoryId: CategoryId): void;
 
-    /** Closes the palette category idetified by the category ID passed in.
+    /** Closes the palette category identified by the category ID passed in.
      * @param categoryId - ID of the category
      */
     closePaletteCategory(categoryId: CategoryId): void;
@@ -755,7 +755,7 @@ export declare class CanvasController {
     deleteSelectedObjects(): void;
 
     /**
-     * Returnd true if the currently selected objects are all linked together.
+     * Returned true if the currently selected objects are all linked together.
      * This is used when deciding to creating a supernode.
      * @returns true if nodes are linked
      */
@@ -799,7 +799,7 @@ export declare class CanvasController {
      *   "closeMessage": string (Optional)
      * }
      * @param messageType - Optional. A type of notification message.
-     * @returns An Array of notificaiton messages
+     * @returns An Array of notification messages
      */
     getNotificationMessages(messageType?: NotificationMsgType): NotificationMsg[];
 
@@ -970,7 +970,7 @@ export declare class CanvasController {
      * and editActionHandler callbacks to be called.
      * If pipelineId is omitted the node will be created in the current
      * "top-level" pipeline.
-     * @deprectaed Use the editActionHandler call directly instead
+     * @deprecated Use the editActionHandler call directly instead
      * @param data - An object containing
      *
      * `nodeTemplate` - a node template from the palette. The nodeTemplate
@@ -1386,7 +1386,7 @@ export declare class CanvasController {
 
     /**
      * Sets the label, for the node identified, to edit mode, provided the node
-     * label is editable. This allows the user to edite the label text.
+     * label is editable. This allows the user to edit the label text.
      * @param nodeId - The ID of the node
      * @param pipelineId - Optional. The ID of the pipeline of the node.
      *                     Defaults to the currently displayed pipeline.
@@ -1573,7 +1573,7 @@ export declare class CanvasController {
     ): ClassName;
 
     /**
-     * Gets the style spcification for a comment
+     * Gets the style specification for a comment
      * @param commentId - The ID of the comment
      * @param temporary - A boolean to indicate if the style is serialized when
      *                    getPipelineFlow() method is called or not.
@@ -1872,7 +1872,7 @@ export declare class CanvasController {
      * array in the pipeline specified by pipeline ID. The class name will be
      * applied to the links' group (<g>) element in the DOM. To remove any
      * previously added classes an empty string can be specified.
-     * @param linkIds - An arry of link IDs
+     * @param linkIds - An array of link IDs
      * @param newClassName - New class string. Can be a space separated list
      *                       of classes or an empty string to remove
      *                       previously added classes.
@@ -2170,7 +2170,7 @@ export declare class CanvasController {
     closeNotificationPanel(): void;
 
     /**
-     * Either opens or closes the notifictaion panel based on its current status
+     * Either opens or closes the notification panel based on its current status
      */
     toggleNotificationPanel(): void;
 
@@ -2222,7 +2222,7 @@ export declare class CanvasController {
     /**
      * Displays a pipeline (identified by the pipelineId passed in). This must be
      * one of the pipelines referenced by the current set of breadcrumbs. It
-     * cannot be used to open a new pipeline outside the current set of breadcruumbs.
+     * cannot be used to open a new pipeline outside the current set of breadcrumbs.
      * @param pipelineId - The ID of the pipeline to display
      */
     displaySubPipeline(
@@ -2308,21 +2308,21 @@ export declare class CanvasController {
     /**
      * Returns true if there is a command on the command stack
      * available to be redone.
-     * @returns A boolean that ndicates if there is a command to redo.
+     * @returns A boolean that indicates if there is a command to redo.
      */
     canRedo(): boolean;
 
     /**
-     * Returns a string which is the label that descibes the next undoable
+     * Returns a string which is the label that describes the next undoable
      * command.
-     * @returns A label that descibes the next undoable command.
+     * @returns A label that describes the next undoable command.
      */
     getUndoLabel(): string;
 
     /**
-     * Returns a string which is the label that descibes the next redoable
+     * Returns a string which is the label that describes the next redoable
      * command.
-     * @returns A label that descibes the next redoable command.
+     * @returns A label that describes the next redoable command.
      */
     getRedoLabel(): string;
 
@@ -2360,7 +2360,7 @@ export declare class CanvasController {
 
     /**
      * Zooms the canvas contents to fit within the viewport
-     * @param animateTime - Amount of miniseconds for the transition.
+     * @param animateTime - Amount of milliseconds for the transition.
      */
     zoomToFit(
       animateTime?: AnimationTime
@@ -2370,7 +2370,7 @@ export declare class CanvasController {
      * Changes the zoom amounts for the canvas. This method does not alter the
      * pipelineFlow document.
      * @param zoomObject - A zoom object
-     * @param animateTime - Amount of miniseconds for the transition.
+     * @param animateTime - Amount of milliseconds for the transition.
      */
     zoomTo(
       zoomObject: ZoomObjectDef,
@@ -2384,7 +2384,7 @@ export declare class CanvasController {
      * If omitted the movement happens immediately.
      * @param x - X coordinate amount.
      * @param y - Y coordinate amount.
-     * @param animateTime - Amount of miniseconds for the transition.
+     * @param animateTime - Amount of milliseconds for the transition.
      */
     translateBy(
       x: CanvasDistance,
