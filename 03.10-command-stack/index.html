@@ -3363,7 +3363,7 @@
 <h1 id="the-command-stack">The Command Stack<a class="headerlink" href="#the-command-stack" title="Permanent link">&para;</a></h1>
 <p>The Command Stack is built into Common Canvas and the application does not need to configure or customize it unless specialized behavior is required.</p>
 <p>The Command Stack maintains an internal stack of commands with a cursor that moves up and down when commands are done, undone or redone. Commands are JavaScript classes that implement a simple interface.</p>
-<p>Common Canvas provides one command for each action that can be perfomed in the <a href="../01.01-flow-editor/">flow editor</a>. The application can optionally add its own commands to the command stack.</p>
+<p>Common Canvas provides one command for each action that can be performed in the <a href="../01.01-flow-editor/">flow editor</a>. The application can optionally add its own commands to the command stack.</p>
 <p>The canvas controller automatically creates an instance of the command stack. When actions, such as <code>Create Node</code>or <code>Delete Link</code>, are performed by the user in the Flow Editor, Common Canvas creates an instance of an <a href="../03.11-internal-actions/">internal command action</a>, adds it to the command stack and executes the command.</p>
 <p>To allow the user to activate the undo and redo actions, Common Canvas provides:</p>
 <ul>
@@ -3372,7 +3372,7 @@
 <li>keyboard shortcuts: ctrl+z (undo) and ctrl+shift+z (redo) when keyboard focus is on the canvas.</li>
 </ul>
 <h2 id="api-control-of-the-command-stack-optional">API control of the command stack (optional)<a class="headerlink" href="#api-control-of-the-command-stack-optional" title="Permanent link">&para;</a></h2>
-<p>If the application specifies its own canvas toolbar, or its own context menu/toolbar for the flow editor canvas, it can include defintions for the <code>undo</code> and <code>redo</code> actions if needed.</p>
+<p>If the application specifies its own canvas toolbar, or its own context menu/toolbar for the flow editor canvas, it can include definitions for the <code>undo</code> and <code>redo</code> actions if needed.</p>
 <p>Alternatively, the application can provide its own undo and redo UI, if required, which calls the canvas controller API.</p>
 <p>The canvas controller has a <a href="../03.04-canvas-controller/#command-stack-interaction-methods">number of methods</a> that allows the application to interact with the command stack if necessary.</p>
 <h2 id="building-an-application-specific-command-optional">Building an application specific command (optional)<a class="headerlink" href="#building-an-application-specific-command-optional" title="Permanent link">&para;</a></h2>
@@ -3388,7 +3388,7 @@
 <p>do() - Performs all actions necessary to execute the command</p>
 <p>undo() - Performs all actions necessary to reverse the actions performed in do()</p>
 <p>redo() - Performs all actions necessary to re-execute the command. For some commands this is the same as do() but for others it is different.</p>
-<p>getLabel() - Returns a label that descibes the action.</p>
+<p>getLabel() - Returns a label that describes the action.</p>
 <p>getFocusObject() - Returns a canvas object (node, link or comment) or the string &ldquo;CanvasFocus&rdquo; to indicate where keyboard focus should be set when the command completes.</p>
 <p>Here is some sample code that shows how a &lsquo;create node&rsquo; command might be written:</p>
 <p><div class="highlight"><pre><span></span><code><span class="w">   </span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Action</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@elyra/canvas&quot;</span><span class="p">;</span>
@@ -3426,13 +3426,13 @@
 </code></pre></div>
    Note that the command has to keep a reference to the new node to allow the node to be added back
    to the canvas in redo() even though it was deleted in undo().</p>
-<p>Here is an example showing how the command action would be created and pushed onto the stack using the canvas-contoller:</p>
+<p>Here is an example showing how the command action would be created and pushed onto the stack using the canvas-controller:</p>
 <div class="highlight"><pre><span></span><code><span class="w">   </span><span class="kd">const</span><span class="w"> </span><span class="nx">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">MyCreateNodeAction</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">);</span>
 <span class="w">   </span><span class="k">this</span><span class="p">.</span><span class="nx">canvasController</span><span class="p">.</span><span class="k">do</span><span class="p">(</span><span class="nx">command</span><span class="p">);</span>
 </code></pre></div>
 <h2 id="exported-common-canvas-action-classes">Exported common-canvas action classes<a class="headerlink" href="#exported-common-canvas-action-classes" title="Permanent link">&para;</a></h2>
 <p>Some of the internal action classes have been exported from Common Canvas and can be extended with additional
-functionality, if necessaey. The classes that are exported are:</p>
+functionality, if necessary. The classes that are exported are:</p>
 <ul>
 <li>CreateAutoNodeAction</li>
 <li>CreateNodeAction</li>
@@ -3441,7 +3441,7 @@ functionality, if necessaey. The classes that are exported are:</p>
 <li>DisconnectObjectsAction</li>
 <li>PasteAction</li>
 </ul>
-<p>The constructors for these classes all take the same two parameters. The <code>data</code> object that descrbes the command
+<p>The constructors for these classes all take the same two parameters. The <code>data</code> object that describes the command
 and a reference to the canvas controller.</p>
 <p>Applications can extend these classes to augment their basic behavior with application specific behavior. It is the application’s responsibility to add the extended object to the command stack when the user performs the corresponding action.</p>
 <p>Although there are no plans to alter the internal workings of these six command action classes, there is always the chance that a change in the future might alter a field name or two. If you extend these classes, it is therefore recommended that you have sufficient regression tests for your extensions that would highlight such a problem, should it occur.</p>

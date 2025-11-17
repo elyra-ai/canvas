@@ -3800,16 +3800,16 @@
 </ul>
 <div class="highlight"><pre><span></span><code><span class="nx">buttonIconHandler</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">callbackIcon</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;actionButtonIcon&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="nx">iconComponenet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="nx">iconComponent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
 <span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">actionId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">buttonId</span><span class="p">;</span>
 <span class="w">            </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">actionId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;iconButton&quot;</span><span class="o">:</span>
-<span class="w">                </span><span class="nx">iconComponenet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Launch</span><span class="p">;</span>
+<span class="w">                </span><span class="nx">iconComponent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Launch</span><span class="p">;</span>
 <span class="w">                </span><span class="k">break</span><span class="p">;</span>
 <span class="w">            </span><span class="k">default</span><span class="o">:</span>
-<span class="w">                </span><span class="nx">iconComponenet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">                </span><span class="nx">iconComponent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="nx">callbackIcon</span><span class="p">(</span><span class="nx">iconComponenet</span><span class="p">);</span>
+<span class="w">            </span><span class="nx">callbackIcon</span><span class="p">(</span><span class="nx">iconComponent</span><span class="p">);</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -3841,8 +3841,8 @@
 <span class="w">        </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-FieldPicker supports custom labels for custom data types. To define a custom label, use the following format in the locale: 
-  - fieldPicker.<code>&lt;type&gt;</code>.label </p>
+FieldPicker supports custom labels for custom data types. To define a custom label, use the following format in the locale:
+  - fieldPicker.<code>&lt;type&gt;</code>.label</p>
 <p>If a custom label is defined using this key, it will be displayed in the UI. Else, the raw <code>&lt;type&gt;</code> value will be displayed.</p>
 <p>Example:
 <div class="highlight"><pre><span></span><code><span class="p">{</span>

@@ -3422,7 +3422,7 @@ This will work correctly for regular nodes, and also supernodes, that have been 
 <p>Next you add the node object to the canvas.
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">canvasController</span><span class="p">.</span><span class="nx">addNode</span><span class="p">(</span><span class="nx">newNode</span><span class="p">);</span>
 </code></pre></div>
-The node will appear at the offsetX, offseY position within the coordinate system for the canvas.</p>
+The node will appear at the offsetX, offsetY position within the coordinate system for the canvas.</p>
 <h3 id="if-command-stack-is-needed">If command stack is needed<a class="headerlink" href="#if-command-stack-is-needed" title="Permanent link">&para;</a></h3>
 <p>This method allows the host application to create a node, or supernode, from a palette template object by creating and executing a command which will be added to the command stack (so the user can <code>undo</code> / <code>redo</code> it) and will also cause the <code>beforeEditActionHandler</code> and <code>editActionHandler</code> callbacks  to be called.</p>
 <p>First your code retrieves a node template from the palette as described above and then calls this method:

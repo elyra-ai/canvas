@@ -3550,7 +3550,7 @@ Where:</p>
 <p><strong>className</strong> - This a string that will be appended to the <code>class</code> field for the top-level <code>&lt;div&gt;</code> that surrounds the action button. This can be used to set application-specific CSS for the button.</p>
 </li>
 <li>
-<p><strong>textContent</strong> - This is an additional string that will be displayed on top of the action button. It can be used to specify adittional information to enahance the icon. For example, a count of messages could be displayed over a icon that, when clicked, shows a messages panel.</p>
+<p><strong>textContent</strong> - This is an additional string that will be displayed on top of the action button. It can be used to specify additional information to enhance the icon. For example, a count of messages could be displayed over a icon that, when clicked, shows a messages panel.</p>
 </li>
 </ul>
 <h3 id="automatic-toolbar-items">Automatic toolbar items<a class="headerlink" href="#automatic-toolbar-items" title="Permanent link">&para;</a></h3>
@@ -3677,8 +3677,8 @@ where this is the <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_m
 <p><strong>action</strong> - a unique identifier and the name of the action to be performed.</p>
 </li>
 <li>
-<p><strong>jsx</strong> - A JSX object or a funciton returning a JSX object. This will be displayed as the action in the toolbar.</p>
-<p>To make the JSX object accessible inside the toolbar this field should be provided as a function. The function will pass a <code>tabIndex</code> field which should be set into the tabIndex property of the display object being created (see expample below). Additionally, the display object should have the `className set to &ldquo;toolbar-jsx-obj&rdquo; (see example below).</p>
+<p><strong>jsx</strong> - A JSX object or a function returning a JSX object. This will be displayed as the action in the toolbar.</p>
+<p>To make the JSX object accessible inside the toolbar this field should be provided as a function. The function will pass a <code>tabIndex</code> field which should be set into the tabIndex property of the display object being created (see example below). Additionally, the display object should have the `className set to &ldquo;toolbar-jsx-obj&rdquo; (see example below).</p>
 </li>
 <li>
 <p><strong>tooltip</strong> - A string or JSX object. This will be displayed as the tooltip for the action in the toolbar. If <code>tooltip</code> is omitted no tooltip will be added to your action. If <code>tooltip</code> is specified the <code>jsx</code> will be inside a tooltip <code>div</code> which is in the toolbar <code>div</code> mentioned above.</p>

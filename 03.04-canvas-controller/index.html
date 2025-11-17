@@ -3828,7 +3828,7 @@ Note: See this page for differences between <a href="../03.04.02-api-object-stru
 <span class="c1">// provided but they will be upgraded to the most recent version.</span>
 <span class="nx">setPipelineFlow</span><span class="p">(</span><span class="nx">flow</span><span class="p">)</span>
 
-<span class="c1">// Clears the pipleine flow and displays an empty canvas.</span>
+<span class="c1">// Clears the pipeline flow and displays an empty canvas.</span>
 <span class="nx">clearPipelineFlow</span><span class="p">()</span>
 
 <span class="c1">// Returns the current pipelineFlow document in the latest version of the</span>
@@ -3851,7 +3851,7 @@ Note: See this page for differences between <a href="../03.04.02-api-object-stru
 <span class="c1">// format.</span>
 <span class="nx">getCanvasInfo</span><span class="p">()</span>
 
-<span class="c1">// Returns the IDs of the ancestor pipleline of the pipeline ID passed in.</span>
+<span class="c1">// Returns the IDs of the ancestor pipeline of the pipeline ID passed in.</span>
 <span class="nx">getAncestorPipelineIds</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
 
 <span class="c1">// Removes all styles from nodes, comments and links. See the setObjectsStyle</span>
@@ -3876,7 +3876,7 @@ Note: See this page for differences between <a href="../03.04.02-api-object-stru
 <span class="c1">// supernode hierarchy that is currently on display.</span>
 <span class="nx">getCurrentPipelineId</span><span class="p">()</span>
 
-<span class="c1">// Returns truty if the pipeline is external (that is it is part of an</span>
+<span class="c1">// Returns truthy if the pipeline is external (that is it is part of an</span>
 <span class="c1">// external pipeline flow). Otherwise, return falsy to indicate the pipeline</span>
 <span class="c1">// is local.</span>
 <span class="nx">isPipelineExternal</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
@@ -3905,14 +3905,14 @@ Note: See this page for differences between <a href="../03.04.02-api-object-stru
 
 <span class="c1">// Sets the loading text of the category. If set to a non-empty string the</span>
 <span class="c1">// category will show an InlineLoading control in the palette category div</span>
-<span class="c1">// with this text as the label. If set to falsey the palette category</span>
+<span class="c1">// with this text as the label. If set to falsy the palette category</span>
 <span class="c1">// will display as normal.</span>
 <span class="nx">setCategoryLoadingText</span><span class="p">(</span><span class="nx">categoryId</span><span class="p">,</span><span class="w"> </span><span class="nx">loadingText</span><span class="p">)</span>
 
 <span class="c1">// Sets the empty text of the category. If set to a non-empty string and the</span>
 <span class="c1">// category does not have any nodes, the palette will show a warning icon with</span>
 <span class="c1">// this text as a message under the category title when the category is opened.</span>
-<span class="c1">// This message will not be displayed if the field is set to falsey or if</span>
+<span class="c1">// This message will not be displayed if the field is set to falsy or if</span>
 <span class="c1">// nodetypes are added to the category.</span>
 <span class="nx">setCategoryEmptyText</span><span class="p">(</span><span class="nx">categoryId</span><span class="p">,</span><span class="w"> </span><span class="nx">emptyText</span><span class="p">)</span>
 
@@ -3974,7 +3974,7 @@ Note: See this page for differences between <a href="../03.04.02-api-object-stru
 <span class="c1">// Opens the palette category identified by the category ID passed in.</span>
 <span class="nx">openPaletteCategory</span><span class="p">(</span><span class="nx">categoryId</span><span class="p">)</span>
 
-<span class="c1">// Closes the palette category idetified by the category ID passed in.</span>
+<span class="c1">// Closes the palette category identified by the category ID passed in.</span>
 <span class="nx">closePaletteCategory</span><span class="p">(</span><span class="nx">categoryId</span><span class="p">)</span>
 
 <span class="c1">// Opens all the palette categories.</span>
@@ -4022,7 +4022,7 @@ Note: See this page for differences between <a href="../03.04.02-api-object-stru
 <span class="nx">areSelectedNodesContiguous</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="notification-messages-methods">Notification messages methods<a class="headerlink" href="#notification-messages-methods" title="Permanent link">&para;</a></h2>
-<p>The notification panel is displayed by the user by clicking the notifications icon in the toolbar. Your application can display whatever messages it wants in the notification panel. See the <a href="../03.04.05-notification-messages/">Notification Messages</a> paage for the structure of message objects. The contents of the notification panel can be managed using the methods below:
+<p>The notification panel is displayed by the user by clicking the notifications icon in the toolbar. Your application can display whatever messages it wants in the notification panel. See the <a href="../03.04.05-notification-messages/">Notification Messages</a> page for the structure of message objects. The contents of the notification panel can be managed using the methods below:
 <div class="highlight"><pre><span></span><code><span class="c1">// Overwrites the array of notification messages shown in the notification</span>
 <span class="c1">// panel.</span>
 <span class="c1">// newMessage - An array of messages (see getNotificationMessages)</span>
@@ -4078,7 +4078,7 @@ Note:</p>
 <span class="c1">// objectIds - An array of node and comment IDs</span>
 <span class="nx">disconnectObjects</span><span class="p">(</span><span class="nx">objectIds</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
-<span class="c1">// Deletes the object specified by the id in the pipleine specified by</span>
+<span class="c1">// Deletes the object specified by the id in the pipeline specified by</span>
 <span class="c1">// pipeline ID.</span>
 <span class="c1">// @Deprecated Use deleteNode or deleteComment as appropriate instead.</span>
 <span class="nx">deleteObject</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
@@ -4116,7 +4116,7 @@ Note:</p>
 </code></pre></div></li>
 </ul>
 <h2 id="node-methods">Node methods<a class="headerlink" href="#node-methods" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1">// Retuns an array of nodes for the pipeline specified by the pipelineId.</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns an array of nodes for the pipeline specified by the pipelineId.</span>
 <span class="nx">getNodes</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
 
 <span class="c1">// Returns a new node created from the data parameter in the pipeline</span>
@@ -4154,7 +4154,7 @@ Note:</p>
 
 <span class="c1">// Sets the node properties</span>
 <span class="c1">// nodeId - The ID of the node</span>
-<span class="c1">// properties - An object containing properties to be overriden in the node</span>
+<span class="c1">// properties - An object containing properties to be overridden in the node</span>
 <span class="c1">// pipelineId - The ID of the pipeline</span>
 <span class="nx">setNodeProperties</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">properties</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
@@ -4182,7 +4182,7 @@ Note:</p>
 <span class="c1">// pipelineId - The ID of the pipeline</span>
 <span class="nx">setNodeMessage</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">message</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
-<span class="c1">// Sets the lable for a node</span>
+<span class="c1">// Sets the label for a node</span>
 <span class="c1">// nodeId - The ID of the node</span>
 <span class="c1">// ndeLabel - The label</span>
 <span class="c1">// pipelineId - The ID of the pipeline</span>
@@ -4297,7 +4297,7 @@ Note:</p>
 <span class="c1">// pipeline specified by pipelineId.</span>
 <span class="nx">getNodeClassName</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
-<span class="c1">// Gets the style spcification for a node.</span>
+<span class="c1">// Gets the style specification for a node.</span>
 <span class="c1">// nodeId - The ID of the node</span>
 <span class="c1">// temporary - A boolean to indicate if the style is serialized when</span>
 <span class="c1">//             getPipelineFlow() method is called or not.</span>
@@ -4340,7 +4340,7 @@ Note:</p>
 <span class="nx">isSuperNodeExpandedInPlace</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
 <span class="c1">// Sets the label, for the node identified, to edit mode, provided the node</span>
-<span class="c1">// label is editable. This allows the user to edite the label text.</span>
+<span class="c1">// label is editable. This allows the user to edit the label text.</span>
 <span class="nx">setNodeLabelEditingMode</span><span class="p">(</span><span class="nx">nodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
 <span class="c1">// Sets the decoration label, for the decoration in the node identified, to edit</span>
@@ -4415,7 +4415,7 @@ Note:</p>
 <span class="c1">// pipeline specified by pipelineId.</span>
 <span class="nx">getCommentClassName</span><span class="p">(</span><span class="nx">commentId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
-<span class="c1">// Gets the style spcification for a comment</span>
+<span class="c1">// Gets the style specification for a comment</span>
 <span class="c1">// commentId - The ID of the node</span>
 <span class="c1">// temporary - A boolean to indicate if the style is serialized when</span>
 <span class="c1">//             getPipelineFlow() method is called or not.</span>
@@ -4517,7 +4517,7 @@ Note:</p>
 <span class="cm"> * array in the pipeline specified by pipeline ID. The class name will be</span>
 <span class="cm"> * applied to the links&#39; group (&lt;g&gt;) element in the DOM. To remove any</span>
 <span class="cm"> * previously added classes an empty string can be specified.</span>
-<span class="cm"> * @param linkIds - An arry of link IDs</span>
+<span class="cm"> * @param linkIds - An array of link IDs</span>
 <span class="cm"> * @param newClassName - New class string. Can be a space separated list</span>
 <span class="cm"> *                       of classes or an empty string to remove</span>
 <span class="cm"> *                       previously added classes.</span>
@@ -4671,7 +4671,7 @@ Note:</p>
 <span class="c1">// Closes the notification panel</span>
 <span class="nx">closeNotificationPanel</span><span class="p">()</span>
 
-<span class="c1">// Either opens or closes the notifictaion panel based on its current status</span>
+<span class="c1">// Either opens or closes the notification panel based on its current status</span>
 <span class="nx">toggleNotificationPanel</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="right-flyout-methods">Right Flyout methods<a class="headerlink" href="#right-flyout-methods" title="Permanent link">&para;</a></h3>
@@ -4679,7 +4679,7 @@ Note:</p>
 <span class="nx">isRightFlyoutOpen</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="top-panel-methods">Top panel methods<a class="headerlink" href="#top-panel-methods" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// Returns a boolean to indicate if the top pnel is open or not</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Returns a boolean to indicate if the top panel is open or not</span>
 <span class="nx">isTopPanelOpen</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="bottom-panel-methods">Bottom panel methods<a class="headerlink" href="#bottom-panel-methods" title="Permanent link">&para;</a></h3>
@@ -4694,12 +4694,12 @@ Note:</p>
 <h3 id="canvaspipeline-navigation-methods">Canvas/pipeline navigation methods<a class="headerlink" href="#canvaspipeline-navigation-methods" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// Displays a pipeline (identified by the pipelineId passed in). This must be</span>
 <span class="c1">// one of the pipelines referenced by the current set of breadcrumbs. It</span>
-<span class="c1">// cannot be used to open a new pipeline outside the current set of breadcruumbs.</span>
+<span class="c1">// cannot be used to open a new pipeline outside the current set of breadcrumbs.</span>
 <span class="nx">displaySubPipeline</span><span class="p">(</span><span class="nx">pipelineId</span><span class="p">)</span>
 
-<span class="c1">// Displays a pipeline for a supernode (identifid by the supernodeId</span>
-<span class="c1">// parameter) in a parent pipeline (identifid by the pipelineId parameter).</span>
-<span class="c1">// This parent pipeline should be the last of the current set of breadcumbs.</span>
+<span class="c1">// Displays a pipeline for a supernode (identified by the supernodeId</span>
+<span class="c1">// parameter) in a parent pipeline (identified by the pipelineId parameter).</span>
+<span class="c1">// This parent pipeline should be the last of the current set of breadcrumbs.</span>
 <span class="c1">// That is, the pipeline currently shown &quot;full page&quot; in the canvas.</span>
 <span class="nx">displaySubPipelineForSupernode</span><span class="p">(</span><span class="nx">supernodeId</span><span class="p">,</span><span class="w"> </span><span class="nx">pipelineId</span><span class="p">)</span>
 
@@ -4741,11 +4741,11 @@ Note:</p>
 <span class="c1">// available to be redone.</span>
 <span class="nx">canRedo</span><span class="p">()</span>
 
-<span class="c1">// Returns a string which is the label that descibes the next undoable</span>
+<span class="c1">// Returns a string which is the label that describes the next undoable</span>
 <span class="c1">// command.</span>
 <span class="nx">getUndoLabel</span><span class="p">()</span>
 
-<span class="c1">// Returns a string which is the label that descibes the next redoable</span>
+<span class="c1">// Returns a string which is the label that describes the next redoable</span>
 <span class="c1">// command.</span>
 <span class="nx">getRedoLabel</span><span class="p">()</span>
 

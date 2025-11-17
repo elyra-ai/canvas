@@ -4088,7 +4088,7 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 </code></pre></div></p>
 <h2 id="node-ports">Node Ports<a class="headerlink" href="#node-ports" title="Permanent link">&para;</a></h2>
 <p>A port is used to indicate the entry or exit point of a link into or out of a node.</p>
-<p>Internally, in the pipeline flow, a node can have zero or more input ports and/or zero or more output ports. Some applications choose to only allow single input and output ports for its nodes, while other applications have multiple input or output ports per node. As well as the number of ports per node, the application can choose how to display the ports in the flow editor. Those applications that have single ports per node often choose not to display the ports while the multiple-ports per node applications usually have to diplay the ports so there is a visual indication of where the links are attached.</p>
+<p>Internally, in the pipeline flow, a node can have zero or more input ports and/or zero or more output ports. Some applications choose to only allow single input and output ports for its nodes, while other applications have multiple input or output ports per node. As well as the number of ports per node, the application can choose how to display the ports in the flow editor. Those applications that have single ports per node often choose not to display the ports while the multiple-ports per node applications usually have to display the ports so there is a visual indication of where the links are attached.</p>
 <table>
 <thead>
 <tr>
@@ -4130,7 +4130,7 @@ would position the image 10 pixels left and 10 pixels above the very center of t
 </code></pre></div>
 <p>will position the input ports like this:</p>
 <p><img src="../assets/cc-node-port-custom.png" width="100" /></p>
-<p>If nodes are set to be resizeable (<a href="../03.02.01-canvas-config/#enableresizablenodes">enableResizableNodes</a> set to <code>true</code>) and the nodes is resized it will look like this, because the second port is tied to the &ldquo;bottomLeft&rdquo; position:</p>
+<p>If nodes are set to be resizable (<a href="../03.02.01-canvas-config/#enableresizablenodes">enableResizableNodes</a> set to <code>true</code>) and the nodes is resized it will look like this, because the second port is tied to the &ldquo;bottomLeft&rdquo; position:</p>
 <p><img src="../assets/cc-node-port-custom-resize.png" width="100" /></p>
 <p>When ports are positioned on the node, regardless of whether they are positioned by default or have customized positions, they are assigned one of four &lsquo;directions&rsquo; that links will be drawn to/from. These directions are dependent on the diagonal quadrant of the node the port is positioned within.</p>
 <p>As an extreme example, if these fields are used to customize a node with four input ports (black circles) and four output ports (blue arrows) like this:</p>
@@ -4235,7 +4235,7 @@ Alternatively, JSX images can be injected directly into the pipeline flow object
 <p>The React object can be built to accept three optional props as follows:
 <div class="highlight"><pre><span></span><code>nodeData - the node object from the internal data provided by the pipeline flow
 canvasController - the canvas controller
-externalUtils - an additional utilties file
+externalUtils - an additional utilities file
 </code></pre></div></p>
 <h2 id="customizing-node-colors-and-styles-with-css">Customizing node colors and styles with CSS<a class="headerlink" href="#customizing-node-colors-and-styles-with-css" title="Permanent link">&para;</a></h2>
 <h3 id="node-dom-construction">Node DOM Construction<a class="headerlink" href="#node-dom-construction" title="Permanent link">&para;</a></h3>

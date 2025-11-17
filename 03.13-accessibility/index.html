@@ -3497,21 +3497,21 @@
 <h1 id="accessibility">Accessibility<a class="headerlink" href="#accessibility" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Common Canvas supports accessibility through the use of Carbon components and, where necessary, with bespoke functions for UI components such as the flow editor canvas. The application can override styles such as color, line widths, etc and when this is done it is the responsibility of the application to ensure the customizations comply with accessibility guidelines.</p>
-<p>Note: In the remarks below whereever <code>Tab</code> is mentioned to move focus highlighting between objects, you can assume that <code>Shift + Tab</code> can be used to do the reverse of what is described.</p>
+<p>Note: In the remarks below wherever <code>Tab</code> is mentioned to move focus highlighting between objects, you can assume that <code>Shift + Tab</code> can be used to do the reverse of what is described.</p>
 <h2 id="keyboard-navigation">Keyboard Navigation<a class="headerlink" href="#keyboard-navigation" title="Permanent link">&para;</a></h2>
 <p>A major part of accessibility is allowing the user to move the focus highlighting around the different components of the UI and interact with those components using only the keyboard. The user can also press <a href="../03.05-keyboard-support/">keyboard shortcuts</a> to interact with those components.</p>
 <p>Common Canvas supports keyboard navigation of the focus highlighting around its different components as follow:</p>
 <h3 id="toolbar">Toolbar<a class="headerlink" href="#toolbar" title="Permanent link">&para;</a></h3>
 <p>The user can tab into and out of the toolbar. Once the focus highlighting is on a tool in the toolbar, the user can use the left and right arrow keys to move through the tools. The user can activate the tool with focus by pressing the space bar or return key.</p>
 <p>The space bar or return key can be used to open any drop-down list associated with the tool and the up and down arrow keys can then be used to navigate through the menu options of the drop-down.</p>
-<p>Additionally, the space bar or return key can also be used to open any sub-panel associated with the tool. The exitance of a sub-pannel is usually shown with a small triangular chevron in the bottom right corrner of the icon.</p>
+<p>Additionally, the space bar or return key can also be used to open any sub-panel associated with the tool. The existence of a sub-panel is usually shown with a small triangular chevron in the bottom right corner of the icon.</p>
 <p>Once the focus is moved inside the sub-panel, the user can press the tab key to move focus through the panel&rsquo;s components. It is recommended that the React object that the application provides to display the contents of a sub-panel should trap focus within the panel so that focus loops around inside the panel as the <code>Tab</code> is continuously pressed. The user can press the escape (esc) key to return focus to the toolbar button.</p>
 <h3 id="palette">Palette<a class="headerlink" href="#palette" title="Permanent link">&para;</a></h3>
 <p>When focus is moved to the palette the user can use the <code>Tab</code> key to move focus from the Search field to the palette categories. When focus is on a category the space bar or return key can be used to open the category. When the category is open, the user can press the up and down arrow keys to move focus up and down through the nodes in the category.</p>
 <p>When focus is on a node, the user can press the space bar or return key to add the node to the flow and, if a viable source node is available, a link will be created from it to the added node. (This is the equivalent of double-clicking the palette node).</p>
 <p>If the user presses shift plus either the space bar or return key the node will be added to the flow without any link being created. (This is the equivalent of dragging the node from the palette onto the flow editor canvas).</p>
 <h3 id="notification-panel">Notification Panel<a class="headerlink" href="#notification-panel" title="Permanent link">&para;</a></h3>
-<p>When the notificaiton panel is opened the focus highlighting appears on the close (X) button. The user can then navigate through the contents of the panel, including the messages and panel buttons, using the <code>Tab</code> key.</p>
+<p>When the notification panel is opened the focus highlighting appears on the close (X) button. The user can then navigate through the contents of the panel, including the messages and panel buttons, using the <code>Tab</code> key.</p>
 <p>To exit the panel, the keyboard user can press the escape (esc) key or put the focus on the close (X) button and press the space bar or return key.</p>
 <h3 id="flow-editor">Flow Editor<a class="headerlink" href="#flow-editor" title="Permanent link">&para;</a></h3>
 <p>When focus highlighting is moved to the flow editor, initially the whole viewport is highlighted. Pressing <code>Cmnd + &lt;comma&gt;</code> will display the context menu for the flow editor just like right-clicking on the flow editor background.</p>
@@ -3522,7 +3522,7 @@
 <li>For a node, they are input ports, output ports or decorations</li>
 <li>For a link, they are decorations or the start handle or end handle of the link (which can be moved, when the config property <code>enableLinkSelection</code> is set to <code>Handles</code> or <code>Detachable</code>).</li>
 </ul>
-<p>For a node, the input ports can be made focusable by setting the <code>inputPortFocusable</code> property (of the node layout object) to <code>true</code> wheile output ports are made focuable by setting <code>outputPortFocusable</code> to true.</p>
+<p>For a node, the input ports can be made focusable by setting the <code>inputPortFocusable</code> property (of the node layout object) to <code>true</code> while output ports are made focusable by setting <code>outputPortFocusable</code> to true.</p>
 <p>When focus is on a node or link, the user can press <code>Option + Tab</code> to put focus on the first of any of the &ldquo;sub-objects&rdquo; of the node or link. Once focus is on a sub-object the user can press <code>Tab</code> to move focus through the other sub-objects of the node or link. The focus is trapped on the node or link: that is, it loops around to the first sub-object after the user presses <code>Tab</code> with focus on the last sub-object. This prevents focus moving away from the node or link in an unexpected manner. The user can press the escape (esc) key to move focus away from the sub-objects and back to the parent node or link.</p>
 <h4 id="navigation-into-and-out-of-a-nodes-react-object">Navigation into and out of a node&rsquo;s React object<a class="headerlink" href="#navigation-into-and-out-of-a-nodes-react-object" title="Permanent link">&para;</a></h4>
 <p>If the application provides a React object to be displayed as the content of a node it is the application&rsquo;s responsibility to ensure the focus can be moved around the components displayed by the React object as required.</p>
@@ -3551,7 +3551,7 @@
 <p>Make objects tabbable or untabbable. To prevent any spurious tabbing behavior, when the React object is first created and when the focus moves outside of the React object, any components inside the object must not be tabbable (that is, they should have their <code>tabindex</code> set to -1). When focus moves inside the React object any objects that need to be tabbed to must be made tabbable (that is, they should have their <code>tabindex</code> set to 0) if the React object is replying on the browser&rsquo;s tabbing capability.</p>
 </li>
 </ol>
-<p>Warning:  Some HTML elements, such as <code>input</code> and <code>button</code>, have a <code>tabindex</code> of <code>0</code> by default so they will need the <code>tabindex</code> to be set explicitely as appropriate.</p>
+<p>Warning:  Some HTML elements, such as <code>input</code> and <code>button</code>, have a <code>tabindex</code> of <code>0</code> by default so they will need the <code>tabindex</code> to be set explicitly as appropriate.</p>
 <p>The <a href="https://github.com/elyra-ai/canvas/blob/main/canvas_modules/harness/src/client/components/custom-canvases/prompt/prompt-react-node.jsx">prompt react node</a> in the <code>Prompt</code> sample application in the test harness implements these steps.</p>
 
 

@@ -3505,7 +3505,7 @@
 <ul>
 <li><code>controls</code> A general panel type containing parameter controls.</li>
 <li><code>tabs</code> A tabbed control, each tab containing sub-panels and controls.</li>
-<li><code>subTabs</code> A horizontal sub-tabbed control, each tab containing sub-panels and controls. If displayed within a Tearsheet container, subtabs will be displayed vertically.</li>
+<li><code>subTabs</code> A horizontal sub-tabbed control, each tab containing sub-panels and controls. If displayed within a Tearsheet container, sub-tabs will be displayed vertically.</li>
 <li><code>panels</code> A panel type that contains sub-panels.</li>
 <li><code>panelSelector</code> A panel containing sub-panels that are shown or hidden based upon a controlling radio selection.</li>
 <li><code>columnSelection</code> A panel type containing field-selection controls that share a common set of fields.</li>
@@ -3539,7 +3539,7 @@
 </code></pre></div></li>
 <li><code>numberfield</code> A numeric text field. Number fields can also optionally display a random number generator button beside the control. See the uihints schema for details.</li>
 <li><code>datefield</code> A date input control whose date format tokens follow <a href="https://date-fns.org/v2.29.3/docs/format">date-fns</a>. Defaults to <code>yyyy-mm-dd</code></li>
-<li><code>timefield</code> A time input control whose time format tokens follow <a href="https://date-fns.org/v2.29.3/docs/format">date-fns</a>. Defautls to <code>H:m:s</code></li>
+<li><code>timefield</code> A time input control whose time format tokens follow <a href="https://date-fns.org/v2.29.3/docs/format">date-fns</a>. Defaults to <code>H:m:s</code></li>
 <li><code>datepicker</code> A date input control with calendar picker whose date format tokens follow <a href="https://flatpickr.js.org/formatting#date-formatting-tokens">Flatpickr</a>. Defaults to <code>Y-m-d</code>. Helper text can be included by adding <code>[parameter_id].helper</code> in the resources section.</li>
 <li><code>datepickerRange</code> A date input control with calendar picker for a range of dates. This follow the same rules as the <code>datepicker</code> control. Start and end labels defaults to <code>Start</code> and <code>End</code> respectively. Start, end, and helper labels can be customized by adding the following in the resources section:
     <div class="highlight"><pre><span></span><code>&quot;resources&quot;: {
@@ -3558,7 +3558,7 @@
 <li><code>oneofselect</code> A standard dropdown list control.</li>
 <li><code>multiselect</code> A standard dropdown list control that allows for multiple selection.</li>
 <li><code>someofselect</code> A multi-selection control for enumerated list parameters where the count is greater than 4.</li>
-<li><code>selectcolumn</code> A dropdown list control that selects from available column names. When dropdown list is empty, <code>selectcolumn</code> control will display default placeholder text <code>"..."</code>. This placeholder text can be customized by setting <code>[parameter_id].emptyList.placeholder</code> in resources section. When custom empty list placeholder text is provided, Common Properties will disable the empty list control.</li>
+<li><code>selectcolumns</code> A dropdown list control that selects from available column names. When dropdown list is empty, <code>selectcolumn</code> control will display default placeholder text <code>"..."</code>. This placeholder text can be customized by setting <code>[parameter_id].emptyList.placeholder</code> in resources section. When custom empty list placeholder text is provided, Common Properties will disable the empty list control.</li>
 <li><code>selectcolumns</code> A multi-select control for column selections.</li>
 <li><code>selectschema</code> A dropdown control that contains the available schemas in <code>dataset_metadata</code>. The <code>name</code> of the schema will be displayed if provided. If <code>name</code> is not provided, the index (zero-based) of the schema will be used instead. When dropdown list is empty, <code>selectschema</code> control will display default placeholder text <code>"..."</code>. This placeholder text can be customized by setting <code>[parameter_id].emptyList.placeholder</code> in resources section. When custom empty list placeholder text is provided, Common Properties will disable the empty list control.</li>
 <li><code>toggle</code>  A standard toggle control with default On/Off states. This text can be customized by setting <code>[parameter_id].toggle.on.label</code> and <code>[parameter_id].toggle.off.label</code> in resources section.</li>
