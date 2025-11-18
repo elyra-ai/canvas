@@ -524,7 +524,7 @@ class ToolTip extends React.Component {
 						onClick={this.stopEventPropagation}
 						onMouseDown={this.stopEventPropagation}
 					>
-						<svg className="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
+						<svg className="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1" aria-hidden>
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
 							<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />
 						</svg>
