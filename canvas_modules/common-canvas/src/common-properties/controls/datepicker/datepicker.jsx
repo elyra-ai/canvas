@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Elyra Authors
+ * Copyright 2023-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,6 +76,7 @@ class DatepickerControl extends React.Component {
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<DatePicker
+					{...validationProps}
 					className="properties-datepicker-wrapper-parent"
 					datePickerType={DATEPICKER_TYPE.SINGLE}
 					dateFormat={this.dateFormat}
