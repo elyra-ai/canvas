@@ -88,11 +88,7 @@
 
 .elyra-CodeMirror.disabled {
 	.cm-content {
-		pointer-events: none; // Disable interaction in the content area
-	}
-
-	.cm-scroller {
-		pointer-events: auto // Allow scroll even when disabled
+		pointer-events: none; // Disable interaction in the content area only
 	}
 }
 
