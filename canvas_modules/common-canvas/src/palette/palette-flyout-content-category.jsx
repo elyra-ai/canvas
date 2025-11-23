@@ -31,9 +31,9 @@ class PaletteFlyoutContentCategory extends React.Component {
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onFocus = this.onFocus.bind(this);
-		this.categoryClicked = this.categoryClicked.bind(this);
-		this.categoryKeyPressed = this.categoryKeyPressed.bind(this);
-		this.setPaletteCategory = this.setPaletteCategory.bind(this);
+		this.onKeyDownCategory = this.onKeyDownCategory.bind(this);
+		this.onHeadingClick = this.onHeadingClick.bind(this);
+		this.getTitleObj = this.getTitleObj.bind(this);
 	}
 
 	onMouseOver(evt) {
@@ -46,6 +46,36 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 	onFocus(evt) {
 		this.displayTip(evt);
+	}
+
+	onKeyDownCategory(evt) {
+		if (KeyboardUtils.openCategory(evt)) {
+			this.onHeadingClick();
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+
+		} else if (this.props.category.is_open &&
+					KeyboardUtils.fromCategoryToFirstNode(evt)) {
+			this.pclRef.current.setFirstNode();
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+
+		} else if (KeyboardUtils.tabFocusOutOfPalette(evt) &&
+					this.props.tabOut) {
+			this.props.tabOut(evt);
+		}
+	}
+
+	// Handles a click on the category heading area. This is called from the Accordion
+	// Item when:
+	// * the user clicks on a header AND
+	// * when the user presses the appropriate keyboard shortcut
+	// Additionally, it's called from onKeyDownCategory when the user presses space
+	// or return.
+	onHeadingClick() {
+		if (this.props.category.is_open) {
+			this.props.canvasController.closePaletteCategory(this.props.category.id);
+		} else {
+			this.props.canvasController.openPaletteCategory(this.props.category.id);
+		}
 	}
 
 	getInlineLoadingRenderCategory() {
@@ -81,21 +111,17 @@ class PaletteFlyoutContentCategory extends React.Component {
 		return content;
 	}
 
-	setPaletteCategory(isOpen) {
-		if (isOpen) {
-			this.props.canvasController.closePaletteCategory(this.props.category.id);
-		} else {
-			this.props.canvasController.openPaletteCategory(this.props.category.id);
-		}
-	}
-
 	// Returns the category object for a regular category.
 	getRenderCategory() {
 		const titleObj = this.getTitleObj();
 		const content = this.getContent();
 		return (
-			<AccordionItem title={titleObj} open={this.props.category.is_open}
-				onKeyDown={this.categoryKeyPressed} onFocus={this.onFocus}
+			<AccordionItem
+				title={titleObj}
+				open={this.props.category.is_open}
+				onKeyDown={this.onKeyDownCategory}
+				onFocus={this.onFocus}
+				onHeadingClick={this.onHeadingClick}
 			>
 				{content}
 			</AccordionItem>
@@ -107,11 +133,11 @@ class PaletteFlyoutContentCategory extends React.Component {
 		const itemImage = this.getItemImage();
 		const itemText = this.getItemText();
 		this.catRef = React.createRef();
+
 		return (
 			<div className="palette-flyout-category"
 				ref={this.catRef}
 				data-id={get(this.props.category, "id", "")}
-				onClick={this.categoryClicked}
 				value={this.props.category.label}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
@@ -119,7 +145,8 @@ class PaletteFlyoutContentCategory extends React.Component {
 				<div className="palette-flyout-category-item" tabIndex={-1}>
 					{itemImage}
 					{itemText}
-				</div></div>
+				</div>
+			</div>
 		);
 	}
 
@@ -216,32 +243,6 @@ class PaletteFlyoutContentCategory extends React.Component {
 			category: this.props.category
 		});
 
-	}
-
-	categoryClicked(evt) {
-		// Stopping event propagation prevents an extra refresh of the node icons when
-		// a category is opened.
-		evt.stopPropagation();
-
-		this.setPaletteCategory(this.props.category.is_open);
-	}
-
-	categoryKeyPressed(evt) {
-		if (evt.target.className === "cds--accordion__heading") {
-			if (KeyboardUtils.openCategory(evt)) {
-				this.setPaletteCategory(this.props.category.is_open);
-				CanvasUtils.stopPropagationAndPreventDefault(evt);
-
-			} else if (this.props.category.is_open &&
-						KeyboardUtils.fromCategoryToFirstNode(evt)) {
-				this.pclRef.current.setFirstNode();
-				CanvasUtils.stopPropagationAndPreventDefault(evt);
-
-			} else if (KeyboardUtils.tabFocusOutOfPalette(evt) &&
-						this.props.tabOut) {
-				this.props.tabOut(evt);
-			}
-		}
 	}
 
 	render() {
