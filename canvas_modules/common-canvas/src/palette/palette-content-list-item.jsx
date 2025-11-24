@@ -86,6 +86,7 @@ class PaletteContentListItem extends React.Component {
 	onKeyDown(evt) {
 		if (KeyboardUtils.createAutoNode(evt)) {
 			this.createAutoNode(true);
+			evt.stopPropagation(); // Stop key event propagating and closing the category.
 
 		} else if (KeyboardUtils.createAutoNodeNoLink(evt)) {
 			this.createAutoNode(false); // false indicates no links are required
@@ -107,7 +108,9 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	onDoubleClick() {
-		this.createAutoNode(true);
+		if (!this.props.allowClickToAdd) {
+			this.createAutoNode(true);
+		}
 	}
 
 	onClick() {
