@@ -155,8 +155,12 @@ Cypress.Commands.add("tabToCategory", (categoryLabel) => {
 		.focus();
 });
 
+// Simulates a press of the space bar on a category. We need to send the key event to the
+// grandparent of the category element.
 Cypress.Commands.add("pressSpaceOnCategory", (categoryLabel) => {
 	cy.findCategory(categoryLabel)
+		.parent()
+		.parent()
 		.type(" ");
 });
 
