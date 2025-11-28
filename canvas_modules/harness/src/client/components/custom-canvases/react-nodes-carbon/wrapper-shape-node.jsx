@@ -17,28 +17,24 @@
 import React from "react";
 import PropTypes from "prop-types";
 import SVG from "react-inlinesvg";
-import { get } from "lodash";
 
 import { ShapeNode } from "@carbon/charts-react";
+import { IMAGE_STYLES } from "./react-nodes-carbon-constants";
 
-class ShapeNodeWrapper extends React.Component {
-	render() {
-		const shape = get(this, "props.nodeData.app_data.react_nodes_data.shape");
+const ShapeNodeWrapper = ({ nodeData }) => {
+	const shape = nodeData?.app_data?.react_nodes_data?.shape;
 
-		const styleImage = { height: "24px", width: "24px", y: 0 };
-		const icon = (<SVG src={this.props.nodeData.image} style={styleImage} />);
-		return (
-			<div className={"shape-node-div"}>
-				<ShapeNode
-					title={this.props.nodeData.label}
-					shape={shape}
-					size="28px"
-					renderIcon={icon}
-				/>
-			</div>
-		);
-	}
-}
+	return (
+		<div className="shape-node-div">
+			<ShapeNode
+				title={nodeData.label}
+				shape={shape}
+				size="28px"
+				renderIcon={<SVG src={nodeData.image} style={IMAGE_STYLES} />}
+			/>
+		</div>
+	);
+};
 
 ShapeNodeWrapper.propTypes = {
 	nodeData: PropTypes.object
