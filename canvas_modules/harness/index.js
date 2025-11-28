@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,31 +19,31 @@
 
 // New Relic must be initialized before anything else
 
-var nconf = require("nconf");
-var log4js = require("log4js");
-var http = require("http");
+import { get } from "nconf";
+import { getLogger } from "log4js";
+import { createServer } from "http";
 
-var application = require("./lib/application");
+import { create, destroy } from "./lib/application";
 
 // Globals
 
-var logger = log4js.getLogger("index");
+var logger = getLogger("index");
 
 // Main ----------------------------------------------------------------------->
 
-application.create(function(err, app) {
+create(function(err, app) {
 
 	if (err) {
 		logger.fatal("Failed to create application.");
 		logger.fatal(err);
-		application.destroy();
+		destroy();
 		return;
 	}
 
-	var port = process.env.PORT || nconf.get("port").http;
+	var port = process.env.PORT || get("port").http;
 	// HTTP
 
-	http.createServer(app).listen(port, function() {
+	createServer(app).listen(port, function() {
 		logger.info("Express server listening on HTTP port " + port);
 	});
 

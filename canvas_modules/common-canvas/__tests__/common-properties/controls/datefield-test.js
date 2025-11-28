@@ -27,8 +27,6 @@ import datefieldParamDef from "../../test_resources/paramDefs/datefield_paramDef
 import DateField from "../../../src/common-properties/controls/datefield";
 import { fireEvent, cleanup } from "@testing-library/react";
 
-const DATEFIELD_PARAM_DEF = require("../../test_resources/paramDefs/datefield_paramDef.json");
-
 const mockDatefield = jest.fn();
 jest.mock("../../../src/common-properties/controls/datefield",
 	() => (props) => mockDatefield(props)
@@ -246,7 +244,7 @@ describe("error messages renders correctly for datefield controls", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(DATEFIELD_PARAM_DEF);
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(datefieldParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
@@ -374,7 +372,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		let dateWrapper = container.querySelectorAll("div[data-id='properties-hidden_date']");
 		expect(dateWrapper).to.have.length(0);
 		controller.updatePropertyValue({ name: "hide_date_field" }, false);
-		const rerendered = propertyUtilsRTL.flyoutEditorFormRerender(DATEFIELD_PARAM_DEF);
+		const rerendered = propertyUtilsRTL.flyoutEditorFormRerender(datefieldParamDef);
 		const { propertiesInfo, propertiesConfig, callbacks, customControls, customConditionOps } = rerendered;
 		rerender(
 			<div className="properties-right-flyout">
@@ -399,7 +397,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		let dateWrapper = container.querySelector("div[data-id='properties-disabled_date']");
 		expect(dateWrapper.querySelector("input").disabled).to.equal(true);
 		controller.updatePropertyValue({ name: "disable_date_field" }, false);
-		const rerendered = propertyUtilsRTL.flyoutEditorFormRerender(DATEFIELD_PARAM_DEF);
+		const rerendered = propertyUtilsRTL.flyoutEditorFormRerender(datefieldParamDef);
 		const { propertiesInfo, propertiesConfig, callbacks, customControls, customConditionOps } = rerendered;
 		rerender(
 			<div className="properties-right-flyout">
