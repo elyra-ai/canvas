@@ -3319,13 +3319,14 @@
 
 
 <h1 id="click-action-handler">Click Action Handler<a class="headerlink" href="#click-action-handler" title="Permanent link">&para;</a></h1>
-<p>This callback is optional. You don&rsquo;t need to implement anything for it and it doesn&rsquo;t need to return anything to Common Canvas. It is called whenever the user clicks or double clicks on something on the canvas. You could use this callback to implement opening a properties dialog when the user double clicks a node.</p>
+<p>This callback is optional. You don&rsquo;t need to implement anything for it and it doesn&rsquo;t need to return anything to Common Canvas.  It gets triggered each time the user performs a click, double-click or right-click action on an object in the flow editor or on the flow editor (canvas) background.</p>
+<p>An example of where this might be useful might be to open a properties dialog when the user double-clicks a node.</p>
 <h2 id="clickactionhandler">clickActionHandler<a class="headerlink" href="#clickactionhandler" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nx">clickActionHandler</span><span class="p">(</span><span class="nx">source</span><span class="p">)</span>
 </code></pre></div>
-<p>The callback is called with a single <code>source</code> parameter which contain information about the object that was clicked.</p>
-<p>Note: When handling selections, it is recommended the selectionChangeHandler be used in preference to this handler when possible. selectionChangeHandler will notify you of all selection changes regardless of how they occur, such as when the user presses Ctrl+A on the keyboard to select all objects.</p>
-<p>At the moment only click/double-click/context-menu  on nodes and the canvas background are returned. It is provided with one parameter that looks like this:</p>
+<p>The callback is called with a single <code>source</code> parameter which contains information about the object that was clicked.</p>
+<p>Note: When handling selections, the <a href="../03.03.08-selection-change-handler/">selectionChangeHandler</a> callback should be used in preference to this handler when possible. <code>selectionChangeHandler</code> will notify you of all selection changes regardless of how they occur, such as when the user presses <code>Ctrl+A</code> on the keyboard to select all objects.</p>
+<p>The clickActionHandler is called for click, double-click and context-menu-click actions on nodes, comments, links and the canvas background. It is provided with one parameter that looks like this:</p>
 <p><div class="highlight"><pre><span></span><code><span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="nx">clickType</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;DOUBLE_CLICK&quot;</span>
 <span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;node_1&quot;</span><span class="p">,</span>
@@ -3336,8 +3337,8 @@
 The fields can be:</p>
 <ul>
 <li>clickType - This can be either &ldquo;SINGLE_CLICK&rdquo;, &ldquo;SINGLE_CLICK_CONTEXTMENU&rdquo; or &ldquo;DOUBLE_CLICK&rdquo;</li>
-<li>objectType - Can be either &ldquo;node&rdquo;, &ldquo;comment&rdquo;, &ldquo;canvas&rdquo; or &ldquo;region&rdquo;. &ldquo;region&rdquo; is specified when the user pulls out a selection rectangle around a set of objects that might include nodes and comments.</li>
-<li>id - The ID of the node or comment clicked. Only provided when objectType is &ldquo;node&rdquo; or &ldquo;comment&rdquo;</li>
+<li>objectType - Can be either &ldquo;node&rdquo;, &ldquo;comment&rdquo;, &ldquo;link&rdquo;, &ldquo;canvas&rdquo; or &ldquo;region&rdquo;. &ldquo;region&rdquo; is specified when the user pulls out a selection rectangle around a set of objects that might include nodes and comments.</li>
+<li>id - The ID of the node, comment or link clicked. Only provided when objectType is &ldquo;node&rdquo;, &ldquo;comment&rdquo; or &ldquo;link&rdquo;.</li>
 <li>selectedObjectIds - An array of the selected objects (after the click action was performed).</li>
 </ul>
 <p>Note: &ldquo;SINGLE_CLICK_CONTEXTMENU&rdquo; indicates that the user performed a contextmenu gesture when doing the click such as pressing the right-side mouse button or a two finger tap on a trackpad.</p>
