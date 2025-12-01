@@ -275,6 +275,15 @@ Cypress.Commands.add("verifyClickActionInConsole", (dataField, dataContent) => {
 	});
 });
 
+Cypress.Commands.add("verifyDoubleClickActionInConsole", (dataField, dataContent) => {
+	cy.document().then((doc) => {
+		const actionText = "clickActionHandler";
+		const lastEventLog = testUtils.getLastLogOfType(doc, actionText);
+		expect(lastEventLog.event).to.equal(actionText);
+		expect(lastEventLog.data[dataField]).to.equal(dataContent);
+	});
+});
+
 Cypress.Commands.add("verifyEditedCommentExists", (commentText) => {
 	// verify comment is in the DOM
 	cy.getCommentWithText(commentText)

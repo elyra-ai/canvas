@@ -2465,8 +2465,12 @@ export default class SVGCanvasRenderer {
 				if (this.svgCanvasTextArea.isEditingText()) {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
-				if (!this.config.enableDragWithoutSelect) {
+
+				if (this.config.enableKeyboardNavigation) {
 					this.setFocusObject(d, d3Event, d.layout.onFocusAllowDefaultAction);
+				}
+
+				if (!this.config.enableDragWithoutSelect) {
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
 					this.selectObjectD3Event(d3Event, d, clickType);
 				}
@@ -5060,7 +5064,8 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableKeyboardNavigation) {
 					this.setFocusObject(d, d3Event);
 				}
-				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE &&
+						!this.config.enableDragWithoutSelect) {
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
 					this.selectObjectD3Event(d3Event, d, clickType);
 				}
@@ -5070,10 +5075,26 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Link Group - click");
 				d3Event.stopPropagation();
 			})
+			.on("dblclick", (d3Event, d) => {
+				this.logger.log("Link Group - double click");
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+					this.canvasController.clickActionHandler({
+						clickType: DOUBLE_CLICK,
+						objectType: "link",
+						id: d.id,
+						selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
+						pipelineId: this.activePipeline.id
+					});
+				}
+			})
 			.on("contextmenu", (d3Event, d) => {
 				this.logger.log("Link Group - context menu");
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+				// With enableDragWithoutSelect set to true, the object for which the
+				// context menu is being requested needs to be implicitly selected (if possible).
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE &&
+						this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK_CONTEXTMENU);
 				}
 				this.setFocusObject(d, d3Event);
