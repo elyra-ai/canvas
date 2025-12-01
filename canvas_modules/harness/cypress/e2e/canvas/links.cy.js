@@ -500,6 +500,17 @@ describe("Test enableLinkSelection = 'LinkOnly' configuration option", function(
 		cy.verifyNumberOfSelectedObjects(0);
 	});
 
+	it("Test clicking a link ", function() {
+		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.verifyClickActionInConsole("clickType", "SINGLE_CLICK");
+		cy.verifyNumberOfSelectedObjects(1);
+	});
+
+	it("Test double-clicking a link ", function() {
+		cy.doubleClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
+		cy.verifyClickActionInConsole("clickType", "DOUBLE_CLICK");
+		cy.verifyNumberOfSelectedObjects(1);
+	});
 });
 
 describe("Test enableLinkSelection = 'Handles' configuration option", function() {
