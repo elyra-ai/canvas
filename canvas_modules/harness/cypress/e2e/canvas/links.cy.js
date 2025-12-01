@@ -508,7 +508,7 @@ describe("Test enableLinkSelection = 'LinkOnly' configuration option", function(
 
 	it("Test double-clicking a link ", function() {
 		cy.doubleClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
-		cy.verifyDoubleClickActionInConsole("clickType", "DOUBLE_CLICK");
+		cy.verifyClickActionInConsole("clickType", "DOUBLE_CLICK");
 		cy.verifyNumberOfSelectedObjects(1);
 	});
 });
