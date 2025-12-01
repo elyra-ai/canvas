@@ -4,5 +4,6 @@
   "canvas.emptyLink": "Clique aqui para fazer um tour",
   "expression.value.column": "Valor customizado",
   "expression.value.column.description": "Testando a descrição customizada do aplicativo",
-  "expression.field.column.description": "Descrição customizada"
+  "expression.field.column.description": "Descrição customizada",
+  "fieldPicker.vectorType.label": "Etiqueta vetorial personalizada"
 }

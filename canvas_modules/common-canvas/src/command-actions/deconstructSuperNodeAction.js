@@ -73,7 +73,7 @@ export default class DeconstructSuperNodeAction extends Action {
 		}
 
 		// Add to newObjectPositions some new positions for the objects being
-		// added to the pipeline from the supernode'ssub-flow. This will
+		// added to the pipeline from the supernode's sub-flow. This will
 		// move them into the position where the supernode once stood. A space
 		// for them will have been created by the code above if
 		// enableMoveNodesOnSupernodeResize is switched on.

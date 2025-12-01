@@ -37,8 +37,8 @@ export default (state = [], action) => {
 			return !remove;
 		});
 
-		const newset = [...subset, ...action.data.extPipelineFlowsToAdd];
-		return newset;
+		const newSet = [...subset, ...action.data.extPipelineFlowsToAdd];
+		return newSet;
 	}
 
 	case "ADD_OBJECTS_AND_UPDATE":

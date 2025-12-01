@@ -387,12 +387,12 @@ export default class SidePanelForms extends React.Component {
 		const options = [];
 		let key = 1;
 		const groupOptions = [];
-		const choosefromlocation = [];
+		const chooseFromLocation = [];
 		options.push(<SelectItem key = "choose-an-option" text = "Choose an option..." value = "Choose an option..." />);
-		choosefromlocation.push(
+		chooseFromLocation.push(
 			<SelectItem key={"choose-from-location"} text = "Choose From Location" value = {CHOOSE_FROM_LOCATION} />);
 		options.push(
-			<SelectItemGroup key ={"choose-file-option"} label = {LOCAL_FILE_OPTION}>{choosefromlocation}
+			<SelectItemGroup key ={"choose-file-option"} label = {LOCAL_FILE_OPTION}>{chooseFromLocation}
 			</SelectItemGroup>);
 		for (const option of optionsInput) {
 			groupOptions.push(<SelectItem key={"param-def-option-" + key++} text={option} value={option} />);
@@ -1688,7 +1688,7 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
-		var displayBoudingRectangles = (<div className="harness-sidepanel-children">
+		var displayBoundingRectangles = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedBoundingRectangles" // Set ID to corresponding field in App.js state
 				labelText="Display Bounding Rectangles"
@@ -1945,7 +1945,7 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableDisplayCustomizedEmptyCanvasContent}
 					{divider}
-					{displayBoudingRectangles}
+					{displayBoundingRectangles}
 					{divider}
 					{enableCanvasUnderlay}
 					{divider}

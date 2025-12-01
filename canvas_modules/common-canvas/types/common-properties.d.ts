@@ -80,7 +80,7 @@ export interface ErrorMessage {
   "text": string;
   "type": string;
   "validation_id": string;
-};
+}
 
 export type ApplyPropertyChangesCallback = (
   propertySet: Record<string, unknown>,

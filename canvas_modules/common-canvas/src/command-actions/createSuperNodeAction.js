@@ -61,7 +61,7 @@ export default class CreateSuperNodeAction extends Action {
 		// Create an API pipeline for the new pipeline so we can call helper functions on it.
 		this.subAPIPipeline = this.objectModel.getAPIPipeline(this.subPipeline.id);
 
-		// Create binding input/output data objects cotaining port and link.
+		// Create binding input/output data objects containing port and link.
 		this.bindingInputData = this.getBindingInputData(this.subflowInputLinks, this.subflowRect);
 		this.bindingOutputData = this.getBindingOutputData(this.subflowOutputLinks, this.subflowRect);
 
@@ -126,14 +126,14 @@ export default class CreateSuperNodeAction extends Action {
 			if (this.apiPipeline.isObjectIdInObjects(comment.id, this.subflowComments)) {
 				filteredLinks.push(link);
 
-			// Include links that are connected to nonselected comments and connected
+			// Include links that are connected to non-selected comments and connected
 			// to selected nodes AND include their comment in the subflow as well.
 			} else if (!this.apiPipeline.isCommentLinkedToNonSelectedNodes(comment.id)) {
 				filteredLinks.push(link);
-				this.subflowComments.push(comment); // Intrinsically, add nonselected comment.
+				this.subflowComments.push(comment); // Intrinsically, add non-selected comment.
 
 			// Do not include any other links in the subflow. These will be links
-			// from nonselected comments to nonselected nodes. Such links will have
+			// from non-selected comments to non-selected nodes. Such links will have
 			// been included in the comment links if the comment has another link
 			// to a selected node. These links will be deleted from the main flow
 			// instead.
@@ -148,21 +148,21 @@ export default class CreateSuperNodeAction extends Action {
 	}
 
 	// Handles all instances where a subflow comment (that is being included in
-	// the subflow) is also linked to a non-selectd node (that is, a node that is
-	// NOT being inlcuded in the subflow). This method will alter
+	// the subflow) is also linked to a non-selected node (that is, a node that is
+	// NOT being included in the subflow). This method will alter
 	// this.subflowLinks and this.linkToDelete.
 	removeCommentLinksToUnselectedNodes(inSubflowCommentLinks, subflowComments) {
 		let subflowCommentLinks = inSubflowCommentLinks;
 		const commentsToUnlinkFromUnselectedNodes = [];
 
-		// Do not move a selected comment to supernode if it is linked to an nonselected node or comment.
+		// Do not move a selected comment to supernode if it is linked to an non-selected node or comment.
 		for (const comment of subflowComments) {
 			if (this.apiPipeline.isCommentLinkedToNonSelectedNodes(comment.id)) {
 				commentsToUnlinkFromUnselectedNodes.push(comment);
 			}
 		}
 
-		// If selected comments have links to nonselected nodes, break the links to nonselected nodes.
+		// If selected comments have links to non-selected nodes, break the links to non-selected nodes.
 		commentsToUnlinkFromUnselectedNodes.forEach((comment) => {
 			const commentLinks = this.apiPipeline.getLinksContainingId(comment.id);
 			commentLinks.forEach((link) => {
@@ -409,14 +409,14 @@ export default class CreateSuperNodeAction extends Action {
 
 	generateUniquePortId(port, nodeId, bindingNodeData) {
 		let newId = port.id ? nodeId + "_" + port.id : port.id;
-		const count = this.occurancesStartingWith(newId, bindingNodeData);
+		const count = this.occurrencesStartingWith(newId, bindingNodeData);
 		if (count > 0) {
 			newId += "_" + count;
 		}
 		return newId;
 	}
 
-	occurancesStartingWith(id, bindingNodeData) {
+	occurrencesStartingWith(id, bindingNodeData) {
 		const foundIds = bindingNodeData.filter((bnd) => (bnd.supernodePort.id.startsWith(id)));
 		return foundIds.length;
 	}
@@ -527,7 +527,7 @@ export default class CreateSuperNodeAction extends Action {
 		this.apiPipeline.deleteNodes(this.subflowNodes, false); // false => don't remove pipelines any supernodes refer to
 		this.apiPipeline.deleteComments(this.subflowComments);
 
-		// Delete links from comments that are not in the subpipeline.
+		// Delete links from comments that are not in the sub-pipeline.
 		this.apiPipeline.deleteLinks(this.linksToDelete);
 
 		this.apiPipeline.addSupernode(this.supernode, [this.subPipeline]);

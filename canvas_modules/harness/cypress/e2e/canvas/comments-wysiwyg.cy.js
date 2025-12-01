@@ -54,7 +54,7 @@ describe("Test for verifying WYSIWYG comments functionality in the application",
 		cy.verifyWysiwygCommentStyles({ styleName: "text-decoration", styleValue: "underline" });
 	});
 
-	it("Test to verify functionality of striketrough option in WYSIWYG toolbar", function() {
+	it("Test to verify functionality of strikethrough option in WYSIWYG toolbar", function() {
 		cy.clickTextToolbarOption("strikethrough");
 		cy.clickCanvasAt(5, 5);
 		cy.verifyWysiwygCommentStyles({ styleName: "text-decoration", styleValue: "line-through" });

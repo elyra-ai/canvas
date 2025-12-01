@@ -28,7 +28,7 @@ const COLOR_DIM_PLUS_PAD = COLOR_DIMENSION + COLOR_PADDING;
 
 
 // These values must reflect the layout of the color picker panel
-// decribed by the SCSS/CSS.
+// described by the SCSS/CSS.
 
 class ColorPicker extends React.Component {
 	constructor(props) {

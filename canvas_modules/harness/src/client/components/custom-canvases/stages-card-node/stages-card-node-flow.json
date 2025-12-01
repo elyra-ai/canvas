@@ -19,7 +19,7 @@
 					"image": "/images/custom-canvases/stages/palette/AmazonS3PX.svg",
 					"x_pos": 0,
 					"y_pos": 193.04999999999998,
-					"description": "Data in Aamzon S3"
+					"description": "Data in Amazon S3"
 				}
 			},
 			"outputs": [{
@@ -235,7 +235,7 @@
 					"image": "/images/custom-canvases/stages/palette/PxRemDup.svg",
 					"x_pos": 1560,
 					"y_pos": 386.09999999999997,
-					"description": "Removes duplcate rows"
+					"description": "Removes duplicate rows"
 				}
 			},
 			"inputs": [{

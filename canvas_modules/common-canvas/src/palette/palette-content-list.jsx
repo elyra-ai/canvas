@@ -30,7 +30,7 @@ class PaletteContentList extends React.Component {
 		this.previousNodeInCategory = this.previousNodeInCategory.bind(this);
 	}
 
-	// Sets focus on the fist ndoe in the list. This is called using a ref
+	// Sets focus on the fist node in the list. This is called using a ref
 	// from the parent category.
 	setFirstNode() {
 		this.currentFocusIndex = 0;

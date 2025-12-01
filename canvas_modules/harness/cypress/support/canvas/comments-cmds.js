@@ -88,7 +88,7 @@ Cypress.Commands.add("ctrlOrCmdClickComment", (commentText) => {
 	cy.window().then((win) => {
 		cy.getCommentWithText(commentText).as("com");
 		// We trigger mousedown and mouseup here instead of using 'click()'
-		// becasue this is needed to get this command to work on the build
+		// because this is needed to get this command to work on the build
 		// machine when enableDragWithoutSelect is set to true even though,
 		// for some reason, 'click()' works successfully on the local machine.
 		cy.get("@com")
@@ -102,7 +102,7 @@ Cypress.Commands.add("ctrlOrCmdClickCommentInSupernode", (commentText, supernode
 	cy.window().then((win) => {
 		cy.getCommentWithTextInSupernode(commentText, supernodeName).as("com");
 		// We trigger mousedown and mouseup here instead of using 'click()'
-		// becasue this is needed to get this command to work on the build
+		// because this is needed to get this command to work on the build
 		// machine when enableDragWithoutSelect is set to true even though,
 		// for some reason, 'click()' works successfully on the local machine.
 		cy.get("@com")

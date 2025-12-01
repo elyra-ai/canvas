@@ -226,14 +226,14 @@ Cypress.Commands.add("verifyCommentIsNotSelected", (commentText) => {
 });
 
 Cypress.Commands.add("verifyNodeExistsInExtraCanvas", (nodeName) => {
-	// Swtich to extra canvas
+	// Switch to extra canvas
 	cy.inExtraCanvas();
 
 	// verify node is in the DOM
 	cy.getNodeWithLabel(nodeName)
 		.should("have.length", 1);
 
-	// Swtich back to regular canvas
+	// Switch back to regular canvas
 	cy.inRegularCanvas();
 });
 
@@ -886,7 +886,7 @@ Cypress.Commands.add("verifyBottomPanelHeight", (height) => {
 
 Cypress.Commands.add("verifyBottomPanelWidth", (width) => {
 	cy.get(".bottom-panel").should((element) => {
-		// Use compareCloseTo here because bottom-panel width is slighyly different
+		// Use compareCloseTo here because bottom-panel width is slightly different
 		// on the build machine to its width when running tests on a local machine.
 		compareCloseTo(element[0].offsetWidth, width);
 	});
@@ -900,7 +900,7 @@ Cypress.Commands.add("verifyTopPanelHeight", (height) => {
 
 Cypress.Commands.add("verifyTopPanelWidth", (width) => {
 	cy.get(".top-panel").should((element) => {
-		// Use compareCloseTo here because top-panel width is slighyly different
+		// Use compareCloseTo here because top-panel width is slightly different
 		// on the build machine to its width when running tests on a local machine.
 		compareCloseTo(element[0].offsetWidth, width);
 	});
@@ -908,7 +908,7 @@ Cypress.Commands.add("verifyTopPanelWidth", (width) => {
 
 Cypress.Commands.add("verifyPalettePanelWidth", (width) => {
 	cy.get(".palette-flyout-div").should((element) => {
-		// Use compareCloseTo here because top-panel width is slighyly different
+		// Use compareCloseTo here because top-panel width is slightly different
 		// on the build machine to its width when running tests on a local machine.
 		compareCloseTo(element[0].offsetWidth, width);
 	});
@@ -1493,14 +1493,14 @@ Cypress.Commands.add("verifyNodeHasDataId", (nodeLabel, dataIdValue, categoryLab
 		});
 });
 
-// Verfiies the focus is on the object passed in
+// Verifies the focus is on the object passed in
 Cypress.Commands.add("verifyFocusOnCanvas", () => {
 	cy.document().then((doc) => {
 		expect(doc.activeElement).to.have.class("d3-svg-canvas-div");
 	});
 });
 
-// Verfiies the focus is on the node passed in
+// Verifies the focus is on the node passed in
 Cypress.Commands.add("verifyFocusOnNode", (nodeLabel) => {
 	cy.document().then((doc) => {
 		cy.getNodeWithLabel(nodeLabel)
@@ -1511,7 +1511,7 @@ Cypress.Commands.add("verifyFocusOnNode", (nodeLabel) => {
 	});
 });
 
-// Verfiies the focus is on the comment passed in
+// Verifies the focus is on the comment passed in
 Cypress.Commands.add("verifyFocusOnComment", (commentText) => {
 	cy.document().then((doc) => {
 		cy.getCommentWithText(commentText)

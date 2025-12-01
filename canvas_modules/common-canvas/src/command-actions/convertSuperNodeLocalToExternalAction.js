@@ -35,7 +35,7 @@ export default class ConvertSuperNodeLocalToExternal extends Action {
 		this.newSupernode.subflow_ref.url = this.data.externalUrl;
 
 		const descPipelines = this.objectModel.getDescendantPipelinesForSupernode(this.oldSupernode);
-		this.oldPipelines = descPipelines.filter((p) => !p.parentUrl); // Filter the local pipeleines
+		this.oldPipelines = descPipelines.filter((p) => !p.parentUrl); // Filter the local pipelines
 
 		// Clone pipelines
 		this.newPipelines = this.objectModel.cloneSupernodeContents(this.newSupernode, this.oldPipelines);

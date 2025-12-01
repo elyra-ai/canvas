@@ -382,15 +382,15 @@ export default class ObjectModel {
 		this.setCanvasInfo(this.getEmptyCanvasInfo());
 	}
 
-	// Deprectaed TODO - Remove this method when WML Canvas supports pipeline Flow
+	// Deprecated TODO - Remove this method when WML Canvas supports pipeline Flow
 	// TODO - Remember to also remove declaration of ObjectModel.oldCanvas from above
 	setCanvas(canvas) {
-		this.oldCanvas = canvas; // TODO - Remember to remvove the declaration of this global when WML Canvas UI supports pipleine flow.
+		this.oldCanvas = canvas; // TODO - Remember to remove the declaration of this global when WML Canvas UI supports pipeline flow.
 		var canvasInfo = CanvasInHandler.convertCanvasToCanvasInfo(canvas);
 		this.setCanvasInfo(canvasInfo);
 	}
 
-	// Deprectaed TODO - Remove this method when WML Canvas supports pipeline Flow
+	// Deprecated TODO - Remove this method when WML Canvas supports pipeline Flow
 	getCanvas() {
 		if (this.oldCanvas) {
 			return CanvasOutHandler.getCanvasBasedOnCanvasInfo(this.oldCanvas, this.getCanvasInfo());
@@ -508,7 +508,7 @@ export default class ObjectModel {
 		return supernodes;
 	}
 
-	// Returns true if the pipelineFlow passd in contains the pipeline identified
+	// Returns true if the pipelineFlow passed in contains the pipeline identified
 	// by the pipelineId passed in.
 	flowContainsPipeline(pipelineFlow, pipelineId) {
 		if (pipelineFlow.pipelines) {
@@ -518,7 +518,7 @@ export default class ObjectModel {
 	}
 
 	// Adds the external pipeline flow, which has been retrieved using the url,
-	// into memory. This means adding the pipelines into the standed set of
+	// into memory. This means adding the pipelines into the set of
 	// pipelines in the canvas info and saving the pipeline flow properties
 	// (except for the pipelines property) using the externalpipelineflows
 	// reducer. shouldAddPipelines is a boolean that controls whether pipelines
@@ -527,7 +527,7 @@ export default class ObjectModel {
 		const convertedPf = this.preparePipelineFlow(externalPipelineFlow, supernode);
 		convertedPf.pipelines.forEach((p) => (p.parentUrl = url));
 
-		// Make a copy and remove the pipelines from the pipleine flow
+		// Make a copy and remove the pipelines from the pipeline flow
 		const newPipelineFlow = Object.assign({}, convertedPf);
 		newPipelineFlow.pipelines = [];
 		newPipelineFlow.url = url;
@@ -549,7 +549,7 @@ export default class ObjectModel {
 
 	// Returns a new header object for the external pipeline flow. A dummy
 	// pipeline will be added to the pipeline flow. This will be replaced by
-	// the actual pipelines when th epipeline flow  is retrieved using
+	// the actual pipelines when the pipeline flow  is retrieved using
 	// CommonCanvas.getExternalPipelineFlow.
 	createExternalPipelineFlowTemplate(pipelineFlowId, pipelineId) {
 		return {
@@ -635,7 +635,7 @@ export default class ObjectModel {
 	}
 
 	// Prepares a pipelineFlow to be loaded into memory in the canvas info. This
-	// involves flattening the pipleine flow hierarchy and adding layout info
+	// involves flattening the pipeline flow hierarchy and adding layout info
 	// to the nodes in the pipelines.
 	preparePipelineFlow(newPipelineFlow, supernode) {
 		const pipelineFlow = this.validateAndUpgrade(newPipelineFlow);
@@ -1174,7 +1174,7 @@ export default class ObjectModel {
 	// The toolbar.jsx React object retrieves some display attributes from the
 	// canvas-controller, not from Redux. This method will refresh the toolbar
 	// config which causes mapStateToProps to run in toolbar.jsx and that
-	// will cause the toolbar to retrieve those attributes from canvas-contoller.
+	// will cause the toolbar to retrieve those attributes from canvas-controller.
 	refreshToolbar() {
 		this.store.dispatch({ type: "REFRESH_TOOLBAR" });
 	}
@@ -1546,7 +1546,7 @@ export default class ObjectModel {
 		const selected = [];
 		const apiPipeline = this.getAPIPipeline(pipelineId);
 		for (const node of apiPipeline.getNodes()) {
-			if (!CanvasUtils.isSuperBindingNode(node)) { // Dont allow supernode binding nodes to be selected
+			if (!CanvasUtils.isSuperBindingNode(node)) { // Don't allow supernode binding nodes to be selected
 				selected.push(node.id);
 			}
 		}
@@ -1566,7 +1566,7 @@ export default class ObjectModel {
 		this.setSelections([], apiPipeline.pipelineId);
 	}
 
-	// Selects a set of nodes which represet all connected nodes from the
+	// Selects a set of nodes which represents all connected nodes from the
 	// current set of selected nodes to the end node passed in. If no
 	// connecting nodes are found, the set of selected nodes remains the same.
 	selectSubGraph(endNodeId, pipelineId) {
@@ -1645,7 +1645,7 @@ export default class ObjectModel {
 		visited.add(nodeId);
 		path.push(nodeId);
 
-		const neighbors = this.getNeighbourNodeIDs(nodeId, links);
+		const neighbors = this.getNeighborNodeIDs(nodeId, links);
 
 		for (const neighbor of neighbors) {
 			this.getGraphPathForNode(neighbor, endNodeId, path, visited, paths, links);
@@ -1667,7 +1667,7 @@ export default class ObjectModel {
 
 	// Returns an array of neighbor nodes for the node identified
 	// by the ID passed in.
-	getNeighbourNodeIDs(nodeId, links) {
+	getNeighborNodeIDs(nodeId, links) {
 		const neighbors = [];
 
 		links.forEach((l) => {
@@ -2253,7 +2253,7 @@ export default class ObjectModel {
 				// first.
 				const newLink = Object.assign({}, link);
 				// If the link is a node-node data link and it is attached to a source
-				// node and that node is not to be clipboarded, set the srcPos
+				// node and that node is not to be put on the clipboard, set the srcPos
 				// coordinates and remove the source node info.
 				if (link.type === NODE_LINK &&
 						link.srcNodeId &&
@@ -2263,7 +2263,7 @@ export default class ObjectModel {
 					newLink.srcPos = CanvasUtils.getSrcPos(link, apiPipeline);
 				}
 				// If the link is a node-node data link and it is attached to a target
-				// node and that node is not to be clipboarded, set the trgPos
+				// node and that node is not to be put on the clipboard, set the trgPos
 				// coordinates and remove the target node info.
 				if (link.type === NODE_LINK &&
 						link.trgNodeId &&
