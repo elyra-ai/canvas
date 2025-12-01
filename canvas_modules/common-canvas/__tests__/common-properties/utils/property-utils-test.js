@@ -16,10 +16,15 @@
 
 import { expect } from "chai";
 import { propertyOf } from "lodash";
-import * as PropertyUtils from "./../../../src/common-properties/util/property-utils.js";
-import testUtils from "./../../_utils_/property-utilsRTL.js";
+import { evaluateText,
+	getDMFieldIcon,
+	isSubControlStructureObjectType,
+	convertObjectStructureToArray,
+	convertArrayStructureToObject,
+	convertValueDataTypes } from "./../../../src/common-properties/util/property-utils.js";
+import { setControls } from "./../../_utils_/property-utilsRTL.js";
 import Controller from "./../../../src/common-properties/properties-controller";
-import propertyUtilsRTL from "./../../_utils_/property-utilsRTL.js";
+import { flyoutEditorForm } from "./../../_utils_/property-utilsRTL.js";
 import structureTableParamDef from "./../../test_resources/paramDefs/structuretable_paramDef.json";
 import convertValuesDataTypesParamDef from "./../../test_resources/paramDefs/convertValueDataTypes_paramDef.json";
 import { cleanup } from "@testing-library/react";
@@ -49,55 +54,55 @@ describe("dynamic text with expressions", () => {
 			}
 		}
 	];
-	testUtils.setControls(controller, controls);
+	setControls(controller, controls);
 	it("test sum expression", () => {
-		let result = PropertyUtils.evaluateText("Sum: ${sum(1,2,3,4)}", controller);
+		let result = evaluateText("Sum: ${sum(1,2,3,4)}", controller);
 		expect(result).to.equal("Sum: 10");
 		controller.updatePropertyValue({ name: "int" }, 0);
-		result = PropertyUtils.evaluateText("Sum: ${sum(int)}", controller);
+		result = evaluateText("Sum: ${sum(int)}", controller);
 		expect(result).to.equal("Sum: 0");
 		controller.updatePropertyValue({ name: "int" }, -1);
-		result = PropertyUtils.evaluateText("Sum: ${sum(int)}", controller);
+		result = evaluateText("Sum: ${sum(int)}", controller);
 		expect(result).to.equal("Sum: -1");
 		// multiple properties
 		controller.updatePropertyValue({ name: "int2" }, 500);
-		result = PropertyUtils.evaluateText("Sum: ${sum(int, int2, -2, int)}. Sum: ${sum(int2)}", controller);
+		result = evaluateText("Sum: ${sum(int, int2, -2, int)}. Sum: ${sum(int2)}", controller);
 		expect(result).to.equal("Sum: 496. Sum: 500");
 		// invalid property name and string property
 		controller.updatePropertyValue({ name: "str" }, "hello");
-		result = PropertyUtils.evaluateText("Sum: ${sum(int3)}. Sum: ${sum(str)}", controller);
+		result = evaluateText("Sum: ${sum(int3)}. Sum: ${sum(str)}", controller);
 		expect(result).to.equal("Sum: 0. Sum: 0");
 		// bad expression
-		result = PropertyUtils.evaluateText("Sum: ${sum()}. Sum: ${sum(int}", controller);
+		result = evaluateText("Sum: ${sum()}. Sum: ${sum(int}", controller);
 		expect(result).to.equal("Sum: 0. Sum: 0");
 	});
 	it("test percent expression", () => {
-		let result = PropertyUtils.evaluateText("Percent: ${percent(1029, 6)}", controller);
+		let result = evaluateText("Percent: ${percent(1029, 6)}", controller);
 		expect(result).to.equal("Percent: 0.097182");
 		controller.updatePropertyValue({ name: "int" }, 0);
-		result = PropertyUtils.evaluateText("Percent: ${percent(int)}", controller);
+		result = evaluateText("Percent: ${percent(int)}", controller);
 		expect(result).to.equal("Percent: 0");
 		controller.updatePropertyValue({ name: "int" }, -1);
-		result = PropertyUtils.evaluateText("Percent: ${percent(int)}", controller);
+		result = evaluateText("Percent: ${percent(int)}", controller);
 		expect(result).to.equal("Percent: -100");
 		// multiple expressions
 		controller.updatePropertyValue({ name: "int2" }, 33);
-		result = PropertyUtils.evaluateText("Percent: ${percent(int2, 2)}. Percent: ${percent(int2, 5)}", controller);
+		result = evaluateText("Percent: ${percent(int2, 2)}. Percent: ${percent(int2, 5)}", controller);
 		expect(result).to.equal("Percent: 3.03. Percent: 3.03030");
 		// invalid property name and string property
 		controller.updatePropertyValue({ name: "str" }, "hello");
-		result = PropertyUtils.evaluateText("Percent: ${percent(int3)}. Percent: ${percent(str)}", controller);
+		result = evaluateText("Percent: ${percent(int3)}. Percent: ${percent(str)}", controller);
 		expect(result).to.equal("Percent: 0. Percent: 0");
 		// bad expression
-		result = PropertyUtils.evaluateText("Percent: ${percent()}. Percent: ${percent(int}", controller);
+		result = evaluateText("Percent: ${percent()}. Percent: ${percent(int}", controller);
 		expect(result).to.equal("Percent: 0. Percent: 0");
 	});
 	it("test different text expressions", () => {
 		// function that doesn't exist
-		let result = PropertyUtils.evaluateText("Percent: ${none(0.1)}", controller);
+		let result = evaluateText("Percent: ${none(0.1)}", controller);
 		expect(result).to.equal("Percent: ");
 		controller.updatePropertyValue({ name: "int" }, 0);
-		result = PropertyUtils.evaluateText("Some text without an expression", controller);
+		result = evaluateText("Some text without an expression", controller);
 		expect(result).to.equal("Some text without an expression");
 	});
 });
@@ -105,7 +110,7 @@ describe("dynamic text with expressions", () => {
 describe("getDMFieldIcon retrieves correct icon type for each measurement level ", () => {
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(structureTableParamDef);
+		const renderedObject = flyoutEditorForm(structureTableParamDef);
 		controller = renderedObject.controller;
 	});
 
@@ -116,42 +121,42 @@ describe("getDMFieldIcon retrieves correct icon type for each measurement level 
 	it("measure level of range should return measurement-scale icon", () => {
 		// Open rename fields Summary Panel in structuretableParamDef
 		const fields = controller.getDatasetMetadataFields();
-		const icon = PropertyUtils.getDMFieldIcon(fields, "Age", "measure");
+		const icon = getDMFieldIcon(fields, "Age", "measure");
 		expect(icon).to.equal("measurement-scale");
 	});
 	it("measure level of ordered_set should return measurement-ordinal icon", () => {
 		const fields = controller.getDatasetMetadataFields();
-		const icon = PropertyUtils.getDMFieldIcon(fields, "Sex", "measure");
+		const icon = getDMFieldIcon(fields, "Sex", "measure");
 		expect(icon).to.equal("measurement-ordinal");
 	});
 	it("measure level of discrete should return measurement-discrete icon", () => {
 		const fields = controller.getDatasetMetadataFields();
-		const icon = PropertyUtils.getDMFieldIcon(fields, "BP", "measure");
+		const icon = getDMFieldIcon(fields, "BP", "measure");
 		expect(icon).to.equal("measurement-discrete");
 	});
 	it("measure level of set should return measurement-nominal icon", () => {
 		const fields = controller.getDatasetMetadataFields();
-		const icon = PropertyUtils.getDMFieldIcon(fields, "Cholesterol", "measure");
+		const icon = getDMFieldIcon(fields, "Cholesterol", "measure");
 		expect(icon).to.equal("measurement-nominal");
 	});
 	it("measure level of flag should return measurement-flag icon", () => {
 		const fields = controller.getDatasetMetadataFields();
-		const icon = PropertyUtils.getDMFieldIcon(fields, "Na", "measure");
+		const icon = getDMFieldIcon(fields, "Na", "measure");
 		expect(icon).to.equal("measurement-flag");
 	});
 	it("measure level of collection should return measurement-nominal icon", () => {
 		const fields = controller.getDatasetMetadataFields();
-		const icon = PropertyUtils.getDMFieldIcon(fields, "K", "measure");
+		const icon = getDMFieldIcon(fields, "K", "measure");
 		expect(icon).to.equal("measurement-nominal");
 	});
 	it("measure level of geospatial should return measurement-nominal icon", () => {
 		const fields = controller.getDatasetMetadataFields();
-		const icon = PropertyUtils.getDMFieldIcon(fields, "Drug", "measure");
+		const icon = getDMFieldIcon(fields, "Drug", "measure");
 		expect(icon).to.equal("measurement-nominal");
 	});
 	it("field with no measurement level should return empty icon", () => {
 		const fields = controller.getDatasetMetadataFields();
-		const icon = PropertyUtils.getDMFieldIcon(fields, "Ag", "measure");
+		const icon = getDMFieldIcon(fields, "Ag", "measure");
 		expect(icon).to.equal("measurement-empty");
 	});
 });
@@ -167,42 +172,42 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 
 	it("isSubControlStructureObjectType returns false when there are no structures of type object", () => {
 		const controlArray = { structureType: "array" };
-		let actual = PropertyUtils.isSubControlStructureObjectType(controlArray);
+		let actual = isSubControlStructureObjectType(controlArray);
 		expect(actual).to.eql(false);
 
 		const subControlsArray = [{ name: "fieldA", structureType: "array", subControls: subControls }];
-		actual = PropertyUtils.isSubControlStructureObjectType(subControlsArray);
+		actual = isSubControlStructureObjectType(subControlsArray);
 		expect(actual).to.eql(false);
 
 		const nestedSubControlsArray = [{ name: "field1" }, { name: "field2", subControls: subControlsArray }, { name: "field3" }];
 		const controlNested = { structureType: "array", subControls: nestedSubControlsArray };
-		actual = PropertyUtils.isSubControlStructureObjectType(controlNested);
+		actual = isSubControlStructureObjectType(controlNested);
 		expect(actual).to.eql(false);
 	});
 
 	it("isSubControlStructureObjectType returns true when there are structures of type object", () => {
 		const controlArray = { structureType: "object" };
-		let actual = PropertyUtils.isSubControlStructureObjectType(controlArray);
+		let actual = isSubControlStructureObjectType(controlArray);
 		expect(actual).to.eql(true);
 
 		const subControlsObject = [{ name: "field1" }, { name: "field2", structureType: "object" }, { name: "field3" }];
 		const subControlObject = { structureType: "array", subControls: subControlsObject };
-		actual = PropertyUtils.isSubControlStructureObjectType(subControlObject);
+		actual = isSubControlStructureObjectType(subControlObject);
 		expect(actual).to.eql(true);
 
 		const nestedSubControlsObject = [{ name: "field1" }, { name: "field2", subControls: subControlsObject }, { name: "field3" }];
 		const controlNested = { structureType: "array", subControls: nestedSubControlsObject };
-		actual = PropertyUtils.isSubControlStructureObjectType(controlNested);
+		actual = isSubControlStructureObjectType(controlNested);
 		expect(actual).to.eql(true);
 	});
 
 	it("convertObjectStructureToArray returns correct values for lists", () => {
-		const actual = PropertyUtils.convertObjectStructureToArray(true, subControls, objectValues);
+		const actual = convertObjectStructureToArray(true, subControls, objectValues);
 		expect(actual).to.eql(arrayValues);
 	});
 
 	it("convertArrayStructureToObject returns correct values for lists", () => {
-		const actual = PropertyUtils.convertArrayStructureToObject(true, subControls, arrayValues, true);
+		const actual = convertArrayStructureToObject(true, subControls, arrayValues, true);
 		expect(actual).to.eql(objectValues);
 	});
 
@@ -210,7 +215,7 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 		const missingArrayValues = [[1, null, "hi"], [null, 404, "hello"], [55005, null, null]];
 		const missingObjectValues = [{ field1: 1, field3: "hi" }, { field2: 404, field3: "hello" }, { field1: 55005 }];
 
-		const actual = PropertyUtils.convertObjectStructureToArray(true, subControls, missingObjectValues);
+		const actual = convertObjectStructureToArray(true, subControls, missingObjectValues);
 		expect(actual).to.eql(missingArrayValues);
 	});
 
@@ -218,12 +223,12 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 		const missingArrayValues = [[1, null, ""], [null, 404, null], [null, "", null]];
 		const missingObjectValues = [{ field1: 1, field2: null, field3: "" }, { field1: null, field2: 404, field3: null }, { field1: null, field2: "", field3: null }];
 
-		const actual = PropertyUtils.convertObjectStructureToArray(true, subControls, missingObjectValues);
+		const actual = convertObjectStructureToArray(true, subControls, missingObjectValues);
 		expect(actual).to.eql(missingArrayValues);
 	});
 
 	it("convertArrayStructureToObject returns correct values for non lists", () => {
-		const actual = PropertyUtils.convertArrayStructureToObject(false, structureEditorSubControls, structureEditorArrayValues);
+		const actual = convertArrayStructureToObject(false, structureEditorSubControls, structureEditorArrayValues);
 		expect(actual).to.eql(structureEditorObjectValues);
 	});
 
@@ -231,7 +236,7 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 		const missingArrayValues = [1, ["string1", "string2"], null, null];
 		const missingObjectValues = { field1: 1, field2: ["string1", "string2"] };
 
-		const actual = PropertyUtils.convertObjectStructureToArray(false, structureEditorSubControls, missingObjectValues);
+		const actual = convertObjectStructureToArray(false, structureEditorSubControls, missingObjectValues);
 		expect(actual).to.eql(missingArrayValues);
 	});
 
@@ -262,10 +267,10 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 			}]
 		}];
 
-		let actual = PropertyUtils.convertObjectStructureToArray(true, subControlObj, currentValues);
+		let actual = convertObjectStructureToArray(true, subControlObj, currentValues);
 		expect(actual).to.eql(nestedStructuresArray);
 
-		actual = PropertyUtils.convertArrayStructureToObject(true, subControlObj, nestedStructuresArray, true);
+		actual = convertArrayStructureToObject(true, subControlObj, nestedStructuresArray, true);
 		expect(actual).to.eql(currentValues);
 	});
 
@@ -282,10 +287,10 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 			]]
 		}];
 
-		let actual = PropertyUtils.convertObjectStructureToArray(true, subControlObj, currentValues);
+		let actual = convertObjectStructureToArray(true, subControlObj, currentValues);
 		expect(actual).to.eql(nestedStructuresArray);
 
-		actual = PropertyUtils.convertArrayStructureToObject(true, subControlObj, nestedStructuresArray, true);
+		actual = convertArrayStructureToObject(true, subControlObj, nestedStructuresArray, true);
 		expect(actual).to.eql(currentValues);
 	});
 
@@ -306,10 +311,10 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 			]
 		];
 
-		let actual = PropertyUtils.convertObjectStructureToArray(true, subControlObj, currentValues);
+		let actual = convertObjectStructureToArray(true, subControlObj, currentValues);
 		expect(actual).to.eql(nestedStructuresArray);
 
-		actual = PropertyUtils.convertArrayStructureToObject(true, subControlObj, nestedStructuresArray);
+		actual = convertArrayStructureToObject(true, subControlObj, nestedStructuresArray);
 		expect(actual).to.eql(currentValues);
 	});
 
@@ -328,10 +333,10 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 			]
 		];
 
-		let actual = PropertyUtils.convertObjectStructureToArray(true, subControlObj, currentValues);
+		let actual = convertObjectStructureToArray(true, subControlObj, currentValues);
 		expect(actual).to.eql(nestedStructuresArray);
 
-		actual = PropertyUtils.convertArrayStructureToObject(true, subControlObj, nestedStructuresArray);
+		actual = convertArrayStructureToObject(true, subControlObj, nestedStructuresArray);
 		expect(actual).to.eql(currentValues);
 	});
 });
@@ -363,12 +368,12 @@ describe("convertValueDataTypestests", () => {
 		const initialValues = propertyOf(convertValuesDataTypesParamDef)("current_parameters");
 		const controls = controller.getControls();
 
-		const actualValues = PropertyUtils.convertValueDataTypes(initialValues, controls);
+		const actualValues = convertValueDataTypes(initialValues, controls);
 		expect(actualValues).to.eql(expectedValues);
 	});
 
 	it("convertValueDataTypes correctly converts currentParameters data types when setting form", () => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(convertValuesDataTypesParamDef, { convertValueDataTypes: true });
+		const renderedObject = flyoutEditorForm(convertValuesDataTypesParamDef, { convertValueDataTypes: true });
 		const controller2 = renderedObject.controller;
 
 		const expected = Object.assign({}, expectedValues);
@@ -386,7 +391,7 @@ describe("convertValueDataTypestests", () => {
 		initialValues.missingControl = "no control definition";
 		const controls = controller.getControls();
 
-		const actualValues = PropertyUtils.convertValueDataTypes(initialValues, controls);
+		const actualValues = convertValueDataTypes(initialValues, controls);
 		const expected = Object.assign({}, expectedValues, { missingControl: "no control definition" });
 		expect(actualValues).to.eql(expected);
 	});

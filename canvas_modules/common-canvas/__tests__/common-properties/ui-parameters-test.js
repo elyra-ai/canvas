@@ -15,7 +15,7 @@
  */
 
 import uiItemsParamDef from "../test_resources/paramDefs/uiItems_paramDef.json";
-import propertyUtilsRTL from "../_utils_/property-utilsRTL";
+import { flyoutEditorForm } from "../_utils_/property-utilsRTL";
 import { expect } from "chai";
 import { cleanup, fireEvent } from "@testing-library/react";
 
@@ -32,7 +32,7 @@ describe("Ui parameters render from paramdef", () => {
 	let wrapper;
 	let renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(uiItemsParamDef);
+		const renderedObject = flyoutEditorForm(uiItemsParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});
@@ -63,7 +63,7 @@ describe("Ui parameters render from paramdef", () => {
 describe("Ui parameters are returned correctly", () => {
 
 	it("Change a UI only property and make sure it is returned in callback", () => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(uiItemsParamDef, null, { applyPropertyChanges: applyPropertyChanges });
+		const renderedObject = flyoutEditorForm(uiItemsParamDef, null, { applyPropertyChanges: applyPropertyChanges });
 		const wrapper = renderedObject.wrapper;
 		// change one of the ui properties values
 		const { container } = wrapper;

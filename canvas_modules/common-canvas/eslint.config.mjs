@@ -18,12 +18,16 @@ import globals from "globals";
 import configs from "eslint-config-canvas";
 import importPlugin from "eslint-plugin-import";
 import reactConfigs from "eslint-config-canvas/react.js";
+import reactPlugin from "eslint-plugin-react";
 
 export default [
 	importPlugin.flatConfigs.errors,
 	...configs,
 	...reactConfigs,
 	{
+		plugins: {
+			react: reactPlugin
+		},
 		settings: {
 			"import/resolver": {
 				"node": {
@@ -32,6 +36,7 @@ export default [
 			}
 		},
 		rules: {
+			...reactPlugin.configs.recommended.rules,
 			// Allow snake_case, but only for object properties e.g. myObj.param_name
 			"camelcase": [
 				"error",

@@ -15,7 +15,7 @@
  */
 
 import { expect } from "chai";
-import propertyUtilsRTL from "../_utils_/property-utilsRTL";
+import { flyoutEditorForm } from "../_utils_/property-utilsRTL";
 import uiItemParamDef from "../test_resources/paramDefs/uiItems_paramDef.json";
 import panelParamDef from "../test_resources/paramDefs/panel_paramDef.json";
 import panelParamDefWide from "../test_resources/paramDefs/widePanel_paramDef.json";
@@ -24,7 +24,7 @@ import { cleanup, fireEvent } from "@testing-library/react";
 describe("editor-form renders correctly with correct uiItems", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(uiItemParamDef);
+		const renderedObject = flyoutEditorForm(uiItemParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -62,7 +62,7 @@ describe("editor-form renders correctly with correct uiItems", () => {
 describe("uiItemParamDef render correctly when the control label is hidden", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtilsRTL.flyoutEditorForm(uiItemParamDef);
+		const renderedObject = flyoutEditorForm(uiItemParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -81,7 +81,7 @@ describe("Flyout editor has the correct width", () => {
 	let wrapper;
 	let renderedObject;
 	beforeEach(() => {
-		renderedObject = propertyUtilsRTL.flyoutEditorForm(panelParamDef);
+		renderedObject = flyoutEditorForm(panelParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -94,7 +94,7 @@ describe("Flyout editor has the correct width", () => {
 		expect(flyout).to.have.length(1);
 	});
 	it("should display a wide fly out editor at wider width", () => {
-		renderedObject = propertyUtilsRTL.flyoutEditorForm(panelParamDefWide);
+		renderedObject = flyoutEditorForm(panelParamDefWide);
 		wrapper = renderedObject.wrapper;
 		const { container } = wrapper;
 		const flyout = container.querySelectorAll("aside.properties-right-flyout.properties-medium");

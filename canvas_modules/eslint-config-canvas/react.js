@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import reactPlugin from "eslint-plugin-react";
+// import reactPlugin from "eslint-plugin-react";
 import globals from "globals";
 
 // View link below for react rules documentation
@@ -161,7 +161,7 @@ const rules = {
 const reactConfigs = [
 	{
         files: ["**/*.js", "**/*.jsx"],
-        ...reactPlugin.configs.flat.recommended,
+        // ...reactPlugin.configs.flat.recommended,
         settings: {
           react: {
             version: "detect", // Automatically detect React version
@@ -174,6 +174,7 @@ const reactConfigs = [
 			sourceType: "module",
 			globals: {
             	...globals.node,
+				...globals.browser,
 				browser: false
 			},
 			parserOptions: {
