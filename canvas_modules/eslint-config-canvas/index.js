@@ -15,8 +15,6 @@
  */
 
 // Modules
-import js from "@eslint/js";
-import globals from "globals";
 
 // Rule overrides only for "development" mode
 // Disallow use of console
@@ -376,15 +374,10 @@ const rules = {
 
 const configs = [
 	{
-		name: "@eslint/js/recommended",
-		rules: js.configs.recommended.rules
-	},
-	{
 		languageOptions: {
 			ecmaVersion: "latest",
 			sourceType: "module",
 			globals: {
-            	...globals.node,
 				browser: false
 			}
 		},

@@ -8,9 +8,5 @@
     "node": ">= 12",
     "npm": ">= 6"
   },
-  "type": "module",
-  "devDependencies": {
-    "eslint": "9.35.0",
-    "eslint-plugin-react": "7.37.5"
-  }
+  "type": "module"
 }

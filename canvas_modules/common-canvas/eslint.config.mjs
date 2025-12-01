@@ -19,6 +19,7 @@ import configs from "eslint-config-canvas";
 import importPlugin from "eslint-plugin-import";
 import reactConfigs from "eslint-config-canvas/react.js";
 import reactPlugin from "eslint-plugin-react";
+import js from "@eslint/js";
 
 export default [
 	importPlugin.flatConfigs.errors,
@@ -36,6 +37,7 @@ export default [
 			}
 		},
 		rules: {
+			...js.configs.recommended.rules,
 			...reactPlugin.configs.recommended.rules,
 			// Allow snake_case, but only for object properties e.g. myObj.param_name
 			"camelcase": [
@@ -45,6 +47,13 @@ export default [
 			"import/no-unresolved": [2, { commonjs: true, amd: true }],
 			"max-len": [2, 180, 4],
 			"id-length": ["error", { "min": 1 }]
+		},
+		languageOptions: {
+			globals: {
+				...globals.node,
+				...globals.browser,
+				browser: false
+			}
 		}
 	},
 	// ESM files
