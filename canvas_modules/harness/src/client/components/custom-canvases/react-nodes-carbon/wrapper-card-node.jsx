@@ -14,98 +14,65 @@
 * limitations under the License.
 */
 
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import SVG from "react-inlinesvg";
-import { get } from "lodash";
 
-import { CardNode, CardNodeColumn,
-	CardNodeSubtitle,
-	CardNodeTitle
-} from "@carbon/charts-react";
+import { CardNode, CardNodeColumn, CardNodeTitle, CardNodeSubtitle } from "@carbon/charts-react";
+import { IMAGE_STYLES } from "./react-nodes-carbon-constants";
 
-class CardNodeWrapper extends React.Component {
+const CardNodeWrapper = ({ nodeData, pipelineData, canvasController }) => {
 
-	componentDidMount() {
-		this.setNodeSize();
-	}
+	const divRef = React.createRef();
 
-	componentDidUpdate() {
-		this.setNodeSize();
-	}
+	const { label, description, op, type, image } = nodeData;
+	const { color, shape } = nodeData?.app_data?.react_nodes_data || {};
 
-	// Sets the node size (which will set the containing foreignObject size) based on display size
-	// of the Card Wrapper. A slight pause is required to allow the Card Wrapper contents to resolve
-	// to their ultimate display size.
-	setNodeSize() {
-		setTimeout(() => {
-			const node = this.props.canvasController.getNode(this.props.nodeData.id, this.props.pipelineData.id);
+	const imageOverride = image === "useDefaultIcon" ? "images/custom-canvases/flows/palette/icons/supernode.svg" : image;
 
-			if (!node.isResized && this.divRef &&
-					(this.divRef.current.scrollHeight > this.divRef.current.clientHeight ||
-						this.divRef.current.scrollWidth > this.divRef.current.clientWidth)) {
-				node.isResized = true;
-				node.resizeHeight = this.divRef.current.scrollHeight + 10;
-				node.resizeWidth = this.divRef.current.scrollWidth;
-				this.props.canvasController.setNodeProperties(this.props.nodeData.id, node, this.props.pipelineData.id);
-			}
-		}, 100);
-	}
+	const isSuperNodeAndExpanded = type === "super_node" && nodeData.is_expanded;
 
-
-	render() {
-		const styleImage = { height: "24px", width: "24px", y: 0 };
-
-		const image = this.props.nodeData.image === "useDefaultIcon"
-			? "images/custom-canvases/flows/palette/icons/supernode.svg"
-			: this.props.nodeData.image;
-
-		if (this.props.nodeData.type === "super_node" &&
-				this.props.nodeData.is_expanded) {
-			// The SVG area that shows the sub-flow will overlay this Card Node that
-			// forms the background for the supernode.
-			return (
-				<div className={"card-node"}>
-					<CardNode>
-						<CardNodeColumn>
-							<SVG src={image} style={styleImage} />
-						</CardNodeColumn>
-						<CardNodeColumn>
-							<CardNodeTitle>{this.props.nodeData.label}</CardNodeTitle>
-						</CardNodeColumn>
-					</CardNode>
-				</div>
-			);
-		}
-
-		// Read attributes from the nodeData, in the pipeline flow JSON file,
-		// for the node we are displaying.
-		const type = get(this, "props.nodeData.op"); // Derive the type from the operator
-		const color = get(this, "props.nodeData.app_data.react_nodes_data.color");
-		const shape = get(this, "props.nodeData.app_data.react_nodes_data.shape");
-
-		// Set the classes based on the node attributes.
-		let className = "card-node";
-		className += type === "card-node-with-outline" ? " card-node-outline-div" : "";
+	let className = "card-node";
+	if (!isSuperNodeAndExpanded) {
+		className += op === "card-node-with-outline" ? " card-node-outline-div" : "";
 		className += shape === "curved-corners" ? " card-node-curved-corners" : "";
-
-		this.divRef = React.createRef();
-
-		return (
-			<div className={className} ref={this.divRef}>
-				<CardNode color={color}>
-					<CardNodeColumn>
-						<SVG src={image} style={styleImage} />
-					</CardNodeColumn>
-					<CardNodeColumn>
-						<CardNodeTitle>{this.props.nodeData.label}</CardNodeTitle>
-						<CardNodeSubtitle>{this.props.nodeData.description}</CardNodeSubtitle>
-					</CardNodeColumn>
-				</CardNode>
-			</div>
-		);
 	}
-}
+
+
+	useEffect(() => {
+		const setNodeSize = () => {
+			setTimeout(() => {
+				const node = canvasController.getNode(nodeData.id, pipelineData.id);
+
+				if (!node.isResized && divRef.current &&
+					(divRef.current.scrollHeight > divRef.current.clientHeight ||
+						divRef.current.scrollWidth > divRef.current.clientWidth)) {
+					node.isResized = true;
+					node.resizeHeight = divRef.current.scrollHeight + 10;
+					node.resizeWidth = divRef.current.scrollWidth;
+					canvasController.setNodeProperties(nodeData.id, node, pipelineData.id);
+				}
+			}, 100);
+		};
+
+		setNodeSize();
+
+	}, [nodeData, pipelineData, canvasController]);
+
+	return (
+		<div className={className} ref={divRef}>
+			<CardNode color={color}>
+				<CardNodeColumn>
+					<SVG src={imageOverride} style={IMAGE_STYLES} />
+				</CardNodeColumn>
+				<CardNodeColumn>
+					<CardNodeTitle>{label}</CardNodeTitle>
+					{!isSuperNodeAndExpanded && <CardNodeSubtitle>{description}</CardNodeSubtitle>}
+				</CardNodeColumn>
+			</CardNode>
+		</div>
+	);
+};
 
 CardNodeWrapper.propTypes = {
 	nodeData: PropTypes.object,
