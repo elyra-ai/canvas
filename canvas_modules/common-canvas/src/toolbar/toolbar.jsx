@@ -563,7 +563,7 @@ class Toolbar extends React.Component {
 		const tabIndex = this.state.focusAction === "toolbar" ? 0 : -1;
 
 		const canvasToolbar = (
-			<div ref={this.toolbarRef} className={toolbarSizeClass} instanceid={this.props.instanceId}
+			<div ref={this.toolbarRef} className={toolbarSizeClass} data-instance-id={this.props.instanceId}
 				tabIndex={tabIndex} onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown}
 			>
 				<div className="toolbar-left-bar" onScroll={this.onScroll}>

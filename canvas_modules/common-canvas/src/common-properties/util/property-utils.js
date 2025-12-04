@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ function evaluateText(text, controller) {
 		const expression = text.substr(startIdx + 2, endIdx);
 		const newText = text.replace("${" + expression + "}", _evaluateExpression(expression, controller));
 		return evaluateText(newText, controller); // test to see if there are more expressions
-	} catch (e) {
+	} catch {
 		logger.warn("Invalid expression.  Make sure replacement expression in text is a valid expression.");
 		return text;
 	}

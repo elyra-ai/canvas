@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+"use strict";
 
 const codeCoverageDir = "reports/coverage";
 const autoprefixer = require("autoprefixer");
@@ -21,8 +22,11 @@ const autoprefixer = require("autoprefixer");
 module.exports = function(grunt) {
 	grunt.initConfig({
 		eslint: {
-			node: {
-				src: ["Gruntfile.js", "__mocks__/**/*.js", "__tests__/**/*.js", "constants/**/*.js", "utils/**/*.js"]
+			target: [
+				"Gruntfile.cjs", "__mocks__/**/*.js", "__tests__/**/*.js", "constants/**/*.js", "utils/**/*.js"
+			],
+			options: {
+				overrideConfigFile: "eslint.config.mjs"
 			},
 			browser: {
 				files: {
@@ -69,7 +73,7 @@ module.exports = function(grunt) {
 		postcss: {
 			options: {
 				processors: [
-					autoprefixer() // add vendor prefixes
+					autoprefixer // add vendor prefixes
 				]
 			},
 			dist: {

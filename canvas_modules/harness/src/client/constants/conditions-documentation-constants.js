@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 /* eslint max-len: ["error", 200]*/
-"use strict";
 
 // Private Methods ------------------------------------------------------------>
-
-function _defineConstant(id, value) {
-	Object.defineProperty(module.exports, id, {
-		value: value,
-		enumerable: true,
-		writable: false
-	});
-}
-
 const fields = [
 	{
 		"name": "Age",
@@ -93,7 +83,7 @@ const fields = [
 ];
 
 // Public Methods ------------------------------------------------------------->
-_defineConstant("TEXTFIELD_ERROR_PROPS_INFO", {
+export const TEXTFIELD_ERROR_PROPS_INFO = {
 	"title": "TextField Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -172,8 +162,8 @@ _defineConstant("TEXTFIELD_ERROR_PROPS_INFO", {
 			"textfieldControlName_no_quotes": "Name cannot contain double or single \"quotes\""
 		}
 	}
-});
-_defineConstant("TEXTFIELD_WARNING_PROPS_INFO", {
+};
+export const TEXTFIELD_WARNING_PROPS_INFO = {
 	"title": "TextField Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -252,8 +242,8 @@ _defineConstant("TEXTFIELD_WARNING_PROPS_INFO", {
 			"textfieldControlName_no_quotes": "Name cannot contain double or single \"quotes\""
 		}
 	}
-});
-_defineConstant("TEXTFIELD_COLNOTEXISTS_PROPS_INFO", {
+};
+export const TEXTFIELD_COLNOTEXISTS_PROPS_INFO = {
 	"title": "TextField Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -320,8 +310,8 @@ _defineConstant("TEXTFIELD_COLNOTEXISTS_PROPS_INFO", {
 			"textfieldControlName_no_quotes": "Name cannot be an existing column field name in the dataset_metadata"
 		}
 	}
-});
-_defineConstant("TEXTAREA_ERROR_PROPS_INFO", {
+};
+export const TEXTAREA_ERROR_PROPS_INFO = {
 	"title": "Textarea Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -388,8 +378,8 @@ _defineConstant("TEXTAREA_ERROR_PROPS_INFO", {
 			"textareaControlName_not_empty": "textarea cannot contain [\"line1\", \"line2\", \"line3\"]"
 		}
 	}
-});
-_defineConstant("TEXTAREA_WARNING_PROPS_INFO", {
+};
+export const TEXTAREA_WARNING_PROPS_INFO = {
 	"title": "Textarea Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -455,8 +445,8 @@ _defineConstant("TEXTAREA_WARNING_PROPS_INFO", {
 			"textareaControlName_not_empty": "textarea cannot be empty"
 		}
 	}
-});
-_defineConstant("LIST_ERROR_PROPS_INFO", {
+};
+export const LIST_ERROR_PROPS_INFO = {
 	"title": "List Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -518,8 +508,8 @@ _defineConstant("LIST_ERROR_PROPS_INFO", {
 			"listControlName_not_empty": "list cannot be empty"
 		}
 	}
-});
-_defineConstant("LIST_WARNING_PROPS_INFO", {
+};
+export const LIST_WARNING_PROPS_INFO = {
 	"title": "List Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -581,8 +571,8 @@ _defineConstant("LIST_WARNING_PROPS_INFO", {
 			"listNumberControlName_not_empty": "list cannot be empty"
 		}
 	}
-});
-_defineConstant("PASSWORD_FIELD_ERROR_PROPS_INFO", {
+};
+export const PASSWORD_FIELD_ERROR_PROPS_INFO = {
 	"title": "Password Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -648,8 +638,8 @@ _defineConstant("PASSWORD_FIELD_ERROR_PROPS_INFO", {
 			"passwordField_not_empty": "password cannot be empty"
 		}
 	}
-});
-_defineConstant("EXPRESSION_ERROR_PROPS_INFO", {
+};
+export const EXPRESSION_ERROR_PROPS_INFO = {
 	"title": "Expression Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -734,8 +724,8 @@ _defineConstant("EXPRESSION_ERROR_PROPS_INFO", {
 			"expressionBox_invalid": "expression must not contain a newline or single quotes. It must contain /."
 		}
 	}
-});
-_defineConstant("EXPRESSION_WARNING_PROPS_INFO", {
+};
+export const EXPRESSION_WARNING_PROPS_INFO = {
 	"title": "Expression Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -801,8 +791,8 @@ _defineConstant("EXPRESSION_WARNING_PROPS_INFO", {
 			"expressionBox_invalid": "expression cannot be empty."
 		}
 	}
-});
-_defineConstant("NUMBERFIELD_ERROR_PROPS_INFO", {
+};
+export const NUMBERFIELD_ERROR_PROPS_INFO = {
 	"title": "NumberField Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -912,8 +902,8 @@ _defineConstant("NUMBERFIELD_ERROR_PROPS_INFO", {
 			"numberfieldControlName_invalid": "Number must be > 0 and < 10 or > 90 and < 100"
 		}
 	}
-});
-_defineConstant("NUMBERFIELD_GENERATOR_WARNING_PROPS_INFO", {
+};
+export const NUMBERFIELD_GENERATOR_WARNING_PROPS_INFO = {
 	"title": "NumberField Generator Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -993,8 +983,8 @@ _defineConstant("NUMBERFIELD_GENERATOR_WARNING_PROPS_INFO", {
 			"numberfieldControlName_notEmpty": "numberfieldControlName cannot be empty."
 		}
 	}
-});
-_defineConstant("CHECKBOX_SINGLE_ERROR_PROPS_INFO", {
+};
+export const CHECKBOX_SINGLE_ERROR_PROPS_INFO = {
 	"title": "Checkbox Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -1062,8 +1052,8 @@ _defineConstant("CHECKBOX_SINGLE_ERROR_PROPS_INFO", {
 			"checkboxSingle": "checkboxSingle must be checked."
 		}
 	}
-});
-_defineConstant("CHECKBOX_SET_ERROR_PROPS_INFO", {
+};
+export const CHECKBOX_SET_ERROR_PROPS_INFO = {
 	"title": "Checkbox Set Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -1145,8 +1135,8 @@ _defineConstant("CHECKBOX_SET_ERROR_PROPS_INFO", {
 			"checkboxSet": "cannot check both string and integer."
 		}
 	}
-});
-_defineConstant("CHECKBOX_SET_WARNING_PROPS_INFO", {
+};
+export const CHECKBOX_SET_WARNING_PROPS_INFO = {
 	"title": "Checkbox Set Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -1217,8 +1207,8 @@ _defineConstant("CHECKBOX_SET_WARNING_PROPS_INFO", {
 			"checkboxSetW_invalid": "cannot check both string and integer."
 		}
 	}
-});
-_defineConstant("RADIOSET_HORIZONTAL_ERROR_PROPS_INFO", {
+};
+export const RADIOSET_HORIZONTAL_ERROR_PROPS_INFO = {
 	"title": "Radioset Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -1288,8 +1278,8 @@ _defineConstant("RADIOSET_HORIZONTAL_ERROR_PROPS_INFO", {
 			"radioset_invalid": "do not select red."
 		}
 	}
-});
-_defineConstant("RADIOSET_VERTICAL_WARNING_PROPS_INFO", {
+};
+export const RADIOSET_VERTICAL_WARNING_PROPS_INFO = {
 	"title": "Radioset Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -1360,8 +1350,8 @@ _defineConstant("RADIOSET_VERTICAL_WARNING_PROPS_INFO", {
 			"radioset_invalid": "do not select any kind of red."
 		}
 	}
-});
-_defineConstant("ONEOFSELECT_ERROR_PROPS_INFO", {
+};
+export const ONEOFSELECT_ERROR_PROPS_INFO = {
 	"title": "One of Select Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -1433,8 +1423,8 @@ _defineConstant("ONEOFSELECT_ERROR_PROPS_INFO", {
 			"oneofselectList_invalid": "an option must be selected."
 		}
 	}
-});
-_defineConstant("MULTISELECT_ERROR_PROPS_INFO", {
+};
+export const MULTISELECT_ERROR_PROPS_INFO = {
 	"title": "Multiselect Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -1502,8 +1492,8 @@ _defineConstant("MULTISELECT_ERROR_PROPS_INFO", {
 			"multiselectList_invalid": "The option red should not be selected."
 		}
 	}
-});
-_defineConstant("SOMEOFSELECT_ERROR_PROPS_INFO", {
+};
+export const SOMEOFSELECT_ERROR_PROPS_INFO = {
 	"title": "Some of Select Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -1575,8 +1565,8 @@ _defineConstant("SOMEOFSELECT_ERROR_PROPS_INFO", {
 			"someofselectList_invalid": "an option must be selected."
 		}
 	}
-});
-_defineConstant("SELECTCOLUMN_ERROR_PROPS_INFO", {
+};
+export const SELECTCOLUMN_ERROR_PROPS_INFO = {
 	"title": "Select Column Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -1643,8 +1633,8 @@ _defineConstant("SELECTCOLUMN_ERROR_PROPS_INFO", {
 			"selectcolumnList_invalid": "cannot select Drug."
 		}
 	}
-});
-_defineConstant("SELECTCOLUMNS_ERROR_PROPS_INFO", {
+};
+export const SELECTCOLUMNS_ERROR_PROPS_INFO = {
 	"title": "SelectColumns Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -1711,8 +1701,8 @@ _defineConstant("SELECTCOLUMNS_ERROR_PROPS_INFO", {
 			"selectcolumnsList_invalid": "Cholesterol must be selected."
 		}
 	}
-});
-_defineConstant("STRUCTURETABLE_ERROR_PROPS_INFO", {
+};
+export const STRUCTURETABLE_ERROR_PROPS_INFO = {
 	"title": "StructureTable Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -1891,8 +1881,8 @@ _defineConstant("STRUCTURETABLE_ERROR_PROPS_INFO", {
 			"new_number_invalid": "Number must be between 0 and 130."
 		}
 	}
-});
-_defineConstant("STRUCTURETABLE_COLNOTEXISTS_PROPS_INFO", {
+};
+export const STRUCTURETABLE_COLNOTEXISTS_PROPS_INFO = {
 	"title": "StructureTable Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -2040,8 +2030,8 @@ _defineConstant("STRUCTURETABLE_COLNOTEXISTS_PROPS_INFO", {
 			"structureTableList_invalid": "New Name cannot be an existing column field name in the dataset_metadata."
 		}
 	}
-});
-_defineConstant("STRUCTURELISTEDITOR_ERROR_PROPS_INFO", {
+};
+export const STRUCTURELISTEDITOR_ERROR_PROPS_INFO = {
 	"title": "StructureListEditor Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -2148,8 +2138,8 @@ _defineConstant("STRUCTURELISTEDITOR_ERROR_PROPS_INFO", {
 			"structurelisteditorList_invalid": "Table cannot be empty."
 		}
 	}
-});
-_defineConstant("STRUCTURELISTEDITOR_WARNING_PROPS_INFO", {
+};
+export const STRUCTURELISTEDITOR_WARNING_PROPS_INFO = {
 	"title": "StructureListEditor Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -2306,9 +2296,9 @@ _defineConstant("STRUCTURELISTEDITOR_WARNING_PROPS_INFO", {
 			"description_invalid": "Description cannot be contain '<' and '>'."
 		}
 	}
-});
+};
 
-_defineConstant("STRING_GROUP_ERROR_PROPS_INFO", {
+export const STRING_GROUP_ERROR_PROPS_INFO = {
 	"title": "Group Type: String Group Conditions",
 	"parameterDef": {
 		"current_parameters": {
@@ -2393,8 +2383,8 @@ _defineConstant("STRING_GROUP_ERROR_PROPS_INFO", {
 			"textfieldControlName_invalid": "First and last name cannot be the same."
 		}
 	}
-});
-_defineConstant("STRING_GROUP_WARNING_PROPS_INFO", {
+};
+export const STRING_GROUP_WARNING_PROPS_INFO = {
 	"title": "Group Type: String Group Conditions",
 	"parameterDef": {
 		"current_parameters": {
@@ -2489,8 +2479,8 @@ _defineConstant("STRING_GROUP_WARNING_PROPS_INFO", {
 			"textfieldControlName_invalid": "First name cannot be empty and Last name cannot contain first name."
 		}
 	}
-});
-_defineConstant("NUMBER_GROUP_ERROR_PROPS_INFO", {
+};
+export const NUMBER_GROUP_ERROR_PROPS_INFO = {
 	"title": "Group Type: String Group Conditions",
 	"parameterDef": {
 		"current_parameters": {
@@ -2583,9 +2573,9 @@ _defineConstant("NUMBER_GROUP_ERROR_PROPS_INFO", {
 			"numberfieldControlName_invalid": "Lower limit cannot be equal to or greater than upper limit."
 		}
 	}
-});
+};
 
-_defineConstant("VISIBLE_GROUP_PROPS_INFO", {
+export const VISIBLE_GROUP_PROPS_INFO = {
 	"title": "Group Type: String Group Conditions",
 	"parameterDef": {
 		"current_parameters": {
@@ -2701,9 +2691,9 @@ _defineConstant("VISIBLE_GROUP_PROPS_INFO", {
 			}
 		]
 	}
-});
+};
 
-_defineConstant("ENABLED_GROUP_PROPS_INFO", {
+export const ENABLED_GROUP_PROPS_INFO = {
 	"title": "Group Type: String Group Conditions",
 	"parameterDef": {
 		"current_parameters": {
@@ -2816,9 +2806,9 @@ _defineConstant("ENABLED_GROUP_PROPS_INFO", {
 			}
 		]
 	}
-});
+};
 
-_defineConstant("ENUM_FILTER_INFO", {
+export const ENUM_FILTER_INFO = {
 	"title": "Filtered Enumeration Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -2910,9 +2900,9 @@ _defineConstant("ENUM_FILTER_INFO", {
 			"radioset_filtered.green.label": "Green radio"
 		}
 	}
-});
+};
 
-_defineConstant("FILTER_INFO", {
+export const FILTER_INFO = {
 	"title": "Filter Schema Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -3129,9 +3119,9 @@ _defineConstant("FILTER_INFO", {
 			}
 		]
 	}
-});
+};
 
-_defineConstant("PANELS_PROPS_INFO", {
+export const PANELS_PROPS_INFO = {
 	"title": "Panels",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3518,8 +3508,8 @@ _defineConstant("PANELS_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("TEXT_PANEL_PROPS_INFO", {
+};
+export const TEXT_PANEL_PROPS_INFO = {
 	"title": "Text Panel",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3642,8 +3632,8 @@ _defineConstant("TEXT_PANEL_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("PANEL_SELECTOR_PROPS_INFO", {
+};
+export const PANEL_SELECTOR_PROPS_INFO = {
 	"title": "PanelSelector",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3902,8 +3892,8 @@ _defineConstant("PANEL_SELECTOR_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("COLUMNSELECTION_PROPS_INFO", {
+};
+export const COLUMNSELECTION_PROPS_INFO = {
 	"title": "ColumnSelection",
 	"parameterDef": {
 		"titleDefinition": {
@@ -4105,8 +4095,8 @@ _defineConstant("COLUMNSELECTION_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("SUMMARY_PANEL_PROPS_INFO", {
+};
+export const SUMMARY_PANEL_PROPS_INFO = {
 	"title": "summaryPanel",
 	"parameterDef": {
 		"titleDefinition": {
@@ -4467,8 +4457,8 @@ _defineConstant("SUMMARY_PANEL_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("TWISTY_PANEL_PROPS_INFO", {
+};
+export const TWISTY_PANEL_PROPS_INFO = {
 	"title": "TwistyPanel",
 	"parameterDef": {
 		"titleDefinition": {
@@ -4641,10 +4631,10 @@ _defineConstant("TWISTY_PANEL_PROPS_INFO", {
 		],
 		"dataset_metadata": []
 	}
-});
+};
 
 // These are needed for the flyout examples. The ids need to be different than the modal
-_defineConstant("PANELS_FLYOUT_PROPS_INFO", {
+export const PANELS_FLYOUT_PROPS_INFO = {
 	"title": "Panels",
 	"parameterDef": {
 		"titleDefinition": {
@@ -5031,8 +5021,8 @@ _defineConstant("PANELS_FLYOUT_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("TEXT_PANEL_FLYOUT_PROPS_INFO", {
+};
+export const TEXT_PANEL_FLYOUT_PROPS_INFO = {
 	"title": "Text Panel",
 	"parameterDef": {
 		"titleDefinition": {
@@ -5155,8 +5145,8 @@ _defineConstant("TEXT_PANEL_FLYOUT_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("PANEL_SELECTOR_FLYOUT_PROPS_INFO", {
+};
+export const PANEL_SELECTOR_FLYOUT_PROPS_INFO = {
 	"title": "PanelSelector",
 	"parameterDef": {
 		"titleDefinition": {
@@ -5415,8 +5405,8 @@ _defineConstant("PANEL_SELECTOR_FLYOUT_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("COLUMNSELECTION_FLYOUT_PROPS_INFO", {
+};
+export const COLUMNSELECTION_FLYOUT_PROPS_INFO = {
 	"title": "ColumnSelection",
 	"parameterDef": {
 		"titleDefinition": {
@@ -5618,8 +5608,8 @@ _defineConstant("COLUMNSELECTION_FLYOUT_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("SUMMARY_PANEL_FLYOUT_PROPS_INFO", {
+};
+export const SUMMARY_PANEL_FLYOUT_PROPS_INFO = {
 	"title": "summaryPanel",
 	"parameterDef": {
 		"titleDefinition": {
@@ -5980,8 +5970,8 @@ _defineConstant("SUMMARY_PANEL_FLYOUT_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("TWISTY_PANEL_FLYOUT_PROPS_INFO", {
+};
+export const TWISTY_PANEL_FLYOUT_PROPS_INFO = {
 	"title": "TwistyPanel",
 	"parameterDef": {
 		"titleDefinition": {
@@ -6154,4 +6144,4 @@ _defineConstant("TWISTY_PANEL_FLYOUT_PROPS_INFO", {
 		],
 		"dataset_metadata": []
 	}
-});
+};

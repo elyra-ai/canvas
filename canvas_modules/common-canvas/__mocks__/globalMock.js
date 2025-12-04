@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,7 @@
  */
 
 /* eslint no-empty-function: ["error", { "allow": ["functions", "arrowFunctions"] }] */
-/* global document*/
 
-global.Range = function Range() {};
 
 const createContextualFragment = (html) => {
 	const div = document.createElement("div");

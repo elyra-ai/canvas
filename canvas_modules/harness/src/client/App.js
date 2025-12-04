@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales"
 import PaletteBundles from "@elyra/canvas/locales/palette/locales";
 import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
-import { CommonCanvas, CanvasController, CommonProperties, ColorPicker } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { CommonCanvas, CanvasController, CommonProperties, ColorPicker } from "@elyra/canvas";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
@@ -95,11 +95,11 @@ import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
 // Uncomment these and associated code to automatically display a flow and palette.
 // import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
-// import modelerPalette from "../../../harness/test_resources/palettes/modelerPalette.json";
+import modelerPalette from "../../../harness/test_resources/palettes/carbonPalette.json";
 
 import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
-	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification, Save, Launch, Restart } from "@carbon/react/icons";
+	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification as NotificationIcon, Save, Launch, Restart } from "@carbon/react/icons";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
 
@@ -478,7 +478,7 @@ class App extends React.Component {
 		try {
 			this.canvasController = new CanvasController();
 			// this.canvasController.setPipelineFlow(allTypesCanvas);
-			// this.canvasController.setPipelineFlowPalette(modelerPalette);
+			this.canvasController.setPipelineFlowPalette(modelerPalette);
 			this.canvasController2 = new CanvasController();
 			// this.canvasController.setLoggingState(true);
 		} catch (err) {
@@ -534,6 +534,9 @@ class App extends React.Component {
 				<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
 			</div>
 		);
+
+
+		console.log(JSON.stringify(HarnessBundles));
 
 		// Create messages here (not in the render) since that would cause
 		// unnecessary renders inside common-canvas and/or common-properties.
@@ -675,7 +678,7 @@ class App extends React.Component {
 
 	getPropertyDefName(node) {
 		if (node.op) {
-			const foundName = this.availableParamDefs.find((name) => name.startsWith(node.op));
+			const foundName = this.availableParamDefs.find((n) => n.startsWith(node.op));
 			if (foundName) {
 				return {
 					fileName: foundName,
@@ -1305,13 +1308,13 @@ class App extends React.Component {
 
 	log(evt, data) {
 		const now = new Date();
-		const event = {
+		const e = {
 			"timestamp": now.toLocaleString() + " " + now.getMilliseconds(),
 			"event": evt,
 			"data": data
 		};
 
-		this.consoleout.push(event);
+		this.consoleout.push(e);
 
 		// Add console output to the global document so the test harness can access it
 		document.eventLog = this.consoleout;
@@ -2415,7 +2418,7 @@ class App extends React.Component {
 					incLabelWithIcon: "after"
 				},
 				{ divider: true },
-				{ action: "toggleNotificationPanel", iconEnabled: (<Notification />) },
+				{ action: "toggleNotificationPanel", iconEnabled: (<NotificationIcon />) },
 				{ divider: true },
 				{ action: "deleteSelectedObjects", label: "Delete" },
 				{ divider: true },

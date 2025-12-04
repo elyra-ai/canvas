@@ -175,6 +175,9 @@ const ToolbarOverflowItem = forwardRef(({
 	);
 });
 
+// This prevents a lint warning about display name missing.
+ToolbarOverflowItem.displayName = "ToolbarOverflowItem";
+
 ToolbarOverflowItem.propTypes = {
 	index: PropTypes.number.isRequired,
 	action: PropTypes.string,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Action } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { Action } from "@elyra/canvas";
 
 export default class AddNodeAndLinkAction extends Action {
 	constructor(data, canvasController) {

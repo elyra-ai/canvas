@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -153,11 +153,11 @@ Cypress.Commands.add("getToolbarActionInExtraCanvas", (action) => {
 });
 
 Cypress.Commands.add("getCanvasToolbar", () => {
-	cy.get(".toolbar-div[instanceid=0]");
+	cy.get(".toolbar-div[data-instance-id=0]");
 });
 
 Cypress.Commands.add("getExtraCanvasToolbar", () => {
-	cy.get(".toolbar-div[instanceid=1]");
+	cy.get(".toolbar-div[data-instance-id=1]");
 });
 
 Cypress.Commands.add("hoverOverToolbarItem", (toolbarItem) => {

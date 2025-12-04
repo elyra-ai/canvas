@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -320,6 +320,7 @@ export default class FieldPicker extends React.Component {
 	_genResetButton() {
 		const resetLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL);
+		// eslint-disable-next-line react/display-name
 		const Reset24 = React.forwardRef((props, ref) => <Reset ref={ref} size={24} {...props} />);
 		const defaultSelections = this.props.currentFields;
 		const selectedFields = this.state.selectedFields;

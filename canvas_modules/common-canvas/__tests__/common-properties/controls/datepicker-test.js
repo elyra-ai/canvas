@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Elyra Authors
+ * Copyright 2023-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ describe("datepicker-control renders correctly", () => {
 		role: "date",
 		light: true
 	};
-	const controlItem = <span>"Label"</span>;
+	const controlItem = <span>&quot;Label&quot;</span>;
 	propertyUtilsRTL.setControls(controller, [control]);
 	const propertyId = { name: "test-datepicker" };
 

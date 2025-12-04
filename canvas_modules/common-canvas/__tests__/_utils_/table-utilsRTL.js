@@ -106,7 +106,7 @@ function getTableRows(container) {
 	let rows = [];
 	try {
 		rows = within(container).getAllByRole("row");
-	} catch (error) {
+	} catch {
 		rows = Array.from(container.querySelectorAll("tr[data-role='properties-data-row']"));
 	}
 	const res = [];
@@ -267,7 +267,7 @@ function validateSelectedCheckbox(checkboxes) {
 	return res;
 }
 
-module.exports = {
+export default {
 	openFieldPicker: openFieldPicker,
 	openFieldPickerForEmptyTable: openFieldPickerForEmptyTable,
 	fieldPicker: fieldPicker,

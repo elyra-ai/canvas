@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -529,7 +529,6 @@ class PaletteDialog extends React.Component {
 		return (
 			<nav aria-label={this.props.intl.formatMessage({ id: "palette.dialog.label", defaultMessage: defaultMessages["palette.dialog.label"] })} role="navigation">
 				<div className="palette-dialog-div"
-					ref="palette"
 					onMouseDown={this.mouseDownOnPalette}
 				>
 					<PaletteDialogTopbar mouseDownMethod={this.mouseDownOnTopBar}

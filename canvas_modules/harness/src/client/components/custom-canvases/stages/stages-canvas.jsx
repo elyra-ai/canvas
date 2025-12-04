@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CommonCanvas, CanvasController, Palette } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { CommonCanvas, CanvasController, Palette } from "@elyra/canvas";
 
 import { Button } from "@carbon/react";
 import { Edit, OpenPanelFilledLeft, Search } from "@carbon/react/icons";

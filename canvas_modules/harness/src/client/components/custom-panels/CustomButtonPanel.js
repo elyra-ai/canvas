@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-/* eslint-disable no-empty-function */
 /* eslint-disable no-unused-vars */
+
 import React from "react";
 import { Button } from "@carbon/react";
 import paramDef from "./json/misclassification_paramDef.json";
@@ -35,7 +35,7 @@ class CustomButtonPanel {
 		this.getAvailableValues = this.getAvailableValues.bind(this);
 		this.getAvailableActualValues = this.getAvailableActualValues.bind(this);
 
-		// Assume a "custom_fields" boolean to determine whether to interogate the
+		// Assume a "custom_fields" boolean to determine whether to interrogate the
 		// datarecord-metadata's modeling_role or the target field when looking for
 		// the target field name.
 		//

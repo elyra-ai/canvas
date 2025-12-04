@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { FormattedMessage } from "react-intl";
-import { CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { CommonProperties } from "@elyra/canvas";
 import { isEmpty } from "lodash";
 import FormsService from "../../../services/FormsService";
 import { PARAMETER_DEFS, CUSTOM } from "../../../constants/harness-constants.js";
@@ -71,7 +71,7 @@ export default class FlowsProperties extends React.Component {
 
 	getPropertyDefName(node) {
 		if (node.op) {
-			const foundName = this.availableParamDefs.find((name) => name.startsWith(node.op));
+			const foundName = this.availableParamDefs.find((n) => n.startsWith(node.op));
 			if (foundName) {
 				return {
 					fileName: foundName,

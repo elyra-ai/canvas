@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-"use strict";
 // Modules
 
-const nconf = require("nconf");
-const log4js = require("log4js");
+import nconf from "nconf";
+import log4js from "log4js";
 
 // Globals
 
@@ -26,11 +25,7 @@ const logger = log4js.getLogger("app-config");
 
 // Public Methods ------------------------------------------------------------->
 
-module.exports.init = _init;
-
-// Private Methods ------------------------------------------------------------>
-
-function _init() {
+function init() {
 
 	logger.info("Initializing nconf...");
 
@@ -65,3 +60,8 @@ function _init() {
 
 	return true;
 }
+
+export default {
+	init
+};
+
