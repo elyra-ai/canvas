@@ -33,7 +33,7 @@ import { jsPDF } from "jspdf";
 import * as htmlToImage from "html-to-image";
 
 import { getMessages } from "../intl/intl-utils";
-import * as HarnessBundles from "../intl/locales";
+import HarnessBundles from "../intl/locales";
 import CommandActionsBundles from "@elyra/canvas/locales/command-actions/locales";
 import CommonCanvasBundles from "@elyra/canvas/locales/common-canvas/locales";
 import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales";
@@ -95,7 +95,6 @@ import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
 // Uncomment these and associated code to automatically display a flow and palette.
 // import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
-import modelerPalette from "../../../harness/test_resources/palettes/carbonPalette.json";
 
 import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
@@ -478,7 +477,7 @@ class App extends React.Component {
 		try {
 			this.canvasController = new CanvasController();
 			// this.canvasController.setPipelineFlow(allTypesCanvas);
-			this.canvasController.setPipelineFlowPalette(modelerPalette);
+			// this.canvasController.setPipelineFlowPalette(modelerPalette);
 			this.canvasController2 = new CanvasController();
 			// this.canvasController.setLoggingState(true);
 		} catch (err) {
@@ -534,7 +533,6 @@ class App extends React.Component {
 				<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
 			</div>
 		);
-
 
 		// Create messages here (not in the render) since that would cause
 		// unnecessary renders inside common-canvas and/or common-properties.
