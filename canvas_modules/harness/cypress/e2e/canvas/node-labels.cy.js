@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -135,8 +135,7 @@ describe("Test editing node labels - Vertical node", function() {
 
 	it("Vertical node - Test editing using the context menu 'Rename' action", function() {
 		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true } });
-		cy.wait(0);
-		cy.getNodeWithLabel("Binding (entry) node").rightclick();
+		cy.rightClickNode("Binding (entry) node");
 		cy.clickOptionFromContextMenu("Rename");
 		cy.enterLabelForNode("Binding (entry) node", "A renamed label is better than a new label");
 		cy.verifyEditActionInConsole("setNodeLabel", "label", "A renamed label is better than a new label");
