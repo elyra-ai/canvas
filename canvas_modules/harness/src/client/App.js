@@ -536,8 +536,6 @@ class App extends React.Component {
 		);
 
 
-		console.log(JSON.stringify(HarnessBundles));
-
 		// Create messages here (not in the render) since that would cause
 		// unnecessary renders inside common-canvas and/or common-properties.
 		this.messages = getMessages(this.locale, [
