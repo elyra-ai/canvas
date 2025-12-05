@@ -40,8 +40,6 @@ describe("Test of custom panels", function() {
 				cy.wrap($el).trigger("keydown", key.panRight);
 			}
 		});
-		// cy.get(".harness-custom-control-slider .cds--slider__thumb").click({ multiple: true, force: true });
-		// cy.get(".harness-custom-control-slider .cds--slider__thumb").type("{rightarrow}".repeat(52));
 		verifySliderDropDown(3);
 		cy.saveWideFlyout("Configure Slider");
 		cy.saveFlyout();

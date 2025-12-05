@@ -35,7 +35,7 @@ root.render(
 				<Route exact path="/" element={<App />} />
 				<Route exact path="/app-small" element={<AppSmall />} />
 				<Route exact path="/app-tiny" element={<AppTiny />} />
-                                <Route exact path="/app-tiny-ts" element={<AppTinyTS />} />
+				<Route exact path="/app-tiny-ts" element={<AppTinyTS />} />
 				<Route path="/properties" element={<CommonPropertiesComponents />} />
 				<Route path="/conditions" element={<CommonPropertiesConditions />} />
 			</Routes>
