@@ -18,25 +18,9 @@
 import configs from "eslint-config-canvas";
 import globals from "globals";
 import importPlugin from "eslint-plugin-import";
-// import js from "@eslint/js";
 import pluginCypress from "eslint-plugin-cypress";
 import reactConfigs from "../eslint-config-canvas/react.js";
 import reactPlugin from "eslint-plugin-react";
-
-
-// settings: {
-// 			"import/resolver": {
-// 				node: {
-// 					extensions: [
-// 						".js",
-// 						".jsx"
-// 					]
-// 				}
-// 			},
-// 			"react": {
-// 				version: "detect"
-// 			}
-// 		}
 
 
 export default [
