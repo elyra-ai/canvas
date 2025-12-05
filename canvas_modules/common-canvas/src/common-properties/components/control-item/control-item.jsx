@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import { STATES, CARBON_ICONS, MESSAGE_KEYS } from "./../../constants/constants.js";
-import { ControlType } from "./../../constants/form-constants";
+import { ControlType, ActionType } from "./../../constants/form-constants";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { isEmpty, get } from "lodash";
 import Icon from "./../../../icons/icon.jsx";
@@ -99,7 +99,11 @@ class ControlItem extends React.Component {
 
 		const action = this.actionFactory.generateAction(0, this.props.control.action);
 
-		const className = classNames("properties-control-item", { "hide": hidden }, { "properties-ci-action-item": action });
+		const className = classNames(
+			"properties-control-item",
+			{ "hide": hidden },
+			{ "properties-ci-action-item": action && this.props.control.action.actionType === ActionType.IMAGE }
+		);
 
 		/*
 		* <ControlItem /> should be called from every control.
