@@ -80,7 +80,11 @@ class PaletteDialog extends React.Component {
 		// false when doing a manual resize of the palette.
 		this.isMaximized = false;
 
+		// Array of nodes for the palette
 		this.paletteNodes = [];
+
+		// Reference to the palette div
+		this.dialogPaletteDivRef = React.createRef();
 
 		// Correction for palette cursor position
 		// Used in both hover zone detection and mouseMove vertical resize at bottom of paletteDiv
@@ -150,7 +154,7 @@ class PaletteDialog extends React.Component {
 	}
 
 	getPaletteDiv() {
-		return this.refs.palette;
+		return this.dialogPaletteDivRef?.current;
 	}
 
 	getStyleProperty(classOrId, property) {
@@ -528,7 +532,7 @@ class PaletteDialog extends React.Component {
 	render() {
 		return (
 			<nav aria-label={this.props.intl.formatMessage({ id: "palette.dialog.label", defaultMessage: defaultMessages["palette.dialog.label"] })} role="navigation">
-				<div className="palette-dialog-div"
+				<div ref={this.dialogPaletteDivRef} className="palette-dialog-div"
 					onMouseDown={this.mouseDownOnPalette}
 				>
 					<PaletteDialogTopbar mouseDownMethod={this.mouseDownOnTopBar}
