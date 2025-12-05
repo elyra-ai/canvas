@@ -22,7 +22,7 @@ let cc = null;
 
 // Returns a context menu definition for the source object passed in which
 // is either the default menu or a customized one provided by the host app.
-export default function getContextMenuDefiniton(source, canvasController) {
+export default function getContextMenuDefinition(source, canvasController) {
 	cc = canvasController;
 
 	const defMenu = createDefaultContextMenu(source, cc);
@@ -48,7 +48,7 @@ export default function getContextMenuDefiniton(source, canvasController) {
 	// We need to remove any unwanted dividers. These might be dividers at
 	// the top of the array that are there after editing actions have been
 	// removed or doubled-up dividers in the menu which might be there after
-	// removing editing actions or in the menu def returtned by the host app.
+	// removing editing actions or in the menu def returned by the host app.
 	if (menuDefinition && menuDefinition.length > 0) {
 		menuDefinition = filterOutUnwantedDividers(menuDefinition);
 	}

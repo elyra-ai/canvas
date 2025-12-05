@@ -79,12 +79,12 @@ Cypress.Commands.add("shortcutKeysPaste", () => {
 });
 
 Cypress.Commands.add("shortcutKeysUndo", () => {
-	cy.getSVGArea().click(1, 1); // Put foucs on the SVG area, ready for key press
+	cy.getSVGArea().click(1, 1); // Put focus on the SVG area, ready for key press
 	cy.getSVGArea().trigger("keydown", key.undo);
 });
 
 Cypress.Commands.add("shortcutKeysRedo", () => {
-	cy.getSVGArea().click(1, 1); // Put foucs on the SVG area, ready for key press
+	cy.getSVGArea().click(1, 1); // Put focus on the SVG area, ready for key press
 	cy.getSVGArea().trigger("keydown", key.redo);
 });
 
@@ -93,7 +93,7 @@ Cypress.Commands.add("shortcutKeysDelete", () => {
 });
 
 Cypress.Commands.add("shortcutKeysSelectAllCanvasObjects", () => {
-	cy.getSVGArea().click(1, 1); // Put foucs on the SVG area, ready for key press
+	cy.getSVGArea().click(1, 1); // Put focus on the SVG area, ready for key press
 	cy.getSVGArea().trigger("keydown", key.selectAll);
 });
 
@@ -136,7 +136,7 @@ Cypress.Commands.add("moveRightFlyoutDivider", (x) => {
 		cy.get(".right-flyout .right-flyout-drag")
 			.trigger("mousedown", "center", { view: win, button: 0, force: true });
 		cy.get("#canvas-div-0")
-			.trigger("mousemove", x, 200, { viewe: win, force: true });
+			.trigger("mousemove", x, 200, { view: win, force: true });
 		cy.get("#canvas-div-0")
 			.trigger("mouseup", x, 200, { view: win, force: true });
 	});

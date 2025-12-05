@@ -724,7 +724,7 @@ export default class SidePanelAPI extends React.Component {
 			>
 				<div className="harness-sidepanel-headers">Clear Notification Messages</div>
 				<Button size="sm"
-					id="harness-clearNotificationMessagesubmit"
+					id="harness-clearNotificationMessageSubmit"
 					onClick={this.clearNotificationMessages.bind(this)}
 				>
 					Clear Messages

@@ -418,6 +418,11 @@ Cypress.Commands.add("clickLink", (linkId) => {
 	cy.getLinkUsingLinkId(linkId).click({ force: true });
 });
 
+Cypress.Commands.add("doubleClickLink", (linkId) => {
+	cy.getLinkUsingLinkId(linkId).dblclick({ force: true });
+});
+
+
 Cypress.Commands.add("ctrlOrCmdClickLink", (linkId) => {
 	cy.get("body").getLinkUsingLinkId(linkId)
 		.click({ metaKey: true });

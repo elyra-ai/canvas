@@ -68,7 +68,7 @@ export default class SVGCanvasUtilsAccessibility {
 
 	// Prepares the canvas objects for processing into tab groups by removing
 	// the 'grp' properties from each object. 'grp' is used to keep track of
-	// which tab group an object is allocted to.
+	// which tab group an object is allocated to.
 	removeGrpProperties() {
 		this.ap.pipeline.nodes.forEach((n) => delete n.grp);
 		this.ap.pipeline.links.forEach((l) => delete l.grp);
@@ -557,9 +557,9 @@ export default class SVGCanvasUtilsAccessibility {
 		return subObjs[index];
 	}
 
-	// Returns an arry of focuable sub-elements of a node or link. These are items within
+	// Returns an array of focusable sub-elements of a node or link. These are items within
 	// the node or link that the user might want to interact with using the keyboard such
-	// as: visible, focusable ports or focuable decorations
+	// as: visible, focusable ports or focusable decorations
 	getFocusableSubObjects(d) {
 		const focusableSubElements = [];
 		const objType = CanvasUtils.getObjectTypeName(d);

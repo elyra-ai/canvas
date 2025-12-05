@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import * as testUtils from "../../utils/eventlog-utils";
+import key from "../../support/canvas/key.js";
 
 describe("Test of custom panels", function() {
 	beforeEach(() => {
@@ -33,8 +34,14 @@ describe("Test of custom panels", function() {
 		cy.openSubPanel("Configure Slider");
 		verifySliderDropDown(6);
 		// move slider to be above 60
-		cy.get(".harness-custom-control-slider .cds--slider__thumb").click({ multiple: true, force: true });
-		cy.get(".harness-custom-control-slider .cds--slider__thumb").type("{rightarrow}".repeat(52));
+		cy.get(".cds--slider__thumb").then(($el) => {
+			// Press the right arrow key 15 times to move slider
+			for (let i = 0; i < 15; i++) {
+				cy.wrap($el).trigger("keydown", key.panRight);
+			}
+		});
+		// cy.get(".harness-custom-control-slider .cds--slider__thumb").click({ multiple: true, force: true });
+		// cy.get(".harness-custom-control-slider .cds--slider__thumb").type("{rightarrow}".repeat(52));
 		verifySliderDropDown(3);
 		cy.saveWideFlyout("Configure Slider");
 		cy.saveFlyout();

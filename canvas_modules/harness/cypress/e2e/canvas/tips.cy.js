@@ -66,7 +66,7 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 
 	it("Test to check if tip show up for link image decoration.", function() {
 		// Must switch off link tips here otherwise, in Cypress, the link tip
-		// appears when hovering over the decoration insead of the decoration tip
+		// appears when hovering over the decoration instead of the decoration tip
 		// even though the decoration tip appears correctly in usual operation.
 		cy.setCanvasConfig({
 			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false,
@@ -100,7 +100,7 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 		cy.verifyTipForDecoration("A tooltip for a label decoration!");
 	});
 
-	it("Test to check if tip does NOT show up for node text decoration when switchd off.", function() {
+	it("Test to check if tip does NOT show up for node text decoration when switched off.", function() {
 		// Switch off decoration tips.
 		cy.setCanvasConfig({
 			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false,
@@ -177,7 +177,7 @@ describe("Test to check if tips don't show up for the palette, nodes, ports and 
 		cy.verifyTipDoesNotShowForLink();
 	});
 
-	it("Test to check if palete tips DON'T show up with palette object fields specified as false", function() {
+	it("Test to check if palette tips DON'T show up with palette object fields specified as false", function() {
 		cy.setCanvasConfig({
 			"selectedTipConfig": {
 				"palette": { categories: false, nodeTemplates: false },
@@ -229,13 +229,13 @@ describe("Test to check if tips are hidden on scroll", function() {
 			.click();
 		cy.getControlContainerFromName("Integer")
 			.then((container) => {
-				cy.verifyTip(container, "visible", "Try pressing Increment or Descrement buttons", "bottom");
+				cy.verifyTip(container, "visible", "Try pressing Increment or Decrement buttons", "bottom");
 			});
 		cy.get(".right-flyout-panel .properties-custom-container")
 			.scrollTo("bottom", { ensureScrollable: false });
 		cy.getControlContainerFromName("Integer")
 			.then((container) => {
-				cy.verifyTip(container, "hidden", "Try pressing Increment or Descrement buttons");
+				cy.verifyTip(container, "hidden", "Try pressing Increment or Decrement buttons");
 			});
 	});
 });
@@ -486,7 +486,7 @@ describe("Test to check if tips show up for toolbar items", function() {
 	it("Test to check if tip DOES NOT show when label is shown next to the icon in the button", function() {
 		cy.setCanvasConfig({ selectedToolbarType: "SingleLeftBarArray" });
 
-		// The Run Selection tool tip should not be displayed becuase the label
+		// The Run Selection tool tip should not be displayed because the label
 		// is already displayed next to the icon in the tool button.
 		cy.hoverOverToolbarItem(".runSelection-action");
 		cy.verifyTipForToolbarItemNotDisplayed(".runSelection-action");
