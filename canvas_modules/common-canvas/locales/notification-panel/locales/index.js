@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-"use strict";
+import de from "./de.json";
+import en from "./en.json";
+import eo from "./eo.json";
+import es from "./es.json";
+import fr from "./fr.json";
+import itIT from "./it.json";
+import ja from "./ja.json";
+import ko from "./ko.json";
+import ptBR from "./pt-BR.json";
+import sv from "./sv.json";
+import zhCN from "./zh-CN.json";
+import zhTW from "./zh-TW.json";
 
-const babelOptions = {
-	babelrc: false, // required so webpack ignores the .babelrc file used for testing in root of project
-	presets: ["@babel/preset-react", "@babel/preset-env"],
-	plugins: ["lodash", "@babel/plugin-proposal-class-properties", "@babel/plugin-transform-runtime"],
+export default {
+	"de": de,
+	"en": en,
+	"eo": eo,
+	"es": es,
+	"fr": fr,
+	"it": itIT,
+	"ja": ja,
+	"ko": ko,
+	"pt-BR": ptBR,
+	"sv": sv,
+	"zh-CN": zhCN,
+	"zh-TW": zhTW
 };
-
-exports.babelOptions = babelOptions;

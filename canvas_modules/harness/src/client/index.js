@@ -19,7 +19,7 @@ import { createRoot } from "react-dom/client.js";
 
 import CommonPropertiesComponents from "./components/common-properties-components.jsx";
 import CommonPropertiesConditions from "./components/common-properties-conditions.jsx";
-import App from "./App";
+import App from "./App.js";
 import AppSmall from "./app-small.js";
 import AppTiny from "./app-tiny.js";
 import AppTinyTS from "./app-tiny.tsx";

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,15 +34,16 @@ class TearSheet extends Component {
 
 		const buttons = this.props.applyOnBlur
 			? null
-			: (<MainEditorPropertiesButtons
-				okHandler={this.props.okHandler}
-				cancelHandler={this.props.cancelHandler}
-				applyLabel={this.props.applyLabel}
-				rejectLabel={this.props.rejectLabel}
-				showPropertiesButtons={this.props.showPropertiesButtons}
-				controller={this.props.controller}
-				disableSaveOnRequiredErrors={this.props.disableSaveOnRequiredErrors}
-			/>);
+			: (
+				<MainEditorPropertiesButtons
+					okHandler={this.props.okHandler}
+					cancelHandler={this.props.cancelHandler}
+					applyLabel={this.props.applyLabel}
+					rejectLabel={this.props.rejectLabel}
+					showPropertiesButtons={this.props.showPropertiesButtons}
+					controller={this.props.controller}
+					disableSaveOnRequiredErrors={this.props.disableSaveOnRequiredErrors}
+				/>);
 
 		return (
 			<Portal>
@@ -56,16 +57,17 @@ class TearSheet extends Component {
 				>
 					{title === null
 						? null
-						: (<ModalHeader
-							className={classNames("properties-tearsheet-header",
-								{ "with-buttons": displayFooterButtons },
-								{ "with-tabs": displayTabs },
-								{ "hide-close-button": typeof this.props.onCloseCallback !== "function" })}
-							title={title}
-							buttonOnClick={this.props.onCloseCallback}
-						>
-							{description ? (<p>{description}</p>) : null}
-						</ModalHeader>)
+						: (
+							<ModalHeader
+								className={classNames("properties-tearsheet-header",
+									{ "with-buttons": displayFooterButtons },
+									{ "with-tabs": displayTabs },
+									{ "hide-close-button": typeof this.props.onCloseCallback !== "function" })}
+								title={title}
+								buttonOnClick={this.props.onCloseCallback}
+							>
+								{description ? (<p>{description}</p>) : null}
+							</ModalHeader>)
 					}
 					<ModalBody className={classNames("properties-tearsheet-body",
 						{ "with-buttons": displayFooterButtons },

@@ -20,8 +20,7 @@ import { renderWithIntl } from "../../_utils_/intl-utils";
 import { Provider } from "react-redux";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
-import { setControls } from "../../_utils_/property-utilsRTL";
-import { getTableRows, selectCheckboxes, selectCheckboxesUsingKeyboard, validateSelectedRowNumRows } from "./../../_utils_/table-utilsRTL";
+import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { TRUNCATE_LIMIT } from "./../../../src/common-properties/constants/constants.js";
@@ -99,7 +98,7 @@ mockList.mockImplementation((props) => {
 
 describe("list renders correctly for array[string]", () => {
 	const controller = new Controller();
-	setControls(controller, [controlString]);
+	propertyUtilsRTL.setControls(controller, [controlString]);
 
 	beforeEach(() => {
 		controller.setErrorMessages({});
@@ -148,7 +147,7 @@ describe("list renders correctly for array[string]", () => {
 		});
 
 		expect(container.querySelectorAll("button.properties-add-fields-button")).to.have.length(1);
-		expect(getTableRows(container)).to.have.length(2);
+		expect(tableUtilsRTL.getTableRows(container)).to.have.length(2);
 	});
 
 	it("should be able to modify value in `list` control textfield", () => {
@@ -197,9 +196,9 @@ describe("list renders correctly for array[string]", () => {
 		expect(container.querySelectorAll(".properties-textfield")).to.have.length(4); // Ensure new Textfields are added
 
 		// select the third row in the table
-		const tableData = getTableRows(container);
+		const tableData = tableUtilsRTL.getTableRows(container);
 		expect(tableData).to.have.length(4);
-		selectCheckboxes(container, [2]);
+		tableUtilsRTL.selectCheckboxes(container, [2]);
 		// ensure Table toolbar has Delete button and select it
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
 		const deleteButton = tableToolbar.querySelectorAll(".toolbar-item.delete-action button");
@@ -262,12 +261,12 @@ describe("list renders correctly for array[string]", () => {
 		);
 		const { container } = wrapper;
 		// select the first row in the table
-		selectCheckboxesUsingKeyboard(container, [0]);
+		tableUtilsRTL.selectCheckboxesUsingKeyboard(container, [0]);
 
 		// Verify row is selected
-		const rows = getTableRows(container);
+		const rows = tableUtilsRTL.getTableRows(container);
 		expect(rows).to.have.length(2);
-		const rowsSelected = validateSelectedRowNumRows(rows);
+		const rowsSelected = tableUtilsRTL.validateSelectedRowNumRows(rows);
 		expect(rowsSelected).to.have.length(1);
 	});
 
@@ -295,7 +294,7 @@ describe("list renders correctly for array[string]", () => {
 
 describe("list renders correctly for array[integer]", () => {
 	const controller = new Controller();
-	setControls(controller, [controlInteger]);
+	propertyUtilsRTL.setControls(controller, [controlInteger]);
 
 	beforeEach(() => {
 		controller.setErrorMessages({});
@@ -349,7 +348,7 @@ describe("list renders correctly for array[integer]", () => {
 		});
 
 		expect(container.querySelectorAll("button.properties-add-fields-button")).to.have.length(1);
-		expect(getTableRows(container)).to.have.length(2);
+		expect(tableUtilsRTL.getTableRows(container)).to.have.length(2);
 	});
 
 	it("should be able to modify value in `list` control numberfield", () => {
@@ -399,9 +398,9 @@ describe("list renders correctly for array[integer]", () => {
 		expect(container.querySelectorAll(".properties-table-cell-control")).to.have.length(4); // Ensure new Numberfields are added
 
 		// select the third row in the table
-		const tableData = getTableRows(container);
+		const tableData = tableUtilsRTL.getTableRows(container);
 		expect(tableData).to.have.length(4);
-		selectCheckboxes(container, [2]);
+		tableUtilsRTL.selectCheckboxes(container, [2]);
 		// ensure Table toolbar has Delete button and select it
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
 		const deleteButton = tableToolbar.querySelectorAll(".toolbar-item.delete-action button");
@@ -439,7 +438,7 @@ describe("list renders correctly as a nested control", () => {
 
 		let onPanelList = summaryPanel.querySelectorAll("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
 		expect(onPanelList).to.have.length(0);
-		selectCheckboxes(summaryPanel, [0]); // Select first row for onPanel edit
+		tableUtilsRTL.selectCheckboxes(summaryPanel, [0]); // Select first row for onPanel edit
 
 		// verify onPanel edit shows list control
 		summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "nested-list-summary-panel");
@@ -483,7 +482,7 @@ describe("list renders correctly as a nested control", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 
 		// deselect the row
-		selectCheckboxes(summaryPanel, [0]);
+		tableUtilsRTL.selectCheckboxes(summaryPanel, [0]);
 
 		// Add another row to main table
 		summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "nested-list-summary-panel");
@@ -499,7 +498,7 @@ describe("list renders correctly as a nested control", () => {
 		summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "nested-list-summary-panel");
 		onPanelList = summaryPanel.querySelectorAll("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
 		expect(onPanelList).to.have.length(0);
-		selectCheckboxes(summaryPanel, [1]); // Select second row for onPaneledit
+		tableUtilsRTL.selectCheckboxes(summaryPanel, [1]); // Select second row for onPaneledit
 
 		// verify onPanel edit shows list control
 		summaryPanel = propertyUtilsRTL.openSummaryPanel(wrapper, "nested-list-summary-panel");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			if (param2Info.value === null) {
 				return false;
 			}
-			const column = param2Info.id.col; // eslint-disable-line  no-case-declarations
+			const column = param2Info.id.col;
 			return param2Info.value[column] !== null && typeof param2Info.value[column] !== "undefined";
 		default:
 			return true;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@
 
 const path = require("path");
 const webpack = require("webpack");
-const babelOptions = require("./scripts/babel/babelOptions").babelOptions;
+const babelOptions = require("./scripts/babel/babelOptions.cjs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const constants = require("./lib/constants");
+const constants = require("./lib/constants.js");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 // Entry & Output files ------------------------------------------------------------>
@@ -45,15 +45,21 @@ const output = {
 
 const rules = [
 	{
-		test: /\.js(x?)$/,
+		test: /\.js(x?)$/u,
 		loader: "babel-loader",
-		exclude: (/node_modules|common-canvas/),
+		exclude: (/node_modules|common-canvas/u),
 		options: babelOptions
 	},
 	{
 		test: /\.tsx?$/, // Matches .ts and .tsx files
 		use: "ts-loader",
 		exclude: /node_modules/,
+	},
+	{
+		test: /\.m?js$/u, // Apply to .js and .mjs files
+		resolve: {
+			fullySpecified: false // Allows omitting extensions for these files
+		}
 	},
 	{
 		test: /\.s*css$/,
@@ -83,7 +89,7 @@ const rules = [
 		]
 	},
 	{
-		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
+		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/u,
 		use: [
 			"file-loader?name=graphics/[contenthash].[ext]"
 		]

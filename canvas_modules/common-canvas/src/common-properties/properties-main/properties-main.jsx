@@ -113,7 +113,7 @@ class PropertiesMain extends React.Component {
 		this.props.callbacks.setPropertiesHasMounted();
 	}
 
-	UNSAFE_componentWillReceiveProps(newProps) { // eslint-disable-line camelcase, react/sort-comp
+	UNSAFE_componentWillReceiveProps(newProps) {
 		if (this.props.light !== newProps.light) { // set the new light prop in controller
 			this.propertiesController.setLight(newProps.light);
 		}

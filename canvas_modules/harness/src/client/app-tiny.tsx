@@ -19,11 +19,8 @@ import { CommonCanvas, CanvasController } from "@elyra/canvas";
 import { useMemo } from "react";
 import { Theme } from "@carbon/react";
 
-import CarbonPalette from "../../test_resources/palettes/carbonPalette.json";
-import CarbonFlow from "../../test_resources/diagrams/carbonCanvas.json";
-
-import "@carbon/styles/css/styles.min.css";
-import "@elyra/canvas/dist/styles/common-canvas.min.css";
+import CarbonPalette from "../../test_resources/palettes/carbonPalette.json" with { type: "json" };
+import CarbonFlow from "../../test_resources/diagrams/carbonCanvas.json" with { type: "json" };
 
 const AppTiny = () => {
   const canvasController = useMemo(() => {

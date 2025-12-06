@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 
 import React from "react";
 import { IntlProvider } from "react-intl";
-import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
-import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
+import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json" with { type: "json" };
+import ModelerPalette from "../../test_resources/palettes/modelerPalette.json" with { type: "json" };
 // Note use "@elyra/canvas" instead of "common-canvas" here, if you are importing from the NPM module.
-import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { CommonCanvas, CanvasController } from "@elyra/canvas";
 // This library is only needed if you want to use hot loading during development.
 
 class App extends React.Component {

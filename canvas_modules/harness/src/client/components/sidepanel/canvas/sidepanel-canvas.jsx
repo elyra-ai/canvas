@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,7 +147,7 @@ export default class SidePanelForms extends React.Component {
 		this.onDragStart = this.onDragStart.bind(this);
 	}
 
-	componentDidMount() { // eslint-disable-line camelcase, react/sort-comp
+	componentDidMount() {
 		const that = this;
 
 		FormsService.getFiles("diagrams")
@@ -277,7 +277,7 @@ export default class SidePanelForms extends React.Component {
 		this.props.setStateValue("selectedExampleApp", value);
 	}
 
-	tipConfigChange(event, { checked, id }) {
+	tipConfigChange(evt, { checked, id }) {
 		const tipConf = Object.assign({}, this.props.getStateValue("selectedTipConfig"));
 		switch (id) {
 		case "tip_palette_categories":

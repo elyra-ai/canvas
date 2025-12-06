@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import { get } from "lodash";
 
 import { Edit } from "@carbon/react/icons";
 
-import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { CommonCanvas, CanvasController } from "@elyra/canvas";
 
 import StagesCardNodeFlow from "./stages-card-node-flow.json";
 import StagesCardNodePalette from "../../../../../test_resources/palettes/stagesPalette.json";

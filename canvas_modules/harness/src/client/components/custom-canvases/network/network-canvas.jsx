@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Elyra Authors
+ * Copyright 2024-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { CommonCanvas, CanvasController } from "@elyra/canvas";
 
 import networkFlow from "./network-flow.json";
 import networkPalette from "./network-palette.json";

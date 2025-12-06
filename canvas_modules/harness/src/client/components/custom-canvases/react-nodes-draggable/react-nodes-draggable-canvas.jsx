@@ -19,7 +19,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { CommonCanvas, CanvasController } from "@elyra/canvas";
 
 import PersonNode from "./person-node.jsx";
 

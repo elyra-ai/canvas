@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,13 +72,14 @@ class StructurelisteditorControl extends AbstractTable {
 				>
 					{
 						isEmpty(this.props.value) && this.props.addRemoveRows
-							? <EmptyTable
-								control={this.props.control}
-								controller={this.props.controller}
-								emptyTableButtonLabel={tableButtonConfig.addButtonLabel}
-								emptyTableButtonClickHandler={this.addRow}
-								disabled={this.props.state === STATES.DISABLED}
-							/>
+							? (
+								<EmptyTable
+									control={this.props.control}
+									controller={this.props.controller}
+									emptyTableButtonLabel={tableButtonConfig.addButtonLabel}
+									emptyTableButtonClickHandler={this.addRow}
+									disabled={this.props.state === STATES.DISABLED}
+								/>)
 							: tableContainer
 					}
 				</div>

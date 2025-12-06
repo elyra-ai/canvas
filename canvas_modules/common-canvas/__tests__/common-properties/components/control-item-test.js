@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import { isEqual } from "lodash";
 import { fireEvent, within } from "@testing-library/react";
 
 const controller = new Controller();
-const controlObj = <div className="dummy_control">"Dummy control"</div>;
+const controlObj = <div className="dummy_control">&quot;Dummy control&quot;</div>;
 
 const control = {
 	name: "test-control",

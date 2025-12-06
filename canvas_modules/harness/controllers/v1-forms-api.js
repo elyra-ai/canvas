@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-"use strict";
 // Modules
-const express = require("express");
+import { Router } from "express";
 
-const getDiagramsListController = require("./v1-get-diagrams-list-controller");
-const getPalettesListController = require("./v1-get-palettes-list-controller");
-const getPropertiesListController = require("./v1-get-properties-list-controller");
-const getFormsListController = require("./v1-get-forms-list-controller");
-const getParameterDefsListController = require("./v1-get-parameterdefs-list-controller");
+import { get as getDiagramsList } from "./v1-get-diagrams-list-controller.js";
+import { get as getFormsList } from "./v1-get-forms-list-controller.js";
+import { get as getPalettesList } from "./v1-get-palettes-list-controller.js";
+import { get as getParameterDefsList } from "./v1-get-parameterdefs-list-controller.js";
+import { get as getPropertiesList } from "./v1-get-properties-list-controller.js";
 
 // Globals
 
-const router = express.Router({
+const router = Router({
 	caseSensitive: true,
 	mergeParams: true
 });
 
 // Public Methods ------------------------------------------------------------->
 
-module.exports = router;
+export default router;
 
 // Private Methods ------------------------------------------------------------>
 
-router.get("/forms/diagrams", getDiagramsListController.get);
-router.get("/forms/palettes", getPalettesListController.get);
-router.get("/forms/properties", getPropertiesListController.get);
-router.get("/forms/forms", getFormsListController.get);
-router.get("/forms/parameterDefs", getParameterDefsListController.get);
+router.get("/forms/diagrams", getDiagramsList);
+router.get("/forms/palettes", getPalettesList);
+router.get("/forms/properties", getPropertiesList);
+router.get("/forms/forms", getFormsList);
+router.get("/forms/parameterDefs", getParameterDefsList);

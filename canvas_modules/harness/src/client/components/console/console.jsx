@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ import React from "react";
 import PropTypes from "prop-types";
 
 export default class Console extends React.Component {
-	showDetails(event) {
-		if (event.target.children.harness_console_pretty_json_container) {
-			if (event.target.children.harness_console_pretty_json_container.style.display === "none") {
-				event.target.children.harness_console_pretty_json_container.style.display = "initial";
+	showDetails(evt) {
+		if (evt.target.children.harness_console_pretty_json_container) {
+			if (evt.target.children.harness_console_pretty_json_container.style.display === "none") {
+				evt.target.children.harness_console_pretty_json_container.style.display = "initial";
 			} else {
-				event.target.children.harness_console_pretty_json_container.style.display = "none";
+				evt.target.children.harness_console_pretty_json_container.style.display = "none";
 			}
 		}
 	}

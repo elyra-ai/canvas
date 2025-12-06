@@ -148,7 +148,7 @@ function getParameterFromParamDef(parameterId, paramDef) {
 	return parameterFound;
 }
 
-module.exports = {
+export default {
 	flyoutEditorForm: flyoutEditorForm,
 	flyoutEditorFormRerender: flyoutEditorFormRerender,
 	setControls: setControls,

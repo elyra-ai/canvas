@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,20 @@
 
 "use strict";
 
+const webpackConfigProd = require("./webpack.config.prod.cjs");
+const webpackConfigDev = require("./webpack.config.dev.cjs");
+
 var IS_PRODUCTION = process.env.NODE_ENV === "production";
 
 module.exports = function(grunt) {
 	grunt.initConfig({
 		eslint: {
-			node: {
-				src: ["index.js", "Gruntfile.js", "controllers/**/*.js",
-					"models/**/*.js", "lib/**/*.js", "tests/**/*.js", "src/**/*.js", "src/**/*.jsx",
-					"features/**/*.js", "scripts/**/*.js"]
+			target: ["index.js", "Gruntfile.cjs", "controllers/**/*.js",
+				"models/**/*.js", "lib/**/*.js", "tests/**/*.js", "src/**/*.js", "src/**/*.jsx",
+				"features/**/*.js", "scripts/**/*.js"
+			],
+			options: {
+				overrideConfigFile: "eslint.config.mjs"
 			}
 		},
 		jsonlint: {
@@ -111,7 +116,7 @@ module.exports = function(grunt) {
 			}
 		},
 		webpack: {
-			client: IS_PRODUCTION ? require("./webpack.config.prod") : require("./webpack.config.dev")
+			client: IS_PRODUCTION ? webpackConfigProd : webpackConfigDev
 		}
 	});
 
