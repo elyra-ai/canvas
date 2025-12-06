@@ -34,7 +34,6 @@ application.create(function(err, app) {
 	if (err) {
 		logger.fatal("Failed to create application.");
 		logger.fatal(err);
-		// destroy();
 		return;
 	}
 
