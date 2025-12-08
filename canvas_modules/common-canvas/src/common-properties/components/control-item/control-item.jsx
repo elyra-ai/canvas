@@ -102,7 +102,7 @@ class ControlItem extends React.Component {
 		const className = classNames(
 			"properties-control-item",
 			{ "hide": hidden },
-			{ "properties-ci-action-item": action && this.props.control.action.actionType === ActionType.IMAGE }
+			{ "properties-ci-action-item image": action && this.props.control.action.actionType === ActionType.IMAGE }
 		);
 
 		/*
