@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 
 import { Add, Bee, Compass, FlowConnection, DirectionCurve } from "@carbon/react/icons";
 
-import { CommonCanvas, CanvasController } from "@elyra/canvas";
+import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import allPortsFlow from "./all-ports-flow.json";
 import allPortsPalette from "./all-ports-palette.json";

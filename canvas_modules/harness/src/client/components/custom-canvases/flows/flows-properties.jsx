@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { FormattedMessage } from "react-intl";
-import { CommonProperties } from "@elyra/canvas";
+import { CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import { isEmpty } from "lodash";
 import FormsService from "../../../services/FormsService";
 import { PARAMETER_DEFS, CUSTOM } from "../../../constants/harness-constants.js";

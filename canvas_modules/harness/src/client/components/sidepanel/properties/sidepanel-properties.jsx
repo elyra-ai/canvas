@@ -21,7 +21,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { get } from "lodash";
-import { CommonProperties } from "@elyra/canvas";
+import { CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import propertiesParamDef from "./sidepanel-properties-param-def.json";
 

@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CommonCanvas, CanvasController } from "@elyra/canvas";
+import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import { LINK_SELECTION_LINK_ONLY, PALETTE_LAYOUT_NONE,
 	STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY }
 	from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";

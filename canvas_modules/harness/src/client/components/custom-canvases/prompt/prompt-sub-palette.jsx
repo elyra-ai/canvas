@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Provider } from "react-redux";
-import { Palette, CanvasController } from "@elyra/canvas";
+import { Palette, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 const BACKSPACE_KEY = "Backspace";
 const DELETE_KEY = "Delete";

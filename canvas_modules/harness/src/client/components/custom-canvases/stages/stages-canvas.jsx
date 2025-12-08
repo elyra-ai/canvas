@@ -18,7 +18,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CommonCanvas, CanvasController, Palette } from "@elyra/canvas";
+import { CommonCanvas, CanvasController, Palette } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import { Button } from "@carbon/react";
 import { Edit, OpenPanelFilledLeft, Search } from "@carbon/react/icons";

@@ -94,7 +94,7 @@ import {
 	ACTION_IMAGE_PROPS_INFO,
 	SLIDER_PROPS_INFO
 } from "../constants/properties-documentation-constants.js";
-import { CommonProperties } from "@elyra/canvas";
+import { CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 class CommonPropertiesComponents extends React.Component {
 	constructor(props) {

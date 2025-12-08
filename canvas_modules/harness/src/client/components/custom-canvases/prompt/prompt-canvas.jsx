@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CommonCanvas, CanvasController } from "@elyra/canvas";
+import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import { Menu } from "@carbon/react/icons";
 import Flow from "./prompt-flow.json";
 import Palette from "./prompt-palette.json";

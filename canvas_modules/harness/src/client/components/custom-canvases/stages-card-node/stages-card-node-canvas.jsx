@@ -21,7 +21,7 @@ import { get } from "lodash";
 
 import { Edit } from "@carbon/react/icons";
 
-import { CommonCanvas, CanvasController } from "@elyra/canvas";
+import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import StagesCardNodeFlow from "./stages-card-node-flow.json";
 import StagesCardNodePalette from "../../../../../test_resources/palettes/stagesPalette.json";
