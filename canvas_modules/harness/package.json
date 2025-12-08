@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "NODE_ENV=development node index.js",
-    "build": "NODE_ENV=development npx stylelint 'src/**/*.scss' 'assets/**/*.scss' && grunt",
+    "build": "npx stylelint 'src/**/*.scss' 'assets/**/*.scss' && grunt",
     "test": "npx cypress open",
     "bundle-report": "NODE_ENV=production BUNDLE_REPORT=true grunt",
     "start-prod": "NODE_ENV=production node index.js",
