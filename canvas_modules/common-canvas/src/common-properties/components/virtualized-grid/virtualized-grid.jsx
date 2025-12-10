@@ -417,10 +417,6 @@ const VirtualizedGrid = (props) => {
 	</div>);
 };
 
-VirtualizedGrid.defaultProps = {
-	disableHeader: false
-};
-
 VirtualizedGrid.propTypes = {
 	data: PropTypes.array.isRequired,
 	tableLabel: PropTypes.string,
