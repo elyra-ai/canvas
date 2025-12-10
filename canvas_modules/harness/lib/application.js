@@ -27,10 +27,6 @@ import { APP_SESSION_KEY, API_PATH_V1, APP_PATH } from "./constants.js";
 import log4js from "log4js";
 import bodyParser from "body-parser";
 import log4jsUtils from "./utils/log4js-util.js";
-import webpack from "webpack";
-import webpackConfig from "../webpack.config.dev.cjs";
-import webpackDevMiddleware from "webpack-dev-middleware";
-import WebpackHotMiddleware from "webpack-hot-middleware";
 
 log4jsUtils.init();
 
@@ -86,7 +82,7 @@ function create(callback) {
 
 	callback(null, app);
 }
-function _configureHmr(app) {
+async function _configureHmr(app) {
 
 	/* eslint new-cap: 0 */
 	/* eslint global-require: 0 */
@@ -95,16 +91,23 @@ function _configureHmr(app) {
 		mergeParams: true
 	});
 
-	const compiler = webpack(webpackConfig);
+	const webpack = await import("webpack");
+	const webpackConfig = await import("../webpack.config.dev.cjs");
+	const compiler = webpack.default(webpackConfig.default);
 
 	// Note: publicPath should match the output directory as defined
 	// in the webpack config, but we are applying this middleware to
 	// a route mounted at constants.APP_PATH already
-	hmrRouter.use(webpackDevMiddleware(compiler, {
+	const WebpackHotMiddleware = await import("webpack-hot-middleware");
+	const WebpackDevMiddleware = await import("webpack-dev-middleware");
+
+	hmrRouter.use(WebpackDevMiddleware(compiler, {
 		publicPath: "/"
 	}));
 	hmrRouter.use(WebpackHotMiddleware(compiler));
+
 	app.use(APP_PATH, hmrRouter);
+
 	// load images and styles from asserts folder in development mode
 	app.use(express.static(path.join(__dirname, "../assets")));
 }
