@@ -76,7 +76,6 @@ export default [
 	},
 	// jest tests
 	{
-		// ...reactConfigs, // TODO: Do we need this??
 		files: [
 			"__tests__/**/*.js"
 		],
@@ -97,7 +96,6 @@ export default [
 	},
 	// d3-zoom-extension
 	{
-		// ...configs, // TODO: Do we need this??
 		files: [ "src/common-canvas/d3-zoom-extension/**/*.js" ],
 		rules: {
 			// Allow snake_case, but only for object properties e.g. myObj.param_name
@@ -143,7 +141,6 @@ export default [
 	},
 	// src
 	{
-		// ...reactConfigs, // TODO: Do we need this??
 		files: [ "src/**/*.js", "src/**/*.jsx" ],
 		rules: {
 			// Disable strict warning on ES6 Components

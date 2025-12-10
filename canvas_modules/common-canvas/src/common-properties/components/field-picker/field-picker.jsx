@@ -320,8 +320,8 @@ export default class FieldPicker extends React.Component {
 	_genResetButton() {
 		const resetLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL);
-		// eslint-disable-next-line react/display-name
 		const Reset24 = React.forwardRef((props, ref) => <Reset ref={ref} size={24} {...props} />);
+		Reset24.displayName = "Reset24";
 		const defaultSelections = this.props.currentFields;
 		const selectedFields = this.state.selectedFields;
 		const isSelectionEqual = defaultSelections.length === selectedFields.length && defaultSelections.every((field) => selectedFields.indexOf(field) > -1);

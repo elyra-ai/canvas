@@ -80,8 +80,6 @@ export default [
 	},
 	// src
 	{
-		// ...configs, // TODO: Do we need this??
-		// ...reactConfigs, // TODO: Do we need this??
 		files: ["src/**/*.js", "src/**/*.jsx", "lib/**/*.js", "*.js"],
 		settings: {
 			"import/resolver": {
@@ -110,8 +108,6 @@ export default [
 	},
 	// cypress
 	{
-		// ...configs, // TODO: Do we need this??
-		// ...reactConfigs, // TODO: Do we need this??
 		files: ["cypress/**/*.js"],
 		 plugins: {
 			cypress: pluginCypress.configs.recommended,
