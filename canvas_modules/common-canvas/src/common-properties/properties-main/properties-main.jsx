@@ -37,7 +37,7 @@ import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
 
 import { injectIntl } from "react-intl";
-import * as styles from "./properties-main-widths.scss";
+import styles from "./properties-main-widths.module.scss";
 
 const FLYOUT_WIDTH_SMALL = parseInt(styles.flyoutWidthSmall, 10);
 const FLYOUT_WIDTH_MEDIUM = parseInt(styles.flyoutWidthMedium, 10);
