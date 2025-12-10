@@ -101,10 +101,10 @@ async function _configureHmr(app) {
 	const WebpackHotMiddleware = await import("webpack-hot-middleware");
 	const WebpackDevMiddleware = await import("webpack-dev-middleware");
 
-	hmrRouter.use(WebpackDevMiddleware(compiler, {
+	hmrRouter.use(WebpackDevMiddleware.default(compiler, {
 		publicPath: "/"
 	}));
-	hmrRouter.use(WebpackHotMiddleware(compiler));
+	hmrRouter.use(WebpackHotMiddleware.default(compiler));
 
 	app.use(APP_PATH, hmrRouter);
 
