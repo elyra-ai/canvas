@@ -18,15 +18,22 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { expect } from "chai";
 import customControlParamDef from "../../test_resources/paramDefs/custom-ctrl-op_paramDef.json";
 import { cleanup } from "@testing-library/react";
+import sinon from "sinon";
+import logger from "./../../../utils/logger";
 
 describe("validating custom operators work correctly", () => {
 	let controller;
+	let warnSpy;
 	beforeEach(() => {
+		warnSpy = sinon.stub(logger, "warn").callsFake(() => {
+			// no-op
+		});
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(customControlParamDef);
 		controller = renderedObject.controller;
 	});
 
 	afterEach(() => {
+		warnSpy.restore();
 		cleanup();
 	});
 	it("custom_op_num parameter should have error when greater than 100 using a custom op", () => {

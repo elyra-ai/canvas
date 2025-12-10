@@ -16,11 +16,13 @@
 
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
-
+import sinon from "sinon";
+import logger from "./../../../utils/logger";
 
 describe("validating cellNotEmpty operator works correctly", () => {
 	const controller = new Controller();
 	const cellNotEmpty = controller.getConditionOp("cellNotEmpty");
+	let warnSpy;
 
 	function wrap(val, role) {
 		return { value: val, control: { controlType: role } };
@@ -29,6 +31,13 @@ describe("validating cellNotEmpty operator works correctly", () => {
 	beforeEach(() => {
 		controller.setErrorMessages({});
 		controller.setControlStates({});
+		warnSpy = sinon.stub(logger, "warn").callsFake(() => {
+			// no-op
+		});
+	});
+
+	afterEach(() => {
+		warnSpy.restore();
 	});
 
 	it("Test cellNotEmpty behaves as expected", () => {

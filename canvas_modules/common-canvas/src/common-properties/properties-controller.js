@@ -1282,7 +1282,9 @@ export default class PropertiesController {
 				Object.keys(inValues).forEach((propertyName) => {
 					const propertyId = { name: propertyName };
 					// Update conditionalDefaultValues object using pass-by-reference
-					conditionsUtil.setConditionalDefaultValue(propertyId, this, conditionalDefaultValues);
+					if (this.getControl(propertyId)) {
+						conditionsUtil.setConditionalDefaultValue(propertyId, this, conditionalDefaultValues);
+					}
 				});
 				if (!isEmpty(conditionalDefaultValues)) {
 					Object.keys(conditionalDefaultValues).forEach((parameterRef) => {

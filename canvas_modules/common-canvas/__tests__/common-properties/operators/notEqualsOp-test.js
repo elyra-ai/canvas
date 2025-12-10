@@ -16,12 +16,14 @@
 
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
-
+import sinon from "sinon";
+import logger from "./../../../utils/logger";
 
 describe("validating notEquals operator works correctly", () => {
 	const controller = new Controller();
 	const notEquals = controller.getConditionOp("notEquals");
 	let undefinedPlaceholder;
+	let warnSpy;
 
 	function wrap(val, role = null) {
 		return { value: val, control: { controlType: role } };
@@ -34,6 +36,13 @@ describe("validating notEquals operator works correctly", () => {
 	beforeEach(() => {
 		controller.setErrorMessages({});
 		controller.setControlStates({});
+		warnSpy = sinon.stub(logger, "warn").callsFake(() => {
+			// no-op
+		});
+	});
+
+	afterEach(() => {
+		warnSpy.restore();
 	});
 
 	it("Test notEquals behaves as expected for edge cases", () => {

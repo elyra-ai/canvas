@@ -16,12 +16,14 @@
 
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
-
+import sinon from "sinon";
+import logger from "./../../../utils/logger";
 
 describe("validating contains operator works correctly", () => {
 	const controller = new Controller();
 	const contains = controller.getConditionOp("contains");
 	let undefinedPlaceholder;
+	let warnSpy;
 
 	function wrap(val, role = null) {
 		return { value: val, control: { controlType: role } };
@@ -34,6 +36,13 @@ describe("validating contains operator works correctly", () => {
 	beforeEach(() => {
 		controller.setErrorMessages({});
 		controller.setControlStates({});
+		warnSpy = sinon.stub(logger, "warn").callsFake(() => {
+			// no-op
+		});
+	});
+
+	afterEach(() => {
+		warnSpy.restore();
 	});
 
 	it("Test contains behaves as expected for edge cases", () => {
