@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ class PaletteDialog extends React.Component {
 			showGrid: true
 		};
 
+		this.paletteRef = React.createRef();
 		this.showGrid = this.showGrid.bind(this);
 		this.mouseDownOnTopBar = this.mouseDownOnTopBar.bind(this);
 		this.mouseDownOnPalette = this.mouseDownOnPalette.bind(this);
@@ -150,7 +151,7 @@ class PaletteDialog extends React.Component {
 	}
 
 	getPaletteDiv() {
-		return this.refs.palette;
+		return this.paletteRef.current;
 	}
 
 	getStyleProperty(classOrId, property) {
@@ -163,30 +164,32 @@ class PaletteDialog extends React.Component {
 	setResizingCursors(ev) {
 		const paletteDiv = this.getPaletteDiv();
 
-		this.setSizingHoverEdge(ev, paletteDiv);
+		if (paletteDiv) {
+			this.setSizingHoverEdge(ev, paletteDiv);
 
-		if (this.verticalSizingHover === "top") {
-			if (this.horizontalSizingHover === "left") {
-				paletteDiv.style.cursor = "nwse-resize";
-			} else if (this.horizontalSizingHover === "right") {
-				paletteDiv.style.cursor = "nesw-resize";
-			} else {
-				paletteDiv.style.cursor = "ns-resize";
-			}
-		} else if (this.verticalSizingHover === "bottom") {
-			if (this.horizontalSizingHover === "left") {
-				paletteDiv.style.cursor = "nesw-resize";
-			} else if (this.horizontalSizingHover === "right") {
-				paletteDiv.style.cursor = "nwse-resize";
-			} else {
-				paletteDiv.style.cursor = "ns-resize";
-			}
-		} else if (this.horizontalSizingHover === "left" ||
-							this.horizontalSizingHover === "right") {
-			paletteDiv.style.cursor = "ew-resize";
+			if (this.verticalSizingHover === "top") {
+				if (this.horizontalSizingHover === "left") {
+					paletteDiv.style.cursor = "nwse-resize";
+				} else if (this.horizontalSizingHover === "right") {
+					paletteDiv.style.cursor = "nesw-resize";
+				} else {
+					paletteDiv.style.cursor = "ns-resize";
+				}
+			} else if (this.verticalSizingHover === "bottom") {
+				if (this.horizontalSizingHover === "left") {
+					paletteDiv.style.cursor = "nesw-resize";
+				} else if (this.horizontalSizingHover === "right") {
+					paletteDiv.style.cursor = "nwse-resize";
+				} else {
+					paletteDiv.style.cursor = "ns-resize";
+				}
+			} else if (this.horizontalSizingHover === "left" ||
+								this.horizontalSizingHover === "right") {
+				paletteDiv.style.cursor = "ew-resize";
 
-		} else {
-			paletteDiv.style.cursor = "default";
+			} else {
+				paletteDiv.style.cursor = "default";
+			}
 		}
 	}
 
@@ -529,7 +532,7 @@ class PaletteDialog extends React.Component {
 		return (
 			<nav aria-label={this.props.intl.formatMessage({ id: "palette.dialog.label", defaultMessage: defaultMessages["palette.dialog.label"] })} role="navigation">
 				<div className="palette-dialog-div"
-					ref="palette"
+					ref={this.paletteRef}
 					onMouseDown={this.mouseDownOnPalette}
 				>
 					<PaletteDialogTopbar mouseDownMethod={this.mouseDownOnTopBar}

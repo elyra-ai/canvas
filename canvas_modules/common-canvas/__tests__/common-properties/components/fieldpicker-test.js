@@ -416,7 +416,7 @@ describe("field-picker-control renders correctly", () => {
 		const { container } = wrapper;
 
 		const searchContainer = container.querySelector("div.properties-ft-search-container");
-		const input = searchContainer.querySelector("input[type='text']");
+		const input = searchContainer.querySelector("input");
 		fireEvent.change(input, { target: { value: "Time" } });
 		expect(tableUtilsRTL.getTableRows(container)).to.have.length(2);
 		// test case insensitive
@@ -563,7 +563,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(tableRows.length).to.equal(30);
 
 		const searchContainer = fieldpicker.querySelector("div.properties-ft-search-container");
-		const input = searchContainer.querySelector("input[type='text']");
+		const input = searchContainer.querySelector("input");
 		fireEvent.change(input, { target: { value: "Time" } });
 
 		fieldpicker = container.querySelector("div.properties-fp-table");
@@ -617,7 +617,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		const { container } = wrapper;
 		let fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
 		const searchContainer = fieldpicker.querySelector("div.properties-ft-search-container");
-		const input = searchContainer.querySelector("input[type='text']");
+		const input = searchContainer.querySelector("input");
 		fireEvent.change(input, { target: { value: "time" } });
 
 		clickFilter(wrapper, "time");
@@ -743,7 +743,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 	it("should be able to select the same field name from different schemas", () => {
 		const { container } = wrapper;
 		let fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
-		const search = fieldpicker.querySelector("div.properties-ft-search-container").querySelector("input[type='text']");
+		const search = fieldpicker.querySelector("div.properties-ft-search-container").querySelector("input");
 		fireEvent.change(search, { target: { value: "age" } });
 		fieldpicker = tableUtilsRTL.openFieldPicker(container, "properties-ft-structuretableMultiInputSchema");
 

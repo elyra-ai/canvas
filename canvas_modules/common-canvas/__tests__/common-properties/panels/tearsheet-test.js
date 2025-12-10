@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ describe("tearsheet tests", () => {
 		await waitFor(() => {
 			const buttonModalClose = document.querySelector("div.properties-tearsheet-panel");
 			expect(buttonModalClose).to.not.be.null;
-			expect(buttonModalClose.classList.contains("is-visible")).to.be.false;
+			expect(document.querySelectorAll("div.properties-tearsheet-panel.is-visible")).to.have.length(1);
 
 			const closeButton = document.querySelector("button.cds--modal-close");
 			expect(closeButton).to.not.be.null;
