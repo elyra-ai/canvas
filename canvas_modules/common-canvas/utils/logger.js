@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,7 +102,9 @@ function _error(id, errorObject) {
 
 // Public Methods ------------------------------------------------------------->
 
-module.exports.debug = _debug;
-module.exports.info = _info;
-module.exports.warn = _warning;
-module.exports.error = _error;
+export default {
+	debug: _debug,
+	info: _info,
+	warn: _warning,
+	error: _error
+};

@@ -1,7 +1,7 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License";
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -14,18 +14,7 @@
  * limitations under the License.
  */
 
-"use strict";
-
 // Private Methods ------------------------------------------------------------>
-
-function _defineConstant(id, value) {
-	Object.defineProperty(module.exports, id, {
-		value: value,
-		enumerable: true,
-		writable: false
-	});
-}
-
 const fields = [
 	{
 		"name": "Age",
@@ -185,27 +174,27 @@ const fields2 = [
 ];
 
 // Public Methods ------------------------------------------------------------->
-_defineConstant("CONTAINERS_RIGHT_FLYOUT_PROPERTIES", "const rightFlyoutContent =(<CommonProperties \n" +
+export const CONTAINERS_RIGHT_FLYOUT_PROPERTIES = "const rightFlyoutContent =(<CommonProperties \n" +
 "    propertiesConfig={this.propertiesConfig} \n" +
 "    propertiesInfo={this.propertiesInfo} \n" +
-"/>);");
+"/>;";
 
-_defineConstant("CONTAINERS_RIGHT_FLYOUT_PROPERTIES_CONFIG", "this.propertiesConfig = { \n" +
+export const CONTAINERS_RIGHT_FLYOUT_PROPERTIES_CONFIG = "this.propertiesConfig = { \n" +
 "    containerType=\"Custom\" \n" +
 "    rightFlyout \n" +
-"};");
+"};";
 
-_defineConstant("CONTAINERS_RIGHT_FLYOUT_PROPERTIES_INFO", "this.propertiesInfo = { \n" +
+export const CONTAINERS_RIGHT_FLYOUT_PROPERTIES_INFO = "this.propertiesInfo = { \n" +
 "    parameterDef: someParameterDefinition \n" +
-"};");
+"};";
 
-_defineConstant("CONTAINERS_RIGHT_FLYOUT_CANVAS", "<CommonCanvas \n" +
+export const CONTAINERS_RIGHT_FLYOUT_CANVAS = "<CommonCanvas \n" +
 "    canvasController={this.canvasController} \n" +
 "    rightFlyoutContent={rightFlyoutContent} \n" +
 "    showRightFlyout={showRightFlyoutProperties} \n" +
-"/>");
+"/>";
 
-_defineConstant("CONTROLS_PROPS_INFO", {
+export const CONTROLS_PROPS_INFO = {
 	"title": "Group Type: controls",
 	"parameterDef": {
 		"titleDefinition": {
@@ -269,8 +258,8 @@ _defineConstant("CONTROLS_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("TABS_PROPS_INFO", {
+};
+export const TABS_PROPS_INFO = {
 	"title": "Group Type: tabs",
 	"parameterDef": {
 		"titleDefinition": {
@@ -338,8 +327,8 @@ _defineConstant("TABS_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("SUBTABS_PROPS_INFO", {
+};
+export const SUBTABS_PROPS_INFO = {
 	"title": "Group Type: subTabs",
 	"parameterDef": {
 		"titleDefinition": {
@@ -413,8 +402,8 @@ _defineConstant("SUBTABS_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("PANELS_PROPS_INFO", {
+};
+export const PANELS_PROPS_INFO = {
 	"title": "Group Type: panels",
 	"parameterDef": {
 		"titleDefinition": {
@@ -503,8 +492,8 @@ _defineConstant("PANELS_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("PANEL_SELECTOR_PROPS_INFO", {
+};
+export const PANEL_SELECTOR_PROPS_INFO = {
 	"title": "Group Type: panelSelector",
 	"parameterDef": {
 		"titleDefinition": {
@@ -646,8 +635,8 @@ _defineConstant("PANEL_SELECTOR_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("PANEL_SELECTOR_INSERT_PROPS_INFO", {
+};
+export const PANEL_SELECTOR_INSERT_PROPS_INFO = {
 	"title": "Group Type: panelSelector",
 	"parameterDef": {
 		"titleDefinition": {
@@ -791,9 +780,9 @@ _defineConstant("PANEL_SELECTOR_INSERT_PROPS_INFO", {
 			}
 		]
 	}
-});
+};
 
-_defineConstant("SUMMARY_PANEL_PROPS_INFO", {
+export const SUMMARY_PANEL_PROPS_INFO = {
 	"title": "Group Type: summaryPanel",
 	"parameterDef": {
 		"titleDefinition": {
@@ -985,8 +974,8 @@ _defineConstant("SUMMARY_PANEL_PROPS_INFO", {
 			"structuretableRenameFields.new_name.desc": "New field name"
 		}
 	}
-});
-_defineConstant("TWISTY_PANEL_PROPS_INFO", {
+};
+export const TWISTY_PANEL_PROPS_INFO = {
 	"title": "Panel Type: TwistyPanel",
 	"parameterDef": {
 		"titleDefinition": {
@@ -1098,8 +1087,8 @@ _defineConstant("TWISTY_PANEL_PROPS_INFO", {
 			"increment": "Increase Step"
 		}
 	}
-});
-_defineConstant("TEARSHEET_PANEL_PROPS_INFO", {
+};
+export const TEARSHEET_PANEL_PROPS_INFO = {
 	"title": "Panel Type: Tearsheet",
 	"parameterDef": {
 		"current_parameters": {
@@ -1157,8 +1146,8 @@ _defineConstant("TEARSHEET_PANEL_PROPS_INFO", {
 			}]
 		}
 	}
-});
-_defineConstant("TEARSHEET_PANEL_FROM_HOST_PROPS_INFO", {
+};
+export const TEARSHEET_PANEL_FROM_HOST_PROPS_INFO = {
 	"title": "Panel Type: Tearsheet",
 	"parameterDef": {
 		"uihints": {
@@ -1184,8 +1173,8 @@ _defineConstant("TEARSHEET_PANEL_FROM_HOST_PROPS_INFO", {
 			}]
 		}
 	}
-});
-_defineConstant("COLUMN_PANEL_PROPS_INFO", {
+};
+export const COLUMN_PANEL_PROPS_INFO = {
 	"title": "Panel Type: ColumnPanel",
 	"parameterDef": {
 		"titleDefinition": {
@@ -1293,8 +1282,8 @@ _defineConstant("COLUMN_PANEL_PROPS_INFO", {
 		"dataset_metadata": {},
 		"resources": {}
 	}
-});
-_defineConstant("COLUMNSELECTION_PROPS_INFO", {
+};
+export const COLUMNSELECTION_PROPS_INFO = {
 	"title": "Group Types: ColumnSelection",
 	"parameterDef": {
 		"titleDefinition": {
@@ -1358,9 +1347,9 @@ _defineConstant("COLUMNSELECTION_PROPS_INFO", {
 			}
 		]
 	}
-});
+};
 
-_defineConstant("TEXT_PANEL_PROPS_INFO", {
+export const TEXT_PANEL_PROPS_INFO = {
 	"title": "Group Types: Text Panel",
 	"parameterDef": {
 		"titleDefinition": {
@@ -1406,9 +1395,9 @@ _defineConstant("TEXT_PANEL_PROPS_INFO", {
 			]
 		}
 	}
-});
+};
 
-_defineConstant("TEXTFIELD_PROPS_INFO", {
+export const TEXTFIELD_PROPS_INFO = {
 	"title": "TextField Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -1459,8 +1448,8 @@ _defineConstant("TEXTFIELD_PROPS_INFO", {
 	"resources": {
 		"textfieldControlName_not_empty": "Textfield Control cannot be empty"
 	}
-});
-_defineConstant("TEXTAREA_PROPS_INFO", {
+};
+export const TEXTAREA_PROPS_INFO = {
 	"title": "Textarea Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -1510,8 +1499,8 @@ _defineConstant("TEXTAREA_PROPS_INFO", {
 	"resources": {
 		"textareaControlName_not_empty": "Textarea Control cannot be empty"
 	}
-});
-_defineConstant("LIST_PROPS_INFO", {
+};
+export const LIST_PROPS_INFO = {
 	"title": "List Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -1557,8 +1546,8 @@ _defineConstant("LIST_PROPS_INFO", {
 			]
 		}
 	}
-});
-_defineConstant("PASSWORD_FIELD_PROPS_INFO", {
+};
+export const PASSWORD_FIELD_PROPS_INFO = {
 	"title": "Password Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -1605,8 +1594,8 @@ _defineConstant("PASSWORD_FIELD_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("EXPRESSION_PROPS_INFO", {
+};
+export const EXPRESSION_PROPS_INFO = {
 	"title": "Expression Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -1726,8 +1715,8 @@ _defineConstant("EXPRESSION_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("CODE_PROPS_INFO", {
+};
+export const CODE_PROPS_INFO = {
 	"title": "Code Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -1846,8 +1835,8 @@ _defineConstant("CODE_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("HIDDEN_PROPS_INFO", {
+};
+export const HIDDEN_PROPS_INFO = {
 	"title": "Hidden Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -1891,8 +1880,8 @@ _defineConstant("HIDDEN_PROPS_INFO", {
 			]
 		}
 	}
-});
-_defineConstant("READONLY_PROPS_INFO", {
+};
+export const READONLY_PROPS_INFO = {
 	"title": "Readonly Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -1936,8 +1925,8 @@ _defineConstant("READONLY_PROPS_INFO", {
 			]
 		}
 	}
-});
-_defineConstant("NUMBERFIELD_PROPS_INFO", {
+};
+export const NUMBERFIELD_PROPS_INFO = {
 	"title": "NumberField Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -1983,8 +1972,8 @@ _defineConstant("NUMBERFIELD_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("SPINNER_PROPS_INFO", {
+};
+export const SPINNER_PROPS_INFO = {
 	"title": "Spinner Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2032,8 +2021,8 @@ _defineConstant("SPINNER_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("NUMBERFIELD_GENERATOR_PROPS_INFO", {
+};
+export const NUMBERFIELD_GENERATOR_PROPS_INFO = {
 	"title": "NumberField Generator Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2093,8 +2082,8 @@ _defineConstant("NUMBERFIELD_GENERATOR_PROPS_INFO", {
 			"numberGenerator.desc": "Generate a random number for use as a seed value"
 		}
 	}
-});
-_defineConstant("DATEFIELD_PROPS_INFO", {
+};
+export const DATEFIELD_PROPS_INFO = {
 	"title": "DateField Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -2134,8 +2123,8 @@ _defineConstant("DATEFIELD_PROPS_INFO", {
 			"fields": []
 		}
 	}
-});
-_defineConstant("TIMEFIELD_PROPS_INFO", {
+};
+export const TIMEFIELD_PROPS_INFO = {
 	"title": "TimeField Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -2175,8 +2164,8 @@ _defineConstant("TIMEFIELD_PROPS_INFO", {
 			"fields": []
 		}
 	}
-});
-_defineConstant("DATEPICKER_PROPS_INFO", {
+};
+export const DATEPICKER_PROPS_INFO = {
 	"title": "Datepicker Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -2221,8 +2210,8 @@ _defineConstant("DATEPICKER_PROPS_INFO", {
 			"datepickerControlName.helper": "Helper text provided through resource label `{parameter_ref}.helper`."
 		}
 	}
-});
-_defineConstant("DATEPICKER_RANGE_PROPS_INFO", {
+};
+export const DATEPICKER_RANGE_PROPS_INFO = {
 	"title": "Datepicker Range",
 	"parameterDef": {
 		"current_parameters": {
@@ -2271,8 +2260,8 @@ _defineConstant("DATEPICKER_RANGE_PROPS_INFO", {
 			"datepickerControlName.range.end.helper": "End helper text."
 		}
 	}
-});
-_defineConstant("SLIDER_PROPS_INFO", {
+};
+export const SLIDER_PROPS_INFO = {
 	"title": "Slider Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2321,8 +2310,8 @@ _defineConstant("SLIDER_PROPS_INFO", {
 			"sliderControlName.max.label": "100"
 		}
 	}
-});
-_defineConstant("CHECKBOX_SINGLE_PROPS_INFO", {
+};
+export const CHECKBOX_SINGLE_PROPS_INFO = {
 	"title": "Checkbox Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2370,8 +2359,8 @@ _defineConstant("CHECKBOX_SINGLE_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("CHECKBOX_SET_PROPS_INFO", {
+};
+export const CHECKBOX_SET_PROPS_INFO = {
 	"title": "Checkbox Set Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2422,8 +2411,8 @@ _defineConstant("CHECKBOX_SET_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("RADIOSET_HORIZONTAL_PROPS_INFO", {
+};
+export const RADIOSET_HORIZONTAL_PROPS_INFO = {
 	"title": "Radioset Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2473,8 +2462,8 @@ _defineConstant("RADIOSET_HORIZONTAL_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("RADIOSET_VERTICAL_PROPS_INFO", {
+};
+export const RADIOSET_VERTICAL_PROPS_INFO = {
 	"title": "Radioset Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2527,8 +2516,8 @@ _defineConstant("RADIOSET_VERTICAL_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("ONEOFSELECT_PROPS_INFO", {
+};
+export const ONEOFSELECT_PROPS_INFO = {
 	"title": "One of Select Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2581,8 +2570,8 @@ _defineConstant("ONEOFSELECT_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO", {
+};
+export const ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO = {
 	"title": "One of Select Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2636,8 +2625,8 @@ _defineConstant("ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("ONEOFSELECT_CUSTOM_VALUE_ALLOW_FILTER_PROPS_INFO", {
+};
+export const ONEOFSELECT_CUSTOM_VALUE_ALLOW_FILTER_PROPS_INFO = {
 	"title": "One of Select Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2692,8 +2681,8 @@ _defineConstant("ONEOFSELECT_CUSTOM_VALUE_ALLOW_FILTER_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("FORCED_RADIOSET_PROPS_INFO", {
+};
+export const FORCED_RADIOSET_PROPS_INFO = {
 	"title": "One of Select Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2748,8 +2737,8 @@ _defineConstant("FORCED_RADIOSET_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("MULTISELECT_PROPS_INFO", {
+};
+export const MULTISELECT_PROPS_INFO = {
 	"title": "Multiselect Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2798,8 +2787,8 @@ _defineConstant("MULTISELECT_PROPS_INFO", {
 			]
 		}
 	}
-});
-_defineConstant("MULTISELECT_FILTERABLE_PROPS_INFO", {
+};
+export const MULTISELECT_FILTERABLE_PROPS_INFO = {
 	"title": "Multiselect Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2849,8 +2838,8 @@ _defineConstant("MULTISELECT_FILTERABLE_PROPS_INFO", {
 			]
 		}
 	}
-});
-_defineConstant("SOMEOFSELECT_PROPS_INFO", {
+};
+export const SOMEOFSELECT_PROPS_INFO = {
 	"title": "Some of Select Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2903,8 +2892,8 @@ _defineConstant("SOMEOFSELECT_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("FORCED_CHECKBOX_SET_PROPS_INFO", {
+};
+export const FORCED_CHECKBOX_SET_PROPS_INFO = {
 	"title": "Forced Checkboxset Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -2958,8 +2947,8 @@ _defineConstant("FORCED_CHECKBOX_SET_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("SELECTSCHEMA_PROPS_INFO", {
+};
+export const SELECTSCHEMA_PROPS_INFO = {
 	"title": "SelectSchema Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3021,8 +3010,8 @@ _defineConstant("SELECTSCHEMA_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("SELECTSCHEMA_EMPTY_PROPS_INFO", {
+};
+export const SELECTSCHEMA_EMPTY_PROPS_INFO = {
 	"title": "SelectSchema Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3078,8 +3067,8 @@ _defineConstant("SELECTSCHEMA_EMPTY_PROPS_INFO", {
 			"selectschemaEmptyPlaceholder.emptyList.placeholder": "Custom empty list placeholder text"
 		}
 	}
-});
-_defineConstant("SELECTCOLUMN_PROPS_INFO", {
+};
+export const SELECTCOLUMN_PROPS_INFO = {
 	"title": "Select Column Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3126,8 +3115,8 @@ _defineConstant("SELECTCOLUMN_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("SELECTCOLUMN_EMPTY_PROPS_INFO", {
+};
+export const SELECTCOLUMN_EMPTY_PROPS_INFO = {
 	"title": "Select Column Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3188,8 +3177,8 @@ _defineConstant("SELECTCOLUMN_EMPTY_PROPS_INFO", {
 			"selectcolumnEmptyPlaceholder.emptyList.placeholder": "Custom empty list placeholder text"
 		}
 	}
-});
-_defineConstant("SELECTCOLUMN_MULTI_INPUT_PROPS_INFO", {
+};
+export const SELECTCOLUMN_MULTI_INPUT_PROPS_INFO = {
 	"title": "Select Column Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3241,8 +3230,8 @@ _defineConstant("SELECTCOLUMN_MULTI_INPUT_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("SELECTCOLUMNS_PROPS_INFO", {
+};
+export const SELECTCOLUMNS_PROPS_INFO = {
 	"title": "SelectColumns Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3289,8 +3278,8 @@ _defineConstant("SELECTCOLUMNS_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO", {
+};
+export const SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO = {
 	"title": "SelectColumns Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3346,8 +3335,8 @@ _defineConstant("SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO", {
 			}
 		]
 	}
-});
-_defineConstant("TOGGLETEXT_PROPS_INFO", {
+};
+export const TOGGLETEXT_PROPS_INFO = {
 	"title": "Toggletext Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3396,9 +3385,9 @@ _defineConstant("TOGGLETEXT_PROPS_INFO", {
 			}
 		]
 	}
-});
+};
 
-_defineConstant("TOGGLE_PROPS_INFO", {
+export const TOGGLE_PROPS_INFO = {
 	"title": "Toggle Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3439,8 +3428,8 @@ _defineConstant("TOGGLE_PROPS_INFO", {
 			]
 		}
 	},
-});
-_defineConstant("TOGGLETEXTICONS_PROPS_INFO", {
+};
+export const TOGGLETEXTICONS_PROPS_INFO = {
 	"title": "Toggletext Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3493,9 +3482,9 @@ _defineConstant("TOGGLETEXTICONS_PROPS_INFO", {
 			}
 		]
 	}
-});
+};
 
-_defineConstant("READONLYTABLE_PROPS_INFO", {
+export const READONLYTABLE_PROPS_INFO = {
 	"title": "ReadonlyTable Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3648,8 +3637,8 @@ _defineConstant("READONLYTABLE_PROPS_INFO", {
 			"readonlyStructurelistTableControl.edit.button.label": "Edit - custom label"
 		}
 	}
-});
-_defineConstant("STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO", {
+};
+export const STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO = {
 	"title": "StructureTableToggle Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3742,8 +3731,8 @@ _defineConstant("STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO", {
 			"structureInlineToggleList.sort_order.Descending.label": "Descending"
 		}
 	}
-});
-_defineConstant("STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO", {
+};
+export const STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO = {
 	"title": "StructureTableInlineTextfield Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3828,8 +3817,8 @@ _defineConstant("STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO", {
 			"structureInlineTextfield.inline_textfield.label": "OutputName"
 		}
 	}
-});
-_defineConstant("STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO", {
+};
+export const STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO = {
 	"title": "StructureTableDropdown Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -3922,8 +3911,8 @@ _defineConstant("STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO", {
 			"structureInlineDropdown.inline_dropdown.label": "Type"
 		}
 	}
-});
-_defineConstant("STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO", {
+};
+export const STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO = {
 	"title": "StructureTableInlineTextfield Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -4072,8 +4061,8 @@ _defineConstant("STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO", {
 			"structurelisteditorTableInput.subpanel_textfield.label": "OutputName"
 		}
 	}
-});
-_defineConstant("STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO", {
+};
+export const STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO = {
 	"title": "StructureListEditor Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -4219,8 +4208,8 @@ _defineConstant("STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO", {
 			"expressionCellTable.description.desc": "if condition true set field"
 		}
 	}
-});
-_defineConstant("STRUCTURETABLE_ROW_SELECTION_PROPS_INFO", {
+};
+export const STRUCTURETABLE_ROW_SELECTION_PROPS_INFO = {
 	"title": "StructureTableRow Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -4365,8 +4354,8 @@ _defineConstant("STRUCTURETABLE_ROW_SELECTION_PROPS_INFO", {
 			"expressionCellTable.description.desc": "if condition true set field"
 		}
 	}
-});
-_defineConstant("STRUCTURELISTEDITOR_PROPS_INFO", {
+};
+export const STRUCTURELISTEDITOR_PROPS_INFO = {
 	"title": "StructureListEditor Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -4450,8 +4439,8 @@ _defineConstant("STRUCTURELISTEDITOR_PROPS_INFO", {
 			"structurelisteditorTableInput.description.label": "Description"
 		}
 	}
-});
-_defineConstant("STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO", {
+};
+export const STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO = {
 	"title": "StructureListEditor Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -4551,8 +4540,8 @@ _defineConstant("STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO", {
 			"structurelisteditorTableInput.seasonal.label": "NonSeasonal"
 		}
 	}
-});
-_defineConstant("STRUCTURETABLE_MOVEABLE_PROPS_INFO", {
+};
+export const STRUCTURETABLE_MOVEABLE_PROPS_INFO = {
 	"title": "StructureTableMoveable Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -4646,8 +4635,8 @@ _defineConstant("STRUCTURETABLE_MOVEABLE_PROPS_INFO", {
 			"structureInlineDropdown.inline_dropdown.label": "Type"
 		}
 	}
-});
-_defineConstant("STRUCTURETABLE_SORTABLE_PROPS_INFO", {
+};
+export const STRUCTURETABLE_SORTABLE_PROPS_INFO = {
 	"title": "StructureTableSortable Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -4742,8 +4731,8 @@ _defineConstant("STRUCTURETABLE_SORTABLE_PROPS_INFO", {
 			"structureInlineDropdown.inline_dropdown.label": "Type"
 		}
 	}
-});
-_defineConstant("STRUCTURETABLE_FILTERABLE_PROPS_INFO", {
+};
+export const STRUCTURETABLE_FILTERABLE_PROPS_INFO = {
 	"title": "StructureTableFilterable Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -4837,8 +4826,8 @@ _defineConstant("STRUCTURETABLE_FILTERABLE_PROPS_INFO", {
 			"structureInlineDropdown.inline_dropdown.label": "Type"
 		}
 	}
-});
-_defineConstant("SUMMARY_PROPS_INFO", {
+};
+export const SUMMARY_PROPS_INFO = {
 	"title": "Group Type: controls",
 	"parameterDef": {
 		"titleDefinition": {
@@ -5122,8 +5111,8 @@ _defineConstant("SUMMARY_PROPS_INFO", {
 			"structuretableRenameFields.new_name.desc": "New field name"
 		}
 	}
-});
-_defineConstant("STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO", {
+};
+export const STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO = {
 	"title": "StructureTableGenerated Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -5233,8 +5222,8 @@ _defineConstant("STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO", {
 			"structureInlineDropdown.inline_dropdown.label": "Type"
 		}
 	}
-});
-_defineConstant("STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO", {
+};
+export const STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO = {
 	"title": "StructureTableGenerated Title",
 	"parameterDef": {
 		"titleDefinition": {
@@ -5345,10 +5334,10 @@ _defineConstant("STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO", {
 			"structureInlineDropdown.inline_dropdown.label": "Type"
 		}
 	}
-});
+};
 
 
-_defineConstant("ACTION_PROPS_INFO", {
+export const ACTION_PROPS_INFO = {
 	"title": "Actions",
 	"parameterDef": {
 		"titleDefinition": {
@@ -5438,9 +5427,9 @@ _defineConstant("ACTION_PROPS_INFO", {
 			]
 		}
 	}
-});
+};
 
-_defineConstant("ACTION_IMAGE_PROPS_INFO", {
+export const ACTION_IMAGE_PROPS_INFO = {
 	"title": "Actions",
 	"parameterDef": {
 		"titleDefinition": {
@@ -5515,4 +5504,4 @@ _defineConstant("ACTION_IMAGE_PROPS_INFO", {
 			]
 		}
 	}
-});
+};

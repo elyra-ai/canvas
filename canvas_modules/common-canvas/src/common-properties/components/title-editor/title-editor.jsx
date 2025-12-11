@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,18 +125,19 @@ class TitleEditor extends Component {
 		const titleWithErrror = get(this.state.titleValidation, "type", null) === CONDITION_MESSAGE_TYPE.ERROR;
 
 		const propertiesTitleEdit = this.props.labelEditable === false || this.state.focused ? <div />
-			: (<Button
-				kind="ghost"
-				className="properties-title-editor-btn edit"
-				data-id="edit"
-				onClick={this.editTitleClickHandler}
-				tooltipPosition="bottom"
-				tooltipAlignment="end"
-				renderIcon={Edit}
-				size="sm"
-				iconDescription={propertiesTitleEditButtonLabel}
-				hasIconOnly
-			/>);
+			: (
+				<Button
+					kind="ghost"
+					className="properties-title-editor-btn edit"
+					data-id="edit"
+					onClick={this.editTitleClickHandler}
+					tooltipPosition="bottom"
+					tooltipAlignment="end"
+					renderIcon={Edit}
+					size="sm"
+					iconDescription={propertiesTitleEditButtonLabel}
+					hasIconOnly
+				/>);
 
 		const renderTooltip = (isDescWithLink) => {
 			const { description } = this.props;

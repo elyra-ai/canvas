@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-"use strict";
 // Modules
 
 // New Relic must be initialized before anything else
 
-var nconf = require("nconf");
-var log4js = require("log4js");
-var http = require("http");
-
-var application = require("./lib/application");
+import application from "./lib/application.js";
+import http from "http";
+import log4js from "log4js";
+import nconf from "nconf";
 
 // Globals
 
@@ -36,7 +34,6 @@ application.create(function(err, app) {
 	if (err) {
 		logger.fatal("Failed to create application.");
 		logger.fatal(err);
-		application.destroy();
 		return;
 	}
 

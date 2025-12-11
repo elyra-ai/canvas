@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -259,23 +259,24 @@ class VirtualizedTable extends React.Component {
 			</div>);
 
 		const resizeElem = columnData.resizable && !this.isLastColumn(dataKey)
-			? (<Draggable
-				axis="x"
-				defaultClassName="properties-vt-header-resize"
-				defaultClassNameDragging="properties-vt-header-resize-active"
-				onDrag={
-					(evt, { deltaX }) => {
-						this.resizeColumn({ dataKey, deltaX });
+			? (
+				<Draggable
+					axis="x"
+					defaultClassName="properties-vt-header-resize"
+					defaultClassNameDragging="properties-vt-header-resize-active"
+					onDrag={
+						(evt, { deltaX }) => {
+							this.resizeColumn({ dataKey, deltaX });
+						}
 					}
-				}
-				position={{ x: 0 }}
-				zIndex={999}
-			>
-				<div
-					role="button" tabIndex="0"
-					aria-label="Resize column"
-				/>
-			</Draggable>)
+					position={{ x: 0 }}
+					zIndex={999}
+				>
+					<div
+						role="button" tabIndex="0"
+						aria-label="Resize column"
+					/>
+				</Draggable>)
 			: "";
 		const headerDisplayLabel = typeof label === "string" ? (<span>{label}</span>) : label;
 		const header = (<div className="properties-vt-label-tip-icon">

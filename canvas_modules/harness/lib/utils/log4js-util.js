@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-"use strict";
 
 // Modules
 
-const log4js = require("log4js");
-
-// const envUtil = require("./env-util");
-// const constants = require("../constants");
+import log4js from "log4js";
 
 // Globals
 
 const RELOAD_INTERVAL = 300; // 5 mins
 const LAYOUT_PATTERN = "[%d] [%[%-5p%]] [%-16c] %m";
 
-// Public Methods ------------------------------------------------------------->
+// Public Methods ------------------------------------------------------------>
 
-module.exports.init = _init;
-module.exports.getRequestLogger = _getRequestLogger;
-
-// Private Methods ------------------------------------------------------------>
-
-function _init() {
+function init() {
 	const appenders = {
 		appenders: {
 			out: {
@@ -52,9 +43,15 @@ function _init() {
 	});
 }
 
-function _getRequestLogger() {
+function getRequestLogger() {
 	return log4js.connectLogger(log4js.getLogger("incoming-request"), {
 		format: "[:status] :method :url (:response-time ms)",
 		level: log4js.levels.TRACE
 	});
 }
+
+
+export default {
+	init,
+	getRequestLogger
+};

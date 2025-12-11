@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 /* global FileReader: true */
 /* eslint no-undef: "error" */
-/* eslint-disable complexity */
 
 import React from "react";
 import { Link } from "react-router-dom";
@@ -121,7 +120,7 @@ export default class SidePanelProperties extends React.Component {
 		};
 	}
 
-	componentDidMount() { // eslint-disable-line camelcase, react/sort-comp
+	componentDidMount() {
 		const that = this;
 		FormsService.getFiles(PARAMETER_DEFS)
 			.then(function(res) {

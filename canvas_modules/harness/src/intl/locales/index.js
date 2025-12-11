@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,30 @@
  * limitations under the License.
  */
 
-const en = require("./en.json");
-const eo = require("./eo.json");
-const de = require("./de.json");
-const es = require("./es.json");
-const fr = require("./fr.json");
-const itIT = require("./it.json");
-const ja = require("./ja.json");
-const zhTW = require("./zh-TW.json");
-const zhCN = require("./zh-CN.json");
-const ko = require("./ko.json");
-const sv = require("./sv.json");
+import de from "./de.json";
+import en from "./en.json";
+import es from "./es.json";
+import fr from "./fr.json";
+import itIT from "./it.json";
+import ja from "./ja.json";
+import ptBR from "./pt-BR.json";
+import zhTW from "./zh-TW.json";
+import zhCN from "./zh-CN.json";
+import eo from "./eo.json";
+import ko from "./ko.json";
+import sv from "./sv.json";
 
-module.exports = {
+export default {
 	"de": de,
 	"en": en,
+	"eo": eo,
 	"es": es,
 	"fr": fr,
 	"it": itIT,
 	"ja": ja,
-	"zh-TW": zhTW,
-	"zh-CN": zhCN,
-	"eo": eo,
 	"ko": ko,
-	"sv": sv
+	"pt-BR": ptBR,
+	"sv": sv,
+	"zh-CN": zhCN,
+	"zh-TW": zhTW
 };

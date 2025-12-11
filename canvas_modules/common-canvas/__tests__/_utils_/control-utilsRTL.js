@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const { fireEvent } = require("@testing-library/react");
+import { fireEvent } from "@testing-library/react";
 
 // Retrieve the dropdown items from a non-filterable dropdown control
 function getDropdownItems(container, parameterId) {
@@ -26,6 +26,6 @@ function getDropdownItems(container, parameterId) {
 	return dropdownList;
 }
 
-module.exports = {
-	getDropdownItems: getDropdownItems
+export default {
+	getDropdownItems
 };
