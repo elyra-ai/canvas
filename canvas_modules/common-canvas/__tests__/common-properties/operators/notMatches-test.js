@@ -16,11 +16,13 @@
 
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
+import sinon from "sinon";
+import logger from "./../../../utils/logger";
 
-
-describe("validating notMatches operator works correctly", () => {
+describe.only("validating notMatches operator works correctly", () => {
 	const controller = new Controller();
 	const notMatches = controller.getConditionOp("notMatches");
+	let warnSpy;
 
 	function wrapParam(desc) {
 		return { value: desc, control: { controlType: "string" } };
@@ -29,6 +31,13 @@ describe("validating notMatches operator works correctly", () => {
 	beforeEach(() => {
 		controller.setErrorMessages({});
 		controller.setControlStates({});
+		warnSpy = sinon.stub(logger, "warn").callsFake(() => {
+			// no-op
+		});
+	});
+
+	afterEach(() => {
+		warnSpy.restore();
 	});
 
 	it("Test notMatches behaves as expected", () => {

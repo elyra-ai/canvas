@@ -24,17 +24,23 @@ import { IntlProvider } from "react-intl";
 import React from "react";
 import { CommonProperties } from "../../../src/common-properties";
 import sinon from "sinon";
+import logger from "./../../../utils/logger";
 
 describe("custom control renders correctly", () => {
 	let wrapper;
 	let controller;
+	let warnSpy;
 	beforeEach(() => {
+		warnSpy = sinon.stub(logger, "warn").callsFake(() => {
+			// no-op
+		});
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(customControlParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
 
 	afterEach(() => {
+		warnSpy.restore();
 		cleanup();
 	});
 
@@ -138,9 +144,18 @@ describe("custom control renders correctly", () => {
 
 describe("custom control classnames appear correctly", () => {
 	let wrapper;
+	let warnSpy;
 	beforeEach(() => {
+		warnSpy = sinon.stub(logger, "warn").callsFake(() => {
+			// no-op
+		});
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(customControlParamDef);
 		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		warnSpy.restore();
+		cleanup();
 	});
 
 	it("custom control should have custom classname defined", () => {
