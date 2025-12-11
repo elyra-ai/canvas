@@ -3863,8 +3863,10 @@ Here is an example of a textfield listening to three state changes:
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">.</span><span class="nx">op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">op</span><span class="p">;</span>
-<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">.</span><span class="nx">evaluate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">evaluate</span><span class="p">;</span>
+<span class="nx">exports</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">op</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">evaluate</span>
+<span class="p">};</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;evaluate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
