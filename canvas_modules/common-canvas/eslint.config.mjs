@@ -96,7 +96,7 @@ export default [
 	},
 	// d3-zoom-extension
 	{
-		files: [ "src/common-canvas/d3-zoom-extension/**/*.js" ],
+		files: ["src/common-canvas/d3-zoom-extension/**/*.js"],
 		rules: {
 			// Allow snake_case, but only for object properties e.g. myObj.param_name
 			"camelcase": [
@@ -141,7 +141,7 @@ export default [
 	},
 	// src
 	{
-		files: [ "src/**/*.js", "src/**/*.jsx" ],
+		files: ["src/**/*.js", "src/**/*.jsx"],
 		rules: {
 			// Disable strict warning on ES6 Components
 			"sort-imports": 0,

@@ -15,14 +15,14 @@
  */
 
 import React, { ReactNode } from "react";
-import { ParameterDefinitions, ExpressionInfo } from "@elyra/pipeline-schemas/types";
-import {
+import type { ParameterDefinitions, ExpressionInfo } from "@elyra/pipeline-schemas/types/index.d.ts";
+import type {
   CommonPropertiesController,
   PropertyId,
   PropertyMessageDef,
-} from "./common-properties-controller";
+} from "./common-properties-controller.d.ts";
 
-export * from "./common-properties-controller";
+export type * from "./common-properties-controller.d.ts";
 export type {
   ParameterDefinitions,
   ConditionsDefinition,
@@ -61,7 +61,7 @@ export type {
   FieldValueGroupsItemDef,
   ValueDef,
   AdditionalInfoItem
-} from "@elyra/pipeline-schemas/types";
+} from "@elyra/pipeline-schemas/types/index.d.ts";
 
 /**
  * https://elyra-ai.github.io/canvas/04.02-callbacks/#actionhandler
