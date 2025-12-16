@@ -170,8 +170,8 @@ export default class CanvasInHandler {
 		}));
 	}
 
-	static getComments(canvasComents) {
-		return canvasComents.map((canvasComment) =>
+	static getComments(canvasComments) {
+		return canvasComments.map((canvasComment) =>
 			({
 				id: canvasComment.id,
 				class_name: canvasComment.className,

@@ -124,9 +124,9 @@ export default class PipelineOutHandler {
 			newNode.data_asset = ciNode.data_asset;
 		}
 
-		const assocationLinks = this.createAssociationLinks(ciNode, ciLinks);
-		if (!isEmpty(assocationLinks)) {
-			newNode.app_data.ui_data.associations = assocationLinks;
+		const associationLinks = this.createAssociationLinks(ciNode, ciLinks);
+		if (!isEmpty(associationLinks)) {
+			newNode.app_data.ui_data.associations = associationLinks;
 		}
 
 		return newNode;
@@ -189,7 +189,7 @@ export default class PipelineOutHandler {
 		if (decorations) {
 			decorations.forEach((decoration) => {
 				if (!decoration.temporary && !decoration.jsx) {
-					const dec = Object.assign({}, decoration); // This will only copy over set values and ignore undefineds
+					const dec = Object.assign({}, decoration); // This will only copy over set values and ignore undefined values
 					newDecorations.push(dec);
 				}
 			});

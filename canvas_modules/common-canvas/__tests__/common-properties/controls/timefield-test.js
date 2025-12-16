@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import TIMEFIELD_PARAM_DEF from "../../test_resources/paramDefs/timefield_paramDef.json";
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
-const controlItem = <span>"Label"</span>;
+const controlItem = <span>&quot;Label&quot;</span>;
 
 const mockTimefield = jest.fn();
 jest.mock("../../../src/common-properties/controls/timefield",

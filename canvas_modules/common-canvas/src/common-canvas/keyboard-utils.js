@@ -27,6 +27,7 @@ const BACKSPACE_KEY = "Backspace";
 const DELETE_KEY = "Delete";
 const SPACE_KEY = "Space";
 
+const NO_BREAK_SPACE_CHAR_KEY = "\u00A0"; // Can be returned in short cuts for screen readers
 const SPACE_CHAR_KEY = " ";
 const COMMA_CHAR_KEY = ",";
 
@@ -481,7 +482,7 @@ export default class KeyboardUtils {
 
 	// key property can sometimes be set to "Space" (SPACE_KEY) in tests.
 	static isSpaceKey(evt) {
-		return evt.key === SPACE_CHAR_KEY || evt.key === SPACE_KEY;
+		return evt.key === SPACE_CHAR_KEY || evt.key === NO_BREAK_SPACE_CHAR_KEY || evt.key === SPACE_KEY;
 	}
 
 	// Returns true if either the 'Command Key' on Mac or

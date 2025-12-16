@@ -152,7 +152,7 @@ describe("Test create supernode within a supernode with a new node from palette"
 
 	it("Add a node from palette to canvas, Cut node on canvas and paste it inside expanded supernode, " +
 	"Add a port to port link between nodes in supernode, Create a nested supernode, " +
-	"Delete supernode should remove nested subpipelines", function() {
+	"Delete supernode should remove nested sub-pipelines", function() {
 		// Double click Derive node on canvas
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Field Ops");
@@ -215,7 +215,7 @@ describe("Test create supernode within a supernode with a new node from palette"
 		cy.verifyNumberOfNodesInSupernodeNested("Second Supernode", "First Supernode", 5);
 		cy.verifyNumberOfLinksInSupernodeNested("Second Supernode", "First Supernode", 4);
 
-		// Delete supernode should remove nested subpipelines
+		// Delete supernode should remove nested sub-pipelines
 		cy.deleteNodeUsingKeyboard("First Supernode");
 
 		// Verify number of nodes and links in all pipelines
@@ -370,16 +370,16 @@ describe("Test context menu for supernode canvas background doesn't deselect nod
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
 
-	it("Select a node in the supernode and check right click on supernode background doesnot deselect it, " +
-	"Create a comment in the supernode and check right click on supernode background doesnot deselect it", function() {
-		// Select a node in the supernode and check right click on supernode background doesnot deselect it
+	it("Select a node in the supernode and check right click on supernode background does not deselect it, " +
+	"Create a comment in the supernode and check right click on supernode background does not deselect it", function() {
+		// Select a node in the supernode and check right click on supernode background does not deselect it
 		cy.rightClickNode("Supernode");
 		cy.clickOptionFromContextMenu("Expand supernode");
 		cy.getNodeWithLabelInSupernode("Partition", "Supernode").click();
 		cy.rightClickExpandedCanvasBackgroundOfSupernode("Supernode");
 		cy.verifyNumberOfSelectedObjects(1);
 
-		// Create a comment in the supernode and check right click on supernode background doesnot deselect it
+		// Create a comment in the supernode and check right click on supernode background does not deselect it
 		// TODO: cy.ctrlOrCmdClickCommentInSupernode() works on localhost but fails on travis
 		// cy.clickOptionFromContextMenu("New comment");
 		// cy.editTextInCommentInSupernode("", "Hello Canvas in a supernode!", "Supernode");
@@ -413,7 +413,7 @@ describe("Test navigation in and out of a supernode", function() {
 	});
 
 	it("Test clicking expansion icon and 'back to previous' button goes in and out of subflow", function() {
-		// First chect the number of node on main canvas
+		// First check the number of node on main canvas
 		cy.verifyNumberOfNodes(15);
 
 		// Expand supernode and click expansion icon to view sub-flow
@@ -421,20 +421,20 @@ describe("Test navigation in and out of a supernode", function() {
 		cy.clickOptionFromContextMenu("Expand supernode");
 		cy.clickExpansionIconOfSupernode("Supernode");
 
-		// Check the sub-flow is dispayed by counting number of nodes including
+		// Check the sub-flow is displayed by counting number of nodes including
 		// binding nodes.
 		cy.verifyNumberOfNodes(8);
 
 		// Click return to go back to main flow.
 		cy.clickReturnToPreviousButton();
 
-		// Check the main flow is dispayed by counting number of nodes
+		// Check the main flow is displayed by counting number of nodes
 		cy.verifyNumberOfNodes(15);
 
 	});
 
 	it("Test clicking expansion icon and 'primary' breadcrumb button goes in and out of subflow", function() {
-		// First chect the number of node on main canvas
+		// First check the number of node on main canvas
 		cy.verifyNumberOfNodes(15);
 
 		// Expand supernode and click expansion icon to view sub-flow
@@ -442,14 +442,14 @@ describe("Test navigation in and out of a supernode", function() {
 		cy.clickOptionFromContextMenu("Expand supernode");
 		cy.clickExpansionIconOfSupernode("Supernode");
 
-		// Check the sub-flow is dispayed by counting number of nodes including
+		// Check the sub-flow is displayed by counting number of nodes including
 		// binding nodes.
 		cy.verifyNumberOfNodes(8);
 
 		// Click return to go back to main flow.
 		cy.clickBreadcrumb("Primary");
 
-		// Check the main flow is dispayed by counting number of nodes
+		// Check the main flow is displayed by counting number of nodes
 		cy.verifyNumberOfNodes(15);
 
 	});
@@ -464,14 +464,14 @@ describe("Test changes in full-page sub-flow are made successfully", function() 
 	});
 
 	it("Test adding some nodes and a link in full-page sub-flow works OK", function() {
-		// First chect the number of node on main canvas
+		// First check the number of node on main canvas
 		cy.verifyNumberOfNodes(15);
 
 		// Expand supernode and click expansion icon to view sub-flow
 		cy.rightClickNode("Supernode");
 		cy.clickOptionFromContextMenu("Display full page");
 
-		// Check the sub-flow is dispayed by counting number of nodes including
+		// Check the sub-flow is displayed by counting number of nodes including
 		// binding nodes.
 		cy.verifyNumberOfNodes(8);
 		cy.verifyNumberOfLinks(7);
@@ -484,14 +484,14 @@ describe("Test changes in full-page sub-flow are made successfully", function() 
 		cy.linkNodeOutputPortToNodeInputPort("Var. File", "outPort", "Derive", "inPort");
 
 
-		// Check the new nodes in the sub-flow are dispayed OK by counting number of nodes
+		// Check the new nodes in the sub-flow are displayed OK by counting number of nodes
 		cy.verifyNumberOfNodes(10);
 		cy.wait(10);
 		cy.verifyNumberOfLinks(8);
 	});
 
 	it("Test adding a comment and comment link in full-page sub-flow works OK", function() {
-		// First chect the number of node on main canvas
+		// First check the number of node on main canvas
 		cy.verifyNumberOfComments(3);
 		cy.verifyNumberOfCommentLinks(5);
 
@@ -499,7 +499,7 @@ describe("Test changes in full-page sub-flow are made successfully", function() 
 		cy.rightClickNode("Supernode");
 		cy.clickOptionFromContextMenu("Display full page");
 
-		// Check the sub-flow is dispayed by counting number of nodes including
+		// Check the sub-flow is displayed by counting number of nodes including
 		// binding nodes.
 		cy.verifyNumberOfComments(0);
 		cy.verifyNumberOfCommentLinks(0);
@@ -511,7 +511,7 @@ describe("Test changes in full-page sub-flow are made successfully", function() 
 		cy.verifyNumberOfComments(1);
 		cy.verifyNumberOfCommentLinks(1);
 
-		// Check the new comment in the sub-flow is dispayed OK
+		// Check the new comment in the sub-flow is displayed OK
 		cy.verifyNumberOfComments(1);
 	});
 

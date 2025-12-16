@@ -261,11 +261,11 @@ export default class CanvasUtils {
 	}
 
 	// Stops propagation of events and prevents any default behavior from
-	// being executed. evnt can be either a regular event object OR the
+	// being executed. evt can be either a regular event object OR the
 	// d3event object provided by d3.
-	static stopPropagationAndPreventDefault(evnt) {
-		evnt.stopPropagation();
-		evnt.preventDefault();
+	static stopPropagationAndPreventDefault(evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
 	}
 
 	// Returns true if evt passed in is a KeyboardEvent. If evt originates from
@@ -294,7 +294,7 @@ export default class CanvasUtils {
 	// straight line should be drawn from. The line's direction originates from an
 	// arbitrary point (origin) within the rectangle and goes to an arbitrary
 	// point (end) outside the rectangle. The rectangle is described by the
-	// first four paramters. The gap is an additional spacing around the
+	// first four parameters. The gap is an additional spacing around the
 	// rectangle used to separate the start of the line from the
 	// rectangle/node boundary. The origin of the line's direction is described by
 	// originX and originY. The end point of the line is described by endX and endY.
@@ -784,7 +784,7 @@ export default class CanvasUtils {
 		}
 
 		// We don't check if the association link already exists because it makes
-		// sense, for some applications, that multiple connections bewteen nodes are
+		// sense, for some applications, that multiple connections between nodes are
 		// allowed. Uncomment this code if we decide to add a config variable
 		// to allow this in the future.
 		// if (this.assocLinkAlreadyExists(srcNode, trgNode, links)) {
@@ -794,7 +794,7 @@ export default class CanvasUtils {
 		return true;
 	}
 
-	// Note - Uncomment this function if in the future we decide to enfore
+	// Note - Uncomment this function if in the future we decide to enforce
 	// preventing multiple association links to be created by providing a config
 	// variable..
 	// Returns true if an association link already exists between the two nodes
@@ -831,7 +831,7 @@ export default class CanvasUtils {
 		return true;
 	}
 
-	// Returns true if the targt node passed in is available to be linked to the
+	// Returns true if the target node passed in is available to be linked to the
 	// source node and port passed in. srcNode and srcPortId may be undefined if
 	// the call is being made while a detached link is being manipulated.
 	static isTrgNodeAvailable(trgNode, srcNode, srcNodePortId, links) {
@@ -852,7 +852,7 @@ export default class CanvasUtils {
 	}
 
 	// Returns true if a link already exists from the source node and port to
-	// the target node and port passed in given the set of links passd in.
+	// the target node and port passed in given the set of links passed in.
 	static linkAlreadyExists(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
 		let exists = false;
 
@@ -925,8 +925,8 @@ export default class CanvasUtils {
 		});
 
 		const maxCard = this.getMaxCardinality(srcPortId, srcNode.outputs);
-		if (maxCard !== null && // Might be 0! So test explicitley for non null.
-				maxCard !== -1 && // -1 indicates an infinite numder of ports are allowed
+		if (maxCard !== null && // Might be 0! So test explicitly for non null.
+				maxCard !== -1 && // -1 indicates an infinite number of ports are allowed
 				srcCount >= maxCard) {
 			return true;
 		}
@@ -934,7 +934,7 @@ export default class CanvasUtils {
 		return false;
 	}
 
-	// Returns true if the cardinality is maxed out for the taget node and port
+	// Returns true if the cardinality is maxed out for the target node and port
 	// passed in. This means any additional connection would not be allowed
 	// to this target node/port combination.
 	static isTrgCardinalityAtMax(portId, trgNode, links) {
@@ -953,8 +953,8 @@ export default class CanvasUtils {
 		});
 
 		const maxCard = this.getMaxCardinality(trgPortId, trgNode.inputs);
-		if (maxCard !== null && // Might be 0! Yes believe it or not someone does set it to zero. So test explicitley for non null.
-				maxCard !== -1 && // -1 indicates an infinite numder of ports are allowed
+		if (maxCard !== null && // Might be 0! Yes believe it or not someone does set it to zero. So test explicitly for non null.
+				maxCard !== -1 && // -1 indicates an infinite number of ports are allowed
 				trgCount >= maxCard) {
 			return true;
 		}
@@ -1163,7 +1163,7 @@ export default class CanvasUtils {
 				// end coordinates of the lines are inside the selection region or not.
 				// TODO: This approach means any selection region that only touches the
 				// link line will not select the line if it is elbow or curve. If any
-				// host app wants more acurate collision detection between the line and
+				// host app wants more accurate collision detection between the line and
 				// the selection region with these line types, this would need to be
 				// improved, perhaps using a library like this:
 				// https://github.com/thelonious/kld-intersections
@@ -1243,7 +1243,7 @@ export default class CanvasUtils {
 			this.isNode(obj) && obj.layout?.nodeMovable;
 	}
 
-	// Returns true if the node passed in should be resizeable. Nodes are resizabele
+	// Returns true if the node passed in should be resizable. Nodes are resizable
 	// except binding nodes in a sub-flow, if their nodeResizable layout value is true.
 	static isNodeResizable(node, config) {
 		if (!config.enableEditingActions ||
@@ -1260,7 +1260,7 @@ export default class CanvasUtils {
 	// nodeHighlightGap may be 0 or undefined. If it is undefined we use the
 	// nodeHighlightGap in the node's layout.
 	// If allLinks is set to true, we include the start and end coordinates of all
-	// links passed in. If set to false (or is undefined), we only inlcude
+	// links passed in. If set to false (or is undefined), we only include
 	// the unconnected ends of semi-detached or fully-detached links. That is,
 	//  where the link has a srcPos and/or a trgPos field.
 	static getCanvasDimensions(nodes, comments, links, commentHighlightGap, nodeHighlightGap, allLinks) {
@@ -1370,7 +1370,7 @@ export default class CanvasUtils {
 	// Parameters:
 	// d - The object
 	// part - A string of the part of the object to be styled. eg 'body' or 'image'
-	//        This is dependent on the style spec in eiether the 'style' or
+	//        This is dependent on the style spec in either the 'style' or
 	//        'temp_style' property.
 	// type = Either 'hover' or 'default'
 	static getObjectStyle(d, part, type) {
@@ -1402,7 +1402,7 @@ export default class CanvasUtils {
 	}
 
 	// Returns a source position object, with x_pos and y_pos fields, that
-	// decribes where a link line would be drawn from if the link's source node
+	// describes where a link line would be drawn from if the link's source node
 	// did not exist. This is useful when doing operations (such as delete or
 	// cut/copy) that cause semi-detached or fully detached links to be created.
 	static getSrcPos(link, apiPipeline) {
@@ -1438,7 +1438,7 @@ export default class CanvasUtils {
 	}
 
 	// Returns a target position object, with x_pos and y_pos fields, that
-	// decribes where a link line would be drawn from if the link's target node
+	// describes where a link line would be drawn from if the link's target node
 	// did not exist. This is useful when doing operations (such as delete or
 	// cut/copy) that cause semi-detached or fully detached links to be created.
 	static getTrgPos(link, apiPipeline) {
@@ -1548,7 +1548,7 @@ export default class CanvasUtils {
 		}
 	}
 
-	// Returns an object contaiing the start and end positions
+	// Returns an object containing the start and end positions
 	// of any current selection in the domNode passed in. The
 	// DOM node is expected to contain text which is stored in a
 	// set of child nodes that are text objects.
@@ -1617,7 +1617,7 @@ export default class CanvasUtils {
 	}
 
 	// Returns an object containing a CSS field and value that
-	// can be applied to a <div> contining text based on the
+	// can be applied to a <div> containing text based on the
 	// format type and action passed in.
 	static convertFormat(format) {
 		switch (format.type) {
@@ -1887,7 +1887,7 @@ export default class CanvasUtils {
 	}
 
 	// Returns the object passed in with all of the null or
-	// undfined properties removed.
+	// undefined properties removed.
 	static removeNullProperties(obj) {
 		for (const key in obj) {
 			if (obj[key] === null || typeof obj[key] === "undefined") {

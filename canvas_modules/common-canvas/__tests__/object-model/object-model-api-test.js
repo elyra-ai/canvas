@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import pipelineFlowTest1Start from "../test_resources/json/pipelineFlowTest1Star
 import pipelineFlowTest1Expected from "../test_resources/json/pipelineFlowTest1Expected.json";
 import supernodeNestedCanvas from "../../../harness/test_resources/diagrams/supernodeNestedCanvas.json";
 
-import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
+import { VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
 	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK } from "../../src/common-canvas/constants/canvas-constants.js";
 
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
@@ -86,7 +86,6 @@ describe("ObjectModel API handle model OK", () => {
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
-		objectModel.fixedLayout = NONE;
 		objectModel.getAPIPipeline().autoLayout(HORIZONTAL);
 
 		objectModel.getAPIPipeline().moveObjects(moveVarNode);
@@ -342,7 +341,7 @@ describe("ObjectModel API handle model OK", () => {
 		const pipelineID = "153651d6-9b88-423c-b01b-861f12d01489";
 		canvasController.setPipelineFlow(startPipelineFlow);
 
-		// In preparation, add a link ID to an arbitarary link in the flow
+		// In preparation, add a link ID to an arbitrary link in the flow
 		// const apiPipeline = objectModel.getAPIPipeline(pipelineID);
 		// const links = apiPipeline.getLinks();
 		const newLinks = [

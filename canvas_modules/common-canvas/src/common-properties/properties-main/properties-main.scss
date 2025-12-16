@@ -15,7 +15,7 @@
  */
 
 @use "../../carbon.scss";
-@use "./properties-main-widths.scss" as propertiesMainWidths;
+@use "./properties-main-widths.module.scss" as propertiesMainWidths;
 @use "../components/components";
 
 $properties-resize-button-size: carbon.$spacing-06;

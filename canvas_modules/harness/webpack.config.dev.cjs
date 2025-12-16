@@ -20,8 +20,8 @@
 
 const path = require("path");
 const webpack = require("webpack");
-const babelOptions = require("./scripts/babel/babelOptions").babelOptions;
-const constants = require("./lib/constants");
+const babelOptions = require("./scripts/babel/babelOptions.cjs");
+const constants = require("./lib/constants.js");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
@@ -51,9 +51,9 @@ const output = {
 
 const rules = [
 	{
-		test: /\.js(x?)$/,
+		test: /\.js(x?)$/u,
 		loader: "babel-loader",
-		exclude: /node_modules/,
+		exclude: /node_modules/u,
 		options: babelOptions
 	},
 	{
@@ -62,28 +62,40 @@ const rules = [
 		exclude: /node_modules/,
 	},
 	{
-		test: /\.s*css$/,
+		test: /\.m?js$/u, // Apply to .js and .mjs files
+		resolve: {
+			fullySpecified: false // Allows omitting extensions for these files
+		}
+	},
+	{
+		test: /\.s*css$/u,
 		use: [
-			{ loader: "style-loader",
+			{
+				loader: "style-loader",
 				options: {
 					esModule: false
 				}
 			},
-			{ loader: "css-loader",
+			{
+				loader: "css-loader",
 				options: {
 					sourceMap: true,
 					url: false
 				}
 			},
-			{ loader: "postcss-loader",
+			{
+				loader: "postcss-loader",
 				options: {
+					sourceMap: true,
 					postcssOptions: {
-						sourceMap: true,
-						plugins: [require("autoprefixer")]
+						plugins: [
+							require("autoprefixer")
+						]
 					}
 				}
 			},
-			{ loader: "sass-loader",
+			{
+				loader: "sass-loader",
 				options: {
 					sassOptions: {
 						includePaths: [".", "node_modules"]
@@ -93,7 +105,7 @@ const rules = [
 		]
 	},
 	{
-		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
+		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/u,
 		use: [
 			"file-loader?name=graphics/[contenthash].[ext]",
 		],

@@ -120,14 +120,14 @@ class CommonCanvasContextToolbar extends React.Component {
 		// If we have some overflow menu items, we reduce the width by five pixels
 		// which forces the overflow menu and the overflow icon to be shown. We
 		// use 5 pixels because this is how many are needed to make the toolbar
-		// work correcty with different browser magnifications.
+		// work correctly with different browser magnifications.
 		const reduction = overflowMenuItems.length > 0 ? 5 : 0;
 		return buttonsWidth + dividersWidth - reduction;
 	}
 
 	// Removes leading and trailing dividers from the items array and any
 	// remaining places where there are consecutive dividers are reduced to a
-	// single divider. These unecessary dividers may occur because the app's
+	// single divider. These unnecessary dividers may occur because the app's
 	// contextMenuHandler may return an array which result in these being left
 	// in the overflowItems array.
 	removeUnnecessaryDividers(items) {
@@ -250,7 +250,7 @@ class CommonCanvasContextToolbar extends React.Component {
 						containingDivId={this.props.containingDivId}
 						toolbarActionHandler={this.toolbarActionHandler}
 						tooltipDirection={"top"}
-						setInititalFocus
+						setInitialFocus
 						closeToolbarOnEsc
 						closeToolbar={this.closeContextToolbar}
 						size={"sm"}

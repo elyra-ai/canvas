@@ -38,7 +38,7 @@ export default class SvgCanvasLinks {
 
 	// Returns an object containing the x and y coordinates of the start position
 	// of a straight line which extends from the source comment passed in to the
-	// end position which is an x, y cordinate.
+	// end position which is an x, y coordinate.
 	getNewStraightCommentLinkStartPos(srcComment, endPos) {
 		return CanvasUtils.getOuterCoord(
 			srcComment.x_pos,
@@ -238,7 +238,7 @@ export default class SvgCanvasLinks {
 
 	// Returns the vertical "center" position for node to/from which
 	// a link will be drawn. This is different for Straight links
-	// than other types of freeform links. This is becuase Straight
+	// than other types of freeform links. This is because Straight
 	// links are drawn directly towards the center of the node whereas
 	// other freeform link type (Elbow, Curve, Parallax) are drawn to the
 	// edges of the node.
@@ -253,7 +253,7 @@ export default class SvgCanvasLinks {
 
 	// Returns the horizontal "center" position for node to/from which
 	// a link will be drawn. This is different for Straight links
-	// than other types of freeform links. This is becuase Straight
+	// than other types of freeform links. This is because Straight
 	// links are drawn directly towards the center of the node whereas
 	// other freeform link type (Elbow, Curve, Parallax) are drawn to the
 	// edges of the node.
@@ -479,7 +479,7 @@ export default class SvgCanvasLinks {
 	// end ("n", "s", "e" or "w").
 	// It does this by rotating any link which has a source end of "n", "s" or "w"
 	// so that the link line is calculated as if it has a source end of "e". This
-	// entails rotating the coordinates for the boundaries of the source and tareget
+	// entails rotating the coordinates for the boundaries of the source and target
 	// nodes as well as the target direction for the link. After the link elements
 	// have been created, this method rotates then back again to their original
 	// orientation.
@@ -509,7 +509,7 @@ export default class SvgCanvasLinks {
 				topTrg = link.trgNode.x_pos;
 				bottomTrg = link.trgNode.x_pos + link.trgNode.width;
 
-			// Rotate by 180 dgrees
+			// Rotate by 180 degrees
 			} else if (link.srcDir === WEST) {
 				topSrc = -(link.srcObj.y_pos + link.srcObj.height);
 				bottomSrc = -(link.srcObj.y_pos);
@@ -540,7 +540,7 @@ export default class SvgCanvasLinks {
 				bottomSrc = link.x1;
 				bottomTrg = link.x2;
 
-			// Rotate by 180 dgrees
+			// Rotate by 180 degrees
 			} else if (link.srcDir === WEST) {
 				topSrc = -link.y1;
 				topTrg = -link.y2;
@@ -603,7 +603,7 @@ export default class SvgCanvasLinks {
 
 	// Returns a new data object based on the data object passed in with its
 	// x1,y1 and x2,y2 coordinates rotated 90 degrees in the clockwise direction
-	// or 90 degress in the anti-clockwise dirction if the antiClockwise
+	// or 90 degrees in the anti-clockwise direction if the antiClockwise
 	// parameter is set to true.
 	rotateData90Degrees(data, antiClockwise) {
 		const newPoint1 = this.rotatePoint90Degrees(data.x1, data.y1, antiClockwise);
@@ -635,7 +635,7 @@ export default class SvgCanvasLinks {
 	}
 
 	// Returns an object containing x and y coordinate passed in rotated by 90
-	// degrees in the clockwise direction or by 90 degrees anit-clockwise if the
+	// degrees in the clockwise direction or by 90 degrees anti-clockwise if the
 	// antiClockwise parameter is set to true.
 	// https://math.stackexchange.com/questions/1330161/how-to-rotate-points-through-90-degree
 	rotatePoint90Degrees(x, y, antiClockwise) {
@@ -649,7 +649,7 @@ export default class SvgCanvasLinks {
 	// based on the source direction. This allows us to create a link as if it
 	// was drawn from an EAST direction port.
 	getRotatedTrgDir(link) {
-		// Rotate anti-clockwise by 90 dgrees
+		// Rotate anti-clockwise by 90 degrees
 		if (link.srcDir === SOUTH) {
 			switch (link.trgDir) {
 			case SOUTH:
@@ -663,7 +663,7 @@ export default class SvgCanvasLinks {
 				return NORTH;
 			}
 
-		// Rotate clockwise by 90 dgrees
+		// Rotate clockwise by 90 degrees
 		} else if (link.srcDir === NORTH) {
 			switch (link.trgDir) {
 			case SOUTH:

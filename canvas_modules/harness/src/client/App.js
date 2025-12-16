@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import { jsPDF } from "jspdf";
 import * as htmlToImage from "html-to-image";
 
 import { getMessages } from "../intl/intl-utils";
-import * as HarnessBundles from "../intl/locales";
+import HarnessBundles from "../intl/locales";
 import CommandActionsBundles from "@elyra/canvas/locales/command-actions/locales";
 import CommonCanvasBundles from "@elyra/canvas/locales/common-canvas/locales";
 import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales";
@@ -95,11 +95,10 @@ import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
 // Uncomment these and associated code to automatically display a flow and palette.
 // import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
-// import modelerPalette from "../../../harness/test_resources/palettes/modelerPalette.json";
 
 import { Add, AddAlt, SubtractAlt, Api_1 as Api, Chat, ChatOff, ColorPalette, Download, Edit, FlowData, GuiManagement,
 	Help, OpenPanelFilledBottom, Play, Scale, Settings, SelectWindow,
-	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification, Save, Launch, Restart } from "@carbon/react/icons";
+	StopFilledAlt, Subtract, TextScale, TouchInteraction, Notification as NotificationIcon, Save, Launch, Restart } from "@carbon/react/icons";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem, Toggle } from "@carbon/react";
 
@@ -502,7 +501,7 @@ class App extends React.Component {
 		// the scrollable area for categories and nodes.
 		this.paletteHeader = (
 			<div style={{ borderBottom: "1px solid lightgray", height: "fit-content", padding: "12px 50px 12px" }} >
-				<Button kind="tertiary" onClick={() => window.alert("Test button clikced!")}>
+				<Button kind="tertiary" onClick={() => window.alert("Test button clicked!")}>
 					Test Button
 				</Button>
 			</div>
@@ -536,7 +535,7 @@ class App extends React.Component {
 		);
 
 		// Create messages here (not in the render) since that would cause
-		// unnecssary renders inside common-canvas and/or common-properties.
+		// unnecessary renders inside common-canvas and/or common-properties.
 		this.messages = getMessages(this.locale, [
 			CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles,
 			HarnessBundles]); // Allow test harness to override labels
@@ -675,7 +674,7 @@ class App extends React.Component {
 
 	getPropertyDefName(node) {
 		if (node.op) {
-			const foundName = this.availableParamDefs.find((name) => name.startsWith(node.op));
+			const foundName = this.availableParamDefs.find((n) => n.startsWith(node.op));
 			if (foundName) {
 				return {
 					fileName: foundName,
@@ -1305,15 +1304,15 @@ class App extends React.Component {
 
 	log(evt, data) {
 		const now = new Date();
-		const event = {
+		const e = {
 			"timestamp": now.toLocaleString() + " " + now.getMilliseconds(),
 			"event": evt,
 			"data": data
 		};
 
-		this.consoleout.push(event);
+		this.consoleout.push(e);
 
-		// Add consoleoutput to the global document so the test harness can access it
+		// Add console output to the global document so the test harness can access it
 		document.eventLog = this.consoleout;
 
 		this.canvasController.log("-------------------------------");
@@ -1354,8 +1353,8 @@ class App extends React.Component {
 
 		// TODO - Logging causes the entire canvas to be refreshed. This can cause
 		// problems if the click action handler is called while common-canvas is
-		// in the middle of procssing an event. Preferably, common-canvas should be
-		//  fixed to only issue a click action after it has finished all proceesing
+		// in the middle of processing an event. Preferably, common-canvas should be
+		//  fixed to only issue a click action after it has finished all processing
 		// or logging in the test harness should be refactored to not cause the
 		// canvas to refresh.
 		// this.log("clickActionHandler()", source);
@@ -1372,8 +1371,8 @@ class App extends React.Component {
 	extraCanvasClickActionHandler(source) {
 		// TODO - Logging causes the entire canvas to be refreshed. This can cause
 		// problems if the click action handler is called while common-canvas is
-		// in the middle of procssing an event. Preferably, common-canvas should be
-		//  fixed to only issue a click action after it has finished all proceesing
+		// in the middle of processing an event. Preferably, common-canvas should be
+		//  fixed to only issue a click action after it has finished all processing
 		// or logging in the test harness should be refactored to not cause the
 		// canvas to refresh.
 		// this.log("extraCanvasClickActionHandler()", source);
@@ -1461,22 +1460,22 @@ class App extends React.Component {
 		if (data.type === "customButtonIcon") {
 			callbackIcon(<Edit size={32} />);
 		} else if (data.type === "actionButtonIcon") { // handle icons for action button according to the actionId
-			let iconComponenet = null;
+			let iconComponent = null;
 			const actionId = data.buttonId;
 			switch (actionId) {
 			case "iconButton":
-				iconComponenet = Launch;
+				iconComponent = Launch;
 				break;
 			case "increment1":
-				iconComponenet = <Add />;
+				iconComponent = <Add />;
 				break;
 			case "dm-update":
-				iconComponenet = <Restart />;
+				iconComponent = <Restart />;
 				break;
 			default:
-				iconComponenet = null;
+				iconComponent = null;
 			}
-			callbackIcon(iconComponenet);
+			callbackIcon(iconComponent);
 		} else if (data.type === "customDataTypeIcon") { // custom icon from consumer app for custom data type
 			let dataIcon = null;
 			const dataType = data.dataType;
@@ -2415,7 +2414,7 @@ class App extends React.Component {
 					incLabelWithIcon: "after"
 				},
 				{ divider: true },
-				{ action: "toggleNotificationPanel", iconEnabled: (<Notification />) },
+				{ action: "toggleNotificationPanel", iconEnabled: (<NotificationIcon />) },
 				{ divider: true },
 				{ action: "deleteSelectedObjects", label: "Delete" },
 				{ divider: true },
@@ -2428,9 +2427,9 @@ class App extends React.Component {
 			toolbarConfig = {
 				leftBar: [
 					{ action: "before-enabled", incLabelWithIcon: "before", label: "Before - enabled", enable: true, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
-					{ action: "before-disabled", incLabelWithIcon: "before", label: "Before - disbaled", enable: false, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
+					{ action: "before-disabled", incLabelWithIcon: "before", label: "Before - disabled", enable: false, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
 					{ action: "after-enabled", incLabelWithIcon: "after", label: "After - enabled", enable: true, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
-					{ action: "after-disabled", incLabelWithIcon: "after", label: "After - disbaled", enable: false, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
+					{ action: "after-disabled", incLabelWithIcon: "after", label: "After - disabled", enable: false, iconEnabled: (<Edit size={32} />), iconDisabled: (<Edit size={32} />) },
 				],
 				rightBar: [
 					{ divider: true },

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-"use strict";
 // Modules
-const express = require("express");
-
-const getSyntaxCheckController = require("./v1-get-syntax-check-controller");
+import { Router } from "express";
+import { get } from "./v1-get-syntax-check-controller.js";
 
 // Globals
 
-const router = express.Router({
+const router = Router({
 	caseSensitive: true,
 	mergeParams: true
 });
 
 // Public Methods ------------------------------------------------------------->
 
-module.exports = router;
+export default router;
 
 // Private Methods ------------------------------------------------------------>
 
-router.get("/ops", getSyntaxCheckController.get);
+router.get("/ops", get);

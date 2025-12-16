@@ -73,7 +73,7 @@ describe("Test the external supernode/sub-flows support", function() {
 		// Check initial contents were restored
 		checkContentsOfExternalNestedCanvas();
 
-		// Redo the chnanges
+		// Redo the changes
 		cy.clickToolbarRedo(); // Redo: 'Create external supernode'
 		cy.clickToolbarRedo(); // Redo: 'Expand supernode'
 
@@ -105,7 +105,7 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.clickEllipsisIconOfSupernode("Supernode");
 		cy.clickOptionFromContextMenu("Convert local to external");
 
-		// The flow has 7 pipelines but now after converion to external 6 of them
+		// The flow has 7 pipelines but now after conversion to external 6 of them
 		// are external (which are the two that are in a different pipeline flow plus)
 		// 4 that were converted).
 		cy.verifyNumberOfPipelines(7);
@@ -124,7 +124,7 @@ describe("Test the external supernode/sub-flows support", function() {
 
 
 	it("Test opening and loading a sub-flow pipeline in an external pipeline flow using expand in place", function() {
-		// Open a flow that referencs an external subflow
+		// Open a flow that references an external subflow
 		cy.openCanvasDefinition("externalMainCanvas.json");
 
 		cy.clickNode("Super node");
@@ -149,7 +149,7 @@ describe("Test the external supernode/sub-flows support", function() {
 	});
 
 	it("Test converting an external supernode to local after opening/loading the flow 'in-place'", function() {
-		// Open a flow that referencs an external subflow
+		// Open a flow that references an external subflow
 		cy.openCanvasDefinition("externalMainCanvas.json");
 
 		cy.clickNode("Super node");
@@ -222,7 +222,7 @@ describe("Test the external supernode/sub-flows support", function() {
 	});
 
 	it("Test converting an external supernode to local before opening/loading the flow 'in-place'", function() {
-		// Open a flow that referencs an external subflow
+		// Open a flow that references an external subflow
 		cy.openCanvasDefinition("externalMainCanvas.json");
 		testForExternalCollapse(1, 0);
 
@@ -276,7 +276,7 @@ describe("Test the external supernode/sub-flows support", function() {
 
 	it("Test opening and returning to another flow doesn't leave external flows behind " +
 		"causing an error", function() {
-		// Open a flow that referencs an external subflow
+		// Open a flow that references an external subflow
 		cy.openCanvasDefinition("externalMainCanvas.json");
 
 		cy.clickNode("Super node");
@@ -318,7 +318,7 @@ describe("Test the external supernode/sub-flows support", function() {
 
 	it("Test opening a flow with an expanded external supernode loads the external pipeline " +
 		"and displays it", function() {
-		// Open a flow that referencs an external subflow
+		// Open a flow that references an external subflow
 		cy.openCanvasDefinition("externalMainCanvasExpanded.json");
 
 		// When the canvas is displayed common-canvas should load the external
@@ -337,7 +337,7 @@ describe("Test the external supernode/sub-flows support", function() {
 	});
 
 	it("Test deleting (and undo/redo) of an external supernode", function() {
-		// Open a flow that referencs an external subflow
+		// Open a flow that references an external subflow
 		cy.openCanvasDefinition("externalMainCanvas.json");
 		testForExternalMainCanvas();
 
@@ -355,7 +355,7 @@ describe("Test the external supernode/sub-flows support", function() {
 	});
 
 	it("Test deleting (and undo/redo) of an expanded external supernode", function() {
-		// Open a flow that referencs an external subflow
+		// Open a flow that references an external subflow
 		cy.openCanvasDefinition("externalMainCanvasExpanded.json");
 		testForExternalMainCanvasExpanded();
 
@@ -374,7 +374,7 @@ describe("Test the external supernode/sub-flows support", function() {
 	});
 
 	it("Test deleting (and undo/redo) of a supernode with nested external supernode", function() {
-		// Open a flow that referencs an external subflow
+		// Open a flow that references an external subflow
 		cy.openCanvasDefinition("externalNestedCanvas.json");
 		testForExternalNestedCanvas();
 
@@ -399,7 +399,7 @@ describe("Test navigate into and out of an external sub-flow inside a sub-flow",
 		cy.openCanvasDefinition("externalMainCanvasExpanded.json");
 	});
 
-	it("Test navigaton using the expansion icon for the inner sub-flow", function() {
+	it("Test navigation using the expansion icon for the inner sub-flow", function() {
 		cy.verifyNumberOfNodes(5);
 		cy.verifyNumberOfNodesInSubFlow(5);
 		cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
@@ -408,7 +408,7 @@ describe("Test navigate into and out of an external sub-flow inside a sub-flow",
 		testBreadcrumbNavigationForExternalMainCanvasExpanded();
 	});
 
-	it("Test navigaton using the ellipsis icon for the inner sub-flow", function() {
+	it("Test navigation using the ellipsis icon for the inner sub-flow", function() {
 		cy.verifyNumberOfNodes(5);
 		cy.verifyNumberOfNodesInSubFlow(5);
 		cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
@@ -456,7 +456,7 @@ describe("Test copy and paste with external pipeline flows", function() {
 		// Expand the copied Supernode
 		cy.rightClickNode("Super node");
 		cy.clickOptionFromContextMenu("Expand supernode");
-		testForExternalMainCanvasCopiedSupernodExpanded();
+		testForExternalMainCanvasCopiedSupernodeExpanded();
 	});
 
 	it("Test copy and paste of expanded external supernode]", function() {
@@ -490,7 +490,7 @@ describe("Test copy and paste with external pipeline flows", function() {
 
 	it("Test conversion to local of copied expanded external supernode]", function() {
 
-		// Thse steps same as tst case above so if that passed then these should be
+		// These steps same as tst case above so if that passed then these should be
 		// OK.
 		cy.openCanvasDefinition("externalMainCanvasExpanded.json");
 		cy.hoverOverNode("Super node");
@@ -502,7 +502,7 @@ describe("Test copy and paste with external pipeline flows", function() {
 		cy.rightClickToDisplayContextMenu(60, 450);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		// Chck everything is OK before converting to local
+		// Check everything is OK before converting to local
 		testForExternalMainCanvasExpandedBeforeConvertToLocal();
 
 		// Convert copied Supernode to Local
@@ -528,15 +528,15 @@ describe("Test copy and paste with external pipeline flows", function() {
 		cy.clickToolbarUndo();
 		testForExternalMainCanvasExpandedAfterConvertToLocal();
 
-		// Undo the convertion of copied Supernode
+		// Undo the conversion of copied Supernode
 		cy.clickToolbarUndo();
 		testForExternalMainCanvasExpandedBeforeConvertToLocal();
 
-		// Redo the convertion of copied Supernode
+		// Redo the conversion of copied Supernode
 		cy.clickToolbarRedo();
 		testForExternalMainCanvasExpandedAfterConvertToLocal();
 
-		// Redo the convertion of copied Supernode
+		// Redo the conversion of copied Supernode
 		cy.clickToolbarRedo();
 		testForExternalMainCanvasExpandedAfterConvertToLocal2();
 	});
@@ -702,7 +702,7 @@ function testForExternalMainCanvasCopiedSupernode() {
 	cy.verifyNumberOfExternalPipelineFlows(0);
 }
 
-function testForExternalMainCanvasCopiedSupernodExpanded() {
+function testForExternalMainCanvasCopiedSupernodeExpanded() {
 	cy.verifyNumberOfNodes(6);
 	cy.verifyNumberOfPortDataLinks(4);
 	cy.verifyNumberOfPipelines(3);

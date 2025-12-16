@@ -175,8 +175,8 @@ class CommonCanvasTextToolbar extends React.Component {
 		const selectedTextColor = (this.getFormatValue("textColor", this.props.formats) || "#000000");
 		const selectedBackgroundColor = (this.getFormatValue("backgroundColor", this.props.formats) || "#FFFFFF");
 
-		// Get the current values (or defaults) for bold/italics/underline/striketrough attributes
-		const boldSeletced = (Boolean)(this.getFormatType("bold", this.props.formats));
+		// Get the current values (or defaults) for bold/italics/underline/strikethrough attributes
+		const boldSelected = (Boolean)(this.getFormatType("bold", this.props.formats));
 		const italicsSelected = (Boolean)(this.getFormatType("italics", this.props.formats));
 		const textDec = this.getFormatValue("textDecoration", this.props.formats);
 		const underlineSelected = textDec?.includes("underline");
@@ -198,7 +198,7 @@ class CommonCanvasTextToolbar extends React.Component {
 					subMenu: subMenuTextSize,
 					closeSubAreaOnClick: true
 				},
-				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold size={32} />), isSelected: boldSeletced },
+				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold size={32} />), isSelected: boldSelected },
 				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic size={32} />), isSelected: italicsSelected },
 				{ action: "underline", label: underlineLabel, enable: true, iconEnabled: (<TextUnderline size={32} />), isSelected: underlineSelected },
 				{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough size={32} />), isSelected: strikethroughSelected },
