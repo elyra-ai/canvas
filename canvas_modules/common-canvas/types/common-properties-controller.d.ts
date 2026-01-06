@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { RecordSchema } from  "@elyra/pipeline-schemas/types";
-import { ParameterDefinitions } from "@elyra/pipeline-schemas/types";
+import type { RecordSchema } from  "@elyra/pipeline-schemas/types/index.d.ts";
+import type { ParameterDefinitions } from "@elyra/pipeline-schemas/types/index.d.ts";
 
 interface BaseProperty {
   /** parameter name defined in operator definition */
