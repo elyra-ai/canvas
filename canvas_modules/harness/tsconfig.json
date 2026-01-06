@@ -7,6 +7,10 @@
     "target": "es5",
     "jsx": "react-jsx", // If using React
     "allowJs": true,
-    "sourceMap": true // For debugging
+    "sourceMap": true, // For debugging
+    "baseUrl": ".",
+    "paths": {
+      "common-canvas": ["./src/common-canvas-dev.js"]
+    }
   }
 }
