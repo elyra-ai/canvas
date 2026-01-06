@@ -2,12 +2,13 @@
   "compilerOptions": {
     "outDir": "./dist/",
     "noImplicitAny": true,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "target": "es5",
-    "jsx": "react-jsx", // If using React
+    "jsx": "react-jsx",
     "allowJs": true,
-    "sourceMap": true, // For debugging
+    "sourceMap": true,
+    "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
       "common-canvas": ["./src/common-canvas-dev.js"]
