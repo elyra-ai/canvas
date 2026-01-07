@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+import React, { useMemo } from "react";
 import { IntlProvider } from "react-intl";
-import { CommonCanvas, CanvasController } from "@elyra/canvas";
-import { useMemo } from "react";
+// Note use "@elyra/canvas" instead of "common-canvas" here, if you are importing from the NPM module.
+import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import { Theme } from "@carbon/react";
 
 import CarbonPalette from "../../test_resources/palettes/carbonPalette.json" with { type: "json" };
