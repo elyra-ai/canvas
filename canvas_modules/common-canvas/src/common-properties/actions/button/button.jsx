@@ -131,7 +131,7 @@ class ButtonAction extends React.Component {
 			display = (<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				direction={this.props.action.data.tooltipDirection || "bottom"}
+				direction={this.props.action.data?.tooltipDirection || "bottom"}
 				className="properties-tooltips"
 				disable={disabled}
 			>
