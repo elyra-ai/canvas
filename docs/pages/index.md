@@ -28,6 +28,18 @@ multiple properties windows - for when you have a multitude of node types each w
 * Is the mainstay of several IBM products/applications.
 * Is delivered as a package from the [**NPM registry**](https://www.npmjs.com/package/@elyra/canvas)
 
+## Use Cases
+
+Elyra Canvas is ideal for building applications that need visual flow editing capabilities, such as:
+
+* **Data Pipeline Designers** - Create visual interfaces for designing and managing data processing pipelines
+* **Workflow Editors** - Build workflow automation tools where users can visually design business processes
+* **ETL Tool Interfaces** - Develop extract, transform, and load (ETL) tools with drag-and-drop functionality
+* **Machine Learning Pipeline Builders** - Design ML workflows that connect data preparation, model training, and deployment steps
+* **Business Process Modeling Tools** - Create applications for modeling and documenting business processes
+* **Data Integration Platforms** - Build tools for connecting and orchestrating data from multiple sources
+* **Analytics Workflow Designers** - Develop interfaces for creating complex analytical workflows
+
 ## What's in this documentation
 
 The 'Home' and 'Components' tabs give a comprehensive overview of Elyra Canvas features so this is useful for any reader assessing the suitability of Elyra Canvas for their application.  Developers can then jump to the remaining tabs starting with 'Initial Setup' to get common setup such as install done, and then moving on to either the 'Common Canvas' or 'Common Properties' tabs (or both) depending on which component is of interest.
