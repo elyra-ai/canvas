@@ -16,16 +16,16 @@
 
 import React, { ComponentClass, FunctionComponent, ReactNode } from "react";
 
-import {
+import type {
   // Pipeline flow
   NodeDecorationDef,
   // Canvas Info
   CanvasNode,
   CanvasComment,
   CanvasLink
-} from "@elyra/pipeline-schemas/types";
+} from "@elyra/pipeline-schemas/types/index.d.ts";
 
-import {
+import type {
   InternalAction,
   PipelineId,
   CanvasNodeId,
@@ -44,9 +44,12 @@ import {
   ClassName,
   DecorationId,
   ContextMenuEntry,
-  CommentFormat,
-  CanvasController
-} from "./canvas-controller";
+  CommentFormat
+} from "./canvas-controller.d.ts";
+
+import { CanvasController } from "./canvas-controller.js"; // Import the JS and TS
+
+export { CanvasController };
 
 export type {
   // Pipeline flow
@@ -111,9 +114,7 @@ export type {
   CanvasCommentLink,
   CanvasNodeLink,
   CanvasAssociationLink
-} from  "@elyra/pipeline-schemas/types";
-
-export { CanvasController } from "./canvas-controller";
+} from  "@elyra/pipeline-schemas/types/index.d.ts";
 
 export type {
   InternalAction,
@@ -151,7 +152,7 @@ export type {
   ContextMenuDivider,
   ContextMenuItem,
   CommentFormat,
-} from "./canvas-controller";
+} from "./canvas-controller.d.ts";
 
 // These positions enumerations can be used to position elements relative to
 // a node or link. The values here should match those in the JSON schema files.

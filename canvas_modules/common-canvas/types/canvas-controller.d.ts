@@ -15,7 +15,7 @@
  */
 import { ReactNode } from "react";
 
-import {
+import type {
   // Pipeline flow
   PipelineFlowDef,
   PipelineDef,
@@ -44,7 +44,7 @@ import {
   CanvasCommentLink,
   CanvasNodeLink,
   CanvasAssociationLink
-} from "@elyra/pipeline-schemas/types";
+} from "@elyra/pipeline-schemas/types/index.d.ts";
 
 
 /** Existing internal common canvas actions */
