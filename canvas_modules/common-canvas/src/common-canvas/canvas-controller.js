@@ -2020,7 +2020,7 @@ export default class CanvasController {
 
 	// Sets focus on the flow editor canvas background.
 	setFocusOnCanvas() {
-		this.setFocusObject(CANVAS_FOCUS);
+		this.setFocusObject(CANVAS_FOCUS, null, true);
 	}
 
 	// Returns the currently focused object or the string "CanvasFocus".
