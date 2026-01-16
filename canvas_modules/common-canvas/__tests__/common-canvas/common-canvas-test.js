@@ -109,7 +109,7 @@ describe("CommonCanvas renders correctly", () => {
 	it("should render one <CanvasContents/> component", () => {
 		const config = {};
 		const { container } = createCommonCanvas(config, canvasController);
-		expect(within(container).getByRole("main")).to.exist;
+		expect(within(container).getByRole("section")).to.exist;
 		expect(container.querySelectorAll("div.common-canvas-drop-div")).to.have.length(1);
 	});
 
