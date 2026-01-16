@@ -719,7 +719,7 @@ class CanvasContents extends React.Component {
 		const svgCanvasDiv = this.getSVGCanvasDiv();
 
 		return (
-			<main aria-label={this.getLabel("canvas.label")} role="main">
+			<section aria-label={this.getLabel("canvas.label")} aria-description={this.getLabel("canvas.description")} tabIndex={0}>
 				<div
 					id={this.mainCanvasDivId}
 					ref={this.contentsRef}
@@ -737,7 +737,7 @@ class CanvasContents extends React.Component {
 					{textToolbar}
 					{dropZoneCanvas}
 				</div>
-			</main>
+			</section>
 		);
 	}
 }
