@@ -19,7 +19,7 @@ import CanvasController from "../../src/common-canvas/canvas-controller";
 import { createCommonCanvas } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
-import { cleanup, within, waitFor } from "@testing-library/react";
+import { cleanup, waitFor } from "@testing-library/react";
 
 
 describe("CommonCanvas renders correctly", () => {
@@ -109,7 +109,7 @@ describe("CommonCanvas renders correctly", () => {
 	it("should render one <CanvasContents/> component", () => {
 		const config = {};
 		const { container } = createCommonCanvas(config, canvasController);
-		expect(within(container).getByRole("section")).to.exist;
+		expect(container.querySelector("section")).to.exist;
 		expect(container.querySelectorAll("div.common-canvas-drop-div")).to.have.length(1);
 	});
 
@@ -243,3 +243,4 @@ describe("CommonCanvas renders correctly", () => {
 		expect(editActionHandler.called).to.be.false;
 	});
 });
+
