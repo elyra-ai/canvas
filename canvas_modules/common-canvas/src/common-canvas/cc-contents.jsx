@@ -719,7 +719,7 @@ class CanvasContents extends React.Component {
 		const svgCanvasDiv = this.getSVGCanvasDiv();
 
 		return (
-			<section aria-label={this.getLabel("canvas.label")} aria-description={this.getLabel("canvas.description")} tabIndex={0}>
+			<section aria-label={this.getLabel("canvas.label")} aria-description={this.getLabel("canvas.description")}>
 				<div
 					id={this.mainCanvasDivId}
 					ref={this.contentsRef}
