@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Elyra Authors
+ * Copyright 2023-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import { DatePicker, DatePickerInput } from "@carbon/react";
 import classNames from "classnames";
 
 import ValidationMessage from "../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import * as ControlUtils from "../../util/control-utils";
 import { getFormattedDate, getISODate } from "../../util/date-utils";
 import { STATES, DATEPICKER_TYPE } from "../../constants/constants.js";
@@ -70,7 +71,7 @@ class DatepickerControl extends React.Component {
 		}
 		const helperText = this.props.controller.getResource(`${this.props.control.name}.helper`, null);
 		const className = classNames("properties-datepicker", "properties-input-control", { "hide": hidden },
-			this.props.messageInfo ? this.props.messageInfo.type : null);
+			this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 
 		return (
@@ -97,7 +98,7 @@ class DatepickerControl extends React.Component {
 						helperText={(!this.props.tableControl && helperText) || this.props.control.helperText}
 					/>
 				</DatePicker>
-				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} propertyId={this.props.propertyId} />
 			</div>
 		);
 	}

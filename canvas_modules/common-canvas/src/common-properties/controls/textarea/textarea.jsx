@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { TextArea } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES } from "./../../constants/constants.js";
@@ -87,7 +88,7 @@ class TextareaControl extends React.Component {
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 				/>
-				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={""} messageInfo={errorMessage} />
+				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={""} messageInfo={errorMessage} propertyId={this.props.propertyId} />
 			</div>);
 		} else {
 			textArea = (
@@ -129,11 +130,17 @@ class TextareaControl extends React.Component {
 				{textArea}
 			</Tooltip>);
 		}
-		const className = classNames("properties-textarea", { "hide": hidden }, this.props.messageInfo ? this.props.messageInfo.type : null);
+		const className = classNames("properties-textarea", { "hide": hidden },
+			this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				{display}
-				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={this.props.state} messageInfo={this.props.messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl}
+					tableOnly={!showValidationMessage}
+					state={this.props.state}
+					messageInfo={this.props.messageInfo}
+					propertyId={this.props.propertyId}
+				/>
 			</div>
 
 		);
