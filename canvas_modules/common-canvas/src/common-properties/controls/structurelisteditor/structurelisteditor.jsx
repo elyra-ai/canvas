@@ -59,7 +59,7 @@ class StructurelisteditorControl extends AbstractTable {
 			<div className={tableClassName}>
 				{table}
 			</div>
-			<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
+			<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} propertyId={this.props.propertyId} />
 		</div>);
 
 		const onPanelContainer = this.getOnPanelContainer(this.props.selectedRows);

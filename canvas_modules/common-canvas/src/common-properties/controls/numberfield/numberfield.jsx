@@ -21,6 +21,7 @@ import { NumberInput, Button } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
+import { doesErrorMessageApplyToCell } from "../../ui-conditions/validation-utils.js";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
 import { ControlType } from "./../../constants/form-constants";
@@ -170,7 +171,7 @@ class NumberfieldControl extends React.Component {
 			"properties-numberfield",
 			{ "numberfield-with-number-generator": has(this.props.control, "label.numberGenerator") ? this.props.control.label.numberGenerator : null },
 			{ "hide": hidden },
-			this.props.messageInfo ? this.props.messageInfo.type : null
+			this.props.messageInfo && doesErrorMessageApplyToCell(this.props.propertyId, this.props.messageInfo) ? this.props.messageInfo.type : null
 		);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
@@ -195,7 +196,7 @@ class NumberfieldControl extends React.Component {
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 				/>
 				{numberGenerator}
-				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} propertyId={this.props.propertyId} />
 			</div>
 		);
 	}
