@@ -11,7 +11,7 @@
       "types": "./types/index.d.ts"
     },
     "./src/*": "./src/*",
-    "./locales/*": "./locales/*",
+    "./locales/*/locales": "./locales/*/locales/index.js",
     "./package.json": "./package.json"
   },
   "homepage": "https://elyra-ai.github.io/canvas/",
