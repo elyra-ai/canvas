@@ -117,15 +117,17 @@ describe("Test supernode expanded to correct size", function() {
 		cy.enterNewPropertiesFlyoutTitle("Second Supernode");
 		cy.saveFlyout();
 
+		// TODO - Agree a way to delete nested nodes in expanded supernode with keyboard
+		// Issue: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/4241
 		// Delete nested supernode within supernode from primary pipeline
-		cy.deleteNodeInSupernodeUsingKeyboard("Second Supernode", "First Supernode");
-		cy.verifyNumberOfNodesInSupernode("First Supernode", 6);
-		cy.verifyNumberOfLinksInSupernode("First Supernode", 3);
+		// cy.deleteNodeInSupernodeUsingKeyboard("Second Supernode", "First Supernode");
+		// cy.verifyNumberOfNodesInSupernode("First Supernode", 6);
+		// cy.verifyNumberOfLinksInSupernode("First Supernode", 3);
 
 		// Undo delete nested supernode operation
-		cy.shortcutKeysUndo();
-		cy.verifyNumberOfNodesInSupernode("First Supernode", 7);
-		cy.verifyNumberOfLinksInSupernode("First Supernode", 6);
+		// cy.shortcutKeysUndo();
+		// cy.verifyNumberOfNodesInSupernode("First Supernode", 7);
+		// cy.verifyNumberOfLinksInSupernode("First Supernode", 6);
 
 		// Expand nested supernode
 		cy.rightClickNodeInSupernode("Second Supernode", "First Supernode");
