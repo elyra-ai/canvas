@@ -2395,7 +2395,7 @@ export default class SVGCanvasRenderer {
 							this.canvasController.autoSelectFocusObj(() =>
 								this.dragNewLinkUtils.createNewLinkFromSelections(),
 							true, // true - "augment" the selection
-							true); // true - always do the auto-select (regardless of how enableDragWithSelect is set)
+							true); // true - always do the auto-select (regardless of how enableDragWithoutSelect is set)
 						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
