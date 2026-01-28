@@ -16,7 +16,6 @@
 
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import SVG from "react-inlinesvg";
 
 import { CardNode, CardNodeColumn, CardNodeTitle, CardNodeSubtitle } from "@carbon/charts-react";
 import { IMAGE_STYLES } from "./react-nodes-carbon-constants";
@@ -66,7 +65,7 @@ const CardNodeWrapper = ({ nodeData, pipelineData, canvasController }) => {
 		<div className={className} ref={divRef}>
 			<CardNode color={color}>
 				<CardNodeColumn>
-					<SVG src={imageOverride} style={IMAGE_STYLES} />
+					<img src={imageOverride} style={IMAGE_STYLES} alt={imageOverride} />
 				</CardNodeColumn>
 				<CardNodeColumn>
 					<CardNodeTitle>{label}</CardNodeTitle>

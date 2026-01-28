@@ -16,7 +16,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import SVG from "react-inlinesvg";
 
 import { ShapeNode } from "@carbon/charts-react";
 import { IMAGE_STYLES } from "./react-nodes-carbon-constants";
@@ -30,7 +29,7 @@ const ShapeNodeWrapper = ({ nodeData }) => {
 				title={nodeData.label}
 				shape={shape}
 				size="28px"
-				renderIcon={<SVG src={nodeData.image} style={IMAGE_STYLES} />}
+				renderIcon={<img src={nodeData.image} style={IMAGE_STYLES} alt={nodeData.image} />}
 			/>
 		</div>
 	);
