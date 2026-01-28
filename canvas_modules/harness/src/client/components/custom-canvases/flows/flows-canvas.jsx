@@ -26,7 +26,7 @@ import FlowsProperties from "./flows-properties";
 
 const FlowsCanvas = (props) => {
 
-	const propertiesRef = React.createRef();
+	const propertiesRef = React.useRef(null);
 
 	const canvasController = React.useMemo(() => {
 		const instance = new CanvasController();

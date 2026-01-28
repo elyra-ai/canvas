@@ -23,7 +23,7 @@ import { IMAGE_STYLES } from "./react-nodes-carbon-constants";
 
 const CardNodeWrapper = ({ nodeData, pipelineData, canvasController }) => {
 
-	const divRef = React.createRef();
+	const divRef = React.useRef(null);
 
 	const { label, description, op, type, image } = nodeData;
 	const { color, shape } = nodeData?.app_data?.react_nodes_data || {};
@@ -40,6 +40,9 @@ const CardNodeWrapper = ({ nodeData, pipelineData, canvasController }) => {
 
 
 	useEffect(() => {
+		// Sets the node size (which will set the containing foreignObject size) based on display size
+		// of the Card Wrapper. A slight pause is required to allow the Card Wrapper contents to resolve
+		// to their ultimate display size.
 		const setNodeSize = () => {
 			setTimeout(() => {
 				const node = canvasController.getNode(nodeData.id, pipelineData.id);
