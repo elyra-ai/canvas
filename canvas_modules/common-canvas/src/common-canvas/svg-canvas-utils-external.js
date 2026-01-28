@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 Elyra Authors
+ * Copyright 2023-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,8 +66,9 @@ export default class SvgCanvasExternal {
 			}
 			container.ccExtRoot.render(jsx);
 
-		// Prior to React v18 we use ReatDOM.render
+		// Prior to React v18 we use ReactDOM.render
 		} else {
+			// eslint-disable-next-line react/no-deprecated
 			ReactDOM.render(jsx, container);
 		}
 	}
@@ -87,8 +88,9 @@ export default class SvgCanvasExternal {
 				container.ccExtRoot = null;
 			});
 
-		// Prior to React v18 we use ReatDOM.unmountComponentAtNode
+		// Prior to React v18 we use ReactDOM.unmountComponentAtNode
 		} else {
+			// eslint-disable-next-line react/no-deprecated
 			ReactDOM.unmountComponentAtNode(foreignObjects[i]);
 		}
 	}

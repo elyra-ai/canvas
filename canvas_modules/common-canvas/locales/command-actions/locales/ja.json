@@ -25,7 +25,7 @@
   "action.deleteNodesCommentsLinks": "{nodes_count, plural, other {# nodes}}、{comments_count, plural, other {# comments}}、および {links_count, plural, other {# links}} の削除",
   "action.deleteNodesComments": "{nodes_count, plural, other {# nodes}} および {comments_count, plural, other {# comments}} の削除",
   "action.disconnectObjects": "オブジェクトの切断",
-  "action.displayPreviousPipeline": "前のパイプラインを表示",
+  "action.displayPreviousPipeline": "前のパイプラインを表示する",
   "action.displaySubPipeline": "スーパーノードのページ全体を表示",
   "action.editComment": "コメントの編集",
   "action.editLinkDecorationLabel": "リンク装飾ラベルの編集",

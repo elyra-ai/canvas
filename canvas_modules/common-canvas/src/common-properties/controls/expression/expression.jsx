@@ -224,7 +224,7 @@ class ExpressionControl extends React.Component {
 			{ tag: tags.meta, class: "cm-meta" }
 		]);
 
-		const linterExtension = linter(jsonParseLinter());
+		const linterExtension = this.props.control.language === "json" ? linter(jsonParseLinter()) : [];
 
 		this.editor = new EditorView({
 			doc: this.props.value,

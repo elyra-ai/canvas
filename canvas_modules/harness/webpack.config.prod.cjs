@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint max-len: 0*/
 /* eslint global-require:0 */
 "use strict";
 
@@ -20,60 +21,60 @@
 
 const path = require("path");
 const webpack = require("webpack");
-const babelOptions = require("./scripts/babel/babelOptions").babelOptions;
-const constants = require("./lib/constants");
+const babelOptions = require("./scripts/babel/babelOptions.cjs");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const constants = require("./lib/constants.js");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-
-// Globals
-
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 // Entry & Output files ------------------------------------------------------------>
 
-const entry = [
-	"webpack-hot-middleware/client",
-	"@babel/polyfill",
-	"./src/client/index.js",
-	"../common-canvas/src/index.scss",
-	"./assets/styles/harness.scss"
-];
-
+const entry = {
+	harness: ["@babel/polyfill", "./src/client/index.js"],
+	vendor: ["react", "react-dom", "react-intl", "intl-messageformat"]
+};
 
 const output = {
 	path: path.join(__dirname, ".build"),
 	publicPath: constants.APP_PATH,
-	filename: "js/canvasharness.js",
-	chunkFilename: "js/canvasharness.chunk.[id].js",
-	sourceMapFilename: "[file].map",
-	devtoolModuleFilenameTemplate: "[resource]",
-	pathinfo: true
+	filename: "js/[name].[contenthash].js",
+	chunkFilename: "js/chunk.[name].[id].[contenthash].js"
 };
 
 
+// Loaders ------------------------------------------------------------>
+
 const rules = [
 	{
-		test: /\.js(x?)$/,
+		test: /\.js(x?)$/u,
 		loader: "babel-loader",
-		exclude: /node_modules/,
+		exclude: (/node_modules|common-canvas/u),
 		options: babelOptions
+	},
+	{
+		test: /\.tsx?$/, // Matches .ts and .tsx files
+		use: "ts-loader",
+		exclude: /node_modules/,
+	},
+	{
+		test: /\.m?js$/u, // Apply to .js and .mjs files
+		resolve: {
+			fullySpecified: false // Allows omitting extensions for these files
+		}
 	},
 	{
 		test: /\.s*css$/,
 		use: [
-			{ loader: "style-loader",
-				options: {
-					esModule: false
-				}
+			{
+				loader: MiniCssExtractPlugin.loader,
 			},
 			{ loader: "css-loader",
 				options: {
-					sourceMap: true,
 					url: false
 				}
 			},
 			{ loader: "postcss-loader",
 				options: {
 					postcssOptions: {
-						sourceMap: true,
 						plugins: [require("autoprefixer")]
 					}
 				}
@@ -88,39 +89,39 @@ const rules = [
 		]
 	},
 	{
-		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
+		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/u,
 		use: [
-			"file-loader?name=graphics/[contenthash].[ext]",
-		],
+			"file-loader?name=graphics/[contenthash].[ext]"
+		]
 	}
 ];
 
-// Custom functions (for plugins) ------------------------------------->
-
 
 // Plugins ------------------------------------------------------------>
-
 const plugins = [
 	new webpack.NoEmitOnErrorsPlugin(),
+	new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
+	new MiniCssExtractPlugin({
+		filename: "harness.min.css"
+	}),
 	// Generates an `index.html` file with the <script> injected.
 	new HtmlWebpackPlugin({
 		inject: true,
-		template: "./index-dev.html"
-	}),
-	new webpack.HotModuleReplacementPlugin(),
-	// generates the source maps used for debugging.  Used instead of `devtool` option
-	new webpack.SourceMapDevToolPlugin({
-		module: true,
-		columns: false
-	}),
-	new ReactRefreshWebpackPlugin(),
+		template: "./index.html"
+	})
 ];
+
+if (process.env.BUNDLE_REPORT) {
+	plugins.push(new BundleAnalyzerPlugin(
+		{ openAnalyzer: true, generateStatsFile: true, analyzerPort: 9999, defaultSizes: "stat" }));
+}
 
 // Exports ------------------------------------------------------------>
 
+
 module.exports = {
-	mode: "development",
-	devtool: false,
+	mode: "production",
+	context: __dirname,
 	entry: entry,
 	resolve: {
 		modules: [
@@ -132,9 +133,9 @@ module.exports = {
 			"react-dom": "node_modules/react-dom",
 			"react-redux": "node_modules/react-redux",
 			"react-intl": "node_modules/react-intl",
-			"common-canvas": "src/common-canvas-dev.js"
+			"common-canvas": "src/common-canvas.js",
 		},
-		extensions: [".js", ".jsx", ".json"]
+		extensions: [".js", ".jsx", ".json", ".ts", ".tsx"]
 	},
 	output: output,
 	module: {

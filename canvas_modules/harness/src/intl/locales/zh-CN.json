@@ -4,5 +4,6 @@
   "canvas.emptyLink": "单击此处以观看导览",
   "expression.value.column": "定制值",
   "expression.value.column.description": "从应用程序测试定制描述",
-  "expression.field.column.description": "定制描述"
+  "expression.field.column.description": "定制描述",
+  "fieldPicker.vectorType.label": "定制矢量标签"
 }

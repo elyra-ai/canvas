@@ -25,7 +25,7 @@
   "action.deleteNodesCommentsLinks": "删除 {nodes_count, plural, other {# nodes}}、{comments_count, plural, other {# 条评论}} 和 {links_count, plural, other {# links}}",
   "action.deleteNodesComments": "删除 {nodes_count, plural, other {# nodes}} 和 {comments_count, plural, other {# 条评论}}",
   "action.disconnectObjects": "断开对象的连接",
-  "action.displayPreviousPipeline": "显示上一个管道",
+  "action.displayPreviousPipeline": "显示上一条管道",
   "action.displaySubPipeline": "显示超节点完整页面",
   "action.editComment": "编辑注释",
   "action.editLinkDecorationLabel": "编辑链接装饰标签",

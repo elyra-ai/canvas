@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 
 import React from "react";
 import { IntlProvider } from "react-intl";
-import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
-import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
+import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json" with { type: "json" };
+import ModelerPalette from "../../test_resources/palettes/modelerPalette.json" with { type: "json" };
 // Note use "@elyra/canvas" instead of "common-canvas" here, if you are importing from the NPM module.
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
@@ -67,7 +67,7 @@ class App extends React.Component {
 	}
 
 	render() {
-		// Uncomment the code below to experiement with passing in a custom div
+		// Uncomment the code below to experiment with passing in a custom div
 		// to specify the 'empty canvas flow' content. Provide it in the
 		// emptyCanvasContent in the canvas config object below.
 		// const emptyCanvasDiv = (
@@ -80,7 +80,7 @@ class App extends React.Component {
 		// 		>Click here to take a tour</span>
 		// 	</div>);
 
-		// Uncomment the code below to experiement with passing in a custom div
+		// Uncomment the code below to experiment with passing in a custom div
 		// to specify the 'drop zone' content. Provide it in the dropZoneCanvasContent
 		// in the canvas config object below.
 		// const dropZoneCanvasDiv = (

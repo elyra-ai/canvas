@@ -71,13 +71,13 @@ export default (state = [], action) => {
 
 // Returns true if the 'current' breadcrumb from the breadcrumbs
 // passed in is in the pipelineFlow's set of pipelines.
-const isCurrentBreadcrumbInPipelineFlow = (brdcrumbs, pipelineFlow) => {
+const isCurrentBreadcrumbInPipelineFlow = (breadcrumbs, pipelineFlow) => {
 	if (pipelineFlow &&
 			pipelineFlow.pipelines &&
-			Array.isArray(brdcrumbs) &&
-			brdcrumbs.length > 0 &&
-			brdcrumbs[brdcrumbs.length - 1].pipelineId) {
-		const piId = brdcrumbs[brdcrumbs.length - 1].pipelineId;
+			Array.isArray(breadcrumbs) &&
+			breadcrumbs.length > 0 &&
+			breadcrumbs[breadcrumbs.length - 1].pipelineId) {
+		const piId = breadcrumbs[breadcrumbs.length - 1].pipelineId;
 		const idx = pipelineFlow.pipelines.findIndex((pipeline) => pipeline.id === piId);
 		return idx > -1;
 	}

@@ -37,7 +37,7 @@ import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
 
 import { injectIntl } from "react-intl";
-import styles from "./properties-main-widths.scss";
+import styles from "./properties-main-widths.module.scss";
 
 const FLYOUT_WIDTH_SMALL = parseInt(styles.flyoutWidthSmall, 10);
 const FLYOUT_WIDTH_MEDIUM = parseInt(styles.flyoutWidthMedium, 10);
@@ -113,7 +113,7 @@ class PropertiesMain extends React.Component {
 		this.props.callbacks.setPropertiesHasMounted();
 	}
 
-	UNSAFE_componentWillReceiveProps(newProps) { // eslint-disable-line camelcase, react/sort-comp
+	UNSAFE_componentWillReceiveProps(newProps) {
 		if (this.props.light !== newProps.light) { // set the new light prop in controller
 			this.propertiesController.setLight(newProps.light);
 		}

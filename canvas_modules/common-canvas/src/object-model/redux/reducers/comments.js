@@ -165,8 +165,7 @@ export default (state = [], action) => {
 
 	case "SET_COMMENT_HIGHLIGHT_TEXT":
 		return state.map((comment) => {
-			const idx = action.data.commentIds.indexOf(comment.id);
-			if (idx > -1) {
+			if (!action.data.commentIds || action.data.commentIds.indexOf(comment.id) > -1) {
 				const newComment = { ...comment };
 				if (action.data.highlightText) {
 					newComment.highlightText = action.data.highlightText;

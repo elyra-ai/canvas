@@ -121,7 +121,7 @@ export default class SvgCanvasUtilsComments {
 
 	static processHeaderCommand(text, inStart, inEnd, action) {
 		const start = this.findPrecedingNewLine(text, inStart);
-		const end = this.findSuceedingNewLine(text, inEnd);
+		const end = this.findSucceedingNewLine(text, inEnd);
 
 		const startText = text.slice(0, start);
 		const selectedText = text.slice(start, end);
@@ -247,7 +247,7 @@ export default class SvgCanvasUtilsComments {
 
 	static processTripleBackTicks(text, inStart, inEnd) {
 		const start = this.findPrecedingNewLine(text, inStart);
-		const end = this.findSuceedingNewLine(text, inEnd);
+		const end = this.findSucceedingNewLine(text, inEnd);
 
 		const startText = text.slice(0, start);
 		const selectedText = text.slice(start, end);
@@ -313,7 +313,7 @@ export default class SvgCanvasUtilsComments {
 
 	static isMultiLineMarkdown(text, inStart, inEnd, action) {
 		const start = this.findPrecedingNewLine(text, inStart);
-		const end = this.findSuceedingNewLine(text, inEnd);
+		const end = this.findSucceedingNewLine(text, inEnd);
 		const selectedText = text.slice(start, end);
 
 		const lines = selectedText.split("\n");
@@ -343,7 +343,7 @@ export default class SvgCanvasUtilsComments {
 
 	static removeMultiLineMarkdown(text, inStart, inEnd, action) {
 		const start = this.findPrecedingNewLine(text, inStart);
-		const end = this.findSuceedingNewLine(text, inEnd);
+		const end = this.findSucceedingNewLine(text, inEnd);
 
 		const startText = text.slice(0, start);
 		const selectedText = text.slice(start, end);
@@ -384,7 +384,7 @@ export default class SvgCanvasUtilsComments {
 
 	static addMultiLineMarkdown(text, inStart, inEnd, action) {
 		const start = this.findPrecedingNewLine(text, inStart);
-		const end = this.findSuceedingNewLine(text, inEnd);
+		const end = this.findSucceedingNewLine(text, inEnd);
 
 		const startText = text.slice(0, start);
 		const selectedText = text.slice(start, end);
@@ -442,7 +442,7 @@ export default class SvgCanvasUtilsComments {
 		return preStart;
 	}
 
-	static findSuceedingNewLine(text, end) {
+	static findSucceedingNewLine(text, end) {
 		let sucEnd = end;
 		while (sucEnd < text.length && text[sucEnd] !== "\n") {
 			sucEnd++;
@@ -452,7 +452,7 @@ export default class SvgCanvasUtilsComments {
 
 	static processReturnCommand(text, inStart, inEnd, originalStart, originalEnd) {
 		const start = this.findPrecedingNewLine(text, inStart);
-		const end = this.findSuceedingNewLine(text, inEnd);
+		const end = this.findSucceedingNewLine(text, inEnd);
 
 		const startText = text.slice(0, start);
 		const selectedText = text.slice(start, end);

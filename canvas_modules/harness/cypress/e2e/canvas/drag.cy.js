@@ -67,7 +67,7 @@ describe("Test to see if regular selection and drag behavior works " +
 		cy.verifyCommentIsSelected("The 4 different node types");
 		cy.clickToolbarUndo();
 
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getNodeWithLabel("Super node").click();
 		// Try dragging a node that is not selected -
@@ -85,7 +85,7 @@ describe("Test to see if regular selection and drag behavior works " +
 		cy.verifyNodeTransform("Super node", 300, 350);
 		cy.clickToolbarUndo();
 
-		// TODO -- Fix when autoselect is available.
+		// TODO -- Fix when auto-select is available.
 		// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3760
 		cy.getCommentWithText(
 			"This canvas shows the 4 different node types and three link types: node links, " +
@@ -145,7 +145,7 @@ describe("Test to see if regular selection and drag behavior works " +
 
 		cy.setCanvasConfig({ "selectedEditingActions": false, "selectedInteractionType": "Carbon" });
 
-		// Verify initial positon of Execution Node
+		// Verify initial position of Execution Node
 		cy.verifyNodeTransform("Execution node", 297, 139);
 
 		// Verify initial translation of the canvas
@@ -166,7 +166,7 @@ describe("Test to see if regular selection and drag behavior works " +
 
 		cy.setCanvasConfig({ "selectedEditingActions": false, "selectedInteractionType": "Carbon" });
 
-		// Verify initial positon of Comment
+		// Verify initial position of Comment
 		cy.verifyCommentTransform(
 			"This canvas shows the 4 different node types and three link types: node links, " +
 			"association links and comments links.", 20, 20
@@ -292,8 +292,8 @@ describe("Test to see if selection works with enableDragWithoutSelect set to tru
 
 		// Select 2 nodes and 1 comment
 		cy.clickToolbarUndo();
-		cy.ctrlOrCmdClickNode("Binding (entry) node"); // TDOD - fix these lines see comment above.
-		cy.ctrlOrCmdClickComment("The 4 different node types"); // TDOD - fix these lines see comment above.
+		cy.ctrlOrCmdClickNode("Binding (entry) node"); // TODO - fix these lines see comment above.
+		cy.ctrlOrCmdClickComment("The 4 different node types"); // TODO - fix these lines see comment above.
 
 		// Verify 2 nodes and 1 comment is selected
 		cy.verifyNodeIsSelected("Execution node");

@@ -55,7 +55,7 @@ export default class LinkInputToOutputAction {
 				type: "nodeLink"
 			};
 
-			// If the link doesn't exist, add it to those to be added to the camvas.
+			// If the link doesn't exist, add it to those to be added to the canvas.
 			if (!this.linkExists(link)) {
 				this.newLinks.push(link);
 			}

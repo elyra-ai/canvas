@@ -25,7 +25,7 @@
   "action.deleteNodesCommentsLinks": "Elimina {nodes_count, plural, other {# nodi} one {# nodo} many {# nodi}}, {comments_count, plural, other {# commenti} one {# commento} many {# commenti}} e {links_count, plural, other {# link} one {# link} many {# link}}",
   "action.deleteNodesComments": "Elimina {nodes_count, plural, other {# nodi} one {# nodo} many {# nodi}} e {comments_count, plural, other {# commenti} one {# commento} many {# commenti}}",
   "action.disconnectObjects": "Disconnetti oggetti",
-  "action.displayPreviousPipeline": "Visualizza pipline precedente",
+  "action.displayPreviousPipeline": "Visualizzare la pipeline precedente",
   "action.displaySubPipeline": "Visualizza la pagina completa del supernodo",
   "action.editComment": "Modifica commento",
   "action.editLinkDecorationLabel": "Modifica etichetta di decorazione del link",

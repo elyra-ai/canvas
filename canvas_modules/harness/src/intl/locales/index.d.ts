@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-"use strict";
 
-const babelOptions = {
-	babelrc: false, // required so webpack ignores the .babelrc file used for testing in root of project
-	presets: ["@babel/preset-react", "@babel/preset-env"],
-	plugins: ["lodash", "@babel/plugin-proposal-class-properties", "@babel/plugin-transform-runtime"],
-};
-
-exports.babelOptions = babelOptions;
+declare const messages: Record<string, Record<string, string>>;
+export default messages;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -170,8 +170,8 @@ class CustomDatasetsPanel {
 		CustomDatasetsPanel.datasetsMain.push({ header: outputName, data: [] });
 		CustomDatasetsPanel.datasetsMain.push({ header: mainName, data: [] });
 		for (let idx = 1; idx < this.inputDatasets.length; idx++) {
-			const name = this.inputDatasets[idx].name ? this.inputDatasets[idx].name : "(" + (idx + 1) + ")";
-			CustomDatasetsPanel.datasetsMain.push({ header: name, data: [] });
+			const n = this.inputDatasets[idx].name ? this.inputDatasets[idx].name : "(" + (idx + 1) + ")";
+			CustomDatasetsPanel.datasetsMain.push({ header: n, data: [] });
 		}
 
 		// Iterate the array of name and field objects in the first dataset (the primary),

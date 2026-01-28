@@ -65,7 +65,7 @@ export default class SidePanel extends React.Component {
 		}
 
 		// Return just a div when flyout is closed. The div will allow
-		// the CSS annimation to work.
+		// the CSS animation to work.
 		return (
 			<div className={"harness-app-sidepanel"} />
 		);

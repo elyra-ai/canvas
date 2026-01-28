@@ -18,14 +18,13 @@ import SampleContent from "./sample-content.tsx";
 import allTypesCanvas from "../../harness/test_resources/diagrams/allTypesCanvas.json";
 import modelerPalette from "../../harness/test_resources/palettes/modelerPalette.json";
 
-import {
+import type {
   PipelineFlowDef,
   CanvasNode,
-  CanvasController,
-  CommonCanvas,
-  CommonProperties,
   CommonPropertiesController,
 } from "./index";
+
+import { CommonCanvas, CanvasController, CommonProperties } from "./index.js"; // Import JS and TS
 
 import { expectType } from "tsd";
 

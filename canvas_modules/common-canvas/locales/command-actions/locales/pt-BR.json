@@ -25,7 +25,7 @@
   "action.deleteNodesCommentsLinks": "Excluir {nodes_count, plural, other {# nós} one {# nó} many {# nós}}, {comments_count, plural, other {# comentários} one {# comentário} many {# comentários}} e {links_count, plural, other {# links} one {# link} many {# links}}",
   "action.deleteNodesComments": "Excluir {nodes_count, plural, other {# nós} one {# nó} many {# nós}} e {comments_count, plural, other {# comentários} one {# comentário} many {# comentários}}",
   "action.disconnectObjects": "Desconectar objetos",
-  "action.displayPreviousPipeline": "Exibir pipeline anterior",
+  "action.displayPreviousPipeline": "Exibir o pipeline anterior",
   "action.displaySubPipeline": "Exibir página inteira de supernó",
   "action.editComment": "Editar comentário",
   "action.editLinkDecorationLabel": "Editar rótulo de decoração do link",

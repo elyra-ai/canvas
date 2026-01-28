@@ -126,7 +126,7 @@ export default class PromptCanvas extends React.Component {
 	}
 
 	editActionHandler(data) {
-		if (data.editType === "app_addPropmpt") {
+		if (data.editType === "app_addPrompt") {
 			this.addPromptNode(data.targetObject.id);
 		}
 	}
@@ -137,7 +137,7 @@ export default class PromptCanvas extends React.Component {
 				return [];
 			}
 			defaultMenu.push({
-				action: "app_addPropmpt",
+				action: "app_addPrompt",
 				label: "Add node with prompt",
 				enable: true,
 				toolbarItem: true,

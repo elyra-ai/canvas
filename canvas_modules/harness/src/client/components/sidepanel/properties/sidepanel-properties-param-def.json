@@ -852,7 +852,7 @@
 							"staticRowsPropertyId",
 							"staticRowsIndexes"
 						]
-					},		
+					},
 					{
 						"id": "static-rows-panel",
 						"type": "actionPanel",

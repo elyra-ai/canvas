@@ -28,7 +28,7 @@ class CommonCanvasLeftFlyout extends React.Component {
 	render() {
 		this.logger.log("render");
 
-		let leftFlyout = <div />; // For no content, return empty <div> so grid siziing for parent <div> work correctly.
+		let leftFlyout = <div />; // For no content, return empty <div> so grid sizing for parent <div> work correctly.
 
 		if (this.props.content && this.props.isOpen) {
 			const lfClass = this.props.enableLeftFlyoutUnderToolbar

@@ -53,7 +53,7 @@ import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
-import getContextMenuDefiniton from "./canvas-controller-menu-utils.js";
+import getContextMenuDefinition from "./canvas-controller-menu-utils.js";
 import { get, isEmpty } from "lodash";
 import { CANVAS_FOCUS,
 	SINGLE_CLICK,
@@ -156,6 +156,7 @@ export default class CanvasController {
 		}
 	}
 
+	// cSpell:disable
 	// Converts the config option 'enableHightlightNodeOnNewLinkDrag' (which has
 	// a typo with a 't' in the middle of 'Highlight') if present, to the correct
 	// name.
@@ -167,6 +168,7 @@ export default class CanvasController {
 		}
 		return config;
 	}
+	// cSpell:enable
 
 	getCanvasConfig() {
 		return this.objectModel.getCanvasConfig();
@@ -292,7 +294,7 @@ export default class CanvasController {
 		this.logger.logEndTimer("setPipelineFlow");
 	}
 
-	// Clears the pipleine flow and displays an empty canvas.
+	// Clears the pipeline flow and displays an empty canvas.
 	clearPipelineFlow() {
 		this.objectModel.clearPipelineFlow();
 	}
@@ -327,7 +329,7 @@ export default class CanvasController {
 		return this.objectModel.getCanvasInfo();
 	}
 
-	// Returns the IDs of the ancestor pipleline of the pipeline ID passed in.
+	// Returns the IDs of the ancestor pipeline of the pipeline ID passed in.
 	getAncestorPipelineIds(pipelineId) {
 		return this.objectModel.getAncestorPipelineIds(pipelineId);
 	}
@@ -370,7 +372,7 @@ export default class CanvasController {
 		return this.objectModel.getCurrentPipelineId();
 	}
 
-	// Returns truty if the pipeline is external (that is it is part of an
+	// Returns truthy if the pipeline is external (that is it is part of an
 	// external pipeline flow). Otherwise, return falsy to indicate the pipeline
 	// is local.
 	isPipelineExternal(pipelineId) {
@@ -435,7 +437,7 @@ export default class CanvasController {
 
 	// Sets the loading text of the category. If set to a non-empty string the
 	// category will show an InlineLoading control in the palette category div
-	// with this text as the label. If set to falsey the palette category
+	// with this text as the label. If set to falsy the palette category
 	// will display as normal.
 	setCategoryLoadingText(categoryId, loadingText) {
 		this.objectModel.setCategoryLoadingText(categoryId, loadingText);
@@ -443,7 +445,7 @@ export default class CanvasController {
 
 	// Sets the empty text of the category. If set to a non-empty string and the
 	// category does not have any nodes the palette will show a dummy node with
-	// this text as the displayed text. If set to falsey no dummy node will be displayed.
+	// this text as the displayed text. If set to falsy no dummy node will be displayed.
 	setCategoryEmptyText(categoryId, emptyText) {
 		this.objectModel.setCategoryEmptyText(categoryId, emptyText);
 	}
@@ -739,7 +741,7 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).disconnectObjects(objectIds);
 	}
 
-	// Deletes the object specified by the id in the pipleine specified by
+	// Deletes the object specified by the id in the pipeline specified by
 	// pipeline ID.
 	// @Deprecated Use deleteNode or deleteComment as appropriate instead.
 	deleteObject(id, pipelineId) {
@@ -791,7 +793,7 @@ export default class CanvasController {
 	// Node methods
 	// ---------------------------------------------------------------------------
 
-	// Retuns an array of nodes for the pipeline specified by the pipelineId.
+	// Returns an array of nodes for the pipeline specified by the pipelineId.
 	getNodes(pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodes();
 	}
@@ -841,7 +843,7 @@ export default class CanvasController {
 
 	// Sets the node properties
 	// nodeId - The ID of the node
-	// properties - An object containing properties to be overriden in the node
+	// properties - An object containing properties to be overridden in the node
 	// pipelineId - The ID of the pipeline
 	setNodeProperties(nodeId, properties, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeProperties(nodeId, properties);
@@ -1098,7 +1100,7 @@ export default class CanvasController {
 	}
 
 	// Sets the label, for the node identified, to edit mode, provided the node
-	// label is editable. This allows the user to edite the label text.
+	// label is editable. This allows the user to edit the label text.
 	setNodeLabelEditingMode(nodeId, pipelineId) {
 		if (this.canvasContents) {
 			this.getSVGCanvasD3().setNodeLabelEditingMode(nodeId, pipelineId);
@@ -1209,13 +1211,13 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).deleteComment(commentId);
 	}
 
-	// Adds cutom attributes to a comment
+	// Adds custom attributes to a comment
 	// @Deprecated
 	addCustomAttrToComments(comIds, attrName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).addCustomAttrToComments(comIds, attrName);
 	}
 
-	// Removes cutom attributes from a comment
+	// Removes custom attributes from a comment
 	// @Deprecated
 	removeCustomAttrFromComments(comIds, attrName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).removeCustomAttrFromComments(comIds, attrName);
@@ -1227,7 +1229,7 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getCommentClassName(commentId);
 	}
 
-	// Gets the style spcification for a comment.
+	// Gets the style specification for a comment.
 	// commentId - The ID of the node
 	// temporary - A boolean to indicate if the styles are serialized when
 	//             getPipelineFlow() method is called or not.
@@ -1260,8 +1262,9 @@ export default class CanvasController {
 		return this.objectModel.isHidingComments();
 	}
 
-	// Sets text to be highlighted in the comments identified by the commentIds array passed in.
-	// pipelineId is optional. If highlightText is null or undefined the highlighting text will
+	// Sets text to be highlighted in the comments identified by the commentIds array passed in
+	// or, if set to a falsy value, the highlight text will be applied to all comments. The
+	// pipelineId is optional. If highlightText is a falsy value, the highlighting will
 	// be removed from the comments.
 	setCommentHighlightText(commentIds, highlightText, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setCommentHighlighText(commentIds, highlightText);
@@ -1385,7 +1388,7 @@ export default class CanvasController {
 	 * array in the pipeline specified by pipeline ID. The class name will be
 	 * applied to the links' group (<g>) element in the DOM. To remove any
 	 * previously added classes an empty string can be specified.
-	 * @param linkIds - An arry of link IDs
+	 * @param linkIds - An array of link IDs
 	 * @param newClassName - New class string. Can be a space separated list
 	 *                       of classes or an empty string to remove
 	 *                       previously added classes.
@@ -1446,7 +1449,7 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getLinkStyle(linkId, temporary);
 	}
 
-	// Sets the branch highlighting flag on all links idetified in
+	// Sets the branch highlighting flag on all links identified in
 	// the pipelineLinkIds parameter.
 	setLinksBranchHighlight(pipelineLinkIds) {
 		this.objectModel.setLinksBranchHighlight(pipelineLinkIds);
@@ -1494,8 +1497,8 @@ export default class CanvasController {
 	// Command stack methods
 	// ---------------------------------------------------------------------------
 
-	// This method is deprecated. Applications should use the canvas-contoller
-	// methods to interact with the cmmand stack.
+	// This method is deprecated. Applications should use the canvas-controller
+	// methods to interact with the command stack.
 	getCommandStack() {
 		return this.commandStack;
 	}
@@ -1572,7 +1575,7 @@ export default class CanvasController {
 		return this.getCommandStack().getAllRedoCommands();
 	}
 
-	// Returns a string which is the label that descibes the next undoable
+	// Returns a string which is the label that describes the next undoable
 	// command.
 	getUndoLabel() {
 		if (this.canUndo()) {
@@ -1584,7 +1587,7 @@ export default class CanvasController {
 		return "";
 	}
 
-	// Returns a string which is the label that descibes the next redoable
+	// Returns a string which is the label that describes the next redoable
 	// command.
 	getRedoLabel() {
 		if (this.canRedo()) {
@@ -1620,7 +1623,7 @@ export default class CanvasController {
 		return this.objectModel.getCurrentBreadcrumb();
 	}
 
-	// Creates a breadcrumb from the supernode object and its parent pipleine ID.
+	// Creates a breadcrumb from the supernode object and its parent pipeline ID.
 	createBreadcrumb(supernodeDatum, parentPipelineId) {
 		return this.objectModel.createBreadcrumb(supernodeDatum, parentPipelineId);
 	}
@@ -1827,7 +1830,7 @@ export default class CanvasController {
 
 	// Displays a pipeline (identified by the pipelineId passed in). This must be
 	// one of the pipelines referenced by the current set of breadcrumbs. It
-	// cannot be used to open a new pipeline outside the current set of breadcruumbs.
+	// cannot be used to open a new pipeline outside the current set of breadcrumbs.
 	displaySubPipeline(pipelineId) {
 		const breadcrumbs = this.objectModel.getBreadcrumbs();
 		const index = breadcrumbs.findIndex((b) => b.pipelineId === pipelineId);
@@ -1844,9 +1847,9 @@ export default class CanvasController {
 		}
 	}
 
-	// Displays a pipeline for a supernode (identifid by the supernodeId
-	// parameter) in a parent pipeline (identifid by the pipelineId parameter).
-	// This parent pipeline should be the last of the current set of breadcumbs.
+	// Displays a pipeline for a supernode (identified by the supernodeId
+	// parameter) in a parent pipeline (identified by the pipelineId parameter).
+	// This parent pipeline should be the last of the current set of breadcrumbs.
 	// That is, the pipeline currently shown "full page" in the canvas.
 	displaySubPipelineForSupernode(supernodeId, pipelineId) {
 		const sn = this.getNode(supernodeId, pipelineId);
@@ -1873,7 +1876,7 @@ export default class CanvasController {
 		this.editActionHandler(data);
 	}
 
-	// Returns the supernode speified in the breadcrumb provided.
+	// Returns the supernode specified in the breadcrumb provided.
 	getSupernodeFromBreadcrumb(breadcrumb) {
 		if (breadcrumb.supernodeParentPipelineId) {
 			const apiPipeline = this.objectModel.getAPIPipeline(breadcrumb.supernodeParentPipelineId);
@@ -2017,7 +2020,7 @@ export default class CanvasController {
 
 	// Sets focus on the flow editor canvas background.
 	setFocusOnCanvas() {
-		this.setFocusObject(CANVAS_FOCUS);
+		this.setFocusObject(CANVAS_FOCUS, null, true);
 	}
 
 	// Returns the currently focused object or the string "CanvasFocus".
@@ -2030,12 +2033,15 @@ export default class CanvasController {
 	 * @param focusObj - The Canvas object or the string "CanvasFocus" where the focus should be set
 	 * @param evt - The event object
 	 */
-	setFocusObject(focusObj, evt) {
+	setFocusObject(focusObj, evt, force = false) {
 		this.logger.log("setFocusObject focusObject = " + CanvasUtils.getFocusName(focusObj));
 
 		this.focusObject = focusObj;
 
-		if (this.focusObject && this.canvasContents) {
+		const isActiveElementInCanvas = this.isTargetInsideCanvas(document.activeElement);
+
+		if ((isActiveElementInCanvas || force) &&
+				this.focusObject && this.canvasContents) {
 			if (this.focusObject === CANVAS_FOCUS) {
 				this.canvasContents.focusOnCanvas();
 
@@ -2049,6 +2055,16 @@ export default class CanvasController {
 			}
 		}
 	}
+
+	// Returns true of the target passed in is either the canvas div or an
+	// element inside the canvas div.
+	isTargetInsideCanvas(target) {
+		if (this.canvasContents) {
+			return this.canvasContents.isTargetInsideCanvas(target);
+		}
+		return false;
+	}
+
 
 	// Returns true of the focus in currently on the flow editor canvas background.
 	isFocusOnCanvas() {
@@ -2282,7 +2298,7 @@ export default class CanvasController {
 	}
 
 	// Returns the ID of the current tooltip or null if no tip
-	// is curently displayed.
+	// is currently displayed.
 	getTipId() {
 		const t = this.objectModel.getTooltip();
 		return t ? t.id : null;
@@ -2473,7 +2489,7 @@ export default class CanvasController {
 	}
 
 	contextMenuHandler(source) {
-		const menuDefinition = getContextMenuDefiniton(source, this);
+		const menuDefinition = getContextMenuDefinition(source, this);
 
 		// Open the context menu if we still have one!
 		if (menuDefinition && menuDefinition.length > 0) {
@@ -2540,7 +2556,7 @@ export default class CanvasController {
 	// model which result in changes to the displayed canvas. Returns true if
 	// the action completes successfully and false if it does not complete,
 	// for example, if the host application cancels the action by returning
-	// false from the beforeEditActionHanlder.
+	// false from the beforeEditActionHandler.
 	editActionHandler(cmndData) {
 		this.logger.log("editActionHandler - " + cmndData.editType);
 		this.logger.log(cmndData);
@@ -2594,14 +2610,14 @@ export default class CanvasController {
 			}
 		}
 
-		// Now preprocessing is complete, execuete the action itself.
+		// Now preprocessing is complete, execute the action itself.
 		return this.editAction(data);
 	}
 
 	// Performs the edit action using the 'data' parameter, which contains the
-	// approprite action parameters, without executing any of the preprocessing
-	// or the beforeEditActionhandler callback. This is useful for applications
-	// that need to do asynchronous activty in their beforeEditActionHandler code.
+	// appropriate action parameters, without executing any of the preprocessing
+	// or the beforeEditActionHandler callback. This is useful for applications
+	// that need to do asynchronous activity in their beforeEditActionHandler code.
 	// Those applications should call this method to execute the command, after
 	// their asynchronous activity has ended, instead of the editActionHandler
 	// method otherwise the host app's beforeEdtActionHandler callback will be
@@ -3014,7 +3030,7 @@ export default class CanvasController {
 		return true;
 	}
 
-	// Sets the appropriate values when handling an external pipleine flow
+	// Sets the appropriate values when handling an external pipeline flow
 	// when performing sub-flow actions.
 	preProcessForExternalPipelines(data) {
 		data.externalPipelineFlowLoad = false;

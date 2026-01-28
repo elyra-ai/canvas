@@ -23,9 +23,9 @@ import {
 } from "../common-canvas/constants/canvas-constants.js";
 
 // Does all preparation needed for nodes in all pipelines before they are saved into Redux. This includes:
-// * setting isSupernodeInputBinding and isSupernodeOutputBinding booleans if approrpiate
+// * setting isSupernodeInputBinding and isSupernodeOutputBinding booleans if appropriate
 // * calculating snap-to-grid positions
-// * calculating the dimensions of nodes based on the space needed to accomodate the ports
+// * calculating the dimensions of nodes based on the space needed to accommodate the ports
 export function prepareNodes(pipelines, nodeLayout, canvasLayout, layoutHandler, supernode) {
 	const newPipelines = setSupernodesBindingStatus(pipelines, supernode);
 	return newPipelines.map((pipeline) => setPipelineObjectAttributes(pipeline, nodeLayout, canvasLayout, layoutHandler));
@@ -88,7 +88,7 @@ function setSupernodesBindingStatusForNode(node, pipelines) {
 
 
 // Sets the auto-calculated attributes for nodes and comments based on different layout
-// informaiton for the pipeline passed in.
+// information for the pipeline passed in.
 function setPipelineObjectAttributes(inPipeline, nodeLayout, canvasLayout, layoutHandler) {
 	const pipeline = Object.assign({}, inPipeline);
 	if (pipeline.nodes) {

@@ -202,7 +202,7 @@ class CommonContextMenu extends React.Component {
 		return (typeof item.enable === "undefined" || item.enable === true);
 	}
 
-	// Builds a new menu based on the menu defintion passed in.
+	// Builds a new menu based on the menu definition passed in.
 	buildMenu(menuDefinition, menuSize, menuPos, canvasRect) {
 		const menuItems = [];
 		const menuRefs = [];
@@ -211,7 +211,7 @@ class CommonContextMenu extends React.Component {
 
 		// Records if we have just displayed a divider. This is useful because we
 		// only want to display one divider if there is a divider element
-		// immediately after another divider element in the menuDefintion array.
+		// immediately after another divider element in the menuDefinition array.
 		let previousDivider = false;
 
 		const allItemsDisabled = this.areAllItemsDisabled(menuDefinition);
@@ -320,7 +320,7 @@ class CommonContextMenu extends React.Component {
 		this.setState({ displaySubMenuAction: "" });
 	}
 
-	// Builds a sub-menu for the menuitem identified by the index into the menudefintion.
+	// Builds a sub-menu for the menuitem identified by the index into the menu definition.
 	buildSubMenu(menuDefinition, index, menuRefs, subMenuContent, runningYPos, menuPos,
 		menuSize, subMenuSize, canvasRect, disabled) {
 		const rtl = this.buildRtlState(menuPos, menuSize, subMenuSize, canvasRect);

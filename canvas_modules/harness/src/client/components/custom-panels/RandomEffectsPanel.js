@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -287,8 +287,8 @@ class RandomEffectsPanel {
 
 	nextEffect() {
 		const propertyValue = this.controller.getPropertyValue({ name: "random_effects_list" });
-		const length = propertyValue ? propertyValue.length : 1;
-		const atEnd = this.arrayIndex === length - 1;
+		const len = propertyValue ? propertyValue.length : 1;
+		const atEnd = this.arrayIndex === len - 1;
 		if (atEnd) {
 			propertyValue.push([[], false, [], [], "VC", 2, false]);
 		}
@@ -305,8 +305,8 @@ class RandomEffectsPanel {
 
 	makePanelIndexPanel() {
 		const propertyValue = this.controller.getPropertyValue({ name: "random_effects_list" });
-		const length = propertyValue ? propertyValue.length : 1;
-		const text = "Random Effect " + (this.arrayIndex + 1) + " of " + length;
+		const len = propertyValue ? propertyValue.length : 1;
+		const text = "Random Effect " + (this.arrayIndex + 1) + " of " + len;
 		return (<div className="glmm-panel-index-div">
 			<span className="glmm-panel-index-span">{text}</span></div>);
 	}
@@ -322,8 +322,8 @@ class RandomEffectsPanel {
 			{"Back"}
 		</Button>);
 		const propertyValue = this.controller.getPropertyValue({ name: "random_effects_list" });
-		const length = propertyValue ? propertyValue.length : 1;
-		const atEnd = this.arrayIndex === length - 1;
+		const len = propertyValue ? propertyValue.length : 1;
+		const atEnd = this.arrayIndex === len - 1;
 		const hasIntercept = propertyValue && propertyValue[this.arrayIndex] ? propertyValue[this.arrayIndex][1] : false;
 		const effects = propertyValue && propertyValue[this.arrayIndex] ? propertyValue[this.arrayIndex][0] : null;
 		const effectsLen = effects ? effects.length : 0;

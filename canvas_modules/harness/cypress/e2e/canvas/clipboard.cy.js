@@ -419,7 +419,7 @@ describe("Test clipboard with detachable links enabled", function() {
 
 		cy.verifyNumberOfLinks(13);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
@@ -447,7 +447,7 @@ describe("Test clipboard with detachable links enabled", function() {
 
 		cy.verifyNumberOfLinks(14);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
 
@@ -460,7 +460,7 @@ describe("Test clipboard with detachable links enabled", function() {
 
 		cy.verifyNumberOfLinks(14);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
 
@@ -487,7 +487,7 @@ describe("Test clipboard with detachable links enabled", function() {
 
 		cy.verifyNumberOfLinks(13);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
@@ -501,7 +501,7 @@ describe("Test clipboard with detachable links enabled", function() {
 
 		cy.verifyNumberOfLinks(13);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
@@ -529,7 +529,7 @@ describe("Test clipboard with detachable links enabled", function() {
 
 		cy.verifyNumberOfLinks(14);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
 
@@ -542,7 +542,7 @@ describe("Test clipboard with detachable links enabled", function() {
 
 		cy.verifyNumberOfLinks(14);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
 
@@ -574,7 +574,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.wait(10);
 		cy.verifyNumberOfLinks(13);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
@@ -593,7 +593,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.wait(10);
 		cy.verifyNumberOfLinks(13);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
@@ -631,7 +631,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.wait(10);
 		cy.verifyNumberOfLinks(14);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
 
@@ -649,7 +649,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.wait(10);
 		cy.verifyNumberOfLinks(14);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
 
@@ -696,7 +696,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.verifyNumberOfNodes(6);
 		cy.verifyNumberOfSelectedObjects(2);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
@@ -727,7 +727,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.verifyNumberOfNodes(6);
 		cy.verifyNumberOfSelectedObjects(3);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
@@ -787,7 +787,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.verifyNumberOfNodes(7);
 		cy.verifyNumberOfSelectedObjects(2);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
 		cy.verifyNumberOfPortDataLinks(8);
@@ -815,7 +815,7 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.verifyNumberOfNodes(7);
 		cy.verifyNumberOfSelectedObjects(3);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
 		cy.verifyNumberOfPortDataLinks(8);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ class ToolbarSubMenuItem extends React.Component {
 
 	clickOutside(evt) {
 		if (this.state.subAreaDisplayed) {
-			const selector = `.${this.generateActionName()}[instanceid='${this.props.instanceId}']`;
+			const selector = `.${this.generateActionName()}[data-instance-id='${this.props.instanceId}']`;
 			const isOver = evt.target.closest(selector);
 
 			if (!isOver && !this.props.actionObj.leaveSubAreaOpenOnClickOutside) {
@@ -134,7 +134,7 @@ class ToolbarSubMenuItem extends React.Component {
 	}
 
 	// Returns a sub-area for a cascading menu item. The sub-area can be either a
-	// sub-panel which is a div contaiing whatever the caller passes in within the
+	// sub-panel which is a div containing whatever the caller passes in within the
 	// supPanel field  OR a sub-menu which is a list of options which is created
 	// from the array of items the caller passes in the subMenu field.
 	generateSubArea() {
@@ -189,7 +189,7 @@ class ToolbarSubMenuItem extends React.Component {
 		const subArea = this.state.subAreaDisplayed ? this.generateSubArea() : null;
 
 		return (
-			<div ref={this.divRef} className={itemClassName} instanceid={this.props.instanceId}
+			<div ref={this.divRef} className={itemClassName} data-instance-id={this.props.instanceId}
 				data-toolbar-action={actionObj.action}
 				onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} onKeyDown={this.onKeyDown}
 			>

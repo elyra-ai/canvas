@@ -49,14 +49,14 @@ class CommonCanvasPanels extends React.Component {
 
 	// Prevent the default behavior (which is to show a plus-sign pointer) as
 	// an object is being dragged over the common canvas components.
-	// Note: this is overriden by the canvas area itself to allow external objects
+	// Note: this is overridden by the canvas area itself to allow external objects
 	// to be dragged over it.
 	onDragOver(evt) {
 		evt.preventDefault();
 	}
 
 	// Prevent an object being dropped on the common canvas causing a file
-	// download event (which is the default!). Note: this is overriden by the
+	// download event (which is the default!). Note: this is overridden by the
 	// canvas area itself to allow external objects to be dropped on it.
 	onDrop(evt) {
 		evt.preventDefault();

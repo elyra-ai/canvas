@@ -68,7 +68,7 @@ import SVGCanvasPipeline from "./svg-canvas-pipeline";
 export default class SVGCanvasRenderer {
 	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config, supernodeInfo = {}) {
 		this.logger = new Logger(["SVGCanvasRenderer", "PipeId", pipelineId]);
-		this.logger.logStartTimer("constructor" + pipelineId.substring(0, 5));
+		this.logger.logStartTimer("constructor - " + pipelineId.substring(0, 5));
 		this.pipelineId = pipelineId;
 		this.supernodeInfo = supernodeInfo; // Contents will be 'empty object' in case of primary pipeline renderer
 		this.canvasDiv = canvasDiv;
@@ -188,7 +188,7 @@ export default class SVGCanvasRenderer {
 			this.supernodeInfo.d3Selection.selectAll(".d3-node-port-output").raise();
 		}
 
-		this.logger.logEndTimer("constructor" + pipelineId.substring(0, 5));
+		this.logger.logEndTimer("constructor - " + pipelineId.substring(0, 5));
 	}
 
 	// Sets the pressed state of the space bar. This is called
@@ -302,7 +302,7 @@ export default class SVGCanvasRenderer {
 		);
 
 
-		// Set the display state incase we changed from in-place to full-page
+		// Set the display state in case we changed from in-place to full-page
 		// sub-flow display.
 		this.dispUtils.setDisplayState();
 		this.logger.log(this.dispUtils.getDisplayStateMsg());
@@ -334,7 +334,7 @@ export default class SVGCanvasRenderer {
 
 	// Updates the selection info for all renderers and displays the selection
 	// highlighting for nodes, links and comments. This provides a performance
-	// inmprovment over running the displayCanvas method which displays the
+	// improvement over running the displayCanvas method which displays the
 	// whole canvas.
 	setSelectionInfo(selectionInfo) {
 		this.selectionInfo = selectionInfo;
@@ -409,7 +409,7 @@ export default class SVGCanvasRenderer {
 	displayCanvas() {
 		this.logger.logStartTimer("displayCanvas");
 
-		// Ensure the SVG area is displayed, incase it was previously hidden.
+		// Ensure the SVG area is displayed, in case it was previously hidden.
 		this.canvasSVG.style("display", "inherit");
 
 		this.displayComments();
@@ -474,7 +474,7 @@ export default class SVGCanvasRenderer {
 	displayBindingNodesToFitSVG() {
 		this.logger.log("displayBindingNodesToFitSVG - start");
 		// Need to set port positions before moving super binding nodes because
-		// we need ports poitioned correctly on the supernode so binding nodes are
+		// we need ports positioned correctly on the supernode so binding nodes are
 		// moved to the right place.
 		this.setPortPositionsAllNodes();
 		this.moveSuperBindingNodes();
@@ -797,9 +797,9 @@ export default class SVGCanvasRenderer {
 	// Returns the page position passed in snapped to the grid in canvas
 	// coordinates. Called externally via svg-canvas-d3.
 	convertPageCoordsToSnappedCanvasCoords(pos) {
-		let positon = this.convertPageCoordsToCanvasCoords(pos.x, pos.y);
-		positon = this.getMousePosSnapToGrid(positon);
-		return positon;
+		let position = this.convertPageCoordsToCanvasCoords(pos.x, pos.y);
+		position = this.getMousePosSnapToGrid(position);
+		return position;
 	}
 
 	// Convert coordinates from the page (based on the page top left corner) to
@@ -820,7 +820,7 @@ export default class SVGCanvasRenderer {
 	// Creates the div which contains the ghost node for drag and
 	// drop actions from the palette. The way setDragImage is handled in
 	// browsers for HTML drag and drop is very odd since the image has to be
-	// 'visible' but not necssarily on display! I know, it confusing. Checkout
+	// 'visible' but not necessarily on display! I know, it confusing. Checkout
 	// this link for an explanation:
 	// https://www.kryogenix.org/code/browser/custom-drag-image.html
 	// Consequently, we place the ghost div, using CSS, within the canvas div
@@ -942,7 +942,7 @@ export default class SVGCanvasRenderer {
 
 		ghostGrp.attr("transform", `translate(${xOffset}, 0) scale(${zoomScale})`);
 
-		// Get the amount the actual browser page is 'zoomed'. This is differet
+		// Get the amount the actual browser page is 'zoomed'. This is different
 		// to the zoom amount for the canvas objects.
 		const browserZoom = this.getBrowserZoom();
 
@@ -959,14 +959,14 @@ export default class SVGCanvasRenderer {
 		};
 	}
 
-	// Returns the amount the actual browser page is 'zoomed'. This is differet
+	// Returns the amount the actual browser page is 'zoomed'. This is different
 	// to the zoom amount for the canvas objects. Unfortunately, this value is not
 	// returned the same for each type of browser so we have to calculate it based
 	// on the type of browser.
 	getBrowserZoom() {
 		let browserZoom = window.devicePixelRatio;
 
-		// Make sure we search for browser idntifiers in this order because with
+		// Make sure we search for browser identifiers in this order because with
 		// the Chrome browser userAgent contains the words "Chrome and "Safari"!
 		// However, with the Safari browser, userAgent only contains the word "Safari".
 		if (navigator.userAgent.includes("Chrome")) {
@@ -1047,7 +1047,7 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	// Switchs off the data link highlighting caused when an insertable
+	// Switches off the data link highlighting caused when an insertable
 	// node is dragged over a link (which joins two nodes together)
 	// which is enabled when 'enableInsertNodeDroppedOnLink' is true.
 	unsetInsertNodeIntoLinkHighlighting(link) {
@@ -1060,7 +1060,7 @@ export default class SVGCanvasRenderer {
 	// Switches on or off data link highlighting depending on the link array
 	// passed in and keeps track of the currently highlighted links. This is
 	// called when a node is dragged from the palette or the canvas over a
-	// fully or partially detached link This beheavior is enabled when
+	// fully or partially detached link This behavior is enabled when
 	// 'enableLinkSelection 'is set to LINK_SELECTION_DETACHABLE.
 	setDetachedLinkHighlighting(links) {
 		if (links && links.length > 0) {
@@ -1075,8 +1075,8 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	// Switchs off the link highlighting when a node is dragged over a fully or
-	// partially detached link. This beheavior is enabled when
+	// Switches off the link highlighting when a node is dragged over a fully or
+	// partially detached link. This behavior is enabled when
 	// 'enableLinkSelection 'is set to LINK_SELECTION_DETACHABLE.
 	unsetDetachedLinkHighlighting() {
 		this.dragOverDetachedLinks.forEach((link) => this.setNodeDragOverLinkHighlighting(link, false));
@@ -1192,7 +1192,7 @@ export default class SVGCanvasRenderer {
 	// Returns true if the nodeTemplate passed in is 'insertable' into a data
 	// link between nodes on the canvas. This involves ensuring the node template
 	// will create a non binding node and also that the cardinality of the ports
-	// is not explicitely set to zero (which some crazy apps want to do!).
+	// is not explicitly set to zero (which some crazy apps want to do!).
 	isNodeTemplateInsertableIntoLink(nodeTemplate) {
 		return this.config.enableInsertNodeDroppedOnLink &&
 			CanvasUtils.hasInputAndOutputPorts(nodeTemplate) &&
@@ -1382,7 +1382,7 @@ export default class SVGCanvasRenderer {
 		this.removeCanvasZoomBehavior();
 
 		// If there are no nodes or comments we don't apply any zoom behaviors
-		// to the SVG area. We only attach the zoom behaviour to the top most SVG
+		// to the SVG area. We only attach the zoom behavior to the top most SVG
 		// area i.e. when we are displaying either the primary pipeline full page
 		// or a sub-pipeline full page.
 		if (!this.activePipeline.isEmptyOrBindingsOnly() &&
@@ -1397,7 +1397,7 @@ export default class SVGCanvasRenderer {
 			// and prevent panning of canvas background.
 			.on("mousedown", (d3Event) => {
 				this.logger.log("Canvas - mousedown");
-				// When displaying inplace subflow and a context menu is requested
+				// When displaying in-place subflow and a context menu is requested
 				// suppress the mouse down which would go to the containing supernode.
 				// This prevents the deselection of any selected nodes in the subflow.
 				if (this.dispUtils.isDisplayingSubFlowInPlace() &&
@@ -1406,7 +1406,7 @@ export default class SVGCanvasRenderer {
 				}
 			})
 			.on("click.zoom", (d3Event) => {
-				// Control comes here after the zoomClick action has been perfoemd in zoomUtils.
+				// Control comes here after the zoomClick action has been performed in zoomUtils.
 				this.logger.log("Canvas - click-zoom");
 
 				this.canvasController.clickActionHandler({
@@ -1430,7 +1430,7 @@ export default class SVGCanvasRenderer {
 
 	// When adding back zoom behavior we need to reset all canvas behaviors
 	// because the ".zoom" events will have been removed from this.canvasSVG
-	// whenn removeCanvasZoomBehavior was called.
+	// when removeCanvasZoomBehavior was called.
 	addCanvasZoomBehavior() {
 		this.resetCanvasSVGBehaviors();
 	}
@@ -1795,18 +1795,24 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayNodesSubset(selection, data) {
-		selection
-			.data(data, (d) => d.id)
-			.join(
-				(enter) => this.createNodes(enter),
-				null,
-				(remove) => this.removeNodes(remove)
-			)
-			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
-			.attr("class", (d) => this.getNodeGroupClass(d))
-			.attr("style", (d) => this.getNodeGrpStyle(d))
-			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
-			.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps, data));
+		// The D3 join operation can sometimes cause focus to be lost from any
+		// currently focused object involved in the join (even if no new objects
+		// have been created or if no objects are removed) so we preserve and
+		// reinstate the focus after this operation is complete.
+		this.preserveFocus(() => {
+			selection
+				.data(data, (d) => d.id)
+				.join(
+					(enter) => this.createNodes(enter),
+					null,
+					(remove) => this.removeNodes(remove)
+				)
+				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
+				.attr("class", (d) => this.getNodeGroupClass(d))
+				.attr("style", (d) => this.getNodeGrpStyle(d))
+				.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
+				.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps, data));
+		});
 	}
 
 	createNodes(enter) {
@@ -1886,7 +1892,6 @@ export default class SVGCanvasRenderer {
 		// Optional foreign object to contain a React object
 		nonBindingNodeGrps
 			.selectChildren(".d3-foreign-object-external-node")
-			.attr("tabindex", -1)
 			.data((d) => (d.layout.nodeExternalObject ? [d] : []), (d) => d.id)
 			.join(
 				(enter) =>
@@ -1901,6 +1906,7 @@ export default class SVGCanvasRenderer {
 				}
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
+			.attr("tabindex", -1)
 			.attr("width", (d) => d.width)
 			.attr("height", (d) => d.height)
 			.attr("x", 0)
@@ -2084,13 +2090,13 @@ export default class SVGCanvasRenderer {
 			)
 			.attr("connected", (port) => (port.isConnected ? "yes" : "no"))
 			.attr("class", (port) => this.getNodeInputPortClassName() + (port.class_name ? " " + port.class_name : ""))
+			.attr("tabindex", -1)
 			.call((joinedInputPortGrps) => this.updateInputPorts(joinedInputPortGrps, node));
 	}
 
 	createInputPorts(enter, node) {
 		const inputPortGroups = enter
 			.append("g")
-			.attr("tabindex", () => (node.layout?.inputPortFocusable ? -1 : ""))
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, inputPorts) => {
@@ -2186,13 +2192,13 @@ export default class SVGCanvasRenderer {
 			)
 			.attr("connected", (port) => (port.isConnected ? "yes" : "no"))
 			.attr("class", (port) => this.getNodeOutputPortClassName() + (port.class_name ? " " + port.class_name : ""))
+			.attr("tabindex", -1)
 			.call((joinedOutputPortGrps) => this.updateOutputPorts(joinedOutputPortGrps, node));
 	}
 
 	createOutputPorts(enter, node) {
 		const outputPortGroups = enter
 			.append("g")
-			.attr("tabindex", () => (node.layout?.outputPortFocusable ? -1 : ""))
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
 			.each((port, i, outputPorts) => {
@@ -2298,7 +2304,6 @@ export default class SVGCanvasRenderer {
 							linkInfosAll.forEach((li) => (li.link.navObject = d));
 							this.setFocusObject(linkInfos[0].link, d3Event);
 						}
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.previousObjectInGroup(d3Event)) {
 						const linkInfos = this.activePipeline.getPreviousLinksToNode(d);
@@ -2390,13 +2395,13 @@ export default class SVGCanvasRenderer {
 							this.canvasController.autoSelectFocusObj(() =>
 								this.dragNewLinkUtils.createNewLinkFromSelections(),
 							true, // true - "augment" the selection
-							true); // true - always do the autoselect (regardless of how enableDragWithSelect is set)
+							true); // true - always do the auto-select (regardless of how enableDragWithoutSelect is set)
 						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					} else if (KeyboardUtils.displayContextOptions(d3Event)) {
 						// Don't let keypress go through to the Canvas otherwise the
-						// canvas contenxt menu/toolbar will be opened.
+						// canvas context menu/toolbar will be opened.
 						d3Event.stopPropagation();
 
 						if (!CanvasUtils.isSuperBindingNode(d)) {
@@ -2466,10 +2471,12 @@ export default class SVGCanvasRenderer {
 				if (this.svgCanvasTextArea.isEditingText()) {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
+
+				if (this.config.enableKeyboardNavigation) {
+					this.setFocusObject(d, d3Event, d.layout.onFocusAllowDefaultAction, true);
+				}
+
 				if (!this.config.enableDragWithoutSelect) {
-					if (this.config.enableKeyboardNavigation) {
-						this.setFocusObject(d, d3Event);
-					}
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
 					this.selectObjectD3Event(d3Event, d, clickType);
 				}
@@ -2495,11 +2502,11 @@ export default class SVGCanvasRenderer {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				if (!CanvasUtils.isSuperBindingNode(d)) {
 					// With enableDragWithoutSelect set to true, the object for which the
-					// context menu is being requested needs to be implicitely selected.
+					// context menu is being requested needs to be implicitly selected.
 					if (this.config.enableDragWithoutSelect) {
 						this.selectObjectD3Event(d3Event, d, SINGLE_CLICK_CONTEXTMENU);
 					}
-					this.setFocusObject(d, d3Event);
+					this.setFocusObject(d, d3Event, false, true);
 					if (!this.config.enableContextToolbar) {
 						this.openContextMenu(d3Event, "node", d);
 					}
@@ -2635,7 +2642,7 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Input Port Circle - context menu");
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				// With enableDragWithoutSelect set to true, the object for which the
-				// context menu is being requested needs to be implicitely selected.
+				// context menu is being requested needs to be implicitly selected.
 				if (this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, node, SINGLE_CLICK_CONTEXTMENU);
 				}
@@ -2695,7 +2702,7 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Output Port Circle - context menu");
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				// With enableDragWithoutSelect set to true, the object for which the
-				// context menu is being requested needs to be implicitely selected.
+				// context menu is being requested needs to be implicitly selected.
 				if (this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, node, SINGLE_CLICK_CONTEXTMENU);
 				}
@@ -2782,7 +2789,7 @@ export default class SVGCanvasRenderer {
 			})
 			.on("mousedown", function() {
 				// Don't stop propagation here because mousedown needs to go through
-				// to the parent object to perform selection of that obejct before the
+				// to the parent object to perform selection of that object before the
 				// "click" event is caught by the code below. This will also cause a blur
 				// on any currently open text entry area and complete any text entry.
 			})
@@ -3489,7 +3496,7 @@ export default class SVGCanvasRenderer {
 		return breadcrumbs.reverse();
 	}
 
-	// Returns the datum object (managd by D3) for the DOM element passed in.
+	// Returns the datum object (managed by D3) for the DOM element passed in.
 	getD3DatumFromDomEl(el) {
 		const sel = d3.select(el);
 		if (sel) {
@@ -3521,7 +3528,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns true if the port (from a node template) passed in has a max
-	// cardinaility of zero. If cardinality or cardinality.max is missing the
+	// cardinality of zero. If cardinality or cardinality.max is missing the
 	// max is considered to be non-zero.
 	isPortMaxCardinalityZero(port) {
 		return (get(port, "app_data.ui_data.cardinality.max", 1) === 0);
@@ -3557,7 +3564,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns the renderer for the supernode passed in. With external
-	// pipeline handling the pipeline referencd by the supernode can change
+	// pipeline handling the pipeline referenced by the supernode can change
 	// over time so we have to make sure the renderer is for the supernode AND
 	// for the active pipeline.
 	getRendererForSupernode(d) {
@@ -3589,7 +3596,7 @@ export default class SVGCanvasRenderer {
 		this.canvasController.contextMenuHandler({
 			type: type,
 			targetObject: type === "canvas" ? null : d,
-			id: type === "canvas" ? null : d.id, // For historical puposes, we pass d.id as well as d as targetObject.
+			id: type === "canvas" ? null : d.id, // For historical purposes, we pass d.id as well as d as targetObject.
 			pipelineId: this.activePipeline.id,
 			cmPos: pos
 				? pos
@@ -3601,7 +3608,7 @@ export default class SVGCanvasRenderer {
 			zoom: this.zoomUtils.getZoomScale() });
 	}
 
-	// Closes the conetext menu if open. Called by various drag utility
+	// Closes the context menu if open. Called by various drag utility
 	// classes.
 	closeContextMenuIfOpen() {
 		if (this.canvasController.isContextMenuDisplayed()) {
@@ -3674,7 +3681,7 @@ export default class SVGCanvasRenderer {
 		return this.getNodePortIdForElement(portElement) || CanvasUtils.getDefaultOutputPortId(srcNode);
 	}
 
-	// Returns a pos object { x, y } for the mpuse position contained in the
+	// Returns a pos object { x, y } for the mouse position contained in the
 	// event object/
 	getMousePosFromEvent(d3Event) {
 		return {
@@ -3712,7 +3719,7 @@ export default class SVGCanvasRenderer {
 		return null;
 	}
 
-	// Returns the node port Id corresponding to the lement passed in.
+	// Returns the node port Id corresponding to the element passed in.
 	getNodePortIdForElement(element) {
 		if (element) {
 			return d3.select(element).attr("data-port-id");
@@ -4070,7 +4077,7 @@ export default class SVGCanvasRenderer {
 		// Sub-flow binding node ports need to be spaced by the inverse of the
 		// zoom amount so that, after zoomToFit on the in-place sub-flow the
 		// binding node ports line up with those on the supernode. This is only
-		// necessary with binding nodes with mutiple ports.
+		// necessary with binding nodes with multiple ports.
 		let multiplier = 1;
 		if (CanvasUtils.isSuperBindingNode(node)) {
 			multiplier = 1 / this.zoomUtils.getZoomScale();
@@ -4151,7 +4158,7 @@ export default class SVGCanvasRenderer {
 		// Sub-flow binding node ports need to be spaced by the inverse of the
 		// zoom amount so that, after zoomToFit on the in-place sub-flow the
 		// binding node ports line up with those on the supernode. This is only
-		// necessary with binding nodes with mutiple ports.
+		// necessary with binding nodes with multiple ports.
 		let multiplier = 1;
 		if (CanvasUtils.isSuperBindingNode(node)) {
 			multiplier = 1 / this.zoomUtils.getZoomScale();
@@ -4520,7 +4527,7 @@ export default class SVGCanvasRenderer {
 				}
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
-						this.setFocusObject(d, d3Event);
+						this.setFocusObject(d, d3Event, false, true);
 					}
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
 					this.selectObjectD3Event(d3Event, d, clickType);
@@ -4552,11 +4559,11 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Comment Group - context menu");
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				// With enableDragWithoutSelect set to true, the object for which the
-				// context menu is being requested needs to be implicitely selected.
+				// context menu is being requested needs to be implicitly selected.
 				if (this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK_CONTEXTMENU);
 				}
-				this.setFocusObject(d, d3Event);
+				this.setFocusObject(d, d3Event, false, true);
 				if (!this.config.enableContextToolbar) {
 					this.openContextMenu(d3Event, "comment", d);
 				}
@@ -4609,7 +4616,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Creates a port object (a grey circle in the top left corner of the
-	// comment for creating links to nodes) for the comment asscoiated with
+	// comment for creating links to nodes) for the comment associated with
 	// the comment group object passed in.
 	createCommentPort(commentObj, d) {
 		const commentGrp = d3.select(commentObj);
@@ -4910,17 +4917,14 @@ export default class SVGCanvasRenderer {
 						if (d.type === NODE_LINK) {
 							const node = this.activePipeline.getNextNodeFromDataLink(d);
 							this.setFocusObject(node, d3Event);
-							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 						} else if (d.type === ASSOCIATION_LINK) {
 							const node = this.activePipeline.getNextNodeFromAssocLink(d);
 							this.setFocusObject(node, d3Event);
-							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 						} else if (d.type === COMMENT_LINK) {
 							const obj = this.activePipeline.getNextObjectFromCommentLink(d);
 							this.setFocusObject(obj, d3Event);
-							CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						}
 
 					} else if (KeyboardUtils.previousObjectInGroup(d3Event)) {
@@ -4971,7 +4975,7 @@ export default class SVGCanvasRenderer {
 
 					} else if (KeyboardUtils.displayContextOptions(d3Event)) {
 						// Don't let keypress go through to the Canvas otherwise the
-						// canvas contenxt menu/toolbar will be opened.
+						// canvas context menu/toolbar will be opened.
 						d3Event.stopPropagation();
 
 						if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
@@ -5064,9 +5068,10 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (this.config.enableKeyboardNavigation) {
-					this.setFocusObject(d, d3Event);
+					this.setFocusObject(d, d3Event, false, true);
 				}
-				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE &&
+						!this.config.enableDragWithoutSelect) {
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
 					this.selectObjectD3Event(d3Event, d, clickType);
 				}
@@ -5076,13 +5081,29 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Link Group - click");
 				d3Event.stopPropagation();
 			})
+			.on("dblclick", (d3Event, d) => {
+				this.logger.log("Link Group - double click");
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+					this.canvasController.clickActionHandler({
+						clickType: DOUBLE_CLICK,
+						objectType: "link",
+						id: d.id,
+						selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
+						pipelineId: this.activePipeline.id
+					});
+				}
+			})
 			.on("contextmenu", (d3Event, d) => {
 				this.logger.log("Link Group - context menu");
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+				// With enableDragWithoutSelect set to true, the object for which the
+				// context menu is being requested needs to be implicitly selected (if possible).
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE &&
+						this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK_CONTEXTMENU);
 				}
-				this.setFocusObject(d, d3Event);
+				this.setFocusObject(d, d3Event, false, true);
 				if (!this.config.enableContextToolbar) {
 					this.openContextMenu(d3Event, "link", d);
 				}
@@ -5218,7 +5239,7 @@ export default class SVGCanvasRenderer {
 						this.setFocusPreviousSubObject(link, d3Event);
 
 					} else if (KeyboardUtils.cancelFocusOnSubObject(d3Event)) {
-						this.canvasController.setFocusObject(link);
+						this.canvasController.restoreFocus();
 
 					} else if (KeyboardUtils.moveLinkHandleUp(d3Event)) {
 						if (this.config.enableEditingActions) {
@@ -5252,7 +5273,7 @@ export default class SVGCanvasRenderer {
 
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
-						this.setFocusObject(d, d3Event);
+						this.setFocusObject(d, d3Event, false, true);
 					}
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
 					this.selectObjectD3Event(d3Event, d, clickType);
@@ -5270,7 +5291,7 @@ export default class SVGCanvasRenderer {
 		linkSel.select(".d3-link-line-arrow-head").attr("style", style);
 	}
 
-	// Returns the class string to be appled to the link selection area.
+	// Returns the class string to be applied to the link selection area.
 	getLinkSelectionAreaClass(d) {
 		let typeClass = "";
 		if (d.type === ASSOCIATION_LINK) {
@@ -5284,7 +5305,7 @@ export default class SVGCanvasRenderer {
 		return "d3-link-selection-area " + typeClass;
 	}
 
-	// Returns the class string to be appled to the link group object.
+	// Returns the class string to be applied to the link group object.
 	getLinkGroupClass(d) {
 		return "d3-link-group " + this.getLinkTypeClass(d) + " " + this.getLinkBranchHighlightCLass(d) + " " + this.getLinkCustomClass(d);
 	}
@@ -5324,7 +5345,7 @@ export default class SVGCanvasRenderer {
 		return "d3-data-link";
 	}
 
-	// Returns the class string to be appled to the comment group object.
+	// Returns the class string to be applied to the comment group object.
 	getCommentGroupClass(d) {
 		let customClass = "";
 		// If the comment has a classname that isn't the default use it!
@@ -5344,7 +5365,7 @@ export default class SVGCanvasRenderer {
 		return "d3-comment-group" + draggableClass + customClass;
 	}
 
-	// Returns the class string to be appled to the node group object.
+	// Returns the class string to be applied to the node group object.
 	getNodeGroupClass(d) {
 		let customClass = " " + d.layout.className || "";
 
@@ -5388,7 +5409,7 @@ export default class SVGCanvasRenderer {
 		return " d3-node-shape-rectangle";
 	}
 
-	// Rearanges the display order of links so 'sub-objects', like decorations and
+	// Rearranges the display order of links so 'sub-objects', like decorations and
 	// link handles, are visible.
 	setDisplayOrder(linkGroup) {
 		this.preserveFocus(() => {
@@ -5462,18 +5483,24 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Preserves the focus while calling the fn function by saving the
-	// focus object and reinstating if after the fn has finished.
+	// focus object and reinstating if after the fn has finished. If,
+	// before the function is called, the active element is in the canvas
+	// then we force the focus to be changed.
 	preserveFocus(fn) {
 		const focusObj = this.canvasController.getFocusObject();
+		const shouldForceFocusChange = this.canvasController.isTargetInsideCanvas(document.activeElement);
 
 		fn();
 
-		if (this.config.enableKeyboardNavigation && !this.isEditingText() && !this.canvasController.isContextMenuDisplayed()) {
+		if (this.config.enableKeyboardNavigation &&
+			!this.isEditingText() &&
+			!this.canvasController.isContextMenuDisplayed())
+		{
 			if (this.subObject) {
 				this.restoreFocusToSubObject();
 
 			} else {
-				this.canvasController.setFocusObject(focusObj);
+				this.canvasController.setFocusObject(focusObj, null, shouldForceFocusChange);
 			}
 		}
 	}
@@ -5498,8 +5525,8 @@ export default class SVGCanvasRenderer {
 	// These are added by the getAttachedLinkObj and getDetachedLinkObj functions:
 	// x1 and y1           - Coordinates of the start of the line
 	// x2 and y2           - Coordinates of the end of the line
-	// coordsUpdated       - A booelan - true means the cordinates are different to before.
-	//                       Used for performance to prevent unneccessary line drawing.
+	// coordsUpdated       - A boolean - true means the coordinates are different to before.
+	//                       Used for performance to prevent unnecessary line drawing.
 	// srcDir              - Direction ("n", "s", "e" or "W") of the source of the line
 	// trgDir              - Direction ("n", "s", "e" or "W") of the target of the line
 	// originX and originY - The theoretical origin in the source node of the line
@@ -5510,7 +5537,7 @@ export default class SVGCanvasRenderer {
 	// pathinfo - an object containing:
 	//   - elements    - An array of elements that make up the path of the link line
 	//   - path        - The SVG path used to draw the link line
-	//   - centerPoint - The x,y cordinate of the center of the link line. Used for
+	//   - centerPoint - The x,y coordinate of the center of the link line. Used for
 	//                   positioning decorations and the context toolbar.
 	buildLinksArray() {
 		this.logger.logStartTimer("buildLinksArray");
@@ -5560,9 +5587,9 @@ export default class SVGCanvasRenderer {
 		return linksArray;
 	}
 
-	// Returns the link object passed in with additional fields to descibe an fully
+	// Returns the link object passed in with additional fields to describe an fully
 	// attached link. This is called when both srcNode AND trgNode set to node
-	// objects indicating a link that is attached at the source and taget ends.
+	// objects indicating a link that is attached at the source and target ends.
 	getAttachedLinkObj(link) {
 		const srcObj = link.srcObj;
 		const trgNode = link.trgNode;
@@ -5883,7 +5910,7 @@ export default class SVGCanvasRenderer {
 	//    the source to the target.
 	// 3. Applies ever increasing minInitialLineForElbow values to the link
 	//    objects based on their sort order.
-	// The result is that the elbow links, emantating from the ports of the node,
+	// The result is that the elbow links, emanating from the ports of the node,
 	//  do not overlap.
 	addMinInitialLineForElbow(links) {
 		this.activePipeline.nodes.forEach((node) => {
@@ -6046,7 +6073,7 @@ export default class SVGCanvasRenderer {
 	// array ordered by the angle that each link makes with the center of the
 	// start node. When handling multiple links that go to the same node
 	// the links have to be grouped where links in the same group go to/from
-	// the same node. For groups, the x and y are *projected* corrdinates to
+	// the same node. For groups, the x and y are *projected* coordinates to
 	// allow us to calculate the angles and ordering etc. The actual x and y
 	// for the links is calculated in getAttachedLinkObj and getDetachedLinkObj.
 	sortLinksInfo(linksDirArrayIn, dir, startCenter) {
@@ -6323,7 +6350,7 @@ export default class SVGCanvasRenderer {
 		const nextObj = this.activePipeline.getNextTabGroupStartObject(focusObj);
 
 		if (nextObj) {
-			this.setFocusObject(nextObj, evt);
+			this.setFocusObject(nextObj, evt, false, true);
 			return true;
 		}
 		return false;
@@ -6351,9 +6378,9 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns the currently focused canvas DOM element for a node, comment
-	// or link as descibed by the document.activeElement property. This will
+	// or link as described by the document.activeElement property. This will
 	// return a DOM element for node, comment or link even if a sub-object
-	// within one of thise objects has focus.
+	// within one of these objects has focus.
 	getActiveCanvasElement() {
 		let objElement = null;
 
@@ -6370,14 +6397,24 @@ export default class SVGCanvasRenderer {
 		return objElement;
 	}
 
-	setFocusObject(focusObj, evt) {
+	// Sets the focus object passed in.
+	setFocusObject(focusObj, evt, allowDefaultAction = false, force = false) {
 		if (!this.config.enableKeyboardNavigation) {
 			return;
 		}
 
-		CanvasUtils.stopPropagationAndPreventDefault(evt);
+		// If allowDefaultAction is specified as true, we do not 'preventDefault'
+		// only stop propagation. Setting allowDefaultAction to true is useful for
+		// applications that provide a React object for the node body and they want
+		// the default action to go through to the React, perhaps to initiate a drag event.
+		if (allowDefaultAction) {
+			evt.stopPropagation();
 
-		this.canvasController.setFocusObject(focusObj, evt);
+		} else {
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+		}
+
+		this.canvasController.setFocusObject(focusObj, evt, force);
 	}
 
 	clearSubObject() {
@@ -6406,7 +6443,7 @@ export default class SVGCanvasRenderer {
 	// outline around the node and corresponding node selection passed in.
 	// This method calculates the gaps by calculating the amount the node
 	// label protrudes outside of the node boundary. This is necessary
-	// becuase, unfortunately, JavaScript's getClientBoundingRect method
+	// because, unfortunately, JavaScript's getClientBoundingRect method
 	// does not take into account the variable size of the <span> inside
 	// the <div> of the <foreignobject> used to display the label.
 	getNodeFocusIncrements(node, objSel) {
@@ -6537,7 +6574,7 @@ export default class SVGCanvasRenderer {
 		if (objSel && !objSel.empty()) {
 			// If the focus was initiated by a Keyboard event we zoom to reveal, so the object
 			// appears in the viewport. If the event was a MouseEvent we don't zoom to reveal
-			// because it interferes with double-click events (also it's not necessary becasue
+			// because it interferes with double-click events (also it's not necessary because
 			// the object will be at least partially visible in the view port for it to be clicked).
 			if (CanvasUtils.isKeyboardEvent(evt)) {
 				const zoom = this.canvasController.getZoomToReveal([obj.id]);

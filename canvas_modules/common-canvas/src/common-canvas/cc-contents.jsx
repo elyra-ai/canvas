@@ -104,10 +104,14 @@ class CanvasContents extends React.Component {
 
 	componentDidMount() {
 		this.logger.log("componentDidMount");
-		this.svgCanvasD3 =
-			new SVGCanvasD3(this.props.canvasInfo.id,
-				this.svgCanvasDivSelector,
-				this.props.canvasController);
+		// componentDidMount may be called twice in StrictMode so only
+		// create the svgCanvasD3 when necessary.
+		if (!this.svgCanvasD3) {
+			this.svgCanvasD3 =
+				new SVGCanvasD3(this.props.canvasInfo.id,
+					this.svgCanvasDivSelector,
+					this.props.canvasController);
+		}
 		this.setCanvasInfo();
 
 		if (this.props.canvasConfig.enableBrowserEditMenu) {
@@ -196,7 +200,7 @@ class CanvasContents extends React.Component {
 		const actions = this.props.canvasController.getKeyboardConfig().actions;
 
 		// We don't handle key presses when:
-		// 1. We are editng text, because the text area needs to receive key
+		// 1. We are editing text, because the text area needs to receive key
 		//    presses for undo, redo, delete etc.
 		// 2. Dragging objects
 		if (this.svgCanvasD3.isEditingText() || this.svgCanvasD3.isDragging()) {
@@ -518,7 +522,9 @@ class CanvasContents extends React.Component {
 		}
 	}
 
-	// Returns true if the target element passed in is inside the canvas div.
+	// Returns true if the target element passed in is either the canvas div
+	// or is inside the canvas div.
+	// Utility function called from canvas-controller.js.
 	isTargetInsideCanvas(target) {
 		return target && target.closest(".common-canvas-drop-div");
 	}
@@ -713,7 +719,7 @@ class CanvasContents extends React.Component {
 		const svgCanvasDiv = this.getSVGCanvasDiv();
 
 		return (
-			<main aria-label={this.getLabel("canvas.label")} role="main">
+			<section aria-label={this.getLabel("canvas.label")} aria-description={this.getLabel("canvas.description")}>
 				<div
 					id={this.mainCanvasDivId}
 					ref={this.contentsRef}
@@ -731,7 +737,7 @@ class CanvasContents extends React.Component {
 					{textToolbar}
 					{dropZoneCanvas}
 				</div>
-			</main>
+			</section>
 		);
 	}
 }

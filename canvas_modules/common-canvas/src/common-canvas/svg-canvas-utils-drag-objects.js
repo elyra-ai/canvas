@@ -183,7 +183,7 @@ export default class SVGCanvasUtilsDragObjects {
 
 		// When direction is NORTH this will cause the bottom border of
 		// the object to be decrease and when the direction is WEST
-		// the right brorder of the object will be decreased.
+		// the right border of the object will be decreased.
 		if (dir === NORTH) {
 			dir = SOUTH;
 		} else if (dir === WEST) {
@@ -336,7 +336,7 @@ export default class SVGCanvasUtilsDragObjects {
 		return yPart + xPart;
 	}
 
-	// Returns a cursor type based on the currect comment sizing direction.
+	// Returns a cursor type based on the current comment sizing direction.
 	// Possible values are: ns-resize, ew-resize, nwse-resize or nesw-resize.
 	getCursorBasedOnDirection(direction) {
 		var cursorType;
@@ -504,7 +504,7 @@ export default class SVGCanvasUtilsDragObjects {
 		return delta;
 	}
 
-	// Finalises the sizing of a node by calling editActionHandler
+	// Finalizes the sizing of a node by calling editActionHandler
 	// with an editNode action.
 	endNodeSizing(node) {
 		let resizeObj = node;
@@ -530,7 +530,7 @@ export default class SVGCanvasUtilsDragObjects {
 
 			// If the node has been resized set the resize properties appropriately.
 			// We use some padding because sometimes, when a node is sized back to its
-			// original dimensions, it isn't retunred to EXACTLY its default width/height.
+			// original dimensions, it isn't returned to EXACTLY its default width/height.
 			if (resizeObj.height > resizeObj.layout.defaultNodeHeight + 2 ||
 					resizeObj.width > resizeObj.layout.defaultNodeWidth + 2) {
 				this.nodeSizingObjectsInfo[resizeObj.id].isResized = true;
@@ -551,7 +551,7 @@ export default class SVGCanvasUtilsDragObjects {
 		}
 	}
 
-	// Finalises the sizing of a comment by calling editActionHandler
+	// Finalizes the sizing of a comment by calling editActionHandler
 	// with an editComment action.
 	endCommentSizing(comment) {
 		let resizeObj = comment;
@@ -599,7 +599,7 @@ export default class SVGCanvasUtilsDragObjects {
 	// this means combining the bigger of the space for the inputs and output ports
 	// with some space for the top of the display frame and the padding at the
 	// bottom of the frame. Then the bigger of that height versus the default
-	// supernode minimum height is retunred.
+	// supernode minimum height is returned.
 	getMinHeight(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
 			const minHt = Math.max(node.inputPortsHeight, node.outputPortsHeight) +
@@ -895,7 +895,7 @@ export default class SVGCanvasUtilsDragObjects {
 			if (CanvasUtils.isNode(obj)) {
 				this.ren.getNodeGroupSelectionById(obj.id).classed("d3-is-moving", state);
 			} else {
-				this.ren.getCommentGroupSelectionById(obj.id).classed("d3-is-monving", state);
+				this.ren.getCommentGroupSelectionById(obj.id).classed("d3-is-moving", state);
 			}
 		});
 	}

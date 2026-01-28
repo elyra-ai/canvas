@@ -36,7 +36,7 @@ import selectioninfo from "./reducers/selectioninfo.js";
 import notificationpanel from "./reducers/notificationpanel.js";
 import externalpipelineflows from "./reducers/externalpipelineflows.js";
 
-export default class CanavasStore {
+export default class CanvasStore {
 	constructor(emptyCanvasInfo) {
 		// Put selectioninfo reducer first so selections are handled before
 		// canvasinfo actions. Also, put canvasconfig reducer before canvasinfo
@@ -165,7 +165,7 @@ export default class CanavasStore {
 
 	// This is a service method for retrieving the internal pipeline. It does NOT
 	// clone the pipeline therefore it should NOT be called from outside this
-	// class because we don't want to surface the intenal data in redux to
+	// class because we don't want to surface the internal data in redux to
 	// the outside world.
 	getNonClonedPipeline(pipelineId) {
 		return this.store.getState().canvasinfo.pipelines.find((p) => p.id === pipelineId);
@@ -174,7 +174,7 @@ export default class CanavasStore {
 	// This is a service method for retrieving selected objects of the type passed
 	// in which can be "nodes", "comments" or "links". It does NOT clone the
 	// resultant array therefore it should NOT be called from outside this
-	// class because we don't want to surface the intenal data in redux to
+	// class because we don't want to surface the internal data in redux to
 	// the outside world.
 	getNonClonedSelectedObjs(type) {
 		const selectedPipelineId = this.getSelectedPipelineId();

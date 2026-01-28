@@ -90,7 +90,7 @@ export default class PromptReactNode extends React.Component {
 
 	// Returns the palette object to be used. This is constructed from the
 	// palette in the application's canvas controller with the first
-	// category reoved since the first category has binding entry nodes.
+	// category removed since the first category has binding entry nodes.
 	getPalette() {
 		const palette = this.props.canvasController.getPaletteData();
 

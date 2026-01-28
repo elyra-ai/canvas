@@ -117,7 +117,7 @@ export const WARNING = "warning";
 export const INFO = "info";
 export const SUCCESS = "success";
 
-export const HORIZONTAL = "horizonal";
+export const HORIZONTAL = "horizontal";
 export const VERTICAL = "vertical";
 
 export const PORT_DISPLAY_CIRCLE = "circle";
@@ -138,7 +138,7 @@ export const ASSOC_VAR_CURVE_LEFT = "curveLeft";
 export const ASSOC_VAR_DOUBLE_BACK_RIGHT = "doubleBackRight";
 export const ASSOC_VAR_DOUBLE_BACK_LEFT = "doubleBackLeft";
 
-// The type of object to which deorations are to be attached.
+// The type of object to which decorations are to be attached.
 export const DEC_NODE = "node";
 export const DEC_LINK = "link";
 
@@ -196,11 +196,11 @@ export const SOUTH = "s";
 export const EAST = "e";
 export const WEST = "w";
 
-// Cuase or actions
+// Cause or actions
 export const CAUSE_MOUSE = "M";
 export const CAUSE_KEYBOARD = "K";
 
-// Defaults for port size incase width and height are not provided in
+// Defaults for port size in case width and height are not provided in
 // the inputPortDisplayObjects and outputPortDisplayObjects arrays.
 export const PORT_WIDTH_DEFAULT = 12;
 export const PORT_HEIGHT_DEFAULT = 12;
@@ -244,7 +244,7 @@ export const TOOLBAR_DELETE_SELECTED_OBJECTS = "deleteSelectedObjects";
 export const TOOLBAR_ZOOM_IN = "zoomIn";
 export const TOOLBAR_ZOOM_OUT = "zoomOut";
 export const TOOLBAR_ZOOM_FIT = "zoomToFit";
-export const TOOLBAR_ARRANGE_HORIZONALLY = "arrangeHorizontally";
+export const TOOLBAR_ARRANGE_HORIZONTALLY = "arrangeHorizontally";
 export const TOOLBAR_ARRANGE_VERTICALLY = "arrangeVertically";
 export const TOOLBAR_TOGGLE_NOTIFICATION_PANEL = "toggleNotificationPanel";
 export const TOOLBAR_OPEN_PALETTE = "openPalette";

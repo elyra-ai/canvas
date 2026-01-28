@@ -32,7 +32,7 @@ class PaletteFlyoutContent extends React.Component {
 		super(props);
 
 		// Note: searchString below is a copy of searchString in
-		// palette-flyout-content-search this duplication is necessaery to allow
+		// palette-flyout-content-search this duplication is necessary to allow
 		// the debounce function to work. When a key is pressed, the searchString in
 		// palette-flyout-content-search is updated causing its text to be rendered.
 		// The handleSearchStringChange() in this class is then called that handles
@@ -109,7 +109,7 @@ class PaletteFlyoutContent extends React.Component {
 				allowClickToAdd={this.props.allowClickToAdd}
 				isPaletteWide={this.props.isPaletteWide}
 				isEditingEnabled={this.props.isEditingEnabled}
-				// isShowRanking // Uncomment this to show ranking for debuggig ranking algorithm
+				// isShowRanking // Uncomment this to show ranking for debugging ranking algorithm
 				isNodeTypeInfosArrayTruncated={isNodeTypeInfosArrayTruncated}
 				createAutoNode={this.props.createAutoNode}
 				tabOutOfOfPalette={this.props.tabOutOfOfPalette}

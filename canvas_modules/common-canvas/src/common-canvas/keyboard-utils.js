@@ -27,9 +27,14 @@ const BACKSPACE_KEY = "Backspace";
 const DELETE_KEY = "Delete";
 const SPACE_KEY = "Space";
 
+const NO_BREAK_SPACE_CHAR_KEY = "\u00A0"; // Can be returned in short cuts for screen readers
 const SPACE_CHAR_KEY = " ";
 const COMMA_CHAR_KEY = ",";
 
+// WARNING when adding a new letter constant below: If the shortcut requires the Meta
+// key AND Shift key to be pressed, on Windows, if the user presses 'Ctrl' as the Meta
+// key, the Shift will cause an upper case letter to be returned. See code below where
+// toLowerCase() is called before comparison.
 const A_KEY = "a";
 const B_KEY = "b";
 const C_KEY = "c";
@@ -247,7 +252,8 @@ export default class KeyboardUtils {
 	/* Link creation */
 
 	static createLink(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === L_KEY;
+		// When meta key is 'Ctrl' on Windows, shift key will cause 'key' property to contain uppercase 'L' - so lowercase it!
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key?.toLowerCase() === L_KEY;
 	}
 
 	/* Comment display */
@@ -293,7 +299,8 @@ export default class KeyboardUtils {
 	}
 
 	static strikethroughCommand(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === X_KEY;
+		// When meta key is 'Ctrl' on Windows, shift key will cause 'key' property to contain uppercase 'X' - so lowercase it!
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key?.toLowerCase() === X_KEY;
 	}
 
 	static numberedListCommand(d3Event) {
@@ -313,7 +320,8 @@ export default class KeyboardUtils {
 	}
 
 	static quoteCommand(d3Event) {
-		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key === I_KEY;
+		// When meta key is 'Ctrl' on Windows, shift key will cause 'key' property to contain uppercase 'I' - so lowercase it!
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key?.toLowerCase() === I_KEY;
 	}
 
 	static incHashesCommand(d3Event) {
@@ -474,12 +482,12 @@ export default class KeyboardUtils {
 
 	// key property can sometimes be set to "Space" (SPACE_KEY) in tests.
 	static isSpaceKey(evt) {
-		return evt.key === SPACE_CHAR_KEY || evt.key === SPACE_KEY;
+		return evt.key === SPACE_CHAR_KEY || evt.key === NO_BREAK_SPACE_CHAR_KEY || evt.key === SPACE_KEY;
 	}
 
 	// Returns true if either the 'Command Key' on Mac or
 	// 'Control Key' or 'Windows key' on Windows is pressed.
-	// evnt can be either a regular event object OR the
+	// evt can be either a regular event object OR the
 	// d3event object provided by d3.
 	static isMetaKey(evt) {
 		if (CanvasUtils.isMacintosh()) {

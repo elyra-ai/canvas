@@ -182,7 +182,7 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	cy.window().then((win) => {
 		cy.getNodeWithLabel(nodeName).as("node");
 		// We trigger mousedown and mouseup here instead of using 'click()'
-		// becasue this is needed to get this command to work on the build
+		// because this is needed to get this command to work on the build
 		// machine when enableDragWithoutSelect is set to true even though,
 		// for some reason, 'click()' works successfully on the local machine.
 		cy.get("@node")
@@ -196,7 +196,7 @@ Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) 
 	cy.window().then((win) => {
 		cy.getNodeWithLabelInSupernode(nodeName, supernodeName).as("node");
 		// We trigger mousedown and mouseup here instead of using 'click()'
-		// becasue this is needed to get this command to work on the build
+		// because this is needed to get this command to work on the build
 		// machine when enableDragWithoutSelect is set to true even though,
 		// for some reason, 'click()' works successfully on the local machine.
 		cy.get("@node")

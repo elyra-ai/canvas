@@ -79,7 +79,7 @@ export default class CreateNodeLinkAction extends Action {
 	}
 
 	// Returns the target node label. It makes sure the target node is there just
-	// to be safe: it would be a bug if target node wasnt there. Also,
+	// to be safe: it would be a bug if target node wasn't there. Also,
 	// although targetNodes is an array this is a historical artifact and in
 	// reality targetNodes will only even have one element.
 	getTargetNodeLabel() {

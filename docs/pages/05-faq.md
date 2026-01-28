@@ -18,7 +18,7 @@
 
 ### Questions about Nodes
 
-??? question "With resizeable nodes (enableResizableNodes: true) why don't the shapes defined by bodyPath and selectionPath change when resizing a node?"
+??? question "With resizable nodes (enableResizableNodes: true) why don't the shapes defined by bodyPath and selectionPath change when resizing a node?"
 
     The bodyPath and selectionPath ‘shapes’ do not automatically redraw when the user resizes the node. However, a function that returns a path can be provided for those fields instead of a string, so the application can return whatever shape it prefers as the resizing progresses. Obviously, these functions are called in real-time so they needs to return very quickly.
 
@@ -42,7 +42,7 @@
 	```js
 		const nodeId = "123";
 
-		const mydtaa = {
+		const mydata = {
 			field1: val1
 			field2: val2
 		}

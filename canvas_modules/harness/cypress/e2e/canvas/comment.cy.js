@@ -250,7 +250,7 @@ describe("Test coloring comments", function() {
 	});
 });
 
-describe("Test edting a comment using the text toolbar to add markdown syntax", function() {
+describe("Test editing a comment using the text toolbar to add markdown syntax", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedMarkdownInComments": true });
@@ -381,7 +381,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 	});
 });
 
-describe("Test edting a comment using keyboard shortcuts to add markdown syntax", function() {
+describe("Test editing a comment using keyboard shortcuts to add markdown syntax", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedMarkdownInComments": true });

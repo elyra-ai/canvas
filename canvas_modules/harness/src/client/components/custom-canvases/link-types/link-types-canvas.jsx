@@ -41,7 +41,7 @@ export default class LinkTypesCanvas extends React.Component {
 			temporary: true
 		};
 
-		// Define a forewards pointing arrow for the target end of a link
+		// Define a forwards pointing arrow for the target end of a link
 		this.targetDecoration = {
 			id: "targetArrow",
 			position: "target",

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ class PaletteDialog extends React.Component {
 
 		// horizontalSizingAction and horizontalSizingHover can be set to left or right
 		this.horizontalSizingAction = "";
-		this.hoizontalSizingHover = "";
+		this.horizontalSizingHover = "";
 
 		// These variables store the palette dimensions
 		this.savedWidth = 0;
@@ -73,17 +73,21 @@ class PaletteDialog extends React.Component {
 
 		// Need to control resizing of palette with snap to grid.
 		this.adjustedWidth = 137; // default width - (default content node grid width)
-		this.adjustedHeight = 51; // default heigth - (default content node grid height) + padding to avoid scroll bar
+		this.adjustedHeight = 51; // default height - (default content node grid height) + padding to avoid scroll bar
 		this.adjustedScrollBarWidth = 15;
 
 		// Boolean to remember whether we are maximized or not. This gets set to
 		// false when doing a manual resize of the palette.
 		this.isMaximized = false;
 
+		// Array of nodes for the palette
 		this.paletteNodes = [];
 
+		// Reference to the palette div
+		this.dialogPaletteDivRef = React.createRef();
+
 		// Correction for palette cursor position
-		// Used in both hoverzone detection and mouseMove vertical resize at bottom of paletteDiv
+		// Used in both hover zone detection and mouseMove vertical resize at bottom of paletteDiv
 		this.hackPaletteOffset = 46;
 		this.hackPaletteTopOffset = this.hackPaletteOffset + 4;
 
@@ -150,7 +154,7 @@ class PaletteDialog extends React.Component {
 	}
 
 	getPaletteDiv() {
-		return this.refs.palette;
+		return this.dialogPaletteDivRef?.current;
 	}
 
 	getStyleProperty(classOrId, property) {
@@ -528,8 +532,7 @@ class PaletteDialog extends React.Component {
 	render() {
 		return (
 			<nav aria-label={this.props.intl.formatMessage({ id: "palette.dialog.label", defaultMessage: defaultMessages["palette.dialog.label"] })} role="navigation">
-				<div className="palette-dialog-div"
-					ref="palette"
+				<div ref={this.dialogPaletteDivRef} className="palette-dialog-div"
 					onMouseDown={this.mouseDownOnPalette}
 				>
 					<PaletteDialogTopbar mouseDownMethod={this.mouseDownOnTopBar}

@@ -13,36 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 "use strict";
 
 module.exports = {
-	extends: "eslint-config-canvas",
-	plugins: [
-		"import"
-	],
-	settings: {
-		"import/resolver": {
-			"node": {
-				"extensions": [".js", ".jsx", ".json"]
-			}
-		}
-	},
-	rules: {
-		// Allow snake_case, but only for object properties e.g. myObj.param_name
-		"camelcase": [
-			"error",
-			{ "properties": "never" }
-		],
-		"import/no-unresolved": [2, { commonjs: true, amd: true }],
-		"max-len": [2, 180, 4],
-		"id-length": ["error", { "min": 1 }]
-	},
-	env: {
-		jasmine: true,
-		jest: true
-	},
-	parserOptions: {
-		"sourceType": "script"
-	}
+	babelrc: false, // required so webpack ignores the .babelrc file used for testing in root of project
+	presets: ["@babel/preset-react", "@babel/preset-env"],
+	plugins: ["lodash", "@babel/plugin-proposal-class-properties", "@babel/plugin-transform-runtime"],
 };

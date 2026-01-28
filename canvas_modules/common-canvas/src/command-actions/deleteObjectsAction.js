@@ -46,14 +46,14 @@ export default class DeleteObjectsAction extends Action {
 		// that will remain on the canvas as detached links when the nodes or
 		// comments, they are connected to, are deleted. They need to be updated to
 		// have their source and target IDs removed (as appropriate based on
-		// whether the source and/or taget object is being deleted) which will
-		// indicate that the node is either partailly or fully detached.
+		// whether the source and/or target object is being deleted) which will
+		// indicate that the node is either partially or fully detached.
 		if (this.areDetachableLinksSupported) {
 			this.linksToDelete = this.getConnectedLinksToDelete(this.linksToDelete, "nodeLink");
 			this.linksToUpdateInfo = this.getLinksToUpdateInfo();
 
 		// Handle links to delete. When detachable links are not enabled we
-		// implicitely delete links connected to nodes and comments being deleted.
+		// implicitly delete links connected to nodes and comments being deleted.
 		// This means we find any links connected to those nodes and comments
 		// and add them to the array of links to delete.
 		} else {
@@ -93,7 +93,7 @@ export default class DeleteObjectsAction extends Action {
 	// Returns an array of 'link info' objects that indicate which links should
 	// remain on the canvas as detached links when nodes they are connected to
 	// are deleted. There is one linkInfo object for each link that needs to be
-	// updated. This is only relavant when detachable links are enabled.
+	// updated. This is only relevant when detachable links are enabled.
 	// The linkInfo object contains:
 	// newLinks - An array of new links to update existing links with detached info
 	// oldLinks - A corresponding array of original links.

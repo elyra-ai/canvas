@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2025 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import PaletteContentList from "./palette-content-list.jsx";
 class PaletteDialogContent extends React.Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
 		// We get the paletteJSON after the initial render so set the
-		// default selected category when it is recieved.
+		// default selected category when it is received.
 		if (nextProps.paletteJSON &&
 				nextProps.paletteJSON.categories &&
 				nextProps.paletteJSON.categories.length > 0 &&
@@ -99,7 +99,7 @@ class PaletteDialogContent extends React.Component {
 					allowClickToAdd={this.props.allowClickToAdd}
 				/>);
 		return (
-			<div className="palette-dialog-content" ref="palettecontent">
+			<div className="palette-dialog-content">
 				<PaletteDialogContentCategories categories={cats}
 					selectedCategory={this.state.selectedCategory}
 					categorySelectedMethod={this.categorySelected}

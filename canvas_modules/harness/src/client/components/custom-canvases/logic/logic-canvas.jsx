@@ -121,7 +121,7 @@ export default class LogicCanvas extends React.Component {
 			const subMenuColorLink = [
 				{ action: "default-color", label: "Default Color", enable: true },
 				{ action: "red-color", label: "Red", enable: true },
-				{ action: "yellow-colorr", label: "Yellow", enable: true },
+				{ action: "yellow-color", label: "Yellow", enable: true },
 				{ action: "green-color", label: "Green", enable: true }
 			];
 

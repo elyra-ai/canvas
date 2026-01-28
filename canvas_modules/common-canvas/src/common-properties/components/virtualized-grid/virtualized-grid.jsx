@@ -289,12 +289,13 @@ const VirtualizedGrid = (props) => {
 					}
 
 					const resizeHandle = header.resizable
-						? (<div className={classNames("properties-vt-header-resize", { "resizing": virtualHeader.column.getIsResizing() })}
-							onMouseDown={virtualHeader.getResizeHandler()}
-							onTouchStart={virtualHeader.getResizeHandler()}
-							role="button" tabIndex="0"
-							aria-label="Resize column"
-						/>)
+						? (
+							<div className={classNames("properties-vt-header-resize", { "resizing": virtualHeader.column.getIsResizing() })}
+								onMouseDown={virtualHeader.getResizeHandler()}
+								onTouchStart={virtualHeader.getResizeHandler()}
+								role="button" tabIndex="0"
+								aria-label="Resize column"
+							/>)
 						: null;
 					return (<th key={`properties-grid-${virtualHeader.id}`}
 						className={classNames("properties-autosized-vt-header sticky-row properties-vt-column properties-tooltips-container",

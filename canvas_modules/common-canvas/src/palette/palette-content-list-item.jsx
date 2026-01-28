@@ -86,6 +86,7 @@ class PaletteContentListItem extends React.Component {
 	onKeyDown(evt) {
 		if (KeyboardUtils.createAutoNode(evt)) {
 			this.createAutoNode(true);
+			evt.stopPropagation(); // Stop key event propagating and closing the category.
 
 		} else if (KeyboardUtils.createAutoNodeNoLink(evt)) {
 			this.createAutoNode(false); // false indicates no links are required
@@ -107,7 +108,9 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	onDoubleClick() {
-		this.createAutoNode(true);
+		if (!this.props.allowClickToAdd) {
+			this.createAutoNode(true);
+		}
 	}
 
 	onClick() {
@@ -172,21 +175,21 @@ class PaletteContentListItem extends React.Component {
 		return elements;
 	}
 
-	// Returns an abbeviated description, constrained to the displayLen passed in,
+	// Returns an abbreviated description, constrained to the displayLen passed in,
 	// based on the full description passed in. The function makes sure the first
 	// occurrence of text to be highlighted is displayed with the abbreviated
 	// text. There are three possibilities:
 	// 1. The first occurrence is within the first displayLen number of characters
 	//    meaning we end the abbreviated text with " ..."
 	// 2. The first occurrence is somewhere in the middle of the text in which
-	//    the abbreviated dscription is prefixed with "... " and suffixed with " ..."
+	//    the abbreviated description is prefixed with "... " and suffixed with " ..."
 	// 3. The first occurrence is within displayLen number of characters of the end
-	//    of the description in which case we prefix the descriptin with "... "
-	// This function also adjusts the occurencs of highlighted text in the
+	//    of the description in which case we prefix the description with "... "
+	// This function also adjusts the occurrences of highlighted text in the
 	// description to account for any text that has been removed from the
 	// beginning of the description.
 	getAbbreviatedDescription(desc, nodeDescOccurrences, displayLen) {
-		// Not all descriptions will have occurencs. If not, just abbreviate and return.
+		// Not all descriptions will have occurrences. If not, just abbreviate and return.
 		if (nodeDescOccurrences.length === 0) {
 			const abbr = desc.substring(0, displayLen) + " ...";
 			return { abbrDesc: abbr, occurrences: nodeDescOccurrences };
