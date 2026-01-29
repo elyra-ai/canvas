@@ -510,7 +510,7 @@ class CanvasContents extends React.Component {
 		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
 		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
 		return (
-			<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId}
+			<section tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId}
 				onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 			/>
 		);
