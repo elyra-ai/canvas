@@ -1292,7 +1292,7 @@ export default class SVGCanvasRenderer {
 		const canvasSVG = parentObject
 			.append("svg")
 			.attr("class", "svg-area") // svg-area used in tests.
-			.attr("aria-label", "SVG area")
+			.attr("aria-hidden", "true")
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("width", dims.width)
 			.attr("height", dims.height)
@@ -1811,6 +1811,9 @@ export default class SVGCanvasRenderer {
 				.attr("class", (d) => this.getNodeGroupClass(d))
 				.attr("style", (d) => this.getNodeGrpStyle(d))
 				.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
+				.attr("aria-label", (d) => d.label)
+				.attr("aria-description", (d) => CanvasUtils.getNodeAriaDescription(d, this.canvasController.labelUtil))
+				.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("node.ariaRoleDescription"))
 				.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps, data));
 		});
 	}
@@ -3589,7 +3592,7 @@ export default class SVGCanvasRenderer {
 
 	// Opens either the context menu or the context toolbar depending on which is
 	// currently enabled. The pos parameter is optional. It is provided when menu
-	// is opened from teh keyboard and it sets both the context menu position and
+	// is opened from the keyboard and it sets both the context menu position and
 	// the "mouse position", if one is needed, by the action selected in the menu.
 	openContextMenu(d3Event, type, d, port, pos) {
 		CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stop the browser context menu appearing
@@ -4238,6 +4241,9 @@ export default class SVGCanvasRenderer {
 			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
 			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 			.attr("class", (c) => this.getCommentGroupClass(c))
+			.attr("aria-label", this.canvasController.labelUtil.getLabel("comment.ariaLabel"))
+			.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("comment.ariaRoleDescription"))
+			.attr("aria-description", (c) => CanvasUtils.getCommentAriaDescription(c, this.canvasController.labelUtil))
 			.call((joinedCommentGrps) => this.updateComments(joinedCommentGrps));
 	}
 
@@ -4786,6 +4792,9 @@ export default class SVGCanvasRenderer {
 			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 			.attr("style", (d) => this.getLinkGrpStyle(d))
 			.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? true : null))
+			.attr("aria-label", (d) => CanvasUtils.getLinkAriaLabel(d, this.canvasController.labelUtil))
+			.attr("aria-description", (d) => CanvasUtils.getLinkAriaDescription(d, this.canvasController.labelUtil))
+			.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("link.ariaRoleDescription"))
 			.call((joinedLinkGrps) => {
 				this.updateLinks(joinedLinkGrps, linksArray);
 			});
@@ -4817,19 +4826,27 @@ export default class SVGCanvasRenderer {
 			.append("path")
 			.attr("class", "d3-link-line-arrow-head");
 
-		// Add a group to store decorations. Adding this here ensures the decorations
-		// are always under the link handles whose groups are added next.
+		// Add a group to store decorations only for links that can have decorations.
+		// Adding this here ensures the decorations are always under the link handles
+		// whose groups are added next.
 		newLinkGrps
+			.filter((d) => d.type === NODE_LINK || d.type === ASSOCIATION_LINK)
 			.append("g")
 			.attr("class", "d3-link-decorations-group");
 
-		// Add a group to store link start handle, if needed.
+		// Add a group to store link start handle, only if handles will be displayed.
 		newLinkGrps
+			.filter((d) => d.type === NODE_LINK && (
+				this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE))
 			.append("g")
 			.attr("class", "d3-link-handle-start-group");
 
-		// Add a group to store link end handle, if needed.
+		// Add a group to store link end handle, only if handles will be displayed.
 		newLinkGrps
+			.filter((d) => d.type === NODE_LINK && (
+				this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE))
 			.append("g")
 			.attr("class", "d3-link-handle-end-group");
 
@@ -5152,6 +5169,7 @@ export default class SVGCanvasRenderer {
 	// Creates the link handle for the start of the link.
 	createStartHandle(enter, d) {
 		let handle = null;
+		const sourceHandleLabel = this.canvasController.labelUtil.getLabel("link.sourceHandle");
 		if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_IMAGE) {
 			handle = enter
 				.append("image")
@@ -5159,14 +5177,16 @@ export default class SVGCanvasRenderer {
 				.attr("x", d.x1 - (this.canvasLayout.linkStartHandleWidth / 2))
 				.attr("y", d.y1 - (this.canvasLayout.linkStartHandleHeight / 2))
 				.attr("width", this.canvasLayout.linkStartHandleWidth)
-				.attr("height", this.canvasLayout.linkStartHandleHeight);
+				.attr("height", this.canvasLayout.linkStartHandleHeight)
+				.attr("aria-label", sourceHandleLabel);
 
 		} else if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_CIRCLE) {
 			handle = enter
 				.append("circle")
 				.attr("r", this.canvasLayout.linkStartHandleRadius)
 				.attr("cx", d.x1)
-				.attr("cy", d.y1);
+				.attr("cy", d.y1)
+				.attr("aria-label", sourceHandleLabel);
 		}
 		return handle;
 	}
@@ -5207,6 +5227,7 @@ export default class SVGCanvasRenderer {
 	// Creates the link handle for the end of the link.
 	createEndHandle(enter, d) {
 		let handle = null;
+		const targetHandleLabel = this.canvasController.labelUtil.getLabel("link.targetHandle");
 		if (this.canvasLayout.linkEndHandleObject === PORT_DISPLAY_IMAGE) {
 			handle = enter
 				.append("image")
@@ -5215,14 +5236,16 @@ export default class SVGCanvasRenderer {
 				.attr("y", d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
 				.attr("width", this.canvasLayout.linkEndHandleWidth)
 				.attr("height", this.canvasLayout.linkEndHandleHeight)
-				.attr("transform", this.getLinkImageTransform(d));
+				.attr("transform", this.getLinkImageTransform(d))
+				.attr("aria-label", targetHandleLabel);
 
 		} else if (this.canvasLayout.linkStartHandleObject === PORT_DISPLAY_CIRCLE) {
 			handle = enter
 				.append("circle")
 				.attr("r", this.canvasLayout.linkEndHandleRadius)
 				.attr("cx", d.x2)
-				.attr("cy", d.y2);
+				.attr("cy", d.y2)
+				.attr("aria-label", targetHandleLabel);
 		}
 		return handle;
 	}

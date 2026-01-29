@@ -1886,6 +1886,91 @@ export default class CanvasUtils {
 		return "Undefined Object";
 	}
 
+	// Returns the aria-label text for a link based on its type.
+	static getLinkAriaLabel(link, labelUtil) {
+		if (link.type === NODE_LINK) {
+			return labelUtil.getLabel("link.ariaLabelDataLink");
+		} else if (link.type === ASSOCIATION_LINK) {
+			return labelUtil.getLabel("link.ariaLabelAssociationLink");
+		} else if (link.type === COMMENT_LINK) {
+			return labelUtil.getLabel("link.ariaLabelCommentLink");
+		}
+		return labelUtil.getLabel("link.ariaLabelGeneric");
+	}
+
+	// Returns the label for a link source node
+	static getLinkSourceLabel(link, labelUtil) {
+		return link.srcObj.label || labelUtil.getLabel("link.unnamedSourceNode");
+	}
+
+	// Returns the label for a link target node
+	static getLinkTargetLabel(link, labelUtil) {
+		return link.trgNode.label || labelUtil.getLabel("link.unnamedTargetNode");
+	}
+
+	// Returns an aria-description for a node that includes the node's description property.
+	// Safely handles description as both string and object types.
+	static getNodeAriaDescription(node, labelUtil) {
+		if (node.description && labelUtil) {
+			const desc = typeof node.description === "string" ? node.description : String(node.description);
+			return labelUtil.getLabel("node.ariaDescription", { description: desc });
+		}
+		return null;
+	}
+
+	// Returns an aria-description for a comment that includes the comment's content.
+	static getCommentAriaDescription(comment, labelUtil) {
+		if (labelUtil) {
+			return labelUtil.getLabel("comment.ariaDescription", { content: comment.content });
+		}
+		return null;
+	}
+
+	// Returns an aria-description for the link that includes source and target node names
+	// for data links (NODE_LINK type), comment links (COMMENT_LINK type), and association links (ASSOCIATION_LINK type).
+	// Handles fully attached, semi-detached, and fully detached links.
+	static getLinkAriaDescription(link, labelUtil) {
+		if (link.type === COMMENT_LINK) {
+			if (link.trgNode) {
+				const trgLabel = this.getLinkTargetLabel(link, labelUtil);
+				return labelUtil.getLabel("link.commentLinkDescription", { trgLabel });
+			}
+		}
+
+		if (link.type === ASSOCIATION_LINK) {
+			if (link.srcObj && link.trgNode) {
+				const srcLabel = this.getLinkSourceLabel(link, labelUtil);
+				const trgLabel = this.getLinkTargetLabel(link, labelUtil);
+				return labelUtil.getLabel("link.associationLinkDescription", { srcLabel, trgLabel });
+			}
+		}
+
+		if (link.type === NODE_LINK) {
+			// Fully attached link
+			if (link.srcObj && link.trgNode) {
+				const srcLabel = this.getLinkSourceLabel(link, labelUtil);
+				const trgLabel = this.getLinkTargetLabel(link, labelUtil);
+				return labelUtil.getLabel("link.dataLinkDescription", { srcLabel, trgLabel });
+			}
+
+			// Semi-detached at source
+			if (!link.srcObj && link.trgNode) {
+				const trgLabel = this.getLinkTargetLabel(link, labelUtil);
+				return labelUtil.getLabel("link.dataLinkDescriptionDetachedSource", { trgLabel });
+			}
+
+			// Semi-detached at target
+			if (link.srcObj && !link.trgNode) {
+				const srcLabel = this.getLinkSourceLabel(link, labelUtil);
+				return labelUtil.getLabel("link.dataLinkDescriptionDetachedTarget", { srcLabel });
+			}
+
+			// Fully detached
+			return labelUtil.getLabel("link.dataLinkDescriptionFullyDetached");
+		}
+		return labelUtil.getLabel("link.unknownLinkDescription");
+	}
+
 	// Returns the object passed in with all of the null or
 	// undefined properties removed.
 	static removeNullProperties(obj) {
