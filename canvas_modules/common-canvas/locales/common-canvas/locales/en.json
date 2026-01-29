@@ -45,6 +45,7 @@
   "node.editMenu": "Edit",
   "node.disconnectNode": "Disconnect",
   "node.saveToPalette": "Save to palette",
+  "port.ariaRoleDescription": "port",
   "link.ariaRoleDescription": "link",
   "link.ariaLabelDataLink": "Data link",
   "link.ariaLabelAssociationLink": "Association link",

@@ -2093,6 +2093,8 @@ export default class SVGCanvasRenderer {
 			.attr("connected", (port) => (port.isConnected ? "yes" : "no"))
 			.attr("class", (port) => this.getNodeInputPortClassName() + (port.class_name ? " " + port.class_name : ""))
 			.attr("tabindex", -1)
+			.attr("aria-label", (port) => port.label || port.id)
+			.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("port.ariaRoleDescription"))
 			.call((joinedInputPortGrps) => this.updateInputPorts(joinedInputPortGrps, node));
 	}
 
@@ -2195,6 +2197,9 @@ export default class SVGCanvasRenderer {
 			.attr("connected", (port) => (port.isConnected ? "yes" : "no"))
 			.attr("class", (port) => this.getNodeOutputPortClassName() + (port.class_name ? " " + port.class_name : ""))
 			.attr("tabindex", -1)
+			.attr("aria-hidden", true)
+			.attr("aria-label", (port) => port.label || port.id)
+			.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("port.ariaRoleDescription"))
 			.call((joinedOutputPortGrps) => this.updateOutputPorts(joinedOutputPortGrps, node));
 	}
 
