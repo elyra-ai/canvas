@@ -160,6 +160,26 @@ describe("Test canvas controller methods", () => {
 		expect(isEqual(expectedNode.label, actualNode.label)).to.be.true;
 	});
 
+	it("should update a nodes with new properties using: setNodesProperties", () => {
+		deepFreeze(startCanvas);
+
+		const expectedNode1 = { label: "New Node Label1" };
+		const expectedNode2 = { label: "New Node Label2" };
+
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setNodesProperties({
+			"id8I6RH2V91XW": expectedNode1,
+			"id125TTEEIK7V": expectedNode2
+		});
+
+		const actualNode1 = canvasController.getNode("id8I6RH2V91XW");
+		const actualNode2 = canvasController.getNode("id125TTEEIK7V");
+
+		expect(isEqual(expectedNode1.label, actualNode1.label)).to.be.true;
+		expect(isEqual(expectedNode2.label, actualNode2.label)).to.be.true;
+	});
+
 	it("should update a comment with new properties using: setCommentProperties", () => {
 		deepFreeze(startCanvas);
 
