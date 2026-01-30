@@ -2892,6 +2892,7 @@ export default class SVGCanvasRenderer {
 				(enter) => this.createDecorations(enter, d, objType, decGrpClassName)
 			)
 			.attr("tabindex", (dec) => (dec.focusable ? -1 : null))
+			.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("decoration.ariaRoleDescription"))
 			.attr("transform", (dec) => this.decUtils.getDecTransform(dec, d, objType))
 			.on("mousedown", (d3Event, dec) => (dec.hotspot && d3Event.button === 0 ? that.callDecoratorCallback(d3Event, d, dec) : null))
 			.each((dec, i, elements) => this.updateDecoration(dec, d3.select(elements[i]), objType, d));

@@ -46,6 +46,7 @@
 	"node.disconnectNode": "[Esperanto~Disconnect~~~~~~eo]",
 	"node.saveToPalette": "[Esperanto~Save to palette~eo]",
 	"port.ariaRoleDescription": "[Esperanto~port~eo]",
+	"decoration.ariaRoleDescription": "[Esperanto~decoration~eo]",
 	"link.ariaRoleDescription": "[Esperanto~link~eo]",
 	"link.ariaLabelDataLink": "[Esperanto~Data link~eo]",
 	"link.ariaLabelAssociationLink": "[Esperanto~Association link~eo]",

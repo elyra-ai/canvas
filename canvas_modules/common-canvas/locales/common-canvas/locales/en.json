@@ -46,6 +46,7 @@
   "node.disconnectNode": "Disconnect",
   "node.saveToPalette": "Save to palette",
   "port.ariaRoleDescription": "port",
+  "decoration.ariaRoleDescription": "decoration",
   "link.ariaRoleDescription": "link",
   "link.ariaLabelDataLink": "Data link",
   "link.ariaLabelAssociationLink": "Association link",
