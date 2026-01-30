@@ -815,6 +815,16 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).addNode(node);
 	}
 
+	// Update a node into the pipeline specified by the pipelineId.
+	updateNode(node, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).updateNode(node);
+	}
+
+	// Update nodes into the pipeline specified by the pipelineId.
+	updateNodes(nodes, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).updateNodes(nodes);
+	}
+
 	// Creates a node using the data parameter provided in the pipeline specified
 	// by pipelineId and adds the command to the command stack (so the user can
 	// undo/redo the command). This will also cause the beforeEditActionHandler

@@ -424,8 +424,13 @@ export default class APIPipeline {
 		return newNodes;
 	}
 
-	replaceNodes(replacementNodes) {
-		this.store.dispatch({ type: "REPLACE_NODES", data: replacementNodes, pipelineId: this.pipelineId });
+
+	updateNode(node) {
+		this.store.dispatch({ type: "REPLACE_NODE", data: { node }, pipelineId: this.pipelineId });
+	}
+
+	updateNodes(nodes) {
+		this.store.dispatch({ type: "REPLACE_NODES", data: nodes, pipelineId: this.pipelineId });
 	}
 
 	// Returns true if a new link needs to be created with the newly created
