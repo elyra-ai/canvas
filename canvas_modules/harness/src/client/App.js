@@ -231,7 +231,7 @@ class App extends React.Component {
 			selectedSplitLinkDroppedOnNode: false,
 			selectedRaiseLinksToTopOnHover: false,
 			selectedStraightLinksAsFreeform: true,
-			selectedKeyboardNavigation: false,
+			selectedKeyboardNavigation: true,
 			selectedSelfRefLinks: false,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
 			selectedCanvasUnderlay: UNDERLAY_NONE,

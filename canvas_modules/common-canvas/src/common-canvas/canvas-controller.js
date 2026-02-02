@@ -2020,7 +2020,7 @@ export default class CanvasController {
 
 	// Sets focus on the flow editor canvas background.
 	setFocusOnCanvas() {
-		this.setFocusObject(CANVAS_FOCUS);
+		this.setFocusObject(CANVAS_FOCUS, null, true);
 	}
 
 	// Returns the currently focused object or the string "CanvasFocus".
@@ -2033,12 +2033,15 @@ export default class CanvasController {
 	 * @param focusObj - The Canvas object or the string "CanvasFocus" where the focus should be set
 	 * @param evt - The event object
 	 */
-	setFocusObject(focusObj, evt) {
+	setFocusObject(focusObj, evt, force = false) {
 		this.logger.log("setFocusObject focusObject = " + CanvasUtils.getFocusName(focusObj));
 
 		this.focusObject = focusObj;
 
-		if (this.focusObject && this.canvasContents) {
+		const isActiveElementInCanvas = this.isTargetInsideCanvas(document.activeElement);
+
+		if ((isActiveElementInCanvas || force) &&
+				this.focusObject && this.canvasContents) {
 			if (this.focusObject === CANVAS_FOCUS) {
 				this.canvasContents.focusOnCanvas();
 
@@ -2052,6 +2055,16 @@ export default class CanvasController {
 			}
 		}
 	}
+
+	// Returns true of the target passed in is either the canvas div or an
+	// element inside the canvas div.
+	isTargetInsideCanvas(target) {
+		if (this.canvasContents) {
+			return this.canvasContents.isTargetInsideCanvas(target);
+		}
+		return false;
+	}
+
 
 	// Returns true of the focus in currently on the flow editor canvas background.
 	isFocusOnCanvas() {

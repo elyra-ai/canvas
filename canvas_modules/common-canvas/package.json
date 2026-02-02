@@ -4,6 +4,16 @@
   "description": "Elyra common-canvas",
   "main": "dist/common-canvas.js",
   "module": "dist/common-canvas.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/common-canvas.es.js",
+      "require": "./dist/common-canvas.js",
+      "types": "./types/index.d.ts"
+    },
+    "./src/*": "./src/*",
+    "./locales/*/locales": "./locales/*/locales/index.js",
+    "./package.json": "./package.json"
+  },
   "homepage": "https://elyra-ai.github.io/canvas/",
   "repository": {
     "type": "git",
@@ -14,7 +24,6 @@
   },
   "license": "Apache-2.0",
   "sideEffects": false,
-  "type": "module",
   "types": "./types/index.d.ts",
   "scripts": {
     "build": "npx stylelint '**/*.scss' && grunt && rollup -c",

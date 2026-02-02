@@ -1795,18 +1795,24 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayNodesSubset(selection, data) {
-		selection
-			.data(data, (d) => d.id)
-			.join(
-				(enter) => this.createNodes(enter),
-				null,
-				(remove) => this.removeNodes(remove)
-			)
-			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
-			.attr("class", (d) => this.getNodeGroupClass(d))
-			.attr("style", (d) => this.getNodeGrpStyle(d))
-			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
-			.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps, data));
+		// The D3 join operation can sometimes cause focus to be lost from any
+		// currently focused object involved in the join (even if no new objects
+		// have been created or if no objects are removed) so we preserve and
+		// reinstate the focus after this operation is complete.
+		this.preserveFocus(() => {
+			selection
+				.data(data, (d) => d.id)
+				.join(
+					(enter) => this.createNodes(enter),
+					null,
+					(remove) => this.removeNodes(remove)
+				)
+				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
+				.attr("class", (d) => this.getNodeGroupClass(d))
+				.attr("style", (d) => this.getNodeGrpStyle(d))
+				.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
+				.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps, data));
+		});
 	}
 
 	createNodes(enter) {
@@ -2389,7 +2395,7 @@ export default class SVGCanvasRenderer {
 							this.canvasController.autoSelectFocusObj(() =>
 								this.dragNewLinkUtils.createNewLinkFromSelections(),
 							true, // true - "augment" the selection
-							true); // true - always do the auto-select (regardless of how enableDragWithSelect is set)
+							true); // true - always do the auto-select (regardless of how enableDragWithoutSelect is set)
 						}
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
@@ -2467,7 +2473,7 @@ export default class SVGCanvasRenderer {
 				}
 
 				if (this.config.enableKeyboardNavigation) {
-					this.setFocusObject(d, d3Event, d.layout.onFocusAllowDefaultAction);
+					this.setFocusObject(d, d3Event, d.layout.onFocusAllowDefaultAction, true);
 				}
 
 				if (!this.config.enableDragWithoutSelect) {
@@ -2500,7 +2506,7 @@ export default class SVGCanvasRenderer {
 					if (this.config.enableDragWithoutSelect) {
 						this.selectObjectD3Event(d3Event, d, SINGLE_CLICK_CONTEXTMENU);
 					}
-					this.setFocusObject(d, d3Event);
+					this.setFocusObject(d, d3Event, false, true);
 					if (!this.config.enableContextToolbar) {
 						this.openContextMenu(d3Event, "node", d);
 					}
@@ -4521,7 +4527,7 @@ export default class SVGCanvasRenderer {
 				}
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
-						this.setFocusObject(d, d3Event);
+						this.setFocusObject(d, d3Event, false, true);
 					}
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
 					this.selectObjectD3Event(d3Event, d, clickType);
@@ -4557,7 +4563,7 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK_CONTEXTMENU);
 				}
-				this.setFocusObject(d, d3Event);
+				this.setFocusObject(d, d3Event, false, true);
 				if (!this.config.enableContextToolbar) {
 					this.openContextMenu(d3Event, "comment", d);
 				}
@@ -5062,7 +5068,7 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing(d3Event);
 				}
 				if (this.config.enableKeyboardNavigation) {
-					this.setFocusObject(d, d3Event);
+					this.setFocusObject(d, d3Event, false, true);
 				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE &&
 						!this.config.enableDragWithoutSelect) {
@@ -5097,7 +5103,7 @@ export default class SVGCanvasRenderer {
 						this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK_CONTEXTMENU);
 				}
-				this.setFocusObject(d, d3Event);
+				this.setFocusObject(d, d3Event, false, true);
 				if (!this.config.enableContextToolbar) {
 					this.openContextMenu(d3Event, "link", d);
 				}
@@ -5267,7 +5273,7 @@ export default class SVGCanvasRenderer {
 
 				if (!this.config.enableDragWithoutSelect) {
 					if (this.config.enableKeyboardNavigation) {
-						this.setFocusObject(d, d3Event);
+						this.setFocusObject(d, d3Event, false, true);
 					}
 					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
 					this.selectObjectD3Event(d3Event, d, clickType);
@@ -5477,18 +5483,24 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Preserves the focus while calling the fn function by saving the
-	// focus object and reinstating if after the fn has finished.
+	// focus object and reinstating if after the fn has finished. If,
+	// before the function is called, the active element is in the canvas
+	// then we force the focus to be changed.
 	preserveFocus(fn) {
 		const focusObj = this.canvasController.getFocusObject();
+		const shouldForceFocusChange = this.canvasController.isTargetInsideCanvas(document.activeElement);
 
 		fn();
 
-		if (this.config.enableKeyboardNavigation && !this.isEditingText() && !this.canvasController.isContextMenuDisplayed()) {
+		if (this.config.enableKeyboardNavigation &&
+			!this.isEditingText() &&
+			!this.canvasController.isContextMenuDisplayed())
+		{
 			if (this.subObject) {
 				this.restoreFocusToSubObject();
 
 			} else {
-				this.canvasController.setFocusObject(focusObj);
+				this.canvasController.setFocusObject(focusObj, null, shouldForceFocusChange);
 			}
 		}
 	}
@@ -6338,7 +6350,7 @@ export default class SVGCanvasRenderer {
 		const nextObj = this.activePipeline.getNextTabGroupStartObject(focusObj);
 
 		if (nextObj) {
-			this.setFocusObject(nextObj, evt);
+			this.setFocusObject(nextObj, evt, false, true);
 			return true;
 		}
 		return false;
@@ -6386,7 +6398,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Sets the focus object passed in.
-	setFocusObject(focusObj, evt, allowDefaultAction = false) {
+	setFocusObject(focusObj, evt, allowDefaultAction = false, force = false) {
 		if (!this.config.enableKeyboardNavigation) {
 			return;
 		}
@@ -6402,7 +6414,7 @@ export default class SVGCanvasRenderer {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 		}
 
-		this.canvasController.setFocusObject(focusObj, evt);
+		this.canvasController.setFocusObject(focusObj, evt, force);
 	}
 
 	clearSubObject() {
