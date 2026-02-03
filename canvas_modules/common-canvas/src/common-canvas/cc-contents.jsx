@@ -499,6 +499,7 @@ class CanvasContents extends React.Component {
 				<section role="application"
 					id={this.svgCanvasDivId}
 					tabIndex="0"
+					aria-roledescription="Flow editor"
 					className="d3-svg-canvas-div keyboard-navigation"
 					onMouseDown={this.onMouseDown} onMouseLeave={this.onMouseLeave}
 					onFocus={this.onFocus}

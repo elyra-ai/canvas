@@ -1811,7 +1811,6 @@ export default class SVGCanvasRenderer {
 				.attr("style", (d) => this.getNodeGrpStyle(d))
 				.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 				.attr("aria-label", (d) => d.label)
-				.attr("aria-description", (d) => CanvasUtils.getNodeAriaDescription(d, this.canvasController.labelUtil))
 				.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("node.ariaRoleDescription"))
 				.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps, data));
 		});
@@ -4247,9 +4246,9 @@ export default class SVGCanvasRenderer {
 			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
 			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 			.attr("class", (c) => this.getCommentGroupClass(c))
-			.attr("aria-label", this.canvasController.labelUtil.getLabel("comment.ariaLabel"))
+			.attr("role", "region")
 			.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("comment.ariaRoleDescription"))
-			.attr("aria-description", (c) => CanvasUtils.getCommentAriaDescription(c, this.canvasController.labelUtil))
+			.attr("aria-label", (c) => this.canvasController.labelUtil.getLabel("comment.ariaLabel", { content: c.content }))
 			.call((joinedCommentGrps) => this.updateComments(joinedCommentGrps));
 	}
 
@@ -4799,7 +4798,6 @@ export default class SVGCanvasRenderer {
 			.attr("style", (d) => this.getLinkGrpStyle(d))
 			.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? true : null))
 			.attr("aria-label", (d) => CanvasUtils.getLinkAriaLabel(d, this.canvasController.labelUtil))
-			.attr("aria-description", (d) => CanvasUtils.getLinkAriaDescription(d, this.canvasController.labelUtil))
 			.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("link.ariaRoleDescription"))
 			.call((joinedLinkGrps) => {
 				this.updateLinks(joinedLinkGrps, linksArray);
@@ -6727,3 +6725,4 @@ export default class SVGCanvasRenderer {
 			.attr("width", bBox.width + (2 * spacing));
 	}
 }
+
