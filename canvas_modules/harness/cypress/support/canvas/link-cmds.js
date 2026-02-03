@@ -372,7 +372,6 @@ Cypress.Commands.add("getDetachedPortLinksToTarget", (pipeline, trgNodeName, trg
 		});
 });
 
-
 Cypress.Commands.add("deleteLinkAt", (linkX, linkY) => {
 	// Delete link using context menu
 	cy.get(".d3-svg-canvas-div")
@@ -407,7 +406,6 @@ function findGrpForLinkId(grpArray, linkId) {
 	}
 	return null;
 }
-
 
 Cypress.Commands.add("getLinkLineUsingLinkId", (linkId) => {
 	cy.get(getLinkSelector(linkId, "line"))
