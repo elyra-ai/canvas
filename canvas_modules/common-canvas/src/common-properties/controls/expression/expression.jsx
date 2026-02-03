@@ -94,6 +94,7 @@ class ExpressionControl extends React.Component {
 		this.handleUpdate = this.handleUpdate.bind(this);
 		this.setCodeMirrorEditable = this.setCodeMirrorEditable.bind(this);
 		this.getCodemirrorState = this.getCodemirrorState.bind(this);
+		this.focusSet = false;
 	}
 
 	componentDidMount() {
@@ -271,6 +272,14 @@ class ExpressionControl extends React.Component {
 		// Set editor in the expression-builder
 		if (this.props.editorDidMount) {
 			this.props.editorDidMount(this.editor);
+
+			if (!this.focusSet && !(this.props.state === STATES.DISABLED) && !this.props.readOnly) {
+				this.focusSet = true;
+				// Set focus on the editor instead of the modal's close button
+				setTimeout(() => {
+					this.editor.focus();
+				}, 0);
+			}
 		}
 	}
 
