@@ -501,7 +501,8 @@ class CanvasContents extends React.Component {
 					tabIndex="0"
 					aria-roledescription="Flow editor"
 					className="d3-svg-canvas-div keyboard-navigation"
-					onMouseDown={this.onMouseDown} onMouseLeave={this.onMouseLeave}
+					onMouseDown={this.onMouseDown}
+					onMouseLeave={this.onMouseLeave}
 					onFocus={this.onFocus}
 					onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 					aria-label={this.getLabel("canvas.label")}
