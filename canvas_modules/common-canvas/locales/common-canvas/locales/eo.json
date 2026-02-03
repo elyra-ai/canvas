@@ -58,7 +58,7 @@
 	"link.targetHandle": "[Esperanto~Target handle~eo]",
 	"link.unnamedSourceNode": "[Esperanto~Unnamed source node~eo]",
 	"link.unnamedTargetNode": "[Esperanto~Unnamed target node~eo]",
-	"link.commentLinkDescription": "[Esperanto~Link from comment to {trgLabel}~eo]",
+	"link.commentLinkDescription": "[Esperanto~Comment link from comment to {trgLabel}~eo]",
 	"link.associationLinkDescription": "[Esperanto~Association link between {srcLabel} and {trgLabel}~eo]",
 	"texttoolbar.headerAction": "[Esperanto~Header~~~~eo]",
 	"texttoolbar.boldAction": "[Esperanto~Bold~~~~eo]",

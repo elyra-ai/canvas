@@ -58,7 +58,7 @@
   "link.targetHandle": "Target handle",
   "link.unnamedSourceNode": "Unnamed source node",
   "link.unnamedTargetNode": "Unnamed target node",
-  "link.commentLinkDescription": "Link from comment to {trgLabel}",
+  "link.commentLinkDescription": "Comment link from comment to {trgLabel}",
   "link.associationLinkDescription": "Association link between {srcLabel} and {trgLabel}",
   "texttoolbar.headerAction": "Header",
   "texttoolbar.boldAction": "Bold",
