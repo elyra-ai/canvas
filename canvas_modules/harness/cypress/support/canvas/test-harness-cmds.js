@@ -39,6 +39,10 @@ Cypress.Commands.add("toggleCommonPropertiesSidePanel", () => {
 	cy.get("[data-toolbar-action='sidepanelProperties']").click();
 });
 
+Cypress.Commands.add("toggleAPISidePanel", () => {
+	cy.get("[data-toolbar-action='sidepanelAPI']").click();
+});
+
 Cypress.Commands.add("openCanvasDefinition", (canvasFileName, checkForComment) => {
 	cy.get("#harness-app-container");
 	cy.document().then((doc) => {
@@ -74,8 +78,7 @@ Cypress.Commands.add("openCanvasPaletteForExtraCanvas", (paletteName) => {
 	});
 });
 
-Cypress.Commands.add("openCanvasAPI", (api) => {
-	cy.get("[data-toolbar-action='sidepanelAPI']").click();
+Cypress.Commands.add("chooseAPIOperation", (api) => {
 	cy.dropdownSelect("#harness-sidepanel-api-list", api);
 });
 

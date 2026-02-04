@@ -247,7 +247,8 @@ describe("Test changing node name to update node tip", function() {
 	});
 
 	it("Test changing node name to update node tip", function() {
-		cy.openCanvasAPI("Set Node Label");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Set Node Label");
 		cy.selectNodeLabelFromDropDown("Na_to_K");
 		cy.setNewLabel("New Node Label");
 		cy.submitAPI();
@@ -264,7 +265,8 @@ describe("Test changing input port name to update port tip", function() {
 	});
 
 	it("Test changing input port name to update port tip", function() {
-		cy.openCanvasAPI("Set Input Port Label");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Set Input Port Label");
 		cy.selectNodeLabelFromDropDown("Na_to_K");
 		cy.selectPortFromDropDown("Input Port2");
 		cy.setNewLabel("New Port Label");
@@ -282,7 +284,8 @@ describe("Test changing output port name to update port tip", function() {
 	});
 
 	it("Test changing output port name to update port tip", function() {
-		cy.openCanvasAPI("Set Output Port Label");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Set Output Port Label");
 		cy.selectNodeLabelFromDropDown("Discard Fields");
 		cy.selectPortFromDropDown("Output Port Two");
 		cy.setNewLabel("New Port Label");

@@ -68,7 +68,8 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a n
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("bigCanvas.json");
-		cy.openCanvasAPI("Zoom To Reveal Node");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Zoom To Reveal Node");
 	});
 
 	it("Test ZoomTo function with x,y parameters", function() {
@@ -129,7 +130,8 @@ describe("Test zoomToReveal function returns the appropriate zoom object for a l
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("allTypesCanvas.json");
-		cy.openCanvasAPI("Zoom To Reveal Link");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Zoom To Reveal Link");
 	});
 
 	it("Test ZoomTo function with x,y parameters", function() {
