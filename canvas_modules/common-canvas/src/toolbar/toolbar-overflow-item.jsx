@@ -182,7 +182,7 @@ ToolbarOverflowItem.propTypes = {
 	index: PropTypes.number.isRequired,
 	action: PropTypes.string,
 	label: PropTypes.string,
-	size: PropTypes.oneOf(["md", "sm"]),
+	size: PropTypes.oneOf(["md", "sm", "lg"]),
 	subMenuActions: PropTypes.array,
 	setOverflowIndex: PropTypes.func,
 	toolbarActionHandler: PropTypes.func,

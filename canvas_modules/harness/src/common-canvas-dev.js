@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CommonCanvas, CanvasController, CommonProperties, CommandStack, Action, FlowValidation, ColorPicker, Palette, FlexibleTable }
+import { CommonCanvas, CanvasController, CommonProperties, CommandStack, Action, FlowValidation, ColorPicker, Palette, FlexibleTable, Toolbar }
 	from "../../common-canvas/src/index";
 
-export { CommonCanvas, CanvasController, CommonProperties, CommandStack, Action, FlowValidation, ColorPicker, Palette, FlexibleTable };
+export { CommonCanvas, CanvasController, CommonProperties, CommandStack, Action, FlowValidation, ColorPicker, Palette, FlexibleTable, Toolbar };

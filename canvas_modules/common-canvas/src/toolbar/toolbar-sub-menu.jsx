@@ -249,7 +249,7 @@ ToolbarSubMenu.propTypes = {
 	parentSelector: PropTypes.string,
 	isOverflowMenu: PropTypes.bool,
 	isCascadeMenu: PropTypes.bool,
-	size: PropTypes.oneOf(["md", "sm"])
+	size: PropTypes.oneOf(["md", "sm", "lg"])
 };
 
 export default ToolbarSubMenu;
