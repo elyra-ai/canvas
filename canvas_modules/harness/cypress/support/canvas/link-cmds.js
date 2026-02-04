@@ -95,13 +95,13 @@ function getLinkSelector(linkId, element) {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	let selector = null;
 	if (element === "grp") {
-		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"]`;
+		selector = `section > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"]`;
 	} else if (element === "line") {
-		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > path`;
+		selector = `section > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > path`;
 	} else if (element === "startHandle") {
-		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > g > .d3-link-handle-start`;
+		selector = `section > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > g > .d3-link-handle-start`;
 	} else if (element === "endHandle") {
-		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > g > .d3-link-handle-end`;
+		selector = `section > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > g > .d3-link-handle-end`;
 	}
 	return selector;
 }
@@ -372,7 +372,6 @@ Cypress.Commands.add("getDetachedPortLinksToTarget", (pipeline, trgNodeName, trg
 		});
 });
 
-
 Cypress.Commands.add("deleteLinkAt", (linkX, linkY) => {
 	// Delete link using context menu
 	cy.get(".d3-svg-canvas-div")
@@ -395,7 +394,7 @@ Cypress.Commands.add("getLinkUsingLinkId", (linkId) => {
 
 function getLinkGrpSelector() {
 	const inst = document.extraCanvas === true ? "1" : "0";
-	const selector = `div > svg > g > g > g[data-id^='link_grp_${inst}']`;
+	const selector = `section > svg > g > g > g[data-id^='link_grp_${inst}']`;
 	return selector;
 }
 
@@ -407,7 +406,6 @@ function findGrpForLinkId(grpArray, linkId) {
 	}
 	return null;
 }
-
 
 Cypress.Commands.add("getLinkLineUsingLinkId", (linkId) => {
 	cy.get(getLinkSelector(linkId, "line"))
