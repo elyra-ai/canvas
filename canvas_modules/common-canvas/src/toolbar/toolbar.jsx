@@ -481,7 +481,7 @@ class Toolbar extends React.Component {
 
 	// Returns JSX for an overflow toolbar item based on the index and action passed in.
 	generateOverflowItem(index, action) {
-		const label = this.props.additionalText ? this.props.additionalText.overflowMenuLabel : "Overflow menu";
+		const label = this.props.additionalText ? this.props.additionalText.overflowMenuLabel : "";
 		const overflowAction = this.getOverflowAction(action);
 		const subMenuActions = index === this.state.leftOverflowIndex ? this.createSubMenuActions() : [];
 
