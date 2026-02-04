@@ -2782,7 +2782,6 @@ class App extends React.Component {
 								labelB="Dark"
 								toggled={this.state.lightTheme}
 								onToggle={this.handleThemeChange.bind(this)}
-								className="toggle-theme"
 							/>
 						</div>
 					),

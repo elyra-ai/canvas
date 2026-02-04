@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,6 +64,7 @@ $harness-navbar-icon-width: 48px;
 }
 
 /* Styles for elements displayed for empty canvas. */
+
 .harness-empty-image {
 	margin-left: auto;
 	margin-right: auto;
@@ -93,58 +94,10 @@ $harness-navbar-icon-width: 48px;
 	user-select: none;
 }
 
-/*Navbar*/
+/* Navbar */
+
 .harness-app-navbar {
 	height: 50px;
-}
-
-.harness-app-navbar-items {
-	position: fixed;
-	width: 100%;
-	height: 50px;
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-	background-color: carbon.$layer-01;
-	border-bottom: 2px solid carbon.$layer-accent-01;
-}
-
-.harness-navbar-li {
-	float: left;
-	height: 100%;
-	display: block;
-	align-items: center;
-
-	a, .toggle-theme {
-		display: block;
-		text-align: center;
-		padding: 14px;
-		width: 18px;
-		fill: carbon.$icon-primary;
-		box-sizing: content-box;
-		cursor: pointer;
-
-		&:hover {
-			background-color: carbon.$layer-accent-01;
-		}
-
-		& svg {
-			color: carbon.$icon_primary;
-		}
-	}
-
-	.toggle-theme {
-		width: 65px;
-	}
-}
-
-.harness-action-bar-sidepanel {
-	float: right;
-}
-
-.harness-nav-divider {
-	border-left: 1px solid carbon.$layer-accent-01;
 }
 
 /* Navbar Theme Toggle */
@@ -197,6 +150,8 @@ $harness-navbar-icon-width: 48px;
 	}
 }
 
+/* Temporary Content for side panels */
+
 .harness-panel-temp-content {
 	background-color: carbon.$layer-01;
 	padding: 30px;
@@ -215,6 +170,8 @@ $harness-navbar-icon-width: 48px;
 		display: flex;
 	}
 }
+
+/* Example Color Picker */
 
 .harness-color-picker {
 	width: 80px;
