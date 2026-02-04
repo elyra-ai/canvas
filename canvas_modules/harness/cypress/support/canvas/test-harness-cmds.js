@@ -32,11 +32,11 @@ Cypress.Commands.add("inRegularCanvas", () => {
 Cypress.Commands.overwrite("log", (subject, message) => cy.task("log", message));
 
 Cypress.Commands.add("toggleCommonCanvasSidePanel", () => {
-	cy.get("#harness-action-bar-sidepanel-canvas").click();
+	cy.get("[data-toolbar-action='sidepanelCanvas']").click();
 });
 
 Cypress.Commands.add("toggleCommonPropertiesSidePanel", () => {
-	cy.get("#harness-action-bar-sidepanel-properties").click();
+	cy.get("[data-toolbar-action='sidepanelProperties']").click();
 });
 
 Cypress.Commands.add("openCanvasDefinition", (canvasFileName, checkForComment) => {
@@ -75,7 +75,7 @@ Cypress.Commands.add("openCanvasPaletteForExtraCanvas", (paletteName) => {
 });
 
 Cypress.Commands.add("openCanvasAPI", (api) => {
-	cy.get("#harness-action-bar-sidepanel-api > a").click();
+	cy.get("[data-toolbar-action='sidepanelAPI']").click();
 	cy.dropdownSelect("#harness-sidepanel-api-list", api);
 });
 
