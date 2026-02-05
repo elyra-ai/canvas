@@ -420,6 +420,7 @@ class Toolbar extends React.Component {
 			const actionObj = toolbarActions[i];
 			if (actionObj) {
 				if (withOverflowItem && this.shouldAddOverflowItem(actionObj)) {
+					// Create a dummy action name for dividers to prevent undefined action showing in debugger.
 					const action = actionObj.divider ? `divider_${i}` : actionObj.action;
 					newItems.push(this.generateOverflowItem(i, action));
 				}
