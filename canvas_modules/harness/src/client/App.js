@@ -2841,6 +2841,7 @@ class App extends React.Component {
 					instanceId={0}
 					toolbarActionHandler={this.toolbarActionHandler.bind(this)}
 					tooltipDirection="bottom"
+					additionalText={{ overflowMenuLabel: "Overflow menu" }}
 					size="lg"
 				/>
 			</div>

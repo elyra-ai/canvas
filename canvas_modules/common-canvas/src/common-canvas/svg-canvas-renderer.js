@@ -1293,6 +1293,7 @@ export default class SVGCanvasRenderer {
 			.append("svg")
 			.attr("class", "svg-area") // svg-area used in tests.
 			.attr("data-pipeline-id", this.activePipeline.id)
+			.attr("aria-label", "SVG area") // Suppress accessibility checker error. This text is not read out.
 			.attr("width", dims.width)
 			.attr("height", dims.height)
 			.attr("x", dims.x)
