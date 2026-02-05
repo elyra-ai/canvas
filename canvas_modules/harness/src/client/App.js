@@ -2738,8 +2738,8 @@ class App extends React.Component {
 					action: "harness-title",
 					label: "Elyra Canvas",
 					enable: true,
-					jsx: (
-						<div className="harness-title-container">
+					jsx: (tabIndex) => (
+						<div className="harness-title-container" tabIndex={tabIndex}>
 							<span className="harness-title">Elyra Canvas</span>
 							<span className="harness-version">{todaysDateFormatted}</span>
 						</div>
@@ -2772,7 +2772,7 @@ class App extends React.Component {
 					action: "theme-toggle",
 					label: "Switch Theme",
 					enable: true,
-					jsx: (
+					jsx: (tabIndex) => (
 						<div className="harness-theme-toggle-wrapper" tabIndex={-1}>
 							<Toggle
 								id="harness-toggle-theme"
@@ -2782,6 +2782,7 @@ class App extends React.Component {
 								labelB="Dark"
 								toggled={this.state.lightTheme}
 								onToggle={this.handleThemeChange.bind(this)}
+								tabIndex={tabIndex}
 							/>
 						</div>
 					),
@@ -2792,8 +2793,8 @@ class App extends React.Component {
 					action: "breadcrumbs",
 					label: "Breadcrumbs",
 					enable: true,
-					jsx: (
-						<div className="harness-pipeline-breadcrumbs-container" tabIndex={-1}>
+					jsx: (tabIndex) => (
+						<div className="harness-pipeline-breadcrumbs-container" tabIndex={tabIndex}>
 							{breadcrumbs}
 						</div>
 					)
