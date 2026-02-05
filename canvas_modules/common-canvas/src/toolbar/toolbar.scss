@@ -22,6 +22,8 @@ $toolbar-button-height: carbon.$spacing-08;
 $toolbar-button-width: carbon.$spacing-08;
 $toolbar-button-sm-height: carbon.$spacing-07;
 $toolbar-button-sm-width: carbon.$spacing-07;
+$toolbar-button-lg-height: carbon.$spacing-09;
+$toolbar-button-lg-width: carbon.$spacing-09;
 $toolbar-divider-width: 1px;
 
 .toolbar-div {
@@ -98,6 +100,69 @@ $toolbar-divider-width: 1px;
 		.toolbar-tick-svg {
 			height: $toolbar-button-sm-height;
 			width: $toolbar-button-sm-height;
+		}
+	}
+
+	/* Large size toolbar  */
+	&.toolbar-size-large {
+		height: $toolbar-button-lg-height;
+
+		.toolbar-left-bar {
+			padding: 0;
+		}
+
+		.toolbar-item button,
+		.toolbar-overflow-item > button {
+			padding: 0;
+			height: $toolbar-button-lg-height;
+		}
+
+		.toolbar-sub-menu-item {
+			height: fit-content;
+		}
+
+		.toolbar-item-content {
+			height: $toolbar-button-lg-height;
+			align-items: center;
+			min-width: carbon.$spacing-09;
+
+			&.is-in-menu {
+				padding-left: 12px;
+				padding-right: 12px;
+			}
+
+			& .content-main {
+				padding: 0;
+			}
+
+			& .overflow-item {
+				padding: 0 carbon.$spacing-04 0 0;
+			}
+
+			& .toolbar-right-chevron {
+				padding: carbon.$spacing-03 0 0;
+			}
+
+			& .checkmark {
+				padding-top: carbon.$spacing-03;
+			}
+		}
+
+		.toolbar-popover-list button {
+			padding: 0;
+		}
+
+		.toolbar-jsx-item {
+			height: $toolbar-button-lg-height;
+		}
+
+		.toolbar-tick-svg {
+			height: $toolbar-button-lg-height;
+			width: $toolbar-button-lg-height;
+		}
+
+		.toolbar-divider {
+			height: $toolbar-button-lg-height;
 		}
 	}
 }

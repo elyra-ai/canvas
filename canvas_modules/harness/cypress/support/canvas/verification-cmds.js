@@ -1080,11 +1080,11 @@ Cypress.Commands.add("verifyNumberOfPortsOnNode", (nodeName, portType, noOfPorts
 });
 
 Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
-	cy.get(".toolbar-left-bar .toolbar-item")
+	cy.get(".common-canvas-toolbar .toolbar-left-bar .toolbar-item")
 		.then((leftBarItems) => {
-			cy.get(".toolbar-right-bar .toolbar-item")
+			cy.get(".common-canvas-toolbar .toolbar-right-bar .toolbar-item")
 				.then((rightBarItems) => {
-					cy.get(".toolbar-overflow-item")
+					cy.get(".common-canvas-toolbar .toolbar-overflow-item")
 						.then((toolbarOverflowItems) => {
 							const leftBarTopItemsCount = getCountToolbarItemsOnTopRow(leftBarItems);
 							const overflowTopItemsCount = getCountToolbarItemsOnTopRow(toolbarOverflowItems);

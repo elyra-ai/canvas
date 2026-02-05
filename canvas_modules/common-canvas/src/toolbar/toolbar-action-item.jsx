@@ -303,7 +303,7 @@ ToolbarActionItem.propTypes = {
 	setToolbarFocusAction: PropTypes.func,
 	isFocusInToolbar: PropTypes.bool,
 	closeAnyOpenSubArea: PropTypes.func,
-	size: PropTypes.oneOf(["md", "sm"])
+	size: PropTypes.oneOf(["md", "sm", "lg"])
 };
 
 export default ToolbarActionItem;

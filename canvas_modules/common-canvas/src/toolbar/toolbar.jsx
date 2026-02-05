@@ -420,7 +420,9 @@ class Toolbar extends React.Component {
 			const actionObj = toolbarActions[i];
 			if (actionObj) {
 				if (withOverflowItem && this.shouldAddOverflowItem(actionObj)) {
-					newItems.push(this.generateOverflowItem(i, actionObj.action));
+					// Create a dummy action name for dividers to prevent undefined action showing in debugger.
+					const action = actionObj.divider ? `divider_${i}` : actionObj.action;
+					newItems.push(this.generateOverflowItem(i, action));
 				}
 				newItems.push(this.generateToolbarItem(actionObj, i, refs));
 			}
@@ -559,7 +561,12 @@ class Toolbar extends React.Component {
 		const leftItems = this.generateToolbarItems(this.leftBar, true, this.leftItemRefs);
 		const rightItems = this.generateToolbarItems(this.rightBar, false, this.rightItemRefs);
 
-		const toolbarSizeClass = this.props.size === "sm" ? "toolbar-div toolbar-size-small" : "toolbar-div";
+		let toolbarSizeClass = "toolbar-div";
+		if (this.props.size === "sm") {
+			toolbarSizeClass = "toolbar-div toolbar-size-small";
+		} else if (this.props.size === "lg") {
+			toolbarSizeClass = "toolbar-div toolbar-size-large";
+		}
 		const tabIndex = this.state.focusAction === "toolbar" ? 0 : -1;
 
 		const canvasToolbar = (
@@ -588,7 +595,7 @@ Toolbar.propTypes = {
 	setInitialFocus: PropTypes.bool,
 	closeToolbarOnEsc: PropTypes.bool,
 	closeToolbar: PropTypes.func,
-	size: PropTypes.oneOf(["md", "sm"])
+	size: PropTypes.oneOf(["md", "sm", "lg"])
 };
 
 export default Toolbar;
