@@ -68,7 +68,9 @@ class PaletteDialogTopbar extends React.Component {
 
 
 		return (
-			<aside className="palette-dialog-topbar" onMouseDown={this.mouseDown}
+			<aside
+				className="palette-dialog-topbar"
+				onMouseDown={this.mouseDown}
 				onDoubleClick={this.doubleClick}
 				aria-label="Palette options"
 			>
