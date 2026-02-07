@@ -4,5 +4,10 @@
   "toolbar.zoomOut": "Zoom out",
   "toolbar.zoomToFit": "Zoom to fit",
   "toolbar.overflowMenu": "Overflow menu",
-  "toolbar.label": "Canvas toolbar"
+  "toolbar.flowEditorToolbarLabel": "Flow editor",
+  "toolbar.textToolbarLabel": "Text",
+  "toolbar.contextToolbarLabel": "Context",
+  "toolbar.paletteDialogToolbarLabel": "Palette dialog",
+  "toolbar.textOptions": "Text options",
+  "toolbar.contextOptions": "Context options"
 }

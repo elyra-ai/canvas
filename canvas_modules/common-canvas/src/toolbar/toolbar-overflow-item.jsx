@@ -161,6 +161,7 @@ const ToolbarOverflowItem = forwardRef(({
 					onClick={toggleExtendedMenu}
 					onKeyDown={onKeyDown}
 					aria-label={label}
+					aria-hidden={tabIndex === -1}
 					size={size}
 				>
 					<div className="toolbar-item-content default">

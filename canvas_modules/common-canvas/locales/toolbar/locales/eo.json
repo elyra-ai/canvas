@@ -4,5 +4,10 @@
 	"toolbar.zoomOut": "[Esperanto~Zoom out~~eo]",
 	"toolbar.zoomToFit": "[Esperanto~Zoom to fit~eo]",
 	"toolbar.overflowMenu": "[Esperanto~Overflow menu~eo]",
-	"toolbar.label": "[Esperanto~Canvas toolbar~eo]"
+	"toolbar.flowEditorToolbarLabel": "[Esperanto~Flow editor toolbar~eo]",
+	"toolbar.textToolbarLabel":"[Esperanto~Text toolbar~eo",
+	"toolbar.contextToolbarLabel": "[Esperanto~Context toolbar~eo",
+	"toolbar.paletteDialogToolbarLabel": "[Esperanto~Palette dialog toolbar~eo",
+	"toolbar.textOptions": "[Esperanto~Text options~eo",
+	"toolbar.contextOptions": "[Esperanto~Context options~eo"
 }

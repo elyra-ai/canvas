@@ -8,6 +8,7 @@
   "edit.copySelection": "Copy",
   "edit.pasteSelection": "Paste",
   "canvas.label": "Flow Editor",
+  "canvas.roleDescription": "Area",
   "canvas.contents": "Flow editor contents",
   "canvas.addComment": "New comment",
   "canvas.addWysiwygComment": "New WYSIWYG comment",

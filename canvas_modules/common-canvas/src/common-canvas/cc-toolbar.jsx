@@ -360,13 +360,16 @@ class CommonCanvasToolbar extends React.Component {
 
 		if (this.props.enableToolbarLayout === TOOLBAR_LAYOUT_TOP) {
 			canvasToolbar = (
-				<div aria-label={this.getLabel("toolbar.label")} role="navigation" className={"common-canvas-toolbar"} >
+				<div role="navigation" className={"common-canvas-toolbar"} >
 					<Toolbar
 						config={toolbarConfig}
 						containingDivId={this.props.containingDivId}
 						instanceId={this.props.canvasController.getInstanceId()}
 						toolbarActionHandler={this.toolbarActionHandler}
-						additionalText={{ overflowMenuLabel: this.getLabel("toolbar.overflowMenu") }}
+						additionalText={{
+							overflowMenuLabel: this.getLabel("toolbar.overflowMenu"),
+							ariaLabel: this.getLabel("toolbar.flowEditorToolbarLabel")
+						}}
 					/>
 				</div>
 			);
