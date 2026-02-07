@@ -72,7 +72,7 @@ class PaletteDialogTopbar extends React.Component {
 				className="palette-dialog-topbar"
 				onMouseDown={this.mouseDown}
 				onDoubleClick={this.doubleClick}
-				aria-label="Palette options"
+				aria-label={this.props.canvasController.labelUtil?.getLabel("toolbar.paletteDialogToolbarContainer")}
 			>
 				<Toolbar
 					instanceId = {0}
@@ -80,7 +80,7 @@ class PaletteDialogTopbar extends React.Component {
 					toolbarActionHandler={this.toolbarActionHandler}
 					additionalText={{
 						overflowMenuLabel: this.props.canvasController.labelUtil.getLabel("toolbar.overflowMenu"),
-						ariaLabel: this.props.canvasController.labelUtil.getLabel("toolbar.paletteDialogToolbarLabel")
+						ariaLabel: this.props.canvasController.labelUtil?.getLabel("toolbar.paletteDialogToolbarLabel")
 					}}
 				/>
 			</aside>

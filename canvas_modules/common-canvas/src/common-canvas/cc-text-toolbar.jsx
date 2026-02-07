@@ -301,7 +301,7 @@ class CommonCanvasTextToolbar extends React.Component {
 					style={{ left: this.props.pos_x, top: this.props.pos_y }}
 					onBlur={this.props.blurHandler}
 					onKeyDown={this.onKeyDown}
-					aria-label={this.getLabel("toolbar.textOptions")}
+					aria-label={this.getLabel("toolbar.textToolbarContainer")}
 				>
 					<Toolbar
 						config={this.getTextToolbarConfig()}

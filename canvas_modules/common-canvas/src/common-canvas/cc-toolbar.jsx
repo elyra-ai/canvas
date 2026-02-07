@@ -360,7 +360,11 @@ class CommonCanvasToolbar extends React.Component {
 
 		if (this.props.enableToolbarLayout === TOOLBAR_LAYOUT_TOP) {
 			canvasToolbar = (
-				<div role="navigation" className={"common-canvas-toolbar"} >
+				<div
+					role="navigation"
+					className={"common-canvas-toolbar"}
+					aria-label={this.getLabel("toolbar.flowEditorToolbarContainer")}
+				>
 					<Toolbar
 						config={toolbarConfig}
 						containingDivId={this.props.containingDivId}

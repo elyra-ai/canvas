@@ -246,7 +246,7 @@ class CommonCanvasContextToolbar extends React.Component {
 					style={{ left: x, top: y, width: toolbarWidth }}
 					onMouseEnter={this.onMouseEnter}
 					onMouseLeave={this.onMouseLeave}
-					aria-label={this.props.canvasController.labelUtil.getLabel("toolbar.contextOptions")}
+					aria-label={this.props.canvasController.labelUtil.getLabel("toolbar.contextToolbarContainer")}
 				>
 					<Toolbar
 						config={toolbarConfig}
