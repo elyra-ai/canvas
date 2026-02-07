@@ -241,8 +241,8 @@ class CommonCanvasContextToolbar extends React.Component {
 			({ x, y } = this.adjustPosToFit(x, y, toolbarWidth, ICON_SIZE_PLUS_GAP));
 
 			contextToolbar = (
-				<div className={"context-toolbar floating-toolbar"} style={{ left: x, top: y, width: toolbarWidth }}
-					onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}
+				<aside className={"context-toolbar floating-toolbar"} style={{ left: x, top: y, width: toolbarWidth }}
+					onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} aria-label={this.props.canvasController.labelUtil.getLabel("toolbar.contextOptions")}
 				>
 					<Toolbar
 						config={toolbarConfig}
@@ -254,8 +254,12 @@ class CommonCanvasContextToolbar extends React.Component {
 						closeToolbarOnEsc
 						closeToolbar={this.closeContextToolbar}
 						size={"sm"}
+						additionalText={{
+							overflowMenuLabel: this.props.canvasController.labelUtil.getLabel("toolbar.overflowMenu"),
+							ariaLabel: this.props.canvasController.labelUtil.getLabel("toolbar.contextToolbarLabel")
+						}}
 					/>
-				</div>
+				</aside>
 			);
 		}
 

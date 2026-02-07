@@ -166,7 +166,7 @@ class Toolbar extends React.Component {
 
 	// When the toolbar resizes, check each toolbar item to see if it has
 	// an open sub-area and, if that item is not a focusable item, close
-	// the sub-area. The item may no longer be focusable it is it was wrapped
+	// the sub-area. The item may no longer be focusable if it was wrapped
 	// into the overflow menu. Also, check to see if the current focus action
 	// item is focusable and, if not, set focus on the first focusable item.
 	onToolbarResize() {
@@ -569,10 +569,10 @@ class Toolbar extends React.Component {
 		}
 		const tabIndex = this.state.focusAction === "toolbar" ? 0 : -1;
 
-		const canvasToolbar = (
+		return (
 			<div ref={this.toolbarRef} className={toolbarSizeClass} data-instance-id={this.props.instanceId}
 				tabIndex={tabIndex} onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown}
-				role="application"
+				role="toolbar" aria-label={this.props.additionalText?.ariaLabel}
 			>
 				<div className="toolbar-left-bar" onScroll={this.onScroll}>
 					{leftItems}
@@ -582,7 +582,6 @@ class Toolbar extends React.Component {
 				</div>
 			</div>
 		);
-		return canvasToolbar;
 	}
 }
 

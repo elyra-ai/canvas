@@ -296,8 +296,8 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		if (this.props.isOpen) {
 			textToolbar = (
-				<div className={"text-toolbar floating-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }}
-					onBlur={this.props.blurHandler} onKeyDown={this.onKeyDown}
+				<aside className={"text-toolbar floating-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }}
+					onBlur={this.props.blurHandler} onKeyDown={this.onKeyDown} aria-label={this.getLabel("toolbar.textOptions")}
 				>
 					<Toolbar
 						config={this.getTextToolbarConfig()}
@@ -306,8 +306,12 @@ class CommonCanvasTextToolbar extends React.Component {
 						toolbarActionHandler={this.props.actionHandler}
 						tooltipDirection={"top"}
 						size={"sm"}
+						additionalText={{
+							overflowMenuLabel: this.getLabel("toolbar.overflowMenu"),
+							ariaLabel: this.getLabel("toolbar.textToolbarLabel")
+						}}
 					/>
-				</div>
+				</aside>
 			);
 		}
 
