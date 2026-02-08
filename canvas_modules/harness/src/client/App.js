@@ -2840,9 +2840,8 @@ class App extends React.Component {
 			<div className="harness-app-navbar" role="navigation" aria-label="Test harness options">
 				<Toolbar
 					config={toolbarConfig}
-					instanceId={0}
+					instanceId={this.canvasController.getInstanceId()}
 					toolbarActionHandler={this.toolbarActionHandler.bind(this)}
-					tooltipDirection="bottom"
 					additionalText={{
 						overflowMenuLabel: "Overflow menu",
 						ariaLabel: "Test harness"
