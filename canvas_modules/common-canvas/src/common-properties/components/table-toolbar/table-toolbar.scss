@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Elyra Authors
+ * Copyright 2024-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,72 +19,15 @@
 .properties-table-toolbar {
 	background-color: carbon.$interactive;
 	height: carbon.$spacing-07;
-	display: flex;
+	width: 100%;
+	display: inline-flex;
 	align-items: center;
 	justify-content: space-between;
-
-	.toolbar-div, .toolbar-jsx-item, .toolbar-overflow-item {
-		background-color: carbon.$interactive;
-		button {
-			border: transparent; // border not needed for overflow and other buttons
-			&:enabled {
-				background-color: carbon.$interactive; // override bg set in canvas toolbar
-				&:hover {
-					background-color: carbon.$button-primary-hover;
-				}
-			}
-			svg {
-				fill: carbon.$text-on-color; // icons including 3 dots should be white 
-			}
-	
-		}
-	}
-	.toolbar-div.toolbar-size-small {
-		.toolbar-left-bar {
-			padding-right: carbon.$spacing-07;
-		}
-		.toolbar-popover-list {
-			.properties-batch-summary {
-				color: carbon.$text-primary; // inside overflow menu-black text
-			}
-			button { // inside overflow menu - ghost
-				background-color: transparent;
-				&:enabled {
-					color: carbon.$link-primary;
-					&:hover {
-						background-color: carbon.$layer-hover;
-					}
-				}
-			}
-		}
-		.toolbar-sub-menu-item {
-			height: carbon.$spacing-07;
-		}
-		.toolbar-item-content .overflow-item {
-			padding-left: carbon.$spacing-02;
-		}
-	}
 
 	.properties-batch-summary {
 		@include carbon.type-style("label-02");
 		padding-left: carbon.$spacing-05;
 		color: carbon.$text-on-color;
-		min-width: 0;
-	}
-	.properties-action-multi-select-edit{
-		padding-top: carbon.$spacing-03; // adjustment for the icon-only Edit btn
-	}
-
-	.action-cancel {
-		width: carbon.$spacing-05;
-	}
-	.action-cancel::before {
-		// Vertical line before cancel button- Custom divider
-		position: absolute;
-		background-color: carbon.$text-on-color;
-		block-size: carbon.$spacing-05;
-		content: "";
-		inline-size: 0.0625rem;
-		inset-inline-start: 0;
+		min-width: 0; // TODO check list
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -435,7 +435,7 @@ export default class AbstractTable extends React.Component {
 		return this.props.controller.getLight() && this.props.control.light;
 	}
 
-	makeTableToolbar(selectedRows) {
+	makeTableToolbar(selectedRows, tableLabel) {
 		// For single select tables, table toolbar doesn't show delete icon because it is added at row level
 		const singleSelectTable = this.props.control.rowSelection === ROW_SELECTION.SINGLE;
 		if (
@@ -468,6 +468,7 @@ export default class AbstractTable extends React.Component {
 						isReadonlyTable={this.isReadonlyTable()}
 						isSingleSelectTable={singleSelectTable}
 						smallFlyout={false}
+						tableLabel={tableLabel}
 					/>
 				</>
 			);
@@ -625,7 +626,8 @@ export default class AbstractTable extends React.Component {
 		const controlValue = this.props.value;
 		this.makeCells(rows, controlValue, tableState);
 
-		const tableToolbar = this.makeTableToolbar(this.props.selectedRows);
+		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+		const tableToolbar = this.makeTableToolbar(this.props.selectedRows, tableLabel);
 		let topRightPanel = null;
 		if (this.props.selectedRows.length > 0 && tableToolbar) {
 			topRightPanel = tableToolbar;
@@ -645,7 +647,6 @@ export default class AbstractTable extends React.Component {
 			delete this.scrollToRow;
 		}
 
-		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
 		// ReadonlyTable with single row selection is non-interactive. rowClickCallback should be undefined.
 		let rowClickCallback;
 		const singleRowSelectionReadonlyTable = this.isReadonlyTable() && this.props.control.rowSelection === ROW_SELECTION.SINGLE;
