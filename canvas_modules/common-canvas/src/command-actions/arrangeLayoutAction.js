@@ -37,7 +37,7 @@ export default class ArrangeLayoutAction extends Action {
 	}
 
 	undo() {
-		this.apiPipeline.updateNodes(this.existingNodes);
+		this.apiPipeline.replaceNodes(this.existingNodes);
 		this.apiPipeline.updateLinks(this.existingLinks);
 	}
 

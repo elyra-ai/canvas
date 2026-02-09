@@ -424,13 +424,8 @@ export default class APIPipeline {
 		return newNodes;
 	}
 
-
-	updateNode(node) {
-		this.store.dispatch({ type: "REPLACE_NODE", data: { node }, pipelineId: this.pipelineId });
-	}
-
-	updateNodes(nodes) {
-		this.store.dispatch({ type: "REPLACE_NODES", data: nodes, pipelineId: this.pipelineId });
+	replaceNodes(replacementNodes) {
+		this.store.dispatch({ type: "REPLACE_NODES", data: replacementNodes, pipelineId: this.pipelineId });
 	}
 
 	// Returns true if a new link needs to be created with the newly created
@@ -715,11 +710,27 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "SET_OUTPUT_PORT_SUBFLOW_NODE_REF", data: { nodeId: nodeId, portId: portId, subflowNodeRef: subflowNodeRef }, pipelineId: this.pipelineId });
 	}
 
-	setNodeProperties(nodeId, properties) {
+	updateNode(nodeId, properties) {
 		let newNode = cloneDeep(this.getNode(nodeId));
 		newNode = Object.assign(newNode, properties);
 		newNode = this.objectModel.setNodeAttributes(newNode);
-		this.store.dispatch({ type: "REPLACE_NODE", data: { node: newNode }, pipelineId: this.pipelineId });
+		return newNode;
+	}
+
+	setNodeProperties(nodeId, properties) {
+		const newNode = updateNode(nodeId, properties);
+		this.store.dispatch({ type: "UPDATE_NODES", data: [newNode], pipelineId: this.pipelineId });
+	}
+
+	setNodesProperties(nodesProperties) {
+		const newNodes = [];
+
+		for (const [nodeId, properties] of Object.entries(nodesProperties)) {
+			const newNode = updateNode(nodeId, properties);
+			newNodes.push(newNode)
+		}
+
+		this.store.dispatch({ type: "UPDATE_NODES", data: newNodes, pipelineId: this.pipelineId });
 	}
 
 	setNodeMessage(nodeId, message) {
