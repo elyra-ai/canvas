@@ -4,5 +4,12 @@
 	"toolbar.zoomOut": "[Esperanto~Zoom out~~eo]",
 	"toolbar.zoomToFit": "[Esperanto~Zoom to fit~eo]",
 	"toolbar.overflowMenu": "[Esperanto~Overflow menu~eo]",
-	"toolbar.label": "[Esperanto~Canvas toolbar~eo]"
+	"toolbar.flowEditorToolbarLabel": "[Esperanto~Flow editor~eo]",
+	"toolbar.flowEditorToolbarContainer": "[Esperanto~Flow editor options~eo]",
+	"toolbar.textToolbarLabel": "[Esperanto~Text~eo]",
+	"toolbar.textToolbarContainer": "[Esperanto~Text options~eo]",
+	"toolbar.contextToolbarLabel": "[Esperanto~Context~eo]",
+	"toolbar.contextToolbarContainer": "[Esperanto~Context options~eo]",
+	"toolbar.paletteDialogToolbarLabel": "[Esperanto~Palette dialog~eo]",
+	"toolbar.paletteDialogToolbarContainer": "[Esperanto~Palette dialog options~eo]"
 }

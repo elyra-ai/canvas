@@ -2738,8 +2738,8 @@ class App extends React.Component {
 					action: "harness-title",
 					label: "Elyra Canvas",
 					enable: true,
-					jsx: (
-						<div className="harness-title-container">
+					jsx: (tabIndex) => (
+						<div className="harness-title-container toolbar-jsx-obj" tabIndex={tabIndex} role="button">
 							<span className="harness-title">Elyra Canvas</span>
 							<span className="harness-version">{todaysDateFormatted}</span>
 						</div>
@@ -2772,7 +2772,7 @@ class App extends React.Component {
 					action: "theme-toggle",
 					label: "Switch Theme",
 					enable: true,
-					jsx: (
+					jsx: (tabIndex) => (
 						<div className="harness-theme-toggle-wrapper" tabIndex={-1}>
 							<Toggle
 								id="harness-toggle-theme"
@@ -2780,8 +2780,10 @@ class App extends React.Component {
 								size="sm"
 								labelA="Light"
 								labelB="Dark"
+								className="toolbar-jsx-obj"
 								toggled={this.state.lightTheme}
 								onToggle={this.handleThemeChange.bind(this)}
+								tabIndex={tabIndex}
 							/>
 						</div>
 					),
@@ -2792,8 +2794,8 @@ class App extends React.Component {
 					action: "breadcrumbs",
 					label: "Breadcrumbs",
 					enable: true,
-					jsx: (
-						<div className="harness-pipeline-breadcrumbs-container" tabIndex={-1}>
+					jsx: (tabIndex) => (
+						<div className="harness-pipeline-breadcrumbs-container toolbar-jsx-obj" tabIndex={tabIndex}>
 							{breadcrumbs}
 						</div>
 					)
@@ -2802,7 +2804,7 @@ class App extends React.Component {
 			rightBar: [
 				{
 					action: "help",
-					label: "Elyra Canvas Docs",
+					label: "Elyra Canvas Documentation",
 					enable: true,
 					iconEnabled: (<Help size={16} />),
 					tooltip: "Elyra Canvas Docs",
@@ -2835,13 +2837,15 @@ class App extends React.Component {
 		};
 
 		return (
-			<div className="harness-app-navbar" aria-label="Test harness toolbar" role="navigation">
+			<div className="harness-app-navbar" role="navigation" aria-label="Test harness options">
 				<Toolbar
 					config={toolbarConfig}
-					instanceId={0}
+					instanceId={this.canvasController.getInstanceId()}
 					toolbarActionHandler={this.toolbarActionHandler.bind(this)}
-					tooltipDirection="bottom"
-					additionalText={{ overflowMenuLabel: "Overflow menu" }}
+					additionalText={{
+						overflowMenuLabel: "Overflow menu",
+						ariaLabel: "Test harness"
+					}}
 					size="lg"
 				/>
 			</div>
