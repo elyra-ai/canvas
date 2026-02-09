@@ -149,9 +149,9 @@ class TableToolbar extends React.Component {
 		const title = (this.props.selectedRows.length === 1)
 			? `${this.props.selectedRows.length} ${singleRowSelectedLabel}`
 			: `${this.props.selectedRows.length} ${multiRowsSelectedLabel}`;
-		return <div className="properties-batch-summary">
+		return (<div className="properties-batch-summary">
 			<span >{title}</span>
-		</div>;
+		</div>);
 	}
 
 	toolbarActionHandler(action) {
@@ -300,13 +300,15 @@ class TableToolbar extends React.Component {
 			const toolbarConfig = {
 				leftBar: this.getToolbarConfig()
 			};
-			const multiSelectInvoker = this.props.multiSelectEdit ?
-				<SubPanelInvoker ref={(ref) => (this.subPanelInvoker = ref)}
-					rightFlyout={this.props.rightFlyout}
-					applyLabel={formatMessage(this.reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL)}
-					rejectLabel={formatMessage(this.reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL)}
-					controller={this.props.controller}
-				/> : null;
+			const multiSelectInvoker = this.props.multiSelectEdit
+				? (
+					<SubPanelInvoker ref={(ref) => (this.subPanelInvoker = ref)}
+						rightFlyout={this.props.rightFlyout}
+						applyLabel={formatMessage(this.reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL)}
+						rejectLabel={formatMessage(this.reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL)}
+						controller={this.props.controller}
+					/>
+				) : null;
 
 			return (
 				<div className="properties-table-toolbar" >
