@@ -86,7 +86,8 @@ describe("Test adding node type to palette Flyout Panel", function() {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout" });
 		cy.clickToolbarPaletteOpen();
-		cy.openCanvasAPI("Add PaletteItem");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Add PaletteItem");
 	});
 
 	it("Test adding node type to palette Flyout Panel", function() {
@@ -102,7 +103,8 @@ describe("Test adding node type to palette Dialog Panel", function() {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Dialog" });
 		cy.clickToolbarPaletteOpen();
-		cy.openCanvasAPI("Add PaletteItem");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Add PaletteItem");
 	});
 
 	it("Test adding node type to palette Dialog Panel", function() {
@@ -119,7 +121,8 @@ describe("Test adding node type to existing category to palette Flyout Panel", f
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout" });
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.clickToolbarPaletteOpen();
-		cy.openCanvasAPI("Add PaletteItem");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Add PaletteItem");
 	});
 
 	it("Test adding node type to existing category to palette Flyout Panel", function() {
@@ -135,7 +138,8 @@ describe("Test adding node type to existing category to palette Dialog Panel", f
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Dialog" });
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.clickToolbarPaletteOpen();
-		cy.openCanvasAPI("Add PaletteItem");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Add PaletteItem");
 	});
 
 	it("Test adding node type to existing category to palette Dialog Panel", function() {

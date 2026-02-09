@@ -25,6 +25,11 @@
 		background: carbon.$field-02;
 		color: carbon.$text-primary;
 
+		&.cm-focused {
+			outline: 2px solid carbon.$focus;
+			outline-offset: -2px;
+		}
+
 		.cm-gutters {
 			border-right: none;
 			background-color: inherit;

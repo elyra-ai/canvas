@@ -21,7 +21,8 @@ describe("Test of notification center message API", function() {
 	});
 
 	it("Test notification message callback, custom content, dismiss, and clear all", function() {
-		cy.openCanvasAPI("Add Notification Message");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Add Notification Message");
 
 		cy.verifyNotificationCounter(0);
 		cy.verifyNotificationMessagesLength(0);

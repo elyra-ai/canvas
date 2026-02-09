@@ -390,7 +390,7 @@ ToolbarButtonItem.propTypes = {
 	actionClickHandler: PropTypes.func,
 	buttonFocusAction: PropTypes.string,
 	isFocusInToolbar: PropTypes.bool,
-	size: PropTypes.oneOf(["md", "sm"])
+	size: PropTypes.oneOf(["md", "sm", "lg"])
 };
 
 export default ToolbarButtonItem;

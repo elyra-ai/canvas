@@ -496,11 +496,16 @@ class CanvasContents extends React.Component {
 		if (this.props.canvasConfig.enableKeyboardNavigation) {
 			// Set tabindex to 0 so the focus can go to the <div>
 			return (
-				<div tabIndex="0" className="d3-svg-canvas-div keyboard-navigation" id={this.svgCanvasDivId}
-					onMouseDown={this.onMouseDown} onMouseLeave={this.onMouseLeave}
+				<section role="application"
+					id={this.svgCanvasDivId}
+					tabIndex="0"
+					aria-roledescription={this.getLabel("canvas.roleDescription")}
+					className="d3-svg-canvas-div keyboard-navigation"
+					onMouseDown={this.onMouseDown}
+					onMouseLeave={this.onMouseLeave}
 					onFocus={this.onFocus}
 					onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
-					role="application" aria-label="canvas-keyboard-navigation" // Resolve Accessibility Violation of role and label
+					aria-label={this.getLabel("canvas.label")}
 				/>
 			);
 		}
@@ -510,7 +515,7 @@ class CanvasContents extends React.Component {
 		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
 		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
 		return (
-			<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId}
+			<section tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId}
 				onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 			/>
 		);
@@ -719,25 +724,23 @@ class CanvasContents extends React.Component {
 		const svgCanvasDiv = this.getSVGCanvasDiv();
 
 		return (
-			<section aria-label={this.getLabel("canvas.label")} aria-description={this.getLabel("canvas.description")}>
-				<div
-					id={this.mainCanvasDivId}
-					ref={this.contentsRef}
-					className="common-canvas-drop-div"
-					onDrop={this.drop}
-					onDragOver={this.dragOver}
-					onDragEnter={this.dragEnter}
-					onDragLeave={this.dragLeave}
-				>
-					{svgCanvasDiv}
-					{emptyCanvas}
-					{returnToPreviousBtn}
-					{stateTag}
-					{contextMenu}
-					{textToolbar}
-					{dropZoneCanvas}
-				</div>
-			</section>
+			<div
+				id={this.mainCanvasDivId}
+				ref={this.contentsRef}
+				className="common-canvas-drop-div"
+				onDrop={this.drop}
+				onDragOver={this.dragOver}
+				onDragEnter={this.dragEnter}
+				onDragLeave={this.dragLeave}
+			>
+				{svgCanvasDiv}
+				{emptyCanvas}
+				{returnToPreviousBtn}
+				{stateTag}
+				{contextMenu}
+				{textToolbar}
+				{dropZoneCanvas}
+			</div>
 		);
 	}
 }

@@ -179,7 +179,8 @@ describe("Test for dynamically adding ports by updating pipeline flow through AP
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("multiPortsCanvas3.json");
-		cy.openCanvasAPI("Set PipelineFlow");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Set PipelineFlow");
 	});
 
 	it("Dynamically add input and output ports ports by updating pipeline flow through API, " +

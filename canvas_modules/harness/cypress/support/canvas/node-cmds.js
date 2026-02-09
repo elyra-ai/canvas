@@ -133,20 +133,20 @@ Cypress.Commands.add("getSupernodePipelineIdNested", (nodeName, supernodeName) =
 
 function getNodeGrpSelector() {
 	const inst = document.extraCanvas === true ? "1" : "0";
-	const selector = `div > svg > g > g > g[data-id^='node_grp_${inst}']`;
+	const selector = `section > svg > g > g > g[data-id^='node_grp_${inst}']`;
 	return selector;
 }
 
 function getNodeGrpSelectorInSubFlow() {
 	const inst = document.extraCanvas === true ? "1" : "0";
-	const selector = `div > svg > g > g > g > svg > g > g > g[data-id^='node_grp_${inst}']`;
+	const selector = `section > svg > g > g > g > svg > g > g > g[data-id^='node_grp_${inst}']`;
 	return selector;
 }
 
 function getNodeGrpSelectorInSupernode(supernodeId) {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	const selector =
-	`div > svg > g > g > g[data-id='node_grp_${inst}_${supernodeId}'] > svg > g > g > g[data-id^='node_grp_${inst}']`;
+	`section > svg > g > g > g[data-id='node_grp_${inst}_${supernodeId}'] > svg > g > g > g[data-id^='node_grp_${inst}']`;
 	return selector;
 }
 

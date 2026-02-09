@@ -257,7 +257,7 @@ ToolbarSubMenuItem.propTypes = {
 	setSubMenuFocus: PropTypes.func,
 	isInOverflowMenu: PropTypes.bool,
 	isInCascadeMenu: PropTypes.bool,
-	size: PropTypes.oneOf(["md", "sm"])
+	size: PropTypes.oneOf(["md", "sm", "lg"])
 };
 
 export default ToolbarSubMenuItem;

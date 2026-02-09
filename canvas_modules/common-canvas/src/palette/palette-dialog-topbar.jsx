@@ -68,9 +68,22 @@ class PaletteDialogTopbar extends React.Component {
 
 
 		return (
-			<div className="palette-dialog-topbar" onMouseDown={this.mouseDown} onDoubleClick={this.doubleClick}>
-				<Toolbar instanceId = {0} config={config} toolbarActionHandler={this.toolbarActionHandler} />
-			</div>
+			<aside
+				className="palette-dialog-topbar"
+				onMouseDown={this.mouseDown}
+				onDoubleClick={this.doubleClick}
+				aria-label={this.props.canvasController.labelUtil?.getLabel("toolbar.paletteDialogToolbarContainer")}
+			>
+				<Toolbar
+					instanceId = {0}
+					config={config}
+					toolbarActionHandler={this.toolbarActionHandler}
+					additionalText={{
+						overflowMenuLabel: this.props.canvasController.labelUtil.getLabel("toolbar.overflowMenu"),
+						ariaLabel: this.props.canvasController.labelUtil?.getLabel("toolbar.paletteDialogToolbarLabel")
+					}}
+				/>
+			</aside>
 		);
 	}
 }

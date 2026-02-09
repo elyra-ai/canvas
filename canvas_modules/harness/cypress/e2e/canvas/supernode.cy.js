@@ -32,7 +32,8 @@ describe("Test the supernode expanded feature", function() {
 		cy.verifyNodeElementWidth("Supernode", "label", "120px");
 
 		// Add a very long label to the supernode
-		cy.openCanvasAPI("Set Node Label");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Set Node Label");
 		cy.selectNodeLabelFromDropDown("Supernode");
 		cy.setNewLabel("New Very Long Supernode Label To Test The Label Abbreviation");
 		cy.submitAPI();
@@ -95,11 +96,12 @@ describe("Test supernode expanded to correct size", function() {
 		cy.verifyNodeDimensions("Supernode", 200, 200);
 
 		// Rename supernode
-		cy.openCanvasAPI("Set Node Label");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Set Node Label");
 		cy.selectNodeLabelFromDropDown("Supernode");
 		cy.setNewLabel("First Supernode");
 		cy.submitAPI();
-		cy.get("#harness-action-bar-sidepanel-api > a").click();
+		cy.toggleAPISidePanel(); // Close the panel
 
 		// Select multiple nodes in supernode
 		cy.getNodeWithLabelInSupernode("Partition", "First Supernode").click();
@@ -183,11 +185,12 @@ describe("Test create supernode within a supernode with a new node from palette"
 		cy.linkNodeOutputPortToNodeInputPortInSupernode("Supernode", "Distribution", "outPort", "Derive", "inPort");
 
 		// Rename supernode
-		cy.openCanvasAPI("Set Node Label");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Set Node Label");
 		cy.selectNodeLabelFromDropDown("Supernode");
 		cy.setNewLabel("First Supernode");
 		cy.submitAPI();
-		cy.get("#harness-action-bar-sidepanel-api > a").click();
+		cy.toggleAPISidePanel(); // Close the panel
 
 		// Select multiple nodes in supernode
 		cy.getNodeWithLabelInSupernode("Distribution", "First Supernode").click();
@@ -249,11 +252,12 @@ describe("Test cut and copy supernode from first canvas to second canvas", funct
 	it("Cut supernode from regular canvas and paste in extra canvas, " +
 	"Copy supernode from regular canvas and paste in extra canvas", function() {
 		// Rename supernode
-		cy.openCanvasAPI("Set Node Label");
+		cy.toggleAPISidePanel();
+		cy.chooseAPIOperation("Set Node Label");
 		cy.selectNodeLabelFromDropDown("Supernode");
 		cy.setNewLabel("First Supernode");
 		cy.submitAPI();
-		cy.get("#harness-action-bar-sidepanel-api > a").click();
+		cy.toggleAPISidePanel(); // Close the panel
 
 		// Cut supernode from regular canvas and paste in extra canvas
 		cy.clickNode("First Supernode");

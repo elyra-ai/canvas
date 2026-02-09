@@ -1886,6 +1886,53 @@ export default class CanvasUtils {
 		return "Undefined Object";
 	}
 
+	// Returns the aria-label text for a link based on its type and connection state.
+	// Includes source and target node names for meaningful accessibility labels.
+	static getLinkAriaLabel(link, labelUtil) {
+		if (link.type === COMMENT_LINK) {
+			if (link.trgNode) {
+				const trgLabel = link.trgNode.label || labelUtil.getLabel("link.unnamedTargetNode");
+				return labelUtil.getLabel("link.commentLinkDescription", { trgLabel });
+			}
+			return labelUtil.getLabel("link.ariaLabelCommentLink");
+		}
+
+		if (link.type === ASSOCIATION_LINK) {
+			if (link.srcObj && link.trgNode) {
+				const srcLabel = link.srcObj.label || labelUtil.getLabel("link.unnamedSourceNode");
+				const trgLabel = link.trgNode.label || labelUtil.getLabel("link.unnamedTargetNode");
+				return labelUtil.getLabel("link.associationLinkDescription", { srcLabel, trgLabel });
+			}
+			return labelUtil.getLabel("link.ariaLabelAssociationLink");
+		}
+
+		if (link.type === NODE_LINK) {
+			// Fully attached link
+			if (link.srcObj && link.trgNode) {
+				const srcLabel = link.srcObj.label || labelUtil.getLabel("link.unnamedSourceNode");
+				const trgLabel = link.trgNode.label || labelUtil.getLabel("link.unnamedTargetNode");
+				return labelUtil.getLabel("link.dataLinkDescription", { srcLabel, trgLabel });
+			}
+
+			// Semi-detached at source
+			if (!link.srcObj && link.trgNode) {
+				const trgLabel = link.trgNode.label || labelUtil.getLabel("link.unnamedTargetNode");
+				return labelUtil.getLabel("link.dataLinkDescriptionDetachedSource", { trgLabel });
+			}
+
+			// Semi-detached at target
+			if (link.srcObj && !link.trgNode) {
+				const srcLabel = link.srcObj.label || labelUtil.getLabel("link.unnamedSourceNode");
+				return labelUtil.getLabel("link.dataLinkDescriptionDetachedTarget", { srcLabel });
+			}
+
+			// Fully detached link
+			return labelUtil.getLabel("link.dataLinkDescriptionFullyDetached");
+		}
+
+		return labelUtil.getLabel("link.ariaLabelGeneric");
+	}
+
 	// Returns the object passed in with all of the null or
 	// undefined properties removed.
 	static removeNullProperties(obj) {

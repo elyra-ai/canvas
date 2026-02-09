@@ -40,7 +40,7 @@ import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales"
 import PaletteBundles from "@elyra/canvas/locales/palette/locales";
 import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
-import { CommonCanvas, CanvasController, CommonProperties, ColorPicker } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { CommonCanvas, CanvasController, CommonProperties, ColorPicker, Toolbar } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
@@ -2721,96 +2721,171 @@ class App extends React.Component {
 		}));
 	}
 
-	render() {
-		this.canvasController.log("-------------------------------");
-		this.canvasController.log("Test Harness render");
-		this.canvasController.log("-------------------------------");
-
+	getNavigationBar() {
 		const currentPipelineId = this.canvasController.getCurrentBreadcrumb().pipelineId;
 		const breadcrumbs = (<Breadcrumbs
 			canvasController={this.canvasController}
 			breadcrumbsDef={this.state.breadcrumbsDef}
 			currentPipelineId={currentPipelineId}
 		/>);
-		const consoleLabel = "Console";
-		const downloadFlowLabel = "Download pipeline flow";
-		const downloadPaletteLabel = "Download palette";
-		const switchTheme = "Switch Theme";
-		const apiLabel = "Common Canvas API";
-		const docsLabel = "Elyra Canvas Docs";
-		const commonPropertiesModalLabel = "Common Properties";
-		const commonCanvasLabel = "Common Canvas";
 		const todaysDate = new Date();
 		const todaysDateFormatted = "v13 - " + todaysDate.toISOString().split("T")[0];
 
-		const navBar = (<div tabIndex="-1" aria-label="Elyra Canvas Test Harness" role="banner">
-			<div className="harness-app-navbar">
-				<ul className="harness-app-navbar-items">
-					<li tabIndex="0" className="harness-navbar-li">
-						<span className="harness-title">Elyra Canvas</span>
-						<span className="harness-version">{todaysDateFormatted}</span>
-					</li>
-					<li tabIndex="0" className="harness-navbar-li harness-nav-divider" data-tooltip-id="toolbar-tooltip" data-tooltip-content={consoleLabel}>
-						<a onClick={this.openConsole.bind(this) }>
-							<OpenPanelFilledBottom size={16} />
-						</a>
-					</li>
-					<li tabIndex="0" className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={downloadFlowLabel}>
-						<a onClick={this.downloadPipelineFlow.bind(this) }>
-							<Download size={16} />
-						</a>
-					</li>
-					<li tabIndex="0" className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={downloadPaletteLabel}>
-						<a onClick={this.downloadPalette.bind(this) }>
-							<Download size={16} />
-						</a>
-					</li>
-					<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
-						{breadcrumbs}
-					</li>
-					<li className="harness-navbar-li" data-tooltip-id="toolbar-tooltip" data-tooltip-content={switchTheme}>
-						<Toggle
-							id="harness-toggle-theme"
-							size="sm"
-							labelA="Light"
-							labelB="Dark"
-							toggled={this.state.lightTheme}
-							onToggle={this.handleThemeChange.bind(this)}
-							className="toggle-theme"
-						/>
-					</li>
-					<li id="harness-action-bar-sidepanel-properties" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
-						data-tooltip-id="toolbar-tooltip" data-tooltip-content={commonPropertiesModalLabel}
-					>
-						<a onClick={this.sidePanelProperties.bind(this) }>
-							<GuiManagement size={16} />
-						</a>
-					</li>
-					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-action-bar-sidepanel"
-						data-tooltip-id="toolbar-tooltip" data-tooltip-content={apiLabel}
-					>
-						<a onClick={this.sidePanelAPI.bind(this) }>
-							<Api size={16} />
-						</a>
-					</li>
-					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
-						data-tooltip-id="toolbar-tooltip" data-tooltip-content={commonCanvasLabel}
-					>
-						<a onClick={this.sidePanelCanvas.bind(this) }>
-							<FlowData size={16} />
-						</a>
-					</li>
-					<li id="harness-action-bar-sidepanel-help" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel"
-						data-tooltip-id="toolbar-tooltip" data-tooltip-content={docsLabel}
-					>
-						<a href="https://elyra-ai.github.io/canvas/" target={"_blank"} >
-							<Help size={16} />
-						</a>
-					</li>
-				</ul>
-			</div>
-		</div>);
+		// Create toolbar configuration object
+		const toolbarConfig = {
+			leftBar: [
+				{
+					action: "harness-title",
+					label: "Elyra Canvas",
+					enable: true,
+					jsx: (tabIndex) => (
+						<div className="harness-title-container toolbar-jsx-obj" tabIndex={tabIndex} role="button">
+							<span className="harness-title">Elyra Canvas</span>
+							<span className="harness-version">{todaysDateFormatted}</span>
+						</div>
+					)
+				},
+				{ divider: true },
+				{
+					action: "console",
+					label: "Console",
+					enable: true,
+					iconEnabled: (<OpenPanelFilledBottom size={16} />),
+					tooltip: "Console"
+				},
+				{
+					action: "downloadFlow",
+					label: "Download pipeline flow",
+					enable: true,
+					iconEnabled: (<Download size={16} />),
+					tooltip: "Download pipeline flow"
+				},
+				{
+					action: "downloadPalette",
+					label: "Download palette",
+					enable: true,
+					iconEnabled: (<Download size={16} />),
+					tooltip: "Download palette"
+				},
+				{ divider: true },
+				{
+					action: "theme-toggle",
+					label: "Switch Theme",
+					enable: true,
+					jsx: (tabIndex) => (
+						<div className="harness-theme-toggle-wrapper" tabIndex={-1}>
+							<Toggle
+								id="harness-toggle-theme"
+								aria-label="Select theme"
+								size="sm"
+								labelA="Light"
+								labelB="Dark"
+								className="toolbar-jsx-obj"
+								toggled={this.state.lightTheme}
+								onToggle={this.handleThemeChange.bind(this)}
+								tabIndex={tabIndex}
+							/>
+						</div>
+					),
+					tooltip: "Switch Theme"
+				},
+				{ divider: true },
+				{
+					action: "breadcrumbs",
+					label: "Breadcrumbs",
+					enable: true,
+					jsx: (tabIndex) => (
+						<div className="harness-pipeline-breadcrumbs-container toolbar-jsx-obj" tabIndex={tabIndex}>
+							{breadcrumbs}
+						</div>
+					)
+				}
+			],
+			rightBar: [
+				{
+					action: "help",
+					label: "Elyra Canvas Documentation",
+					enable: true,
+					iconEnabled: (<Help size={16} />),
+					tooltip: "Elyra Canvas Docs",
+					isExternalLink: true,
+					externalUrl: "https://elyra-ai.github.io/canvas/"
+				},
+				{ divider: true },
+				{
+					action: "sidepanelCanvas",
+					label: "Common Canvas",
+					enable: true,
+					iconEnabled: (<FlowData size={16} />),
+					tooltip: "Common Canvas"
+				},
+				{
+					action: "sidepanelAPI",
+					label: "Common Canvas API",
+					enable: true,
+					iconEnabled: (<Api size={16} />),
+					tooltip: "Common Canvas API"
+				},
+				{
+					action: "sidepanelProperties",
+					label: "Common Properties",
+					enable: true,
+					iconEnabled: (<GuiManagement size={16} />),
+					tooltip: "Common Properties"
+				}
+			]
+		};
 
+		return (
+			<div className="harness-app-navbar" role="navigation" aria-label="Test harness options">
+				<Toolbar
+					config={toolbarConfig}
+					instanceId={this.canvasController.getInstanceId()}
+					toolbarActionHandler={this.toolbarActionHandler.bind(this)}
+					additionalText={{
+						overflowMenuLabel: "Overflow menu",
+						ariaLabel: "Test harness"
+					}}
+					size="lg"
+				/>
+			</div>
+		);
+	}
+
+	toolbarActionHandler(action) {
+		switch (action) {
+		case "console":
+			this.openConsole();
+			break;
+		case "downloadFlow":
+			this.downloadPipelineFlow();
+			break;
+		case "downloadPalette":
+			this.downloadPalette();
+			break;
+		case "sidepanelProperties":
+			this.sidePanelProperties();
+			break;
+		case "sidepanelAPI":
+			this.sidePanelAPI();
+			break;
+		case "sidepanelCanvas":
+			this.sidePanelCanvas();
+			break;
+		case "help":
+			window.open("https://elyra-ai.github.io/canvas/", "_blank");
+			break;
+		default:
+			break;
+		}
+	}
+
+	render() {
+		this.canvasController.log("-------------------------------");
+		this.canvasController.log("Test Harness render");
+		this.canvasController.log("-------------------------------");
+
+		const navBar = this.getNavigationBar();
 		const commonCanvasConfig = this.getCanvasConfig();
 		const commonCanvasConfig2 = this.getCanvasConfig2();
 		const toolbarConfig = this.getToolbarConfig();
