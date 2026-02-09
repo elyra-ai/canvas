@@ -24,10 +24,19 @@
 	align-items: center;
 	justify-content: space-between;
 
+	// Set overflow menu to be same background color as the table toolbar
+	// This is visible when the table toolbar extends further than the table's width,
+	// which can be seen in a 'list' control with moveable_rows, in a narrow flyout
+	.properties-toolbar-items .toolbar-div .toolbar-overflow-item button {
+		background-color: carbon.$interactive;
+		&:hover {
+			background-color: carbon.$button-primary-hover;
+		}
+	}
+
 	.properties-batch-summary {
 		@include carbon.type-style("label-02");
 		padding-left: carbon.$spacing-05;
 		color: carbon.$text-on-color;
-		min-width: 0; // TODO check list
 	}
 }
