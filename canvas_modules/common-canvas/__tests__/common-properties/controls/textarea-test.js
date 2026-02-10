@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,17 @@
  */
 
 import React from "react";
+import { expect } from "chai";
+import { fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { expect as expectJest } from "@jest/globals";
+
 import TextArea from "../../../src/common-properties/controls/textarea";
 import { TRUNCATE_LIMIT } from "../../../src/common-properties/constants/constants.js";
 import { render } from "../../_utils_/mount-utils.js";
-import { expect } from "chai";
-import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import textareaParamDef from "../../test_resources/paramDefs/textarea_paramDef.json";
-import { fireEvent } from "@testing-library/react";
 
 const controller = new Controller();
 
@@ -68,6 +70,7 @@ mockTextArea.mockImplementation((props) => {
 });
 
 describe("textarea control renders correctly", () => {
+	const user = userEvent.setup();
 
 	beforeEach(() => {
 		controller.setErrorMessages({});
@@ -140,7 +143,7 @@ describe("textarea control renders correctly", () => {
 		expect(controller.getPropertyValue(propertyIdList)).to.eql(["My new value", "another line"]);
 	});
 
-	it("textarea should not go over max chars", () => {
+	it("textarea should not go over max chars", async() => {
 		const wrapper = render(
 			<TextArea
 				store={controller.getStore()}
@@ -152,11 +155,12 @@ describe("textarea control renders correctly", () => {
 		const value = propertyUtilsRTL.genLongString(control.charLimit + 10);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
 		const input = textWrapper.querySelector("textarea");
-		fireEvent.change(input, { target: { value: value } });
+		user.clear(input);
+		await user.type(input, value);
 		expect(controller.getPropertyValue(propertyId)).to.equal(value.substr(0, control.charLimit));
 	});
 
-	it("textarea should set maxLengthForMultiLineControls correctly without charLimit", () => {
+	it("textarea should set maxLengthForMultiLineControls correctly without charLimit", async() => {
 		controller.setPropertiesConfig({ maxLengthForMultiLineControls: maxLengthForMultiLineControls });
 		const wrapper = render(
 			<TextArea
@@ -169,7 +173,8 @@ describe("textarea control renders correctly", () => {
 		const value = propertyUtilsRTL.genLongString(maxLengthForMultiLineControls + 10);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea-list']");
 		const input = textWrapper.querySelector("textarea");
-		fireEvent.change(input, { target: { value: value } });
+		user.clear(input);
+		await user.type(input, value);
 		expect(controller.getPropertyValue(propertyIdList)).to.eql([value.substr(0, maxLengthForMultiLineControls)]);
 	});
 
