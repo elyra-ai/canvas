@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,18 @@
  */
 
 import React from "react";
+import { expect } from "chai";
+import { expect as expectJest } from "@jest/globals";
+import { fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
 import Textfield from "./../../../src/common-properties/controls/textfield";
 import Controller from "./../../../src/common-properties/properties-controller";
 import { TRUNCATE_LIMIT } from "./../../../src/common-properties/constants/constants.js";
 import { render } from "../../_utils_/mount-utils.js";
-import { expect } from "chai";
-import { expect as expectJest } from "@jest/globals";
 import { Provider } from "react-redux";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import textfieldParamDef from "../../test_resources/paramDefs/textfield_paramDef.json";
-import { fireEvent } from "@testing-library/react";
 
 
 const controller = new Controller();
@@ -75,6 +77,7 @@ mockTextfield.mockImplementation((props) => {
 });
 
 describe("textfield renders correctly", () => {
+	const user = userEvent.setup();
 	const propertyId = { name: "test-text" };
 
 	beforeEach(() => {
@@ -194,7 +197,7 @@ describe("textfield renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.equal("value 1, value2");
 	});
 
-	it("textfield should not go over max chars", () => {
+	it("textfield should not go over max chars", async() => {
 		const wrapper = render(
 			<Textfield
 				store={controller.getStore()}
@@ -206,11 +209,12 @@ describe("textfield renders correctly", () => {
 		const value = propertyUtilsRTL.genLongString(control.charLimit + 10);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-text']");
 		const input = textWrapper.querySelector("input");
-		fireEvent.change(input, { target: { value: value } });
+		user.clear(input);
+		await user.type(input, value);
 		expect(controller.getPropertyValue(propertyId)).to.equal(value.substr(0, control.charLimit));
 	});
 
-	it("textfield should set maxLengthForSingleLineControls correctly without charLimit set", () => {
+	it("textfield should set maxLengthForSingleLineControls correctly without charLimit set", async() => {
 		const propertyId2 = { name: "test-text2" };
 		controller.setPropertiesConfig({ maxLengthForSingleLineControls: maxLengthForSingleLineControls });
 		const wrapper = render(
@@ -224,7 +228,8 @@ describe("textfield renders correctly", () => {
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-text2']");
 		const input = textWrapper.querySelector("input");
 		const value = propertyUtilsRTL.genLongString(maxLengthForSingleLineControls + 10);
-		fireEvent.change(input, { target: { value: value } });
+		user.clear(input);
+		await user.type(input, value);
 		expect(controller.getPropertyValue(propertyId2)).to.equal(value.substr(0, maxLengthForSingleLineControls));
 	});
 
@@ -431,7 +436,6 @@ describe("textfield list works correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.eql([]);
 	});
 });
-
 
 describe("textfield classnames appear correctly", () => {
 	let wrapper;
