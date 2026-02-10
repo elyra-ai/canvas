@@ -428,12 +428,15 @@ describe("structuretable control renders correctly", () => {
 		expect(columns[0].querySelectorAll("input")).to.have.length(1); // checkbox
 		expect(columns[1].querySelectorAll(".tooltip-container")).to.have.length(1);
 		expect(columns[2].querySelectorAll(".tooltip-container")).to.have.length(1);
-		expect(columns[3].querySelectorAll(".tooltip-container")).to.have.length(1);
+		expect(columns[3].querySelectorAll(".properties-truncated-tooltip .tooltip-container")).to.have.length(1);
+		expect(columns[3].querySelectorAll(".properties-vt-info-icon-tip .tooltip-container")).to.have.length(1);
 		expect(columns[3].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
 		expect(columns[4].querySelectorAll(".tooltip-container")).to.have.length(1);
-		expect(columns[5].querySelectorAll(".tooltip-container")).to.have.length(1);
+		expect(columns[5].querySelectorAll(".properties-truncated-tooltip .tooltip-container")).to.have.length(1);
+		expect(columns[5].querySelectorAll(".properties-vt-info-icon-tip .tooltip-container")).to.have.length(1);
 		expect(columns[5].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
-		expect(columns[6].querySelectorAll(".tooltip-container")).to.have.length(1);
+		expect(columns[6].querySelectorAll(".properties-truncated-tooltip .tooltip-container")).to.have.length(1);
+		expect(columns[6].querySelectorAll(".properties-vt-info-icon-tip .tooltip-container")).to.have.length(1);
 		expect(columns[6].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
 	});
 
