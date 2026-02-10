@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,17 @@
  */
 
 import React from "react";
+import { expect } from "chai";
+import sinon from "sinon";
+import { cleanup, fireEvent, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
 import { CommonProperties } from "../../src/common-properties";
 import PropertiesDialog from "../../src/common-properties/components/properties-modal";
 import propertyUtilsRTL from "../_utils_/property-utilsRTL.js";
 import tableUtilsRTL from "../_utils_/table-utilsRTL.js";
 import { render } from "../_utils_/mount-utils.js";
-import { expect } from "chai";
-import sinon from "sinon";
+
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 import expressionTestResource from "../test_resources/json/expression-one-category.json";
 import numberfieldResource from "../test_resources/paramDefs/numberfield_paramDef.json";
@@ -35,7 +39,7 @@ import { IntlProvider } from "react-intl";
 import { AiGenerate, Password } from "@carbon/icons-react";
 
 import { CARBON_MODAL_SIZE_XSMALL, CARBON_MODAL_SIZE_SMALL, CARBON_MODAL_SIZE_LARGE } from "./../../src/common-properties/constants/constants";
-import { cleanup, fireEvent, screen } from "@testing-library/react";
+
 
 const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
@@ -1192,11 +1196,13 @@ describe("CommonProperties conditionHandling option tests", () => {
 describe("CommonProperties should set maxLengthForMultiLineControls and maxLengthForSingleLineControls in propertiesConfig", () => {
 	const maxLengthForSingleLineControls = 5;
 	const maxLengthForMultiLineControls = 15;
+	const user = userEvent.setup();
+
 	afterEach(() => {
 		cleanup();
 	});
 
-	it("verify number of characters for single-line string type controls don't exceed maxLengthForSingleLineControls from propertiesConfig", () => {
+	it("verify number of characters for single-line string type controls don't exceed maxLengthForSingleLineControls from propertiesConfig", async() => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(textfieldResource, { maxLengthForSingleLineControls: maxLengthForSingleLineControls });
 		const { container } = renderedObject.wrapper;
 		const controller = renderedObject.controller;
@@ -1205,13 +1211,14 @@ describe("CommonProperties should set maxLengthForMultiLineControls and maxLengt
 		const textWrapper = container.querySelector("div[data-id='properties-ctrl-string']");
 		const input = textWrapper.querySelectorAll("input");
 		const newValue = "This sentence has more characters than maxLengthForSingleLineControls.";
-		fireEvent.change(input[0], { target: { value: newValue } });
+		user.clear(input[0]);
+		await user.type(input[0], newValue);
 		// Verify only 5 characters are displayed - "This "
 		expect(controller.getPropertyValue("string")).to.equal(newValue.substring(0, maxLengthForSingleLineControls));
 
 	});
 
-	it("verify number of characters for multi-line string type controls don't exceed maxLengthForMultiLineControls from propertiesConfig", () => {
+	it("verify number of characters for multi-line string type controls don't exceed maxLengthForMultiLineControls from propertiesConfig", async() => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(textAreaResource, { maxLengthForMultiLineControls: maxLengthForMultiLineControls });
 		const { container } = renderedObject.wrapper;
 		const controller = renderedObject.controller;
@@ -1220,13 +1227,14 @@ describe("CommonProperties should set maxLengthForMultiLineControls and maxLengt
 		const textWrapper = container.querySelector("div[data-id='properties-ctrl-string']");
 		const textarea = textWrapper.querySelectorAll("textarea");
 		const newValue = "This sentence has more characters than maxLengthForMultiLineControls.";
-		fireEvent.change(textarea[0], { target: { value: newValue } });
+		user.clear(textarea[0]);
+		await user.type(textarea[0], newValue);
 		// Verify only 15 characters are displayed - "This sentence h"
 		expect(controller.getPropertyValue("string")).to.equal(newValue.substring(0, maxLengthForMultiLineControls));
 
 	});
 
-	it("verify char_limit from uiHints overrides the value of maxLengthForSingleLineControls from propertiesConfig", () => {
+	it("verify char_limit from uiHints overrides the value of maxLengthForSingleLineControls from propertiesConfig", async() => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(textfieldResource, { maxLengthForSingleLineControls: maxLengthForSingleLineControls });
 		const { container } = renderedObject.wrapper;
 		const controller = renderedObject.controller;
@@ -1238,13 +1246,14 @@ describe("CommonProperties should set maxLengthForMultiLineControls and maxLengt
 		const textWrapper = container.querySelector("div[data-id='properties-ctrl-string_charLimit']");
 		const input = textWrapper.querySelectorAll("input");
 		const newValue = "This sentence should display 10 characters.";
-		fireEvent.change(input[0], { target: { value: newValue } });
+		user.clear(input[0]);
+		await user.type(input[0], newValue);
 		// Verify 10 characters are displayed - "This sente"
 		expect(controller.getPropertyValue("string_charLimit")).to.equal(newValue.substring(0, charLimit));
 
 	});
 
-	it("verify char_limit from uiHints overrides the value of maxLengthForMultiLineControls from propertiesConfig", () => {
+	it("verify char_limit from uiHints overrides the value of maxLengthForMultiLineControls from propertiesConfig", async() => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(textAreaResource, { maxLengthForMultiLineControls: maxLengthForMultiLineControls });
 		const { container } = renderedObject.wrapper;
 		const controller = renderedObject.controller;
@@ -1256,7 +1265,8 @@ describe("CommonProperties should set maxLengthForMultiLineControls and maxLengt
 		const textWrapper = container.querySelector("div[data-id='properties-ctrl-string_charLimit']");
 		const textarea = textWrapper.querySelector("textarea");
 		const newValue = "This sentence should display 20 characters.";
-		fireEvent.change(textarea, { target: { value: newValue } });
+		user.clear(textarea);
+		await user.type(textarea, newValue);
 		// Verify 20 characters are displayed - "This sentence should"
 		expect(textarea.textContent).to.equal(newValue.substring(0, charLimit));
 
