@@ -138,6 +138,7 @@ class ListControl extends AbstractTable {
 					isReadonlyTable={false}
 					isSingleSelectTable={false}
 					smallFlyout={this.props.rightFlyout && this.props.controller.getEditorSize() === "small"}
+					containingDivId={getDataId(this.props.propertyId)}
 				/>
 			);
 		}
@@ -196,7 +197,7 @@ class ListControl extends AbstractTable {
 		</div>);
 
 		return (
-			<div data-id={getDataId(this.props.propertyId)} className="properties-list-control" >
+			<div data-id={getDataId(this.props.propertyId)} id={getDataId(this.props.propertyId)} className="properties-list-control" >
 				{this.props.controlItem}
 				{
 					isEmpty(this.props.value) && this.props.addRemoveRows

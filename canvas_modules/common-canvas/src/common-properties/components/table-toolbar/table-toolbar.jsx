@@ -311,7 +311,7 @@ class TableToolbar extends React.Component {
 				) : null;
 
 			return (
-				<div className="properties-table-toolbar" >
+				<div className="properties-table-toolbar">
 					{this.getLeftBarContents()}
 					{multiSelectInvoker}
 					<div className="properties-toolbar-items">
@@ -324,6 +324,7 @@ class TableToolbar extends React.Component {
 								overflowMenuLabel: formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_OVERFLOW_LABEL),
 								ariaLabel: formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_LABEL, { table_label: this.props.tableLabel })
 							}}
+							containingDivId={this.props.containingDivId}
 						/>
 					</div>
 				</div>
@@ -344,7 +345,7 @@ TableToolbar.propTypes = {
 	rightFlyout: PropTypes.bool,
 	smallFlyout: PropTypes.bool, // list control in right flyout having editor size small
 	tableState: PropTypes.string,
-	tableLabel: PropTypes.string,
+	tableLabel: PropTypes.string.isRequired,
 	isReadonlyTable: PropTypes.bool,
 	isSingleSelectTable: PropTypes.bool,
 	addRemoveRows: PropTypes.bool,
@@ -352,7 +353,8 @@ TableToolbar.propTypes = {
 	multiSelectEdit: PropTypes.bool,
 	multiSelectEditSubPanel: PropTypes.element,
 	multiSelectEditRowPropertyId: PropTypes.object,
-	disableRowMoveButtons: PropTypes.bool // set by redux,
+	disableRowMoveButtons: PropTypes.bool, // set by redux
+	containingDivId: PropTypes.string
 };
 
 const mapStateToProps = (state, ownProps) => ({
