@@ -30,6 +30,7 @@
   "table.search.header": "View in tables",
   "table.search.placeholder": "Find in column {column_name}",
   "table.search.label": "Search in {table_name} table",
+  "table.sort.column.label": "Sort by {column_name}",
   "summary.longTable.placeholder": "More than ten fields...",
   "alerts.tab.title": "Alerts",
   "title.editor.label": "edit title",
