@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,9 +51,6 @@ class TextfieldControl extends React.Component {
 
 	handleChange(evt) {
 		let value = evt.target.value;
-		if (this.charLimit !== -1 && value) {
-			value = value.substring(0, this.charLimit);
-		}
 		if (this.isList) {
 			value = ControlUtils.splitNewlines(value, arrayValueDelimiter);
 		}
@@ -116,6 +113,8 @@ class TextfieldControl extends React.Component {
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 					ref={this.textInputRef}
 					readOnly={this.props.readOnly}
+					enableCounter={this.charLimit !== -1}
+					maxCount={this.charLimit}
 				/>
 			);
 
