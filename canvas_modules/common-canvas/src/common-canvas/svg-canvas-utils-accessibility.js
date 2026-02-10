@@ -331,7 +331,13 @@ export default class SVGCanvasUtilsAccessibility {
 		}
 
 		const localObj = this.getLocalObject(focusObj);
-		const index = this.tabObjects.findIndex((tg) => tg.obj.grp === localObj?.grp && tg.obj.id === localObj?.id);
+		let index = this.tabObjects.findIndex((tg) => tg.obj.grp === localObj?.grp && tg.obj.id === localObj?.id);
+
+		// If we don't find an exact match, look for the first tab object that is in the
+		// same group as the object passed in.
+		if (index === -1) {
+			index = this.tabObjects.findIndex((tg) => tg.obj.grp === localObj?.grp);
+		}
 
 		if (index === this.tabObjects.length - 1) {
 			return null;
@@ -348,9 +354,15 @@ export default class SVGCanvasUtilsAccessibility {
 		}
 
 		const localObj = this.getLocalObject(focusObj);
-		const index = this.tabObjects.findIndex((tg) => tg.obj.grp === localObj?.grp && tg.obj.id === localObj?.id);
+		let index = this.tabObjects.findIndex((tg) => tg.obj.grp === localObj?.grp && tg.obj.id === localObj?.id);
 
-		if (index === 0) {
+		// If we don't find an exact match, look for the last tab object that is in the
+		// same group as the object passed in.
+		if (index === -1) {
+			index = this.tabObjects.findLastIndex((tg) => tg.obj.grp === localObj?.grp);
+		}
+
+		if (index < 1) {
 			return null;
 		}
 		return this.tabObjects[index - 1].obj;
