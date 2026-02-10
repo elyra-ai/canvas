@@ -100,7 +100,7 @@ export default class SVGCanvasUtilsAccessibility {
 		const loopEntryNodes = [];
 
 		objGroups.forEach((og) => {
-			const entryNodes = og.filter((node) => !this.nodeHasInputLinks(node));
+			const entryNodes = og.filter((node) => !this.nodeHasInputLinks(node) && !this.nodeHasAssocLinks(node));
 			if (entryNodes.length === 0) {
 				const loopEntryNode = this.getLoopEntryNode(og);
 				loopEntryNodes.push(loopEntryNode);
@@ -331,7 +331,7 @@ export default class SVGCanvasUtilsAccessibility {
 		}
 
 		const localObj = this.getLocalObject(focusObj);
-		const index = this.tabObjects.findIndex((tg) => tg.obj.grp === localObj?.grp);
+		const index = this.tabObjects.findIndex((tg) => tg.obj.grp === localObj?.grp && tg.obj.id === localObj?.id);
 
 		if (index === this.tabObjects.length - 1) {
 			return null;
@@ -348,7 +348,7 @@ export default class SVGCanvasUtilsAccessibility {
 		}
 
 		const localObj = this.getLocalObject(focusObj);
-		const index = this.tabObjects.findIndex((tg) => tg.obj.grp === localObj?.grp);
+		const index = this.tabObjects.findIndex((tg) => tg.obj.grp === localObj?.grp && tg.obj.id === localObj?.id);
 
 		if (index === 0) {
 			return null;
@@ -356,6 +356,9 @@ export default class SVGCanvasUtilsAccessibility {
 		return this.tabObjects[index - 1].obj;
 	}
 
+	// Returns one of the locally cached objects (cached in the active pipeline)
+	// with the same ID as the one passed in. We use the cached object because it
+	// will have the 'grp' field set appropriately.
 	getLocalObject(focusObj) {
 		return this.ap.pipeline.nodes.find((n) => n.id === focusObj.id) ||
 			this.ap.pipeline.links.find((l) => l.id === focusObj.id) ||
