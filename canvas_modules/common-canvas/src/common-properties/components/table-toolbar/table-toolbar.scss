@@ -32,6 +32,9 @@
 		&:hover {
 			background-color: carbon.$button-primary-hover;
 		}
+		svg {
+			fill: carbon.$icon-on-color;
+		}
 	}
 
 	.properties-batch-summary {
