@@ -37,6 +37,7 @@ import structureListEditorParamDef from "../test_resources/paramDefs/structureli
 import structureEditorParamDef from "../test_resources/paramDefs/structureeditor_paramDef.json";
 import { IntlProvider } from "react-intl";
 import { AiGenerate, Password } from "@carbon/icons-react";
+import * as commonPropertiesMessages from "../../locales/common-properties/locales/en.json";
 
 import { CARBON_MODAL_SIZE_XSMALL, CARBON_MODAL_SIZE_SMALL, CARBON_MODAL_SIZE_LARGE } from "./../../src/common-properties/constants/constants";
 
@@ -47,9 +48,13 @@ const propertyIconHandler = sinon.spy();
 
 const locale = "en";
 const localMessages = {
+	...commonPropertiesMessages,
 	"structureTable.addButton.label": "Add Some Stuff",
 	"propertiesEdit.applyButton.label": "CONFIRM",
-	"propertiesEdit.rejectButton.label": "NOT"
+	"propertiesEdit.rejectButton.label": "NOT",
+	"fieldPicker.unknown.label": "unknown",
+	"fieldPicker.customType.label": "custom type",
+	"fieldPicker.vectorType.label": "vector type"
 };
 
 const validationErrorMessages = {
@@ -148,7 +153,7 @@ describe("CommonProperties renders correctly", () => {
 	it.skip("all required props should have been defined", () => {
 		const propertiesConfig = { containerType: "Editing" };
 		render(
-			<IntlProvider key="IntlProvider2" locale={locale} messages={{}}>
+			<IntlProvider key="IntlProvider2" locale={locale} messages={localMessages}>
 				<SpyWrapper
 					propertiesInfo={propertiesInfo}
 					propertiesConfig={propertiesConfig}
