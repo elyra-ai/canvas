@@ -490,6 +490,13 @@ describe("ObjectModel files handling test", () => {
 			if (n.inputs) {
 				n.inputs.forEach((inp) => delete inp.links);
 			}
+			if (n.app_data?.ui_data?.decorations) {
+				n.app_data?.ui_data?.decorations.forEach((d) => {
+					delete d.focusable;
+					delete d.tooltip;
+					return d;
+				});
+			}
 		});
 		return outFlow;
 	}
