@@ -262,7 +262,7 @@
               "width": 265,
               "height": 114,
               "class_name": "d3-comment-rect bkg-col-cyan-20",
-              "content": "## JSX Icons Canvas\nThis canvas shows a palette and a flow of nodes that all use JSX objects as their icons. The icons are all imported from the <a href=\"https://carbondesignsystem.com/elements/icons/library\" target=\"_blank\">Carbon Icons library</a>. ",
+              "content": "## JSX Icons Canvas\nThis canvas shows a palette and a flow of nodes that all use JSX objects as their icons. The icons are all imported from the <a href=\"https://carbondesignsystem.com/elements/icons/library\" target=\"_blank\" tabindex=-1>Carbon Icons library</a>. ",
               "associated_id_refs": []
             }
           ]

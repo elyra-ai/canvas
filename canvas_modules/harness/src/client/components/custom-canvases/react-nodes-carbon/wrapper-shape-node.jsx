@@ -34,6 +34,7 @@ class ShapeNodeWrapper extends React.Component {
 					shape={shape}
 					size="28px"
 					renderIcon={icon}
+					tabIndex={-1}
 				/>
 			</div>
 		);
