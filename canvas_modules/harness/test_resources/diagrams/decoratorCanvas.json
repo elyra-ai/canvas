@@ -48,7 +48,8 @@
                       "class_name": "zoom-in-decoration",
                       "image": "/images/decorators/zoom-in_32.svg",
                       "hotspot": true,
-                      "focusable": true
+                      "focusable": true,
+                      "tooltip": "Tooltip for link 1"
                     },
                     {
                       "id": "assocDec3",
@@ -64,7 +65,8 @@
                       "width": 10,
                       "height": 15,
                       "x_pos": -6,
-                      "y_pos": -5
+                      "y_pos": -5,
+                      "tooltip": "Tooltip for link 2"
                     }
                   ]
                 }
@@ -345,7 +347,9 @@
                   "class_name": "zoom-in-decoration",
                   "hotspot": true,
                   "id": "zoomInDecoration",
-                  "image": "/images/decorators/zoom-in_32.svg"
+                  "image": "/images/decorators/zoom-in_32.svg",
+                  "focusable": true,
+                  "tooltip": "Zoom in tooltip"
                 }
               ]
             }
@@ -451,7 +455,8 @@
                   "position": "topCenter",
                   "x_pos": 0,
                   "y_pos": 0,
-                  "focusable": true
+                  "focusable": true,
+                  "tooltip": "Tooltip for top-center decoration"
                 },
                 {
                   "id": "3",
@@ -497,7 +502,8 @@
                   "position": "bottomRight",
                   "x_pos": 0,
                   "y_pos": 0,
-                  "focusable": true
+                  "focusable": true,
+                  "tooltip": "Tooltip for bottom-right decoration"
                 }
               ]
             }

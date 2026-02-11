@@ -2942,7 +2942,8 @@ export default class SVGCanvasRenderer {
 				.attr("class", this.decUtils.getDecClass(dec, `d3-${objType}-dec-path`))
 				.attr("x", 0)
 				.attr("y", 0)
-				.attr("d", dec.path);
+				.attr("d", dec.path)
+				.attr("aria-label", dec.tooltip ? dec.tooltip : this.canvasController.labelUtil.getLabel("decoration.shapeDecoration"));
 		} else {
 			pathSel.remove();
 		}
@@ -2960,7 +2961,7 @@ export default class SVGCanvasRenderer {
 				.attr("y", this.decUtils.getDecPadding(dec, d, objType))
 				.attr("width", this.decUtils.getDecWidth(dec, d, objType) - (2 * this.decUtils.getDecPadding(dec, d, objType)))
 				.attr("height", this.decUtils.getDecHeight(dec, d, objType) - (2 * this.decUtils.getDecPadding(dec, d, objType)))
-				.attr("aria-label", "Image decoration")
+				.attr("aria-label", dec.tooltip ? dec.tooltip : this.canvasController.labelUtil.getLabel("decoration.imageDecoration"))
 				.each(() => this.setDecImageContent(imageSel, dec.image));
 		} else {
 			imageSel.remove();
@@ -2986,6 +2987,7 @@ export default class SVGCanvasRenderer {
 			labelSel
 				.attr("width", this.decUtils.getDecLabelWidth(dec, d, objType))
 				.attr("height", this.decUtils.getDecLabelHeight(dec, d, objType))
+				.attr("aria-label", escapeText(dec.label))
 				.select("div")
 				.attr("class", this.decUtils.getDecLabelClass(dec, objType))
 				.select("span")
@@ -3006,7 +3008,7 @@ export default class SVGCanvasRenderer {
 					.attr("tabindex", -1)
 					.attr("x", 0)
 					.attr("y", 0)
-					.attr("aria-label", "JSX decoration");
+					.attr("aria-label", dec.tooltip ? dec.tooltip : this.canvasController.labelUtil.getLabel("decoration.jsxDecoration"));
 			}
 			extSel
 				.attr("width", this.decUtils.getDecWidth(dec, d, objType))
@@ -3073,6 +3075,23 @@ export default class SVGCanvasRenderer {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						this.callDecoratorCallback(d3Event, d, dec);
 					}
+				}
+			})
+			.on("focus", (d3Event, dec) => {
+				if (this.canOpenTip(TIP_TYPE_DEC) && dec.tooltip) {
+					this.canvasController.closeTip(); // Ensure any existing tip is removed
+					this.canvasController.openTip({
+						id: this.getId("dec_tip", dec.id),
+						type: TIP_TYPE_DEC,
+						targetObj: d3Event.currentTarget,
+						pipelineId: this.activePipeline.id,
+						decoration: dec
+					});
+				}
+			})
+			.on("blur", (d3Event, dec) => {
+				if (this.canOpenTip(TIP_TYPE_DEC) && dec.tooltip) {
+					this.canvasController.closeTip();
 				}
 			})
 			.on("mouseenter", (d3Event, dec) => {
