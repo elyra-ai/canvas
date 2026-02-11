@@ -530,7 +530,7 @@ export default class AbstractTable extends React.Component {
 		return editButton;
 	}
 
-	makeCustomButtonsPanel(tableState, customButtons) {
+	makeCustomButtonsPanel(tableState, customButtons, tableLabel) {
 		let customTableButtons = null;
 		if (customButtons) {
 			customTableButtons = (<div className="properties-at-buttons-container">
@@ -541,6 +541,7 @@ export default class AbstractTable extends React.Component {
 					customButtons={customButtons}
 					customButtonsState={this.props.tableButtons}
 					toolbarOverflowLabel={this.getTableToolbarOverflowLabel()}
+					tableLabel={tableLabel}
 				/>
 			</div>);
 		}
@@ -632,7 +633,7 @@ export default class AbstractTable extends React.Component {
 		if (this.props.selectedRows.length > 0 && tableToolbar) {
 			topRightPanel = tableToolbar;
 		} else if (customButtons) {
-			topRightPanel = this.makeCustomButtonsPanel(tableState, customButtons);
+			topRightPanel = this.makeCustomButtonsPanel(tableState, customButtons, tableLabel);
 		} else if (this.isReadonlyTable()) {
 			if (!this.props.hideEditButton) {
 				topRightPanel = this.makeEditButtonPanel(tableState, tableButtonConfig);

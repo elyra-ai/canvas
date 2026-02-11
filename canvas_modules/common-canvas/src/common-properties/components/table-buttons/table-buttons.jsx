@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,14 @@ import PropTypes from "prop-types";
 
 import Toolbar from "../../../toolbar/toolbar";
 
-import { STATES } from "./../../constants/constants";
+import { formatMessage } from "../../util/property-utils";
+import { MESSAGE_KEYS, STATES } from "./../../constants/constants";
 
 class TableButtons extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.reactIntl = this.props.controller.getReactIntl();
 		this.getCustomButtonEnabled = this.getCustomButtonEnabled.bind(this);
 		this.customButtonIconCallback = this.customButtonIconCallback.bind(this);
 		this.customButtonOnClick = this.customButtonOnClick.bind(this);
@@ -120,7 +122,10 @@ class TableButtons extends React.Component {
 				instanceId={0}
 				size="sm"
 				toolbarActionHandler={this.customButtonOnClick}
-				additionalText={{ overflowMenuLabel: this.props.toolbarOverflowLabel }}
+				additionalText={{
+					overflowMenuLabel: this.props.toolbarOverflowLabel,
+					ariaLabel: formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_LABEL, { table_label: this.props.tableLabel })
+				}}
 			/>
 		</div>);
 	}
@@ -130,6 +135,7 @@ TableButtons.propTypes = {
 	controller: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	customButtons: PropTypes.array.isRequired,
+	tableLabel: PropTypes.string.isRequired,
 	tableState: PropTypes.string,
 	toolbarOverflowLabel: PropTypes.string,
 	customButtonsState: PropTypes.object // set in by redux
