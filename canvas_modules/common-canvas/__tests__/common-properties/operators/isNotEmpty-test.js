@@ -17,11 +17,14 @@
 import { expect } from "chai";
 import { ControlType } from "../../../src/common-properties/constants/form-constants";
 import Controller from "../../../src/common-properties/properties-controller";
+import sinon from "sinon";
+import logger from "./../../../utils/logger";
 
 describe("validating isNotEmpty operator works correctly", () => {
 	const controller = new Controller();
 	const isNotEmpty = controller.getConditionOp("isNotEmpty");
 	let undefinedPlaceholder;
+	let warnSpy;
 
 	function wrap(val) {
 		return { value: val, control: { controlType: ControlType.TEXTFIELD } }; // controlType can be anything
@@ -38,6 +41,13 @@ describe("validating isNotEmpty operator works correctly", () => {
 	beforeEach(() => {
 		controller.setErrorMessages({});
 		controller.setControlStates({});
+		warnSpy = sinon.stub(logger, "warn").callsFake(() => {
+			// no-op
+		});
+	});
+
+	afterEach(() => {
+		warnSpy.restore();
 	});
 
 	it("Test isNotEmpty returns as expected when trimSpaces set to true", () => {
