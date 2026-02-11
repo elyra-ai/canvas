@@ -314,7 +314,7 @@ class TableToolbar extends React.Component {
 				<div className="properties-table-toolbar">
 					{this.getLeftBarContents()}
 					{multiSelectInvoker}
-					<div className="properties-toolbar-items">
+					<div className="properties-toolbar-items floating-toolbar">
 						<Toolbar
 							config={toolbarConfig}
 							instanceId={0}
