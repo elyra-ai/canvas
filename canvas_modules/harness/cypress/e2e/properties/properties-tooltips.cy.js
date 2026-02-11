@@ -86,17 +86,16 @@ describe("Test if tips show up for textfields in tables when there is overflow",
 	});
 });
 
-describe("Test if tips show up in table headers correctly", function() {
+describe("Test if tips show up in table headers truncate correctly", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.toggleCommonPropertiesSidePanel();
-		cy.openPropertyDefinition("Conditions_paramDef.json");
+		cy.openPropertyDefinition("structuretable_paramDef.json");
 	});
 
 	it("Test if tips show when simple header has ellipsis", function() {
-		cy.toggleCategory("Table");
 		cy.openSubPanel("Configure Rename fields");
 		cy.get(".properties-wf-children th[data-id='properties-vt-header-field']")
 			.trigger("mouseover");
@@ -105,6 +104,16 @@ describe("Test if tips show up in table headers correctly", function() {
 			.trigger("mouseover");
 		cy.verifyTip(null, "visible", "Output name");
 		cy.saveWideFlyout("Configure Rename fields");
+	});
+});
+
+describe("Test if tips show up in table headers correctly", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.toggleCommonPropertiesSidePanel();
+		cy.selectPropertiesContainerType("Flyout");
+		cy.toggleCommonPropertiesSidePanel();
+		cy.openPropertyDefinition("Conditions_paramDef.json");
 	});
 
 	it("Test if tips show when checkbox in header has ellipsis", function() {

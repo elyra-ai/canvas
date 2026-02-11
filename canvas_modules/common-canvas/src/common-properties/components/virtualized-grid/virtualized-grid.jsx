@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Elyra Authors
+ * Copyright 2025-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,13 @@ import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import { isEmpty, includes } from "lodash";
-import { Checkbox, Toggletip, ToggletipButton, ToggletipContent } from "@carbon/react";
+import { Checkbox } from "@carbon/react";
 import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
 
+import Tooltip from "./../../../tooltip/tooltip.jsx";
 import TruncatedContentTooltip from "../truncated-content-tooltip";
 import { ROW_SELECTION } from "../../constants/constants.js";
+import KeyboardUtils from "../../../common-canvas/keyboard-utils.js";
 
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
@@ -255,20 +257,17 @@ const VirtualizedGrid = (props) => {
 					const infoIcon = isEmpty(header.description)
 						? null
 						: (<div className="properties-vt-info-icon-tip">
-							<Toggletip autoAlign align="bottom" onClick={(evt) => evt.stopPropagation()}>
-								<ToggletipButton><Information className="properties-vt-info-icon" /></ToggletipButton>
-								<ToggletipContent className="properties-grid-th-toggletip">{header.description}</ToggletipContent>
-							</Toggletip>
+							<Tooltip
+								id="properties-tooltip-info"
+								tip={header.description}
+								direction="bottom"
+								className="properties-tooltips"
+								showToolTipOnClick
+							>
+								<Information className="properties-vt-info-icon" />
+							</Tooltip>
 						</div>);
 					const sortable = includes(props.sortColumns, header.key);
-					const headerContentTooltip = (<div className={classNames("properties-vt-label-tip-icon", { "header-disabled": !sortable })}>
-						<TruncatedContentTooltip
-							tooltipText={header.headerLabel}
-							content={headerDisplayLabel}
-							disabled={header.disabled}
-						/>
-						{infoIcon}
-					</div>);
 					let sortIcon = null;
 					if (!sortable) {
 						sortIcon = null;
@@ -280,13 +279,35 @@ const VirtualizedGrid = (props) => {
 						sortIcon = <ArrowsVertical className="properties-ft-column-sort-icon default" />;
 					}
 
-					let headerDisplay = headerContentTooltip;
+					let headerSort = null;
 					if (sortable) {
-						headerDisplay = (<button className={classNames("properties-vt-header-btn cds--table-sort", { "header-disabled": !sortable })} disabled={!sortable}>
-							{headerContentTooltip}
+						headerSort = (<div
+							className="properties-vt-header-sort-icon"
+							disabled={!sortable}
+							tabIndex={sortIcon ? 0 : null}
+							role={sortIcon ? "button" : null}
+							aria-label={sortIcon ? props.intl.formatMessage(
+								{ id: "table.sort.column.label" },
+								{ column_name: headerLabel }
+							) : null}
+							onKeyDown={sortIcon ? (evt) => {
+								if (KeyboardUtils.spaceKey(evt)) {
+									virtualHeader.column.getToggleSortingHandler()(evt);
+								}
+							} : null}
+							onClick={virtualHeader.column.getToggleSortingHandler()}
+						>
 							{sortIcon}
-						</button>);
+						</div>);
 					}
+					const headerContentTooltip = (<div className="properties-vt-label-tip-icon">
+						<TruncatedContentTooltip
+							tooltipText={headerLabel}
+							content={headerDisplayLabel}
+							disabled={header.disabled}
+						/>
+						{infoIcon}
+					</div>);
 
 					const resizeHandle = header.resizable
 						? (
@@ -308,7 +329,8 @@ const VirtualizedGrid = (props) => {
 						aria-label={headerLabel}
 						data-id={`properties-vt-header-${header.key}`}
 					>
-						{headerDisplay}
+						{headerContentTooltip}
+						{headerSort}
 						{resizeHandle}
 					</th>);
 				})}
