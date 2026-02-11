@@ -665,7 +665,7 @@ class MappingContainerNode extends React.Component {
 			: (<div className="node-no-columns">No columns</div>);
 
 		return (
-			<div id={this.getScrollDivId()} className="scroll-div" onScroll={this.onScroll} onWheel={this.onScroll} >
+			<div id={this.getScrollDivId()} className="scroll-div" onScroll={this.onScroll} onWheel={this.onScroll} tabIndex={-1}>
 				{content}
 			</div>
 		);

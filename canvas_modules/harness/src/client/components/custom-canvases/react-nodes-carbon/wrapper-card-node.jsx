@@ -66,7 +66,7 @@ class CardNodeWrapper extends React.Component {
 			// forms the background for the supernode.
 			return (
 				<div className={"card-node"}>
-					<CardNode>
+					<CardNode tabIndex={-1}>
 						<CardNodeColumn>
 							<SVG src={image} style={styleImage} />
 						</CardNodeColumn>
@@ -93,7 +93,7 @@ class CardNodeWrapper extends React.Component {
 
 		return (
 			<div className={className} ref={this.divRef}>
-				<CardNode color={color}>
+				<CardNode color={color} tabIndex={-1}>
 					<CardNodeColumn>
 						<SVG src={image} style={styleImage} />
 					</CardNodeColumn>
