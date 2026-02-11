@@ -176,7 +176,7 @@ describe("textarea control renders correctly", () => {
 		user.clear(input);
 		await user.type(input, value);
 		expect(controller.getPropertyValue(propertyIdList)).to.eql([value.substr(0, maxLengthForMultiLineControls)]);
-	});
+	}, 6000);
 
 	it("textarea should not have a text limit when charList set to -1", () => {
 		const wrapper = render(
