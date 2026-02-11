@@ -72,7 +72,7 @@ class TableToolbar extends React.Component {
 	}
 
 
-	getToolbarConfig() {
+	getLeftBarConfig() {
 		const editLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_EDIT);
 		const deleteLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DELETE);
 		const cancelLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_CANCEL);
@@ -139,7 +139,7 @@ class TableToolbar extends React.Component {
 		);
 	}
 
-	getLeftBarContents() {
+	getLeftTitleContents() {
 		const singleRowSelectedLabel = (this.props.smallFlyout)
 			? formatMessage(this.reactIntl, MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL_SMALL_FLYOUT) // item
 			: formatMessage(this.reactIntl, MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL); // item selected
@@ -298,7 +298,7 @@ class TableToolbar extends React.Component {
 	render() {
 		if ((this.props.addRemoveRows || this.props.moveableRows || this.props.multiSelectEdit) && this.props.selectedRows.length > 0) {
 			const toolbarConfig = {
-				leftBar: this.getToolbarConfig()
+				leftBar: this.getLeftBarConfig()
 			};
 			const multiSelectInvoker = this.props.multiSelectEdit
 				? (
@@ -312,7 +312,7 @@ class TableToolbar extends React.Component {
 
 			return (
 				<div className="properties-table-toolbar">
-					{this.getLeftBarContents()}
+					{this.getLeftTitleContents()}
 					{multiSelectInvoker}
 					<div className="properties-toolbar-items floating-toolbar">
 						<Toolbar

@@ -627,7 +627,7 @@ export default class AbstractTable extends React.Component {
 		const controlValue = this.props.value;
 		this.makeCells(rows, controlValue, tableState);
 
-		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+		const tableLabel = this.props.control?.label?.text || "";
 		const tableToolbar = this.makeTableToolbar(this.props.selectedRows, tableLabel);
 		let topRightPanel = null;
 		if (this.props.selectedRows.length > 0 && tableToolbar) {

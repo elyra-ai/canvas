@@ -144,7 +144,7 @@ class SelectColumnsControl extends AbstractTable {
 		};
 
 		const rows = this.makeRows(this.props.value, this.props.state);
-		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+		const tableLabel = this.props.control?.label?.text || "";
 		const tableToolbar = this.makeTableToolbar(tableLabel);
 		const topRightPanel = (this.props.selectedRows.length > 0 && tableToolbar) ? tableToolbar : this.makeAddButtonPanel(this.props.state, tableButtonConfig);
 		let rowToScrollTo;
