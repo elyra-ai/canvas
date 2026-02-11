@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Elyra Authors
+ * Copyright 2025-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,20 +72,10 @@
 						}
 					}
 
-					.properties-vt-header-btn {
-						width: 100%;
-						padding-right: carbon.$spacing-06;
-
-						&.header-disabled {
-							padding-right: carbon.$spacing-05;
-							:hover {
-								cursor: default;
-							}
-						}
-					}
-
-					.header-disabled {
-						padding: 0 carbon.$spacing-05;
+					.properties-vt-header-sort-icon {
+						width: carbon.$spacing-05;
+						height: carbon.$spacing-05;
+						margin-left: carbon.$spacing-02;
 					}
 
 					.properties-vt-header-resize {
@@ -98,7 +88,6 @@
 					.properties-ft-column-sort-icon {
 						flex: 0 0 carbon.$spacing-05;
 						height: carbon.$spacing-05;
-						margin-left: carbon.$spacing-02;
 
 						&.default {
 							fill: carbon.$layer-accent-01;
@@ -106,6 +95,7 @@
 					}
 
 					.properties-vt-label-tip-icon {
+						padding-left: carbon.$spacing-05;
 						display: flex;
 						align-items: center;
 						width: 100%;
@@ -119,17 +109,18 @@
 									cursor: pointer;
 								}
 							}
-							.properties-grid-th-toggletip .cds--toggletip-content {
-								font-size: 12px;
-								font-weight: 400;
-								line-height: 1.2;
-							}
 						}
 					}
 
 					&.properties-vt-column-with-resize,
 					&.properties-vt-column-sortable {
-						&:hover {
+						.properties-vt-label-tip-icon {
+							width: calc(100% - #{carbon.$spacing-06}); // Allocate space for sort icon
+						}
+
+						&:hover,
+						&:focus-within { // Display the sort icon when focused via keyboard navigation
+							cursor: pointer;
 							background-color: carbon.$layer-active-01;
 							.properties-vt-header-resize {
 								background-color: carbon.$button-secondary-active;

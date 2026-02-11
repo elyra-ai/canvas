@@ -30,6 +30,7 @@
   "table.search.header": "[Esperanto~View in tables~eo]",
   "table.search.placeholder": "[Esperanto~Find in column {column_name}~~~~~~~~eo]",
   "table.search.label": "[Esperanto~Search in {table_name} table~~~~~~~~eo]",
+  "table.sort.column.label": "[Esperanto~Sort by {column_name}~~~~~~~~eo]",
   "summary.longTable.placeholder": "[Esperanto~More than ten fields...~~~~eo]",
   "alerts.tab.title": "[Esperanto~Alerts~eo]",
   "title.editor.label": "[Esperanto~edit title~~~~~~eo]",
