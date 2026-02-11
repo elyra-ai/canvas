@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,10 @@ $textinput-bottom-padding: 5px;
 				border-right: 0;
 				border-left: 0;
 			}
+		}
+		// Do not display counter within a table cell
+		.cds--text-input__label-counter {
+			display: none;
 		}
 		&.error {
 			input:not([disabled]) {
