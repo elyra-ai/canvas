@@ -870,6 +870,7 @@ export default class SVGCanvasRenderer {
 			.attr("height", (50 + node.height) * zoomScale) // Add some extra pixels, in case label is below label bottom
 			.attr("x", 0)
 			.attr("y", 0)
+			.attr("aria-hidden", true)
 			.attr("class", "d3-ghost-svg");
 
 		const ghostGrp = ghostAreaSVG
