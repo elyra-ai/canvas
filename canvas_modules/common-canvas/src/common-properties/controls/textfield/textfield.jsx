@@ -108,6 +108,7 @@ class TextfieldControl extends React.Component {
 					helperText={this.props.control.helperText}
 					onChange={this.handleChange.bind(this)}
 					value={value}
+					title={value}
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
@@ -117,22 +118,6 @@ class TextfieldControl extends React.Component {
 					maxCount={this.charLimit}
 				/>
 			);
-
-			if (this.props.tableControl) {
-				const tooltipProps = {
-					truncatedRef: this.textInputRef
-				};
-				let disabled = true;
-				if (value && this.props.state !== STATES.DISABLED) {
-					disabled = false;
-				}
-				textInput = (<TruncatedContentTooltip
-					{...tooltipProps}
-					content={textInput}
-					tooltipText={value}
-					disabled={disabled}
-				/>);
-			}
 		}
 
 		return (

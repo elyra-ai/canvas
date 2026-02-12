@@ -406,6 +406,10 @@ class ToolTip extends React.Component {
 			};
 			const click = (evt) => this.toggleTooltipOnClick(evt);
 
+			// If the content has a tooltip that can be shown via hover, then it must also be doable via keyboard
+			const canDisplayFullText = this.canDisplayFullText(this.triggerRef);
+			const allowKeyboardFocus = this.props.showToolTipIfTruncated && !canDisplayFullText;
+
 			triggerContent = (<div
 				data-id={`${this.uuid}-${this.props.id}-trigger`}
 				className="tooltip-trigger"
@@ -413,14 +417,14 @@ class ToolTip extends React.Component {
 				onMouseLeave={!this.props.showToolTipOnClick ? mouseleave : null}
 				onMouseDown={!this.props.showToolTipOnClick ? mousedown : null}
 				onClick={this.props.showToolTipOnClick ? click : null}
-				onFocus={this.props.showToolTipOnClick ? onFocus : null} // When focused using keyboard
-				onBlur={this.props.showToolTipOnClick ? onBlur : null}
+				onFocus={this.props.showToolTipOnClick || allowKeyboardFocus ? onFocus : null} // When focused using keyboard
+				onBlur={this.props.showToolTipOnClick || allowKeyboardFocus ? onBlur : null}
 				onKeyDown={this.props.showToolTipOnClick ? onKeyDown : null}
-				tabIndex={this.props.showToolTipOnClick ? 0 : null}
-				role={this.props.showToolTipOnClick ? "button" : null}
-				aria-labelledby={this.props.showToolTipOnClick ? `${this.uuid}-${this.props.id}` : null}
-				aria-expanded={this.props.showToolTipOnClick ? this.state.isTooltipVisible : null}
-				aria-controls={this.props.showToolTipOnClick ? `${this.uuid}-${this.props.id}` : null}
+				tabIndex={this.props.showToolTipOnClick || allowKeyboardFocus ? 0 : null}
+				role={this.props.showToolTipOnClick || allowKeyboardFocus ? "button" : null}
+				aria-labelledby={this.props.showToolTipOnClick || allowKeyboardFocus ? `${this.uuid}-${this.props.id}` : null}
+				aria-expanded={this.props.showToolTipOnClick || allowKeyboardFocus ? this.state.isTooltipVisible : null}
+				aria-controls={this.props.showToolTipOnClick || allowKeyboardFocus ? `${this.uuid}-${this.props.id}` : null}
 				ref={(ref) => (this.triggerRef = ref)}
 			>
 				{this.props.children}
