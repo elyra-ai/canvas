@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Elyra Authors
+ * Copyright 2024-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -225,7 +225,7 @@ describe("TableToolbar renderes correctly", () => {
 		expect(controller.getSelectedRows(propertyId)).to.eql(rowselections);
 
 		// Click on Cancel button in toolbar
-		const cancelButton = tableToolbar[0].querySelector("button.action-cancel");
+		const cancelButton = tableToolbar[0].querySelector(".toolbar-item.cancel-action button");
 		fireEvent.click(cancelButton);
 
 		// validate row selection is cleared
@@ -903,7 +903,7 @@ describe("TableToolbar multi select edit button works correctly", () => {
 
 		// verify that the "Edit" button is not present in table toolbar because you selected only 1 row
 		let tableToolbar = container.querySelector("div.properties-table-toolbar");
-		let multiSelectEditButton = tableToolbar.querySelectorAll("button.properties-action-multi-select-edit");
+		let multiSelectEditButton = tableToolbar.querySelectorAll(".toolbar-item.multiSelectEdit-action button");
 		expect(multiSelectEditButton).to.have.length(0);
 
 		// select four rows in the table
@@ -912,7 +912,7 @@ describe("TableToolbar multi select edit button works correctly", () => {
 
 		// verify that the "Edit" button is present in table toolbar
 		tableToolbar = container.querySelector("div.properties-table-toolbar");
-		multiSelectEditButton = tableToolbar.querySelectorAll("button.properties-action-multi-select-edit");
+		multiSelectEditButton = tableToolbar.querySelectorAll(".toolbar-item.multiSelectEdit-action button");
 		expect(multiSelectEditButton).to.have.length(1);
 
 		// Click the multiSelectEditButton in table toolbars
@@ -987,7 +987,7 @@ describe("TableToolbar multi select edit button works correctly", () => {
 
 		// verify that the "Edit" button is not present in table toolbar because you selected only 1 row
 		let tableToolbar = container.querySelector("div.properties-table-toolbar");
-		let multiSelectEditButton = tableToolbar.querySelectorAll("button.properties-action-multi-select-edit");
+		let multiSelectEditButton = tableToolbar.querySelectorAll(".toolbar-item.multiSelectEdit-action button");
 		expect(multiSelectEditButton).to.have.length(0);
 
 		// verify Edit button in ALL rows is enabled
@@ -1003,7 +1003,7 @@ describe("TableToolbar multi select edit button works correctly", () => {
 
 		// verify that the "Edit" button is present in table toolbar
 		tableToolbar = container.querySelector("div.properties-table-toolbar");
-		multiSelectEditButton = tableToolbar.querySelectorAll("button.properties-action-multi-select-edit");
+		multiSelectEditButton = tableToolbar.querySelectorAll(".toolbar-item.multiSelectEdit-action button");
 		expect(multiSelectEditButton).to.have.length(1);
 
 		// verify Edit button in ALL rows is disabled

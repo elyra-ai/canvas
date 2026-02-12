@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,7 +121,7 @@ class ListControl extends AbstractTable {
 		return headers;
 	}
 
-	makeTableToolbar() {
+	makeTableToolbar(tableLabel) {
 		if (this.props.addRemoveRows || this.props.control?.moveableRows) {
 			return (
 				<TableToolbar
@@ -129,6 +129,7 @@ class ListControl extends AbstractTable {
 					propertyId={this.props.propertyId}
 					selectedRows={this.props.selectedRows}
 					tableState={this.props.state}
+					tableLabel={tableLabel}
 					addRemoveRows={this.props.addRemoveRows}
 					moveableRows={this.props.control?.moveableRows}
 					removeSelectedRows={this.removeSelected}
@@ -137,6 +138,7 @@ class ListControl extends AbstractTable {
 					isReadonlyTable={false}
 					isSingleSelectTable={false}
 					smallFlyout={this.props.rightFlyout && this.props.controller.getEditorSize() === "small"}
+					containingDivId={getDataId(this.props.propertyId)}
 				/>
 			);
 		}
@@ -157,14 +159,14 @@ class ListControl extends AbstractTable {
 		};
 
 		const rows = this.makeRows(this.props.value, this.props.state, headers);
-		const tableToolbar = this.makeTableToolbar();
+		const tableLabel = this.props.control?.label?.text || "";
+		const tableToolbar = this.makeTableToolbar(tableLabel);
 		const topRightPanel = (this.props.selectedRows.length > 0 && tableToolbar) ? tableToolbar : this.makeAddButtonPanel(this.props.state, tableButtonConfig);
 		let rowToScrollTo;
 		if (Number.isInteger(this.scrollToRow) && rows.length > this.scrollToRow) {
 			rowToScrollTo = this.scrollToRow;
 			delete this.scrollToRow;
 		}
-		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
 		const tableClassName = classNames("properties-list-table", { "disabled": this.props.state === STATES.DISABLED });
 
 		const table =	(
@@ -195,7 +197,7 @@ class ListControl extends AbstractTable {
 		</div>);
 
 		return (
-			<div data-id={getDataId(this.props.propertyId)} className="properties-list-control" >
+			<div data-id={getDataId(this.props.propertyId)} id={getDataId(this.props.propertyId)} className="properties-list-control" >
 				{this.props.controlItem}
 				{
 					isEmpty(this.props.value) && this.props.addRemoveRows

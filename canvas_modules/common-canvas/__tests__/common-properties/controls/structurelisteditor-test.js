@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -410,7 +410,7 @@ describe("StructureListEditorControl renders correctly", () => {
 		// verify that the table toolbar doesn't have Edit button
 		let tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		let editButton = tableToolbar[0].querySelectorAll("button.properties-action-multi-select-edit");
+		let editButton = tableToolbar[0].querySelectorAll(".toolbar-item.multiSelectEdit-action button");
 		expect(editButton).to.have.length(0);
 
 		// multiple select the four row in the table
@@ -418,7 +418,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 		// verify that the table toolbar has Edit button
 		tableToolbar = container.querySelector("div.properties-table-toolbar");
-		editButton = tableToolbar.querySelectorAll("button.properties-action-multi-select-edit");
+		editButton = tableToolbar.querySelectorAll(".toolbar-item.multiSelectEdit-action button");
 		expect(editButton).to.have.length(1);
 	});
 
@@ -647,7 +647,7 @@ describe("StructureListEditor render from paramdef", () => {
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
 		// Clear row selection
-		const cancelButton = container.querySelector("div.properties-table-toolbar").querySelector("button.action-cancel");
+		const cancelButton = container.querySelector("div.properties-table-toolbar").querySelector(".toolbar-item.cancel-action button");
 		fireEvent.click(cancelButton);
 
 		// select the second from the last row and move it to the top and make sure the error messages stay aligned.
@@ -689,7 +689,7 @@ describe("StructureListEditor render from paramdef", () => {
 
 		// verify that the "Edit" button is not present in table toolbar
 		let tableToolbar = container.querySelector("div.properties-table-toolbar");
-		let multiSelectEditButton = tableToolbar.querySelectorAll("button.properties-action-multi-select-edit");
+		let multiSelectEditButton = tableToolbar.querySelectorAll(".toolbar-item.multiSelectEdit-action button");
 		expect(multiSelectEditButton).to.have.length(0);
 
 		// multiple select four rows in the table
@@ -698,7 +698,7 @@ describe("StructureListEditor render from paramdef", () => {
 
 		// verify that the "Edit" button is present in table toolbar
 		tableToolbar = container.querySelector("div.properties-table-toolbar");
-		multiSelectEditButton = tableToolbar.querySelectorAll("button.properties-action-multi-select-edit");
+		multiSelectEditButton = tableToolbar.querySelectorAll(".toolbar-item.multiSelectEdit-action button");
 		expect(multiSelectEditButton).to.have.length(1);
 
 		// verify that the Edit button in selected rows is disabled
