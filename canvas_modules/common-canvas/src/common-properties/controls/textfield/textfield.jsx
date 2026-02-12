@@ -24,7 +24,6 @@ import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES } from "./../../constants/constants.js";
 import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
-import TruncatedContentTooltip from "./../../components/truncated-content-tooltip";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
 
