@@ -143,7 +143,7 @@ describe("add rows in tables with correct default values", () => {
 		// added row is selected by default which shows table toolbar
 		// Cancel row selections from table toolbar, so that "Add columns" button shows up in the header
 		const tableToolbar = wrapper.container.querySelector("div.properties-table-toolbar");
-		const cancelButton = tableToolbar.querySelector("button.action-cancel");
+		const cancelButton = tableToolbar.querySelector(".toolbar-item.cancel-action button");
 		fireEvent.click(cancelButton);
 
 		// change the parameter_ref control value and then add a new row.

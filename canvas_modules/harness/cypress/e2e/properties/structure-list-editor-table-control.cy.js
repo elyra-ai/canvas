@@ -23,7 +23,7 @@ describe("Test of subpanel editing of selectcolumns in a structurelisteditor", f
 		cy.openPropertyDefinition("selectcolumns_paramDef.json");
 	});
 
-	it.only("Test of subpanel editing of selectcolumns in a structurelisteditor", function() {
+	it("Test of subpanel editing of selectcolumns in a structurelisteditor", function() {
 		cy.toggleCategory("Table");
 		cy.openSubPanel("Configure Fields in Sub-panel");
 		cy.clickButtonInTable("Add in empty table", "structurelist_sub_panel");
