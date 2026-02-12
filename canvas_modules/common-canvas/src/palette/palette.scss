@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,8 +124,9 @@ $palette-dialog-list-item-height: 46px;
 		}
 
 		&:focus {
-			border-color: carbon.$focus;
-			box-shadow: inset 0 0 0 carbon.$spacing-01 carbon.$focus;
+			// Focus styling like this allows it to be visible in high contrast mode.
+			outline: 2px solid carbon.$focus;
+			outline-offset: -2px;
 		}
 
 		.palette-list-item-category-label {
@@ -232,6 +233,13 @@ $palette-dialog-list-item-height: 46px;
 
 		.cds--accordion__heading {
 			padding: 0;
+
+			&:focus {
+				// Replace accordion focus highlighting with outline - this allows it to be visible in high contrast mode.
+				box-shadow: unset;
+				outline: 2px solid carbon.$focus;
+				outline-offset: -2px;
+			}
 		}
 
 		.cds--accordion__wrapper {
@@ -555,3 +563,4 @@ $palette-dialog-list-item-height: 46px;
 .palette-content-list {
 	width: 100%;
 }
+
