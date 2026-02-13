@@ -211,7 +211,7 @@ Cypress.Commands.add("selectAllRowsInTable", (propertyId) => {
 Cypress.Commands.add("cancelRowSelection", (propertyId) => {
 	cy.get(`div[data-id='properties-ft-${propertyId}']`)
 		.find(".properties-table-toolbar")
-		.find("button.action-cancel")
+		.find(".toolbar-item.cancel-action button")
 		.click();
 });
 
