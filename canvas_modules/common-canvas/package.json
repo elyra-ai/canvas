@@ -59,7 +59,7 @@
     "immutable": "^4.0.0",
     "jsonschema": "^1.4.0",
     "lodash": "^4.17.21",
-    "markdown-it": "^13.0.1",
+    "markdown-it": "^14.1.1",
     "prop-types": "^15.7.2",
     "react-draggable": "^4.4.4",
     "react-inlinesvg": "^4.1.3",
