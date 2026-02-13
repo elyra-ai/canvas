@@ -37,9 +37,9 @@ export default (state = [], action) => {
 
 	case "UPDATE_NODES": {
 		return state.map((node, index) => {
-				const newNode = action.data.find(newNode => newNode.id === node.id)
-				return newNode ? newNode : node;
-			});
+			const updatedNode = action.data.find((newNode) => newNode.id === node.id);
+			return updatedNode ? updatedNode : node;
+		});
 	}
 
 	case "REPLACE_NODES": {
