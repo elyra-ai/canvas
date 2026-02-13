@@ -105,6 +105,8 @@ class NotificationPanel extends React.Component {
 					className={"notifications " + className + message.type}
 					onClick={this.notificationCallback.bind(this, message.id, message.callback)}
 					tabIndex={0}
+					role="button"
+					aria-roledescription="text"
 					ref={(ref) => (!ref || this.allRefs.push(ref))}
 				>
 					{type}
@@ -212,11 +214,14 @@ class NotificationPanel extends React.Component {
 
 		const notificationPanelMessages = this.props.messages.length > 0
 			? this.getNotifications()
-			: (<div tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))} className="notification-panel-empty-message-container">
-				<div className="notification-panel-empty-message">
-					{this.props.notificationConfig && this.props.notificationConfig.emptyMessage ? this.props.notificationConfig.emptyMessage : null}
-				</div>
-			</div>);
+			: (
+				<div tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))} className="notification-panel-empty-message-container"
+					role="button" aria-roledescription="text"
+				>
+					<div className="notification-panel-empty-message">
+						{this.props.notificationConfig && this.props.notificationConfig.emptyMessage ? this.props.notificationConfig.emptyMessage : null}
+					</div>
+				</div>);
 
 		const clearAll = this.props.notificationConfig && this.props.notificationConfig.clearAllMessage
 			? (<div className="notification-panel-clear-all-container">
@@ -252,7 +257,10 @@ class NotificationPanel extends React.Component {
 
 		return (
 			<div className="notification-panel" onKeyDown={this.keyDownOnPanel}>
-				<div className="notification-panel-header-container" tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))}>
+				<div className="notification-panel-header-container"
+					tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))}
+					role="button" aria-roledescription="text"
+				>
 					{notificationHeader}
 					{notificationSubtitle}
 				</div>
