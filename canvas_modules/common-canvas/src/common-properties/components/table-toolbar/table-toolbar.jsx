@@ -149,7 +149,7 @@ class TableToolbar extends React.Component {
 		const title = (this.props.selectedRows.length === 1)
 			? `${this.props.selectedRows.length} ${singleRowSelectedLabel}`
 			: `${this.props.selectedRows.length} ${multiRowsSelectedLabel}`;
-		return (<div className="properties-batch-summary">
+		return (<div className="properties-batch-summary" role="button" aria-roledescription="text">
 			<span >{title}</span>
 		</div>);
 	}

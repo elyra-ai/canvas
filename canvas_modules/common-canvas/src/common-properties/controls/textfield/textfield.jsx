@@ -24,7 +24,6 @@ import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES } from "./../../constants/constants.js";
 import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
-import TruncatedContentTooltip from "./../../components/truncated-content-tooltip";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
 
@@ -108,6 +107,7 @@ class TextfieldControl extends React.Component {
 					helperText={this.props.control.helperText}
 					onChange={this.handleChange.bind(this)}
 					value={value}
+					title={value}
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
@@ -117,22 +117,6 @@ class TextfieldControl extends React.Component {
 					maxCount={this.charLimit}
 				/>
 			);
-
-			if (this.props.tableControl) {
-				const tooltipProps = {
-					truncatedRef: this.textInputRef
-				};
-				let disabled = true;
-				if (value && this.props.state !== STATES.DISABLED) {
-					disabled = false;
-				}
-				textInput = (<TruncatedContentTooltip
-					{...tooltipProps}
-					content={textInput}
-					tooltipText={value}
-					disabled={disabled}
-				/>);
-			}
 		}
 
 		return (

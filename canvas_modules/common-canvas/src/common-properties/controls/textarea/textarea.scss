@@ -31,4 +31,9 @@
 		min-width: 100%;
 		border-bottom: 1px solid carbon.$layer-accent-01;
 	}
+
+	// Do not display counter within a table cell
+	.cds--text-area__label-wrapper {
+		display: none;
+	}
 }

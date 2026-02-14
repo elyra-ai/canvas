@@ -114,7 +114,7 @@ class ReadonlyControl extends React.Component {
 			aria-disabled={this.props.state === STATES.DISABLED}
 		>{controlValue}</span>);
 		let display = readOnly;
-		if (this.props.tableControl) {
+		if (this.props.tableControl && controlValue.length > 0) {
 			let disabled = true;
 			if (controlValue) {
 				disabled = false;

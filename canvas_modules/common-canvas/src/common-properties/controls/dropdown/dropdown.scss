@@ -45,9 +45,6 @@
 			background-color: transparent; // Override carbon default background-color: #f4f4f4;
 			padding: 0 1.25rem 0 0;
 			box-shadow: 0 carbon.$spacing-01 0 0 carbon.$button-primary;
-			&:focus {
-				outline: unset;
-			}
 
 		}
 		&.error {
