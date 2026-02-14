@@ -156,6 +156,7 @@ export default (state = {}, action) => {
 	}
 
 	case "ADD_NODE":
+	case "UPDATE_NODES":
 	case "REPLACE_NODES":
 	case "REPLACE_NODE":
 	case "SIZE_AND_POSITION_OBJECTS":

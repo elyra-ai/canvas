@@ -849,6 +849,13 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeProperties(nodeId, properties);
 	}
 
+	// Sets the nodes properties
+	// nodesProperties - An object containing properties to be overridden in the node
+	// pipelineId - The ID of the pipeline
+	setNodesProperties(nodesProperties, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setNodesProperties(nodesProperties);
+	}
+
 	// Sets the node parameters
 	// nodeId - The ID of the node
 	// parameters - An array of parameters
