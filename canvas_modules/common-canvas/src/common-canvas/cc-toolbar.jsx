@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -109,7 +109,7 @@ class CommonCanvasToolbar extends React.Component {
 	generateToolbarConfig() {
 		let config = this.copyConfig();
 
-		if (config) {
+		if (config && config.leftBar) {
 			if (Array.isArray(config)) {
 				config = this.getConvertedLegacyToolbar(config);
 			} else if (typeof config.rightBar === "undefined") {
@@ -118,6 +118,7 @@ class CommonCanvasToolbar extends React.Component {
 
 		} else {
 			config = this.getDefaultToolbar();
+			config.size = this.props.config?.size || "md";
 		}
 
 		config = this.optionallyAddPaletteTool(config);
@@ -145,6 +146,9 @@ class CommonCanvasToolbar extends React.Component {
 		}
 		if (this.props.config && this.props.config.rightBar) {
 			config.rightBar = [...this.props.config.rightBar];
+		}
+		if (this.props.config.size) {
+			config.size = this.props.config.size;
 		}
 		return config;
 	}
@@ -359,6 +363,7 @@ class CommonCanvasToolbar extends React.Component {
 		let canvasToolbar = null;
 
 		if (this.props.enableToolbarLayout === TOOLBAR_LAYOUT_TOP) {
+			const toolbarSize = toolbarConfig.size || "md";
 			canvasToolbar = (
 				<div
 					role="navigation"
@@ -370,6 +375,7 @@ class CommonCanvasToolbar extends React.Component {
 						containingDivId={this.props.containingDivId}
 						instanceId={this.props.canvasController.getInstanceId()}
 						toolbarActionHandler={this.toolbarActionHandler}
+						size={toolbarSize}
 						additionalText={{
 							overflowMenuLabel: this.getLabel("toolbar.overflowMenu"),
 							ariaLabel: this.getLabel("toolbar.flowEditorToolbarLabel")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,91 +48,23 @@ $toolbar-divider-width: 1px;
 	&.toolbar-size-small {
 		height: $toolbar-button-sm-height;
 
-		.toolbar-left-bar {
-			padding: 0;
-		}
-
-		.toolbar-item button,
-		.toolbar-overflow-item > button {
-			padding: 0;
-			height: $toolbar-button-sm-height;
-		}
-
-		.toolbar-sub-menu-item {
-			height: fit-content;
+		& .toolbar-left-bar {
+			padding-right: calc($toolbar-button-sm-height + 2px);
 		}
 
 		.toolbar-item-content {
-			height: $toolbar-button-sm-height;
-			align-items: center;
-			min-width: carbon.$spacing-07;
-
-			&.is-in-menu {
-				padding-left: 10px;
-				padding-right: 10px;
-			}
-
-			& .overflow-item {
-				padding: 0;
-			}
-
-			& .toolbar-right-chevron {
-				padding: carbon.$spacing-02 0 0;
-			}
-
-			& .checkmark {
-				padding-top: carbon.$spacing-02;
-			}
-		}
-
-		.toolbar-popover-list button {
-			padding: 0;
-		}
-
-		.toolbar-jsx-item {
-			height: $toolbar-button-sm-height;
-		}
-
-		.toolbar-tick-svg {
-			height: $toolbar-button-sm-height;
-			width: $toolbar-button-sm-height;
-		}
-	}
-
-	/* Large size toolbar  */
-	&.toolbar-size-large {
-		height: $toolbar-button-lg-height;
-
-		.toolbar-left-bar {
-			padding: 0;
-		}
-
-		.toolbar-item button,
-		.toolbar-overflow-item > button {
-			padding: 0;
-			height: $toolbar-button-lg-height;
-		}
-
-		.toolbar-sub-menu-item {
-			height: fit-content;
-		}
-
-		.toolbar-item-content {
-			height: $toolbar-button-lg-height;
-			align-items: center;
-			min-width: carbon.$spacing-09;
-
-			&.is-in-menu {
-				padding-left: 12px;
-				padding-right: 12px;
-			}
+			min-width: $toolbar-button-sm-width;
 
 			& .content-main {
-				padding: 0;
+				padding: 7px;
 			}
 
-			& .overflow-item {
-				padding: 0 carbon.$spacing-04 0 0;
+			& .toolbar-up-down-chevron {
+				padding: 7px 8px 0 0;
+			}
+
+			& .toolbar-up-down-chevron-mini {
+				padding: 8px 2px 0 2px;
 			}
 
 			& .toolbar-right-chevron {
@@ -142,19 +74,79 @@ $toolbar-divider-width: 1px;
 			& .checkmark {
 				padding-top: carbon.$spacing-03;
 			}
+
+			& .toolbar-text-content {
+				top: 11px;
+				left: 9px;
+			}
 		}
 
-		.toolbar-popover-list button {
-			padding: 0;
+		.toolbar-jsx-item {
+			height: $toolbar-button-sm-height;
+		}
+
+		.toolbar-sub-menu-jsx-item {
+			height: $toolbar-button-sm-height;
+		}
+
+		.toolbar-tick-svg {
+			height: $toolbar-button-sm-height;
+			width: $toolbar-button-sm-width;
+		}
+
+		.toolbar-divider {
+			height: $toolbar-button-sm-height;
+		}
+	}
+
+	/* Large size toolbar  */
+	&.toolbar-size-large {
+		height: $toolbar-button-lg-height;
+
+		& .toolbar-left-bar {
+			padding-right: calc($toolbar-button-lg-height + 2px);
+		}
+
+		.toolbar-item-content {
+			min-width: $toolbar-button-lg-width;
+
+			& .content-main {
+				padding: 15px;
+			}
+
+			& .toolbar-up-down-chevron {
+				padding: 16px 8px 0 0;
+			}
+
+			& .toolbar-up-down-chevron-mini {
+				padding: 16px 4px 0 4px;
+			}
+
+			& .toolbar-right-chevron {
+				padding-top: carbon.$spacing-05;
+			}
+
+			& .checkmark {
+				padding-top: carbon.$spacing-05;
+			}
+
+			& .toolbar-text-content {
+				top: 19px;
+				left: 17px;
+			}
 		}
 
 		.toolbar-jsx-item {
 			height: $toolbar-button-lg-height;
 		}
 
+		.toolbar-sub-menu-jsx-item {
+			height: $toolbar-button-lg-height;
+		}
+
 		.toolbar-tick-svg {
 			height: $toolbar-button-lg-height;
-			width: $toolbar-button-lg-height;
+			width: $toolbar-button-lg-width;
 		}
 
 		.toolbar-divider {
@@ -196,8 +188,6 @@ $toolbar-divider-width: 1px;
 
 	& > .toolbar-button-item > button {
 		padding: 0;
-		min-height: 30px;
-		height: $toolbar-button-height;
 	}
 
 	&.default,
@@ -241,14 +231,10 @@ $toolbar-divider-width: 1px;
 
 
 .toolbar-overflow-item {
-	background-color: carbon.$layer-01;
-	width: 30px; // Set width instead of using inline-block to fix Safari display bug.
 	& button {
 		padding: 0;
-		height: $toolbar-button-height;
-		min-height: 30px;
 		background-color: carbon.$layer-01;
-		border-right: $toolbar-divider-width solid carbon.$layer-accent-01;
+		border-right: $toolbar-divider-width solid carbon.$layer-accent-01; // Extra line to right of overflow button.
 	}
 
 	& button:hover {
@@ -268,7 +254,6 @@ $toolbar-divider-width: 1px;
 		padding-bottom: 0;
 		padding-left: carbon.$spacing-05;
 		padding-right: carbon.$spacing-05;
-		min-height: 20px;
 	}
 }
 
@@ -277,6 +262,7 @@ $toolbar-divider-width: 1px;
 	display: flex;
 	justify-content: center;
 	grid-template-columns: 1fr 16px;
+	min-width: $toolbar-button-width;
 
 	&.disabled {
 		pointer-events: none;
@@ -297,12 +283,12 @@ $toolbar-divider-width: 1px;
 	}
 
 	& .toolbar-up-down-chevron {
-		padding: 11px 8px 11px 0;
+		padding: 11px 8px 0 0;
 		pointer-events: none;
 	}
 
 	& .toolbar-up-down-chevron-mini {
-		padding: 11px 2px;
+		padding: 11px 2px 0 0;
 
 		&:hover {
 			background-color: carbon.$background-selected-hover;
@@ -314,21 +300,13 @@ $toolbar-divider-width: 1px;
 		pointer-events: none;
 	}
 
-	& .overflow-item {
-		padding: 11px;
-	}
-
 	&.is-in-menu {
 		justify-content: space-between;
-
-		& .content-main {
-			padding: carbon.$spacing-03 0 6px;
-		}
 	}
 
 	& .checkmark {
 		pointer-events: none;
-		padding-top: carbon.$spacing-03;
+		padding-top: carbon.$spacing-04;
 	}
 
 	&.default {
@@ -377,6 +355,10 @@ $toolbar-divider-width: 1px;
 		&.after {
 			padding-left: carbon.$spacing-03;
 		}
+
+		// &.label-only {
+		// 	// No need for padding with label-only;
+		// }
 
 		&.overflow {
 			padding-left: carbon.$spacing-03;
