@@ -140,7 +140,7 @@ class ToolbarSubMenu extends React.Component {
 		const focusableActions = [];
 
 		for (let i = 0; i < this.props.subMenuActions?.length; i++) {
-			if (this.props.subMenuActions[i].enable || this.props.subMenuActions[i].jsx) {
+			if (this.props.subMenuActions[i]?.enable || this.props.subMenuActions[i]?.jsx) {
 				focusableActions.push(this.props.subMenuActions[i]);
 			}
 		}
@@ -165,7 +165,7 @@ class ToolbarSubMenu extends React.Component {
 	}
 
 	getFirstCheckedItem() {
-		return this.props.subMenuActions.find((a) => a.isSelected);
+		return this.props.subMenuActions.find((a) => a?.isSelected);
 	}
 
 	// Generates an array of JSX objects for a sub-menu defined by the
