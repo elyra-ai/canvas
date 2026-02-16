@@ -211,7 +211,8 @@ class ToolbarButtonItem extends React.Component {
 
 		const chevronDiv = this.generateChevronDiv(actionObj);
 
-		const mainClassName = actionObj.purpose ? "content-main dual" : "content-main";
+		let mainClassName = actionObj.purpose ? "content-main dual" : "content-main";
+		mainClassName += labelBefore || labelAfter || labelOnly ? " with-label" : "";
 
 		const checkMark = this.props.actionObj.isSelected && this.props.isInMenu ? (<div className={"checkmark"}> <Checkmark /></div>) : null;
 
