@@ -109,7 +109,7 @@ class CommonCanvasToolbar extends React.Component {
 	generateToolbarConfig() {
 		let config = this.copyConfig();
 
-		if (config && config.leftBar) {
+		if (config) {
 			if (Array.isArray(config)) {
 				config = this.getConvertedLegacyToolbar(config);
 			} else if (typeof config.rightBar === "undefined") {
@@ -118,7 +118,7 @@ class CommonCanvasToolbar extends React.Component {
 
 		} else {
 			config = this.getDefaultToolbar();
-			config.size = this.props.config?.size || "md";
+			config.size = "md";
 		}
 
 		config = this.optionallyAddPaletteTool(config);

@@ -2305,7 +2305,7 @@ class App extends React.Component {
 	getToolbarConfig() {
 		let toolbarConfig = null;
 		if (this.state.selectedToolbarType === TOOLBAR_TYPE_DEFAULT) {
-			toolbarConfig = {};
+			toolbarConfig = null;
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_SUB_AREAS) {
 			const subMenuTextSize = [
