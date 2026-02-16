@@ -1086,19 +1086,24 @@ Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
 				.then((rightBarItems) => {
 					cy.get(".common-canvas-toolbar .toolbar-overflow-item")
 						.then((toolbarOverflowItems) => {
-							const leftBarTopItemsCount = getCountToolbarItemsOnTopRow(leftBarItems);
-							const overflowTopItemsCount = getCountToolbarItemsOnTopRow(toolbarOverflowItems);
-							const rightBarTopItemsCount = getCountToolbarItemsOnTopRow(rightBarItems);
+							cy.get(".common-canvas-toolbar .toolbar-left-bar .toolbar-divider")
+								.then((leftBarDividerItems) => {
+									const leftBarTopItemsCount = getCountToolbarItemsOnTopRow(leftBarItems);
+									const overflowTopItemsCount = getCountToolbarItemsOnTopRow(toolbarOverflowItems);
+									const rightBarTopItemsCount = getCountToolbarItemsOnTopRow(rightBarItems);
+									const leftBarDividerItemsCount = getCountToolbarItemsOnTopRow(leftBarDividerItems);
 
-							let visibleItemsCount = leftBarTopItemsCount + rightBarTopItemsCount;
+									let visibleItemsCount = leftBarTopItemsCount + rightBarTopItemsCount;
 
-							// If there is one more overflow item than the left bar items
-							// then an overflow item is visible.
-							if (overflowTopItemsCount > leftBarTopItemsCount) {
-								visibleItemsCount++;
-							}
+									// If there is one more overflow item than the left bar items
+									// then an overflow item is visible. Note: there is one overflow item
+									// for each divider in the left bar as well as each button in the left bar.
+									if (overflowTopItemsCount > leftBarTopItemsCount + leftBarDividerItemsCount) {
+										visibleItemsCount++;
+									}
 
-							expect(visibleItemsCount).to.equal(noOfItems);
+									expect(visibleItemsCount).to.equal(noOfItems);
+								});
 						});
 				});
 		});

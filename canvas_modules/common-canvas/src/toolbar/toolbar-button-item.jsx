@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,6 +147,8 @@ class ToolbarButtonItem extends React.Component {
 			return " before";
 		} else if (inLabelWithIcon === "after") {
 			return " after";
+		} else if (inLabelWithIcon === "label-only") {
+			return " label-only";
 		}
 		return "";
 	}
@@ -182,6 +184,7 @@ class ToolbarButtonItem extends React.Component {
 	generateRegularItem(actionObj) {
 		let labelBefore = null;
 		let labelAfter = null;
+		let labelOnly = null;
 
 		if (this.props.isInMenu) {
 			labelAfter = this.generateLabel(actionObj.label, !actionObj.enable, true);
@@ -191,9 +194,12 @@ class ToolbarButtonItem extends React.Component {
 
 		} else if (actionObj.incLabelWithIcon === "after") {
 			labelAfter = this.generateLabel(actionObj.label, !actionObj.enable, false, actionObj.incLabelWithIcon);
+
+		} else if (actionObj.incLabelWithIcon === "label-only") {
+			labelOnly = this.generateLabel(actionObj.label, !actionObj.enable, false, actionObj.incLabelWithIcon);
 		}
 
-		const icon = this.generateIcon(actionObj);
+		const icon = actionObj.incLabelWithIcon === "label-only" ? null : this.generateIcon(actionObj);
 		const textContent = actionObj.textContent ? (<div className="toolbar-text-content"> {actionObj.textContent} </div>) : null;
 
 		const itemContentClassName = classNames(
@@ -205,7 +211,8 @@ class ToolbarButtonItem extends React.Component {
 
 		const chevronDiv = this.generateChevronDiv(actionObj);
 
-		const mainClassName = actionObj.purpose ? "content-main dual" : "content-main";
+		let mainClassName = actionObj.purpose ? "content-main dual" : "content-main";
+		mainClassName += labelBefore || labelAfter || labelOnly ? " with-label" : "";
 
 		const checkMark = this.props.actionObj.isSelected && this.props.isInMenu ? (<div className={"checkmark"}> <Checkmark /></div>) : null;
 
@@ -215,6 +222,7 @@ class ToolbarButtonItem extends React.Component {
 					{labelBefore}
 					{icon}
 					{labelAfter}
+					{labelOnly}
 					{textContent}
 				</div>
 				{chevronDiv}
@@ -270,10 +278,9 @@ class ToolbarButtonItem extends React.Component {
 				const chevronMini = this.props.subAreaDisplayed ? (<ChevronUp size={12} />) : (<ChevronDown size={12} />);
 				return (<div className={"toolbar-up-down-chevron-mini"} onClick={this.miniChevronClicked.bind(this)}>{chevronMini}</div>);
 			}
-			const path = this.props.size === "sm" ? "M 29 29 L 29 23 23 29 Z" : "M 37 37 L 37 30 30 37 Z";
 			return (
-				<svg className="toolbar-tick-svg" aria-hidden="true">
-					<path d={path} className="toolbar-tick-mark" />
+				<svg className="toolbar-tick-svg" viewBox="0 0 32 32" aria-hidden="true">
+					<path d="M 30 30 L 30 24 24 30 Z" className="toolbar-tick-mark" />
 				</svg>
 			);
 		}
