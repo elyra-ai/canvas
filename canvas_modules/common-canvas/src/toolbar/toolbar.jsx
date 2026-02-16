@@ -36,6 +36,7 @@ class Toolbar extends React.Component {
 			focusAction: "toolbar",
 			leftOverflowIndex: null,
 			rightOverflowIndex: null,
+			isOverflowButtonDisplayed: false,
 		};
 
 		// Keeps track of whether the focus is on the toolbar or not. We should
@@ -94,6 +95,7 @@ class Toolbar extends React.Component {
 	componentDidUpdate() {
 		const focusableItems = this.getFocusableItemRefs();
 		const index = focusableItems.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
+
 		if (focusableItems.length === 0 && this.state.focusAction !== "disabled") {
 			this.setTabIndexOnDisabledToolbar();
 		} else if ((index === -1 && this.state.focusAction !== "toolbar") ||
@@ -101,6 +103,9 @@ class Toolbar extends React.Component {
 			this.isFocusInToolbar = true;
 			this.setFocusOnFirstItem();
 		}
+
+		// Set overflow button state
+		this.setOverflowButtonState();
 	}
 
 	componentWillUnmount() {
@@ -196,6 +201,9 @@ class Toolbar extends React.Component {
 		if (!isFocusActionFocusable) {
 			this.setFocusOnFirstItem();
 		}
+
+		// Set overflow button state
+		this.setOverflowButtonState();
 	}
 
 	// Returns the ref to any item that currently has an open sub-area or null
@@ -383,6 +391,35 @@ class Toolbar extends React.Component {
 		return index;
 	}
 
+	// Sets the isOverflowButtonDisplayed state variable depending on whether an
+	// overflow button is currently displayed or not.
+	setOverflowButtonState() {
+		const isOverflowDisplayed = this.isOverflowButtonDisplayed();
+		if (isOverflowDisplayed !== this.state.isOverflowButtonDisplayed) {
+			this.setState({ isOverflowButtonDisplayed: isOverflowDisplayed });
+		}
+	}
+
+	// Returns true if an overflow menu button is currently displayed.
+	// This happens when left bar items wrap to a second row.
+	isOverflowButtonDisplayed() {
+		if (this.leftItemRefs.length === 0) {
+			return false;
+		}
+
+		const firstItemRect = this.leftItemRefs[0].current?.getBoundingRect();
+
+		// Check if any left bar item has wrapped to a second row
+		for (let i = 1; i < this.leftItemRefs.length; i++) {
+			const itemRect = this.leftItemRefs[i].current?.getBoundingRect();
+			if (itemRect?.top !== firstItemRect?.top) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	// Returns true of the current focus action item is one of the focusable
 	// items. (It may not be if it has been placed in the overflow menu).
 	isFocusActionFocusable(focusAction, focusableItemRefs) {
@@ -435,11 +472,11 @@ class Toolbar extends React.Component {
 	// overflow item for dividers that are the last element in the left bar array because
 	// we don't want an overflow menu generated for a single divider.
 	shouldAddOverflowItem(actionObj) {
-		return !(actionObj.divider && this.isLastLeftbarItem(actionObj));
+		return !(actionObj.divider && this.isLastLeftBarItem(actionObj));
 	}
 
 	// Return true if the action object passed in is the last element in the left bar array.
-	isLastLeftbarItem(actionObj) {
+	isLastLeftBarItem(actionObj) {
 		return this.leftBar[this.leftBar.length - 1] === actionObj;
 	}
 
@@ -570,12 +607,17 @@ class Toolbar extends React.Component {
 		}
 		const tabIndex = this.state.focusAction === "toolbar" ? 0 : -1;
 
+		// Add class to left bar when overflow button is not displayed
+		const leftBarClass = this.state.isOverflowButtonDisplayed
+			? "toolbar-left-bar"
+			: "toolbar-left-bar toolbar-left-bar-no-overflow";
+
 		return (
 			<div ref={this.toolbarRef} className={toolbarSizeClass} data-instance-id={this.props.instanceId}
 				tabIndex={tabIndex} onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown}
 				role="toolbar" aria-label={this.props.additionalText?.ariaLabel}
 			>
-				<div className="toolbar-left-bar" onScroll={this.onScroll}>
+				<div className={leftBarClass} onScroll={this.onScroll}>
 					{leftItems}
 				</div>
 				<div className="toolbar-right-bar">
