@@ -383,17 +383,6 @@ export interface Breadcrumb {
 }
 
 /**
- * A partial node object containing a sub-set of one or more properties,
- * but not the 'id', to replace those in the node
- */
-type PartialNodeProperties =
-  | Omit<Partial<CanvasExecutionNode>, "id">
-  | Omit<Partial<CanvasBindingEntryNode>, "id">
-  | Omit<Partial<CanvasBindingExitNode>, "id">
-  | Omit<Partial<CanvasSupernode>, "id">
-  | Omit<Partial<CanvasModelNode>, "id">
-
-/**
  * https://elyra-ai.github.io/canvas/03.04-canvas-controller/ *
  * The application can programmatically perform most of the actions
  * that the user can do in Common Canvas by calling the Canvas Controller API.
@@ -1012,33 +1001,36 @@ export declare class CanvasController {
      */
     deleteNode(nodeId: CanvasNodeId, pipelineId?: PipelineId): void;
 
+    /**
+     * Sets the node properties
+     * @param nodeId - The ID of the node
+     * @param properties - A partial node object containing a sub-set of
+     *                     one or more properties, but not the 'id', to
+     *                     replace those in the node
+     * @param pipelineId - Optional. The ID of the pipeline of the node.
+     *                     Defaults to the currently displayed pipeline.
+     */
+    setNodeProperties(
+      nodeId: CanvasNodeId,
+      properties:
+        | Omit<Partial<CanvasExecutionNode>, "id">
+        | Omit<Partial<CanvasBindingEntryNode>, "id">
+        | Omit<Partial<CanvasBindingExitNode>, "id">
+        | Omit<Partial<CanvasSupernode>, "id">
+        | Omit<Partial<CanvasModelNode>, "id">,
+      pipelineId?: PipelineId
+    ): void;
 
-  /**
-   * Sets the node properties
-   * @param nodeId - The ID of the node
-   * @param properties - A partial node object containing a sub-set of
-   *                     one or more properties, but not the 'id', to
-   *                     replace those in the node
-   * @param pipelineId - Optional. The ID of the pipeline of the node.
-   *                     Defaults to the currently displayed pipeline.
-   */
-  setNodeProperties(
-    nodeId: CanvasNodeId,
-    properties: PartialNodeProperties,
-    pipelineId?: PipelineId
-  ): void;
-
-  /**
-  * Sets the nodes properties
-  * @param nodesProperties - A object with node id as key and a partial node object as value 
-  * @param pipelineId - Optional. The ID of the pipeline of the node.
-  *                     Defaults to the currently displayed pipeline.
-  */
-  setNodesProperties(
-    nodesProperties: Record<CanvasNodeId, PartialNodeProperties>,
-    pipelineId?: PipelineId
-  ): void;
-
+    /**
+    * Sets the nodes properties
+    * @param nodesProperties - An array of object containing properties to be overridden in the node
+    * @param pipelineId - Optional. The ID of the pipeline of the node.
+    *                     Defaults to the currently displayed pipeline.
+    */
+    setNodesProperties(
+      nodesProperties: Partial<CanvasNode>[],
+      pipelineId?: PipelineId
+    ): void;
 
     /**
      * Sets the node parameters

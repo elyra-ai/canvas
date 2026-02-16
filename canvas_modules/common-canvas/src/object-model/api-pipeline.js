@@ -711,20 +711,23 @@ export default class APIPipeline {
 	}
 
 	setNodeProperties(nodeId, properties) {
-		this.setNodesProperties({ [nodeId]: properties });
+		this.setNodesProperties([{ ...properties, id: nodeId }]);
 	}
 
 	setNodesProperties(nodesProperties) {
-		const newNodes = [];
+		const updatedNodes = [];
 
-		for (const [nodeId, properties] of Object.entries(nodesProperties)) {
-			let newNode = cloneDeep(this.getNode(nodeId));
-			newNode = Object.assign(newNode, properties);
-			newNode = this.objectModel.setNodeAttributes(newNode);
-			newNodes.push(newNode);
-		}
+		nodesProperties.forEach((node) => {
+			const existingNode = this.getNode(node.id);
+			if (existingNode) {
+				let updatedNode = cloneDeep(existingNode);
+				updatedNode = Object.assign(updatedNode, node);
+				updatedNode = this.objectModel.setNodeAttributes(updatedNode);
+				updatedNodes.push(updatedNode);
+			}
+		});
 
-		this.store.dispatch({ type: "UPDATE_NODES", data: newNodes, pipelineId: this.pipelineId });
+		this.store.dispatch({ type: "UPDATE_NODES", data: updatedNodes, pipelineId: this.pipelineId });
 	}
 
 	setNodeMessage(nodeId, message) {
