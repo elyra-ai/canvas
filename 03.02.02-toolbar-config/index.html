@@ -3449,7 +3449,8 @@
 <span class="w">            </span><span class="p">{</span><span class="w"> </span><span class="nx">divider</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
 <span class="w">            </span><span class="p">{</span><span class="w"> </span><span class="nx">action</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;run&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Run Pipeline&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">enable</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="p">],</span>
-<span class="w">        </span><span class="nx">overrideAutoEnableDisable</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">        </span><span class="nx">overrideAutoEnableDisable</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">size</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;md&quot;</span>
 <span class="w">    </span><span class="p">};</span>
 <span class="w">    </span><span class="p">...</span>
 <span class="w">    </span><span class="p">...</span>
@@ -3465,6 +3466,9 @@ Where:</p>
 </li>
 <li>
 <p><strong>overrideAutoEnableDisable</strong> - a boolean. The default is false. By default Common Canvas has an auto-enablement feature that controls the enablement of common tools in the toolbar based on user actions (e.g enable the <code>Delete</code> icon when items are selected). If <code>overrideAutoEnableDisable</code> set to true it will switch off the auto-enablement feature. This is useful if the host application wants to disable all the nodes under certain circumstances. If set to true, the <code>enable</code> property in the action items for each tool is used to decide whether to display the icon as enabled or disabled. If set to false or omitted, Common Canvas will handle the auto-enablement of common actions. (See the <code>action</code>section below for more details.)</p>
+</li>
+<li>
+<p><strong>size</strong> - a string that controls the size of the toolbar buttons. Can be set to &ldquo;sm&rdquo; (small), &ldquo;md&rdquo; (medium), or &ldquo;lg&rdquo; (large). The default is &ldquo;md&rdquo;. This affects the height and padding of all toolbar buttons and icons.</p>
 </li>
 </ul>
 <p>The toolbar will display the objects in the same order they are defined in the leftBar and rightBar arrays.</p>
@@ -3523,7 +3527,7 @@ Where:</p>
 </ul>
 </li>
 <li>
-<p><strong>incLabelWithIcon</strong> - can be set to &ldquo;no&rdquo;, &ldquo;before&rdquo; or &ldquo;after&rdquo;. The default is &ldquo;no&rdquo;. This field specifies whether the label should be displayed in the toolbar with the icon and if so, where it is displayed with respect to the icon.</p>
+<p><strong>incLabelWithIcon</strong> - can be set to &ldquo;no&rdquo;, &ldquo;before&rdquo;, &ldquo;after&rdquo; or &ldquo;label-only&rdquo;. The default is &ldquo;no&rdquo;. This field specifies whether the label should be displayed in the toolbar with the icon and if so, where it is displayed with respect to the icon (either before or after) or, if &ldquo;label-only&rdquo; is specified that only the label should be displayed.</p>
 <p><img src="../assets/cc-toolbar-action-text-before.png" width="65" />
 <img src="../assets/cc-toolbar-action-text-after.png" width="65" /></p>
 </li>
