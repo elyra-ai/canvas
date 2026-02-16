@@ -80,7 +80,7 @@ class TableToolbar extends React.Component {
 		const editBtn = { action: "multiSelectEdit", label: editLabel, iconEnabled: (<Edit />), enable: true, kind: "primary" };
 		const deleteBtn = (this.props.addRemoveRows && !this.props.isReadonlyTable && !this.props.isSingleSelectTable)
 			? { action: "delete", label: deleteLabel, iconEnabled: (<TrashCan />), enable: true, kind: "primary" } : null;
-		const cancelBtn = { action: "cancel", label: cancelLabel, enable: true, incLabelWithIcon: "before", kind: "primary" };
+		const cancelBtn = { action: "cancel", label: cancelLabel, enable: true, incLabelWithIcon: "label-only", kind: "primary" };
 
 		// For delete, edit, show its divider only if those icons are present
 		const toolbarConfig = [
@@ -311,7 +311,7 @@ class TableToolbar extends React.Component {
 				) : null;
 
 			return (
-				<div className="properties-table-toolbar">
+				<div className={"properties-table-toolbar"}>
 					{this.getLeftTitleContents()}
 					{multiSelectInvoker}
 					<div className="properties-toolbar-items floating-toolbar">
@@ -363,5 +363,3 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 export default connect(mapStateToProps)(TableToolbar);
-
-

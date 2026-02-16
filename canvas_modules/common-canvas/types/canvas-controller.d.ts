@@ -1020,6 +1020,18 @@ export declare class CanvasController {
         | Omit<Partial<CanvasModelNode>, "id">,
       pipelineId?: PipelineId
     ): void;
+
+    /**
+    * Sets the nodes properties
+    * @param nodesProperties - An array of object containing properties to be overridden in the node
+    * @param pipelineId - Optional. The ID of the pipeline of the node.
+    *                     Defaults to the currently displayed pipeline.
+    */
+    setNodesProperties(
+      nodesProperties: Partial<CanvasNode>[],
+      pipelineId?: PipelineId
+    ): void;
+
     /**
      * Sets the node parameters
      * @param nodeId - The ID of the node

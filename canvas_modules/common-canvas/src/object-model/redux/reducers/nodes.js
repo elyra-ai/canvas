@@ -35,6 +35,13 @@ export default (state = [], action) => {
 		];
 	}
 
+	case "UPDATE_NODES": {
+		return state.map((node) => {
+			const updatedNode = action.data.find((newNode) => newNode.id === node.id);
+			return updatedNode || node;
+		});
+	}
+
 	case "REPLACE_NODES": {
 		return action.data;
 	}
