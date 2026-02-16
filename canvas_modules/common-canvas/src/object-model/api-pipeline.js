@@ -711,10 +711,23 @@ export default class APIPipeline {
 	}
 
 	setNodeProperties(nodeId, properties) {
-		let newNode = cloneDeep(this.getNode(nodeId));
-		newNode = Object.assign(newNode, properties);
-		newNode = this.objectModel.setNodeAttributes(newNode);
-		this.store.dispatch({ type: "REPLACE_NODE", data: { node: newNode }, pipelineId: this.pipelineId });
+		this.setNodesProperties([{ ...properties, id: nodeId }]);
+	}
+
+	setNodesProperties(nodesProperties) {
+		const updatedNodes = [];
+
+		nodesProperties.forEach((node) => {
+			const existingNode = this.getNode(node.id);
+			if (existingNode) {
+				let updatedNode = cloneDeep(existingNode);
+				updatedNode = Object.assign(updatedNode, node);
+				updatedNode = this.objectModel.setNodeAttributes(updatedNode);
+				updatedNodes.push(updatedNode);
+			}
+		});
+
+		this.store.dispatch({ type: "UPDATE_NODES", data: updatedNodes, pipelineId: this.pipelineId });
 	}
 
 	setNodeMessage(nodeId, message) {

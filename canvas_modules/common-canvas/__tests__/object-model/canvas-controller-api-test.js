@@ -148,16 +148,27 @@ describe("Test canvas controller methods", () => {
 		canvasController.setPipelineFlow(allTypesCanvas);
 		canvasController.setNodeProperties("id8I6RH2V91XW", { label: "New Node Label" });
 
-		const pf = canvasController.getPipelineFlow();
-		canvasController.setPipelineFlow(pf);
-
 		const actualNode = canvasController.getNode("id8I6RH2V91XW");
 		const expectedNode = { label: "New Node Label" };
 
-		// console.info("Expected Node = " + JSON.stringify(expectedNode, null, 2));
-		// console.info("Actual Node   = " + JSON.stringify(actualNode, null, 2));
-
 		expect(isEqual(expectedNode.label, actualNode.label)).to.be.true;
+	});
+
+	it("should update a nodes with new properties using: setNodesProperties", () => {
+		deepFreeze(startCanvas);
+
+		const expectedNode1 = { id: "id8I6RH2V91XW", label: "New Node Label1" };
+		const expectedNode2 = { id: "id125TTEEIK7V", label: "New Node Label2" };
+
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setNodesProperties([expectedNode1, expectedNode2]);
+
+		const actualNode1 = canvasController.getNode("id8I6RH2V91XW");
+		const actualNode2 = canvasController.getNode("id125TTEEIK7V");
+
+		expect(isEqual(expectedNode1.label, actualNode1.label)).to.be.true;
+		expect(isEqual(expectedNode2.label, actualNode2.label)).to.be.true;
 	});
 
 	it("should update a comment with new properties using: setCommentProperties", () => {
