@@ -22,6 +22,8 @@ import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disabl
 import CardNodeWrapper from "./wrapper-card-node.jsx";
 import ShapeNodeWrapper from "./wrapper-shape-node.jsx";
 
+import CardNodeDoubleWrapper from "./wrapper-card-node-double.jsx";
+
 import ReactNodesFlow from "./react-nodes-carbon-flow.json";
 import ReactNodesPalette from "./react-nodes-carbon-palette.json";
 
@@ -35,6 +37,7 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 
 		this.getConfig = this.getConfig.bind(this);
 		this.layoutHandler = this.layoutHandler.bind(this);
+		this.clickActionHandler = this.clickActionHandler.bind(this);
 	}
 
 	getConfig() {
@@ -103,7 +106,41 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 		return this.canvasController;
 	}
 
+	clickActionHandler() {
+		const pf = this.canvasController.getPipelineFlow();
+
+		pf.pipelines[0].nodes[4].outputs.push(
+			{ id: "123",
+				app_data: {
+					ui_data: {
+						label: "output2",
+						cardinality: {
+							min: 0,
+							max: -1
+						}
+					}
+				}
+			}
+		);
+
+		this.canvasController.setPipelineFlow(pf);
+
+	}
+
 	layoutHandler(node) {
+
+		if (node?.op && node.op.includes("card-node") &&
+			node.outputs?.length > 1) {
+			return {
+				nodeExternalObject: CardNodeDoubleWrapper,
+				outputPortAutoPosition: false,
+				outputPortPositions: [
+					{ x_pos: 0, y_pos: 10, pos: "topRight" },
+					{ x_pos: 0, y_pos: -10, pos: "bottomRight" }
+				]
+			};
+		}
+
 		if (node?.op && node.op.includes("shape-node")) {
 			const config = {
 				selectionPath: "M -4 -4 h 36 v 36 h -36 Z",
@@ -130,6 +167,7 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 				canvasController={this.canvasController}
 				config={config}
 				layoutHandler={this.layoutHandler}
+				clickActionHandler={this.clickActionHandler}
 			/>
 		);
 	}

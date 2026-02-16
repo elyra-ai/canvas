@@ -58,7 +58,7 @@
 		}
 
 		.d3-node-port-output {
-			opacity: 0;
+			// opacity: 0;
 			transform: translateX(-8px);
 			transition: opacity 0.1s cubic-bezier(0.4, 0.14, 0.3, 1), transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 			transition-delay: 0.125s;
@@ -72,7 +72,7 @@
 		}
 
 		.d3-node-port-input {
-			opacity: 0;
+			// opacity: 0;
 
 			&[isSupernodeBinding="yes"] {
 				opacity: 100;
