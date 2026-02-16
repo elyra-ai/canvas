@@ -243,6 +243,8 @@ $toolbar-divider-width: 1px;
 
 
 .toolbar-overflow-item {
+	width: 30px; // Set width instead of using inline-block to fix Safari display bug.
+
 	& button {
 		padding: 0;
 		background-color: carbon.$layer-01;
