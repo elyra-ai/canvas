@@ -368,9 +368,10 @@ $toolbar-divider-width: 1px;
 			padding-left: carbon.$spacing-03;
 		}
 
-		// &.label-only {
-		// 	// No need for padding with label-only;
-		// }
+		&.label-only {
+			padding-left: 0;
+			padding-right: 0;
+		}
 
 		&.overflow {
 			padding-left: carbon.$spacing-03;
