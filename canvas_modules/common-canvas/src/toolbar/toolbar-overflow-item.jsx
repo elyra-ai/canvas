@@ -166,7 +166,7 @@ const ToolbarOverflowItem = forwardRef(({
 				>
 					<div className="toolbar-item-content default">
 						<div className="content-main">
-							<div className="toolbar-icon overflow-item">
+							<div className="toolbar-icon">
 								<OverflowMenuVertical />
 							</div>
 						</div>
