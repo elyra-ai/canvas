@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -219,6 +219,7 @@ class App extends React.Component {
 			selectedNodeFormatType: NODE_FORMAT_VERTICAL,
 			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
 			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
+			selectedToolbarSize: "md",
 			selectedSaveZoom: SAVE_ZOOM_NONE,
 			selectedZoomIntoSubFlows: false,
 			selectedSingleOutputPortDisplay: false,
@@ -2339,9 +2340,11 @@ class App extends React.Component {
 				leftBar: [
 					{ action: "palette", label: "Palette", enable: true },
 					{ divider: true },
-					{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt size={32} />) },
+					{ action: "stopit", label: "Stop", enable: true, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt size={32} />) },
 					{ divider: true },
 					{ action: "run", label: "Run", enable: true, iconEnabled: (<Play size={32} />) },
+					{ divider: true },
+					{ action: "cancel", label: "Cancel", enable: true, incLabelWithIcon: "label-only" },
 					{ divider: true },
 					{ action: "createAutoComment", label: "Markdown Comment", enable: true },
 					{ divider: true },
@@ -2502,6 +2505,7 @@ class App extends React.Component {
 								<InlineLoading status="active" description="Loading..."
 									className={"toolbar-jsx-obj"}
 									tabIndex={tabIndex}
+									size={this.state.selectedToolbarSize}
 								/>
 							</div>
 						)
@@ -2516,6 +2520,7 @@ class App extends React.Component {
 									onClick={(e) => window.alert("Checkbox clicked!")}
 									className={"toolbar-jsx-obj"}
 									tabIndex={tabIndex}
+									size={this.state.selectedToolbarSize}
 								/>
 							</div>
 						)
@@ -2525,10 +2530,11 @@ class App extends React.Component {
 						action: "custom-button",
 						tooltip: "A custom button of type primary!",
 						jsx: (tabIndex) => (
-							<Button id={"custom-button"} size="md" kind="primary"
+							<Button id={"custom-button"} kind="primary"
 								onClick={(e) => window.alert("Button clicked!")}
 								className={"toolbar-jsx-obj"}
 								tabIndex={tabIndex}
+								size={this.state.selectedToolbarSize}
 							>
 								Custom button
 							</Button>
@@ -2553,6 +2559,7 @@ class App extends React.Component {
 									}}
 									className={"toolbar-jsx-obj"}
 									tabIndex={tabIndex}
+									size={this.state.selectedToolbarSize}
 								>
 									<OverflowMenuItem itemText="Big" />
 									<OverflowMenuItem itemText="Medium" />
@@ -2579,6 +2586,11 @@ class App extends React.Component {
 					{ action: "deleteSelectedObjects", label: "Delete", enable: false }
 				]
 			};
+		}
+
+		// Add size property to toolbar config if it exists
+		if (toolbarConfig) {
+			toolbarConfig.size = this.state.selectedToolbarSize;
 		}
 
 		return toolbarConfig;
@@ -3131,7 +3143,7 @@ class App extends React.Component {
 						contextMenuHandler={this.contextMenuHandler}
 						editActionHandler={this.extraCanvasEditActionHandler}
 						clickActionHandler={this.extraCanvasClickActionHandler}
-						toolbarConfig={this.toolbarConfig}
+						toolbarConfig={toolbarConfig}
 						canvasController={this.canvasController2}
 						notificationConfig={this.state.notificationConfig2}
 						rightFlyoutContent={rightFlyoutContent2}

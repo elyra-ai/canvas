@@ -20,26 +20,38 @@
 	background-color: carbon.$interactive;
 	height: carbon.$spacing-07;
 	width: 100%;
-	display: inline-flex;
+	display: grid;
 	align-items: center;
-	justify-content: space-between;
-
-	// Set overflow menu to be same background color as the table toolbar
-	// This is visible when the table toolbar extends further than the table's width,
-	// which can be seen in a 'list' control with moveable_rows, in a narrow flyout
-	.properties-toolbar-items .toolbar-div .toolbar-overflow-item button {
-		background-color: carbon.$interactive;
-		&:hover {
-			background-color: carbon.$button-primary-hover;
-		}
-		svg {
-			fill: carbon.$icon-on-color;
-		}
-	}
+	grid-template-columns: auto 1fr;
 
 	.properties-batch-summary {
 		@include carbon.type-style("label-02");
 		padding-left: carbon.$spacing-05;
 		color: carbon.$text-on-color;
+		flex-shrink: 0;
+		white-space: nowrap;
+	}
+
+	.properties-toolbar-items {
+		min-width: 0;
+		justify-self: end;
+
+		// Set overflow menu to be same background color as the table toolbar
+		// This is visible when the table toolbar extends further than the table's width,
+		// which can be seen in a 'list' control with moveable_rows, in a narrow flyout
+		.toolbar-div {
+			width: 100%;
+			background-color: carbon.$interactive;
+
+			& .toolbar-overflow-item button {
+				background-color: carbon.$interactive;
+				&:hover {
+					background-color: carbon.$button-primary-hover;
+				}
+				svg {
+					fill: carbon.$icon-on-color;
+				}
+			}
+		}
 	}
 }

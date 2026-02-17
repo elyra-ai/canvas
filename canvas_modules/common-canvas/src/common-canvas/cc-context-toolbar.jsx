@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Elyra Authors
+ * Copyright 2023-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import ColorPicker from "../color-picker";
 import { CAUSE_KEYBOARD } from "./constants/canvas-constants.js";
 
 const CM_TOOLBAR_GAP = 2;
-const CM_ICON_SIZE = 32;
+const CM_ICON_SIZE = 32; // Icon size for small size toolbar
 const CM_ICON_PAD = 2;
 const DIVIDER_SIZE = 1;
 const ICON_SIZE_PLUS_GAP = CM_ICON_SIZE + CM_TOOLBAR_GAP;
