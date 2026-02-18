@@ -75,11 +75,13 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 				imageDisplay: false,
 				labelDisplay: false,
 
+				inputPortDisplay: false, // Can be switched to true to see image specified below
 				inputPortObject: "image",
 				inputPortImage: "/images/custom-canvases/flows/decorations/dragStateArrow.svg",
 				inputPortWidth: 20,
 				inputPortHeight: 20,
 
+				outputPortDisplay: true, // 'opacity' in CSS is used to show/hide output ports on hover
 				outputPortRightPosX: 5,
 				outputPortRightPosY: 30,
 				outputPortObject: "image",
