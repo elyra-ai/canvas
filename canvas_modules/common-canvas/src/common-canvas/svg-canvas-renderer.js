@@ -65,7 +65,6 @@ import SvgCanvasDragDetLink from "./svg-canvas-utils-drag-det-link.js";
 import SvgCanvasZoom from "./svg-canvas-utils-zoom.js";
 import SVGCanvasPipeline from "./svg-canvas-pipeline";
 
-// Map defining the display order of node child elements
 export default class SVGCanvasRenderer {
 	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config, supernodeInfo = {}) {
 		this.logger = new Logger(["SVGCanvasRenderer", "PipeId", pipelineId]);

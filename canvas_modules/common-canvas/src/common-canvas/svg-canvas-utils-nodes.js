@@ -18,6 +18,7 @@ import CanvasUtils from "./common-canvas-utils.js";
 import { ERROR, WARNING, NODE_ERROR_ICON, NODE_WARNING_ICON,
 	TEXT_AREA_BORDER_ADJUSTMENT } from "./constants/canvas-constants";
 
+// Map defining the display order of node child elements
 // Lower numbers are rendered first (appear behind higher numbers)
 const NODE_ELEMENT_ORDER = new Map([
 	["d3-focus-path", 1],
@@ -37,7 +38,6 @@ const NODE_ELEMENT_ORDER = new Map([
 ]);
 
 const DEFAULT_ELEMENT_INDEX = 999;
-
 export default class SvgCanvasNodes {
 	constructor(canvasLayout) {
 		this.canvasLayout = canvasLayout;
