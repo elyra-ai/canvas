@@ -1856,7 +1856,7 @@ export default class SVGCanvasRenderer {
 					enter
 						.insert("path",
 							(d, i, newNodes) =>
-								this.nodeUtils.getBeforeElement(newNodes[i].parentNode, "d3-node-sizing"))
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-node-sizing"))
 						.attr("class", "d3-node-sizing")
 						.call(this.attachNodeSizingListeners.bind(this))
 			)
@@ -1872,7 +1872,7 @@ export default class SVGCanvasRenderer {
 					enter
 						.insert("path",
 							(d, i, newNodes) =>
-								this.nodeUtils.getBeforeElement(newNodes[i].parentNode, "d3-node-selection-highlight"))
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-node-selection-highlight"))
 						.attr("class", "d3-node-selection-highlight")
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
@@ -1889,7 +1889,7 @@ export default class SVGCanvasRenderer {
 					enter
 						.insert("path",
 							(d, i, newNodes) =>
-								this.nodeUtils.getBeforeElement(newNodes[i].parentNode, "d3-node-body-outline"))
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-node-body-outline"))
 						.attr("class", "d3-node-body-outline")
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
@@ -1905,7 +1905,7 @@ export default class SVGCanvasRenderer {
 					enter
 						.insert("foreignObject",
 							(d, i, newNodes) =>
-								this.nodeUtils.getBeforeElement(newNodes[i].parentNode, "d3-foreign-object-external-node"))
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-foreign-object-external-node"))
 						.attr("class", "d3-foreign-object-external-node"),
 				null,
 				(exit) => {
@@ -1932,7 +1932,7 @@ export default class SVGCanvasRenderer {
 					enter
 						.insert((d) => this.getImageElement(d),
 							(d, i, newNodes) =>
-								this.nodeUtils.getBeforeElement(newNodes[i].parentNode, "d3-node-image"))
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-node-image"))
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.each((d, idx, imgs) => this.setNodeImageContent(d, idx, imgs))
@@ -1951,7 +1951,7 @@ export default class SVGCanvasRenderer {
 					const labelFOSel = enter
 						.insert("foreignObject",
 							(d, i, newNodes) =>
-								this.nodeUtils.getBeforeElement(newNodes[i].parentNode, "d3-foreign-object-node-label"))
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-foreign-object-node-label"))
 						.attr("class", "d3-foreign-object-node-label")
 						.call(this.attachNodeLabelListeners.bind(this));
 					labelFOSel
