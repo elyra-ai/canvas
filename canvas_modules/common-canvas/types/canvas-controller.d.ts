@@ -46,6 +46,7 @@ import type {
   CanvasAssociationLink
 } from "@elyra/pipeline-schemas/types/index.d.ts";
 
+import type { Action } from "./action.d.ts";
 
 /** Existing internal common canvas actions */
 export type InternalAction =
@@ -2270,13 +2271,7 @@ export declare class CanvasController {
      * do() method of the command to be called.
      */
     do(
-      command: {
-        do(): void;
-        undo(): void;
-        redo(): void;
-        getLabel(): string;
-        getFocusObject(): "CanvasFocus" | object;
-      }
+      command: Action
     ): void;
 
     /**

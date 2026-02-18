@@ -24,7 +24,7 @@ import type {
   CommonPropertiesController,
 } from "./index";
 
-import { CommonCanvas, CanvasController, CommonProperties } from "./index.js"; // Import JS and TS
+import { CommonCanvas, CanvasController, CommonProperties, Action } from "./index.js"; // Import JS and TS
 
 import { expectType } from "tsd";
 
@@ -169,6 +169,42 @@ const commonCanvasAll = new CommonCanvas({
   bottomPanelContent: (SampleContent),
 });
 expectType<CommonCanvas>(commonCanvasAll);
+
+/* ------------------------------------------------------------------- */
+/*   Action subclassing tests                                          */
+/* ------------------------------------------------------------------- */
+
+class MyCommandAction extends Action {
+  do(): void {
+    // Custom implementation
+  }
+
+  undo(): void {
+    // Custom implementation
+  }
+
+  redo(): void {
+    // Custom implementation
+  }
+
+  getLabel(): string {
+    return "My Command Action";
+  }
+
+  getFocusObject(): "CanvasFocus" | CanvasNode | void {
+    return "CanvasFocus";
+  }
+}
+
+const commandAction = new MyCommandAction({}, canvasController);
+expectType<MyCommandAction>(commandAction);
+expectType<void>(commandAction.do());
+expectType<void>(commandAction.undo());
+expectType<void>(commandAction.redo());
+expectType<string>(commandAction.getLabel());
+expectType<"CanvasFocus" | CanvasNode | void>(commandAction.getFocusObject());
+
+expectType<void>(canvasController.do(commandAction))
 
 
 /* ------------------------------------------------------------------- */
