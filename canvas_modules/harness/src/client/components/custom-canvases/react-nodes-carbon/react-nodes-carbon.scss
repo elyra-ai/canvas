@@ -72,8 +72,6 @@
 		}
 
 		.d3-node-port-input {
-			opacity: 0;
-
 			&[isSupernodeBinding="yes"] {
 				opacity: 100;
 				transform: translateX(-10px);
