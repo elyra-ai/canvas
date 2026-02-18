@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1848,15 +1848,15 @@ export default class SVGCanvasRenderer {
 			.attr("d", (d) => this.getNodeShapePathSizing(d));
 
 		// Node Sizing Area
-		// This is inserted as first child because, on supernode expansion, this may be
-		// opened after other objects like the body and label etc.
 		nonBindingNodeGrps
 			.selectChildren(".d3-node-sizing")
 			.data((d) => (CanvasUtils.isNodeResizable(d, this.config) ? [d] : []), (d) => d.id)
 			.join(
 				(enter) =>
 					enter
-						.insert("path", ":first-child")
+						.insert("path",
+							(d, i, newNodes) =>
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-node-sizing"))
 						.attr("class", "d3-node-sizing")
 						.call(this.attachNodeSizingListeners.bind(this))
 			)
@@ -1870,7 +1870,9 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) =>
 					enter
-						.append("path")
+						.insert("path",
+							(d, i, newNodes) =>
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-node-selection-highlight"))
 						.attr("class", "d3-node-selection-highlight")
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
@@ -1885,7 +1887,9 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) =>
 					enter
-						.append("path")
+						.insert("path",
+							(d, i, newNodes) =>
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-node-body-outline"))
 						.attr("class", "d3-node-body-outline")
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
@@ -1899,7 +1903,9 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) =>
 					enter
-						.append("foreignObject")
+						.insert("foreignObject",
+							(d, i, newNodes) =>
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-foreign-object-external-node"))
 						.attr("class", "d3-foreign-object-external-node"),
 				null,
 				(exit) => {
@@ -1923,7 +1929,10 @@ export default class SVGCanvasRenderer {
 			.data((d) => (d.layout.imageDisplay ? [d] : []), (d) => d.id)
 			.join(
 				(enter) =>
-					enter.append((d) => this.getImageElement(d))
+					enter
+						.insert((d) => this.getImageElement(d),
+							(d, i, newNodes) =>
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-node-image"))
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.each((d, idx, imgs) => this.setNodeImageContent(d, idx, imgs))
@@ -1940,7 +1949,9 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) => {
 					const labelFOSel = enter
-						.append("foreignObject")
+						.insert("foreignObject",
+							(d, i, newNodes) =>
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-foreign-object-node-label"))
 						.attr("class", "d3-foreign-object-node-label")
 						.call(this.attachNodeLabelListeners.bind(this));
 					labelFOSel
