@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,26 +66,6 @@ import SvgCanvasZoom from "./svg-canvas-utils-zoom.js";
 import SVGCanvasPipeline from "./svg-canvas-pipeline";
 
 // Map defining the display order of node child elements
-// Lower numbers are rendered first (appear behind higher numbers)
-const NODE_ELEMENT_ORDER = new Map([
-	["d3-focus-path", 1],
-	["d3-node-sizing", 2],
-	["d3-node-selection-highlight", 3],
-	["d3-node-body-outline", 4],
-	["d3-foreign-object-external-node", 5],
-	["d3-node-image", 6],
-	["d3-foreign-object-node-label", 7],
-	["d3-node-ellipsis-group", 8],
-	["d3-node-super-expand-icon-group", 9],
-	["d3-node-port-input", 10],
-	["d3-node-port-output", 10], // Ports have same priority
-	["d3-svg-canvas-underlay", 11], // Supernode contents
-	["d3-node-error-marker", 12],
-	["d3-node-dec-group", 13]
-]);
-
-const DEFAULT_ELEMENT_INDEX = 999;
-
 export default class SVGCanvasRenderer {
 	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config, supernodeInfo = {}) {
 		this.logger = new Logger(["SVGCanvasRenderer", "PipeId", pipelineId]);
@@ -1877,7 +1857,7 @@ export default class SVGCanvasRenderer {
 					enter
 						.insert("path",
 							(d, i, newNodes) =>
-								this.getBeforeElement(newNodes[i]._parent, "d3-node-sizing"))
+								this.nodeUtils.getBeforeElement(newNodes[i].parentNode, "d3-node-sizing"))
 						.attr("class", "d3-node-sizing")
 						.call(this.attachNodeSizingListeners.bind(this))
 			)
@@ -1893,7 +1873,7 @@ export default class SVGCanvasRenderer {
 					enter
 						.insert("path",
 							(d, i, newNodes) =>
-								this.getBeforeElement(newNodes[i]._parent, "d3-node-selection-highlight"))
+								this.nodeUtils.getBeforeElement(newNodes[i].parentNode, "d3-node-selection-highlight"))
 						.attr("class", "d3-node-selection-highlight")
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
@@ -1910,7 +1890,7 @@ export default class SVGCanvasRenderer {
 					enter
 						.insert("path",
 							(d, i, newNodes) =>
-								this.getBeforeElement(newNodes[i]._parent, "d3-node-body-outline"))
+								this.nodeUtils.getBeforeElement(newNodes[i].parentNode, "d3-node-body-outline"))
 						.attr("class", "d3-node-body-outline")
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
@@ -1926,7 +1906,7 @@ export default class SVGCanvasRenderer {
 					enter
 						.insert("foreignObject",
 							(d, i, newNodes) =>
-								this.getBeforeElement(newNodes[i]._parent, "d3-foreign-object-external-node"))
+								this.nodeUtils.getBeforeElement(newNodes[i].parentNode, "d3-foreign-object-external-node"))
 						.attr("class", "d3-foreign-object-external-node"),
 				null,
 				(exit) => {
@@ -1953,7 +1933,7 @@ export default class SVGCanvasRenderer {
 					enter
 						.insert((d) => this.getImageElement(d),
 							(d, i, newNodes) =>
-								this.getBeforeElement(newNodes[i]._parent, "d3-node-image"))
+								this.nodeUtils.getBeforeElement(newNodes[i].parentNode, "d3-node-image"))
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.each((d, idx, imgs) => this.setNodeImageContent(d, idx, imgs))
@@ -1972,7 +1952,7 @@ export default class SVGCanvasRenderer {
 					const labelFOSel = enter
 						.insert("foreignObject",
 							(d, i, newNodes) =>
-								this.getBeforeElement(newNodes[i]._parent, "d3-foreign-object-node-label"))
+								this.nodeUtils.getBeforeElement(newNodes[i].parentNode, "d3-foreign-object-node-label"))
 						.attr("class", "d3-foreign-object-node-label")
 						.call(this.attachNodeLabelListeners.bind(this));
 					labelFOSel
@@ -2033,45 +2013,6 @@ export default class SVGCanvasRenderer {
 			.on(".drag", null);
 
 		this.logger.logEndTimer("updateNodes");
-	}
-
-	// Returns the element before which a new node element should be inserted to
-	// maintain the correct display order. The order is:
-	// 1. focus outline, 2. sizing area, 3. selection highlighting, 4. node body,
-	// 5. foreign object for React object, 6. node image, 7. node label,
-	// 8. ellipsis icon, 9. supernode expansion icon, 10. ports, 11. supernode contents,
-	// 12. error marker, 13. decorations
-	getBeforeElement(nodeGrp, newElementClass) {
-		if (!nodeGrp?.children) {
-			return null;
-		}
-
-		const newElementIndex = NODE_ELEMENT_ORDER.get(newElementClass) ?? DEFAULT_ELEMENT_INDEX;
-
-		// Find the first child element that should come after the new element
-		return this.getNextChildElement(nodeGrp, newElementIndex);
-	}
-
-	// Get the next child, if one exists, in the nodeGrp's children after
-	// the one at newElementIndex
-	getNextChildElement(nodeGrp, newElementIndex) {
-		const childrenArray = Array.from(nodeGrp.children);
-		const found = childrenArray.find((child) =>
-			this.shouldChildComeAfter(child, newElementIndex));
-
-		return found ?? null;
-	}
-
-	// Returns true if the child element should come after an element with the given order
-	shouldChildComeAfter(child, targetOrder) {
-		const classList = child.classList;
-		for (const className of classList) {
-			const order = NODE_ELEMENT_ORDER.get(className);
-			if (typeof order !== "undefined" && order > targetOrder) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	// Returns true if the drag handler should be added to a node.

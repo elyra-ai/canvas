@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,68 @@ import CanvasUtils from "./common-canvas-utils.js";
 import { ERROR, WARNING, NODE_ERROR_ICON, NODE_WARNING_ICON,
 	TEXT_AREA_BORDER_ADJUSTMENT } from "./constants/canvas-constants";
 
+// Lower numbers are rendered first (appear behind higher numbers)
+const NODE_ELEMENT_ORDER = new Map([
+	["d3-focus-path", 1],
+	["d3-node-sizing", 2],
+	["d3-node-selection-highlight", 3],
+	["d3-node-body-outline", 4],
+	["d3-foreign-object-external-node", 5],
+	["d3-node-image", 6],
+	["d3-foreign-object-node-label", 7],
+	["d3-node-ellipsis-group", 8],
+	["d3-node-super-expand-icon-group", 9],
+	["d3-node-port-input", 10],
+	["d3-node-port-output", 10], // Ports have same priority
+	["d3-svg-canvas-underlay", 11], // Supernode contents
+	["d3-node-error-marker", 12],
+	["d3-node-dec-group", 13]
+]);
+
+const DEFAULT_ELEMENT_INDEX = 999;
+
 export default class SvgCanvasNodes {
 	constructor(canvasLayout) {
 		this.canvasLayout = canvasLayout;
+	}
+
+	// Returns the element before which a new node element should be inserted to
+	// maintain the correct display order. The order is:
+	// 1. focus outline, 2. sizing area, 3. selection highlighting, 4. node body,
+	// 5. foreign object for React object, 6. node image, 7. node label,
+	// 8. ellipsis icon, 9. supernode expansion icon, 10. ports, 11. supernode contents,
+	// 12. error marker, 13. decorations
+	getBeforeElement(nodeGrp, newElementClass) {
+		if (!nodeGrp?.children) {
+			return null;
+		}
+
+		const newElementIndex = NODE_ELEMENT_ORDER.get(newElementClass) ?? DEFAULT_ELEMENT_INDEX;
+
+		// Find the first child element that should come after the new element
+		return this.getNextChildElement(nodeGrp, newElementIndex);
+	}
+
+	// Get the next child, if one exists, in the nodeGrp's children after
+	// the one at newElementIndex
+	getNextChildElement(nodeGrp, newElementIndex) {
+		const childrenArray = Array.from(nodeGrp.children);
+		const found = childrenArray.find((child) =>
+			this.shouldChildComeAfter(child, newElementIndex));
+
+		return found ?? null;
+	}
+
+	// Returns true if the child element should come after an element with the given order
+	shouldChildComeAfter(child, targetOrder) {
+		const classList = child.classList;
+		for (const className of classList) {
+			const order = NODE_ELEMENT_ORDER.get(className);
+			if (typeof order !== "undefined" && order > targetOrder) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	isPointInNodeBoundary(pos, node) {
