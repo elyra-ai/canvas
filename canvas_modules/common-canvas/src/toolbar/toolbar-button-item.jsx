@@ -360,7 +360,7 @@ ToolbarButtonItem.propTypes = {
 			PropTypes.string,
 			PropTypes.object
 		]),
-		incLabelWithIcon: PropTypes.oneOf(["no", "before", "after"]),
+		incLabelWithIcon: PropTypes.oneOf(["no", "before", "after", "label-only"]),
 		purpose: PropTypes.oneOf(["single", "dual"]),
 		enable: PropTypes.bool,
 		iconEnabled: PropTypes.oneOfType([
