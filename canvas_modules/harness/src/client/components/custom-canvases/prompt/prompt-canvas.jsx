@@ -25,6 +25,64 @@ import Template from "./prompt-template.json";
 import PromptReactNode from "./prompt-react-node.jsx";
 import AddNodeAndLinkAction from "./addNodeAndLinkAction.js";
 
+const config = {
+	enableParentClass: "prompt",
+	enableNodeFormatType: "Vertical",
+	enableLinkType: "Curve",
+	enableLinkMethod: "Ports",
+	enableLinkDirection: "LeftRight",
+	enableSnapToGridType: "After",
+	enableLinkSelection: "None",
+	enableKeyboardNavigation: true,
+	enableMarkdownInComments: true,
+	enableContextToolbar: true,
+	tipConfig: {
+		palette: true,
+		nodes: false,
+		ports: false,
+		links: false
+	},
+	enableNodeLayout: {
+		drawNodeLinkLineFromTo: "image_center",
+		drawCommentLinkLineTo: "image_center",
+		defaultNodeWidth: 72,
+		defaultNodeHeight: 72,
+		imageWidth: 48,
+		imageHeight: 48,
+		imagePosX: 12,
+		imagePosY: 4,
+		labelPosX: 36,
+		labelPosY: 54,
+		labelWidth: 120,
+		labelHeight: 18,
+
+		inputPortDisplayObjects: [
+			{ type: "circleWithArrow" }
+		],
+
+		inputPortFocusable: false,
+		outputPortFocusable: true,
+
+		outputPortDisplayObjects: [
+			{ type: "image", src: "/images/custom-canvases/prompt/number_1.svg", width: 16, height: 16 },
+			{ type: "image", src: "/images/custom-canvases/prompt/number_2.svg", width: 16, height: 16 },
+			// { type: "image", src: "/images/custom-canvases/prompt/number_3.svg", width: 16, height: 16 }
+			// Replace third element with this element to test a JSX port.
+			{ type: "jsx", src: (<Menu />), width: 16, height: 16 }
+		],
+		outputPortGuideObjects: [
+			{ type: "image", src: "/images/custom-canvases/prompt/number_1.svg", width: 16, height: 16 },
+			{ type: "image", src: "/images/custom-canvases/prompt/number_2.svg", width: 16, height: 16 },
+			{ type: "image", src: "/images/custom-canvases/prompt/number_3.svg", width: 16, height: 16 }
+		],
+	},
+	enableCanvasLayout: {
+		dataLinkArrowHead: false,
+		linkGap: 4,
+		displayLinkOnOverlap: false
+	}
+};
+
 export default class PromptCanvas extends React.Component {
 	constructor(props) {
 		super(props);
@@ -35,71 +93,13 @@ export default class PromptCanvas extends React.Component {
 
 		this.promptObjects = [];
 
-		this.getConfig = this.getConfig.bind(this);
+		this.config = { ...props.config, ...config };
+
 		this.addNodeHandler = this.addNodeHandler.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.layoutHandler = this.layoutHandler.bind(this);
 		this.closePromptNode = this.closePromptNode.bind(this);
-	}
-
-	getConfig() {
-		const config = Object.assign({}, this.props.config, {
-			enableParentClass: "prompt",
-			enableNodeFormatType: "Vertical",
-			enableLinkType: "Curve",
-			enableLinkMethod: "Ports",
-			enableLinkDirection: "LeftRight",
-			enableSnapToGridType: "After",
-			enableLinkSelection: "None",
-			enableKeyboardNavigation: true,
-			enableMarkdownInComments: true,
-			enableContextToolbar: true,
-			tipConfig: {
-				palette: true,
-				nodes: false,
-				ports: false,
-				links: false
-			},
-			enableNodeLayout: {
-				drawNodeLinkLineFromTo: "image_center",
-				drawCommentLinkLineTo: "image_center",
-				defaultNodeWidth: 72,
-				defaultNodeHeight: 72,
-				imageWidth: 48,
-				imageHeight: 48,
-				imagePosX: 12,
-				imagePosY: 4,
-				labelPosX: 36,
-				labelPosY: 54,
-				labelWidth: 120,
-				labelHeight: 18,
-
-				inputPortDisplayObjects: [
-					{ type: "circleWithArrow" }
-				],
-
-				inputPortFocusable: false,
-				outputPortFocusable: true,
-
-				outputPortDisplayObjects: [
-					{ type: "image", src: "/images/custom-canvases/prompt/number_1.svg", width: 16, height: 16 },
-					{ type: "image", src: "/images/custom-canvases/prompt/number_2.svg", width: 16, height: 16 },
-					{ type: "image", src: "/images/custom-canvases/prompt/number_3.svg", width: 16, height: 16 }
-				],
-				outputPortGuideObjects: [
-					{ type: "image", src: "/images/custom-canvases/prompt/number_1.svg", width: 16, height: 16 },
-					{ type: "image", src: "/images/custom-canvases/prompt/number_2.svg", width: 16, height: 16 },
-					{ type: "image", src: "/images/custom-canvases/prompt/number_3.svg", width: 16, height: 16 }
-				],
-			},
-			enableCanvasLayout: {
-				dataLinkArrowHead: false,
-				linkGap: 4,
-				displayLinkOnOverlap: false
-			}
-		});
-		return config;
 	}
 
 	clickActionHandler(source) {
@@ -255,12 +255,10 @@ export default class PromptCanvas extends React.Component {
 	}
 
 	render() {
-		const config = this.getConfig();
-
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
-				config={config}
+				config={this.config}
 				clickActionHandler={this.clickActionHandler}
 				layoutHandler={this.layoutHandler}
 				contextMenuHandler={this.contextMenuHandler}

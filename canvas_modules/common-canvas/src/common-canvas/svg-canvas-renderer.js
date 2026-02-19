@@ -2122,6 +2122,7 @@ export default class SVGCanvasRenderer {
 				const obj = d3.select(inputPorts[i]);
 				obj
 					.append(portDisplayInfo.tag)
+					.attr("tabindex", -1)
 					.attr("class", "d3-node-port-input-main" +
 						(portDisplayInfo.tag === "foreignObject" ? " d3-foreign-object-port-jsx" : ""));
 
@@ -2227,6 +2228,7 @@ export default class SVGCanvasRenderer {
 				const obj = d3.select(outputPorts[i]);
 				obj
 					.append(portDisplayInfo.tag)
+					.attr("tabindex", -1)
 					.attr("class", "d3-node-port-output-main" +
 						(portDisplayInfo.tag === "foreignObject" ? " d3-foreign-object-port-jsx" : ""));
 
