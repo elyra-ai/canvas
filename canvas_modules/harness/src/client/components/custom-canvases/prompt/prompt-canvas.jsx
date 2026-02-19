@@ -66,9 +66,9 @@ const config = {
 		outputPortDisplayObjects: [
 			{ type: "image", src: "/images/custom-canvases/prompt/number_1.svg", width: 16, height: 16 },
 			{ type: "image", src: "/images/custom-canvases/prompt/number_2.svg", width: 16, height: 16 },
-			{ type: "image", src: "/images/custom-canvases/prompt/number_3.svg", width: 16, height: 16 }
+			// { type: "image", src: "/images/custom-canvases/prompt/number_3.svg", width: 16, height: 16 }
 			// Replace third element with this element to test a JSX port.
-			// { type: "jsx", src: (<Menu />), width: 16, height: 16 }
+			{ type: "jsx", src: (<Menu />), width: 16, height: 16 }
 		],
 		outputPortGuideObjects: [
 			{ type: "image", src: "/images/custom-canvases/prompt/number_1.svg", width: 16, height: 16 },
