@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Elyra Authors
+ * Copyright 2024-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -252,6 +252,16 @@ export default class KeyboardUtils {
 	/* Link creation */
 
 	static createLink(d3Event) {
+		// When meta key is 'Ctrl' on Windows, shift key will cause 'key' property to contain uppercase 'L' - so lowercase it!
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key?.toLowerCase() === L_KEY;
+	}
+
+	static addConnectFromStatus(d3Event) {
+		// When meta key is 'Ctrl' on Windows, shift key will cause 'key' property to contain uppercase 'L' - so lowercase it!
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key?.toLowerCase() === L_KEY;
+	}
+
+	static createLinkFromConnectFrom(d3Event) {
 		// When meta key is 'Ctrl' on Windows, shift key will cause 'key' property to contain uppercase 'L' - so lowercase it!
 		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key?.toLowerCase() === L_KEY;
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,16 @@ export default (state = [], action) => {
 			if (action.data.portId === port.id) {
 				const newPort = Object.assign({}, port);
 				newPort.subflow_node_ref = action.data.subflowNodeRef;
+				return newPort;
+			}
+			return port;
+		});
+	case "UPDATE_CONNECT_FROM_STATUS":
+		return state.map((port, index) => {
+			if (action.data.portId === port.id) {
+				const newPort = Object.assign({}, port);
+				// Toggle: if already true, make it false; otherwise use the provided value
+				newPort.connectFrom = port.connectFrom ? false : action.data.connectFrom;
 				return newPort;
 			}
 			return port;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -708,6 +708,10 @@ export default class APIPipeline {
 
 	setOutputPortSubflowNodeRef(nodeId, portId, subflowNodeRef) {
 		this.store.dispatch({ type: "SET_OUTPUT_PORT_SUBFLOW_NODE_REF", data: { nodeId: nodeId, portId: portId, subflowNodeRef: subflowNodeRef }, pipelineId: this.pipelineId });
+	}
+
+	setOutputPortConnectFromStatus(nodeId, portId, connectFrom) {
+		this.store.dispatch({ type: "UPDATE_CONNECT_FROM_STATUS", data: { nodeId: nodeId, portId: portId, connectFrom: connectFrom }, pipelineId: this.pipelineId });
 	}
 
 	setNodeProperties(nodeId, properties) {

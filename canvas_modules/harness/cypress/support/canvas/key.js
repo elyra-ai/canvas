@@ -55,4 +55,12 @@ keys.link = { key: "k", metaKey: true, shiftKey: false, release: true };
 keys.numberedList = { key: "7", metaKey: true, shiftKey: true, release: true };
 keys.bulletedList = { key: "8", metaKey: true, shiftKey: true, release: true };
 
+// Shortcut for marking port as connection source and creating links
+keys.connectFromPort = { key: "l", metaKey: true, shiftKey: true, release: true };
+
+// Navigation keys
+keys.altTab = { key: "Tab", altKey: true, release: true };
+keys.escape = { key: "Escape", release: true };
+keys.arrowRight = { key: "ArrowRight", release: true };
+
 export default keys;

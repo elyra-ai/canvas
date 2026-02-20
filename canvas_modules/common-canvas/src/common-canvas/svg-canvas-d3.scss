@@ -643,6 +643,13 @@ g.d3-link-dec-group:focus {
 	fill: transparent;
 }
 
+.d3-node-port-output-connect-from-arrow {
+	stroke: $node-port-output-stroke-color;
+	stroke-width: 2px;
+	fill: none;
+	vector-effect: non-scaling-stroke;
+}
+
 .d3-node-port-output:hover {
 	stroke: $node-port-output-hover-stroke;
 	fill: $node-port-output-hover-fill;

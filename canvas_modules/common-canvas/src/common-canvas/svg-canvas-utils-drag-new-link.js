@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -460,6 +460,9 @@ export default class SVGCanvasUtilsDragNewLink {
 				linkType: "data", // Added for historical purposes - for WML Canvas support
 				pipelineId: this.ren.activePipeline.id });
 
+			// Clear connectFrom status if it was set on the source port
+			this.ren.canvasController.clearConnectFromStatus(this.ren.activePipeline.id);
+
 		} else if (this.ren.config.enableLinkReplaceOnNewConnection &&
 					CanvasUtils.isDataLinkReplacementAllowed(srcPortId, trgPortId, srcNode, trgNode,
 						this.ren.activePipeline.links, this.ren.config.enableSelfRefLinks)) {
@@ -476,6 +479,9 @@ export default class SVGCanvasUtilsDragNewLink {
 					pipelineId: this.pipelineId,
 					replaceLink: linksToTrgPort[0]
 				});
+
+				// Clear connectFrom status if it was set on the source port
+				this.ren.canvasController.clearConnectFromStatus(this.ren.activePipeline.id);
 			}
 		}
 	}

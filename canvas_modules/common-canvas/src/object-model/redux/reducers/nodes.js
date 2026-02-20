@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -329,6 +329,7 @@ export default (state = [], action) => {
 
 	case "SET_OUTPUT_PORT_LABEL":
 	case "SET_OUTPUT_PORT_SUBFLOW_NODE_REF":
+	case "UPDATE_CONNECT_FROM_STATUS":
 		return state.map((node, index) => {
 			if (action.data.nodeId === node.id) {
 				return Object.assign({}, node, { outputs: ports(node.outputs, action) });

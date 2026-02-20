@@ -1441,6 +1441,41 @@ export declare class CanvasController {
     ): void
 
     /**
+     * Sets the connection source for creating a link from an output port.
+     * This is called when the user activates the keyboard shortcut (Ctrl/Cmd + Shift + L)
+     * while focus is on an output port.
+     * @param nodeId - The ID of the node
+     * @param portId - The ID of the output port
+     * @param pipelineId - Optional. The ID of the pipeline of the node.
+     *                     Defaults to the currently displayed pipeline.
+     */
+    setPortConnectFrom(
+      nodeId: CanvasNodeId,
+      portId: CanvasPortId,
+      pipelineId?: PipelineId
+    ): void;
+
+    /**
+     * Finds the node and output port that has connectFrom set to true in the specified pipeline.
+     * Returns an object with { node, portId } or null if not found.
+     * @param pipelineId - Optional. The ID of the pipeline.
+     *                     Defaults to the currently displayed pipeline.
+     * @returns An object containing the node and portId, or null if not found
+     */
+    getConnectFromInfo(
+      pipelineId?: PipelineId
+    ): { node: CanvasNode; portId: CanvasPortId } | null;
+
+    /**
+     * Clears the connectFrom status from any port in the specified pipeline.
+     * @param pipelineId - Optional. The ID of the pipeline.
+     *                     Defaults to the currently displayed pipeline.
+     */
+    clearConnectFromStatus(
+      pipelineId?: PipelineId
+    ): void;
+
+    /**
      * ## Comment methods
      * https://elyra-ai.github.io/canvas/03.04-canvas-controller/#comment-methods
      */

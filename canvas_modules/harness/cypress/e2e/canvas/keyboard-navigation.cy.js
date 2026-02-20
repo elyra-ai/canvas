@@ -166,4 +166,66 @@ describe("Test keyboard navigation", function() {
 		// Verify the new zoom amount
 		cy.verifyZoomTransform(238, 43, 1);
 	});
+
+	it("Test creating a link between ports using keyboard shortcuts", function() {
+		// Set node layout config to enable focusable ports
+		cy.setCanvasConfig({
+			"selectedKeyboardNavigation": true,
+			"selectedNodeLayout": {
+				"inputPortFocusable": true,
+				"outputPortFocusable": true
+			}
+		});
+
+		// Click canvas to move focus there
+		cy.clickCanvasAt(1, 1);
+
+		// Get initial link count
+		cy.verifyNumberOfLinks(9);
+
+		// Tab to first node and select it
+		cy.pressOnCanvas(key.tab);
+		cy.pressOnComment("This canvas shows the 4 different node " +
+			"types and three link types: node links, association links and comments links.", key.tab);
+		cy.verifyFocusOnNode("Binding (entry) node");
+
+		// Press Alt+Tab to move focus to the node's sub-objects (ports)
+		cy.pressOnNode("Binding (entry) node", key.altTab);
+
+		// Press Ctrl/Cmd+Shift+L to mark the output port as connection source
+		cy.pressOnOutputPort("Binding (entry) node", key.connectFromPort);
+
+		// Verify the arrow indicator appears on the output port
+		cy.verifyPortConnectFromArrowExists("Binding (entry) node");
+
+		// Navigate back to the node and then to the Super node using right arrow
+		cy.pressOnNode("Binding (entry) node", key.escape);
+
+		// Use right arrow to navigate through nodes and links to Super node
+		// Binding node -> link -> Execution node -> link -> Super node
+		cy.pressOnNode("Binding (entry) node", key.arrowRight);
+
+		// Now on link between Binding and Execution, press right arrow again
+		cy.pressOnLinkWithLabel("Binding (entry) node-Execution node", key.arrowRight);
+
+		// Now on Execution node, press right arrow
+		cy.pressOnNode("Execution node", key.arrowRight);
+
+		// Now on link between Execution and Super node, press right arrow again
+		cy.pressOnLinkWithLabel("Execution node-Super node", key.arrowRight);
+
+		cy.verifyFocusOnNode("Super node");
+
+		// Press Alt+Tab to move focus to the Super node's input port
+		cy.pressOnNode("Super node", key.altTab);
+
+		// Press Ctrl/Cmd+Shift+L to create the link from Binding node to Super node
+		cy.pressOnInputPort("Super node", key.connectFromPort);
+
+		// Verify a new link was created
+		cy.verifyNumberOfLinks(10);
+
+		// Verify the arrow indicator is removed after link creation
+		cy.verifyPortConnectFromArrowDoesNotExist("Binding (entry) node");
+	});
 });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1135,6 +1135,44 @@ export default class CanvasController {
 	 */
 	setSubObjectFocusFunction(nodeId, focusFunction, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setSubObjectFocusFunction(nodeId, focusFunction);
+	}
+
+	// Sets the connection source for creating a link from an output port.
+	// This is called when the user activates the keyboard shortcut (Ctrl/Cmd + Shift + L)
+	// while focus is on an output port. Only one port can have connectFrom set to true at a time.
+	setPortConnectFrom(nodeId, portId, pipelineId) {
+		// First, clear any existing connectFrom status in the pipeline
+		this.clearConnectFromStatus(pipelineId);
+		// Now set the new connectFrom status
+		this.objectModel.getAPIPipeline(pipelineId).setOutputPortConnectFromStatus(nodeId, portId, true);
+	}
+
+	// Finds the node and output port that has connectFrom set to true in the specified pipeline.
+	// Returns an object with { node, portId } or null if not found.
+	getConnectFromInfo(pipelineId) {
+		const nodes = this.objectModel.getAPIPipeline(pipelineId).getNodes();
+		for (const node of nodes) {
+			if (node.outputs) {
+				for (const port of node.outputs) {
+					if (port.connectFrom) {
+						return { node: node, portId: port.id };
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	// Clears the connectFrom status from any port in the specified pipeline.
+	clearConnectFromStatus(pipelineId) {
+		const connectFromInfo = this.getConnectFromInfo(pipelineId);
+		if (connectFromInfo) {
+			this.objectModel.getAPIPipeline(pipelineId).setOutputPortConnectFromStatus(
+				connectFromInfo.node.id,
+				connectFromInfo.portId,
+				false
+			);
+		}
 	}
 
 	// ---------------------------------------------------------------------------
