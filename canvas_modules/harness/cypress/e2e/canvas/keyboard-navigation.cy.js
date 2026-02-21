@@ -189,8 +189,8 @@ describe("Test keyboard navigation", function() {
 			"types and three link types: node links, association links and comments links.", key.tab);
 		cy.verifyFocusOnNode("Binding (entry) node");
 
-		// Press Alt+Tab to move focus to the node's sub-objects (ports)
-		cy.pressOnNode("Binding (entry) node", key.altTab);
+		// Press Shift+Alt+Down Arrow to move focus to the node's sub-objects (ports)
+		cy.pressOnNode("Binding (entry) node", key.focusSubObject);
 
 		// Press Ctrl/Cmd+Shift+L to mark the output port as connection source
 		cy.pressOnOutputPort("Binding (entry) node", key.connectFromPort);
@@ -216,8 +216,8 @@ describe("Test keyboard navigation", function() {
 
 		cy.verifyFocusOnNode("Super node");
 
-		// Press Alt+Tab to move focus to the Super node's input port
-		cy.pressOnNode("Super node", key.altTab);
+		// Press Shift+Alt+Down Arrow to move focus to the Super node's input port
+		cy.pressOnNode("Super node", key.focusSubObject);
 
 		// Press Ctrl/Cmd+Shift+L to create the link from Binding node to Super node
 		cy.pressOnInputPort("Super node", key.connectFromPort);

@@ -2212,7 +2212,12 @@ export default class SVGCanvasRenderer {
 			.attr("class", (port) => this.getNodeOutputPortClassName() + (port.class_name ? " " + port.class_name : ""))
 			.attr("tabindex", -1)
 			.attr("role", "button")
-			.attr("aria-label", (port) => port.label || port.id)
+			.attr("aria-label", (port) => {
+				const label = port.label || port.id;
+				return port.connectFrom
+					? this.canvasController.labelUtil.getLabel("port.markedForOutput", { label: label })
+					: label;
+			})
 			.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("port.ariaRoleDescription"))
 			.call((joinedOutputPortGrps) => this.updateOutputPorts(joinedOutputPortGrps, node));
 	}

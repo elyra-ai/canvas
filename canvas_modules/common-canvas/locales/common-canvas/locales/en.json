@@ -46,6 +46,7 @@
   "node.disconnectNode": "Disconnect",
   "node.saveToPalette": "Save to palette",
   "port.ariaRoleDescription": "port",
+  "port.markedForOutput": "{label}. Marked for output",
   "decoration.ariaRoleDescription": "decoration",
   "decoration.imageDecoration": "Image decoration",
   "decoration.shapeDecoration": "Shape decoration",

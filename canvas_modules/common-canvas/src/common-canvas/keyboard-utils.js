@@ -174,15 +174,17 @@ export default class KeyboardUtils {
 	}
 
 	static focusSubObject(d3Event) {
-		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.key === TAB_KEY;
+		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.altKey && d3Event.key === DOWN_ARROW_KEY;
 	}
 
 	static nextSubObject(d3Event) {
-		return !d3Event.shiftKey && d3Event.key === TAB_KEY;
+		return (!d3Event.shiftKey && d3Event.key === TAB_KEY) ||
+			(!this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.altKey && d3Event.key === DOWN_ARROW_KEY);
 	}
 
 	static previousSubObject(d3Event) {
-		return d3Event.shiftKey && d3Event.key === TAB_KEY;
+		return (d3Event.shiftKey && d3Event.key === TAB_KEY) ||
+		(!this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.altKey && d3Event.key === UP_ARROW_KEY);
 	}
 
 	static cancelFocusOnSubObject(d3Event) {
@@ -202,19 +204,19 @@ export default class KeyboardUtils {
 	}
 
 	static moveObjectLeft(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === LEFT_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && !d3Event.altKey && d3Event.key === LEFT_ARROW_KEY;
 	}
 
 	static moveObjectRight(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === RIGHT_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && !d3Event.altKey && d3Event.key === RIGHT_ARROW_KEY;
 	}
 
 	static moveObjectUp(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === UP_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && !d3Event.altKey && d3Event.key === UP_ARROW_KEY;
 	}
 
 	static moveObjectDown(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === DOWN_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && !d3Event.altKey && d3Event.key === DOWN_ARROW_KEY;
 	}
 
 	static sizeObjectLeft(d3Event) {
