@@ -2212,7 +2212,12 @@ export default class SVGCanvasRenderer {
 			.attr("class", (port) => this.getNodeOutputPortClassName() + (port.class_name ? " " + port.class_name : ""))
 			.attr("tabindex", -1)
 			.attr("role", "button")
-			.attr("aria-label", (port) => port.label || port.id)
+			.attr("aria-label", (port) => {
+				const label = port.label || port.id;
+				return port.connectFrom
+					? this.canvasController.labelUtil.getLabel("port.markedForOutput", { label: label })
+					: label;
+			})
 			.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("port.ariaRoleDescription"))
 			.call((joinedOutputPortGrps) => this.updateOutputPorts(joinedOutputPortGrps, node));
 	}
@@ -2271,6 +2276,30 @@ export default class SVGCanvasRenderer {
 						.attr("transform", this.getOutputPortArrowPathTransform(port));
 				}
 			});
+
+		// Update connect-from indicator arrows - only create when needed
+		joinedOutputPortGrps.each((port, i, outputPortGrps) => {
+			const portGrp = d3.select(outputPortGrps[i]);
+			const existingArrow = portGrp.select(".d3-node-port-output-connect-from-arrow");
+
+			if (port.connectFrom) {
+				// Create arrow if it doesn't exist
+				if (existingArrow.empty()) {
+					portGrp.append("path")
+						.attr("class", "d3-node-port-output-connect-from-arrow");
+				}
+				// Update arrow path and transform based on port direction
+				const arrowInfo = this.getConnectFromArrowInfo(port, node);
+				portGrp.select(".d3-node-port-output-connect-from-arrow")
+					.attr("d", arrowInfo.path)
+					.attr("transform", arrowInfo.transform);
+			} else {
+				// Remove arrow if it exists and connectFrom is false
+				if (!existingArrow.empty()) {
+					existingArrow.remove();
+				}
+			}
+		});
 
 		if (this.config.enableEditingActions) {
 			const handler = this.dragNewLinkUtils.getDragNewLinkHandler();
@@ -2640,6 +2669,13 @@ export default class SVGCanvasRenderer {
 							selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
 							pipelineId: this.activePipeline.id
 						});
+
+					} else if (KeyboardUtils.createLinkFromConnectFrom(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						const connectFromInfo = this.canvasController.getConnectFromInfo(this.activePipeline.id);
+						if (connectFromInfo) {
+							this.dragNewLinkUtils.createNewNodeLink(connectFromInfo.node, connectFromInfo.portId, node, port.id);
+						}
 					}
 				}
 			})
@@ -2700,6 +2736,10 @@ export default class SVGCanvasRenderer {
 							selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
 							pipelineId: this.activePipeline.id
 						});
+
+					} else if (KeyboardUtils.addConnectFromStatus(d3Event)) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						this.canvasController.setPortConnectFrom(node.id, port.id, this.activePipeline.id);
 					}
 				}
 			})
@@ -6306,6 +6346,49 @@ export default class SVGCanvasRenderer {
 	getOutputPortArrowPathTransform(port) {
 		const angle = CanvasUtils.getAngleForOutputPorts(port.dir);
 		return `translate(${port.cx}, ${port.cy}) rotate(${angle})`;
+	}
+
+	// Returns the path and transform for the connect-from indicator arrow
+	// based on the port's direction. The arrow points away from the port.
+	getConnectFromArrowInfo(port, node) {
+		const offset = node.layout.portRadius + 5;
+		const dir = port.dir || "e"; // Default to east if no direction specified
+
+		// Single arrow path pointing right: shaft is 12px long, arrowhead is 3px
+		const path = "M 0 0 L 12 0 L 9 -3 M 12 0 L 9 3";
+
+		// Rotation angles for each direction
+		const rotations = {
+			e: 0, // East - no rotation (arrow points right)
+			s: 90, // South - rotate 90° (arrow points down)
+			w: 180, // West - rotate 180° (arrow points left)
+			n: 270 // North - rotate 270° (arrow points up)
+		};
+
+		const rotation = rotations[dir] || 0;
+
+		// Calculate offset position based on direction
+		let offsetX = 0;
+		let offsetY = 0;
+		switch (dir) {
+		case "n":
+			offsetY = -offset;
+			break;
+		case "s":
+			offsetY = offset;
+			break;
+		case "e":
+			offsetX = offset;
+			break;
+		case "w":
+		default:
+			offsetX = -offset;
+			break;
+		}
+
+		const transform = `translate(${port.cx + offsetX}, ${port.cy + offsetY}) rotate(${rotation})`;
+
+		return { path, transform };
 	}
 
 	// Returns an SVG path to draw the arrow head.

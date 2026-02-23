@@ -507,3 +507,29 @@ Cypress.Commands.add("resizeNode", (nodeLabel, corner, newWidth, newHeight) => {
 			cy.resizeObjectToDimensions(srcBodySelector, srcSizingSelector, corner, newWidth, newHeight);
 		});
 });
+
+Cypress.Commands.add("verifyPortConnectFromArrowExists", (nodeLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.find(".d3-node-port-output-connect-from-arrow")
+		.should("exist");
+});
+
+Cypress.Commands.add("verifyPortConnectFromArrowDoesNotExist", (nodeLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.find(".d3-node-port-output-connect-from-arrow")
+		.should("not.exist");
+});
+
+Cypress.Commands.add("pressOnOutputPort", (nodeLabel, keyObj) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.find(".d3-node-port-output")
+		.first()
+		.trigger("keydown", keyObj);
+});
+
+Cypress.Commands.add("pressOnInputPort", (nodeLabel, keyObj) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.find(".d3-node-port-input")
+		.first()
+		.trigger("keydown", keyObj);
+});

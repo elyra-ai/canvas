@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import key from "../../support/canvas/key.js";
+
 Cypress.Commands.add("getLinkWithLabel", (linkLabel) => {
 	const nodeNames = linkLabel.split("-");
 	cy.getPipeline()
@@ -34,6 +36,11 @@ Cypress.Commands.add("getLinkWithLabel", (linkLabel) => {
 						});
 				});
 		});
+});
+
+Cypress.Commands.add("pressOnLinkWithLabel", (linkLabel, keyObj) => {
+	cy.getLinkWithLabel(linkLabel)
+		.trigger("keydown", keyObj);
 });
 
 Cypress.Commands.add("getLinkIdForLabel", (linkLabel) =>
