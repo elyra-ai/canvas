@@ -3786,7 +3786,7 @@
 <td>Increases the width of the focused comment or node (if <code>enableResizableNodes</code> is true)</td>
 </tr>
 <tr>
-<td>Alt + [tab key]</td>
+<td>Shift + Alt + [down arrow key]</td>
 <td>-</td>
 <td>Move focus to first sub-object (port/decoration) in the focused node or link</td>
 </tr>
@@ -3809,7 +3809,7 @@
 </table>
 <h3 id="when-focus-is-on-a-sub-object-port-or-decoration-of-a-node-or-link-in-the-flow-editor">When focus is on a sub-object (port or decoration) of a node or link in the flow editor<a class="headerlink" href="#when-focus-is-on-a-sub-object-port-or-decoration-of-a-node-or-link-in-the-flow-editor" title="Permanent link">&para;</a></h3>
 <p>The shortcuts in this table are only available when the canvas config field <a href="../03.02.01-canvas-config/#enablekeyboardnavigation">enableKeyboardNavigation</a> is set to <code>true</code>.</p>
-<p>Focus is initially moved to the sub-objects of a node or link by pressing <code>Alt + [tab key]</code>. After that the following short cuts are available.</p>
+<p>Focus is initially moved to the sub-objects of a node or link by pressing <code>Shift + Alt + [down arrow key]</code>. After that the following short cuts are available.</p>
 <table>
 <thead>
 <tr>
@@ -3820,14 +3820,14 @@
 </thead>
 <tbody>
 <tr>
-<td>[tab key]</td>
+<td>[tab key] or Shift + Alt + [down arrow key]</td>
 <td>-</td>
-<td>Move focus to next sub-object (port/decoration) in the focused node or link</td>
+<td>Move focus to next sub-object (port/decoration/link-handle) in the focused node or link</td>
 </tr>
 <tr>
-<td>Shift + [tab key]</td>
+<td>Shift + [tab key] or Shift + Alt + [up arrow key]</td>
 <td>-</td>
-<td>Move focus to previous sub-object (port/decoration) in the focused node or link</td>
+<td>Move focus to previous sub-object (port/decoration/link-handle) in the focused node or link</td>
 </tr>
 <tr>
 <td>[return key]</td>
@@ -3838,6 +3838,16 @@
 <td>[space bar]</td>
 <td>-</td>
 <td>Same as pressing the return key</td>
+</tr>
+<tr>
+<td>Meta + Shift + [L Key]</td>
+<td>-</td>
+<td>When focus is on an output port, marks it as the connection source for creating a link. Pressing the shortcut again toggles the marking off.</td>
+</tr>
+<tr>
+<td>Meta + Shift + [L Key]</td>
+<td>-</td>
+<td>When focus is on an input port and a source output port is marked, creates a link from the marked source port to the focused input port.</td>
 </tr>
 <tr>
 <td>[esc key]</td>
