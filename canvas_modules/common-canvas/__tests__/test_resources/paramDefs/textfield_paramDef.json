@@ -185,7 +185,8 @@
         },
         "description": {
           "default": "textfield with parameter value set to 'default testing' by default"
-        }
+        },
+        "char_limit": -1
       },
       {
         "parameter_ref": "string_empty",

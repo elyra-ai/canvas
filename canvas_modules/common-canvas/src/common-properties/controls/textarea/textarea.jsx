@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,9 +40,6 @@ class TextareaControl extends React.Component {
 
 	handleChange(evt) {
 		let value = evt.target.value;
-		if (this.charLimit !== -1 && value) {
-			value = value.substring(0, this.charLimit);
-		}
 		if (this.props.control.valueDef && this.props.control.valueDef.isList) { // array
 			value = ControlUtils.splitNewlines(value, newLine);
 		}
@@ -86,6 +83,8 @@ class TextareaControl extends React.Component {
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
+					enableCounter={this.charLimit !== -1}
+					maxCount={this.charLimit}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={""} messageInfo={errorMessage} />
 			</div>);
@@ -103,6 +102,8 @@ class TextareaControl extends React.Component {
 					helperText={this.props.control.helperText}
 					readOnly={this.props.readOnly}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
+					enableCounter={this.charLimit !== -1}
+					maxCount={this.charLimit}
 				/>
 			);
 		}

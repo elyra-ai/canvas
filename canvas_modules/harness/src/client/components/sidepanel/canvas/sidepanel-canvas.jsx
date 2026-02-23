@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1606,6 +1606,33 @@ export default class SidePanelForms extends React.Component {
 			</FormGroup>
 		</div>);
 
+		var toolbarSize = (<div className="harness-sidepanel-children" id="harness-sidepanel-toolbar-size">
+			<FormGroup
+				legendText="Toolbar Size"
+			>
+				<RadioButtonGroup
+					name="selectedToolbarSize" // Set name to corresponding field name in App.js
+					className="harness-sidepanel-radio-group"
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedToolbarSize")}
+					orientation="vertical"
+				>
+					<RadioButton
+						value="sm"
+						labelText="Small"
+					/>
+					<RadioButton
+						value="md"
+						labelText="Medium"
+					/>
+					<RadioButton
+						value="lg"
+						labelText="Large"
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
+		</div>);
+
 		var tipConfig = (<div className="harness-sidepanel-children" id="harness-sidepanel-tip-config">
 			<fieldset className="cds--fieldset">
 				<legend className="cds--label">Tips</legend>
@@ -1894,6 +1921,8 @@ export default class SidePanelForms extends React.Component {
 					{toolbarLayout}
 					{divider}
 					{toolbarType}
+					{divider}
+					{toolbarSize}
 					{divider}
 					<div className="harness-side-panel-header">Left Flyout</div>
 					{divider}

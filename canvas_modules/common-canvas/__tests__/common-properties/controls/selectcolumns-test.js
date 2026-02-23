@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -547,7 +547,7 @@ describe("selectcolumns control functions correctly in a table", () => {
 		// Since 2 rows are selected, table toolbar shows up
 		// Clear row selection to show "Add columns" button
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
-		const cancelButton = tableToolbar.querySelectorAll("button.action-cancel");
+		const cancelButton = tableToolbar.querySelectorAll(".toolbar-item.cancel-action button");
 		expect(cancelButton).to.have.length(1);
 		fireEvent.click(cancelButton[0]);
 

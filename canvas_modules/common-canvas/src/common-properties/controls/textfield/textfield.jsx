@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES } from "./../../constants/constants.js";
 import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
-import TruncatedContentTooltip from "./../../components/truncated-content-tooltip";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
 
@@ -51,9 +50,6 @@ class TextfieldControl extends React.Component {
 
 	handleChange(evt) {
 		let value = evt.target.value;
-		if (this.charLimit !== -1 && value) {
-			value = value.substring(0, this.charLimit);
-		}
 		if (this.isList) {
 			value = ControlUtils.splitNewlines(value, arrayValueDelimiter);
 		}
@@ -111,29 +107,16 @@ class TextfieldControl extends React.Component {
 					helperText={this.props.control.helperText}
 					onChange={this.handleChange.bind(this)}
 					value={value}
+					title={value}
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					aria-label={this.props.control.labelVisible ? null : this.props.control?.label?.text}
 					ref={this.textInputRef}
 					readOnly={this.props.readOnly}
+					enableCounter={this.charLimit !== -1}
+					maxCount={this.charLimit}
 				/>
 			);
-
-			if (this.props.tableControl) {
-				const tooltipProps = {
-					truncatedRef: this.textInputRef
-				};
-				let disabled = true;
-				if (value && this.props.state !== STATES.DISABLED) {
-					disabled = false;
-				}
-				textInput = (<TruncatedContentTooltip
-					{...tooltipProps}
-					content={textInput}
-					tooltipText={value}
-					disabled={disabled}
-				/>);
-			}
 		}
 
 		return (

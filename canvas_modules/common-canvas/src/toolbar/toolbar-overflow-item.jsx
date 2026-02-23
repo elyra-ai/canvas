@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -165,8 +165,10 @@ const ToolbarOverflowItem = forwardRef(({
 					size={size}
 				>
 					<div className="toolbar-item-content default">
-						<div className="toolbar-icon overflow-item">
-							<OverflowMenuVertical />
+						<div className="content-main">
+							<div className="toolbar-icon">
+								<OverflowMenuVertical />
+							</div>
 						</div>
 					</div>
 				</Button>

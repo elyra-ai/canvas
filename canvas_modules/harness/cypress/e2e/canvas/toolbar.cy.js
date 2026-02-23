@@ -114,19 +114,19 @@ describe("Test for toolbar resize", function() {
 	it("Test number of items in toolbar for different window sizes", function() {
 		cy.wait(10);
 		cy.viewport(400, 600);
-		cy.verifyNumberOfItemsInToolbar(8);
+		cy.verifyNumberOfItemsInToolbar(8); // Appears as 7 in Cypress after resize handler has run
 
 		cy.viewport(500, 600);
-		cy.verifyNumberOfItemsInToolbar(10);
+		cy.verifyNumberOfItemsInToolbar(11); // Appears as 10 in Cypress after resize handler has run
 
 		cy.viewport(540, 600);
-		cy.verifyNumberOfItemsInToolbar(11);
+		cy.verifyNumberOfItemsInToolbar(12); // Appears as 11 in Cypress after resize handler has run
 
 		cy.viewport(580, 600);
 		cy.verifyNumberOfItemsInToolbar(12);
 
 		cy.viewport(620, 600);
-		cy.verifyNumberOfItemsInToolbar(13);
+		cy.verifyNumberOfItemsInToolbar(12);
 
 		cy.viewport(660, 600);
 	});

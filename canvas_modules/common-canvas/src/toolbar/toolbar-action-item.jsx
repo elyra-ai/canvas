@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -262,7 +262,7 @@ ToolbarActionItem.propTypes = {
 			PropTypes.string,
 			PropTypes.object
 		]),
-		incLabelWithIcon: PropTypes.oneOf(["no", "before", "after"]),
+		incLabelWithIcon: PropTypes.oneOf(["no", "before", "after", "label-only"]),
 		purpose: PropTypes.oneOf(["single", "dual"]),
 		enable: PropTypes.bool,
 		iconEnabled: PropTypes.oneOfType([

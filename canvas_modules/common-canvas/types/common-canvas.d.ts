@@ -48,8 +48,9 @@ import type {
 } from "./canvas-controller.d.ts";
 
 import { CanvasController } from "./canvas-controller.js"; // Import the JS and TS
+import { Action } from "./action.js"; // Import the JS and TS
 
-export { CanvasController };
+export { CanvasController, Action };
 
 export type {
   // Pipeline flow

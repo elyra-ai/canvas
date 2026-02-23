@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -870,6 +870,7 @@ export default class SVGCanvasRenderer {
 			.attr("height", (50 + node.height) * zoomScale) // Add some extra pixels, in case label is below label bottom
 			.attr("x", 0)
 			.attr("y", 0)
+			.attr("aria-hidden", true)
 			.attr("class", "d3-ghost-svg");
 
 		const ghostGrp = ghostAreaSVG
@@ -1847,15 +1848,15 @@ export default class SVGCanvasRenderer {
 			.attr("d", (d) => this.getNodeShapePathSizing(d));
 
 		// Node Sizing Area
-		// This is inserted as first child because, on supernode expansion, this may be
-		// opened after other objects like the body and label etc.
 		nonBindingNodeGrps
 			.selectChildren(".d3-node-sizing")
 			.data((d) => (CanvasUtils.isNodeResizable(d, this.config) ? [d] : []), (d) => d.id)
 			.join(
 				(enter) =>
 					enter
-						.insert("path", ":first-child")
+						.insert("path",
+							(d, i, newNodes) =>
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-node-sizing"))
 						.attr("class", "d3-node-sizing")
 						.call(this.attachNodeSizingListeners.bind(this))
 			)
@@ -1869,7 +1870,9 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) =>
 					enter
-						.append("path")
+						.insert("path",
+							(d, i, newNodes) =>
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-node-selection-highlight"))
 						.attr("class", "d3-node-selection-highlight")
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
@@ -1884,7 +1887,9 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) =>
 					enter
-						.append("path")
+						.insert("path",
+							(d, i, newNodes) =>
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-node-body-outline"))
 						.attr("class", "d3-node-body-outline")
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
@@ -1898,7 +1903,9 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) =>
 					enter
-						.append("foreignObject")
+						.insert("foreignObject",
+							(d, i, newNodes) =>
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-foreign-object-external-node"))
 						.attr("class", "d3-foreign-object-external-node"),
 				null,
 				(exit) => {
@@ -1922,7 +1929,10 @@ export default class SVGCanvasRenderer {
 			.data((d) => (d.layout.imageDisplay ? [d] : []), (d) => d.id)
 			.join(
 				(enter) =>
-					enter.append((d) => this.getImageElement(d))
+					enter
+						.insert((d) => this.getImageElement(d),
+							(d, i, newNodes) =>
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-node-image"))
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.each((d, idx, imgs) => this.setNodeImageContent(d, idx, imgs))
@@ -1939,7 +1949,9 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) => {
 					const labelFOSel = enter
-						.append("foreignObject")
+						.insert("foreignObject",
+							(d, i, newNodes) =>
+								this.nodeUtils.getBeforeElement(newNodes[i]._parent, "d3-foreign-object-node-label"))
 						.attr("class", "d3-foreign-object-node-label")
 						.call(this.attachNodeLabelListeners.bind(this));
 					labelFOSel
@@ -2110,6 +2122,7 @@ export default class SVGCanvasRenderer {
 				const obj = d3.select(inputPorts[i]);
 				obj
 					.append(portDisplayInfo.tag)
+					.attr("tabindex", -1)
 					.attr("class", "d3-node-port-input-main" +
 						(portDisplayInfo.tag === "foreignObject" ? " d3-foreign-object-port-jsx" : ""));
 
@@ -2215,6 +2228,7 @@ export default class SVGCanvasRenderer {
 				const obj = d3.select(outputPorts[i]);
 				obj
 					.append(portDisplayInfo.tag)
+					.attr("tabindex", -1)
 					.attr("class", "d3-node-port-output-main" +
 						(portDisplayInfo.tag === "foreignObject" ? " d3-foreign-object-port-jsx" : ""));
 
@@ -2942,7 +2956,8 @@ export default class SVGCanvasRenderer {
 				.attr("class", this.decUtils.getDecClass(dec, `d3-${objType}-dec-path`))
 				.attr("x", 0)
 				.attr("y", 0)
-				.attr("d", dec.path);
+				.attr("d", dec.path)
+				.attr("aria-label", dec.tooltip ? dec.tooltip : this.canvasController.labelUtil.getLabel("decoration.shapeDecoration"));
 		} else {
 			pathSel.remove();
 		}
@@ -2960,7 +2975,7 @@ export default class SVGCanvasRenderer {
 				.attr("y", this.decUtils.getDecPadding(dec, d, objType))
 				.attr("width", this.decUtils.getDecWidth(dec, d, objType) - (2 * this.decUtils.getDecPadding(dec, d, objType)))
 				.attr("height", this.decUtils.getDecHeight(dec, d, objType) - (2 * this.decUtils.getDecPadding(dec, d, objType)))
-				.attr("aria-label", "Image decoration")
+				.attr("aria-label", dec.tooltip ? dec.tooltip : this.canvasController.labelUtil.getLabel("decoration.imageDecoration"))
 				.each(() => this.setDecImageContent(imageSel, dec.image));
 		} else {
 			imageSel.remove();
@@ -2986,6 +3001,7 @@ export default class SVGCanvasRenderer {
 			labelSel
 				.attr("width", this.decUtils.getDecLabelWidth(dec, d, objType))
 				.attr("height", this.decUtils.getDecLabelHeight(dec, d, objType))
+				.attr("aria-label", escapeText(dec.label))
 				.select("div")
 				.attr("class", this.decUtils.getDecLabelClass(dec, objType))
 				.select("span")
@@ -3006,7 +3022,7 @@ export default class SVGCanvasRenderer {
 					.attr("tabindex", -1)
 					.attr("x", 0)
 					.attr("y", 0)
-					.attr("aria-label", "JSX decoration");
+					.attr("aria-label", dec.tooltip ? dec.tooltip : this.canvasController.labelUtil.getLabel("decoration.jsxDecoration"));
 			}
 			extSel
 				.attr("width", this.decUtils.getDecWidth(dec, d, objType))
@@ -3073,6 +3089,23 @@ export default class SVGCanvasRenderer {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						this.callDecoratorCallback(d3Event, d, dec);
 					}
+				}
+			})
+			.on("focus", (d3Event, dec) => {
+				if (this.canOpenTip(TIP_TYPE_DEC) && dec.tooltip) {
+					this.canvasController.closeTip(); // Ensure any existing tip is removed
+					this.canvasController.openTip({
+						id: this.getId("dec_tip", dec.id),
+						type: TIP_TYPE_DEC,
+						targetObj: d3Event.currentTarget,
+						pipelineId: this.activePipeline.id,
+						decoration: dec
+					});
+				}
+			})
+			.on("blur", (d3Event, dec) => {
+				if (this.canOpenTip(TIP_TYPE_DEC) && dec.tooltip) {
+					this.canvasController.closeTip();
 				}
 			})
 			.on("mouseenter", (d3Event, dec) => {

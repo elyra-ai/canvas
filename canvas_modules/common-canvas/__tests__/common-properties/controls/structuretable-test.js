@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -428,12 +428,15 @@ describe("structuretable control renders correctly", () => {
 		expect(columns[0].querySelectorAll("input")).to.have.length(1); // checkbox
 		expect(columns[1].querySelectorAll(".tooltip-container")).to.have.length(1);
 		expect(columns[2].querySelectorAll(".tooltip-container")).to.have.length(1);
-		expect(columns[3].querySelectorAll(".tooltip-container")).to.have.length(1);
+		expect(columns[3].querySelectorAll(".properties-truncated-tooltip .tooltip-container")).to.have.length(1);
+		expect(columns[3].querySelectorAll(".properties-vt-info-icon-tip .tooltip-container")).to.have.length(1);
 		expect(columns[3].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
 		expect(columns[4].querySelectorAll(".tooltip-container")).to.have.length(1);
-		expect(columns[5].querySelectorAll(".tooltip-container")).to.have.length(1);
+		expect(columns[5].querySelectorAll(".properties-truncated-tooltip .tooltip-container")).to.have.length(1);
+		expect(columns[5].querySelectorAll(".properties-vt-info-icon-tip .tooltip-container")).to.have.length(1);
 		expect(columns[5].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
-		expect(columns[6].querySelectorAll(".tooltip-container")).to.have.length(1);
+		expect(columns[6].querySelectorAll(".properties-truncated-tooltip .tooltip-container")).to.have.length(1);
+		expect(columns[6].querySelectorAll(".properties-vt-info-icon-tip .tooltip-container")).to.have.length(1);
 		expect(columns[6].querySelectorAll("svg.properties-vt-info-icon")).to.have.length(1);
 	});
 
@@ -455,7 +458,7 @@ describe("structuretable control renders correctly", () => {
 		let tableWrapper = container.querySelector("div[data-id='properties-keys']");
 		// Clear selected rows from table toolbar
 		const tableToolbar = container.querySelector("div.properties-table-toolbar");
-		const cancelButton = tableToolbar.querySelector("button.action-cancel");
+		const cancelButton = tableToolbar.querySelector(".toolbar-item.cancel-action button");
 		fireEvent.click(cancelButton);
 
 		// select the add column button
@@ -836,14 +839,14 @@ describe("structuretable multiselect edit works", () => {
 		// verify that the edit button is not present in table toolbar
 		const tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		let editButton = container.querySelectorAll("button.properties-action-multi-select-edit");
+		let editButton = container.querySelectorAll(".toolbar-item.multiSelectEdit-action button");
 		expect(editButton).to.have.length(0);
 
 		// multiple select the four rows in the table
 		tableUtilsRTL.selectCheckboxes(container, [1, 2, 3]);
 
 		// verify that the edit button is present
-		editButton = container.querySelectorAll("button.properties-action-multi-select-edit");
+		editButton = container.querySelectorAll(".toolbar-item.multiSelectEdit-action button");
 		expect(editButton).to.have.length(1);
 	});
 	it("mse table should show header even when rows are filtered", () => {
@@ -872,7 +875,7 @@ describe("structuretable multiselect edit works", () => {
 		// verify that the table toolbar is present and it has edit button
 		tableToolbar = container.querySelectorAll("div.properties-table-toolbar");
 		expect(tableToolbar).to.have.length(1);
-		const editButton = tableToolbar[0].querySelectorAll("button.properties-action-multi-select-edit");
+		const editButton = tableToolbar[0].querySelectorAll(".toolbar-item.multiSelectEdit-action button");
 		expect(editButton).to.have.length(1);
 	});
 });
@@ -902,7 +905,7 @@ describe("structuretable multiselect edit works incrementally", () => {
 
 		// Click edit button in table toolbar
 		let tableToolbar = container.querySelector("div.properties-table-toolbar");
-		let editButton = tableToolbar.querySelector("button.properties-action-multi-select-edit");
+		let editButton = tableToolbar.querySelector(".toolbar-item.multiSelectEdit-action button");
 		fireEvent.click(editButton);
 
 		// A new panel opens which shows editable columns
@@ -942,7 +945,7 @@ describe("structuretable multiselect edit works incrementally", () => {
 
 		// Select Football for Sport
 		tableToolbar = container.querySelector("div.properties-table-toolbar");
-		editButton = tableToolbar.querySelector("button.properties-action-multi-select-edit");
+		editButton = tableToolbar.querySelector(".toolbar-item.multiSelectEdit-action button");
 		fireEvent.click(editButton);
 
 		dropdownWrapper = container.querySelector("div[data-id='properties-ctrl-dummy_entry_sport_name']").querySelector(".properties-dropdown");

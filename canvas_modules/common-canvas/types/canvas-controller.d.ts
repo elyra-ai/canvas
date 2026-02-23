@@ -46,6 +46,7 @@ import type {
   CanvasAssociationLink
 } from "@elyra/pipeline-schemas/types/index.d.ts";
 
+import type { Action } from "./action.d.ts";
 
 /** Existing internal common canvas actions */
 export type InternalAction =
@@ -1020,6 +1021,18 @@ export declare class CanvasController {
         | Omit<Partial<CanvasModelNode>, "id">,
       pipelineId?: PipelineId
     ): void;
+
+    /**
+    * Sets the nodes properties
+    * @param nodesProperties - An array of object containing properties to be overridden in the node
+    * @param pipelineId - Optional. The ID of the pipeline of the node.
+    *                     Defaults to the currently displayed pipeline.
+    */
+    setNodesProperties(
+      nodesProperties: Partial<CanvasNode>[],
+      pipelineId?: PipelineId
+    ): void;
+
     /**
      * Sets the node parameters
      * @param nodeId - The ID of the node
@@ -2258,13 +2271,7 @@ export declare class CanvasController {
      * do() method of the command to be called.
      */
     do(
-      command: {
-        do(): void;
-        undo(): void;
-        redo(): void;
-        getLabel(): string;
-        getFocusObject(): "CanvasFocus" | object;
-      }
+      command: Action
     ): void;
 
     /**

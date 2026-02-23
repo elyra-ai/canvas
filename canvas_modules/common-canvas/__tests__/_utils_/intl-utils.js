@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,25 @@
 import React from "react";
 import { IntlProvider } from "react-intl";
 import { render } from "./mount-utils.js";
+import * as commonPropertiesMessages from "../../locales/common-properties/locales/en.json";
+import * as harnessPropertiesMessages from "../../../harness/src/intl/locales/en.json";
 
 const defaultLocale = "en-US";
 const locale = defaultLocale;
 
+// Add mock custom field types for tests
+const testMessages = {
+	...commonPropertiesMessages,
+	...harnessPropertiesMessages,
+	"fieldPicker.unknown.label": "unknown",
+	"fieldPicker.customType.label": "custom type",
+	"fieldPicker.vectorType.label": "vector type"
+};
+
 export function renderWithIntl(node, inOptions) {
 	// eslint-disable-next-line react/prop-types
 	function Wrapper({ children }) {
-		return (<IntlProvider locale={locale} defaultLocale={defaultLocale}>{children}</IntlProvider>);
+		return (<IntlProvider locale={locale} defaultLocale={defaultLocale} messages={testMessages}>{children}</IntlProvider>);
 	}
 	return render(node, { wrapper: Wrapper, ...inOptions });
 }

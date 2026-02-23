@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Elyra Authors
+ * Copyright 2024-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Button } from "@carbon/react";
 import { TrashCan, Edit, UpToTop, ChevronUp, ChevronDown, DownToBottom } from "@carbon/react/icons";
 import { MESSAGE_KEYS, STATES } from "../../constants/constants";
 import Toolbar from "../../../toolbar/toolbar";
@@ -73,49 +72,22 @@ class TableToolbar extends React.Component {
 	}
 
 
-	getRightToolbarConfig() {
+	getLeftBarConfig() {
 		const editLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_EDIT);
 		const deleteLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_DELETE);
 		const cancelLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_BUTTON_CANCEL);
-		const applyLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL);
-		const rejectLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
-		const editBtn = {
-			action: "multiSelectEdit",
-			jsx: (
-				<SubPanelInvoker ref={(ref) => (this.subPanelInvoker = ref)}
-					rightFlyout={this.props.rightFlyout}
-					applyLabel={applyLabel}
-					rejectLabel={rejectLabel}
-					controller={this.props.controller}
-				>
-					<Button
-						className="properties-action-multi-select-edit"
-						size="sm"
-						renderIcon={Edit}
-						hasIconOnly
-						iconDescription={editLabel}
-						tooltipPosition="bottom"
-						onClick={this.showSubPanel}
-					/>
-				</SubPanelInvoker>
-			)
-		};
 
+		const editBtn = { action: "multiSelectEdit", label: editLabel, iconEnabled: (<Edit />), enable: true, kind: "primary" };
 		const deleteBtn = (this.props.addRemoveRows && !this.props.isReadonlyTable && !this.props.isSingleSelectTable)
 			? { action: "delete", label: deleteLabel, iconEnabled: (<TrashCan />), enable: true, kind: "primary" } : null;
-		const cancelBtn = {
-			action: "cancel",
-			jsx: (
-				<Button size="sm" className="action-cancel" onClick={this.handleCancel}>
-					{cancelLabel}
-				</Button>
-			)
-		};
+		const cancelBtn = { action: "cancel", label: cancelLabel, enable: true, incLabelWithIcon: "label-only", kind: "primary" };
+
 		// For delete, edit, show its divider only if those icons are present
 		const toolbarConfig = [
 			...(this.props.moveableRows ? this.getTableRowMoveButtons() : []),
 			deleteBtn,
 			this.props.multiSelectEdit ? editBtn : null,
+			{ divider: true },
 			cancelBtn
 		];
 		return toolbarConfig;
@@ -167,7 +139,7 @@ class TableToolbar extends React.Component {
 		);
 	}
 
-	getLeftBarConfig() {
+	getLeftTitleContents() {
 		const singleRowSelectedLabel = (this.props.smallFlyout)
 			? formatMessage(this.reactIntl, MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL_SMALL_FLYOUT) // item
 			: formatMessage(this.reactIntl, MESSAGE_KEYS.SINGLE_SELECTED_ROW_LABEL); // item selected
@@ -177,12 +149,9 @@ class TableToolbar extends React.Component {
 		const title = (this.props.selectedRows.length === 1)
 			? `${this.props.selectedRows.length} ${singleRowSelectedLabel}`
 			: `${this.props.selectedRows.length} ${multiRowsSelectedLabel}`;
-		return [{
-			action: "summary",
-			jsx: (<div className="properties-batch-summary" >
-				<span >{title}</span>
-			</div>)
-		}];
+		return (<div className="properties-batch-summary" role="button" aria-roledescription="text">
+			<span >{title}</span>
+		</div>);
 	}
 
 	toolbarActionHandler(action) {
@@ -198,6 +167,8 @@ class TableToolbar extends React.Component {
 			this.handleCancel();
 		} else if (action === "delete") {
 			this.props.removeSelectedRows();
+		} else if (action === "multiSelectEdit") {
+			this.showSubPanel();
 		}
 	}
 
@@ -327,19 +298,35 @@ class TableToolbar extends React.Component {
 	render() {
 		if ((this.props.addRemoveRows || this.props.moveableRows || this.props.multiSelectEdit) && this.props.selectedRows.length > 0) {
 			const toolbarConfig = {
-				leftBar: this.getLeftBarConfig(),
-				rightBar: this.getRightToolbarConfig()
+				leftBar: this.getLeftBarConfig()
 			};
+			const multiSelectInvoker = this.props.multiSelectEdit
+				? (
+					<SubPanelInvoker ref={(ref) => (this.subPanelInvoker = ref)}
+						rightFlyout={this.props.rightFlyout}
+						applyLabel={formatMessage(this.reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL)}
+						rejectLabel={formatMessage(this.reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL)}
+						controller={this.props.controller}
+					/>
+				) : null;
 
 			return (
-				<div className="properties-table-toolbar" >
-					<Toolbar
-						config={toolbarConfig}
-						instanceId={0}
-						size="sm"
-						toolbarActionHandler={this.toolbarActionHandler}
-						additionalText={{ overflowMenuLabel: formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_OVERFLOW_LABEL) }}
-					/>
+				<div className={"properties-table-toolbar"}>
+					{this.getLeftTitleContents()}
+					{multiSelectInvoker}
+					<div className="properties-toolbar-items floating-toolbar">
+						<Toolbar
+							config={toolbarConfig}
+							instanceId={0}
+							size="sm"
+							toolbarActionHandler={this.toolbarActionHandler}
+							additionalText={{
+								overflowMenuLabel: formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_OVERFLOW_LABEL),
+								ariaLabel: formatMessage(this.reactIntl, MESSAGE_KEYS.TABLE_TOOLBAR_LABEL, { table_label: this.props.tableLabel })
+							}}
+							containingDivId={this.props.containingDivId}
+						/>
+					</div>
 				</div>
 			);
 		}
@@ -358,6 +345,7 @@ TableToolbar.propTypes = {
 	rightFlyout: PropTypes.bool,
 	smallFlyout: PropTypes.bool, // list control in right flyout having editor size small
 	tableState: PropTypes.string,
+	tableLabel: PropTypes.string.isRequired,
 	isReadonlyTable: PropTypes.bool,
 	isSingleSelectTable: PropTypes.bool,
 	addRemoveRows: PropTypes.bool,
@@ -365,7 +353,8 @@ TableToolbar.propTypes = {
 	multiSelectEdit: PropTypes.bool,
 	multiSelectEditSubPanel: PropTypes.element,
 	multiSelectEditRowPropertyId: PropTypes.object,
-	disableRowMoveButtons: PropTypes.bool // set by redux,
+	disableRowMoveButtons: PropTypes.bool, // set by redux
+	containingDivId: PropTypes.string
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -374,5 +363,3 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 export default connect(mapStateToProps)(TableToolbar);
-
-

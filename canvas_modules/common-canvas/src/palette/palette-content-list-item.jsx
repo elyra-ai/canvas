@@ -113,10 +113,12 @@ class PaletteContentListItem extends React.Component {
 		}
 	}
 
-	onClick() {
+	onClick(evt) {
 		if (this.props.allowClickToAdd) {
 			this.createAutoNode(true);
 		}
+		// Prevent click going to toolbar when palette is embedded in a node.
+		evt.stopPropagation();
 	}
 
 	onMouseOver(evt) {
