@@ -390,7 +390,12 @@ class EditorForm extends React.Component {
 				<Link className="properties-link-text" onClick={this._handleMessageClick.bind(this, uiItem.controlId)} >
 					{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}
 				</Link>);
-			return <div key={"link-text." + key} className={textClass} >{icon}{text}</div>;
+			return (
+				<div key={"link-text." + key} className={textClass} >
+				    <div className="properties-alerts-icon">{icon}</div>
+				    {text}
+				</div>
+			);
 		case ("hSeparator"):
 			return <hr key={"h-separator." + key} className="properties-h-separator" />;
 		case ("panel"):
