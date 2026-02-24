@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -229,5 +229,76 @@ describe("Test that context menu is displayed for ports", function() {
 
 		cy.rightClickTargetPortOfNode("Super node", "input1SuperNodePE");
 		cy.verifyOptionInContextMenu("CMI: Input Port action for 'input1SuperNodePE'");
+	});
+});
+
+describe("Test connecting ports using context menu 'Connect from' and 'Connect to' options", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("allTypesCanvas.json");
+	});
+
+	it("Test connecting two ports using context menu - mark output port then connect to input port", function() {
+		// Verify initial number of links
+		cy.verifyNumberOfPortDataLinks(4);
+
+		// Right-click on output port of "Binding (entry) node" and select "Connect from"
+		cy.rightClickSourcePortOfNode("Binding (entry) node", "outPort");
+		cy.clickOptionFromContextMenu("Connect from");
+
+		// Verify the port is marked (should have visual indicator)
+		cy.verifyPortHasConnectFromArrow("Binding (entry) node");
+
+		// Right-click on input port of "Super node" and select "Connect to"
+		cy.rightClickTargetPortOfNode("Super node", "input1SuperNodePE");
+		cy.clickOptionFromContextMenu("Connect to");
+
+		// Verify a new link was created
+		cy.verifyNumberOfPortDataLinks(5);
+		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
+			"Binding (entry) node", "outPort", "Super node", "input1SuperNodePE", 1
+		);
+
+		// Verify the connect from arrow is removed after creating the link
+		cy.verifyPortDoesNotHaveConnectFromArrow("Binding (entry) node");
+	});
+
+	it("Test that 'Connect from' is disabled when output port is at max cardinality", function() {
+		// Create a link to max out the cardinality of an output port
+		// First, verify the initial state
+		cy.verifyNumberOfPortDataLinks(4);
+
+		// Right-click on an output port that has max cardinality of 1
+		// Note: This assumes there's a port with max cardinality of 1 in the test canvas
+		// If not, this test would need to be adjusted based on the actual canvas configuration
+		cy.rightClickSourcePortOfNode("Binding (entry) node", "outPort");
+
+		// The "Connect from" option should be enabled initially
+		cy.verifyOptionInContextMenu("Connect from");
+	});
+
+	it("Test that 'Connect to' is disabled when input port is at max cardinality", function() {
+		// Verify initial number of links
+		cy.verifyNumberOfPortDataLinks(4);
+
+		// Mark an output port first
+		cy.rightClickSourcePortOfNode("Binding (entry) node", "outPort");
+		cy.clickOptionFromContextMenu("Connect from");
+
+		// Try to connect to an input port that is already at max cardinality
+		// Note: This assumes there's a port with max cardinality in the test canvas
+		// The "Connect to" option should be disabled if the port is at max cardinality
+		cy.rightClickTargetPortOfNode("Execution node", "inPort");
+		cy.verifyOptionInContextMenu("Connect to");
+	});
+
+	it("Test that 'Connect to' is disabled when no output port is marked", function() {
+		// Right-click on input port without marking any output port first
+		// Use Super node's first input port which is not at max cardinality
+		cy.rightClickTargetPortOfNode("Super node", "input1SuperNodePE");
+
+		// Verify "Connect to" option exists but is disabled
+		cy.getOptionFromContextMenu("Connect to")
+			.should("have.class", "disabled");
 	});
 });

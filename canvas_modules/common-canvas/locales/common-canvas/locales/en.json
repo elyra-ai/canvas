@@ -47,6 +47,8 @@
   "node.saveToPalette": "Save to palette",
   "port.ariaRoleDescription": "port",
   "port.markedForOutput": "{label}. Marked for output",
+  "port.markForOutput": "Connect from",
+  "port.connectTo": "Connect to",
   "decoration.ariaRoleDescription": "decoration",
   "decoration.imageDecoration": "Image decoration",
   "decoration.shapeDecoration": "Shape decoration",

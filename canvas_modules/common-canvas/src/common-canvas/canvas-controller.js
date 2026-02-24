@@ -2761,6 +2761,31 @@ export default class CanvasController {
 			this.objectModel.ensurePipelineIsLoaded(data);
 			break;
 		}
+		case "connectFromPort": {
+			this.setPortConnectFrom(data.id, data.port.id, data.pipelineId);
+			break;
+		}
+		case "connectToPort": {
+			const connectFromInfo = this.getConnectFromInfo(data.pipelineId);
+			if (connectFromInfo) {
+				const srcNode = connectFromInfo.node;
+				const trgNode = this.getNode(data.id, data.pipelineId);
+
+				if (srcNode && trgNode) {
+					// Get the SVG canvas D3 object which has the renderer
+					const svgCanvasD3 = this.getSVGCanvasD3();
+					// Use dragNewLinkUtils to create the link
+					// This handles all validation and link replacement logic
+					svgCanvasD3?.renderer?.dragNewLinkUtils?.createNewNodeLink(
+						srcNode,
+						connectFromInfo.portId,
+						trgNode,
+						data.port.id
+					);
+				}
+			}
+			break;
+		}
 		default:
 		}
 
