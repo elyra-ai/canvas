@@ -2676,6 +2676,21 @@ export default class SVGCanvasRenderer {
 						if (connectFromInfo) {
 							this.dragNewLinkUtils.createNewNodeLink(connectFromInfo.node, connectFromInfo.portId, node, port.id);
 						}
+
+					} else if (KeyboardUtils.displayContextOptions(d3Event)) {
+						// Don't let keypress go through to the Canvas otherwise the
+						// canvas context menu/toolbar will be opened.
+						d3Event.stopPropagation();
+
+						// Simulates a single right-button click on the port
+						this.selectObject(node, SINGLE_CLICK_CONTEXTMENU);
+
+						if (this.config.enableContextToolbar) {
+							this.addContextToolbar(d3Event, node, "input_port", CAUSE_KEYBOARD, null, null, port);
+						} else {
+							const pos = this.getObjectCenterPosition(d3Event.currentTarget);
+							this.openContextMenu(d3Event, "input_port", node, port, pos);
+						}
 					}
 				}
 			})
@@ -2740,6 +2755,21 @@ export default class SVGCanvasRenderer {
 					} else if (KeyboardUtils.addConnectFromStatus(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						this.canvasController.setPortConnectFrom(node.id, port.id, this.activePipeline.id);
+
+					} else if (KeyboardUtils.displayContextOptions(d3Event)) {
+						// Don't let keypress go through to the Canvas otherwise the
+						// canvas context menu/toolbar will be opened.
+						d3Event.stopPropagation();
+
+						// Simulates a single right-button click on the port
+						this.selectObject(node, SINGLE_CLICK_CONTEXTMENU);
+
+						if (this.config.enableContextToolbar) {
+							this.addContextToolbar(d3Event, node, "output_port", CAUSE_KEYBOARD, null, null, port);
+						} else {
+							const pos = this.getObjectCenterPosition(d3Event.currentTarget);
+							this.openContextMenu(d3Event, "output_port", node, port, pos);
+						}
 					}
 				}
 			})
@@ -3445,9 +3475,14 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	getDefaultContextToolbarPos(objType, d) {
+	getDefaultContextToolbarPos(objType, d, port) {
 		if (objType === "link") {
 			return { ...d.pathInfo.centerPoint };
+
+		} else if (objType === "input_port" || objType === "output_port") {
+			// For ports, d is the node and port contains cx/cy coordinates relative to the node
+			// Convert to absolute canvas coordinates by adding node position
+			return { x: d.x_pos + port.cx, y: d.y_pos + port.cy };
 
 		} else if (objType === "node" && d.layout.contextToolbarPosition === "topCenter" && !d.is_expanded) {
 			return { x: d.x_pos + (d.width / 2), y: d.y_pos };
@@ -3456,17 +3491,17 @@ export default class SVGCanvasRenderer {
 		return { x: d.x_pos + d.width, y: d.y_pos };
 	}
 
-	addContextToolbar(d3Event, d, objType, cause, xPos, yPos) {
+	addContextToolbar(d3Event, d, objType, cause, xPos, yPos, port) {
 		if (!this.isSizing() && !this.isDragging() &&
 				!this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
 			if (cause === CAUSE_MOUSE) {
 				this.canvasController.setMouseInObject(d.id);
 			}
-			let pos = this.getDefaultContextToolbarPos(objType, d);
+			let pos = this.getDefaultContextToolbarPos(objType, d, port);
 			pos.x = xPos ? pos.x + xPos : pos.x;
 			pos.y = yPos ? pos.y + yPos : pos.y;
 			pos = this.zoomUtils.unTransformPos(pos);
-			this.openContextMenu(d3Event, objType, d, null, pos);
+			this.openContextMenu(d3Event, objType, d, port, pos);
 		}
 	}
 
