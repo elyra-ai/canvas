@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -514,10 +514,20 @@ Cypress.Commands.add("verifyPortConnectFromArrowExists", (nodeLabel) => {
 		.should("exist");
 });
 
+// Alias for verifyPortConnectFromArrowExists
+Cypress.Commands.add("verifyPortHasConnectFromArrow", (nodeLabel) => {
+	cy.verifyPortConnectFromArrowExists(nodeLabel);
+});
+
 Cypress.Commands.add("verifyPortConnectFromArrowDoesNotExist", (nodeLabel) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.find(".d3-node-port-output-connect-from-arrow")
 		.should("not.exist");
+});
+
+// Alias for verifyPortConnectFromArrowDoesNotExist
+Cypress.Commands.add("verifyPortDoesNotHaveConnectFromArrow", (nodeLabel) => {
+	cy.verifyPortConnectFromArrowDoesNotExist(nodeLabel);
 });
 
 Cypress.Commands.add("pressOnOutputPort", (nodeLabel, keyObj) => {

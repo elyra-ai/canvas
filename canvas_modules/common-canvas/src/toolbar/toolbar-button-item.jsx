@@ -27,7 +27,8 @@ import { StopFilledAlt, Play, Undo, Redo, Chat, ChatOff, Result,
 	Cut, Copy, Paste, Edit,	ColorPalette, Maximize, Minimize,
 	Launch, AddComment, TrashCan, ZoomIn, ZoomOut,
 	Checkmark, ChevronRight, ChevronDown, ChevronUp,
-	CenterToFit, OpenPanelFilledLeft, ArrangeVertical, ArrangeHorizontal } from "@carbon/react/icons";
+	CenterToFit, OpenPanelFilledLeft, ArrowRight,
+	ArrangeVertical, ArrangeHorizontal } from "@carbon/react/icons";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT,
@@ -36,7 +37,8 @@ import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_DELETE_SELECTED_OBJECTS, TOOLBAR_DELETE_LINK,
 	TOOLBAR_ZOOM_IN, TOOLBAR_ZOOM_OUT, TOOLBAR_ZOOM_FIT,
 	TOOLBAR_ARRANGE_HORIZONTALLY, TOOLBAR_ARRANGE_VERTICALLY,
-	TOOLBAR_OPEN_PALETTE, TOOLBAR_CLOSE_PALETTE, TOOLBAR_TOGGLE_PALETTE, TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
+	TOOLBAR_OPEN_PALETTE, TOOLBAR_CLOSE_PALETTE, TOOLBAR_TOGGLE_PALETTE,
+	TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_CONNECT_FROM_PORT, TOOLBAR_CONNECT_TO_PORT,
 	TOOLBAR_SHOW_COMMENTS, TOOLBAR_HIDE_COMMENTS,
 	TOOLBAR_EXPAND_SUPERNODE_IN_PLACE, TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE,
 	TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE, TOOLBAR_SET_NODE_LABEL_EDIT, TOOLBAR_SET_COMMENT_EDIT_MODE }
@@ -92,6 +94,10 @@ class ToolbarButtonItem extends React.Component {
 			return <Copy disabled={disabled} />;
 		case (TOOLBAR_PASTE):
 			return <Paste disabled={disabled} />;
+		case (TOOLBAR_CONNECT_FROM_PORT):
+			return <ArrowRight disabled={disabled} />;
+		case (TOOLBAR_CONNECT_TO_PORT):
+			return <ArrowRight disabled={disabled} />;
 		case (TOOLBAR_CREATE_COMMENT):
 		case (TOOLBAR_CREATE_AUTO_COMMENT):
 		case (TOOLBAR_CREATE_WYSIWYG_COMMENT):

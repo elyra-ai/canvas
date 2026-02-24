@@ -594,6 +594,11 @@ g.d3-link-dec-group:focus {
 	stroke: $node-port-output-stroke-color;
 	fill: $node-body-fill;
 	stroke-width: 1.25;
+
+	& circle {
+		outline: none;
+	}
+
 	& foreignobject {
 		outline: none;
 	}
@@ -661,6 +666,11 @@ g.d3-link-dec-group:focus {
 	stroke: $node-port-input-stroke-color;
 	fill: $node-port-input-fill-color;
 	stroke-width: 1.25;
+
+	& circle {
+		outline: none;
+	}
+
 	& foreignobject {
 		outline: none;
 	}

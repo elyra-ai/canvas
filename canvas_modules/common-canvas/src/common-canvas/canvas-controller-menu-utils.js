@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import { get } from "lodash";
 import { LINK_SELECTION_NONE, SUPER_NODE, WYSIWYG } from "./constants/canvas-constants";
+import CanvasUtils from "./common-canvas-utils";
 
 // Global temporary variable to handle the canvas controller.
 let cc = null;
@@ -119,7 +120,9 @@ const isEditingAction = (action) =>
 	action === "convertSuperNodeExternalToLocal" ||
 	action === "convertSuperNodeLocalToExternal" ||
 	action === "deleteLink" ||
-	action === "saveToPalette"
+	action === "saveToPalette" ||
+	action === "connectFromPort" ||
+	action === "connectToPort"
 ;
 
 // Returns a default context menu definition for the source object and canvas
@@ -292,6 +295,34 @@ const createDefaultContextMenu = (source) => {
 		menuDefinition = menuDefinition.concat(
 			{ divider: true },
 			{ action: "saveToPalette", label: getLabel("node.saveToPalette") }
+		);
+	}
+	// Mark output port for creating links
+	if (source.type === "output_port") {
+		// Check if the port can accept more connections based on cardinality
+		const node = cc.getNode(source.id, source.pipelineId);
+		const links = cc.getLinks(source.pipelineId);
+		const isCardinalityAtMax = CanvasUtils.isSrcCardinalityAtMax(source.port.id, node, links);
+
+		menuDefinition = menuDefinition.concat(
+			{ action: "connectFromPort", label: getLabel("port.markForOutput"), enable: !isCardinalityAtMax, toolbarItem: true, iconEnabled: "ArrowRight" }
+		);
+	}
+	// Connect to input port from marked output port
+	if (source.type === "input_port") {
+		const connectFromInfo = cc.getConnectFromInfo(source.pipelineId);
+		const hasMarkedPort = connectFromInfo !== null;
+
+		// Check if the input port can accept more connections based on cardinality
+		const node = cc.getNode(source.id, source.pipelineId);
+		const links = cc.getLinks(source.pipelineId);
+		const isCardinalityAtMax = CanvasUtils.isTrgCardinalityAtMax(source.port.id, node, links);
+
+		// Enable only if there's a marked port AND this port can accept more connections
+		const isEnabled = hasMarkedPort && !isCardinalityAtMax;
+
+		menuDefinition = menuDefinition.concat(
+			{ action: "connectToPort", label: getLabel("port.connectTo"), enable: isEnabled, toolbarItem: true, iconEnabled: "ArrowLeft" }
 		);
 	}
 
