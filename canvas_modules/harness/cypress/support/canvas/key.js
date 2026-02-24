@@ -23,6 +23,7 @@ keys.selectAll = { key: "a", metaKey: true, release: true };
 keys.delete = { key: "Delete", metaKey: false, release: true };
 
 keys.contextMenu = { key: ",", metaKey: true, release: true };
+keys.contextMenuShiftF10 = { key: "F10", shiftKey: true, release: true };
 keys.moveObjectDown = { key: "ArrowDown", metaKey: true, release: true };
 keys.sizeObjectDown = { key: "ArrowDown", metaKey: false, shiftKey: true, release: true };
 
