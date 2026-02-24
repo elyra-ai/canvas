@@ -172,6 +172,8 @@ class CommonCanvasContextToolbar extends React.Component {
 		return (
 			objType === "link" ||
 			objType === "canvas" ||
+			objType === "input_port" ||
+			objType === "output_port" ||
 			objType === "node" &&
 				this.props.contextSource.targetObject.layout.contextToolbarPosition === "topCenter" &&
 				!this.props.contextSource.targetObject.is_expanded);
