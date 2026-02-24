@@ -27,7 +27,7 @@ import { StopFilledAlt, Play, Undo, Redo, Chat, ChatOff, Result,
 	Cut, Copy, Paste, Edit,	ColorPalette, Maximize, Minimize,
 	Launch, AddComment, TrashCan, ZoomIn, ZoomOut,
 	Checkmark, ChevronRight, ChevronDown, ChevronUp,
-	CenterToFit, OpenPanelFilledLeft, ArrowRight,
+	CenterToFit, OpenPanelFilledLeft, ConnectSource, ConnectTarget,
 	ArrangeVertical, ArrangeHorizontal } from "@carbon/react/icons";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
@@ -95,9 +95,9 @@ class ToolbarButtonItem extends React.Component {
 		case (TOOLBAR_PASTE):
 			return <Paste disabled={disabled} />;
 		case (TOOLBAR_CONNECT_FROM_PORT):
-			return <ArrowRight disabled={disabled} />;
+			return <ConnectSource disabled={disabled} />;
 		case (TOOLBAR_CONNECT_TO_PORT):
-			return <ArrowRight disabled={disabled} />;
+			return <ConnectTarget disabled={disabled} />;
 		case (TOOLBAR_CREATE_COMMENT):
 		case (TOOLBAR_CREATE_AUTO_COMMENT):
 		case (TOOLBAR_CREATE_WYSIWYG_COMMENT):

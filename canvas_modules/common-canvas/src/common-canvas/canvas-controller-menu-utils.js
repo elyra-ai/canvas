@@ -305,7 +305,7 @@ const createDefaultContextMenu = (source) => {
 		const isCardinalityAtMax = CanvasUtils.isSrcCardinalityAtMax(source.port.id, node, links);
 
 		menuDefinition = menuDefinition.concat(
-			{ action: "connectFromPort", label: getLabel("port.markForOutput"), enable: !isCardinalityAtMax, toolbarItem: true, iconEnabled: "ArrowRight" }
+			{ action: "connectFromPort", label: getLabel("port.markForOutput"), enable: !isCardinalityAtMax, toolbarItem: true }
 		);
 	}
 	// Connect to input port from marked output port
@@ -322,7 +322,7 @@ const createDefaultContextMenu = (source) => {
 		const isEnabled = hasMarkedPort && !isCardinalityAtMax;
 
 		menuDefinition = menuDefinition.concat(
-			{ action: "connectToPort", label: getLabel("port.connectTo"), enable: isEnabled, toolbarItem: true, iconEnabled: "ArrowLeft" }
+			{ action: "connectToPort", label: getLabel("port.connectTo"), enable: isEnabled, toolbarItem: true }
 		);
 	}
 
