@@ -71,6 +71,11 @@ class Toolbar extends React.Component {
 	}
 
 	componentDidMount() {
+		if (this.getFocusableItemRefs().length === 0) {
+			this.isFocusInToolbar = true;
+			this.setFocusOnFirstDisabledItem();
+		}
+
 		this.resizeObserver = new ResizeObserver((entries) => {
 			for (const entry of entries) {
 				this.onToolbarResize(entry.contentRect);
@@ -78,11 +83,6 @@ class Toolbar extends React.Component {
 		});
 		if (this.toolbarRef.current) {
 			this.resizeObserver.observe(this.toolbarRef.current);
-		}
-
-		if (this.getFocusableItemRefs().length === 0) {
-			this.isFocusInToolbar = true;
-			this.setFocusOnFirstDisabledItem();
 		}
 	}
 
