@@ -26,7 +26,7 @@
   "sideEffects": false,
   "types": "./types/index.d.ts",
   "scripts": {
-    "build": "npx stylelint '**/*.scss' && grunt && rollup -c",
+    "build": "npx stylelint '**/*.scss' && grunt --force && rollup -c",
     "test:jest": "NODE_ENV=test jest",
     "test:typescript": "tsd",
     "test": "npm run test:jest && npm run test:typescript",
