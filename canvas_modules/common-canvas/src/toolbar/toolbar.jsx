@@ -66,13 +66,14 @@ class Toolbar extends React.Component {
 		this.generateToolbarItems = this.generateToolbarItems.bind(this);
 		this.setFocusAction = this.setFocusAction.bind(this);
 		this.setFocusOnItem = this.setFocusOnItem.bind(this);
-		this.setTabIndexOnDisabledToolbar = this.setTabIndexOnDisabledToolbar.bind(this);
+		this.setFocusOnFirstDisabledItem = this.setFocusOnFirstDisabledItem.bind(this);
 		this.closeAnyOpenSubArea = this.closeAnyOpenSubArea.bind(this);
 	}
 
 	componentDidMount() {
-		if (this.getFocusableItemRefs().length === 0 && this.state.focusAction !== "disabled") {
-			this.setTabIndexOnDisabledToolbar();
+		if (this.getFocusableItemRefs().length === 0) {
+			this.isFocusInToolbar = true;
+			this.setFocusOnFirstDisabledItem();
 		}
 
 		this.resizeObserver = new ResizeObserver((entries) => {
@@ -97,7 +98,8 @@ class Toolbar extends React.Component {
 		const index = focusableItems.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
 
 		if (focusableItems.length === 0 && this.state.focusAction !== "disabled") {
-			this.setTabIndexOnDisabledToolbar();
+			this.setFocusOnFirstDisabledItem();
+
 		} else if ((index === -1 && this.state.focusAction !== "toolbar") ||
 					 (!this.isFocusInToolbar && this.props.setInitialFocus)) {
 			this.isFocusInToolbar = true;
@@ -219,10 +221,14 @@ class Toolbar extends React.Component {
 		return subAreaOpenRef;
 	}
 
-	// All items are disabled in the toolbar
-	setTabIndexOnDisabledToolbar() {
-		this.isFocusInToolbar = false;
+	// Sets focus on toolbar div when all toolbar items are disabled.
+	// CSS will highlight the first button to show where focus is.
+	setFocusOnFirstDisabledItem() {
 		this.setFocusAction("disabled");
+		// Set focus on the toolbar div when all buttons are disabled
+		if (this.props.setInitialFocus && this.toolbarRef.current) {
+			this.toolbarRef.current.focus();
+		}
 	}
 
 	// Either sets the focus on the item for the action passed in or, if
@@ -599,12 +605,16 @@ class Toolbar extends React.Component {
 		const leftItems = this.generateToolbarItems(this.leftBar, true, this.leftItemRefs);
 		const rightItems = this.generateToolbarItems(this.rightBar, false, this.rightItemRefs);
 
-		let toolbarSizeClass = "toolbar-div";
+		let toolbarClass = "toolbar-div";
 		if (this.props.size === "sm") {
-			toolbarSizeClass = "toolbar-div toolbar-size-small";
+			toolbarClass += " toolbar-size-small";
 		} else if (this.props.size === "lg") {
-			toolbarSizeClass = "toolbar-div toolbar-size-large";
+			toolbarClass += " toolbar-size-large";
 		}
+		if (this.state.focusAction === "disabled") {
+			toolbarClass += " toolbar-all-disabled";
+		}
+
 		const tabIndex = this.state.focusAction === "toolbar" ? 0 : -1;
 
 		// Add class to left bar when overflow button is not displayed
@@ -613,7 +623,7 @@ class Toolbar extends React.Component {
 			: "toolbar-left-bar toolbar-left-bar-no-overflow";
 
 		return (
-			<div ref={this.toolbarRef} className={toolbarSizeClass} data-instance-id={this.props.instanceId}
+			<div ref={this.toolbarRef} className={toolbarClass} data-instance-id={this.props.instanceId}
 				tabIndex={tabIndex} onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown}
 				role="toolbar" aria-label={this.props.additionalText?.ariaLabel}
 			>
