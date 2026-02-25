@@ -66,15 +66,11 @@ class Toolbar extends React.Component {
 		this.generateToolbarItems = this.generateToolbarItems.bind(this);
 		this.setFocusAction = this.setFocusAction.bind(this);
 		this.setFocusOnItem = this.setFocusOnItem.bind(this);
-		this.setTabIndexOnDisabledToolbar = this.setTabIndexOnDisabledToolbar.bind(this);
+		this.setFocusOnFirstDisabledItem = this.setFocusOnFirstDisabledItem.bind(this);
 		this.closeAnyOpenSubArea = this.closeAnyOpenSubArea.bind(this);
 	}
 
 	componentDidMount() {
-		if (this.getFocusableItemRefs().length === 0 && this.state.focusAction !== "disabled") {
-			this.setTabIndexOnDisabledToolbar();
-		}
-
 		this.resizeObserver = new ResizeObserver((entries) => {
 			for (const entry of entries) {
 				this.onToolbarResize(entry.contentRect);
@@ -82,6 +78,11 @@ class Toolbar extends React.Component {
 		});
 		if (this.toolbarRef.current) {
 			this.resizeObserver.observe(this.toolbarRef.current);
+		}
+
+		if (this.getFocusableItemRefs().length === 0) {
+			this.isFocusInToolbar = true;
+			this.setFocusOnFirstDisabledItem();
 		}
 	}
 
@@ -97,7 +98,8 @@ class Toolbar extends React.Component {
 		const index = focusableItems.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
 
 		if (focusableItems.length === 0 && this.state.focusAction !== "disabled") {
-			this.setTabIndexOnDisabledToolbar();
+			this.setFocusOnFirstDisabledItem();
+
 		} else if ((index === -1 && this.state.focusAction !== "toolbar") ||
 					 (!this.isFocusInToolbar && this.props.setInitialFocus)) {
 			this.isFocusInToolbar = true;
@@ -219,10 +221,14 @@ class Toolbar extends React.Component {
 		return subAreaOpenRef;
 	}
 
-	// All items are disabled in the toolbar
-	setTabIndexOnDisabledToolbar() {
-		this.isFocusInToolbar = false;
+	// Sets focus on toolbar div when all toolbar items are disabled.
+	// CSS will highlight the first button to show where focus is.
+	setFocusOnFirstDisabledItem() {
 		this.setFocusAction("disabled");
+		// Set focus on the toolbar div when all buttons are disabled
+		if (this.props.setInitialFocus && this.toolbarRef.current) {
+			this.toolbarRef.current.focus();
+		}
 	}
 
 	// Either sets the focus on the item for the action passed in or, if
@@ -605,7 +611,11 @@ class Toolbar extends React.Component {
 		} else if (this.props.size === "lg") {
 			toolbarSizeClass = "toolbar-div toolbar-size-large";
 		}
-		const tabIndex = this.state.focusAction === "toolbar" ? 0 : -1;
+		// When all buttons are disabled, make toolbar focusable and add class
+		const tabIndex = (this.state.focusAction === "toolbar" || this.state.focusAction === "disabled") ? 0 : -1;
+		if (this.state.focusAction === "disabled") {
+			toolbarSizeClass += " toolbar-all-disabled";
+		}
 
 		// Add class to left bar when overflow button is not displayed
 		const leftBarClass = this.state.isOverflowButtonDisplayed

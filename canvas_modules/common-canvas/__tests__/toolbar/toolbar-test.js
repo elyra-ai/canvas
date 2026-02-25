@@ -191,7 +191,7 @@ describe("Toolbar renders correctly", () => {
 		});
 	});
 
-	it("should set 'tabindex=-1' if all items are disabled in the toolbar", () => {
+	it("should set 'tabindex=0' on toolbar when all items are disabled", () => {
 		const toolbarConfig = {
 			rightBar: [
 				{ action: "zoomIn", label: "Cut", enable: false },
@@ -205,7 +205,15 @@ describe("Toolbar renders correctly", () => {
 		const { container } = createToolbar(toolbarConfig, toolbarActionHandler);
 
 		const toolbar = container.querySelector(".toolbar-div");
-		expect(toolbar.getAttribute("tabindex")).to.equal("-1");
+		// Toolbar should be focusable when all buttons are disabled
+		// CSS will highlight the first button when toolbar has focus
+		expect(toolbar.getAttribute("tabindex")).to.equal("0");
+
+		// Verify all buttons are disabled
+		const buttons = container.querySelectorAll("button");
+		buttons.forEach((button) => {
+			expect(button.hasAttribute("disabled")).to.be.true;
+		});
 	});
 });
 
