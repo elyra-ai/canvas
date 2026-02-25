@@ -87,17 +87,17 @@
     "@testing-library/react": "14.2.2",
     "@testing-library/user-event": "14.6.1",
     "autoprefixer": "9.8.8",
-    "babel-jest": "26.3.0",
+    "babel-jest": "29.7.0",
     "babel-plugin-lodash": "3.3.4",
     "babel-plugin-transform-react-remove-prop-types": "0.4.24",
     "chai": "4.2.0",
     "classnames": "2.5.1",
     "deep-freeze": "0.0.1",
-    "eslint": "^9.35.0",
+    "eslint": "^9.39.3",
     "eslint-config-canvas": "file:../eslint-config-canvas",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-react": "7.37.5",
-    "grunt": "1.5.3",
+    "grunt": "1.6.1",
     "grunt-contrib-clean": "2.0.0",
     "grunt-contrib-sass": "2.0.0",
     "grunt-env": "1.0.1",
@@ -132,6 +132,15 @@
     "react": "^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-intl": "^5.0.0 || ^6.0.0 || ^7.0.0"
+  },
+  "overrides": {
+    "minimatch": "^10.2.1",
+    "grunt": {
+      "minimatch": "^10.2.1",
+      "glob": {
+        "minimatch": "^10.2.1"
+      }
+    }
   },
   "tsd": {
     "compilerOptions": {
