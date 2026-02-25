@@ -605,16 +605,14 @@ class Toolbar extends React.Component {
 		const leftItems = this.generateToolbarItems(this.leftBar, true, this.leftItemRefs);
 		const rightItems = this.generateToolbarItems(this.rightBar, false, this.rightItemRefs);
 
-		let toolbarSizeClass = "toolbar-div";
+		let toolbarClass = "toolbar-div";
 		if (this.props.size === "sm") {
-			toolbarSizeClass = "toolbar-div toolbar-size-small";
+			toolbarClass += " toolbar-size-small";
 		} else if (this.props.size === "lg") {
-			toolbarSizeClass = "toolbar-div toolbar-size-large";
+			toolbarClass += " toolbar-size-large";
 		}
-		// When all buttons are disabled, make toolbar focusable and add class
-		const tabIndex = (this.state.focusAction === "toolbar" || this.state.focusAction === "disabled") ? 0 : -1;
 		if (this.state.focusAction === "disabled") {
-			toolbarSizeClass += " toolbar-all-disabled";
+			toolbarClass += " toolbar-all-disabled";
 		}
 
 		// Add class to left bar when overflow button is not displayed
@@ -623,8 +621,8 @@ class Toolbar extends React.Component {
 			: "toolbar-left-bar toolbar-left-bar-no-overflow";
 
 		return (
-			<div ref={this.toolbarRef} className={toolbarSizeClass} data-instance-id={this.props.instanceId}
-				tabIndex={tabIndex} onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown}
+			<div ref={this.toolbarRef} className={toolbarClass} data-instance-id={this.props.instanceId}
+				tabIndex={-1} onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown}
 				role="toolbar" aria-label={this.props.additionalText?.ariaLabel}
 			>
 				<div className={leftBarClass} onScroll={this.onScroll}>
