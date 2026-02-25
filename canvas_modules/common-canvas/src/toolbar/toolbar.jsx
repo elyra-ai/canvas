@@ -615,6 +615,8 @@ class Toolbar extends React.Component {
 			toolbarClass += " toolbar-all-disabled";
 		}
 
+		const tabIndex = this.state.focusAction === "toolbar" ? 0 : -1;
+
 		// Add class to left bar when overflow button is not displayed
 		const leftBarClass = this.state.isOverflowButtonDisplayed
 			? "toolbar-left-bar"
@@ -622,7 +624,7 @@ class Toolbar extends React.Component {
 
 		return (
 			<div ref={this.toolbarRef} className={toolbarClass} data-instance-id={this.props.instanceId}
-				tabIndex={-1} onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown}
+				tabIndex={tabIndex} onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown}
 				role="toolbar" aria-label={this.props.additionalText?.ariaLabel}
 			>
 				<div className={leftBarClass} onScroll={this.onScroll}>
