@@ -4,5 +4,12 @@
   "toolbar.zoomOut": "Diminuir zoom",
   "toolbar.zoomToFit": "Zoom para ajustar",
   "toolbar.overflowMenu": "Menu overflow",
-  "toolbar.label": "Barra de ferramentas de tela"
+  "toolbar.flowEditorToolbarLabel": "Editor de Fluxo",
+  "toolbar.flowEditorToolbarContainer": "Opções do editor de fluxo",
+  "toolbar.textToolbarLabel": "Texto",
+  "toolbar.textToolbarContainer": "Opções de texto",
+  "toolbar.contextToolbarLabel": "Contexto",
+  "toolbar.contextToolbarContainer": "Opções de contexto",
+  "toolbar.paletteDialogToolbarLabel": "Caixa de diálogo Paleta",
+  "toolbar.paletteDialogToolbarContainer": "Opções da caixa de diálogo Paleta"
 }
