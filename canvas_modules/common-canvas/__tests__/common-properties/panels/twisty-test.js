@@ -43,7 +43,7 @@ describe("twisty panel renders correctly", () => {
 		expect(tableTwisty.querySelectorAll("li.cds--accordion__item--active")).to.have.length(1);
 
 		// Verify class for subtitle is not applied
-		expect(twisty.classList.contains("properties-twisty-sub-title")).to.equal(false);
+		expect(twisty.classList.contains("properties-twisty-custom-title")).to.equal(false);
 	});
 
 	it("should expand content when twisty panel link clicked", () => {
@@ -168,145 +168,166 @@ describe("twisty panel visible and enabled conditions work correctly", () => {
 });
 
 
-describe("twisty panel subtitle renders correctly", () => {
-	let mockTwistyTitleHandler;
+describe("twisty panel custom title renders correctly", () => {
+	let mockPanelTitleHandler;
 
 	afterEach(() => {
 		cleanup();
 	});
 
-	it("should render subtitle when twistyTitleHandler is provided and returns a value", () => {
-		mockTwistyTitleHandler = sinon.spy((panelId) => {
+	it("should render custom title when panelTitleHandler is provided and returns a value", () => {
+		mockPanelTitleHandler = sinon.spy(({ panelId }) => {
 			if (panelId === "TwistyPanel1") {
-				return <span className="test-subtitle">Subtitle for Panel 1</span>;
+				return <span className="test-custom-title">Custom Title for Panel 1</span>;
 			}
 			return null;
 		});
 
 		const callbacks = {
-			twistyTitleHandler: mockTwistyTitleHandler
+			panelTitleHandler: mockPanelTitleHandler
 		};
 
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(twistypanelParamDef, null, callbacks);
 		const { container } = renderedObject.wrapper;
 		const twisty = container.querySelector("div[data-id='properties-TwistyPanel1']");
 
-		// Check that the title wrapper div exists
-		const titleDiv = twisty.querySelector(".properties-twisty-panel-title");
-		expect(titleDiv).to.not.be.null;
+		// Check that the custom title is rendered in the accordion
+		const customTitle = twisty.querySelector(".test-custom-title");
+		expect(customTitle).to.not.be.null;
+		expect(customTitle.textContent).to.equal("Custom Title for Panel 1");
 
-		// Check that the subtitle is rendered
-		const subtitle = titleDiv.querySelector(".test-subtitle");
-		expect(subtitle).to.not.be.null;
-		expect(subtitle.textContent).to.equal("Subtitle for Panel 1");
+		// Check that the CSS class for custom title is applied
+		expect(twisty.classList.contains("properties-twisty-custom-title")).to.equal(true);
 
-		// Check that the CSS class for subtitle is applied
-		expect(twisty.classList.contains("properties-twisty-sub-title")).to.equal(true);
-
-		// Verify the handler was called with the correct panel ID
-		expect(mockTwistyTitleHandler.calledWith("TwistyPanel1")).to.equal(true);
+		// Verify the handler was called (it gets called for all panels in the form)
+		expect(mockPanelTitleHandler.called).to.equal(true);
+		// Find the call for TwistyPanel1
+		const twistyPanel1Call = mockPanelTitleHandler.getCalls().find((call) => call.args[0].panelId === "TwistyPanel1");
+		expect(twistyPanel1Call).to.not.be.undefined;
+		expect(twistyPanel1Call.args[0].label).to.equal("Automatic Reclassify");
 	});
 
-	it("should not apply subtitle CSS class when twistyTitleHandler returns null", () => {
-	// Mock the twistyTitleHandler to return null
-		mockTwistyTitleHandler = sinon.spy(() => null);
+	it("should use default label when panelTitleHandler returns null", () => {
+		mockPanelTitleHandler = sinon.spy(() => null);
 
 		const callbacks = {
-			twistyTitleHandler: mockTwistyTitleHandler
+			panelTitleHandler: mockPanelTitleHandler
 		};
 
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(twistypanelParamDef, null, callbacks);
 		const { container } = renderedObject.wrapper;
 		const twisty = container.querySelector("div[data-id='properties-TwistyPanel1']");
 
-		// Check that the subtitle CSS class is not applied when subtitle is null
-		expect(twisty.classList.contains("properties-twisty-sub-title")).to.equal(false);
+		// Check that the custom title CSS class is not applied when handler returns null
+		expect(twisty.classList.contains("properties-twisty-custom-title")).to.equal(false);
+
+		// Verify the default label is used
+		const accordionButton = twisty.querySelector(".cds--accordion__heading");
+		expect(accordionButton.textContent).to.include("Automatic Reclassify");
 	});
 
-	it("should not render subtitle wrapper when twistyTitleHandler is not provided", () => {
+	it("should use default label when panelTitleHandler is not provided", () => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(twistypanelParamDef);
 		const { container } = renderedObject.wrapper;
 		const twisty = container.querySelector("div[data-id='properties-TwistyPanel1']");
 
-		// Without a handler, the title should be plain text, not wrapped in a div
-		const titleDiv = twisty.querySelector(".properties-twisty-panel-title");
-		expect(titleDiv).to.be.null;
+		// Check that the custom title CSS class is not applied
+		expect(twisty.classList.contains("properties-twisty-custom-title")).to.equal(false);
 
-		// Check that the subtitle CSS class is not applied
-		expect(twisty.classList.contains("properties-twisty-sub-title")).to.equal(false);
+		// Verify the default label is used
+		const accordionButton = twisty.querySelector(".cds--accordion__heading");
+		expect(accordionButton.textContent).to.include("Automatic Reclassify");
 	});
 
-	it("should call twistyTitleHandler with correct panel ids", () => {
-		mockTwistyTitleHandler = sinon.spy((panelId) => <span>Subtitle for {panelId}</span>);
+	it("should call panelTitleHandler with correct arguments for each panel", () => {
+		mockPanelTitleHandler = sinon.spy(({ panelId, label }) => <span>Custom title for {panelId}</span>);
 
 		const callbacks = {
-			twistyTitleHandler: mockTwistyTitleHandler
+			panelTitleHandler: mockPanelTitleHandler
 		};
 
 		propertyUtilsRTL.flyoutEditorForm(twistypanelParamDef, null, callbacks);
 
-		// Verify the handler was called with the correct panel IDs
-		expect(mockTwistyTitleHandler.calledWith("TwistyPanel1")).to.equal(true);
-		expect(mockTwistyTitleHandler.calledWith("TableTwisty")).to.equal(true);
-		expect(mockTwistyTitleHandler.calledWith("TwistyPanel2")).to.equal(true);
+		// Verify the handler was called 3 times (once for each panel)
+		expect(mockPanelTitleHandler.callCount).to.equal(3);
+
+		// Verify the handler was called with correct arguments
+		const call1 = mockPanelTitleHandler.getCall(0).args[0];
+		expect(call1.panelId).to.equal("TwistyPanel1");
+		expect(call1.label).to.equal("Automatic Reclassify");
+
+		const call2 = mockPanelTitleHandler.getCall(1).args[0];
+		expect(call2.panelId).to.equal("TableTwisty");
+
+		const call3 = mockPanelTitleHandler.getCall(2).args[0];
+		expect(call3.panelId).to.equal("TwistyPanel2");
 	});
 
-	it("should render different subtitles for different panels", () => {
-		mockTwistyTitleHandler = sinon.spy((panelId) => {
+	it("should render different custom titles for different panels", () => {
+		mockPanelTitleHandler = sinon.spy(({ panelId }) => {
 			if (panelId === "TwistyPanel1") {
-				return <span className="subtitle-1">First Panel Subtitle</span>;
+				return <span className="custom-title-1">First Panel Custom Title</span>;
 			} else if (panelId === "TableTwisty") {
-				return <span className="subtitle-2">Table Panel Subtitle</span>;
+				return <span className="custom-title-2">Table Panel Custom Title</span>;
 			}
 			return null;
 		});
 
 		const callbacks = {
-			twistyTitleHandler: mockTwistyTitleHandler
+			panelTitleHandler: mockPanelTitleHandler
 		};
 
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(twistypanelParamDef, null, callbacks);
 		const { container } = renderedObject.wrapper;
 
-		// Check first panel subtitle
+		// Check first panel custom title
 		const twisty1 = container.querySelector("div[data-id='properties-TwistyPanel1']");
-		const subtitle1 = twisty1.querySelector(".subtitle-1");
-		expect(subtitle1).to.not.be.null;
-		expect(subtitle1.textContent).to.equal("First Panel Subtitle");
-		expect(twisty1.classList.contains("properties-twisty-sub-title")).to.equal(true);
+		const customTitle1 = twisty1.querySelector(".custom-title-1");
+		expect(customTitle1).to.not.be.null;
+		expect(customTitle1.textContent).to.equal("First Panel Custom Title");
+		expect(twisty1.classList.contains("properties-twisty-custom-title")).to.equal(true);
 
-		// Check table panel subtitle
+		// Check table panel custom title
 		const twistyTable = container.querySelector("div[data-id='properties-TableTwisty']");
-		const subtitle2 = twistyTable.querySelector(".subtitle-2");
-		expect(subtitle2).to.not.be.null;
-		expect(subtitle2.textContent).to.equal("Table Panel Subtitle");
-		expect(twistyTable.classList.contains("properties-twisty-sub-title")).to.equal(true);
+		const customTitle2 = twistyTable.querySelector(".custom-title-2");
+		expect(customTitle2).to.not.be.null;
+		expect(customTitle2.textContent).to.equal("Table Panel Custom Title");
+		expect(twistyTable.classList.contains("properties-twisty-custom-title")).to.equal(true);
 
-		// Check third panel has no subtitle
+		// Check third panel uses default label (no custom title)
 		const twisty2 = container.querySelector("div[data-id='properties-TwistyPanel2']");
-		expect(twisty2.classList.contains("properties-twisty-sub-title")).to.equal(false);
+		expect(twisty2.classList.contains("properties-twisty-custom-title")).to.equal(false);
 	});
 
-	it("should render panel label along with subtitle", () => {
-		mockTwistyTitleHandler = sinon.spy((panelId) => {
+	it("should allow custom title to include original label", () => {
+		mockPanelTitleHandler = sinon.spy(({ panelId, label }) => {
 			if (panelId === "TwistyPanel1") {
-				return <span className="test-subtitle">Additional Info</span>;
+				return (
+					<div>
+						<span className="original-label">{label}</span>
+						<span className="additional-info"> - Additional Info</span>
+					</div>
+				);
 			}
 			return null;
 		});
 
 		const callbacks = {
-			twistyTitleHandler: mockTwistyTitleHandler
+			panelTitleHandler: mockPanelTitleHandler
 		};
 
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(twistypanelParamDef, null, callbacks);
 		const { container } = renderedObject.wrapper;
 		const twisty = container.querySelector("div[data-id='properties-TwistyPanel1']");
-		const titleDiv = twisty.querySelector(".properties-twisty-panel-title");
 
-		// Check that both the label and subtitle are present
-		expect(titleDiv.textContent).to.include("Automatic Reclassify");
-		expect(titleDiv.textContent).to.include("Additional Info");
+		// Check that both the original label and additional info are present
+		const originalLabel = twisty.querySelector(".original-label");
+		expect(originalLabel).to.not.be.null;
+		expect(originalLabel.textContent).to.equal("Automatic Reclassify");
+
+		const additionalInfo = twisty.querySelector(".additional-info");
+		expect(additionalInfo).to.not.be.null;
+		expect(additionalInfo.textContent).to.include("Additional Info");
 	});
 });
 

@@ -464,8 +464,7 @@ class App extends React.Component {
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
 		this.propertiesControllerHandler2 = this.propertiesControllerHandler2.bind(this);
-		this.twistyTitleHandler = this.twistyTitleHandler.bind(this);
-
+		this.panelTitleHandler = this.panelTitleHandler.bind(this);
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.tooltipLinkHandler = this.tooltipLinkHandler.bind(this);
 
@@ -1900,8 +1899,8 @@ class App extends React.Component {
 		return "Save properties custom label";
 	}
 
-	// Handler for twisty panel title labels
-	twistyTitleHandler(panelId) {
+	// Handler for panel title labels
+	panelTitleHandler({ panelId, label }) {
 		if (panelId === "TwistyPanel2") {
 			const labelText = this.state.twistyLabelText;
 			const iconType = this.state.twistyLabelIcon;
@@ -1914,12 +1913,13 @@ class App extends React.Component {
 					icon = <ErrorFilled />;
 				}
 
-				return (
+				return (<div className="harness-custom-twisty-title">
+					{label}
 					<div className={classNames("harness-twisty-sub-title", iconType)}>
 						{icon}
 						<span>{labelText}</span>
 					</div>
-				);
+				</div>);
 			}
 		}
 		return null;
@@ -2143,7 +2143,7 @@ class App extends React.Component {
 			tooltipLinkHandler: this.tooltipLinkHandler,
 			propertyIconHandler: this.propertyIconHandler,
 			filterItemsHandler: this.filterItemsHandler,
-			twistyTitleHandler: this.twistyTitleHandler
+			panelTitleHandler: this.panelTitleHandler
 		};
 		if (this.state.propertiesValidationHandler) {
 			callbacks.validationHandler = this.validationHandler;

@@ -26,22 +26,13 @@ import { STATES } from "./../../constants/constants.js";
 class TwistyPanel extends React.Component {
 	constructor(props) {
 		super(props);
-		this.twistyTitleHandler = props.controller.getHandlers().twistyTitleHandler ?? null;
+		this.panelTitleHandler = props.controller.getHandlers().panelTitleHandler ?? null;
 	}
 
 	render() {
 		const className = this.props.panel.className ? this.props.panel.className : "";
 		const disabled = this.props.panelState === STATES.DISABLED;
-
-		let title = this.props.panel.label;
-		let subTitle = null;
-		if (this.twistyTitleHandler) {
-			subTitle = this.twistyTitleHandler(this.props.panel.id);
-			title = (<div className="properties-twisty-panel-title">
-				{this.props.panel.label}
-				{subTitle}
-			</div>);
-		}
+		const title = this.panelTitleHandler?.({ panelId: this.props.panel.id, label: this.props.panel.label }) || this.props.panel.label;
 
 		return (
 			<div
@@ -49,7 +40,7 @@ class TwistyPanel extends React.Component {
 					"properties-twisty-panel",
 					{ "hide": this.props.panelState === STATES.HIDDEN },
 					{ "properties-control-nested-panel": this.props.panel.nestedPanel },
-					{ "properties-twisty-sub-title": subTitle },
+					{ "properties-twisty-custom-title": this.props.panel.label !== title },
 					className
 				)} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
 			>

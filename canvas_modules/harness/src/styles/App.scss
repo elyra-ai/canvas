@@ -201,7 +201,7 @@ $harness-navbar-icon-width: 48px;
 }
 
 // Modify height of the TwistyPanel button to allow room for sub title to appear
-.properties-twisty-sub-title[data-id="properties-TwistyPanel2"] .properties-twisty-accordion-item > button:first-of-type {
+.properties-twisty-custom-title[data-id="properties-TwistyPanel2"] .properties-twisty-accordion-item > button:first-of-type {
 	height: 60px;
 
 	.harness-twisty-sub-title {
