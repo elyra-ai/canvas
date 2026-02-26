@@ -199,3 +199,27 @@ $harness-navbar-icon-width: 48px;
 .harness-custom-spacer {
 	height: carbon.$spacing-07;
 }
+
+// Modify height of the TwistyPanel button to allow room for sub title to appear
+.properties-twisty-sub-title[data-id="properties-TwistyPanel2"] .properties-twisty-accordion-item > button:first-of-type {
+	height: 60px;
+
+	.harness-twisty-sub-title {
+		display: flex;
+		align-items: center;
+		gap: carbon.$spacing-02;
+		margin-top: carbon.$spacing-02;
+
+		&.warning svg {
+			fill: carbon.$support-warning;
+			[data-icon-path="inner-path"] { // exclamation mark
+				fill: carbon.$layer-selected-inverse;
+				opacity: 1;
+			}
+		}
+
+		&.error svg {
+			fill: carbon.$support-error;
+		}
+	}
+}

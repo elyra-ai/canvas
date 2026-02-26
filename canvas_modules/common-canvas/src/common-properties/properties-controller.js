@@ -46,7 +46,8 @@ export default class PropertiesController {
 			titleChangeHandler: null,
 			tooltipLinkHandler: null,
 			propertyIconHandler: null,
-			filterItemsHandler: null
+			filterItemsHandler: null,
+			twistyTitleHandler: null
 		};
 		this.propertiesConfig = {};
 		this.visibleDefinitions = {};

@@ -27,7 +27,7 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
-import { Password, Code } from "@carbon/icons-react";
+import { Password, Code, WarningFilled, ErrorFilled } from "@carbon/icons-react";
 
 import { jsPDF } from "jspdf";
 import * as htmlToImage from "html-to-image";
@@ -184,6 +184,10 @@ class App extends React.Component {
 			openSidepanelCanvas: false,
 			openSidepanelProperties: false,
 			openSidepanelAPI: false,
+
+			// Twisty panel state
+			twistyLabelText: "",
+			twistyLabelIcon: "none",
 
 			// Common canvas state variables
 			paletteOpened: false,
@@ -460,6 +464,7 @@ class App extends React.Component {
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
 		this.propertiesControllerHandler2 = this.propertiesControllerHandler2.bind(this);
+		this.twistyTitleHandler = this.twistyTitleHandler.bind(this);
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.tooltipLinkHandler = this.tooltipLinkHandler.bind(this);
@@ -1895,6 +1900,31 @@ class App extends React.Component {
 		return "Save properties custom label";
 	}
 
+	// Handler for twisty panel title labels
+	twistyTitleHandler(panelId) {
+		if (panelId === "TwistyPanel2") {
+			const labelText = this.state.twistyLabelText;
+			const iconType = this.state.twistyLabelIcon;
+
+			if (labelText) {
+				let icon = null;
+				if (iconType === "warning") {
+					icon = <WarningFilled />;
+				} else if (iconType === "error") {
+					icon = <ErrorFilled />;
+				}
+
+				return (
+					<div className={classNames("harness-twisty-sub-title", iconType)}>
+						{icon}
+						<span>{labelText}</span>
+					</div>
+				);
+			}
+		}
+		return null;
+	}
+
 	refreshContent(streamId, diagramId) {
 		this.log("refreshContent()");
 	}
@@ -2077,6 +2107,15 @@ class App extends React.Component {
 			}
 			propertiesController.updatePropertyValue(propertyId, value);
 		}
+		if (actionId === "submitTwistyTitleLabel") {
+			// Get the current values from the properties controller and save to state
+			const labelText = propertiesController.getPropertyValue({ name: "twistyLabelInput" });
+			const iconType = propertiesController.getPropertyValue({ name: "twistyLabelIcon" });
+			this.setState({
+				twistyLabelText: labelText,
+				twistyLabelIcon: iconType
+			});
+		}
 
 
 		this.log("propertyActionHandler() " + actionId);
@@ -2103,7 +2142,8 @@ class App extends React.Component {
 			propertiesActionLabelHandler: this.propertiesActionLabelHandler,
 			tooltipLinkHandler: this.tooltipLinkHandler,
 			propertyIconHandler: this.propertyIconHandler,
-			filterItemsHandler: this.filterItemsHandler
+			filterItemsHandler: this.filterItemsHandler,
+			twistyTitleHandler: this.twistyTitleHandler
 		};
 		if (this.state.propertiesValidationHandler) {
 			callbacks.validationHandler = this.validationHandler;

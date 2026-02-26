@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import React from "react";
+import sinon from "sinon";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import twistypanelParamDef from "./../../test_resources/paramDefs/twistyPanel_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
@@ -39,6 +41,9 @@ describe("twisty panel renders correctly", () => {
 		const tableTwisty = container.querySelector("div[data-id='properties-TableTwisty']");
 		expect(tableTwisty.querySelectorAll("li.cds--accordion__item")).to.have.length(1);
 		expect(tableTwisty.querySelectorAll("li.cds--accordion__item--active")).to.have.length(1);
+
+		// Verify class for subtitle is not applied
+		expect(twisty.classList.contains("properties-twisty-sub-title")).to.equal(false);
 	});
 
 	it("should expand content when twisty panel link clicked", () => {
@@ -159,6 +164,149 @@ describe("twisty panel visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "twisty-panel2" })).to.equal("hidden");
 		expect(controller.getControlState({ name: "numberfield3" })).to.equal("hidden");
 		expect(twistyPanel.classList.contains("hide")).to.equal(true);
+	});
+});
+
+
+describe("twisty panel subtitle renders correctly", () => {
+	let mockTwistyTitleHandler;
+
+	afterEach(() => {
+		cleanup();
+	});
+
+	it("should render subtitle when twistyTitleHandler is provided and returns a value", () => {
+		mockTwistyTitleHandler = sinon.spy((panelId) => {
+			if (panelId === "TwistyPanel1") {
+				return <span className="test-subtitle">Subtitle for Panel 1</span>;
+			}
+			return null;
+		});
+
+		const callbacks = {
+			twistyTitleHandler: mockTwistyTitleHandler
+		};
+
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(twistypanelParamDef, null, callbacks);
+		const { container } = renderedObject.wrapper;
+		const twisty = container.querySelector("div[data-id='properties-TwistyPanel1']");
+
+		// Check that the title wrapper div exists
+		const titleDiv = twisty.querySelector(".properties-twisty-panel-title");
+		expect(titleDiv).to.not.be.null;
+
+		// Check that the subtitle is rendered
+		const subtitle = titleDiv.querySelector(".test-subtitle");
+		expect(subtitle).to.not.be.null;
+		expect(subtitle.textContent).to.equal("Subtitle for Panel 1");
+
+		// Check that the CSS class for subtitle is applied
+		expect(twisty.classList.contains("properties-twisty-sub-title")).to.equal(true);
+
+		// Verify the handler was called with the correct panel ID
+		expect(mockTwistyTitleHandler.calledWith("TwistyPanel1")).to.equal(true);
+	});
+
+	it("should not apply subtitle CSS class when twistyTitleHandler returns null", () => {
+	// Mock the twistyTitleHandler to return null
+		mockTwistyTitleHandler = sinon.spy(() => null);
+
+		const callbacks = {
+			twistyTitleHandler: mockTwistyTitleHandler
+		};
+
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(twistypanelParamDef, null, callbacks);
+		const { container } = renderedObject.wrapper;
+		const twisty = container.querySelector("div[data-id='properties-TwistyPanel1']");
+
+		// Check that the subtitle CSS class is not applied when subtitle is null
+		expect(twisty.classList.contains("properties-twisty-sub-title")).to.equal(false);
+	});
+
+	it("should not render subtitle wrapper when twistyTitleHandler is not provided", () => {
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(twistypanelParamDef);
+		const { container } = renderedObject.wrapper;
+		const twisty = container.querySelector("div[data-id='properties-TwistyPanel1']");
+
+		// Without a handler, the title should be plain text, not wrapped in a div
+		const titleDiv = twisty.querySelector(".properties-twisty-panel-title");
+		expect(titleDiv).to.be.null;
+
+		// Check that the subtitle CSS class is not applied
+		expect(twisty.classList.contains("properties-twisty-sub-title")).to.equal(false);
+	});
+
+	it("should call twistyTitleHandler with correct panel ids", () => {
+		mockTwistyTitleHandler = sinon.spy((panelId) => <span>Subtitle for {panelId}</span>);
+
+		const callbacks = {
+			twistyTitleHandler: mockTwistyTitleHandler
+		};
+
+		propertyUtilsRTL.flyoutEditorForm(twistypanelParamDef, null, callbacks);
+
+		// Verify the handler was called with the correct panel IDs
+		expect(mockTwistyTitleHandler.calledWith("TwistyPanel1")).to.equal(true);
+		expect(mockTwistyTitleHandler.calledWith("TableTwisty")).to.equal(true);
+		expect(mockTwistyTitleHandler.calledWith("TwistyPanel2")).to.equal(true);
+	});
+
+	it("should render different subtitles for different panels", () => {
+		mockTwistyTitleHandler = sinon.spy((panelId) => {
+			if (panelId === "TwistyPanel1") {
+				return <span className="subtitle-1">First Panel Subtitle</span>;
+			} else if (panelId === "TableTwisty") {
+				return <span className="subtitle-2">Table Panel Subtitle</span>;
+			}
+			return null;
+		});
+
+		const callbacks = {
+			twistyTitleHandler: mockTwistyTitleHandler
+		};
+
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(twistypanelParamDef, null, callbacks);
+		const { container } = renderedObject.wrapper;
+
+		// Check first panel subtitle
+		const twisty1 = container.querySelector("div[data-id='properties-TwistyPanel1']");
+		const subtitle1 = twisty1.querySelector(".subtitle-1");
+		expect(subtitle1).to.not.be.null;
+		expect(subtitle1.textContent).to.equal("First Panel Subtitle");
+		expect(twisty1.classList.contains("properties-twisty-sub-title")).to.equal(true);
+
+		// Check table panel subtitle
+		const twistyTable = container.querySelector("div[data-id='properties-TableTwisty']");
+		const subtitle2 = twistyTable.querySelector(".subtitle-2");
+		expect(subtitle2).to.not.be.null;
+		expect(subtitle2.textContent).to.equal("Table Panel Subtitle");
+		expect(twistyTable.classList.contains("properties-twisty-sub-title")).to.equal(true);
+
+		// Check third panel has no subtitle
+		const twisty2 = container.querySelector("div[data-id='properties-TwistyPanel2']");
+		expect(twisty2.classList.contains("properties-twisty-sub-title")).to.equal(false);
+	});
+
+	it("should render panel label along with subtitle", () => {
+		mockTwistyTitleHandler = sinon.spy((panelId) => {
+			if (panelId === "TwistyPanel1") {
+				return <span className="test-subtitle">Additional Info</span>;
+			}
+			return null;
+		});
+
+		const callbacks = {
+			twistyTitleHandler: mockTwistyTitleHandler
+		};
+
+		const renderedObject = propertyUtilsRTL.flyoutEditorForm(twistypanelParamDef, null, callbacks);
+		const { container } = renderedObject.wrapper;
+		const twisty = container.querySelector("div[data-id='properties-TwistyPanel1']");
+		const titleDiv = twisty.querySelector(".properties-twisty-panel-title");
+
+		// Check that both the label and subtitle are present
+		expect(titleDiv.textContent).to.include("Automatic Reclassify");
+		expect(titleDiv.textContent).to.include("Additional Info");
 	});
 });
 

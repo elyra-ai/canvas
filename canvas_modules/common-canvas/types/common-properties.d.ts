@@ -192,6 +192,16 @@ export type TitleChangeHandler = (
 ) => void;
 
 /**
+ * Callback handler for twisty panel titles.
+ * Called when a twisty panel title needs to be rendered or customized.
+ */
+export type TwistyTitleHandler = (
+  panelId: PropertyId,
+  title: string,
+  subtitle: string | ReactNode
+) => ReactNode;
+
+/**
  * https://elyra-ai.github.io/canvas/04.08-properties-config/
  */
 export interface CommonPropertiesConfig {
@@ -462,6 +472,11 @@ export interface CommonPropertiesProps {
       url: string;
       label: string;
     };
+    /**
+     * Callback handler for twisty panel titles.
+     * Called when a twisty panel title needs to be rendered or customized.
+     */
+    twistyTitleHandler?: TwistyTitleHandler;
   };
   propertiesConfig?: CommonPropertiesConfig;
   customPanels?: unknown[];
