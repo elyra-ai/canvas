@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Elyra Authors
+ * Copyright 2024-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -174,15 +174,17 @@ export default class KeyboardUtils {
 	}
 
 	static focusSubObject(d3Event) {
-		return !this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.altKey && d3Event.key === TAB_KEY;
+		return !this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.altKey && d3Event.key === DOWN_ARROW_KEY;
 	}
 
 	static nextSubObject(d3Event) {
-		return !d3Event.shiftKey && d3Event.key === TAB_KEY;
+		return (!d3Event.shiftKey && d3Event.key === TAB_KEY) ||
+			(!this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.altKey && d3Event.key === DOWN_ARROW_KEY);
 	}
 
 	static previousSubObject(d3Event) {
-		return d3Event.shiftKey && d3Event.key === TAB_KEY;
+		return (d3Event.shiftKey && d3Event.key === TAB_KEY) ||
+		(!this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.altKey && d3Event.key === UP_ARROW_KEY);
 	}
 
 	static cancelFocusOnSubObject(d3Event) {
@@ -202,19 +204,19 @@ export default class KeyboardUtils {
 	}
 
 	static moveObjectLeft(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === LEFT_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && !d3Event.altKey && d3Event.key === LEFT_ARROW_KEY;
 	}
 
 	static moveObjectRight(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === RIGHT_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && !d3Event.altKey && d3Event.key === RIGHT_ARROW_KEY;
 	}
 
 	static moveObjectUp(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === UP_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && !d3Event.altKey && d3Event.key === UP_ARROW_KEY;
 	}
 
 	static moveObjectDown(d3Event) {
-		return this.isMetaKey(d3Event) && !d3Event.shiftKey && d3Event.key === DOWN_ARROW_KEY;
+		return this.isMetaKey(d3Event) && !d3Event.shiftKey && !d3Event.altKey && d3Event.key === DOWN_ARROW_KEY;
 	}
 
 	static sizeObjectLeft(d3Event) {
@@ -252,6 +254,16 @@ export default class KeyboardUtils {
 	/* Link creation */
 
 	static createLink(d3Event) {
+		// When meta key is 'Ctrl' on Windows, shift key will cause 'key' property to contain uppercase 'L' - so lowercase it!
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key?.toLowerCase() === L_KEY;
+	}
+
+	static addConnectFromStatus(d3Event) {
+		// When meta key is 'Ctrl' on Windows, shift key will cause 'key' property to contain uppercase 'L' - so lowercase it!
+		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key?.toLowerCase() === L_KEY;
+	}
+
+	static createLinkFromConnectFrom(d3Event) {
 		// When meta key is 'Ctrl' on Windows, shift key will cause 'key' property to contain uppercase 'L' - so lowercase it!
 		return this.isMetaKey(d3Event) && d3Event.shiftKey && d3Event.key?.toLowerCase() === L_KEY;
 	}

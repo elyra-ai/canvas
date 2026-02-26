@@ -23,8 +23,9 @@ keys.selectAll = { key: "a", metaKey: true, release: true };
 keys.delete = { key: "Delete", metaKey: false, release: true };
 
 keys.contextMenu = { key: ",", metaKey: true, release: true };
+keys.contextMenuShiftF10 = { key: "F10", shiftKey: true, release: true };
 keys.moveObjectDown = { key: "ArrowDown", metaKey: true, release: true };
-keys.sizeObjectDown = { key: "ArrowDown", shiftKey: true, release: true };
+keys.sizeObjectDown = { key: "ArrowDown", metaKey: false, shiftKey: true, release: true };
 
 keys.panDown = { key: "ArrowDown", metaKey: true, shiftKey: true, release: true };
 keys.panRight = { key: "ArrowRight", metaKey: true, shiftKey: true, release: true };
@@ -54,5 +55,13 @@ keys.quote = { key: "i", metaKey: true, shiftKey: true, release: true };
 keys.link = { key: "k", metaKey: true, shiftKey: false, release: true };
 keys.numberedList = { key: "7", metaKey: true, shiftKey: true, release: true };
 keys.bulletedList = { key: "8", metaKey: true, shiftKey: true, release: true };
+
+// Shortcut for marking port as connection source and creating links
+keys.connectFromPort = { key: "l", metaKey: true, shiftKey: true, release: true };
+
+// Navigation keys
+keys.focusSubObject = { key: "ArrowDown", metaKey: false, shiftKey: true, altKey: true, release: true };
+keys.escape = { key: "Escape", release: true };
+keys.arrowRight = { key: "ArrowRight", release: true };
 
 export default keys;

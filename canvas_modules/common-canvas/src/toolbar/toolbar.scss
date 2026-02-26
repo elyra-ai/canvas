@@ -44,6 +44,14 @@ $toolbar-divider-width: 1px;
 		box-shadow: inset 0 0 0 1px carbon.$focus;
 	}
 
+	// When toolbar has focus and all buttons are disabled,
+	// highlight the first button to show where focus is
+	&.toolbar-all-disabled:focus {
+		.toolbar-left-bar > .toolbar-item:nth-of-type(2) .toolbar-button-item button {
+			box-shadow: inset 0 0 0 2px carbon.$focus;
+		}
+	}
+
 	/* Small size toolbar  */
 	&.toolbar-size-small {
 		height: $toolbar-button-sm-height;
