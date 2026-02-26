@@ -4,5 +4,12 @@
   "toolbar.zoomOut": "缩小",
   "toolbar.zoomToFit": "缩放至适当大小",
   "toolbar.overflowMenu": "溢出菜单",
-  "toolbar.label": "画布工具栏"
+  "toolbar.flowEditorToolbarLabel": "流程编辑器",
+  "toolbar.flowEditorToolbarContainer": "流程编辑器选项",
+  "toolbar.textToolbarLabel": "文本",
+  "toolbar.textToolbarContainer": "文本选项",
+  "toolbar.contextToolbarLabel": "上下文",
+  "toolbar.contextToolbarContainer": "上下文选项",
+  "toolbar.paletteDialogToolbarLabel": "调色板对话框",
+  "toolbar.paletteDialogToolbarContainer": "调色板对话框选项"
 }
