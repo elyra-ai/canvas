@@ -3014,6 +3014,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#paneltitlehandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        panelTitleHandler()
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3655,6 +3666,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#paneltitlehandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        panelTitleHandler()
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3695,7 +3717,8 @@
       propertiesActionLabelHandler: this.propertiesActionLabelHandler,
       tooltipLinkHandler: this.tooltipLinkHandler,
       filterItemsHandler: this.filterItemsHandler,
-      customHeaderHandler: this.customHeaderHandler
+      customHeaderHandler: this.customHeaderHandler,
+      panelTitleHandler: this.panelTitleHandler
   };
 </code></pre></div>
 <h3 id="applypropertychangespropertyset-appdata-additionalinfo-undoinfo-uiproperties">applyPropertyChanges(propertySet, appData, additionalInfo, undoInfo, uiProperties)<a class="headerlink" href="#applypropertychangespropertyset-appdata-additionalinfo-undoinfo-uiproperties" title="Permanent link">&para;</a></h3>
@@ -3918,6 +3941,21 @@ This callback must return an object having url and label.</p>
 
 <span class="p">}</span>
 </code></pre></div></p>
+<h3 id="paneltitlehandler">panelTitleHandler()<a class="headerlink" href="#paneltitlehandler" title="Permanent link">&para;</a></h3>
+<p>Optional callback used to customize the title display of panels. This callback is currently only called when rendering a twisty panel and allows you to replace the default panel title with custom content (such as adding icons, badges, or additional text).</p>
+<p>The callback receives an object with <code>panelId</code> and <code>label</code> properties, and should return a string or JSX element to be used as the panel title, or null to use the default label.</p>
+<div class="highlight"><pre><span></span><code><span class="nx">panelTitleHandler</span><span class="p">({</span><span class="w"> </span><span class="nx">panelId</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">panelId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;twisty-panel-id&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<span class="w">      </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;custom-panel-title&quot;</span><span class="o">&gt;</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">label</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="nx">span</span><span class="w"> </span><span class="nx">className</span><span class="o">=</span><span class="s2">&quot;custom-subtitle&quot;</span><span class="o">&gt;</span><span class="nx">sub</span><span class="w"> </span><span class="nx">title</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+<span class="w">      </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"> </span><span class="c1">// Use default label specified in parameter defintion</span>
+<span class="p">}</span>
+</code></pre></div>
 
 
 
