@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,13 +125,13 @@ describe("CommonCanvas renders correctly", () => {
 	it("should render one <PaletteFlyout/> component when enablePaletteLayout is not specified", () => {
 		const config = {};
 		const { container } = createCommonCanvas(config, canvasController);
-		expect(container.querySelectorAll("nav.palette-nav")).to.have.length(1);
+		expect(container.querySelectorAll("div.palette-nav")).to.have.length(1);
 	});
 
 	it("should render one <PaletteFlyout/> component when enablePaletteLayout is set to Flyout", () => {
 		const config = { enablePaletteLayout: "Flyout" };
 		const { container } = createCommonCanvas(config, canvasController);
-		expect(container.querySelectorAll("nav.palette-nav")).to.have.length(1);
+		expect(container.querySelectorAll("div.palette-nav")).to.have.length(1);
 	});
 
 	it("should not render any <PaletteDialog/> component when enablePaletteLayout is not specified", () => {

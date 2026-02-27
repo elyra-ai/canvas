@@ -6,5 +6,8 @@
 	"palette.flyout.search.more": "[Esperanto~Show more~~~~eo]",
 	"palette.flyout.search.less": "[Esperanto~Show less~~~~eo]",
 	"palette.flyout.label": "[Esperanto~Flyout Palette~eo]",
-	"palette.dialog.label": "[Esperanto~Dialog Palette~eo]"
+	"palette.dialog.label": "[Esperanto~Dialog Palette~eo]",
+	"palette.dialog.grid": "[Esperanto~Grid view~eo]",
+	"palette.dialog.list": "[Esperanto~List view~eo]",
+	"palette.dialog.close": "[Esperanto~Close palette~eo]"
 }

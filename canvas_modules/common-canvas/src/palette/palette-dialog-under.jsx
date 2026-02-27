@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -530,8 +530,11 @@ class PaletteDialog extends React.Component {
 	}
 
 	render() {
+		const label = this.props.intl.formatMessage(
+			{ id: "palette.dialog.label", defaultMessage: defaultMessages["palette.dialog.label"] }
+		);
 		return (
-			<nav aria-label={this.props.intl.formatMessage({ id: "palette.dialog.label", defaultMessage: defaultMessages["palette.dialog.label"] })} role="navigation">
+			<div role="region" aria-label={label} >
 				<div ref={this.dialogPaletteDivRef} className="palette-dialog-div"
 					onMouseDown={this.mouseDownOnPalette}
 				>
@@ -548,7 +551,7 @@ class PaletteDialog extends React.Component {
 						allowClickToAdd={this.props.allowClickToAdd}
 					/>
 				</div>
-			</nav>
+			</div>
 		);
 	}
 }
