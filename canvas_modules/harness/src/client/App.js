@@ -516,7 +516,7 @@ class App extends React.Component {
 		// which would cause a refresh.
 		this.emptyCanvasDiv = (
 			<div>
-				<Isvg src={BlankCanvasImage} aria-label="Harness empty image" className="harness-empty-image" />
+				<Isvg src={BlankCanvasImage} aria-label="Empty canvas - add nodes to get started" alt="Empty canvas illustration" className="harness-empty-image" />
 				<span className="harness-empty-text">
 					<FormattedMessage
 						id={"canvas.emptyText"}
@@ -2787,18 +2787,6 @@ class App extends React.Component {
 		const toolbarConfig = {
 			leftBar: [
 				{
-					action: "harness-title",
-					label: "Elyra Canvas",
-					enable: true,
-					jsx: (tabIndex) => (
-						<div className="harness-title-container toolbar-jsx-obj" tabIndex={tabIndex} role="button">
-							<span className="harness-title">Elyra Canvas</span>
-							<span className="harness-version">{todaysDateFormatted}</span>
-						</div>
-					)
-				},
-				{ divider: true },
-				{
 					action: "console",
 					label: "Console",
 					enable: true,
@@ -2866,10 +2854,10 @@ class App extends React.Component {
 				{ divider: true },
 				{
 					action: "sidepanelCanvas",
-					label: "Common Canvas",
+					label: "Common Canvas Options",
 					enable: true,
 					iconEnabled: (<FlowData size={16} />),
-					tooltip: "Common Canvas"
+					tooltip: "Common Canvas Options"
 				},
 				{
 					action: "sidepanelAPI",
@@ -2880,16 +2868,20 @@ class App extends React.Component {
 				},
 				{
 					action: "sidepanelProperties",
-					label: "Common Properties",
+					label: "Common Properties Options",
 					enable: true,
 					iconEnabled: (<GuiManagement size={16} />),
-					tooltip: "Common Properties"
+					tooltip: "Common Properties Options"
 				}
 			]
 		};
 
 		return (
-			<div className="harness-app-navbar" role="navigation" aria-label="Test harness options">
+			<div className="harness-app-navbar" role="banner" aria-label="Test harness">
+				<div className="harness-title-container">
+					<span className="harness-title">Elyra Canvas</span>
+					<span className="harness-version">{todaysDateFormatted}</span>
+				</div>
 				<Toolbar
 					config={toolbarConfig}
 					instanceId={this.canvasController.getInstanceId()}

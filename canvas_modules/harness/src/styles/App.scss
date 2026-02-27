@@ -44,25 +44,6 @@ $harness-navbar-icon-width: 48px;
 	height: 50%;
 }
 
-.harness-title {
-	color: carbon.$text-primary;
-	min-width: $harness-navbar-title-width;
-	display: block;
-	font-size: 14px;
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-top: 4px;
-}
-
-.harness-version {
-	color: carbon.$text-primary;
-	display: block;
-	font-size: 8px;
-	text-align: right;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
 /* Styles for elements displayed for empty canvas. */
 
 .harness-empty-image {
@@ -98,6 +79,37 @@ $harness-navbar-icon-width: 48px;
 
 .harness-app-navbar {
 	height: 50px;
+	display: flex;
+}
+
+.harness-title-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: carbon.$layer-01;
+	height: 100%;
+	border-right: 1px solid carbon.$border-subtle-01;
+	border-bottom: 1px solid carbon.$border-subtle-01;
+
+	.harness-title {
+		color: carbon.$text-primary;
+		min-width: $harness-navbar-title-width;
+		display: block;
+		font-size: 14px;
+		padding-left: 4px;
+		padding-top: 4px;
+	}
+
+	.harness-version {
+		color: carbon.$text-primary;
+		display: block;
+		font-size: 8px;
+		text-align: right;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
 }
 
 /* Navbar Theme Toggle */
