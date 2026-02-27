@@ -8,7 +8,9 @@
     "fields": [
       "age",
       "drug"
-    ]
+    ],
+    "twistyLabelInput": "",
+    "twistyLabelIcon": "none"
   },
   "parameters": [
     {
@@ -26,6 +28,18 @@
       "type": "array[string]",
       "role": "column",
       "required": true
+    },
+    {
+      "id": "twistyLabelInput",
+      "type": "string"
+    },
+    {
+      "id": "twistyLabelIcon",
+      "enum": [
+        "none",
+        "warning",
+        "error"
+      ]
     }
   ],
   "complex_types": [],
@@ -68,6 +82,33 @@
         },
         "moveable_rows": true,
         "summary": true
+      },
+      {
+        "parameter_ref": "twistyLabelInput",
+        "label": {
+          "default": "Text to display under twisty title"
+        }
+      },
+      {
+        "parameter_ref": "twistyLabelIcon",
+        "label": {
+          "default": "Twisty Label Icon"
+        },
+        "description": {
+          "default": "Select an icon to display with the twisty sub label that will appear under the title."
+        },
+        "control": "radioset",
+        "orientation": "vertical",
+        "values": [
+          "none",
+          "warning",
+          "error"
+        ],
+        "value_labels": [
+          "None",
+          "Warning",
+          "Error"
+        ]
       }
     ],
     "action_info": [
@@ -80,6 +121,13 @@
         "data": {
           "parameter_ref": "toValue"
         }
+      },
+      {
+        "id": "submitTwistyTitleLabel",
+        "label": {
+          "resource_key": "Submit"
+        },
+        "control": "button"
       }
     ],
     "complex_type_info": [],
@@ -130,6 +178,33 @@
                 "id": "Inline editing",
                 "parameter_refs": [
                   "fields"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "TwistyPanel2",
+            "label": {
+              "default": "Twisty title label"
+            },
+            "type": "twistyPanel",
+            "group_info": [
+              {
+                "id": "twisty-label-controls",
+                "type": "controls",
+                "label": {
+                  "default": "Range Fields"
+                },
+                "parameter_refs": [
+                  "twistyLabelInput",
+                  "twistyLabelIcon"
+                ]
+              },
+              {
+                "id": "submit-action-panel",
+                "type": "actionPanel",
+                "action_refs": [
+                  "submitTwistyTitleLabel"
                 ]
               }
             ]

@@ -24,21 +24,28 @@ import { STATES } from "./../../constants/constants.js";
 
 
 class TwistyPanel extends React.Component {
+	constructor(props) {
+		super(props);
+		this.panelTitleHandler = props.controller.getHandlers().panelTitleHandler ?? null;
+	}
 
 	render() {
 		const className = this.props.panel.className ? this.props.panel.className : "";
 		const disabled = this.props.panelState === STATES.DISABLED;
+		const title = this.panelTitleHandler?.({ panelId: this.props.panel.id, label: this.props.panel.label }) || this.props.panel.label;
+
 		return (
 			<div
 				className={classNames(
 					"properties-twisty-panel",
 					{ "hide": this.props.panelState === STATES.HIDDEN },
 					{ "properties-control-nested-panel": this.props.panel.nestedPanel },
+					{ "properties-twisty-custom-title": this.props.panel.label !== title },
 					className
 				)} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
 			>
 				<Accordion disabled={disabled}>
-					<AccordionItem disabled={disabled} open={this.props.panel.open} title={this.props.panel.label}>
+					<AccordionItem disabled={disabled} open={this.props.panel.open} title={title} className="properties-twisty-accordion-item">
 						{this.props.children}
 					</AccordionItem>
 				</Accordion>
