@@ -48,11 +48,15 @@ export default class WideFlyout extends Component {
 			return;
 		}
 		if (this.props.show && modal) {
-			const active = document.activeElement;
-			// Restore focus if lost due to modal content changes like typing or adding new fields
-			if (active === document.body || !modal.contains(active)) {
-				this.focusOnFirstFocusable();
-			}
+			// During render, document.activeElement is document.body temporarily,
+			// so we need to wait for last updates before checking focus.
+			setTimeout(() => {
+				const active = document.activeElement;
+				// Restore focus if lost due to modal content changes like typing or adding new fields
+				if (active === document.body || !modal.contains(active)) {
+					this.focusOnFirstFocusable();
+				}
+			}, 0);
 		}
 	}
 	componentWillUnmount() {
@@ -67,7 +71,7 @@ export default class WideFlyout extends Component {
 		}
 		return Array.from(
 			modal.querySelectorAll(
-				"button, a[href], input, select, textarea, [tabindex]:not([tabindex='-1'])"
+				"button, a[href], input, select, textarea, [tabindex]:not([tabindex='-1']), [contenteditable='true']"
 			)).filter((el) => el.offsetParent !== null); // Filter out hidden/disabled elements.
 	}
 	// Focus on the first focusable element once modal opens.

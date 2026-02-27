@@ -21,7 +21,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const babelOptions = require("./scripts/babel/babelOptions.cjs");
-const constants = require("./lib/constants.js");
+const constants = import("./lib/constants.js");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
