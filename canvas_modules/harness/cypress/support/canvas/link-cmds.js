@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import key from "../../support/canvas/key.js";
-
 Cypress.Commands.add("getLinkWithLabel", (linkLabel) => {
 	const nodeNames = linkLabel.split("-");
 	cy.getPipeline()
