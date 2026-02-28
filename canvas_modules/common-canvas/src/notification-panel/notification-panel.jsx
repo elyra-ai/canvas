@@ -143,8 +143,16 @@ class NotificationPanel extends React.Component {
 					</button>
 				);
 			} else {
+				// role="article" marks this as a self-contained notification item.
+				// tabIndex={0} ensures keyboard users can reach notifications that
+				// have no interactive children (no callback, no dismiss button).
 				notificationBody = (
-					<div className={"notifications " + message.type}>
+					<div
+						className={"notifications " + message.type}
+						role="article"
+						tabIndex={0}
+						ref={(ref) => (!ref || this.allRefs.push(ref))}
+					>
 						{type}
 						{messageDetails}
 					</div>
