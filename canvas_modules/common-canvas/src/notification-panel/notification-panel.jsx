@@ -205,9 +205,7 @@ class NotificationPanel extends React.Component {
 			return null;
 		}
 
-		const headerText = this.props.notificationConfig && this.props.notificationConfig.notificationHeader
-			? this.props.notificationConfig.notificationHeader
-			: DEFAULT_NOTIFICATION_HEADER;
+		const headerText = this.props.notificationConfig?.notificationHeader ?? DEFAULT_NOTIFICATION_HEADER;
 
 		const notificationHeader = (<div className="notification-panel-header">{headerText}</div>);
 
