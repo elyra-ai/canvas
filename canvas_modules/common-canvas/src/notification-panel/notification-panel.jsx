@@ -119,23 +119,36 @@ class NotificationPanel extends React.Component {
 				: null;
 
 			const containerClass = "notifications-button-container" + (message.closeMessage ? " has-close-message" : "");
-			notifications.push(<div className={containerClass} role="listitem" key={index + "-" + message.id} >
-				<button
-					type="button"
-					className={"notifications " + className + message.type}
-					onClick={this.notificationCallback.bind(this, message.id, message.callback)}
-					ref={(ref) => (!ref || this.allRefs.push(ref))}
-				>
-					{type}
-					<div className="notification-message-details">
-						{title}
-						{subtitle}
-						<div className="notification-message-content">
-							{message.content}
-						</div>
-						{timestamp}
+			const messageDetails = (
+				<div className="notification-message-details">
+					{title}
+					{subtitle}
+					<div className="notification-message-content">
+						{message.content}
 					</div>
-				</button>
+					{timestamp}
+				</div>
+			);
+			const notificationBody = message.callback
+				? (
+					<button
+						type="button"
+						className={"notifications " + className + message.type}
+						onClick={this.notificationCallback.bind(this, message.id, message.callback)}
+						ref={(ref) => (!ref || this.allRefs.push(ref))}
+					>
+						{type}
+						{messageDetails}
+					</button>
+				)
+				: (
+					<div className={"notifications " + message.type}>
+						{type}
+						{messageDetails}
+					</div>
+				);
+			notifications.push(<div className={containerClass} role="listitem" key={index + "-" + message.id} >
+				{notificationBody}
 				{closeMessage}
 			</div>);
 		}
