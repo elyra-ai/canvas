@@ -85,6 +85,8 @@ $notification-panel-button-container-height: 49px;
 	.notifications-button-container {
 		border-bottom: 1px solid carbon.$layer-accent-01;
 		min-height: $notification-message-height;
+		display: flex;
+		align-items: flex-start;
 	}
 
 	.notification-panel-empty-message-container {
@@ -114,7 +116,8 @@ $notification-panel-button-container-height: 49px;
 	.notifications {
 		padding: carbon.$spacing-05 carbon.$spacing-05 carbon.$spacing-05 calc(#{carbon.$spacing-05} - #{$notification-left-border-color-width});
 		display: inline-flex;
-		width: 100%;
+		flex: 1;
+		width: auto;
 		min-height: $notification-message-height;
 		background-color: carbon.$layer-01;
 		border-style: none;
@@ -176,7 +179,8 @@ $notification-panel-button-container-height: 49px;
 		.notification-message-details {
 			text-align: left;
 			overflow-wrap: break-word;
-			width: 266px;
+			flex: 1;
+			min-width: 0;
 
 			.notification-message-title {
 				@include carbon.type-style("productive-heading-01");

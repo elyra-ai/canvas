@@ -95,10 +95,7 @@ class NotificationPanel extends React.Component {
 				? (
 					<button type="button" ref={(ref) => (!ref || this.allRefs.push(ref))}
 						className="notification-message-close"
-						onClick={(evt) => {
-							evt.stopPropagation();
-							this.clickOnCloseButton(message);
-						}}
+						onClick={this.clickOnCloseButton.bind(this, message)}
 						aria-label={typeof message.closeMessage === "string"
 							? message.closeMessage
 							: this.props.intl.formatMessage({
@@ -136,9 +133,9 @@ class NotificationPanel extends React.Component {
 							{message.content}
 						</div>
 						{timestamp}
-						{closeMessage}
 					</div>
 				</button>
+				{closeMessage}
 			</div>);
 		}
 
