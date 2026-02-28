@@ -96,6 +96,12 @@ class NotificationPanel extends React.Component {
 					<button type="button" ref={(ref) => (!ref || this.allRefs.push(ref))}
 						className="notification-message-close"
 						onClick={this.clickOnCloseButton.bind(this, message)}
+						aria-label={typeof message.closeMessage === "string"
+							? message.closeMessage
+							: this.props.intl.formatMessage({
+								id: "notification.message.close.button.label",
+								defaultMessage: defaultMessages["notification.message.close.button.label"]
+							})}
 					>
 						{message.closeMessage}
 					</button>)
