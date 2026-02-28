@@ -146,6 +146,7 @@ class NotificationPanel extends React.Component {
 				notificationBody = (
 					<div
 						className={"notifications " + message.type}
+						role="group"
 						tabIndex={0}
 						ref={(ref) => (!ref || this.allRefs.push(ref))}
 					>
