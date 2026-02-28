@@ -37,6 +37,9 @@ class NotificationPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
+		// Flag used to defer focus management until after the re-render that follows
+		// clearNotificationMessages(). Setting focus synchronously in that method would
+		// reference stale DOM nodes because this.allRefs is rebuilt on each render().
 		this.focusAfterClear = false;
 
 		this.logger = new Logger("NotificationPanel");
@@ -48,6 +51,8 @@ class NotificationPanel extends React.Component {
 	}
 
 	componentDidUpdate() {
+		// After clearNotificationMessages() triggers a re-render, move focus to the
+		// first focusable item now that this.allRefs reflects the updated DOM.
 		if (this.focusAfterClear) {
 			this.focusAfterClear = false;
 			this.setFocusOnFirstItem();
