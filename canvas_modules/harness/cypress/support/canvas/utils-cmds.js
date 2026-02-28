@@ -73,7 +73,7 @@ Cypress.Commands.add("getObjectDimensions", (objSelector) => {
 });
 
 Cypress.Commands.add("getCanvasTranslateCoords", () => {
-	cy.get(`div#canvas-div-${document.instanceId} > div[role='application'] > .svg-area > g`)
+	cy.get(`div#canvas-div-${document.instanceId} > .d3-svg-canvas-div > .svg-area > g`)
 		.then((g) => {
 			const transform = g[0].getAttribute("transform");
 			return extractTransformValues(transform);
@@ -82,7 +82,7 @@ Cypress.Commands.add("getCanvasTranslateCoords", () => {
 
 
 Cypress.Commands.add("getCanvasBackgroundTranslateCoords", () => {
-	cy.get(`div#canvas-div-${document.instanceId} > div[role='application'] > .svg-area > .d3-svg-background-grid`)
+	cy.get(`div#canvas-div-${document.instanceId} > .d3-svg-canvas-div > .svg-area > .d3-svg-background-grid`)
 		.then((background) => {
 			const transform = background[0].getAttribute("transform");
 			return extractTransformValues(transform);
