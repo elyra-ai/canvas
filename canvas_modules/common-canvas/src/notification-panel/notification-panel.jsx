@@ -47,13 +47,7 @@ class NotificationPanel extends React.Component {
 	}
 
 	componentDidMount() {
-		// Only move focus into the panel when it was opened via keyboard navigation.
-		// When opened via mouse click, document.activeElement is document.body (no
-		// specific element has keyboard focus), so we leave focus where it is to
-		// avoid disorienting mouse users.
-		if (document.activeElement && document.activeElement !== document.body) {
-			this.setFocusOnFirstItem();
-		}
+		this.setFocusOnFirstItem();
 	}
 
 	componentDidUpdate() {
