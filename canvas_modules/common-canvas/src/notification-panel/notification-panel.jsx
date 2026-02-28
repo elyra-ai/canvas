@@ -209,7 +209,7 @@ class NotificationPanel extends React.Component {
 
 		const notificationHeader = (<div className="notification-panel-header">{headerText}</div>);
 
-		const notificationSubtitle = this.props.notificationConfig && this.props.notificationConfig.notificationSubtitle
+		const notificationSubtitle = this.props.notificationConfig?.notificationSubtitle
 			? (<div className="notification-panel-subtitle">
 				{this.props.notificationConfig.notificationSubtitle}
 			</div>)
@@ -239,11 +239,11 @@ class NotificationPanel extends React.Component {
 			: (
 				<div ref={(ref) => (!ref || this.allRefs.push(ref))} className="notification-panel-empty-message-container">
 					<div className="notification-panel-empty-message">
-						{this.props.notificationConfig && this.props.notificationConfig.emptyMessage ? this.props.notificationConfig.emptyMessage : null}
+						{this.props.notificationConfig?.emptyMessage ?? null}
 					</div>
 				</div>);
 
-		const clearAll = this.props.notificationConfig && this.props.notificationConfig.clearAllMessage
+		const clearAll = this.props.notificationConfig?.clearAllMessage
 			? (<div className="notification-panel-clear-all-container">
 				<Button
 					ref={(ref) => (!ref || this.props.messages.length === 0 || this.allRefs.push(ref))}
@@ -258,8 +258,7 @@ class NotificationPanel extends React.Component {
 			</div>)
 			: null;
 
-		const secondaryButton = this.props.notificationConfig &&
-			this.props.notificationConfig.secondaryButtonLabel &&
+		const secondaryButton = this.props.notificationConfig?.secondaryButtonLabel &&
 			this.props.notificationConfig.secondaryButtonCallback
 			? (<div className="notification-panel-secondary-button-container">
 				<Button
