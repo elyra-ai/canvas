@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -109,7 +109,7 @@ describe("CommonCanvas renders correctly", () => {
 	it("should render one <CanvasContents/> component", () => {
 		const config = {};
 		const { container } = createCommonCanvas(config, canvasController);
-		expect(container.querySelector("section")).to.exist;
+		expect(container.querySelector("div.d3-svg-canvas-div")).to.exist;
 		expect(container.querySelectorAll("div.common-canvas-drop-div")).to.have.length(1);
 	});
 
@@ -125,13 +125,13 @@ describe("CommonCanvas renders correctly", () => {
 	it("should render one <PaletteFlyout/> component when enablePaletteLayout is not specified", () => {
 		const config = {};
 		const { container } = createCommonCanvas(config, canvasController);
-		expect(container.querySelectorAll("nav.palette-nav")).to.have.length(1);
+		expect(container.querySelectorAll("div.palette-nav")).to.have.length(1);
 	});
 
 	it("should render one <PaletteFlyout/> component when enablePaletteLayout is set to Flyout", () => {
 		const config = { enablePaletteLayout: "Flyout" };
 		const { container } = createCommonCanvas(config, canvasController);
-		expect(container.querySelectorAll("nav.palette-nav")).to.have.length(1);
+		expect(container.querySelectorAll("div.palette-nav")).to.have.length(1);
 	});
 
 	it("should not render any <PaletteDialog/> component when enablePaletteLayout is not specified", () => {
@@ -190,7 +190,7 @@ describe("CommonCanvas renders correctly", () => {
 		canvasController.openPalette();
 		expect(canvasController.isPaletteOpen() === true).to.be.true;
 
-		// After closeing the palette the palette should be closed.
+		// After closing the palette the palette should be closed.
 		canvasController.closePalette();
 		expect(canvasController.isPaletteOpen() === false).to.be.true;
 	});
@@ -204,7 +204,7 @@ describe("CommonCanvas renders correctly", () => {
 		createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig,
 			{ editActionHandler: editActionHandler });
 
-		canvasController.editActionHandler({ editType: "dummayFunction" });
+		canvasController.editActionHandler({ editType: "dummyFunction" });
 
 		expect(editActionHandler.called).to.be.true;
 	});
@@ -214,14 +214,14 @@ describe("CommonCanvas renders correctly", () => {
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 		const config = {};
 		const canvasParams = {};
-		const beforeEditActionHandler = (data) => data; // Just return the data passd in
+		const beforeEditActionHandler = (data) => data; // Just return the data passed in
 		const editActionHandler = sinon.spy();
 
 		createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig,
 			{ editActionHandler: editActionHandler,
 				beforeEditActionHandler: beforeEditActionHandler });
 
-		canvasController.editActionHandler({ editType: "dummayFunction" });
+		canvasController.editActionHandler({ editType: "dummyFunction" });
 
 		expect(editActionHandler.called).to.be.true;
 	});
@@ -238,7 +238,7 @@ describe("CommonCanvas renders correctly", () => {
 			{ editActionHandler: editActionHandler,
 				beforeEditActionHandler: beforeEditActionHandler });
 
-		canvasController.editActionHandler({ editType: "dummayFunction" });
+		canvasController.editActionHandler({ editType: "dummyFunction" });
 
 		expect(editActionHandler.called).to.be.false;
 	});

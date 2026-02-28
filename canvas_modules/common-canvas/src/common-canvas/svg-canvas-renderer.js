@@ -4355,7 +4355,6 @@ export default class SVGCanvasRenderer {
 			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
 			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
 			.attr("class", (c) => this.getCommentGroupClass(c))
-			.attr("role", "region")
 			.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("comment.ariaRoleDescription"))
 			.attr("aria-label", (c) => this.canvasController.labelUtil.getLabel("comment.ariaLabel", { content: c.content }))
 			.call((joinedCommentGrps) => this.updateComments(joinedCommentGrps));

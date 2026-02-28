@@ -5,11 +5,7 @@
   "toolbar.zoomToFit": "Zoom to fit",
   "toolbar.overflowMenu": "Overflow menu",
   "toolbar.flowEditorToolbarLabel": "Flow editor",
-  "toolbar.flowEditorToolbarContainer": "Flow editor options",
   "toolbar.textToolbarLabel": "Text",
-  "toolbar.textToolbarContainer": "Text options",
   "toolbar.contextToolbarLabel": "Context",
-  "toolbar.contextToolbarContainer": "Context options",
-  "toolbar.paletteDialogToolbarLabel": "Palette dialog",
-  "toolbar.paletteDialogToolbarContainer": "Palette dialog options"
+  "toolbar.paletteDialogToolbarLabel": "Palette dialog"
 }

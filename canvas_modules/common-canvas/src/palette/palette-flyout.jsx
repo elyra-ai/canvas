@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,11 @@ class PaletteFlyout extends React.Component {
 			className += " palette-flyout-div-narrow";
 		}
 
+		const label = this.props.intl.formatMessage(
+			{ id: "palette.flyout.label", defaultMessage: defaultMessages["palette.flyout.label"] }
+		);
 		return (
-			<nav className="palette-nav"
-				aria-label={this.props.intl.formatMessage({ id: "palette.flyout.label", defaultMessage: defaultMessages["palette.flyout.label"] })}
-				role="navigation"
-			>
+			<div role="region" aria-label={label} className="palette-nav">
 				<div className={className}>
 					<PaletteFlyoutContent
 						canvasController={this.props.canvasController}
@@ -52,7 +52,7 @@ class PaletteFlyout extends React.Component {
 						tabOutOfOfPalette={this.props.tabOutOfOfPalette}
 					/>
 				</div>
-			</nav>
+			</div>
 		);
 	}
 }
