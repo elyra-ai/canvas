@@ -143,15 +143,15 @@ class NotificationPanel extends React.Component {
 					</button>
 				);
 			} else {
+				// No callback: render as a plain div so the screen reader does not
+				// announce it as an interactive button. The notification content is
+				// reachable via screen reader virtual cursor, and any interactive
+				// children (links, dismiss button) are reachable via Tab.
 				notificationBody = (
-					<button
-						type="button"
-						className={"notifications " + message.type}
-						ref={(ref) => (!ref || this.allRefs.push(ref))}
-					>
+					<div className={"notifications " + message.type}>
 						{type}
 						{messageDetails}
-					</button>
+					</div>
 				);
 			}
 			notifications.push(<div className={containerClass} role="listitem" key={index + "-" + message.id} >
