@@ -496,10 +496,9 @@ class CanvasContents extends React.Component {
 		if (this.props.canvasConfig.enableKeyboardNavigation) {
 			// Set tabindex to 0 so the focus can go to the <div>
 			return (
-				<section role="application"
+				<div role="region"
 					id={this.svgCanvasDivId}
 					tabIndex="0"
-					aria-roledescription={this.getLabel("canvas.roleDescription")}
 					className="d3-svg-canvas-div keyboard-navigation"
 					onMouseDown={this.onMouseDown}
 					onMouseLeave={this.onMouseLeave}
@@ -515,7 +514,7 @@ class CanvasContents extends React.Component {
 		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
 		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
 		return (
-			<section tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId}
+			<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId}
 				onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
 			/>
 		);
