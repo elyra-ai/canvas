@@ -61,7 +61,7 @@ class NotificationPanel extends React.Component {
 			const message = this.props.messages[index];
 			const className = message.callback ? " clickable " : "";
 			const iconType = message.type;
-			const type = (<div className="notification-message-type">
+			const type = (<div className="notification-message-type" aria-hidden="true">
 				<Icon type={iconType} className={`notification-message-icon-${iconType}`} />
 			</div>);
 
@@ -90,7 +90,7 @@ class NotificationPanel extends React.Component {
 
 			const timestamp = message.timestamp
 				? (<div className="notification-message-timestamp">
-					<div className="notification-message-timestamp-icon">
+					<div className="notification-message-timestamp-icon" aria-hidden="true">
 						<Icon type="time" />
 					</div>
 					<div className="notification-message-string">
