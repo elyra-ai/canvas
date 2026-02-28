@@ -190,7 +190,7 @@ describe("CommonCanvas renders correctly", () => {
 		canvasController.openPalette();
 		expect(canvasController.isPaletteOpen() === true).to.be.true;
 
-		// After closeing the palette the palette should be closed.
+		// After closing the palette the palette should be closed.
 		canvasController.closePalette();
 		expect(canvasController.isPaletteOpen() === false).to.be.true;
 	});
@@ -204,7 +204,7 @@ describe("CommonCanvas renders correctly", () => {
 		createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig,
 			{ editActionHandler: editActionHandler });
 
-		canvasController.editActionHandler({ editType: "dummayFunction" });
+		canvasController.editActionHandler({ editType: "dummyFunction" });
 
 		expect(editActionHandler.called).to.be.true;
 	});
@@ -214,14 +214,14 @@ describe("CommonCanvas renders correctly", () => {
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 		const config = {};
 		const canvasParams = {};
-		const beforeEditActionHandler = (data) => data; // Just return the data passd in
+		const beforeEditActionHandler = (data) => data; // Just return the data passed in
 		const editActionHandler = sinon.spy();
 
 		createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig,
 			{ editActionHandler: editActionHandler,
 				beforeEditActionHandler: beforeEditActionHandler });
 
-		canvasController.editActionHandler({ editType: "dummayFunction" });
+		canvasController.editActionHandler({ editType: "dummyFunction" });
 
 		expect(editActionHandler.called).to.be.true;
 	});
@@ -238,7 +238,7 @@ describe("CommonCanvas renders correctly", () => {
 			{ editActionHandler: editActionHandler,
 				beforeEditActionHandler: beforeEditActionHandler });
 
-		canvasController.editActionHandler({ editType: "dummayFunction" });
+		canvasController.editActionHandler({ editType: "dummyFunction" });
 
 		expect(editActionHandler.called).to.be.false;
 	});
