@@ -37,6 +37,7 @@ class NotificationPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
+		this.focusAfterClear = false;
 
 		this.logger = new Logger("NotificationPanel");
 		this.keyDownOnPanel = this.keyDownOnPanel.bind(this);
@@ -44,6 +45,13 @@ class NotificationPanel extends React.Component {
 
 	componentDidMount() {
 		this.setFocusOnFirstItem();
+	}
+
+	componentDidUpdate() {
+		if (this.focusAfterClear) {
+			this.focusAfterClear = false;
+			this.setFocusOnFirstItem();
+		}
 	}
 
 	setFocusOnFirstItem() {
@@ -143,8 +151,8 @@ class NotificationPanel extends React.Component {
 	}
 
 	clearNotificationMessages() {
+		this.focusAfterClear = true;
 		this.props.subPanelData.canvasController.clearNotificationMessages();
-		this.setFocusOnFirstItem();
 
 		if (typeof this.props.notificationConfig.clearAllCallback === "function") {
 			this.props.notificationConfig.clearAllCallback();
