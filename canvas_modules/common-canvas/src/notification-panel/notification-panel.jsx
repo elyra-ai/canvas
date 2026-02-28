@@ -118,17 +118,12 @@ class NotificationPanel extends React.Component {
 				</div>)
 				: null;
 
-			const ariaLabel = message.title && typeof message.title === "string"
-				? `${message.type}: ${message.title}`
-				: message.type;
-
 			notifications.push(<div className="notifications-button-container" role="listitem" key={index + "-" + message.id} >
 				<button
 					type="button"
 					className={"notifications " + className + message.type}
 					onClick={this.notificationCallback.bind(this, message.id, message.callback)}
 					ref={(ref) => (!ref || this.allRefs.push(ref))}
-					aria-label={ariaLabel}
 				>
 					{type}
 					<div className="notification-message-details">
