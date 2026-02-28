@@ -214,13 +214,19 @@ class NotificationPanel extends React.Component {
 
 		const headerText = this.props.notificationConfig?.notificationHeader ?? DEFAULT_NOTIFICATION_HEADER;
 
-		const notificationHeader = (<div className="notification-panel-header">{headerText}</div>);
+		const notificationHeader = (
+			<div id="notification-panel-header" className="notification-panel-header">{headerText}</div>
+		);
 
 		const notificationSubtitle = this.props.notificationConfig?.notificationSubtitle
-			? (<div className="notification-panel-subtitle">
+			? (<div id="notification-panel-subtitle" className="notification-panel-subtitle">
 				{this.props.notificationConfig.notificationSubtitle}
 			</div>)
 			: null;
+
+		const panelLabelledBy = notificationSubtitle
+			? "notification-panel-header notification-panel-subtitle"
+			: "notification-panel-header";
 
 		const closeButton = (
 			<div className="notification-panel-close-button">
@@ -283,7 +289,7 @@ class NotificationPanel extends React.Component {
 
 		return (
 			<div className="notification-panel" onKeyDown={this.keyDownOnPanel}
-				role="complementary" aria-label={headerText}
+				role="complementary" aria-labelledby={panelLabelledBy}
 			>
 				<div className="notification-panel-header-container">
 					{notificationHeader}
