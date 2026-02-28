@@ -80,13 +80,12 @@ class NotificationPanel extends React.Component {
 
 			const closeMessage = message.closeMessage
 				? (
-					<div tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))}
-						className = "notification-message-close"
+					<button type="button" ref={(ref) => (!ref || this.allRefs.push(ref))}
+						className="notification-message-close"
 						onClick={this.clickOnCloseButton.bind(this, message)}
-						onKeyDown={this.keyDownOnCloseButton.bind(this, message)}
 					>
 						{message.closeMessage}
-					</div>)
+					</button>)
 				: null;
 
 			const timestamp = message.timestamp
@@ -101,11 +100,10 @@ class NotificationPanel extends React.Component {
 				: null;
 
 			notifications.push(<div className="notifications-button-container" key={index + "-" + message.id} >
-				<div
+				<button
+					type="button"
 					className={"notifications " + className + message.type}
 					onClick={this.notificationCallback.bind(this, message.id, message.callback)}
-					tabIndex={0}
-					role="button"
 					ref={(ref) => (!ref || this.allRefs.push(ref))}
 				>
 					{type}
@@ -118,7 +116,7 @@ class NotificationPanel extends React.Component {
 						{timestamp}
 						{closeMessage}
 					</div>
-				</div>
+				</button>
 			</div>);
 		}
 
@@ -133,12 +131,6 @@ class NotificationPanel extends React.Component {
 
 	clickOnCloseButton(message) {
 		this.deleteNotification(message.id);
-	}
-
-	keyDownOnCloseButton(message, evt) {
-		if (KeyboardUtils.activateButton(evt)) {
-			this.deleteNotification(message.id);
-		}
 	}
 
 	deleteNotification(id) {

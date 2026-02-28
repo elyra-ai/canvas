@@ -129,6 +129,8 @@ $notification-panel-button-container-height: 49px;
 		margin-top: 0; // Required for Safari
 		margin-bottom: 0; // Required for Safari
 		outline: none; // Turn outline off and use carbon style for focus below.
+		font: inherit; // Reset native <button> font inheritance
+		text-align: left; // Reset native <button> center alignment
 
 		&:focus {
 			border-color: carbon.$focus;
@@ -229,6 +231,11 @@ $notification-panel-button-container-height: 49px;
 
 .notification-message-close {
 	width: fit-content;
+	background: none; // Reset native <button> background
+	border: none; // Reset native <button> border
+	padding: 0; // Reset native <button> padding
+	font: inherit; // Reset native <button> font inheritance
+	cursor: pointer;
 	&:hover {
 		text-decoration: underline;
 	}
