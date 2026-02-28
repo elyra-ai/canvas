@@ -412,10 +412,6 @@ export default class KeyboardUtils {
 	/* Notification panel key functions          */
 	/* ----------------------------------------- */
 
-	static activateButton(evt) {
-		return evt.key === RETURN_KEY || this.isSpaceKey(evt);
-	}
-
 	static nextSection(evt) {
 		return !evt.shiftKey && evt.key === TAB_KEY;
 	}

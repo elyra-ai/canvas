@@ -1,3 +1,5 @@
 {
-    "notification.panel.close.button.description": "Close"
+    "notification.panel.close.button.description": "Close",
+    "notification.message.close.button.label": "Dismiss notification",
+    "notification.message.open.button.label": "Open"
 }

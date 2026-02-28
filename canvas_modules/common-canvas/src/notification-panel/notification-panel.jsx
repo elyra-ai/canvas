@@ -37,6 +37,10 @@ class NotificationPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
+		// Flag used to defer focus management until after the re-render that follows
+		// clearNotificationMessages(). Setting focus synchronously in that method would
+		// reference stale DOM nodes because this.allRefs is rebuilt on each render().
+		this.focusAfterClear = false;
 
 		this.logger = new Logger("NotificationPanel");
 		this.keyDownOnPanel = this.keyDownOnPanel.bind(this);
@@ -44,6 +48,15 @@ class NotificationPanel extends React.Component {
 
 	componentDidMount() {
 		this.setFocusOnFirstItem();
+	}
+
+	componentDidUpdate() {
+		// After clearNotificationMessages() triggers a re-render, move focus to the
+		// first focusable item now that this.allRefs reflects the updated DOM.
+		if (this.focusAfterClear) {
+			this.focusAfterClear = false;
+			this.setFocusOnFirstItem();
+		}
 	}
 
 	setFocusOnFirstItem() {
@@ -59,9 +72,8 @@ class NotificationPanel extends React.Component {
 		}
 		for (let index = 0; index < this.props.messages.length; index++) {
 			const message = this.props.messages[index];
-			const className = message.callback ? " clickable " : "";
 			const iconType = message.type;
-			const type = (<div className="notification-message-type">
+			const type = (<div className="notification-message-type" aria-hidden="true">
 				<Icon type={iconType} className={`notification-message-icon-${iconType}`} />
 			</div>);
 
@@ -80,18 +92,23 @@ class NotificationPanel extends React.Component {
 
 			const closeMessage = message.closeMessage
 				? (
-					<div tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))}
-						className = "notification-message-close"
+					<button type="button" ref={(ref) => (!ref || this.allRefs.push(ref))}
+						className="notification-message-close"
 						onClick={this.clickOnCloseButton.bind(this, message)}
-						onKeyDown={this.keyDownOnCloseButton.bind(this, message)}
+						aria-label={typeof message.closeMessage === "string"
+							? message.closeMessage
+							: this.props.intl.formatMessage({
+								id: "notification.message.close.button.label",
+								defaultMessage: defaultMessages["notification.message.close.button.label"]
+							})}
 					>
 						{message.closeMessage}
-					</div>)
+					</button>)
 				: null;
 
 			const timestamp = message.timestamp
 				? (<div className="notification-message-timestamp">
-					<div className="notification-message-timestamp-icon">
+					<div className="notification-message-timestamp-icon" aria-hidden="true">
 						<Icon type="time" />
 					</div>
 					<div className="notification-message-string">
@@ -100,26 +117,40 @@ class NotificationPanel extends React.Component {
 				</div>)
 				: null;
 
-			notifications.push(<div className="notifications-button-container" key={index + "-" + message.id} >
-				<div
-					className={"notifications " + className + message.type}
-					onClick={this.notificationCallback.bind(this, message.id, message.callback)}
-					tabIndex={0}
-					role="button"
-					aria-roledescription="text"
-					ref={(ref) => (!ref || this.allRefs.push(ref))}
-				>
-					{type}
-					<div className="notification-message-details">
-						{title}
-						{subtitle}
-						<div className="notification-message-content">
-							{message.content}
-						</div>
-						{timestamp}
-						{closeMessage}
+			const hasActions = message.callback || message.closeMessage;
+			const containerClass = "notifications-button-container" + (hasActions ? " has-actions" : "");
+			const messageDetails = (
+				<div className="notification-message-details">
+					{title}
+					{subtitle}
+					<div className="notification-message-content">
+						{message.content}
 					</div>
+					{timestamp}
 				</div>
+			);
+			const openButton = message.callback
+				? (
+					<button
+						type="button"
+						className="notification-message-open"
+						onClick={this.notificationCallback.bind(this, message.id, message.callback)}
+						ref={(ref) => (!ref || this.allRefs.push(ref))}
+					>
+						{this.props.intl.formatMessage({
+							id: "notification.message.open.button.label",
+							defaultMessage: defaultMessages["notification.message.open.button.label"]
+						})}
+					</button>
+				)
+				: null;
+			notifications.push(<div className={containerClass} role="listitem" key={index + "-" + message.id} >
+				<div className={"notifications " + message.type}>
+					{type}
+					{messageDetails}
+				</div>
+				{openButton}
+				{closeMessage}
 			</div>);
 		}
 
@@ -136,19 +167,13 @@ class NotificationPanel extends React.Component {
 		this.deleteNotification(message.id);
 	}
 
-	keyDownOnCloseButton(message, evt) {
-		if (KeyboardUtils.activateButton(evt)) {
-			this.deleteNotification(message.id);
-		}
-	}
-
 	deleteNotification(id) {
 		this.props.subPanelData.canvasController.deleteNotificationMessages(id);
 	}
 
 	clearNotificationMessages() {
+		this.focusAfterClear = true;
 		this.props.subPanelData.canvasController.clearNotificationMessages();
-		this.setFocusOnFirstItem();
 
 		if (typeof this.props.notificationConfig.clearAllCallback === "function") {
 			this.props.notificationConfig.clearAllCallback();
@@ -181,17 +206,21 @@ class NotificationPanel extends React.Component {
 			return null;
 		}
 
-		const headerText = this.props.notificationConfig && this.props.notificationConfig.notificationHeader
-			? this.props.notificationConfig.notificationHeader
-			: DEFAULT_NOTIFICATION_HEADER;
+		const headerText = this.props.notificationConfig?.notificationHeader ?? DEFAULT_NOTIFICATION_HEADER;
 
-		const notificationHeader = (<div className="notification-panel-header">{headerText}</div>);
+		const notificationHeader = (
+			<div id="notification-panel-header" className="notification-panel-header">{headerText}</div>
+		);
 
-		const notificationSubtitle = this.props.notificationConfig && this.props.notificationConfig.notificationSubtitle
-			? (<div className="notification-panel-subtitle">
+		const notificationSubtitle = this.props.notificationConfig?.notificationSubtitle
+			? (<div id="notification-panel-subtitle" className="notification-panel-subtitle">
 				{this.props.notificationConfig.notificationSubtitle}
 			</div>)
 			: null;
+
+		const panelLabelledBy = notificationSubtitle
+			? "notification-panel-header notification-panel-subtitle"
+			: "notification-panel-header";
 
 		const closeButton = (
 			<div className="notification-panel-close-button">
@@ -215,15 +244,13 @@ class NotificationPanel extends React.Component {
 		const notificationPanelMessages = this.props.messages.length > 0
 			? this.getNotifications()
 			: (
-				<div tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))} className="notification-panel-empty-message-container"
-					role="button" aria-roledescription="text"
-				>
+				<div ref={(ref) => (!ref || this.allRefs.push(ref))} className="notification-panel-empty-message-container">
 					<div className="notification-panel-empty-message">
-						{this.props.notificationConfig && this.props.notificationConfig.emptyMessage ? this.props.notificationConfig.emptyMessage : null}
+						{this.props.notificationConfig?.emptyMessage ?? null}
 					</div>
 				</div>);
 
-		const clearAll = this.props.notificationConfig && this.props.notificationConfig.clearAllMessage
+		const clearAll = this.props.notificationConfig?.clearAllMessage
 			? (<div className="notification-panel-clear-all-container">
 				<Button
 					ref={(ref) => (!ref || this.props.messages.length === 0 || this.allRefs.push(ref))}
@@ -238,8 +265,7 @@ class NotificationPanel extends React.Component {
 			</div>)
 			: null;
 
-		const secondaryButton = this.props.notificationConfig &&
-			this.props.notificationConfig.secondaryButtonLabel &&
+		const secondaryButton = this.props.notificationConfig?.secondaryButtonLabel &&
 			this.props.notificationConfig.secondaryButtonCallback
 			? (<div className="notification-panel-secondary-button-container">
 				<Button
@@ -256,16 +282,15 @@ class NotificationPanel extends React.Component {
 			: null;
 
 		return (
-			<div className="notification-panel" onKeyDown={this.keyDownOnPanel}>
-				<div className="notification-panel-header-container"
-					tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))}
-					role="button" aria-roledescription="text"
-				>
+			<div className="notification-panel" onKeyDown={this.keyDownOnPanel}
+				role="complementary" aria-labelledby={panelLabelledBy}
+			>
+				<div className="notification-panel-header-container">
 					{notificationHeader}
 					{notificationSubtitle}
 				</div>
 				{closeButton}
-				<div className="notification-panel-messages">
+				<div className="notification-panel-messages" role="list">
 					{notificationPanelMessages}
 				</div>
 				<div className="notification-panel-button-container">
