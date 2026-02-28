@@ -72,7 +72,6 @@ class NotificationPanel extends React.Component {
 		}
 		for (let index = 0; index < this.props.messages.length; index++) {
 			const message = this.props.messages[index];
-			const className = message.callback ? " clickable " : "";
 			const iconType = message.type;
 			const type = (<div className="notification-message-type" aria-hidden="true">
 				<Icon type={iconType} className={`notification-message-icon-${iconType}`} />
@@ -118,7 +117,8 @@ class NotificationPanel extends React.Component {
 				</div>)
 				: null;
 
-			const containerClass = "notifications-button-container" + (message.closeMessage ? " has-close-message" : "");
+			const hasActions = message.callback || message.closeMessage;
+			const containerClass = "notifications-button-container" + (hasActions ? " has-actions" : "");
 			const messageDetails = (
 				<div className="notification-message-details">
 					{title}
@@ -129,33 +129,27 @@ class NotificationPanel extends React.Component {
 					{timestamp}
 				</div>
 			);
-			let notificationBody;
-			if (message.callback) {
-				notificationBody = (
+			const openButton = message.callback
+				? (
 					<button
 						type="button"
-						className={"notifications " + className + message.type}
+						className="notification-message-open"
 						onClick={this.notificationCallback.bind(this, message.id, message.callback)}
 						ref={(ref) => (!ref || this.allRefs.push(ref))}
 					>
-						{type}
-						{messageDetails}
+						{this.props.intl.formatMessage({
+							id: "notification.message.open.button.label",
+							defaultMessage: defaultMessages["notification.message.open.button.label"]
+						})}
 					</button>
-				);
-			} else {
-				// No callback: render as a plain div so the screen reader does not
-				// announce it as an interactive button. The notification content is
-				// reachable via screen reader virtual cursor, and any interactive
-				// children (links, dismiss button) are reachable via Tab.
-				notificationBody = (
-					<div className={"notifications " + message.type}>
-						{type}
-						{messageDetails}
-					</div>
-				);
-			}
+				)
+				: null;
 			notifications.push(<div className={containerClass} role="listitem" key={index + "-" + message.id} >
-				{notificationBody}
+				<div className={"notifications " + message.type}>
+					{type}
+					{messageDetails}
+				</div>
+				{openButton}
 				{closeMessage}
 			</div>);
 		}

@@ -87,7 +87,7 @@ $notification-panel-button-container-height: 49px;
 		min-height: $notification-message-height;
 		position: relative;
 
-		&.has-close-message .notifications {
+		&.has-actions .notifications {
 			padding-bottom: carbon.$spacing-07;
 		}
 	}
@@ -159,10 +159,6 @@ $notification-panel-button-container-height: 49px;
 			}
 		}
 
-		&.clickable {
-			cursor: pointer;
-		}
-
 		.notification-message-type {
 			display: flex;
 			justify-content: center;
@@ -229,6 +225,7 @@ $notification-panel-button-container-height: 49px;
 	}
 }
 
+.notification-message-open,
 .notification-message-close {
 	position: absolute;
 	bottom: carbon.$spacing-05;
@@ -243,5 +240,13 @@ $notification-panel-button-container-height: 49px;
 	cursor: pointer;
 	&:hover {
 		text-decoration: underline;
+	}
+}
+
+.notification-message-close {
+	// When both open and close buttons are present, offset close button to the right
+	.has-actions & {
+		left: auto;
+		right: carbon.$spacing-05;
 	}
 }
