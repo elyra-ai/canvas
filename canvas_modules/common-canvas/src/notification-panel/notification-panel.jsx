@@ -272,10 +272,7 @@ class NotificationPanel extends React.Component {
 			<div className="notification-panel" onKeyDown={this.keyDownOnPanel}
 				role="complementary" aria-label={headerText}
 			>
-				<div className="notification-panel-header-container"
-					tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))}
-					role="region" aria-label={headerText}
-				>
+				<div className="notification-panel-header-container">
 					{notificationHeader}
 					{notificationSubtitle}
 				</div>
