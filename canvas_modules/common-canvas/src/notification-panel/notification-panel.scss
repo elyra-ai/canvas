@@ -85,8 +85,11 @@ $notification-panel-button-container-height: 49px;
 	.notifications-button-container {
 		border-bottom: 1px solid carbon.$layer-accent-01;
 		min-height: $notification-message-height;
-		display: flex;
-		align-items: flex-start;
+		position: relative;
+
+		&.has-close-message .notifications {
+			padding-bottom: carbon.$spacing-07;
+		}
 	}
 
 	.notification-panel-empty-message-container {
@@ -116,8 +119,7 @@ $notification-panel-button-container-height: 49px;
 	.notifications {
 		padding: carbon.$spacing-05 carbon.$spacing-05 carbon.$spacing-05 calc(#{carbon.$spacing-05} - #{$notification-left-border-color-width});
 		display: inline-flex;
-		flex: 1;
-		width: auto;
+		width: 100%;
 		min-height: $notification-message-height;
 		background-color: carbon.$layer-01;
 		border-style: none;
@@ -228,6 +230,11 @@ $notification-panel-button-container-height: 49px;
 }
 
 .notification-message-close {
+	position: absolute;
+	bottom: carbon.$spacing-05;
+	// Align with the start of .notification-message-details:
+	// left-border (spacing-02) + left-padding (spacing-05 - spacing-02) + icon+padding (~24px)
+	left: calc(#{carbon.$spacing-05} + 24px);
 	width: fit-content;
 	background: none; // Reset native <button> background
 	border: none; // Reset native <button> border

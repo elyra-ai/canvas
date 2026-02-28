@@ -118,7 +118,8 @@ class NotificationPanel extends React.Component {
 				</div>)
 				: null;
 
-			notifications.push(<div className="notifications-button-container" role="listitem" key={index + "-" + message.id} >
+			const containerClass = "notifications-button-container" + (message.closeMessage ? " has-close-message" : "");
+			notifications.push(<div className={containerClass} role="listitem" key={index + "-" + message.id} >
 				<button
 					type="button"
 					className={"notifications " + className + message.type}
