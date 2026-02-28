@@ -122,7 +122,7 @@ class NotificationPanel extends React.Component {
 				? `${message.type}: ${message.title}`
 				: message.type;
 
-			notifications.push(<div className="notifications-button-container" key={index + "-" + message.id} >
+			notifications.push(<div className="notifications-button-container" role="listitem" key={index + "-" + message.id} >
 				<button
 					type="button"
 					className={"notifications " + className + message.type}
@@ -280,7 +280,7 @@ class NotificationPanel extends React.Component {
 					{notificationSubtitle}
 				</div>
 				{closeButton}
-				<div className="notification-panel-messages">
+				<div className="notification-panel-messages" role="list">
 					{notificationPanelMessages}
 				</div>
 				<div className="notification-panel-button-container">
