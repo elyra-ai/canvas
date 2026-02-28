@@ -496,7 +496,7 @@ class CanvasContents extends React.Component {
 		if (this.props.canvasConfig.enableKeyboardNavigation) {
 			// Set tabindex to 0 so the focus can go to the <div>
 			return (
-				<div role="region"
+				<div role="application"
 					id={this.svgCanvasDivId}
 					tabIndex="0"
 					className="d3-svg-canvas-div keyboard-navigation"
