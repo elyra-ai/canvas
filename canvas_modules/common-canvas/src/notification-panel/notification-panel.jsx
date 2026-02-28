@@ -129,8 +129,9 @@ class NotificationPanel extends React.Component {
 					{timestamp}
 				</div>
 			);
-			const notificationBody = message.callback
-				? (
+			let notificationBody;
+			if (message.callback) {
+				notificationBody = (
 					<button
 						type="button"
 						className={"notifications " + className + message.type}
@@ -140,13 +141,19 @@ class NotificationPanel extends React.Component {
 						{type}
 						{messageDetails}
 					</button>
-				)
-				: (
-					<div className={"notifications " + message.type}>
+				);
+			} else {
+				notificationBody = (
+					<div
+						className={"notifications " + message.type}
+						tabIndex={0}
+						ref={(ref) => (!ref || this.allRefs.push(ref))}
+					>
 						{type}
 						{messageDetails}
 					</div>
 				);
+			}
 			notifications.push(<div className={containerClass} role="listitem" key={index + "-" + message.id} >
 				{notificationBody}
 				{closeMessage}
