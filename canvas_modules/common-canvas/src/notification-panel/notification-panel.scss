@@ -207,7 +207,7 @@ $notification-panel-button-container-height: 49px;
 }
 
 .notification-message-timestamp {
-	display: inline-flex;
+	display: flex;
 	color: carbon.$text-secondary;
 	svg {
 		width: 10px;
