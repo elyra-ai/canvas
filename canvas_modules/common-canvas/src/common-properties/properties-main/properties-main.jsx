@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -654,7 +654,7 @@ class PropertiesMain extends React.Component {
 					<div className="properties-right-flyout-container">
 						<aside
 							aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
-							role="complementary"
+							role="region"
 							ref={this.commonProperties}
 							className={className}
 							onBlur={this.onBlur}

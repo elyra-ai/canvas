@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,7 +138,7 @@ class CommonProperties extends React.Component {
 				return (
 					<aside
 						aria-label={propertiesLandmarkRoleLabel}
-						role="complementary"
+						role="region"
 						className="properties-wrapper properties-right-flyout properties-small"
 					>
 						<div className="properties-flyout-error-container">
@@ -158,7 +158,7 @@ class CommonProperties extends React.Component {
 			return ( // Non Right Flyout Custom
 				<aside
 					aria-label={propertiesLandmarkRoleLabel}
-					role="complementary"
+					role="region"
 					className="properties-wrapper properties-custom-container"
 				>
 					<div className= "properties-flyout-error-container">

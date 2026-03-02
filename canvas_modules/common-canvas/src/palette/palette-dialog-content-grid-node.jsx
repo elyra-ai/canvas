@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -132,7 +132,7 @@ class PaletteDialogContentGridNode extends React.Component {
 
 			} else if (typeof image === "string") {
 				icon = image.endsWith(".svg")
-					? <SVG src={image} className="node-icon" alt={label} />
+					? <SVG src={image} className="node-icon" aria-label={label} />
 					: <img src={image} className="node-icon" alt={label} />;
 			}
 		}

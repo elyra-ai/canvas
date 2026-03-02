@@ -3204,18 +3204,24 @@ class App extends React.Component {
 			);
 		}
 
+		const className = classNames(
+			"harness-canvas-container",
+			{ "double": this.state.selectedExtraCanvasDisplayed },
+			{ "side-panel-open": this.isSidePanelOpen() },
+			{ "console-panel-open": this.state.consoleOpened }
+		);
+
 		const tooltipFontSize = "13px";
 		const mainView = (<div id="harness-app-container">
 			{navBar}
 			{sidePanel}
 			{!isEmpty(this.state.propertiesInfo) ? commonPropertiesContainer : null}
-			<div className={classNames("harness-canvas-container",
-				{ "double": this.state.selectedExtraCanvasDisplayed },
-				{ "side-panel-open": this.isSidePanelOpen() },
-				{ "console-panel-open": this.state.consoleOpened })}
+			<main className={className}
+				aria-label="Test harness"
+				aria-roledescription={"Display"}
 			>
 				{commonCanvas}
-			</div>
+			</main>
 			{consoleView}
 			<ReactTooltip id="toolbar-tooltip" place="bottom" effect="solid" style={{ fontSize: tooltipFontSize }} />
 		</div>);
