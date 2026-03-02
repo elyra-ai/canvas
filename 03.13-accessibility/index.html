@@ -3496,7 +3496,12 @@
 
 <h1 id="accessibility">Accessibility<a class="headerlink" href="#accessibility" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Common Canvas supports accessibility through the use of Carbon components and, where necessary, with bespoke functions for UI components such as the flow editor canvas. The application can override styles such as color, line widths, etc and when this is done it is the responsibility of the application to ensure the customizations comply with accessibility guidelines.</p>
+<p>Common Canvas supports accessibility through the use of Carbon components and, where necessary, with bespoke UI components such as the flow editor canvas. The application can override styles such as color, line widths, etc and when this is done it is the responsibility of the application to ensure the customizations comply with accessibility guidelines.</p>
+<p>To avoid accessibility violations, the application must wrap the <code>CommonCanvas</code> object using an HTML element with a landmark role, such as <code>&lt;main&gt;</code>. For example:
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">main</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">CommonCanvas</span> <span class="err">...</span> <span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="nt">main</span><span class="p">&gt;</span>
+</code></pre></div></p>
 <p>Note: In the remarks below wherever <code>Tab</code> is mentioned to move focus highlighting between objects, you can assume that <code>Shift + Tab</code> can be used to do the reverse of what is described.</p>
 <h2 id="keyboard-navigation">Keyboard Navigation<a class="headerlink" href="#keyboard-navigation" title="Permanent link">&para;</a></h2>
 <p>A major part of accessibility is allowing the user to move the focus highlighting around the different components of the UI and interact with those components using only the keyboard. The user can also press <a href="../03.05-keyboard-support/">keyboard shortcuts</a> to interact with those components.</p>
