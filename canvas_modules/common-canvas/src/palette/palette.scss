@@ -53,6 +53,12 @@ $palette-dialog-list-item-height: 46px;
 	.palette-flyout-content {
 		grid-template-columns: 72px;
 	}
+
+	.palette-flyout-search-container .palette-flyout-search input {
+		width: 72px;
+		padding-left: 72px;
+		padding-right: 0;
+	}
 }
 
 .palette-nav {
