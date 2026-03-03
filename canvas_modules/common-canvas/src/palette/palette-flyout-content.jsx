@@ -125,6 +125,12 @@ class PaletteFlyoutContent extends React.Component {
 	handleSearchStringChange(s) {
 		this.ss = s;
 		this.setSearchStringThrottled();
+
+		// If the user tabs to the search entry area and types some
+		// text, and the palette is not in wide state, open it.
+		if (!this.props.isPaletteWide) {
+			this.props.canvasController.openPalette();
+		}
 	}
 
 	render() {
