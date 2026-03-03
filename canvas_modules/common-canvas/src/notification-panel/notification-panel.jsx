@@ -100,13 +100,8 @@ class NotificationPanel extends React.Component {
 				</div>)
 				: null;
 
-			notifications.push(<div className="notifications-button-container" role="listitem" key={index + "-" + message.id} >
-				<div
-					className={"notifications " + className + message.type}
-					onClick={this.notificationCallback.bind(this, message.id, message.callback)}
-					{...(message.callback && { tabIndex: 0, role: "button" })}
-					ref={(ref) => (!ref || this.allRefs.push(ref))}
-				>
+			const notificationMessage = (
+				<>
 					{type}
 					<div className="notification-message-details">
 						{title}
@@ -117,8 +112,34 @@ class NotificationPanel extends React.Component {
 						{timestamp}
 						{closeMessage}
 					</div>
+				</>
+			);
+
+			const notificationElement = message.callback
+				? (
+					<button
+						className={"notifications notifications-button " + className + message.type}
+						onClick={this.notificationCallback.bind(this, message.id, message.callback)}
+						ref={(ref) => (!ref || this.allRefs.push(ref))}
+						type="button"
+					>
+						{notificationMessage}
+					</button>
+				)
+				: (
+					<div
+						className={"notifications " + className + message.type}
+						ref={(ref) => (!ref || this.allRefs.push(ref))}
+					>
+						{notificationMessage}
+					</div>
+				);
+
+			notifications.push(
+				<div className="notifications-button-container" role="listitem" key={index + "-" + message.id}>
+					{notificationElement}
 				</div>
-			</div>);
+			);
 		}
 
 		return notifications;

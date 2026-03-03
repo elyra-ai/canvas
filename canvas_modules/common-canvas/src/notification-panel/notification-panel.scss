@@ -162,6 +162,12 @@ $notification-panel-button-container-height: 49px;
 			cursor: pointer;
 		}
 
+		&.notifications-button {
+			text-align: left;
+			font: inherit;
+			color: inherit;
+		}
+
 		.notification-message-type {
 			display: flex;
 			justify-content: center;
