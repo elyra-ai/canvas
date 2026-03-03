@@ -204,7 +204,7 @@ class NotificationPanel extends React.Component {
 
 		const notificationSubtitle = this.props.notificationConfig?.notificationSubtitle
 			? (<div className="notification-panel-subtitle">
-				{this.props.notificationConfig.notificationSubtitle}
+				{subtitleText}
 			</div>)
 			: null;
 
@@ -232,7 +232,7 @@ class NotificationPanel extends React.Component {
 			: (
 				<div className="notification-panel-empty-message-container">
 					<div className="notification-panel-empty-message">
-						{this.props.notificationConfig && this.props.notificationConfig.emptyMessage ? this.props.notificationConfig.emptyMessage : null}
+						{emptyMessageText || null}
 					</div>
 				</div>);
 
