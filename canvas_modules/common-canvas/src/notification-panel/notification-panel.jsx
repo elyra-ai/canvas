@@ -79,14 +79,16 @@ class NotificationPanel extends React.Component {
 
 			const closeMessage = message.closeMessage
 				? (
-					<button
+					<div
 						ref={(ref) => (!ref || this.allRefs.push(ref))}
 						className="notification-message-close"
 						onClick={this.clickOnCloseButton.bind(this, message)}
-						type="button"
+						onKeyDown={this.keyDownOnCloseButton.bind(this, message)}
+						role="button"
+						tabIndex={0}
 					>
 						{message.closeMessage}
-					</button>)
+					</div>)
 				: null;
 
 			const timestamp = message.timestamp
@@ -160,7 +162,7 @@ class NotificationPanel extends React.Component {
 		return ariaLabel;
 	}
 
-	notificationCallback(id, messageCallback) {
+	notificationCallback(id, messageCallback, evt) {
 		if (messageCallback) {
 			messageCallback(id);
 		}
