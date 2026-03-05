@@ -114,8 +114,7 @@ $harness-navbar-icon-width: 48px;
 
 /* Navbar Theme Toggle */
 .harness-theme-toggle-wrapper {
-	padding-left: 16px;
-	padding-right: 16px;
+	padding: 14px 16px;
 }
 
 /* Navbar Breadcrumbs */
@@ -125,7 +124,7 @@ $harness-navbar-icon-width: 48px;
 	overflow-y: auto;
 	line-height: 18px;
 	align-items: center;
-	padding: 0 10px;
+	padding: 14px 10px;
 }
 
 .harness-pipeline-breadcrumbs {
