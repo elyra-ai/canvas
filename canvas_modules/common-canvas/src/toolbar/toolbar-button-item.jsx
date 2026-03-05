@@ -148,6 +148,15 @@ class ToolbarButtonItem extends React.Component {
 		}
 	}
 
+	setButtonFocus() {
+		const jsxItem = this.buttonRef.current.querySelector(".toolbar-jsx-obj");
+		if (jsxItem) {
+			jsxItem.focus();
+		} else {
+			this.buttonRef.current.focus();
+		}
+	}
+
 	handleCascadeMenuClosing(prevProps) {
 		const isThisButtonFocused = this.props.buttonFocusAction === this.props.actionObj.action;
 
@@ -157,12 +166,7 @@ class ToolbarButtonItem extends React.Component {
 
 		if (cascadeMenuJustClosed) {
 			// Cascaded menu closed, restore focus to this button
-			const jsxItem = this.buttonRef.current.querySelector(".toolbar-jsx-obj");
-			if (jsxItem) {
-				jsxItem.focus();
-			} else {
-				this.buttonRef.current.focus();
-			}
+			this.setButtonFocus();
 			// Tooltip should already be visible, but ensure it stays visible
 			this.showTooltip();
 			return true;
@@ -177,32 +181,20 @@ class ToolbarButtonItem extends React.Component {
 		const hasFocus = this.props.isFocusInToolbar && isThisButtonFocused;
 		const hadFocus = prevProps.isFocusInToolbar && wasThisButtonFocused;
 
-		if (hasFocus && !hadFocus) {
-			// Button is gaining focus within toolbar
-			const jsxItem = this.buttonRef.current.querySelector(".toolbar-jsx-obj");
-			if (jsxItem) {
-				jsxItem.focus();
-			} else {
-				this.buttonRef.current.focus();
-			}
-			this.showTooltip();
-
-		} else if (isThisButtonFocused && !wasThisButtonFocused) {
-			// This button became the focused button - set focus and show tooltip
-			const jsxItem = this.buttonRef.current.querySelector(".toolbar-jsx-obj");
-			if (jsxItem) {
-				jsxItem.focus();
-			} else {
-				this.buttonRef.current.focus();
-			}
-			this.showTooltip();
+		// Only set button focus if isFocusInToolbar is true (keyboard navigation)
+		if ((hasFocus && !hadFocus) ||
+			(isThisButtonFocused && !wasThisButtonFocused && this.props.isFocusInToolbar)) {
+			// Button is gaining focus within toolbar or became the focused button
+			this.setButtonFocus();
+			// Tooltip will be shown by onButtonFocus handler when DOM focus is set
 
 		} else if (hadFocus && !hasFocus) {
 			// Button is losing focus
 			this.hideTooltip();
+		}
 
-		} else if (wasThisButtonFocused && !isThisButtonFocused) {
-			// Button focus moved to another button
+		// Hide tooltip if this button is no longer the focused button (even if it still has DOM focus)
+		if (wasThisButtonFocused && !isThisButtonFocused) {
 			this.hideTooltip();
 		}
 	}
