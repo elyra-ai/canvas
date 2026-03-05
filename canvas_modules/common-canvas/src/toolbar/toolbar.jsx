@@ -205,6 +205,9 @@ class Toolbar extends React.Component {
 			this.setFocusOnFirstItem();
 		}
 
+		// Hide all tooltips when toolbar layout changes to prevent misaligned tooltips
+		this.hideAllTooltips();
+
 		// Set overflow button state
 		this.setOverflowButtonState();
 	}
@@ -579,6 +582,22 @@ class Toolbar extends React.Component {
 		subMenuActions = l.concat(r);
 
 		return subMenuActions;
+	}
+
+	// Hides all tooltips on toolbar items when the toolbar layout changes.
+	// This prevents tooltips from being displayed at incorrect positions
+	// when buttons move due to toolbar contraction or wrapping.
+	hideAllTooltips() {
+		this.leftItemRefs.forEach((ref) => {
+			if (ref.current?.hideTooltip) {
+				ref.current.hideTooltip();
+			}
+		});
+		this.rightItemRefs.forEach((ref) => {
+			if (ref.current?.hideTooltip) {
+				ref.current.hideTooltip();
+			}
+		});
 	}
 
 	closeAnyOpenSubArea() {

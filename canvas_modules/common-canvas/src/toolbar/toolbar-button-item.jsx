@@ -148,32 +148,44 @@ class ToolbarButtonItem extends React.Component {
 		}
 	}
 
+	// Sets focus on the button or JSX item. For JSX items, if the item itself
+	// cannot receive focus (e.g., wrapper has tabIndex={-1}), searches for and
+	// focuses the first focusable child element within the wrapper.
 	setButtonFocus() {
 		const jsxItem = this.buttonRef.current.querySelector(".toolbar-jsx-obj");
 		if (jsxItem) {
 			jsxItem.focus();
+			if (document.activeElement !== jsxItem) {
+				const focusableElement = this.buttonRef.current.querySelector(
+					"button, [href], input, select, textarea, [tabindex]:not([tabindex=\"-1\"])"
+				);
+				if (focusableElement) {
+					focusableElement.focus();
+				}
+			}
 		} else {
 			this.buttonRef.current.focus();
 		}
 	}
 
+	// Handles focus restoration when a cascaded menu closes. If a cascaded menu
+	// just closed while this button still has focus, restores focus to the button
+	// and ensures the tooltip remains visible.
 	handleCascadeMenuClosing(prevProps) {
 		const isThisButtonFocused = this.props.buttonFocusAction === this.props.actionObj.action;
-
-		// Check if a cascaded menu just closed (subAreaDisplayed changed from true to false)
-		// while this button still has focus
 		const cascadeMenuJustClosed = prevProps.subAreaDisplayed && !this.props.subAreaDisplayed && isThisButtonFocused;
 
 		if (cascadeMenuJustClosed) {
-			// Cascaded menu closed, restore focus to this button
 			this.setButtonFocus();
-			// Tooltip should already be visible, but ensure it stays visible
 			this.showTooltip();
 			return true;
 		}
 		return false;
 	}
 
+	// Handles regular focus changes for toolbar buttons. Sets focus on the button
+	// when it becomes the focused item during keyboard navigation, and hides the
+	// tooltip when focus moves away.
 	handleRegularFocusChanges(prevProps) {
 		const isThisButtonFocused = this.props.buttonFocusAction === this.props.actionObj.action;
 		const wasThisButtonFocused = prevProps.buttonFocusAction === this.props.actionObj.action;
@@ -181,12 +193,9 @@ class ToolbarButtonItem extends React.Component {
 		const hasFocus = this.props.isFocusInToolbar && isThisButtonFocused;
 		const hadFocus = prevProps.isFocusInToolbar && wasThisButtonFocused;
 
-		// Only set button focus if isFocusInToolbar is true (keyboard navigation)
 		if ((hasFocus && !hadFocus) ||
 			(isThisButtonFocused && !wasThisButtonFocused && this.props.isFocusInToolbar)) {
-			// Button is gaining focus within toolbar or became the focused button
 			this.setButtonFocus();
-			// Tooltip will be shown by onButtonFocus handler when DOM focus is set
 
 		} else if (hadFocus && !hasFocus) {
 			// Button is losing focus
