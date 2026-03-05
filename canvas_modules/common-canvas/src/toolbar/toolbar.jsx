@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,12 @@ class Toolbar extends React.Component {
 		// Index values (leftOverflowIndex and rightOverflowIndex) are used
 		// to keep track of how the left and right bar arrays
 		// should be split to be able to create the overflow menu.
+		// displayedOverflowIndex stores which overflow button is currently displayed (or null if none)
 		this.state = {
 			focusAction: "toolbar",
 			leftOverflowIndex: null,
 			rightOverflowIndex: null,
-			isOverflowButtonDisplayed: false,
+			displayedOverflowIndex: null,
 		};
 
 		// Keeps track of whether the focus is on the toolbar or not. We should
@@ -397,33 +398,36 @@ class Toolbar extends React.Component {
 		return index;
 	}
 
-	// Sets the isOverflowButtonDisplayed state variable depending on whether an
-	// overflow button is currently displayed or not.
+	// Sets the displayedOverflowIndex state variable to indicate which overflow button
+	// is currently displayed, or null if no overflow button is displayed.
 	setOverflowButtonState() {
-		const isOverflowDisplayed = this.isOverflowButtonDisplayed();
-		if (isOverflowDisplayed !== this.state.isOverflowButtonDisplayed) {
-			this.setState({ isOverflowButtonDisplayed: isOverflowDisplayed });
+		const displayedIndex = this.getDisplayedOverflowIndex();
+		if (displayedIndex !== this.state.displayedOverflowIndex) {
+			this.setState({ displayedOverflowIndex: displayedIndex });
 		}
 	}
 
-	// Returns true if an overflow menu button is currently displayed.
+	// Returns the index of the overflow button that is currently displayed,
+	// or null if no overflow button is displayed.
 	// This happens when left bar items wrap to a second row.
-	isOverflowButtonDisplayed() {
+	getDisplayedOverflowIndex() {
 		if (this.leftItemRefs.length === 0) {
-			return false;
+			return null;
 		}
 
 		const firstItemRect = this.leftItemRefs[0].current?.getBoundingRect();
 
-		// Check if any left bar item has wrapped to a second row
+		// Find the first item that has wrapped to a second row
 		for (let i = 1; i < this.leftItemRefs.length; i++) {
 			const itemRect = this.leftItemRefs[i].current?.getBoundingRect();
 			if (itemRect?.top !== firstItemRect?.top) {
-				return true;
+				// Return the index of the wrapped item
+				// This is the overflow button that should be displayed
+				return i;
 			}
 		}
 
-		return false;
+		return null;
 	}
 
 	// Returns true of the current focus action item is one of the focusable
@@ -530,6 +534,10 @@ class Toolbar extends React.Component {
 		const overflowAction = this.getOverflowAction(action);
 		const subMenuActions = index === this.state.leftOverflowIndex ? this.createSubMenuActions() : [];
 
+		// Determine if this overflow button is visible
+		// It's visible when its index matches the displayedOverflowIndex
+		const isVisible = index === this.state.displayedOverflowIndex;
+
 		// Create a ref for the overflow item to add to array of references to
 		// all overflow items.
 		const ref = React.createRef();
@@ -552,6 +560,8 @@ class Toolbar extends React.Component {
 				setToolbarFocusAction={this.setFocusOnItem}
 				isFocusInToolbar={this.isFocusInToolbar}
 				closeAnyOpenSubArea={this.closeAnyOpenSubArea}
+				tooltipDirection={this.props.tooltipDirection}
+				isVisible={isVisible}
 			/>
 		);
 
@@ -618,7 +628,7 @@ class Toolbar extends React.Component {
 		const tabIndex = this.state.focusAction === "toolbar" ? 0 : -1;
 
 		// Add class to left bar when overflow button is not displayed
-		const leftBarClass = this.state.isOverflowButtonDisplayed
+		const leftBarClass = this.state.displayedOverflowIndex !== null
 			? "toolbar-left-bar"
 			: "toolbar-left-bar toolbar-left-bar-no-overflow";
 
