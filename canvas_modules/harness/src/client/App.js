@@ -2443,28 +2443,30 @@ class App extends React.Component {
 			];
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOMIZE_AUTO) {
-			toolbarConfig = [
-				{ action: "cut", label: "Cut" },
-				{ action: "copy", label: "Copy" },
-				{ action: "paste", label: "Paste" },
-				{ divider: true },
-				{ action: "undo", label: "Undo" },
-				{ action: "redo", label: "Redo" },
-				{ divider: true },
-				{ action: "togglePalette",
-					label: this.canvasController.isPaletteOpen() ? "Close Palette" : "Open Palette",
-					iconEnabled: this.canvasController.isPaletteOpen() ? (<SubtractAlt />) : (<AddAlt />),
-					incLabelWithIcon: "after"
-				},
-				{ divider: true },
-				{ action: "toggleNotificationPanel", iconEnabled: (<NotificationIcon />) },
-				{ divider: true },
-				{ action: "deleteSelectedObjects", label: "Delete" },
-				{ divider: true },
-				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
-				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
-				{ divider: true }
-			];
+			toolbarConfig = {
+				leftBar: [
+					{ action: "cut", label: "Cut" },
+					{ action: "copy", label: "Copy" },
+					{ action: "paste", label: "Paste" },
+					{ divider: true },
+					{ action: "undo", label: "Undo" },
+					{ action: "redo", label: "Redo" },
+					{ divider: true },
+					{ action: "togglePalette",
+						label: this.canvasController.isPaletteOpen() ? "Close Palette" : "Open Palette",
+						iconEnabled: this.canvasController.isPaletteOpen() ? (<SubtractAlt />) : (<AddAlt />),
+						incLabelWithIcon: "after"
+					},
+					{ divider: true },
+					{ action: "toggleNotificationPanel", iconEnabled: (<NotificationIcon />) },
+					{ divider: true },
+					{ action: "deleteSelectedObjects", label: "Delete" },
+					{ divider: true },
+					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
+					{ divider: true }
+				]
+			};
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_BEFORE_AFTER) {
 			toolbarConfig = {
