@@ -68,7 +68,7 @@ var commonCanvasControllerInstanceId = 0;
 
 export default class CanvasController {
 
-	constructor() {
+	constructor(instanceId = commonCanvasControllerInstanceId++) {
 		this.logger = new Logger("CanvasController");
 
 		this.contextMenuConfig = {
@@ -122,9 +122,8 @@ export default class CanvasController {
 
 		this.isContextToolbarForNonSelectedObj = this.isContextToolbarForNonSelectedObj.bind(this);
 
-		// Increment the global instance ID by 1 each time a new
-		// canvas controller is created.
-		this.instanceId = commonCanvasControllerInstanceId++;
+		// Use provided instanceId or auto-generated ID.
+		this.instanceId = instanceId;
 
 		// Global variable to track whether branch highlighting is displayed or not.
 		this.branchHighlighted = false;
@@ -254,11 +253,13 @@ export default class CanvasController {
 
 	// Allow application to set instanceId.  Needed for server side rendering to prevent
 	// new instanceId from being created on page refreshes.
+	// @deprecated Use the constructor parameter instead: new CanvasController(instanceId)
 	setInstanceId(instanceId) {
 		this.instanceId = instanceId;
 	}
 
 	// Return a unique identifier for this instance of Common Canvas.
+	// The instanceId can be set via the constructor parameter or will be auto-generated.
 	getInstanceId() {
 		return this.instanceId;
 	}
