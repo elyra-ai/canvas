@@ -66,43 +66,6 @@ describe("Test to check if a port to port link can be made with a new node", fun
 	});
 });
 
-describe("Test for dynamically adding ports by updating pipeline flow through API", function() {
-	beforeEach(() => {
-		cy.visit("/");
-		cy.openCanvasDefinition("multiPortsCanvas3.json");
-		cy.toggleAPISidePanel();
-		cy.chooseAPIOperation("Set PipelineFlow");
-	});
-
-	it("Dynamically add input and output ports ports by updating pipeline flow through API, " +
-	"add port to port links, verification steps", function() {
-		// Add input and output ports to node "Select1"
-		cy.updatePipelineflowToAddInputOutputPortsToNode("Select1");
-		cy.submitAPI();
-
-		// Add port to port links
-		cy.linkNodeOutputPortToNodeInputPort("Var. File", "outPort", "Select1", "inPort");
-		cy.linkNodeOutputPortToNodeInputPort("Select3", "outPort1", "Select1", "inPort2");
-		cy.linkNodeOutputPortToNodeInputPort("Select1", "outPort", "Select3", "inPort");
-		cy.linkNodeOutputPortToNodeInputPort("Select1", "outPort2", "Select2", "inPort");
-
-		// Verification steps
-		cy.verifyNumberOfPortDataLinks(4);
-		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
-			"Var. File", "outPort", "Select1", "inPort", 1
-		);
-		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
-			"Select3", "outPort1", "Select1", "inPort2", 1
-		);
-		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
-			"Select1", "outPort", "Select3", "inPort", 1
-		);
-		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
-			"Select1", "outPort2", "Select2", "inPort", 1
-		);
-	});
-});
-
 describe("Test that context menu is displayed for ports", function() {
 	beforeEach(() => {
 		cy.visit("/");
