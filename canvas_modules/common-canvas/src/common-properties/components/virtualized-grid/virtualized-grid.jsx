@@ -395,7 +395,7 @@ const VirtualizedGrid = (props) => {
 	 * @param {Event} evt - The click event object
 	 * @param {number} rowIndex - The visual index of the clicked row
 	 * @param {Object} rowData - The data object for the clicked row
-	 * @param {number} rowData.originalRowIndex - The original index of the row before sorting
+	 * @param {number} rowData.originalRowIndex - The original index from getOriginalRowIndex
 	 * @param {boolean} rowData.disabled - Whether the row is disabled
 	 * @param {boolean} [newValue] - Optional explicit new selection state (true/false)
 	 */
