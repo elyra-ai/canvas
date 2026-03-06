@@ -49,21 +49,30 @@ class ToolbarButtonItem extends React.Component {
 		super(props);
 
 		this.buttonRef = React.createRef();
+		this.tooltipRef = React.createRef();
+
+		this.onButtonFocus = this.onButtonFocus.bind(this);
+		this.onButtonBlur = this.onButtonBlur.bind(this);
 	}
 
-	componentDidUpdate() {
-		if (this.props.isFocusInToolbar &&
-				this.props.buttonFocusAction === this.props.actionObj.action) {
-			// If a Jsx object was provided, the class of the component should have
-			// been set to toolbar-jsx-obj.
-			const jsxItem = this.buttonRef.current.querySelector(".toolbar-jsx-obj");
-			if (jsxItem) {
-				jsxItem.focus();
-				return;
-			}
-
-			this.buttonRef.current.focus();
+	componentDidUpdate(prevProps) {
+		// Handle cascaded menu closing separately from regular focus changes
+		if (this.handleCascadeMenuClosing(prevProps)) {
+			return;
 		}
+
+		// Handle regular focus changes
+		this.handleRegularFocusChanges(prevProps);
+	}
+
+	onButtonFocus(evt) {
+		// Show tooltip when button receives focus (including via Tab key)
+		this.showTooltip();
+	}
+
+	onButtonBlur(evt) {
+		// Hide tooltip when button loses focus (including via Tab key)
+		this.hideTooltip();
 	}
 
 	// Returns a default icon, if there is one, for the action passed in.
@@ -137,6 +146,74 @@ class ToolbarButtonItem extends React.Component {
 		default:
 			return null;
 		}
+	}
+
+	// Sets focus on the button or JSX item. For JSX items, if the item itself
+	// cannot receive focus (e.g., wrapper has tabIndex={-1}), searches for and
+	// focuses the first focusable child element within the wrapper.
+	setButtonFocus() {
+		const jsxItem = this.buttonRef.current.querySelector(".toolbar-jsx-obj");
+		if (jsxItem) {
+			jsxItem.focus();
+			if (document.activeElement !== jsxItem) {
+				const focusableElement = this.buttonRef.current.querySelector(
+					"button, [href], input, select, textarea, [tabindex]:not([tabindex=\"-1\"])"
+				);
+				if (focusableElement) {
+					focusableElement.focus();
+				}
+			}
+		} else {
+			this.buttonRef.current.focus();
+		}
+	}
+
+	// Handles focus restoration when a cascaded menu closes. If a cascaded menu
+	// just closed while this button still has focus, restores focus to the button
+	// and ensures the tooltip remains visible.
+	handleCascadeMenuClosing(prevProps) {
+		const isThisButtonFocused = this.props.buttonFocusAction === this.props.actionObj.action;
+		const cascadeMenuJustClosed = prevProps.subAreaDisplayed && !this.props.subAreaDisplayed && isThisButtonFocused;
+
+		if (cascadeMenuJustClosed) {
+			this.setButtonFocus();
+			this.showTooltip();
+			return true;
+		}
+		return false;
+	}
+
+	// Handles regular focus changes for toolbar buttons. Sets focus on the button
+	// when it becomes the focused item during keyboard navigation, and hides the
+	// tooltip when focus moves away.
+	handleRegularFocusChanges(prevProps) {
+		const isThisButtonFocused = this.props.buttonFocusAction === this.props.actionObj.action;
+		const wasThisButtonFocused = prevProps.buttonFocusAction === this.props.actionObj.action;
+
+		const hasFocus = this.props.isFocusInToolbar && isThisButtonFocused;
+		const hadFocus = prevProps.isFocusInToolbar && wasThisButtonFocused;
+
+		if ((hasFocus && !hadFocus) ||
+			(isThisButtonFocused && !wasThisButtonFocused && this.props.isFocusInToolbar)) {
+			this.setButtonFocus();
+
+		} else if (hadFocus && !hasFocus) {
+			// Button is losing focus
+			this.hideTooltip();
+		}
+
+		// Hide tooltip if this button is no longer the focused button (even if it still has DOM focus)
+		if (wasThisButtonFocused && !isThisButtonFocused) {
+			this.hideTooltip();
+		}
+	}
+
+	showTooltip() {
+		this.tooltipRef.current?.setTooltipVisible?.(true);
+	}
+
+	hideTooltip() {
+		this.tooltipRef.current?.setTooltipVisible?.(false);
 	}
 
 	generateLabel(label, disable, isInMenu, incLabelWithIcon) {
@@ -247,6 +324,8 @@ class ToolbarButtonItem extends React.Component {
 			<Button kind={kind}
 				ref={this.buttonRef}
 				onClick={this.props.actionClickHandler}
+				onFocus={this.onButtonFocus}
+				onBlur={this.onButtonBlur}
 				disabled={!actionObj.enable}
 				aria-label={ariaLabel}
 				size={this.props.size}
@@ -313,7 +392,11 @@ class ToolbarButtonItem extends React.Component {
 			content = actionObj.jsx;
 		}
 		const jsx = this.wrapInTooltip(content);
-		const div = (<div ref={this.buttonRef}>{jsx}</div>);
+		const div = (
+			<div ref={this.buttonRef} onFocus={this.onButtonFocus} onBlur={this.onButtonBlur}>
+				{jsx}
+			</div>
+		);
 
 		return div;
 	}
@@ -327,7 +410,7 @@ class ToolbarButtonItem extends React.Component {
 			const direction = this.props.tooltipDirection ? this.props.tooltipDirection : "bottom";
 
 			return (
-				<Tooltip id={tooltipId} tip={tip} disable={!enableTooltip} className="icon-tooltip" direction={direction} hoverable>
+				<Tooltip ref={this.tooltipRef} id={tooltipId} tip={tip} disable={!enableTooltip} className="icon-tooltip" direction={direction} hoverable>
 					{content}
 				</Tooltip>
 			);
@@ -409,3 +492,4 @@ ToolbarButtonItem.propTypes = {
 };
 
 export default ToolbarButtonItem;
+
