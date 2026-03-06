@@ -36,6 +36,7 @@ import supernodePalette from "../../../harness/test_resources/palettes/supernode
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../../harness/test_resources/diagrams/externalSubFlowCanvas1.json";
 import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../../harness/test_resources/diagrams/externalSubFlowCanvas2.json";
+import multiPortsCanvas3 from "../../../harness/test_resources/diagrams/multiPortsCanvas3.json";
 
 
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
@@ -540,6 +541,130 @@ describe("Test canvas controller methods", () => {
 		const downstreamTestActual = canvasController.getDownstreamNodes(["f5373d9e-677d-4717-a9fd-3b57038ce0de"]);
 
 		expect(JSON.stringify(downstreamTestExpected)).to.equal(JSON.stringify(downstreamTestActual));
+	});
+
+	it("should dynamically add input and output ports by updating pipeline flow through API " +
+		"and add port to port links", () => {
+		deepFreeze(multiPortsCanvas3);
+
+		const canvasController2 = new CanvasController();
+		canvasController2.setPipelineFlow(multiPortsCanvas3);
+
+		// Get the Select1 node using getNodes() without parameters
+		const nodes = canvasController2.getNodes();
+		const select1Node = nodes.find((n) => n.label === "Select1");
+		expect(select1Node).to.not.be.undefined;
+
+		// Add input and output ports to node "Select1"
+		// We need to modify the node in the pipeline flow, not the node object from getNodes()
+		const pipelineFlow = canvasController2.getPipelineFlow();
+		const pipeline = pipelineFlow.pipelines[0];
+		const node = pipeline.nodes.find((n) => n.id === select1Node.id);
+
+		// Add additional input ports
+		node.inputs.push({
+			id: "inPort2",
+			app_data: {
+				ui_data: {
+					cardinality: { min: 0, max: 1 },
+					label: "Input Port 2"
+				}
+			}
+		});
+
+		// Add additional output ports
+		node.outputs.push({
+			id: "outPort2",
+			app_data: {
+				ui_data: {
+					cardinality: { min: 0, max: -1 },
+					label: "Output Port 2"
+				}
+			}
+		});
+
+		// Update the pipeline flow with the modified node
+		canvasController2.setPipelineFlow(pipelineFlow);
+
+		// Get node IDs for creating links - use getNodes() which returns nodes with labels at top level
+		const updatedNodes = canvasController2.getNodes();
+		const varFileNode = updatedNodes.find((n) => n.label === "Var. File");
+		const select2Node = updatedNodes.find((n) => n.label === "Select2");
+		const select3Node = updatedNodes.find((n) => n.label === "Select3");
+		const updatedSelect1Node = updatedNodes.find((n) => n.label === "Select1");
+
+		// Add port to port links
+		const linkData1 = {
+			type: "nodeLink",
+			nodes: [{ id: varFileNode.id, portId: "outPort" }],
+			targetNodes: [{ id: updatedSelect1Node.id, portId: "inPort" }]
+		};
+		const link1Data = canvasController2.createNodeLinks(linkData1);
+		canvasController2.addLinks(link1Data);
+
+		const linkData2 = {
+			type: "nodeLink",
+			nodes: [{ id: select3Node.id, portId: "outPort1" }],
+			targetNodes: [{ id: updatedSelect1Node.id, portId: "inPort2" }]
+		};
+		const link2Data = canvasController2.createNodeLinks(linkData2);
+		canvasController2.addLinks(link2Data);
+
+		const linkData3 = {
+			type: "nodeLink",
+			nodes: [{ id: updatedSelect1Node.id, portId: "outPort" }],
+			targetNodes: [{ id: select3Node.id, portId: "inPort" }]
+		};
+		const link3Data = canvasController2.createNodeLinks(linkData3);
+		canvasController2.addLinks(link3Data);
+
+		const linkData4 = {
+			type: "nodeLink",
+			nodes: [{ id: updatedSelect1Node.id, portId: "outPort2" }],
+			targetNodes: [{ id: select2Node.id, portId: "inPort" }]
+		};
+		const link4Data = canvasController2.createNodeLinks(linkData4);
+		canvasController2.addLinks(link4Data);
+
+		// Verification steps
+		const links = canvasController2.getLinks();
+		expect(links).to.have.length(4);
+
+		// Verify link between Var. File outPort and Select1 inPort
+		const link1 = links.find((l) =>
+			l.srcNodeId === varFileNode.id &&
+			l.srcNodePortId === "outPort" &&
+			l.trgNodeId === updatedSelect1Node.id &&
+			l.trgNodePortId === "inPort"
+		);
+		expect(link1).to.not.be.undefined;
+
+		// Verify link between Select3 outPort1 and Select1 inPort2
+		const link2 = links.find((l) =>
+			l.srcNodeId === select3Node.id &&
+			l.srcNodePortId === "outPort1" &&
+			l.trgNodeId === updatedSelect1Node.id &&
+			l.trgNodePortId === "inPort2"
+		);
+		expect(link2).to.not.be.undefined;
+
+		// Verify link between Select1 outPort and Select3 inPort
+		const link3 = links.find((l) =>
+			l.srcNodeId === updatedSelect1Node.id &&
+			l.srcNodePortId === "outPort" &&
+			l.trgNodeId === select3Node.id &&
+			l.trgNodePortId === "inPort"
+		);
+		expect(link3).to.not.be.undefined;
+
+		// Verify link between Select1 outPort2 and Select2 inPort
+		const link4 = links.find((l) =>
+			l.srcNodeId === updatedSelect1Node.id &&
+			l.srcNodePortId === "outPort2" &&
+			l.trgNodeId === select2Node.id &&
+			l.trgNodePortId === "inPort"
+		);
+		expect(link4).to.not.be.undefined;
 	});
 });
 
