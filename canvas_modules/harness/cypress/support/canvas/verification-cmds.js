@@ -1156,11 +1156,12 @@ Cypress.Commands.add("verifyTipForToolbarItem", (toolbarItem, tipText) => {
 		});
 });
 
-Cypress.Commands.add("verifyTipForToolbarItemNotDisplayed", (toolbarItem) => {
-	cy.getToolbarAction(toolbarItem)
-		.find(".tooltip-trigger")
+
+Cypress.Commands.add("verifyNoTipsExist", () => {
+	cy.get("div.common-canvas-tooltip[aria-hidden=false]")
 		.should("not.exist");
 });
+
 
 Cypress.Commands.add("verifyTipForCategory", (categoryLabel) => {
 	// Verify the tip shows

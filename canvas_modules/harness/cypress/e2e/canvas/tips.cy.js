@@ -492,13 +492,58 @@ describe("Test to check if tips show up for toolbar items", function() {
 		// The Run Selection tool tip should not be displayed because the label
 		// is already displayed next to the icon in the tool button.
 		cy.hoverOverToolbarItem(".runSelection-action");
-		cy.verifyTipForToolbarItemNotDisplayed(".runSelection-action");
+		cy.verifyNoTipsExist();
+
 		cy.mouseoutToolbarItem(".runSelection-action");
 
 		// This tooltip should show because there is no text in the button.
 		cy.hoverOverToolbarItem(".run-action");
 		cy.verifyTipForToolbarItem(".run-action", "Run");
 		cy.mouseoutToolbarItem(".run-action");
+	});
+
+	it("Test to check if tooltip is removed from display when the toolbar size changes", function() {
+		// Click on addComment button and verify focus and the tooltip is displayed
+		cy.clickToolbarAddComment();
+		cy.get(".createAutoComment-action button").should("have.focus");
+		cy.verifyTipForToolbarItem(".createAutoComment-action", "New comment");
+
+		// Move focus left to the Undo button
+		cy.get("body").type("{leftarrow}");
+		cy.get(".undo-action button").should("have.focus");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Create comment");
+
+		// Move focus left again to the Palette button
+		cy.get("body").type("{leftarrow}");
+		cy.get(".paletteOpen-action button").should("have.focus");
+		cy.verifyTipForToolbarItem(".paletteOpen-action", "Palette");
+
+		// Activate the palette button by pressing Return key
+		cy.get(".paletteOpen-action").type("{enter}");
+
+		// Verify tooltip is removed after activation. Tooltips should be removed
+		// when the toolbar resizes, as it does in this case.
+		cy.verifyNoTipsExist();
+	});
+
+	it("Test to check if a tooltip displayed after keyboard navigation is removed after hovering mouse over a toolbar button", function() {
+		// Click on addComment button and verify focus and the tooltip is displayed
+		cy.clickToolbarAddComment();
+		cy.get(".createAutoComment-action button").should("have.focus");
+		cy.verifyTipForToolbarItem(".createAutoComment-action", "New comment");
+
+		// Move focus left to the Undo button
+		cy.get("body").type("{leftarrow}");
+		cy.get(".undo-action button").should("have.focus");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Create comment");
+
+		// Hover mouse over the Zoom in button
+		cy.hoverOverToolbarItem(".zoomIn-action");
+		cy.mouseoutToolbarItem(".zoomIn-action");
+
+		// Verify tooltip is removed after activation. Tooltips should be removed
+		// when the toolbar resizes, as it does in this case.
+		cy.verifyNoTipsExist();
 	});
 });
 
@@ -616,3 +661,5 @@ describe("Test undo redo tooltips for different actions", function() {
 			cy.clickToolbarRedo();
 		});
 });
+
+
