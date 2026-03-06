@@ -32,6 +32,8 @@ import supernodeCanvas from "../../../harness/test_resources/diagrams/supernodeC
 import externalMainCanvasExpanded from "../../../harness/test_resources/diagrams/externalMainCanvasExpanded.json";
 import commonPalette from "../../../harness/test_resources/palettes/commonPalette.json";
 import supernodePalette from "../../../harness/test_resources/palettes/supernodePalette.json";
+import cardinalityCanvas from "../../../harness/test_resources/diagrams/cardinalityCanvas.json";
+import multiPortsCanvas2 from "../../../harness/test_resources/diagrams/multiPortsCanvas2.json";
 
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../../harness/test_resources/diagrams/externalSubFlowCanvas1.json";
@@ -570,3 +572,159 @@ function beforeEditActionHandler(data) {
 	}
 	return data;
 }
+
+// Helper function to create links and verify counts
+function createLinkAndVerify(canvasController, srcNodeLabel, srcPortId, trgNodeLabel, trgPortId, expectedLinkCount) {
+	const nodes = canvasController.getNodes();
+	const srcNode = nodes.find((n) => n.label === srcNodeLabel);
+	const trgNode = nodes.find((n) => n.label === trgNodeLabel);
+
+	if (!srcNode || !trgNode) {
+		return false;
+	}
+
+	const linkData = {
+		type: "nodeLink",
+		nodes: [{ id: srcNode.id, portId: srcPortId }],
+		targetNodes: [{ id: trgNode.id, portId: trgPortId }]
+	};
+
+	const links = canvasController.createNodeLinks(linkData);
+	canvasController.addLinks(links);
+
+	const allLinks = canvasController.getLinks();
+	expect(allLinks).to.have.length(expectedLinkCount);
+
+	return true;
+}
+
+// Helper function to verify link exists between nodes
+function verifyLinkBetweenPorts(canvasController, srcNodeLabel, srcPortId, trgNodeLabel, trgPortId, expectedCount) {
+	const nodes = canvasController.getNodes();
+	const srcNode = nodes.find((n) => n.label === srcNodeLabel);
+	const trgNode = nodes.find((n) => n.label === trgNodeLabel);
+
+	if (!srcNode || !trgNode) {
+		if (expectedCount === 0) {
+			return;
+		}
+		throw new Error(`Node not found: ${srcNodeLabel} or ${trgNodeLabel}`);
+	}
+
+	const links = canvasController.getLinks();
+	const matchingLinks = links.filter((l) =>
+		l.srcNodeId === srcNode.id &&
+		l.srcNodePortId === srcPortId &&
+		l.trgNodeId === trgNode.id &&
+		l.trgNodePortId === trgPortId
+	);
+
+	expect(matchingLinks).to.have.length(expectedCount);
+}
+
+describe("Test adding links to target nodes with maxed out cardinalities", () => {
+	it("should reject new connection when target node is maxed out (cardinality 0:1)", () => {
+		deepFreeze(cardinalityCanvas);
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(cardinalityCanvas);
+
+		// Create first link - should succeed
+		createLinkAndVerify(canvasController, "Out 0:1", "outPort", "In 0:1", "inPort", 1);
+		verifyLinkBetweenPorts(canvasController, "Out 0:1", "outPort", "In 0:1", "inPort", 1);
+
+		// Try to create second link to same port - should fail because In 0:1 already has a link
+		createLinkAndVerify(canvasController, "Out 0:3", "outPort", "In 0:1", "inPort", 1);
+		verifyLinkBetweenPorts(canvasController, "Out 0:3", "outPort", "In 0:1", "inPort", 0);
+	});
+
+	it("should handle target node with multiple ports and different cardinalities", () => {
+		deepFreeze(cardinalityCanvas);
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(cardinalityCanvas);
+
+		// Create first link to InputPort2 - should succeed
+		createLinkAndVerify(canvasController, "Out 0:1", "outPort", "0:1 & 0:2", "InputPort2", 1);
+		verifyLinkBetweenPorts(canvasController, "Out 0:1", "outPort", "0:1 & 0:2", "InputPort2", 1);
+
+		// Create second link to InputPort2 - should succeed because InputPort2 can accept 2 input links
+		createLinkAndVerify(canvasController, "Out 0:3", "outPort", "0:1 & 0:2", "InputPort2", 2);
+		verifyLinkBetweenPorts(canvasController, "Out 0:3", "outPort", "0:1 & 0:2", "InputPort2", 1);
+
+		// Try to create third link to InputPort2 - should fail because InputPort2 already has 2 input links
+		createLinkAndVerify(canvasController, "0:1 & 0:-1", "outPort2", "0:1 & 0:2", "InputPort2", 2);
+		verifyLinkBetweenPorts(canvasController, "0:1 & 0:-1", "outPort2", "0:1 & 0:2", "InputPort2", 0);
+	});
+
+	it("should handle target node with all ports having cardinality limits", () => {
+		deepFreeze(cardinalityCanvas);
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(cardinalityCanvas);
+
+		// Create links to different ports - all should succeed
+		createLinkAndVerify(canvasController, "Out 0:1", "outPort", "All 0:1", "inPort1", 1);
+		verifyLinkBetweenPorts(canvasController, "Out 0:1", "outPort", "All 0:1", "inPort1", 1);
+
+		createLinkAndVerify(canvasController, "Out 0:3", "outPort", "All 0:1", "inPort2", 2);
+		verifyLinkBetweenPorts(canvasController, "Out 0:3", "outPort", "All 0:1", "inPort2", 1);
+
+		createLinkAndVerify(canvasController, "0:1 & 0:-1", "outPort1", "All 0:1", "inPort3", 3);
+		verifyLinkBetweenPorts(canvasController, "0:1 & 0:-1", "outPort1", "All 0:1", "inPort3", 1);
+
+		// Try to create links to already maxed out ports - all should fail
+		createLinkAndVerify(canvasController, "0:1 & 0:-1", "outPort2", "All 0:1", "inPort1", 3);
+		verifyLinkBetweenPorts(canvasController, "0:1 & 0:-1", "outPort2", "All 0:1", "inPort1", 0);
+
+		createLinkAndVerify(canvasController, "0:1 & 0:-1", "outPort2", "All 0:1", "inPort2", 3);
+		verifyLinkBetweenPorts(canvasController, "0:1 & 0:-1", "outPort2", "All 0:1", "inPort2", 0);
+
+		createLinkAndVerify(canvasController, "0:1 & 0:-1", "outPort2", "All 0:1", "inPort3", 3);
+		verifyLinkBetweenPorts(canvasController, "0:1 & 0:-1", "outPort2", "All 0:1", "inPort3", 0);
+
+		// Create link to inPort4 - should succeed
+		createLinkAndVerify(canvasController, "0:1 & 0:-1", "outPort2", "All 0:1", "inPort4", 4);
+		verifyLinkBetweenPorts(canvasController, "0:1 & 0:-1", "outPort2", "All 0:1", "inPort4", 1);
+	});
+});
+
+describe("Test multiple ports operations with cardinality enforcement", () => {
+	it("should create multiple port-to-port links and enforce cardinality limits", () => {
+		deepFreeze(multiPortsCanvas2);
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(multiPortsCanvas2);
+
+		// Verify initial state - canvas has 5 existing links
+		let links = canvasController.getLinks();
+		expect(links).to.have.length(5);
+
+		// Add port to port links - all should succeed
+		createLinkAndVerify(canvasController, "Select4", "outPort", "Merge1", "inPort3", 6);
+		createLinkAndVerify(canvasController, "Var. File", "outPort", "Select1", "inPort", 7);
+		createLinkAndVerify(canvasController, "Select2", "outPort1", "Table", "inPort", 8);
+		createLinkAndVerify(canvasController, "Select2", "outPort2", "Table", "inPort", 9);
+		createLinkAndVerify(canvasController, "Select2", "outPort3", "Table", "inPort", 10);
+		createLinkAndVerify(canvasController, "Select2", "outPort4", "Table", "inPort", 11);
+		createLinkAndVerify(canvasController, "Select3", "outPort1", "Neural Net", "inPort1", 12);
+		createLinkAndVerify(canvasController, "Select3", "outPort2", "Neural Net", "inPort1", 13);
+		createLinkAndVerify(canvasController, "Select3", "outPort3", "Neural Net", "inPort1", 14);
+		createLinkAndVerify(canvasController, "Select3", "outPort4", "Neural Net", "inPort1", 15);
+		createLinkAndVerify(canvasController, "Select3", "outPort5", "Neural Net", "inPort1", 16);
+		createLinkAndVerify(canvasController, "Select4", "outPort", "Sort", "inPort", 17);
+		createLinkAndVerify(canvasController, "Select4", "outPort", "Merge1", "inPort1", 18);
+
+		// Negative Tests - these should fail due to cardinality limits
+
+		// The cardinality of 'inPort2' port on 'Neural Net' node is a max of 2
+		// It already has 2 links, so this should fail
+		createLinkAndVerify(canvasController, "Select3", "outPort8", "Neural Net", "inPort2", 18);
+		verifyLinkBetweenPorts(canvasController, "Select3", "outPort8", "Neural Net", "inPort2", 0);
+
+		// Node "Select4" node "outPort" has a maximum cardinality of 4
+		// It already has 4 links, so this should fail
+		createLinkAndVerify(canvasController, "Select4", "outPort", "Merge2", "inPort", 18);
+		verifyLinkBetweenPorts(canvasController, "Select4", "outPort", "Merge2", "inPort", 0);
+
+		// Final verification - should still have 18 links
+		links = canvasController.getLinks();
+		expect(links).to.have.length(18);
+	});
+});
