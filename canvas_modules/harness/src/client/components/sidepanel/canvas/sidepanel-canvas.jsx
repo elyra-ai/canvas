@@ -1608,7 +1608,7 @@ export default class SidePanelForms extends React.Component {
 
 		var toolbarSize = (<div className="harness-sidepanel-children" id="harness-sidepanel-toolbar-size">
 			<FormGroup
-				legendText="Toolbar Size"
+				legendText={(<div><span>Toolbar Size</span><br /><span>Note: Size doesn't work with Default and SingleLeftBarArray.</span></div>)}
 			>
 				<RadioButtonGroup
 					name="selectedToolbarSize" // Set name to corresponding field name in App.js
