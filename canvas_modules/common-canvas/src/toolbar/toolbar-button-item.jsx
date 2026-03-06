@@ -355,7 +355,8 @@ class ToolbarButtonItem extends React.Component {
 				return <div className={"toolbar-right-chevron"}><ChevronRight /></div>;
 			}
 			if (actionObj.incLabelWithIcon === "before" ||
-					actionObj.incLabelWithIcon === "after") {
+					actionObj.incLabelWithIcon === "after" ||
+					actionObj.incLabelWithIcon === "label-only") {
 				const chevron = this.props.subAreaDisplayed ? (<ChevronUp />) : (<ChevronDown />);
 				return (<div className={"toolbar-up-down-chevron"}>{chevron}</div>);
 			}
@@ -423,7 +424,8 @@ class ToolbarButtonItem extends React.Component {
 	showLabelAsTip(actionObj) {
 		if (actionObj.label) {
 			if (actionObj.incLabelWithIcon === "before" ||
-					actionObj.incLabelWithIcon === "after") {
+					actionObj.incLabelWithIcon === "after" ||
+					actionObj.incLabelWithIcon === "label-only") {
 				return false;
 			}
 			return true;
