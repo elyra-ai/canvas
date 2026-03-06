@@ -163,56 +163,6 @@ Cypress.Commands.add("setCategoryName", (categoryName) => {
 		.type(categoryName);
 });
 
-// update the pipelineflow to add input and output ports to node
-Cypress.Commands.add("updatePipelineflowToAddInputOutputPortsToNode", (nodeName) => {
-	cy.get("#harness-sidepanel-api-pipelineFlow")
-		.find("textarea")
-		.invoke("text")
-		.then((flowText) => {
-			const pipelineFlow = JSON.parse(flowText);
-			const nodeList = pipelineFlow.pipelines[0].nodes;
-			const node = nodeList.find((nd) => nd.app_data.ui_data.label === nodeName);
-			const newInputPort = {
-				"id": "inPort2",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": 1
-						},
-						"label": "Input Port2"
-					}
-				},
-				"links": []
-			};
-
-			const newOutputPort = {
-				"id": "outPort2",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": -1
-						},
-						"label": "Output Port2"
-					}
-				}
-			};
-
-			node.inputs.push(newInputPort);
-			node.outputs.push(newOutputPort);
-
-			const newPipelineFlow = JSON.stringify(pipelineFlow);
-			cy.get("#harness-sidepanel-api-pipelineFlow")
-				.find("textarea")
-				.as("textArea");
-			cy.get("@textArea")
-				.clear();
-			cy.get("@textArea")
-				.type(newPipelineFlow, { parseSpecialCharSequences: false });
-		});
-});
-
 Cypress.Commands.add("clickOutsideNotificationPanel", () => {
 	cy.get(".d3-svg-canvas-div").click();
 });
