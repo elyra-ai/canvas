@@ -17,19 +17,57 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { NotificationsPanel } from "@carbon/ibm-products";
-import KeyboardUtils from "@elyra/canvas/src/common-canvas/keyboard-utils.js";
 
 class NotificationsPanelWrapper extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.wrapperRef = React.createRef();
 		this.onKeyDown = this.onKeyDown.bind(this);
+		this.handleFocusTrap = this.handleFocusTrap.bind(this);
+	}
+
+	componentDidMount() {
+		// Focus the wrapper when mounted to enable focus trapping
+		if (this.wrapperRef.current) {
+			this.wrapperRef.current.focus();
+		}
 	}
 
 	onKeyDown(evt) {
-		if (KeyboardUtils.closeSubArea(evt)) {
+		if (evt.key === "Escape") {
 			evt.stopPropagation();
 			this.props.closeSubPanel();
+		} else if (evt.key === "Tab") {
+			this.handleFocusTrap(evt);
+		}
+	}
+
+	handleFocusTrap(evt) {
+		if (!this.wrapperRef.current) {
+			return;
+		}
+
+		// Get all focusable elements within the panel
+		const focusableElements = this.wrapperRef.current.querySelectorAll(
+			"button, [href], input, select, textarea, [tabindex]:not([tabindex=\"-1\"])"
+		);
+
+		if (focusableElements.length === 0) {
+			return;
+		}
+
+		const firstElement = focusableElements[0];
+		const lastElement = focusableElements[focusableElements.length - 1];
+
+		// If shift+tab on first element, move to last
+		if (evt.shiftKey && document.activeElement === firstElement) {
+			evt.preventDefault();
+			lastElement.focus();
+		} else if (!evt.shiftKey && document.activeElement === lastElement) {
+			// If tab on last element, move to first
+			evt.preventDefault();
+			firstElement.focus();
 		}
 	}
 
@@ -42,7 +80,12 @@ class NotificationsPanelWrapper extends React.Component {
 		const onDismissAllNotifications = subPanelData?.onDismissAllNotifications;
 
 		return (
-			<div className="notifications-panel-wrapper" onKeyDown={this.onKeyDown} tabIndex={-1}>
+			<div
+				ref={this.wrapperRef}
+				className="notifications-panel-wrapper"
+				onKeyDown={this.onKeyDown}
+				tabIndex={-1}
+			>
 				<NotificationsPanel
 					open
 					data={notifications}

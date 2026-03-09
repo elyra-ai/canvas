@@ -81,7 +81,7 @@ import RandomEffectsPanel from "./components/custom-panels/RandomEffectsPanel";
 import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
 import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel";
 import CustomOverflowAction from "./components/custom-actions/CustomOverflowAction.js";
-import NotificationsPanelWrapper from "./components/notifications-panel-wrapper.jsx";
+import NotificationsPanelWrapper from "./components/carbon-notifications-panel/carbon-notifications-panel-wrapper.jsx";
 
 import * as CustomOpMax from "./custom/condition-ops/customMax";
 import * as CustomNonEmptyListLessThan from "./custom/condition-ops/customNonEmptyListLessThan";
@@ -191,7 +191,7 @@ class App extends React.Component {
 			twistyLabelIcon: "none",
 
 			// Notifications state
-			notifications: [
+			carbonNotifications: [
 				{
 					id: "1",
 					type: "error",
@@ -200,7 +200,7 @@ class App extends React.Component {
 					description: "Error code: ERR_500. The server encountered an internal error and was unable to complete your request. " +
 						"Please try again later or contact support if the problem persists.",
 					timestamp: new Date(),
-					onNotificationClick: () => console.log("Clicked notification 1")
+					onNotificationClick: () => window.alert("Clicked notification 1")
 				},
 				{
 					id: "2",
@@ -209,7 +209,7 @@ class App extends React.Component {
 					subtitle: "This is a warning notification",
 					description: "Your session will expire in 5 minutes due to inactivity. Please save your work to avoid losing any unsaved changes.",
 					timestamp: new Date(),
-					onNotificationClick: () => console.log("Clicked notification 2")
+					onNotificationClick: () => window.alert("Clicked notification 2")
 				},
 				{
 					id: "3",
@@ -219,7 +219,7 @@ class App extends React.Component {
 					description: "A new version of the application is available. Update now to access the latest features and improvements, " +
 						"including enhanced performance and bug fixes.",
 					timestamp: new Date(),
-					onNotificationClick: () => console.log("Clicked notification 3")
+					onNotificationClick: () => window.alert("Clicked notification 3")
 				},
 				{
 					id: "4",
@@ -228,7 +228,7 @@ class App extends React.Component {
 					subtitle: "Operation completed successfully",
 					description: "Your data has been successfully exported to CSV format. The file contains 1,234 records and is ready for download from your downloads folder.",
 					timestamp: new Date(),
-					onNotificationClick: () => console.log("Clicked notification 4")
+					onNotificationClick: () => window.alert("Clicked notification 4")
 				},
 				{
 					id: "5",
@@ -238,7 +238,7 @@ class App extends React.Component {
 					description: "Network connection lost. Please check your internet connection and try again. " +
 						"If you're behind a firewall, ensure that the required ports are open.",
 					timestamp: new Date(),
-					onNotificationClick: () => console.log("Clicked notification 5")
+					onNotificationClick: () => window.alert("Clicked notification 5")
 				},
 				{
 					id: "6",
@@ -247,7 +247,7 @@ class App extends React.Component {
 					subtitle: "You are approaching your storage limit",
 					description: "You have used 9.2 GB of your 10 GB storage quota (92%). Consider deleting old files or upgrading your plan to avoid service interruption.",
 					timestamp: new Date(),
-					onNotificationClick: () => console.log("Clicked notification 6")
+					onNotificationClick: () => window.alert("Clicked notification 6")
 				}
 			],
 
@@ -744,13 +744,13 @@ class App extends React.Component {
 
 	dismissSingleNotification(notification) {
 		this.setState((prevState) => ({
-			notifications: prevState.notifications.filter((n) => n.id !== notification.id)
+			carbonNotifications: prevState.carbonNotifications.filter((n) => n.id !== notification.id)
 		}));
 		this.log("Dismissed notification: " + notification.id);
 	}
 
 	dismissAllNotifications() {
-		this.setState({ notifications: [] });
+		this.setState({ carbonNotifications: [] });
 		this.log("Dismissed all notifications");
 	}
 
@@ -2454,7 +2454,7 @@ class App extends React.Component {
 					</div>);
 
 			const notificationsData = {
-				notifications: this.state.notifications,
+				notifications: this.state.carbonNotifications,
 				onDismissSingleNotification: this.dismissSingleNotification,
 				onDismissAllNotifications: this.dismissAllNotifications
 			};

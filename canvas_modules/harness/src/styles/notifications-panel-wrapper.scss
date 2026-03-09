@@ -19,41 +19,60 @@
 .notifications-panel-wrapper {
 	// Override the absolute positioning of NotificationsPanel
 	.c4p--notifications-panel {
-		position: relative !important;
-		top: auto !important;
-		right: auto !important;
-		bottom: auto !important;
-		left: auto !important;
-		transform: none !important;
-		width: 350px !important;
-		max-width: 350px !important;
-		min-width: 350px !important;
-		height: fit-content !important;
-		min-height: 0 !important;
-		max-height: 500px !important;
-		box-shadow: none !important;
+		position: relative;
+		top: auto;
+		right: auto;
+		bottom: auto;
+		left: auto;
+		transform: none;
+		width: 350px;
+		max-width: 350px;
+		min-width: 350px;
+		height: fit-content;
+		min-height: 0;
+		max-height: 500px;
+		box-shadow: none;
 	}
 
 	// Ensure the panel content is visible and scrollable
 	.c4p--notifications-panel__container {
-		height: fit-content !important;
-		min-height: 0 !important;
-		max-height: 500px !important;
-		overflow-y: auto !important;
-		padding-bottom: 0 !important;
+		height: fit-content;
+		min-height: 0;
+		max-height: 500px;
+		overflow-y: auto;
+		padding-bottom: 0;
 	}
 
 	// Override the main section height
 	.c4p--notifications-panel__main-section {
-		height: fit-content !important;
-		min-height: 0 !important;
-		flex: 0 1 auto !important;
+		height: fit-content;
+		min-height: 0;
+		flex: 0 1 auto;
 	}
 
 	// Remove extra padding/spacing from notification list
 	.c4p--notifications-panel__notification-list {
-		min-height: 0 !important;
-		padding-bottom: 0 !important;
+		min-height: 0;
+		padding-bottom: 0;
+	}
+
+	// Center the empty state content vertically with proper spacing
+	// Override the margin-block-start from Carbon for IBM Products
+	.c4p--notifications-panel__main-section-empty.c4p--notifications-panel__main-section {
+		margin-block-start: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding-top: 40px;
+		padding-bottom: 40px;
+		text-align: center;
+
+		// Center the SVG icon
+		svg {
+			margin-left: auto;
+			margin-right: auto;
+		}
 	}
 }
 
