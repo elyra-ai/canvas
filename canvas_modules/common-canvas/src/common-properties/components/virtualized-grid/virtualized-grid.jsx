@@ -197,11 +197,6 @@ const VirtualizedGrid = (props) => {
 				onMouseLeave={(evt) => overSelectOption(evt)}
 				onFocus={(evt) => overSelectOption(evt)}
 				onBlur={(evt) => overSelectOption(evt)}
-				onKeyDown={(evt) => {
-					if (evt.key === "Space" || evt.key === "Enter") {
-						onRowClick(evt, rowIndex, rowData);
-					}
-				}}
 			>
 				<Checkbox
 					id={`properties-vt-row-cb-${props.scrollKey}-${rowIndex}`}
@@ -211,6 +206,7 @@ const VirtualizedGrid = (props) => {
 					checked={rowSelected}
 					disabled={rowDisabled || props.tableDisabled}
 					readOnly={props.readOnly}
+					onChange={(evt, data) => onRowClick(evt.nativeEvent, rowIndex, rowData, data.checked)}
 				/>
 			</td>);
 		}
@@ -391,12 +387,24 @@ const VirtualizedGrid = (props) => {
 		</tbody>);
 	};
 
-	const onRowClick = (evt, rowIndex, rowData) => {
+	/**
+	 * Handles row click events for selection and interaction.
+	 * Prevents propagation for dropdown options and manages row selection state
+	 * including support for shift-key multi-selection.
+	 *
+	 * @param {Event} evt - The click event object
+	 * @param {number} rowIndex - The visual index of the clicked row
+	 * @param {Object} rowData - The data object for the clicked row
+	 * @param {number} rowData.originalRowIndex - The original index from getOriginalRowIndex
+	 * @param {boolean} rowData.disabled - Whether the row is disabled
+	 * @param {boolean} [newValue] - Optional explicit new selection state (true/false)
+	 */
+	const onRowClick = (evt, rowIndex, rowData, newValue) => {
 		if (evt.target.className === "cds--select-option") {
 			evt.stopPropagation(); // stop propagation when selecting dropdown select options within table rows
-		} else {
+		} else if (typeof newValue !== "undefined" || props.rowSelection === ROW_SELECTION.SINGLE) {
 			// Set selections
-			const selected = !isRowSelected(rowData.originalRowIndex);
+			const selected = newValue ?? !isRowSelected(rowData.originalRowIndex);
 			if (typeof props.setRowsSelected === "function") {
 				props.setRowsSelected({
 					"index": rowIndex,
