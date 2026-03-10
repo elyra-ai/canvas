@@ -17,58 +17,25 @@
 
 // Override NotificationsPanel positioning to work within toolbar sub-panel
 .notifications-panel-wrapper {
-	// Override the absolute positioning of NotificationsPanel
+	// Override main panel properties
 	.c4p--notifications-panel {
 		position: relative;
 		top: auto;
-		right: auto;
-		bottom: auto;
-		left: auto;
-		transform: none;
 		width: 350px;
-		max-width: 350px;
 		min-width: 350px;
-		height: fit-content;
 		min-height: 0;
 		max-height: 500px;
 		box-shadow: none;
-	}
-
-	// Ensure the panel content is visible and scrollable
-	.c4p--notifications-panel__container {
-		height: fit-content;
-		min-height: 0;
-		max-height: 500px;
-		overflow-y: auto;
-		padding-bottom: 0;
-	}
-
-	// Override the main section height
-	.c4p--notifications-panel__main-section {
-		height: fit-content;
-		min-height: 0;
-		flex: 0 1 auto;
-	}
-
-	// Remove extra padding/spacing from notification list
-	.c4p--notifications-panel__notification-list {
-		min-height: 0;
-		padding-bottom: 0;
+		border-block-end: none;
+		border-inline-start: none;
 	}
 
 	// Center the empty state content vertically with proper spacing
-	// Override the margin-block-start from Carbon for IBM Products
 	.c4p--notifications-panel__main-section-empty.c4p--notifications-panel__main-section {
 		margin-block-start: 0;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
 		padding-top: 40px;
 		padding-bottom: 40px;
-		text-align: center;
 
-		// Center the SVG icon
 		svg {
 			margin-left: auto;
 			margin-right: auto;
@@ -76,4 +43,4 @@
 	}
 }
 
-// Made with Bob
+// Made with Bob (and Craig)
