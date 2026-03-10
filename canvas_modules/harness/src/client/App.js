@@ -81,6 +81,7 @@ import RandomEffectsPanel from "./components/custom-panels/RandomEffectsPanel";
 import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
 import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel";
 import CustomOverflowAction from "./components/custom-actions/CustomOverflowAction.js";
+import NotificationsPanelWrapper from "./components/carbon-notifications-panel/carbon-notifications-panel-wrapper.jsx";
 
 import * as CustomOpMax from "./custom/condition-ops/customMax";
 import * as CustomNonEmptyListLessThan from "./custom/condition-ops/customNonEmptyListLessThan";
@@ -188,6 +189,67 @@ class App extends React.Component {
 			// Twisty panel state
 			twistyLabelText: "",
 			twistyLabelIcon: "none",
+
+			// Notifications state
+			carbonNotifications: [
+				{
+					id: "1",
+					type: "error",
+					title: "Error notification",
+					subtitle: "This is an error notification",
+					description: "Error code: ERR_500. The server encountered an internal error and was unable to complete your request. " +
+						"Please try again later or contact support if the problem persists.",
+					timestamp: new Date(),
+					onNotificationClick: () => window.alert("Clicked notification 1")
+				},
+				{
+					id: "2",
+					type: "warning",
+					title: "Warning notification",
+					subtitle: "This is a warning notification",
+					description: "Your session will expire in 5 minutes due to inactivity. Please save your work to avoid losing any unsaved changes.",
+					timestamp: new Date(),
+					onNotificationClick: () => window.alert("Clicked notification 2")
+				},
+				{
+					id: "3",
+					type: "informational",
+					title: "Informational notification",
+					subtitle: "This is an informational notification",
+					description: "A new version of the application is available. Update now to access the latest features and improvements, " +
+						"including enhanced performance and bug fixes.",
+					timestamp: new Date(),
+					onNotificationClick: () => window.alert("Clicked notification 3")
+				},
+				{
+					id: "4",
+					type: "success",
+					title: "Success notification",
+					subtitle: "Operation completed successfully",
+					description: "Your data has been successfully exported to CSV format. The file contains 1,234 records and is ready for download from your downloads folder.",
+					timestamp: new Date(),
+					onNotificationClick: () => window.alert("Clicked notification 4")
+				},
+				{
+					id: "5",
+					type: "error",
+					title: "Connection failed",
+					subtitle: "Unable to connect to the server",
+					description: "Network connection lost. Please check your internet connection and try again. " +
+						"If you're behind a firewall, ensure that the required ports are open.",
+					timestamp: new Date(),
+					onNotificationClick: () => window.alert("Clicked notification 5")
+				},
+				{
+					id: "6",
+					type: "warning",
+					title: "Storage limit warning",
+					subtitle: "You are approaching your storage limit",
+					description: "You have used 9.2 GB of your 10 GB storage quota (92%). Consider deleting old files or upgrading your plan to avoid service interruption.",
+					timestamp: new Date(),
+					onNotificationClick: () => window.alert("Clicked notification 6")
+				}
+			],
 
 			// Common canvas state variables
 			paletteOpened: false,
@@ -390,6 +452,9 @@ class App extends React.Component {
 		this.appendNotificationMessages = this.appendNotificationMessages.bind(this);
 		this.clearNotificationMessages = this.clearNotificationMessages.bind(this);
 		this.setCanvasConfig = this.setCanvasConfig.bind(this);
+
+		this.dismissSingleNotification = this.dismissSingleNotification.bind(this);
+		this.dismissAllNotifications = this.dismissAllNotifications.bind(this);
 
 		this.setBreadcrumbsDefinition = this.setBreadcrumbsDefinition.bind(this);
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
@@ -675,6 +740,18 @@ class App extends React.Component {
 
 	getLabel(labelId, defaultLabel) {
 		return (<FormattedMessage id={labelId} defaultMessage={defaultLabel} />);
+	}
+
+	dismissSingleNotification(notification) {
+		this.setState((prevState) => ({
+			carbonNotifications: prevState.carbonNotifications.filter((n) => n.id !== notification.id)
+		}));
+		this.log("Dismissed notification: " + notification.id);
+	}
+
+	dismissAllNotifications() {
+		this.setState({ carbonNotifications: [] });
+		this.log("Dismissed all notifications");
 	}
 
 	getPropertyDefName(node) {
@@ -2376,6 +2453,12 @@ class App extends React.Component {
 						</div>
 					</div>);
 
+			const notificationsData = {
+				notifications: this.state.carbonNotifications,
+				onDismissSingleNotification: this.dismissSingleNotification,
+				onDismissAllNotifications: this.dismissAllNotifications
+			};
+
 			toolbarConfig = {
 				leftBar: [
 					{ action: "palette", label: "Palette", enable: true },
@@ -2395,6 +2478,9 @@ class App extends React.Component {
 					{ divider: true },
 					{ action: "settingspanel", iconEnabled: (<Settings />), label: "Settings", enable: true,
 						subPanel: AppSettingsPanel, subPanelData: { saveData: (settings) => window.alert("Panel data received by application.\n" + settings) } },
+					{ divider: true },
+					{ action: "notifications-panel", iconEnabled: (<NotificationIcon size={32} />), label: "Notifications", enable: true,
+						subPanel: NotificationsPanelWrapper, subPanelData: notificationsData },
 					{ divider: true },
 					{ action: "text-size-submenu", incLabelWithIcon: "after", iconEnabled: (<TextScale size={32} />), label: "Text Size", enable: true,
 						subMenu: subMenuTextSize, closeSubAreaOnClick: true },
