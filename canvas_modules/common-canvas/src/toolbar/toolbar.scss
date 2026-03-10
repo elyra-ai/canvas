@@ -299,7 +299,7 @@ $toolbar-divider-width: 1px;
 
 .toolbar-sub-menu-item {
 	position: relative; // Allows any cascade sub-menu to be positioned absolutely
-	& button {
+	& > button { // Restrict styles to sub-menu buttons so styles do not cascade to buttons in sub-panels.
 		width: 100%;
 		padding-top: 0;
 		padding-bottom: 0;
