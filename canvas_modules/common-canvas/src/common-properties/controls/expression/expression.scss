@@ -19,7 +19,8 @@
 @forward "./expression-toggle/expression-toggle";
 
 // Define code mirror colors that pass WCAG AA color contrast standard
-// when compared to the different background colors used in the UI.
+// when compared to the different background colors used in the UI
+// using: https://webaim.org/resources/contrastchecker/
 // There are four different possible backgrounds:
 // * expression in narrow flyout,
 // * expression in narrow flyout - highlighted line,
@@ -27,7 +28,8 @@
 // * modal expression builder - highlighted line
 // Colors specified are derived from those in the Carbon 'syntax'
 // group of colors: https://carbondesignsystem.com/elements/color/tokens/#syntax
-// but with their brightness adjusted.
+// but with their brightness adjusted to pass the standard for
+// 'normal text'.
 
 // If no carbon theme is set or the light theme is set.
 :root,
