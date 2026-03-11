@@ -33,7 +33,7 @@
 
 // If no carbon theme is set or the light theme is set.
 :root,
-[data-carbon-theme='g10'] {
+[data-carbon-theme=g10] {
 	--cm-keyword-color: #0152E9; // From $syntax-keyword
 	--cm-number-color: #177233; // From $syntax-number
 	--cm-def-color: #755D06; // From $syntax-definition
