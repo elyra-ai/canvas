@@ -180,7 +180,6 @@
 					// Radio button styling for single selection mode, based on Carbon single selection DataTable
 					.cds--radio-button-wrapper {
 						margin-bottom: 0;
-						opacity: 0; // Visually hide by default while maintaining keyboard accessibility
 
 						.cds--radio-button__label {
 							display: flex;
@@ -193,16 +192,6 @@
 							margin-inline-end: -(carbon.$spacing-01);
 						}
 					}	
-				}
-
-				// Show radio button on row hover
-				&:hover .properties-vt-row-radio .cds--radio-button-wrapper {
-					opacity: 1;
-				}
-
-				// Show radio button when focused via keyboard navigation
-				&:focus-within .properties-vt-row-radio .cds--radio-button-wrapper {
-					opacity: 1;
 				}
 
 				.properties-grid-body-row-cell, .properties-grid-fake-col {
@@ -226,21 +215,9 @@
 		}
 
 		&.properties-vt-single-selection {
-			tr {
-				border-left: carbon.$spacing-02 solid transparent;
-			}
 			tr.properties-grid-body-row.properties-vt-row-selected {
 				background-color: carbon.$layer-selected-01;
-				border-left: carbon.$spacing-02 solid carbon.$button-primary;
 
-				// Show radio button when row is selected
-				.properties-vt-row-radio .cds--radio-button-wrapper {
-					opacity: 1;
-				}
-
-				&:not(.properties-vt-row-disabled):hover {
-					border-left: carbon.$spacing-02 solid carbon.$button-primary;
-				}
 				&:hover:not(.properties-vt-row-non-interactive) {
 					background-color: carbon.$layer-accent-hover-01;
 				}

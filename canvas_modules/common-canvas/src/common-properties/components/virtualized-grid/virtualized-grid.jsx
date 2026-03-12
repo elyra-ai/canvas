@@ -224,23 +224,24 @@ const VirtualizedGrid = (props) => {
 					{ row_index: rowIndex + 1, table_label: (props.tableLabel ? props.tableLabel : "") }
 				);
 
-			selectOption = (<td className="properties-vt-row-checkbox"
-				onMouseEnter={(evt) => overSelectOption(evt)}
-				onMouseLeave={(evt) => overSelectOption(evt)}
-				onFocus={(evt) => overSelectOption(evt)}
-				onBlur={(evt) => overSelectOption(evt)}
-			>
-				<Checkbox
-					id={`properties-vt-row-cb-${props.scrollKey}-${rowIndex}`}
-					key={`properties-vt-row-cb-${props.scrollKey}-${rowIndex}`}
-					labelText={translatedRowCheckboxLabel}
-					hideLabel
-					checked={rowSelected}
-					disabled={rowDisabled || props.tableDisabled}
-					readOnly={props.readOnly}
-					onChange={(evt, data) => onRowClick(evt.nativeEvent, rowIndex, rowData, data.checked)}
-				/>
-			</td>);
+				selectOption = (<td className="properties-vt-row-checkbox"
+					onMouseEnter={(evt) => overSelectOption(evt)}
+					onMouseLeave={(evt) => overSelectOption(evt)}
+					onFocus={(evt) => overSelectOption(evt)}
+					onBlur={(evt) => overSelectOption(evt)}
+				>
+					<Checkbox
+						id={`properties-vt-row-cb-${props.scrollKey}-${rowIndex}`}
+						key={`properties-vt-row-cb-${props.scrollKey}-${rowIndex}`}
+						labelText={translatedRowCheckboxLabel}
+						hideLabel
+						checked={rowSelected}
+						disabled={rowDisabled || props.tableDisabled}
+						readOnly={props.readOnly}
+						onChange={(evt, data) => onRowClick(evt.nativeEvent, rowIndex, rowData, data.checked)}
+					/>
+				</td>);
+			}
 		}
 		return selectOption;
 	};
