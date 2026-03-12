@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -162,6 +162,12 @@ $notification-panel-button-container-height: 49px;
 			cursor: pointer;
 		}
 
+		&.notifications-button {
+			text-align: left;
+			font: inherit;
+			color: inherit;
+		}
+
 		.notification-message-type {
 			display: flex;
 			justify-content: center;
@@ -191,11 +197,9 @@ $notification-panel-button-container-height: 49px;
 			.notification-message-subtitle {
 				@include carbon.type-style("label-01");
 				color: carbon.$text-secondary;
-				hr {
-					margin-bottom: carbon.$spacing-03;
-					border-bottom: 0;
-					border-top: solid 1px carbon.$layer-accent-01;
-				}
+				padding-bottom: carbon.$spacing-03;
+				border-bottom: solid 1px carbon.$layer-accent-01;
+				margin-bottom: carbon.$spacing-03;
 			}
 
 			.notification-message-content {
@@ -229,6 +233,15 @@ $notification-panel-button-container-height: 49px;
 
 .notification-message-close {
 	width: fit-content;
+	background: none;
+	border: none;
+	padding: 0;
+	font: inherit;
+	color: inherit;
+	cursor: pointer;
+	text-align: left;
+	display: block;
+
 	&:hover {
 		text-decoration: underline;
 	}

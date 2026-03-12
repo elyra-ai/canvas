@@ -3501,7 +3501,7 @@ export default class SVGCanvasRenderer {
 			pos.x = xPos ? pos.x + xPos : pos.x;
 			pos.y = yPos ? pos.y + yPos : pos.y;
 			pos = this.zoomUtils.unTransformPos(pos);
-			this.openContextMenu(d3Event, objType, d, port, pos);
+			this.openContextMenu(d3Event, objType, d, port, pos, cause);
 		}
 	}
 
@@ -3701,14 +3701,14 @@ export default class SVGCanvasRenderer {
 	// This is called from svg-canvas-d3.js to enable a keyboard shortcut to open
 	// the context options in an appropriate position.
 	openCanvasContextOptions(evt) {
-		this.openContextMenu(evt, "canvas", null, null, { x: 50, y: 50 });
+		this.openContextMenu(evt, "canvas", null, null, { x: 100, y: 100 }, CAUSE_KEYBOARD);
 	}
 
 	// Opens either the context menu or the context toolbar depending on which is
 	// currently enabled. The pos parameter is optional. It is provided when menu
 	// is opened from the keyboard and it sets both the context menu position and
 	// the "mouse position", if one is needed, by the action selected in the menu.
-	openContextMenu(d3Event, type, d, port, pos) {
+	openContextMenu(d3Event, type, d, port, pos, cause) {
 		CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stop the browser context menu appearing
 		this.canvasController.contextMenuHandler({
 			type: type,
@@ -3722,7 +3722,8 @@ export default class SVGCanvasRenderer {
 			selectedObjectIds: this.canvasController.getSelectedObjectIds(),
 			addBreadcrumbs: (d && d.type === SUPER_NODE) ? this.getSupernodeBreadcrumbs(d3Event.currentTarget) : null,
 			port: port,
-			zoom: this.zoomUtils.getZoomScale() });
+			zoom: this.zoomUtils.getZoomScale(),
+			cause: cause });
 	}
 
 	// Closes the context menu if open. Called by various drag utility

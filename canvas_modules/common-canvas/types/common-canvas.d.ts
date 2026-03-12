@@ -686,6 +686,7 @@ export interface ToolbarConfig {
     | ToolbarJsxItem
   )[];
   overrideAutoEnableDisable?: boolean;
+  size?: "md" | "sm" | "lg";
 }
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1156,9 +1156,8 @@ Cypress.Commands.add("verifyTipForToolbarItem", (toolbarItem, tipText) => {
 		});
 });
 
-Cypress.Commands.add("verifyTipForToolbarItemNotDisplayed", (toolbarItem) => {
-	cy.getToolbarAction(toolbarItem)
-		.find(".tooltip-trigger")
+Cypress.Commands.add("verifyNoTipsExist", () => {
+	cy.get("div.common-canvas-tooltip[aria-hidden=false]")
 		.should("not.exist");
 });
 

@@ -32,6 +32,7 @@ class ToolTip extends React.Component {
 		this.uuid = uuid4();
 		this.pendingTooltip = null;
 		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
+		this.handleMouseOverOtherTrigger = this.handleMouseOverOtherTrigger.bind(this);
 		this.stopEventPropagation = this.stopEventPropagation.bind(this);
 		this.tabKeyPressed = false;
 		// Tooltip should not close if link inside tooltip is clicked.
@@ -42,6 +43,7 @@ class ToolTip extends React.Component {
 	componentDidMount() {
 		window.addEventListener("scroll", this.hideTooltipOnScrollAndResize, true);
 		window.addEventListener("resize", this.hideTooltipOnScrollAndResize, true);
+		document.addEventListener("mouseover", this.handleMouseOverOtherTrigger, true);
 		if (this.props.targetObj) {
 			this.setTooltipVisible(true);
 		}
@@ -50,6 +52,7 @@ class ToolTip extends React.Component {
 	componentWillUnmount() {
 		window.removeEventListener("scroll", this.hideTooltipOnScrollAndResize, true);
 		window.removeEventListener("resize", this.hideTooltipOnScrollAndResize, true);
+		document.removeEventListener("mouseover", this.handleMouseOverOtherTrigger, true);
 		if (this.pendingTooltip) {
 			clearTimeout(this.pendingTooltip);
 		}
@@ -361,6 +364,16 @@ class ToolTip extends React.Component {
 
 	hideTooltipOnScrollAndResize(evt) {
 		if (this.state.isTooltipVisible && !this.linkClicked) {
+			this.setTooltipVisible(false);
+		}
+	}
+
+	// Handles mouseover events on the document to detect when the user hovers
+	// over a different tooltip trigger element. If detected, closes the current
+	// tooltip to prevent multiple tooltips from being displayed simultaneously.
+	handleMouseOverOtherTrigger(evt) {
+		const target = evt.target.closest(".tooltip-trigger");
+		if (target && target !== this.triggerRef && this.state.isTooltipVisible) {
 			this.setTooltipVisible(false);
 		}
 	}
