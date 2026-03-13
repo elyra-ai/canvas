@@ -46,6 +46,13 @@
 					margin-right: carbon.$spacing-02;
 				}
 
+				.properties-vt-header-radio {
+					height: carbon.$spacing-07;
+					width: 18px; // This matches the width of the radio button
+					margin-left: carbon.$spacing-05;
+					margin-right: carbon.$spacing-02;	
+				}
+
 				th.properties-autosized-vt-header {
 					@include carbon.type-style("productive-heading-01");
 					letter-spacing: normal; // Override Carbon for tooltip calculations
@@ -165,6 +172,28 @@
 					align-content: center;
 				}
 
+				.properties-vt-row-radio {
+					margin-left: carbon.$spacing-05;
+					margin-right: carbon.$spacing-02;
+					align-content: center;
+
+					// Radio button styling for single selection mode, based on Carbon single selection DataTable
+					.cds--radio-button-wrapper {
+						margin-bottom: 0;
+
+						.cds--radio-button__label {
+							display: flex;
+							align-items: flex-start;
+							justify-content: center;
+							margin: 0;
+						}
+
+						.cds--radio-button__appearance {
+							margin-inline-end: -(carbon.$spacing-01);
+						}
+					}	
+				}
+
 				.properties-grid-body-row-cell, .properties-grid-fake-col {
 					display: flex;
 					align-items: center;
@@ -186,16 +215,9 @@
 		}
 
 		&.properties-vt-single-selection {
-			tr {
-				border-left: carbon.$spacing-02 solid transparent;
-			}
 			tr.properties-grid-body-row.properties-vt-row-selected {
 				background-color: carbon.$layer-selected-01;
-				border-left: carbon.$spacing-02 solid carbon.$button-primary;
 
-				&:not(.properties-vt-row-disabled):hover {
-					border-left: carbon.$spacing-02 solid carbon.$button-primary;
-				}
 				&:hover:not(.properties-vt-row-non-interactive) {
 					background-color: carbon.$layer-accent-hover-01;
 				}

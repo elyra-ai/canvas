@@ -220,8 +220,8 @@ class FlexibleTable extends React.Component {
 		const columns = this.props.columns;
 
 		let tableWidth = this.state.availableWidth - COLUMN_PADDING_BUFFER; // subtract for the left padding scss $spacing-04
-		if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
-			tableWidth -= 40;
+		if (typeof this.props.updateRowSelections !== "undefined") {
+			tableWidth -= DEFAULT_COL_MIN_WIDTH; // Adjust for selection column (checkboxes or radio buttons)
 		}
 		const compare = tableWidth + (COLUMN_PADDING_BUFFER * 0.75); // Save initial width for comparison later
 		let remainingColumns = columns.length; // keep track of how many columns to calculate width for
@@ -294,7 +294,7 @@ class FlexibleTable extends React.Component {
 		if (this.state.tableWidth > 0 && this.state.tableWidth < this.state.availableWidth) {
 			let excessWidth = this.state.availableWidth - this.state.tableWidth - COLUMN_PADDING_BUFFER;
 			if (typeof this.props.updateRowSelections !== "undefined") {
-				excessWidth -= 40; // Adjust for checkboxes
+				excessWidth -= DEFAULT_COL_MIN_WIDTH; // Adjust for selection column (checkboxes or radio buttons)
 			}
 			this.setState({ excessWidth: excessWidth > 0 ? excessWidth : 0 });
 		} else if (this.state.excessWidth !== 0) {
@@ -435,7 +435,9 @@ class FlexibleTable extends React.Component {
 		const overSelectOption = data.isOverSelectOption;
 
 		if (!this.props.data[displayedRowIndex].disabled && typeof this.props.updateRowSelections === "function") {
-			if (overSelectOption) { // Checkbox is clicked
+			if (this.props.rowSelection === ROW_SELECTION.SINGLE) { // Table row is clicked
+				this.props.updateRowSelections(data.index, evt, this.props.data[data.index].rowKey);
+			} else if (overSelectOption) { // Checkbox is clicked
 				let current = this.props.selectedRows ? this.props.selectedRows : [];
 				if (data.selectMultipleRows) { // multiple rows selected/deselected using shift key
 					current = this.handleCheckedMultipleRows(data.lastCheckedRow, displayedRowIndex, checked);
@@ -452,8 +454,6 @@ class FlexibleTable extends React.Component {
 				// Sort ascending because we want to add selected rows in the same order as they're displayed in the table
 				current.sort((a, b) => a - b);
 				this.props.updateRowSelections(current);
-			} else if (this.props.rowSelection === ROW_SELECTION.SINGLE) { // Table row is clicked
-				this.props.updateRowSelections(data.index, evt, this.props.data[data.index].rowKey);
 			}
 		}
 	}
