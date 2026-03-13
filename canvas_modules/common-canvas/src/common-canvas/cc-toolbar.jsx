@@ -366,9 +366,7 @@ class CommonCanvasToolbar extends React.Component {
 			const toolbarSize = toolbarConfig.size || "md";
 			canvasToolbar = (
 				<div
-					role="navigation"
 					className={"common-canvas-toolbar"}
-					aria-label={this.getLabel("toolbar.flowEditorToolbarContainer")}
 				>
 					<Toolbar
 						config={toolbarConfig}

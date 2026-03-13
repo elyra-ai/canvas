@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -296,12 +296,11 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		if (this.props.isOpen) {
 			textToolbar = (
-				<aside
+				<div
 					className={"text-toolbar floating-toolbar"}
 					style={{ left: this.props.pos_x, top: this.props.pos_y }}
 					onBlur={this.props.blurHandler}
 					onKeyDown={this.onKeyDown}
-					aria-label={this.getLabel("toolbar.textToolbarContainer")}
 				>
 					<Toolbar
 						config={this.getTextToolbarConfig()}
@@ -315,7 +314,7 @@ class CommonCanvasTextToolbar extends React.Component {
 							ariaLabel: this.getLabel("toolbar.textToolbarLabel")
 						}}
 					/>
-				</aside>
+				</div>
 			);
 		}
 

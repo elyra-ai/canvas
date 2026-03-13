@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,25 +54,29 @@ class PaletteDialogTopbar extends React.Component {
 	}
 
 	render() {
+		const labelUtil = this.props.canvasController.labelUtil;
+		const gridLabel = labelUtil.getLabel("palette.dialog.grid");
+		const listLabel = labelUtil.getLabel("palette.dialog.list");
+		const closeLabel = labelUtil.getLabel("palette.dialog.close");
+
 		const config = {
 			leftBar: [
-				{ action: "grid", iconEnabled: (<Grid />), enable: true, isSelected: this.props.showGrid },
-				{ action: "list", iconEnabled: (<List />), enable: true, isSelected: !this.props.showGrid },
+				{ action: "grid", label: gridLabel, iconEnabled: (<Grid />), enable: true, isSelected: this.props.showGrid },
+				{ action: "list", label: listLabel, iconEnabled: (<List />), enable: true, isSelected: !this.props.showGrid },
 				{ divider: true }
 			],
 			rightBar: [
 				{ divider: true },
-				{ action: "close", iconEnabled: (<CloseOutline />), enable: true }
+				{ action: "close", label: closeLabel, iconEnabled: (<CloseOutline />), enable: true }
 			]
 		};
 
 
 		return (
-			<aside
+			<div
 				className="palette-dialog-topbar"
 				onMouseDown={this.mouseDown}
 				onDoubleClick={this.doubleClick}
-				aria-label={this.props.canvasController.labelUtil?.getLabel("toolbar.paletteDialogToolbarContainer")}
 			>
 				<Toolbar
 					instanceId = {0}
@@ -83,7 +87,7 @@ class PaletteDialogTopbar extends React.Component {
 						ariaLabel: this.props.canvasController.labelUtil?.getLabel("toolbar.paletteDialogToolbarLabel")
 					}}
 				/>
-			</aside>
+			</div>
 		);
 	}
 }

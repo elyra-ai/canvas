@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,16 +74,18 @@ class NotificationPanel extends React.Component {
 			const subtitle = message.subtitle
 				? (<div className = "notification-message-subtitle">
 					{message.subtitle}
-					<hr />
 				</div>)
 				: null;
 
 			const closeMessage = message.closeMessage
 				? (
-					<div tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))}
-						className = "notification-message-close"
+					<div
+						ref={(ref) => (!ref || this.allRefs.push(ref))}
+						className="notification-message-close"
 						onClick={this.clickOnCloseButton.bind(this, message)}
 						onKeyDown={this.keyDownOnCloseButton.bind(this, message)}
+						role="button"
+						tabIndex={0}
 					>
 						{message.closeMessage}
 					</div>)
@@ -100,15 +102,8 @@ class NotificationPanel extends React.Component {
 				</div>)
 				: null;
 
-			notifications.push(<div className="notifications-button-container" key={index + "-" + message.id} >
-				<div
-					className={"notifications " + className + message.type}
-					onClick={this.notificationCallback.bind(this, message.id, message.callback)}
-					tabIndex={0}
-					role="button"
-					aria-roledescription="text"
-					ref={(ref) => (!ref || this.allRefs.push(ref))}
-				>
+			const notificationMessage = (
+				<>
 					{type}
 					<div className="notification-message-details">
 						{title}
@@ -119,14 +114,55 @@ class NotificationPanel extends React.Component {
 						{timestamp}
 						{closeMessage}
 					</div>
+				</>
+			);
+
+			const notificationElement = message.callback
+				? (
+					<button
+						className={"notifications notifications-button " + className + message.type}
+						onClick={this.notificationCallback.bind(this, message.id, message.callback)}
+						ref={(ref) => (!ref || this.allRefs.push(ref))}
+						type="button"
+					>
+						{notificationMessage}
+					</button>
+				)
+				: (
+					<div
+						className={"notifications " + className + message.type}
+						ref={(ref) => (!ref || this.allRefs.push(ref))}
+					>
+						{notificationMessage}
+					</div>
+				);
+
+			notifications.push(
+				<div className="notifications-button-container" role="listitem" key={index + "-" + message.id}>
+					{notificationElement}
 				</div>
-			</div>);
+			);
 		}
 
 		return notifications;
 	}
 
-	notificationCallback(id, messageCallback) {
+	getAriaHeaderLabel(headerText, subtitleText, emptyMessageText, hasMessages) {
+		let ariaLabel = "";
+		if (typeof headerText === "string") {
+			ariaLabel = headerText;
+			if (typeof subtitleText === "string" && subtitleText) {
+				ariaLabel += " " + subtitleText;
+			}
+			// Add empty message if there are no notifications
+			if (!hasMessages && typeof emptyMessageText === "string" && emptyMessageText) {
+				ariaLabel += " " + emptyMessageText;
+			}
+		}
+		return ariaLabel;
+	}
+
+	notificationCallback(id, messageCallback, evt) {
 		if (messageCallback) {
 			messageCallback(id);
 		}
@@ -181,15 +217,17 @@ class NotificationPanel extends React.Component {
 			return null;
 		}
 
-		const headerText = this.props.notificationConfig && this.props.notificationConfig.notificationHeader
-			? this.props.notificationConfig.notificationHeader
-			: DEFAULT_NOTIFICATION_HEADER;
+		const headerText = this.props.notificationConfig?.notificationHeader || DEFAULT_NOTIFICATION_HEADER;
+		const subtitleText = this.props.notificationConfig?.notificationSubtitle ?? "";
+		const emptyMessageText = this.props.notificationConfig?.emptyMessage ?? "";
+
+		const ariaLabel = this.getAriaHeaderLabel(headerText, subtitleText, emptyMessageText, this.props.messages.length > 0);
 
 		const notificationHeader = (<div className="notification-panel-header">{headerText}</div>);
 
-		const notificationSubtitle = this.props.notificationConfig && this.props.notificationConfig.notificationSubtitle
+		const notificationSubtitle = this.props.notificationConfig?.notificationSubtitle
 			? (<div className="notification-panel-subtitle">
-				{this.props.notificationConfig.notificationSubtitle}
+				{subtitleText}
 			</div>)
 			: null;
 
@@ -215,11 +253,9 @@ class NotificationPanel extends React.Component {
 		const notificationPanelMessages = this.props.messages.length > 0
 			? this.getNotifications()
 			: (
-				<div tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))} className="notification-panel-empty-message-container"
-					role="button" aria-roledescription="text"
-				>
+				<div className="notification-panel-empty-message-container">
 					<div className="notification-panel-empty-message">
-						{this.props.notificationConfig && this.props.notificationConfig.emptyMessage ? this.props.notificationConfig.emptyMessage : null}
+						{emptyMessageText || null}
 					</div>
 				</div>);
 
@@ -256,16 +292,18 @@ class NotificationPanel extends React.Component {
 			: null;
 
 		return (
-			<div className="notification-panel" onKeyDown={this.keyDownOnPanel}>
-				<div className="notification-panel-header-container"
-					tabIndex={0} ref={(ref) => (!ref || this.allRefs.push(ref))}
-					role="button" aria-roledescription="text"
-				>
+			<div
+				className="notification-panel"
+				role="region"
+				aria-label={ariaLabel}
+				onKeyDown={this.keyDownOnPanel}
+			>
+				<div className="notification-panel-header-container">
 					{notificationHeader}
 					{notificationSubtitle}
 				</div>
 				{closeButton}
-				<div className="notification-panel-messages">
+				<div className="notification-panel-messages" role="list">
 					{notificationPanelMessages}
 				</div>
 				<div className="notification-panel-button-container">

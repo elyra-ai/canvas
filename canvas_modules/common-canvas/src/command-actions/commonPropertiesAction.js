@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,15 +27,21 @@ export default class CommonPropertiesAction extends Action {
 
 	// Standard methods
 	do() {
-		this.applyPropertyChanges(this.newValues.properties, this.appData, this.newValues.additionalInfo, this.newValues.undoInfo, this.newValues.uiProperties);
+		if (this.applyPropertyChanges) {
+			this.applyPropertyChanges(this.newValues.properties, this.appData, this.newValues.additionalInfo, this.newValues.undoInfo, this.newValues.uiProperties);
+		}
 	}
 
 	undo() {
-		this.applyPropertyChanges(this.initialValues.properties, this.appData, this.initialValues.additionalInfo, this.initialValues.undoInfo, this.initialValues.uiProperties);
+		if (this.applyPropertyChanges) {
+			this.applyPropertyChanges(this.initialValues.properties, this.appData, this.initialValues.additionalInfo, this.initialValues.undoInfo, this.initialValues.uiProperties);
+		}
 	}
 
 	redo() {
-		this.applyPropertyChanges(this.newValues.properties, this.appData, this.newValues.additionalInfo, this.newValues.undoInfo, this.newValues.uiProperties);
+		if (this.applyPropertyChanges) {
+			this.applyPropertyChanges(this.newValues.properties, this.appData, this.newValues.additionalInfo, this.newValues.undoInfo, this.newValues.uiProperties);
+		}
 	}
 
 	getLabel() {

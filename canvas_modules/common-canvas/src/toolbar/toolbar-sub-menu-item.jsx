@@ -193,19 +193,17 @@ class ToolbarSubMenuItem extends React.Component {
 				data-toolbar-action={actionObj.action}
 				onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} onKeyDown={this.onKeyDown}
 			>
-				<div>
-					<ToolbarButtonItem
-						actionObj={actionObj}
-						actionName={this.generateActionName()}
-						instanceId={this.props.instanceId}
-						isInMenu
-						subAreaDisplayed={this.state.subAreaDisplayed}
-						actionClickHandler={this.actionClickHandler}
-						buttonFocusAction={this.props.subMenuFocusAction}
-						isFocusInToolbar // Focus must be in toolbar for this sub-menu item to appear
-						size={this.props.size}
-					/>
-				</div>
+				<ToolbarButtonItem
+					actionObj={actionObj}
+					actionName={this.generateActionName()}
+					instanceId={this.props.instanceId}
+					isInMenu
+					subAreaDisplayed={this.state.subAreaDisplayed}
+					actionClickHandler={this.actionClickHandler}
+					buttonFocusAction={this.props.subMenuFocusAction}
+					isFocusInToolbar // Focus must be in toolbar for this sub-menu item to appear
+					size={this.props.size}
+				/>
 				{subArea}
 			</div>
 		);

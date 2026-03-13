@@ -28,6 +28,7 @@
 @forward "../../src/styles/custom-controls.scss";
 @forward "../../src/styles/custom-actions.scss";
 @forward "../../src/styles/glmm.scss";
+@forward "../../src/styles/notifications-panel-wrapper.scss";
 
 :root {
 	@include carbon.theme(themes.$g10);

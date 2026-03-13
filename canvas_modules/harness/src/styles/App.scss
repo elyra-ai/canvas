@@ -16,6 +16,7 @@
 
 @use "../../assets/styles/carbon.scss";
 @use "../../assets/styles/commonVars.scss";
+@use "@carbon/ibm-products/css/index.min.css";
 
 $harness-navbar-title-width: 120px;
 $harness-navbar-icon-width: 48px;
@@ -42,25 +43,6 @@ $harness-navbar-icon-width: 48px;
 
 .harness-canvas-single {
 	height: 50%;
-}
-
-.harness-title {
-	color: carbon.$text-primary;
-	min-width: $harness-navbar-title-width;
-	display: block;
-	font-size: 14px;
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-top: 4px;
-}
-
-.harness-version {
-	color: carbon.$text-primary;
-	display: block;
-	font-size: 8px;
-	text-align: right;
-	padding-left: 10px;
-	padding-right: 10px;
 }
 
 /* Styles for elements displayed for empty canvas. */
@@ -98,12 +80,42 @@ $harness-navbar-icon-width: 48px;
 
 .harness-app-navbar {
 	height: 50px;
+	display: flex;
+}
+
+.harness-title-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: carbon.$layer-01;
+	height: 100%;
+	border-right: 1px solid carbon.$border-subtle-01;
+	border-bottom: 1px solid carbon.$border-subtle-01;
+
+	.harness-title {
+		color: carbon.$text-primary;
+		min-width: $harness-navbar-title-width;
+		display: block;
+		font-size: 14px;
+		padding-left: 4px;
+		padding-top: 4px;
+	}
+
+	.harness-version {
+		color: carbon.$text-primary;
+		display: block;
+		font-size: 8px;
+		text-align: right;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
 }
 
 /* Navbar Theme Toggle */
 .harness-theme-toggle-wrapper {
-	padding-left: 16px;
-	padding-right: 16px;
+	padding: 14px 16px;
 }
 
 /* Navbar Breadcrumbs */
@@ -113,7 +125,7 @@ $harness-navbar-icon-width: 48px;
 	overflow-y: auto;
 	line-height: 18px;
 	align-items: center;
-	padding: 0 10px;
+	padding: 14px 10px;
 }
 
 .harness-pipeline-breadcrumbs {
@@ -198,4 +210,28 @@ $harness-navbar-icon-width: 48px;
 
 .harness-custom-spacer {
 	height: carbon.$spacing-07;
+}
+
+// Modify height of the TwistyPanel button to allow room for sub title to appear
+.properties-twisty-custom-title[data-id="properties-TwistyPanel2"] .properties-twisty-accordion-item > button:first-of-type {
+	height: 60px;
+
+	.harness-twisty-sub-title {
+		display: flex;
+		align-items: center;
+		gap: carbon.$spacing-02;
+		margin-top: carbon.$spacing-02;
+
+		&.warning svg {
+			fill: carbon.$support-warning;
+			[data-icon-path="inner-path"] { // exclamation mark
+				fill: carbon.$layer-selected-inverse;
+				opacity: 1;
+			}
+		}
+
+		&.error svg {
+			fill: carbon.$support-error;
+		}
+	}
 }
