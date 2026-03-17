@@ -20,7 +20,9 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import Icon from "./../icons/icon.jsx";
 import { Button } from "@carbon/react";
-import { Close } from "@carbon/react/icons";
+// Import Carbon icons individually to enable tree-shaking and reduce bundle size
+import Close from "@carbon/icons-react/lib/Close";
+
 import Logger from "../logging/canvas-logger.js";
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import { DEFAULT_NOTIFICATION_HEADER } from "./../common-canvas/constants/canvas-constants.js";

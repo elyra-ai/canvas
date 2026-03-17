@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,9 @@ import { formatMessage } from "./../../util/property-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
 import { ControlType } from "./../../constants/form-constants";
-import { Shuffle } from "@carbon/react/icons";
+// Import Carbon icons individually to enable tree-shaking and reduce bundle size
+import Shuffle from "@carbon/icons-react/lib/Shuffle";
+
 import { has } from "lodash";
 
 class NumberfieldControl extends React.Component {

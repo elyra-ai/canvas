@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,10 @@ import PropTypes from "prop-types";
 import { formatMessage } from "./../../util/property-utils";
 import { MESSAGE_KEYS } from "./../../constants/constants";
 import { ControlType } from "./../../constants/form-constants";
-import { Add, Edit } from "@carbon/react/icons";
+// Import Carbon icons individually to enable tree-shaking and reduce bundle size
+import Add from "@carbon/icons-react/lib/Add";
+import Edit from "@carbon/icons-react/lib/Edit";
+
 import { Button } from "@carbon/react";
 
 export default class EmptyTable extends React.Component {

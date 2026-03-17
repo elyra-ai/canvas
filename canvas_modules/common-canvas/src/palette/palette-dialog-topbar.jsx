@@ -17,7 +17,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CloseOutline, Grid, List } from "@carbon/react/icons";
+// Import Carbon icons individually to enable tree-shaking and reduce bundle size
+import CloseOutline from "@carbon/icons-react/lib/CloseOutline";
+import Grid from "@carbon/icons-react/lib/Grid";
+import List from "@carbon/icons-react/lib/List";
 
 import Toolbar from "../toolbar";
 

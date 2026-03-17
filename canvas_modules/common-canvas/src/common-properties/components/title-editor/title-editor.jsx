@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,12 @@ import { connect } from "react-redux";
 import Isvg from "react-inlinesvg";
 import { get } from "lodash";
 import classNames from "classnames";
-import { Help, Edit, Close, Information } from "@carbon/react/icons";
+// Import Carbon icons individually to enable tree-shaking and reduce bundle size
+import Help from "@carbon/icons-react/lib/Help";
+import Edit from "@carbon/icons-react/lib/Edit";
+import Close from "@carbon/icons-react/lib/Close";
+import Information from "@carbon/icons-react/lib/Information";
+
 import { TextInput, Button, Layer, Link } from "@carbon/react";
 import { Toggletip, ToggletipButton, ToggletipContent, ToggletipActions } from "@carbon/react";
 

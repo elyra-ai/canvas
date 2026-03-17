@@ -18,7 +18,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button, Checkbox } from "@carbon/react";
-import { TrashCan } from "@carbon/react/icons";
+// Import Carbon icons individually to enable tree-shaking and reduce bundle size
+import Add from "@carbon/icons-react/lib/Add";
+import Edit from "@carbon/icons-react/lib/Edit";
+import TrashCan from "@carbon/icons-react/lib/TrashCan";
+
 import FlexibleTable from "./../components/flexible-table";
 import TableButtons from "./../components/table-buttons";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
@@ -26,7 +30,6 @@ import Tooltip from "../../tooltip/tooltip.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
 import classNames from "classnames";
-import { Add, Edit } from "@carbon/react/icons";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 import { v4 as uuid4 } from "uuid";
 
