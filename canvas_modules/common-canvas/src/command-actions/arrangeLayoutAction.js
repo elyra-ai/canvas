@@ -27,6 +27,9 @@ export default class ArrangeLayoutAction extends Action {
 		// Copy the nodes to remember their original positions.
 		this.existingNodes = this.apiPipeline.getNodes().map((n) => ({ ...n }));
 
+		// Copy the comments to remember their original positions.
+		this.existingComments = this.apiPipeline.getComments().map((c) => ({ ...c }));
+
 		// Copy the links (including detached links) to remember their original positions.
 		this.existingLinks = this.apiPipeline.getLinks().map((n) => ({ ...n }));
 	}
@@ -38,6 +41,7 @@ export default class ArrangeLayoutAction extends Action {
 
 	undo() {
 		this.apiPipeline.replaceNodes(this.existingNodes);
+		this.apiPipeline.replaceComments(this.existingComments);
 		this.apiPipeline.updateLinks(this.existingLinks);
 	}
 
