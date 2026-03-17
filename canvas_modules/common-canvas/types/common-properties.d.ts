@@ -201,7 +201,7 @@ export type TitleChangeHandler = (
  * @returns A custom title (string or ReactNode) to replace the default, or null to use the default label
  */
 export type PanelTitleHandler = (params: {
-  panelId: PropertyId;
+  panelId: string;
   label: string;
 }) => ReactNode | null;
 
