@@ -76,7 +76,7 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 				labelDisplay: false,
 
 				// Input ports are displayed because they need to appear for
-				//  binding nodes in sub-flow displays. For regular nodes,
+				// binding nodes in sub-flow displays. For regular nodes,
 				// they are hidden by setting `opacity: 0` in the CSS.
 				inputPortDisplay: true,
 				inputPortObject: "image",
