@@ -75,7 +75,10 @@ export default class ReactNodesCarbonCanvas extends React.Component {
 				imageDisplay: false,
 				labelDisplay: false,
 
-				inputPortDisplay: false, // Can be switched to true to see image specified below
+				// Input ports are displayed because they need to appear for
+				//  binding nodes in sub-flow displays. For regular nodes,
+				// they are hidden by setting `opacity: 0` in the CSS.
+				inputPortDisplay: true,
 				inputPortObject: "image",
 				inputPortImage: "/images/custom-canvases/flows/decorations/dragStateArrow.svg",
 				inputPortWidth: 20,
