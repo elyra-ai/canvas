@@ -72,6 +72,10 @@
 		}
 
 		.d3-node-port-input {
+			// Hide input nodes for regular nodes
+			opacity: 0;
+
+			// But display them for binding nodes is sub-flow.
 			&[isSupernodeBinding="yes"] {
 				opacity: 100;
 				transform: translateX(-10px);
