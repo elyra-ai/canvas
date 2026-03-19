@@ -17,14 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-// Import Carbon icons individually to enable tree-shaking and reduce bundle size
-import TrashCan from "@carbon/icons-react/lib/TrashCan";
-import Edit from "@carbon/icons-react/lib/Edit";
-import UpToTop from "@carbon/icons-react/lib/UpToTop";
-import ChevronUp from "@carbon/icons-react/lib/ChevronUp";
-import ChevronDown from "@carbon/icons-react/lib/ChevronDown";
-import DownToBottom from "@carbon/icons-react/lib/DownToBottom";
-
+import { TrashCan, Edit, UpToTop, ChevronUp, ChevronDown, DownToBottom } from "@carbon/react/icons";
 import { MESSAGE_KEYS, STATES } from "../../constants/constants";
 import Toolbar from "../../../toolbar/toolbar";
 

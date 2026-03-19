@@ -25,28 +25,12 @@ import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import KeyboardUtils from "./keyboard-utils.js";
 import Logger from "../logging/canvas-logger.js";
 import ColorPicker from "../color-picker";
-// Import Carbon icons individually to enable tree-shaking and reduce bundle size
-import AlignBoxTopCenter from "@carbon/icons-react/lib/AlignBoxTopCenter";
-import AlignBoxMiddleCenter from "@carbon/icons-react/lib/AlignBoxMiddleCenter";
-import AlignBoxBottomCenter from "@carbon/icons-react/lib/AlignBoxBottomCenter";
-import Code from "@carbon/icons-react/lib/Code";
-import ColorPalette from "@carbon/icons-react/lib/ColorPalette";
-import Link from "@carbon/icons-react/lib/Link";
-import ListBulleted from "@carbon/icons-react/lib/ListBulleted";
-import ListNumbered from "@carbon/icons-react/lib/ListNumbered";
-import SquareOutline from "@carbon/icons-react/lib/SquareOutline";
-import TextAlignCenter from "@carbon/icons-react/lib/TextAlignCenter";
-import TextAlignLeft from "@carbon/icons-react/lib/TextAlignLeft";
-import TextAlignRight from "@carbon/icons-react/lib/TextAlignRight";
-import TextColor from "@carbon/icons-react/lib/TextColor";
-import TextFont from "@carbon/icons-react/lib/TextFont";
-import TextIndentMore from "@carbon/icons-react/lib/TextIndentMore";
-import TextBold from "@carbon/icons-react/lib/TextBold";
-import TextItalic from "@carbon/icons-react/lib/TextItalic";
-import TextUnderline from "@carbon/icons-react/lib/TextUnderline";
-import TextScale from "@carbon/icons-react/lib/TextScale";
-import TextStrikethrough from "@carbon/icons-react/lib/TextStrikethrough";
-
+import {
+	AlignBoxTopCenter, AlignBoxMiddleCenter, AlignBoxBottomCenter,
+	Code, ColorPalette, Link, ListBulleted, ListNumbered, SquareOutline,
+	TextAlignCenter, TextAlignLeft, TextAlignRight, TextColor, TextFont, TextIndentMore,
+	TextBold, TextItalic, TextUnderline, TextScale, TextStrikethrough
+} from "@carbon/react/icons";
 import {
 	MARKDOWN, WYSIWYG
 } from "./constants/canvas-constants.js";

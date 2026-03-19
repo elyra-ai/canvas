@@ -222,6 +222,10 @@ export default (state = [], action) => {
 			return comment;
 		});
 
+	case "REPLACE_COMMENTS": {
+		return action.data;
+	}
+
 	default:
 		return state;
 	}

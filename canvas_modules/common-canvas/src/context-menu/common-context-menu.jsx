@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2026 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-// Import Carbon icons individually to enable tree-shaking and reduce bundle size
-import ChevronRight from "@carbon/icons-react/lib/ChevronRight";
-
+import { ChevronRight } from "@carbon/react/icons";
 import ColorPicker from "../color-picker";
 import KeyboardUtils from "../common-canvas/keyboard-utils";
 

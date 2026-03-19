@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2026 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import { Button } from "@carbon/react";
-// Import Carbon icons individually to enable tree-shaking and reduce bundle size
-import Maximize from "@carbon/icons-react/lib/Maximize";
-import Minimize from "@carbon/icons-react/lib/Minimize";
-
+import { Maximize, Minimize } from "@carbon/react/icons";
 import { formatMessage } from "../../../util/property-utils";
 import { MESSAGE_KEYS } from "../../../constants/constants";
 

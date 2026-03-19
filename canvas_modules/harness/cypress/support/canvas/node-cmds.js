@@ -120,6 +120,22 @@ Cypress.Commands.add("getNodeIdForLabelInSupernode", (nodeLabel, supernodeName) 
 		})
 );
 
+Cypress.Commands.add("getNodeWithLabelInSupernodeInSupernode", (nodeLabel, innerSupernodeLabel, outerSupernodeLabel) => {
+	cy.getNodeWithLabel(outerSupernodeLabel)
+		.then((outerSupernode) => {
+			const outerSupernodeId = outerSupernode[0].getAttribute("data-id").substring(11);
+			cy.get(getNodeGrpSelectorInSupernode(outerSupernodeId))
+				.then((grpArray) => {
+					const innerSupernode = findGrpForLabel(grpArray, innerSupernodeLabel);
+					const innerSupernodeId = innerSupernode.getAttribute("data-id").substring(11);
+					// Finally get the node within the inner supernode
+					const selector = getNodeGrpSelectorInSupernodeInSupernode(innerSupernodeId, outerSupernodeId);
+					cy.get(selector)
+						.then((innerGrpArray) => findGrpForLabel(innerGrpArray, nodeLabel));
+				});
+		});
+});
+
 Cypress.Commands.add("getSupernodePipelineId", (supernodeName) => {
 	cy.get(getNodeGrpSelector())
 		.then((grpArray) => findGrpForLabel(grpArray, supernodeName).__data__.subflow_ref.pipeline_id_ref);
@@ -147,6 +163,16 @@ function getNodeGrpSelectorInSupernode(supernodeId) {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	const selector =
 	`.d3-svg-canvas-div > svg > g > g > g[data-id='node_grp_${inst}_${supernodeId}'] > svg > g > g > g[data-id^='node_grp_${inst}']`;
+	return selector;
+}
+
+function getNodeGrpSelectorInSupernodeInSupernode(innerSupernodeId, outerSupernodeId) {
+	const inst = document.extraCanvas === true ? "1" : "0";
+	const selector =
+		".d3-svg-canvas-div > " +
+		`svg > g > g > g[data-id='node_grp_${inst}_${outerSupernodeId}'] > ` +
+		`svg > g > g > g[data-id='node_grp_${inst}_${innerSupernodeId}'] > ` +
+		`svg > g > g > g[data-id^='node_grp_${inst}']`;
 	return selector;
 }
 
@@ -246,6 +272,11 @@ Cypress.Commands.add("hoverOverNodeLabel", (nodeName) => {
 
 Cypress.Commands.add("hoverOverNodeInSupernode", (nodeName, supernodeName) => {
 	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
+		.trigger("mouseenter", { force: true });
+});
+
+Cypress.Commands.add("hoverOverNodeInSupernodeInSupernode", (nodeLabel, innerSupernodeLabel, outerSupernodeLabel) => {
+	cy.getNodeWithLabelInSupernodeInSupernode(nodeLabel, innerSupernodeLabel, outerSupernodeLabel)
 		.trigger("mouseenter", { force: true });
 });
 

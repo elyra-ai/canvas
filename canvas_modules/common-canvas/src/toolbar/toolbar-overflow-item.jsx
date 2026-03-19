@@ -18,9 +18,7 @@ import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef } f
 import PropTypes from "prop-types";
 
 import { Button } from "@carbon/react";
-// Import Carbon icons individually to enable tree-shaking and reduce bundle size
-import OverflowMenuVertical from "@carbon/icons-react/lib/OverflowMenuVertical";
-
+import { OverflowMenuVertical } from "@carbon/react/icons";
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
 import Tooltip from "../tooltip/tooltip.jsx";

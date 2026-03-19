@@ -27,9 +27,7 @@ import { ERROR, WARNING, SUCCESS, INFO, PALETTE_LAYOUT_NONE,
 	NOTIFICATION_ICON_CLASS, TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_LAYOUT_TOP,
 	TOOLBAR_TOGGLE_PALETTE }
 	from "../common-canvas/constants/canvas-constants";
-// Import Carbon icons individually to enable tree-shaking and reduce bundle size
-import SidePanelOpenFilled from "@carbon/icons-react/lib/SidePanelOpenFilled";
-import SidePanelCloseFilled from "@carbon/icons-react/lib/SidePanelCloseFilled";
+import { SidePanelOpenFilled, SidePanelCloseFilled } from "@carbon/react/icons";
 
 class CommonCanvasToolbar extends React.Component {
 	constructor(props) {

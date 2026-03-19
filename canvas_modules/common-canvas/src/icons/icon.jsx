@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2026 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,30 +23,15 @@ import Double from "./../../assets/images/double.svg";
 import Integer from "./../../assets/images/integer.svg";
 import StringIcon from "./../../assets/images/string.svg";
 
-// Import Carbon icons individually to enable tree-shaking and reduce bundle size
-import WarningFilled from "@carbon/icons-react/lib/WarningFilled";
-import ErrorFilled from "@carbon/icons-react/lib/ErrorFilled";
-import CheckmarkFilled from "@carbon/icons-react/lib/CheckmarkFilled";
-import InformationFilled from "@carbon/icons-react/lib/InformationFilled";
-import Information from "@carbon/icons-react/lib/Information";
-import ChevronDown from "@carbon/icons-react/lib/ChevronDown";
-import ChevronUp from "@carbon/icons-react/lib/ChevronUp";
-import ChevronLeft from "@carbon/icons-react/lib/ChevronLeft";
-import ChevronRight from "@carbon/icons-react/lib/ChevronRight";
-import AddAlt from "@carbon/icons-react/lib/AddAlt";
-import Settings from "@carbon/icons-react/lib/Settings";
-import Search from "@carbon/icons-react/lib/Search";
-import Warning from "@carbon/icons-react/lib/Warning";
-import Edit from "@carbon/icons-react/lib/Edit";
-import CircleDash from "@carbon/icons-react/lib/CircleDash";
-import RulerAlt from "@carbon/icons-react/lib/RulerAlt";
-import ListNumbered from "@carbon/icons-react/lib/ListNumbered";
-import ListBulleted from "@carbon/icons-react/lib/ListBulleted";
-import Flag from "@carbon/icons-react/lib/Flag";
-import ChartVennDiagram from "@carbon/icons-react/lib/ChartVennDiagram";
-import Calendar from "@carbon/icons-react/lib/Calendar";
-import Time from "@carbon/icons-react/lib/Time";
-import EventSchedule from "@carbon/icons-react/lib/EventSchedule";
+import { WarningFilled, ErrorFilled, CheckmarkFilled, InformationFilled, Information,
+	ChevronDown, ChevronUp, ChevronLeft, ChevronRight,
+	AddAlt,
+	Settings,
+	Search,
+	Warning,
+	Edit,
+	CircleDash, RulerAlt, ListNumbered, ListBulleted, Flag, ChartVennDiagram,
+	Calendar, Time, EventSchedule } from "@carbon/react/icons";
 
 import { ERROR, WARNING, INFO, SUCCESS, CANVAS_CARBON_ICONS, CONTEXT_MENU_CARBON_ICONS } from "../common-canvas/constants/canvas-constants";
 import { CONDITION_MESSAGE_TYPE, CARBON_ICONS, DATA_TYPE } from "../common-properties/constants/constants";

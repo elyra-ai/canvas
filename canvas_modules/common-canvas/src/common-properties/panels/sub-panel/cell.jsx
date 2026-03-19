@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2026 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "@carbon/react";
-// Import Carbon icons individually to enable tree-shaking and reduce bundle size
-import Edit from "@carbon/icons-react/lib/Edit";
-
+import { Edit } from "@carbon/react/icons";
 import { formatMessage } from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { cloneDeep } from "lodash";

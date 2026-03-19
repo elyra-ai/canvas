@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2026 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,7 @@ import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import { injectIntl } from "react-intl";
-// Import Carbon icons individually to enable tree-shaking and reduce bundle size
-import Locked from "@carbon/icons-react/lib/Locked";
-import EditOff from "@carbon/icons-react/lib/EditOff";
-
+import { Locked, EditOff } from "@carbon/react/icons";
 import { STATE_TAG_LOCKED, STATE_TAG_READ_ONLY, TIP_TYPE_STATE_TAG }
 	from "../common-canvas/constants/canvas-constants.js";
 
