@@ -77,7 +77,14 @@ export default {
 				"@babel/plugin-proposal-class-properties",
 				"@babel/plugin-transform-runtime",
 				"@babel/plugin-proposal-export-default-from",
-				["transform-react-remove-prop-types", { removeImport: true }]
+				["transform-react-remove-prop-types", { removeImport: true }],
+				["transform-imports", {
+					"@carbon/react/icons": {
+						"transform": "@carbon/icons-react/lib/${member}",
+						"preventFullImport": true,
+						"skipDefaultConversion": true
+					}
+				}]
 			]
 		}),
 		terser(),
