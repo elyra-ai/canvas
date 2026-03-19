@@ -817,6 +817,43 @@ export default class SVGCanvasRenderer {
 		return { x: pos.x + Math.round(svgRect.left), y: pos.y + Math.round(svgRect.top) };
 	}
 
+	// Converts canvas coordinates to screen coordinates.
+	// If we're displaying a sub-flow in place, we need to adjust the position
+	// to account for the offset of the sub-flow SVG area within the parent canvas.
+	// This is done recursively for nested sub-flows.
+	convertCanvasCoordsToScreenCoords(pos) {
+		let screenPos = this.zoomUtils.unTransformPos(pos);
+
+		if (this.dispUtils.isDisplayingSubFlowInPlace()) {
+			screenPos = this.addParentSupernodeOffset(screenPos);
+		}
+
+		return screenPos;
+	}
+
+	// Recursively adds the parent supernode offset to the position.
+	// This handles nested sub-flows by transforming through each parent's zoom level.
+	addParentSupernodeOffset(pos) {
+		const parentSVGDims = this.getParentSupernodeSVGDimensions();
+
+		// Add the offset of this sub-flow's SVG area within the parent's canvas (in canvas coordinates)
+		const posWithOffset = {
+			x: pos.x + parentSVGDims.x_pos,
+			y: pos.y + parentSVGDims.y_pos
+		};
+
+		// Transform through the parent's zoom to get to parent's viewport coordinates
+		const transformedPos = this.supernodeInfo.renderer.zoomUtils.unTransformPos(posWithOffset);
+
+		// If the parent renderer is also displaying a sub-flow in place,
+		// recursively transform through its parent's zoom
+		if (this.supernodeInfo.renderer.dispUtils.isDisplayingSubFlowInPlace()) {
+			return this.supernodeInfo.renderer.addParentSupernodeOffset(transformedPos);
+		}
+
+		return transformedPos;
+	}
+
 	// Creates the div which contains the ghost node for drag and
 	// drop actions from the palette. The way setDragImage is handled in
 	// browsers for HTML drag and drop is very odd since the image has to be
@@ -3500,7 +3537,7 @@ export default class SVGCanvasRenderer {
 			let pos = this.getDefaultContextToolbarPos(objType, d, port);
 			pos.x = xPos ? pos.x + xPos : pos.x;
 			pos.y = yPos ? pos.y + yPos : pos.y;
-			pos = this.zoomUtils.unTransformPos(pos);
+			pos = this.convertCanvasCoordsToScreenCoords(pos);
 			this.openContextMenu(d3Event, objType, d, port, pos, cause);
 		}
 	}
