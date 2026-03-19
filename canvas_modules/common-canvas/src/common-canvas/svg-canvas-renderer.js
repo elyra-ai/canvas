@@ -3501,8 +3501,39 @@ export default class SVGCanvasRenderer {
 			pos.x = xPos ? pos.x + xPos : pos.x;
 			pos.y = yPos ? pos.y + yPos : pos.y;
 			pos = this.zoomUtils.unTransformPos(pos);
+
+			// If we're displaying a sub-flow in place, we need to adjust the position
+			// to account for the offset of the sub-flow SVG area within the parent canvas.
+			// This is done recursively for nested sub-flows.
+			if (this.dispUtils.isDisplayingSubFlowInPlace()) {
+				pos = this.addParentSupernodeOffset(pos);
+			}
+
 			this.openContextMenu(d3Event, objType, d, port, pos, cause);
 		}
+	}
+
+	// Recursively adds the parent supernode offset to the position.
+	// This handles nested sub-flows by transforming through each parent's zoom level.
+	addParentSupernodeOffset(pos) {
+		const parentSVGDims = this.getParentSupernodeSVGDimensions();
+
+		// Add the offset of this sub-flow's SVG area within the parent's canvas (in canvas coordinates)
+		const posWithOffset = {
+			x: pos.x + parentSVGDims.x_pos,
+			y: pos.y + parentSVGDims.y_pos
+		};
+
+		// Transform through the parent's zoom to get to parent's viewport coordinates
+		const transformedPos = this.supernodeInfo.renderer.zoomUtils.unTransformPos(posWithOffset);
+
+		// If the parent renderer is also displaying a sub-flow in place,
+		// recursively transform through its parent's zoom
+		if (this.supernodeInfo.renderer.dispUtils.isDisplayingSubFlowInPlace()) {
+			return this.supernodeInfo.renderer.addParentSupernodeOffset(transformedPos);
+		}
+
+		return transformedPos;
 	}
 
 	removeContextToolbar() {
