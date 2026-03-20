@@ -30,7 +30,7 @@ import {
 	Code, ColorPalette, Link, ListBulleted, ListNumbered, SquareOutline,
 	TextAlignCenter, TextAlignLeft, TextAlignRight, TextColor, TextFont, TextIndentMore,
 	TextBold, TextItalic, TextUnderline, TextScale, TextStrikethrough
-} from "@carbon/react/icons";
+} from "../icons/carbon-icons";
 import {
 	MARKDOWN, WYSIWYG
 } from "./constants/canvas-constants.js";

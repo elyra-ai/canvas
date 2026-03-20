@@ -27,7 +27,7 @@ import { Button } from "@carbon/react";
 
 import { MESSAGE_KEYS, DATA_TYPE, SORT_DIRECTION, ROW_SELECTION } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
-import { Reset } from "@carbon/react/icons";
+import { Reset } from "./../../../icons/carbon-icons";
 
 import { isEmpty, sortBy, isEqual } from "lodash";
 

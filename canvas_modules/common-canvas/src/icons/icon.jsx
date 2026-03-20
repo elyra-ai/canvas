@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import { WarningFilled, ErrorFilled, CheckmarkFilled, InformationFilled, Informa
 	Warning,
 	Edit,
 	CircleDash, RulerAlt, ListNumbered, ListBulleted, Flag, ChartVennDiagram,
-	Calendar, Time, EventSchedule } from "@carbon/react/icons";
+	Calendar, Time, EventSchedule } from "./carbon-icons";
 
 import { ERROR, WARNING, INFO, SUCCESS, CANVAS_CARBON_ICONS, CONTEXT_MENU_CARBON_ICONS } from "../common-canvas/constants/canvas-constants";
 import { CONDITION_MESSAGE_TYPE, CARBON_ICONS, DATA_TYPE } from "../common-properties/constants/constants";

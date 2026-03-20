@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CloseOutline, Grid, List } from "@carbon/react/icons";
+import { CloseOutline, Grid, List } from "../icons/carbon-icons";
 
 import Toolbar from "../toolbar";
 

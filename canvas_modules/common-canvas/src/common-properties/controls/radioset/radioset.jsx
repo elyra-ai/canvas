@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import { RadioButton, RadioButtonGroup } from "@carbon/react";
 import classNames from "classnames";
 import { MESSAGE_KEYS, STATES, UPDATE_TYPE } from "./../../constants/constants.js";
 import { v4 as uuid4 } from "uuid";
-import { Information } from "@carbon/react/icons";
+import { Information } from "./../../../icons/carbon-icons";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { isEmpty } from "lodash";
 

@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import Isvg from "react-inlinesvg";
 import { get } from "lodash";
 import classNames from "classnames";
-import { Help, Edit, Close, Information } from "@carbon/react/icons";
+import { Help, Edit, Close, Information } from "./../../../icons/carbon-icons";
 import { TextInput, Button, Layer, Link } from "@carbon/react";
 import { Toggletip, ToggletipButton, ToggletipContent, ToggletipActions } from "@carbon/react";
 

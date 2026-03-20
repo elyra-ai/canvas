@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import { Column, Table, AutoSizer } from "react-virtualized";
 import Draggable from "react-draggable";
 import { Checkbox, Loading } from "@carbon/react";
-import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
+import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "./../../../icons/carbon-icons";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import TruncatedContentTooltip from "./../truncated-content-tooltip";
 import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";

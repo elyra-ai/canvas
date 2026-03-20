@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { TrashCan, Edit, UpToTop, ChevronUp, ChevronDown, DownToBottom } from "@carbon/react/icons";
+import { TrashCan, Edit, UpToTop, ChevronUp, ChevronDown, DownToBottom } from "./../../../icons/carbon-icons";
 import { MESSAGE_KEYS, STATES } from "../../constants/constants";
 import Toolbar from "../../../toolbar/toolbar";
 

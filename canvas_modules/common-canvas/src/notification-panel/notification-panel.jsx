@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import Icon from "./../icons/icon.jsx";
 import { Button } from "@carbon/react";
-import { Close } from "@carbon/react/icons";
+import { Close } from "../icons/carbon-icons";
 import Logger from "../logging/canvas-logger.js";
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import { DEFAULT_NOTIFICATION_HEADER } from "./../common-canvas/constants/canvas-constants.js";

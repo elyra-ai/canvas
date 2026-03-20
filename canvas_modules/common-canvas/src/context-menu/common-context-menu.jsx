@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { ChevronRight } from "@carbon/react/icons";
+import { ChevronRight } from "../icons/carbon-icons";
 import ColorPicker from "../color-picker";
 import KeyboardUtils from "../common-canvas/keyboard-utils";
 
