@@ -23,7 +23,8 @@ import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
 import { v4 as uuid4 } from "uuid";
 import { intersection, isEqual } from "lodash";
-import { Information } from "./../../../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import Information from "@carbon/icons-react/lib/Information";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { STATES } from "./../../constants/constants.js";
 import { isEmpty } from "lodash";

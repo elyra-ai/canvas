@@ -24,7 +24,8 @@ import { formatMessage } from "./../../util/property-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
 import { ControlType } from "./../../constants/form-constants";
-import { Shuffle } from "./../../../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import Shuffle from "@carbon/icons-react/lib/Shuffle";
 import { has } from "lodash";
 
 class NumberfieldControl extends React.Component {

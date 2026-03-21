@@ -18,7 +18,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button, Checkbox } from "@carbon/react";
-import { TrashCan, Add, Edit } from "./../../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import TrashCan from "@carbon/icons-react/lib/TrashCan";
+import Add from "@carbon/icons-react/lib/Add";
+import Edit from "@carbon/icons-react/lib/Edit";
 import FlexibleTable from "./../components/flexible-table";
 import TableButtons from "./../components/table-buttons";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";

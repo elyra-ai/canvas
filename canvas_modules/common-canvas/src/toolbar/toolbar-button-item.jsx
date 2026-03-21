@@ -23,12 +23,36 @@ import ToggleNotificationPanel from "./../../assets/images/notification_counter_
 import { Button } from "@carbon/react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
-import { StopFilledAlt, Play, Undo, Redo, Chat, ChatOff, Result,
-	Cut, Copy, Paste, Edit,	ColorPalette, Maximize, Minimize,
-	Launch, AddComment, TrashCan, ZoomIn, ZoomOut,
-	Checkmark, ChevronRight, ChevronDown, ChevronUp,
-	CenterToFit, OpenPanelFilledLeft, ConnectSource, ConnectTarget,
-	ArrangeVertical, ArrangeHorizontal } from "../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import StopFilledAlt from "@carbon/icons-react/lib/StopFilledAlt";
+import Play from "@carbon/icons-react/lib/Play";
+import Undo from "@carbon/icons-react/lib/Undo";
+import Redo from "@carbon/icons-react/lib/Redo";
+import Chat from "@carbon/icons-react/lib/Chat";
+import ChatOff from "@carbon/icons-react/lib/ChatOff";
+import Result from "@carbon/icons-react/lib/Result";
+import Cut from "@carbon/icons-react/lib/Cut";
+import Copy from "@carbon/icons-react/lib/Copy";
+import Paste from "@carbon/icons-react/lib/Paste";
+import Edit from "@carbon/icons-react/lib/Edit";
+import ColorPalette from "@carbon/icons-react/lib/ColorPalette";
+import Maximize from "@carbon/icons-react/lib/Maximize";
+import Minimize from "@carbon/icons-react/lib/Minimize";
+import Launch from "@carbon/icons-react/lib/Launch";
+import AddComment from "@carbon/icons-react/lib/AddComment";
+import TrashCan from "@carbon/icons-react/lib/TrashCan";
+import ZoomIn from "@carbon/icons-react/lib/ZoomIn";
+import ZoomOut from "@carbon/icons-react/lib/ZoomOut";
+import Checkmark from "@carbon/icons-react/lib/Checkmark";
+import ChevronRight from "@carbon/icons-react/lib/ChevronRight";
+import ChevronDown from "@carbon/icons-react/lib/ChevronDown";
+import ChevronUp from "@carbon/icons-react/lib/ChevronUp";
+import CenterToFit from "@carbon/icons-react/lib/CenterToFit";
+import OpenPanelFilledLeft from "@carbon/icons-react/lib/OpenPanelFilledLeft";
+import ConnectSource from "@carbon/icons-react/lib/ConnectSource";
+import ConnectTarget from "@carbon/icons-react/lib/ConnectTarget";
+import ArrangeVertical from "@carbon/icons-react/lib/ArrangeVertical";
+import ArrangeHorizontal from "@carbon/icons-react/lib/ArrangeHorizontal";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT,

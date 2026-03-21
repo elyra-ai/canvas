@@ -19,7 +19,9 @@ import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import { injectIntl } from "react-intl";
-import { Locked, EditOff } from "../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import Locked from "@carbon/icons-react/lib/Locked";
+import EditOff from "@carbon/icons-react/lib/EditOff";
 import { STATE_TAG_LOCKED, STATE_TAG_READ_ONLY, TIP_TYPE_STATE_TAG }
 	from "../common-canvas/constants/canvas-constants.js";
 

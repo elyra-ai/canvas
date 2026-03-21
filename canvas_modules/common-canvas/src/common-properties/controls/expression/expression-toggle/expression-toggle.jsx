@@ -19,7 +19,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import { Button } from "@carbon/react";
-import { Maximize, Minimize } from "./../../../../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import Maximize from "@carbon/icons-react/lib/Maximize";
+import Minimize from "@carbon/icons-react/lib/Minimize";
 import { formatMessage } from "../../../util/property-utils";
 import { MESSAGE_KEYS } from "../../../constants/constants";
 

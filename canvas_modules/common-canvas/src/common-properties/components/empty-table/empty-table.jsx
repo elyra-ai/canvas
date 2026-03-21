@@ -19,7 +19,9 @@ import PropTypes from "prop-types";
 import { formatMessage } from "./../../util/property-utils";
 import { MESSAGE_KEYS } from "./../../constants/constants";
 import { ControlType } from "./../../constants/form-constants";
-import { Add, Edit } from "./../../../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import Add from "@carbon/icons-react/lib/Add";
+import Edit from "@carbon/icons-react/lib/Edit";
 import { Button } from "@carbon/react";
 
 export default class EmptyTable extends React.Component {

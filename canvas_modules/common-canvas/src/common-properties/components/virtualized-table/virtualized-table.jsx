@@ -17,7 +17,11 @@
 import { Column, Table, AutoSizer } from "react-virtualized";
 import Draggable from "react-draggable";
 import { Checkbox, Loading } from "@carbon/react";
-import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "./../../../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import ArrowUp from "@carbon/icons-react/lib/ArrowUp";
+import ArrowDown from "@carbon/icons-react/lib/ArrowDown";
+import ArrowsVertical from "@carbon/icons-react/lib/ArrowsVertical";
+import Information from "@carbon/icons-react/lib/Information";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import TruncatedContentTooltip from "./../truncated-content-tooltip";
 import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";

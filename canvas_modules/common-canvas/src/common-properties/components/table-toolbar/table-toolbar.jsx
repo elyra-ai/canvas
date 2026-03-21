@@ -17,7 +17,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { TrashCan, Edit, UpToTop, ChevronUp, ChevronDown, DownToBottom } from "./../../../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import TrashCan from "@carbon/icons-react/lib/TrashCan";
+import Edit from "@carbon/icons-react/lib/Edit";
+import UpToTop from "@carbon/icons-react/lib/UpToTop";
+import ChevronUp from "@carbon/icons-react/lib/ChevronUp";
+import ChevronDown from "@carbon/icons-react/lib/ChevronDown";
+import DownToBottom from "@carbon/icons-react/lib/DownToBottom";
 import { MESSAGE_KEYS, STATES } from "../../constants/constants";
 import Toolbar from "../../../toolbar/toolbar";
 

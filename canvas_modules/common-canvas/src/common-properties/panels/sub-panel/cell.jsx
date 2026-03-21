@@ -17,7 +17,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "@carbon/react";
-import { Edit } from "./../../../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import Edit from "@carbon/icons-react/lib/Edit";
 import { formatMessage } from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { cloneDeep } from "lodash";

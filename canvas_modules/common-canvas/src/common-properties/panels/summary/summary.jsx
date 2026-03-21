@@ -19,7 +19,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "@carbon/react";
-import { Add } from "./../../../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import Add from "@carbon/icons-react/lib/Add";
 import WideFlyout from "./../../components/wide-flyout";
 import Icon from "./../../../icons/icon.jsx";
 

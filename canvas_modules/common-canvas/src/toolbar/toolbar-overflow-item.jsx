@@ -18,7 +18,8 @@ import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef } f
 import PropTypes from "prop-types";
 
 import { Button } from "@carbon/react";
-import { OverflowMenuVertical } from "../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import OverflowMenuVertical from "@carbon/icons-react/lib/OverflowMenuVertical";
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
 import Tooltip from "../tooltip/tooltip.jsx";

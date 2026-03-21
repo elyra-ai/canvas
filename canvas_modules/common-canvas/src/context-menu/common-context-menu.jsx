@@ -17,7 +17,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { ChevronRight } from "../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import ChevronRight from "@carbon/icons-react/lib/ChevronRight";
 import ColorPicker from "../color-picker";
 import KeyboardUtils from "../common-canvas/keyboard-utils";
 

@@ -17,7 +17,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CloseOutline, Grid, List } from "../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import CloseOutline from "@carbon/icons-react/lib/CloseOutline";
+import Grid from "@carbon/icons-react/lib/Grid";
+import List from "@carbon/icons-react/lib/List";
 
 import Toolbar from "../toolbar";
 

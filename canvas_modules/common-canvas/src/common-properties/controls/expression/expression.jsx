@@ -29,7 +29,8 @@ import { formatMessage } from "./../../util/property-utils";
 import ExpressionBuilder from "./expression-builder/expression-builder";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE, STATES } from "./../../constants/constants";
 import { ControlType } from "./../../constants/form-constants";
-import { Calculator } from "./../../../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import Calculator from "@carbon/icons-react/lib/Calculator";
 import * as ControlUtils from "./../../util/control-utils";
 import { get } from "lodash";
 import ExpressionToggle from "./expression-toggle/expression-toggle";

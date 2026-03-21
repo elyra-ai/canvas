@@ -26,7 +26,8 @@ import { RadioButton, RadioButtonGroup } from "@carbon/react";
 import classNames from "classnames";
 import { MESSAGE_KEYS, STATES, UPDATE_TYPE } from "./../../constants/constants.js";
 import { v4 as uuid4 } from "uuid";
-import { Information } from "./../../../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import Information from "@carbon/icons-react/lib/Information";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { isEmpty } from "lodash";
 

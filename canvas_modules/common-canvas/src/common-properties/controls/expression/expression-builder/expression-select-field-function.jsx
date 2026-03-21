@@ -16,7 +16,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Add } from "./../../../../icons/carbon-icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import Add from "@carbon/icons-react/lib/Add";
 import { Button } from "@carbon/react";
 import { Switch, ContentSwitcher, Dropdown, Layer } from "@carbon/react";
 import FlexibleTable from "./../../../components/flexible-table/flexible-table";
