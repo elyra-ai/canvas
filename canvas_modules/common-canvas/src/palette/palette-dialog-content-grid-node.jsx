@@ -17,9 +17,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { has } from "lodash";
-import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
-import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM,
+// Carbon icons - direct imports for tree-shaking optimization
+import Warning from "@carbon/icons-react/lib/Warning";
+import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
 	from "../common-canvas/constants/canvas-constants.js";
 
@@ -146,7 +147,7 @@ class PaletteDialogContentGridNode extends React.Component {
 			label = this.props.category.empty_text;
 			draggable = "false";
 			txtClassName = "palette-dialog-grid-node-text-warning";
-			icon = (<Icon type={CANVAS_CARBON_ICONS.WARNING_UNFILLED} className="palette-dialog-grid-node-icon-warning" draggable="false" />);
+			icon = (<Warning className="palette-dialog-grid-node-icon-warning" draggable="false" />);
 		}
 
 		return (

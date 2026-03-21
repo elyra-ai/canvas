@@ -18,10 +18,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import Icon from "./../icons/icon.jsx";
+import classNames from "classnames";
 import { Button } from "@carbon/react";
 // Carbon icons - direct imports for tree-shaking optimization
 import Close from "@carbon/icons-react/lib/Close";
+import WarningFilled from "@carbon/icons-react/lib/WarningFilled";
+import ErrorFilled from "@carbon/icons-react/lib/ErrorFilled";
+import CheckmarkFilled from "@carbon/icons-react/lib/CheckmarkFilled";
+import InformationFilled from "@carbon/icons-react/lib/InformationFilled";
+import Time from "@carbon/icons-react/lib/Time";
 import Logger from "../logging/canvas-logger.js";
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import { DEFAULT_NOTIFICATION_HEADER } from "./../common-canvas/constants/canvas-constants.js";
@@ -53,6 +58,23 @@ class NotificationPanel extends React.Component {
 		}
 	}
 
+	getIconComponent(iconType) {
+		const customClassName = `notification-message-icon-${iconType}`;
+
+		switch (iconType) {
+		case "error":
+			return <ErrorFilled className={classNames("canvas-state-icon-error", customClassName)} />;
+		case "warning":
+			return <WarningFilled className={classNames("canvas-state-icon-warning", customClassName)} />;
+		case "success":
+			return <CheckmarkFilled className={classNames("canvas-state-icon-success", customClassName)} />;
+		case "info":
+			return <InformationFilled className={classNames("canvas-state-icon-info", customClassName)} />;
+		default:
+			return null;
+		}
+	}
+
 	getNotifications() {
 		const notifications = [];
 		if (!this.props.messages) {
@@ -63,7 +85,7 @@ class NotificationPanel extends React.Component {
 			const className = message.callback ? " clickable " : "";
 			const iconType = message.type;
 			const type = (<div className="notification-message-type">
-				<Icon type={iconType} className={`notification-message-icon-${iconType}`} />
+				{this.getIconComponent(iconType)}
 			</div>);
 
 			const title = message.title
@@ -95,7 +117,7 @@ class NotificationPanel extends React.Component {
 			const timestamp = message.timestamp
 				? (<div className="notification-message-timestamp">
 					<div className="notification-message-timestamp-icon">
-						<Icon type="time" />
+						<Time />
 					</div>
 					<div className="notification-message-string">
 						{message.timestamp}
