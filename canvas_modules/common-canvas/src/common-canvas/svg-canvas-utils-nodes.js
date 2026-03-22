@@ -187,7 +187,7 @@ export default class SvgCanvasNodes {
 			return node.x_pos + this.canvasLayout.supernodeImagePosX + (this.canvasLayout.supernodeImageWidth / 2);
 		}
 		return node.x_pos +
-			this.getElementPosX(node.width, node.layout.imagePosX, node.layout.imagePosition) +
+			CanvasUtils.getElementPosX(node.width, node.layout.imagePosX, node.layout.imagePosition) +
 			(node.layout.imageWidth / 2);
 	}
 
@@ -197,7 +197,7 @@ export default class SvgCanvasNodes {
 			return node.y_pos + this.canvasLayout.supernodeImagePosY + (this.canvasLayout.supernodeImageHeight / 2);
 		}
 		return node.y_pos +
-			this.getElementPosY(node.height, node.layout.imagePosY, node.layout.imagePosition) +
+			CanvasUtils.getElementPosY(node.height, node.layout.imagePosY, node.layout.imagePosition) +
 			(node.layout.imageHeight / 2);
 	}
 
@@ -205,14 +205,14 @@ export default class SvgCanvasNodes {
 		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeImagePosX;
 		}
-		return this.getElementPosX(node.width, node.layout.imagePosX, node.layout.imagePosition);
+		return CanvasUtils.getElementPosX(node.width, node.layout.imagePosX, node.layout.imagePosition);
 	}
 
 	getNodeImagePosY(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeImagePosY;
 		}
-		return this.getElementPosY(node.height, node.layout.imagePosY, node.layout.imagePosition);
+		return CanvasUtils.getElementPosY(node.height, node.layout.imagePosY, node.layout.imagePosition);
 	}
 
 	getNodeImageWidth(node) {
@@ -233,7 +233,7 @@ export default class SvgCanvasNodes {
 		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeLabelPosX;
 		}
-		const x = this.getElementPosX(node.width, node.layout.labelPosX, node.layout.labelPosition);
+		const x = CanvasUtils.getElementPosX(node.width, node.layout.labelPosX, node.layout.labelPosition);
 		return node.layout.labelAlign === "center" ? x - (node.layout.labelWidth / 2) : x;
 	}
 
@@ -241,7 +241,7 @@ export default class SvgCanvasNodes {
 		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeLabelPosY;
 		}
-		return this.getElementPosY(node.height, node.layout.labelPosY, node.layout.labelPosition);
+		return CanvasUtils.getElementPosY(node.height, node.layout.labelPosY, node.layout.labelPosition);
 	}
 
 	getNodeLabelWidth(node) {
@@ -354,7 +354,7 @@ export default class SvgCanvasNodes {
 			return node.width + this.canvasLayout.supernodeEllipsisPosX;
 		}
 
-		return this.getElementPosX(node.width, node.layout.ellipsisPosX, node.layout.ellipsisPosition);
+		return CanvasUtils.getElementPosX(node.width, node.layout.ellipsisPosX, node.layout.ellipsisPosition);
 	}
 
 	getNodeEllipsisPosY(node) {
@@ -362,7 +362,7 @@ export default class SvgCanvasNodes {
 			return this.canvasLayout.supernodeEllipsisPosY;
 		}
 
-		return this.getElementPosY(node.height, node.layout.ellipsisPosY, node.layout.ellipsisPosition);
+		return CanvasUtils.getElementPosY(node.height, node.layout.ellipsisPosY, node.layout.ellipsisPosition);
 	}
 
 	getNodeExpansionIconTranslate(node) {
@@ -374,14 +374,14 @@ export default class SvgCanvasNodes {
 		if (CanvasUtils.isExpandedSupernode(node)) {
 			return node.width + this.canvasLayout.supernodeErrorPosX;
 		}
-		return this.getElementPosX(node.width, node.layout.errorXPos, node.layout.errorPosition);
+		return CanvasUtils.getElementPosX(node.width, node.layout.errorXPos, node.layout.errorPosition);
 	}
 
 	getNodeErrorPosY(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeErrorPosY;
 		}
-		return this.getElementPosY(node.height, node.layout.errorYPos, node.layout.errorPosition);
+		return CanvasUtils.getElementPosY(node.height, node.layout.errorYPos, node.layout.errorPosition);
 	}
 
 	getNodeErrorWidth(node) {
@@ -396,36 +396,6 @@ export default class SvgCanvasNodes {
 			return this.canvasLayout.supernodeErrorHeight;
 		}
 		return node.layout.errorHeight;
-	}
-
-	getNodePortPosX(posInfo, node) {
-		return this.getElementPosX(node.width, posInfo.x_pos, posInfo.pos);
-	}
-
-	getNodePortPosY(posInfo, node) {
-		return this.getElementPosY(node.height, posInfo.y_pos, posInfo.pos);
-	}
-
-	getElementPosX(width, xOffset = 0, position = "topLeft") {
-		let x = 0;
-
-		if (position.endsWith("Center")) {
-			x += (width / 2);
-		} else if (position.endsWith("Right")) {
-			x += width;
-		}
-		return x + Number(xOffset);
-	}
-
-	getElementPosY(height, yOffset = 0, position = "topLeft") {
-		let y = 0;
-
-		if (position.startsWith("middle")) {
-			y += (height / 2);
-		} else if (position.startsWith("bottom")) {
-			y += height;
-		}
-		return y + Number(yOffset);
 	}
 
 	// Returns the X offset for the port which references the nodeId passed in
