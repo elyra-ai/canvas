@@ -31,10 +31,9 @@ const CLOCKWISE = false;
 const ANTI_CLOCKWISE = true;
 
 export default class SvgCanvasLinks {
-	constructor(config, canvasLayout, nodeUtils, commentUtils) {
+	constructor(config, canvasLayout, commentUtils) {
 		this.canvasLayout = canvasLayout;
 		this.config = config;
-		this.nodeUtils = nodeUtils;
 		this.commentUtils = commentUtils;
 	}
 

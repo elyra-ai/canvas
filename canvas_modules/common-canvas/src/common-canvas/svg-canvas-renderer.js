@@ -87,7 +87,7 @@ export default class SVGCanvasRenderer {
 
 		this.dispUtils = new SvgCanvasDisplay(this.canvasController, this.supernodeInfo.d3Selection, this.pipelineId, breadcrumbs);
 		this.commentUtils = new SvgCanvasComments();
-		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils, this.commentUtils);
+		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.commentUtils);
 		this.decUtils = new SvgCanvasDecs(this.canvasLayout);
 		this.dragObjectUtils = new SvgCanvasDragObject(this);
 		this.dragLinkUtils = new SvgCanvasDragLink(this);
@@ -98,7 +98,6 @@ export default class SVGCanvasRenderer {
 		this.svgCanvasTextArea = new SvgCanvasTextArea(
 			this.config,
 			this.dispUtils,
-			this.nodeUtils,
 			this.decUtils,
 			this.canvasController,
 			this.canvasDiv,
@@ -281,11 +280,10 @@ export default class SVGCanvasRenderer {
 
 		// Must recreate these utils objects because they use the config object
 		// which may have changed.
-		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils, this.commentUtils);
+		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.commentUtils);
 		this.svgCanvasTextArea = new SvgCanvasTextArea(
 			this.config,
 			this.dispUtils,
-			this.nodeUtils,
 			this.decUtils,
 			this.canvasController,
 			this.canvasDiv,

@@ -46,14 +46,13 @@ const BLACK = "#000000";
 
 export default class SvgCanvasTextArea {
 
-	constructor(config, dispUtils, nodeUtils, decUtils, canvasController,
+	constructor(config, dispUtils, decUtils, canvasController,
 		canvasDiv, activePipeline, removeTempCursorOverlay,
 		displayCommentsCallback, displayLinksCallback, getCommentToolbarPosCallback,
 		addCanvasZoomBehavior, removeCanvasZoomBehavior) {
 
 		this.config = config;
 		this.dispUtils = dispUtils;
-		this.nodeUtils = nodeUtils;
 		this.decUtils = decUtils;
 		this.canvasController = canvasController;
 		this.canvasDiv = canvasDiv;
