@@ -1191,7 +1191,7 @@ export default class CanvasUtils {
 				// improved, perhaps using a library like this:
 				// https://github.com/thelonious/kld-intersections
 				} else if (this.isPosInArea({ x_pos: link.x1, y_pos: link.y1 }, region, 0) ||
-										this.isPosInArea({ x_pos: link.x2, y_pos: link.y2 }, region, 0)) {
+							this.isPosInArea({ x_pos: link.x2, y_pos: link.y2 }, region, 0)) {
 					regionSelections.push(link.id);
 				}
 			}

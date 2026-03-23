@@ -23,6 +23,7 @@ const d3 = Object.assign({}, d3Drag, d3Ease, d3Selection);
 
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
+import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 	LINK_TYPE_CURVE, LINK_TYPE_STRAIGHT, LINK_SELECTION_DETACHABLE,
 	FLOW_IN, FLOW_OUT,
@@ -280,7 +281,7 @@ export default class SVGCanvasUtilsDragNewLink {
 		// to draw straight lines over the node.
 		if (linkCategory === NODE_LINK &&
 				this.ren.canvasLayout.linkType === LINK_TYPE_STRAIGHT &&
-				this.ren.nodeUtils.isPointInNodeBoundary(transPos, this.drawingNewLinkData.srcObj)) {
+				SvgCanvasNodes.isPointInNodeBoundary(transPos, this.drawingNewLinkData.srcObj)) {
 			this.removeNewLinkLine();
 
 		} else {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1021,6 +1021,7 @@ export default class LayoutDimensions {
 			newLayout = this.overridePortPositions(newLayout, config); // Must do this before overrideNodeLayout
 			newLayout = this.overrideNodeResizable(newLayout, config);
 			newLayout = this.overrideNodeLayout(newLayout, overlayLayout); // Must do this before overrideSnapToGrid
+			newLayout = this.addSupernodeFieldsToNodeLayout(newLayout); // Add supernode fields from canvasLayout to nodeLayout
 			newLayout = this.overrideCanvasLayout(newLayout, config, overlayLayout);
 			newLayout = this.overrideLinkType(newLayout, config);
 			newLayout = this.overrideSnapToGrid(newLayout, config);
@@ -1046,6 +1047,48 @@ export default class LayoutDimensions {
 
 	static overrideNodeLayout(layout, overlayLayout) {
 		layout.nodeLayout = Object.assign({}, layout.nodeLayout, overlayLayout.nodeLayout || {});
+
+		return layout;
+	}
+
+	// Adds supernode fields from canvasLayout to nodeLayout
+	static addSupernodeFieldsToNodeLayout(layout) {
+		const supernodeFields = [
+			"supernodeLabelPosX",
+			"supernodeLabelPosY",
+			"supernodeLabelWidth",
+			"supernodeLabelHeight",
+			"supernodeImageWidth",
+			"supernodeImageHeight",
+			"supernodeImagePosX",
+			"supernodeImagePosY",
+			"supernodeEllipsisPosX",
+			"supernodeEllipsisPosY",
+			"supernodeEllipsisWidth",
+			"supernodeEllipsisHeight",
+			"supernodeExpansionIconPosX",
+			"supernodeExpansionIconPosY",
+			"supernodeExpansionIconHeight",
+			"supernodeExpansionIconWidth",
+			"supernodeExpansionIconHoverAreaPadding",
+			"supernodeErrorPosX",
+			"supernodeErrorPosY",
+			"supernodeErrorWidth",
+			"supernodeErrorHeight",
+			"supernodeDefaultWidth",
+			"supernodeDefaultHeight",
+			"supernodeMinWidth",
+			"supernodeMinHeight",
+			"supernodeTopAreaHeight",
+			"supernodeSVGAreaPadding",
+			"supernodeBindingPortRadius"
+		];
+
+		supernodeFields.forEach((field) => {
+			if (typeof layout.canvasLayout[field] !== "undefined") {
+				layout.nodeLayout[field] = layout.canvasLayout[field];
+			}
+		});
 
 		return layout;
 	}
