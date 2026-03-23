@@ -86,8 +86,7 @@ export default class SVGCanvasRenderer {
 		this.instanceId = this.canvasController.getInstanceId();
 
 		this.dispUtils = new SvgCanvasDisplay(this.canvasController, this.supernodeInfo.d3Selection, this.pipelineId, breadcrumbs);
-		this.commentUtils = new SvgCanvasComments();
-		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.commentUtils);
+		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout);
 		this.decUtils = new SvgCanvasDecs(this.canvasLayout);
 		this.dragObjectUtils = new SvgCanvasDragObject(this);
 		this.dragLinkUtils = new SvgCanvasDragLink(this);
@@ -280,7 +279,7 @@ export default class SVGCanvasRenderer {
 
 		// Must recreate these utils objects because they use the config object
 		// which may have changed.
-		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.commentUtils);
+		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout);
 		this.svgCanvasTextArea = new SvgCanvasTextArea(
 			this.config,
 			this.dispUtils,
@@ -4288,7 +4287,7 @@ export default class SVGCanvasRenderer {
 			: escapeText(d.content));
 
 		if (d.highlightText) {
-			return this.commentUtils.insertCommentHighlight(htmlString, d.highlightText);
+			return SvgCanvasComments.insertCommentHighlight(htmlString, d.highlightText);
 		}
 		return htmlString;
 	}
