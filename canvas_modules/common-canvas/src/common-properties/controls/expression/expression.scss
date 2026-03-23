@@ -19,13 +19,13 @@
 @forward "./expression-toggle/expression-toggle";
 
 // Define code mirror colors that pass WCAG AA color contrast standard
-// when compared to the different background colors used in the UI
 // using: https://webaim.org/resources/contrastchecker/
+// when compared to the different background colors used in the UI
 // There are four different possible backgrounds:
-// * expression in narrow flyout,
-// * expression in narrow flyout - highlighted line,
-// * modal expression builder,
-// * modal expression builder - highlighted line
+// * expression in narrow flyout,                    Light theme: #F4F4F4, Dark theme: #525252
+// * expression in narrow flyout - highlighted line, Light theme: #DFDFDF, Dark theme: #606060
+// * modal expression builder,                       Light theme: #FFFFFF, Dark theme: #393939
+// * modal expression builder - highlighted line,    Light theme: #E8E8E8, Dark theme: #4D4D4D
 // Colors specified are derived from those in the Carbon 'syntax'
 // group of colors: https://carbondesignsystem.com/elements/color/tokens/#syntax
 // but with their brightness adjusted to pass the standard for
@@ -34,7 +34,7 @@
 // If no carbon theme is set or the light theme is set.
 :root,
 [data-carbon-theme=g10] {
-	--cm-keyword-color: #0152E9; // From $syntax-keyword
+	--cm-keyword-color: #7922FC; // From $syntax-control-keyword
 	--cm-number-color: #177233; // From $syntax-number
 	--cm-def-color: #755D06; // From $syntax-definition
 	--cm-comment-color: #187233; // From $syntax-comment
@@ -48,7 +48,7 @@
 
 // For dark theme
 [data-carbon-theme=g90] {
-	--cm-keyword-color: #CCDDFF; // From $syntax-keyword
+	--cm-keyword-color: #E6D6FF; // From $syntax-control-keyword
 	--cm-number-color: #A9EAB9; // From $syntax-number
 	--cm-def-color: #F8D968; // From $syntax-definition
 	--cm-comment-color: #B1E7BE; // From $syntax-comment
