@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -564,6 +564,29 @@ export default class CanvasUtils {
 		return WEST;
 	}
 
+	// Calculates element X position based on width, offset, and position string.
+	static getElementPosX(width, xOffset = 0, position = "topLeft") {
+		let x = 0;
+
+		if (position.endsWith("Center")) {
+			x += (width / 2);
+		} else if (position.endsWith("Right")) {
+			x += width;
+		}
+		return x + Number(xOffset);
+	}
+
+	// Calculates element Y position based on height, offset, and position string.
+	static getElementPosY(height, yOffset = 0, position = "topLeft") {
+		let y = 0;
+
+		if (position.startsWith("middle")) {
+			y += (height / 2);
+		} else if (position.startsWith("bottom")) {
+			y += height;
+		}
+		return y + Number(yOffset);
+	}
 
 	// Returns true if the line described by x1, y1, x2, y2 either intersects or
 	// is fully inside the rectangle described by rx1, ry1, rx2, ry2.

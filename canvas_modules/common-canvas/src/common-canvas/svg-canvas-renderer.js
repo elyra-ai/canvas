@@ -53,6 +53,7 @@ import CanvasUtils from "./common-canvas-utils.js";
 import KeyboardUtils from "./keyboard-utils.js";
 import SvgCanvasDisplay from "./svg-canvas-utils-display.js";
 import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
+import SvgCanvasPorts from "./svg-canvas-utils-ports.js";
 import SvgCanvasComments from "./svg-canvas-utils-comments.js";
 import SvgCanvasLinks from "./svg-canvas-utils-links.js";
 import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
@@ -815,6 +816,43 @@ export default class SVGCanvasRenderer {
 		const svgRect = this.canvasSVG.node().getBoundingClientRect();
 		const pos = this.zoomUtils.unTransformPos({ x, y });
 		return { x: pos.x + Math.round(svgRect.left), y: pos.y + Math.round(svgRect.top) };
+	}
+
+	// Converts canvas coordinates to screen coordinates.
+	// If we're displaying a sub-flow in place, we need to adjust the position
+	// to account for the offset of the sub-flow SVG area within the parent canvas.
+	// This is done recursively for nested sub-flows.
+	convertCanvasCoordsToScreenCoords(pos) {
+		let screenPos = this.zoomUtils.unTransformPos(pos);
+
+		if (this.dispUtils.isDisplayingSubFlowInPlace()) {
+			screenPos = this.addParentSupernodeOffset(screenPos);
+		}
+
+		return screenPos;
+	}
+
+	// Recursively adds the parent supernode offset to the position.
+	// This handles nested sub-flows by transforming through each parent's zoom level.
+	addParentSupernodeOffset(pos) {
+		const parentSVGDims = this.getParentSupernodeSVGDimensions();
+
+		// Add the offset of this sub-flow's SVG area within the parent's canvas (in canvas coordinates)
+		const posWithOffset = {
+			x: pos.x + parentSVGDims.x_pos,
+			y: pos.y + parentSVGDims.y_pos
+		};
+
+		// Transform through the parent's zoom to get to parent's viewport coordinates
+		const transformedPos = this.supernodeInfo.renderer.zoomUtils.unTransformPos(posWithOffset);
+
+		// If the parent renderer is also displaying a sub-flow in place,
+		// recursively transform through its parent's zoom
+		if (this.supernodeInfo.renderer.dispUtils.isDisplayingSubFlowInPlace()) {
+			return this.supernodeInfo.renderer.addParentSupernodeOffset(transformedPos);
+		}
+
+		return transformedPos;
 	}
 
 	// Creates the div which contains the ghost node for drag and
@@ -3500,7 +3538,7 @@ export default class SVGCanvasRenderer {
 			let pos = this.getDefaultContextToolbarPos(objType, d, port);
 			pos.x = xPos ? pos.x + xPos : pos.x;
 			pos.y = yPos ? pos.y + yPos : pos.y;
-			pos = this.zoomUtils.unTransformPos(pos);
+			pos = this.convertCanvasCoordsToScreenCoords(pos);
 			this.openContextMenu(d3Event, objType, d, port, pos, cause);
 		}
 	}
@@ -4104,210 +4142,12 @@ export default class SVGCanvasRenderer {
 	}
 
 	setPortPositionsForNode(node) {
-		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM ||
-				this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-			this.setPortPositionsVertical(
-				node, node.inputs, node.inputPortsWidth,
-				node.layout.inputPortPositions,
-				node.layout.inputPortAutoPosition);
-			this.setPortPositionsVertical(
-				node, node.outputs, node.outputPortsWidth,
-				node.layout.outputPortPositions,
-				node.layout.outputPortAutoPosition,
-				this.config.enableSingleOutputPortDisplay);
-
-		} else {
-			this.setPortPositionsHoriz(
-				node, node.inputs, node.inputPortsHeight,
-				node.layout.inputPortPositions,
-				node.layout.inputPortAutoPosition);
-			this.setPortPositionsHoriz(
-				node, node.outputs, node.outputPortsHeight,
-				node.layout.outputPortPositions,
-				node.layout.outputPortAutoPosition,
-				this.config.enableSingleOutputPortDisplay);
-		}
-	}
-
-	setPortPositionsVertical(node, ports, portsWidth, portPositions, autoPosition, displaySinglePort = false) {
-		if (ports && ports.length > 0) {
-			const xPos = this.nodeUtils.getNodePortPosX(portPositions[0], node);
-			const yPos = this.nodeUtils.getNodePortPosY(portPositions[0], node);
-
-			if (node.width <= node.layout.defaultNodeWidth &&
-					ports.length === 1) {
-				ports[0].cx = xPos;
-				ports[0].cy = yPos;
-				ports[0].dir = CanvasUtils.getPortDir(ports[0].cx, ports[0].cy, node);
-			} else {
-				// If we are only going to display a single port, we set all the
-				// port positions to be the same as if there is only one port.
-				if (displaySinglePort) {
-					this.setPortPositionsVerticalDisplaySingle(node, ports, xPos, yPos);
-
-				} else if (autoPosition || CanvasUtils.isExpandedSupernode(node)) {
-					this.setPortPositionsVerticalAuto(node, ports, portsWidth, yPos);
-
-				} else {
-					this.setPortPositionsCustom(ports, portPositions, node, xPos, yPos);
-				}
-			}
-		}
-	}
-
-	// If only a single port is to be displayed, this methods sets the x and y
-	// coordinates of all the ports to the same values appropriately for either
-	// regular nodes or expanded supernodes.
-	setPortPositionsVerticalDisplaySingle(node, ports, xPos, yPos) {
-		let xPosition = 0;
-		if (CanvasUtils.isExpandedSupernode(node)) {
-			const widthSvgArea = node.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
-			xPosition = widthSvgArea / 2;
-
-		} else {
-			xPosition = xPos;
-		}
-
-		ports.forEach((p) => {
-			p.cx = xPosition;
-			p.cy = yPos;
-			p.dir = CanvasUtils.getPortDir(p.cx, p.cy, node);
-		});
-	}
-
-	// Sets the ports x and y coordinates for regular and expanded supernodes
-	// when all ports are displayed in a normal manner (as opposed to when a
-	// single port is displayed).
-	setPortPositionsVerticalAuto(node, ports, portsWidth, yPos) {
-		let xPosition = 0;
-
-		if (CanvasUtils.isExpandedSupernode(node)) {
-			const widthSvgArea = node.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
-			const remainingSpace = widthSvgArea - portsWidth;
-			xPosition = this.canvasLayout.supernodeSVGAreaPadding + (remainingSpace / 2);
-
-		} else if (portsWidth < node.width) {
-			xPosition = (node.width - portsWidth) / 2;
-		}
-
-		xPosition += node.layout.portArcOffset;
-
-		// Sub-flow binding node ports need to be spaced by the inverse of the
-		// zoom amount so that, after zoomToFit on the in-place sub-flow the
-		// binding node ports line up with those on the supernode. This is only
-		// necessary with binding nodes with multiple ports.
-		let multiplier = 1;
-		if (CanvasUtils.isSuperBindingNode(node)) {
-			multiplier = 1 / this.zoomUtils.getZoomScale();
-		}
-		ports.forEach((p) => {
-			xPosition += (node.layout.portArcRadius * multiplier);
-			p.cx = xPosition;
-			p.cy = yPos;
-			p.dir = CanvasUtils.getPortDir(p.cx, p.cy, node);
-			xPosition += ((node.layout.portArcRadius + node.layout.portArcSpacing) * multiplier);
-		});
-	}
-
-	setPortPositionsHoriz(node, ports, portsHeight, portPositions, autoPosition, displaySinglePort = false) {
-		if (ports && ports.length > 0) {
-			const xPos = this.nodeUtils.getNodePortPosX(portPositions[0], node);
-			const yPos = this.nodeUtils.getNodePortPosY(portPositions[0], node);
-
-			if (node.height <= node.layout.defaultNodeHeight &&
-					ports.length === 1) {
-				ports[0].cx = xPos;
-				ports[0].cy = yPos;
-				ports[0].dir = CanvasUtils.getPortDir(ports[0].cx, ports[0].cy, node);
-
-			} else {
-				// If we are only going to display a single port, we set all the
-				// port positions to be the same as if there is only one port.
-				if (displaySinglePort) {
-					this.setPortPositionsHorizDisplaySingle(node, ports, xPos, yPos);
-
-				} else if (autoPosition || CanvasUtils.isExpandedSupernode(node)) {
-					this.setPortPositionsHorizAuto(node, ports, portsHeight, xPos);
-
-				} else {
-					this.setPortPositionsCustom(ports, portPositions, node, xPos, yPos);
-				}
-			}
-		}
-	}
-
-	// If only a single port is to be displayed, this methods sets the x and y
-	// coordinates of all the ports to the same values appropriately for either
-	// regular nodes or expanded supernodes.
-	setPortPositionsHorizDisplaySingle(node, ports, xPos, yPos) {
-		let yPosition = 0;
-		if (CanvasUtils.isExpandedSupernode(node)) {
-			const heightSvgArea = node.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
-			yPosition = this.canvasLayout.supernodeTopAreaHeight + (heightSvgArea / 2);
-
-		} else {
-			yPosition = yPos;
-		}
-
-		ports.forEach((p) => {
-			p.cx = xPos;
-			p.cy = yPosition;
-			p.dir = CanvasUtils.getPortDir(p.cx, p.cy, node);
-		});
-	}
-
-	// Sets the ports x and y coordinates for regular and expanded supernodes
-	// when all ports are displayed in a normal manner (as opposed to when a
-	// single port is displayed).
-	setPortPositionsHorizAuto(node, ports, portsHeight, xPos) {
-		let yPosition = 0;
-
-		if (CanvasUtils.isExpandedSupernode(node)) {
-			const heightSvgArea = node.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
-			const remainingSpace = heightSvgArea - portsHeight;
-			yPosition = this.canvasLayout.supernodeTopAreaHeight + (remainingSpace / 2);
-
-		} else if (portsHeight < node.height) {
-			yPosition = (node.height - portsHeight) / 2;
-		}
-
-		yPosition += node.layout.portArcOffset;
-
-		// Sub-flow binding node ports need to be spaced by the inverse of the
-		// zoom amount so that, after zoomToFit on the in-place sub-flow the
-		// binding node ports line up with those on the supernode. This is only
-		// necessary with binding nodes with multiple ports.
-		let multiplier = 1;
-		if (CanvasUtils.isSuperBindingNode(node)) {
-			multiplier = 1 / this.zoomUtils.getZoomScale();
-		}
-		ports.forEach((p) => {
-			yPosition += (node.layout.portArcRadius * multiplier);
-			p.cx = xPos;
-			p.cy = yPosition;
-			p.dir = CanvasUtils.getPortDir(p.cx, p.cy, node);
-			yPosition += ((node.layout.portArcRadius + node.layout.portArcSpacing) * multiplier);
-		});
-	}
-
-	// Sets the node's port positions based on the custom positions provided
-	// by the application in the portPositions array.
-	setPortPositionsCustom(ports, portPositions, node, zerothX, zerothY) {
-		let xPos = zerothX;
-		let yPos = zerothY;
-
-		ports.forEach((p, i) => {
-			// No need to recalculate the zeroth position AND if there are more
-			// ports than portPositions just use the last port position for all
-			// subsequent ports.
-			if (i > 0 && i < portPositions.length) {
-				xPos = this.nodeUtils.getNodePortPosX(portPositions[i], node);
-				yPos = this.nodeUtils.getNodePortPosY(portPositions[i], node);
-			}
-			p.cx = xPos;
-			p.cy = yPos;
-			p.dir = CanvasUtils.getPortDir(p.cx, p.cy, node);
-		});
+		SvgCanvasPorts.setPortPositionsForNode(
+			node,
+			this.canvasLayout,
+			this.config,
+			this.zoomUtils.getZoomScale()
+		);
 	}
 
 	// Displays all the comments on the canvas either by creating new comments,
