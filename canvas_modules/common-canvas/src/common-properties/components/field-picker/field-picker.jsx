@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,8 @@ import { Button } from "@carbon/react";
 
 import { MESSAGE_KEYS, DATA_TYPE, SORT_DIRECTION, ROW_SELECTION } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
-import { Reset } from "@carbon/react/icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import Reset from "@carbon/icons-react/lib/Reset";
 
 import { isEmpty, sortBy, isEqual } from "lodash";
 

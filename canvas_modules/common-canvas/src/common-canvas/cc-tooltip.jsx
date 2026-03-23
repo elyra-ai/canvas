@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,14 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 import Tooltip from "../tooltip/tooltip.jsx";
-import Icon from "../icons/icon.jsx";
 import { isEmpty } from "lodash";
+// Carbon icons - direct imports for tree-shaking optimization
+import WarningFilled from "@carbon/icons-react/lib/WarningFilled";
+import ErrorFilled from "@carbon/icons-react/lib/ErrorFilled";
 import { TIP_TYPE_PALETTE_ITEM, TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_DEC,
-	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TIP_TYPE_STATE_TAG,
-	ERROR, WARNING } from "../common-canvas/constants/canvas-constants.js";
+	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TIP_TYPE_STATE_TAG } from "../common-canvas/constants/canvas-constants.js";
 
 class CommonCanvasTooltip extends React.Component {
 	constructor(props) {
@@ -92,9 +94,9 @@ class CommonCanvasTooltip extends React.Component {
 				{
 					let icon = null;
 					if (this.props.canvasController.getObjectModel().hasErrorMessage(this.props.node)) {
-						icon = (<Icon type={ERROR} className="tip-node-status error" />);
+						icon = (<ErrorFilled className={classNames("canvas-state-icon-error", "tip-node-status", "error")} />);
 					} else if (this.props.canvasController.getObjectModel().hasWarningMessage(this.props.node)) {
-						icon = (<Icon type={WARNING} className="tip-node-status warning" />);
+						icon = (<WarningFilled className={classNames("canvas-state-icon-warning", "tip-node-status", "warning")} />);
 					}
 					const nodeType = this.props.canvasController.getObjectModel().getPaletteNode(this.props.node.op);
 					let nodeLabel = this.props.node.label;
