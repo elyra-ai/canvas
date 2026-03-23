@@ -42,21 +42,21 @@
 	--cm-punctuation-color: #636363; // From $syntax-punctuation
 	--cm-property-color: #006C7A; // From $syntax-property-name
 	--cm-operator-color: #636363; // From $syntax-operator
-	--cm-string-color: carbon.$syntax-string; // This work as-is
+	--cm-string-color: #{carbon.$syntax-string};  // This work as-is
 	--cm-meta--color: #197132; // From $syntax-meta
 }
 
 // For dark theme
 [data-carbon-theme=g90] {
-	--cm-keyword-color: #CCDEFF; // From $syntax-keyword
+	--cm-keyword-color: #CCDDFF; // From $syntax-keyword
 	--cm-number-color: #A9EAB9; // From $syntax-number
 	--cm-def-color: #F8D968; // From $syntax-definition
 	--cm-comment-color: #B1E7BE; // From $syntax-comment
 	--cm-variable-color: #CCDEFF; // From $syntax-variable
-	--cm-punctuation-color: carbon.$syntax-punctuation; // From $syntax-punctuation
+	--cm-punctuation-color: #{carbon.$syntax-punctuation}; // From $syntax-punctuation
 	--cm-property-color: #9EE6F0; // From $syntax-property-name
-	--cm-operator-color: carbon.$syntax-operator; // This work as-is
-	--cm-string-color: carbon.$syntax-string; // This work as-is
+	--cm-operator-color: #{carbon.$syntax-operator}; // This work as-is
+	--cm-string-color: #{carbon.$syntax-string}; // This work as-is
 	--cm-meta--color: #B6E7C3; // From $syntax-meta
 }
 
