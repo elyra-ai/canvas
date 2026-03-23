@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,10 @@ import PropTypes from "prop-types";
 import { get, has } from "lodash";
 import KeyboardUtils from "../common-canvas/keyboard-utils.js";
 import PaletteContentListItemBtn from "./palette-content-list-item-btn.jsx";
-import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
-import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM,
+// Carbon icons - direct imports for tree-shaking optimization
+import Warning from "@carbon/icons-react/lib/Warning";
+import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
 	from "../common-canvas/constants/canvas-constants.js";
 
@@ -372,7 +373,7 @@ class PaletteContentListItem extends React.Component {
 				itemText = (<span>{labelText}</span>);
 			}
 			draggable = "false";
-			icon = (<Icon type={CANVAS_CARBON_ICONS.WARNING_UNFILLED} className="palette-list-item-icon-warning" draggable="false" />);
+			icon = (<Warning className="palette-list-item-icon-warning" draggable="false" />);
 		}
 
 		const mainDivClass = this.getMainDivClass();

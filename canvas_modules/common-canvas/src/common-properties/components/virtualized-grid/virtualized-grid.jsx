@@ -22,7 +22,11 @@ import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import { isEmpty, includes } from "lodash";
 import { Checkbox } from "@carbon/react";
-import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import ArrowUp from "@carbon/icons-react/lib/ArrowUp";
+import ArrowDown from "@carbon/icons-react/lib/ArrowDown";
+import ArrowsVertical from "@carbon/icons-react/lib/ArrowsVertical";
+import Information from "@carbon/icons-react/lib/Information";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import TruncatedContentTooltip from "../truncated-content-tooltip";
