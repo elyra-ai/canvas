@@ -65,7 +65,7 @@ describe("SvgCanvasPorts utility tests", () => {
 		});
 	});
 
-	describe("setPortPositionsForNode - vertical layout", () => {
+	describe("setPortPositionsAndSizesForNode - vertical layout", () => {
 		it("should set port positions for single input and output port", () => {
 			const node = {
 				width: 70,
@@ -83,7 +83,8 @@ describe("SvgCanvasPorts utility tests", () => {
 					inputPortPositions: [{ x_pos: 0, y_pos: 0, pos: "topCenter" }],
 					outputPortPositions: [{ x_pos: 0, y_pos: 0, pos: "bottomCenter" }],
 					inputPortAutoPosition: true,
-					outputPortAutoPosition: true
+					outputPortAutoPosition: true,
+					singleOutputPortDisplay: false
 				}
 			};
 
@@ -92,11 +93,7 @@ describe("SvgCanvasPorts utility tests", () => {
 				supernodeSVGAreaPadding: 3
 			};
 
-			const config = {
-				enableSingleOutputPortDisplay: false
-			};
-
-			SvgCanvasPorts.setPortPositionsForNode(node, canvasLayout, config, 1);
+			SvgCanvasPorts.setPortPositionsAndSizesForNode(node, canvasLayout, 1);
 
 			// Single port should be positioned at the center
 			expect(node.inputs[0].cx).toBe(35); // center of 70px width
@@ -129,7 +126,8 @@ describe("SvgCanvasPorts utility tests", () => {
 					inputPortPositions: [{ x_pos: 0, y_pos: 0, pos: "topCenter" }],
 					outputPortPositions: [{ x_pos: 0, y_pos: 0, pos: "bottomCenter" }],
 					inputPortAutoPosition: true,
-					outputPortAutoPosition: true
+					outputPortAutoPosition: true,
+					singleOutputPortDisplay: false
 				}
 			};
 
@@ -138,11 +136,7 @@ describe("SvgCanvasPorts utility tests", () => {
 				supernodeSVGAreaPadding: 3
 			};
 
-			const config = {
-				enableSingleOutputPortDisplay: false
-			};
-
-			SvgCanvasPorts.setPortPositionsForNode(node, canvasLayout, config, 1);
+			SvgCanvasPorts.setPortPositionsAndSizesForNode(node, canvasLayout, 1);
 
 			// Ports should be evenly distributed
 			expect(node.inputs[0].cx).toBeGreaterThan(0);
@@ -161,7 +155,7 @@ describe("SvgCanvasPorts utility tests", () => {
 		});
 	});
 
-	describe("setPortPositionsForNode - horizontal layout", () => {
+	describe("setPortPositionsAndSizesForNode - horizontal layout", () => {
 		it("should set port positions for horizontal link direction", () => {
 			const node = {
 				width: 70,
@@ -179,7 +173,8 @@ describe("SvgCanvasPorts utility tests", () => {
 					inputPortPositions: [{ x_pos: 0, y_pos: 0, pos: "middleLeft" }],
 					outputPortPositions: [{ x_pos: 0, y_pos: 0, pos: "middleRight" }],
 					inputPortAutoPosition: true,
-					outputPortAutoPosition: true
+					outputPortAutoPosition: true,
+					singleOutputPortDisplay: false
 				}
 			};
 
@@ -188,11 +183,7 @@ describe("SvgCanvasPorts utility tests", () => {
 				supernodeSVGAreaPadding: 3
 			};
 
-			const config = {
-				enableSingleOutputPortDisplay: false
-			};
-
-			SvgCanvasPorts.setPortPositionsForNode(node, canvasLayout, config, 1);
+			SvgCanvasPorts.setPortPositionsAndSizesForNode(node, canvasLayout, 1);
 
 			// Single port should be positioned at the middle
 			expect(node.inputs[0].cx).toBe(0);
@@ -295,7 +286,8 @@ describe("SvgCanvasPorts utility tests", () => {
 					inputPortPositions: [{ x_pos: 0, y_pos: 0, pos: "topCenter" }],
 					outputPortPositions: [{ x_pos: 0, y_pos: 0, pos: "bottomCenter" }],
 					inputPortAutoPosition: true,
-					outputPortAutoPosition: true
+					outputPortAutoPosition: true,
+					singleOutputPortDisplay: false
 				}
 			};
 
@@ -304,11 +296,7 @@ describe("SvgCanvasPorts utility tests", () => {
 				supernodeSVGAreaPadding: 3
 			};
 
-			const config = {
-				enableSingleOutputPortDisplay: false
-			};
-
-			SvgCanvasPorts.setPortPositionsForNode(node, canvasLayout, config, 1);
+			SvgCanvasPorts.setPortPositionsAndSizesForNode(node, canvasLayout, 1);
 
 			// Ports should be positioned within the SVG area (accounting for padding)
 			expect(node.inputs[0].cx).toBeGreaterThan(0);
@@ -349,7 +337,8 @@ describe("SvgCanvasPorts utility tests", () => {
 					inputPortPositions: [{ x_pos: 0, y_pos: 0, pos: "topCenter" }],
 					outputPortPositions: [{ x_pos: 0, y_pos: 0, pos: "bottomCenter" }],
 					inputPortAutoPosition: true,
-					outputPortAutoPosition: true
+					outputPortAutoPosition: true,
+					singleOutputPortDisplay: false
 				}
 			};
 
@@ -358,13 +347,9 @@ describe("SvgCanvasPorts utility tests", () => {
 				supernodeSVGAreaPadding: 3
 			};
 
-			const config = {
-				enableSingleOutputPortDisplay: false
-			};
-
 			const zoomScale = 0.5; // 50% zoom
 
-			SvgCanvasPorts.setPortPositionsForNode(node, canvasLayout, config, zoomScale);
+			SvgCanvasPorts.setPortPositionsAndSizesForNode(node, canvasLayout, zoomScale);
 
 			// With zoom scale, port spacing should be adjusted
 			const spacing = node.inputs[1].cx - node.inputs[0].cx;

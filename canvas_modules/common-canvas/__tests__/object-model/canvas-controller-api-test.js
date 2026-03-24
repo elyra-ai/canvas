@@ -289,8 +289,8 @@ describe("Test canvas controller methods", () => {
 		const actualPortStr = JSON.stringify(inputs2[1], null, 2);
 		const expectedPortStr = JSON.stringify(newInputPort, null, 2);
 
-		// console.log(actualPortStr)
-		// console.log(expectedPortStr)
+		// console.log(actualPortStr);
+		// console.log(expectedPortStr);
 
 		expect(isEqual(expectedPortStr, actualPortStr)).to.be.true;
 	});

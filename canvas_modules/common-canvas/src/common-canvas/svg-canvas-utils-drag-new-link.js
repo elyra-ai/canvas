@@ -328,11 +328,12 @@ export default class SVGCanvasUtilsDragNewLink {
 			.each((d, i, guideSel) => {
 				const obj = d3.select(guideSel[i]);
 				const transform = this.ren.getLinkImageTransform(d);
+				// Create a port object with the guide position
+				const guidePort = { ...this.drawingNewLinkData.srcPort, cx: d.x2, cy: d.y2 };
 				this.ren.updatePort(obj,
 					this.drawingNewLinkData.portGuideInfo,
 					this.drawingNewLinkData.srcObj,
-					d.x2,
-					d.y2,
+					guidePort,
 					transform);
 			});
 	}
