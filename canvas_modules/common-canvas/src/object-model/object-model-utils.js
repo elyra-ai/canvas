@@ -119,7 +119,6 @@ export function setNodeAttributesWithLayout(node, nodeLayout, canvasLayout, layo
 	} else {
 		newNode = setNodeDimensionAttributesHoriz(newNode, canvasLayout);
 	}
-
 	if (canvasLayout.snapToGridType === SNAP_TO_GRID_DURING ||
 			canvasLayout.snapToGridType === SNAP_TO_GRID_AFTER) {
 		newNode.x_pos = CanvasUtils.snapToGrid(newNode.x_pos, canvasLayout.snapToGridXPx);
