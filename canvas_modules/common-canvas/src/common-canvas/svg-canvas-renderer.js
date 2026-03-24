@@ -442,7 +442,7 @@ export default class SVGCanvasRenderer {
 	// Ensures the binding ports for a full-page sub-flow are calculated
 	// and displayed correctly.
 	displayPortsForSubFlowFullPage() {
-		this.setPortPositionsForNode(this.getParentSupernodeDatum());
+		this.setPortPositionsAndSizesForNode(this.getParentSupernodeDatum());
 		this.displayBindingNodesToFitSVG();
 	}
 
@@ -1818,7 +1818,7 @@ export default class SVGCanvasRenderer {
 	displaySingleNode(d) {
 		this.logger.logStartTimer("displaySingleNode " + this.getFlags());
 
-		this.setPortPositionsForNode(d);
+		this.setPortPositionsAndSizesForNode(d);
 
 		const selection = this.getNodeGroupSelectionById(d.id);
 		this.displayNodesSubset(selection, [d]);
@@ -4091,11 +4091,11 @@ export default class SVGCanvasRenderer {
 	// Sets the port positions on nodes for use when displaying nodes and links
 	setPortPositionsAllNodes() {
 		this.activePipeline.nodes.forEach((node) => {
-			this.setPortPositionsForNode(node);
+			this.setPortPositionsAndSizesForNode(node);
 		});
 	}
 
-	setPortPositionsForNode(node) {
+	setPortPositionsAndSizesForNode(node) {
 		SvgCanvasPorts.setPortPositionsAndSizesForNode(
 			node,
 			this.canvasLayout,
