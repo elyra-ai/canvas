@@ -15,7 +15,7 @@
  */
 
 import CanvasUtils from "./common-canvas-utils.js";
-import { LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP } from "./constants/canvas-constants";
+import { LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP, PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT } from "./constants/canvas-constants";
 
 export default class SvgCanvasPorts {
 
@@ -80,15 +80,16 @@ export default class SvgCanvasPorts {
 	}
 
 	/**
-	 * Sets port positions for a node based on the link direction and layout configuration.
-	 * This modifies the ports array in place, setting cx, cy, and dir properties.
+	 * Sets port positions and sizes for a node based on the link direction and layout configuration.
+	 * This modifies the ports array in place, setting cx, cy, dir, width, and height properties.
 	 *
 	 * @param {Object} node - The node object containing layout information and ports
 	 * @param {Object} canvasLayout - Canvas layout configuration
-	 * @param {Object} config - Additional configuration options
 	 * @param {number} zoomScale - Current zoom scale (for binding nodes)
 	 */
-	static setPortPositionsForNode(node, canvasLayout, config, zoomScale = 1) {
+	static setPortPositionsAndSizesForNode(node, canvasLayout, zoomScale = 1) {
+		const enableSingleOutputPortDisplay = node.layout.singleOutputPortDisplay;
+
 		if (canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM ||
 				canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
 			this.setPortPositionsVertical(
@@ -102,7 +103,7 @@ export default class SvgCanvasPorts {
 				node, node.outputs, node.outputPortsWidth,
 				node.layout.outputPortPositions,
 				node.layout.outputPortAutoPosition,
-				config.enableSingleOutputPortDisplay,
+				enableSingleOutputPortDisplay,
 				canvasLayout,
 				zoomScale);
 
@@ -118,9 +119,30 @@ export default class SvgCanvasPorts {
 				node, node.outputs, node.outputPortsHeight,
 				node.layout.outputPortPositions,
 				node.layout.outputPortAutoPosition,
-				config.enableSingleOutputPortDisplay,
+				enableSingleOutputPortDisplay,
 				canvasLayout,
 				zoomScale);
+		}
+
+		// Set width and height for all ports
+		this.setPortSizes(node.inputs, node.layout.inputPortDisplayObjects);
+		this.setPortSizes(node.outputs, node.layout.outputPortDisplayObjects);
+	}
+
+	/**
+	 * Sets width and height properties on ports based on display objects.
+	 *
+	 * @param {Array} ports - Array of port objects
+	 * @param {Array} displayObjects - Array of display object configurations
+	 */
+	static setPortSizes(ports, displayObjects) {
+		if (ports && displayObjects) {
+			ports.forEach((port, i) => {
+				const idx = (i < displayObjects.length) ? i : displayObjects.length - 1;
+				const portObj = displayObjects[idx];
+				port.width = portObj.width || PORT_WIDTH_DEFAULT;
+				port.height = portObj.height || PORT_HEIGHT_DEFAULT;
+			});
 		}
 	}
 

@@ -40,7 +40,6 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	WYSIWYG, CAUSE_KEYBOARD, CAUSE_MOUSE,
 	FLOW_IN, FLOW_OUT,
 	SHAPE_PORT_ARCS, SHAPE_RECTANGLE_ROUNDED_CORNERS,
-	PORT_WIDTH_DEFAULT, PORT_HEIGHT_DEFAULT,
 	SINGLE_CLICK, SINGLE_CLICK_CONTEXTMENU, DOUBLE_CLICK,
 	DISPLAY_GRID_DOTS, DISPLAY_GRID_DOTS_AND_LINES, DISPLAY_GRID_BOXES, DISPLAY_GRID_BOXES_AND_LINES,
 	CANVAS_FOCUS
@@ -442,7 +441,7 @@ export default class SVGCanvasRenderer {
 	// Ensures the binding ports for a full-page sub-flow are calculated
 	// and displayed correctly.
 	displayPortsForSubFlowFullPage() {
-		this.setPortPositionsForNode(this.getParentSupernodeDatum());
+		this.setPortPositionsAndSizesForNode(this.getParentSupernodeDatum());
 		this.displayBindingNodesToFitSVG();
 	}
 
@@ -1818,7 +1817,7 @@ export default class SVGCanvasRenderer {
 	displaySingleNode(d) {
 		this.logger.logStartTimer("displaySingleNode " + this.getFlags());
 
-		this.setPortPositionsForNode(d);
+		this.setPortPositionsAndSizesForNode(d);
 
 		const selection = this.getNodeGroupSelectionById(d.id);
 		this.displayNodesSubset(selection, [d]);
@@ -2180,7 +2179,7 @@ export default class SVGCanvasRenderer {
 				const portIdx = CanvasUtils.getPortIndex(node.inputs, port.id);
 				const portDisplayInfo = this.getPortDisplayInfo(node.layout.inputPortDisplayObjects, portIdx);
 				const transform = this.getPortImageTransform(port, FLOW_IN);
-				this.updatePort(obj, portDisplayInfo, node, port.cx, port.cy, transform);
+				this.updatePort(obj, portDisplayInfo, node, port, transform);
 			});
 
 		joinedInputPortGrps.selectChildren(".d3-node-port-input-arrow")
@@ -2228,7 +2227,7 @@ export default class SVGCanvasRenderer {
 		outputs = node.layout.outputPortDisplay ? outputs : [];
 
 		// Only show a single output port (the last one) if config tells us to.
-		outputs = this.config.enableSingleOutputPortDisplay && outputs.length > 1
+		outputs = node.layout.singleOutputPortDisplay && outputs.length > 1
 			? [outputs[outputs.length - 1]]
 			: outputs;
 
@@ -2292,7 +2291,7 @@ export default class SVGCanvasRenderer {
 				const portIdx = CanvasUtils.getPortIndex(node.outputs, port.id);
 				const portInfo = this.getPortDisplayInfo(node.layout.outputPortDisplayObjects, portIdx);
 				const transform = this.getPortImageTransform(port, FLOW_OUT);
-				this.updatePort(obj, portInfo, node, port.cx, port.cy, transform);
+				this.updatePort(obj, portInfo, node, port, transform);
 			});
 
 		joinedOutputPortGrps.selectChildren(".d3-node-port-output-arrow")
@@ -2340,7 +2339,7 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	updatePort(obj, portInfo, node, cx, cy, transform) {
+	updatePort(obj, portInfo, node, port, transform) {
 		if (portInfo.type === PORT_DISPLAY_JSX || portInfo.type === PORT_DISPLAY_IMAGE) {
 			if (portInfo.type === PORT_DISPLAY_JSX) {
 				obj
@@ -2349,17 +2348,17 @@ export default class SVGCanvasRenderer {
 				obj.attr("xlink:href", portInfo.src);
 			}
 			obj
-				.attr("x", cx - (portInfo.width / 2))
-				.attr("y", cy - (portInfo.height / 2))
-				.attr("width", portInfo.width)
-				.attr("height", portInfo.height)
+				.attr("x", port.cx - (port.width / 2))
+				.attr("y", port.cy - (port.height / 2))
+				.attr("width", port.width)
+				.attr("height", port.height)
 				.attr("transform", transform);
 
 		} else {
 			obj
 				.attr("r", this.getPortRadius(node))
-				.attr("cx", cx)
-				.attr("cy", cy);
+				.attr("cx", port.cx)
+				.attr("cy", port.cy);
 		}
 	}
 
@@ -2369,8 +2368,6 @@ export default class SVGCanvasRenderer {
 		const obj = { ...portObj };
 		obj.tag = obj.type === "jsx" ? "foreignObject" : obj.type;
 		obj.tag = obj.type === "circleWithArrow" ? "circle" : obj.tag;
-		obj.width = obj.width || PORT_WIDTH_DEFAULT;
-		obj.width = obj.height || PORT_HEIGHT_DEFAULT;
 		return obj;
 	}
 
@@ -4093,15 +4090,14 @@ export default class SVGCanvasRenderer {
 	// Sets the port positions on nodes for use when displaying nodes and links
 	setPortPositionsAllNodes() {
 		this.activePipeline.nodes.forEach((node) => {
-			this.setPortPositionsForNode(node);
+			this.setPortPositionsAndSizesForNode(node);
 		});
 	}
 
-	setPortPositionsForNode(node) {
-		SvgCanvasPorts.setPortPositionsForNode(
+	setPortPositionsAndSizesForNode(node) {
+		SvgCanvasPorts.setPortPositionsAndSizesForNode(
 			node,
 			this.canvasLayout,
-			this.config,
 			this.zoomUtils.getZoomScale()
 		);
 	}

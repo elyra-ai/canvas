@@ -45,7 +45,7 @@ const objectModel = canvasController.getObjectModel();
 
 describe("ObjectModel API handle model OK", () => {
 
-	it("should oneTimeLayout a canvas horiziontally", () => {
+	it("should oneTimeLayout a canvas horizontally", () => {
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
@@ -82,7 +82,7 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
-	it("should move a node after oneTimeLayout horiziontally", () => {
+	it("should move a node after oneTimeLayout horizontally", () => {
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);

@@ -273,6 +273,11 @@ const horizontalDefaultLayout = {
 			{ type: "circle" }
 		],
 
+		// When set to true, only a single output port (the last one) will be
+		// displayed when a node has multiple output ports. This is useful for
+		// simplifying the visual appearance of nodes with many outputs.
+		singleOutputPortDisplay: false,
+
 		// Automatically increases the node size to accommodate its ports so both
 		// input and output ports can be shown within the dimensions of
 		// the node.
@@ -767,6 +772,11 @@ const verticalDefaultLayout = {
 			{ type: "circle" }
 		],
 
+		// When set to true, only a single output port (the last one) will be
+		// displayed when a node has multiple output ports. This is useful for
+		// simplifying the visual appearance of nodes with many outputs.
+		singleOutputPortDisplay: false,
+
 		// Automatically increases the node size to accommodate its ports so both
 		// input and output ports can be shown within the dimensions of
 		// the node.
@@ -1020,6 +1030,7 @@ export default class LayoutDimensions {
 		if (config) {
 			newLayout = this.overridePortPositions(newLayout, config); // Must do this before overrideNodeLayout
 			newLayout = this.overrideNodeResizable(newLayout, config);
+			newLayout = this.overrideSingleOutputPortDisplay(newLayout, config);
 			newLayout = this.overrideNodeLayout(newLayout, overlayLayout); // Must do this before overrideSnapToGrid
 			newLayout = this.addSupernodeFieldsToNodeLayout(newLayout); // Add supernode fields from canvasLayout to nodeLayout
 			newLayout = this.overrideCanvasLayout(newLayout, config, overlayLayout);
@@ -1042,6 +1053,11 @@ export default class LayoutDimensions {
 
 	static overrideNodeResizable(layout, config) {
 		layout.nodeLayout.nodeResizable = config.enableResizableNodes;
+		return layout;
+	}
+
+	static overrideSingleOutputPortDisplay(layout, config) {
+		layout.nodeLayout.singleOutputPortDisplay = config.enableSingleOutputPortDisplay;
 		return layout;
 	}
 
