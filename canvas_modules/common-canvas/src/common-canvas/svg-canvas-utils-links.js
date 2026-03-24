@@ -20,6 +20,7 @@
 import CanvasUtils from "./common-canvas-utils.js";
 import SvgCanvasPorts from "./svg-canvas-utils-ports.js";
 import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
+import SvgCanvasComments from "./svg-canvas-utils-comments.js";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_LEFT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT, LINK_TYPE_PARALLAX,
@@ -31,10 +32,9 @@ const CLOCKWISE = false;
 const ANTI_CLOCKWISE = true;
 
 export default class SvgCanvasLinks {
-	constructor(config, canvasLayout, commentUtils) {
+	constructor(config, canvasLayout) {
 		this.canvasLayout = canvasLayout;
 		this.config = config;
-		this.commentUtils = commentUtils;
 	}
 
 	// Returns an object containing the x and y coordinates of the start position
@@ -47,8 +47,8 @@ export default class SvgCanvasLinks {
 			srcComment.width,
 			srcComment.height,
 			this.canvasLayout.linkGap,
-			this.commentUtils.getCommentCenterPosX(srcComment),
-			this.commentUtils.getCommentCenterPosY(srcComment),
+			SvgCanvasComments.getCommentCenterPosX(srcComment),
+			SvgCanvasComments.getCommentCenterPosY(srcComment),
 			endPos.x,
 			endPos.y);
 	}
@@ -298,8 +298,8 @@ export default class SvgCanvasLinks {
 	}
 
 	getCommentLinkCoords(srcComment, trgNode) {
-		const srcCenterX = this.commentUtils.getCommentCenterPosX(srcComment);
-		const srcCenterY = this.commentUtils.getCommentCenterPosY(srcComment);
+		const srcCenterX = SvgCanvasComments.getCommentCenterPosX(srcComment);
+		const srcCenterY = SvgCanvasComments.getCommentCenterPosY(srcComment);
 		let trgCenterX;
 		let trgCenterY;
 
