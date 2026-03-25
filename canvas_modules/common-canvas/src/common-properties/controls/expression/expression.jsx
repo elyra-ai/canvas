@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,8 @@ import { formatMessage } from "./../../util/property-utils";
 import ExpressionBuilder from "./expression-builder/expression-builder";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE, STATES } from "./../../constants/constants";
 import { ControlType } from "./../../constants/form-constants";
-import { Calculator } from "@carbon/react/icons";
+// Carbon icons - direct imports for tree-shaking optimization
+import Calculator from "@carbon/icons-react/lib/Calculator";
 import * as ControlUtils from "./../../util/control-utils";
 import { get } from "lodash";
 import ExpressionToggle from "./expression-toggle/expression-toggle";
@@ -514,7 +515,7 @@ class ExpressionControl extends React.Component {
 							className={codemirrorClassName}
 							ref={this.editorRef}
 							style={{ height: this.state.expressionEditorHeight, minHeight: minLineHeight }}
-							aria-disabled={this.props.state === STATES.DISABLED || !this.props.readOnly}
+							aria-disabled={this.props.state === STATES.DISABLED || this.props.readOnly}
 						/>
 						<ValidationMessage state={this.props.state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 					</div>

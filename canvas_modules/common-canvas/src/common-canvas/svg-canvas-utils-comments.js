@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,19 @@
 
 export default class SvgCanvasUtilsComments {
 	// Returns the absolute x coordinate of the center of the comment
-	getCommentCenterPosX(com) {
+	static getCommentCenterPosX(com) {
 		return com.x_pos + (com.width / 2);
 	}
 
 	// Returns the absolute y coordinate of the center of the comment
-	getCommentCenterPosY(com) {
+	static getCommentCenterPosY(com) {
 		return com.y_pos + (com.height / 2);
 	}
 
 	// Converts the HTML string passed in to a new HTML string containing and
 	// necessary <mark> tags for the text to be highlighted specified by the
 	// search string passed in.
-	insertCommentHighlight(htmlString, searchStr) {
+	static insertCommentHighlight(htmlString, searchStr) {
 		// Parse the HTML string.
 		const parser = new DOMParser();
 		const doc = parser.parseFromString(htmlString, "text/html");
@@ -64,7 +64,7 @@ export default class SvgCanvasUtilsComments {
 	// { splitStart, splitEnd, node }
 	// where splitStart and splitEnd are the beginning and ending position of the
 	// highlighted text and node is a text node in the DOM.
-	searchForElementInfos(element, searchStart, searchEnd, runStart, elementInfos) {
+	static searchForElementInfos(element, searchStart, searchEnd, runStart, elementInfos) {
 		let textStart = runStart;
 		let textEnd = runStart;
 
@@ -91,7 +91,7 @@ export default class SvgCanvasUtilsComments {
 
 	// Modifies each text node in the element infos array by adding <mark> and </mark>
 	// around the text to be highlighted and modifies the DOM objects appropriately.
-	insertMarkElements(elementInfos) {
+	static insertMarkElements(elementInfos) {
 		for (let i = 0; i < elementInfos.length; i++) {
 			const elementInfo = elementInfos[i];
 			const node = elementInfo.node;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -207,21 +207,6 @@ export const PORT_HEIGHT_DEFAULT = 12;
 
 // Context Menu button value
 export const CONTEXT_MENU_BUTTON = 2;
-
-export const CANVAS_CARBON_ICONS = {
-	CHEVRONARROWS: {
-		UP: "chevron-up",
-		DOWN: "chevron-down"
-	},
-	SEARCH: "search",
-	WARNING_UNFILLED: "warning16"
-};
-
-export const CONTEXT_MENU_CARBON_ICONS = {
-	CHEVRONARROWS: {
-		RIGHT: "chevron-right"
-	}
-};
 
 export const TOOLBAR_STOP = "stop";
 export const TOOLBAR_RUN = "run";

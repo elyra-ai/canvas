@@ -1187,6 +1187,10 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "SET_COMMENT_HIGHLIGHT_TEXT", data: { commentIds, highlightText }, pipelineId: this.pipelineId });
 	}
 
+	 replaceComments(replacementComments) {
+		this.store.dispatch({ type: "REPLACE_COMMENTS", data: replacementComments, pipelineId: this.pipelineId });
+	}
+
 	// ---------------------------------------------------------------------------
 	// Link methods
 	// ---------------------------------------------------------------------------

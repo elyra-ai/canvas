@@ -18,6 +18,48 @@
 @forward "./expression-builder/expression-builder";
 @forward "./expression-toggle/expression-toggle";
 
+// Define code mirror colors that pass WCAG AA color contrast standard
+// using: https://webaim.org/resources/contrastchecker/
+// when compared to the different background colors used in the UI
+// There are four different possible backgrounds:
+// * expression in narrow flyout,                    Light theme: #F4F4F4, Dark theme: #525252
+// * expression in narrow flyout - highlighted line, Light theme: #DFDFDF, Dark theme: #606060
+// * modal expression builder,                       Light theme: #FFFFFF, Dark theme: #393939
+// * modal expression builder - highlighted line,    Light theme: #E8E8E8, Dark theme: #4D4D4D
+// Colors specified are derived from those in the Carbon 'syntax'
+// group of colors: https://carbondesignsystem.com/elements/color/tokens/#syntax
+// but with their brightness adjusted to pass the standard for
+// 'normal text'.
+
+// If no carbon theme is set or the light theme is set.
+:root,
+[data-carbon-theme=g10] {
+	--cm-keyword-color: #7922FC; // From $syntax-control-keyword
+	--cm-number-color: #177233; // From $syntax-number
+	--cm-def-color: #755D06; // From $syntax-definition
+	--cm-comment-color: #187233; // From $syntax-comment
+	--cm-variable-color: #0152E9; // From $syntax-variable
+	--cm-punctuation-color: #636363; // From $syntax-punctuation
+	--cm-property-color: #006C7A; // From $syntax-property-name
+	--cm-operator-color: #636363; // From $syntax-operator
+	--cm-string-color: #{carbon.$syntax-string};  // This work as-is
+	--cm-meta--color: #197132; // From $syntax-meta
+}
+
+// For dark theme
+[data-carbon-theme=g90] {
+	--cm-keyword-color: #E6D6FF; // From $syntax-control-keyword
+	--cm-number-color: #A9EAB9; // From $syntax-number
+	--cm-def-color: #F8D968; // From $syntax-definition
+	--cm-comment-color: #B1E7BE; // From $syntax-comment
+	--cm-variable-color: #CCDEFF; // From $syntax-variable
+	--cm-punctuation-color: #{carbon.$syntax-punctuation}; // From $syntax-punctuation
+	--cm-property-color: #9EE6F0; // From $syntax-property-name
+	--cm-operator-color: #{carbon.$syntax-operator}; // This work as-is
+	--cm-string-color: #{carbon.$syntax-string}; // This work as-is
+	--cm-meta--color: #B6E7C3; // From $syntax-meta
+}
+
 .elyra-CodeMirror {
 	.cm-editor {
 		height: inherit;
@@ -71,26 +113,16 @@
 		}
 	}
 
-	.cm-line .cm-keyword { color: carbon.$link-secondary; }
-
-	.cm-line .cm-number { color: carbon.$text-secondary; }
-
-	.cm-line .cm-def { color: carbon.$support-error; }
-
-	.cm-line .cm-comment {
-		color: carbon.$syntax-unit;
-	}
-
-	.cm-line .cm-variable,
-	.cm-line .cm-punctuation,
-	.cm-line .cm-property,
-	.cm-line .cm-operator {
-		color: carbon.$text-primary;
-	}
-
-	.cm-line .cm-string { color: carbon.$button-danger-secondary; }
-
-	.cm-line .cm-meta { color: carbon.$layer-01; }
+	.cm-line .cm-keyword { color: var(--cm-keyword-color); }
+	.cm-line .cm-number { color: var(--cm-number-color); }
+	.cm-line .cm-def { color: var(--cm-def-color) }
+	.cm-line .cm-comment { color: var(--cm-comment-color) }
+	.cm-line .cm-variable  { color: var(--cm-variable-color) }
+	.cm-line .cm-punctuation   { color: var(--cm-punctuation-color) }
+	.cm-line .cm-property   { color: var(--cm-property-color) }
+	.cm-line .cm-operator { color: var(--cm-operator-color) }
+	.cm-line .cm-string { color: var(--cm-string-color) }
+	.cm-line .cm-meta { color: var(--cm-meta--color) }
 }
 
 .elyra-CodeMirror.disabled {
