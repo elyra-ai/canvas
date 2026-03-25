@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2024 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import KeyboardUtils from "./keyboard-utils.js";
 import SvgCanvasMarkdown from "./svg-canvas-utils-markdown.js";
+import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import {
 	MARKDOWN, WYSIWYG
 } from "./constants/canvas-constants.js";
@@ -45,14 +46,13 @@ const BLACK = "#000000";
 
 export default class SvgCanvasTextArea {
 
-	constructor(config, dispUtils, nodeUtils, decUtils, canvasController,
+	constructor(config, dispUtils, decUtils, canvasController,
 		canvasDiv, activePipeline, removeTempCursorOverlay,
 		displayCommentsCallback, displayLinksCallback, getCommentToolbarPosCallback,
 		addCanvasZoomBehavior, removeCanvasZoomBehavior) {
 
 		this.config = config;
 		this.dispUtils = dispUtils;
-		this.nodeUtils = nodeUtils;
 		this.decUtils = decUtils;
 		this.canvasController = canvasController;
 		this.canvasDiv = canvasDiv;
@@ -469,12 +469,12 @@ export default class SvgCanvasTextArea {
 			maxCharacters: node.layout.labelMaxCharacters,
 			allowReturnKey: node.layout.labelAllowReturnKey,
 			textCanBeEmpty: false,
-			xPos: this.nodeUtils.getNodeLabelTextAreaPosX(node),
-			yPos: this.nodeUtils.getNodeLabelTextAreaPosY(node),
-			width: this.nodeUtils.getNodeLabelTextAreaWidth(node),
-			height: this.nodeUtils.getNodeLabelTextAreaHeight(node),
+			xPos: SvgCanvasNodes.getNodeLabelTextAreaPosX(node),
+			yPos: SvgCanvasNodes.getNodeLabelTextAreaPosY(node),
+			width: SvgCanvasNodes.getNodeLabelTextAreaWidth(node),
+			height: SvgCanvasNodes.getNodeLabelTextAreaHeight(node),
 			autoSize: true,
-			className: this.nodeUtils.getNodeLabelTextAreaClass(node),
+			className: SvgCanvasNodes.getNodeLabelTextAreaClass(node),
 			parentDomObj: parentDomObj,
 			autoSizeCallback: this.autoSizeMultiLineLabel.bind(this),
 			saveTextChangesCallback: this.saveNodeLabelChanges.bind(this),

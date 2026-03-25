@@ -16,7 +16,9 @@
 
 import CanvasUtils from "./common-canvas-utils.js";
 import { ERROR, WARNING, NODE_ERROR_ICON, NODE_WARNING_ICON,
-	TEXT_AREA_BORDER_ADJUSTMENT } from "./constants/canvas-constants";
+	TEXT_AREA_BORDER_ADJUSTMENT, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON } from "./constants/canvas-constants";
+import SUPERNODE_ICON from "../../assets/images/supernode.svg";
+import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
 
 // Map defining the display order of node child elements
 // Lower numbers are rendered first (appear behind higher numbers)
@@ -39,17 +41,13 @@ const NODE_ELEMENT_ORDER = new Map([
 
 const DEFAULT_ELEMENT_INDEX = 999;
 export default class SvgCanvasNodes {
-	constructor(canvasLayout) {
-		this.canvasLayout = canvasLayout;
-	}
-
 	// Returns the element before which a new node element should be inserted to
 	// maintain the correct display order. The order is:
 	// 1. focus outline, 2. sizing area, 3. selection highlighting, 4. node body,
 	// 5. foreign object for React object, 6. node image, 7. node label,
 	// 8. ellipsis icon, 9. supernode expansion icon, 10. ports, 11. supernode contents,
 	// 12. error marker, 13. decorations
-	getBeforeElement(nodeGrp, newElementClass) {
+	static getBeforeElement(nodeGrp, newElementClass) {
 		if (!nodeGrp?.children) {
 			return null;
 		}
@@ -62,7 +60,7 @@ export default class SvgCanvasNodes {
 
 	// Get the next child, if one exists, in the nodeGrp's children after
 	// the one at newElementIndex
-	getNextChildElement(nodeGrp, newElementIndex) {
+	static getNextChildElement(nodeGrp, newElementIndex) {
 		const childrenArray = Array.from(nodeGrp.children);
 		const found = childrenArray.find((child) =>
 			this.shouldChildComeAfter(child, newElementIndex));
@@ -71,7 +69,7 @@ export default class SvgCanvasNodes {
 	}
 
 	// Returns true if the child element should come after an element with the given order
-	shouldChildComeAfter(child, targetOrder) {
+	static shouldChildComeAfter(child, targetOrder) {
 		const classList = child.classList;
 		for (const className of classList) {
 			const order = NODE_ELEMENT_ORDER.get(className);
@@ -82,14 +80,14 @@ export default class SvgCanvasNodes {
 		return false;
 	}
 
-	isPointInNodeBoundary(pos, node) {
+	static isPointInNodeBoundary(pos, node) {
 		return pos.x >= node.x_pos &&
 			pos.x <= node.x_pos + node.width &&
 			pos.y >= node.y_pos &&
 			pos.y <= node.y_pos + node.height;
 	}
 
-	getNodeLabelClass(node) {
+	static getNodeLabelClass(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
 			return "d3-node-label d3-label-single-line " + this.getMessageLabelClass(node.messages);
 		}
@@ -98,7 +96,7 @@ export default class SvgCanvasNodes {
 		return "d3-node-label " + this.getMessageLabelClass(node.messages) + lineTypeClass + justificationClass;
 	}
 
-	getNodeLabelTextAreaClass(node) {
+	static getNodeLabelTextAreaClass(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
 			return "d3-node-label-entry d3-label-single-line";
 		}
@@ -107,7 +105,7 @@ export default class SvgCanvasNodes {
 		return "d3-node-label-entry" + lineTypeClass + justificationClass;
 	}
 
-	getErrorMarkerIcon(data) {
+	static getErrorMarkerIcon(data) {
 		const messageLevel = this.getMessageLevel(data.messages);
 		let iconPath = "";
 		switch (messageLevel) {
@@ -123,7 +121,7 @@ export default class SvgCanvasNodes {
 		return iconPath;
 	}
 
-	getMessageLevel(messages) {
+	static getMessageLevel(messages) {
 		let messageLevel = "";
 		if (messages && messages.length > 0) {
 			for (const message of messages) {
@@ -137,7 +135,7 @@ export default class SvgCanvasNodes {
 		return messageLevel;
 	}
 
-	getMessageLabelClass(messages) {
+	static getMessageLabelClass(messages) {
 		const messageLevel = this.getMessageLevel(messages);
 		let labelClass = "";
 		switch (messageLevel) {
@@ -153,7 +151,7 @@ export default class SvgCanvasNodes {
 		return labelClass;
 	}
 
-	getErrorMarkerClass(messages) {
+	static getErrorMarkerClass(messages) {
 		const messageLevel = this.getMessageLevel(messages);
 		let labelClass = "d3-error-circle-off";
 		switch (messageLevel) {
@@ -171,20 +169,20 @@ export default class SvgCanvasNodes {
 
 	// Returns the absolute x coordinate of the center of the node. If node is
 	// an expanded supernode, its expanded width is in the 'width' field.
-	getNodeCenterPosX(node) {
+	static getNodeCenterPosX(node) {
 		return node.x_pos + (node.width / 2);
 	}
 
 	// Returns the absolute y coordinate of the center of the node.  If node is
 	// an expanded supernode, its expanded height is in the 'height' field.
-	getNodeCenterPosY(node) {
+	static getNodeCenterPosY(node) {
 		return node.y_pos + (node.height / 2);
 	}
 
 	// Returns the absolute x coordinate of the center of the node image
-	getNodeImageCenterPosX(node) {
+	static getNodeImageCenterPosX(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return node.x_pos + this.canvasLayout.supernodeImagePosX + (this.canvasLayout.supernodeImageWidth / 2);
+			return node.x_pos + node.layout.supernodeImagePosX + (node.layout.supernodeImageWidth / 2);
 		}
 		return node.x_pos +
 			CanvasUtils.getElementPosX(node.width, node.layout.imagePosX, node.layout.imagePosition) +
@@ -192,77 +190,77 @@ export default class SvgCanvasNodes {
 	}
 
 	// Returns the absolute y coordinate of the center of the node image
-	getNodeImageCenterPosY(node) {
+	static getNodeImageCenterPosY(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return node.y_pos + this.canvasLayout.supernodeImagePosY + (this.canvasLayout.supernodeImageHeight / 2);
+			return node.y_pos + node.layout.supernodeImagePosY + (node.layout.supernodeImageHeight / 2);
 		}
 		return node.y_pos +
 			CanvasUtils.getElementPosY(node.height, node.layout.imagePosY, node.layout.imagePosition) +
 			(node.layout.imageHeight / 2);
 	}
 
-	getNodeImagePosX(node) {
+	static getNodeImagePosX(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return this.canvasLayout.supernodeImagePosX;
+			return node.layout.supernodeImagePosX;
 		}
 		return CanvasUtils.getElementPosX(node.width, node.layout.imagePosX, node.layout.imagePosition);
 	}
 
-	getNodeImagePosY(node) {
+	static getNodeImagePosY(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return this.canvasLayout.supernodeImagePosY;
+			return node.layout.supernodeImagePosY;
 		}
 		return CanvasUtils.getElementPosY(node.height, node.layout.imagePosY, node.layout.imagePosition);
 	}
 
-	getNodeImageWidth(node) {
+	static getNodeImageWidth(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return this.canvasLayout.supernodeImageWidth;
+			return node.layout.supernodeImageWidth;
 		}
 		return node.layout.imageWidth;
 	}
 
-	getNodeImageHeight(node) {
+	static getNodeImageHeight(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return this.canvasLayout.supernodeImageHeight;
+			return node.layout.supernodeImageHeight;
 		}
 		return node.layout.imageHeight;
 	}
 
-	getNodeLabelPosX(node) {
+	static getNodeLabelPosX(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return this.canvasLayout.supernodeLabelPosX;
+			return node.layout.supernodeLabelPosX;
 		}
 		const x = CanvasUtils.getElementPosX(node.width, node.layout.labelPosX, node.layout.labelPosition);
 		return node.layout.labelAlign === "center" ? x - (node.layout.labelWidth / 2) : x;
 	}
 
-	getNodeLabelPosY(node) {
+	static getNodeLabelPosY(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return this.canvasLayout.supernodeLabelPosY;
+			return node.layout.supernodeLabelPosY;
 		}
 		return CanvasUtils.getElementPosY(node.height, node.layout.labelPosY, node.layout.labelPosition);
 	}
 
-	getNodeLabelWidth(node) {
+	static getNodeLabelWidth(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return node.width - this.canvasLayout.supernodeLabelPosX + this.canvasLayout.supernodeErrorPosX;
+			return node.width - node.layout.supernodeLabelPosX + node.layout.supernodeErrorPosX;
 		}
 		return node.layout.labelWidth;
 	}
 
-	getNodeLabelHeight(node) {
+	static getNodeLabelHeight(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return this.canvasLayout.supernodeLabelHeight;
+			return node.layout.supernodeLabelHeight;
 		}
 		return node.layout.labelHeight;
 	}
 
-	getNodeLabelEditIconTranslate(node, spanObj, zoomScale, fullLabelOnHover) {
+	static getNodeLabelEditIconTranslate(node, spanObj, zoomScale, fullLabelOnHover) {
 		return `translate(${this.getNodeLabelEditIconPosX(node, spanObj, zoomScale, fullLabelOnHover)}, ${this.getNodeLabelEditIconPosY(node)})`;
 	}
 
-	getNodeLabelEditIconPosX(node, spanObj, zoomScale, fullLabelOnHover) {
+	static getNodeLabelEditIconPosX(node, spanObj, zoomScale, fullLabelOnHover) {
 		const labelWidth = fullLabelOnHover ? this.getNodeLabelHoverWidth(node) : this.getNodeLabelWidth(node);
 		const posX = fullLabelOnHover ? this.getNodeLabelHoverPosX(node) : this.getNodeLabelPosX(node);
 		const spanWidth = spanObj.getBoundingClientRect().width;
@@ -277,11 +275,11 @@ export default class SvgCanvasNodes {
 		return this.getNodeLabelPosX(node) + xOffsetFromStart;
 	}
 
-	getNodeLabelEditIconPosY(node) {
+	static getNodeLabelEditIconPosY(node) {
 		return this.getNodeLabelPosY(node);
 	}
 
-	getNodeLabelHoverPosX(node) {
+	static getNodeLabelHoverPosX(node) {
 		if (node.layout.labelSingleLine &&
 				node.layout.labelAlign === "center") {
 			return this.getNodeLabelPosX(node) - 250;
@@ -289,7 +287,7 @@ export default class SvgCanvasNodes {
 		return this.getNodeLabelPosX(node);
 	}
 
-	getNodeLabelHoverWidth(node) {
+	static getNodeLabelHoverWidth(node) {
 		if (node.layout.labelSingleLine) {
 			if (node.layout.labelAlign === "center") {
 				return node.layout.labelWidth + 500;
@@ -299,7 +297,7 @@ export default class SvgCanvasNodes {
 		return node.layout.labelWidth;
 	}
 
-	getNodeLabelHoverHeight(node, spanObj, zoomScale) {
+	static getNodeLabelHoverHeight(node, spanObj, zoomScale) {
 		if (node.layout.labelSingleLine) {
 			return node.layout.labelHeight;
 		}
@@ -307,114 +305,172 @@ export default class SvgCanvasNodes {
 		return Math.max(calcHeight, node.layout.labelHeight);
 	}
 
-	getNodeLabelTextAreaWidth(node) {
+	static getNodeLabelTextAreaWidth(node) {
 		return this.getNodeLabelWidth(node) + (2 * TEXT_AREA_BORDER_ADJUSTMENT);
 	}
 
-	getNodeLabelTextAreaHeight(node) {
+	static getNodeLabelTextAreaHeight(node) {
 		return this.getNodeLabelHeight(node) + (2 * TEXT_AREA_BORDER_ADJUSTMENT);
 	}
 
-	getNodeLabelTextAreaPosX(node) {
+	static getNodeLabelTextAreaPosX(node) {
 		return this.getNodeLabelPosX(node) - TEXT_AREA_BORDER_ADJUSTMENT;
 	}
 
-	getNodeLabelTextAreaPosY(node) {
+	static getNodeLabelTextAreaPosY(node) {
 		return this.getNodeLabelPosY(node) - TEXT_AREA_BORDER_ADJUSTMENT;
 	}
 
-	getNodeEllipsisTranslate(node) {
+	static getNodeEllipsisTranslate(node) {
 		return `translate(${this.getNodeEllipsisPosX(node)}, ${this.getNodeEllipsisPosY(node)})`;
 	}
 
-	getNodeEllipsisWidth(node) {
+	static getNodeEllipsisWidth(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return this.canvasLayout.supernodeEllipsisWidth;
+			return node.layout.supernodeEllipsisWidth;
 		}
 		return node.layout.ellipsisWidth;
 	}
 
-	getNodeEllipsisHeight(node) {
+	static getNodeEllipsisHeight(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return this.canvasLayout.supernodeEllipsisHeight;
+			return node.layout.supernodeEllipsisHeight;
 		}
 		return node.layout.ellipsisHeight;
 	}
 
-	getNodeEllipsisIconWidth(node) {
+	static getNodeEllipsisIconWidth(node) {
 		return this.getNodeEllipsisWidth(node) - (2 * node.layout.ellipsisHoverAreaPadding);
 	}
 
-	getNodeEllipsisIconHeight(node) {
+	static getNodeEllipsisIconHeight(node) {
 		return this.getNodeEllipsisHeight(node) - (2 * node.layout.ellipsisHoverAreaPadding);
 	}
 
-	getNodeEllipsisPosX(node) {
+	static getNodeEllipsisPosX(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return node.width + this.canvasLayout.supernodeEllipsisPosX;
+			return node.width + node.layout.supernodeEllipsisPosX;
 		}
 
 		return CanvasUtils.getElementPosX(node.width, node.layout.ellipsisPosX, node.layout.ellipsisPosition);
 	}
 
-	getNodeEllipsisPosY(node) {
+	static getNodeEllipsisPosY(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return this.canvasLayout.supernodeEllipsisPosY;
+			return node.layout.supernodeEllipsisPosY;
 		}
 
 		return CanvasUtils.getElementPosY(node.height, node.layout.ellipsisPosY, node.layout.ellipsisPosition);
 	}
 
-	getNodeExpansionIconTranslate(node) {
-		const posX = node.width + this.canvasLayout.supernodeExpansionIconPosX;
-		return `translate(${posX}, ${this.canvasLayout.supernodeExpansionIconPosY})`;
+	static getNodeExpansionIconTranslate(node) {
+		const posX = node.width + node.layout.supernodeExpansionIconPosX;
+		return `translate(${posX}, ${node.layout.supernodeExpansionIconPosY})`;
 	}
 
-	getNodeErrorPosX(node) {
+	static getNodeErrorPosX(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return node.width + this.canvasLayout.supernodeErrorPosX;
+			return node.width + node.layout.supernodeErrorPosX;
 		}
 		return CanvasUtils.getElementPosX(node.width, node.layout.errorXPos, node.layout.errorPosition);
 	}
 
-	getNodeErrorPosY(node) {
+	static getNodeErrorPosY(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return this.canvasLayout.supernodeErrorPosY;
+			return node.layout.supernodeErrorPosY;
 		}
 		return CanvasUtils.getElementPosY(node.height, node.layout.errorYPos, node.layout.errorPosition);
 	}
 
-	getNodeErrorWidth(node) {
+	static getNodeErrorWidth(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return this.canvasLayout.supernodeErrorWidth;
+			return node.layout.supernodeErrorWidth;
 		}
 		return node.layout.errorWidth;
 	}
 
-	getNodeErrorHeight(node) {
+	static getNodeErrorHeight(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
-			return this.canvasLayout.supernodeErrorHeight;
+			return node.layout.supernodeErrorHeight;
 		}
 		return node.layout.errorHeight;
 	}
 
 	// Returns the X offset for the port which references the nodeId passed in
 	// based on the precalculated X coordinate of the port.
-	getSupernodePortXOffset(nodeId, ports) {
+	static getSupernodePortXOffset(nodeId, ports, node) {
 		if (ports) {
 			const supernodePort = ports.find((port) => port.subflow_node_ref === nodeId);
-			return supernodePort.cx - this.canvasLayout.supernodeSVGAreaPadding;
+			return supernodePort.cx - node.layout.supernodeSVGAreaPadding;
 		}
 		return 0;
 	}
 
 	// Returns the Y offset for the port which references the nodeId passed in
 	// based on the pre-calculated Y coordinate of the port.
-	getSupernodePortYOffset(nodeId, ports) {
+	static getSupernodePortYOffset(nodeId, ports) {
 		if (ports) {
 			const supernodePort = ports.find((port) => port.subflow_node_ref === nodeId);
 			return supernodePort.cy;
 		}
 		return 0;
+	}
+
+	// Returns the appropriate image from the object (either node or decoration)
+	// passed in.
+	static getNodeImage(d) {
+		if (!d.image) {
+			return null;
+		} else if (d.image === USE_DEFAULT_ICON) {
+			if (CanvasUtils.isSupernode(d)) {
+				return SUPERNODE_ICON;
+			}
+		} else if (d.image === USE_DEFAULT_EXT_ICON) {
+			if (CanvasUtils.isSupernode(d)) {
+				return SUPERNODE_EXT_ICON;
+			}
+		}
+		return d.image;
+	}
+
+	// Returns the type of image passed in, either "svg" or "image" or
+	// "jsx" or null (if no image was provided).
+	// This will be used to append an svg or image element to the DOM.
+	// Parameters:
+	//   nodeImage - the image to check
+	//   externalUtils - utility object with isValidJsxElement method
+	//   config - configuration object with enableImageDisplay setting
+	static getImageType(nodeImage, externalUtils, config) {
+		if (nodeImage) {
+			if (typeof nodeImage === "object") {
+				if (externalUtils && externalUtils.isValidJsxElement(nodeImage)) {
+					return "jsx";
+				}
+			} else if (typeof nodeImage === "string") {
+				return	nodeImage.endsWith(".svg") && config?.enableImageDisplay !== "SVGAsImage" ? "svg" : "image";
+			}
+		}
+		return null;
+	}
+
+	// Returns the node that is near the position passed in. If nodeProximity
+	// is provided it will be used as additional space beyond the node boundary
+	// to decide if the node is under the position.
+	// Parameters:
+	//   pos - object with x and y coordinates
+	//   nodeProximity - additional space beyond node boundary (default 0)
+	//   nodes - array of nodes to check
+	static getNodeNearPos(pos, nodeProximity, nodes) {
+		let node = null;
+		const prox = nodeProximity || 0;
+		nodes.forEach((d) => {
+			if (pos.x >= d.x_pos - prox &&
+					pos.x <= d.x_pos + d.width + prox &&
+					pos.y >= d.y_pos - prox &&
+					pos.y <= d.y_pos + d.height + prox) {
+				node = d;
+			}
+		});
+		return node;
 	}
 }
