@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
+import dagre from "dagre/dist/dagre.min.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
-import { NODE_LINK, ASSOCIATION_LINK, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL } from "../common-canvas/constants/canvas-constants.js";
+import {
+	NODE_LINK, ASSOCIATION_LINK, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL
+} from "../common-canvas/constants/canvas-constants.js";
 
 export default class LayoutDagre {
 
-	// Performs Dagre auto-layout asynchronously using dagre library
-	static async performLayout(canvasInfoPipeline, canvasLayout, canvasConfig, layoutDirection) {
-		// Dynamically import dagre only when needed (code splitting)
-		const { default: dagre } = await import("dagre/dist/dagre.min.js");
+	// Performs Dagre auto-layout synchronously using dagre library
+	// Static import required for backward compatibility - ensures synchronous execution
+	static performLayout(canvasInfoPipeline, canvasLayout, canvasConfig, layoutDirection) {
 
 		// Default to Dagre layout
 		const direction = layoutDirection === VERTICAL ? DAGRE_VERTICAL : DAGRE_HORIZONTAL;

@@ -862,19 +862,29 @@ export default class APIPipeline {
 
 	// Performs auto-layout using the configured layout library (ELK or Dagre).
 	// The library selection is determined by canvasConfig.enableLayoutLibrary.
-	async autoLayout(layoutDirection) {
+	// Dagre is sync for backward compatibility, ELK is async.
+	autoLayout(layoutDirection) {
 		const canvasInfoPipeline = this.getPipeline();
 		const canvasLayout = this.objectModel.getCanvasLayout();
 		const canvasConfig = this.objectModel.getCanvasConfig();
 
-		const { movedNodesInfo, movedLinksInfo } = await Layout.performLayout(
+		const result = Layout.performLayout(
 			canvasInfoPipeline,
 			canvasLayout,
 			canvasConfig,
 			layoutDirection
 		);
 
-		this.sizeAndPositionObjects(movedNodesInfo, movedLinksInfo);
+		// Handle both sync (Dagre) and async (ELK) results
+		if (result && typeof result.then === "function") {
+			// Async (ELK) - return promise for callers who want to await
+			return result.then((layoutResult) => {
+				this.sizeAndPositionObjects(layoutResult.movedNodesInfo, layoutResult.movedLinksInfo);
+			});
+		}
+		// Sync (Dagre) - for backward compatibility
+		this.sizeAndPositionObjects(result.movedNodesInfo, result.movedLinksInfo);
+		return null;
 	}
 
 	// Return the dimensions of the bounding rectangle for the listOfNodes.

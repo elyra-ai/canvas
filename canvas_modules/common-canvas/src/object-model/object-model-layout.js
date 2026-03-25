@@ -22,13 +22,14 @@ export default class Layout {
 
 	/**
 	 * Performs auto-layout using the specified library (ELK or Dagre)
+	 * Dagre is sync (static import), ELK is async (dynamic import for code splitting)
 	 * @param {Object} canvasInfoPipeline - The pipeline containing nodes and links
 	 * @param {Object} canvasLayout - Canvas layout configuration
 	 * @param {Object} canvasConfig - Canvas configuration
 	 * @param {string} layoutDirection - Layout direction (VERTICAL or HORIZONTAL)
-	 * @returns {Promise<Object>} Object containing movedNodesInfo and movedLinksInfo
+	 * @returns {Promise<Object>|Object} Promise for ELK, Object for Dagre
 	 */
-	static async performLayout(canvasInfoPipeline, canvasLayout, canvasConfig, layoutDirection) {
+	static performLayout(canvasInfoPipeline, canvasLayout, canvasConfig, layoutDirection) {
 		const layoutLibrary = canvasConfig.enableLayoutLibrary;
 
 		if (layoutLibrary === LAYOUT_LIBRARY_ELK) {
