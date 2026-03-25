@@ -61,7 +61,9 @@ import {
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
-	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
+	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE,
+	ELK_STRATEGY_INTERACTIVE,
+	ELK_STRATEGY_SIMPLE
 } from "../../../constants/harness-constants.js";
 
 import {
@@ -678,6 +680,26 @@ export default class SidePanelForms extends React.Component {
 						<RadioButton
 							value={LAYOUT_LIBRARY_ELK}
 							labelText={LAYOUT_LIBRARY_ELK}
+						/>
+					</RadioButtonGroup>
+				</FormGroup>
+				<FormGroup
+					legendText="ELK node placement"
+				>
+					<RadioButtonGroup
+						className="harness-sidepanel-radio-group"
+						name="elkLayeredStrategy" // Set name to corresponding field name in App.js
+						onChange={this.setStateValue}
+						defaultSelected={this.props.getStateValue("elkLayeredStrategy")}
+						orientation="vertical"
+					>
+						<RadioButton
+							value={ELK_STRATEGY_INTERACTIVE}
+							labelText={ELK_STRATEGY_INTERACTIVE}
+						/>
+						<RadioButton
+							value={ELK_STRATEGY_SIMPLE}
+							labelText={ELK_STRATEGY_SIMPLE}
 						/>
 					</RadioButtonGroup>
 				</FormGroup>

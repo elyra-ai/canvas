@@ -24,45 +24,38 @@ export default class LayoutELK {
 
 	// Gets or creates the ELK instance (singleton pattern)
 	static async getElkInstance() {
-		if (!LayoutELK.elkInstance) {
+		if (!this.elkInstance) {
 			// Dynamically import ELK only when needed (code splitting)
 			const { default: ELK } = await import("elkjs/lib/elk.bundled.js");
-			LayoutELK.elkInstance = new ELK();
+			this.elkInstance = new ELK();
 		}
-		return LayoutELK.elkInstance;
-	}
-
-	// Helper method to get node layout options based on link method
-	// Returns "FREE" for Freeform links, "FIXED_POS" for port-based links
-	static getNodeLayoutOptions(canvasConfig) {
-		const portConstraints = canvasConfig?.enableLinkMethod === LINK_METHOD_FREEFORM ? "FREE" : "FIXED_POS";
-		return { "elk.portConstraints": portConstraints };
+		return this.elkInstance;
 	}
 
 	// Performs ELK auto-layout asynchronously using elkjs library
 	static async performLayout(canvasInfoPipeline, canvasLayout, canvasConfig, layoutDirection) {
-		const elk = await LayoutELK.getElkInstance();
+		const elk = await this.getElkInstance();
 
 		// Set port positions and sizes for all nodes before creating ELK nodes
 		canvasInfoPipeline.nodes.forEach((node) => {
 			SvgCanvasPorts.setPortPositionsAndSizesForNode(node, canvasLayout);
 		});
 
-		// Get layout options based on link method configuration
-		const nodeLayoutOptions = LayoutELK.getNodeLayoutOptions(canvasConfig);
+		// Get layout options based on link method configuration and custom options
+		const nodeLayoutOptions = this.getNodeLayoutOptions(canvasConfig, canvasLayout);
 
 		// Build children array from canvasInfoPipeline nodes
 		const children = canvasInfoPipeline.nodes.map((node) =>
-			LayoutELK.createElkNode(node, nodeLayoutOptions)
+			this.createElkNode(node, nodeLayoutOptions)
 		);
 
 		// Add comments from canvasInfoPipeline as ELK comment boxes
-		const commentNodes = LayoutELK.createElkComments(canvasInfoPipeline.comments);
+		const commentNodes = this.createElkComments(canvasInfoPipeline.comments);
 		children.push(...commentNodes);
 
 		// Build edges array from canvasInfoPipeline links (both node links and comment links)
 		// Also collect dummy nodes for detached link endpoints
-		const { edges, dummyNodes } = LayoutELK.createElkEdgesWithDummyNodes(canvasInfoPipeline.links, canvasConfig, nodeLayoutOptions);
+		const { edges, dummyNodes } = this.createElkEdgesWithDummyNodes(canvasInfoPipeline.links, canvasConfig, nodeLayoutOptions);
 
 		// Add dummy nodes to children array so ELK will layout detached link endpoints
 		children.push(...dummyNodes);
@@ -74,40 +67,70 @@ export default class LayoutELK {
 		// Determine ELK direction based on layoutDirection parameter
 		const elkDirection = layoutDirection === VERTICAL ? "DOWN" : "RIGHT";
 
+		// Default layout options for ELK
+		const defaultLayoutOptions = {
+			"elk.algorithm": "layered",
+			"elk.direction": elkDirection,
+			"elk.layered.nodePlacement.strategy": "INTERACTIVE",
+			"elk.padding": `[top=${marginY},left=${marginX},bottom=${marginY},right=${marginX}]`,
+			"elk.layered.spacing.nodeNodeBetweenLayers": 80, // Gap between layers within a group
+			"elk.spacing.nodeNode": 80, // Minimum gap between
+			"elk.spacing.componentComponent": 100, // Space between groups of nodes
+			"elk.spacing.commentComment": 200, // Space between comments connected to the same node
+			"elk.spacing.commentNode": 50 // Space between a node and its comments
+		};
+
+		// Overlay custom ELK layout options from canvasLayout if provided
+		const customLayoutOptions = canvasLayout.elkLayout?.root || {};
+		const layoutOptions = { ...defaultLayoutOptions, ...customLayoutOptions };
+
 		// Graph data for ELK layout
 		const graph = {
 			id: "root",
-			layoutOptions: {
-				"elk.algorithm": "layered",
-				"elk.direction": elkDirection,
-				"elk.layered.nodePlacement.strategy": "INTERACTIVE",
-				"elk.padding": `[top=${marginY},left=${marginX},bottom=${marginY},right=${marginX}]`,
-				"elk.layered.spacing.nodeNodeBetweenLayers": 80, // Gap between layers within a group
-				"elk.spacing.nodeNode": 80, // Minimum gap between
-				"elk.spacing.componentComponent": 100, // Space between groups of nodes
-				"elk.spacing.commentComment": 200, // Space between comments connected to the same node
-				"elk.spacing.commentNode": 50 // Space between a node and its comments
-			},
+			layoutOptions,
 			children: children,
 			edges: edges
 		};
 
 		// Uncomment for debug
-		console.log("ELK Input Graph:", JSON.stringify(graph, null, 2));
+		// console.log("ELK Input Graph:", JSON.stringify(graph, null, 2));
 
 		return elk.layout(graph)
-			.then((layoutResult) => LayoutELK.processLayoutResult(layoutResult, canvasInfoPipeline))
+			.then((layoutResult) => this.processLayoutResult(layoutResult, canvasInfoPipeline))
 			.catch((error) => {
 				console.error("ELK Layout Error:", error);
 				throw error;
 			});
 	}
 
+	// Helper method to get node layout options based on link method
+	// Returns "FREE" for Freeform links, "FIXED_POS" for port-based links
+	// Overlays custom node options from canvasLayout.elkLayout.node if provided
+	static getNodeLayoutOptions(canvasConfig, canvasLayout) {
+		const portConstraints = canvasConfig?.enableLinkMethod === LINK_METHOD_FREEFORM ? "FREE" : "FIXED_POS";
+		const defaultOptions = { "elk.portConstraints": portConstraints };
+
+		// Overlay custom node layout options from canvasLayout if provided
+		const customNodeOptions = canvasLayout?.elkLayout?.node || {};
+		return { ...defaultOptions, ...customNodeOptions };
+	}
+
+	// Helper method to create moved object info from original object and ELK node
+	static createMovedObjectInfo(original, elkNode) {
+		return {
+			id: original.id,
+			x_pos: elkNode.x,
+			y_pos: elkNode.y,
+			width: original.width,
+			height: original.height
+		};
+	}
+
 	// Processes ELK layout result and converts it to movedNodesInfo format
 	// Builds lookup maps for O(1) access and handles both nodes and comments
 	static processLayoutResult(layoutResult, canvasInfoPipeline) {
 		// Uncomment for debug
-		console.log("ELK Output Layout:", JSON.stringify(layoutResult, null, 2));
+		// console.log("ELK Output Layout:", JSON.stringify(layoutResult, null, 2));
 
 		const movedNodesInfo = {};
 
@@ -124,30 +147,18 @@ export default class LayoutELK {
 			// Look up the original node by ID using Map
 			const originalNode = nodeMap.get(elkNode.id);
 			if (originalNode) {
-				movedNodesInfo[originalNode.id] = {
-					id: originalNode.id,
-					x_pos: elkNode.x,
-					y_pos: elkNode.y,
-					width: originalNode.width,
-					height: originalNode.height
-				};
+				movedNodesInfo[originalNode.id] = this.createMovedObjectInfo(originalNode, elkNode);
 			} else {
 				// Check if it's a comment
 				const originalComment = commentMap.get(elkNode.id);
 				if (originalComment) {
-					movedNodesInfo[originalComment.id] = {
-						id: originalComment.id,
-						x_pos: elkNode.x,
-						y_pos: elkNode.y,
-						width: originalComment.width,
-						height: originalComment.height
-					};
+					movedNodesInfo[originalComment.id] = this.createMovedObjectInfo(originalComment, elkNode);
 				}
 			}
 		});
 
 		// Extract positions for detached links from dummy nodes
-		const movedLinksInfo = LayoutELK.convertGraphToMovedLinks(layoutResult);
+		const movedLinksInfo = this.convertGraphToMovedLinks(layoutResult);
 
 		return { movedNodesInfo, movedLinksInfo };
 	}
@@ -248,13 +259,13 @@ export default class LayoutELK {
 			// Handle semi-detached link (detached source end)
 			if (link.srcPos) {
 				srcNodeId = `temp-src-node-${link.id}`;
-				dummyNodes.push(LayoutELK.createDummyNode(srcNodeId, defaultWidth, defaultHeight, nodeLayoutOptions));
+				dummyNodes.push(this.createDummyNode(srcNodeId, defaultWidth, defaultHeight, nodeLayoutOptions));
 			}
 
 			// Handle semi-detached link (detached target end)
 			if (link.trgPos) {
 				trgNodeId = `temp-trg-node-${link.id}`;
-				dummyNodes.push(LayoutELK.createDummyNode(trgNodeId, defaultWidth, defaultHeight, nodeLayoutOptions));
+				dummyNodes.push(this.createDummyNode(trgNodeId, defaultWidth, defaultHeight, nodeLayoutOptions));
 			}
 
 			// Create edge with appropriate source and target (real nodes or dummy nodes)
@@ -296,8 +307,8 @@ export default class LayoutELK {
 		// Add input and output ports if they exist
 		// Use the positions and sizes set by setPortPositionsAndSizesForNode
 		const ports = [
-			...LayoutELK.createElkPorts(node.inputs, node.id),
-			...LayoutELK.createElkPorts(node.outputs, node.id)
+			...this.createElkPorts(node.inputs, node.id),
+			...this.createElkPorts(node.outputs, node.id)
 		];
 
 		if (ports.length > 0) {
