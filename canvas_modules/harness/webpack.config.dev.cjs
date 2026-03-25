@@ -151,7 +151,14 @@ module.exports = {
 			"react-intl": "node_modules/react-intl",
 			"common-canvas": "src/common-canvas-dev.js"
 		},
-		extensions: [".js", ".jsx", ".json", ".ts", ".tsx"]
+		extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
+		fallback: {
+			// Set to false because common-canvas uses elk.bundled.js which includes
+			// its own inline worker implementation and doesn't need the web-worker package.
+			// This prevents webpack from trying to bundle the web-worker dependency
+			// that exists in elkjs's package.json but isn't actually used.
+			"web-worker": false
+		}
 	},
 	output: output,
 	module: {

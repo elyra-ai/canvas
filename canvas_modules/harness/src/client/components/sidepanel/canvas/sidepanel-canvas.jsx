@@ -109,7 +109,9 @@ import {
 	DISPLAY_GRID_DOTS,
 	DISPLAY_GRID_BOXES,
 	DISPLAY_GRID_DOTS_AND_LINES,
-	DISPLAY_GRID_BOXES_AND_LINES
+	DISPLAY_GRID_BOXES_AND_LINES,
+	LAYOUT_LIBRARY_ELK,
+	LAYOUT_LIBRARY_DAGRE
 } from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
 
 import FormsService from "../../../services/FormsService";
@@ -654,6 +656,31 @@ export default class SidePanelForms extends React.Component {
 					onChange={this.enteredStateValue}
 					value={this.props.getStateValue("enteredSnapToGridY")}
 				/>
+			</div>
+		</div>);
+
+		var layoutLibrary = (<div className="harness-sidepanel-children" id="harness-sidepanel-layout-library">
+			<div>
+				<FormGroup
+					legendText="Layout Library"
+				>
+					<RadioButtonGroup
+						className="harness-sidepanel-radio-group"
+						name="selectedLayoutLibrary" // Set name to corresponding field name in App.js
+						onChange={this.setStateValue}
+						defaultSelected={this.props.getStateValue("selectedLayoutLibrary")}
+						orientation="vertical"
+					>
+						<RadioButton
+							value={LAYOUT_LIBRARY_DAGRE}
+							labelText={LAYOUT_LIBRARY_DAGRE}
+						/>
+						<RadioButton
+							value={LAYOUT_LIBRARY_ELK}
+							labelText={LAYOUT_LIBRARY_ELK}
+						/>
+					</RadioButtonGroup>
+				</FormGroup>
 			</div>
 		</div>);
 
@@ -1979,6 +2006,8 @@ export default class SidePanelForms extends React.Component {
 					{enableCanvasUnderlay}
 					{divider}
 					<div className="harness-side-panel-header">Operational</div>
+					{divider}
+					{layoutLibrary}
 					{divider}
 					{enableKeyboardNavigation}
 					{divider}

@@ -163,7 +163,8 @@ import {
 	IMAGE_DISPLAY_SVG_INLINE,
 	UNDERLAY_NONE,
 	PALETTE_LAYOUT_FLYOUT,
-	TOOLBAR_LAYOUT_TOP
+	TOOLBAR_LAYOUT_TOP,
+	LAYOUT_LIBRARY_DAGRE
 } from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
@@ -274,6 +275,7 @@ class App extends React.Component {
 			selectedMoveNodesInComment: false,
 			selectedContextToolbar: false,
 			selectedSnapToGridType: SNAP_TO_GRID_NONE,
+			selectedLayoutLibrary: LAYOUT_LIBRARY_DAGRE,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
 			selectedDisplayGridType: DISPLAY_GRID_NONE,
@@ -2322,6 +2324,7 @@ class App extends React.Component {
 			enableSnapToGridType: this.state.selectedSnapToGridType,
 			enableSnapToGridX: this.state.enteredSnapToGridX,
 			enableSnapToGridY: this.state.enteredSnapToGridY,
+			enableLayoutLibrary: this.state.selectedLayoutLibrary,
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableImageDisplay: this.state.selectedImageDisplay,
 			enableLinkType: this.state.selectedLinkType,
