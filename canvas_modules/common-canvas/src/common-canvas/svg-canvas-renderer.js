@@ -2556,7 +2556,7 @@ export default class SVGCanvasRenderer {
 				}
 
 				if (!this.config.enableDragWithoutSelect) {
-					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
+					const clickType = this.getClickType(d3Event);
 					this.selectObjectD3Event(d3Event, d, clickType);
 				}
 				this.logger.logEndTimer("Node Group - mouse down");
@@ -2565,9 +2565,8 @@ export default class SVGCanvasRenderer {
 				this.logger.logStartTimer("Node Group - mouse up");
 				d3Event.stopPropagation();
 
-				if (this.config.enableDragWithoutSelect) {
-					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
-					this.selectObjectD3Event(d3Event, d, clickType);
+				if (this.config.enableDragWithoutSelect && d3Event.button !== CONTEXT_MENU_BUTTON) {
+					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK);
 				}
 				this.logger.logEndTimer("Node Group - mouse up");
 			})
@@ -2972,6 +2971,12 @@ export default class SVGCanvasRenderer {
 				nodeGrpSel.selectAll(".d3-label-edit-icon-group").remove();
 			}
 		}
+	}
+
+	// Return the type of click based on which button is used. This will also
+	// detect the equivalent gesture with a trackpad.
+	getClickType(d3Event) {
+		return d3Event.button === CONTEXT_MENU_BUTTON ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
 	}
 
 	// Adds the object passed in to the set of selected objects using
@@ -4453,7 +4458,7 @@ export default class SVGCanvasRenderer {
 				}
 
 				if (!this.config.enableDragWithoutSelect) {
-					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
+					const clickType = this.getClickType(d3Event);
 					this.selectObjectD3Event(d3Event, d, clickType);
 				}
 				this.logger.logEndTimer("Comment Group - mouse down");
@@ -4462,9 +4467,8 @@ export default class SVGCanvasRenderer {
 				this.logger.logStartTimer("Comment Group - mouse up");
 				d3Event.stopPropagation();
 
-				if (this.config.enableDragWithoutSelect) {
-					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
-					this.selectObjectD3Event(d3Event, d, clickType);
+				if (this.config.enableDragWithoutSelect && d3Event.button !== CONTEXT_MENU_BUTTON) {
+					this.selectObjectD3Event(d3Event, d, SINGLE_CLICK);
 				}
 				this.logger.logEndTimer("Comment Group - mouse up");
 			})
@@ -5016,7 +5020,7 @@ export default class SVGCanvasRenderer {
 				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE &&
 						!this.config.enableDragWithoutSelect) {
-					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
+					const clickType = this.getClickType(d3Event);
 					this.selectObjectD3Event(d3Event, d, clickType);
 				}
 				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
@@ -5225,7 +5229,7 @@ export default class SVGCanvasRenderer {
 					if (this.config.enableKeyboardNavigation) {
 						this.setFocusObject(d, d3Event, false, true);
 					}
-					const clickType = d3Event.button === 2 ? SINGLE_CLICK_CONTEXTMENU : SINGLE_CLICK;
+					const clickType = this.getClickType(d3Event);
 					this.selectObjectD3Event(d3Event, d, clickType);
 				}
 
