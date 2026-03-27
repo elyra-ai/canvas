@@ -43,8 +43,43 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 function mockConsole(consoleMethod) {
-	const ignoredMessages = ["test was not wrapped in act(...)", "Rendering components directly into document.body is discouraged"];
-	return (message, ...args) => {
+	const ignoredMessages = [
+		"test was not wrapped in act(...)",
+		"Rendering components directly into document.body is discouraged",
+		"[WARNING]: Ignoring unsupported condition operation 'colDoesExists' for control type structuretable:",
+		"[WARNING]: Ignoring unsupported condition operation 'colDoesExists' for control type structurelisteditor:",
+		"[WARNING]: Ignoring unsupported condition operation 'colNotExists' for control type numberfield:",
+		"[WARNING]: Ignoring unsupported condition operation 'contains' for control type passwordfield:",
+		"[WARNING]: Ignoring unsupported condition operation 'notContains' for control type passwordfield:",
+		"[WARNING]: Ignoring unsupported condition operation 'notEquals' for control type passwordfield:",
+		"[WARNING]: Ignoring unsupported condition operation 'cellNotEmpty' for control type wrongcontrol:",
+		"[WARNING]: Ignoring unsupported condition operation 'equals' for control type passwordfield:",
+		"[WARNING]: Ignoring condition operation 'equals' for parameter_ref undefined with input data type function:",
+		"[WARNING]: Ignoring condition operation 'matches' for parameter_ref test no regular expression specified in condition.:",
+		"[WARNING]: Ignoring condition operation 'matches' for parameter_ref test with input data type number:",
+		"[WARNING]: Ignoring condition operation 'notMatches' for parameter_ref undefined no regular expression specified in condition.:",
+		"[WARNING]: Ignoring condition operation 'notMatches' for parameter_ref undefined with input data type number:",
+		"[WARNING]: Ignoring condition operation 'isNotEmpty' for parameter_ref undefined with input data type function:",
+		"[WARNING]: Ignoring condition operation 'isEmpty' for parameter_ref undefined with input data type function:",
+		"[WARNING]: Ignoring condition operation 'contains' for parameter_ref undefined with input data type function:",
+		"[WARNING]: Ignoring condition operation 'notContains' for parameter_ref undefined with input data type function:",
+		"[WARNING]: Condition Operator dmRoleEquals only intended for use on columns:",
+		"[WARNING]: Condition Operator dmMeasurementEquals only intended for use on columns:",
+		"[WARNING]: Condition Operator dmMeasurementNotEquals only intended for use on columns:",
+		"[WARNING]: Condition Operator dmTypeNotEquals only intended for use on columns:",
+		"[WARNING]: Condition Operator dmTypeEquals only intended for use on columns:",
+		"[WARNING]: Condition Operator dmRoleEquals only intended for use on columns:",
+		"[WARNING]: Control not found for samplingSize:",
+		"[WARNING]: Control not found for param_removed:",
+		// Next message for VirtualizedGrid
+		"Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
+		// Error thrown by error-boundary-test.js
+		"Error: This is a fake error thrown for testing purposes."
+
+	];
+	return (msg, ...args) => {
+		const message = typeof msg === "object" ? msg.toString() : msg; // msg might be an error object if one was thrown.
+
 		const hasIgnoredMessage = ignoredMessages.some((ignoredMessage) => message && typeof message === "string" && message.includes(ignoredMessage));
 		if (!hasIgnoredMessage) {
 			consoleMethod(message, ...args);
