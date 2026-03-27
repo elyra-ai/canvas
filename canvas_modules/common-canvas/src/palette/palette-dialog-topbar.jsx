@@ -16,6 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { injectIntl } from "react-intl";
 
 // Carbon icons - direct imports for tree-shaking optimization
 import CloseOutline from "@carbon/icons-react/lib/CloseOutline";
@@ -57,10 +58,9 @@ class PaletteDialogTopbar extends React.Component {
 	}
 
 	render() {
-		const labelUtil = this.props.canvasController.labelUtil;
-		const gridLabel = labelUtil.getLabel("palette.dialog.grid");
-		const listLabel = labelUtil.getLabel("palette.dialog.list");
-		const closeLabel = labelUtil.getLabel("palette.dialog.close");
+		const gridLabel = this.props.intl.formatMessage({ id: "palette.dialog.grid" });
+		const listLabel = this.props.intl.formatMessage({ id: "palette.dialog.list" });
+		const closeLabel = this.props.intl.formatMessage({ id: "palette.dialog.close" });
 
 		const config = {
 			leftBar: [
@@ -86,8 +86,8 @@ class PaletteDialogTopbar extends React.Component {
 					config={config}
 					toolbarActionHandler={this.toolbarActionHandler}
 					additionalText={{
-						overflowMenuLabel: this.props.canvasController.labelUtil.getLabel("toolbar.overflowMenu"),
-						ariaLabel: this.props.canvasController.labelUtil?.getLabel("toolbar.paletteDialogToolbarLabel")
+						overflowMenuLabel: this.props.intl.formatMessage({ id: "toolbar.overflowMenu" }),
+						ariaLabel: this.props.intl.formatMessage({ id: "toolbar.paletteDialogToolbarLabel" })
 					}}
 				/>
 			</div>
@@ -96,6 +96,10 @@ class PaletteDialogTopbar extends React.Component {
 }
 
 PaletteDialogTopbar.propTypes = {
+	// From injectIntl
+	intl: PropTypes.object.isRequired,
+
+	// From PaletteDialogUnder
 	showGridMethod: PropTypes.func.isRequired,
 	windowMaximizeMethod: PropTypes.func.isRequired,
 	showGrid: PropTypes.bool.isRequired,
@@ -103,4 +107,5 @@ PaletteDialogTopbar.propTypes = {
 	canvasController: PropTypes.object.isRequired
 };
 
-export default PaletteDialogTopbar;
+
+export default (injectIntl(PaletteDialogTopbar));
