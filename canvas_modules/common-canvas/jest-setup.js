@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-/* global fetch */
+/* global jest, beforeEach */
 import fetchMock from "jest-fetch-mock";
 fetchMock.enableMocks();
 fetch.mockResponse("<svg />");
 
 // Added to filter out `act` error and warning messages
-console.warn = jest.fn(mockConsole(console.warn));
-console.error = jest.fn(mockConsole(console.error));
+console.warn = mockConsole(console.warn);
+console.error = mockConsole(console.error);
 
 // Added to simulate scrollIntoView for react components
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
@@ -55,9 +55,11 @@ function mockConsole(consoleMethod) {
 beforeEach(() => {
 	// Mock the Virtual DOM so the table can be rendered: https://github.com/TanStack/virtual/issues/641
 	Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
+		configurable: true,
 		value: 1000
 	});
 	Object.defineProperty(HTMLElement.prototype, "offsetWidth", {
+		configurable: true,
 		value: 1000
 	});
 });
