@@ -71,10 +71,13 @@ function mockConsole(consoleMethod) {
 		"[WARNING]: Condition Operator dmRoleEquals only intended for use on columns:",
 		"[WARNING]: Control not found for samplingSize:",
 		"[WARNING]: Control not found for param_removed:",
-		// Next message for VirtualizedGrid
-		"Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
 		// Error thrown by error-boundary-test.js
-		"Error: This is a fake error thrown for testing purposes."
+		"Error: This is a fake error thrown for testing purposes.",
+		// This message for VirtualizedGrid
+		"Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
+		// These messages from virtualized-table
+		"componentWillMount has been renamed",
+		"componentWillReceiveProps has been renamed",
 
 	];
 	return (msg, ...args) => {
