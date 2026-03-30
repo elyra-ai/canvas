@@ -2076,6 +2076,10 @@ class App extends React.Component {
 		if (actionId === "openTearsheet") {
 			propertiesController.setActiveTearsheet(data.tearsheet_ref);
 		}
+		if (actionId === "multiselect-update") {
+			const propertyId = { name: data.parameter_ref };
+			propertiesController.updatePropertyValue(propertyId, ["red", "orange"]);
+		}
 		if (actionId === "increment") {
 			const propertyId = { name: data.parameter_ref };
 			let value = propertiesController.getPropertyValue(propertyId);

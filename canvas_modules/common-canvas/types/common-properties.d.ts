@@ -195,14 +195,16 @@ export type TitleChangeHandler = (
  * Callback handler for customizing panel titles.
  * Called when a twisty panel is rendered, allowing you to replace the default title with custom content.
  *
- * @param params - Object containing panelId and label
+ * @param params - Object containing panelId, label, and data
  * @param params.panelId - The ID of the panel
  * @param params.label - The default label/title of the panel
+ * @param params.data - Optional data object associated with the panel
  * @returns A custom title (string or ReactNode) to replace the default, or null to use the default label
  */
 export type PanelTitleHandler = (params: {
   panelId: string;
   label: string;
+  data?: Record<string, unknown>;
 }) => ReactNode | null;
 
 /**
