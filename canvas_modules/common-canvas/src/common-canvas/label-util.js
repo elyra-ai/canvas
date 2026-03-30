@@ -14,14 +14,26 @@
  * limitations under the License.
  */
 
-import defaultMessages1 from "../../locales/common-canvas/locales/en.json";
-import defaultMessages2 from "../../locales/command-actions/locales/en.json";
+import commandActionsMessages from "../../locales/command-actions/locales/en.json";
+import commonCanvasMessages from "../../locales/common-canvas/locales/en.json";
+import commonPropertiesMessages from "../../locales/common-properties/locales/en.json";
+import notificationPanelMessages from "../../locales/notification-panel/locales/en.json";
+import paletteMessages from "../../locales/palette/locales/en.json";
+import toolbarMessages from "../../locales/toolbar/locales/en.json";
+
 
 export default class LabelUtil {
 	constructor() {
 		this.intl = null;
 		this.actionLabelHandler = null;
-		this.defaultMessages = { ...defaultMessages1, ...defaultMessages2 };
+		this.defaultMessages = {
+			...commandActionsMessages,
+			...commonCanvasMessages,
+			...commonPropertiesMessages,
+			...notificationPanelMessages,
+			...paletteMessages,
+			...toolbarMessages,
+		};
 	}
 
 	setIntl(intl) {
@@ -48,11 +60,14 @@ export default class LabelUtil {
 
 	getLabel(key, substituteObj) {
 		let formattedMessage;
+
 		if (typeof this.intl !== "undefined" && this.intl !== null) {
 			formattedMessage = this.intl.formatMessage({ id: key, defaultMessage: this.defaultMessages[key] }, substituteObj);
 		} else {
 			formattedMessage = this.defaultMessages[key];
+			console.warn(`Missing intl object in label-util.js. Returning default message for key: ${key} which is ${formattedMessage}`);
 		}
+
 		return formattedMessage;
 	}
 
