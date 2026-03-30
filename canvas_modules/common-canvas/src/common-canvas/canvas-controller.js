@@ -19,7 +19,6 @@ import AttachNodeToLinksAction from "../command-actions/attachNodeToLinksAction.
 import CommandStack from "../command-stack/command-stack.js";
 import ConvertSuperNodeExternalToLocal from "../command-actions/convertSuperNodeExternalToLocalAction.js";
 import ConvertSuperNodeLocalToExternal from "../command-actions/convertSuperNodeLocalToExternalAction.js";
-import * as constants from "./constants/canvas-constants";
 import CreateAutoNodeAction from "../command-actions/createAutoNodeAction.js";
 import CreateCommentAction from "../command-actions/createCommentAction.js";
 import CreateCommentLinkAction from "../command-actions/createCommentLinkAction.js";
@@ -58,7 +57,11 @@ import { get, isEmpty } from "lodash";
 import { CANVAS_FOCUS,
 	SINGLE_CLICK,
 	LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE,
-	SNAP_TO_GRID_NONE, SUPER_NODE, WYSIWYG, CAUSE_MOUSE, CAUSE_KEYBOARD
+	SNAP_TO_GRID_NONE, SUPER_NODE, WYSIWYG, CAUSE_MOUSE, CAUSE_KEYBOARD,
+	CONNECTED_BRANCH, CONNECTED_UPSTREAM, CONNECTED_DOWNSTREAM,
+	TIP_TYPE_PALETTE_ITEM, TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_NODE,
+	TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK, TIP_TYPE_STATE_TAG,
+	HORIZONTAL, VERTICAL
 } from "./constants/canvas-constants";
 
 import { cloneDeep } from "lodash";
@@ -1059,7 +1062,7 @@ export default class CanvasController {
 	 */
 	getBranchNodes(nodeIds, pipelineId) {
 		const pId = pipelineId ? pipelineId : this.getCurrentPipelineId();
-		return this.objectModel.getConnectedObjects(pId, nodeIds, constants.CONNECTED_BRANCH);
+		return this.objectModel.getConnectedObjects(pId, nodeIds, CONNECTED_BRANCH);
 	}
 
 	/**
@@ -1072,7 +1075,7 @@ export default class CanvasController {
 	 */
 	getUpstreamNodes(nodeIds, pipelineId) {
 		const pId = pipelineId ? pipelineId : this.getCurrentPipelineId();
-		return this.objectModel.getConnectedObjects(pId, nodeIds, constants.CONNECTED_UPSTREAM);
+		return this.objectModel.getConnectedObjects(pId, nodeIds, CONNECTED_UPSTREAM);
 	}
 
 	/**
@@ -1085,7 +1088,7 @@ export default class CanvasController {
 	 */
 	getDownstreamNodes(nodeIds, pipelineId) {
 		const pId = pipelineId ? pipelineId : this.getCurrentPipelineId();
-		return this.objectModel.getConnectedObjects(pId, nodeIds, constants.CONNECTED_DOWNSTREAM);
+		return this.objectModel.getConnectedObjects(pId, nodeIds, CONNECTED_DOWNSTREAM);
 	}
 
 	// Adds a custom attribute to the nodes.
@@ -2285,30 +2288,30 @@ export default class CanvasController {
 				const data = {};
 				// Copy only required fields from tipConfig to data object - ignore other fields in tipConfig
 				switch (tipConfig.type) {
-				case constants.TIP_TYPE_PALETTE_ITEM:
+				case TIP_TYPE_PALETTE_ITEM:
 					data.nodeTemplate = tipConfig.nodeTemplate;
 					break;
-				case constants.TIP_TYPE_PALETTE_CATEGORY:
+				case TIP_TYPE_PALETTE_CATEGORY:
 					data.category = tipConfig.category;
 					break;
-				case constants.TIP_TYPE_NODE:
+				case TIP_TYPE_NODE:
 					data.pipelineId = tipConfig.pipelineId;
 					data.node = tipConfig.node;
 					break;
-				case constants.TIP_TYPE_PORT:
+				case TIP_TYPE_PORT:
 					data.pipelineId = tipConfig.pipelineId;
 					data.node = tipConfig.node;
 					data.port = tipConfig.port;
 					break;
-				case constants.TIP_TYPE_DEC:
+				case TIP_TYPE_DEC:
 					data.pipelineId = tipConfig.pipelineId;
 					data.decoration = tipConfig.decoration;
 					break;
-				case constants.TIP_TYPE_LINK:
+				case TIP_TYPE_LINK:
 					data.pipelineId = tipConfig.pipelineId;
 					data.link = tipConfig.link;
 					break;
-				case constants.TIP_TYPE_STATE_TAG:
+				case TIP_TYPE_STATE_TAG:
 					data.stateTagText = tipConfig.stateTagText;
 					data.stateTagType = tipConfig.stateTagType;
 					break;
@@ -2353,19 +2356,19 @@ export default class CanvasController {
 	isTipEnabled(tipType) {
 		const canvasConfig = this.getCanvasConfig();
 		switch (tipType) {
-		case constants.TIP_TYPE_PALETTE_CATEGORY:
+		case TIP_TYPE_PALETTE_CATEGORY:
 			return canvasConfig.tipConfig.palette === true || get(canvasConfig, "tipConfig.palette.categories", false);
-		case constants.TIP_TYPE_PALETTE_ITEM:
+		case TIP_TYPE_PALETTE_ITEM:
 			return canvasConfig.tipConfig.palette === true || get(canvasConfig, "tipConfig.palette.nodeTemplates", false);
-		case constants.TIP_TYPE_NODE:
+		case TIP_TYPE_NODE:
 			return canvasConfig.tipConfig.nodes;
-		case constants.TIP_TYPE_PORT:
+		case TIP_TYPE_PORT:
 			return canvasConfig.tipConfig.ports;
-		case constants.TIP_TYPE_DEC:
+		case TIP_TYPE_DEC:
 			return canvasConfig.tipConfig.decorations;
-		case constants.TIP_TYPE_LINK:
+		case TIP_TYPE_LINK:
 			return canvasConfig.tipConfig.links;
-		case constants.TIP_TYPE_STATE_TAG:
+		case TIP_TYPE_STATE_TAG:
 			return canvasConfig.tipConfig.stateTag;
 		default:
 			return false;
@@ -2946,13 +2949,13 @@ export default class CanvasController {
 				break;
 			}
 			case "arrangeHorizontally": {
-				data.layoutDirection = constants.HORIZONTAL;
+				data.layoutDirection = HORIZONTAL;
 				command = new ArrangeLayoutAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "arrangeVertically": {
-				data.layoutDirection = constants.VERTICAL;
+				data.layoutDirection = VERTICAL;
 				command = new ArrangeLayoutAction(data, this);
 				this.commandStack.do(command);
 				break;
