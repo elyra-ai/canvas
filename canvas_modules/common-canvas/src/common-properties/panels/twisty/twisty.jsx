@@ -32,7 +32,7 @@ class TwistyPanel extends React.Component {
 	render() {
 		const className = this.props.panel.className ? this.props.panel.className : "";
 		const disabled = this.props.panelState === STATES.DISABLED;
-		const title = this.panelTitleHandler?.({ panelId: this.props.panel.id, label: this.props.panel.label }) || this.props.panel.label;
+		const title = this.panelTitleHandler?.({ panelId: this.props.panel.id, label: this.props.panel.label, data: this.props.panel.data }) || this.props.panel.label;
 
 		return (
 			<div

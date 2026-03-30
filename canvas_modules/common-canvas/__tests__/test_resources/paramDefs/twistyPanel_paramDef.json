@@ -187,6 +187,9 @@
             "label": {
               "default": "Twisty title label"
             },
+            "data": {
+              "something": "option data"
+            },
             "type": "twistyPanel",
             "group_info": [
               {
