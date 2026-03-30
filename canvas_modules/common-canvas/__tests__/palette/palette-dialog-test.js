@@ -49,39 +49,66 @@ describe("Palette Dialog renders correctly", () => {
 });
 
 const paletteSpec = {
+	"version": "3.0",
 	"categories": [{
 		"id": "import",
-		"category": "import",
 		"label": "Import",
 		"node_types": [{
-			"label": "Var. File",
-			"description": "Imports data from a comma-delimited file",
-			"typeId": "variablefile",
-			"image": "data:image/svg+xml;base64,..",
-			"outputPorts": [{
-				"name": "out-data",
+			"id": "",
+			"op": "variablefile",
+			"type": "execution_node",
+			"app_data": {
+				"ui_data": {
+					"label": "Var. File",
+					"description": "Imports data from a comma-delimited file",
+					"image": "data:image/svg+xml;base64,.."
+				}
+			},
+			"outputs": [{
+				"id": "out-data",
 				"label": "Output data",
-				"cardinality": "1:N"
+				"cardinality": {
+					"min": 1,
+					"max": -1
+				}
 			}]
 		}, {
-			"label": "User Input",
-			"description": "Allows a user to generate literal data",
-			"typeId": "userinput",
-			"image": "data:image/svg+xml;base64,..",
-			"outputPorts": [{
-				"name": "out-data",
+			"id": "",
+			"op": "userinput",
+			"type": "execution_node",
+			"app_data": {
+				"ui_data": {
+					"label": "User Input",
+					"description": "Allows a user to generate literal data",
+					"image": "data:image/svg+xml;base64,.."
+				}
+			},
+			"outputs": [{
+				"id": "out-data",
 				"label": "Output data",
-				"cardinality": "1:N"
+				"cardinality": {
+					"min": 1,
+					"max": -1
+				}
 			}]
 		}, {
-			"label": "Object Store",
-			"description": "Imports data from the Object Store",
-			"typeId": "object_storage_import",
-			"image": "data:image/svg+xml;base64,..",
-			"outputPorts": [{
-				"name": "out-data",
+			"id": "",
+			"op": "object_storage_import",
+			"type": "execution_node",
+			"app_data": {
+				"ui_data": {
+					"label": "Object Store",
+					"description": "Imports data from the Object Store",
+					"image": "data:image/svg+xml;base64,.."
+				}
+			},
+			"outputs": [{
+				"id": "out-data",
 				"label": "Output data",
-				"cardinality": "1:N"
+				"cardinality": {
+					"min": 1,
+					"max": -1
+				}
 			}]
 		}]
 	}]
