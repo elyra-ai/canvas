@@ -67,10 +67,12 @@ export default class SVGCanvasUtilsDragNewLink {
 	dragStartNewLink(d3Event, d) {
 		if (this.isEventForOutputPort(d3Event)) {
 			const node = this.getNodeForPort(d3Event);
+			this.beginNewLinkCallback(d, node);
 			this.startOutputPortNewLink(d3Event, d, node);
 
 		} else if (this.isEventForInputPort(d3Event)) {
 			const node = this.getNodeForPort(d3Event);
+			this.beginNewLinkCallback(d, node);
 			this.startInputPortNewLink(d3Event, d, node);
 
 		} else if (this.ren.activePipeline.getObjectTypeName(d) === "comment") {
@@ -669,5 +671,16 @@ export default class SVGCanvasUtilsDragNewLink {
 			}
 		}
 		return false;
+	}
+
+	// Signals to the host application that the link is beginning to be
+	// created, to give the app the chance to prepare.
+	beginNewLinkCallback(port, node) {
+		this.ren.canvasController.editActionHandler({
+			editType: "beginNewLink",
+			editSource: "canvas",
+			node: node,
+			port: port
+		});
 	}
 }

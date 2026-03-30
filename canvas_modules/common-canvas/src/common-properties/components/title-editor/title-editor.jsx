@@ -295,7 +295,10 @@ TitleEditor.propTypes = {
 	showHeadingDesc: PropTypes.bool,
 	rightFlyoutTabsView: PropTypes.bool,
 	titleInfo: PropTypes.object,
-	description: PropTypes.object,
+	description: PropTypes.oneOfType([
+		PropTypes.object,
+		PropTypes.string
+	]),
 	title: PropTypes.string, // set by redux
 	setTitle: PropTypes.func // set by redux
 };

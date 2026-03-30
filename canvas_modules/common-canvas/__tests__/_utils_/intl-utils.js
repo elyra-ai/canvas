@@ -16,16 +16,26 @@
 import React from "react";
 import { IntlProvider } from "react-intl";
 import { render } from "./mount-utils.js";
-import * as commonPropertiesMessages from "../../locales/common-properties/locales/en.json";
-import * as harnessPropertiesMessages from "../../../harness/src/intl/locales/en.json";
+import commandActionsMessages from "../../locales/command-actions/locales/en.json";
+import commonCanvasMessages from "../../locales/common-canvas/locales/en.json";
+import commonPropertiesMessages from "../../locales/common-properties/locales/en.json";
+import notificationPanelMessages from "../../locales/notification-panel/locales/en.json";
+import paletteMessages from "../../locales/palette/locales/en.json";
+import toolbarMessages from "../../locales/toolbar/locales/en.json";
+import harnessMessages from "../../../harness/src/intl/locales/en.json";
 
-const defaultLocale = "en-US";
+const defaultLocale = "en";
 const locale = defaultLocale;
 
 // Add mock custom field types for tests
 const testMessages = {
+	...commandActionsMessages,
+	...commonCanvasMessages,
 	...commonPropertiesMessages,
-	...harnessPropertiesMessages,
+	...notificationPanelMessages,
+	...paletteMessages,
+	...toolbarMessages,
+	...harnessMessages,
 	"fieldPicker.unknown.label": "unknown",
 	"fieldPicker.customType.label": "custom type",
 	"fieldPicker.vectorType.label": "vector type"
