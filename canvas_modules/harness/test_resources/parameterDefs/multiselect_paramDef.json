@@ -308,7 +308,8 @@
           "default": "multiselect no options selected"
         },
         "class_name": "multiselect-control-class",
-        "control": "multiselect"
+        "control": "multiselect",
+        "action_ref": "multiselect-update"
       },
       {
         "parameter_ref": "multiselect",
@@ -533,6 +534,26 @@
             "class_name": "table-subpanel-multiselect-control-class"
           }
         ]
+      }
+    ],
+    "action_info": [
+      {
+        "id": "multiselect-update",
+        "label": {
+          "default": "Update"
+        },
+        "description": {
+          "default": "This will select a value in the multi-select control"
+        },
+        "control": "button",
+        "button": {
+          "kind": "primary",
+          "size": "sm"
+        },
+        "data": {
+          "parameter_ref": "multiselect_empty"
+        },
+        "class_name": "custom-class-for-action-button"
       }
     ],
     "group_info": [

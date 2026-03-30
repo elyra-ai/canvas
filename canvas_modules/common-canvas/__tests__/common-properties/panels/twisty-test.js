@@ -329,6 +329,30 @@ describe("twisty panel custom title renders correctly", () => {
 		expect(additionalInfo).to.not.be.null;
 		expect(additionalInfo.textContent).to.include("Additional Info");
 	});
+
+	it("should pass data parameter to panelTitleHandler when data is provided", () => {
+		mockPanelTitleHandler = sinon.spy(({ panelId, label, data }) => {
+			if (data) {
+				return <span className="custom-title-with-data">{label} - {data.customInfo}</span>;
+			}
+			return null;
+		});
+
+		const callbacks = {
+			panelTitleHandler: mockPanelTitleHandler
+		};
+
+		propertyUtilsRTL.flyoutEditorForm(twistypanelParamDef, null, callbacks);
+
+		// Verify the handler was called with data parameter
+		expect(mockPanelTitleHandler.callCount).to.be.greaterThan(0);
+
+		// Check that data parameter is present in the call arguments
+		const firstCall = mockPanelTitleHandler.getCall(0).args[0];
+		expect(firstCall).to.have.property("panelId");
+		expect(firstCall).to.have.property("label");
+		expect(firstCall).to.have.property("data");
+	});
 });
 
 describe("twisty panel classNames applied correctly", () => {
