@@ -73,12 +73,15 @@ class Description {
 }
 
 class ControlPanel {
-	constructor(id, panelType, className, nestedPanel, controls, label, copen = false) {
+	constructor(id, panelType, className, nestedPanel, controls, label, data, copen = false) {
 		this.id = id;
 		this.panelType = panelType;
 		this.nestedPanel = nestedPanel;
 		this.uiItems = controls;
 		this.open = copen;
+		if (data) {
+			this.data = data;
+		}
 		if (label) {
 			this.label = label;
 		}
@@ -150,13 +153,13 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	switch (group.groupType()) {
 	case GroupType.CONTROLS:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName, nestedPanel,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo, EditStyle.SUBPANEL)));
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo, EditStyle.SUBPANEL), null, group.data));
 	case GroupType.COLUMN_SELECTION:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, groupClassName, nestedPanel,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo, EditStyle.SUBPANEL)));
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo, EditStyle.SUBPANEL), null, group.data));
 	case GroupType.ADDITIONAL: {
 		const panel = new ControlPanel(groupName, PanelType.GENERAL, groupClassName, nestedPanel,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo, EditStyle.SUBPANEL));
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, additionalInfo, EditStyle.SUBPANEL), null, group.data);
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
 		return UIItem.makeAdditionalLink(groupLabel, groupLabel, panel);
 	}
@@ -186,7 +189,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName, nestedPanel, panSubItems));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName, nestedPanel, panSubItems, null, group.data));
 	}
 	case GroupType.COLUMN_PANEL: {
 		const panSubItems = [];
@@ -196,7 +199,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_PANEL, groupClassName, nestedPanel, panSubItems));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_PANEL, groupClassName, nestedPanel, panSubItems, null, group.data));
 	}
 	case GroupType.CUSTOM_PANEL: {
 		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, groupClassName, nestedPanel, group.parameterNames(), group.data));
@@ -210,7 +213,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.SUMMARY, groupClassName, nestedPanel, panSubItems, groupLabel));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.SUMMARY, groupClassName, nestedPanel, panSubItems, groupLabel, group.data));
 	}
 	case GroupType.ACTION_PANEL: {
 		groupLabel = l10nProvider.l10nResource(group.label);
@@ -242,7 +245,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, groupClassName, nestedPanel, panSubItems, groupLabel, group.open));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, groupClassName, nestedPanel, panSubItems, groupLabel, group.data, group.open));
 	}
 	case GroupType.TEARSHEET_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
@@ -258,7 +261,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makeTearsheetPanel(new ControlPanel(groupName, PanelType.TEARSHEET, groupClassName, nestedPanel, panSubItems, groupLabel, false), groupDesc);
+		return UIItem.makeTearsheetPanel(new ControlPanel(groupName, PanelType.TEARSHEET, groupClassName, nestedPanel, panSubItems, groupLabel, group.data, false), groupDesc);
 	}
 	default:
 		logger.warn("(Unknown group type '" + group.groupType() + "')");
@@ -722,7 +725,9 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata, a
 			structureMetadata,
 			l10nProvider,
 			additionalInfo,
-			EditStyle.SUBPANEL)
+			EditStyle.SUBPANEL),
+		null,
+		structureDef.data
 	);
 	const groupLabel = l10nProvider.l10nLabel(structureDef, structureDef.name);
 	return UIItem.makeAdditionalLink("...", groupLabel, panel);
@@ -741,7 +746,9 @@ function _makeInlineEditStyleSubPanel(structureDef, l10nProvider, structureMetad
 			structureMetadata,
 			l10nProvider,
 			additionalInfo,
-			EditStyle.INLINE)
+			EditStyle.INLINE),
+		null,
+		structureDef.data
 	);
 	const groupLabel = l10nProvider.l10nLabel(structureDef, structureDef.name);
 	return UIItem.makeAdditionalLink("...", groupLabel, panel);

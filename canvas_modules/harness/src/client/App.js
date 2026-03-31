@@ -145,7 +145,8 @@ import {
 	TOOLBAR_TYPE_CARBON_BUTTONS,
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
 	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE,
-	CATEGORY_VIEW_ACCORDIONS
+	CATEGORY_VIEW_ACCORDIONS,
+	ELK_STRATEGY_INTERACTIVE
 } from "./constants/harness-constants.js";
 
 import {
@@ -163,7 +164,8 @@ import {
 	IMAGE_DISPLAY_SVG_INLINE,
 	UNDERLAY_NONE,
 	PALETTE_LAYOUT_FLYOUT,
-	TOOLBAR_LAYOUT_TOP
+	TOOLBAR_LAYOUT_TOP,
+	LAYOUT_LIBRARY_DAGRE
 } from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
@@ -274,6 +276,8 @@ class App extends React.Component {
 			selectedMoveNodesInComment: false,
 			selectedContextToolbar: false,
 			selectedSnapToGridType: SNAP_TO_GRID_NONE,
+			selectedLayoutLibrary: LAYOUT_LIBRARY_DAGRE,
+			elkLayeredStrategy: ELK_STRATEGY_INTERACTIVE,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
 			selectedDisplayGridType: DISPLAY_GRID_NONE,
@@ -2072,6 +2076,10 @@ class App extends React.Component {
 		if (actionId === "openTearsheet") {
 			propertiesController.setActiveTearsheet(data.tearsheet_ref);
 		}
+		if (actionId === "multiselect-update") {
+			const propertyId = { name: data.parameter_ref };
+			propertiesController.updatePropertyValue(propertyId, ["red", "orange"]);
+		}
 		if (actionId === "increment") {
 			const propertyId = { name: data.parameter_ref };
 			let value = propertiesController.getPropertyValue(propertyId);
@@ -2322,6 +2330,7 @@ class App extends React.Component {
 			enableSnapToGridType: this.state.selectedSnapToGridType,
 			enableSnapToGridX: this.state.enteredSnapToGridX,
 			enableSnapToGridY: this.state.enteredSnapToGridY,
+			enableLayoutLibrary: this.state.selectedLayoutLibrary,
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableImageDisplay: this.state.selectedImageDisplay,
 			enableLinkType: this.state.selectedLinkType,
@@ -2383,7 +2392,12 @@ class App extends React.Component {
 				displayGridMajorY: this.state.enteredMajorGridY,
 				displayGridMinorX: this.state.enteredMinorGridX,
 				displayGridMinorY: this.state.enteredMinorGridY,
-				...this.state.selectedCanvasLayout
+				...this.state.selectedCanvasLayout,
+				elkLayout: {
+					root: {
+						"elk.layered.nodePlacement.strategy": this.state.elkLayeredStrategy
+					}
+				}
 			},
 			enableLinksOverNodes: this.state.selectedLinksOverNodes
 		};
