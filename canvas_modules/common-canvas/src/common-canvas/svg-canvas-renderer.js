@@ -4865,6 +4865,7 @@ export default class SVGCanvasRenderer {
 						if (d.type === NODE_LINK) {
 							const node = this.activePipeline.getNextNodeFromDataLink(d);
 							this.setFocusObject(node, d3Event);
+							this.lowerLinkToBottom(d3Event.currentTarget);
 
 						} else if (d.type === ASSOCIATION_LINK) {
 							const node = this.activePipeline.getNextNodeFromAssocLink(d);
@@ -4879,6 +4880,7 @@ export default class SVGCanvasRenderer {
 						if (d.type === NODE_LINK) {
 							const node = this.activePipeline.getPreviousNodeFromDataLink(d);
 							this.setFocusObject(node, d3Event);
+							this.lowerLinkToBottom(d3Event.currentTarget);
 
 						} else if (d.type === ASSOCIATION_LINK) {
 							const node = this.activePipeline.getPreviousNodeFromAssocLink(d);
@@ -4892,10 +4894,12 @@ export default class SVGCanvasRenderer {
 					} else if (KeyboardUtils.nextSiblingLink(d3Event)) {
 						const link = this.activePipeline.getNextSiblingLink(d);
 						this.setFocusObject(link, d3Event);
+						this.lowerLinkToBottom(d3Event.currentTarget);
 
 					} else if (KeyboardUtils.previousSiblingLink(d3Event)) {
 						const link = this.activePipeline.getPreviousSiblingLink(d);
 						this.setFocusObject(link, d3Event);
+						this.lowerLinkToBottom(d3Event.currentTarget);
 
 					} else if (KeyboardUtils.focusSubObject(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
@@ -4948,6 +4952,8 @@ export default class SVGCanvasRenderer {
 					return;
 				}
 
+				console.log("link mouseenter");
+
 				const targetObj = d3Event.currentTarget;
 
 				if ((this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
@@ -4958,7 +4964,7 @@ export default class SVGCanvasRenderer {
 					// Only raise link if we're NOT editing text because raising a link
 					// will cause a 'blur' in the text edit area which will end editing.
 					if (!this.isEditingText()) {
-						this.raiseLinkToTop(targetObj);
+						this.raiseLinkToTopPreserveFocus(targetObj);
 					}
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
@@ -5000,7 +5006,7 @@ export default class SVGCanvasRenderer {
 						!this.config.enableLinksOverNodes &&
 						!this.isEditingText() &&
 						!this.isDragging()) {
-					this.lowerLinkToBottom(targetObj);
+					this.lowerLinkToBottomPreserveFocus(targetObj);
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				this.setLinkLineStyles(targetObj, link, "default");
@@ -5416,24 +5422,28 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	raiseLinkToTopById(linkId) {
+	raiseLinkToTopByIdPreserveFocus(linkId) {
 		this.preserveFocus(() =>
 			this.getLinkGroupSelectionById(linkId).raise()
 		);
 	}
 
-	raiseLinkToTop(obj) {
+	raiseLinkToTopPreserveFocus(obj) {
 		this.preserveFocus(() =>
 			d3.select(obj)
 				.raise()
 		);
 	}
 
-	lowerLinkToBottom(obj) {
+	lowerLinkToBottomPreserveFocus(obj) {
 		this.preserveFocus(() =>
-			d3.select(obj)
-				.lower()
+			this.lowerLinkToBottom(obj)
 		);
+	}
+
+	lowerLinkToBottom(obj) {
+		const linkGrp = d3.select(obj);
+		linkGrp.lower();
 	}
 
 	// Preserves the focus while calling the fn function by saving the
@@ -6494,20 +6504,6 @@ export default class SVGCanvasRenderer {
 			return;
 		}
 
-		// If there is currently a focused link and it is the top most object,
-		// push it to the bottom of the display order, because it will have
-		// been raised to the top when it previously received focus.
-		if (!this.config.enableLinksOverNodes &&
-				(this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)) {
-			const focusSel = d3.selectAll(".d3-link-group:focus-within");
-			const focusElement = focusSel.node();
-			const topElement = focusElement?.parentElement?.lastChild;
-			if (topElement?.classList?.contains("d3-link-group")) {
-				d3.select(topElement).lower();
-			}
-		}
-
 		this.subObject = null;
 		this.subObjectParentObj = null;
 
@@ -6551,8 +6547,10 @@ export default class SVGCanvasRenderer {
 			if (this.activePipeline.getLink(obj.id)) {
 				objSel = this.getLinkGroupSelectionById(obj.id);
 
-				// Raise any node (data) link to top before focusing it, if it has handles
-				if (obj.type === NODE_LINK &&
+				// With a keyboard event, raise any node (data) link with handles
+				// to the top before focusing it.
+				if (CanvasUtils.isKeyboardEvent(evt) &&
+						obj.type === NODE_LINK &&
 						(this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE)) {
 					objSel.raise();
