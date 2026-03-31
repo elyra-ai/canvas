@@ -104,6 +104,7 @@ describe("Table buttons renders correctly", () => {
 				propertyId={propertyId}
 				customButtons={customButtons}
 				tableState=""
+				tableLabel={"Test label"}
 				customButtonsState={customButtonsState}
 			/>
 		);
@@ -187,6 +188,7 @@ describe("Table buttons renders correctly", () => {
 				propertyId={propertyId}
 				customButtons={customButtons}
 				tableState={tableStateDisable}
+				tableLabel={"Test label"}
 				customButtonsState={customButtonsState}
 			/>
 		);
@@ -269,6 +271,7 @@ describe("Table buttons renders correctly", () => {
 				propertyId={propertyId}
 				customButtons={customButtons}
 				tableState=""
+				tableLabel={"Test label"}
 				customButtonsState={customButtonsState}
 			/>
 		);
@@ -294,6 +297,7 @@ describe("Table buttons renders correctly", () => {
 				propertyId={propertyId}
 				customButtons={customButtons}
 				tableState=""
+				tableLabel={"Test label"}
 				customButtonsState={customButtonsState}
 			/>
 		);
