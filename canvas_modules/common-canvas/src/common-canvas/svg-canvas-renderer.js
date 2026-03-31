@@ -4952,8 +4952,6 @@ export default class SVGCanvasRenderer {
 					return;
 				}
 
-				console.log("link mouseenter");
-
 				const targetObj = d3Event.currentTarget;
 
 				if ((this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
