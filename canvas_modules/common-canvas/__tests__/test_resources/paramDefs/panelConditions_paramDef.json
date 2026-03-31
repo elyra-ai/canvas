@@ -387,6 +387,9 @@
     "label": {
       "default": "Panels"
     },
+    "description": {
+      "default": "This is a tooltip for panels image."
+    },
     "parameter_info": [
       {
         "parameter_ref": "disableTextPanel",
@@ -938,6 +941,9 @@
         "id": "moon",
         "label": {
           "resource_key": "moon"
+        },
+        "description": {
+          "default": "This is a tooltip for moon action image."
         },
         "control": "image",
         "data": {
