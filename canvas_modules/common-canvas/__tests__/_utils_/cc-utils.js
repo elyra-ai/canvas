@@ -118,7 +118,7 @@ export function createIntlCommonCanvasToolbar(data, canvasController) {
 
 	const wrapper = renderWithIntl(
 		<Provider store={canvasController.getStore()}>
-			<CommonCanvasToolbar canvasController={canvasController} />
+			<CommonCanvasToolbar canvasController={canvasController} containingDivId="test-div-id" />
 		</Provider>
 	);
 

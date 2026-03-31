@@ -94,16 +94,22 @@ describe("Tearsheet renders correctly", () => {
 	});
 
 	it("should not display buttons in tearsheet if showPropertiesButtons is false", () => {
-		const wrapper = renderWithIntl(<TearSheet
-			open
-			onCloseCallback={Sinon.spy()}
-			tearsheet={{
-				title: "test title",
-				content: "test content"
-			}}
-			showPropertiesButtons={false}
-			applyOnBlur
-		/>);
+		const wrapper = renderWithIntl(
+			<Provider store={controller.getStore()}>
+				<TearSheet
+					open
+					onCloseCallback={Sinon.spy()}
+					tearsheet={{
+						title: "test title",
+						content: "test content"
+					}}
+					showPropertiesButtons={false}
+					applyOnBlur
+					cancelHandler={Sinon.spy()}
+					controller={controller}
+					disableSaveOnRequiredErrors={false}
+				/>
+			</Provider>);
 		const { container } = wrapper;
 		const tearsheet = container.getElementsByClassName("properties-tearsheet-panel");
 		expect(tearsheet).to.not.be.null;
