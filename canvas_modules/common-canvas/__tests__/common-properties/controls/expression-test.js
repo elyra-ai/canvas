@@ -1308,7 +1308,7 @@ describe("expression select field function tests", () => {
 				controller={controller}
 				language={control.language}
 				onChange={Sinon.spy()}
-				functionList={ExpressionInfo.actual.functionCategories}
+				functionList={ExpressionInfo.actual.functionCategories["General Functions"].functionList}
 			/>
 		);
 	});
