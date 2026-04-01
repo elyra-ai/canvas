@@ -23,7 +23,8 @@ import {
 	ASSOC_STRAIGHT,
 	LINK_SELECTION_NONE,
 	NODE_FORMAT_HORIZONTAL,
-	PALETTE_LAYOUT_FLYOUT
+	PALETTE_LAYOUT_FLYOUT,
+	LAYOUT_LIBRARY_DAGRE
 } from "../common-canvas/constants/canvas-constants";
 
 export default class ConfigUtils {
@@ -104,6 +105,7 @@ export default class ConfigUtils {
 			enableSnapToGridY: null,
 			enableAutoLayoutVerticalSpacing: null,
 			enableAutoLayoutHorizontalSpacing: null,
+			enableLayoutLibrary: LAYOUT_LIBRARY_DAGRE,
 			enableSingleOutputPortDisplay: false,
 			enableNarrowPalette: true,
 			schemaValidation: false,

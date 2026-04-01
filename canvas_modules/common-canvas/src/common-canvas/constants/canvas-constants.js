@@ -145,6 +145,9 @@ export const DEC_LINK = "link";
 export const DAGRE_HORIZONTAL = "LR";
 export const DAGRE_VERTICAL = "TB";
 
+export const LAYOUT_LIBRARY_ELK = "ELK";
+export const LAYOUT_LIBRARY_DAGRE = "Dagre";
+
 export const NODE_LINK = "nodeLink";
 export const ASSOCIATION_LINK = "associationLink";
 export const COMMENT_LINK = "commentLink";
