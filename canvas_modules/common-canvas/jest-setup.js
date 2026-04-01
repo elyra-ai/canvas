@@ -71,13 +71,29 @@ function mockConsole(consoleMethod) {
 		"[WARNING]: Condition Operator dmRoleEquals only intended for use on columns:",
 		"[WARNING]: Control not found for samplingSize:",
 		"[WARNING]: Control not found for param_removed:",
+		"[WARNING]: Control not found for expression:",
+		"[WARNING]: Control not found for custom_name_checkbox:",
+		"[WARNING]: Control not found for hidden_field:",
+		"[WARNING]: Control not found for custom_name:",
+		"[WARNING]: Control not found for annotation:",
+		"[WARNING]: Control not found for custom_name_checkbox:",
+		"[WARNING]: Control not found for defaultOperations:",
+		"[WARNING]: Control not found for default_boolean:",
+		"[WARNING]: Control not found for keys:",
+		"[WARNING]: Control not found for textfield:",
+		"[WARNING]: Ignoring unknown condition operation 'customSyntaxCheck' for parameter_ref expression:",
+		"[WARNING]: Ignoring unknown condition operation 'customNonEmptyListLessThan' for parameter_ref list_string_error:",
+		"[WARNING]: Ignoring unknown condition operation 'customRequiredColumn' for parameter_ref checkbox:",
+		"[WARNING]: Ignoring unknown condition operation 'customMax' for parameter_ref custom_op_num:",
+		"Warning: Failed prop type: Invalid prop `value` supplied to `DropDown`, expected one of type [string, object].",
+
 		// Error thrown by error-boundary-test.js
 		"Error: This is a fake error thrown for testing purposes.",
 		// This message for VirtualizedGrid
 		"Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
 		// These messages from virtualized-table
 		"componentWillMount has been renamed",
-		"componentWillReceiveProps has been renamed",
+		"componentWillReceiveProps has been renamed"
 
 	];
 	return (msg, ...args) => {

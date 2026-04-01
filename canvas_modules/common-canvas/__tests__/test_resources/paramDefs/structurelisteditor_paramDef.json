@@ -2010,7 +2010,7 @@
             "type": "summaryPanel",
             "group_info": [
               {
-                "id": "Structure Table Inline Control",
+                "id": "Structure Table Inline Control - Objects",
                 "parameter_refs": [
                   "structurelisteditorObjectType",
                   "structurelisteditorDefaultObjectType"
