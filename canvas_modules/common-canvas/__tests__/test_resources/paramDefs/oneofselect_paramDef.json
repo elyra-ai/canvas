@@ -227,9 +227,9 @@
     {
       "id": "fill",
       "enum": [
-        -1,
-        0,
-        32
+        "-1",
+        "0",
+        "32"
       ],
       "default": 0,
       "required": false
