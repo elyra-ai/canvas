@@ -82,7 +82,7 @@ class PaletteFlyoutContentFilteredList extends React.Component {
 					defaultMessage: defaultMessages["palette.flyout.search.resultsrestricted"]
 				});
 			contentItems.push(
-				<div key="restrict-item" className="palette-flyout-restrict-item" tabIndex={0} onKeyDown={this.onKeyDownResults}>
+				<div key="restrict-item" className="palette-flyout-restrict-item" onKeyDown={this.onKeyDownResults}>
 					{resultsRestricted}
 				</div>
 			);
