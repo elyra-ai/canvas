@@ -69,6 +69,8 @@ mockTextArea.mockImplementation((props) => {
 	return <TextAreaComp {...props} />;
 });
 
+const dummyControlItem = (<div>Dummy control item text</div>);
+
 describe("textarea control renders correctly", () => {
 	const user = userEvent.setup();
 
@@ -89,6 +91,7 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 			/>
 		);
 		expectJest(mockTextArea).toHaveBeenCalledWith({
@@ -96,6 +99,7 @@ describe("textarea control renders correctly", () => {
 			"controller": controller,
 			"control": control,
 			"propertyId": propertyId,
+			"controlItem": dummyControlItem,
 		});
 	});
 
@@ -106,6 +110,7 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
@@ -120,6 +125,7 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
@@ -135,6 +141,7 @@ describe("textarea control renders correctly", () => {
 				control={controlList}
 				controller={controller}
 				propertyId={propertyIdList}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea-list']");
@@ -150,6 +157,7 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const value = propertyUtilsRTL.genLongString(control.charLimit + 10);
@@ -168,6 +176,7 @@ describe("textarea control renders correctly", () => {
 				control={controlList}
 				controller={controller}
 				propertyId={propertyIdList}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const value = propertyUtilsRTL.genLongString(maxLengthForMultiLineControls + 10);
@@ -185,6 +194,7 @@ describe("textarea control renders correctly", () => {
 				control={controlNoLimit}
 				controller={controller}
 				propertyId={propertyIdList}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const value = propertyUtilsRTL.genLongString(maxLengthForMultiLineControls + 10);
@@ -201,6 +211,7 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
@@ -215,6 +226,7 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
@@ -232,6 +244,7 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
@@ -250,6 +263,7 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
@@ -266,13 +280,14 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
 		expect(textWrapper.querySelector("textarea").disabled).to.equal(true);
 	});
 
-	it("textarea doesn not render when hidden", () => {
+	it("textarea does not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<TextArea
@@ -280,6 +295,7 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
@@ -298,6 +314,7 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
@@ -314,6 +331,7 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const textWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
@@ -332,6 +350,7 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 			/>
 		);
 		const helpTextWrapper = wrapper.container.querySelector("div[data-id='properties-test-textarea']");
@@ -347,6 +366,7 @@ describe("textarea control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={dummyControlItem}
 				readOnly
 			/>
 		);
