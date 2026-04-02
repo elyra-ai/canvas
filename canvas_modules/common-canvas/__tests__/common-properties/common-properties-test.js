@@ -1142,6 +1142,7 @@ describe("CommonProperties should set propertiesConfig correctly", () => {
 			applyOnBlur: false,
 			heading: true,
 			showRequiredIndicator: true,
+			disableSaveOnRequiredErrors: false,
 			trimSpaces: true
 		};
 		const wrapper = renderedObject.wrapper;
