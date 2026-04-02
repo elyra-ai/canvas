@@ -25,6 +25,7 @@ import PropertiesDialog from "../../src/common-properties/components/properties-
 import propertyUtilsRTL from "../_utils_/property-utilsRTL.js";
 import tableUtilsRTL from "../_utils_/table-utilsRTL.js";
 import { render } from "../_utils_/mount-utils.js";
+import { suppressConsoleWarning } from "../_utils_/message-utils";
 
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 import expressionTestResource from "../test_resources/json/expression-one-category.json";
@@ -45,18 +46,6 @@ import { CARBON_MODAL_SIZE_XSMALL, CARBON_MODAL_SIZE_SMALL, CARBON_MODAL_SIZE_LA
 const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
 const propertyIconHandler = sinon.spy();
-
-// Helper function to suppress specific console warnings
-function suppressConsoleWarning(warningMessage) {
-	return jest.spyOn(console, "warn").mockImplementation((message) => {
-		if (message && message.includes(warningMessage)) {
-			return; // Suppress this specific warning
-		}
-		// Log other warnings normally
-		// Can't use console.warn here otherwise it loops.
-		console.log(message); // eslint-disable-line no-console
-	});
-}
 
 const locale = "en";
 const localMessages = {
@@ -443,7 +432,10 @@ describe("CommonProperties works correctly in flyout", () => {
 	});
 
 	it("When enableResize=true and editor_size=small and pixel_width min and max are set resize button should be rendered", () => {
-		const consoleWarnSpy = suppressConsoleWarning("No resize button shown. Pixel width min size is greater than or equal to pixel width max size.");
+		const consoleWarnSpy = suppressConsoleWarning([
+			"No resize button shown. Pixel width min size is greater than or equal to pixel width max size.",
+			"Control not found for samplingSize"
+		]);
 
 		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
 		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
@@ -517,7 +509,10 @@ describe("CommonProperties works correctly in flyout", () => {
 	});
 
 	it("When enableResize=true and editor_size=small and pixel_width min and max are the same the resize button should not be rendered", () => {
-		const consoleWarnSpy = suppressConsoleWarning("No resize button shown. Pixel width min size is greater than or equal to pixel width max size.");
+		const consoleWarnSpy = suppressConsoleWarning([
+			"No resize button shown. Pixel width min size is greater than or equal to pixel width max size.",
+			"Control not found for samplingSize"
+		]);
 
 		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
 		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
@@ -537,7 +532,10 @@ describe("CommonProperties works correctly in flyout", () => {
 	});
 
 	it("When enableResize=true and editor_size=medium and pixel_width min and max are the same the resize button should not be rendered", () => {
-		const consoleWarnSpy = suppressConsoleWarning("No resize button shown. Pixel width min size is greater than or equal to default max size.");
+		const consoleWarnSpy = suppressConsoleWarning([
+			"No resize button shown. Pixel width min size is greater than or equal to default max size.",
+			"Control not found for samplingSize"
+		]);
 
 		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
 		newPropertiesInfo.parameterDef.uihints.editor_size = "medium";
@@ -557,7 +555,10 @@ describe("CommonProperties works correctly in flyout", () => {
 	});
 
 	it("When enableResize=true and editor_size=large and pixel_width min and max are the same the resize button should not be rendered", () => {
-		const consoleWarnSpy = suppressConsoleWarning("No resize button shown. Pixel width min size is greater than or equal to default max size.");
+		const consoleWarnSpy = suppressConsoleWarning([
+			"No resize button shown. Pixel width min size is greater than or equal to default max size.",
+			"Control not found for samplingSize"
+		]);
 
 		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
 		newPropertiesInfo.parameterDef.uihints.editor_size = "large";
@@ -588,7 +589,10 @@ describe("CommonProperties works correctly in flyout", () => {
 	});
 
 	it("When enableResize=true and editor_size=max and pixel_width min and max is provided the resize button should not be rendered", () => {
-		const consoleWarnSpy = suppressConsoleWarning("No resize button shown. Pixel width min size ignored.");
+		const consoleWarnSpy = suppressConsoleWarning([
+			"No resize button shown. Pixel width min size ignored.",
+			"Control not found for samplingSize"
+		]);
 
 		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
 		newPropertiesInfo.parameterDef.uihints.editor_size = "max";
@@ -608,7 +612,10 @@ describe("CommonProperties works correctly in flyout", () => {
 	});
 
 	it("When enableResize=true and editor_size is omitted and pixel_width min and max are the same the resize button should not be rendered", () => {
-		const consoleWarnSpy = suppressConsoleWarning("No resize button shown. Pixel width min size is greater than or equal to pixel width max size.");
+		const consoleWarnSpy = suppressConsoleWarning([
+			"No resize button shown. Pixel width min size is greater than or equal to pixel width max size.",
+			"Control not found for samplingSize"
+		]);
 
 		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
 		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 800, max: 800 };
