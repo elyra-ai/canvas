@@ -52,7 +52,7 @@ describe("datepicker-control renders correctly", () => {
 		role: "date",
 		light: true
 	};
-	const controlItem = <span>&quot;Label&quot;</span>;
+	const controlItem = (<span>Test Label</span>);
 	propertyUtilsRTL.setControls(controller, [control]);
 	const propertyId = { name: "test-datepicker" };
 
@@ -69,8 +69,8 @@ describe("datepicker-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		expectJest(mockDatepicker).toHaveBeenCalledWith({
@@ -88,8 +88,8 @@ describe("datepicker-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const dateWrapper = wrapper.container.querySelector("div[data-id='properties-test-datepicker']");
@@ -103,8 +103,8 @@ describe("datepicker-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		let dateWrapper = wrapper.container.querySelector("div[data-id='properties-test-datepicker']");
@@ -132,8 +132,8 @@ describe("datepicker-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const helpTextWrapper = wrapper.container.querySelector("div[data-id='properties-test-datepicker']");
@@ -150,8 +150,8 @@ describe("datepicker-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 				readOnly
 			/>
 		);
@@ -165,8 +165,8 @@ describe("datepicker-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		expect(controller.getPropertyValue(propertyId)).to.equal("2023-03-23T00:00:00.00");
