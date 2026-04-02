@@ -53,8 +53,7 @@ function suppressConsoleWarning(warningMessage) {
 			return; // Suppress this specific warning
 		}
 		// Log other warnings normally
-		// Can't use console.warn otherwise it loops.
-		console.log("[Warning] " + message); // eslint-disable-line no-console
+		console.log("[Warning] " + message); // Can't use console.warn otherwise it loops.
 	});
 }
 
