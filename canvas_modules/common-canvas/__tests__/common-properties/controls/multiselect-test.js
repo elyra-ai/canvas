@@ -22,6 +22,7 @@ import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
+import { suppressConsoleError } from "../../_utils_/message-utils.js";
 
 import multiselectParamDef from "../../test_resources/paramDefs/multiselect_paramDef.json";
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
@@ -115,6 +116,12 @@ describe("multiselect renders correctly", () => {
 	});
 
 	it("multiselect handles null correctly", () => {
+		// Suppress expected error messages from this test. Display as:
+		// "Cannot update a component (`Connect(MultiSelectControl)`) while rendering a different component",
+		const consoleErrorSpy = suppressConsoleError(
+			"Cannot update a component (`%s`) while rendering a different component (`%s`)."
+		);
+
 		controller.setPropertyValues(
 			{ propertyName: null }
 		);
@@ -139,6 +146,9 @@ describe("multiselect renders correctly", () => {
 		fireEvent.click(multiselectList[0]);
 		const expectedValue = [multiselectList[0].textContent];
 		expect(controller.getPropertyValue(propertyId)).to.eql(expectedValue);
+
+		// Restore console.error
+		consoleErrorSpy.mockRestore();
 	});
 
 	it("multiselect handles undefined correctly", () => {
