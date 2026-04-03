@@ -240,7 +240,8 @@ describe("multiselect renders correctly", () => {
 	});
 
 	it("MultiSelectControl helperText is rendered correctly", () => {
-		control.helperText = "MultiSelectControl helperText";
+		const helperTextContent = "MultiSelectControl helperText";
+		control.helperText = (<span>{helperTextContent}</span>);
 		controller.setPropertyValues(
 			{ }
 		);
@@ -254,11 +255,11 @@ describe("multiselect renders correctly", () => {
 		);
 		const { container } = wrapper;
 		const helpTextWrapper = container.querySelector("div[data-id='properties-test-multiselect']");
-		expect(helpTextWrapper.querySelector("div.cds--form__helper-text").textContent).to.equal(control.helperText);
+		expect(helpTextWrapper.querySelector("div.cds--form__helper-text").textContent).to.equal(helperTextContent);
 	});
 
 	it("MultiSelectControl readOnly is rendered correctly", () => {
-		control.helperText = true;
+		control.helperText = (<span>MultiSelectControl helperText</span>);
 		controller.setPropertyValues(
 			{ }
 		);
