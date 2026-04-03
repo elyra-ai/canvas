@@ -140,6 +140,7 @@ TextfieldControl.propTypes = {
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.oneOfType([
 		PropTypes.string,
+		PropTypes.number,
 		PropTypes.array
 	]), // pass in by redux
 	messageInfo: PropTypes.object, // pass in by redux
