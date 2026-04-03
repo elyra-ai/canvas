@@ -27,6 +27,8 @@ import oneofselectParamDef from "../../test_resources/paramDefs/oneofselect_para
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 import { cloneDeep } from "lodash";
 
+const controlItem = (<span>Test Label</span>);
+
 const mockOneofselectControl = jest.fn();
 jest.mock("../../../src/common-properties/controls/dropdown",
 	() => (props) => mockOneofselectControl(props)
@@ -84,6 +86,7 @@ describe("oneofselect renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -91,6 +94,7 @@ describe("oneofselect renders correctly", () => {
 			"store": controller.getStore(),
 			"controller": controller,
 			"control": control,
+			"controlItem": controlItem,
 			"propertyId": propertyId,
 		});
 	});
@@ -101,6 +105,7 @@ describe("oneofselect renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -117,6 +122,7 @@ describe("oneofselect renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -142,6 +148,7 @@ describe("oneofselect renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -168,6 +175,7 @@ describe("oneofselect renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -181,19 +189,21 @@ describe("oneofselect renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
 		const dropdownWrapper = wrapper.container.querySelector("div[data-id='properties-test-oneofselect']");
 		expect(dropdownWrapper.querySelector("button").disabled).to.equal(true);
 	});
-	it("dropdown doesn not render when hidden", () => {
+	it("dropdown does not render when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = render(
 			<OneofselectControl
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -207,6 +217,7 @@ describe("oneofselect renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -231,6 +242,7 @@ describe("oneofselect renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -248,6 +260,7 @@ describe("oneofselect renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
