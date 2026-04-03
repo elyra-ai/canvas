@@ -85,7 +85,6 @@ function mockConsole(consoleMethod) {
 		"[WARNING]: Ignoring unknown condition operation 'customNonEmptyListLessThan' for parameter_ref list_string_error:",
 		"[WARNING]: Ignoring unknown condition operation 'customRequiredColumn' for parameter_ref checkbox:",
 		"[WARNING]: Ignoring unknown condition operation 'customMax' for parameter_ref custom_op_num:",
-		"Warning: Failed prop type: Invalid prop `value` supplied to `DropDown`, expected one of type [string, object].",
 
 		// This message for VirtualizedGrid
 		"Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
