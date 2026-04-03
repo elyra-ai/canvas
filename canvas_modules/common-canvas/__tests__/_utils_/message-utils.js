@@ -42,8 +42,11 @@ export function suppressConsoleError(errorMessages) {
 	return jest.spyOn(console, "error").mockImplementation((message) => {
 		// Check if message matches any of the messages to suppress
 		for (const errorMessage of messagesToSuppress) {
-			if (message && message.includes(errorMessage)) {
-				return;
+			if (message) {
+				const msg = typeof message === "object" ? message.toString() : message;
+				if (msg.includes(errorMessage)) {
+					return;
+				}
 			}
 		}
 		// Log other errors normally

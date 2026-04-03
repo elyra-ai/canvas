@@ -87,8 +87,6 @@ function mockConsole(consoleMethod) {
 		"[WARNING]: Ignoring unknown condition operation 'customMax' for parameter_ref custom_op_num:",
 		"Warning: Failed prop type: Invalid prop `value` supplied to `DropDown`, expected one of type [string, object].",
 
-		// Error thrown by error-boundary-test.js
-		"Error: This is a fake error thrown for testing purposes.",
 		// This message for VirtualizedGrid
 		"Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
 		// These messages from virtualized-table
