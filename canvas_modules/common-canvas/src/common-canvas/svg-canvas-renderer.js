@@ -3221,16 +3221,25 @@ export default class SVGCanvasRenderer {
 					this.canvasController.closeTip();
 				}
 			})
-			.on("mouseenter", (d3Event, dec) => {
+			// Use mouse over because underlying object (node or link) is also
+			// using mouse over so, here, the decoration gets first opportunity
+			// to display its tooltip and prevent propagation if necessary.
+			.on("mouseover", (d3Event, dec) => {
 				if (this.canOpenTip(TIP_TYPE_DEC) && dec.tooltip) {
-					this.canvasController.closeTip(); // Ensure any existing tip is removed
-					this.canvasController.openTip({
-						id: this.getId("dec_tip", dec.id),
-						type: TIP_TYPE_DEC,
-						targetObj: d3Event.currentTarget,
-						pipelineId: this.activePipeline.id,
-						decoration: dec
-					});
+					const tipId = this.canvasController.getTipId(); // Id of current tip or null
+					const decTipId = this.getId("dec_tip", dec.id);
+
+					if (tipId === null || tipId !== decTipId) {
+						this.canvasController.closeTip(); // Ensure any existing tip is removed
+						this.canvasController.openTip({
+							id: decTipId,
+							type: TIP_TYPE_DEC,
+							targetObj: d3Event.currentTarget,
+							pipelineId: this.activePipeline.id,
+							decoration: dec
+						});
+					}
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 			})
 			.on("mouseleave", (d3Event, dec) => {
