@@ -93,8 +93,7 @@ function mockConsole(consoleMethod) {
 		"Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.",
 		// These messages from virtualized-table
 		"componentWillMount has been renamed",
-		"componentWillReceiveProps has been renamed",
-		"validateDOMNesting(...): <button> cannot appear as a descendant of <button>"
+		"componentWillReceiveProps has been renamed"
 
 	];
 	return (msg, ...args) => {

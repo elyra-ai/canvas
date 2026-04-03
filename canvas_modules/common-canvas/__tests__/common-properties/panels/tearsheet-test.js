@@ -101,7 +101,7 @@ describe("Tearsheet renders correctly", () => {
 					onCloseCallback={Sinon.spy()}
 					tearsheet={{
 						title: "test title",
-						content: "test content"
+						content: ["test content"]
 					}}
 					showPropertiesButtons={false}
 					applyOnBlur
@@ -131,7 +131,7 @@ describe("Tearsheet renders correctly", () => {
 					onCloseCallback={null}
 					tearsheet={{
 						title: "test title",
-						content: "test content"
+						content: ["test content"]
 					}}
 					applyLabel="Save"
 					rejectLabel="Cancel"
