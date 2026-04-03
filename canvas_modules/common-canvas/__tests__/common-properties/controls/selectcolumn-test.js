@@ -27,6 +27,7 @@ import selectcolumnMultiInputParamDef from "../../test_resources/paramDefs/selec
 import { fireEvent, cleanup } from "@testing-library/react";
 
 const emptyValueIndicator = "...";
+const controlItem = (<span>Test Label</span>);
 
 const mockSelectColumn = jest.fn();
 jest.mock("../../../src/common-properties/controls/dropdown",
@@ -107,8 +108,9 @@ describe("selectcolumn control renders correctly", () => {
 			<SelectColumn
 				store={controller.getStore()}
 				control={control}
+				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
-				controller = {controller}
 			/>
 		);
 
@@ -116,6 +118,7 @@ describe("selectcolumn control renders correctly", () => {
 			"store": controller.getStore(),
 			"controller": controller,
 			"control": control,
+			"controlItem": controlItem,
 			"propertyId": propertyId,
 		});
 	});
@@ -133,8 +136,9 @@ describe("selectcolumn control renders correctly", () => {
 			<SelectColumn
 				store={controller.getStore()}
 				control={control}
+				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
-				controller = {controller}
 			/>
 		);
 		const dropdownWrapper = wrapper.container.querySelector("div[data-id='properties-targetField']");
@@ -150,8 +154,9 @@ describe("selectcolumn control renders correctly", () => {
 			<SelectColumn
 				store={controller.getStore()}
 				control={control}
+				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
-				controller = {controller}
 			/>
 		);
 		const { container } = wrapper;
@@ -175,8 +180,9 @@ describe("selectcolumn control renders correctly", () => {
 			<SelectColumn
 				store={controller.getStore()}
 				control={control}
+				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
-				controller = {controller}
 			/>
 		);
 		const { container } = wrapper;
@@ -200,8 +206,9 @@ describe("selectcolumn control renders correctly", () => {
 			<SelectColumn
 				store={controller.getStore()}
 				control={control}
+				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
-				controller = {controller}
 			/>
 		);
 		const { container } = wrapper;
@@ -227,6 +234,7 @@ describe("selectcolumn control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -244,6 +252,7 @@ describe("selectcolumn control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 				readOnly
 			/>
