@@ -6578,7 +6578,11 @@ export default class SVGCanvasRenderer {
 			// appears in the viewport. If the event was a MouseEvent we don't zoom to reveal
 			// because it interferes with double-click events (also it's not necessary because
 			// the object will be at least partially visible in the view port for it to be clicked).
-			if (CanvasUtils.isKeyboardEvent(evt)) {
+			// Also, we don't zoom to reveal if the object is a link in a full-page subflow
+			// because a) they are almost always on display and b) if the link is to, or from, a
+			// binding node zoomToReveal will cause the nodes to be incorrectly moved.
+			if (CanvasUtils.isKeyboardEvent(evt) &&
+					!(type === "link" && this.dispUtils.isDisplayingSubFlowFullPage())) {
 				const zoom = this.canvasController.getZoomToReveal([obj.id]);
 
 				if (zoom) {
