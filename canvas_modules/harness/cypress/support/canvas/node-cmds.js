@@ -299,7 +299,8 @@ Cypress.Commands.add("hoverOverOutputPortOfNode", (nodeName, outputPortId) => {
 Cypress.Commands.add("hoverOverNodeDecoration", (nodeName, decId) => {
 	cy.getNodeWithLabel(nodeName)
 		.find("[data-id='node_dec_group_0_" + decId + "']")
-		.trigger("mouseenter");
+		.trigger("mouseenter")
+		.trigger("mouseover");
 });
 
 Cypress.Commands.add("clickEditIconForNodeDecLabel", (nodeName) => {
