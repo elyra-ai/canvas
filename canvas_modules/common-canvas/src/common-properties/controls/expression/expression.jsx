@@ -454,6 +454,8 @@ class ExpressionControl extends React.Component {
 
 		const flyout = this.state.showExpressionBuilder ? (<TearSheet
 			open
+			controller={this.props.controller}
+			disableSaveOnRequiredErrors={false}
 			onCloseCallback={this.cancelExpressionBuilder}
 			okHandler={this.hideExpressionBuilder}
 			cancelHandler={this.cancelExpressionBuilder}

@@ -22,6 +22,7 @@ import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 import { expect } from "chai";
 import sinon from "sinon";
 import { render } from "@testing-library/react";
+import { suppressConsoleError } from "../_utils_/message-utils.js";
 
 const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
@@ -36,7 +37,14 @@ describe("The error boundary class should catch errors and display a fallback UI
 	function throwAnError() {
 		throw new Error("This is a fake error thrown for testing purposes.");
 	}
+
 	it("When an error is thrown in the constructor of Properties-Main, the error should be caught with a fallback UI containing a button", () => {
+		// Suppress expected error messages from this test
+		const consoleErrorSpy = suppressConsoleError([
+			"Error: This is a fake error thrown for testing purposes.",
+			"The above error occurred in the <PropertiesMain> component:"
+		]);
+
 		const propertiesConfig = {
 			rightFlyoutPanel: true,
 			containerType: "Custom"
@@ -59,5 +67,8 @@ describe("The error boundary class should catch errors and display a fallback UI
 		expect(container.querySelectorAll("div.properties-flyout-error-container")).to.have.length(1);
 		expect(container.querySelectorAll("button.properties-apply-button.cds--btn.cds--btn--primary")).to.have.length(1);
 		expect(container.querySelectorAll("button.properties-apply-button.cds--btn.cds--btn--secondary")).to.have.length(0);
+
+		// Restore console.error
+		consoleErrorSpy.mockRestore();
 	});
 });

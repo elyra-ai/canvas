@@ -52,7 +52,7 @@ describe("datepicker-range-control renders correctly", () => {
 		role: "date",
 		light: true
 	};
-	const controlItem = <span>&quot;Label&quot;</span>;
+	const controlItem = (<span>Test Label</span>);
 	propertyUtilsRTL.setControls(controller, [control]);
 	const propertyId = { name: "test-datepicker-range" };
 
@@ -70,8 +70,8 @@ describe("datepicker-range-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 
@@ -90,8 +90,8 @@ describe("datepicker-range-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const { container } = wrapper;
@@ -106,8 +106,8 @@ describe("datepicker-range-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const { container } = wrapper;
@@ -140,8 +140,8 @@ describe("datepicker-range-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const { container } = wrapper;
@@ -164,8 +164,8 @@ describe("datepicker-range-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 				readOnly
 			/>
 		);

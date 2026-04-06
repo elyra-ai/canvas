@@ -18,10 +18,12 @@ import { expect } from "chai";
 import ACTION_PARAMDEF from "../../test_resources/paramDefs/action_paramDef.json";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { cleanup, fireEvent } from "@testing-library/react";
+import { suppressConsoleError } from "../../_utils_/message-utils";
 
 describe("custom action renders correctly", () => {
 	let wrapper;
 	let controller;
+
 	beforeEach(() => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(ACTION_PARAMDEF);
 		wrapper = renderedObject.wrapper;
@@ -49,6 +51,12 @@ describe("custom action renders correctly", () => {
 	});
 
 	it("updating custom actions should work correctly", () => {
+		// Suppress error issued by Carbon's OverflowMenu component. The actual message is:
+		// validateDOMNesting(...): <button> cannot appear as a descendant of <button>
+		const consoleErrorSpy = suppressConsoleError(
+			"Warning: validateDOMNesting(...): %s cannot appear as a descendant of <%s>.%s"
+		);
+
 		const { container } = wrapper;
 		const customActionLeft = container.querySelectorAll("div.custom-action-left");
 		expect(customActionLeft).to.have.length(1);
@@ -83,6 +91,9 @@ describe("custom action renders correctly", () => {
 		readonlyText = container.querySelector("div[data-id='properties-ctrl-readonly_text']").querySelector(".properties-field-type");
 		expect(readonlyText.textContent).to.equal("Menu item 2");
 		expect(controller.getPropertyValue(readonlyTextPropertyId)).to.equal("Menu item 2");
+
+		// Restore console.error
+		consoleErrorSpy.mockRestore();
 	});
 });
 

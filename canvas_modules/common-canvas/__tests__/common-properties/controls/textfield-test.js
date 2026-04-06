@@ -30,6 +30,7 @@ import textfieldParamDef from "../../test_resources/paramDefs/textfield_paramDef
 
 
 const controller = new Controller();
+const controlItem = (<span>Test Label</span>);
 
 const control = {
 	name: "test-text",
@@ -97,6 +98,7 @@ describe("textfield renders correctly", () => {
 					store={controller.getStore()}
 					control={control}
 					controller={controller}
+					controlItem={controlItem}
 					propertyId={propertyId}
 				/>
 			</Provider>
@@ -114,6 +116,7 @@ describe("textfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -121,6 +124,7 @@ describe("textfield renders correctly", () => {
 			"store": controller.getStore(),
 			"controller": controller,
 			"control": control,
+			"controlItem": controlItem,
 			"propertyId": propertyId,
 		});
 	});
@@ -154,14 +158,14 @@ describe("textfield renders correctly", () => {
 	it("Disable the space trimming when trimSpaces set to false", () => {
 		const renderedObject = propertyUtilsRTL.flyoutEditorForm(textfieldParamDef, { trimSpaces: false });
 		const wrapper = renderedObject.wrapper;
-		const rcontroller = renderedObject.controller;
+		const localController = renderedObject.controller;
 		const { container } = wrapper;
 
 		const inputWrapper2 = container.querySelector("div[data-id='properties-ctrl-string_empty']");
 		const input = inputWrapper2.querySelector("input");
 
 		fireEvent.change(input, { target: { value: "  " } });
-		const actualErrors = rcontroller.getAllErrorMessages();
+		const actualErrors = localController.getAllErrorMessages();
 		expect(actualErrors).to.eql({}); // no error because space is a valid input
 
 	});
@@ -172,6 +176,7 @@ describe("textfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -187,6 +192,7 @@ describe("textfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -203,6 +209,7 @@ describe("textfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -222,6 +229,7 @@ describe("textfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control2}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId2}
 			/>
 		);
@@ -239,6 +247,7 @@ describe("textfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -256,6 +265,7 @@ describe("textfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -274,6 +284,7 @@ describe("textfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -290,6 +301,7 @@ describe("textfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -304,6 +316,7 @@ describe("textfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -322,6 +335,7 @@ describe("textfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -330,8 +344,8 @@ describe("textfield renders correctly", () => {
 		expect(messageWrapper).to.have.length(1);
 	});
 
-	it("textfield renders helpertext correctly", () => {
-		control.helperText = "textfield helpertext";
+	it("textfield renders helper text correctly", () => {
+		control.helperText = "textfield helper text";
 		controller.setPropertyValues(
 			{ }
 		);
@@ -340,6 +354,7 @@ describe("textfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -357,6 +372,7 @@ describe("textfield renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 				readOnly
 			/>
@@ -382,6 +398,7 @@ describe("textfield list works correctly", () => {
 				store={controller.getStore()}
 				control={controlList}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -397,6 +414,7 @@ describe("textfield list works correctly", () => {
 				store={controller.getStore()}
 				control={controlList}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -412,6 +430,7 @@ describe("textfield list works correctly", () => {
 				store={controller.getStore()}
 				control={controlList}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -427,6 +446,7 @@ describe("textfield list works correctly", () => {
 				store={controller.getStore()}
 				control={controlList2}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);

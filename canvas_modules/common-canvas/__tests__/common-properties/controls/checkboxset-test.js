@@ -29,6 +29,7 @@ import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
 
 const controller = new Controller();
+const controlItem = (<span>Test Label</span>);
 
 const control = {
 	name: "test-checkboxset",
@@ -92,6 +93,7 @@ describe("checkboxset control tests", () => {
 				<Checkboxset
 					control={control}
 					controller={controller}
+					controlItem={controlItem}
 					propertyId={propertyId}
 					tableControl
 				/>
@@ -101,6 +103,7 @@ describe("checkboxset control tests", () => {
 		expectJest(mockCheckboxset).toHaveBeenCalledWith({
 			"controller": controller,
 			"control": control,
+			"controlItem": controlItem,
 			"propertyId": propertyId,
 			"tableControl": true
 		});
@@ -111,6 +114,7 @@ describe("checkboxset control tests", () => {
 				<Checkboxset
 					control={control}
 					controller={controller}
+					controlItem={controlItem}
 					propertyId={propertyId}
 				/>
 			</Provider>
@@ -129,6 +133,7 @@ describe("checkboxset control tests", () => {
 				<Checkboxset
 					control={control}
 					controller={controller}
+					controlItem={controlItem}
 					propertyId={propertyId}
 				/>
 			</Provider>
@@ -146,6 +151,7 @@ describe("checkboxset control tests", () => {
 				<Checkboxset
 					control={controlNumber}
 					controller={controller}
+					controlItem={controlItem}
 					propertyId={propertyIdNumber}
 				/>
 			</Provider>
@@ -164,6 +170,7 @@ describe("checkboxset control tests", () => {
 				<Checkboxset
 					control={control}
 					controller={controller}
+					controlItem={controlItem}
 					propertyId={propertyId}
 				/>
 			</Provider>
@@ -204,6 +211,7 @@ describe("checkboxset control tests", () => {
 				<Checkboxset
 					control={controlNumber}
 					controller={controller}
+					controlItem={controlItem}
 					propertyId={propertyIdNumber}
 				/>
 			</Provider>
@@ -236,6 +244,7 @@ describe("checkboxset control tests", () => {
 				<Checkboxset
 					control={controlInvalid}
 					controller={controller}
+					controlItem={controlItem}
 					propertyId={propertyIdInvalid}
 				/>
 			</Provider>
@@ -260,6 +269,7 @@ describe("checkboxset control tests", () => {
 				<Checkboxset
 					control={controlNull}
 					controller={controller}
+					controlItem={controlItem}
 					propertyId={propertyIdNull}
 				/>
 			</Provider>
@@ -284,6 +294,7 @@ describe("checkboxset control tests", () => {
 				<Checkboxset
 					control={controlUndefined}
 					controller={controller}
+					controlItem={controlItem}
 					propertyId={propertyIdUndefined}
 				/>
 			</Provider>
@@ -308,6 +319,7 @@ describe("checkboxset control tests", () => {
 				<Checkboxset
 					control={control}
 					controller={controller}
+					controlItem={controlItem}
 					propertyId={propertyId}
 				/>
 			</Provider>
@@ -327,6 +339,7 @@ describe("checkboxset control tests", () => {
 				<Checkboxset
 					control={control}
 					controller={controller}
+					controlItem={controlItem}
 					propertyId={propertyId}
 				/>
 			</Provider>
@@ -346,6 +359,7 @@ describe("checkboxset control tests", () => {
 				<Checkboxset
 					control={control}
 					controller={controller}
+					controlItem={controlItem}
 					propertyId={propertyId}
 				/>
 			</Provider>

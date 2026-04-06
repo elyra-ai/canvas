@@ -27,7 +27,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import TIMEFIELD_PARAM_DEF from "../../test_resources/paramDefs/timefield_paramDef.json";
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
 
-const controlItem = <span>&quot;Label&quot;</span>;
+const controlItem = (<span>Test Label</span>);
 
 const mockTimefield = jest.fn();
 jest.mock("../../../src/common-properties/controls/timefield",
@@ -66,8 +66,8 @@ describe("timefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		expectJest(mockTimefield).toHaveBeenCalledWith({
@@ -85,8 +85,8 @@ describe("timefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const timeWrapper = wrapper.container.querySelector("div[data-id='properties-test-timefield']");
@@ -100,8 +100,8 @@ describe("timefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const timeWrapper = wrapper.container.querySelector("div[data-id='properties-test-timefield']");
@@ -117,8 +117,8 @@ describe("timefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const timeWrapper = wrapper.container.querySelector("div[data-id='properties-test-timefield']");
@@ -139,8 +139,8 @@ describe("timefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const timeWrapper = wrapper.container.querySelector("div[data-id='properties-test-timefield']");
@@ -155,8 +155,8 @@ describe("timefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const timeWrapper = wrapper.container.querySelector("div[data-id='properties-test-timefield']");
@@ -170,8 +170,8 @@ describe("timefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const timeWrapper = wrapper.container.querySelector("div[data-id='properties-test-timefield']");
@@ -189,8 +189,8 @@ describe("timefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const helpTextWrapper = wrapper.container.querySelector("div[data-id='properties-test-timefield']");
@@ -207,8 +207,8 @@ describe("timefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 				readOnly
 			/>
 		);

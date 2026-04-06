@@ -51,7 +51,7 @@ describe("datefield-control renders correctly", () => {
 		},
 		light: true
 	};
-	const controlItem = <span>&quot;Label&quot;</span>;
+	const controlItem = (<span>Test Label</span>);
 	propertyUtilsRTL.setControls(controller, [control]);
 	const propertyId = { name: "test-datefield" };
 
@@ -68,16 +68,16 @@ describe("datefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		expectJest(mockDatefield).toHaveBeenCalledWith({
 			"store": controller.getStore(),
 			"controller": controller,
 			"control": control,
-			"propertyId": propertyId,
-			"controlItem": controlItem
+			"controlItem": controlItem,
+			"propertyId": propertyId
 		});
 	});
 
@@ -87,8 +87,8 @@ describe("datefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const { container } = wrapper;
@@ -103,8 +103,8 @@ describe("datefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const { container } = wrapper;
@@ -120,8 +120,8 @@ describe("datefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const { container } = wrapper;
@@ -144,8 +144,8 @@ describe("datefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const { container } = wrapper;
@@ -161,8 +161,8 @@ describe("datefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const { container } = wrapper;
@@ -177,8 +177,8 @@ describe("datefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const { container } = wrapper;
@@ -194,8 +194,8 @@ describe("datefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
-				propertyId={propertyId}
 				controlItem={controlItem}
+				propertyId={propertyId}
 			/>
 		);
 		const { container } = wrapper;
@@ -212,6 +212,7 @@ describe("datefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 			/>
 		);
@@ -230,6 +231,7 @@ describe("datefield-control renders correctly", () => {
 				store={controller.getStore()}
 				control={control}
 				controller={controller}
+				controlItem={controlItem}
 				propertyId={propertyId}
 				readOnly
 			/>

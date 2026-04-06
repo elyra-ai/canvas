@@ -61,7 +61,7 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 
 	it("should render text toolbar in new position when moved", async() => {
 		const { container } = createIntlCommonCanvasTextToolbar({}, canvasController);
-		canvasController.openTextToolbar(100, 200, [], () => { /**/ });
+		canvasController.openTextToolbar(100, 200, [], MARKDOWN, () => { /**/ });
 
 		await waitFor(() => {
 			expect(container.querySelectorAll(".text-toolbar")[0].style.left).to.equal("100px");
@@ -78,7 +78,7 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 
 	it("should NOT render <Toolbar/> after it is closed", async() => {
 		const { container } = createIntlCommonCanvasTextToolbar({}, canvasController);
-		canvasController.openTextToolbar(100, 200, [], () => { /**/ });
+		canvasController.openTextToolbar(100, 200, [], MARKDOWN, () => { /**/ });
 
 		await waitFor(() => {
 			expect(container.querySelectorAll("div.text-toolbar")).to.have.length(1);

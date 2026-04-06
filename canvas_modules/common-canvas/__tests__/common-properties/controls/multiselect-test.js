@@ -22,6 +22,7 @@ import { render } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
+import { suppressConsoleError } from "../../_utils_/message-utils.js";
 
 import multiselectParamDef from "../../test_resources/paramDefs/multiselect_paramDef.json";
 import { fireEvent, waitFor, cleanup } from "@testing-library/react";
@@ -115,6 +116,12 @@ describe("multiselect renders correctly", () => {
 	});
 
 	it("multiselect handles null correctly", () => {
+		// Suppress expected error messages from this test. Display as:
+		// "Cannot update a component (`Connect(MultiSelectControl)`) while rendering a different component",
+		const consoleErrorSpy = suppressConsoleError(
+			"Cannot update a component (`%s`) while rendering a different component (`%s`)."
+		);
+
 		controller.setPropertyValues(
 			{ propertyName: null }
 		);
@@ -139,6 +146,9 @@ describe("multiselect renders correctly", () => {
 		fireEvent.click(multiselectList[0]);
 		const expectedValue = [multiselectList[0].textContent];
 		expect(controller.getPropertyValue(propertyId)).to.eql(expectedValue);
+
+		// Restore console.error
+		consoleErrorSpy.mockRestore();
 	});
 
 	it("multiselect handles undefined correctly", () => {
@@ -240,7 +250,8 @@ describe("multiselect renders correctly", () => {
 	});
 
 	it("MultiSelectControl helperText is rendered correctly", () => {
-		control.helperText = "MultiSelectControl helperText";
+		const helperTextContent = "MultiSelectControl helperText";
+		control.helperText = (<span>{helperTextContent}</span>);
 		controller.setPropertyValues(
 			{ }
 		);
@@ -254,11 +265,11 @@ describe("multiselect renders correctly", () => {
 		);
 		const { container } = wrapper;
 		const helpTextWrapper = container.querySelector("div[data-id='properties-test-multiselect']");
-		expect(helpTextWrapper.querySelector("div.cds--form__helper-text").textContent).to.equal(control.helperText);
+		expect(helpTextWrapper.querySelector("div.cds--form__helper-text").textContent).to.equal(helperTextContent);
 	});
 
 	it("MultiSelectControl readOnly is rendered correctly", () => {
-		control.helperText = true;
+		control.helperText = (<span>MultiSelectControl helperText</span>);
 		controller.setPropertyValues(
 			{ }
 		);
