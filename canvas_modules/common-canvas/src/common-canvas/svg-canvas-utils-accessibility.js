@@ -383,7 +383,7 @@ export default class SVGCanvasUtilsAccessibility {
 		dataLinksFrom.forEach((link) => { linkInfos.push({ link: link, type: "node", obj: link.srcObj }); });
 
 		const dataLinksTo = this.getLinksToNode(node, NODE_LINK);
-		// FIlter out any self-referencing links which will have already been added.
+		// Filter out any self-referencing links which will have already been added.
 		dataLinksTo.forEach((link) => {
 			if (link.srcNodeId !== link.trgNodeId) {
 				linkInfos.push({ link: link, type: "node", obj: link.trgNode });
