@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import Action from "../command-stack/action.js";
+import { CANVAS_FOCUS } from "../common-canvas/constants/canvas-constants.js";
 
 export default class DisplaySubPipeline extends Action {
 	constructor(data, canvasController) {
@@ -53,4 +54,9 @@ export default class DisplaySubPipeline extends Action {
 	getLabel() {
 		return this.labelUtil.getActionLabel(this, "action.displaySubPipeline");
 	}
+
+	getFocusObject() {
+		return CANVAS_FOCUS;
+	}
+
 }
