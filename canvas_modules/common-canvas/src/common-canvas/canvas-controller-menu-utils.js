@@ -15,7 +15,7 @@
  */
 
 import { get } from "lodash";
-import { LINK_SELECTION_NONE, SUPER_NODE, WYSIWYG } from "./constants/canvas-constants";
+import { LINK_SELECTION_NONE, SUPER_NODE, WYSIWYG, CAUSE_KEYBOARD } from "./constants/canvas-constants";
 import CanvasUtils from "./common-canvas-utils";
 
 // Global temporary variable to handle the canvas controller.
@@ -100,6 +100,8 @@ const filterOutUnwantedDividers = (menuDef) => {
 const isEditingAction = (action) =>
 	action === "createComment" ||
 	action === "createWYSIWYGComment" ||
+	action === "createAutoComment" ||
+	action === "createAutoWYSIWYGComment" ||
 	action === "colorBackground" ||
 	action === "disconnectNode" ||
 	action === "setCommentEditingMode" ||
@@ -133,9 +135,11 @@ const createDefaultContextMenu = (source) => {
 
 	// Select all & add comment: canvas only
 	if (source.type === "canvas") {
-
+		const commentMenu = source.cause === CAUSE_KEYBOARD
+			? createAutoCommentMenu()
+			: createCommentMenu();
 		menuDefinition = menuDefinition.concat(
-			createCommentMenu(),
+			commentMenu,
 			createSelectAllMenu()
 		);
 	}
@@ -330,13 +334,23 @@ const createDefaultContextMenu = (source) => {
 };
 
 const createCommentMenu = () => {
+	const menu = [{ action: "createComment", label: getLabel("canvas.addComment"), toolbarItem: true }];
 	if (cc.getCanvasConfig().enableWYSIWYGComments) {
-		return [
-			{ action: "createComment", label: getLabel("canvas.addComment"), toolbarItem: true },
+		menu.push(
 			{ action: "createWYSIWYGComment", label: getLabel("canvas.addWysiwygComment"), toolbarItem: true }
-		];
+		);
 	}
-	return { action: "createComment", label: getLabel("canvas.addComment"), toolbarItem: true };
+	return menu;
+};
+
+const createAutoCommentMenu = () => {
+	const menu = [{ action: "createAutoComment", label: getLabel("canvas.addComment"), toolbarItem: true }];
+	if (cc.getCanvasConfig().enableWYSIWYGComments) {
+		menu.push(
+			{ action: "createAutoWYSIWYGComment", label: getLabel("canvas.addWysiwygComment"), toolbarItem: true }
+		);
+	}
+	return menu;
 };
 
 const createSelectAllMenu = () => {
