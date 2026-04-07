@@ -2490,7 +2490,7 @@ export default class SVGCanvasRenderer {
 								this.addContextToolbar(d3Event, d, "node", CAUSE_KEYBOARD);
 							} else {
 								const pos = this.getObjectCenterPosition(d3Event.currentTarget);
-								this.openContextMenu(d3Event, "node", d, null, pos);
+								this.openContextMenu(d3Event, "node", d, null, pos, CAUSE_KEYBOARD);
 							}
 						}
 					}
@@ -2726,7 +2726,7 @@ export default class SVGCanvasRenderer {
 							this.addContextToolbar(d3Event, node, "input_port", CAUSE_KEYBOARD, null, null, port);
 						} else {
 							const pos = this.getObjectCenterPosition(d3Event.currentTarget);
-							this.openContextMenu(d3Event, "input_port", node, port, pos);
+							this.openContextMenu(d3Event, "input_port", node, port, pos, CAUSE_KEYBOARD);
 						}
 					}
 				}
@@ -2805,7 +2805,7 @@ export default class SVGCanvasRenderer {
 							this.addContextToolbar(d3Event, node, "output_port", CAUSE_KEYBOARD, null, null, port);
 						} else {
 							const pos = this.getObjectCenterPosition(d3Event.currentTarget);
-							this.openContextMenu(d3Event, "output_port", node, port, pos);
+							this.openContextMenu(d3Event, "output_port", node, port, pos, CAUSE_KEYBOARD);
 						}
 					}
 				}
@@ -3734,7 +3734,7 @@ export default class SVGCanvasRenderer {
 	// currently enabled. The pos parameter is optional. It is provided when menu
 	// is opened from the keyboard and it sets both the context menu position and
 	// the "mouse position", if one is needed, by the action selected in the menu.
-	openContextMenu(d3Event, type, d, port, pos, cause) {
+	openContextMenu(d3Event, type, d, port, pos, cause = CAUSE_MOUSE) {
 		CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stop the browser context menu appearing
 		this.canvasController.contextMenuHandler({
 			type: type,
@@ -4424,7 +4424,7 @@ export default class SVGCanvasRenderer {
 							this.addContextToolbar(d3Event, d, "comment", CAUSE_KEYBOARD);
 						} else {
 							const pos = this.getObjectCenterPosition(d3Event.currentTarget);
-							this.openContextMenu(d3Event, "comment", d, null, pos);
+							this.openContextMenu(d3Event, "comment", d, null, pos, CAUSE_KEYBOARD);
 						}
 					}
 				}
