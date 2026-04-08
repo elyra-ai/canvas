@@ -25,7 +25,8 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import StructureEditorControl from "../../../src/common-properties/controls/structureeditor";
 import structureeditorParamDef from "../../test_resources/paramDefs/structureeditor_paramDef.json";
-import { fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 
 const emptyValueIndicator = "...";

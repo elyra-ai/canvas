@@ -18,7 +18,8 @@ import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import { expect } from "chai";
 import PANEL_SELECTOR_PARAM_DEF from "./../../test_resources/paramDefs/panelSelector_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
-import { cleanup, fireEvent, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 describe("'panel selector insert' renders correctly", () => {
 	let wrapper;

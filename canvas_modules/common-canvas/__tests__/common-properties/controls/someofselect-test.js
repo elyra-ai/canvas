@@ -24,7 +24,8 @@ import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import SomeOfSelectParamDef from "../../test_resources/paramDefs/someofselect_paramDef.json";
-import { fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 const mockSomeOfSelect = jest.fn();
 jest.mock("../../../src/common-properties/controls/someofselect",

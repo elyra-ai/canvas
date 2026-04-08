@@ -22,7 +22,8 @@ import { renderWithIntl } from "../../_utils_/intl-utils";
 import TearSheet from "./../../../src/common-properties/panels/tearsheet";
 import codeParamDef from "./../../test_resources/paramDefs/code_paramDef.json";
 import Sinon from "sinon";
-import { cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, screen } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 import { Provider } from "react-redux";
 
 describe("tearsheet tests", () => {

@@ -25,7 +25,8 @@ import { format } from "date-fns";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import TIMEFIELD_PARAM_DEF from "../../test_resources/paramDefs/timefield_paramDef.json";
-import { fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 const controlItem = <span>&quot;Label&quot;</span>;
 

@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 import { expect } from "chai";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";

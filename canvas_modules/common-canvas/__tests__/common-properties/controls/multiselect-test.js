@@ -24,7 +24,8 @@ import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import multiselectParamDef from "../../test_resources/paramDefs/multiselect_paramDef.json";
-import { fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 const mockMultiselect = jest.fn();
 jest.mock("../../../src/common-properties/controls/multiselect",

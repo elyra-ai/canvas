@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 import React from "react";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 import { renderWithIntl } from "../_utils_/intl-utils";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import { expect } from "chai";

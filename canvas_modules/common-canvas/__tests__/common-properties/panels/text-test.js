@@ -18,7 +18,8 @@ import { expect } from "chai";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import panelParamDef from "./../../test_resources/paramDefs/panel_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
-import { cleanup, fireEvent, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 describe("textPanel render correctly", () => {
 	let renderedObject;

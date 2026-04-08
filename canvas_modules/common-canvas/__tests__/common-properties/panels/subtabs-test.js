@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { cleanup, waitFor } from "@testing-library/react";
+import { cleanup } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tabParamDef from "./../../test_resources/paramDefs/tab_paramDef.json";
 import { expect } from "chai";

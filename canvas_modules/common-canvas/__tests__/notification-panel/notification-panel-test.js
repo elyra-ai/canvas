@@ -25,7 +25,8 @@ import { expect as expectJest } from "@jest/globals";
 import sinon from "sinon";
 import isEqual from "lodash/isEqual";
 import { renderWithIntl } from "../_utils_/intl-utils";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 let canvasController = new CanvasController();
 

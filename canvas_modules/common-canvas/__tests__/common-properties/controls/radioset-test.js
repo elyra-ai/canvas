@@ -18,7 +18,8 @@ import { expect } from "chai";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "./../../_utils_/table-utilsRTL";
 import radioParamDef from "../../test_resources/paramDefs/radio_paramDef.json";
-import { fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 describe("radio renders and works correctly with different enum types", () => {
 

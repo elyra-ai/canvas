@@ -19,7 +19,8 @@ import tableUtilsRTL from "../../_utils_/table-utilsRTL";
 import summarypanelParamDef from "./../../test_resources/paramDefs/summarypanel_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
 import { expect } from "chai";
-import { cleanup, waitFor, fireEvent } from "@testing-library/react";
+import { cleanup, fireEvent } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 describe("summary renders correctly", () => {
 	let wrapper;

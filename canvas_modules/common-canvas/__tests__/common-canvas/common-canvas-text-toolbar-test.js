@@ -18,7 +18,8 @@ import CanvasController from "../../src/common-canvas/canvas-controller";
 import { MARKDOWN } from "../../src/common-canvas/constants/canvas-constants.js";
 import { createIntlCommonCanvasTextToolbar } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
-import { cleanup, waitFor } from "@testing-library/react";
+import { cleanup } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 const canvasController = new CanvasController();
 

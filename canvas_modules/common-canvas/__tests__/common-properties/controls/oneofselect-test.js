@@ -24,7 +24,8 @@ import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import oneofselectParamDef from "../../test_resources/paramDefs/oneofselect_paramDef.json";
-import { fireEvent, waitFor, cleanup } from "@testing-library/react";
+import { fireEvent, cleanup } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 import { cloneDeep } from "lodash";
 
 const mockOneofselectControl = jest.fn();

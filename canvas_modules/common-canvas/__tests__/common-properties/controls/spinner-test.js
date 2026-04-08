@@ -22,7 +22,8 @@ import { expect as expectJest } from "@jest/globals";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import spinnerParamDef from "../../test_resources/paramDefs/spinner_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 
 const controller = new Controller();

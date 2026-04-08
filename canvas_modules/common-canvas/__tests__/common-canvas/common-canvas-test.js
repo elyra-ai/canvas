@@ -19,7 +19,8 @@ import CanvasController from "../../src/common-canvas/canvas-controller";
 import { createCommonCanvas } from "../_utils_/cc-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
-import { cleanup, waitFor } from "@testing-library/react";
+import { cleanup } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 
 describe("CommonCanvas renders correctly", () => {

@@ -22,7 +22,8 @@ import { render } from "../../_utils_/mount-utils.js";
 import propertyUtilsRTL from "../../_utils_/property-utilsRTL";
 import tableUtilsRTL from "../../_utils_/table-utilsRTL";
 import checkboxParamDef from "../../test_resources/paramDefs/checkbox_paramDef.json";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
+import { waitFor } from "@testing-library/dom";
 
 const controller = new Controller();
 
