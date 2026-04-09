@@ -883,6 +883,12 @@ export default class SvgCanvasTextArea {
 			.on("blur", (d3Event, d) => {
 				this.logger.log("Text area - blur");
 
+				// Some Cypress test scenarios can result in a second call to onBlur. So if
+				// neither of the underlying objects is not in existence we can just return.
+				if (!this.foreignObjectComment && !this.foreignObjectLabel) {
+					return;
+				}
+
 				// If the esc key was pressed to cause the blur event just return
 				// so label returns to what it was before editing started.
 				if (this.textAreaEscKeyPressed) {
