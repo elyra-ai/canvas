@@ -160,6 +160,10 @@ Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText, 
 	}
 });
 
+Cypress.Commands.add("completeTextEntry", () => {
+	cy.focused().type("{shift}{enter}");
+});
+
 Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newCommentText) => {
 	cy.getCommentWithTextInSubFlow(originalCommentText).as("comment");
 	cy.get("@comment").dblclick();

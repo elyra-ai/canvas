@@ -88,6 +88,7 @@ export default class SvgCanvasTextArea {
 	displayCommentTextArea(d, parentDomObj) {
 		this.editingTextData = {
 			id: d.id,
+			comment: d,
 			text: d.content,
 			singleLine: false,
 			maxCharacters: null,
@@ -635,6 +636,7 @@ export default class SvgCanvasTextArea {
 		// the text value since it will be unavailable after the text area closes.
 		const newText = newValue;
 		this.closeTextArea(data);
+
 		if (data.text !== newText || this.textAreaHeight !== data.height ||
 				!this.areFormatsTheSame(data.formats, data.newFormats)) {
 			data.saveTextChangesCallback(data, newText, this.textAreaHeight);
@@ -705,6 +707,7 @@ export default class SvgCanvasTextArea {
 			// Tidy up
 			this.foreignObjectComment.remove();
 			this.foreignObjectComment = null;
+			this.canvasController.setFocusObject(data.comment, null, true);
 		}
 		this.editingText = false;
 		this.editingTextId = "";
