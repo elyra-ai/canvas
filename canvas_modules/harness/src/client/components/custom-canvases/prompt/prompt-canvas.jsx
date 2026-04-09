@@ -166,9 +166,7 @@ export default class PromptCanvas extends React.Component {
 		const cmnd = new AddNodeAndLinkAction(data, this.canvasController);
 		this.canvasController.do(cmnd);
 
-		setTimeout(() => {
-			this.canvasController.setFocusObject(cmnd.newNode);
-		}, 10);
+		this.canvasController.setFocusObject(cmnd.newNode);
 	}
 
 	// Add a Prompt node to the flow editor with a link to it from
