@@ -4902,13 +4902,17 @@ export default class SVGCanvasRenderer {
 
 					} else if (KeyboardUtils.nextSiblingLink(d3Event)) {
 						const link = this.activePipeline.getNextSiblingLink(d);
-						this.setFocusObject(link, d3Event);
-						this.lowerLinkToBottom(d3Event.currentTarget);
+						if (link.id !== d.id) {
+							this.setFocusObject(link, d3Event);
+							this.lowerLinkToBottom(d3Event.currentTarget);
+						}
 
 					} else if (KeyboardUtils.previousSiblingLink(d3Event)) {
 						const link = this.activePipeline.getPreviousSiblingLink(d);
-						this.setFocusObject(link, d3Event);
-						this.lowerLinkToBottom(d3Event.currentTarget);
+						if (link.id !== d.id) {
+							this.setFocusObject(link, d3Event);
+							this.lowerLinkToBottom(d3Event.currentTarget);
+						}
 
 					} else if (KeyboardUtils.focusSubObject(d3Event)) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
