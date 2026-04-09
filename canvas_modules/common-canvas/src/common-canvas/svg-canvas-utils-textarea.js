@@ -884,7 +884,7 @@ export default class SvgCanvasTextArea {
 				this.logger.log("Text area - blur");
 
 				// Some Cypress test scenarios can result in a second call to onBlur. So if
-				// neither of the underlying objects is not in existence we can just return.
+				// neither of the underlying objects are in existence we can just return.
 				if (!this.foreignObjectComment && !this.foreignObjectLabel) {
 					return;
 				}
