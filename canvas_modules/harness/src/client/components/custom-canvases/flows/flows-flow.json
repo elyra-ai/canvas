@@ -221,13 +221,15 @@
               "expanded_height": 200,
               "decorations": [
                 {
+                  "id": "supernode-zoom",
                   "position": "topLeft",
                   "x_pos": 9,
                   "y_pos": 0,
                   "image": "images/custom-canvases/flows/decorations/drillIntoSupernode.svg",
                   "outline": true,
                   "hotspot": true,
-                  "id": "supernode-zoom"
+                  "focusable": true,
+                  "tooltip": "Display supernode sub-flow"
                 }
               ]
             }

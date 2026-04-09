@@ -1841,7 +1841,7 @@ export default class SVGCanvasRenderer {
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.attr("class", (d) => this.getNodeGroupClass(d))
 				.attr("style", (d) => this.getNodeGrpStyle(d))
-				.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
+				.attr("tabindex", -1)
 				.attr("aria-label", (d) => d.label)
 				.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("node.ariaRoleDescription"))
 				.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps, data));
@@ -3018,7 +3018,7 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) => this.createDecorations(enter, d, objType, decGrpClassName)
 			)
-			.attr("tabindex", (dec) => (dec.focusable ? -1 : null))
+			.attr("tabindex", -1)
 			.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("decoration.ariaRoleDescription"))
 			.attr("transform", (dec) => this.decUtils.getDecTransform(dec, d, objType))
 			.on("mousedown", (d3Event, dec) => (dec.hotspot && d3Event.button === 0 ? that.callDecoratorCallback(d3Event, d, dec) : null))
@@ -4170,7 +4170,7 @@ export default class SVGCanvasRenderer {
 				(enter) => this.createComments(enter)
 			)
 			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
-			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
+			.attr("tabindex", -1)
 			.attr("class", (c) => this.getCommentGroupClass(c))
 			.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("comment.ariaRoleDescription"))
 			.attr("aria-label", (c) => this.canvasController.labelUtil.getLabel("comment.ariaLabel", { content: c.content }))
@@ -4269,7 +4269,7 @@ export default class SVGCanvasRenderer {
 			.attr("height", (c) => c.height)
 
 			.select(".d3-comment-text-scroll")
-			.attr("tabindex", "-1") // Prevent tab taking focus to the scroll div
+			.attr("tabindex", -1) // Prevent tab taking focus to the scroll div
 			.each((d, i, commentTexts) => {
 				const commentElement = d3.select(commentTexts[i]);
 				CanvasUtils.applyOutlineStyle(commentElement, d.formats); // Only apply outlineStyle format here
@@ -4730,7 +4730,7 @@ export default class SVGCanvasRenderer {
 				(enter) => this.createLinks(enter)
 			)
 			.attr("class", (d) => this.getLinkGroupClass(d))
-			.attr("tabindex", (d) => (this.config.enableKeyboardNavigation ? -1 : null))
+			.attr("tabindex", -1)
 			.attr("style", (d) => this.getLinkGrpStyle(d))
 			.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? true : null))
 			.attr("aria-label", (d) => CanvasUtils.getLinkAriaLabel(d, this.canvasController.labelUtil))
@@ -5086,9 +5086,7 @@ export default class SVGCanvasRenderer {
 	updateStartHandles(d, linkGrp) {
 		const handlesGrp = d3.select(linkGrp)
 			.selectAll(".d3-link-handle-start-group")
-			.attr("tabindex", () => (this.config.enableKeyboardNavigation &&
-				(this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) ? -1 : null))
+			.attr("tabindex", -1)
 			.call(this.attachLinkHandleListeners.bind(this, "start"));
 
 		const handles = d.type === NODE_LINK && (
@@ -5143,9 +5141,7 @@ export default class SVGCanvasRenderer {
 	updateEndHandles(d, linkGrp) {
 		const handlesGrp = d3.select(linkGrp)
 			.selectAll(".d3-link-handle-end-group")
-			.attr("tabindex", () => (this.config.enableKeyboardNavigation &&
-				(this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) ? -1 : null))
+			.attr("tabindex", -1)
 
 			.call(this.attachLinkHandleListeners.bind(this, "end"));
 
