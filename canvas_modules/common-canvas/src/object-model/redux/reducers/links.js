@@ -135,6 +135,16 @@ export default (state = [], action) => {
 			return link;
 		});
 
+	case "SET_LINK_PARAMETERS":
+		return state.map((link, index) => {
+			if (action.data.linkId === link.id) {
+				const newLink = Object.assign({}, link);
+				newLink.parameters = action.data.parameters;
+				return newLink;
+			}
+			return link;
+		});
+
 	case "SET_LINK_SRC_INFO":
 		return state.map((link) => {
 			if (link.id === action.data.linkId) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 Elyra Authors
+ * Copyright 2017-2026 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,7 +115,6 @@ describe("Test canvas controller methods", () => {
 		expect(isEqual(expectedLink, actualLink)).to.be.true;
 	});
 
-
 	it("should update a link with new properties using: setNodeDataLinkTrgInfo", () => {
 		deepFreeze(startCanvas);
 
@@ -141,6 +140,110 @@ describe("Test canvas controller methods", () => {
 		// console.info("Actual Link   = " + JSON.stringify(actualLink, null, 2));
 
 		expect(isEqual(expectedLink, actualLink)).to.be.true;
+	});
+
+	it("should set link parameters using: setLinkParameters", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(allTypesCanvas);
+
+		// Set parameters for a link
+		const parameters = {
+			param1: "value1",
+			param2: "value2",
+			param3: 123,
+			nestedParam: {
+				subParam1: "nestedValue1",
+				subParam2: "nestedValue2"
+			}
+		};
+
+		canvasController.setLinkParameters("a81684aa-9b09-4620-aa59-54035a5de913", parameters);
+
+		const actualLink = canvasController.getLink("a81684aa-9b09-4620-aa59-54035a5de913");
+
+		// Verify the parameters were set correctly
+		expect(actualLink.parameters).to.deep.equal(parameters);
+
+		// Verify other link properties remain unchanged
+		expect(actualLink.id).to.equal("a81684aa-9b09-4620-aa59-54035a5de913");
+		expect(actualLink.srcNodeId).to.equal("|:;<,>.9?/`~!@#$%^&*()_+=-{}][");
+		expect(actualLink.trgNodeId).to.equal("nodeIDSuperNodePE");
+		expect(actualLink.type).to.equal("nodeLink");
+	});
+
+	it("should update existing link parameters using: setLinkParameters", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(allTypesCanvas);
+
+		// Set initial parameters
+		const initialParameters = {
+			oldParam1: "oldValue1",
+			oldParam2: "oldValue2"
+		};
+		canvasController.setLinkParameters("a81684aa-9b09-4620-aa59-54035a5de913", initialParameters);
+
+		// Update with new parameters
+		const newParameters = {
+			newParam1: "newValue1",
+			newParam2: "newValue2"
+		};
+		canvasController.setLinkParameters("a81684aa-9b09-4620-aa59-54035a5de913", newParameters);
+
+		const actualLink = canvasController.getLink("a81684aa-9b09-4620-aa59-54035a5de913");
+
+		// Verify old parameters are replaced with new ones
+		expect(actualLink.parameters).to.deep.equal(newParameters);
+		expect(actualLink.parameters.oldParam1).to.be.undefined;
+		expect(actualLink.parameters.oldParam2).to.be.undefined;
+	});
+
+	it("should set empty parameters using: setLinkParameters", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(allTypesCanvas);
+
+		// Set initial parameters
+		canvasController.setLinkParameters("a81684aa-9b09-4620-aa59-54035a5de913", { param1: "value1" });
+
+		// Set empty parameters
+		canvasController.setLinkParameters("a81684aa-9b09-4620-aa59-54035a5de913", {});
+
+		const actualLink = canvasController.getLink("a81684aa-9b09-4620-aa59-54035a5de913");
+
+		// Verify parameters are set to empty object
+		expect(actualLink.parameters).to.deep.equal({});
+	});
+
+	it("should set link parameters for a specific pipeline using: setLinkParameters", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(supernodeCanvas);
+
+		const primaryPipelineId = canvasController.getPrimaryPipelineId();
+		const parameters = {
+			pipelineParam1: "pipelineValue1",
+			pipelineParam2: 456
+		};
+
+		// Get a link from the primary pipeline
+		const links = canvasController.getLinks(primaryPipelineId);
+		if (links && links.length > 0) {
+			const linkId = links[0].id;
+
+			// Set parameters for the link in the specific pipeline
+			canvasController.setLinkParameters(linkId, parameters, primaryPipelineId);
+
+			const actualLink = canvasController.getLink(linkId, primaryPipelineId);
+
+			// Verify parameters are set correctly
+			expect(actualLink.parameters).to.deep.equal(parameters);
+		}
 	});
 
 
@@ -255,7 +358,6 @@ describe("Test canvas controller methods", () => {
 		// There should be no decorations property
 		expect(typeof link2.decorations === "undefined").to.be.true;
 	});
-
 
 	it("should retrieve and get input ports using: getNodeInputPorts and setNodeInputPorts", () => {
 		deepFreeze(allTypesCanvas);
@@ -440,7 +542,7 @@ describe("Test canvas controller methods", () => {
 		canvasController.displaySubPipelineForSupernode("8609fbcf-828a-49cc-8fee-c9d4593e3207", "external-sub-flow-pipeline-1");
 		expect(canvasController.getBreadcrumbs()).to.have.length(3);
 
-		// Try undoing the three actions performd so far.
+		// Try undoing the three actions performed so far.
 		canvasController.getCommandStack().undo();
 		expect(canvasController.getBreadcrumbs()).to.have.length(2);
 
@@ -451,7 +553,7 @@ describe("Test canvas controller methods", () => {
 		expect(canvasController.getBreadcrumbs()).to.have.length(1);
 
 
-		// Try rdoing the three actions performd so far.
+		// Try doing the three actions performed so far.
 		canvasController.getCommandStack().redo();
 		expect(canvasController.getBreadcrumbs()).to.have.length(3);
 
@@ -495,7 +597,6 @@ describe("Test canvas controller methods", () => {
 		expect(canvasController.getPipelineFlow().pipelines).to.have.length(2);
 
 	});
-
 
 	it("should execute a Command to create a supernode on the canvas from a palette supernode", () => {
 		const canvasController = new CanvasController();
@@ -673,7 +774,6 @@ describe("Test canvas controller methods", () => {
 const externalPipelineFlows = [];
 externalPipelineFlows["external-sub-flow-url-1"] = EXTERNAL_SUB_FLOW_CANVAS_1;
 externalPipelineFlows["external-sub-flow-url-2"] = EXTERNAL_SUB_FLOW_CANVAS_2;
-
 
 function beforeEditActionHandler(data) {
 	switch (data.editType) {
