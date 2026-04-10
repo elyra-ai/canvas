@@ -35,7 +35,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: 22.x
-    - run: node -v && npm -v
     - name: Install latest npm needed for OIDC
       run: |
         curl -qL https://www.npmjs.com/install.sh | sh
