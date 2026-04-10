@@ -36,7 +36,10 @@ jobs:
       with:
         node-version: 22.x
     - run: node -v && npm -v
-    - run: npm install -g npm@latest
+    - name: Install npm 11.5.1 or later
+      run: |
+        curl -qL https://www.npmjs.com/install.sh | sh
+        npm install -g npm@11.5.1
     - run: node -v && npm -v
     - run: npm install -g grunt-cli sass
     - run: ./canvas_modules/common-canvas/build.sh
