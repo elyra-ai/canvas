@@ -35,6 +35,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: 22.x
+    - run: node -v && npm -v
     - run: npm install -g npm@latest
     - run: node -v && npm -v
     - run: npm install -g grunt-cli sass
