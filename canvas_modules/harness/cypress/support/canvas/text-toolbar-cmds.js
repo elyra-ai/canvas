@@ -44,6 +44,25 @@ Cypress.Commands.add("getTextToolbar", () => {
 	cy.get(".text-toolbar");
 });
 
+Cypress.Commands.add("focusFirstTextToolbarButton", () => {
+	cy.getTextToolbar()
+		.find("button")
+		.first()
+		.then((button) => {
+			button[0].focus();
+		});
+});
+
+Cypress.Commands.add("clickFocusedTextToolbarButton", () => {
+	cy.focused().then((button) => {
+		button[0].click();
+	});
+});
+
+Cypress.Commands.add("moveFocusRightInTextToolbar", () => {
+	cy.focused().type("{rightarrow}");
+});
+
 Cypress.Commands.add("getOptionFromTextToolbarOverflow", (optionName) => {
 	cy.getTextToolbar()
 		.find(".toolbar-popover-list")

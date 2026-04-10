@@ -1526,6 +1526,13 @@ Cypress.Commands.add("verifyFocusOnComment", (commentText) => {
 	});
 });
 
+// Verifies the focus is on the comment entry area
+Cypress.Commands.add("verifyFocusOnCommentEntry", () => {
+	cy.document().then((doc) => {
+		expect(doc.activeElement).to.have.class("d3-comment-text-entry");
+	});
+});
+
 // Compares two pixel value to see if they are within the compareRange value or not.
 Cypress.Commands.add("verifyPixelValueInCompareRange", (value, cssValue) => {
 	// value should be in the compare range of cssValue
