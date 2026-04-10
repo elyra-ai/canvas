@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Copyright 2017-2023 Elyra Authors
+# Copyright 2017-2026 Elyra Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,13 +38,14 @@ else
     echo "Invalid semantic version format"
 fi
 
-echo "Publishing Elyra Canvas $NPM_VERSION to Artifactory NPM"
-echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
-# Set to v12 dist tag to override latest tag
+echo "Publishing Elyra Canvas $NPM_VERSION to npm with provenance"
+# --provenance: Generates cryptographic proof and signed attestation (Trusted Publisher)
+# --access public: Ensures scoped package (@elyra/canvas) is publicly accessible
+# Authentication via GitHub OIDC (no token needed)
 if [[ "$major_version" == "v12" ]]; then
     echo "v12 tag found, publishing under v12"
-    npm publish --tag v12 --userconfig=~/.npmrc --registry=https://registry.npmjs.org
+    npm publish --tag v12 --provenance --access public
 else
     echo "publishing under latest"
-    npm publish --userconfig=~/.npmrc --registry=https://registry.npmjs.org
+    npm publish --provenance --access public
 fi
