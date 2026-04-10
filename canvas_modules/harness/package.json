@@ -13,7 +13,7 @@
   },
   "type": "module",
   "engines": {
-    "node": "20.x"
+    "node": "22.x"
   },
   "dependencies": {
     "@ibm/plex": "^6.4.1",
