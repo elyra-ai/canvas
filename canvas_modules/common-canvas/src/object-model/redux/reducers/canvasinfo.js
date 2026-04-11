@@ -167,6 +167,7 @@ export default (state = {}, action) => {
 	case "SET_NODE_MESSAGES":
 	case "SET_NODE_DECORATIONS":
 	case "SET_LINK_DECORATIONS":
+	case "SET_LINK_PARAMETERS":
 	case "ADD_NODE_ATTR":
 	case "REMOVE_NODE_ATTR":
 	case "SET_NODE_LABEL":
