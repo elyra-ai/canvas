@@ -385,10 +385,13 @@ describe("ObjectModel files handling test", () => {
 		const expectedCanvas = removeGeneratedLinkIds(JSON.parse(JSON.stringify(latestPipelineFlow)));
 		const actualCanvas = removeGeneratedLinkIds(objectModel.getPipelineFlow());
 
-		// console.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// Also ignore any parameters in the expected canvas
+		const expectedCanvas2 = removeParametersFromLinks(expectedCanvas);
+
+		// console.info("Expected Canvas = " + JSON.stringify(expectedCanvas2, null, 2));
 		// console.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
-		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
+		expect(isEqual(JSON.stringify(expectedCanvas2, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
 	}
 
 	// Returns a modified expected canvas for comparing with an upgraded V1 pipeline
@@ -519,6 +522,25 @@ describe("ObjectModel files handling test", () => {
 				pipeline.app_data.ui_data.comments.forEach((comment) => {
 					if (comment.associated_id_refs) {
 						comment.associated_id_refs.forEach((link) => delete link.id);
+					}
+				});
+			}
+		});
+		return pipelineFlow;
+	}
+
+	// The `parameters` field was added in schema v3 and is not expected when converting
+	// from an older version of the schema - so remove it.
+	function removeParametersFromLinks(pipelineFlow) {
+		pipelineFlow.pipelines.forEach((pipeline, pIdx) => {
+			if (pipeline.nodes) {
+				pipeline.nodes.forEach((node, mIdx) => {
+					if (node.inputs) {
+						node.inputs.forEach((input, iIdx) => {
+							if (input.links) {
+								input.links.forEach((link, lIds) => delete link.parameters);
+							}
+						});
 					}
 				});
 			}
