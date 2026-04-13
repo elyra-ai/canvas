@@ -35,10 +35,6 @@ jobs:
       uses: actions/setup-node@v6
       with:
         node-version: 24.x
-    - name: Install latest npm needed for OIDC
-      run: |
-        curl -qL https://www.npmjs.com/install.sh | sh
-        npm install -g npm@latest
     - run: node -v && npm -v
     - run: npm install -g grunt-cli sass
     - run: ./canvas_modules/common-canvas/build.sh
