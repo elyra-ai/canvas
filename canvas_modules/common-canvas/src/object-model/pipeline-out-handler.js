@@ -483,6 +483,11 @@ export default class PipelineOutHandler {
 		if (link.description) {
 			newLink.description = link.description;
 		}
+
+		if (link.parameters) {
+			newLink.parameters = link.parameters;
+		}
+
 		return newLink;
 	}
 }

@@ -1382,6 +1382,10 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "SET_LINK_PROPERTIES", data: { linkId: linkId, linkProperties: linkProperties }, pipelineId: this.pipelineId });
 	}
 
+	setLinkParameters(linkId, parameters) {
+		this.store.dispatch({ type: "SET_LINK_PARAMETERS", data: { linkId: linkId, parameters: parameters }, pipelineId: this.pipelineId });
+	}
+
 	setNodeDataLinkSrcInfo(linkId, srcNodeId, srcNodePortId) {
 		this.store.dispatch({ type: "SET_LINK_SRC_INFO", data: { linkId: linkId, srcNodeId: srcNodeId, srcNodePortId: srcNodePortId }, pipelineId: this.pipelineId });
 	}

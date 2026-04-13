@@ -397,6 +397,9 @@ export default class PipelineInHandler {
 		if (link.description) { // description is also optional
 			newLink.description = link.description;
 		}
+		if (link.parameters) { // parameters is also optional
+			newLink.parameters = link.parameters;
+		}
 
 		return newLink;
 	}

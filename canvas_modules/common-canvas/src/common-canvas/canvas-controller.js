@@ -1353,6 +1353,14 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setLinkProperties(linkId, properties);
 	}
 
+	// Sets the link parameters
+	// linkId - The ID of the link
+	// parameters - An array of parameters
+	// pipelineId - The ID of the pipeline
+	setLinkParameters(linkId, parameters, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setLinkParameters(linkId, parameters);
+	}
+
 	// Sets the source properties in the data link identified by the linkId. The
 	// srcNodeId and srcNodePortId will be set to the values provided. If
 	// srcNodePortId is set to null the current srcNodePortId will be removed

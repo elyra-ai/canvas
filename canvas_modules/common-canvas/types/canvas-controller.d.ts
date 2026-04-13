@@ -1736,6 +1736,19 @@ export declare class CanvasController {
     ): void;
 
     /**
+     * Sets the link parameters
+     * @param linkId - The ID of the link
+     * @param parameters - An array of parameters
+     * @param pipelineId - Optional. The ID of the pipeline of the link.
+     *                     Defaults to the currently displayed pipeline.
+     */
+    setLinkParameters(
+      linkId: CanvasLinkId,
+      parameters: Record<string, unknown>[],
+      pipelineId?: PipelineId
+    ): void;
+
+    /**
      * Sets the source properties in the data link identified by the linkId. The
      * srcNodeId and srcNodePortId will be set to the values provided. If
      * srcNodePortId is set to null the current srcNodePortId will be removed
