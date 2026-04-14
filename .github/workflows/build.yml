@@ -30,15 +30,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Use Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
-        node-version: 22.x
-    - name: Install latest npm needed for OIDC
-      run: |
-        curl -qL https://www.npmjs.com/install.sh | sh
-        npm install -g npm@latest
+        node-version: 24.x
     - run: node -v && npm -v
     - run: npm install -g grunt-cli sass
     - run: ./canvas_modules/common-canvas/build.sh
@@ -50,7 +46,7 @@ jobs:
     needs: [build]
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Tag main build
         env:
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
