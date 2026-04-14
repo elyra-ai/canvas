@@ -6600,7 +6600,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns true if the object should cause a 'zoom to reveal' to occur when focus
-	// is moved to it. That is if we are displaying a sub-flow full page when:
+	// is moved to it. That is, if we are displaying a sub-flow full-page when:
 	// 1. The object is a link - because
 	//    a) they are almost always on display and
 	//    b) if the link is to, or from, a binding node zoomToReveal will cause the
