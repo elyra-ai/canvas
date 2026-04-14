@@ -4724,20 +4724,26 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayLinksSubset(selection, linksArray) {
-		selection
-			.data(linksArray, (link) => link.id)
-			.join(
-				(enter) => this.createLinks(enter)
-			)
-			.attr("class", (d) => this.getLinkGroupClass(d))
-			.attr("tabindex", -1)
-			.attr("style", (d) => this.getLinkGrpStyle(d))
-			.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? true : null))
-			.attr("aria-label", (d) => CanvasUtils.getLinkAriaLabel(d, this.canvasController.labelUtil))
-			.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("link.ariaRoleDescription"))
-			.call((joinedLinkGrps) => {
-				this.updateLinks(joinedLinkGrps, linksArray);
-			});
+		// The D3 join operation can sometimes cause focus to be lost from any
+		// currently focused object involved in the join (even if no new objects
+		// have been created or if no objects are removed) so we preserve and
+		// reinstate the focus after this operation is complete.
+		this.preserveFocus(() => {
+			selection
+				.data(linksArray, (link) => link.id)
+				.join(
+					(enter) => this.createLinks(enter)
+				)
+				.attr("class", (d) => this.getLinkGroupClass(d))
+				.attr("tabindex", -1)
+				.attr("style", (d) => this.getLinkGrpStyle(d))
+				.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? true : null))
+				.attr("aria-label", (d) => CanvasUtils.getLinkAriaLabel(d, this.canvasController.labelUtil))
+				.attr("aria-roledescription", this.canvasController.labelUtil.getLabel("link.ariaRoleDescription"))
+				.call((joinedLinkGrps) => {
+					this.updateLinks(joinedLinkGrps, linksArray);
+				});
+		});
 	}
 
 	// Creates all newly created links specified in the enter selection.

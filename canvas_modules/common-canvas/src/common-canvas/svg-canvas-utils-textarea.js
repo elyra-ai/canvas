@@ -88,7 +88,7 @@ export default class SvgCanvasTextArea {
 	displayCommentTextArea(d, parentDomObj) {
 		this.editingTextData = {
 			id: d.id,
-			comment: d,
+			focusReturn: d,
 			text: d.content,
 			singleLine: false,
 			maxCharacters: null,
@@ -465,6 +465,7 @@ export default class SvgCanvasTextArea {
 
 		this.editingTextData = {
 			id: node.id,
+			focusReturn: node,
 			text: node.label,
 			singleLine: node.layout.labelSingleLine,
 			maxCharacters: node.layout.labelMaxCharacters,
@@ -538,6 +539,7 @@ export default class SvgCanvasTextArea {
 
 		this.editingTextData = {
 			id: dec.id,
+			focusReturn: obj,
 			text: dec.label,
 			singleLine: dec.label_single_line || false,
 			maxCharacters: dec.label_max_characters || null,
@@ -707,10 +709,10 @@ export default class SvgCanvasTextArea {
 			// Tidy up
 			this.foreignObjectComment.remove();
 			this.foreignObjectComment = null;
-			this.canvasController.setFocusObject(data.comment, null, true);
 		}
 		this.editingText = false;
 		this.editingTextId = "";
+		this.canvasController.setFocusObject(data.focusReturn, null, true);
 	}
 
 	// Returns true if one of the keys that are allowed in the text area, when
