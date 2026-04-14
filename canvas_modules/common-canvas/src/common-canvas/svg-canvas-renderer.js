@@ -6578,11 +6578,8 @@ export default class SVGCanvasRenderer {
 			// appears in the viewport. If the event was a MouseEvent we don't zoom to reveal
 			// because it interferes with double-click events (also it's not necessary because
 			// the object will be at least partially visible in the view port for it to be clicked).
-			// Also, we don't zoom to reveal if the object is a link in a full-page subflow
-			// because a) they are almost always on display and b) if the link is to, or from, a
-			// binding node zoomToReveal will cause the nodes to be incorrectly moved.
-			if (CanvasUtils.isKeyboardEvent(evt) &&
-					!(type === "link" && this.dispUtils.isDisplayingSubFlowFullPage())) {
+			// Also, some objects should not cause a zoom, so check for them.
+			if (CanvasUtils.isKeyboardEvent(evt) && this.shouldObjectCauseZoom(obj, type)) {
 				const zoom = this.canvasController.getZoomToReveal([obj.id]);
 
 				if (zoom) {
@@ -6600,6 +6597,24 @@ export default class SVGCanvasRenderer {
 			const id = obj ? obj.id : "Unknown";
 			this.logger.error(`Error applying focus to ${type} object with ID: ${id}`);
 		}
+	}
+
+	// Returns true if the object should cause a 'zoom to reveal' to occur when focus
+	// is moved to it. That is, if we are displaying a sub-flow full-page when:
+	// 1. The object is a link - because
+	//    a) they are almost always on display and
+	//    b) if the link is to, or from, a binding node zoomToReveal will cause the
+	//       nodes to be incorrectly moved.
+	// 2. The object is a binding node -- because they are always in a fixed position.
+	shouldObjectCauseZoom(obj, type) {
+		if (this.dispUtils.isDisplayingSubFlowFullPage()) {
+			if (type === "link") {
+				return false;
+			} else if (type === "node" && CanvasUtils.isSuperBindingNode(obj)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	// Moves the focus highlighting to the next appropriate sub-object within
